@@ -1,16 +1,29 @@
 ---
+import DocsLayout from '../layouts/DocsLayout.astro';
+import { buildNavigation, getDocs } from '../lib/docs';
+import { getEntry } from 'astro:content';
 
+const entry = await getEntry('docs', 'overview/testim-overview');
+
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const [rendered, docs] = await Promise.all([entry.render(), getDocs()]);
+
+const navSections = buildNavigation(docs);
+const { Content, headings } = rendered;
+
+const { title, description, hero } = entry.data;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<DocsLayout
+  title={title}
+  description={description}
+  hero={hero}
+  navSections={navSections}
+  currentSlug="testim-overview"
+  headings={headings}
+>
+  <Content />
+</DocsLayout>

@@ -1,0 +1,26 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+const { headings } = Astro.props as { headings: MarkdownHeading[] };
+const filtered = headings.filter((heading) => heading.depth > 1 && heading.depth <= 3);
+---
+
+{
+  filtered.length > 0 && (
+    <nav aria-label="ページ内ナビゲーション" class="sticky top-32">
+      <h2 class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">目次</h2>
+      <ol class="mt-4 space-y-2 text-sm text-slate-500">
+        {filtered.map((heading) => (
+          <li style={`padding-left: ${(heading.depth - 2) * 0.75}rem`}>
+            <a
+              href={`#${heading.slug}`}
+              class="block rounded-md px-3 py-1 transition hover:bg-blue-50 hover:text-blue-600"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

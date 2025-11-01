@@ -1,0 +1,346 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@layer base {
+  html {
+    font-family:
+      'Noto Sans JP',
+      'Hiragino Sans',
+      'Yu Gothic',
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+  }
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+    font-feature-settings: 'palt' 1;
+  }
+  html.search-modal-open #mobile-doc-nav-container {
+    display: none;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 600;
+  }
+  code {
+    font-family:
+      'Fira Code', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+  }
+}
+
+@layer components {
+  .docs-prose {
+    @apply text-slate-700;
+  }
+  .docs-prose h1 {
+    @apply mt-0 text-3xl font-semibold text-slate-900;
+  }
+  .docs-prose h2 {
+    @apply mt-12 text-2xl font-semibold text-slate-900;
+  }
+  .docs-prose h3 {
+    @apply mt-8 text-xl font-semibold text-slate-900;
+  }
+  .docs-prose p {
+    @apply mt-6 leading-relaxed;
+  }
+  .docs-prose > ul,
+  .docs-prose > ol {
+    @apply mt-6 pl-6 text-slate-700;
+  }
+  .docs-prose > ul {
+    @apply list-disc;
+  }
+  .docs-prose > ol {
+    @apply list-decimal;
+  }
+  .docs-prose ul ul,
+  .docs-prose ul ol,
+  .docs-prose ol ul,
+  .docs-prose ol ol {
+    @apply mt-2 pl-5;
+  }
+  .docs-prose ul ul {
+    list-style-type: circle;
+  }
+  .docs-prose ul ul ul {
+    list-style-type: square;
+  }
+  .docs-prose ol ol {
+    list-style-type: lower-alpha;
+  }
+  .docs-prose ol ol ol {
+    list-style-type: lower-roman;
+  }
+  .docs-prose li {
+    @apply mt-2 leading-relaxed;
+  }
+  .docs-prose a {
+    @apply text-blue-600 underline decoration-blue-200 decoration-2 underline-offset-4 transition hover:text-blue-700;
+  }
+  .docs-prose blockquote {
+    @apply mt-6 rounded-2xl border border-blue-300 bg-blue-50 px-6 py-5 text-sm text-blue-950 shadow-sm;
+  }
+  .docs-prose blockquote p {
+    @apply mt-4;
+  }
+  .docs-prose blockquote p:first-child {
+    margin-top: 0;
+  }
+  .docs-prose blockquote p + p {
+    @apply mt-3;
+  }
+  .docs-prose blockquote strong {
+    @apply font-semibold text-blue-950;
+  }
+
+  /* 脚注のスタイル */
+  .docs-prose .footnotes {
+    @apply mt-12 border-t border-slate-200 pt-8;
+  }
+  .docs-prose .footnotes h2 {
+    @apply text-xl font-semibold text-slate-900 mb-4;
+  }
+  .docs-prose .footnotes h2::before {
+    content: '脚注';
+  }
+  .docs-prose .footnotes h2 a {
+    display: none;
+  }
+  .docs-prose .footnotes hr {
+    display: none;
+  }
+  .docs-prose .footnotes ol {
+    @apply mt-4 text-sm text-slate-600;
+    list-style-type: decimal;
+    list-style-position: outside;
+    padding-left: 2rem;
+    margin-left: 0;
+    display: block;
+  }
+  .docs-prose .footnotes li {
+    @apply leading-relaxed;
+    display: list-item;
+    margin-top: 0.75rem;
+    padding-left: 0.5rem;
+  }
+  .docs-prose .footnotes li::marker {
+    color: var(--color-blue-600);
+    font-weight: 600;
+  }
+  .docs-prose .footnotes li:first-child {
+    margin-top: 0;
+  }
+  .docs-prose .footnotes p {
+    @apply mt-0 inline;
+  }
+  .docs-prose .footnotes a[data-footnote-backref] {
+    @apply ml-2 text-blue-600 no-underline hover:text-blue-700;
+  }
+  .docs-prose sup {
+    @apply ml-0.5;
+  }
+  .docs-prose sup a {
+    @apply text-blue-600 no-underline hover:text-blue-700;
+  }
+  .docs-prose code:not(pre code) {
+    @apply rounded-md bg-blue-50 px-1.5 py-0.5 text-sm font-medium text-blue-800;
+  }
+  .docs-prose pre {
+    @apply mt-8 overflow-x-auto rounded-2xl border border-slate-900/10 bg-slate-950 p-5 text-sm text-slate-100 shadow-lg;
+    background-image: radial-gradient(circle at top left, rgba(37, 99, 235, 0.3), transparent);
+  }
+  .docs-prose pre code {
+    @apply bg-transparent p-0 text-[13px] leading-6 text-slate-100;
+  }
+  .docs-prose hr {
+    @apply my-12 border-slate-200;
+  }
+
+  /* タスクリスト（チェックボックス）スタイル */
+  .docs-prose .contains-task-list {
+    @apply list-none pl-0;
+  }
+  .docs-prose .task-list-item {
+    @apply flex items-start gap-2;
+  }
+  .docs-prose .task-list-item input[type='checkbox'] {
+    @apply mt-1.5 h-[18px] w-[18px] cursor-default rounded border-2;
+    flex-shrink: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    border-color: var(--color-slate-300);
+    background-color: white;
+  }
+  .docs-prose .task-list-item input[type="checkbox"]:checked {
+    border-color: var(--color-blue-600);
+    background-color: var(--color-blue-600);
+  }
+  .docs-prose .task-list-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .docs-prose .task-list-item input[type='checkbox']:not(:checked) {
+    @apply bg-white;
+  }
+
+  /* テーブルスタイル */
+  .docs-prose table {
+    @apply mt-8 w-full rounded-2xl border border-slate-200 text-sm;
+    border-collapse: collapse;
+    table-layout: auto;
+  }
+  .docs-prose table thead {
+    @apply border-b border-slate-200;
+    display: table-header-group;
+  }
+  .docs-prose table thead th {
+    @apply bg-slate-50 px-4 py-3 text-left font-semibold text-slate-900;
+    display: table-cell;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+  .docs-prose table thead th:first-child {
+    width: 15%;
+    min-width: 120px;
+  }
+  .docs-prose table thead th:nth-child(2) {
+    width: 15%;
+    min-width: 120px;
+  }
+  .docs-prose table thead th:nth-child(3) {
+    width: 50%;
+  }
+  .docs-prose table thead th:nth-child(4) {
+    width: 20%;
+    min-width: 140px;
+  }
+  .docs-prose table tbody {
+    display: table-row-group;
+  }
+  .docs-prose table tr {
+    display: table-row;
+  }
+  .docs-prose table tbody tr {
+    @apply border-b border-slate-200;
+  }
+  .docs-prose table tbody td {
+    @apply px-4 py-3 text-slate-700;
+    display: table-cell;
+    white-space: normal;
+    word-wrap: break-word;
+    vertical-align: top;
+  }
+  .docs-prose table tbody td:first-child {
+    font-weight: 500;
+  }
+  .docs-prose table tbody tr:last-child {
+    @apply border-b-0;
+  }
+  .docs-prose table tbody td ul,
+  .docs-prose table tbody td ol {
+    @apply mt-2 pl-5;
+  }
+  .docs-prose table tbody td li {
+    @apply mt-1;
+  }
+  .docs-prose table tbody td code {
+    @apply text-xs;
+  }
+
+  /* Callout（情報パネル）スタイル */
+  .docs-prose .callout {
+    @apply mt-6 rounded-2xl border px-6 py-5 text-sm shadow-sm;
+  }
+  .docs-prose .callout .callout-indicator {
+    @apply flex items-start gap-3 mb-3;
+  }
+  .docs-prose .callout .callout-hint {
+    @apply shrink-0 w-6 h-6;
+  }
+  .docs-prose .callout .callout-hint svg {
+    @apply w-full h-full;
+  }
+  .docs-prose .callout .callout-title {
+    @apply font-semibold text-base;
+  }
+  .docs-prose .callout .callout-content {
+    @apply text-sm;
+  }
+  .docs-prose .callout .callout-content p {
+    @apply mt-0 first:mt-0;
+  }
+
+  /* Callout タイプ別スタイル */
+  .docs-prose .callout-tip {
+    @apply border-blue-200 bg-blue-50/70 text-blue-900;
+  }
+  .docs-prose .callout-tip .callout-hint {
+    @apply text-blue-600;
+  }
+
+  .docs-prose .callout-warning {
+    @apply border-amber-200 bg-amber-50/70 text-amber-900;
+  }
+  .docs-prose .callout-warning .callout-hint {
+    @apply text-amber-600;
+  }
+
+  .docs-prose .callout-success {
+    @apply border-emerald-200 bg-emerald-50/70 text-emerald-900;
+  }
+  .docs-prose .callout-success .callout-hint {
+    @apply text-emerald-600;
+  }
+
+  .docs-prose .callout-danger {
+    @apply border-rose-200 bg-rose-50/70 text-rose-900;
+  }
+  .docs-prose .callout-danger .callout-hint {
+    @apply text-rose-600;
+  }
+
+  .docs-prose .callout-note {
+    @apply border-slate-200 bg-slate-50/70 text-slate-700;
+  }
+  .docs-prose .callout-note .callout-hint {
+    @apply text-slate-600;
+  }
+
+  .docs-prose .callout-info {
+    @apply border-sky-200 bg-sky-50/70 text-sky-900;
+  }
+  .docs-prose .callout-info .callout-hint {
+    @apply text-sky-600;
+  }
+
+  /* コードブロックにタイトルがある場合 */
+  .docs-prose pre[data-has-title='true'] {
+    @apply relative pt-12;
+  }
+  .docs-prose pre[data-has-title='true']::before {
+    content: attr(data-title);
+    @apply absolute left-0 right-0 top-0 rounded-t-2xl border-b border-slate-700/50 bg-slate-800/80 px-5 py-2 text-xs font-medium text-slate-300;
+  }
+
+  /* 見出しリンク */
+  .heading-link {
+    @apply no-underline hover:underline;
+  }
+}
