@@ -88,7 +88,9 @@ const { title, description, hero, navSections, currentSlug, headings } =
 
     <div class="mx-auto flex w-full max-w-screen-2xl flex-1 gap-8 px-4 py-10 sm:px-6 lg:gap-12">
       <aside class="hidden w-64 shrink-0 lg:block">
-        <NavSidebar sections={navSections} currentSlug={currentSlug} />
+        <div id="doc-sidebar-scroll" class="sticky top-32 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+          <NavSidebar sections={navSections} currentSlug={currentSlug} />
+        </div>
       </aside>
 
       <main class="flex-1">
@@ -164,5 +166,40 @@ const { title, description, hero, navSections, currentSlug, headings } =
         </div>
       </div>
     </footer>
+
+    <script is:inline>
+      (() => {
+        const KEY = 'doc-sidebar-scroll';
+        const getEl = () => document.getElementById('doc-sidebar-scroll');
+
+        const restore = () => {
+          const el = getEl();
+          if (!el) return;
+          try {
+            const saved = sessionStorage.getItem(KEY);
+            if (!saved) return;
+            const { top } = JSON.parse(saved);
+            if (typeof top === 'number') el.scrollTop = top;
+          } catch {}
+        };
+
+        const save = () => {
+          const el = getEl();
+          if (!el) return;
+          try {
+            sessionStorage.setItem(KEY, JSON.stringify({ top: el.scrollTop }));
+          } catch {}
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', restore, { once: true });
+        } else {
+          restore();
+        }
+
+        window.addEventListener('beforeunload', save);
+        window.addEventListener('pagehide', save);
+      })();
+    </script>
   </body>
 </html>
