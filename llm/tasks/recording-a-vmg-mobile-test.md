@@ -1,0 +1,184 @@
+# 翻訳タスク (recording-a-vmg-mobile-test)
+
+下記のMarkdown本文を日本語に翻訳してください。Markdownの構造、リンク、画像パス、コードブロックは維持してください。
+- 画像の相対パス (/images/...) は変更しない
+- ":fa-...:" のようなアイコン記法はそのまま残す
+- 表や表ヘッダー、HTMLタグは壊さない
+- リンクのURLは変更しない（アンカーテキストのみ訳す）
+
+--- 原文本文ここから ---
+
+Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。[Mobile Apps Library](https://help.testim.io/docs/mobile-apps) に接続されています。つまり、実行しているテストがモバイルアプリを使用している場合、Virtual Mobile Grid でテストを実行する前に、そのアプリを Mobile Apps Library に追加する必要があります。
+
+Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は[Device Management](https://help.testim.io/docs/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス(Android と iOS)が利用できます。
+
+## モード
+
+記録は以下のモードのいずれかで実行できます:
+
+- **Enhanced mode（推奨）** - Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション(ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク)でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](https://help.testim.io/docs/enhanced-mode-mobile) を参照してください。
+
+- **Appium mode** - このモードは、他の Appium ベースのグリッドとのテストの互換性を保証し、ローカルデバイスでのローカル実行をサポートします。一方、このモードは Appium の機能に制限されており、特にハイブリッドアプリや WebView を使用している場合、すべてのテストフローを記録できない可能性があります。既存のテストは、Appium 互換モードを使用している場合でも引き続き動作します。
+
+## 開始する前に
+
+開始する前に、以下を確認してください:
+
+- **モバイルテストプロジェクト** - モバイルテストには、Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、Tricentis サポートにお問い合わせください。
+
+:::info
+**注意:**
+
+各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。たとえば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
+:::
+
+- **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス(Android と iOS)が利用できます。詳細については、[Virtual Mobile Grid](https://help.testim.io/docs/virtual-mobile-grid) を参照してください。
+
+:::info
+**無料トライアルの制限**
+
+無料トライアルには以下の制限が適用されます:
+
+- 並列化なし
+- 実行時間は10分に制限
+- 1時間に1回のみ実行可能
+
+追加機能が必要な場合は、Tricentis 担当者にお問い合わせください。
+:::
+
+- **アプリケーション要件** -
+  - **Enhanced Mode** - 以下の要件が適用されます:
+    - ネイティブアプリ - Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
+    - WebView を含むネイティブアプリ
+    - React Native アプリ
+    - Flutter アプリ
+  - **Appium Mode** - このモードでは、ネイティブアプリのみがサポートされます。Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
+
+## モバイルテストの記録
+
+:::info
+**仮想/物理デバイスでの記録**
+
+Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバイスで記録されたテストは、仮想デバイスでのみ実行できます。物理デバイスで記録されたテストは、物理デバイスでのみ実行できます。
+:::
+
+**モバイルテストを記録するには:**
+
+1. Dashboard 画面から **New Test** ボタンをクリックします。
+2. アクションメニューの **Record** ボタンをクリックして、テストの記録を開始します。
+3. Select a device ダイアログで、**Virtual Mobile Grid** が選択されていることを確認します。
+4. 以下のいずれかを実行します:
+   - [Enhanced Mode (Mobile)](https://help.testim.io/docs/enhanced-mode-mobile) を使用するには、**Enhanced mode** タブを選択します。
+
+   ![Enhanced mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/ea12c91-enhancedmodetab.png)
+
+   - Appium mode を使用するには、**Appium mode** タブを選択します。
+
+   ![Appium mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/92b7695-appiummodetab.png)
+
+5. ドロップダウンメニューから目的の **Device** と **OS Version** を選択します。
+
+![テスト構成](/images/recording-tests/recording-a-vmg-mobile-test/4d9063d-testconfiguration.png)
+
+6. 以下のいずれかの方法でテストするアプリケーションを選択します:
+   - **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
+
+   ![新しいテスト](/images/recording-tests/recording-a-vmg-mobile-test/5302733-new_test.png)
+
+   - **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
+
+:::info
+**アプリコンパイルの互換性（iOS のみ）**
+
+仮想デバイスを使用してテストを記録する場合は、アプリが仮想デバイス用にコンパイルされていること（.app）を確認してください。逆に、物理デバイスを使用して記録する場合は、アプリが物理デバイス用にコンパイルされていること（.ipa）を確認してください。詳細については、[How to Prepare a .ipa for Mobile Testing](https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing) を参照してください。
+:::
+
+:::info
+Virtual Mobile Grid でテストを実行する場合、テストの開始には約30秒から1分かかる場合があります。これは、VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
+:::
+
+:::info
+**注意:**
+
+各テストは単一のアプリケーションとのみ対話できます。
+:::
+
+7. **Done** をクリックします。
+8. AUT (Application Under Test) Mirroring Viewer が開き、開かれたテスト対象アプリケーションが表示されます。ビューアを使用すると、デバイスを表示し、テスト対象アプリケーションと対話できます。その間、Testim はアクションを記録します。サポートされているモバイルアクションを参照してください。
+
+![記録](/images/recording-tests/recording-a-vmg-mobile-test/90125a4-recording2.gif)
+
+:::warning
+**重要なお知らせ**
+
+テストを記録するときは、安定性を高めるために、テキスト要素を選択し、外側のフレーム、画像、アイコンを避けるようにしてください。
+
+![要素選択の例](/images/recording-tests/recording-a-vmg-mobile-test/b4b47b7-image_20.png)
+:::
+
+9. 記録を停止するには、**Stop Recording** ボタンをクリックするか、Viewer ウィンドウを閉じます。
+
+![記録停止](/images/recording-tests/recording-a-vmg-mobile-test/92a68f8-stoprecording.png)
+
+10. Setup ステップの **Show Properties** ボタンをクリックします。
+
+![プロパティ表示](/images/recording-tests/recording-a-vmg-mobile-test/ca97285-showproperties.png)
+
+11. Properties ペインで、以下の設定を構成します:
+    - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は "untitled test" です。
+    - **Description** - オプションでテストの説明を入力します。
+    - **Configuration** - デフォルトでは、構成は VMG で利用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[Setting the Test Configuration](https://help.testim.io/docs/setting-the-test-configuration) を参照してください。
+    - **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS Array リテラルで複数の順序付きデータセットを定義することにより、データ駆動型テストを構成できます。[Configuring a Data-driven Test From The Visual Editor](https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
+
+12. **Save** をクリックしてテストを保存します。
+
+:::warning
+**自動リカバリ**
+
+新しいテストを作成したり、既存のテストに変更を加えたりする場合は、必ずテストを保存してください。しかし、心配しないでください。テストを保存する前にブラウザを閉じても、ブラウザのキャッシュに保存されるため、作業を再開できるはずです。詳細については、[Recovering a test that was not saved](https://help.testim.io/docs/recovering-a-test-that-was-not-saved) を参照してください。
+:::
+
+13. 追加のテスト構成設定を構成する場合は、[Setting the Test Configuration](https://help.testim.io/docs/setting-the-test-configuration) を参照してください。
+
+## サポートされているモバイルアクション
+
+テストの記録中に AUT Viewer を使用する際に、現在サポートされているアクションは以下のとおりです:
+
+- **Tap** - ユーザーがモバイルデバイス画面上の要素をタップすることをシミュレートします。このステップを作成するには、記録中に AUT Viewer 画面でマウスをクリックします。
+- **Swipe Vertical** - ユーザーが画面を垂直方向に押してドラッグすることをシミュレートします。このステップを作成するには、マウスをクリックし、カーソルを垂直方向にドラッグしてマウスボタンを離します。
+- **Swipe Horizonal** - ユーザーが画面を水平方向に押してドラッグすることをシミュレートします。このステップを作成するには、マウスをクリックし、カーソルを水平方向にドラッグしてマウスボタンを離します。
+- **Set Custom Text** - ユーザーがアプリのテキストフィールドにテキストを入力することをシミュレートします。テキスト要素の上にマウスを置くと、要素が赤色で強調表示されます。テキスト要素をクリックすると、Set Custom Text ウィンドウが開きます。フィールドに目的のテキストを入力し、Send ボタンをクリックします。
+
+## 追加のステップの追加とプロパティの編集
+
+記録中またはテストが保存された後、事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。
+
+一般的なステップのプロパティについて詳しく知るには、[Editing a Step's Properties](https://help.testim.io/docs/editing-a-steps-properties) を参照してください。
+
+## サポートされている事前定義済みモバイルアクション
+
+テストの記録中または記録後に手動でステップを追加する際に、現在サポートされているアクションは以下のとおりです:
+
+- [Validate email](https://help.testim.io/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。
+- [Validate element visible](https://help.testim.io/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。
+- [Validate element text](https://help.testim.io/docs/validate-element-text) - 要素テキスト検証は、特定のテキスト値も指定する点で、要素の可視性検証と似ています。
+- [Wait for element visible](https://help.testim.io/docs/wait-for#wait-for-element-visible) - 要素がページに表示されるまで待機するために使用します。
+- [Wait for element text](https://help.testim.io/docs/wait-for#wait-for-element-text) - テストを続行する前に特定のテキストが表示されることを確認するために使用します。
+- [Sleep](https://help.testim.io/docs/wait-for#sleep) - ステップ間で一定時間待機できます。
+- [Add extract value step](https://help.testim.io/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
+- **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
+- **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。
+- [Generate email address](https://help.testim.io/docs/email-validation#generating-a-temporary-email-address) - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。
+- [Add CLI action](https://help.testim.io/docs/add-cli-validations-and-actions) - CLI 環境でカスタム Node.js スクリプトを実行します。
+- [Add API action](https://help.testim.io/docs/api-testing#adding-an-api-action-step) - API 呼び出しから返されるデータを取得する場合に使用します。
+
+:::info
+Add CLI action および/または Add API action ステップを使用してカスタムコードを実行する前に、[Testim CLI](https://help.testim.io/docs/the-command-line-cli) を実行する必要があります。
+:::
+
+- [Generate random value](https://help.testim.io/docs/generating-a-random-value) - 動的データテストのランダム値を生成します。
+- [Generate date](https://help.testim.io/docs/generating-a-date) - 事前定義されたプロパティに従って日付を生成します。
+- **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。通常、次回実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
+- **Back** - Back ボタンステップを作成し、デバイスに戻るコマンドを送信します。Android のみでサポートされています。
+- **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
+- [Execute Driver Script Step (mobile)](https://help.testim.io/docs/execute-driver-script-step) - Execute Driver Script ステップを使用すると、拡張機能と検証のために Appium 2.0 以上を使用してスクリプトを実行できます。

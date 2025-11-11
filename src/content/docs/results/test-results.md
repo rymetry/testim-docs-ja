@@ -1,0 +1,86 @@
+---
+title: 'テスト結果'
+description: 'テスト実行後の結果の確認方法について説明します。全体の結果とステップごとの詳細結果の見方を学びます。'
+category: '結果'
+order: 2
+updated: '2025-11-11'
+keywords:
+  - testim
+  - test-results
+  - results
+  - テスト結果
+---
+テスト実行中に何が起こるかを理解します。
+
+テストを実行した後、エディタ画面でテスト結果を確認できます。テスト実行全体の情報と、実行された各ステップの詳細情報が表示されます。
+
+## テスト結果全体の確認
+
+![](/images/results/test-results/57e86af-testresultswithcallouts.png)
+
+テストレベルでは、テスト結果に以下の情報が表示されます:
+
+* **テスト結果サマリー** - テスト結果サマリーには以下の情報が含まれます:
+  * テストが成功または失敗したかの表示
+  * テスト実行時間
+  * 実行設定情報(テストのベースURL、ターゲットデバイス、アプリケーション名)
+* **テスト情報** - **i**アイコンをクリックしてテスト情報を表示します。テスト情報には以下が含まれます:
+  * Ext. version - Testim拡張機能ソフトウェアのバージョン
+  * Source - テストがローカルまたはリモートで実行されたか
+  * Run mode - 実行で使用されたフレームワーク(例: Appium)
+  * Grid name - 実行で使用されたグリッド
+  * Run config. - このテスト実行中に使用されたテスト設定。詳細については、[設定ライブラリ - Web](/docs/test-management/shared-configuration)および[設定ライブラリ - モバイル](/docs/test-management/configuration-library-mobile)を参照してください。
+  * Zoom level - テスト実行で使用されたズームレベル
+  * OS - テスト実行で使用されたオペレーティングシステム
+  * Browser - テスト実行で使用されたブラウザとブラウザバージョン
+  * Date (UTC) - テストが実行されたUTC日付
+  * Time - テストが実行されたUTC時刻
+* **3点メニュー** - クリックして以下のメニューを開きます:
+  * コンソールログを表示 - テスト実行のコンソールログを表示します。詳細については、[コンソールログ](/docs/results/network-logs-copy)を参照してください。
+  * ネットワークログを表示 - テスト実行のネットワークログを表示します。詳細については、[ネットワークログ](/docs/results/network-logs)を参照してください。
+  * テスト履歴を表示 - 選択したテストにフィルタリングしながら、[テスト実行](/docs/results/test-runs)画面を表示します。
+  * 実行を表示 - 選択したテストにフィルタリングしながら、[実行画面](/docs/results/execution-runs-screen)を表示します。
+  * PDF実行レポートを生成 - テスト実行結果の詳細なPDFレポートを生成します。詳細については??を参照してください。
+* **改善されたステップを表示** - 自動的に改善されたロケーターを持つステップを表示するトグル。詳細については、[ロケーター: 自動改善](/docs/test-management/locators-auto-improve)を参照してください。
+* **ステップカウント** - ステップカウンターは、テストステップの総数をカウントするライブカウンターです。ステップとグループ(内部グループを含む)をカウントしますが、フックはカウントしません。カウンターは、ステップを追加または削除すると動的に更新されます。
+
+テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/results/visual-validation-test-results)を参照してください。
+
+## ステップ結果の確認
+
+テスト実行中、Testimは各ステップをその結果で更新します。これには、ステータス(成功または失敗)、失敗した場合の詳細なエラーメッセージ、所要時間、その特定の状態での画面のスクリーンショットが含まれます。これは、ブラウザでローカルにテストを実行する場合と、[CLIツール](/docs/running-tests/the-command-line-cli)を使用してCIで実行する場合の両方で同じです。
+
+![](/images/results/test-results/3aab71e-step-results.jpg "step-results.jpg")
+
+ステップ上部の警告アイコンにカーソルを合わせると、コンソールログのエラーと警告、ネットワークエラー、または重大なページ変更警告などの詳細情報が表示されます。ページ変更警告は、その要素のスマートロケーターの信頼レベルが記録されたテストと比較して20%以上変動した場合に、テスト実行に表示されます。これは、基礎となるコードが変更され、ユーザーがその要素のスマートロケーターを「改善」または「再割り当て」する必要があることを示している可能性があります。
+
+![](/images/results/test-results/a152f4c-image.png)
+
+各ステップの結果を表示するには、ダブルクリックします:
+
+![](/images/results/test-results/831ca16-step-result.jpg "step-result.jpg")
+
+または、ステップが選択されているときに**プロパティ**パネルを開きます:
+
+![](/images/results/test-results/6720992-step-properties.jpg "step-properties.jpg")
+
+ステップのスクリーンショットを表示するには、ステップ上のスクリーンショットアイコンをクリックします:
+
+![](/images/results/test-results/cff91a3-screenshot-icon.jpg "screenshot-icon.jpg")
+
+または、ステップを開いたときのスクリーンショットアイコンをクリックします:
+
+![](/images/results/test-results/266c99e-screenshot-icon2.jpg "screenshot-icon2.jpg")
+
+どちらの方法でも、ステップ詳細画面のスクリーンショットタブが開きます。ここで、ステップ作成時に撮影された元のスクリーンショットと、最近のテスト実行からのスクリーンショットを比較できます。
+
+![](/images/results/test-results/3f45d36-screenshots.jpg "screenshots.jpg")
+
+テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/results/visual-validation-test-results)を参照してください。\
+このステップのネットワークログまたはコンソールを表示するには、**ネットワークログ**または**コンソールログ**タブをクリックします。詳細については、[ネットワークログ](/docs/results/network-logs)および[コンソールログ](/docs/results/network-logs-copy)を参照してください。
+
+![](/images/results/test-results/86bec2d-screenshots-networklog.jpg "screenshots-networklog.jpg")
+
+> 🚧 注意
+>
+> デフォルトでは、Testimはテスト結果を30日間保持します。

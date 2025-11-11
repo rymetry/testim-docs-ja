@@ -1,0 +1,60 @@
+# 翻訳タスク (changelog)
+
+下記のMarkdown本文を日本語に翻訳してください。Markdownの構造、リンク、画像パス、コードブロックは維持してください。
+- 画像の相対パス (/images/...) は変更しない
+- ":fa-...:" のようなアイコン記法はそのまま残す
+- 表や表ヘッダー、HTMLタグは壊さない
+- リンクのURLは変更しない（アンカーテキストのみ訳す）
+
+--- 原文本文ここから ---
+
+## Logging of screenshots March 2023
+
+The latest version of Testim for Salesforce allows you to capture a screenshot of each test step and store it in the Salesforce logs, which helps in debugging. Just enable the Log screenshots option to do this.
+
+## Switch between users with Login As step May 2023
+
+As an Admin user, you can now switch between users within a single test case. To do so, use the Log In As Salesforce step after you sign into your Salesforce account.
+
+## Permission validation step May 2023
+
+To further secure your Salesforce environments, with this test step you can now validate the read and write permissions for each object and its fields to ensure that they match the expected permissions.
+
+## Sign-in with Salesforce May 2023
+
+You can now use Salesforce Single Sign-On (SSO) when creating Personas. A Persona that is created with Sign-in with Salesforce does not need to follow MFA Login authentication steps. We also use this method now to automatically create an Admin Persona whenever connecting a new Salesforce Environment.
+
+## Tricentis Test Management for Jira Integration June 2023
+
+You can now link a test in Testim for Salesforce to a test case in Tricentis Test Management for Jira. After test execution in Tricentis Test Automation for Salesforce, the test results are automatically displayed in the Tricentis Test Management for Jira execution results. For more information, see Tricentis Test Management for Jira integration.
+
+## Availability of a Demo Project June 2023
+
+A demo project is available that has a pre-connected Salesforce Sandbox and example Salesforce testcases, so you can immediately start exploring and learning the product.
+
+## CI integrations June 2023
+
+The latest version of Testim for Salesforce supports Copado integration and Gearset integration. You can use these CI tools to deploy changes to Salesforce. By integrating with Testim for Salesforce, you can ensure that nothing is broken before deploying the changes to production.
+
+- Copado integration: you can now add the URL Callout step and use a single webhook call to the Tricentis Test Automation for Salesforce REST API to automate testing from Copado.
+- Gearset integration: you can now add a webhook in Gearset and use a single webhook call to the Tricentis Test Automation for Salesforce REST API to automate testing from a CI or deployment job in Gearset.
+
+## CPQ Quote Line Editor step July 2023
+
+Salesforce CPQ application maintains product configuration and pricing rules when generating Sales quotes. You can now validate these business rules in the CPQ Quote Line Editor with our new no-code test step by changing, storing, and validating values in the tables.
+
+## AI Test Creator July 2023
+
+A set of tests are automatically created using the data from your connected Salesforce environment. It does this by both examining the current Records in your Salesforce environment and identifying where there needs to be unique values.
+
+## SOC 2 Type 1 and ISO 27001 Certified August 2023
+
+Demonstrates our commitment to data security, compliance, and customer trust.
+
+## Ability for Company Owners to Clone Projects November 2023
+
+Development teams and Consultancies commonly have a set of basic tests and test configurations that they need to reproduce for every new project or client engagement. To save time reproducing these test assets, Company Owners now have access to Project Cloning on the Project Page.
+
+## Document Validation step December 2023
+
+The Document Validation test step provides a comprehensive no-code solution for validating and storing the contents of documents. This includes checking for the existence or non-existence of specific text, validating key-value pairs, and ensuring the accuracy of table contents.

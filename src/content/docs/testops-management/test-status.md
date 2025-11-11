@@ -1,0 +1,131 @@
+---
+title: 'テストステータス'
+description: '原文: https://help.testim.io/docs/test-status'
+category: 'TestOps管理'
+order: 2
+updated: '2025-11-02'
+keywords:
+  - testim
+  - test-status
+  - testops-management
+---
+どのテストに作業が必要かを管理するためにテストにステータスを追加します
+
+テストにステータスを追加して、どのテストに作業が必要かを管理できます。ステータスは、テストライブラリリストおよびテストエディタの列の1つとして表示されます。
+
+デフォルトでは、すべてのステータスは「Draft」とラベル付けされています。この機能を有効にすると、Testim は過去30日間に実行されたテストを自動的に識別し、「Active」とラベル付けします。その他のステータスはすべて以下に説明するように手動で適用されます。
+
+テストのステータスを手動で管理することで、以下のメリットを享受できます:
+
+* 不安定/失敗するテストを CI/スイートから削除せずに手動で隔離できます。
+* CI に接続されていない（アクティブでない）テストを簡単に確認できます。
+* CI を失敗させることなく、段階的にテストを CI に追加できます。
+* ステータスでテストをフィルタリングすることで、プロジェクトの可視性が向上します。
+
+> 📘 これは PRO 機能です
+>
+> この機能は、プロフェッショナルプランのプロジェクトのみに公開されています。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をご覧ください。
+
+> 🚧 注意
+>
+> この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[こちら](https://help.testim.io/docs/the-command-line-cli#cli-installation)をお読みください。
+
+## テストステータス
+
+各テストは以下のいずれかのステータスを持つことができます:
+
+| ステータス | 定義 | CI/スケジューラーの一部として実行 | スケジューラー/CI の失敗 |
+| :--------- | :------------------------------------------------------------------------------------- | :---------------------------------- | :------------------- |
+| Draft      | テストはまだ作業中 | はい\* | はい |
+| Evaluating | テストは準備完了だが、安定性を検証する必要がある | はい | いいえ |
+| Active     | テストは準備完了で安定している | はい | はい |
+| Quarantine | テストは安定したテストの定義に適合しておらず、修正待ち | いいえ | いいえ |
+
+\*ベストプラクティスは、テストが準備完了してから CI/スケジューラーに追加することであり、Draft ステータスでは追加しないことです。
+
+## テストステータスの表示
+
+テストのステータスは以下の画面に表示されます:\
+**テストライブラリ画面** - Test Lists -> Tests
+
+![](/images/testops-management/test-status/ebf3e27-teststatuses1.png "teststatuses1.png")
+
+**テストエディタ**
+
+![](/images/testops-management/test-status/a56ee9d-teststatuses2.png "teststatuses2.png")
+
+## ステータスでテストをフィルタリング
+
+:fa-arrow-right: **ステータスでテストをフィルタリングするには:**
+
+1. **Test List --> Tests** に移動します。
+2. **Filter** ボタンをクリックします。
+
+![](/images/testops-management/test-status/615dd27-filter.png "filter.png")
+
+3. **Filter Test** ペインで、関連するステータスのチェックボックスを選択します。
+
+![](/images/testops-management/test-status/ac7f5bd-teststatuses3.png "teststatuses3.png")
+
+## テストのステータスを変更
+
+ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](https://help.testim.io/docs/revisions)に表示されます。
+
+:fa-arrow-right: **テストライブラリからテストステータスを変更するには:**
+
+1. Test List --> Tests に移動します。
+2. **Status** 列で、関連するステータスを選択します。
+
+![](/images/testops-management/test-status/3eaae69-Jan-28-2021_09-43-29.gif "Jan-28-2021 09-43-29.gif")
+
+\**注意:* 編集したいすべてのテストを選択してから、トップメニューからステータス変更をクリックすることで、テストステータスを一括編集することも可能です。
+
+> 📘
+>
+> テストステータスの一部として、不安定なテストを表示し、そのステータスをどのように管理するかを決定するオプションも追加しました。不安定なテストの詳細については、[こちら](https://help.testim.io/docs/flaky-tests)をご覧ください。
+
+:fa-arrow-right: **Testim のエディタからテストステータスを変更するには:**
+
+1. エディタでテストを開きます。
+2. 左上隅からステータスを変更します。
+
+![](/images/testops-management/test-status/65da094-Screen_Shot_2021-01-10_at_7.41.32.png "Screen Shot 2021-01-10 at 7.41.32.png")
+
+> 📘
+>
+> ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、3 way マージコンフリクトとして解決する必要があります。詳細については[こちら](https://help.testim.io/docs/version-control-branches)をご覧ください。
+
+## テストステータスの使用
+
+### テスト実行時
+
+テストを実行した後、ステータスは以下のように反映されます:
+
+* 実行される **Draft テスト**は以前と同様に表示されます。これらのテストのステータスを Active に変更することをお勧めします。
+* **Evaluating テスト**はテスト実行に表示されますが、失敗した場合、失敗が無視されたことを示すインジケーターが表示されます。
+
+![](/images/testops-management/test-status/2effede-Screen_Shot_2021-01-28_at_8.56.41.png "Screen Shot 2021-01-28 at 8.56.41.png")
+
+* **Active テスト**は以前と同様に表示されます。
+* **Quarantine テスト**は実行されません（テスト実行には表示されません）。
+
+### スイート実行時
+
+スイート実行では、ステータスは以下のように反映されます:
+
+* 実行される **Draft テスト**は以前と同様に表示されます。これらのテストのステータスを Active に変更することをお勧めします。
+* **Evaluating テスト**はテスト実行に表示されますが、失敗した場合、CI を失敗させなかったことを示すインジケーターが表示されます。
+* **Active テスト**は以前と同様に表示されます。
+* **Quarantine テスト**は実行されません（スイート実行には隔離インジケーター付きで表示されます）。
+
+![](/images/testops-management/test-status/87013d7-Screen_Shot_2021-01-10_at_8.02.34.png "Screen Shot 2021-01-10 at 8.02.34.png")
+
+### CLI 実行
+
+* **失敗した Evaluating テスト**は、CLI 実行サマリーに FAILED-EVALUATING として表示されます。
+* **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[こちら](https://help.testim.io/docs/the-command-line-cli#the-common-parameters)をご覧ください。
+* **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
+
+> 📘
+>
+> Quarantine テストは、バイパスされた "--run-quarantined-tests" フラグを使用することで CLI で実行できます。
