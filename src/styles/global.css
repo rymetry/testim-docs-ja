@@ -2,6 +2,16 @@
 @import 'tailwindcss';
 
 @layer base {
+  :root {
+    /* アンカーオフセット（デフォルト: 小さい画面） */
+    --anchor-offset: 6rem;
+  }
+  @media (min-width: 1024px) {
+    :root {
+      /* lg以上 */
+      --anchor-offset: 7rem;
+    }
+  }
   html {
     font-family:
       'Noto Sans JP',
@@ -342,5 +352,15 @@
   /* 見出しリンク */
   .heading-link {
     @apply no-underline hover:underline;
+  }
+
+  /* 見出しのアンカー遷移時にヘッダー下に隠れないようオフセット */
+  .docs-prose h1,
+  .docs-prose h2,
+  .docs-prose h3,
+  .docs-prose h4,
+  .docs-prose h5,
+  .docs-prose h6 {
+    scroll-margin-top: var(--anchor-offset); /* sticky header + 余白に合わせる */
   }
 }
