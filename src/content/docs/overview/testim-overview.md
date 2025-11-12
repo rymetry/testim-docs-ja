@@ -3,14 +3,18 @@ title: 'Testim 概要'
 description: 'Testimは、コード、コードレス、または両方を組み合わせた方法で、回復力のあるエンドツーエンドテストを最速で作成できるプラットフォームです。'
 category: '概要'
 order: 1
-updated: 'Updated 15 days ago'
+updated: 'Updated15 days ago'
 keywords:
-  - overview
-  - testim
-  - test automation
-  - web testing
-  - mobile testing
-  - salesforce testing
+  - Testim概要
+  - テスト自動化
+  - エンドツーエンドテスト
+  - Webテスト
+  - モバイルテスト
+  - Salesforceテスト
+  - AIテスト
+  - コードレステスト
+  - TestOps
+  - 品質保証
 ---
 
 Testimは、コード、コードレス、または両方を組み合わせた方法で、回復力のあるエンドツーエンドテストを最速で作成できるプラットフォームです。
@@ -35,13 +39,13 @@ Testimは、安定したテストの高速作成と、チームが効率的に�
 
 Testimの高速作成とAIを活用した安定性により、Salesforceのような動的なアプリケーションに最適です。Salesforceと統合する顧客向けアプリケーションを構築している場合、Testimはエンドツーエンドのワークフローをテストするための優れた選択肢です。
 
-詳細については、[Salesforce テスト](https://help.testim.io/docs/salesforce-testing-overview) をご覧ください。
+詳細については、[Salesforce テスト](/docs/salesforce-testing-overview) をご覧ください。
 
 ### モバイルアプリテスト
 
 Testimは、デバイスとアプリケーションの管理を簡素化し、モバイルアプリケーションのテストをより簡単にします。ユーザーは、同じ機能とTestimエクスペリエンスを使用して、ローコードテストを迅速に作成できます。
 
-詳細については、[最初のモバイルテストの作成](https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor) をご覧ください。
+詳細については、[最初のモバイルテストの作成](/docs/creating-your-first-mobile-test-in-testim-visual-editor) をご覧ください。
 
 ## 変更履歴
 
@@ -52,5 +56,5 @@ Testimの新機能をご確認ください。新機能の継続的なリスト�
 テストの作成を始める準備ができました：
 
 - [アカウントの設定](/docs/setting-up-your-account)
-- [Webテスト入門（コードレステスト）](https://help.testim.io/docs/creating-your-first-codeless-test)
-- [モバイルテスト入門](https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor)
+- [Webテスト入門（コードレステスト）](/docs/creating-your-first-codeless-test)
+- [モバイルテスト入門](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

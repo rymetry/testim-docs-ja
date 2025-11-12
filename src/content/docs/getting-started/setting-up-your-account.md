@@ -3,13 +3,18 @@ title: 'アカウントの設定'
 description: 'Testim拡張機能のインストール方法とTestimアカウントの無料トライアル登録手順を説明します。'
 category: 'はじめに'
 order: 1
-updated: '2025-01-30'
+updated: 'about 2 months ago'
 keywords:
-  - account setup
-  - installation
-  - chrome extension
-  - sign up
-  - free trial
+  - アカウント設定
+  - インストール
+  - Chrome拡張機能
+  - サインアップ
+  - 無料トライアル
+  - ログイン
+  - 初期設定
+  - Chromeウェブストア
+  - パスワード設定
+  - 月間1000回実行
 ---
 
 この記事では、Testim拡張機能のインストール方法とTestimアカウント（無料トライアル）へのサインアップ方法を説明します。これらの準備が整えば、テストの作成を始めることができます。
@@ -21,7 +26,7 @@ Testim拡張機能をインストールするには：
 1. Chrome ウェブストアにアクセスして、[こちら](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)から拡張機能をダウンロードします。
 
 :::info
-**なぜTestim拡張機能が必要なのか？**: 詳細は[こちら](https://help.testim.io/docs/why-do-you-need-testim-extension)をご覧ください。
+**なぜTestim拡張機能が必要なのか？**: 詳細は[こちら](/docs/why-do-you-need-testim-extension)をご覧ください。
 :::
 
 2. **Chromeに追加**をクリックし、確認ウィンドウで**拡張機能を追加**をクリックします。
@@ -72,15 +77,12 @@ Testim拡張機能をインストールするには：
 
 ![使用方法選択画面](/images/getting-started/setting-up-your-account/c65df4a-2024-09-09_15-42-59.png)
 
-無料トライアルアカウントがアクティブ化され、[Testim拡張機能](https://help.testim.io/docs/why-do-you-need-testim-extension)のインストールに案内されます。
+無料トライアルアカウントがアクティブ化され、[Testim拡張機能](/docs/why-do-you-need-testim-extension)のインストールに案内されます。
 
 ## 次のステップ
 
 これでテストの作成を開始する準備が整いました！
 
-- [最初のコードレステストの作成](https://help.testim.io/docs/creating-your-first-codeless-test)
-- [Webテストの記録方法](https://help.testim.io/docs/how-to-record-a-test)
-- [モバイルテスト入門](https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor)
----
-
-**更新日**: 30 日前
+- [最初のコードレステストの作成](/docs/creating-your-first-codeless-test)
+- [Webテストの記録方法](/docs/how-to-record-a-test)
+- [モバイルテスト入門](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

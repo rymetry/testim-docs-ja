@@ -3,13 +3,18 @@ title: 'Web テスト入門（コードレステスト）'
 description: 'Testimの「Space & Beyond」デモサイトを使って最初のコードレスWebテストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。'
 category: 'はじめに'
 order: 2
-updated: '2025-11-02'
+updated: 'about 2 months ago'
 keywords:
-  - getting started
-  - codeless testing
-  - recording
-  - validations
-  - test results
+  - はじめに
+  - コードレステスト
+  - テスト記録
+  - 検証
+  - テスト結果
+  - Webテスト
+  - ログインテスト
+  - バリデーション
+  - テストエディタ
+  - ローカル実行
 ---
 
 ## ようこそ
@@ -43,11 +48,11 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
    ![Record ボタン](/images/getting-started/creating-your-first-codeless-test/ce98d0d-gettingstarted3.png)
 
-   既定の **Base URL** にデモサイトの URL「[demo.testim.io](http://google.com)」が設定されている場合は、新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。そのままステップ 4 に進みます。Base URL が未設定の場合は **Start A New Test** ウィンドウが開きます。
+   既定の **Base URL** にデモサイトの URL「[demo.testim.io](https://demo.testim.io)」が設定されている場合は、新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。そのままステップ 4 に進みます。Base URL が未設定の場合は **Start A New Test** ウィンドウが開きます。
 
 ![Start A New Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/d42b2ee-gettingstarted4.png)
 
-3. **Your app URL** フィールドにデモサイトの URL「[demo.testim.io](http://google.com)」を入力し、**Create Test** をクリックします。
+3. **Your app URL** フィールドにデモサイトの URL「d[demo.testim.io](https://demo.testim.io)」を入力し、**Create Test** をクリックします。
    新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。このウィンドウが **Application Under Test (AUT)** です。このウィンドウで行った操作が記録され、Testim のテストとして保存されます。
 4. AUT のブラウザで任意のユーザー名とパスワードを使ってログインします。
 
@@ -64,7 +69,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 ![Save Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/f78c409-savetest.png)
 
 :::warning{title="Auto Recovery"}
-新しいテストを作成したり既存テストを編集したりしたら、必ず保存してください。保存前にブラウザを閉じてしまっても、テストはブラウザのキャッシュに保存され、作業を再開できる場合があります。詳しくは [保存していないテストを復元する](doc:recovering-a-test-that-was-not-saved) を参照してください。
+新しいテストを作成したり既存テストを編集したりしたら、必ず保存してください。保存前にブラウザを閉じてしまっても、テストはブラウザのキャッシュに保存され、作業を再開できる場合があります。詳しくは[保存していないテストを復元する](/docs/recovering-a-test-that-was-not-saved)を参照してください。
 :::
 
 7. **Name** フィールドに「Space & Beyond Demo 01」と入力し、**OK** をクリックします。
@@ -134,7 +139,3 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 テストが失敗した場合は、失敗の原因に関する詳細情報が表示されます（次の例では、検証で「Goodbye」を期待していたのに対し、実際の値が「Hello」でした）。
 
 ![失敗時の結果例](/images/getting-started/creating-your-first-codeless-test/6bb34c8-failed.png)
-
----
-
-**更新日**: 30日前

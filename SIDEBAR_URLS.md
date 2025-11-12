@@ -8,28 +8,37 @@
 - ✅ 翻訳済み: 283個
 - ⏳ 未翻訳: 0個
 
+## 検証ステータス
+
+- ✅🔍 検証済み（frontmatter・keywords・リンク・lint）: 12個
+- ✅   翻訳のみ完了: 271個
+
+### アイコンの意味
+- ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
+- ✅   翻訳完了
+
 ---
 
 ## Overview（概要）
 
-- ✅ https://help.testim.io/docs/testim-overview
-- ✅ https://help.testim.io/docs/testim-automate
-- ✅ https://help.testim.io/docs/help-ai-assistant
-- ✅ https://help.testim.io/docs/use-ai-in-with-testim
-- ✅ https://help.testim.io/docs/ai-data-usage-policy
-- ✅ https://help.testim.io/docs/enhanced-mode-mobile
+- ✅🔍 https://help.testim.io/docs/testim-overview
+- ✅🔍 https://help.testim.io/docs/testim-automate
+- ✅🔍 https://help.testim.io/docs/help-ai-assistant
+- ✅🔍 https://help.testim.io/docs/use-ai-in-with-testim
+- ✅🔍 https://help.testim.io/docs/ai-data-usage-policy
+- ✅🔍 https://help.testim.io/docs/enhanced-mode-mobile
 
 ## Getting Started（はじめに）
 
-- ✅ https://help.testim.io/docs/setting-up-your-account
-- ✅ https://help.testim.io/docs/creating-your-first-codeless-test
-- ✅ https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor
+- ✅🔍 https://help.testim.io/docs/setting-up-your-account
+- ✅🔍 https://help.testim.io/docs/creating-your-first-codeless-test
+- ✅🔍 https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor
 
 ## Recording a Web Test（Webテストの記録）
 
-- ✅ https://help.testim.io/docs/how-to-record-a-test
-- ✅ https://help.testim.io/docs/why-do-you-need-testim-extension
-- ✅ https://help.testim.io/docs/multi-windows-recording
+- ✅🔍 https://help.testim.io/docs/how-to-record-a-test
+- ✅🔍 https://help.testim.io/docs/why-do-you-need-testim-extension
+- ✅🔍 https://help.testim.io/docs/multi-windows-recording
 
 ## Recording a Mobile Test（モバイルテストの記録）
 

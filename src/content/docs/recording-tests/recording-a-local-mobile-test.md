@@ -58,7 +58,7 @@ Androidデバイスの場合、デバイスを「デバッグモード」で実�
 
 Tricentis Mobile Agentがデバイスを認識すると、デバイスがリストに表示されます:
 
-![TMAに接続されたデバイス](/images/recording-tests/recording-a-local-mobile-test/4db538d-tma-connected-device.png)
+![TMAに接続されたデバイス](/images/recording-tests/recording-a-local-mobile-test/ec4cb63-4db538d-tma-connected-device.png)
 
 ### 物理iOSデバイスの接続
 

@@ -4,6 +4,16 @@ description: "TestimのAIツール（Help Assistant、Coding Assistant、Salesfo
 category: "概要"
 order: 4
 updated: "Updated about 1 month ago"
+keywords:
+  - AI
+  - Copilot
+  - ヘルプアシスタント
+  - コーディングアシスタント
+  - Salesforce
+  - エージェンティックテスト
+  - 自動化
+  - 生成AI
+  - テスト効率化
 ---
 
 テストをより簡単にするために提供している AI ツールをご覧ください。
@@ -20,7 +30,7 @@ Testim に関する質問があれば、Testim Copilot ヘルプアシスタン�
 
 Copilot を使用して、Testim の質問に関連する情報（ドキュメントやその他のリソースへのリンクを含む）を取得します。開始するには、**ヘルプ**ボタンをクリックするだけです。
 
-[Testim Copilot ヘルプアシスタント](https://help.testim.io/docs/help-ai-assistant#/)の詳細をご覧ください。
+[Testim Copilot ヘルプアシスタント](/docs/help-ai-assistant)の詳細をご覧ください。
 
 ## コーディングのヘルプを取得
 
@@ -30,7 +40,7 @@ Copilot を使用して、Testim の質問に関連する情報（ドキュメ�
 
 生成、修正、または JavaScript コードの説明が必要な場合でも、Copilot がお手伝いします。
 
-[Testim Copilot コーディングアシスタント](https://help.testim.io/docs/coding-assistant)の詳細をご覧ください。
+[Testim Copilot コーディングアシスタント](/docs/coding-assistant)の詳細をご覧ください。
 
 ## Salesforce 向けテストの作成
 
@@ -40,4 +50,4 @@ Copilot を使用して、Testim の質問に関連する情報（ドキュメ�
 
 Salesforce 環境用の独自のテストを生成して実行します。
 
-[Agentic Test Automation for Salesforce](https://help.testim.io/docs/use-agentic-test-automation-for-salesforce#/)の詳細をご覧ください。
+[Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce)の詳細をご覧ください。

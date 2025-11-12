@@ -5,12 +5,16 @@ category: "概要"
 order: 5
 updated: "Updated about 1 month ago"
 keywords:
-  - ai-policy
-  - data-usage
-  - privacy
-  - security
-  - azure-openai
-  - copilot
+  - AIポリシー
+  - データ使用
+  - プライバシー
+  - セキュリティ
+  - Azure OpenAI
+  - データ保持
+  - データ処理
+  - オプトイン
+  - オプトアウト
+  - 利用規約
 ---
 
 Testim AI ソリューションは、Microsoft Azure OpenAI Service の力を Testim 製品と統合しています。Microsoft は、AI サービスに対して企業レベルのデータプライバシーとデータセキュリティのコンプライアンスを提供します。また、多管轄 AI コンプライアンスプログラムを維持しています。Copilot は、データのプライバシーを損なうことなく、テストにおけるユーザーの生産性を向上させ、高品質なソフトウェアの提供を加速するように設計されています。
@@ -21,11 +25,11 @@ Tricentis は、製品における AI の責任ある信頼できる使用を確
 
 Testim は以下の機能を提供しています。
 
-- [Testim ヘルプアシスタント](https://help.testim.io/docs/help-ai-assistant) - 生成 AI 技術を使用して、ソフトウェアの使用方法についてユーザーを支援します。質問（プロンプトを使用）をして、関連するヘルプ情報を応答として受け取ることができます。
+- [Testim ヘルプアシスタント](/docs/help-ai-assistant) - 生成 AI 技術を使用して、ソフトウェアの使用方法についてユーザーを支援します。質問（プロンプトを使用）をして、関連するヘルプ情報を応答として受け取ることができます。
 
-- [Testim Copilot コーディングアシスタント](https://help.testim.io/docs/coding-assistant) - カスタム JS コードの記述を含むテストステップの一部である JS コードの記述、理解、または修正を支援します。
+- [Testim Copilot コーディングアシスタント](/docs/coding-assistant) - カスタム JS コードの記述を含むテストステップの一部である JS コードの記述、理解、または修正を支援します。
 
-- [Agentic Test Automation for Salesforce](https://help.testim.io/docs/use-agentic-test-automation-for-salesforce#/) - 生成 AI 技術と高度な Salesforce 事前構築済みステップを使用して、Salesforce 環境でテストを作成および実行します。
+- [Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce) - 生成 AI 技術と高度な Salesforce 事前構築済みステップを使用して、Salesforce 環境でテストを作成および実行します。
 
 ## 顧客データの使用
 

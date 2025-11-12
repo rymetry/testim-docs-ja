@@ -5,11 +5,16 @@ category: "概要"
 order: 3
 updated: "Updated about 2 months ago"
 keywords:
-  - help-assistant
-  - ai
-  - copilot
-  - support
-  - documentation
+  - ヘルプアシスタント
+  - AI
+  - Copilot
+  - サポート
+  - ドキュメント
+  - チャット支援
+  - 生成AI
+  - Testimヘルプ
+  - 質問応答
+  - 技術サポート
 ---
 
 Testim の使い方について質問してみてください
