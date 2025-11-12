@@ -3,7 +3,7 @@ title: "TestimでAIを使用する"
 description: "TestimのAIツール（Help Assistant、Coding Assistant、Salesforce Agentic AI Testing）の概要"
 category: "概要"
 order: 4
-updated: "2024-03-15"
+updated: "Updated about 1 month ago"
 ---
 
 テストをより簡単にするために提供している AI ツールをご覧ください。
@@ -41,7 +41,3 @@ Copilot を使用して、Testim の質問に関連する情報（ドキュメ�
 Salesforce 環境用の独自のテストを生成して実行します。
 
 [Agentic Test Automation for Salesforce](https://help.testim.io/docs/use-agentic-test-automation-for-salesforce#/)の詳細をご覧ください。
-
----
-
-**更新日**: 22 日前

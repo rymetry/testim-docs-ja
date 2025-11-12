@@ -3,7 +3,7 @@ title: "Enhanced Mode モバイルテスト"
 description: "TestimのEnhanced Modeを使用したモバイルアプリケーションのテスト方法"
 category: "概要"
 order: 6
-updated: "2024-03-15"
+updated: "Updated about 2 months ago"
 ---
 
 Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定、高速、多用途なテストを提供します。ゼロナレッジアプローチと統合 API により、新しい Enhanced mode は市場の他のツールよりもモバイルビューの構造をよく把握します。この追加の可視性により、クロスプラットフォーム（React Native、Flutter）やハイブリッドアプリなど、Appium などの他のプラットフォームでは不可能なテストフローが可能になります。Enhanced mode は、柔軟で高速かつ使いやすいクラウド内の仮想モバイルグリッドで、すべてのモバイルアプリケーション（ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク）のテストをサポートします。
@@ -74,7 +74,3 @@ Enhanced mode で記録されたテストは Enhanced mode で実行され、Enh
 ### Enhanced mode を使用しているテストが失敗した場合はどうなりますか？
 
 Appium 互換モードと同様に、問題をトラブルシューティングしてアプリを修正するか、アプリの変更によって失敗が発生した場合はテストを更新する必要があります。詳細については、[テストが失敗した理由](https://help.testim.io/docs/why-did-my-test-fail)を参照してください。
-
----
-
-**更新日**: 約 1 か月前

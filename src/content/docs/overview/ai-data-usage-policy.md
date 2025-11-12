@@ -3,7 +3,7 @@ title: "AIデータ使用ポリシー"
 description: "Testimにおける生成AIの使用とデータプライバシーに関するポリシー"
 category: "概要"
 order: 5
-updated: "2024-03-15"
+updated: "Updated about 1 month ago"
 keywords:
   - ai-policy
   - data-usage
@@ -69,7 +69,3 @@ Testim Copilot コーディングアシスタントの場合、会社のオー�
 ## 利用規約
 
 Copilot ソリューションの使用は、[Tricentis 一般利用規約](https://www.tricentis.com/legal-information/general-terms-of-use)および [Tricentis AI ソリューション製品固有の規約](https://www.tricentis.com/legal-information/ai-terms)の対象となります。AI ソリューションには、Tricentis が顧客に追加の規約を渡す必要があるサードパーティプロバイダーの技術が組み込まれている場合もあります。これらのサードパーティポリシーは[こちら](https://www.tricentis.com/legal-information/third-party-ai-policies)で入手できます。
-
----
-
-**更新日**: 22 日前

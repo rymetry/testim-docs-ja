@@ -3,7 +3,7 @@ title: "Testim Automate"
 description: "WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール"
 category: "概要"
 order: 2
-updated: "2024-03-15"
+updated: "Updated about 2 months ago"
 keywords:
   - testim-automate
   - web-testing
@@ -92,10 +92,7 @@ Smart Locators は各テスト実行で学習します。一部の属性が変�
 
 時間の経過とともに、アプリが変化するにつれて、要素のロケータースコアが低下する可能性があります。ロケータースコアが 70% を下回ると、Testim は自動的にそのロケーターを改善してテストの安定性を向上させようとします。詳細については、[Locators: Auto Improve](https://help.testim.io/docs/locators-auto-improve) を参照してください。
 
----
+## 次のステップ
 
-**更新日**: 約 1 か月前
-
-**次のステップ**:
 - [Testim ビジュアルエディタで初めてのコードレステストを作成する](https://help.testim.io/docs/creating-your-first-codeless-test)
 - [Testim ビジュアルエディタで初めてのモバイルテストを作成する](https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor-edited)

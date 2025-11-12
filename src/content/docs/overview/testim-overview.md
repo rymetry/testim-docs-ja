@@ -3,7 +3,7 @@ title: 'Testim 概要'
 description: 'Testimは、コード、コードレス、または両方を組み合わせた方法で、回復力のあるエンドツーエンドテストを最速で作成できるプラットフォームです。'
 category: '概要'
 order: 1
-updated: '2025-10-30'
+updated: 'Updated 15 days ago'
 keywords:
   - overview
   - testim
@@ -54,7 +54,3 @@ Testimの新機能をご確認ください。新機能の継続的なリスト�
 - [アカウントの設定](/docs/setting-up-your-account)
 - [Webテスト入門（コードレステスト）](https://help.testim.io/docs/creating-your-first-codeless-test)
 - [モバイルテスト入門](https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor)
-
----
-
-**更新日**: 1 日前
