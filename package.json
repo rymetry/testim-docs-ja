@@ -15,7 +15,11 @@
     "docs:fetch": "node scripts/fetch_translate_images.mjs",
     "docs:placeholders": "node scripts/generate_untranslated_placeholders.mjs",
     "docs:prepare-llm": "node scripts/prepare_llm_tasks.mjs",
-    "docs:apply-llm": "node scripts/apply_llm_translations.mjs"
+    "docs:apply-llm": "node scripts/apply_llm_translations.mjs",
+    "check:updates": "node scripts/check_outdated_docs.mjs",
+    "check:dates": "node scripts/fetch_all_updated_dates.mjs",
+    "update:dates": "node scripts/update_dates_from_english.mjs",
+    "update:dates:apply": "node scripts/update_dates_from_english.mjs --apply"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.1",
@@ -25,6 +29,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "astro": "^5.15.2",
+    "gray-matter": "^4.0.3",
     "hastscript": "^9.0.1",
     "minisearch": "^7.2.0",
     "react": "^19.2.0",

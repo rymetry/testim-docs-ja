@@ -1,9 +1,10 @@
 ---
-title: "AIデータ使用ポリシー"
-description: "Testimにおける生成AIの使用とデータプライバシーに関するポリシー"
-category: "概要"
+title: 'AIデータ使用ポリシー'
+description: 'Testimにおける生成AIの使用とデータプライバシーに関するポリシー'
+category: '概要'
 order: 5
-updated: "Updated about 1 month ago"
+updated: '2025-10-13'
+sourceUrl: 'https://help.testim.io/docs/ai-data-usage-policy'
 keywords:
   - AIポリシー
   - データ使用

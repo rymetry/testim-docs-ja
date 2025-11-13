@@ -3,7 +3,8 @@ title: 'モバイルテストエディタ画面'
 description: 'Testimモバイルテストエディタ画面の構成要素と機能について説明します。'
 category: 'テスト作成'
 order: 10
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/mobile-test-editor'
 keywords:
   - モバイルテストエディタ
   - AUT Viewer

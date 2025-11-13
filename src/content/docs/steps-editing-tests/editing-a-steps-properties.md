@@ -4,6 +4,7 @@ description: 'ステップ作成後にプロパティを編集する方法を学
 category: 'ステップとテスト編集'
 order: 5
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/editing-a-steps-properties'
 keywords:
   - ステッププロパティ
   - プロパティ編集

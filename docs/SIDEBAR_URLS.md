@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み（frontmatter・keywords・リンク・lint）: 12個
-- ✅   翻訳のみ完了: 271個
+- ✅🔍 検証済み（frontmatter・keywords・リンク・lint）: 21個
+- ✅   翻訳のみ完了: 262個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -42,15 +42,15 @@
 
 ## Recording a Mobile Test（モバイルテストの記録）
 
-- ✅ https://help.testim.io/docs/recording-a-mobile-test
-- ✅ https://help.testim.io/docs/recording-a-vmg-mobile-test
-- ✅ https://help.testim.io/docs/recording-a-local-mobile-test
-- ✅ https://help.testim.io/docs/setting-the-test-configuration
-- ✅ https://help.testim.io/docs/configure-tricentis-mobile-agent
-- ✅ https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing
-- ✅ https://help.testim.io/docs/mobile-test-editor
-- ✅ https://help.testim.io/docs/mobile-test-mirroring-toolbar
-- ✅ https://help.testim.io/docs/vision-locate
+- ✅🔍 https://help.testim.io/docs/recording-a-mobile-test
+- ✅🔍 https://help.testim.io/docs/recording-a-vmg-mobile-test
+- ✅🔍 https://help.testim.io/docs/recording-a-local-mobile-test
+- ✅🔍 https://help.testim.io/docs/setting-the-test-configuration
+- ✅🔍 https://help.testim.io/docs/configure-tricentis-mobile-agent
+- ✅🔍 https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing
+- ✅🔍 https://help.testim.io/docs/mobile-test-editor
+- ✅🔍 https://help.testim.io/docs/mobile-test-mirroring-toolbar
+- ✅🔍 https://help.testim.io/docs/vision-locate
 
 ## Steps & Editing Tests（ステップとテスト編集）
 

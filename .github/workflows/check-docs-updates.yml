@@ -1,0 +1,144 @@
+name: Check Documentation Updates
+
+on:
+  schedule:
+    # 毎週月曜日の午前9時（JST）に実行
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    # 手動実行も可能
+  pull_request:
+    # PRでも実行（情報提供のため）
+    paths:
+      - 'src/content/docs/**/*.md'
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Check for outdated documentation
+        id: check
+        run: |
+          # エラーを無視して実行（結果をキャプチャするため）
+          node scripts/check_outdated_docs.mjs || echo "outdated_found=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Upload results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-update-status
+          path: docs-update-status.json
+          retention-days: 30
+      
+      - name: Create issue if outdated
+        if: steps.check.outputs.outdated_found == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const status = JSON.parse(fs.readFileSync('docs-update-status.json', 'utf8'));
+            
+            const outdated = status.files.filter(f => f.needsUpdate);
+            
+            let body = '## 📋 英語原文が更新されたドキュメントが見つかりました\n\n';
+            body += `チェック日時: ${status.checkedAt}\n\n`;
+            body += '### 📊 サマリー\n\n';
+            body += `- ✅ 最新: ${status.summary.upToDate}件\n`;
+            body += `- ❌ 更新必要: ${status.summary.outdated}件\n`;
+            body += `- ⚠️ エラー: ${status.summary.errors}件\n\n`;
+            
+            if (outdated.length > 0) {
+              body += '### ❌ 更新が必要なファイル\n\n';
+              outdated.forEach(item => {
+                body += `#### \`${item.file}\`\n\n`;
+                body += `- 日本語版: ${item.japaneseUpdated}\n`;
+                body += `- 英語原文: ${item.englishUpdated}\n`;
+                body += `- 遅延: ${item.daysBehind}日\n`;
+                body += `- URL: ${item.sourceUrl}\n\n`;
+              });
+            }
+            
+            body += '\n---\n';
+            body += '自動生成: GitHub Actions ([check-docs-updates.yml](.github/workflows/check-docs-updates.yml))';
+            
+            // 既存のissueを検索
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'documentation,update-needed'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('英語原文が更新されたドキュメント')
+            );
+            
+            if (existingIssue) {
+              // 既存のissueを更新
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: `## 🔄 更新チェック結果（${new Date().toISOString().split('T')[0]}）\n\n${body}`
+              });
+            } else {
+              // 新しいissueを作成
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '📋 英語原文が更新されたドキュメントがあります',
+                body: body,
+                labels: ['documentation', 'update-needed', 'automated']
+              });
+            }
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            if (!fs.existsSync('docs-update-status.json')) {
+              return;
+            }
+            
+            const status = JSON.parse(fs.readFileSync('docs-update-status.json', 'utf8'));
+            const outdated = status.files.filter(f => f.needsUpdate);
+            
+            if (outdated.length === 0) {
+              return;
+            }
+            
+            let body = '## 📋 ドキュメント更新状況\n\n';
+            body += `このPRに含まれるファイルのうち、英語原文が更新されているものがあります：\n\n`;
+            
+            outdated.slice(0, 5).forEach(item => {
+              body += `- \`${item.file}\`: ${item.japaneseUpdated} → ${item.englishUpdated} (${item.daysBehind}日遅れ)\n`;
+            });
+            
+            if (outdated.length > 5) {
+              body += `\n...他 ${outdated.length - 5}件\n`;
+            }
+            
+            body += '\n詳細は[Artifactをダウンロード]してご確認ください。';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });

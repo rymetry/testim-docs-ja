@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Documentation update tracking
+docs-update-status.json
+docs-dates-snapshot.json

@@ -1,11 +1,18 @@
 ---
-title: "モバイルテスト用IPAの準備方法"
-description: "Xcodeを使用して、仮想デバイスおよび物理デバイス用のiOSアプリケーション(.appおよび.ipa)をビルドする方法について説明します。"
-category: "テスト作成"
+title: 'モバイルテスト用IPAの準備方法'
+description: 'Xcodeを使用して、仮想デバイスおよび物理デバイス用のiOSアプリケーション(.appおよび.ipa)をビルドする方法について説明します。'
+category: 'テスト作成'
 order: 8
-updated: "2025-11-02"
-keywords: ["IPA", "iOS", "Xcode", "ビルド", "仮想デバイス", "物理デバイス", "モバイルアプリ"]
-sourceUrl: "https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing"
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing'
+keywords:
+  - IPA
+  - iOS
+  - Xcode
+  - ビルド
+  - 仮想デバイス
+  - 物理デバイス
+  - モバイルアプリ
 ---
 
 仮想デバイスを使用してテストを記録する場合は、アプリが仮想デバイス用にコンパイルされていること(.app)を確認してください。逆に、物理デバイスを使用して記録する場合は、アプリが物理デバイスで動作するようにコンパイルされていること(.ipa)を確認してください。

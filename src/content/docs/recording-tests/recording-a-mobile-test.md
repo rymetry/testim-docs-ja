@@ -3,7 +3,8 @@ title: 'モバイルテストの記録'
 description: 'Testimでモバイルテストを記録するための2つの方法について説明します。VMGを使用する方法とローカルデバイスを使用する方法があります。'
 category: 'テスト作成'
 order: 4
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/recording-a-mobile-test'
 keywords:
   - モバイルテスト
   - テスト記録
@@ -13,7 +14,7 @@ keywords:
   - Appium mode
 ---
 
-モバイルテストは、物理デバイスと仮想デバイスの両方で iOS および Android デバイス上で記録および実行できます。記録自体は、Windows、Mac、Linux コンピュータで Web ブラウザを使用して実行できます。モバイルテストを記録すると、Testim は各アクションをテストステップに変換し、Testim Visual Editor 画面に表示します。ただし、[テストの編集](https://help.testim.io/docs/editing-your-tests)により、いつでも手動で追加のステップをテストに追加できます。テストは[テストライブラリ](https://help.testim.io/docs/test-list)に追加され、いつでも実行できます。
+モバイルテストは、物理デバイスと仮想デバイスの両方で iOS および Android デバイス上で記録および実行できます。記録自体は、Windows、Mac、Linux コンピュータで Web ブラウザを使用して実行できます。モバイルテストを記録すると、Testim は各アクションをテストステップに変換し、Testim Visual Editor 画面に表示します。ただし、[テストの編集](/docs/editing-your-tests)により、いつでも手動で追加のステップをテストに追加できます。テストは[テストライブラリ](/docs/test-list)に追加され、いつでも実行できます。
 
 :::warning
 **記録を開始する前に**
@@ -26,13 +27,13 @@ keywords:
 
 モバイルテストを記録する方法は2つあります:
 
-[VMG を使用したモバイルテストの記録](https://help.testim.io/docs/recording-a-vmg-mobile-test)（推奨）- Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。有料ユーザーのライセンスに含まれており、特別な統合やソフトウェアのインストールは必要ありません。記録は以下のモードのいずれかで実行できます:
+[VMG を使用したモバイルテストの記録](/docs/recording-a-vmg-mobile-test)(推奨) - Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。有料ユーザーのライセンスに含まれており、特別な統合やソフトウェアのインストールは必要ありません。記録は以下のモードのいずれかで実行できます:
 
-- **Enhanced mode（推奨）** - Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション(ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク)でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](https://help.testim.io/docs/enhanced-mode-mobile) を参照してください。
+- **Enhanced mode(推奨)** - Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション(ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク)でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を参照してください。
 
 - **Appium mode** - このモードは、他の Appium ベースのグリッドとのテストの互換性を保証し、ローカルデバイスでのローカル実行をサポートします。一方、このモードは Appium の機能に制限されており、特にハイブリッドアプリや WebView を使用している場合、すべてのテストフローを記録できない可能性があります。既存のテストは、Appium 互換モードを使用している場合でも引き続き動作します。
 
-[ローカルデバイスを使用したモバイルテストの記録](https://help.testim.io/docs/recording-a-local-mobile-test) - ローカルモバイルテストは、物理および仮想の iOS と Android デバイスの両方でローカルに記録および実行できます。このオプションは Appium モードでのみサポートされています。
+[ローカルデバイスを使用したモバイルテストの記録](/docs/recording-a-local-mobile-test) - ローカルモバイルテストは、物理および仮想の iOS と Android デバイスの両方でローカルに記録および実行できます。このオプションは Appium モードでのみサポートされています。
 
 :::info
 **仮想/物理デバイスでの記録**

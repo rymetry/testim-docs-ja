@@ -99,7 +99,7 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
 **新しく記事を書く方・編集する方へ:**
 
-- 📝 **[WRITING_GUIDE.md](./WRITING_GUIDE.md)** - Markdown の書き方から拡張機能まで、すべて解説
+- 📝 **[WRITING_GUIDE.md](./docs/WRITING_GUIDE.md)** - Markdown の書き方から拡張機能まで、すべて解説
   - Markdown vs MDX の選び方
   - 情報パネル、コードブロックの使い方
   - ベストプラクティスとFAQ
@@ -109,9 +109,9 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
   - すべての機能の詳しい使用例
   - ブラウザでの表示イメージを確認
 
-- 🌐 **[TRANSLATION_GUIDE.md](./TRANSLATION_GUIDE.md)** - 公式ドキュメントからの翻訳手順
+- 🌐 **[TRANSLATION_GUIDE.md](./docs/TRANSLATION_GUIDE.md)** - 公式ドキュメントからの翻訳手順
 
-詳細は [WRITING_GUIDE.md](./WRITING_GUIDE.md) を参照してください。
+詳細は [WRITING_GUIDE.md](./docs/WRITING_GUIDE.md) を参照してください。
 
 ## 🔍 検索機能
 
@@ -128,9 +128,50 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 - レスポンシブなモーダルUI
 - アクセシブルなキーボード操作
 
+## 📅 ドキュメント更新管理
+
+英語原文の更新を自動追跡するスクリプトを提供しています。日本語翻訳が英語版に対して最新かどうかを確認し、更新が必要なドキュメントを検出できます。
+
+### 利用可能なコマンド
+
+```bash
+# 更新が必要なドキュメントをチェック
+npm run check:updates
+
+# 全ファイルの英語原文更新日を確認
+npm run check:dates
+
+# 更新日を英語版に合わせる（ドライラン）
+npm run update:dates
+
+# 更新日を実際に更新
+npm run update:dates:apply
+```
+
+### スクリプトの詳細
+
+- **check:updates** - 日本語版と英語版の更新日を比較し、更新が必要なファイルをリスト表示
+- **check:dates** - すべてのドキュメントの英語原文更新日を一括取得して表示
+- **update:dates** - 英語原文の更新日で日本語ファイルを更新（変更内容のプレビューのみ）
+- **update:dates:apply** - 実際にファイルを更新（`--apply`フラグ付き）
+
+### GitHub Actions による自動チェック
+
+毎週月曜日午前9時(JST)に自動で更新チェックを実行し、更新が必要な場合はIssueを作成します。
+
+- **スケジュール実行**: 週次で自動実行
+- **手動実行**: GitHub Actionsから手動トリガー可能
+- **PR時の情報提供**: Pull Request作成時に更新状況をコメント表示
+
+### 関連ドキュメント
+
+- [scripts/README.md](./scripts/README.md) - スクリプトの詳しい使い方
+- [DOCS_DATE_TRACKING.md](./docs/DOCS_DATE_TRACKING.md) - 日付トラッキングの仕様と注意事項
+- [DOCS_REVIEW.md](./docs/DOCS_REVIEW.md) - ドキュメントレビュー手順
+
 ## 🏆 ライセンス
 
-このプロジェクトは Testim 公式ドキュメントの非公式日本語訳です。  
+このプロジェクトは Testim 公式ドキュメントの非公式日本語訳です。
 オリジナルコンテンツの著作権は [Tricentis](https://www.tricentis.com/) に帰属します。
 
 ## 🤝 コントリビューション
@@ -146,4 +187,4 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
 ---
 
-**Note**: このプロジェクトは Testim 公式の日本語化プロジェクトではなく、コミュニティによる非公式翻訳です。
+**Note**: このプロジェクトは Testim 公式の日本語化プロジェクトではなく、個人による非公式翻訳です。

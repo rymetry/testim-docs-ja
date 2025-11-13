@@ -1,9 +1,10 @@
 ---
-title: "Webとモバイルテスト"
-description: "WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール"
-category: "概要"
+title: 'Webとモバイルテスト'
+description: 'WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール'
+category: '概要'
 order: 2
-updated: "Updated about 2 months ago"
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/testim-automate'
 keywords:
   - Webテスト
   - モバイルテスト
@@ -74,7 +75,7 @@ Testim には、テストをカスタマイズするための多くの機能が�
 
 [テスト結果](/docs/test-results) - チームとテストスイートのパフォーマンスを測定します。テストの経時的な傾向を確認します。
 
-[バグキャプチャ](https://help.testim.io/docs/capture) - キャプチャツールを使用すると、バグレポートが本当に簡単です。スクリーンショット、ビデオをキャプチャし、エラーの説明を追加して、バグトラッカーに送信します。60 秒以内に完了します。
+[バグキャプチャ](/docs/testim-extension-capture-video-bug-scenario) - キャプチャツールを使用すると、バグレポートが本当に簡単です。スクリーンショット、ビデオをキャプチャし、エラーの説明を追加して、バグトラッカーに送信します。60 秒以内に完了します。
 
 ## TestOps: 制御、管理、インサイトでテストをスケール
 

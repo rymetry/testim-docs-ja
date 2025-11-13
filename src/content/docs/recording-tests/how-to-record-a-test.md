@@ -3,7 +3,8 @@ title: 'Web テストの記録方法'
 description: 'TestimでWebテストを記録する手順を、プロジェクトの準備からBase URLとテスト構成の設定、録画・一時停止・保存のポイントまで段階的に解説します。'
 category: 'テスト作成'
 order: 1
-updated: 'about 2 months ago'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/how-to-record-a-test'
 keywords:
   - テスト記録
   - Base URL
@@ -175,7 +176,7 @@ CLI でテストを実行する際は、コマンドで別のテスト構成を�
 
 ### カスタム構成を作成する
 
-新しいカスタム構成を作成する手順は、[共有構成の作成](https://help.testim.io/docs/shared-configuration#create-a-shared-configuration) を参照してください。
+新しいカスタム構成を作成する手順は、[共有構成の作成](/docs/shared-configuration#create-a-shared-configuration) を参照してください。
 
 ## ステップ4: テストを記録する
 

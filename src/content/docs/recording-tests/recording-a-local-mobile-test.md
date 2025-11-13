@@ -1,16 +1,23 @@
 ---
-title: "ローカルデバイスを使用したモバイルテストの記録"
-description: "物理デバイスまたは仮想デバイス(iOS/Android)を使用してローカル環境でモバイルテストを記録する方法について説明します。"
-category: "テスト作成"
+title: 'ローカルデバイスを使用したモバイルテストの記録'
+description: '物理デバイスまたは仮想デバイス(iOS/Android)を使用してローカル環境でモバイルテストを記録する方法について説明します。'
+category: 'テスト作成'
 order: 6
-updated: "2025-11-02"
-keywords: ["ローカルモバイルテスト", "TMA", "物理デバイス", "仮想デバイス", "iOS", "Android", "Tricentis Mobile Agent"]
-sourceUrl: "https://help.testim.io/docs/recording-a-local-mobile-test"
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/recording-a-local-mobile-test'
+keywords:
+  - ローカルモバイルテスト
+  - TMA
+  - 物理デバイス
+  - 仮想デバイス
+  - iOS
+  - Android
+  - Tricentis Mobile Agent
 ---
 
 ローカル環境でモバイルテストを記録・実行する
 
-モバイルテストは、物理デバイスおよび仮想デバイス(iOS/Android)の両方でローカル環境での記録と実行が可能です。記録自体は、Windows、Mac、またはLinuxコンピューターでWebブラウザを使用して実行できます。モバイルテストを記録すると、Testimは各アクションをテストステップに変換し、Testim Visual Editorの画面に表示します。ただし、[テストの編集](https://help.testim.io/docs/editing-your-tests)により、テストに追加のステップを手動で追加することもできます。テストは[テストライブラリ](https://help.testim.io/docs/test-list)に追加され、いつでも実行できます。
+モバイルテストは、物理デバイスおよび仮想デバイス(iOS/Android)の両方でローカル環境での記録と実行が可能です。記録自体は、Windows、Mac、またはLinuxコンピューターでWebブラウザを使用して実行できます。モバイルテストを記録すると、Testimは各アクションをテストステップに変換し、Testim Visual Editorの画面に表示します。ただし、[テストの編集](/docs/editing-your-tests)により、テストに追加のステップを手動で追加することもできます。テストは[テストライブラリ](/docs/test-management/test-list)に追加され、いつでも実行できます。
 
 :::warning[警告]
 マルチスクリーンデバイス(折りたたみ式/フリップ式電話など)は現在サポートされていません。
@@ -36,7 +43,7 @@ sourceUrl: "https://help.testim.io/docs/recording-a-local-mobile-test"
 
 ## ステップ1 - TMAに接続する
 
-最初のステップとして、TMAをTestimに接続する必要があります。[Tricentis Mobile Agentの接続](https://help.testim.io/docs/configure-tricentis-mobile-agent#connect-the-tricentis-mobile-agent-to-testim)セクションの手順に従ってください。
+最初のステップとして、TMAをTestimに接続する必要があります。[Tricentis Mobile Agentの接続](/docs/configure-tricentis-mobile-agent#connect-the-tricentis-mobile-agent-to-testim)セクションの手順に従ってください。
 
 ## ステップ2 - デバイスを接続する
 
@@ -53,7 +60,7 @@ Androidデバイスを接続するには、以下の要件を満たす必要が�
 1. 物理Androidデバイスをローカルコンピューターに接続します(例: USBケーブルを使用して携帯電話を接続)。
 
 :::info[情報]
-Androidデバイスの場合、デバイスを「デバッグモード」で実行する必要があります - [開発者オプションとUSBデバッグを有効にする](https://developer.android.com/studio/debug/dev-options#enable)。デバッグモードを有効にした後、設定 > 開発者オプションに移動し、USBデバッグオプションを有効にします。詳細については、[Tricentis Mobile Agentの構成](https://help.testim.io/docs/configure-tricentis-mobile-agent)の関連セクションを参照してください。
+Androidデバイスの場合、デバイスを「デバッグモード」で実行する必要があります - [開発者オプションとUSBデバッグを有効にする](https://developer.android.com/studio/debug/dev-options#enable)。デバッグモードを有効にした後、設定 > 開発者オプションに移動し、USBデバッグオプションを有効にします。詳細については、[Tricentis Mobile Agentの構成](/docs/configure-tricentis-mobile-agent)の関連セクションを参照してください。
 :::
 
 Tricentis Mobile Agentがデバイスを認識すると、デバイスがリストに表示されます:
@@ -198,7 +205,7 @@ Simulatorソフトウェアがシステムトレイで開きます。
 
 • **ローカルデバイスアプリ** - 接続されたデバイス(物理デバイスまたは仮想デバイス)上のアプリの1つを使用できます。これらのアプリは、デバイスがTMAに接続されている場合にテストで使用できます。
 
-• **モバイルアプリライブラリ** - モバイルアプリライブラリの既存のアプリを使用できます。この場合、他のユーザーはローカルデバイスにアプリがインストールされていなくても、共通のアプリをテストに使用できます。[ローカルコンピューターからモバイルアプリを追加する](https://help.testim.io/docs/mobile-apps#add-mobile-app-from-local-computer)セクションの手順に従って、テストを記録する前にアプリを追加することもできます。モバイルアプリライブラリでアプリを管理する方法の詳細については、[モバイルアプリ](https://help.testim.io/docs/mobile-apps)を参照してください。
+• **モバイルアプリライブラリ** - モバイルアプリライブラリの既存のアプリを使用できます。この場合、他のユーザーはローカルデバイスにアプリがインストールされていなくても、共通のアプリをテストに使用できます。[ローカルコンピューターからモバイルアプリを追加する](/docs/mobile-apps#add-mobile-app-from-local-computer)セクションの手順に従って、テストを記録する前にアプリを追加することもできます。モバイルアプリライブラリでアプリを管理する方法の詳細については、[モバイルアプリ](/docs/mobile-apps)を参照してください。
 
 • **アプリのアップロード** - テスト作成の一部として、アプリをアップロードできます。
 
@@ -236,11 +243,11 @@ Simulatorソフトウェアがシステムトレイで開きます。
 記録後にデバイスを変更する場合、選択したアプリを追加の記録または再生を実行するためにデバイスにインストールする必要があります。
 :::
 
-   • **Upload app** - このオプションを選択して、ローカルコンピューターから[モバイルアプリ](https://help.testim.io/docs/mobile-apps)ライブラリに新しいアプリを追加します。サポートされているファイルタイプには、Androidデバイス用の.apkファイル(JavaまたはKotlinフレームワークベース)、iOSデバイス用の.ipaファイル(Objective CまたはSwiftフレームワークベース)が含まれます。アップロードは150MBに制限されています(より大きなファイルをアップロードするには、Tricentisサポートにお問い合わせください)。
+   • **Upload app** - このオプションを選択して、ローカルコンピューターから[モバイルアプリ](/docs/mobile-apps)ライブラリに新しいアプリを追加します。サポートされているファイルタイプには、Androidデバイス用の.apkファイル(JavaまたはKotlinフレームワークベース)、iOSデバイス用の.ipaファイル(Objective CまたはSwiftフレームワークベース)が含まれます。アップロードは150MBに制限されています(より大きなファイルをアップロードするには、Tricentisサポートにお問い合わせください)。
 
 7. **Done**をクリックして終了します。
 
-8. テスト対象のアプリケーションが開いた[AUTミラーリングビューアー](https://help.testim.io/docs/mobile-test-editor)が表示されます。ビューアーを使用すると、デバイスを表示してテスト対象のアプリケーションと対話できます。Testimはアクションを記録します。サポートされているアクションの詳細については、以下の[サポートされているモバイルアクション](#サポートされているモバイルアクション)セクションを参照してください。
+8. テスト対象のアプリケーションが開いた[AUTミラーリングビューアー](/docs/mobile-test-editor)が表示されます。ビューアーを使用すると、デバイスを表示してテスト対象のアプリケーションと対話できます。Testimはアクションを記録します。サポートされているアクションの詳細については、以下の[サポートされているモバイルアクション](#サポートされているモバイルアクション)セクションを参照してください。
 
 :::info[情報]
 テストステップは、AUTミラーリングビューアーでアクションを実行することによってのみ記録されます。デバイスで直接アクションを実行しても、テストステップは記録されません。
@@ -263,12 +270,12 @@ Simulatorソフトウェアがシステムトレイで開きます。
     • **Test name** - テストの名前を入力します。デフォルトでは、テスト名は「untitled test」です。
     • **Description** - オプションで、テストの説明を入力します。
     • **Configuration** - デフォルトでは、構成はVMGで使用可能な任意のデバイスと任意のOSバージョンを使用するように設定されています。別の構成を使用する場合は、[テスト構成の設定](/docs/recording-tests/setting-the-test-configuration)を参照してください。
-    • **Test Data** - JavaScriptでデータセットを定義するか、オブジェクトのJS配列リテラルで複数の順序付きデータセットを定義することで、データ駆動テストを構成できます。[Visual Editorからのデータ駆動テストの構成](https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+    • **Test Data** - JavaScriptでデータセットを定義するか、オブジェクトのJS配列リテラルで複数の順序付きデータセットを定義することで、データ駆動テストを構成できます。[Visual Editorからのデータ駆動テストの構成](/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
 
 11. **Save**をクリックしてテストを保存します。
 
 :::warning[自動復旧]
-新しいテストを作成したり既存のテストに変更を加えたりするときは、必ずテストを保存してください。ただし、心配しないでください。テストを保存する前にブラウザを閉じた場合でも、テストはブラウザのキャッシュに保存されているため、作業を再開できます。詳細については、[保存されなかったテストの復旧](https://help.testim.io/docs/recovering-a-test-that-was-not-saved)を参照してください。
+新しいテストを作成したり既存のテストに変更を加えたりするときは、必ずテストを保存してください。ただし、心配しないでください。テストを保存する前にブラウザを閉じた場合でも、テストはブラウザのキャッシュに保存されているため、作業を再開できます。詳細については、[保存されなかったテストの復旧](/docs/recovering-a-test-that-was-not-saved)を参照してください。
 :::
 
 12. 追加のテスト構成設定を構成する場合は、[テスト構成の設定](/docs/recording-tests/setting-the-test-configuration)を参照してください。
@@ -291,43 +298,43 @@ Simulatorソフトウェアがシステムトレイで開きます。
 
 記録中またはテスト保存後に、追加の事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。
 
-一般的なステッププロパティの詳細については、[ステップのプロパティの編集](https://help.testim.io/docs/editing-a-steps-properties)を参照してください。
+一般的なステッププロパティの詳細については、[ステップのプロパティの編集](/docs/editing-a-steps-properties)を参照してください。
 
 ### サポートされている事前定義済みモバイルアクション
 
 テストの記録中または記録後にステップを手動で追加する際、以下のアクションが現在サポートされています:
 
-• **[Validate email](https://help.testim.io/docs/email-validation)** - Testimは、永続的および一時的なメールアドレスを提供する組み込みのメールサービスを提供しています。Validate emailステップは、これらのメールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
+• **[Validate email](/docs/email-validation)** - Testimは、永続的および一時的なメールアドレスを提供する組み込みのメールサービスを提供しています。Validate emailステップは、これらのメールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
 
-• **[Validate element visible](https://help.testim.io/docs/validate-element-visible)** - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
+• **[Validate element visible](/docs/validate-element-visible)** - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
 
-• **[Validate element text](https://help.testim.io/docs/validate-element-text)** - 要素テキスト検証は、要素の存在に依存するという点で要素可視性検証に似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
+• **[Validate element text](/docs/validate-element-text)** - 要素テキスト検証は、要素の存在に依存するという点で要素可視性検証に似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 
-• **[Wait for element visible](https://help.testim.io/docs/wait-for#wait-for-element-visible)** - wait for element visibleを使用して、要素がページに表示されるまで待機します。
+• **[Wait for element visible](/docs/wait-for#wait-for-element-visible)** - wait for element visibleを使用して、要素がページに表示されるまで待機します。
 
-• **[Wait for element text](https://help.testim.io/docs/wait-for#wait-for-element-text)** - wait for element textを使用して、テストを続行する前に特定のテキストが表示されることを確認します。
+• **[Wait for element text](/docs/wait-for#wait-for-element-text)** - wait for element textを使用して、テストを続行する前に特定のテキストが表示されることを確認します。
 
-• **[Sleep](https://help.testim.io/docs/wait-for#sleep)** - ステップ間で一定期間待機できるようにします。
+• **[Sleep](/docs/wait-for#sleep)** - ステップ間で一定期間待機できるようにします。
 
-• **[Add extract value step](https://help.testim.io/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
+• **[Add extract value step](/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
 
 • **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 
 • **Code verification** - デバイスにキーストロークを送信します。これは通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
 
-• **[Generate email address](https://help.testim.io/docs/email-validation#generating-a-temporary-email-address)** - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。例えば、毎回新しいユーザーでサインアップフローを複数回テストする場合などです。
+• **[Generate email address](/docs/email-validation#generating-a-temporary-email-address)** - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。例えば、毎回新しいユーザーでサインアップフローを複数回テストする場合などです。
 
-• **[Add CLI action](https://help.testim.io/docs/add-cli-validations-and-actions)** - CLI環境でカスタムNode.jsスクリプトを実行します。
+• **[Add CLI action](/docs/add-cli-validations-and-actions)** - CLI環境でカスタムNode.jsスクリプトを実行します。
 
-• **[Add API action](https://help.testim.io/docs/api-testing#adding-an-api-action-step)** - API呼び出しから返されるデータを取得する場合に使用します。このデータを使用して、返されることを確認できます。
+• **[Add API action](/docs/api-testing#adding-an-api-action-step)** - API呼び出しから返されるデータを取得する場合に使用します。このデータを使用して、返されることを確認できます。
 
 :::info[情報]
-Add CLI actionおよび/またはAdd API actionステップを使用してカスタムコードを実行する前に、[Testim CLI](https://help.testim.io/docs/the-command-line-cli)を実行する必要があります。
+Add CLI actionおよび/またはAdd API actionステップを使用してカスタムコードを実行する前に、[Testim CLI](/docs/the-command-line-cli)を実行する必要があります。
 :::
 
-• **[Generate random value](https://help.testim.io/docs/generating-a-random-value)** - 動的データテスト用のランダム値を生成します。
+• **[Generate random value](/docs/generating-a-random-value)** - 動的データテスト用のランダム値を生成します。
 
-• **[Generate date](https://help.testim.io/docs/generating-a-date)** - 事前定義されたプロパティに従って日付を生成します。
+• **[Generate date](/docs/generating-a-date)** - 事前定義されたプロパティに従って日付を生成します。
 
 • **Reset app** - Androidでは、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOSでは、このステップはアプリケーションを閉じて起動します(キャッシュはクリアしません)。このステップは通常、次回の実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
 
@@ -337,7 +344,7 @@ Add CLI actionおよび/またはAdd API actionステップを使用してカス
 
 • **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
 
-• **[Execute Driver Script Step (mobile)](https://help.testim.io/docs/execute-driver-script-step)** - Execute Driver Script stepを使用すると、Appium 2.0以降を使用してスクリプトを実行し、テストで拡張された機能と検証を行うことができます。
+• **[Execute Driver Script Step (mobile)](/docs/execute-driver-script-step)** - Execute Driver Script stepを使用すると、Appium 2.0以降を使用してスクリプトを実行し、テストで拡張された機能と検証を行うことができます。
 
 ---
 

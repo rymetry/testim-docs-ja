@@ -3,7 +3,7 @@ import path from 'path';
 
 // Paths
 const ROOT = process.cwd();
-const SIDEBAR_FILE = path.join(ROOT, 'SIDEBAR_URLS.md');
+const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
 const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
 
 // Helpers

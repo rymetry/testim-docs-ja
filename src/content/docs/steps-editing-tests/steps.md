@@ -4,6 +4,7 @@ description: 'Testimのステップの種類と使い方について説明しま
 category: 'ステップとテスト編集'
 order: 1
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/steps'
 keywords:
   - ステップ
   - テスト編集
@@ -12,13 +13,13 @@ keywords:
   - 自動記録
 ---
 
-ステップは、[グループ](https://help.testim.io/docs/groups)と共に、テストの基本的な構成要素です。ステップには、ほぼすべてのテスト要件を満たすために、さまざまなアクションと検証を実行できます。各ステップには特定のプロパティがあり、[ステップのプロパティパネル](https://help.testim.io/docs/editing-a-steps-properties)で確認できます。一部のステップは[共有ステップ](https://help.testim.io/docs/shareable-steps)として個別に共有できますが、他のステップは共有のために追加のステップとグループ化する必要があります。
+ステップは、[グループ](/docs/groups)と共に、テストの基本的な構成要素です。ステップには、ほぼすべてのテスト要件を満たすために、さまざまなアクションと検証を実行できます。各ステップには特定のプロパティがあり、[ステップのプロパティパネル](/docs/editing-a-steps-properties)で確認できます。一部のステップは[共有ステップ](/docs/shareable-steps)として個別に共有できますが、他のステップは共有のために追加のステップとグループ化する必要があります。
 
 ## ステップの追加方法
 
 ステップは2つの方法で追加できます：
 
-- **手動ステップ** - ユーザーが矢印記号の上にマウスを移動し、事前定義ステップリストから関連するステップを選択することで、手動でステップを追加します。または、ビジュアルエディターまたはAUTブラウザから[キーボードショートカット](https://help.testim.io/docs/keyboard-shortcuts)のいずれかを使用して、手動でステップを追加することもできます。
+- **手動ステップ** - ユーザーが矢印記号の上にマウスを移動し、事前定義ステップリストから関連するステップを選択することで、手動でステップを追加します。または、ビジュアルエディターまたはAUTブラウザから[キーボードショートカット](/docs/keyboard-shortcuts)のいずれかを使用して、手動でステップを追加することもできます。
 
 - **自動記録ステップ** - ユーザーがテスト対象アプリケーションと対話する際に、テストの記録中にステップが自動的に追加されます。
 
@@ -88,13 +89,9 @@ keywords:
 | Click | マウスクリック時 |
 | Double click | ダブルクリック時 |
 | Right click | 右クリック時 |
-| Scroll (to element/on page) | スクロール操作時（[Scrollステップ](https://help.testim.io/docs/scroll)を参照） |
+| Scroll (to element/on page) | スクロール操作時（[Scrollステップ](/docs/scroll)を参照） |
 | Set text | フィールドにテキストを設定時 |
-| File upload / File drop | ファイル選択またはフレームへのファイルドロップ時（[ファイルアップロードステップ検証](https://help.testim.io/docs/file-upload-step)を参照） |
+| File upload / File drop | ファイル選択またはフレームへのファイルドロップ時（[ファイルアップロードステップ検証](/docs/file-upload-step)を参照） |
 | Press (Key press) | キーボードキー押下時（Enter、Tab、ESC、Page Up、Page Downなど） |
-| Download validation | 記録中にファイルがダウンロードされた時。手動でも追加可能（[Validate download](https://help.testim.io/docs/validate-download)を参照） |
-| Drag & Drop | AUT内でアーティファクトをドラッグ&ドロップ時（[Drag & Dropステップ](https://help.testim.io/docs/drag-drop-step)を参照） |
-
----
-
-**最終更新**: 約1か月前
+| Download validation | 記録中にファイルがダウンロードされた時。手動でも追加可能（[Validate download](/docs/validate-download)を参照） |
+| Drag & Drop | AUT内でアーティファクトをドラッグ&ドロップ時（[Drag & Dropステップ](/docs/drag-drop-step)を参照） |
