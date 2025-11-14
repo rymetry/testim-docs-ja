@@ -3,7 +3,7 @@ title: 'ステップのプロパティ編集'
 description: 'ステップ作成後にプロパティを編集する方法を学びます。一般プロパティと専門プロパティの設定方法を詳しく解説します。'
 category: 'ステップとテスト編集'
 order: 5
-updated: '2025-11-02'
+updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/editing-a-steps-properties'
 keywords:
   - ステッププロパティ
@@ -81,7 +81,3 @@ keywords:
 | **Variable name** | Add extract value step, Get cookie, Generate random value, Generate date | これは、これらの各ステップでデータを保持する変数にTestimが使用するデフォルト名です。名前を変更するには、フィールド内をクリックして内容を編集します。注：変数名はJavaScriptの名前制限の対象となります。たとえば、スペースや特殊文字は使用できません。 | JavaScript variables |
 | **Variable scope** | Add extract value step, Get cookie, Generate random value, Generate date | これらのタイプのステップでTestimが使用する変数のスコープを選択できます。デフォルトでは、変数スコープはTestに設定されています。変更したい場合は、Variable scopeドロップダウンをクリックして、次の3つのオプションのいずれかを選択します：<br/>• **Local**: 同じグループ内（グループ内で宣言されている場合）またはテスト内（テストレベルから宣言されている場合）のステップ間でパラメータを渡すことができます。<br/>• **Test**: 同じテスト内のステップとグループ間でパラメータを渡すことができます。<br/>• **Suite**: 同じテストスイート内のテスト間でパラメータを渡すことができます。 | - |
 | **PARAMS** | Add custom action, Add API action, Add custom validation, Validate API, Add network validation, Add custom wait for | パラメータは、事前に情報がわからなくても、さまざまなシナリオをテストするためにステップで使用できます。PARAMSの横にある+をクリックすると、Testimでステップで使用するHTMLパラメータとJSパラメータを定義できます。 | Parameters |
-
----
-
-**最終更新**: 約1か月前

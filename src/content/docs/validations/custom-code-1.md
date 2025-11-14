@@ -1,13 +1,21 @@
 ---
 title: 'カスタムコードによる検証'
-description: '原文: https://help.testim.io/docs/custom-code-1'
+description: 'カスタムJavaScriptコードを使用した検証ステップの作成方法。高度な検証ロジックや独自の検証条件を実装できるPro機能です。'
 category: '検証'
 order: 5
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/custom-code-1'
 keywords:
-  - testim
-  - custom-code-1
-  - validations
+  - カスタムコード
+  - JavaScript
+  - カスタム検証
+  - スクリプト
+  - 高度な検証
+  - プログラマブル
+  - コーディング
+  - テスト拡張
+  - 独自ロジック
+  - 柔軟な検証
 ---
 カスタムコードによる検証
 
@@ -17,8 +25,8 @@ Testim では、独自の JavaScript コードを入力してアクションや�
 
 ## ブラウザー内で実行する場合
 
-ブラウザー内で実行する利点は DOM と直接やり取りできる点です。アプリ内要素の特定には Testim の Smart Locators も活用できます。また、多くの場合 API リクエストは認証済み（Cookie が自動的に渡されます）です。詳しくは [Add custom validations and actions](/docs/validations/custom-code) を参照してください。
+ブラウザー内で実行する利点は DOM と直接やり取りできる点です。アプリ内要素の特定には Testim の Smart Locators も活用できます。また、多くの場合 API リクエストは認証済み（Cookie が自動的に渡されます）です。詳しくは [Add custom validations and actions](/docs/custom-code) を参照してください。
 
 ## ブラウザー外（Node.js）で実行する場合
 
-ブラウザー外で実行する利点は CORS 制約が無いことです。さらに、任意の NPM パッケージを利用できます。詳しくは [Validating using code in Node.js](/docs/validations/validate-download) を参照してください。
+ブラウザー外で実行する利点は CORS 制約が無いことです。さらに、任意の NPM パッケージを利用できます。詳しくは [Validating using code in Node.js](/docs/validate-download) を参照してください。

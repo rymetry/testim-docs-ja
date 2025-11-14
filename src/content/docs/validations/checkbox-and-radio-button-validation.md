@@ -1,13 +1,21 @@
 ---
 title: 'チェックボックス／ラジオボタンの検証'
-description: '原文: https://help.testim.io/docs/checkbox-and-radio-button-validation'
+description: 'チェックボックスやラジオボタンの選択状態を検証するステップ。フォーム要素の状態確認に特化した検証機能を提供します。'
 category: '検証'
 order: 12
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/checkbox-and-radio-button-validation'
 keywords:
-  - testim
-  - checkbox-and-radio-button-validation
-  - validations
+  - チェックボックス
+  - ラジオボタン
+  - フォーム検証
+  - 選択状態
+  - UI検証
+  - インプット
+  - フォーム要素
+  - Testim
+  - 選択検証
+  - ボタン状態
 ---
 チェックボックス／ラジオボタンがオンかオフかを検証する
 
@@ -17,73 +25,73 @@ keywords:
 本検証はネイティブの input 要素（checkbox/radio）のみ対象です。カスタム実装で基盤となる input を持たない場合はサポートされません。
 :::
 
-## Adding a Validate checkbox/radio button step
+## Validate checkbox/radio button ステップの追加
 
 :fa-arrow-right: **Validate checkbox / Validate radio button を追加するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the validation.
+1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
 
-![3659](/images/validations/checkbox-and-radio-button-validation/0d8957c-Testim_130a.png "Testim 130a.png")
+![ステップ追加位置の矢印記号](/images/validations/checkbox-and-radio-button-validation/0d8957c-Testim_130a.png "Testim 130a.png")
 
 アクションのオプションが表示されます。
 
-![](/images/validations/checkbox-and-radio-button-validation/d0c62d2-Testim_131a_r.png)
+![CLI](/images/validations/checkbox-and-radio-button-validation/d0c62d2-Testim_131a_r.png)
 
-2. Click on the **Toggle Breakpoint** button.
+2. **Toggle Breakpoint** ボタンをクリックします。
 
-![](/images/validations/checkbox-and-radio-button-validation/d6e78f5-Testim_132_r.png)
+![CLI](/images/validations/checkbox-and-radio-button-validation/d6e78f5-Testim_132_r.png)
 
-3. Click on the **Play Scenario** button to run the test until the breakpoint.
+3. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![3665](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png "Testim 133a.png")
+![Play Scenarioボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png "Testim 133a.png")
 
-4. Hover over the :fa-caret-right: **(arrow symbol)** again and click on the **“M”** (Testim predefined steps).\
+4. もう一度 :fa-caret-right: **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![](/images/validations/checkbox-and-radio-button-validation/9c03152-Testim_134_r.png)
+![ステップ追加矢印](/images/validations/checkbox-and-radio-button-validation/9c03152-Testim_134_r.png)
 
-5. Click on **Validations**.\
+5. **Validations** をクリックします。\
    Validations メニューが展開されます。
 
-![](/images/validations/checkbox-and-radio-button-validation/7b3d72a-Testim_135_r.png)
+![検証](/images/validations/checkbox-and-radio-button-validation/7b3d72a-Testim_135_r.png)
 
-6. Scroll down through the menu and select **Validate checkbox** or **Validate radio button**.
+6. メニューをスクロールして **Validate checkbox** または **Validate radio button** を選択します。
 
 > 📘 メニュー上部の検索ボックスで検索することもできます。
 
-7. In the AUT window, identify the relevant checkbox or radio button that you wish to validate, and click on it to select it.\
-   The step is created, and a thumbnail of the selected element is shown in the step.
+7. AUT ウィンドウで、検証したいチェックボックスまたはラジオボタンを特定し、クリックして選択します。\
+   ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![3654](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png "Testim 136.png")
+![作成されたチェックボックス検証ステップ](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png "Testim 136.png")
 
-8. Hover over the step you just created and click on the **Show Properties** (:fa-cog:) icon.
+8. 作成したステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![3633](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png "Testim 137a.png")
+![Show Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png "Testim 137a.png")
 
-The **Properties panel** opens on the right-hand side.\
-9\. In the **Expected status** section, click either **Checked** (default) or **Unchecked**, depending on which status you want to validate.
+右側に **Properties パネル** が開きます。\
+9\. **Expected status** セクションで、検証したいステータスに応じて **Checked**（デフォルト）または **Unchecked** をクリックします。
 
-![](/images/validations/checkbox-and-radio-button-validation/5ed3749-Testim_138a_r.png)
+![検証](/images/validations/checkbox-and-radio-button-validation/5ed3749-Testim_138a_r.png)
 
-10. Click on the **Toggle Breakpoint** button after the Validation step to remove the breakpoint.
+10. 検証ステップの後の **Toggle Breakpoint** ボタンをクリックして、ブレークポイントを削除します。
 
-## Modifying a Validate checkbox/radio button step
+## Validate checkbox/radio button ステップの変更
 
-If you want to change the checkbox/radio button you selected, you don’t need to delete and re-record the step. Instead, you can reassign the checkbox/radio button with a different checkbox/radio button.
+選択したチェックボックス/ラジオボタンを変更したい場合、ステップを削除して再記録する必要はありません。代わりに、別のチェックボックス/ラジオボタンに再割り当てできます。
 
-:fa-arrow-right: **To reassign the selected checkbox/radio button in a Validation step:**
+:fa-arrow-right: **検証ステップで選択したチェックボックス/ラジオボタンを再割り当てするには:**
 
-1. Hover over the position to the left of the step for which you want to reassign the checkbox/radio button and click on the **Toggle Breakpoint** button.
-2. Click on the **Play Scenario** button to run the test until the breakpoint.
-3. Hover over the step for which you want to reassign the checkbox/radio button and click on the **Show Properties** (:fa-cog:) icon.
+1. チェックボックス/ラジオボタンを再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** ボタンをクリックします。
+2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
+3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![3667](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png "Testim 139a.png")
+![ステップのShow Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png "Testim 139a.png")
 
 右側に **Properties** パネルが表示されます。\
-4\. Hover over the **Target checkbox/radio button** thumbnail to show options, and click **Reassign**.
+4\. **Target checkbox/radio button** のサムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。
 
-![](/images/validations/checkbox-and-radio-button-validation/db9dd10-Testim_141a_r.png)
+![チェックボックス](/images/validations/checkbox-and-radio-button-validation/db9dd10-Testim_141a_r.png)
 
-5. In the AUT window, identify the new checkbox/radio button that you would like to select and click on it.\
-   The selected checkbox/radio button is shown in the Target box in the Properties panel.
-6. Click on the same **Toggle Breakpoint** button to the left of the step for which you reassigned the checkbox/radio button to remove the breakpoint.
+5. AUT ウィンドウで、選択したい新しいチェックボックス/ラジオボタンを特定し、クリックします。\
+   選択したチェックボックス/ラジオボタンが Properties パネルの Target ボックスに表示されます。
+6. チェックボックス/ラジオボタンを再割り当てしたステップの左側にある同じ **Toggle Breakpoint** ボタンをクリックして、ブレークポイントを削除します。

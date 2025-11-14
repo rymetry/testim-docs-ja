@@ -17,49 +17,9 @@ keywords:
 
 システムは以下のデバッグ、実行、記録機能をサポートしています:
 
-<Table align={["left","left","left"]}>
-  <thead>
-    <tr>
-      <th style={{ textAlign: "left" }}>
-        デバッグ
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        実行
-      </th>
-
-      <th style={{ textAlign: "left" }}>
-        記録
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td style={{ textAlign: "left" }}>
-        • [ステップイン](#step-into)
-        • [ステップオーバー](#step-over)
-        • [ステップアウト](#step-out)
-        • [一時停止/続行](#pause-and-continue-debugging)
-        • [実行停止](#stop-run)
-        • [再実行](#rerun)
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        • [デバッグ付きでローカル実行](#running-locally-with-debugging)\
-        • [デバッグなしでローカル実行](#running-locally-without-debugging)\
-        • [Grid上で実行](https://help.testim.io/docs/running-tests-overview#running-a-remote-web-test)\
-        • [ここから再生](/docs/test-execution/play-from-here)\
-        • [同じパラメーターでローカル再実行](/docs/test-execution/rerun-locally-with-the-same-params)
-      </td>
-
-      <td style={{ textAlign: "left" }}>
-        • [記録開始](doc:recording-additional-steps-to-fix-bugs#start-recording)\
-        • [この位置から記録開始](doc:recording-additional-steps-to-fix-bugs#start-recording-at-this-position)
-      </td>
-    </tr>
-  </tbody>
-</Table>
+| デバッグ | 実行 | 記録 |
+|---------|------|------|
+| • [ステップイン](#step-into)<br/>• [ステップオーバー](#step-over)<br/>• [ステップアウト](#step-out)<br/>• [一時停止/続行](#pause-and-continue-debugging)<br/>• [実行停止](#stop-run)<br/>• [再実行](#rerun) | • [デバッグ付きでローカル実行](#running-locally-with-debugging)<br/>• [デバッグなしでローカル実行](#running-locally-without-debugging)<br/>• [Grid上で実行](https://help.testim.io/docs/running-tests-overview#running-a-remote-web-test)<br/>• [ここから再生](/docs/test-execution/play-from-here)<br/>• [同じパラメーターでローカル再実行](/docs/test-execution/rerun-locally-with-the-same-params) | • [記録開始](doc:recording-additional-steps-to-fix-bugs#start-recording)<br/>• [この位置から記録開始](doc:recording-additional-steps-to-fix-bugs#start-recording-at-this-position) |
 
 デバッグ、実行、および記録ボタンの有効/無効は、現在のエディターの状態（実行中、記録中など）によって決定されます。
 

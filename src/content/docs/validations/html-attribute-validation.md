@@ -1,17 +1,25 @@
 ---
-title: 'Validate HTML attribute (Web)'
-description: '原文: https://help.testim.io/docs/html-attribute-validation'
+title: 'HTML属性の検証（Web）'
+description: 'Web要素のHTML属性値を検証するステップ。id、class、data属性などの値が期待通りであることを確認し、動的なUI要素の状態を検証します。'
 category: '検証'
 order: 10
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/html-attribute-validation'
 keywords:
-  - testim
-  - html-attribute-validation
-  - validations
+  - HTML属性
+  - 属性検証
+  - DOM
+  - Web
+  - 要素属性
+  - タグ検証
+  - HTML
+  - UI検証
+  - データ属性
+  - Testim
 ---
-Validate any HTML attribute in your app
+アプリ内の任意のHTML属性を検証する
 
-The HTML attribute validation allows you to validate the value of any HTML attribute of an element (e.g. *href*, *src*, *alt*, *title*, etc.). It is also possible to validate a "disabled" attribute, as explained below.
+HTML属性検証では、要素の任意のHTML属性の値を検証できます（例：*href*、*src*、*alt*、*title* など）。また、以下に説明する通り「disabled」属性の検証も可能です。
 
 ## Adding a Validate HTML attribute step
 
@@ -19,29 +27,29 @@ The HTML attribute validation allows you to validate the value of any HTML attri
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the validation.
 
-![](/images/validations/html-attribute-validation/a0c5a27-Testim_233a.png "Testim 233a.png")
+![ステップ追加矢印](/images/validations/html-attribute-validation/a0c5a27-Testim_233a.png "Testim 233a.png")
 
 アクションのオプションが表示されます。
 
-![](/images/validations/html-attribute-validation/9ad04c9-Testim_234a_r.png "Testim 234a_r.png")
+![CLI](/images/validations/html-attribute-validation/9ad04c9-Testim_234a_r.png "Testim 234a_r.png")
 
-2. Click on the **Toggle breakpoint** button.
+2. **Toggle breakpoint** ボタンをクリックします。
 
-![](/images/validations/html-attribute-validation/3040109-Testim_235_r.png "Testim 235_r.png")
+![CLI](/images/validations/html-attribute-validation/3040109-Testim_235_r.png "Testim 235_r.png")
 
-3. Click on the **Run test** button, to run the test until the breakpoint.
+3. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
 
-![](/images/validations/html-attribute-validation/c3f0d75-Testim_236a.png "Testim 236a.png")
+![ステップ追加矢印](/images/validations/html-attribute-validation/c3f0d75-Testim_236a.png "Testim 236a.png")
 
-4. Hover over the :fa-caret-right: **(arrow symbol)** again and click on the “**M**” (Testim predefined steps).\
+4. 再び :fa-caret-right: **（矢印記号）** にカーソルを合わせ、"**M**"（Testim定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![](/images/validations/html-attribute-validation/0bd37d9-Testim_237_r.png "Testim 237_r.png")
+![ステップ追加矢印](/images/validations/html-attribute-validation/0bd37d9-Testim_237_r.png "Testim 237_r.png")
 
 5. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
-![](/images/validations/html-attribute-validation/e3e4f2e-Testim_238_r.png "Testim 238_r.png")
+![検証](/images/validations/html-attribute-validation/e3e4f2e-Testim_238_r.png "Testim 238_r.png")
 
 6. メニューをスクロールし **Validate HTML attribute** を選択します。
 
@@ -49,41 +57,41 @@ The HTML attribute validation allows you to validate the value of any HTML attri
 メニュー上部の検索ボックスで **Validate HTML attribute** を検索することもできます。
 :::
 
-7. In the **AUT** window, identify the relevant element for which you wish to validate an HTML attribute, and click on it to select it.\
-   The **HTML Attribute Validation** form is shown.
+7. **AUT** ウィンドウで、HTML属性を検証したい対象要素を特定し、クリックして選択します。\
+   **HTML Attribute Validation** フォームが表示されます。
 
-![](/images/validations/html-attribute-validation/4a3f8b9-Testim_239_r.png "Testim 239_r.png")
+![検証](/images/validations/html-attribute-validation/4a3f8b9-Testim_239_r.png "Testim 239_r.png")
 
-8. In the **Attribute name** field, enter a valid HTML attribute that you wish to validate (e.g. *href*, *src*, *alt*, *title*, etc.).
-9. In the **Expected value** field, enter the value you wish to validate for the attribute (e.g. *[https://www.testim.io](https://www.testim.io)*).
+8. **Attribute name** フィールドに、検証したい有効なHTML属性を入力します（例：*href*、*src*、*alt*、*title* など）。
+9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：*[https://www.testim.io](https://www.testim.io)*）。
 
 > 📘
 >
-> For the expected value you can use regex. For example, 'href' that starts with https will have the following regex:/^https/
+> Expected value では正規表現も使用できます。例えば、https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
 
-10. Click **OK**.\
-    The “Validate HTML attribute” step is added in the **Editor**, and a thumbnail of the selected element is shown in the step.
-11. Click on the **Toggle Breakpoint** button after the validation step to remove the breakpoint.
+10. **OK** をクリックします。\
+    **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+11. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
-### Validating a "disabled" attribute
+### 「disabled」属性の検証
 
-It is also possible to validate a "disabled" HTML attribute.
+「disabled」HTML属性を検証することも可能です。
 
  :fa-arrow-right: **disabled 属性を検証するには:**
 
-1. Perform steps 1-6 above.
+1. 上記の手順1～6を実行します。
 
-2. In the **AUT** window, identify the relevant element for which you wish to validate the "disabled" HTML attribute, and click on it to select it.\
-   The **HTML Attribute Validation** form is shown.
+2. **AUT** ウィンドウで、「disabled」HTML属性を検証したい対象要素を特定し、クリックして選択します。\
+   **HTML Attribute Validation** フォームが表示されます。
 
 3. **Attribute name** に `disabled` を入力します。
 
 4. **Expected value** には値を入力しません。  
-   ![](/images/validations/html-attribute-validation/a78b8f5-image.png)
+   ![HTML](/images/validations/html-attribute-validation/a78b8f5-image.png)
 
-5. Click **OK**.\
-   The “Validate HTML attribute” step is added in the **Editor**, and a thumbnail of the selected element is shown in the step.  
-   ![](/images/validations/html-attribute-validation/a1bbe4a-image_1.png)
+5. **OK** をクリックします。\
+   **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+   ![検証](/images/validations/html-attribute-validation/a1bbe4a-image_1.png)
 
 6. Click on the **Toggle Breakpoint** button after the validation step to remove the breakpoint.
 
@@ -93,42 +101,42 @@ It is also possible to validate a "disabled" HTML attribute.
 
 :fa-arrow-right: **検証ステップで選択要素を再割り当てするには:**
 
-1. Hover over the position to the left of the step for which you want to reassign the element and click on the **Toggle breakpoint** button.
-2. Click on the **Run test** button to run the test until the breakpoint.
-3. Hover over the step for which you want to reassign the element and click on the **Show Properties** (:fa-cog:) icon.
+1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
+2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/html-attribute-validation/330255f-Testim_240a.png "Testim 240a.png")
-
-右側に **Properties** パネルが表示されます。
-
-4. Hover over the **Target element** thumbnail to show options, and click **Reassign**.
-
-![](/images/validations/html-attribute-validation/1272545-Testim_241a_r.png "Testim 241a_r.png")
-
-5. In the **AUT** window, identify the new element that you would like to select and click on it.\
-   The selected element is shown in the **Target element** box in the **Properties** panel.
-6. In the **Properties** panel **Attribute name** field enter the attribute name for the new element.
-7. In the **Properties** panel **Expected value** field enter the expected value of the new attribute.
-
-> 📘
->
-> When modifying the value of the **Attribute name** and **Expected value** in the **Properties** panel, make sure they are enclosed in single quotes: e.g. ‘href’ and ‘[https://www.testim.io’](https://www.testim.io’).
-
-8. Click on the same **Toggle Breakpoint** button to the left of the step for which you reassigned the element to remove the breakpoint.
-
-:fa-arrow-right: **To modify the properties of the*original* element:**
-
-1. Hover over the step for which you want to reassign the element and click on the **Show Properties** (:fa-cog:) icon.
-
-![](/images/validations/html-attribute-validation/8f90779-Testim_242a.png "Testim 242a.png")
+![CLI](/images/validations/html-attribute-validation/330255f-Testim_240a.png "Testim 240a.png")
 
 右側に **Properties** パネルが表示されます。
 
-![](/images/validations/html-attribute-validation/aa817ce-Testim_241_r.png "Testim 241_r.png")
+4. **Target element** サムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。
 
-2. In the **Properties** panel **Attribute name** field enter the new attribute name for the element.
-3. In the **Properties** panel **Expected value** field enter the new expected value of the attribute.
+![CLI](/images/validations/html-attribute-validation/1272545-Testim_241a_r.png "Testim 241a_r.png")
+
+5. **AUT** ウィンドウで、新しく選択したい要素を特定し、クリックします。\
+   選択された要素が **Properties** パネルの **Target element** ボックスに表示されます。
+6. **Properties** パネルの **Attribute name** フィールドに、新しい要素の属性名を入力します。
+7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 
 > 📘
 >
-> When modifying the value of the **Attribute name** and **Expected value** in the **Properties** panel, make sure they are enclosed in single quotes: e.g. ‘href’ and ‘[https://www.testim.io’](https://www.testim.io’).
+> **Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+
+8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
+
+:fa-arrow-right: ***元の***要素のプロパティを変更するには:**
+
+1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+
+![CLI](/images/validations/html-attribute-validation/8f90779-Testim_242a.png "Testim 242a.png")
+
+右側に **Properties** パネルが表示されます。
+
+![属性](/images/validations/html-attribute-validation/aa817ce-Testim_241_r.png "Testim 241_r.png")
+
+2. **Properties** パネルの **Attribute name** フィールドに、要素の新しい属性名を入力します。
+3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
+
+> 📘
+>
+> **Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')

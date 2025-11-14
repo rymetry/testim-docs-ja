@@ -1,19 +1,27 @@
 ---
 title: 'ビジュアル検証（要素・ビューポート・全ページ）'
-description: '原文: https://help.testim.io/docs/pixel-validation-and-pixel-wait-for'
+description: 'ピクセルレベルでの画像比較による検証ステップ。スクリーンショットを比較してUIの見た目を検証し、レイアウト崩れやデザイン変更を検出します。'
 category: '検証'
 order: 13
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/pixel-validation-and-pixel-wait-for'
 keywords:
-  - testim
-  - pixel-validation-and-pixel-wait-for
-  - validations
+  - ピクセル検証
+  - ビジュアル検証
+  - 画像比較
+  - スクリーンショット
+  - UI検証
+  - レイアウト
+  - 見た目検証
+  - Testim
+  - ピクセル比較
+  - ビジュアルテスト
 ---
 ピクセルレベルでビジュアル差分を検証する
 
 ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](https://applitools.com/) のサービスを利用しており、Applitools Eyes との連携が必要です。
 
-開始前に、[Applitools Eyes](https://applitools.com/) と Testim を連携してください。詳しくは [Applitools integration](/docs/applitools-integration/applitools-integration) を参照。\
+開始前に、[Applitools Eyes](https://applitools.com/) と Testim を連携してください。詳しくは [Applitools integration](/docs/applitools-integration) を参照。\
 関連情報：
 
 * [https://applitools.com/docs/topics/test-manager/viewers/tm-baseline-viewer.html](https://applitools.com/docs/topics/test-manager/viewers/tm-baseline-viewer.html)
@@ -30,169 +38,110 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 
 次のビジュアル検証を実行できます：
 
-* **Validate Element Visualization** — 特定要素の視覚差分を比較。参照 - [Validate Element Visualization](/docs/visual-validations/validate-element-visualization)
-* **Wait For Element Visualization** — 要素が可視になるまで待機し、その後視覚的に検証。参照 - [Wait For Element Visualization](/docs/visual-validations/wait-for-element-visualization)
-* **Viewport Visualization** — ビューポートの視覚差分を比較。参照 - [Validate Viewport Visualization](/docs/visual-validations/validate-viewport-visualization)
-* **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/visual-validations/validate-full-page-visualization)
+* **Validate Element Visualization** — 特定要素の視覚差分を比較。参照 - [Validate Element Visualization](/docs/validate-element-visualization)
+* **Wait For Element Visualization** — 要素が可視になるまで待機し、その後視覚的に検証。参照 - [Wait For Element Visualization](/docs/wait-for-element-visualization)
+* **Viewport Visualization** — ビューポートの視覚差分を比較。参照 - [Validate Viewport Visualization](/docs/validate-viewport-visualization)
+* **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/validate-full-page-visualization)
 
 :::info
 テスト構成を変更すると Applitools 側では新しいベースラインが作られますが、Testim 側のベースラインは変わりません。構成ごとにベースラインを分けたい場合はテストを分けて作成してください。
 :::
 
-## Visual Validation Parameters
+## ビジュアル検証パラメータ
 
-There are four visual validation parameters that you can modify within Testim:
+Testim 内で変更できるビジュアル検証パラメータは 4 つあります：
 
-* **Add Environment** – add one or more simulated environment configurations (including advanced environments) for your test to run on. This feature requires additional Applitools licensing for Ultrafast Test Cloud. Environments added on accounts without this feature license will be rejected by Applitools.
-* **Match level** – Sometimes you will want to change the comparison method between your baseline and your test, especially when dealing with applications that consist of dynamic content. Testim supports the following Applitools Eyes match levels: Exact, Strict (default), Content, and Layout. For more information about these levels, see [Match Levels](https://applitools.com/docs/common/cmn-eyes-match-levels.html). In addition to editing the Match Level in Testim, in Applitools Eyes, you can mark a region of your element, viewport, or page, and define it with a different match level.
-* **Enable RCA** – The Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches. The system gathers information from the DOM in order to understand why there was a mismatch. The results can be viewed in Applitools Eyes. This feature requires additional Applitools licensing. RCA enabling in projects with accounts that don’t have this feature license will be rejected by Applitools.
-* **Ignore displacement diffs** – Sometimes an element on a page shifts to a new location, but doesn’t change in any other way. The Ignore displacement diffs feature enables the system to ignore visual differences caused by this type of displacement. When implementing this feature, it is recommended to enable the feature on the step level and not on the configuration/test level.
+* **Add Environment** – テストを実行する 1 つ以上のシミュレートされた環境設定（高度な環境を含む）を追加します。この機能には Ultrafast Test Cloud 用の追加 Applitools ライセンスが必要です。この機能ライセンスのないアカウントで追加された環境は Applitools によって拒否されます。
+* **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/common/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
+* **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、Applitools によって拒否されます。
+* **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
 
-These visual validation parameters can be modified in the following places:
+これらのビジュアル検証パラメータは次の場所で変更できます：
 
-<Table align={["left","left","left"]}>
-  <thead>
-    <tr>
-      <th>
-        Modified in
-      </th>
+| 変更場所 | 適用対象 | 追加情報 |
+|-------------|------------|------------------------|
+| Configuration Library | その設定が指定されたテスト内のすべてのビジュアル検証ステップ（CLI や Scheduler 経由で実行されるテストを含む） | テスト設定の詳細は [Create a shared configuration](/docs/shared-configuration) を参照。CLI の詳細は [Command line interface: Test Config](/docs/the-command-line-cli) を参照。Scheduler の詳細は [Scheduler](/docs/scheduler) を参照。 |
+| テストエディター内のセットアップステップ | テスト内の各ステップに適用。ただし次の場合を除く：<br/>• テストが異なる設定で CLI またはスケジューラから実行される場合、または<br/>• ステップレベルでビジュアル検証パラメータがオーバーライドされている特定ステップの場合。 | |
+| ステップレベル | テストレベルに適用され、テストレベルのビジュアル検証パラメータを上書きします。 | |
 
-      <th>
-        Applies to
-      </th>
+### テスト設定でビジュアル検証設定を変更する
 
-      <th>
-        Additional information
-      </th>
-    </tr>
-  </thead>
+:fa-arrow-right: **テスト設定でビジュアル検証設定を変更するには：**
 
-  <tbody>
-    <tr>
-      <td>
-        Configuration Library
-      </td>
+1. 左メニューで **Runs > Configuration List** に移動します。
 
-      <td>
-        Applies to all visual validation steps run in a test that is set with that configuration (including tests run via CLI or Scheduler).
-      </td>
+![左メニューのRuns > Configuration Listへのナビゲーション](/images/validations/pixel-validation-and-pixel-wait-for/212dd99-Testim_502b.png)
 
-      <td>
-        For more information on test configuration, see [Create a shared configuration](doc:shared-configuration#section-create-a-shared-configuration). For more information about the CLI, see [Command line interface: Test Config](doc:the-command-line-cli#section-test-config). For more information about the Scheduler, see [Scheduler](/docs/running-tests/scheduler).
-      </td>
-    </tr>
+**Configuration Library** が表示されます。
 
-    <tr>
-      <td>
-        Setup Step in the Test Editor
-      </td>
+2. **+ Create New** ボタンをクリックします。
 
-      <td>
-        Applies to each step within the test unless:  
+![Configuration Libraryの+ Create Newボタン](/images/validations/pixel-validation-and-pixel-wait-for/3e415da-Testim_503a.png)
 
-        * the test is run from the CLI or a scheduler with a different configuration, or  
-        * the visual validation parameters are overridden on the step level for a specific step.
-      </td>
-
-      <td>
-
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        Step level
-      </td>
-
-      <td>
-        Applies to the test level and will override test-level visual validation parameters.
-      </td>
-
-      <td>
-
-      </td>
-    </tr>
-  </tbody>
-</Table>
-
-### Modifying visual validation settings in the test Configuration
-
-:fa-arrow-right: **To modify visual validation settings in the test Configuration:**
-
-1. In the left menu, navigate to **Runs > Configuration List**.
-
-![](/images/validations/pixel-validation-and-pixel-wait-for/212dd99-Testim_502b.png "Testim 502b.png")
-
-The **Configuration Library** is shown.
-
-2. Click the **+ Create New** button.
-
-![](/images/validations/pixel-validation-and-pixel-wait-for/3e415da-Testim_503a.png "Testim 503a.png")
-
-3. Enter the basic configuration, as described in [Configuration List](https://help.testim.io/docs/shared-configuration#creating-and-modifying-test-configurations-in-the-configuration-library)
-4. Click **Advanced** and enter advanced settings as explained in [Test Configuration](https://help.testim.io/docs/how-to-record-a-test#section-test-configuration-parameters).\
+3. [Configuration List](/docs/shared-configuration#creating-and-modifying-test-configurations-in-the-configuration-library) に記載されている基本設定を入力します。
+4. **Advanced** をクリックし、[Test Configuration](/docs/how-to-record-a-test) に説明されている詳細設定を入力します。\
    詳細設定が表示されます。
 
-![](/images/validations/pixel-validation-and-pixel-wait-for/938763b-Testim_602_r.png "Testim 602_r.png")
+![Visual validationの詳細設定画面](/images/validations/pixel-validation-and-pixel-wait-for/938763b-Testim_602_r.png)
 
-5. In the **Visual validation** section, click **Add Environment** and enter the desired environment settings
-6. In the **Visual validation** section, modify the settings as follows:
-   * **Match Level**- click the down arrow and choose one of the following Applitools Eyes options: *Exact*, *Strict*, *Content*, or *Layout*.
-   * **Concurrency** - specify the maximum number of Eyes test that can be executed concurrently.
-   * **Enable RCA** - the Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches.
-   * **Ignore displacement diffs** - enables the system to ignore visual differences caused by this type of displacement.
-   * **Visual validation timeout** - modifies the time lapse (in milliseconds) which causes the test to register a fail for visual validation steps.
-7. Click **Add**.\
+5. **Visual validation** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
+6. **Visual validation** セクションで次のように設定を変更します：
+   * **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：*Exact*、*Strict*、*Content*、または *Layout*。
+   * **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+   * **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+   * **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+   * **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
+7. **Add** をクリックします。\
    構成が作成され **Configuration Library** に追加されます。
 
-### Modifying test-level visual validation settings in the Editor
+### エディターでテストレベルのビジュアル検証設定を変更する
 
-:fa-arrow-right: **To modify test-level visual validation settings in the Editor:**
+:fa-arrow-right: **エディターでテストレベルのビジュアル検証設定を変更するには：**
 
-1. Hover over the test’s setup step, and click the **Show Properties** (:fa-cog:) icon.
+1. テストのセットアップステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/pixel-validation-and-pixel-wait-for/3ee33fb-Testim_488a.png "Testim 488a.png")
-
-右側に **Properties** パネルが表示されます。
-
-2. Click the **Edit Configuration** icon.
-
-![](/images/validations/pixel-validation-and-pixel-wait-for/b448b7a-Testim_489a_r.png "Testim 489a_r.png")
-
-3. Under **Visual Validation** settings, click **Add Environment** and enter the desired environment settings.
-
-![](/images/validations/pixel-validation-and-pixel-wait-for/f26de2d-Testim_607a_r.png "Testim 607a_r.png")
-
-4. In the **Visual validation** section, modify the settings as follows:
-   * **Match Level**- click the down arrow and choose one of the following Applitools Eyes options: *Exact*, *Strict*, *Content*, or *Layout*.
-   * **Concurrency** - specify the maximum number of Eyes test that can be executed concurrently.
-   * **Enable RCA** - the Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches.
-   * **Ignore displacement diffs** - enables the system to ignore visual differences caused by this type of displacement.
-   * **Visual validation timeout** - modifies the time lapse (in milliseconds) which causes the test to register a fail for visual validation steps.
-
-### Modifying step-level visual validation settings
-
-:fa-arrow-right: **To access step-level visual validation settings:**
-
-1. Hover over the visual validation step for which you want to modify the settings, and click the **Show Properties** (:fa-cog:) icon.
-
-![](/images/validations/pixel-validation-and-pixel-wait-for/9ffa82b-Testim_493a.png "Testim 493a.png")
+![テストのセットアップステップのShow Propertiesアイコン](/images/validations/pixel-validation-and-pixel-wait-for/3ee33fb-Testim_488a.png)
 
 右側に **Properties** パネルが表示されます。
 
-2. Toggle the **Override test settings** switch to the right.
+2. **Edit Configuration** アイコンをクリックします。
 
-![](/images/validations/pixel-validation-and-pixel-wait-for/cf1ef6d-Testim_608a_r.png "Testim 608a_r.png")
+![PropertiesパネルのEdit Configurationアイコン](/images/validations/pixel-validation-and-pixel-wait-for/b448b7a-Testim_489a_r.png)
 
-The **Override test settings** options are shown.
+3. **Visual Validation** 設定の下で **Add Environment** をクリックし、希望する環境設定を入力します。
 
-![](/images/validations/pixel-validation-and-pixel-wait-for/36df0aa-Testim_609_r.png "Testim 609_r.png")
+![Visual Validation設定のAdd Environment](/images/validations/pixel-validation-and-pixel-wait-for/f26de2d-Testim_607a_r.png)
 
-3. In the **Override test settings** section, click **Add Environment** and enter the desired environment settings.
-4. In the **Override test settings** section, modify the remaining settings as follows:
-   * **Match Level**- click the down arrow and choose one of the following Applitools Eyes options: *Exact*, *Strict*, *Content*, or *Layout*.
-   * **Concurrency** - specify the maximum number of Eyes test that can be executed concurrently.
-   * **Enable RCA** - the Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches.
-   * **Ignore displacement diffs** - enables the system to ignore visual differences caused by this type of displacement.
+4. **Visual validation** セクションで次のように設定を変更します：
+   * **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：*Exact*、*Strict*、*Content*、または *Layout*。
+   * **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+   * **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+   * **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+   * **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
 
-The visual validation parameters are modified for this step, and will override any test-level visual validation parameters currently set.
+### ステップレベルのビジュアル検証設定を変更する
+
+:fa-arrow-right: **ステップレベルのビジュアル検証設定にアクセスするには：**
+
+1. 設定を変更したいビジュアル検証ステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+
+![ビジュアル検証ステップのShow Propertiesアイコン](/images/validations/pixel-validation-and-pixel-wait-for/9ffa82b-Testim_493a.png)
+
+右側に **Properties** パネルが表示されます。
+
+2. **Override test settings** スイッチを右に切り替えます。
+
+![PropertiesパネルのOverride test settingsスイッチ](/images/validations/pixel-validation-and-pixel-wait-for/cf1ef6d-Testim_608a_r.png)
+
+**Override test settings** オプションが表示されます。
+
+![Override test settingsオプション画面](/images/validations/pixel-validation-and-pixel-wait-for/36df0aa-Testim_609_r.png)
+
+3. **Override test settings** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
+4. **Override test settings** セクションで残りの設定を次のように変更します：
+   * **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：*Exact*、*Strict*、*Content*、または *Layout*。
+   * **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+   * **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+   * **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+
+このステップのビジュアル検証パラメータが変更され、現在設定されているテストレベルのビジュアル検証パラメータを上書きします。

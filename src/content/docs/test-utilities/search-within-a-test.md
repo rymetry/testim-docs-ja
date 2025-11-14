@@ -1,13 +1,21 @@
 ---
 title: 'テスト内検索'
-description: '原文: https://help.testim.io/docs/search-within-a-test'
+description: 'テスト内のステップ、JavaScriptコード、パラメーター、URL、条件などを横断検索する方法を学びます。'
 category: 'テストユーティリティ'
 order: 3
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/search-within-a-test'
 keywords:
-  - testim
-  - search-within-a-test
-  - test-utilities
+  - テスト内検索
+  - 検索機能
+  - ステップ検索
+  - JavaScriptコード検索
+  - パラメーター検索
+  - URL検索
+  - 条件検索
+  - ループ検索
+  - テストユーティリティ
+  - 検索制限事項
 ---
 テスト内のオブジェクトを検索する方法
 
@@ -16,12 +24,12 @@ keywords:
 検索対象（制限事項は末尾参照）
 
 * **Step description** — ステップの **Description** フィールドや **Text to assign** フィールドに入力したテキスト
-* **JS Code** — ステップ内の JavaScript コード（例: [Add custom validations and actions](/docs/validations/custom-code) ステップ内のコード）
+* **JS Code** — ステップ内の JavaScript コード（例: [Add custom validations and actions](/docs/custom-code) ステップ内のコード）
 * **Parameters** — ステップ内の JS/HTML パラメーター名・値
 * **Base URL** — ベースURLの任意の部分
-* **URL** — [Navigation Step](/docs/handling-ui-actions/navigation) や [Add an API Action Step](https://help.testim.io/docs/api-testing#adding-an-api-action-step) 内のURLの任意の部分
+* **URL** — [Navigation Step](/docs/navigation) や [Add an API Action Step](https://help.testim.io/docs/api-testing#adding-an-api-action-step) 内のURLの任意の部分
 * **Test Data** — ステップ内のテストデータの任意の部分
-* **Condition** — **When to run step** で **Custom** を選択した際の JavaScript 条件（[Conditions](/docs/conditions/conditions) 参照）
+* **Condition** — **When to run step** で **Custom** を選択した際の JavaScript 条件（[Conditions](/docs/conditions) 参照）
 * **Loop** — **When to run step** で **Loop for** を選択した際の JavaScript 条件
 
 ## 検索の使い方
@@ -29,10 +37,10 @@ keywords:
 :fa-arrow-right: **テスト内を検索するには:**
 
 1. テスト画面で **Search** ボタンをクリックします。\
-   ![](/images/test-utilities/search-within-a-test/e200c02-searchbutton.png)
+   ![検索ボタン](/images/test-utilities/search-within-a-test/e200c02-searchbutton.png)
 2. 検索語を入力します。検索は大文字・小文字を区別しません。検索語は最低 3 文字必要です。\
    検索結果は **Search Results** ペインに表示されます。各結果は、検索語に（完全または部分的に）一致した要素を含むステップを表します。一致箇所は黄色でハイライトされます。詳細は [Understanding the search results](https://help.testim.io/docs/search-within-a-test#understanding-the-search-results) を参照してください。\
-   ![](/images/test-utilities/search-within-a-test/f945272-searchresults.JPG)
+   ![検索結果ペイン](/images/test-utilities/search-within-a-test/f945272-searchresults.JPG)
 3. 任意の検索結果をクリックすると該当ステップが開きます。
 
 ## 検索結果の見方

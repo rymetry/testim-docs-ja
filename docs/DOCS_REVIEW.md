@@ -43,13 +43,37 @@
 ファイル全体について:
 - [ ] プロジェクト全体で`npm run lint`を実行した際にエラーが出ないか
 
+## ルーティングシステムの重要事項
+
+**このプロジェクトのルーティングは、フォルダ構造を無視してファイル名のみを使用します。**
+
+- ファイルパス: `src/content/docs/groups/groups.md`
+- 生成されるURL: `/docs/groups` (フォルダ名は含まれない)
+
+詳細は `src/lib/docs.ts` の `buildNavigation` 関数を参照:
+
+```typescript
+// URLに使うslugは最後のファイル名部分のみ
+const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
+```
+
+**注意:** ファイル名の重複がないため、このシステムは正常に機能します。
+
 ## リンク変換ルール
+
+### 内部リンクの正しい形式
+- ❌ 間違い: `/docs/カテゴリ/ファイル名` (フォルダ構造を含む)
+- ✅ 正しい: `/docs/ファイル名` (ファイル名のみ)
+
+### 変換手順
 1. 記事本文内の全リンクをスキャン
-2. `https://help.testim.io/docs/{path}` 形式のリンクを抽出
-3. `/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/` 内で `{path}.md` ファイルの存在を確認
+2. `https://help.testim.io/docs/{path}` または `/docs/{category}/{filename}` 形式のリンクを抽出
+3. `/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/` 内で対応する `.md` ファイルの存在を確認
+   - 英語URL `https://help.testim.io/docs/testim-overview` → ファイル検索パターン `**/testim-overview.md`
 4. ファイルが存在する場合:
-   - リンクを相対パスに変更: `/docs/{filename}`
+   - リンクをファイル名のみの形式に変更: `/docs/{filename}`
    - 例: `[テキスト](https://help.testim.io/docs/testim-overview)` → `[テキスト](/docs/testim-overview)`
+   - 例: `[Groups](/docs/groups/groups)` → `[Groups](/docs/groups)`
 5. ファイルが存在しない場合:
    - 元の外部リンクを維持
 

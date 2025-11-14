@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み（frontmatter・keywords・リンク・lint）: 21個
-- ✅   翻訳のみ完了: 262個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 55個
+- ✅   翻訳のみ完了: 228個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -54,52 +54,52 @@
 
 ## Steps & Editing Tests（ステップとテスト編集）
 
-- ✅ https://help.testim.io/docs/steps
-- ✅ https://help.testim.io/docs/editing-your-tests
-- ✅ https://help.testim.io/docs/editing-target-element-properties
-- ✅ https://help.testim.io/docs/editing-target-element-properties-mobile
-- ✅ https://help.testim.io/docs/editing-a-steps-properties
+- ✅🔍 https://help.testim.io/docs/steps
+- ✅🔍 https://help.testim.io/docs/editing-your-tests
+- ✅🔍 https://help.testim.io/docs/editing-target-element-properties
+- ✅🔍 https://help.testim.io/docs/editing-target-element-properties-mobile
+- ✅🔍 https://help.testim.io/docs/editing-a-steps-properties
 
 ## Groups（グループ）
 
-- ✅ https://help.testim.io/docs/groups
-- ✅ https://help.testim.io/docs/auto-grouping
-- ✅ https://help.testim.io/docs/auto-complete
-- ✅ https://help.testim.io/docs/shareable-steps
+- ✅🔍 https://help.testim.io/docs/groups
+- ✅🔍 https://help.testim.io/docs/auto-grouping
+- ✅🔍 https://help.testim.io/docs/auto-complete
+- ✅🔍 https://help.testim.io/docs/shareable-steps
 
 ## Conditions（条件分岐）
 
-- ✅ https://help.testim.io/docs/conditions
-- ✅ https://help.testim.io/docs/advanced-conditions-settings
+- ✅🔍 https://help.testim.io/docs/conditions
+- ✅🔍 https://help.testim.io/docs/advanced-conditions-settings
 
 ## Test Utilities（テストユーティリティ）
 
-- ✅ https://help.testim.io/docs/generating-a-random-value
-- ✅ https://help.testim.io/docs/generating-a-date
-- ✅ https://help.testim.io/docs/search-within-a-test
-- ✅ https://help.testim.io/docs/recovering-a-test-that-was-not-saved
-- ✅ https://help.testim.io/docs/advanced-set-text
+- ✅🔍 https://help.testim.io/docs/generating-a-random-value
+- ✅🔍 https://help.testim.io/docs/generating-a-date
+- ✅🔍 https://help.testim.io/docs/search-within-a-test
+- ✅🔍 https://help.testim.io/docs/recovering-a-test-that-was-not-saved
+- ✅🔍 https://help.testim.io/docs/advanced-set-text
 
-## Validations（検証）
+## Validations(検証)
 
-- ✅ https://help.testim.io/docs/validations
-- ✅ https://help.testim.io/docs/validate-element-visible
-- ✅ https://help.testim.io/docs/validate-element-not-visible
-- ✅ https://help.testim.io/docs/validate-element-text
-- ✅ https://help.testim.io/docs/custom-code-1
-- ✅ https://help.testim.io/docs/custom-code
-- ✅ https://help.testim.io/docs/add-cli-validations-and-actions
-- ✅ https://help.testim.io/docs/validate-download
-- ✅ https://help.testim.io/docs/email-validation
-- ✅ https://help.testim.io/docs/html-attribute-validation
-- ✅ https://help.testim.io/docs/validate-element-attribute
-- ✅ https://help.testim.io/docs/checkbox-and-radio-button-validation
-- ✅ https://help.testim.io/docs/pixel-validation-and-pixel-wait-for
-- ✅ https://help.testim.io/docs/add-network-validation
-- ✅ https://help.testim.io/docs/file-upload-step
-- ✅ https://help.testim.io/docs/mongodb-validation
-- ✅ https://help.testim.io/docs/mysql-validation
-- ✅ https://help.testim.io/docs/css-property-validation
+- ✅🔍 https://help.testim.io/docs/validations
+- ✅🔍 https://help.testim.io/docs/validate-element-visible
+- ✅🔍 https://help.testim.io/docs/validate-element-not-visible
+- ✅🔍 https://help.testim.io/docs/validate-element-text
+- ✅🔍 https://help.testim.io/docs/custom-code-1
+- ✅🔍 https://help.testim.io/docs/custom-code
+- ✅🔍 https://help.testim.io/docs/add-cli-validations-and-actions
+- ✅🔍 https://help.testim.io/docs/validate-download
+- ✅🔍 https://help.testim.io/docs/email-validation
+- ✅🔍 https://help.testim.io/docs/html-attribute-validation
+- ✅🔍 https://help.testim.io/docs/validate-element-attribute
+- ✅🔍 https://help.testim.io/docs/checkbox-and-radio-button-validation
+- ✅🔍 https://help.testim.io/docs/pixel-validation-and-pixel-wait-for
+- ✅🔍 https://help.testim.io/docs/add-network-validation
+- ✅🔍 https://help.testim.io/docs/file-upload-step
+- ✅🔍 https://help.testim.io/docs/mongodb-validation
+- ✅🔍 https://help.testim.io/docs/mysql-validation
+- ✅🔍 https://help.testim.io/docs/css-property-validation
 
 ## Accessibility Validations（アクセシビリティ検証）
 

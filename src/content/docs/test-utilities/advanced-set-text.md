@@ -1,17 +1,25 @@
 ---
 title: '動的なテキスト入力'
-description: '原文: https://help.testim.io/docs/advanced-set-text'
+description: 'JavaScript式やパラメーターを組み合わせてSet textステップに動的な値を設定する方法を学びます。'
 category: 'テストユーティリティ'
 order: 5
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/advanced-set-text'
 keywords:
-  - testim
-  - advanced-set-text
-  - test-utilities
+  - 動的テキスト
+  - Set textステップ
+  - JavaScript式
+  - パラメーター
+  - テキスト入力
+  - 動的文字列
+  - データ駆動テスト
+  - 変数
+  - テストユーティリティ
+  - 文字列連結
 ---
 JavaScript とパラメーターを組み合わせて動的なテキストを設定する
 
-**Set text** ステップ（テキスト入力）のあるテストを記録した後、記録時に入力した固定テキストを動的文字列に置き換えられます。動的文字列には JavaScript 式や、あらかじめ作成済みのパラメーターを含めることができます。より高度な活用例については [Data-driven testing](/docs/data-driven-testing/data-driven-testing) を参照してください。
+**Set text** ステップ（テキスト入力）のあるテストを記録した後、記録時に入力した固定テキストを動的文字列に置き換えられます。動的文字列には JavaScript 式や、あらかじめ作成済みのパラメーターを含めることができます。より高度な活用例については [Data-driven testing](/docs/data-driven-testing) を参照してください。
 
 ## JavaScript 式でテキストを設定する
 
@@ -39,7 +47,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 ## パラメーターでテキストを設定する
 
-パラメーターをテキストとして使用するには、事前に別ステップや別テストで作成されている必要があります。詳細は [Parameters](/docs/parameters/parameters) を参照してください。
+パラメーターをテキストとして使用するには、事前に別ステップや別テストで作成されている必要があります。詳細は [Parameters](/docs/parameters) を参照してください。
 
 :fa-arrow-right: **パラメーターでテキストを設定するには:**
 

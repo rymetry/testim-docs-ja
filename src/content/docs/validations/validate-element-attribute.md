@@ -1,44 +1,52 @@
 ---
 title: '要素属性の検証（モバイル）'
-description: '原文: https://help.testim.io/docs/validate-element-attribute'
+description: '要素の属性値が期待通りであることを検証するステップ。HTML属性やDOMプロパティの値を確認し、要素の状態を詳細に検証できます。'
 category: '検証'
 order: 11
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/validate-element-attribute'
 keywords:
-  - testim
-  - validate-element-attribute
-  - validations
+  - 属性検証
+  - 要素属性
+  - DOM属性
+  - HTML
+  - プロパティ
+  - 属性値
+  - UI検証
+  - Web要素
+  - Testim
+  - 動的検証
 ---
 モバイルアプリ内の任意の要素属性を検証する
 
 要素属性検証では、画面上の要素が持つ属性値を検証できます。
 
-## Adding a Validate Element Attribute step
+## Validate Element Attribute ステップの追加
 
 :fa-arrow-right: **Validate Element Attribute を追加するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the validation.
+1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
 
-![](/images/validations/validate-element-attribute/a45b667-small-screen1.png)
+![ステップ追加矢印](/images/validations/validate-element-attribute/a45b667-small-screen1.png)
 
 アクションのオプションが表示されます。
 
-2. Click on the **Toggle breakpoint** button.
+2. **Toggle breakpoint** ボタンをクリックします。
 
-![](/images/validations/validate-element-attribute/2d940f9-small-screen2.png)
+![CLI](/images/validations/validate-element-attribute/2d940f9-small-screen2.png)
 
-3. Click on the **Run test** button, to run the test until the breakpoint.
+3. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
 
-![](/images/validations/validate-element-attribute/3f42de6-small-screen3.png)
+![ステップ追加矢印](/images/validations/validate-element-attribute/3f42de6-small-screen3.png)
 
-4. Hover over the :fa-caret-right: **(arrow symbol)** again and click on the “**M**” (Testim predefined steps).\
+4. 再び :fa-caret-right: **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![](/images/validations/validate-element-attribute/0bd37d9-Testim_237_r.png "Testim 237_r.png")
+![ステップ追加矢印](/images/validations/validate-element-attribute/0bd37d9-Testim_237_r.png "Testim 237_r.png")
 
 5. **Validations** をクリックします。**Validations** メニューが展開されます。メニューをスクロールして **Validate element attribute** を選択します。
 
-![](/images/validations/validate-element-attribute/ee0bd01-elementattribute.png)
+![検証](/images/validations/validate-element-attribute/ee0bd01-elementattribute.png)
 
 :::info
 メニュー上部の検索ボックスで **Validate element attribute** を検索することもできます。
@@ -46,13 +54,13 @@ keywords:
 
 7. **AUT** ウィンドウで検証対象の要素を選択します。検証の設定には要素の属性名が必要です。
 
-![](/images/validations/validate-element-attribute/d65e7f9-image_7.png)
+![検証](/images/validations/validate-element-attribute/d65e7f9-image_7.png)
 
-7. The **Element Attribute Validation** form is shown.
+7. **Element Attribute Validation** フォームが表示されます。
 
-![](/images/validations/validate-element-attribute/6a2c9cd-elementattvalidation.png)
+![検証](/images/validations/validate-element-attribute/6a2c9cd-elementattvalidation.png)
 
-8. **Attribute name** に検証したい属性名（例: checkable, checked, className, clickable）を入力します。利用可能な属性一覧は [List of possible attributes](https://help.testim.io/docs/validate-element-attribute#list-of-possible-attributes) を参照。
+8. **Attribute name** に検証したい属性名（例: checkable, checked, className, clickable）を入力します。利用可能な属性一覧は [List of possible attributes](/docs/validate-element-attribute#list-of-possible-attributes) を参照。
 9. **Expected value** に期待値を入力します（例: `true`）。
 
 :::note
@@ -63,10 +71,10 @@ keywords:
 期待値には正規表現を使用できます。
 :::
 
-Testim will validate whether the selected element attribute's expected value is present when running your test.
+Testim はテスト実行時に、選択した要素の属性が期待値を持つかどうかを検証します。
 
-10. Click **OK**. The “Validate element attribute” step is added in the **Editor**, and a thumbnail of the selected element is shown in the step.
-11. Click on the **Toggle Breakpoint** button after the validation step to remove the breakpoint.
+10. **OK** をクリックします。**Editor** に「Validate element attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+11. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
 ## Validate element attribute ステップの修正
 
@@ -74,20 +82,20 @@ Testim will validate whether the selected element attribute's expected value is 
 
 :fa-arrow-right: **検証ステップで選択要素を再割り当てするには:**
 
-1. Hover over the position to the left of the step for which you want to reassign the element and click on the **Toggle breakpoint** button.
-2. Click on the **Run test** button to run the test until the breakpoint.
-3. Hover over the step for which you want to reassign the element and click on the **Show Properties** (:fa-cog:) icon.
+1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
+2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/validate-element-attribute/7495290-updatedsteps.png)
+![CLI](/images/validations/validate-element-attribute/7495290-updatedsteps.png)
 
 右側に **Properties** パネルが表示されます。
 
-4. Hover over the **Target element** thumbnail to show options, and click **Reassign**.
+4. **Target element** サムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。
 
-![](/images/validations/validate-element-attribute/61bac26-reassign.png)
+![CLI](/images/validations/validate-element-attribute/61bac26-reassign.png)
 
-5. In the **AUT** window, identify the new element that you would like to select and click on it.\
-   The selected element is shown in the **Target element** box in the **Properties** panel.
+5. **AUT** ウィンドウで、新しく選択したい要素を特定しクリックします。\
+   選択された要素が **Properties** パネルの **Target element** ボックスに表示されます。
 6. **Attribute name** に新しい要素の属性名を入力します。
 7. **Expected value** に新しい属性の期待値を入力します。
 
@@ -95,28 +103,28 @@ Testim will validate whether the selected element attribute's expected value is 
 **Attribute name** と **Expected value** を編集する際は、値をクォートで囲んでください（例: `'enabled'` / `'true'`）。
 :::
 
-8. Click on the same **Toggle Breakpoint** button to the left of the step for which you reassigned the element to remove the breakpoint.
+8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
 :fa-arrow-right: **元の要素のプロパティを編集するには:**
 
-1. Hover over the step for which you want to reassign the element and click on the **Show Properties** (:fa-cog:) icon.
+1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/validate-element-attribute/240621e-properties.png)
+![CLI](/images/validations/validate-element-attribute/240621e-properties.png)
 
 右側に **Properties** パネルが表示されます。
 
-2. In the **Properties** panel **Attribute name** field enter the new attribute name for the element.
-3. In the **Properties** panel **Expected value** field enter the new expected value of the attribute.
+2. **Properties** パネルの **Attribute name** フィールドに、要素の新しい属性名を入力します。
+3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
 
-![](/images/validations/validate-element-attribute/4865d83-propertiespanel.png)
+![属性](/images/validations/validate-element-attribute/4865d83-propertiespanel.png)
 
 > 📘
 >
-> When modifying the value of the **Attribute name** and **Expected value** in the **Properties** panel, make sure they are enclosed in single quotes: e.g. ‘clickable’ and 'true'.
+> **Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'clickable' と 'true'。
 
-## List of possible attributes
+## 利用可能な属性一覧
 
-### iOS attributes (using Appium)
+### iOS 属性(Appium 使用時)
 
 * checkable
 * checked
@@ -140,7 +148,7 @@ Testim will validate whether the selected element attribute's expected value is 
 * displayed
 * contentSize
 
-### Android attributes
+### Android 属性
 
 * UID
 * accessibilityContainer

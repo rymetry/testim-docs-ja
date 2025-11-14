@@ -100,4 +100,4 @@ Smart Locators は各テスト実行で学習します。一部の属性が変�
 ## 次のステップ
 
 - [Testim ビジュアルエディタで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- [Testim ビジュアルエディタで初めてのモバイルテストを作成する](/docs/getting-started/creating-your-first-mobile-test-in-testim-visual-editor)
+- [Testim ビジュアルエディタで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

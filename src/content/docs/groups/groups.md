@@ -1,13 +1,21 @@
 ---
-title: 'Groups'
-description: '原文: https://help.testim.io/docs/groups'
+title: 'グループ'
+description: '複数のステップをグループにまとめて再利用する方法を学びます。グループの作成、プロパティ設定、他のテストでの再利用、変更方法について解説します。'
 category: 'グループ'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/groups'
 keywords:
-  - testim
-  - groups
-  - groups
+  - グループ
+  - 共有グループ
+  - ステップのグループ化
+  - 再利用
+  - グループプロパティ
+  - クローン
+  - テスト整理
+  - パラメータ
+  - ブランチ
+  - グループ管理
 ---
 再利用を活用するために、複数のステップをグループにまとめましょう。
 
@@ -15,7 +23,7 @@ keywords:
 
 この原則は自動テストでも同様に機能します。ステップをグループ化し、プロジェクト内の他のテストから呼び出せるようにすることで、テスト全体を整理できます。テスト間でグループを共有しない場合でも、ビジュアルエディター上に表示されるステップ数を減らすことで、テストの見通しが良くなります。
 
-グループの共有に加えて、他のステップとグループ化せずに共有できるステップもあります。詳しくは [Shareable Steps](/docs/groups/shareable-steps) を参照してください。
+グループの共有に加えて、他のステップとグループ化せずに共有できるステップもあります。詳しくは [Shareable Steps](/docs/shareable-steps) を参照してください。
 
 ## グループの作成
 
@@ -24,83 +32,34 @@ keywords:
 1. ステップを複数選択します。Windows では **Ctrl**、macOS では **Command** キーを押しながら左クリックする、または対象ステップを囲むように領域選択します。
 2. ステップが選択されている状態で **Add Group** をクリックします。
 
-![](/images/groups/groups/9bdc970-Screen_Shot_2021-04-07_at_8.14.41.png)
+![グループ作成ボタン](/images/groups/groups/9bdc970-Screen_Shot_2021-04-07_at_8.14.41.png)
 
 3. **Group Name** フィールドにグループ名を入力します。
 4. このグループをプロジェクト内の他のテストでも使用可能にする場合は、**Shared Group** チェックボックスをオンにします。
-5. 自動グループ化を有効にする場合は、**Apply auto group on matching steps** をオンにし、[Auto-grouping](/docs/groups/auto-grouping) の手順に従います。  
+5. 自動グループ化を有効にする場合は、**Apply auto group on matching steps** をオンにし、[Auto-grouping](/docs/auto-grouping) の手順に従います。
 6. **Confirm** をクリックします。\
    ステップは 1 つのグループステップにまとめられます。グループがテスト間で共有されている場合は **Shared** インジケーターが表示されます。
 
-![](/images/groups/groups/86a6a5f-Screen_Shot_2021-04-07_at_8.16.06.png "Screen Shot 2021-04-07 at 8.16.06.png")
+![共有グループインジケーター](/images/groups/groups/86a6a5f-Screen_Shot_2021-04-07_at_8.16.06.png "Screen Shot 2021-04-07 at 8.16.06.png")
 
 7. グループ内の個々のステップを表示するには、グループをダブルクリックします。
 
-![](/images/groups/groups/053d9d4-Screen_Shot_2021-12-13_at_11.27.08.png "Screen Shot 2021-12-13 at 11.27.08.png")
+![グループ内のステップ表示](/images/groups/groups/053d9d4-Screen_Shot_2021-12-13_at_11.27.08.png "Screen Shot 2021-12-13 at 11.27.08.png")
 
 ## グループプロパティの指定（任意）
 
 グループステップ上で **Show Properties**（:fa-cog:）をクリックすると、**Group Properties** ペインが開きます。
 
-<Table align=["left","left","left"]>
-  <thead>
-    <tr>
-      <th>Property</th>
-      <th>Description</th>
-      <th>Comment</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Shared step name</td>
-      <td>グループの名前。</td>
-      <td>名前を変更すると、すべてのインスタンスが更新されます。</td>
-    </tr>
-    <tr>
-      <td>Description</td>
-      <td>グループの説明。</td>
-      <td>インスタンスごとに異なる説明を設定できます。</td>
-    </tr>
-    <tr>
-      <td>Replace with clone</td>
-      <td>他のインスタンスに影響を与えずに変更できるコピー（クローン）を作成します。</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Params</td>
-      <td>参照: [Parameters for groups](/docs/parameters/parameters-for-groups)</td>
-      <td>名前を変更すると、すべてのインスタンスが更新されます。</td>
-    </tr>
-    <tr>
-      <td>When this step fails</td>
-      <td>グループステップが失敗した場合の動作。</td>
-      <td>名前を変更すると、すべてのインスタンスが更新されます。</td>
-    </tr>
-    <tr>
-      <td>When to run step</td>
-      <td>
-        このグループステップを実行する条件を指定するブレークポイントを作成します。\
-        条件の詳細は [Conditions](/docs/conditions/conditions) を参照してください。
-      </td>
-      <td>名前を変更すると、すべてのインスタンスが更新されます。</td>
-    </tr>
-    <tr>
-      <td>Repeat group</td>
-      <td>
-        条件に基づくループを作成します。詳細は [Loops](/docs/handling-ui-actions/loops) を参照してください。
-      </td>
-      <td>名前を変更すると、すべてのインスタンスが更新されます。</td>
-    </tr>
-    <tr>
-      <td>Context</td>
-      <td>
-        ページ内や複数ページにまたがって、グループ全体を異なる要素に割り当てます。詳しくは\
-        [Group context](/docs/advanced-features/group-context) を参照してください。
-      </td>
-      <td>インスタンスごとに値を変えられます。</td>
-    </tr>
-  </tbody>
-</Table>
+| Property | Description | Comment |
+|----------|-------------|---------|
+| Shared step name | グループの名前。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
+| Description | グループの説明。 | インスタンスごとに異なる説明を設定できます。 |
+| Replace with clone | 他のインスタンスに影響を与えずに変更できるコピー（クローン）を作成します。 | |
+| Params | 参照: [Parameters for groups](/docs/parameters-for-groups) | 名前を変更すると、すべてのインスタンスが更新されます。 |
+| When this step fails | グループステップが失敗した場合の動作。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
+| When to run step | このグループステップを実行する条件を指定するブレークポイントを作成します。条件の詳細は [Conditions](/docs/conditions) を参照してください。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
+| Repeat group | 条件に基づくループを作成します。詳細は [Loops](/docs/loops) を参照してください。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
+| Context | ページ内や複数ページにまたがって、グループ全体を異なる要素に割り当てます。詳しくは [Group context](/docs/group-context) を参照してください。 | インスタンスごとに値を変えられます。 |
 
 ## グループの再利用
 
@@ -109,16 +68,16 @@ keywords:
 
 1. 2 つのステップの間にある **>（矢印）** にカーソルを合わせます。
 
-![](/images/groups/groups/d67e999-Screen_Shot_2021-04-07_at_8.23.10.png "Screen Shot 2021-04-07 at 8.23.10.png")
+![ステップ間の矢印アイコン](/images/groups/groups/d67e999-Screen_Shot_2021-04-07_at_8.23.10.png "Screen Shot 2021-04-07 at 8.23.10.png")
 
    アクションのオプションが表示されます。
 
-![](/images/groups/groups/e8714ed-Untitled.png)
+![アクションオプション](/images/groups/groups/e8714ed-Untitled.png)
 
 2. **フォルダー**（Shared steps）をクリックします。\
    Shared steps メニューが開きます。
 
-![](/images/groups/groups/f27f1ea-Testim_070.png)
+![Shared stepsメニュー](/images/groups/groups/f27f1ea-Testim_070.png)
 
 3. グループ名をクリックして新しいステップとして追加します。\
    グループがエディターにステップとして追加されます。
@@ -127,28 +86,28 @@ keywords:
 >
 > 検索ボックスを使ってグループを検索することもできます。
 
-![](/images/groups/groups/ed12ece-Jan-29-2021_05-44-08.gif "Jan-29-2021 05-44-08.gif")
+![グループの検索と追加](/images/groups/groups/ed12ece-Jan-29-2021_05-44-08.gif "Jan-29-2021 05-44-08.gif")
 
-4. ステップがパラメーターの受け渡しを前提としている場合は、[Parameters](/docs/parameters/parameters) セクションを参照し、パラメーター値を編集して割り当てるのを忘れないでください。各ステップは独自のパラメーターを受け渡します（例: 「login」を、あるテストでは「David」、別のテストでは「John」というパラメーターで呼び出す）。
+4. ステップがパラメーターの受け渡しを前提としている場合は、[Parameters](/docs/parameters) セクションを参照し、パラメーター値を編集して割り当てるのを忘れないでください。各ステップは独自のパラメーターを受け渡します（例: 「login」を、あるテストでは「David」、別のテストでは「John」というパラメーターで呼び出す）。
 
 > 📘 Note
 >
-> グループのコピー / 切り取り / 貼り付けも可能です。詳しくは [Editing Tests](/docs/steps-editing-tests/editing-your-tests) を参照してください。
+> グループのコピー / 切り取り / 貼り付けも可能です。詳しくは [Editing Tests](/docs/editing-your-tests) を参照してください。
 
 :fa-arrow-right: **別のテストでグループを再利用するには:**
 
 1. もう一方のテストで、2 つのステップ間の **>（矢印）**、または最後のステップの後ろにある **+（プラス）** にカーソルを合わせます。
 
-![](/images/groups/groups/dd8aa04-Testim_076b.png "Testim 076b.png")
+![ステップ追加位置](/images/groups/groups/dd8aa04-Testim_076b.png "Testim 076b.png")
 
    アクションのオプションが表示されます。
 
-![](/images/groups/groups/f510425-Testim_072a.png)
+![アクションメニュー](/images/groups/groups/f510425-Testim_072a.png)
 
 2. **フォルダー**（Shared steps）をクリックします。\
    Shared steps メニューが開きます。
 
-![](/images/groups/groups/caf4176-Testim_070.png)
+![共有ステップ一覧](/images/groups/groups/caf4176-Testim_070.png)
 
 3. グループ名をクリックして新しいステップとして追加します。\
    グループがエディターにステップとして追加されます。
@@ -180,15 +139,15 @@ keywords:
   * テストを停止
   * **Group Details** に入り、下図のように新しいステップを録画
 
-![](/images/groups/groups/5ebf6b1-record.gif "record.gif")
+![グループへの録画追加](/images/groups/groups/5ebf6b1-record.gif "record.gif")
 
 * **既存ステップの途中に手順を追加して録画** — 直前の最後のステップの状態で AUT を開き、下図のように追加入力を録画します。
 
-![](/images/groups/groups/0265592-Jan-31-2021_05-55-41.gif "Jan-31-2021 05-55-41.gif")
+![ステップ途中への追加録画](/images/groups/groups/0265592-Jan-31-2021_05-55-41.gif "Jan-31-2021 05-55-41.gif")
 
 * **手順の並べ替え / 削除** — ステップをドラッグして順序を変更できます。削除は選択後に DELETE を押します。
 
-![](/images/groups/groups/58446f7-MyVideo_9.gif "MyVideo_9.gif")
+![ステップの並べ替えと削除](/images/groups/groups/58446f7-MyVideo_9.gif "MyVideo_9.gif")
 
 > 📘 Tip
 >
@@ -206,7 +165,7 @@ keywords:
 3. 上部メニューまたはコンテキストメニューの **Hide** をクリック\
    選択した共有ステップが共有ライブラリから非表示になります。既にテストに追加済みのステップには影響しません。
 
-![](/images/groups/groups/35bff41-Untitled.png "Untitled.png")
+![共有ステップの非表示設定](/images/groups/groups/35bff41-Untitled.png "Untitled.png")
 
 ## 共有グループの特定のインスタンスのみをクローンで置き換える
 
@@ -217,11 +176,11 @@ keywords:
 1. クローンしたい共有グループを編集します。
 2. **Properties** パネルで **Replace with a clone** をクリックします。
 
-![](/images/groups/groups/4195e49-replaceclone.png "replaceclone.png")
+![クローンへの置き換え](/images/groups/groups/4195e49-replaceclone.png "replaceclone.png")
 
 3. 新しいグループ名を入力します。
 
-![](/images/groups/groups/96ed6f2-replaceclone2.PNG "replaceclone2.PNG")
+![新しいグループ名の入力](/images/groups/groups/96ed6f2-replaceclone2.PNG "replaceclone2.PNG")
 
 4. 新しいステップを共有として定義するかどうかを選択します。
 5. **Confirm** をクリックします。\

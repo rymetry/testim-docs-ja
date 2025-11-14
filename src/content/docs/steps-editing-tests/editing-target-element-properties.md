@@ -3,13 +3,19 @@ title: 'ターゲット要素のプロパティ編集'
 description: 'ターゲット要素の編集方法を学びます。要素のハイライト、再割り当て、改善、Smart Locatorsの表示方法を解説します。'
 category: 'ステップとテスト編集'
 order: 3
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/editing-target-element-properties'
 keywords:
   - ターゲット要素
   - Smart Locators
   - 要素の再割り当て
   - ロケーター
   - プロパティ編集
+  - ハイライト
+  - 改善
+  - DOM
+  - セレクタ
+  - 自動改善
 ---
 
 ターゲット要素とは、AUT（テスト対象アプリケーション）ブラウザでこのステップのメイン要素として選択された要素です。ターゲット要素は編集可能です。要素自体は、プロパティパネルにサムネイル画像として表示されます。
@@ -156,10 +162,6 @@ Smart Locatorsは、要素/セレクタの一意性を理解するのに役立�
 
 ### Auto Improved Locators
 
-Testimが元のロケーターを自動改善されたロケーターに置き換えた場合、ロケーターパネルの上部に「Locator auto improved」メッセージが表示されます。詳細については、[Locators: Auto Improve](https://help.testim.io/docs/locators-auto-improve)を参照してください。
+Testimが元のロケーターを自動改善されたロケーターに置き換えた場合、ロケーターパネルの上部に「Locator auto improved」メッセージが表示されます。詳細については、[Locators: Auto Improve](/docs/locators-auto-improve)を参照してください。
 
 ![自動改善されたロケーター](/images/steps-editing-tests/editing-target-element-properties/2f1a2ef-autoimprove.png)
-
----
-
-**最終更新**: 約1か月前

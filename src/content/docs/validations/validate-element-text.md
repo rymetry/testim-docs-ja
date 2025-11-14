@@ -1,18 +1,26 @@
 ---
 title: '要素テキストの検証'
-description: '原文: https://help.testim.io/docs/validate-element-text'
+description: '要素に表示されているテキストが期待値と一致するかを検証するステップ。部分一致、完全一致、正規表現など柔軟な検証条件を設定できます。'
 category: '検証'
 order: 4
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/validate-element-text'
 keywords:
-  - testim
-  - validate-element-text
-  - validations
+  - テキスト検証
+  - 要素テキスト
+  - 文字列確認
+  - UI検証
+  - コンテンツ検証
+  - テスト
+  - 自動化
+  - Testim
+  - テキストマッチング
+  - DOM検証
 ---
 期待するテキストが表示されていることを検証する
 
 Element Text 検証は、指定した要素の存在を前提にする点で Element Visible 検証と似ていますが、Element Text 検証ではその要素に表示される「特定のテキスト値」も指定して検証します。複数のテキスト要素をまとめて検証することもできます。\
-検証対象のテキストは、固定文字列のほか、正規表現（Regex）、短い JS 式、パラメーターなどで表せます。詳細は [Advanced text validation](/docs/validations/validate-element-text#advanced-text-validation) を参照してください。
+検証対象のテキストは、固定文字列のほか、正規表現（Regex）、短い JS 式、パラメーターなどで表せます。詳細は [Advanced text validation](/docs/validate-element-text#advanced-text-validation) を参照してください。
 
 :::note
 （Web のみの補足）記録中に、アプリ上のテキストをキーボードショートカットで直接検証として記録できます。Ctrl + 'v' を押して検証したいテキストを選択します。
@@ -24,29 +32,29 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
-![](/images/validations/validate-element-text/c2ef26f-Screen_Shot_2021-04-18_at_6.37.44.png "Screen Shot 2021-04-18 at 6.37.44.png")
+![スクリーンショット](/images/validations/validate-element-text/c2ef26f-Screen_Shot_2021-04-18_at_6.37.44.png "Screen Shot 2021-04-18 at 6.37.44.png")
 
    アクションのオプションが表示されます。
 
-![](/images/validations/validate-element-text/f9aa3c6-Testim_083a_r.png)
+![ステップ追加](/images/validations/validate-element-text/f9aa3c6-Testim_083a_r.png)
 
 2. **Toggle Breakpoint** をクリックします。
 
-![](/images/validations/validate-element-text/388d9b8-Testim_085_r.png)
+![ステップ選択](/images/validations/validate-element-text/388d9b8-Testim_085_r.png)
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![](/images/validations/validate-element-text/b22feac-Screen_Shot_2021-04-18_at_6.39.03.png "Screen Shot 2021-04-18 at 6.39.03.png")
+![スクリーンショット](/images/validations/validate-element-text/b22feac-Screen_Shot_2021-04-18_at_6.39.03.png "Screen Shot 2021-04-18 at 6.39.03.png")
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    Predefined steps メニューが開きます。
 
-![](/images/validations/validate-element-text/46a723c-Testim_034_r.png)
+![検証](/images/validations/validate-element-text/46a723c-Testim_034_r.png)
 
 5. **Validations** をクリックします。\
    Validations セクションが展開されます。
 
-![](/images/validations/validate-element-text/9d4b608-Testim_035_r.png)
+![検証](/images/validations/validate-element-text/9d4b608-Testim_035_r.png)
 
 6. **Validate element text** を選択します。
 
@@ -57,7 +65,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 7. AUT ウィンドウで検証したい要素をクリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![](/images/validations/validate-element-text/1915d47-Testim_090.png "Testim 090.png")
+![検証オプション](/images/validations/validate-element-text/1915d47-Testim_090.png "Testim 090.png")
 
 :::info
 Ctrl キーを押しながら複数の要素をクリックして、複数テキストの検証をまとめて作成することもできます。この場合、すべての検証を含む再利用可能なグループが作成されます。
@@ -71,11 +79,11 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせ、**Testim predefined steps** ボタンをクリックします。
 
-![](/images/validations/validate-element-text/c16fd83-predefined-steps.png "predefined-steps.png")
+![定義済みステップ](/images/validations/validate-element-text/c16fd83-predefined-steps.png "predefined-steps.png")
 
 2. **Validations** 内の **Validate element text** を選択します。
 
-![](/images/validations/validate-element-text/e3ba3d9-validateelementtext.png "validateelementtext.png")
+![要素テキスト検証](/images/validations/validate-element-text/e3ba3d9-validateelementtext.png "validateelementtext.png")
 
 :::note
 メニュー上部の検索ボックスで **Validate element text** を検索することもできます。
@@ -83,11 +91,11 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 3. AUT が開きます。検証したい画面上のテキスト要素を選択します。
 
-![](/images/validations/validate-element-text/90346f6-selectelement.png "selectelement.png")
+![要素選択](/images/validations/validate-element-text/90346f6-selectelement.png "selectelement.png")
 
 4. **Text Validation** ステップが作成され、選択要素のサムネイルがステップに表示されます。
 
-![](/images/validations/validate-element-text/2665c9c-textvalidationstep.png "textvalidationstep.png")
+![検証](/images/validations/validate-element-text/2665c9c-textvalidationstep.png "textvalidationstep.png")
 
 ## Validate element text ステップの修正（Mobile & Web）
 
@@ -101,21 +109,21 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
+![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
 
    右側に Properties パネルが表示されます。
 
 4. **Target element** のサムネイルにカーソルを合わせます。
 
-![](/images/validations/validate-element-text/449b9a6-Testim_011a_r.png)
+![テキスト設定](/images/validations/validate-element-text/449b9a6-Testim_011a_r.png)
 
    **Target element** のオプションが表示されます。
 
-![](/images/validations/validate-element-text/3f8b95d-Testim_010_r.png)
+![要素設定](/images/validations/validate-element-text/3f8b95d-Testim_010_r.png)
 
 5. **Reassign** をクリックします。
 
-![](/images/validations/validate-element-text/b8192be-Testim_010a_r.png)
+![要素設定](/images/validations/validate-element-text/b8192be-Testim_010a_r.png)
 
 6. AUT 上で新しい要素を特定し、クリックして選択します。\
    選択した要素が Properties パネルの **Target element** に表示されます。
@@ -127,13 +135,13 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 1. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
+![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
 
    右側に Properties パネルが表示されます。
 
 2. **Expected value** フィールドに、検証対象のテキスト（文字列 / 正規表現 / JS 式 / パラメーター）を設定します。
 
-![](/images/validations/validate-element-text/d1bc4c3-Testim_011b_r.png)
+![テキスト設定](/images/validations/validate-element-text/d1bc4c3-Testim_011b_r.png)
 
 > 例: 固定文字列や正規表現 `new RegExp('^Hello')`、`'Hello ' + userName` のようにパラメーターと結合した式などを指定できます。
 
@@ -149,14 +157,14 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 ### テストレベルでのパラメーター指定（Web）
 
 1. データ駆動テストの設定でパラメーターを渡します。
-   * **外部ソースからのデータ** → [Configuring data-driven tests using data from an external source](/docs/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)
-   * **Config ファイル** → [Configuration file](/docs/configuration-file/configuration-file-run-hooks), [Config file でのデータ駆動設定](/docs/data-driven-testing/configuring-data-driven-tests-using-the-config-file)
+   * **外部ソースからのデータ** → [Configuring data-driven tests using data from an external source](/docs/configuring-data-driven-tests-using-data-from-an-external-source)
+   * **Config ファイル** → [Configuration file](/docs/configuration-file-run-hooks), [Config file でのデータ駆動設定](/docs/configuring-data-driven-tests-using-the-config-file)
 
 <Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
   **画像をクリックで拡大**
 </Image>
 
-2. パラメーターのスコープが「ステップ」の場合は、[Exports Parameters](/docs/parameters/exports-parameters) を使って Element Text 検証ステップ（またはテストレベル）へエクスポートしてください。\
+2. パラメーターのスコープが「ステップ」の場合は、[Exports Parameters](/docs/exports-parameters) を使って Element Text 検証ステップ（またはテストレベル）へエクスポートしてください。\
    例）`username` というパラメーターに `Hello, John` を渡す場合、カスタムアクションを追加してエディターに以下を入力します。
 
 ```javascript

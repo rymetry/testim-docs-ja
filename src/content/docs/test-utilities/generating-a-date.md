@@ -1,13 +1,21 @@
 ---
-title: 'Generating a Date'
-description: '原文: https://help.testim.io/docs/generating-a-date'
+title: '日付の生成'
+description: '日付や時刻を扱うテスト向けに、指定したフォーマットやタイムゾーンで日付を生成するステップの作成方法を学びます。'
 category: 'テストユーティリティ'
 order: 2
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/generating-a-date'
 keywords:
-  - testim
-  - generating-a-date
-  - test-utilities
+  - 日付生成
+  - Generate date
+  - タイムゾーン
+  - 日付フォーマット
+  - 時差補正
+  - UTC
+  - ブラウザローカル時計
+  - 変数スコープ
+  - テストユーティリティ
+  - 日時入力
 ---
 日付を生成するステップの作成
 
@@ -27,17 +35,17 @@ keywords:
 
    アクションのオプションが表示されます。
 
-![](/images/test-utilities/generating-a-date/f22a0db-Testim_083a.png)
+![アクションオプションメニュー](/images/test-utilities/generating-a-date/f22a0db-Testim_083a.png)
 
 2. **"M"**（Testim の事前定義ステップ）をクリックします。\
    事前定義ステップのメニューが開きます。
 
-![](/images/test-utilities/generating-a-date/bb5ad0a-Testim_034.png)
+![事前定義ステップメニュー](/images/test-utilities/generating-a-date/bb5ad0a-Testim_034.png)
 
 3. **Actions** をクリックします。\
    Actions セクションが展開されます。
 
-![](/images/test-utilities/generating-a-date/981810c-Testim_079.png)
+![Actionsメニュー](/images/test-utilities/generating-a-date/981810c-Testim_079.png)
 
 4. メニューをスクロールして **Generate date** を選択します。
 
@@ -51,62 +59,14 @@ keywords:
 
 ## Generate Date のプロパティ
 
-<Table align=["left","left","left"]>
-  <thead>
-    <tr>
-      <th>プロパティ</th>
-      <th>説明</th>
-      <th>コメント</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Description</td>
-      <td>ステップの名称。</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Variable Name</td>
-      <td>変数名。</td>
-      <td>既定値 - "dateValue"</td>
-    </tr>
-    <tr>
-      <td>Date Format</td>
-      <td>任意の JS 日付フォーマットを指定できます。各フォーマットについては <a href="https://day.js.org/docs/en/display/format">こちら</a> を参照してください。</td>
-      <td>既定値 - 'YYYY-MM-DD'</td>
-    </tr>
-    <tr>
-      <td>Time difference</td>
-      <td>
-        生成する日時をブラウザー時刻や UTC（UTC を選択した場合）から前後にずらせます。<br/>
-        右側の単位フィールドをクリックして（seconds、minutes などの）単位を選択します。<br/>
-        値フィールドで上下キーを使って値を設定します。正の値はブラウザー／UTC 時刻より後、負の値は前を意味します。
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Variable Scope</td>
-      <td>
-        変数を受け渡しできるスコープ：
-        <ul>
-          <li><strong>Local:</strong> 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。</li>
-          <li><strong>Test:</strong> 同一テスト内のステップやグループ間で受け渡しできます。</li>
-          <li><strong>Suite:</strong> 同一テストスイート内のテスト間で受け渡しできます。</li>
-        </ul>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>When this step fails</td>
-      <td>ステップが失敗した場合の動作を指定します。</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>When to run step</td>
-      <td>ステップの実行条件を指定します。詳細は <a href="/docs/conditions/conditions">Conditions</a> を参照してください。</td>
-      <td></td>
-    </tr>
-  </tbody>
-</Table>
+| プロパティ | 説明 | コメント |
+|----------|------|---------|
+| Description | ステップの名称。 | |
+| Variable Name | 変数名。 | 既定値 - "dateValue" |
+| Date Format | 任意の JS 日付フォーマットを指定できます。各フォーマットについては [こちら](https://day.js.org/docs/en/display/format) を参照してください。 | 既定値 - 'YYYY-MM-DD' |
+| Time difference | 生成する日時をブラウザー時刻や UTC（UTC を選択した場合）から前後にずらせます。右側の単位フィールドをクリックして（seconds、minutes などの）単位を選択します。値フィールドで上下キーを使って値を設定します。正の値はブラウザー／UTC 時刻より後、負の値は前を意味します。 | |
+| Variable Scope | 変数を受け渡しできるスコープ：<br/>**Local:** 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。<br/>**Test:** 同一テスト内のステップやグループ間で受け渡しできます。<br/>**Suite:** 同一テストスイート内のテスト間で受け渡しできます。 | |
+| When this step fails | ステップが失敗した場合の動作を指定します。 | |
+| When to run step | ステップの実行条件を指定します。詳細は [Conditions](/docs/conditions) を参照してください。 | |
 
 このステップの使用例は <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/IrAg1rfldG">こちら</a> を参照してください。

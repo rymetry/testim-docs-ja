@@ -1,13 +1,21 @@
 ---
 title: 'MySQL の検証'
-description: '原文: https://help.testim.io/docs/mysql-validation'
+description: 'MySQLデータベースに接続してデータを検証するCLIステップ。テーブルデータの確認やSQLクエリ実行により、データベースの状態を検証できるPro機能です。'
 category: '検証'
 order: 17
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/mysql-validation'
 keywords:
-  - testim
-  - mysql-validation
-  - validations
+  - MySQL
+  - データベース検証
+  - SQL
+  - DB検証
+  - データ検証
+  - クエリ
+  - テーブル
+  - レコード
+  - Testim
+  - データベース接続
 ---
 CLI アクションと SQL で MySQL を検証する
 
@@ -55,4 +63,4 @@ return sequelize
 
 **see screenshot:**
 
-![](/images/validations/mysql-validation/0164122-see_screenshot2.png "see screenshot2.png")
+![スクリーンショット](/images/validations/mysql-validation/0164122-see_screenshot2.png "see screenshot2.png")

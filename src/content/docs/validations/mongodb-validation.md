@@ -1,13 +1,21 @@
 ---
 title: 'MongoDB の検証'
-description: '原文: https://help.testim.io/docs/mongodb-validation'
+description: 'MongoDBデータベースに接続してデータを検証するCLIステップ。ドキュメントの内容確認やクエリ実行により、データベースの状態を検証できるPro機能です。'
 category: '検証'
 order: 16
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/mongodb-validation'
 keywords:
-  - testim
-  - mongodb-validation
-  - validations
+  - MongoDB
+  - データベース検証
+  - NoSQL
+  - DB検証
+  - データ検証
+  - クエリ
+  - コレクション
+  - ドキュメント
+  - Testim
+  - データベース接続
 ---
 CLI アクションステップを使って MongoDB を検証する
 
@@ -73,4 +81,4 @@ return connect()
 
 **see screenshot:**
 
-![](/images/validations/mongodb-validation/c5c8e33-see_screenshot.png "see screenshot.png")
+![スクリーンショット](/images/validations/mongodb-validation/c5c8e33-see_screenshot.png "see screenshot.png")

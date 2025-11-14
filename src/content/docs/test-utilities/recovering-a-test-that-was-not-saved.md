@@ -1,13 +1,21 @@
 ---
 title: '保存されなかったテストの復旧'
-description: '原文: https://help.testim.io/docs/recovering-a-test-that-was-not-saved'
+description: 'ブラウザーキャッシュに自動保存された下書きから、保存されなかったテストを復旧する方法を学びます。'
 category: 'テストユーティリティ'
 order: 4
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/recovering-a-test-that-was-not-saved'
 keywords:
-  - testim
-  - recovering-a-test-that-was-not-saved
-  - test-utilities
+  - テスト復旧
+  - 自動保存
+  - 下書き
+  - ブラウザーキャッシュ
+  - テスト保存
+  - 中断復旧
+  - 未保存テスト
+  - テストユーティリティ
+  - セーブ機能
+  - キャッシュ復元
 ---
 保存されなかったテストの復旧
 
@@ -18,7 +26,7 @@ keywords:
 1. 編集していたテストを開きます。\
    次のダイアログが表示されます。
 
-   ![](/images/test-utilities/recovering-a-test-that-was-not-saved/f9d3bb2-2024-07-01_12-38-43.png)
+   ![テスト復旧ダイアログ](/images/test-utilities/recovering-a-test-that-was-not-saved/f9d3bb2-2024-07-01_12-38-43.png)
 2. 次のいずれかを実行します。
    1. **Recover** をクリックして、未保存のテストを復旧します。
    2. **Dismiss** をクリックして復旧せずに続行します（この場合、下書きではなく最後に保存した状態でテストが開きます）。  

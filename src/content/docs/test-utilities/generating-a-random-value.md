@@ -1,13 +1,21 @@
 ---
-title: 'Generating a random value'
-description: '原文: https://help.testim.io/docs/generating-a-random-value'
+title: 'ランダム値の生成'
+description: '動的データテスト用に乱数を生成するステップの作成方法を学びます。毎回異なるランダム文字列を入力してテストカバレッジを拡張します。'
 category: 'テストユーティリティ'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/generating-a-random-value'
 keywords:
-  - testim
-  - generating-a-random-value
-  - test-utilities
+  - ランダム値生成
+  - Generate random value
+  - 動的データテスト
+  - テキスト入力
+  - 変数スコープ
+  - パラメーター
+  - データカバレッジ
+  - ランダム文字列
+  - テストユーティリティ
+  - Set textステップ
 ---
 動的データテスト用に乱数（ランダム値）を生成するステップの作成
 
@@ -22,17 +30,17 @@ keywords:
 
    アクションのオプションが表示されます。
 
-![](/images/test-utilities/generating-a-random-value/077856e-Testim_224a_r.png)
+![アクションオプションメニュー](/images/test-utilities/generating-a-random-value/077856e-Testim_224a_r.png)
 
 2. **"M"**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![](/images/test-utilities/generating-a-random-value/509a4e6-Testim_034_r.png)
+![事前定義ステップメニュー](/images/test-utilities/generating-a-random-value/509a4e6-Testim_034_r.png)
 
 3. **Actions** をクリックします。\
    Actions メニューが展開されます。
 
-![](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
+![Actionsメニュー](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
 
 4. メニューをスクロールし **Generate random value** を選択します。
 
@@ -65,7 +73,7 @@ keywords:
   * **Test**: 同一テスト内のステップやグループ間で受け渡しできます。*既定値*
   * **Suite**: 同一テストスイート内のテスト間で受け渡しできます。
 * **When this step fails** – ステップが失敗した場合の動作を指定します。
-* **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/conditions/conditions) を参照してください。
+* **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – Testim がテストステップの失敗と見なすまでの規定待機時間を上書きし、別の時間（ミリ秒）を指定できます。
 
 テストを実行すると、生成されたランダム値（任意のプレフィックス／サフィックスを含む）が指定した変数に格納されます。

@@ -1,23 +1,31 @@
 ---
-title: 'Validate email'
-description: '原文: https://help.testim.io/docs/email-validation'
+title: 'メール検証'
+description: 'Testimの組み込みメールサービスを使用してメール受信を検証するステップ。サインアップやログインフローのメール確認テストに利用できるPro機能です。'
 category: '検証'
 order: 9
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/email-validation'
 keywords:
-  - testim
-  - email-validation
-  - validations
+  - メール検証
+  - Eメール
+  - サインアップ
+  - ログイン
+  - メールボックス
+  - 受信確認
+  - テスト用メール
+  - 認証フロー
+  - ユーザー登録
+  - Testim受信箱
 ---
-Validate sign-up and login flows
+サインアップとログインフローを検証する
 
-Testim offers a built-in email service which provides permanent and temporary email addresses. The _Validate email_ step can be used to validate that an email was sent to these email addresses. This step is typically used to test your app sign-up or login flows.
+Testim は、恒久的および一時的なメールアドレスを提供する組み込みメールサービスを備えています。_Validate email_ ステップを使用すると、これらのメールアドレスにメールが送信されたことを検証できます。このステップは通常、アプリのサインアップまたはログインフローをテストするために使用されます。
 
-> 📘 This is a pro feature
+> 📘 これはPro機能です
 >
-> This is a pro feature only open to projects on our professional plan. To learn more about our professional plan, click [here](https://www.testim.io/pricing/).
+> これはProfessionalプランのプロジェクトでのみ利用可能なPro機能です。Professionalプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
 
-The _Validate email_ step is a predefined validation step that receives your Testim inbox content of a specified Testim email address as an array of all of the messages within that mailbox, contained in a parameter named _messages_ with the following fields:
+_Validate email_ ステップは、指定されたTestimメールアドレスのTestim受信箱の内容を、そのメールボックス内のすべてのメッセージの配列として受け取る事前定義された検証ステップです。メッセージは _messages_ という名前のパラメータに含まれ、次のフィールドを持ちます：
 
 | Field name       | Return type                                                                                                                                                               |
 | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -40,179 +48,179 @@ The _Validate email_ step is a predefined validation step that receives your Tes
 | created_at       | string                                                                                                                                                                    |
 | updated_at       | string                                                                                                                                                                    |
 
-The email validation can use one of two types of emails to receive the emails that will be validated:  
+メール検証では、次の2種類のメールアドレスのいずれかを使用して、検証対象のメールを受信できます：
 
-- **Permanent email** - Testim offers a permanent email address that you can use for many purposes, including testing login flows and password reset flows. As part of the test, you will be able to validate that emails are sent to the email address, by adding this email address to the **Validate Email** step. This step will validate that the email was received in the permanent email address, for example, by fetching a link from the email and exporting it.
-- **Temporary email** - There are times you may need to generate a new random email address every time you run a test, for example to test a sign-up flow multiple times with a new user each time. Using the **Generate email address** step, a new email address is generated with every run. You will configure the **Generate email address** step to save the temporary email address as a parameter. And then you will be able to validate that emails are sent to the temporary email address, by adding this parameter to the **Validate Email** step. The **Validate Email** step will validate that the email was received in the temporary email address, for example, by fetching a link from the email and exporting it.
+- **恒久的メール** - Testimは、ログインフローやパスワードリセットフローのテストなど、さまざまな目的で使用できる恒久的なメールアドレスを提供します。テストの一環として、このメールアドレスを **Validate Email** ステップに追加することで、メールアドレスにメールが送信されたことを検証できます。このステップは、恒久的メールアドレスでメールが受信されたことを検証します。例えば、メールからリンクを取得してエクスポートします。
+- **一時的メール** - テストを実行するたびに新しいランダムなメールアドレスを生成する必要がある場合があります。例えば、サインアップフローを毎回新しいユーザーでテストする場合などです。**Generate email address** ステップを使用すると、実行のたびに新しいメールアドレスが生成されます。**Generate email address** ステップを設定して、一時的メールアドレスをパラメータとして保存します。その後、このパラメータを **Validate Email** ステップに追加することで、一時的メールアドレスにメールが送信されたことを検証できます。**Validate Email** ステップは、一時的メールアドレスでメールが受信されたことを検証します。例えば、メールからリンクを取得してエクスポートします。
 
-As a preliminary step to validating emails, create a **permanent email** or use the **Generate email address step** to generate a temporary email address as follows.
+メールを検証する準備段階として、**恒久的メール**を作成するか、**Generate email address ステップ**を使用して一時的メールアドレスを次のように生成します。
 
 > 📘
 >
-> Testim generates email addresses exclusively through its own email service and does not have the ability to utilize third-party email services for creating permanent or temporary email addresses.
+> Testimは独自のメールサービスを通じて専用にメールアドレスを生成しており、サードパーティのメールサービスを利用して恒久的または一時的メールアドレスを作成する機能はありません。
 
-# Option A - Creating a permanent email address
+# オプションA - 恒久的メールアドレスの作成
 
-The process assumes that you have an existing or new test that will include the **Validate email** step.
+このプロセスは、**Validate email** ステップを含む既存または新規のテストがあることを前提としています。
 
-:fa-arrow-right: **To create a permanent email:**
+:fa-arrow-right: **恒久的メールを作成するには：**
 
-1. On the left menu, click on the **Settings** icon.
+1. 左メニューで **Settings** アイコンをクリックします。
 
-![](/images/validations/email-validation/87c09ff-settings.png)
+![設定アイコン](/images/validations/email-validation/87c09ff-settings.png)
 
-2. Click the **Email Service** tab.
+2. **Email Service** タブをクリックします。
 
-![](/images/validations/email-validation/a11da76-emailservice.png)
+![メールサービスタブ](/images/validations/email-validation/a11da76-emailservice.png)
 
-3. Click the **Generate Email Address** button.
+3. **Generate Email Address** ボタンをクリックします。
 
-![](/images/validations/email-validation/16ade5a-213f19a-Testim_293a.png)
+![メールアドレス生成ボタン](/images/validations/email-validation/16ade5a-213f19a-Testim_293a.png)
 
-4. A random email address is generated and shown on the page. Hover your mouse over the email address and click **Copy**, to copy the email address or **Inbox** to view the email's inbox.
+4. ランダムなメールアドレスが生成され、ページに表示されます。メールアドレスにマウスを合わせ、**Copy** をクリックしてメールアドレスをコピーするか、**Inbox** をクリックしてメールの受信箱を表示します。
 
-![](/images/validations/email-validation/b1096f1-caa2097-Testim_295_r.png)
+![コピーボタン](/images/validations/email-validation/b1096f1-caa2097-Testim_295_r.png)
 
-## Using the permanent email in the relevant steps of the test
+## テストの関連ステップで恒久的メールを使用する
 
-This email address can be used as an input in the test. For example, a test that validates the sign up process, in which the user enters an email and password and then receives an email with a link that should be clicked in order to confirm/validate the email. In this example, the permanent email address will be used in the sign up step, where the user enters the email address.
+このメールアドレスはテストの入力として使用できます。例えば、サインアッププロセスを検証するテストでは、ユーザーがメールアドレスとパスワードを入力し、その後メールを確認/検証するためにクリックする必要があるリンクを含むメールを受信します。この例では、ユーザーがメールアドレスを入力するサインアップステップで恒久的メールアドレスが使用されます。
 
-In the example below, the permanent email address was entered to the **Text to assign** field of the **Set text** step, where the user enters the email address into the email field.
+以下の例では、ユーザーがメールフィールドにメールアドレスを入力する **Set text** ステップの **Text to assign** フィールドに恒久的メールアドレスが入力されています。
 
-![](/images/validations/email-validation/ee9773d-signupflow.png)
+![サインアップフロー](/images/validations/email-validation/ee9773d-signupflow.png)
 
-# Option B - Generating a temporary email address
+# オプションB - 一時的メールアドレスの生成
 
-The process assumes that you have an existing or new test that will include the **Generate email address** and the  **Validate email** steps.
+このプロセスは、**Generate email address** と **Validate email** ステップを含む既存または新規のテストがあることを前提としています。
 
-## Adding the Generate Email Address step
+## Generate Email Address ステップの追加
 
-In this step we will add the step that will generate the temporary email address and save the address as a variable to be used in other steps.
+このステップでは、一時的メールアドレスを生成し、そのアドレスを他のステップで使用するための変数として保存するステップを追加します。
 
- :fa-arrow-right: **To generate a temporary email address:**
+ :fa-arrow-right: **一時的メールアドレスを生成するには：**
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![](/images/validations/email-validation/856a8f8-Testim_298a.png "Testim 298a.png")
+![ステップ追加](/images/validations/email-validation/856a8f8-Testim_298a.png "Testim 298a.png")
 
 アクションのオプションが表示されます。
 
-![](/images/validations/email-validation/fd77ed2-Testim_283a_r.png "Testim 283a_r.png")
+![アクションオプション](/images/validations/email-validation/fd77ed2-Testim_283a_r.png "Testim 283a_r.png")
 
 2. Click on the “**M**” (Testim predefined steps).  
    **Predefined steps** メニューが開きます。
 
-![](/images/validations/email-validation/0ab4994-Testim_270_r2.png "Testim 270_r2.png")
+![ステップ選択](/images/validations/email-validation/0ab4994-Testim_270_r2.png "Testim 270_r2.png")
 
-3. Click on **Actions**.  
-   The **Actions** menu expands.
+3. **Actions** をクリックします。  
+   **Actions** メニューが展開されます。
 
-![](/images/validations/email-validation/4502efd-Testim_299_r.png "Testim 299_r.png")
+![メールアドレス生成設定](/images/validations/email-validation/4502efd-Testim_299_r.png "Testim 299_r.png")
 
-4. Scroll down through the menu and select **Generate email address**.
+4. メニューをスクロールして **Generate email address** を選択します。
 
 > 📘
 >
 > メニュー上部の検索ボックスで検索することもできます。
 
-A “Generate email address” step is added in the **Editor**.
+**Editor** に "Generate email address" ステップが追加されます。
 
-5. Hover over the newly created step, and click on the **Show Properties** (:fa-cog:) icon.
+5. 新しく作成されたステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/email-validation/fb10c5b-Testim_300a.png "Testim 300a.png")
+![ステップ追加位置](/images/validations/email-validation/fb10c5b-Testim_300a.png "Testim 300a.png")
 
 右側に **Properties** パネルが表示されます。
 
-![](/images/validations/email-validation/4952255-Testim_301_r.png "Testim 301_r.png")
+![変数名設定](/images/validations/email-validation/4952255-Testim_301_r.png "Testim 301_r.png")
 
-6. In the **Variable name** field, enter name for the variable that will hold the temporary email address. For example, use the value `emailAddress`.
-7. In the **Variable scope** field, specify the scope in which the variable can be passed:
-   1. **Local**: Allows you to pass the _emailAddress_ parameter between steps in the same scope. _This is the default_.
-   2. **Test**: Allows you to pass the _emailAddress_ parameter between steps and groups in the same test.
-   3. **Suite**: Allows you to pass the _emailAddress_ parameter between tests in the same test suite.
-8. Set additional settings in the step and parameters as needed.
-9. Copy the parameter name in the **variable name** field. (e.g. the name `emailAddress`)-  This parameter will be used in the **Email Validation** step.
+6. **Variable name** フィールドに、一時的メールアドレスを保持する変数の名前を入力します。例えば、`emailAddress` という値を使用します。
+7. **Variable scope** フィールドで、変数を渡せるスコープを指定します：
+   1. **Local**: 同じスコープ内のステップ間で _emailAddress_ パラメータを渡すことができます。_これがデフォルトです_。
+   2. **Test**: 同じテスト内のステップとグループ間で _emailAddress_ パラメータを渡すことができます。
+   3. **Suite**: 同じテストスイート内のテスト間で _emailAddress_ パラメータを渡すことができます。
+8. 必要に応じて、ステップとパラメータの追加設定を行います。
+9. **variable name** フィールドのパラメータ名をコピーします（例：`emailAddress` という名前）。このパラメータは **Email Validation** ステップで使用されます。
 
-# Sending emails to the appropriate Testim inbox in advance
+# 事前に適切なTestim受信箱にメールを送信する
 
-At this point the permanent or temporary inboxes are empty from emails. To test that emails are being received in the new inbox, you may want to point the email service to send emails to the newly created inbox.
+この時点では、恒久的または一時的な受信箱にメールはありません。新しい受信箱でメールが受信されていることをテストするために、メールサービスが新しく作成した受信箱にメールを送信するよう設定することができます。
 
-## Finding the email address of the inbox
+## 受信箱のメールアドレスを見つける
 
-### Permanent email address option
+### 恒久的メールアドレスオプション
 
-:fa-arrow-right: **To find the permanent email address:**
+:fa-arrow-right: **恒久的メールアドレスを見つけるには：**
 
-1. Go to **Settings > Email Service**.  
-   The permanent email addresses are displayed.  
-   ![](/images/validations/email-validation/3b33312-emailaddresses.png)
-2. Hover over the relevant email and click **Copy**.  
-   ![](/images/validations/email-validation/bb1c588-emailaddresses2.png)
+1. **Settings > Email Service** に移動します。  
+   恒久的メールアドレスが表示されます。  
+   ![設定アイコン](/images/validations/email-validation/3b33312-emailaddresses.png)
+2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
+   ![コピーボタン](/images/validations/email-validation/bb1c588-emailaddresses2.png)
 
-### Temporary email address option
+### 一時的メールアドレスオプション
 
-In case of the temporary email address option, by using the **Generate email address** step, a new email address is generated with every run. You will configure the **Generate email address** step to save the temporary email address as a parameter. For example, in the following  **Generate email address** step, the parameter the holds the temporary email address is called `tempEmail`. This parameter, which holds the temporary email address, can be used to send the email address to the email service, by for example, using an API step in Testim.
+一時的メールアドレスオプションの場合、**Generate email address** ステップを使用することで、実行のたびに新しいメールアドレスが生成されます。**Generate email address** ステップを設定して、一時的メールアドレスをパラメータとして保存します。例えば、次の **Generate email address** ステップでは、一時的メールアドレスを保持するパラメータは `tempEmail` と呼ばれています。この一時的メールアドレスを保持するパラメータは、例えばTestimのAPIステップを使用して、メールサービスにメールアドレスを送信するために使用できます。
 
-![](/images/validations/email-validation/a0c8558-tempEmail.png)
+![メールアドレス生成ボタン](/images/validations/email-validation/a0c8558-tempEmail.png)
 
-It is also possible to view and copy the temporary email address from the Email Service screen.
+Email Service画面から一時的メールアドレスを表示およびコピーすることも可能です。
 
-:fa-arrow-right: **To find the temporary email address:**
+:fa-arrow-right: **一時的メールアドレスを見つけるには：**
 
-1. Go to **Settings > Email Service**.  
-   The temporary email addresses are marked with "Temporary" in the title.  
-   ![](/images/validations/email-validation/f061421-image_1.png)
-2. Hover over the relevant email and click **Copy**.  
-   ![](/images/validations/email-validation/18ef3a0-image_2.png)
+1. **Settings > Email Service** に移動します。  
+   一時的メールアドレスはタイトルに "Temporary" とマークされています。  
+   ![設定アイコン](/images/validations/email-validation/f061421-image_1.png)
+2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
+   ![コピーボタン](/images/validations/email-validation/18ef3a0-image_2.png)
 
-## Using a Run API Action step
+## Run API Actionステップの使用
 
-The Run API Action step can be used to send the temporary/permanent email address information to an email service and to invoke the service to send an email to this email address.  
+Run API Actionステップを使用して、一時的/恒久的メールアドレス情報をメールサービスに送信し、サービスを呼び出してこのメールアドレスにメールを送信することができます。
 
-The following test example includes a **Generate email address** step, which will generate a temporary email address and store this email address as a parameter called `emailAddress`.
+次のテスト例には **Generate email address** ステップが含まれており、一時的メールアドレスを生成し、このメールアドレスを `emailAddress` というパラメータとして保存します。
 
-![](/images/validations/email-validation/a86cebf-image.png)
+![メールアドレス生成ボタン](/images/validations/email-validation/a86cebf-image.png)
 
-![](/images/validations/email-validation/5973c2a-image_1.png)
+![画像](/images/validations/email-validation/5973c2a-image_1.png)
 
-Following the **Generate email address** step, there is an **Run API Action** step. This step sends a POST API call to the email service and uses the parameter `emailAddress` that was defined in the **Generate email address** step as an input to populate the destination email address, which is defined in the `toAddress` parameter in the code.
+**Generate email address** ステップの後に、**Run API Action** ステップがあります。このステップはメールサービスにPOST API呼び出しを送信し、**Generate email address** ステップで定義された `emailAddress` パラメータを入力として使用し、コード内の `toAddress` パラメータで定義されている宛先メールアドレスを設定します。
 
-![](/images/validations/email-validation/e2ae339-image_2.png)
+![メールアドレス生成ボタン](/images/validations/email-validation/e2ae339-image_2.png)
 
-## Sending emails through any email service
+## 任意のメールサービスを通じたメール送信
 
-You can also send emails to the permanent/temporary email addresses directly through the email services.
+メールサービスを通じて、恒久的/一時的メールアドレスに直接メールを送信することもできます。
 
-# Creating a Validate Email Step
+# Validate Emailステップの作成
 
-As part of this test we want to check that the email (e.g., signup confirmation) was sent to the permanent  or temporary email, by adding a **Validate email step**.
+このテストの一環として、**Validate emailステップ**を追加することで、メール（例：サインアップ確認）が恒久的または一時的メールに送信されたことを確認します。
 
-There are two ways to configure the Validate email step:
+Validate emailステップを設定する方法は2つあります：
 
-- **Coded**- using a JavaScript code it is possible, for example, to check if the email inbox includes the relevant email and also the code can export the links from this email.
-- **Codeless**- this involves configuring settings from the UI that enable the step to identify the relevant email based on a variety of possible conditions and export links or texts from the email.  
+- **Coded** - JavaScriptコードを使用して、例えばメール受信箱に関連するメールが含まれているかを確認し、またコードでこのメールからリンクをエクスポートすることができます。
+- **Codeless** - UIから設定を構成し、さまざまな可能な条件に基づいて関連するメールを特定し、メールからリンクまたはテキストをエクスポートできるようにステップを設定します。
 
-## Creating a Validation Email Step using the Coded Option
+## Codedオプションを使用したValidation Emailステップの作成
 
-:fa-arrow-right: **To create the validate email step:**
+:fa-arrow-right: **validate emailステップを作成するには：**
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![](/images/validations/email-validation/e4b6b3d-Testim_302a.png "Testim 302a.png")
+![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png "Testim 302a.png")
 
 アクションのオプションが表示されます。
 
-![](/images/validations/email-validation/cbc623c-Testim_283a_r.png "Testim 283a_r.png")
+![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png "Testim 283a_r.png")
 
 2. Click on the “**M**” (Testim predefined steps).  
    **Predefined steps** メニューが開きます。
 
-![](/images/validations/email-validation/408099e-Testim_270_r2.png "Testim 270_r2.png")
+![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png "Testim 270_r2.png")
 
 3. Click on **Validations**.  
    **Validations** メニューが展開されます。
 
-![](/images/validations/email-validation/056be62-Testim_303_r.png "Testim 303_r.png")
+![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png "Testim 303_r.png")
 
 4. Scroll down through the menu and select **Validate email**.
 
@@ -222,55 +230,55 @@ There are two ways to configure the Validate email step:
 
 **Add Step** ウィンドウが表示されます。
 
-![](/images/validations/email-validation/667ffe5-Testim_215_r.png "Testim 215_r.png")
+![パラメータ設定](/images/validations/email-validation/667ffe5-Testim_215_r.png "Testim 215_r.png")
 
-5. In the **Name the new step** field, enter a (meaningful) name for this step.
+5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
-6. If this is a shared step to be made available to reuse in this or other tests, keep the box next to **Shared step** selected (default), and choose a folder from the **Select shared step folder** list where you want this step stored. Otherwise, deselect the checkbox.  
-   For more information about shared steps, see [Groups](/docs/groups/groups).
+6. これがこのテストまたは他のテストで再利用できるようにする共有ステップである場合は、**Shared step** の隣のボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダを選択します。そうでない場合は、チェックボックスの選択を解除します。  
+   共有ステップの詳細については、[Groups](/docs/groups)を参照してください。
 
-7. Click **Create Step**.
+7. **Create Step** をクリックします。
 
-8. Click the **Coded** tab.  
-   ![](/images/validations/email-validation/fa0a6bb-coded.png)  
-   The **function** editor opens, and the **Properties** panel opens on the right-hand side.
+8. **Coded** タブをクリックします。  
+   ![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)  
+   **function** エディターが開き、右側に **Properties** パネルが開きます。
 
-9. Do one of the following:  
-   **For the permanent email option** - copy the permanent email address and paste it into the **Email address** field. This email address should be surrounded by single or double quotes.
+9. 次のいずれかを実行します：  
+   **恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。
 
-![](/images/validations/email-validation/9489320-emailaddressfield.png)
+![コピーボタン](/images/validations/email-validation/9489320-emailaddressfield.png)
 
-**For the temporary email option** -
+**一時的メールオプションの場合** -
 
-Enter the name of the **Variable name** parameter, which you defined in the **Generate email address** step,  into the **Email address** field.  
-![](/images/validations/email-validation/3bfe619-image.png)
+**Generate email address** ステップで定義した **Variable name** パラメータの名前を **Email address** フィールドに入力します。  
+![メールアドレス生成ボタン](/images/validations/email-validation/3bfe619-image.png)
 
-> 🚧 The **Email address** field is mandatory.
+> 🚧 **Email address** フィールドは必須です。
 
-10. Set additional settings in the step and parameters as needed.
-11. In the **function** text box, type in the desired JavaScript code. If you have defined parameters, you can refer to those parameters in your JavaScript code. See the [Email validation examples](https://help.testim.io/docs/email-validation#email-validation-examples) section below to learn about different ways to validate the email. The code will typically use value entered into the Email address field as a parameter in the code.
+10. 必要に応じて、ステップとパラメータの追加設定を行います。
+11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメータを定義している場合は、JavaScript コード内でそれらのパラメータを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/email-validation#email-validation-examples) セクションを参照してください。コードは通常、Email address フィールドに入力された値をコード内のパラメータとして使用します。
 
 > 📘
 >
-> If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use `$(<query>).length` instead of `$(<query>)`.
+> HTML パラメータ以外の DOM セレクタ（例：jQuery）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
 
 12. 左上の戻る矢印でエディターに戻ります。
 
-![](/images/validations/email-validation/b4b8e1e-back.png)
+![戻るボタン](/images/validations/email-validation/b4b8e1e-back.png)
 
 > 📘
 >
-> If you opened your AUT to define an HTML element as a parameter, click on the **Toggle Breakpoint** button to remove the breakpoint.
+> AUTを開いてHTML要素をパラメータとして定義した場合は、**Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
 ステップが作成されます。
 
-### Coded email validation examples
+### Codedメール検証の例
 
-#### Validate sign-up subject line
+#### サインアップ件名の検証
 
-You can use the _Validate email_ step to validate the contents of the subject line of an email generated by your app that was sent to a Testim-generated email address.
+_Validate email_ ステップを使用して、アプリが生成してTestim生成メールアドレスに送信したメールの件名の内容を検証できます。
 
-![](/images/validations/email-validation/120320e-Testim_306.png "Testim 306.png")
+![メール検証コード例](/images/validations/email-validation/120320e-Testim_306.png "Testim 306.png")
 
 **Example Code:**
 
@@ -283,11 +291,11 @@ if (messages && messages[0] ){
 return false;
 ```
 
-#### Validate links in body
+#### 本文内のリンクを検証する
 
-You can use the _Validate email_ step to look for hyperlinks in the body of an email, and return the text component and link component of each link found.
+_Validate email_ ステップを使用して、メールの本文内のハイパーリンクを検索し、見つかった各リンクのテキストコンポーネントとリンクコンポーネントを返すことができます。
 
-![](/images/validations/email-validation/df541fc-Testim_307.png "Testim 307.png")
+![メール検証結果](/images/validations/email-validation/df541fc-Testim_307.png "Testim 307.png")
 
 **Example Code:**
 
@@ -316,27 +324,27 @@ var emailLinks = getLinks(messages[0].html);
 exportsTest.emailLink = emailLinks[0];  
 ```
 
-## Creating a Validate Email Step using the Codeless Option
+## Codelessオプションを使用したValidate Emailステップの作成
 
- :fa-arrow-right: **To create the validate email step:**
+ :fa-arrow-right: **validate emailステップを作成するには：**
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![](/images/validations/email-validation/e4b6b3d-Testim_302a.png "Testim 302a.png")
+![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png "Testim 302a.png")
 
 アクションのオプションが表示されます。
 
-![](/images/validations/email-validation/cbc623c-Testim_283a_r.png "Testim 283a_r.png")
+![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png "Testim 283a_r.png")
 
 2. Click on the “**M**” (Testim predefined steps).  
    **Predefined steps** メニューが開きます。
 
-![](/images/validations/email-validation/408099e-Testim_270_r2.png "Testim 270_r2.png")
+![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png "Testim 270_r2.png")
 
 3. Click on **Validations**.  
    **Validations** メニューが展開されます。
 
-![](/images/validations/email-validation/056be62-Testim_303_r.png "Testim 303_r.png")
+![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png "Testim 303_r.png")
 
 4. Scroll down through the menu and select **Validate email**.
 
@@ -346,65 +354,65 @@ exportsTest.emailLink = emailLinks[0];
 
 **Add Step** ウィンドウが表示されます。
 
-![](/images/validations/email-validation/667ffe5-Testim_215_r.png "Testim 215_r.png")
+![パラメータ設定](/images/validations/email-validation/667ffe5-Testim_215_r.png "Testim 215_r.png")
 
-5. In the **Name the new step** field, enter a (meaningful) name for this step.
+5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
-6. If this is a shared step to be made available to reuse in this or other tests, keep the box next to **Shared step** selected (default), and choose a folder from the **Select shared step folder** list where you want this step stored. Otherwise, deselect the checkbox.  
-   For more information about shared steps, see [Groups](/docs/groups/groups).
+6. これがこのテストまたは他のテストで再利用できるようにする共有ステップである場合は、**Shared step** の隣のボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダを選択します。そうでない場合は、チェックボックスの選択を解除します。  
+   共有ステップの詳細については、[Groups](/docs/groups)を参照してください。
 
-7. Click **Create Step**.  
-   ![](/images/validations/email-validation/873ab96-codeless_screen.png)
+7. **Create Step** をクリックします。  
+   ![コードレス画面](/images/validations/email-validation/873ab96-codeless_screen.png)
 
-8. Under **Email Filters**, specify the conditions to identifying the email in the inbox by selecting the checkboxes of the condition types that you want to enable. Emails that match all of these conditions (i.e., AND condition) will be validated and the step will pass, if non of emails in the inbox matches these conditions, the step will fail. All conditions are optional, but at least one condition should be active:
-   1. **Time range** -  specify the time range in minutes of the emails received in the inbox. For example, enter 30 to scan the email that were received in the last 30 minutes.
-   2. **Expected subject** - type the text or part of the text that should be in the subject of the email to match. This can be a partial match. The text field may contain parameters that are within scope, such as `{{param1}}` for instance.
-   3. **Expected body** - type the text or part of the text that should be in the body of the email to match. This can be a partial match. The text field may contain parameters that are within scope, such as `{{param1}}` for instance.
+8. **Email Filters** の下で、有効にしたい条件タイプのチェックボックスを選択して、受信箱内のメールを特定する条件を指定します。これらの条件すべてに一致するメール（つまりAND条件）が検証されてステップが成功します。受信箱内のメールがこれらの条件のいずれにも一致しない場合、ステップは失敗します。すべての条件はオプションですが、少なくとも1つの条件を有効にする必要があります：
+   1. **Time range** - 受信箱で受信したメールの時間範囲を分単位で指定します。例えば、30と入力すると過去30分間に受信したメールをスキャンします。
+   2. **Expected subject** - メールの件名に含まれるべきテキストまたはテキストの一部を入力します。これは部分一致でも構いません。テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメータを含めることができます。
+   3. **Expected body** - メールの本文に含まれるべきテキストまたはテキストの一部を入力します。これは部分一致でも構いません。テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメータを含めることができます。
 
-9. Under **Email text extraction**, specify what should be optionally extracted from the body of the emails that were matched by the email filters, this can be either texts from the email or links from the email. For example, if the email contains a code, similar to SMS code, you can use this feature to extract this code. The extracted texts and links will appear in the step result after its execution. All links are extracted automatically regardless of the extraction settings:
+9. **Email text extraction** の下で、メールフィルタによって一致したメールの本文からオプションで抽出するものを指定します。これはメールからのテキストまたはリンクのいずれかです。例えば、メールにSMSコードのようなコードが含まれている場合、この機能を使用してこのコードを抽出できます。抽出されたテキストとリンクは、実行後にステップ結果に表示されます。すべてのリンクは、抽出設定に関係なく自動的に抽出されます：
 
-   1. Select the checkbox to enable.
-   2. Select one of the following:
-      1. **Location**- select this option if you want to configure conditions for extraction based on the location of the extracted texts.  
-      2. **Regex** - select this option if you want to enter a regular expression as the condition that will define which texts will be extracted from the email.  
+   1. チェックボックスを選択して有効にします。
+   2. 次のいずれかを選択します：
+      1. **Location** - 抽出されるテキストの位置に基づいて抽出条件を設定する場合は、このオプションを選択します。  
+      2. **Regex** - メールから抽出するテキストを定義する条件として正規表現を入力する場合は、このオプションを選択します。  
          > 📘
          >
-         > Entries in this section are case sensitive.
-   3. If you have selected the **Location**option, select one of the following:
+         > このセクションのエントリは大文字と小文字を区別します。
+   3. **Location** オプションを選択した場合は、次のいずれかを選択します：
 
-      1. **Extraction between** - select to extract the text/links that is between the text in the first field and the text in the second field. Type the strings in the first and second fields to define the beginning (after which the text will be extracted) and the end (before which the text will be extracted).
-      2. **Extraction from** - select to extract the text/links that is from the text in the field until the end of the email. Type the strings in the field to define the beginning (after which the text will be extracted).
-      3. **Extraction until** - select to extract the text/links that is from the beginning of the email until the text in the field. Type the strings in the first field to define the end (before which the text will be extracted).
+      1. **Extraction between** - 最初のフィールドのテキストと2番目のフィールドのテキストの間にあるテキスト/リンクを抽出する場合に選択します。最初と2番目のフィールドに文字列を入力して、開始位置（その後からテキストが抽出される）と終了位置（その前までテキストが抽出される）を定義します。
+      2. **Extraction from** - フィールドのテキストからメールの終わりまでのテキスト/リンクを抽出する場合に選択します。フィールドに文字列を入力して開始位置（その後からテキストが抽出される）を定義します。
+      3. **Extraction until** - メールの開始からフィールドのテキストまでのテキスト/リンクを抽出する場合に選択します。最初のフィールドに文字列を入力して終了位置（その前までテキストが抽出される）を定義します。
 
-         The text fields may contain parameters that are within scope, such as `{{param1}}` for instance.
-   4. If you have selected the **Regex** option, enter the regex condition for text extraction in the filed. To see usage examples of regex conditions, [click here](https://www.sitepoint.com/demystifying-regex-with-practical-examples/).
+         テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメータを含めることができます。
+   4. **Regex** オプションを選択した場合は、フィールドにテキスト抽出用のregex条件を入力します。regex条件の使用例を確認するには、[こちらをクリック](https://www.sitepoint.com/demystifying-regex-with-practical-examples/)してください。
 
-10. If you want to verify the email filter and the extraction:
-    1. Under **Verification email inbox address** section, click the field and select one of the permanent email addresses.
-    2. Click **Verify Email Filters**.  
-       When looking at test run, after drilling down the step, the following pane is displayed on the right. The pane displays information about emails that were captured in the specified inbox, including information about the sender, the extracted texts, and the links that were captured.  
-       ![](/images/validations/email-validation/74073d1-verify.png)
+10. メールフィルタと抽出を検証する場合：
+    1. **Verification email inbox address** セクションの下で、フィールドをクリックし、恒久的メールアドレスのいずれかを選択します。
+    2. **Verify Email Filters** をクリックします。  
+       テスト実行を見るとき、ステップをドリルダウンした後、次のペインが右側に表示されます。このペインには、指定された受信箱でキャプチャされたメールに関する情報（送信者、抽出されたテキスト、キャプチャされたリンクなど）が表示されます。  
+       ![受信箱ボタン](/images/validations/email-validation/74073d1-verify.png)
 
-11. Do one of the following:  
-    **For the permanent email option** - copy the permanent email address and paste it into the **Email address** field. This email address should be surrounded by single or double quotes.  
-    ![](/images/validations/email-validation/55551bf-image_3.png)  
-    **For the temporary email option** -  
-    Enter the name of the **Variable name** parameter, which you defined in the **Generate email address** step,  into the **Email address** field.  
-    ![](/images/validations/email-validation/d50b959-image_4.png)
+11. 次のいずれかを実行します：  
+    **恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。  
+    ![コピーボタン](/images/validations/email-validation/55551bf-image_3.png)  
+    **一時的メールオプションの場合** -  
+    **Generate email address** ステップで定義した **Variable name** パラメータの名前を **Email address** フィールドに入力します。  
+    ![メールアドレス生成ボタン](/images/validations/email-validation/d50b959-image_4.png)
 
-12. Set additional settings in the step and parameters as needed.
+12. 必要に応じて、ステップとパラメータの追加設定を行います。
 
-13. Close the pane, click back to view the test, and click **Save** to save the changes.  
+13. ペインを閉じ、戻るをクリックしてテストを表示し、**Save** をクリックして変更を保存します。
 
-14. Set additional settings in the step and parameters as needed.
+14. 必要に応じて、ステップとパラメータの追加設定を行います。
 
 ステップが作成されます。
 
-### Export parameters
+### エクスポートパラメータ
 
-After the step is created, it provides three export parameter that can be used in other steps that are located after the email validation step:
+ステップが作成されると、メール検証ステップの後に配置された他のステップで使用できる3つのエクスポートパラメータが提供されます：
 
-- `emailData` - includes all the parameters in the filtered email
-- `emailExtractedText` - includes the optional extracted text
-- `emailExtractedLinks` - includes the optional array of extracted links.  
-  `emailExtractedLinks` is an array; to access an entry within the array, use `emailExtractedLinks[n]`, where `0` represents the first entry.
+- `emailData` - フィルタされたメール内のすべてのパラメータを含みます
+- `emailExtractedText` - オプションで抽出されたテキストを含みます
+- `emailExtractedLinks` - オプションで抽出されたリンクの配列を含みます。  
+  `emailExtractedLinks` は配列です。配列内のエントリにアクセスするには、`emailExtractedLinks[n]` を使用します。`0` は最初のエントリを表します。

@@ -19,85 +19,12 @@ keywords:
 
 以下の種類をサポートします。未対応の組み合わせは “unsupported keyboard shortcut” エラーになります。
 
-<Table align={["left","left","left"]}>
-  <thead>
-    <tr>
-      <th>
-        ショートカットの種類
-      </th>
-
-      <th>
-        Windows 例
-      </th>
-
-      <th>
-        Mac 例
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td>
-        Alt/Ctrl modifier + char/number/special key
-      </td>
-
-      <td>
-        ALT + X\
-        CTRL + 1 
-      </td>
-
-      <td>
-        <kbd>⌥ Option</kbd> + <kbd>X</kbd>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        Modifier + function key
-      </td>
-
-      <td>
-        Alt + F3\
-        Ctrl + F10
-      </td>
-
-      <td>
-        <kbd>⌥ Option</kbd> + <kbd>F3</kbd>\ <kbd>⌘ Command</kbd> + <kbd>F10</kbd>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        Modifier (\*2) + char/number/special key
-      </td>
-
-      <td>
-        Alt + Ctrl + X\
-        Ctrl + Shift + 1
-      </td>
-
-      <td>
-        <kbd>⌥ Option</kbd> + <kbd>⌘ Command</kbd> + <kbd>X</kbd>\ <kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>1</kbd>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        Modifier (\*2) + function key
-      </td>
-
-      <td>
-        Alt + Ctrl + F12\
-        Ctrl + Shift + F7
-      </td>
-
-      <td>
-        <kbd>⌥ Option</kbd> + <kbd>⌃ Control</kbd> + <kbd>F12</kbd>\ <kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>F7</kbd>
-      </td>
-    </tr>
-  </tbody>
-</Table>
+| ショートカットの種類 | Windows 例 | Mac 例 |
+|------------------|-----------|--------|
+| Alt/Ctrl modifier + char/number/special key | ALT + X<br/>CTRL + 1 | <kbd>⌥ Option</kbd> + <kbd>X</kbd> |
+| Modifier + function key | Alt + F3<br/>Ctrl + F10 | <kbd>⌥ Option</kbd> + <kbd>F3</kbd><br/><kbd>⌘ Command</kbd> + <kbd>F10</kbd> |
+| Modifier (×2) + char/number/special key | Alt + Ctrl + X<br/>Ctrl + Shift + 1 | <kbd>⌥ Option</kbd> + <kbd>⌘ Command</kbd> + <kbd>X</kbd><br/><kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>1</kbd> |
+| Modifier (×2) + function key | Alt + Ctrl + F12<br/>Ctrl + Shift + F7 | <kbd>⌥ Option</kbd> + <kbd>⌃ Control</kbd> + <kbd>F12</kbd><br/><kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>F7</kbd> |
 
 # 手動でショートカットステップを追加
 

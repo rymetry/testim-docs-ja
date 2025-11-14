@@ -1,13 +1,21 @@
 ---
 title: 'ファイルアップロードの検証'
-description: '原文: https://help.testim.io/docs/file-upload-step'
+description: 'ファイルアップロード機能をテストするステップ。ローカルファイルを選択してアップロードする操作を自動化し、ファイル入力フォームの動作を検証します。'
 category: '検証'
 order: 15
-updated: '2025-11-02'
+updated: '2025-09-14'
+sourceUrl: 'https://help.testim.io/docs/file-upload-step'
 keywords:
-  - testim
-  - file-upload-step
-  - validations
+  - ファイルアップロード
+  - アップロード
+  - ファイル選択
+  - フォーム
+  - インプット
+  - ファイル入力
+  - Testim
+  - アップロード検証
+  - ファイル処理
+  - UI操作
 ---
 OS のファイルブラウザーやドラッグ＆ドロップでファイルアップロード操作を記録する
 
@@ -35,66 +43,66 @@ OS のファイルブラウザーやドラッグ＆ドロップでファイル�
 
 :fa-arrow-right: **Chrome で「ダウンロード前に各ファイルの保存場所を確認する」を無効にするには:**
 
-1. In the Chrome browser, click on the **Chrome menu** (three dots at the top right).
+1. Chrome ブラウザーで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 
-![](/images/validations/file-upload-step/66c3a04-Testim_249a.png "Testim 249a.png")
+![CLI](/images/validations/file-upload-step/66c3a04-Testim_249a.png "Testim 249a.png")
 
 **Chrome menu** のオプションが表示されます。
 
-2. Click on **Settings**.
+2. **Settings** をクリックします。
 
-![](/images/validations/file-upload-step/a1dc980-Testim_250a_r.png "Testim 250a_r.png")
+![設定アイコン](/images/validations/file-upload-step/a1dc980-Testim_250a_r.png "Testim 250a_r.png")
 
 **Chrome Settings** ページが開きます。
 
-3. Click on **Advanced**.
+3. **Advanced** をクリックします。
 
-![](/images/validations/file-upload-step/fd3f76e-Testim_251a.png "Testim 251a.png")
+![CLI](/images/validations/file-upload-step/fd3f76e-Testim_251a.png "Testim 251a.png")
 
 **Advanced** メニューが展開されます。
 
-4. Click on **Downloads**.
+4. **Downloads** をクリックします。
 
-![](/images/validations/file-upload-step/bfff7bc-Testim_252a_r.png "Testim 252a_r.png")
+![ダウンロード](/images/validations/file-upload-step/bfff7bc-Testim_252a_r.png "Testim 252a_r.png")
 
 **Downloads** 設定ページが表示されます。
 
-5. Ensure the **Ask where to save each file before downloading** toggle is disabled (to the left). Click on it to toggle between enabled (right) and disabled (left).
+5. **Ask where to save each file before downloading** トグルが無効（左側）になっていることを確認します。クリックすると有効（右側）と無効（左側）を切り替えられます。
 
-![](/images/validations/file-upload-step/6631d57-Testim_253a.png "Testim 253a.png")
+![ステップ追加矢印](/images/validations/file-upload-step/6631d57-Testim_253a.png "Testim 253a.png")
 
 :fa-arrow-right: **「Element must be visible」のチェックを外すには:**
 
-1. Hover over the desired upload step and click on the **Show Properties** (:fa-cog:) icon.
+1. 対象のアップロードステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/file-upload-step/40da018-Testim_254a.png "Testim 254a.png")
+![アップロード](/images/validations/file-upload-step/40da018-Testim_254a.png "Testim 254a.png")
 
 右側に **Properties** パネルが表示されます。
 
-![](/images/validations/file-upload-step/bf62347-Testim_255_r.png "Testim 255_r.png")
+![表示検証](/images/validations/file-upload-step/bf62347-Testim_255_r.png "Testim 255_r.png")
 
-2. Click the **Element must be visible** checkbox to deselect it.
+2. **Element must be visible** チェックボックスをクリックして選択を解除します。
 
 ## ファイルアップロードステップの追加
 
 ファイルアップロードは、AUT へのアップロード操作を記録することで自動的に追加されるステップです（プリセットではありません）。記録時に AUT へアップロードしたファイルはグリッドにもアップロードされ、テスト実行時に利用されます。
 
-:fa-arrow-right: **“File Drop” / “Browse For File” ステップを作成するには:**
+:fa-arrow-right: **"File Drop" / "Browse For File" ステップを作成するには:**
 
-1. In the flow of recording your test, navigate to a location in your app to upload a file. This may be a drag and drop box in your app, or a link which opens your local file browser.
-2. Drag and drop your file(s) or follow the prompts in your local file browser to select your file(s).\
+1. テストの記録中、アプリ内のファイルアップロード場所に移動します。アプリ内のドラッグ＆ドロップボックス、またはローカルファイルブラウザーを開くリンクの場合があります。
+2. ファイルをドラッグ＆ドロップするか、ローカルファイルブラウザーの指示に従ってファイルを選択します。\
    The file is uploaded to the Testim server, and a **File Drop** step or a **Browse For File** step is created.
 
-![](/images/validations/file-upload-step/b79925e-Testim_256a.png "Testim 256a.png")
+![ファイル](/images/validations/file-upload-step/b79925e-Testim_256a.png "Testim 256a.png")
 
 テスト実行時、ファイルはサーバーからローカルにダウンロードされ、AUT にアップロードされます。
 
-:fa-arrow-right: **“File Drop” / “Browse For File” ステップでファイル一覧を確認するには:**
+:fa-arrow-right: **"File Drop" / "Browse For File" ステップでファイル一覧を確認するには:**
 
-1. Hover over the upload step for which you want to view the files and click on the **Show Properties** (:fa-cog:) icon.
+1. ファイル一覧を確認したいアップロードステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/validations/file-upload-step/a68316e-Testim_254a.png "Testim 254a.png")
+![ファイル](/images/validations/file-upload-step/a68316e-Testim_254a.png "Testim 254a.png")
 
 右側の **Properties** パネルにアップロード済みファイルが表示されます。
 
-![](/images/validations/file-upload-step/dd52cc2-Testim_257a_r.png "Testim 257a_r.png")
+![Testimインターフェース](/images/validations/file-upload-step/dd52cc2-Testim_257a_r.png "Testim 257a_r.png")
