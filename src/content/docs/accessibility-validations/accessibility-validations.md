@@ -3,13 +3,19 @@ title: 'ページアクセシビリティ検証'
 description: 'Webページ全体のアクセシビリティレベルをチェックし、アクセシビリティ違反を特定する方法を解説します。'
 category: '検証'
 order: 19
-updated: '2025-11-02'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/accessibility-validations'
 keywords:
   - アクセシビリティ
   - WCAG
   - Axe Core
   - 検証
   - アクセシビリティ準拠
+  - ページ検証
+  - 影響レベル
+  - アクセシビリティレポート
+  - Deque
+  - Chrome
 ---
 
 アクセシブルなWebページとは、障害や機能制限を持つ人々が利用できるように設計されたWebページのことです。米国や欧州のほとんどの組織では、アクセシビリティ準拠が求められています。
@@ -40,31 +46,31 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 1. ステップを追加したい場所の矢印記号にマウスオーバーします。
 
-![](/images/validations/accessibility-validations/04ebd5b-Testim_340a.png)
+![矢印記号にマウスオーバー](/images/validations/accessibility-validations/04ebd5b-Testim_340a.png)
 
 アクションオプションが表示されます。
 
-![](/images/validations/accessibility-validations/4b0c617-Testim_283a_r_action_options.png)
+![アクションオプション](/images/validations/accessibility-validations/4b0c617-Testim_283a_r_action_options.png)
 
 2. **Toggle Breakpoint**ボタンをクリックします。
 
-![](/images/validations/accessibility-validations/96c08f9-Testim_341_r.png)
+![Toggle Breakpointボタン](/images/validations/accessibility-validations/96c08f9-Testim_341_r.png)
 
 3. **Run test**ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![](/images/validations/accessibility-validations/c1f821e-Testim_342a.png)
+![Run testボタン](/images/validations/accessibility-validations/c1f821e-Testim_342a.png)
 
 4. 再度矢印記号にマウスオーバーし、「M」（Testim定義済みステップ）をクリックします。
 
 定義済みステップメニューが開きます。
 
-![](/images/validations/accessibility-validations/ea60818-Testim_270_r2_predefined_steps.png)
+![定義済みステップメニュー](/images/validations/accessibility-validations/ea60818-Testim_270_r2_predefined_steps.png)
 
 5. **Validations**をクリックします。
 
 検証メニューが展開されます。
 
-![](/images/validations/accessibility-validations/e0f49dc-Testim_271_r2_validations_menu.png)
+![検証メニュー](/images/validations/accessibility-validations/e0f49dc-Testim_271_r2_validations_menu.png)
 
 6. メニューをスクロールして**Validate page accessibility**を選択します。
 
@@ -74,11 +80,11 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 エディターにページアクセシビリティ検証ステップが追加されます。
 
-![](/images/validations/accessibility-validations/e967a00-Testim_343a.png)
+![ページアクセシビリティ検証ステップ](/images/validations/accessibility-validations/e967a00-Testim_343a.png)
 
 7. 新しく作成されたステップにマウスオーバーし、**プロパティを表示**（歯車アイコン）をクリックします。
 
-![](/images/validations/accessibility-validations/170105b-Testim_344a.png)
+![プロパティを表示アイコン](/images/validations/accessibility-validations/170105b-Testim_344a.png)
 
 右側にプロパティパネルが開きます。
 
@@ -104,39 +110,39 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 1. 失敗したページアクセシビリティ検証ステップにマウスオーバーし、**プロパティを表示**（歯車アイコン）をクリックします。
 
-![](/images/validations/accessibility-validations/791f79c-Testim_345a.png)
+![失敗したステップのプロパティ表示](/images/validations/accessibility-validations/791f79c-Testim_345a.png)
 
 右側にプロパティパネルが開きます。
 
 2. プロパティパネルで、**Check here for more details**リンクをクリックします。
 
-![](/images/validations/accessibility-validations/08c719f-Screen_Shot_2021-12-20_at_8.27.57.png)
+![Check here for more detailsリンク](/images/validations/accessibility-validations/08c719f-Screen_Shot_2021-12-20_at_8.27.57.png)
 
 :::note
 または、エラーパネルで**Accessibility report**リンクをクリックすることもできます。
 :::
 
-![](/images/validations/accessibility-validations/2b2619c-Testim_345b.png)
+![Accessibility reportリンク](/images/validations/accessibility-validations/2b2619c-Testim_345b.png)
 
 アクセシビリティ結果ウィンドウが表示され（以前に選択した影響レベルに基づいて）、アクセシビリティ問題のリスト、検出された発生回数、影響レベルが表示されます。
 
-![](/images/validations/accessibility-validations/f450ae7-Testim_348z_r.png)
+![アクセシビリティ結果ウィンドウ](/images/validations/accessibility-validations/f450ae7-Testim_348z_r.png)
 
 すべての影響レベルに基づいて見つかったアクセシビリティ問題を表示したい場合は、**All impact level**トグルをクリックします。
 
-![](/images/validations/accessibility-validations/7e6519c-Testim_349za_r.png)
+![All impact levelトグル](/images/validations/accessibility-validations/7e6519c-Testim_349za_r.png)
 
 3. 結果をCSVファイルとしてダウンロードしたい場合は、ダウンロードアイコンをクリックします。（CSVファイルには、合格したものを含むすべてのアクセシビリティテストの結果が含まれます。）
 
-![](/images/validations/accessibility-validations/f155939-Testim_349zb_r.png)
+![ダウンロードアイコン](/images/validations/accessibility-validations/f155939-Testim_349zb_r.png)
 
 4. いずれかの結果の横にある下矢印をクリックすると、以下の詳細情報が表示されます: 説明、問題の修正方法、要素のCSSセレクター。
 
-![](/images/validations/accessibility-validations/47bcc8a-Testim_350a_r2.png)
+![アクセシビリティ問題の詳細](/images/validations/accessibility-validations/47bcc8a-Testim_350a_r2.png)
 
 5. アクセシビリティ問題の発生が複数見つかった場合は、要素のCSSセレクターセクションの矢印をクリックして、問題の異なるインスタンスを表示します。
 
-![](/images/validations/accessibility-validations/09ff7dd-Testim_350b_r2.png)
+![複数のインスタンス表示](/images/validations/accessibility-validations/09ff7dd-Testim_350b_r2.png)
 
 ## ルールの説明
 

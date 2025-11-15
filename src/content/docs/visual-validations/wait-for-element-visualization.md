@@ -3,20 +3,26 @@ title: '要素のビジュアライゼーション待機'
 description: '要素のビジュアライゼーションが条件を満たすまで待機する方法。Applitoolsとの連携により、ビジュアルマッチングを実現します。'
 category: 'ビジュアル検証'
 order: 4
-updated: '2025-11-02'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/wait-for-element-visualization'
 keywords:
   - ビジュアル検証
   - applitools
   - 要素待機
   - wait for
   - visual validation
+  - ビジュアルマッチング
+  - レンダリング待機
+  - DOM検証
+  - ベースライン
+  - Applitools Eyes
 ---
 
 ピクセルレベルでビジュアルの詳細を検証
 
 **要素のビジュアライゼーション待機**ステップを使用すると、テストは要素が視覚的にマッチするまで待機します。このステップは、ネットワークリクエストが完了するのを待つ場合や、ページやDOM要素が完全にレンダリングされるまで待機する必要がある場合に役立ちます。
 
-この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
+この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::warning{title="Applitoolsライセンスについて"}
 RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしではApplitoolsによって拒否されます。詳細については、Applitoolsの担当者にお問い合わせください。

@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 55個
-- ✅   翻訳のみ完了: 228個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 59個
+- ✅   翻訳のみ完了: 224個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -103,15 +103,15 @@
 
 ## Accessibility Validations（アクセシビリティ検証）
 
-- ✅ https://help.testim.io/docs/accessibility-validations
-- ✅ https://help.testim.io/docs/element-accessibility-validation
+- ✅🔍 https://help.testim.io/docs/accessibility-validations
+- ✅🔍 https://help.testim.io/docs/element-accessibility-validation
 
 ## Visual Validations（ビジュアル検証）
 
-- ✅ https://help.testim.io/docs/validate-element-visualization
-- ✅ https://help.testim.io/docs/validate-viewport-visualization
-- ✅ https://help.testim.io/docs/validate-full-page-visualization
-- ✅ https://help.testim.io/docs/wait-for-element-visualization
+- ✅🔍 https://help.testim.io/docs/validate-element-visualization
+- ✅🔍 https://help.testim.io/docs/validate-viewport-visualization
+- ✅🔍 https://help.testim.io/docs/validate-full-page-visualization
+- ✅🔍 https://help.testim.io/docs/wait-for-element-visualization
 
 ## Data-driven Testing(データ駆動テスト)
 

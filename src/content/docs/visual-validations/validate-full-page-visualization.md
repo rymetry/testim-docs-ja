@@ -3,18 +3,24 @@ title: 'フルページのビジュアル検証'
 description: 'ページ全体のピクセルレベルでのビジュアル差異を検証する方法。Applitoolsとの連携により、ベースラインと現在のテスト実行を比較します。'
 category: 'ビジュアル検証'
 order: 3
-updated: '2025-11-02'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/validate-full-page-visualization'
 keywords:
   - ビジュアル検証
   - applitools
   - フルページ検証
   - ピクセル検証
   - full page validation
+  - ページ全体検証
+  - ベースライン比較
+  - ビジュアルテスト
+  - UI検証
+  - Applitools Eyes
 ---
 
 ピクセルレベルでビジュアルの詳細を検証
 
-**フルページのビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
+**フルページのビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::warning{title="Applitoolsライセンスについて"}
 RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしではApplitoolsによって拒否されます。詳細については、Applitoolsの担当者にお問い合わせください。
@@ -55,5 +61,5 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、Applitools Eyesで詳細を開いてください。
 
 :::tip
-**ビューポートのビジュアル検証**ステップまたは**フルページのビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/miscellaneous/keyboard-shortcuts) をご覧ください。
+**ビューポートのビジュアル検証**ステップまたは**フルページのビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/keyboard-shortcuts) をご覧ください。
 :::

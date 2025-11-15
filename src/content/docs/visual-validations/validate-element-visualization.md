@@ -3,18 +3,24 @@ title: '要素のビジュアル検証'
 description: 'ピクセルレベルで要素のビジュアル差異を検証する方法。Applitoolsとの連携により、ベースラインと現在のテスト実行を比較します。'
 category: 'ビジュアル検証'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/validate-element-visualization'
 keywords:
   - ビジュアル検証
   - applitools
   - 要素検証
   - ピクセル検証
   - visual validation
+  - ベースライン比較
+  - ビジュアルテスト
+  - UI検証
+  - 画面検証
+  - Applitools Eyes
 ---
 
 ピクセルレベルでビジュアルの詳細を検証
 
-**要素のビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
+**要素のビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::info{title="PRO機能"}
 この機能はプロフェッショナルプランでのみ利用できます。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/) をご覧ください。
@@ -69,7 +75,7 @@ keywords:
 テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、Applitools Eyesで詳細を開いてください。
 
 :::tip
-**要素のビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/miscellaneous/keyboard-shortcuts) をご覧ください。
+**要素のビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/keyboard-shortcuts) をご覧ください。
 :::
 
 :::note{title="ベースラインの作成"}
