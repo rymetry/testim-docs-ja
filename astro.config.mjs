@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel';
 
 import tailwindcss from '@tailwindcss/vite';
 
@@ -11,8 +12,21 @@ import remarkCalloutDirectives from '@microflash/remark-callout-directives';
 
 import react from '@astrojs/react';
 
+// .envファイルを手動で読み込む
+import { config } from 'dotenv';
+config();
+
+// Basic認証が有効な場合はSSR、無効な場合はStatic
+const isAuthEnabled = process.env.BASIC_AUTH_ENABLED === 'true';
+
+console.log('🔐 BASIC_AUTH_ENABLED:', process.env.BASIC_AUTH_ENABLED);
+console.log('⚙️  Output mode:', isAuthEnabled ? 'server (SSR)' : 'static');
+
 // https://astro.build/config
 export default defineConfig({
+  output: isAuthEnabled ? 'server' : 'static',
+  // Vercel adapterは常に必要（staticでも.vercel/output生成に必須）
+  adapter: vercel({}),
   vite: {
     plugins: [tailwindcss()],
   },
@@ -50,7 +64,7 @@ export default defineConfig({
           // meta文字列からtitleを抽出
           const meta = this.options.meta?.__raw || '';
           const titleMatch = meta.match(/title="([^"]+)"/);
-          
+
           if (titleMatch) {
             const title = titleMatch[1];
             node.properties['data-title'] = title;

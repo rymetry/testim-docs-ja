@@ -3,6 +3,7 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
 import { buildNavigation, getDocs } from '../../lib/docs';
 import { getEntry } from 'astro:content';
 
+// Static生成用: output='static'の時のみ実行される
 export async function getStaticPaths() {
   const docs = await getDocs();
   return docs.map((doc) => {
@@ -17,7 +18,21 @@ export async function getStaticPaths() {
 }
 
 const slugParam = Astro.params.slug ?? 'testim-overview';
-const { docId } = Astro.props;
+const docs = await getDocs();
+
+// SSRモード: URLパラメータからdocIdを解決
+// Staticモード: propsからdocIdを取得
+const docId = Astro.props?.docId ?? (() => {
+  const match = docs.find((doc) => {
+    const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
+    return urlSlug === slugParam;
+  });
+  return match?.id;
+})();
+
+if (!docId) {
+  return Astro.redirect('/404');
+}
 
 // docIdから.mdを除いたものを使用
 const entry = await getEntry('docs', docId.replace(/\.md$/, ''));
@@ -26,7 +41,7 @@ if (!entry) {
   return Astro.redirect('/404');
 }
 
-const [rendered, docs] = await Promise.all([entry.render(), getDocs()]);
+const rendered = await entry.render();
 
 const navSections = buildNavigation(docs);
 const { Content, headings } = rendered;

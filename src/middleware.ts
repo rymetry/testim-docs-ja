@@ -1,0 +1,61 @@
+import type { MiddlewareHandler } from 'astro';
+
+const UNAUTHORIZED_HEADERS = {
+  'WWW-Authenticate': 'Basic realm="Protected", charset="UTF-8"',
+  'X-Robots-Tag': 'noindex, nofollow',
+};
+
+const toBool = (value: string | undefined) => value?.toLowerCase() === 'true';
+
+// Edge Runtime対応: atob (Web標準API) を使用
+const decodeCredentials = (header: string | null) => {
+  if (!header?.startsWith('Basic ')) {
+    return null;
+  }
+
+  try {
+    // Base64デコード (Edge Runtime互換)
+    const decoded = atob(header.slice(6));
+    const separatorIndex = decoded.indexOf(':');
+
+    if (separatorIndex === -1) {
+      return null;
+    }
+
+    return {
+      username: decoded.slice(0, separatorIndex),
+      password: decoded.slice(separatorIndex + 1),
+    };
+  } catch {
+    return null;
+  }
+};
+
+const unauthorizedResponse = () =>
+  new Response('Unauthorized', {
+    status: 401,
+    headers: UNAUTHORIZED_HEADERS,
+  });
+
+export const onRequest: MiddlewareHandler = async ({ request }, next) => {
+  const authEnabled = toBool(process.env.BASIC_AUTH_ENABLED);
+
+  // Basic認証が無効な場合はミドルウェアをスキップ
+  if (!authEnabled) {
+    return next();
+  }
+
+  // Basic認証が有効な場合は認証チェック + noindex
+  const credentials = decodeCredentials(request.headers.get('authorization'));
+  const expectedUser = process.env.BASIC_AUTH_USER ?? '';
+  const expectedPass = process.env.BASIC_AUTH_PASS ?? '';
+
+  if (!credentials || credentials.username !== expectedUser || credentials.password !== expectedPass) {
+    return unauthorizedResponse();
+  }
+
+  // 認証成功時もnoindexヘッダーを付与
+  const response = await next();
+  response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  return response;
+};
