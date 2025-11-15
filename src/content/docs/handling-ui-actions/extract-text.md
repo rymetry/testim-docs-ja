@@ -1,15 +1,21 @@
 ---
 title: '値の抽出ステップ'
-description: '原文: https://help.testim.io/docs/extract-text'
+description: 'Webまたはモバイルアプリケーションからテキストや値を抽出し、後のステップで使用する方法を学びます。'
 category: 'UI操作'
 order: 8
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/extract-text'
 keywords:
   - testim
   - extract-text
   - handling-ui-actions
   - 値の抽出
   - テキスト抽出
+  - 要素抽出
+  - パラメータ化
+  - テスト自動化
+  - UI操作
+  - データ抽出
 ---
 Webまたはモバイルアプリケーションから直接値をコピーして、後のステップで使用できるようにします
 

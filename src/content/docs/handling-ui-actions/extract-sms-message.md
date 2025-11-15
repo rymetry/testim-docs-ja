@@ -1,19 +1,25 @@
 ---
 title: 'SMS メッセージの抽出'
-description: '原文: https://help.testim.io/docs/extract-sms-message'
+description: 'CLIアクションステップとTwilioを使用してSMSメッセージを抽出し、受信時刻とコンテンツの検証を行う方法を学びます。'
 category: 'UI操作'
 order: 9
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/extract-sms-message'
 keywords:
   - testim
   - extract-sms-message
   - handling-ui-actions
   - SMS
   - Twilio
+  - SMSメッセージ
+  - メッセージ検証
+  - CLIアクション
+  - テスト自動化
+  - 二要素認証
 ---
 CLIアクションステップとTwilioを使用してSMSメッセージを抽出する方法を学びます。
 
-[CLIアクションステップ](/docs/validations/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMSメッセージの受信時刻とコンテンツの高度な検証を実行できます。
+[CLIアクションステップ](/docs/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMSメッセージの受信時刻とコンテンツの高度な検証を実行できます。
 
 #### **コード例:**
 

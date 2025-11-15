@@ -213,11 +213,25 @@ async function updateDatesFromEnglish(filePattern = null, dryRun = false) {
     console.log(`  🔄 更新: ${data.updated || 'なし'} → ${englishDate}`);
     
     if (!dryRun) {
-      // frontmatterを更新
-      data.updated = englishDate;
+      // updatedフィールドのみを正規表現で置換（フォーマットを保持）
+      const updatedRegex = /^updated:\s*.*$/m;
+      const newUpdatedLine = `updated: '${englishDate}'`;
       
-      // ファイルを書き換え
-      const newContent = matter.stringify(markdown, data);
+      let newContent;
+      if (updatedRegex.test(content)) {
+        // 既存のupdatedフィールドを置換
+        newContent = content.replace(updatedRegex, newUpdatedLine);
+      } else {
+        // updatedフィールドが存在しない場合は追加（frontmatterの最後に）
+        newContent = content.replace(/^---$/m, (match, offset, string) => {
+          // 最初の---の後に見つかった場合はスキップ
+          const firstDash = string.indexOf('---');
+          if (offset === firstDash) return match;
+          // 2番目の---の前に追加
+          return `${newUpdatedLine}\n${match}`;
+        });
+      }
+      
       fs.writeFileSync(filePath, newContent, 'utf-8');
       
       console.log(`  ✅ ファイルを更新しました\n`);

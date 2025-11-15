@@ -1,14 +1,21 @@
 ---
 title: 'UI操作の処理'
-description: '原文: https://help.testim.io/docs/handling-ui-actions'
+description: 'スクロール、ドラッグ&ドロップ、ホバーなど、特定のUI操作を処理するための特別な手順について説明します。'
 category: 'UI操作'
 order: 1
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/handling-ui-actions'
 keywords:
-  - testim
-  - handling-ui-actions
   - UI操作
   - ユーザーインターフェース
+  - スクロール
+  - ドラッグアンドドロップ
+  - ホバー
+  - ナビゲーション
+  - ページ更新
+  - テスト記録
+  - Webテスト
+  - 自動化テスト
 ---
 特定のUI操作を処理するための特別な手順
 
@@ -36,7 +43,7 @@ keywords:
   <tbody>
     <tr>
       <td>
-        [スクロール](/docs/handling-ui-actions/scroll)
+        [スクロール](/docs/scroll)
       </td>
 
       <td>
@@ -46,7 +53,7 @@ keywords:
 
     <tr>
       <td>
-        [自動スクロール](/docs/handling-ui-actions/auto-scroll)
+        [自動スクロール](/docs/auto-scroll)
       </td>
 
       <td>
@@ -56,7 +63,7 @@ keywords:
 
     <tr>
       <td>
-        [ドラッグ&ドロップステップ](/docs/handling-ui-actions/drag-drop-step)
+        [ドラッグ&ドロップステップ](/docs/drag-drop-step)
       </td>
 
       <td>
@@ -66,7 +73,7 @@ keywords:
 
     <tr>
       <td>
-        [ホバーステップ](/docs/handling-ui-actions/hover-step)
+        [ホバーステップ](/docs/hover-step)
       </td>
 
       <td>
@@ -76,7 +83,7 @@ keywords:
 
     <tr>
       <td>
-        [ナビゲーションステップ](/docs/handling-ui-actions/navigation)
+        [ナビゲーションステップ](/docs/navigation)
       </td>
 
       <td>
@@ -86,7 +93,7 @@ keywords:
 
     <tr>
       <td>
-        [ページの更新](/docs/handling-ui-actions/refresh-page)
+        [ページの更新](/docs/refresh-page)
       </td>
 
       <td>

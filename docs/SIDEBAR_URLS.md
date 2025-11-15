@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 59個
-- ✅   翻訳のみ完了: 224個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 69個
+- ✅   翻訳のみ完了: 214個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -115,23 +115,23 @@
 
 ## Data-driven Testing(データ駆動テスト)
 
-- ✅ https://help.testim.io/docs/data-driven-testing
-- ✅ https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor
-- ✅ https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file
-- ✅ https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source
+- ✅🔍 https://help.testim.io/docs/data-driven-testing
+- ✅🔍 https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor
+- ✅🔍 https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file
+- ✅🔍 https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source
 
 ## Handling UI Actions(UI操作)
 
-- ✅ https://help.testim.io/docs/handling-ui-actions
-- ✅ https://help.testim.io/docs/auto-scroll
-- ✅ https://help.testim.io/docs/drag-drop-step
-- ✅ https://help.testim.io/docs/navigation
-- ✅ https://help.testim.io/docs/refresh-page
-- ✅ https://help.testim.io/docs/scroll
-- ✅ https://help.testim.io/docs/hover-step
-- ✅ https://help.testim.io/docs/extract-text
-- ✅ https://help.testim.io/docs/extract-sms-message
-- ✅ https://help.testim.io/docs/loops
+- ✅🔍 https://help.testim.io/docs/handling-ui-actions
+- ✅🔍 https://help.testim.io/docs/auto-scroll
+- ✅🔍 https://help.testim.io/docs/drag-drop-step
+- ✅🔍 https://help.testim.io/docs/navigation
+- ✅🔍 https://help.testim.io/docs/refresh-page
+- ✅🔍 https://help.testim.io/docs/scroll
+- ✅🔍 https://help.testim.io/docs/hover-step
+- ✅🔍 https://help.testim.io/docs/extract-text
+- ✅🔍 https://help.testim.io/docs/extract-sms-message
+- ✅🔍 https://help.testim.io/docs/loops
 
 ## Parameters（パラメータ）
 

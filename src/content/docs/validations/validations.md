@@ -1,8 +1,7 @@
 ---
-title: 検証
-description:
-  Testimで利用できる検証ステップの概要。要素の可視性、テキスト、属性、ビジュアル、アクセシビリティ、ネットワーク、データベースなど多様な検証方法を提供します。
-category: 検証
+title: '検証'
+description: 'Testimで利用できる検証ステップの概要。要素の可視性、テキスト、属性、ビジュアル、アクセシビリティ、ネットワーク、データベースなど多様な検証方法を提供します。'
+category: '検証'
 order: 1
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validations'

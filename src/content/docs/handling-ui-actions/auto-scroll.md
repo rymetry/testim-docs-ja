@@ -1,14 +1,21 @@
 ---
 title: '自動スクロール'
-description: '原文: https://help.testim.io/docs/auto-scroll'
+description: 'ビューポート外の要素に自動的にスクロールする機能。スクロール関連の不安定性を排除してテストの安定性を向上させます。'
 category: 'UI操作'
 order: 2
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/auto-scroll'
 keywords:
-  - testim
-  - auto-scroll
-  - handling-ui-actions
   - 自動スクロール
+  - UI操作
+  - スクロール
+  - ビューポート
+  - テスト安定性
+  - ステッププロパティ
+  - 要素表示
+  - 自動化テスト
+  - 不安定性解消
+  - Webテスト
 ---
 スクロール関連の不安定性を排除して安定性を向上させます
 

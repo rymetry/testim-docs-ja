@@ -1,14 +1,21 @@
 ---
 title: 'ナビゲーションステップ'
-description: '原文: https://help.testim.io/docs/navigation'
+description: 'テスト内で別のページに移動するナビゲーションステップの追加方法。新しいタブで開くオプションも説明します。'
 category: 'UI操作'
 order: 4
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/navigation'
 keywords:
-  - testim
-  - navigation
-  - handling-ui-actions
   - ナビゲーション
+  - UI操作
+  - ページ移動
+  - URL遷移
+  - 新しいタブ
+  - テストステップ
+  - Webテスト
+  - 自動化テスト
+  - アクション
+  - 定義済みステップ
 ---
 アプリをテストする際にナビゲーションステップを追加する方法を学びます
 

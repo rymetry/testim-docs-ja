@@ -1,14 +1,21 @@
 ---
 title: 'ホバーステップ'
-description: '原文: https://help.testim.io/docs/hover-step'
+description: 'Testimでホバーステップを記録し、マウスオーバーで表示されるメニューやツールチップの動作をテストする方法を学びます。'
 category: 'UI操作'
 order: 7
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/hover-step'
 keywords:
   - testim
   - hover-step
   - handling-ui-actions
   - ホバー
+  - マウスオーバー
+  - ツールチップ
+  - メニュー表示
+  - テスト自動化
+  - UI操作
+  - 要素操作
 ---
 アプリをテストする際に「ホバー」ステップを記録する方法を学びます
 

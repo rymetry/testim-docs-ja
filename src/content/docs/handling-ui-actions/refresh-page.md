@@ -1,15 +1,21 @@
 ---
 title: 'ページ更新ステップ'
-description: '原文: https://help.testim.io/docs/refresh-page'
+description: 'Testimでページ更新ステップを追加し、ブラウザでページの最新バージョンを表示する方法を学びます。'
 category: 'UI操作'
 order: 5
-updated: '2025-11-11'
+updated: '2025-09-15'
+sourceUrl: 'https://help.testim.io/docs/refresh-page'
 keywords:
   - testim
   - refresh-page
   - handling-ui-actions
   - ページ更新
   - リフレッシュ
+  - ブラウザ更新
+  - タブ更新
+  - マルチタブテスト
+  - テスト自動化
+  - UI操作
 ---
 テストに更新ステップを追加する
 

@@ -1,15 +1,21 @@
 ---
 title: '設定ファイルを使用したデータ駆動テストの構成'
-description: '原文: https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file'
+description: '設定ファイルを使用してデータ駆動テストを構成する方法を説明します。'
+sourceUrl: 'https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file'
 category: 'データ駆動テスト'
 order: 3
-updated: '2025-11-11'
+updated: '2025-09-15'
 keywords:
   - testim
   - configuring-data-driven-tests-using-the-config-file
   - data-driven-testing
   - 設定ファイル
   - データ駆動テスト
+  - Configuration File
+  - 複数データセット
+  - beforeSuite
+  - overrideTestData
+  - テストデータ管理
 ---
 
 [設定ファイル](/docs/configuration-file/configuration-file-run-hooks)を編集し、設定ファイルを使用するフラグを追加してCLIでテストを実行することで、1つまたは複数のテストにテストデータを渡すことができます。設定ファイルは、設定ファイルフックを実行しながら、テストを実行するために必要なすべてのパラメータを含む一般的なJSファイルです。これらのフック(例:`beforeSuite`)の1つを通じて、実行全体または特定のテストにテストデータを追加できます。このデータセットは、ビジュアルエディターで定義されたデータセットを上書きできます。
