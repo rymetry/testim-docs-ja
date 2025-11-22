@@ -1,13 +1,21 @@
 ---
 title: '待機（Wait for）'
-description: '原文: https://help.testim.io/docs/wait-for'
+description: '各種「待機」ステップを使って要素の表示・非表示、テキスト、ダウンロード完了などを待ってから処理を進める方法を説明します。'
 category: '高度な機能'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/wait-for'
 keywords:
-  - testim
-  - wait-for
-  - advanced-features
+  - 待機
+  - 要素の表示
+  - 要素の非表示
+  - テキスト待機
+  - スリープ
+  - カスタム待機
+  - ビジュアル検証
+  - ダウンロード待機
+  - Testim
+  - 高度な機能
 ---
 ただ「待つ」必要があるときに。
 
@@ -15,13 +23,13 @@ keywords:
 
 Testim には待機のためのビルトイン機能があります。提供される待機の種類:
 
-* Wait for element visible ([web](wait-for#wait-for-element-visible-web) and [mobile](wait-for#wait-for-element-visible-mobile))
-* Wait for element not visible ([web](wait-for-element-not-visible-web))
-* Wait for element text ([web](wait-for#wait-for-element-text-web) and [mobile](wait-for#wait-for-element-text-mobile))
-* Sleep ([web](wait-for#sleep-web) and [mobile](wait-for#sleep-mobile))
-* Custom Wait for (JavaScript) ([web](wait-for#custom-wait-for-web))
-* Wait for element visualization ([web](wait-for#wait-for-element-visualization-web))
-* Wait for Download ([web](wait-for#wait-for-download-web))
+* 要素の表示待機（[Web](#wait-for-element-visible-web)、[モバイル](#wait-for-element-visible-mobile)）
+* 要素の非表示待機（[Web](#wait-for-element-not-visible-web)）
+* 要素テキストの表示待機（[Web](#wait-for-element-text-web)、[モバイル](#wait-for-element-text-mobile)）
+* スリープ（[Web](#sleep-web)、[モバイル](#sleep-mobile)）
+* カスタム待機（JavaScript）（[Web](#custom-wait-for-web)）
+* 要素のビジュアル待機（[Web](#wait-for-element-visualization-web)）
+* ダウンロード待機（[Web](#wait-for-download-web)）
 
 ## 要素の表示を待つ（Web）
 
@@ -29,18 +37,18 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 :fa-arrow-right: **Wait for Element Visible を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/25e3a64-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/25e3a64-predefined.jpg)
 
-3. Select the **Wait for element visible** step.
+3. **Wait for element visible** ステップを選択します。
 
-![](/images/advanced-features/wait-for/3512b00-wait-for-element-visible-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/3512b00-wait-for-element-visible-step.png)
 
-4. Select the target element in your application.
+4. AUT 上のターゲット要素を選択します。
 
-![](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
 
 > 📘 注意
 >
@@ -48,22 +56,22 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ## 要素の表示を待つ（モバイル）
 
-Use wait for element visible to wait for your element to be visible on the page.
+画面上で要素が表示されるまで待機する場合に **Wait for element visible** を使用します。
 
 :fa-arrow-right: **Wait for Element Visible を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/2737b17-mobile-predefined-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/2737b17-mobile-predefined-step.png)
 
-3. Select the **Wait for element visible** step.
+3. **Wait for element visible** ステップを選択します。
 
-![](/images/advanced-features/wait-for/1403f9a-mobile-element-visible.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/1403f9a-mobile-element-visible.png)
 
-4. Select the **target element**in your application AUT.
+4. AUT 上で対象要素（**target element**）を選択します。
 
-![](/images/advanced-features/wait-for/f85f8ff-select-target.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/f85f8ff-select-target.png)
 
 > 📘 注意
 >
@@ -73,20 +81,20 @@ Use wait for element visible to wait for your element to be visible on the page.
 
 要素がページから消えるまで待機します。
 
-:fa-arrow右: **Wait for Element Not Visible を追加するには:**
+:fa-arrow-right: **Wait for Element Not Visible を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/6b2f5e3-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/6b2f5e3-predefined.jpg)
 
-3. Select the **Wait for element not visible** step.
+3. **Wait for element not visible** ステップを選択します。
 
-![](/images/advanced-features/wait-for/c9ec1c1-element-not-visible-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/c9ec1c1-element-not-visible-step.png)
 
-4. Select the target element in your application.
+4. AUT 上のターゲット要素を選択します。
 
-![](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png)
 
 > 📘 注意
 >
@@ -98,14 +106,14 @@ Use wait for element visible to wait for your element to be visible on the page.
 
 :fa-arrow-right: **待機前の遅延を設定するには:**
 
-1. Enter the properties of the '**Wait for Element not visible**' step that you created.
-2. Check **Pre-step delay**.
+1. 作成した '**Wait for Element not visible**' ステップのプロパティを開きます。
+2. **Pre-step delay** をオンにします。
 
-![](/images/advanced-features/wait-for/7f4b046-pre-step-delay.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/7f4b046-pre-step-delay.png)
 
-3. Set **delay time in milliseconds (ms)**. Testim will wait this amount of time before moving to the next step.
+3. **delay time in milliseconds (ms)** に待機させたい時間をミリ秒で入力します。この時間だけ待ってから次のステップへ進みます。
 
-![](/images/advanced-features/wait-for/e0a7107-delay.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e0a7107-delay.png)
 
 ## 要素テキストの表示を待つ（Web）
 
@@ -113,53 +121,47 @@ Use wait for element visible to wait for your element to be visible on the page.
 
 :fa-arrow-right: **Wait for element text を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/6cae95d-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/6cae95d-predefined.jpg)
 
-3. Select the **Wait for element text** step.
+3. **Wait for element text** ステップを選択します。
 
-![](/images/advanced-features/wait-for/9db9023-wait-element-text-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/9db9023-wait-element-text-step.png)
 
-4. Select the target text element you want to wait for from your app.
+4. 待機対象としたいテキスト要素を AUT 上で選択します。
 
-![](/images/advanced-features/wait-for/00ffc60-text-selection.png)
-
-> 📘 注意
->
-> 同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/00ffc60-text-selection.png)
 
 > 📘 注意
 >
-> '**Expected Value**' にはパラメータ、正規表現、JavaScript式が使用できます。詳細は[高度なテキスト検証](doc:validate-element-text#advanced-text-validation) を参照してください。
+> 同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。  
+> また、'**Expected Value**' にはパラメータ、正規表現、JavaScript式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
 
 ## 要素テキストの表示を待つ（モバイル）
 
-Use wait for element text to make sure a specific text appears before continuing with the test.
+特定のテキストが表示されるまで待機したい場合に **Wait for element text** を使用します。
 
 :fa-arrow-right: **Wait for element text を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/0f45edc-mobile-predefined-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/0f45edc-mobile-predefined-step.png)
 
-3. Select the **Wait for element text** step.
+3. **Wait for element text** ステップを選択します。
 
-![](/images/advanced-features/wait-for/6362268-mobile-element-text.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/6362268-mobile-element-text.png)
 
-4. Select the target text element you want to wait for from your app.
+4. 待機対象としたいテキスト要素を AUT 上で選択します。
 
-![](/images/advanced-features/wait-for/5bb3fab-select-target.png)
-
-> 📘 注意
->
-> 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/5bb3fab-select-target.png)
 
 > 📘 注意
 >
-> 'Expected Value' にはパラメータ、正規表現、JavaScript式が使用できます（Advanced text validation 参照）。
+> 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
+> また、'Expected Value' にはパラメータ、正規表現、JavaScript式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
 
 ## スリープ（Web）
 
@@ -167,56 +169,56 @@ Use wait for element text to make sure a specific text appears before continuing
 
 :fa-arrow-right: **Sleep を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/a5f65a5-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/a5f65a5-predefined.jpg)
 
-3. Select the **Sleep** step.
+3. **Sleep** ステップを選択します。
 
-![](/images/advanced-features/wait-for/e2c3b70-sleep-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e2c3b70-sleep-step.png)
 
 4. 既定は1秒（1,000ms）です。**sleep duration** はステップのプロパティで編集します。
 
-![](/images/advanced-features/wait-for/8cf49cd-sleep-duration.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/8cf49cd-sleep-duration.png)
 
 ## スリープ（モバイル）
 
-Sometimes you want to wait a few seconds between the steps. Use it carefully as constant waiting will make the test run longer.
+ステップ間で数秒待機したい場合に使用します。待機時間が長すぎるとテスト全体の実行時間が延びるため、必要最小限に留めてください。
 
 :fa-arrow-right: **Sleep を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/237cdc5-mobile-predefined-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/237cdc5-mobile-predefined-step.png)
 
-3. Select the **Sleep** step.
+3. **Sleep** ステップを選択します。
 
-![](/images/advanced-features/wait-for/2b5b317-mobile-sleep.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/2b5b317-mobile-sleep.png)
 
 4. 既定は1秒（1,000ms）。**sleep duration** はステップのプロパティで編集します。
 
-![](/images/advanced-features/wait-for/f953339-sleep-duration.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/f953339-sleep-duration.png)
 
 ## 要素のビジュアル待機（Web）
 
-要素が表示されるのを待ち、期待するビジュアルと一致するか検証します。詳細は[ビジュアル検証](/docs/validations/pixel-validation-and-pixel-wait-for) を参照してください。
+要素が表示されるのを待ち、期待するビジュアルと一致するか検証します。詳細は[ビジュアル検証](/docs/pixel-validation-and-pixel-wait-for) を参照してください。
 
 :fa-arrow-right: **Wait for element visualization を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/0819163-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/0819163-predefined.jpg)
 
-3. Select the **Wait for element visualization** step.
+3. **Wait for element visualization** ステップを選択します。
 
-![](/images/advanced-features/wait-for/d8b8712-element-visualization-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/d8b8712-element-visualization-step.png)
 
-4. Select the target element in your application.
+4. AUT 上のターゲット要素を選択します。
 
-![](/images/advanced-features/wait-for/16cbd24-wait-for-element-visible-selection.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/16cbd24-wait-for-element-visible-selection.png)
 
 ## カスタム待機（Web）
 
@@ -224,28 +226,28 @@ Sometimes you want to wait a few seconds between the steps. Use it carefully as 
 
 :fa-arrow-right: **Custom wait for を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/bd85a91-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/bd85a91-predefined.jpg)
 
-3. Select the **Add custom wait for** step.
+3. **Add custom wait for** ステップを選択します。
 
-![](/images/advanced-features/wait-for/dbfd2ee-custom-wait-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/dbfd2ee-custom-wait-step.png)
 
-4. Provide a **name** for the new step and click the **Create Step** button.
+4. 新しいステップの **name** を入力し、**Create Step** をクリックします。
 
-![](/images/advanced-features/wait-for/da06ecb-custom-wait-name.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/da06ecb-custom-wait-name.png)
 
-5. JSエディタで関数内にコードを記述し、True/False を返すことを確認します。
+5. JSエディタで関数内にコードを記述し、true/false を返すことを確認します。
 
-![](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
 > 📘 注意
 >
 > * 関数が true を返すかステップのタイムアウトに達するまでリトライします。
 > * Custom wait for は再利用可能です。
-> * ステップパラメータ、エクスポートパラメータなども利用できます。詳細は[カスタム検証・アクション](/docs/validations/custom-code)。
+> * ステップパラメータ、エクスポートパラメータなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
 
 ## ダウンロード待機（Web）
 
@@ -253,27 +255,27 @@ Sometimes you want to wait a few seconds between the steps. Use it carefully as 
 
 :fa-arrow-right: **Wait for Download を追加するには:**
 
-1. Navigate to the **Test Editor** for your test.
-2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
+1. テストの **Test Editor** を開きます。
+2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
 
-![](/images/advanced-features/wait-for/dde267a-predefined.jpg)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/dde267a-predefined.jpg)
 
-3. Select the **Wait for Download** step.
+3. **Wait for Download** ステップを選択します。
 
-![](/images/advanced-features/wait-for/681c4e7-wait-for-download-step.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/681c4e7-wait-for-download-step.png)
 
-4. Provide a **name** for the new step and click the **Create Step** button.
+4. 新しいステップの **name** を入力し、**Create Step** をクリックします。
 
-![](/images/advanced-features/wait-for/fa1cbce-wait-for-download-step-name.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/fa1cbce-wait-for-download-step-name.png)
 
-5. JSエディタでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/validations/validate-download) を参照。
+5. JSエディタでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/validate-download) を参照してください。
 
-![](/images/advanced-features/wait-for/e553c48-wait-for-download.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e553c48-wait-for-download.png)
 
-6. Click the **Back Arrow** to return to the test editor. Your script will automatically be saved.
+6. **Back Arrow** をクリックしてテストエディタに戻ります。スクリプトは自動的に保存されます。
 
-![](/images/advanced-features/wait-for/4a10d25-return-to-test.png)
+![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/4a10d25-return-to-test.png)
 
 ## Wait For ステップでターゲット要素を再割り当て
 
-作成後でも、ターゲット要素やテキストを再割り当てできます。詳細は[ターゲット要素のプロパティ編集](doc:editing-target-element-properties#reassigningimproving-the-target-element) を参照してください。
+作成後でも、ターゲット要素やテキストを再割り当てできます。詳細は[ターゲット要素のプロパティ編集](/docs/editing-target-element-properties#reassigningimproving-the-target-element) を参照してください。

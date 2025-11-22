@@ -1,15 +1,23 @@
 ---
 title: 'フック（Hooks）'
-description: '原文: https://help.testim.io/docs/hooks'
+description: 'テストやステップの前後に共有ステップ／共有グループを実行するフック（Before/After test、Before/After each step など）の設定方法と代表的なユースケースを説明します。'
 category: '高度な機能'
 order: 8
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/hooks'
 keywords:
-  - testim
-  - hooks
-  - advanced-features
+  - フック
+  - Before test
+  - After test
+  - Before each step
+  - After each step
+  - Test Configuration
+  - Config file
+  - 実行フック
+  - 前処理
+  - 後処理
 ---
-フックは、各ステップの前後やテストの前後に、既存の[共有ステップ](/docs/groups/shareable-steps)や[共有グループ](/docs/groups/groups)を実行する仕組みです。設定後は通常どおりテストを実行でき、フックは他のステップ同様に実行されます。実行後、結果の可視化も可能です。
+フックは、各ステップの前後やテストの前後に、既存の[共有ステップ](/docs/shareable-steps)や[共有グループ](/docs/groups)を実行する仕組みです。設定後は通常どおりテストを実行でき、フックは他のステップ同様に実行されます。実行後、結果の可視化も可能です。
 
 ## よくある用途
 
@@ -17,28 +25,28 @@ keywords:
 
 テスト開始前に特定の処理を実行します。
 
-- Initialization of variables:  can be used to initialize variables that will be used in each test.
-- Preparation of test environment: can be used to prepare the test environment by setting up a database connection, creating necessary directories, or starting a server.
-- Cleaning up after previous tests: can be used to clean up after previous tests and ensure that each test starts with a fresh environment.
-- Sharing setup between tests: can be used to setup shared resources that will be used by multiple tests, reducing duplication of logic.
+- 変数の初期化: 各テストで使用する変数を事前に初期化する処理。
+- テスト環境の準備: DB 接続の確立、必要なディレクトリの作成、サーバー起動など、テスト実行前に環境を整える処理。
+- 前のテストのクリーンアップ: 前回テストの残骸を削除し、毎回クリーンな状態からテストを開始するための処理。
+- 複数テストで共通のセットアップ: 複数テストで共通して必要な前処理をまとめ、重複したロジックを減らすための処理。
 
 ### After test の例
 
 テスト終了後に特定の処理を実行します。
 
-- Cleaning up test environment: can be used to clean up the test environment by closing database connections, removing temporary files, or stopping a server.
-- Verifying results: can be used to verify the results of a test, such as checking the contents of a file, or the state of a database.
-- Restoring original state: can be used to restore the original state of the environment, ensuring that the next test starts with a clean slate.
-- Sharing cleanup between tests: can be used to clean up shared resources that were used by multiple tests, reducing duplication of logic.
+- テスト環境のクリーンアップ: DB 接続のクローズ、一時ファイルの削除、サーバー停止など、テスト後のクリーンアップ処理。
+- 結果の検証: ファイル内容や DB の状態を確認するなど、テスト結果が期待どおりか追加で検証する処理。
+- 元の状態への復元: 次のテストをクリーンな状態で開始できるよう、環境を元の状態に戻す処理。
+- 複数テストで共通の後処理: 複数テストで共通して必要なクリーンアップ処理をまとめ、重複したロジックを減らすための処理。
 
 ### Before/After each step の例
 
-The before and after each step hooks allow you to execute logic before and after each step in a test.
+Before/After each step フックは、テスト内の「各ステップの直前・直後」にロジックを挿入したい場合に使用します。
 
-- Debugging: The before and after step hooks can be used to add 'debugging' statements or to understand the state of the application before and after each step in a test.
-- Verifying intermediate results: The after step hook can be used to verify the intermediate results of a test, such as checking the values of variables after each step.
-- Sharing setup between steps: The before step hook can be used to set up shared resources that will be used by multiple steps, reducing duplication of logic.
-- Monitoring progress: The after step hook can be used to monitor the progress of a test, such as logging the results of each step.
+- デバッグ用途: 各ステップの前後でログを出力し、アプリケーションの状態やパラメータの値を確認する。
+- 中間結果の検証: ステップ実行後に変数の値などをチェックし、中間状態が期待どおりか検証する。
+- ステップ間で共有するセットアップ: 複数ステップで共通して必要な前処理をまとめ、重複したロジックを減らす。
+- 進捗のモニタリング: 各ステップの結果を計測・記録し、テストの進行状況を監視する。
 
 > 📘
 >
@@ -56,290 +64,282 @@ The before and after each step hooks allow you to execute logic before and after
 >
 > フックのコピー／切り取り＆貼り付けはできません。
 
-The following table summarizes which type of hook can be configured through each of the methods mentioned above:
+上記の3つの方法（プロパティパネル／構成リスト／既定構成）から、どの種類のフックを設定できるかを表にまとめると次のとおりです。
 
-| Hook Type        | Test Configuration | Config File | Comments                    |
+| Hook の種類      | Test Configuration | Config File | コメント                    |
 | :--------------- | :----------------- | :---------- | :-------------------------- |
 | Before each step | V                  |             |                             |
 | After each step  | V                  |             |                             |
 | Before test      | V                  | V           |                             |
 | After test       | V                  | V           |                             |
-| Before suite     |                    | V           | Not presented in the editor |
-| After suite      |                    | V           | Not presented in the editor |
+| Before suite     |                    | V           | エディタ画面には表示されません |
+| After suite      |                    | V           | エディタ画面には表示されません |
 
 ## テスト構成から作成
 
-Test Configuration Hooks can be created via the Properties panel, via the Configuration list screen, or via the test's default configuration settings.
-
-The Some Test Configuration Hooks
+Test Configuration Hooks は、プロパティパネル／構成リスト画面／テストの既定構成から作成できます。
 
 ### プロパティパネルから作成
 
 テストの**プロパティパネル**から作成できるフック:
 
-- **Before test handler** - will run before the test.
-- **Before each step handler** - will run before each step in the test
-- **After each step handler** - will run after each step in the test
-- **After test handler**- will run after the test
+- **Before test handler** – テスト実行前に実行されるフック
+- **Before each step handler** – テスト内の各ステップ実行前に実行されるフック
+- **After each step handler** – 各ステップ実行後に実行されるフック
+- **After test handler** – テスト実行後に実行されるフック
 
-:fa-arrow-right: **手順:**
+:fa-arrow-right: **プロパティパネルからフックを作成する手順:**
 
-1. In the test click the **Show Test Properties** button.
+1. 対象テストを開き、**Show Test Properties** ボタンをクリックします。
 
-![](/images/advanced-features/hooks/8c42f76-2023-01-03_14-15-34.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/8c42f76-2023-01-03_14-15-34.png)
 
-2. In the **Properties** panel, in the **Configuration** section, click the **Edit** button.
+2. **Properties** パネルの **Configuration** セクションで **Edit** ボタンをクリックします。
 
-![](/images/advanced-features/hooks/c4e3ae5-2023-01-03_14-33-45.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/c4e3ae5-2023-01-03_14-33-45.png)
 
-The **Edit Configuration** pane is displayed.
+**Edit Configuration** ペインが表示されます。
 
-3. In the **Before/After Hooks** section, select the checkbox of the hook type you wish to create:  
-   _Before test handler - will run before the test.  
-   _ Before each step handler - will run before each step in the test  
-   _After each step handler - will run after each step in the test  
-   _ After test handler - will run after the test
+3. **Before/After Hooks** セクションで作成したいフックタイプにチェックを入れます。  
+   例:
+   _Before test handler – テスト前に実行  
+   _ Before each step handler – 各ステップ前に実行  
+   _After each step handler – 各ステップ後に実行  
+   _ After test handler – テスト後に実行
 
-![](/images/advanced-features/hooks/b9e4709-2023-01-03_14-51-20.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/b9e4709-2023-01-03_14-51-20.png)
 
-4. Select the shared step or group from the drop-down menu.
+4. ドロップダウンから、フックとして実行したい共有ステップまたは共有グループを選択します。
 
-![](/images/advanced-features/hooks/bd656ae-2023-01-03_14-58-41.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/bd656ae-2023-01-03_14-58-41.png)
 
-5. If you have selected **After each step handler** or **After test handler** options, select one of the following options under Run on:
-   - Always - specifies that the hook will always run.
-   - Success - specifies that the hook will run if the step/test was successful.
-   - Failure - specifies that the hook will run if the step/test has failed.
+5. **After each step handler** または **After test handler** を選択した場合、**Run on** オプションで実行条件を選びます。
+   - **Always** – 常に実行
+   - **Success** – ステップ／テストが成功した場合のみ実行
+   - **Failure** – ステップ／テストが失敗した場合のみ実行
 
-![](/images/advanced-features/hooks/7e42513-2023-01-04_14-36-47small.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/7e42513-2023-01-04_14-36-47small.png)
 
-6. Click **Save** to save the test.  
-   The hooks are added to the specific test.
+6. **Save** をクリックしてテストを保存します。  
+   これで、選択したテストにフックが追加されます。
 
-![](/images/advanced-features/hooks/603e29d-propertiespanel.gif)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/603e29d-propertiespanel.gif)
 
-### Creating hooks via the Configuration List screen
+### Configuration List 画面からフックを作成する
 
-The following hooks can be created via the **Configuration List** screen:
+**Configuration List** 画面からは、次のフックを作成できます。
 
-- Before test handler - will run before the test.
-- Before each step handler - will run before each step in the test
-- After each step handler - will run after each step in the test
-- After test handler - will run after the test
+- Before test handler – テスト前に実行
+- Before each step handler – 各ステップ前に実行
+- After each step handler – 各ステップ後に実行
+- After test handler – テスト後に実行
 
-:fa-arrow-right: **To create a hook via the Configuration List screen:**
+:fa-arrow-right: **Configuration List からフックを作成するには:**
 
-1. Go to **Runs > Configuration List**.
-2. Click **Create New**.
+1. メニューから **Runs > Configuration List** を開きます。
+2. **Create New** をクリックします。
 
-![](/images/advanced-features/hooks/fea2a3f-2023-01-03_15-30-30.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/fea2a3f-2023-01-03_15-30-30.png)
 
-3. In the **Add New Configuration** screen click **Advanced**.
+3. **Add New Configuration** 画面で **Advanced** をクリックします。
 
-![](/images/advanced-features/hooks/50907d5-2023-01-03_15-48-32.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/50907d5-2023-01-03_15-48-32.png)
 
-4. In the **Before/After Hooks** section, select the checkbox of the hook type you wish to create:
-   - Before test handler - will run before the test.
-   - Before each step handler - will run before each step in the test
-   - After each step handler - will run after each step in the test
-   - After test handler - will run after the test
+4. **Before/After Hooks** セクションで作成したいフックタイプにチェックを入れます。
+   - Before test handler – テスト前に実行
+   - Before each step handler – 各ステップ前に実行
+   - After each step handler – 各ステップ後に実行
+   - After test handler – テスト後に実行
 
-![](/images/advanced-features/hooks/b5ea260-2023-01-03_15-49-37.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/b5ea260-2023-01-03_15-49-37.png)
 
-5. Select the shared step or group from the drop-down menu.
-6. If you have selected **After each step handler** or **After test handler** options, select one of the following options under **Run on**:
-   - **Always**- specifies that the hook will always run.
-   - **Success**- specifies that the hook will run if the step/test was successful.
-   - **Failure**- specifies that the hook will run if the step/test has failed.
-7. Click **Add**.  
-   At this point the configuration with the Hooks will be available to be used in the relevant tests.
+5. ドロップダウンから、フックとして実行したい共有ステップまたは共有グループを選択します。
+6. **After each step handler** または **After test handler** を選択した場合、**Run on** で実行条件を選びます。
+   - **Always** – 常に実行
+   - **Success** – ステップ／テストが成功した場合のみ実行
+   - **Failure** – ステップ／テストが失敗した場合のみ実行
+7. **Add** をクリックします。  
+   これで、作成したフック構成が関連テストで利用可能になります。
 
-![](/images/advanced-features/hooks/0cbe19a-configlist.gif)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/0cbe19a-configlist.gif)
 
-### Creating hooks via the Default Configuration setting
+### Default Configuration 設定からフックを作成する
 
-:fa-arrow-right: **To create a hook via the Default Configuration setting:**
+:fa-arrow-right: **Default Configuration からフックを作成するには:**
 
-1. In the test, in the **Default Configuration** setting, click the **Edit** button.
+1. テストの **Default Configuration** 設定で **Edit** ボタンをクリックします。
 
-![](/images/advanced-features/hooks/54cf195-2023-01-04_13-02-27.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/54cf195-2023-01-04_13-02-27.png)
 
-2. To create a new configuration, click the**Custom (create new) +** option from the drop-down menu.
+2. 新しい構成を作成する場合は、ドロップダウンから **Custom (create new) +** を選択します。
 
-![](/images/advanced-features/hooks/c6f2e2e-2023-01-04_13-05-48.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/c6f2e2e-2023-01-04_13-05-48.png)
 
-   The **Change Default Configuration** dialog is displayed.
+   **Change Default Configuration** ダイアログが表示されます。
 
-3. In the **Before/After Hooks** section, select the checkbox of the hook type you wish to create:
+3. **Before/After Hooks** セクションで作成したいフックタイプにチェックを入れます。
 
-- Before test handler - will run before the test.
-- Before each step handler - will run before each step in the test
-- After each step handler - will run after each step in the test
-- After test handler - will run after the test
+- Before test handler – テスト前に実行
+- Before each step handler – 各ステップ前に実行
+- After each step handler – 各ステップ後に実行
+- After test handler – テスト後に実行
 
-![](/images/advanced-features/hooks/4bfbda7-2023-01-04_13-29-01.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/4bfbda7-2023-01-04_13-29-01.png)
 
-4. Select the shared step or group from the drop-down menu.
-5. If you have selected **After each step handler**or **After test handler**options, select one of the following options under **Run on**:
-   - Always - specifies that the hook will always run.
-   - Success - specifies that the hook will run if the step/test was successful.
-   - Failure - specifies that the hook will run if the step/test has failed.
-6. Click **Change** to save.  
-   The test will include the new default configuration.
+4. ドロップダウンから、フックとして実行したい共有ステップまたは共有グループを選択します。
+5. **After each step handler** または **After test handler** を選択した場合、**Run on** で次のいずれかを選びます。
+   - Always – 常に実行
+   - Success – ステップ／テストが成功した場合のみ実行
+   - Failure – ステップ／テストが失敗した場合のみ実行
+6. **Change** をクリックして保存します。  
+   これで、そのテストは新しいデフォルト構成（フック設定を含む）を使用するようになります。
 
-![](/images/advanced-features/hooks/c475584-defaultconfig.gif)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/c475584-defaultconfig.gif)
 
-## Test Configuration Hooks Run Parameters
+## Test Configuration Hooks の実行パラメータ
 
-The following Test Configuration Hooks have additional run parameters available only to them that can help gather more information on the test. This information is available in the step/test itself, so, for example, you can a custom step with code that will use the data in these parameters:
+一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメータが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
 
-- **After each step handler parameters** - the after step test configuration hook includes the following objects and parameters:
-  - \_stepData
-    - testName - the name of the test.
-    - name - the name of the step.
-  - \_stepInternalData
-    - hookType - the type of hook (e.g., afterStep)
-    - path - the URL of the step.
-    - stepId - the ID of the step.
-    - projectId - the ID of the project.
-    - branch - the name of the branch.
-    - testId - the ID of the test.
-    - testResultId - the ID of the test result.
-    - type - the type of step (e.g., action-code-step).
-    - failureReason - the reason for failure if failed.
-    - errorType - the type of error if there is an error.
-- **After test handler parameters** -  the after test test configuration hook includes the following objects and parameters:
-  - \_stepData
-    - testName - the name of the test.
-  - \_stepInternalData
-    - hookType - the type of hook (e.g., afterTest)
-    - projectId - the ID of the project.
-    - branch -  the name of the branch.
-    - testId - the ID of the test.
-    - testResultId - the ID of the test result.
-    - failureReason - the reason for failure if failed.
-    - errorType - the type of error if there is an error.
+- **After each step handler parameters** – After each step フックで利用できるオブジェクトとパラメータ:
+  - `_stepData`
+    - `testName` – テスト名
+    - `name` – ステップ名
+  - `_stepInternalData`
+    - `hookType` – フック種別（例: `afterStep`）
+    - `path` – ステップの URL
+    - `stepId` – ステップ ID
+    - `projectId` – プロジェクト ID
+    - `branch` – ブランチ名
+    - `testId` – テスト ID
+    - `testResultId` – テスト結果 ID
+    - `type` – ステップ種別（例: `action-code-step`）
+    - `failureReason` – 失敗理由（失敗時）
+    - `errorType` – エラータイプ（エラーがある場合）
 
-# Creating Hooks via the Config File
+- **After test handler parameters** – After test フックで利用できるオブジェクトとパラメータ:
+  - `_stepData`
+    - `testName` – テスト名
+  - `_stepInternalData`
+    - `hookType` – フック種別（例: `afterTest`）
+    - `projectId` – プロジェクト ID
+    - `branch` – ブランチ名
+    - `testId` – テスト ID
+    - `testResultId` – テスト結果 ID
+    - `failureReason` – 失敗理由（失敗時）
+    - `errorType` – エラータイプ（エラーがある場合）
 
-The Configuration File is a common JS containing all the required parameters to run your test and/or test suite. It includes run hooks which can be used to setup the application backend and define parameters before/after a single test or all tests.  
-Through the Config File it is possible to set the following hook types:
+# 設定ファイル（Config File）でフックを作成する
 
-- Before test - will run before the test
-- After test - will run after the test
-- Before Suite - will run before the suite
-- After Suite - will run after the suite  
+Config File は、テスト／テストスイートの実行に必要なパラメータと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
+Config File で設定できるフックタイプは次のとおりです。
 
-The following guides provides detailed instructions on how to configure before/after hooks through the Config File -
+- **Before test** – テスト実行前に実行
+- **After test** – テスト実行後に実行
+- **Before Suite** – スイート実行前に実行
+- **After Suite** – スイート実行後に実行  
 
-For general information about Config file - [https://help.testim.io/docs/configuration-file-run-hooks](https://help.testim.io/docs/configuration-file-run-hooks)
+Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。
 
-For instruction on how to add config file parameters via hooks - [https://help.testim.io/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](https://help.testim.io/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
+- Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
+- フック経由で Config file パラメータを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
-# Hooks Visualizations
+# フックの可視化（Hooks Visualizations）
 
-After running the test that includes hooks the following visualizations will be displayed.
-
-> 📘
->
-> When running tests in Turbo Mode, hooks presentation will not be available to avoid saving unnecessary data. However, hooks will be available only for failed runs in turbo mode.
-
-## Viewing before/after each step hooks
-
-Following the execution, steps that include before/after step hooks have a “Hook” button that is displayed when hovering over the step.
-
-![](/images/advanced-features/hooks/1946c2e-2023-01-08_19-27-53.png)
-
-To view the shared steps/group inside the hook, click the **Hook**button. The hook steps will appear before or after the step as follows:
-
-![](/images/advanced-features/hooks/da1ff7a-2023-01-09_14-42-53.png)
+Hooks を含むテストを実行すると、エディタ上でさまざまなビジュアル表示が行われます。
 
 > 📘
 >
-> To close, click the Hook button again.
+> Turbo Mode でテストを実行している場合、不要なデータ保存を避けるためフックの表示は制限されます。Turbo Mode では、フックが可視化されるのは失敗した実行のみです。
 
-To open the hooks for **multiple steps at the same time**, select the desired steps and click the **Hook** button on the editor toolbar.
+## Before/After each step フックの可視化
 
-![](/images/advanced-features/hooks/a8cac90-2023-01-10_11-58-24.png)
+Before/After each step フックが設定されているステップには、実行後にステップ上へ「Hook」ボタンが表示されます（ステップにカーソルを合わせたときに表示）。
 
-If the hook is a shared group, double-clicking the hook step will open the shared group, displaying its steps.
+![フック設定のスクリーンショット](/images/advanced-features/hooks/1946c2e-2023-01-08_19-27-53.png)
 
-![](/images/advanced-features/hooks/4be982c-2023-01-09_16-20-49.png)
+Hook ボタンをクリックすると、そのステップに紐づいている共有ステップ／共有グループが展開され、フックとして実行されたステップが前後に表示されます。
 
-> 📘
->
-> If you have selected to use a shared group, the before/after each step hooks will not appear in the group level, but rather in the group’s internal steps.
-
-The step is connected to the related hook step, which it is configured to run before/after, and the connection is indicated with a circle and dotted arrow.
-
-![](/images/advanced-features/hooks/fde7478-hooks_with_callouts.png)
-
-The hook step itself is indicated by a gray bottom with the hook icon and a thicker border. Just like a regular step, you can double click the hook step to view its details. The number at the top right corner indicates the number of tests that are using this shared step (the hook step is actually a shared step that is currently used as a hook).
+![フック設定のスクリーンショット](/images/advanced-features/hooks/da1ff7a-2023-01-09_14-42-53.png)
 
 > 📘
 >
-> The hook step itself can be viewed but cannot be edited. However, it is possible to edit it by adding it to a test and editing it from there, as any other shared step.
+> 再度 Hook ボタンをクリックすると、フック表示を閉じることができます。
+
+複数のステップに対してフックをまとめて確認したい場合は、対象ステップを複数選択し、エディタツールバーの **Hook** ボタンをクリックします。
+
+![フック設定のスクリーンショット](/images/advanced-features/hooks/a8cac90-2023-01-10_11-58-24.png)
+
+フックとして設定されているステップが共有グループの場合、そのステップをダブルクリックすると共有グループの中身（内部ステップ）が表示されます。
+
+![フック設定のスクリーンショット](/images/advanced-features/hooks/4be982c-2023-01-09_16-20-49.png)
 
 > 📘
 >
-> When clicking on the **View Screenshot** of a hook step to view the side-by-side view, the **Baseline** side will not be displayed, only the result will be displayed.
+> 共有グループをフックとして使用している場合、Before/After each step フックはグループ単位ではなく「グループ内部のステップ」に対して表示されます。
 
-## Viewing before/after test hooks
+テストステップとフックステップの関係は、円と点線の矢印で示されます。これにより、どのフックがどのステップの前後に実行されたかが視覚的に分かります。
 
-The before/after test hooks run once before/after the test. Following the execution, the first step (setup step) will include a “Hook” button that is displayed when hovering over the step.
+![フック設定のスクリーンショット](/images/advanced-features/hooks/fde7478-hooks_with_callouts.png)
 
-![](/images/advanced-features/hooks/26263ab-2023-01-09_14-19-57.png)
-
-To view the shared steps/group inside the hook, click the Hook button. The hook steps will appear before the step as follows:
-
-![](/images/advanced-features/hooks/fefda67-2023-01-09_14-42-53.png)
-
-The step is connected to the related hook step (before it), which it is configured to run before the test. The connection is indicated with a circle and dotted arrow.
-
-![](/images/advanced-features/hooks/2be214f-hookscallouts2.png)
-
-The hook step itself is indicated by a gray bottom with the hook icon and thicker border. Just like a regular step, you can double click the hook step to view its details. The number at the top right corner indicates the number of tests that are using this shared step (the hook step is actually a shared step that is currently used as a hook). On the right side of the Setup step there is an arrow indicating that there is also an after test hook. Click on the arrow to shift to the "after test hook", which is located after the last step.
+フックステップ自体は、フックアイコン付きのグレーのボックスとして表示され、通常のステップより太い枠線で区別されます。共有ステップと同様に、フックステップをダブルクリックすることで詳細を確認できます。右上の数字は、その共有ステップを利用しているテスト数を示します（フックは共有ステップとして管理されています）。
 
 > 📘
 >
-> The hook step itself can be viewed but cannot be edited. However, it is possible to edit it by adding it to a test and editing it from there, as any other shared step.
+> フックステップ自体はビュー専用で、直接編集することはできません。ただし、通常の共有ステップと同様に、別のテストに追加してから編集することは可能です。  
+> また、Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、Baseline（基準画像）は表示されず、結果側のみが表示されます。
+
+## Before/After test フックの可視化
+
+Before/After test フックはテストごとに 1 回、テストの開始前／終了後に実行されます。実行後、最初のステップ（Setup ステップ）にカーソルを合わせると「Hook」ボタンが表示されます。
+
+![フック設定のスクリーンショット](/images/advanced-features/hooks/26263ab-2023-01-09_14-19-57.png)
+
+Hook ボタンをクリックすると、テスト前後に実行された共有ステップ／共有グループが Setup ステップの前後に展開されます。
+
+![フック設定のスクリーンショット](/images/advanced-features/hooks/fefda67-2023-01-09_14-42-53.png)
+
+テスト本体のステップと Before/After test フックの関係は、円と点線の矢印で示されます。
+
+![フック設定のスクリーンショット](/images/advanced-features/hooks/2be214f-hookscallouts2.png)
+
+フックステップは、フックアイコン付きのグレーのボックスとして太い枠線で表示されます。ダブルクリックすると詳細を確認でき、右上の数字はその共有ステップを使用しているテスト数を示します。Setup ステップの右側に矢印が表示されている場合は After test フックも存在し、矢印をクリックするとテスト末尾のフック表示に切り替わります。
 
 > 📘
 >
-> When clicking on the **View Screenshot** of a hook step to view the side-by-side view, the **Baseline** side will not be displayed, only the result will be displayed.
+> フックステップ自体はその場で編集できませんが、別のテストに追加して共有ステップとして編集することは可能です。  
+> Hook ステップのスクリーンショットをサイドバイサイド表示した場合、Baseline 側は表示されず、結果側のみ表示されます。
 
-## Viewing hooks that did not run due to success/failure conditions
+## 成功／失敗条件により実行されなかったフックの確認
 
-When creating the hook, it is possible to configure that the hook step will run only on success/failure of the step/group. Hook steps that didn’t run due to a success/failure condition, will be marked with a blue dot, as seen below.
+フック作成時に、ステップ／グループが成功した場合のみ／失敗した場合のみ実行するように条件を設定できます。この条件により実行されなかったフックは、青いドットでマークされます。
 
-![](/images/advanced-features/hooks/b8ecffe-2023-01-10_13-37-28.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/b8ecffe-2023-01-10_13-37-28.png)
 
-The hook step itself will include a blue ‘info’ indication and the connecting arrow will be marked in blue, as seen below.
+実行されなかったフックステップには、青い「info」アイコンが付き、関連する接続矢印も青で表示されます。
 
-![](/images/advanced-features/hooks/b53a405-2023-01-10_13-43-21.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/b53a405-2023-01-10_13-43-21.png)
 
-Hover your mouse over the “info” to view the reason the step did not run.
+マウスを info アイコンに乗せると、そのフックが実行されなかった理由（成功条件／失敗条件など）が表示されます。
 
-![](/images/advanced-features/hooks/bd7554b-2023-01-10_13-46-41.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/bd7554b-2023-01-10_13-46-41.png)
 
-## Viewing errors related to hooks
+## フックに関連するエラーの確認
 
-Following the test execution, you may encounter error(s) in your test.  
-If the error is on a hook step, a red dot on the step indicates that there is an error in the related hook step. On the left side of step (for both ‘before each step’ hook error & ‘before test’ hook error) and on the right side of step (for both ‘after each step’ hook error & ‘after test’ hook error).
+テスト実行後にエラーが発生した場合、そのエラーがフックステップに起因することがあります。フックステップでエラーが発生した場合、関連ステップの左側（before each step / before test のフックエラー）または右側（after each step / after test のフックエラー）に赤いドットが表示されます。
 
-![](/images/advanced-features/hooks/2e6d6d0-2023-01-10_13-59-44.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/2e6d6d0-2023-01-10_13-59-44.png)
 
-Click the hook button to view the hook step.
+Hook ボタンをクリックすると、該当するフックステップが表示されます。
 
-![](/images/advanced-features/hooks/da8c532-2023-01-10_12-24-18.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/da8c532-2023-01-10_12-24-18.png)
 
-It is possible to view the erred steps, even if they are inside a group, with a single click.  
-:fa-arrow-right: **To drill directly down to the error:**
+グループ内にあるフックステップのエラーでも、1クリックで直接そのエラー箇所まで辿ることができます。  
+:fa-arrow-right: **エラー箇所を直接表示するには:**
 
-1. Click the **See Error** link.
+1. **See Error** リンクをクリックします。
 
-![](/images/advanced-features/hooks/4a6b5dd-2023-01-10_12-23-08.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/4a6b5dd-2023-01-10_12-23-08.png)
 
-The shared group/step that includes the error is displayed and the specific error step is highlighted.
+エラーを含む共有グループ／共有ステップが表示され、その中で問題のあるステップがハイライトされます。
 
-![](/images/advanced-features/hooks/9f90f12-2023-01-10_12-24-18.png)
+![フック設定のスクリーンショット](/images/advanced-features/hooks/9f90f12-2023-01-10_12-24-18.png)

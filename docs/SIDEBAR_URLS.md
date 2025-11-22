@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 78個
-- ✅   翻訳のみ完了: 205個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 87個
+- ✅   翻訳のみ完了: 196個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -147,15 +147,15 @@
 
 ## Advanced Features（高度な機能）
 
-- ✅ https://help.testim.io/docs/wait-for
-- ✅ https://help.testim.io/docs/api-testing
-- ✅ https://help.testim.io/docs/cookies
-- ✅ https://help.testim.io/docs/group-context
-- ✅ https://help.testim.io/docs/auto-grouping2
-- ✅ https://help.testim.io/docs/advanced-js-editor
-- ✅ https://help.testim.io/docs/custom-action-step-mobile
-- ✅ https://help.testim.io/docs/hooks
-- ✅ https://help.testim.io/docs/error-suffix-customization
+- ✅🔍 https://help.testim.io/docs/wait-for
+- ✅🔍 https://help.testim.io/docs/api-testing
+- ✅🔍 https://help.testim.io/docs/cookies
+- ✅🔍 https://help.testim.io/docs/group-context
+- ✅🔍 https://help.testim.io/docs/auto-grouping2
+- ✅🔍 https://help.testim.io/docs/advanced-js-editor
+- ✅🔍 https://help.testim.io/docs/custom-action-step-mobile
+- ✅🔍 https://help.testim.io/docs/hooks
+- ✅🔍 https://help.testim.io/docs/error-suffix-customization
 
 ## Special Steps（特殊ステップ）
 

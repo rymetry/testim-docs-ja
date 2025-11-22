@@ -1,157 +1,159 @@
 ---
 title: '自動グルーピング'
-description: '原文: https://help.testim.io/docs/auto-grouping2'
+description: 'Auto grouping 機能でプロジェクト内の重複ステップ列を検出し、共有グループに置き換えてテストの重複を削減する方法を説明します。'
 category: '高度な機能'
 order: 5
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/auto-grouping2'
 keywords:
-  - testim
-  - auto-grouping2
-  - advanced-features
+  - 自動グルーピング
+  - auto grouping
+  - 共有グループ
+  - 重複ステップ
+  - DRY 原則
+  - テスト保守
+  - 重複レベル
+  - テストアーキテクチャ
+  - グループ化
+  - Testim
 ---
-テスト内の重複ステップ列を検出し、再利用可能なグループへまとめます
+テスト内の重複ステップ列を検出し、再利用可能なグループへまとめます。
 
 > 📘 プロ機能
 >
-> Professional プランで利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)。
+> Professional プランで利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)。  
+> 自動グルーピングは master ブランチでのみ動作します（状態は毎週末に更新されます）。  
+> また、本機能は Web / Mobile Web プロジェクトで利用できます。
+
+Auto grouping は、プロジェクト全体のテストから同じステップ列を検出し、共有グループに置き換えることで重複を削減する機能です。テストもコードと同じように DRY（Don't Repeat Yourself）原則を守ることで、メンテナンスが容易になります。グループ内のステップを 1 箇所変更すると、そのグループを使用しているすべてのテストに変更が反映されます。
+
+Auto Grouping 画面には、他のテストやグループと重複しているステップ列の候補が一覧表示されます。どの候補を共有グループに変換するかを確認し、採用した候補は新しいブランチ上で保存されます。ブランチ内の変更をレビューしてから master ブランチへマージできます。
+
+### 重複レベルスコア（Duplication level scoring）
+
+重複レベルスコアは、プロジェクト内にどれだけ重複したステップが残っているかを 0〜100 の数値で表します。スコアが高いほど重複が多い状態です。自動グルーピングの候補を適用していくと、このスコアを下げて重複を減らせます。
+
+スコアは次の 3 色で表示されます。
+
+* **Green** – 重複が少なく、良好な状態
+* **Yellow** – 中程度の重複あり。自動グルーピングの適用を推奨
+* **Red** – 重複が多い状態。自動グルーピングの適用が強く推奨されます
+
+## 自動グルーピング候補の確認（Reviewing auto-grouping suggestion）
+
+:fa-arrow-right: **自動グルーピング候補を確認するには:**
+
+1. メインメニューで **Auto-grouping** をクリックします。\
+   画面右側の **Auto Grouping** ペイン（黒いペイン）に候補一覧が表示されます。ここには次の情報が含まれます。
+   * **Project duplication level** – プロジェクト全体の重複レベル（0〜100）。まだグループ化されていない重複ステップの量を示します。重複レベルを下げるには、一覧の候補を採用していきます。
+   * **The number of duplicate steps** – 他のテストで見つかった同一ステップ列の数。
+   * **Duplication level reduction** – 候補を採用したときに重複レベルがどれだけ下がるか（例: 現在 14% で 1% と表示されている場合、採用後は 13% になる）。
+   * **The number tests and groups** – 同じステップ列が見つかったテスト／グループの数。  
+
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png)
 
 > 📘
 >
-> 自動グルーピングは master ブランチでのみ動作します。状態は毎週末に更新されます。
+> 重複レベルの計算は、毎週日曜日に実行されるオフライン処理に基づく推定値です。すべての最新変更をリアルタイムに反映しているわけではありません。
+
+2. 任意の候補をクリックすると、その候補に含まれるテスト／グループの詳細が **Test List** ペインに表示されます。
+
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/79c9465-Screen_Shot_2021-02-28_at_9.52.04.png)
+
+3. 対象のテスト／グループをクリックすると、重複しているステップ列がハイライト表示されます。
+
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/eb1a270-Screen_Shot_2021-02-23_at_6.14.45.png)
+
+4. テスト全体のコンテキストの中で重複ステップ列を確認したい場合は、**Open Test** アイコンをクリックします。エディタ画面が新しいタブで開き、重複ステップ列がハイライトされます。
+
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/bdbe859-Screen_Shot_2020-10-27_at_11.58.10.png)
+
+## 自動グルーピング候補の編集（Editing the auto-grouping suggestion）
+
+:fa-arrow-right: **自動グルーピング候補を編集するには:**
+
+1. **Auto-Grouping** ペインで任意の候補を選択し、**Edit** アイコンをクリックします。
+
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/e52ddfd-Dec-06-2020_11-38-33.gif)
+
+2. 候補に含めるステップを次のように編集します。
+   * グループに含めたい／含めたくないステップを選択・解除して調整します。
+
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/ca23e3b-Dec-06-2020_11-41-28.gif)
+
+* **Clear all** をクリックすると選択をすべてクリアし、改めて含めたいステップだけを選択できます。
 
 > 📘
 >
-> 本機能は Web / Mobile Web プロジェクトで利用できます。
+> グループには最低でも 3 ステップ以上含める必要があります。
 
-Auto grouping identifies duplicate test step sequences across your project and allows replacing them with reusable groups. Tests are like code. Similar to the DRY (don't repeat yourself) principle in coding, good test architecture should minimize duplication and simplify maintenance. Groups make maintenance easier as a step is updated in a group it updates all dependent tests.
+いつでも **Select original** をクリックすれば、元の提案内容に戻せます。\
+候補を編集すると、新しいグループ候補には **Edited** ラベルが付き、テスト一覧も編集内容に応じて更新されます。
 
-In the Auto Grouping screen, you can find a list of step sequences that match other groups or other step sequences in other tests.  You can review these auto-grouping suggestions and decide which of these should be turned into a shared group.  The tests with the newly created shared groups will be saved in a new branch, so you can review these changes before merging them into the master branch.
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/52cf745-Screen_Shot_2020-12-06_at_11.45.31.png)
 
-### Duplication level scoring
+## 自動グルーピング候補のフィルタリング（Filtering auto-grouping suggestions）
 
-The duplication level is a score of how many duplications you have in your project. The higher the score, the project contains more duplications.\
-When applying auto grouping suggestions, you can reduce your score and avoid these duplications.\
-The duplication level scoring can have one of three colors:
+自動グルーピング候補が多い場合は、条件で絞り込むことができます。
 
-* **Green** - your project has a **good** score and does not contain a lot of duplication levels
-* **Yellow** - your project has a **medium** score in terms of duplications, it is recommended to apply auto grouping to reduce this score.
-* **Red** - Your project contains a lot of duplications, applying auto grouping is highly recommended to reduce this score
+:fa-arrow-right: **候補をフィルタリングするには:**
 
-# Reviewing auto-grouping suggestion
+1. **Auto Grouping** ペイン（黒いペイン）でフィルターアイコンをクリックします。
 
-:fa-arrow-right: **To review the auto-grouping suggestions:**
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/de78d7f-filter.png)
 
-1. On the main menu, click **Auto-grouping**.\
-   A list of auto-grouping suggestions will appear in the **Auto Grouping** pane (black).  The list includes the following information:
-   * **Project duplication level** - The duplication level of the project is a score from 0-100 that indicates the amount of duplicate steps that could have been grouped but were not yet grouped within the master branch. In order to reduce the duplication level, you can confirm the suggested auto-groupings listed below. For more information, see [Duplication level scoring](doc:auto-grouping2#duplication-level-scoring)
+**FILTER & SORT STEPS DUPLICATIONS** 画面が表示され、次のフィルターオプションを利用できます。
 
-> 📘
->
-> The duplication calculation is an estimate that is based on weekly offline processes (which occurs every Sunday) and doesn't reflect all updates.
+* **Test owner** – 選択したテストオーナーのテストのみ表示
+* **Test Name** – 選択したテストのみ表示
+* **Suite Name** – 選択したスイートに含まれるテストのみ表示
+* **Group Name** – 選択したグループを含むテストのみ表示
 
-* **The number of duplicate steps** - these are the number of identical sequential steps found in other tests.
-* **Duplication level reduction** - by accepting the auto-grouping suggestion, the project duplication level will be reduced by the specified number. For example, if the project duplication level is 14% and the specified number is 1%, after accepting the suggestion, the project duplication level will be reduced to 13%.
-* **The number tests and groups** - the number of tests and groups in which the same step sequences were found.  
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/282da88-Feb-28-2021_10-23-47.gif)
 
-![](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png)
+2. いずれかのフィルター項目をクリックします。\
+   対象の一覧が表示されます。
 
-2. Click the desired auto-grouping suggestion to view its details.\
-   The detailed list of tests and groups that include the duplicate steps is presented in the **Test List** pane.
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/4b25c4d-testname.PNG)
 
-![](/images/advanced-features/auto-grouping2/79c9465-Screen_Shot_2021-02-28_at_9.52.04.png)
+3. **Show all** をクリックしてすべての候補を表示し、必要な項目を選択します。
+4. **Number of Steps** で、重複ステップ数の範囲を指定したい場合は **Min. Steps** と **Max Steps** を入力します。
+5. **Apply** をクリックしてフィルターを適用します。
 
-3. Click on the desired test/group item to view the duplicate step sequences.
+## 自動グルーピング候補のソート（Sorting auto-grouping suggestions）
 
-![](/images/advanced-features/auto-grouping2/eb1a270-Screen_Shot_2021-02-23_at_6.14.45.png)
+同じ画面で候補の並び順も変更できます。
 
-4. To view the duplicate step sequence in the context of the entire test in the Editor screen, click **Open Test** icon. The test will be opened in a new tab with the duplicate steps sequence highlighted.
+ソートオプション:
 
-![](/images/advanced-features/auto-grouping2/bdbe859-Screen_Shot_2020-10-27_at_11.58.10.png)
+* **Duplication Level - Descending (default)** – 重複レベルの削減効果が大きい候補から表示
+* **Duplication level - Ascending** – 重複レベルの削減効果が小さい候補から表示
+* **Number of steps - Ascending** – 重複ステップ数が少ない候補から表示
+* **Number of steps - Descending** – 重複ステップ数が多い候補から表示
+* **Number of matches - Ascending** – 影響を受けるテスト／共有ステップ数が少ない候補から表示
+* **Number of matches - Descending** – 影響を受けるテスト／共有ステップ数が多い候補から表示
 
-## Editing the auto-grouping suggestion
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/dde76be-Screen_Shot_2021-02-28_at_10.17.23.png)
 
-:fa-arrow-right: **To edit the auto-grouping suggestions:**
+## 候補から共有グループを作成する（Creating the shared group based on the suggestion）
 
-1. In the **Auto-Grouping** pane, select one of the suggestions and then click the **Edit** icon.
+:fa-arrow-right: **候補から共有グループを作成するには:**
 
-![](/images/advanced-features/auto-grouping2/e52ddfd-Dec-06-2020_11-38-33.gif)
+1. **Test List** ペインで、自動グルーピングを適用したいテスト／グループを選択または解除します。
+2. **Create Shared Group** をクリックします。
+3. **Shared group name** フィールドに共有グループ名を入力します。
+4. **Branch** で次のいずれかを選択します。
+   * **New Branch** – 新しいブランチを作成し、ブランチ名を入力します。
+   * **Current Branch** – master 以外のブランチで作業している場合、そのブランチに新しい共有グループ入りのテストを保存します。
 
-2. Edit the steps you would like to include in the following ways:
-   * Add/remove individual steps from the suggested group by selecting/deselecting them.
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/5ac239d-Screen_Shot_2020-10-27_at_12.11.32.png)
 
-![](/images/advanced-features/auto-grouping2/ca23e3b-Dec-06-2020_11-41-28.gif)
+5. **Next** をクリックします。
+6. グループがパラメータを使用している場合、自動グルーピング機能はグループ用に新しいパラメータを作成します。この場合、追加のステップとしてパラメータ名を入力する画面が表示されます。
 
-* Click **Clear all** to clear all the selections, and select the desired steps for the group.
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/cc757a0-Screen_Shot_2020-10-29_at_18.53.28.png)
 
-> 📘
->
-> There should be at least 3 steps.
+7. **Create** をクリックします。\
+   自動グルーピングが完了すると、完了メッセージが表示され、続けて次のグループ候補を処理できます。
 
-At any point, you can click **Select original** to revert back to the original selections.\
-After editing a suggestion, the new auto group suggestion will appear with the label **Edited**, and the test list will update based on the edited group.
-
-![](/images/advanced-features/auto-grouping2/52cf745-Screen_Shot_2020-12-06_at_11.45.31.png)
-
-# Filtering auto-grouping suggestions
-
-You can narrow the number of auto-grouping suggestions by filtering them based to various criteria.\
-:fa-arrow-right: **To filter the auto grouping suggestions:**
-
-1. In the the **Auto Grouping** pane (black), click on the Filter icon.
-
-![](/images/advanced-features/auto-grouping2/de78d7f-filter.png)
-
-The **FILTER & SORT STEPS DUPLICATIONS** screen is displayed with the following options:
-
-* Test owner - only the tests of the selected test owners will be displayed.
-* Test Name - only the selected tests will be displayed.
-* Suite Name - only the tests in the selected Suites will be displayed.
-* Group Name - only the tests that include the selected groups will be displayed.
-
-![](/images/advanced-features/auto-grouping2/282da88-Feb-28-2021_10-23-47.gif)
-
-2. Click the relevant filter option.\
-   A list of items is displayed.
-
-![](/images/advanced-features/auto-grouping2/4b25c4d-testname.PNG)
-
-3. Click **Show all**to display all available items.
-4. Select the relevant items.
-5. Under **Number of Steps**, if you want to filter the suggestions by the amount of duplicate steps, specify the range by entering the **Min. Steps** and **Max Steps**.  
-6. Click **Apply**.
-
-# Sorting auto-grouping suggestions
-
-In the **FILTER & SORT STEPS DUPLICATIONS** screen, you can select how to sort the auto-grouping suggestions:
-
-* **Duplication Level - Descending (default)** - suggestions that will reduce the duplication level the most will appear at the top.
-* **Duplication level - Ascending** - suggestions that will have the least impact on the duplication level  will appear at the top.
-* **Number of steps - Ascending** - suggestions have the least number of  steps will appear at the top.
-* **Number of steps - Descending** - suggestions have the most number of  steps will appear at the top.
-* **Number of matches - Ascending** - suggestions that affect the most number of tests/shared steps will appear at the top
-* **Number of matches - Descending** - suggestions that affect the least number of tests/shared steps will appear at the top.
-
-![](/images/advanced-features/auto-grouping2/dde76be-Screen_Shot_2021-02-28_at_10.17.23.png)
-
-# Creating the shared group based on the suggestion
-
-:fa-arrow-right: **To create the shared group:**
-
-1. In the **Test List** pane, select/deselect the tests/groups for which you want to implement the suggested auto-grouping.
-2. Click **Create Shared Group**.
-3. In the **Shared group name** field, enter a name for the shared group.
-4. Under **Branch** select one of the following:
-   * **New Branch** - a new branch will be created. Enter a name for the new branch in the Branch Name field.
-   * **Current Branch** - if you are using a branch that is not the Master branch, the tests with the new shared group will be saved into the current branch.
-
-![](/images/advanced-features/auto-grouping2/5ac239d-Screen_Shot_2020-10-27_at_12.11.32.png)
-
-5. Click **Next**.
-6. In case the group uses parameters, the auto-grouping feature will create new parameters for your groups. In this case, there will be an extra step for you to provide the parameter names:
-
-![](/images/advanced-features/auto-grouping2/cc757a0-Screen_Shot_2020-10-29_at_18.53.28.png)
-
-7. Click **Create**.\
-   After creating the group, you'll get a message the auto grouping was completed and you can move on to creating the next group.
-
-![](/images/advanced-features/auto-grouping2/0a5c88f-Screen_Shot_2020-10-28_at_13.33.39.png)
+![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/0a5c88f-Screen_Shot_2020-10-28_at_13.33.39.png)

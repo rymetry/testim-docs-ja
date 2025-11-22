@@ -1,13 +1,21 @@
 ---
 title: 'カスタムアクションステップ（モバイル）'
-description: '原文: https://help.testim.io/docs/custom-action-step-mobile'
+description: 'モバイル向けカスタムアクションステップで Appium コマンドを使った高度な操作や検証を実装する方法を説明します。'
 category: '高度な機能'
 order: 7
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/custom-action-step-mobile'
 keywords:
-  - testim
-  - custom-action-step-mobile
-  - advanced-features
+  - カスタムアクション
+  - モバイルテスト
+  - Appium
+  - performActions
+  - sendKeys
+  - hideKeyboard
+  - findElement
+  - TMA
+  - モバイルコマンド
+  - Testim モバイル
 ---
 事前定義ステップにないアクションや検証を行いたい場合に、Appium を用いたスクリプトを実行できる「カスタムアクション（モバイル）」ステップを使用します。複数のモバイルコマンドをバッチ実行でき、JSパラメータも利用可能です。
 
@@ -22,7 +30,7 @@ keywords:
 
 ## VMGでサポートされるAppiumメソッド
 
-The following Appium methods are supported:
+次の Appium メソッドがサポートされています:
 
 * `performActions`
 * `findElement`
@@ -42,21 +50,21 @@ The following Appium methods are supported:
 1. 追加したい位置の矢印（:fa-caret-right:）または **+** にカーソルを合わせます。
 2. “M”（Testim 定義済みステップ）をクリックし、メニューを開きます。
 
-![](/images/advanced-features/custom-action-step-mobile/0b5972d-ca1.png)
+![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/0b5972d-ca1.png)
 
 3. **Actions** を展開し、**Add custom action** を選択します。
 
-![](/images/advanced-features/custom-action-step-mobile/603ef8c-customaction.png)
+![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/603ef8c-customaction.png)
 
 > 📘 注意
 >
 > メニュー上部の検索ボックスで Add custom action を検索しても構いません。
 
 4. **Name** にわかりやすい名前を入力します。
-5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/groups/groups) を参照してください。
+5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/groups) を参照してください。
 6. **Create Step** をクリックします。関数エディタと右側の **Properties** パネルが開きます。
 
-![](/images/advanced-features/custom-action-step-mobile/795f7e2-ca3.png)
+![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/795f7e2-ca3.png)
 
 7. **Properties** の **Description** を必要に応じて編集します（既定: Run shared action / Run action）。
 8. 必要なパラメータを定義します。
@@ -69,11 +77,11 @@ The following Appium methods are supported:
 10. **function** テキストボックスにJSコードを記述します。定義したパラメータを参照できます。
 11. 戻る矢印でエディタに戻ります。
 
-    ![](/images/advanced-features/custom-action-step-mobile/af049a0-Run_Shared_action.jpg)
+    ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/af049a0-Run_Shared_action.jpg)
 
 ステップが作成されます。
 
-![](/images/advanced-features/custom-action-step-mobile/0b1c350-customaction3.png)
+![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/0b1c350-customaction3.png)
 
 <br />
 
@@ -87,7 +95,7 @@ The following Appium methods are supported:
 
 `performActions` の使用例です。画面左上から100ms待機後、100ピクセル下方向へドラッグして指を離します。
 
-```
+```javascript
 const start_x = 50
 const start_y = 1
 const end_x = 50

@@ -1,13 +1,21 @@
 ---
 title: 'API テスト'
-description: '原文: https://help.testim.io/docs/api-testing'
+description: 'UI テストから HTTP API を呼び出し、レスポンスの検証やテスト内でのデータ利用を行う API テストステップ（Validate API / Add API action）の使い方を説明します。'
 category: '高度な機能'
 order: 2
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/api-testing'
 keywords:
-  - testim
-  - api-testing
-  - advanced-features
+  - API テスト
+  - HTTP リクエスト
+  - Validate API
+  - Add API action
+  - レスポンス検証
+  - ステータスコード
+  - ヘッダー検証
+  - ボディ検証
+  - パラメータ
+  - バックエンド検証
 ---
 UI テストからサーバーAPIを呼び出し、検証やデータ取得を簡単に行います。
 
@@ -23,302 +31,300 @@ API ステップには **Add API action** と **Validate API** の2種類があ�
 
 # Validate API ステップの追加
 
-API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/validation)を参照。\
+API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/validations)を参照。\
 :fa-arrow-right: **“Add API validation” を追加するには:**
 
-![](/images/advanced-features/api-testing/eb15a7d-validatestep.gif)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/eb15a7d-validatestep.gif)
 
-1. Hover over the :fa-caret-right: (arrow symbol) (or + symbol after the final step) where you want to add the Add API validation step.
-2. Click the **“M”** (Testim predefined steps).\
-   The **Predefined steps** menu opens.
-3. Click on Validations.\
-   The **Validations** menu expands
-4. Scroll down through the menu and select Validate API:
-
-> 📘
->
-> Alternatively, you can use the search box at the top of the menu to search for *Validate API*.
-
-The **Add Step** window is shown
-
-![](/images/advanced-features/api-testing/d92c26a-Picture1.png)
-
-5. In the **Name the new step** field, enter a name for this step.
-6. If this is a shared step to be made available to reuse in this or other tests, keep the box next to Shared step selected (default), and choose a folder from the **Select shared step** folder list where you want this step stored. Otherwise, deselect the checkbox.\
-   For more information about shared steps, see [Groups](/docs/groups/groups)
-7. Click **Create Step**.\
-   The **Run Shared API Validation** window opens.
-
-![](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png)
-
-8. In the **URL** field, select the desired HTTP Request method and enter the root-endpoint and path. You can add parameters to the URL. For more information, see [Using Parameters](doc:api-testing#using-parameters-in-the-sent-http-request) section below.
-9. In the **Header** section, enter the header Key-Value pairs that need to be sent with your API. Select the Key-Value (default) option to enter the header in separate key and value fields. Select the Raw option to enter the values in their raw format (e.g. when copying from the browser's devtools network panel).\
-   You can test different requests using different headers. Select the checkboxes to the left of the headers you wish to test. Requests with checked headers are all performed, one after the other. To delete a header, select the X to the right of the header.
-
-![](/images/advanced-features/api-testing/0277227-header.png)
-
-10. Click the **Authorization** tab to configure the Authorization header. Select one of the following authorization options:
-    * **None** – select this option if you do not want to send authorization parameters or if you want to use an authorization type other than Basic or Bearer. In this case you will have to manually enter the Authorization parameters under the Header tab.
-    * **Basic** – select this option if the endpoint uses Basic Authorization. Enter the username and the password.
-    * **Bearer** - select this option if the endpoint uses Bearer Authorization. Enter the Token.
+1. **Add API validation** ステップを追加したい位置の :fa-caret-right:（矢印）アイコン、または最後のステップの後ろにある **+** アイコンにカーソルを合わせます。
+2. **“M”**（Testim predefined steps）ボタンをクリックします。\
+   **Predefined steps** メニューが開きます。
+3. **Validations** をクリックします。\
+   **Validations** メニューが展開されます。
+4. メニューをスクロールし、**Validate API** を選択します。
 
 > 📘
 >
-> Authorization types entered under the **Authorization** tab (other than None) override authorizations manually entered in the **Header** tab
+> メニュー上部の検索ボックスに *Validate API* と入力して検索することもできます。
 
-![](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
+**Add Step** ウィンドウが表示されます。
 
-11. In the **Body** section, in the drop-down menu, select the data format you want to send and enter the Body of your call in the box below. For example, use the Text option for entering free text (e.g. sending a key and a value). Options are: Text, JSON, JavaScript, XML, and HTML. You can add parameters to the Body. For more information, see  [Using Parameters](doc:api-testing#using-parameters-in-the-sent-http-request) section below.  
+![API テストのスクリーンショット](/images/advanced-features/api-testing/d92c26a-Picture1.png)
 
-![](/images/advanced-features/api-testing/ba2e285-body.png)
+5. **Name the new step** フィールドに、このステップの名前を入力します。
+6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step** フォルダリストから保存先フォルダを選択します。共有ステップにしない場合はチェックを外します。\
+   共有ステップの詳細は [グループ](/docs/groups) を参照してください。
+7. **Create Step** をクリックします。\
+   **Run Shared API Validation** ウィンドウが開きます。
 
-In the **Assertion** section, you can optionally assert on the header, body, or status code response without manually entering code. The Assertion is run before the code in Run additional code on request results (see below). The response for the assertion can be Passed (TRUE) or Failed (FALSE). If the Assertion fails, the step and test will fail and the Run additional code on request results code won’t be executed. <br/>\
-Do the following:
+![API テストのスクリーンショット](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png)
 
-* In the drop-down menu, select the element on which you will perform the assertion, options include Status code, Header, Body (JSON), or Body (Text). <br/>
-* In the second field, select an operator. <br/>
-* In the third field (value), enter the value you are checking. The value can be a parameter without curly brackets. <br/>
-* Repeat the steps above to add additional assertions. To enable/disable the assertion select/deselect the checkbox.<br/>
+8. **URL** フィールドで使用する HTTP リクエストメソッドを選択し、ルートエンドポイントとパスを入力します。必要に応じて URL にパラメータを追加します。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
+9. **Header** セクションで、API に送信するヘッダーのキーと値を入力します。ヘッダーを個別のキー／値フィールドで入力したい場合は **Key-Value**（デフォルト）を選択し、ブラウザの DevTools Network パネルからコピーした文字列などをそのまま貼り付けたい場合は **Raw** を選択します。\
+   複数のヘッダーを定義している場合、左側のチェックボックスをオンにしたヘッダーを使ったリクエストが順に実行されます。ヘッダーを削除したい場合は右端の **X** をクリックします。
 
-![](/images/advanced-features/api-testing/9c95b25-assertions.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/0277227-header.png)
 
-13. Select the **Run additional code on request** results switch if you want to run code that will perform additional validations that are not possible through the assertion or add additional functionality to the validation. For example, throwing an error message following a failed validation. You can add parameters to the code. For more information, see Using Parameters section below.
-
-![](/images/advanced-features/api-testing/a99b5db-run_additional_code.png)
-
-14. Click **Show step properties**.
-
-![](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png)
-
-15. In the **Properties** panel, in the **Send via web page** checkbox:
-
-    * **Deselect the checkbox** - if you want to send the API call outside the browser context so that browser-restrictions do not apply to it. For example, if your API doesn't support CORS.
-    * **Select the checkbox** - if you need the API to also send browser information such as cookies. (They are sent automatically.)
-
-      ![](/images/advanced-features/api-testing/3cf1b19-properties.png)
-16. In the **Allow API request retry** field:
-    1. **Select the checkbox** - select this checkbox if you want to retry the sending of the request only if the request itself has failed (i.e., returned a failed status code).
-    2. **Deselect the checkbox** - even if the status code is error, Testim will still run the step with its validations and the addition code (i.e., without trying to resend the request). For example, this is useful when the assertion is set as an error code, and so there is no need to retry sending the request.
-17. In the **Params** field, add the relevant parameters, as described in  [Using Parameters](doc:api-testing#using-parameters-in-the-sent-http-request) section below.
+10. 認証ヘッダーを設定するには **Authorization** タブをクリックし、次のいずれかの方式を選択します。
+    * **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の認証方式を使いたい場合に選択します。この場合、認証ヘッダーは **Header** タブで手動入力する必要があります。
+    * **Basic** – エンドポイントが Basic 認証を使用する場合に選択します。ユーザー名とパスワードを入力します。
+    * **Bearer** – エンドポイントが Bearer トークン認証を使用する場合に選択します。トークンを入力します。
 
 > 📘
 >
-> If you're running via a webpage, and the page has not finished loading, this step can fail. If the previous step requires loading, add a [wait for](/docs/advanced-features/wait-for) before the API step to verify that the page has finished loading.
+> **Authorization** タブで **None** 以外を選択した場合、その設定が **Header** タブで手動入力した Authorization 値を上書きします。
 
-## Checking the request outside of the context of the AUT
+![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-If you want to check your request for a quick response outside of the context of the AUT (without running the test), in the **URL** field, click the **Send** button. Assertions and code in the **Run additional code on request results** window will not be executed. Only local parameters with static values, which are defined in the **Properties** panel will be sent. Non-static values will be sent as empty strings.\
-The available step parameters are listed below the **URL** field. You can click **Edit** to modify the parameter in the **Properties** panel.
+11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。たとえばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメータを埋め込めます。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。  
 
-![](/images/advanced-features/api-testing/b763cb7-image_13.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
+
+**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。<br/>\
+設定手順:
+
+* 1つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
+* 2つ目のドロップダウンで比較演算子を選択します。<br/>
+* 3つ目の入力欄に比較する値を入力します。値には波括弧なしでパラメータを指定することもできます。<br/>
+* 追加の Assertion を設定したい場合は同じ手順で行を追加し、左のチェックボックスで有効／無効を切り替えます。<br/>
+
+![API テストのスクリーンショット](/images/advanced-features/api-testing/9c95b25-assertions.png)
+
+13. Assertion では表現しきれない複雑な検証や追加処理（失敗時にカスタムエラーメッセージを投げるなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンス結果を受け取って任意の JavaScript コードを実行できます。パラメータも利用可能で、詳しくは後述の Using Parameters を参照してください。
+
+![API テストのスクリーンショット](/images/advanced-features/api-testing/a99b5db-run_additional_code.png)
+
+14. **Show step properties** をクリックして、ステップのプロパティパネルを開きます。
+
+![API テストのスクリーンショット](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png)
+
+15. **Properties** パネルの **Send via web page** チェックボックスでは API 呼び出しの実行コンテキストを制御できます。
+
+    * チェックを外す – ブラウザコンテキストの外側から API を送信します。ブラウザの制限（CORS など）を避けたい場合に有効です。
+    * チェックを付ける – ブラウザ情報（Cookie など）も含めて送信したい場合に使用します（Cookie は自動的に送信されます）。
+
+      ![API テストのスクリーンショット](/images/advanced-features/api-testing/3cf1b19-properties.png)
+16. **Allow API request retry** では、リクエストが失敗した場合に再送を行うかどうかを制御します。
+    1. チェックを付ける – リクエスト自体が失敗したとき（エラーステータスコードのとき）のみ再送を行います。
+    2. チェックを外す – ステータスコードがエラーであっても再送は行わず、検証と追加コードの実行に進みます。たとえば「エラーコードであること」を Assertion で期待している場合などに有用です。
+17. **Params** フィールドでは、後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) で利用するパラメータを定義します。
 
 > 📘
 >
-> This request will not be counted against your account quota.\
-> The response is temporary, which means that upon exiting the step, the response will be cleared.
+> テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、API ステップの前に [wait for](/docs/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
+
+## AUT コンテキスト外でリクエストを試す
+
+テストを実行せずに、AUT（対象アプリ）コンテキスト外で素早くリクエストだけを試したい場合は、**URL** フィールドの **Send** ボタンを使います。このとき **Run additional code on request results** で設定したコードや Assertion は実行されません。\
+送信されるのは **Properties** パネルで定義されたローカルパラメータのうち、静的な値のみです。動的な値は空文字として送信されます。\
+利用可能なステップパラメータは URL フィールド下に一覧表示され、**Edit** をクリックすると **Properties** パネルで編集できます。
+
+![API テストのスクリーンショット](/images/advanced-features/api-testing/b763cb7-image_13.png)
+
+> 📘
+>
+> このリクエストはアカウントの使用量（クォータ）にはカウントされません。\
+> また、このレスポンスは一時的なもので、ステップを閉じると内容はクリアされます。
 
 # Adding an API Action Step
 
-Use an API validation step to perform additional actions, while using the API response. For example, the returned data can be used for calculations, or to save it for later use in the test (export parameter). It is possible to use the data from the *header*, *body*, or \_status \_code response.\
-:fa-arrow-right:**To add an “Add API action” step:**
+API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行いたいケースで使用します。返却データを計算に利用したり、後続ステップで利用するためにエクスポートパラメータとして保存したりできます。*header* / *body* / *status code* いずれの情報も利用可能です。\
+:fa-arrow-right:**“Add API action” ステップを追加するには:**
 
-![](/images/advanced-features/api-testing/437b054-apiaciton.gif)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/437b054-apiaciton.gif)
 
-1. Hover over the :fa-caret-right: (arrow symbol) (or + symbol after the final step) where you want to add the Add API action step.
-2. Click the “M” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
-3. Click on **Actions**.\
-   The **Actions** menu expands.
-4. Scroll down through the menu and select **Add API action**.
-
-> 📘
->
-> Alternatively, you can use the search box at the top of the menu to search for **Add API action**.
-
-The **Add Step** window is shown.
-
-![](/images/advanced-features/api-testing/01b1c12-Picture1.png)
-
-5. Follow **steps 5-13** as described in the [Adding a Validate API Step](doc:api-testing#adding-a-validate-api-step) section above.
-6. Select the **Run additional code on request results** switch if you want to run code that will use the returned data from the API call for cases other than validation (e.g. to extract parameters, close DB connections, etc.). You can run any JavaScript code, and use the data returned from the API call, including the *status code*, *response headers*, and *response body*. If the response body content type is XML/JSON, the parameter type will be an Object, otherwise the parameter type is String.
-
-![](/images/advanced-features/api-testing/5d3302a-image_2.png)
-
-7. Follow **steps 14-16** as described in the [Adding a Validate API Step](doc:api-testing#adding-a-validate-api-step) section above.
+1. 追加したい位置の :fa-caret-right:（矢印）または最後のステップ後ろの **+** にカーソルを合わせます。
+2. “M”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
+3. **Actions** をクリックします。\
+   **Actions** メニューが展開されます。
+4. 一覧から **Add API action** を選択します。
 
 > 📘
 >
-> If you're running via a webpage, and the page has not finished loading, this step can fail. If the previous step requires loading, add a wait for before the API step to verify that the page has finished loading.
+> 上部の検索ボックスで **Add API action** を検索して選択することもできます。
+
+**Add Step** ウィンドウが表示されます。
+
+![API テストのスクリーンショット](/images/advanced-features/api-testing/01b1c12-Picture1.png)
+
+5. 上記「Validate API ステップの追加」の **手順 5〜13** に従って、URL・ヘッダー・ボディ・Assertion などを設定します（ただし目的は「検証」ではなく「応答データの利用」になります）。
+6. レスポンスデータを使った追加処理（パラメータ抽出、DB 接続のクローズなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンスの *status code* / *response headers* / *response body* などを利用して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合は Object、それ以外は文字列として渡されます。
+
+![API テストのスクリーンショット](/images/advanced-features/api-testing/5d3302a-image_2.png)
+
+7. 残りのプロパティ（送信コンテキストやリトライ設定、Params など）は、「Validate API ステップの追加」の **手順 14〜16** を参照して設定します。
+
+> 📘
+>
+> ブラウザ経由で実行しており、直前のステップでページの読み込みが終わっていない場合、このステップは失敗することがあります。前のステップでページロードが必要な場合は、API ステップの前に wait for ステップを挿入し、ページの読み込み完了を確認してください。
 
 # Including a File and/or Text field with an API Call Using Form Data
 
-When adding an API Action or Validate API step to a test, you have the ability to include a file attachment with the API call and/or a text field that can hold a key:value pair.
+Validate API / Add API action ステップでは、フォームデータを使ってファイルやテキストフィールドを API に含めることができます。
 
-:fa-arrow-right: **To include a file attachment in an API call:**
+:fa-arrow-right: **API 呼び出しにファイルを含めるには:**
 
-1. Navigate to your test and add a Validate API or API Action step as described above.
-2. In the **Body** section of step, select the **Form Data** entry type.
+1. 対象テストで Validate API または API Action ステップを追加します（前述手順参照）。
+2. ステップの **Body** セクションで **Form Data** エントリタイプを選択します。
 
-![](/images/advanced-features/api-testing/f021f36-api-testing-1.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/f021f36-api-testing-1.jpg)
 
-3. Select the **File** entry type.
+3. エントリタイプとして **File** を選択します。
 
-![](/images/advanced-features/api-testing/aa68d56-api-testing-2.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/aa68d56-api-testing-2.jpg)
 
-Testim automatically updates the header **Content-Type** to “multipart/form-data.”
+Testim はヘッダーの **Content-Type** を自動的に `multipart/form-data` に更新します。
 
-![](/images/advanced-features/api-testing/c433a90-api-testing-3.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/c433a90-api-testing-3.jpg)
 
-> 📘 Note:
+> 📘 注意
 >
-> Sending a file as part of an API call only works with the **Post** HTTP Request method.
+> ファイルを送信できるのは **Post** HTTP メソッドのみです。
 
-4. Enter the **Key** name for the filename.
+4. ファイル名を受け取る **Key** 名を入力します。
 
-![](/images/advanced-features/api-testing/b5a918f-api-testing-4.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/b5a918f-api-testing-4.jpg)
 
-5. Click the **Upload File** button and attach a file from your computer.
+5. **Upload File** ボタンをクリックし、ローカルマシンからファイルを選択してアップロードします。
 
-![](/images/advanced-features/api-testing/09a8669-api-testing-5.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/09a8669-api-testing-5.jpg)
 
-> 📘 Note:
+> 📘 注意
 >
-> If you do not provide the Key name or file attachment for the file entry, the API call will exclude this entry when running the test.
+> Key 名またはファイルのどちらかが指定されていない場合、そのエントリはテスト実行時の API 呼び出しから自動的に除外されます。
 
-Testim will save the file to the testing server and when the test runs, the test will automatically link to the file and upload the file as part of the test.
+アップロードされたファイルはテストサーバーに保存され、テスト実行時にそのファイルが API 呼び出しの一部として送信されます。
 
-> 📘 Note:
+> 📘 注意
 >
-> Testim limits the file upload size to 25MB. If you try to upload a file larger than 25MB Testim will display a validation message and prevent you from attaching the file.
+> アップロードできるファイルサイズは最大 25MB です。これを超えるファイルをアップロードしようとすると、Testim がバリデーションエラーを表示し添付をブロックします。
 
-:fa-arrow-right: **To include a text field in an API call:**
+:fa-arrow-right: **API 呼び出しにテキストフィールドを含めるには:**
 
-1. Navigate to your test and add a Validate API or API Action step as described above.
-2. In the **Body** section of step, select the **Form Data** entry type.
-3. Select the **Text** entry type.
-4. Enter the **Key** name for the text field.
-5. Enter the **Value** of the text field.
+1. 対象テストで Validate API または API Action ステップを追加します。
+2. ステップの **Body** セクションで **Form Data** エントリタイプを選択します。
+3. エントリタイプとして **Text** を選択します。
+4. テキストフィールドの **Key** 名を入力します。
+5. テキストフィールドの **Value** を入力します。
 
-![](/images/advanced-features/api-testing/428ba6a-Picture1.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/428ba6a-Picture1.png)
 
-The key:value pair of the form is saved. When the test runs, the test will send the key:value pair along with the API call.
+設定した key:value のペアは保存され、テスト実行時に API リクエストと一緒に送信されます。
 
 ## Cancel a File Upload in Progress
 
-You have the ability to cancel a file upload while the upload is in progress.
+アップロード中のファイルを途中でキャンセルすることもできます。
 
-:fa-arrow-right: **To Cancel a file upload in progress:**
+:fa-arrow-right: **アップロード中のファイルをキャンセルするには:**
 
-1. Click the **“X”** next to the entry with the file upload in progress.
+1. アップロード中のエントリの右側にある **“X”** をクリックします。
 
-![](/images/advanced-features/api-testing/e72c0ab-api-testing-6.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/e72c0ab-api-testing-6.jpg)
 
-Testim will cancel the file upload and allow you reupload a different file.
+Testim がファイルのアップロードをキャンセルし、別のファイルを再度アップロードできる状態になります。
 
-![](/images/advanced-features/api-testing/e25b412-api-testing-7.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/e25b412-api-testing-7.jpg)
 
 ## Replace a File Attachment
 
-You have the ability to replace the file attachment for an existing entry.
+既存エントリに添付済みのファイルを別のファイルに差し替えることもできます。
 
-:fa-arrow-right: **To Replace the File Attachment of an existing file entry:**
+:fa-arrow-right: **ファイル添付を別のファイルに置き換えるには:**
 
-1. Click the **“X”** next to the previously attached file entry.
+1. 既存のファイルが添付されているエントリの **“X”** をクリックします。
 
-![](/images/advanced-features/api-testing/0428c1c-api-testing-8.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/0428c1c-api-testing-8.jpg)
 
-2. Click the **Upload File** button and attach a file from your computer to upload a new file.
+2. **Upload File** ボタンをクリックし、新しいファイルを選択してアップロードします。
 
-![](/images/advanced-features/api-testing/0c81dc9-api-testing-5.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/0c81dc9-api-testing-5.jpg)
 
 ## Exclude or Delete an Entry from the Body Section
 
-You have the ability to exclude or delete a Body entry from the API call.
+Body セクションに定義したエントリは、一時的に無効化したり完全に削除したりできます。
 
-:fa-arrow-right: **To exclude an entry from the API call:**
+:fa-arrow-right: **API 呼び出しからエントリだけ除外するには:**
 
-1. Click the **check box** to the left of the entry you want to exclude from the test.
+1. テストから除外したいエントリの左側にあるチェックボックスをオフにします。
 
-![](/images/advanced-features/api-testing/de72f68-api-testing-10.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/de72f68-api-testing-10.jpg)
 
-Testim will exclude this entry from the test, but the entry will not be deleted and can be included again at any time.
+テスト実行時、そのエントリはリクエストから除外されますが、定義自体は残るため、あとから再度有効化できます。
 
-:fa-arrow-right: **To delete an entry from the API call:**
+:fa-arrow-right: **Body セクションからエントリを完全に削除するには:**
 
-1. Click the **“X”** to the right of the Body entry you want to delete.
+1. 削除したい Body エントリ右側の **“X”** をクリックします。
 
-![](/images/advanced-features/api-testing/e7fea88-api-testing-9.jpg)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/e7fea88-api-testing-9.jpg)
 
-Testim will remove this entry.
+エントリは完全に削除されます。
 
 # Using Parameters
 
-You can use parameters in the API step as you would in any other step that uses code. You can use parameters in the sent HTTP request, in the HTTP response, and/or as part of the Assertion. Parameter can be either in-param, as dependency injection, or out-param via the exports/exportsGlobal. You can also access any other variables in the test's scope.\
-Read more about parameters options [here](/docs/parameters/parameters).
+API ステップでは、他のコードステップと同様にパラメータを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメータを埋め込んだり、レスポンスから値を取り出してパラメータに保存したり、Assertion の値として使用したりできます。パラメータは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
+パラメータの詳細は [Parameters](/docs/parameters) を参照してください。
 
 > 📘
 >
-> Arrays are supported in the following format: `array.0.name`
-
-> 📘
->
-> Complex expressions are **NOT** supported within the API step sections.
+> 配列パラメータは `array.0.name` のような形式で参照できます。  
+> また、API ステップ内の各入力セクションでは、複雑な式はサポートされません。
 
 ## Using parameters in the sent HTTP request
 
-Parameters can be used in the header, body, and URL. Since those sections are cumbersome to write in JS, we made it easy for you. In these sections you will need to add double\\triple curly brackets around the parameters.
+パラメータは、送信する HTTP リクエストのヘッダー／ボディ／URL に埋め込めます。これらのセクションは純粋な JS で書くと煩雑になるため、Testim ではパラメータを「二重／三重の波括弧」で簡単に埋め込めるようになっています。
 
 ### Adding parameters to the Body
 
-You can use triple brackets if you do not want the parameters to be encoded. e.g, \{\{\{param}}}.
+パラメータの値をエンコードせずそのまま埋め込みたい場合は、三重波括弧を使います（例: `{{{param}}}`）。
 
-![](/images/advanced-features/api-testing/59f09c0-Picture2.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/59f09c0-Picture2.png)
 
 ### Adding parameters to the URL
 
-If you want to send the API call to an API that uses the same URL as the test's base URL, instead of writing the entire URL you can use the Base URL parameter, by writing \{\{\{BASE\_URL}}} in the URL field, followed by the rest of the URL. You can use triple brackets if you do not want the parameters to be encoded. e.g, \{\{\{param}}}.
+テストの Base URL と同じホストにある API に対して呼び出しを行いたい場合は、URL 全体を記述する代わりに `{{{BASE_URL}}}` パラメータを使えます。URL フィールドで `{{{BASE_URL}}}` の後ろにパスを続けて入力してください。ここでもパラメータをエンコードしたくない場合は三重波括弧を使用します（例: `{{{param}}}`）。
 
-![](/images/advanced-features/api-testing/753553d-image_5.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/753553d-image_5.png)
 
 ### Adding parameters to the Header
 
-You can use triple brackets if you do not want the parameters to be encoded. e.g, \{\{\{param}}}.
+ヘッダーにパラメータを入れる場合も同様で、値をエンコードしたくない場合は `{{{param}}}` のように三重波括弧を使用します。
 
-![](/images/advanced-features/api-testing/82b5c47-image_3.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/82b5c47-image_3.png)
 
 ## Using parameters in the HTTP response
 
-Parameters added in the Properties panel will be automatically added to the function's signature.
+Properties パネルで追加したパラメータは、API ステップ内のコードの関数シグネチャに自動的に追加されます。これにより、レスポンスを処理するコード内でパラメータを直接利用できます。
 
-![](/images/advanced-features/api-testing/eb87221-image_9.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/eb87221-image_9.png)
 
 ## Using parameters in the Assertion
 
-Parameters can be added to the assertion without the need to add curly brackets.
+Assertion セクションでも、比較値としてパラメータをそのまま使用できます。この場合、値には波括弧を付ける必要はありません。
 
-![](/images/advanced-features/api-testing/bb8290c-image_8.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/bb8290c-image_8.png)
 
-![](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png)
 
 # Viewing the result after the run
 
-After running the step, you'll see the response returned from the API call in the Response tab, along with additional info, such as response status code, call duration, and the size of the binary files. You can also view the sent request and download the response info.
+ステップ実行後は、**Response** タブで API レスポンスを確認できます。ここでは、レスポンスボディだけでなく、ステータスコードやリクエスト時間、バイナリファイルのサイズなどの追加情報も表示されます。また、送信されたリクエスト内容を確認したり、レスポンス情報をダウンロードしたりすることもできます。
 
-![](/images/advanced-features/api-testing/a311eec-image_10.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/a311eec-image_10.png)
 
-The following features are available in the **Response** tab:
+**Response** タブでは次の機能が利用できます。
 
-* **View Sent Request** – When you click this button a window opens showing the full request that was sent. Parameters are converted to static values. From this window you can **download** a JSON file of the response or **copy** the information shown to your clipboard.
+* **View Sent Request** – クリックすると送信されたリクエストの完全な内容を表示するウィンドウが開きます。パラメータは実際の値に展開された状態で表示されます。この画面からレスポンス情報を JSON として **ダウンロード** したり、内容をクリップボードに **コピー** したりできます。
 
-![](/images/advanced-features/api-testing/e6c16b6-image_11.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/e6c16b6-image_11.png)
 
-* **Download the response info** – When you click on the download button (arrow to the right of View Sent Request) a JSON file with the entire response is downloaded to your local device.
-* **Assertion response** – if you have configured assertions, you will see the one of the following indications next to the assertion:
-  * **Passed** – this indicates that the assertion was TRUE.
-  * **Failed** – this indicates that the assertion was FALSE. In this case the step will fail, which in turn will fail the test.
+* **Download the response info** – **View Sent Request** の右側にあるダウンロードボタンをクリックすると、レスポンス全体を含んだ JSON ファイルをローカルにダウンロードできます。
+* **Assertion response** – Assertion を設定している場合、それぞれの Assertion の横に次のいずれかの結果が表示されます。
+  * **Passed** – 条件が TRUE になり、Assertion が成功したことを示します。
+  * **Failed** – 条件が FALSE となり、Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
 
-![](/images/advanced-features/api-testing/639898e-image_12.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/639898e-image_12.png)
 
-**Usage examples** - [click here](https://app.testim.io/#/project/GYXR2qZC/branch/master/automate/tests/97auidmCzzUtZuoQ)
+**Usage examples** - 具体的な使用例は [こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/automate/tests/97auidmCzzUtZuoQ) を参照してください。
 
-**Troubleshooting** - [click here](doc:why-did-my-test-fail#13-api-step-failed)
+**Troubleshooting** - よくあるエラーと対処方法は [こちら](/docs/why-did-my-test-fail#13-api-step-failed) を参照してください。
