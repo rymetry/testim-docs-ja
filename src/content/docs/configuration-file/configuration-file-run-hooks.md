@@ -1,13 +1,21 @@
 ---
 title: '設定ファイル'
-description: '原文: https://help.testim.io/docs/configuration-file-run-hooks'
+description: 'Testim の CLI で使用する設定ファイル（config）で、プロジェクトやテスト実行のパラメータ、実行フック（before/after test・suite）を定義する方法を説明します。'
 category: '設定ファイル'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/configuration-file-run-hooks'
 keywords:
-  - testim
-  - configuration-file-run-hooks
-  - configuration-file
+  - 設定ファイル
+  - config ファイル
+  - run hooks
+  - Before Suite
+  - Before Test
+  - After Test
+  - After Suite
+  - CLI 設定
+  - Testim
+  - 実行フック
 ---
 設定ファイルについて
 
@@ -62,7 +70,7 @@ exports.config = {
 
 > 📘
 >
-> グリッド名の設定方法は [グリッド管理](/docs/grid-management/grid-management) を参照してください。
+> グリッド名の設定方法は [グリッド管理](/docs/grid-management) を参照してください。
 
 ​
 
@@ -70,7 +78,7 @@ exports.config = {
 
 設定ファイルには次の要素が含まれます。
 
-- CLIフラグ: テストの実行方法を指示します。設定ファイルで使えるフラグは、[CLIフラグ](https://help.testim.io/docs/the-command-line-cli)に記載のプロパティをすべてサポートします。\
+- CLIフラグ: テストの実行方法を指示します。設定ファイルで使えるフラグは、[CLIフラグ](/docs/the-command-line-cli)に記載のプロパティをすべてサポートします。\
   プロパティ名の書式はCLIとは少し異なり、ハイフン（-）をキャメルケースに置き換えます。\
   例: `--base-url` → `baseUrl`
 
@@ -90,7 +98,7 @@ exports.config = {
 - Before Suite: スイートの前に実行
 - After Suite: スイートの後に実行
 
-フックの詳細は [Hooks](doc:hooks#creating-hooks-via-the-test-configuration) を参照してください。
+フックの詳細は [Hooks](/docs/hooks#creating-hooks-via-the-test-configuration) を参照してください。
 
 以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
 
@@ -109,14 +117,14 @@ exports.config = {
 
 ## 設定フックの事前定義プロパティ
 
-各種設定フックには、テスト／スイートに関する追加情報を取得するための事前定義プロパティが用意されています。例えば、Before Suite フックで `projectId` の値を出力できます。詳細は[設定ファイルフックの事前定義プロパティ](/docs/configuration-file/predefined-properties-in-config-file-hooks)を参照してください。
+各種設定フックには、テスト／スイートに関する追加情報を取得するための事前定義プロパティが用意されています。例えば、Before Suite フックで `projectId` の値を出力できます。詳細は[設定ファイルフックの事前定義プロパティ](/docs/predefined-properties-in-config-file-hooks)を参照してください。
 
 ### beforeTest フックで実行時のラベル一覧を取得する
 
 設定ファイルの `beforeTest` フック内で、テストに定義されたラベル一覧でパラメータを埋めることができます。\
 次の例では `labels` というパラメータを定義しています。このパラメータには事前定義パラメータ `allLabels` を用いて、そのテストに付与されたラベルの一覧が入ります。以降、パラメータが使える場所で参照できます。例えば **カスタムステップ** で、ラベルに `Games` が含まれる場合はステップをスキップする、といったコードを記述できます。
 
-パラメータの利用については[設定ファイルのパラメータ](/docs/parameters/configuration-file-parameters)も参照してください。
+パラメータの利用については[設定ファイルのパラメータ](/docs/configuration-file-parameters)も参照してください。
 
 <br />
 
@@ -149,7 +157,7 @@ exports.config = {
 
 afterSuite 関数内では、その実行でエクスポートされたグローバルパラメータを参照できます。\
 構文: `suite.exportsGlobal.<param_name>`\
-グローバルエクスポートの詳細は[パラメータのエクスポート](/docs/parameters/exports-parameters)を参照してください。
+グローバルエクスポートの詳細は[パラメータのエクスポート](/docs/exports-parameters)を参照してください。
 
 <br />
 
@@ -169,7 +177,7 @@ exports.config = {
 # 設定ファイルを使ってテストを実行する
 
 1. 設定ファイルを作成します（例: `testimConfig.js`）。
-2. [コマンドライン（CLI）](/docs/running-tests/the-command-line-cli) にパラメータとして渡します。
+2. [コマンドライン（CLI）](/docs/the-command-line-cli) にパラメータとして渡します。
 3. 必要に応じて、ファイルへのパスを指定してください。
 
 ```shell

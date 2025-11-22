@@ -1,100 +1,110 @@
 ---
 title: 'Salesforce APEX アクションステップ'
-description: '原文: https://help.testim.io/docs/salesforce-apex-action-step'
+description: 'Salesforce の APEX コードをテストステップとして実行し、UI を越えた E2E 検証やバックエンドデータ操作を行う Salesforce APEX アクションステップの使い方を説明します。'
 category: '特殊ステップ'
 order: 2
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/salesforce-apex-action-step'
 keywords:
-  - testim
-  - salesforce-apex-action-step
-  - special-steps
+  - Salesforce APEX
+  - APEX アクション
+  - Salesforce テスト
+  - 特殊ステップ
+  - バックエンド検証
+  - データ操作
+  - CLI エージェント
+  - Testim
+  - 接続情報
+  - パラメータ
 ---
-APEX コードをテスト内のステップとして実行し、UI を越えたE2E検証を可能にします。APEX コードブロックに任意のパラメータを渡せます。APEX 側の入力パラメータは文字列型で受け取り、必要に応じてAPEX内で型変換してください。実行後、Salesforceから返ったデータなどはステップログで確認できます。
+APEX コードをテスト内のステップとして実行し、UI を越えた E2E 検証を可能にします。APEX コードブロックに任意のパラメータを渡せます。APEX 側の入力パラメータは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、Salesforce から返ったデータなどはステップログで確認できます。
 
-> 📘 Salesforce 環境で2FAが有効な場合、テスト実行マシンのIPを管理者にホワイトリスト登録してもらってください。
+> 📘 Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を管理者にホワイトリスト登録してもらってください。
 
 ローカルで本ステップを含むテストを実行するには、事前に次を実行します: **npm i -g @testim/testim-cli && testim connect**
 
-Below is the general procedure for adding a *Salesforce APEX action* step followed by sample code for an example.
+以下に *Salesforce APEX action* ステップの追加手順と、代表的なコード例を示します。
 
 ## Salesforce APEX アクションステップを追加する
 
 :fa-arrow-right: **追加手順:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. 追加したい位置の :fa-caret-right: **（矢印）** にカーソルを合わせます。
 
-![1941](/images/special-steps/salesforce-apex-action-step/7be8ce7-Testim_512a.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/7be8ce7-Testim_512a.png)
 
-The **action items** are displayed.
+アクションオプションが表示されます。
 
-![204](/images/special-steps/salesforce-apex-action-step/afcfd40-Testim_566.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/afcfd40-Testim_566.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![400](/images/special-steps/salesforce-apex-action-step/eb0f440-Testim_544_r.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/eb0f440-Testim_544_r.png)
 
-3. Click on **Salesforce**.\
-   The **Salesforce** menu expands.
+3. **Salesforce** をクリックします。\
+   **Salesforce** メニューが展開されます。
 
-![400](/images/special-steps/salesforce-apex-action-step/67feeca-Testim_545_r.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/67feeca-Testim_545_r.png)
 
-4. Scroll down through the menu and select **Salesforce APEX action**.
+4. メニューをスクロールし、**Salesforce APEX action** を選択します。
 
-> 📘 Alternatively, you can use the search box at the top of the menu to search for **Salesforce APEX action**.
+> 📘
+>
+> メニュー上部の検索ボックスに **Salesforce APEX action** と入力して検索することもできます。
 
-The **Add Step** window is shown.
+**Add Step** ウィンドウが表示されます。
 
-![400](/images/special-steps/salesforce-apex-action-step/2d49d61-Testim_567_r.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/2d49d61-Testim_567_r.png)
 
-5. In the **Name the new step** field, enter a (meaningful) name for this step.
-6. If this is a shared step to be made available to reuse in this or other tests, keep the box next to **Shared step** selected (default), and choose a folder from the **Select shared step folder** list where you want this step stored. Otherwise, deselect the checkbox.\
-   For more information about shared steps, see [Groups](/docs/groups/groups).
-7. Click **Create Step**.\
-   The **function** editor opens, and the Properties panel opens on the right-hand side.
+5. **Name the new step** フィールドに、このステップのわかりやすい名前を入力します。
+6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step folder** リストから保存先フォルダを選択します。共有ステップにしない場合はチェックを外します。\
+   共有ステップの詳細は [グループ](/docs/groups) を参照してください。
+7. **Create Step** をクリックします。\
+   **function** エディタが開き、右側に Properties パネルが表示されます。
 
-![2061](/images/special-steps/salesforce-apex-action-step/db6f5b8-Testim_537.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/db6f5b8-Testim_537.png)
 
-8. In the **Properties** panel, in the **Description** field, optionally edit the description of this step. The default description is “Run Salesforce Apex action”.
-9. Enter your connection properties for the Salesforce environment on which you want to run the APEX code.\
-   You can enter strings (surrounded by single or double quotes) or parameters (not surrounded by quotes). For more information on using parameters, see [Using Parameters](doc:salesforce-apex-action-step#section-using-parameters) (below).
+8. **Properties** パネルの **Description** フィールドで、このステップの説明を必要に応じて編集します（既定値は “Run Salesforce Apex action”）。
+9. APEX コードを実行したい Salesforce 環境への接続情報を入力します。\
+   文字列（シングルまたはダブルクォートで囲む）またはパラメータ（クォートなし）を指定できます。パラメータの使い方の詳細は後述の [Using Parameters](/docs/salesforce-apex-action-step#using-parameters) を参照してください。
 
-* In the **URL** field, enter the URL of your Salesforce environment.
-* In the **Username** field, enter your Salesforce username.
-* In the **Password** field, enter your Salesforce password.
-* In the **Security Token** field, enter your Salesforce security token (generated in Salesforce).\
-  You can reset your Salesforce security token in the **My Personal Information** section of Salesforce.
+* **URL** フィールドに、対象 Salesforce 環境の URL を入力します。
+* **Username** フィールドに、Salesforce のユーザー名を入力します。
+* **Password** フィールドに、Salesforce のパスワードを入力します。
+* **Security Token** フィールドに、Salesforce で発行されたセキュリティトークンを入力します。\
+  セキュリティトークンは Salesforce の **My Personal Information** セクションから再発行できます。
 
-![3129](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
 
 10. APEX 側の入力パラメータは文字列型で受け取ります。必要なパラメータを次のように定義します。\
-    a. In the **Properties** panel, in the **APEX Params** section, Click the **+ APEX PARAMS** button.\
-    b. Enter the parameter’s **Value**. The value will be automatically converted to type *string*. This value can be later reconverted to another type through the code described in step 12.\
-    c. The parameter is automatically named “param”. To assign a relevant name to the parameter, click on the **edit** icon and enter the desired name.
+    a. **Properties** パネルの **APEX Params** セクションで **+ APEX PARAMS** ボタンをクリックします。\
+    b. パラメータの **Value** を入力します。この値は自動的に *string* 型に変換されます（Step 12 で説明するコード内で別の型に変換可能です）。\
+    c. パラメータ名はデフォルトで “param” になります。わかりやすい名前に変更したい場合は **edit** アイコンをクリックして任意の名前を入力します。
 
-![200](/images/special-steps/salesforce-apex-action-step/7007b2f-Testim_538a_r.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/7007b2f-Testim_538a_r.png)
 
-11. 任意のプロパティ:
+11. 任意設定のプロパティ:
 
-* **When this step fails** – Specify what to do if this step fails.
-* **When to run step** – Specify conditions for when to run the step. For more information, see [Conditions](/docs/conditions/conditions).
-* **Override timeout** – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).
+* **When this step fails** – ステップが失敗した場合の挙動。
+* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+* **Override timeout** – 既定のタイムアウト時間（この時間を超えるとステップ失敗とみなされる）を上書きし、別の時間（ミリ秒）を設定します。
 
-12. **function** 欄に APEX コードを記述します。定義したパラメータを参照できます。
-13. 戻る矢印でエディタへ戻ります。
+12. **function** 欄に APEX コードを記述します。定義したパラメータをこのコード内で参照できます。
+13. 戻る矢印をクリックしてメインのエディタに戻ります。
 
-![400](/images/special-steps/salesforce-apex-action-step/d91f582-Testim_540a_r.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/d91f582-Testim_540a_r.png)
 
-設定完了です。
+設定が完了すると、テスト実行時に APEX コードが呼び出されます。
 
-![2061](/images/special-steps/salesforce-apex-action-step/eb1a459-Testim_541a.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/eb1a459-Testim_541a.png)
 
 14. 実行前に **npm i -g @testim/testim-cli && testim connect** を実行して CLI エージェントを起動してください。\
-    未起動の場合、プロンプトが表示されます。
+    起動していない場合は、テスト実行時に接続を促すプロンプトが表示されます。
 
-![400](/images/special-steps/salesforce-apex-action-step/5f98f17-Testim_536_r.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/5f98f17-Testim_536_r.png)
 
-After you run your test, a step log is available in the code editor with your test results from Salesforce.
+テストを実行すると、コードエディタ内の Step Log で Salesforce からの結果を確認できます。
 
 ### パラメータの使用
 
@@ -102,22 +112,22 @@ After you run your test, a step log is available in the code editor with your te
 
 :fa-arrow-right: **接続情報にパラメータを使う:**
 
-1. Define parameters in one of the following ways:
+1. 次のいずれかの方法でパラメータを定義します。
 
-* **Add a parameter to the test data** – You can define a parameter by adding **Test Data** to the **Setup** step (the first step of the test). For detailed instructions, see [Configuring a data driven test from the visual editor](doc:data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor).
-* **Add a parameter to the config file** – You can add a parameter to the [Configuration file](/docs/configuration-file/configuration-file-run-hooks). For detailed instructions, see [Configuring Data Driven Tests using the Config file](doc:data-driven-testing#section-configuring-data-driven-tests-using-the-config-file).
-* **Add a parameter to a Custom step** – You can create a Custom step and then add a parameter to this Custom Step. For detailed instructions, see [Parameters in custom JavaScript steps](/docs/parameters/parameters-in-custom-javascript-steps).\
-  You then need to pass the parameter to the *Salesforce APEX action* step or to the test level, by exporting the parameter. For detailed instructions, see [Exports Parameters](/docs/parameters/exports-parameters).
+* **テストデータにパラメータを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメータを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
+* **設定ファイルにパラメータを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメータを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
+* **カスタムステップにパラメータを追加** – カスタムステップを作成してパラメータを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
+  その後、エクスポート機能を使ってパラメータを *Salesforce APEX action* ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
 
-2. In your *Salesforce APEX action* step, add the parameters to the **URL**, **Username**, and **Password** fields.
+2. *Salesforce APEX action* ステップの **URL**、**Username**、**Password** フィールドに、上記で定義したパラメータを設定します。
 
 ## 例: APEX アクション
 
-You can use the *Salesforce APEX action* step to manipulate your Salesforce objects. In the same test, you can add additional steps to verify that your Salesforce application reflected the changes that were made on the Salesforce objects. The *Salesforce APEX action* step can manipulate multiple objects at once.
+*Salesforce APEX action* ステップを使うと、Salesforce オブジェクトを直接操作できます。同じテスト内に検証用ステップを追加すれば、オブジェクトへの変更がアプリケーション上に正しく反映されたかどうかも確認できます。1 回のステップで複数のオブジェクトをまとめて操作することも可能です。
 
 ### 新規アカウントの検証
 
-In this scenario we will use the *Salesforce APEX action* step to create a new account. In Salesforce there is a rule that copies the account name to another custom text field called 'mySpecialField' in the Account Object. Additional steps validate that the rule was applied by checking that in both fields (accountName and mySpecialField) the name is the same.
+この例では *Salesforce APEX action* ステップを使って新しいアカウントを作成します。Salesforce 側には、アカウントオブジェクト内のカスタムテキストフィールド `mySpecialField` にアカウント名をコピーするルールが設定されているとします。追加の検証ステップで、accountName フィールドと mySpecialField フィールドの値が同一であることを確認し、ルールが正しく適用されたかを検証します。
 
 ![2061](/images/special-steps/salesforce-apex-action-step/ec7a3f9-Testim_542.png)
 
@@ -136,16 +146,16 @@ try {
 
 ## 実行結果ログの確認
 
-After a test containing a *Salesforce APEX action* step is run, a step log is available in the code editor with your test results from Salesforce.
+*Salesforce APEX action* ステップを含むテストを実行すると、コードエディタの Step Log から Salesforce から返却された結果を確認できます。
 
 :fa-arrow-right: **確認手順:**
 
-1. Double-click on the *Salesforce APEX action* step for which you wish to view the Result Log.
+1. 結果を確認したい *Salesforce APEX action* ステップをダブルクリックします。
 
-![3593](/images/special-steps/salesforce-apex-action-step/324def4-Testim_564a.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/324def4-Testim_564a.png)
 
-The **code editor** opens, and the **Step Log** is shown at the bottom of the screen.
+コードエディタが開き、画面下部に **Step Log** が表示されます。
 
-If there is a log received from Salesforce, the details will be shown in the Step Log section.
+Salesforce からログが返っている場合、その詳細が Step Log セクションに表示されます。
 
-![2061](/images/special-steps/salesforce-apex-action-step/4d25a94-Testim_539a.png)
+![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/4d25a94-Testim_539a.png)

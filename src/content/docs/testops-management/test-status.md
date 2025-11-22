@@ -82,7 +82,7 @@ keywords:
 
 > 📘
 >
-> テストステータスの一部として、不安定なテストを表示し、そのステータスをどのように管理するかを決定するオプションも追加しました。不安定なテストの詳細については、[こちら](https://help.testim.io/docs/flaky-tests)をご覧ください。
+> テストステータスの一部として、不安定なテストを表示し、そのステータスをどのように管理するかを決定するオプションも追加しました。不安定なテストの詳細については、[こちら](/docs/flaky-tests)をご覧ください。
 
 :fa-arrow-right: **Testim のエディタからテストステータスを変更するには:**
 
@@ -123,7 +123,7 @@ keywords:
 ### CLI 実行
 
 * **失敗した Evaluating テスト**は、CLI 実行サマリーに FAILED-EVALUATING として表示されます。
-* **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[こちら](https://help.testim.io/docs/the-command-line-cli#the-common-parameters)をご覧ください。
+* **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[こちら](/docs/the-command-line-cli#the-common-parameters)をご覧ください。
 * **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
 
 > 📘

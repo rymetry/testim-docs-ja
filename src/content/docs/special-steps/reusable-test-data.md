@@ -1,13 +1,21 @@
 ---
 title: 'テストデータ（再利用）'
-description: '原文: https://help.testim.io/docs/reusable-test-data'
+description: 'Test Data ファイルを使って複数テスト間でデータを再利用し、スケジューラやテスト設定から上書き・割り当てを行う方法を説明します。'
 category: '特殊ステップ'
 order: 9
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/reusable-test-data'
 keywords:
-  - testim
-  - reusable-test-data
-  - special-steps
+  - テストデータ
+  - 再利用可能データ
+  - Test Data
+  - CSV
+  - JSON
+  - Excel
+  - スケジューラ
+  - Override test data
+  - Test Data Library
+  - 特殊ステップ
 ---
 テストデータを再利用し、テスト実行ごとに使い回す方法を説明します。
 
@@ -19,11 +27,8 @@ Testim のテストデータファイルは、複数テストで使うデータ�
 * ユーザーや商品などを変えて同一テストを実行する
 * チームで共通のテストデータソースを共有したい
 
-<br />
-
-![](/images/special-steps/reusable-test-data/5ad1c9f-Test_Data_Files.jpg)
-
-<br />
+![再利用可能なテストデータのスクリーンショット](/images/special-steps/reusable-test-data/5ad1c9f-Test_Data_Files.jpg)
+*** End Patch!*\
 
 ### Testim での使い方
 
@@ -45,9 +50,9 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 
 :fa-arrow-right: **手順:**
 
-1. Go to **Resources > Test Data** .
-2. Select **Upload Test Data**.
-3. In the dialog, enter a name and upload your test data file, then select **OK**.
+1. Testim 画面で **Resources > Test Data** を開きます。
+2. **Upload Test Data** を選択します。
+3. 表示されたダイアログで名前を入力し、テストデータファイルをアップロードして **OK** をクリックします。
 
 アップロードが完了すると **Test Data** タブに一覧表示されます。
 
@@ -65,9 +70,9 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 
 :fa-arrow-right: **手順:**
 
-1. Go to **Resources > Test Data**.
-2. Select **Deleted**.
-3. Right-click the desired test data file and select **Restore**.
+1. **Resources > Test Data** を開きます。
+2. **Deleted** タブを選択します。
+3. 復元したいテストデータ行を右クリックし、**Restore** を選択します。
 
 復元後、**Test Data** タブから利用できます。
 
@@ -77,24 +82,21 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 
 :fa-arrow-right: **上書き手順:**
 
-1. Go to **Runs > Scheduled Runs**.
-2. Select **New scheduler**.
-3. Toggle **Override test data**.
+1. Testim 画面で **Runs > Scheduled Runs** を開きます。
+2. **New scheduler** を選択します。
+3. **Override test data** をオンに切り替えます。
 
 > 📘
 >
 > ここでの上書きは既定のテストデータのみ対象で、テスト内で定義した上書き値には影響しません。
 
-4. Select a test data file from the dropdown menu, or **Upload data file** to add a new one. You can upload test data files in CSV, JSON or Excel. Note that each file can be up to 2 MB.
-5. Select **Create**.
+4. ドロップダウンからテストデータファイルを選択するか、**Upload data file** で新しいファイルをアップロードします。CSV / JSON / Excel 形式に対応しており、最大サイズは 2 MB です。
+5. **Create** を選択します。
 
 既定のテストデータは選択したファイルの値に置き換わります。
 
-<br />
+![再利用可能なテストデータのスクリーンショット](/images/special-steps/reusable-test-data/79b7927-uploading_file.jpg)
 
-![](/images/special-steps/reusable-test-data/79b7927-uploading_file.jpg)
-
-<br />
 
 ## テストへテストデータファイルを割り当て
 
@@ -104,39 +106,37 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 >
 > 優先度を付けると、実行レベルで設定したデータより先に適用されます。重複するキーは上書きではなくマージされます。
 
-<br />
-
-![](/images/special-steps/reusable-test-data/9cbb820-Assign_data_file.jpg)
+![再利用可能なテストデータのスクリーンショット](/images/special-steps/reusable-test-data/9cbb820-Assign_data_file.jpg)
 
 ### 既存のテストデータをファイルに変換
 
 :fa-arrow-right: **手順:**
 
-1. In Testim, select a test and open it in **Editor**.
-2. Select the **Show step properties** icon to open the **Test Configuration Properties** panel.
-3. Select **Editor > Test Data**.
-4. Select **Convert to file** above the test data preview.
-5. In the input field, enter a name for the new test data file, then select **Convert**.
+1. Testim で対象テストを開き、**Editor** 画面を表示します。
+2. **Show step properties** アイコンをクリックし、**Test Configuration Properties** パネルを開きます。
+3. **Editor > Test Data** を選択します。
+4. テストデータプレビューの上にある **Convert to file** をクリックします。
+5. 入力フィールドに新しいテストデータファイル名を入力し、**Convert** をクリックします。
 
 > 📘
 >
 > 既存の埋め込みデータは再利用可能なファイルに変換され、ライブラリへ保存されます（以後、他テストでも利用可）。
 
-6. If you want to prioritize your test data file, select the **Prioritize test data** checkbox.
+6. テストデータファイルの優先度を上げたい場合は、**Prioritize test data** チェックボックスをオンにします。
 
-The converted test data file will be assigned to this test and added to the Test Data Library. The new values will be used for your next test execution.
+変換されたテストデータファイルはこのテストに割り当てられ、Test Data Library に追加されます。次回のテスト実行から新しい値が使用されます。
 
 ### テストデータファイルを再利用
 
 :fa-arrow-right: **手順:**
 
-1. In Testim, select a test and open it in **Editor**.
-2. Select the **Show step properties** icon to open the **Test Configuration Properties** panel.
-3. Select **Editor > Reusable File**.
-4. Choose a test data file from the dropdown menu, or select **Upload data file** to add a new one.
-5. If you want to prioritize your test data file, select the **Prioritize test data** checkbox.
+1. Testim で対象テストを開き、**Editor** 画面を表示します。
+2. **Show step properties** アイコンをクリックして **Test Configuration Properties** パネルを開きます。
+3. **Editor > Reusable File** を選択します。
+4. ドロップダウンからテストデータファイルを選択するか、**Upload data file** を選択して新しいファイルをアップロードします。
+5. テストデータファイルを優先的に使用したい場合は、**Prioritize test data** チェックボックスをオンにします。
 
-The selected test data file will be added to this test and the new values will be used for your next test execution.
+選択したテストデータファイルがこのテストに割り当てられ、次回のテスト実行時にその値が使用されます。
 
 ### CLI
 

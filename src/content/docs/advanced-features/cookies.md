@@ -1,13 +1,21 @@
 ---
 title: 'Cookie（クッキー）'
-description: '原文: https://help.testim.io/docs/cookies'
+description: '専用ステップやカスタムコード、設定ファイルを使ってテスト内でブラウザクッキーを設定・取得する方法を説明します。'
 category: '高度な機能'
 order: 3
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/cookies'
 keywords:
-  - testim
-  - cookies
-  - advanced-features
+  - クッキー
+  - Cookie ステップ
+  - Set Cookie
+  - Get Cookie
+  - テストデータ
+  - カスタムアクション
+  - 設定ファイル
+  - セッション管理
+  - 認証
+  - テスト自動化
 ---
 ブラウザクッキーの取得と設定
 
@@ -31,115 +39,121 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 **Set Cookie** ステップは、テストのUIから直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメータを利用します。
 
-:fa-arrow-right: **To set a cookie by entering its attributes:**
+:fa-arrow-right: **属性を直接入力して Cookie を設定するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. 追加したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
 
-![3845](/images/advanced-features/cookies/9a4e48a-Testim_201a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9a4e48a-Testim_201a.png)
 
-The action options are displayed.
+アクションオプションが表示されます。
 
-![300](/images/advanced-features/cookies/d3b6f5e-Testim_202a_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/d3b6f5e-Testim_202a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![300](/images/advanced-features/cookies/42edd22-Testim_203_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/42edd22-Testim_203_r.png)
 
-3. Click on **Actions**.\
-   The Actions menu expands.
+3. **Actions** をクリックします。\
+   **Actions** メニューが展開されます。
 
-![300](/images/advanced-features/cookies/bab0fb0-Testim_204_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/bab0fb0-Testim_204_r.png)
 
-4. Scroll down through the menu and select **Set Cookie**.
+4. 下にスクロールして **Set Cookie** を選択します。
 
-> 📘 Alternatively, you can use the search box at the top of the menu to search for **Set Cookie**.
+> 📘
+>
+> 上部の検索ボックスで **Set Cookie** を検索して選択することもできます。
 
-The **Set Cookie** screen is shown.
+**Set Cookie** 画面が表示されます。
 
-![300](/images/advanced-features/cookies/fd880f8-Testim_205_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/fd880f8-Testim_205_r.png)
 
-5. Ensure the **Create new Cookie** radio button is selected (default).
-6. Enter your desired values in the first four **Cookie Info** fields.
+5. **Create new Cookie** ラジオボタンが選択されていることを確認します（既定値）。
+6. 最初の4つの **Cookie Info** フィールドに値を入力します。
 
-* **Cookie name** – the name of the cookie. This parameter is required.
-* **Cookie value** – the value you wish to assign to the cookie. This parameter is required.
-* **Domain** – the host to which the cookie will be sent. The default Domain (blank) is the Base URL your test is running on. This parameter is optional.
-* **Path** – the path that must exist in the request URL. The default Path (blank) is the root directory. This parameter is optional.
+* **Cookie name** – Cookie 名（必須）。
+* **Cookie value** – 設定したい値（必須）。
+* **Domain** – Cookie を送信するホスト。空欄（既定）の場合はテストが実行されている Base URL が使用されます（任意）。
+* **Path** – リクエストURLに含まれている必要があるパス。空欄（既定）はルートディレクトリを意味します（任意）。
 
-> 📘 Strings must be surrounded by single or double quotes.
+> 📘 文字列はシングルクォートまたはダブルクォートで囲む必要があります。
 
-7. In the **Expires (Max-Age)** field, select from the dropdown your desired expiration time for your cookie (default = session).
-8. Select the **HttpOnly** checkbox if you want your cookie set to HttpOnly.
-9. Select the **Secure** checkbox if you want your cookie set to Secure.
-10. Click the **back arrow** to return to the main **Editor** window.
+7. **Expires (Max-Age)** フィールドで有効期限を選択します（既定値は session）。
+8. Cookie を HttpOnly にしたい場合は **HttpOnly** チェックボックスをオンにします。
+9. HTTPS 通信時のみ送信したい場合は **Secure** チェックボックスをオンにします。
+10. **back arrow** をクリックしてメインの **Editor** 画面に戻ります。
 
-![300](/images/advanced-features/cookies/55825e1-Testim_206a_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/55825e1-Testim_206a_r.png)
 
-When you run your test your cookie will be set.
+テストを実行すると、指定した属性で Cookie が設定されます。
 
-:fa-arrow-right: **To set a cookie using a cookie parameter:**
+:fa-arrow-right: **パラメータから Cookie を設定するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. Cookie を追加したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
 
-![3845](/images/advanced-features/cookies/81c33b1-Testim_201a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/81c33b1-Testim_201a.png)
 
-The action options are displayed.
+アクションオプションが表示されます。
 
-![300](/images/advanced-features/cookies/8a64224-Testim_202a_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/8a64224-Testim_202a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined step**s menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![300](/images/advanced-features/cookies/9634744-Testim_203_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9634744-Testim_203_r.png)
 
-3. Click on **Actions**.\
-   The Actions menu expands.
+3. **Actions** をクリックします。\
+   **Actions** メニューが展開されます。
 
-![300](/images/advanced-features/cookies/0e28a9c-Testim_204_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/0e28a9c-Testim_204_r.png)
 
-4. Scroll down through the menu and select **Set Cookie**.
+4. 下にスクロールして **Set Cookie** を選択します。
 
-> 📘 Alternatively, you can use the search box at the top of the menu to search for **Set Cookie**.
+> 📘
+>
+> 上部の検索ボックスで **Set Cookie** を検索して選択することもできます。
 
-The **Set Cookie** screen is shown.
+**Set Cookie** 画面が表示されます。
 
-![300](/images/advanced-features/cookies/fc68884-Testim_205_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/fc68884-Testim_205_r.png)
 
-5. Select the **Use cookie parameter** radio button.\
-   The **Parameter Name** field is shown.
+5. **Use cookie parameter** ラジオボタンを選択します。\
+   **Parameter Name** フィールドが表示されます。
 
-![3849](/images/advanced-features/cookies/3d4b48c-Testim_218.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/3d4b48c-Testim_218.png)
 
-6. In the **Parameter Name** field, enter the name of a previously created cookie parameter/variable. For more information, see [Getting Cookies using the Get Cookie step](doc:cookies#getting-cookies-using-the-get-cookie-step).
-7. Click the **back arrow** to return to the main **Editor** window.
+6. **Parameter Name** に、事前に作成した Cookie パラメータ／変数の名前を入力します。詳細は [Getting Cookies using the Get Cookie step](/docs/cookies#getting-cookies-using-the-get-cookie-step) を参照してください。
+7. **back arrow** をクリックしてメインの **Editor** 画面に戻ります。
 
-![3851](/images/advanced-features/cookies/98be8c7-Testim_219a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/98be8c7-Testim_219a.png)
 
-When you run your test, your cookie will be set with the current value of the cookie parameter you entered in this step.
+テスト実行時、その時点のパラメータ値を使って Cookie が設定されます。
 
 ### Setting Cookies using the Setup step – “Test Data” property
 
-Set your cookies in the **Test Data** property of the Setup step if you need your cookies for a particular test, or if you need to have the cookies loaded before your page loads.
+特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。
 
-:fa-arrow-right: **To set cookies in the Test Data property:**
+:fa-arrow-right: **Test Data プロパティで Cookie を設定するには:**
 
-1. Hover over the **Setup** step (the first step in your test), and click on the **Show Properties** (:fa-cog:) icon.
+1. テストの最初のステップである **Setup** ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
 
-![3843](/images/advanced-features/cookies/9335a8c-Testim_210a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9335a8c-Testim_210a.png)
 
-The **Test Configuration Properties** panel opens on the right-hand side.
+右側に **Test Configuration Properties** パネルが表示されます。
 
-![200](/images/advanced-features/cookies/3866fe4-Testim_211_r2.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/3866fe4-Testim_211_r2.png)
 
-> 📘 Alternatively, you can double-click the **Setup** step, or click the **Show step properties** icon in the top right corner of the screen.
+> 📘
+>
+> **Setup** ステップをダブルクリックするか、画面右上の **Show step properties** アイコンをクリックしても同じパネルを開けます。
 
-2. Scroll down through the options, and click **Test Data**.\
-   A JavaScript editor opens.
+2. オプションをスクロールして **Test Data** をクリックします。\
+   JavaScript エディタが開きます。
 
-![3851](/images/advanced-features/cookies/f222a38-Testim_212.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f222a38-Testim_212.png)
 
-3. In the editor enter the code for setting your cookies.
+3. エディタに Cookie を設定するコードを記述します。
 
 ```javascript
 return {
@@ -154,81 +168,83 @@ return {
 };
 ```
 
-> 📘 **name** = cookie name\
-> **value** = cookie value\
-> **domain** = cookie domain (optional)
+> 📘 **name** = Cookie 名\
+> **value** = Cookie の値\
+> **domain** = Cookie のドメイン（任意）
 
-Click the **back arrow** to return to the main **Editor** window.
+**back arrow** をクリックしてメインの **Editor** ウィンドウに戻ります。
 
-![3830](/images/advanced-features/cookies/2dea826-Testim_213a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/2dea826-Testim_213a.png)
 
-When you run your test the cookies will be loaded before your page loads.
+テストを実行すると、ページ読み込み前に Cookie がロードされた状態でテストが開始されます。
 
 ### Setting Cookies using a custom JS (JavaScript) step
 
-Set your cookies in a **Custom JavaScript** step if you need your cookies for a particular test, but don’t necessarily need them at the start of the test.
+特定のタイミングで Cookie を設定したいが、テスト開始直後である必要はない場合は、**Custom JavaScript** ステップ（custom action）を使って任意の位置で Cookie を設定できます。
 
-:fa-arrow-right: **To set cookies using JavaScript in a “custom action” step:**
+:fa-arrow-right: **カスタムアクションステップで JavaScript を使って Cookie を設定するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the cookies.
+1. Cookie を追加したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
 
-![3845](/images/advanced-features/cookies/57fdc2c-Testim_201a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/57fdc2c-Testim_201a.png)
 
-The action options are displayed.
+アクションオプションが表示されます。
 
-![300](/images/advanced-features/cookies/abbdb56-Testim_202a_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/abbdb56-Testim_202a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![300](/images/advanced-features/cookies/2042807-Testim_203_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/2042807-Testim_203_r.png)
 
-3. Click on **Actions**.\
-   The Actions menu expands.
+3. **Actions** をクリックします。\
+   **Actions** メニューが展開されます。
 
-![300](/images/advanced-features/cookies/bf34029-Testim_204_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/bf34029-Testim_204_r.png)
 
-4. Scroll down through the menu and select **Add custom action**.\
-   The **Add Step** window opens.
+4. 下にスクロールして **Add custom action** を選択します。\
+   **Add Step** ウィンドウが表示されます。
 
-![300](/images/advanced-features/cookies/f0ba274-Testim_215_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f0ba274-Testim_215_r.png)
 
-> 📘 Alternatively, you can use the search box at the top of the menu to search for **Add custom action**.
+> 📘
+>
+> 上部の検索ボックスで **Add custom action** を検索して選択することもできます。
 
-5. In the **Name the new step** field, enter a (meaningful) name for this step.
-6. If this is a shared step (to be made available to reuse in this and other tests), keep the box next to **Shared step** selected, and select a folder in which to save the step. (This is the default.) Otherwise, deselect it.
-7. Click **Create Step**.\
-   The **JS Editor** opens, and the **Custom Action Properties** panel opens on the right-hand side.
+5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
+6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダを選択します（既定値）。このステップを共有したくない場合はチェックを外します。
+7. **Create Step** をクリックします。\
+   **JS Editor** と右側の **Custom Action Properties** パネルが開きます。
 
-![3851](/images/advanced-features/cookies/17ff9b7-Testim_216.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/17ff9b7-Testim_216.png)
 
-8. In the **editor**, enter code to set your cookies, using the following as an example.
+8. エディタに Cookie を設定するコードを記述します。下記は一例です。
 
 ```javascript
 document.cookie = "password=SuperSecretPassword!";
 document.cookie = "username=tomsmith";
 ```
 
-9. Optionally fill in the properties in the **Custom Action Properties** panel.
+9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
-* **Step name** – The name of the step. (Default is the name you entered in Step 5.)
-* **Description** – The description of the step. (Default = *Run action*)
-* **Share step** – Allows you to set this step as a shared step.
-* **+ Params** – Add JavaScript or HTML parameters. For more information see [Parameters in custom JavaScript steps](/docs/parameters/parameters-in-custom-javascript-steps).
-* **When this step fails** – Specify what to do if the step fails.
-* **When to run step** – Specify conditions for when to run the step. For more info, see [Conditions](/docs/conditions/conditions).
-* **Override timeout** – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds)
+* **Step name** – ステップ名（既定値は手順5で入力した名前）。
+* **Description** – ステップの説明（既定値 = *Run action*）。
+* **Share step** – ステップを共有ステップとして保存するかどうか。
+* **+ Params** – JavaScript / HTML パラメータの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+* **When this step fails** – ステップ失敗時の挙動。
+* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+* **Override timeout** – 既定のタイムアウト時間（ステップ失敗までの時間）をミリ秒単位で上書きします。
 
-When you run your test, the cookies will be set at the location where you added the Custom Action step.
+テストを実行すると、Custom Action ステップの位置で Cookie 設定処理が実行されます。
 
-### Setting Cookies using a Configuration File
+### 設定ファイルを使って Cookie を設定する
 
-You can set your cookies by using a configuration file when working through your CLI. A configuration file is a JavaScript file containing all the required parameters to run your test suite and run hooks which can be used to set up the application backend. This option is useful when you need the cookies for your entire test suite.
+CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメータや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。
 
-:fa-arrow-right: **To set cookies using a configuration file:**
+:fa-arrow-right: **設定ファイルを使って Cookie を設定するには:**
 
-1. Create a JavaScript configuration file. See [Configuration file & run hooks](/docs/configuration-file/configuration-file-run-hooks).
-2. Add code to the beforeSuite section in order to set the cookies. Use the following code as a model.
+1. JavaScript の設定ファイルを作成します。詳細は [Configuration file & run hooks](/docs/configuration-file-run-hooks) を参照してください。
+2. `beforeSuite` セクションに Cookie を設定するコードを追加します。以下は例です。
 
 ```javascript
 beforeSuite: function (suite) {   
@@ -246,103 +262,107 @@ beforeSuite: function (suite) {
 }
 ```
 
-## Getting Cookies
+## Cookie を取得する
 
-Testim enables you to “get” cookies by assigning the value of a cookie to a variable. You can then use the cookie attributes in your test.
+Testim では、Cookie の値を変数に代入することで Cookie を「取得」し、テスト内で属性を再利用することができます。
 
-### Getting Cookies using the Get Cookie step
+### Get Cookie ステップを使って Cookie を取得する {#getting-cookies-using-the-get-cookie-step}
 
-The **Get Cookie** step allows you to get cookies directly from the UI within the context of a test by storing the value of a cookie in a variable.
+**Get Cookie** ステップを使うと、テスト中の UI から直接 Cookie を読み取り、その値を変数に保存できます。
 
-:fa-arrow-right: **To get a cookie using the Get Cookie step:**
+:fa-arrow-right: **Get Cookie ステップで Cookie を取得するには:**
 
-![894](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif)
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. Cookie を取得したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
 
-![3851](/images/advanced-features/cookies/182e01a-Testim_207a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/182e01a-Testim_207a.png)
 
-The action options are displayed.
+アクションオプションが表示されます。
 
-![300](/images/advanced-features/cookies/42c6ecf-Testim_202a_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/42c6ecf-Testim_202a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![300](/images/advanced-features/cookies/f95fa58-Testim_203_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f95fa58-Testim_203_r.png)
 
-3. Click on **Actions**.\
-   The Actions menu expands.
+3. **Actions** をクリックします。\
+   **Actions** メニューが展開されます。
 
-![300](/images/advanced-features/cookies/ab4f1d0-Testim_204_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/ab4f1d0-Testim_204_r.png)
 
-4. Scroll down through the menu and select **Get Cookie**.
+4. 下にスクロールして **Get Cookie** を選択します。
 
-> 📘 Alternatively, you can use the search box at the top of the menu to search for **Get Cookie**.
+> 📘
+>
+> 上部の検索ボックスで **Get Cookie** を検索して選択することもできます。
 
-A “Get Cookie” step is added in the **Editor**.\
-5\. Hover over the newly created step, and click on the **Show Properties** (:fa-cog:) icon.
+**Editor** 内に “Get Cookie” ステップが追加されます。\
+5\. 追加されたステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
 
-![3851](/images/advanced-features/cookies/06fb384-Testim_208a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/06fb384-Testim_208a.png)
 
-The **Properties** panel opens on the right-hand side.
+右側に **Properties** パネルが表示されます。
 
-![300](/images/advanced-features/cookies/e8f327d-Testim_209_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/e8f327d-Testim_209_r.png)
 
-6. Fill in the properties as described below.
+6. 次のプロパティを設定します。
 
-* **Description** – The description of the step. (Default = *Get Cookie*)
-* **Cookie name** – The name of the cookie you are getting. (Strings must be surrounded by single or double quotes.)
-* **Variable name** – The name of the variable in which you wish to store the cookie data. (Default = *myCookie*)
-* **Variable scope** – The scope in which the variable can be passed:
-  * **Local**: allows you to pass parameters between steps in the same scope.
-  * **Test**: allows you to pass parameters between steps and groups in the same test.
-  * **Suite**: allows you to pass parameters between tests in the same test suite.
-* **When this step fails** – Specify what to do if the step fails.
-* **When to run step** – Specify conditions for when to run the step. For more info, see [Conditions](/docs/conditions/conditions).
-* **Override timeout** – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds)
+* **Description** – ステップの説明（既定値 = *Get Cookie*）。
+* **Cookie name** – 取得したい Cookie 名。文字列はシングル／ダブルクォートで囲む必要があります。
+* **Variable name** – Cookie 情報を保存する変数名（既定値 = *myCookie*）。
+* **Variable scope** – 変数をどの範囲で参照できるか:
+  * **Local**: 同一スコープ内のステップ間で共有
+  * **Test**: 同一テスト内のステップ／グループ間で共有
+  * **Suite**: 同じテストスイート内のテスト間で共有
+* **When this step fails** – ステップ失敗時の挙動。
+* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+* **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
-When the test is run, the specified cookie will be stored in the variable.
+テスト実行時、指定した Cookie の情報が変数に保存されます。
 
 ### Getting Cookies using a custom JS (JavaScript) step
 
-You can get cookies without having to use the Get Cookie step by adding a “custom action” step, and entering your code in the JavaScript editor.
+Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
 
-:fa-arrow-right: **To get a cookie using JavaScript in a “custom action” step:**
+:fa-arrow-right: **カスタムアクションステップで Cookie を取得するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. Cookie を取得したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
 
-![3851](/images/advanced-features/cookies/9e6579b-Testim_220a.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9e6579b-Testim_220a.png)
 
-The action options are displayed.
+アクションオプションが表示されます。
 
-![300](/images/advanced-features/cookies/4daa9d3-Testim_202a_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/4daa9d3-Testim_202a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![300](/images/advanced-features/cookies/ab3aebb-Testim_203_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/ab3aebb-Testim_203_r.png)
 
-3. Click on **Actions**.\
-   The Actions menu expands.
+3. **Actions** をクリックします。\
+   **Actions** メニューが展開されます。
 
-![300](/images/advanced-features/cookies/9030d32-Testim_204_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9030d32-Testim_204_r.png)
 
-4. Scroll down through the menu and select **Add custom action**.\
-   The **Add Step** window opens.
+4. 下にスクロールして **Add custom action** を選択します。\
+   **Add Step** ウィンドウが表示されます。
 
-![300](/images/advanced-features/cookies/295c84e-Testim_215_r.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/295c84e-Testim_215_r.png)
 
-> 📘 Alternatively, you can use the search box at the top of the menu to search for **Add custom action**.
+> 📘
+>
+> 上部の検索ボックスで **Add custom action** を検索して選択することもできます。
 
-5. In the **Name the new step** field, enter a (meaningful) name for this step.
-6. If this is a shared step (to be made available to reuse in this and other tests), keep the box next to **Shared step** selected, and select a folder in which to save the step. (This is the default.) Otherwise, deselect it.
-7. Click **Create Step**.\
-   The **JS Editor** opens, and the **Custom Action Properties** panel opens on the right-hand side.
+5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
+6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダを選択します（既定値）。共有不要ならチェックを外します。
+7. **Create Step** をクリックします。\
+   **JS Editor** と **Custom Action Properties** パネルが開きます。
 
-![3851](/images/advanced-features/cookies/895c71a-Testim_221.png)
+![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/895c71a-Testim_221.png)
 
-8. In the **editor**, enter code to get your cookies. The following example gets and prints the value of the cookies named *username* and *password*.
+8. エディタに Cookie を取得するコードを記述します。以下は、`username` と `password` という Cookie の値を取得してログ出力する例です。
 
 ```javascript
 //create an array of the site cookies
@@ -370,14 +390,14 @@ for(var i = 0; i <cookieArray.length; i++) {
 }
 ```
 
-9. Optionally fill in the properties in the **Custom Action Properties** panel.
+9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
-* **Step name** – The name of the step. (Default is the name you entered in Step 5.)
-* **Description** – The description of the step. (Default = *Run action*)
-* **Share step** – Allows you to set this step as a shared step.
-* **+ Params** – Add JavaScript or HTML parameters. For more information see [Parameters in custom JavaScript steps](/docs/parameters/parameters-in-custom-javascript-steps).
-* **When this step fails** – Specify what to do if the step fails.
-* **When to run step** – Specify conditions for when to run the step. For more info, see [Conditions](/docs/conditions/conditions).
-* **Override timeou**t – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds)
+* **Step name** – ステップ名（既定値は手順5で入力した名前）。
+* **Description** – ステップの説明（既定値 = *Run action*）。
+* **Share step** – ステップを共有ステップとして保存するかどうか。
+* **+ Params** – JavaScript / HTML パラメータの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+* **When this step fails** – ステップ失敗時の挙動。
+* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+* **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
-When you run your test, the Get Cookies function will run as part of the Custom Action step that you have added.
+テストを実行すると、Custom Action ステップ内で定義した Cookie 取得処理が実行されます。

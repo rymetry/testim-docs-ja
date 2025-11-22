@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 78個
-- ✅   翻訳のみ完了: 205個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 99個
+- ✅   翻訳のみ完了: 184個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -147,27 +147,27 @@
 
 ## Advanced Features（高度な機能）
 
-- ✅ https://help.testim.io/docs/wait-for
-- ✅ https://help.testim.io/docs/api-testing
-- ✅ https://help.testim.io/docs/cookies
-- ✅ https://help.testim.io/docs/group-context
-- ✅ https://help.testim.io/docs/auto-grouping2
-- ✅ https://help.testim.io/docs/advanced-js-editor
-- ✅ https://help.testim.io/docs/custom-action-step-mobile
-- ✅ https://help.testim.io/docs/hooks
-- ✅ https://help.testim.io/docs/error-suffix-customization
+- ✅🔍 https://help.testim.io/docs/wait-for
+- ✅🔍 https://help.testim.io/docs/api-testing
+- ✅🔍 https://help.testim.io/docs/cookies
+- ✅🔍 https://help.testim.io/docs/group-context
+- ✅🔍 https://help.testim.io/docs/auto-grouping2
+- ✅🔍 https://help.testim.io/docs/advanced-js-editor
+- ✅🔍 https://help.testim.io/docs/custom-action-step-mobile
+- ✅🔍 https://help.testim.io/docs/hooks
+- ✅🔍 https://help.testim.io/docs/error-suffix-customization
 
 ## Special Steps（特殊ステップ）
 
-- ✅ https://help.testim.io/docs/salesforce-auto-login-step
-- ✅ https://help.testim.io/docs/salesforce-apex-action-step
-- ✅ https://help.testim.io/docs/coding-assistant
-- ✅ https://help.testim.io/docs/keyboard-shortcut-step
-- ✅ https://help.testim.io/docs/set-geolocation
-- ✅ https://help.testim.io/docs/deep-link-mobile
-- ✅ https://help.testim.io/docs/hide-keyboard-mobile
-- ✅ https://help.testim.io/docs/clear-text-mobile
-- ✅ https://help.testim.io/docs/reusable-test-data
+- ✅🔍 https://help.testim.io/docs/salesforce-auto-login-step
+- ✅🔍 https://help.testim.io/docs/salesforce-apex-action-step
+- ✅🔍 https://help.testim.io/docs/coding-assistant
+- ✅🔍 https://help.testim.io/docs/keyboard-shortcut-step
+- ✅🔍 https://help.testim.io/docs/set-geolocation
+- ✅🔍 https://help.testim.io/docs/deep-link-mobile
+- ✅🔍 https://help.testim.io/docs/hide-keyboard-mobile
+- ✅🔍 https://help.testim.io/docs/clear-text-mobile
+- ✅🔍 https://help.testim.io/docs/reusable-test-data
 
 ## Running Tests（テスト実行）
 
@@ -184,8 +184,8 @@
 
 ## Configuration File（設定ファイル）
 
-- ✅ https://help.testim.io/docs/configuration-file-run-hooks
-- ✅ https://help.testim.io/docs/predefined-properties-in-config-file-hooks
+- ✅🔍 https://help.testim.io/docs/configuration-file-run-hooks
+- ✅🔍 https://help.testim.io/docs/predefined-properties-in-config-file-hooks
 
 ## Mock Network Responses(ネットワークモック)
 
@@ -198,8 +198,8 @@
 
 ## Test Execution(テスト実行制御)
 
-- ✅ https://help.testim.io/docs/play-from-here
-- ✅ https://help.testim.io/docs/rerun-locally-with-the-same-params
+- ✅🔍 https://help.testim.io/docs/play-from-here
+- ✅🔍 https://help.testim.io/docs/rerun-locally-with-the-same-params
 
 ## Results(結果)
 
@@ -251,7 +251,7 @@
 
 ## Integrations（統合）
 
-- ✅ https://help.testim.io/docs/integrations-overview
+- ✅🔍 https://help.testim.io/docs/integrations-overview
 
 ## CI Integrations（CI統合）
 
