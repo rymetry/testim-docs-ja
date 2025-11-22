@@ -3,12 +3,15 @@ title: 'ネットワークログ'
 description: 'ステップレベルとテストレベルでのネットワークログの表示方法。リクエスト情報、HTTPヘッダー、HARファイルのダウンロード。'
 category: '結果'
 order: 4
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/network-logs'
 keywords:
-  - testim
-  - network-logs
-  - results
   - ネットワークログ
+  - HARファイル
+  - HTTPリクエスト
+  - デバッグ
+  - パフォーマンス
+  - テスト結果
   - HARファイル
 ---
 
@@ -31,7 +34,7 @@ keywords:
 >
 > 画面の左右の矢印をクリックすると、前後のステップのリクエスト結果を表示できます。
 
-![](/images/results/network-logs/1eac062-network_log.gif)
+![ステップレベルのネットワークログ画面](/images/results/network-logs/1eac062-network_log.gif)
 
 各リクエストに表示される情報は、次の表のとおりです。
 
@@ -114,7 +117,6 @@ keywords:
  </tbody>
 </table>
 
-
 ### リクエスト結果のフィルタリング
 
 ファイル名テキスト、ドメイン、タイプ、エラーでフィルタリングできます。
@@ -123,7 +125,7 @@ keywords:
 
 1. FilterボックスにフィルタリングするテキストSTRINGを入力します。
 
-![](/images/results/network-logs/e21c0d7-Testim_074a.png)
+![ファイル名とドメインでのフィルター例](/images/results/network-logs/e21c0d7-Testim_074a.png)
 
 *File*列と*Domain*列のテキストに基づいて、結果が即座にフィルタリングされます。
 
@@ -131,7 +133,7 @@ keywords:
 
 1. リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。オプションには*XHR*、*JS*、*CSS*、*Img*、*Media*、*Font*、*Doc*、*WS*、*Manifest*が含まれます。
 
-![](/images/results/network-logs/0d05487-Testim_074b.png)
+![リクエストタイプ別フィルターの例](/images/results/network-logs/0d05487-Testim_074b.png)
 
 選択内容に基づいて、結果が即座にフィルタリングされます。
 
@@ -143,7 +145,7 @@ keywords:
 
 1. リクエスト結果テーブルのヘッダーで、**Errors Only**チェックボックスを選択します。
 
-![](/images/results/network-logs/b45e218-Testim_074c.png)
+![エラーのみフィルターの例](/images/results/network-logs/b45e218-Testim_074c.png)
 
 エラーのある結果のみが表示されます。
 
@@ -155,15 +157,15 @@ keywords:
 
 1. リクエストデータを含む任意の行をクリックします。
 
-![](/images/results/network-logs/190bb8b-results-rows.png)
+![リクエスト一覧テーブルの例](/images/results/network-logs/190bb8b-results-rows.png)
 
 Headersウィンドウが開き、*General*、*Response Headers*、*Request Headers*の3つのセクションが表示されます。
 
-![](/images/results/network-logs/a67587b-result-headers.png)
+![Headersウィンドウに表示される情報](/images/results/network-logs/a67587b-result-headers.png)
 
 2. 左上隅の**X**をクリックして、Headersウィンドウを閉じます。
 
-![](/images/results/network-logs/3049d02-result-headers.png)
+![Headersウィンドウの閉じる操作](/images/results/network-logs/3049d02-result-headers.png)
 
 > 📘
 >
@@ -183,7 +185,7 @@ Headersウィンドウが開き、*General*、*Response Headers*、*Request Head
 5. 横に並んだ3点メニューをクリックし、**View network log**をクリックします。\
    複数の要素でフィルタリングできます。リクエストをクリックすると、そのリクエストに関連するHTTPヘッダーが表示されます。
 
-![](/images/results/network-logs/661f4ae-networklogtest.gif)
+![テストレベルのネットワークログ画面](/images/results/network-logs/661f4ae-networklogtest.gif)
 
 各リクエストに表示される情報は、次の表のとおりです。
 
@@ -266,12 +268,11 @@ Headersウィンドウが開き、*General*、*Response Headers*、*Request Head
  </tbody>
 </table>
 
-
 > 📘
 >
 > この機能はChromeブラウザでのみサポートされています。\
 > プライバシーとセキュリティ上の理由から、HARファイルにはレスポンスボディは含まれません。\
-> 完全なHARを作成してダウンロードするには、[モックネットワーク](https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file#option-1---using-testim-to-create-the-har-file)を使用してください。
+> 完全なHARを作成してダウンロードするには、[モックネットワーク](/docs/mocking-all-the-network-traffic-using-a-har-file#option-1---using-testim-to-create-the-har-file)を使用してください。
 
 ## HARファイルのダウンロード
 
@@ -281,7 +282,7 @@ Headersウィンドウが開き、*General*、*Response Headers*、*Request Head
    **Network Activity**画面が表示されます。
 2. **Download**ボタンをクリックして、ファイルを保存します。
 
-![](/images/results/network-logs/f1b8915-download.png)
+![HARファイルダウンロードボタン](/images/results/network-logs/f1b8915-download.png)
 
 3. さらなるデバッグと分析のために、ファイルを開発者ツールにアップロードすることをお勧めします。
 
@@ -293,7 +294,7 @@ Network Activity画面には、ネットワークトラフィックが表示さ�
 * リクエストタイプに基づくフィルター - リストされているリクエストタイプ（XHR、JS、CSSなど）のいずれかを選択します。
 * エラーのみフィルター - **Error Only**チェックボックスを選択すると、エラーで応答されたリクエストのみが表示されます。
 
-![](/images/results/network-logs/aee6500-Screen_Shot_2020-11-24_at_8.03.42.png)
+![Network Activity画面のフィルタリング例](/images/results/network-logs/aee6500-Screen_Shot_2020-11-24_at_8.03.42.png)
 
 ネットワークアクティビティエントリには、次の情報が含まれます。
 

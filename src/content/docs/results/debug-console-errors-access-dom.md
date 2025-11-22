@@ -3,14 +3,15 @@ title: 'コンソールエラーのデバッグとDOMアクセス'
 description: 'Chrome開発者ツールを使用したデバッグ、コンソールエラーとネットワークエラーの確認、失敗ステップのDOMスナップショット表示について説明します。'
 category: '結果'
 order: 8
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/debug-console-errors-access-dom'
 keywords:
-  - testim
-  - debug-console-errors-access-dom
-  - results
-  - デバッグ
   - コンソールエラー
-  - DOM
+  - ネットワークエラー
+  - DOMスナップショット
+  - デバッグ
+  - Chrome DevTools
+  - テストログ
 ---
 ## Chromeコンソールを使用したデバッグ
 
@@ -25,15 +26,15 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 1. テスト実行または実行に移動します。
 2. テスト上部のエラーメッセージと、失敗した特定のテストステップを確認します。
 
-![1920](/images/results/debug-console-errors-access-dom/1b081be-displayed-errors.png)
+![テスト結果画面のエラー表示](/images/results/debug-console-errors-access-dom/1b081be-displayed-errors.png)
 
 3. コンソールログを開きます。
 
-![401](/images/results/debug-console-errors-access-dom/154a7ab-vewconsolelog.png)
+![ブラウザコンソールログの表示](/images/results/debug-console-errors-access-dom/154a7ab-vewconsolelog.png)
 
 4. コンソールログを表示して、特定のエラーに関する洞察を得ます。
 
-![1161](/images/results/debug-console-errors-access-dom/8c191a6-consoleerrors.png)
+![コンソールエラー一覧の例](/images/results/debug-console-errors-access-dom/8c191a6-consoleerrors.png)
 
 > 📘 注意:
 >
@@ -48,13 +49,13 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 1. テスト実行または実行に移動します。
 2. 失敗した特定のテストステップでエラーメッセージを確認します。
 
-![270](/images/results/debug-console-errors-access-dom/1400173-steperror.png)
+![失敗ステップのエラーメッセージ](/images/results/debug-console-errors-access-dom/1400173-steperror.png)
 
 3. DOMスナップショットを表示するには、ステップにカーソルを合わせて**スクリーンショットを表示**ボタンをクリックするか、ステップのプロパティパネルで**DOMを表示**リンクをクリックします。
 
-![281](/images/results/debug-console-errors-access-dom/a6ac0aa-viewdom1.png)
+![DOMスナップショット表示ボタン](/images/results/debug-console-errors-access-dom/a6ac0aa-viewdom1.png)
 
-![324](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png)
+![DOMスナップショット表示画面](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png)
 
 > 📘 注意:
 >
@@ -69,4 +70,4 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 * **ローカルエクスポート**: このステップで作成されたエクスポートパラメータ。
 * **グローバルエクスポート**: このステップで作成されたグローバルエクスポートパラメータ。
 
-![1414](/images/results/debug-console-errors-access-dom/e5d13c5-step_params.gif)
+![ステップパラメータの詳細表示](/images/results/debug-console-errors-access-dom/e5d13c5-step_params.gif)

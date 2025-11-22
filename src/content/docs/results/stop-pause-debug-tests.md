@@ -3,13 +3,15 @@ title: 'テストの停止、一時停止、デバッグ'
 description: 'テスト実行中の停止、一時停止、ステップバイステップ実行、ブレークポイントの設定方法について説明します。'
 category: '結果'
 order: 11
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/stop-pause-debug-tests'
 keywords:
-  - testim
-  - stop-pause-debug-tests
-  - results
-  - デバッグ
+  - テスト停止
+  - 一時停止
+  - ステップ実行
   - ブレークポイント
+  - 途中から再生
+  - デバッグ
 ---
 失敗したテストがある場合、デバッグを開始するためにテストが完全に実行されるまで待つ必要はありません。Testimには、実行時にテストを迅速にデバッグするためのツールがいくつか含まれています:
 
@@ -23,11 +25,11 @@ keywords:
 
 1. アクションメニューの**停止**ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/97c8cc2-test-running.png)
+![実行中のテストを示す画面](/images/results/stop-pause-debug-tests/97c8cc2-test-running.png)
 
 テストは失敗としてマークされ、完了しなかった最後のステップが強調表示されます。
 
-![](/images/results/stop-pause-debug-tests/84ea66c-test-failed-stopped.png)
+![停止後に失敗としてマークされたテスト](/images/results/stop-pause-debug-tests/84ea66c-test-failed-stopped.png)
 
 ## 実行中のテストを一時停止する
 
@@ -35,11 +37,11 @@ keywords:
 
 1. アクションメニューの「一時停止」ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/32e47a3-test-pause.png)
+![一時停止中のテスト実行画面](/images/results/stop-pause-debug-tests/32e47a3-test-pause.png)
 
 2. テストの実行を再開するには、アクションメニューの**再生**ボタンをクリックします。テストは、以前に一時停止されたステップから再開されます。
 
-![](/images/results/stop-pause-debug-tests/680cdd0-test-resume.png)
+![一時停止から再開したテスト実行](/images/results/stop-pause-debug-tests/680cdd0-test-resume.png)
 
 ## ステップバイステップで実行する
 
@@ -49,11 +51,11 @@ keywords:
 
 1. **再生**ボタンの横のドロップダウンボタンをクリックし、**ローカルでステップバイステップ実行**を選択します。
 
-![](/images/results/stop-pause-debug-tests/32f50bb-run-step-by-step.png)
+![ステップバイステップ実行の選択](/images/results/stop-pause-debug-tests/32f50bb-run-step-by-step.png)
 
 2. アクションメニューの**次のステップを再生**ボタンをクリックして、テストの次のステップを実行します。
 
-![](/images/results/stop-pause-debug-tests/260b2f1-run-next-step.png)
+![次のステップのみを実行するボタン](/images/results/stop-pause-debug-tests/260b2f1-run-next-step.png)
 
 ## ブレークポイントを挿入する
 
@@ -63,11 +65,11 @@ keywords:
 
 1. 2つのステップ間の矢印にカーソルを合わせ、**ブレークポイントの切り替え**ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/20582a1-add-breakpoint.png)
+![ブレークポイントの追加操作](/images/results/stop-pause-debug-tests/20582a1-add-breakpoint.png)
 
 これにより、ステップ間にブレークポイント(一時停止記号)が表示されます。
 
-![](/images/results/stop-pause-debug-tests/2301396-breakpointadded.png)
+![ブレークポイントが挿入されたステップ間の表示](/images/results/stop-pause-debug-tests/2301396-breakpointadded.png)
 
 > 📘 注意:
 >
@@ -85,6 +87,6 @@ keywords:
 
 1. 2つのステップ間の矢印にカーソルを合わせ、**ここから再生**ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/0b8ce9d-playfromhere.png)
+![特定のステップから再生ボタン](/images/results/stop-pause-debug-tests/0b8ce9d-playfromhere.png)
 
 テストは、選択後のステップから実行を開始します。

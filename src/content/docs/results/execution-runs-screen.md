@@ -3,20 +3,22 @@ title: '実行ラン画面'
 description: '実行ラン画面で実行の結果と統計を表示。実行リスト、統計パネル、グラフ、フィルター、詳細画面、テスト操作。'
 category: '結果'
 order: 9
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/execution-runs-screen'
 keywords:
-  - testim
-  - execution-runs-screen
-  - results
   - 実行ラン
-  - 統計
+  - テスト実行一覧
+  - 実行統計
+  - 成功率
+  - 実行フィルター
+  - CSVエクスポート
 ---
 
 実行の結果と統計を表示します。
 
-実行（Execution）は、単一の実行として実行される1つまたは複数のテストのセットです。実行は、自動的に（スケジューラーなど）または手動で（特定のラベルを含むテストを実行するCLIなど）開始できます。Execution Runs画面には、以前の実行ランに関する情報が表示されます。これらの実行は、スイート、ラベル、またはテストプランごとにグループ化されます（実行された各テストを個別のエントリとしてリスト表示する[Test runs](/docs/results/test-runs)ビューとは対照的です）。
+実行（Execution）は、単一の実行として実行される1つまたは複数のテストのセットです。実行は、自動的に（スケジューラーなど）または手動で（特定のラベルを含むテストを実行するCLIなど）開始できます。Execution Runs画面には、以前の実行ランに関する情報が表示されます。これらの実行は、スイート、ラベル、またはテストプランごとにグループ化されます（実行された各テストを個別のエントリとしてリスト表示する[Test runs](/docs/test-runs)ビューとは対照的です）。
 
-![](/images/results/execution-runs-screen/e1d2a5a-execution-runs-1.jpg)
+![Execution Runs画面の一覧ビュー](/images/results/execution-runs-screen/e1d2a5a-execution-runs-1.jpg)
 
 > 📘 注意:
 >
@@ -26,7 +28,7 @@ keywords:
 
 実行リストには、個々の実行ランに関する情報が表示されます。
 
-![](/images/results/execution-runs-screen/3b4daca-execution-runs-2.jpg)
+![実行リストテーブルの例](/images/results/execution-runs-screen/3b4daca-execution-runs-2.jpg)
 
 * **Execution**: 実行の名前。実行名は、実行がどのように実行されたかに関する追加の詳細を提供します。詳細については、以下の実行名の規則を参照してください。実行名をクリックすると、実行の詳細が表示されます。
 * **Branch**: 実行のテストブランチの名前
@@ -37,7 +39,7 @@ keywords:
 * **Duration**: 実行の時間
 * **Concurrency**: 並列で実行されたテストの数
 * **Results**: 合格/不合格テストの数
-* **Result labels**: 実行に追加された結果ラベル。詳細については、[結果ラベル](/docs/results/result-labels)を参照してください。
+* **Result labels**: 実行に追加された結果ラベル。詳細については、[結果ラベル](/docs/result-labels)を参照してください。
 * **Status**: 現在の実行ステータス。可能なステータス値は次のとおりです。
   * Passed - 実行内のすべてのテストが合格しました。
   * Failed - 実行内の少なくとも1つのテストが失敗しました。
@@ -134,12 +136,11 @@ keywords:
  </tbody>
 </table>
 
-
 ## 統計パネル
 
 統計パネルには、現在表示されている実行ランの集計統計が表示されます。
 
-![](/images/results/execution-runs-screen/d2657a6-execution-runs-3.jpg)
+![統計パネルのサマリー表示](/images/results/execution-runs-screen/d2657a6-execution-runs-3.jpg)
 
 * **Success Rate**: すべてのテストが合格した実行ランの割合を表示します。上記の例では、リスト内の実行ランの67%（3つのうち2つ）が合格しています。
 * **Executions Passed**: 合格した実行ランの総数を表示します。
@@ -149,7 +150,7 @@ keywords:
 
 実行ラングラフは、実行数と実行ごとのテスト数の概要を提供します。特定の実行をドリルダウンして検査し、各テストの結果を確認できます。ステータス、時間、実行/ラベルでフィルタリングすることもできます。グラフにカーソルを合わせると、各実行の詳細が表示されます。
 
-![](/images/results/execution-runs-screen/1f67add-execution-runs-4.jpg)
+![実行ラングラフの例](/images/results/execution-runs-screen/1f67add-execution-runs-4.jpg)
 
 * **X軸**: 実行が行われた時刻を含む圧縮されたタイムラインを表示します。
 * **Y軸**: 実行の数を表示します。
@@ -160,13 +161,13 @@ keywords:
 
 1. グラフの上にある**Hide section**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/9bc14d3-execution-runs-5.jpg)
+![グラフを非表示にする操作](/images/results/execution-runs-screen/9bc14d3-execution-runs-5.jpg)
 
 Testimはグラフを折りたたんで非表示にします。
 
 2. グラフを再度表示するには、Execution Runsタイトルの下にある**Show section**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/6252a26-execution-runs-6.jpg)
+![グラフを再表示した状態](/images/results/execution-runs-screen/6252a26-execution-runs-6.jpg)
 
 Testimがグラフを表示します。
 
@@ -185,15 +186,15 @@ Testimがグラフを表示します。
 
 1. 操作パネルの**Filter by Date**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/af82e4f-execution-runs-7.jpg)
+![日付フィルターの指定画面](/images/results/execution-runs-screen/af82e4f-execution-runs-7.jpg)
 
 2. **事前定義されたリスト**からフィルターを選択するか、**カスタム**の日付範囲を選択します。
 
-![](/images/results/execution-runs-screen/d3935f9-execution-runs-8.jpg)
+![事前定義フィルターとカスタム範囲](/images/results/execution-runs-screen/d3935f9-execution-runs-8.jpg)
 
-Testimは、選択した期間に基づいて実行リストを自動的にフィルタリングします。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/test-management/saving-a-filtered-view)を参照してください。タイトルの横の数字は、選択したフィルターに一致する実行の数を表示します。
+Testimは、選択した期間に基づいて実行リストを自動的にフィルタリングします。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/saving-a-filtered-view)を参照してください。タイトルの横の数字は、選択したフィルターに一致する実行の数を表示します。
 
-![](/images/results/execution-runs-screen/ec5d395-image.png)
+![フィルター適用後の実行一覧](/images/results/execution-runs-screen/ec5d395-image.png)
 
 ### 詳細フィルター
 
@@ -201,23 +202,23 @@ Testimは、選択した期間に基づいて実行リストを自動的にフ�
 
 1. 操作パネルの**Advanced Filters**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/256b5d0-execution-runs-9.jpg)
+![詳細フィルターを開くボタン](/images/results/execution-runs-screen/256b5d0-execution-runs-9.jpg)
 
 Testimが**Filter Execution Runs**パネルを表示します。
 
-![](/images/results/execution-runs-screen/d2233ef-execution-runs-10.jpg)
+![Filter Execution Runsパネル](/images/results/execution-runs-screen/d2233ef-execution-runs-10.jpg)
 
-2. 目的のフィルターを選択し、**Apply**ボタンをクリックして実行リストにフィルターを適用します。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/test-management/saving-a-filtered-view)を参照してください。
+2. 目的のフィルターを選択し、**Apply**ボタンをクリックして実行リストにフィルターを適用します。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/saving-a-filtered-view)を参照してください。
 
-![](/images/results/execution-runs-screen/e2a7dfd-execution-runs-11.jpg)
+![詳細フィルター適用後の一覧](/images/results/execution-runs-screen/e2a7dfd-execution-runs-11.jpg)
 
 3. すべてのフィルターを削除するには、詳細フィルターパネルの**Reset filters**リンクをクリックします。
 
-![](/images/results/execution-runs-screen/e940922-execution-runs-12.jpg)
+![フィルターリセットリンク](/images/results/execution-runs-screen/e940922-execution-runs-12.jpg)
 
 タイトルの横の数字は、選択したフィルターに一致する実行の数を表示します。
 
-![](/images/results/execution-runs-screen/b58720a-image.png)
+![フィルター件数の表示例](/images/results/execution-runs-screen/b58720a-image.png)
 
 ### 実行リストのエクスポート
 
@@ -225,7 +226,7 @@ Testimが**Filter Execution Runs**パネルを表示します。
 
 1. 操作パネルの**Export Execution List**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/20419f8-execution-runs-13.jpg)
+![Export Execution Listボタン](/images/results/execution-runs-screen/20419f8-execution-runs-13.jpg)
 
 TestimがローカルにダウンロードするCSVファイルを生成します。
 
@@ -235,11 +236,11 @@ TestimがローカルにダウンロードするCSVファイルを生成しま�
 
 1. 操作パネルの検索ボックスに**実行名**を入力します。
 
-![](/images/results/execution-runs-screen/9d06ec3-execution-runs-14.jpg)
+![実行名での検索ボックス](/images/results/execution-runs-screen/9d06ec3-execution-runs-14.jpg)
 
 Testimは、一致する実行名を持つ実行ランのみを表示します。
 
-![](/images/results/execution-runs-screen/5d143af-execution-runs-15.jpg)
+![検索条件に一致する実行のみ表示](/images/results/execution-runs-screen/5d143af-execution-runs-15.jpg)
 
 ## 実行詳細画面
 
@@ -249,11 +250,11 @@ Testimは、一致する実行名を持つ実行ランのみを表示します�
 
 1. **実行リスト**内のいずれかの実行をダブルクリックします。
 
-![](/images/results/execution-runs-screen/252ce9a-execution-runs-16.jpg)
+![実行詳細画面への遷移](/images/results/execution-runs-screen/252ce9a-execution-runs-16.jpg)
 
 Testimが実行詳細画面を表示します。
 
-![](/images/results/execution-runs-screen/7097ad4-execution-runs-17.jpg)
+![実行詳細画面の例](/images/results/execution-runs-screen/7097ad4-execution-runs-17.jpg)
 
 ### 実行の詳細
 
@@ -334,27 +335,27 @@ Testimが実行詳細画面を表示します。
 1. Execution Runs画面で、現在実行中の実行をダブルクリックします。
 2. **Abort Run**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/9b2f2d6-execution-runs-18.jpg)
+![Abort Runボタンの位置](/images/results/execution-runs-screen/9b2f2d6-execution-runs-18.jpg)
 
 Testimが実行ランを停止します。
 
 > 📘 注意:
 >
-> 「Abort Run」ボタンは、アクティブに実行中のリモートエディター実行/スケジューラー/ローカル実行でのみ使用できます。CLI実行を中止する方法の詳細については、[CLI](/docs/running-tests/the-command-line-cli)を参照してください。
+> 「Abort Run」ボタンは、アクティブに実行中のリモートエディター実行/スケジューラー/ローカル実行でのみ使用できます。CLI実行を中止する方法の詳細については、[CLI](/docs/the-command-line-cli)を参照してください。
 
 ### 実行詳細画面から直接テストを再実行する（Web）
 
 実行詳細画面にいる間、テストを再実行できます。\
-[コマンドラインインターフェース（CLI）](/docs/running-tests/the-command-line-cli)\
+[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)\
 :fa-arrow-right: **実行詳細画面からテストを再実行するには:**
 
 1. 実行詳細画面で、テストリスト内のテストの1つを選択します。
 
-![](/images/results/execution-runs-screen/8e66ad6-execution-runs-19.jpg)
+![実行詳細画面でテストを選択](/images/results/execution-runs-screen/8e66ad6-execution-runs-19.jpg)
 
 2. アクションパネルの**Rerun with same params**ボタンをクリックします。テストリスト内の任意のテストを右クリックして、**Rerun with same params**を選択することもできます。
 
-![](/images/results/execution-runs-screen/cd2aaef-execution-runs-20.jpg)
+![同じパラメーターでのテスト再実行](/images/results/execution-runs-screen/cd2aaef-execution-runs-20.jpg)
 
 Testimは、テストエディターにいるかのようにテストを実行します。
 
@@ -366,7 +367,7 @@ Testimは、テストエディターにいるかのようにテストを実行�
 
 1. 実行詳細画面から、操作パネルの**情報アイコン**にカーソルを合わせます。
 
-![](/images/results/execution-runs-screen/7d07e73-execution-runs-21.jpg)
+![詳細なデバッグ情報のポップアップ](/images/results/execution-runs-screen/7d07e73-execution-runs-21.jpg)
 
 Testimが次の情報を表示します。
 
@@ -385,7 +386,7 @@ Testimが次の情報を表示します。
 
 1. テスト行を右クリックし、**Test History**を選択します。
 
-![](/images/results/execution-runs-screen/cd50136-execution-runs-22.jpg)
+![Test Historyメニューの選択](/images/results/execution-runs-screen/cd50136-execution-runs-22.jpg)
 
 Testimがその特定のテストのみのテスト履歴を表示します。
 
@@ -397,11 +398,11 @@ Testimがその特定のテストのみのテスト履歴を表示します。
 
 1. テストリスト内の失敗したテストを右クリックし、**Tag failure type**を選択します。
 
-![](/images/results/execution-runs-screen/0faac2a-execution-runs-23.jpg)
+![失敗テストに対するTag failure type操作](/images/results/execution-runs-screen/0faac2a-execution-runs-23.jpg)
 
-2. テスト失敗タグ付け画面を完了します。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures)を参照してください。
+2. テスト失敗タグ付け画面を完了します。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/tag-remote-runs-failures)を参照してください。
 
-![](/images/results/execution-runs-screen/3fee6aa-execution-runs-24.jpg)
+![失敗タイプタグ付け画面](/images/results/execution-runs-screen/3fee6aa-execution-runs-24.jpg)
 
 ### 実行結果画面に表示されるテストのフィルタリング
 
@@ -411,43 +412,43 @@ Testimがその特定のテストのみのテスト履歴を表示します。
 
 1. 操作パネルの**Advanced Filters**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/393f537-execution-runs-9.jpg)
+![ステータスでテストをフィルタリング](/images/results/execution-runs-screen/393f537-execution-runs-9.jpg)
 
 2. フィルターパネルの**Status**セクションから1つ以上の値を選択します。
 
-![](/images/results/execution-runs-screen/b08df21-execution-runs-25.jpg)
+![ステータスフィルター選択画面](/images/results/execution-runs-screen/b08df21-execution-runs-25.jpg)
 
 3. **Apply**ボタンをクリックして、実行リストにフィルターを適用します。
 
-![](/images/results/execution-runs-screen/7486425-execution-runs-26.jpg)
+![ステータスフィルター適用後の結果一覧](/images/results/execution-runs-screen/7486425-execution-runs-26.jpg)
 
 :fa-arrow-right: **実行結果画面に表示されるテストをテスト所有者でフィルタリングするには:**
 
 1. 操作パネルの**Advanced Filters**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/83134b4-execution-runs-9.jpg)
+![Test OwnerフィルターのAdvanced Filters](/images/results/execution-runs-screen/83134b4-execution-runs-9.jpg)
 
 2. フィルターパネルの**Test Owner**セクションから1つ以上の値を選択します。
 
-![](/images/results/execution-runs-screen/b461691-execution-runs-27.jpg)
+![Test Ownerの選択画面](/images/results/execution-runs-screen/b461691-execution-runs-27.jpg)
 
 3. **Apply**ボタンをクリックして、実行リストにフィルターを適用します。
 
-![](/images/results/execution-runs-screen/719cabe-execution-runs-26.jpg)
+![Test Ownerフィルター適用後の結果一覧](/images/results/execution-runs-screen/719cabe-execution-runs-26.jpg)
 
 :fa-arrow-right: **実行結果画面に表示されるテストを失敗タイプでフィルタリングするには:**
 
 1. 操作パネルの**Advanced Filters**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/1437733-execution-runs-9.jpg)
+![失敗タイプフィルターのAdvanced Filters](/images/results/execution-runs-screen/1437733-execution-runs-9.jpg)
 
 2. フィルターパネルの失敗タイプセクションから1つ以上の値を選択します。
 
-![](/images/results/execution-runs-screen/a856dc5-execution-runs-28.jpg)
+![失敗タイプの選択画面](/images/results/execution-runs-screen/a856dc5-execution-runs-28.jpg)
 
 3. **Apply**ボタンをクリックして、実行リストにフィルターを適用します。
 
-![](/images/results/execution-runs-screen/8293525-execution-runs-26.jpg)
+![失敗タイプフィルター適用後の結果一覧](/images/results/execution-runs-screen/8293525-execution-runs-26.jpg)
 
 <br />
 
@@ -455,7 +456,7 @@ Testimがその特定のテストのみのテスト履歴を表示します。
 
 1. 操作パネルの**Advanced Filters**ボタンをクリックします。
 
-![](/images/results/execution-runs-screen/393f537-execution-runs-9.jpg)
+![ラベルフィルターのAdvanced Filters](/images/results/execution-runs-screen/393f537-execution-runs-9.jpg)
 
 2. フィルターパネルの**Label**セクションから1つ以上の値を選択します。
 3. 次のいずれかのオペランドを選択します。
@@ -463,7 +464,7 @@ Testimがその特定のテストのみのテスト履歴を表示します。
    2. AND - 選択したすべてのラベルを含むテストのみを返します。
 4. **Apply**ボタンをクリックして、実行リストにフィルターを適用します。
 
-![](/images/results/execution-runs-screen/7486425-execution-runs-26.jpg)
+![ラベルフィルター適用後の結果一覧](/images/results/execution-runs-screen/7486425-execution-runs-26.jpg)
 
 ### テストの詳細を表示
 
@@ -473,8 +474,8 @@ Testimがその特定のテストのみのテスト履歴を表示します。
 
 1. 実行結果画面から、テストリスト内のテストの任意の場所をダブルクリックします。
 
-![](/images/results/execution-runs-screen/fc3e4c2-execution-runs-29.jpg)
+![テスト行をダブルクリックして詳細に移動](/images/results/execution-runs-screen/fc3e4c2-execution-runs-29.jpg)
 
 Testimがテストの詳細なステップを表示します。
 
-![](/images/results/execution-runs-screen/6564064-execution-runs-30.jpg)
+![テスト実行のステップ詳細画面](/images/results/execution-runs-screen/6564064-execution-runs-30.jpg)
