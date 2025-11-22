@@ -1,13 +1,21 @@
 ---
 title: 'テキストのクリア（モバイル）'
-description: '原文: https://help.testim.io/docs/clear-text-mobile'
+description: 'モバイルテストで Clear Text ステップを使って入力フィールドの文字列を削除し、必要に応じてカスタムアクションでバックスペースを送信する回避策を説明します。'
 category: '特殊ステップ'
 order: 8
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/clear-text-mobile'
 keywords:
-  - testim
-  - clear-text-mobile
-  - special-steps
+  - Clear Text
+  - テキストクリア
+  - モバイルテスト
+  - 入力フィールド
+  - Appium
+  - バックスペース
+  - カスタムアクション
+  - 特殊ステップ
+  - Testim
+  - 入力リセット
 ---
 選択済みの入力フィールドからテキストをクリアします。
 
@@ -19,7 +27,7 @@ Appium 側の既知の制限により、稀に入力内容がすべてクリア�
 * [https://discuss.appium.io/t/clear-elements-is-not-working/28832/9](https://discuss.appium.io/t/clear-elements-is-not-working/28832/9)
 * [https://discuss.appium.io/t/appium-15-1-doesnt-clear-the-field-in-appium-ios/28842/3](https://discuss.appium.io/t/appium-15-1-doesnt-clear-the-field-in-appium-ios/28842/3)
 
-Testim Mobile では回避策として [カスタムアクションステップ](/docs/advanced-features/custom-action-step-mobile) でバックスペースを送信します。例:\
+Testim Mobile では回避策として [カスタムアクションステップ](/docs/custom-action-step-mobile) でバックスペースを送信します。例:\
 `await DRIVER.sendKeys('\b\b\b\b\b\b\b');`
 
-バックスペースの回数は任意です。[テストデータ](/docs/special-steps/reusable-test-data) に用意した入力文字列の長さ分を送るのが一般的です。
+バックスペースの回数は任意です。[テストデータ](/docs/reusable-test-data) に用意した入力文字列の長さ分を送るのが一般的です。

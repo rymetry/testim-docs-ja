@@ -260,7 +260,7 @@ Body セクションに定義したエントリは、一時的に無効化した
 
 エントリは完全に削除されます。
 
-# Using Parameters
+# パラメータの使用 {#using-parameters}
 
 API ステップでは、他のコードステップと同様にパラメータを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメータを埋め込んだり、レスポンスから値を取り出してパラメータに保存したり、Assertion の値として使用したりできます。パラメータは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
 パラメータの詳細は [Parameters](/docs/parameters) を参照してください。
@@ -270,35 +270,35 @@ API ステップでは、他のコードステップと同様にパラメータ�
 > 配列パラメータは `array.0.name` のような形式で参照できます。  
 > また、API ステップ内の各入力セクションでは、複雑な式はサポートされません。
 
-## Using parameters in the sent HTTP request
+## 送信する HTTP リクエストでのパラメータ利用 {#using-parameters-in-the-sent-http-request}
 
 パラメータは、送信する HTTP リクエストのヘッダー／ボディ／URL に埋め込めます。これらのセクションは純粋な JS で書くと煩雑になるため、Testim ではパラメータを「二重／三重の波括弧」で簡単に埋め込めるようになっています。
 
-### Adding parameters to the Body
+### Body へのパラメータ追加
 
 パラメータの値をエンコードせずそのまま埋め込みたい場合は、三重波括弧を使います（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/59f09c0-Picture2.png)
 
-### Adding parameters to the URL
+### URL へのパラメータ追加
 
 テストの Base URL と同じホストにある API に対して呼び出しを行いたい場合は、URL 全体を記述する代わりに `{{{BASE_URL}}}` パラメータを使えます。URL フィールドで `{{{BASE_URL}}}` の後ろにパスを続けて入力してください。ここでもパラメータをエンコードしたくない場合は三重波括弧を使用します（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/753553d-image_5.png)
 
-### Adding parameters to the Header
+### Header へのパラメータ追加
 
 ヘッダーにパラメータを入れる場合も同様で、値をエンコードしたくない場合は `{{{param}}}` のように三重波括弧を使用します。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/82b5c47-image_3.png)
 
-## Using parameters in the HTTP response
+## HTTP レスポンスでのパラメータ利用
 
 Properties パネルで追加したパラメータは、API ステップ内のコードの関数シグネチャに自動的に追加されます。これにより、レスポンスを処理するコード内でパラメータを直接利用できます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/eb87221-image_9.png)
 
-## Using parameters in the Assertion
+## Assertion でのパラメータ利用
 
 Assertion セクションでも、比較値としてパラメータをそのまま使用できます。この場合、値には波括弧を付ける必要はありません。
 
@@ -306,7 +306,7 @@ Assertion セクションでも、比較値としてパラメータをそのま�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png)
 
-# Viewing the result after the run
+# 実行後の結果の確認
 
 ステップ実行後は、**Response** タブで API レスポンスを確認できます。ここでは、レスポンスボディだけでなく、ステータスコードやリクエスト時間、バイナリファイルのサイズなどの追加情報も表示されます。また、送信されたリクエスト内容を確認したり、レスポンス情報をダウンロードしたりすることもできます。
 

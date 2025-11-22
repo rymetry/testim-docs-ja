@@ -262,11 +262,11 @@ beforeSuite: function (suite) {
 }
 ```
 
-## Getting Cookies
+## Cookie を取得する
 
 Testim では、Cookie の値を変数に代入することで Cookie を「取得」し、テスト内で属性を再利用することができます。
 
-### Getting Cookies using the Get Cookie step
+### Get Cookie ステップを使って Cookie を取得する {#getting-cookies-using-the-get-cookie-step}
 
 **Get Cookie** ステップを使うと、テスト中の UI から直接 Cookie を読み取り、その値を変数に保存できます。
 

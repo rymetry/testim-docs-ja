@@ -1,17 +1,25 @@
 ---
 title: 'キーボードを隠す（モバイル）'
-description: '原文: https://help.testim.io/docs/hide-keyboard-mobile'
+description: 'モバイルテストで hideKeyboard が機能しないケースの理由と、カスタムアクションステップを使ってキーボードを安全に閉じる回避策を説明します。'
 category: '特殊ステップ'
 order: 7
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/hide-keyboard-mobile'
 keywords:
-  - testim
-  - hide-keyboard-mobile
-  - special-steps
+  - キーボードを隠す
+  - hideKeyboard
+  - モバイルテスト
+  - Appium
+  - カスタムアクション
+  - KEYCODE_BACK
+  - KEYCODE_ENTER
+  - 特殊ステップ
+  - Testim
+  - エラー回避
 ---
 一部のサードパーティ環境では、`hideKeyboard` を呼ぶと「ソフトウェアキーボードを隠せない」エラーが返ることがあります。特定のキーボード挙動や端末状態が `Driver.hidekeyboard()` に適切に応答せず、Appium 側で予期しない遷移が発生するためです。
 
-回避策として、カスタムアクションを記録してください。作成方法は [カスタムアクションステップ（モバイル）](https://help.testim.io/docs/custom-action-step-mobile) を参照。
+回避策として、カスタムアクションを記録してください。作成方法は [カスタムアクションステップ（モバイル）](/docs/custom-action-step-mobile) を参照。
 
 ユースケースに応じて、以下のキーコードを送信します。
 
@@ -20,7 +28,7 @@ keywords:
 
 以下は Back ボタン相当を送ってキーボードを閉じる例です。
 
-```Text JavaScript
+```javascript
 // Trigger Android KEYCODE_BACK to hide keyboard
 
 await DRIVER.pressKeyCode(4);

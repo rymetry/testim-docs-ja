@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 87個
-- ✅   翻訳のみ完了: 196個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 96個
+- ✅   翻訳のみ完了: 187個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -159,15 +159,15 @@
 
 ## Special Steps（特殊ステップ）
 
-- ✅ https://help.testim.io/docs/salesforce-auto-login-step
-- ✅ https://help.testim.io/docs/salesforce-apex-action-step
-- ✅ https://help.testim.io/docs/coding-assistant
-- ✅ https://help.testim.io/docs/keyboard-shortcut-step
-- ✅ https://help.testim.io/docs/set-geolocation
-- ✅ https://help.testim.io/docs/deep-link-mobile
-- ✅ https://help.testim.io/docs/hide-keyboard-mobile
-- ✅ https://help.testim.io/docs/clear-text-mobile
-- ✅ https://help.testim.io/docs/reusable-test-data
+- ✅🔍 https://help.testim.io/docs/salesforce-auto-login-step
+- ✅🔍 https://help.testim.io/docs/salesforce-apex-action-step
+- ✅🔍 https://help.testim.io/docs/coding-assistant
+- ✅🔍 https://help.testim.io/docs/keyboard-shortcut-step
+- ✅🔍 https://help.testim.io/docs/set-geolocation
+- ✅🔍 https://help.testim.io/docs/deep-link-mobile
+- ✅🔍 https://help.testim.io/docs/hide-keyboard-mobile
+- ✅🔍 https://help.testim.io/docs/clear-text-mobile
+- ✅🔍 https://help.testim.io/docs/reusable-test-data
 
 ## Running Tests（テスト実行）
 

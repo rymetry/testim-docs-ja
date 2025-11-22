@@ -1,13 +1,21 @@
 ---
 title: 'Salesforce 自動ログインステップ'
-description: '原文: https://help.testim.io/docs/salesforce-auto-login-step'
+description: 'Salesforce 環境（本番・サンドボックス）にユーザー名とパスワードで自動ログインし、毎回ログイン手順を記録せずにテストを開始できる専用ステップについて説明します。'
 category: '特殊ステップ'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/salesforce-auto-login-step'
 keywords:
-  - testim
-  - salesforce-auto-login-step
-  - special-steps
+  - Salesforce 自動ログイン
+  - Salesforce ログイン
+  - MFA
+  - 多要素認証
+  - テストデータ
+  - 接続情報
+  - 特殊ステップ
+  - Testim
+  - 自動ログインステップ
+  - 認証エラー対策
 ---
 Salesforce 環境（本番/サンドボックス）にログイン・ログアウトの記録無しで認証できるステップです。ログインステップを追加し、接続先の情報を入力するだけで、すぐにテストの記録を開始できます。
 
@@ -21,50 +29,50 @@ Salesforce 環境（本番/サンドボックス）にログイン・ログア�
 
 ### MFA 認証
 
-2022年2月1日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時にMFAを行うソフトウェア型オーセンティケータを実装しています。有効化手順は[Setting up MFA](doc:salesforce-auto-login-step#setting-up-mfa) を参照してください。
+2022年2月1日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時にMFAを行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/salesforce-auto-login-step#setting-up-mfa) を参照してください。
 
 ## Salesforce 自動ログインステップを追加する
 
 :fa-arrow-right: **追加手順:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. 追加したい位置の :fa-caret-right: **（矢印）** にカーソルを合わせます。
 
-![](/images/special-steps/salesforce-auto-login-step/3e1c90c-Testim_512a.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/3e1c90c-Testim_512a.png)
 
-The **action items** are displayed.
+アクションオプションが表示されます。
 
-![](/images/special-steps/salesforce-auto-login-step/9b114f6-Testim_566.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/9b114f6-Testim_566.png)
 
-2. Click on the “**M**” (Testim predefined steps).\
-   The **Predefined steps** menu opens.
+2. “**M**”（Testim predefined steps）をクリックします。\
+   **Predefined steps** メニューが開きます。
 
-![](/images/special-steps/salesforce-auto-login-step/c70c927-Testim_544_r.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/c70c927-Testim_544_r.png)
 
-3. Click on **Salesforce**.\
-   The **Salesforce** menu expands.
+3. **Salesforce** をクリックします。\
+   **Salesforce** メニューが展開されます。
 
-![](/images/special-steps/salesforce-auto-login-step/cedf632-Testim_545_r.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/cedf632-Testim_545_r.png)
 
-4. Scroll down through the menu and select **Salesforce auto-login**.
+4. メニューをスクロールし、**Salesforce auto-login** を選択します。
 
 > 📘
 >
-> Alternatively, you can use the search box at the top of the menu to search for **Salesforce auto-login**.
+> メニュー上部の検索ボックスで **Salesforce auto-login** と入力して検索することもできます。
 
-The **Add Step** window is shown.
+**Add Step** ウィンドウが表示されます。
 
-![](/images/special-steps/salesforce-auto-login-step/9bcc036-2d49d61-Testim_567_r.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/9bcc036-2d49d61-Testim_567_r.png)
 
-5. **Name** にわかりやすい名前を入力します。
-6. 他テストでも再利用したい場合は **Shared step** をオンのまま、保存先フォルダを選択します（詳細は[グループ](/docs/groups/groups)）。
-7. Click **Create Step**.
-8. Hover over the step and click on the Show Properties (:fa-cog:) icon. The step is added in the **Editor**, and the **Properties** panel opens on the right-hand side.
+5. **Name** にわかりやすいステップ名を入力します。
+6. 他テストでも再利用したい場合は **Shared step** をオンのまま、保存先フォルダを選択します（詳細は[グループ](/docs/groups)）。
+7. **Create Step** をクリックします。
+8. 追加されたステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。ステップが **Editor** に追加され、右側に **Properties** パネルが表示されます。
 
-![](/images/special-steps/salesforce-auto-login-step/2c50d67-newproperties.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/2c50d67-newproperties.png)
 
 9. **Login URL** に環境のログインURLを入力します。
 10. **Username** と **Password** に認証情報を入力します。
-11. MFA を使う場合は [Setting up MFA](doc:salesforce-auto-login-step#setting-up-mfa) に従います。\
+11. MFA を使う場合は [Setting up MFA](/docs/salesforce-auto-login-step#setting-up-mfa) に従います。\
     これで設定は完了です。
 
 ### パラメータの使用
@@ -77,60 +85,60 @@ The **Add Step** window is shown.
 
 :fa-arrow-right: **接続情報にパラメータを使う:**
 
-1. Define parameters in one of the following ways:
-   * **Add a parameter to the test data** – You can define a parameter by adding **Test Data** to the **Setup** step (the first step of the test). For detailed instructions, see [Configuring a data driven test from the visual editor](doc:data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor).
-   * **Add a parameter to the config file** – You can add a parameter to the [Configuration file](/docs/configuration-file/configuration-file-run-hooks). For detailed instructions, see [Configuring Data Driven Tests using the Config file](doc:data-driven-testing#section-configuring-data-driven-tests-using-the-config-file).
-   * **Add a parameter to a Custom step** – You can create a Custom step and then add a parameter to this Custom Step. For detailed instructions, see [Parameters in custom JavaScript steps](/docs/parameters/parameters-in-custom-javascript-steps).\
-     You then need to pass the parameter to the *Salesforce auto-login* step or to the test level, by exporting the parameter. For detailed instructions, see [Exports Parameters](/docs/parameters/exports-parameters).
-2. In your *Salesforce auto-login* step, add the parameters to the **URL**, **Username**, and **Password** fields.
+1. 次のいずれかの方法でパラメータを定義します。
+   * **テストデータにパラメータを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメータを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
+   * **設定ファイルにパラメータを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメータを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
+   * **カスタムステップにパラメータを追加** – カスタムステップを作成してパラメータを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
+     その後、エクスポート機能を使ってパラメータを *Salesforce auto-login* ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
+2. *Salesforce auto-login* ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメータを設定します。
 
 ## MFA のセットアップ
 
 Salesforce 側でシークレットキーを取得し、Testim のプロパティパネルにある Secret Key に登録します。\
 :fa-arrow-right: **手順:**
 
-1. Login to Salesforce and Navigate to **Setup > Users > Users >** and select the user for which you want to set up MFA.
+1. Salesforce にログインし、**Setup > Users > Users** に移動して MFA を設定したいユーザーを選択します。
 
-![](/images/special-steps/salesforce-auto-login-step/bc293ae-image.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/bc293ae-image.png)
 
-2. If you have already registered a 3rd party Authenticator app (Google Authenticator, Microsoft Authenticator etc.) under **App Registration: One-Time Password Authenticator**, you will need to disconnect it and then reconnect in order to obtain the secret key.  
-   * Under **User Details**, in the **App Registration - One-Time Password Authenticator** setting, click **Disconnect**.
-   * If you have never registered a 3rd party Authenticator App, proceed to the next step.
+2. 既に **App Registration: One-Time Password Authenticator** に Google Authenticator や Microsoft Authenticator などのサードパーティ認証アプリが登録されている場合、シークレットキーを取得するために一度切断してから再接続する必要があります。  
+   * **User Details** の **App Registration - One-Time Password Authenticator** 設定で **Disconnect** をクリックします。
+   * まだサードパーティ認証アプリを登録していない場合は、この手順はスキップして次へ進みます。
 
-![](/images/special-steps/salesforce-auto-login-step/e1f92f2-image_1.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/e1f92f2-image_1.png)
 
-3. Under **User Details**, in the **App Registration - One-Time Password Authenticator** setting, click **Connect**.
+3. 同じく **User Details** の **App Registration - One-Time Password Authenticator** 設定で **Connect** をクリックします。
 
-![](/images/special-steps/salesforce-auto-login-step/167397d-image_2.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/167397d-image_2.png)
 
-4. Login into Salesforce with your user name and password, when prompted with the following notice, select **Choose another verification method**.
+4. ユーザー名とパスワードで Salesforce にログインし、MFA の選択画面が表示されたら **Choose another verification method** を選択します。
 
-![](/images/special-steps/salesforce-auto-login-step/3eff270-pasted_image_0.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/3eff270-pasted_image_0.png)
 
-5. In the **Choose a verification method** screen, select **Use verification codes from an authenticator app** and click **Continue**.
+5. **Choose a verification method** 画面で **Use verification codes from an authenticator app** を選択し、**Continue** をクリックします。
 
-![](/images/special-steps/salesforce-auto-login-step/522b354-pasted_image_0_1.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/522b354-pasted_image_0_1.png)
 
-6. In the **Connect an authenticator app screen**, click **I cant scan the QR code**.
+6. **Connect an authenticator app** 画面で **I cant scan the QR code** をクリックします。
 
-![](/images/special-steps/salesforce-auto-login-step/71f0334-pasted_image_0_2.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/71f0334-pasted_image_0_2.png)
 
-7. A secret key is displayed. Copy the secret key.
+7. シークレットキーが表示されるので、これをコピーします。
 
-![](/images/special-steps/salesforce-auto-login-step/7022745-pasted_image_0_4.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/7022745-pasted_image_0_4.png)
 
-8. When adding the Salesforce Auto-Login step (see - [Adding a Salesforce Login Step](doc:salesforce-auto-login-step#adding-a-salesforce-auto-login-step), in the step's **Properties Panel**, under **Login with MFA**, click the **ADD KEY** button.
+8. Salesforce Auto-Login ステップの追加時（[Salesforce 自動ログインステップを追加する](/docs/salesforce-auto-login-step#salesforce-自動ログインステップを追加する) を参照）、ステップの **Properties Panel** 内にある **Login with MFA** セクションで **ADD KEY** ボタンをクリックします。
 
-![](/images/special-steps/salesforce-auto-login-step/79bffd0-image_3.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/79bffd0-image_3.png)
 
-9. Paste the key that you have copied from Salesforce into the **Your Key** field and click **Add**.
+9. Salesforce からコピーしたシークレットキーを **Your Key** フィールドに貼り付け、**Add** をクリックします。
 
-![](/images/special-steps/salesforce-auto-login-step/33e9456-image_4.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/33e9456-image_4.png)
 
-A verification code is displayed:
+検証コードが表示されます。
 
-![](/images/special-steps/salesforce-auto-login-step/76d0fe8-image_5.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/76d0fe8-image_5.png)
 
-10. Go back to Salesforce and enter the verification code that was displayed into the **Verification Code** and click **Connect**.  
+10. Salesforce に戻り、表示された検証コードを **Verification Code** フィールドに入力して **Connect** をクリックします。  
 
-![](/images/special-steps/salesforce-auto-login-step/d783a5c-verification_code.png)
+![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/d783a5c-verification_code.png)
