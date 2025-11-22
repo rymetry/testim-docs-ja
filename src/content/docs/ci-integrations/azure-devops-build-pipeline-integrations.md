@@ -4,15 +4,20 @@ description: 'Azure PipelinesでTestimテストを実行する方法について
 category: 'CI統合'
 order: 3
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/azure-devops-build-pipeline-integrations'
 keywords:
-  - testim
-  - azure-devops
-  - azure-pipelines
-  - ci統合
-  - yaml設定
+  - Azure DevOps
+  - Azure Pipelines
+  - CI統合
+  - CIパイプライン
+  - YAML設定
+  - YAMLテンプレート
+  - ビルドパイプライン
+  - パイプラインタスク
+  - テスト自動実行
 ---
 
-![](/images/ci-integrations/azure-devops-build-pipeline-integrations/5ac760e-Azure-Pipelines.png)
+![Azure Pipelinesロゴ](/images/ci-integrations/azure-devops-build-pipeline-integrations/5ac760e-Azure-Pipelines.png)
 
 [Azure pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/)とTestimを統合するには、YAMLファイルに以下の行を追加する必要があります:
 
@@ -39,4 +44,4 @@ steps:
     testResultsFiles: '**/testim-tests-report.xml'
 ```
 
-**注記**: グリッド名については、[こちら](/docs/grid-management/grid-management)でグリッドの設定方法をご確認ください。
+**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。

@@ -4,12 +4,16 @@ description: 'Copado Release ManagerからURL CalloutステップでTestimテス
 category: 'CI統合'
 order: 12
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/copado-integration'
 keywords:
-  - testim
-  - copado
-  - ci統合
-  - url-callout
-  - salesforce-devops
+  - Copado
+  - Salesforce
+  - Salesforce DevOps
+  - リリースマネジメント
+  - CI統合
+  - CIパイプライン
+  - URL Callout
+  - テスト自動実行
 ---
 
 Copadoからテストを自動化するには、Copadoに[URL Calloutステップ](https://docs.copado.com/articles/#!copado-ci-cd-publication/deployment-step-url-callout)を追加し、単一のWebhook呼び出しでTestim/TTA for Salesforce REST APIを使用します。
@@ -19,16 +23,16 @@ Copadoからテストを自動化するには、Copadoに[URL Calloutステッ�
 1. Testim/TTA for Salesforceで、**Settings > API**に移動します。
 2. **Generate API Key**をクリックします。  
 
-   ![](/images/ci-integrations/copado-integration/b650ac8-generate1.png)
+   ![APIキー生成ボタンが表示された画面](/images/ci-integrations/copado-integration/b650ac8-generate1.png)
 3. キーの名前を入力し、**Generate**をクリックします。
 
-   ![](/images/ci-integrations/copado-integration/0aab69d-generateAPI.png)
+   ![APIキー名入力とGenerateボタンの画面](/images/ci-integrations/copado-integration/0aab69d-generateAPI.png)
 4. 表示されたAPIキーをコピーし、**Done**をクリックします。このキーが表示されるのは生成時のみなので、できるだけ早くコピーしてください。
 
-   ![](/images/ci-integrations/copado-integration/1b473ef-apikey.png)
+   ![生成されたAPIキーをコピーする画面](/images/ci-integrations/copado-integration/1b473ef-apikey.png)
 5. SwaggerでTestim REST APIに移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行API呼び出しのタイプを選択して、JSONペイロードをコピーします。
 
-   ![](/images/ci-integrations/copado-integration/7c0621b-copado_swagger.png)
+   ![Swagger上でTestim REST APIエンドポイントを確認する画面](/images/ci-integrations/copado-integration/7c0621b-copado_swagger.png)
 6. Copado Release Managerアプリで、Stepsセクションに新しいステップを追加してDeploymentを作成します。そのためには、以下の手順に従います:
 
    1. **Type**で、**Perform callout and continue with deployment**を選択します。
@@ -45,11 +49,11 @@ Copadoからテストを自動化するには、Copadoに[URL Calloutステッ�
 
    6. **Body**に、Swaggerから(ステップ5)のJSONペイロードを貼り付けます。
 
-      ![](/images/ci-integrations/copado-integration/b00424d-copado_steps.png)
+      ![CopadoのURL CalloutステップでBodyを設定する画面](/images/ci-integrations/copado-integration/b00424d-copado_steps.png)
 
    7. JSONペイロードで、`"grid" : "string"`を、Testim/TTA for Salesforceの右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
 
-      ![](/images/ci-integrations/copado-integration/4049e1e-copado_grid.png)
+      ![Testim/TTA for SalesforceのGridsセクションのスクリーンショット](/images/ci-integrations/copado-integration/4049e1e-copado_grid.png)
 
    8. テストするには、ステップを保存して**Deploy > Deploy All**をクリックします。
 
@@ -63,14 +67,14 @@ Copadoからテストを自動化するには、Copadoに[URL Calloutステッ�
 
 1. Copadoで、**Details > Type**に移動し、**Perform callout and pause step**を選択して**Resume URL**をコピーします。
 
-   ![](/images/ci-integrations/copado-integration/a87ef04-copado_pause_step1.png)
+   ![CopadoでPerform callout and pause stepを選択する画面](/images/ci-integrations/copado-integration/a87ef04-copado_pause_step1.png)
 2. Testim/TTA for Salesforceで、エディタで**Add API action**ステップを作成し、共有ステップにします。
 3. **Add API action**ステップで、**Resume URL**(ステップ1)を入力し、プロパティで**Send via web page**を無効にします。
 
-   ![](/images/ci-integrations/copado-integration/612d721-copado_pause_step3.png)
+   ![Add API actionステップにResume URLを設定する画面](/images/ci-integrations/copado-integration/612d721-copado_pause_step3.png)
 4. **Runs > Configuration**リストに移動し、新しい構成を作成して**After test handler**を選択し、共有ステップ(ステップ2)を選択します。
 
-   ![](/images/ci-integrations/copado-integration/e032878-copado_pause_step4.png)
+   ![Runs設定でAfter test handlerに共有ステップを設定する画面](/images/ci-integrations/copado-integration/e032878-copado_pause_step4.png)
 5. テストまたはテストプランの設定で、新しく作成した構成(ステップ4)を選択します。
 
-   ![](/images/ci-integrations/copado-integration/70f00d2-copado_pause_step5.png)
+   ![テスト設定で新しい構成を選択する画面](/images/ci-integrations/copado-integration/70f00d2-copado_pause_step5.png)

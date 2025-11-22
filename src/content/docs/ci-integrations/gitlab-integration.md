@@ -4,15 +4,17 @@ description: 'GitLab CI/CDでTestimテストを実行する方法について説
 category: 'CI統合'
 order: 6
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/gitlab-integration'
 keywords:
-  - testim
-  - gitlab
-  - gitlab-ci
-  - ci統合
-  - yaml設定
+  - GitLab
+  - GitLab CI
+  - CI統合
+  - CIパイプライン
+  - YAML設定
+  - Testim CLI
 ---
 
-![](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png)
+![GitLabロゴ](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png)
 
 **YAMLファイル**\
 GitLabとTestimを統合するには、YAMLファイルに以下の行を追加する必要があります:
@@ -42,10 +44,5 @@ testim:
       junit: testim-report.xml
 ```
 
-> 📘
->
-> グリッド名については、[こちら](/docs/grid-management/grid-management)でグリッドの設定方法をご確認ください。
-
-> 📘
->
-> Testimは、Node.jsのすべての[LTS/サポートされているバージョン](https://github.com/nodejs/Release/blob/main/README.md)をサポートしています。
+> 📘 グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+> 📘 Testimは、Node.jsのすべての[LTS/サポートされているバージョン](https://github.com/nodejs/Release/blob/main/README.md)をサポートしています。

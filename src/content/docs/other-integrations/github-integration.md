@@ -4,12 +4,15 @@ description: 'TestimでGitHubブランチを管理し、Git Issuesでバグを�
 category: 'その他の統合'
 order: 1
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/github-integration'
 keywords:
-  - testim
-  - github
+  - Testim
+  - GitHub
+  - GitHub統合
   - バージョン管理
   - ブランチ管理
-  - git-issues
+  - Git Issues
+  - バグ報告
 ---
 
 TestimでGitHubブランチを管理し、Git Issuesでバグを公開します
