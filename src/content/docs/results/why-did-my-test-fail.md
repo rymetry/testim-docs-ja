@@ -3,13 +3,16 @@ title: 'テストが失敗した理由は？'
 description: 'テスト失敗の原因を理解し、エラーメッセージの種類、一般的な原因、および修正方法を学びます。'
 category: '結果'
 order: 6
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/why-did-my-test-fail'
 keywords:
-  - testim
-  - why-did-my-test-fail
-  - results
+  - テスト失敗
   - エラーメッセージ
   - トラブルシューティング
+  - スマートロケーター
+  - グリッド
+  - タイムアウト
+  - APIステップ
 ---
 
 エラーメッセージ、発生理由、および修正方法を理解します。
@@ -37,7 +40,7 @@ Testimは、次のような異なる失敗タイプを識別します。
 
 Testimは、次のような異なる警告タイプを識別します。
 
-1. **[ビューポートサイズにリサイズできない](doc:why-did-my-test-fail#1-could-not-resize-to-view-port-size)** - 必要なビューポートサイズにリサイズできないことを示す警告が表示されます。
+1. **[ビューポートサイズにリサイズできない](/docs/why-did-my-test-fail#1-could-not-resize-to-view-port-size)** - 必要なビューポートサイズにリサイズできないことを示す警告が表示されます。
 
 ## テスト失敗タイプ
 
@@ -60,10 +63,10 @@ Testimは、次のような異なる警告タイプを識別します。
 * サイドバイサイドのスクリーンショットを見て、テスト内で要素が表示されていたかどうかを判断します。
 * アプリケーションのCSSを更新して、要素が非表示になっておらず、正しい不透明度、期待されるサイズと位置を持つようにします。
 * レコーディングの解像度とテストを実行しているコンピューターの解像度が同じかどうかを確認します。そうでない場合は、テストを実行しているコンピューターの解像度を元のレコーディングと一致するように調整します。
-* 要素がビューポートに表示されない場合は、それに到達するために[スクロールステップを追加](/docs/handling-ui-actions/scroll)する必要があるかもしれません。
-* 要素は、マウスが別の要素の上にホバーしたときにのみ表示されることがあります（例：ドロップダウンメニュー）。ホバーステップは自動的に記録されないため、要素を表示するために記録する必要があるかもしれません。詳細については、[ホバーステップ](/docs/handling-ui-actions/hover-step)を参照してください。
-* ステップのプロパティで「要素が表示されている必要がある」チェックボックスをオフにします。時々、ビジネスロジックにとって表示検証が不要な場合があり、その場合はオフにできます。システムにオーバーレイがある場合は、迅速な解決策になります。詳細については、[ターゲット要素プロパティの編集](/docs/steps-editing-tests/editing-target-element-properties)を参照してください。
-* 失敗したステップのDOMを確認します。ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップのDOMの表示によるデバッグ](https://help.testim.io/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
+* 要素がビューポートに表示されない場合は、それに到達するために[スクロールステップを追加](/docs/scroll)する必要があるかもしれません。
+* 要素は、マウスが別の要素の上にホバーしたときにのみ表示されることがあります（例：ドロップダウンメニュー）。ホバーステップは自動的に記録されないため、要素を表示するために記録する必要があるかもしれません。詳細については、[ホバーステップ](/docs/hover-step)を参照してください。
+* ステップのプロパティで「要素が表示されている必要がある」チェックボックスをオフにします。時々、ビジネスロジックにとって表示検証が不要な場合があり、その場合はオフにできます。システムにオーバーレイがある場合は、迅速な解決策になります。詳細については、[ターゲット要素プロパティの編集](/docs/editing-target-element-properties)を参照してください。
+* 失敗したステップのDOMを確認します。ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップのDOMの表示によるデバッグ](/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
 
 ### 2. Element not Found
 
@@ -80,10 +83,10 @@ Testimは、次のような異なる警告タイプを識別します。
 
 * サイドバイサイドのスクリーンショットを比較して、テスト内で要素が表示されていたかどうかを判断します。
 * スクリーンショットの進行状況を表示して、前のステップがページへのナビゲーションに失敗したかどうかを判断します。
-* すべてのフォーム送信情報が正しいことを確認します。詳細については、[パラメーター](/docs/parameters/parameters)を参照してください。
-* ページの読み込みが完了しなかった、または読み込みに遅延がある場合は、[待機ステップを追加](/docs/advanced-features/wait-for)して、Testimにターゲット要素が表示されるまで待機するように強制します。
-* 要素が表示されているが認識されない場合は、[ターゲット要素の改善](doc:editing-target-element-properties#improving-the-target-element)を試してください。
-* 失敗したステップのDOMを確認します。ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップのDOMの表示によるデバッグ](https://help.testim.io/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
+* すべてのフォーム送信情報が正しいことを確認します。詳細については、[パラメーター](/docs/parameters)を参照してください。
+* ページの読み込みが完了しなかった、または読み込みに遅延がある場合は、[待機ステップを追加](/docs/wait-for)して、Testimにターゲット要素が表示されるまで待機するように強制します。
+* 要素が表示されているが認識されない場合は、[ターゲット要素の改善](/docs/editing-target-element-properties#improving-the-target-element)を試してください。
+* 失敗したステップのDOMを確認します。ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップのDOMの表示によるデバッグ](/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
 
 ### 3. Tab not Found
 
@@ -111,8 +114,8 @@ Testimは、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 * サイドバイサイドのスクリーンショットを比較して、テスト内でフレームが表示されていたかどうかを判断します。
-* [DOM](/docs/results/debug-console-errors-access-dom)を検査して、期待されたフレームが読み込まれたことを検証します。
-* ターゲット要素がiframe内になくなった場合は、失敗したテストステップの[ターゲット要素を再割り当て](doc:editing-target-element-properties#reassigningimproving-the-target-element)します。
+* [DOM](/docs/debug-console-errors-access-dom)を検査して、期待されたフレームが読み込まれたことを検証します。
+* ターゲット要素がiframe内になくなった場合は、失敗したテストステップの[ターゲット要素を再割り当て](/docs/editing-target-element-properties#reassigningimproving-the-target-element)します。
 
 ### 5. JavaScript Error
 
@@ -125,8 +128,8 @@ Testimは、次のような異なる警告タイプを識別します。
 
 **どうすればよいか？**
 
-* [カスタムステップ/アクション](doc:custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)または標準ステップの[JSパラメーター](/docs/parameters/parameters)のJavaScriptコードを確認します。
-* アサーションが失敗した場合は、このメッセージをより有益なエラーに置き換えます。詳細については、[カスタム検証とアクションの追加](/docs/validations/custom-code)を参照してください。
+* [カスタムステップ/アクション](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)または標準ステップの[JSパラメーター](/docs/parameters)のJavaScriptコードを確認します。
+* アサーションが失敗した場合は、このメッセージをより有益なエラーに置き換えます。詳細については、[カスタム検証とアクションの追加](/docs/custom-code)を参照してください。
 
 ### 6. Could not get Browser
 
@@ -141,11 +144,11 @@ Testimは、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 * グリッドに実行しようとしたブラウザが含まれているかどうかを確認します。
-* [CLIの並列パラメーター](/docs/parallel)を使用している場合は、グリッド上のすべての使用可能なブラウザを使用するテストを並列で実行していないことを確認します。
+* [CLIの並列パラメーター](/docs/the-command-line-cli)を使用している場合は、グリッド上のすべての使用可能なブラウザを使用するテストを並列で実行していないことを確認します。
 * グリッドにブラウザを追加します。
 * すべてのテストがこのエラーで失敗する場合、グリッド設定に問題がある可能性があります。追加のヘルプについては、グリッドプロバイダーに連絡してください。
 
-現在のグリッド構成の詳細については、[グリッド管理](/docs/grid-management/grid-management)を参照してください。
+現在のグリッド構成の詳細については、[グリッド管理](/docs/grid-management)を参照してください。
 
 ### 7. Browser Type is not Supported
 
@@ -159,7 +162,7 @@ Testimは、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 * ブラウザがグリッド上に存在することを確認します。存在しない場合は、追加のヘルプについてグリッドプロバイダーに連絡できます。
-* IE、Edge、Firefox、Safariブラウザは、[seleniumモードで実行](doc:the-command-line-cli#mode-selenium)する必要があります。CLIに「--mode selenium」が含まれていることを確認してください。
+* IE、Edge、Firefox、Safariブラウザは、[seleniumモードで実行](/docs/the-command-line-cli#mode-selenium)する必要があります。CLIに「--mode selenium」が含まれていることを確認してください。
 
 ### 8. Page is not Available
 
@@ -172,10 +175,10 @@ Testimは、次のような異なる警告タイプを識別します。
 
 **どうすればよいか？**
 
-* テストの[ベースURL](/docs/running-tests/base-url)が正しいことを確認します。
+* テストの[ベースURL](/docs/base-url)が正しいことを確認します。
 * リモートグリッドで実行している場合は、テスト環境がグリッドからアクセス可能であることを確認します。
-  * **内部サーバー/localhost:** [トンネル](https://help.testim.io/docs/dedicated-run-tunnel)を有効にするために連絡してください。
-  * **制限付きのパブリック環境（VPN/Geolocation）:** カスタム/サードパーティグリッドのIPをホワイトリストに追加するか、Testimグリッドユーザーの場合は[TestimグリッドIP](https://help.testim.io/docs/testim-grid-ips)をホワイトリストに追加してください。
+  * **内部サーバー/localhost:** [トンネル](/docs/dedicated-run-tunnel)を有効にするために連絡してください。
+  * **制限付きのパブリック環境（VPN/Geolocation）:** カスタム/サードパーティグリッドのIPをホワイトリストに追加するか、Testimグリッドユーザーの場合は[TestimグリッドIP](/docs/testim-grid-ips)をホワイトリストに追加してください。
 
 ### 9. Failed to Set Text
 
@@ -204,7 +207,7 @@ Testimは、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 * テストを手動で実行して、ターゲット要素がクリックできることを確認します。
-* クリックステップの前に短い[「スリープステップ」](https://help.testim.io/docs/wait-for#sleep-web)または[「待機ステップ」](https://help.testim.io/docs/wait-for)を追加して、ページが完全に読み込まれ、クリック/テキスト設定イベントがトリガーされる準備ができていることを確認します。
+* クリックステップの前に短い[「スリープステップ」](/docs/wait-for#sleep-web)または[「待機ステップ」](/docs/wait-for)を追加して、ページが完全に読み込まれ、クリック/テキスト設定イベントがトリガーされる準備ができていることを確認します。
 * テキスト設定/クリックステップのプロパティを更新して、「Native Events」を許可/削除します。
 
 ### 11. Concurrency Limit Reached
@@ -217,7 +220,7 @@ Testimは、次のような異なる警告タイプを識別します。
 
 **どうすればよいか？**
 
-* テストに使用可能なグリッドの数を増やします（[グリッド管理](/docs/grid-management/grid-management)を参照）。
+* テストに使用可能なグリッドの数を増やします（[グリッド管理](/docs/grid-management)を参照）。
 * 並列で実行されているテストの数を減らします。
 
 ### 12. Test is Too Long (Time Out)
@@ -231,7 +234,7 @@ Testimは、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 * テストのステップ数を減らします。
-* 必要に応じてデフォルトのテストタイムアウト（10分）を上書きします: [https://help.testim.io/docs/the-command-line-cli#test-timeout](https://help.testim.io/docs/the-command-line-cli#test-timeout)
+* 必要に応じてデフォルトのテストタイムアウト（10分）を上書きします: [/docs/the-command-line-cli#test-timeout](/docs/the-command-line-cli#test-timeout)
 
 ### 13. API Step Failed
 
@@ -246,8 +249,8 @@ APIステップが失敗すると、API呼び出しの誤った結果により�
 **どうすればよいか？**
 
 * エンドポイントURLを手動で確認します。
-* API呼び出しに追加のコードを実行し、検証エラーを表示して問題を特定するのに役立てます（[APIテスト](/docs/advanced-features/api-testing)を参照）。
-* [APIパラメーター](doc:api-testing#using-parameters)が正しいことを確認します。
+* API呼び出しに追加のコードを実行し、検証エラーを表示して問題を特定するのに役立てます（[APIテスト](/docs/api-testing)を参照）。
+* [APIパラメーター](/docs/api-testing#using-parameters)が正しいことを確認します。
 * ステータスコード0（CORS）のために失敗した場合は、「Send via webpage」チェックボックスの選択を解除する必要があります。これにより、API呼び出しがブラウザコンテキストの**外部**で送信され、CORS制限がバイパスされます。
 
 ## テスト警告タイプ
@@ -272,7 +275,7 @@ APIステップが失敗すると、API呼び出しの誤った結果により�
 
 テスト失敗の原因を特定するのに役立つ4つの主なトラブルシューティング手順があります。
 
-* スクリーンショットの比較: 成功した元のテストと最近失敗したテストのスクリーンショットを比較することで、失敗の原因となったUIの変更を特定できます。詳細については、[サイドバイサイドスクリーンショットの比較](/docs/results/compare-side-by-side-screenshots)を参照してください。
-* 失敗したステップのDOMの確認: ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップのDOMの表示によるデバッグ](https://help.testim.io/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
-* コンソールログ: エラーメッセージや警告、情報などのコンソールレベルの情報を表示します。詳細については、[コンソールログ](/docs/results/network-logs-copy)を参照してください。
-* ネットワークログ: ネットワーク接続とリソースのダウンロードまたはアップロードを追跡します。このログは、リソースが期待どおりに転送されていることを確認する必要がある場合に使用されます。詳細については、[ネットワークログ](/docs/results/network-logs)を参照してください。
+* スクリーンショットの比較: 成功した元のテストと最近失敗したテストのスクリーンショットを比較することで、失敗の原因となったUIの変更を特定できます。詳細については、[サイドバイサイドスクリーンショットの比較](/docs/compare-side-by-side-screenshots)を参照してください。
+* 失敗したステップのDOMの確認: ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップのDOMの表示によるデバッグ](/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
+* コンソールログ: エラーメッセージや警告、情報などのコンソールレベルの情報を表示します。詳細については、[コンソールログ](/docs/network-logs-copy)を参照してください。
+* ネットワークログ: ネットワーク接続とリソースのダウンロードまたはアップロードを追跡します。このログは、リソースが期待どおりに転送されていることを確認する必要がある場合に使用されます。詳細については、[ネットワークログ](/docs/network-logs)を参照してください。

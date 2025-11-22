@@ -3,12 +3,15 @@ title: 'コンソールログ'
 description: 'テスト実行中のコンソールログの確認方法について説明します。ステップレベルとテストレベルでの表示方法を学びます。'
 category: '結果'
 order: 5
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/network-logs-copy'
 keywords:
-  - testim
-  - network-logs-copy
-  - results
   - コンソールログ
+  - テストログ
+  - エラーログ
+  - ログレベル
+  - ステップログ
+  - テスト結果
 ---
 コンソールログには、システムの確認、エラー、通知情報が含まれます。テスト実行中、コンソールログはテスト結果の一部として表示されます。コンソールログは、ステップレベルまたはテストレベルで表示できます。
 
@@ -29,7 +32,7 @@ keywords:
 >
 > 画面の左右の矢印をクリックすることで、前後のステップのリクエスト結果を表示できます。
 
-![](/images/results/network-logs-copy/63aeaeb-consoletest.gif)
+![ステップレベルのコンソールログ画面](/images/results/network-logs-copy/63aeaeb-consoletest.gif)
 
 ## テストレベルでのコンソールログの表示
 
@@ -44,4 +47,4 @@ keywords:
 5. 横3点メニューをクリックし、**コンソールログを表示**をクリックします。
 6. 各ステップで取得したいログ詳細のレベル(verbose、error、warning、またはinfo)でフィルタリングしたり、ログテキストに一致する文字列を入力してフィルタリングしたりできます。
 
-![](/images/results/network-logs-copy/2c4ec40-consollog.gif)
+![テストレベルのコンソールログ画面](/images/results/network-logs-copy/2c4ec40-consollog.gif)

@@ -3,12 +3,15 @@ title: 'テスト実行PDFレポート'
 description: 'テスト実行結果をPDFレポートとしてエクスポートする方法について説明します。3種類のレポート形式から選択できます。'
 category: '結果'
 order: 15
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/test-run-pdf-report'
 keywords:
-  - testim
-  - test-run-pdf-report
-  - results
+  - テスト結果レポート
   - PDFレポート
+  - スクリーンショット
+  - 失敗ステップ
+  - レポート共有
+  - メール送信
 ---
 テスト実行の結果をPDFレポートとしてエクスポートし、メールで送信できます。レポートには以下の3つのバージョンがあります:
 
@@ -33,10 +36,10 @@ keywords:
 
 1. テスト実行後、テスト画面で3点メニューをクリックし、**PDF実行レポートを生成**を選択します。
 
-   ![](/images/results/test-run-pdf-report/1ff2d09-2024-08-08_16-38-55.png)
+   ![テスト画面のPDFレポート生成メニュー](/images/results/test-run-pdf-report/1ff2d09-2024-08-08_16-38-55.png)
 2. 以下のいずれかを選択します:
 
-   ![](/images/results/test-run-pdf-report/fb19aab-2024-08-08_16-40-29.png)
+   ![PDFレポートの出力オプション選択画面](/images/results/test-run-pdf-report/fb19aab-2024-08-08_16-40-29.png)
 
    1. **失敗ステップのスクリーンショット(推奨)** - 失敗したステップのスクリーンショットのみが含まれます。これにより、問題を迅速に特定できます。
    2. **すべてのスクリーンショット** - テスト内のすべてのステップのスクリーンショットが含まれます。
@@ -52,10 +55,10 @@ keywords:
 
 1. テスト実行後、テスト実行画面で、関連するテストを右クリックし、**PDF実行レポートを生成**を選択します。
 
-   ![](/images/results/test-run-pdf-report/74be35f-2024-08-08_16-52-25.png)
+   ![テスト実行画面からのPDFレポート生成](/images/results/test-run-pdf-report/74be35f-2024-08-08_16-52-25.png)
 2. 以下のいずれかを選択します:
 
-   ![](/images/results/test-run-pdf-report/fb19aab-2024-08-08_16-40-29.png)
+   ![PDFレポートの出力オプション選択画面](/images/results/test-run-pdf-report/fb19aab-2024-08-08_16-40-29.png)
 
    1. **失敗ステップのスクリーンショット(推奨)** - 失敗したステップのスクリーンショットのみが含まれます。これにより、問題を迅速に特定できます。
    2. **すべてのスクリーンショット** - テスト内のすべてのステップのスクリーンショットが含まれます。

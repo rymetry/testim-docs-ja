@@ -3,13 +3,16 @@ title: 'テスト実行'
 description: '過去のテスト実行の統計を表示するTest Runs画面。Counted RunsとLocal Editor Runs、フィルター、グラフ、CSV出力、失敗タグ付け。'
 category: '結果'
 order: 10
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/test-runs'
 keywords:
-  - testim
-  - test-runs
-  - results
   - テスト実行
-  - 統計
+  - 実行統計
+  - Counted Runs
+  - Local Editor Runs
+  - フィルター
+  - グラフ
+  - CSVエクスポート
 ---
 
 過去のテスト実行の統計を表示します。
@@ -25,21 +28,21 @@ keywords:
 
 * メインメニューで、**Runs > Test runs**をクリックします。
 
-![](/images/results/test-runs/f2c9226-testrunsscreen.png)
+![Test Runs画面の一覧ビュー](/images/results/test-runs/f2c9226-testrunsscreen.png)
 
 * **Execution Runs**画面（**Runs => Executions**）から、実行を選択し、テストを右クリックして、**Test history**オプションを選択します。
 
-![](/images/results/test-runs/dfeed2f-executions.gif)
+![Execution Runs画面からTest Runsを開く操作](/images/results/test-runs/dfeed2f-executions.gif)
 
 ## Test Runs画面の要素
 
 Test Runs画面には、選択したフィルターに従って、特定のテスト/すべてのテストの最後の実行に関する統計が表示されます。特定のテストからこの画面に移動すると、そのテストのみの統計が表示されます。特定のテスト実行をクリックすると、テストエディター内でそのテスト実行が開き、ドリルダウンしてテスト実行の詳細（例:各ステップのスクリーンショットと時間）を確認できます。
 
-![](/images/results/test-runs/db5dab5-testrunswithcallouts.png)
+![Test Runs画面の要素説明付きスクリーンショット](/images/results/test-runs/db5dab5-testrunswithcallouts.png)
 
 ### 集計統計
 
-![](/images/results/test-runs/3a186c8-stats.png)
+![集計統計セクションの例](/images/results/test-runs/3a186c8-stats.png)
 
 集計統計セクションには、すべての実行の結果の次の要約が表示されます。
 
@@ -55,19 +58,19 @@ Test Runs画面には、選択したフィルターに従って、特定のテ�
 
 フィルターをクリックし、事前定義されたオプションのいずれかを選択するか、Customを選択して特定の開始日と終了日を指定します。
 
-![](/images/results/test-runs/0672e47-timefilter.png)
+![期間フィルターの選択画面](/images/results/test-runs/0672e47-timefilter.png)
 
 ### 検索
 
 検索クエリを入力して、一致するテスト名を持つテスト結果を検索します。
 
-![](/images/results/test-runs/52b1e01-search.png)
+![テスト名での検索ボックス](/images/results/test-runs/52b1e01-search.png)
 
 ### 詳細フィルター
 
 **Advanced Filters**ボタンをクリックして、**Filter Test Runs**ペインを開きます。
 
-![](/images/results/test-runs/0d27b84-advancedfilters.png)
+![Advanced Filtersボタンとペイン](/images/results/test-runs/0d27b84-advancedfilters.png)
 
 詳細フィルターペインには、次のフィルターがあります。
 
@@ -78,7 +81,7 @@ Test Runs画面には、選択したフィルターに従って、特定のテ�
 * **Browser** - テスト実行で使用されたブラウザを選択します。（Webのみ）
 * **Test Owner** - テストの該当する所有者を選択します。テストの所有者は、必ずしもテストを実行したユーザーではありません。
 
-このフィルター表示の保存について詳しくは、[フィルター表示の保存](/docs/test-management/saving-a-filtered-view)を参照してください。
+このフィルター表示の保存について詳しくは、[フィルター表示の保存](/docs/saving-a-filtered-view)を参照してください。
 
 ## 実行グラフ
 
@@ -88,7 +91,7 @@ Test Runs画面には、選択したフィルターに従って、特定のテ�
 * 赤のバー - 不合格\
   バーにカーソルを合わせると、その詳細が表示されます。
 
-![](/images/results/test-runs/221ad29-graph.png)
+![実行グラフのバー表示](/images/results/test-runs/221ad29-graph.png)
 
 ## CSVダウンロード
 
@@ -96,13 +99,13 @@ Test Runs画面には、選択したフィルターに従って、特定のテ�
 
 CSVをダウンロードするには、**CSV Download**ボタンをクリックして、保存先を選択します。
 
-![](/images/results/test-runs/c7e1e19-download.png)
+![CSV Downloadボタン](/images/results/test-runs/c7e1e19-download.png)
 
 ## テスト失敗のタグ付け
 
-**Tag Test Failure**ボタンをクリックして、以下のリストにあるすべての失敗した実行に失敗タイプをタグ付けします。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures)を参照してください。
+**Tag Test Failure**ボタンをクリックして、以下のリストにあるすべての失敗した実行に失敗タイプをタグ付けします。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/tag-remote-runs-failures)を参照してください。
 
-![](/images/results/test-runs/1084b14-tag.PNG)
+![Tag Test Failureボタンの位置](/images/results/test-runs/1084b14-tag.PNG)
 
 ## テスト実行の詳細
 
@@ -209,7 +212,7 @@ CSVをダウンロードするには、**CSV Download**ボタンをクリック�
    </td>
    <td style="text-align: left;">
     実行に追加された失敗タグ。失敗タグを追加するには、「Tag test failure」リンクをクリックします。詳細については、
-    <a href="/docs/results/tag-remote-runs-failures">
+    <a href="/docs/tag-remote-runs-failures">
      失敗した実行への失敗タイプのタグ付け
     </a>
     を参照してください。
@@ -244,13 +247,12 @@ CSVをダウンロードするには、**CSV Download**ボタンをクリック�
  </tbody>
 </table>
 
-
 ## リトライの表示
 
 テスト実行にいくつかのリトライがあった場合、リトライの結果を表示できます。リトライを伴うテスト実行には、ステータスアイコンに黄色の(!)マークが付きます。\
-リトライとその設定方法について詳しくは、[こちら](https://help.testim.io/docs/the-command-line-cli#failed-test-retries)を参照してください。
+リトライとその設定方法について詳しくは、[こちら](/docs/the-command-line-cli#failed-test-retries)を参照してください。
 
-![](/images/results/test-runs/47577e0-retries.png)
+![リトライがあるテスト実行の表示例](/images/results/test-runs/47577e0-retries.png)
 
 :fa-arrow-right: **特定の実行のすべてのリトライ結果を表示するには:**
 
@@ -258,7 +260,7 @@ CSVをダウンロードするには、**CSV Download**ボタンをクリック�
 2. 「Test retries」アイコンをクリックします
 3. 表示したい結果を開きます
 
-![](/images/results/test-runs/ce29e63-testretries.gif)
+![Test retriesアイコンからリトライ結果を確認](/images/results/test-runs/ce29e63-testretries.gif)
 
 > 📘
 >
