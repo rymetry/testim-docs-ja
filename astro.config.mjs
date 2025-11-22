@@ -9,12 +9,45 @@ import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkCalloutDirectives from '@microflash/remark-callout-directives';
+import { visit, SKIP } from 'unist-util-visit';
 
 import react from '@astrojs/react';
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
 config();
+
+// テーブルをレスポンシブ対応のdivでラップするrehypeプラグイン
+function rehypeWrapTable() {
+  return (tree) => {
+    visit(tree, { type: 'element', tagName: 'table' }, (node, index, parent) => {
+      // 安全性チェック強化
+      if (!parent || typeof index !== 'number' || parent.type !== 'element') {
+        return;
+      }
+
+      // 二重ラップ防止（より厳密なチェック）
+      const parentClasses = parent.properties?.className;
+      if (
+        parent.tagName === 'div' && 
+        Array.isArray(parentClasses) && 
+        parentClasses.includes('overflow-x-auto')
+      ) {
+        return;
+      }
+
+      // テーブルをラップ
+      parent.children[index] = {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['overflow-x-auto', 'my-8'] },
+        children: [node],
+      };
+      
+      return SKIP;
+    });
+  };
+}
 
 // Basic認証が有効な場合はSSR、無効な場合はStatic
 const isAuthEnabled = process.env.BASIC_AUTH_ENABLED === 'true';
@@ -54,6 +87,7 @@ export default defineConfig({
           className: 'heading-link',
         },
       }],
+      rehypeWrapTable,
     ],
     shikiConfig: {
       theme: 'dracula',

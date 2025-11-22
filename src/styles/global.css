@@ -48,7 +48,7 @@
 
 @layer components {
   .docs-prose {
-    @apply text-slate-700;
+    @apply text-slate-700 break-words;
   }
   .docs-prose h1 {
     @apply mt-0 text-3xl font-semibold text-slate-900;
@@ -99,17 +99,21 @@
   .docs-prose blockquote {
     @apply mt-6 rounded-2xl border border-blue-300 bg-blue-50 px-6 py-5 text-sm text-blue-950 shadow-sm;
   }
-  .docs-prose blockquote p {
+  .docs-prose blockquote p:not(:first-child) {
     @apply mt-4;
-  }
-  .docs-prose blockquote p:first-child {
-    margin-top: 0;
   }
   .docs-prose blockquote p + p {
     @apply mt-3;
   }
   .docs-prose blockquote strong {
     @apply font-semibold text-blue-950;
+  }
+
+  /* メディア要素のレスポンシブ対応 */
+  .docs-prose img,
+  .docs-prose video,
+  .docs-prose iframe {
+    @apply mt-8 max-w-full h-auto rounded-xl border border-slate-200 shadow-sm;
   }
 
   /* 脚注のスタイル */
@@ -212,19 +216,15 @@
 
   /* テーブルスタイル */
   .docs-prose table {
-    @apply mt-8 w-full rounded-2xl border border-slate-200 text-sm;
+    @apply mt-8 w-full text-sm;
     border-collapse: collapse;
     table-layout: auto;
   }
   .docs-prose table thead {
-    @apply border-b border-slate-200;
-    display: table-header-group;
+    @apply bg-slate-100;
   }
   .docs-prose table thead th {
-    @apply bg-slate-50 px-4 py-3 text-left font-semibold text-slate-900;
-    display: table-cell;
-    white-space: normal;
-    word-wrap: break-word;
+    @apply border border-slate-300 px-4 py-3 text-left font-semibold text-slate-900;
   }
   .docs-prose table thead th:first-child {
     width: 15%;
@@ -241,27 +241,19 @@
     width: 20%;
     min-width: 140px;
   }
-  .docs-prose table tbody {
-    display: table-row-group;
-  }
-  .docs-prose table tr {
-    display: table-row;
-  }
   .docs-prose table tbody tr {
-    @apply border-b border-slate-200;
+    @apply bg-white;
+  }
+  .docs-prose table tbody tr:nth-child(even) {
+    @apply bg-slate-50;
   }
   .docs-prose table tbody td {
-    @apply px-4 py-3 text-slate-700;
-    display: table-cell;
-    white-space: normal;
-    word-wrap: break-word;
+    @apply border border-slate-300 px-4 py-3 text-slate-700;
     vertical-align: top;
   }
   .docs-prose table tbody td:first-child {
+    @apply bg-slate-50;
     font-weight: 500;
-  }
-  .docs-prose table tbody tr:last-child {
-    @apply border-b-0;
   }
   .docs-prose table tbody td ul,
   .docs-prose table tbody td ol {
@@ -362,5 +354,12 @@
   .docs-prose h5,
   .docs-prose h6 {
     scroll-margin-top: var(--anchor-offset); /* sticky header + 余白に合わせる */
+  }
+
+  /* モバイルでのテーブル最適化 */
+  @media (max-width: 768px) {
+    .docs-prose table thead th {
+      width: auto;
+    }
   }
 }
