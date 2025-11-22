@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 98個
-- ✅   翻訳のみ完了: 185個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 99個
+- ✅   翻訳のみ完了: 184個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -198,8 +198,8 @@
 
 ## Test Execution(テスト実行制御)
 
-- ✅ https://help.testim.io/docs/play-from-here
-- ✅ https://help.testim.io/docs/rerun-locally-with-the-same-params
+- ✅🔍 https://help.testim.io/docs/play-from-here
+- ✅🔍 https://help.testim.io/docs/rerun-locally-with-the-same-params
 
 ## Results(結果)
 
@@ -251,7 +251,7 @@
 
 ## Integrations（統合）
 
-- ✅ https://help.testim.io/docs/integrations-overview
+- ✅🔍 https://help.testim.io/docs/integrations-overview
 
 ## CI Integrations（CI統合）
 

@@ -1,14 +1,21 @@
 ---
 title: 'ここから再生'
-description: 'テストを特定の位置から実行する「ここから再生」機能について説明します。部分的なテスト検証に便利な機能です。'
+description: 'テストを特定の位置から実行する「ここから再生」機能の使い方と注意点を説明します。テスト全体を実行せずに一部だけを検証したい場合に便利な機能です。'
 category: 'テスト実行制御'
 order: 1
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/play-from-here'
 keywords:
-  - testim
-  - play-from-here
-  - test-execution
   - ここから再生
+  - テスト実行
+  - 部分実行
+  - デバッグ
+  - ステップ再生
+  - テストエディタ
+  - 実行ポイント
+  - Testim
+  - 再生メニュー
+  - ブレークポイント
 ---
 特定の位置からテストを実行する方法を学びます。
 
@@ -22,6 +29,6 @@ keywords:
 
 1. 実行を開始したい位置の矢印をクリックします。
 2. **ここから再生**ボタンをクリックします。\
-   ![](/images/test-execution/play-from-here/5039ce9-playfromhere.png)
+   ![ここから再生のスクリーンショット](/images/test-execution/play-from-here/5039ce9-playfromhere.png)
 
 セットアップステップの実行後、この位置からテストの実行が開始されます。
