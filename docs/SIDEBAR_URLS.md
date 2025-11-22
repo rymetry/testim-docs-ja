@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 129個
-- ✅   翻訳のみ完了: 154個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 148個
+- ✅   翻訳のみ完了: 135個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -229,25 +229,25 @@
 
 ## Test Management（テスト管理）
 
-- ✅ https://help.testim.io/docs/test-management-overview
-- ✅ https://help.testim.io/docs/test-list
-- ✅ https://help.testim.io/docs/managing-tests-and-folders
-- ✅ https://help.testim.io/docs/cloning-tests
-- ✅ https://help.testim.io/docs/shared-steps-library
-- ✅ https://help.testim.io/docs/managing-shared-steps-and-folders
-- ✅ https://help.testim.io/docs/dependencies-and-ordering-of-tests
-- ✅ https://help.testim.io/docs/labels
-- ✅ https://help.testim.io/docs/revisions
-- ✅ https://help.testim.io/docs/shared-configuration
-- ✅ https://help.testim.io/docs/configuration-library-mobile
-- ✅ https://help.testim.io/docs/test-plans
-- ✅ https://help.testim.io/docs/test-plans-mobile
-- ✅ https://help.testim.io/docs/test-suites
-- ✅ https://help.testim.io/docs/locators-auto-improve
-- ✅ https://help.testim.io/docs/bug-reporting
-- ✅ https://help.testim.io/docs/saving-a-filtered-view
-- ✅ https://help.testim.io/docs/mobile-apps
-- ✅ https://help.testim.io/docs/view-local-connected-mobile-devices
+- ✅🔍 https://help.testim.io/docs/test-management-overview
+- ✅🔍 https://help.testim.io/docs/test-list
+- ✅🔍 https://help.testim.io/docs/managing-tests-and-folders
+- ✅🔍 https://help.testim.io/docs/cloning-tests
+- ✅🔍 https://help.testim.io/docs/shared-steps-library
+- ✅🔍 https://help.testim.io/docs/managing-shared-steps-and-folders
+- ✅🔍 https://help.testim.io/docs/dependencies-and-ordering-of-tests
+- ✅🔍 https://help.testim.io/docs/labels
+- ✅🔍 https://help.testim.io/docs/revisions
+- ✅🔍 https://help.testim.io/docs/shared-configuration
+- ✅🔍 https://help.testim.io/docs/configuration-library-mobile
+- ✅🔍 https://help.testim.io/docs/test-plans
+- ✅🔍 https://help.testim.io/docs/test-plans-mobile
+- ✅🔍 https://help.testim.io/docs/test-suites
+- ✅🔍 https://help.testim.io/docs/locators-auto-improve
+- ✅🔍 https://help.testim.io/docs/bug-reporting
+- ✅🔍 https://help.testim.io/docs/saving-a-filtered-view
+- ✅🔍 https://help.testim.io/docs/mobile-apps
+- ✅🔍 https://help.testim.io/docs/view-local-connected-mobile-devices
 
 ## Integrations（統合）
 

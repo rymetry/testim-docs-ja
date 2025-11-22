@@ -3,13 +3,15 @@ title: 'テストのクローン作成'
 description: '現在のプロジェクトまたは他のプロジェクトにテストをクローンします'
 category: 'テスト管理'
 order: 3
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/cloning-tests'
 keywords:
-  - testim
-  - cloning-tests
-  - test-management
   - テストクローン
+  - テストコピー
   - プロジェクト間コピー
+  - 共有ステップの複製
+  - ブランチ設定
+  - テスト構成の引き継ぎ
 ---
 
 現在のプロジェクトまたは他のプロジェクトにテストをクローンします
@@ -174,22 +176,19 @@ keywords:
  </tbody>
 </table>
 
-
-<br />
-
 :fa-arrow-right:**テストをクローンするには:**
 
 1. **Test Library** 画面（Test List > Tests）で、テスト名をクリックして選択します。**CTRL/CMD キー**を押しながら、目的のテストのそれぞれをクリックすることで、複数のテストを選択できます。テストライブラリにフォルダーがない場合は、キーボードで **CTRL/CMD キー + A** を押すことで、すべてのテストを選択することもできます。
 2. 上部の **Clone** ボタンをクリックします。
 
-   ![](/images/test-management/cloning-tests/0d3e5cb-clonetop.png)
+   ![選択したテストに対して上部のCloneボタンをクリックするTest Library画面](/images/test-management/cloning-tests/0d3e5cb-clonetop.png)
 
    テストを右クリックして、**Clone** オプションを選択することもできます。
 
-   ![](/images/test-management/cloning-tests/7baf98b-clonerightclick.png)
+   ![テストを右クリックしてCloneオプションを選択するコンテキストメニュー](/images/test-management/cloning-tests/7baf98b-clonerightclick.png)
 3. **Clone Test** ダイアログで、**Target Project**（ターゲットプロジェクト）を選択します。デフォルトでは現在のプロジェクトが選択されています。
 
-   ![](/images/test-management/cloning-tests/cd000a2-image_1.png)
+   ![Clone Testダイアログでターゲットプロジェクトを選択する画面](/images/test-management/cloning-tests/cd000a2-image_1.png)
 4. **Tests to be cloned** で、クローンしたいテストを選択します。
 5. **Confirm** をクリックします。\
    テストが選択したプロジェクトにクローンされます。Testim は元のテストの名前を使用してテストに名前を付けます。例: 「Copy of [元のテスト名]」。

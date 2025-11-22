@@ -3,13 +3,16 @@ title: '共有ステップとフォルダーの管理'
 description: '共有ステップライブラリでのフォルダーの作成、移動、名前変更、削除の方法について説明します。'
 category: 'テスト管理'
 order: 6
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/managing-shared-steps-and-folders'
 keywords:
-  - testim
-  - managing-shared-steps-and-folders
-  - test-management
+  - 共有ステップ管理
   - 共有ステップ
   - フォルダー管理
+  - フォルダー作成
+  - フォルダー移動
+  - フォルダー名変更
+  - フォルダー削除
 ---
 
 ## 新しいフォルダーの作成
@@ -22,7 +25,7 @@ keywords:
 
 **New Folder**ウィンドウが開きます。
 
-![](/images/test-management/managing-shared-steps-and-folders/ad17465-Testim_042_r.png)
+![共有ステップ用の新しいフォルダー名を入力するNew Folderダイアログ](/images/test-management/managing-shared-steps-and-folders/ad17465-Testim_042_r.png)
 
 2. **New name**フィールドに、フォルダーの名前を入力します。
 
@@ -49,7 +52,7 @@ keywords:
 
 **Move To**ウィンドウが開きます。
 
-![](/images/test-management/managing-shared-steps-and-folders/9b7bee5-Testim_059_r.png)
+![Move Toダイアログで共有ステップの移動先フォルダーを選択する画面](/images/test-management/managing-shared-steps-and-folders/9b7bee5-Testim_059_r.png)
 
 3. ターゲットフォルダーをクリックします。
 
@@ -72,7 +75,7 @@ keywords:
 
 **Edit Name**ウィンドウが開きます。
 
-![](/images/test-management/managing-shared-steps-and-folders/e01dde7-Testim_060_r.png)
+![Edit Nameダイアログで共有ステップフォルダーの新しい名前を入力する画面](/images/test-management/managing-shared-steps-and-folders/e01dde7-Testim_060_r.png)
 
 3. **New name**フィールドに、ファイルまたはフォルダーの新しい名前を入力します。
 4. **OK**をクリックします。\
@@ -93,7 +96,7 @@ keywords:
 
 **Delete**確認ウィンドウが開きます。
 
-![](/images/test-management/managing-shared-steps-and-folders/14401e7-Testim_061_r.png)
+![共有ステップフォルダー削除時のDelete確認ダイアログ](/images/test-management/managing-shared-steps-and-folders/14401e7-Testim_061_r.png)
 
 3. **Delete**をクリックします。\
    フォルダーが削除されます。

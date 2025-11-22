@@ -3,13 +3,15 @@ title: 'ロケーター: 自動改善'
 description: 'ロケータースコアが低下したときに自動的に改善される機能について説明します。'
 category: 'テスト管理'
 order: 15
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/locators-auto-improve'
 keywords:
-  - testim
-  - locators-auto-improve
-  - test-management
-  - ロケーター
-  - 自動改善
+  - ロケーター自動改善
+  - ロケータースコア
+  - セルフヒーリング
+  - テスト安定性
+  - Revision History
+  - Locatorsパネル
 ---
 
 時間の経過とともに、アプリが変更されると、要素のロケータースコアが低下する可能性があります。ロケータースコアが70%を下回ると、Testimはテストの安定性を向上させるために、そのロケーターを自動的に改善しようとします。ロケータースコアが正常に改善されると、Testimは劣化したロケーターを改善されたロケーターに置き換えます。この置き換えは、以下で説明するように、UI内の3つの異なる場所（*Revision History*パネル、*Locators*パネル、*Test Library*画面）に表示されます。

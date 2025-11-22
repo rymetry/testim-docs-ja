@@ -3,14 +3,15 @@ title: '共有構成'
 description: '複数/すべてのテストで同じテスト構成を使用します'
 category: 'テスト管理'
 order: 9
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/shared-configuration'
 keywords:
-  - testim
-  - shared-configuration
-  - test-management
   - 共有構成
   - テスト構成
   - 構成ライブラリ
+  - テスト環境設定
+  - ブラウザー構成
+  - CLI実行設定
 ---
 
 複数/すべてのテストで同じテスト構成を使用します
@@ -28,18 +29,13 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 * **Step Timeout** - テストがタイムアウトするミリ秒単位の時間
 * **Step Delay** - Testim がテストの各ステップ間で自動的に一時停止する時間
 
-![](/images/test-management/shared-configuration/6d34e75-webconfiglibrary.png)
+![Configuration LibraryにWebテスト構成の一覧が表示された画面](/images/test-management/shared-configuration/6d34e75-webconfiglibrary.png)
 
-* **Configuration Library** – 構成ライブラリで新しい構成を作成できます。この構成は、その構成で設定されたテストで実行されるすべてのステップに適用されます（CLI またはスケジューラー経由で実行されるテストを含む）。テスト構成の詳細については、[Setting the Test Configuration](doc:how-to-record-a-test#section-step-3-setting-the-test-configuration) を参照してください。CLI の詳細については、[Command line interface: Test Config](doc:the-command-line-cli#section-test-config) を参照してください。スケジューラーの詳細については、[Scheduler](/docs/running-tests/scheduler) を参照してください。
+* **Configuration Library** – 構成ライブラリで新しい構成を作成できます。この構成は、その構成で設定されたテストで実行されるすべてのステップに適用されます（CLI またはスケジューラー経由で実行されるテストを含む）。テスト構成の詳細については、[Setting the Test Configuration](doc:how-to-record-a-test#section-step-3-setting-the-test-configuration) を参照してください。CLI の詳細については、[Command line interface: Test Config](doc:the-command-line-cli#section-test-config) を参照してください。スケジューラーの詳細については、[Scheduler](/docs/scheduler) を参照してください。
 * **Setup Step in the Test Editor** – すべてのテストには、テストの Setup ステップのプロパティパネルからアクセスできる独自のデフォルト構成があります。テストのデフォルト構成で設定された構成パラメーターは、テストが異なる構成で CLI またはスケジューラーから実行されない限り適用されます。
 
-> 📘
->
-> テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command line interface](/docs/running-tests/the-command-line-cli) を参照してください。
-
-> 🚧
->
-> テスト構成に対応しないシステムでテストをローカルで実行すると、テストは利用可能な構成で実行され、警告メッセージが表示されます。
+> 📘 テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command line interface](/docs/the-command-line-cli) を参照してください。
+> 🚧 テスト構成に対応しないシステムでテストをローカルで実行すると、テストは利用可能な構成で実行され、警告メッセージが表示されます。
 
 ## 構成ライブラリでテスト構成を作成および変更する
 
@@ -51,17 +47,17 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/bde6165-Testim_502b.png)
+![左側メニューからRuns > Configuration Listを開きConfiguration Libraryを表示している画面](/images/test-management/shared-configuration/bde6165-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. **+ Create New** ボタンをクリックします。
 
-![](/images/test-management/shared-configuration/bc7aa0f-Testim_503a.png)
+![Configuration Libraryで+ Create Newボタンをクリックする画面](/images/test-management/shared-configuration/bc7aa0f-Testim_503a.png)
 
 **Add New Config** 設定が表示されます。
 
-![](/images/test-management/shared-configuration/b2d6d80-Testim_504_r.png)
+![Add New ConfigダイアログでブラウザーやOSなど基本設定を入力する画面](/images/test-management/shared-configuration/b2d6d80-Testim_504_r.png)
 
 3. 基本オプションを次のように入力します:
 
@@ -72,7 +68,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 4. **Advanced** をクリックします。\
    詳細構成オプションが表示されます。\
-   ![](/images/test-management/shared-configuration/eac30c0-advancednative.jpg)
+   ![テスト構成の詳細設定セクションでNative Eventsの動作を設定する画面](/images/test-management/shared-configuration/eac30c0-advancednative.jpg)
 
 5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](doc:how-to-record-a-test#section-test-configuration-parameters) を参照してください。
 
@@ -80,11 +76,11 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 7. **Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
 
-   ![](/images/test-management/shared-configuration/93bbedb-3845ef1-image_1.png)
+   ![BeforeとAfter hooksの設定を編集するテスト構成詳細画面](/images/test-management/shared-configuration/93bbedb-3845ef1-image_1.png)
 
    ネイティブオーバーライドでテストを実行した後、テスト実行サマリーにネイティブまたは非ネイティブオーバーライドが適用されたかどうかの表示が表示されます。以下の例では、**Native click event** オプションが選択されています。
 
-   ![](/images/test-management/shared-configuration/1a9eceb-028f074-image.png)
+   ![新しいテスト構成の内容を確認しChangeボタンで保存する画面](/images/test-management/shared-configuration/1a9eceb-028f074-image.png)
 
 8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/before-after-hooks) を参照してください。
 
@@ -97,18 +93,18 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/9a234a1-Testim_502b.png)
+![Configuration Libraryで構成リストを表示し編集対象の行を選択している画面](/images/test-management/shared-configuration/9a234a1-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. クローンしたいテスト構成の行をクリックします。\
    コンテキストツールが表示されます。
 
-![](/images/test-management/shared-configuration/b2ffc88-Testim_590a.png)
+![選択したテスト構成の行にコンテキストツールが表示されている画面](/images/test-management/shared-configuration/b2ffc88-Testim_590a.png)
 
 3. **Clone** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/c9eac99-Testim_590b.png)
+![テスト構成のコンテキストツールバーに表示されたRenameアイコン](/images/test-management/shared-configuration/c9eac99-Testim_590b.png)
 
 > 📘
 >
@@ -116,7 +112,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Clone Configuration** オプションが表示されます。
 
-![](/images/test-management/shared-configuration/53958a2-Testim_591_r.png)
+![Edit Nameダイアログで構成の新しい名前を入力する画面](/images/test-management/shared-configuration/53958a2-Testim_591_r.png)
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
 5. **Clone** をクリックします。\
@@ -128,14 +124,14 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/15c8c6f-Testim_502b.png)
+![Runs > Configuration Listから構成一覧を開いたConfiguration Library画面](/images/test-management/shared-configuration/15c8c6f-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. 変更したいテスト構成の行をダブルクリックします。\
    **Edit Config** 設定が表示されます。
 
-![](/images/test-management/shared-configuration/7ef3c8f-editconfig.jpg)
+![Edit Config画面でブラウザーや解像度など構成詳細を編集する画面](/images/test-management/shared-configuration/7ef3c8f-editconfig.jpg)
 
 3. 基本オプションを次のように変更します:
 
@@ -147,7 +143,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 4. **Advanced** をクリックします。\
    詳細構成オプションが表示されます。
 
-![](/images/test-management/shared-configuration/6780665-editconfig2.jpg)
+![Edit Config画面でNative Eventsやその他の詳細オプションを変更する画面](/images/test-management/shared-configuration/6780665-editconfig2.jpg)
 
 5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](doc:how-to-record-a-test#section-test-configuration-parameters) を参照してください。
 6. **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはデフォルトでネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。
@@ -162,18 +158,18 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/efa52dd-Testim_502b.png)
+![Configuration Libraryから名前変更したい構成の行を選択する画面](/images/test-management/shared-configuration/efa52dd-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. 名前を変更したいテスト構成の行をクリックします。\
    コンテキストツールが表示されます。
 
-![](/images/test-management/shared-configuration/815c253-Testim_590a.png)
+![選択された構成行にコンテキストツールが表示されているConfiguration Library画面](/images/test-management/shared-configuration/815c253-Testim_590a.png)
 
 3. **Rename** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/cd437c4-Testim_590d.png)
+![コンテキストツールバーのRenameアイコンを強調表示した画面](/images/test-management/shared-configuration/cd437c4-Testim_590d.png)
 
 > 📘
 >
@@ -181,7 +177,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Edit Name** 設定が表示されます。
 
-![](/images/test-management/shared-configuration/3519685-Testim_593_r.png)
+![Edit Name設定で構成の新しい名前を入力するダイアログ](/images/test-management/shared-configuration/3519685-Testim_593_r.png)
 
 4. **New name** フィールドに、この構成の新しい名前を入力します。
 5. **OK** をクリックします。\
@@ -193,18 +189,18 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/3dcbaab-Testim_502b.png)
+![Configuration Libraryから削除したい構成の行を選択している画面](/images/test-management/shared-configuration/3dcbaab-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. 削除したいテスト構成の行をクリックします。\
    コンテキストツールが表示されます。
 
-![](/images/test-management/shared-configuration/2917eb3-Testim_590a.png)
+![選択された構成に対してDeleteアイコンを使用できる状態を示すコンテキストツールバー](/images/test-management/shared-configuration/2917eb3-Testim_590a.png)
 
 3. **Delete** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/ee65ecc-Testim_590c.png)
+![コンテキストツールバーのDeleteアイコンを強調表示した画面](/images/test-management/shared-configuration/ee65ecc-Testim_590c.png)
 
 > 📘
 >
@@ -212,7 +208,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 確認ダイアログが表示されます。
 
-![](/images/test-management/shared-configuration/ac8e414-Testim_592_r.png)
+![構成削除の確認内容が表示されたDelete確認ダイアログ](/images/test-management/shared-configuration/ac8e414-Testim_592_r.png)
 
 4. **Delete** をクリックします。\
    構成が **Configuration Library** から削除されます。
@@ -226,13 +222,13 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 1. Runs > Configuration List に移動します。
 2. アクションメニューの **Advanced Filters** ボタンをクリックします。
 
-![](/images/test-management/shared-configuration/8b46862-configadvancedfilters.png)
+![Configuration LibraryのアクションメニューでAdvanced Filtersボタンをクリックする画面](/images/test-management/shared-configuration/8b46862-configadvancedfilters.png)
 
 3. **Filter Configuration** パネルから希望するフィルターを選択し、**Apply** ボタンをクリックします。
 
-![](/images/test-management/shared-configuration/cd53734-configapplyfilters.png)
+![Filter Configurationパネルで条件を設定しApplyボタンをクリックする画面](/images/test-management/shared-configuration/cd53734-configapplyfilters.png)
 
-スケジュール実行のリストがフィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
+スケジュール実行のリストがフィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/saving-a-filtered-view) を参照してください。
 
 ## テストエディターでテスト構成を作成および変更する
 
@@ -242,19 +238,19 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. テストの **Setup** ステップ（最初のステップ）にカーソルを合わせ、**Show properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/9bdfe00-Testim_594a.png)
+![Test EditorのSetupステップにカーソルを合わせてShow propertiesアイコンをクリックする画面](/images/test-management/shared-configuration/9bdfe00-Testim_594a.png)
 
 右側に **Properties** パネルが開きます。
 
-![](/images/test-management/shared-configuration/db2fc84-Testim_595_r.png)
+![右側に表示されたPropertiesパネルでConfigurationセクションが開いている画面](/images/test-management/shared-configuration/db2fc84-Testim_595_r.png)
 
 2. **Configuration** セクションで、**Edit Configuration** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/21b9d84-Testim_596a_r.png)
+![ConfigurationセクションのEdit Configurationアイコンをクリックする画面](/images/test-management/shared-configuration/21b9d84-Testim_596a_r.png)
 
 **Edit Configuration** 設定が表示されます。
 
-![](/images/test-management/shared-configuration/9ebae2c-editconfig3.jpg)
+![Edit ConfigurationウィンドウでブラウザーやOSなどテスト構成を詳細に設定する画面](/images/test-management/shared-configuration/9ebae2c-editconfig3.jpg)
 
 3. オプションを次のように変更します:
 
@@ -268,15 +264,15 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 4. 戻る矢印をクリックして、**Edit Configuration** 設定を閉じます。
 
-![](/images/test-management/shared-configuration/8e94901-Testim_600a_r.png)
+![Edit Configuration画面から戻る矢印を押してテストエディターに戻る操作画面](/images/test-management/shared-configuration/8e94901-Testim_600a_r.png)
 
 5. **Save** をクリックします。
 
-![](/images/test-management/shared-configuration/d7f9a8b-Testim_594b.png)
+![テストエディターで構成変更後にSaveボタンをクリックする画面](/images/test-management/shared-configuration/d7f9a8b-Testim_594b.png)
 
 **Change Message** ウィンドウが開きます。
 
-![](/images/test-management/shared-configuration/990d848-Testim_601_r.png)
+![Change Messageウィンドウで今回の変更内容をMessage欄に入力する画面](/images/test-management/shared-configuration/990d848-Testim_601_r.png)
 
 6. **Message** フィールドに、必要に応じて、このバージョンで行われた変更の説明を入力します。
 7. **OK** をクリックします。\

@@ -3,13 +3,15 @@ title: 'リビジョン'
 description: 'テストの変更履歴を管理し、以前のバージョンに戻す方法について説明します。'
 category: 'テスト管理'
 order: 9
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/revisions'
 keywords:
-  - testim
-  - revisions
-  - test-management
   - リビジョン
   - バージョン管理
+  - テスト履歴
+  - 変更履歴
+  - ロールバック
+  - ロケーター自動改善
 ---
 
 テストに変更を加えて保存するたびに、変更前のテストのバージョンが自動的に保存されます。これらのテストの各バージョンはリビジョンと呼ばれます。\
@@ -36,7 +38,7 @@ keywords:
 
 ## ロケーターの自動改善プロセス後の自動リビジョン
 
-Testimは、劣化したロケーターを自動改善されたロケーターに置き換えた後、自動的に新しいリビジョンを作成します。新しいリビジョンは、**Revision History**パネルで「Testim auto improve」というラベルが付けられます。詳細については、[ロケーター: 自動改善](/docs/test-management/locators-auto-improve)を参照してください。また、テスト内のどのステップが自動改善されたかを表示することもできます。
+Testimは、劣化したロケーターを自動改善されたロケーターに置き換えた後、自動的に新しいリビジョンを作成します。新しいリビジョンは、**Revision History**パネルで「Testim auto improve」というラベルが付けられます。詳細については、[ロケーター: 自動改善](/docs/locators-auto-improve)を参照してください。また、テスト内のどのステップが自動改善されたかを表示することもできます。
 
 ![2454](/images/test-management/revisions/4cf4abe-Testim_478a.png)
 
