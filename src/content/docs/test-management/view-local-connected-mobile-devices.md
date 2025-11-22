@@ -1,7 +1,7 @@
 ---
 title: 'ローカル接続モバイルデバイスの表示'
 description: 'Tricentis Mobile Agentに接続されたローカルモバイルデバイスの表示方法について説明します。'
-category: 'テスト管理'
+category: 'デバイス管理'
 order: 19
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/view-local-connected-mobile-devices'

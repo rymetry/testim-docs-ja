@@ -1,7 +1,7 @@
 ---
 title: 'Copilotライセンス管理'
 description: '企業オーナーがCopilotライセンスを管理し、ユーザーにライセンスシートを割り当てる方法について説明します。'
-category: 'project-user-management'
+category: '管理者設定'
 order: 6
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/copilot-license-management'

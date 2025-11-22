@@ -1,7 +1,7 @@
 ---
 title: 'CLI前提条件'
 description: 'Testim CLIを使用するために必要なシステム要件とコンポーネントについて説明します。Node.jsとTestim CLIの互換性情報を提供します。'
-category: 'cli-api'
+category: 'セッティング'
 order: 2
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/cli-prerequisites'

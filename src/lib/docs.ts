@@ -6,7 +6,28 @@ import { getCollection } from 'astro:content';
 export type DocEntry = CollectionEntry<'docs'>;
 
 // ナビゲーションのカテゴリ表示順を固定する。未登録のカテゴリは末尾に回る。
-const CATEGORY_ORDER = ['概要', 'はじめに', 'ガイド'];
+const CATEGORY_ORDER = [
+  '概要',
+  'はじめに',
+  'テスト作成',
+  'ステップとテスト編集',
+  '高度な機能',
+  'テスト実行',
+  '結果',
+  'デバッグ',
+  'テスト管理',
+  'モバイルアプリ',
+  'デバイス管理',
+  'インテグレーション',
+  'セッティング',
+  '管理者設定',
+  'TESTOPS',
+  'Salesforceテスト',
+  'Testim拡張機能',
+  'セキュリティ',
+  'ガイド',
+  'Tesim Labs',
+];
 
 export async function getDocs(): Promise<DocEntry[]> {
   const docs = await getCollection('docs');

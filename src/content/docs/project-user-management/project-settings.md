@@ -1,7 +1,7 @@
 ---
 title: 'プロジェクト設定'
 description: 'プロジェクトの一般設定とプルリクエスト設定の変更方法について説明します。プロジェクト名、ベースURL、デフォルト設定、ブランチ保護などを管理します。'
-category: 'project-user-management'
+category: '管理者設定'
 order: 4
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/project-settings'

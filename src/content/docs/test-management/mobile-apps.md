@@ -1,7 +1,7 @@
 ---
 title: 'モバイルアプリ'
 description: 'アップロードされたすべてのアプリのリストを含むモバイルアプリライブラリを管理します'
-category: 'テスト管理'
+category: 'モバイルアプリ'
 order: 18
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/mobile-apps'

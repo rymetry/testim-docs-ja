@@ -1,7 +1,7 @@
 ---
 title: 'シークレット管理'
 description: '機密情報を安全に管理するためのシークレットマネージャーの使用方法について説明します。テスト、設定ファイル、パラメータファイルでのシークレットの利用方法を提供します。'
-category: 'project-user-management'
+category: '管理者設定'
 order: 3
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/secrets'
