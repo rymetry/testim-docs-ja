@@ -385,25 +385,6 @@
     @apply block max-w-full h-auto mx-auto;
   }
 
-  /* ブラウザ対応表（複数ブラウザ実行） */
-  .docs-prose .browser-support-table {
-    table-layout: fixed;
-  }
-  .docs-prose .browser-support-table col.browser-support-col-name {
-    width: 20%;
-    min-width: 140px;
-  }
-  .docs-prose .browser-support-table col.browser-support-col-testim,
-  .docs-prose .browser-support-table col.browser-support-col-selenium,
-  .docs-prose .browser-support-table col.browser-support-col-third {
-    width: 26%;
-    min-width: 140px;
-  }
-  .docs-prose .browser-support-table th:nth-child(n + 2),
-  .docs-prose .browser-support-table td:nth-child(n + 2) {
-    @apply text-center;
-    overflow-wrap: anywhere;
-  }
 
   /* Callout（情報パネル）スタイル */
   .docs-prose .callout {
@@ -503,24 +484,14 @@
     .docs-prose .run-types-table {
       table-layout: auto;
     }
-    .docs-prose .browser-support-table {
-      table-layout: auto;
-    }
     .docs-prose .run-types-table col.run-types-col-type,
-  .docs-prose .run-types-table col.run-types-col-illustration,
-  .docs-prose .run-types-table col.run-types-col-location,
-  .docs-prose .run-types-table col.run-types-col-quota,
-  .docs-prose .run-types-table col.run-types-col-notes {
-    width: auto;
+    .docs-prose .run-types-table col.run-types-col-illustration,
+    .docs-prose .run-types-table col.run-types-col-location,
+    .docs-prose .run-types-table col.run-types-col-quota,
+    .docs-prose .run-types-table col.run-types-col-notes {
+      width: auto;
       min-width: 0;
     }
-    .docs-prose .browser-support-table col.browser-support-col-name,
-  .docs-prose .browser-support-table col.browser-support-col-testim,
-  .docs-prose .browser-support-table col.browser-support-col-selenium,
-  .docs-prose .browser-support-table col.browser-support-col-third {
-    width: auto;
-    min-width: 0;
-  }
     .docs-prose .md-table-2cols th,
     .docs-prose .md-table-2cols td,
     .docs-prose .md-table-3cols th,

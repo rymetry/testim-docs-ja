@@ -21,13 +21,7 @@ keywords:
 
 **テストを実行できるブラウザと OS は？**
 
-<table class="browser-support-table">
- <colgroup>
-  <col class="browser-support-col-name"/>
-  <col class="browser-support-col-testim"/>
-  <col class="browser-support-col-selenium"/>
-  <col class="browser-support-col-third"/>
- </colgroup>
+<table class="md-table md-table-4cols">
  <thead>
   <tr>
    <th>
@@ -101,9 +95,8 @@ keywords:
     はい - Windows
    </td>
   </tr>
- </tbody>
+</tbody>
 </table>
-
 
 ## テストを複数のブラウザで実行する方法は？
 

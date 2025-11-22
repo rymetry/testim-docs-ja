@@ -1,13 +1,20 @@
 ---
 title: 'Salesforceテストの作成'
-description: '原文: https://help.testim.io/docs/create-a-salesforce-test'
+description: 'Salesforce環境に接続し、ペルソナやモックネットワーク、テスト設定などを利用してSalesforceテストを作成・実行する手順を説明します。'
 category: 'Salesforceテスト'
 order: 7
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/create-a-salesforce-test'
 keywords:
-  - testim
-  - create-a-salesforce-test
-  - salesforce-testing
+  - Salesforceテスト
+  - テスト作成
+  - ペルソナ
+  - モックネットワーク
+  - HARファイル
+  - テスト設定
+  - 共有構成
+  - 手動ステップ
+  - Salesforceステップ
 ---
 Salesforceテストは、接続されたSalesforce環境に接続し、テストしたいユーザージャーニーを実行します。テストには一連のステップが含まれ、それぞれがSalesforceアプリケーションとの別のインタラクションを表します。
 
@@ -16,8 +23,8 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 テストにステップを追加するには2つの方法があります:
 
 - **ステップを手動で追加** - ステップを手動で追加できます。ステップは次のカテゴリに整理されています:
-  - **Salesforceステップ** - Salesforceアプリケーションの使用に固有のステップ。Salesforceステップは、Salesforceアプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforceアプリケーション内でフォームなどのSalesforceオブジェクトを表示および設定したりできます。詳細については、[Salesforceステップ](https://help.testim.io/docs/salesforce-steps)を参照してください
-  - **事前定義ステップ** - Webアプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](https://help.testim.io/docs/steps#manual-steps)を参照してください
+  - **Salesforceステップ** - Salesforceアプリケーションの使用に固有のステップ。Salesforceステップは、Salesforceアプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforceアプリケーション内でフォームなどのSalesforceオブジェクトを表示および設定したりできます。詳細については、[Salesforceステップ](/docs/salesforce-steps)を参照してください
+  - **事前定義ステップ** - Webアプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](/docs/steps#manual-steps)を参照してください
   - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/groups/shareable-steps)を参照してください。
 - **[ステップの記録](doc:create-a-salesforce-test#recording-steps)** - Recordボタンをクリックすると、Salesforceアプリケーション（ベースURL）を表示するブラウザが開きます。入力、クリックなどのすべてのインタラクションは、自動的にテストのステップに変換されます。ステップの記録は、Salesforce環境で広範なカスタマイズが行われたためにSalesforceステップを使用できない場合にも役立ちます。
 
@@ -31,7 +38,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 ペルソナ画面（下の例を参照）では、各ペルソナ（行）に対して、各環境（列）の異なるログイン認証情報を設定できます。Salesforceテストを作成する際、**Salesforce Loginステップ**で自分が定義した任意のペルソナを選択できます。このペルソナには、テストが最初に作成された環境用に設定されたログイン認証情報があります。ただし、後でこのテストの環境を変更する場合（[ブランチのSalesforce環境の変更](doc:tta-for-salesforce-branch-management#changing-the-salesforce-environment-of-a-branch)を参照）、ペルソナ画面の設定に基づいて、システムが新しく選択された環境の関連認証情報を自動的に割り当てるため、Loginステップで異なるログイン認証情報を選択する必要はありません。したがって、別の環境を使用する場合にテストを書き直す必要はありません。
 
-![](/images/salesforce-testing/create-a-salesforce-test/89ceae3-personastable.png)
+![Salesforceペルソナ設定の表](/images/salesforce-testing/create-a-salesforce-test/89ceae3-personastable.png)
 
 # 前提条件
 
@@ -43,11 +50,11 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 :fa-arrow-right:**新しいテストを作成するには:**
 
-1. Testim for Salesforceアカウントで、**Settings > Salesforce**に移動し、画面右上の**New test**をクリックします。
-   ![](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
+1. Testim for Salesforceアカウントで、**Settings > Salesforce**に移動し、画面右上の**New test**をクリックします。  
+   ![新しいSalesforceテスト作成ボタン](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
    デフォルトの**Setup Step**で新しいテストが表示されます。
-2. **Show Properties**アイコンをクリックし、**Properties Panel**で目的の設定を編集することで、ステップのプロパティを変更できます。
-   ![](/images/salesforce-testing/create-a-salesforce-test/1ca3180-properties.png)
+2. **Show Properties**アイコンをクリックし、**Properties Panel**で目的の設定を編集することで、ステップのプロパティを変更できます。  
+   ![Salesforceテストのプロパティペイン](/images/salesforce-testing/create-a-salesforce-test/1ca3180-properties.png)
 
 **Setup Step**には次のプロパティが含まれます:
 
@@ -119,7 +126,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
    </td>
    <td style="text-align: left;">
     Testimは、テストの一部としてテスト対象アプリケーション（AUT）のネットワークトラフィックをモックする機能を提供します。テスト実行中、実際の呼び出しを実行する代わりに、システムは呼び出しをインターセプトし、モックされたレスポンスを返します。詳細については、
-    <a href="/docs/mock-network-responses/mock-network-responses">
+    <a href="/docs/mock-network-responses">
      ネットワークレスポンスのモック
     </a>
     を参照してください。
@@ -167,7 +174,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
      Edit
     </strong>
     ボタンをクリックして新しい設定を作成します。詳細については、
-    <a href="https://help.testim.io/docs/shared-configuration#creating-and-modifying-test-configurations-in-the-test-editor">
+    <a href="/docs/shared-configuration#create-a-shared-configuration">
      テスト設定
     </a>
     を参照してください
@@ -203,9 +210,8 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
    <td style="text-align: left;">
    </td>
   </tr>
- </tbody>
+</tbody>
 </table>
-
 
 # 手動ステップの追加
 
@@ -215,14 +221,14 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 1. **Setup step**の後、マウスを+ボタンの上に移動します。
 2. **Add Steps**ボタンをクリックします。
-3. 目的のタブ - [Salesforceステップ](/docs/salesforce-steps/salesforce-steps)、事前定義ステップ、または共有ステップをクリックします。
+3. 目的のタブ - [Salesforceステップ](/docs/salesforce-steps)、事前定義ステップ、または共有ステップをクリックします。
 4. ステップを検索するには、検索ボックスにその名前を入力し始めてリストを絞り込みます。
-5. リストから目的のステップをクリックします。
-   [Salesforceステップ](/docs/salesforce-steps/salesforce-steps)の場合、**Properties**ペインが右側に表示されます。ペインには2つのタブが含まれます:
+5. リストから目的のステップをクリックします。  
+   [Salesforceステップ](/docs/salesforce-steps)の場合、**Properties**ペインが右側に表示されます。ペインには2つのタブが含まれます:
    **Object** - ステップのSalesforceオブジェクトプロパティを表示します。これらのプロパティには、設定が必要な必須プロパティが含まれる場合があります。
    **Properties** - ステップの動作に関連する追加のオプションプロパティを表示します。
 
-![](/images/salesforce-testing/create-a-salesforce-test/2752956-manualstep.gif)
+![Salesforce手動ステップを追加する操作](/images/salesforce-testing/create-a-salesforce-test/2752956-manualstep.gif)
 
 > 📘 ベストプラクティス - 変数命名規則
 >
@@ -234,13 +240,12 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 - **Salesforceモード** - このモードは、レコーダーのクラウドアイコン（下記参照）で示され、レコーダーはSalesforceステップを実行し、単一のステップ内で複数のアクションの実行を可能にします。このモードは、Salesforce環境が広範囲にカスタマイズされている場合は機能しない可能性があります。このような場合、Webモードにフォールバックして、すべての個別のアクション/ステップを記録することが可能です。このモードを使用して作成されたステップは、クラウドアイコン（下記参照）でマークされます。Webモードに戻すには、レコーダーのクラウドアイコンをクリックします。
 
- ![](/images/salesforce-testing/create-a-salesforce-test/9381461-salesforce_mode.png)
-
-![](/images/salesforce-testing/create-a-salesforce-test/de463f1-salesforcestep.png)
+ ![Salesforceモードのレコーダーアイコン](/images/salesforce-testing/create-a-salesforce-test/9381461-salesforce_mode.png)
+![Salesforceモードで記録されたステップ](/images/salesforce-testing/create-a-salesforce-test/de463f1-salesforcestep.png)
 
 - **Webモード** - これはレコーダーの通常モードで、レコーダー上の打ち消し線付きのクラウドアイコン（下記参照）で示されます。このモードでは、すべてのインタラクション（クリック、スクロール、テキスト追加など）が個別のステップで表されます。Salesforceモードに戻すには、レコーダーのクラウドアイコンをクリックします。
 
-![](/images/salesforce-testing/create-a-salesforce-test/6dfd53b-nosalesforcemode.png)
+![Webモードのレコーダーアイコン](/images/salesforce-testing/create-a-salesforce-test/6dfd53b-nosalesforcemode.png)
 
 > 📘 Salesforceモードをオフにする必要がある場合
 >
@@ -252,8 +257,8 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 2. テストに[Log in](/docs/salesforce-steps/sfdc-step-login)ステップを追加します。
 3. テストを実行して環境にログインし、追加のステップを記録できるようにします。
 4. テストで、目的のステップの隣にある**+**ボタンの上にマウスを移動し、**Record**ボタンをクリックします。レコーダーは、青いクラウドアイコンで示される**Salesforceモード**で自動的に有効になります。これは、アプリケーションとのインタラクションが、関連する場合にSalesforceステップを生成することを意味します。
-5. ![](/images/salesforce-testing/create-a-salesforce-test/1a9ac07-afterlogin.png)
+5. ![ログイン完了後のSalesforce画面](/images/salesforce-testing/create-a-salesforce-test/1a9ac07-afterlogin.png)
 6. Salesforceアプリケーションとやり取りしてステップを生成します。Salesforceステップはクラウドアイコンで示されます。
 
-![](/images/salesforce-testing/create-a-salesforce-test/90023bd-salesforcesteps.png)
+![Salesforceステップが並んだテストフロー](/images/salesforce-testing/create-a-salesforce-test/90023bd-salesforcesteps.png)
 7. テストの作成が完了したら、**Save**をクリックします。
