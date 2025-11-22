@@ -32,11 +32,11 @@ Testim は、これらの不安定なテストを見つけ、そのステータ�
 2. **Filter** ボタンをクリックします。
 3. **Filter Test** ペインの **Show only flaky tests** で、Yes チェックボックスを選択します。
 
-![](/images/testops-management/flaky-tests/af759d0-Jan-28-2021_11-20-25.gif "Jan-28-2021 11-20-25.gif")
+![](/images/testops-management/flaky-tests/af759d0-Jan-28-2021_11-20-25.gif)
 
 再実行で成功したテストは、「Last Runs」列に黄色のマークが表示されます。
 
-![](/images/testops-management/flaky-tests/03bc19a-Untitled.png "Untitled.png")
+![](/images/testops-management/flaky-tests/03bc19a-Untitled.png)
 
 ## 不安定なテストのステータス変更
 

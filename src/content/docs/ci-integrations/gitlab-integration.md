@@ -12,7 +12,7 @@ keywords:
   - yaml設定
 ---
 
-![](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png "gitlab-logo-gray-rgb.png")
+![](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png)
 
 **YAMLファイル**\
 GitLabとTestimを統合するには、YAMLファイルに以下の行を追加する必要があります:

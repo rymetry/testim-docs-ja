@@ -31,7 +31,7 @@ keywords:
 
 1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
 
-![ステップ追加位置の矢印記号](/images/validations/checkbox-and-radio-button-validation/0d8957c-Testim_130a.png "Testim 130a.png")
+![ステップ追加位置の矢印記号](/images/validations/checkbox-and-radio-button-validation/0d8957c-Testim_130a.png)
 
 アクションのオプションが表示されます。
 
@@ -43,7 +43,7 @@ keywords:
 
 3. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png "Testim 133a.png")
+![Play Scenarioボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png)
 
 4. もう一度 :fa-caret-right: **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
@@ -62,11 +62,11 @@ keywords:
 7. AUT ウィンドウで、検証したいチェックボックスまたはラジオボタンを特定し、クリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![作成されたチェックボックス検証ステップ](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png "Testim 136.png")
+![作成されたチェックボックス検証ステップ](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png)
 
 8. 作成したステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![Show Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png "Testim 137a.png")
+![Show Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png)
 
 右側に **Properties パネル** が開きます。\
 9\. **Expected status** セクションで、検証したいステータスに応じて **Checked**（デフォルト）または **Unchecked** をクリックします。
@@ -85,7 +85,7 @@ keywords:
 2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![ステップのShow Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png "Testim 139a.png")
+![ステップのShow Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png)
 
 右側に **Properties** パネルが表示されます。\
 4\. **Target checkbox/radio button** のサムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。

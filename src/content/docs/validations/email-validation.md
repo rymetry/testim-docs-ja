@@ -101,21 +101,21 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![ステップ追加](/images/validations/email-validation/856a8f8-Testim_298a.png "Testim 298a.png")
+![ステップ追加](/images/validations/email-validation/856a8f8-Testim_298a.png)
 
 アクションのオプションが表示されます。
 
-![アクションオプション](/images/validations/email-validation/fd77ed2-Testim_283a_r.png "Testim 283a_r.png")
+![アクションオプション](/images/validations/email-validation/fd77ed2-Testim_283a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).  
    **Predefined steps** メニューが開きます。
 
-![ステップ選択](/images/validations/email-validation/0ab4994-Testim_270_r2.png "Testim 270_r2.png")
+![ステップ選択](/images/validations/email-validation/0ab4994-Testim_270_r2.png)
 
 3. **Actions** をクリックします。  
    **Actions** メニューが展開されます。
 
-![メールアドレス生成設定](/images/validations/email-validation/4502efd-Testim_299_r.png "Testim 299_r.png")
+![メールアドレス生成設定](/images/validations/email-validation/4502efd-Testim_299_r.png)
 
 4. メニューをスクロールして **Generate email address** を選択します。
 
@@ -127,11 +127,11 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 5. 新しく作成されたステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![ステップ追加位置](/images/validations/email-validation/fb10c5b-Testim_300a.png "Testim 300a.png")
+![ステップ追加位置](/images/validations/email-validation/fb10c5b-Testim_300a.png)
 
 右側に **Properties** パネルが表示されます。
 
-![変数名設定](/images/validations/email-validation/4952255-Testim_301_r.png "Testim 301_r.png")
+![変数名設定](/images/validations/email-validation/4952255-Testim_301_r.png)
 
 6. **Variable name** フィールドに、一時的メールアドレスを保持する変数の名前を入力します。例えば、`emailAddress` という値を使用します。
 7. **Variable scope** フィールドで、変数を渡せるスコープを指定します：
@@ -206,21 +206,21 @@ Validate emailステップを設定する方法は2つあります：
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png "Testim 302a.png")
+![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
 アクションのオプションが表示されます。
 
-![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png "Testim 283a_r.png")
+![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).  
    **Predefined steps** メニューが開きます。
 
-![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png "Testim 270_r2.png")
+![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
 3. Click on **Validations**.  
    **Validations** メニューが展開されます。
 
-![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png "Testim 303_r.png")
+![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
 4. Scroll down through the menu and select **Validate email**.
 
@@ -230,7 +230,7 @@ Validate emailステップを設定する方法は2つあります：
 
 **Add Step** ウィンドウが表示されます。
 
-![パラメータ設定](/images/validations/email-validation/667ffe5-Testim_215_r.png "Testim 215_r.png")
+![パラメータ設定](/images/validations/email-validation/667ffe5-Testim_215_r.png)
 
 5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
@@ -278,7 +278,7 @@ Validate emailステップを設定する方法は2つあります：
 
 _Validate email_ ステップを使用して、アプリが生成してTestim生成メールアドレスに送信したメールの件名の内容を検証できます。
 
-![メール検証コード例](/images/validations/email-validation/120320e-Testim_306.png "Testim 306.png")
+![メール検証コード例](/images/validations/email-validation/120320e-Testim_306.png)
 
 **Example Code:**
 
@@ -295,7 +295,7 @@ return false;
 
 _Validate email_ ステップを使用して、メールの本文内のハイパーリンクを検索し、見つかった各リンクのテキストコンポーネントとリンクコンポーネントを返すことができます。
 
-![メール検証結果](/images/validations/email-validation/df541fc-Testim_307.png "Testim 307.png")
+![メール検証結果](/images/validations/email-validation/df541fc-Testim_307.png)
 
 **Example Code:**
 
@@ -330,21 +330,21 @@ exportsTest.emailLink = emailLinks[0];
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png "Testim 302a.png")
+![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
 アクションのオプションが表示されます。
 
-![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png "Testim 283a_r.png")
+![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).  
    **Predefined steps** メニューが開きます。
 
-![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png "Testim 270_r2.png")
+![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
 3. Click on **Validations**.  
    **Validations** メニューが展開されます。
 
-![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png "Testim 303_r.png")
+![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
 4. Scroll down through the menu and select **Validate email**.
 
@@ -354,7 +354,7 @@ exportsTest.emailLink = emailLinks[0];
 
 **Add Step** ウィンドウが表示されます。
 
-![パラメータ設定](/images/validations/email-validation/667ffe5-Testim_215_r.png "Testim 215_r.png")
+![パラメータ設定](/images/validations/email-validation/667ffe5-Testim_215_r.png)
 
 5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 

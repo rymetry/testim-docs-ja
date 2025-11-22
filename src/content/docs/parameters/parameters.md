@@ -3,11 +3,19 @@ title: 'パラメータ'
 description: '原文: https://help.testim.io/docs/parameters'
 category: 'パラメータ'
 order: 1
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/parameters'
 keywords:
-  - testim
-  - parameters
-  - parameters
+  - Testim
+  - パラメータ
+  - 変数
+  - データ駆動テスト
+  - 設定
+  - スコープ
+  - 定義方法
+  - 変数
+  - データ駆動テスト
+  - 設定ファイル
 ---
 パラメータの使い方をまとめて解説します。
 
@@ -15,13 +23,13 @@ keywords:
 
 ## パラメータの定義方法
 
-* [ステッププロパティパネルのパラメータ](/docs/parameters/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメータを定義できます。
-* [グループのパラメータ](/docs/parameters/parameters-for-groups) - グループにパラメータを定義し、他テストでも再利用できます。
-* [パラメータのエクスポート](/docs/parameters/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディタで定義したパラメータを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
-* [JSON パラメータファイル](/docs/parameters/json-parameters-file-parameters) - JSONファイルで定義し、実行時に受け渡します。
-* [設定ファイルのパラメータ](/docs/parameters/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
-* [テストデータ](/docs/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
-* 値生成ステップ - [日付の生成](https://help.testim.io/docs/generating-a-date#adding-a-generate-date-step)、[メールアドレスの生成](https://help.testim.io/docs/email-validation#generating-a-temporary-email-address)、[値の抽出](https://help.testim.io/docs/extract-text)、[乱数の生成](https://help.testim.io/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
+* [ステッププロパティパネルのパラメータ](/docs/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメータを定義できます。
+* [グループのパラメータ](/docs/parameters-for-groups) - グループにパラメータを定義し、他テストでも再利用できます。
+* [パラメータのエクスポート](/docs/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディタで定義したパラメータを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
+* [JSON パラメータファイル](/docs/json-parameters-file-parameters) - JSONファイルで定義し、実行時に受け渡します。
+* [設定ファイルのパラメータ](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
+* [テストデータ](/docs/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
+* 値生成ステップ - [日付の生成](/docs/generating-a-date#adding-a-generate-date-step)、[メールアドレスの生成](/docs/email-validation#generating-a-temporary-email-address)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
 
 ## 事前定義（標準）パラメータ
 
@@ -37,7 +45,7 @@ keywords:
 
 データ駆動テストでの動的なベースURLとしても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。
 
-詳細は [Base URL](/docs/running-tests/base-url) を参照してください。
+詳細は [Base URL](/docs/base-url) を参照してください。
 
 ### Testim Iterator パラメータ
 
@@ -47,11 +55,11 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 >
 > このパラメータのスコープはグループのループ内に限定されます。
 
-詳細は [https://help.testim.io/docs/loops#using-the-loop-iterator-parameter](https://help.testim.io/docs/loops#using-the-loop-iterator-parameter) を参照してください。
+詳細は [https://help.testim.io/docs/loops#using-the-loop-iterator-parameter](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
 
 ### Network Requests パラメータ
 
-`networkRequests` は、実行中に発生したネットワークリクエストをオブジェクト配列として収集します。ネットワーク検証ステップ内でのみ利用できます。詳細は [ネットワーク検証の追加](/docs/validations/add-network-validation) を参照してください。
+`networkRequests` は、実行中に発生したネットワークリクエストをオブジェクト配列として収集します。ネットワーク検証ステップ内でのみ利用できます。詳細は [ネットワーク検証の追加](/docs/add-network-validation) を参照してください。
 
 ## パラメータの使用方法
 
@@ -65,9 +73,9 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 
 * プロパティパネルの任意のテキスト入力欄 - 例: テキスト検証の「期待値」、ステップの実行条件（要素テキスト）の「期待値」など。以下の入力欄は非対応です：Variable Name／Description／Date Format
 * プロパティパネルの Param セクションにある式入力欄 - ここに別のパラメータ名を設定して、値を連鎖させることもできます。
-* 任意の関数エディタ - 一部のステップ（例: カスタム検証）やカスタム条件のエディタ内で参照可能です。詳細は [高度なJSエディタ](/docs/advanced-features/advanced-js-editor) を参照してください。
-* [API ステップ](https://help.testim.io/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。Request URL／Header／Body／Assertion／Function editor
+* 任意の関数エディタ - 一部のステップ（例: カスタム検証）やカスタム条件のエディタ内で参照可能です。詳細は [高度なJSエディタ](/docs/advanced-js-editor) を参照してください。
+* [API ステップ](/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。Request URL／Header／Body／Assertion／Function editor
 
 ## パラメータを非表示にする
 
-パラメータに機微情報を含む場合は、[非表示パラメータ](/docs/parameters/hidden-parameters) の手順で値の保存・表示を抑制できます。
+パラメータに機微情報を含む場合は、[非表示パラメータ](/docs/hidden-parameters) の手順で値の保存・表示を抑制できます。

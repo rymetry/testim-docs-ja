@@ -35,21 +35,21 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![3845](/images/advanced-features/cookies/9a4e48a-Testim_201a.png "Testim 201a.png")
+![3845](/images/advanced-features/cookies/9a4e48a-Testim_201a.png)
 
 The action options are displayed.
 
-![300](/images/advanced-features/cookies/d3b6f5e-Testim_202a_r.png "Testim 202a_r.png")
+![300](/images/advanced-features/cookies/d3b6f5e-Testim_202a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).\
    The **Predefined steps** menu opens.
 
-![300](/images/advanced-features/cookies/42edd22-Testim_203_r.png "Testim 203_r.png")
+![300](/images/advanced-features/cookies/42edd22-Testim_203_r.png)
 
 3. Click on **Actions**.\
    The Actions menu expands.
 
-![300](/images/advanced-features/cookies/bab0fb0-Testim_204_r.png "Testim 204_r.png")
+![300](/images/advanced-features/cookies/bab0fb0-Testim_204_r.png)
 
 4. Scroll down through the menu and select **Set Cookie**.
 
@@ -57,7 +57,7 @@ The action options are displayed.
 
 The **Set Cookie** screen is shown.
 
-![300](/images/advanced-features/cookies/fd880f8-Testim_205_r.png "Testim 205_r.png")
+![300](/images/advanced-features/cookies/fd880f8-Testim_205_r.png)
 
 5. Ensure the **Create new Cookie** radio button is selected (default).
 6. Enter your desired values in the first four **Cookie Info** fields.
@@ -74,7 +74,7 @@ The **Set Cookie** screen is shown.
 9. Select the **Secure** checkbox if you want your cookie set to Secure.
 10. Click the **back arrow** to return to the main **Editor** window.
 
-![300](/images/advanced-features/cookies/55825e1-Testim_206a_r.png "Testim 206a_r.png")
+![300](/images/advanced-features/cookies/55825e1-Testim_206a_r.png)
 
 When you run your test your cookie will be set.
 
@@ -82,21 +82,21 @@ When you run your test your cookie will be set.
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![3845](/images/advanced-features/cookies/81c33b1-Testim_201a.png "Testim 201a.png")
+![3845](/images/advanced-features/cookies/81c33b1-Testim_201a.png)
 
 The action options are displayed.
 
-![300](/images/advanced-features/cookies/8a64224-Testim_202a_r.png "Testim 202a_r.png")
+![300](/images/advanced-features/cookies/8a64224-Testim_202a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).\
    The **Predefined step**s menu opens.
 
-![300](/images/advanced-features/cookies/9634744-Testim_203_r.png "Testim 203_r.png")
+![300](/images/advanced-features/cookies/9634744-Testim_203_r.png)
 
 3. Click on **Actions**.\
    The Actions menu expands.
 
-![300](/images/advanced-features/cookies/0e28a9c-Testim_204_r.png "Testim 204_r.png")
+![300](/images/advanced-features/cookies/0e28a9c-Testim_204_r.png)
 
 4. Scroll down through the menu and select **Set Cookie**.
 
@@ -104,17 +104,17 @@ The action options are displayed.
 
 The **Set Cookie** screen is shown.
 
-![300](/images/advanced-features/cookies/fc68884-Testim_205_r.png "Testim 205_r.png")
+![300](/images/advanced-features/cookies/fc68884-Testim_205_r.png)
 
 5. Select the **Use cookie parameter** radio button.\
    The **Parameter Name** field is shown.
 
-![3849](/images/advanced-features/cookies/3d4b48c-Testim_218.png "Testim 218.png")
+![3849](/images/advanced-features/cookies/3d4b48c-Testim_218.png)
 
 6. In the **Parameter Name** field, enter the name of a previously created cookie parameter/variable. For more information, see [Getting Cookies using the Get Cookie step](doc:cookies#getting-cookies-using-the-get-cookie-step).
 7. Click the **back arrow** to return to the main **Editor** window.
 
-![3851](/images/advanced-features/cookies/98be8c7-Testim_219a.png "Testim 219a.png")
+![3851](/images/advanced-features/cookies/98be8c7-Testim_219a.png)
 
 When you run your test, your cookie will be set with the current value of the cookie parameter you entered in this step.
 
@@ -126,18 +126,18 @@ Set your cookies in the **Test Data** property of the Setup step if you need you
 
 1. Hover over the **Setup** step (the first step in your test), and click on the **Show Properties** (:fa-cog:) icon.
 
-![3843](/images/advanced-features/cookies/9335a8c-Testim_210a.png "Testim 210a.png")
+![3843](/images/advanced-features/cookies/9335a8c-Testim_210a.png)
 
 The **Test Configuration Properties** panel opens on the right-hand side.
 
-![200](/images/advanced-features/cookies/3866fe4-Testim_211_r2.png "Testim 211_r2.png")
+![200](/images/advanced-features/cookies/3866fe4-Testim_211_r2.png)
 
 > 📘 Alternatively, you can double-click the **Setup** step, or click the **Show step properties** icon in the top right corner of the screen.
 
 2. Scroll down through the options, and click **Test Data**.\
    A JavaScript editor opens.
 
-![3851](/images/advanced-features/cookies/f222a38-Testim_212.png "Testim 212.png")
+![3851](/images/advanced-features/cookies/f222a38-Testim_212.png)
 
 3. In the editor enter the code for setting your cookies.
 
@@ -160,7 +160,7 @@ return {
 
 Click the **back arrow** to return to the main **Editor** window.
 
-![3830](/images/advanced-features/cookies/2dea826-Testim_213a.png "Testim 213a.png")
+![3830](/images/advanced-features/cookies/2dea826-Testim_213a.png)
 
 When you run your test the cookies will be loaded before your page loads.
 
@@ -172,26 +172,26 @@ Set your cookies in a **Custom JavaScript** step if you need your cookies for a 
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the cookies.
 
-![3845](/images/advanced-features/cookies/57fdc2c-Testim_201a.png "Testim 201a.png")
+![3845](/images/advanced-features/cookies/57fdc2c-Testim_201a.png)
 
 The action options are displayed.
 
-![300](/images/advanced-features/cookies/abbdb56-Testim_202a_r.png "Testim 202a_r.png")
+![300](/images/advanced-features/cookies/abbdb56-Testim_202a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).\
    The **Predefined steps** menu opens.
 
-![300](/images/advanced-features/cookies/2042807-Testim_203_r.png "Testim 203_r.png")
+![300](/images/advanced-features/cookies/2042807-Testim_203_r.png)
 
 3. Click on **Actions**.\
    The Actions menu expands.
 
-![300](/images/advanced-features/cookies/bf34029-Testim_204_r.png "Testim 204_r.png")
+![300](/images/advanced-features/cookies/bf34029-Testim_204_r.png)
 
 4. Scroll down through the menu and select **Add custom action**.\
    The **Add Step** window opens.
 
-![300](/images/advanced-features/cookies/f0ba274-Testim_215_r.png "Testim 215_r.png")
+![300](/images/advanced-features/cookies/f0ba274-Testim_215_r.png)
 
 > 📘 Alternatively, you can use the search box at the top of the menu to search for **Add custom action**.
 
@@ -200,7 +200,7 @@ The action options are displayed.
 7. Click **Create Step**.\
    The **JS Editor** opens, and the **Custom Action Properties** panel opens on the right-hand side.
 
-![3851](/images/advanced-features/cookies/17ff9b7-Testim_216.png "Testim 216.png")
+![3851](/images/advanced-features/cookies/17ff9b7-Testim_216.png)
 
 8. In the **editor**, enter code to set your cookies, using the following as an example.
 
@@ -256,25 +256,25 @@ The **Get Cookie** step allows you to get cookies directly from the UI within th
 
 :fa-arrow-right: **To get a cookie using the Get Cookie step:**
 
-![894](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif "Jan-31-2021 06-34-55.gif")
+![894](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif)
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![3851](/images/advanced-features/cookies/182e01a-Testim_207a.png "Testim 207a.png")
+![3851](/images/advanced-features/cookies/182e01a-Testim_207a.png)
 
 The action options are displayed.
 
-![300](/images/advanced-features/cookies/42c6ecf-Testim_202a_r.png "Testim 202a_r.png")
+![300](/images/advanced-features/cookies/42c6ecf-Testim_202a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).\
    The **Predefined steps** menu opens.
 
-![300](/images/advanced-features/cookies/f95fa58-Testim_203_r.png "Testim 203_r.png")
+![300](/images/advanced-features/cookies/f95fa58-Testim_203_r.png)
 
 3. Click on **Actions**.\
    The Actions menu expands.
 
-![300](/images/advanced-features/cookies/ab4f1d0-Testim_204_r.png "Testim 204_r.png")
+![300](/images/advanced-features/cookies/ab4f1d0-Testim_204_r.png)
 
 4. Scroll down through the menu and select **Get Cookie**.
 
@@ -283,11 +283,11 @@ The action options are displayed.
 A “Get Cookie” step is added in the **Editor**.\
 5\. Hover over the newly created step, and click on the **Show Properties** (:fa-cog:) icon.
 
-![3851](/images/advanced-features/cookies/06fb384-Testim_208a.png "Testim 208a.png")
+![3851](/images/advanced-features/cookies/06fb384-Testim_208a.png)
 
 The **Properties** panel opens on the right-hand side.
 
-![300](/images/advanced-features/cookies/e8f327d-Testim_209_r.png "Testim 209_r.png")
+![300](/images/advanced-features/cookies/e8f327d-Testim_209_r.png)
 
 6. Fill in the properties as described below.
 
@@ -312,26 +312,26 @@ You can get cookies without having to use the Get Cookie step by adding a “cus
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![3851](/images/advanced-features/cookies/9e6579b-Testim_220a.png "Testim 220a.png")
+![3851](/images/advanced-features/cookies/9e6579b-Testim_220a.png)
 
 The action options are displayed.
 
-![300](/images/advanced-features/cookies/4daa9d3-Testim_202a_r.png "Testim 202a_r.png")
+![300](/images/advanced-features/cookies/4daa9d3-Testim_202a_r.png)
 
 2. Click on the “**M**” (Testim predefined steps).\
    The **Predefined steps** menu opens.
 
-![300](/images/advanced-features/cookies/ab3aebb-Testim_203_r.png "Testim 203_r.png")
+![300](/images/advanced-features/cookies/ab3aebb-Testim_203_r.png)
 
 3. Click on **Actions**.\
    The Actions menu expands.
 
-![300](/images/advanced-features/cookies/9030d32-Testim_204_r.png "Testim 204_r.png")
+![300](/images/advanced-features/cookies/9030d32-Testim_204_r.png)
 
 4. Scroll down through the menu and select **Add custom action**.\
    The **Add Step** window opens.
 
-![300](/images/advanced-features/cookies/295c84e-Testim_215_r.png "Testim 215_r.png")
+![300](/images/advanced-features/cookies/295c84e-Testim_215_r.png)
 
 > 📘 Alternatively, you can use the search box at the top of the menu to search for **Add custom action**.
 
@@ -340,7 +340,7 @@ The action options are displayed.
 7. Click **Create Step**.\
    The **JS Editor** opens, and the **Custom Action Properties** panel opens on the right-hand side.
 
-![3851](/images/advanced-features/cookies/895c71a-Testim_221.png "Testim 221.png")
+![3851](/images/advanced-features/cookies/895c71a-Testim_221.png)
 
 8. In the **editor**, enter code to get your cookies. The following example gets and prints the value of the cookies named *username* and *password*.
 

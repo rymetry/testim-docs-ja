@@ -108,15 +108,15 @@ console.log("Base URL:" + BASE_URL)
 
 1. 新しいナビゲーションステップを追加する場所で **+** または **矢印** アイコンにマウスをホバーし、**Testim 定義済みステップ** ボタンをクリックします。
 
-![](/images/running-tests/base-url/0fa605c-predefined.jpg "predefined.jpg")
+![](/images/running-tests/base-url/0fa605c-predefined.jpg)
 
 2. **ナビゲーションアクションを追加** を検索してクリックします。
 
-![](/images/running-tests/base-url/10e28bf-nav-step.jpg "nav-step.jpg")
+![](/images/running-tests/base-url/10e28bf-nav-step.jpg)
 
 3. **BASE\_URL** パラメータを使用して URL を入力し、その後に残りの URL パスを入力します。
 
-![](/images/running-tests/base-url/0017136-nav-url.jpg "nav-url.jpg")
+![](/images/running-tests/base-url/0017136-nav-url.jpg)
 
 > 📘
 >
@@ -124,6 +124,6 @@ console.log("Base URL:" + BASE_URL)
 
 Testim は、動的 URL を含むナビゲーションステップを保存します。
 
-![](/images/running-tests/base-url/d14049f-base-url.jpg "base-url.jpg")
+![](/images/running-tests/base-url/d14049f-base-url.jpg)
 
 テストが実行されると、ナビゲーションステップは、テスト実行のベース URL の後に指定されたパスを含む URL に移動します。

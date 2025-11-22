@@ -53,7 +53,7 @@ The duplication level scoring can have one of three colors:
 * **Duplication level reduction** - by accepting the auto-grouping suggestion, the project duplication level will be reduced by the specified number. For example, if the project duplication level is 14% and the specified number is 1%, after accepting the suggestion, the project duplication level will be reduced to 13%.
 * **The number tests and groups** - the number of tests and groups in which the same step sequences were found.  
 
-![](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png "Screen Shot 2021-02-28 at 9.51.19.png")
+![](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png)
 
 2. Click the desired auto-grouping suggestion to view its details.\
    The detailed list of tests and groups that include the duplicate steps is presented in the **Test List** pane.
@@ -62,7 +62,7 @@ The duplication level scoring can have one of three colors:
 
 3. Click on the desired test/group item to view the duplicate step sequences.
 
-![](/images/advanced-features/auto-grouping2/eb1a270-Screen_Shot_2021-02-23_at_6.14.45.png "Screen Shot 2021-02-23 at 6.14.45.png")
+![](/images/advanced-features/auto-grouping2/eb1a270-Screen_Shot_2021-02-23_at_6.14.45.png)
 
 4. To view the duplicate step sequence in the context of the entire test in the Editor screen, click **Open Test** icon. The test will be opened in a new tab with the duplicate steps sequence highlighted.
 
@@ -74,12 +74,12 @@ The duplication level scoring can have one of three colors:
 
 1. In the **Auto-Grouping** pane, select one of the suggestions and then click the **Edit** icon.
 
-![](/images/advanced-features/auto-grouping2/e52ddfd-Dec-06-2020_11-38-33.gif "Dec-06-2020 11-38-33.gif")
+![](/images/advanced-features/auto-grouping2/e52ddfd-Dec-06-2020_11-38-33.gif)
 
 2. Edit the steps you would like to include in the following ways:
    * Add/remove individual steps from the suggested group by selecting/deselecting them.
 
-![](/images/advanced-features/auto-grouping2/ca23e3b-Dec-06-2020_11-41-28.gif "Dec-06-2020 11-41-28.gif")
+![](/images/advanced-features/auto-grouping2/ca23e3b-Dec-06-2020_11-41-28.gif)
 
 * Click **Clear all** to clear all the selections, and select the desired steps for the group.
 
@@ -90,7 +90,7 @@ The duplication level scoring can have one of three colors:
 At any point, you can click **Select original** to revert back to the original selections.\
 After editing a suggestion, the new auto group suggestion will appear with the label **Edited**, and the test list will update based on the edited group.
 
-![](/images/advanced-features/auto-grouping2/52cf745-Screen_Shot_2020-12-06_at_11.45.31.png "Screen Shot 2020-12-06 at 11.45.31.png")
+![](/images/advanced-features/auto-grouping2/52cf745-Screen_Shot_2020-12-06_at_11.45.31.png)
 
 # Filtering auto-grouping suggestions
 
@@ -99,7 +99,7 @@ You can narrow the number of auto-grouping suggestions by filtering them based t
 
 1. In the the **Auto Grouping** pane (black), click on the Filter icon.
 
-![](/images/advanced-features/auto-grouping2/de78d7f-filter.png "filter.png")
+![](/images/advanced-features/auto-grouping2/de78d7f-filter.png)
 
 The **FILTER & SORT STEPS DUPLICATIONS** screen is displayed with the following options:
 
@@ -108,12 +108,12 @@ The **FILTER & SORT STEPS DUPLICATIONS** screen is displayed with the following 
 * Suite Name - only the tests in the selected Suites will be displayed.
 * Group Name - only the tests that include the selected groups will be displayed.
 
-![](/images/advanced-features/auto-grouping2/282da88-Feb-28-2021_10-23-47.gif "Feb-28-2021 10-23-47.gif")
+![](/images/advanced-features/auto-grouping2/282da88-Feb-28-2021_10-23-47.gif)
 
 2. Click the relevant filter option.\
    A list of items is displayed.
 
-![](/images/advanced-features/auto-grouping2/4b25c4d-testname.PNG "testname.PNG")
+![](/images/advanced-features/auto-grouping2/4b25c4d-testname.PNG)
 
 3. Click **Show all**to display all available items.
 4. Select the relevant items.
@@ -131,7 +131,7 @@ In the **FILTER & SORT STEPS DUPLICATIONS** screen, you can select how to sort t
 * **Number of matches - Ascending** - suggestions that affect the most number of tests/shared steps will appear at the top
 * **Number of matches - Descending** - suggestions that affect the least number of tests/shared steps will appear at the top.
 
-![](/images/advanced-features/auto-grouping2/dde76be-Screen_Shot_2021-02-28_at_10.17.23.png "Screen Shot 2021-02-28 at 10.17.23.png")
+![](/images/advanced-features/auto-grouping2/dde76be-Screen_Shot_2021-02-28_at_10.17.23.png)
 
 # Creating the shared group based on the suggestion
 
@@ -144,14 +144,14 @@ In the **FILTER & SORT STEPS DUPLICATIONS** screen, you can select how to sort t
    * **New Branch** - a new branch will be created. Enter a name for the new branch in the Branch Name field.
    * **Current Branch** - if you are using a branch that is not the Master branch, the tests with the new shared group will be saved into the current branch.
 
-![](/images/advanced-features/auto-grouping2/5ac239d-Screen_Shot_2020-10-27_at_12.11.32.png "Screen Shot 2020-10-27 at 12.11.32.png")
+![](/images/advanced-features/auto-grouping2/5ac239d-Screen_Shot_2020-10-27_at_12.11.32.png)
 
 5. Click **Next**.
 6. In case the group uses parameters, the auto-grouping feature will create new parameters for your groups. In this case, there will be an extra step for you to provide the parameter names:
 
-![](/images/advanced-features/auto-grouping2/cc757a0-Screen_Shot_2020-10-29_at_18.53.28.png "Screen Shot 2020-10-29 at 18.53.28.png")
+![](/images/advanced-features/auto-grouping2/cc757a0-Screen_Shot_2020-10-29_at_18.53.28.png)
 
 7. Click **Create**.\
    After creating the group, you'll get a message the auto grouping was completed and you can move on to creating the next group.
 
-![](/images/advanced-features/auto-grouping2/0a5c88f-Screen_Shot_2020-10-28_at_13.33.39.png "Screen Shot 2020-10-28 at 13.33.39.png")
+![](/images/advanced-features/auto-grouping2/0a5c88f-Screen_Shot_2020-10-28_at_13.33.39.png)

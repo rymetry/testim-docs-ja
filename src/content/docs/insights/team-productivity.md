@@ -26,7 +26,7 @@ keywords:
 
 チーム生産性レポートにアクセスするには、Insights --> Reports --> Team productivity タブに移動します
 
-![](/images/insights/team-productivity/88a14b0-Screen_Shot_2021-11-23_at_14.28.30.png "Screen Shot 2021-11-23 at 14.28.30.png")
+![](/images/insights/team-productivity/88a14b0-Screen_Shot_2021-11-23_at_14.28.30.png)
 
 ### チーム生産性 - ビュー
 
@@ -37,7 +37,7 @@ keywords:
 3. 作成されたテスト - 選択された時間に選択されたチームメンバーによって作成されたテストの数（前期間との比較）
 4. 更新されたテスト - 選択された時間に選択されたチームメンバーによって更新されたテストの数（前期間との比較）
 
-![](/images/insights/team-productivity/0961ae3-Screen_Shot_2021-08-08_at_13.50.12.png "Screen Shot 2021-08-08 at 13.50.12.png")
+![](/images/insights/team-productivity/0961ae3-Screen_Shot_2021-08-08_at_13.50.12.png)
 
 バービューでは、次の情報が表示されます:
 

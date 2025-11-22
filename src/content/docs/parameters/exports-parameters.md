@@ -3,11 +3,18 @@ title: 'パラメータのエクスポート'
 description: '原文: https://help.testim.io/docs/exports-parameters'
 category: 'パラメータ'
 order: 8
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/exports-parameters'
 keywords:
-  - testim
-  - exports-parameters
-  - parameters
+  - Testim
+  - パラメータ
+  - エクスポート
+  - 変数
+  - スコープ
+  - exports
+  - exportsGlobal
+  - exportsTest
+  - JavaScript
 ---
 テスト内のステップ間、あるいは別テスト間でパラメータを受け渡す
 
@@ -41,7 +48,7 @@ exportsTest.bestTestingTool = "Testim";
 exportsGlobal.bestTestingTool = "Testim";
 ```
 
-![](/images/parameters/exports-parameters/1b18e5a-export_param1.gif "export_param1.gif")
+![パラメータのエクスポート例](/images/parameters/exports-parameters/1b18e5a-export_param1.gif)
 
 3. カスタム検証を追加し、次を入力します。
 
@@ -51,7 +58,7 @@ if (bestTestingTool !== "Testim") {
 }
 ```
 
-![](/images/parameters/exports-parameters/cb9a4de-add_custom_validation.png "add_custom_validation.png")
+![カスタム検証の追加](/images/parameters/exports-parameters/cb9a4de-add_custom_validation.png)
 
 4. テストを実行し、成功を確認します。
 
@@ -75,12 +82,12 @@ exports.bestTestingTool = local;
 
 1. 最後のステップで '**js Param**' を追加します。
 
-![](/images/parameters/exports-parameters/cc6cb99-image_19.png "image (19).png")
+![JSパラメータの追加](/images/parameters/exports-parameters/cc6cb99-image_19.png)
 
 2. パラメータ名を "WhoIsAwesome" に変更します。
 3. 値を `bestTestingTool + " is awesome!"` に設定します。
 
-![](/images/parameters/exports-parameters/cbcab47-exports_params_2.gif "exports_params_2.gif")
+![JSパラメータの設定](/images/parameters/exports-parameters/cbcab47-exports_params_2.gif)
 
 4. エディタのコードを次のように変更します。
 

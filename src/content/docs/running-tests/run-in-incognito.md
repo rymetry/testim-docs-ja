@@ -28,7 +28,7 @@ Chrome ブラウザのシークレットモードでテストを実行する前�
 
 1. Chrome ブラウザで、**chrome://extensions** URL に移動します。
 
-![1242](/images/running-tests/run-in-incognito/c469394-File1485182199573.png "File1485182199573.png")
+![1242](/images/running-tests/run-in-incognito/c469394-File1485182199573.png)
 
 2. **Testim Editor** 拡張機能を見つけて、**詳細** ボタンをクリックします。
 
@@ -36,7 +36,7 @@ Chrome ブラウザのシークレットモードでテストを実行する前�
 
 3. **シークレットで許可** 設定を **オン** に切り替えます。
 
-![694](/images/running-tests/run-in-incognito/3cb1da7-testim-extension-allow-incognito.jpg "testim-extension-allow-incognito.jpg")
+![694](/images/running-tests/run-in-incognito/3cb1da7-testim-extension-allow-incognito.jpg)
 
 これでシークレットモードでテストを実行する準備ができました。
 
@@ -50,15 +50,15 @@ Chrome ブラウザのシークレットモードでローカルテストまた�
 
 2. テストを開き、**実行** ボタンの横にある **オプション** 矢印をクリックします。
 
-![322](/images/running-tests/run-in-incognito/cbf521b-run-options.jpg "run-options.jpg")
+![322](/images/running-tests/run-in-incognito/cbf521b-run-options.jpg)
 
 3. **シークレットモードで実行** を選択します。
 
-![305](/images/running-tests/run-in-incognito/81ebcd1-check-run-in-incognito.jpg "check-run-in-incognito.jpg")
+![305](/images/running-tests/run-in-incognito/81ebcd1-check-run-in-incognito.jpg)
 
 **シークレット** アイコンは、各実行オプションの横に表示されて、シークレットモードで実行していることを示します。
 
-![278](/images/running-tests/run-in-incognito/6a4f471-incognito-icons.jpg "incognito-icons.jpg")
+![278](/images/running-tests/run-in-incognito/6a4f471-incognito-icons.jpg)
 
 4. テストを実行する方法を選択してください。
 

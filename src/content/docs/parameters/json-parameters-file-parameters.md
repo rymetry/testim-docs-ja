@@ -3,11 +3,17 @@ title: 'JSON パラメータファイル'
 description: '原文: https://help.testim.io/docs/json-parameters-file-parameters'
 category: 'パラメータ'
 order: 4
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/json-parameters-file-parameters'
 keywords:
-  - testim
-  - json-parameters-file-parameters
-  - parameters
+  - Testim
+  - パラメータ
+  - JSONファイル
+  - CLI
+  - 実行時引数
+  - 設定ファイル
+  - テスト実行
+  - 動的値
 ---
 JSON パラメータファイルでテストに値を渡す
 
@@ -30,7 +36,7 @@ JSON パラメータファイルでテストに値を渡す
 
 ## CLI で指定する
 
-作成したJSONファイルは、[Testim CLI](/docs/running-tests/the-command-line-cli) の **--params-file** 引数で指定します。
+作成したJSONファイルは、[Testim CLI](/docs/the-command-line-cli) の **--params-file** 引数で指定します。
 
 > 📘
 >
@@ -60,4 +66,4 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --params-file <PARAM FILE NAME e.g. params-file.js>
 ```
 
-以降は、[ステッププロパティパネルのパラメータ](/docs/parameters/parameters-in-custom-javascript-steps) として各テストから参照できます。
+以降は、[ステッププロパティパネルのパラメータ](/docs/parameters-in-custom-javascript-steps) として各テストから参照できます。

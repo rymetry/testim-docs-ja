@@ -28,20 +28,20 @@ keywords:
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![533](/images/project-user-management/project-settings/186b1b8-Picture1.png "Picture1.png")
+![533](/images/project-user-management/project-settings/186b1b8-Picture1.png)
 
 2. **Project Name** セクションで、**Edit** ボタン(鉛筆)をクリックします。
 
-![502](/images/project-user-management/project-settings/f225cca-Picture2.png "Picture2.png")
+![502](/images/project-user-management/project-settings/f225cca-Picture2.png)
 
 **Project Name** ウィンドウが開きます。\
 3\. **Enter a new name for this project** フィールドに、新しい名前を入力します。
 
-![354](/images/project-user-management/project-settings/ad8a31f-Picture3.png "Picture3.png")
+![354](/images/project-user-management/project-settings/ad8a31f-Picture3.png)
 
 4. **OK** をクリックします。
 
-![355](/images/project-user-management/project-settings/e99b797-Picture4.png "Picture4.png")
+![355](/images/project-user-management/project-settings/e99b797-Picture4.png)
 
 **Project Name** ウィンドウが閉じ、プロジェクト名が更新されます。
 
@@ -53,20 +53,20 @@ keywords:
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![489](/images/project-user-management/project-settings/e75b51b-Picture5.png "Picture5.png")
+![489](/images/project-user-management/project-settings/e75b51b-Picture5.png)
 
 2. **Default Base URL** セクションで、**Edit** ボタン(鉛筆)をクリックします。
 
-![458](/images/project-user-management/project-settings/2c841e2-Picture6.png "Picture6.png")
+![458](/images/project-user-management/project-settings/2c841e2-Picture6.png)
 
 **Test Default URL** ウィンドウが開きます。\
 3\. **Your app URL** フィールドに、テスト対象のアプリのURLを入力します。
 
-![344](/images/project-user-management/project-settings/38fd0c6-Picture7.png "Picture7.png")
+![344](/images/project-user-management/project-settings/38fd0c6-Picture7.png)
 
 4. **OK** をクリックします。
 
-![344](/images/project-user-management/project-settings/27396a6-Picture8.png "Picture8.png")
+![344](/images/project-user-management/project-settings/27396a6-Picture8.png)
 
 **Test Default URL** ウィンドウが閉じ、ベースURLが更新されます。
 
@@ -78,15 +78,15 @@ keywords:
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![533](/images/project-user-management/project-settings/4da3d58-Picture9.png "Picture9.png")
+![533](/images/project-user-management/project-settings/4da3d58-Picture9.png)
 
 2. **Default Test Configuration** セクションで、**Edit** ボタン(鉛筆)をクリックします。
 
-![477](/images/project-user-management/project-settings/3b78b90-Picture10.png "Picture10.png")
+![477](/images/project-user-management/project-settings/3b78b90-Picture10.png)
 
 3. 希望のデフォルト設定を選択し、**Select** をクリックします。
 
-![284](/images/project-user-management/project-settings/a8bb9b9-Picture11.png "Picture11.png")
+![284](/images/project-user-management/project-settings/a8bb9b9-Picture11.png)
 
 デフォルトテスト設定が更新されます。このプロジェクトの新しいテストは、選択した設定を使用して実行されます。
 
@@ -100,11 +100,11 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![491](/images/project-user-management/project-settings/afd5208-Picture12.png "Picture12.png")
+![491](/images/project-user-management/project-settings/afd5208-Picture12.png)
 
 2. **Allow auto-complete suggestions** トグルをクリックします。(左 = オフ; 右 = オン)
 
-![487](/images/project-user-management/project-settings/05d39e3-Picture13.png "Picture13.png")
+![487](/images/project-user-management/project-settings/05d39e3-Picture13.png)
 
 ### 非表示パラメータ
 
@@ -114,29 +114,29 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![475](/images/project-user-management/project-settings/7be7e39-Picture14.png "Picture14.png")
+![475](/images/project-user-management/project-settings/7be7e39-Picture14.png)
 
 現在の非表示パラメータのリストが **Hidden Parameters** セクションに表示されます。リストに現在パラメータがない場合は、**Add hidden params** リンクが表示されます。\
 2\. **Add hidden params** リンクをクリックします。
 
-![487](/images/project-user-management/project-settings/f841a78-Picture15.png "Picture15.png")
+![487](/images/project-user-management/project-settings/f841a78-Picture15.png)
 
 > 📘 または、リストにすでにパラメータがある場合は、パラメータリストをクリックします。
 
 **Hidden Parameters** ウィンドウが表示されます。
 
-![784](/images/project-user-management/project-settings/a25a3bb-Picture16.png "Picture16.png")
+![784](/images/project-user-management/project-settings/a25a3bb-Picture16.png)
 
 3. **The params you want to hide** フィールドで:
 
 - 追加したい非表示パラメータごとに、パラメータの名前を入力し、Enterを押します。(非表示パラメータ名は大文字と小文字が区別されます。)
 - 削除したい非表示パラメータごとに、パラメータ名の右側にある「**x**」をクリックします。
 
-![315](/images/project-user-management/project-settings/a0c01f0-Picture17.png "Picture17.png")
+![315](/images/project-user-management/project-settings/a0c01f0-Picture17.png)
 
 4. **Update** をクリックします。
 
-![313](/images/project-user-management/project-settings/1e32984-Picture18.png "Picture18.png")
+![313](/images/project-user-management/project-settings/1e32984-Picture18.png)
 
 更新された非表示パラメータのリストが **Hidden Parameters** セクションに表示されます。
 
@@ -146,7 +146,7 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 > 📘 これはプロフェッショナルプランのプロジェクトのみ利用可能なプロ機能です。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
 
-![521](/images/project-user-management/project-settings/cda9cf7-Picture19.png "Picture19.png")
+![521](/images/project-user-management/project-settings/cda9cf7-Picture19.png)
 
 ### 変更からのブランチ保護
 

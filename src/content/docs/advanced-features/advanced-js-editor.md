@@ -36,4 +36,4 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 * CLI wait for
 * Download wait for
 
-![](/images/advanced-features/advanced-js-editor/37b40ca-monaco_editor4x.png "monaco_editor@4x.png")
+![](/images/advanced-features/advanced-js-editor/37b40ca-monaco_editor4x.png)

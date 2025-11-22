@@ -23,21 +23,21 @@ Below is the general procedure for adding a *Salesforce APEX action* step follow
 
 1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
 
-![1941](/images/special-steps/salesforce-apex-action-step/7be8ce7-Testim_512a.png "Testim 512a.png")
+![1941](/images/special-steps/salesforce-apex-action-step/7be8ce7-Testim_512a.png)
 
 The **action items** are displayed.
 
-![204](/images/special-steps/salesforce-apex-action-step/afcfd40-Testim_566.png "Testim 566.png")
+![204](/images/special-steps/salesforce-apex-action-step/afcfd40-Testim_566.png)
 
 2. Click on the “**M**” (Testim predefined steps).\
    The **Predefined steps** menu opens.
 
-![400](/images/special-steps/salesforce-apex-action-step/eb0f440-Testim_544_r.png "Testim 544_r.png")
+![400](/images/special-steps/salesforce-apex-action-step/eb0f440-Testim_544_r.png)
 
 3. Click on **Salesforce**.\
    The **Salesforce** menu expands.
 
-![400](/images/special-steps/salesforce-apex-action-step/67feeca-Testim_545_r.png "Testim 545_r.png")
+![400](/images/special-steps/salesforce-apex-action-step/67feeca-Testim_545_r.png)
 
 4. Scroll down through the menu and select **Salesforce APEX action**.
 
@@ -45,7 +45,7 @@ The **action items** are displayed.
 
 The **Add Step** window is shown.
 
-![400](/images/special-steps/salesforce-apex-action-step/2d49d61-Testim_567_r.png "Testim 567_r.png")
+![400](/images/special-steps/salesforce-apex-action-step/2d49d61-Testim_567_r.png)
 
 5. In the **Name the new step** field, enter a (meaningful) name for this step.
 6. If this is a shared step to be made available to reuse in this or other tests, keep the box next to **Shared step** selected (default), and choose a folder from the **Select shared step folder** list where you want this step stored. Otherwise, deselect the checkbox.\
@@ -53,7 +53,7 @@ The **Add Step** window is shown.
 7. Click **Create Step**.\
    The **function** editor opens, and the Properties panel opens on the right-hand side.
 
-![2061](/images/special-steps/salesforce-apex-action-step/db6f5b8-Testim_537.png "Testim 537.png")
+![2061](/images/special-steps/salesforce-apex-action-step/db6f5b8-Testim_537.png)
 
 8. In the **Properties** panel, in the **Description** field, optionally edit the description of this step. The default description is “Run Salesforce Apex action”.
 9. Enter your connection properties for the Salesforce environment on which you want to run the APEX code.\
@@ -65,14 +65,14 @@ The **Add Step** window is shown.
 * In the **Security Token** field, enter your Salesforce security token (generated in Salesforce).\
   You can reset your Salesforce security token in the **My Personal Information** section of Salesforce.
 
-![3129](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png "Testim 535.png")
+![3129](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
 
 10. APEX 側の入力パラメータは文字列型で受け取ります。必要なパラメータを次のように定義します。\
     a. In the **Properties** panel, in the **APEX Params** section, Click the **+ APEX PARAMS** button.\
     b. Enter the parameter’s **Value**. The value will be automatically converted to type *string*. This value can be later reconverted to another type through the code described in step 12.\
     c. The parameter is automatically named “param”. To assign a relevant name to the parameter, click on the **edit** icon and enter the desired name.
 
-![200](/images/special-steps/salesforce-apex-action-step/7007b2f-Testim_538a_r.png "Testim 538a_r.png")
+![200](/images/special-steps/salesforce-apex-action-step/7007b2f-Testim_538a_r.png)
 
 11. 任意のプロパティ:
 
@@ -83,16 +83,16 @@ The **Add Step** window is shown.
 12. **function** 欄に APEX コードを記述します。定義したパラメータを参照できます。
 13. 戻る矢印でエディタへ戻ります。
 
-![400](/images/special-steps/salesforce-apex-action-step/d91f582-Testim_540a_r.png "Testim 540a_r.png")
+![400](/images/special-steps/salesforce-apex-action-step/d91f582-Testim_540a_r.png)
 
 設定完了です。
 
-![2061](/images/special-steps/salesforce-apex-action-step/eb1a459-Testim_541a.png "Testim 541a.png")
+![2061](/images/special-steps/salesforce-apex-action-step/eb1a459-Testim_541a.png)
 
 14. 実行前に **npm i -g @testim/testim-cli && testim connect** を実行して CLI エージェントを起動してください。\
     未起動の場合、プロンプトが表示されます。
 
-![400](/images/special-steps/salesforce-apex-action-step/5f98f17-Testim_536_r.png "Testim 536_r.png")
+![400](/images/special-steps/salesforce-apex-action-step/5f98f17-Testim_536_r.png)
 
 After you run your test, a step log is available in the code editor with your test results from Salesforce.
 
@@ -119,7 +119,7 @@ You can use the *Salesforce APEX action* step to manipulate your Salesforce obje
 
 In this scenario we will use the *Salesforce APEX action* step to create a new account. In Salesforce there is a rule that copies the account name to another custom text field called 'mySpecialField' in the Account Object. Additional steps validate that the rule was applied by checking that in both fields (accountName and mySpecialField) the name is the same.
 
-![2061](/images/special-steps/salesforce-apex-action-step/ec7a3f9-Testim_542.png "Testim 542.png")
+![2061](/images/special-steps/salesforce-apex-action-step/ec7a3f9-Testim_542.png)
 
 #### コード例
 
@@ -142,10 +142,10 @@ After a test containing a *Salesforce APEX action* step is run, a step log is av
 
 1. Double-click on the *Salesforce APEX action* step for which you wish to view the Result Log.
 
-![3593](/images/special-steps/salesforce-apex-action-step/324def4-Testim_564a.png "Testim 564a.png")
+![3593](/images/special-steps/salesforce-apex-action-step/324def4-Testim_564a.png)
 
 The **code editor** opens, and the **Step Log** is shown at the bottom of the screen.
 
 If there is a log received from Salesforce, the details will be shown in the Step Log section.
 
-![2061](/images/special-steps/salesforce-apex-action-step/4d25a94-Testim_539a.png "Testim 539a.png")
+![2061](/images/special-steps/salesforce-apex-action-step/4d25a94-Testim_539a.png)

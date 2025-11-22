@@ -26,12 +26,12 @@ SSOはプレミアム機能であり、統合前に有効にする必要があ�
 
 1. **Testim Automate**で、右上隅にある**ユーザー**アイコンをクリックします。
 
-![285](/images/security-sso/sso-integration/1add547-sso1.png "sso1.png")
+![285](/images/security-sso/sso-integration/1add547-sso1.png)
 
 2. ドロップダウンメニューで、**Settings**をクリックします。
 3. 画面上部にSSOタブが表示されます。SSOメニューの横にロックアイコンが表示される場合、SSO機能は有効になっていません。この場合、TestimのCSMに連絡してSSO機能を有効にするよう依頼してください。
 
-![809](/images/security-sso/sso-integration/b377d5e-sso2.png "sso2.png")
+![809](/images/security-sso/sso-integration/b377d5e-sso2.png)
 
 # デプロイメント用のSSOを設定する
 

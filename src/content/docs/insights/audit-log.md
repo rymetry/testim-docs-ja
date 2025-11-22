@@ -32,7 +32,7 @@ Testim の監査ログは、Testim Automate のすべてのイベントを記録
 
 ### 時間でフィルタリング
 
-![](/images/insights/audit-log/8155736-filterbytime.png "filterbytime.png")
+![](/images/insights/audit-log/8155736-filterbytime.png)
 
 期間ボタンをクリックすると、次のオプションが開きます（すべて現地時間）:
 
@@ -62,17 +62,17 @@ Testim の監査ログは、Testim Automate のすべてのイベントを記録
 >
 > デフォルトでは、すべてのフィルタが選択されています。つまり、個々のアイテムが選択されない限り、すべてのプロジェクト、メンバー、アクションが表示されます。
 
-![](/images/insights/audit-log/9109820-Nov-15-2020_09-12-15.gif "Nov-15-2020 09-12-15.gif")
+![](/images/insights/audit-log/9109820-Nov-15-2020_09-12-15.gif)
 
 各フィルタは複数選択できます。虫眼鏡をクリックして検索条件を選択することで、特定の値を検索できます。
 
 特定のエントリ値（ユーザー名、アクティビティ、またはプロジェクト名）をクリックすると、ビューは自動的にこの値でフィルタリングされます。
 
-![](/images/insights/audit-log/682e1f7-Nov-15-2020_10-10-44.gif "Nov-15-2020 10-10-44.gif")
+![](/images/insights/audit-log/682e1f7-Nov-15-2020_10-10-44.gif)
 
 フィルタボタンの近くの数字は、適用されているアクティブなフィルタの数を示します。
 
-![](/images/insights/audit-log/65d4a4b-Screen_Shot_2020-11-15_at_9.40.09.png "Screen Shot 2020-11-15 at 9.40.09.png")
+![](/images/insights/audit-log/65d4a4b-Screen_Shot_2020-11-15_at_9.40.09.png)
 
 ### CSV へのダウンロード
 

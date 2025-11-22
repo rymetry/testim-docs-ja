@@ -54,7 +54,7 @@ keywords:
 
 1. FilterボックスにフィルタリングするテキストSTRINGを入力します。
 
-![](/images/results/network-logs/e21c0d7-Testim_074a.png "Testim 074a.png")
+![](/images/results/network-logs/e21c0d7-Testim_074a.png)
 
 *File*列と*Domain*列のテキストに基づいて、結果が即座にフィルタリングされます。
 
@@ -62,7 +62,7 @@ keywords:
 
 1. リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。オプションには*XHR*、*JS*、*CSS*、*Img*、*Media*、*Font*、*Doc*、*WS*、*Manifest*が含まれます。
 
-![](/images/results/network-logs/0d05487-Testim_074b.png "Testim 074b.png")
+![](/images/results/network-logs/0d05487-Testim_074b.png)
 
 選択内容に基づいて、結果が即座にフィルタリングされます。
 
@@ -74,7 +74,7 @@ keywords:
 
 1. リクエスト結果テーブルのヘッダーで、**Errors Only**チェックボックスを選択します。
 
-![](/images/results/network-logs/b45e218-Testim_074c.png "Testim 074c.png")
+![](/images/results/network-logs/b45e218-Testim_074c.png)
 
 エラーのある結果のみが表示されます。
 
@@ -86,15 +86,15 @@ keywords:
 
 1. リクエストデータを含む任意の行をクリックします。
 
-![](/images/results/network-logs/190bb8b-results-rows.png "results-rows.png")
+![](/images/results/network-logs/190bb8b-results-rows.png)
 
 Headersウィンドウが開き、*General*、*Response Headers*、*Request Headers*の3つのセクションが表示されます。
 
-![](/images/results/network-logs/a67587b-result-headers.png "result-headers.png")
+![](/images/results/network-logs/a67587b-result-headers.png)
 
 2. 左上隅の**X**をクリックして、Headersウィンドウを閉じます。
 
-![](/images/results/network-logs/3049d02-result-headers.png "result-headers.png")
+![](/images/results/network-logs/3049d02-result-headers.png)
 
 > 📘
 >
@@ -143,7 +143,7 @@ Headersウィンドウが開き、*General*、*Response Headers*、*Request Head
    **Network Activity**画面が表示されます。
 2. **Download**ボタンをクリックして、ファイルを保存します。
 
-![](/images/results/network-logs/f1b8915-download.png "download.png")
+![](/images/results/network-logs/f1b8915-download.png)
 
 3. さらなるデバッグと分析のために、ファイルを開発者ツールにアップロードすることをお勧めします。
 
@@ -155,7 +155,7 @@ Network Activity画面には、ネットワークトラフィックが表示さ�
 * リクエストタイプに基づくフィルター - リストされているリクエストタイプ（XHR、JS、CSSなど）のいずれかを選択します。
 * エラーのみフィルター - **Error Only**チェックボックスを選択すると、エラーで応答されたリクエストのみが表示されます。
 
-![](/images/results/network-logs/aee6500-Screen_Shot_2020-11-24_at_8.03.42.png "Screen Shot 2020-11-24 at 8.03.42.png")
+![](/images/results/network-logs/aee6500-Screen_Shot_2020-11-24_at_8.03.42.png)
 
 ネットワークアクティビティエントリには、次の情報が含まれます。
 

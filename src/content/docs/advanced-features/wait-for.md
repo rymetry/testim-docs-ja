@@ -32,15 +32,15 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/25e3a64-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/25e3a64-predefined.jpg)
 
 3. Select the **Wait for element visible** step.
 
-![](/images/advanced-features/wait-for/3512b00-wait-for-element-visible-step.png "wait-for-element-visible-step.png")
+![](/images/advanced-features/wait-for/3512b00-wait-for-element-visible-step.png)
 
 4. Select the target element in your application.
 
-![](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png "wait-for-element-visible-selection.png")
+![](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
 
 > 📘 注意
 >
@@ -55,15 +55,15 @@ Use wait for element visible to wait for your element to be visible on the page.
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/2737b17-mobile-predefined-step.png "mobile-predefined-step.png")
+![](/images/advanced-features/wait-for/2737b17-mobile-predefined-step.png)
 
 3. Select the **Wait for element visible** step.
 
-![](/images/advanced-features/wait-for/1403f9a-mobile-element-visible.png "mobile-element-visible.png")
+![](/images/advanced-features/wait-for/1403f9a-mobile-element-visible.png)
 
 4. Select the **target element**in your application AUT.
 
-![](/images/advanced-features/wait-for/f85f8ff-select-target.png "select-target.png")
+![](/images/advanced-features/wait-for/f85f8ff-select-target.png)
 
 > 📘 注意
 >
@@ -78,15 +78,15 @@ Use wait for element visible to wait for your element to be visible on the page.
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/6b2f5e3-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/6b2f5e3-predefined.jpg)
 
 3. Select the **Wait for element not visible** step.
 
-![](/images/advanced-features/wait-for/c9ec1c1-element-not-visible-step.png "element-not-visible-step.png")
+![](/images/advanced-features/wait-for/c9ec1c1-element-not-visible-step.png)
 
 4. Select the target element in your application.
 
-![](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png "wait-for-element-visible-selection.png")
+![](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png)
 
 > 📘 注意
 >
@@ -101,11 +101,11 @@ Use wait for element visible to wait for your element to be visible on the page.
 1. Enter the properties of the '**Wait for Element not visible**' step that you created.
 2. Check **Pre-step delay**.
 
-![](/images/advanced-features/wait-for/7f4b046-pre-step-delay.png "pre-step-delay.png")
+![](/images/advanced-features/wait-for/7f4b046-pre-step-delay.png)
 
 3. Set **delay time in milliseconds (ms)**. Testim will wait this amount of time before moving to the next step.
 
-![](/images/advanced-features/wait-for/e0a7107-delay.png "delay.png")
+![](/images/advanced-features/wait-for/e0a7107-delay.png)
 
 ## 要素テキストの表示を待つ（Web）
 
@@ -116,15 +116,15 @@ Use wait for element visible to wait for your element to be visible on the page.
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/6cae95d-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/6cae95d-predefined.jpg)
 
 3. Select the **Wait for element text** step.
 
-![](/images/advanced-features/wait-for/9db9023-wait-element-text-step.png "wait-element-text-step.png")
+![](/images/advanced-features/wait-for/9db9023-wait-element-text-step.png)
 
 4. Select the target text element you want to wait for from your app.
 
-![](/images/advanced-features/wait-for/00ffc60-text-selection.png "text-selection.png")
+![](/images/advanced-features/wait-for/00ffc60-text-selection.png)
 
 > 📘 注意
 >
@@ -143,15 +143,15 @@ Use wait for element text to make sure a specific text appears before continuing
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/0f45edc-mobile-predefined-step.png "mobile-predefined-step.png")
+![](/images/advanced-features/wait-for/0f45edc-mobile-predefined-step.png)
 
 3. Select the **Wait for element text** step.
 
-![](/images/advanced-features/wait-for/6362268-mobile-element-text.png "mobile-element-text.png")
+![](/images/advanced-features/wait-for/6362268-mobile-element-text.png)
 
 4. Select the target text element you want to wait for from your app.
 
-![](/images/advanced-features/wait-for/5bb3fab-select-target.png "select-target.png")
+![](/images/advanced-features/wait-for/5bb3fab-select-target.png)
 
 > 📘 注意
 >
@@ -170,15 +170,15 @@ Use wait for element text to make sure a specific text appears before continuing
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/a5f65a5-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/a5f65a5-predefined.jpg)
 
 3. Select the **Sleep** step.
 
-![](/images/advanced-features/wait-for/e2c3b70-sleep-step.png "sleep-step.png")
+![](/images/advanced-features/wait-for/e2c3b70-sleep-step.png)
 
 4. 既定は1秒（1,000ms）です。**sleep duration** はステップのプロパティで編集します。
 
-![](/images/advanced-features/wait-for/8cf49cd-sleep-duration.png "sleep-duration.png")
+![](/images/advanced-features/wait-for/8cf49cd-sleep-duration.png)
 
 ## スリープ（モバイル）
 
@@ -189,15 +189,15 @@ Sometimes you want to wait a few seconds between the steps. Use it carefully as 
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/237cdc5-mobile-predefined-step.png "mobile-predefined-step.png")
+![](/images/advanced-features/wait-for/237cdc5-mobile-predefined-step.png)
 
 3. Select the **Sleep** step.
 
-![](/images/advanced-features/wait-for/2b5b317-mobile-sleep.png "mobile-sleep.png")
+![](/images/advanced-features/wait-for/2b5b317-mobile-sleep.png)
 
 4. 既定は1秒（1,000ms）。**sleep duration** はステップのプロパティで編集します。
 
-![](/images/advanced-features/wait-for/f953339-sleep-duration.png "sleep-duration.png")
+![](/images/advanced-features/wait-for/f953339-sleep-duration.png)
 
 ## 要素のビジュアル待機（Web）
 
@@ -208,15 +208,15 @@ Sometimes you want to wait a few seconds between the steps. Use it carefully as 
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/0819163-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/0819163-predefined.jpg)
 
 3. Select the **Wait for element visualization** step.
 
-![](/images/advanced-features/wait-for/d8b8712-element-visualization-step.png "element-visualization-step.png")
+![](/images/advanced-features/wait-for/d8b8712-element-visualization-step.png)
 
 4. Select the target element in your application.
 
-![](/images/advanced-features/wait-for/16cbd24-wait-for-element-visible-selection.png "wait-for-element-visible-selection.png")
+![](/images/advanced-features/wait-for/16cbd24-wait-for-element-visible-selection.png)
 
 ## カスタム待機（Web）
 
@@ -227,19 +227,19 @@ Sometimes you want to wait a few seconds between the steps. Use it carefully as 
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/bd85a91-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/bd85a91-predefined.jpg)
 
 3. Select the **Add custom wait for** step.
 
-![](/images/advanced-features/wait-for/dbfd2ee-custom-wait-step.png "custom-wait-step.png")
+![](/images/advanced-features/wait-for/dbfd2ee-custom-wait-step.png)
 
 4. Provide a **name** for the new step and click the **Create Step** button.
 
-![](/images/advanced-features/wait-for/da06ecb-custom-wait-name.png "custom-wait-name.png")
+![](/images/advanced-features/wait-for/da06ecb-custom-wait-name.png)
 
 5. JSエディタで関数内にコードを記述し、True/False を返すことを確認します。
 
-![](/images/advanced-features/wait-for/94a0b4a-js-wait.png "js-wait.png")
+![](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
 > 📘 注意
 >
@@ -256,23 +256,23 @@ Sometimes you want to wait a few seconds between the steps. Use it carefully as 
 1. Navigate to the **Test Editor** for your test.
 2. Hover over the **arrow** where you want to insert the new step and click **Testim predefined steps.**
 
-![](/images/advanced-features/wait-for/dde267a-predefined.jpg "predefined.jpg")
+![](/images/advanced-features/wait-for/dde267a-predefined.jpg)
 
 3. Select the **Wait for Download** step.
 
-![](/images/advanced-features/wait-for/681c4e7-wait-for-download-step.png "wait-for-download-step.png")
+![](/images/advanced-features/wait-for/681c4e7-wait-for-download-step.png)
 
 4. Provide a **name** for the new step and click the **Create Step** button.
 
-![](/images/advanced-features/wait-for/fa1cbce-wait-for-download-step-name.png "wait-for-download-step-name.png")
+![](/images/advanced-features/wait-for/fa1cbce-wait-for-download-step-name.png)
 
 5. JSエディタでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/validations/validate-download) を参照。
 
-![](/images/advanced-features/wait-for/e553c48-wait-for-download.png "wait-for-download.png")
+![](/images/advanced-features/wait-for/e553c48-wait-for-download.png)
 
 6. Click the **Back Arrow** to return to the test editor. Your script will automatically be saved.
 
-![](/images/advanced-features/wait-for/4a10d25-return-to-test.png "return-to-test.png")
+![](/images/advanced-features/wait-for/4a10d25-return-to-test.png)
 
 ## Wait For ステップでターゲット要素を再割り当て
 

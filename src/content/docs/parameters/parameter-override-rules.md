@@ -3,28 +3,34 @@ title: 'パラメータの上書きルール'
 description: '原文: https://help.testim.io/docs/parameter-override-rules'
 category: 'パラメータ'
 order: 7
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/parameter-override-rules'
 keywords:
-  - testim
-  - parameter-override-rules
-  - parameters
+  - Testim
+  - パラメータ
+  - 上書きルール
+  - スコープ
+  - 設定ファイル
+  - オーバーライド
+  - 優先順位
+  - CLI
 ---
 パラメータ使用時に発生する上書き（オーバーライド）ルールの整理
 
-Testim でパラメータを使う方法はいくつかあります（例: [データ駆動テスト](https://help.testim.io/docs/data-driven-testing)、[グループ](/docs/groups/groups)、[パラメータのエクスポート](https://help.testim.io/docs/exports-parameters)、[設定ファイルと実行フック](https://help.testim.io/docs/configuration-file-run-hooks)、[パラメータファイル](/docs/parameters-for-tests)）。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
+Testim でパラメータを使う方法はいくつかあります（例: [データ駆動テスト](/docs/data-driven-testing)、[グループ](/docs/groups)、[パラメータのエクスポート](/docs/exports-parameters)、[設定ファイルと実行フック](/docs/configuration-file-parameters)、[パラメータファイル](/docs/json-parameters-file-parameters)）。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
 
 ## 上書きの基本
 
 多くのプログラミング言語と同様、同名の値は後から代入したものが有効になります。Testim でも同様に上書きが発生します。
 
-#### テスト開始前
+### テスト開始前
 
-* [設定ファイルのパラメータ](https://help.testim.io/docs/configuration-file-run-hooks) は [パラメータファイル](parameters-for-tests) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
-* [パラメータファイル](/docs/configuration-file/configuration-file-run-hooks) は [既定のテストデータ／ランデータ](/docs/data-driven-testing/data-driven-testing) を上書きします。
+* [設定ファイルのパラメータ](/docs/configuration-file-parameters) は [パラメータファイル](/docs/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
+* [パラメータファイル](/docs/json-parameters-file-parameters) は [既定のテストデータ／ランデータ](/docs/data-driven-testing) を上書きします。
 
 Note: テストに渡されるすべてのパラメータは**ローカルレベル**の可視性（テスト全体を大きな1つのグループとみなす）を持ちます。
 
-#### 実行中
+### 実行中
 
 可視性スコープは次の3種類です。
 
@@ -32,7 +38,7 @@ Note: テストに渡されるすべてのパラメータは**ローカルレベ
 * Test — テストの間有効です
 * Test Suite — 複数テスト実行をまたいで受け渡されます
 
-#### 上書きの優先
+### 上書きの優先
 
 スコープが狭い（よりローカルな）値ほど優先されます。ローカルが最強で、必ずローカルが使われます。例：
 
@@ -48,17 +54,17 @@ console.log(x); // prints "local"
 >
 > グループで作成したパラメータは「ローカルスコープ」です。同スコープまたはより狭いスコープの同名パラメータで上書きできます。
 
-#### 用途の整理
+### 用途の整理
 
-**データ駆動テストのパラメータ**
+#### データ駆動テストのパラメータ
 
 既定値の定義に使います（設定ファイルやフックで上書きされ得る）。配列（オブジェクトの配列）を与えると同一テストを複数回実行できます。
 
-**パラメータファイル**
+#### パラメータファイル
 テスト固有ではなく、すべてのテストへ共通値（例: 共通認証情報）を渡します。
 
-**設定ファイル**
-動的にパラメータ群を読み込みます。Node.js で実行されるカスタムJSが使えるため、DBやCSVなど任意のソースから読み込めます。サンプルは[こちら](/docs/data-driven-testing/data-driven-testing)。
+#### 設定ファイル
+動的にパラメータ群を読み込みます。Node.js で実行されるカスタムJSが使えるため、DBやCSVなど任意のソースから読み込めます。サンプルは[こちら](/docs/data-driven-testing)。
 
 Notes:
 

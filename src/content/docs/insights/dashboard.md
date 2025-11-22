@@ -27,7 +27,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 ## 自分に割り当てられたもの
 
-![](/images/insights/dashboard/37cf94c-Testim_423a.png "Testim 423a.png")
+![](/images/insights/dashboard/37cf94c-Testim_423a.png)
 
 **Assigned to me** トグルがオンの場合、次のセクションは、ログインしているユーザーに固有のデータのみを反映するように調整されます。（*Duplication Level* セクションのデータは変更されません。）
 
@@ -38,7 +38,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 ## リモート実行実行
 
-![](/images/insights/dashboard/ee0a420-Testim_424.png "Testim 424.png")
+![](/images/insights/dashboard/ee0a420-Testim_424.png)
 
 リモート実行実行ペインは、選択した期間とフィルタ中にプロジェクト内のテストで実行されたリモート実行実行に関する詳細情報を表示します。*リモート実行実行* には、スイート実行、プラン実行、スケジュール実行、ラベル付きで実行されたテストが含まれます。
 
@@ -63,7 +63,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 ### リモート実行ペイン - 自分に割り当てられたもの
 
-![](/images/insights/dashboard/38c2012-Testim_423a.png "Testim 423a.png")
+![](/images/insights/dashboard/38c2012-Testim_423a.png)
 
 **Assigned to me** トグルがオンの場合、このペインは **Remote Execution Runs** から **Remote Test Runs** に変更され、表示される情報は、プロジェクト内のテストで実行されたリモート*実行実行*から、自分が所有するプロジェクト内のテストでのリモート*テスト実行*に切り替わります。
 
@@ -87,11 +87,11 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 1. 期間ボタンをクリックします。
 
-![](/images/insights/dashboard/0ecbbdd-Testim_424a.png "Testim 424a.png")
+![](/images/insights/dashboard/0ecbbdd-Testim_424a.png)
 
 期間オプションが表示されます。
 
-![](/images/insights/dashboard/4b50102-Testim_425_r.png "Testim 425_r.png")
+![](/images/insights/dashboard/4b50102-Testim_425_r.png)
 
 2. 希望する期間を選択します。\
    指定された期間に基づいてペイン内のデータが自動的に更新されます。
@@ -104,15 +104,15 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 1. **Filter** ボタンをクリックします。
 
-![](/images/insights/dashboard/0cd9b61-Testim_424b.png "Testim 424b.png")
+![](/images/insights/dashboard/0cd9b61-Testim_424b.png)
 
 **Filter Remote Runs** ペインが右側に開き、フィルタリングできる実行実行タイプ（Execution、Label、Plan、Scheduler）とフィルタリングできる結果ラベルが表示されます。（表示される結果ラベルは、以前に結果にラベルを付けるために使用した用語に基づいています。詳細については、[結果ラベル](/docs/results/result-labels) を参照してください。）
 
-![](/images/insights/dashboard/8e0456e-Testim_445_r.png "Testim 445_r.png")
+![](/images/insights/dashboard/8e0456e-Testim_445_r.png)
 
 2. 特定の実行タイプでフィルタリングするには、タイプを選択してから、そのタイプの下に表示される目的のチェックボックスを選択します。（フィルタリングする実行タイプを複数選択することはできません。）
 
-![](/images/insights/dashboard/6fde101-Testim_477_r.png "Testim 477_r.png")
+![](/images/insights/dashboard/6fde101-Testim_477_r.png)
 
 > 📘
 >
@@ -132,7 +132,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 4. *evaluating* のテストステータスを持つテスト実行からのデータを含める場合は、**Include Evaluating** トグルをクリックします。*evaluating* ステータスのテストはまだユーザーによって評価されているため、デフォルトではその実行からのデータは含まれません。テストステータスの詳細については、[テストステータス](/docs/testops-management/test-status) を参照してください。
 
-![](/images/insights/dashboard/66749e3-Testim_477a_r.png "Testim 477a_r.png")
+![](/images/insights/dashboard/66749e3-Testim_477a_r.png)
 
 > 📘
 >
@@ -153,11 +153,11 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 7. 次回 TestOps ダッシュボードにアクセスするときのために現在のフィルタ設定を保存する場合は、**save view** をクリックします。（**save view** オプションは、ピン留めされたブランチのコンテキスト内で TestOps ダッシュボードを表示している場合にのみ使用できます。）詳細については、[フィルタリングされたビューの保存](/docs/test-management/saving-a-filtered-view) を参照してください。別のブランチをピン留めするまでフィルタ設定が保存され、その時点でフィルタがリセットされます。詳細については、[ブランチのピン留め](doc:version-control-branches#pinning-a-branch) を参照してください。
 
-![](/images/insights/dashboard/328226e-Testim_424c.png "Testim 424c.png")
+![](/images/insights/dashboard/328226e-Testim_424c.png)
 
 ## テスト概要
 
-![](/images/insights/dashboard/3189f64-Testim_428.png "Testim 428.png")
+![](/images/insights/dashboard/3189f64-Testim_428.png)
 
 テスト概要ペインは、プロジェクト内のすべてのテストがさまざまなテストステータス間でどのように分散されているかを表示します。（**Assigned to me** が選択されている場合、このペインはユーザーのテストがさまざまなテストステータス間でどのように分散されているかを表示します）。テストステータスは次のとおりです:
 
@@ -177,7 +177,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 ## 重複レベル
 
-![](/images/insights/dashboard/b239602-Testim_429_r.png "Testim 429_r.png")
+![](/images/insights/dashboard/b239602-Testim_429_r.png)
 
 重複レベルペインは、プロジェクトの自動グループ化スコアを表示します。Testim は、まだ共有グループを作成していないプロジェクト内の重複したテストステップシーケンスを識別し、その情報に基づいてプロジェクトに自動グループ化スコアを割り当てます。スコアが高いほど、まだ共有グループに入れられていない重複したテストステップシーケンスの量が多いことを示します。数値が低いほど、プロジェクトは「健全」です。
 
@@ -189,7 +189,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 ## 最近のアクティビティ
 
-![](/images/insights/dashboard/deabaf5-Testim_430_r.png "Testim 430_r.png")
+![](/images/insights/dashboard/deabaf5-Testim_430_r.png)
 
 最近のアクティビティペインは、プロジェクトの最近のアクティビティ/イベントを表示するアクティビティログです。（**Assigned to me** が選択されている場合、このペインはユーザーの最近のアクティビティ/イベントのみを表示します。）
 
@@ -197,7 +197,7 @@ TestOps ダッシュボードは5つのセクションに分かれています:
 
 ## プルリクエスト
 
-![](/images/insights/dashboard/6a7bfda-Testim_431_r.png "Testim 431_r.png")
+![](/images/insights/dashboard/6a7bfda-Testim_431_r.png)
 
 プルリクエストペインは、プロジェクトのプルリクエストに関する情報を表示します。（**Assigned to me** が選択されている場合、このペインはユーザーが所有するプルリクエストに関する情報のみを表示します。）プルリクエストは、テストに変更を加えたユーザーが、プロジェクトの master ブランチにマージするために変更をレビューするよう要求するリクエストです。このセクションは、master ブランチが選択されている場合にのみ表示されます。
 

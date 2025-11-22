@@ -33,15 +33,15 @@ keywords:
 
 ステップに条件を追加すると、そのステップタイルに菱形アイコンが表示されます。
 
-![条件インジケーターの菱形アイコン](/images/conditions/conditions/5a8943a-Screen_Shot_2021-04-07_at_8.02.33.png "Screen Shot 2021-04-07 at 8.02.33.png")
+![条件インジケーターの菱形アイコン](/images/conditions/conditions/5a8943a-Screen_Shot_2021-04-07_at_8.02.33.png)
 
 テスト実行時、条件が truthy を返した場合、菱形アイコンは緑色で表示され、ステップが実行されたことを示します。
 
-![条件が真の場合の緑色の菱形](/images/conditions/conditions/e2d0a13-Screen_Shot_2021-04-27_at_6.36.08.png "Screen Shot 2021-04-27 at 6.36.08.png")
+![条件が真の場合の緑色の菱形](/images/conditions/conditions/e2d0a13-Screen_Shot_2021-04-27_at_6.36.08.png)
 
 条件が falsy を返した場合、菱形は赤色で表示され、ステップがスキップされたことを示します。
 
-![条件が偽の場合の赤色の菱形](/images/conditions/conditions/ed652c5-Screen_Shot_2021-04-27_at_6.38.16.png "Screen Shot 2021-04-27 at 6.38.16.png")
+![条件が偽の場合の赤色の菱形](/images/conditions/conditions/ed652c5-Screen_Shot_2021-04-27_at_6.38.16.png)
 
 ## 代表的なユースケース
 
@@ -61,23 +61,23 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 :fa-arrow-right: **Element 条件を設定するには:**
 
-![Element条件設定のデモ](/images/conditions/conditions/8397205-Conditions.gif "Conditions.gif")
+![Element条件設定のデモ](/images/conditions/conditions/8397205-Conditions.gif)
 
 1. 条件を追加したいステップの左にある **>（矢印）** にカーソルを合わせます。
 
-![ステップの矢印アイコン](/images/conditions/conditions/da381a6-Testim_120a.png "Testim 120a.png")
+![ステップの矢印アイコン](/images/conditions/conditions/da381a6-Testim_120a.png)
 
    アクションのオプションが表示されます。
 
-![アクションオプションメニュー](/images/conditions/conditions/c3d594e-Testim_121a.png "Testim 121a.png")
+![アクションオプションメニュー](/images/conditions/conditions/c3d594e-Testim_121a.png)
 
 2. **Toggle Breakpoint** をクリックします。
 
-![Toggle Breakpointボタン](/images/conditions/conditions/cfcb5fc-Testim_122.png "Testim 122.png")
+![Toggle Breakpointボタン](/images/conditions/conditions/cfcb5fc-Testim_122.png)
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/conditions/conditions/3fd74ed-Testim_129a.png "Testim 129a.png")
+![Play Scenarioボタン](/images/conditions/conditions/3fd74ed-Testim_129a.png)
 
 4. 条件を追加したいステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。\
    右側に **Properties** パネルが開きます。

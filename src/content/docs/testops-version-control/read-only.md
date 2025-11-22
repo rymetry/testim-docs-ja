@@ -26,7 +26,7 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 
 ブランチ読み取り専用モードは、**Settings -> General** 画面の **Pull Requests** 設定の下にあり、プロジェクトごとに構成されます。これを有効にするには、**Protect branch from changes** トグルをオンに切り替えます。ブランチは「read-only」とラベル付けされます。
 
-![](/images/testops-version-control/read-only/77cbaf9-project_settings.png "project settings.png")
+![](/images/testops-version-control/read-only/77cbaf9-project_settings.png)
 
 ## 読み取り専用としてのブランチの動作
 
@@ -36,7 +36,7 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 
 * ブランチの下で直接テストに保存を実行すると、別のブランチへのフォークを実行し、新しいブランチに変更を保存するように求められます
 
-![](/images/testops-version-control/read-only/ef453c8-Screen_Shot_2021-01-18_at_6.21.37.png "Screen Shot 2021-01-18 at 6.21.37.png")
+![](/images/testops-version-control/read-only/ef453c8-Screen_Shot_2021-01-18_at_6.21.37.png)
 
 ### テストリスト
 
@@ -53,7 +53,7 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 * テストのステータスを変更
 * 名前を変更
 
-![](/images/testops-version-control/read-only/a5dab70-Untitled_2.png "Untitled 2.png")
+![](/images/testops-version-control/read-only/a5dab70-Untitled_2.png)
 
 #### スイート
 
@@ -64,10 +64,10 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 * スイートを削除
 * スイートを編集
 
-![](/images/testops-version-control/read-only/1f237b2-Untitled_3.png "Untitled 3.png")
+![](/images/testops-version-control/read-only/1f237b2-Untitled_3.png)
 
 ### 読み取り専用ブランチでの自動改善機能
 
 デフォルトでは、自動改善機能は読み取り専用として設定されていないブランチでのみ実行されます。ただし、ブランチが master ブランチの場合、**Allow Auto-Improve on master** をオンに設定することで、master 読み取り専用ブランチに自動改善機能を適用できます。詳細については、[読み取り専用ブランチでの自動改善の許可](doc:locators-auto-improve#section-allowing-auto-improve-on-a-master-read-only-branch)を参照してください。
 
-![](/images/testops-version-control/read-only/05bf593-autoimprove.png "autoimprove.png")
+![](/images/testops-version-control/read-only/05bf593-autoimprove.png)

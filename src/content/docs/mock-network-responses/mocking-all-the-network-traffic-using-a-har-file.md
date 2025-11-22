@@ -28,16 +28,16 @@ HARファイルを作成する方法は2つあります:
 
 1. テストを保存した後([テストの記録方法](/docs/recording-tests/how-to-record-a-test)を参照)、プロパティ(:fa-cog:)アイコンをクリックします。**テストプロパティ**ペインが表示されます:
 
-![258](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/ba55bd3-mock1.PNG "mock1.PNG")
+![258](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/ba55bd3-mock1.PNG)
 
 2. **モックネットワーク**プロパティで、矢印をクリックしてメニューオプションを開きます。
 3. **新しいHARを記録**をクリックします。テストがローカルで実行され、HARファイルが自動的に作成されます。
 
-![264](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/1192e87-mock5.png "mock5.png")
+![264](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/1192e87-mock5.png)
 
 4. プロセスが完了したら、**保存**をクリックします。
 
-![436](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/4d5a0c7-mock4.PNG "mock4.PNG")
+![436](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/4d5a0c7-mock4.PNG)
 
 ## オプション2 - カスタムHARファイルを作成
 
@@ -49,14 +49,14 @@ HARファイルを作成する方法は2つあります:
 4. **ネットワーク**タブを選択します。
 5. **ネットワーク**タブ内で、**ログを保持**オプションを選択します。
 
-![715](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/99eaa6e-preserve_log.png "preserve_log.png")
+![715](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/99eaa6e-preserve_log.png)
 
 6. **ネットワーク**タブの左上にある赤い円を選択してログを記録します。
 7. ページを更新し、Chromeがブラウザとウェブサイトの対話を記録できるようにします。
 8. ページが読み込まれたら、**コンソール**タブを選択し、コンソールボックス内で右クリックします。メニューが表示されます。
 9. **名前を付けて保存**を選択し、ファイルに名前を付けます。
 
-![559](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/8624d01-consolesave.png "consolesave.png")
+![559](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/8624d01-consolesave.png)
 
 10. **ネットワーク**タブに戻り、**名前**列の任意の項目を右クリックします。
 11. **「コンテンツ付きでHARを保存」**を選択します。
@@ -71,7 +71,7 @@ HARファイルを作成する方法は2つあります:
 
 1. **テストプロパティ**ペインで、**カスタムHARをアップロード**をクリックします。
 
-![254](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/fc7237d-mock3.png "mock3.png")
+![254](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/fc7237d-mock3.png)
 
 2. 保存したカスタムHARファイルを見つけて、**開く**をクリックしてアップロードします。
 
@@ -82,7 +82,7 @@ HARファイルを作成する方法は2つあります:
 1. Testimビジュアルエディタで、**テストリスト**画面に移動し、新しいHARを記録したか、カスタムHARをアップロードしたテストをクリックします。
 2. テストエディタ画面で、**再生**ボタンの横に**モックネットワーク**アイコンが表示され、モックネットワークが利用可能であることを示します。
 
-![274](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/7a3343e-mock6.png "mock6.png")
+![274](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/7a3343e-mock6.png)
 
 3. **再生**ボタンをクリックして、モックネットワークを使用してテストを実行します。
 4. **保存**をクリックします。

@@ -42,7 +42,7 @@ keywords:
 4. 再び :fa-caret-right: **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![ステップ追加矢印](/images/validations/validate-element-attribute/0bd37d9-Testim_237_r.png "Testim 237_r.png")
+![ステップ追加矢印](/images/validations/validate-element-attribute/0bd37d9-Testim_237_r.png)
 
 5. **Validations** をクリックします。**Validations** メニューが展開されます。メニューをスクロールして **Validate element attribute** を選択します。
 

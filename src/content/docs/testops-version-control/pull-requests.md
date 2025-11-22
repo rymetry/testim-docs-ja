@@ -35,7 +35,7 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 
 :fa-arrow-right: **プルリクエストを作成するには:**
 
-![640](/images/testops-version-control/pull-requests/99a18df-Open.gif "Open.gif")
+![640](/images/testops-version-control/pull-requests/99a18df-Open.gif)
 
 1. ブランチに変更を加えた後、ブランチドロップダウンメニューからマージするブランチを選択し、**Merge** アイコンをクリックします。
    **Open Pull Request** ダイアログが表示され、承認された場合にターゲットブランチにマージされるテストとフォルダが表示されます。
@@ -50,7 +50,7 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 
 :fa-arrow-right: **プロジェクトのすべての PR を表示するには:**
 
-![1920](/images/testops-version-control/pull-requests/be05e3d-prreview2.gif "prreview2.gif")
+![1920](/images/testops-version-control/pull-requests/be05e3d-prreview2.gif)
 
 1. ブランチドロップダウンメニューの横にある **PR** ボタンをクリックします。
    次の情報を含む開いている PR のリストが表示されます:
@@ -69,7 +69,7 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 2. レビューしたい PR を開きます。
 3. PR が「Require approving reviewer」とマークされている場合、次の情報が表示されます:
 
-![429](/images/testops-version-control/pull-requests/876fb0e-Testim_621.png "Testim 621.png")
+![429](/images/testops-version-control/pull-requests/876fb0e-Testim_621.png)
 
 * ソースブランチ名とプルリクエストタイトル
 * マージ結果 - 競合の数（ある場合）
@@ -86,10 +86,10 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 
 :fa-arrow-right: **プルリクエストを再送信するには:**
 
-![640](/images/testops-version-control/pull-requests/7035af3-PR3.gif "PR3.gif")
+![640](/images/testops-version-control/pull-requests/7035af3-PR3.gif)
 
 1. レビュー担当者が要求した変更を行った後、プルリクエストを開き、**Re-Submit** をクリックします。（プルリクエストをクローズする場合は **Close PR** をクリックします。）
 
-![400](/images/testops-version-control/pull-requests/325f07e-Testim_613_r.png "Testim 613_r.png")
+![400](/images/testops-version-control/pull-requests/325f07e-Testim_613_r.png)
 
 2. 再送信の **Comment** を入力し、**Re-Submit** をクリックします。

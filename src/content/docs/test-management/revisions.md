@@ -20,7 +20,7 @@ keywords:
 リビジョンは自動的に作成されます。何もする必要はありません。\
 次の例では、「login\_test」というテストがあり、パスワードを設定するステップが更新されました。テストを保存すると、変更の目的をオプションで指定するよう促す次のダイアログが表示されます:
 
-![1707](/images/test-management/revisions/4bf97f1-change_message.PNG "change_message.PNG")
+![1707](/images/test-management/revisions/4bf97f1-change_message.PNG)
 
 **OK**をクリックすると、新しいリビジョンが作成されます。
 
@@ -32,20 +32,20 @@ keywords:
 2. **See old revision**をクリックします。\
    変更メッセージ、変更を行ったユーザーの名前、および変更が行われた日付を含むリビジョンのリストが表示されます:
 
-![1920](/images/test-management/revisions/0930cee-revisions.gif "revisions.gif")
+![1920](/images/test-management/revisions/0930cee-revisions.gif)
 
 ## ロケーターの自動改善プロセス後の自動リビジョン
 
 Testimは、劣化したロケーターを自動改善されたロケーターに置き換えた後、自動的に新しいリビジョンを作成します。新しいリビジョンは、**Revision History**パネルで「Testim auto improve」というラベルが付けられます。詳細については、[ロケーター: 自動改善](/docs/test-management/locators-auto-improve)を参照してください。また、テスト内のどのステップが自動改善されたかを表示することもできます。
 
-![2454](/images/test-management/revisions/4cf4abe-Testim_478a.png "Testim 478a.png")
+![2454](/images/test-management/revisions/4cf4abe-Testim_478a.png)
 
 :fa-arrow-right: **自動改善されたステップを表示するには:**
 
 1. 自動改善されたテストを開きます。
 2. **Show improved steps**スイッチを右にトグルします。
 
-![3807](/images/test-management/revisions/cadf2a8-Testim_585b.png "Testim 585b.png")
+![3807](/images/test-management/revisions/cadf2a8-Testim_585b.png)
 
 自動改善されたステップが強調表示されます。
 
@@ -53,19 +53,19 @@ Testimは、劣化したロケーターを自動改善されたロケーター�
 
 リビジョンを表示するには、表示したいリビジョンにカーソルを合わせて、**View**をクリックするだけです:
 
-![1920](/images/test-management/revisions/55ba93b-revisions2.gif "revisions2.gif")
+![1920](/images/test-management/revisions/55ba93b-revisions2.gif)
 
 ## 以前のリビジョンへの復元
 
 以前のリビジョンに戻すには、以前のリビジョンにアクセスして**Save**をクリックします。
 
-![1920](/images/test-management/revisions/a59b3e9-revisions3.gif "revisions3.gif")
+![1920](/images/test-management/revisions/a59b3e9-revisions3.gif)
 
 ## 共有ステップを含むテスト
 
 共有ステップ（グループステップやカスタムJavaScriptステップの1つなど）は、別のテストで変更される場合があります。別のテストで変更された共有ステップを使用している場合、この変更がリビジョンリストにも表示されます。
 
-![732](/images/test-management/revisions/0b89bb9-shared.PNG "shared.PNG")
+![732](/images/test-management/revisions/0b89bb9-shared.PNG)
 
 > 📘
 >
@@ -75,4 +75,4 @@ Testimは、劣化したロケーターを自動改善されたロケーター�
 
 テストの古いリビジョンを開くことを選択した場合、そのリビジョンで使用されていた共有ステップの古いリビジョンも開きます。したがって、以前のリビジョンを保存した際に共有ステップが変更されていた場合、フォルダーのすべてのインスタンスも影響を受けます。
 
-![1472](/images/test-management/revisions/61b8751-revert.PNG "revert.PNG")
+![1472](/images/test-management/revisions/61b8751-revert.PNG)

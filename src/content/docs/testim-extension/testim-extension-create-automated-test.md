@@ -21,12 +21,12 @@ Testim自動テスト作成機能を使用すると、Webブラウザから直�
 4. 再度Testim拡張機能アイコンをクリックします。\
    拡張機能メニューが開きます。
 
-![425](/images/testim-extension/testim-extension-create-automated-test/93438d2-Testim_extension.PNG "Testim extension.PNG")
+![425](/images/testim-extension/testim-extension-create-automated-test/93438d2-Testim_extension.PNG)
 
 5. 「Create Automated Test」をクリックします。\
    バックグラウンドでTestimビジュアルエディターを含むタブが開き、Testimは元の画面の記録を開始します。
 
-![539](/images/testim-extension/testim-extension-create-automated-test/114c8d6-recording.PNG "recording.PNG")
+![539](/images/testim-extension/testim-extension-create-automated-test/114c8d6-recording.PNG)
 
 6. 追加のページへの移動を含むユーザーアクションを実行して、テストを記録します。
 7. 完了したら、「Stop」ボタンをクリックします。\

@@ -45,41 +45,41 @@ OS のファイルブラウザーやドラッグ＆ドロップでファイル�
 
 1. Chrome ブラウザーで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 
-![CLI](/images/validations/file-upload-step/66c3a04-Testim_249a.png "Testim 249a.png")
+![CLI](/images/validations/file-upload-step/66c3a04-Testim_249a.png)
 
 **Chrome menu** のオプションが表示されます。
 
 2. **Settings** をクリックします。
 
-![設定アイコン](/images/validations/file-upload-step/a1dc980-Testim_250a_r.png "Testim 250a_r.png")
+![設定アイコン](/images/validations/file-upload-step/a1dc980-Testim_250a_r.png)
 
 **Chrome Settings** ページが開きます。
 
 3. **Advanced** をクリックします。
 
-![CLI](/images/validations/file-upload-step/fd3f76e-Testim_251a.png "Testim 251a.png")
+![CLI](/images/validations/file-upload-step/fd3f76e-Testim_251a.png)
 
 **Advanced** メニューが展開されます。
 
 4. **Downloads** をクリックします。
 
-![ダウンロード](/images/validations/file-upload-step/bfff7bc-Testim_252a_r.png "Testim 252a_r.png")
+![ダウンロード](/images/validations/file-upload-step/bfff7bc-Testim_252a_r.png)
 
 **Downloads** 設定ページが表示されます。
 
 5. **Ask where to save each file before downloading** トグルが無効（左側）になっていることを確認します。クリックすると有効（右側）と無効（左側）を切り替えられます。
 
-![ステップ追加矢印](/images/validations/file-upload-step/6631d57-Testim_253a.png "Testim 253a.png")
+![ステップ追加矢印](/images/validations/file-upload-step/6631d57-Testim_253a.png)
 
 :fa-arrow-right: **「Element must be visible」のチェックを外すには:**
 
 1. 対象のアップロードステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![アップロード](/images/validations/file-upload-step/40da018-Testim_254a.png "Testim 254a.png")
+![アップロード](/images/validations/file-upload-step/40da018-Testim_254a.png)
 
 右側に **Properties** パネルが表示されます。
 
-![表示検証](/images/validations/file-upload-step/bf62347-Testim_255_r.png "Testim 255_r.png")
+![表示検証](/images/validations/file-upload-step/bf62347-Testim_255_r.png)
 
 2. **Element must be visible** チェックボックスをクリックして選択を解除します。
 
@@ -93,7 +93,7 @@ OS のファイルブラウザーやドラッグ＆ドロップでファイル�
 2. ファイルをドラッグ＆ドロップするか、ローカルファイルブラウザーの指示に従ってファイルを選択します。\
    The file is uploaded to the Testim server, and a **File Drop** step or a **Browse For File** step is created.
 
-![ファイル](/images/validations/file-upload-step/b79925e-Testim_256a.png "Testim 256a.png")
+![ファイル](/images/validations/file-upload-step/b79925e-Testim_256a.png)
 
 テスト実行時、ファイルはサーバーからローカルにダウンロードされ、AUT にアップロードされます。
 
@@ -101,8 +101,8 @@ OS のファイルブラウザーやドラッグ＆ドロップでファイル�
 
 1. ファイル一覧を確認したいアップロードステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![ファイル](/images/validations/file-upload-step/a68316e-Testim_254a.png "Testim 254a.png")
+![ファイル](/images/validations/file-upload-step/a68316e-Testim_254a.png)
 
 右側の **Properties** パネルにアップロード済みファイルが表示されます。
 
-![Testimインターフェース](/images/validations/file-upload-step/dd52cc2-Testim_257a_r.png "Testim 257a_r.png")
+![Testimインターフェース](/images/validations/file-upload-step/dd52cc2-Testim_257a_r.png)

@@ -32,7 +32,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
-![スクリーンショット](/images/validations/validate-element-text/c2ef26f-Screen_Shot_2021-04-18_at_6.37.44.png "Screen Shot 2021-04-18 at 6.37.44.png")
+![スクリーンショット](/images/validations/validate-element-text/c2ef26f-Screen_Shot_2021-04-18_at_6.37.44.png)
 
    アクションのオプションが表示されます。
 
@@ -44,7 +44,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![スクリーンショット](/images/validations/validate-element-text/b22feac-Screen_Shot_2021-04-18_at_6.39.03.png "Screen Shot 2021-04-18 at 6.39.03.png")
+![スクリーンショット](/images/validations/validate-element-text/b22feac-Screen_Shot_2021-04-18_at_6.39.03.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    Predefined steps メニューが開きます。
@@ -65,7 +65,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 7. AUT ウィンドウで検証したい要素をクリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![検証オプション](/images/validations/validate-element-text/1915d47-Testim_090.png "Testim 090.png")
+![検証オプション](/images/validations/validate-element-text/1915d47-Testim_090.png)
 
 :::info
 Ctrl キーを押しながら複数の要素をクリックして、複数テキストの検証をまとめて作成することもできます。この場合、すべての検証を含む再利用可能なグループが作成されます。
@@ -79,11 +79,11 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせ、**Testim predefined steps** ボタンをクリックします。
 
-![定義済みステップ](/images/validations/validate-element-text/c16fd83-predefined-steps.png "predefined-steps.png")
+![定義済みステップ](/images/validations/validate-element-text/c16fd83-predefined-steps.png)
 
 2. **Validations** 内の **Validate element text** を選択します。
 
-![要素テキスト検証](/images/validations/validate-element-text/e3ba3d9-validateelementtext.png "validateelementtext.png")
+![要素テキスト検証](/images/validations/validate-element-text/e3ba3d9-validateelementtext.png)
 
 :::note
 メニュー上部の検索ボックスで **Validate element text** を検索することもできます。
@@ -91,11 +91,11 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 3. AUT が開きます。検証したい画面上のテキスト要素を選択します。
 
-![要素選択](/images/validations/validate-element-text/90346f6-selectelement.png "selectelement.png")
+![要素選択](/images/validations/validate-element-text/90346f6-selectelement.png)
 
 4. **Text Validation** ステップが作成され、選択要素のサムネイルがステップに表示されます。
 
-![検証](/images/validations/validate-element-text/2665c9c-textvalidationstep.png "textvalidationstep.png")
+![検証](/images/validations/validate-element-text/2665c9c-textvalidationstep.png)
 
 ## Validate element text ステップの修正（Mobile & Web）
 
@@ -109,7 +109,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
+![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
    右側に Properties パネルが表示されます。
 
@@ -135,7 +135,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 1. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
+![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
    右側に Properties パネルが表示されます。
 

@@ -81,4 +81,4 @@ return connect()
 
 **see screenshot:**
 
-![スクリーンショット](/images/validations/mongodb-validation/c5c8e33-see_screenshot.png "see screenshot.png")
+![スクリーンショット](/images/validations/mongodb-validation/c5c8e33-see_screenshot.png)

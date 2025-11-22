@@ -16,7 +16,7 @@ keywords:
 
 モバイルアプリライブラリには、アップロードされたすべてのアプリのリストが含まれています。モバイルアプリライブラリの各アプリには、次の情報が表示されます:
 
-![](/images/test-management/mobile-apps/beee998-mobile-apps-library.png "mobile-apps-library.png")
+![](/images/test-management/mobile-apps/beee998-mobile-apps-library.png)
 
 * **App**: アプリケーションの名前
 * **Identifier**: アップロード時にアプリファイルのメタデータから取得された一意のアプリ ID（パッケージ識別子/バンドル識別子）
@@ -43,19 +43,19 @@ keywords:
 
 1. メインメニューから **Mobile Apps Tab** に移動します。
 
-![](/images/test-management/mobile-apps/9c9184e-mobileappstab.png "mobileappstab.png")
+![](/images/test-management/mobile-apps/9c9184e-mobileappstab.png)
 
 2. **New App** ボタンをクリックします。
 
-![](/images/test-management/mobile-apps/3531196-newapp.png "newapp.png")
+![](/images/test-management/mobile-apps/3531196-newapp.png)
 
 3. **APK/IPA ファイル**を選択するか、ローカルコンピューターからアップロードウィンドウにファイルをドラッグアンドドロップします。一度にアップロードできるファイルは1つだけです。
 
-![](/images/test-management/mobile-apps/ab59dec-addnewapp.png "addnewapp.png")
+![](/images/test-management/mobile-apps/ab59dec-addnewapp.png)
 
 4. アプリが **Mobile Apps Library** に追加されます。
 
-![](/images/test-management/mobile-apps/4b1abee-appadded.png "appadded.png")
+![](/images/test-management/mobile-apps/4b1abee-appadded.png)
 
 > 📘 注意:
 >
@@ -70,7 +70,7 @@ keywords:
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Download File** ボタンをクリックします。
 
-![](/images/test-management/mobile-apps/28abf33-download.png "download.png")
+![](/images/test-management/mobile-apps/28abf33-download.png)
 
 ## モバイルアプリライブラリからアプリを削除する
 
@@ -81,11 +81,11 @@ keywords:
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Delete** ボタンをクリックします。
 
-![](/images/test-management/mobile-apps/ae5134d-delete.png "delete.png")
+![](/images/test-management/mobile-apps/ae5134d-delete.png)
 
 モバイルアプリがテストで使用されている場合、削除できません。アプリを削除する前に、すべてのテストからアプリケーションを削除するか、アプリケーションを使用するすべてのテストを削除する必要があります。
 
-![](/images/test-management/mobile-apps/c14310b-cannotdelete.png "cannotdelete.png")
+![](/images/test-management/mobile-apps/c14310b-cannotdelete.png)
 
 ## モバイルアプリ ID をコピーする
 
@@ -96,11 +96,11 @@ keywords:
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Copy ID** ボタンをクリックします。
 
-![](/images/test-management/mobile-apps/434c659-copyid.png "copyid.png")
+![](/images/test-management/mobile-apps/434c659-copyid.png)
 
 その後、必要な場所にモバイルアプリ ID を貼り付けることができます。
 
-![](/images/test-management/mobile-apps/e67232c-useid.png "useid.png")
+![](/images/test-management/mobile-apps/e67232c-useid.png)
 
 ## モバイルアプリライブラリを検索する
 
@@ -111,7 +111,7 @@ keywords:
 1. **Mobile Apps Library** に移動します。
 2. 検索ボックスに検索したいモバイルアプリの **Name**（名前）を入力します。モバイルアプリは、検索条件に一致するアプリのリストを自動的にフィルタリングします。
 
-![](/images/test-management/mobile-apps/0a994e5-search.png "search.png")
+![](/images/test-management/mobile-apps/0a994e5-search.png)
 
 ## グリッドプロバイダーへのモバイルアプリの直接アップロード
 

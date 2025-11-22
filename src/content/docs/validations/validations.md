@@ -53,7 +53,7 @@ Testim では次の種類の検証を利用できます。
 
 ### Validate element visible
 
-![表示検証](/images/validations/validations/9dc088f-Testim_019_r.png "Testim 019_r.png")
+![表示検証](/images/validations/validations/9dc088f-Testim_019_r.png)
 
 ### Validate element text
 
@@ -73,6 +73,6 @@ Testim では次の種類の検証を利用できます。
 
 検証が失敗すると、ステップ左上のアイコンが赤になり、Properties パネルには失敗メッセージが表示されます。加えて、エディター上部に赤いバーが表示され、失敗したステップの期待値と実際値が示されます。**See error** リンクをクリックすると、完全なエラーメッセージを確認できます。
 
-![スクリーンショット](/images/validations/validations/ecfa22f-Screen_Shot_2021-04-18_at_6.35.08.png "Screen Shot 2021-04-18 at 6.35.08.png")
+![スクリーンショット](/images/validations/validations/ecfa22f-Screen_Shot_2021-04-18_at_6.35.08.png)
 
 詳細は [Test results](/docs/test-results) を参照してください。

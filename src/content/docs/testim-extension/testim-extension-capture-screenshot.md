@@ -23,12 +23,12 @@ Testim拡張機能のスクリーンショットキャプチャ機能を使用�
 4. 再度**Testim拡張機能**アイコンをクリックします。\
    拡張機能メニューが開きます。
 
-![425](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG "Testim extension.PNG")
+![425](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
 
 5. **Capture Screenshot**をクリックします。\
    画面が固定され、注釈ツールバーが表示されます。
 
-![620](/images/testim-extension/testim-extension-capture-screenshot/92260ba-annotation_toolbar.PNG "annotation toolbar.PNG")
+![620](/images/testim-extension/testim-extension-capture-screenshot/92260ba-annotation_toolbar.PNG)
 
 6. 以下の注釈ツールを使用してスクリーンショットに注釈を付けます(上から下の順):
 
@@ -47,11 +47,11 @@ Testim拡張機能のスクリーンショットキャプチャ機能を使用�
 1. Testimをバグトラッカーに接続していることを確認してください。詳細については - &lt;参照を追加&gt;
 2. スクリーンショットに注釈を付けた後、注釈ツールバーで「Publish」をクリックします。
 
-![620](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png "publishbutton.png")
+![620](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png)
 
 3. 接続したバグトラッカーシステムに応じて、バグ情報を入力するための異なるフォームが表示されます。以下の説明に基づいてフォームに入力し、「Publish」をクリックします。
 
-![3107](/images/testim-extension/testim-extension-capture-screenshot/403ffb7-trelloformwithcallouts.PNG "trelloformwithcallouts.PNG")
+![3107](/images/testim-extension/testim-extension-capture-screenshot/403ffb7-trelloformwithcallouts.PNG)
 
 フォームには以下の要素が含まれます:
 

@@ -35,16 +35,16 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 
 1. **Settings --> API** に移動します。
 
-![](/images/cli-api/api-access/90025bb-Screen_Shot_2020-10-19_at_12.40.39.png "Screen Shot 2020-10-19 at 12.40.39.png")
+![](/images/cli-api/api-access/90025bb-Screen_Shot_2020-10-19_at_12.40.39.png)
 
 2. **Generate API Key** をクリックします。
 3. キーに名前を付けて **Generate** をクリックします。APIキーの値が表示されます。
 
-![](/images/cli-api/api-access/eb6356a-Screen_Shot_2020-10-19_at_12.42.18.png "Screen Shot 2020-10-19 at 12.42.18.png")
+![](/images/cli-api/api-access/eb6356a-Screen_Shot_2020-10-19_at_12.42.18.png)
 
 4. APIキーをコピーして **Done** をクリックします。[APIキーの使用](doc:api-access#using-the-api-key)セクションの説明に従って、API認証ヘッダーでキーを使用します。
 
-![](/images/cli-api/api-access/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png "Screen Shot 2020-10-19 at 12.50.40.png")
+![](/images/cli-api/api-access/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png)
 
 > 📘
 >
@@ -54,7 +54,7 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 
 **Settings > API** 画面から、既存のキーを管理できます。**検索ボックス**にキー名を入力して、既存のキーを検索できます。
 
-![](/images/cli-api/api-access/7728ff5-Screen_Shot_2020-10-19_at_12.52.14.png "Screen Shot 2020-10-19 at 12.52.14.png")
+![](/images/cli-api/api-access/7728ff5-Screen_Shot_2020-10-19_at_12.52.14.png)
 
 :fa-arrow-right: **追加のキーを生成するには:**
 

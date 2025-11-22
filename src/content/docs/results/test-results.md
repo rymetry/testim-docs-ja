@@ -50,7 +50,7 @@ keywords:
 
 テスト実行中、Testimは各ステップをその結果で更新します。これには、ステータス(成功または失敗)、失敗した場合の詳細なエラーメッセージ、所要時間、その特定の状態での画面のスクリーンショットが含まれます。これは、ブラウザでローカルにテストを実行する場合と、[CLIツール](/docs/running-tests/the-command-line-cli)を使用してCIで実行する場合の両方で同じです。
 
-![](/images/results/test-results/3aab71e-step-results.jpg "step-results.jpg")
+![](/images/results/test-results/3aab71e-step-results.jpg)
 
 ステップ上部の警告アイコンにカーソルを合わせると、コンソールログのエラーと警告、ネットワークエラー、または重大なページ変更警告などの詳細情報が表示されます。ページ変更警告は、その要素のスマートロケーターの信頼レベルが記録されたテストと比較して20%以上変動した場合に、テスト実行に表示されます。これは、基礎となるコードが変更され、ユーザーがその要素のスマートロケーターを「改善」または「再割り当て」する必要があることを示している可能性があります。
 
@@ -58,28 +58,28 @@ keywords:
 
 各ステップの結果を表示するには、ダブルクリックします:
 
-![](/images/results/test-results/831ca16-step-result.jpg "step-result.jpg")
+![](/images/results/test-results/831ca16-step-result.jpg)
 
 または、ステップが選択されているときに**プロパティ**パネルを開きます:
 
-![](/images/results/test-results/6720992-step-properties.jpg "step-properties.jpg")
+![](/images/results/test-results/6720992-step-properties.jpg)
 
 ステップのスクリーンショットを表示するには、ステップ上のスクリーンショットアイコンをクリックします:
 
-![](/images/results/test-results/cff91a3-screenshot-icon.jpg "screenshot-icon.jpg")
+![](/images/results/test-results/cff91a3-screenshot-icon.jpg)
 
 または、ステップを開いたときのスクリーンショットアイコンをクリックします:
 
-![](/images/results/test-results/266c99e-screenshot-icon2.jpg "screenshot-icon2.jpg")
+![](/images/results/test-results/266c99e-screenshot-icon2.jpg)
 
 どちらの方法でも、ステップ詳細画面のスクリーンショットタブが開きます。ここで、ステップ作成時に撮影された元のスクリーンショットと、最近のテスト実行からのスクリーンショットを比較できます。
 
-![](/images/results/test-results/3f45d36-screenshots.jpg "screenshots.jpg")
+![](/images/results/test-results/3f45d36-screenshots.jpg)
 
 テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/results/visual-validation-test-results)を参照してください。\
 このステップのネットワークログまたはコンソールを表示するには、**ネットワークログ**または**コンソールログ**タブをクリックします。詳細については、[ネットワークログ](/docs/results/network-logs)および[コンソールログ](/docs/results/network-logs-copy)を参照してください。
 
-![](/images/results/test-results/86bec2d-screenshots-networklog.jpg "screenshots-networklog.jpg")
+![](/images/results/test-results/86bec2d-screenshots-networklog.jpg)
 
 > 🚧 注意
 >

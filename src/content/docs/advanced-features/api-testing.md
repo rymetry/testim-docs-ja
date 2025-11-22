@@ -26,7 +26,7 @@ API ステップには **Add API action** と **Validate API** の2種類があ�
 API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/validation)を参照。\
 :fa-arrow-right: **“Add API validation” を追加するには:**
 
-![](/images/advanced-features/api-testing/eb15a7d-validatestep.gif "validatestep.gif")
+![](/images/advanced-features/api-testing/eb15a7d-validatestep.gif)
 
 1. Hover over the :fa-caret-right: (arrow symbol) (or + symbol after the final step) where you want to add the Add API validation step.
 2. Click the **“M”** (Testim predefined steps).\
@@ -41,7 +41,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 The **Add Step** window is shown
 
-![](/images/advanced-features/api-testing/d92c26a-Picture1.png "Picture1.png")
+![](/images/advanced-features/api-testing/d92c26a-Picture1.png)
 
 5. In the **Name the new step** field, enter a name for this step.
 6. If this is a shared step to be made available to reuse in this or other tests, keep the box next to Shared step selected (default), and choose a folder from the **Select shared step** folder list where you want this step stored. Otherwise, deselect the checkbox.\
@@ -49,13 +49,13 @@ The **Add Step** window is shown
 7. Click **Create Step**.\
    The **Run Shared API Validation** window opens.
 
-![](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png "run_sharred_api_validation.png")
+![](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png)
 
 8. In the **URL** field, select the desired HTTP Request method and enter the root-endpoint and path. You can add parameters to the URL. For more information, see [Using Parameters](doc:api-testing#using-parameters-in-the-sent-http-request) section below.
 9. In the **Header** section, enter the header Key-Value pairs that need to be sent with your API. Select the Key-Value (default) option to enter the header in separate key and value fields. Select the Raw option to enter the values in their raw format (e.g. when copying from the browser's devtools network panel).\
    You can test different requests using different headers. Select the checkboxes to the left of the headers you wish to test. Requests with checked headers are all performed, one after the other. To delete a header, select the X to the right of the header.
 
-![](/images/advanced-features/api-testing/0277227-header.png "header.png")
+![](/images/advanced-features/api-testing/0277227-header.png)
 
 10. Click the **Authorization** tab to configure the Authorization header. Select one of the following authorization options:
     * **None** – select this option if you do not want to send authorization parameters or if you want to use an authorization type other than Basic or Bearer. In this case you will have to manually enter the Authorization parameters under the Header tab.
@@ -66,11 +66,11 @@ The **Add Step** window is shown
 >
 > Authorization types entered under the **Authorization** tab (other than None) override authorizations manually entered in the **Header** tab
 
-![](/images/advanced-features/api-testing/e0ec5a9-authorization.png "authorization.png")
+![](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
 11. In the **Body** section, in the drop-down menu, select the data format you want to send and enter the Body of your call in the box below. For example, use the Text option for entering free text (e.g. sending a key and a value). Options are: Text, JSON, JavaScript, XML, and HTML. You can add parameters to the Body. For more information, see  [Using Parameters](doc:api-testing#using-parameters-in-the-sent-http-request) section below.  
 
-![](/images/advanced-features/api-testing/ba2e285-body.png "body.png")
+![](/images/advanced-features/api-testing/ba2e285-body.png)
 
 In the **Assertion** section, you can optionally assert on the header, body, or status code response without manually entering code. The Assertion is run before the code in Run additional code on request results (see below). The response for the assertion can be Passed (TRUE) or Failed (FALSE). If the Assertion fails, the step and test will fail and the Run additional code on request results code won’t be executed. <br/>\
 Do the following:
@@ -80,15 +80,15 @@ Do the following:
 * In the third field (value), enter the value you are checking. The value can be a parameter without curly brackets. <br/>
 * Repeat the steps above to add additional assertions. To enable/disable the assertion select/deselect the checkbox.<br/>
 
-![](/images/advanced-features/api-testing/9c95b25-assertions.png "assertions.png")
+![](/images/advanced-features/api-testing/9c95b25-assertions.png)
 
 13. Select the **Run additional code on request** results switch if you want to run code that will perform additional validations that are not possible through the assertion or add additional functionality to the validation. For example, throwing an error message following a failed validation. You can add parameters to the code. For more information, see Using Parameters section below.
 
-![](/images/advanced-features/api-testing/a99b5db-run_additional_code.png "run_additional_code.png")
+![](/images/advanced-features/api-testing/a99b5db-run_additional_code.png)
 
 14. Click **Show step properties**.
 
-![](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png "showstepproperties.png")
+![](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png)
 
 15. In the **Properties** panel, in the **Send via web page** checkbox:
 
@@ -110,7 +110,7 @@ Do the following:
 If you want to check your request for a quick response outside of the context of the AUT (without running the test), in the **URL** field, click the **Send** button. Assertions and code in the **Run additional code on request results** window will not be executed. Only local parameters with static values, which are defined in the **Properties** panel will be sent. Non-static values will be sent as empty strings.\
 The available step parameters are listed below the **URL** field. You can click **Edit** to modify the parameter in the **Properties** panel.
 
-![](/images/advanced-features/api-testing/b763cb7-image_13.png "image (13).png")
+![](/images/advanced-features/api-testing/b763cb7-image_13.png)
 
 > 📘
 >
@@ -122,7 +122,7 @@ The available step parameters are listed below the **URL** field. You can click 
 Use an API validation step to perform additional actions, while using the API response. For example, the returned data can be used for calculations, or to save it for later use in the test (export parameter). It is possible to use the data from the *header*, *body*, or \_status \_code response.\
 :fa-arrow-right:**To add an “Add API action” step:**
 
-![](/images/advanced-features/api-testing/437b054-apiaciton.gif "apiaciton.gif")
+![](/images/advanced-features/api-testing/437b054-apiaciton.gif)
 
 1. Hover over the :fa-caret-right: (arrow symbol) (or + symbol after the final step) where you want to add the Add API action step.
 2. Click the “M” (Testim predefined steps).\
@@ -137,12 +137,12 @@ Use an API validation step to perform additional actions, while using the API re
 
 The **Add Step** window is shown.
 
-![](/images/advanced-features/api-testing/01b1c12-Picture1.png "Picture1.png")
+![](/images/advanced-features/api-testing/01b1c12-Picture1.png)
 
 5. Follow **steps 5-13** as described in the [Adding a Validate API Step](doc:api-testing#adding-a-validate-api-step) section above.
 6. Select the **Run additional code on request results** switch if you want to run code that will use the returned data from the API call for cases other than validation (e.g. to extract parameters, close DB connections, etc.). You can run any JavaScript code, and use the data returned from the API call, including the *status code*, *response headers*, and *response body*. If the response body content type is XML/JSON, the parameter type will be an Object, otherwise the parameter type is String.
 
-![](/images/advanced-features/api-testing/5d3302a-image_2.png "image (2).png")
+![](/images/advanced-features/api-testing/5d3302a-image_2.png)
 
 7. Follow **steps 14-16** as described in the [Adding a Validate API Step](doc:api-testing#adding-a-validate-api-step) section above.
 
@@ -159,15 +159,15 @@ When adding an API Action or Validate API step to a test, you have the ability t
 1. Navigate to your test and add a Validate API or API Action step as described above.
 2. In the **Body** section of step, select the **Form Data** entry type.
 
-![](/images/advanced-features/api-testing/f021f36-api-testing-1.jpg "api-testing-1.jpg")
+![](/images/advanced-features/api-testing/f021f36-api-testing-1.jpg)
 
 3. Select the **File** entry type.
 
-![](/images/advanced-features/api-testing/aa68d56-api-testing-2.jpg "api-testing-2.jpg")
+![](/images/advanced-features/api-testing/aa68d56-api-testing-2.jpg)
 
 Testim automatically updates the header **Content-Type** to “multipart/form-data.”
 
-![](/images/advanced-features/api-testing/c433a90-api-testing-3.jpg "api-testing-3.jpg")
+![](/images/advanced-features/api-testing/c433a90-api-testing-3.jpg)
 
 > 📘 Note:
 >
@@ -175,11 +175,11 @@ Testim automatically updates the header **Content-Type** to “multipart/form-da
 
 4. Enter the **Key** name for the filename.
 
-![](/images/advanced-features/api-testing/b5a918f-api-testing-4.jpg "api-testing-4.jpg")
+![](/images/advanced-features/api-testing/b5a918f-api-testing-4.jpg)
 
 5. Click the **Upload File** button and attach a file from your computer.
 
-![](/images/advanced-features/api-testing/09a8669-api-testing-5.jpg "api-testing-5.jpg")
+![](/images/advanced-features/api-testing/09a8669-api-testing-5.jpg)
 
 > 📘 Note:
 >
@@ -199,7 +199,7 @@ Testim will save the file to the testing server and when the test runs, the test
 4. Enter the **Key** name for the text field.
 5. Enter the **Value** of the text field.
 
-![](/images/advanced-features/api-testing/428ba6a-Picture1.png "Picture1.png")
+![](/images/advanced-features/api-testing/428ba6a-Picture1.png)
 
 The key:value pair of the form is saved. When the test runs, the test will send the key:value pair along with the API call.
 
@@ -211,11 +211,11 @@ You have the ability to cancel a file upload while the upload is in progress.
 
 1. Click the **“X”** next to the entry with the file upload in progress.
 
-![](/images/advanced-features/api-testing/e72c0ab-api-testing-6.jpg "api-testing-6.jpg")
+![](/images/advanced-features/api-testing/e72c0ab-api-testing-6.jpg)
 
 Testim will cancel the file upload and allow you reupload a different file.
 
-![](/images/advanced-features/api-testing/e25b412-api-testing-7.jpg "api-testing-7.jpg")
+![](/images/advanced-features/api-testing/e25b412-api-testing-7.jpg)
 
 ## Replace a File Attachment
 
@@ -225,11 +225,11 @@ You have the ability to replace the file attachment for an existing entry.
 
 1. Click the **“X”** next to the previously attached file entry.
 
-![](/images/advanced-features/api-testing/0428c1c-api-testing-8.jpg "api-testing-8.jpg")
+![](/images/advanced-features/api-testing/0428c1c-api-testing-8.jpg)
 
 2. Click the **Upload File** button and attach a file from your computer to upload a new file.
 
-![](/images/advanced-features/api-testing/0c81dc9-api-testing-5.jpg "api-testing-5.jpg")
+![](/images/advanced-features/api-testing/0c81dc9-api-testing-5.jpg)
 
 ## Exclude or Delete an Entry from the Body Section
 
@@ -239,7 +239,7 @@ You have the ability to exclude or delete a Body entry from the API call.
 
 1. Click the **check box** to the left of the entry you want to exclude from the test.
 
-![](/images/advanced-features/api-testing/de72f68-api-testing-10.jpg "api-testing-10.jpg")
+![](/images/advanced-features/api-testing/de72f68-api-testing-10.jpg)
 
 Testim will exclude this entry from the test, but the entry will not be deleted and can be included again at any time.
 
@@ -247,7 +247,7 @@ Testim will exclude this entry from the test, but the entry will not be deleted 
 
 1. Click the **“X”** to the right of the Body entry you want to delete.
 
-![](/images/advanced-features/api-testing/e7fea88-api-testing-9.jpg "api-testing-9.jpg")
+![](/images/advanced-features/api-testing/e7fea88-api-testing-9.jpg)
 
 Testim will remove this entry.
 
@@ -272,52 +272,52 @@ Parameters can be used in the header, body, and URL. Since those sections are cu
 
 You can use triple brackets if you do not want the parameters to be encoded. e.g, \{\{\{param}}}.
 
-![](/images/advanced-features/api-testing/59f09c0-Picture2.png "Picture2.png")
+![](/images/advanced-features/api-testing/59f09c0-Picture2.png)
 
 ### Adding parameters to the URL
 
 If you want to send the API call to an API that uses the same URL as the test's base URL, instead of writing the entire URL you can use the Base URL parameter, by writing \{\{\{BASE\_URL}}} in the URL field, followed by the rest of the URL. You can use triple brackets if you do not want the parameters to be encoded. e.g, \{\{\{param}}}.
 
-![](/images/advanced-features/api-testing/753553d-image_5.png "image (5).png")
+![](/images/advanced-features/api-testing/753553d-image_5.png)
 
 ### Adding parameters to the Header
 
 You can use triple brackets if you do not want the parameters to be encoded. e.g, \{\{\{param}}}.
 
-![](/images/advanced-features/api-testing/82b5c47-image_3.png "image (3).png")
+![](/images/advanced-features/api-testing/82b5c47-image_3.png)
 
 ## Using parameters in the HTTP response
 
 Parameters added in the Properties panel will be automatically added to the function's signature.
 
-![](/images/advanced-features/api-testing/eb87221-image_9.png "image (9).png")
+![](/images/advanced-features/api-testing/eb87221-image_9.png)
 
 ## Using parameters in the Assertion
 
 Parameters can be added to the assertion without the need to add curly brackets.
 
-![](/images/advanced-features/api-testing/bb8290c-image_8.png "image (8).png")
+![](/images/advanced-features/api-testing/bb8290c-image_8.png)
 
-![](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png "Screen Shot 2022-03-09 at 15.08.34.png")
+![](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png)
 
 # Viewing the result after the run
 
 After running the step, you'll see the response returned from the API call in the Response tab, along with additional info, such as response status code, call duration, and the size of the binary files. You can also view the sent request and download the response info.
 
-![](/images/advanced-features/api-testing/a311eec-image_10.png "image (10).png")
+![](/images/advanced-features/api-testing/a311eec-image_10.png)
 
 The following features are available in the **Response** tab:
 
 * **View Sent Request** – When you click this button a window opens showing the full request that was sent. Parameters are converted to static values. From this window you can **download** a JSON file of the response or **copy** the information shown to your clipboard.
 
-![](/images/advanced-features/api-testing/e6c16b6-image_11.png "image (11).png")
+![](/images/advanced-features/api-testing/e6c16b6-image_11.png)
 
 * **Download the response info** – When you click on the download button (arrow to the right of View Sent Request) a JSON file with the entire response is downloaded to your local device.
 * **Assertion response** – if you have configured assertions, you will see the one of the following indications next to the assertion:
   * **Passed** – this indicates that the assertion was TRUE.
   * **Failed** – this indicates that the assertion was FALSE. In this case the step will fail, which in turn will fail the test.
 
-![](/images/advanced-features/api-testing/639898e-image_12.png "image (12).png")
+![](/images/advanced-features/api-testing/639898e-image_12.png)
 
 **Usage examples** - [click here](https://app.testim.io/#/project/GYXR2qZC/branch/master/automate/tests/97auidmCzzUtZuoQ)
 

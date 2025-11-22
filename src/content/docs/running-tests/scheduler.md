@@ -28,7 +28,7 @@ keywords:
 1. **実行 -> スケジュール実行** に移動します。
 2. **新しいスケジューラー** または **スケジュールしましょう**（初めてのスケジュール実行の場合）をクリックします。
 
-![](/images/running-tests/scheduler/2e1dc9b-newscheduler.png "newscheduler.png")
+![](/images/running-tests/scheduler/2e1dc9b-newscheduler.png)
 
 **新しいスケジュール作成** ウィンドウが開きます。
 
@@ -40,16 +40,16 @@ keywords:
 
 4. **一般情報** の下で、スケジューラーの **名前** を入力し、オプションで **説明** を入力します。
 
-![](/images/running-tests/scheduler/8c3d8ec-schedulername.png "schedulername.png")
+![](/images/running-tests/scheduler/8c3d8ec-schedulername.png)
 
 5. **何を実行するか** の下の **テストリスト** フィールドで、次のいずれかを選択します：
 
 * **ラベル、スイート**：テストラベルまたはスイート名でテストまたはテストスイートを選択します。
 * **テストプラン**：テストプラン名でテストプラン 1 つ以上を選択します。
 
-![](/images/running-tests/scheduler/1302ffb-whattorunlabels.png "whattorunlabels.png")
+![](/images/running-tests/scheduler/1302ffb-whattorunlabels.png)
 
-![](/images/running-tests/scheduler/c1ee51f-whattorunplan.png "whattorunplan.png")
+![](/images/running-tests/scheduler/c1ee51f-whattorunplan.png)
 
 入力を開始してから、スケジュール実行に含める [ラベル](/docs/test-management/labels)、[テストスイート](/docs/test-management/test-suites)、または [テストプラン](/docs/test-management/test-plans) の名前を選択します。ドロップダウンリストが表示されない場合は、ラベル/スイート/プランのスペルが正しいことを確認してください。
 
@@ -57,9 +57,9 @@ keywords:
    * **デフォルト構成をオーバーライド** - テストが実行されるブラウザ、画面解像度、OS など、現在のテスト構成をオーバーライドしたい場合は、このオプションを選択します。このオプションを選択した後、事前構成済みの構成を選択することも、事前構成済みの構成を編集することも、新しい構成を作成することもできます。詳細については、[テスト構成パラメータ](doc:how-to-record-a-test#section-test-configuration-parameters) を参照してください。
    * **ベース URL をオーバーライド** - ベース URL に関する現在のテスト構成をオーバーライドしたい場合は、このオプションを選択します。このオプションを選択した後、新しい **ベース URL** を入力します。
 
-![](/images/running-tests/scheduler/d2c4bac-overridedefault.png "overridedefault.png")
+![](/images/running-tests/scheduler/d2c4bac-overridedefault.png)
 
-![](/images/running-tests/scheduler/bcbd156-defaulturl.png "defaulturl.png")
+![](/images/running-tests/scheduler/bcbd156-defaulturl.png)
 
 > 📘 注：
 >
@@ -77,7 +77,7 @@ keywords:
 
 9. **どこで実行するか** の下で、テストを実行したいグリッドを選択します。グリッド構成の詳細については、[グリッド管理](/docs/grid-management/grid-management) を参照してください。
 
-![](/images/running-tests/scheduler/a07a8af-wheretorun.png "wheretorun.png")
+![](/images/running-tests/scheduler/a07a8af-wheretorun.png)
 
 > 📘 注：
 >
@@ -96,7 +96,7 @@ keywords:
   * メール - メール通知を受け取るには、「メール」チェックボックスを選択し、受信者のメール/メールを入力します。
   * Slack - Slack 経由で通知を送信するには、「Slack」チェックボックスを選択します。Slack に通知を送信するには、初期統合を設定する必要があります。詳細については、[下記](https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack) を参照してください。
 
-![](/images/running-tests/scheduler/748b4b5-notify.png "notify.png")
+![](/images/running-tests/scheduler/748b4b5-notify.png)
 
 11. **詳細** をクリックして [高度なスケジューラーオプション](doc:scheduler#section-advanced-scheduler-options) を構成します。
 
@@ -107,7 +107,7 @@ keywords:
 
 新しいスケジュール実行が作成され、自動的にオンになります：
 
-![](/images/running-tests/scheduler/6f589a7-newscheduleradded.png "newscheduleradded.png")
+![](/images/running-tests/scheduler/6f589a7-newscheduleradded.png)
 
 ## スケジューラーを Slack と統合する
 
@@ -115,15 +115,15 @@ keywords:
 
 1. **新しいスケジュール作成** ウィンドウ > **通知** セクションで、**Slack に追加** をクリックします。
 
-![](/images/running-tests/scheduler/20be5b7-TestimSlack.png "TestimSlack.png")
+![](/images/running-tests/scheduler/20be5b7-TestimSlack.png)
 
 Slack にリダイレクトされてアクセスを確認します。**許可** をクリックします：
 
-![](/images/running-tests/scheduler/7bd8ab6-648de2c-Screen_Shot_2020-09-10_at_9.54.47.png "648de2c-Screen_Shot_2020-09-10_at_9.54.47.png")
+![](/images/running-tests/scheduler/7bd8ab6-648de2c-Screen_Shot_2020-09-10_at_9.54.47.png)
 
 2. 通知を受けたい Slack チャネルを追加します。
 
-![](/images/running-tests/scheduler/8d6ec5b-078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png "078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png")
+![](/images/running-tests/scheduler/8d6ec5b-078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png)
 
 > 📘
 >
@@ -170,7 +170,7 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 
 スイートが実行中の場合、実行を停止できます。**実行** ⇒ **スイート実行** ⇒ 実行中のテストを選択 ⇒ **スケジュール実行を中止** をクリックします。
 
-![](/images/running-tests/scheduler/ce0cfc6-Screen_Shot_2020-01-23_at_9.53.15.png "Screen Shot 2020-01-23 at 9.53.15.png")
+![](/images/running-tests/scheduler/ce0cfc6-Screen_Shot_2020-01-23_at_9.53.15.png)
 
 ## スケジューラーのクローン
 
@@ -181,11 +181,11 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 1. **スケジュールリスト** 画面で、クローンしたいスケジューラーを選択します。
 2. **クローン** ボタンをクリックします。
 
-![](/images/running-tests/scheduler/7660cab-copy.png "copy.png")
+![](/images/running-tests/scheduler/7660cab-copy.png)
 
 3. スケジューラーに **名前** を付けて **クローン** をクリックします。
 
-![](/images/running-tests/scheduler/ae08359-clone.png "clone.png")
+![](/images/running-tests/scheduler/ae08359-clone.png)
 
 これで新しいスケジューラーを編集できます。
 
@@ -198,7 +198,7 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 1. **実行 > スケジュール実行** に移動します。
 2. **高度なフィルタ** ボタンをクリックします。
 
-![](/images/running-tests/scheduler/972a9bd-schedulerfilter.png "schedulerfilter.png")
+![](/images/running-tests/scheduler/972a9bd-schedulerfilter.png)
 
 3. **スケジューラーのフィルタリング** パネルから次のフィルターを選択して、**適用** ボタンをクリックします。
    1. **アクティブなものだけを表示** - 有効にすると、アクティブなスケジューラーのみが表示されます

@@ -33,15 +33,15 @@ keywords:
 カスタムコンテキストを割り当てる際は、DOMの最も大きい要素（例: Body）を選ぶことを推奨します（詳細は[DOMで最も大きい要素を選ぶ](doc:group-context#selecting-the-largest-element-in-the-dom)）。以下は共有グループを新しいコンテキストで再利用する前提の手順です（グループの作成は[こちら](doc:groups#creating-a-group)）。\
 :fa-arrow-right: **設定手順:**
 
-![](/images/advanced-features/group-context/3d67f16-Jan-31-2021_08-33-20.gif "Jan-31-2021 08-33-20.gif")
+![](/images/advanced-features/group-context/3d67f16-Jan-31-2021_08-33-20.gif)
 
 1. 追加したい位置の **>（矢印）** にカーソルを合わせます。
 
-![](/images/advanced-features/group-context/8acff4c-Testim_115a.png "Testim 115a.png")
+![](/images/advanced-features/group-context/8acff4c-Testim_115a.png)
 
 アクションオプションが表示されます。
 
-![](/images/advanced-features/group-context/014defd-Testim_116a.png "Testim 116a.png")
+![](/images/advanced-features/group-context/014defd-Testim_116a.png)
 
 2. **フォルダ**（Shared steps）をクリックし、共有ステップメニューを開きます。
 
@@ -49,7 +49,7 @@ keywords:
 
 3. 目的のグループを選択し、テストに追加します。
 
-![](/images/advanced-features/group-context/b9e1760-Testim_117.png "Testim 117.png")
+![](/images/advanced-features/group-context/b9e1760-Testim_117.png)
 
 4. そのグループ左の **>（矢印）** にカーソルを合わせ、**Toggle Breakpoint** をクリックします。
 
@@ -57,11 +57,11 @@ keywords:
 
 6. **Play Scenario** でブレークポイントまで実行します。
 
-![](/images/advanced-features/group-context/42c85ed-Testim_119a.png "Testim 119a.png")
+![](/images/advanced-features/group-context/42c85ed-Testim_119a.png)
 
 7. 追加したグループにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![](/images/advanced-features/group-context/cbec1d6-Testim_001a.png "Testim 001a.png")
+![](/images/advanced-features/group-context/cbec1d6-Testim_001a.png)
 
 右側にプロパティパネルが開きます。
 
@@ -79,7 +79,7 @@ AUT ブラウザが開きます。
 
 10. 選択した要素は **Properties** の Context セクションにある **Target element** に表示されます。
 
-![](/images/advanced-features/group-context/2402cd0-Testim_003.png "Testim 003.png")
+![](/images/advanced-features/group-context/2402cd0-Testim_003.png)
 
 新しいコンテキストがグループに自動適用され、個々のステップを再割り当てする必要はありません。
 

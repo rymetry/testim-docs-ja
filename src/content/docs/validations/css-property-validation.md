@@ -27,7 +27,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 
 1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
 
-![ステップ追加矢印](/images/validations/css-property-validation/cd930ed-Testim_142a.png "Testim 142a.png")
+![ステップ追加矢印](/images/validations/css-property-validation/cd930ed-Testim_142a.png)
 
 アクションのオプションが表示されます。
 
@@ -39,7 +39,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 
 3. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![ステップ追加矢印](/images/validations/css-property-validation/87450ab-Testim_145a.png "Testim 145a.png")
+![ステップ追加矢印](/images/validations/css-property-validation/87450ab-Testim_145a.png)
 
 4. もう一度 :fa-caret-right: **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
@@ -69,7 +69,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 10. **OK** をクリックします。\
     ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![検証](/images/validations/css-property-validation/efe9aec-Testim_147.png "Testim 147.png")
+![検証](/images/validations/css-property-validation/efe9aec-Testim_147.png)
 
 11. 検証ステップの後の **Toggle Breakpoint** ボタンをクリックして、ブレークポイントを削除します。
 
@@ -82,7 +82,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
 
-![CLI](/images/validations/css-property-validation/00517ed-Testim_148a.png "Testim 148a.png")
+![CLI](/images/validations/css-property-validation/00517ed-Testim_148a.png)
 
 右側に **Properties** パネルが表示されます。
 

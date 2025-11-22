@@ -27,11 +27,11 @@ keywords:
 
 :fa-arrow-right: 生成日付（Generate date）ステップを追加するには:
 
-![894](/images/test-utilities/generating-a-date/a09d76d-Jan-31-2021_06-26-26.gif "Jan-31-2021 06-26-26.gif")
+![894](/images/test-utilities/generating-a-date/a09d76d-Jan-31-2021_06-26-26.gif)
 
 1. 2 つのステップの間にある **>（矢印）** か、最後のステップの後ろにある **+（プラス）** にカーソルを合わせます。
 
-![3665](/images/test-utilities/generating-a-date/46fca20-Testim_082b.png "Testim 082b.png")
+![3665](/images/test-utilities/generating-a-date/46fca20-Testim_082b.png)
 
    アクションのオプションが表示されます。
 

@@ -3,17 +3,23 @@ title: 'グループのパラメータ'
 description: '原文: https://help.testim.io/docs/parameters-for-groups'
 category: 'パラメータ'
 order: 3
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/parameters-for-groups'
 keywords:
-  - testim
-  - parameters-for-groups
-  - parameters
+  - Testim
+  - グループ
+  - パラメータ
+  - 再利用
+  - スコープ
+  - ローカルスコープ
+  - 共有ステップ
+  - テスト自動化
 ---
 グループへパラメータを渡して再利用性を高める方法
 
-[グループ](/docs/groups/groups) にはパラメータ（テストステップへ値を渡すための変数）を含められます。ログインの例なら、ユーザー名やパスワードをパラメータ化して、registered_user／guest など異なる組み合わせを切り替えられます。\
+[グループ](/docs/groups) にはパラメータ（テストステップへ値を渡すための変数）を含められます。ログインの例なら、ユーザー名やパスワードをパラメータ化して、registered_user／guest など異なる組み合わせを切り替えられます。\
 グループが複数テストで共有されている場合、グループのパラメータは各テストで参照でき、テストごとに値だけを設定すれば再利用できます。\
-グループへの追加方法は、[ステッププロパティパネルのパラメータ](/docs/parameters/parameters-in-custom-javascript-steps) と同様です。まず[グループを作成](/docs/groups/groups)し、パラメータを追加して、グループ内の対象ステップに割り当て、値を設定します。
+グループへの追加方法は、[ステッププロパティパネルのパラメータ](/docs/parameters-in-custom-javascript-steps) と同様です。まず[グループを作成](/docs/groups)し、パラメータを追加して、グループ内の対象ステップに割り当て、値を設定します。
 
 ## パラメータのスコープ
 
@@ -28,21 +34,21 @@ keywords:
 
 :fa-arrow-right: **グループにパラメータを追加するには:**
 
-1. [グループ](/docs/groups/groups) の手順でグループを作成します（例: Login group）。
+1. [グループ](/docs/groups) の手順でグループを作成します（例: Login group）。
 2. グループの**プロパティを表示**アイコン（:fa-cog:）をクリックします。
 3. **Params** 横の **+** をクリックし、**JS** を選択します。
 
-![](/images/parameters/parameters-for-groups/8e504bc-paramsjs.PNG "paramsjs.PNG")
+![JSパラメータの追加](/images/parameters/parameters-for-groups/8e504bc-paramsjs.PNG)
 
 4. **編集**アイコンからパラメータ名を設定します（"param" を置き換え）。
 
-![](/images/parameters/parameters-for-groups/0d72468-edit.png "edit.png")
+![パラメータ名の編集](/images/parameters/parameters-for-groups/0d72468-edit.png)
 
 5. 名前の下の欄に値を入力します。文字列はクォートで囲みます（例: 'guest'）。この値はこのテスト内のみで有効です。
 
 6. 追加のパラメータも同様に設定します。
 
-![](/images/parameters/parameters-for-groups/4c19442-example.PNG "example.PNG")
+![パラメータ設定例](/images/parameters/parameters-for-groups/4c19442-example.PNG)
 
 7. **保存** → **OK** をクリックします。
 
@@ -59,7 +65,7 @@ keywords:
 2. パラメータを割り当てたいステップを選択し、**プロパティを表示**（:fa-cog:）をクリックします。例として **Set text** ステップに `username` を割り当てます。
 3. **プロパティ**パネルの **Text to assign** を、静的値からパラメータ名（例: username）に変更します。
 
-![](/images/parameters/parameters-for-groups/a5856f1-texttoassign.png "texttoassign.png")
+![パラメータの割り当て](/images/parameters/parameters-for-groups/a5856f1-texttoassign.png)
 
 4. 同様に他のステップへも割り当てます（例: パスワード）。
 5. **保存** → **OK** をクリックします。
@@ -71,13 +77,13 @@ keywords:
 
 :fa-arrow-right: **再利用手順:**
 
-1. [グループの再利用](/docs/groups/groups) の手順で別テストに追加します。関連ステップへの割り当ては維持され、値のみ未設定の状態です。
+1. [グループの再利用](/docs/groups) の手順で別テストに追加します。関連ステップへの割り当ては維持され、値のみ未設定の状態です。
 
-![](/images/parameters/parameters-for-groups/c3bace7-addinglogingroup.PNG "addinglogingroup.PNG")
+![グループの追加](/images/parameters/parameters-for-groups/c3bace7-addinglogingroup.PNG)
 
 2. グループの**プロパティを表示**（:fa-cog:）。パラメータは存在しますが値は未設定です。
 
-![](/images/parameters/parameters-for-groups/5ccad01-notassigned.png "notassigned.png")
+![未設定のパラメータ](/images/parameters/parameters-for-groups/5ccad01-notassigned.png)
 
 3. **Assign Now** ドロップダウンから **JS** を選択し、値を入力します（文字列はクォートで囲む）。
 4. 他のパラメータも同様に設定します。

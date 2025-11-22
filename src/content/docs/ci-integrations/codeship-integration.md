@@ -12,13 +12,13 @@ keywords:
   - webdriver-manager
 ---
 
-![](/images/ci-integrations/codeship-integration/1328260-codeship1.png "codeship1.png")
+![](/images/ci-integrations/codeship-integration/1328260-codeship1.png)
 
 ## プロジェクト設定
 
 [Codeship](http://codeship.com/)とTestimを統合するには、CodeshipプロジェクトのProject SettingsのTest Settingsに移動します:
 
-![](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png "codeship2.png")
+![](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png)
 
 ## ローカルSelenium Gridで実行
 
@@ -43,7 +43,7 @@ testim --project "<PROJECT ID>" \
 ​
 ```
 
-![](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png "codeship3.png")
+![](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
 
 ​## 外部Selenium Gridで実行\
 アプリが公開されている利用可能なサーバーにデプロイされている場合、外部Selenium Gridでテストを実行できます。その場合、ローカルSelenium Server(webdriver-manager)は不要なので、setup commandsセクションに以下の行のみを追加します:

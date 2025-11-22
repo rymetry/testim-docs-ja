@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 69個
-- ✅   翻訳のみ完了: 214個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 78個
+- ✅   翻訳のみ完了: 205個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -135,15 +135,15 @@
 
 ## Parameters（パラメータ）
 
-- ✅ https://help.testim.io/docs/parameters
-- ✅ https://help.testim.io/docs/parameters-in-custom-javascript-steps
-- ✅ https://help.testim.io/docs/parameters-for-groups
-- ✅ https://help.testim.io/docs/json-parameters-file-parameters
-- ✅ https://help.testim.io/docs/configuration-file-parameters
-- ✅ https://help.testim.io/docs/passing-parameters-from-excel-file
-- ✅ https://help.testim.io/docs/parameter-override-rules
-- ✅ https://help.testim.io/docs/exports-parameters
-- ✅ https://help.testim.io/docs/hidden-parameters
+- ✅🔍 https://help.testim.io/docs/parameters
+- ✅🔍 https://help.testim.io/docs/parameters-in-custom-javascript-steps
+- ✅🔍 https://help.testim.io/docs/parameters-for-groups
+- ✅🔍 https://help.testim.io/docs/json-parameters-file-parameters
+- ✅🔍 https://help.testim.io/docs/configuration-file-parameters
+- ✅🔍 https://help.testim.io/docs/passing-parameters-from-excel-file
+- ✅🔍 https://help.testim.io/docs/parameter-override-rules
+- ✅🔍 https://help.testim.io/docs/exports-parameters
+- ✅🔍 https://help.testim.io/docs/hidden-parameters
 
 ## Advanced Features（高度な機能）
 

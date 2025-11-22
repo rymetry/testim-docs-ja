@@ -26,4 +26,4 @@ return [
 
 プロジェクトレベルでアプリ名をオーバーライドすることもできます。デフォルトのアプリ名は*projectId*です。オーバーライドするには、Settings -> Integration --> Applitools統合の下に、アプリケーション名を追加します
 
-![1739](/images/applitools-integration/override-applitools-app-name/f97a73d-Group_45.jpg "Group 45.jpg")
+![1739](/images/applitools-integration/override-applitools-app-name/f97a73d-Group_45.jpg)

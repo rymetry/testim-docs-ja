@@ -30,7 +30,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. ユーザーアバターをクリックします。
 2. **Team** ハイパーリンクをクリックします。
 
-![](/images/project-user-management/project-and-user-management/4129216-projects.png "projects.png")
+![](/images/project-user-management/project-and-user-management/4129216-projects.png)
 
 > 📘
 >
@@ -43,7 +43,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. ユーザーアバターをクリックします。
 2. **Team** ハイパーリンクをクリックします。
 
-![](/images/project-user-management/project-and-user-management/cfcf882-5543298-team.png "5543298-team.png")
+![](/images/project-user-management/project-and-user-management/cfcf882-5543298-team.png)
 
 ### 企業チームメイトの追加
 
@@ -67,9 +67,9 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. 削除したいチームメイトを1人以上選択します。複数のチームメイトを選択するには CTRL/CMD + クリックを使用します。
 2. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「Delete users」を選択することもできます。
 
-![](/images/project-user-management/project-and-user-management/3af9d4d-deletecompanyusers.png "deletecompanyusers.png")
+![](/images/project-user-management/project-and-user-management/3af9d4d-deletecompanyusers.png)
 
-![](/images/project-user-management/project-and-user-management/0724162-4a1895b-rightclickdelete.png "4a1895b-rightclickdelete.png")
+![](/images/project-user-management/project-and-user-management/0724162-4a1895b-rightclickdelete.png)
 
 選択したチームメイトが企業から削除されます。
 
@@ -87,7 +87,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. 企業オーナーとしてログインしていることを確認します。
 2. **Team** 画面で、企業オーナーではないユーザーを右クリックし、**Add company owner** を選択します。
 
-![](/images/project-user-management/project-and-user-management/3151c91-c0f396c-addcompanyowner.png "c0f396c-addcompanyowner.png")
+![](/images/project-user-management/project-and-user-management/3151c91-c0f396c-addcompanyowner.png)
 
 ### 企業オーナーの削除
 
@@ -96,7 +96,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. 企業オーナーとしてログインしていることを確認します。
 2. **Team** 画面で、企業オーナーのユーザーを右クリックし、**Remove company owner** を選択します。
 
-![](/images/project-user-management/project-and-user-management/397901e-ef3c7bd-remove.png "ef3c7bd-remove.png")
+![](/images/project-user-management/project-and-user-management/397901e-ef3c7bd-remove.png)
 
 ## 企業とプロジェクト間のナビゲーション
 

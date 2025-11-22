@@ -55,19 +55,19 @@ testim  --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<You
 
 スケジュールされた実行をターボモードに変換するには、変換したいスケジュールされた実行を選択 --> 編集モードに入る --> ターボモードトグルをオンにします。
 
-![](/images/insights/turbo-mode/4dc96a6-Oct-26-2021_12-46-54.gif "Oct-26-2021 12-46-54.gif")
+![](/images/insights/turbo-mode/4dc96a6-Oct-26-2021_12-46-54.gif)
 
 ## ターボモードテスト結果
 
 * 上記のように、テストアーティファクトは失敗したテストに対してのみ利用可能です
 * 実行の下 - ターボモード表示が表示されます
 
-![](/images/insights/turbo-mode/47fe6d2-Screen_Shot_2021-10-27_at_6.23.57.png "Screen Shot 2021-10-27 at 6.23.57.png")
+![](/images/insights/turbo-mode/47fe6d2-Screen_Shot_2021-10-27_at_6.23.57.png)
 
 * テスト実行の下 - ターボモードで実行された各テストには表示があります
 
-![](/images/insights/turbo-mode/2c63b5a-Screen_Shot_2021-10-27_at_6.25.47.png "Screen Shot 2021-10-27 at 6.25.47.png")
+![](/images/insights/turbo-mode/2c63b5a-Screen_Shot_2021-10-27_at_6.25.47.png)
 
 * エディター - 各結果の左上（テストステータスの隣）に表示があります
 
-![](/images/insights/turbo-mode/1c24db7-Screen_Shot_2021-10-27_at_6.27.52.png "Screen Shot 2021-10-27 at 6.27.52.png")
+![](/images/insights/turbo-mode/1c24db7-Screen_Shot_2021-10-27_at_6.27.52.png)

@@ -15,7 +15,7 @@ keywords:
 **「結果ラベル」**を使用すると、リモート実行にテキストラベルを追加できます。\
 **「スイート実行」**および**「テスト実行」**ページで、結果ラベルを選択して実行を簡単にフィルタリングできます。
 
-![1893](/images/results/result-labels/f4b59d0-ResultLabels.gif "ResultLabels.gif")
+![1893](/images/results/result-labels/f4b59d0-ResultLabels.gif)
 
 結果ラベルは、以下のようなさまざまなオプションに使用できます:
 
