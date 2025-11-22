@@ -12,7 +12,7 @@ keywords:
   - yaml設定
 ---
 
-![368](/images/ci-integrations/circle-ci-integration/3eecb4e-circleci.png "circleci.png")
+![368](/images/ci-integrations/circle-ci-integration/3eecb4e-circleci.png)
 
 #### YAMLファイル
 

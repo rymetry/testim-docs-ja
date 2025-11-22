@@ -25,15 +25,15 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 1. テスト実行または実行に移動します。
 2. テスト上部のエラーメッセージと、失敗した特定のテストステップを確認します。
 
-![1920](/images/results/debug-console-errors-access-dom/1b081be-displayed-errors.png "displayed-errors.png")
+![1920](/images/results/debug-console-errors-access-dom/1b081be-displayed-errors.png)
 
 3. コンソールログを開きます。
 
-![401](/images/results/debug-console-errors-access-dom/154a7ab-vewconsolelog.png "vewconsolelog.png")
+![401](/images/results/debug-console-errors-access-dom/154a7ab-vewconsolelog.png)
 
 4. コンソールログを表示して、特定のエラーに関する洞察を得ます。
 
-![1161](/images/results/debug-console-errors-access-dom/8c191a6-consoleerrors.png "consoleerrors.png")
+![1161](/images/results/debug-console-errors-access-dom/8c191a6-consoleerrors.png)
 
 > 📘 注意:
 >
@@ -48,13 +48,13 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 1. テスト実行または実行に移動します。
 2. 失敗した特定のテストステップでエラーメッセージを確認します。
 
-![270](/images/results/debug-console-errors-access-dom/1400173-steperror.png "steperror.png")
+![270](/images/results/debug-console-errors-access-dom/1400173-steperror.png)
 
 3. DOMスナップショットを表示するには、ステップにカーソルを合わせて**スクリーンショットを表示**ボタンをクリックするか、ステップのプロパティパネルで**DOMを表示**リンクをクリックします。
 
-![281](/images/results/debug-console-errors-access-dom/a6ac0aa-viewdom1.png "viewdom1.png")
+![281](/images/results/debug-console-errors-access-dom/a6ac0aa-viewdom1.png)
 
-![324](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png "viewdom2.png")
+![324](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png)
 
 > 📘 注意:
 >
@@ -69,4 +69,4 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 * **ローカルエクスポート**: このステップで作成されたエクスポートパラメータ。
 * **グローバルエクスポート**: このステップで作成されたグローバルエクスポートパラメータ。
 
-![1414](/images/results/debug-console-errors-access-dom/e5d13c5-step_params.gif "step params.gif")
+![1414](/images/results/debug-console-errors-access-dom/e5d13c5-step_params.gif)

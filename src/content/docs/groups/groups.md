@@ -40,11 +40,11 @@ keywords:
 6. **Confirm** をクリックします。\
    ステップは 1 つのグループステップにまとめられます。グループがテスト間で共有されている場合は **Shared** インジケーターが表示されます。
 
-![共有グループインジケーター](/images/groups/groups/86a6a5f-Screen_Shot_2021-04-07_at_8.16.06.png "Screen Shot 2021-04-07 at 8.16.06.png")
+![共有グループインジケーター](/images/groups/groups/86a6a5f-Screen_Shot_2021-04-07_at_8.16.06.png)
 
 7. グループ内の個々のステップを表示するには、グループをダブルクリックします。
 
-![グループ内のステップ表示](/images/groups/groups/053d9d4-Screen_Shot_2021-12-13_at_11.27.08.png "Screen Shot 2021-12-13 at 11.27.08.png")
+![グループ内のステップ表示](/images/groups/groups/053d9d4-Screen_Shot_2021-12-13_at_11.27.08.png)
 
 ## グループプロパティの指定（任意）
 
@@ -68,7 +68,7 @@ keywords:
 
 1. 2 つのステップの間にある **>（矢印）** にカーソルを合わせます。
 
-![ステップ間の矢印アイコン](/images/groups/groups/d67e999-Screen_Shot_2021-04-07_at_8.23.10.png "Screen Shot 2021-04-07 at 8.23.10.png")
+![ステップ間の矢印アイコン](/images/groups/groups/d67e999-Screen_Shot_2021-04-07_at_8.23.10.png)
 
    アクションのオプションが表示されます。
 
@@ -86,7 +86,7 @@ keywords:
 >
 > 検索ボックスを使ってグループを検索することもできます。
 
-![グループの検索と追加](/images/groups/groups/ed12ece-Jan-29-2021_05-44-08.gif "Jan-29-2021 05-44-08.gif")
+![グループの検索と追加](/images/groups/groups/ed12ece-Jan-29-2021_05-44-08.gif)
 
 4. ステップがパラメーターの受け渡しを前提としている場合は、[Parameters](/docs/parameters) セクションを参照し、パラメーター値を編集して割り当てるのを忘れないでください。各ステップは独自のパラメーターを受け渡します（例: 「login」を、あるテストでは「David」、別のテストでは「John」というパラメーターで呼び出す）。
 
@@ -98,7 +98,7 @@ keywords:
 
 1. もう一方のテストで、2 つのステップ間の **>（矢印）**、または最後のステップの後ろにある **+（プラス）** にカーソルを合わせます。
 
-![ステップ追加位置](/images/groups/groups/dd8aa04-Testim_076b.png "Testim 076b.png")
+![ステップ追加位置](/images/groups/groups/dd8aa04-Testim_076b.png)
 
    アクションのオプションが表示されます。
 
@@ -139,15 +139,15 @@ keywords:
   * テストを停止
   * **Group Details** に入り、下図のように新しいステップを録画
 
-![グループへの録画追加](/images/groups/groups/5ebf6b1-record.gif "record.gif")
+![グループへの録画追加](/images/groups/groups/5ebf6b1-record.gif)
 
 * **既存ステップの途中に手順を追加して録画** — 直前の最後のステップの状態で AUT を開き、下図のように追加入力を録画します。
 
-![ステップ途中への追加録画](/images/groups/groups/0265592-Jan-31-2021_05-55-41.gif "Jan-31-2021 05-55-41.gif")
+![ステップ途中への追加録画](/images/groups/groups/0265592-Jan-31-2021_05-55-41.gif)
 
 * **手順の並べ替え / 削除** — ステップをドラッグして順序を変更できます。削除は選択後に DELETE を押します。
 
-![ステップの並べ替えと削除](/images/groups/groups/58446f7-MyVideo_9.gif "MyVideo_9.gif")
+![ステップの並べ替えと削除](/images/groups/groups/58446f7-MyVideo_9.gif)
 
 > 📘 Tip
 >
@@ -165,7 +165,7 @@ keywords:
 3. 上部メニューまたはコンテキストメニューの **Hide** をクリック\
    選択した共有ステップが共有ライブラリから非表示になります。既にテストに追加済みのステップには影響しません。
 
-![共有ステップの非表示設定](/images/groups/groups/35bff41-Untitled.png "Untitled.png")
+![共有ステップの非表示設定](/images/groups/groups/35bff41-Untitled.png)
 
 ## 共有グループの特定のインスタンスのみをクローンで置き換える
 
@@ -176,11 +176,11 @@ keywords:
 1. クローンしたい共有グループを編集します。
 2. **Properties** パネルで **Replace with a clone** をクリックします。
 
-![クローンへの置き換え](/images/groups/groups/4195e49-replaceclone.png "replaceclone.png")
+![クローンへの置き換え](/images/groups/groups/4195e49-replaceclone.png)
 
 3. 新しいグループ名を入力します。
 
-![新しいグループ名の入力](/images/groups/groups/96ed6f2-replaceclone2.PNG "replaceclone2.PNG")
+![新しいグループ名の入力](/images/groups/groups/96ed6f2-replaceclone2.PNG)
 
 4. 新しいステップを共有として定義するかどうかを選択します。
 5. **Confirm** をクリックします。\

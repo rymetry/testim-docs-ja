@@ -12,7 +12,7 @@ keywords:
   - nodejs
 ---
 
-![455](/images/ci-integrations/teamcity-integration/6a3c92e-4pro3hwiQxCVNwY6QQXg_teamcity-logo.png "4pro3hwiQxCVNwY6QQXg_teamcity-logo.png")
+![455](/images/ci-integrations/teamcity-integration/6a3c92e-4pro3hwiQxCVNwY6QQXg_teamcity-logo.png)
 
 TeamCityとテストを統合するには、まずTeamCityマシンまたはそのスレーブマシンの1つにnode.js(12.13+、14.15+、16.13+)がインストールされている必要があります。
 
@@ -20,11 +20,11 @@ TeamCityとテストを統合するには、まずTeamCityマシンまたはそ�
 
 1. プロジェクトに新しいビルドステップを作成します:
 
-![1242](/images/ci-integrations/teamcity-integration/6bdc599-irViLY05QOSHdya5bXqR_06-add-build-step.png "irViLY05QOSHdya5bXqR_06-add-build-step.png")
+![1242](/images/ci-integrations/teamcity-integration/6bdc599-irViLY05QOSHdya5bXqR_06-add-build-step.png)
 
 2. "Command Line"ランナータイプを選択します:
 
-![887](/images/ci-integrations/teamcity-integration/6e50ad2-gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png "gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png")
+![887](/images/ci-integrations/teamcity-integration/6e50ad2-gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png)
 
 3. [CLIページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメータを使用してCustom Scriptを設定します。\
    以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです:
@@ -47,11 +47,11 @@ set +x
  --reporters teamcity,console
 ```
 
-![1010](/images/ci-integrations/teamcity-integration/8360a86-xkywkbTDRDiv6XSRI8zk_09-new-build-step-form-full.png "xkywkbTDRDiv6XSRI8zk_09-new-build-step-form-full.png")
+![1010](/images/ci-integrations/teamcity-integration/8360a86-xkywkbTDRDiv6XSRI8zk_09-new-build-step-form-full.png)
 
 TeamCityが結果を保存、分析、表示するために、Testimは自動的に認識される独自のTeamCityレポート形式を生成します:
 
-![1042](/images/ci-integrations/teamcity-integration/947a4f9-byvxlS1TKuodnownVWwg_10-build-results.png "byvxlS1TKuodnownVWwg_10-build-results.png")
+![1042](/images/ci-integrations/teamcity-integration/947a4f9-byvxlS1TKuodnownVWwg_10-build-results.png)
 
 **注記:**
 

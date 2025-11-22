@@ -23,11 +23,11 @@ keywords:
 
 1. アクションメニューの**停止**ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/97c8cc2-test-running.png "test-running.png")
+![](/images/results/stop-pause-debug-tests/97c8cc2-test-running.png)
 
 テストは失敗としてマークされ、完了しなかった最後のステップが強調表示されます。
 
-![](/images/results/stop-pause-debug-tests/84ea66c-test-failed-stopped.png "test-failed-stopped.png")
+![](/images/results/stop-pause-debug-tests/84ea66c-test-failed-stopped.png)
 
 ## 実行中のテストを一時停止する
 
@@ -35,11 +35,11 @@ keywords:
 
 1. アクションメニューの「一時停止」ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/32e47a3-test-pause.png "test-pause.png")
+![](/images/results/stop-pause-debug-tests/32e47a3-test-pause.png)
 
 2. テストの実行を再開するには、アクションメニューの**再生**ボタンをクリックします。テストは、以前に一時停止されたステップから再開されます。
 
-![](/images/results/stop-pause-debug-tests/680cdd0-test-resume.png "test-resume.png")
+![](/images/results/stop-pause-debug-tests/680cdd0-test-resume.png)
 
 ## ステップバイステップで実行する
 
@@ -49,11 +49,11 @@ keywords:
 
 1. **再生**ボタンの横のドロップダウンボタンをクリックし、**ローカルでステップバイステップ実行**を選択します。
 
-![](/images/results/stop-pause-debug-tests/32f50bb-run-step-by-step.png "run-step-by-step.png")
+![](/images/results/stop-pause-debug-tests/32f50bb-run-step-by-step.png)
 
 2. アクションメニューの**次のステップを再生**ボタンをクリックして、テストの次のステップを実行します。
 
-![](/images/results/stop-pause-debug-tests/260b2f1-run-next-step.png "run-next-step.png")
+![](/images/results/stop-pause-debug-tests/260b2f1-run-next-step.png)
 
 ## ブレークポイントを挿入する
 
@@ -63,11 +63,11 @@ keywords:
 
 1. 2つのステップ間の矢印にカーソルを合わせ、**ブレークポイントの切り替え**ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/20582a1-add-breakpoint.png "add-breakpoint.png")
+![](/images/results/stop-pause-debug-tests/20582a1-add-breakpoint.png)
 
 これにより、ステップ間にブレークポイント(一時停止記号)が表示されます。
 
-![](/images/results/stop-pause-debug-tests/2301396-breakpointadded.png "breakpointadded.png")
+![](/images/results/stop-pause-debug-tests/2301396-breakpointadded.png)
 
 > 📘 注意:
 >
@@ -85,6 +85,6 @@ keywords:
 
 1. 2つのステップ間の矢印にカーソルを合わせ、**ここから再生**ボタンをクリックします。
 
-![](/images/results/stop-pause-debug-tests/0b8ce9d-playfromhere.png "playfromhere.png")
+![](/images/results/stop-pause-debug-tests/0b8ce9d-playfromhere.png)
 
 テストは、選択後のステップから実行を開始します。

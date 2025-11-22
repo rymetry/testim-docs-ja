@@ -12,7 +12,7 @@ keywords:
   - yaml設定
 ---
 
-![](/images/ci-integrations/azure-devops-build-pipeline-integrations/5ac760e-Azure-Pipelines.png "Azure-Pipelines.png")
+![](/images/ci-integrations/azure-devops-build-pipeline-integrations/5ac760e-Azure-Pipelines.png)
 
 [Azure pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/)とTestimを統合するには、YAMLファイルに以下の行を追加する必要があります:
 

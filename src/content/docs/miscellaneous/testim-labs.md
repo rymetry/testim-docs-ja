@@ -18,7 +18,7 @@ Labsユーザーの場合、各機能はプロジェクトごとに有効また�
 1. **Setting--> Labs**に移動します。
 2. **Request Invite**をクリックします。
 
-![1662](/images/miscellaneous/testim-labs/af88e5d-Screen_Shot_2020-10-30_at_10.55.18_AM.png "Screen Shot 2020-10-30 at 10.55.18 AM.png")
+![1662](/images/miscellaneous/testim-labs/af88e5d-Screen_Shot_2020-10-30_at_10.55.18_AM.png)
 
 > 📘 受理プロセス
 >

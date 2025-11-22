@@ -25,13 +25,13 @@ keywords:
 
 1. 新しい [Group](/docs/groups) を作成する際に、**Apply auto group on matching steps** を選択します。
 
-![1689](/images/groups/auto-grouping/e63b692-auto-group1.png "auto-group1.png")
+![1689](/images/groups/auto-grouping/e63b692-auto-group1.png)
 
 2. **Branch Name** フィールドに作成する新しいブランチ名を入力します。
 3. **Confirm** をクリックします。\
    Testim が自動グループ化を適用したテスト件数を示すメッセージが表示されます。
 
-![2426](/images/groups/auto-grouping/2a96564-Screen_Shot_2020-07-07_at_13.58.18.png "Screen Shot 2020-07-07 at 13.58.18.png")
+![2426](/images/groups/auto-grouping/2a96564-Screen_Shot_2020-07-07_at_13.58.18.png)
 
 > 📘 New branch
 >

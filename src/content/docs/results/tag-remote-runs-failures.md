@@ -26,7 +26,7 @@ keywords:
 
 > ❗️ 「Run locally」ではなく「Run on grid」オプションを使用してテストを実行してください
 
-![1155](/images/results/tag-remote-runs-failures/3ee72ad-tag6.png "tag6.png")
+![1155](/images/results/tag-remote-runs-failures/3ee72ad-tag6.png)
 
 次のダイアログが表示されます。
 
@@ -60,7 +60,7 @@ keywords:
 2. **Tag Test Failure**ダイアログで、**Create issue**をクリックして、バグトラッキングシステムに新しい課題を作成します。\
    バグの詳細が自動的に作成され、**Publish Bug**画面が表示されます。
 
-![3145](/images/results/tag-remote-runs-failures/60c8974-jiraaftercreateissue.PNG "jiraaftercreateissue.PNG")
+![3145](/images/results/tag-remote-runs-failures/60c8974-jiraaftercreateissue.PNG)
 
 3. **Summary**フィールドに、わかりやすい要約を入力します。
 4. ProjectとTypeの選択を変更し、提案されたテキストを編集できます。
@@ -82,7 +82,7 @@ keywords:
 
 2. タグにマウスを合わせ、**Edit Tag**アイコンをクリックします。
 
-![398](/images/results/tag-remote-runs-failures/5f62567-edit_tasg_icon.png "edit_tasg_icon.png")
+![398](/images/results/tag-remote-runs-failures/5f62567-edit_tasg_icon.png)
 
 3. 既存のテスト失敗タグを編集します。
 
@@ -98,11 +98,11 @@ keywords:
 2. 時間枠ドロップダウンメニューを使用して、該当する時間枠を設定します。\
    リストの下部にテスト実行のリストが表示されます。
 
-![1901](/images/results/tag-remote-runs-failures/8031cf7-tag3.png "tag3.png")
+![1901](/images/results/tag-remote-runs-failures/8031cf7-tag3.png)
 
 3. リストの上部にあるバグアイコンをクリックします。
 
-![364](/images/results/tag-remote-runs-failures/c5fe49c-tag5.png "tag5.png")
+![364](/images/results/tag-remote-runs-failures/c5fe49c-tag5.png)
 
 次のダイアログが表示されます。
 
@@ -120,7 +120,7 @@ keywords:
 1. テスト結果画面の上部で、提案された失敗タグにマウスを合わせます。\
    次のダイアログが表示されます。
 
-![990](/images/results/tag-remote-runs-failures/bac5964-tag7.PNG "tag7.PNG")
+![990](/images/results/tag-remote-runs-failures/bac5964-tag7.PNG)
 
 2. 次のいずれかを実行します。
 
@@ -135,7 +135,7 @@ keywords:
 3. 提案された失敗タグを含むテストには、「Suggested」というラベルが付けられます。
 4. 提案された失敗タグにマウスを合わせます。
 
-![1231](/images/results/tag-remote-runs-failures/c10c05c-tag8.png "tag8.png")
+![1231](/images/results/tag-remote-runs-failures/c10c05c-tag8.png)
 
 5. 次のいずれかを実行します。
 
@@ -152,20 +152,20 @@ keywords:
    失敗レポートは上から3番目のレポートです。
 2. ドロップダウンメニューをクリックして、レポートの時間枠を選択します。
 
-![451](/images/results/tag-remote-runs-failures/65b3172-timeframe.PNG "timeframe.PNG")
+![451](/images/results/tag-remote-runs-failures/65b3172-timeframe.PNG)
 
 3. レポートには**ドーナツチャート**と**折れ線グラフ**の2つのビューがあります。ビューモードをクリックして、ビュー間を切り替えます。
 
-![363](/images/results/tag-remote-runs-failures/3167d19-views.png "views.png")
+![363](/images/results/tag-remote-runs-failures/3167d19-views.png)
 
 ### タイプ別の失敗 – ドーナツチャート
 
-![1380](/images/results/tag-remote-runs-failures/6817b4d-report1.png "report1.png")
+![1380](/images/results/tag-remote-runs-failures/6817b4d-report1.png)
 
 ドーナツチャートには、タグ別の失敗タイプの分布が表示されます。各タグには、実行総数に対する発生率と、前の期間における発生率が含まれます。失敗タグをクリックすると**Test Runs**画面が表示され、このタイプでタグ付けされたすべての実行がリストされます。
 
 ### タイプ別の失敗 – 折れ線グラフ
 
-![1380](/images/results/tag-remote-runs-failures/205bbec-report2.png "report2.png")
+![1380](/images/results/tag-remote-runs-failures/205bbec-report2.png)
 
 折れ線グラフには、指定された期間における各タイプの失敗の発生回数が表示されます。各タグは、左側の凡例に従って色分けされています。マウスを合わせると、追加情報が表示されます。

@@ -12,7 +12,7 @@ keywords:
   - nodejs
 ---
 
-![](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png "tCyedoSJRGO8AAGv6sqs_jenkins-logo.png")
+![](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png)
 
 Jenkinsとテストを統合するには、まず\
 Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsのLTS/サポートされているバージョンのいずれか)がインストールされている必要があります。
@@ -21,11 +21,11 @@ Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsの
 
 1. Jenkinsで新しいアイテムを作成します:
 
-![](/images/ci-integrations/jenkins-integration/56a9e41-96INjt2YRViRwuogwLgW_jenkins_new_item.PNG "96INjt2YRViRwuogwLgW_jenkins_new_item.PNG")
+![](/images/ci-integrations/jenkins-integration/56a9e41-96INjt2YRViRwuogwLgW_jenkins_new_item.PNG)
 
 2. ジョブ名(例: "Testim Tests")を入力し、"Freestyle project"を選択して"OK"をクリックします:
 
-![](/images/ci-integrations/jenkins-integration/ba919cf-QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG "QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG")
+![](/images/ci-integrations/jenkins-integration/ba919cf-QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG)
 
 3. 実行ステップを追加します
 
@@ -33,7 +33,7 @@ Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsの
 
 3. "Execute Shell"ステップを追加します:
 
-![](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG "ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG")
+![](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
 
 4. [CLIページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
    以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです(sudoは不要)
@@ -64,7 +64,7 @@ testim --label "<YOUR LABEL>" \
 
 3. "Execute Windows batch command"ステップを追加します:
 
-![](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png "File1488700749415.png")
+![](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
 
 4. [CLIページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
    以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです:
@@ -87,8 +87,8 @@ testim --label "<YOUR LABEL>" ^
 
 5. Jenkinsが結果を保存、分析、表示するために、標準のJUnitXMLReporter XMLファイルを生成します。Jenkinsがファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
 
-![](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG "0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG")
+![](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)
 
 5. セクション4の"report-file"パラメータに従って、xmlファイルの値を設定します:
 
-![](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG "AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG")
+![](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG)

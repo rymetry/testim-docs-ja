@@ -17,7 +17,7 @@ keywords:
 UI経由でモックネットワークモードを無効化するには:\
 **プロパティ**ペインで、モックネットワークの下にある**モックネットワークでテストを実行**設定を切り替えます。
 
-![264](/images/mock-network-responses/disabling-network-mock-mode/26999eb-mock9.png "mock9.png")
+![264](/images/mock-network-responses/disabling-network-mock-mode/26999eb-mock9.png)
 
 ## CLI経由でモックネットワークモードを無効化する
 

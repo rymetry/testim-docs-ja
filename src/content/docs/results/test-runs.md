@@ -102,7 +102,7 @@ CSVをダウンロードするには、**CSV Download**ボタンをクリック�
 
 **Tag Test Failure**ボタンをクリックして、以下のリストにあるすべての失敗した実行に失敗タイプをタグ付けします。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures)を参照してください。
 
-![](/images/results/test-runs/1084b14-tag.PNG "tag.PNG")
+![](/images/results/test-runs/1084b14-tag.PNG)
 
 ## テスト実行の詳細
 

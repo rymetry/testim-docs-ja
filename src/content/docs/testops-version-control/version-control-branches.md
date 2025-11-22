@@ -80,7 +80,7 @@ keywords:
 * 上部の **Branches** ドロップダウンメニューをクリックしてブランチのリストを表示し、目的のブランチを選択します。各ブランチ名の近くの日付は、最後に変更された日時を示します。
 * **Search** 機能を使用してブランチのリストをフィルタリングできます。
 
-![](/images/testops-version-control/version-control-branches/56eb40e-branchlist.PNG "branchlist.PNG")
+![](/images/testops-version-control/version-control-branches/56eb40e-branchlist.PNG)
 
 > 📘 注意
 >
@@ -93,13 +93,13 @@ Testim に初めてログインすると、プロジェクトのデフォルト�
 
 1. ブランチドロップダウンメニューをクリックします。
 
-![](/images/testops-version-control/version-control-branches/2c5854d-Testim_470a.png "Testim 470a.png")
+![](/images/testops-version-control/version-control-branches/2c5854d-Testim_470a.png)
 
 プロジェクトのブランチが表示されます。
 
 2. ピン留めしたいブランチにカーソルを合わせて、「pin」ボタンをクリックします。
 
-![](/images/testops-version-control/version-control-branches/ecd5bc0-Testim_469b.png "Testim 469b.png")
+![](/images/testops-version-control/version-control-branches/ecd5bc0-Testim_469b.png)
 
 ブランチがピン留めされます。プロジェクトにアクセスするたびに、ピン留めされたブランチのデータが表示されます。
 
@@ -115,7 +115,7 @@ Testim に初めてログインすると、プロジェクトのデフォルト�
 1. 上部の **Branches** ドロップダウンメニューをクリックしてブランチのリストを表示し、目的のブランチにマウスを合わせます。
 2. **Delete** アイコンをクリックします。
 
-![](/images/testops-version-control/version-control-branches/cdb6eb9-delete_branch.png "delete_branch.png")
+![](/images/testops-version-control/version-control-branches/cdb6eb9-delete_branch.png)
 
 3. **OK** をクリックして削除を確認します。
 

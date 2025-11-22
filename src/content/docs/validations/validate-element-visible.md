@@ -27,7 +27,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
-![ステップ追加位置の矢印](/images/validations/validate-element-visible/9718cce-Screen_Shot_2021-04-18_at_6.37.44.png "Screen Shot 2021-04-18 at 6.37.44.png")
+![ステップ追加位置の矢印](/images/validations/validate-element-visible/9718cce-Screen_Shot_2021-04-18_at_6.37.44.png)
 
    アクションのオプションが表示されます。
 
@@ -39,7 +39,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/validations/validate-element-visible/a703f11-Screen_Shot_2021-04-18_at_6.39.03.png "Screen Shot 2021-04-18 at 6.39.03.png")
+![Play Scenarioボタン](/images/validations/validate-element-visible/a703f11-Screen_Shot_2021-04-18_at_6.39.03.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    Predefined steps メニューが開きます。
@@ -60,7 +60,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![作成された検証ステップ](/images/validations/validate-element-visible/aa9d9b2-Testim_088.png "Testim 088.png")
+![作成された検証ステップ](/images/validations/validate-element-visible/aa9d9b2-Testim_088.png)
 
 8. 検証ステップの後ろにある **Toggle Breakpoint** をクリックしてブレークポイントを解除します（Web のみ）。
 
@@ -70,27 +70,27 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
-![ステップ追加位置の矢印](/images/validations/validate-element-visible/542ad86-hover_arrow.png "hover arrow.png")
+![ステップ追加位置の矢印](/images/validations/validate-element-visible/542ad86-hover_arrow.png)
 
    アクションのオプションが表示されます。
 
-![アクションオプションメニュー](/images/validations/validate-element-visible/0baf831-1.1.png "1.1.png")
+![アクションオプションメニュー](/images/validations/validate-element-visible/0baf831-1.1.png)
 
 2. **Toggle Breakpoint** をクリックします。
 
-![Toggle Breakpointボタン](/images/validations/validate-element-visible/051ca7e-2.png "2.png")
+![Toggle Breakpointボタン](/images/validations/validate-element-visible/051ca7e-2.png)
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/validations/validate-element-visible/73e5022-3.png "3.png")
+![Play Scenarioボタン](/images/validations/validate-element-visible/73e5022-3.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。Predefined steps メニューが開きます。
 
-![Predefined stepsメニュー](/images/validations/validate-element-visible/ae3357c-4.png "4.png")
+![Predefined stepsメニュー](/images/validations/validate-element-visible/ae3357c-4.png)
 
 5. **Validations** をクリックします。Validations セクションが展開されます。
 
-![Validationsメニュー展開](/images/validations/validate-element-visible/a79a79c-5.png "5.png")
+![Validationsメニュー展開](/images/validations/validate-element-visible/a79a79c-5.png)
 
 6. メニューをスクロールして **Validate element visible** を選択します。\
 
@@ -101,7 +101,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![作成された検証ステップ](/images/validations/validate-element-visible/604aa0a-7.png "7.png")
+![作成された検証ステップ](/images/validations/validate-element-visible/604aa0a-7.png)
 
 ## Validate element visible ステップの修正（Web）
 
@@ -113,7 +113,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![Show Propertiesアイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png "Screen Shot 2021-04-18 at 6.42.37.png")
+![Show Propertiesアイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png)
 
    右側に Properties パネルが表示されます。\
 4\. **Target element** のサムネイルにカーソルを合わせます。
@@ -122,11 +122,11 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
    **Target element** のオプションが表示されます。
 
-![Target elementのオプション](/images/validations/validate-element-visible/694c31a-Testim_010_r.png "Testim 010_r.png")
+![Target elementのオプション](/images/validations/validate-element-visible/694c31a-Testim_010_r.png)
 
 5. **Reassign** をクリックします。
 
-![Reassignボタン](/images/validations/validate-element-visible/db22251-Testim_010a_r.png "Testim 010a_r.png")
+![Reassignボタン](/images/validations/validate-element-visible/db22251-Testim_010a_r.png)
 
 6. AUT ウィンドウで新しい要素を特定し、クリックして選択します。\
    選択した要素が Properties パネルの **Target element** に表示されます。
@@ -140,20 +140,20 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 1. 対象ステップで **Show Properties** アイコンをクリックします。
 
-![Show Propertiesアイコン](/images/validations/validate-element-visible/0d76f51-validationgear.png "validationgear.png")
+![Show Propertiesアイコン](/images/validations/validate-element-visible/0d76f51-validationgear.png)
 
    右側に Properties パネルが表示されます。
 
-![要素変更の通知](/images/validations/validate-element-visible/1953a8a-elementchanged.png "elementchanged.png")
+![要素変更の通知](/images/validations/validate-element-visible/1953a8a-elementchanged.png)
 
-![モバイルPropertiesパネル](/images/validations/validate-element-visible/fb5abe0-mobileproperties.png "mobileproperties.png")
+![モバイルPropertiesパネル](/images/validations/validate-element-visible/fb5abe0-mobileproperties.png)
 
 2. **Target element** のサムネイルにカーソルを合わせ、**Reassign** をクリックします。
 
-![Reassignボタン](/images/validations/validate-element-visible/623adff-reassignmobile.png "reassignmobile.png")
+![Reassignボタン](/images/validations/validate-element-visible/623adff-reassignmobile.png)
 
 4. AUT ウィンドウで新しい要素を特定し、クリックして選択します。
 
-![要素の選択](/images/validations/validate-element-visible/db6aef0-selectelement.png "selectelement.png")
+![要素の選択](/images/validations/validate-element-visible/db6aef0-selectelement.png)
 
    選択した要素が Properties パネルの **Target element** に表示されます。

@@ -31,7 +31,7 @@ GitHub統合により、ブラウザから直接Git Issuesでバグを報告す�
 4. "**All repositories**"を選択するか、特定のリポジトリを選択します。
 5. 再度"**Install**"をクリックします。
 
-![1511](/images/other-integrations/github-integration/307ac62-gitHub2.gif "gitHub2.gif")
+![1511](/images/other-integrations/github-integration/307ac62-gitHub2.gif)
 
 接続するリポジトリを定義し、必要なアクションを許可します。
 

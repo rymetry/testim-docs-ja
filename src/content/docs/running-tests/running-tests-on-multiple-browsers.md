@@ -41,7 +41,7 @@ keywords:
 * ブラウザ、オペレーティングシステム、解像度を選択します。
 * 「**OK**」をクリックします
 
-![](/images/running-tests/running-tests-on-multiple-browsers/1dfe42b-multiplebrowsers.gif "multiplebrowsers.gif")
+![](/images/running-tests/running-tests-on-multiple-browsers/1dfe42b-multiplebrowsers.gif)
 
 ## CLI でテストを実行する
 

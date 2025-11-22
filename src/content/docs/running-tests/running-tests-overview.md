@@ -54,7 +54,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 
 エディター画面で、**テスト実行** ボタンをクリックします。
 
-![](/images/running-tests/running-tests-overview/d35670c-run.png "run.png")
+![](/images/running-tests/running-tests-overview/d35670c-run.png)
 
 ### ローカル モバイル テストを実行する
 
@@ -62,7 +62,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 
 1. アクションメニューの **実行** ボタンをクリックします。
 
-![](/images/running-tests/running-tests-overview/c7c7791-image_8.png "image (8).png")
+![](/images/running-tests/running-tests-overview/c7c7791-image_8.png)
 
 > 📘
 >
@@ -70,7 +70,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 
 デバイス ビューアー ウィンドウが開き、テスト アクションが実行されます。 テストが完了すると、テストが成功したかどうかを示すポップアップ ウィンドウが表示されます。
 
-![](/images/running-tests/running-tests-overview/c09003f-image_9.png "image (9).png")
+![](/images/running-tests/running-tests-overview/c09003f-image_9.png)
 
 ## リモート Web テストを実行する
 
@@ -81,7 +81,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 1. エディター画面で、**テスト実行** ボタンの横にあるドロップダウン メニューをクリックします。
 2. **グリッド上で実行** をクリックします。
 
-![](/images/running-tests/running-tests-overview/f9349a4-2023-02-05_17-39-19.png "2023-02-05_17-39-19.png")
+![](/images/running-tests/running-tests-overview/f9349a4-2023-02-05_17-39-19.png)
 
 グリッド設定を変更する場合は、**編集** をクリックします。
 グリッド管理の詳細については、[グリッド管理](/docs/grid-management/grid-management) を参照してください。
@@ -113,22 +113,22 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 
 1. テストリスト画面で、実行するテストを選択します。 複数のテストを選択するには、テストを左クリックしながら Ctrl (Windows) または Command (Mac) キーを押します。
 
-![](/images/running-tests/running-tests-overview/834e475-run2.png "run2.png")
+![](/images/running-tests/running-tests-overview/834e475-run2.png)
 
 選択したテストが強調表示されます。
 
 2. **再生** ボタンをクリックします。
 
-![](/images/running-tests/running-tests-overview/4e677da-run3.png "run3.png")
+![](/images/running-tests/running-tests-overview/4e677da-run3.png)
 
 確認ウィンドウが表示されます。
 
-![](/images/running-tests/running-tests-overview/eb4fc34-run4.png "run4.png")
+![](/images/running-tests/running-tests-overview/eb4fc34-run4.png)
 
 3. 適切なチェック ボックスを選択し、**OK** をクリックします。
    ブラウザーが開き、テストが実行されます。 実行中は実行ステータスを確認できます。 実行が完了すると、実行に関する情報を含む [実行画面](/docs/results/execution-runs-screen) が表示されます。 詳細については、「実行画面」を参照してください。
 
-![](/images/running-tests/running-tests-overview/69ffd79-run5.png "run5.png")
+![](/images/running-tests/running-tests-overview/69ffd79-run5.png)
 
 ## Testim UI でスケジューラーを通じてテストを実行する (Web のみ)
 

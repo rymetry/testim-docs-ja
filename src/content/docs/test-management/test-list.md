@@ -178,9 +178,9 @@ csv ファイルがローカルマシンにダウンロードされます。\
 1. 構成を変更したいテストを選択します
 2. トップメニューまたはコンテキストメニューから「Edit test config」をクリックします
 
-![](/images/test-management/test-list/62c4e7f-Screen_Shot_2021-12-06_at_16.51.38.png "Screen Shot 2021-12-06 at 16.51.38.png")
+![](/images/test-management/test-list/62c4e7f-Screen_Shot_2021-12-06_at_16.51.38.png)
 
 3. 適用する構成を選択します
 4. 「OK」をクリックします
 
-![](/images/test-management/test-list/93790fb-Screen_Shot_2021-12-06_at_16.52.54.png "Screen Shot 2021-12-06 at 16.52.54.png")
+![](/images/test-management/test-list/93790fb-Screen_Shot_2021-12-06_at_16.52.54.png)

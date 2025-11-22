@@ -29,19 +29,19 @@ keywords:
 1. テストリスト画面で、テスト名をクリックして選択します。
 2. **Edit Labels**ボタンをクリックします。
 
-![](/images/test-management/labels/96cd0e5-edit-labels.png "edit-labels.png")
+![](/images/test-management/labels/96cd0e5-edit-labels.png)
 
 **テストを右クリック**して、**Edit Labels**オプションを選択することもできます。
 
-![](/images/test-management/labels/ed79e05-editlabelsrightclick.png "editlabelsrightclick.png")
+![](/images/test-management/labels/ed79e05-editlabelsrightclick.png)
 
 3. テストに適用する既存のラベルを選択または選択解除します。
 
-![](/images/test-management/labels/64cba32-selectdeselectlabels.png "selectdeselectlabels.png")
+![](/images/test-management/labels/64cba32-selectdeselectlabels.png)
 
 4. 新しいラベルを追加するには、新しいラベルを入力し、**Create New**リンクをクリックしてから、**Apply**をクリックします。
 
-![](/images/test-management/labels/18b0282-newlabel.png "newlabel.png")
+![](/images/test-management/labels/18b0282-newlabel.png)
 
 > 🚧
 >
@@ -56,19 +56,19 @@ keywords:
 1. **Test List > Tests**に移動します。
 2. アクションメニューの**Advanced Filters**ボタンをクリックします。
 
-![](/images/test-management/labels/dbf0508-advancedfilters.png "advancedfilters.png")
+![](/images/test-management/labels/dbf0508-advancedfilters.png)
 
 **Advanced Filters**パネルが表示されます。
 
-![](/images/test-management/labels/e740633-advancedfilterspanel.png "advancedfilterspanel.png")
+![](/images/test-management/labels/e740633-advancedfilterspanel.png)
 
 3. パネルの**Label**セクションで、フィルターのラベルを選択/選択解除し、**Apply**をクリックします。
 
-![](/images/test-management/labels/95aaa61-selectlabels.png "selectlabels.png")
+![](/images/test-management/labels/95aaa61-selectlabels.png)
 
 テストリストには、選択したラベルを含むテストのみが表示されます。
 
-![](/images/test-management/labels/12ab199-filteredlist.png "filteredlist.png")
+![](/images/test-management/labels/12ab199-filteredlist.png)
 
 ## CLIベースの実行でのラベルの使用
 

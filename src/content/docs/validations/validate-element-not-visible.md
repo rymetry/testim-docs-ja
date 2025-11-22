@@ -31,7 +31,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
-![スクリーンショット](/images/validations/validate-element-not-visible/effce9f-Screen_Shot_2021-04-18_at_6.37.44.png "Screen Shot 2021-04-18 at 6.37.44.png")
+![スクリーンショット](/images/validations/validate-element-not-visible/effce9f-Screen_Shot_2021-04-18_at_6.37.44.png)
 
    アクションのオプションが表示されます。
 
@@ -43,7 +43,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![スクリーンショット](/images/validations/validate-element-not-visible/a073c5b-Screen_Shot_2021-04-18_at_6.39.03.png "Screen Shot 2021-04-18 at 6.39.03.png")
+![スクリーンショット](/images/validations/validate-element-not-visible/a073c5b-Screen_Shot_2021-04-18_at_6.39.03.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    Predefined steps メニューが開きます。
@@ -64,11 +64,11 @@ Element not visible 検証では、要素がページ上で表示されていな
 7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
-![非表示検証](/images/validations/validate-element-not-visible/5680a81-Testim_089.png "Testim 089.png")
+![非表示検証](/images/validations/validate-element-not-visible/5680a81-Testim_089.png)
 
 8. 要素が不可視かどうかを確認する前に遅延を入れたい場合は、ステップにカーソルを合わせて **Show Properties**（:fa-cog:）をクリックします。
 
-![スクリーンショット](/images/validations/validate-element-not-visible/bf63c08-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
+![スクリーンショット](/images/validations/validate-element-not-visible/bf63c08-Screen_Shot_2021-04-18_at_6.40.55.png)
 
    右側に Properties パネルが表示されます。
 
@@ -94,7 +94,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
-![スクリーンショット](/images/validations/validate-element-not-visible/5ad089f-Screen_Shot_2021-04-18_at_6.40.55.png "Screen Shot 2021-04-18 at 6.40.55.png")
+![スクリーンショット](/images/validations/validate-element-not-visible/5ad089f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
    右側に Properties パネルが表示されます。
 

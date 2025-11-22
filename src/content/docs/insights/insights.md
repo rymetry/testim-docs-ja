@@ -17,7 +17,7 @@ Insights 画面には、*TestOps Dashboard* と *Reports* の2つのタブがあ
 
 * **Reports** - **Insights** 画面の **Reports** タブは、成功および失敗したテスト実行に関する情報、チームのアクティビティ、最も失敗したテストに関する情報など、選択した期間におけるプロジェクトの品質に関する詳細情報を表示します。会社オーナーとプロジェクトオーナーは、週次サマリーをメールで受け取ります。詳細については、[Reports](/docs/managerial-reports) を参照してください。
 
-![1932](/images/insights/insights/317734a-Testim_466a.png "Testim 466a.png")
+![1932](/images/insights/insights/317734a-Testim_466a.png)
 
 ## ブランチの選択
 
@@ -27,7 +27,7 @@ Insights 画面には、*TestOps Dashboard* と *Reports* の2つのタブがあ
 
 1. ブランチドロップダウンメニューをクリックし、ブランチを選択します。
 
-![3663](/images/insights/insights/42c0ba8-Testim_467a.png "Testim 467a.png")
+![3663](/images/insights/insights/42c0ba8-Testim_467a.png)
 
 指定されたブランチに基づいてデータが自動的に更新されます。
 

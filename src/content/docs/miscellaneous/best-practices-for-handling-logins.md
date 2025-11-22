@@ -35,7 +35,7 @@ keywords:
 
 これが最初のテストの場合は、この[ガイド](/docs/hello-world)を参照してください。
 
-![1903](/images/miscellaneous/best-practices-for-handling-logins/546ac11-login_1.gif "login_1.gif")
+![1903](/images/miscellaneous/best-practices-for-handling-logins/546ac11-login_1.gif)
 
 ### シークレットモードで実行する
 
@@ -51,7 +51,7 @@ keywords:
 
 注意: グループに意味のある名前を付けるようにしてください。
 
-![640](/images/miscellaneous/best-practices-for-handling-logins/4dfa1e2-Oct-20-2020_11-42-25.gif "Oct-20-2020 11-42-25.gif")
+![640](/images/miscellaneous/best-practices-for-handling-logins/4dfa1e2-Oct-20-2020_11-42-25.gif)
 
 ### すでにログインしている状況に対処する
 
@@ -63,7 +63,7 @@ keywords:
 1. ログインボタンが表示されているか確認する - 要素条件を使用します。
 2. 現在のURLがログインページと一致するか確認する - カスタム条件を使用します。
 
-![640](/images/miscellaneous/best-practices-for-handling-logins/535c34a-Oct-20-2020_11-47-18.gif "Oct-20-2020 11-47-18.gif")
+![640](/images/miscellaneous/best-practices-for-handling-logins/535c34a-Oct-20-2020_11-47-18.gif)
 
 [条件](/docs/conditions/conditions)の追加方法について学びます。
 
@@ -77,7 +77,7 @@ keywords:
 4. グループステップに入ります。
 5. ユーザー名設定ステップとパスワード設定ステップを変更し、定数値の代わりにこれらのパラメータを配置します。
 
-![640](/images/miscellaneous/best-practices-for-handling-logins/cfbed43-Oct-20-2020_11-51-43.gif "Oct-20-2020 11-51-43.gif")
+![640](/images/miscellaneous/best-practices-for-handling-logins/cfbed43-Oct-20-2020_11-51-43.gif)
 
 [グループへのパラメータの追加](/docs/parameters/parameters-for-groups)について詳しく学びます。
 

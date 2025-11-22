@@ -110,11 +110,13 @@ const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
 - **変更すべきリンク**:
   - 現在: `https://help.testim.io/docs/example`
   - 変更後: `/docs/example`
-  - 対応ファイル: `/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/{FOLDER_NAME}/example.md`
 
 ### 🔍 Lintエラー
 (あれば記載、なければ「エラーなし」)
 
 <!-- 使い方はコンテキストに本ファイルを指定し、以下を指定してプロンプトに入力して実行 -->
-<!-- - SECTION_NAME: xxxx
-- FOLDER_NAME: yyyy -->
+<!--
+## Input
+- SECTION_NAME: xxxx
+- FOLDER_NAME: yyyy
+-->

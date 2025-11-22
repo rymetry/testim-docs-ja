@@ -143,9 +143,9 @@ URLをログインURLに置き換えてください。
 
 1. **テストプロパティ**ペインで、**カスタムマッピングファイルをアップロード**をクリックします。
 
-![](/images/mock-network-responses/creating-a-mapping-file/7858343-mock8.png "mock8.png")
+![](/images/mock-network-responses/creating-a-mapping-file/7858343-mock8.png)
 
 2. 保存したカスタムマッピングファイルを見つけて、**開く**をクリックしてアップロードします。
 3. **保存**をクリックして、アクティベートを保存します。
 
-![](/images/mock-network-responses/creating-a-mapping-file/cbd045e-mock7.PNG "mock7.PNG")
+![](/images/mock-network-responses/creating-a-mapping-file/cbd045e-mock7.PNG)

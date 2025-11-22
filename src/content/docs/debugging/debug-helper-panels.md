@@ -28,7 +28,7 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 
 ## コンソールログヘルパーパネル
 
-![](/images/debugging/debug-helper-panels/2cb6efa-consolelog.png "consolelog.png")
+![](/images/debugging/debug-helper-panels/2cb6efa-consolelog.png)
 
 コンソールログの機能:
 

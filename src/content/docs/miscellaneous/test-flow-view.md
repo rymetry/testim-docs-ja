@@ -23,14 +23,14 @@ keywords:
 
 テストフロービューにアクセスするには、**Test list-->Tests**に移動し、右上隅のグラフビューを選択します。
 
-![3352](/images/miscellaneous/test-flow-view/a73e9a6-Screen_Shot_2021-02-18_at_9.15.43.png "Screen Shot 2021-02-18 at 9.15.43.png")
+![3352](/images/miscellaneous/test-flow-view/a73e9a6-Screen_Shot_2021-02-18_at_9.15.43.png)
 
 * プロジェクトは最初に正方形のアイコンで表されます
 * 各共有ステップは六角形のアイコンで表されます
 * 通常のステップは円で表されます
 * フローの開始時に、同じ共有ステップのシーケンスで始まるすべてのテストは、フローに分岐があるまで統合されます
 
-![3196](/images/miscellaneous/test-flow-view/0b73a63-Screen_Shot_2021-02-18_at_9.16.54.png "Screen Shot 2021-02-18 at 9.16.54.png")
+![3196](/images/miscellaneous/test-flow-view/0b73a63-Screen_Shot_2021-02-18_at_9.16.54.png)
 
 ## テストフロービューのコントロール
 
@@ -38,12 +38,12 @@ keywords:
 * **ズームイン/アウト** - スクロールホイールを使用してズームイン/アウトします
 * **詳細** - ステップにカーソルを合わせてテスト名を表示します
 
-![3182](/images/miscellaneous/test-flow-view/f4a5230-Untitled.png "Untitled.png")
+![3182](/images/miscellaneous/test-flow-view/f4a5230-Untitled.png)
 
 * **ステップアクセス** - ステップ（円）をクリックすると、そのステップが選択され、このステップのプロパティパネルが開いた状態で、新しいタブでそのステップが開きます
 
-![1316](/images/miscellaneous/test-flow-view/23a5cbe-Oct-29-2020_11-05-58.gif "Oct-29-2020 11-05-58.gif")
+![1316](/images/miscellaneous/test-flow-view/23a5cbe-Oct-29-2020_11-05-58.gif)
 
 * **共有ステップアクセス** - 共有ステップ（六角形）をクリックすると、この共有ステップを使用するテストのみを含むようにフィルタリングされた、新しいタブでテストライブラリが開きます
 
-![898](/images/miscellaneous/test-flow-view/72371e7-Feb-18-2021_09-27-55.gif "Feb-18-2021 09-27-55.gif")
+![898](/images/miscellaneous/test-flow-view/72371e7-Feb-18-2021_09-27-55.gif)

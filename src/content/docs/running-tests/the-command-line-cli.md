@@ -43,7 +43,7 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
    [LambdaTest](/docs/grid-management/browserstack-integration-copy)\
    基本的な CLI コマンドは **例** の下部に表示されます。
 
-![](/images/running-tests/the-command-line-cli/af52b8a-cli_command.png "cli_command.png")
+![](/images/running-tests/the-command-line-cli/af52b8a-cli_command.png)
 
 基本コマンドには以下の要素が含まれています:\
 `--token`: 認証トークン\
@@ -341,7 +341,7 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 ターミナルで Ctrl+C ショートカットを使用して CLI 実行を中止することができます。実行は実行リストの下で「中止」ステータスを持つようになります。
 
-![](/images/running-tests/the-command-line-cli/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png "Screen Shot 2020-10-15 at 11.49.37.png")
+![](/images/running-tests/the-command-line-cli/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png)
 
 CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを閉じることで強制的に終了することもできます (いわゆる、不正な中止)。\
 これにより実行は停止しますが、ステータスはエディターで「実行中」のままになります。実行ステータスは 90 分後に「タイムアウト」に変わります。
@@ -464,7 +464,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 `--app-id`、モバイル アプリ ライブラリのモバイル アプリの特定のアプリ ID を選択してテストを実行します。これは、記録中に使用された現在のアプリをオーバーライドする場合に使用されます。アプリ ID を取得するには、[モバイル アプリ] 画面に移動し、リストされているアプリの 1 つを右クリックして、**ID をコピー** を選択します。
 
-![](/images/running-tests/the-command-line-cli/097f1f4-2023-02-06_13-00-18.png "2023-02-06_13-00-18.png")
+![](/images/running-tests/the-command-line-cli/097f1f4-2023-02-06_13-00-18.png)
 
 ```shell
 --app-id "appID123"

@@ -71,7 +71,7 @@ TestimとTTM for Jiraの統合を設定した後、Testimの特定のテスト�
 1. Testimで、マッピングしたいテストを開きます。
 2. Testimのテスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
 
-![](/images/test-management-integrations/ttm-for-jira-integration/56e072e-setupstepprops.png "setupstepprops.png")
+![](/images/test-management-integrations/ttm-for-jira-integration/56e072e-setupstepprops.png)
 
 3. Setupステップの **Properties（プロパティ）** パネルで、Test in TTM for Jiraの下で、最初のドロップダウンメニューからTTM for Jiraプロジェクトを選択し、次に2番目のドロップダウンメニューから特定のテストを選択します。複数のテストケースをマッピングできます。
 

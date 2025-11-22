@@ -9,7 +9,7 @@ keywords:
   - testim-extension-overview
   - testim-extension
 ---
-![425](/images/testim-extension/testim-extension-overview/d78ddb1-Testim_extension.PNG "Testim extension.PNG")
+![425](/images/testim-extension/testim-extension-overview/d78ddb1-Testim_extension.PNG)
 
 ## Testim拡張機能が必要な理由
 

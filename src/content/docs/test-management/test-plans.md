@@ -97,7 +97,7 @@ keywords:
 2. 実行したいプランを選択します。
 3. **Play** ボタンをクリックします。
 
-![](/images/test-management/test-plans/88d404a-Mar-22-2021_11-38-54.gif "Mar-22-2021 11-38-54.gif")
+![](/images/test-management/test-plans/88d404a-Mar-22-2021_11-38-54.gif)
 
 > 📘
 >

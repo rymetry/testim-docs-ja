@@ -12,7 +12,7 @@ keywords:
   - yaml設定
 ---
 
-![](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png "Continuous-Deployment-con-GitHub-Actions.png")
+![](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)
 
 TestimとGitHub Actionsを統合するには、新しいGitHub-Actionワークフローを作成する必要があります:
 

@@ -13,7 +13,7 @@ keywords:
 ---
 新しいHARの記録後、カスタムHARのアップロード後、またはマッピングファイルのアップロード後、テストのモックネットワークモードが自動的に有効になります。
 
-![264](/images/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file/26999eb-mock9.png "mock9.png")
+![264](/images/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file/26999eb-mock9.png)
 
 UI経由でローカルに、またはCLI経由でリモートで、モックネットワークモードでテストを実行できます。
 
@@ -24,7 +24,7 @@ UI経由でローカルに、またはCLI経由でリモートで、モックネ
 1. Testimビジュアルエディタで、**テストリスト**画面に移動し、新しいHARを記録したか、カスタムHARをアップロードしたテストをクリックします。
 2. テストエディタ画面で、**再生**ボタンの横に**モックネットワーク**アイコンが表示され、モックネットワークが利用可能であることを示します。
 
-![274](/images/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file/173c389-mock6.png "mock6.png")
+![274](/images/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file/173c389-mock6.png)
 
 3. **再生**ボタンをクリックして、モックネットワークを使用してテストを実行します。
 

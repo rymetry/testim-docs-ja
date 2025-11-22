@@ -63,4 +63,4 @@ return sequelize
 
 **see screenshot:**
 
-![スクリーンショット](/images/validations/mysql-validation/0164122-see_screenshot2.png "see screenshot2.png")
+![スクリーンショット](/images/validations/mysql-validation/0164122-see_screenshot2.png)

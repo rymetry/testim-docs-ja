@@ -21,7 +21,7 @@ keywords:
 どのビルドが成功または失敗したかを簡単に追跡し、ワンクリックで関連するテスト結果を開いて、失敗の理由をより深く理解できます。\
 また、テスト結果の履歴を全体的に把握できるチャートも追加しました。これは、関連する期間に応じてフィルタリングすることもできます:
 
-![](/images/ci-integrations/integrate-testim-to-your-ci/eac37a2-Screen_Shot_2021-02-21_at_10.21.49.png "Screen Shot 2021-02-21 at 10.21.49.png")
+![](/images/ci-integrations/integrate-testim-to-your-ci/eac37a2-Screen_Shot_2021-02-21_at_10.21.49.png)
 
 ## 今すぐ始める
 
@@ -29,7 +29,7 @@ keywords:
 2. ドロップダウンリストからCIプラットフォームを選択します
 3. 生成されたコマンドをコピーします
 
-![](/images/ci-integrations/integrate-testim-to-your-ci/78fd262-Feb-21-2021_10-25-31.gif "Feb-21-2021 10-25-31.gif")
+![](/images/ci-integrations/integrate-testim-to-your-ci/78fd262-Feb-21-2021_10-25-31.gif)
 
 **特定のCIへの統合に関するガイドのリスト:**
 

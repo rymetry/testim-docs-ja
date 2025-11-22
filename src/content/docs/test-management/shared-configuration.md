@@ -51,17 +51,17 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/bde6165-Testim_502b.png "Testim 502b.png")
+![](/images/test-management/shared-configuration/bde6165-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. **+ Create New** ボタンをクリックします。
 
-![](/images/test-management/shared-configuration/bc7aa0f-Testim_503a.png "Testim 503a.png")
+![](/images/test-management/shared-configuration/bc7aa0f-Testim_503a.png)
 
 **Add New Config** 設定が表示されます。
 
-![](/images/test-management/shared-configuration/b2d6d80-Testim_504_r.png "Testim 504_r.png")
+![](/images/test-management/shared-configuration/b2d6d80-Testim_504_r.png)
 
 3. 基本オプションを次のように入力します:
 
@@ -97,18 +97,18 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/9a234a1-Testim_502b.png "Testim 502b.png")
+![](/images/test-management/shared-configuration/9a234a1-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. クローンしたいテスト構成の行をクリックします。\
    コンテキストツールが表示されます。
 
-![](/images/test-management/shared-configuration/b2ffc88-Testim_590a.png "Testim 590a.png")
+![](/images/test-management/shared-configuration/b2ffc88-Testim_590a.png)
 
 3. **Clone** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/c9eac99-Testim_590b.png "Testim 590b.png")
+![](/images/test-management/shared-configuration/c9eac99-Testim_590b.png)
 
 > 📘
 >
@@ -116,7 +116,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Clone Configuration** オプションが表示されます。
 
-![](/images/test-management/shared-configuration/53958a2-Testim_591_r.png "Testim 591_r.png")
+![](/images/test-management/shared-configuration/53958a2-Testim_591_r.png)
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
 5. **Clone** をクリックします。\
@@ -128,7 +128,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/15c8c6f-Testim_502b.png "Testim 502b.png")
+![](/images/test-management/shared-configuration/15c8c6f-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
@@ -162,18 +162,18 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/efa52dd-Testim_502b.png "Testim 502b.png")
+![](/images/test-management/shared-configuration/efa52dd-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. 名前を変更したいテスト構成の行をクリックします。\
    コンテキストツールが表示されます。
 
-![](/images/test-management/shared-configuration/815c253-Testim_590a.png "Testim 590a.png")
+![](/images/test-management/shared-configuration/815c253-Testim_590a.png)
 
 3. **Rename** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/cd437c4-Testim_590d.png "Testim 590d.png")
+![](/images/test-management/shared-configuration/cd437c4-Testim_590d.png)
 
 > 📘
 >
@@ -181,7 +181,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Edit Name** 設定が表示されます。
 
-![](/images/test-management/shared-configuration/3519685-Testim_593_r.png "Testim 593_r.png")
+![](/images/test-management/shared-configuration/3519685-Testim_593_r.png)
 
 4. **New name** フィールドに、この構成の新しい名前を入力します。
 5. **OK** をクリックします。\
@@ -193,18 +193,18 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
-![](/images/test-management/shared-configuration/3dcbaab-Testim_502b.png "Testim 502b.png")
+![](/images/test-management/shared-configuration/3dcbaab-Testim_502b.png)
 
 **Configuration Library** が表示されます。
 
 2. 削除したいテスト構成の行をクリックします。\
    コンテキストツールが表示されます。
 
-![](/images/test-management/shared-configuration/2917eb3-Testim_590a.png "Testim 590a.png")
+![](/images/test-management/shared-configuration/2917eb3-Testim_590a.png)
 
 3. **Delete** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/ee65ecc-Testim_590c.png "Testim 590c.png")
+![](/images/test-management/shared-configuration/ee65ecc-Testim_590c.png)
 
 > 📘
 >
@@ -212,7 +212,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 確認ダイアログが表示されます。
 
-![](/images/test-management/shared-configuration/ac8e414-Testim_592_r.png "Testim 592_r.png")
+![](/images/test-management/shared-configuration/ac8e414-Testim_592_r.png)
 
 4. **Delete** をクリックします。\
    構成が **Configuration Library** から削除されます。
@@ -226,11 +226,11 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 1. Runs > Configuration List に移動します。
 2. アクションメニューの **Advanced Filters** ボタンをクリックします。
 
-![](/images/test-management/shared-configuration/8b46862-configadvancedfilters.png "configadvancedfilters.png")
+![](/images/test-management/shared-configuration/8b46862-configadvancedfilters.png)
 
 3. **Filter Configuration** パネルから希望するフィルターを選択し、**Apply** ボタンをクリックします。
 
-![](/images/test-management/shared-configuration/cd53734-configapplyfilters.png "configapplyfilters.png")
+![](/images/test-management/shared-configuration/cd53734-configapplyfilters.png)
 
 スケジュール実行のリストがフィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
 
@@ -242,15 +242,15 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 1. テストの **Setup** ステップ（最初のステップ）にカーソルを合わせ、**Show properties** (:fa-cog:) アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/9bdfe00-Testim_594a.png "Testim 594a.png")
+![](/images/test-management/shared-configuration/9bdfe00-Testim_594a.png)
 
 右側に **Properties** パネルが開きます。
 
-![](/images/test-management/shared-configuration/db2fc84-Testim_595_r.png "Testim 595_r.png")
+![](/images/test-management/shared-configuration/db2fc84-Testim_595_r.png)
 
 2. **Configuration** セクションで、**Edit Configuration** アイコンをクリックします。
 
-![](/images/test-management/shared-configuration/21b9d84-Testim_596a_r.png "Testim 596a_r.png")
+![](/images/test-management/shared-configuration/21b9d84-Testim_596a_r.png)
 
 **Edit Configuration** 設定が表示されます。
 
@@ -268,15 +268,15 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 4. 戻る矢印をクリックして、**Edit Configuration** 設定を閉じます。
 
-![](/images/test-management/shared-configuration/8e94901-Testim_600a_r.png "Testim 600a_r.png")
+![](/images/test-management/shared-configuration/8e94901-Testim_600a_r.png)
 
 5. **Save** をクリックします。
 
-![](/images/test-management/shared-configuration/d7f9a8b-Testim_594b.png "Testim 594b.png")
+![](/images/test-management/shared-configuration/d7f9a8b-Testim_594b.png)
 
 **Change Message** ウィンドウが開きます。
 
-![](/images/test-management/shared-configuration/990d848-Testim_601_r.png "Testim 601_r.png")
+![](/images/test-management/shared-configuration/990d848-Testim_601_r.png)
 
 6. **Message** フィールドに、必要に応じて、このバージョンで行われた変更の説明を入力します。
 7. **OK** をクリックします。\

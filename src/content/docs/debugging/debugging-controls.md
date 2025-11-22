@@ -75,7 +75,7 @@ keywords:
 
 このコントロールを使用して、グループの内部にステップインせずにスキップします。「ステップオーバー」ボタンをクリックすると、エディターは次のステップまたはグループを実行します。次のステップがグループの場合、エディターはグループ内部にステップインせずにグループを実行し、グループステップの後で停止し、停止した場所を点滅する矢印（**仮想ブレークポイント**とも呼ばれます）でマークします。通常のブレークポイントとは異なり、仮想ブレークポイントはシステムが実行を停止したテスト内の場所です。
 
-![](/images/debugging/debugging-controls/8735a97-stepover.png "stepover.png")
+![](/images/debugging/debugging-controls/8735a97-stepover.png)
 
 ![](/images/debugging/debugging-controls/3b312df-steopover.gif)
 
@@ -83,7 +83,7 @@ keywords:
 
 このコントロールを使用して、グループにステップインし、その内部実行を確認します。「ステップイン」ボタンをクリックすると、エディターはグループを開き（グループのステップを表示し）ますが、まだ実行はしません。この場合、仮想ブレークポイントはグループ内の最初のステップの前に配置されます。
 
-![](/images/debugging/debugging-controls/f6562fe-stepinto.png "stepinto.png")
+![](/images/debugging/debugging-controls/f6562fe-stepinto.png)
 
 ![](/images/debugging/debugging-controls/0d82c03-stepinto.gif)
 
@@ -91,7 +91,7 @@ keywords:
 
 このコントロールを使用して、グループのステップを実行した後、グループの内部ビューを終了します。これは、グループにステップインした後、グループのステップを実行してからグループからステップアウトしたい場合に便利です。たとえば、問題がグループ自体ではなく、その呼び出し元にあると考える場合などです。「ステップアウト」ボタンをクリックすると、システムはグループの残りのステップを実行し、グループからステップアウトし、グループステップの後に仮想ブレークポイントを配置します。
 
-![](/images/debugging/debugging-controls/64e5995-stepout.png "stepout.png")
+![](/images/debugging/debugging-controls/64e5995-stepout.png)
 
 ![](/images/debugging/debugging-controls/d8b61de-stepout.gif)
 

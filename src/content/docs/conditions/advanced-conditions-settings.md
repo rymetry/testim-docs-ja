@@ -26,9 +26,9 @@ Testim の条件は、ステップの実行にもループの繰り返し（[Rep
 1. [Conditions](/docs/conditions) に従って条件を設定するか、[Repeat Group Loops](/docs/loops) に従ってループを設定します。
 2. Properties パネルの **When to run step** セクション（ループの場合は **Repeat group** セクション）で **Settings**（:fa-cog:）をクリックします。右側に **Advanced** パネルが開きます。
 
-![276](/images/conditions/advanced-conditions-settings/9e54f5e-WhenToRunStepCustom.png "WhenToRunStepCustom.png")
+![276](/images/conditions/advanced-conditions-settings/9e54f5e-WhenToRunStepCustom.png)
 
-![293](/images/conditions/advanced-conditions-settings/2d936c1-Testim_Image_031.png "Testim Image 031.png")
+![293](/images/conditions/advanced-conditions-settings/2d936c1-Testim_Image_031.png)
 
 以下の通り、拡張設定を構成します:
 

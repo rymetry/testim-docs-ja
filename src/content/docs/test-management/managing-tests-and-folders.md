@@ -21,7 +21,7 @@ keywords:
 
 1. Test Library 画面で、**+** ボタンをクリックし、**New Folder** を選択します。
 
-![](/images/test-management/managing-tests-and-folders/43e2f2e-new-folder.png "new-folder.png")
+![](/images/test-management/managing-tests-and-folders/43e2f2e-new-folder.png)
 
 2. フォルダーに **New Name**（新しい名前）を付けて、**OK** ボタンをクリックします。
 
@@ -29,7 +29,7 @@ keywords:
 
 新しいフォルダーがテストライブラリに追加されます。
 
-![](/images/test-management/managing-tests-and-folders/704b426-folder-added.png "folder-added.png")
+![](/images/test-management/managing-tests-and-folders/704b426-folder-added.png)
 
 > 📘
 >
@@ -44,11 +44,11 @@ keywords:
 1. テストまたはフォルダー名をクリックして選択します。
 2. **Move to Folder** ボタンをクリックします。
 
-![](/images/test-management/managing-tests-and-folders/b9c5a31-move-to-folder.png "move-to-folder.png")
+![](/images/test-management/managing-tests-and-folders/b9c5a31-move-to-folder.png)
 
 テストを右クリックして、**Move to Folder** オプションを選択することもできます。
 
-![](/images/test-management/managing-tests-and-folders/fcdaa0c-move-to-folder-rightclick.png "move-to-folder-rightclick.png")
+![](/images/test-management/managing-tests-and-folders/fcdaa0c-move-to-folder-rightclick.png)
 
 > 📘
 >
@@ -71,19 +71,19 @@ keywords:
 1. テスト名をクリックして選択します。
 2. **Edit Labels** ボタンをクリックします。
 
-![](/images/test-management/managing-tests-and-folders/ec0956e-edit-labels.png "edit-labels.png")
+![](/images/test-management/managing-tests-and-folders/ec0956e-edit-labels.png)
 
 テストを右クリックして、**Edit Labels** オプションを選択することもできます。
 
-![](/images/test-management/managing-tests-and-folders/0a03342-editlabelsrightclick.png "editlabelsrightclick.png")
+![](/images/test-management/managing-tests-and-folders/0a03342-editlabelsrightclick.png)
 
 3. テストに適用する既存のラベルを選択または選択解除します。
 
-![](/images/test-management/managing-tests-and-folders/0bb369c-selectdeselectlabels.png "selectdeselectlabels.png")
+![](/images/test-management/managing-tests-and-folders/0bb369c-selectdeselectlabels.png)
 
 4. 新しいラベルを追加するには、新しいラベルを入力し、**Create New** リンクをクリックしてから、**Apply** をクリックします。
 
-![](/images/test-management/managing-tests-and-folders/6737516-newlabel.png "newlabel.png")
+![](/images/test-management/managing-tests-and-folders/6737516-newlabel.png)
 
 > 📘
 >
@@ -143,11 +143,11 @@ Test Library 画面から、テストまたはフォルダー、あるいは複�
 1. テストまたはフォルダー名をクリックして選択します。
 2. **Delete** アイコンをクリックします
 
-![](/images/test-management/managing-tests-and-folders/fd32693-delete-test.png "delete-test.png")
+![](/images/test-management/managing-tests-and-folders/fd32693-delete-test.png)
 
 テストまたはフォルダー名を右クリックして、右クリックメニューから **Delete** を選択することもできます。
 
-![](/images/test-management/managing-tests-and-folders/f8f3e24-delete-right-click.png "delete-right-click.png")
+![](/images/test-management/managing-tests-and-folders/f8f3e24-delete-right-click.png)
 
 > 📘
 >

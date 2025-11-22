@@ -26,31 +26,31 @@ TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzu
 5. **Create**をクリックします。
 6. 左側のメニューで**Single sign-on**をクリックします。
 
-![371](/images/security-sso/azure-ad-sso-integration/0db1560-saml.png "saml.png")
+![371](/images/security-sso/azure-ad-sso-integration/0db1560-saml.png)
 
 7. **SAML**をクリックします。
 8. 別のタブで**Testim Automate**を開き、右上隅にあるユーザーアイコンをクリックします。
 
-![285](/images/security-sso/azure-ad-sso-integration/713786e-sso1.png "sso1.png")
+![285](/images/security-sso/azure-ad-sso-integration/713786e-sso1.png)
 
 9. ドロップダウンメニューで、**Settings**をクリックし、**SSO**タブをクリックします。
 10. **Testim Service Provider Details**セクションの下で、**Service Provider Metadata**をクリックしてXMLファイルをダウンロードします。
 11. **Azure**タブに戻り、**Upload Metadata File**をクリックします。
 
-![1036](/images/security-sso/azure-ad-sso-integration/91619bd-uploadmetadatafile.png "uploadmetadatafile.png")
+![1036](/images/security-sso/azure-ad-sso-integration/91619bd-uploadmetadatafile.png)
 
  **Basic SAML Configuration**画面が表示されます。\
 12\. **Testim**タブに戻り、**Testim Service Provider Details**の下の**Assertion Consumer Service URL**で、**Copy**ボタンをクリックします。
 
-![1000](/images/security-sso/azure-ad-sso-integration/dc1324d-assertiontestim.png "assertiontestim.png")
+![1000](/images/security-sso/azure-ad-sso-integration/dc1324d-assertiontestim.png)
 
 13. **Azure**タブに戻り、コピーした**Assertion Consumer Service URL**を**Reply URL**フィールドに貼り付けて保存します。
 
-![788](/images/security-sso/azure-ad-sso-integration/dbbfe28-basicsmlconfiguration.png "basicsmlconfiguration.png")
+![788](/images/security-sso/azure-ad-sso-integration/dbbfe28-basicsmlconfiguration.png)
 
 14. **Azure**タブで、**User Attribute & Claims**に移動します。
 
-![1545](/images/security-sso/azure-ad-sso-integration/c03a031-manageclaim.png "manageclaim.png")
+![1545](/images/security-sso/azure-ad-sso-integration/c03a031-manageclaim.png)
 
 15. 以下の詳細で新しいクレームを追加します:
 
@@ -68,11 +68,11 @@ TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzu
 17. **Testim**タブで、**IDENTITY PROVIDER (IDP) METADATA**の下の**Upload File**をクリックし、Federation Metadata XMLファイルを選択します。
 18. すべてのユーザーがAzureを通じてのみログインでき、通常のTestimログインページを通じてログインできないようにするには、**Enable SSO**をオンにし、**Force users to login via idP**チェックボックスを選択します。
 
-![1890](/images/security-sso/azure-ad-sso-integration/eda2ac8-ssoconfiguration3.png "ssoconfiguration3.png")
+![1890](/images/security-sso/azure-ad-sso-integration/eda2ac8-ssoconfiguration3.png)
 
 19. **Azure**タブで、**Users and groups**画面に移動し、**Add users/group**をクリックします。
 20. **Azure**のまま、**Properties**画面に移動し、**User assignment required**オプションを必要に応じてオンまたはオフにします。
 
-![985](/images/security-sso/azure-ad-sso-integration/8b155e0-testim_web_site_sso.png "testim web site sso.png")
+![985](/images/security-sso/azure-ad-sso-integration/8b155e0-testim_web_site_sso.png)
 
 21. 左側のメニューで**Single sign-on**に戻り、設定をテストします。

@@ -3,15 +3,21 @@ title: '設定ファイルのパラメータ'
 description: '原文: https://help.testim.io/docs/configuration-file-parameters'
 category: 'パラメータ'
 order: 5
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'
 keywords:
-  - testim
-  - configuration-file-parameters
-  - parameters
+  - Testim
+  - 設定ファイル
+  - パラメータ
+  - beforeSuite
+  - beforeTest
+  - config file
+  - フック
+  - テストデータ
 ---
 設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
 
-[*設定ファイル*](/docs/configuration-file/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメータを定義する共通JSです。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメータ定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメータを各テストへ渡せます。
+[*設定ファイル*](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメータを定義する共通JSです。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメータ定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメータを各テストへ渡せます。
 
 ## パラメータのスコープ
 
@@ -19,7 +25,7 @@ keywords:
 
 ## 設定ファイルでの定義
 
-[設定ファイル](/docs/configuration-file/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメータを定義できます。例：
+[設定ファイル](/docs/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメータを定義できます。例：
 
 ```javascript
 exports.config = {
@@ -140,10 +146,10 @@ exports.config = {
 
 ## CLI での指定
 
-設定ファイルは [Testim CLI](/docs/running-tests/the-command-line-cli) の **-c** 引数で指定します。
+設定ファイルは [Testim CLI](/docs/the-command-line-cli) の **-c** 引数で指定します。
 
 ```shell
 testim -c "testimConfig.js"
 ```
 
-以降は、[ステッププロパティパネルのパラメータ](/docs/parameters/parameters-in-custom-javascript-steps) として各テストから参照できます。
+以降は、[ステッププロパティパネルのパラメータ](/docs/parameters-in-custom-javascript-steps) として各テストから参照できます。

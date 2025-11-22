@@ -28,7 +28,7 @@ keywords:
 1. **実行 -> スケジュール実行** に移動します。
 2. **新しいスケジューラー** または **スケジュールしましょう**（初めてのスケジュール実行の場合）をクリックします。
 
-![](/images/running-tests/scheduler-mobile/2e1dc9b-newscheduler.png "newscheduler.png")
+![](/images/running-tests/scheduler-mobile/2e1dc9b-newscheduler.png)
 
 **新しいスケジュール作成** ウィンドウが開きます。
 
@@ -73,7 +73,7 @@ keywords:
   * メール - メール通知を受け取るには、「メール」チェックボックスを選択し、受信者のメール/メールを入力します。
   * Slack - Slack 経由で通知を送信するには、「Slack」チェックボックスを選択します。Slack に通知を送信するには、初期統合を設定する必要があります。詳細については、[下記](https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack) を参照してください。
 
-![](/images/running-tests/scheduler-mobile/748b4b5-notify.png "notify.png")
+![](/images/running-tests/scheduler-mobile/748b4b5-notify.png)
 
 10. **詳細** をクリックして [高度なスケジューラーオプション](doc:scheduler#section-advanced-scheduler-options) を構成します。
 
@@ -82,7 +82,7 @@ keywords:
 
 新しいスケジュール実行が作成され、自動的にオンになります：
 
-![](/images/running-tests/scheduler-mobile/6f589a7-newscheduleradded.png "newscheduleradded.png")
+![](/images/running-tests/scheduler-mobile/6f589a7-newscheduleradded.png)
 
 ## スケジューラーを Slack と統合する
 
@@ -90,15 +90,15 @@ keywords:
 
 1. **新しいスケジュール作成** ウィンドウ > **通知** セクションで、**Slack に追加** をクリックします。
 
-![](/images/running-tests/scheduler-mobile/20be5b7-TestimSlack.png "TestimSlack.png")
+![](/images/running-tests/scheduler-mobile/20be5b7-TestimSlack.png)
 
 Slack にリダイレクトされてアクセスを確認します。**許可** をクリックします：
 
-![](/images/running-tests/scheduler-mobile/7bd8ab6-648de2c-Screen_Shot_2020-09-10_at_9.54.47.png "648de2c-Screen_Shot_2020-09-10_at_9.54.47.png")
+![](/images/running-tests/scheduler-mobile/7bd8ab6-648de2c-Screen_Shot_2020-09-10_at_9.54.47.png)
 
 2. 通知を受けたい Slack チャネルを追加します。
 
-![](/images/running-tests/scheduler-mobile/8d6ec5b-078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png "078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png")
+![](/images/running-tests/scheduler-mobile/8d6ec5b-078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png)
 
 > 📘
 >
@@ -112,7 +112,7 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 
 テストの並行実行、特定ブランチでの実行、結果ラベルの追加、またはテストタイムアウトの拡張などの高度なスケジューラーオプションの場合は、**詳細** オプションをクリックしてください：
 
-![](/images/running-tests/scheduler-mobile/62cade7-Screen_Shot_2020-09-06_at_15.21.32.png "Screen_Shot_2020-09-06_at_15.21.32.png")
+![](/images/running-tests/scheduler-mobile/62cade7-Screen_Shot_2020-09-06_at_15.21.32.png)
 
 * **並列** - 並行実行できるテストの数を選択します。
 
@@ -145,7 +145,7 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 
 スイートが実行中の場合、実行を停止できます。**実行** ⇒ **スイート実行** ⇒ 実行中のテストを選択 ⇒ **スケジュール実行を中止** をクリックします。
 
-![](/images/running-tests/scheduler-mobile/ce0cfc6-Screen_Shot_2020-01-23_at_9.53.15.png "Screen Shot 2020-01-23 at 9.53.15.png")
+![](/images/running-tests/scheduler-mobile/ce0cfc6-Screen_Shot_2020-01-23_at_9.53.15.png)
 
 ## スケジューラーのクローン
 
@@ -156,11 +156,11 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 1. **スケジュールリスト** 画面で、クローンしたいスケジューラーを選択します。
 2. **クローン** ボタンをクリックします。
 
-![](/images/running-tests/scheduler-mobile/7660cab-copy.png "copy.png")
+![](/images/running-tests/scheduler-mobile/7660cab-copy.png)
 
 3. スケジューラーに **名前** を付けて **クローン** をクリックします。
 
-![](/images/running-tests/scheduler-mobile/ae08359-clone.png "clone.png")
+![](/images/running-tests/scheduler-mobile/ae08359-clone.png)
 
 これで新しいスケジューラーを編集できます。
 
@@ -173,10 +173,10 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 1. 実行 > スケジュール実行 に移動します。
 2. **高度なフィルタ** ボタンをクリックします。
 
-![](/images/running-tests/scheduler-mobile/972a9bd-schedulerfilter.png "schedulerfilter.png")
+![](/images/running-tests/scheduler-mobile/972a9bd-schedulerfilter.png)
 
 3. **スケジューラーのフィルタリング** パネルから目的のフィルターを選択して、**適用** ボタンをクリックします。
 
-![](/images/running-tests/scheduler-mobile/c227da0-applyfiltersscheduler.png "applyfiltersscheduler.png")
+![](/images/running-tests/scheduler-mobile/c227da0-applyfiltersscheduler.png)
 
 スケジュール実行のリストは、フィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[フィルタリングされたビューの保存](/docs/test-management/saving-a-filtered-view) を参照してください。

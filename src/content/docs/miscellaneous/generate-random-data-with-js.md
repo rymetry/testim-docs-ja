@@ -13,7 +13,7 @@ keywords:
 
 Testimのすべてのステップはパラメータ化できます。これは、set-textステップが記録されたリテラル値（例: "[john@yourapp.io]()", "passw0rd!"）だけでなく、任意のJS式を持つことができることを意味します。
 
-![2541](/images/miscellaneous/generate-random-data-with-js/0ad0468-Untitled.png "Untitled.png")
+![2541](/images/miscellaneous/generate-random-data-with-js/0ad0468-Untitled.png)
 
 ## ステップにランダムデータを割り当てる方法は？
 

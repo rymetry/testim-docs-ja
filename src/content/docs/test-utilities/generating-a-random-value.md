@@ -26,7 +26,7 @@ keywords:
 
 1. ステップを追加したい位置の :fa-caret-right: **（矢印）** にカーソルを合わせます。
 
-![3849](/images/test-utilities/generating-a-random-value/4924b93-Testim_223a.png "Testim 223a.png")
+![3849](/images/test-utilities/generating-a-random-value/4924b93-Testim_223a.png)
 
    アクションのオプションが表示されます。
 
@@ -51,11 +51,11 @@ keywords:
 「Generate random value」ステップが **Editor** に追加されます。\
 5\. 作成したステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
 
-![3848](/images/test-utilities/generating-a-random-value/a6856ec-Testim_225a.png "Testim 225a.png")
+![3848](/images/test-utilities/generating-a-random-value/a6856ec-Testim_225a.png)
 
    右側に **Properties** パネルが表示されます。
 
-![200](/images/test-utilities/generating-a-random-value/caec929-Testim_226_r.png "Testim 226_r.png")
+![200](/images/test-utilities/generating-a-random-value/caec929-Testim_226_r.png)
 
 6. 以下の説明に従ってプロパティを設定します。
 
@@ -82,11 +82,11 @@ keywords:
 
 1. 変更したい **Set text** ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
 
-![3849](/images/test-utilities/generating-a-random-value/4a5bd98-Testim_227a.png "Testim 227a.png")
+![3849](/images/test-utilities/generating-a-random-value/4a5bd98-Testim_227a.png)
 
    右側に **Properties** パネルが表示されます。
 
-![200](/images/test-utilities/generating-a-random-value/7a35bba-Testim_228_r.png "Testim 228_r.png")
+![200](/images/test-utilities/generating-a-random-value/7a35bba-Testim_228_r.png)
 
 2. **Text to assign** フィールドに、**Generate random value** ステップで使用した **Variable Name** を入力します。
 
@@ -101,4 +101,4 @@ keywords:
 
 [こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/uLiH9r9jPk) をクリックすると、複数の **Generate random value** ステップを含むサンプルテストが開きます。テストを実行し、設定の調整を試してみてください。
 
-![894](/images/test-utilities/generating-a-random-value/0c1762d-Jan-31-2021_06-20-28.gif "Jan-31-2021 06-20-28.gif")
+![894](/images/test-utilities/generating-a-random-value/0c1762d-Jan-31-2021_06-20-28.gif)
