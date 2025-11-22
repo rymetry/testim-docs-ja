@@ -3,13 +3,14 @@ title: 'プロジェクト設定'
 description: 'プロジェクトの一般設定とプルリクエスト設定の変更方法について説明します。プロジェクト名、ベースURL、デフォルト設定、ブランチ保護などを管理します。'
 category: 'project-user-management'
 order: 4
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/project-settings'
 keywords:
-  - testim
   - プロジェクト設定
-  - ベースurl
+  - ベースURL
   - プルリクエスト
   - ブランチ保護
+  - オートコンプリート
 ---
 
 プロジェクト設定(名前、デフォルトURL、パーソナルCLIなど)の変更場所を学ぶ
@@ -28,20 +29,20 @@ keywords:
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![533](/images/project-user-management/project-settings/186b1b8-Picture1.png)
+![Project Name編集ダイアログへの遷移ボタン](/images/project-user-management/project-settings/186b1b8-Picture1.png)
 
 2. **Project Name** セクションで、**Edit** ボタン(鉛筆)をクリックします。
 
-![502](/images/project-user-management/project-settings/f225cca-Picture2.png)
+![Project Nameセクションの編集アイコン](/images/project-user-management/project-settings/f225cca-Picture2.png)
 
 **Project Name** ウィンドウが開きます。\
 3\. **Enter a new name for this project** フィールドに、新しい名前を入力します。
 
-![354](/images/project-user-management/project-settings/ad8a31f-Picture3.png)
+![新しいプロジェクト名を入力するフィールド](/images/project-user-management/project-settings/ad8a31f-Picture3.png)
 
 4. **OK** をクリックします。
 
-![355](/images/project-user-management/project-settings/e99b797-Picture4.png)
+![OKボタンをクリックしてプロジェクト名を保存する画面](/images/project-user-management/project-settings/e99b797-Picture4.png)
 
 **Project Name** ウィンドウが閉じ、プロジェクト名が更新されます。
 
@@ -53,11 +54,11 @@ keywords:
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
-![489](/images/project-user-management/project-settings/e75b51b-Picture5.png)
+![Default Base URLセクションの編集ボタン](/images/project-user-management/project-settings/e75b51b-Picture5.png)
 
 2. **Default Base URL** セクションで、**Edit** ボタン(鉛筆)をクリックします。
 
-![458](/images/project-user-management/project-settings/2c841e2-Picture6.png)
+![Base URL編集用の入力ダイアログ](/images/project-user-management/project-settings/2c841e2-Picture6.png)
 
 **Test Default URL** ウィンドウが開きます。\
 3\. **Your app URL** フィールドに、テスト対象のアプリのURLを入力します。

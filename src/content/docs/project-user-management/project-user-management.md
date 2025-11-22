@@ -3,13 +3,14 @@ title: 'プロジェクトへのユーザー招待と削除'
 description: 'プロジェクトにチームメイトを招待し、削除する方法について説明します。プロジェクトオーナーの割り当ても管理できます。'
 category: 'project-user-management'
 order: 1
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/project-user-management'
 keywords:
-  - testim
   - プロジェクト管理
-  - ユーザー管理
+  - ユーザー招待
   - チームメイト
   - プロジェクトオーナー
+  - Project teammates
 ---
 
 プロジェクトへのユーザー招待と削除
@@ -31,11 +32,11 @@ keywords:
 
 入力したアドレスにプロジェクトへの招待が送信され、**Project teammates** ページのリストに追加されます。まだ招待を受け入れていないユーザーは *Pending* と表示されます。
 
-![](/images/project-user-management/project-user-management/a651531-c664f51-Screen_Shot_2021-11-28_at_8.43.33.png)
+![Project teammatesページでチームメイトを招待する画面](/images/project-user-management/project-user-management/a651531-c664f51-Screen_Shot_2021-11-28_at_8.43.33.png)
 
 ## チームメイトの削除
 
-プロジェクトオーナーは、プロジェクトからチームメイトを削除できます。この手順では、ユーザーはプロジェクトからのみ削除され、企業からは削除されません。企業のユーザーリストからユーザーを削除するには、[プロジェクトとユーザー管理(企業レベル)](/docs/project-user-management/project-and-user-management)を参照してください。(唯一のプロジェクトオーナーであるチームメイトは、プロジェクトから削除できません。)
+プロジェクトオーナーは、プロジェクトからチームメイトを削除できます。この手順では、ユーザーはプロジェクトからのみ削除され、企業からは削除されません。企業のユーザーリストからユーザーを削除するには、[プロジェクトとユーザー管理(企業レベル)](/docs/project-and-user-management)を参照してください。(唯一のプロジェクトオーナーであるチームメイトは、プロジェクトから削除できません。)
 
 > 📘
 >
@@ -45,22 +46,22 @@ keywords:
 
 1. メインナビゲーションで、**Users** アイコンをクリックします。
 
-![](/images/project-user-management/project-user-management/62ec3ab-users.png)
+![Usersアイコンを経由して表示されるProject teammates画面](/images/project-user-management/project-user-management/62ec3ab-users.png)
 
 **Project teammates** ページが表示されます。
 
 2. 削除したいチームメイトを1人以上選択します。複数のチームメイトを選択するには **CTRL/CMD + クリック** を使用します。\
    3\. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「Delete users」を選択することもできます。
 
-![](/images/project-user-management/project-user-management/aec7e20-select-delete.png)
+![複数のチームメイトを選択して削除オプションを表示する画面](/images/project-user-management/project-user-management/aec7e20-select-delete.png)
 
-![](/images/project-user-management/project-user-management/843e879-4a1895b-rightclickdelete.png)
+![右クリックメニューからDelete usersを選択する例](/images/project-user-management/project-user-management/843e879-4a1895b-rightclickdelete.png)
 
 **Remove From Project** 確認が表示されます。
 
 3. **OK** をクリックします。
 
-![](/images/project-user-management/project-user-management/19e6767-confirmdelete.png)
+![Remove From Project確認ダイアログ](/images/project-user-management/project-user-management/19e6767-confirmdelete.png)
 
 選択したチームメイトがプロジェクトから削除されます。
 
@@ -72,13 +73,13 @@ keywords:
 
 1. メインナビゲーションで、**Users** アイコンをクリックします。
 
-![](/images/project-user-management/project-user-management/e402149-Testim_446a.png)
+![Project teammates画面でAdd Project Ownerメニューを選ぶところ](/images/project-user-management/project-user-management/e402149-Testim_446a.png)
 
 **Project teammates** ページが表示されます。
 
 2. プロジェクトオーナーとして追加したいチームメイトを右クリックし、**Add Project Owner** を選択します。
 
-![](/images/project-user-management/project-user-management/4feb2ce-6d483e0-Screen_Shot_2021-11-28_at_9.13.20.png)
+![右クリックメニューからProject Owner追加を選択](/images/project-user-management/project-user-management/4feb2ce-6d483e0-Screen_Shot_2021-11-28_at_9.13.20.png)
 
 チームメイトがプロジェクトオーナーとして追加されます。
 
@@ -86,18 +87,18 @@ keywords:
 
 1. メインナビゲーションで、**Users** アイコンをクリックします。
 
-![](/images/project-user-management/project-user-management/08f10f6-Testim_446a.png)
+![Project Ownerを選択した状態の画面](/images/project-user-management/project-user-management/08f10f6-Testim_446a.png)
 
 **Project teammates** ページが表示されます。
 
 2. プロジェクトオーナーから削除したいチームメイトにカーソルを合わせ、**Remove Project Owner** をクリックします。
 
-![](/images/project-user-management/project-user-management/4ad504b-cc07442-Screen_Shot_2021-11-28_at_9.14.37.png)
+![Remove Project Owner確認ダイアログの例](/images/project-user-management/project-user-management/4ad504b-cc07442-Screen_Shot_2021-11-28_at_9.14.37.png)
 
 **Remove Project Owner** 確認が表示されます。
 
 3. **Remove** をクリックします。
 
-![](/images/project-user-management/project-user-management/c1cc343-Testim_452a.png)
+![Project Owner削除後の確認メッセージ](/images/project-user-management/project-user-management/c1cc343-Testim_452a.png)
 
 チームメイトがプロジェクトオーナーから削除されます。
