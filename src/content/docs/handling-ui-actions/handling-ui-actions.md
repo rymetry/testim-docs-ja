@@ -27,11 +27,78 @@ keywords:
 
 以下は、テストに追加できるより高度なUI操作の一部です。
 
-| 操作 | 説明 |
-| :--- | :--- |
-| [スクロール](/docs/scroll) | テストでページの特定の場所または要素にスクロールさせたい場合に、ステップを追加します。 |
-| [自動スクロール](/docs/auto-scroll) | 要素が最初にビューポートの外側にある場合、テストが自動的にページ要素にスクロールするかどうかを制御します。 |
-| [ドラッグ&ドロップステップ](/docs/drag-drop-step) | ユーザーが画像をアップロードセクションにドラッグしたり、ビジュアルエディターのワークスペースに要素を追加したりするなど、「ドラッグ&ドロップ」アクションを記録するステップを追加します。 |
-| [ホバーステップ](/docs/hover-step) | ユーザーがメニュー、ツールチップ、またはボタンにカーソルを合わせるなど、ホバーアクションを記録するステップを追加します。 |
-| [ナビゲーションステップ](/docs/navigation) | テストで別のページに移動させたい場合にステップを追加します。 |
-| [ページの更新](/docs/refresh-page) | テストでページを更新させたい場合にステップを追加します。 |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    操作
+   </th>
+   <th style="text-align: left;">
+    説明
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/scroll">
+     スクロール
+    </a>
+   </td>
+   <td style="text-align: left;">
+    テストでページの特定の場所または要素にスクロールさせたい場合に、ステップを追加します。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/auto-scroll">
+     自動スクロール
+    </a>
+   </td>
+   <td style="text-align: left;">
+    要素が最初にビューポートの外側にある場合、テストが自動的にページ要素にスクロールするかどうかを制御します。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/drag-drop-step">
+     ドラッグ&amp;ドロップステップ
+    </a>
+   </td>
+   <td style="text-align: left;">
+    ユーザーが画像をアップロードセクションにドラッグしたり、ビジュアルエディターのワークスペースに要素を追加したりするなど、「ドラッグ&amp;ドロップ」アクションを記録するステップを追加します。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/hover-step">
+     ホバーステップ
+    </a>
+   </td>
+   <td style="text-align: left;">
+    ユーザーがメニュー、ツールチップ、またはボタンにカーソルを合わせるなど、ホバーアクションを記録するステップを追加します。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/navigation">
+     ナビゲーションステップ
+    </a>
+   </td>
+   <td style="text-align: left;">
+    テストで別のページに移動させたい場合にステップを追加します。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/refresh-page">
+     ページの更新
+    </a>
+   </td>
+   <td style="text-align: left;">
+    テストでページを更新させたい場合にステップを追加します。
+   </td>
+  </tr>
+ </tbody>
+</table>
+

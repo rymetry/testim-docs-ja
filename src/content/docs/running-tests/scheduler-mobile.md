@@ -1,17 +1,24 @@
 ---
 title: 'スケジューラー - モバイル'
-description: 'テスト実行セクション「スケジューラー - モバイル」に関するドキュメント。'
+description: 'モバイルテストを対象に、スケジューラーを使ってラベル・スイート・テストプランを定期実行し、モバイルグリッドやデバイス構成、アプリケーションのオーバーライド、通知などを設定する方法を説明します。'
 category: 'テスト実行'
 order: 6
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/scheduler-mobile'
 keywords:
-  - testim
-  - scheduler-mobile
-  - running-tests
+  - スケジューラー
+  - モバイルテスト
+  - スケジュール実行
+  - モバイルグリッド
+  - デバイス構成
+  - テストプラン
+  - 通知
+  - テスト実行
+  - Testim
 ---
 テストをスケジュールし、モバイルアプリケーションを監視する
 
-スケジュール実行は、事前に定義されたスケジュールに基づいて実行されるテスト実行です。例えば、夜間ビルドを実行するようにテストをスケジュールすることも、本番アプリケーションを監視するため 30 分ごとに実行するようにスケジュールすることもできます。テスト実行をスケジュールするには、テストが [ラベル](/docs/test-management/labels) を持つか、[テストスイート](/docs/test-management/test-suites) の一部である必要があります。
+スケジュール実行は、事前に定義されたスケジュールに基づいて実行されるテスト実行です。例えば、夜間ビルドを実行するようにテストをスケジュールすることも、本番アプリケーションを監視するため 30 分ごとに実行するようにスケジュールすることもできます。テスト実行をスケジュールするには、テストが [ラベル](/docs/labels) を持つか、[テストスイート](/docs/test-suites) の一部である必要があります。
 
 > 📘
 >
@@ -21,26 +28,26 @@ keywords:
 
 > 📘
 >
-> 以前にスケジューラーを作成済みで、新しいスケジューラーを既存のスケジューラーに基づかせたい場合は、[スケジューラーのクローン](doc:scheduler#section-cloning-a-scheduler) 機能を使用できます。
+> 以前にスケジューラーを作成済みで、新しいスケジューラーを既存のスケジューラーに基づかせたい場合は、[スケジューラーのクローン](/docs/scheduler#section-cloning-a-scheduler) 機能を使用できます。
 
 :fa-arrow-right: **新しいテスト実行スケジュールを作成するには：**
 
 1. **実行 -> スケジュール実行** に移動します。
 2. **新しいスケジューラー** または **スケジュールしましょう**（初めてのスケジュール実行の場合）をクリックします。
 
-![](/images/running-tests/scheduler-mobile/2e1dc9b-newscheduler.png)
+![モバイルスケジューラーの新規作成ボタン](/images/running-tests/scheduler-mobile/2e1dc9b-newscheduler.png)
 
 **新しいスケジュール作成** ウィンドウが開きます。
 
-![](/images/running-tests/scheduler-mobile/bb1af3f-schedulermobile1.png)
+![モバイル用新しいスケジュール作成ウィンドウ](/images/running-tests/scheduler-mobile/bb1af3f-schedulermobile1.png)
 
 3. **一般情報** の下で、スケジューラーの **名前** を入力し、オプションで **説明** を入力します。
 
-![](/images/running-tests/scheduler-mobile/38ac724-schedulermobile2.png)
+![モバイルスケジューラーの一般情報入力画面](/images/running-tests/scheduler-mobile/38ac724-schedulermobile2.png)
 
 4. **何を実行するか** の下の **テストリスト** フィールドで、次のいずれかを選択します：
    1. **ラベル、スイート**：テストラベルまたはスイート名でテストまたはテストスイートを選択します。
-   2. **テストプラン**：テストプラン名でテストプラン 1 つ以上を選択します。入力を開始してから、スケジュール実行に含める [ラベル](/docs/test-management/labels)、[テストスイート](/docs/test-management/test-suites)、または [テストプラン](/docs/test-management/test-plans) の名前を選択します。ドロップダウンリストが表示されない場合は、ラベル/スイート/プランのスペルが正しいことを確認してください。
+   2. **テストプラン**：テストプラン名でテストプラン 1 つ以上を選択します。入力を開始してから、スケジュール実行に含める [ラベル](/docs/labels)、[テストスイート](/docs/test-suites)、または [テストプラン](/docs/test-plans) の名前を選択します。ドロップダウンリストが表示されない場合は、ラベル/スイート/プランのスペルが正しいことを確認してください。
 5. **どこで実行するか** の下で、テストを実行したいモバイルグリッドを選択します。グリッド構成の詳細については、[グリッド管理](/docs/grid-management) を参照してください。
 
 > 📘 注：
@@ -67,22 +74,22 @@ keywords:
 
 * **通知する** - デフォルトでは、新しいスケジュールを作成する場合、すべての失敗時に通知されるように設定されています。通知設定を次のいずれかのオプションに変更できます：
 
-![](/images/running-tests/scheduler-mobile/fc5cfeb-Screen_Shot_2020-09-21_at_1.17.45_PM.png)
+![通知条件を選択する設定画面](/images/running-tests/scheduler-mobile/fc5cfeb-Screen_Shot_2020-09-21_at_1.17.45_PM.png)
 
 * **設定** - 通知の送信先を指定できます。次のオプションが利用可能です：
   * メール - メール通知を受け取るには、「メール」チェックボックスを選択し、受信者のメール/メールを入力します。
   * Slack - Slack 経由で通知を送信するには、「Slack」チェックボックスを選択します。Slack に通知を送信するには、初期統合を設定する必要があります。詳細については、[下記](https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack) を参照してください。
 
-![](/images/running-tests/scheduler-mobile/748b4b5-notify.png)
+![Slack 通知設定の詳細画面](/images/running-tests/scheduler-mobile/748b4b5-notify.png)
 
-10. **詳細** をクリックして [高度なスケジューラーオプション](doc:scheduler#section-advanced-scheduler-options) を構成します。
+10. **詳細** をクリックして [高度なスケジューラーオプション](/docs/scheduler#section-advanced-scheduler-options) を構成します。
 
-    ![](/images/running-tests/scheduler-mobile/1b576ad-scheduler3.png)
+    ![モバイルスケジューラーの高度なオプション設定画面](/images/running-tests/scheduler-mobile/1b576ad-scheduler3.png)
 11. **作成** をクリックしてスケジューラーを保存します。
 
 新しいスケジュール実行が作成され、自動的にオンになります：
 
-![](/images/running-tests/scheduler-mobile/6f589a7-newscheduleradded.png)
+![作成されたモバイルスケジューラーが一覧に表示された状態](/images/running-tests/scheduler-mobile/6f589a7-newscheduleradded.png)
 
 ## スケジューラーを Slack と統合する
 
@@ -90,29 +97,25 @@ keywords:
 
 1. **新しいスケジュール作成** ウィンドウ > **通知** セクションで、**Slack に追加** をクリックします。
 
-![](/images/running-tests/scheduler-mobile/20be5b7-TestimSlack.png)
+![Slack との連携を追加するボタン](/images/running-tests/scheduler-mobile/20be5b7-TestimSlack.png)
 
 Slack にリダイレクトされてアクセスを確認します。**許可** をクリックします：
 
-![](/images/running-tests/scheduler-mobile/7bd8ab6-648de2c-Screen_Shot_2020-09-10_at_9.54.47.png)
+![Slack 側でアクセスを許可する画面](/images/running-tests/scheduler-mobile/7bd8ab6-648de2c-Screen_Shot_2020-09-10_at_9.54.47.png)
 
 2. 通知を受けたい Slack チャネルを追加します。
 
-![](/images/running-tests/scheduler-mobile/8d6ec5b-078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png)
+![通知用 Slack チャネルの選択画面](/images/running-tests/scheduler-mobile/8d6ec5b-078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png)
 
-> 📘
+> 📘 任意の時点でチャネルを削除/追加し、Slack 通知を無効にできます。既に統合を構成した後に追加された非公開 Slack チャネルを選択したい場合は、それを切断（Slack 経由）してから、スケジューラー画面から再度接続する必要があります。
 >
-> 任意の時点でチャネルを削除/追加し、Slack 通知を無効にできます。既に統合を構成した後に追加された非公開 Slack チャネルを選択したい場合は、それを切断（Slack 経由）してから、スケジューラー画面から再度接続する必要があります。
-
-> 📘
->
-> チャネル数が多い Slack ワークスペースを使用する場合、ワークスペースから Slack チャネルの読み込みで困難が生じる場合があります。この場合、Testim サポートに連絡してください。問題を解決する代替統合メカニズムを提供します。
+> 📘 チャネル数が多い Slack ワークスペースを使用する場合、ワークスペースから Slack チャネルの読み込みで困難が生じる場合があります。この場合、Testim サポートに連絡してください。問題を解決する代替統合メカニズムを提供します。
 
 ## 高度なスケジューラーオプション
 
 テストの並行実行、特定ブランチでの実行、結果ラベルの追加、またはテストタイムアウトの拡張などの高度なスケジューラーオプションの場合は、**詳細** オプションをクリックしてください：
 
-![](/images/running-tests/scheduler-mobile/62cade7-Screen_Shot_2020-09-06_at_15.21.32.png)
+![モバイルスケジューラーの高度なオプション設定画面](/images/running-tests/scheduler-mobile/62cade7-Screen_Shot_2020-09-06_at_15.21.32.png)
 
 * **並列** - 並行実行できるテストの数を選択します。
 
@@ -131,7 +134,7 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 
 トグルしてスケジュール実行テストスイートを一時停止または再アクティブ化します。
 
-![](/images/running-tests/scheduler-mobile/0ec2157-activateschedule.png)
+![モバイルスケジュール実行の有効・無効トグル](/images/running-tests/scheduler-mobile/0ec2157-activateschedule.png)
 
 ### 編集
 
@@ -145,7 +148,7 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 
 スイートが実行中の場合、実行を停止できます。**実行** ⇒ **スイート実行** ⇒ 実行中のテストを選択 ⇒ **スケジュール実行を中止** をクリックします。
 
-![](/images/running-tests/scheduler-mobile/ce0cfc6-Screen_Shot_2020-01-23_at_9.53.15.png)
+![モバイルスケジュール実行を中止する画面](/images/running-tests/scheduler-mobile/ce0cfc6-Screen_Shot_2020-01-23_at_9.53.15.png)
 
 ## スケジューラーのクローン
 
@@ -156,11 +159,11 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 1. **スケジュールリスト** 画面で、クローンしたいスケジューラーを選択します。
 2. **クローン** ボタンをクリックします。
 
-![](/images/running-tests/scheduler-mobile/7660cab-copy.png)
+![モバイルスケジューラーのクローン作成ボタン](/images/running-tests/scheduler-mobile/7660cab-copy.png)
 
 3. スケジューラーに **名前** を付けて **クローン** をクリックします。
 
-![](/images/running-tests/scheduler-mobile/ae08359-clone.png)
+![クローンされたモバイルスケジューラーの編集画面](/images/running-tests/scheduler-mobile/ae08359-clone.png)
 
 これで新しいスケジューラーを編集できます。
 
@@ -173,10 +176,10 @@ Slack にリダイレクトされてアクセスを確認します。**許可** 
 1. 実行 > スケジュール実行 に移動します。
 2. **高度なフィルタ** ボタンをクリックします。
 
-![](/images/running-tests/scheduler-mobile/972a9bd-schedulerfilter.png)
+![モバイルスケジューラーライブラリのフィルターメニュー](/images/running-tests/scheduler-mobile/972a9bd-schedulerfilter.png)
 
 3. **スケジューラーのフィルタリング** パネルから目的のフィルターを選択して、**適用** ボタンをクリックします。
 
-![](/images/running-tests/scheduler-mobile/c227da0-applyfiltersscheduler.png)
+![フィルター適用後のモバイルスケジュール実行一覧](/images/running-tests/scheduler-mobile/c227da0-applyfiltersscheduler.png)
 
-スケジュール実行のリストは、フィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[フィルタリングされたビューの保存](/docs/test-management/saving-a-filtered-view) を参照してください。
+スケジュール実行のリストは、フィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[フィルタリングされたビューの保存](/docs/saving-a-filtered-view) を参照してください。

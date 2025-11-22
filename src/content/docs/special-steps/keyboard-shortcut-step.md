@@ -27,12 +27,68 @@ keywords:
 
 以下の種類をサポートします。未対応の組み合わせは “unsupported keyboard shortcut” エラーになります。
 
-| ショートカットの種類                         | Windows 例                        | Mac 例                                      |
-|----------------------------------------------|-----------------------------------|---------------------------------------------|
-| Alt/Ctrl 修飾キー + 文字/数字/記号キー       | ALT + X / CTRL + 1               | Option + X                                  |
-| 修飾キー + ファンクションキー               | Alt + F3 / Ctrl + F10            | Option + F3 / Command + F10                 |
-| 修飾キー 2つ + 文字/数字/記号キー           | Alt + Ctrl + X / Ctrl + Shift + 1 | Option + Command + X / Command + Shift + 1 |
-| 修飾キー 2つ + ファンクションキー           | Alt + Ctrl + F12 / Ctrl + Shift + F7 | Option + Control + F12 / Command + Shift + F7 |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    ショートカットの種類
+   </th>
+   <th>
+    Windows 例
+   </th>
+   <th>
+    Mac 例
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    Alt/Ctrl 修飾キー + 文字/数字/記号キー
+   </td>
+   <td>
+    ALT + X / CTRL + 1
+   </td>
+   <td>
+    Option + X
+   </td>
+  </tr>
+  <tr>
+   <td>
+    修飾キー + ファンクションキー
+   </td>
+   <td>
+    Alt + F3 / Ctrl + F10
+   </td>
+   <td>
+    Option + F3 / Command + F10
+   </td>
+  </tr>
+  <tr>
+   <td>
+    修飾キー 2つ + 文字/数字/記号キー
+   </td>
+   <td>
+    Alt + Ctrl + X / Ctrl + Shift + 1
+   </td>
+   <td>
+    Option + Command + X / Command + Shift + 1
+   </td>
+  </tr>
+  <tr>
+   <td>
+    修飾キー 2つ + ファンクションキー
+   </td>
+   <td>
+    Alt + Ctrl + F12 / Ctrl + Shift + F7
+   </td>
+   <td>
+    Option + Control + F12 / Command + Shift + F7
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 # 手動でショートカットステップを追加
 

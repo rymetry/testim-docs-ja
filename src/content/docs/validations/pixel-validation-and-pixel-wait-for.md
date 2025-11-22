@@ -58,11 +58,71 @@ Testim 内で変更できるビジュアル検証パラメータは 4 つあり�
 
 これらのビジュアル検証パラメータは次の場所で変更できます：
 
-| 変更場所 | 適用対象 | 追加情報 |
-|-------------|------------|------------------------|
-| Configuration Library | その設定が指定されたテスト内のすべてのビジュアル検証ステップ（CLI や Scheduler 経由で実行されるテストを含む） | テスト設定の詳細は [Create a shared configuration](/docs/shared-configuration) を参照。CLI の詳細は [Command line interface: Test Config](/docs/the-command-line-cli) を参照。Scheduler の詳細は [Scheduler](/docs/scheduler) を参照。 |
-| テストエディター内のセットアップステップ | テスト内の各ステップに適用。ただし次の場合を除く：<br/>• テストが異なる設定で CLI またはスケジューラから実行される場合、または<br/>• ステップレベルでビジュアル検証パラメータがオーバーライドされている特定ステップの場合。 | |
-| ステップレベル | テストレベルに適用され、テストレベルのビジュアル検証パラメータを上書きします。 | |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    変更場所
+   </th>
+   <th>
+    適用対象
+   </th>
+   <th>
+    追加情報
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    Configuration Library
+   </td>
+   <td>
+    その設定が指定されたテスト内のすべてのビジュアル検証ステップ（CLI や Scheduler 経由で実行されるテストを含む）
+   </td>
+   <td>
+    テスト設定の詳細は
+    <a href="/docs/shared-configuration">
+     Create a shared configuration
+    </a>
+    を参照。CLI の詳細は
+    <a href="/docs/the-command-line-cli">
+     Command line interface: Test Config
+    </a>
+    を参照。Scheduler の詳細は
+    <a href="/docs/scheduler">
+     Scheduler
+    </a>
+    を参照。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    テストエディター内のセットアップステップ
+   </td>
+   <td>
+    テスト内の各ステップに適用。ただし次の場合を除く：
+    <br/>
+    • テストが異なる設定で CLI またはスケジューラから実行される場合、または
+    <br/>
+    • ステップレベルでビジュアル検証パラメータがオーバーライドされている特定ステップの場合。
+   </td>
+   <td>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    ステップレベル
+   </td>
+   <td>
+    テストレベルに適用され、テストレベルのビジュアル検証パラメータを上書きします。
+   </td>
+   <td>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### テスト設定でビジュアル検証設定を変更する
 

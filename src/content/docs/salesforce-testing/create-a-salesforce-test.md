@@ -51,17 +51,161 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 **Setup Step**には次のプロパティが含まれます:
 
-| パラメータ            | 説明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |    |
-| :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :- |
-| Base URL             | デフォルトでは、このURLは、最初に接続した環境に応じて、Salesforceホームページの一般的なURL（`https://login.salesforce.com`または`https://test.salesforce.com`）のいずれかになります。Log inステップが、現在のブランチ用に設定した環境に直接移動するため、これを変更する必要はありません。                                                                                                                                                             |    |
-| Test name            | テストの名前を入力します。デフォルトでは、テストは'untitled test'として保存されます。                                                                                                                                                                                                                                                                                                                                                                                                                                                  |    |
-| Test description     | テストのオプションの説明を入力します。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |    |
-| Test owner           | デフォルトでは、テスト所有者はテストを作成したユーザーです。オプションでリストから別のユーザーを選択するにはクリックします。                                                                                                                                                                                                                                                                                                                                                                                                       |    |
-| Mock network         | Testimは、テストの一部としてテスト対象アプリケーション（AUT）のネットワークトラフィックをモックする機能を提供します。テスト実行中、実際の呼び出しを実行する代わりに、システムは呼び出しをインターセプトし、モックされたレスポンスを返します。詳細については、[ネットワークレスポンスのモック](/docs/mock-network-responses/mock-network-responses)を参照してください。                                                                                                                                                                                                                         |    |
-| Salesforce options   | Salesforceログにステップのスクリーンショットを含めたい場合は、**Log screenshots**オプションを有効にします。これは、単一のステップで複数のアクションを実行するSalesforceステップでのみ利用可能です。Salesforceステップのスクリーンショットには、ステップのすべてのアクションが含まれます。**Salesforce Log**を表示するには、テストを実行した後、ステップの**View Screenshot**ボタンをクリックしてから、**Salesforce Log**タブをクリックします。パフォーマンス上の理由から、必要な場合を除き、この機能を有効にすることは推奨されません。 |    |
-| Configuration        | テストの設定は、テストを実行するために使用されるシステム仕様を決定します。テスト設定を変更する場合は、**Choose Other**をクリックして既存のテスト設定を選択するか、**Edit**ボタンをクリックして新しい設定を作成します。詳細については、[テスト設定](https://help.testim.io/docs/shared-configuration#creating-and-modifying-test-configurations-in-the-test-editor)を参照してください                                                                                                            |    |
-| Test in TTM for Jira | Tricentis Test Management（TTM）for Jiraは、QAと開発を連携させるJira内のエンドツーエンドのテスト管理で、アイデアから本番まで、ソフトウェアに品質を組み込んで共同作業することができます。詳細については、[TTM for Jira統合](/docs/test-management-integrations/ttm-for-jira-integration)を参照してください                                                                                                                                                                                                                 |    |
-| Test Data            | テストデータはデータ駆動テストに使用されます。詳細については、[ビジュアルエディターからのデータ駆動テストの設定](/docs/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。                                                                                                                                                                                                                                  |    |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    パラメータ
+   </th>
+   <th style="text-align: left;">
+    説明
+   </th>
+   <th style="text-align: left;">
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Base URL
+   </td>
+   <td style="text-align: left;">
+    デフォルトでは、このURLは、最初に接続した環境に応じて、Salesforceホームページの一般的なURL（
+    <code>
+     https://login.salesforce.com
+    </code>
+    または
+    <code>
+     https://test.salesforce.com
+    </code>
+    ）のいずれかになります。Log inステップが、現在のブランチ用に設定した環境に直接移動するため、これを変更する必要はありません。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Test name
+   </td>
+   <td style="text-align: left;">
+    テストの名前を入力します。デフォルトでは、テストは'untitled test'として保存されます。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Test description
+   </td>
+   <td style="text-align: left;">
+    テストのオプションの説明を入力します。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Test owner
+   </td>
+   <td style="text-align: left;">
+    デフォルトでは、テスト所有者はテストを作成したユーザーです。オプションでリストから別のユーザーを選択するにはクリックします。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Mock network
+   </td>
+   <td style="text-align: left;">
+    Testimは、テストの一部としてテスト対象アプリケーション（AUT）のネットワークトラフィックをモックする機能を提供します。テスト実行中、実際の呼び出しを実行する代わりに、システムは呼び出しをインターセプトし、モックされたレスポンスを返します。詳細については、
+    <a href="/docs/mock-network-responses/mock-network-responses">
+     ネットワークレスポンスのモック
+    </a>
+    を参照してください。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Salesforce options
+   </td>
+   <td style="text-align: left;">
+    Salesforceログにステップのスクリーンショットを含めたい場合は、
+    <strong>
+     Log screenshots
+    </strong>
+    オプションを有効にします。これは、単一のステップで複数のアクションを実行するSalesforceステップでのみ利用可能です。Salesforceステップのスクリーンショットには、ステップのすべてのアクションが含まれます。
+    <strong>
+     Salesforce Log
+    </strong>
+    を表示するには、テストを実行した後、ステップの
+    <strong>
+     View Screenshot
+    </strong>
+    ボタンをクリックしてから、
+    <strong>
+     Salesforce Log
+    </strong>
+    タブをクリックします。パフォーマンス上の理由から、必要な場合を除き、この機能を有効にすることは推奨されません。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Configuration
+   </td>
+   <td style="text-align: left;">
+    テストの設定は、テストを実行するために使用されるシステム仕様を決定します。テスト設定を変更する場合は、
+    <strong>
+     Choose Other
+    </strong>
+    をクリックして既存のテスト設定を選択するか、
+    <strong>
+     Edit
+    </strong>
+    ボタンをクリックして新しい設定を作成します。詳細については、
+    <a href="https://help.testim.io/docs/shared-configuration#creating-and-modifying-test-configurations-in-the-test-editor">
+     テスト設定
+    </a>
+    を参照してください
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Test in TTM for Jira
+   </td>
+   <td style="text-align: left;">
+    Tricentis Test Management（TTM）for Jiraは、QAと開発を連携させるJira内のエンドツーエンドのテスト管理で、アイデアから本番まで、ソフトウェアに品質を組み込んで共同作業することができます。詳細については、
+    <a href="/docs/test-management-integrations/ttm-for-jira-integration">
+     TTM for Jira統合
+    </a>
+    を参照してください
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Test Data
+   </td>
+   <td style="text-align: left;">
+    テストデータはデータ駆動テストに使用されます。詳細については、
+    <a href="/docs/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor">
+     ビジュアルエディターからのデータ駆動テストの設定
+    </a>
+    を参照してください。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 # 手動ステップの追加
 

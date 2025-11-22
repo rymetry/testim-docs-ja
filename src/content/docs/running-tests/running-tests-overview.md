@@ -1,48 +1,128 @@
 ---
 title: 'テスト実行の概要'
-description: 'テストの実行方法に関する包括的なドキュメント'
+description: 'ローカル実行、グリッド実行、スケジューラー、CLI など Testim でテストを実行するさまざまな方法と、それぞれの実行タイプがテスト実行クォータにどのようにカウントされるかを説明します。'
 category: 'テスト実行'
 order: 1
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/running-tests-overview'
 keywords:
-  - testim
-  - running-tests-overview
-  - running-tests
+  - テスト実行
+  - ローカル実行
+  - リモート実行
+  - グリッド実行
+  - スケジューラー
+  - CLI
+  - テスト実行クォータ
+  - 実行タイプ
+  - TestOps
+  - Testim
 ---
 
 テストの実行方法を学習してください
 
-Testim でテストを実行する複数の方法があります:
+Testim でテストを実行する複数の方法があります。
 
-**ローカル実行**
+### ローカル実行
 
-- [テストエディター](doc:running-tests-overview#running-a-single-test-through-the-test-screen-on-testim-automate-ui-web--mobile) (Web & モバイル)
-- [テストリスト](doc:running-tests-overview#running-a-single-or-multiple-tests-through-the-test-list-on-testim-ui-web-only) (Web のみ)
-- [スイートリスト](doc:running-tests-overview#running-tests-through-the-suites-screen-on-testim-ui-web-only) (Web のみ)
-- [プランリスト](doc:running-tests-overview#running-tests-through-the-plans-screen-on-testim-ui-web-only) (Web のみ)
-- [CLI](doc:running-tests-overview#running-tests-through-the-plans-screen-on-testim-ui-web-only) (Web & モバイル)
+- [Test Editor](#testim-ui-でテストスクリーンを通じて単一のテストを実行する-web--モバイル) (Web & モバイル)
+- [Test List](#testim-ui-でテストリストを通じて単一または複数のテストを実行する-web-のみ) (Web のみ)
+- [Suite List](#testim-ui-でスイート画面を通じてテストを実行する-web-のみ) (Web のみ)
+- [Plans List](#testim-ui-でプラン画面を通じてテストを実行する-web-のみ) (Web のみ)
+- [CLI](#cli-を通じてテストを実行する-web--モバイル) (Web & モバイル)
 
-**リモート実行**
+### リモート実行
 
-- [テストエディター](doc:running-tests-overview#running-a-remote-web-test) (Web & モバイル)
-- [スケジューラー](doc:running-tests-overview#running-tests-through-scheduler-on-testim-ui-web-only) (Web のみ)
-- [CLI](doc:running-tests-overview#running-tests-through-the-cli-web--mobile) (Web & モバイル)
+- [Test Editor](#リモート-web-テストを実行する) (Web & モバイル)
+- [Scheduler](#testim-ui-でスケジューラーを通じてテストを実行する-web-のみ) (Web のみ)
+- [CLI](#cli-を通じてテストを実行する-web--モバイル) (Web & モバイル)
 
 ## テスト実行がテスト実行モデルプランにどのようにカウントされるか
 
 テスト実行モデルのサブスクリプションには、テスト実行の最大数が付属しています。ローカルエディター実行はこのカウントから除外されますが、以下の表に示す他の実行タイプは含まれます。
 
-| 実行タイプ             | イラスト                                                                                                     | 実行場所 | 実行クォータにカウント | 注記                                                                                        |
-| :-------------------- | :----------------------------------------------------------------------------------------------------------- | :------ | :------------------- | :--------------------------------------------------------------------------------------- |
-| ローカルエディター実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/obwoaogsvcsoy09mlx2q.png) | ローカル | いいえ                | これには 2 つのタイプのローカルエディター実行が含まれます: 「ローカルで実行」および「デバッグなしでローカルで実行」 |
-| ローカルテスト実行     | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/xqzcvrixxh7klhttxcvv.png) | ローカル | はい                 | 安定したテストをグリッド経由で実行することをお勧めします。 |
-| ローカルスイート実行   | ![suites](https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png)            | ローカル | はい                 | 安定したテストをグリッド経由で実行することをお勧めします。 |
-| ローカルテスト計画実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/tasdwyoeqgku3dgbb4yl.png) | ローカル | はい                 | 安定したテストをグリッド経由で実行することをお勧めします。 |
-| ローカル CI 実行      | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/etuuumjl8mnaf6yi8swg.png) | ローカル | はい                 | CI ツール/ローカルターミナル/シェル経由で CLI コマンドを実行する必要があります。 |
-| グリッド上で実行      | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/aliqt4hzl7exfzihlyhr.png) | リモート | はい                 |                                                                                           |
-| スケジューラー (自動) | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/butca7hm2m9ynmildilk.png) | リモート | はい                 | スケジューラーが作成されてアクティブになると、関連するテストは構成された時間に自動的に実行されます。 |
-| スケジューラー (手動) | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/jjslea2li1v9c3dfg9yn.png) | リモート | はい                 | スケジューラーのアクティブステータスに関係なく、すぐに実行されます。 |
-| リモート CI 実行      | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/tt27za73qdynpxbl58o8.png) | リモート | はい                 | - CLI コマンドを実行する必要があります - ターミナル/シェルから実行できます - Azure パイプラインは複数の CI オプションの 1 つです |
+<table class="run-types-table">
+  <colgroup>
+    <col class="run-types-col-type" />
+    <col class="run-types-col-illustration" />
+    <col class="run-types-col-location" />
+    <col class="run-types-col-quota" />
+    <col class="run-types-col-notes" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th>実行タイプ</th>
+      <th>イラスト</th>
+      <th>実行場所</th>
+      <th>実行クォータにカウント</th>
+      <th>注記</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ローカルエディター実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/obwoaogsvcsoy09mlx2q.png" alt="ローカルエディター実行のUI例" /></td>
+      <td>ローカル</td>
+      <td>いいえ</td>
+      <td>「ローカルで実行」「デバッグなしでローカルで実行」の 2 種類のローカルエディター実行が含まれます。</td>
+    </tr>
+    <tr>
+      <td>ローカルテスト実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/xqzcvrixxh7klhttxcvv.png" alt="ローカルテスト実行のUI例" /></td>
+      <td>ローカル</td>
+      <td>はい</td>
+      <td>安定したテストはグリッド経由で実行することを推奨します。</td>
+    </tr>
+    <tr>
+      <td>ローカルスイート実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png" alt="ローカルスイート実行のUI例" /></td>
+      <td>ローカル</td>
+      <td>はい</td>
+      <td>安定したテストはグリッド経由で実行することを推奨します。</td>
+    </tr>
+    <tr>
+      <td>ローカルテスト計画実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/tasdwyoeqgku3dgbb4yl.png" alt="ローカルテスト計画実行のUI例" /></td>
+      <td>ローカル</td>
+      <td>はい</td>
+      <td>安定したテストはグリッド経由で実行することを推奨します。</td>
+    </tr>
+    <tr>
+      <td>ローカル CI 実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/etuuumjl8mnaf6yi8swg.png" alt="ローカル CI 実行のUI例" /></td>
+      <td>ローカル</td>
+      <td>はい</td>
+      <td>CI ツールやローカルターミナル／シェルから CLI コマンドを実行する必要があります。</td>
+    </tr>
+    <tr>
+      <td>グリッド上で実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/aliqt4hzl7exfzihlyhr.png" alt="グリッド上でのテスト実行のUI例" /></td>
+      <td>リモート</td>
+      <td>はい</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>スケジューラー (自動)</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/butca7hm2m9ynmildilk.png" alt="スケジューラー自動実行のUI例" /></td>
+      <td>リモート</td>
+      <td>はい</td>
+      <td>一度スケジューラーを作成してアクティブにすると、関連するテストは構成された時間に自動的に実行されます。</td>
+    </tr>
+    <tr>
+      <td>スケジューラー (手動)</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/jjslea2li1v9c3dfg9yn.png" alt="スケジューラー手動実行のUI例" /></td>
+      <td>リモート</td>
+      <td>はい</td>
+      <td>スケジューラーのアクティブステータスに関係なく、すぐに実行されます。</td>
+    </tr>
+    <tr>
+      <td>リモート CI 実行</td>
+      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/tt27za73qdynpxbl58o8.png" alt="リモート CI 実行のUI例" /></td>
+      <td>リモート</td>
+      <td>はい</td>
+      <td>CLI コマンドを実行する必要があります。ターミナル／シェルから実行することも、Azure パイプラインなど複数ある CI オプションの 1 つとして実行することもできます。</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Testim UI でテストスクリーンを通じて単一のテストを実行する (Web & モバイル)
 
@@ -54,7 +134,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 
 エディター画面で、**テスト実行** ボタンをクリックします。
 
-![](/images/running-tests/running-tests-overview/d35670c-run.png)
+![ローカル実行ボタンの位置を示す画面](/images/running-tests/running-tests-overview/d35670c-run.png)
 
 ### ローカル モバイル テストを実行する
 
@@ -62,7 +142,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 
 1. アクションメニューの **実行** ボタンをクリックします。
 
-![](/images/running-tests/running-tests-overview/c7c7791-image_8.png)
+![モバイルテストのローカル実行ボタン](/images/running-tests/running-tests-overview/c7c7791-image_8.png)
 
 > 📘
 >
@@ -70,7 +150,7 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 
 デバイス ビューアー ウィンドウが開き、テスト アクションが実行されます。 テストが完了すると、テストが成功したかどうかを示すポップアップ ウィンドウが表示されます。
 
-![](/images/running-tests/running-tests-overview/c09003f-image_9.png)
+![モバイルテスト実行中のデバイスビューアー画面](/images/running-tests/running-tests-overview/c09003f-image_9.png)
 
 ## リモート Web テストを実行する
 
@@ -81,29 +161,29 @@ Testim Automate UI を使用して、単一のテストをローカルまたは�
 1. エディター画面で、**テスト実行** ボタンの横にあるドロップダウン メニューをクリックします。
 2. **グリッド上で実行** をクリックします。
 
-![](/images/running-tests/running-tests-overview/f9349a4-2023-02-05_17-39-19.png)
+![Web テストをグリッド上で実行するメニュー](/images/running-tests/running-tests-overview/f9349a4-2023-02-05_17-39-19.png)
 
 グリッド設定を変更する場合は、**編集** をクリックします。
-グリッド管理の詳細については、[グリッド管理](/docs/grid-management/grid-management) を参照してください。
+グリッド管理の詳細については、[グリッド管理](/docs/grid-management) を参照してください。
 
 ## リモート モバイル テストを実行する
 
-モバイル テストをリモートで実行するには、グリッド接続と [モバイル構成](/docs/test-management/configuration-library-mobile) が必要です。 モバイル構成は使用する特定のモバイル デバイスを決定しますが、モバイル構成が提供されていない場合、Testim は選択したグリッドから最初に利用可能なモバイル デバイスを使用します。 テスト エディターを使用して、グリッド上で単一のテストをリモートで実行できます。 グリッド管理の詳細については、[グリッド管理](/docs/grid-management/grid-management) を参照してください。
+モバイル テストをリモートで実行するには、グリッド接続と [モバイル構成](/docs/configuration-library-mobile) が必要です。 モバイル構成は使用する特定のモバイル デバイスを決定しますが、モバイル構成が提供されていない場合、Testim は選択したグリッドから最初に利用可能なモバイル デバイスを使用します。 テスト エディターを使用して、グリッド上で単一のテストをリモートで実行できます。 グリッド管理の詳細については、[グリッド管理](/docs/grid-management) を参照してください。
 
 :fa-arrow-right: **モバイル テストをリモートで実行するには:**
 
 1. エディター画面で、**テスト実行** ボタンの横にあるドロップダウン メニューをクリックします。
 2. **グリッド上で実行** オプションをクリックして、デフォルトのグリッドと構成でテストを実行します。
 
-![](/images/running-tests/running-tests-overview/b0306b9-runongrid.png)
+![モバイルテストをグリッド上で実行するオプション](/images/running-tests/running-tests-overview/b0306b9-runongrid.png)
 
 3. **編集** リンクをクリックして、実行するグリッドを選択し、元のテスト設定をオーバーライドする別のデバイスとモバイル アプリを選択します。
 
-![](/images/running-tests/running-tests-overview/e89ec9f-choosegrid.png)
+![モバイルグリッドと構成の選択画面](/images/running-tests/running-tests-overview/e89ec9f-choosegrid.png)
 
 4. **実行** ボタンをクリックして、テストをリモートで実行します。
 
-![](/images/running-tests/running-tests-overview/fee31b2-choosegrid.png)
+![モバイルテストのリモート実行開始画面](/images/running-tests/running-tests-overview/fee31b2-choosegrid.png)
 
 ## Testim UI でテストリストを通じて単一または複数のテストを実行する (Web のみ)
 
@@ -113,39 +193,39 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 
 1. テストリスト画面で、実行するテストを選択します。 複数のテストを選択するには、テストを左クリックしながら Ctrl (Windows) または Command (Mac) キーを押します。
 
-![](/images/running-tests/running-tests-overview/834e475-run2.png)
+![テストリストからテストを選択する画面](/images/running-tests/running-tests-overview/834e475-run2.png)
 
 選択したテストが強調表示されます。
 
 2. **再生** ボタンをクリックします。
 
-![](/images/running-tests/running-tests-overview/4e677da-run3.png)
+![テストリスト画面の再生ボタン](/images/running-tests/running-tests-overview/4e677da-run3.png)
 
 確認ウィンドウが表示されます。
 
-![](/images/running-tests/running-tests-overview/eb4fc34-run4.png)
+![テスト実行オプション確認ダイアログ](/images/running-tests/running-tests-overview/eb4fc34-run4.png)
 
 3. 適切なチェック ボックスを選択し、**OK** をクリックします。
    ブラウザーが開き、テストが実行されます。 実行中は実行ステータスを確認できます。 実行が完了すると、実行に関する情報を含む [実行画面](/docs/results/execution-runs-screen) が表示されます。 詳細については、「実行画面」を参照してください。
 
-![](/images/running-tests/running-tests-overview/69ffd79-run5.png)
+![テスト実行結果と実行画面へのリンク](/images/running-tests/running-tests-overview/69ffd79-run5.png)
 
 ## Testim UI でスケジューラーを通じてテストを実行する (Web のみ)
 
 あらかじめ定義されたスケジュールでテストを実行するようにスケジュールできます。 テスト実行をスケジュールするには、テストにラベルがあるか、テスト スイートの一部である必要があります。
-このように実行されたテストは、グリッド上でリモートでのみ実行されます。 詳細については、[スケジューラー](/docs/running-tests/scheduler) を参照してください。
+このように実行されたテストは、グリッド上でリモートでのみ実行されます。 詳細については、[スケジューラー](/docs/scheduler) を参照してください。
 
 ## Testim UI でスイート画面を通じてテストを実行する (Web のみ)
 
-テスト スイート機能を使用して、テストをグループ化し、それらが実行される順序を管理する柔軟性があります。 このように実行されたテストはローカルでのみ実行されます。 詳細については、[テスト スイート](/docs/test-management/test-suites) を参照してください。
+テスト スイート機能を使用して、テストをグループ化し、それらが実行される順序を管理する柔軟性があります。 このように実行されたテストはローカルでのみ実行されます。 詳細については、[テスト スイート](/docs/test-suites) を参照してください。
 
 ## Testim UI でプラン画面を通じてテストを実行する (Web のみ)
 
-テスト計画機能を使用して、複数のテストを実行しながら、それらが実行される環境を構成できます。 テスト計画内のテストは、CLI を通じてローカルおよび/またはリモートで実行できます。 詳細については、[テスト計画](/docs/test-management/test-plans) を参照してください。
+テスト計画機能を使用して、複数のテストを実行しながら、それらが実行される環境を構成できます。 テスト計画内のテストは、CLI を通じてローカルおよび/またはリモートで実行できます。 詳細については、[テスト計画](/docs/test-plans) を参照してください。
 
 ## CLI を通じてテストを実行する (Web & モバイル)
 
-コマンドライン インターフェイスを通じてテストを実行し、CI プラットフォームと統合できます。 Testim は、選択した構成に基づいて基本コマンドを作成する CLI コマンド ジェネレーターを提供します。 コマンドは CLI にコピーして、追加のフラグを追加できます。詳細については、[コマンドライン インターフェース (CLI)](/docs/running-tests/the-command-line-cli) を参照してください。
+コマンドライン インターフェイスを通じてテストを実行し、CI プラットフォームと統合できます。 Testim は、選択した構成に基づいて基本コマンドを作成する CLI コマンド ジェネレーターを提供します。 コマンドは CLI にコピーして、追加のフラグを追加できます。詳細については、[コマンドライン インターフェース (CLI)](/docs/the-command-line-cli) を参照してください。
 
 ### CLI を通じて Web テストを実行する
 
@@ -179,7 +259,7 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 1. **設定 > CLI** タブに移動します。
 2. **ローカル** をクリックします。
 
-![](/images/running-tests/running-tests-overview/9a52dff-local.jpg)
+![CLI タブでローカル実行オプションが選択された画面](/images/running-tests/running-tests-overview/9a52dff-local.jpg)
 
    基本 CLI コマンドは下部の **例** に表示されます。
    基本コマンドには以下の要素が含まれます:
@@ -198,7 +278,7 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 
 :fa-arrow-right: **CLI を通じてモバイル テストをリモートで実行するには:**
 
-1. グリッドを通じて実行する場合は、[グリッド管理](/docs/grid-management/grid-management) の指示に従って、事前にグリッドを構成する必要があります。
+1. グリッドを通じて実行する場合は、[グリッド管理](/docs/grid-management) の指示に従って、事前にグリッドを構成する必要があります。
 2. **設定 > CLI** タブに移動します。
 3. **CI** オプションが選択されていることを確認します (デフォルト)。
 4. **グリッド** で、テストを実行するグリッドを選択します。
@@ -210,7 +290,7 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
    `--mode`: モバイル テストの場合、`appium` グリッドが表示されます。
 5. CLI をコピーし、編集して、必要に応じてパラメータを追加します。
 
-[コマンドライン インターフェース (CLI)](/docs/running-tests/the-command-line-cli) で説明されている特定のテスト、ラベル、構成、その他のラベルを実行できます。
+[コマンドライン インターフェース (CLI)](/docs/the-command-line-cli) で説明されている特定のテスト、ラベル、構成、その他のラベルを実行できます。
 
 #### CLI を通じてモバイル テストをローカルで実行する
 
@@ -221,7 +301,7 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 1. **設定 > CLI** タブに移動します。
 2. **ローカル** をクリックします。
 
-![](/images/running-tests/running-tests-overview/628e67d-localmobile.png)
+![モバイルテスト用のローカル実行 CLI 設定画面](/images/running-tests/running-tests-overview/628e67d-localmobile.png)
 
 基本 CLI コマンドは下部の **例** に表示されます。
    基本コマンドには以下の要素が含まれます:
@@ -236,11 +316,11 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 >
 > 実行に対して 1 つの UDID のみを選択することが可能です (並列実行はありません)。
 
-![](/images/running-tests/running-tests-overview/1f8899d-udid.png)
+![TMA のデバイス管理画面で UDID を確認する例](/images/running-tests/running-tests-overview/1f8899d-udid.png)
 
 3. CLI コマンドをコピーし、編集して、必要に応じてパラメータを追加します。
 
-[コマンドライン インターフェース (CLI)](/docs/running-tests/the-command-line-cli) で説明されている特定のテスト、ラベル、構成、その他のラベルを実行できます。
+[コマンドライン インターフェース (CLI)](/docs/the-command-line-cli) で説明されている特定のテスト、ラベル、構成、その他のラベルを実行できます。
 
 ## テストのタイムアウト
 

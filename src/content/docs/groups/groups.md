@@ -50,16 +50,126 @@ keywords:
 
 グループステップ上で **Show Properties**（:fa-cog:）をクリックすると、**Group Properties** ペインが開きます。
 
-| Property | Description | Comment |
-|----------|-------------|---------|
-| Shared step name | グループの名前。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
-| Description | グループの説明。 | インスタンスごとに異なる説明を設定できます。 |
-| Replace with clone | 他のインスタンスに影響を与えずに変更できるコピー（クローン）を作成します。 | |
-| Params | 参照: [Parameters for groups](/docs/parameters-for-groups) | 名前を変更すると、すべてのインスタンスが更新されます。 |
-| When this step fails | グループステップが失敗した場合の動作。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
-| When to run step | このグループステップを実行する条件を指定するブレークポイントを作成します。条件の詳細は [Conditions](/docs/conditions) を参照してください。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
-| Repeat group | 条件に基づくループを作成します。詳細は [Loops](/docs/loops) を参照してください。 | 名前を変更すると、すべてのインスタンスが更新されます。 |
-| Context | ページ内や複数ページにまたがって、グループ全体を異なる要素に割り当てます。詳しくは [Group context](/docs/group-context) を参照してください。 | インスタンスごとに値を変えられます。 |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    Property
+   </th>
+   <th>
+    Description
+   </th>
+   <th>
+    Comment
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    Shared step name
+   </td>
+   <td>
+    グループの名前。
+   </td>
+   <td>
+    名前を変更すると、すべてのインスタンスが更新されます。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Description
+   </td>
+   <td>
+    グループの説明。
+   </td>
+   <td>
+    インスタンスごとに異なる説明を設定できます。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Replace with clone
+   </td>
+   <td>
+    他のインスタンスに影響を与えずに変更できるコピー（クローン）を作成します。
+   </td>
+   <td>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Params
+   </td>
+   <td>
+    参照:
+    <a href="/docs/parameters-for-groups">
+     Parameters for groups
+    </a>
+   </td>
+   <td>
+    名前を変更すると、すべてのインスタンスが更新されます。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    When this step fails
+   </td>
+   <td>
+    グループステップが失敗した場合の動作。
+   </td>
+   <td>
+    名前を変更すると、すべてのインスタンスが更新されます。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    When to run step
+   </td>
+   <td>
+    このグループステップを実行する条件を指定するブレークポイントを作成します。条件の詳細は
+    <a href="/docs/conditions">
+     Conditions
+    </a>
+    を参照してください。
+   </td>
+   <td>
+    名前を変更すると、すべてのインスタンスが更新されます。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Repeat group
+   </td>
+   <td>
+    条件に基づくループを作成します。詳細は
+    <a href="/docs/loops">
+     Loops
+    </a>
+    を参照してください。
+   </td>
+   <td>
+    名前を変更すると、すべてのインスタンスが更新されます。
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Context
+   </td>
+   <td>
+    ページ内や複数ページにまたがって、グループ全体を異なる要素に割り当てます。詳しくは
+    <a href="/docs/group-context">
+     Group context
+    </a>
+    を参照してください。
+   </td>
+   <td>
+    インスタンスごとに値を変えられます。
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ## グループの再利用
 

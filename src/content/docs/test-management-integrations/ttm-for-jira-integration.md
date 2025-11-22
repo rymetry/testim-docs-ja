@@ -176,13 +176,61 @@ Testim発のテスト実行の名前は、以下の命名規則を使用しま�
 - **Name** - Testimのテスト名
 - **Status** - 実行のステータス。表示されるステータスはTTM for Jiraステータスで、Testimステータスから以下のように変換されます（Testim > TTM for Jira）：
 
-| Testim                                        | TTM for Jira |
-| :-------------------------------------------- | :----------- |
-| ABORTED                                       | Unexecuted   |
-| SKIPPED（テストが「Quarantine」ステータスの場合） | Blocked      |
-| TIMEOUT                                       | Failed       |
-| PASSED                                        | Passed       |
-| FAILED                                        | Failed       |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Testim
+   </th>
+   <th style="text-align: left;">
+    TTM for Jira
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    ABORTED
+   </td>
+   <td style="text-align: left;">
+    Unexecuted
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    SKIPPED（テストが「Quarantine」ステータスの場合）
+   </td>
+   <td style="text-align: left;">
+    Blocked
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    TIMEOUT
+   </td>
+   <td style="text-align: left;">
+    Failed
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    PASSED
+   </td>
+   <td style="text-align: left;">
+    Passed
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    FAILED
+   </td>
+   <td style="text-align: left;">
+    Failed
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 > 📘 注意:
 >

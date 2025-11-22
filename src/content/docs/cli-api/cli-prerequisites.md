@@ -19,7 +19,50 @@ Testimはクラウドベースのアップデートを行うSaaS製品ですが�
 
 以下がこれらのコンポーネントのシステム要件です:
 
-| コンポーネント | 要件 | 備考 |
-|------------|------|------|
-| Testim CLI | 最新バージョン | 後方互換性 - 前2バージョンまでサポート |
-| Node.JS | TLS/サポート対象バージョン | 後方互換性 - 前2バージョンまでサポート<br/><br/>TLS/サポート対象バージョンについては[こちら](https://github.com/nodejs/Release/blob/main/README.md)を参照してください |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    コンポーネント
+   </th>
+   <th>
+    要件
+   </th>
+   <th>
+    備考
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    Testim CLI
+   </td>
+   <td>
+    最新バージョン
+   </td>
+   <td>
+    後方互換性 - 前2バージョンまでサポート
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Node.JS
+   </td>
+   <td>
+    TLS/サポート対象バージョン
+   </td>
+   <td>
+    後方互換性 - 前2バージョンまでサポート
+    <br/>
+    <br/>
+    TLS/サポート対象バージョンについては
+    <a href="https://github.com/nodejs/Release/blob/main/README.md">
+     こちら
+    </a>
+    を参照してください
+   </td>
+  </tr>
+ </tbody>
+</table>
+

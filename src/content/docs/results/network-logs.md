@@ -35,16 +35,85 @@ keywords:
 
 各リクエストに表示される情報は、次の表のとおりです。
 
-| 項目 | 説明 |
-| :-------- | :------------------------------------------------------------------------ |
-| File | ファイル名 |
-| Status | HTTPステータスコード |
-| Method | HTTPリクエストメソッド |
-| Domain | リクエスト送信先のドメイン |
-| Type | リクエストタイプ（XHR、JS、CSSなど） |
-| Size | レスポンスサイズ（ヘッダーとボディを含む） |
-| Time | リクエスト開始からレスポンス受信までの時間 |
-| Waterfall | リクエストアクティビティの視覚的な内訳 |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    項目
+   </th>
+   <th style="text-align: left;">
+    説明
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    File
+   </td>
+   <td style="text-align: left;">
+    ファイル名
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Status
+   </td>
+   <td style="text-align: left;">
+    HTTPステータスコード
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Method
+   </td>
+   <td style="text-align: left;">
+    HTTPリクエストメソッド
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Domain
+   </td>
+   <td style="text-align: left;">
+    リクエスト送信先のドメイン
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Type
+   </td>
+   <td style="text-align: left;">
+    リクエストタイプ（XHR、JS、CSSなど）
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Size
+   </td>
+   <td style="text-align: left;">
+    レスポンスサイズ（ヘッダーとボディを含む）
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Time
+   </td>
+   <td style="text-align: left;">
+    リクエスト開始からレスポンス受信までの時間
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Waterfall
+   </td>
+   <td style="text-align: left;">
+    リクエストアクティビティの視覚的な内訳
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### リクエスト結果のフィルタリング
 
@@ -118,16 +187,85 @@ Headersウィンドウが開き、*General*、*Response Headers*、*Request Head
 
 各リクエストに表示される情報は、次の表のとおりです。
 
-| 項目 | 説明 |
-| :-------- | :------------------------------------------------------------------------ |
-| File | ファイル名 |
-| Status | HTTPステータスコード |
-| Method | HTTPリクエストメソッド |
-| Domain | リクエスト送信先のドメイン |
-| Type | リクエストタイプ（XHR、JS、CSSなど） |
-| Size | レスポンスサイズ（ヘッダーとボディを含む） |
-| Time | リクエスト開始からレスポンス受信までの時間 |
-| Waterfall | リクエストアクティビティの視覚的な内訳 |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    項目
+   </th>
+   <th style="text-align: left;">
+    説明
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    File
+   </td>
+   <td style="text-align: left;">
+    ファイル名
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Status
+   </td>
+   <td style="text-align: left;">
+    HTTPステータスコード
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Method
+   </td>
+   <td style="text-align: left;">
+    HTTPリクエストメソッド
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Domain
+   </td>
+   <td style="text-align: left;">
+    リクエスト送信先のドメイン
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Type
+   </td>
+   <td style="text-align: left;">
+    リクエストタイプ（XHR、JS、CSSなど）
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Size
+   </td>
+   <td style="text-align: left;">
+    レスポンスサイズ（ヘッダーとボディを含む）
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Time
+   </td>
+   <td style="text-align: left;">
+    リクエスト開始からレスポンス受信までの時間
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Waterfall
+   </td>
+   <td style="text-align: left;">
+    リクエストアクティビティの視覚的な内訳
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 > 📘
 >

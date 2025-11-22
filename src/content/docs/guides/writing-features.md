@@ -252,21 +252,178 @@ GitHub Flavored Markdownのタスクリストも使えます。
 
 機能の比較や情報の整理に便利です。
 
-| 機能       | Markdown   | MDX        | 推奨 |
-| ---------- | ---------- | ---------- | ---- |
-| 学習コスト | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆   | MD   |
-| 執筆速度   | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆   | MD   |
-| 拡張性     | ⭐⭐☆☆☆    | ⭐⭐⭐⭐⭐ | MDX  |
-| プレビュー | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆   | MD   |
+<table class="md-table md-table-4cols">
+ <thead>
+  <tr>
+   <th>
+    機能
+   </th>
+   <th>
+    Markdown
+   </th>
+   <th>
+    MDX
+   </th>
+   <th>
+    推奨
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    学習コスト
+   </td>
+   <td>
+    ⭐⭐⭐⭐⭐
+   </td>
+   <td>
+    ⭐⭐⭐☆☆
+   </td>
+   <td>
+    MD
+   </td>
+  </tr>
+  <tr>
+   <td>
+    執筆速度
+   </td>
+   <td>
+    ⭐⭐⭐⭐⭐
+   </td>
+   <td>
+    ⭐⭐⭐☆☆
+   </td>
+   <td>
+    MD
+   </td>
+  </tr>
+  <tr>
+   <td>
+    拡張性
+   </td>
+   <td>
+    ⭐⭐☆☆☆
+   </td>
+   <td>
+    ⭐⭐⭐⭐⭐
+   </td>
+   <td>
+    MDX
+   </td>
+  </tr>
+  <tr>
+   <td>
+    プレビュー
+   </td>
+   <td>
+    ⭐⭐⭐⭐⭐
+   </td>
+   <td>
+    ⭐⭐⭐☆☆
+   </td>
+   <td>
+    MD
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### 複雑なテーブル
 
-| プラン       | 月額料金 | テスト実行数 | サポート     | 推奨用途     |
-| ------------ | -------- | ------------ | ------------ | ------------ |
-| Free         | $0       | 100回/月     | コミュニティ | 個人学習     |
-| Starter      | $49      | 1,000回/月   | メール       | 小規模チーム |
-| Professional | $199     | 10,000回/月  | 優先サポート | 本番環境     |
-| Enterprise   | 要相談   | 無制限       | 専任担当     | 大規模組織   |
+<table class="md-table md-table-5cols">
+ <thead>
+  <tr>
+   <th>
+    プラン
+   </th>
+   <th>
+    月額料金
+   </th>
+   <th>
+    テスト実行数
+   </th>
+   <th>
+    サポート
+   </th>
+   <th>
+    推奨用途
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    Free
+   </td>
+   <td>
+    $0
+   </td>
+   <td>
+    100回/月
+   </td>
+   <td>
+    コミュニティ
+   </td>
+   <td>
+    個人学習
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Starter
+   </td>
+   <td>
+    $49
+   </td>
+   <td>
+    1,000回/月
+   </td>
+   <td>
+    メール
+   </td>
+   <td>
+    小規模チーム
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Professional
+   </td>
+   <td>
+    $199
+   </td>
+   <td>
+    10,000回/月
+   </td>
+   <td>
+    優先サポート
+   </td>
+   <td>
+    本番環境
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Enterprise
+   </td>
+   <td>
+    要相談
+   </td>
+   <td>
+    無制限
+   </td>
+   <td>
+    専任担当
+   </td>
+   <td>
+    大規模組織
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ---
 

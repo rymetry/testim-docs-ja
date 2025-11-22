@@ -99,14 +99,69 @@ Xrayでテスト実行の結果を表示するには、リモートグリッド�
 - Testimのテスト実行のネットワークログのURL（Webのみ）
 - Status - 実行のステータス。表示されるステータスはXrayステータスで、Testimステータスから以下のように変換されます（Testim > Xray）：
 
-| Testim               | Xray      |
-| :------------------- | :-------- |
-| skipped              | TODO      |
-| failed               | FAIL      |
-| timeout              | FAIL      |
-| aborted              | TODO      |
-| passed               | PASSED    |
-| Testimに該当なし     | EXECUTING |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Testim
+   </th>
+   <th style="text-align: left;">
+    Xray
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    skipped
+   </td>
+   <td style="text-align: left;">
+    TODO
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    failed
+   </td>
+   <td style="text-align: left;">
+    FAIL
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    timeout
+   </td>
+   <td style="text-align: left;">
+    FAIL
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    aborted
+   </td>
+   <td style="text-align: left;">
+    TODO
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    passed
+   </td>
+   <td style="text-align: left;">
+    PASSED
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Testimに該当なし
+   </td>
+   <td style="text-align: left;">
+    EXECUTING
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 > 📘
 >

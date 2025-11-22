@@ -1,13 +1,20 @@
 ---
 title: 'スケジューラーの Webhook 経由での通知'
-description: '原文: https://help.testim.io/docs/schedulers-notification-via-webhook'
+description: 'スケジュール実行の結果を Webhook で外部システムへ送信し、JSON ペイロードを利用してレポート生成やアラートなどの処理をトリガーする方法を説明します。'
 category: 'テスト実行'
 order: 7
-updated: '2025-11-02'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/schedulers-notification-via-webhook'
 keywords:
-  - testim
-  - schedulers-notification-via-webhook
-  - running-tests
+  - Webhook
+  - スケジューラー
+  - スケジュール実行
+  - 通知
+  - JSON ペイロード
+  - 実行結果
+  - 自動化
+  - テスト実行
+  - Testim
 ---
 Webhook 経由でスケジューラーの結果を取得できるようにします
 
@@ -61,20 +68,20 @@ Webhook は、次の情報を含む JSON ペイロードを送信します：
 
 1. メインナビゲーションで **実行** アイコンをクリックします。
 
-![](/images/running-tests/schedulers-notification-via-webhook/7bb277d-runs.png)
+![実行タブのナビゲーションアイコン](/images/running-tests/schedulers-notification-via-webhook/7bb277d-runs.png)
 
 2. **スケジュール実行** をクリックして **スケジュール実行** タブを開きます。
 
-![](/images/running-tests/schedulers-notification-via-webhook/6e0c331-scheduledruns.png)
+![スケジュール実行タブのスクリーンショット](/images/running-tests/schedulers-notification-via-webhook/6e0c331-scheduledruns.png)
 
 **スケジューラーリスト** ページが表示されます。
 
-![](/images/running-tests/schedulers-notification-via-webhook/3d5057d-schedulerlibrary.png)
+![スケジューラーリストページの画面](/images/running-tests/schedulers-notification-via-webhook/3d5057d-schedulerlibrary.png)
 
 3. Webhook を設定したいスケジューラーをクリックします。
    **スケジュール実行を編集** ウィンドウが開きます。
 
-![](/images/running-tests/schedulers-notification-via-webhook/f79c48d-editscheduler.png)
+![スケジュール実行を編集するウィンドウ](/images/running-tests/schedulers-notification-via-webhook/f79c48d-editscheduler.png)
 
 4. 「通知する」フィールドで、次のいずれかのオプションを選択します：
    1. すべての失敗時
@@ -82,10 +89,10 @@ Webhook は、次の情報を含む JSON ペイロードを送信します：
    3. すべての実行時
 5. **設定** の下で **Webhook** を選択します。
 
-![](/images/running-tests/schedulers-notification-via-webhook/c10fa5c-webhookfield.png)
+![通知設定で Webhook を選択する画面](/images/running-tests/schedulers-notification-via-webhook/c10fa5c-webhookfield.png)
 
 5. 表示される **Webhook** フィールドに有効な URL を入力します。これは Testim が実行結果を POST する URL です。
 
-![](/images/running-tests/schedulers-notification-via-webhook/bd200e6-webhook2.png)
+![Webhook URL 入力フィールドのスクリーンショット](/images/running-tests/schedulers-notification-via-webhook/bd200e6-webhook2.png)
 
 6. **保存** をクリックします。

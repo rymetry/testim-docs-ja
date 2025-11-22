@@ -17,9 +17,94 @@ keywords:
 
 システムは以下のデバッグ、実行、記録機能をサポートしています:
 
-| デバッグ | 実行 | 記録 |
-|---------|------|------|
-| • [ステップイン](#step-into)<br/>• [ステップオーバー](#step-over)<br/>• [ステップアウト](#step-out)<br/>• [一時停止/続行](#pause-and-continue-debugging)<br/>• [実行停止](#stop-run)<br/>• [再実行](#rerun) | • [デバッグ付きでローカル実行](#running-locally-with-debugging)<br/>• [デバッグなしでローカル実行](#running-locally-without-debugging)<br/>• [Grid上で実行](https://help.testim.io/docs/running-tests-overview#running-a-remote-web-test)<br/>• [ここから再生](/docs/test-execution/play-from-here)<br/>• [同じパラメーターでローカル再実行](/docs/test-execution/rerun-locally-with-the-same-params) | • [記録開始](doc:recording-additional-steps-to-fix-bugs#start-recording)<br/>• [この位置から記録開始](doc:recording-additional-steps-to-fix-bugs#start-recording-at-this-position) |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    デバッグ
+   </th>
+   <th>
+    実行
+   </th>
+   <th>
+    記録
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    •
+    <a href="#step-into">
+     ステップイン
+    </a>
+    <br/>
+    •
+    <a href="#step-over">
+     ステップオーバー
+    </a>
+    <br/>
+    •
+    <a href="#step-out">
+     ステップアウト
+    </a>
+    <br/>
+    •
+    <a href="#pause-and-continue-debugging">
+     一時停止/続行
+    </a>
+    <br/>
+    •
+    <a href="#stop-run">
+     実行停止
+    </a>
+    <br/>
+    •
+    <a href="#rerun">
+     再実行
+    </a>
+   </td>
+   <td>
+    •
+    <a href="#running-locally-with-debugging">
+     デバッグ付きでローカル実行
+    </a>
+    <br/>
+    •
+    <a href="#running-locally-without-debugging">
+     デバッグなしでローカル実行
+    </a>
+    <br/>
+    •
+    <a href="https://help.testim.io/docs/running-tests-overview#running-a-remote-web-test">
+     Grid上で実行
+    </a>
+    <br/>
+    •
+    <a href="/docs/test-execution/play-from-here">
+     ここから再生
+    </a>
+    <br/>
+    •
+    <a href="/docs/test-execution/rerun-locally-with-the-same-params">
+     同じパラメーターでローカル再実行
+    </a>
+   </td>
+   <td>
+    •
+    <a href="doc:recording-additional-steps-to-fix-bugs#start-recording">
+     記録開始
+    </a>
+    <br/>
+    •
+    <a href="doc:recording-additional-steps-to-fix-bugs#start-recording-at-this-position">
+     この位置から記録開始
+    </a>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 デバッグ、実行、および記録ボタンの有効/無効は、現在のエディターの状態（実行中、記録中など）によって決定されます。
 

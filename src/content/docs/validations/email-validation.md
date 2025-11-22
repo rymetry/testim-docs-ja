@@ -27,26 +27,176 @@ Testim は、恒久的および一時的なメールアドレスを提供する�
 
 _Validate email_ ステップは、指定されたTestimメールアドレスのTestim受信箱の内容を、そのメールボックス内のすべてのメッセージの配列として受け取る事前定義された検証ステップです。メッセージは _messages_ という名前のパラメータに含まれ、次のフィールドを持ちます：
 
-| Field name       | Return type                                                                                                                                                               |
-| :--------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| attachments      | [AttachmentCollection](http://ews-javascript-api.github.io/api/classes/complexproperties_attachmentcollection.attachmentcollection.html)                                  |
-| from             | [EmailAddress](http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddress.emailaddress.html)                                                          |
-| to               | [EmailAddressCollection](http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddresscollection.emailaddresscollection.html)                            |
-| subject          | string                                                                                                                                                                    |
-| date (time sent) | Date                                                                                                                                                                      |
-| received_date    | Date                                                                                                                                                                      |
-| message_id       | string                                                                                                                                                                    |
-| headers          | [InternetMessageHeaderCollection](http://ews-javascript-api.github.io/api/classes/complexproperties_internetmessageheadercollection.internetmessageheadercollection.html) |
-| html             |                                                                                                                                                                           |
-| text             | string                                                                                                                                                                    |
-| mail_from        | [EmailAddress](http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddress.emailaddress.html)                                                          |
-| rcpt_to          | [EmailAddressCollection](http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddresscollection.emailaddresscollection.html)                            |
-| size             | number                                                                                                                                                                    |
-| projectId        | string                                                                                                                                                                    |
-| email            | string                                                                                                                                                                    |
-| expire_at        | string                                                                                                                                                                    |
-| created_at       | string                                                                                                                                                                    |
-| updated_at       | string                                                                                                                                                                    |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Field name
+   </th>
+   <th style="text-align: left;">
+    Return type
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    attachments
+   </td>
+   <td style="text-align: left;">
+    <a href="http://ews-javascript-api.github.io/api/classes/complexproperties_attachmentcollection.attachmentcollection.html">
+     AttachmentCollection
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    from
+   </td>
+   <td style="text-align: left;">
+    <a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddress.emailaddress.html">
+     EmailAddress
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    to
+   </td>
+   <td style="text-align: left;">
+    <a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddresscollection.emailaddresscollection.html">
+     EmailAddressCollection
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    subject
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    date (time sent)
+   </td>
+   <td style="text-align: left;">
+    Date
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    received_date
+   </td>
+   <td style="text-align: left;">
+    Date
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    message_id
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    headers
+   </td>
+   <td style="text-align: left;">
+    <a href="http://ews-javascript-api.github.io/api/classes/complexproperties_internetmessageheadercollection.internetmessageheadercollection.html">
+     InternetMessageHeaderCollection
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    html
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    text
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    mail_from
+   </td>
+   <td style="text-align: left;">
+    <a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddress.emailaddress.html">
+     EmailAddress
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    rcpt_to
+   </td>
+   <td style="text-align: left;">
+    <a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddresscollection.emailaddresscollection.html">
+     EmailAddressCollection
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    size
+   </td>
+   <td style="text-align: left;">
+    number
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    projectId
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    email
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expire_at
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    created_at
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    updated_at
+   </td>
+   <td style="text-align: left;">
+    string
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 メール検証では、次の2種類のメールアドレスのいずれかを使用して、検証対象のメールを受信できます：
 

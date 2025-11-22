@@ -1,13 +1,21 @@
 ---
 title: 'コマンドライン インターフェース (CLI)'
-description: 'コマンドラインからテストを実行し、CI と統合する方法に関するドキュメント'
+description: 'Testim CLI のインストール方法と、プロジェクト ID・トークン・グリッド・ラベル・スイート・テスト計画などのパラメータを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。'
 category: 'テスト実行'
 order: 2
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/the-command-line-cli'
 keywords:
-  - testim
-  - the-command-line-cli
-  - running-tests
+  - CLI
+  - コマンドライン
+  - テスト実行
+  - CI 連携
+  - グリッド実行
+  - ラベル実行
+  - スイート実行
+  - テスト計画
+  - 実行パラメータ
+  - Testim
 ---
 
 コマンドラインからすべてのテストを実行し、CI と統合します。
@@ -26,7 +34,7 @@ npm install -g @testim/testim-cli
 
 以上です！
 
-#### 基本的な CLI コマンド
+### 基本的な CLI コマンド
 
 Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タブに表示され、トークンとプロジェクト ID が含まれています。
 
@@ -36,14 +44,14 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザーが開きます）(Web のみ)
 3. **CI プラットフォーム** で、希望する CI プラットフォームを選択します (オプション)
 4. **グリッド** で、テストを実行するグリッドを選択します。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:\
-   [仮想モバイルグリッド](/docs/grid-management/virtual-mobile-grid)\
-   [Tricentis Device Cloud](/docs/grid-management/tricentis-device-cloud)\
-   [Testim Headspin Mobile](/docs/grid-management/headspin-integration)\
-   [Browserstack](/docs/grid-management/browserstack-integration-1)\
-   [LambdaTest](/docs/grid-management/browserstack-integration-copy)\
+   [仮想モバイルグリッド](/docs/virtual-mobile-grid)\
+   [Tricentis Device Cloud](/docs/tricentis-device-cloud)\
+   [Testim Headspin Mobile](/docs/headspin-integration)\
+   [Browserstack](/docs/browserstack-integration-1)\
+   [LambdaTest](/docs/browserstack-integration-copy)\
    基本的な CLI コマンドは **例** の下部に表示されます。
 
-![](/images/running-tests/the-command-line-cli/af52b8a-cli_command.png)
+![設定画面に表示される基本的な CLI コマンド例](/images/running-tests/the-command-line-cli/af52b8a-cli_command.png)
 
 基本コマンドには以下の要素が含まれています:\
 `--token`: 認証トークン\
@@ -52,7 +60,7 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 
 5. CLI をコピーし、編集して必要に応じてパラメータを追加します。 特定のテスト、ラベル、構成など、以下のセクションで説明されているように実行できます。
 
-#### その他の一般的なパラメータ
+### その他の一般的なパラメータ
 
 最も一般的なオプションを含む基本コマンドの例は次のとおりです (使用可能なすべてのオプションの詳細な説明については、以下を参照):
 
@@ -72,7 +80,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 ## すべての CLI パラメータ
 
-#### プロジェクト
+### プロジェクト
 
 `--project` プロジェクト ID。\
 別のプロジェクトを選択するには、企業画面に移動し (参照 [プロジェクトとユーザー管理](/docs/project-and-user-management))、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
@@ -81,7 +89,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --project AOL-12323-a4b2-4762-df380
 ```
 
-#### アクセストークン
+### アクセストークン
 
 `--token` アクセストークン。アクセストークンは、**設定 > CLI** タブ画面に表示されている基本的な CLI コマンド例から取得できます。
 
@@ -132,7 +140,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 `--grid`、使用する Selenium グリッド名。"Testim-Grid"/ローカル selenium グリッド/ Saucelabs / Browserstack を使用できます。
 
 `--grid` `<grid-name>`
-注: グリッドを構成する方法については、[こちら](/docs/grid-management/grid-management) をお読みください。
+注: グリッドを構成する方法については、[こちら](/docs/grid-management) をお読みください。
 
 #### ホスト
 
@@ -167,7 +175,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 #### テスト構成
 
 `test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメータ (例: ブラウザー、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメータなど) を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
-詳細は [構成ライブラリ - Web](/docs/test-management/shared-configuration) および [構成ライブラリ - モバイル](/docs/test-management/configuration-library-mobile) をお読みください。
+詳細は [構成ライブラリ - Web](/docs/shared-configuration) および [構成ライブラリ - モバイル](/docs/configuration-library-mobile) をお読みください。
 
 ```shell
 --test-config "1280x1024_SXGA_chrome" --test-config "1366x768_WXGA_firefox"
@@ -341,7 +349,7 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 ターミナルで Ctrl+C ショートカットを使用して CLI 実行を中止することができます。実行は実行リストの下で「中止」ステータスを持つようになります。
 
-![](/images/running-tests/the-command-line-cli/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png)
+![CLI 実行が中止されたことを示す実行結果画面](/images/running-tests/the-command-line-cli/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png)
 
 CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを閉じることで強制的に終了することもできます (いわゆる、不正な中止)。\
 これにより実行は停止しますが、ステータスはエディターで「実行中」のままになります。実行ステータスは 90 分後に「タイムアウト」に変わります。
@@ -418,7 +426,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### **Sealights buildSessionId**
 
-`--sealights-build-session-id`、実行された特定のビルドに関連する ID を使用して Sealights 統合でテストを実行します。`buildSessionId` を取得するには、[buildSessionID オプション セクション](doc:sealights-integration#buildsessionid-option) の指示に従います。
+`--sealights-build-session-id`、実行された特定のビルドに関連する ID を使用して Sealights 統合でテストを実行します。`buildSessionId` を取得するには、[buildSessionID オプション セクション](/docs/sealights-integration#buildsessionid-option) の指示に従います。
 
 ```shell
 --sealights-build-session-id [sealights-suid-session-id]
@@ -426,7 +434,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### **Sealights labId**
 
-`--sealights-lab-id`、ラボ ID を使用して Sealights 統合でテストを実行します。`labId` を取得するには、[labId オプション セクション](doc:sealights-integration#labid-option) の指示に従います。
+`--sealights-lab-id`、ラボ ID を使用して Sealights 統合でテストを実行します。`labId` を取得するには、[labId オプション セクション](/docs/sealights-integration#labid-option) の指示に従います。
 
 ```shell
 --sealights-lab-id [sealights-lab-id]
@@ -464,7 +472,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 `--app-id`、モバイル アプリ ライブラリのモバイル アプリの特定のアプリ ID を選択してテストを実行します。これは、記録中に使用された現在のアプリをオーバーライドする場合に使用されます。アプリ ID を取得するには、[モバイル アプリ] 画面に移動し、リストされているアプリの 1 つを右クリックして、**ID をコピー** を選択します。
 
-![](/images/running-tests/the-command-line-cli/097f1f4-2023-02-06_13-00-18.png)
+![モバイルアプリ画面でアプリ ID をコピーする操作](/images/running-tests/the-command-line-cli/097f1f4-2023-02-06_13-00-18.png)
 
 ```shell
 --app-id "appID123"

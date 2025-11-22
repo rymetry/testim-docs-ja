@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 99個
-- ✅   翻訳のみ完了: 184個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 109個
+- ✅   翻訳のみ完了: 174個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -171,16 +171,16 @@
 
 ## Running Tests（テスト実行）
 
-- ✅ https://help.testim.io/docs/running-tests-overview
-- ✅ https://help.testim.io/docs/the-command-line-cli
-- ✅ https://help.testim.io/docs/allow-chrome-browser-to-use-microphone
-- ✅ https://help.testim.io/docs/base-url
-- ✅ https://help.testim.io/docs/scheduler
-- ✅ https://help.testim.io/docs/scheduler-mobile
-- ✅ https://help.testim.io/docs/schedulers-notification-via-webhook
-- ✅ https://help.testim.io/docs/running-tests-on-multiple-browsers
-- ✅ https://help.testim.io/docs/run-multiple-tests-locally
-- ✅ https://help.testim.io/docs/run-in-incognito
+- ✅🔍 https://help.testim.io/docs/running-tests-overview
+- ✅🔍 https://help.testim.io/docs/the-command-line-cli
+- ✅🔍 https://help.testim.io/docs/allow-chrome-browser-to-use-microphone
+- ✅🔍 https://help.testim.io/docs/base-url
+- ✅🔍 https://help.testim.io/docs/scheduler
+- ✅🔍 https://help.testim.io/docs/scheduler-mobile
+- ✅🔍 https://help.testim.io/docs/schedulers-notification-via-webhook
+- ✅🔍 https://help.testim.io/docs/running-tests-on-multiple-browsers
+- ✅🔍 https://help.testim.io/docs/run-multiple-tests-locally
+- ✅🔍 https://help.testim.io/docs/run-in-incognito
 
 ## Configuration File（設定ファイル）
 

@@ -74,14 +74,164 @@ Webプラン画面には以下の情報が表示されます:
 
 <br />
 
-| 実行タイプ                                                                                                                                                                                  | プロジェクトタイプ                                                              | 並列化クォータにカウント |
-| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ | :-------------------------------- |
-| **テストエディタ**から実行をトリガー                                                                                                                                                                                | - ローカルブラウザを使用するWeb <br/> - TMAを使用するモバイル <br/> - VMGを使用するモバイル | いいえ                                |
-| **グリッド上のテストエディタ(Testimおよびサードパーティ)**から実行をトリガー                                                                                                                                                                 | Web & モバイル                                                              | はい                               |
-| **CLI**から実行をトリガー                                                                                                                                                                        | Web & モバイル                                                              | はい                               |
-| `-use-local-chrome-driver` フラグを指定して **CLI**から実行をトリガー                                                                                                                                                                 | Web                                                                       | いいえ                                |
-| `host=localhost/127.0.0.1` を指定して **CLI**から実行をトリガー                                                                                                                                                                        | Web                                                                       | はい                               |
-| `host=localhost/127.0.0.1` を指定して **グリッド上のテストエディタ**から実行をトリガー                                                                                                                                                                            | Web                                                                       | はい                               |
-| **Public API**経由で実行をトリガー                                                                                                                                                                  | Web & モバイル                                                              | はい                               |
-| 以下の画面から実行をトリガー: **テストリスト / テストプラン / テストスイート**。注 - これらのページのいずれかからテストをトリガーすると、テストはローカルブラウザで実行されます。 | Web & モバイル                                                              | いいえ                                |
-| **スケジューラ**から実行をトリガー                                                                                                                                                                  | Web & モバイル                                                              | はい                               |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    実行タイプ
+   </th>
+   <th style="text-align: left;">
+    プロジェクトタイプ
+   </th>
+   <th style="text-align: left;">
+    並列化クォータにカウント
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    <strong>
+     テストエディタ
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    - ローカルブラウザを使用するWeb
+    <br/>
+    - TMAを使用するモバイル
+    <br/>
+    - VMGを使用するモバイル
+   </td>
+   <td style="text-align: left;">
+    いいえ
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <strong>
+     グリッド上のテストエディタ(Testimおよびサードパーティ)
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web &amp; モバイル
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <strong>
+     CLI
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web &amp; モバイル
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <code>
+     -use-local-chrome-driver
+    </code>
+    フラグを指定して
+    <strong>
+     CLI
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web
+   </td>
+   <td style="text-align: left;">
+    いいえ
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <code>
+     host=localhost/127.0.0.1
+    </code>
+    を指定して
+    <strong>
+     CLI
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <code>
+     host=localhost/127.0.0.1
+    </code>
+    を指定して
+    <strong>
+     グリッド上のテストエディタ
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <strong>
+     Public API
+    </strong>
+    経由で実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web &amp; モバイル
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    以下の画面から実行をトリガー:
+    <strong>
+     テストリスト / テストプラン / テストスイート
+    </strong>
+    。注 - これらのページのいずれかからテストをトリガーすると、テストはローカルブラウザで実行されます。
+   </td>
+   <td style="text-align: left;">
+    Web &amp; モバイル
+   </td>
+   <td style="text-align: left;">
+    いいえ
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <strong>
+     スケジューラ
+    </strong>
+    から実行をトリガー
+   </td>
+   <td style="text-align: left;">
+    Web &amp; モバイル
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+ </tbody>
+</table>
+

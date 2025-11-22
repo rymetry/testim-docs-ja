@@ -1,13 +1,20 @@
 ---
 title: 'シークレットモードで実行'
-description: 'テスト実行セクション「Run in incognito」に関するドキュメント。'
+description: 'Chrome のシークレットモードを使って Cookie やログイン状態の影響を受けないクリーンな状態でテストを実行するための設定と手順を説明します。'
 category: 'テスト実行'
 order: 10
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/run-in-incognito'
 keywords:
-  - testim
-  - run-in-incognito
-  - running-tests
+  - シークレットモード
+  - Chrome
+  - ローカル実行
+  - リモート実行
+  - Cookie
+  - ログイン状態
+  - Testim 拡張機能
+  - テスト実行
+  - Testim
 ---
 
 常に新規から開始 - シークレットモードでテストを実行する方法を学習してください
@@ -28,15 +35,15 @@ Chrome ブラウザのシークレットモードでテストを実行する前�
 
 1. Chrome ブラウザで、**chrome://extensions** URL に移動します。
 
-![1242](/images/running-tests/run-in-incognito/c469394-File1485182199573.png)
+![Chrome 拡張機能一覧画面](/images/running-tests/run-in-incognito/c469394-File1485182199573.png)
 
 2. **Testim Editor** 拡張機能を見つけて、**詳細** ボタンをクリックします。
 
-![](/images/running-tests/run-in-incognito/32e8712-testim-extension-details.jpg)
+![Testim Editor 拡張機能の詳細ボタン](/images/running-tests/run-in-incognito/32e8712-testim-extension-details.jpg)
 
 3. **シークレットで許可** 設定を **オン** に切り替えます。
 
-![694](/images/running-tests/run-in-incognito/3cb1da7-testim-extension-allow-incognito.jpg)
+![シークレットで許可設定をオンにする画面](/images/running-tests/run-in-incognito/3cb1da7-testim-extension-allow-incognito.jpg)
 
 これでシークレットモードでテストを実行する準備ができました。
 
@@ -50,15 +57,15 @@ Chrome ブラウザのシークレットモードでローカルテストまた�
 
 2. テストを開き、**実行** ボタンの横にある **オプション** 矢印をクリックします。
 
-![322](/images/running-tests/run-in-incognito/cbf521b-run-options.jpg)
+![テスト実行オプションメニューのスクリーンショット](/images/running-tests/run-in-incognito/cbf521b-run-options.jpg)
 
 3. **シークレットモードで実行** を選択します。
 
-![305](/images/running-tests/run-in-incognito/81ebcd1-check-run-in-incognito.jpg)
+![シークレットモードで実行オプションの選択](/images/running-tests/run-in-incognito/81ebcd1-check-run-in-incognito.jpg)
 
 **シークレット** アイコンは、各実行オプションの横に表示されて、シークレットモードで実行していることを示します。
 
-![278](/images/running-tests/run-in-incognito/6a4f471-incognito-icons.jpg)
+![シークレットモード実行を示すアイコン表示](/images/running-tests/run-in-incognito/6a4f471-incognito-icons.jpg)
 
 4. テストを実行する方法を選択してください。
 

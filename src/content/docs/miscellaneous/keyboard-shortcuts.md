@@ -13,24 +13,322 @@ keywords:
 
 Testimには、テスト作成を高速化するために使用できる一連のショートカットがあります。これらのショートカットを使用すると、テスト記録中にさまざまな検証を追加できます。
 
-| アクション名                                                              | Windows           | Mac               | 使用可能な場所 |
-| :----------------------------------------------------------------------- | :---------------- | :---------------- | :----------- |
-| [ホバーステップを追加](https://help.testim.io/docs/hover-step)                 | Alt + H           | Option + H        | エディター + AUT |
-| [要素テキストを検証](/docs/validations/validate-element-text)                       | Alt + V           | Option + V        | エディター + AUT |
-| [要素の表示を検証](/docs/validations/validate-element-visible)                 | Alt + L           | Option + L        | エディター + AUT |
-| [カスタム検証とアクションを追加](/docs/validations/custom-code)                    | Alt + J           | Option + J        | エディター       |
-| [新しいグループを追加](https://help.testim.io/docs/groups#creating-a-group)     | Alt + G           | Option + G        | エディター       |
-| テストを保存                                                                | Ctrl + S          | Cmd + S           | エディター       |
-| 新しいテストを作成                                                          | Alt + N           | Option + N        | エディター       |
-| [要素ビジュアライゼーションを検証](/docs/visual-validations/validate-element-visualization)     | Alt + E           | Option + E        | エディター + AUT |
-| [ビューポートビジュアライゼーションを検証](/docs/visual-validations/validate-viewport-visualization)   | Alt + P           | Option + P        | エディター       |
-| [フルページビジュアライゼーションを検証](/docs/visual-validations/validate-full-page-visualization) | Alt + D           | Option + D        | エディター       |
-| すべて選択（リスト内）                                                    | Ctrl + A          | Cmd + A           | エディター       |
-| [ブレークポイントを切り替え](https://help.testim.io/docs/stop-pause-debug-tests)  | Ctrl + B          | Cmd + B           | エディター       |
-| [ステップをコピー](doc:editing-your-tests#copying-a-step)                       | Ctrl + C          | Cmd + C           | エディター       |
-| [ステップをカット](doc:editing-your-tests#cutting-a-step)                        | Ctrl + X          | Cmd + X           | エディター       |
-| [ステップを貼り付け](doc:editing-your-tests#pasting-a-step)                      | Ctrl + V          | Cmd + V           | エディター       |
-| [ステップを削除](doc:editing-your-tests#deleting-steps)                     | Delete, Backspace | Delete, Backspace | エディター       |
-| [値を抽出ステップを追加](https://help.testim.io/docs/extract-text)       | Alt + X           | Option + X        | エディター       |
-| [要素の表示を待機](doc:wait-for#wait-for-element-visible)        | Alt + M           | Option + M        | エディター       |
-| [要素テキストを待機](doc:wait-for#wait-for-element-text)              | Alt + T           | Option + T        | エディター       |
+<table class="md-table md-table-4cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    アクション名
+   </th>
+   <th style="text-align: left;">
+    Windows
+   </th>
+   <th style="text-align: left;">
+    Mac
+   </th>
+   <th style="text-align: left;">
+    使用可能な場所
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    <a href="https://help.testim.io/docs/hover-step">
+     ホバーステップを追加
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + H
+   </td>
+   <td style="text-align: left;">
+    Option + H
+   </td>
+   <td style="text-align: left;">
+    エディター + AUT
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/validations/validate-element-text">
+     要素テキストを検証
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + V
+   </td>
+   <td style="text-align: left;">
+    Option + V
+   </td>
+   <td style="text-align: left;">
+    エディター + AUT
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/validations/validate-element-visible">
+     要素の表示を検証
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + L
+   </td>
+   <td style="text-align: left;">
+    Option + L
+   </td>
+   <td style="text-align: left;">
+    エディター + AUT
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/validations/custom-code">
+     カスタム検証とアクションを追加
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + J
+   </td>
+   <td style="text-align: left;">
+    Option + J
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="https://help.testim.io/docs/groups#creating-a-group">
+     新しいグループを追加
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + G
+   </td>
+   <td style="text-align: left;">
+    Option + G
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    テストを保存
+   </td>
+   <td style="text-align: left;">
+    Ctrl + S
+   </td>
+   <td style="text-align: left;">
+    Cmd + S
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    新しいテストを作成
+   </td>
+   <td style="text-align: left;">
+    Alt + N
+   </td>
+   <td style="text-align: left;">
+    Option + N
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/visual-validations/validate-element-visualization">
+     要素ビジュアライゼーションを検証
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + E
+   </td>
+   <td style="text-align: left;">
+    Option + E
+   </td>
+   <td style="text-align: left;">
+    エディター + AUT
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/visual-validations/validate-viewport-visualization">
+     ビューポートビジュアライゼーションを検証
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + P
+   </td>
+   <td style="text-align: left;">
+    Option + P
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="/docs/visual-validations/validate-full-page-visualization">
+     フルページビジュアライゼーションを検証
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + D
+   </td>
+   <td style="text-align: left;">
+    Option + D
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    すべて選択（リスト内）
+   </td>
+   <td style="text-align: left;">
+    Ctrl + A
+   </td>
+   <td style="text-align: left;">
+    Cmd + A
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="https://help.testim.io/docs/stop-pause-debug-tests">
+     ブレークポイントを切り替え
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Ctrl + B
+   </td>
+   <td style="text-align: left;">
+    Cmd + B
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="doc:editing-your-tests#copying-a-step">
+     ステップをコピー
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Ctrl + C
+   </td>
+   <td style="text-align: left;">
+    Cmd + C
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="doc:editing-your-tests#cutting-a-step">
+     ステップをカット
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Ctrl + X
+   </td>
+   <td style="text-align: left;">
+    Cmd + X
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="doc:editing-your-tests#pasting-a-step">
+     ステップを貼り付け
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Ctrl + V
+   </td>
+   <td style="text-align: left;">
+    Cmd + V
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="doc:editing-your-tests#deleting-steps">
+     ステップを削除
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Delete, Backspace
+   </td>
+   <td style="text-align: left;">
+    Delete, Backspace
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="https://help.testim.io/docs/extract-text">
+     値を抽出ステップを追加
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + X
+   </td>
+   <td style="text-align: left;">
+    Option + X
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="doc:wait-for#wait-for-element-visible">
+     要素の表示を待機
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + M
+   </td>
+   <td style="text-align: left;">
+    Option + M
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    <a href="doc:wait-for#wait-for-element-text">
+     要素テキストを待機
+    </a>
+   </td>
+   <td style="text-align: left;">
+    Alt + T
+   </td>
+   <td style="text-align: left;">
+    Option + T
+   </td>
+   <td style="text-align: left;">
+    エディター
+   </td>
+  </tr>
+ </tbody>
+</table>
+

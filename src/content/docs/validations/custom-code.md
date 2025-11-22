@@ -123,9 +123,35 @@ if(amount > 1000) {
 
 **Example Parameters:**
 
-| Name | Type | Value |
-|------|------|-------|
-| amountLabel | HTML | \{an HTML element containing a numeral} |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    Name
+   </th>
+   <th>
+    Type
+   </th>
+   <th>
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    amountLabel
+   </td>
+   <td>
+    HTML
+   </td>
+   <td>
+    {an HTML element containing a numeral}
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 #### テキスト要素の比較（Custom validation）
 
@@ -148,10 +174,46 @@ return equal;
 
 **Example Parameters:**
 
-| Name | Type | Value |
-|------|------|-------|
-| firstLabel | HTML | \{an HTML element containing text} |
-| secondLabel | HTML | \{an HTML element containing text} |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    Name
+   </th>
+   <th>
+    Type
+   </th>
+   <th>
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    firstLabel
+   </td>
+   <td>
+    HTML
+   </td>
+   <td>
+    {an HTML element containing text}
+   </td>
+  </tr>
+  <tr>
+   <td>
+    secondLabel
+   </td>
+   <td>
+    HTML
+   </td>
+   <td>
+    {an HTML element containing text}
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 #### Promise による非同期検証（Custom validation）
 

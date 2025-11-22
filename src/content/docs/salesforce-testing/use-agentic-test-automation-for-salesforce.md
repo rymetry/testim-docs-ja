@@ -37,11 +37,99 @@ AIエージェントの支援を受けて、Salesforce環境向けのユニー�
 
 プロンプトがどのようなものになるかについて詳しく知るには、以下の表でいくつかのプロンプト例を確認してください:
 
-| ユースケース                                               | プロンプト                                                                                                                                                                                                                   | 複雑さ |
-| :----------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
-| アカウント管理のテスト                                | `Create a new Account.`                                                                                                                                                                                                  | 低        |
-| カスタム認証情報を使用したアカウント管理のテスト        | `Create an account with the following data: Account name: Account123, Parent account: Account123_Root UAN: 111, Do not delete the account Account 123.`                                                                  | 中     |
-| アカウントと連絡先管理のテスト                    | `Create a new Account and add a new Contact for that Account.`                                                                                                                                                           | 低        |
-| 商談管理のテスト                            | `Create an Account and an Opportunity, progress the Opportunity through all stages.`                                                                                                                                     | 中     |
-| アクティビティ管理のテスト（検証なし） | `Create a new Lead and log a Call and set a Task for 7 days time, do not validate either task.`                                                                                                                          | 中     |
-| リード変換のテスト（検証あり）             | `Create a new Lead, work through all stages to converting to an Opportunity with a new Account and Contact. Validate that a new Opportunity, Account and Contact are created, and the fields are correct from the Lead.` | 高       |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    ユースケース
+   </th>
+   <th style="text-align: left;">
+    プロンプト
+   </th>
+   <th style="text-align: left;">
+    複雑さ
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    アカウント管理のテスト
+   </td>
+   <td style="text-align: left;">
+    <code>
+     Create a new Account.
+    </code>
+   </td>
+   <td style="text-align: left;">
+    低
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    カスタム認証情報を使用したアカウント管理のテスト
+   </td>
+   <td style="text-align: left;">
+    <code>
+     Create an account with the following data: Account name: Account123, Parent account: Account123_Root UAN: 111, Do not delete the account Account 123.
+    </code>
+   </td>
+   <td style="text-align: left;">
+    中
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    アカウントと連絡先管理のテスト
+   </td>
+   <td style="text-align: left;">
+    <code>
+     Create a new Account and add a new Contact for that Account.
+    </code>
+   </td>
+   <td style="text-align: left;">
+    低
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    商談管理のテスト
+   </td>
+   <td style="text-align: left;">
+    <code>
+     Create an Account and an Opportunity, progress the Opportunity through all stages.
+    </code>
+   </td>
+   <td style="text-align: left;">
+    中
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    アクティビティ管理のテスト（検証なし）
+   </td>
+   <td style="text-align: left;">
+    <code>
+     Create a new Lead and log a Call and set a Task for 7 days time, do not validate either task.
+    </code>
+   </td>
+   <td style="text-align: left;">
+    中
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    リード変換のテスト（検証あり）
+   </td>
+   <td style="text-align: left;">
+    <code>
+     Create a new Lead, work through all stages to converting to an Opportunity with a new Account and Contact. Validate that a new Opportunity, Account and Contact are created, and the fields are correct from the Lead.
+    </code>
+   </td>
+   <td style="text-align: left;">
+    高
+   </td>
+  </tr>
+ </tbody>
+</table>
+

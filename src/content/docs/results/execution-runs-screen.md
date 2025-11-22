@@ -54,13 +54,86 @@ keywords:
 
 実行名は、実行がどのように実行されたかに関する追加の詳細を提供します。
 
-| 実行名 | 説明 |
-| :-------- | :-------- |
-| Remote run (Testim Editor) | テストライブラリから特定のテストをリモート（グリッド上）で実行する場合 |
-| Local suite | テストライブラリから特定のテストをローカルで実行する場合<br/>スイートライブラリから特定のスイートをローカルで実行する場合<br/>テストエディターから単一のテストを実行した場合は表示されません。 |
-| \<Suite name> または\<Label name> または\<Test plan name> | CLIを使用して特定のスイートおよび/またはラベルを実行する場合<br/>CLIを使用して特定のテストプランを実行する場合<br/>CLIまたはスケジューラーを使用して複数のテストプランを実行する場合は、複数の実行エントリが作成され、各テストプランが独自の実行エントリを持ちます。 |
-| \<Scheduler name> | ラベルまたはスイートで特定のスケジューラーを実行する場合 |
-| \<Scheduler name>//\<Test plan name> | テストプランで特定のスケジューラーを実行する場合<br/>CLIを使用して複数のテストプランを実行する場合、各テストプランが独自の実行エントリを持ちます。 |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    実行名
+   </th>
+   <th style="text-align: left;">
+    説明
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Remote run (Testim Editor)
+   </td>
+   <td style="text-align: left;">
+    テストライブラリから特定のテストをリモート（グリッド上）で実行する場合
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Local suite
+   </td>
+   <td style="text-align: left;">
+    テストライブラリから特定のテストをローカルで実行する場合
+    <br/>
+    スイートライブラリから特定のスイートをローカルで実行する場合
+    <br/>
+    テストエディターから単一のテストを実行した場合は表示されません。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    \
+    <suite name="">
+     または\
+     <label name="">
+      または\
+      <test name="" plan="">
+      </test>
+     </label>
+    </suite>
+   </td>
+   <td style="text-align: left;">
+    CLIを使用して特定のスイートおよび/またはラベルを実行する場合
+    <br/>
+    CLIを使用して特定のテストプランを実行する場合
+    <br/>
+    CLIまたはスケジューラーを使用して複数のテストプランを実行する場合は、複数の実行エントリが作成され、各テストプランが独自の実行エントリを持ちます。
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    \
+    <scheduler name="">
+    </scheduler>
+   </td>
+   <td style="text-align: left;">
+    ラベルまたはスイートで特定のスケジューラーを実行する場合
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    \
+    <scheduler name="">
+     //\
+     <test name="" plan="">
+     </test>
+    </scheduler>
+   </td>
+   <td style="text-align: left;">
+    テストプランで特定のスケジューラーを実行する場合
+    <br/>
+    CLIを使用して複数のテストプランを実行する場合、各テストプランが独自の実行エントリを持ちます。
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ## 統計パネル
 

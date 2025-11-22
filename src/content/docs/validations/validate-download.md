@@ -209,11 +209,57 @@ return csv({
 
 **Example Parameters:**
 
-| Name              | Type       | Value               |
-| :---------------- | :--------- | :------------------ |
-| csv               | Package    | \[csvtojson\@2.0.8] |
-| expectedNumOfRows | JavaScript | '237'               |
-| expectedText      | JavaScript | 'JURISDICTION NAME' |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Name
+   </th>
+   <th style="text-align: left;">
+    Type
+   </th>
+   <th style="text-align: left;">
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    csv
+   </td>
+   <td style="text-align: left;">
+    Package
+   </td>
+   <td style="text-align: left;">
+    [csvtojson\@2.0.8]
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedNumOfRows
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    '237'
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedText
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'JURISDICTION NAME'
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### 画像ファイル
 
@@ -237,13 +283,79 @@ return width === parseInt(expectedWidth) &&
 
 **Example Parameters:**
 
-| Name              | Type       | Value                              |
-| :---------------- | :--------- | :--------------------------------- |
-| sizeOf            | Package    | \[image-size\@0.6.3]               |
-| expectedName      | JavaScript | 'yellow-cat-cartoon-style-clipart' |
-| expectedImageType | JavaScript | 'jpg'                              |
-| expectedWidth     | JavaScript | '573'                              |
-| expectedHeight    | JavaScript | '600'                              |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Name
+   </th>
+   <th style="text-align: left;">
+    Type
+   </th>
+   <th style="text-align: left;">
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    sizeOf
+   </td>
+   <td style="text-align: left;">
+    Package
+   </td>
+   <td style="text-align: left;">
+    [image-size\@0.6.3]
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedName
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'yellow-cat-cartoon-style-clipart'
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedImageType
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'jpg'
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedWidth
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    '573'
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedHeight
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    '600'
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### MS Excel ファイル
 
@@ -269,11 +381,57 @@ if (sheet !== expectedPageName) {
 
 **Example Parameters:**
 
-| Name                | Type       | Value           |
-| :------------------ | :--------- | :-------------- |
-| XLSX                | Package    | \[xlsx\@0.14.1] |
-| expectedNumOfSheets | JavaScript | '3'             |
-| expectedPageName    | JavaScript | 'Example Test'  |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Name
+   </th>
+   <th style="text-align: left;">
+    Type
+   </th>
+   <th style="text-align: left;">
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    XLSX
+   </td>
+   <td style="text-align: left;">
+    Package
+   </td>
+   <td style="text-align: left;">
+    [xlsx\@0.14.1]
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedNumOfSheets
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    '3'
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedPageName
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'Example Test'
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### MS PowerPoint ファイル
 
@@ -311,11 +469,59 @@ expectedText.forEach(item => {
 
 **Example Parameters:**
 
-| Name | Type | Value |
-|------|------|-------|
-| Docxtemplater | Package | \[docxtemplater\@3.9.5] |
-| JSZip | Package | \[jszip\@2.\*] |
-| expectedText | JavaScript | `:0,"text":"Department"},{"slideIndex":1,"text":"Location"}]` |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th>
+    Name
+   </th>
+   <th>
+    Type
+   </th>
+   <th>
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    Docxtemplater
+   </td>
+   <td>
+    Package
+   </td>
+   <td>
+    [docxtemplater\@3.9.5]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    JSZip
+   </td>
+   <td>
+    Package
+   </td>
+   <td>
+    [jszip\@2.*]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    expectedText
+   </td>
+   <td>
+    JavaScript
+   </td>
+   <td>
+    <code>
+     :0,"text":"Department"},{"slideIndex":1,"text":"Location"}]
+    </code>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 > 📘
 >
@@ -343,11 +549,57 @@ return docxText.includes(expectedText);
 
 **Example Parameters:**
 
-| Name          | Type       | Value                   |
-| :------------ | :--------- | :---------------------- |
-| Docxtemplater | Package    | \[docxtemplater\@3.9.5] |
-| JSZip         | Package    | \[jszip\@2.\*]          |
-| expectedText  | JavaScript | 'Item A'                |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Name
+   </th>
+   <th style="text-align: left;">
+    Type
+   </th>
+   <th style="text-align: left;">
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Docxtemplater
+   </td>
+   <td style="text-align: left;">
+    Package
+   </td>
+   <td style="text-align: left;">
+    [docxtemplater\@3.9.5]
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    JSZip
+   </td>
+   <td style="text-align: left;">
+    Package
+   </td>
+   <td style="text-align: left;">
+    [jszip\@2.*]
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedText
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'Item A'
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 > 📘
 >
@@ -385,8 +637,54 @@ return pdf(fileBuffer).then((data) => {
 
 **Example Parameters:**
 
-| Name               | Type       | Value                |
-| :----------------- | :--------- | :------------------- |
-| pdf                | Package    | \[pdf-parse\@latest] |
-| expectedNumOfPages | JavaScript | '2'                  |
-| expectedText       | JavaScript | 'A Simple PDF File'  |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Name
+   </th>
+   <th style="text-align: left;">
+    Type
+   </th>
+   <th style="text-align: left;">
+    Value
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    pdf
+   </td>
+   <td style="text-align: left;">
+    Package
+   </td>
+   <td style="text-align: left;">
+    [pdf-parse\@latest]
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedNumOfPages
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    '2'
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    expectedText
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'A Simple PDF File'
+   </td>
+  </tr>
+ </tbody>
+</table>
+

@@ -1,13 +1,19 @@
 ---
 title: 'ベース URL'
-description: 'テスト実行セクション「Base URL」に関するドキュメント。'
+description: 'テストのベース URL の考え方と、実行時にベース URL をオーバーライドする方法、ベース URL パラメータ BASE_URL を使って複数環境やデータドリブンテストに対応する方法を説明します。'
 category: 'テスト実行'
 order: 4
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/base-url'
 keywords:
-  - testim
-  - base-url
-  - running-tests
+  - ベースURL
+  - URL オーバーライド
+  - 環境切り替え
+  - ナビゲーションステップ
+  - BASE_URL パラメータ
+  - データドリブンテスト
+  - テスト実行
+  - Testim
 ---
 異なるベース URL を使用して、さまざまな環境でテストを実行する方法を学習してください
 
@@ -19,7 +25,7 @@ keywords:
 
 Testim のベース URL は、テストが開始されるウェブサイトの最初のページです。通常、これはウェブサイトアドレスのルートで、**ホスト**という名前付けにより、通常はウェブサイトのホームページを指します。例えば、[http://demo.testim.io](http://demo.testim.io) や [http://www.google.com](http://www.google.com) です。ベース URL はテストの最初のステップである **セットアップステップ** で定義されます。テスト内の追加ステップには、最初のページ/ホームページから同じウェブサイト内のページへのリンククリックが含まれる場合があります。これらのページの URL には、同じベース URL の後に **相対パス** が含まれます。例えば、[http://demo.testim.io/signup](http://demo.testim.io/signup) です。
 
-![](/images/running-tests/base-url/b1cff8e-baseurl.jpg)
+![ベースURL設定画面のスクリーンショット](/images/running-tests/base-url/b1cff8e-baseurl.jpg)
 
 ## テスト実行時にベース URL をオーバーライドする
 
@@ -27,18 +33,18 @@ Testim のベース URL は、テストが開始されるウェブサイトの�
 
 Test Editor を通じてテストを実行する場合は、「Run on a grid」セクションで指定できます。
 
-![](/images/running-tests/base-url/3bcd12f-runongrid.jpg)
+![Run on a grid セクションのスクリーンショット](/images/running-tests/base-url/3bcd12f-runongrid.jpg)
 
 さらに、テスト実行時に異なるベース URL を送信するために使用できるコンポーネントの一覧を次に示します：
 
-* [CLI](/docs/running-tests/the-command-line-cli)
-* [スケジューラー](/docs/running-tests/scheduler)
-* [構成ファイル](/docs/configuration-file/configuration-file-run-hooks)
-* [テストプラン](/docs/test-management/test-plans)
+* [CLI](/docs/the-command-line-cli)
+* [スケジューラー](/docs/scheduler)
+* [構成ファイル](/docs/configuration-file-run-hooks)
+* [テストプラン](/docs/test-plans)
 
 テスト実行中に別のベース URL でベース URL がオーバーライドされると、オーバーライドするベース URL が上部に表示されます（下の画像を参照）。このURL は「セットアップステップ」に表示されるものと異なることに注意してください。
 
-![](/images/running-tests/base-url/2907735-fb0b21d-base-url-setup.jpg)
+![ベースURLオーバーライドの表示例](/images/running-tests/base-url/2907735-fb0b21d-base-url-setup.jpg)
 
 ### セットアップステップでベース URL をオーバーライドする
 
@@ -58,7 +64,7 @@ Test Editor を通じてテストを実行する場合は、「Run on a grid」�
 * オーバーライドベース URL - [https://www.google.com/doodles](https://www.google.com/doodles)
 * 結果のナビゲーションステップ - [https://www.google.com/checkout](https://www.google.com/checkout)
 
-![](/images/running-tests/base-url/6e073c9-image.png)
+![ナビゲーションステップのURLオーバーライド例](/images/running-tests/base-url/6e073c9-image.png)
 
 > 📘 ナビゲーションステップの URL がパラメータの場合
 >
@@ -83,11 +89,11 @@ Test Editor を通じてテストを実行する場合は、「Run on a grid」�
  **カスタムアクションステップにベース URL パラメータを追加するには：**
 
 1. 新しい **カスタムアクションステップ** を追加する場所で **+** または **矢印** アイコンにマウスをホバーし、**Testim 定義済みステップ** ボタンをクリックします。\
-   ![](/images/running-tests/base-url/45c6324-2023-06-13_17-20-26.jpg)
+   ![カスタムアクションステップの追加画面](/images/running-tests/base-url/45c6324-2023-06-13_17-20-26.jpg)
 2. **アクション** メニューをクリックします。
 3. **カスタムアクションを追加** をクリックします。
 4. **新しいステップに名前を付ける** フィールドで、このステップに（意味のある）名前を入力します。\
-   ![](/images/running-tests/base-url/e352510-2023-06-13_17-23-03.jpg)
+   ![カスタムアクションステップ名の入力例](/images/running-tests/base-url/e352510-2023-06-13_17-23-03.jpg)
 5. **ステップを作成** をクリックします。\
    関数エディタが開き、**プロパティ** パネルが右側に開きます。
 6. 関数エディタで、ベース URL パラメータを使用して関数を入力します。次の例では、パラメータを使用してコンソールログに値を出力します：
@@ -98,7 +104,7 @@ console.log("Base URL:" + BASE_URL)
 
 テストを実行した後、ベース URL パラメータ値がログに表示されます：
 
-![](/images/running-tests/base-url/09475a3-2023-06-13_17-28-39.jpg)
+![BASE_URL を使用したログ出力結果](/images/running-tests/base-url/09475a3-2023-06-13_17-28-39.jpg)
 
 ### ナビゲーションステップでベース URL パラメータを使用する
 
@@ -108,15 +114,15 @@ console.log("Base URL:" + BASE_URL)
 
 1. 新しいナビゲーションステップを追加する場所で **+** または **矢印** アイコンにマウスをホバーし、**Testim 定義済みステップ** ボタンをクリックします。
 
-![](/images/running-tests/base-url/0fa605c-predefined.jpg)
+![ナビゲーションステップ追加メニュー](/images/running-tests/base-url/0fa605c-predefined.jpg)
 
 2. **ナビゲーションアクションを追加** を検索してクリックします。
 
-![](/images/running-tests/base-url/10e28bf-nav-step.jpg)
+![ナビゲーションアクションの選択画面](/images/running-tests/base-url/10e28bf-nav-step.jpg)
 
 3. **BASE\_URL** パラメータを使用して URL を入力し、その後に残りの URL パスを入力します。
 
-![](/images/running-tests/base-url/0017136-nav-url.jpg)
+![BASE_URL を使用したナビゲーションURL設定例](/images/running-tests/base-url/0017136-nav-url.jpg)
 
 > 📘
 >
@@ -124,6 +130,6 @@ console.log("Base URL:" + BASE_URL)
 
 Testim は、動的 URL を含むナビゲーションステップを保存します。
 
-![](/images/running-tests/base-url/d14049f-base-url.jpg)
+![BASE_URL を使用したナビゲーションステップの保存結果](/images/running-tests/base-url/d14049f-base-url.jpg)
 
 テストが実行されると、ナビゲーションステップは、テスト実行のベース URL の後に指定されたパスを含む URL に移動します。

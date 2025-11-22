@@ -66,14 +66,103 @@ Before/After each step フックは、テスト内の「各ステップの直前
 
 上記の3つの方法（プロパティパネル／構成リスト／既定構成）から、どの種類のフックを設定できるかを表にまとめると次のとおりです。
 
-| Hook の種類      | Test Configuration | Config File | コメント                    |
-| :--------------- | :----------------- | :---------- | :-------------------------- |
-| Before each step | V                  |             |                             |
-| After each step  | V                  |             |                             |
-| Before test      | V                  | V           |                             |
-| After test       | V                  | V           |                             |
-| Before suite     |                    | V           | エディタ画面には表示されません |
-| After suite      |                    | V           | エディタ画面には表示されません |
+<table class="md-table md-table-4cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Hook の種類
+   </th>
+   <th style="text-align: left;">
+    Test Configuration
+   </th>
+   <th style="text-align: left;">
+    Config File
+   </th>
+   <th style="text-align: left;">
+    コメント
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Before each step
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    After each step
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Before test
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    After test
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Before suite
+   </td>
+   <td style="text-align: left;">
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+    エディタ画面には表示されません
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    After suite
+   </td>
+   <td style="text-align: left;">
+   </td>
+   <td style="text-align: left;">
+    V
+   </td>
+   <td style="text-align: left;">
+    エディタ画面には表示されません
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ## テスト構成から作成
 

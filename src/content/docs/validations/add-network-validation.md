@@ -37,22 +37,153 @@ keywords:
 >
 > リクエストボディとレスポンスボディのキャプチャも可能です。詳細は [Capturing Request and Response Body](#capturing-request-and-response-body) を参照してください。
 
-| プロパティ | 説明 |
-|--------|----------|
-| url | リクエストURL |
-| source | URLを生成したページ |
-| method | リクエストメソッド（例: GET, POST, PUT など） |
-| startTime | リクエストの読み込み開始時刻（Unix時間、ミリ秒） |
-| endTime | リクエストの読み込み完了時刻（Unix時間、ミリ秒） |
-| tabNumber | リクエスト元のタブ番号 |
-| statusCode | レスポンスのステータスコード |
-| statusText | ステータスコードに対応するステータステキスト |
-| isBlocked | リクエストがブロックされたかどうか<br/>**true** = ブロック済み<br/>**false** = ブロックされていない |
-| blockReason | ブロックされた理由（例: 広告ブロッカー、リクエスト失敗、オリジン、CORSなど） |
-| isDone | リクエストが完了したかどうか<br/>**true** = 完了<br/>**false** = 保留中 |
-| type | レスポンスに含まれるデータの種類（例: XHR, document, Imageなど）（Chromeより） |
-| responseSize | レスポンスの合計サイズ（エンコード済み、ヘッダー含む）（バイト） |
-| protocol | ネットワークプロトコル（例: h2, http/1.1）（Chromeより） |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th>
+    プロパティ
+   </th>
+   <th>
+    説明
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    url
+   </td>
+   <td>
+    リクエストURL
+   </td>
+  </tr>
+  <tr>
+   <td>
+    source
+   </td>
+   <td>
+    URLを生成したページ
+   </td>
+  </tr>
+  <tr>
+   <td>
+    method
+   </td>
+   <td>
+    リクエストメソッド（例: GET, POST, PUT など）
+   </td>
+  </tr>
+  <tr>
+   <td>
+    startTime
+   </td>
+   <td>
+    リクエストの読み込み開始時刻（Unix時間、ミリ秒）
+   </td>
+  </tr>
+  <tr>
+   <td>
+    endTime
+   </td>
+   <td>
+    リクエストの読み込み完了時刻（Unix時間、ミリ秒）
+   </td>
+  </tr>
+  <tr>
+   <td>
+    tabNumber
+   </td>
+   <td>
+    リクエスト元のタブ番号
+   </td>
+  </tr>
+  <tr>
+   <td>
+    statusCode
+   </td>
+   <td>
+    レスポンスのステータスコード
+   </td>
+  </tr>
+  <tr>
+   <td>
+    statusText
+   </td>
+   <td>
+    ステータスコードに対応するステータステキスト
+   </td>
+  </tr>
+  <tr>
+   <td>
+    isBlocked
+   </td>
+   <td>
+    リクエストがブロックされたかどうか
+    <br/>
+    <strong>
+     true
+    </strong>
+    = ブロック済み
+    <br/>
+    <strong>
+     false
+    </strong>
+    = ブロックされていない
+   </td>
+  </tr>
+  <tr>
+   <td>
+    blockReason
+   </td>
+   <td>
+    ブロックされた理由（例: 広告ブロッカー、リクエスト失敗、オリジン、CORSなど）
+   </td>
+  </tr>
+  <tr>
+   <td>
+    isDone
+   </td>
+   <td>
+    リクエストが完了したかどうか
+    <br/>
+    <strong>
+     true
+    </strong>
+    = 完了
+    <br/>
+    <strong>
+     false
+    </strong>
+    = 保留中
+   </td>
+  </tr>
+  <tr>
+   <td>
+    type
+   </td>
+   <td>
+    レスポンスに含まれるデータの種類（例: XHR, document, Imageなど）（Chromeより）
+   </td>
+  </tr>
+  <tr>
+   <td>
+    responseSize
+   </td>
+   <td>
+    レスポンスの合計サイズ（エンコード済み、ヘッダー含む）（バイト）
+   </td>
+  </tr>
+  <tr>
+   <td>
+    protocol
+   </td>
+   <td>
+    ネットワークプロトコル（例: h2, http/1.1）（Chromeより）
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 :fa-arrow-right: **Add network validation ステップを追加するには:**
 
@@ -233,9 +364,35 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 
 **パラメーター例:**
 
-| 名前        | タイプ       | 値                                                                                    |
-| :---------- | :--------- | :--------------------------------------------------------------------------------------- |
-| maxTimeInMS | JavaScript | \{ステップが失敗する前にネットワーク呼び出しに許可される最大ミリ秒数} |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    名前
+   </th>
+   <th style="text-align: left;">
+    タイプ
+   </th>
+   <th style="text-align: left;">
+    値
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    maxTimeInMS
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    {ステップが失敗する前にネットワーク呼び出しに許可される最大ミリ秒数}
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 # リクエストボディとレスポンスボディのキャプチャ
 

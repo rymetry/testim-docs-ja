@@ -108,18 +108,142 @@ CSVをダウンロードするには、**CSV Download**ボタンをクリック�
 
 テスト実行の詳細には、フィルターの条件に一致するすべてのテスト実行がリストされます。
 
-| パラメーター | 説明 | 値 |
-| :-------- | :-------- | :-------- |
-| Test Name | テスト実行のテスト名。 | |
-| Branch | 実行されたテストを保持するブランチ | |
-| Browser (web) | テスト実行で使用されたブラウザ。 | |
-| Device (mobile) | テスト実行で使用されたデバイス。 | |
-| OS | テスト実行で使用されたオペレーティングシステム。 | |
-| Started | 実行が開始された時刻。 | |
-| Duration | テスト実行の時間。 | |
-| Result Labels | 実行に追加された結果ラベル。クリックしてラベルを表示します。 | |
-| Failure Type | 実行に追加された失敗タグ。失敗タグを追加するには、「Tag test failure」リンクをクリックします。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures)を参照してください。 | |
-| Status | テスト実行のステータス。 | **Failed** - 赤いx<br/>**Failed with retries** - 黄色の感嘆符付き赤いx<br/>**Passed** - 緑のv |
+<table class="md-table md-table-3cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    パラメーター
+   </th>
+   <th style="text-align: left;">
+    説明
+   </th>
+   <th style="text-align: left;">
+    値
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Test Name
+   </td>
+   <td style="text-align: left;">
+    テスト実行のテスト名。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Branch
+   </td>
+   <td style="text-align: left;">
+    実行されたテストを保持するブランチ
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Browser (web)
+   </td>
+   <td style="text-align: left;">
+    テスト実行で使用されたブラウザ。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Device (mobile)
+   </td>
+   <td style="text-align: left;">
+    テスト実行で使用されたデバイス。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    OS
+   </td>
+   <td style="text-align: left;">
+    テスト実行で使用されたオペレーティングシステム。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Started
+   </td>
+   <td style="text-align: left;">
+    実行が開始された時刻。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Duration
+   </td>
+   <td style="text-align: left;">
+    テスト実行の時間。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Result Labels
+   </td>
+   <td style="text-align: left;">
+    実行に追加された結果ラベル。クリックしてラベルを表示します。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Failure Type
+   </td>
+   <td style="text-align: left;">
+    実行に追加された失敗タグ。失敗タグを追加するには、「Tag test failure」リンクをクリックします。詳細については、
+    <a href="/docs/results/tag-remote-runs-failures">
+     失敗した実行への失敗タイプのタグ付け
+    </a>
+    を参照してください。
+   </td>
+   <td style="text-align: left;">
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Status
+   </td>
+   <td style="text-align: left;">
+    テスト実行のステータス。
+   </td>
+   <td style="text-align: left;">
+    <strong>
+     Failed
+    </strong>
+    - 赤いx
+    <br/>
+    <strong>
+     Failed with retries
+    </strong>
+    - 黄色の感嘆符付き赤いx
+    <br/>
+    <strong>
+     Passed
+    </strong>
+    - 緑のv
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ## リトライの表示
 

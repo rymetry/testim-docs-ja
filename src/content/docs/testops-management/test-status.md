@@ -34,12 +34,83 @@ keywords:
 
 各テストは以下のいずれかのステータスを持つことができます:
 
-| ステータス | 定義 | CI/スケジューラーの一部として実行 | スケジューラー/CI の失敗 |
-| :--------- | :------------------------------------------------------------------------------------- | :---------------------------------- | :------------------- |
-| Draft      | テストはまだ作業中 | はい\* | はい |
-| Evaluating | テストは準備完了だが、安定性を検証する必要がある | はい | いいえ |
-| Active     | テストは準備完了で安定している | はい | はい |
-| Quarantine | テストは安定したテストの定義に適合しておらず、修正待ち | いいえ | いいえ |
+<table class="md-table md-table-4cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    ステータス
+   </th>
+   <th style="text-align: left;">
+    定義
+   </th>
+   <th style="text-align: left;">
+    CI/スケジューラーの一部として実行
+   </th>
+   <th style="text-align: left;">
+    スケジューラー/CI の失敗
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Draft
+   </td>
+   <td style="text-align: left;">
+    テストはまだ作業中
+   </td>
+   <td style="text-align: left;">
+    はい*
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Evaluating
+   </td>
+   <td style="text-align: left;">
+    テストは準備完了だが、安定性を検証する必要がある
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+   <td style="text-align: left;">
+    いいえ
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Active
+   </td>
+   <td style="text-align: left;">
+    テストは準備完了で安定している
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+   <td style="text-align: left;">
+    はい
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Quarantine
+   </td>
+   <td style="text-align: left;">
+    テストは安定したテストの定義に適合しておらず、修正待ち
+   </td>
+   <td style="text-align: left;">
+    いいえ
+   </td>
+   <td style="text-align: left;">
+    いいえ
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 \*ベストプラクティスは、テストが準備完了してから CI/スケジューラーに追加することであり、Draft ステータスでは追加しないことです。
 

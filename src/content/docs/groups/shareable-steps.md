@@ -20,30 +20,177 @@ keywords:
 
 ### Validations（検証）
 
-| Validations            | Documentation                                                                                                  |
-| :--------------------- | :------------------------------------------------------------------------------------------------------------- |
-| Add custom validation  | [Add custom validations and actions](/docs/custom-code)                                                          |
-| Add CLI validation     | [Adding a CLI step](/docs/validate-download#adding-a-cli-step)                                                   |
-| Validate download      | [Adding a Validate download validation step](/docs/validate-download#adding-a-validate-download-validation-step) |
-| Validate email         | [Validate email](/docs/email-validation)                                                                         |
-| Validate API           | [API Validation](/docs/api-testing#api-validation)                                                               |
-| Add network validation | [Add network validation](/docs/add-network-validation)                                                           |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Validations
+   </th>
+   <th style="text-align: left;">
+    Documentation
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Add custom validation
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/custom-code">
+     Add custom validations and actions
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Add CLI validation
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/validate-download#adding-a-cli-step">
+     Adding a CLI step
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Validate download
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/validate-download#adding-a-validate-download-validation-step">
+     Adding a Validate download validation step
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Validate email
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/email-validation">
+     Validate email
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Validate API
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/api-testing#api-validation">
+     API Validation
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Add network validation
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/add-network-validation">
+     Add network validation
+    </a>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### Wait for（待機）
 
-| Wait For            | Documentation                                                |
-| :------------------ | :----------------------------------------------------------- |
-| Add custom wait for | [Custom Wait for](/docs/wait-for#custom-wait-for)              |
-| Add CLI wait for    | [Adding a CLI step](/docs/validate-download#adding-a-cli-step) |
-| Wait for download   | [Wait for Download](/docs/wait-for#wait-for-download-web)      |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Wait For
+   </th>
+   <th style="text-align: left;">
+    Documentation
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Add custom wait for
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/wait-for#custom-wait-for">
+     Custom Wait for
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Add CLI wait for
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/validate-download#adding-a-cli-step">
+     Adding a CLI step
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Wait for download
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/wait-for#wait-for-download-web">
+     Wait for Download
+    </a>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ### Actions（アクション）
 
-| Actions           | Documentation                                                |
-| :---------------- | :----------------------------------------------------------- |
-| Add custom action | [Add custom validations and actions](/docs/custom-code)        |
-| Add CLI action    | [Adding a CLI step](/docs/validate-download#adding-a-cli-step) |
-| Add API action    | [API Action](/docs/api-testing#api-action)                     |
+<table class="md-table md-table-2cols">
+ <thead>
+  <tr>
+   <th style="text-align: left;">
+    Actions
+   </th>
+   <th style="text-align: left;">
+    Documentation
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    Add custom action
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/custom-code">
+     Add custom validations and actions
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Add CLI action
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/validate-download#adding-a-cli-step">
+     Adding a CLI step
+    </a>
+   </td>
+  </tr>
+  <tr>
+   <td style="text-align: left;">
+    Add API action
+   </td>
+   <td style="text-align: left;">
+    <a href="/docs/api-testing#api-action">
+     API Action
+    </a>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
 
 ## 新しい共有ステップの作成
 
