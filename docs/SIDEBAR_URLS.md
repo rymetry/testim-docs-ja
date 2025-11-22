@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 109個
-- ✅   翻訳のみ完了: 174個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 124個
+- ✅   翻訳のみ完了: 159個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -203,21 +203,21 @@
 
 ## Results(結果)
 
-- ✅ https://help.testim.io/docs/results-overview
-- ✅ https://help.testim.io/docs/test-results
-- ✅ https://help.testim.io/docs/compare-side-by-side-screenshots
-- ✅ https://help.testim.io/docs/network-logs
-- ✅ https://help.testim.io/docs/network-logs-copy
-- ✅ https://help.testim.io/docs/why-did-my-test-fail
-- ✅ https://help.testim.io/docs/visual-validation-test-results
-- ✅ https://help.testim.io/docs/debug-console-errors-access-dom
-- ✅ https://help.testim.io/docs/execution-runs-screen
-- ✅ https://help.testim.io/docs/test-runs
-- ✅ https://help.testim.io/docs/stop-pause-debug-tests
-- ✅ https://help.testim.io/docs/result-labels
-- ✅ https://help.testim.io/docs/export-test-list-and-test-results
-- ✅ https://help.testim.io/docs/tag-remote-runs-failures
-- ✅ https://help.testim.io/docs/test-run-pdf-report
+- ✅🔍 https://help.testim.io/docs/results-overview
+- ✅🔍 https://help.testim.io/docs/test-results
+- ✅🔍 https://help.testim.io/docs/compare-side-by-side-screenshots
+- ✅🔍 https://help.testim.io/docs/network-logs
+- ✅🔍 https://help.testim.io/docs/network-logs-copy
+- ✅🔍 https://help.testim.io/docs/why-did-my-test-fail
+- ✅🔍 https://help.testim.io/docs/visual-validation-test-results
+- ✅🔍 https://help.testim.io/docs/debug-console-errors-access-dom
+- ✅🔍 https://help.testim.io/docs/execution-runs-screen
+- ✅🔍 https://help.testim.io/docs/test-runs
+- ✅🔍 https://help.testim.io/docs/stop-pause-debug-tests
+- ✅🔍 https://help.testim.io/docs/result-labels
+- ✅🔍 https://help.testim.io/docs/export-test-list-and-test-results
+- ✅🔍 https://help.testim.io/docs/tag-remote-runs-failures
+- ✅🔍 https://help.testim.io/docs/test-run-pdf-report
 
 ## Debugging（デバッグ）
 
