@@ -19,6 +19,7 @@ config();
 
 // テーブルをレスポンシブ対応のdivでラップするrehypeプラグイン
 function rehypeWrapTable() {
+  // @ts-expect-error
   return (tree) => {
     visit(tree, { type: 'element', tagName: 'table' }, (node, index, parent) => {
       // 安全性チェック強化
