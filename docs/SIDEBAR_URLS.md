@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 202個
-- ✅   翻訳のみ完了: 81個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 205個
+- ✅   翻訳のみ完了: 78個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -313,9 +313,9 @@
 
 ## CLI & API（CLI・API）
 
-- ✅ https://help.testim.io/docs/cli-settings
-- ✅ https://help.testim.io/docs/cli-prerequisites
-- ✅ https://help.testim.io/docs/api-access
+- ✅🔍 https://help.testim.io/docs/cli-settings
+- ✅🔍 https://help.testim.io/docs/cli-prerequisites
+- ✅🔍 https://help.testim.io/docs/api-access
 
 ## Project & User Management（プロジェクト・ユーザー管理）
 
