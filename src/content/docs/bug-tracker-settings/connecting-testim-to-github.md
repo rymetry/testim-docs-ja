@@ -3,20 +3,25 @@ title: 'TestimとGitHub（Issues）の連携'
 description: 'TestimとGitHub Issuesを連携してバグレポートをGitHubで管理する方法を説明します。統合設定、Issue作成、テスト結果とGitHubリポジトリの連携方法を網羅しています。'
 category: 'bug-tracker-settings'
 order: 50
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
 keywords:
-  - testim
-  - github
-  - github-issues
-  - バグトラッカー
-  - 統合設定
+  - GitHub Issues
+  - GitHub連携
+  - Issue連携
+  - Issue自動作成
+  - バグレポート
+  - バグ管理
+  - テスト失敗
+  - 課題管理
+  - テストレポート
 ---
 
 # TestimとGitHub（Issues）の連携
 
 GitHub Issuesは、GitHubリポジトリに統合されたバグトラッカーおよび課題管理ツールです。TestimとGitHub Issuesを連携することで、テスト失敗時に自動的にGitHub Issueを作成し、コードとバグ管理を一元化できます。
 
-> **注意**: この連携は、[GitHub統合](../other-integrations/github-integration)（ブランチ管理）とは異なります。こちらはIssue作成に特化した連携です。
+> **注意**: この連携は、[GitHub統合](/docs/github-integration)（ブランチ管理）とは異なります。こちらはIssue作成に特化した連携です。
 
 ## GitHub Issues連携の設定
 
@@ -74,5 +79,5 @@ GitHub Issuesは、GitHubリポジトリに統合されたバグトラッカー�
 
 ## 関連ドキュメント
 
-- [GitHub統合（ブランチ管理）](../other-integrations/github-integration)
-- [バグトラッカー設定](bug-tracker-settings)
+- [GitHub統合（ブランチ管理）](/docs/github-integration)
+- [バグトラッカー設定](/docs/bug-tracker-settings)

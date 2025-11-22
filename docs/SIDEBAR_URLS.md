@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 192個
-- ✅   翻訳のみ完了: 91個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 197個
+- ✅   翻訳のみ完了: 86個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -297,11 +297,11 @@
 
 ## Bug Tracker Settings（バグトラッカー設定）
 
-- ✅ https://help.testim.io/docs/bug-tracker-settings
-- ✅ https://help.testim.io/docs/connecting-testim-to-jira
-- ✅ https://help.testim.io/docs/connecting-testim-to-trello
-- ✅ https://help.testim.io/docs/connecting-testim-to-slack
-- ✅ https://help.testim.io/docs/connecting-testim-to-github
+- ✅🔍 https://help.testim.io/docs/bug-tracker-settings
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-jira
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-trello
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-slack
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-github
 
 ## Test Management Integrations（テスト管理統合）
 
