@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 197個
-- ✅   翻訳のみ完了: 86個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 202個
+- ✅   翻訳のみ完了: 81個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -305,11 +305,11 @@
 
 ## Test Management Integrations（テスト管理統合）
 
-- ✅ https://help.testim.io/docs/test-management-integrations
-- ✅ https://help.testim.io/docs/qtest-integration
-- ✅ https://help.testim.io/docs/testrail-integration
-- ✅ https://help.testim.io/docs/ttm-for-jira-integration
-- ✅ https://help.testim.io/docs/xray-integration
+- ✅🔍 https://help.testim.io/docs/test-management-integrations
+- ✅🔍 https://help.testim.io/docs/qtest-integration
+- ✅🔍 https://help.testim.io/docs/testrail-integration
+- ✅🔍 https://help.testim.io/docs/ttm-for-jira-integration
+- ✅🔍 https://help.testim.io/docs/xray-integration
 
 ## CLI & API（CLI・API）
 
