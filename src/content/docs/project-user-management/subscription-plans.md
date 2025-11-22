@@ -3,14 +3,13 @@ title: 'サブスクリプションプラン'
 description: 'Web、モバイル、Salesforce、Copilotの各プロダクトカテゴリのサブスクリプションプラン詳細と使用状況について説明します。並列化モデルの理解を提供します。'
 category: 'project-user-management'
 order: 5
-updated: '2025-09-18'
-sourceUrl: 'https://help.testim.io/docs/subscription-plans'
+updated: '2025-11-11'
 keywords:
+  - testim
   - サブスクリプション
   - プラン
   - 並列化
   - 使用制限
-  - WebモバイルSalesforce
 ---
 
 企業オーナーのみが利用できる **Subscription** 画面には、以下の各プロダクトカテゴリのソフトウェアサブスクリプションプランの詳細と現在の使用状況が表示されます:
@@ -36,7 +35,7 @@ Webプラン画面には以下の情報が表示されます:
 
 ## 並列化モデル - プラン詳細
 
-![Parallel SlotsとProjectsなどプランの詳細を表示する画面](/images/project-user-management/subscription-plans/7a353fc-parallelweb.png)
+![](/images/project-user-management/subscription-plans/7a353fc-parallelweb.png)
 
 - **Parallel Slots** - プランに含まれる並列実行の数。
 - **Projects** - プランに含まれるプロジェクトの数。
@@ -46,11 +45,11 @@ Webプラン画面には以下の情報が表示されます:
 
 プランの現在の使用状況は画面の右上隅に表示されます。
 
-![並列化モデルの使用状況ドーナツチャートとポップアップ](/images/project-user-management/subscription-plans/fad8303-parallelpopup.png)
+![](/images/project-user-management/subscription-plans/fad8303-parallelpopup.png)
 
 この要素には、並列化使用レベルを示すドーナツチャートと、プランの合計数のうち現在の使用数を示す数値が含まれます。要素をクリックすると詳細が表示されます。
 
-![並列化使用率の詳細ポップオーバー](/images/project-user-management/subscription-plans/3893360-openpopover.png)
+![](/images/project-user-management/subscription-plans/3893360-openpopover.png)
 
 <br />
 
@@ -235,3 +234,4 @@ Webプラン画面には以下の情報が表示されます:
   </tr>
  </tbody>
 </table>
+

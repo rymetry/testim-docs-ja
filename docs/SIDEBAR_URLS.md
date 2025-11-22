@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 212個
-- ✅   翻訳のみ完了: 71個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 205個
+- ✅   翻訳のみ完了: 78個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -319,13 +319,13 @@
 
 ## Project & User Management（プロジェクト・ユーザー管理）
 
-- ✅🔍 https://help.testim.io/docs/project-user-management
-- ✅🔍 https://help.testim.io/docs/project-and-user-management
-- ✅🔍 https://help.testim.io/docs/project-settings
-- ✅🔍 https://help.testim.io/docs/secrets
-- ✅🔍 https://help.testim.io/docs/subscription-plans
-- ✅🔍 https://help.testim.io/docs/copilot-license-management
-- ✅🔍 https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright
+- ✅ https://help.testim.io/docs/project-user-management
+- ✅ https://help.testim.io/docs/project-and-user-management
+- ✅ https://help.testim.io/docs/project-settings
+- ✅ https://help.testim.io/docs/secrets
+- ✅ https://help.testim.io/docs/subscription-plans
+- ✅ https://help.testim.io/docs/copilot-license-management
+- ✅ https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright
 
 ## TestOps（TestOps）
 
