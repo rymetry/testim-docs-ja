@@ -1,20 +1,20 @@
 ---
 title: 'Virtual Mobile Grid（VMG）'
 description: 'Testim Virtual Mobile Grid（VMG）を使用してクラウド上の実デバイスでモバイルテストを実行する詳細な手順を説明します。デバイス選択、アプリアップロード、テスト実行方法を網羅しています。'
-category: 'grid-management'
-order: 30
-updated: '2025-11-11'
+category: 'グリッド管理'
+order: 3
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/virtual-mobile-grid'
 keywords:
-  - testim
-  - vmg
-  - virtual-mobile-grid
+  - Virtual Mobile Grid
+  - VMG
   - モバイルテスト
   - クラウドデバイス
 ---
 
 # Virtual Mobile Grid（VMG）
 
-> **注意**: Virtual Mobile Grid（VMG）は現在、**Tricentis Device Cloud**に名称変更されています。最新情報については、[Tricentis Device Cloud](tricentis-device-cloud)を参照してください。
+> **注意**: Virtual Mobile Grid（VMG）は現在、**Tricentis Device Cloud**に名称変更されています。最新情報については、[Tricentis Device Cloud](/docs/tricentis-device-cloud)を参照してください。
 
 Virtual Mobile Grid（VMG）は、Testimが提供するクラウドベースのモバイルデバイステスト環境です。実デバイスでモバイルアプリケーションをテストできます。
 
@@ -143,6 +143,6 @@ testim --grid "virtual-mobile-grid" \
 
 ## 関連ドキュメント
 
-- [モバイルテストの記録](../recording-mobile-tests/recording-a-mobile-test)
-- [モバイルアプリの管理](../test-management/mobile-apps)
-- [モバイルテストスケジューラ](../running-tests/scheduler-mobile)
+- [モバイルテストの記録](/docs/recording-a-mobile-test)
+- [モバイルアプリの管理](/docs/mobile-apps)
+- [モバイルテストスケジューラ](/docs/scheduler-mobile)

@@ -1,14 +1,15 @@
 ---
 title: 'Headspin統合'
 description: 'TestimとHeadspinを統合してリモートデバイスでモバイルテストを実行する方法を説明します。実デバイスへのアクセス、設定手順、実行方法を網羅しています。'
-category: 'grid-management'
-order: 90
-updated: '2025-11-11'
+category: 'グリッド管理'
+order: 9
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/headspin-integration'
 keywords:
-  - testim
-  - headspin
+  - HeadSpin
   - モバイルグリッド
   - リモートデバイス
+  - クラウドデバイス
   - 統合設定
 ---
 

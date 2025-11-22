@@ -21,7 +21,7 @@ keywords:
 
 1. 共有ステップライブラリ画面で、**New Folder**ボタンをクリックします。
 
-![3704](/images/test-management/managing-shared-steps-and-folders/2d7c63e-Testim_056c.png)
+![共有ステップライブラリ画面でNew Folderボタンをクリックする画面](/images/test-management/managing-shared-steps-and-folders/2d7c63e-Testim_056c.png)
 
 **New Folder**ウィンドウが開きます。
 
@@ -34,7 +34,7 @@ keywords:
 3. **OK**をクリックします。\
    フォルダーが作成されます。
 
-![1402](/images/test-management/managing-shared-steps-and-folders/c4eaf28-Jan-28-2021_13-44-46.gif)
+![新しい共有ステップフォルダーが作成されリストに表示された状態](/images/test-management/managing-shared-steps-and-folders/c4eaf28-Jan-28-2021_13-44-46.gif)
 
 ## 共有ステップ/フォルダーのフォルダーへの移動
 
@@ -48,7 +48,7 @@ keywords:
 
 2. **Move to folder**アイコンをクリックします（または、共有ステップまたはフォルダー名を右クリックして、右クリックメニューから**Move to folder**を選択します）。
 
-![3697](/images/test-management/managing-shared-steps-and-folders/e69ad9d-Testim_058a.png)
+![Move to folderアイコンをクリックして共有ステップの移動を開始する画面](/images/test-management/managing-shared-steps-and-folders/e69ad9d-Testim_058a.png)
 
 **Move To**ウィンドウが開きます。
 
@@ -61,7 +61,7 @@ keywords:
 4. **Select**をクリックします。\
    アイテムが選択したフォルダーに移動されます。
 
-![640](/images/test-management/managing-shared-steps-and-folders/3c7a06c-Jan-28-2021_13-54-14.gif)
+![選択した共有ステップが新しいフォルダーに移動されたことを示すアニメーション](/images/test-management/managing-shared-steps-and-folders/3c7a06c-Jan-28-2021_13-54-14.gif)
 
 ## フォルダーの名前変更
 
@@ -71,7 +71,7 @@ keywords:
 1. フォルダー名をクリックして選択します。
 2. **Rename**アイコンをクリックします（または、テストまたはフォルダー名を右クリックして、右クリックメニューから**Rename**を選択します）。
 
-![3697](/images/test-management/managing-shared-steps-and-folders/af0d84c-Testim_058b.png)
+![フォルダーを選択してRenameアイコンをクリックする共有ステップライブラリ画面](/images/test-management/managing-shared-steps-and-folders/af0d84c-Testim_058b.png)
 
 **Edit Name**ウィンドウが開きます。
 
@@ -92,7 +92,7 @@ keywords:
 
 2. **Delete**アイコンをクリックします（または、テストまたはフォルダー名を右クリックして、右クリックメニューから**Delete**を選択します）。
 
-![3697](/images/test-management/managing-shared-steps-and-folders/fd63935-Testim_058c.png)
+![共有ステップフォルダーのDeleteアイコンをクリックする画面](/images/test-management/managing-shared-steps-and-folders/fd63935-Testim_058c.png)
 
 **Delete**確認ウィンドウが開きます。
 

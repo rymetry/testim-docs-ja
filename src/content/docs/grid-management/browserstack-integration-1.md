@@ -1,12 +1,12 @@
 ---
 title: 'BrowserStack統合'
 description: 'TestimとBrowserStackを統合してクラウドベースのブラウザおよびモバイルデバイスでテストを実行する方法を説明します。設定手順、認証情報の管理、実行方法を網羅しています。'
-category: 'grid-management'
-order: 60
-updated: '2025-11-11'
+category: 'グリッド管理'
+order: 6
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/browserstack-integration-1'
 keywords:
-  - testim
-  - browserstack
+  - BrowserStack
   - クラウドグリッド
   - ブラウザテスト
   - モバイルテスト

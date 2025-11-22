@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 168個
-- ✅   翻訳のみ完了: 115個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 192個
+- ✅   翻訳のみ完了: 91個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -284,16 +284,16 @@
 
 ## Grid Management（グリッド管理）
 
-- ✅ https://help.testim.io/docs/grid-management
-- ✅ https://help.testim.io/docs/tricentis-device-cloud
-- ✅ https://help.testim.io/docs/virtual-mobile-grid
-- ✅ https://help.testim.io/docs/custom-grid
-- ✅ https://help.testim.io/docs/saucelabs-integration
-- ✅ https://help.testim.io/docs/browserstack-integration-1
-- ✅ https://help.testim.io/docs/browserstack-integration-copy
-- ✅ https://help.testim.io/docs/saucelabs-browserstack-options
-- ✅ https://help.testim.io/docs/headspin-integration
-- ✅ https://help.testim.io/docs/bitbucket-integration
+- ✅🔍 https://help.testim.io/docs/grid-management
+- ✅🔍 https://help.testim.io/docs/tricentis-device-cloud
+- ✅🔍 https://help.testim.io/docs/virtual-mobile-grid
+- ✅🔍 https://help.testim.io/docs/custom-grid
+- ✅🔍 https://help.testim.io/docs/saucelabs-integration
+- ✅🔍 https://help.testim.io/docs/browserstack-integration-1
+- ✅🔍 https://help.testim.io/docs/browserstack-integration-copy
+- ✅🔍 https://help.testim.io/docs/saucelabs-browserstack-options
+- ✅🔍 https://help.testim.io/docs/headspin-integration
+- ✅🔍 https://help.testim.io/docs/bitbucket-integration
 
 ## Bug Tracker Settings（バグトラッカー設定）
 

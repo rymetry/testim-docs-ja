@@ -1,61 +1,65 @@
 ---
-title: 'Extended run parameters for Saucelabs & BrowserStack'
-description: '原文: https://help.testim.io/docs/saucelabs-browserstack-options'
+title: 'SauceLabs/BrowserStackオプション'
+description: 'SauceLabsおよびBrowserStackで利用可能な拡張実行パラメーターの設定方法について説明します。JSONファイルでのオプション指定やCLIの使用例を提供します。'
 category: 'グリッド管理'
 order: 8
-updated: '2025-11-02'
+updated: '2025-11-21'
+sourceUrl: 'https://help.testim.io/docs/saucelabs-browserstack-options'
 keywords:
-  - testim
-  - saucelabs-browserstack-options
-  - grid-management
+  - SauceLabs
+  - BrowserStack
+  - 拡張実行パラメーター
+  - grid-options
+  - 設定オプション
+  - カスタマイズ
 ---
-How to send extended run parameters to Saucelabs and Browserstack
+SauceLabsおよびBrowserStackでテストを実行する際、JSON形式の拡張実行パラメーターを使用して、追加の設定を渡すことができます。
 
-Using the JSON extended run parameters file you can send more configuration parameters to Saucelabs and BrowserStack.
-
-For example, if you are looking to run a test on a specific browser version and timezone:
-
-1. Create a json file with the following:
+たとえば、特定の画面解像度やタイムゾーンでテストを実行したい場合は、次のようなJSONファイルを作成します:
 
 ```json
 {
-       "screenResolution": "2560x1600",
-       "timeZone": "New_York"
+  "screenResolution": "2560x1600",
+  "timeZone": "New_York"
 }
 ```
 
-2. In the CLI, add: **--sauce-options  "&lt;aboveConfigFileName&gt;.json"**
+CLIでこの設定を使用するには、次のオプションを追加します:
 
-The extended run parameters can be used in the following use cases:
+```shell
+testim --grid saucelabs --browser chrome --grid-options '{"screenResolution":"2560x1600","timeZone":"New_York"}'
+```
 
-* Control devices allocation
-* Control Appium version
-* Control auto alerts approval
-* Control data captured on grid for example
-* Disable video
-* Disable network logs
-* Custom test results mapping with build and project option caps
-* Control reset strategy
+拡張実行パラメーターは、次のようなユースケースに使用できます:
 
-## Override rules for extended run parameter (mobile)
+- デバイスの割り当て方法の制御
+- 使用するAppiumバージョンの制御
+- 自動アラート承認の有効化/無効化
+- グリッド側で取得するデータ量の制御（動画やネットワークログなど）
+- 動画の有効/無効の切り替え
+- ネットワークログの有効/無効の切り替え
+- ビルドやプロジェクトに応じたカスタムテスト結果マッピング
+- リセット戦略の制御
 
-The JSON extended run parameters file settings overrides the following settings:
+## モバイル向けの拡張実行パラメーターの上書きルール
 
-* CLI Flags (deviceName, osVersion)
-* Mobile Config
-* Default values such as: `autoGrantPermissions`, `AutoAcceptAlerts`, Disable video capturing.
+モバイル向けのJSON拡張実行パラメーターを使用すると、次の設定が上書きされます:
 
-> 📘 PlatformVersion capabilities
+- CLIフラグ（`deviceName`、`osVersion`）
+- モバイル構成（Mobile Config）
+- デフォルト値（`autoGrantPermissions`、`AutoAcceptAlerts`、動画キャプチャの有効/無効 など）
+
+> 📘 `platformVersion` の扱い
 >
-> `platformVersion` capability is validated and used to compute which Appium version should be used, for example if the client requested Appium version equals “1.22.2” with `platformVersion` equals “17.2” on IOS run, it will automatically use Appium 2 and throw a warning to the user about it (same way as `osVersion` from (mobile config /cli flag) logic).
+> `platformVersion` ケイパビリティは検証され、使用すべきAppiumバージョンを決定するために使用されます。たとえば、クライアントがAppiumバージョン`1.22.2`と `platformVersion` `17.2`（iOS）の組み合わせを指定した場合、自動的にAppium 2が使用され、同時にその旨の警告が表示されます（これは、モバイル構成やCLIフラグの `osVersion` ロジックと同様です）。
 
 ## SauceLabs
 
-**For Web:**
+**Webでの利用:**
 
-Add to your CLI: **--sauce-options  "config_saucelabs.json"**
+CLIに次のオプションを追加します: **--sauce-options  "config_saucelabs.json"**
 
-Example to the file:
+設定ファイルの例:
 
 ```json
 {
@@ -69,11 +73,12 @@ Example to the file:
 }
 ```
 
-Sauce lab options for params: [https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options](https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options)
+SauceLabsで利用できるケイパビリティの詳細は、公式ドキュメントを参照してください:  
+[https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options](https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options)
 
-**For mobile:**
+**モバイルでの利用:**
 
-* Use W3C format for Appium (without prefix) and saucelabs options.
+- AppiumのW3Cフォーマット（接頭辞なし）を使用し、SauceLabsオプションを指定します。
 
 [Appium caps](https://saucelabs.com/resources/blog/appium-desired-capabilities-tutorial)
 
@@ -93,12 +98,12 @@ Sauce lab options for params: [https://wiki.saucelabs.com/display/DOCS/Test+Conf
 }
 ```
 
-## Browserstack
+## BrowserStack
 
-**For web:**
+**Webでの利用:**
 
-Add to your CLI:  **--browserstack-options "config_browserstack.json"**\
-All supported override parameters
+CLIに次のオプションを追加します: **--browserstack-options "config_browserstack.json"**  
+以下はサポートされる代表的なオーバーライドパラメーターの例です:
 
 ```json
 {
@@ -115,13 +120,13 @@ All supported override parameters
 }
 ```
 
-BrowserStack options for params:\
+BrowserStackで利用できるケイパビリティの詳細は、公式ドキュメントを参照してください:  
 [https://www.browserstack.com/automate/capabilities](https://www.browserstack.com/automate/capabilities)
 
-**For mobile:**
+**モバイルでの利用:**
 
-* Use W3C capabilities format for Appium extended run parameters without the prefix
-* Use legacy (Wire JSON) format for BrowserStack extended run parameters.
+- Appiumの拡張実行パラメーターには、接頭辞なしのW3Cケイパビリティ形式を使用します。
+- BrowserStack側の拡張実行パラメーターには、レガシー（Wire JSON）形式を使用します。
 
 [Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
 
@@ -129,7 +134,7 @@ BrowserStack options for params:\
 
 ```json
 {
-// need to fix project and build (W3C format changed to projectName, buildName)
+// project と build を修正する必要があります（W3C形式では projectName, buildName に変更）
 "project": "json-project-test",
 "build": "json-build-test",
 "platformVersion": "12",
@@ -141,6 +146,7 @@ BrowserStack options for params:\
 }
 ```
 
-> 🚧 Browserstack certificate error
+> 🚧 BrowserStackの証明書エラーについて
 >
-> If you're testing with devices that use Android version 13.0 or greater, your target devices may appear as though they are offline due to a certificate issue. For more information on how to resolve this issue, please [review Browserstack's relevant documentation](https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues).
+> Android 13.0以降を使用するデバイスでテストしている場合、証明書の問題によりターゲットデバイスがオフラインのように見えることがあります。この問題の詳細および解決方法については、BrowserStackのドキュメントを参照してください:  
+> [https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
