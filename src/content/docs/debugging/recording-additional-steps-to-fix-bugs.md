@@ -3,18 +3,24 @@ title: 'バグ解決のための新しいステップの記録'
 description: 'デバッグ中に不足しているステップを追加する方法。テストの最後または途中でステップを記録する手順。'
 category: 'デバッグ'
 order: 3
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/recording-additional-steps-to-fix-bugs'
 keywords:
-  - testim
-  - recording-additional-steps-to-fix-bugs
-  - debugging
-  - ステップ記録
+  - ステップ追加
+  - 途中から記録
   - バグ修正
+  - デバッグ
+  - テスト編集
+  - 再記録
+  - テスト修正
+  - ステップ記録
+  - AUT操作
+  - テスト更新
 ---
 
 デバッグを伴うテストを実行した後、テストにいくつかのステップが欠けていることや、一部のステップが更新されておらず再記録が必要であることがわかる場合があります。ステップを手動で追加したり、AUT（テスト対象アプリケーション）を介して記録したりすることが可能です。テスト記録は、テスト対象アプリケーション（AUT）と対話するときに、ユーザーアクションのシーケンスを記録できる機能です。
 
-詳細については、[テストの編集](/docs/steps-editing-tests/editing-your-tests)を参照してください。
+詳細については、[テストの編集](/docs/editing-your-tests)を参照してください。
 
 ## 記録を開始
 
@@ -24,7 +30,7 @@ keywords:
 
 * 実行が停止している間に、**Record**ボタンをクリックします。
 
-![](/images/debugging/recording-additional-steps-to-fix-bugs/42ba6df-record.png)
+![Recordボタンの位置](/images/debugging/recording-additional-steps-to-fix-bugs/42ba6df-record.png)
 
 ## この位置から記録を開始
 
@@ -34,7 +40,7 @@ keywords:
 
 1. 新しく記録したステップを追加するステップまでテストを実行します。手動ブレークポイントを配置することでこれを行うことができます（詳細については該当セクションを参照してください）。AUTが追加のステップを記録するために使用する画面を表示していることを確認してください。
 2. 追加の記録ステップを追加する2つのステップ間の矢印にカーソルを合わせ、**Start recording at this position**ボタンをクリックします。\
-   ![](/images/debugging/recording-additional-steps-to-fix-bugs/603c6fe-startrecordingatthis.png)
+   ![Start recording at this positionボタン](/images/debugging/recording-additional-steps-to-fix-bugs/603c6fe-startrecordingatthis.png)
 3. AUTウィンドウで、追加のステップを記録します。
 4. **Stop recording**ボタンをクリックして、記録を停止します。\
-   ![](/images/debugging/recording-additional-steps-to-fix-bugs/8eeb2d5-stoprecording.png)
+   ![Stop recordingボタン](/images/debugging/recording-additional-steps-to-fix-bugs/8eeb2d5-stoprecording.png)

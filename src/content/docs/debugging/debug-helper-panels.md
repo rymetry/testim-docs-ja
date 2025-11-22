@@ -3,24 +3,28 @@ title: 'デバッグヘルパーパネル'
 description: 'テストのデバッグ中に問題を見つけて修正するためのデバッグヘルパーパネルの使用方法について説明します。'
 category: 'デバッグ'
 order: 4
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/debug-helper-panels'
 keywords:
-  - testim
-  - debug-helper-panels
-  - debugging
-  - デバッグ
+  - デバッグヘルパー
   - コンソールログ
   - ブレークポイント管理
   - スコープ
+  - 変数確認
+  - デバッグパネル
+  - ログフィルター
+  - テスト変数
+  - デバッグ
+  - エラーログ
 ---
 
 Testimエディターを使用する際、デバッグプロセス中にテスト開発者が問題を見つけて修正するのを支援するいくつかのデバッグヘルパーパネルが利用できます。
 
 以下のヘルパーパネルが利用可能です:
 
-* **[コンソールログ](https://help.testim.io/docs/debug-helper-panels#console-log-helper-panel)** - コンソールログパネルは、テスト実行中にコンソールに出力されるメッセージを表示します。テスト開発者は、テストコード内で*console.log( )*文を使用して、変数の値やその他のデバッグ情報を出力できます。コンソールログは、テスト内で何が起こっているかを理解するのに役立ち、エラーや予期しない動作を特定するのに役立ちます。
-* **[ブレークポイントマネージャー](https://help.testim.io/docs/debug-helper-panels#breakpoint-manager-helper-panel)** - ブレークポイントマネージャーパネルを使用すると、テスト開発者はテスト内のブレークポイントを簡単に管理できます。ブレークポイントは、テストが実行を一時停止するポイントであり、テスト開発者が変数を調査したり、テストをステップバイステップで確認したりできます。この機能は、テスト内のエラーや予期しない動作の原因を特定するのに役立ちます。
-* **[スコープ](https://help.testim.io/docs/debug-helper-panels#scope-helper-panel)** - スコープパネルは、テスト内のパラメーターの現在のスコープに関する情報を表示します。スコープとは、各時点でのテスト内のパラメーター内の変数のコンテキストを指します。スコープウィンドウは、テスト開発者がテストの構造と、異なるテストステップ間でのデータの受け渡し方法を理解するのに役立ちます。
+* **[コンソールログ](/docs/debug-helper-panels#コンソールログヘルパーパネル)** - コンソールログパネルは、テスト実行中にコンソールに出力されるメッセージを表示します。テスト開発者は、テストコード内で*console.log( )*文を使用して、変数の値やその他のデバッグ情報を出力できます。コンソールログは、テスト内で何が起こっているかを理解するのに役立ち、エラーや予期しない動作を特定するのに役立ちます。
+* **[ブレークポイントマネージャー](/docs/debug-helper-panels#ブレークポイントマネージャーヘルパーパネル)** - ブレークポイントマネージャーパネルを使用すると、テスト開発者はテスト内のブレークポイントを簡単に管理できます。ブレークポイントは、テストが実行を一時停止するポイントであり、テスト開発者が変数を調査したり、テストをステップバイステップで確認したりできます。この機能は、テスト内のエラーや予期しない動作の原因を特定するのに役立ちます。
+* **[スコープ](/docs/debug-helper-panels#スコープヘルパーパネル)** - スコープパネルは、テスト内のパラメーターの現在のスコープに関する情報を表示します。スコープとは、各時点でのテスト内のパラメーター内の変数のコンテキストを指します。スコープウィンドウは、テスト開発者がテストの構造と、異なるテストステップ間でのデータの受け渡し方法を理解するのに役立ちます。
 
 > 📘
 >
@@ -28,7 +32,7 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 
 ## コンソールログヘルパーパネル
 
-![](/images/debugging/debug-helper-panels/2cb6efa-consolelog.png)
+![コンソールログヘルパーパネル](/images/debugging/debug-helper-panels/2cb6efa-consolelog.png)
 
 コンソールログの機能:
 
@@ -46,11 +50,11 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 1. テストエディターでテストを実行します。
 2. **デバッグヘルパー**ボタンをクリックします。画面下部に**コンソールログ**が表示されます。
 
-![](/images/debugging/debug-helper-panels/518bb70-small-consolelog.png)
+![実行中のコンソールログ](/images/debugging/debug-helper-panels/518bb70-small-consolelog.png)
 
 コンソールログは、**ログ**タイトルの横にある矢印をクリックすることで、展開および最小化できます。**ログ**タイトルの横の数字は、ログメッセージの数を表示します。
 
-![](/images/debugging/debug-helper-panels/30d6586-small-image.png)
+![コンソールログの展開](/images/debugging/debug-helper-panels/30d6586-small-image.png)
 
 ### コンソールログのフィルタリング
 
@@ -59,12 +63,12 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 :fa-arrow-right: **テキストでコンソールログをフィルタリングするには:**
 
 * **Filter entries by log text**フィールドにテキスト（部分テキストも可）を入力して、フィルター文字列に一致するコンソールエントリのみを表示します。\
-  ![](/images/debugging/debug-helper-panels/ec8750f-small-d9944c6-small-filterconsole.png)
+  ![コンソールログのフィルタリング](/images/debugging/debug-helper-panels/ec8750f-small-d9944c6-small-filterconsole.png)
 
 :fa-arrow-right: **優先度でコンソールログをフィルタリングするには:**
 
 * **レベル**ドロップダウンメニューをクリックして、コンソールログに表示されるコンソールエントリのレベルを変更します。\
-  ![](/images/debugging/debug-helper-panels/5c8327c-small-bc77ba3-small-consolelevels.png)
+  ![コンソールログレベル](/images/debugging/debug-helper-panels/5c8327c-small-bc77ba3-small-consolelevels.png)
 
 ### 複数のテスト実行でのコンソールログの保持
 
@@ -74,7 +78,7 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 
 * コンソールログの**Preserve logs**チェックボックスをクリックします。
 
-![](/images/debugging/debug-helper-panels/f70b8dd-small-preservelog.png)
+![コンソールログの保持](/images/debugging/debug-helper-panels/f70b8dd-small-preservelog.png)
 
 ### コンソールログのクリア
 
@@ -84,11 +88,11 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 
 1. コンソールログの**Clear Console**ボタンをクリックして、すべてのコンソールエントリをクリアします。
 
-![](/images/debugging/debug-helper-panels/564bdd9-small-clearconsole.png)
+![コンソールログのクリア](/images/debugging/debug-helper-panels/564bdd9-small-clearconsole.png)
 
 ## ブレークポイントマネージャーヘルパーパネル
 
-![](/images/debugging/debug-helper-panels/4cc8dd1-small-5a02322-breakpointhelper.png)
+![ブレークポイントヘルパーパネル](/images/debugging/debug-helper-panels/4cc8dd1-small-5a02322-breakpointhelper.png)
 
 ブレークポイントマネージャーヘルパーパネルを使用すると、テスト内のさまざまなブレークポイントを管理できます。以下が含まれます:
 
@@ -105,16 +109,16 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 1. テストがブレークポイントに到達するまで、Testimエディターでテストを実行します。
 2. **デバッグヘルパー**アイコンをクリックします。
 
-![](/images/debugging/debug-helper-panels/a07a039-small-debugging_helper.png)
+![デバッグヘルパーアイコン](/images/debugging/debug-helper-panels/a07a039-small-debugging_helper.png)
 
 3. これにより、**デバッグヘルパー**パネルが開きます。
 4. **ブレークポイント**セクションを展開して、テスト内のすべてのブレークポイントの**場所**を表示します。
 
-![](/images/debugging/debug-helper-panels/7bf1530-small-debugging_helper.png)
+![ブレークポイントセッション](/images/debugging/debug-helper-panels/7bf1530-small-debugging_helper.png)
 
 デバッグヘルパーは、現在アクティブなブレークポイントを強調表示します。
 
-![](/images/debugging/debug-helper-panels/d0b0028-small-debugging_helper.png)
+![アクティブなブレークポイント](/images/debugging/debug-helper-panels/d0b0028-small-debugging_helper.png)
 
 各ブレークポイントの**場所**の形式は、テスト階層内の各ブレークポイントの位置を特定するのに役立ちます:
 
@@ -131,7 +135,7 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 1. デバッグヘルパーで**ブレークポイント**を見つけます。
 2. ブレークポイントの右側にある**Go to location**ボタンをクリックします。テストエディターでブレークポイントの場所が**強調表示**されます。
 
-![](/images/debugging/debug-helper-panels/9b270b4-small-gotobreakpoint.png)
+![ブレークポイントの場所に移動](/images/debugging/debug-helper-panels/9b270b4-small-gotobreakpoint.png)
 
 ### ブレークポイントの削除
 
@@ -143,20 +147,20 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 2. 削除するブレークポイントに移動します。
 3. ブレークポイントにカーソルを合わせて、**Delete breakpoint**ボタンをクリックします。
 
-![](/images/debugging/debug-helper-panels/96b29dc-small-deletebreak.png)
+![ブレークポイントの削除](/images/debugging/debug-helper-panels/96b29dc-small-deletebreak.png)
 
 :fa-arrow-right: **テスト内のすべてのブレークポイントを削除するには:**
 
 1. デバッグヘルパーパネルを開きます。
 2. **省略記号**が表示されるまで**Location**セクションにカーソルを合わせ、**Delete all breakpoints**ボタンをクリックします。
 
-![](/images/debugging/debug-helper-panels/24f5b52-small-deleteallbreaks.png)
+![すべてのブレークポイントの削除](/images/debugging/debug-helper-panels/24f5b52-small-deleteallbreaks.png)
 
 ## スコープヘルパーパネル
 
 エディター内のスコープパネルは、テストステップ内の変数に関する情報を表示します。スコープとは、変数にアクセスして使用できるテストの「領域」を指します。テストがブレークポイントで一時停止している場合、スコープパネルには現在のスコープで利用可能な変数に関する情報が表示されます。
 
-![](/images/debugging/debug-helper-panels/154d502-small-image_1.png)
+![スコープヘルパーパネル](/images/debugging/debug-helper-panels/154d502-small-image_1.png)
 
 スコープパネルには通常、スコープ内の各変数の名前、タイプ、および値に関する情報が表示されます。この情報は、テストをデバッグする際に役立ちます。テスト開発者は、どのデータが利用可能で、どのように使用されているかを迅速に確認できます。たとえば、テスト開発者はスコープウィンドウを使用して変数の値を調査し、問題や予期しない動作を特定できます。
 
@@ -169,11 +173,11 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 1. テストエディターでテストを完了またはブレークポイントまで実行します。
 2. **デバッグヘルパー**ボタンをクリックして、デバッグヘルパーを開きます。
 
-![](/images/debugging/debug-helper-panels/250d3e8-small-debugging_helper.png)
+![デバッグヘルパーアイコン](/images/debugging/debug-helper-panels/250d3e8-small-debugging_helper.png)
 
 3. **スコープ**セクションを展開して、テストのすべての変数とそのスコープを表示します。
 
-![](/images/debugging/debug-helper-panels/22f7fc2-small-scope.png)
+![スコープセクション](/images/debugging/debug-helper-panels/22f7fc2-small-scope.png)
 
 > 📘 注意:
 >
@@ -181,7 +185,7 @@ Testimエディターを使用する際、デバッグプロセス中にテス�
 
 4. テストの以前のステップをクリックして、**そのステップが実行されるまでのスコープ内のすべての変数**を表示します。
 
-![](/images/debugging/debug-helper-panels/e1aaef3-small-prevscope.png)
+![そのステップが実行されるまでのスコープ内のすべての変数](/images/debugging/debug-helper-panels/e1aaef3-small-prevscope.png)
 
 デバッグヘルパーのスコープセクションには、次のタイプのパラメーターが表示されます:
 

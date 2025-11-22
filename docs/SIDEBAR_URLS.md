@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 124個
-- ✅   翻訳のみ完了: 159個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 129個
+- ✅   翻訳のみ完了: 154個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -221,11 +221,11 @@
 
 ## Debugging（デバッグ）
 
-- ✅ https://help.testim.io/docs/debugging-overview
-- ✅ https://help.testim.io/docs/debugging-controls
-- ✅ https://help.testim.io/docs/recording-additional-steps-to-fix-bugs
-- ✅ https://help.testim.io/docs/debug-helper-panels
-- ✅ https://help.testim.io/docs/js-code-debugging
+- ✅🔍 https://help.testim.io/docs/debugging-overview
+- ✅🔍 https://help.testim.io/docs/debugging-controls
+- ✅🔍 https://help.testim.io/docs/recording-additional-steps-to-fix-bugs
+- ✅🔍 https://help.testim.io/docs/debug-helper-panels
+- ✅🔍 https://help.testim.io/docs/js-code-debugging
 
 ## Test Management（テスト管理）
 

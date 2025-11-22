@@ -3,14 +3,19 @@ title: 'デバッグコントロール'
 description: 'テスト開発者がテストの問題を特定・修正するためのデバッグコントロールの使用方法について説明します。'
 category: 'デバッグ'
 order: 2
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/debugging-controls'
 keywords:
-  - testim
-  - debugging-controls
-  - debugging
+  - デバッグコントロール
   - デバッグ
   - ブレークポイント
   - ステップ実行
+  - ステップイン
+  - ステップオーバー
+  - 一時停止
+  - ローカル実行
+  - 仮想ブレークポイント
+  - テスト再実行
 ---
 
 デバッグコントロールを使用すると、テスト開発者はテスト実行の完了を待つことなく、実行中にテストの問題を特定して修正できます。テストのカバレッジが不足している場合（例:AUTに新機能が追加された場合）、特定の位置から記録してテストにステップを追加することもできます。記録/作成、実行、およびデバッグのコントロールは、シームレスな開発環境を実現するために便利にグループ化されており、テスト開発者は1か所でテストの作成、テスト、デバッグを迅速に行うことができます。
@@ -76,28 +81,28 @@ keywords:
     </a>
     <br/>
     •
-    <a href="https://help.testim.io/docs/running-tests-overview#running-a-remote-web-test">
+    <a href="/docs/running-tests-overview#running-a-remote-web-test">
      Grid上で実行
     </a>
     <br/>
     •
-    <a href="/docs/test-execution/play-from-here">
+    <a href="/docs/play-from-here">
      ここから再生
     </a>
     <br/>
     •
-    <a href="/docs/test-execution/rerun-locally-with-the-same-params">
+    <a href="/docs/rerun-locally-with-the-same-params">
      同じパラメーターでローカル再実行
     </a>
    </td>
    <td>
     •
-    <a href="doc:recording-additional-steps-to-fix-bugs#start-recording">
+    <a href="/docs/recording-additional-steps-to-fix-bugs#start-recording">
      記録開始
     </a>
     <br/>
     •
-    <a href="doc:recording-additional-steps-to-fix-bugs#start-recording-at-this-position">
+    <a href="/docs/recording-additional-steps-to-fix-bugs#start-recording-at-this-position">
      この位置から記録開始
     </a>
    </td>
@@ -105,47 +110,48 @@ keywords:
  </tbody>
 </table>
 
-
 デバッグ、実行、および記録ボタンの有効/無効は、現在のエディターの状態（実行中、記録中など）によって決定されます。
 
-### ブレークポイント
+## ブレークポイント
 
 ブレークポイントは、さまざまな段階でテスト実行を一時停止するために使用されます。ブレークポイントには2つのタイプがあります:
 
-* **手動ブレークポイント** - ユーザーが手動で設定するブレークポイント（詳細は[ブレークポイントの挿入](doc:stop-pause-debug-tests#insert-a-breakpoint)を参照）\
-  ![](/images/debugging/debugging-controls/4531fad-breakpoint1.png)
-* **仮想ブレークポイント** - デバッグコントロールの使用時にシステムが自動的に作成するブレークポイント（ステップイン、ステップアウト、ステップオーバー、一時停止など）。仮想ブレークポイントは、点滅する強調表示された矢印で表されます。\
-  ![](/images/debugging/debugging-controls/64f42cc-breakpoint2.png)
+* **手動ブレークポイント** - ユーザーが手動で設定するブレークポイント（詳細は[ブレークポイントの挿入](/docs/stop-pause-debug-tests#ブレークポイントを挿入する)を参照）
 
-# デバッグ付きでローカル実行
+  ![ブレークポイントの挿入](/images/debugging/debugging-controls/4531fad-breakpoint1.png)
+
+* **仮想ブレークポイント** - デバッグコントロールの使用時にシステムが自動的に作成するブレークポイント（ステップイン、ステップアウト、ステップオーバー、一時停止など）。仮想ブレークポイントは、点滅する強調表示された矢印で表されます。
+  ![仮想ブレークポイント](/images/debugging/debugging-controls/64f42cc-breakpoint2.png)
+
+## デバッグ付きでローカル実行
 
 デバッグ付きでテストをローカル実行すると、デバッグ機能を使用しながらテストを実行でき、テストの特定の部分をより精密かつ制御された方法で詳しく調査できます。特定のポイントでテスト実行を一時停止することで、変数を調査したり、テストをステップ実行したり、エラーや予期しない動作を分析したりできます。たとえば、デバッグモードでテストを実行すると、任意のポイントでテストを一時停止し、ステップオーバーでステップを実行し、グループにステップインしてグループ内の特定のステップの実行を表示するなどができます。デバッグモードはローカル実行でのみ機能します。
 
 > 📘 ローカル実行オプション
 >
-> ブレークポイントに遭遇してもエディターが一時停止しないようにデバッグなしでテストをローカル実行したい場合は、**ローカル実行**オプションを使用してください。詳細については、[デバッグなしでローカル実行](https://help.testim.io/docs/debugging-controls#running-locally-without-debugging)を参照してください。
+> ブレークポイントに遭遇してもエディターが一時停止しないようにデバッグなしでテストをローカル実行したい場合は、**ローカル実行**オプションを使用してください。詳細については、[デバッグなしでローカル実行](/docs/debugging-controls#デバッグ付きでローカル実行)を参照してください。
 
 :fa-arrow-right: **デバッグモードでテストを実行する:**
 
 1. 次のいずれかを実行します:
-   1. **デバッグ付きでローカル実行**ボタンをクリックします。\
-      ![](/images/debugging/debugging-controls/38a770d-runlocallywithdebug.png)
-   2. **実行オプション**ドロップダウンメニューをクリックし、**デバッグ付きでローカル実行**オプションをクリックします。\
-      ![](/images/debugging/debugging-controls/9a27022-rundebugdropdown.png)
-   3. **F5**キーを押します。\
-      テストの実行が開始され、**デバッグコントロール**メニューが表示されます。\
-      ![](/images/debugging/debugging-controls/b68851e-debugging_controls.png)
-2. テストを一時停止するには、**デバッグコントロールメニュー**で**一時停止**ボタンをクリックします。\
-   ![](/images/debugging/debugging-controls/f8c64f1-pause.png)\
+   1. **デバッグ付きでローカル実行**ボタンをクリックします。
+      ![デバッグ付きローカル実行](/images/debugging/debugging-controls/38a770d-runlocallywithdebug.png)
+   2. **実行オプション**ドロップダウンメニューをクリックし、**デバッグ付きでローカル実行**オプションをクリックします。
+      ![実行オプションからのデバッグ付きローカル実行の選択](/images/debugging/debugging-controls/9a27022-rundebugdropdown.png)
+   3. **F5**キーを押します。
+      テストの実行が開始され、**デバッグコントロール**メニューが表示されます。
+      ![デバッグコントロールメニュー](/images/debugging/debugging-controls/b68851e-debugging_controls.png)
+2. テストを一時停止するには、**デバッグコントロールメニュー**で**一時停止**ボタンをクリックします。
+   ![デバッグの一時停止](/images/debugging/debugging-controls/f8c64f1-pause.png)
    テストを一時停止すると、デバッグコントロールが表示されます。デバッグコントロールの詳細は以下を参照してください。
-3. 任意のポイントでテスト実行を停止してデバッグモードを終了するには、**停止**ボタンをクリックします。\
-   ![](/images/debugging/debugging-controls/c3c750b-stop.png)
+3. 任意のポイントでテスト実行を停止してデバッグモードを終了するには、**停止**ボタンをクリックします。
+   ![デバッグモードの停止](/images/debugging/debugging-controls/c3c750b-stop.png)
 
-# デバッグコントロールメニュー
+## デバッグコントロールメニュー
 
 デバッグモードでテストを実行すると、**デバッグコントロールメニュー**が表示され、テストの特定の部分をナビゲートして実行するための以下のツールが提供されます。
 
-![](/images/debugging/debugging-controls/c0e290c-debuggingcontrolswcallouts.png)
+![デバッグコントロールメニュー](/images/debugging/debugging-controls/c0e290c-debuggingcontrolswcallouts.png)
 
 ## 移動
 
@@ -160,31 +166,31 @@ keywords:
 
 このコントロールを使用して、グループの内部にステップインせずにスキップします。「ステップオーバー」ボタンをクリックすると、エディターは次のステップまたはグループを実行します。次のステップがグループの場合、エディターはグループ内部にステップインせずにグループを実行し、グループステップの後で停止し、停止した場所を点滅する矢印（**仮想ブレークポイント**とも呼ばれます）でマークします。通常のブレークポイントとは異なり、仮想ブレークポイントはシステムが実行を停止したテスト内の場所です。
 
-![](/images/debugging/debugging-controls/8735a97-stepover.png)
+![ステップオーバー](/images/debugging/debugging-controls/8735a97-stepover.png)
 
-![](/images/debugging/debugging-controls/3b312df-steopover.gif)
+![ステップオーバー動作イメージ](/images/debugging/debugging-controls/3b312df-steopover.gif)
 
 ## ステップイン
 
 このコントロールを使用して、グループにステップインし、その内部実行を確認します。「ステップイン」ボタンをクリックすると、エディターはグループを開き（グループのステップを表示し）ますが、まだ実行はしません。この場合、仮想ブレークポイントはグループ内の最初のステップの前に配置されます。
 
-![](/images/debugging/debugging-controls/f6562fe-stepinto.png)
+![ステップイン](/images/debugging/debugging-controls/f6562fe-stepinto.png)
 
-![](/images/debugging/debugging-controls/0d82c03-stepinto.gif)
+![ステップイン動作イメージ](/images/debugging/debugging-controls/0d82c03-stepinto.gif)
 
 ## ステップアウト
 
 このコントロールを使用して、グループのステップを実行した後、グループの内部ビューを終了します。これは、グループにステップインした後、グループのステップを実行してからグループからステップアウトしたい場合に便利です。たとえば、問題がグループ自体ではなく、その呼び出し元にあると考える場合などです。「ステップアウト」ボタンをクリックすると、システムはグループの残りのステップを実行し、グループからステップアウトし、グループステップの後に仮想ブレークポイントを配置します。
 
-![](/images/debugging/debugging-controls/64e5995-stepout.png)
+![ステップアウト](/images/debugging/debugging-controls/64e5995-stepout.png)
 
-![](/images/debugging/debugging-controls/d8b61de-stepout.gif)
+![ステップアウト動作イメージ](/images/debugging/debugging-controls/d8b61de-stepout.gif)
 
 ## 再実行
 
 このコントロールを使用して、手動でテストを停止して再実行することなく、同じテストを迅速かつ簡単に再実行できます。これは、同じシナリオを再テストしたい場合や、修正が問題を解決したことを確認したい場合に便利です。「再実行」ボタンをクリックすると、システムは直ちにテストを最初から実行し始めます。
 
-![](/images/debugging/debugging-controls/9dc6997-rerun.gif)
+![再実行動作イメージ](/images/debugging/debugging-controls/9dc6997-rerun.gif)
 
 ## 実行停止
 
@@ -194,7 +200,7 @@ keywords:
 
 * テストの実行中に、**実行停止**ボタンをクリックします。
 
-# ローカル実行（デバッグなし）
+## ローカル実行（デバッグなし）
 
 この実行オプションを使用すると、デバッグ機能なしでテストをローカルで実行できます。このモードでテストを実行すると、**ブレークポイントに遭遇してもテスト実行は一時停止しません**。これは、デバッグのオーバーヘッドなしで、テストの出力や動作をすばやく確認したい場合に便利です。
 
@@ -202,6 +208,6 @@ keywords:
 
 * **実行オプション**ドロップダウンメニューをクリックし、**ローカル実行**オプションをクリックします。
 
-![](/images/debugging/debugging-controls/91f0e8f-runlocally.png)
+![ローカル実行デバッグなし](/images/debugging/debugging-controls/91f0e8f-runlocally.png)
 
 テストはブレークポイントで一時停止せずに実行されます。
