@@ -1,9 +1,9 @@
 name: Check Documentation Updates
 
 on:
-  schedule:
+  # schedule:
     # 毎週月曜日の午前9時（JST）に実行
-    - cron: '0 0 * * 1'
+    # - cron: '0 0 * * 1'
 
   workflow_dispatch:
     # 手動実行も可能

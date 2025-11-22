@@ -3,13 +3,16 @@ title: 'Xray統合'
 description: 'TestimとXray for Jiraを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の表示方法を網羅しています。'
 category: 'test-management-integrations'
 order: 50
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/xray-integration'
 keywords:
-  - testim
-  - xray
-  - jira
-  - テスト管理
-  - 統合設定
+  - Xray
+  - Jira連携
+  - テスト管理ツール
+  - テストケース管理
+  - テスト結果同期
+  - テスト実行
+  - ステータスマッピング
 ---
 
 # Xray統合
@@ -38,12 +41,12 @@ Xray統合を使用する前に、TestimをXrayプロジェクトに接続する
 1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合モジュールがあります。
 2. Xray統合モジュールで、**login（ログイン）** をクリックします。
 
-![](/images/test-management-integrations/xray-integration/c11e6d6-image.png)
+![Xray統合モジュールのログインボタン](/images/test-management-integrations/xray-integration/c11e6d6-image.png)
 
 3. **Jira APIトークン**、**XrayクライアントID**、**Xrayクライアントシークレット** フィールドに、取得した認証情報を貼り付けます（上記の導入部分を参照）。
 4. **Jiraユーザー名** と **Jira URL** を追加します。
 
-![](/images/test-management-integrations/xray-integration/a4eef2a-image_1.png)
+![Jira APIトークンとXrayクライアント情報を入力する画面](/images/test-management-integrations/xray-integration/a4eef2a-image_1.png)
 
 5. **Connect（接続）** をクリックします。\
    この時点で、TestimはXrayのプロジェクトに関連付けられましたが、特定のテストにはマッピングされていません。
@@ -54,7 +57,7 @@ Xray統合を使用する前に、TestimをXrayプロジェクトに接続する
 
 6. Testimで、関連付けたいXrayプロジェクトをリストから選択します。
 
-   ![](/images/test-management-integrations/xray-integration/88115b5-image_2.png)
+   ![関連付けたいXrayプロジェクトを選択する画面](/images/test-management-integrations/xray-integration/88115b5-image_2.png)
 
 ## TestimのテストをXrayテストケースにマッピングする
 
@@ -65,11 +68,11 @@ TestimとXrayの統合を設定した後、Testimの特定のテストをXrayの
 1. Testimで、マッピングしたいテストを開きます。
 2. Testimのテスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
 
-![](/images/test-management-integrations/xray-integration/56e072e-setupstepprops.png)
+![SetupステップのPropertiesアイコンが表示されたTestimテスト](/images/test-management-integrations/xray-integration/56e072e-setupstepprops.png)
 
 3. Setupステップの **Properties（プロパティ）** パネルで、Test in Xrayの下で、最初のドロップダウンメニューからXrayプロジェクトを選択し、次に2番目のドロップダウンメニューから特定のテストを選択します。複数のテストケースをマッピングできます。
 
-![](/images/test-management-integrations/xray-integration/54bed6c-Picture3.png)
+![Test in Xrayでプロジェクトとテストを選択するドロップダウン](/images/test-management-integrations/xray-integration/54bed6c-Picture3.png)
 
 4. **Save（保存）** をクリックします。
 
@@ -83,15 +86,15 @@ Xrayでテスト実行の結果を表示するには、リモートグリッド�
 > Xray側のテストの **issue type（課題タイプ）** は [Test](https://docs.getxray.app/display/ON/Enabling+Xray+Issue+Types) である必要があります。\
 > Xrayの **Test** 課題タイプが変更された場合、実行はXrayでテストされません。
 
-![](/images/test-management-integrations/xray-integration/4a95d2f-image_3.png)
+![XrayプロジェクトボードのTo Do列に表示されたテスト実行](/images/test-management-integrations/xray-integration/4a95d2f-image_3.png)
 
 関連する実行をクリックして、実行の詳細を取得します。
 
-![](/images/test-management-integrations/xray-integration/c163dfb-image_4.png)
+![Xrayでのテスト実行詳細画面](/images/test-management-integrations/xray-integration/c163dfb-image_4.png)
 
 以下の詳細がTestimからXrayにプッシュされます：
 
-![](/images/test-management-integrations/xray-integration/ef5842d-Picture7.png)
+![TestimからXrayにプッシュされるテスト名やステータスの一覧](/images/test-management-integrations/xray-integration/ef5842d-Picture7.png)
 
 - Name - Testimのテスト名
 - Testimのテスト実行へのリンク

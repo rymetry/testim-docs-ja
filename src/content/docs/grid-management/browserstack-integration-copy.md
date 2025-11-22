@@ -1,13 +1,13 @@
 ---
 title: 'SauceLabs/BrowserStackオプション'
 description: 'SauceLabsおよびBrowserStackで利用可能な高度な設定オプションを説明します。タイムゾーン、画面解像度、デバイス設定、その他のカスタマイズ方法を網羅しています。'
-category: 'grid-management'
-order: 80
-updated: '2025-11-11'
+category: 'グリッド管理'
+order: 7
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/browserstack-integration-copy'
 keywords:
-  - testim
-  - saucelabs
-  - browserstack
+  - SauceLabs
+  - BrowserStack
   - 設定オプション
   - カスタマイズ
 ---

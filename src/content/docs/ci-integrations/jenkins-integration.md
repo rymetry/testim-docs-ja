@@ -4,15 +4,20 @@ description: 'JenkinsでTestimテストを実行する方法について説明�
 category: 'CI統合'
 order: 14
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/jenkins-integration'
 keywords:
-  - testim
-  - jenkins
-  - ci統合
-  - testim-cli
-  - nodejs
+  - Jenkins
+  - CI統合
+  - Jenkinsパイプライン
+  - フリースタイルジョブ
+  - ビルドジョブ
+  - Linuxビルド
+  - Windowsビルド
+  - Testim CLI
+  - Node.js
 ---
 
-![](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png)
+![Jenkinsロゴ](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png)
 
 Jenkinsとテストを統合するには、まず\
 Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsのLTS/サポートされているバージョンのいずれか)がインストールされている必要があります。
@@ -21,11 +26,11 @@ Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsの
 
 1. Jenkinsで新しいアイテムを作成します:
 
-![](/images/ci-integrations/jenkins-integration/56a9e41-96INjt2YRViRwuogwLgW_jenkins_new_item.PNG)
+![Jenkinsで新しいジョブを作成する画面](/images/ci-integrations/jenkins-integration/56a9e41-96INjt2YRViRwuogwLgW_jenkins_new_item.PNG)
 
 2. ジョブ名(例: "Testim Tests")を入力し、"Freestyle project"を選択して"OK"をクリックします:
 
-![](/images/ci-integrations/jenkins-integration/ba919cf-QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG)
+![JenkinsのFreestyleプロジェクト作成画面](/images/ci-integrations/jenkins-integration/ba919cf-QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG)
 
 3. 実行ステップを追加します
 
@@ -33,9 +38,9 @@ Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsの
 
 3. "Execute Shell"ステップを追加します:
 
-![](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
+![JenkinsでExecute Shellビルドステップを追加する画面](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
 
-4. [CLIページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
+4. [CLIページ](/docs/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
    以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです(sudoは不要)
 
 ```shell
@@ -58,15 +63,15 @@ testim --label "<YOUR LABEL>" \
   Jenkins Execute Shell Command
 </Image>
 
-**注記:** グリッド名については、[こちら](/docs/grid-management/grid-management)でグリッドの設定方法をご確認ください。
+**注記:** グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
 
 ### Windows
 
 3. "Execute Windows batch command"ステップを追加します:
 
-![](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
+![JenkinsでExecute Windows batch commandステップを追加する画面](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
 
-4. [CLIページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
+4. [CLIページ](/docs/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
    以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell Batch
@@ -87,8 +92,8 @@ testim --label "<YOUR LABEL>" ^
 
 5. Jenkinsが結果を保存、分析、表示するために、標準のJUnitXMLReporter XMLファイルを生成します。Jenkinsがファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
 
-![](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)
+![Publish JUnit test result reportポストビルドアクションを追加する画面](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)
 
 5. セクション4の"report-file"パラメータに従って、xmlファイルの値を設定します:
 
-![](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG)
+![JUnitテスト結果のXMLファイルパスを設定する画面](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG)

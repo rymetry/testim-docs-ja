@@ -3,14 +3,17 @@ title: 'テストリスト'
 description: 'テストライブラリでテストを追跡および管理します'
 category: 'テスト管理'
 order: 1
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/test-list'
 keywords:
-  - testim
-  - test-list
-  - test-management
   - テストリスト
   - テストライブラリ
-  - フィルター
+  - テスト管理
+  - テストフィルター
+  - テスト検索
+  - ラベルフィルター
+  - 不安定テスト
+  - テストステータス
 ---
 
 テストを追跡します
@@ -29,15 +32,15 @@ keywords:
 
 テストライブラリ画面には、次の情報を含むテストとフォルダーのリストが表示されます:
 
-* **Name** - テストまたはフォルダーの名前。Testim がテスト内の1つ以上の要素の劣化したロケーターを自動改善されたロケーターに置き換えた場合、テスト名の後に約2週間「Ai」アイコンが表示されます。詳細については、[Locators: Auto Improve](/docs/test-management/locators-auto-improve) を参照してください。
+* **Name** - テストまたはフォルダーの名前。Testim がテスト内の1つ以上の要素の劣化したロケーターを自動改善されたロケーターに置き換えた場合、テスト名の後に約2週間「Ai」アイコンが表示されます。詳細については、[Locators: Auto Improve](/docs/locators-auto-improve) を参照してください。
 * **Owner** - テストまたはフォルダーの所有者。
 * **App Name (mobile)** - テストの記録に使用されたモバイルアプリの名前。
 * **App Version (mobile)** - テストの記録に使用されたモバイルアプリのバージョン。
 * **Updated** - テストへの最終更新を示す時刻を表示します。
 * **Kind** - アイテムが *test\_または \_folder* であるかを示します。
-* **Label** - テストに追加されたラベルのリスト。詳細については、[Labels](/docs/test-management/labels) を参照してください。
+* **Label** - テストに追加されたラベルのリスト。詳細については、[Labels](/docs/labels) を参照してください。
 * **Status** - テストのステータス。詳細については、[Test Statuses](doc:test-status#section-test-statuses) を参照してください。
-* **Last Runs** - 最後の10回のリモート実行のステータスを示します。各垂直線はテスト実行を表します。緑の線は合格したテストを示します。赤の線は失敗したテストを示します。黄色の線は、再試行後にのみ合格したテストを示します。10回未満のテストが実行された場合、残りの線は灰色になります。:fa-close: または :fa-check: アイコンは、最新のテストのステータスを示します。:fa-close: は失敗を示し、:fa-check: は合格を示します。インジケーターをクリックすると、*Test runs* 画面にアクセスできます。詳細については、[Test runs](/docs/results/test-runs) を参照してください。
+* **Last Runs** - 最後の10回のリモート実行のステータスを示します。各垂直線はテスト実行を表します。緑の線は合格したテストを示します。赤の線は失敗したテストを示します。黄色の線は、再試行後にのみ合格したテストを示します。10回未満のテストが実行された場合、残りの線は灰色になります。:fa-close: または :fa-check: アイコンは、最新のテストのステータスを示します。:fa-close: は失敗を示し、:fa-check: は合格を示します。インジケーターをクリックすると、*Test runs* 画面にアクセスできます。詳細については、[Test runs](/docs/test-runs) を参照してください。
 
 ## テストライブラリをフィルタリングする
 
@@ -47,30 +50,30 @@ keywords:
 
 1. **Advanced filters** アイコンをクリックします。
 
-![](/images/test-management/test-list/8492bf1-2024-11-24_17-00-17.png)
+![Test Library画面でAdvanced filtersアイコンをクリックする操作](/images/test-management/test-list/8492bf1-2024-11-24_17-00-17.png)
 
 右側に **Filter Tests** ペインが開きます。
 
-![](/images/test-management/test-list/31e9bf4-filtertests.png)
+![ステータスやラベルなどの条件を設定できるFilter Testsペイン](/images/test-management/test-list/31e9bf4-filtertests.png)
 
 2. **Filter Test** ペインで、1つ以上のフィルター条件を選択します:
-   1. **Show Flaky Tests** - このトグルを有効にすると、不安定なテストのみが表示されます。テストは、再試行後に合格した場合、不安定とみなされます。詳細については、[Flaky tests](/docs/testops-management/flaky-tests) を参照してください。
-   2. **Test Status** - ステータスは、どのテストに作業が必要かを管理するために手動で追加されます。詳細については、[Test Status](/docs/testops-management/test-status) を参照してください。次のステータスの1つ以上を選択します:
+   1. **Show Flaky Tests** - このトグルを有効にすると、不安定なテストのみが表示されます。テストは、再試行後に合格した場合、不安定とみなされます。詳細については、[Flaky tests](/docs/flaky-tests) を参照してください。
+   2. **Test Status** - ステータスは、どのテストに作業が必要かを管理するために手動で追加されます。詳細については、[Test Status](/docs/test-status) を参照してください。次のステータスの1つ以上を選択します:
       1. Draft - テストはまだ進行中です
       2. Evaluating - テストは準備ができていますが、その安定性を検証する必要があります
       3. Active - テストは準備ができており、安定しています
       4. Quarantine - テストは安定したテストの定義に適合せず、修正を待っています
-   3. **Label** - ラベルは、特定のスイートまたはテストプランに配置することなく、テストを1つ以上の特性に関連付けるために使用されます。詳細については、[Labels](/docs/test-management/labels) を参照してください。次のラベルの1つ以上を選択してから、次のオペランドの1つを選択します:
+   3. **Label** - ラベルは、特定のスイートまたはテストプランに配置することなく、テストを1つ以上の特性に関連付けるために使用されます。詳細については、[Labels](/docs/labels) を参照してください。次のラベルの1つ以上を選択してから、次のオペランドの1つを選択します:
       1. OR - 選択したラベルの1つ以上を含むテストを返します。
       2. AND - 選択したすべてのラベルを含むテストのみを返します。
-   4. **Test Owner** - テスト所有者は、各テストの「所有者」として選択されたユーザーです。詳細については、[Test Owner](/docs/testops-management/test-owner) を参照してください。リスト内のテスト所有者の1つ以上を選択します。
+   4. **Test Owner** - テスト所有者は、各テストの「所有者」として選択されたユーザーです。詳細については、[Test Owner](/docs/test-owner) を参照してください。リスト内のテスト所有者の1つ以上を選択します。
 
 > 📘
 >
 > Filter Test ペインの各セクション内で条件を検索することもできます。**Search**（虫眼鏡）アイコンをクリックし、開いた検索ボックスに検索条件を入力します。
 
 3. **Apply** をクリックします。\
-   フィルターが適用され、条件を満たすテストのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
+   フィルターが適用され、条件を満たすテストのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/saving-a-filtered-view) を参照してください。
 
 > 📘
 >
@@ -91,7 +94,7 @@ keywords:
 * **AND 検索:** 2番目の検索用語を追加すると（スペースで区切って）、**AND** 検索として機能します。ラベルの場合、2番目の用語の前に **label:** という用語を付ける必要があります。
 * **除外検索:** 検索用語の前にマイナス記号を付けると（スペースなし）、**NOT** 検索として機能します。複数の用語がある場合は、用語間にスペースを追加してください。ラベルの場合、2番目の用語の前に **label** という用語を付ける必要があります。
 
-![](/images/test-management/test-list/f9e60e3-search.png)
+![テスト名や説明で検索ボックスからテストを検索する画面](/images/test-management/test-list/f9e60e3-search.png)
 
 :fa-arrow-right: **名前と説明で検索するには:**
 
@@ -142,14 +145,14 @@ label:sanity -label:failed
 
 2. **Play** アイコンをクリックします（またはテスト名を右クリックして、右クリックメニューから **Play** を選択します）。
 
-![](/images/test-management/test-list/dd0e0f1-play.png)
+![選択したテストに対してPlayアイコンをクリックするTest Library画面](/images/test-management/test-list/dd0e0f1-play.png)
 
 **Run Test Locally** ウィンドウが開きます。
 
-![](/images/test-management/test-list/54f8563-confirm.png)
+![Run Test LocallyダイアログでIncognitoやBase URLを設定する画面](/images/test-management/test-list/54f8563-confirm.png)
 
 3. *Incognito モード*でテストを実行したい場合は、**Run in Incognito mode** を選択します。
-4. テストが最初にテストで構成されたものとは異なるベース URL を使用するようにしたい場合は、**Override Base URL** を選択し、表示されるフィールドに URL を入力します。詳細については、[Base URL](/docs/running-tests/base-url) を参照してください。
+4. テストが最初にテストで構成されたものとは異なるベース URL を使用するようにしたい場合は、**Override Base URL** を選択し、表示されるフィールドに URL を入力します。詳細については、[Base URL](/docs/base-url) を参照してください。
 5. **OK** をクリックします。
 
 > 🚧
@@ -165,7 +168,7 @@ label:sanity -label:failed
 
 1. **Export to CSV** アイコンをクリックします。
 
-![](/images/test-management/test-list/5426c49-export.png)
+![テスト一覧からExport to CSVアイコンをクリックする画面](/images/test-management/test-list/5426c49-export.png)
 
 csv ファイルがローカルマシンにダウンロードされます。\
 **注意:** 検索/フィルタリング時、CSV には一致するアイテムのみが含まれます。
@@ -178,9 +181,9 @@ csv ファイルがローカルマシンにダウンロードされます。\
 1. 構成を変更したいテストを選択します
 2. トップメニューまたはコンテキストメニューから「Edit test config」をクリックします
 
-![](/images/test-management/test-list/62c4e7f-Screen_Shot_2021-12-06_at_16.51.38.png)
+![トップメニューからEdit test configを選択して構成を編集する画面](/images/test-management/test-list/62c4e7f-Screen_Shot_2021-12-06_at_16.51.38.png)
 
 3. 適用する構成を選択します
 4. 「OK」をクリックします
 
-![](/images/test-management/test-list/93790fb-Screen_Shot_2021-12-06_at_16.52.54.png)
+![利用可能な構成の一覧からテストに適用する構成を選択するダイアログ](/images/test-management/test-list/93790fb-Screen_Shot_2021-12-06_at_16.52.54.png)

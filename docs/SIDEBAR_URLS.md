@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 129個
-- ✅   翻訳のみ完了: 154個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 212個
+- ✅   翻訳のみ完了: 71個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -229,25 +229,25 @@
 
 ## Test Management（テスト管理）
 
-- ✅ https://help.testim.io/docs/test-management-overview
-- ✅ https://help.testim.io/docs/test-list
-- ✅ https://help.testim.io/docs/managing-tests-and-folders
-- ✅ https://help.testim.io/docs/cloning-tests
-- ✅ https://help.testim.io/docs/shared-steps-library
-- ✅ https://help.testim.io/docs/managing-shared-steps-and-folders
-- ✅ https://help.testim.io/docs/dependencies-and-ordering-of-tests
-- ✅ https://help.testim.io/docs/labels
-- ✅ https://help.testim.io/docs/revisions
-- ✅ https://help.testim.io/docs/shared-configuration
-- ✅ https://help.testim.io/docs/configuration-library-mobile
-- ✅ https://help.testim.io/docs/test-plans
-- ✅ https://help.testim.io/docs/test-plans-mobile
-- ✅ https://help.testim.io/docs/test-suites
-- ✅ https://help.testim.io/docs/locators-auto-improve
-- ✅ https://help.testim.io/docs/bug-reporting
-- ✅ https://help.testim.io/docs/saving-a-filtered-view
-- ✅ https://help.testim.io/docs/mobile-apps
-- ✅ https://help.testim.io/docs/view-local-connected-mobile-devices
+- ✅🔍 https://help.testim.io/docs/test-management-overview
+- ✅🔍 https://help.testim.io/docs/test-list
+- ✅🔍 https://help.testim.io/docs/managing-tests-and-folders
+- ✅🔍 https://help.testim.io/docs/cloning-tests
+- ✅🔍 https://help.testim.io/docs/shared-steps-library
+- ✅🔍 https://help.testim.io/docs/managing-shared-steps-and-folders
+- ✅🔍 https://help.testim.io/docs/dependencies-and-ordering-of-tests
+- ✅🔍 https://help.testim.io/docs/labels
+- ✅🔍 https://help.testim.io/docs/revisions
+- ✅🔍 https://help.testim.io/docs/shared-configuration
+- ✅🔍 https://help.testim.io/docs/configuration-library-mobile
+- ✅🔍 https://help.testim.io/docs/test-plans
+- ✅🔍 https://help.testim.io/docs/test-plans-mobile
+- ✅🔍 https://help.testim.io/docs/test-suites
+- ✅🔍 https://help.testim.io/docs/locators-auto-improve
+- ✅🔍 https://help.testim.io/docs/bug-reporting
+- ✅🔍 https://help.testim.io/docs/saving-a-filtered-view
+- ✅🔍 https://help.testim.io/docs/mobile-apps
+- ✅🔍 https://help.testim.io/docs/view-local-connected-mobile-devices
 
 ## Integrations（統合）
 
@@ -255,77 +255,77 @@
 
 ## CI Integrations（CI統合）
 
-- ✅ https://help.testim.io/docs/integrate-testim-to-your-ci
-- ✅ https://help.testim.io/docs/azure-devops-build-pipeline-integrations
-- ✅ https://help.testim.io/docs/bamboo-integration
-- ✅ https://help.testim.io/docs/circle-ci-integration
-- ✅ https://help.testim.io/docs/codeship-integration
-- ✅ https://help.testim.io/docs/jenkins-integration
-- ✅ https://help.testim.io/docs/jenkins-integration-using-docker
-- ✅ https://help.testim.io/docs/teamcity-integration
-- ✅ https://help.testim.io/docs/vsts-and-tfs-integration
-- ✅ https://help.testim.io/docs/gitlab-integration
-- ✅ https://help.testim.io/docs/github-action-integration
-- ✅ https://help.testim.io/docs/copado-integration
-- ✅ https://help.testim.io/docs/gearset-integration
-- ✅ https://help.testim.io/docs/autorabit-integration
-- ✅ https://help.testim.io/docs/dedicated-run-tunnel
+- ✅🔍 https://help.testim.io/docs/integrate-testim-to-your-ci
+- ✅🔍 https://help.testim.io/docs/azure-devops-build-pipeline-integrations
+- ✅🔍 https://help.testim.io/docs/bamboo-integration
+- ✅🔍 https://help.testim.io/docs/circle-ci-integration
+- ✅🔍 https://help.testim.io/docs/codeship-integration
+- ✅🔍 https://help.testim.io/docs/jenkins-integration
+- ✅🔍 https://help.testim.io/docs/jenkins-integration-using-docker
+- ✅🔍 https://help.testim.io/docs/teamcity-integration
+- ✅🔍 https://help.testim.io/docs/vsts-and-tfs-integration
+- ✅🔍 https://help.testim.io/docs/gitlab-integration
+- ✅🔍 https://help.testim.io/docs/github-action-integration
+- ✅🔍 https://help.testim.io/docs/copado-integration
+- ✅🔍 https://help.testim.io/docs/gearset-integration
+- ✅🔍 https://help.testim.io/docs/autorabit-integration
+- ✅🔍 https://help.testim.io/docs/dedicated-run-tunnel
 
 ## Applitools Integration（Applitools統合）
 
-- ✅ https://help.testim.io/docs/applitools-integration
-- ✅ https://help.testim.io/docs/override-applitools-test-name
-- ✅ https://help.testim.io/docs/override-applitools-app-name
+- ✅🔍 https://help.testim.io/docs/applitools-integration
+- ✅🔍 https://help.testim.io/docs/override-applitools-test-name
+- ✅🔍 https://help.testim.io/docs/override-applitools-app-name
 
 ## Other Integrations（その他の統合）
 
-- ✅ https://help.testim.io/docs/github-integration
-- ✅ https://help.testim.io/docs/sealights-integration
+- ✅🔍 https://help.testim.io/docs/github-integration
+- ✅🔍 https://help.testim.io/docs/sealights-integration
 
 ## Grid Management（グリッド管理）
 
-- ✅ https://help.testim.io/docs/grid-management
-- ✅ https://help.testim.io/docs/tricentis-device-cloud
-- ✅ https://help.testim.io/docs/virtual-mobile-grid
-- ✅ https://help.testim.io/docs/custom-grid
-- ✅ https://help.testim.io/docs/saucelabs-integration
-- ✅ https://help.testim.io/docs/browserstack-integration-1
-- ✅ https://help.testim.io/docs/browserstack-integration-copy
-- ✅ https://help.testim.io/docs/saucelabs-browserstack-options
-- ✅ https://help.testim.io/docs/headspin-integration
-- ✅ https://help.testim.io/docs/bitbucket-integration
+- ✅🔍 https://help.testim.io/docs/grid-management
+- ✅🔍 https://help.testim.io/docs/tricentis-device-cloud
+- ✅🔍 https://help.testim.io/docs/virtual-mobile-grid
+- ✅🔍 https://help.testim.io/docs/custom-grid
+- ✅🔍 https://help.testim.io/docs/saucelabs-integration
+- ✅🔍 https://help.testim.io/docs/browserstack-integration-1
+- ✅🔍 https://help.testim.io/docs/browserstack-integration-copy
+- ✅🔍 https://help.testim.io/docs/saucelabs-browserstack-options
+- ✅🔍 https://help.testim.io/docs/headspin-integration
+- ✅🔍 https://help.testim.io/docs/bitbucket-integration
 
 ## Bug Tracker Settings（バグトラッカー設定）
 
-- ✅ https://help.testim.io/docs/bug-tracker-settings
-- ✅ https://help.testim.io/docs/connecting-testim-to-jira
-- ✅ https://help.testim.io/docs/connecting-testim-to-trello
-- ✅ https://help.testim.io/docs/connecting-testim-to-slack
-- ✅ https://help.testim.io/docs/connecting-testim-to-github
+- ✅🔍 https://help.testim.io/docs/bug-tracker-settings
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-jira
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-trello
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-slack
+- ✅🔍 https://help.testim.io/docs/connecting-testim-to-github
 
 ## Test Management Integrations（テスト管理統合）
 
-- ✅ https://help.testim.io/docs/test-management-integrations
-- ✅ https://help.testim.io/docs/qtest-integration
-- ✅ https://help.testim.io/docs/testrail-integration
-- ✅ https://help.testim.io/docs/ttm-for-jira-integration
-- ✅ https://help.testim.io/docs/xray-integration
+- ✅🔍 https://help.testim.io/docs/test-management-integrations
+- ✅🔍 https://help.testim.io/docs/qtest-integration
+- ✅🔍 https://help.testim.io/docs/testrail-integration
+- ✅🔍 https://help.testim.io/docs/ttm-for-jira-integration
+- ✅🔍 https://help.testim.io/docs/xray-integration
 
 ## CLI & API（CLI・API）
 
-- ✅ https://help.testim.io/docs/cli-settings
-- ✅ https://help.testim.io/docs/cli-prerequisites
-- ✅ https://help.testim.io/docs/api-access
+- ✅🔍 https://help.testim.io/docs/cli-settings
+- ✅🔍 https://help.testim.io/docs/cli-prerequisites
+- ✅🔍 https://help.testim.io/docs/api-access
 
 ## Project & User Management（プロジェクト・ユーザー管理）
 
-- ✅ https://help.testim.io/docs/project-user-management
-- ✅ https://help.testim.io/docs/project-and-user-management
-- ✅ https://help.testim.io/docs/project-settings
-- ✅ https://help.testim.io/docs/secrets
-- ✅ https://help.testim.io/docs/subscription-plans
-- ✅ https://help.testim.io/docs/copilot-license-management
-- ✅ https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright
+- ✅🔍 https://help.testim.io/docs/project-user-management
+- ✅🔍 https://help.testim.io/docs/project-and-user-management
+- ✅🔍 https://help.testim.io/docs/project-settings
+- ✅🔍 https://help.testim.io/docs/secrets
+- ✅🔍 https://help.testim.io/docs/subscription-plans
+- ✅🔍 https://help.testim.io/docs/copilot-license-management
+- ✅🔍 https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright
 
 ## TestOps（TestOps）
 

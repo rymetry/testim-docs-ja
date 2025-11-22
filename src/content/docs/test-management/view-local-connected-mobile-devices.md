@@ -3,17 +3,18 @@ title: 'ローカル接続モバイルデバイスの表示'
 description: 'Tricentis Mobile Agentに接続されたローカルモバイルデバイスの表示方法について説明します。'
 category: 'テスト管理'
 order: 19
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/view-local-connected-mobile-devices'
 keywords:
-  - testim
-  - view-local-connected-mobile-devices
-  - test-management
-  - モバイルデバイス
+  - ローカルモバイルデバイス
+  - Tricentis Mobile Agent
   - TMA
-  - UDID
+  - モバイルデバイス管理
+  - UDIDコピー
+  - モバイルテスト実行端末
 ---
 
-ローカルデバイスセクションでは、Tricentis Mobile Agent（TMA）に接続されているすべての物理および仮想モバイルデバイスを表示できます。モバイルデバイスの追加と管理の詳細については、[Tricentis Mobile Agentの設定](https://help.testim.io/docs/configure-tricentis-mobile-agent)を参照してください。
+ローカルデバイスセクションでは、Tricentis Mobile Agent（TMA）に接続されているすべての物理および仮想モバイルデバイスを表示できます。モバイルデバイスの追加と管理の詳細については、[Tricentis Mobile Agentの設定](/docs/configure-tricentis-mobile-agent)を参照してください。
 
 ## 接続されているローカルデバイスの表示
 
@@ -21,11 +22,11 @@ keywords:
 
 1. メインナビゲーションメニューから**Mobile Devices**ボタンをクリックします。
 
-![](/images/test-management/view-local-connected-mobile-devices/95bbf7b-devicemgmtmenu.png)
+![メインナビゲーションメニューでMobile Devicesボタンを選択する画面](/images/test-management/view-local-connected-mobile-devices/95bbf7b-devicemgmtmenu.png)
 
 2. 上部メニューから**Local Devices**を選択します。Testimは、ワークステーションに接続されているローカルデバイスのリストを表示します。
 
-![](/images/test-management/view-local-connected-mobile-devices/6f8b3e6-local_devices.png)
+![Local Devicesタブに接続済みモバイルデバイスの一覧が表示された画面](/images/test-management/view-local-connected-mobile-devices/6f8b3e6-local_devices.png)
 
 ### デバイスUDIDのコピー
 
@@ -36,7 +37,7 @@ keywords:
 1. UDIDにカーソルを合わせます。\
    コピーアイコンが表示されます。
 
-![](/images/test-management/view-local-connected-mobile-devices/5fb74a4-UDID.png)
+![モバイルデバイスのUDIDにカーソルを合わせてコピーアイコンを表示している画面](/images/test-management/view-local-connected-mobile-devices/5fb74a4-UDID.png)
 
 2. コピーアイコンをクリックします。\
    UDIDがクリップボードにコピーされます。

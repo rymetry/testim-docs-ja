@@ -3,13 +3,17 @@ title: 'qTest統合'
 description: 'TestimとqTestを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信、CLIでの使用方法を網羅しています。'
 category: 'test-management-integrations'
 order: 20
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/qtest-integration'
 keywords:
-  - testim
-  - qtest
-  - tricentis
-  - テスト管理
-  - 統合設定
+  - qTest
+  - Tricentis Test Management
+  - テスト管理ツール
+  - テストケース管理
+  - テスト結果同期
+  - テスト実行
+  - API連携
+  - リモートグリッド
 ---
 
 # qTest統合

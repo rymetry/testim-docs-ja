@@ -4,21 +4,25 @@ description: 'Circle CIのローカルSelenium GridでTestimテストを実行�
 category: 'CI統合'
 order: 1
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/circle-ci-integration'
 keywords:
-  - testim
-  - circle-ci
-  - ci統合
-  - selenium-grid
-  - yaml設定
+  - CircleCI
+  - Circle CI
+  - CI統合
+  - CIパイプライン
+  - Selenium Grid
+  - ローカルSelenium Grid
+  - YAML設定
+  - テスト自動実行
 ---
 
-![368](/images/ci-integrations/circle-ci-integration/3eecb4e-circleci.png)
+![CircleCIロゴ](/images/ci-integrations/circle-ci-integration/3eecb4e-circleci.png)
 
-#### YAMLファイル
+### YAMLファイル
 
 [Circle CI](https://circleci.com/)のローカルSelenium Gridを使用してTestimと統合するには、circle.yamlファイルに以下の行を追加する必要があります:
 
-**YAML**
+#### YAML
 
 ```yaml
 version: 2
@@ -37,4 +41,4 @@ jobs:
           path: /tmp/circleci-test-results
 ```
 
-**注記**: グリッド名については、[こちら](https://help.testim.io/docs/grid-management)でグリッドの設定方法をご確認ください。
+**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。

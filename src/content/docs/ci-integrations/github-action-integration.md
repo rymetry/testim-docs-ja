@@ -4,21 +4,24 @@ description: 'GitHub ActionsでTestimテストを実行する方法について�
 category: 'CI統合'
 order: 2
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/github-action-integration'
 keywords:
-  - testim
-  - github-actions
-  - ci統合
-  - workflow
-  - yaml設定
+  - GitHub Actions
+  - GitHub Action
+  - GitHub
+  - CI統合
+  - CIパイプライン
+  - ワークフロー
+  - YAML設定
 ---
 
-![](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)
+![GitHub Actionsの継続的デプロイ図](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)
 
 TestimとGitHub Actionsを統合するには、新しいGitHub-Actionワークフローを作成する必要があります:
 
 以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 
-**YAMLファイル**
+### YAMLファイル
 
 ```yaml
 name: Testim E2E

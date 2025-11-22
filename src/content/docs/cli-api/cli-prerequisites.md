@@ -3,13 +3,15 @@ title: 'CLI前提条件'
 description: 'Testim CLIを使用するために必要なシステム要件とコンポーネントについて説明します。Node.jsとTestim CLIの互換性情報を提供します。'
 category: 'cli-api'
 order: 2
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/cli-prerequisites'
 keywords:
-  - testim
-  - cli
-  - 前提条件
-  - nodejs
+  - CLI前提
+  - Node.js
+  - TLSサポート
   - システム要件
+  - バージョンサポート
+  - 環境設定
 ---
 
 Testimはクラウドベースのアップデートを行うSaaS製品ですが、TestimのCLI機能を使用するには以下のコンポーネントが必要です:
@@ -65,4 +67,3 @@ Testimはクラウドベースのアップデートを行うSaaS製品ですが�
   </tr>
  </tbody>
 </table>
-

@@ -1,12 +1,12 @@
 ---
 title: 'SauceLabs統合'
 description: 'TestimとSauceLabsを統合してクラウドベースのブラウザおよびモバイルデバイスでテストを実行する方法を説明します。設定手順、認証情報の管理、実行方法を網羅しています。'
-category: 'grid-management'
-order: 50
-updated: '2025-11-11'
+category: 'グリッド管理'
+order: 5
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/saucelabs-integration'
 keywords:
-  - testim
-  - saucelabs
+  - SauceLabs
   - クラウドグリッド
   - ブラウザテスト
   - モバイルテスト

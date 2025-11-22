@@ -3,13 +3,14 @@ title: 'フィルタービューの保存'
 description: 'フィルタリングしたビューを保存して、リストを整理する方法について説明します。'
 category: 'テスト管理'
 order: 17
-updated: '2025-11-11'
+updated: '2025-09-22'
+sourceUrl: 'https://help.testim.io/docs/saving-a-filtered-view'
 keywords:
-  - testim
-  - saving-a-filtered-view
-  - test-management
-  - フィルター
+  - フィルタービュー
   - ビュー保存
+  - 一覧画面フィルター
+  - テスト一覧フィルター
+  - 実行一覧フィルター
 ---
 
 Testimの一部の画面では、ビューをフィルタリングする機能が提供されています。これにより、特定の基準を満たすアイテムのみを表示/非表示にできます。特定のページで頻繁にビューをフィルタリングする場合は、そのビューを保存して、ページに戻ったときにすでにフィルタリングされているようにすることを検討してください。
@@ -30,15 +31,15 @@ Testimの一部の画面では、ビューをフィルタリングする機能�
 
 2. **時間フィルター**、**詳細フィルター**、または**検索フィルター**を使用してビューをフィルタリングします。
 
-![1106](/images/test-management/saving-a-filtered-view/a0750b7-savedfilters.png)
+![保存されたフィルタービューの一覧が表示された画面](/images/test-management/saving-a-filtered-view/a0750b7-savedfilters.png)
 
 3. ビューに必要なフィルターを適用します。以下の例では、ビューには過去7日間に失敗し、名前に「Scheduler」という単語を含む実行が表示されています。
 
-![1775](/images/test-management/saving-a-filtered-view/557a06f-applyfilters.png)
+![時間フィルターや詳細フィルターを適用してビューを絞り込む画面](/images/test-management/saving-a-filtered-view/557a06f-applyfilters.png)
 
 4. アクションメニューの**Save View**ボタンをクリックします。
 
-![1358](/images/test-management/saving-a-filtered-view/3c9a77b-saveview.png)
+![Applyした条件をSave Viewとして保存する画面](/images/test-management/saving-a-filtered-view/3c9a77b-saveview.png)
 
 現在のビューがこのページのデフォルトビューとして保存されました。このページに戻ると、保存したフィルターが自動的に適用されます。
 

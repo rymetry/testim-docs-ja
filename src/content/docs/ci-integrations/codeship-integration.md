@@ -4,21 +4,23 @@ description: 'CodeshipでTestimテストを実行する方法について説明�
 category: 'CI統合'
 order: 10
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/codeship-integration'
 keywords:
-  - testim
-  - codeship
-  - ci統合
-  - selenium-grid
-  - webdriver-manager
+  - Codeship
+  - CI統合
+  - CIパイプライン
+  - Selenium Grid
+  - WebDriver Manager
+  - テスト自動実行
 ---
 
-![](/images/ci-integrations/codeship-integration/1328260-codeship1.png)
+![Codeshipロゴ](/images/ci-integrations/codeship-integration/1328260-codeship1.png)
 
 ## プロジェクト設定
 
 [Codeship](http://codeship.com/)とTestimを統合するには、CodeshipプロジェクトのProject SettingsのTest Settingsに移動します:
 
-![](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png)
+![Codeshipのプロジェクト設定画面](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png)
 
 ## ローカルSelenium Gridで実行
 
@@ -43,7 +45,7 @@ testim --project "<PROJECT ID>" \
 ​
 ```
 
-![](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
+![Codeshipのテストコマンド設定画面](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
 
 ​## 外部Selenium Gridで実行\
 アプリが公開されている利用可能なサーバーにデプロイされている場合、外部Selenium Gridでテストを実行できます。その場合、ローカルSelenium Server(webdriver-manager)は不要なので、setup commandsセクションに以下の行のみを追加します:
@@ -62,4 +64,4 @@ testim --project "<PROJECT ID>" \
        --token "<TOKEN>"
 ```
 
-**注記**: グリッド名については、[こちら](/docs/grid-management/grid-management)でグリッドの設定方法をご確認ください。
+**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。

@@ -3,18 +3,21 @@ title: 'シークレット管理'
 description: '機密情報を安全に管理するためのシークレットマネージャーの使用方法について説明します。テスト、設定ファイル、パラメータファイルでのシークレットの利用方法を提供します。'
 category: 'project-user-management'
 order: 3
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/secrets'
 keywords:
-  - testim
+  - Secrets Manager
   - シークレット
-  - セキュリティ
-  - 暗号化
   - 機密情報管理
+  - 暗号化
+  - 隠しパラメータ
+  - パスワードフィールド
+  - 共有ステップ
 ---
 
 本番環境の管理者認証情報、電話番号、ID番号などの機密情報がテストで使用されることがあります。このような場合、シークレット情報がバージョン履歴に公開されたり、プレーンテキストで保存されたりすることは避けたいものです。
 
-Testimには、機密値を一元管理できる **Secrets Manager** が備わっています。構造化されたシークレットは、顧客管理キーを使用してAES-256で暗号化されます。テストアーティファクトは、AWSデフォルトのサーバー側暗号化(SSE-S3)を介してAES-256を使用して保存時に暗号化されます。シークレットはステップに割り当てることができ、[共有ステップ](https://help.testim.io/docs/shareable-steps)を含むテスト全体で再利用できます。
+Testimには、機密値を一元管理できる **Secrets Manager** が備わっています。構造化されたシークレットは、顧客管理キーを使用してAES-256で暗号化されます。テストアーティファクトは、AWSデフォルトのサーバー側暗号化(SSE-S3)を介してAES-256を使用して保存時に暗号化されます。シークレットはステップに割り当てることができ、[共有ステップ](/docs/shareable-steps)を含むテスト全体で再利用できます。
 
 テスト実行中、TestimはHTTPS(TLS)を使用して転送中の値を暗号化することに注意することが重要です。ただし、シークレットはフィールドタイプがパスワードの場合にのみ非表示になります。つまり、シークレットはパスワードフィールドにある場合にのみ、スクリーンショットでアスタリスクとして表示されます。
 
@@ -32,7 +35,7 @@ Testimには、機密値を一元管理できる **Secrets Manager** が備わ�
 
 テストエディタからシークレットマネージャーにアクセスすることもできます。シークレットを含むテストを選択し、シークレットを使用するステップを選択し、**Properties** を選択してから、**Go to secrets manager** を選択します。
 
-![](/images/project-user-management/secrets/6791efd-4.jpg)
+![Secrets Managerに表示されるシークレット一覧とメニュー](/images/project-user-management/secrets/6791efd-4.jpg)
 
 ## シークレットの作成
 
@@ -45,7 +48,7 @@ Testimには、機密値を一元管理できる **Secrets Manager** が備わ�
 1. **Resources > Secrets Manager** に移動します。
 2. **New Secret** をクリックします。
 
-   ![](/images/project-user-management/secrets/6876945-image.png)
+   ![New Secretを作成するフォーム](/images/project-user-management/secrets/6876945-image.png)
 3. **Name** フィールドに、シークレットの名前を入力します。以下に説明する正しい構文に従っていることを確認してください。
 4. **Value** フィールドに、秘密にしておく値(電話番号、パスワードなど)を入力します。
 5. **Description** フィールドに、オプションでシークレットの説明を入力します。
@@ -66,7 +69,7 @@ Testimには、機密値を一元管理できる **Secrets Manager** が備わ�
 >
 > シークレットを削除する前に、関連するテストからシークレットを更新または削除してください。
 
-![](/images/project-user-management/secrets/97b8fca-image.png)
+![既存シークレットを右クリックしたコンテキストメニュー](/images/project-user-management/secrets/97b8fca-image.png)
 
 <br />
 
@@ -82,7 +85,7 @@ Testimには、機密値を一元管理できる **Secrets Manager** が備わ�
 3. **Assign** の下で、**Secret** オプションを選択します。
 4. リストから使用したいシークレットを選択します。
 
-![](/images/project-user-management/secrets/0c8cfb3-image_16.png)
+![シークレットの編集ダイアログ例](/images/project-user-management/secrets/0c8cfb3-image_16.png)
 
 ### テストデータ
 
@@ -92,11 +95,11 @@ Testimには、機密値を一元管理できる **Secrets Manager** が備わ�
 
 例:
 
-![](/images/project-user-management/secrets/82ec572-SCR-20250624-nzsi.png)
+![複数のシークレットが一覧表示されているSecrets Manager画面](/images/project-user-management/secrets/82ec572-SCR-20250624-nzsi.png)
 
 ## 設定ファイルへのシークレットの追加
 
-[設定ファイル](https://help.testim.io/docs/configuration-file-run-hooks)は、テストやテストスイートを実行するために必要なすべてのパラメータを含む一般的なJSファイルです。これには、単一のテストまたはすべてのテストの前後にアプリケーションバックエンドをセットアップし、パラメータを定義するために使用できる実行フックが含まれています。設定ファイルは、configという名前のJSONですべてのプロパティをエクスポートする必要があります。設定ファイルでのシークレットの定義は、他のパラメータと同じオーバーライドルールに従います。
+[設定ファイル](/docs/configuration-file-run-hooks)は、テストやテストスイートを実行するために必要なすべてのパラメータを含む一般的なJSファイルです。これには、単一のテストまたはすべてのテストの前後にアプリケーションバックエンドをセットアップし、パラメータを定義するために使用できる実行フックが含まれています。設定ファイルは、configという名前のJSONですべてのプロパティをエクスポートする必要があります。設定ファイルでのシークレットの定義は、他のパラメータと同じオーバーライドルールに従います。
 
 ### シークレットの構文
 
@@ -110,11 +113,11 @@ SECRETS.<keyName>
 
 例:
 
-![](/images/project-user-management/secrets/1b55334-image_13.png)
+![Secrets機能の使い方を説明するUI画面](/images/project-user-management/secrets/1b55334-image_13.png)
 
 ## パラメータファイルへのシークレットの追加
 
-[JSONパラメータファイル](/docs/parameters/json-parameters-file-parameters)を使用すると、テスト実行にパラメータを渡すことができます。この方法を使用すると、テスト環境によって異なる動的な値をテスト内で定義できます。たとえば、ローカルでテストする場合とCIでテストする場合で、異なるログイン認証情報(ユーザー名とパスワード)を設定できます。パラメータを定義するJSONパラメータファイルを作成し、テストを実行する際にJSONパラメータファイルを呼び出すコマンドに引数を追加できます。CLIコマンドは、実行に含まれるテストにパラメータを渡します。
+[JSONパラメータファイル](/docs/json-parameters-file-parameters)を使用すると、テスト実行にパラメータを渡すことができます。この方法を使用すると、テスト環境によって異なる動的な値をテスト内で定義できます。たとえば、ローカルでテストする場合とCIでテストする場合で、異なるログイン認証情報(ユーザー名とパスワード)を設定できます。パラメータを定義するJSONパラメータファイルを作成し、テストを実行する際にJSONパラメータファイルを呼び出すコマンドに引数を追加できます。CLIコマンドは、実行に含まれるテストにパラメータを渡します。
 
 ### シークレットの構文
 
@@ -144,10 +147,10 @@ SECRETS.<keyName>
 
 例:
 
-![](/images/project-user-management/secrets/f68b69a-image_14.png)
+![暗号化キーを使用したシークレットの作成フロー例](/images/project-user-management/secrets/f68b69a-image_14.png)
 
 ## シークレットを含むテスト実行の表示
 
 シークレットを含むテスト実行は、アイコンでマークされます(以下を参照)。
 
-![](/images/project-user-management/secrets/7ea630b-testruns2.png)
+![シークレットが使用されたテスト実行結果の例](/images/project-user-management/secrets/7ea630b-testruns2.png)

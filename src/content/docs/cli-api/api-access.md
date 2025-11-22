@@ -3,13 +3,15 @@ title: 'APIアクセス'
 description: 'Testim Automate REST APIを使用してブランチ管理、テスト実行、結果取得などを行う方法について説明します。APIキーの生成と管理手順を提供します。'
 category: 'cli-api'
 order: 3
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/api-access'
 keywords:
-  - testim
-  - api
-  - rest-api
-  - apiキー
-  - 認証
+  - REST API
+  - APIアクセス
+  - APIキー管理
+  - 認証ヘッダー
+  - 実行結果取得
+  - ブランチ管理
 ---
 
 Testim AutomateのREST APIを使用して、以下のアクションを実行できます:
@@ -35,16 +37,16 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 
 1. **Settings --> API** に移動します。
 
-![](/images/cli-api/api-access/90025bb-Screen_Shot_2020-10-19_at_12.40.39.png)
+![API設定ページとGenerate API Keyボタン](/images/cli-api/api-access/90025bb-Screen_Shot_2020-10-19_at_12.40.39.png)
 
 2. **Generate API Key** をクリックします。
 3. キーに名前を付けて **Generate** をクリックします。APIキーの値が表示されます。
 
-![](/images/cli-api/api-access/eb6356a-Screen_Shot_2020-10-19_at_12.42.18.png)
+![APIキー生成後に表示されるキー値とCopyボタン](/images/cli-api/api-access/eb6356a-Screen_Shot_2020-10-19_at_12.42.18.png)
 
 4. APIキーをコピーして **Done** をクリックします。[APIキーの使用](doc:api-access#using-the-api-key)セクションの説明に従って、API認証ヘッダーでキーを使用します。
 
-![](/images/cli-api/api-access/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png)
+![APIキーをコピーしてDoneをクリックする画面](/images/cli-api/api-access/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png)
 
 > 📘
 >
@@ -54,11 +56,11 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 
 **Settings > API** 画面から、既存のキーを管理できます。**検索ボックス**にキー名を入力して、既存のキーを検索できます。
 
-![](/images/cli-api/api-access/7728ff5-Screen_Shot_2020-10-19_at_12.52.14.png)
+![既存APIキー一覧と検索ボックス](/images/cli-api/api-access/7728ff5-Screen_Shot_2020-10-19_at_12.52.14.png)
 
 :fa-arrow-right: **追加のキーを生成するには:**
 
-- **Generate New** をクリックして、上記の[APIアクセスの有効化](https://help.testim.io/docs/api-access#enabling-api-access)セクションの手順に従います。
+- **Generate New** をクリックして、上記の[APIアクセスの有効化](/docs/api-access#enabling-api-access)セクションの手順に従います。
 
 :fa-arrow-right: **APIアクセスを取り消すには:**
 

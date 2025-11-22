@@ -3,13 +3,16 @@ title: 'プロジェクトとユーザー管理(企業レベル)'
 description: '企業(アカウント)レベルでのプロジェクトとユーザーの構造、チームメイトの追加と削除、企業オーナーの管理方法について説明します。'
 category: 'project-user-management'
 order: 2
-updated: '2025-11-11'
+updated: '2025-09-18'
+sourceUrl: 'https://help.testim.io/docs/project-and-user-management'
 keywords:
-  - testim
   - 企業管理
-  - プロジェクト構造
-  - チームメイト管理
+  - 組織構造
+  - Company
+  - Projects
+  - Teammates
   - 企業オーナー
+  - プロジェクトライブラリ
 ---
 
 組織のプロジェクトとユーザー構造を理解する
@@ -30,7 +33,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. ユーザーアバターをクリックします。
 2. **Team** ハイパーリンクをクリックします。
 
-![](/images/project-user-management/project-and-user-management/4129216-projects.png)
+![Company配下のProjects一覧を表示したプロジェクトライブラリ画面](/images/project-user-management/project-and-user-management/4129216-projects.png)
 
 > 📘
 >
@@ -43,7 +46,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. ユーザーアバターをクリックします。
 2. **Team** ハイパーリンクをクリックします。
 
-![](/images/project-user-management/project-and-user-management/cfcf882-5543298-team.png)
+![Team画面に表示される企業チームメイト一覧](/images/project-user-management/project-and-user-management/cfcf882-5543298-team.png)
 
 ### 企業チームメイトの追加
 
@@ -54,7 +57,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. Team画面で、**+ Teammate** をクリックします。
 2. フィールドにユーザーのメールアドレスを入力します。複数のメールアドレスを入力できます。
 
-![](/images/project-user-management/project-and-user-management/b9302f5-invite_teammates.png)
+![+ Teammateボタンをクリックした後の招待フォーム](/images/project-user-management/project-and-user-management/b9302f5-invite_teammates.png)
 
 3. これらのユーザーがアクセスできるプロジェクトを選択するには、プロジェクト名の横にある + ボタンをクリックします。
 4. **Invite** をクリックします。\
@@ -67,9 +70,9 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. 削除したいチームメイトを1人以上選択します。複数のチームメイトを選択するには CTRL/CMD + クリックを使用します。
 2. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「Delete users」を選択することもできます。
 
-![](/images/project-user-management/project-and-user-management/3af9d4d-deletecompanyusers.png)
+![企業チームメイトを選択してDelete Userボタンを押す画面](/images/project-user-management/project-and-user-management/3af9d4d-deletecompanyusers.png)
 
-![](/images/project-user-management/project-and-user-management/0724162-4a1895b-rightclickdelete.png)
+![右クリックメニューからDelete usersを選択する画面](/images/project-user-management/project-and-user-management/0724162-4a1895b-rightclickdelete.png)
 
 選択したチームメイトが企業から削除されます。
 
@@ -87,7 +90,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. 企業オーナーとしてログインしていることを確認します。
 2. **Team** 画面で、企業オーナーではないユーザーを右クリックし、**Add company owner** を選択します。
 
-![](/images/project-user-management/project-and-user-management/3151c91-c0f396c-addcompanyowner.png)
+![企業チームメイトにCompany Owner権限を割り当てるメニュー](/images/project-user-management/project-and-user-management/3151c91-c0f396c-addcompanyowner.png)
 
 ### 企業オーナーの削除
 
@@ -96,7 +99,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. 企業オーナーとしてログインしていることを確認します。
 2. **Team** 画面で、企業オーナーのユーザーを右クリックし、**Remove company owner** を選択します。
 
-![](/images/project-user-management/project-and-user-management/397901e-ef3c7bd-remove.png)
+![Company Owner権限を削除するオプション](/images/project-user-management/project-and-user-management/397901e-ef3c7bd-remove.png)
 
 ## 企業とプロジェクト間のナビゲーション
 
@@ -108,7 +111,7 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
 1. ユーザーアバター(右上隅)をクリックします。
 2. **Company** セクションの下にリストされている希望の企業を選択します。
 
-   ![](/images/project-user-management/project-and-user-management/8a4e71c-companyselection.png)
+![複数Companyから対象会社を選択するダイアログ](/images/project-user-management/project-and-user-management/8a4e71c-companyselection.png)
 
 **プロジェクト間のナビゲーション**\
 いつでも別のプロジェクトに切り替えることができます。
@@ -122,4 +125,4 @@ Testimは組織構造を提供しており、**Company**(「アカウント」�
    2. モバイルプロジェクト - Testim モバイルプロジェクト
    3. Salesforceプロジェクト - Testim Salesforceプロジェクト
 
-      ![](/images/project-user-management/project-and-user-management/6b17344-projects.png)
+![企業内のすべてのProjectsリストを表示した画面](/images/project-user-management/project-and-user-management/6b17344-projects.png)
