@@ -75,7 +75,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 #### プロジェクト
 
 `--project` プロジェクト ID。\
-別のプロジェクトを選択するには、企業画面に移動し (参照 [https://help.testim.io/docs/project-and-user-management](https://help.testim.io/docs/project-and-user-management))、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
+別のプロジェクトを選択するには、企業画面に移動し (参照 [プロジェクトとユーザー管理](/docs/project-and-user-management))、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
 
 ```shell
 --project AOL-12323-a4b2-4762-df380
@@ -175,7 +175,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### パラメータ ファイル
 
-`--params-file` テスト実行にパラメータを渡すために使用できる JSON パラメータ ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。たとえば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 (ユーザー名とパスワード) を設定できます。JSON パラメータ ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [https://help.testim.io/docs/json-parameters-file-parameters](https://help.testim.io/docs/json-parameters-file-parameters) をお読みください。
+`--params-file` テスト実行にパラメータを渡すために使用できる JSON パラメータ ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。たとえば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 (ユーザー名とパスワード) を設定できます。JSON パラメータ ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメータファイル](/docs/json-parameters-file-parameters) をお読みください。
 
 > 📘
 >
@@ -283,7 +283,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --retries <max_num_of_retries>
 ```
 
-再試行のみで成功したテストは、testim ライブラリの下で簡単にフィルタリングできます。詳細については、[こちら](https://help.testim.io/docs/flaky-tests) をお読みください。
+再試行のみで成功したテストは、testim ライブラリの下で簡単にフィルタリングできます。詳細については、[不安定なテスト](/docs/flaky-tests) をお読みください。
 
 #### TestRail レポートを無効にする (Web のみ)
 

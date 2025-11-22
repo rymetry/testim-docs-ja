@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 96個
-- ✅   翻訳のみ完了: 187個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 98個
+- ✅   翻訳のみ完了: 185個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -184,8 +184,8 @@
 
 ## Configuration File（設定ファイル）
 
-- ✅ https://help.testim.io/docs/configuration-file-run-hooks
-- ✅ https://help.testim.io/docs/predefined-properties-in-config-file-hooks
+- ✅🔍 https://help.testim.io/docs/configuration-file-run-hooks
+- ✅🔍 https://help.testim.io/docs/predefined-properties-in-config-file-hooks
 
 ## Mock Network Responses(ネットワークモック)
 
