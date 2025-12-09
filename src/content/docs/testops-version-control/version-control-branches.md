@@ -4,10 +4,18 @@ description: '原文: https://help.testim.io/docs/version-control-branches'
 category: 'TestOpsバージョン管理'
 order: 2
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/version-control-branches'
 keywords:
-  - testim
-  - version-control-branches
-  - testops-version-control
+  - ブランチ管理
+  - TestOpsバージョン管理
+  - ブランチ作成
+  - ブランチ切り替え
+  - ブランチピン留め
+  - ブランチ削除
+  - CI連携
+  - 共有属性
+  - 開発プロセス
+  - テスト同期
 ---
 チームの開発プロセスに応じてテストを管理します。
 

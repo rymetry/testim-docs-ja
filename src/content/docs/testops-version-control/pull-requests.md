@@ -4,10 +4,18 @@ description: '原文: https://help.testim.io/docs/pull-requests'
 category: 'TestOpsバージョン管理'
 order: 4
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/pull-requests'
 keywords:
-  - testim
-  - pull-requests
-  - testops-version-control
+  - プルリクエスト
+  - TestOpsバージョン管理
+  - コードレビュー
+  - 承認プロセス
+  - レビュアー
+  - PR作成
+  - PR再送信
+  - 変更要求
+  - 承認ワークフロー
+  - テストレビュー
 ---
 master へのマージ時にプルリクエストを提出します
 

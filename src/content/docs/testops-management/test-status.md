@@ -4,10 +4,18 @@ description: '原文: https://help.testim.io/docs/test-status'
 category: 'TestOps管理'
 order: 2
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/test-status'
 keywords:
-  - testim
-  - test-status
-  - testops-management
+  - テストステータス
+  - TestOps管理
+  - Draft
+  - Evaluating
+  - Active
+  - Quarantine
+  - CI連携
+  - 不安定なテスト
+  - テスト品質管理
+  - スケジューラー実行
 ---
 どのテストに作業が必要かを管理するためにテストにステータスを追加します
 
@@ -28,7 +36,7 @@ keywords:
 
 > 🚧 注意
 >
-> この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[こちら](https://help.testim.io/docs/the-command-line-cli#cli-installation)をお読みください。
+> この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[こちら](/docs/the-command-line-cli#cli-installation)をお読みください。
 
 ## テストステータス
 
@@ -140,7 +148,7 @@ keywords:
 
 ## テストのステータスを変更
 
-ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](https://help.testim.io/docs/revisions)に表示されます。
+ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](/docs/revisions)に表示されます。
 
 :fa-arrow-right: **テストライブラリからテストステータスを変更するには:**
 
@@ -164,7 +172,7 @@ keywords:
 
 > 📘
 >
-> ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、3 way マージコンフリクトとして解決する必要があります。詳細については[こちら](https://help.testim.io/docs/version-control-branches)をご覧ください。
+> ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、3 way マージコンフリクトとして解決する必要があります。詳細については[こちら](/docs/version-control-branches)をご覧ください。
 
 ## テストステータスの使用
 

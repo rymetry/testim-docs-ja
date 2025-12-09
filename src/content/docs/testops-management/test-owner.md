@@ -4,10 +4,18 @@ description: '原文: https://help.testim.io/docs/test-owner'
 category: 'TestOps管理'
 order: 3
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/test-owner'
 keywords:
-  - testim
-  - test-owner
-  - testops-management
+  - テストオーナー
+  - TestOps管理
+  - 所有権管理
+  - 作業負荷分散
+  - テスト責任者
+  - フィルタリング
+  - テストライブラリ
+  - スイート実行
+  - テスト割り当て
+  - チーム管理
 ---
 テストにオーナーを割り当てて、作業負荷をスケーリングしながら冗長性を最小化します
 

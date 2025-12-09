@@ -4,15 +4,23 @@ description: '原文: https://help.testim.io/docs/read-only'
 category: 'TestOpsバージョン管理'
 order: 5
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/read-only'
 keywords:
-  - testim
-  - read-only
-  - testops-version-control
+  - 読み取り専用ブランチ
+  - TestOpsバージョン管理
+  - ブランチ保護
+  - 直接変更防止
+  - マスターブランチ
+  - プルリクエスト
+  - 自動改善
+  - ブランチロック
+  - 変更制御
+  - 権限管理
 ---
 ブランチへの直接書き込みを許可しない（ブランチとマージを使用する場合のみ）
 
 Testim には、ブランチへの直接書き込みを許可しないようにブランチをロックする機能があります。\
-ブランチに書き込むには、すべてのユーザーがまず別のブランチにフォークしてから、ブランチへのマージを実行する必要があります。ブランチへのマージは[プルリクエスト](https://help.testim.io/docs/pull-requests)を通じて実行できます。
+ブランチに書き込むには、すべてのユーザーがまず別のブランチにフォークしてから、ブランチへのマージを実行する必要があります。ブランチへのマージは[プルリクエスト](/docs/pull-requests)を通じて実行できます。
 
 > 📘 これは PRO 機能です
 >
