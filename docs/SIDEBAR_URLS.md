@@ -440,14 +440,14 @@
 
 ```javascript
 // サイドバー内の全リンクURLを抽出
-Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href).join('\n')
+Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href).join('\n');
 ```
 
 または、重複を除いてソートする場合:
 
 ```javascript
 // 重複を除去してソート
-[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href))].sort().join('\n')
+[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href))].sort().join('\n');
 ```
 
 ### 実行結果の保存
