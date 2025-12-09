@@ -29,9 +29,9 @@ keywords:
 ## ブランチの使用
 
 * 出発点として、各プロジェクトは単一の「master」ブランチで構成されます。
-* チームが開発するブランチ（例: git ブランチ）ごとに新しいブランチを作成し、各ブランチを個別にテストすることをお勧めします。Testim は [GitHub と統合](/docs/other-integrations/github-integration)でき、GitHub でブランチが作成されたときに自動的に新しいブランチを作成し、コードをマージするときに自動的にテストをマージできます。
+* チームが開発するブランチ（例: git ブランチ）ごとに新しいブランチを作成し、各ブランチを個別にテストすることをお勧めします。Testim は [GitHub と統合](/docs/github-integration)でき、GitHub でブランチが作成されたときに自動的に新しいブランチを作成し、コードをマージするときに自動的にテストをマージできます。
 * いつでもブランチを切り替えて、ブランチ内のテストを好きなように変更できます。あるブランチでの変更は他のブランチに影響しません。
-* ある時点で、ブランチ間でマージしたい場合があります（例: 機能ブランチを Master ブランチにマージ）。マージを実行するには、[ブランチのマージ](/docs/testops-version-control/merging-branches)セクションの指示に従ってください。（製品の）コードをマージするときは、テストコードもマージする必要があります。マージ後、[ブランチの削除](doc:version-control-branches#section-deleting-a-branch)を検討してください。
+* ある時点で、ブランチ間でマージしたい場合があります（例: 機能ブランチを Master ブランチにマージ）。マージを実行するには、[ブランチのマージ](/docs/merging-branches)セクションの指示に従ってください。（製品の）コードをマージするときは、テストコードもマージする必要があります。マージ後、[ブランチの削除](#ブランチの削除)を検討してください。
 
 ## ブランチを使用する一般的なユースケース
 
@@ -55,7 +55,7 @@ keywords:
 >
 > 大規模なプロジェクトの場合、自動的に新しいブランチにリダイレクトされません。作成されたらそのブランチに切り替えることができます。
 
-![](/images/testops-version-control/version-control-branches/4339d17-Jun-13-2021_08-14-32.gif)
+![ブランチ作成プロセス](/images/testops-version-control/version-control-branches/4339d17-Jun-13-2021_08-14-32.gif)
 
 ## ブランチ間で共有される属性
 
@@ -63,11 +63,11 @@ keywords:
 
 たとえば、Edit Config 画面のすべてのフィールドは、すべてのブランチで自動的にマージされます。以下に表示されているように、この事実を示す通知があります:
 
-![](/images/testops-version-control/version-control-branches/77bdb14-image.png)
+![自動マージの通知](/images/testops-version-control/version-control-branches/77bdb14-image.png)
 
 特定の属性に関連する通知の別の例を次に示します:
 
-![](/images/testops-version-control/version-control-branches/958eae5-image_1.png)
+![属性別の通知](/images/testops-version-control/version-control-branches/958eae5-image_1.png)
 
 以下はこれらの属性のリストです:
 
@@ -88,7 +88,7 @@ keywords:
 * 上部の **Branches** ドロップダウンメニューをクリックしてブランチのリストを表示し、目的のブランチを選択します。各ブランチ名の近くの日付は、最後に変更された日時を示します。
 * **Search** 機能を使用してブランチのリストをフィルタリングできます。
 
-![](/images/testops-version-control/version-control-branches/56eb40e-branchlist.PNG)
+![ブランチ一覧](/images/testops-version-control/version-control-branches/56eb40e-branchlist.PNG)
 
 > 📘 注意
 >
@@ -101,13 +101,13 @@ Testim に初めてログインすると、プロジェクトのデフォルト�
 
 1. ブランチドロップダウンメニューをクリックします。
 
-![](/images/testops-version-control/version-control-branches/2c5854d-Testim_470a.png)
+![ブランチドロップダウンメニュー](/images/testops-version-control/version-control-branches/2c5854d-Testim_470a.png)
 
 プロジェクトのブランチが表示されます。
 
 2. ピン留めしたいブランチにカーソルを合わせて、「pin」ボタンをクリックします。
 
-![](/images/testops-version-control/version-control-branches/ecd5bc0-Testim_469b.png)
+![ピン留めボタン](/images/testops-version-control/version-control-branches/ecd5bc0-Testim_469b.png)
 
 ブランチがピン留めされます。プロジェクトにアクセスするたびに、ピン留めされたブランチのデータが表示されます。
 
@@ -123,7 +123,7 @@ Testim に初めてログインすると、プロジェクトのデフォルト�
 1. 上部の **Branches** ドロップダウンメニューをクリックしてブランチのリストを表示し、目的のブランチにマウスを合わせます。
 2. **Delete** アイコンをクリックします。
 
-![](/images/testops-version-control/version-control-branches/cdb6eb9-delete_branch.png)
+![ブランチ削除](/images/testops-version-control/version-control-branches/cdb6eb9-delete_branch.png)
 
 3. **OK** をクリックして削除を確認します。
 

@@ -124,14 +124,14 @@ keywords:
 
 ## テストステータスの表示
 
-テストのステータスは以下の画面に表示されます:\
+テストのステータスは以下の画面に表示されます：\
 **テストライブラリ画面** - Test Lists -> Tests
 
-![](/images/testops-management/test-status/ebf3e27-teststatuses1.png)
+![テストライブラリのテストステータス](/images/testops-management/test-status/ebf3e27-teststatuses1.png)
 
 **テストエディタ**
 
-![](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
+![テストエディタのテストステータス](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
 
 ## ステータスでテストをフィルタリング
 
@@ -140,11 +140,11 @@ keywords:
 1. **Test List --> Tests** に移動します。
 2. **Filter** ボタンをクリックします。
 
-![](/images/testops-management/test-status/615dd27-filter.png)
+![Filterボタン](/images/testops-management/test-status/615dd27-filter.png)
 
 3. **Filter Test** ペインで、関連するステータスのチェックボックスを選択します。
 
-![](/images/testops-management/test-status/ac7f5bd-teststatuses3.png)
+![ステータスフィルター](/images/testops-management/test-status/ac7f5bd-teststatuses3.png)
 
 ## テストのステータスを変更
 
@@ -155,7 +155,7 @@ keywords:
 1. Test List --> Tests に移動します。
 2. **Status** 列で、関連するステータスを選択します。
 
-![](/images/testops-management/test-status/3eaae69-Jan-28-2021_09-43-29.gif)
+![ステータス変更](/images/testops-management/test-status/3eaae69-Jan-28-2021_09-43-29.gif)
 
 \**注意:* 編集したいすべてのテストを選択してから、トップメニューからステータス変更をクリックすることで、テストステータスを一括編集することも可能です。
 
@@ -168,7 +168,7 @@ keywords:
 1. エディタでテストを開きます。
 2. 左上隅からステータスを変更します。
 
-![](/images/testops-management/test-status/65da094-Screen_Shot_2021-01-10_at_7.41.32.png)
+![エディタでステータス変更](/images/testops-management/test-status/65da094-Screen_Shot_2021-01-10_at_7.41.32.png)
 
 > 📘
 >
@@ -183,7 +183,7 @@ keywords:
 * 実行される **Draft テスト**は以前と同様に表示されます。これらのテストのステータスを Active に変更することをお勧めします。
 * **Evaluating テスト**はテスト実行に表示されますが、失敗した場合、失敗が無視されたことを示すインジケーターが表示されます。
 
-![](/images/testops-management/test-status/2effede-Screen_Shot_2021-01-28_at_8.56.41.png)
+![Evaluatingテストの実行結果](/images/testops-management/test-status/2effede-Screen_Shot_2021-01-28_at_8.56.41.png)
 
 * **Active テスト**は以前と同様に表示されます。
 * **Quarantine テスト**は実行されません（テスト実行には表示されません）。
@@ -197,7 +197,7 @@ keywords:
 * **Active テスト**は以前と同様に表示されます。
 * **Quarantine テスト**は実行されません（スイート実行には隔離インジケーター付きで表示されます）。
 
-![](/images/testops-management/test-status/87013d7-Screen_Shot_2021-01-10_at_8.02.34.png)
+![スイート実行時のQuarantineテスト](/images/testops-management/test-status/87013d7-Screen_Shot_2021-01-10_at_8.02.34.png)
 
 ### CLI 実行
 
