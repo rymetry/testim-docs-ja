@@ -163,7 +163,8 @@ export default function SearchModal() {
       return;
     }
 
-    if (e.key === 'Enter' && results[selectedIndex]) {
+    // IME変換中のEnterキーは無視（日本語入力の変換確定を妨げない）
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing && results[selectedIndex]) {
       e.preventDefault();
       const target = results[selectedIndex];
       const urlSlug = target.slug.split('/').pop() || target.slug;
