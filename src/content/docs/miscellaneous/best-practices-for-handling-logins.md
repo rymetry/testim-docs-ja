@@ -5,9 +5,11 @@ category: 'その他'
 order: 4
 updated: '2025-11-02'
 keywords:
-  - testim
-  - best-practices-for-handling-logins
-  - miscellaneous
+  - ログイン処理
+  - ベストプラクティス
+  - 認証情報管理
+  - 共有ステップ
+  - 環境設定
 ---
 すべてのテストでログインを再利用する方法を見つける
 
@@ -35,23 +37,23 @@ keywords:
 
 これが最初のテストの場合は、この[ガイド](/docs/hello-world)を参照してください。
 
-![1903](/images/miscellaneous/best-practices-for-handling-logins/546ac11-login_1.gif)
+![ログインプロセスのテスト記録手順を示すGIFアニメーション。ユーザー名、パスワード入力からログインボタンクリックまでの流れ](/images/miscellaneous/best-practices-for-handling-logins/546ac11-login_1.gif)
 
 ### シークレットモードで実行する
 
 シークレットモードでの実行は、ログインプロセスを作成する際に非常に便利です。\
 シークレットモードで実行すると、毎回クリーンなブラウザで開始します。つまり、Cookie、ローカルストレージなしで、ブラウザがあなたを記憶していない状態です。
 
-シークレットモードでの実行方法については[こちら](/docs/running-tests/run-in-incognito)で学習してください。
+シークレットモードでの実行方法については[こちら](/docs/run-in-incognito)で学習してください。
 
 ### ステップをグループ化する
 
 ログインステップをグループ化すると、これらのステップを他のテストで再利用できます。\
-ログインステップをグループ化する方法については[こちら](/docs/groups/groups)で学習してください。
+ログインステップをグループ化する方法については[こちら](/docs/groups)で学習してください。
 
 注意: グループに意味のある名前を付けるようにしてください。
 
-![640](/images/miscellaneous/best-practices-for-handling-logins/4dfa1e2-Oct-20-2020_11-42-25.gif)
+![ログインステップをグループ化して再利用可能にする手順を示すGIFアニメーション](/images/miscellaneous/best-practices-for-handling-logins/4dfa1e2-Oct-20-2020_11-42-25.gif)
 
 ### すでにログインしている状況に対処する
 
@@ -63,9 +65,9 @@ keywords:
 1. ログインボタンが表示されているか確認する - 要素条件を使用します。
 2. 現在のURLがログインページと一致するか確認する - カスタム条件を使用します。
 
-![640](/images/miscellaneous/best-practices-for-handling-logins/535c34a-Oct-20-2020_11-47-18.gif)
+![ログイングループに条件を追加して、すでにログイン済みの状況に対応する手順を示すGIFアニメーション](/images/miscellaneous/best-practices-for-handling-logins/535c34a-Oct-20-2020_11-47-18.gif)
 
-[条件](/docs/conditions/conditions)の追加方法について学びます。
+[条件](/docs/conditions)の追加方法について学びます。
 
 ### パラメータを追加する
 
@@ -77,9 +79,9 @@ keywords:
 4. グループステップに入ります。
 5. ユーザー名設定ステップとパスワード設定ステップを変更し、定数値の代わりにこれらのパラメータを配置します。
 
-![640](/images/miscellaneous/best-practices-for-handling-logins/cfbed43-Oct-20-2020_11-51-43.gif)
+![ログイングループにusernameとpasswordパラメータを追加して汎用的にする手順を示すGIFアニメーション](/images/miscellaneous/best-practices-for-handling-logins/cfbed43-Oct-20-2020_11-51-43.gif)
 
-[グループへのパラメータの追加](/docs/parameters/parameters-for-groups)について詳しく学びます。
+[グループへのパラメータの追加](/docs/parameters-for-groups)について詳しく学びます。
 
 これで、このグループを使用するたびに、異なる認証情報を設定できます。
 
@@ -87,7 +89,7 @@ keywords:
 
 テストを作成するとき、手動ユーザーとして記録したステップの一部は、自動テストには関係ない場合があります。例えば、テキストフィールド間で「Tab」を押したり、データを入力するためにテキストフィールドをクリックしたりすることです。これらのステップは削除できます。
 
-1. 不要なステップをクリアします。ステップの削除方法について[詳細](/docs/steps-editing-tests/editing-your-tests)を確認してください。
+1. 不要なステップをクリアします。ステップの削除方法について[詳細](/docs/editing-your-tests)を確認してください。
 2. 必要なものを削除していないことを確認するために、再度実行します。
 3. 再度保存します。
 

@@ -5,9 +5,11 @@ category: 'その他'
 order: 1
 updated: '2025-11-02'
 keywords:
-  - testim
-  - mobile-web-testing
-  - miscellaneous
+  - モバイルWebテスト
+  - モバイルデバイス
+  - エミュレーター
+  - レスポンシブデザイン
+  - クロスプラットフォーム
 ---
 モバイルデバイスエミュレーターでアプリケーションをテストする
 
@@ -22,14 +24,14 @@ Testimを使用して、（モバイルWeb）アプリケーションがさま�
 
 モバイルWebテストの作成は、デスクトップWebテストと同様に機能します。新しいテストを開始すると、デフォルトのiPhone 6設定が表示され、編集できます。
 
-![](/images/miscellaneous/mobile-web-testing/f90da78-Aug-10-2020_12-12-32.gif)
+![モバイルWebテストの作成手順を示すGIFアニメーション。iPhone 6設定を選択してデバイスエミュレーターモードでテストを開始する様子](/images/miscellaneous/mobile-web-testing/f90da78-Aug-10-2020_12-12-32.gif)
 
 デフォルト設定を選択した後、デスクトップWebで行ったようにテストの記録を続行します（記録ボタンをクリックすると、選択した設定でエミュレーターモードのChromeが開きます）。\
 背後では、ユーザーエージェントを変更しています（画面サイズを変更するだけではありません）。
 
 ## 異なるデバイスで実行する
 
-異なるデバイスでの実行は[CLI](https://help.testim.io/docs/the-command-line-cli)を介して行われます。
+異なるデバイスでの実行は[CLI](/docs/the-command-line-cli)を介して行われます。
 
 > 📘
 >
