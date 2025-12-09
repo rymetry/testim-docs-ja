@@ -5,9 +5,12 @@ category: 'セキュリティ・SSO'
 order: 1
 updated: '2025-11-02'
 keywords:
-  - testim
-  - testim-grid-ips
-  - security-sso
+  - IPホワイトリスト
+  - Testimグリッド
+  - LambdaTestグリッド
+  - ブラウザIP
+  - アクセス制限
+  - セキュリティ設定
 ---
 環境が公開されているが制限されている場合、テスト対象の環境にグリッドブラウザがアクセスできるように、グリッドブラウザのIPをホワイトリストに登録する必要があります。
 
