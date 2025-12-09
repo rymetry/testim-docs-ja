@@ -5,13 +5,18 @@ category: 'インサイト'
 order: 3
 updated: '2025-11-02'
 keywords:
-  - testim
-  - reports
-  - insights
+  - レポート
+  - テスト実行結果
+  - チームアクティビティ
+  - 品質トレンド
+  - 失敗タイプ
+  - 週次サマリー
+  - 会社レベルレポート
+  - 改善領域
 ---
 品質トレンドの概要を把握します
 
-**Insights** セクションの **Reports** タブは、成功および失敗したテスト実行に関する情報、チームのアクティビティ、最も失敗したテストに関する情報など、選択した期間におけるプロジェクトの品質に関する詳細情報を表示します。情報を表示するプロジェクトのブランチを選択できます。詳細については、[ブランチの選択](doc:insights#selecting-a-branch) を参照してください。
+**Insights** セクションの **Reports** タブは、成功および失敗したテスト実行に関する情報、チームのアクティビティ、最も失敗したテストに関する情報など、選択した期間におけるプロジェクトの品質に関する詳細情報を表示します。情報を表示するプロジェクトのブランチを選択できます。詳細については、[ブランチの選択](/docs/insights#ブランチの選択) を参照してください。
 
 このページには次のセクションが含まれます:
 
@@ -28,7 +33,7 @@ keywords:
 * プロジェクトオーナー - デフォルトで、特定のプロジェクトの週次レポートをメールで受け取ります。
 * 会社およびプロジェクトオーナー - プロジェクト設定の **Reports** タブでメールアドレスを追加することで、追加のユーザーに週次レポートを送信するように構成できます。
 
-会社オーナーとプロジェクトオーナーは、追加の会社レベルのレポートにアクセスできます。詳細については、[会社レベルのレポート](doc:reports#company-level-report) を参照してください。
+会社オーナーとプロジェクトオーナーは、追加の会社レベルのレポートにアクセスできます。詳細については、[会社レベルのレポート](#会社レベルのレポート) を参照してください。
 
 ## テスト実行結果
 
@@ -43,7 +48,7 @@ keywords:
 
 ### 成功したテスト実行
 
-![](/images/insights/reports/72d272b-Testim_351.png)
+![成功したテスト実行ペイン](/images/insights/reports/72d272b-Testim_351.png)
 
 このペインの左側には、選択した期間の次のテスト実行情報が表示されます:
 
@@ -57,7 +62,7 @@ keywords:
 
 ### 実行中のテスト
 
-![](/images/insights/reports/39eca9d-Testim_352a.png)
+![テスト実行の詳細情報](/images/insights/reports/39eca9d-Testim_352a.png)
 
 このペインには、実行中のテストに関する情報が含まれます。*実行中*のテストは、選択した期間に少なくとも1回実行されたテストとして定義されます。\
 このペインの左側には、選択した期間の次の情報が表示されます:
@@ -70,7 +75,7 @@ keywords:
 
 ### 平均期間
 
-![](/images/insights/reports/8ceb5e5-Testim_352b_r.png)
+![失敗タイプの分散](/images/insights/reports/8ceb5e5-Testim_352b_r.png)
 
 このペインには、テスト実行期間に関する次の情報が表示されます。*テスト実行期間*は、単一のテストの1回の実行の実行時間として定義されます。
 
@@ -80,9 +85,9 @@ keywords:
 
 ### 失敗タイプ
 
-![](/images/insights/reports/523676f-Testim_353a.png)
+![実行中のテスト情報](/images/insights/reports/523676f-Testim_353a.png)
 
-![](/images/insights/reports/a39285c-Testim_354a.png)
+![実行結果のリスト](/images/insights/reports/a39285c-Testim_354a.png)
 
 このペインの左側には、選択した期間中に失敗したテストにタグ付けした各失敗タイプの割合が表示されます。前期間の割合も表示されます。デフォルトでは、タグ付けしたテストのみがこれらの数値に含まれます。失敗した全体の分布を表示するには、**Show untagged** トグルをクリックします。
 
@@ -92,7 +97,7 @@ keywords:
 
 ## チームのアクティビティ
 
-![](/images/insights/reports/62cde1e-Testim_356.png)
+![平均実行時間情報](/images/insights/reports/62cde1e-Testim_356.png)
 
 このセクションには、選択した期間中のチームのアクティビティに関する情報を示す1つのペインが含まれています。
 
@@ -102,13 +107,13 @@ keywords:
 
 ## Testim のアクティビティ
 
-![](/images/insights/reports/9e8477a-Testim_355_r.png)
+![失敗タイプの詳細](/images/insights/reports/9e8477a-Testim_355_r.png)
 
-このペインには、ロケーターが0.75のしきい値を下回り、Testim がそれでも要素を見つけた回数が、ロケーターの総数のうち表示されます。詳細については、[スマートロケーター](doc:core-concepts#smart-locators) を参照してください。
+このペインには、ロケーターが0.75のしきい値を下回り、Testim がそれでも要素を見つけた回数が、ロケーターの総数のうち表示されます。詳細については、[スマートロケーター](/docs/core-concepts#スマートロケーター) を参照してください。
 
 ## 改善できる箇所
 
-![](/images/insights/reports/5224124-Testim_339.png)
+![チームアクティビティセクション](/images/insights/reports/5224124-Testim_339.png)
 
 このセクションには、選択した期間中に最も失敗した3つのテストがリストされます。リストされているテストのいずれかをクリックすると、選択したテストでフィルタリングされた過去の実行の詳細な統計を示す **Test Runs** ページが開きます。詳細については、[テスト実行画面](/docs/test-runs-1) を参照してください。**Show All Tests** をクリックすると、選択した期間中に5回以上失敗したすべてのテストがリストされます。選択した期間中に5回未満しか実行されていないテストは、リストに表示されません。
 
@@ -119,15 +124,15 @@ keywords:
 
 1. **Filter** ボタンをクリックします。
 
-![](/images/insights/reports/0e0361d-Testim_471a.png)
+![Testimのアクティビティセクション](/images/insights/reports/0e0361d-Testim_471a.png)
 
 **Filter** ペインが右側に開き、フィルタリングできる実行実行タイプ（Suite、Plan、Scheduler、Label、Test）と、フィルタリングできる Branch、Result Labels、Browsers が表示されます。（**選択した時間枠に関連するオプションのみが表示されます。** 表示される結果ラベルは、以前に結果にラベルを付けるために使用した用語に基づいています。詳細については、[結果ラベル](/docs/results/result-labels) を参照してください。）
 
-![](/images/insights/reports/73e8e57-Testim_474_r.png)
+![スマートロケーター使用状況](/images/insights/reports/73e8e57-Testim_474_r.png)
 
 2. 特定の実行タイプでフィルタリングするには、タイプを選択してから、そのタイプの下に表示される目的のチェックボックスを選択します。（フィルタリングする実行タイプを複数選択することはできません。）
 
-![](/images/insights/reports/3bb3d46-Testim_475_r.png)
+![自己修復使用状況](/images/insights/reports/3bb3d46-Testim_475_r.png)
 
 > 📘
 >
@@ -138,7 +143,7 @@ keywords:
 5. ブラウザでフィルタリングするには、**Browser** セクションで目的のチェックボックスを選択します。
 6. *evaluating* のテストステータスを持つテスト実行からのデータを含める場合は、**Include Evaluating** トグルをクリックします。*evaluating* ステータスのテストはまだユーザーによって評価されているため、デフォルトではその実行からのデータは含まれません。テストステータスの詳細については、[テストステータス](/docs/testops-management/test-status) を参照してください。
 
-![](/images/insights/reports/06e10a5-Testim_476a_r.png)
+![AIステップ使用状況](/images/insights/reports/06e10a5-Testim_476a_r.png)
 
 > 📘
 >
@@ -167,13 +172,13 @@ keywords:
 
 1. **アカウントプロファイル画像**をクリックします。
 
-![](/images/insights/reports/9fd9f62-Testim_398a.png)
+![最も失敗したテストTop3](/images/insights/reports/9fd9f62-Testim_398a.png)
 
 アカウントメニューが開きます。
 
 2. **Reports** をクリックします。
 
-![](/images/insights/reports/faed44f-Testim_399a_r.png)
+![失敗テストの詳細情報](/images/insights/reports/faed44f-Testim_399a_r.png)
 
 > 📘
 >
@@ -181,7 +186,7 @@ keywords:
 
 会社レベルのレポートが開きます。各セクションの詳細については、上記を参照してください。
 
-![](/images/insights/reports/4de5dbb-Testim_404.png)
+![会社レベルのレポート](/images/insights/reports/4de5dbb-Testim_404.png)
 
 ### 会社レベルのレポートのフィルタリング
 
@@ -190,11 +195,11 @@ keywords:
 
 1. **Filter** ボタンをクリックします。
 
-![](/images/insights/reports/4f03ad0-Testim_400a.png)
+![プロジェクト選択ドロップダウン](/images/insights/reports/4f03ad0-Testim_400a.png)
 
 **Filter** ペインが右側に開きます。
 
-![](/images/insights/reports/38c8e08-Testim_405_r.png)
+![期間選択ドロップダウン](/images/insights/reports/38c8e08-Testim_405_r.png)
 
 2. **Project** セクションで、フィルタリングする1つ以上のプロジェクトを選択します。
 
@@ -204,7 +209,7 @@ keywords:
 
 3. *evaluating* のテストステータスを持つテストからのデータを含める場合は、**Include Evaluating** トグルをクリックします。
 
-![](/images/insights/reports/45333ed-Testim_405a_r.png)
+![フィルターオプション](/images/insights/reports/45333ed-Testim_405a_r.png)
 
 > 📘
 >
