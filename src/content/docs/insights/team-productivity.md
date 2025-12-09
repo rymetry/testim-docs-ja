@@ -5,9 +5,13 @@ category: 'インサイト'
 order: 4
 updated: '2025-11-02'
 keywords:
-  - testim
-  - team-productivity
-  - insights
+  - チーム生産性
+  - 生産性レポート
+  - アクティブなチームメイト
+  - 作成されたテスト
+  - 更新されたテスト
+  - ブランチフィルタ
+  - ユーザー作業量
 ---
 チームの作業と生産性をより見やすく把握します
 
@@ -26,7 +30,7 @@ keywords:
 
 チーム生産性レポートにアクセスするには、Insights --> Reports --> Team productivity タブに移動します
 
-![](/images/insights/team-productivity/88a14b0-Screen_Shot_2021-11-23_at_14.28.30.png)
+![チーム生産性レポートの場所](/images/insights/team-productivity/88a14b0-Screen_Shot_2021-11-23_at_14.28.30.png)
 
 ### チーム生産性 - ビュー
 
@@ -37,7 +41,7 @@ keywords:
 3. 作成されたテスト - 選択された時間に選択されたチームメンバーによって作成されたテストの数（前期間との比較）
 4. 更新されたテスト - 選択された時間に選択されたチームメンバーによって更新されたテストの数（前期間との比較）
 
-![](/images/insights/team-productivity/0961ae3-Screen_Shot_2021-08-08_at_13.50.12.png)
+![チーム生産性統計ダッシュボード](/images/insights/team-productivity/0961ae3-Screen_Shot_2021-08-08_at_13.50.12.png)
 
 バービューでは、次の情報が表示されます:
 

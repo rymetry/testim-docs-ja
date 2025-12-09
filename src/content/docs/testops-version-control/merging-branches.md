@@ -4,10 +4,18 @@ description: '原文: https://help.testim.io/docs/merging-branches'
 category: 'TestOpsバージョン管理'
 order: 3
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/merging-branches'
 keywords:
-  - testim
-  - merging-branches
-  - testops-version-control
+  - ブランチマージ
+  - TestOpsバージョン管理
+  - 競合解決
+  - 3-wayマージ
+  - チェリーピック
+  - 変更確認
+  - 共有ステップ
+  - テスト統合
+  - マージプロセス
+  - ソースブランチ
 ---
 2つのブランチをマージすると、選択したブランチのステップを混在させたり、テスト全体を現在表示されているブランチ（master ブランチまたは他のブランチ）に追加したりできます。マージ後、ソースブランチは明示的に削除するまで存在し続けます。競合が発生した場合は、競合するステップを確認し、どのステップを採用するかを決定できます。
 
@@ -17,7 +25,7 @@ keywords:
 2. **Branches** ドロップダウンメニューをクリックし、ソースブランチにマウスを合わせます。
 3. **Merge** アイコンをクリックします。
 
-![](/images/testops-version-control/merging-branches/2a9c092-sourcemerge.PNG)
+![ブランチマージ](/images/testops-version-control/merging-branches/2a9c092-sourcemerge.PNG)
 
 **Merge Branch** ダイアログには、マージされるすべての変更の概要が表示されます。この時点で変更を確認する必要があります。以下の **変更の確認** セクションを参照してください。
 
@@ -41,11 +49,11 @@ keywords:
 
 1. 概要ドロップダウンをクリックして個々のアイテムを表示します。
 
-![](/images/testops-version-control/merging-branches/f3e40eb-merge_dropdown.png)
+![マージドロップダウン](/images/testops-version-control/merging-branches/f3e40eb-merge_dropdown.png)
 
 リストには、ソースブランチとターゲットブランチの違いの詳細（新しいステップの数、変更されたステップの数、削除されたステップの数など）が含まれます。
 
-![](/images/testops-version-control/merging-branches/6b13a35-c9cef4f-Screen_Shot_2020-06-23_at_15.45.46.png)
+![変更詳細](/images/testops-version-control/merging-branches/6b13a35-c9cef4f-Screen_Shot_2020-06-23_at_15.45.46.png)
 
 2. テストまたはスイートをマージに含めない場合は、選択を解除するとマージから削除されます。
 3. 完了したら、**Merge** をクリックします。\
@@ -53,7 +61,7 @@ keywords:
 
 > 📘
 >
-> [プルリクエスト](/docs/testops-version-control/pull-requests)機能が有効になっている場合、チェリーピックは PR が承認されてから利用可能になります。
+> [プルリクエスト](/docs/pull-requests)機能が有効になっている場合、チェリーピックは PR が承認されてから利用可能になります。
 
 > 📘 注意
 >
@@ -64,7 +72,7 @@ keywords:
 2つのブランチをマージする際、テストの特定のステップ間や共有ステップ間で競合が発生する可能性があります。たとえば、ソースで変更されたステップが、その間にターゲットで削除された場合などです。すべての競合を解決しない限り、マージプロセスを続行できません。\
 **マージ変更の確認** プロセスの一環として、競合がある場合、**Merge Branch** 画面の上部と競合がある特定のアイテムで競合の数が示されます。
 
-![](/images/testops-version-control/merging-branches/ffa92c7-mergewithconflicts.png)
+![競合のあるマージ](/images/testops-version-control/merging-branches/ffa92c7-mergewithconflicts.png)
 
 ## 共有ステップ間の競合の解決
 
@@ -75,11 +83,11 @@ keywords:
 
 共有ステップ間の競合を解決するには、競合を含む共有ステップの隣にある **Compare** をクリックします:
 
-![](/images/testops-version-control/merging-branches/8a021ca-compareshared.png)
+![共有ステップのCompare](/images/testops-version-control/merging-branches/8a021ca-compareshared.png)
 
 **Compare** 共有ステップ画面が表示されます:
 
-![](/images/testops-version-control/merging-branches/6a292c3-shared_compare_screen_callouts.PNG)
+![共有ステップ比較画面](/images/testops-version-control/merging-branches/6a292c3-shared_compare_screen_callouts.PNG)
 
 競合がある共有ステップの部分が強調表示されます。\
 **Compare Shared Step** 画面には3つの列があります:
@@ -96,7 +104,7 @@ keywords:
 
 CLI/API アクション共有ステップの比較画面は次のようになります:
 
-![](/images/testops-version-control/merging-branches/b08a1d1-compare_custom_step.PNG)
+![CLI/APIアクション比較](/images/testops-version-control/merging-branches/b08a1d1-compare_custom_step.PNG)
 
 :fa-arrow-right: **共有ステップの競合を解決するには:**
 
@@ -116,11 +124,11 @@ CLI/API アクション共有ステップの比較画面は次のようになり
 
 テスト間の競合を解決するには、競合を含むテストの隣にある **Compare** をクリックします。
 
-![](/images/testops-version-control/merging-branches/e1888e3-testconflict_comparelink.png)
+![テスト競合のCompare](/images/testops-version-control/merging-branches/e1888e3-testconflict_comparelink.png)
 
 **Compare** 画面が表示されます:
 
-![](/images/testops-version-control/merging-branches/1cc4137-Screen_Shot_2021-02-09_at_6.28.59.png)
+![テスト比較画面](/images/testops-version-control/merging-branches/1cc4137-Screen_Shot_2021-02-09_at_6.28.59.png)
 
 **Compare** 画面には3つの列があります:
 
@@ -139,15 +147,15 @@ CLI/API アクション共有ステップの比較画面は次のようになり
 
 ソースとターゲットのどちらのプロパティを使用するかを決定する必要があります（デフォルトでは最新のものが選択されます）
 
-競合を含む各ステップが強調表示されます。競合ステップ（ソースまたはターゲット）には次の要素が含まれます:
+競合ステップ（ソースまたはターゲット）には次の要素が含まれます:
 
 * **ステップオブジェクト** - テストに表示されるのと同じオブジェクト。
 * **競合理由** - 競合が作成されたこのステップで実行されたアクション。たとえば、ソースではこのステップが削除され、ターゲットではこのステップが編集された等。
-* **推奨バージョンインジケータ** - このアクションが反対側のバージョンよりも後に実行されたことを示します。
+* **推奨バージョンインジケーター** - このアクションが反対側のバージョンよりも後に実行されたことを示します。
 
 テストには、パラメータ値やグループコンテキストに関連する競合がある共有グループなどの共有ステップが含まれる場合があり、これは特定のテストコンテキストで解決する必要があります。このため、共有グループは、競合の特定の理由（変更された特定のパラメータ値など）を表示しながら、テスト競合解決画面に表示される場合があります。
 
-![](/images/testops-version-control/merging-branches/844f324-step_compare_callouts.PNG)
+![ステップ比較](/images/testops-version-control/merging-branches/844f324-step_compare_callouts.PNG)
 
 :fa-arrow-right: **競合を解決するには:**
 
@@ -157,7 +165,7 @@ CLI/API アクション共有ステップの比較画面は次のようになり
 
 1. 関連する矢印（左/右）をクリックして、選択したバージョンを Merge（中央）列に配置します。
 
-![](/images/testops-version-control/merging-branches/62021e4-beforeafter.PNG)
+![マージ前後](/images/testops-version-control/merging-branches/62021e4-beforeafter.PNG)
 
 > 📘 注意
 >
@@ -185,11 +193,11 @@ CLI/API アクション共有ステップの比較画面は次のようになり
 
 1. **Merge Branch** 画面から、**Resolve all** をクリックします。
 
-![](/images/testops-version-control/merging-branches/6df160f-resolveall2.png)
+![Resolve allボタン](/images/testops-version-control/merging-branches/6df160f-resolveall2.png)
 
 すべての競合が解決されたことを確認する次のメッセージが表示されます。
 
-![](/images/testops-version-control/merging-branches/58d49c3-resolved2.png)
+![競合解決完了](/images/testops-version-control/merging-branches/58d49c3-resolved2.png)
 
 2. **Merge** をクリックします。\
    選択したブランチのすべてのステップが、現在表示されているブランチ（master ブランチまたは他のブランチ）にマージされます。

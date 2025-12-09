@@ -4,10 +4,18 @@ description: '原文: https://help.testim.io/docs/testops-version-control'
 category: 'TestOpsバージョン管理'
 order: 1
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/testops-version-control'
 keywords:
-  - testim
-  - testops-version-control
-  - testops-version-control
+  - TestOpsバージョン管理
+  - ブランチ管理
+  - マージ
+  - プルリクエスト
+  - 3-wayマージ
+  - 競合解決
+  - 共有属性
+  - 読み取り専用
+  - Git連携
+  - テスト変更管理
 ---
 ブランチ、マージ、プルリクエスト（PR）は、Git などのバージョン管理システムで一般的に使用される概念で、コードの変更を管理し、ソフトウェア開発プロジェクトで共同作業を行うために使用されます。Testim はいくつかの例外を除いて同様の機能を提供します。
 
@@ -18,7 +26,7 @@ keywords:
 
 > 📘 注意:
 >
-> Testim では、一部のアーティファクトはブランチ間で共有されており、あるブランチでアーティファクトに加えられた変更は、他のすべてのブランチの対応するアーティファクトを自動的に変更します。[ブランチ間で共有される属性](https://help.testim.io/docs/version-control-branches#shared-attributes-between-branches)のリストをご覧ください。このメカニズムは、Git のようなブランチ/マージ/PR メカニズムと比較して独自のものです。
+> Testim では、一部のアーティファクトはブランチ間で共有されており、あるブランチでアーティファクトに加えられた変更は、他のすべてのブランチの対応するアーティファクトを自動的に変更します。[ブランチ間で共有される属性](/docs/version-control-branches#shared-attributes-between-branches)のリストをご覧ください。このメカニズムは、Git のようなブランチ/マージ/PR メカニズムと比較して独自のものです。
 
 * [プルリクエスト](/docs/testops-version-control/pull-requests): プルリクエスト（PR）は、Testim バージョン管理の機能で、テスト開発者がメインブランチ（通常は「master」）への変更を提案できるようにします。
   * PR メカニズムは、[読み取り専用表示のあるブランチ](/docs/testops-version-control/read-only)にマージする際にアクティブになります。

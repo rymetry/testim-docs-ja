@@ -5,9 +5,11 @@ category: 'その他'
 order: 2
 updated: '2025-11-02'
 keywords:
-  - testim
-  - keyboard-shortcuts
-  - miscellaneous
+  - キーボードショートカット
+  - ショートカットキー
+  - テスト作成効率化
+  - 検証追加
+  - 操作性向上
 ---
 より迅速で簡単なテスト作成のためのキーボードショートカット
 

@@ -4,14 +4,22 @@ description: '原文: https://help.testim.io/docs/flaky-tests'
 category: 'TestOps管理'
 order: 4
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/flaky-tests'
 keywords:
-  - testim
-  - flaky-tests
-  - testops-management
+  - 不安定なテスト
+  - TestOps管理
+  - テストリトライ
+  - テストステータス
+  - Quarantine
+  - Evaluating
+  - CI失敗
+  - テスト品質
+  - 失敗パターン
+  - 自動再実行
 ---
 Testim のライブラリを使用して不安定なテストを簡単に見つけます
 
-テストは、リトライ後に成功した場合、不安定と見なされます。つまり、最初の試行では失敗し、その後の1回以上のリトライで成功した場合です。リトライとその設定方法の詳細については、[こちら](https://help.testim.io/docs/the-command-line-cli#failed-test-retries)をお読みください。
+テストは、リトライ後に成功した場合、不安定と見なされます。つまり、最初の試行では失敗し、その後の1回以上のリトライで成功した場合です。リトライとその設定方法の詳細については、[こちら](/docs/the-command-line-cli#failed-test-retries)をお読みください。
 
 > 📘
 >
@@ -25,18 +33,18 @@ Testim は、これらの不安定なテストを見つけ、そのステータ�
 
 ## 不安定なテストを見つける
 
-この機能は **[テストステータス](https://help.testim.io/docs/test-status)** 機能の一部です。この機能を使用するには、Testim LABS 設定で **Test Status** 機能がオンになっていることを確認してください。\
+この機能は **[テストステータス](/docs/test-status)** 機能の一部です。この機能を使用するには、Testim LABS 設定で **Test Status** 機能がオンになっていることを確認してください。\
 :fa-arrow-right: **不安定なテストを表示するには:**
 
 1. **Test List ⇒ Tests** に移動します。
 2. **Filter** ボタンをクリックします。
 3. **Filter Test** ペインの **Show only flaky tests** で、Yes チェックボックスを選択します。
 
-![](/images/testops-management/flaky-tests/af759d0-Jan-28-2021_11-20-25.gif)
+![不安定なテストフィルター](/images/testops-management/flaky-tests/af759d0-Jan-28-2021_11-20-25.gif)
 
 再実行で成功したテストは、「Last Runs」列に黄色のマークが表示されます。
 
-![](/images/testops-management/flaky-tests/03bc19a-Untitled.png)
+![不安定なテストの表示](/images/testops-management/flaky-tests/03bc19a-Untitled.png)
 
 ## 不安定なテストのステータス変更
 
@@ -47,6 +55,6 @@ Testim は、これらの不安定なテストを見つけ、そのステータ�
   * バグをすぐに修正したい場合 - テストが **「Active」** ステータスであることを確認してください。これにより、失敗した場合に実行全体が失敗します。その間、アプリケーションのバグ修正に取り組み続けてください。
   * バグを後で修正したい場合 - この場合、テストステータスを **「Quarantine」** に変更する必要があります。テストは CI/スケジューラーの一部として実行されません。バグを修正した後、テストステータスを **「Evaluating」** または **「Active」** に変更できます。
 
-> ��
+> 📘
 >
-> アプリケーションでバグを識別した場合は、失敗を「Bug in app」としてタグ付けすることもお勧めします。結果タグ付けの詳細については、[こちら](https://help.testim.io/docs/tagging-failed-runs-with-failure-types)をご覧ください。
+> アプリケーションでバグを識別した場合は、失敗を「Bug in app」としてタグ付けすることもお勧めします。結果タグ付けの詳細については、[こちら](/docs/tag-remote-runs-failures)をご覧ください。

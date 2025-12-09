@@ -5,13 +5,13 @@
 
 ## 翻訳ステータス
 
-- ✅ 翻訳済み: 283個
+- ✅ 翻訳済み: 284個
 - ⏳ 未翻訳: 0個
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 212個
-- ✅   翻訳のみ完了: 71個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 236個
+- ✅   翻訳のみ完了: 48個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -291,6 +291,7 @@
 - ✅🔍 https://help.testim.io/docs/saucelabs-integration
 - ✅🔍 https://help.testim.io/docs/browserstack-integration-1
 - ✅🔍 https://help.testim.io/docs/browserstack-integration-copy
+- ✅🔍 https://help.testim.io/docs/custom-capabilities
 - ✅🔍 https://help.testim.io/docs/saucelabs-browserstack-options
 - ✅🔍 https://help.testim.io/docs/headspin-integration
 - ✅🔍 https://help.testim.io/docs/bitbucket-integration
@@ -329,31 +330,31 @@
 
 ## TestOps（TestOps）
 
-- ✅ https://help.testim.io/docs/testops-overview
+- ✅🔍 https://help.testim.io/docs/testops-overview
 
 ## TestOps Management（TestOps管理）
 
-- ✅ https://help.testim.io/docs/testops-management
-- ✅ https://help.testim.io/docs/test-status
-- ✅ https://help.testim.io/docs/test-owner
-- ✅ https://help.testim.io/docs/flaky-tests
+- ✅🔍 https://help.testim.io/docs/testops-management
+- ✅🔍 https://help.testim.io/docs/test-status
+- ✅🔍 https://help.testim.io/docs/test-owner
+- ✅🔍 https://help.testim.io/docs/flaky-tests
 
 ## TestOps Version Control（TestOpsバージョン管理）
 
-- ✅ https://help.testim.io/docs/testops-version-control
-- ✅ https://help.testim.io/docs/version-control-branches
-- ✅ https://help.testim.io/docs/merging-branches
-- ✅ https://help.testim.io/docs/pull-requests
-- ✅ https://help.testim.io/docs/read-only
+- ✅🔍 https://help.testim.io/docs/testops-version-control
+- ✅🔍 https://help.testim.io/docs/version-control-branches
+- ✅🔍 https://help.testim.io/docs/merging-branches
+- ✅🔍 https://help.testim.io/docs/pull-requests
+- ✅🔍 https://help.testim.io/docs/read-only
 
 ## Insights（インサイト）
 
-- ✅ https://help.testim.io/docs/insights
-- ✅ https://help.testim.io/docs/dashboard
-- ✅ https://help.testim.io/docs/reports
-- ✅ https://help.testim.io/docs/team-productivity
-- ✅ https://help.testim.io/docs/audit-log
-- ✅ https://help.testim.io/docs/turbo-mode
+- ✅🔍 https://help.testim.io/docs/insights
+- ✅🔍 https://help.testim.io/docs/dashboard
+- ✅🔍 https://help.testim.io/docs/reports
+- ✅🔍 https://help.testim.io/docs/team-productivity
+- ✅🔍 https://help.testim.io/docs/audit-log
+- ✅🔍 https://help.testim.io/docs/turbo-mode
 
 ## Salesforce Testing（Salesforceテスト）
 
@@ -405,28 +406,28 @@
 
 ## Testim Extension（Testim拡張機能）
 
-- ✅ https://help.testim.io/docs/testim-extension-overview
-- ✅ https://help.testim.io/docs/testim-extension-capture-screenshot
-- ✅ https://help.testim.io/docs/testim-extension-capture-video-bug-scenario
-- ✅ https://help.testim.io/docs/testim-extension-create-automated-test
+- ✅🔍 https://help.testim.io/docs/testim-extension-overview
+- ✅🔍 https://help.testim.io/docs/testim-extension-capture-screenshot
+- ✅🔍 https://help.testim.io/docs/testim-extension-capture-video-bug-scenario
+- ✅🔍 https://help.testim.io/docs/testim-extension-create-automated-test
 
 ## Security & SSO（セキュリティ・SSO）
 
-- ✅ https://help.testim.io/docs/testim-grid-ips
-- ✅ https://help.testim.io/docs/sso-integration
-- ✅ https://help.testim.io/docs/onelogin-sso-integration
-- ✅ https://help.testim.io/docs/okta-sso-integration
-- ✅ https://help.testim.io/docs/azure-ad-sso-integration
+- ✅🔍 https://help.testim.io/docs/testim-grid-ips
+- ✅🔍 https://help.testim.io/docs/sso-integration
+- ✅🔍 https://help.testim.io/docs/onelogin-sso-integration
+- ✅🔍 https://help.testim.io/docs/okta-sso-integration
+- ✅🔍 https://help.testim.io/docs/azure-ad-sso-integration
 
 ## Miscellaneous（その他）
 
-- ✅ https://help.testim.io/docs/mobile-web-testing
-- ✅ https://help.testim.io/docs/keyboard-shortcuts
-- ✅ https://help.testim.io/docs/generate-random-data-with-js
-- ✅ https://help.testim.io/docs/best-practices-for-handling-logins
-- ✅ https://help.testim.io/docs/testim-labs
-- ✅ https://help.testim.io/docs/test-flow-view
-- ✅ https://help.testim.io/docs/link-directly-to-a-shared-step
+- ✅🔍 https://help.testim.io/docs/mobile-web-testing
+- ✅🔍 https://help.testim.io/docs/keyboard-shortcuts
+- ✅🔍 https://help.testim.io/docs/generate-random-data-with-js
+- ✅🔍 https://help.testim.io/docs/best-practices-for-handling-logins
+- ✅🔍 https://help.testim.io/docs/testim-labs
+- ✅🔍 https://help.testim.io/docs/test-flow-view
+- ✅🔍 https://help.testim.io/docs/link-directly-to-a-shared-step
 
 ---
 
@@ -440,14 +441,14 @@
 
 ```javascript
 // サイドバー内の全リンクURLを抽出
-Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href).join('\n')
+Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href).join('\n');
 ```
 
 または、重複を除いてソートする場合:
 
 ```javascript
 // 重複を除去してソート
-[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href))].sort().join('\n')
+[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href))].sort().join('\n');
 ```
 
 ### 実行結果の保存

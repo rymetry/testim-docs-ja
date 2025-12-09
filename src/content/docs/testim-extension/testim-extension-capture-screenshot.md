@@ -5,9 +5,15 @@ category: 'Testim拡張機能'
 order: 2
 updated: '2025-11-02'
 keywords:
-  - testim
-  - testim-extension-capture-screenshot
-  - testim-extension
+  - Testim拡張機能
+  - スクリーンショット
+  - キャプチャ
+  - 注釈ツール
+  - バグトラッキング
+  - Jira
+  - Slack
+  - Trello
+  - GitHub
 ---
 Testim拡張機能のスクリーンショットキャプチャ機能を使用すると、Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加し、Jira、Slack、Trello、Githubなどのバグトラッキングシステムにバグ/問題として送信できます。\
 バグトラッカーにバグを送信するには、まずTestimをバグトラッキングシステムに接続する必要があります。詳細については、&lt;バグトラッカー設定ページへの参照を追加&gt;を参照してください。\
@@ -23,12 +29,12 @@ Testim拡張機能のスクリーンショットキャプチャ機能を使用�
 4. 再度**Testim拡張機能**アイコンをクリックします。\
    拡張機能メニューが開きます。
 
-![425](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
+![Testim拡張機能メニュー](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
 
 5. **Capture Screenshot**をクリックします。\
    画面が固定され、注釈ツールバーが表示されます。
 
-![620](/images/testim-extension/testim-extension-capture-screenshot/92260ba-annotation_toolbar.PNG)
+![注釈ツールバー](/images/testim-extension/testim-extension-capture-screenshot/92260ba-annotation_toolbar.PNG)
 
 6. 以下の注釈ツールを使用してスクリーンショットに注釈を付けます(上から下の順):
 
@@ -47,7 +53,7 @@ Testim拡張機能のスクリーンショットキャプチャ機能を使用�
 1. Testimをバグトラッカーに接続していることを確認してください。詳細については - &lt;参照を追加&gt;
 2. スクリーンショットに注釈を付けた後、注釈ツールバーで「Publish」をクリックします。
 
-![620](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png)
+![Publishボタン](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png)
 
 3. 接続したバグトラッカーシステムに応じて、バグ情報を入力するための異なるフォームが表示されます。以下の説明に基づいてフォームに入力し、「Publish」をクリックします。
 

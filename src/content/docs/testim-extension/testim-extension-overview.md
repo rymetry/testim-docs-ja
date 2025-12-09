@@ -5,11 +5,16 @@ category: 'Testim拡張機能'
 order: 1
 updated: '2025-11-02'
 keywords:
-  - testim
-  - testim-extension-overview
-  - testim-extension
+  - Testim拡張機能
+  - Chrome拡張機能
+  - スマートロケーター
+  - スクリーンショットキャプチャ
+  - ビデオ録画
+  - 自動テスト作成
+  - DOMアクセス
+  - ビジュアルエディター
 ---
-![425](/images/testim-extension/testim-extension-overview/d78ddb1-Testim_extension.PNG)
+![Testim拡張機能アイコン](/images/testim-extension/testim-extension-overview/d78ddb1-Testim_extension.PNG)
 
 ## Testim拡張機能が必要な理由
 
@@ -19,9 +24,9 @@ Testimはテストの作成と実行にスマートロケーターを使用し�
 
 拡張機能自体は以下の機能を実行するために使用できます:
 
-* **[スクリーンショットをキャプチャ](/docs/testim-extension/testim-extension-capture-screenshot)** - Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加でき、バグトラッキングシステムにバグ/問題として送信できます。
-* **[ビデオとバグシナリオをキャプチャ](/docs/testim-extension/testim-extension-capture-video-bug-scenario)** - プロセスのビデオ画面録画をキャプチャし、各ステップのスクリーンショットを作成し、バグトラッキングシステムにバグ/問題として送信できます。
-* **[自動テストを作成](/docs/testim-extension/testim-extension-create-automated-test)** - 現在のWebページをベースURLとして、Testimビジュアルエディターで新しいテストを作成します。
+* **[スクリーンショットをキャプチャ](/docs/testim-extension-capture-screenshot)** - Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加でき、バグトラッキングシステムにバグ/問題として送信できます。
+* **[ビデオとバグシナリオをキャプチャ](/docs/testim-extension-capture-video-bug-scenario)** - プロセスのビデオ画面録画をキャプチャし、各ステップのスクリーンショットを作成し、バグトラッキングシステムにバグ/問題として送信できます。
+* **[自動テストを作成](/docs/testim-extension-create-automated-test)** - 現在のWebページをベーURLとして、Testimビジュアルエディターで新しいテストを作成します。
 * **Testimを開く** - Testimビジュアルエディターを開きます。
 
 ## セキュリティに関する免責事項
