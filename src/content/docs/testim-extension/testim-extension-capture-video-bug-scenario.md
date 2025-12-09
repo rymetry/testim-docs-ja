@@ -5,9 +5,12 @@ category: 'Testim拡張機能'
 order: 3
 updated: '2025-11-02'
 keywords:
-  - testim
-  - testim-extension-capture-video-bug-scenario
-  - testim-extension
+  - Testim拡張機能
+  - ビデオキャプチャ
+  - バグシナリオ
+  - 画面録画
+  - バグトラッキング
+  - スクリーンショット
 ---
 バグトラッカーにバグを送信するには、まずTestimをバグトラッキングシステムに接続する必要があります。詳細については、&lt;バグトラッカー設定ページへの参照を追加&gt;を参照してください。
 
