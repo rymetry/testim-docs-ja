@@ -1,13 +1,20 @@
 ---
 title: 'トラブルシューティング'
-description: '原文: https://help.testim.io/docs/troubleshoot'
+description: 'Testim for Salesforceで起こりやすい接続・実行失敗などの問題と対処方法をまとめます。'
 category: 'Salesforceユーティリティ'
 order: 3
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/troubleshoot'
 keywords:
-  - testim
-  - troubleshoot
-  - salesforce-utilities
+  - トラブルシューティング
+  - Salesforce接続
+  - IPホワイトリスト
+  - Grid
+  - ログイン履歴
+  - 権限
+  - ページ読み込み
+  - IAM
+  - Okta
 ---
 
 ## Salesforce環境に接続できない
@@ -17,7 +24,7 @@ Salesforce環境に接続するには、Salesforce環境が以下の要件を満
 * APIアクセスをサポート - これには、Enterprise、Performance、Unlimited、およびDeveloper Edition組織が必要です。Professional Edition組織は、アドオンとしてAPIアクセスを追加できます。Salesforce Essentials EditionはAPIアクセスをサポートしていません。
 * **管理 > ユーザー > プロファイル**で、Salesforce環境に接続するために選択されたユーザーに対してREST APIが有効になっています。
 
-  ![](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
+  ![プロファイル設定でREST APIを有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
 
 * Salesforce環境に接続するために選択されたユーザーの権限は:
 
@@ -31,11 +38,11 @@ Salesforce環境に接続するには、Salesforce環境が以下の要件を満
   * 54.245.105.236
   * 54.214.4.125
 
-  ![](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
+  ![ネットワークアクセスでIPをホワイトリスト登録](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
 
 * ブロックされている追加のIPアドレスをホワイトリストに登録します。**設定 > ID > ログイン履歴**で、アプリケーション「Testim for Salesforce」に対してブロックされている「制限付きIP」アドレスをログイン履歴で確認してください。
 
-  ![](/images/salesforce-utilities/troubleshoot/32799d4-Picture2.png)
+  ![ログイン履歴で制限付きIPを確認](/images/salesforce-utilities/troubleshoot/32799d4-Picture2.png)
 
 ## Grid上のスケジュール済みテスト実行が失敗する
 
@@ -44,21 +51,21 @@ Salesforce環境に接続するには、Salesforce環境が以下の要件を満
 * Azure Active DirectoryやOktaなどのIdentity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対してIAMサービスを無効にすることをお勧めします。Gridでのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
 * IPアドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付きIP」アドレスをログイン履歴で確認してください。
 
-  ![](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
+  ![ログイン履歴で制限付きIPを確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
 
   Gridからの外部アクセスを妨げている可能性のある以下の制限を削除してください:
 
   * IPアドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
 
-    ![](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
+    ![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
 
   * IPアドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログインIPアドレス範囲**
 
-    ![](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
+    ![プロファイルレベルのログインIPアドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
 
   * ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
 
-    ![](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
+    ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
 
 > 📘
 >
@@ -70,15 +77,15 @@ Salesforce環境に接続するには、Salesforce環境が以下の要件を満
 
 1. Tricentis Testim拡張機能をシークレットモードで実行するように構成します。
 
-   ![](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
+  ![Chrome拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
 
 2. シークレットモードでテストを実行します。
 
-   ![](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
+  ![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
 
 ## Createステップを使用して前のステップで作成したレコードが、Findステップを使用してSalesforceで見つからない
 
-**Create**ステップを使用してSalesforceでレコードを作成する場合、レコードが実際にSalesforceで作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](https://help.testim.io/docs/conditions#configuring-a-custom-condition)を含むステップを追加し、その後次のステップに進むことです。
+**Create**ステップを使用してSalesforceでレコードを作成する場合、レコードが実際にSalesforceで作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/conditions#configuring-a-custom-condition)を含むステップを追加し、その後次のステップに進むことです。
 
 カスタム条件を含む追加されるステップは、こちらのデモプロジェクトで共有ステップとして見つけることができます - [https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs](https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs)
 
@@ -86,15 +93,15 @@ Salesforce環境に接続するには、Salesforce環境が以下の要件を満
 
 デモテストでは、**Create**ステップの後に共有**Find**ステップが続きます。
 
-![](/images/salesforce-utilities/troubleshoot/210f6e5-troubleshootfind.png)
+![共有Findステップの例](/images/salesforce-utilities/troubleshoot/210f6e5-troubleshootfind.png)
 
 **Find**ステップには、レコードが見つかるまで、または最大4回までステップを繰り返すカスタム条件が含まれています:
 
-![](/images/salesforce-utilities/troubleshoot/f96d08f-customcondition.png)
+![Findステップのカスタム条件設定](/images/salesforce-utilities/troubleshoot/f96d08f-customcondition.png)
 
 これがカスタム条件のコードです（**カスタム**の横にある**編集**リンクをクリックして表示）:
 
-![](/images/salesforce-utilities/troubleshoot/58bdc93-code.png)
+![カスタム条件のコード例](/images/salesforce-utilities/troubleshoot/58bdc93-code.png)
 
 カスタムコードは、レコードが見つかるまで、またはレコードの検索を4回試行するまで、この共有グループを繰り返すように設定されています。
 
@@ -102,11 +109,11 @@ Find Account共有ステップには2つの内部ステップが含まれてい�
 
 * **Findステップ** - レコードを見つけるための検索ステップ:
 
-  ![](/images/salesforce-utilities/troubleshoot/b20c5ec-find.png)
+  ![Findステップの例](/images/salesforce-utilities/troubleshoot/b20c5ec-find.png)
 
 * **Sleepステップ** - 次の反復を待機するスリープステップ。
 
-  ![](/images/salesforce-utilities/troubleshoot/46c1a28-sleep.png)
+  ![Sleepステップの例](/images/salesforce-utilities/troubleshoot/46c1a28-sleep.png)
 
 ## Salesforceレコーダーを使用した自動化がSalesforce選択リストから値を選択しない
 
@@ -117,7 +124,7 @@ Salesforce選択リストの自動化は困難です。選択を記録する際�
 これは以下の理由による可能性があります:
 
 * テストを実行しているSalesforceアカウントに、このフィールドを表示するための読み取り権限がない可能性があります。\
-  **可能な解決策** - このアカウントのフィールド権限を表示するには、[権限検証](/docs/salesforce-steps/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。
+  **可能な解決策** - このアカウントのフィールド権限を表示するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。
 * テストを実行しているSalesforceアカウントのページレイアウトが、このフィールドなしで構成されている可能性があります。\
   **可能な解決策** - ページレイアウトを検証するには、Salesforceで設定を確認してください。
 
@@ -126,7 +133,7 @@ Salesforce選択リストの自動化は困難です。選択を記録する際�
 これには2つの可能な理由があります:
 
 1. Salesforceページの読み込み時間がGridとローカル実行で異なる場合があります。予期しない追加のページ読み込み時間により、このタイムアウトエラーが発生する可能性があります。\
-   **可能な解決策** - 失敗するテストステップの前に、Salesforceステップ[ページ読み込みを待機](/docs/salesforce-steps/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforceページの読み込みが完了するまでテスト実行を一時停止します。
+  **可能な解決策** - 失敗するテストステップの前に、Salesforceステップ[ページ読み込みを待機](/docs/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforceページの読み込みが完了するまでテスト実行を一時停止します。
 
 2. ローカル記録またはローカル実行中にユーザーがブラウザウィンドウのサイズを変更した場合。\
    **可能な解決策** - ブラウザウィンドウのサイズを変更せず、Gridでテストが実行されるときと同じサイズのままにすることをお勧めします。
@@ -135,7 +142,7 @@ Salesforce選択リストの自動化は困難です。選択を記録する際�
 
 Salesforceは、Sign-in with Salesforce（OAuth）ではなく、ユーザー名/パスワードで認証されたアカウントからの同時ログインのみを許可します。
 
-**可能な解決策** - 同時テスト実行には、ユーザー名/パスワードで認証されたペルソナを使用してください。詳細については、[ペルソナの作成](/docs/salesforce-testing/create-a-persona-and-add-users)を参照してください。
+**可能な解決策** - 同時テスト実行には、ユーザー名/パスワードで認証されたペルソナを使用してください。詳細については、[ペルソナの作成](/docs/create-a-persona-and-add-users)を参照してください。
 
 ## テストを記録する際にステップが欠落している
 
@@ -151,4 +158,4 @@ Salesforceは、Sign-in with Salesforce（OAuth）ではなく、ユーザー名
 これには2つの可能な理由があります:
 
 * Salesforceステップには、（ClassicとLightningの両方の）sObjectのページレイアウトにあるフィールドのみが含まれます。Lightningアプリビルダーを使用してのみ追加されたフィールドは含まれません。Salesforce管理者がページレイアウトからフィールドを除外したが、Lightningアプリビルダーを使用して[動的フォーム](https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&type=5)を作成するときに追加した可能性があります。Salesforceステップを使用するには、Salesforceセットアップでページレイアウトにフィールドを追加するか、テストを作成する際にSalesforceレコーダーを使用してください。
-* Salesforceステップには、Salesforce環境の接続に使用されるSalesforceアカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](https://help.testim.io/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別のSalesforceアカウントでSalesforce環境を再接続する必要がある場合があります。
+* Salesforceステップには、Salesforce環境の接続に使用されるSalesforceアカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別のSalesforceアカウントでSalesforce環境を再接続する必要がある場合があります。
