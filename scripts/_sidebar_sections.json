@@ -1,0 +1,1390 @@
+[
+  {
+    "rawTitle": "Overview（概要）",
+    "jp": "概要",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/testim-overview",
+        "slug": "testim-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/testim-automate",
+        "slug": "testim-automate"
+      },
+      {
+        "url": "https://help.testim.io/docs/help-ai-assistant",
+        "slug": "help-ai-assistant"
+      },
+      {
+        "url": "https://help.testim.io/docs/use-ai-in-with-testim",
+        "slug": "use-ai-in-with-testim"
+      },
+      {
+        "url": "https://help.testim.io/docs/ai-data-usage-policy",
+        "slug": "ai-data-usage-policy"
+      },
+      {
+        "url": "https://help.testim.io/docs/enhanced-mode-mobile",
+        "slug": "enhanced-mode-mobile"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Getting Started（はじめに）",
+    "jp": "はじめに",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/setting-up-your-account",
+        "slug": "setting-up-your-account"
+      },
+      {
+        "url": "https://help.testim.io/docs/creating-your-first-codeless-test",
+        "slug": "creating-your-first-codeless-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor",
+        "slug": "creating-your-first-mobile-test-in-testim-visual-editor"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Recording a Web Test（Webテストの記録）",
+    "jp": "Webテストの記録",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/how-to-record-a-test",
+        "slug": "how-to-record-a-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/why-do-you-need-testim-extension",
+        "slug": "why-do-you-need-testim-extension"
+      },
+      {
+        "url": "https://help.testim.io/docs/multi-windows-recording",
+        "slug": "multi-windows-recording"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Recording a Mobile Test（モバイルテストの記録）",
+    "jp": "モバイルテストの記録",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/recording-a-mobile-test",
+        "slug": "recording-a-mobile-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/recording-a-vmg-mobile-test",
+        "slug": "recording-a-vmg-mobile-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/recording-a-local-mobile-test",
+        "slug": "recording-a-local-mobile-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/setting-the-test-configuration",
+        "slug": "setting-the-test-configuration"
+      },
+      {
+        "url": "https://help.testim.io/docs/configure-tricentis-mobile-agent",
+        "slug": "configure-tricentis-mobile-agent"
+      },
+      {
+        "url": "https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing",
+        "slug": "how-to-prepare-an-ipa-for-mobile-testing"
+      },
+      {
+        "url": "https://help.testim.io/docs/mobile-test-editor",
+        "slug": "mobile-test-editor"
+      },
+      {
+        "url": "https://help.testim.io/docs/mobile-test-mirroring-toolbar",
+        "slug": "mobile-test-mirroring-toolbar"
+      },
+      {
+        "url": "https://help.testim.io/docs/vision-locate",
+        "slug": "vision-locate"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Steps & Editing Tests（ステップとテスト編集）",
+    "jp": "ステップとテスト編集",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/steps",
+        "slug": "steps"
+      },
+      {
+        "url": "https://help.testim.io/docs/editing-your-tests",
+        "slug": "editing-your-tests"
+      },
+      {
+        "url": "https://help.testim.io/docs/editing-target-element-properties",
+        "slug": "editing-target-element-properties"
+      },
+      {
+        "url": "https://help.testim.io/docs/editing-target-element-properties-mobile",
+        "slug": "editing-target-element-properties-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/editing-a-steps-properties",
+        "slug": "editing-a-steps-properties"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Groups（グループ）",
+    "jp": "グループ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/groups",
+        "slug": "groups"
+      },
+      {
+        "url": "https://help.testim.io/docs/auto-grouping",
+        "slug": "auto-grouping"
+      },
+      {
+        "url": "https://help.testim.io/docs/auto-complete",
+        "slug": "auto-complete"
+      },
+      {
+        "url": "https://help.testim.io/docs/shareable-steps",
+        "slug": "shareable-steps"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Conditions（条件分岐）",
+    "jp": "条件分岐",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/conditions",
+        "slug": "conditions"
+      },
+      {
+        "url": "https://help.testim.io/docs/advanced-conditions-settings",
+        "slug": "advanced-conditions-settings"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Test Utilities（テストユーティリティ）",
+    "jp": "テストユーティリティ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/generating-a-random-value",
+        "slug": "generating-a-random-value"
+      },
+      {
+        "url": "https://help.testim.io/docs/generating-a-date",
+        "slug": "generating-a-date"
+      },
+      {
+        "url": "https://help.testim.io/docs/search-within-a-test",
+        "slug": "search-within-a-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/recovering-a-test-that-was-not-saved",
+        "slug": "recovering-a-test-that-was-not-saved"
+      },
+      {
+        "url": "https://help.testim.io/docs/advanced-set-text",
+        "slug": "advanced-set-text"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Validations(検証)",
+    "jp": "検証",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/validations",
+        "slug": "validations"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-element-visible",
+        "slug": "validate-element-visible"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-element-not-visible",
+        "slug": "validate-element-not-visible"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-element-text",
+        "slug": "validate-element-text"
+      },
+      {
+        "url": "https://help.testim.io/docs/custom-code-1",
+        "slug": "custom-code-1"
+      },
+      {
+        "url": "https://help.testim.io/docs/custom-code",
+        "slug": "custom-code"
+      },
+      {
+        "url": "https://help.testim.io/docs/add-cli-validations-and-actions",
+        "slug": "add-cli-validations-and-actions"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-download",
+        "slug": "validate-download"
+      },
+      {
+        "url": "https://help.testim.io/docs/email-validation",
+        "slug": "email-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/html-attribute-validation",
+        "slug": "html-attribute-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-element-attribute",
+        "slug": "validate-element-attribute"
+      },
+      {
+        "url": "https://help.testim.io/docs/checkbox-and-radio-button-validation",
+        "slug": "checkbox-and-radio-button-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/pixel-validation-and-pixel-wait-for",
+        "slug": "pixel-validation-and-pixel-wait-for"
+      },
+      {
+        "url": "https://help.testim.io/docs/add-network-validation",
+        "slug": "add-network-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/file-upload-step",
+        "slug": "file-upload-step"
+      },
+      {
+        "url": "https://help.testim.io/docs/mongodb-validation",
+        "slug": "mongodb-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/mysql-validation",
+        "slug": "mysql-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/css-property-validation",
+        "slug": "css-property-validation"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Accessibility Validations（アクセシビリティ検証）",
+    "jp": "アクセシビリティ検証",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/accessibility-validations",
+        "slug": "accessibility-validations"
+      },
+      {
+        "url": "https://help.testim.io/docs/element-accessibility-validation",
+        "slug": "element-accessibility-validation"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Visual Validations（ビジュアル検証）",
+    "jp": "ビジュアル検証",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/validate-element-visualization",
+        "slug": "validate-element-visualization"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-viewport-visualization",
+        "slug": "validate-viewport-visualization"
+      },
+      {
+        "url": "https://help.testim.io/docs/validate-full-page-visualization",
+        "slug": "validate-full-page-visualization"
+      },
+      {
+        "url": "https://help.testim.io/docs/wait-for-element-visualization",
+        "slug": "wait-for-element-visualization"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Data-driven Testing(データ駆動テスト)",
+    "jp": "データ駆動テスト",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/data-driven-testing",
+        "slug": "data-driven-testing"
+      },
+      {
+        "url": "https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor",
+        "slug": "configuring-a-data-driven-test-from-the-visual-editor"
+      },
+      {
+        "url": "https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file",
+        "slug": "configuring-data-driven-tests-using-the-config-file"
+      },
+      {
+        "url": "https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source",
+        "slug": "configuring-data-driven-tests-using-data-from-an-external-source"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Handling UI Actions(UI操作)",
+    "jp": "UI操作",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/handling-ui-actions",
+        "slug": "handling-ui-actions"
+      },
+      {
+        "url": "https://help.testim.io/docs/auto-scroll",
+        "slug": "auto-scroll"
+      },
+      {
+        "url": "https://help.testim.io/docs/drag-drop-step",
+        "slug": "drag-drop-step"
+      },
+      {
+        "url": "https://help.testim.io/docs/navigation",
+        "slug": "navigation"
+      },
+      {
+        "url": "https://help.testim.io/docs/refresh-page",
+        "slug": "refresh-page"
+      },
+      {
+        "url": "https://help.testim.io/docs/scroll",
+        "slug": "scroll"
+      },
+      {
+        "url": "https://help.testim.io/docs/hover-step",
+        "slug": "hover-step"
+      },
+      {
+        "url": "https://help.testim.io/docs/extract-text",
+        "slug": "extract-text"
+      },
+      {
+        "url": "https://help.testim.io/docs/extract-sms-message",
+        "slug": "extract-sms-message"
+      },
+      {
+        "url": "https://help.testim.io/docs/loops",
+        "slug": "loops"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Parameters（パラメータ）",
+    "jp": "パラメータ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/parameters",
+        "slug": "parameters"
+      },
+      {
+        "url": "https://help.testim.io/docs/parameters-in-custom-javascript-steps",
+        "slug": "parameters-in-custom-javascript-steps"
+      },
+      {
+        "url": "https://help.testim.io/docs/parameters-for-groups",
+        "slug": "parameters-for-groups"
+      },
+      {
+        "url": "https://help.testim.io/docs/json-parameters-file-parameters",
+        "slug": "json-parameters-file-parameters"
+      },
+      {
+        "url": "https://help.testim.io/docs/configuration-file-parameters",
+        "slug": "configuration-file-parameters"
+      },
+      {
+        "url": "https://help.testim.io/docs/passing-parameters-from-excel-file",
+        "slug": "passing-parameters-from-excel-file"
+      },
+      {
+        "url": "https://help.testim.io/docs/parameter-override-rules",
+        "slug": "parameter-override-rules"
+      },
+      {
+        "url": "https://help.testim.io/docs/exports-parameters",
+        "slug": "exports-parameters"
+      },
+      {
+        "url": "https://help.testim.io/docs/hidden-parameters",
+        "slug": "hidden-parameters"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Advanced Features（高度な機能）",
+    "jp": "高度な機能",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/wait-for",
+        "slug": "wait-for"
+      },
+      {
+        "url": "https://help.testim.io/docs/api-testing",
+        "slug": "api-testing"
+      },
+      {
+        "url": "https://help.testim.io/docs/cookies",
+        "slug": "cookies"
+      },
+      {
+        "url": "https://help.testim.io/docs/group-context",
+        "slug": "group-context"
+      },
+      {
+        "url": "https://help.testim.io/docs/auto-grouping2",
+        "slug": "auto-grouping2"
+      },
+      {
+        "url": "https://help.testim.io/docs/advanced-js-editor",
+        "slug": "advanced-js-editor"
+      },
+      {
+        "url": "https://help.testim.io/docs/custom-action-step-mobile",
+        "slug": "custom-action-step-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/hooks",
+        "slug": "hooks"
+      },
+      {
+        "url": "https://help.testim.io/docs/error-suffix-customization",
+        "slug": "error-suffix-customization"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Special Steps（特殊ステップ）",
+    "jp": "特殊ステップ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/salesforce-auto-login-step",
+        "slug": "salesforce-auto-login-step"
+      },
+      {
+        "url": "https://help.testim.io/docs/salesforce-apex-action-step",
+        "slug": "salesforce-apex-action-step"
+      },
+      {
+        "url": "https://help.testim.io/docs/coding-assistant",
+        "slug": "coding-assistant"
+      },
+      {
+        "url": "https://help.testim.io/docs/keyboard-shortcut-step",
+        "slug": "keyboard-shortcut-step"
+      },
+      {
+        "url": "https://help.testim.io/docs/set-geolocation",
+        "slug": "set-geolocation"
+      },
+      {
+        "url": "https://help.testim.io/docs/deep-link-mobile",
+        "slug": "deep-link-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/hide-keyboard-mobile",
+        "slug": "hide-keyboard-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/clear-text-mobile",
+        "slug": "clear-text-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/reusable-test-data",
+        "slug": "reusable-test-data"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Running Tests（テスト実行）",
+    "jp": "テスト実行",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/running-tests-overview",
+        "slug": "running-tests-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/the-command-line-cli",
+        "slug": "the-command-line-cli"
+      },
+      {
+        "url": "https://help.testim.io/docs/allow-chrome-browser-to-use-microphone",
+        "slug": "allow-chrome-browser-to-use-microphone"
+      },
+      {
+        "url": "https://help.testim.io/docs/base-url",
+        "slug": "base-url"
+      },
+      {
+        "url": "https://help.testim.io/docs/scheduler",
+        "slug": "scheduler"
+      },
+      {
+        "url": "https://help.testim.io/docs/scheduler-mobile",
+        "slug": "scheduler-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/schedulers-notification-via-webhook",
+        "slug": "schedulers-notification-via-webhook"
+      },
+      {
+        "url": "https://help.testim.io/docs/running-tests-on-multiple-browsers",
+        "slug": "running-tests-on-multiple-browsers"
+      },
+      {
+        "url": "https://help.testim.io/docs/run-multiple-tests-locally",
+        "slug": "run-multiple-tests-locally"
+      },
+      {
+        "url": "https://help.testim.io/docs/run-in-incognito",
+        "slug": "run-in-incognito"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Configuration File（設定ファイル）",
+    "jp": "設定ファイル",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/configuration-file-run-hooks",
+        "slug": "configuration-file-run-hooks"
+      },
+      {
+        "url": "https://help.testim.io/docs/predefined-properties-in-config-file-hooks",
+        "slug": "predefined-properties-in-config-file-hooks"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Mock Network Responses(ネットワークモック)",
+    "jp": "ネットワークモック",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/mock-network-responses",
+        "slug": "mock-network-responses"
+      },
+      {
+        "url": "https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file",
+        "slug": "mocking-all-the-network-traffic-using-a-har-file"
+      },
+      {
+        "url": "https://help.testim.io/docs/creating-a-mapping-file",
+        "slug": "creating-a-mapping-file"
+      },
+      {
+        "url": "https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file",
+        "slug": "running-the-test-in-mock-mode-using-the-mapping-file"
+      },
+      {
+        "url": "https://help.testim.io/docs/disabling-network-mock-mode",
+        "slug": "disabling-network-mock-mode"
+      },
+      {
+        "url": "https://help.testim.io/docs/mock-network-responses-troubleshooting",
+        "slug": "mock-network-responses-troubleshooting"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Test Execution(テスト実行制御)",
+    "jp": "テスト実行制御",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/play-from-here",
+        "slug": "play-from-here"
+      },
+      {
+        "url": "https://help.testim.io/docs/rerun-locally-with-the-same-params",
+        "slug": "rerun-locally-with-the-same-params"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Results(結果)",
+    "jp": "結果",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/results-overview",
+        "slug": "results-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-results",
+        "slug": "test-results"
+      },
+      {
+        "url": "https://help.testim.io/docs/compare-side-by-side-screenshots",
+        "slug": "compare-side-by-side-screenshots"
+      },
+      {
+        "url": "https://help.testim.io/docs/network-logs",
+        "slug": "network-logs"
+      },
+      {
+        "url": "https://help.testim.io/docs/network-logs-copy",
+        "slug": "network-logs-copy"
+      },
+      {
+        "url": "https://help.testim.io/docs/why-did-my-test-fail",
+        "slug": "why-did-my-test-fail"
+      },
+      {
+        "url": "https://help.testim.io/docs/visual-validation-test-results",
+        "slug": "visual-validation-test-results"
+      },
+      {
+        "url": "https://help.testim.io/docs/debug-console-errors-access-dom",
+        "slug": "debug-console-errors-access-dom"
+      },
+      {
+        "url": "https://help.testim.io/docs/execution-runs-screen",
+        "slug": "execution-runs-screen"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-runs",
+        "slug": "test-runs"
+      },
+      {
+        "url": "https://help.testim.io/docs/stop-pause-debug-tests",
+        "slug": "stop-pause-debug-tests"
+      },
+      {
+        "url": "https://help.testim.io/docs/result-labels",
+        "slug": "result-labels"
+      },
+      {
+        "url": "https://help.testim.io/docs/export-test-list-and-test-results",
+        "slug": "export-test-list-and-test-results"
+      },
+      {
+        "url": "https://help.testim.io/docs/tag-remote-runs-failures",
+        "slug": "tag-remote-runs-failures"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-run-pdf-report",
+        "slug": "test-run-pdf-report"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Debugging（デバッグ）",
+    "jp": "デバッグ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/debugging-overview",
+        "slug": "debugging-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/debugging-controls",
+        "slug": "debugging-controls"
+      },
+      {
+        "url": "https://help.testim.io/docs/recording-additional-steps-to-fix-bugs",
+        "slug": "recording-additional-steps-to-fix-bugs"
+      },
+      {
+        "url": "https://help.testim.io/docs/debug-helper-panels",
+        "slug": "debug-helper-panels"
+      },
+      {
+        "url": "https://help.testim.io/docs/js-code-debugging",
+        "slug": "js-code-debugging"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Test Management（テスト管理）",
+    "jp": "テスト管理",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/test-management-overview",
+        "slug": "test-management-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-list",
+        "slug": "test-list"
+      },
+      {
+        "url": "https://help.testim.io/docs/managing-tests-and-folders",
+        "slug": "managing-tests-and-folders"
+      },
+      {
+        "url": "https://help.testim.io/docs/cloning-tests",
+        "slug": "cloning-tests"
+      },
+      {
+        "url": "https://help.testim.io/docs/shared-steps-library",
+        "slug": "shared-steps-library"
+      },
+      {
+        "url": "https://help.testim.io/docs/managing-shared-steps-and-folders",
+        "slug": "managing-shared-steps-and-folders"
+      },
+      {
+        "url": "https://help.testim.io/docs/dependencies-and-ordering-of-tests",
+        "slug": "dependencies-and-ordering-of-tests"
+      },
+      {
+        "url": "https://help.testim.io/docs/labels",
+        "slug": "labels"
+      },
+      {
+        "url": "https://help.testim.io/docs/revisions",
+        "slug": "revisions"
+      },
+      {
+        "url": "https://help.testim.io/docs/shared-configuration",
+        "slug": "shared-configuration"
+      },
+      {
+        "url": "https://help.testim.io/docs/configuration-library-mobile",
+        "slug": "configuration-library-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-plans",
+        "slug": "test-plans"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-plans-mobile",
+        "slug": "test-plans-mobile"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-suites",
+        "slug": "test-suites"
+      },
+      {
+        "url": "https://help.testim.io/docs/locators-auto-improve",
+        "slug": "locators-auto-improve"
+      },
+      {
+        "url": "https://help.testim.io/docs/bug-reporting",
+        "slug": "bug-reporting"
+      },
+      {
+        "url": "https://help.testim.io/docs/saving-a-filtered-view",
+        "slug": "saving-a-filtered-view"
+      },
+      {
+        "url": "https://help.testim.io/docs/mobile-apps",
+        "slug": "mobile-apps"
+      },
+      {
+        "url": "https://help.testim.io/docs/view-local-connected-mobile-devices",
+        "slug": "view-local-connected-mobile-devices"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Integrations（統合）",
+    "jp": "統合",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/integrations-overview",
+        "slug": "integrations-overview"
+      }
+    ]
+  },
+  {
+    "rawTitle": "CI Integrations（CI統合）",
+    "jp": "CI統合",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/integrate-testim-to-your-ci",
+        "slug": "integrate-testim-to-your-ci"
+      },
+      {
+        "url": "https://help.testim.io/docs/azure-devops-build-pipeline-integrations",
+        "slug": "azure-devops-build-pipeline-integrations"
+      },
+      {
+        "url": "https://help.testim.io/docs/bamboo-integration",
+        "slug": "bamboo-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/circle-ci-integration",
+        "slug": "circle-ci-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/codeship-integration",
+        "slug": "codeship-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/jenkins-integration",
+        "slug": "jenkins-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/jenkins-integration-using-docker",
+        "slug": "jenkins-integration-using-docker"
+      },
+      {
+        "url": "https://help.testim.io/docs/teamcity-integration",
+        "slug": "teamcity-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/vsts-and-tfs-integration",
+        "slug": "vsts-and-tfs-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/gitlab-integration",
+        "slug": "gitlab-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/github-action-integration",
+        "slug": "github-action-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/copado-integration",
+        "slug": "copado-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/gearset-integration",
+        "slug": "gearset-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/autorabit-integration",
+        "slug": "autorabit-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/dedicated-run-tunnel",
+        "slug": "dedicated-run-tunnel"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Applitools Integration（Applitools統合）",
+    "jp": "Applitools統合",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/applitools-integration",
+        "slug": "applitools-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/override-applitools-test-name",
+        "slug": "override-applitools-test-name"
+      },
+      {
+        "url": "https://help.testim.io/docs/override-applitools-app-name",
+        "slug": "override-applitools-app-name"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Other Integrations（その他の統合）",
+    "jp": "その他の統合",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/github-integration",
+        "slug": "github-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/sealights-integration",
+        "slug": "sealights-integration"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Grid Management（グリッド管理）",
+    "jp": "グリッド管理",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/grid-management",
+        "slug": "grid-management"
+      },
+      {
+        "url": "https://help.testim.io/docs/tricentis-device-cloud",
+        "slug": "tricentis-device-cloud"
+      },
+      {
+        "url": "https://help.testim.io/docs/virtual-mobile-grid",
+        "slug": "virtual-mobile-grid"
+      },
+      {
+        "url": "https://help.testim.io/docs/custom-grid",
+        "slug": "custom-grid"
+      },
+      {
+        "url": "https://help.testim.io/docs/saucelabs-integration",
+        "slug": "saucelabs-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/browserstack-integration-1",
+        "slug": "browserstack-integration-1"
+      },
+      {
+        "url": "https://help.testim.io/docs/browserstack-integration-copy",
+        "slug": "browserstack-integration-copy"
+      },
+      {
+        "url": "https://help.testim.io/docs/custom-capabilities",
+        "slug": "custom-capabilities"
+      },
+      {
+        "url": "https://help.testim.io/docs/saucelabs-browserstack-options",
+        "slug": "saucelabs-browserstack-options"
+      },
+      {
+        "url": "https://help.testim.io/docs/headspin-integration",
+        "slug": "headspin-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/bitbucket-integration",
+        "slug": "bitbucket-integration"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Bug Tracker Settings（バグトラッカー設定）",
+    "jp": "バグトラッカー設定",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/bug-tracker-settings",
+        "slug": "bug-tracker-settings"
+      },
+      {
+        "url": "https://help.testim.io/docs/connecting-testim-to-jira",
+        "slug": "connecting-testim-to-jira"
+      },
+      {
+        "url": "https://help.testim.io/docs/connecting-testim-to-trello",
+        "slug": "connecting-testim-to-trello"
+      },
+      {
+        "url": "https://help.testim.io/docs/connecting-testim-to-slack",
+        "slug": "connecting-testim-to-slack"
+      },
+      {
+        "url": "https://help.testim.io/docs/connecting-testim-to-github",
+        "slug": "connecting-testim-to-github"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Test Management Integrations（テスト管理統合）",
+    "jp": "テスト管理統合",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/test-management-integrations",
+        "slug": "test-management-integrations"
+      },
+      {
+        "url": "https://help.testim.io/docs/qtest-integration",
+        "slug": "qtest-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/testrail-integration",
+        "slug": "testrail-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/ttm-for-jira-integration",
+        "slug": "ttm-for-jira-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/xray-integration",
+        "slug": "xray-integration"
+      }
+    ]
+  },
+  {
+    "rawTitle": "CLI & API（CLI・API）",
+    "jp": "CLI・API",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/cli-settings",
+        "slug": "cli-settings"
+      },
+      {
+        "url": "https://help.testim.io/docs/cli-prerequisites",
+        "slug": "cli-prerequisites"
+      },
+      {
+        "url": "https://help.testim.io/docs/api-access",
+        "slug": "api-access"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Project & User Management（プロジェクト・ユーザー管理）",
+    "jp": "プロジェクト・ユーザー管理",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/project-user-management",
+        "slug": "project-user-management"
+      },
+      {
+        "url": "https://help.testim.io/docs/project-and-user-management",
+        "slug": "project-and-user-management"
+      },
+      {
+        "url": "https://help.testim.io/docs/project-settings",
+        "slug": "project-settings"
+      },
+      {
+        "url": "https://help.testim.io/docs/secrets",
+        "slug": "secrets"
+      },
+      {
+        "url": "https://help.testim.io/docs/subscription-plans",
+        "slug": "subscription-plans"
+      },
+      {
+        "url": "https://help.testim.io/docs/copilot-license-management",
+        "slug": "copilot-license-management"
+      },
+      {
+        "url": "https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright",
+        "slug": "exporting-a-testim-test-as-code-for-playwright"
+      }
+    ]
+  },
+  {
+    "rawTitle": "TestOps（TestOps）",
+    "jp": "TestOps",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/testops-overview",
+        "slug": "testops-overview"
+      }
+    ]
+  },
+  {
+    "rawTitle": "TestOps Management（TestOps管理）",
+    "jp": "TestOps管理",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/testops-management",
+        "slug": "testops-management"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-status",
+        "slug": "test-status"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-owner",
+        "slug": "test-owner"
+      },
+      {
+        "url": "https://help.testim.io/docs/flaky-tests",
+        "slug": "flaky-tests"
+      }
+    ]
+  },
+  {
+    "rawTitle": "TestOps Version Control（TestOpsバージョン管理）",
+    "jp": "TestOpsバージョン管理",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/testops-version-control",
+        "slug": "testops-version-control"
+      },
+      {
+        "url": "https://help.testim.io/docs/version-control-branches",
+        "slug": "version-control-branches"
+      },
+      {
+        "url": "https://help.testim.io/docs/merging-branches",
+        "slug": "merging-branches"
+      },
+      {
+        "url": "https://help.testim.io/docs/pull-requests",
+        "slug": "pull-requests"
+      },
+      {
+        "url": "https://help.testim.io/docs/read-only",
+        "slug": "read-only"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Insights（インサイト）",
+    "jp": "インサイト",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/insights",
+        "slug": "insights"
+      },
+      {
+        "url": "https://help.testim.io/docs/dashboard",
+        "slug": "dashboard"
+      },
+      {
+        "url": "https://help.testim.io/docs/reports",
+        "slug": "reports"
+      },
+      {
+        "url": "https://help.testim.io/docs/team-productivity",
+        "slug": "team-productivity"
+      },
+      {
+        "url": "https://help.testim.io/docs/audit-log",
+        "slug": "audit-log"
+      },
+      {
+        "url": "https://help.testim.io/docs/turbo-mode",
+        "slug": "turbo-mode"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Salesforce Testing（Salesforceテスト）",
+    "jp": "Salesforceテスト",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/salesforce-testing-overview",
+        "slug": "salesforce-testing-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/salesforce-testing-getting-started",
+        "slug": "salesforce-testing-getting-started"
+      },
+      {
+        "url": "https://help.testim.io/docs/core-concepts",
+        "slug": "core-concepts"
+      },
+      {
+        "url": "https://help.testim.io/docs/changelog",
+        "slug": "changelog"
+      },
+      {
+        "url": "https://help.testim.io/docs/create-and-manage-test-environments",
+        "slug": "create-and-manage-test-environments"
+      },
+      {
+        "url": "https://help.testim.io/docs/create-a-persona-and-add-users",
+        "slug": "create-a-persona-and-add-users"
+      },
+      {
+        "url": "https://help.testim.io/docs/create-a-salesforce-test",
+        "slug": "create-a-salesforce-test"
+      },
+      {
+        "url": "https://help.testim.io/docs/use-agentic-test-automation-for-salesforce",
+        "slug": "use-agentic-test-automation-for-salesforce"
+      },
+      {
+        "url": "https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments",
+        "slug": "create-and-merge-branches-from-different-test-environments"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Salesforce Steps（Salesforceステップ）",
+    "jp": "Salesforceステップ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/salesforce-steps",
+        "slug": "salesforce-steps"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-login",
+        "slug": "sfdc-step-login"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-loginas",
+        "slug": "sfdc-step-loginas"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-launchapp",
+        "slug": "sfdc-step-launchapp"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-logout",
+        "slug": "sfdc-step-logout"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-findandgotorecord",
+        "slug": "sfdc-step-findandgotorecord"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-waitforpageload",
+        "slug": "sfdc-step-waitforpageload"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-closeconsoletabs",
+        "slug": "sfdc-step-closeconsoletabs"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-apex-action",
+        "slug": "sfdc-step-apex-action"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-permission-validation",
+        "slug": "sfdc-step-permission-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-document-validation",
+        "slug": "sfdc-document-validation"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-convertleadtoopportunity",
+        "slug": "sfdc-step-convertleadtoopportunity"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-quotelineeditor",
+        "slug": "sfdc-step-quotelineeditor"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-create",
+        "slug": "sfdc-step-create"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-validate",
+        "slug": "sfdc-step-validate"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-edit",
+        "slug": "sfdc-step-edit"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-relatedlistaction",
+        "slug": "sfdc-step-relatedlistaction"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-quickactions",
+        "slug": "sfdc-step-quickactions"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-delete",
+        "slug": "sfdc-step-delete"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-verifypicklistoptions",
+        "slug": "sfdc-step-verifypicklistoptions"
+      },
+      {
+        "url": "https://help.testim.io/docs/sfdc-step-salesforce-flows",
+        "slug": "sfdc-step-salesforce-flows"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Salesforce Utilities（Salesforceユーティリティ）",
+    "jp": "Salesforceユーティリティ",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/log-screenshots",
+        "slug": "log-screenshots"
+      },
+      {
+        "url": "https://help.testim.io/docs/record-tests-with-salesforce",
+        "slug": "record-tests-with-salesforce"
+      },
+      {
+        "url": "https://help.testim.io/docs/troubleshoot",
+        "slug": "troubleshoot"
+      },
+      {
+        "url": "https://help.testim.io/docs/faq",
+        "slug": "faq"
+      },
+      {
+        "url": "https://help.testim.io/docs/tta-for-salesforce-branch-management",
+        "slug": "tta-for-salesforce-branch-management"
+      },
+      {
+        "url": "https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup",
+        "slug": "best-practice-variable-naming-convention-for-easy-cleanup"
+      },
+      {
+        "url": "https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution",
+        "slug": "methods-for-displaying-a-specific-record-during-test-execution"
+      },
+      {
+        "url": "https://help.testim.io/docs/setting-mfa-for-salesforce",
+        "slug": "setting-mfa-for-salesforce"
+      },
+      {
+        "url": "https://help.testim.io/docs/page-layout",
+        "slug": "page-layout"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Testim Extension（Testim拡張機能）",
+    "jp": "Testim拡張機能",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/testim-extension-overview",
+        "slug": "testim-extension-overview"
+      },
+      {
+        "url": "https://help.testim.io/docs/testim-extension-capture-screenshot",
+        "slug": "testim-extension-capture-screenshot"
+      },
+      {
+        "url": "https://help.testim.io/docs/testim-extension-capture-video-bug-scenario",
+        "slug": "testim-extension-capture-video-bug-scenario"
+      },
+      {
+        "url": "https://help.testim.io/docs/testim-extension-create-automated-test",
+        "slug": "testim-extension-create-automated-test"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Security & SSO（セキュリティ・SSO）",
+    "jp": "セキュリティ・SSO",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/testim-grid-ips",
+        "slug": "testim-grid-ips"
+      },
+      {
+        "url": "https://help.testim.io/docs/sso-integration",
+        "slug": "sso-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/onelogin-sso-integration",
+        "slug": "onelogin-sso-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/okta-sso-integration",
+        "slug": "okta-sso-integration"
+      },
+      {
+        "url": "https://help.testim.io/docs/azure-ad-sso-integration",
+        "slug": "azure-ad-sso-integration"
+      }
+    ]
+  },
+  {
+    "rawTitle": "Miscellaneous（その他）",
+    "jp": "その他",
+    "urls": [
+      {
+        "url": "https://help.testim.io/docs/mobile-web-testing",
+        "slug": "mobile-web-testing"
+      },
+      {
+        "url": "https://help.testim.io/docs/keyboard-shortcuts",
+        "slug": "keyboard-shortcuts"
+      },
+      {
+        "url": "https://help.testim.io/docs/generate-random-data-with-js",
+        "slug": "generate-random-data-with-js"
+      },
+      {
+        "url": "https://help.testim.io/docs/best-practices-for-handling-logins",
+        "slug": "best-practices-for-handling-logins"
+      },
+      {
+        "url": "https://help.testim.io/docs/testim-labs",
+        "slug": "testim-labs"
+      },
+      {
+        "url": "https://help.testim.io/docs/test-flow-view",
+        "slug": "test-flow-view"
+      },
+      {
+        "url": "https://help.testim.io/docs/link-directly-to-a-shared-step",
+        "slug": "link-directly-to-a-shared-step"
+      }
+    ]
+  }
+]
