@@ -1,8 +1,8 @@
 ---
 title: 'フルページのビジュアル検証'
 description: 'ページ全体のピクセルレベルでのビジュアル差異を検証する方法。Applitoolsとの連携により、ベースラインと現在のテスト実行を比較します。'
-category: 'ビジュアル検証'
-order: 3
+category: '高度な編集'
+order: 5024
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/validate-full-page-visualization'
 keywords:

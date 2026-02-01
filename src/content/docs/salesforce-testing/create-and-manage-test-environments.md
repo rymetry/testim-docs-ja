@@ -2,7 +2,7 @@
 title: 'Salesforce環境の接続'
 description: 'Testim for SalesforceにSalesforce環境を接続し、既存環境の管理（名前変更・再接続・削除・キャッシュクリア）を行う手順を説明します。'
 category: 'Salesforceテスト'
-order: 5
+order: 16005
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-and-manage-test-environments'
 keywords:
@@ -17,6 +17,7 @@ keywords:
    - 設定
    - Testim for Salesforce
 ---
+
 Testim for Salesforceテストを作成する前に、Salesforce環境をTestim for Salesforceに接続する必要があります。各環境は1つ以上のブランチに関連付けられます（ブランチは1つの環境に関連付けることができます）。
 
 # Salesforce環境の接続
@@ -24,7 +25,7 @@ Testim for Salesforceテストを作成する前に、Salesforce環境をTestim 
 :fa-arrow-right: **Salesforce環境を接続するには**:
 
 1. Testim for Salesforceアカウントで、**Settings > Salesforce > Environments**に移動し、**Connect a salesforce environment**を選択します。\
-   ![](/images/salesforce-testing/create-and-manage-test-environments/681f2b6-connect.png)
+   ![スクリーンショット](/images/salesforce-testing/create-and-manage-test-environments/681f2b6-connect.png)
 2. **Select Type**フィールドで、Salesforce環境のタイプを選択します:
    * **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
    * **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
@@ -34,7 +35,7 @@ Testim for Salesforceテストを作成する前に、Salesforce環境をTestim 
    2. 新しいブランチを作成する場合は、**Create New Branch**フィールドにブランチの名前を入力します。
 5. **Connect**をクリックします。\
    Salesforceログイン画面が表示されます。\
-   ![](/images/salesforce-testing/create-and-manage-test-environments/43f1fac-salesforcelogin.png)
+   ![スクリーンショット](/images/salesforce-testing/create-and-manage-test-environments/43f1fac-salesforcelogin.png)
 6. システム管理者権限を持つアカウントでログインします。
 7. **Allow**を選択して、Testim for SalesforceがID URLサービスにアクセスし、API経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
 

@@ -1,8 +1,8 @@
 ---
 title: 'ドラッグ&ドロップステップ'
 description: 'ドラッグ&ドロップステップの記録と変更方法。ドロップターゲットの変更やネイティブイベントの使用方法を説明します。'
-category: 'UI操作'
-order: 3
+category: '高度な編集'
+order: 5032
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/drag-drop-step'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 自動化テスト
   - Chrome拡張
 ---
+
 テストでドラッグ&ドロップステップを記録および変更する方法を学びます
 
 ドラッグ&ドロップの操作は、テスト記録時に自動的に記録されます。

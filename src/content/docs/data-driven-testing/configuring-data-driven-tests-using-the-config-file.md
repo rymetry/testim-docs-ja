@@ -2,8 +2,8 @@
 title: '設定ファイルを使用したデータ駆動テストの構成'
 description: '設定ファイルを使用してデータ駆動テストを構成する方法を説明します。'
 sourceUrl: 'https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file'
-category: 'データ駆動テスト'
-order: 3
+category: '高度な編集'
+order: 5028
 updated: '2025-09-15'
 keywords:
   - testim

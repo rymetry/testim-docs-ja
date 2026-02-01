@@ -1,8 +1,8 @@
 ---
 title: '選択リストオプションの検証'
 description: '選択リスト（ドロップダウン）に表示される/されないオプションを検証します。'
-category: 'Salesforceステップ'
-order: 20
+category: 'Salesforceテスト'
+order: 16029
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-verifypicklistoptions'
 keywords:
@@ -13,6 +13,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -29,12 +30,12 @@ keywords:
 2. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**選択リストオプションの検証**ステップを選択します。\
    **選択リストオプションの検証**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-verifypicklistoptions/2694c63-2024-05-06_15-48-25.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-verifypicklistoptions/2694c63-2024-05-06_15-48-25.png)
 3. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、選択リストオプションを検証したいレコードのオブジェクトのタイプを決定します。
 4. **レコードタイプを選択**の下で、選択リストオプションを検証したいレコードのレコードタイプを選択します。\
    レコードタイプ/オブジェクトのフィールドのリストが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-verifypicklistoptions/5643048-2024-05-06_15-59-04.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-verifypicklistoptions/5643048-2024-05-06_15-59-04.png)
 5. 選択リストオプションを検証したい各フィールドについて、**Action** の下で次のオプションのいずれかを選択します:
    1. **Exact Match** - **Options** フィールドで選択されたオプションがこのフィールドのすべての選択リストオプションと一致することを検証したい場合は、このオプションを選択します。オプションが多い場合や少ない場合は、ステップは失敗します。
    2. **Includes** - **Options** フィールドで選択されたオプションがこのフィールドの選択リストオプションに含まれていることを検証したい場合は、このオプションを選択します。1つ以上のオプションが含まれていない場合、ステップは失敗します。

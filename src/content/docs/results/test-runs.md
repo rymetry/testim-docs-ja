@@ -2,7 +2,7 @@
 title: 'テスト実行'
 description: '過去のテスト実行の統計を表示するTest Runs画面。Counted RunsとLocal Editor Runs、フィルター、グラフ、CSV出力、失敗タグ付け。'
 category: '結果'
-order: 10
+order: 7010
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-runs'
 keywords:

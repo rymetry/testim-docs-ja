@@ -1,8 +1,8 @@
 ---
 title: 'サブスクリプションプラン'
 description: 'Web、モバイル、Salesforce、Copilotの各プロダクトカテゴリのサブスクリプションプラン詳細と使用状況について説明します。並列化モデルの理解を提供します。'
-category: '管理者設定'
-order: 5
+category: '管理'
+order: 14006
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/subscription-plans'
 keywords:

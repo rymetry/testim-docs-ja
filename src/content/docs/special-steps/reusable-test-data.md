@@ -1,8 +1,8 @@
 ---
 title: 'テストデータ（再利用）'
 description: 'Test Data ファイルを使って複数テスト間でデータを再利用し、スケジューラやテスト設定から上書き・割り当てを行う方法を説明します。'
-category: '特殊ステップ'
-order: 9
+category: '高度な編集'
+order: 5066
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/reusable-test-data'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Test Data Library
   - 特殊ステップ
 ---
+
 テストデータを再利用し、テスト実行ごとに使い回す方法を説明します。
 
 Testim のテストデータファイルは、複数テストで使うデータを一元管理する仕組みです。毎回テストに同じ値を埋め込む代わりに、**Resources > Test Data** に1度登録しておけば、必要なときに参照できます。実行時に値を上書きすることも可能で、テストの保守性・可読性・更新効率が向上します。
@@ -96,7 +97,6 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 既定のテストデータは選択したファイルの値に置き換わります。
 
 ![再利用可能なテストデータのスクリーンショット](/images/special-steps/reusable-test-data/79b7927-uploading_file.jpg)
-
 
 ## テストへテストデータファイルを割り当て
 

@@ -1,24 +1,31 @@
 ---
 title: 'ページレイアウト'
-description: '原文: https://help.testim.io/docs/page-layout'
-category: 'Salesforceユーティリティ'
-order: 9
-updated: '2025-11-02'
+description: 'Salesforceのページレイアウトがステップで選択できるフィールドに与える影響と、ページレイアウト選択の手順を説明します。'
+category: 'Salesforceテスト'
+order: 16039
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/page-layout'
 keywords:
-  - testim
-  - page-layout
-  - salesforce-utilities
+  - ページレイアウト
+  - レコード操作
+  - フィールド
+  - レコードタイプ
+  - 動的フォーム
+  - 権限
+  - 編集ステップ
+  - 作成ステップ
+  - 検証ステップ
 ---
 
 Salesforceのページレイアウトとは、オブジェクトレコードページでのフィールド、関連リスト、カスタムリンクの表示を決定するフレームワークです。Salesforceでは、さまざまなページレイアウトがプロファイルに割り当てられます。これは、オブジェクトレコードで作業するユーザーが、自分のプロファイルに割り当てられたページレイアウトに含まれるフィールドのみを表示することを意味します。
 
-デフォルトでは、Testim for Salesforceで[編集](/docs/salesforce-steps/sfdc-step-edit)ステップなど**レコード操作**カテゴリのステップの1つを構成する場合、ステップのペインに表示されるフィールドは、Testim for SalesforceとSalesforceプラットフォーム間の初期接続を構成したユーザーにSalesforceで割り当てられたページレイアウトに基づいています。
+デフォルトでは、Testim for Salesforceで[編集](/docs/sfdc-step-edit)ステップなど**レコード操作**カテゴリのステップの1つを構成する場合、ステップのペインに表示されるフィールドは、Testim for SalesforceとSalesforceプラットフォーム間の初期接続を構成したユーザーにSalesforceで割り当てられたページレイアウトに基づいています。
 
 ページレイアウト機能を使用すると、利用可能なページレイアウトのいずれかをレコード操作ステップの一部として選択できるようになり、さまざまなSalesforceオブジェクトレコードフィールドへのより大きな制御とアクセシビリティが可能になります。この機能は、以下のステップで利用できます:
 
-* [編集](/docs/salesforce-steps/sfdc-step-edit)
-* [作成](/docs/salesforce-steps/sfdc-step-create)
-* [検証](/docs/salesforce-steps/sfdc-step-validate)
+* [編集](/docs/sfdc-step-edit)
+* [作成](/docs/sfdc-step-create)
+* [検証](/docs/sfdc-step-validate)
 
 > 🚧 実行時のフィールドへのアクセス
 >

@@ -1,8 +1,8 @@
 ---
 title: 'CLI設定'
 description: 'コマンドラインインターフェース(CLI)を使用してテストを実行するための基本コードの生成方法について説明します。CI統合とローカルシェルの両方をサポートします。'
-category: 'セッティング'
-order: 1
+category: '設定'
+order: 13001
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/cli-settings'
 keywords:

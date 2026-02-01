@@ -1,8 +1,8 @@
 ---
 title: 'カスタムコードによる検証'
 description: 'カスタムJavaScriptコードを使用した検証ステップの作成方法。高度な検証ロジックや独自の検証条件を実装できるPro機能です。'
-category: '検証'
-order: 5
+category: '高度な編集'
+order: 5006
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/custom-code-1'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 独自ロジック
   - 柔軟な検証
 ---
+
 カスタムコードによる検証
 
 任意のユースケースに対応するために、カスタムコードを使ったテストステップを作成できます。

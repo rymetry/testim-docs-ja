@@ -1,8 +1,8 @@
 ---
 title: 'GitHub Actions統合'
 description: 'GitHub ActionsでTestimテストを実行する方法について説明します。ワークフロー作成手順とYAMLファイルのサンプルコードを提供します。'
-category: 'CI統合'
-order: 2
+category: '統合'
+order: 12012
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/github-action-integration'
 keywords:

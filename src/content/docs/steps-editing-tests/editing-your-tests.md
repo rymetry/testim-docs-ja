@@ -1,8 +1,8 @@
 ---
 title: 'テストの編集'
 description: '既存テストの編集方法を学びます。新しいステップの追加、コピー&ペースト、ステップの削除、ステップの変更方法を解説します。'
-category: 'ステップとテスト編集'
-order: 2
+category: 'テスト編集'
+order: 4002
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/editing-your-tests'
 keywords:

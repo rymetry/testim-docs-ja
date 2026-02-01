@@ -1,8 +1,8 @@
 ---
 title: '削除'
 description: '表示中のSalesforceレコードを削除します。'
-category: 'Salesforceステップ'
-order: 19
+category: 'Salesforceテスト'
+order: 16028
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-delete'
 keywords:
@@ -11,6 +11,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -30,5 +31,5 @@ keywords:
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、削除ステップを選択します。\
    **削除**ステップが追加され、次の**オブジェクトプロパティ**が表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-delete/f1f2053-deletestep.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-delete/f1f2053-deletestep.png)
 4. 完了したら、**保存**をクリックします。

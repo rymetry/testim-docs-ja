@@ -1,8 +1,8 @@
 ---
 title: '設定ファイルフックの事前定義プロパティ'
 description: '設定ファイルの Before/After Suite・Test フックで参照できる事前定義プロパティと、その用途の概要を一覧で説明します。'
-category: '設定ファイル'
-order: 2
+category: 'テスト実行'
+order: 6012
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/predefined-properties-in-config-file-hooks'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - config hooks
 ---
+
 以下では、各種設定フックで利用できる事前定義プロパティを紹介します。これらは実行の「info」に含まれる情報で、テスト／スイートに関する追加情報を取得するのに利用できます。例えば、Before Suite フックで `projectId` の値を出力できます。
 
 ## Before Suite の事前定義プロパティ
@@ -56,7 +57,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 ## After Suite の事前定義プロパティ
 
@@ -293,7 +293,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 ## Before Test の事前定義プロパティ
 
@@ -737,7 +736,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 ## After Test の事前定義プロパティ
 
@@ -1370,4 +1368,3 @@ keywords:
   </tr>
  </tbody>
 </table>
-

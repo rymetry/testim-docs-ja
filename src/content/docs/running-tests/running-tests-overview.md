@@ -2,7 +2,7 @@
 title: 'テスト実行の概要'
 description: 'ローカル実行、グリッド実行、スケジューラー、CLI など Testim でテストを実行するさまざまな方法と、それぞれの実行タイプがテスト実行クォータにどのようにカウントされるかを説明します。'
 category: 'テスト実行'
-order: 1
+order: 6001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/running-tests-overview'
 keywords:

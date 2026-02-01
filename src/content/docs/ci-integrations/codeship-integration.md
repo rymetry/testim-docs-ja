@@ -1,8 +1,8 @@
 ---
 title: 'Codeship統合'
 description: 'CodeshipでTestimテストを実行する方法について説明します。ローカルおよび外部Selenium Gridの設定手順を提供します。'
-category: 'CI統合'
-order: 10
+category: '統合'
+order: 12006
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/codeship-integration'
 keywords:

@@ -2,7 +2,7 @@
 title: 'テストプラン - モバイル'
 description: 'すべてのテスト、セットアップ・クリーンアップテスト、および実行設定を含むモバイルアプリのテストプランの作成方法について説明します。'
 category: 'テスト管理'
-order: 13
+order: 9013
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-plans-mobile'
 keywords:

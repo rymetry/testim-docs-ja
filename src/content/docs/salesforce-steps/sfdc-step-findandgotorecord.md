@@ -1,8 +1,8 @@
 ---
 title: 'レコードを検索して移動'
 description: 'テキスト検索で一致するレコードを探し、最初の検索結果に移動します。'
-category: 'Salesforceステップ'
-order: 6
+category: 'Salesforceテスト'
+order: 16015
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-findandgotorecord'
 keywords:
@@ -12,6 +12,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -25,11 +26,11 @@ keywords:
 3. **オブジェクトを選択**フィールドで、検索したいオブジェクトのタイプを選択します。
 4. **検索対象**フィールドに、探しているレコードに一致するテキスト文字列を入力します。
 
-   ![](/images/salesforce-steps/sfdc-step-findandgotorecord/ef0246d-acme.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-findandgotorecord/ef0246d-acme.png)
 5. 検索クエリとして変数を使用したい場合は、**検索対象**フィールドをクリックし、**T** サインをクリックします。\
    フィールドが **JS** パラメータフィールドに変わります。
 6. フィールドに変数名を入力します。
 
-   ![](/images/salesforce-steps/sfdc-step-findandgotorecord/28f5b3c-companyname.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-findandgotorecord/28f5b3c-companyname.png)
 7. **保存**をクリックします。\
    テストを実行すると、検索ステップは一致するレコードを検索し、複数の結果が返された場合は最初の結果に移動します。結果が見つからない場合、ステップは失敗します。

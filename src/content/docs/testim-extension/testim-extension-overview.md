@@ -2,7 +2,7 @@
 title: 'Testim拡張機能 - 概要'
 description: '原文: https://help.testim.io/docs/testim-extension-overview'
 category: 'Testim拡張機能'
-order: 1
+order: 17001
 updated: '2025-11-02'
 keywords:
   - Testim拡張機能
@@ -14,6 +14,7 @@ keywords:
   - DOMアクセス
   - ビジュアルエディター
 ---
+
 ![Testim拡張機能アイコン](/images/testim-extension/testim-extension-overview/d78ddb1-Testim_extension.PNG)
 
 ## Testim拡張機能が必要な理由

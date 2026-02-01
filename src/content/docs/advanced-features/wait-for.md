@@ -1,8 +1,8 @@
 ---
 title: '待機（Wait for）'
 description: '各種「待機」ステップを使って要素の表示・非表示、テキスト、ダウンロード完了などを待ってから処理を進める方法を説明します。'
-category: '高度な機能'
-order: 1
+category: '高度な編集'
+order: 5049
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/wait-for'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - 高度な機能
 ---
+
 ただ「待つ」必要があるときに。
 
 次のステップへ進む前に、あるイベントの発生を待ちたい場面があります。要素の表示待ち、テキストの表示待ち、数秒の待機など、さまざまです。

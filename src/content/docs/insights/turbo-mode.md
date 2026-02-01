@@ -1,8 +1,8 @@
 ---
 title: 'ターボモード'
 description: '原文: https://help.testim.io/docs/turbo-mode'
-category: 'インサイト'
-order: 6
+category: 'TestOps'
+order: 15016
 updated: '2025-11-02'
 keywords:
   - ターボモード
@@ -14,17 +14,14 @@ keywords:
   - Edge Chromium
   - PRO機能
 ---
+
 Testim テストを大規模に効率的に実行し、パフォーマンスを向上させます。
 
 パフォーマンスを向上させ、テストの実行時間を平均30%短縮し、不要なデータの保存を回避します。
 
 > 📘 これは PRO 機能です
->
 > この機能は、プロフェッショナルプランのプロジェクトのみに公開されています。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/) をクリックしてください。
-
-> 📘
->
-> 「Turbo」モードは、Chrome または Edge Chromium のみで適用されます。
+> 📘 「Turbo」モードは、Chrome または Edge Chromium のみで適用されます。
 
 ## ターボモードでの実行
 
@@ -44,7 +41,6 @@ Testim テストを大規模に効率的に実行し、パフォーマンスを�
   * BASEURL
 
   > 📘
-  >
   > ブラウザのクラッシュなど、失敗した実行でもデータが保存されない場合があります。
 
 ### CLI 経由でのターボモード実行

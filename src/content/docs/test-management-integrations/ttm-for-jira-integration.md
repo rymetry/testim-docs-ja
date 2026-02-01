@@ -1,8 +1,8 @@
 ---
 title: 'TTM for Jira統合'
 description: 'TestimとTTM for Jira（Tricentis Test Management for Jira）を統合してテスト結果を自動的に同期する方法を説明します。統合設定、手動マッピング、一括作成とマッピング機能を網羅しています。'
-category: 'test-management-integrations'
-order: 40
+category: '統合'
+order: 12041
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/ttm-for-jira-integration'
 keywords:
@@ -233,11 +233,7 @@ Testim発のテスト実行の名前は、以下の命名規則を使用しま�
  </tbody>
 </table>
 
-
 > 📘 注意:
->
 > TTM for JIRAでこれらのステータスを変更すると、統合が中断される可能性があります。
-
 > 📘 注意:
->
 > TTM for Jiraの必須カスタムフィールドはサポートされていません。TTM for Jiraでカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。

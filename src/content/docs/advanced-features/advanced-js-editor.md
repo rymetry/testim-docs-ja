@@ -1,8 +1,8 @@
 ---
 title: '高度なJSエディタ'
 description: 'Monaco ベースの高度なJSエディタでカスタムステップや検証の JavaScript コードを快適に編集する方法と対応ステップを説明します。'
-category: '高度な機能'
-order: 6
+category: '高度な編集'
+order: 5054
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/advanced-js-editor'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - JavaScript 編集
   - シンタックスチェック
 ---
+
 Monaco Editor を用いたシンタックスチェック、自動補完、配色などで、カスタムステップの編集体験を向上させます。
 
 新しい高度なJSエディタは、[Monaco Editor](https://microsoft.github.io/monaco-editor/) をベースにした、より快適で効率的なコーディング体験を提供します。以下のさまざまなカスタムステップでJSの記述に利用できます（一覧は後述）。Monaco Editor は VS Code を支えるコードエディタです。

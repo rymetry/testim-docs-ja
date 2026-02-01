@@ -2,7 +2,7 @@
 title: 'ビジュアル検証テスト結果'
 description: 'Applitools統合プロジェクトでのビジュアル検証テスト結果の確認方法について説明します。'
 category: '結果'
-order: 7
+order: 7007
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/visual-validation-test-results'
 keywords:
@@ -13,6 +13,7 @@ keywords:
   - 追加環境
   - 実行設定
 ---
+
 プロジェクトがApplitoolsと統合されている場合、テスト結果にはビジュアル検証設定に固有の情報も含まれます。
 
 ## テスト結果全体

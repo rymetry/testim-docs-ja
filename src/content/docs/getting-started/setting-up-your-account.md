@@ -2,7 +2,7 @@
 title: 'アカウントの設定'
 description: 'Testim拡張機能のインストール方法とTestimアカウントの無料トライアル登録手順を説明します。'
 category: 'はじめに'
-order: 1
+order: 2001
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/setting-up-your-account'
 keywords:

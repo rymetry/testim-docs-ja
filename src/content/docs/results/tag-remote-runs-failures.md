@@ -2,7 +2,7 @@
 title: '失敗した実行への失敗タイプのタグ付け'
 description: '失敗したリモート実行にタグを付けてデータを収集し、レポートのインサイトを提供する方法。失敗タイプ、説明、課題へのリンク。'
 category: '結果'
-order: 14
+order: 7014
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/tag-remote-runs-failures'
 keywords:

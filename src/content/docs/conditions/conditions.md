@@ -1,8 +1,8 @@
 ---
 title: '条件分岐'
 description: 'テストステップに条件を設定して実行を制御する方法を学びます。Element、Element text、Custom、Never(skip)など5種類の条件設定について詳しく解説します。'
-category: '条件分岐'
-order: 1
+category: 'テスト編集'
+order: 4010
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/conditions'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テスト実行制御
   - ブレークポイント
 ---
+
 テストに条件（Condition）を追加する
 
 "when to run step" 機能を使うと、テスト内の各ステップを実行するかしないかを制御できます。グループステップを含むあらゆるステップに「実行条件（when to run）」を設定できます。

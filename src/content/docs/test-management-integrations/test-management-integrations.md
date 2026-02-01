@@ -1,8 +1,8 @@
 ---
 title: 'テスト管理統合'
 description: 'Testimで利用可能なテスト管理ツール統合の概要を説明します。qTest、TestRail、Xray、TTM for Jiraとの連携により、テスト結果を一元管理できます。'
-category: 'test-management-integrations'
-order: 10
+category: '統合'
+order: 12038
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/test-management-integrations'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: 'Gearset統合'
 description: 'GearsetのCIまたはデプロイジョブからWebhookを使用してTestimテストを自動化する方法について説明します。WebhookとREST APIの設定手順を提供します。'
-category: 'CI統合'
-order: 7
+category: '統合'
+order: 12014
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/gearset-integration'
 keywords:

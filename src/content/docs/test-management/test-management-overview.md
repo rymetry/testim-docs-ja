@@ -2,7 +2,7 @@
 title: 'テスト管理概要'
 description: 'テスト、設定、およびリソースを管理するための各種画面について説明します。'
 category: 'テスト管理'
-order: 1
+order: 9001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-management-overview'
 keywords:

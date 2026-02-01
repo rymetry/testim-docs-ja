@@ -1,8 +1,8 @@
 ---
 title: 'Salesforce APEX アクションステップ'
 description: 'Salesforce の APEX コードをテストステップとして実行し、UI を越えた E2E 検証やバックエンドデータ操作を行う Salesforce APEX アクションステップの使い方を説明します。'
-category: '特殊ステップ'
-order: 2
+category: '高度な編集'
+order: 5059
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/salesforce-apex-action-step'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 接続情報
   - パラメータ
 ---
+
 APEX コードをテスト内のステップとして実行し、UI を越えた E2E 検証を可能にします。APEX コードブロックに任意のパラメータを渡せます。APEX 側の入力パラメータは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、Salesforce から返ったデータなどはステップログで確認できます。
 
 > 📘 Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を管理者にホワイトリスト登録してもらってください。

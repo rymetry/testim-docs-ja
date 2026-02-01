@@ -1,8 +1,8 @@
 ---
 title: 'APEX を実行'
 description: 'テスト内のステップとしてApexコードを実行し、値のエクスポートも行えます。'
-category: 'Salesforceステップ'
-order: 9
+category: 'Salesforceテスト'
+order: 16018
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-apex-action'
 keywords:
@@ -14,6 +14,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -28,7 +29,7 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 2. **Salesforce ステップ**タブの下で、**API 操作**をクリックし、**APEX を実行**ステップを選択します。\
    **function** エディターが開き、右側に **プロパティ**パネルが開きます:
 
-   ![](/images/salesforce-steps/sfdc-step-apex-action/c0c4dc9-Picture2.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/c0c4dc9-Picture2.png)
 3. **プロパティ**パネルの**説明**フィールドで、このステップの説明をオプションで編集します。デフォルトの説明は「Salesforce - APEX Action」です。
 4. function テキストボックスに、目的の APEX コードを入力します。パラメータを定義している場合は、APEX コードでそれらのパラメータを参照できます。
 5. 戻る矢印をクリックして、メインエディターウィンドウに戻ります。
@@ -45,7 +46,7 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 
 3. **JS** インジケーターの横に、APEX スクリプトで使用されるこのパラメータの名前を付けます。これは、エディターウィンドウの関数宣言で自動的に引数として表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-apex-action/fbe2f4f-Picture3.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/fbe2f4f-Picture3.png)
 
 ## 値のエクスポート
 
@@ -78,7 +79,7 @@ exportsTest.oppAmount = firstoppAmount;
   }
 ```
 
-![](/images/salesforce-steps/sfdc-step-apex-action/da0a612-Picture4.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/da0a612-Picture4.png)
 
 ## APEX アクション結果ログの表示
 
@@ -92,4 +93,4 @@ exportsTest.oppAmount = firstoppAmount;
 
 Salesforce から受信したログがある場合、詳細がステップログセクションに表示されます。
 
-![](/images/salesforce-steps/sfdc-step-apex-action/825fff5-view_apex_action_2.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/825fff5-view_apex_action_2.png)

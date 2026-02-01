@@ -1,8 +1,8 @@
 ---
 title: 'ステッププロパティパネルのパラメータ'
 description: '原文: https://help.testim.io/docs/parameters-in-custom-javascript-steps'
-category: 'パラメータ'
-order: 2
+category: '高度な編集'
+order: 5041
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters-in-custom-javascript-steps'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - カスタムアクション
   - ステップ再利用
 ---
+
 ステップのプロパティパネル（JavaScript/HTML）でパラメータを定義する
 
 多くのステップでは、**プロパティ**パネル内の **PARAMS** 欄でパラメータを定義できます。

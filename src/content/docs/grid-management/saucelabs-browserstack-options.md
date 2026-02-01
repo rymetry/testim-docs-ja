@@ -1,8 +1,8 @@
 ---
 title: 'SauceLabs/BrowserStackオプション'
 description: 'SauceLabsおよびBrowserStackで利用可能な拡張実行パラメーターの設定方法について説明します。JSONファイルでのオプション指定やCLIの使用例を提供します。'
-category: 'グリッド管理'
-order: 8
+category: '統合'
+order: 12030
 updated: '2025-11-21'
 sourceUrl: 'https://help.testim.io/docs/saucelabs-browserstack-options'
 keywords:
@@ -13,6 +13,7 @@ keywords:
   - 設定オプション
   - カスタマイズ
 ---
+
 SauceLabsおよびBrowserStackでテストを実行する際、JSON形式の拡張実行パラメーターを使用して、追加の設定を渡すことができます。
 
 たとえば、特定の画面解像度やタイムゾーンでテストを実行したい場合は、次のようなJSONファイルを作成します:

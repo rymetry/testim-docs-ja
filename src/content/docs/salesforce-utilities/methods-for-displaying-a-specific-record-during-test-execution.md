@@ -1,18 +1,24 @@
 ---
 title: 'テスト実行中に特定のSalesforceレコードを検索して表示する'
-description: '原文: https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution'
-category: 'Salesforceユーティリティ'
-order: 7
-updated: '2025-11-02'
+description: 'テスト実行中に特定レコードを表示するためのナビゲーション/検索/作成/記録の方法を解説します。'
+category: 'Salesforceテスト'
+order: 16037
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution'
 keywords:
-  - testim
-  - methods-for-displaying-a-specific-record-during-test-execution
-  - salesforce-utilities
+  - レコード表示
+  - ナビゲーション
+  - レコードを検索して移動
+  - Findステップ
+  - Createステップ
+  - 記録ステップ
+  - ブレークポイント
+  - URL
 ---
 
 一部のSalesforceステップでは、テストの実行中にシステムが特定のレコードに移動する必要があります。これにより、目的のレコードがSalesforceに表示されているときに指定されたステップが実行されます。これを実現するには複数の方法があります:
 
-* **ナビゲーションアクションステップ** - 目的のレコードのURLを含む[ナビゲーションアクションを追加](/docs/handling-ui-actions/navigation)ステップを、指定されたステップの前に追加します。たとえば、**検証ステップ**を使用する場合、Salesforceで目的のレコードを見つけ、ブラウザからURLをコピーし、**検証ステップ**の前にURLを含む**ナビゲーションアクションを追加**ステップを追加します。
+* **ナビゲーションアクションステップ** - 目的のレコードのURLを含む[ナビゲーションアクションを追加](/docs/navigation)ステップを、指定されたステップの前に追加します。たとえば、**検証ステップ**を使用する場合、Salesforceで目的のレコードを見つけ、ブラウザからURLをコピーし、**検証ステップ**の前にURLを含む**ナビゲーションアクションを追加**ステップを追加します。
 * **レコードを検索して移動ステップ** - 指定されたステップの前に**[レコードを検索して移動](/docs/sfdc-step-find)**ステップを追加します。たとえば、**検証ステップ**の前に、目的のレコードを見つけてAUTに表示する**レコードを検索して移動**ステップを作成します。
-* **レコード作成ステップ** - テストの一部として作成ステップを使用して指定されたレコードを作成した場合、そのレコードはAUTに表示されます。そのため、[作成](/docs/salesforce-steps/sfdc-step-create)ステップの直後に指定されたステップを配置すると、指定されたレコードがSalesforceに表示されます。
-* **レコードに移動するための記録ステップ** - [記録されたステップ](/docs/salesforce-utilities/record-tests-with-salesforce)は、テストのどこにでも追加できます。指定されたステップの直前にブレークポイントを有効にし、テストのその時点までテストを実行してから、「この位置から記録を開始」をクリックし、AUT/Salesforceで指定されたレコードに移動するために必要なステップを記録します。
+* **レコード作成ステップ** - テストの一部として作成ステップを使用して指定されたレコードを作成した場合、そのレコードはAUTに表示されます。そのため、[作成](/docs/sfdc-step-create)ステップの直後に指定されたステップを配置すると、指定されたレコードがSalesforceに表示されます。
+* **レコードに移動するための記録ステップ** - [記録されたステップ](/docs/record-tests-with-salesforce)は、テストのどこにでも追加できます。指定されたステップの直前にブレークポイントを有効にし、テストのその時点までテストを実行してから、「この位置から記録を開始」をクリックし、AUT/Salesforceで指定されたレコードに移動するために必要なステップを記録します。

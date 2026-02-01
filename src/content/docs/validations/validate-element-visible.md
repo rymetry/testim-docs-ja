@@ -1,8 +1,8 @@
 ---
 title: '要素の可視性の検証'
 description: '要素が画面上に表示されているかを検証するステップ。ページ上の特定要素の可視性を確認し、期待通りのUI状態であることを保証します。'
-category: '検証'
-order: 2
+category: '高度な編集'
+order: 5003
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-element-visible'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - ビジュアル検証
   - ページ検証
 ---
+
 期待する要素が可視であることを検証する
 
 Element visible 検証では、要素がページ（Web）やアプリ画面（モバイル）に存在し可視であるかを確認できます。要素に可変の画像やテキストが含まれていても検証は機能します。この検証は要素の存在と可視性のみを確認し、内容の具体値はチェックしません。

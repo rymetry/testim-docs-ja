@@ -2,7 +2,7 @@
 title: 'Testim拡張機能 - スクリーンショットをキャプチャ'
 description: '原文: https://help.testim.io/docs/testim-extension-capture-screenshot'
 category: 'Testim拡張機能'
-order: 2
+order: 17002
 updated: '2025-11-02'
 keywords:
   - Testim拡張機能
@@ -15,6 +15,7 @@ keywords:
   - Trello
   - GitHub
 ---
+
 Testim拡張機能のスクリーンショットキャプチャ機能を使用すると、Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加し、Jira、Slack、Trello、Githubなどのバグトラッキングシステムにバグ/問題として送信できます。\
 バグトラッカーにバグを送信するには、まずTestimをバグトラッキングシステムに接続する必要があります。詳細については、&lt;バグトラッカー設定ページへの参照を追加&gt;を参照してください。\
 スクリーンショットキャプチャ機能を使用するには、Testim拡張機能をダウンロードする必要があります。Testim拡張機能をダウンロードするには - [こちらをクリック](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)してください。

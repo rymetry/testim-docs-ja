@@ -2,7 +2,7 @@
 title: '変更履歴'
 description: 'Testim for Salesforceの主な機能追加・改善の履歴（スクリーンショット、Login As、権限検証、SSO、CI統合など）をまとめます。'
 category: 'Salesforceテスト'
-order: 4
+order: 16004
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/changelog'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Gearset
   - Document Validation
 ---
+
 ## スクリーンショットのログ記録 2023年3月
 
 Testim for Salesforceの最新バージョンでは、各テストステップのスクリーンショットをキャプチャし、Salesforceログに保存できるようになり、デバッグに役立ちます。これを行うには、Log screenshotsオプションを有効にするだけです。

@@ -1,8 +1,8 @@
 ---
 title: 'GitHub統合'
 description: 'TestimでGitHubブランチを管理し、Git Issuesでバグを報告する方法について説明します。ブランチの自動作成とマージ機能を提供します。'
-category: 'その他の統合'
-order: 1
+category: '統合'
+order: 12020
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/github-integration'
 keywords:

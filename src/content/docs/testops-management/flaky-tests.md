@@ -1,8 +1,8 @@
 ---
 title: '不安定なテスト'
 description: '原文: https://help.testim.io/docs/flaky-tests'
-category: 'TestOps管理'
-order: 4
+category: 'TestOps'
+order: 15005
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/flaky-tests'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 失敗パターン
   - 自動再実行
 ---
+
 Testim のライブラリを使用して不安定なテストを簡単に見つけます
 
 テストは、リトライ後に成功した場合、不安定と見なされます。つまり、最初の試行では失敗し、その後の1回以上のリトライで成功した場合です。リトライとその設定方法の詳細については、[こちら](/docs/the-command-line-cli#failed-test-retries)をお読みください。

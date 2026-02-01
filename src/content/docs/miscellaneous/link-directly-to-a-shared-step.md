@@ -1,8 +1,8 @@
 ---
 title: '共有ステップに直接リンク'
 description: '原文: https://help.testim.io/docs/link-directly-to-a-shared-step'
-category: 'その他'
-order: 7
+category: 'Testim Labs'
+order: 20003
 updated: '2025-11-02'
 keywords:
   - 共有ステップ
@@ -11,6 +11,7 @@ keywords:
   - アクセス性向上
   - Labs機能
 ---
+
 > 📘 これはTestim Labs機能です
 >
 > Testim Labsに参加している場合は、**Settings > Labs**でこの機能が有効になっていることを確認してください。Testim Labsと参加方法の詳細については、[こちら](/docs/testim-labs)を参照してください

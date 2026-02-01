@@ -1,8 +1,8 @@
 ---
 title: 'インテグレーションの概要'
 description: 'Testim が提供する CI・グリッド・バグトラッカー・テスト管理などの各種統合機能の概要と、関連ドキュメントへのリンクをまとめたページです。'
-category: 'インテグレーション'
-order: 1
+category: '統合'
+order: 12001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/integrations-overview'
 keywords:

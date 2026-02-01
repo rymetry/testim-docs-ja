@@ -1,8 +1,8 @@
 ---
 title: '監査ログ'
 description: '原文: https://help.testim.io/docs/audit-log'
-category: 'インサイト'
-order: 5
+category: 'TestOps'
+order: 15015
 updated: '2025-11-02'
 keywords:
   - 監査ログ
@@ -13,6 +13,7 @@ keywords:
   - ログフィルタリング
   - PRO機能
 ---
+
 Testim の監査ログは、Testim Automate のすべてのイベントを記録します。\
 この機能は有料顧客に自動的に有効化され、プロジェクトオーナーと会社オーナーのみがアクセスできます。
 
@@ -34,7 +35,7 @@ Testim の監査ログは、Testim Automate のすべてのイベントを記録
 
 # 監査ログのフィルタリング
 
-### 時間でフィルタリング
+## 時間でフィルタリング
 
 ![時間フィルターボタン](/images/insights/audit-log/8155736-filterbytime.png)
 
@@ -52,7 +53,7 @@ Testim の監査ログは、Testim Automate のすべてのイベントを記録
 >
 > ログアクティビティは、プロジェクトで監査ログが有効化された日から記録されます。
 
-### 追加フィルタ
+## 追加フィルタ
 
 追加のフィルタオプションにアクセスするには、オプションボタンをクリックします。次の条件でフィルタリングできます:
 

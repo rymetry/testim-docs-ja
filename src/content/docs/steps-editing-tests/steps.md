@@ -1,8 +1,8 @@
 ---
 title: 'ステップ'
 description: 'Testimのステップの種類と使い方について説明します。手動ステップと自動記録ステップの違い、検証ステップ、待機ステップ、アクションステップの詳細を解説します。'
-category: 'ステップとテスト編集'
-order: 1
+category: 'テスト編集'
+order: 4001
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/steps'
 keywords:
@@ -188,7 +188,6 @@ keywords:
  </tbody>
 </table>
 
-
 ### 待機ステップ
 
 <table class="md-table md-table-2cols">
@@ -269,7 +268,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 ### アクションステップ
 
@@ -384,7 +382,6 @@ keywords:
  </tbody>
 </table>
 
-
 ## 自動記録ステップ
 
 テスト対象アプリケーション（AUT）での操作中に自動的に記録されるステップです。
@@ -491,4 +488,3 @@ keywords:
   </tr>
  </tbody>
 </table>
-

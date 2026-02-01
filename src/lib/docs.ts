@@ -2,32 +2,103 @@ import type { NavItem } from '../types/navigation';
 import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { getCollection } from 'astro:content';
+import fs from 'node:fs';
 
 export type DocEntry = CollectionEntry<'docs'>;
 
-// ナビゲーションのカテゴリ表示順を固定する。未登録のカテゴリは末尾に回る。
-const CATEGORY_ORDER = [
+type SidebarOrdering = {
+  categoryIndexByLabel: Map<string, number>;
+  itemIndexBySlug: Map<string, number>;
+};
+
+// フロントエンドのナビゲーション表示順のフォールバック。
+// （通常は docs/SIDEBAR_URLS.md から抽出した順を優先）
+const FALLBACK_CATEGORY_ORDER: string[] = [
   '概要',
   'はじめに',
-  'テスト作成',
-  'ステップとテスト編集',
-  '高度な機能',
+  'テストの記録',
+  'テスト編集',
+  '高度な編集',
   'テスト実行',
   '結果',
   'デバッグ',
   'テスト管理',
   'モバイルアプリ',
   'デバイス管理',
-  'インテグレーション',
-  'セッティング',
-  '管理者設定',
-  'TESTOPS',
+  '統合',
+  '設定',
+  '管理',
+  'TestOps',
   'Salesforceテスト',
   'Testim拡張機能',
   'セキュリティ',
   'ガイド',
-  'Tesim Labs',
+  'Testim Labs',
 ];
+
+function extractJapaneseLabel(sectionTitle: string): string {
+  // "Overview（概要）" -> "概要"
+  // "Validations(検証)" -> "検証"
+  const m = sectionTitle.match(/[（(]([^）)]+)[）)]/);
+  return (m ? m[1] : sectionTitle).trim();
+}
+
+function getSidebarOrdering(): SidebarOrdering {
+  try {
+    const sidebarUrl = new URL('../../docs/SIDEBAR_URLS.md', import.meta.url);
+    const text = fs.readFileSync(sidebarUrl, 'utf8');
+    const lines = text.split(/\r?\n/);
+
+    const sectionRe = /^##\s+(.+?)\s*$/;
+    const urlRe = /^-\s+✅(?:🔍)?\s+https:\/\/help\.testim\.io\/docs\/([^\s#]+)\s*$/;
+
+    const categoryIndexByLabel = new Map<string, number>();
+    const itemIndexBySlug = new Map<string, number>();
+
+    let currentCategory: string | null = null;
+    let globalItemIndex = 0;
+
+    for (const line of lines) {
+      const sm = line.match(sectionRe);
+      if (sm) {
+        const raw = sm[1].trim();
+        // メタ見出しはスキップ
+        if (raw === '翻訳ステータス' || raw === '検証ステータス' || raw === 'URL抽出方法') {
+          currentCategory = null;
+          continue;
+        }
+        currentCategory = extractJapaneseLabel(raw);
+        if (!categoryIndexByLabel.has(currentCategory)) {
+          categoryIndexByLabel.set(currentCategory, categoryIndexByLabel.size);
+        }
+        continue;
+      }
+
+      const um = line.match(urlRe);
+      if (um && currentCategory) {
+        const slug = um[1];
+        // グローバルの並び（SIDEBAR内の出現順）を採用
+        if (!itemIndexBySlug.has(slug)) {
+          itemIndexBySlug.set(slug, globalItemIndex++);
+        }
+      }
+    }
+
+    if (categoryIndexByLabel.size > 0 && itemIndexBySlug.size > 0) {
+      return { categoryIndexByLabel, itemIndexBySlug };
+    }
+  } catch {
+    // fall through
+  }
+
+  // 失敗時は固定順のみ
+  return {
+    categoryIndexByLabel: new Map(FALLBACK_CATEGORY_ORDER.map((c, i) => [c, i])),
+    itemIndexBySlug: new Map(),
+  };
+}
+
+const SIDEBAR_ORDERING = getSidebarOrdering();
 
 export async function getDocs(): Promise<DocEntry[]> {
   const docs = await getCollection('docs');
@@ -55,15 +126,24 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
     // URLに使うslugは最後のファイル名部分のみ（例: "testim-overview"）
     const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
     
+    const groupKey = doc.data.category;
+    const sidebarItemIndex = SIDEBAR_ORDERING.itemIndexBySlug.get(urlSlug);
+
     const item = {
       title: doc.data.title,
       slug: urlSlug,
       description: doc.data.description,
-      order: doc.data.order ?? 0,
+      order: sidebarItemIndex ?? (doc.data.order ?? 0),
     };
-    const groupKey = doc.data.category;
-    const preferredIndex = CATEGORY_ORDER.indexOf(groupKey);
-    const categoryOrder = preferredIndex >= 0 ? preferredIndex : (doc.data.order ?? 0) + CATEGORY_ORDER.length;
+
+    const preferredIndex = SIDEBAR_ORDERING.categoryIndexByLabel.get(groupKey);
+    const fallbackIndex = FALLBACK_CATEGORY_ORDER.indexOf(groupKey);
+    const categoryOrder =
+      preferredIndex !== undefined
+        ? preferredIndex
+        : fallbackIndex >= 0
+          ? fallbackIndex
+          : (doc.data.order ?? 0) + FALLBACK_CATEGORY_ORDER.length;
 
     if (!groups.has(groupKey)) {
       groups.set(groupKey, {

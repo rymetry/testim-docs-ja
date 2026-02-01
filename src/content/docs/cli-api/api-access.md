@@ -1,8 +1,8 @@
 ---
 title: 'Testim REST APIアクセス'
 description: 'Testim Automate REST APIを使用してブランチ管理、テスト実行、結果取得などを行う方法について説明します。APIキーの生成と管理手順を提供します。'
-category: '管理者設定'
-order: 3
+category: '管理'
+order: 14001
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/api-access'
 keywords:
@@ -23,11 +23,8 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 - **実行結果** - 実行結果を取得します。
 
 > 👍
->
 > 完全なAPIドキュメントについては、[こちら](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml)を参照してください。
-
 > 📘 これはプロ機能です
->
 > この機能はプロフェッショナルプランのプロジェクトのみ利用可能です。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
 
 # APIアクセスの有効化
@@ -49,7 +46,6 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 ![APIキーをコピーしてDoneをクリックする画面](/images/cli-api/api-access/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png)
 
 > 📘
->
 > APIキーの値を表示できるのはこのときだけです。
 
 # APIキーの管理

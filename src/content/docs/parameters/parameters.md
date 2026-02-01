@@ -1,8 +1,8 @@
 ---
 title: 'パラメータ'
 description: '原文: https://help.testim.io/docs/parameters'
-category: 'パラメータ'
-order: 1
+category: '高度な編集'
+order: 5040
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - データ駆動テスト
   - 設定ファイル
 ---
+
 パラメータの使い方をまとめて解説します。
 
 パラメータは、テストステップ／テスト／テストスイートへ情報を受け渡すための変数です。事前に値を固定せずに、異なるシナリオを切り替えて検証できます。定義方法には複数あり、方法ごとに有効範囲（スコープ）が異なります。

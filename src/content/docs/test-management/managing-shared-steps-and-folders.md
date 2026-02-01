@@ -2,7 +2,7 @@
 title: '共有ステップとフォルダーの管理'
 description: '共有ステップライブラリでのフォルダーの作成、移動、名前変更、削除の方法について説明します。'
 category: 'テスト管理'
-order: 6
+order: 9006
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/managing-shared-steps-and-folders'
 keywords:

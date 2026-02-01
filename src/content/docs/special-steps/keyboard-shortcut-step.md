@@ -1,8 +1,8 @@
 ---
 title: 'キーボードショートカットステップ'
 description: 'キーボードショートカットステップを使って Ctrl+C や Command+F などのショートカットをテスト中の AUT に送信し、Windows / Mac 両方で同じテストを再生する方法を説明します。'
-category: '特殊ステップ'
-order: 4
+category: '高度な編集'
+order: 5061
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/keyboard-shortcut-step'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - ショートカット送信
 ---
+
 実行時に指定したキーボードショートカット（例: Ctrl + C）をAUTへ送信します。定義済みステップから手動で追加できます。Windows/Macの両方で再生をサポートし、記録環境に応じてコマンドを自動変換します（Windowsで記録した Ctrl+C は、Macでは ⌘+C に変換）。
 
 > 📘
@@ -88,7 +89,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 # 手動でショートカットステップを追加
 

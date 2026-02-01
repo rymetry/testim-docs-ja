@@ -1,8 +1,8 @@
 ---
 title: 'Azure AD SSO統合'
 description: '原文: https://help.testim.io/docs/azure-ad-sso-integration'
-category: 'セキュリティ・SSO'
-order: 5
+category: 'セキュリティ'
+order: 18005
 updated: '2025-11-02'
 keywords:
   - Azure AD
@@ -14,6 +14,7 @@ keywords:
   - 認証
   - アクセス管理
 ---
+
 Azure Active DirectoryはMicrosoftのクラウドベースのIDおよびアクセス管理サービスです。Azure ADシームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
 TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzureで一度認証すれば、再度認証することなくTestimにアクセスできます。
 

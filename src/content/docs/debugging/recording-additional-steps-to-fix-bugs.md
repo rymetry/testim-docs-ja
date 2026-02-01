@@ -2,7 +2,7 @@
 title: 'バグ解決のための新しいステップの記録'
 description: 'デバッグ中に不足しているステップを追加する方法。テストの最後または途中でステップを記録する手順。'
 category: 'デバッグ'
-order: 3
+order: 8003
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/recording-additional-steps-to-fix-bugs'
 keywords:

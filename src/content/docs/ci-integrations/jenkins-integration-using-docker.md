@@ -1,8 +1,8 @@
 ---
 title: 'Jenkins統合 - Dockerを使用'
 description: 'JenkinsでDockerコンテナを使用してTestimテストを実行する方法について説明します。Docker Engineのインストールとジョブ設定手順を提供します。'
-category: 'CI統合'
-order: 11
+category: '統合'
+order: 12008
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/jenkins-integration-using-docker'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: '要素属性の検証（モバイル）'
 description: '要素の属性値が期待通りであることを検証するステップ。HTML属性やDOMプロパティの値を確認し、要素の状態を詳細に検証できます。'
-category: '検証'
-order: 11
+category: '高度な編集'
+order: 5012
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/validate-element-attribute'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - 動的検証
 ---
+
 モバイルアプリ内の任意の要素属性を検証する
 
 要素属性検証では、画面上の要素が持つ属性値を検証できます。

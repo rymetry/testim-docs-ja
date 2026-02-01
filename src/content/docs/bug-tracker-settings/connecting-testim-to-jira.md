@@ -1,8 +1,8 @@
 ---
 title: 'TestimとJiraの連携'
 description: 'TestimとJiraを連携してバグレポートを自動化する方法を説明します。統合設定、課題の作成、テスト結果とJiraチケットの連携方法を網羅しています。'
-category: 'bug-tracker-settings'
-order: 20
+category: '統合'
+order: 12034
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-jira'
 keywords:

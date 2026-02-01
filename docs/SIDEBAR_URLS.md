@@ -1,7 +1,7 @@
 # Testim Documentation - 全サイドバーURL一覧
 
-取得日: 2025年11月2日
-総数: 283 URL
+取得日: 2026年2月1日
+総数: 284 URL
 
 ## 翻訳ステータス
 
@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 236個
-- ✅   翻訳のみ完了: 48個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 284個
+- ✅   翻訳のみ完了: 0個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -34,14 +34,11 @@
 - ✅🔍 https://help.testim.io/docs/creating-your-first-codeless-test
 - ✅🔍 https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor
 
-## Recording a Web Test（Webテストの記録）
+## Recording Tests（テストの記録）
 
 - ✅🔍 https://help.testim.io/docs/how-to-record-a-test
 - ✅🔍 https://help.testim.io/docs/why-do-you-need-testim-extension
 - ✅🔍 https://help.testim.io/docs/multi-windows-recording
-
-## Recording a Mobile Test（モバイルテストの記録）
-
 - ✅🔍 https://help.testim.io/docs/recording-a-mobile-test
 - ✅🔍 https://help.testim.io/docs/recording-a-vmg-mobile-test
 - ✅🔍 https://help.testim.io/docs/recording-a-local-mobile-test
@@ -52,36 +49,27 @@
 - ✅🔍 https://help.testim.io/docs/mobile-test-mirroring-toolbar
 - ✅🔍 https://help.testim.io/docs/vision-locate
 
-## Steps & Editing Tests（ステップとテスト編集）
+## Editing Tests（テスト編集）
 
 - ✅🔍 https://help.testim.io/docs/steps
 - ✅🔍 https://help.testim.io/docs/editing-your-tests
 - ✅🔍 https://help.testim.io/docs/editing-target-element-properties
 - ✅🔍 https://help.testim.io/docs/editing-target-element-properties-mobile
 - ✅🔍 https://help.testim.io/docs/editing-a-steps-properties
-
-## Groups（グループ）
-
 - ✅🔍 https://help.testim.io/docs/groups
 - ✅🔍 https://help.testim.io/docs/auto-grouping
 - ✅🔍 https://help.testim.io/docs/auto-complete
 - ✅🔍 https://help.testim.io/docs/shareable-steps
-
-## Conditions（条件分岐）
-
 - ✅🔍 https://help.testim.io/docs/conditions
 - ✅🔍 https://help.testim.io/docs/advanced-conditions-settings
-
-## Test Utilities（テストユーティリティ）
-
 - ✅🔍 https://help.testim.io/docs/generating-a-random-value
 - ✅🔍 https://help.testim.io/docs/generating-a-date
 - ✅🔍 https://help.testim.io/docs/search-within-a-test
 - ✅🔍 https://help.testim.io/docs/recovering-a-test-that-was-not-saved
+
+## Advanced Editing（高度な編集）
+
 - ✅🔍 https://help.testim.io/docs/advanced-set-text
-
-## Validations(検証)
-
 - ✅🔍 https://help.testim.io/docs/validations
 - ✅🔍 https://help.testim.io/docs/validate-element-visible
 - ✅🔍 https://help.testim.io/docs/validate-element-not-visible
@@ -100,28 +88,16 @@
 - ✅🔍 https://help.testim.io/docs/mongodb-validation
 - ✅🔍 https://help.testim.io/docs/mysql-validation
 - ✅🔍 https://help.testim.io/docs/css-property-validation
-
-## Accessibility Validations（アクセシビリティ検証）
-
 - ✅🔍 https://help.testim.io/docs/accessibility-validations
 - ✅🔍 https://help.testim.io/docs/element-accessibility-validation
-
-## Visual Validations（ビジュアル検証）
-
 - ✅🔍 https://help.testim.io/docs/validate-element-visualization
 - ✅🔍 https://help.testim.io/docs/validate-viewport-visualization
 - ✅🔍 https://help.testim.io/docs/validate-full-page-visualization
 - ✅🔍 https://help.testim.io/docs/wait-for-element-visualization
-
-## Data-driven Testing(データ駆動テスト)
-
 - ✅🔍 https://help.testim.io/docs/data-driven-testing
 - ✅🔍 https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor
 - ✅🔍 https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file
 - ✅🔍 https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source
-
-## Handling UI Actions(UI操作)
-
 - ✅🔍 https://help.testim.io/docs/handling-ui-actions
 - ✅🔍 https://help.testim.io/docs/auto-scroll
 - ✅🔍 https://help.testim.io/docs/drag-drop-step
@@ -132,9 +108,6 @@
 - ✅🔍 https://help.testim.io/docs/extract-text
 - ✅🔍 https://help.testim.io/docs/extract-sms-message
 - ✅🔍 https://help.testim.io/docs/loops
-
-## Parameters（パラメータ）
-
 - ✅🔍 https://help.testim.io/docs/parameters
 - ✅🔍 https://help.testim.io/docs/parameters-in-custom-javascript-steps
 - ✅🔍 https://help.testim.io/docs/parameters-for-groups
@@ -144,9 +117,6 @@
 - ✅🔍 https://help.testim.io/docs/parameter-override-rules
 - ✅🔍 https://help.testim.io/docs/exports-parameters
 - ✅🔍 https://help.testim.io/docs/hidden-parameters
-
-## Advanced Features（高度な機能）
-
 - ✅🔍 https://help.testim.io/docs/wait-for
 - ✅🔍 https://help.testim.io/docs/api-testing
 - ✅🔍 https://help.testim.io/docs/cookies
@@ -156,9 +126,6 @@
 - ✅🔍 https://help.testim.io/docs/custom-action-step-mobile
 - ✅🔍 https://help.testim.io/docs/hooks
 - ✅🔍 https://help.testim.io/docs/error-suffix-customization
-
-## Special Steps（特殊ステップ）
-
 - ✅🔍 https://help.testim.io/docs/salesforce-auto-login-step
 - ✅🔍 https://help.testim.io/docs/salesforce-apex-action-step
 - ✅🔍 https://help.testim.io/docs/coding-assistant
@@ -181,27 +148,18 @@
 - ✅🔍 https://help.testim.io/docs/running-tests-on-multiple-browsers
 - ✅🔍 https://help.testim.io/docs/run-multiple-tests-locally
 - ✅🔍 https://help.testim.io/docs/run-in-incognito
-
-## Configuration File（設定ファイル）
-
 - ✅🔍 https://help.testim.io/docs/configuration-file-run-hooks
 - ✅🔍 https://help.testim.io/docs/predefined-properties-in-config-file-hooks
-
-## Mock Network Responses(ネットワークモック)
-
 - ✅🔍 https://help.testim.io/docs/mock-network-responses
 - ✅🔍 https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file
 - ✅🔍 https://help.testim.io/docs/creating-a-mapping-file
 - ✅🔍 https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file
 - ✅🔍 https://help.testim.io/docs/disabling-network-mock-mode
 - ✅🔍 https://help.testim.io/docs/mock-network-responses-troubleshooting
-
-## Test Execution(テスト実行制御)
-
 - ✅🔍 https://help.testim.io/docs/play-from-here
 - ✅🔍 https://help.testim.io/docs/rerun-locally-with-the-same-params
 
-## Results(結果)
+## Results（結果）
 
 - ✅🔍 https://help.testim.io/docs/results-overview
 - ✅🔍 https://help.testim.io/docs/test-results
@@ -219,7 +177,7 @@
 - ✅🔍 https://help.testim.io/docs/tag-remote-runs-failures
 - ✅🔍 https://help.testim.io/docs/test-run-pdf-report
 
-## Debugging（デバッグ）
+## Debugging Tests（デバッグ）
 
 - ✅🔍 https://help.testim.io/docs/debugging-overview
 - ✅🔍 https://help.testim.io/docs/debugging-controls
@@ -246,15 +204,18 @@
 - ✅🔍 https://help.testim.io/docs/locators-auto-improve
 - ✅🔍 https://help.testim.io/docs/bug-reporting
 - ✅🔍 https://help.testim.io/docs/saving-a-filtered-view
+
+## Mobile Apps（モバイルアプリ）
+
 - ✅🔍 https://help.testim.io/docs/mobile-apps
+
+## device managment（デバイス管理）
+
 - ✅🔍 https://help.testim.io/docs/view-local-connected-mobile-devices
 
 ## Integrations（統合）
 
 - ✅🔍 https://help.testim.io/docs/integrations-overview
-
-## CI Integrations（CI統合）
-
 - ✅🔍 https://help.testim.io/docs/integrate-testim-to-your-ci
 - ✅🔍 https://help.testim.io/docs/azure-devops-build-pipeline-integrations
 - ✅🔍 https://help.testim.io/docs/bamboo-integration
@@ -270,20 +231,11 @@
 - ✅🔍 https://help.testim.io/docs/gearset-integration
 - ✅🔍 https://help.testim.io/docs/autorabit-integration
 - ✅🔍 https://help.testim.io/docs/dedicated-run-tunnel
-
-## Applitools Integration（Applitools統合）
-
 - ✅🔍 https://help.testim.io/docs/applitools-integration
 - ✅🔍 https://help.testim.io/docs/override-applitools-test-name
 - ✅🔍 https://help.testim.io/docs/override-applitools-app-name
-
-## Other Integrations（その他の統合）
-
 - ✅🔍 https://help.testim.io/docs/github-integration
 - ✅🔍 https://help.testim.io/docs/sealights-integration
-
-## Grid Management（グリッド管理）
-
 - ✅🔍 https://help.testim.io/docs/grid-management
 - ✅🔍 https://help.testim.io/docs/tricentis-device-cloud
 - ✅🔍 https://help.testim.io/docs/virtual-mobile-grid
@@ -295,31 +247,25 @@
 - ✅🔍 https://help.testim.io/docs/saucelabs-browserstack-options
 - ✅🔍 https://help.testim.io/docs/headspin-integration
 - ✅🔍 https://help.testim.io/docs/bitbucket-integration
-
-## Bug Tracker Settings（バグトラッカー設定）
-
 - ✅🔍 https://help.testim.io/docs/bug-tracker-settings
 - ✅🔍 https://help.testim.io/docs/connecting-testim-to-jira
 - ✅🔍 https://help.testim.io/docs/connecting-testim-to-trello
 - ✅🔍 https://help.testim.io/docs/connecting-testim-to-slack
 - ✅🔍 https://help.testim.io/docs/connecting-testim-to-github
-
-## Test Management Integrations（テスト管理統合）
-
 - ✅🔍 https://help.testim.io/docs/test-management-integrations
 - ✅🔍 https://help.testim.io/docs/qtest-integration
 - ✅🔍 https://help.testim.io/docs/testrail-integration
 - ✅🔍 https://help.testim.io/docs/ttm-for-jira-integration
 - ✅🔍 https://help.testim.io/docs/xray-integration
 
-## CLI & API（CLI・API）
+## Settings（設定）
 
 - ✅🔍 https://help.testim.io/docs/cli-settings
 - ✅🔍 https://help.testim.io/docs/cli-prerequisites
+
+## Administration（管理）
+
 - ✅🔍 https://help.testim.io/docs/api-access
-
-## Project & User Management（プロジェクト・ユーザー管理）
-
 - ✅🔍 https://help.testim.io/docs/project-user-management
 - ✅🔍 https://help.testim.io/docs/project-and-user-management
 - ✅🔍 https://help.testim.io/docs/project-settings
@@ -331,24 +277,15 @@
 ## TestOps（TestOps）
 
 - ✅🔍 https://help.testim.io/docs/testops-overview
-
-## TestOps Management（TestOps管理）
-
 - ✅🔍 https://help.testim.io/docs/testops-management
 - ✅🔍 https://help.testim.io/docs/test-status
 - ✅🔍 https://help.testim.io/docs/test-owner
 - ✅🔍 https://help.testim.io/docs/flaky-tests
-
-## TestOps Version Control（TestOpsバージョン管理）
-
 - ✅🔍 https://help.testim.io/docs/testops-version-control
 - ✅🔍 https://help.testim.io/docs/version-control-branches
 - ✅🔍 https://help.testim.io/docs/merging-branches
 - ✅🔍 https://help.testim.io/docs/pull-requests
 - ✅🔍 https://help.testim.io/docs/read-only
-
-## Insights（インサイト）
-
 - ✅🔍 https://help.testim.io/docs/insights
 - ✅🔍 https://help.testim.io/docs/dashboard
 - ✅🔍 https://help.testim.io/docs/reports
@@ -358,51 +295,45 @@
 
 ## Salesforce Testing（Salesforceテスト）
 
-- ✅ https://help.testim.io/docs/salesforce-testing-overview
-- ✅ https://help.testim.io/docs/salesforce-testing-getting-started
-- ✅ https://help.testim.io/docs/core-concepts
-- ✅ https://help.testim.io/docs/changelog
-- ✅ https://help.testim.io/docs/create-and-manage-test-environments
-- ✅ https://help.testim.io/docs/create-a-persona-and-add-users
-- ✅ https://help.testim.io/docs/create-a-salesforce-test
-- ✅ https://help.testim.io/docs/use-agentic-test-automation-for-salesforce
-- ✅ https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
-
-## Salesforce Steps（Salesforceステップ）
-
-- ✅ https://help.testim.io/docs/salesforce-steps
-- ✅ https://help.testim.io/docs/sfdc-step-login
-- ✅ https://help.testim.io/docs/sfdc-step-loginas
-- ✅ https://help.testim.io/docs/sfdc-step-launchapp
-- ✅ https://help.testim.io/docs/sfdc-step-logout
-- ✅ https://help.testim.io/docs/sfdc-step-findandgotorecord
-- ✅ https://help.testim.io/docs/sfdc-step-waitforpageload
-- ✅ https://help.testim.io/docs/sfdc-step-closeconsoletabs
-- ✅ https://help.testim.io/docs/sfdc-step-apex-action
-- ✅ https://help.testim.io/docs/sfdc-step-permission-validation
-- ✅ https://help.testim.io/docs/sfdc-document-validation
-- ✅ https://help.testim.io/docs/sfdc-step-convertleadtoopportunity
-- ✅ https://help.testim.io/docs/sfdc-step-quotelineeditor
-- ✅ https://help.testim.io/docs/sfdc-step-create
-- ✅ https://help.testim.io/docs/sfdc-step-validate
-- ✅ https://help.testim.io/docs/sfdc-step-edit
-- ✅ https://help.testim.io/docs/sfdc-step-relatedlistaction
-- ✅ https://help.testim.io/docs/sfdc-step-quickactions
-- ✅ https://help.testim.io/docs/sfdc-step-delete
-- ✅ https://help.testim.io/docs/sfdc-step-verifypicklistoptions
-- ✅ https://help.testim.io/docs/sfdc-step-salesforce-flows
-
-## Salesforce Utilities（Salesforceユーティリティ）
-
-- ✅ https://help.testim.io/docs/log-screenshots
-- ✅ https://help.testim.io/docs/record-tests-with-salesforce
-- ✅ https://help.testim.io/docs/troubleshoot
-- ✅ https://help.testim.io/docs/faq
-- ✅ https://help.testim.io/docs/tta-for-salesforce-branch-management
-- ✅ https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
-- ✅ https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
-- ✅ https://help.testim.io/docs/setting-mfa-for-salesforce
-- ✅ https://help.testim.io/docs/page-layout
+- ✅🔍 https://help.testim.io/docs/salesforce-testing-overview
+- ✅🔍 https://help.testim.io/docs/salesforce-testing-getting-started
+- ✅🔍 https://help.testim.io/docs/core-concepts
+- ✅🔍 https://help.testim.io/docs/changelog
+- ✅🔍 https://help.testim.io/docs/create-and-manage-test-environments
+- ✅🔍 https://help.testim.io/docs/create-a-persona-and-add-users
+- ✅🔍 https://help.testim.io/docs/create-a-salesforce-test
+- ✅🔍 https://help.testim.io/docs/use-agentic-test-automation-for-salesforce
+- ✅🔍 https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
+- ✅🔍 https://help.testim.io/docs/salesforce-steps
+- ✅🔍 https://help.testim.io/docs/sfdc-step-login
+- ✅🔍 https://help.testim.io/docs/sfdc-step-loginas
+- ✅🔍 https://help.testim.io/docs/sfdc-step-launchapp
+- ✅🔍 https://help.testim.io/docs/sfdc-step-logout
+- ✅🔍 https://help.testim.io/docs/sfdc-step-findandgotorecord
+- ✅🔍 https://help.testim.io/docs/sfdc-step-waitforpageload
+- ✅🔍 https://help.testim.io/docs/sfdc-step-closeconsoletabs
+- ✅🔍 https://help.testim.io/docs/sfdc-step-apex-action
+- ✅🔍 https://help.testim.io/docs/sfdc-step-permission-validation
+- ✅🔍 https://help.testim.io/docs/sfdc-document-validation
+- ✅🔍 https://help.testim.io/docs/sfdc-step-convertleadtoopportunity
+- ✅🔍 https://help.testim.io/docs/sfdc-step-quotelineeditor
+- ✅🔍 https://help.testim.io/docs/sfdc-step-create
+- ✅🔍 https://help.testim.io/docs/sfdc-step-validate
+- ✅🔍 https://help.testim.io/docs/sfdc-step-edit
+- ✅🔍 https://help.testim.io/docs/sfdc-step-relatedlistaction
+- ✅🔍 https://help.testim.io/docs/sfdc-step-quickactions
+- ✅🔍 https://help.testim.io/docs/sfdc-step-delete
+- ✅🔍 https://help.testim.io/docs/sfdc-step-verifypicklistoptions
+- ✅🔍 https://help.testim.io/docs/sfdc-step-salesforce-flows
+- ✅🔍 https://help.testim.io/docs/log-screenshots
+- ✅🔍 https://help.testim.io/docs/record-tests-with-salesforce
+- ✅🔍 https://help.testim.io/docs/troubleshoot
+- ✅🔍 https://help.testim.io/docs/faq
+- ✅🔍 https://help.testim.io/docs/tta-for-salesforce-branch-management
+- ✅🔍 https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
+- ✅🔍 https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
+- ✅🔍 https://help.testim.io/docs/setting-mfa-for-salesforce
+- ✅🔍 https://help.testim.io/docs/page-layout
 
 ## Testim Extension（Testim拡張機能）
 
@@ -411,7 +342,7 @@
 - ✅🔍 https://help.testim.io/docs/testim-extension-capture-video-bug-scenario
 - ✅🔍 https://help.testim.io/docs/testim-extension-create-automated-test
 
-## Security & SSO（セキュリティ・SSO）
+## Security（セキュリティ）
 
 - ✅🔍 https://help.testim.io/docs/testim-grid-ips
 - ✅🔍 https://help.testim.io/docs/sso-integration
@@ -419,16 +350,18 @@
 - ✅🔍 https://help.testim.io/docs/okta-sso-integration
 - ✅🔍 https://help.testim.io/docs/azure-ad-sso-integration
 
-## Miscellaneous（その他）
+## Guides（ガイド）
 
 - ✅🔍 https://help.testim.io/docs/mobile-web-testing
 - ✅🔍 https://help.testim.io/docs/keyboard-shortcuts
 - ✅🔍 https://help.testim.io/docs/generate-random-data-with-js
 - ✅🔍 https://help.testim.io/docs/best-practices-for-handling-logins
+
+## Testim Labs（Testim Labs）
+
 - ✅🔍 https://help.testim.io/docs/testim-labs
 - ✅🔍 https://help.testim.io/docs/test-flow-view
 - ✅🔍 https://help.testim.io/docs/link-directly-to-a-shared-step
-
 ---
 
 ## URL抽出方法

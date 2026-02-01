@@ -1,8 +1,8 @@
 ---
 title: 'Testim拡張機能が必要な理由'
 description: 'TestimのSmart Locatorsを使用したテストの作成と実行に必要なTestim拡張機能の役割と、そのセキュリティポリシーについて説明します。'
-category: 'テスト作成'
-order: 2
+category: 'テストの記録'
+order: 3002
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/why-do-you-need-testim-extension'
 keywords:

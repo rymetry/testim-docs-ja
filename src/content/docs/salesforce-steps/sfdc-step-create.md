@@ -1,8 +1,8 @@
 ---
 title: '作成'
 description: '指定したフィールド値で新しいSalesforceレコードを作成し、必要に応じて検証も行います。'
-category: 'Salesforceステップ'
-order: 14
+category: 'Salesforceテスト'
+order: 16023
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-create'
 keywords:
@@ -13,6 +13,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -25,7 +26,7 @@ keywords:
 2. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**作成**ステップを選択します。\
    **作成ステップ**が追加され、次の**オブジェクトプロパティ**が表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-create/a3e93cc-object_properties.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-create/a3e93cc-object_properties.png)
 3. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、作成されるレコードのタイプを決定します。
 4. 場合によっては、**レコードタイプ**も選択する必要があります。これはレコードのサブタイプのようなものです。
 
@@ -35,7 +36,7 @@ keywords:
 
    接続された Salesforce 環境からのレコードのフィールドのリストが表示されます。(\*) で示されているフィールドは必須です。フィールド名の上にマウスを置くと、Salesforce のフィールドの**データタイプ**と **API 名**が表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-create/b692df3-objectfields.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-create/b692df3-objectfields.png)
 5. 作成したい各フィールドについて、**Action** の下で次のオプションのいずれかを選択します:
    1. Input - 指定された値をフィールドに入力します。フィールドが編集不可の場合、このアクションはリストされません。このアクションには、以下で説明するように値を入力する必要があります。
    2. Verify - このアクションは、フィールドの値がレコードの値と一致することを確認します。このアクションには、以下で説明するように値を入力する必要があります。
@@ -50,7 +51,7 @@ keywords:
    1. T. テキストモード。値はリテラル文字列として扱われます。
    2. \{JS}. JavaScript モード。値は JavaScript 式として評価されます。フィールドは JavaScript 変数と関数を評価します。
 
-      ![](/images/salesforce-steps/sfdc-step-create/0059a45-switchgif.gif)
+      ![操作手順アニメーション](/images/salesforce-steps/sfdc-step-create/0059a45-switchgif.gif)
 
       > 📘
       >

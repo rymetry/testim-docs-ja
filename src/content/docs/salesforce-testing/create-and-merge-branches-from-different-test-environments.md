@@ -2,7 +2,7 @@
 title: '異なるテスト環境からのブランチの作成とマージ'
 description: '異なるテスト環境でテストを実行するためのブランチ作成とマージ手順（環境選択、マージ後削除など）を説明します。'
 category: 'Salesforceテスト'
-order: 9
+order: 16009
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments'
 keywords:
@@ -17,12 +17,13 @@ keywords:
    - Testim for Salesforce
    - ブランチ管理
 ---
+
 Testim for Salesforceの各テスト環境は、次の設定で構成されています:
 
 * 関連するSalesforce環境のURL
 * テスト環境が利用可能なブランチ。
 
-![](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/5f39d87-branch.png)
+![スクリーンショット](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/5f39d87-branch.png)
 
 別のテスト環境でテストを実行する場合は、新しいブランチを作成し、別のテスト環境を選択する必要があります。
 
@@ -32,7 +33,7 @@ Testim for Salesforceの各テスト環境は、次の設定で構成されて�
 
 :fa-arrow-right:**新しいブランチを作成するには:**
 
-![](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/8d71d98-newbranch.gif)
+![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/8d71d98-newbranch.gif)
 
 1. Testim for Salesforceで、**New Branch**アイコンを選択します。
 2. **New branch name**フィールドに、ブランチの名前を入力します。
@@ -44,7 +45,7 @@ Testim for Salesforceの各テスト環境は、次の設定で構成されて�
 
 :fa-arrow: :fa-arrow-right: **ブランチをマージするには:**
 
-![](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/2c34ad0-mergebranch.gif)
+![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/2c34ad0-mergebranch.gif)
 
 1. Testim for Salesforceで、ブランチ検索ドロップダウンから、マージするブランチを選択します。
 2. マージアイコンをクリックします。\

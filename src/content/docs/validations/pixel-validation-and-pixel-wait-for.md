@@ -1,8 +1,8 @@
 ---
 title: 'ビジュアル検証（要素・ビューポート・全ページ）'
 description: 'ピクセルレベルでの画像比較による検証ステップ。スクリーンショットを比較してUIの見た目を検証し、レイアウト崩れやデザイン変更を検出します。'
-category: '検証'
-order: 13
+category: '高度な編集'
+order: 5014
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/pixel-validation-and-pixel-wait-for'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - ピクセル比較
   - ビジュアルテスト
 ---
+
 ピクセルレベルでビジュアル差分を検証する
 
 ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](https://applitools.com/) のサービスを利用しており、Applitools Eyes との連携が必要です。
@@ -122,7 +123,6 @@ Testim 内で変更できるビジュアル検証パラメータは 4 つあり�
   </tr>
  </tbody>
 </table>
-
 
 ### テスト設定でビジュアル検証設定を変更する
 

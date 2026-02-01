@@ -2,7 +2,7 @@
 title: '複数ブラウザでテストを実行'
 description: 'Chrome・Firefox・Safari・Edge など複数ブラウザでテストを並行実行するために、構成リストと CLI・スケジューラーを使ってブラウザ構成を指定する方法を説明します。'
 category: 'テスト実行'
-order: 8
+order: 6008
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/running-tests-on-multiple-browsers'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - テスト実行
   - Testim
 ---
+
 テストは異なるブラウザで並行して実行でき、実行時間を短縮し、複数の構成を確認できます。Chrome でのみローカルで実行することもでき、Testim のグリッド、Sauce Labs や Browserstack などの 3 番目のパーティグリッド、または独自の内部 Selenium ベースグリッドなど、サポートされているグリッドで Chrome およびその他のブラウザで実行できます。
 
 ブラウザを実行しているオペレーティングシステムは、使用しているグリッドに依存します。

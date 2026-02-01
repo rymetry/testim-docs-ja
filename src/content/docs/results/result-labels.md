@@ -2,7 +2,7 @@
 title: '結果ラベル'
 description: 'テスト実行結果にラベルを追加する方法について説明します。CLIまたはスケジューラーからラベルを追加できます。'
 category: '結果'
-order: 12
+order: 7012
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/result-labels'
 keywords:
@@ -13,6 +13,7 @@ keywords:
   - スケジューラー
   - テスト管理
 ---
+
 実行結果にラベルを追加する方法を学びます。
 
 **「結果ラベル」**を使用すると、リモート実行にテキストラベルを追加できます。\

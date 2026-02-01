@@ -1,8 +1,8 @@
 ---
 title: 'テストフロービュー'
 description: '原文: https://help.testim.io/docs/test-flow-view'
-category: 'その他'
-order: 6
+category: 'Testim Labs'
+order: 20002
 updated: '2025-11-02'
 keywords:
   - テストフロービュー
@@ -11,6 +11,7 @@ keywords:
   - テスト構造
   - Labs機能
 ---
+
 > 📘 これはTestimのLabs機能です
 >
 > Testim Labsに参加している場合は、**Settings > Labs**でこの機能が有効になっていることを確認してください。Testim Labsと参加方法の詳細については、[こちら](/docs/testim-labs)を参照してください

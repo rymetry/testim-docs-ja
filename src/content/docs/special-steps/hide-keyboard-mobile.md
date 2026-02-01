@@ -1,8 +1,8 @@
 ---
 title: 'キーボードを隠す（モバイル）'
 description: 'モバイルテストで hideKeyboard が機能しないケースの理由と、カスタムアクションステップを使ってキーボードを安全に閉じる回避策を説明します。'
-category: '特殊ステップ'
-order: 7
+category: '高度な編集'
+order: 5064
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hide-keyboard-mobile'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - エラー回避
 ---
+
 一部のサードパーティ環境では、`hideKeyboard` を呼ぶと「ソフトウェアキーボードを隠せない」エラーが返ることがあります。特定のキーボード挙動や端末状態が `Driver.hidekeyboard()` に適切に応答せず、Appium 側で予期しない遷移が発生するためです。
 
 回避策として、カスタムアクションを記録してください。作成方法は [カスタムアクションステップ（モバイル）](/docs/custom-action-step-mobile) を参照。

@@ -1,8 +1,8 @@
 ---
 title: 'コンソールタブを閉じる'
 description: 'Salesforceコンソールアプリの全タブを閉じ、テスト開始時の状態を整えます。'
-category: 'Salesforceステップ'
-order: 8
+category: 'Salesforceテスト'
+order: 16017
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-closeconsoletabs'
 keywords:
@@ -12,6 +12,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 **コンソールタブを閉じる**ステップは、Salesforce コンソールアプリケーションのすべてのコンソールタブを閉じます。コンソールアプリケーションをテストする際は、「クリーンな状態」でテストを開始することを保証するために、このステップをテストの最初に配置することが推奨されます。
 
 :fa-arrow-right: **コンソールタブを閉じるステップを追加するには:**

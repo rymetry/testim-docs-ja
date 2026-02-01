@@ -2,7 +2,7 @@
 title: 'リビジョン'
 description: 'テストの変更履歴を管理し、以前のバージョンに戻す方法について説明します。'
 category: 'テスト管理'
-order: 9
+order: 9009
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/revisions'
 keywords:

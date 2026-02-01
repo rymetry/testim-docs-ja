@@ -1,8 +1,8 @@
 ---
 title: 'Tricentis Device Cloud'
 description: 'Tricentis Device Cloud（旧Testim Virtual Mobile Grid）を使用してクラウド上の実デバイスでモバイルテストを実行する方法を説明します。'
-category: 'グリッド管理'
-order: 2
+category: '統合'
+order: 12023
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/tricentis-device-cloud'
 keywords:

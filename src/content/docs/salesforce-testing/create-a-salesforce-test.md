@@ -2,7 +2,7 @@
 title: 'Salesforceテストの作成'
 description: 'Salesforce環境に接続し、ペルソナやモックネットワーク、テスト設定などを利用してSalesforceテストを作成・実行する手順を説明します。'
 category: 'Salesforceテスト'
-order: 7
+order: 16007
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-a-salesforce-test'
 keywords:
@@ -16,6 +16,7 @@ keywords:
   - 手動ステップ
   - Salesforceステップ
 ---
+
 Salesforceテストは、接続されたSalesforce環境に接続し、テストしたいユーザージャーニーを実行します。テストには一連のステップが含まれ、それぞれがSalesforceアプリケーションとの別のインタラクションを表します。
 
 #### ステップの種類
@@ -25,7 +26,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 - **ステップを手動で追加** - ステップを手動で追加できます。ステップは次のカテゴリに整理されています:
   - **Salesforceステップ** - Salesforceアプリケーションの使用に固有のステップ。Salesforceステップは、Salesforceアプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforceアプリケーション内でフォームなどのSalesforceオブジェクトを表示および設定したりできます。詳細については、[Salesforceステップ](/docs/salesforce-steps)を参照してください
   - **事前定義ステップ** - Webアプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](/docs/steps#manual-steps)を参照してください
-   - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/shareable-steps)を参照してください。
+  - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/shareable-steps)を参照してください。
 - **[ステップの記録](doc:create-a-salesforce-test#recording-steps)** - Recordボタンをクリックすると、Salesforceアプリケーション（ベースURL）を表示するブラウザが開きます。入力、クリックなどのすべてのインタラクションは、自動的にテストのステップに変換されます。ステップの記録は、Salesforce環境で広範なカスタマイズが行われたためにSalesforceステップを使用できない場合にも役立ちます。
 
 **2つの方法を組み合わせることが可能です** - 一部のステップを手動で追加してから追加のステップを記録したり、その逆も可能です。

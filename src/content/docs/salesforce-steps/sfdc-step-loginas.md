@@ -1,8 +1,8 @@
 ---
 title: '別のユーザーとしてログイン'
 description: '管理者ユーザーとして、別のユーザーに切り替えてログインします。'
-category: 'Salesforceステップ'
-order: 3
+category: 'Salesforceテスト'
+order: 16012
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-loginas'
 keywords:
@@ -13,6 +13,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforceステップ
 >
 > これはSalesforceステップです。
@@ -24,7 +25,7 @@ keywords:
 1. **+**ボタンをクリックし、**Salesforce**ステップタブの下で、**Common operations**をクリックして**Log in as another user**ステップを選択することで、**Log in as another user**ステップを追加します。\
    次の**Properties Tab**が表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-loginas/02cc7f3-2024-05-05_15-07-06.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-loginas/02cc7f3-2024-05-05_15-07-06.png)
 2. 次のいずれかを実行します:
 
    1. [ペルソナの作成](/docs/create-a-persona-and-add-users)プロセスですでに定義されている**ペルソナ**を選択する場合は、**Select persona**ドロップダウンメニューから目的のペルソナを選択します。

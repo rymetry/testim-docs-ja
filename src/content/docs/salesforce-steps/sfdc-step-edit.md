@@ -1,8 +1,8 @@
 ---
 title: '編集'
 description: '表示中のSalesforceレコードのフィールドを編集します。'
-category: 'Salesforceステップ'
-order: 16
+category: 'Salesforceテスト'
+order: 16025
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-edit'
 keywords:
@@ -12,6 +12,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -37,7 +38,7 @@ keywords:
 5. 場合によっては、レコードタイプも選択する必要があります。これはレコードのサブタイプのようなものです。\
    接続された Salesforce 環境からのレコードのフィールドのリストが表示されます。(\*) で示されているフィールドは必須です。
 
-   ![](/images/salesforce-steps/sfdc-step-edit/8db8c0b-editstep.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-edit/8db8c0b-editstep.png)
 
 6. 作成したい各フィールドについて、**Action** の下で次のオプションのいずれかを選択します:
 
@@ -54,6 +55,6 @@ keywords:
    T. テキストモード。値はリテラル文字列として扱われます。\
    \{JS}. JavaScript モード。値は JavaScript 式として評価されます。フィールドは JavaScript 変数と関数を評価します。
 
-   ![](/images/salesforce-steps/sfdc-step-edit/d6ba8eb-switchgif.gif)
+   ![操作手順アニメーション](/images/salesforce-steps/sfdc-step-edit/d6ba8eb-switchgif.gif)
 
 8. **保存**をクリックします。

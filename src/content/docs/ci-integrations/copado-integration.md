@@ -1,8 +1,8 @@
 ---
 title: 'Copado統合'
 description: 'Copado Release ManagerからURL CalloutステップでTestimテストを自動化する方法について説明します。REST APIの設定とデプロイの一時停止機能を提供します。'
-category: 'CI統合'
-order: 12
+category: '統合'
+order: 12013
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/copado-integration'
 keywords:

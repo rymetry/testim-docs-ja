@@ -1,8 +1,8 @@
 ---
 title: 'Xray統合'
 description: 'TestimとXray for Jiraを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の表示方法を網羅しています。'
-category: 'test-management-integrations'
-order: 50
+category: '統合'
+order: 12042
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/xray-integration'
 keywords:
@@ -165,11 +165,7 @@ Xrayでテスト実行の結果を表示するには、リモートグリッド�
  </tbody>
 </table>
 
-
 > 📘
->
 > Xrayでこれらのステータスを変更すると、統合が中断される可能性があります。
-
 > 📘
->
 > Xrayの必須カスタムフィールドはサポートされていません。Xrayでカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。

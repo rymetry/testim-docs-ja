@@ -1,13 +1,18 @@
 ---
 title: 'Salesforceでテストを記録する'
-description: '原文: https://help.testim.io/docs/record-tests-with-salesforce'
-category: 'Salesforceユーティリティ'
-order: 2
-updated: '2025-11-02'
+description: '事前定義されたSalesforceステップに加えて、必要な操作を記録ステップとして追加する手順を説明します。'
+category: 'Salesforceテスト'
+order: 16032
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/record-tests-with-salesforce'
 keywords:
-  - testim
-  - record-tests-with-salesforce
-  - salesforce-utilities
+   - テストの記録
+   - 記録ステップ
+   - ブレークポイント
+   - この位置から記録を開始
+   - 記録を停止
+   - 検証モード
+   - Visual Editor
 ---
 
 事前定義されたSalesforceステップが利用できない場合、必要な操作を記録してギャップを埋めることができます。テストは、事前定義されたステップと記録されたステップを組み合わせて作成できます。これは、事前定義されたステップを追加し、その後に追加のステップを記録できることを意味します。
@@ -23,7 +28,7 @@ keywords:
 6. **記録を停止**ボタンをクリックします。\
    ステップがテストに追加され、さらにステップを追加し続けることができます。
 
-   ![](/images/salesforce-utilities/record-tests-with-salesforce/4e06137-recording.gif)
+   ![ステップ記録のデモ](/images/salesforce-utilities/record-tests-with-salesforce/4e06137-recording.gif)
 
 :fa-arrow-right: **テストの最後にステップを記録するには:**
 

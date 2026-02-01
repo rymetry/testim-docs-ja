@@ -1,8 +1,8 @@
 ---
 title: 'CSS プロパティの検証'
 description: '要素のCSSプロパティ値を検証するステップ。color、font-size、displayなどのスタイル属性を確認し、UIの見た目や表示状態を検証します。'
-category: '検証'
-order: 18
+category: '高度な編集'
+order: 5019
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/css-property-validation'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - CSS
   - スタイルシート
 ---
+
 要素の任意の CSS プロパティを検証する
 
 CSS プロパティ検証では、色・背景色・フォントなど任意の CSS プロパティを検証できます。

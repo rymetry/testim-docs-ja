@@ -2,7 +2,7 @@
 title: 'コマンドライン インターフェース (CLI)'
 description: 'Testim CLI のインストール方法と、プロジェクト ID・トークン・グリッド・ラベル・スイート・テスト計画などのパラメータを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。'
 category: 'テスト実行'
-order: 2
+order: 6002
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/the-command-line-cli'
 keywords:

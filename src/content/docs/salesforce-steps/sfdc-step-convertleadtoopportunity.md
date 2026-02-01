@@ -1,8 +1,8 @@
 ---
 title: 'リードを商談に変換'
 description: 'リードを商談に変換し、取引先・取引先責任者・商談の属性を設定します。'
-category: 'Salesforceステップ'
-order: 12
+category: 'Salesforceテスト'
+order: 16021
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-convertleadtoopportunity'
 keywords:
@@ -14,6 +14,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
@@ -33,7 +34,7 @@ keywords:
 3. **Salesforce ステップ**タブの下で、**CPQ 操作**をクリックし、**リードを商談に変換**ステップを選択します。\
    **リードを商談に変換**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-convertleadtoopportunity/f408a44-2024-05-05_19-30-37.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-convertleadtoopportunity/f408a44-2024-05-05_19-30-37.png)
 4. 取引先、取引先責任者、商談情報をカスタマイズすることも、Salesforce で構成されたデフォルト値を使用することもできます:
    1. 値をカスタマイズするには、デフォルトを使用チェックボックスの選択を解除し、関連するカテゴリを開いて、目的の値をフィールドに入力します。
    2. デフォルト値を使用するには、デフォルトを使用チェックボックスを選択します。

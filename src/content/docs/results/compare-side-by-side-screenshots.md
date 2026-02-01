@@ -2,7 +2,7 @@
 title: 'スクリーンショットの並列比較'
 description: 'ベースラインスクリーンショットとテスト実行結果のスクリーンショットを並べて比較する方法について説明します。'
 category: '結果'
-order: 3
+order: 7003
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/compare-side-by-side-screenshots'
 keywords:
@@ -13,6 +13,7 @@ keywords:
   - UI変更
   - ビジュアルデバッグ
 ---
+
 スクリーンショット画面では、ステップ作成時に撮影された元のベースラインスクリーンショットと、最近のテスト実行からのスクリーンショットを比較できます。スクリーンショットはステップレベルでのみ表示できます。
 
 :fa-arrow-right: **ステップのスクリーンショットを並べて比較するには:**

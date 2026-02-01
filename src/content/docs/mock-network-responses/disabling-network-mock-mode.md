@@ -1,8 +1,8 @@
 ---
 title: 'ネットワークモックモードの無効化'
 description: 'ネットワークモックモードを無効化する方法について説明します。UI経由またはCLI経由での無効化手順を学びます。'
-category: 'ネットワークモック'
-order: 5
+category: 'テスト実行'
+order: 6017
 updated: '2025-11-11'
 sourceUrl: 'https://help.testim.io/docs/disabling-network-mock-mode'
 keywords:
@@ -14,6 +14,7 @@ keywords:
   - テストプロパティ
   - 実行設定
 ---
+
 以前にモックネットワークモードを有効にしたテストに対して、ネットワークモックモードを無効にすることができます。
 
 ## UI経由でモックネットワークモードを無効化する
