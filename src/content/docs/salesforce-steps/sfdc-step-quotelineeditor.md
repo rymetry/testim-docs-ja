@@ -1,19 +1,25 @@
 ---
 title: '見積品目エディターアクション'
-description: '原文: https://help.testim.io/docs/sfdc-step-quotelineeditor'
+description: 'CPQの見積品目エディターで、入力・検証・値の保存を行います。'
 category: 'Salesforceステップ'
 order: 13
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-quotelineeditor'
 keywords:
-  - testim
-  - sfdc-step-quotelineeditor
-  - salesforce-steps
+   - Salesforce
+   - CPQ
+   - 見積
+   - 見積品目
+   - 検証
+   - 入力
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
 
-**見積品目エディターアクション**ステップは、CPQ アプリケーションの見積品目エディターで、見積の特定の品目および/または見積全体の製品価格計算をテストするために使用できます。テストの一部として、CPQ 見積に値を入力したり、特定の値が期待どおりに表示されることを検証したりするようにステップを構成できます。たとえば、このステップを使用して、`quantity` フィールドに数量 `40` を*入力*し、計算された `Net Total` フィールドに値 `EUR 720,000` が表示されることを検証できます。他のステップと同様に、任意の値を[パラメータ](https://help.testim.io/docs/parameters)にすることもでき、見積品目/レコードで見つかった値を Testim for Salesforce のパラメータに格納して、テストの後のステップで使用することもできます。
+**見積品目エディターアクション**ステップは、CPQ アプリケーションの見積品目エディターで、見積の特定の品目および/または見積全体の製品価格計算をテストするために使用できます。テストの一部として、CPQ 見積に値を入力したり、特定の値が期待どおりに表示されることを検証したりするようにステップを構成できます。たとえば、このステップを使用して、`quantity` フィールドに数量 `40` を*入力*し、計算された `Net Total` フィールドに値 `EUR 720,000` が表示されることを検証できます。他のステップと同様に、任意の値を[パラメータ](/docs/parameters)にすることもでき、見積品目/レコードで見つかった値を Testim for Salesforce のパラメータに格納して、テストの後のステップで使用することもできます。
 
 各ステップには、1つのステップに複数の検証/アクション/入力を含めることができ、順番に連続して実行されます。たとえば、1つのアクションには **Net Total** が 720 ユーロであることの検証が含まれ、次のアクションは **Additional discount** フィールドに値 30 を入力します。この割引により Net Total 値が変更されるため、別のアクションを追加して、（割引後の）新しい値 560 ユーロで Net Total フィールドを再度検証できます。
 

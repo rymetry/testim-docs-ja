@@ -3,7 +3,7 @@ title: 'Salesforceテストの作成'
 description: 'Salesforce環境に接続し、ペルソナやモックネットワーク、テスト設定などを利用してSalesforceテストを作成・実行する手順を説明します。'
 category: 'Salesforceテスト'
 order: 7
-updated: '2025-11-02'
+updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-a-salesforce-test'
 keywords:
   - Salesforceテスト
@@ -25,14 +25,14 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 - **ステップを手動で追加** - ステップを手動で追加できます。ステップは次のカテゴリに整理されています:
   - **Salesforceステップ** - Salesforceアプリケーションの使用に固有のステップ。Salesforceステップは、Salesforceアプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforceアプリケーション内でフォームなどのSalesforceオブジェクトを表示および設定したりできます。詳細については、[Salesforceステップ](/docs/salesforce-steps)を参照してください
   - **事前定義ステップ** - Webアプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](/docs/steps#manual-steps)を参照してください
-  - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/groups/shareable-steps)を参照してください。
+   - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/shareable-steps)を参照してください。
 - **[ステップの記録](doc:create-a-salesforce-test#recording-steps)** - Recordボタンをクリックすると、Salesforceアプリケーション（ベースURL）を表示するブラウザが開きます。入力、クリックなどのすべてのインタラクションは、自動的にテストのステップに変換されます。ステップの記録は、Salesforce環境で広範なカスタマイズが行われたためにSalesforceステップを使用できない場合にも役立ちます。
 
 **2つの方法を組み合わせることが可能です** - 一部のステップを手動で追加してから追加のステップを記録したり、その逆も可能です。
 
 #### セットアップステップ
 
-テストの最初のステップはセットアップステップです。このステップは、テストのベースURLを定義します。デフォルトでは、このURLは、最初に接続した環境に応じて、Salesforceホームページの一般的なURL（`https://login.salesforce.com`または`https://test.salesforce.com`）のいずれかになります。[Log in](/docs/salesforce-steps/sfdc-step-login)ステップが、現在のブランチ用に設定した環境に直接移動するため、これを変更する必要はありません。
+テストの最初のステップはセットアップステップです。このステップは、テストのベースURLを定義します。デフォルトでは、このURLは、最初に接続した環境に応じて、Salesforceホームページの一般的なURL（`https://login.salesforce.com`または`https://test.salesforce.com`）のいずれかになります。[Log in](/docs/sfdc-step-login)ステップが、現在のブランチ用に設定した環境に直接移動するため、これを変更する必要はありません。
 
 #### ペルソナの選択
 
@@ -42,9 +42,9 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 # 前提条件
 
-- Testim Extensionをダウンロードしてインストールする - [なぜTestim拡張機能が必要ですか？](/docs/recording-tests/why-do-you-need-testim-extension)
-- [Salesforceテスト環境をTestim/TTA for Salesforceに接続する](/docs/salesforce-testing/create-and-manage-test-environments)。
-- [ペルソナを作成する](/docs/salesforce-testing/create-a-persona-and-add-users)。
+- Testim Extensionをダウンロードしてインストールする - [なぜTestim拡張機能が必要ですか？](/docs/why-do-you-need-testim-extension)
+- [Salesforceテスト環境をTestim/TTA for Salesforceに接続する](/docs/create-and-manage-test-environments)。
+- [ペルソナを作成する](/docs/create-a-persona-and-add-users)。
 
 # Salesforceテストの作成
 
@@ -188,7 +188,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
    </td>
    <td style="text-align: left;">
     Tricentis Test Management（TTM）for Jiraは、QAと開発を連携させるJira内のエンドツーエンドのテスト管理で、アイデアから本番まで、ソフトウェアに品質を組み込んで共同作業することができます。詳細については、
-    <a href="/docs/test-management-integrations/ttm-for-jira-integration">
+   <a href="/docs/ttm-for-jira-integration">
      TTM for Jira統合
     </a>
     を参照してください
@@ -202,7 +202,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
    </td>
    <td style="text-align: left;">
     テストデータはデータ駆動テストに使用されます。詳細については、
-    <a href="/docs/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor">
+   <a href="/docs/configuring-a-data-driven-test-from-the-visual-editor">
      ビジュアルエディターからのデータ駆動テストの設定
     </a>
     を参照してください。
@@ -232,7 +232,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 > 📘 ベストプラクティス - 変数命名規則
 >
-> テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テストで変数を作成する際に、[ベストプラクティス - 簡単なクリーンアップのための変数命名規則](/docs/salesforce-utilities/best-practice-variable-naming-convention-for-easy-cleanup)の手順に従ってください。
+> テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テストで変数を作成する際に、[ベストプラクティス - 簡単なクリーンアップのための変数命名規則](/docs/best-practice-variable-naming-convention-for-easy-cleanup)の手順に従ってください。
 
 # ステップの記録
 
@@ -253,8 +253,8 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 :fa-arrow-right: **レコーダーを使用してステップを記録するには:**
 
-1. 始める前に、Salesforce環境が接続されていることを確認してください。詳細については、[Salesforce環境の接続](/docs/salesforce-testing/create-and-manage-test-environments)を参照してください。
-2. テストに[Log in](/docs/salesforce-steps/sfdc-step-login)ステップを追加します。
+1. 始める前に、Salesforce環境が接続されていることを確認してください。詳細については、[Salesforce環境の接続](/docs/create-and-manage-test-environments)を参照してください。
+2. テストに[Log in](/docs/sfdc-step-login)ステップを追加します。
 3. テストを実行して環境にログインし、追加のステップを記録できるようにします。
 4. テストで、目的のステップの隣にある**+**ボタンの上にマウスを移動し、**Record**ボタンをクリックします。レコーダーは、青いクラウドアイコンで示される**Salesforceモード**で自動的に有効になります。これは、アプリケーションとのインタラクションが、関連する場合にSalesforceステップを生成することを意味します。
 5. ![ログイン完了後のSalesforce画面](/images/salesforce-testing/create-a-salesforce-test/1a9ac07-afterlogin.png)

@@ -1,13 +1,21 @@
 ---
 title: 'コアコンセプト'
-description: '原文: https://help.testim.io/docs/core-concepts'
+description: 'Salesforceテストの基本概念（ステップ、レコーダー、ローカル/グリッド実行、結果など）を整理します。'
 category: 'Salesforceテスト'
 order: 3
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/core-concepts'
 keywords:
-  - testim
-  - core-concepts
-  - salesforce-testing
+  - コアコンセプト
+  - Salesforceテスト
+  - テストステップ
+  - テストレコーダー
+  - ローカル実行
+  - グリッド実行
+  - テスト結果
+  - Chrome拡張機能
+  - テストスイート
+  - CI
 ---
 ***Salesforceテストとは何ですか？***
 

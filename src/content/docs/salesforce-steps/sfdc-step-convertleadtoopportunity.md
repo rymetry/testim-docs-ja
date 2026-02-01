@@ -1,13 +1,18 @@
 ---
 title: 'リードを商談に変換'
-description: '原文: https://help.testim.io/docs/sfdc-step-convertleadtoopportunity'
+description: 'リードを商談に変換し、取引先・取引先責任者・商談の属性を設定します。'
 category: 'Salesforceステップ'
 order: 12
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-convertleadtoopportunity'
 keywords:
-  - testim
-  - sfdc-step-convertleadtoopportunity
-  - salesforce-steps
+   - Salesforce
+   - リード
+   - 商談
+   - 変換
+   - CPQ
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
@@ -19,11 +24,11 @@ keywords:
 
 > 📘 レコード表示の要件
 >
-> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 
 :fa-arrow-right:**リードを商談に変換ステップを追加するには:**
 
-1. テストで、**リードを商談に変換**ステップの前に、目的のリードレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、**リードを商談に変換**ステップの前に、目的のリードレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**CPQ 操作**をクリックし、**リードを商談に変換**ステップを選択します。\
    **リードを商談に変換**ステップが追加され、次の**オブジェクト**プロパティが表示されます。

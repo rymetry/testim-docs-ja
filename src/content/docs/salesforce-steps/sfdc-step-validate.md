@@ -1,13 +1,16 @@
 ---
 title: '検証'
-description: '原文: https://help.testim.io/docs/sfdc-step-validate'
+description: '既存レコードのフィールド値が期待値と一致することを検証します。'
 category: 'Salesforceステップ'
 order: 15
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-validate'
 keywords:
-  - testim
-  - sfdc-step-validate
-  - salesforce-steps
+   - Salesforce
+   - レコード検証
+   - フィールド
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
@@ -17,13 +20,13 @@ keywords:
 
 > 📘 レコード表示の要件
 >
-> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-utilities/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 
 <br />
 
 :fa-arrow-right:**検証ステップを追加するには:**
 
-1. テストで、検証ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-utilities/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、検証ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. + ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**検証**ステップを選択します。\
    検証ステップが追加され、次のオブジェクトプロパティが表示されます。

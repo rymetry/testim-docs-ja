@@ -1,13 +1,17 @@
 ---
 title: 'Salesforce フロー'
-description: '原文: https://help.testim.io/docs/sfdc-step-salesforce-flows'
+description: 'フロービルダーで作成した画面フローを、フィールド入力で完了させるステップです。'
 category: 'Salesforceステップ'
 order: 21
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-salesforce-flows'
 keywords:
-  - testim
-  - sfdc-step-salesforce-flows
-  - salesforce-steps
+   - Salesforce
+   - フロー
+   - 画面フロー
+   - 入力
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
@@ -21,8 +25,8 @@ Salesforce のフロービルダーは、個別のフローを構築するため
 
 Salesforce フローステップを追加する前に、次を追加する必要があります:
 
-* Salesforce フローが URL でアクセスされる場合は、Salesforce フローステップの前に[ナビゲーションステップ](/docs/handling-ui-actions/navigation)を追加します。
-* Salesforce フローが Testim を使用して作成された Salesforce オブジェクトに埋め込まれている場合、Salesforce フローステップは、Salesforce オブジェクトの作成に使用されたステップの直後に配置できます（例: [作成](/docs/salesforce-steps/sfdc-step-create)ステップの直後）。
+* Salesforce フローが URL でアクセスされる場合は、Salesforce フローステップの前に[ナビゲーションステップ](/docs/navigation)を追加します。
+* Salesforce フローが Testim を使用して作成された Salesforce オブジェクトに埋め込まれている場合、Salesforce フローステップは、Salesforce オブジェクトの作成に使用されたステップの直後に配置できます（例: [作成](/docs/sfdc-step-create)ステップの直後）。
 
 # フロー画面完了ステップの作成
 
@@ -48,7 +52,7 @@ Salesforce フローステップを追加する前に、次を追加する必要
    \{JS}. JavaScript モード。値は JavaScript 式として評価されます。フィールドは JavaScript 変数と関数を評価します。
    > 📘 サポートされていないフィールド
    >
-   > 場合によっては、フィールドがサポートされていません（例: 一部のカスタムフィールドなど）。この場合、フィールドは「まだサポートされていません」という通知と共に無効として表示されます。それでも、[Salesforce でテストを記録する](/docs/salesforce-utilities/record-tests-with-salesforce)で説明されているように、レコーダーを使用してステップを追加することで、このフィールドをテストに含めることができます。記録されたステップが、フィールドが表示されるテスト内の場所に追加されるようにしてください（ここにブレークポイントを追加して記録します）。
+   > 場合によっては、フィールドがサポートされていません（例: 一部のカスタムフィールドなど）。この場合、フィールドは「まだサポートされていません」という通知と共に無効として表示されます。それでも、[Salesforce でテストを記録する](/docs/record-tests-with-salesforce)で説明されているように、レコーダーを使用してステップを追加することで、このフィールドをテストに含めることができます。記録されたステップが、フィールドが表示されるテスト内の場所に追加されるようにしてください（ここにブレークポイントを追加して記録します）。
 7. **保存**をクリックしてステップを保存します。
 8. フローに複数の画面が含まれている場合は、上記のステップ 1〜7 に従って、各画面に対してフロー画面完了ステップを追加します。
    > 📘 フローの最終画面

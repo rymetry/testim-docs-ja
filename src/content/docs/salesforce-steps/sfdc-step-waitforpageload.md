@@ -1,13 +1,16 @@
 ---
 title: 'ページ読み込み待機'
-description: '原文: https://help.testim.io/docs/sfdc-step-waitforpageload'
+description: '次のステップに進む前に、ページの読み込み完了を待機します。'
 category: 'Salesforceステップ'
 order: 7
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-waitforpageload'
 keywords:
-  - testim
-  - sfdc-step-waitforpageload
-  - salesforce-steps
+  - Salesforce
+  - 待機
+  - ページ読み込み
+  - Salesforceステップ
+  - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
