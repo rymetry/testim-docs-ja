@@ -1,8 +1,8 @@
 ---
 title: 'カスタム検証とアクションの追加'
 description: 'カスタム検証をJavaScriptで作成する方法。標準の検証ステップでは対応できない複雑な検証ロジックを実装し、テストの柔軟性を高めます。'
-category: '検証'
-order: 6
+category: '高度な編集'
+order: 5007
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/custom-code'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - カスタマイズ
   - 独自検証
 ---
+
 スクリプトを用いて高度な検証を作成する
 
 プリセットのステップメニューに無い独自のアクションや検証を行いたい場合があります。*Add custom validation* ステップや *Add custom action* ステップを使うと、任意のパラメーターと JavaScript コードを入力するカスタムステップを作成できます。カスタムアクションは戻り値を返さずに記述し、カスタム検証は真偽値を返します。*true* を返すと検証は成功、*false* を返すと失敗になります（サンプルは後述）。

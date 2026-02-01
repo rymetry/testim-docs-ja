@@ -1,8 +1,8 @@
 ---
 title: 'Salesforceステップ'
 description: 'Salesforce環境での共通操作・レコード操作・API操作・CPQ操作を、テストに手動追加できる定義済みステップとして提供します。'
-category: 'Salesforceステップ'
-order: 1
+category: 'Salesforceテスト'
+order: 16010
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/salesforce-steps'
 keywords:
@@ -14,6 +14,7 @@ keywords:
   - API操作
   - CPQ操作
 ---
+
 Salesforceステップは、テストに手動で追加できます。これらのステップは、接続されたSalesforce環境のレコードとフィールドで事前入力されたSalesforceの一般的なアクションをカバーしています。ステップは、共通操作、レコード操作、API操作で構成されています。
 
 ![操作手順アニメーション](/images/salesforce-steps/salesforce-steps/488aa39-rework_salesforce_steps.gif)

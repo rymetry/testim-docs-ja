@@ -1,8 +1,8 @@
 ---
 title: 'モバイルWebテスト'
 description: '原文: https://help.testim.io/docs/mobile-web-testing'
-category: 'その他'
-order: 1
+category: 'ガイド'
+order: 19001
 updated: '2025-11-02'
 keywords:
   - モバイルWebテスト
@@ -11,6 +11,7 @@ keywords:
   - レスポンシブデザイン
   - クロスプラットフォーム
 ---
+
 モバイルデバイスエミュレーターでアプリケーションをテストする
 
 アプリケーションはモバイルデバイスをサポートしていますか？\

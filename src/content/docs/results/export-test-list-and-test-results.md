@@ -2,7 +2,7 @@
 title: 'テストリストとテスト結果のエクスポート'
 description: 'テスト結果をCSVファイルにエクスポートする方法について説明します。実行画面、テスト実行画面、テストリスト画面からエクスポートできます。'
 category: '結果'
-order: 13
+order: 7013
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/export-test-list-and-test-results'
 keywords:
@@ -13,6 +13,7 @@ keywords:
   - テストリスト
   - レポート
 ---
+
 結果をCSVファイルにエクスポートする方法を学びます。
 
 エクスポートボタンをクリックすることで、[実行画面](/docs/execution-runs-screen)、[テスト実行](/docs/test-runs)画面、[テストリスト](/docs/test-list)からテスト結果をエクスポートできます。

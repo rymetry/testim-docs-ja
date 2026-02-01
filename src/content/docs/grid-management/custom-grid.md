@@ -1,8 +1,8 @@
 ---
 title: 'カスタムグリッド'
 description: 'Testimで独自のSelenium GridやAppiumグリッドを使用する方法を説明します。ローカルまたはプライベートグリッドの設定、接続方法、トラブルシューティングを網羅しています。'
-category: 'グリッド管理'
-order: 4
+category: '統合'
+order: 12025
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/custom-grid'
 keywords:

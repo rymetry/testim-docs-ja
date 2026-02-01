@@ -1,8 +1,8 @@
 ---
 title: 'フック（Hooks）'
 description: 'テストやステップの前後に共有ステップ／共有グループを実行するフック（Before/After test、Before/After each step など）の設定方法と代表的なユースケースを説明します。'
-category: '高度な機能'
-order: 8
+category: '高度な編集'
+order: 5056
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hooks'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 前処理
   - 後処理
 ---
+
 フックは、各ステップの前後やテストの前後に、既存の[共有ステップ](/docs/shareable-steps)や[共有グループ](/docs/groups)を実行する仕組みです。設定後は通常どおりテストを実行でき、フックは他のステップ同様に実行されます。実行後、結果の可視化も可能です。
 
 ## よくある用途

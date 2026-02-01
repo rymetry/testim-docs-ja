@@ -1,8 +1,8 @@
 ---
 title: 'レコードを検索して移動'
 description: 'テキスト検索で一致するレコードを探し、最初の検索結果に移動します。'
-category: 'Salesforceステップ'
-order: 6
+category: 'Salesforceテスト'
+order: 16015
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-findandgotorecord'
 keywords:
@@ -12,6 +12,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

@@ -1,8 +1,8 @@
 ---
 title: '専用実行トンネル'
 description: '内部サーバーまたはlocalhostからTestimテストを実行するためのトンネル機能について説明します。設定方法と追加のユースケースを提供します。'
-category: 'CI統合'
-order: 8
+category: '統合'
+order: 12016
 updated: '2025-02-10'
 keywords:
   - Dedicated Run Tunnel

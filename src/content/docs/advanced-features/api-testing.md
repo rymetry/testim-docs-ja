@@ -1,8 +1,8 @@
 ---
 title: 'API テスト'
 description: 'UI テストから HTTP API を呼び出し、レスポンスの検証やテスト内でのデータ利用を行う API テストステップ（Validate API / Add API action）の使い方を説明します。'
-category: '高度な機能'
-order: 2
+category: '高度な編集'
+order: 5050
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/api-testing'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - パラメータ
   - バックエンド検証
 ---
+
 UI テストからサーバーAPIを呼び出し、検証やデータ取得を簡単に行います。
 
 API テストは、テスト内でAPI呼び出し（HTTPリクエスト）を行います。これにより、他ステップで使うデータの取得や、バックエンドとフロントエンドの値の整合を確認する検証が可能です。APIリクエストはヘッダー（認証情報を含む）とボディを持つ完全なHTTPリクエストです。\

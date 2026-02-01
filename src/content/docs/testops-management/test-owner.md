@@ -1,8 +1,8 @@
 ---
 title: 'テストオーナー'
 description: '原文: https://help.testim.io/docs/test-owner'
-category: 'TestOps管理'
-order: 3
+category: 'TestOps'
+order: 15004
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/test-owner'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テスト割り当て
   - チーム管理
 ---
+
 テストにオーナーを割り当てて、作業負荷をスケーリングしながら冗長性を最小化します
 
 テストオーナー機能により、各テストの「オーナー」を指定できます。これは、テストの責任者を識別したり、テストオーナーでテストライブラリやスイート実行結果をフィルタリングしたりするのに役立ちます。デフォルトでは、最初のテストオーナーはテストの作成者です。テストを新しいオーナーに再割り当てできます。

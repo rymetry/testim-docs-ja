@@ -1,8 +1,8 @@
 ---
 title: 'ターボモード'
 description: '原文: https://help.testim.io/docs/turbo-mode'
-category: 'インサイト'
-order: 6
+category: 'TestOps'
+order: 15016
 updated: '2025-11-02'
 keywords:
   - ターボモード
@@ -14,6 +14,7 @@ keywords:
   - Edge Chromium
   - PRO機能
 ---
+
 Testim テストを大規模に効率的に実行し、パフォーマンスを向上させます。
 
 パフォーマンスを向上させ、テストの実行時間を平均30%短縮し、不要なデータの保存を回避します。

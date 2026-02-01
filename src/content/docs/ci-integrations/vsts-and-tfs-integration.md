@@ -1,8 +1,8 @@
 ---
 title: 'VSTS / TFS統合'
 description: 'Visual Studio Team Services(VSTS)およびTeam Foundation Server(TFS)でTestimテストを実行する方法について説明します。Dockerタスクの設定手順を提供します。'
-category: 'CI統合'
-order: 13
+category: '統合'
+order: 12010
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/vsts-and-tfs-integration'
 keywords:

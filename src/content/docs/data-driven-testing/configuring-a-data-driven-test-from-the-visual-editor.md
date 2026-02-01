@@ -1,8 +1,8 @@
 ---
 title: 'ビジュアルエディターでのデータ駆動テストの設定'
 description: 'ビジュアルエディターでテストデータを追加し、複数のデータセットで同じテストを実行する方法を解説します。'
-category: 'データ駆動テスト'
-order: 2
+category: '高度な編集'
+order: 5027
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: 'ブランチ管理'
 description: '原文: https://help.testim.io/docs/version-control-branches'
-category: 'TestOpsバージョン管理'
-order: 2
+category: 'TestOps'
+order: 15007
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/version-control-branches'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 開発プロセス
   - テスト同期
 ---
+
 チームの開発プロセスに応じてテストを管理します。
 
 ブランチでテストを管理することで、開発のより早い段階でテスト結果を得ることができます。つまり、ブランチを使用すると、最終リリースを待つのではなく、新機能が開発されている時点でテストできるようになります。\

@@ -1,8 +1,8 @@
 ---
 title: '要素が不可視であることの検証'
 description: '要素が画面上に表示されていないことを検証するステップ。非表示要素や削除された要素の状態を確認し、UIの正しい動作を検証します。'
-category: '検証'
-order: 3
+category: '高度な編集'
+order: 5004
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-element-not-visible'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 非表示検証
   - ページ検証
 ---
+
 要素が不可視であることを検証する
 
 Element not visible 検証では、要素がページ上で表示されていない（不可視）ことを確認できます。画面から要素が消えたこと、あるいは最初から表示されていないことを確かめる用途に適しています。

@@ -1,8 +1,8 @@
 ---
 title: 'ディープリンク（モバイル）'
 description: 'Deep Link ステップで、モバイルアプリ内の特定画面を URL スキームで直接開き、パラメータ付きのディープリンク動作を検証する方法を説明します。'
-category: '特殊ステップ'
-order: 6
+category: '高度な編集'
+order: 5063
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/deep-link-mobile'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - 画面遷移
 ---
+
 アプリ内の特定画面を直接開くディープリンクを追加します。
 
 ディープリンクは、アプリを起動して特定の画面を直接開くリンクです（ホーム画面やWebではなく、アプリ内の所定位置へ遷移）。OS標準アプリやブラウザを含む端末内のアプリを開け、パラメータ（例: 電話番号）も渡せます。

@@ -2,7 +2,7 @@
 title: 'Web テスト入門（コードレステスト）'
 description: 'Testimの「Space & Beyond」デモサイトを使って最初のコードレスWebテストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。'
 category: 'はじめに'
-order: 2
+order: 2002
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/creating-your-first-codeless-test'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: '動的なテキスト入力'
 description: 'JavaScript式やパラメーターを組み合わせてSet textステップに動的な値を設定する方法を学びます。'
-category: 'テストユーティリティ'
-order: 5
+category: '高度な編集'
+order: 5001
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/advanced-set-text'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テストユーティリティ
   - 文字列連結
 ---
+
 JavaScript とパラメーターを組み合わせて動的なテキストを設定する
 
 **Set text** ステップ（テキスト入力）のあるテストを記録した後、記録時に入力した固定テキストを動的文字列に置き換えられます。動的文字列には JavaScript 式や、あらかじめ作成済みのパラメーターを含めることができます。より高度な活用例については [Data-driven testing](/docs/data-driven-testing) を参照してください。

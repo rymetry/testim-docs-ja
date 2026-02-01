@@ -2,7 +2,7 @@
 title: 'Salesforce環境の接続'
 description: 'Testim for SalesforceにSalesforce環境を接続し、既存環境の管理（名前変更・再接続・削除・キャッシュクリア）を行う手順を説明します。'
 category: 'Salesforceテスト'
-order: 5
+order: 16005
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-and-manage-test-environments'
 keywords:
@@ -17,6 +17,7 @@ keywords:
    - 設定
    - Testim for Salesforce
 ---
+
 Testim for Salesforceテストを作成する前に、Salesforce環境をTestim for Salesforceに接続する必要があります。各環境は1つ以上のブランチに関連付けられます（ブランチは1つの環境に関連付けることができます）。
 
 # Salesforce環境の接続

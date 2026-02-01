@@ -1,8 +1,8 @@
 ---
 title: 'リードを商談に変換'
 description: 'リードを商談に変換し、取引先・取引先責任者・商談の属性を設定します。'
-category: 'Salesforceステップ'
-order: 12
+category: 'Salesforceテスト'
+order: 16021
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-convertleadtoopportunity'
 keywords:
@@ -14,6 +14,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

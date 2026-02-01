@@ -2,7 +2,7 @@
 title: 'スケジューラーの Webhook 経由での通知'
 description: 'スケジュール実行の結果を Webhook で外部システムへ送信し、JSON ペイロードを利用してレポート生成やアラートなどの処理をトリガーする方法を説明します。'
 category: 'テスト実行'
-order: 7
+order: 6007
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/schedulers-notification-via-webhook'
 keywords:
@@ -16,6 +16,7 @@ keywords:
   - テスト実行
   - Testim
 ---
+
 Webhook 経由でスケジューラーの結果を取得できるようにします
 
 Webhook 経由でのスケジューラー通知機能は、スケジュール実行通知の設定オプションで URL を Webhook として追加する機能をユーザーに提供します。**通知** セクションには、通知をトリガーする時期（例：「すべての失敗時」）と通知を送信する方法の設定があります。これらの方法の 1 つは Webhook です。Testim の外部では、Webhook を使用して、レポートなどの形式のプロセスをトリガーできます。

@@ -1,8 +1,8 @@
 ---
 title: 'ブランチのマージ'
 description: '原文: https://help.testim.io/docs/merging-branches'
-category: 'TestOpsバージョン管理'
-order: 3
+category: 'TestOps'
+order: 15008
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/merging-branches'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - マージプロセス
   - ソースブランチ
 ---
+
 2つのブランチをマージすると、選択したブランチのステップを混在させたり、テスト全体を現在表示されているブランチ（master ブランチまたは他のブランチ）に追加したりできます。マージ後、ソースブランチは明示的に削除するまで存在し続けます。競合が発生した場合は、競合するステップを確認し、どのステップを採用するかを決定できます。
 
 :fa-arrow-right: **2つのブランチをマージするには:**

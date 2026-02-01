@@ -1,8 +1,8 @@
 ---
 title: 'JSON パラメータファイル'
 description: '原文: https://help.testim.io/docs/json-parameters-file-parameters'
-category: 'パラメータ'
-order: 4
+category: '高度な編集'
+order: 5043
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/json-parameters-file-parameters'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - テスト実行
   - 動的値
 ---
+
 JSON パラメータファイルでテストに値を渡す
 
 **JSON パラメータファイル**を使うと、実行時にパラメータを渡せます。環境ごとに異なる値を定義でき、たとえばローカルとCIで認証情報を切り替える、といった用途に向いています。パラメータを定義したJSONファイルを用意し、テスト実行時にCLI引数で指定します。

@@ -1,8 +1,8 @@
 ---
 title: 'バグトラッカー設定'
 description: 'Testimで利用可能なバグトラッカー統合の概要を説明します。Jira、Trello、Slack、GitHubとの連携方法と、効率的なバグ管理のベストプラクティスを網羅しています。'
-category: 'bug-tracker-settings'
-order: 10
+category: '統合'
+order: 12033
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/bug-tracker-settings'
 keywords:

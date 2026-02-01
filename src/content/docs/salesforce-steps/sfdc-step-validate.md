@@ -1,8 +1,8 @@
 ---
 title: '検証'
 description: '既存レコードのフィールド値が期待値と一致することを検証します。'
-category: 'Salesforceステップ'
-order: 15
+category: 'Salesforceテスト'
+order: 16024
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-validate'
 keywords:
@@ -12,6 +12,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

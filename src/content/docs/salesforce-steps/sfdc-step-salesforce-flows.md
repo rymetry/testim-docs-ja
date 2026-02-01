@@ -1,8 +1,8 @@
 ---
 title: 'Salesforce フロー'
 description: 'フロービルダーで作成した画面フローを、フィールド入力で完了させるステップです。'
-category: 'Salesforceステップ'
-order: 21
+category: 'Salesforceテスト'
+order: 16030
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-salesforce-flows'
 keywords:
@@ -13,6 +13,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

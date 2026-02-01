@@ -2,7 +2,7 @@
 title: 'ベース URL'
 description: 'テストのベース URL の考え方と、実行時にベース URL をオーバーライドする方法、ベース URL パラメータ BASE_URL を使って複数環境やデータドリブンテストに対応する方法を説明します。'
 category: 'テスト実行'
-order: 4
+order: 6004
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/base-url'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - テスト実行
   - Testim
 ---
+
 異なるベース URL を使用して、さまざまな環境でテストを実行する方法を学習してください
 
 同じテストを異なる URL で実行する方法を考えたことはありますか？\

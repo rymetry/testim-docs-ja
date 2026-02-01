@@ -1,8 +1,8 @@
 ---
 title: '設定ファイル'
 description: 'Testim の CLI で使用する設定ファイル（config）で、プロジェクトやテスト実行のパラメータ、実行フック（before/after test・suite）を定義する方法を説明します。'
-category: '設定ファイル'
-order: 1
+category: 'テスト実行'
+order: 6011
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/configuration-file-run-hooks'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - 実行フック
 ---
+
 設定ファイルについて
 
 設定ファイルは、テストやテストスイートを実行するために必要な各種パラメータを含む共通のJSファイルです。単一テスト／全テストの前後でバックエンドのセットアップやパラメータ定義を行うための実行フックも含まれます。

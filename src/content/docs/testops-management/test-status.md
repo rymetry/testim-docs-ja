@@ -1,8 +1,8 @@
 ---
 title: 'テストステータス'
 description: '原文: https://help.testim.io/docs/test-status'
-category: 'TestOps管理'
-order: 2
+category: 'TestOps'
+order: 15003
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/test-status'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テスト品質管理
   - スケジューラー実行
 ---
+
 どのテストに作業が必要かを管理するためにテストにステータスを追加します
 
 テストにステータスを追加して、どのテストに作業が必要かを管理できます。ステータスは、テストライブラリリストおよびテストエディタの列の1つとして表示されます。

@@ -1,8 +1,8 @@
 ---
 title: 'ダウンロード検証'
 description: 'ダウンロードしたファイルの内容を検証するCLIステップ。CSV、PDF、画像などのファイル形式に対応し、ファイルの内容や属性を確認できるPro機能です。'
-category: '検証'
-order: 8
+category: '高度な編集'
+order: 5009
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-download'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Pro機能
   - ファイルチェック
 ---
+
 テスト内から Node.js スクリプトを実行してダウンロード内容が期待通りであることを検証する
 
 *Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。

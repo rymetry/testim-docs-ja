@@ -1,8 +1,8 @@
 ---
 title: 'TestOps 概要'
 description: 'TestOps の制御・管理・インサイト機能により、テスト運用を大規模にスケールさせる考え方と主な機能群（ブランチ管理、テストステータス、オーナー、インサイトレポート）を紹介します。'
-category: 'testops'
-order: 1
+category: 'TestOps'
+order: 15001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/testops-overview'
 keywords:

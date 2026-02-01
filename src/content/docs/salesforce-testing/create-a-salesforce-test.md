@@ -2,7 +2,7 @@
 title: 'Salesforceテストの作成'
 description: 'Salesforce環境に接続し、ペルソナやモックネットワーク、テスト設定などを利用してSalesforceテストを作成・実行する手順を説明します。'
 category: 'Salesforceテスト'
-order: 7
+order: 16007
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-a-salesforce-test'
 keywords:
@@ -16,6 +16,7 @@ keywords:
   - 手動ステップ
   - Salesforceステップ
 ---
+
 Salesforceテストは、接続されたSalesforce環境に接続し、テストしたいユーザージャーニーを実行します。テストには一連のステップが含まれ、それぞれがSalesforceアプリケーションとの別のインタラクションを表します。
 
 #### ステップの種類

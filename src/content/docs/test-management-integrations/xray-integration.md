@@ -1,8 +1,8 @@
 ---
 title: 'Xray統合'
 description: 'TestimとXray for Jiraを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の表示方法を網羅しています。'
-category: 'test-management-integrations'
-order: 50
+category: '統合'
+order: 12042
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/xray-integration'
 keywords:

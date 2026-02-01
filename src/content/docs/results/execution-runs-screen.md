@@ -2,7 +2,7 @@
 title: '実行ラン画面'
 description: '実行ラン画面で実行の結果と統計を表示。実行リスト、統計パネル、グラフ、フィルター、詳細画面、テスト操作。'
 category: '結果'
-order: 9
+order: 7009
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/execution-runs-screen'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: 'GitLab統合'
 description: 'GitLab CI/CDでTestimテストを実行する方法について説明します。YAMLファイルの設定手順とサンプルコードを提供します。'
-category: 'CI統合'
-order: 6
+category: '統合'
+order: 12011
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/gitlab-integration'
 keywords:

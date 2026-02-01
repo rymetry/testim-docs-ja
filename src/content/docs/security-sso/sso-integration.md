@@ -1,8 +1,8 @@
 ---
 title: 'SSO統合'
 description: '原文: https://help.testim.io/docs/sso-integration'
-category: 'セキュリティ・SSO'
-order: 2
+category: 'セキュリティ'
+order: 18002
 updated: '2025-11-02'
 keywords:
   - SSO
@@ -14,6 +14,7 @@ keywords:
   - 認証
   - PRO機能
 ---
+
 シングルサインオンサービスをTestimと統合する
 
 TestimはOkta、OneLogin、AzureADを通じたSSO（シングルサインオン）をサポートしています。SSO機能により、ユーザーがTestimにログインする際に、会社のIDプロバイダーを通じて認証できるようになります。ユーザーはSSOプロバイダー（IDプロバイダー（IDP）としても知られる）で一度認証すれば、セッション中にTestimや他のアプリケーションにアクセスでき、各アプリケーションで認証する必要がありません。

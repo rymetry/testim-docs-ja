@@ -1,8 +1,8 @@
 ---
 title: 'カスタムテスト機能'
 description: '原文: https://help.testim.io/docs/custom-capabilities'
-category: 'グリッド管理'
-order: 7
+category: '統合'
+order: 12029
 updated: '2024-11-21'
 sourceUrl: 'https://help.testim.io/docs/custom-capabilities'
 keywords:

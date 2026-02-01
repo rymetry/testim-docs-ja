@@ -1,8 +1,8 @@
 ---
 title: 'レポート'
 description: '原文: https://help.testim.io/docs/reports'
-category: 'インサイト'
-order: 3
+category: 'TestOps'
+order: 15013
 updated: '2025-11-02'
 keywords:
   - レポート
@@ -14,6 +14,7 @@ keywords:
   - 会社レベルレポート
   - 改善領域
 ---
+
 品質トレンドの概要を把握します
 
 **Insights** セクションの **Reports** タブは、成功および失敗したテスト実行に関する情報、チームのアクティビティ、最も失敗したテストに関する情報など、選択した期間におけるプロジェクトの品質に関する詳細情報を表示します。情報を表示するプロジェクトのブランチを選択できます。詳細については、[ブランチの選択](/docs/insights#ブランチの選択) を参照してください。

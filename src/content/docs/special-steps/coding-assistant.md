@@ -1,8 +1,8 @@
 ---
 title: 'Testim Copilot コーディングアシスタント'
 description: 'Testim Copilot コーディングアシスタントで、カスタムアクションやカスタム検証などの JavaScript コードを生成・解説・修正し、テスト用スクリプトの作成を効率化する方法を説明します。'
-category: '特殊ステップ'
-order: 3
+category: '高度な編集'
+order: 5060
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/coding-assistant'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - コード修正
   - コード解説
 ---
+
 Copilot コーディングアシスタントは、以下のステップで用いる JS コードの作成・理解・修正を支援します。
 
 * [Add Custom Action](/docs/custom-code)

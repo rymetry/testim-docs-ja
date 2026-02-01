@@ -1,8 +1,8 @@
 ---
 title: 'TestimをCIに統合する'
 description: 'Testim CLIを使用してCI環境にテストを統合する方法について説明します。テストスイートの実行追跡とCI固有の統合ガイドのリンクを提供します。'
-category: 'CI統合'
-order: 5
+category: '統合'
+order: 12002
 updated: '2025-02-21'
 sourceUrl: 'https://help.testim.io/docs/integrate-testim-to-your-ci'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: '権限の検証'
 description: 'ユーザー権限（オブジェクト/フィールド）を取得し、期待値との差分を検証します。'
-category: 'Salesforceステップ'
-order: 10
+category: 'Salesforceテスト'
+order: 16019
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-permission-validation'
 keywords:
@@ -14,6 +14,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

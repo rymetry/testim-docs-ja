@@ -1,8 +1,8 @@
 ---
 title: 'APEX を実行'
 description: 'テスト内のステップとしてApexコードを実行し、値のエクスポートも行えます。'
-category: 'Salesforceステップ'
-order: 9
+category: 'Salesforceテスト'
+order: 16018
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-apex-action'
 keywords:
@@ -14,6 +14,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

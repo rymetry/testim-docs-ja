@@ -1,8 +1,8 @@
 ---
 title: '作成'
 description: '指定したフィールド値で新しいSalesforceレコードを作成し、必要に応じて検証も行います。'
-category: 'Salesforceステップ'
-order: 14
+category: 'Salesforceテスト'
+order: 16023
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-create'
 keywords:
@@ -13,6 +13,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

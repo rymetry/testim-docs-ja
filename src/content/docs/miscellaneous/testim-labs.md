@@ -1,8 +1,8 @@
 ---
 title: 'Testim Labsについて'
 description: '原文: https://help.testim.io/docs/testim-labs'
-category: 'その他'
-order: 5
+category: 'Testim Labs'
+order: 20001
 updated: '2025-11-02'
 keywords:
   - Testim Labs
@@ -11,6 +11,7 @@ keywords:
   - VIP機能
   - フィードバック
 ---
+
 Testim Labsは、まだすべてのユーザーに公開されていない新しいTestim機能に早期アクセスできるVIP機能です。これらは「アルファ版」や「ベータ版」ではありません。これらは本番環境で使用できる機能であり、試して価値を実現し始めることができます。また、フィードバックを提供して、チームの要件により適合するように機能の方向性に影響を与えることもできます。
 
 Labsユーザーの場合、各機能はプロジェクトごとに有効または無効にされます。

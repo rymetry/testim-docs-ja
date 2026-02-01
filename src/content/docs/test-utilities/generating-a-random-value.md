@@ -1,8 +1,8 @@
 ---
 title: 'ランダム値の生成'
 description: '動的データテスト用に乱数を生成するステップの作成方法を学びます。毎回異なるランダム文字列を入力してテストカバレッジを拡張します。'
-category: 'テストユーティリティ'
-order: 1
+category: 'テスト編集'
+order: 4012
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/generating-a-random-value'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テストユーティリティ
   - Set textステップ
 ---
+
 動的データテスト用に乱数（ランダム値）を生成するステップの作成
 
 テキスト入力用の **Set text** ステップを含むテストを記録した後、そのステップの入力に毎回異なるランダム文字列を使用するよう、テスト構成を編集できます。ランダム文字列は **Generate random value** ステップで生成され、変数に格納されます（このステップは **Set text** ステップの直前に挿入します）。その後、**Set text** ステップで、**Generate random value** ステップで作成した変数を参照するように編集します。\

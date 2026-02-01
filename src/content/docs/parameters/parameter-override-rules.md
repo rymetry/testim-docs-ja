@@ -1,8 +1,8 @@
 ---
 title: 'パラメータの上書きルール'
 description: '原文: https://help.testim.io/docs/parameter-override-rules'
-category: 'パラメータ'
-order: 7
+category: '高度な編集'
+order: 5046
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameter-override-rules'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - 優先順位
   - CLI
 ---
+
 パラメータ使用時に発生する上書き（オーバーライド）ルールの整理
 
 Testim でパラメータを使う方法はいくつかあります（例: [データ駆動テスト](/docs/data-driven-testing)、[グループ](/docs/groups)、[パラメータのエクスポート](/docs/exports-parameters)、[設定ファイルと実行フック](/docs/configuration-file-parameters)、[パラメータファイル](/docs/json-parameters-file-parameters)）。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。

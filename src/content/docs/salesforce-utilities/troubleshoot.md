@@ -1,8 +1,8 @@
 ---
 title: 'トラブルシューティング'
 description: 'Testim for Salesforceで起こりやすい接続・実行失敗などの問題と対処方法をまとめます。'
-category: 'Salesforceユーティリティ'
-order: 3
+category: 'Salesforceテスト'
+order: 16033
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/troubleshoot'
 keywords:

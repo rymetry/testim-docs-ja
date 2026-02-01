@@ -1,8 +1,8 @@
 ---
 title: 'Tricentis Mobile Agentの構成'
 description: 'Tricentis Mobile Agent(TMA)のインストール、接続、デバイス構成、およびトラブルシューティング方法について説明します。'
-category: 'テスト作成'
-order: 7
+category: 'テストの記録'
+order: 3008
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/configure-tricentis-mobile-agent'
 keywords:

@@ -1,8 +1,8 @@
 ---
 title: '拡張条件設定'
 description: '条件やループの高度な設定方法を学びます。条件判定のリトライ時間や検証時間を調整して、より柔軟なテスト実行を実現します。'
-category: '条件分岐'
-order: 2
+category: 'テスト編集'
+order: 4011
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/advanced-conditions-settings'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - 条件判定
   - 高度な設定
 ---
+
 Testim の条件は、ステップの実行にもループの繰り返し（[Repeat Group Loops](/docs/loops)）にも適用できます。\
 ステップやループに設定した条件が false の場合、既定ではステップはスキップ（またはループは即座に終了）されます。逆に条件が true の場合、既定では直ちにステップを実行（またはループを繰り返し）ます。下記の拡張オプションを使うと、true/false と判定する前に一定時間、条件チェックを継続するように設定できます。
 

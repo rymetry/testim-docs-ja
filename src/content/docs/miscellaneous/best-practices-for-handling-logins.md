@@ -1,8 +1,8 @@
 ---
 title: 'ログイン処理のベストプラクティス'
 description: '原文: https://help.testim.io/docs/best-practices-for-handling-logins'
-category: 'その他'
-order: 4
+category: 'ガイド'
+order: 19004
 updated: '2025-11-02'
 keywords:
   - ログイン処理
@@ -11,6 +11,7 @@ keywords:
   - 共有ステップ
   - 環境設定
 ---
+
 すべてのテストでログインを再利用する方法を見つける
 
 アプリケーションでログインが必要な場合、以下を考慮する必要があります:

@@ -1,8 +1,8 @@
 ---
 title: 'SalesforceのMFA設定'
 description: 'SalesforceのMFA（認証アプリ）を設定し、Testim for Salesforceの資格情報に認証キーを登録する手順を説明します。'
-category: 'Salesforceユーティリティ'
-order: 8
+category: 'Salesforceテスト'
+order: 16038
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/setting-mfa-for-salesforce'
 keywords:

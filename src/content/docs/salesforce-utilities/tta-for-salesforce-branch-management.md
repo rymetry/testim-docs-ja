@@ -1,8 +1,8 @@
 ---
 title: 'Testim for Salesforceブランチ管理'
 description: 'Testim for Salesforceのブランチ作成・切り替え・環境変更・マージの概要を説明します。'
-category: 'Salesforceユーティリティ'
-order: 5
+category: 'Salesforceテスト'
+order: 16035
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/tta-for-salesforce-branch-management'
 keywords:

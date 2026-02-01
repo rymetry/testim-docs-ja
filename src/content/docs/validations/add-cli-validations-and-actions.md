@@ -1,8 +1,8 @@
 ---
 title: 'CLI 検証とアクションの追加'
 description: 'CLIステップを使用してNode.jsスクリプトを実行し、カスタム検証やアクションを追加する方法。ファイル操作やデータベース接続など高度な機能を実現できるPro機能です。'
-category: '検証'
-order: 7
+category: '高度な編集'
+order: 5008
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/add-cli-validations-and-actions'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - CLIステップ
   - コマンド実行
 ---
+
 テスト内から Node.js スクリプトを実行する
 
 ブラウザーの実行環境で動作する [カスタム検証/アクション](/docs/custom-code) に加えて、CLI 環境（Node.js）で実行されるカスタムスクリプトも作成できます。

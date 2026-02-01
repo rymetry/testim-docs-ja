@@ -1,8 +1,8 @@
 ---
 title: 'Jenkins統合'
 description: 'JenkinsでTestimテストを実行する方法について説明します。LinuxとWindows環境でのビルドステップ設定手順を提供します。'
-category: 'CI統合'
-order: 14
+category: '統合'
+order: 12007
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/jenkins-integration'
 keywords:

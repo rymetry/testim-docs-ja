@@ -1,8 +1,8 @@
 ---
 title: 'Sealights統合'
 description: 'SealightsとTestimを統合してテスト最適化を実現する方法について説明します。CLI、スケジューラー、APIでの実行方法を提供します。'
-category: 'その他の統合'
-order: 2
+category: '統合'
+order: 12021
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/sealights-integration'
 keywords:

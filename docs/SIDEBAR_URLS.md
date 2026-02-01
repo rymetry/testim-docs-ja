@@ -362,9 +362,6 @@
 - ✅🔍 https://help.testim.io/docs/testim-labs
 - ✅🔍 https://help.testim.io/docs/test-flow-view
 - ✅🔍 https://help.testim.io/docs/link-directly-to-a-shared-step
-
-
-
 ---
 
 ## URL抽出方法

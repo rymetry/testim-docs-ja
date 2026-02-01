@@ -1,8 +1,8 @@
 ---
 title: '要素テキストの検証'
 description: '要素に表示されているテキストが期待値と一致するかを検証するステップ。部分一致、完全一致、正規表現など柔軟な検証条件を設定できます。'
-category: '検証'
-order: 4
+category: '高度な編集'
+order: 5005
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-element-text'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テキストマッチング
   - DOM検証
 ---
+
 期待するテキストが表示されていることを検証する
 
 Element Text 検証は、指定した要素の存在を前提にする点で Element Visible 検証と似ていますが、Element Text 検証ではその要素に表示される「特定のテキスト値」も指定して検証します。複数のテキスト要素をまとめて検証することもできます。\

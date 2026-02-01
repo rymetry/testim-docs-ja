@@ -1,8 +1,8 @@
 ---
 title: 'グループのパラメータ'
 description: '原文: https://help.testim.io/docs/parameters-for-groups'
-category: 'パラメータ'
-order: 3
+category: '高度な編集'
+order: 5042
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters-for-groups'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - 共有ステップ
   - テスト自動化
 ---
+
 グループへパラメータを渡して再利用性を高める方法
 
 [グループ](/docs/groups) にはパラメータ（テストステップへ値を渡すための変数）を含められます。ログインの例なら、ユーザー名やパスワードをパラメータ化して、registered_user／guest など異なる組み合わせを切り替えられます。\

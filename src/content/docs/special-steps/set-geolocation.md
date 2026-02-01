@@ -1,8 +1,8 @@
 ---
 title: 'ジオロケーションの設定（モバイル）'
 description: 'Set Geolocation ステップでモバイルデバイスの位置情報（緯度・経度）を指定し、位置依存のシナリオをテストする方法を説明します。'
-category: '特殊ステップ'
-order: 5
+category: '高度な編集'
+order: 5062
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/set-geolocation'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - ロケーションモック
   - 位置依存テスト
 ---
+
 モバイルデバイスに特定の位置情報を設定します
 
 一部のモバイルアプリは端末の位置情報を利用します。本ステップでテスト実行中のデバイスに任意の位置情報を設定できます。

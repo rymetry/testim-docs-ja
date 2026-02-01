@@ -1,8 +1,8 @@
 ---
 title: 'ログのスクリーンショット'
 description: 'テスト実行時に各ステップのスクリーンショットをSalesforceログに保存する方法を説明します。'
-category: 'Salesforceユーティリティ'
-order: 1
+category: 'Salesforceテスト'
+order: 16031
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/log-screenshots'
 keywords:

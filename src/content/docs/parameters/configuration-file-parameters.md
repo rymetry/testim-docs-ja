@@ -1,8 +1,8 @@
 ---
 title: '設定ファイルのパラメータ'
 description: '原文: https://help.testim.io/docs/configuration-file-parameters'
-category: 'パラメータ'
-order: 5
+category: '高度な編集'
+order: 5044
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - フック
   - テストデータ
 ---
+
 設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
 
 [*設定ファイル*](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメータを定義する共通JSです。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメータ定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメータを各テストへ渡せます。

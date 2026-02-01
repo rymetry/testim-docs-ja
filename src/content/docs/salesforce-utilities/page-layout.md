@@ -1,8 +1,8 @@
 ---
 title: 'ページレイアウト'
 description: 'Salesforceのページレイアウトがステップで選択できるフィールドに与える影響と、ページレイアウト選択の手順を説明します。'
-category: 'Salesforceユーティリティ'
-order: 9
+category: 'Salesforceテスト'
+order: 16039
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/page-layout'
 keywords:

@@ -2,7 +2,7 @@
 title: 'Salesforceテストの開始'
 description: 'Salesforce環境の接続から、テストの作成・保存・実行までを一連で体験できるチュートリアルです。'
 category: 'Salesforceテスト'
-order: 2
+order: 16002
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/salesforce-testing-getting-started'
 keywords:
@@ -17,6 +17,7 @@ keywords:
    - ログアウト
    - Testim for Salesforce
 ---
+
 ## Testim for Salesforceへようこそ
 
 このチュートリアルでは、Testim for Salesforceでテストを作成する方法を学びます。チュートリアルの一環として、Salesforce環境の接続、新しいテストの作成と記録、そして最後に実行する方法を学びます。このチュートリアルでは、プロセスのすべてのオプションを網羅するのではなく、最初から最後までのプロセスを説明する特定のシナリオを扱います。

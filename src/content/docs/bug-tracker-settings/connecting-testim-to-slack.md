@@ -1,8 +1,8 @@
 ---
 title: 'TestimとSlackの連携'
 description: 'TestimとSlackを連携して、失敗したテストやバグの詳細を指定したSlackチャンネルに投稿する方法と、テスト結果の通知設定について説明します。統合設定、チャンネル選択、通知のカスタマイズ方法を網羅しています。'
-category: 'bug-tracker-settings'
-order: 40
+category: '統合'
+order: 12036
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-slack'
 keywords:

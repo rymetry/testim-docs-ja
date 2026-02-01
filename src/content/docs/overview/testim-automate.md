@@ -2,7 +2,7 @@
 title: 'Webとモバイルテスト'
 description: 'WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール'
 category: '概要'
-order: 2
+order: 1002
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/testim-automate'
 keywords:

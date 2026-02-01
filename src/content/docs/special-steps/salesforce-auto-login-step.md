@@ -1,8 +1,8 @@
 ---
 title: 'Salesforce 自動ログインステップ'
 description: 'Salesforce 環境（本番・サンドボックス）にユーザー名とパスワードで自動ログインし、毎回ログイン手順を記録せずにテストを開始できる専用ステップについて説明します。'
-category: '特殊ステップ'
-order: 1
+category: '高度な編集'
+order: 5058
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/salesforce-auto-login-step'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 自動ログインステップ
   - 認証エラー対策
 ---
+
 Salesforce 環境（本番/サンドボックス）にログイン・ログアウトの記録無しで認証できるステップです。ログインステップを追加し、接続先の情報を入力するだけで、すぐにテストの記録を開始できます。
 
 > 📘

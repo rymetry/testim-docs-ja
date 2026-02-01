@@ -1,8 +1,8 @@
 ---
 title: 'ネットワーク検証の追加'
 description: 'ネットワークリクエストとレスポンスを検証するステップ。APIコール、Ajaxリクエスト、HTTPレスポンスの内容を確認し、通信状態を検証します。'
-category: '検証'
-order: 14
+category: '高度な編集'
+order: 5015
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/add-network-validation'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - API
   - Testim
 ---
+
 ネットワークリクエストが期待どおりに実行されたかを検証する
 
 *network validation* ステップでは、ネットワークリクエストを検証できます。プリセットの検証ステップで、オブジェクトの配列 `networkRequests`（下表）を受け取り、この配列に対して JavaScript を実行します。

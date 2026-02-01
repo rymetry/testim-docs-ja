@@ -2,7 +2,7 @@
 title: 'ペルソナの作成'
 description: 'ペルソナ（ユーザータイプ）を作成し、Salesforceユーザーの認証情報を関連付ける方法を説明します。'
 category: 'Salesforceテスト'
-order: 6
+order: 16006
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-a-persona-and-add-users'
 keywords:
@@ -17,6 +17,7 @@ keywords:
    - 環境切り替え
    - Testim for Salesforce
 ---
+
 Testim for Salesforceのペルソナは、管理者、営業、顧客などのユーザータイプです。ペルソナは、テストを実行する際にSalesforce環境にアクセスするために使用されます。ペルソナを作成した後、接続されたSalesforce環境の既存のSalesforceユーザーの認証情報と関連付けます。これにより、テストを書き直すことなく、さまざまな環境（Dev、QA、本番など）間を切り替えることができます。
 
 このプロセスは、Salesforce環境をTestim for Salesforceに接続していることを前提としています。詳細については、[Salesforce環境の接続](/docs/create-and-manage-test-environments)を参照してください。

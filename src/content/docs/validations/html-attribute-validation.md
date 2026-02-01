@@ -1,8 +1,8 @@
 ---
 title: 'HTML属性の検証（Web）'
 description: 'Web要素のHTML属性値を検証するステップ。id、class、data属性などの値が期待通りであることを確認し、動的なUI要素の状態を検証します。'
-category: '検証'
-order: 10
+category: '高度な編集'
+order: 5011
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/html-attribute-validation'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - データ属性
   - Testim
 ---
+
 アプリ内の任意のHTML属性を検証する
 
 HTML属性検証では、要素の任意のHTML属性の値を検証できます（例：*href*、*src*、*alt*、*title* など）。また、以下に説明する通り「disabled」属性の検証も可能です。

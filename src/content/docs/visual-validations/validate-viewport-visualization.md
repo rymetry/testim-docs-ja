@@ -1,8 +1,8 @@
 ---
 title: 'ビューポートのビジュアル検証'
 description: 'ビューポートのピクセルレベルでのビジュアル差異を検証する方法。Applitoolsとの連携により、ベースラインと現在のテスト実行を比較します。'
-category: 'ビジュアル検証'
-order: 2
+category: '高度な編集'
+order: 5023
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/validate-viewport-visualization'
 keywords:

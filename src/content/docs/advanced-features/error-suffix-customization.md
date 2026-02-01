@@ -1,8 +1,8 @@
 ---
 title: 'エラーサフィックスのカスタマイズ'
 description: 'エラーサフィックス機能でステップ失敗時のメッセージ末尾に任意の文字列やパラメータを追加する方法を説明します。'
-category: '高度な機能'
-order: 9
+category: '高度な編集'
+order: 5057
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/error-suffix-customization'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - プロパティ設定
   - トラブルシューティング
 ---
+
 ステップのエラーメッセージをカスタマイズする
 
 ステップのプロパティ設定で、失敗時に表示されるエラーメッセージへ任意の文字列（およびパラメータ）をサフィックスとして追加できます。

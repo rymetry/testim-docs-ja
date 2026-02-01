@@ -1,8 +1,8 @@
 ---
 title: 'インサイト'
 description: '原文: https://help.testim.io/docs/insights'
-category: 'インサイト'
-order: 1
+category: 'TestOps'
+order: 15011
 updated: '2025-11-02'
 keywords:
   - インサイト
@@ -14,6 +14,7 @@ keywords:
   - ブランチ選択
   - TestOpsダッシュボード
 ---
+
 **Insights** 画面では、テストデータから洞察を得て、品質の現状、能力の構築、チームの進捗状況、プロセス改善領域を理解できます。この画面は、テストに関する重要な情報と統計を集中管理し、詳細なレポートへのアクセスを提供します。これにより、プロジェクトの健全性に関する情報を表示および分析し、注意が必要なテストに焦点を当てることができます。情報を表示するプロジェクトのブランチを選択できます。
 
 Insights 画面には、*TestOps Dashboard* と *Reports* の2つのタブがあります。

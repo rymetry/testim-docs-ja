@@ -1,8 +1,8 @@
 ---
 title: 'JSでランダムデータを生成'
 description: '原文: https://help.testim.io/docs/generate-random-data-with-js'
-category: 'その他'
-order: 3
+category: 'ガイド'
+order: 19003
 updated: '2025-11-02'
 keywords:
   - ランダムデータ生成
@@ -11,6 +11,7 @@ keywords:
   - 動的データ
   - テストデータ生成
 ---
+
 ランダムデータ（ユーザー名、パスワード、メールなど）をテキストフィールドに動的に割り当てる方法を学ぶ
 
 Testimのすべてのステップはパラメータ化できます。これは、set-textステップが記録されたリテラル値（例: "[john@yourapp.io](mailto:john@yourapp.io)", "passw0rd!"）だけでなく、任意のJS式を持つことができることを意味します。

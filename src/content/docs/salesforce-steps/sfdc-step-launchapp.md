@@ -1,8 +1,8 @@
 ---
 title: 'アプリを起動'
 description: 'ログイン後にSalesforceアプリを選択して開きます。'
-category: 'Salesforceステップ'
-order: 4
+category: 'Salesforceテスト'
+order: 16013
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-launchapp'
 keywords:
@@ -12,6 +12,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 > 📘 Salesforceステップ
 >
 > これはSalesforceステップです。

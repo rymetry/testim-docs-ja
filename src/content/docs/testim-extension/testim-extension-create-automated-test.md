@@ -2,7 +2,7 @@
 title: 'Testim拡張機能 - 自動テストを作成'
 description: '原文: https://help.testim.io/docs/testim-extension-create-automated-test'
 category: 'Testim拡張機能'
-order: 4
+order: 17004
 updated: '2025-11-02'
 keywords:
   - Testim拡張機能
@@ -12,6 +12,7 @@ keywords:
   - ベーURL
   - テスト保存
 ---
+
 Testim自動テスト作成機能を使用すると、Webブラウザから直接Testimビジュアルエディターでテストを素早く記録できます。
 
 ## 自動テストの作成

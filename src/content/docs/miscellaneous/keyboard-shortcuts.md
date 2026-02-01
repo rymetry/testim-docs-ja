@@ -1,8 +1,8 @@
 ---
 title: 'キーボードショートカット'
 description: '原文: https://help.testim.io/docs/keyboard-shortcuts'
-category: 'その他'
-order: 2
+category: 'ガイド'
+order: 19002
 updated: '2025-11-02'
 keywords:
   - キーボードショートカット
@@ -11,6 +11,7 @@ keywords:
   - 検証追加
   - 操作性向上
 ---
+
 より迅速で簡単なテスト作成のためのキーボードショートカット
 
 Testimには、テスト作成を高速化するために使用できる一連のショートカットがあります。これらのショートカットを使用すると、テスト記録中にさまざまな検証を追加できます。

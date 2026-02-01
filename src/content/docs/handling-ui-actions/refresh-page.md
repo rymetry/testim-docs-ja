@@ -1,8 +1,8 @@
 ---
 title: 'ページ更新ステップ'
 description: 'Testimでページ更新ステップを追加し、ブラウザでページの最新バージョンを表示する方法を学びます。'
-category: 'UI操作'
-order: 5
+category: '高度な編集'
+order: 5034
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/refresh-page'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テスト自動化
   - UI操作
 ---
+
 テストに更新ステップを追加する
 
 一部のWebページでは、ページの更新を表示するために更新が必要です。これは、WebページがサーバーUで更新されているが、ブラウザにまだ変更が表示されていない場合に発生します。

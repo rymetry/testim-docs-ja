@@ -1,8 +1,8 @@
 ---
 title: 'モックモードでのテスト実行'
 description: 'マッピングファイルを使用したモックモードでのテスト実行方法について説明します。UI経由またはCLI経由での実行手順を学びます。'
-category: 'ネットワークモック'
-order: 4
+category: 'テスト実行'
+order: 6016
 updated: '2025-11-11'
 sourceUrl: 'https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file'
 keywords:
@@ -15,6 +15,7 @@ keywords:
   - ローカル実行
   - リモート実行
 ---
+
 新しいHARの記録後、カスタムHARのアップロード後、またはマッピングファイルのアップロード後、テストのモックネットワークモードが自動的に有効になります。
 
 ![モックネットワークモードが有効なテストの設定画面](/images/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file/26999eb-mock9.png)

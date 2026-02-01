@@ -2,7 +2,7 @@
 title: 'シークレットモードで実行'
 description: 'Chrome のシークレットモードを使って Cookie やログイン状態の影響を受けないクリーンな状態でテストを実行するための設定と手順を説明します。'
 category: 'テスト実行'
-order: 10
+order: 6010
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/run-in-incognito'
 keywords:

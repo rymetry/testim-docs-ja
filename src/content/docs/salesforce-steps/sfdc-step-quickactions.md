@@ -1,8 +1,8 @@
 ---
 title: 'クイックアクション'
 description: 'レコードのクイックアクション（タスク作成、通話ログ、新規イベント、メール）を実行します。'
-category: 'Salesforceステップ'
-order: 18
+category: 'Salesforceテスト'
+order: 16027
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-quickactions'
 keywords:
@@ -15,6 +15,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

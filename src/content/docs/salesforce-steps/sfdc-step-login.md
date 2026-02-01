@@ -1,8 +1,8 @@
 ---
 title: 'ログイン'
 description: 'ペルソナを選択してSalesforce環境にログインします。'
-category: 'Salesforceステップ'
-order: 2
+category: 'Salesforceテスト'
+order: 16011
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-login'
 keywords:
@@ -12,6 +12,7 @@ keywords:
   - Salesforceステップ
   - Testim for Salesforce
 ---
+
 > 📘 Salesforceステップ
 >
 > これはSalesforceステップです。

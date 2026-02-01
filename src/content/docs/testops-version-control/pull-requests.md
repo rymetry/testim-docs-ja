@@ -1,8 +1,8 @@
 ---
 title: 'プルリクエスト'
 description: '原文: https://help.testim.io/docs/pull-requests'
-category: 'TestOpsバージョン管理'
-order: 4
+category: 'TestOps'
+order: 15009
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/pull-requests'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 承認ワークフロー
   - テストレビュー
 ---
+
 master へのマージ時にプルリクエストを提出します
 
 プルリクエストは、テストに導入された変更をレビュー担当者に通知します。プルリクエストが開かれると、変更が Master ブランチまたは他のブランチにマージされる前に、協力者と潜在的な変更について議論およびレビューできます。プルリクエストにコメントを追加できます。プルリクエストのレビュー担当者もプルリクエストにコメントを追加できます。プルリクエストは「コードレビュー」慣行の重要な部分であり、テスター/開発者が他の人の作業を壊すことを最小限に抑えます。

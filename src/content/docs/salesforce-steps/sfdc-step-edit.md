@@ -1,8 +1,8 @@
 ---
 title: '編集'
 description: '表示中のSalesforceレコードのフィールドを編集します。'
-category: 'Salesforceステップ'
-order: 16
+category: 'Salesforceテスト'
+order: 16025
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-edit'
 keywords:
@@ -12,6 +12,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

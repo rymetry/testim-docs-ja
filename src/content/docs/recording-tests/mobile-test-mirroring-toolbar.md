@@ -1,8 +1,8 @@
 ---
 title: 'モバイルテストミラーリングツールバー'
 description: 'AUTミラーリングウィンドウのツールバー機能について説明します。'
-category: 'テスト作成'
-order: 11
+category: 'テストの記録'
+order: 3011
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/mobile-test-mirroring-toolbar'
 keywords:

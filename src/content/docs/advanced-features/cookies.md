@@ -1,8 +1,8 @@
 ---
 title: 'Cookie（クッキー）'
 description: '専用ステップやカスタムコード、設定ファイルを使ってテスト内でブラウザクッキーを設定・取得する方法を説明します。'
-category: '高度な機能'
-order: 3
+category: '高度な編集'
+order: 5051
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/cookies'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 認証
   - テスト自動化
 ---
+
 ブラウザクッキーの取得と設定
 
 > 📘 Cookie とは、Web サイトから送信されブラウザに保存される小さなデータです。用途は多岐に渡りますが、テスト自動化ではログインフロー全体を踏まずに Cookie を直接設定して認証を高速化する、といった使い方が可能です。

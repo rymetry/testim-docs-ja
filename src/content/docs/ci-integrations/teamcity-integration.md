@@ -1,8 +1,8 @@
 ---
 title: 'TeamCity統合'
 description: 'TeamCityでTestimテストを実行する方法について説明します。ビルドステップの設定手順とスクリプトテンプレートを提供します。'
-category: 'CI統合'
-order: 9
+category: '統合'
+order: 12009
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/teamcity-integration'
 keywords:

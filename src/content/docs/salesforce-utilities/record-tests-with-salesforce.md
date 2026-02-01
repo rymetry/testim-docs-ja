@@ -1,8 +1,8 @@
 ---
 title: 'Salesforceでテストを記録する'
 description: '事前定義されたSalesforceステップに加えて、必要な操作を記録ステップとして追加する手順を説明します。'
-category: 'Salesforceユーティリティ'
-order: 2
+category: 'Salesforceテスト'
+order: 16032
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/record-tests-with-salesforce'
 keywords:

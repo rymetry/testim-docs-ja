@@ -1,8 +1,8 @@
 ---
 title: 'ブランチ読み取り専用状態'
 description: '原文: https://help.testim.io/docs/read-only'
-category: 'TestOpsバージョン管理'
-order: 5
+category: 'TestOps'
+order: 15010
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/read-only'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - 変更制御
   - 権限管理
 ---
+
 ブランチへの直接書き込みを許可しない（ブランチとマージを使用する場合のみ）
 
 Testim には、ブランチへの直接書き込みを許可しないようにブランチをロックする機能があります。\

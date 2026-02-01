@@ -2,7 +2,7 @@
 title: 'テストとフォルダーの管理'
 description: 'フォルダーとラベルを使用してテストを整理し、テストのクローン作成やベース URL の変更を行います'
 category: 'テスト管理'
-order: 2
+order: 9003
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/managing-tests-and-folders'
 keywords:

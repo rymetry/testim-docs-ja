@@ -1,8 +1,8 @@
 ---
 title: '選択リストオプションの検証'
 description: '選択リスト（ドロップダウン）に表示される/されないオプションを検証します。'
-category: 'Salesforceステップ'
-order: 20
+category: 'Salesforceテスト'
+order: 16029
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-verifypicklistoptions'
 keywords:
@@ -13,6 +13,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。

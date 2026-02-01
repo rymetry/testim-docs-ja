@@ -1,8 +1,8 @@
 ---
 title: 'チーム生産性'
 description: '原文: https://help.testim.io/docs/team-productivity'
-category: 'インサイト'
-order: 4
+category: 'TestOps'
+order: 15014
 updated: '2025-11-02'
 keywords:
   - チーム生産性
@@ -13,6 +13,7 @@ keywords:
   - ブランチフィルタ
   - ユーザー作業量
 ---
+
 チームの作業と生産性をより見やすく把握します
 
 ## チーム生産性レポート

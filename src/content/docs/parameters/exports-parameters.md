@@ -1,8 +1,8 @@
 ---
 title: 'パラメータのエクスポート'
 description: '原文: https://help.testim.io/docs/exports-parameters'
-category: 'パラメータ'
-order: 8
+category: '高度な編集'
+order: 5047
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/exports-parameters'
 keywords:
@@ -16,6 +16,7 @@ keywords:
   - exportsTest
   - JavaScript
 ---
+
 テスト内のステップ間、あるいは別テスト間でパラメータを受け渡す
 
 エクスポートには3種類あります。

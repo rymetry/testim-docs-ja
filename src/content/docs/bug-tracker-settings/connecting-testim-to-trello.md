@@ -1,8 +1,8 @@
 ---
 title: 'TestimとTrelloの連携'
 description: 'TestimとTrelloを連携してバグレポートをTrelloカードとして管理する方法を説明します。統合設定、カード作成、テスト結果の追跡方法を網羅しています。'
-category: 'bug-tracker-settings'
-order: 30
+category: '統合'
+order: 12035
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-trello'
 keywords:

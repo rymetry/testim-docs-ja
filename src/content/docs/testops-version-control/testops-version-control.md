@@ -1,8 +1,8 @@
 ---
 title: 'TestOps - バージョン管理'
 description: '原文: https://help.testim.io/docs/testops-version-control'
-category: 'TestOpsバージョン管理'
-order: 1
+category: 'TestOps'
+order: 15006
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/testops-version-control'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Git連携
   - テスト変更管理
 ---
+
 ブランチ、マージ、プルリクエスト（PR）は、Git などのバージョン管理システムで一般的に使用される概念で、コードの変更を管理し、ソフトウェア開発プロジェクトで共同作業を行うために使用されます。Testim はいくつかの例外を除いて同様の機能を提供します。
 
 これらの概念の背後にあるメカニズムの簡単な概要は次のとおりです:

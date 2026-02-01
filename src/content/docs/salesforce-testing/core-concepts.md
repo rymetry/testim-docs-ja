@@ -2,7 +2,7 @@
 title: 'コアコンセプト'
 description: 'Salesforceテストの基本概念（ステップ、レコーダー、ローカル/グリッド実行、結果など）を整理します。'
 category: 'Salesforceテスト'
-order: 3
+order: 16003
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/core-concepts'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テストスイート
   - CI
 ---
+
 ***Salesforceテストとは何ですか？***
 
 Salesforceテストは、ユーザーのインタラクションとフローを模倣する様々なテストステップで構成されます。ステップは、手動でステップを追加したり、画面上のアクションを記録することで作成できます。テストケースは、上記の2つの方法で作成されたテストステップの組み合わせを持つことができます。

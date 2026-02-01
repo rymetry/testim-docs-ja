@@ -1,8 +1,8 @@
 ---
 title: 'テスト内検索'
 description: 'テスト内のステップ、JavaScriptコード、パラメーター、URL、条件などを横断検索する方法を学びます。'
-category: 'テストユーティリティ'
-order: 3
+category: 'テスト編集'
+order: 4014
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/search-within-a-test'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - テストユーティリティ
   - 検索制限事項
 ---
+
 テスト内のオブジェクトを検索する方法
 
 検索機能を使うと、テスト内のオブジェクトを横断して検索できます。テスト画面の検索フィールドに自由入力（最低3文字）すると検索が行われます。検索は**大文字・小文字を区別しません**。

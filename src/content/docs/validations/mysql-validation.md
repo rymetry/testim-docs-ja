@@ -1,8 +1,8 @@
 ---
 title: 'MySQL の検証'
 description: 'MySQLデータベースに接続してデータを検証するCLIステップ。テーブルデータの確認やSQLクエリ実行により、データベースの状態を検証できるPro機能です。'
-category: '検証'
-order: 17
+category: '高度な編集'
+order: 5018
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/mysql-validation'
 keywords:
@@ -17,6 +17,7 @@ keywords:
   - Testim
   - データベース接続
 ---
+
 CLI アクションと SQL で MySQL を検証する
 
 [CLI action step](/docs/cli-actions) を使って MySQL に対してクエリや検証を実行できます。

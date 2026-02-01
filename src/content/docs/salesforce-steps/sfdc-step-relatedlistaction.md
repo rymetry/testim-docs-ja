@@ -1,8 +1,8 @@
 ---
 title: '関連リストアクション'
 description: '関連リスト内のレコードを作成・検証・表示します。'
-category: 'Salesforceステップ'
-order: 17
+category: 'Salesforceテスト'
+order: 16026
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-relatedlistaction'
 keywords:
@@ -14,6 +14,7 @@ keywords:
    - Salesforceステップ
    - Testim for Salesforce
 ---
+
 > 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
