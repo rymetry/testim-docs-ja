@@ -1,15 +1,21 @@
 ---
 title: 'クイックアクション'
-description: '原文: https://help.testim.io/docs/sfdc-step-quickactions'
+description: 'レコードのクイックアクション（タスク作成、通話ログ、新規イベント、メール）を実行します。'
 category: 'Salesforceステップ'
 order: 18
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-quickactions'
 keywords:
-  - testim
-  - sfdc-step-quickactions
-  - salesforce-steps
+   - Salesforce
+   - クイックアクション
+   - タスク
+   - 通話ログ
+   - イベント
+   - メール
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
-> �� Salesforce ステップ
+> 📘 Salesforce ステップ
 >
 > これは Salesforce ステップです。
 
@@ -26,13 +32,13 @@ keywords:
 
 > 📘 レコード表示の要件
 >
-> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 
 # クイックアクションステップの作成
 
 :fa-arrow-right:**クイックアクションステップを作成するには:**
 
-1. テストで、クイックアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、クイックアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**クイックアクション**ステップを選択します。\
    **クイックアクション**ステップが追加され、次の**オブジェクト**プロパティが表示されます。

@@ -1,17 +1,25 @@
 ---
 title: 'ペルソナの作成'
-description: '原文: https://help.testim.io/docs/create-a-persona-and-add-users'
+description: 'ペルソナ（ユーザータイプ）を作成し、Salesforceユーザーの認証情報を関連付ける方法を説明します。'
 category: 'Salesforceテスト'
 order: 6
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/create-a-persona-and-add-users'
 keywords:
-  - testim
-  - create-a-persona-and-add-users
-  - salesforce-testing
+   - ペルソナ
+   - Salesforceユーザー
+   - 認証情報
+   - Sign in with Salesforce
+   - ユーザー名とパスワード
+   - MFA
+   - Personas
+   - 設定
+   - 環境切り替え
+   - Testim for Salesforce
 ---
 Testim for Salesforceのペルソナは、管理者、営業、顧客などのユーザータイプです。ペルソナは、テストを実行する際にSalesforce環境にアクセスするために使用されます。ペルソナを作成した後、接続されたSalesforce環境の既存のSalesforceユーザーの認証情報と関連付けます。これにより、テストを書き直すことなく、さまざまな環境（Dev、QA、本番など）間を切り替えることができます。
 
-このプロセスは、Salesforce環境をTestim for Salesforceに接続していることを前提としています。詳細については、[Salesforce環境の接続](/docs/salesforce-testing/create-and-manage-test-environments)を参照してください。
+このプロセスは、Salesforce環境をTestim for Salesforceに接続していることを前提としています。詳細については、[Salesforce環境の接続](/docs/create-and-manage-test-environments)を参照してください。
 
 > 📘
 >
@@ -42,6 +50,6 @@ Testim for Salesforceのペルソナは、管理者、営業、顧客などの�
       ![](/images/salesforce-testing/create-a-persona-and-add-users/7277fad-addcredentials.png)
 5. **Salesforce user**フィールドで、ドロップダウンメニューから関連するユーザーを選択します。
 6. **Salesforce Password**フィールドに、関連するパスワードを入力します。
-7. ログインにMFAが必要な場合は、MFA認証キーを入力します。MFAキーの見つけ方については、[Salesforce用MFAの設定](/docs/salesforce-utilities/setting-mfa-for-salesforce)を参照してください。
+7. ログインにMFAが必要な場合は、MFA認証キーを入力します。MFAキーの見つけ方については、[Salesforce用MFAの設定](/docs/setting-mfa-for-salesforce)を参照してください。
 8. **Save**をクリックします。\
    認証情報は、ペルソナ名の行と関連する環境列の下のテーブルに表示されます。テストを実行する際、設定されたすべてのペルソナを含むテストの関連環境を選択できます。

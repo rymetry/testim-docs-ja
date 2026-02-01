@@ -1,13 +1,15 @@
 ---
-title: 'Log out'
-description: '原文: https://help.testim.io/docs/sfdc-step-logout'
+title: 'ログアウト'
+description: 'Salesforceにログインしているユーザーをログアウトします。'
 category: 'Salesforceステップ'
 order: 5
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-logout'
 keywords:
-  - testim
-  - sfdc-step-logout
-  - salesforce-steps
+  - Salesforce
+  - ログアウト
+  - Salesforceステップ
+  - Testim for Salesforce
 ---
 > 📘 Salesforceステップ
 >

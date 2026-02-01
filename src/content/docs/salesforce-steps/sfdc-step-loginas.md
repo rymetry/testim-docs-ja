@@ -1,13 +1,17 @@
 ---
-title: 'Log In As Another User'
-description: '原文: https://help.testim.io/docs/sfdc-step-loginas'
+title: '別のユーザーとしてログイン'
+description: '管理者ユーザーとして、別のユーザーに切り替えてログインします。'
 category: 'Salesforceステップ'
 order: 3
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-loginas'
 keywords:
-  - testim
-  - sfdc-step-loginas
-  - salesforce-steps
+   - Salesforce
+   - 別のユーザーとしてログイン
+   - 管理者
+   - ペルソナ
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforceステップ
 >
@@ -23,11 +27,11 @@ keywords:
    ![](/images/salesforce-steps/sfdc-step-loginas/02cc7f3-2024-05-05_15-07-06.png)
 2. 次のいずれかを実行します:
 
-   1. [ペルソナの作成](/docs/salesforce-testing/create-a-persona-and-add-users)プロセスですでに定義されている**ペルソナ**を選択する場合は、**Select persona**ドロップダウンメニューから目的のペルソナを選択します。
+   1. [ペルソナの作成](/docs/create-a-persona-and-add-users)プロセスですでに定義されている**ペルソナ**を選択する場合は、**Select persona**ドロップダウンメニューから目的のペルソナを選択します。
    2. ペルソナとして定義されていないユーザー名を使用する場合は、**Input Username**フィールドに次のいずれかの方法でユーザー名を入力します:
 
       1. **ユーザー名文字列** - ユーザー名を文字列として入力するには、文字列をフィールドに入力します。文字列は自動的に単一引用符で囲まれます。
-      2. **ユーザー名変数** - JavaScriptコードを入力し、ユーザー名に変数を使用して、テストの各実行でテストデータから一意のユーザー名を使用することもできます。**T**アイコンをクリックしてJSコードを入力します。詳細については、[データ駆動テスト](/docs/data-driven-testing/data-driven-testing)を参照してください。
+      2. **ユーザー名変数** - JavaScriptコードを入力し、ユーザー名に変数を使用して、テストの各実行でテストデータから一意のユーザー名を使用することもできます。**T**アイコンをクリックしてJSコードを入力します。詳細については、[データ駆動テスト](/docs/data-driven-testing)を参照してください。
 3. **Navigation options**セクションで、次のオプションのいずれかを選択します:
 
    1. **Stay on current page after log in as** - 別のユーザーとしてログインした後、同じページに留まることを確認する場合は、このオプションを選択します。

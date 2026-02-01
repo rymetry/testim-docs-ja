@@ -1,13 +1,18 @@
 ---
 title: 'APEX を実行'
-description: '原文: https://help.testim.io/docs/sfdc-step-apex-action'
+description: 'テスト内のステップとしてApexコードを実行し、値のエクスポートも行えます。'
 category: 'Salesforceステップ'
 order: 9
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-apex-action'
 keywords:
-  - testim
-  - sfdc-step-apex-action
-  - salesforce-steps
+  - Salesforce
+  - Apex
+  - SOQL
+  - SOSL
+  - エクスポート
+  - Salesforceステップ
+  - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
@@ -46,7 +51,7 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 
 APEX スクリプトから値をエクスポートするには、次の要件を満たす必要があります:
 
-1. 値をエクスポートするには **Export** 関数を使用してください。[https://help.testim.io/docs/exports-parameters#exporting-a-parameter](https://help.testim.io/docs/exports-parameters#exporting-a-parameter) を参照してください。
+1. 値をエクスポートするには **Export** 関数を使用してください。[/docs/exports-parameters#exporting-a-parameter](/docs/exports-parameters#exporting-a-parameter) を参照してください。
 2. エクスポートする値は APEX 変数に格納する必要があります。
 3. APEX 変数名とエクスポート変数名の両方は、アルファベット文字（A-z）とアンダースコアのみで構成される必要があります。
 4. APEX スクリプトに Salesforce DML 関数が含まれている場合、値のエクスポートはできません。DML 関数が必要な場合は、複数のテストステップに分割する必要があります。

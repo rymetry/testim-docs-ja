@@ -1,13 +1,21 @@
 ---
 title: '変更履歴'
-description: '原文: https://help.testim.io/docs/changelog'
+description: 'Testim for Salesforceの主な機能追加・改善の履歴（スクリーンショット、Login As、権限検証、SSO、CI統合など）をまとめます。'
 category: 'Salesforceテスト'
 order: 4
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/changelog'
 keywords:
-  - testim
-  - changelog
-  - salesforce-testing
+  - 変更履歴
+  - Salesforceテスト
+  - スクリーンショット
+  - Login As
+  - 権限検証
+  - Salesforce SSO
+  - CI統合
+  - Copado
+  - Gearset
+  - Document Validation
 ---
 ## スクリーンショットのログ記録 2023年3月
 

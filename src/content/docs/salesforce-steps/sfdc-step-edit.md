@@ -1,13 +1,16 @@
 ---
 title: '編集'
-description: '原文: https://help.testim.io/docs/sfdc-step-edit'
+description: '表示中のSalesforceレコードのフィールドを編集します。'
 category: 'Salesforceステップ'
 order: 16
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-edit'
 keywords:
-  - testim
-  - sfdc-step-edit
-  - salesforce-steps
+   - Salesforce
+   - レコード編集
+   - フィールド
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
@@ -17,13 +20,13 @@ keywords:
 
 > 📘 レコード表示の要件
 >
-> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 
 <br />
 
 :fa-arrow-right:**編集ステップを追加するには:**
 
-1. テストで、**編集**ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、**編集**ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 
 2. **+** ボタンをクリックしてステップを追加します。
 

@@ -1,13 +1,17 @@
 ---
 title: '選択リストオプションの検証'
-description: '原文: https://help.testim.io/docs/sfdc-step-verifypicklistoptions'
+description: '選択リスト（ドロップダウン）に表示される/されないオプションを検証します。'
 category: 'Salesforceステップ'
 order: 20
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/sfdc-step-verifypicklistoptions'
 keywords:
-  - testim
-  - sfdc-step-verifypicklistoptions
-  - salesforce-steps
+   - Salesforce
+   - 選択リスト
+   - オプション
+   - 権限
+   - Salesforceステップ
+   - Testim for Salesforce
 ---
 > 📘 Salesforce ステップ
 >
@@ -15,7 +19,7 @@ keywords:
 
 選択リストオプションの検証ステップは、レコードを作成する際に、特定のフィールドのドロップダウンメニュー（選択リスト）に特定のオプションが表示されているか、または表示されていないかを検証します。これは通常、特定のユーザーがレコードを作成する際に、権限の一部ではないオプションを表示できないことを確認するために使用されます。各選択リストについて、指定されたオプションが存在すること、存在しないこと、または選択されたオプションとフィールドに表示されているオプションが完全に一致することを検証できます。
 
-このステップは、[別のユーザーとしてログイン](/docs/salesforce-steps/sfdc-step-loginas)ステップと組み合わせて、さまざまなユーザータイプで利用可能なさまざまな選択リストオプションをテストできます。
+このステップは、[別のユーザーとしてログイン](/docs/sfdc-step-loginas)ステップと組み合わせて、さまざまなユーザータイプで利用可能なさまざまな選択リストオプションをテストできます。
 
 # 選択リストオプションの検証ステップの作成
 

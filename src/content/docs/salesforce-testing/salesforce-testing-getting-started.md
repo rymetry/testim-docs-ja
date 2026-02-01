@@ -1,13 +1,21 @@
 ---
 title: 'Salesforceテストの開始'
-description: '原文: https://help.testim.io/docs/salesforce-testing-getting-started'
+description: 'Salesforce環境の接続から、テストの作成・保存・実行までを一連で体験できるチュートリアルです。'
 category: 'Salesforceテスト'
 order: 2
-updated: '2025-11-02'
+updated: '2025-12-02'
+sourceUrl: 'https://help.testim.io/docs/salesforce-testing-getting-started'
 keywords:
-  - testim
-  - salesforce-testing-getting-started
-  - salesforce-testing
+   - Salesforceテスト
+   - チュートリアル
+   - Salesforce環境接続
+   - ペルソナ
+   - ログイン
+   - アプリ起動
+   - レコード作成
+   - 検証
+   - ログアウト
+   - Testim for Salesforce
 ---
 ## Testim for Salesforceへようこそ
 
@@ -20,8 +28,7 @@ keywords:
 それでは、最初のテストを作成しましょう！
 
 ### チュートリアルのユースケース
-
-Testim for Salesforceのテストは、Salesforceアプリケーションとのやり取りを記録し、これらのやり取りを自動的にステップに変換するレコーダーを使用するか、テストにステップを手動で追加することで作成されます。また、これら2つの方法を組み合わせることもできます。手動ステップには「Salesforceステップ」を含めることができます。これらのステップはSalesforce専用に設計されており、テスト作成プロセスを簡素化し、より深い統合とスマートな機能を可能にする方法でSalesforceオブジェクトを利用します。ただし、デプロイメントに広範なカスタマイズが含まれている場合、Salesforceステップが完全に機能しない可能性があります。このような場合は、通常の動作モードでレコーダーを使用することをお勧めします。レコーダーの使用方法については、[Salesforceテストの作成](https://help.testim.io/docs/create-a-salesforce-test)を参照してください。このチュートリアルでは、手動ステップに焦点を当てています。
+Testim for Salesforceのテストは、Salesforceアプリケーションとのやり取りを記録し、これらのやり取りを自動的にステップに変換するレコーダーを使用するか、テストにステップを手動で追加することで作成されます。また、これら2つの方法を組み合わせることもできます。手動ステップには「Salesforceステップ」を含めることができます。これらのステップはSalesforce専用に設計されており、テスト作成プロセスを簡素化し、より深い統合とスマートな機能を可能にする方法でSalesforceオブジェクトを利用します。ただし、デプロイメントに広範なカスタマイズが含まれている場合、Salesforceステップが完全に機能しない可能性があります。このような場合は、通常の動作モードでレコーダーを使用することをお勧めします。レコーダーの使用方法については、[Salesforceテストの作成](/docs/create-a-salesforce-test)を参照してください。このチュートリアルでは、手動ステップに焦点を当てています。
 
 このチュートリアルでは、Salesforceへのログイン、Salesアプリの起動、特定の名前のアカウントの作成、そして指定された名前のアカウントが存在することを検証するテストを扱います。
 
@@ -75,7 +82,7 @@ Testim for Salesforceテストを作成する前に、Salesforce環境をTestim 
    Log inステップが追加され、**Object**ペインが表示されます。
 
    ![](/images/salesforce-testing/salesforce-testing-getting-started/1fbf0ad-loginand_object.png)
-6. **Select login persona**の下で、ドロップダウンメニューをクリックし、テスト全体で使用する関連ペルソナを選択します。環境を接続すると、システムはデフォルトの管理者ペルソナを作成します。ただし、追加のペルソナが作成されている場合もあります。追加のペルソナを作成する場合は、[ペルソナの作成とユーザーの追加](/docs/salesforce-testing/create-a-persona-and-add-users)の手順に従ってください。
+6. **Select login persona**の下で、ドロップダウンメニューをクリックし、テスト全体で使用する関連ペルソナを選択します。環境を接続すると、システムはデフォルトの管理者ペルソナを作成します。ただし、追加のペルソナが作成されている場合もあります。追加のペルソナを作成する場合は、[ペルソナの作成とユーザーの追加](/docs/create-a-persona-and-add-users)の手順に従ってください。
 7. **+**ボタンをクリックして、別のステップを追加します。
 8. **Salesforce steps**タブの下で、**Launch app**ステップをクリックします。このステップは、環境内で選択されたアプリを起動します。
 9. ステップの**Object**ペインで、**Select App**の下で、**Sales**オプションを選択します。
