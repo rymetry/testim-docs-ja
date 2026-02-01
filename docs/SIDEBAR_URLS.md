@@ -1,7 +1,7 @@
 # Testim Documentation - 全サイドバーURL一覧
 
 取得日: 2025年11月2日
-総数: 283 URL
+総数: 284 URL
 
 ## 翻訳ステータス
 
@@ -10,8 +10,8 @@
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 236個
-- ✅   翻訳のみ完了: 48個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 284個
+- ✅   翻訳のみ完了: 0個
 
 ### アイコンの意味
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
@@ -358,51 +358,51 @@
 
 ## Salesforce Testing（Salesforceテスト）
 
-- ✅ https://help.testim.io/docs/salesforce-testing-overview
-- ✅ https://help.testim.io/docs/salesforce-testing-getting-started
-- ✅ https://help.testim.io/docs/core-concepts
-- ✅ https://help.testim.io/docs/changelog
-- ✅ https://help.testim.io/docs/create-and-manage-test-environments
-- ✅ https://help.testim.io/docs/create-a-persona-and-add-users
-- ✅ https://help.testim.io/docs/create-a-salesforce-test
-- ✅ https://help.testim.io/docs/use-agentic-test-automation-for-salesforce
-- ✅ https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
+- ✅🔍 https://help.testim.io/docs/salesforce-testing-overview
+- ✅🔍 https://help.testim.io/docs/salesforce-testing-getting-started
+- ✅🔍 https://help.testim.io/docs/core-concepts
+- ✅🔍 https://help.testim.io/docs/changelog
+- ✅🔍 https://help.testim.io/docs/create-and-manage-test-environments
+- ✅🔍 https://help.testim.io/docs/create-a-persona-and-add-users
+- ✅🔍 https://help.testim.io/docs/create-a-salesforce-test
+- ✅🔍 https://help.testim.io/docs/use-agentic-test-automation-for-salesforce
+- ✅🔍 https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
 
 ## Salesforce Steps（Salesforceステップ）
 
-- ✅ https://help.testim.io/docs/salesforce-steps
-- ✅ https://help.testim.io/docs/sfdc-step-login
-- ✅ https://help.testim.io/docs/sfdc-step-loginas
-- ✅ https://help.testim.io/docs/sfdc-step-launchapp
-- ✅ https://help.testim.io/docs/sfdc-step-logout
-- ✅ https://help.testim.io/docs/sfdc-step-findandgotorecord
-- ✅ https://help.testim.io/docs/sfdc-step-waitforpageload
-- ✅ https://help.testim.io/docs/sfdc-step-closeconsoletabs
-- ✅ https://help.testim.io/docs/sfdc-step-apex-action
-- ✅ https://help.testim.io/docs/sfdc-step-permission-validation
-- ✅ https://help.testim.io/docs/sfdc-document-validation
-- ✅ https://help.testim.io/docs/sfdc-step-convertleadtoopportunity
-- ✅ https://help.testim.io/docs/sfdc-step-quotelineeditor
-- ✅ https://help.testim.io/docs/sfdc-step-create
-- ✅ https://help.testim.io/docs/sfdc-step-validate
-- ✅ https://help.testim.io/docs/sfdc-step-edit
-- ✅ https://help.testim.io/docs/sfdc-step-relatedlistaction
-- ✅ https://help.testim.io/docs/sfdc-step-quickactions
-- ✅ https://help.testim.io/docs/sfdc-step-delete
-- ✅ https://help.testim.io/docs/sfdc-step-verifypicklistoptions
-- ✅ https://help.testim.io/docs/sfdc-step-salesforce-flows
+- ✅🔍 https://help.testim.io/docs/salesforce-steps
+- ✅🔍 https://help.testim.io/docs/sfdc-step-login
+- ✅🔍 https://help.testim.io/docs/sfdc-step-loginas
+- ✅🔍 https://help.testim.io/docs/sfdc-step-launchapp
+- ✅🔍 https://help.testim.io/docs/sfdc-step-logout
+- ✅🔍 https://help.testim.io/docs/sfdc-step-findandgotorecord
+- ✅🔍 https://help.testim.io/docs/sfdc-step-waitforpageload
+- ✅🔍 https://help.testim.io/docs/sfdc-step-closeconsoletabs
+- ✅🔍 https://help.testim.io/docs/sfdc-step-apex-action
+- ✅🔍 https://help.testim.io/docs/sfdc-step-permission-validation
+- ✅🔍 https://help.testim.io/docs/sfdc-document-validation
+- ✅🔍 https://help.testim.io/docs/sfdc-step-convertleadtoopportunity
+- ✅🔍 https://help.testim.io/docs/sfdc-step-quotelineeditor
+- ✅🔍 https://help.testim.io/docs/sfdc-step-create
+- ✅🔍 https://help.testim.io/docs/sfdc-step-validate
+- ✅🔍 https://help.testim.io/docs/sfdc-step-edit
+- ✅🔍 https://help.testim.io/docs/sfdc-step-relatedlistaction
+- ✅🔍 https://help.testim.io/docs/sfdc-step-quickactions
+- ✅🔍 https://help.testim.io/docs/sfdc-step-delete
+- ✅🔍 https://help.testim.io/docs/sfdc-step-verifypicklistoptions
+- ✅🔍 https://help.testim.io/docs/sfdc-step-salesforce-flows
 
 ## Salesforce Utilities（Salesforceユーティリティ）
 
-- ✅ https://help.testim.io/docs/log-screenshots
-- ✅ https://help.testim.io/docs/record-tests-with-salesforce
-- ✅ https://help.testim.io/docs/troubleshoot
-- ✅ https://help.testim.io/docs/faq
-- ✅ https://help.testim.io/docs/tta-for-salesforce-branch-management
-- ✅ https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
-- ✅ https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
-- ✅ https://help.testim.io/docs/setting-mfa-for-salesforce
-- ✅ https://help.testim.io/docs/page-layout
+- ✅🔍 https://help.testim.io/docs/log-screenshots
+- ✅🔍 https://help.testim.io/docs/record-tests-with-salesforce
+- ✅🔍 https://help.testim.io/docs/troubleshoot
+- ✅🔍 https://help.testim.io/docs/faq
+- ✅🔍 https://help.testim.io/docs/tta-for-salesforce-branch-management
+- ✅🔍 https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
+- ✅🔍 https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
+- ✅🔍 https://help.testim.io/docs/setting-mfa-for-salesforce
+- ✅🔍 https://help.testim.io/docs/page-layout
 
 ## Testim Extension（Testim拡張機能）
 
