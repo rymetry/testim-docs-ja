@@ -95,7 +95,6 @@ keywords:
  </tbody>
 </table>
 
-
 ### Wait for（待機）
 
 <table class="md-table md-table-2cols">
@@ -143,7 +142,6 @@ keywords:
  </tbody>
 </table>
 
-
 ### Actions（アクション）
 
 <table class="md-table md-table-2cols">
@@ -190,7 +188,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 ## 新しい共有ステップの作成
 

@@ -31,7 +31,7 @@ keywords:
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**検証**ステップを選択します。\
    検証ステップが追加され、次のオブジェクトプロパティが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-validate/77f2be9-validate1.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-validate/77f2be9-validate1.png)
 4. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、検証されるレコードのタイプを決定します。
 5. 場合によっては、**レコードタイプ**も選択する必要があります。これはレコードのサブタイプのようなものです。
 6. 検証したい各フィールドについて、Action の下で次のオプションのいずれかを選択します:
@@ -45,7 +45,7 @@ keywords:
    1. T. テキストモード。値はリテラル文字列として扱われます。
    2. \{JS}. JavaScript モード。値は JavaScript 式として評価されます。フィールドは JavaScript 変数と関数を評価します。
 
-      ![](/images/salesforce-steps/sfdc-step-validate/97e5e6d-switchgif.gif)
+      ![操作手順アニメーション](/images/salesforce-steps/sfdc-step-validate/97e5e6d-switchgif.gif)
 
 > 📘
 >

@@ -23,7 +23,7 @@ keywords:
 
 各ステップには、1つのステップに複数の検証/アクション/入力を含めることができ、順番に連続して実行されます。たとえば、1つのアクションには **Net Total** が 720 ユーロであることの検証が含まれ、次のアクションは **Additional discount** フィールドに値 30 を入力します。この割引により Net Total 値が変更されるため、別のアクションを追加して、（割引後の）新しい値 560 ユーロで Net Total フィールドを再度検証できます。
 
-![](/images/salesforce-steps/sfdc-step-quotelineeditor/f9d6097-example.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-quotelineeditor/f9d6097-example.png)
 
 :fa-arrow-right:**見積品目エディターアクションステップを追加するには:**
 
@@ -31,14 +31,14 @@ keywords:
 2. **Salesforce** ステップタブの下で、**CPQ 操作**をクリックし、**見積品目エディターアクション**ステップを選択します。\
    次の**プロパティタブ**が表示されます:
 
-   ![](/images/salesforce-steps/sfdc-step-quotelineeditor/f434ecd-cpq1.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-quotelineeditor/f434ecd-cpq1.png)
 3. **Group Name** セクションの下の **Group Name** フィールドで、オプションで見積の関連するテーブル/セクションの名前を指定します。グループ名が指定されていない場合、アクションは画面に表示される最初のテーブルに適用されます。
 4. **Select Row** セクションの下で、次のいずれかを実行してテーブル内の関連する行を選択します:
 
    1. **Row number** - 行の番号を入力します。たとえば、最初の行の場合は値 `1` を入力します。
    2. **By filter** - このオプションは、指定された値を指定された列の1つ以上の値と一致させて行を選択します。たとえば、*Product Code* 列で見つかった値でフィルタリングします。
 
-      ![](/images/salesforce-steps/sfdc-step-quotelineeditor/e573302-cpq2.png)
+      ![スクリーンショット](/images/salesforce-steps/sfdc-step-quotelineeditor/e573302-cpq2.png)
 
       **Add** をクリックして、次を指定します:
 
@@ -50,7 +50,7 @@ keywords:
       4. **Add** を再度クリックして、フィルタに別の条件を追加します。
 5. **Actions** セクションの下で、見積に適用したいアクション（つまり、検証、入力、CPQ からの値の保存）を追加します。
 
-   ![](/images/salesforce-steps/sfdc-step-quotelineeditor/6079c5d-cpq3.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-quotelineeditor/6079c5d-cpq3.png)
 
    **Add** をクリックして、次を指定します:
 

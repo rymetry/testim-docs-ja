@@ -26,7 +26,7 @@ node scripts/check_outdated_docs.mjs
 
 **出力例:**
 
-```
+```text
 📋 ドキュメント更新状況チェック開始
 
 📄 150個のファイルをスキャン中...
@@ -65,7 +65,7 @@ node scripts/fetch_all_updated_dates.mjs
 
 **出力例:**
 
-```
+```text
 📋 英語原文の更新日を一括取得
 
 📄 150個のファイルを処理中...
@@ -118,7 +118,7 @@ node scripts/update_dates_from_english.mjs --apply --pattern recording-tests
 
 **出力例:**
 
-```
+```text
 📋 英語原文の更新日で日本語ファイルを更新
 
 🔍 ドライランモード: ファイルは変更されません

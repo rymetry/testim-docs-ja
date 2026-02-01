@@ -35,23 +35,23 @@ keywords:
 
 * **Chrome ブラウザで PDF をダウンロード設定を有効にする:** 設定は、**設定 > プライバシーとセキュリティ > サイトの設定 > その他のコンテンツ設定 > PDF ドキュメント**にあります。**デフォルトの動作**で、**PDF をダウンロード**オプションが選択されていることを確認してください。
 
-  ![](/images/salesforce-steps/sfdc-document-validation/e31ed48-downloadpdfssetting.png)
+  ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/e31ed48-downloadpdfssetting.png)
 * **Testim Editor 拡張機能の設定でファイル URL へのアクセスを有効にする** - 以下で説明するように、Testim Editor 拡張機能で「ファイル URL へのアクセスを許可」設定を有効にします。
 
 :fa-arrow-right:**ファイル URL へのアクセスを許可設定を有効にするには:**
 
 1. Chrome ブラウザで、**拡張機能**アイコンをクリックします。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/4c1e0c1-extensionsicon.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/4c1e0c1-extensionsicon.png)
 2. **拡張機能を管理**をクリックします。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/f1de3d3-manageextensions.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/f1de3d3-manageextensions.png)
 3. **Testim Editor** 拡張機能で、**詳細**をクリックします。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/1708299-details.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/1708299-details.png)
 4. **ファイル URL へのアクセスを許可**設定を有効にします。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/3eac5c9-allowaccess.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/3eac5c9-allowaccess.png)
 
 ## ドキュメントの検証ステップの自動作成
 
@@ -68,7 +68,7 @@ keywords:
    * **Key Value** - キー・バリュー ペアの検証と変数への内容の抽出を実行します。
    * **Tables** - テーブル内容の検証と変数への内容の抽出を実行します。
 
-![](/images/salesforce-steps/sfdc-document-validation/052b47f-documentvalidation1.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/052b47f-documentvalidation1.png)
 
 3. 以下で説明するように条件/アクションを編集します。
 4. **保存**をクリックします。
@@ -86,7 +86,7 @@ keywords:
    * **Key Value** - キー・バリュー ペアの検証と変数への内容の抽出を実行します。
    * **Tables** - テーブル内容の検証と変数への内容の抽出を実行します。
 
-![](/images/salesforce-steps/sfdc-document-validation/052b47f-documentvalidation1.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/052b47f-documentvalidation1.png)
 
 3. 以下で説明するように条件/アクションを編集します。
 4. **保存**をクリックします。
@@ -99,7 +99,7 @@ keywords:
 
    条件/アクション構成セクションが表示されます:
 
-   ![](/images/salesforce-steps/sfdc-document-validation/734197c-contentcondition.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/734197c-contentcondition.png)
 
 2. **Verify** フィールドで、次のいずれかを選択します:
    1. **Exists** - 指定されたテキストが PDF ドキュメント内に存在するかどうかを検証します。
@@ -108,7 +108,7 @@ keywords:
 3. **Value** フィールドに、存在または非存在を検証したい文字列を入力します。\
    次の例では、文字列の非存在をチェックします。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/8cd3a51-Picture1.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/8cd3a51-Picture1.png)
 
 4. 追加の条件を追加するには、**ADD** ボタンを再度クリックして、上記の手順を繰り返します。
 
@@ -122,13 +122,13 @@ keywords:
 
    条件/アクション構成セクションが表示されます:
 
-   ![](/images/salesforce-steps/sfdc-document-validation/610592d-keyvalue.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/610592d-keyvalue.png)
 2. **Key** フィールドに、ラベルとセパレーターの組み合わせを入力します。ラベルはテキスト文字列で、セパレーターはコロン、セミコロン、ダッシュ、ハッシュ、カンマなどの任意の記号にすることができます。たとえば、`Address:` は PDF のアドレスフィールドのキーです。
 3. **Action** フィールドで、**Verify** オプション（チェックマークアイコン）を選択します。
 4. **Value** フィールドに、指定された Key 文字列の後に存在することを検証したい文字列を入力します。\
    次の例では、2つのキー・バリュー ペアの存在をチェックします。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/866d74b-Picture3.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/866d74b-Picture3.png)
 5. 追加の条件を追加するには、**ADD** ボタンを再度クリックして、上記の手順を繰り返します。
 
 # Key Value 抽出の構成
@@ -141,13 +141,13 @@ keywords:
 
    条件/アクション構成セクションが表示されます:
 
-   ![](/images/salesforce-steps/sfdc-document-validation/610592d-keyvalue.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/610592d-keyvalue.png)
 2. **Key** フィールドに、ラベルとセパレーターの組み合わせを入力します。ラベルはテキスト文字列で、セパレーターはコロン、セミコロン、ダッシュ、ハッシュ、カンマなどの任意の記号にすることができます。たとえば、`Address:` は PDF のアドレスフィールドのキーです。
 3. **Action** フィールドで、**Store** オプション（x アイコン）を選択します。
 4. **Value** フィールドに、作成される変数の名前、または前のステップで定義された変数の名前を入力します。Key 文字列の後の値がこの変数に格納されます。\
    次の例では、PDF の `Quote #` キーの後に来る値を抽出し、`quoteNumber` という変数に格納します。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/a4a7fe7-keyvalueextraction.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/a4a7fe7-keyvalueextraction.png)
 5. 追加の条件を追加するには、**ADD** ボタンを再度クリックして、上記の手順を繰り返します。
 
 # Table 検証の構成
@@ -160,7 +160,7 @@ PDF ドキュメント内のテーブル内の指定されたデータの存在�
 
    条件/アクション構成セクションが表示されます:
 
-   ![](/images/salesforce-steps/sfdc-document-validation/d5e9840-table1.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/d5e9840-table1.png)
 2. **Table number** フィールドに、出現順序でのテーブルの位置を示す数値を入力します。たとえば、`2` は2番目のテーブルの内容を検証します。
 3. **Add Action** をクリックして、検証したい内容の正確な位置と値を指定します。
 4. **Row** フィールドに、出現順序でのテーブル内の位置行を示す数値を入力します。
@@ -180,7 +180,7 @@ PDF ドキュメント内のテーブル内の指定されたデータの存在�
 1. **Table** セクションで、**ADD** をクリックします。\
    条件/アクション構成セクションが表示されます:
 
-   ![](/images/salesforce-steps/sfdc-document-validation/1de3b15-table1.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/1de3b15-table1.png)
 2. **Table number** フィールドに、出現順序でのテーブルの位置を示す数値を入力します。たとえば、`2` は2番目のテーブルから内容を抽出します。
 3. **Add Action** をクリックして、抽出したい内容の正確な位置と値を指定します。
 4. **Row** フィールドに、出現順序でのテーブル内の位置行を示す数値を入力します。
@@ -189,6 +189,6 @@ PDF ドキュメント内のテーブル内の指定されたデータの存在�
 7. **Value** フィールドに、作成される変数の名前、または前のステップで定義された変数の名前を入力します。テーブルの指定された位置の値がこの変数に格納されます。\
    次の例では、PDF の最初のテーブルの3行目、2列目にある値を抽出し、`quoteTotal` という変数に格納します。
 
-   ![](/images/salesforce-steps/sfdc-document-validation/c2eeac1-table3.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-document-validation/c2eeac1-table3.png)
 8. 同じテーブル内で追加の抽出を指定するには、**Add Action** をクリックして、上記の手順を繰り返します。
 9. 追加のテーブル抽出を追加するには、**ADD** ボタンを再度クリックして、上記の手順を繰り返します。

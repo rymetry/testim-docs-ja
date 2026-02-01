@@ -36,12 +36,12 @@ Salesforce フローステップを追加する前に、次を追加する必要
 2. **Salesforce ステップ**タブの下で、**フロー操作**をクリックし、**フロー画面完了**ステップを選択します。\
    **フロー画面完了**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-salesforce-flows/d2389a0-flowsproperties.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-salesforce-flows/d2389a0-flowsproperties.png)
 3. **フローを選択**ドロップダウンメニューをクリックし、目的の画面フローを選択します。リストには、作成されたすべての非管理画面フローが表示されます。
 4. **画面を選択**ドロップダウンメニューをクリックし、目的の画面を選択します。リストには、選択されたフローの一部であるすべての画面が表示されます。\
    この画面のフィールドのリストが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-salesforce-flows/9fb87de-flows2.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-salesforce-flows/9fb87de-flows2.png)
 5. 値を入力したい各フィールドについて、**Action** の下で次のオプションのいずれかを選択します:
    1. Input - 指定された値をフィールドに入力します。フィールドが編集不可の場合、このアクションはリストされません。このアクションには、以下で説明するように値を入力する必要があります。
    2. Ignore - このアクションは、フィールドに対してアクションを実行しません。このアクションには値を入力する必要はありません。

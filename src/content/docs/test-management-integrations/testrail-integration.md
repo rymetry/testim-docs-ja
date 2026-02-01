@@ -64,7 +64,7 @@ TestimのテストとTestRailのテストケースをマッピングするには
 
 例：
 
-```
+```text
 C123 - Login Test
 ```
 

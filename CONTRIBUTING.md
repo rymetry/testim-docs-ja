@@ -140,7 +140,7 @@ git checkout -b docs/update-translation-guide
 
 ### 推奨フォーマット
 
-```
+```text
 <type>: <subject>
 
 <body>

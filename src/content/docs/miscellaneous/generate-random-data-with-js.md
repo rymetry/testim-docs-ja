@@ -13,32 +13,34 @@ keywords:
 ---
 ランダムデータ（ユーザー名、パスワード、メールなど）をテキストフィールドに動的に割り当てる方法を学ぶ
 
-Testimのすべてのステップはパラメータ化できます。これは、set-textステップが記録されたリテラル値（例: "[john@yourapp.io]()", "passw0rd!"）だけでなく、任意のJS式を持つことができることを意味します。
+Testimのすべてのステップはパラメータ化できます。これは、set-textステップが記録されたリテラル値（例: "[john@yourapp.io](mailto:john@yourapp.io)", "passw0rd!"）だけでなく、任意のJS式を持つことができることを意味します。
 
 ![set-textステップでJS式を使用してパラメータ化する方法を示すTestimエディターの画面](/images/miscellaneous/generate-random-data-with-js/0ad0468-Untitled.png)
 
 ## ステップにランダムデータを割り当てる方法は？
 
 記録された値をJS式で置き換えるだけです。以下にいくつかの例を示します:\
-**ランダムメール**
+### ランダムメール
 
 ```javascript
 Math.round(Math.random()*100000)+"@email.com"
 ```
 
-**ランダムパスワード**
+### ランダムパスワード
 
 ```javascript
 Math.random().toString(36).slice(-8)
 ```
 
-**その他のランダム値**
+### その他のランダム値
 
 ```javascript
 Date.now()+5
 ```
 
-**[パラメータ](/docs/parameters)として定義した場合、変数を割り当てることもできます:**
+### パラメータとして定義した場合（変数の割り当て）
+
+[パラメータ](/docs/parameters)として定義した場合、変数を割り当てることもできます:
 
 ```javascript
 myVar + "sdf"

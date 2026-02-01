@@ -260,7 +260,6 @@ return csv({
  </tbody>
 </table>
 
-
 ### 画像ファイル
 
 *Validate download* ステップで、画像タイプや寸法など画像の高度な検証ができます。\
@@ -356,7 +355,6 @@ return width === parseInt(expectedWidth) &&
  </tbody>
 </table>
 
-
 ### MS Excel ファイル
 
 *Validate download* ステップで、シート数やシート名など Excel の高度な検証ができます。\
@@ -431,7 +429,6 @@ if (sheet !== expectedPageName) {
   </tr>
  </tbody>
 </table>
-
 
 ### MS PowerPoint ファイル
 
@@ -522,7 +519,6 @@ expectedText.forEach(item => {
  </tbody>
 </table>
 
-
 > 📘
 >
 > JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
@@ -599,7 +595,6 @@ return docxText.includes(expectedText);
   </tr>
  </tbody>
 </table>
-
 
 > 📘
 >
@@ -687,4 +682,3 @@ return pdf(fileBuffer).then((data) => {
   </tr>
  </tbody>
 </table>
-

@@ -21,7 +21,7 @@ keywords:
 
 一部の Salesforce レコードは、**Activity** タブの下に **Quick Action** ボタンを表示でき、これには New task、Log a call、New event、Email が含まれます。
 
-![](/images/salesforce-steps/sfdc-step-quickactions/fde81be-Activity.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/fde81be-Activity.png)
 
 **クイックアクション**ステップは、現在のレコードに対して指定されたクイックアクションを実行します。これは、関連するクイックアクションボタンをクリックし、指定されたフィールドに入力することをシミュレートします。クイックアクションステップは、レコードに対して次のクイックアクションを実行するために使用できます:
 
@@ -43,12 +43,12 @@ keywords:
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**クイックアクション**ステップを選択します。\
    **クイックアクション**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-quickactions/dc44746-quickactions.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/dc44746-quickactions.png)
 4. **レコードタイプを選択**の下で、クイックアクション項目を追加したいレコードのレコードタイプを選択します。
 5. **クイックアクションを選択**の下で、目的の**クイックアクション**を選択します。\
    クイックアクションのフォームが表示されます。各クイックアクションには異なるフォームがあります。(\*) で示されているフィールドは必須です。
 
-   ![](/images/salesforce-steps/sfdc-step-quickactions/1def12e-quickactionnewtask.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/1def12e-quickactionnewtask.png)
 6. 入力したい各フィールドについて、Action の下で次のオプションのいずれかを選択します:
    1. **Input** - 指定された値をフィールドに入力します。フィールドが編集不可の場合、このアクションはリストされません。このアクションには、以下で説明するように値を入力する必要があります。
    2. **Verify** - このアクションは、フィールドの値がレコードの値と一致することを確認します。このアクションには、以下で説明するように値を入力する必要があります。

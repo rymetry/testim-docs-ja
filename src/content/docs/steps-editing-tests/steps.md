@@ -188,7 +188,6 @@ keywords:
  </tbody>
 </table>
 
-
 ### 待機ステップ
 
 <table class="md-table md-table-2cols">
@@ -269,7 +268,6 @@ keywords:
   </tr>
  </tbody>
 </table>
-
 
 ### アクションステップ
 
@@ -384,7 +382,6 @@ keywords:
  </tbody>
 </table>
 
-
 ## 自動記録ステップ
 
 テスト対象アプリケーション（AUT）での操作中に自動的に記録されるステップです。
@@ -491,4 +488,3 @@ keywords:
   </tr>
  </tbody>
 </table>
-

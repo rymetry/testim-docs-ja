@@ -184,7 +184,6 @@ keywords:
  </tbody>
 </table>
 
-
 :fa-arrow-right: **Add network validation ステップを追加するには:**
 
 1. ステップを追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
@@ -392,7 +391,6 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
   </tr>
  </tbody>
 </table>
-
 
 # リクエストボディとレスポンスボディのキャプチャ
 

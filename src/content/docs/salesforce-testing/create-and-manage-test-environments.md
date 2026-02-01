@@ -24,7 +24,7 @@ Testim for Salesforceテストを作成する前に、Salesforce環境をTestim 
 :fa-arrow-right: **Salesforce環境を接続するには**:
 
 1. Testim for Salesforceアカウントで、**Settings > Salesforce > Environments**に移動し、**Connect a salesforce environment**を選択します。\
-   ![](/images/salesforce-testing/create-and-manage-test-environments/681f2b6-connect.png)
+   ![スクリーンショット](/images/salesforce-testing/create-and-manage-test-environments/681f2b6-connect.png)
 2. **Select Type**フィールドで、Salesforce環境のタイプを選択します:
    * **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
    * **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
@@ -34,7 +34,7 @@ Testim for Salesforceテストを作成する前に、Salesforce環境をTestim 
    2. 新しいブランチを作成する場合は、**Create New Branch**フィールドにブランチの名前を入力します。
 5. **Connect**をクリックします。\
    Salesforceログイン画面が表示されます。\
-   ![](/images/salesforce-testing/create-and-manage-test-environments/43f1fac-salesforcelogin.png)
+   ![スクリーンショット](/images/salesforce-testing/create-and-manage-test-environments/43f1fac-salesforcelogin.png)
 6. システム管理者権限を持つアカウントでログインします。
 7. **Allow**を選択して、Testim for SalesforceがID URLサービスにアクセスし、API経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
 

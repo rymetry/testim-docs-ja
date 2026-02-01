@@ -172,5 +172,4 @@ keywords:
  </tbody>
 </table>
 
-
 このステップの使用例は <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/IrAg1rfldG">こちら</a> を参照してください。

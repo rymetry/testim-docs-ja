@@ -27,7 +27,7 @@ TestimテストをPlaywright用に適応されたコードとしてエクスポ�
 1. エディタでテストを開きます。
 2. ブラウザで、URLの末尾に以下のサフィックスを追加して **Enter** を押します。
 
-   ```
+  ```text
    ?embedMode=true&exportPuppeteer=true&exportSelenium=true&exportPlaywright=true
    ```
 

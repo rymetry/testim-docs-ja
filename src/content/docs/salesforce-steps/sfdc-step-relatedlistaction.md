@@ -20,7 +20,7 @@ keywords:
 
 Contacts などの一部の Salesforce オブジェクトは、Opportunities、Cases などの関連オブジェクトを **Related** タブの下に表示できます（以下の例を参照）。
 
-![](/images/salesforce-steps/sfdc-step-relatedlistaction/8bb9014-related.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-relatedlistaction/8bb9014-related.png)
 
 <br />
 
@@ -55,7 +55,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 <br />
 
-![](/images/salesforce-steps/sfdc-step-relatedlistaction/0c6f260-fieldlistcreate.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-relatedlistaction/0c6f260-fieldlistcreate.png)
 
 9. 作成したい各フィールドについて、**Action** の下で次のオプションのいずれかを選択します:
    1. **Input** - 指定された値をフィールドに入力します。フィールドが編集不可の場合、このアクションはリストされません。このアクションには、以下で説明するように値を入力する必要があります。
@@ -84,7 +84,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 8. **アクションを選択**フィールドで、**Verify** を選択します。
 9. **Filter (Where)** セクションの下で、**Add** をクリックしてフィルタを追加します。フィルタは、フィルタ条件に一致させることで関連項目リストの行を選択します。次を指定します:
 
-   ![](/images/salesforce-steps/sfdc-step-relatedlistaction/23ac824-filterwhere.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-relatedlistaction/23ac824-filterwhere.png)
 
    1. **Column** - ドロップダウンメニューから列の名前を選択します。
    2. **Operator** - 条件に適用される演算子を選択します。次の演算子が使用できます:

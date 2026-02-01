@@ -329,7 +329,6 @@ GitHub Flavored Markdownのタスクリストも使えます。
  </tbody>
 </table>
 
-
 ### 複雑なテーブル
 
 <table class="md-table md-table-5cols">
@@ -423,7 +422,6 @@ GitHub Flavored Markdownのタスクリストも使えます。
   </tr>
  </tbody>
 </table>
-
 
 ---
 

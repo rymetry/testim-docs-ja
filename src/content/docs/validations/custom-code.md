@@ -152,7 +152,6 @@ if(amount > 1000) {
  </tbody>
 </table>
 
-
 #### テキスト要素の比較（Custom validation）
 
 2 つの要素のテキストを比較する例です。`innerText` が等しければパスし、異なる場合は失敗します。
@@ -213,7 +212,6 @@ return equal;
   </tr>
  </tbody>
 </table>
-
 
 #### Promise による非同期検証（Custom validation）
 

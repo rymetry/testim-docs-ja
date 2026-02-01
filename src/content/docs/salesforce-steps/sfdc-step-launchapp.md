@@ -24,6 +24,6 @@ keywords:
 2. **Salesforce steps**タブの下で、**Common operations**をクリックし、**Launch app**ステップを選択します。\
    **Launch app**ステップが追加され、次の**Object properties**が表示されます。
 
-   ![](/images/salesforce-steps/sfdc-step-launchapp/818df59-2024-05-05_16-42-34.png)
+   ![スクリーンショット](/images/salesforce-steps/sfdc-step-launchapp/818df59-2024-05-05_16-42-34.png)
 3. **Select app**の下で、ドロップダウンメニューから目的のSalesforceアプリを選択します。
 4. 完了したら、**Save**をクリックします。
