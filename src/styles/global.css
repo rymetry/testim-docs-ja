@@ -1,5 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Noto Sans JP';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/woff2/NotoSansJP-VariableFont_wght.woff2') format('woff2');
+}
 
 @layer base {
   :root {
