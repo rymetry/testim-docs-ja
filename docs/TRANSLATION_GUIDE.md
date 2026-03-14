@@ -2,11 +2,13 @@
 
 このガイドでは、Testim 公式ドキュメント（https://help.testim.io/docs/）から新しいページを日本語翻訳して追加する手順を説明します。
 
+翻訳作業では、公式サイトの表示に加えて `docs/SIDEBAR_URLS.md` をこのリポジトリ内の正本として扱ってください。カテゴリ順、ページ順、翻訳対象の有無は、まずこのファイルを基準に確認します。
+
 ## 1. 準備：公式サイトの構造を確認
 
 ### 1.1 サイドバーの確認
 
-翻訳前に、公式サイトの左サイドバーで以下を確認してください：
+翻訳前に、公式サイトの左サイドバーと `docs/SIDEBAR_URLS.md` で以下を確認してください：
 
 1. **カテゴリ名**（h2見出し）: 例「Testim Overview」「Getting Started」「Salesforce Testing」など
 2. **各ページのタイトルと順序**: カテゴリ内での表示順
@@ -14,7 +16,7 @@
 
 ### 1.2 翻訳対象の選定
 
-- 公式サイトのサイドバーから翻訳したいページを選択
+- `docs/SIDEBAR_URLS.md` から翻訳したいページを選択
 - URL slugをメモ
 - カテゴリ名と表示順をメモ
 
@@ -22,7 +24,11 @@
 
 ### 2.1 配置場所
 
-カテゴリごとにフォルダを作成し、その中にファイルを配置します：
+既存のトピックフォルダにページを配置します。**フォルダ構造は整理用であり、カテゴリ名や公開URLとは1対1で対応しません。**
+
+たとえば `テスト編集` カテゴリのページでも、内容に応じて `steps-editing-tests/`、`groups/`、`conditions/`、`test-utilities/` など複数のフォルダに分かれて配置されます。
+
+配置例：
 
 ```text
 src/content/docs/
@@ -30,31 +36,50 @@ src/content/docs/
 │   ├── testim-overview.md
 │   ├── getting-started.md
 │   └── testim-automate.md
-├── recording-tests/          # テスト作成カテゴリ
+├── recording-tests/          # テストの記録カテゴリの代表フォルダ
 │   ├── how-to-record-a-test.md
 │   └── recording-a-mobile-test.md
-├── salesforce-testing/     # Salesforce テストカテゴリ
-│   └── salesforce-overview.md
+├── steps-editing-tests/     # テスト編集カテゴリの代表フォルダ
+│   ├── steps.md
+│   └── editing-your-tests.md
+├── validations/             # 高度な編集カテゴリの代表フォルダ
+│   └── validate-element-visible.md
 └── guides/                 # ガイドカテゴリ
     └── writing-features.md
 ```
 
-**フォルダ命名規則**: 英語カテゴリ名をケバブケース（kebab-case）に変換
-- 例: "Overview" → `overview/`
-- 例: "Recording Tests" → `recording-tests/`
-- 例: "Salesforce Testing" → `salesforce-testing/`
+**フォルダ選択ルール**:
+- まず既存の近い記事と同じフォルダに置く
+- フォルダ名は記事のトピック単位で判断し、カテゴリ名だけで決めない
+- 公開URLはフォルダではなくファイル名で決まるため、配置先よりファイル名の整合性を優先する
 
 ### 2.2 ファイル命名規則
 
 **重要**: ファイル名は元のURL slugと完全に一致させること。
 
 | URL | カテゴリフォルダ | ファイル名 |
-|-----|---------------|-----------|
+| --- | ------------- | --------- |
 | `https://help.testim.io/docs/testim-overview` | `overview/` | `testim-overview.md` |
 | `https://help.testim.io/docs/how-to-record-a-test` | `recording-tests/` | `how-to-record-a-test.md` |
 | `https://help.testim.io/docs/salesforce-overview` | `salesforce-testing/` | `salesforce-overview.md` |
 
 この命名規則により、元のページとの対応関係が明確になり、更新時の追跡が容易になります。
+
+### 2.3 ルーティングの重要事項
+
+**このプロジェクトの公開URLは、フォルダ構造を無視してファイル名のみで決まります。**
+
+```text
+src/content/docs/overview/testim-overview.md
+→ /docs/testim-overview
+
+src/content/docs/getting-started/setting-up-your-account.md
+→ /docs/setting-up-your-account
+```
+
+そのため、本文中の内部リンクも必ず `/docs/{slug}` 形式にしてください。
+- 正しい例: `/docs/testim-overview`
+- 誤った例: `/docs/overview/testim-overview`
 
 ## 3. Frontmatter 設定
 
@@ -63,10 +88,11 @@ src/content/docs/
 ```yaml
 ---
 title: '日本語タイトル'
-description: '日本語説明文（SEO用、100-160文字推奨）'
-category: '日本語カテゴリ名'
-order: [カテゴリ内での表示順]
+description: '日本語説明文（SEO用、100-160文字推奨。原文URLの貼り付けは不可）'
+category: '既存カテゴリ名に合わせた日本語ラベル'
+order: 1001
 updated: 'YYYY-MM-DD'
+sourceUrl: 'https://help.testim.io/docs/testim-overview'
 keywords:
   - キーワード1
   - キーワード2
@@ -74,40 +100,53 @@ keywords:
 ---
 ```
 
+補足:
+- `description` には原文URLや「原文: ...」のようなプレースホルダを入れず、日本語の要約を記載します
+- `sourceUrl` は原文追跡のため運用上必須です
+- `keywords` は最大10件までを目安に、日本語の検索語を設定します
+
 ### 3.1 カテゴリ名の日本語化
 
-公式サイトの英語カテゴリ名を日本語に翻訳します。以下は例です：
+公式サイトの英語カテゴリ名を日本語に翻訳します。**カテゴリ名は既存のラベルに厳密に合わせてください。** フォルダ名とは一致しない場合があります。
 
-| 英語カテゴリ名 | 日本語カテゴリ名 | フォルダ名 |
-|------------|-------------|----------|
-| Overview | 概要 | `testim-overview/` |
+| 英語カテゴリ名 | 日本語カテゴリ名 | 代表フォルダ例 |
+| ------------ | ------------- | ---------------- |
+| Overview | 概要 | `overview/` |
 | Getting Started | はじめに | `getting-started/` |
-| Recording Tests | テスト作成 | `recording-tests/` |
-| Salesforce Testing | Salesforce テスト | `salesforce-testing/` |
-| Integrations | 統合 | `integrations/` |
+| Recording Tests | テストの記録 | `recording-tests/` |
+| Editing Tests | テスト編集 | `steps-editing-tests/`, `groups/` |
+| Advanced Editing | 高度な編集 | `validations/`, `parameters/` |
+| Running Tests | テスト実行 | `running-tests/`, `test-execution/` |
+| Results | 結果 | `results/` |
+| Debugging Tests | デバッグ | `debugging/` |
+| Test Management | テスト管理 | `test-management/` |
+| Integrations | 統合 | `integrations/`, `other-integrations/` |
+| Salesforce Testing | Salesforceテスト | `salesforce-testing/` |
+| Testim Extension | Testim拡張機能 | `testim-extension/` |
+| Security | セキュリティ | `security-sso/` |
 | Guides | ガイド | `guides/` |
 
 **重要**: 新しいカテゴリを追加する場合は、既存の翻訳パターンに従って一貫性を保ってください。
 
 ### 3.2 表示順（order）の設定
 
-**公式サイトのサイドバーと同じ順序で設定してください。**
+**`docs/SIDEBAR_URLS.md` と同じ順序で設定してください。**
 
-各カテゴリ内で、公式サイトの上から順に番号を振ります：
+このプロジェクトでは、`order` は単純な 1, 2, 3 ではなく、セクションごとの数値帯で管理されています。既存ファイルの近い値に合わせて設定してください。
 
 ```yaml
-# 例: 概要カテゴリ内
-# 公式サイトでの表示順
-1. Testim Overview          → order: 1
-2. Getting Started          → order: 2
-3. Testim Automate         → order: 3
-4. Testim Copilot Help     → order: 4
-...
+# 例: 既存の実ファイル
+# overview/testim-overview.md                → order: 1001
+# getting-started/setting-up-your-account.md → order: 2001
+# recording-tests/how-to-record-a-test.md    → order: 3001
+# running-tests/scheduler.md                 → order: 6005
 ```
 
-**注意**: カテゴリが異なれば、同じorder番号を使っても問題ありません。
-- `testim-overview/page1.md` → `order: 1`
-- `recording-tests/page1.md` → `order: 1` （別カテゴリなのでOK）
+設定ルール:
+- サイドバー順は `docs/SIDEBAR_URLS.md` に合わせる
+- 既存記事を編集するときは、現在の `order` の数値帯を維持する
+- 新規記事を追加するときは、同じセクション内の近い記事を見て未使用の値を割り当てる
+- `order` は補助的な並び順でもあるため、重複や極端な飛び値は避ける
 
 ## 4. メディアファイルの処理
 
@@ -292,7 +331,7 @@ public/images/
 │   │   └── answer.png
 │   └── enhanced-mode-mobile/
 │       └── mobile-test-setup.png
-├── recording-tests/            # テスト作成カテゴリ
+├── recording-tests/            # テストの記録カテゴリ
 │   ├── how-to-record-a-test/
 │   │   └── demo-video.mp4
 │   └── recording-a-mobile-test/
@@ -405,8 +444,9 @@ HTMLの`<video>`タグを使用：
 2. **技術用語**:
    - 技術用語は正確に翻訳し、必要に応じて英語を併記
    - 既存の日本語UIで使用されている用語に統一
-3. **リンク**: 内部リンクは日本語版ページへ、外部リンクは原文URLを維持
-4. **自然な日本語**:
+3. **Testim の機能名は英語維持**: Testim の機能名、製品名、画面名、固有ラベルは原則として英語のまま残します。機能名自体は翻訳せず、必要なら前後の説明文で日本語補足を加えます。
+4. **リンク**: 内部リンクは日本語版ページへ、外部リンクは原文URLを維持
+5. **自然な日本語**:
    - 直訳ではなく、日本人が理解しやすい表現にすること
    - 文体は「です・ます調」で統一
    - 原文の意図を正確に伝えることを最優先してください
@@ -417,10 +457,14 @@ HTMLの`<video>`タグを使用：
 翻訳時は以下の用語を統一してください。新しい用語が出現した場合は、この表に追加してください。
 
 | 英語 | 日本語 | 備考 |
-|------|--------|------|
+| ------ | -------- | ------ |
 | Smart Locators | Smart Locators | 固有技術名は英語のまま |
 | Testim Copilot | Testim Copilot | 製品名 |
 | Testim Automate | Testim Automate | 製品名 |
+| Auto Grouping | Auto Grouping | 機能名は英語のまま |
+| Scheduler | Scheduler | 機能名は英語のまま |
+| Shared Steps | Shared Steps | 機能名は英語のまま |
+| TestOps | TestOps | 製品機能名 |
 | Enhanced mode | Enhanced mode | 技術用語として英語のまま |
 | VMG | VMG（仮想モバイルグリッド） | 初出時のみ補足 |
 | codeless | コードレス | カタカナ化 |
@@ -596,9 +640,10 @@ find src/content/docs -name "*.md" | sort
 
 - [ ] ファイル名が元のURL slugと一致している
 - [ ] ファイルが適切なカテゴリフォルダに配置されている
-- [ ] frontmatterに必要な項目（title, description, category, order, updated, keywords）がすべて記載されている
+- [ ] frontmatterに必要な項目（title, description, category, order, updated, sourceUrl, keywords）がすべて記載されている
+- [ ] description が日本語の要約になっており、`原文: URL` のようなプレースホルダになっていない
 - [ ] カテゴリ名が日本語化されており、他のページと統一されている
-- [ ] orderが公式サイトのサイドバー順序と一致している
+- [ ] orderが `docs/SIDEBAR_URLS.md` と既存の数値帯に整合している
 - [ ] **公式ページから画像URLを全て抽出した（コマンド実行結果を確認）**
 - [ ] **抽出した画像URLの数を確認した（`wc -l`コマンドで件数チェック）**
 - [ ] **コンテンツ画像とロゴ・アイコンを区別してダウンロードした**
@@ -610,8 +655,9 @@ find src/content/docs -name "*.md" | sort
 - [ ] 日本語として自然な表現になっている
 - [ ] 原文の構造（見出し階層、段落）が維持されている
 - [ ] 内部リンクが日本語版ページを指している（可能な場合）
+- [ ] 内部リンクが `/docs/{slug}` 形式で、フォルダ名を含んでいない
 - [ ] 外部リンクが正しく機能する
-- [ ] Calloutなどの特殊記法がWRITING_GUIDEに準拠している
+- [ ] 新規追加・大規模改稿した Callout が `:::` 記法で書かれている
 - [ ] コードブロックにtitle属性が付与されている（必要な場合）
 - [ ] ビルドエラーが発生しない
 - [ ] メディアファイルの無いページにフォルダを作成していない
@@ -708,7 +754,8 @@ category: 概要
 
 ```yaml
 category: 'カテゴリ名'
-order: 1
+order: 1001
+sourceUrl: 'https://help.testim.io/docs/example-slug'
 ```
 
 2. ファイルが適切なフォルダに配置されているか確認：
@@ -720,13 +767,13 @@ find src/content/docs -name "[filename].md"
 
 ### 9.4 サイドバーの順序が公式サイトと異なる
 
-**原因**: order値が公式サイトの順序と一致していない
+**原因**: `docs/SIDEBAR_URLS.md` の並び、または既存ファイルの数値帯と整合していない
 
 **解決策**:
 
-1. 公式サイト（https://help.testim.io/docs/）のサイドバーを開く
-2. カテゴリ内のページを上から順に確認
-3. 各ページのorderを1から順に振り直す
+1. `docs/SIDEBAR_URLS.md` で対象カテゴリ内の掲載順を確認する
+2. 同じカテゴリの既存ファイルを見て、使われている `order` の数値帯を確認する
+3. 対象ページの `order` を近い値へ調整する
 
 ### 9.5 動画が再生されない
 
@@ -873,11 +920,12 @@ fi
 ### 11.1 新しいページを追加する場合
 
 1. 公式サイトから翻訳対象のURLとカテゴリを確認
-2. カテゴリフォルダが存在しない場合は作成
-3. このガイドに従ってファイルを作成
-4. orderを該当カテゴリ内の公式サイト順序に合わせて設定
-5. メディアファイルがあれば抽出・ダウンロード
-6. ビルドして動作確認
+2. `docs/SIDEBAR_URLS.md` に対象URLがあり、掲載位置が正しいことを確認
+3. 近いトピックのフォルダを選び、必要なら新しいフォルダを作成
+4. このガイドに従ってファイルを作成
+5. orderを該当セクションの既存レンジに合わせて設定
+6. メディアファイルがあれば抽出・ダウンロード
+7. ビルドして動作確認
 
 **新しいカテゴリを追加する場合**:
 
@@ -888,9 +936,10 @@ mkdir -p src/content/docs/[new-category-folder]
 # 2. 最初のページを作成
 touch src/content/docs/[new-category-folder]/[page-slug].md
 
-# 3. frontmatterで新しいカテゴリ名を設定
+# 3. frontmatterで新しいカテゴリ名と sourceUrl を設定
 # category: '新しいカテゴリ名'
-# order: 1
+# order: 1001
+# sourceUrl: 'https://help.testim.io/docs/[page-slug]'
 ```
 
 ### 10.2 既存ページを更新する場合
@@ -908,7 +957,7 @@ updated: '2025-11-15'  # 更新日を今日の日付に
 
 ### 10.3 カテゴリ順序の調整
 
-公式サイトでカテゴリの順序が変更された場合、各ファイルのorderを更新してください。
+公式サイトでカテゴリの順序が変更された場合、まず `docs/SIDEBAR_URLS.md` を更新し、その後で必要な `order` を見直してください。
 
 **ヒント**: カテゴリ全体のorderを一括確認
 
@@ -934,6 +983,7 @@ grep -r "Smart Locators" src/content/docs/
 
 - `src/content/config.ts` - コンテンツのスキーマ定義（frontmatter検証）
 - `src/lib/docs.ts` - ドキュメント取得とナビゲーション構築ロジック
+- `docs/SIDEBAR_URLS.md` - 翻訳対象URL、カテゴリ順、ページ順の正本
 - `src/components/navigation/NavSidebar.astro` - サイドバーコンポーネント
 - `.github/copilot-instructions.md` - プロジェクト全体の指針
 - `WRITING_GUIDE.md` - Markdown記法と拡張機能のガイド

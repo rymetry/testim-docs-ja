@@ -1,215 +1,244 @@
-# ドキュメント更新管理スクリプト
+# ドキュメント運用スクリプト
 
-このディレクトリには、英語原文と日本語翻訳の更新状況を追跡・管理するためのスクリプトが含まれています。
+このディレクトリには、order.md で定義している継続メンテナンス基盤を支えるスクリプトだけを残しています。
 
-## スクリプト一覧
+現在の方針は次の通りです。
+- `docs/SIDEBAR_URLS.md` を seed 兼 正本として扱う
+- 初回は full モード相当で全ページを整備する
+- 継続運用では差分検知と更新確認を自動化する
+- セクション限定の一時修正スクリプトは残さない
 
-### 1. `check_outdated_docs.mjs`
+## スクリプト分類
 
-英語原文と日本語翻訳の更新日を比較し、更新が必要なドキュメントを検出します。
+### 1. URL・サイドバー同期
 
-**使用方法:**
+#### `update_sidebar_urls_from_live.mjs`
+
+help.testim.io のサイドバーを取得し、`docs/SIDEBAR_URLS.md` を更新します。
+
+用途:
+- seed URL の最新化
+- セクション単位の作業範囲更新
+- 翻訳対象URL一覧の再生成
+
+実行:
+
+```bash
+npm run docs:sync-sidebar
+```
+
+注意:
+- 現在は live HTML から直接抽出します
+- order.md の要件に合わせて、今後は sitemap 優先 + フォールバック + 0件 fail-fast に強化予定です
+
+#### `sync_frontmatter_from_sidebar.mjs`
+
+`docs/SIDEBAR_URLS.md` を基準に、各ページの `category` と `order` を同期します。
+
+用途:
+- サイドバー順との整合維持
+- frontmatter のカテゴリ揺れ防止
+
+実行:
+
+```bash
+npm run docs:sync-frontmatter
+npm run docs:sync-frontmatter:apply
+```
+
+### 2. 翻訳パイプライン
+
+#### `generate_untranslated_placeholders.mjs`
+
+`docs/SIDEBAR_URLS.md` を読み、未翻訳ページのプレースホルダ Markdown を生成します。
+
+用途:
+- 初回 full 整備の足場作成
+- 未翻訳スラッグのスキャフォールド生成
+
+実行:
+
+```bash
+npm run docs:placeholders
+```
+
+#### `prepare_llm_tasks.mjs`
+
+既存 Markdown の本文を抽出して、LLM に渡す翻訳タスクファイルを `llm/tasks/` に生成します。
+
+用途:
+- LLM 翻訳の前処理
+- frontmatter を壊さず本文だけ翻訳対象に切り出す
+
+実行:
+
+```bash
+npm run docs:prepare-llm
+```
+
+#### `apply_llm_translations.mjs`
+
+`llm/translations/` 内の翻訳結果を既存ドキュメントに反映します。frontmatter は既存ファイルのものを維持します。
+
+用途:
+- LLM 翻訳結果の反映
+- 本文のみの差し替え
+
+実行:
+
+```bash
+npm run docs:apply-llm
+```
+
+### 3. 本文・画像整備
+
+#### `fetch_translate_images.mjs`
+
+英語本文から画像を取得し、ドキュメント本文中の画像参照も整備します。
+
+用途:
+- 初回 full 整備時の画像ミラー
+- `public/images/` と本文参照の同期
+
+実行:
+
+```bash
+npm run docs:fetch
+```
+
+#### `fix_alt_all.mjs`
+
+Markdown 内の空 alt 画像を補正します。レポジトリ全体を対象にする汎用スクリプトです。
+
+用途:
+- Markdown lint の MD045 対策
+- 画像 alt の最低限の正規化
+
+実行:
+
+```bash
+npm run docs:fix-alt
+```
+
+備考:
+- セクション限定版は削除済みです
+- 将来的には WRITING_GUIDE 準拠チェックへ統合する想定です
+
+### 4. 更新日・差分検知
+
+#### `check_outdated_docs.mjs`
+
+英語原文と日本語ドキュメントの更新日を比較し、更新が必要なページを検出します。
+
+用途:
+- 継続メンテナンスの差分検知
+- CI / GitHub Actions での定期チェック
+
+実行:
 
 ```bash
 npm run check:updates
-# または
-node scripts/check_outdated_docs.mjs
 ```
 
-**機能:**
-- すべての`.md`ファイルをスキャン
-- `sourceUrl`が設定されているファイルの英語原文から更新日を取得
-- 日本語版の`updated`フィールドと比較
-- 更新が必要なファイルをリスト表示
-- 結果を`docs-update-status.json`に保存
-- CIで実行時、更新が必要な場合はエラーコードで終了
+出力:
+- `docs-update-status.json`
 
-**出力例:**
+#### `fetch_all_updated_dates.mjs`
 
-```text
-📋 ドキュメント更新状況チェック開始
+全ページの英語原文更新日をまとめて取得し、スナップショットを保存します。
 
-📄 150個のファイルをスキャン中...
+用途:
+- 更新日の棚卸し
+- 追跡データのスナップショット取得
 
-🔍 src/content/docs/recording-tests/recording-a-mobile-test.md
-  ✅ 最新: 2025-09-18
-
-🔍 src/content/docs/getting-started/overview.md
-  ❌ 更新が必要: 日本語 2025-08-15 → 英語 2025-10-20 (66日遅れ)
-
-========================================
-📊 チェック結果サマリー
-
-✅ 最新: 140件
-❌ 更新必要: 8件
-⚠️  エラー: 2件
-```
-
-### 2. `fetch_all_updated_dates.mjs`
-
-すべてのドキュメントの英語原文更新日を一括取得して一覧表示します。
-
-**使用方法:**
+実行:
 
 ```bash
 npm run check:dates
-# または
-node scripts/fetch_all_updated_dates.mjs
 ```
 
-**機能:**
-- すべての`sourceUrl`から更新日を一括取得
-- テーブル形式で見やすく表示
-- 結果を`docs-dates-snapshot.json`に保存
-- 現在の状況を素早く確認
+出力:
+- `docs-dates-snapshot.json`
 
-**出力例:**
+#### `update_dates_from_english.mjs`
 
-```text
-📋 英語原文の更新日を一括取得
+英語原文の更新日を日本語ドキュメントの `updated` に反映します。
 
-📄 150個のファイルを処理中...
+用途:
+- frontmatter の更新日同期
 
-🔍 recording-a-mobile-test.md... ✅ 2025-09-18
-🔍 overview.md... 🔄 2025-10-20
-
-========================================
-📊 取得結果一覧
-
-状態      | ファイル名                    | 日本語版   | 英語版
-----------|------------------------------|-----------|----------
-✅ 最新   | recording-a-mobile-test.md   | 2025-09-18| 2025-09-18
-🔄 要更新 | overview.md                  | 2025-08-15| 2025-10-20
-```
-
-### 3. `update_dates_from_english.mjs`
-
-英語原文から取得した更新日で、日本語ファイルの`updated`フィールドを自動更新します。
-
-**使用方法:**
-
-**ドライラン（変更内容の確認のみ）:**
+実行:
 
 ```bash
 npm run update:dates
-# または
-node scripts/update_dates_from_english.mjs
-```
-
-**実際に更新:**
-
-```bash
 npm run update:dates:apply
-# または
-node scripts/update_dates_from_english.mjs --apply
 ```
 
-**特定フォルダのみ更新:**
+### 5. 診断・補助
+
+#### `report_frontmatter_categories.mjs`
+
+frontmatter の `category` 分布と `docs/SIDEBAR_URLS.md` のカテゴリを比較する診断スクリプトです。
+
+用途:
+- カテゴリ揺れの可視化
+- frontmatter 整合性確認
+
+実行:
 
 ```bash
-node scripts/update_dates_from_english.mjs --apply --pattern recording-tests
+npm run docs:report-categories
 ```
 
-**機能:**
-- 英語原文から最新の更新日を取得
-- 日本語ファイルの`updated`フィールドを自動更新
-- デフォルトはドライラン（`--apply`で実際に更新）
-- `--pattern`オプションで特定のファイル/フォルダのみ処理
+## 残しているスクリプト
 
-**出力例:**
+- `update_sidebar_urls_from_live.mjs`
+- `sync_frontmatter_from_sidebar.mjs`
+- `generate_untranslated_placeholders.mjs`
+- `prepare_llm_tasks.mjs`
+- `apply_llm_translations.mjs`
+- `fetch_translate_images.mjs`
+- `fix_alt_all.mjs`
+- `check_outdated_docs.mjs`
+- `fetch_all_updated_dates.mjs`
+- `update_dates_from_english.mjs`
+- `report_frontmatter_categories.mjs`
 
-```text
-📋 英語原文の更新日で日本語ファイルを更新
+## 削除したスクリプト
 
-🔍 ドライランモード: ファイルは変更されません
+- `fix_alt_test_management.mjs`
+  - `fix_alt_all.mjs` と役割が重複しており、対象が Test Management セクションに限定されていたため削除
+- `fix_links_test_management.mjs`
+  - セクション限定の一時修正で、今後は汎用リンク正規化または品質チェックへ統合すべきため削除
 
-🔍 src/content/docs/recording-tests/recording-a-mobile-test.md
-  ✅ 既に最新です: 2025-09-18
+## 基本ワークフロー
 
-🔍 src/content/docs/getting-started/overview.md
-  🔄 更新: 2025-08-15 → 2025-10-20
-  💡 [ドライラン] ファイルは更新されません
-
-========================================
-📊 更新結果サマリー
-
-✅ 更新完了: 8件
-⏭️  変更なし: 140件
-```
-
-## GitHub Actions
-
-### `check-docs-updates.yml`
-
-週次で自動的にドキュメントの更新状況をチェックします。
-
-**トリガー:**
-- 毎週月曜日の午前9時（JST）
-- 手動実行（workflow_dispatch）
-- Pull Request作成時（情報提供のため）
-
-**動作:**
-1. `check_outdated_docs.mjs`を実行
-2. 更新が必要なドキュメントが見つかった場合:
-   - GitHub Issueを作成または更新
-   - ラベル: `documentation`, `update-needed`, `automated`
-3. 結果をArtifactとして保存（30日間保持）
-4. PR作成時はコメントで状況を通知
-
-## ワークフロー例
-
-### 定期的な確認
+### 初回 full 整備
 
 ```bash
-# 週に1回程度、更新状況を確認
+npm run docs:sync-sidebar
+npm run docs:placeholders
+npm run docs:prepare-llm
+# 翻訳結果を llm/translations/ に配置
+npm run docs:apply-llm
+npm run docs:fetch
+npm run docs:sync-frontmatter:apply
+npm run update:dates:apply
+npm run docs:fix-alt
+npm run lint
+```
+
+### 継続メンテナンス
+
+```bash
+npm run docs:sync-sidebar
 npm run check:updates
-
-# 更新が必要な場合、内容を確認
 npm run check:dates
-
-# 問題なければ一括更新（ドライラン）
-npm run update:dates
-
-# 確認後、実際に更新
-npm run update:dates:apply
-
-# 変更をコミット
-git add src/content/docs/
-git commit -m "docs: 英語原文の更新日を反映"
 ```
 
-### 特定フォルダの更新
+## 今後の統合候補
 
-```bash
-# recording-testsフォルダのみ更新
-node scripts/update_dates_from_english.mjs --apply --pattern recording-tests
-```
-
-## 必要な環境
-
-- Node.js 18以上
-- インターネット接続（英語原文の取得のため）
-
-## トラブルシューティング
-
-### エラー: `Cannot find package 'gray-matter'`
-
-```bash
-npm install
-```
-
-### レート制限エラー
-
-スクリプトは各リクエスト間に100msの待機時間を設けていますが、大量のファイルを処理する場合は時間がかかります。
-
-### 更新日が取得できない
-
-- `sourceUrl`が正しく設定されているか確認
-- 英語原文のURLが変更されていないか確認
-- ネットワーク接続を確認
-
-## 注意事項
-
-- `updated`フィールドは英語原文の最終更新日を記録します
-- 実際の翻訳作業の完了日とは異なる場合があります
-- 重要な更新の場合は、内容を確認してから翻訳を更新してください
+- URL 収集の fail-fast と sitemap フォールバック実装
+- WRITING_GUIDE 準拠の機械チェック追加
+- full / diff モードを 1 つの入口コマンドへ統合
+- 日付取得ロジックの共通化

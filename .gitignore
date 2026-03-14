@@ -27,3 +27,10 @@ pnpm-debug.log*
 # Documentation update tracking
 docs-update-status.json
 docs-dates-snapshot.json
+
+# Pipeline generated files
+scripts/.checkpoint
+scripts/.cache/
+
+# Takt-specific ignores
+.takt/

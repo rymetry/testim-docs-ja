@@ -8,6 +8,9 @@
 ## 📚 目次
 
 - [基本方針](#-基本方針)
+- [frontmatter 必須ルール](#-frontmatter-必須ルール)
+- [内部リンク規則](#-内部リンク規則)
+- [Testim 機能名・製品名・画面名の英語維持](#️-testim-機能名製品名画面名の英語維持)
 - [Markdown vs MDX の選び方](#-markdown-vs-mdx-の選び方)
 - [Markdown で使える機能](#-markdown-で使える機能)
 - [MDX でのみ使える機能](#-mdx-でのみ使える機能)
@@ -24,6 +27,58 @@
 1. **通常の記事は .md で書く**（執筆しやすさ優先）
 2. **特別な機能が必要な場合のみ .mdx を使う**（拡張性優先）
 3. **迷ったら Markdown (.md) を選択**（98%のケースはこれで十分）
+
+---
+
+## 📋 frontmatter 必須ルール
+
+すべての記事ファイルには以下の frontmatter が必須です。
+
+```yaml
+---
+title: 'ページタイトル（日本語）'
+description: 'ページの説明（100文字以内、プレースホルダ禁止）'
+sourceUrl: 'https://help.testim.io/docs/{slug}'
+updated: '2025-11-02'
+---
+```
+
+| フィールド | 必須 | 規則 |
+|-----------|------|------|
+| `title` | ✅ | 日本語タイトル |
+| `description` | ✅ | 具体的な説明文。「説明文」「TODO」などのプレースホルダ禁止 |
+| `sourceUrl` | ✅ | 英語原文 URL（`https://help.testim.io/docs/{slug}`）必須 |
+| `updated` | ✅ | 更新日（`YYYY-MM-DD` 形式） |
+
+---
+
+## 🔗 内部リンク規則
+
+内部リンクは必ず `/docs/{slug}` 形式を使用してください。
+
+```markdown
+✅ 正しい
+[Testim 概要](/docs/testim-overview)
+
+❌ 禁止（カテゴリフォルダ付き）
+[Testim 概要](/docs/overview/testim-overview)
+
+❌ 禁止（`doc:` 形式はソース原稿のみ。公開ページには使わない）
+[Testim 概要](doc:testim-overview)
+```
+
+---
+
+## 🏷️ Testim 機能名・製品名・画面名の英語維持
+
+Testim の固有名詞は英語のまま維持してください。日本語に翻訳しないこと。
+
+| カテゴリ | 例 |
+|---------|-----|
+| 製品名 | Testim、Testim Automate、Testim Grid |
+| 画面名 | Test Editor、Project Settings、Test Suite |
+| 機能名 | Visual AI、Smart Locators、Branching、Hooks |
+| API/設定名 | `test.id`、`step.label`、`params.timeout` |
 
 ---
 
@@ -50,7 +105,7 @@
 ### 具体例
 
 | やりたいこと | ファイル形式 |
-|------------|------------|
+| ------------ | ------------ |
 | 見出し、段落、リスト | `.md` |
 | 画像の挿入 | `.md` |
 | テーブル（表）の作成 | `.md` |
@@ -228,7 +283,7 @@ on:
 [Testim 公式サイト](https://www.testim.io/)
 
 # 内部リンク（他のドキュメントページ）
-[Testim 概要](/docs/overview/testim-overview)
+[Testim 概要](/docs/testim-overview)
 
 # アンカーリンク（同じページ内）
 [情報パネルセクションへ](#情報パネルcallout)
@@ -287,7 +342,7 @@ $$
 
 :::tip{title="詳細な実装例が見たい方へ"}
 すべての機能の詳しい使用例は、
-[執筆機能リファレンス](/docs/guides/writing-features) をご覧ください。
+[執筆機能リファレンス](/docs/writing-features) をご覧ください。
 :::
 
 ---
@@ -454,7 +509,7 @@ src/content/docs/
 ### 🎨 情報パネルの使い分け
 
 | タイプ | 用途 | 例 |
-|--------|------|-----|
+| -------- | ------ | ----- |
 | `tip` | 便利な情報、ヒント | 「時間を節約するには...」 |
 | `warning` | 注意事項、制限 | 「この機能は Enterprise プランのみ」 |
 | `success` | ベストプラクティス | 「推奨される設定方法」 |
@@ -530,14 +585,14 @@ import Tabs from '../../components/Tabs.tsx';
 
 ### Q4: 内部リンクのパスがわかりません
 
-**A:** `/docs/` 以降のフォルダ構造とファイル名（拡張子なし）を使用します。
+**A:** `/docs/` 以降は**ファイル名のみ**を使用します。フォルダ構造はURLに含まれません。
 
 ```text
 src/content/docs/overview/testim-overview.md
-→ /docs/overview/testim-overview
+→ /docs/testim-overview
 
 src/content/docs/getting-started/creating-your-first-test.md
-→ /docs/getting-started/creating-your-first-test
+→ /docs/creating-your-first-test
 ```
 
 ### Q5: 既存ページを更新する際の注意点は？
@@ -568,7 +623,7 @@ MDX が必要なのは：
 
 ### プロジェクト内ドキュメント
 
-- 📖 [**執筆機能リファレンス**](/docs/guides/writing-features) - 全機能の詳細な実装例
+- 📖 [**執筆機能リファレンス**](/docs/writing-features) - 全機能の詳細な実装例
 - 🌐 [**翻訳ガイド**](./TRANSLATION_GUIDE.md) - 公式ドキュメントからの翻訳手順
 - 📘 [**README**](./README.md) - プロジェクト概要とセットアップ
 
@@ -588,7 +643,7 @@ MDX が必要なのは：
 - **コードブロックには必ず言語指定とタイトルを付ける** - 読者の理解を助ける
 - **情報パネルは適切なタイプを選ぶ** - tip / warning / success / danger など
 - **執筆中は `npm run dev` でリアルタイムプレビュー** - 見た目を確認しながら書く
-- **困ったら [執筆機能リファレンス](/docs/guides/writing-features) を参照** - 実装例が豊富
+- **困ったら [執筆機能リファレンス](/docs/writing-features) を参照** - 実装例が豊富
 
 ---
 

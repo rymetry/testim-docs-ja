@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
+import { createHash } from 'crypto';
 
 const execFileAsync = promisify(execFile);
 
@@ -19,7 +20,6 @@ const todayStr = `${yyyy}-${mm}-${dd}`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const toKebab = (str) => String(str).toLowerCase().replace(/&/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-// Index local docs by slug => {categoryFolder,filePath}
 function buildSlugIndex() {
   /** @type {Record<string, {categoryFolder:string, filePath:string}>} */
   const index = {};
@@ -38,10 +38,8 @@ function buildSlugIndex() {
   return index;
 }
 
-// Parse sidebar to get untranslated list with order
-function getUntranslatedList() {
-  const raw = fs.readFileSync(SIDEBAR_FILE, 'utf8');
-  const lines = raw.split(/\r?\n/);
+function parseSidebarList(sidebarText, filterFn) {
+  const lines = sidebarText.split(/\r?\n/);
   /** @type {Array<{categoryEnglish:string, categoryJapanese:string, url:string, slug:string, order:number}>} */
   const out = [];
   let current = null;
@@ -53,11 +51,10 @@ function getUntranslatedList() {
       order = 0;
       continue;
     }
-    const m = line.match(/^\-\s*([✅⏳])\s+(https?:\/\/help\.testim\.io\/docs\/([a-z0-9\-]+))\s*$/);
+    const m = line.match(/^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/help\.testim\.io\/docs\/([a-z0-9\-]+))\s*$/);
     if (m && current) {
       order += 1;
-      const status = m[1];
-      if (status !== '⏳') continue;
+      if (!filterFn(m[1])) continue;
       const url = m[2];
       const slug = m[3];
       out.push({ categoryEnglish: current.english, categoryJapanese: current.japanese, url, slug, order });
@@ -66,9 +63,56 @@ function getUntranslatedList() {
   return out;
 }
 
+export function getUntranslatedList(sidebarText) {
+  return parseSidebarList(sidebarText, (status) => status === '⏳');
+}
+
+export function getAllPagesList(sidebarText) {
+  return parseSidebarList(sidebarText, (status) => status === '✅' || status === '✅🔍');
+}
+
+export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch) {
+  const allPages = getAllPagesList(sidebarText);
+  const storedHashes = fs.existsSync(hashesPath)
+    ? JSON.parse(fs.readFileSync(hashesPath, 'utf8'))
+    : {};
+
+  const newHashes = { ...storedHashes };
+  const changed = [];
+
+  for (const page of allPages) {
+    const srcUrl = `${page.url}.md`;
+    let content = '';
+    try {
+      const res = await fetchFn(srcUrl);
+      if (res.ok) content = await res.text();
+    } catch (e) {
+      console.warn(`getDiffPagesList: network error for ${page.slug} (${e?.message}); treating as changed.`);
+    }
+    const hash = computeHash(content);
+    if (storedHashes[page.slug] !== hash) {
+      changed.push(page);
+    }
+    newHashes[page.slug] = hash;
+  }
+
+  fs.mkdirSync(path.dirname(hashesPath), { recursive: true });
+  fs.writeFileSync(hashesPath, JSON.stringify(newHashes, null, 2), 'utf8');
+  return changed;
+}
+
+export function parseMode(argv) {
+  const flag = argv.find((a) => a.startsWith('--mode='));
+  if (!flag) return null;
+  return flag.split('=')[1];
+}
+
+function computeHash(content) {
+  return createHash('sha256').update(content).digest('hex');
+}
+
 async function downloadAsset(url, destDir) {
   const filename = path.basename(new URL(url).pathname);
-  // shorten long readme hashes: keep first 7
   let targetName = filename;
   const m = filename.match(/^([a-fA-F0-9]{7})[a-fA-F0-9]{50,}(-.*)/);
   if (m) targetName = `${m[1]}${m[2]}`;
@@ -76,7 +120,6 @@ async function downloadAsset(url, destDir) {
   await fs.promises.mkdir(destDir, { recursive: true });
   if (fs.existsSync(destPath)) return { name: targetName, path: destPath };
 
-  // Try fetch then curl fallback
   try {
     const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: '*/*' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -110,18 +153,14 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug) {
     const re = new RegExp(p.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
     updated = updated.replace(re, p.local);
   }
-  // Convert <Image ... src="..." /> to markdown image
   updated = updated.replace(/<Image\b[^>]*src=\"([^\"]+)\"[^>]*\/>/g, (m, src) => `![](${src})`);
   return updated;
 }
 
-function rewriteDocLinks(markdown, slugIndex) {
-  // Handles: (doc:slug) and (doc:slug#fragment)
+export function rewriteDocLinks(markdown) {
   return markdown.replace(/\]\(doc:([a-z0-9\-]+)(#[^)]+)?\)/g, (m, slug, frag = '') => {
-    const hit = slugIndex[slug];
     const tail = frag || '';
-    if (!hit) return `](/docs/${slug}${tail})`;
-    return `](/docs/${hit.categoryFolder}/${slug}${tail})`;
+    return `](/docs/${slug}${tail})`;
   });
 }
 
@@ -147,7 +186,7 @@ function buildFrontmatter(item, title, categoryFolder, extra = {}) {
   return lines.join('\n');
 }
 
-async function processOne(item, slugIndex, options) {
+async function processOne(item, slugIndex) {
   const hit = slugIndex[item.slug];
   if (!hit) {
     console.warn(`⚠️  No local path for slug: ${item.slug}`);
@@ -155,7 +194,6 @@ async function processOne(item, slugIndex, options) {
   }
   const { categoryFolder, filePath } = hit;
 
-  // Fetch markdown source
   const srcUrl = `${item.url}.md`;
   const res = await fetch(srcUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: 'text/markdown' } });
   if (!res.ok) {
@@ -164,11 +202,9 @@ async function processOne(item, slugIndex, options) {
   }
   let md = await res.text();
 
-  // Rewrite images and links
   md = await rewriteAndDownloadMedia(md, categoryFolder, item.slug);
-  md = rewriteDocLinks(md, slugIndex);
+  md = rewriteDocLinks(md);
 
-  // Title from H1 (we remove H1 from body)
   const title = extractTitle(md) || item.slug.replace(/-/g, ' ');
   md = md.replace(/^#\s+.+\n+/, '');
 
@@ -183,14 +219,25 @@ async function main() {
   const args = process.argv.slice(2);
   const onlySlug = args.find((a) => a.startsWith('--slug='))?.split('=')[1];
   const limit = Number(args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '0');
-  const prepareLLM = args.includes('--prepare-llm');
+  const mode = parseMode(args);
 
+  const sidebarText = fs.readFileSync(SIDEBAR_FILE, 'utf8');
   const slugIndex = buildSlugIndex();
-  const list = getUntranslatedList();
+
+  let list;
+  if (mode === 'full') {
+    list = getAllPagesList(sidebarText);
+  } else if (mode === 'diff') {
+    const hashesPath = path.join(ROOT, 'scripts', '.cache', 'page-hashes.json');
+    list = await getDiffPagesList(sidebarText, hashesPath);
+  } else {
+    list = getUntranslatedList(sidebarText);
+  }
+
   let done = 0;
   for (const item of list) {
     if (onlySlug && item.slug !== onlySlug) continue;
-    const ok = await processOne(item, slugIndex, {});
+    const ok = await processOne(item, slugIndex);
     if (ok) done++;
     if (limit && done >= limit) break;
     await sleep(60);
@@ -198,7 +245,9 @@ async function main() {
   console.log(`Done. Processed ${done} file(s).`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

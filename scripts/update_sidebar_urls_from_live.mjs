@@ -49,7 +49,7 @@ function decodeHtmlEntities(s) {
     .replace(/&gt;/g, '>');
 }
 
-function normalizeUrl(href) {
+export function normalizeUrl(href) {
   if (!href) return null;
   if (href.startsWith('http://') || href.startsWith('https://')) {
     if (href.startsWith('https://help.testim.io/docs/')) return href;
@@ -60,7 +60,7 @@ function normalizeUrl(href) {
   return null;
 }
 
-function parseExistingStatusMap(text) {
+export function parseExistingStatusMap(text) {
   const statusByUrl = new Map();
   const re = /^-\s+(✅🔍|✅)\s+(https:\/\/help\.testim\.io\/docs\/[^\s#]+)\s*$/;
   for (const line of text.split(/\r?\n/)) {
@@ -70,8 +70,8 @@ function parseExistingStatusMap(text) {
   return statusByUrl;
 }
 
-async function fetchHtml(url) {
-  const res = await fetch(url, {
+async function fetchHtml(url, fetchFn = fetch) {
+  const res = await fetchFn(url, {
     headers: {
       // Readme のWAF対策でUAがないと403になることがある
       'User-Agent':
@@ -101,7 +101,7 @@ function extractH2(sectionHtml) {
   return decodeHtmlEntities(stripTags(m[1]).replace(/\s+/g, ' ').trim());
 }
 
-function extractUrls(sectionHtml) {
+export function extractUrls(sectionHtml) {
   const hrefs = [...sectionHtml.matchAll(/<a\b[^>]*\bhref="([^"]+)"/gi)].map((m) => m[1]);
   const urls = [];
   const seen = new Set();
@@ -115,7 +115,7 @@ function extractUrls(sectionHtml) {
   return urls;
 }
 
-function buildOutput({ sections, statusByUrl, existingHeader }) {
+export function buildOutput({ sections, statusByUrl, existingHeader }) {
   const allUrls = [];
   const seenGlobal = new Set();
 
@@ -160,12 +160,15 @@ function buildOutput({ sections, statusByUrl, existingHeader }) {
   headerLines.push('');
 
   const body = [];
+  const seenBody = new Set();
   for (const section of sections) {
     const jp = JP_LABEL_BY_EN[section.title] ?? section.title;
     body.push(`## ${section.title}（${jp}）`);
     body.push('');
 
     for (const url of section.urls) {
+      if (seenBody.has(url)) continue;
+      seenBody.add(url);
       const st = statusByUrl.get(url) ?? '✅🔍';
       body.push(`- ${st} ${url}`);
     }
@@ -183,20 +186,64 @@ function buildOutput({ sections, statusByUrl, existingHeader }) {
   return [...headerLines, ...body, ...(footer.length ? ['', ...footer] : [])].join('\n') + '\n';
 }
 
-async function main() {
-  const existing = fs.existsSync(SIDEBAR_URLS_PATH) ? fs.readFileSync(SIDEBAR_URLS_PATH, 'utf8') : '';
-  const statusByUrl = parseExistingStatusMap(existing);
+export async function fetchSitemap(fetchFn = fetch) {
+  const SITEMAP_URL = 'https://help.testim.io/sitemap.xml';
+  try {
+    const res = await fetchFn(SITEMAP_URL);
+    if (!res.ok) return [];
+    const xml = await res.text();
+    const urls = [];
+    for (const m of xml.matchAll(/<loc>(https:\/\/help\.testim\.io\/docs\/[^<]+)<\/loc>/g)) {
+      urls.push(m[1]);
+    }
+    return urls;
+  } catch (e) {
+    console.warn(`fetchSitemap: failed (${e?.message}). Falling back.`);
+    return [];
+  }
+}
 
-  const html = await fetchHtml(LIVE_URL);
+/** Fetch HTML sections from LIVE_URL, filtering URLs with urlFilter. */
+async function fetchNavSections(urlFilter, fetchFn) {
+  const html = await fetchHtml(LIVE_URL, fetchFn);
   const nav = extractHubSidebar(html);
   const sectionHtmls = extractSections(nav);
-
   const sections = [];
   for (const sectionHtml of sectionHtmls) {
     const title = extractH2(sectionHtml);
     if (!title) continue;
-    const urls = extractUrls(sectionHtml);
+    const urls = extractUrls(sectionHtml).filter(urlFilter);
     sections.push({ title, urls });
+  }
+  return sections;
+}
+
+export async function main(fetchFn = fetch) {
+  const existing = fs.existsSync(SIDEBAR_URLS_PATH) ? fs.readFileSync(SIDEBAR_URLS_PATH, 'utf8') : '';
+  const statusByUrl = parseExistingStatusMap(existing);
+
+  let sections = [];
+  const sitemapUrls = await fetchSitemap(fetchFn);
+
+  if (sitemapUrls.length > 0) {
+    try {
+      const sitemapSet = new Set(sitemapUrls);
+      sections = await fetchNavSections((u) => sitemapSet.has(u), fetchFn);
+      const placed = new Set(sections.flatMap((s) => s.urls));
+      const unplaced = sitemapUrls.filter((u) => !placed.has(u));
+      if (unplaced.length > 0) sections.push({ title: 'Other', urls: unplaced });
+    } catch (e) {
+      console.warn(`HTML section fetch failed (${e?.message}); using flat sitemap section.`);
+      sections = [{ title: 'All', urls: sitemapUrls }];
+    }
+  } else {
+    sections = await fetchNavSections(() => true, fetchFn);
+  }
+
+  const totalUrls = new Set(sections.flatMap((s) => s.urls)).size;
+  if (totalUrls === 0) {
+    console.error('Fatal: 0 URLs collected. Aborting.');
+    process.exit(1);
   }
 
   const out = buildOutput({ sections, statusByUrl, existingHeader: existing });
@@ -205,10 +252,12 @@ async function main() {
 
   console.log(`Updated ${SIDEBAR_URLS_PATH}`);
   console.log(`Sections: ${sections.length}`);
-  console.log(`Total unique URLs: ${new Set(sections.flatMap((s) => s.urls)).size}`);
+  console.log(`Total unique URLs: ${totalUrls}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
