@@ -1,7 +1,7 @@
 ---
-title: 'Bamboo統合'
-description: 'BambooでTestimテストを実行する方法について説明します。プラン作成、Testim CLIのインストール、実行タスクの設定手順を提供します。'
-category: '統合'
+title: Bamboo統合
+description: BambooでTestimテストを実行する方法について説明します。プラン作成、Testim CLIのインストール、実行タスクの設定手順を提供します。
+category: 統合
 order: 12004
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/bamboo-integration'

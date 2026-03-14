@@ -1,7 +1,7 @@
 ---
-title: 'テスト結果'
-description: 'テスト実行後の結果の確認方法について説明します。全体の結果とステップごとの詳細結果の見方を学びます。'
-category: '結果'
+title: テスト結果
+description: テスト実行後の結果の確認方法について説明します。全体の結果とステップごとの詳細結果の見方を学びます。
+category: 結果
 order: 7002
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-results'
@@ -30,7 +30,7 @@ keywords:
   * テスト実行時間
   * 実行設定情報(テストのベースURL、ターゲットデバイス、アプリケーション名)
 * **テスト情報** - **i**アイコンをクリックしてテスト情報を表示します。テスト情報には以下が含まれます:
-  * Ext. version - Testim拡張機能ソフトウェアのバージョン
+  * Ext. version - Testim Extensionソフトウェアのバージョン
   * Source - テストがローカルまたはリモートで実行されたか
   * Run mode - 実行で使用されたフレームワーク(例: Appium)
   * Grid name - 実行で使用されたグリッド

@@ -1,7 +1,7 @@
 ---
-title: 'ブランチ管理'
-description: '原文: https://help.testim.io/docs/version-control-branches'
-category: 'TestOps'
+title: ブランチ管理
+description: チームの開発プロセスに応じてテストを管理します。
+category: TestOps
 order: 15007
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/version-control-branches'

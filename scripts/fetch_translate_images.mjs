@@ -3,6 +3,8 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { createHash } from 'crypto';
+import matter from 'gray-matter';
+import { filterItemsBySection } from './lib/sidebar.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -10,6 +12,7 @@ const ROOT = process.cwd();
 const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
 const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
 const PUBLIC_IMAGES = path.join(ROOT, 'public', 'images');
+const DEFAULT_STATE_PATH = path.join(ROOT, 'scripts', '.cache', 'docs-state.json');
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -68,7 +71,12 @@ export function getUntranslatedList(sidebarText) {
 }
 
 export function getAllPagesList(sidebarText) {
-  return parseSidebarList(sidebarText, (status) => status === '✅' || status === '✅🔍');
+  return parseSidebarList(sidebarText, () => true);
+}
+
+function extractUpdatedFromMarkdown(content) {
+  const match = content.match(/^updated:\s*['"]?([0-9]{4}-[0-9]{2}-[0-9]{2})['"]?\s*$/m);
+  return match?.[1] ?? null;
 }
 
 export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch) {
@@ -90,10 +98,17 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch)
       console.warn(`getDiffPagesList: network error for ${page.slug} (${e?.message}); treating as changed.`);
     }
     const hash = computeHash(content);
-    if (storedHashes[page.slug] !== hash) {
+    const previousHash =
+      typeof storedHashes[page.slug] === 'string' ? storedHashes[page.slug] : storedHashes[page.slug]?.hash;
+    if (previousHash !== hash) {
       changed.push(page);
     }
-    newHashes[page.slug] = hash;
+    newHashes[page.slug] = {
+      sourceUrl: page.url,
+      hash,
+      updated: extractUpdatedFromMarkdown(content),
+      checkedAt: new Date().toISOString(),
+    };
   }
 
   fs.mkdirSync(path.dirname(hashesPath), { recursive: true });
@@ -105,6 +120,10 @@ export function parseMode(argv) {
   const flag = argv.find((a) => a.startsWith('--mode='));
   if (!flag) return null;
   return flag.split('=')[1];
+}
+
+function parseSection(argv) {
+  return argv.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
 }
 
 function computeHash(content) {
@@ -153,12 +172,12 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug) {
     const re = new RegExp(p.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
     updated = updated.replace(re, p.local);
   }
-  updated = updated.replace(/<Image\b[^>]*src=\"([^\"]+)\"[^>]*\/>/g, (m, src) => `![](${src})`);
+  updated = updated.replace(/<Image\b[^>]*src=\"([^\"]+)\"[^>]*\/>/g, (_match, src) => `![](${src})`);
   return updated;
 }
 
 export function rewriteDocLinks(markdown) {
-  return markdown.replace(/\]\(doc:([a-z0-9\-]+)(#[^)]+)?\)/g, (m, slug, frag = '') => {
+  return markdown.replace(/\]\(doc:([a-z0-9\-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
     const tail = frag || '';
     return `](/docs/${slug}${tail})`;
   });
@@ -169,21 +188,79 @@ function extractTitle(md) {
   return m ? m[1].trim() : '';
 }
 
-function buildFrontmatter(item, title, categoryFolder, extra = {}) {
-  const keywords = ['testim', item.slug, toKebab(item.categoryEnglish)];
-  const lines = [
-    '---',
-    `title: '${title.replace(/'/g, "''")}'`,
-    `description: '原文: ${item.url}'`,
-    `category: '${item.categoryJapanese}'`,
-    `order: ${item.order}`,
-    `updated: '${todayStr}'`,
-    'keywords:',
-    ...keywords.map((k) => `  - ${k}`),
-    '---',
-    '',
-  ];
-  return lines.join('\n');
+function stripMarkdown(text) {
+  return String(text)
+    .replace(/!\[[^\]]*]\([^)]+\)/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/[*_>#-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function generateDescription(title, content) {
+  const lines = content.split('\n');
+  let current = [];
+
+  const flush = () => {
+    if (!current.length) return '';
+    return stripMarkdown(current.join(' '));
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      const candidate = flush();
+      if (candidate) return candidate.slice(0, 120);
+      current = [];
+      continue;
+    }
+    if (
+      /^#/.test(line) ||
+      /^:{3,}/.test(line) ||
+      /^```/.test(line) ||
+      /^!\[/.test(line) ||
+      /^<[^>]+>/.test(line) ||
+      /^[-*+]\s/.test(line) ||
+      /^\d+\.\s/.test(line)
+    ) {
+      continue;
+    }
+    current.push(line);
+  }
+
+  const fallback = flush();
+  if (fallback) return fallback.slice(0, 120);
+  return `${title} に関する日本語ドキュメントです。`;
+}
+
+function buildFrontmatter(item, existingFilePath, fallbackTitle) {
+  const raw = fs.readFileSync(existingFilePath, 'utf8');
+  const parsed = matter(raw);
+  const data = parsed.data ?? {};
+  const body = parsed.content ?? '';
+  const keywords =
+    Array.isArray(data.keywords) && data.keywords.length > 0
+      ? data.keywords
+      : ['testim', item.slug, toKebab(item.categoryEnglish)];
+
+  const description =
+    typeof data.description === 'string' && data.description.trim() && !/^原文:\s*/u.test(data.description)
+      ? data.description.trim()
+      : generateDescription(data.title || fallbackTitle, body);
+
+  const frontmatter = {
+    ...data,
+    title: data.title || fallbackTitle,
+    description,
+    category: data.category || item.categoryJapanese,
+    order: typeof data.order === 'number' ? data.order : item.order,
+    updated: data.updated || todayStr,
+    sourceUrl: item.url,
+    keywords,
+  };
+
+  return matter.stringify('', frontmatter).trimEnd() + '\n\n';
 }
 
 async function processOne(item, slugIndex) {
@@ -208,7 +285,7 @@ async function processOne(item, slugIndex) {
   const title = extractTitle(md) || item.slug.replace(/-/g, ' ');
   md = md.replace(/^#\s+.+\n+/, '');
 
-  const fm = buildFrontmatter(item, title, categoryFolder);
+  const fm = buildFrontmatter(item, filePath, title);
   const final = fm + md.trim() + '\n';
   await fs.promises.writeFile(filePath, final, 'utf8');
   console.log(`✓ Wrote ${path.relative(ROOT, filePath)}`);
@@ -220,6 +297,7 @@ async function main() {
   const onlySlug = args.find((a) => a.startsWith('--slug='))?.split('=')[1];
   const limit = Number(args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '0');
   const mode = parseMode(args);
+  const section = parseSection(args);
 
   const sidebarText = fs.readFileSync(SIDEBAR_FILE, 'utf8');
   const slugIndex = buildSlugIndex();
@@ -228,11 +306,12 @@ async function main() {
   if (mode === 'full') {
     list = getAllPagesList(sidebarText);
   } else if (mode === 'diff') {
-    const hashesPath = path.join(ROOT, 'scripts', '.cache', 'page-hashes.json');
+    const hashesPath = DEFAULT_STATE_PATH;
     list = await getDiffPagesList(sidebarText, hashesPath);
   } else {
     list = getUntranslatedList(sidebarText);
   }
+  list = filterItemsBySection(list, section);
 
   let done = 0;
   for (const item of list) {

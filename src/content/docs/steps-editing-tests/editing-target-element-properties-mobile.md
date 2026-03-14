@@ -1,9 +1,12 @@
 ---
-title: 'ターゲット要素のプロパティ編集(モバイル)'
-description: 'モバイルテストにおけるターゲット要素の編集方法を学びます。要素のハイライト、再割り当て、ロケーターの表示、機械学習モード、Vision Locateについて解説します。'
-category: 'テスト編集'
+title: ターゲット要素のプロパティ編集(モバイル)
+description: >-
+  モバイルテストにおけるターゲット要素の編集方法を学びます。要素のハイライト、再割り当て、ロケーターの表示、機械学習モード、Vision
+  Locateについて解説します。
+category: テスト編集
 order: 4004
 updated: '2025-09-13'
+sourceUrl: 'https://help.testim.io/docs/editing-target-element-properties-mobile'
 keywords:
   - モバイル
   - ターゲット要素

@@ -1,7 +1,7 @@
 ---
-title: 'Enhanced Mode モバイルテスト'
-description: 'TestimのEnhanced Modeを使用したモバイルアプリケーションのテスト方法'
-category: '概要'
+title: Enhanced Mode モバイルテスト
+description: TestimのEnhanced Modeを使用したモバイルアプリケーションのテスト方法
+category: 概要
 order: 1006
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/enhanced-mode-mobile'

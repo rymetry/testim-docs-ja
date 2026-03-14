@@ -1,7 +1,7 @@
 ---
-title: 'テスト構成の設定'
-description: 'モバイルテストの構成パラメータを設定し、デフォルト構成を上書きする方法について説明します。'
-category: 'テストの記録'
+title: テスト構成の設定
+description: モバイルテストの構成パラメータを設定し、デフォルト構成を上書きする方法について説明します。
+category: テストの記録
 order: 3007
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/setting-the-test-configuration'

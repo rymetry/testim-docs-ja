@@ -1,7 +1,9 @@
 ---
-title: 'Salesforce 自動ログインステップ'
-description: 'Salesforce 環境（本番・サンドボックス）にユーザー名とパスワードで自動ログインし、毎回ログイン手順を記録せずにテストを開始できる専用ステップについて説明します。'
-category: '高度な編集'
+title: Salesforce 自動ログインステップ
+description: >-
+  Salesforce
+  環境（本番・サンドボックス）にユーザー名とパスワードで自動ログインし、毎回ログイン手順を記録せずにテストを開始できる専用ステップについて説明します。
+category: 高度な編集
 order: 5058
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/salesforce-auto-login-step'

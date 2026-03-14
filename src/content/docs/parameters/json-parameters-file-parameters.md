@@ -1,7 +1,7 @@
 ---
-title: 'JSON パラメータファイル'
-description: '原文: https://help.testim.io/docs/json-parameters-file-parameters'
-category: '高度な編集'
+title: JSON パラメータファイル
+description: JSON パラメータファイルでテストに値を渡す
+category: 高度な編集
 order: 5043
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/json-parameters-file-parameters'

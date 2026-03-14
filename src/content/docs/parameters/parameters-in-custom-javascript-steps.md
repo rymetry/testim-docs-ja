@@ -1,7 +1,7 @@
 ---
-title: 'ステッププロパティパネルのパラメータ'
-description: '原文: https://help.testim.io/docs/parameters-in-custom-javascript-steps'
-category: '高度な編集'
+title: ステッププロパティパネルのパラメータ
+description: ステップのプロパティパネル（JavaScript/HTML）でパラメータを定義する
+category: 高度な編集
 order: 5041
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters-in-custom-javascript-steps'

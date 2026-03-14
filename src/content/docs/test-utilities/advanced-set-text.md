@@ -1,7 +1,7 @@
 ---
-title: '動的なテキスト入力'
-description: 'JavaScript式やパラメーターを組み合わせてSet textステップに動的な値を設定する方法を学びます。'
-category: '高度な編集'
+title: 動的なテキスト入力
+description: JavaScript式やパラメーターを組み合わせてSet textステップに動的な値を設定する方法を学びます。
+category: 高度な編集
 order: 5001
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/advanced-set-text'

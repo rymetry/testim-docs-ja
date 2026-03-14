@@ -1,7 +1,7 @@
 ---
-title: 'ステップのプロパティ編集'
-description: 'ステップ作成後にプロパティを編集する方法を学びます。一般プロパティと専門プロパティの設定方法を詳しく解説します。'
-category: 'テスト編集'
+title: ステップのプロパティ編集
+description: ステップ作成後にプロパティを編集する方法を学びます。一般プロパティと専門プロパティの設定方法を詳しく解説します。
+category: テスト編集
 order: 4005
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/editing-a-steps-properties'

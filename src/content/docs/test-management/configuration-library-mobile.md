@@ -1,7 +1,7 @@
 ---
-title: '構成ライブラリ - モバイル'
-description: 'テストを実行するために使用されるシステム仕様を決定するモバイル構成を管理します'
-category: 'テスト管理'
+title: 構成ライブラリ - モバイル
+description: テストを実行するために使用されるシステム仕様を決定するモバイル構成を管理します
+category: テスト管理
 order: 9011
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/configuration-library-mobile'
@@ -61,7 +61,7 @@ keywords:
 5. **Static Allocation** オプションを選択した場合、**Devices** セクションで、テストで使用したい特定のデバイスのチェックボックスを選択します。このデバイスのリストから、Testim は、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスを選択します。
 
 > 📘 注意:
-> 複数のデバイスを選択した場合でも、Testim はテスト実行中に使用される1つのデバイスのみを選択します。このデバイスは、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスです。SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/app-automate/appium/dynamic-device-allocation) を参照してください。
+> 複数のデバイスを選択した場合でも、Testim はテスト実行中に使用される1つのデバイスのみを選択します。このデバイスは、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスです。SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/appium/dynamic-device-allocation) を参照してください。
 
 6. **Dynamic Allocation** オプションを選択した場合、**Rules** で、次の操作を行って条件に一致するデバイスを動的に選択するルールを定義します:
    1. **Field** で、デバイスをフィルタリングする条件を選択します。たとえば、**OS Version** を選択して、オペレーティングシステムのバージョンでフィルタリングします。条件のリストは、その特定のプロバイダーによって提供される機能に基づいて、異なるグリッドプロバイダーでは若干異なる場合があります。

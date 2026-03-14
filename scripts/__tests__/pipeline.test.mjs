@@ -22,9 +22,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-let parseArgs, loadCheckpoint, saveCheckpoint;
+let parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps;
 before(async () => {
-  ({ parseArgs, loadCheckpoint, saveCheckpoint } = await import('../pipeline.mjs'));
+  ({ parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps } = await import('../pipeline.mjs'));
 });
 
 // ---------------------------------------------------------------------------
@@ -51,6 +51,12 @@ describe('parseArgs', () => {
   it('handles combined flags', () => {
     const result = parseArgs(['--mode=full']);
     assert.equal(result.mode, 'full');
+  });
+
+  it('parses section and resume flags', () => {
+    const result = parseArgs(['--mode=full', '--section=Overview', '--no-resume']);
+    assert.equal(result.section, 'Overview');
+    assert.equal(result.resume, false);
   });
 });
 
@@ -144,5 +150,20 @@ describe('checkpoint step update', () => {
     assert.equal(updated.step, 'fetch_done');
     assert.equal(updated.completed_phase, 'PR-0a');
     assert.equal(updated.mode, 'full');
+  });
+});
+
+describe('getPendingSteps', () => {
+  it('returns all steps when resume is disabled', () => {
+    const steps = getPendingSteps({ step: 'fetch_done', mode: 'diff' }, { resume: false, mode: 'diff' });
+    assert.deepEqual(steps, ['url_collect', 'placeholders', 'fetch', 'prepare_llm', 'apply_llm']);
+  });
+
+  it('skips completed steps when checkpoint matches mode and section', () => {
+    const steps = getPendingSteps(
+      { step: 'fetch_done', mode: 'diff', section: 'Overview' },
+      { resume: true, mode: 'diff', section: 'Overview' }
+    );
+    assert.deepEqual(steps, ['prepare_llm', 'apply_llm']);
   });
 });

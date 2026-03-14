@@ -1,7 +1,7 @@
 ---
-title: '削除'
-description: '表示中のSalesforceレコードを削除します。'
-category: 'Salesforceテスト'
+title: 削除
+description: 表示中のSalesforceレコードを削除します。
+category: Salesforceテスト
 order: 16028
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-delete'

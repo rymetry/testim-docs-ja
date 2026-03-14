@@ -1,7 +1,7 @@
 ---
-title: '自動スクロール'
-description: 'ビューポート外の要素に自動的にスクロールする機能。スクロール関連の不安定性を排除してテストの安定性を向上させます。'
-category: '高度な編集'
+title: 自動スクロール
+description: ビューポート外の要素に自動的にスクロールする機能。スクロール関連の不安定性を排除してテストの安定性を向上させます。
+category: 高度な編集
 order: 5031
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/auto-scroll'

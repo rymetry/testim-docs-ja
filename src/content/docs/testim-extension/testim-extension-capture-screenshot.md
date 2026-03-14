@@ -1,11 +1,13 @@
 ---
-title: 'Testim拡張機能 - スクリーンショットをキャプチャ'
-description: '原文: https://help.testim.io/docs/testim-extension-capture-screenshot'
-category: 'Testim拡張機能'
+title: Testim Extension - スクリーンショットをキャプチャ
+description: >-
+  Testim拡張機能のスクリーンショットキャプチャ機能を使用すると、Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加し、Jira、Slack、Trello、Githubなどのバグトラッキングシステムにバグ/問
+category: Testim Extension
 order: 17002
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/testim-extension-capture-screenshot'
 keywords:
-  - Testim拡張機能
+  - Testim Extension
   - スクリーンショット
   - キャプチャ
   - 注釈ツール
@@ -16,21 +18,21 @@ keywords:
   - GitHub
 ---
 
-Testim拡張機能のスクリーンショットキャプチャ機能を使用すると、Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加し、Jira、Slack、Trello、Githubなどのバグトラッキングシステムにバグ/問題として送信できます。\
+Testim Extensionのスクリーンショットキャプチャ機能を使用すると、Webページのスクリーンショットをキャプチャし、注釈(矢印、テキストなど)を追加し、Jira、Slack、Trello、Githubなどのバグトラッキングシステムにバグ/問題として送信できます。\
 バグトラッカーにバグを送信するには、まずTestimをバグトラッキングシステムに接続する必要があります。詳細については、&lt;バグトラッカー設定ページへの参照を追加&gt;を参照してください。\
-スクリーンショットキャプチャ機能を使用するには、Testim拡張機能をダウンロードする必要があります。Testim拡張機能をダウンロードするには - [こちらをクリック](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)してください。
+スクリーンショットキャプチャ機能を使用するには、Testim Extensionをダウンロードする必要があります。Testim Extensionをダウンロードするには - [こちらをクリック](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)してください。
 
 ## スクリーンショットのキャプチャと注釈の追加
 
 :fa-arrow-right: スクリーンショットをキャプチャして注釈を付けるには:
 
-1. Webブラウザで、キャプチャしたいWebページに移動し、**Testim拡張機能**アイコンをクリックします。
+1. Webブラウザで、キャプチャしたいWebページに移動し、**Testim Extension**アイコンをクリックします。
 2. Testimにログインしていない場合は、**Login** To **Start**をクリックします。すでにログインしている場合は、ステップ5に進みます。
 3. 開いた新しいタブでログインプロセスを完了し、前のタブに戻ります。
-4. 再度**Testim拡張機能**アイコンをクリックします。\
+4. 再度**Testim Extension**アイコンをクリックします。\
    拡張機能メニューが開きます。
 
-![Testim拡張機能メニュー](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
+![Testim Extensionメニュー](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
 
 5. **Capture Screenshot**をクリックします。\
    画面が固定され、注釈ツールバーが表示されます。

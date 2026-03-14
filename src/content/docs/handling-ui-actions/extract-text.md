@@ -1,7 +1,7 @@
 ---
-title: '値の抽出ステップ'
-description: 'Webまたはモバイルアプリケーションからテキストや値を抽出し、後のステップで使用する方法を学びます。'
-category: '高度な編集'
+title: 値の抽出ステップ
+description: Webまたはモバイルアプリケーションからテキストや値を抽出し、後のステップで使用する方法を学びます。
+category: 高度な編集
 order: 5037
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/extract-text'
@@ -133,7 +133,7 @@ Webまたはモバイルアプリケーションから直接値をコピーし�
 
 :fa-arrow-right: **抽出変数を使用するには:**
 
-1. テキスト検証ステップを記録します。(テキスト検証の詳細は[こちら](/docs/validations/validations)をご覧ください)
+1. テキスト検証ステップを記録します。(テキスト検証の詳細は[こちら](/docs/validations)をご覧ください)
 2. テキスト検証ステップの**プロパティパネル**を開きます。
 
 ![テキストプロパティ](/images/handling-ui-actions/extract-text/e403d66-text-properties.png)

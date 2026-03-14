@@ -1,7 +1,7 @@
 ---
-title: 'カスタムテスト機能'
-description: '原文: https://help.testim.io/docs/custom-capabilities'
-category: '統合'
+title: カスタムテスト機能
+description: すべてのグリッドで高度なテスト構成（機能）を追加する方法
+category: 統合
 order: 12029
 updated: '2024-11-21'
 sourceUrl: 'https://help.testim.io/docs/custom-capabilities'

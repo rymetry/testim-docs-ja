@@ -1,7 +1,7 @@
 ---
-title: 'テストオーナー'
-description: '原文: https://help.testim.io/docs/test-owner'
-category: 'TestOps'
+title: テストオーナー
+description: テストにオーナーを割り当てて、作業負荷をスケーリングしながら冗長性を最小化します
+category: TestOps
 order: 15004
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/test-owner'

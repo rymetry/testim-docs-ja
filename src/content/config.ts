@@ -7,8 +7,8 @@ const docs = defineCollection({
     description: z.string(),
     category: z.string(),
     order: z.number().default(0),
-    updated: z.string().optional(),
-    sourceUrl: z.string().url().optional(),
+    updated: z.string(),
+    sourceUrl: z.string().url(),
     hero: z
       .object({
         eyebrow: z.string().optional(),

@@ -1,19 +1,19 @@
 ---
-title: '見積品目エディターアクション'
-description: 'CPQの見積品目エディターで、入力・検証・値の保存を行います。'
-category: 'Salesforceテスト'
+title: 見積品目エディターアクション
+description: CPQの見積品目エディターで、入力・検証・値の保存を行います。
+category: Salesforceテスト
 order: 16022
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-quotelineeditor'
 keywords:
-   - Salesforce
-   - CPQ
-   - 見積
-   - 見積品目
-   - 検証
-   - 入力
-   - Salesforceステップ
-   - Testim for Salesforce
+  - Salesforce
+  - CPQ
+  - 見積
+  - 見積品目
+  - 検証
+  - 入力
+  - Salesforceステップ
+  - Testim for Salesforce
 ---
 
 > 📘 Salesforce ステップ

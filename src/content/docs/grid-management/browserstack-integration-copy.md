@@ -1,7 +1,8 @@
 ---
-title: 'SauceLabs/BrowserStackオプション'
-description: 'SauceLabsおよびBrowserStackで利用可能な高度な設定オプションを説明します。タイムゾーン、画面解像度、デバイス設定、その他のカスタマイズ方法を網羅しています。'
-category: '統合'
+title: SauceLabs/BrowserStackオプション
+description: >-
+  SauceLabsおよびBrowserStackで利用可能な高度な設定オプションを説明します。タイムゾーン、画面解像度、デバイス設定、その他のカスタマイズ方法を網羅しています。
+category: 統合
 order: 12028
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/browserstack-integration-copy'

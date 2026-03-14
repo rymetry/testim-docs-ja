@@ -1,7 +1,9 @@
 ---
-title: 'Bitbucket統合'
-description: 'TestimとBitbucketを統合してバージョン管理とCI/CDパイプラインを連携させる方法を説明します。リポジトリ接続、Bitbucket Pipelines設定、自動テスト実行を網羅しています。'
-category: '統合'
+title: Bitbucket統合
+description: >-
+  TestimとBitbucketを統合してバージョン管理とCI/CDパイプラインを連携させる方法を説明します。リポジトリ接続、Bitbucket
+  Pipelines設定、自動テスト実行を網羅しています。
+category: 統合
 order: 12032
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/bitbucket-integration'

@@ -98,10 +98,10 @@ describe('getUntranslatedList', () => {
 });
 
 // ---------------------------------------------------------------------------
-// getAllPagesList (new) — returns ✅ and ✅🔍 items (full mode source)
+// getAllPagesList (new) — returns all sidebar items (full mode source)
 // ---------------------------------------------------------------------------
 describe('getAllPagesList', () => {
-  it('returns ✅ items', () => {
+  it('includes ✅ and ⏳ items', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
@@ -110,8 +110,9 @@ describe('getAllPagesList', () => {
       '',
     ].join('\n');
     const list = getAllPagesList(sidebarText);
-    assert.equal(list.length, 1);
+    assert.equal(list.length, 2);
     assert.equal(list[0].slug, 'testim-overview');
+    assert.equal(list[1].slug, 'getting-started');
   });
 
   it('returns ✅🔍 items', () => {
@@ -126,7 +127,7 @@ describe('getAllPagesList', () => {
     assert.equal(list[0].slug, 'testim-overview');
   });
 
-  it('excludes ⏳ items', () => {
+  it('includes ⏳ items when they exist', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
@@ -134,7 +135,8 @@ describe('getAllPagesList', () => {
       '',
     ].join('\n');
     const list = getAllPagesList(sidebarText);
-    assert.equal(list.length, 0);
+    assert.equal(list.length, 1);
+    assert.equal(list[0].slug, 'getting-started');
   });
 });
 
@@ -227,7 +229,9 @@ describe('getDiffPagesList', () => {
 
     const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
     assert.ok('my-page' in saved, 'hash for my-page must be persisted');
-    assert.equal(typeof saved['my-page'], 'string');
+    assert.equal(typeof saved['my-page'], 'object');
+    assert.equal(saved['my-page'].sourceUrl, 'https://help.testim.io/docs/my-page');
+    assert.equal(typeof saved['my-page'].hash, 'string');
   });
 
   it('treats fetch network error as changed', async () => {

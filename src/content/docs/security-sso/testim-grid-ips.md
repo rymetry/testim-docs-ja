@@ -1,9 +1,11 @@
 ---
-title: 'TestimとLambdaTestグリッドのIP'
-description: '原文: https://help.testim.io/docs/testim-grid-ips'
-category: 'セキュリティ'
+title: TestimとLambdaTestグリッドのIP
+description: >-
+  環境が公開されているが制限されている場合、テスト対象の環境にグリッドブラウザがアクセスできるように、グリッドブラウザのIPをホワイトリストに登録する必要があります。
+category: セキュリティ
 order: 18001
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/testim-grid-ips'
 keywords:
   - IPホワイトリスト
   - Testimグリッド

@@ -1,7 +1,7 @@
 ---
-title: 'ネットワークログ'
-description: 'ステップレベルとテストレベルでのネットワークログの表示方法。リクエスト情報、HTTPヘッダー、HARファイルのダウンロード。'
-category: '結果'
+title: ネットワークログ
+description: ステップレベルとテストレベルでのネットワークログの表示方法。リクエスト情報、HTTPヘッダー、HARファイルのダウンロード。
+category: 結果
 order: 7004
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/network-logs'

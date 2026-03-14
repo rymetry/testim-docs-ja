@@ -1,7 +1,7 @@
 ---
-title: '要素属性の検証（モバイル）'
-description: '要素の属性値が期待通りであることを検証するステップ。HTML属性やDOMプロパティの値を確認し、要素の状態を詳細に検証できます。'
-category: '高度な編集'
+title: 要素属性の検証（モバイル）
+description: 要素の属性値が期待通りであることを検証するステップ。HTML属性やDOMプロパティの値を確認し、要素の状態を詳細に検証できます。
+category: 高度な編集
 order: 5012
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/validate-element-attribute'

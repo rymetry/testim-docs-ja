@@ -1,17 +1,18 @@
 ---
-title: 'ビジュアルエディターでのデータ駆動テストの設定'
-description: 'ビジュアルエディターでテストデータを追加し、複数のデータセットで同じテストを実行する方法を解説します。'
-category: '高度な編集'
+title: Visual Editorでのデータ駆動テストの設定
+description: Visual Editorでテストデータを追加し、複数のデータセットで同じテストを実行する方法を解説します。
+category: 高度な編集
 order: 5027
 updated: '2025-09-15'
-sourceUrl: 'https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor'
+sourceUrl: >-
+  https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor
 keywords:
   - データ駆動テスト
   - テストデータ
   - CSV
   - Excel
   - パラメータ
-  - ビジュアルエディター
+  - Visual Editor
   - Setupステップ
   - ファイルアップロード
   - データセット
@@ -70,7 +71,7 @@ return行の括弧は残しておく必要があります。
 
 "username": "tomsmith", "password": "SuperSecretPassword!"
 
-エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UIで提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/running-tests/scheduler) を使用する必要があります。
+エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UIで提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/scheduler) を使用する必要があります。
 
 ## CSV/Excelファイルをアップロードしてテストデータを追加
 

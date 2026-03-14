@@ -1,7 +1,7 @@
 ---
-title: 'ラベル'
-description: 'テストにラベルを追加して整理し、フィルタリングやテストプランの作成に活用する方法について説明します。'
-category: 'テスト管理'
+title: ラベル
+description: テストにラベルを追加して整理し、フィルタリングやテストプランの作成に活用する方法について説明します。
+category: テスト管理
 order: 9008
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/labels'

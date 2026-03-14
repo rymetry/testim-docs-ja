@@ -1,7 +1,9 @@
 ---
-title: '設定ファイル'
-description: 'Testim の CLI で使用する設定ファイル（config）で、プロジェクトやテスト実行のパラメータ、実行フック（before/after test・suite）を定義する方法を説明します。'
-category: 'テスト実行'
+title: 設定ファイル
+description: >-
+  Testim の CLI で使用する設定ファイル（config）で、プロジェクトやテスト実行のパラメータ、実行フック（before/after
+  test・suite）を定義する方法を説明します。
+category: テスト実行
 order: 6011
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/configuration-file-run-hooks'
@@ -141,7 +143,7 @@ beforeTest: function(test) {
 
 設定ファイルの `beforeTest` フック内で、テストのベースURLを取得し、変数を任意の値に更新できます。\
 次の例では、現在のベースURLを取得して、任意の文字列を付与したURLに更新しています。\
-パラメータの利用については[設定ファイルのパラメータ](/docs/parameters/configuration-file-parameters)も参照してください。
+パラメータの利用については[設定ファイルのパラメータ](/docs/configuration-file-parameters)も参照してください。
 
 ```javascript
 exports.config = {

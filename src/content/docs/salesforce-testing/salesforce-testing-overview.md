@@ -1,7 +1,9 @@
 ---
-title: 'Salesforceテスト'
-description: 'Testim for Salesforce（TTA for Salesforce）の概要と、はじめに・環境接続・テスト作成などの主要リソースへの導線をまとめます。'
-category: 'Salesforceテスト'
+title: Salesforceテスト
+description: >-
+  Testim for Salesforce（TTA for
+  Salesforce）の概要と、はじめに・環境接続・テスト作成などの主要リソースへの導線をまとめます。
+category: Salesforceテスト
 order: 16001
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/salesforce-testing-overview'

@@ -1,7 +1,9 @@
 ---
-title: 'Testim REST APIアクセス'
-description: 'Testim Automate REST APIを使用してブランチ管理、テスト実行、結果取得などを行う方法について説明します。APIキーの生成と管理手順を提供します。'
-category: '管理'
+title: Testim REST APIアクセス
+description: >-
+  Testim Automate REST
+  APIを使用してブランチ管理、テスト実行、結果取得などを行う方法について説明します。APIキーの生成と管理手順を提供します。
+category: 管理
 order: 14001
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/api-access'

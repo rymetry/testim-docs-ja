@@ -1,7 +1,7 @@
 ---
-title: 'テスト実行PDFレポート'
-description: 'テスト実行結果をPDFレポートとしてエクスポートする方法について説明します。3種類のレポート形式から選択できます。'
-category: '結果'
+title: テスト実行PDFレポート
+description: テスト実行結果をPDFレポートとしてエクスポートする方法について説明します。3種類のレポート形式から選択できます。
+category: 結果
 order: 7015
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-run-pdf-report'

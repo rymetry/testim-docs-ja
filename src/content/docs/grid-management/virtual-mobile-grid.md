@@ -1,7 +1,9 @@
 ---
-title: 'Virtual Mobile Grid（VMG）'
-description: 'Testim Virtual Mobile Grid（VMG）を使用してクラウド上の実デバイスでモバイルテストを実行する詳細な手順を説明します。デバイス選択、アプリアップロード、テスト実行方法を網羅しています。'
-category: '統合'
+title: Virtual Mobile Grid（VMG）
+description: >-
+  Testim Virtual Mobile
+  Grid（VMG）を使用してクラウド上の実デバイスでモバイルテストを実行する詳細な手順を説明します。デバイス選択、アプリアップロード、テスト実行方法を網羅しています。
+category: 統合
 order: 12024
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/virtual-mobile-grid'

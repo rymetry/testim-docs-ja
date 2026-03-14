@@ -1,7 +1,7 @@
 ---
-title: 'デバッグコントロール'
-description: 'テスト開発者がテストの問題を特定・修正するためのデバッグコントロールの使用方法について説明します。'
-category: 'デバッグ'
+title: デバッグコントロール
+description: テスト開発者がテストの問題を特定・修正するためのデバッグコントロールの使用方法について説明します。
+category: デバッグ
 order: 8002
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/debugging-controls'

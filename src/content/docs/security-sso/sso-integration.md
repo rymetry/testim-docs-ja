@@ -1,9 +1,10 @@
 ---
-title: 'SSO統合'
-description: '原文: https://help.testim.io/docs/sso-integration'
-category: 'セキュリティ'
+title: SSO統合
+description: シングルサインオンサービスをTestimと統合する
+category: セキュリティ
 order: 18002
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/sso-integration'
 keywords:
   - SSO
   - シングルサインオン

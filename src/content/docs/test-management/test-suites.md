@@ -1,7 +1,7 @@
 ---
-title: 'テストスイート'
-description: 'テストをテストスイートに整理し、実行順序を管理する方法について説明します。'
-category: 'テスト管理'
+title: テストスイート
+description: テストをテストスイートに整理し、実行順序を管理する方法について説明します。
+category: テスト管理
 order: 9014
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-suites'

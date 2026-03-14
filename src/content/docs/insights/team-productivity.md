@@ -1,9 +1,10 @@
 ---
-title: 'チーム生産性'
-description: '原文: https://help.testim.io/docs/team-productivity'
-category: 'TestOps'
+title: チーム生産性
+description: チームの作業と生産性をより見やすく把握します
+category: TestOps
 order: 15014
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/team-productivity'
 keywords:
   - チーム生産性
   - 生産性レポート

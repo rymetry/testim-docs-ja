@@ -1,7 +1,7 @@
 ---
-title: 'カスタムアクションステップ（モバイル）'
-description: 'モバイル向けカスタムアクションステップで Appium コマンドを使った高度な操作や検証を実装する方法を説明します。'
-category: '高度な編集'
+title: カスタムアクションステップ（モバイル）
+description: モバイル向けカスタムアクションステップで Appium コマンドを使った高度な操作や検証を実装する方法を説明します。
+category: 高度な編集
 order: 5055
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/custom-action-step-mobile'

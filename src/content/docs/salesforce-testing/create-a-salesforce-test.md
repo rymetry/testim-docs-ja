@@ -1,7 +1,7 @@
 ---
-title: 'Salesforceテストの作成'
-description: 'Salesforce環境に接続し、ペルソナやモックネットワーク、テスト設定などを利用してSalesforceテストを作成・実行する手順を説明します。'
-category: 'Salesforceテスト'
+title: Salesforceテストの作成
+description: Salesforce環境に接続し、ペルソナやモックネットワーク、テスト設定などを利用してSalesforceテストを作成・実行する手順を説明します。
+category: Salesforceテスト
 order: 16007
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/create-a-salesforce-test'
@@ -43,7 +43,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 # 前提条件
 
-- Testim Extensionをダウンロードしてインストールする - [なぜTestim拡張機能が必要ですか？](/docs/why-do-you-need-testim-extension)
+- Testim Extensionをダウンロードしてインストールする - [なぜTestim Extensionが必要ですか？](/docs/why-do-you-need-testim-extension)
 - [Salesforceテスト環境をTestim/TTA for Salesforceに接続する](/docs/create-and-manage-test-environments)。
 - [ペルソナを作成する](/docs/create-a-persona-and-add-users)。
 
@@ -204,7 +204,7 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
    <td style="text-align: left;">
     テストデータはデータ駆動テストに使用されます。詳細については、
    <a href="/docs/configuring-a-data-driven-test-from-the-visual-editor">
-     ビジュアルエディターからのデータ駆動テストの設定
+     Visual Editorからのデータ駆動テストの設定
     </a>
     を参照してください。
    </td>

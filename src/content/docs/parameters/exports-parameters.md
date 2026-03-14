@@ -1,7 +1,7 @@
 ---
-title: 'パラメータのエクスポート'
-description: '原文: https://help.testim.io/docs/exports-parameters'
-category: '高度な編集'
+title: パラメータのエクスポート
+description: テスト内のステップ間、あるいは別テスト間でパラメータを受け渡す
+category: 高度な編集
 order: 5047
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/exports-parameters'

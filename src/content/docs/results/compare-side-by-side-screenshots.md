@@ -1,7 +1,7 @@
 ---
-title: 'スクリーンショットの並列比較'
-description: 'ベースラインスクリーンショットとテスト実行結果のスクリーンショットを並べて比較する方法について説明します。'
-category: '結果'
+title: スクリーンショットの並列比較
+description: ベースラインスクリーンショットとテスト実行結果のスクリーンショットを並べて比較する方法について説明します。
+category: 結果
 order: 7003
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/compare-side-by-side-screenshots'

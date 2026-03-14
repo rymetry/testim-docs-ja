@@ -1,7 +1,7 @@
 ---
-title: 'グループのパラメータ'
-description: '原文: https://help.testim.io/docs/parameters-for-groups'
-category: '高度な編集'
+title: グループのパラメータ
+description: グループへパラメータを渡して再利用性を高める方法
+category: 高度な編集
 order: 5042
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters-for-groups'

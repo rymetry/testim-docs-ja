@@ -1,9 +1,10 @@
 ---
-title: '専用実行トンネル'
-description: '内部サーバーまたはlocalhostからTestimテストを実行するためのトンネル機能について説明します。設定方法と追加のユースケースを提供します。'
-category: '統合'
+title: 専用実行トンネル
+description: 内部サーバーまたはlocalhostからTestimテストを実行するためのトンネル機能について説明します。設定方法と追加のユースケースを提供します。
+category: 統合
 order: 12016
 updated: '2025-02-10'
+sourceUrl: 'https://help.testim.io/docs/dedicated-run-tunnel'
 keywords:
   - Dedicated Run Tunnel
   - トンネル

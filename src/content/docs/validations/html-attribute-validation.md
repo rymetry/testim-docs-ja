@@ -1,7 +1,7 @@
 ---
-title: 'HTML属性の検証（Web）'
-description: 'Web要素のHTML属性値を検証するステップ。id、class、data属性などの値が期待通りであることを確認し、動的なUI要素の状態を検証します。'
-category: '高度な編集'
+title: HTML属性の検証（Web）
+description: Web要素のHTML属性値を検証するステップ。id、class、data属性などの値が期待通りであることを確認し、動的なUI要素の状態を検証します。
+category: 高度な編集
 order: 5011
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/html-attribute-validation'

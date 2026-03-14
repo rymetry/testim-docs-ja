@@ -1,7 +1,7 @@
 ---
-title: 'カスタム検証とアクションの追加'
-description: 'カスタム検証をJavaScriptで作成する方法。標準の検証ステップでは対応できない複雑な検証ロジックを実装し、テストの柔軟性を高めます。'
-category: '高度な編集'
+title: カスタム検証とアクションの追加
+description: カスタム検証をJavaScriptで作成する方法。標準の検証ステップでは対応できない複雑な検証ロジックを実装し、テストの柔軟性を高めます。
+category: 高度な編集
 order: 5007
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/custom-code'

@@ -1,7 +1,8 @@
 ---
-title: 'グリッド管理'
-description: 'Testimで利用可能な様々なテスト実行グリッドの概要を説明します。Testimグリッド、クラウドプロバイダー、カスタムグリッドの選択と設定方法を網羅しています。'
-category: '統合'
+title: グリッド管理
+description: >-
+  Testimで利用可能な様々なテスト実行グリッドの概要を説明します。Testimグリッド、クラウドプロバイダー、カスタムグリッドの選択と設定方法を網羅しています。
+category: 統合
 order: 12022
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/grid-management'

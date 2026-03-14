@@ -1,7 +1,9 @@
 ---
-title: 'VMGを使用したモバイルテストの記録'
-description: 'Virtual Mobile Gridを使用してモバイルテストを記録する手順について説明します。Enhanced modeとAppium modeの両方に対応しています。'
-category: 'テストの記録'
+title: VMGを使用したモバイルテストの記録
+description: >-
+  Virtual Mobile Gridを使用してモバイルテストを記録する手順について説明します。Enhanced modeとAppium
+  modeの両方に対応しています。
+category: テストの記録
 order: 3005
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/recording-a-vmg-mobile-test'

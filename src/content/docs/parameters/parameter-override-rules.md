@@ -1,7 +1,7 @@
 ---
-title: 'パラメータの上書きルール'
-description: '原文: https://help.testim.io/docs/parameter-override-rules'
-category: '高度な編集'
+title: パラメータの上書きルール
+description: パラメータ使用時に発生する上書き（オーバーライド）ルールの整理
+category: 高度な編集
 order: 5046
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameter-override-rules'

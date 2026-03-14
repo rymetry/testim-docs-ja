@@ -1,12 +1,14 @@
 ---
-title: 'Salesforce向けエージェント型テスト自動化の使用'
-description: 'Agentic Test AutomationでAIエージェントにプロンプトを与え、Salesforce向けのテストを生成・実行する手順とプロンプト例を紹介します。'
-category: 'Salesforceテスト'
+title: Salesforce向けAgentic Test Automationの使用
+description: >-
+  Agentic Test
+  AutomationでAIエージェントにプロンプトを与え、Salesforce向けのテストを生成・実行する手順とプロンプト例を紹介します。
+category: Salesforceテスト
 order: 16008
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/use-agentic-test-automation-for-salesforce'
 keywords:
-  - エージェント型テスト自動化
+  - Agentic Test Automation
   - Agentic Test Automation
   - AIエージェント
   - プロンプト
@@ -20,14 +22,14 @@ keywords:
 
 AIエージェントの支援を受けて、Salesforce環境向けのユニークなテストを作成します。
 
-[ステップを手動で追加または記録する](/docs/create-a-salesforce-test)ことに加えて、エージェント型テスト自動化の支援を受けてSalesforce向けのテストを作成できます。このツールを使用すると、特別にトレーニングされたAIエージェントと協力して、Salesforce環境向けのユニークなテストを生成および実行できます。
+[ステップを手動で追加または記録する](/docs/create-a-salesforce-test)ことに加えて、Agentic Test Automationの支援を受けてSalesforce向けのテストを作成できます。このツールを使用すると、特別にトレーニングされたAIエージェントと協力して、Salesforce環境向けのユニークなテストを生成および実行できます。
 
 # 前提条件
 
-* Testim Extensionをダウンロードしてインストールする - [なぜTestim拡張機能が必要ですか？](/docs/why-do-you-need-testim-extension)
+* Testim Extensionをダウンロードしてインストールする - [なぜTestim Extensionが必要ですか？](/docs/why-do-you-need-testim-extension)
 * [Salesforceテスト環境をTestim/TTA for Salesforceに接続する](/docs/create-and-manage-test-environments)。
 
-# エージェント型テスト自動化で新しいSalesforceテストを作成する
+# Agentic Test Automationで新しいSalesforceテストを作成する
 
 :fa-arrow-right:**新しいテストを作成するには:**
 

@@ -1,7 +1,9 @@
 ---
-title: '非表示パラメータ'
-description: '原文: https://help.testim.io/docs/hidden-parameters'
-category: '高度な編集'
+title: 非表示パラメータ
+description: >-
+  テストでパラメータを使うと、実行時に使用された値がUIに保存・表示され、デバッグや原因追跡に役立ちます。一方で機微情報を扱う場合は値を表示したくないことがあります。Testim
+  では、非表示にするパラメータを定義できます。非表示パラメータは
+category: 高度な編集
 order: 5048
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hidden-parameters'

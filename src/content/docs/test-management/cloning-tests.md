@@ -1,7 +1,7 @@
 ---
-title: 'テストのクローン作成'
-description: '現在のプロジェクトまたは他のプロジェクトにテストをクローンします'
-category: 'テスト管理'
+title: テストのクローン作成
+description: 現在のプロジェクトまたは他のプロジェクトにテストをクローンします
+category: テスト管理
 order: 9004
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/cloning-tests'

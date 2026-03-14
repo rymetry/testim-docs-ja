@@ -1,7 +1,7 @@
 ---
-title: 'プロジェクトへのユーザー招待と削除'
-description: 'プロジェクトにチームメイトを招待し、削除する方法について説明します。プロジェクトオーナーの割り当ても管理できます。'
-category: '管理'
+title: プロジェクトへのユーザー招待と削除
+description: プロジェクトにチームメイトを招待し、削除する方法について説明します。プロジェクトオーナーの割り当ても管理できます。
+category: 管理
 order: 14002
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/project-user-management'

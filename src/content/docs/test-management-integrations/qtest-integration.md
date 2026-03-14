@@ -1,7 +1,8 @@
 ---
-title: 'qTest統合'
-description: 'TestimとqTestを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信、CLIでの使用方法を網羅しています。'
-category: '統合'
+title: qTest統合
+description: >-
+  TestimとqTestを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信、CLIでの使用方法を網羅しています。
+category: 統合
 order: 12039
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/qtest-integration'

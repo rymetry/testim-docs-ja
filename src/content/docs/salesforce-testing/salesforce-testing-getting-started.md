@@ -1,21 +1,21 @@
 ---
-title: 'Salesforceテストの開始'
-description: 'Salesforce環境の接続から、テストの作成・保存・実行までを一連で体験できるチュートリアルです。'
-category: 'Salesforceテスト'
+title: Salesforceテストの開始
+description: Salesforce環境の接続から、テストの作成・保存・実行までを一連で体験できるチュートリアルです。
+category: Salesforceテスト
 order: 16002
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/salesforce-testing-getting-started'
 keywords:
-   - Salesforceテスト
-   - チュートリアル
-   - Salesforce環境接続
-   - ペルソナ
-   - ログイン
-   - アプリ起動
-   - レコード作成
-   - 検証
-   - ログアウト
-   - Testim for Salesforce
+  - Salesforceテスト
+  - チュートリアル
+  - Salesforce環境接続
+  - ペルソナ
+  - ログイン
+  - アプリ起動
+  - レコード作成
+  - 検証
+  - ログアウト
+  - Testim for Salesforce
 ---
 
 ## Testim for Salesforceへようこそ

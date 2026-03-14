@@ -1,7 +1,7 @@
 ---
-title: 'プルリクエスト'
-description: '原文: https://help.testim.io/docs/pull-requests'
-category: 'TestOps'
+title: プルリクエスト
+description: master へのマージ時にプルリクエストを提出します
+category: TestOps
 order: 15009
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/pull-requests'

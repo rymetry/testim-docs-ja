@@ -156,12 +156,6 @@ describe('internal link format', () => {
 // C. Testim feature name Japanese translation check
 // ---------------------------------------------------------------------------
 describe('Testim feature name preservation', () => {
-  const ngWords = [
-    { japanese: 'Testim拡張機能', english: 'Testim Extension' },
-    { japanese: 'ビジュアルエディタ', english: 'Visual Editor' },
-    { japanese: 'テスト自動化', context: 'Testim Automate' },
-  ];
-
   it('returns error when "Testim拡張機能" appears outside code block', () => {
     const content = makeDoc({ body: 'Testim拡張機能を使ってテストを記録します。\n' });
     const errors = lintContent(content, 'src/content/docs/test.md');
@@ -228,8 +222,8 @@ describe('Markdown syntax: callout directives', () => {
     assert.equal(e.level, 'error');
   });
 
-  it('no error for known callout types (note, warning, tip, danger)', () => {
-    for (const type of ['note', 'warning', 'tip', 'danger']) {
+  it('no error for known callout types (note, warning, tip, danger, success, info)', () => {
+    for (const type of ['note', 'warning', 'tip', 'danger', 'success', 'info']) {
       const content = makeDoc({ body: `::: ${type}\nContent\n:::\n` });
       const errors = lintContent(content, 'src/content/docs/test.md');
       assert.equal(
@@ -238,6 +232,12 @@ describe('Markdown syntax: callout directives', () => {
         `"${type}" should be a valid callout type`
       );
     }
+  });
+
+  it('no error for four-colon fence with custom title', () => {
+    const content = makeDoc({ body: '::::info{title="補足"}\nContent\n::::\n' });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    assert.equal(errorsOf(['callout-unknown-type'], errors).length, 0);
   });
 });
 

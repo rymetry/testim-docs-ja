@@ -1,7 +1,7 @@
 ---
-title: 'モバイルテストの記録'
-description: 'Testimでモバイルテストを記録するための2つの方法について説明します。VMGを使用する方法とローカルデバイスを使用する方法があります。'
-category: 'テストの記録'
+title: モバイルテストの記録
+description: Testimでモバイルテストを記録するための2つの方法について説明します。VMGを使用する方法とローカルデバイスを使用する方法があります。
+category: テストの記録
 order: 3004
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/recording-a-mobile-test'

@@ -1,7 +1,9 @@
 ---
-title: '条件分岐'
-description: 'テストステップに条件を設定して実行を制御する方法を学びます。Element、Element text、Custom、Never(skip)など5種類の条件設定について詳しく解説します。'
-category: 'テスト編集'
+title: 条件分岐
+description: >-
+  テストステップに条件を設定して実行を制御する方法を学びます。Element、Element
+  text、Custom、Never(skip)など5種類の条件設定について詳しく解説します。
+category: テスト編集
 order: 4010
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/conditions'

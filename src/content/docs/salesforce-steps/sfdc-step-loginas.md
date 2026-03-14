@@ -1,17 +1,17 @@
 ---
-title: '別のユーザーとしてログイン'
-description: '管理者ユーザーとして、別のユーザーに切り替えてログインします。'
-category: 'Salesforceテスト'
+title: 別のユーザーとしてログイン
+description: 管理者ユーザーとして、別のユーザーに切り替えてログインします。
+category: Salesforceテスト
 order: 16012
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-loginas'
 keywords:
-   - Salesforce
-   - 別のユーザーとしてログイン
-   - 管理者
-   - ペルソナ
-   - Salesforceステップ
-   - Testim for Salesforce
+  - Salesforce
+  - 別のユーザーとしてログイン
+  - 管理者
+  - ペルソナ
+  - Salesforceステップ
+  - Testim for Salesforce
 ---
 
 > 📘 Salesforceステップ

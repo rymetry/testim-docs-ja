@@ -1,7 +1,7 @@
 ---
-title: 'テストステータス'
-description: '原文: https://help.testim.io/docs/test-status'
-category: 'TestOps'
+title: テストステータス
+description: どのテストに作業が必要かを管理するためにテストにステータスを追加します
+category: TestOps
 order: 15003
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/test-status'

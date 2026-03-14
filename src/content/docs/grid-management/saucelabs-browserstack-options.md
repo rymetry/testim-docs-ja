@@ -1,7 +1,8 @@
 ---
-title: 'SauceLabs/BrowserStackオプション'
-description: 'SauceLabsおよびBrowserStackで利用可能な拡張実行パラメーターの設定方法について説明します。JSONファイルでのオプション指定やCLIの使用例を提供します。'
-category: '統合'
+title: SauceLabs/BrowserStackオプション
+description: >-
+  SauceLabsおよびBrowserStackで利用可能な拡張実行パラメーターの設定方法について説明します。JSONファイルでのオプション指定やCLIの使用例を提供します。
+category: 統合
 order: 12030
 updated: '2025-11-21'
 sourceUrl: 'https://help.testim.io/docs/saucelabs-browserstack-options'
@@ -129,7 +130,7 @@ BrowserStackで利用できるケイパビリティの詳細は、公式ドキ�
 - Appiumの拡張実行パラメーターには、接頭辞なしのW3Cケイパビリティ形式を使用します。
 - BrowserStack側の拡張実行パラメーターには、レガシー（Wire JSON）形式を使用します。
 
-[Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
+[Appium caps](https://www.browserstack.com/docs/appium/debug-failed-tests/appium-logs)
 
 [Browserstack options](https://www.browserstack.com/app-automate/capabilities?tag=jsonwire) JSON File Example:
 
@@ -150,4 +151,4 @@ BrowserStackで利用できるケイパビリティの詳細は、公式ドキ�
 > 🚧 BrowserStackの証明書エラーについて
 >
 > Android 13.0以降を使用するデバイスでテストしている場合、証明書の問題によりターゲットデバイスがオフラインのように見えることがあります。この問題の詳細および解決方法については、BrowserStackのドキュメントを参照してください:  
-> [https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
+> [https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)

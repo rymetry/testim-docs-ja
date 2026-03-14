@@ -1,242 +1,126 @@
 # ドキュメント運用スクリプト
 
-このディレクトリには、order.md で定義している継続メンテナンス基盤を支えるスクリプトだけを残しています。
+`docs/SIDEBAR_URLS.md` を seed 兼 正本として扱い、初回整備は `full`、継続運用は `diff` を既定とします。再開位置は `scripts/.checkpoint` で管理します。
 
-現在の方針は次の通りです。
-- `docs/SIDEBAR_URLS.md` を seed 兼 正本として扱う
-- 初回は full モード相当で全ページを整備する
-- 継続運用では差分検知と更新確認を自動化する
-- セクション限定の一時修正スクリプトは残さない
+## 基本コマンド
 
-## スクリプト分類
-
-### 1. URL・サイドバー同期
-
-#### `update_sidebar_urls_from_live.mjs`
-
-help.testim.io のサイドバーを取得し、`docs/SIDEBAR_URLS.md` を更新します。
-
-用途:
-- seed URL の最新化
-- セクション単位の作業範囲更新
-- 翻訳対象URL一覧の再生成
-
-実行:
+### URL と seed の同期
 
 ```bash
 npm run docs:sync-sidebar
 ```
 
-注意:
-- 現在は live HTML から直接抽出します
-- order.md の要件に合わせて、今後は sitemap 優先 + フォールバック + 0件 fail-fast に強化予定です
+- `help.testim.io` の sitemap を優先し、必要ならフォールバックで URL を収集します
+- 収集件数が 0 件なら fail-fast で停止します
+- `docs/SIDEBAR_URLS.md` を更新します
 
-#### `sync_frontmatter_from_sidebar.mjs`
-
-`docs/SIDEBAR_URLS.md` を基準に、各ページの `category` と `order` を同期します。
-
-用途:
-- サイドバー順との整合維持
-- frontmatter のカテゴリ揺れ防止
-
-実行:
+### パイプライン実行
 
 ```bash
-npm run docs:sync-frontmatter
-npm run docs:sync-frontmatter:apply
+npm run docs:pipeline
+npm run docs:pipeline:full
+npm run docs:pipeline:diff
 ```
 
-### 2. 翻訳パイプライン
+- `docs:pipeline` の既定は `--mode=diff`
+- `docs:pipeline:full` は初回全件整備用です
+- `scripts/.checkpoint` を読み、同じ `mode` / `section` の続きから再開します
+- 最初からやり直す場合は `--no-resume` を付けます
 
-#### `generate_untranslated_placeholders.mjs`
+追加オプション:
 
-`docs/SIDEBAR_URLS.md` を読み、未翻訳ページのプレースホルダ Markdown を生成します。
+```bash
+npm run docs:pipeline -- --section="Overview"
+npm run docs:pipeline:full -- --section="Getting Started"
+npm run docs:pipeline -- --section="Test Management" --no-resume
+```
 
-用途:
-- 初回 full 整備の足場作成
-- 未翻訳スラッグのスキャフォールド生成
-
-実行:
+### 個別ステップ
 
 ```bash
 npm run docs:placeholders
-```
-
-#### `prepare_llm_tasks.mjs`
-
-既存 Markdown の本文を抽出して、LLM に渡す翻訳タスクファイルを `llm/tasks/` に生成します。
-
-用途:
-- LLM 翻訳の前処理
-- frontmatter を壊さず本文だけ翻訳対象に切り出す
-
-実行:
-
-```bash
-npm run docs:prepare-llm
-```
-
-#### `apply_llm_translations.mjs`
-
-`llm/translations/` 内の翻訳結果を既存ドキュメントに反映します。frontmatter は既存ファイルのものを維持します。
-
-用途:
-- LLM 翻訳結果の反映
-- 本文のみの差し替え
-
-実行:
-
-```bash
-npm run docs:apply-llm
-```
-
-### 3. 本文・画像整備
-
-#### `fetch_translate_images.mjs`
-
-英語本文から画像を取得し、ドキュメント本文中の画像参照も整備します。
-
-用途:
-- 初回 full 整備時の画像ミラー
-- `public/images/` と本文参照の同期
-
-実行:
-
-```bash
 npm run docs:fetch
+npm run docs:prepare-llm
+npm run docs:apply-llm
+npm run docs:normalize
 ```
 
-#### `fix_alt_all.mjs`
+- `docs:placeholders` は `full` 整備時の未翻訳ページの足場を生成します
+- `docs:fetch` は英語本文・画像を取得し、`scripts/.cache/docs-state.json` に差分用メタデータを保存します
+- `docs:prepare-llm` は `llm/tasks/` を生成します
+- `docs:apply-llm` は `llm/translations/` を既存 frontmatter を保ったまま反映します
+- `docs:normalize` は内部リンク、固有名詞、description を一括正規化します
 
-Markdown 内の空 alt 画像を補正します。レポジトリ全体を対象にする汎用スクリプトです。
+`--section="..."` は `docs:placeholders` / `docs:fetch` / `docs:prepare-llm` / `docs:apply-llm` / `docs:normalize` / `lint:docs` で使用できます。セクション名は `docs/SIDEBAR_URLS.md` の見出しに一致させてください。
 
-用途:
-- Markdown lint の MD045 対策
-- 画像 alt の最低限の正規化
-
-実行:
+### 品質チェック
 
 ```bash
-npm run docs:fix-alt
+npm run lint:docs
+npm test
+npm run build
 ```
 
-備考:
-- セクション限定版は削除済みです
-- 将来的には WRITING_GUIDE 準拠チェックへ統合する想定です
+- `lint:docs` は `docs/WRITING_GUIDE.md` 準拠、frontmatter、内部リンク、画像参照、英語維持ルールを検証します
+- `build` は Astro schema で `sourceUrl` / `updated` 必須を再検証します
 
-### 4. 更新日・差分検知
+## 初回 full 整備
 
-#### `check_outdated_docs.mjs`
-
-英語原文と日本語ドキュメントの更新日を比較し、更新が必要なページを検出します。
-
-用途:
-- 継続メンテナンスの差分検知
-- CI / GitHub Actions での定期チェック
-
-実行:
+セクションごとに 1 PR で進めます。
 
 ```bash
-npm run check:updates
+npm run docs:sync-sidebar
+npm run docs:pipeline:full -- --section="Overview"
+npm run lint:docs -- --section="Overview"
+npm test
+npm run build
 ```
 
-出力:
-- `docs-update-status.json`
+同じ流れを `docs/SIDEBAR_URLS.md` の順序で各セクションに繰り返します。
 
-#### `fetch_all_updated_dates.mjs`
-
-全ページの英語原文更新日をまとめて取得し、スナップショットを保存します。
-
-用途:
-- 更新日の棚卸し
-- 追跡データのスナップショット取得
-
-実行:
+## 継続メンテナンス
 
 ```bash
-npm run check:dates
+npm run docs:sync-sidebar
+npm run docs:pipeline
+npm run lint:docs
+npm test
+npm run build
 ```
 
-出力:
-- `docs-dates-snapshot.json`
+- `docs:pipeline` は既定で `diff` モードです
+- 変更がないページは `scripts/.cache/docs-state.json` の `hash` / `updated` を使ってスキップします
 
-#### `update_dates_from_english.mjs`
+## Checkpoint の扱い
 
-英語原文の更新日を日本語ドキュメントの `updated` に反映します。
+`scripts/.checkpoint` には次の情報を保存します。
 
-用途:
-- frontmatter の更新日同期
-
-実行:
-
-```bash
-npm run update:dates
-npm run update:dates:apply
+```json
+{
+  "completed_phase": "PR-final",
+  "completed_at": "2026-03-14T00:00:00.000Z",
+  "next_phase": null,
+  "step": "apply_llm_done",
+  "mode": "diff",
+  "section": null
+}
 ```
 
-### 5. 診断・補助
+- `step` は `url_collect`, `placeholders`, `fetch`, `prepare_llm`, `apply_llm` の完了位置を表します
+- `mode` または `section` が変わった場合は、その条件で最初から実行します
+- 強制的に最初から実行したい場合は `--no-resume` を使用します
 
-#### `report_frontmatter_categories.mjs`
-
-frontmatter の `category` 分布と `docs/SIDEBAR_URLS.md` のカテゴリを比較する診断スクリプトです。
-
-用途:
-- カテゴリ揺れの可視化
-- frontmatter 整合性確認
-
-実行:
-
-```bash
-npm run docs:report-categories
-```
-
-## 残しているスクリプト
+## 関連スクリプト
 
 - `update_sidebar_urls_from_live.mjs`
-- `sync_frontmatter_from_sidebar.mjs`
 - `generate_untranslated_placeholders.mjs`
+- `fetch_translate_images.mjs`
 - `prepare_llm_tasks.mjs`
 - `apply_llm_translations.mjs`
-- `fetch_translate_images.mjs`
-- `fix_alt_all.mjs`
+- `normalize_docs.mjs`
+- `lint-docs.mjs`
 - `check_outdated_docs.mjs`
-- `fetch_all_updated_dates.mjs`
-- `update_dates_from_english.mjs`
-- `report_frontmatter_categories.mjs`
-
-## 削除したスクリプト
-
-- `fix_alt_test_management.mjs`
-  - `fix_alt_all.mjs` と役割が重複しており、対象が Test Management セクションに限定されていたため削除
-- `fix_links_test_management.mjs`
-  - セクション限定の一時修正で、今後は汎用リンク正規化または品質チェックへ統合すべきため削除
-
-## 基本ワークフロー
-
-### 初回 full 整備
-
-```bash
-npm run docs:sync-sidebar
-npm run docs:placeholders
-npm run docs:prepare-llm
-# 翻訳結果を llm/translations/ に配置
-npm run docs:apply-llm
-npm run docs:fetch
-npm run docs:sync-frontmatter:apply
-npm run update:dates:apply
-npm run docs:fix-alt
-npm run lint
-```
-
-### 継続メンテナンス
-
-```bash
-npm run docs:sync-sidebar
-npm run check:updates
-npm run check:dates
-```
-
-## 今後の統合候補
+- `sync_frontmatter_from_sidebar.mjs`
 
 - URL 収集の fail-fast と sitemap フォールバック実装
 - WRITING_GUIDE 準拠の機械チェック追加

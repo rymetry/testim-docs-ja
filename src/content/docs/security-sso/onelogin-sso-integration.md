@@ -1,9 +1,12 @@
 ---
-title: 'OneLogin SSO統合'
-description: '原文: https://help.testim.io/docs/onelogin-sso-integration'
-category: 'セキュリティ'
+title: OneLogin SSO統合
+description: >-
+  OneLogin,
+  Inc.はクラウドベースのIDおよびアクセス管理プロバイダーで、企業や組織に統合アクセス管理プラットフォームを提供しています。TestimはOneLoginと統合されており、OneLoginのユーザーはOneLoginで
+category: セキュリティ
 order: 18003
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/onelogin-sso-integration'
 keywords:
   - OneLogin
   - SSO統合

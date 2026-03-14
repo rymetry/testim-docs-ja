@@ -1,7 +1,7 @@
 ---
-title: 'Testim 概要'
-description: 'Testimは、コード、コードレス、または両方を組み合わせた方法で、回復力のあるエンドツーエンドテストを最速で作成できるプラットフォームです。'
-category: '概要'
+title: Testim 概要
+description: Testimは、コード、コードレス、または両方を組み合わせた方法で、回復力のあるエンドツーエンドテストを最速で作成できるプラットフォームです。
+category: 概要
 order: 1001
 updated: '2025-11-13'
 sourceUrl: 'https://help.testim.io/docs/testim-overview'

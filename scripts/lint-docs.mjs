@@ -8,46 +8,43 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import matter from 'gray-matter';
+import { getSectionSlugSet } from './lib/sidebar.mjs';
 
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), '../..');
 const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
+const PUBLIC_ROOT = path.join(ROOT, 'public');
 
 /** @typedef {{ file: string, line: number | null, rule: string, message: string, level: 'error' | 'warning' }} LintError */
 
-const VALID_CALLOUT_TYPES = new Set(['note', 'warning', 'tip', 'danger']);
+const VALID_CALLOUT_TYPES = new Set(['note', 'warning', 'tip', 'danger', 'success', 'info']);
 const VALID_SOURCE_URL_RE = /^https:\/\/help\.testim\.io\/docs\/[a-z0-9-]+$/;
 
-const FEATURE_NAME_NG = [
-  'Testim拡張機能',
-  'ビジュアルエディタ',
-  'テスト自動化', // context: Testim Automate
-];
-
 function parseFrontmatter(content) {
-  if (!content.startsWith('---')) {
-    return { fm: {}, bodyStart: 0 };
-  }
-  const end = content.indexOf('\n---', 3);
-  if (end === -1) {
-    return { fm: {}, bodyStart: 0 };
-  }
-  const fmText = content.slice(3, end).trim();
-  const bodyStart = end + 4; // skip closing ---\n
-  const fm = {};
-  for (const line of fmText.split('\n')) {
-    const m = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*):\s*(.+)$/);
-    if (m) {
-      fm[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '');
-    }
-  }
-  return { fm, bodyStart };
+  const parsed = matter(content);
+  const fmBlock = content.startsWith('---\n') ? content.slice(0, content.indexOf('\n---', 4) + 4) : '';
+  const bodyStart = fmBlock ? fmBlock.split('\n').length + 2 : 1;
+  return { fm: parsed.data ?? {}, body: parsed.content ?? content, bodyStart };
 }
 
 function stripCode(body) {
   let result = body.replace(/```[\s\S]*?```/g, '');
   result = result.replace(/`[^`]*`/g, '');
   return result;
+}
+
+const FEATURE_NAME_RULES = [
+  { pattern: /Testim拡張機能/g, expected: 'Testim Extension' },
+  { pattern: /Tricentis Testim拡張機能/g, expected: 'Tricentis Testim Extension' },
+  { pattern: /Testimビジュアルエディタ(?:ー)?/g, expected: 'Testim Visual Editor' },
+  { pattern: /Testim ビジュアルエディタ(?:ー)?/g, expected: 'Testim Visual Editor' },
+  { pattern: /(?<!Testim )ビジュアルエディタ(?:ー)?/g, expected: 'Visual Editor' },
+  { pattern: /エージェント型テスト自動化/g, expected: 'Agentic Test Automation' },
+];
+
+function toAbsoluteLine(bodyLineNumber, bodyStartLine) {
+  return bodyStartLine + bodyLineNumber - 1;
 }
 
 /**
@@ -65,8 +62,7 @@ export function lintContent(content, filePath) {
   const warn = (rule, message, line = null) =>
     errors.push({ file: filePath, line, rule, message, level: 'warning' });
 
-  const { fm, bodyStart } = parseFrontmatter(content);
-  const body = content.slice(bodyStart);
+  const { fm, body, bodyStart } = parseFrontmatter(content);
 
   if (!fm.sourceUrl || fm.sourceUrl === 'undefined') {
     err('sourceUrl-required', 'frontmatter: sourceUrl is required');
@@ -89,20 +85,29 @@ export function lintContent(content, filePath) {
 
   const bodyLines = body.split('\n');
   bodyLines.forEach((line, i) => {
-    const internalLinkRe = /\]\(\/docs\/([a-z0-9-]+)\/([a-z0-9-]+)/g;
+    const internalLinkRe = /\]\(\/docs\/([a-z0-9-]+)\/([a-z0-9-]+)(#[^)]+)?\)/g;
     let m;
     while ((m = internalLinkRe.exec(line)) !== null) {
-      err('internal-link-format', `Internal link must use /docs/{slug} not /docs/{folder}/{slug} (found: /docs/${m[1]}/${m[2]})`, i + 1);
+      err(
+        'internal-link-format',
+        `Internal link must use /docs/{slug} not /docs/{folder}/{slug} (found: /docs/${m[1]}/${m[2]})`,
+        toAbsoluteLine(i + 1, bodyStart)
+      );
     }
   });
 
   const bodyWithoutCode = stripCode(body);
   const bodyWithoutCodeLines = bodyWithoutCode.split('\n');
-  for (const ngWord of FEATURE_NAME_NG) {
+  for (const rule of FEATURE_NAME_RULES) {
     bodyWithoutCodeLines.forEach((line, i) => {
-      if (line.includes(ngWord)) {
-        err('feature-name-japanese', `Testim feature name "${ngWord}" must remain in English`, i + 1);
+      if (rule.pattern.test(line)) {
+        err(
+          'feature-name-japanese',
+          `Testim feature name must remain in English (use: ${rule.expected})`,
+          toAbsoluteLine(i + 1, bodyStart)
+        );
       }
+      rule.pattern.lastIndex = 0;
     });
   }
 
@@ -112,7 +117,7 @@ export function lintContent(content, filePath) {
       if (!inCodeBlock) {
         const lang = line.slice(3).trim();
         if (!lang) {
-          warn('code-block-no-language', 'Code block missing language specifier', i + 1);
+          warn('code-block-no-language', 'Code block missing language specifier', toAbsoluteLine(i + 1, bodyStart));
         }
         inCodeBlock = true;
       } else {
@@ -121,15 +126,37 @@ export function lintContent(content, filePath) {
     }
   });
 
-  const calloutRe = /^:::\s+(\S+)/gm;
+  const calloutRe = /^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$/gm;
   let calloutMatch;
   while ((calloutMatch = calloutRe.exec(body)) !== null) {
     const type = calloutMatch[1].toLowerCase();
     if (!VALID_CALLOUT_TYPES.has(type)) {
       const lineNum = body.slice(0, calloutMatch.index).split('\n').length;
-      err('callout-unknown-type', `Unknown callout type "${calloutMatch[1]}". Valid types: ${[...VALID_CALLOUT_TYPES].join(', ')}`, lineNum);
+      err(
+        'callout-unknown-type',
+        `Unknown callout type "${calloutMatch[1]}". Valid types: ${[...VALID_CALLOUT_TYPES].join(', ')}`,
+        toAbsoluteLine(lineNum, bodyStart)
+      );
     }
   }
+
+  let imageCodeBlock = false;
+  bodyLines.forEach((line, index) => {
+    if (/^```/.test(line.trim())) {
+      imageCodeBlock = !imageCodeBlock;
+      return;
+    }
+    if (imageCodeBlock) return;
+
+    const imageRe = /!\[[^\]]*]\((\/images\/[^)]+)\)|<img[^>]+src=["'](\/images\/[^"']+)["']/g;
+    let imageMatch;
+    while ((imageMatch = imageRe.exec(line)) !== null) {
+      const imagePath = imageMatch[1] ?? imageMatch[2];
+      if (!fs.existsSync(path.join(PUBLIC_ROOT, imagePath.replace(/^\//, '')))) {
+        err('image-missing', `Referenced image does not exist: ${imagePath}`, toAbsoluteLine(index + 1, bodyStart));
+      }
+    }
+  });
 
   return errors;
 }
@@ -137,6 +164,7 @@ export function lintContent(content, filePath) {
 async function main() {
   const args = process.argv.slice(2);
   const pathArg = args.find((a) => a.startsWith('--path='))?.split('=').slice(1).join('=');
+  const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
 
   let files = [];
 
@@ -148,6 +176,10 @@ async function main() {
         files.push(path.join(DOCS_ROOT, entry));
       }
     }
+  }
+  if (section) {
+    const slugSet = getSectionSlugSet(section);
+    files = files.filter((file) => slugSet.has(path.basename(file, '.md')));
   }
 
   let totalErrors = 0;

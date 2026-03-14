@@ -1,7 +1,7 @@
 ---
-title: '変更履歴'
-description: 'Testim for Salesforceの主な機能追加・改善の履歴（スクリーンショット、Login As、権限検証、SSO、CI統合など）をまとめます。'
-category: 'Salesforceテスト'
+title: 変更履歴
+description: Testim for Salesforceの主な機能追加・改善の履歴（スクリーンショット、Login As、権限検証、SSO、CI統合など）をまとめます。
+category: Salesforceテスト
 order: 16004
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/changelog'

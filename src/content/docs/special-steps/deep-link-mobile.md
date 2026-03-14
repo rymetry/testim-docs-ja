@@ -1,7 +1,7 @@
 ---
-title: 'ディープリンク（モバイル）'
-description: 'Deep Link ステップで、モバイルアプリ内の特定画面を URL スキームで直接開き、パラメータ付きのディープリンク動作を検証する方法を説明します。'
-category: '高度な編集'
+title: ディープリンク（モバイル）
+description: Deep Link ステップで、モバイルアプリ内の特定画面を URL スキームで直接開き、パラメータ付きのディープリンク動作を検証する方法を説明します。
+category: 高度な編集
 order: 5063
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/deep-link-mobile'

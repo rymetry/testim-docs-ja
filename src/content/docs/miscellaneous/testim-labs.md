@@ -1,9 +1,12 @@
 ---
-title: 'Testim Labsについて'
-description: '原文: https://help.testim.io/docs/testim-labs'
-category: 'Testim Labs'
+title: Testim Labsについて
+description: >-
+  Testim
+  Labsは、まだすべてのユーザーに公開されていない新しいTestim機能に早期アクセスできるVIP機能です。これらは「アルファ版」や「ベータ版」ではありません。これらは本番環境で使用できる機能であり、試して価値を実現し始めるこ
+category: Testim Labs
 order: 20001
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/testim-labs'
 keywords:
   - Testim Labs
   - 新機能

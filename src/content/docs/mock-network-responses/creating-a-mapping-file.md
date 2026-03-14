@@ -1,7 +1,7 @@
 ---
-title: 'マッピングファイルの作成'
-description: 'ネットワークモック用のマッピングファイルの作成方法を説明します。リクエストとレスポンスのマッピング、パススルー認証の設定方法を学びます。'
-category: 'テスト実行'
+title: マッピングファイルの作成
+description: ネットワークモック用のマッピングファイルの作成方法を説明します。リクエストとレスポンスのマッピング、パススルー認証の設定方法を学びます。
+category: テスト実行
 order: 6015
 updated: '2025-11-11'
 sourceUrl: 'https://help.testim.io/docs/creating-a-mapping-file'

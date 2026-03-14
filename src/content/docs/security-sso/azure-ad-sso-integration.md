@@ -1,9 +1,12 @@
 ---
-title: 'Azure AD SSO統合'
-description: '原文: https://help.testim.io/docs/azure-ad-sso-integration'
-category: 'セキュリティ'
+title: Azure AD SSO統合
+description: >-
+  Azure Active DirectoryはMicrosoftのクラウドベースのIDおよびアクセス管理サービスです。Azure
+  ADシームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーと
+category: セキュリティ
 order: 18005
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/azure-ad-sso-integration'
 keywords:
   - Azure AD
   - Azure Active Directory

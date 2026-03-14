@@ -1,7 +1,7 @@
 ---
-title: 'バグ報告'
-description: 'バグをキャプチャして報告する方法と、Jira、Slack、Trello、Githubなどのバグトラッカーとの連携について説明します。'
-category: 'テスト管理'
+title: バグ報告
+description: バグをキャプチャして報告する方法と、Jira、Slack、Trello、Githubなどのバグトラッカーとの連携について説明します。
+category: テスト管理
 order: 9016
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/bug-reporting'
@@ -22,7 +22,7 @@ Testimは、バグをキャプチャして報告する簡単な方法を提供�
 バグレポートは2つの方法で作成できます:
 
 * **テスト失敗のタグ付け** – テスト失敗にタグを付ける際に、テスト失敗をバグ/課題として報告することもできます。詳細な手順については、[失敗タイプでの失敗した実行のタグ付け](/docs/tag-remote-runs-failures)を参照してください。
-* **Testim拡張機能** – Testim拡張機能を使用して、Webブラウザから直接Webページで見つかったバグ（テストに関連しないもの）を報告できます。詳細な手順については、[Testim拡張機能 - ビデオとバグシナリオのキャプチャ](/docs/testim-extension-capture-video-bug-scenario)を参照してください。
+* **Testim Extension** – Testim Extensionを使用して、Webブラウザから直接Webページで見つかったバグ（テストに関連しないもの）を報告できます。詳細な手順については、[Testim Extension - ビデオとバグシナリオのキャプチャ](/docs/testim-extension-capture-video-bug-scenario)を参照してください。
 
 ## バグレポートに含めることができる内容
 

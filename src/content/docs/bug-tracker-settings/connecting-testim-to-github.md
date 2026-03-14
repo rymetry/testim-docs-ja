@@ -1,7 +1,9 @@
 ---
-title: 'TestimとGitHub（Issues）の連携'
-description: 'TestimとGitHub Issuesを連携してバグレポートをGitHubで管理する方法を説明します。統合設定、Issue作成、テスト結果とGitHubリポジトリの連携方法を網羅しています。'
-category: '統合'
+title: TestimとGitHub（Issues）の連携
+description: >-
+  TestimとGitHub
+  Issuesを連携してバグレポートをGitHubで管理する方法を説明します。統合設定、Issue作成、テスト結果とGitHubリポジトリの連携方法を網羅しています。
+category: 統合
 order: 12037
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'

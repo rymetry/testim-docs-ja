@@ -1,7 +1,7 @@
 ---
-title: 'パラメータ'
-description: '原文: https://help.testim.io/docs/parameters'
-category: '高度な編集'
+title: パラメータ
+description: パラメータの使い方をまとめて解説します。
+category: 高度な編集
 order: 5040
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters'

@@ -1,7 +1,9 @@
 ---
-title: 'AutoRABIT統合'
-description: 'AutoRABITのCIジョブからTestim REST APIを使用してテスト実行を自動化する方法について説明します。Callout URLの設定手順を提供します。'
-category: '統合'
+title: AutoRABIT統合
+description: >-
+  AutoRABITのCIジョブからTestim REST APIを使用してテスト実行を自動化する方法について説明します。Callout
+  URLの設定手順を提供します。
+category: 統合
 order: 12015
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/autorabit-integration'

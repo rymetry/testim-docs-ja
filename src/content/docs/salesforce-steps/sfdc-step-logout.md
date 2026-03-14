@@ -1,7 +1,7 @@
 ---
-title: 'ログアウト'
-description: 'Salesforceにログインしているユーザーをログアウトします。'
-category: 'Salesforceテスト'
+title: ログアウト
+description: Salesforceにログインしているユーザーをログアウトします。
+category: Salesforceテスト
 order: 16014
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-logout'

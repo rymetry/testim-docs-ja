@@ -1,7 +1,7 @@
 ---
-title: 'JSコードデバッグ'
-description: 'Chrome DevToolsを使用してコードベースのステップ内のJavaScriptコードをデバッグする方法。サポートされるステップとデバッグ手順。'
-category: 'デバッグ'
+title: JSコードデバッグ
+description: Chrome DevToolsを使用してコードベースのステップ内のJavaScriptコードをデバッグする方法。サポートされるステップとデバッグ手順。
+category: デバッグ
 order: 8005
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/js-code-debugging'

@@ -1,7 +1,7 @@
 ---
-title: 'グループコンテキスト'
-description: 'グループコンテキスト機能を使って、同じグループステップを異なる要素やタブなど複数のコンテキストで再利用する方法を説明します。'
-category: '高度な編集'
+title: グループコンテキスト
+description: グループコンテキスト機能を使って、同じグループステップを異なる要素やタブなど複数のコンテキストで再利用する方法を説明します。
+category: 高度な編集
 order: 5052
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/group-context'

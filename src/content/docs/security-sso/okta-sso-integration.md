@@ -1,9 +1,11 @@
 ---
-title: 'Okta SSO統合'
-description: '原文: https://help.testim.io/docs/okta-sso-integration'
-category: 'セキュリティ'
+title: Okta SSO統合
+description: >-
+  OktaはIDおよびアクセス管理サービスプロバイダーです。TestimはOktaと統合されており、OktaユーザーはOktaで一度認証すれば、再度認証することなくTestimにアクセスできます。
+category: セキュリティ
 order: 18004
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/okta-sso-integration'
 keywords:
   - Okta
   - SSO統合
