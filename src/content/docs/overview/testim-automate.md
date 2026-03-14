@@ -1,7 +1,7 @@
 ---
-title: 'Webとモバイルテスト'
-description: 'WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール'
-category: '概要'
+title: Webとモバイルテスト
+description: WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール
+category: 概要
 order: 1002
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/testim-automate'
@@ -14,7 +14,7 @@ keywords:
   - テストグリッド
   - CI統合
   - TestOps
-  - ビジュアルエディタ
+  - Visual Editor
   - クロスブラウザテスト
 ---
 
@@ -22,12 +22,12 @@ Testim Automate は、安定したテストを高速に作成できる本格的�
 
 ## コードレステスト作成
 
-Testim は、ステップを記録してテストを作成できるコードレステスト作成環境を提供します。Testim ビジュアルエディタ内で記録を開始し、アプリケーション内でクリック、メニューオプションの選択、テキスト入力などを行うだけです。その結果、ビジュアルエディタ内で編集可能なステップバイステップのテストが作成されます。テストの記録の優れた点は、Testim のアルゴリズムを使用して各要素とそのパラメータを一意に識別することです。
+Testim は、ステップを記録してテストを作成できるコードレステスト作成環境を提供します。Testim Visual Editor内で記録を開始し、アプリケーション内でクリック、メニューオプションの選択、テキスト入力などを行うだけです。その結果、Visual Editor内で編集可能なステップバイステップのテストが作成されます。テストの記録の優れた点は、Testim のアルゴリズムを使用して各要素とそのパラメータを一意に識別することです。
 
 私たちの AI は Smart Locators と呼ばれるものを使用して、数百の属性を評価してスコアリングするため、要素が変更されてもテストは壊れません。開始するには、以下の入門ガイドの手順に従ってください。
 
-- Web の場合 - [Testim ビジュアルエディタで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- モバイルの場合 - [Testim ビジュアルエディタで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
+- Web の場合 - [Testim Visual Editorで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
+- モバイルの場合 - [Testim Visual Editorで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
 
 ## テストのカスタマイズ
 
@@ -99,5 +99,5 @@ Smart Locators は各テスト実行で学習します。一部の属性が変�
 
 ## 次のステップ
 
-- [Testim ビジュアルエディタで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- [Testim ビジュアルエディタで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
+- [Testim Visual Editorで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
+- [Testim Visual Editorで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

@@ -1,9 +1,10 @@
 ---
-title: 'ログイン処理のベストプラクティス'
-description: '原文: https://help.testim.io/docs/best-practices-for-handling-logins'
-category: 'ガイド'
+title: ログイン処理のベストプラクティス
+description: すべてのテストでログインを再利用する方法を見つける
+category: ガイド
 order: 19004
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/best-practices-for-handling-logins'
 keywords:
   - ログイン処理
   - ベストプラクティス

@@ -12,19 +12,22 @@ import { spawn } from 'node:child_process';
 const ROOT = path.resolve(fileURLToPath(import.meta.url), '../..');
 const SCRIPTS_DIR = path.join(ROOT, 'scripts');
 const DEFAULT_CHECKPOINT_PATH = path.join(SCRIPTS_DIR, '.checkpoint');
+export const PIPELINE_STEPS = ['url_collect', 'placeholders', 'fetch', 'prepare_llm', 'apply_llm'];
 
-/** @typedef {{ completed_phase?: string, completed_at?: string, next_phase?: string, step?: string, mode?: string }} CheckpointData */
+/** @typedef {{ completed_phase?: string, completed_at?: string, next_phase?: string | null, step?: string, mode?: string, section?: string | null }} CheckpointData */
 
 /**
  * Parse CLI arguments.
  * @param {string[]} argv
- * @returns {{ mode: string }}
+ * @returns {{ mode: string, section: string | null, resume: boolean }}
  */
 export function parseArgs(argv) {
   const modeFlag = argv.find((a) => a.startsWith('--mode='));
   const mode = modeFlag ? modeFlag.split('=')[1] : 'diff';
+  const section = argv.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=') ?? null;
+  const resume = !argv.includes('--no-resume');
 
-  return { mode };
+  return { mode, section, resume };
 }
 
 /**
@@ -48,6 +51,18 @@ export async function saveCheckpoint(checkpointPath, data) {
   await fs.promises.writeFile(checkpointPath, JSON.stringify(data, null, 2), 'utf8');
 }
 
+export function getPendingSteps(checkpoint, { resume = true, mode = 'diff', section = null } = {}) {
+  if (!resume || !checkpoint) return [...PIPELINE_STEPS];
+  if ((checkpoint.mode ?? 'diff') !== mode) return [...PIPELINE_STEPS];
+  if ((checkpoint.section ?? null) !== section) return [...PIPELINE_STEPS];
+  if (!checkpoint.step) return [...PIPELINE_STEPS];
+
+  const stepName = checkpoint.step.replace(/_done$/, '');
+  const index = PIPELINE_STEPS.indexOf(stepName);
+  if (index === -1) return [...PIPELINE_STEPS];
+  return PIPELINE_STEPS.slice(index + 1);
+}
+
 function runProcess(script, args = []) {
   return new Promise((resolve, reject) => {
     const child = spawn('node', [path.join(SCRIPTS_DIR, script), ...args], {
@@ -68,50 +83,70 @@ async function runStep(name, fn, checkpointPath) {
 
 async function main() {
   const args = process.argv.slice(2);
-  const { mode } = parseArgs(args);
+  const { mode, section, resume } = parseArgs(args);
 
   const checkpointPath = DEFAULT_CHECKPOINT_PATH;
-
+  const checkpoint = loadCheckpoint(checkpointPath);
+  const pendingSteps = getPendingSteps(checkpoint, { resume, mode, section });
   const modeArgs = [`--mode=${mode}`];
-
-  await runStep('url_collect', async () => {
-    const code = await runProcess('update_sidebar_urls_from_live.mjs', []);
-    if (code !== 0) {
-      console.error('url_collect step failed. Aborting pipeline.');
-      process.exit(code);
-    }
-  }, checkpointPath);
-
-  await runStep('fetch', async () => {
-    const code = await runProcess('fetch_translate_images.mjs', modeArgs);
-    if (code !== 0) {
-      console.error('fetch step failed. Aborting pipeline.');
-      process.exit(code);
-    }
-  }, checkpointPath);
-
-  await runStep('prepare_llm', async () => {
-    const code = await runProcess('prepare_llm_tasks.mjs', []);
-    if (code !== 0) {
-      console.error('prepare_llm step failed. Aborting pipeline.');
-      process.exit(code);
-    }
-  }, checkpointPath);
-
-  await runStep('apply_llm', async () => {
-    const code = await runProcess('apply_llm_translations.mjs', []);
-    if (code !== 0) {
-      console.error('apply_llm step failed. Aborting pipeline.');
-      process.exit(code);
-    }
-  }, checkpointPath);
+  const sectionArgs = section ? [`--section=${section}`] : [];
 
   await saveCheckpoint(checkpointPath, {
-    completed_phase: 'PR-0a',
+    ...(checkpoint ?? {}),
+    mode,
+    section,
+  });
+
+  const stepHandlers = {
+    url_collect: async () => {
+      const code = await runProcess('update_sidebar_urls_from_live.mjs', []);
+      if (code !== 0) {
+        console.error('url_collect step failed. Aborting pipeline.');
+        process.exit(code);
+      }
+    },
+    placeholders: async () => {
+      if (mode !== 'full') return;
+      const code = await runProcess('generate_untranslated_placeholders.mjs', sectionArgs);
+      if (code !== 0) {
+        console.error('placeholders step failed. Aborting pipeline.');
+        process.exit(code);
+      }
+    },
+    fetch: async () => {
+      const code = await runProcess('fetch_translate_images.mjs', [...modeArgs, ...sectionArgs]);
+      if (code !== 0) {
+        console.error('fetch step failed. Aborting pipeline.');
+        process.exit(code);
+      }
+    },
+    prepare_llm: async () => {
+      const code = await runProcess('prepare_llm_tasks.mjs', sectionArgs);
+      if (code !== 0) {
+        console.error('prepare_llm step failed. Aborting pipeline.');
+        process.exit(code);
+      }
+    },
+    apply_llm: async () => {
+      const code = await runProcess('apply_llm_translations.mjs', sectionArgs);
+      if (code !== 0) {
+        console.error('apply_llm step failed. Aborting pipeline.');
+        process.exit(code);
+      }
+    },
+  };
+
+  for (const step of pendingSteps) {
+    await runStep(step, stepHandlers[step], checkpointPath);
+  }
+
+  await saveCheckpoint(checkpointPath, {
+    completed_phase: 'PR-final',
     completed_at: new Date().toISOString(),
-    next_phase: 'PR-0b',
+    next_phase: null,
     step: 'apply_llm_done',
     mode,
+    section,
   });
 
   console.log('\n✅ Pipeline complete.');

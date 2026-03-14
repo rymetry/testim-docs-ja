@@ -105,12 +105,6 @@ function updateMarkdownFile(filePath, updates) {
   const end = raw.indexOf('\n---', 3);
   if (end < 0) return { changed: false, reason: 'no-frontmatter-end' };
 
-  // Find the closing delimiter line
-  const closingIdx = raw.indexOf('---', 3);
-  // Safer: split by the first two --- blocks
-  const parts = raw.split(/^---\s*$/m);
-  // parts: [beforeFirst, fm, rest...] but behavior depends; fallback to manual if needed
-
   const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
   if (!match) return { changed: false, reason: 'frontmatter-parse-failed' };
 

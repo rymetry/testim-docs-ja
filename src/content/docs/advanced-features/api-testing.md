@@ -1,7 +1,9 @@
 ---
-title: 'API テスト'
-description: 'UI テストから HTTP API を呼び出し、レスポンスの検証やテスト内でのデータ利用を行う API テストステップ（Validate API / Add API action）の使い方を説明します。'
-category: '高度な編集'
+title: API テスト
+description: >-
+  UI テストから HTTP API を呼び出し、レスポンスの検証やテスト内でのデータ利用を行う API テストステップ（Validate API / Add
+  API action）の使い方を説明します。
+category: 高度な編集
 order: 5050
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/api-testing'

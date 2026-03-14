@@ -1,7 +1,7 @@
 ---
-title: 'コンソールエラーのデバッグとDOMアクセス'
-description: 'Chrome開発者ツールを使用したデバッグ、コンソールエラーとネットワークエラーの確認、失敗ステップのDOMスナップショット表示について説明します。'
-category: '結果'
+title: コンソールエラーのデバッグとDOMアクセス
+description: Chrome開発者ツールを使用したデバッグ、コンソールエラーとネットワークエラーの確認、失敗ステップのDOMスナップショット表示について説明します。
+category: 結果
 order: 7008
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/debug-console-errors-access-dom'

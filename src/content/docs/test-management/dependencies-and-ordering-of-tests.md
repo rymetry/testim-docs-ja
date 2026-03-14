@@ -1,7 +1,7 @@
 ---
-title: 'テストの依存関係と順序'
-description: 'テスト間の依存関係と実行順序の管理方法について説明します。'
-category: 'テスト管理'
+title: テストの依存関係と順序
+description: テスト間の依存関係と実行順序の管理方法について説明します。
+category: テスト管理
 order: 9007
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/dependencies-and-ordering-of-tests'

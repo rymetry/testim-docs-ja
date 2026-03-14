@@ -1,7 +1,7 @@
 ---
-title: 'トラブルシューティング'
-description: 'Testim for Salesforceで起こりやすい接続・実行失敗などの問題と対処方法をまとめます。'
-category: 'Salesforceテスト'
+title: トラブルシューティング
+description: Testim for Salesforceで起こりやすい接続・実行失敗などの問題と対処方法をまとめます。
+category: Salesforceテスト
 order: 16033
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/troubleshoot'
@@ -73,9 +73,9 @@ Salesforce環境に接続するには、Salesforce環境が以下の要件を満
 
 ## 最初のテストステップでテスト実行が失敗する
 
-他のChrome拡張機能との競合がある場合、最初のテストステップでテスト実行が失敗することがあります。テスト実行を分離し、Tricentis Testim拡張機能のみを有効にすることをお勧めします。これを行うには、以下の手順に従ってください:
+他のChrome拡張機能との競合がある場合、最初のテストステップでテスト実行が失敗することがあります。テスト実行を分離し、Tricentis Testim Extensionのみを有効にすることをお勧めします。これを行うには、以下の手順に従ってください:
 
-1. Tricentis Testim拡張機能をシークレットモードで実行するように構成します。
+1. Tricentis Testim Extensionをシークレットモードで実行するように構成します。
 
   ![Chrome拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
 

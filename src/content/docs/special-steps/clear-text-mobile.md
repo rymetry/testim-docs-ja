@@ -1,7 +1,9 @@
 ---
-title: 'テキストのクリア（モバイル）'
-description: 'モバイルテストで Clear Text ステップを使って入力フィールドの文字列を削除し、必要に応じてカスタムアクションでバックスペースを送信する回避策を説明します。'
-category: '高度な編集'
+title: テキストのクリア（モバイル）
+description: >-
+  モバイルテストで Clear Text
+  ステップを使って入力フィールドの文字列を削除し、必要に応じてカスタムアクションでバックスペースを送信する回避策を説明します。
+category: 高度な編集
 order: 5065
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/clear-text-mobile'

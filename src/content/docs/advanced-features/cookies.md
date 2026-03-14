@@ -1,7 +1,7 @@
 ---
-title: 'Cookie（クッキー）'
-description: '専用ステップやカスタムコード、設定ファイルを使ってテスト内でブラウザクッキーを設定・取得する方法を説明します。'
-category: '高度な編集'
+title: Cookie（クッキー）
+description: 専用ステップやカスタムコード、設定ファイルを使ってテスト内でブラウザクッキーを設定・取得する方法を説明します。
+category: 高度な編集
 order: 5051
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/cookies'

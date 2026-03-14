@@ -1,7 +1,7 @@
 ---
-title: 'Vision Locate'
-description: 'Vision Locateモードの使用方法と、視覚分析アルゴリズムを使用して画面上の要素を特定する方法について説明します。'
-category: 'テストの記録'
+title: Vision Locate
+description: Vision Locateモードの使用方法と、視覚分析アルゴリズムを使用して画面上の要素を特定する方法について説明します。
+category: テストの記録
 order: 3012
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/vision-locate'

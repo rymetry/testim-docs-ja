@@ -1,7 +1,7 @@
 ---
-title: '不安定なテスト'
-description: '原文: https://help.testim.io/docs/flaky-tests'
-category: 'TestOps'
+title: 不安定なテスト
+description: Testim のライブラリを使用して不安定なテストを簡単に見つけます
+category: TestOps
 order: 15005
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/flaky-tests'

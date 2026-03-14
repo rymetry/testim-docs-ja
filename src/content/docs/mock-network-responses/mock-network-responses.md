@@ -1,7 +1,8 @@
 ---
-title: 'ネットワークモックレスポンス'
-description: 'Testimのネットワークモックレスポンス機能について説明します。HARファイルまたはマッピングファイルを使用してネットワークトラフィックをモックする方法を学びます。'
-category: 'テスト実行'
+title: ネットワークモックレスポンス
+description: >-
+  Testimのネットワークモックレスポンス機能について説明します。HARファイルまたはマッピングファイルを使用してネットワークトラフィックをモックする方法を学びます。
+category: テスト実行
 order: 6013
 updated: '2025-11-11'
 sourceUrl: 'https://help.testim.io/docs/mock-network-responses'

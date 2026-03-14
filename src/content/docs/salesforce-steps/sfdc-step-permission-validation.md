@@ -1,7 +1,7 @@
 ---
-title: '権限の検証'
-description: 'ユーザー権限（オブジェクト/フィールド）を取得し、期待値との差分を検証します。'
-category: 'Salesforceテスト'
+title: 権限の検証
+description: ユーザー権限（オブジェクト/フィールド）を取得し、期待値との差分を検証します。
+category: Salesforceテスト
 order: 16019
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-step-permission-validation'

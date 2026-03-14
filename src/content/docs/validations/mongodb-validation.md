@@ -1,7 +1,7 @@
 ---
-title: 'MongoDB の検証'
-description: 'MongoDBデータベースに接続してデータを検証するCLIステップ。ドキュメントの内容確認やクエリ実行により、データベースの状態を検証できるPro機能です。'
-category: '高度な編集'
+title: MongoDB の検証
+description: MongoDBデータベースに接続してデータを検証するCLIステップ。ドキュメントの内容確認やクエリ実行により、データベースの状態を検証できるPro機能です。
+category: 高度な編集
 order: 5017
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/mongodb-validation'

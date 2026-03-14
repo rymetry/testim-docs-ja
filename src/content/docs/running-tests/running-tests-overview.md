@@ -1,7 +1,9 @@
 ---
-title: 'テスト実行の概要'
-description: 'ローカル実行、グリッド実行、スケジューラー、CLI など Testim でテストを実行するさまざまな方法と、それぞれの実行タイプがテスト実行クォータにどのようにカウントされるかを説明します。'
-category: 'テスト実行'
+title: テスト実行の概要
+description: >-
+  ローカル実行、グリッド実行、スケジューラー、CLI など Testim
+  でテストを実行するさまざまな方法と、それぞれの実行タイプがテスト実行クォータにどのようにカウントされるかを説明します。
+category: テスト実行
 order: 6001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/running-tests-overview'
@@ -206,7 +208,7 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 ![テスト実行オプション確認ダイアログ](/images/running-tests/running-tests-overview/eb4fc34-run4.png)
 
 3. 適切なチェック ボックスを選択し、**OK** をクリックします。
-   ブラウザーが開き、テストが実行されます。 実行中は実行ステータスを確認できます。 実行が完了すると、実行に関する情報を含む [実行画面](/docs/results/execution-runs-screen) が表示されます。 詳細については、「実行画面」を参照してください。
+   ブラウザーが開き、テストが実行されます。 実行中は実行ステータスを確認できます。 実行が完了すると、実行に関する情報を含む [実行画面](/docs/execution-runs-screen) が表示されます。 詳細については、「実行画面」を参照してください。
 
 ![テスト実行結果と実行画面へのリンク](/images/running-tests/running-tests-overview/69ffd79-run5.png)
 

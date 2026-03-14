@@ -22,6 +22,7 @@
     "docs:pipeline:diff": "node scripts/pipeline.mjs --mode=diff",
     "docs:fetch": "node scripts/fetch_translate_images.mjs",
     "docs:fix-alt": "node scripts/fix_alt_all.mjs",
+    "docs:normalize": "node scripts/normalize_docs.mjs",
     "docs:placeholders": "node scripts/generate_untranslated_placeholders.mjs",
     "docs:prepare-llm": "node scripts/prepare_llm_tasks.mjs",
     "docs:apply-llm": "node scripts/apply_llm_translations.mjs",

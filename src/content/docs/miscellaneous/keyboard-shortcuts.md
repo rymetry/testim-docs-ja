@@ -1,9 +1,10 @@
 ---
-title: 'キーボードショートカット'
-description: '原文: https://help.testim.io/docs/keyboard-shortcuts'
-category: 'ガイド'
+title: キーボードショートカット
+description: より迅速で簡単なテスト作成のためのキーボードショートカット
+category: ガイド
 order: 19002
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/keyboard-shortcuts'
 keywords:
   - キーボードショートカット
   - ショートカットキー
@@ -52,7 +53,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validations/validate-element-text">
+    <a href="/docs/validate-element-text">
      要素テキストを検証
     </a>
    </td>
@@ -68,7 +69,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validations/validate-element-visible">
+    <a href="/docs/validate-element-visible">
      要素の表示を検証
     </a>
    </td>
@@ -84,7 +85,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validations/custom-code">
+    <a href="/docs/custom-code">
      カスタム検証とアクションを追加
     </a>
    </td>
@@ -144,7 +145,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/visual-validations/validate-element-visualization">
+    <a href="/docs/validate-element-visualization">
      要素ビジュアライゼーションを検証
     </a>
    </td>
@@ -160,7 +161,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/visual-validations/validate-viewport-visualization">
+    <a href="/docs/validate-viewport-visualization">
      ビューポートビジュアライゼーションを検証
     </a>
    </td>
@@ -176,7 +177,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/visual-validations/validate-full-page-visualization">
+    <a href="/docs/validate-full-page-visualization">
      フルページビジュアライゼーションを検証
     </a>
    </td>

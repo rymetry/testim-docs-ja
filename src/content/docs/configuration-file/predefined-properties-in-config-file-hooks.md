@@ -1,7 +1,7 @@
 ---
-title: '設定ファイルフックの事前定義プロパティ'
-description: '設定ファイルの Before/After Suite・Test フックで参照できる事前定義プロパティと、その用途の概要を一覧で説明します。'
-category: 'テスト実行'
+title: 設定ファイルフックの事前定義プロパティ
+description: 設定ファイルの Before/After Suite・Test フックで参照できる事前定義プロパティと、その用途の概要を一覧で説明します。
+category: テスト実行
 order: 6012
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/predefined-properties-in-config-file-hooks'

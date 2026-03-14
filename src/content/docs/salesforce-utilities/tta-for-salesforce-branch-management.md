@@ -1,19 +1,19 @@
 ---
-title: 'Testim for Salesforceブランチ管理'
-description: 'Testim for Salesforceのブランチ作成・切り替え・環境変更・マージの概要を説明します。'
-category: 'Salesforceテスト'
+title: Testim for Salesforceブランチ管理
+description: Testim for Salesforceのブランチ作成・切り替え・環境変更・マージの概要を説明します。
+category: Salesforceテスト
 order: 16035
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/tta-for-salesforce-branch-management'
 keywords:
-   - ブランチ管理
-   - Testim for Salesforce
-   - Salesforce環境
-   - ブランチ作成
-   - ブランチ切り替え
-   - 環境変更
-   - マージ
-   - Mainブランチ
+  - ブランチ管理
+  - Testim for Salesforce
+  - Salesforce環境
+  - ブランチ作成
+  - ブランチ切り替え
+  - 環境変更
+  - マージ
+  - Mainブランチ
 ---
 
 Testim for Salesforceブランチ管理機能は、一般的なTestimブランチ管理機能と似ていますが、いくつかの主要な違いがあります。一般的なTestimブランチ管理の詳細については、[ブランチ管理](/docs/version-control-branches)を参照してください。

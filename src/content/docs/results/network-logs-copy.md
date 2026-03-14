@@ -1,7 +1,7 @@
 ---
-title: 'コンソールログ'
-description: 'テスト実行中のコンソールログの確認方法について説明します。ステップレベルとテストレベルでの表示方法を学びます。'
-category: '結果'
+title: コンソールログ
+description: テスト実行中のコンソールログの確認方法について説明します。ステップレベルとテストレベルでの表示方法を学びます。
+category: 結果
 order: 7005
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/network-logs-copy'

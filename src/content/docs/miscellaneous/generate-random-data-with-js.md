@@ -1,9 +1,10 @@
 ---
-title: 'JSでランダムデータを生成'
-description: '原文: https://help.testim.io/docs/generate-random-data-with-js'
-category: 'ガイド'
+title: JSでランダムデータを生成
+description: ランダムデータ（ユーザー名、パスワード、メールなど）をテキストフィールドに動的に割り当てる方法を学ぶ
+category: ガイド
 order: 19003
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/generate-random-data-with-js'
 keywords:
   - ランダムデータ生成
   - JavaScript

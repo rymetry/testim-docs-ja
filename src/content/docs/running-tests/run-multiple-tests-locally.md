@@ -1,7 +1,9 @@
 ---
-title: 'ローカルで複数のテストを実行'
-description: 'テストライブラリから複数のテストを選択し、Chrome のローカルブラウザでまとめて実行する方法と、シークレットモードやベース URL のオーバーライドなどのオプションを説明します。'
-category: 'テスト実行'
+title: ローカルで複数のテストを実行
+description: >-
+  テストライブラリから複数のテストを選択し、Chrome のローカルブラウザでまとめて実行する方法と、シークレットモードやベース URL
+  のオーバーライドなどのオプションを説明します。
+category: テスト実行
 order: 6009
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/run-multiple-tests-locally'

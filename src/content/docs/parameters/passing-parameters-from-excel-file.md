@@ -1,7 +1,7 @@
 ---
-title: 'Excel ファイルからパラメータを渡す'
-description: '原文: https://help.testim.io/docs/passing-parameters-from-excel-file'
-category: '高度な編集'
+title: Excel ファイルからパラメータを渡す
+description: Excel/CSV のデータをテストにパラメータとして渡す方法
+category: 高度な編集
 order: 5045
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/passing-parameters-from-excel-file'

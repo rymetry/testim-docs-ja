@@ -1,7 +1,7 @@
 ---
-title: 'CSS プロパティの検証'
-description: '要素のCSSプロパティ値を検証するステップ。color、font-size、displayなどのスタイル属性を確認し、UIの見た目や表示状態を検証します。'
-category: '高度な編集'
+title: CSS プロパティの検証
+description: 要素のCSSプロパティ値を検証するステップ。color、font-size、displayなどのスタイル属性を確認し、UIの見た目や表示状態を検証します。
+category: 高度な編集
 order: 5019
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/css-property-validation'

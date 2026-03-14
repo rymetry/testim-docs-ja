@@ -1,7 +1,7 @@
 ---
-title: 'メール検証'
-description: 'Testimの組み込みメールサービスを使用してメール受信を検証するステップ。サインアップやログインフローのメール確認テストに利用できるPro機能です。'
-category: '高度な編集'
+title: メール検証
+description: Testimの組み込みメールサービスを使用してメール受信を検証するステップ。サインアップやログインフローのメール確認テストに利用できるPro機能です。
+category: 高度な編集
 order: 5010
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/email-validation'

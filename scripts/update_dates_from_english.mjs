@@ -186,7 +186,7 @@ async function updateDatesFromEnglish(filePattern = null, dryRun = false) {
   for (const filePath of filesToUpdate) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const parsed = matter(content);
-    const { data, content: markdown } = parsed;
+    const { data } = parsed;
     const relativePath = path.relative(rootDir, filePath);
     
     if (!data.sourceUrl) {

@@ -1,9 +1,10 @@
 ---
-title: 'ターボモード'
-description: '原文: https://help.testim.io/docs/turbo-mode'
-category: 'TestOps'
+title: ターボモード
+description: Testim テストを大規模に効率的に実行し、パフォーマンスを向上させます。
+category: TestOps
 order: 15016
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/turbo-mode'
 keywords:
   - ターボモード
   - パフォーマンス向上

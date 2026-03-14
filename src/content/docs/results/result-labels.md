@@ -1,7 +1,7 @@
 ---
-title: '結果ラベル'
-description: 'テスト実行結果にラベルを追加する方法について説明します。CLIまたはスケジューラーからラベルを追加できます。'
-category: '結果'
+title: 結果ラベル
+description: テスト実行結果にラベルを追加する方法について説明します。CLIまたはスケジューラーからラベルを追加できます。
+category: 結果
 order: 7012
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/result-labels'

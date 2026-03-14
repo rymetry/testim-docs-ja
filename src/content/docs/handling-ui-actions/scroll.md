@@ -1,7 +1,7 @@
 ---
-title: 'スクロールステップ'
-description: 'Testimでスクロールステップの動作を理解し、要素へのスクロール、ページスクロール、マウスホイールスクロールの記録と設定方法を学びます。'
-category: '高度な編集'
+title: スクロールステップ
+description: Testimでスクロールステップの動作を理解し、要素へのスクロール、ページスクロール、マウスホイールスクロールの記録と設定方法を学びます。
+category: 高度な編集
 order: 5035
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/scroll'

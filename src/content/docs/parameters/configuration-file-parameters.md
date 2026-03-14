@@ -1,7 +1,7 @@
 ---
-title: '設定ファイルのパラメータ'
-description: '原文: https://help.testim.io/docs/configuration-file-parameters'
-category: '高度な編集'
+title: 設定ファイルのパラメータ
+description: 設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
+category: 高度な編集
 order: 5044
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'

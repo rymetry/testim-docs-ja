@@ -1,10 +1,11 @@
 ---
-title: 'ベストプラクティス - クリーンアップを容易にする変数命名規則'
-description: 'テストで作成したSalesforceレコードを後で削除しやすくする命名規則（固定プレフィックス＋ランダムサフィックス）を紹介します。'
-category: 'Salesforceテスト'
+title: ベストプラクティス - クリーンアップを容易にする変数命名規則
+description: テストで作成したSalesforceレコードを後で削除しやすくする命名規則（固定プレフィックス＋ランダムサフィックス）を紹介します。
+category: Salesforceテスト
 order: 16036
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup'
+sourceUrl: >-
+  https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
 keywords:
   - 変数命名規則
   - クリーンアップ

@@ -1,7 +1,7 @@
 ---
-title: '他のテストへの新しいグループの適用'
-description: 'グループ作成時に他の適用可能なテストへ自動的にグループを適用する自動グループ化機能について説明します。'
-category: 'テスト編集'
+title: 他のテストへの新しいグループの適用
+description: グループ作成時に他の適用可能なテストへ自動的にグループを適用する自動グループ化機能について説明します。
+category: テスト編集
 order: 4007
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/auto-grouping'

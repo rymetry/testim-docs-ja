@@ -1,15 +1,16 @@
-# 執筆ガイド: Markdown で書いて拡張機能を使う
+# 執筆ガイド: Testim Docs JA
 
 > このガイドは、Testim ドキュメント日本語版の**執筆者・編集者向け**です。
 > 翻訳作業については [TRANSLATION_GUIDE.md](./TRANSLATION_GUIDE.md) をご参照ください。
 
-このプロジェクトでは、**Markdown (.md)** で記事を書きながら、豊富な拡張機能を利用できます。
+このプロジェクトでは、公開ドキュメントを **Markdown (`.md`)** で管理し、`npm run lint:docs` と CI で機械検証します。
 
 ## 📚 目次
 
-- [基本方針](#-基本方針)
+- [最優先ルール](#-最優先ルール)
 - [frontmatter 必須ルール](#-frontmatter-必須ルール)
 - [内部リンク規則](#-内部リンク規則)
+- [Callout 規則](#-callout-規則)
 - [Testim 機能名・製品名・画面名の英語維持](#️-testim-機能名製品名画面名の英語維持)
 - [Markdown vs MDX の選び方](#-markdown-vs-mdx-の選び方)
 - [Markdown で使える機能](#-markdown-で使える機能)
@@ -22,17 +23,19 @@
 
 ---
 
-## 🎯 基本方針
+## 🎯 最優先ルール
 
-1. **通常の記事は .md で書く**（執筆しやすさ優先）
-2. **特別な機能が必要な場合のみ .mdx を使う**（拡張性優先）
-3. **迷ったら Markdown (.md) を選択**（98%のケースはこれで十分）
+1. `docs/WRITING_GUIDE.md` を公開ドキュメント整備の最優先ルールとする
+2. 公開ページは原則 `.md` で管理し、特別な UI が必要な場合だけ `.mdx` を使う
+3. `npm run lint:docs` で検出される違反は必ず修正してからマージする
+4. Testim の機能名、製品名、画面名、固有ラベルは原則として英語のまま維持する
+5. `docs/SIDEBAR_URLS.md` を seed URL とセクション分割の正本として扱う
 
 ---
 
 ## 📋 frontmatter 必須ルール
 
-すべての記事ファイルには以下の frontmatter が必須です。
+すべての記事ファイルには以下の frontmatter が必須です。`src/content/config.ts` と `scripts/lint-docs.mjs` の両方で検証されます。
 
 ```yaml
 ---
@@ -46,9 +49,16 @@ updated: '2025-11-02'
 | フィールド | 必須 | 規則 |
 |-----------|------|------|
 | `title` | ✅ | 日本語タイトル |
-| `description` | ✅ | 具体的な説明文。「説明文」「TODO」などのプレースホルダ禁止 |
+| `description` | ✅ | 具体的な説明文。「説明文」「TODO」「原文: ...」などのプレースホルダ禁止 |
 | `sourceUrl` | ✅ | 英語原文 URL（`https://help.testim.io/docs/{slug}`）必須 |
 | `updated` | ✅ | 更新日（`YYYY-MM-DD` 形式） |
+
+追加ルール:
+
+- `sourceUrl` は `https://help.testim.io/docs/{slug}` の 1 スラッグ形式のみ許可
+- `updated` は英語原文に追従させる
+- `description` は本文から読める内容を 1-2 文で要約する
+- frontmatter の欠落は build 前に修正する
 
 ---
 
@@ -67,6 +77,42 @@ updated: '2025-11-02'
 [Testim 概要](doc:testim-overview)
 ```
 
+補足:
+
+- アンカー付きリンクも `/docs/{slug}#section-name` を使用する
+- `/docs/{folder}/{slug}` 形式は lint でエラーになる
+
+---
+
+## 📣 Callout 規則
+
+情報パネルは `:::` 以上のコロンで始める callout を使用してください。
+
+```markdown
+:::tip
+基本の tip
+:::
+
+::::info{title="参考情報"}
+カスタムタイトル付きの info
+::::
+```
+
+許可されるタイプは次の 6 種類だけです。
+
+- `tip`
+- `warning`
+- `success`
+- `danger`
+- `note`
+- `info`
+
+追加ルール:
+
+- `:::unknown` のような未定義タイプは禁止
+- `{title="..."}` によるカスタムタイトルは使用可
+- 画像パスは `/images/...` を使い、実ファイルが `public/images/...` に存在しなければならない
+
 ---
 
 ## 🏷️ Testim 機能名・製品名・画面名の英語維持
@@ -79,6 +125,14 @@ Testim の固有名詞は英語のまま維持してください。日本語に�
 | 画面名 | Test Editor、Project Settings、Test Suite |
 | 機能名 | Visual AI、Smart Locators、Branching、Hooks |
 | API/設定名 | `test.id`、`step.label`、`params.timeout` |
+
+特に次の表現は日本語化しません。
+
+- `Testim Extension`
+- `Tricentis Testim Extension`
+- `Testim Visual Editor`
+- `Visual Editor`
+- `Agentic Test Automation`
 
 ---
 

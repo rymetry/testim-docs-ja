@@ -1,7 +1,7 @@
 ---
-title: 'ホバーステップ'
-description: 'Testimでホバーステップを記録し、マウスオーバーで表示されるメニューやツールチップの動作をテストする方法を学びます。'
-category: '高度な編集'
+title: ホバーステップ
+description: Testimでホバーステップを記録し、マウスオーバーで表示されるメニューやツールチップの動作をテストする方法を学びます。
+category: 高度な編集
 order: 5036
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/hover-step'

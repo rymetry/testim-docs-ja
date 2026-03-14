@@ -1,7 +1,7 @@
 ---
-title: '要素アクセシビリティ検証'
-description: 'Webページ上の特定の要素がアクセシブルかどうかをチェックし、アクセシビリティ違反を特定する方法を解説します。'
-category: '高度な編集'
+title: 要素アクセシビリティ検証
+description: Webページ上の特定の要素がアクセシブルかどうかをチェックし、アクセシビリティ違反を特定する方法を解説します。
+category: 高度な編集
 order: 5021
 updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/element-accessibility-validation'
@@ -44,31 +44,31 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 1. ステップを追加したい場所の矢印記号にマウスオーバーします。
 
-![矢印記号にマウスオーバー](/images/validations/element-accessibility-validation/4a5271a-Testim_357a.png)
+![矢印記号にマウスオーバー](/images/accessibility-validations/element-accessibility-validation/4a5271a-Testim_357a.png)
 
 アクションオプションが表示されます。
 
-![アクションオプション](/images/validations/element-accessibility-validation/e69c262-Testim_358a_r.png)
+![アクションオプション](/images/accessibility-validations/element-accessibility-validation/e69c262-Testim_358a_r.png)
 
 2. **Toggle Breakpoint**ボタンをクリックします。
 
-![Toggle Breakpointボタン](/images/validations/element-accessibility-validation/848348d-Testim_359_r.png)
+![Toggle Breakpointボタン](/images/accessibility-validations/element-accessibility-validation/848348d-Testim_359_r.png)
 
 3. **Run test**ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![Run testボタン](/images/validations/element-accessibility-validation/6ce633c-Testim_360a.png)
+![Run testボタン](/images/accessibility-validations/element-accessibility-validation/6ce633c-Testim_360a.png)
 
 4. 再度矢印記号にマウスオーバーし、「M」（Testim定義済みステップ）をクリックします。
 
 定義済みステップメニューが開きます。
 
-![定義済みステップメニュー](/images/validations/element-accessibility-validation/238c2a5-Testim_270_r2_predefined_steps.png)
+![定義済みステップメニュー](/images/accessibility-validations/element-accessibility-validation/238c2a5-Testim_270_r2_predefined_steps.png)
 
 5. **Validations**をクリックします。
 
 検証メニューが展開されます。
 
-![検証メニュー](/images/validations/element-accessibility-validation/e797323-Testim_271_r2_validations_menu.png)
+![検証メニュー](/images/accessibility-validations/element-accessibility-validation/e797323-Testim_271_r2_validations_menu.png)
 
 6. メニューをスクロールして**Validate element accessibility**を選択します。
 
@@ -80,15 +80,15 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 エディターに要素アクセシビリティ検証ステップが追加されます。
 
-![要素アクセシビリティ検証ステップ](/images/validations/element-accessibility-validation/2d66ca3-Testim_361a.png)
+![要素アクセシビリティ検証ステップ](/images/accessibility-validations/element-accessibility-validation/2d66ca3-Testim_361a.png)
 
 8. 新しく作成されたステップにマウスオーバーし、**プロパティを表示**（歯車アイコン）をクリックします。
 
-![プロパティを表示アイコン](/images/validations/element-accessibility-validation/3095c4a-Testim_362a.png)
+![プロパティを表示アイコン](/images/accessibility-validations/element-accessibility-validation/3095c4a-Testim_362a.png)
 
 右側にプロパティパネルが開きます。
 
-![プロパティパネル](/images/validations/element-accessibility-validation/2b9a324-Screen_Shot_2021-12-22_at_6.15.33.png)
+![プロパティパネル](/images/accessibility-validations/element-accessibility-validation/2b9a324-Screen_Shot_2021-12-22_at_6.15.33.png)
 
 9. 以下の説明に従ってプロパティを設定します。
 
@@ -101,7 +101,7 @@ Testimのアクセシビリティステップは、業界をリードするア�
    - **Override timeout** – Testimがテストステップの失敗を登録するデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒単位）を指定できます。
    - **Disable auto-scroll** – ビューポート外に存在する要素への自動スクロールを無効にします。
 
-![要素アクセシビリティ検証の設定](/images/validations/element-accessibility-validation/48398ce-element_accessibility_validation.gif)
+![要素アクセシビリティ検証の設定](/images/accessibility-validations/element-accessibility-validation/48398ce-element_accessibility_validation.gif)
 
 10. 検証ステップの後の**Toggle Breakpoint**ボタンをクリックして、ブレークポイントを解除します。
 
@@ -115,39 +115,39 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 1. 失敗した要素アクセシビリティ検証ステップにマウスオーバーし、**プロパティを表示**（歯車アイコン）をクリックします。
 
-![失敗したステップのプロパティ表示](/images/validations/element-accessibility-validation/b3cc849-Testim_364a.png)
+![失敗したステップのプロパティ表示](/images/accessibility-validations/element-accessibility-validation/b3cc849-Testim_364a.png)
 
 右側にプロパティパネルが開きます。
 
 2. プロパティパネルで、**Check here for more details**リンクをクリックします。
 
-![Check here for more detailsリンク](/images/validations/element-accessibility-validation/fe90831-Testim_365a_r.png)
+![Check here for more detailsリンク](/images/accessibility-validations/element-accessibility-validation/fe90831-Testim_365a_r.png)
 
 :::note
 または、エラーパネルで**Accessibility report**リンクをクリックすることもできます。
 :::
 
-![Accessibility reportリンク](/images/validations/element-accessibility-validation/b5fd0af-Testim_364b.png)
+![Accessibility reportリンク](/images/accessibility-validations/element-accessibility-validation/b5fd0af-Testim_364b.png)
 
 アクセシビリティ結果ウィンドウが表示され（以前に選択した影響レベルに基づいて）、アクセシビリティ問題のリスト、検出された発生回数、影響レベルが表示されます。
 
-![アクセシビリティ結果ウィンドウ](/images/validations/element-accessibility-validation/2d4772e-Testim_366_r.png)
+![アクセシビリティ結果ウィンドウ](/images/accessibility-validations/element-accessibility-validation/2d4772e-Testim_366_r.png)
 
 すべての影響レベルに基づいて見つかったアクセシビリティ問題を表示したい場合は、**All impact levels**トグルをクリックします。
 
-![All impact levelsトグル](/images/validations/element-accessibility-validation/136f7ef-Testim_366a_r.png)
+![All impact levelsトグル](/images/accessibility-validations/element-accessibility-validation/136f7ef-Testim_366a_r.png)
 
 3. 結果をCSVファイルとしてダウンロードしたい場合は、ダウンロードアイコンをクリックします。（CSVファイルには、合格したものを含むすべてのアクセシビリティテストの結果が含まれます。）
 
-![ダウンロードアイコン](/images/validations/element-accessibility-validation/ecca0de-Testim_366b_r.png)
+![ダウンロードアイコン](/images/accessibility-validations/element-accessibility-validation/ecca0de-Testim_366b_r.png)
 
 4. いずれかの結果の横にある下矢印をクリックすると、以下の詳細情報が表示されます: 説明、問題の修正方法、要素のCSSセレクター。
 
-![アクセシビリティ問題の詳細](/images/validations/element-accessibility-validation/b81df21-Testim_367a_r.png)
+![アクセシビリティ問題の詳細](/images/accessibility-validations/element-accessibility-validation/b81df21-Testim_367a_r.png)
 
 5. アクセシビリティ問題の発生が複数見つかった場合は、要素のCSSセレクターセクションの矢印をクリックして、問題の異なるインスタンスを表示します。
 
-![複数のインスタンス表示](/images/validations/element-accessibility-validation/edadefa-Testim_350b_r2.png)
+![複数のインスタンス表示](/images/accessibility-validations/element-accessibility-validation/edadefa-Testim_350b_r2.png)
 
 ## ルールの説明
 

@@ -1,9 +1,10 @@
 ---
-title: 'テストフロービュー'
-description: '原文: https://help.testim.io/docs/test-flow-view'
-category: 'Testim Labs'
+title: テストフロービュー
+description: "\U0001F4D8 これはTestimのLabs機能です Testim Labsに参加している場合は、 Settings Labs でこの機能が有効になっていることを確認してください。Testim Labsと参加方法の詳細については、こちらを参照してくだ"
+category: Testim Labs
 order: 20002
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/test-flow-view'
 keywords:
   - テストフロービュー
   - ビジュアライゼーション

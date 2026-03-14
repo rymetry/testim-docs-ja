@@ -1,7 +1,7 @@
 ---
-title: 'TestimでAIを使用する'
-description: 'TestimのAIツール（Help Assistant、Coding Assistant、Salesforce Agentic AI Testing）の概要'
-category: '概要'
+title: TestimでAIを使用する
+description: TestimのAIツール（Help Assistant、Coding Assistant、Salesforce Agentic AI Testing）の概要
+category: 概要
 order: 1004
 updated: '2025-10-13'
 sourceUrl: 'https://help.testim.io/docs/use-ai-in-with-testim'

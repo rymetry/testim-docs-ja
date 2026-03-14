@@ -1,17 +1,17 @@
 ---
-title: 'ドキュメントの検証'
-description: 'ダウンロードしたPDFの内容を、条件に基づいて検証・抽出します。'
-category: 'Salesforceテスト'
+title: ドキュメントの検証
+description: ダウンロードしたPDFの内容を、条件に基づいて検証・抽出します。
+category: Salesforceテスト
 order: 16020
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/sfdc-document-validation'
 keywords:
-   - Salesforce
-   - PDF
-   - ドキュメント検証
-   - 抽出
-   - Salesforceステップ
-   - Testim for Salesforce
+  - Salesforce
+  - PDF
+  - ドキュメント検証
+  - 抽出
+  - Salesforceステップ
+  - Testim for Salesforce
 ---
 
 ダウンロードした PDF ファイルの内容を検証する

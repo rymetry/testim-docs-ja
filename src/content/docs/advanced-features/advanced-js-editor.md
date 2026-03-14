@@ -1,7 +1,7 @@
 ---
-title: '高度なJSエディタ'
-description: 'Monaco ベースの高度なJSエディタでカスタムステップや検証の JavaScript コードを快適に編集する方法と対応ステップを説明します。'
-category: '高度な編集'
+title: 高度なJSエディタ
+description: Monaco ベースの高度なJSエディタでカスタムステップや検証の JavaScript コードを快適に編集する方法と対応ステップを説明します。
+category: 高度な編集
 order: 5054
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/advanced-js-editor'
@@ -28,7 +28,7 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 * 自動補完
 * シンタックスカラーリング
 * コードナビゲーション
-* 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editor/editingevolved)
+* 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editingevolved)
 
 ### 使用できるステップ
 

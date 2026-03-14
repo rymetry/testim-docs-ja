@@ -1,9 +1,10 @@
 ---
-title: 'モバイルWebテスト'
-description: '原文: https://help.testim.io/docs/mobile-web-testing'
-category: 'ガイド'
+title: モバイルWebテスト
+description: モバイルデバイスエミュレーターでアプリケーションをテストする
+category: ガイド
 order: 19001
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/mobile-web-testing'
 keywords:
   - モバイルWebテスト
   - モバイルデバイス

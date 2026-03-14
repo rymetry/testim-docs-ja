@@ -1,7 +1,7 @@
 ---
-title: 'TestRail統合'
-description: 'TestimとTestRailを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信方法を網羅しています。'
-category: '統合'
+title: TestRail統合
+description: TestimとTestRailを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信方法を網羅しています。
+category: 統合
 order: 12040
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/testrail-integration'

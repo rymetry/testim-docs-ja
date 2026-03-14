@@ -1,7 +1,7 @@
 ---
-title: '実行ラン画面'
-description: '実行ラン画面で実行の結果と統計を表示。実行リスト、統計パネル、グラフ、フィルター、詳細画面、テスト操作。'
-category: '結果'
+title: 実行ラン画面
+description: 実行ラン画面で実行の結果と統計を表示。実行リスト、統計パネル、グラフ、フィルター、詳細画面、テスト操作。
+category: 結果
 order: 7009
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/execution-runs-screen'
@@ -372,7 +372,7 @@ Testimは、テストエディターにいるかのようにテストを実行�
 Testimが次の情報を表示します。
 
 * Concurrency - 現在の実行と同時に実行された実行の数
-* Extension Version - 実行を実行したTestim拡張機能のバージョン
+* Extension Version - 実行を実行したTestim Extensionのバージョン
 * Source - 実行がどのように実行されたか（ローカル、リモートなど）
 * CLI Version - 拡張機能の実行に使用されたCLIのバージョン
 * Grid Name - 実行の実行に使用されたグリッドの名前

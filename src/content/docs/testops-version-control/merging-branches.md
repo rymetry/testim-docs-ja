@@ -1,7 +1,9 @@
 ---
-title: 'ブランチのマージ'
-description: '原文: https://help.testim.io/docs/merging-branches'
-category: 'TestOps'
+title: ブランチのマージ
+description: >-
+  2つのブランチをマージすると、選択したブランチのステップを混在させたり、テスト全体を現在表示されているブランチ（master
+  ブランチまたは他のブランチ）に追加したりできます。マージ後、ソースブランチは明示的に削除するまで存在し続けます。競
+category: TestOps
 order: 15008
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/merging-branches'

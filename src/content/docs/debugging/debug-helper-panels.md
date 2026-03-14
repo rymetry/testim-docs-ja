@@ -1,7 +1,7 @@
 ---
-title: 'デバッグヘルパーパネル'
-description: 'テストのデバッグ中に問題を見つけて修正するためのデバッグヘルパーパネルの使用方法について説明します。'
-category: 'デバッグ'
+title: デバッグヘルパーパネル
+description: テストのデバッグ中に問題を見つけて修正するためのデバッグヘルパーパネルの使用方法について説明します。
+category: デバッグ
 order: 8004
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/debug-helper-panels'

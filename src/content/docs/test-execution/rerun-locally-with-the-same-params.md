@@ -1,7 +1,7 @@
 ---
-title: '同じパラメータでローカル再実行'
-description: '過去のテスト実行と同じパラメータを使用してローカルでテストを再実行する「同じパラメータでローカル再実行」機能の使い方を説明します。'
-category: 'テスト実行'
+title: 同じパラメータでローカル再実行
+description: 過去のテスト実行と同じパラメータを使用してローカルでテストを再実行する「同じパラメータでローカル再実行」機能の使い方を説明します。
+category: テスト実行
 order: 6020
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/rerun-locally-with-the-same-params'

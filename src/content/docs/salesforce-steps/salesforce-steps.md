@@ -1,7 +1,7 @@
 ---
-title: 'Salesforceステップ'
-description: 'Salesforce環境での共通操作・レコード操作・API操作・CPQ操作を、テストに手動追加できる定義済みステップとして提供します。'
-category: 'Salesforceテスト'
+title: Salesforceステップ
+description: Salesforce環境での共通操作・レコード操作・API操作・CPQ操作を、テストに手動追加できる定義済みステップとして提供します。
+category: Salesforceテスト
 order: 16010
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/salesforce-steps'

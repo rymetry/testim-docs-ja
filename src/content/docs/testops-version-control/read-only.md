@@ -1,7 +1,7 @@
 ---
-title: 'ブランチ読み取り専用状態'
-description: '原文: https://help.testim.io/docs/read-only'
-category: 'TestOps'
+title: ブランチ読み取り専用状態
+description: ブランチへの直接書き込みを許可しない（ブランチとマージを使用する場合のみ）
+category: TestOps
 order: 15010
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/read-only'

@@ -1,7 +1,9 @@
 ---
-title: 'Salesforce APEX アクションステップ'
-description: 'Salesforce の APEX コードをテストステップとして実行し、UI を越えた E2E 検証やバックエンドデータ操作を行う Salesforce APEX アクションステップの使い方を説明します。'
-category: '高度な編集'
+title: Salesforce APEX アクションステップ
+description: >-
+  Salesforce の APEX コードをテストステップとして実行し、UI を越えた E2E 検証やバックエンドデータ操作を行う Salesforce
+  APEX アクションステップの使い方を説明します。
+category: 高度な編集
 order: 5059
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/salesforce-apex-action-step'

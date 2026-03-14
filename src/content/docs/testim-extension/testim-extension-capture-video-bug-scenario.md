@@ -1,11 +1,13 @@
 ---
-title: 'Testim拡張機能 - ビデオとバグシナリオをキャプチャ'
-description: '原文: https://help.testim.io/docs/testim-extension-capture-video-bug-scenario'
-category: 'Testim拡張機能'
+title: Testim Extension - ビデオとバグシナリオをキャプチャ
+description: >-
+  バグトラッカーにバグを送信するには、まずTestimをバグトラッキングシステムに接続する必要があります。詳細については、&lt;バグトラッカー設定ページへの参照を追加&gt;を参照してください。
+category: Testim Extension
 order: 17003
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/testim-extension-capture-video-bug-scenario'
 keywords:
-  - Testim拡張機能
+  - Testim Extension
   - ビデオキャプチャ
   - バグシナリオ
   - 画面録画

@@ -1,7 +1,7 @@
 ---
-title: '日付の生成'
-description: '日付や時刻を扱うテスト向けに、指定したフォーマットやタイムゾーンで日付を生成するステップの作成方法を学びます。'
-category: 'テスト編集'
+title: 日付の生成
+description: 日付や時刻を扱うテスト向けに、指定したフォーマットやタイムゾーンで日付を生成するステップの作成方法を学びます。
+category: テスト編集
 order: 4013
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/generating-a-date'
@@ -102,7 +102,7 @@ keywords:
    </td>
    <td>
     任意の JS 日付フォーマットを指定できます。各フォーマットについては
-    <a href="https://day.js.org/docs/en/display/format">
+    <a href="https://day.js.org/docs/display/format">
      こちら
     </a>
     を参照してください。

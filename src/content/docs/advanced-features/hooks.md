@@ -1,7 +1,9 @@
 ---
-title: 'フック（Hooks）'
-description: 'テストやステップの前後に共有ステップ／共有グループを実行するフック（Before/After test、Before/After each step など）の設定方法と代表的なユースケースを説明します。'
-category: '高度な編集'
+title: フック（Hooks）
+description: >-
+  テストやステップの前後に共有ステップ／共有グループを実行するフック（Before/After test、Before/After each step
+  など）の設定方法と代表的なユースケースを説明します。
+category: 高度な編集
 order: 5056
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hooks'

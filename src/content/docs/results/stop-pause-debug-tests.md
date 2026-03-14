@@ -1,7 +1,7 @@
 ---
-title: 'テストの停止、一時停止、デバッグ'
-description: 'テスト実行中の停止、一時停止、ステップバイステップ実行、ブレークポイントの設定方法について説明します。'
-category: '結果'
+title: テストの停止、一時停止、デバッグ
+description: テスト実行中の停止、一時停止、ステップバイステップ実行、ブレークポイントの設定方法について説明します。
+category: 結果
 order: 7011
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/stop-pause-debug-tests'

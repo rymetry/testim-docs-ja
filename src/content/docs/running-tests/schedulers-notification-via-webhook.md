@@ -1,7 +1,9 @@
 ---
-title: 'スケジューラーの Webhook 経由での通知'
-description: 'スケジュール実行の結果を Webhook で外部システムへ送信し、JSON ペイロードを利用してレポート生成やアラートなどの処理をトリガーする方法を説明します。'
-category: 'テスト実行'
+title: スケジューラーの Webhook 経由での通知
+description: >-
+  スケジュール実行の結果を Webhook で外部システムへ送信し、JSON
+  ペイロードを利用してレポート生成やアラートなどの処理をトリガーする方法を説明します。
+category: テスト実行
 order: 6007
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/schedulers-notification-via-webhook'

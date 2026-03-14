@@ -1,7 +1,8 @@
 ---
-title: 'バグトラッカー設定'
-description: 'Testimで利用可能なバグトラッカー統合の概要を説明します。Jira、Trello、Slack、GitHubとの連携方法と、効率的なバグ管理のベストプラクティスを網羅しています。'
-category: '統合'
+title: バグトラッカー設定
+description: >-
+  Testimで利用可能なバグトラッカー統合の概要を説明します。Jira、Trello、Slack、GitHubとの連携方法と、効率的なバグ管理のベストプラクティスを網羅しています。
+category: 統合
 order: 12033
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/bug-tracker-settings'
@@ -29,8 +30,8 @@ Testimは、主要なバグトラッカーおよびプロジェクト管理ツ�
 - **失敗した実行への失敗タイプのタグ付けから報告**  
   失敗したテスト実行に失敗タイプをタグ付けするフローの中で、**Create issue** リンクをクリックしてバグを作成できます。詳細な手順については、[失敗した実行への失敗タイプのタグ付け](/docs/tag-remote-runs-failures) を参照してください。
 
-- **Testim拡張機能からのバグキャプチャ**  
-  [Testim拡張機能 - 概要](/docs/testim-extension-overview) を使用すると、以下の方法でブラウザ上の問題をキャプチャし、そのままバグトラッカーに送信できます：
+- **Testim Extensionからのバグキャプチャ**  
+  [Testim Extension - 概要](/docs/testim-extension-overview) を使用すると、以下の方法でブラウザ上の問題をキャプチャし、そのままバグトラッカーに送信できます：
   - [スクリーンショットのキャプチャ](/docs/testim-extension-capture-screenshot)
   - [ビデオとバグシナリオのキャプチャ](/docs/testim-extension-capture-video-bug-scenario)
 

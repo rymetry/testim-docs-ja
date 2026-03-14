@@ -1,7 +1,7 @@
 ---
-title: 'ターゲット要素のプロパティ編集'
-description: 'ターゲット要素の編集方法を学びます。要素のハイライト、再割り当て、改善、Smart Locatorsの表示方法を解説します。'
-category: 'テスト編集'
+title: ターゲット要素のプロパティ編集
+description: ターゲット要素の編集方法を学びます。要素のハイライト、再割り当て、改善、Smart Locatorsの表示方法を解説します。
+category: テスト編集
 order: 4003
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/editing-target-element-properties'

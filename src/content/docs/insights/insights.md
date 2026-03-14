@@ -1,9 +1,12 @@
 ---
-title: 'インサイト'
-description: '原文: https://help.testim.io/docs/insights'
-category: 'TestOps'
+title: インサイト
+description: >-
+  Insights
+  画面では、テストデータから洞察を得て、品質の現状、能力の構築、チームの進捗状況、プロセス改善領域を理解できます。この画面は、テストに関する重要な情報と統計を集中管理し、詳細なレポートへのアクセスを提供します。これにより、プ
+category: TestOps
 order: 15011
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/insights'
 keywords:
   - インサイト
   - ダッシュボード

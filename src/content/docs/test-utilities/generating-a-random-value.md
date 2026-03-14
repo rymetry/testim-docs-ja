@@ -1,7 +1,7 @@
 ---
-title: 'ランダム値の生成'
-description: '動的データテスト用に乱数を生成するステップの作成方法を学びます。毎回異なるランダム文字列を入力してテストカバレッジを拡張します。'
-category: 'テスト編集'
+title: ランダム値の生成
+description: 動的データテスト用に乱数を生成するステップの作成方法を学びます。毎回異なるランダム文字列を入力してテストカバレッジを拡張します。
+category: テスト編集
 order: 4012
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/generating-a-random-value'

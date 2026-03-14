@@ -1,7 +1,7 @@
 ---
-title: '要素テキストの検証'
-description: '要素に表示されているテキストが期待値と一致するかを検証するステップ。部分一致、完全一致、正規表現など柔軟な検証条件を設定できます。'
-category: '高度な編集'
+title: 要素テキストの検証
+description: 要素に表示されているテキストが期待値と一致するかを検証するステップ。部分一致、完全一致、正規表現など柔軟な検証条件を設定できます。
+category: 高度な編集
 order: 5005
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-element-text'
@@ -116,15 +116,15 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 4. **Target element** のサムネイルにカーソルを合わせます。
 
-![テキスト設定](/images/validations/validate-element-text/449b9a6-Testim_011a_r.png)
+![テキスト設定](/images/validations/validate-element-text/5934637-Testim_015a_r.png)
 
    **Target element** のオプションが表示されます。
 
-![要素設定](/images/validations/validate-element-text/3f8b95d-Testim_010_r.png)
+![要素設定](/images/validations/validate-element-text/79b44a7-Testim_010_r.png)
 
 5. **Reassign** をクリックします。
 
-![要素設定](/images/validations/validate-element-text/b8192be-Testim_010a_r.png)
+![要素設定](/images/validations/validate-element-text/17dc6a7-Testim_010a_r.png)
 
 6. AUT 上で新しい要素を特定し、クリックして選択します。\
    選択した要素が Properties パネルの **Target element** に表示されます。
@@ -142,7 +142,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 2. **Expected value** フィールドに、検証対象のテキスト（文字列 / 正規表現 / JS 式 / パラメーター）を設定します。
 
-![テキスト設定](/images/validations/validate-element-text/d1bc4c3-Testim_011b_r.png)
+![テキスト設定](/images/validations/validate-element-text/d8459d3-Testim_015b_r.png)
 
 > 例: 固定文字列や正規表現 `new RegExp('^Hello')`、`'Hello ' + userName` のようにパラメーターと結合した式などを指定できます。
 

@@ -1,7 +1,7 @@
 ---
-title: 'ここから再生'
-description: 'テストを特定の位置から実行する「ここから再生」機能の使い方と注意点を説明します。テスト全体を実行せずに一部だけを検証したい場合に便利な機能です。'
-category: 'テスト実行'
+title: ここから再生
+description: テストを特定の位置から実行する「ここから再生」機能の使い方と注意点を説明します。テスト全体を実行せずに一部だけを検証したい場合に便利な機能です。
+category: テスト実行
 order: 6019
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/play-from-here'

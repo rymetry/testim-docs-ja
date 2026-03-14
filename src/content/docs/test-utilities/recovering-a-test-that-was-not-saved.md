@@ -1,7 +1,7 @@
 ---
-title: '保存されなかったテストの復旧'
-description: 'ブラウザーキャッシュに自動保存された下書きから、保存されなかったテストを復旧する方法を学びます。'
-category: 'テスト編集'
+title: 保存されなかったテストの復旧
+description: ブラウザーキャッシュに自動保存された下書きから、保存されなかったテストを復旧する方法を学びます。
+category: テスト編集
 order: 4015
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/recovering-a-test-that-was-not-saved'

@@ -1,21 +1,22 @@
 ---
-title: '異なるテスト環境からのブランチの作成とマージ'
-description: '異なるテスト環境でテストを実行するためのブランチ作成とマージ手順（環境選択、マージ後削除など）を説明します。'
-category: 'Salesforceテスト'
+title: 異なるテスト環境からのブランチの作成とマージ
+description: 異なるテスト環境でテストを実行するためのブランチ作成とマージ手順（環境選択、マージ後削除など）を説明します。
+category: Salesforceテスト
 order: 16009
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments'
+sourceUrl: >-
+  https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
 keywords:
-   - ブランチ
-   - テスト環境
-   - 環境切り替え
-   - New Branch
-   - Merge Branch
-   - トランク
-   - master
-   - Salesforce Environments
-   - Testim for Salesforce
-   - ブランチ管理
+  - ブランチ
+  - テスト環境
+  - 環境切り替え
+  - New Branch
+  - Merge Branch
+  - トランク
+  - master
+  - Salesforce Environments
+  - Testim for Salesforce
+  - ブランチ管理
 ---
 
 Testim for Salesforceの各テスト環境は、次の設定で構成されています:

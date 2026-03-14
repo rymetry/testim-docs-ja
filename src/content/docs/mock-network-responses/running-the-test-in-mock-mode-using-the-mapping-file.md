@@ -1,10 +1,11 @@
 ---
-title: 'モックモードでのテスト実行'
-description: 'マッピングファイルを使用したモックモードでのテスト実行方法について説明します。UI経由またはCLI経由での実行手順を学びます。'
-category: 'テスト実行'
+title: モックモードでのテスト実行
+description: マッピングファイルを使用したモックモードでのテスト実行方法について説明します。UI経由またはCLI経由での実行手順を学びます。
+category: テスト実行
 order: 6016
 updated: '2025-11-11'
-sourceUrl: 'https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file'
+sourceUrl: >-
+  https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file
 keywords:
   - モックモード
   - ネットワークモック
@@ -26,7 +27,7 @@ UI経由でローカルに、またはCLI経由でリモートで、モックネ
 
 :fa-arrow-right:**ローカルでテストを実行するには:**
 
-1. Testimビジュアルエディタで、**テストリスト**画面に移動し、新しいHARを記録したか、カスタムHARをアップロードしたテストをクリックします。
+1. Testim Visual Editorで、**テストリスト**画面に移動し、新しいHARを記録したか、カスタムHARをアップロードしたテストをクリックします。
 2. テストエディタ画面で、**再生**ボタンの横に**モックネットワーク**アイコンが表示され、モックネットワークが利用可能であることを示します。
 
 ![再生ボタン横にモックネットワークアイコンが表示されたテスト一覧](/images/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file/173c389-mock6.png)

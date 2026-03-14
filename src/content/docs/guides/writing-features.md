@@ -1,9 +1,10 @@
 ---
-title: '執筆機能リファレンス'
-description: 'Markdownファイルで使える拡張機能の完全ガイド。情報パネル、コードブロック、数式表示など、ドキュメント執筆に必要な機能を網羅的に解説します。'
-category: '執筆ガイド'
+title: 執筆機能リファレンス
+description: Markdownファイルで使える拡張機能の完全ガイド。情報パネル、コードブロック、数式表示など、ドキュメント執筆に必要な機能を網羅的に解説します。
+category: 執筆ガイド
 order: 50
 updated: '2025-11-02'
+sourceUrl: 'https://help.testim.io/docs/writing-features'
 keywords:
   - markdown
   - 執筆ガイド

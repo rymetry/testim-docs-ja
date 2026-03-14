@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { parseSidebarSections, getSectionSlugSet } from './lib/sidebar.mjs';
 
 // Paths
 const ROOT = process.cwd();
@@ -31,111 +32,91 @@ const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 const todayStr = `${yyyy}-${mm}-${dd}`;
 
-// Read sidebar file
-if (!fs.existsSync(SIDEBAR_FILE)) {
-  console.error(`Missing file: ${SIDEBAR_FILE}`);
-  process.exit(1);
-}
+async function main() {
+  const args = process.argv.slice(2);
+  const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
 
-const raw = fs.readFileSync(SIDEBAR_FILE, 'utf8');
-const lines = raw.split(/\r?\n/);
-
-// Parse categories and items
-/** @type {Array<{ english: string, japanese: string | null, items: Array<{status: string, url: string, slug: string}> }>} */
-const categories = [];
-
-let current = null;
-for (const line of lines) {
-  // Heading line: ## Name（日本語）
-  const h = line.match(/^##\s+(.+?)(?:（(.+?)）)?\s*$/);
-  if (h) {
-    const english = h[1].trim();
-    const japanese = h[2] ? h[2].trim() : null;
-    current = { english, japanese, items: [] };
-    categories.push(current);
-    continue;
+  if (!fs.existsSync(SIDEBAR_FILE)) {
+    console.error(`Missing file: ${SIDEBAR_FILE}`);
+    process.exit(1);
   }
 
-  // Item line: - ⏳ or ✅ plus URL
-  const m = line.match(/^\-\s*([✅⏳])\s+(https?:\/\/help\.testim\.io\/docs\/([a-z0-9\-]+))\s*$/);
-  if (m && current) {
-    const status = m[1];
-    const url = m[2];
-    const slug = m[3];
-    current.items.push({ status, url, slug });
-  }
-}
+  const raw = fs.readFileSync(SIDEBAR_FILE, 'utf8');
+  const categories = parseSidebarSections(raw);
+  const sectionSlugs = section ? getSectionSlugSet(section, categories) : null;
 
-// Ensure docs root exists
-fs.mkdirSync(DOCS_ROOT, { recursive: true });
+  fs.mkdirSync(DOCS_ROOT, { recursive: true });
 
-let created = 0;
-/** @type {Array<string>} */
-const createdPaths = [];
+  let created = 0;
+  /** @type {Array<string>} */
+  const createdPaths = [];
 
-for (const cat of categories) {
-  if (!cat || !cat.items.length) continue;
-  const english = cat.english;
-  const japanese = cat.japanese || english; // fallback to English if JP missing
-  const categoryFolder = toKebab(english);
-  const categoryDir = path.join(DOCS_ROOT, categoryFolder);
-  fs.mkdirSync(categoryDir, { recursive: true });
+  for (const cat of categories) {
+    if (!cat || !cat.items.length) continue;
+    const english = cat.english;
+    const japanese = cat.japanese || english;
+    const categoryFolder = toKebab(english);
+    const categoryDir = path.join(DOCS_ROOT, categoryFolder);
+    fs.mkdirSync(categoryDir, { recursive: true });
 
-  // Build order by appearance across all items
-  let order = 0;
-  for (const item of cat.items) {
-    order += 1;
-    if (item.status === '✅') continue; // skip already translated
+    let order = 0;
+    for (const item of cat.items) {
+      order += 1;
+      if (item.status !== '⏳') continue;
+      if (sectionSlugs && !sectionSlugs.has(item.slug)) continue;
 
-    const slug = item.slug;
-    const filePath = path.join(categoryDir, `${slug}.md`);
-    if (fs.existsSync(filePath)) {
-      // Do not overwrite existing content
-      continue;
+      const slug = item.slug;
+      const filePath = path.join(categoryDir, `${slug}.md`);
+      if (fs.existsSync(filePath)) continue;
+
+      const title = `【翻訳中】${titleCaseFromSlug(slug)}`;
+      const description = `${titleCaseFromSlug(slug)} の日本語ドキュメントを準備しています。`;
+      const keywords = [slug, toKebab(english), 'testim'];
+
+      const fm = [
+        '---',
+        `title: '${title}'`,
+        `description: '${description}'`,
+        `category: '${japanese}'`,
+        `order: ${order}`,
+        `updated: '${todayStr}'`,
+        `sourceUrl: '${item.url}'`,
+        'keywords:',
+        ...keywords.map((k) => `  - ${k}`),
+        '---',
+        '',
+      ].join('\n');
+
+      const body = [
+        ':::note{title="翻訳ステータス"}',
+        'このページの日本語翻訳は準備中です。原文をご参照ください。',
+        '',
+        `[原文ページ](${item.url})`,
+        ':::',
+        '',
+        '## 概要',
+        '本文の翻訳は今後追加されます。翻訳の優先度や疑問点があれば Issue でお知らせください。',
+        '',
+      ].join('\n');
+
+      fs.writeFileSync(filePath, fm + body, 'utf8');
+      created += 1;
+      createdPaths.push(path.relative(ROOT, filePath));
     }
+  }
 
-    const title = `【翻訳中】${titleCaseFromSlug(slug)}`;
-    const description = `このページは翻訳作業中です。原文: ${item.url}`;
-    const keywords = [slug, toKebab(english), 'testim'];
-
-    const fm = [
-      '---',
-      `title: '${title}'`,
-      `description: '${description}'`,
-      `category: '${japanese}'`,
-      `order: ${order}`,
-      `updated: '${todayStr}'`,
-      'keywords:',
-      ...keywords.map((k) => `  - ${k}`),
-      '---',
-      '',
-    ].join('\n');
-
-    const body = [
-      ':::note{title="翻訳ステータス"}',
-      'このページの日本語翻訳は準備中です。原文をご参照ください。',
-      '',
-      `[原文ページ](${item.url})`,
-      ':::',
-      '',
-      '## 概要',
-      '本文の翻訳は今後追加されます。翻訳の優先度や疑問点があれば Issue でお知らせください。',
-      '',
-    ].join('\n');
-
-    const content = fm + body;
-    fs.writeFileSync(filePath, content, 'utf8');
-    created += 1;
-    createdPaths.push(path.relative(ROOT, filePath));
+  console.log(`Created ${created} placeholder files.`);
+  for (const createdPath of createdPaths.slice(0, 30)) {
+    console.log(`- ${createdPath}`);
+  }
+  if (createdPaths.length > 30) {
+    console.log(`...and ${createdPaths.length - 30} more`);
   }
 }
 
-console.log(`Created ${created} placeholder files.`);
-// Print up to first 30 created paths for quick inspection
-for (const p of createdPaths.slice(0, 30)) {
-  console.log(`- ${p}`);
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
 }
-if (createdPaths.length > 30) {
-  console.log(`...and ${createdPaths.length - 30} more`);
-}
-

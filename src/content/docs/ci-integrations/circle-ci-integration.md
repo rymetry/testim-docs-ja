@@ -1,7 +1,9 @@
 ---
-title: 'Circle CI統合'
-description: 'Circle CIのローカルSelenium GridでTestimテストを実行する方法について説明します。YAMLファイルの設定手順とサンプルコードを提供します。'
-category: '統合'
+title: Circle CI統合
+description: >-
+  Circle CIのローカルSelenium
+  GridでTestimテストを実行する方法について説明します。YAMLファイルの設定手順とサンプルコードを提供します。
+category: 統合
 order: 12005
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/circle-ci-integration'

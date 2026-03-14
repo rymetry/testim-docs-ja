@@ -1,7 +1,7 @@
 ---
-title: 'デバッグ概要'
-description: 'Testimのデバッグツールの概要。実行時のデバッグ、ブレークポイント、ステップバイステップ実行による効率的な問題解決。'
-category: 'デバッグ'
+title: デバッグ概要
+description: Testimのデバッグツールの概要。実行時のデバッグ、ブレークポイント、ステップバイステップ実行による効率的な問題解決。
+category: デバッグ
 order: 8001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/debugging-overview'

@@ -1,7 +1,7 @@
 ---
-title: 'よくある質問（FAQ）'
-description: 'Testim for Salesforceに関するよくある質問と回答をまとめます。'
-category: 'Salesforceテスト'
+title: よくある質問（FAQ）
+description: Testim for Salesforceに関するよくある質問と回答をまとめます。
+category: Salesforceテスト
 order: 16034
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/faq'

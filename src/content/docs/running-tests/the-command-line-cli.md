@@ -1,7 +1,9 @@
 ---
-title: 'コマンドライン インターフェース (CLI)'
-description: 'Testim CLI のインストール方法と、プロジェクト ID・トークン・グリッド・ラベル・スイート・テスト計画などのパラメータを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。'
-category: 'テスト実行'
+title: コマンドライン インターフェース (CLI)
+description: >-
+  Testim CLI のインストール方法と、プロジェクト
+  ID・トークン・グリッド・ラベル・スイート・テスト計画などのパラメータを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。
+category: テスト実行
 order: 6002
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/the-command-line-cli'
@@ -310,7 +312,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 testim --tunnel --tunnel-port <APP PORT default 80>
 ```
 
-詳細については、[この記事](/docs/ci-integrations/dedicated-run-tunnel) をご確認ください。
+詳細については、[この記事](/docs/dedicated-run-tunnel) をご確認ください。
 
 #### 失敗したテストの再実行
 
@@ -419,7 +421,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 ### Sealights 統合
 
-[Sealights 統合](/docs/other-integrations/sealights-integration) を使用して CLI でテストを実行するときは、Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
+[Sealights 統合](/docs/sealights-integration) を使用して CLI でテストを実行するときは、Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
 
 * **Sealights buildSessionId** - この ID は、実行された特定のビルドに関連しています。通常、これはアプリケーション内の特定のコンポーネントに関連しています。つまり、特定のコンポーネントをテストする場合、このオプションを使用することをお勧めします。
 * **Sealights labId** - 通常、同じ環境でホストされている複数のコンポーネントが同じ LabId を共有できます。複数のコンポーネントをテストする場合、buildSessionId ではなく LabId を使用することをお勧めします。

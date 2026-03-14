@@ -1,7 +1,7 @@
 ---
-title: 'Chrome ブラウザでマイクを使用する'
-description: 'Chrome でテストを実行する際に、モックマイクを有効にして音声入力をシミュレートするための CLI フラグ設定方法を説明します。'
-category: 'テスト実行'
+title: Chrome ブラウザでマイクを使用する
+description: Chrome でテストを実行する際に、モックマイクを有効にして音声入力をシミュレートするための CLI フラグ設定方法を説明します。
+category: テスト実行
 order: 6003
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/allow-chrome-browser-to-use-microphone'

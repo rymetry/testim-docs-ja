@@ -1,7 +1,9 @@
 ---
-title: '複数ブラウザでテストを実行'
-description: 'Chrome・Firefox・Safari・Edge など複数ブラウザでテストを並行実行するために、構成リストと CLI・スケジューラーを使ってブラウザ構成を指定する方法を説明します。'
-category: 'テスト実行'
+title: 複数ブラウザでテストを実行
+description: >-
+  Chrome・Firefox・Safari・Edge など複数ブラウザでテストを並行実行するために、構成リストと
+  CLI・スケジューラーを使ってブラウザ構成を指定する方法を説明します。
+category: テスト実行
 order: 6008
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/running-tests-on-multiple-browsers'

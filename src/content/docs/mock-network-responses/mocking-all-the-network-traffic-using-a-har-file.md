@@ -1,7 +1,8 @@
 ---
-title: 'HARファイルを使用したネットワークトラフィックのモック'
-description: 'HARファイルを使用してネットワークトラフィックをモックする方法について説明します。Testimで作成する方法とカスタムHARファイルを作成する方法の両方を解説します。'
-category: 'テスト実行'
+title: HARファイルを使用したネットワークトラフィックのモック
+description: >-
+  HARファイルを使用してネットワークトラフィックをモックする方法について説明します。Testimで作成する方法とカスタムHARファイルを作成する方法の両方を解説します。
+category: テスト実行
 order: 6014
 updated: '2025-11-11'
 sourceUrl: 'https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file'
@@ -31,7 +32,7 @@ HARファイルを作成する方法は2つあります:
 
 :fa-arrow-right:**TestimでHARファイルを作成するには:**
 
-1. テストを保存した後([テストの記録方法](/docs/recording-tests/how-to-record-a-test)を参照)、プロパティ(:fa-cog:)アイコンをクリックします。**テストプロパティ**ペインが表示されます:
+1. テストを保存した後([テストの記録方法](/docs/how-to-record-a-test)を参照)、プロパティ(:fa-cog:)アイコンをクリックします。**テストプロパティ**ペインが表示されます:
 
 ![テストプロパティペインでモックネットワークを構成する画面](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/ba55bd3-mock1.PNG)
 
@@ -84,7 +85,7 @@ HARファイルを作成する方法は2つあります:
 
 :fa-arrow-right:**HARファイルを使用してテストを実行するには:**
 
-1. Testimビジュアルエディタで、**テストリスト**画面に移動し、新しいHARを記録したか、カスタムHARをアップロードしたテストをクリックします。
+1. Testim Visual Editorで、**テストリスト**画面に移動し、新しいHARを記録したか、カスタムHARをアップロードしたテストをクリックします。
 2. テストエディタ画面で、**再生**ボタンの横に**モックネットワーク**アイコンが表示され、モックネットワークが利用可能であることを示します。
 
 ![モックネットワークアイコンが表示されたテスト再生ボタン](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/7a3343e-mock6.png)

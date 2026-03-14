@@ -1,10 +1,11 @@
 ---
-title: 'テスト実行中に特定のSalesforceレコードを検索して表示する'
-description: 'テスト実行中に特定レコードを表示するためのナビゲーション/検索/作成/記録の方法を解説します。'
-category: 'Salesforceテスト'
+title: テスト実行中に特定のSalesforceレコードを検索して表示する
+description: テスト実行中に特定レコードを表示するためのナビゲーション/検索/作成/記録の方法を解説します。
+category: Salesforceテスト
 order: 16037
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution'
+sourceUrl: >-
+  https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
 keywords:
   - レコード表示
   - ナビゲーション

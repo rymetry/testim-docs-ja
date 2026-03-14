@@ -1,7 +1,7 @@
 ---
-title: '要素の可視性の検証'
-description: '要素が画面上に表示されているかを検証するステップ。ページ上の特定要素の可視性を確認し、期待通りのUI状態であることを保証します。'
-category: '高度な編集'
+title: 要素の可視性の検証
+description: 要素が画面上に表示されているかを検証するステップ。ページ上の特定要素の可視性を確認し、期待通りのUI状態であることを保証します。
+category: 高度な編集
 order: 5003
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-element-visible'
