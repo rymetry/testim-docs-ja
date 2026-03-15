@@ -1,60 +1,38 @@
 ---
 title: TestimとJiraの連携
-description: TestimとJiraを連携してバグレポートを自動化する方法を説明します。統合設定、課題の作成、テスト結果とJiraチケットの連携方法を網羅しています。
+description: Testim から Jira に bug を公開するための接続手順を説明します。Bug ticket に含まれる内容と Jira への初回接続フローを確認できます。
 category: 統合
 order: 12034
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-jira'
 keywords:
-  - testim
-  - jira
+  - Testim
+  - Jira連携
+  - バグ報告
   - バグトラッカー
-  - 課題管理
-  - 統合設定
+  - Jira issue
+  - 不具合チケット
+  - 接続設定
 ---
 
 # TestimとJiraの連携
 
-Jiraは、プロジェクト管理と課題追跡のための強力なツールです。TestimとJiraを連携することで、テスト失敗時に自動的にJiraの課題を作成し、効率的にバグを追跡できます。
+Testim は、新しい Bug ticket を作成します。これには、bug の詳細な説明、bug の再現手順、screen resolution と browser、bug の screenshot が含まれます。次の screenshot は、説明や screenshot などを含む、実際に作成された Bug Ticket の例です。詳細については、[Bug Reporting](/docs/bug-reporting) を参照してください。
 
-## Jira連携の設定
+![Jira に作成された Bug Ticket の例](/images/bug-tracker-settings/connecting-testim-to-jira/6290943-image.png)
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **Jira**セクションを見つけます
-4. **Connect（接続）** をクリックします
-5. Jiraの認証情報を入力します：
-   - **Jira URL**: JiraインスタンスのURL（例：`https://your-company.atlassian.net`）
-   - **Email**: Jiraアカウントのメールアドレス
-   - **API Token**: JiraのAPIトークン（[Atlassianアカウント設定](https://id.atlassian.com/manage-profile/security/api-tokens)で生成）
-6. **Connect（接続）** をクリックして接続を完了します
+Testim を Jira に接続するには、まず Jira に login する必要があります。初回の handshake が確立されると、その後は接続を再設定しなくても Jira に issue を作成できるようになります。
 
-## Jira課題の作成
+## TestimをJiraに接続する
 
-テスト失敗時にJira課題を作成するには：
+1. `Settings > Bug Tracker` に移動します。
+2. Jira が選択されており、すでに Jira に logged in していることを確認します。
+3. `Host` field に Jira site の URL を入力します。たとえば `https://<yourcompany>.atlassian.net` です。
 
-1. テスト結果画面を開きます
-2. 失敗したステップを選択します
-3. **Create Bug（バグを作成）** ボタンをクリックします
-4. **Jira**を選択します
-5. 課題の詳細を入力します：
-   - **Project（プロジェクト）**: Jiraプロジェクトを選択
-   - **Issue Type（課題タイプ）**: バグ、タスクなどを選択
-   - **Summary（要約）**: 課題のタイトル
-   - **Description（説明）**: 詳細な説明（自動的にテスト情報が含まれます）
-6. **Create（作成）** をクリックします
+![Jira の Host field](/images/bug-tracker-settings/connecting-testim-to-jira/f26f1c9-jira1.PNG)
 
-作成されたJira課題には、以下の情報が自動的に含まれます：
-- テスト名
-- 失敗したステップ
-- スクリーンショット
-- エラーメッセージ
-- テスト実行へのリンク
+logged in していない場合は、**Log in** リンクをクリックして Jira に login します。
 
-## トラブルシューティング
+4. **Select** をクリックします。**Select** ボタンは **Selected** に置き換わります。
 
-接続に問題がある場合は、以下を確認してください：
-
-- Jira URLが正しいか（`https://`を含む完全なURL）
-- APIトークンが有効か
-- Jiraアカウントに課題を作成する権限があるか
+![Jira 接続後に Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-jira/ac0f29a-jira2.png)

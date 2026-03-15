@@ -7,12 +7,13 @@ updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
 keywords:
   - Testim
+  - GitHub連携
   - GitHub Issues
-  - GitHub
   - バグトラッカー
-  - issue
-  - Bug Tracker
-  - Settings
+  - バグ報告
+  - issue作成
+  - 接続設定
+  - 不具合管理
 ---
 
 # TestimとGitHubの連携

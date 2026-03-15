@@ -7,12 +7,13 @@ updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/bug-tracker-settings'
 keywords:
   - Testim
-  - バグトラッカー
-  - issue
-  - Jira
-  - Trello
-  - Slack
-  - GitHub
+  - バグトラッカー設定
+  - バグ報告
+  - issue管理
+  - Jira連携
+  - Trello連携
+  - Slack連携
+  - GitHub連携
 ---
 
 # バグトラッカー設定
@@ -29,7 +30,7 @@ bug や issue を tracking system に報告する方法はいくつかありま�
 
 ![失敗した実行から Create issue を選択](/images/bug-tracker-settings/bug-tracker-settings/78599fb-tagtestwithcreateissue.png)
 
-- [Testim Extension](/docs/testim-extension-overview) を使うと、issue を [Screenshot](/docs/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
+- [Testim Chrome Extension](/docs/testim-extension-overview) を使うと、issue を [Screenshot](/docs/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
 
 ![Testim Extension から bug を Publish](/images/bug-tracker-settings/bug-tracker-settings/23ee812-publishbug.png)
 

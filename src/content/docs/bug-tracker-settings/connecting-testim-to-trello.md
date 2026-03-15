@@ -1,58 +1,40 @@
 ---
 title: TestimとTrelloの連携
-description: >-
-  TestimとTrelloを連携してバグレポートをTrelloカードとして管理する方法を説明します。統合設定、カード作成、テスト結果の追跡方法を網羅しています。
+description: Testim から Trello に bug を公開するための接続手順を説明します。Testim Automate への認可と Trello への初回接続フローを確認できます。
 category: 統合
 order: 12035
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-trello'
 keywords:
-  - trello
+  - Testim
+  - Trello連携
+  - バグ報告
   - バグトラッカー
-  - カード管理
-  - 統合設定
+  - Trelloカード
+  - 接続設定
+  - 不具合管理
 ---
 
 # TestimとTrelloの連携
 
-Trelloは、カンバンボードを使用したプロジェクト管理ツールです。TestimとTrelloを連携することで、テスト失敗時に自動的にTrelloカードを作成し、視覚的にバグを管理できます。
+Testim は、新しい bug ticket を作成します。これには、bug の詳細な説明、bug の再現手順、screen resolution と browser、bug の screenshot が含まれます。Testim を Trello に接続するには、以下で説明するように access permission を Testim Automate に付与する必要があります。
 
-## Trello連携の設定
+## TestimをTrelloに接続する
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **Trello**セクションを見つけます
-4. **Connect（接続）** をクリックします
-5. Trelloの認証画面が表示されます
-6. **Allow（許可）** をクリックしてTestimにアクセスを許可します
-7. 接続が完了します
+1. `Settings > Bug Tracker` に移動します。
+2. **Trello** ロゴをクリックします。
+3. **Log in** リンクをクリックします。
 
-## Trelloカードの作成
+![Trello の Log in リンク](/images/bug-tracker-settings/connecting-testim-to-trello/7e41e35-trello1.png)
 
-テスト失敗時にTrelloカードを作成するには：
+次の notice が表示されます。
 
-1. テスト結果画面を開きます
-2. 失敗したステップを選択します
-3. **Create Bug（バグを作成）** ボタンをクリックします
-4. **Trello**を選択します
-5. カードの詳細を入力します：
-   - **Board（ボード）**: Trelloボードを選択
-   - **List（リスト）**: リストを選択（例：To Do、Bugs）
-   - **Title（タイトル）**: カードのタイトル
-   - **Description（説明）**: 詳細な説明（自動的にテスト情報が含まれます）
-6. **Create（作成）** をクリックします
+![Trello の認可 notice](/images/bug-tracker-settings/connecting-testim-to-trello/cea3497-trello2.PNG)
 
-作成されたTrelloカードには、以下の情報が自動的に含まれます：
-- テスト名
-- 失敗したステップ
-- スクリーンショット
-- エラーメッセージ
-- テスト実行へのリンク
+4. **Log in** をクリックし、アカウントに login します。
 
-## トラブルシューティング
+次の notice が表示されます。
 
-接続に問題がある場合は、以下を確認してください：
+![Trello へのアクセス許可 notice](/images/bug-tracker-settings/connecting-testim-to-trello/7fdec49-trello3.PNG)
 
-- Trelloアカウントが有効か
-- Testimに必要な権限が付与されているか
-- 選択したボードへのアクセス権限があるか
+5. **Allow** をクリックします。

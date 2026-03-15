@@ -9,10 +9,12 @@ keywords:
   - Testim
   - Slack連携
   - バグトラッカー
-  - Slack
-  - channel
-  - Bug Reporting
+  - バグ報告
+  - Slack channel
+  - 接続設定
+  - アクセス権限
   - プロ機能
+  - 不具合通知
 ---
 
 # TestimとSlackの連携
