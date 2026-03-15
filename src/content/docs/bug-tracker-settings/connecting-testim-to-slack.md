@@ -1,98 +1,47 @@
 ---
 title: TestimとSlackの連携
-description: >-
-  TestimとSlackを連携して、失敗したテストやバグの詳細を指定したSlackチャンネルに投稿する方法と、テスト結果の通知設定について説明します。統合設定、チャンネル選択、通知のカスタマイズ方法を網羅しています。
+description: Testim から指定した Slack channel に bug の説明を送るための接続手順を説明します。
 category: 統合
 order: 12036
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-slack'
 keywords:
+  - Testim
   - Slack連携
-  - バグ報告
-  - バグキャプチャ
   - バグトラッカー
-  - 通知設定
-  - テスト失敗
-  - テスト結果通知
-  - 統合設定
+  - Slack
+  - channel
+  - Bug Reporting
+  - プロ機能
 ---
 
 # TestimとSlackの連携
 
-Slackは、チームコミュニケーションのための人気のあるプラットフォームです。TestimとSlackを連携することで、バグの再現手順、画面解像度やブラウザ情報、スクリーンショットなどを含むバグの詳細を、指定したSlackチャンネルに投稿できます。また、テスト実行結果の通知もリアルタイムに受け取ることができます。
+Testim は、指定した Slack channel に bug の説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度と browser、バグのスクリーンショットが含まれます。Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
 
-> 📘 プロ機能
->
-> この機能はProfessionalプラン以上で利用できます。プランの詳細については [Testimの料金プラン](https://www.testim.io/pricing/) を参照してください。  
-> ご利用前に、[プライバシーポリシー](https://www.testim.io/privacy) を確認し、データの取り扱いについて理解しておいてください。
+開始前に、データの取り扱いについて [プライバシーポリシー](https://www.testim.io/privacy) を確認してください。
 
-## Slack連携の設定
+:::info{title="プロ機能"}
+この機能はProfessionalプラン以上で利用できます。プランの詳細については [Testimの料金プラン](https://www.testim.io/pricing/) を参照してください。
+:::
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **Slack**セクションを見つけます
-4. **Connect（接続）** をクリックします
-5. Slackの認証画面が表示されます
-6. Testimを追加するワークスペースを選択します
-7. 通知を送信するチャンネルを選択します
-8. **Allow（許可）** をクリックしてTestimにアクセスを許可します
-9. 接続が完了します
+## TestimをSlackに接続する
 
-## 通知の設定
+1. `Settings > Bug Tracker` に移動します。
+2. Slack にログイン済みであることを確認し、**Slack** ロゴをクリックします。
+3. **Add to Slack** をクリックします。
 
-Slack連携では、以下のタイミングで通知を送信できます：
+次の notice が表示されます。
 
-### テスト実行完了時
+![Slack の認可画面](/images/bug-tracker-settings/connecting-testim-to-slack/04ae870-f6257bf-Screen_Shot_2019-11-21_at_21.48.45.png)
 
-テスト実行が完了したときに通知を送信します。
+4. ドロップダウンメニューから対象の channel を選び、**Allow** をクリックします。
+5. Testim の画面で **Select** をクリックします。
 
-- テストの成功/失敗状況
-- 実行時間
-- テスト結果へのリンク
+![Slack channel の選択](/images/bug-tracker-settings/connecting-testim-to-slack/b42f2d6-slack1.PNG)
 
-### テスト失敗時のみ
+**Select** ボタンは **Selected** に変わります。
 
-テストが失敗したときにのみ通知を送信します。
+![Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-slack/9781336-slack3.PNG)
 
-- 失敗したテストの詳細
-- エラーメッセージ
-- スクリーンショット（リンク）
-
-### スケジュール実行完了時
-
-スケジュールされたテスト実行が完了したときに通知を送信します。
-
-- 実行されたテストの数
-- 成功/失敗の内訳
-- 全体のサマリー
-
-## 通知のカスタマイズ
-
-通知の内容は、プロジェクト設定でカスタマイズできます：
-
-1. **Settings（設定）** > **Notifications（通知）** に移動します
-2. Slack通知の設定を選択します
-3. 以下をカスタマイズできます：
-   - 通知を送信するチャンネル
-   - 通知するイベントの種類
-   - メッセージのフォーマット
-
-## バグレポートの作成
-
-テスト失敗時にSlackからバグレポートを作成することもできます：
-
-1. Slack通知に含まれるリンクをクリックします
-2. テスト結果画面が開きます
-3. **Create Bug（バグを作成）** ボタンをクリックします
-4. 統合されたバグトラッカー（Jira、Trelloなど）を選択します
-
-バグキャプチャ機能の詳しい使い方については、[バグ報告](/docs/bug-reporting) を参照してください。
-
-## トラブルシューティング
-
-通知が届かない場合は、以下を確認してください：
-
-- Slackワークスペースへの接続が有効か
-- Testimアプリに通知を送信する権限があるか
-- 選択したチャンネルが存在し、アクセス可能か
-- 通知設定が正しく設定されているか
+[バグ報告](/docs/bug-reporting) の手順に従って、bug capture を設定してください。
