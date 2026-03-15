@@ -20,7 +20,7 @@ keywords:
 
 ![CircleCIロゴ](/images/ci-integrations/circle-ci-integration/3eecb4e-circleci.png)
 
-### YAMLファイル
+### YAML File
 
 [Circle CI](https://circleci.com/)のローカルSelenium Gridを使用してTestimと統合するには、circle.yamlファイルに以下の行を追加する必要があります:
 
