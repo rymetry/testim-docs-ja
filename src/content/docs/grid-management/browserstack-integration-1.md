@@ -1,73 +1,69 @@
 ---
-title: BrowserStack統合
+title: BrowserStack Integration
 description: >-
-  TestimとBrowserStackを統合してクラウドベースのブラウザおよびモバイルデバイスでテストを実行する方法を説明します。設定手順、認証情報の管理、実行方法を網羅しています。
+  Testim で BrowserStack Grid を追加し、CLI、CI、Scheduler、Test Plan、Test
+  Editor からテストを実行する方法を説明します。
 category: 統合
 order: 12027
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/browserstack-integration-1'
 keywords:
   - BrowserStack
-  - クラウドグリッド
-  - ブラウザテスト
-  - モバイルテスト
+  - Grid
+  - CLI
+  - Scheduler
+  - Test Plan
 ---
 
-# BrowserStack統合
+Testim で作成したテストを BrowserStack 上で実行できます。
 
-[BrowserStack](https://www.browserstack.com/)は、クラウドベースのブラウザおよびモバイルデバイスでテストを実行できるプラットフォームです。TestimとBrowserStackを統合することで、BrowserStackの広範なブラウザとデバイスのカバレッジを活用できます。
+この記事では、Testim 上で BrowserStack を設定する方法と、テストを実行する方法を説明します。
 
-## 前提条件
+## BrowserStack Grid を追加する
 
-- 有効なBrowserStackアカウント
-- BrowserStackのユーザー名とアクセスキー
+:fa-arrow-right: **BrowserStack Grid を追加するには:**
 
-## BrowserStack統合の設定
+1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Browserstack** を選択します。
+2. **Next** をクリックします。
+3. 次の field を入力します。
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **BrowserStack**セクションを見つけます
-4. 以下の情報を入力します：
-   - **Username（ユーザー名）**: BrowserStackのユーザー名
-   - **Access Key（アクセスキー）**: BrowserStackのアクセスキー
-5. **Connect（接続）** をクリックします
+* **Name**: 実行時に使用する Grid 名
+* **Host**: BrowserStack の host name
+* **Port**: BrowserStack の port
+* **Username**: BrowserStack の user name
+* **Password/access key**: 接続に使用する BrowserStack access key または password
 
-## BrowserStackでテストを実行する
+![BrowserStack Grid の接続情報を設定する画面](/images/grid-management/browserstack-integration-1/be4fb2b-Jul-24-2021_08-13-41.gif)
 
-### エディタから実行
+## Grid で実行する方法
 
-1. テストエディタを開きます
-2. **Run（実行）** ボタンをクリックします
-3. **Grid（グリッド）** ドロップダウンから **BrowserStack** を選択します
-4. 実行したいブラウザまたはデバイスを選択します
-5. **Run（実行）** をクリックしてテストを開始します
+次のいずれかの方法で、テストをリモート実行できます。
 
-### CLIから実行
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
 
-```bash
-testim --grid browserstack --browser chrome --token <your-token>
-```
+Grid 名を指定して `--grid` parameter を追加します。
 
-### モバイルテストの実行
+[Scheduler](/docs/scheduler)
 
-BrowserStackでモバイルテストを実行する場合：
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-```bash
-testim --grid browserstack --device "iPhone 13" --os-version "15.0" --token <your-token>
-```
+[Test Plan](/docs/test-plans)
 
-### 追加オプション
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-BrowserStackの追加オプション（タイムゾーン、画面解像度など）については、[SauceLabs/BrowserStackオプション](saucelabs-browserstack-options)を参照してください。
+### editor から実行する
 
-## BrowserStackでの結果確認
+Test Editor から直接 Grid 上でテストを実行できます。
 
-テスト実行後、Testim上で結果を確認できます。また、BrowserStackダッシュボードでも詳細なログ、スクリーンショット、ビデオを確認できます。
+* **Run** ボタンの横にある options arrow をクリックします。
+* **Run on a grid** をクリックします。
 
-## トラブルシューティング
+その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
 
-接続に問題がある場合は、以下を確認してください：
+![Test Editor から BrowserStack Grid を選んで実行する画面](/images/grid-management/browserstack-integration-1/0ca9bb7-Jul-21-2021_13-11-22.gif)
 
-- BrowserStackのユーザー名とアクセスキーが正しいか
-- BrowserStackアカウントがアクティブで、利用可能な並列実行枠があるか
-- 選択したブラウザ/デバイスがBrowserStackで利用可能か
+テスト実行に追加 option を渡したい場合は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/saucelabs-browserstack-options) を参照してください。
+
+:::info
+`--grid` parameter は、旧来の host / port parameter を置き換えます。
+:::

@@ -1,53 +1,45 @@
 ---
-title: Headspin統合
+title: HeadSpin Integration
 description: >-
-  TestimとHeadspinを統合してリモートデバイスでモバイルテストを実行する方法を説明します。実デバイスへのアクセス、設定手順、実行方法を網羅しています。
+  Testim で HeadSpin Grid を追加し、HeadSpin API Token を取得して設定する方法を説明します。
 category: 統合
 order: 12031
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/headspin-integration'
 keywords:
   - HeadSpin
-  - モバイルグリッド
-  - リモートデバイス
-  - クラウドデバイス
-  - 統合設定
+  - API Token
+  - Grid
+  - mobile
+  - Testim HeadSpin Mobile
 ---
 
-# Headspin統合
+Testim で作成した mobile テストを HeadSpin 上で実行できます。
 
-[Headspin](https://www.headspin.io/)は、世界中に配置された実デバイスへのアクセスを提供するモバイルテストプラットフォームです。TestimとHeadspinを統合することで、Headspinの実デバイスでモバイルテストを実行できます。
+この記事では、Testim 上で HeadSpin Grid を設定する方法を説明します。
 
-## 前提条件
+## HeadSpin Grid を追加する
 
-- 有効なHeadspinアカウント
-- Testimプロジェクトへのアクセス権限
+:fa-arrow-right: **HeadSpin Grid を追加するには:**
 
-## Headspin統合の設定
+1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Testim HeadSpin Mobile** を選択します。
+2. **Next** をクリックします。
+3. 次の field を入力します。
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **Headspin**セクションを見つけます
-4. 以下の情報を入力します：
-   - **API Token（APIトークン）**: HeadspinダッシュボードからAPIトークンを取得して入力
-5. **Connect（接続）** をクリックします
+* **Name**: 実行時に使用する Grid 名
+* **API Token**: HeadSpin 側で生成した API Token。詳細は後述します。
 
-## Headspinでテストを実行する
+![HeadSpin Grid の Name と API Token を設定する画面](/images/grid-management/headspin-integration/29244fe-2023-01-29_17-51-47.gif)
 
-Headspinデバイスでテストを実行するには：
+## HeadSpin API Token を取得する
 
-1. テストエディタを開きます
-2. **Run（実行）** ボタンをクリックします
-3. **Grid（グリッド）** ドロップダウンから **Headspin** を選択します
-4. 実行したいデバイスを選択します
-5. **Run（実行）** をクリックしてテストを開始します
+:fa-arrow-right: **HeadSpin API Token を取得するには:**
 
-### CLIでの実行
+1. HeadSpin account に login します。
+2. 画面右上で user name をクリックします。
 
-CLIからHeadspinデバイスでテストを実行する場合は、`--grid` パラメータを使用します：
+![HeadSpin の user menu を開いた状態](/images/grid-management/headspin-integration/689ab5c-2023-01-29_18-01-05.png)
 
-```bash
-testim --grid headspin --device "iPhone 13" --token <your-token>
-```
-
-これでHeadspin統合が完了し、実デバイスでモバイルテストを実行できるようになります。
+3. **Settings** をクリックします。
+4. **User Settings** の **API Token** section で、既存 token をコピーするか、**+New Token** button をクリックして新規 token を作成します。
+5. API Token をコピーし、Testim の API Token field に貼り付けます。
