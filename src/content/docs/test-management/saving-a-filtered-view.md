@@ -3,7 +3,7 @@ title: フィルタービューの保存
 description: フィルタリングしたビューを保存して、リストを整理する方法について説明します。
 category: テスト管理
 order: 9017
-updated: '2025-09-22'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/saving-a-filtered-view'
 keywords:
   - フィルタービュー

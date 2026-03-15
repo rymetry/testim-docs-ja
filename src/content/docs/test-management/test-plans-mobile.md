@@ -3,7 +3,7 @@ title: テストプラン - モバイル
 description: すべてのテスト、セットアップ・クリーンアップテスト、および実行設定を含むモバイルアプリのテストプランの作成方法について説明します。
 category: テスト管理
 order: 9013
-updated: '2025-09-22'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/test-plans-mobile'
 keywords:
   - モバイルテストプラン
@@ -48,19 +48,19 @@ keywords:
 
 ![Add After Allセクションでクリーンアップ用のテストスイートやラベルを設定する画面](/images/test-management/test-plans-mobile/7cf9f5b-newmobiletestplan.png)
 
-> 📘 注意:
->
-> * 「Before all」と「After all」のテストは、常に並列レベル`1`で実行されます。CLIで設定されている場合、「Test List」のみがより高い並列化レベルで実行できます。
-> * 「before all」テストの1つが失敗した場合、Test listのテストは実行されません。
-> * 「Add After All」のテストは、Test listのテストが失敗しても常に実行されます。
+:::note{title="注意"}
+* 「Before all」と「After all」のテストは、常に並列レベル `1` で実行されます。CLI で設定されている場合、「Test List」のみがより高い並列化レベルで実行できます。
+* 「before all」テストの1つが失敗した場合、Test list のテストは実行されません。
+* 「Add After All」のテストは、Test list のテストが失敗しても常に実行されます。
+:::
 
 8. **Where to Run**フィールドで、テストを実行する**Mobile Grid**を選択します。詳細については、[Grid Management](/docs/grid-management)を参照してください。
 
 ![Where to Runフィールドでモバイルグリッドを選択する画面](/images/test-management/test-plans-mobile/103e4f6-newmobiletestplan.png)
 
-> 📘
->
-> **Override default configurations**を選択すると、選択したグリッドに関連付けられた設定のみが表示されます。
+:::note
+**Override default configurations** を選択すると、選択したグリッドに関連付けられた設定のみが表示されます。
+:::
 
 9. **What to run on**セクションで、**Override default configurations**チェックボックスを選択して、選択した設定でテストのデフォルト設定を上書きします。選択したグリッドでサポートされている設定のみが表示されます。設定のリストから選択するか、新しい設定を作成します。詳細については、[Configurations Library](/docs/configuration-library-mobile)を参照してください。複数の設定を選択すると、それぞれ複数の実行が行われます。各設定は、グリッドから自動的に選択された単一のデバイスで実行される実行をトリガーします。
 
@@ -76,10 +76,17 @@ keywords:
 
 テストプランを実行するには、次のようにCLIコマンドでプラン名を指定する必要があります:
 
-`--test-plan "Test Plan Demo"`
+```shell
+--test-plan "Test Plan Demo"
+```
 
-> 📘 CLIに別のグリッド名を追加すると、プランで定義されたグリッドが上書きされます。
-> 📘 CLIステップ: テストにCLIステップがある場合は、実行前にCLIが実行されていることを確認してください。
+:::note
+CLI に別のグリッド名を追加すると、プランで定義されたグリッドが上書きされます。
+:::
+
+:::note{title="CLI Steps"}
+テストに CLI ステップがある場合は、実行前に CLI が実行されていることを確認してください。
+:::
 
 ## テスト間でのパラメーターの共有
 

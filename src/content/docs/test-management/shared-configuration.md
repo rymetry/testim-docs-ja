@@ -3,7 +3,7 @@ title: 共有構成
 description: 複数/すべてのテストで同じテスト構成を使用します
 category: テスト管理
 order: 9010
-updated: '2025-09-22'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/shared-configuration'
 keywords:
   - 共有構成
@@ -16,7 +16,7 @@ keywords:
 
 複数/すべてのテストで同じテスト構成を使用します
 
-**Configuration List** ページには、ローカルで実行する場合でも CLI で実行する場合でも、作成されテストに使用できるすべてのテスト構成が表示されます。テストの構成は、テストを実行するために使用されるシステム仕様を決定します。テストをローカルで実行する場合、構成はローカル環境と一致する必要があります。Testim Grid でテストを実行する場合、Testim は指定した環境をシミュレートします。CLI でテストを実行するときに `--test-config` フラグを使用してテスト構成を含めることができます。詳細については、[Test Config](doc:the-command-line-cli#section-test-config) を参照してください。このリストのテスト構成は、*Configuration Library* または *Test Editor* の Setup ステップで作成および変更できます。
+**Configuration List** ページには、ローカルで実行する場合でも CLI で実行する場合でも、作成されテストに使用できるすべてのテスト構成が表示されます。テストの構成は、テストを実行するために使用されるシステム仕様を決定します。テストをローカルで実行する場合、構成はローカル環境と一致する必要があります。Testim Grid でテストを実行する場合、Testim は指定した環境をシミュレートします。CLI でテストを実行するときに `--test-config` フラグを使用してテスト構成を含めることができます。詳細については、[Test Config](/docs/the-command-line-cli) を参照してください。このリストのテスト構成は、*Configuration Library* または *Test Editor* の Setup ステップで作成および変更できます。
 
 ## 既存の構成を表示する
 
@@ -31,11 +31,16 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![Configuration LibraryにWebテスト構成の一覧が表示された画面](/images/test-management/shared-configuration/6d34e75-webconfiglibrary.png)
 
-* **Configuration Library** – 構成ライブラリで新しい構成を作成できます。この構成は、その構成で設定されたテストで実行されるすべてのステップに適用されます（CLI またはスケジューラー経由で実行されるテストを含む）。テスト構成の詳細については、[Setting the Test Configuration](doc:how-to-record-a-test#section-step-3-setting-the-test-configuration) を参照してください。CLI の詳細については、[Command line interface: Test Config](doc:the-command-line-cli#section-test-config) を参照してください。スケジューラーの詳細については、[Scheduler](/docs/scheduler) を参照してください。
+* **Configuration Library** – 構成ライブラリで新しい構成を作成できます。この構成は、その構成で設定されたテストで実行されるすべてのステップに適用されます（CLI またはスケジューラー経由で実行されるテストを含む）。テスト構成の詳細については、[Setting the Test Configuration](/docs/how-to-record-a-test) を参照してください。CLI の詳細については、[Command line interface: Test Config](/docs/the-command-line-cli) を参照してください。スケジューラーの詳細については、[Scheduler](/docs/scheduler) を参照してください。
 * **Setup Step in the Test Editor** – すべてのテストには、テストの Setup ステップのプロパティパネルからアクセスできる独自のデフォルト構成があります。テストのデフォルト構成で設定された構成パラメーターは、テストが異なる構成で CLI またはスケジューラーから実行されない限り適用されます。
 
-> 📘 テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command line interface](/docs/the-command-line-cli) を参照してください。
-> 🚧 テスト構成に対応しないシステムでテストをローカルで実行すると、テストは利用可能な構成で実行され、警告メッセージが表示されます。
+:::note
+テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command line interface](/docs/the-command-line-cli) を参照してください。
+:::
+
+:::warning
+テスト構成に対応しないシステムでテストをローカルで実行すると、テストは利用可能な構成で実行され、警告メッセージが表示されます。
+:::
 
 ## 構成ライブラリでテスト構成を作成および変更する
 
@@ -70,7 +75,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
    詳細構成オプションが表示されます。\
    ![テスト構成の詳細設定セクションでNative Eventsの動作を設定する画面](/images/test-management/shared-configuration/eac30c0-advancednative.jpg)
 
-5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](doc:how-to-record-a-test#section-test-configuration-parameters) を参照してください。
+5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](/docs/how-to-record-a-test) を参照してください。
 
 6. **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。
 
@@ -145,7 +150,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![Edit Config画面でNative Eventsやその他の詳細オプションを変更する画面](/images/test-management/shared-configuration/6780665-editconfig2.jpg)
 
-5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](doc:how-to-record-a-test#section-test-configuration-parameters) を参照してください。
+5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](/docs/how-to-record-a-test) を参照してください。
 6. **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはデフォルトでネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。
 7. **Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
 8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/before-after-hooks) を参照してください。
@@ -258,7 +263,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 * **Browser** セクションで、ドロップダウン矢印をクリックして、希望するブラウザーを選択します。
 * **OS** セクションで、ドロップダウン矢印をクリックして、希望するオペレーティングシステムを選択します。
 * **Resolution** セクションで、希望する解像度を選択します。
-* **Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](doc:how-to-record-a-test#section-test-configuration-parameters) を参照してください。
+* **Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](/docs/how-to-record-a-test) を参照してください。
 * **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはデフォルトでネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。**Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
 * **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/before-after-hooks) を参照してください。
 

@@ -3,7 +3,7 @@ title: 構成ライブラリ - モバイル
 description: テストを実行するために使用されるシステム仕様を決定するモバイル構成を管理します
 category: テスト管理
 order: 9011
-updated: '2025-09-22'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/configuration-library-mobile'
 keywords:
   - モバイル構成
@@ -60,8 +60,13 @@ keywords:
 
 5. **Static Allocation** オプションを選択した場合、**Devices** セクションで、テストで使用したい特定のデバイスのチェックボックスを選択します。このデバイスのリストから、Testim は、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスを選択します。
 
-> 📘 注意:
-> 複数のデバイスを選択した場合でも、Testim はテスト実行中に使用される1つのデバイスのみを選択します。このデバイスは、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスです。SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/appium/dynamic-device-allocation) を参照してください。
+:::warning{title="注意"}
+複数のデバイスを選択した場合でも、Testim はテスト実行中に使用される1つのデバイスのみを選択します。このデバイスは、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスです。
+:::
+
+:::note
+BrowserStack と SauceLabs では、1つのデバイスしか選択できません。
+:::
 
 6. **Dynamic Allocation** オプションを選択した場合、**Rules** で、次の操作を行って条件に一致するデバイスを動的に選択するルールを定義します:
    1. **Field** で、デバイスをフィルタリングする条件を選択します。たとえば、**OS Version** を選択して、オペレーティングシステムのバージョンでフィルタリングします。条件のリストは、その特定のプロバイダーによって提供される機能に基づいて、異なるグリッドプロバイダーでは若干異なる場合があります。
@@ -69,7 +74,15 @@ keywords:
    3. **Operand** で、ルールのオペランド値を入力します。正規表現ルールの場合は、正規表現を入力します。\
       現在ルールに一致する選択したグリッドからのデバイスのリストは、以下の **Devices** セクションに表示されます。動的割り当て構成でテストを実行する場合、Testim はルール条件を満たすデバイスのセットから最初に利用可能なデバイスを検索し、そのデバイスをテストに使用します。グリッドプロバイダーがグリッド上のデバイスを更新すると、デバイスは引き続きルールを満たすかどうかに基づいて、構成で自動的に利用可能または利用不可になります。
 
-> 📘 注意: ルールが複数のデバイスに一致する場合でも、Testim はテスト実行中に使用される1つのデバイスのみを選択します。このデバイスは、ルール条件を満たすデバイスのセットから最初に利用可能なデバイスです。
+:::warning{title="注意"}
+SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。
+
+BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/app-automate/appium/dynamic-device-allocation) を参照してください。
+:::
+
+:::note
+ルールが複数のデバイスに一致する場合でも、Testim はテスト実行中に使用される1つのデバイスのみを選択します。このデバイスは、ルール条件を満たすデバイスのセットから最初に利用可能なデバイスです。
+:::
 
 7. 下部近くの **Advanced** リンクをクリックして、構成に追加の詳細パラメーターを定義します。**Back** ボタンをクリックして、メイン構成設定に戻ります。
 
@@ -88,9 +101,9 @@ keywords:
 
 すべてのテストには、テストの Setup ステップの **Properties** パネルからアクセスできる独自のデフォルト構成があります。デフォルトでは、**Device Name** 設定は「Any device」、**OS Version** 設定は「Any version」になります。この設定に従って、Testim は選択したグリッド上で最初に利用可能なデバイスを選択します。テストのデフォルト構成で設定された構成パラメーターは、テストが異なるテスト構成で実行されない限り適用されます。
 
-> 📘
->
-> テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command Line Interface](/docs/the-command-line-cli#test-config) を参照してください。
+:::note
+テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command Line Interface](/docs/the-command-line-cli#test-config) を参照してください。
+:::
 
 ## テスト構成のクローン作成、名前変更、変更、削除
 
@@ -106,9 +119,9 @@ keywords:
 
 ![Configuration Libraryでテスト構成を選択しCloneアイコンをクリックする画面](/images/test-management/configuration-library-mobile/1e505f5-image.png)
 
-> 📘
->
-> または、行を右クリックして、**Clone** を選択することもできます。
+:::note
+または、行を右クリックして、**Clone** を選択することもできます。
+:::
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
 5. **Clone** をクリックします。\
@@ -126,9 +139,9 @@ keywords:
    コンテキストツールが表示されます。
 3. **Rename** アイコンをクリックします。
 
-> 📘
->
-> または、行を右クリックして、**Rename** を選択することもできます。
+:::note
+または、行を右クリックして、**Rename** を選択することもできます。
+:::
 
 **Edit Name** 設定が表示されます。
 
@@ -168,9 +181,9 @@ keywords:
 3. **Delete** アイコンをクリックします。\
    ![Configuration LibraryでDeleteアイコンをクリックしてテスト構成の削除を実行する画面](/images/test-management/configuration-library-mobile/138a8ac-image_2.png)
 
-> 📘
->
-> または、行を右クリックして、**Delete** を選択することもできます。
+:::note
+または、行を右クリックして、**Delete** を選択することもできます。
+:::
 
 確認ダイアログが表示されます。
 
