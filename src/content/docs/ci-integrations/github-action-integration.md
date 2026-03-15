@@ -21,7 +21,8 @@ TestimとGitHub Actionsを統合するには、新しいGitHub-Actionワーク�
 
 以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 
-### YAMLファイル
+<!-- markdownlint-disable-next-line MD036 -->
+**YAML File**
 
 ```yaml
 name: Testim E2E
@@ -39,6 +40,6 @@ jobs:
             - run: testim --token <TESTIM_TOKEN> --project <PROJECT_ID> --grid <GRID_NAME>
 ```
 
-> 📘
->
-> 機密データ(プロジェクトトークンなど)を扱うベストプラクティスは、[暗号化されたシークレット](https://docs.github.com/en/actions/security-guides/encrypted-secrets)を使用することです
+:::note
+機密データ（プロジェクトトークンなど）を扱うベストプラクティスは、[encrypted secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)を使用することです。
+:::
