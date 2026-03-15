@@ -1,6 +1,6 @@
 ---
-title: モバイルアプリ
-description: アップロードされたすべてのアプリのリストを含むモバイルアプリライブラリを管理します
+title: Mobile Apps
+description: Mobile Apps Library にアップロードしたアプリの追加、ダウンロード、削除、ID コピー、検索、Upload to Grid の手順を説明します。
 category: モバイルアプリ
 order: 10001
 updated: '2025-09-22'
@@ -11,22 +11,22 @@ keywords:
   - APKアップロード
   - IPAアップロード
   - モバイルアプリ管理
-  - モバイルアプリID
+  - Mobile App ID
 ---
 
-モバイルアプリライブラリには、アップロードされたすべてのアプリのリストが含まれています。モバイルアプリライブラリの各アプリには、次の情報が表示されます:
+Mobile Apps Library には、アップロードされたすべてのアプリのリストが含まれています。Mobile Apps Library の各アプリには、次の情報が表示されます:
 
 ![モバイルアプリライブラリの一覧画面](/images/test-management/mobile-apps/beee998-mobile-apps-library.png)
 
 * **App**: アプリケーションの名前
 * **Identifier**: アップロード時にアプリファイルのメタデータから取得された一意のアプリ ID（パッケージ識別子/バンドル識別子）
 * **Version**: アップロード時にアプリファイルのメタデータから取得されたアプリのバージョン
-* **Uploaded**: アプリファイルがモバイルアプリライブラリに追加された日付
+* **Uploaded**: アプリファイルが Mobile Apps Library に追加された日付
 * **Size**: モバイルアプリのファイルサイズ
 
-> 📘 注意:
->
-> モバイルアプリライブラリのアプリは、異なるテストブランチ間で利用できます。
+:::note
+Mobile Apps Library のアプリは、異なるテストブランチ間で利用できます。
+:::
 
 ## ローカルコンピューターからモバイルアプリを追加する
 
@@ -35,11 +35,11 @@ keywords:
 * Android デバイス - Java または Kotlin フレームワークベースの .apk ファイル
 * iOS デバイス - Objective C または Swift フレームワークベースの .ipa ファイル
 
-> 📘
->
-> アップロードは 150 MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。
+:::note
+アップロードは 150 MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。
+:::
 
-:fa-arrow-right: **ローカルコンピューターからアプリライブラリにモバイルアプリを追加するには:**
+:fa-arrow-right: **ローカルコンピューターから Mobile Apps Library にモバイルアプリを追加するには:**
 
 1. メインメニューから **Mobile Apps Tab** に移動します。
 
@@ -57,26 +57,26 @@ keywords:
 
 ![アップロード後にモバイルアプリライブラリへ追加されたアプリ](/images/test-management/mobile-apps/4b1abee-appadded.png)
 
-> 📘 注意:
->
-> デフォルトのアップロードサイズ制限は 150MB です。より大きなファイルをアップロードする必要がある場合は、Testim 管理者に連絡して、ファイルアップロードサイズ制限の引き上げについて相談してください。
+:::warning
+デフォルトのアップロードサイズ制限は 150MB です。より大きなファイルをアップロードする必要がある場合は、Testim 管理者に連絡して、ファイルアップロードサイズ制限の引き上げについて相談してください。
+:::
 
-## モバイルアプリライブラリからアプリをダウンロードする
+## Mobile Apps Library からアプリをダウンロードする
 
-モバイルアプリライブラリのアプリをローカルコンピューターにダウンロードできます。
+Mobile Apps Library のアプリをローカルコンピューターにダウンロードできます。
 
-:fa-arrow-right: **モバイルアプリライブラリからアプリをダウンロードするには:**
+:fa-arrow-right: **Mobile Apps Library からアプリをダウンロードするには:**
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Download File** ボタンをクリックします。
 
 ![選択したモバイルアプリのDownload Fileボタン](/images/test-management/mobile-apps/28abf33-download.png)
 
-## モバイルアプリライブラリからアプリを削除する
+## Mobile Apps Library からアプリを削除する
 
-モバイルアプリライブラリでアプリが不要になった場合は、削除できます。
+Mobile Apps Library でアプリが不要になった場合は、削除できます。
 
-:fa-arrow-right: **モバイルアプリライブラリからアプリを削除するには**:
+:fa-arrow-right: **Mobile Apps Library からアプリを削除するには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Delete** ボタンをクリックします。
@@ -87,26 +87,26 @@ keywords:
 
 ![テストで使用中のためモバイルアプリを削除できないことを示すメッセージ](/images/test-management/mobile-apps/c14310b-cannotdelete.png)
 
-## モバイルアプリ ID をコピーする
+## Mobile App ID をコピーする
 
-モバイルアプリライブラリに含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#running-mobile-tests-through-the-cli) を参照してください。
+Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#running-mobile-tests-through-the-cli) を参照してください。
 
-:fa-arrow-right: **モバイルアプリ ID をコピーするには**:
+:fa-arrow-right: **Mobile App ID をコピーするには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Copy ID** ボタンをクリックします。
 
 ![モバイルアプリのMobile App IDをコピーするCopy IDボタン](/images/test-management/mobile-apps/434c659-copyid.png)
 
-その後、必要な場所にモバイルアプリ ID を貼り付けることができます。
+その後、必要な場所に Mobile App ID を貼り付けることができます。
 
 ![CLI設定画面でコピーしたMobile App IDを使用する例](/images/test-management/mobile-apps/e67232c-useid.png)
 
-## モバイルアプリライブラリを検索する
+## Mobile Apps Library を検索する
 
-モバイルアプリライブラリで名前でモバイルアプリを検索できます。
+Mobile Apps Library で名前でモバイルアプリを検索できます。
 
-:fa-arrow-right: **モバイルアプリライブラリでアプリを検索するには**:
+:fa-arrow-right: **Mobile Apps Library でアプリを検索するには**:
 
 1. **Mobile Apps Library** に移動します。
 2. 検索ボックスに検索したいモバイルアプリの **Name**（名前）を入力します。モバイルアプリは、検索条件に一致するアプリのリストを自動的にフィルタリングします。
@@ -115,7 +115,7 @@ keywords:
 
 ## グリッドプロバイダーへのモバイルアプリの直接アップロード
 
-Testim モバイルアプリライブラリにアップロードされたモバイルアプリは、グリッドプロバイダーのアプリストレージに手動でアップロードできます。これにより、テストを実行するときに Testim がアプリケーションをグリッドにロードするのを待つことなく、グリッドでアプリケーションを実行できます。
+Testim Mobile Apps Library にアップロードされたモバイルアプリは、グリッドプロバイダーのアプリストレージに手動でアップロードできます。これにより、テストを実行するときに Testim がアプリケーションをグリッドにロードするのを待つことなく、グリッドでアプリケーションを実行できます。
 
 :fa-arrow-right: **モバイルアプリをグリッドプロバイダーに直接アップロードするには**:
 
