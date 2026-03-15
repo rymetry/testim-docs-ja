@@ -21,7 +21,8 @@ TestimとGitHub Actionsを統合するには、新しいGitHub-Actionワーク�
 
 以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 
-### YAML File
+<!-- markdownlint-disable-next-line MD036 -->
+**YAML File**
 
 ```yaml
 name: Testim E2E

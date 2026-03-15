@@ -41,11 +41,12 @@ This is a pro feature.
 
 Testim CLI は、専用の tunnel address を指すようにアプリケーションの base URL を自動的に調整します。
 
-## Additional use cases
+# Additional use cases
 
 テスト実行中、すべてのトラフィックはトンネルを開始するマシンを経由してルーティングされ、ホワイトリスト登録が実用的でない状況に対するソリューションを提供します。上記のように、テスト環境にアクセスできるマシンからCLIコマンドを開始することが重要です。さらに、このアプローチは、グリッドの地理的位置を管理し、コマンドをトリガーするマシンの場所に合わせるための回避策として機能します。
 
-### Example using Testim CLI with a tunnel
+<!-- markdownlint-disable-next-line MD001 -->
+#### Example using Testim CLI with a tunnel
 
 ```shell
 testim --tunnel --tunnel-port <APP PORT default 80> --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" --report-file test-results/testim-tests-report.xml
