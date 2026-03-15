@@ -3,7 +3,7 @@ title: バグ報告
 description: バグをキャプチャして報告する方法と、Jira、Slack、Trello、Githubなどのバグトラッカーとの連携について説明します。
 category: テスト管理
 order: 9016
-updated: '2025-09-22'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/bug-reporting'
 keywords:
   - バグ報告

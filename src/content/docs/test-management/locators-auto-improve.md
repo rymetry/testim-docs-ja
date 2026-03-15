@@ -3,7 +3,7 @@ title: 'ロケーター: 自動改善'
 description: ロケータースコアが低下したときに自動的に改善される機能について説明します。
 category: テスト管理
 order: 9015
-updated: '2025-09-22'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/locators-auto-improve'
 keywords:
   - ロケーター自動改善
@@ -49,7 +49,7 @@ Testimは、1つ以上の劣化したロケーターが自動改善されたロ�
 
 ## Test Libraryのフィルタリング
 
-**Test Library**のテストリストを、自動改善されたテストでフィルタリングできます。**Test Library**のフィルタリングの詳細については、[Test Libraryのフィルタリング](doc:test-list#section-filtering-the-test-library)を参照してください。
+**Test Library** のテストリストを、自動改善されたテストでフィルタリングできます。**Test Library** のフィルタリングの詳細については、[テストリスト](/docs/test-list) を参照してください。
 
 :fa-arrow-right: **自動改善されたテストでTest Libraryをフィルタリングするには:**
 
