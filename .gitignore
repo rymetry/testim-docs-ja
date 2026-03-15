@@ -34,3 +34,6 @@ scripts/.cache/
 
 # Takt-specific ignores
 .takt/
+
+# Local assistant settings
+.claude/settings.local.json
