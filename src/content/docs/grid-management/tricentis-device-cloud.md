@@ -1,8 +1,8 @@
 ---
 title: Tricentis Device Cloud
 description: >-
-  Tricentis Device Cloud（旧Testim Virtual Mobile
-  Grid）を使用してクラウド上の実デバイスでモバイルテストを実行する方法を説明します。
+  Tricentis Device Cloud の無料 trial 開始手順と、TDC 対応 mobile
+  configuration を使って CLI、CI、Scheduler、Test Plan から実行する方法を説明します。
 category: 統合
 order: 12023
 updated: '2025-09-22'
@@ -11,60 +11,53 @@ keywords:
   - Tricentis Device Cloud
   - TDC
   - Tricentis
-  - モバイルグリッド
-  - クラウドデバイス
+  - Device Management
+  - Real Devices Cloud
+  - mobile configuration
 ---
 
-# Tricentis Device Cloud
+Testim Mobile は Tricentis Device Cloud (TDC) と組み合わせることで、サポート付きで Grid 上の実機 iOS / Android device を利用できます。さらに、machine learning を活用した analytics により、mobile app の usability や performance に関する insight も得られます。
 
-Tricentis Device Cloud（旧Testim Virtual Mobile Grid）は、クラウド上の実デバイスでモバイルテストを実行できるTricentisのマネージドサービスです。
+TDC では、複数ユーザーで共有する shared device と、自分専用の dedicated private device の両方が提供されます。Tricentis Device Cloud は特別な integration を必要とせず、Company Owner または Project Owner として申し込める無料 trial も含まれています。trial を開始すると、その shared resource はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用できるようになります。trial 期間中は、Android と iOS の shared trial device を使用できます。
 
-## 概要
+## 無料の Tricentis Device Cloud trial を開始する
 
-Tricentis Device Cloudを使用すると、以下のことが可能になります：
+Company Owner または Project Owner は、Tricentis Device Cloud の無料 trial を開始できます。無料 trial をスキップして有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
 
-- 様々なiOSおよびAndroidデバイスでテストを実行
-- デバイスのセットアップやメンテナンスの手間を削減
-- スケーラブルなテスト実行環境を利用
-- 実デバイス上での正確なテスト結果を取得
+:fa-arrow-right: **無料の Tricentis Device Cloud trial を開始するには:**
 
-## 利用可能なデバイス
+1. **Device Management > Real Devices Cloud** tab に移動します。
+2. **Start A Trial** をクリックします。
 
-Tricentis Device Cloudでは、以下のデバイスが利用可能です：
+![Real Devices Cloud tab で Start A Trial をクリックする画面](/images/grid-management/tricentis-device-cloud/c299505-image_4.png)
 
-- **iOS**: 最新のiPhoneおよびiPadモデル
-- **Android**: 主要メーカーの最新デバイス（Samsung、Google Pixelなど）
+数秒後に trial が **activated** され、次の通知が表示されます。
 
-利用可能なデバイスの完全なリストは、Testimのデバイス選択画面で確認できます。
+![Tricentis Device Cloud trial が有効化された通知](/images/grid-management/tricentis-device-cloud/0012b7c-trialactive.png)
 
-## Tricentis Device Cloudでテストを実行する
+次に、メイン navigation menu の **Device Management** link へ移動します。\
+**Tricentis Device Cloud Shared** 画面で、trial 期間中に利用できる device を確認できます。
 
-### エディタから実行
+![Tricentis Device Cloud Shared 画面に trial device 一覧が表示されている様子](/images/grid-management/tricentis-device-cloud/b81b106-image_3.png)
 
-1. テストエディタを開きます
-2. **Run（実行）** ボタンをクリックします
-3. **Grid（グリッド）** ドロップダウンから **Tricentis Device Cloud** を選択します
-4. 実行したいデバイスとOSバージョンを選択します
-5. **Run（実行）** をクリックしてテストを開始します
+## Tricentis Device Cloud でテストを実行する
 
-### CLIから実行
+Tricentis Device Cloud でテストを実行する前に、TDC と互換性のある mobile configuration を作成しておく必要があります。
 
-```bash
-testim --grid "tricentis-device-cloud" --device "iPhone 14" --os-version "16.0" --token <your-token>
-```
+[Configuration Library - Mobile](/docs/configuration-library-mobile)
 
-### スケジューラから実行
+![TDC 用 mobile configuration の設定例](/images/grid-management/tricentis-device-cloud/6773dc8-config.png)
 
-1. **Scheduler（スケジューラ）** に移動します
-2. スケジュールを作成または編集します
-3. **Grid（グリッド）** として **Tricentis Device Cloud** を選択します
-4. テストを実行するデバイスを選択します
-5. スケジュールを保存して有効化します
+次のいずれかの方法で、テストをリモート実行できます。
 
-## 制限事項
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
 
-- Tricentis Device Cloudは、Testimプランに応じて利用可能です
-- 同時実行数は契約プランによって異なります
-- 一部の地域では利用できない場合があります
+Grid 名を指定して `--grid` parameter を追加します。
 
-詳細については、Tricentisサポートにお問い合わせください。
+[Scheduler](/docs/scheduler-mobile)
+
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+
+[Test Plan](/docs/test-plans-mobile)
+
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。

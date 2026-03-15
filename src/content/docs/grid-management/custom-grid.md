@@ -1,73 +1,64 @@
 ---
-title: カスタムグリッド
+title: Custom Grid
 description: >-
-  Testimで独自のSelenium
-  GridやAppiumグリッドを使用する方法を説明します。ローカルまたはプライベートグリッドの設定、接続方法、トラブルシューティングを網羅しています。
+  Testim で独自の Selenium Grid を設定し、CLI、CI、Scheduler、Test Plan、
+  Test Editor からリモート実行する方法を説明します。
 category: 統合
 order: 12025
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/custom-grid'
 keywords:
-  - カスタムグリッド
+  - Custom Grid
   - Selenium Grid
-  - Appium
-  - プライベートグリッド
-  - ローカルグリッド
+  - Grid
+  - CLI
+  - Scheduler
+  - Test Plan
 ---
 
-# カスタムグリッド
+独自の Selenium Grid 上でテストを実行できます。
 
-Testimでは、独自のSelenium GridまたはAppiumグリッドを使用してテストを実行できます。これにより、ローカル環境やプライベートネットワーク内のグリッドでテストを実行できるようになります。
+この記事では、Testim 上で独自の Selenium Grid を設定する方法を説明します。
 
-## カスタムグリッドの設定
+## Custom Grid を追加する
 
-### 1. グリッドの準備
+:fa-arrow-right: **Custom Grid を追加するには:**
 
-カスタムグリッドを使用する前に、以下を確認してください：
+1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Custom Grid** を選択します。
+2. **Next** をクリックします。
+3. **Name** field に、利用する Selenium Grid の名前を入力します。
+4. **Host** field に、Selenium Grid の host name または IP address を入力します。
+5. **Port** field に、Selenium Grid の port を入力します。
 
-- Selenium Grid 3.x以上またはAppium Serverが稼働していること
-- グリッドがTestimから到達可能なネットワーク上にあること
-- 適切なブラウザドライバーまたはモバイルデバイスが設定されていること
+:::info
+ローカルで実行する場合でも、Testim はテスト結果を表示して保存するために browser へ接続する必要があります。network から [https://services.testim.io/](https://services.testim.io/) へアクセスできることを確認してください。
+:::
 
-### 2. Testimでのグリッド設定
+![Custom Grid の Name、Host、Port を設定する画面](/images/grid-management/custom-grid/caabeca-2023-03-19_17-44-02.gif)
 
-1. Testimにログインします
-2. **Settings（設定）** > **Grids（グリッド）** に移動します
-3. **Add Custom Grid（カスタムグリッドを追加）** をクリックします
-4. 以下の情報を入力します：
-   - **Grid Name（グリッド名）**: グリッドを識別するための名前
-   - **Grid URL（グリッドURL）**: グリッドのエンドポイントURL（例：`http://localhost:4444/wd/hub`）
-5. **Save（保存）** をクリックします
+## Grid で実行する方法
 
-## カスタムグリッドでテストを実行する
+次のいずれかの方法で、テストをリモート実行できます。
 
-### エディタから実行
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
 
-1. テストエディタを開きます
-2. **Run（実行）** ボタンをクリックします
-3. **Grid（グリッド）** ドロップダウンからカスタムグリッドを選択します
-4. **Run（実行）** をクリックしてテストを開始します
+Grid 名を指定して `--grid` parameter を追加します。
 
-### CLIから実行
+[Scheduler](/docs/scheduler)
 
-```bash
-testim --grid "Custom Grid Name" --token <your-token> --project <project-id>
-```
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-## トラブルシューティング
+[Test Plan](/docs/test-plans)
 
-### 接続エラー
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-グリッドに接続できない場合：
+### editor から実行する
 
-- グリッドURLが正しいか確認してください
-- Testimからグリッドへのネットワーク接続を確認してください
-- ファイアウォール設定を確認してください
+Test Editor から直接 Grid 上でテストを実行できます。
 
-### セッション開始エラー
+* **Run** ボタンの横にある options arrow をクリックします。
+* **Run on a grid** をクリックします。
 
-セッションを開始できない場合：
+その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
 
-- グリッドに利用可能なノードがあるか確認してください
-- 要求されたブラウザ/デバイスがグリッドで利用可能か確認してください
-- グリッドのログを確認してエラーの詳細を調べてください
+![Test Editor から Run on a grid を選択している画面](/images/grid-management/custom-grid/0ca9bb7-Jul-21-2021_13-11-22.gif)

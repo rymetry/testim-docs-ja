@@ -1,65 +1,65 @@
 ---
-title: SauceLabs統合
+title: SauceLabs Integration
 description: >-
-  TestimとSauceLabsを統合してクラウドベースのブラウザおよびモバイルデバイスでテストを実行する方法を説明します。設定手順、認証情報の管理、実行方法を網羅しています。
+  Testim で SauceLabs Grid を追加し、CLI、CI、Scheduler、Test Plan、Test
+  Editor からテストを実行する方法を説明します。
 category: 統合
 order: 12026
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/saucelabs-integration'
 keywords:
   - SauceLabs
-  - クラウドグリッド
-  - ブラウザテスト
-  - モバイルテスト
+  - Grid
+  - CLI
+  - Scheduler
+  - Test Plan
 ---
 
-# SauceLabs統合
+Testim で作成したテストを SauceLabs の browser と mobile device 上で実行できます。
 
-[SauceLabs](https://saucelabs.com/)は、クラウドベースのブラウザおよびモバイルデバイスでテストを実行できるプラットフォームです。TestimとSauceLabsを統合することで、SauceLabsの広範なブラウザとデバイスのカバレッジを活用できます。
+この記事では、Testim 上で SauceLabs を設定する方法と、テストを実行する方法を説明します。
 
-## 前提条件
+## SauceLabs Grid を追加する
 
-- 有効なSauceLabsアカウント
-- SauceLabsのユーザー名とアクセスキー
+:fa-arrow-right: **SauceLabs Grid を追加するには:**
 
-## SauceLabs統合の設定
+1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
+2. **Next** をクリックします。
+3. 次の field を入力します。
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **SauceLabs**セクションを見つけます
-4. 以下の情報を入力します：
-   - **Username（ユーザー名）**: SauceLabsのユーザー名
-   - **Access Key（アクセスキー）**: SauceLabsのアクセスキー
-5. **Connect（接続）** をクリックします
+* **Name**: 実行時に使用する Grid 名
+* **Saucelabs User**: 接続に使用する SauceLabs key
+* **Saucelabs key**: 接続に使用する SauceLabs key
+* **Host**: SauceLabs の host name
+* **Port**: SauceLabs の port
 
-## SauceLabsでテストを実行する
+![SauceLabs Grid の接続情報を設定する画面](/images/grid-management/saucelabs-integration/be4fb2b-Jul-24-2021_08-13-41.gif)
 
-### エディタから実行
+## Grid で実行する方法
 
-1. テストエディタを開きます
-2. **Run（実行）** ボタンをクリックします
-3. **Grid（グリッド）** ドロップダウンから **SauceLabs** を選択します
-4. 実行したいブラウザまたはデバイスを選択します
-5. **Run（実行）** をクリックしてテストを開始します
+次のいずれかの方法で、テストをリモート実行できます。
 
-### CLIから実行
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
 
-```bash
-testim --grid saucelabs --browser chrome --token <your-token>
-```
+Grid 名を指定して `--grid` parameter を追加します。
 
-### 追加オプション
+[Scheduler](/docs/scheduler)
 
-SauceLabsの追加オプション（タイムゾーン、画面解像度など）については、[SauceLabs/BrowserStackオプション](saucelabs-browserstack-options)を参照してください。
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-## SauceLabsでの結果確認
+[Test Plan](/docs/test-plans)
 
-テスト実行後、Testim上で結果を確認できます。また、SauceLabsダッシュボードでも詳細なログ、スクリーンショット、ビデオを確認できます。
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-## トラブルシューティング
+### Editor から実行する
 
-接続に問題がある場合は、以下を確認してください：
+Test Editor から直接 Grid 上でテストを実行できます。
 
-- SauceLabsのユーザー名とアクセスキーが正しいか
-- SauceLabsアカウントがアクティブか
-- 選択したブラウザ/デバイスがSauceLabsで利用可能か
+* **Run** ボタンの横にある options arrow をクリックします。
+* **Run on a grid** をクリックします。
+
+その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
+
+![Test Editor から SauceLabs Grid を選んで実行する画面](/images/grid-management/saucelabs-integration/0ca9bb7-Jul-21-2021_13-11-22.gif)
+
+テスト実行に追加 option を渡したい場合は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/saucelabs-browserstack-options) を参照してください。

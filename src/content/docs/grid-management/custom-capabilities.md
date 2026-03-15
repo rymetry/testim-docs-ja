@@ -1,87 +1,87 @@
 ---
-title: カスタムテスト機能
-description: すべてのグリッドで高度なテスト構成（機能）を追加する方法
+title: Custom Test Capabilities
+description: >-
+  すべての Grid で利用できる advanced test parameter を Custom capabilities として作成、
+  テストへ追加し、CLI や Scheduler で利用する方法を説明します。
 category: 統合
 order: 12029
 updated: '2024-11-21'
 sourceUrl: 'https://help.testim.io/docs/custom-capabilities'
 keywords:
-  - カスタム機能
-  - テスト設定
-  - グリッド設定
+  - Custom capabilities
+  - Grid
   - BrowserStack
   - SauceLabs
   - Appium
-  - デバイス設定
-  - カスタムケイパビリティ
-  - テスト環境
-  - 詳細設定
+  - CLI
+  - Scheduler
 ---
 
-すべてのグリッドで高度なテスト構成（機能）を追加する方法
+すべての Grid で advanced test configuration（capabilities）を追加する方法を説明します。
 
-カスタム機能を使用すると、利用可能なすべてのグリッドで幅広い高度なテストパラメータを追加できます。これらはJSONオブジェクトを使用してキーと値のペアとしてエンコードされます。
+Custom capabilities を使用すると、利用可能なすべての Grid に対して幅広い advanced test parameter を追加できます。これらは JSON object の key-value pair として記述します。
 
-例えば、デバイスのシステム言語やタイムゾーン:
+たとえば、device の system language や time zone を次のように指定できます。
 
 ```json
 {
-    "appium:language": "en",
-    "appium:timeZone": "Europe/London"
+  "appium:language": "en",
+  "appium:timeZone": "Europe/London"
 }
 ```
 
-この例では、英語をシステム言語、ロンドンをタイムゾーンとしてテスト自動化セッションを開始するようドライバーに指示しています。
+この例では、system language を English、time zone を London にして test automation session を開始するよう driver へ指示しています。
 
-## 利用可能な機能
+## 利用可能な capabilities
 
-幅広い機能から選択できます。その可用性は、テストを実行するグリッドによって異なるため、開始する前にグリッドでサポートされている内容を必ず確認してください。
+多数の capability から選択できます。利用可否はテストを実行する Grid に依存するため、開始前に対象 Grid が何をサポートしているかを確認してください。
 
-Testimのテスト構成で既に定義されている一部の機能は上書きできないことに注意してください。これらの機能には以下が含まれます:
+Testim の test configuration で既に定義されている一部 capability は上書きできません。対象には次のものが含まれます。
 
-- `platformName`/`platform`
+- `platformName` / `platform`
 - `app`/`bundleId`/`appPackage`
 - `chromiumOptions.extensions`
 
-## カスタム機能の作成
+## Custom capabilities を作成する
 
-すべてのカスタム機能は、**Custom capabilities**の下のRunsページで作成および保存されます。新しいカスタム機能を作成するには、次の手順に従います:
+すべての Custom capabilities は **Runs** page の **Custom capabilities** で作成および保存されます。新しい Custom capability を作成するには、次の手順に従います。
 
-1. **Custom capabilities**に移動し、**+**を選択します。
-2. Monaco Code Editorで、テストに追加したい機能の名前を入力し始めます。エディターは自動的に利用可能なキーを提案して入力します。
-3. キーを選択し、その値を定義します。
-4. **Save**を選択します。
-5. カスタム機能に名前を付けます。
+1. **Custom capabilities** に移動し、**+** を選択します。
+2. Monaco Code Editor で、テストへ追加したい capability 名の入力を開始します。editor は利用可能な key を自動提案して補完します。
+3. key を選択し、value を定義します。
+4. **Save** を選択します。
+5. Custom capability に名前を付けます。
 
-## テストにカスタム機能を追加
+## テストに Custom capabilities を追加する
 
-カスタム機能を作成したら、テストに追加します。そのためには、次の手順に従います:
+Custom capabilities を作成したら、次の手順でテストに追加します。
 
-1. テストライブラリからテストを開きます。
-2. 右上隅の**Show step properties**を選択します。
-3. **Custom capabilities**リストから、先ほど作成したカスタム機能を選択します。
-4. 事前にカスタム機能を作成していない場合は、**Add new one**を選択します。Custom capabilitiesページにリダイレクトされ、上記の手順に従って新しい機能を作成できます。
-5. テストを実行します。
+1. test library から test を開きます。
+2. 右上の **Show step properties** を選択します。
+3. **Custom capabilities** list から、先ほど作成した Custom capability を選択します。
+4. 事前に Custom capability を作成していない場合は **Add new one** を選択します。**Custom capabilities** page へ移動し、上記手順で新しい capability を作成できます。
+5. test を実行します。
 
-## CLIでカスタム機能を使用
+## CLI で Custom capabilities を使う
 
-コマンドラインインターフェース（CLI）を使用して、カスタム機能でテストを実行できます。そのためには、次の2つのパラメータのいずれかを使用します:
+command line interface (CLI) では、Custom capabilities 付きでテストを実行できます。次の 2 つの parameter のいずれかを使用します。
 
-- `--custom-capabilities-name` - Testimで事前に作成したカスタム機能を追加します。
-- `--custom-capabilities-file` - JSONファイルとしてローカルに作成したカスタム機能を追加します。
+- `--custom-capabilities-name`: Testim 上で事前に作成した Custom capability を追加します。
+- `--custom-capabilities-file`: local で JSON file として作成した Custom capability を追加します。
 
-これら2つのパラメータを同時に使用することはできません。
+この 2 つの parameter は同時には使用できません。
 
-> 📘
-> SaucelabsおよびBrowserStackグリッドでCLIを使用して機能を操作する方法について詳しく知りたい場合は、[CLIでのSaucelabs & BrowserStackのテスト機能](/docs/saucelabs-browserstack-options)を確認してください。
+:::info
+CLI を使って SauceLabs / BrowserStack Grid で capability を扱う方法の詳細は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/saucelabs-browserstack-options) を参照してください。
+:::
 
-## カスタム機能を使用したテストのスケジュール設定
+## Custom capabilities を使ってテストを schedule する
 
-テストにカスタム機能を追加したら、[テストをスケジュール](/docs/scheduler-mobile)できます。
+Custom capability をテストへ追加したら、[テストを schedule](/docs/scheduler-mobile) できます。
 
-スケジュールされたテスト実行でカスタム機能を上書きすることもできます。そのためには、次の手順に従います:
+scheduled test run で Custom capabilities を上書きすることもできます。手順は次のとおりです。
 
-1. 通常どおりテストのスケジュール設定を開始します。
-2. スケジューラー設定で、**What to run on**に移動し、**Override custom capabilities**を選択します。
-3. 新しいカスタム機能を選択します。これらのカスタム機能は、テストの元のカスタム機能を変更することなく、このスケジュールされた実行にのみ追加されます。
-4. **Save**を選択します。
+1. 通常どおり test の scheduling を開始します。
+2. scheduler 設定の **What to run on** で **Override custom capabilities** を選択します。
+3. 新しい Custom capabilities を選択します。これらは、元の Custom capabilities を変更せず、この scheduled run にだけ追加されます。
+4. **Save** を選択します。

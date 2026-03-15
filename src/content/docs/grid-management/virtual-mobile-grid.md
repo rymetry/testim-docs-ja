@@ -1,8 +1,8 @@
 ---
-title: Virtual Mobile Grid（VMG）
+title: Virtual Mobile Grid
 description: >-
-  Testim Virtual Mobile
-  Grid（VMG）を使用してクラウド上の実デバイスでモバイルテストを実行する詳細な手順を説明します。デバイス選択、アプリアップロード、テスト実行方法を網羅しています。
+  Virtual Mobile Grid の trial 開始手順、実行前の前提条件、CLI、CI、Scheduler、Test
+  Plan、Test Editor からの実行方法、および app の差し替え方法を説明します。
 category: 統合
 order: 12024
 updated: '2025-09-22'
@@ -10,141 +10,126 @@ sourceUrl: 'https://help.testim.io/docs/virtual-mobile-grid'
 keywords:
   - Virtual Mobile Grid
   - VMG
-  - モバイルテスト
-  - クラウドデバイス
+  - Mobile Apps Library
+  - Device Management
+  - mobile configuration
+  - app-id
 ---
 
-# Virtual Mobile Grid（VMG）
+Virtual Mobile Grid (VMG) は、多数の iOS simulator と Android emulator を対象にテストできる Grid です。利用可能なさまざまな virtual device を使うことで、接続と設定を簡素化し、品質を高められます。
 
-> **注意**: Virtual Mobile Grid（VMG）は現在、**Tricentis Device Cloud**に名称変更されています。最新情報については、[Tricentis Device Cloud](/docs/tricentis-device-cloud)を参照してください。
+* 利用可能な virtual device を使って接続と設定を簡素化し、品質を向上できます。
+* 異なる device で parallel run を行い、テスト実行をスケールできます。
 
-Virtual Mobile Grid（VMG）は、Testimが提供するクラウドベースのモバイルデバイステスト環境です。実デバイスでモバイルアプリケーションをテストできます。
+Virtual Mobile Grid はテストの記録にも実行にも使用できます。また、[Mobile Apps Library](/docs/mobile-apps) と接続されています。つまり、mobile app を使うテストを Virtual Mobile Grid で実行する前に、その app を Mobile Apps Library へ追加しておく必要があります。
 
-## 概要
+Virtual Mobile Grid に特別な integration は不要です。有償 customer には license に含まれています。Community license でも、Company Owner または Project Owner であれば無料 trial に登録できます。trial を開始すると、Virtual Mobile Grid はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用可能になります。trial 期間中は Android と iOS のさまざまな virtual device を使用できます。
 
-VMGを使用すると、以下のことが可能になります：
+:::warning{title="Test Compatibility"}
+Virtual Mobile Grid で実行できるのは、virtual device で動作するように compile された iOS application のみです。
+:::
 
-- iOSおよびAndroidの実デバイスでテストを実行
-- デバイスの購入、セットアップ、メンテナンスが不要
-- 複数のデバイスでの並列実行
-- 様々なOSバージョンとデバイスモデルのカバレッジ
+:::info{title="OS Compatibility"}
+Virtual Mobile Grid は x86_64 Android build のみをサポートします。
+:::
 
-## 利用可能なデバイス
+## 無料の Virtual Mobile Grid trial を開始する
 
-VMGでは、以下のデバイスが利用可能です：
+Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。trial 期間は 14 日間です。trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
 
-### iOS
-- iPhone（複数モデル）
-- iPad（複数モデル）
-- 様々なiOSバージョン
+:fa-arrow-right: **無料の Virtual Mobile Grid trial を開始するには:**
 
-### Android
-- Samsung Galaxy シリーズ
-- Google Pixel シリーズ
-- その他主要メーカーのデバイス
-- 様々なAndroidバージョン
+1. **Device Management** 画面へ移動し、**Virtual Mobile Grid** tab を開いて **Start A Trial** をクリックします。
 
-利用可能なデバイスの完全なリストは、Testimのデバイス選択画面で確認できます。
+![Device Management で Virtual Mobile Grid trial を開始する画面](/images/grid-management/virtual-mobile-grid/52a46cf-image.png)
 
-## VMGでのテスト実行
+数秒後に trial が **activated** され、次の通知が表示されます。
 
-### 1. アプリケーションのアップロード
+![Virtual Mobile Grid trial が有効化された通知](/images/grid-management/virtual-mobile-grid/6ab7015-image_1.png)
 
-VMGでテストを実行する前に、テスト対象のアプリをアップロードする必要があります：
+**Virtual Mobile Grid** 画面では、trial 期間中に利用できる device を確認できます。
 
-1. **Mobile Apps（モバイルアプリ）** セクションに移動します
-2. **Upload App（アプリをアップロード）** をクリックします
-3. `.ipa`（iOS）または `.apk`（Android）ファイルを選択します
-4. アプリがアップロードされるまで待ちます
+## Virtual Mobile Grid でテストを実行する
 
-### 2. テストの作成
+Virtual Mobile Grid でテストを実行する前に、次を確認してください。
 
-1. **New Test（新規テスト）** をクリックします
-2. **Mobile Test（モバイルテスト）** を選択します
-3. **Grid（グリッド）** として **Virtual Mobile Grid** を選択します
-4. テスト対象のデバイスとOSバージョンを選択します
-5. アップロードしたアプリを選択します
-6. テストの記録を開始します
+* **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
 
-### 3. テストの実行
+![Virtual Mobile Grid 向け mobile configuration の設定例](/images/grid-management/virtual-mobile-grid/07dd385-image_2.png)
 
-#### エディタから実行
+* **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps) を参照してください。すでに ***"From Device"*** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
 
-1. テストエディタを開きます
-2. **Run（実行）** ボタンをクリックします
-3. **Grid（グリッド）** が **Virtual Mobile Grid** に設定されていることを確認します
-4. デバイスとアプリを選択します
-5. **Run（実行）** をクリックしてテストを開始します
+### テストをリモート実行する
 
-#### CLIから実行
+Virtual Mobile Grid 用に設定した configuration を使うことで、次のいずれかの方法でテストをリモート実行できます。
 
-```bash
-testim --grid "virtual-mobile-grid" \
-  --device "iPhone 14" \
-  --os-version "16.0" \
-  --app-id <your-app-id> \
-  --token <your-token> \
-  --project <project-id>
-```
+:::info
+[Mobile Apps Library](/docs/mobile-apps) に対象の mobile app があることを確認してください。
+:::
 
-#### スケジューラから実行
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
 
-1. **Scheduler（スケジューラ）** に移動します
-2. スケジュールを作成または編集します
-3. **Grid（グリッド）** として **Virtual Mobile Grid** を選択します
-4. デバイス、OSバージョン、アプリを選択します
-5. スケジュールを保存して有効化します
+Grid 名を指定して `--grid` parameter を追加します。
 
-## ベストプラクティス
+[Scheduler](/docs/scheduler-mobile)
 
-### アプリのバージョン管理
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-- アプリの新しいバージョンを定期的にアップロードします
-- 古いバージョンを削除して、ストレージを管理します
-- アプリ名に明確なバージョン番号を付けます
+[Test Plan](/docs/test-plans-mobile)
 
-### デバイス選択
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-- 対象ユーザーが使用している主要なデバイスをカバーします
-- 古いOSバージョンと最新バージョンの両方でテストします
-- 画面サイズの異なるデバイスでテストします
+[Remote Run through the Editor](/docs/running-tests-overview#running-a-remote-mobile-test)
 
-### パフォーマンス最適化
+**Run on a grid** option で **Virtual Mobile Grid** と該当する configuration を選択します。
 
-- 不要な待機時間を減らします
-- 並列実行を活用してテスト時間を短縮します
-- テストを適切にグループ化します
+![Remote Run through the Editor で Virtual Mobile Grid を選択している画面](/images/grid-management/virtual-mobile-grid/81f27e0-image_3.png)
 
-## トラブルシューティング
+### From Device で記録した app を変更する
 
-### アプリのアップロードに失敗する
+***"From Device"*** option で選択した app を使ってテストを記録済みの場合は、次の方法で app を差し替えます。
 
-- アプリファイルのサイズを確認します（制限あり）
-- ファイル形式が正しいか確認します（`.ipa`または`.apk`）
-- ネットワーク接続を確認します
+#### Editor から変更する
 
-### デバイスに接続できない
+:fa-arrow-right: **Editor から app を変更するには:**
 
-- 選択したデバイスが利用可能か確認します
-- 同時実行の制限に達していないか確認します
-- Testimサポートに連絡してデバイスの状態を確認します
+1. **Setup Step** で **Show Properties** をクリックします。
+2. **Properties** pane の **Application name** の下にある **Change app** link をクリックします。
+3. From **Library option** を選択し、一覧から該当する app を選びます。
+4. **Done** をクリックします。
 
-### テストが不安定
+![Setup Step の Properties から app を差し替える画面](/images/grid-management/virtual-mobile-grid/87bb169-changeappgif.gif)
 
-- デバイス固有の問題かどうかを確認するため、複数のデバイスでテストします
-- 待機時間を調整します
-- ネットワーク状態を確認します
+#### CLI から変更する
 
-## 制限事項
+CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、Mobile Apps Library にある別の app Id で上書きできます。
 
-- VMGは契約プランに応じて利用可能です
-- 同時実行数はプランによって異なります
-- 一部の地域では利用できない場合があります
+:fa-arrow-right: **既定の app ID を上書きするには:**
 
-詳細については、Tricentisサポートにお問い合わせください。
+1. **Settings > CLI** へ移動します。
+2. **Grid** drop-down menu で **Virtual Mobile Grid** を選択します。
+3. command example を command prompt へコピーします。
+4. **Mobile Apps Library** へ移動します。
+5. 対象の app を選択し、**Copy ID** button をクリックします。
+6. command prompt で、コピーした ID を続けて `--app-id` flag を追加します。
+7. CLI command を実行します。
 
-## 関連ドキュメント
+#### scheduler から変更する
 
-- [モバイルテストの記録](/docs/recording-a-mobile-test)
-- [モバイルアプリの管理](/docs/mobile-apps)
-- [モバイルテストスケジューラ](/docs/scheduler-mobile)
+:fa-arrow-right: **scheduler で既定の app を上書きするには:**
+
+1. **Runs > Scheduled Runs** へ移動します。
+2. 対象の scheduler を開きます。
+3. **What to run on** で **Override application** checkbox を選択します。
+4. **Select from library** で対象 application を選択します。
+5. **Save** をクリックします。
+
+#### test plan から変更する
+
+:fa-arrow-right: **test plan で既定の app を上書きするには:**
+
+1. **Test List > Plans** へ移動します。
+2. 対象の test plan を開きます。
+3. **What to run on** で **Override application** checkbox を選択します。
+4. **Select from library** で対象 application を選択します。
+5. **Save** をクリックします。

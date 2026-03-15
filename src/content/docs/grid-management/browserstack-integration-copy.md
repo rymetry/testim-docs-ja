@@ -1,113 +1,71 @@
 ---
-title: SauceLabs/BrowserStackオプション
+title: LambdaTest Integration
 description: >-
-  SauceLabsおよびBrowserStackで利用可能な高度な設定オプションを説明します。タイムゾーン、画面解像度、デバイス設定、その他のカスタマイズ方法を網羅しています。
+  Testim で LambdaTest Grid を追加し、CLI、CI、Scheduler、Test Plan、Test
+  Editor から実行する方法を説明します。
 category: 統合
 order: 12028
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/browserstack-integration-copy'
 keywords:
-  - SauceLabs
-  - BrowserStack
-  - 設定オプション
-  - カスタマイズ
+  - LambdaTest
+  - Grid
+  - CLI
+  - Scheduler
+  - Test Plan
 ---
 
-# SauceLabs/BrowserStackオプション
+Testim で作成したテストを LambdaTest 上で実行できます。
 
-SauceLabsおよびBrowserStackでテストを実行する際、様々な追加オプションを設定してテスト環境をカスタマイズできます。
+この記事では、Testim 上で LambdaTest を設定する方法と、テストを実行する方法を説明します。
 
-## 共通オプション
+:::info
+LambdaTest integration では、Testim は現在 [selenium testing](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/) のみをサポートしています。[Hyper Execute](https://www.lambdatest.com/support/docs/getting-started-with-hyperexecute/) を含むそれ以外の option はサポートしていません。
+:::
 
-### タイムゾーン設定
+## LambdaTest Grid を追加する
 
-テストを特定のタイムゾーンで実行するには、設定ファイルまたはCLIで指定できます：
+:fa-arrow-right: **LambdaTest Grid を追加するには:**
 
-```javascript
-// 設定ファイル
-{
-  "gridOptions": {
-    "timezone": "America/New_York"
-  }
-}
-```
+1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **LambdaTest** を選択します。
+2. **Next** をクリックします。
+3. 次の field を入力します。
 
-```bash
-# CLI
-testim --grid saucelabs --browser chrome --grid-options '{"timezone":"America/New_York"}' --token <your-token>
-```
+* **Name**: 実行時に使用する Grid 名
+* **Host**: LambdaTest の host name（例: `hub.lambdatest.com`）
+* **Port**: LambdaTest の port。既定値は `443`
+* **Username**: LambdaTest の user name
+* **Password/access key**: 接続に使用する LambdaTest access key または password
 
-### 画面解像度
+![LambdaTest Grid の接続情報を設定する画面](/images/grid-management/browserstack-integration-copy/9301458-gridmanagement.gif)
 
-画面解像度を指定するには：
+## Grid で実行する方法
 
-```javascript
-// 設定ファイル
-{
-  "gridOptions": {
-    "screenResolution": "1920x1080"
-  }
-}
-```
+次のいずれかの方法で、テストをリモート実行できます。
 
-### デバイス名とバージョン
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
 
-モバイルテストの場合、デバイス名とOSバージョンを指定できます：
+Grid 名を指定して `--grid` parameter を追加します。
 
-```bash
-testim --grid browserstack --device "iPhone 13" --os-version "15.0" --token <your-token>
-```
+[Scheduler](/docs/scheduler)
 
-## SauceLabs固有のオプション
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-### ビデオ録画の無効化
+[Test Plan](/docs/test-plans)
 
-```javascript
-{
-  "gridOptions": {
-    "recordVideo": false
-  }
-}
-```
+**Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-### スクリーンショットの無効化
+### editor から実行する
 
-```javascript
-{
-  "gridOptions": {
-    "recordScreenshots": false
-  }
-}
-```
+Test Editor から直接 Grid 上でテストを実行できます。
 
-## BrowserStack固有のオプション
+* **Run** ボタンの横にある options arrow をクリックします。
+* **Run on a grid** をクリックします。
 
-### ローカルテスト
+その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
 
-BrowserStack Localを使用してローカル環境のアプリケーションをテストするには：
+![Test Editor から LambdaTest Grid を選んで実行する画面](/images/grid-management/browserstack-integration-copy/2b9a380-lambdagrid.gif)
 
-```javascript
-{
-  "gridOptions": {
-    "local": true,
-    "localIdentifier": "my-tunnel"
-  }
-}
-```
-
-### ネットワークログ
-
-```javascript
-{
-  "gridOptions": {
-    "networkLogs": true
-  }
-}
-```
-
-## 詳細情報
-
-各プラットフォームで利用可能なすべてのオプションについては、以下を参照してください：
-
-- [SauceLabs Capabilities](https://docs.saucelabs.com/dev/test-configuration-options/)
-- [BrowserStack Capabilities](https://www.browserstack.com/automate/capabilities)
+:::info
+`--grid` parameter は、旧来の host / port parameter を置き換えます。
+:::
