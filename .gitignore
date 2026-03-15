@@ -36,4 +36,4 @@ scripts/.cache/
 .takt/
 
 # Local assistant settings
-.claude/settings.local.json
+.claude/
