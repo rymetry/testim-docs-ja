@@ -14,9 +14,11 @@
    `docs:prepare-llm` でタスクを切り出し、`docs:apply-llm` で翻訳結果を反映する。
 4. `format`
    `docs:fetch` と `docs:normalize` で本文、画像、内部リンク、固有名詞、description を正規化する。
-5. `qa`
+5. `source parity qa`
+   `sourceUrl` の原文とローカル Markdown を比較し、本文、手順、callout、画像件数、画像配置を照合する。画像を取得済みでも本文に埋め込まれていなければ差し戻す。
+6. `qa`
    `npm run lint:docs && npm test && npm run build` を通す。必要なら `--section="..."` で対象を絞る。
-6. `release`
+7. `release`
    セクション単位で PR を作成し、通過したセクションだけ `docs/SIDEBAR_URLS.md` の検証状態を更新する。
 
 ## セクション単位の進め方
@@ -37,6 +39,8 @@
 - 必須のサブエージェント構成は設けない
 - 継続運用の正本は repo 内のスクリプト、lint、CI とする
 - 補助として 1 つの maintainer skill を追加するのは有効だが、複数サブエージェントの常設化は不要
+- 実運用で分離するなら、追加する役割は 1 つだけに絞る
+  - `source-parity reviewer`: `sourceUrl` とローカル記事を比較し、本文欠落、画像未埋め込み、相対リンク残りを検出する
 
 ## CI の役割
 

@@ -1,85 +1,54 @@
 ---
-title: TestimとGitHub（Issues）の連携
-description: >-
-  TestimとGitHub
-  Issuesを連携してバグレポートをGitHubで管理する方法を説明します。統合設定、Issue作成、テスト結果とGitHubリポジトリの連携方法を網羅しています。
+title: TestimとGitHubの連携
+description: Testim から GitHub Issues に bug を報告するための接続手順を説明します。
 category: 統合
 order: 12037
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
 keywords:
+  - Testim
   - GitHub Issues
-  - GitHub連携
-  - Issue連携
-  - Issue自動作成
-  - バグレポート
-  - バグ管理
-  - テスト失敗
-  - 課題管理
-  - テストレポート
+  - GitHub
+  - バグトラッカー
+  - issue
+  - Bug Tracker
+  - Settings
 ---
 
-# TestimとGitHub（Issues）の連携
+# TestimとGitHubの連携
 
-GitHub Issuesは、GitHubリポジトリに統合されたバグトラッカーおよび課題管理ツールです。TestimとGitHub Issuesを連携することで、テスト失敗時に自動的にGitHub Issueを作成し、コードとバグ管理を一元化できます。
+GitHub integration を使うと、Testim から直接 GitHub Issues に bug を報告できます。bug に関する情報は自動的に入力されます。
 
-> **注意**: この連携は、[GitHub統合](/docs/github-integration)（ブランチ管理）とは異なります。こちらはIssue作成に特化した連携です。
+## TestimをGitHubに接続する
 
-## GitHub Issues連携の設定
+1. `Settings > Bug Tracker` に移動します。
+2. **Github** ロゴをクリックします。
+3. **Log in** をクリックします。
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **GitHub Issues**セクションを見つけます
-4. **Connect（接続）** をクリックします
-5. GitHubの認証画面が表示されます
-6. **Authorize（認証）** をクリックしてTestimにアクセスを許可します
-7. Issueを作成するリポジトリへのアクセスを許可します
-8. 接続が完了します
+次の画面が表示されます。
 
-## GitHub Issueの作成
+![GitHub の Log in リンク](/images/bug-tracker-settings/connecting-testim-to-github/d04116b-github1.png)
 
-テスト失敗時にGitHub Issueを作成するには：
+次の notice が表示されます。
 
-1. テスト結果画面を開きます
-2. 失敗したステップを選択します
-3. **Create Bug（バグを作成）** ボタンをクリックします
-4. **GitHub**を選択します
-5. Issueの詳細を入力します：
-   - **Repository（リポジトリ）**: GitHubリポジトリを選択
-   - **Title（タイトル）**: Issueのタイトル
-   - **Description（説明）**: 詳細な説明（自動的にテスト情報が含まれます）
-   - **Labels（ラベル）**: オプションでラベルを追加（例：bug、test-failure）
-   - **Assignees（担当者）**: オプションで担当者を割り当て
-6. **Create（作成）** をクリックします
+![GitHub の notice 画面](/images/bug-tracker-settings/connecting-testim-to-github/7aa9766-github2.PNG)
 
-作成されたGitHub Issueには、以下の情報が自動的に含まれます：
-- テスト名
-- 失敗したステップ
-- スクリーンショット（画像として添付）
-- エラーメッセージ
-- テスト実行へのリンク
-- ブラウザとOS情報
+4. 画面上部の **Sign in** をクリックし、GitHub アカウントにログインします。
+5. ログイン後、**Configure** をクリックします。
 
-## GitHubでのIssue管理
+![GitHub の Configure 画面](/images/bug-tracker-settings/connecting-testim-to-github/b8b4322-github3.png)
 
-作成されたIssueは、GitHub上で通常のIssueと同様に管理できます：
+6. 対象のアカウントをクリックし、Testim.io をどこにインストールするか指定します。
 
-- ラベルの追加・編集
-- マイルストーンへの割り当て
-- プルリクエストとのリンク
-- コメントの追加
-- ステータスの更新（Open/Closed）
+![インストール先アカウントの選択](/images/bug-tracker-settings/connecting-testim-to-github/85799b1-github4.PNG)
 
-## トラブルシューティング
+7. **Install** をクリックします。
 
-接続に問題がある場合は、以下を確認してください：
+![GitHub App の Install](/images/bug-tracker-settings/connecting-testim-to-github/66d3537-github5.PNG)
 
-- GitHubアカウントが有効か
-- Testimに必要な権限が付与されているか（repo権限）
-- 選択したリポジトリへのアクセス権限があるか
-- Issueを作成する権限があるか
+この時点で、Testim Visual Editor の `Settings > CLI` 画面が開きます。
 
-## 関連ドキュメント
+8. `Settings > Bug Tracker` に戻り、**Github** をクリックします。
+9. `"You are logged in"` メッセージが表示されることを確認します。
 
-- [GitHub統合（ブランチ管理）](/docs/github-integration)
-- [バグトラッカー設定](/docs/bug-tracker-settings)
+![GitHub 接続完了メッセージ](/images/bug-tracker-settings/connecting-testim-to-github/c4190f2-github6.PNG)
