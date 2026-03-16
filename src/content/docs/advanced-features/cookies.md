@@ -171,7 +171,8 @@ return {
 };
 ```
 
-:::note{title="**name** = Cookie 名\"}
+:::note
+**name** = Cookie 名\
 **value** = Cookie の値\
 **domain** = Cookie のドメイン（任意）
 :::

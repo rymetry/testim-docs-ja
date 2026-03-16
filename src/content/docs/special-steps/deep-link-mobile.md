@@ -56,9 +56,11 @@ keywords:
    3. parameter — アプリに渡す値（例: 電話番号）
    4. 文字列（JS式）なので引用符で囲みます
    5. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
-      > 📘
-      >
-      > 一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+
+   :::note
+   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+   :::
+
    6. ディープリンク値にパラメータを追加することもできます。通常の Testim パラメータを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
 5. **OK** をクリックします。\
    Deep Link ステップが追加されます。

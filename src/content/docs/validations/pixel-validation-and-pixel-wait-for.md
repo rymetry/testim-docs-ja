@@ -34,7 +34,7 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 :::
 
 :::note
-これは Professional プランの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
+これは Professional planの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
 :::
 
 次のビジュアル検証を実行できます：

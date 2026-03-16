@@ -23,7 +23,7 @@ keywords:
 *network validation* ステップでは、ネットワークリクエストを検証できます。プリセットの検証ステップで、オブジェクトの配列 `networkRequests`（下表）を受け取り、この配列に対して JavaScript を実行します。
 
 :::note
-これは Professional プランの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
+これは Professional planの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
 :::
 
 :::info

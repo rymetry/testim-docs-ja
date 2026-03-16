@@ -20,8 +20,8 @@ keywords:
 
 テストで[パラメータ](/docs/parameters)を使うと、実行時に使用された値がUIに保存・表示され、デバッグや原因追跡に役立ちます。一方で機微情報を扱う場合は値を表示したくないことがあります。Testim では、非表示にするパラメータを定義できます。非表示パラメータはクラウドに保存されないため、「同じパラメータで再実行」は利用できません。
 
-:::note{title="プロ機能"}
-この機能は Professional プランで利用可能です。詳細は [こちら](https://www.testim.io/pricing/)。
+:::note{title="Pro機能"}
+この機能は Professional planで利用可能です。詳細は [こちら](https://www.testim.io/pricing/)。
 :::
 
 ## 非表示パラメータを追加する

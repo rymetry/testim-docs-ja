@@ -23,7 +23,7 @@ keywords:
 *Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
 :::note{title="これは Pro 機能です"}
-この機能は Professional プランのプロジェクトでのみ利用できます。Professional プランの詳細については [Testim 料金ページ](https://www.testim.io/pricing/) をご覧ください。
+この機能は Professional planのプロジェクトでのみ利用できます。Professional planの詳細については [Testim 料金ページ](https://www.testim.io/pricing/) をご覧ください。
 :::
 
 ## 前提条件

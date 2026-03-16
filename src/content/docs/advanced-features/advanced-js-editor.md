@@ -35,8 +35,8 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 高度なJSエディタを利用できるステップ:
 
 * [Custom action](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
-* [CLI action](/docs/cli-actions)
-* [Custom validation](/docs/custom-validations-and-actions#creating-a-custom-validation)
+* [CLI action](/docs/add-cli-validations-and-actions)
+* [Custom validation](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
 * [CLI validation](/docs/add-cli-validations-and-actions)
 * [Download validation](/docs/validate-download)
 * [Email validation](/docs/email-validation)

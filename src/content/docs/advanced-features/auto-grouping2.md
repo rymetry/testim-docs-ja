@@ -20,8 +20,8 @@ keywords:
 
 テスト内の重複ステップ列を検出し、再利用可能なグループへまとめます。
 
-:::note{title="プロ機能"}
-Professional プランで利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)。  
+:::note{title="Pro機能"}
+Professional planで利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)。  
 自動グルーピングは master ブランチでのみ動作します（状態は毎週末に更新されます）。  
 また、本機能は Web / Mobile Web プロジェクトで利用できます。
 :::

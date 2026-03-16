@@ -32,7 +32,7 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 :::
 
 :::note
-これは Professional プランの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
+これは Professional planの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
 :::
 
 ## 前提条件
