@@ -403,7 +403,8 @@ Validate emailステップを設定する方法は2つあります：
 **Generate email address** ステップで定義した **Variable name** パラメータの名前を **Email address** フィールドに入力します。  
 ![メールアドレス生成ボタン](/images/validations/email-validation/3bfe619-image.png)
 
-:::warning{title="**Email address** フィールドは必須です。"}
+:::warning
+**Email address** フィールドは必須です。
 :::
 
 10. 必要に応じて、ステップとパラメータの追加設定を行います。
