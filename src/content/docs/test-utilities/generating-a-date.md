@@ -26,7 +26,7 @@ keywords:
 
 # 生成日付ステップを追加する
 
-:fa-arrow-right: 生成日付（Generate date）ステップを追加するには:
+**生成日付（Generate date）ステップを追加するには:**
 
 ![894](/images/test-utilities/generating-a-date/a09d76d-Jan-31-2021_06-26-26.gif)
 
@@ -55,7 +55,7 @@ keywords:
 :::
 
 「Generate date」ステップがエディターに追加されます。\
-5. 作成したステップで **Show Properties**（:fa-cog:）をクリックし、以下の説明に従ってプロパティを設定します。\
+5. 作成したステップで **Show Properties**をクリックし、以下の説明に従ってプロパティを設定します。\
 6. **Properties** ペインの **Step Parameters** ドロップダウンをクリックすると、現在の設定で生成された日付を確認できます。  
 
 ## Generate Date のプロパティ
