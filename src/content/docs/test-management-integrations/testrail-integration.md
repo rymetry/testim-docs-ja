@@ -81,7 +81,7 @@ JSONは以下の形式にする必要があります:
 }
 ```
 
-これらのパラメータを渡すには、CLIコマンドの一部として `--tms-field-file` フラグを使用します。フラグの後にパラメータとその値を含むJSONファイルパスを指定します。例:
+これらのパラメータを渡すには、[CLI](/docs/the-command-line-cli)コマンドの一部として `--tms-field-file` フラグを使用します。フラグの後にパラメータとその値を含むJSONファイルパスを指定します。例:
 
 ```shell
 --tms-field-file [tms-field-file.json]

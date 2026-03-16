@@ -126,7 +126,7 @@ TestimとTTM for Jiraの統合を設定した後、Testimの特定のテスト�
 
 ![一括マッピングが100%完了したことを示すメッセージ](/images/test-management-integrations/ttm-for-jira-integration/a63029e-ttm4jira.png)
 
-8. マッピングに失敗したテストがある場合、正常にマッピングされたテストの総数と失敗したマッピングの名前を含むメッセージが表示されます。❗アイコンにカーソルを合わせると、失敗に関する追加の詳細を表示できます。
+8. マッピングに失敗したテストがある場合、正常にマッピングされたテストの総数と失敗したマッピングの名前を含むメッセージが表示されます。❗アイコンをクリックすると、失敗に関する追加の詳細を表示できます。
 
 ![マッピング失敗テストとエラー詳細を表示する画面](/images/test-management-integrations/ttm-for-jira-integration/b12eefd-ttm4jira.png)
 
@@ -162,8 +162,8 @@ TTM for Jiraでテスト実行の結果を表示するには、リモートグ�
 
 Testim発のテスト実行の名前は、以下の命名規則を使用します：
 
-- "Testim.io `<ブランチ名> : <実行名>" **<YYYY-MM-DD>**` または
-- "Testim.io `<ブランチ名>" **<YYYY-MM-DD>**`（実行名がない場合）
+- `Testim.io <ブランチ名> : <実行名>` **`<YYYY-MM-DD>`** または
+- `Testim.io <ブランチ名>` **`<YYYY-MM-DD>`**（実行名がない場合）
 
 :::info{title="注意"}
 データはUTC日付を反映します。

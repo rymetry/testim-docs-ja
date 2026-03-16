@@ -23,8 +23,8 @@ keywords:
 
 Testimは、主要なテスト管理ツールと統合し、テスト結果を自動的に同期できます。これにより、Testimとエンタープライズテスト管理プラットフォーム間でテストケースと実行結果を一元管理できます。
 
-:::info{title="プロ機能"}
-この機能はProfessionalプラン以上で利用できます。プランの詳細については [Testimの料金プラン](https://www.testim.io/pricing/) を参照してください。
+:::info{title="Pro機能"}
+この機能は、Professional planのプロジェクトにのみ開かれています。
 :::
 
 ## 利用可能なテスト管理統合

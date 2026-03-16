@@ -37,7 +37,7 @@ qTest統合により、qTestのテストをTestimのテストにリンクでき�
 
 ![qTest統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 
-3. qTestを開き、URLからドメインをコピーしてTestimの **URL** フィールドに貼り付けます。URL構造: `https://<プロジェクト名>.qtestnet.com/`。例: `myProject`。
+3. qTestを開き、URLからドメインをコピーして（ログイン済みであることを確認してください）、Testimの **URL** フィールドに貼り付けます。URL構造: `https://<プロジェクト名>.qtestnet.com/`。`プロジェクト名` はqTestのURLで確認できます。例: `myProject`。
 
 ![qTestのURL入力例](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
 
