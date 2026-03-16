@@ -18,11 +18,11 @@ keywords:
 
 AutoRABITからテストを自動化するには、CIジョブでCallout URLを追加して、Testim REST APIを呼び出し、テスト、テストプラン、テストスイート、またはテストラベルのテスト実行をトリガーできます。これは、単一のWebhook呼び出しでシームレスに実行でき、中間VMやCIツールは必要ありません。
 
-> 📘
->
-> これはProアカウントでのみ利用可能です
+:::info
+これはProアカウントでのみ利用可能です
+:::
 
-:fa-arrow-right:**TestimとAutoRABITを統合するには:**
+**TestimとAutoRABITを統合するには:**
 
 1. Testimで、**Settings > API**に移動します。
 2. **Generate Key**をクリックします。

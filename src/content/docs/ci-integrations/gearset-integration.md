@@ -20,7 +20,7 @@ keywords:
 
 GearsetのCIまたはデプロイジョブからテストを自動化するには、GearsetでWebhookを追加し、単一のWebhook呼び出しでTestim/TTA for Salesforce REST APIを使用します。
 
-:fa-arrow-right: **Gearsetを統合するには:**
+**Gearsetを統合するには:**
 
 1. Testim/TTA for Salesforceで、**Settings > API**に移動します。
 2. **Generate API Key**をクリックします。  
