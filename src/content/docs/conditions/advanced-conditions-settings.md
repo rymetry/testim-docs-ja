@@ -3,7 +3,7 @@ title: 拡張条件設定
 description: 条件やループの高度な設定方法を学びます。条件判定のリトライ時間や検証時間を調整して、より柔軟なテスト実行を実現します。
 category: テスト編集
 order: 4011
-updated: '2026-03-17'
+updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/advanced-conditions-settings'
 keywords:
   - 拡張条件設定

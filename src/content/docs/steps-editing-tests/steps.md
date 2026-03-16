@@ -4,7 +4,7 @@ description: >-
   Testimのステップの種類と使い方について説明します。手動ステップと自動記録ステップの違い、検証ステップ、待機ステップ、アクションステップの詳細を解説します。
 category: テスト編集
 order: 4001
-updated: '2026-03-17'
+updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/steps'
 keywords:
   - ステップ

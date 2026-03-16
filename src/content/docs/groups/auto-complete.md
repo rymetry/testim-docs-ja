@@ -3,7 +3,7 @@ title: オートコンプリート
 description: 共有グループを活用してテスト記録を効率化するオートコンプリート機能について説明します。事前記録されたステップの候補から選択して自動実行できます。
 category: テスト編集
 order: 4008
-updated: '2026-03-17'
+updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/auto-complete'
 keywords:
   - オートコンプリート
