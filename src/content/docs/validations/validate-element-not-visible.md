@@ -3,7 +3,7 @@ title: 要素が不可視であることの検証
 description: 要素が画面上に表示されていないことを検証するステップ。非表示要素や削除された要素の状態を確認し、UIの正しい動作を検証します。
 category: 高度な編集
 order: 5004
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/validate-element-not-visible'
 keywords:
   - 要素検証
@@ -28,7 +28,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ## Validate element not visible ステップの追加
 
-:fa-arrow-right: **Element Not Visible 検証を追加するには:**
+**Element Not Visible 検証を追加するには:**
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
@@ -67,7 +67,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ![非表示検証](/images/validations/validate-element-not-visible/5680a81-Testim_089.png)
 
-8. 要素が不可視かどうかを確認する前に遅延を入れたい場合は、ステップにカーソルを合わせて **Show Properties**（:fa-cog:）をクリックします。
+8. 要素が不可視かどうかを確認する前に遅延を入れたい場合は、ステップにカーソルを合わせて **Show Properties**をクリックします。
 
 ![スクリーンショット](/images/validations/validate-element-not-visible/bf63c08-Screen_Shot_2021-04-18_at_6.40.55.png)
 
@@ -89,11 +89,11 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 選択した要素を変更したい場合、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。
 
-:fa-arrow-right: **Validate element not visible ステップで選択要素を再割り当てするには:**
+**Validate element not visible ステップで選択要素を再割り当てするには:**
 
 1. 再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** をクリックします。
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
-3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
+3. 対象ステップにカーソルを合わせ、**Show Properties**をクリックします。
 
 ![スクリーンショット](/images/validations/validate-element-not-visible/5ad089f-Screen_Shot_2021-04-18_at_6.40.55.png)
 

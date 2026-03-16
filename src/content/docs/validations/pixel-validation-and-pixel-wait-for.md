@@ -3,7 +3,7 @@ title: ビジュアル検証（要素・ビューポート・全ページ）
 description: ピクセルレベルでの画像比較による検証ステップ。スクリーンショットを比較してUIの見た目を検証し、レイアウト崩れやデザイン変更を検出します。
 category: 高度な編集
 order: 5014
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/pixel-validation-and-pixel-wait-for'
 keywords:
   - ピクセル検証
@@ -126,7 +126,7 @@ Testim 内で変更できるビジュアル検証パラメータは 4 つあり�
 
 ### テスト設定でビジュアル検証設定を変更する
 
-:fa-arrow-right: **テスト設定でビジュアル検証設定を変更するには：**
+**テスト設定でビジュアル検証設定を変更するには：**
 
 1. 左メニューで **Runs > Configuration List** に移動します。
 
@@ -156,9 +156,9 @@ Testim 内で変更できるビジュアル検証パラメータは 4 つあり�
 
 ### エディターでテストレベルのビジュアル検証設定を変更する
 
-:fa-arrow-right: **エディターでテストレベルのビジュアル検証設定を変更するには：**
+**エディターでテストレベルのビジュアル検証設定を変更するには：**
 
-1. テストのセットアップステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+1. テストのセットアップステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![テストのセットアップステップのShow Propertiesアイコン](/images/validations/pixel-validation-and-pixel-wait-for/3ee33fb-Testim_488a.png)
 
@@ -181,9 +181,9 @@ Testim 内で変更できるビジュアル検証パラメータは 4 つあり�
 
 ### ステップレベルのビジュアル検証設定を変更する
 
-:fa-arrow-right: **ステップレベルのビジュアル検証設定にアクセスするには：**
+**ステップレベルのビジュアル検証設定にアクセスするには：**
 
-1. 設定を変更したいビジュアル検証ステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+1. 設定を変更したいビジュアル検証ステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![ビジュアル検証ステップのShow Propertiesアイコン](/images/validations/pixel-validation-and-pixel-wait-for/9ffa82b-Testim_493a.png)
 

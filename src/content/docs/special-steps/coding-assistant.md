@@ -5,7 +5,7 @@ description: >-
   コードを生成・解説・修正し、テスト用スクリプトの作成を効率化する方法を説明します。
 category: 高度な編集
 order: 5060
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/coding-assistant'
 keywords:
   - コーディングアシスタント
@@ -32,7 +32,7 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 このアシスタントは OpenAI の生成AIを Testim 用に統合・最適化したものです。チャットのプロンプト入力に加え、スラッシュ（/）で始まるコマンドも利用できます。
 
-:fa-arrow-right:**使用手順:**
+**使用手順:**
 
 1. カスタムステップを作成します（上記リンク先の手順を参照）。
 

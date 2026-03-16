@@ -3,7 +3,7 @@ title: 設定ファイルのパラメータ
 description: 設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
 category: 高度な編集
 order: 5044
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'
 keywords:
   - Testim
@@ -60,7 +60,7 @@ exports.config = {
 
 `return` セクションに `overrideTestData` を追加すると、テスト名ごとにデータを割り当てられます。実行内でテストごとに異なる値を指定できます。
 
-:fa-arrow-right: **テストごとのデータを追加するには:**
+**テストごとのデータを追加するには:**
 
 1. 設定ファイルを作成／編集します。
 2. `beforeSuite` の戻り値に `overrideTestData` を追加し、テスト名とデータセット（JSON）を記述します。他の設定はそのまま保持します。例：
@@ -76,9 +76,9 @@ beforeSuite: function () {
 } //add comma here if there are more functions after beforeSuite
 ```
 
-> 📘
->
-> "Test 1" と "Test 2" はテスト名です。
+:::note
+"Test 1" と "Test 2" はテスト名です。
+:::
 
 同じ例で、最初のテストに2つのデータセットを与える場合：
 
@@ -100,7 +100,7 @@ beforeSuite: function () {
 
 設定フック（`beforeSuite` / `beforeTest`）の `return` に値を置くと、実行に含まれる全テストで同一データが使われます。
 
-:fa-arrow-right: **実行レベルで指定するには:**
+**実行レベルで指定するには:**
 
 1. 設定ファイルを作成／編集します。
 2. `beforeSuite` または `beforeTest` の `return` にパラメータと値を記述します。

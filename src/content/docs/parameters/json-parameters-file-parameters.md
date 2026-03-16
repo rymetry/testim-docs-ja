@@ -3,7 +3,7 @@ title: JSON パラメータファイル
 description: JSON パラメータファイルでテストに値を渡す
 category: 高度な編集
 order: 5043
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/json-parameters-file-parameters'
 keywords:
   - Testim
@@ -39,9 +39,9 @@ JSON パラメータファイルでテストに値を渡す
 
 作成したJSONファイルは、[Testim CLI](/docs/the-command-line-cli) の **--params-file** 引数で指定します。
 
-> 📘
->
-> `--params-file` に指定するパスはフルパスではなく相対パスである必要があります。
+:::note
+`--params-file` に指定するパスはフルパスではなく相対パスである必要があります。
+:::
 
 ```shell
 testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" 

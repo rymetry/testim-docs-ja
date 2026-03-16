@@ -3,7 +3,7 @@ title: Excel ファイルからパラメータを渡す
 description: Excel/CSV のデータをテストにパラメータとして渡す方法
 category: 高度な編集
 order: 5045
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/passing-parameters-from-excel-file'
 keywords:
   - Testim

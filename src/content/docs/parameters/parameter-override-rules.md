@@ -3,7 +3,7 @@ title: パラメータの上書きルール
 description: パラメータ使用時に発生する上書き（オーバーライド）ルールの整理
 category: 高度な編集
 order: 5046
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/parameter-override-rules'
 keywords:
   - Testim
@@ -51,9 +51,9 @@ exportsGlobal.x = "global"
 console.log(x); // prints "local"
 ```
 
-> 📘 スコープの考え方
->
-> グループで作成したパラメータは「ローカルスコープ」です。同スコープまたはより狭いスコープの同名パラメータで上書きできます。
+:::note{title="スコープの考え方"}
+グループで作成したパラメータは「ローカルスコープ」です。同スコープまたはより狭いスコープの同名パラメータで上書きできます。
+:::
 
 ### 用途の整理
 

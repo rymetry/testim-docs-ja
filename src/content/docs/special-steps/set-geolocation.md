@@ -3,7 +3,7 @@ title: ジオロケーションの設定（モバイル）
 description: Set Geolocation ステップでモバイルデバイスの位置情報（緯度・経度）を指定し、位置依存のシナリオをテストする方法を説明します。
 category: 高度な編集
 order: 5062
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/set-geolocation'
 keywords:
   - ジオロケーション
@@ -22,11 +22,11 @@ keywords:
 
 一部のモバイルアプリは端末の位置情報を利用します。本ステップでテスト実行中のデバイスに任意の位置情報を設定できます。
 
-> 📘
->
-> 変更されるのはGPS座標のみで、端末の日時設定は変更しません。
+:::note
+変更されるのはGPS座標のみで、端末の日時設定は変更しません。
+:::
 
-:fa-arrow-right: **追加手順:**
+**追加手順:**
 
 1. 記録中に **Mirroring Toolbar** の **More actions** をクリック。
 2. **Set Geolocation** を選択します。\

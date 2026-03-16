@@ -3,7 +3,7 @@ title: Cookie（クッキー）
 description: 専用ステップやカスタムコード、設定ファイルを使ってテスト内でブラウザクッキーを設定・取得する方法を説明します。
 category: 高度な編集
 order: 5051
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/cookies'
 keywords:
   - クッキー
@@ -20,7 +20,8 @@ keywords:
 
 ブラウザクッキーの取得と設定
 
-> 📘 Cookie とは、Web サイトから送信されブラウザに保存される小さなデータです。用途は多岐に渡りますが、テスト自動化ではログインフロー全体を踏まずに Cookie を直接設定して認証を高速化する、といった使い方が可能です。
+:::note{title="Cookie とは、Web サイトから送信されブラウザに保存される小さなデータです。用途は多岐に渡りますが、テスト自動化ではログインフロー全体を踏まずに Cookie を直接設定して認証を高速化する、といった使い方が可能です。"}
+:::
 
 Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
 Cookie を扱う代表的な方法:
@@ -40,9 +41,9 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 **Set Cookie** ステップは、テストのUIから直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメータを利用します。
 
-:fa-arrow-right: **属性を直接入力して Cookie を設定するには:**
+**属性を直接入力して Cookie を設定するには:**
 
-1. 追加したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
+1. 追加したい位置の （矢印）にカーソルを合わせます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9a4e48a-Testim_201a.png)
 
@@ -62,9 +63,9 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 4. 下にスクロールして **Set Cookie** を選択します。
 
-> 📘
->
-> 上部の検索ボックスで **Set Cookie** を検索して選択することもできます。
+:::note
+上部の検索ボックスで **Set Cookie** を検索して選択することもできます。
+:::
 
 **Set Cookie** 画面が表示されます。
 
@@ -78,7 +79,8 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 * **Domain** – Cookie を送信するホスト。空欄（既定）の場合はテストが実行されている Base URL が使用されます（任意）。
 * **Path** – リクエストURLに含まれている必要があるパス。空欄（既定）はルートディレクトリを意味します（任意）。
 
-> 📘 文字列はシングルクォートまたはダブルクォートで囲む必要があります。
+:::note{title="文字列はシングルクォートまたはダブルクォートで囲む必要があります。"}
+:::
 
 7. **Expires (Max-Age)** フィールドで有効期限を選択します（既定値は session）。
 8. Cookie を HttpOnly にしたい場合は **HttpOnly** チェックボックスをオンにします。
@@ -89,9 +91,9 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 テストを実行すると、指定した属性で Cookie が設定されます。
 
-:fa-arrow-right: **パラメータから Cookie を設定するには:**
+**パラメータから Cookie を設定するには:**
 
-1. Cookie を追加したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
+1. Cookie を追加したい位置の （矢印）にカーソルを合わせます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/81c33b1-Testim_201a.png)
 
@@ -111,9 +113,9 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 4. 下にスクロールして **Set Cookie** を選択します。
 
-> 📘
->
-> 上部の検索ボックスで **Set Cookie** を検索して選択することもできます。
+:::note
+上部の検索ボックスで **Set Cookie** を検索して選択することもできます。
+:::
 
 **Set Cookie** 画面が表示されます。
 
@@ -135,9 +137,9 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。
 
-:fa-arrow-right: **Test Data プロパティで Cookie を設定するには:**
+**Test Data プロパティで Cookie を設定するには:**
 
-1. テストの最初のステップである **Setup** ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
+1. テストの最初のステップである **Setup** ステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9335a8c-Testim_210a.png)
 
@@ -145,9 +147,9 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/3866fe4-Testim_211_r2.png)
 
-> 📘
->
-> **Setup** ステップをダブルクリックするか、画面右上の **Show step properties** アイコンをクリックしても同じパネルを開けます。
+:::note
+**Setup** ステップをダブルクリックするか、画面右上の **Show step properties** アイコンをクリックしても同じパネルを開けます。
+:::
 
 2. オプションをスクロールして **Test Data** をクリックします。\
    JavaScript エディタが開きます。
@@ -169,9 +171,10 @@ return {
 };
 ```
 
-> 📘 **name** = Cookie 名\
-> **value** = Cookie の値\
-> **domain** = Cookie のドメイン（任意）
+:::note{title="**name** = Cookie 名\"}
+**value** = Cookie の値\
+**domain** = Cookie のドメイン（任意）
+:::
 
 **back arrow** をクリックしてメインの **Editor** ウィンドウに戻ります。
 
@@ -183,9 +186,9 @@ return {
 
 特定のタイミングで Cookie を設定したいが、テスト開始直後である必要はない場合は、**Custom JavaScript** ステップ（custom action）を使って任意の位置で Cookie を設定できます。
 
-:fa-arrow-right: **カスタムアクションステップで JavaScript を使って Cookie を設定するには:**
+**カスタムアクションステップで JavaScript を使って Cookie を設定するには:**
 
-1. Cookie を追加したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
+1. Cookie を追加したい位置の （矢印）にカーソルを合わせます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/57fdc2c-Testim_201a.png)
 
@@ -208,9 +211,9 @@ return {
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f0ba274-Testim_215_r.png)
 
-> 📘
->
-> 上部の検索ボックスで **Add custom action** を検索して選択することもできます。
+:::note
+上部の検索ボックスで **Add custom action** を検索して選択することもできます。
+:::
 
 5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
 6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダを選択します（既定値）。このステップを共有したくない場合はチェックを外します。
@@ -242,7 +245,7 @@ document.cookie = "username=tomsmith";
 
 CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメータや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。
 
-:fa-arrow-right: **設定ファイルを使って Cookie を設定するには:**
+**設定ファイルを使って Cookie を設定するには:**
 
 1. JavaScript の設定ファイルを作成します。詳細は [Configuration file & run hooks](/docs/configuration-file-run-hooks) を参照してください。
 2. `beforeSuite` セクションに Cookie を設定するコードを追加します。以下は例です。
@@ -271,11 +274,11 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 **Get Cookie** ステップを使うと、テスト中の UI から直接 Cookie を読み取り、その値を変数に保存できます。
 
-:fa-arrow-right: **Get Cookie ステップで Cookie を取得するには:**
+**Get Cookie ステップで Cookie を取得するには:**
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif)
 
-1. Cookie を取得したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
+1. Cookie を取得したい位置の （矢印）にカーソルを合わせます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/182e01a-Testim_207a.png)
 
@@ -295,12 +298,12 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 4. 下にスクロールして **Get Cookie** を選択します。
 
-> 📘
->
-> 上部の検索ボックスで **Get Cookie** を検索して選択することもできます。
+:::note
+上部の検索ボックスで **Get Cookie** を検索して選択することもできます。
+:::
 
 **Editor** 内に “Get Cookie” ステップが追加されます。\
-5\. 追加されたステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
+5\. 追加されたステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/06fb384-Testim_208a.png)
 
@@ -327,9 +330,9 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
 
-:fa-arrow-right: **カスタムアクションステップで Cookie を取得するには:**
+**カスタムアクションステップで Cookie を取得するには:**
 
-1. Cookie を取得したい位置の :fa-caret-right:（矢印）にカーソルを合わせます。
+1. Cookie を取得したい位置の （矢印）にカーソルを合わせます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9e6579b-Testim_220a.png)
 
@@ -352,9 +355,9 @@ Get Cookie ステップを使わなくても、custom action ステップ内の 
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/295c84e-Testim_215_r.png)
 
-> 📘
->
-> 上部の検索ボックスで **Add custom action** を検索して選択することもできます。
+:::note
+上部の検索ボックスで **Add custom action** を検索して選択することもできます。
+:::
 
 5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
 6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダを選択します（既定値）。共有不要ならチェックを外します。

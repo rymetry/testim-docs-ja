@@ -3,7 +3,7 @@ title: ディープリンク（モバイル）
 description: Deep Link ステップで、モバイルアプリ内の特定画面を URL スキームで直接開き、パラメータ付きのディープリンク動作を検証する方法を説明します。
 category: 高度な編集
 order: 5063
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/deep-link-mobile'
 keywords:
   - ディープリンク
@@ -28,23 +28,23 @@ keywords:
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/58d5cba-open.png)
 
-> 📘
->
-> 本ステップは [VMG](/docs/virtual-mobile-grid) でのみ利用可能です。
+:::note
+本ステップは [VMG](/docs/virtual-mobile-grid) でのみ利用可能です。
+:::
 
 ## Deep Link ステップを追加する
 
-:fa-arrow-right:**追加手順:**
+**追加手順:**
 
-1. Deep Link ステップを追加したい位置の矢印（:fa-caret-right:）にカーソルを合わせます。アクションオプションが表示されます。
+1. Deep Link ステップを追加したい位置の矢印（）にカーソルを合わせます。アクションオプションが表示されます。
 2. “**M**”（Testim predefined steps）をクリックします。**Predefined steps** メニューが開きます。
 3. **Actions** メニューを展開し、**Deep link** ステップを選択します。
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/213c463-deeplink.png)
 
-> 📘 注意
->
-> メニュー上部の検索ボックスで “Deep link” と入力して検索することもできます。
+:::note{title="注意"}
+メニュー上部の検索ボックスで “Deep link” と入力して検索することもできます。
+:::
 
 次のダイアログが表示されます。
 

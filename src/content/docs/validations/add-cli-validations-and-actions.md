@@ -4,7 +4,7 @@ description: >-
   CLIステップを使用してNode.jsスクリプトを実行し、カスタム検証やアクションを追加する方法。ファイル操作やデータベース接続など高度な機能を実現できるPro機能です。
 category: 高度な編集
 order: 5008
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/add-cli-validations-and-actions'
 keywords:
   - CLI
@@ -39,7 +39,7 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 * CLI 検証/アクションを含むテストをローカルで実行するには、次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
 
-:fa-arrow-right: **CLI 検証/アクションを含むテストをローカルで実行するには:**
+**CLI 検証/アクションを含むテストをローカルで実行するには:**
 
 1. OS の **Command Prompt**（端末）を開きます。
 2. 次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
@@ -54,9 +54,9 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 *Add CLI action* / *Add CLI validation* のどちらも手順は同じです。
 
-:fa-arrow-right: **CLI ステップを追加するには:**
+**CLI ステップを追加するには:**
 
-1. 追加したい位置の :fa-caret-right: **（矢印）**（または最後のステップの **+**）にカーソルを合わせます。
+1. 追加したい位置の **（矢印）**（または最後のステップの **+**）にカーソルを合わせます。
 
 ![ステップ追加アイコン](/images/validations/add-cli-validations-and-actions/f982ee3-Testim_329a.png)
 

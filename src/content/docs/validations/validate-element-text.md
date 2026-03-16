@@ -3,7 +3,7 @@ title: 要素テキストの検証
 description: 要素に表示されているテキストが期待値と一致するかを検証するステップ。部分一致、完全一致、正規表現など柔軟な検証条件を設定できます。
 category: 高度な編集
 order: 5005
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/validate-element-text'
 keywords:
   - テキスト検証
@@ -29,7 +29,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 
 ## Validate element text ステップの追加（Web）
 
-:fa-arrow-right: **Element Text 検証を追加するには:**
+**Element Text 検証を追加するには:**
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
@@ -76,7 +76,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 ## Validate element text ステップの追加（Mobile）
 
-:fa-arrow-right: **Element Text 検証を追加するには:**
+**Element Text 検証を追加するには:**
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせ、**Testim predefined steps** ボタンをクリックします。
 
@@ -104,11 +104,11 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 ### 選択要素の再割り当て
 
-:fa-arrow-right: **Validate element text ステップで選択要素を再割り当てするには:**
+**Validate element text ステップで選択要素を再割り当てするには:**
 
 1. 再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** をクリックします。
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
-3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
+3. 対象ステップにカーソルを合わせ、**Show Properties**をクリックします。
 
 ![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
@@ -132,9 +132,9 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 ### 検証テキストの編集
 
-:fa-arrow-right: **Validate element text ステップで検証するテキストを編集するには:**
+**Validate element text ステップで検証するテキストを編集するには:**
 
-1. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
+1. 対象ステップにカーソルを合わせ、**Show Properties**をクリックします。
 
 ![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
 

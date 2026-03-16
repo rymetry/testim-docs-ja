@@ -4,7 +4,7 @@ description: >-
   Testimで利用できる検証ステップの概要。要素の可視性、テキスト、属性、ビジュアル、アクセシビリティ、ネットワーク、データベースなど多様な検証方法を提供します。
 category: 高度な編集
 order: 5002
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/validations'
 keywords:
   - 検証

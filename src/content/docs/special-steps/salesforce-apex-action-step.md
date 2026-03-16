@@ -5,7 +5,7 @@ description: >-
   APEX アクションステップの使い方を説明します。
 category: 高度な編集
 order: 5059
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/salesforce-apex-action-step'
 keywords:
   - Salesforce APEX
@@ -22,7 +22,8 @@ keywords:
 
 APEX コードをテスト内のステップとして実行し、UI を越えた E2E 検証を可能にします。APEX コードブロックに任意のパラメータを渡せます。APEX 側の入力パラメータは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、Salesforce から返ったデータなどはステップログで確認できます。
 
-> 📘 Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を管理者にホワイトリスト登録してもらってください。
+:::note{title="Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を管理者にホワイトリスト登録してもらってください。"}
+:::
 
 ローカルで本ステップを含むテストを実行するには、事前に次を実行します: **npm i -g @testim/testim-cli && testim connect**
 
@@ -30,9 +31,9 @@ APEX コードをテスト内のステップとして実行し、UI を越えた
 
 ## Salesforce APEX アクションステップを追加する
 
-:fa-arrow-right: **追加手順:**
+**追加手順:**
 
-1. 追加したい位置の :fa-caret-right: **（矢印）** にカーソルを合わせます。
+1. 追加したい位置の **（矢印）** にカーソルを合わせます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/7be8ce7-Testim_512a.png)
 
@@ -52,9 +53,9 @@ APEX コードをテスト内のステップとして実行し、UI を越えた
 
 4. メニューをスクロールし、**Salesforce APEX action** を選択します。
 
-> 📘
->
-> メニュー上部の検索ボックスに **Salesforce APEX action** と入力して検索することもできます。
+:::note
+メニュー上部の検索ボックスに **Salesforce APEX action** と入力して検索することもできます。
+:::
 
 **Add Step** ウィンドウが表示されます。
 
@@ -113,7 +114,7 @@ APEX コードをテスト内のステップとして実行し、UI を越えた
 
 テスト／スイート／設定ファイル／他ステップで定義したパラメータを用いて、接続情報を渡せます。
 
-:fa-arrow-right: **接続情報にパラメータを使う:**
+**接続情報にパラメータを使う:**
 
 1. 次のいずれかの方法でパラメータを定義します。
 
@@ -151,7 +152,7 @@ try {
 
 *Salesforce APEX action* ステップを含むテストを実行すると、コードエディタの Step Log から Salesforce から返却された結果を確認できます。
 
-:fa-arrow-right: **確認手順:**
+**確認手順:**
 
 1. 結果を確認したい *Salesforce APEX action* ステップをダブルクリックします。
 

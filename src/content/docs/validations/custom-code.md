@@ -3,7 +3,7 @@ title: カスタム検証とアクションの追加
 description: カスタム検証をJavaScriptで作成する方法。標準の検証ステップでは対応できない複雑な検証ロジックを実装し、テストの柔軟性を高めます。
 category: 高度な編集
 order: 5007
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/custom-code'
 keywords:
   - カスタム検証
@@ -26,9 +26,9 @@ keywords:
 
 検証やアクションの詳細に関わらず、手順は共通です。実際に記述するコードやパラメーターはユースケースに応じて変わります。以下に共通手順と、いくつかの例のコードとパラメーターを示します。
 
-:fa-arrow-right: **Add custom validation / Add custom action を追加するには:**
+**Add custom validation / Add custom action を追加するには:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the validation.
+1. Hover over the **(arrow symbol)** where you want to add the validation.
 
 ![ステップ追加位置の矢印記号](/images/validations/custom-code/b5a63dc-Testim_282a.png)
 

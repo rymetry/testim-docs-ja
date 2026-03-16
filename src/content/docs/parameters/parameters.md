@@ -3,7 +3,7 @@ title: パラメータ
 description: パラメータの使い方をまとめて解説します。
 category: 高度な編集
 order: 5040
-updated: '2025-09-22'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/parameters'
 keywords:
   - Testim
@@ -40,9 +40,9 @@ keywords:
 
 テスト実行のベースURL（テスト定義の値、または上書き値）が入ります。パラメータが使える場所ならどこでも利用可能です。
 
-> 📘
->
-> URL 文字列の前後に単一引用符が付く場合があります（例: 'BASE_URL + '/Extension''）。その場合は引用符を削除して利用してください（例: BASE_URL + '/Extension'）。
+:::note
+URL 文字列の前後に単一引用符が付く場合があります（例: 'BASE_URL + '/Extension''）。その場合は引用符を削除して利用してください（例: BASE_URL + '/Extension'）。
+:::
 
 データ駆動テストでの動的なベースURLとしても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。
 
@@ -52,9 +52,9 @@ keywords:
 
 TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の反復回数を示します。ループのたびに1ずつ増加します。
 
-> 📘
->
-> このパラメータのスコープはグループのループ内に限定されます。
+:::note
+このパラメータのスコープはグループのループ内に限定されます。
+:::
 
 詳細は [https://help.testim.io/docs/loops#using-the-loop-iterator-parameter](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
 

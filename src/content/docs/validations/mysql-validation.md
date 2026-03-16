@@ -3,7 +3,7 @@ title: MySQL の検証
 description: MySQLデータベースに接続してデータを検証するCLIステップ。テーブルデータの確認やSQLクエリ実行により、データベースの状態を検証できるPro機能です。
 category: 高度な編集
 order: 5018
-updated: '2025-09-14'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/mysql-validation'
 keywords:
   - MySQL
