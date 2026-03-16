@@ -42,13 +42,44 @@
 - 実運用で分離するなら、追加する役割は 1 つだけに絞る
   - `source-parity reviewer`: `sourceUrl` とローカル記事を比較し、本文欠落、画像未埋め込み、相対リンク残りを検出する
 
+## Source Parity チェック
+
+`npm run check:parity` で以下のローカルチェックを即時実行する:
+
+| チェック項目 | 検出内容 |
+|-------------|---------|
+| `untranslated` | 未翻訳の英語テキスト行（UI 操作指示文のパターンマッチ） |
+| `legacy-callout` | レガシー callout 形式（`> 📘`, `> ❗️` 等） |
+| `jsx-callout` | JSX/MDX `<Callout>` コンポーネント残留 |
+| `h1-in-body` | 本文中の H1 見出し（`# ` で始まる行） |
+| `orphan-page` | `docs/SIDEBAR_URLS.md` に未掲載のページ |
+
+リモートモード（`npm run check:parity:remote`）では上記に加えて英語原文をフェッチし、見出し数・画像数・コードブロック数を比較する。
+
+**セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
+
+**出力**: `parity-check-status.json` に詳細結果を保存。CI では artifact として Upload される。
+
+### 全文比較（深い調査）
+
+全ファイルを英語原文と内容レベルで比較する場合は、以下の手順で並行エージェントを活用する:
+
+1. ファイルをカテゴリフォルダごとに 6〜8 グループに分割する
+2. 各グループに対して Agent を起動し、`sourceUrl` から英語原文を WebFetch で取得
+3. 見出し構造、画像数、コードブロック、callout、未翻訳テキストを比較
+4. 結果を既存 Issue と突き合わせ、カバーされていない乖離に対して新規 Issue を作成
+5. 既存オープン Issue にはコメントで具体的な乖離情報を追加
+
+この手法で 285 ファイル全件を約 3 分（8 並行エージェント）で比較できる。
+
 ## 定期運用（3日ごと）
 
 - 3日ごとに以下を実行する:
   1. `npm run docs:sync-sidebar` で SIDEBAR_URLS を最新化
   2. 新規ページ追加を検出 → 重複チェック後 GitHub Issue 作成
   3. `npm run check:updates` で更新のあったドキュメントを検出
-  4. 更新があった場合 → 重複チェック後まとめて1つの GitHub Issue 作成
+  4. `npm run check:parity` でローカル品質チェック（未翻訳テキスト、レガシー callout 等）
+  5. 更新・問題があった場合 → 重複チェック後まとめて1つの GitHub Issue 作成
 - CronCreate（セッション内）と GitHub Actions（恒久的）の二重体制で運用する
 - 検出された Issue は次回セッションでメイン作業フローに従い対応する
 - **重複防止**: Issue 作成前に `gh issue list --state open --search/--label` で既存 Issue を検索し、既存あればコメント追加、なければ新規作成
@@ -109,3 +140,5 @@
 
 - `check-docs-updates.yml` で3日ごとのスケジュール（`0 0 */3 * *`）と PR 時の `lint:docs`, `test`, `build` を実行する
 - `docs:sync-sidebar` と `check:updates` を workflow に接続し、更新差分を artifact と issue/comment で可視化する
+- `check:parity` を workflow に接続し、未翻訳テキスト・レガシー callout 等の品質問題を定期検出する
+- 検出結果は `docs-update-status.json` と `parity-check-status.json` として artifact に保存される

@@ -27,6 +27,7 @@ pnpm-debug.log*
 # Documentation update tracking
 docs-update-status.json
 docs-dates-snapshot.json
+parity-check-status.json
 
 # Pipeline generated files
 scripts/.checkpoint

@@ -27,6 +27,8 @@
     "docs:prepare-llm": "node scripts/prepare_llm_tasks.mjs",
     "docs:apply-llm": "node scripts/apply_llm_translations.mjs",
     "docs:report-categories": "node scripts/report_frontmatter_categories.mjs",
+    "check:parity": "node scripts/check_source_parity.mjs",
+    "check:parity:remote": "node scripts/check_source_parity.mjs --remote",
     "check:updates": "node scripts/check_outdated_docs.mjs",
     "check:dates": "node scripts/fetch_all_updated_dates.mjs",
     "update:dates": "node scripts/update_dates_from_english.mjs",
