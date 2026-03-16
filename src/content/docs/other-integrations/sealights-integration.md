@@ -34,7 +34,7 @@ SealightsとTestimの統合でテストを実行する前に、まず以下を�
 SealightsとTestimの統合を使用する前に、Sealights Agent Tokenを介してTestimをSealightsに接続する必要があります。このプロセスは1回のみ必要です。
 
 :::info
-Sealights統合は無料ティアのお客様にはご利用いただけません。
+Sealights統合は無料プランのお客様にはご利用いただけません。
 :::
 
 **TestimをSealightsに接続するには:**
