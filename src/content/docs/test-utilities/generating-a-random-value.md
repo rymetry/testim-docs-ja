@@ -3,7 +3,7 @@ title: ランダム値の生成
 description: 動的データテスト用に乱数を生成するステップの作成方法を学びます。毎回異なるランダム文字列を入力してテストカバレッジを拡張します。
 category: テスト編集
 order: 4012
-updated: '2025-09-13'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/generating-a-random-value'
 keywords:
   - ランダム値生成
@@ -23,9 +23,9 @@ keywords:
 テキスト入力用の **Set text** ステップを含むテストを記録した後、そのステップの入力に毎回異なるランダム文字列を使用するよう、テスト構成を編集できます。ランダム文字列は **Generate random value** ステップで生成され、変数に格納されます（このステップは **Set text** ステップの直前に挿入します）。その後、**Set text** ステップで、**Generate random value** ステップで作成した変数を参照するように編集します。\
 ランダムなデータを生成してテストできるようにすることで、追加のテストを作成せずにカバレッジを拡張し、仕様内での失敗ケースの発見、データセットの分散、同じデータを繰り返し使ってしまうことの回避が可能になります。
 
-:fa-arrow-right: **「Generate random value」ステップで乱数を生成するには:**
+**「Generate random value」ステップで乱数を生成するには:**
 
-1. ステップを追加したい位置の :fa-caret-right: **（矢印）** にカーソルを合わせます。
+1. ステップを追加したい位置の **>（矢印）** にカーソルを合わせます。
 
 ![3849](/images/test-utilities/generating-a-random-value/4924b93-Testim_223a.png)
 
@@ -50,7 +50,7 @@ keywords:
 :::
 
 「Generate random value」ステップが **Editor** に追加されます。\
-5\. 作成したステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
+5\. 作成したステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
 ![3848](/images/test-utilities/generating-a-random-value/a6856ec-Testim_225a.png)
 
@@ -79,9 +79,9 @@ keywords:
 
 テストを実行すると、生成されたランダム値（任意のプレフィックス／サフィックスを含む）が指定した変数に格納されます。
 
-:fa-arrow-right: **「Set text」ステップでランダム文字列を入力するよう変更するには:**
+**「Set text」ステップでランダム文字列を入力するよう変更するには:**
 
-1. 変更したい **Set text** ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。
+1. 変更したい **Set text** ステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
 ![3849](/images/test-utilities/generating-a-random-value/4a5bd98-Testim_227a.png)
 

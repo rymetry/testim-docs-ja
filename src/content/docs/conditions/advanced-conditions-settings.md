@@ -3,7 +3,7 @@ title: 拡張条件設定
 description: 条件やループの高度な設定方法を学びます。条件判定のリトライ時間や検証時間を調整して、より柔軟なテスト実行を実現します。
 category: テスト編集
 order: 4011
-updated: '2025-09-13'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/advanced-conditions-settings'
 keywords:
   - 拡張条件設定
@@ -19,13 +19,16 @@ keywords:
 Testim の条件は、ステップの実行にもループの繰り返し（[Repeat Group Loops](/docs/loops)）にも適用できます。\
 ステップやループに設定した条件が false の場合、既定ではステップはスキップ（またはループは即座に終了）されます。逆に条件が true の場合、既定では直ちにステップを実行（またはループを繰り返し）ます。下記の拡張オプションを使うと、true/false と判定する前に一定時間、条件チェックを継続するように設定できます。
 
-> 📘 次の種類の条件に拡張設定を適用できます: Element、Element text、Custom\
-> 次の種類のループに拡張設定を適用できます: While element、While element text is、For each item、Loop for、Custom
+:::note
+次の種類の条件に拡張設定を適用できます: Element、Element text、Custom
 
-:fa-arrow-right: **拡張条件設定を構成するには:**
+次の種類のループに拡張設定を適用できます: While element、While element text is、For each item、Loop for、Custom
+:::
+
+**拡張条件設定を構成するには:**
 
 1. [Conditions](/docs/conditions) に従って条件を設定するか、[Repeat Group Loops](/docs/loops) に従ってループを設定します。
-2. Properties パネルの **When to run step** セクション（ループの場合は **Repeat group** セクション）で **Settings**（:fa-cog:）をクリックします。右側に **Advanced** パネルが開きます。
+2. Properties パネルの **When to run step** セクション（ループの場合は **Repeat group** セクション）で **Settings**をクリックします。右側に **Advanced** パネルが開きます。
 
 ![276](/images/conditions/advanced-conditions-settings/9e54f5e-WhenToRunStepCustom.png)
 

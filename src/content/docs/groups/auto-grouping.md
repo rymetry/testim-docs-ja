@@ -3,7 +3,7 @@ title: 他のテストへの新しいグループの適用
 description: グループ作成時に他の適用可能なテストへ自動的にグループを適用する自動グループ化機能について説明します。
 category: テスト編集
 order: 4007
-updated: '2025-09-13'
+updated: '2026-03-17'
 sourceUrl: 'https://help.testim.io/docs/auto-grouping'
 keywords:
   - 自動グループ化
@@ -22,7 +22,7 @@ keywords:
 
 自動グループ化の詳細は [Auto grouping](/docs/auto-grouping2) を参照してください。
 
-:fa-arrow-right: **自動グループ化を有効にするには:**
+**自動グループ化を有効にするには:**
 
 1. 新しい [Group](/docs/groups) を作成する際に、**Apply auto group on matching steps** を選択します。
 
@@ -34,6 +34,6 @@ keywords:
 
 ![2426](/images/groups/auto-grouping/2a96564-Screen_Shot_2020-07-07_at_13.58.18.png)
 
-> 📘 New branch
->
-> 自動グループ化を使用すると、新しいブランチが自動的に作成されます。これは、新しいグループによって他ユーザーや他テストへ予期せぬ影響を与えないようにするためです。新しいグループによる変更に問題がなければブランチをマージし、問題があればブランチを削除してください。
+:::note{title="New branch"}
+自動グループ化を使用すると、新しいブランチが自動的に作成されます。これは、新しいグループによって他ユーザーや他テストへ予期せぬ影響を与えないようにするためです。新しいグループによる変更に問題がなければブランチをマージし、問題があればブランチを削除してください。
+:::
