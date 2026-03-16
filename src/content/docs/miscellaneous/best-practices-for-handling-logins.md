@@ -37,7 +37,7 @@ keywords:
 3. パスワードを入力
 4. ログインをクリック
 
-これが最初のテストの場合は、この[ガイド](/docs/hello-world)を参照してください。
+これが最初のテストの場合は、この[ガイド](/docs/creating-your-first-codeless-test)を参照してください。
 
 ![ログインプロセスのテスト記録手順を示すGIFアニメーション。ユーザー名、パスワード入力からログインボタンクリックまでの流れ](/images/miscellaneous/best-practices-for-handling-logins/546ac11-login_1.gif)
 

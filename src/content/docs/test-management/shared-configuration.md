@@ -48,7 +48,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ### 新しいテスト構成を作成する
 
-:fa-arrow-right: **新しいテスト構成を作成するには:**
+**新しいテスト構成を作成するには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
@@ -87,14 +87,14 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
    ![新しいテスト構成の内容を確認しChangeボタンで保存する画面](/images/test-management/shared-configuration/1a9eceb-028f074-image.png)
 
-8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/before-after-hooks) を参照してください。
+8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/configuration-file-run-hooks) を参照してください。
 
 9. **Add** をクリックします。\
    構成が作成され、**Configuration Library** に追加されます。
 
 ### テスト構成のクローン作成
 
-:fa-arrow-right: **テスト構成をクローンするには:**
+**テスト構成をクローンするには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
@@ -111,9 +111,9 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![テスト構成のコンテキストツールバーに表示されたRenameアイコン](/images/test-management/shared-configuration/c9eac99-Testim_590b.png)
 
-> 📘
->
-> または、行を右クリックして、**Clone** を選択することもできます。
+:::note
+または、行を右クリックして、**Clone** を選択することもできます。
+:::
 
 **Clone Configuration** オプションが表示されます。
 
@@ -125,7 +125,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ### テスト構成の変更
 
-:fa-arrow-right: **テスト構成を変更するには:**
+**テスト構成を変更するには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
@@ -153,13 +153,13 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](/docs/how-to-record-a-test) を参照してください。
 6. **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはデフォルトでネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。
 7. **Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
-8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/before-after-hooks) を参照してください。
+8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/configuration-file-run-hooks) を参照してください。
 9. **Change** をクリックします。\
    構成が変更されます。
 
 ### テスト構成の名前変更
 
-:fa-arrow-right: **テスト構成の名前を変更するには:**
+**テスト構成の名前を変更するには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
@@ -176,9 +176,9 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![コンテキストツールバーのRenameアイコンを強調表示した画面](/images/test-management/shared-configuration/cd437c4-Testim_590d.png)
 
-> 📘
->
-> または、行を右クリックして、**Rename** を選択することもできます。
+:::note
+または、行を右クリックして、**Rename** を選択することもできます。
+:::
 
 **Edit Name** 設定が表示されます。
 
@@ -190,7 +190,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ### テスト構成の削除
 
-:fa-arrow-right: **テスト構成を削除するには:**
+**テスト構成を削除するには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 
@@ -207,9 +207,9 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![コンテキストツールバーのDeleteアイコンを強調表示した画面](/images/test-management/shared-configuration/ee65ecc-Testim_590c.png)
 
-> 📘
->
-> または、行を右クリックして、**Delete** を選択することもできます。
+:::note
+または、行を右クリックして、**Delete** を選択することもできます。
+:::
 
 確認ダイアログが表示されます。
 
@@ -222,7 +222,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 構成ライブラリにフィルターを適用して、特定の条件を満たすアイテムのみを表示できます。
 
-:fa-arrow-right: **構成ライブラリをフィルタリングするには:**
+**構成ライブラリをフィルタリングするには:**
 
 1. Runs > Configuration List に移動します。
 2. アクションメニューの **Advanced Filters** ボタンをクリックします。
@@ -239,9 +239,9 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Test Editor** で変更されたテスト構成は、構成に名前が含まれていてテストが保存されている場合、**Configuration Library** に追加されます。新しく追加されたテスト構成は、将来のテストに使用できます。
 
-:fa-arrow-right: **テスト内でテスト構成を変更するには:**
+**テスト内でテスト構成を変更するには:**
 
-1. テストの **Setup** ステップ（最初のステップ）にカーソルを合わせ、**Show properties** (:fa-cog:) アイコンをクリックします。
+1. テストの **Setup** ステップ（最初のステップ）にカーソルを合わせ、**Show properties**  アイコンをクリックします。
 
 ![Test EditorのSetupステップにカーソルを合わせてShow propertiesアイコンをクリックする画面](/images/test-management/shared-configuration/9bdfe00-Testim_594a.png)
 
@@ -265,7 +265,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 * **Resolution** セクションで、希望する解像度を選択します。
 * **Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](/docs/how-to-record-a-test) を参照してください。
 * **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはデフォルトでネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。**Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
-* **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/before-after-hooks) を参照してください。
+* **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/configuration-file-run-hooks) を参照してください。
 
 4. 戻る矢印をクリックして、**Edit Configuration** 設定を閉じます。
 
