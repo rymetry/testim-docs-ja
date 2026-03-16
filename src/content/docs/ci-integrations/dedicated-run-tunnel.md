@@ -22,9 +22,9 @@ Dedicated Run Tunnel を使用すると、internal server や localhost から�
 場合によっては、Testimまたは外部プロバイダー(SauceLabsなど)が提供するリモートSelenium Gridサーバーを使用して、独自のプライベートまたは内部サーバーでテストを実行したい場合があります。
 
 :::info
-この機能はProアカウントでのみ利用可能です。
+この機能はPro機能です。
 
-Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
+この機能は、Professional planのプロジェクトにのみ開かれています。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
 :::
 
 ## 前提条件
