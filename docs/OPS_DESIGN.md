@@ -54,6 +54,28 @@
 - **重複防止**: Issue 作成前に `gh issue list --state open --search/--label` で既存 Issue を検索し、既存あればコメント追加、なければ新規作成
 - GitHub Actions workflow にも同等の重複防止ロジックが組込済み（label: `documentation,update-needed`）
 
+## 一括変更時の検証フロー
+
+複数ファイルを一括変換する場合、**検証スクリプトを変換スクリプトと同時に作成**し、初回コミット前に通す。
+
+必須検証項目:
+
+1. `/docs/{slug}` リンクの参照先ファイルが全件存在するか（HTML `<a href>` 含む）。`#fragment` アンカーがある場合は、対象ファイル内に該当する見出しが存在するかも確認する
+2. callout 変換後に構文が壊れていないか（引用符の整合、タイトル長、タイプとタイトルの一致）
+3. 残存パターンがないか（`:fa-` マーカー、`> 📘` blockquote、外部 `help.testim.io` リンク）
+4. `updated` フィールドが英語原文の日付のまま維持されているか
+5. main からの巻き戻りがないか（`git diff` の追加行に既存問題が混入していないか）
+6. 変更対象ファイル内の既存問題（fa-icon、旧 callout 等）も一緒に修正する。リンクだけ直してファイル内の他の問題を放置しない
+
+## 原文スラグ変更の検知
+
+英語原文側でスラグがリネームされることがある（例: `execute-driver-script-step` → `custom-action-step-mobile`）。
+
+検知方法:
+
+- `npm run docs:sync-sidebar` で英語サイドバーを取得し、JA ファイルの sourceUrl と突き合わせる
+- 新規ファイル作成前に同一 sourceUrl を持つ既存ファイルがないか確認する
+
 ## レビュー方針
 
 - セルフチェック後に Codex CLI（`.claude/skills/codex-review/SKILL.md`）で read-only レビューを実施

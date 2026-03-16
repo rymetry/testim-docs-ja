@@ -24,7 +24,7 @@ keywords:
 
 ## 新しいモバイルテストプランの作成
 
-:fa-arrow-right: **新しいテストプランを作成するには:**
+**新しいテストプランを作成するには:**
 
 1. メインメニューで**Test List**に移動します。
 2. 上部ナビゲーションから**Plans**を選択します。
@@ -48,7 +48,7 @@ keywords:
 
 ![Add After Allセクションでクリーンアップ用のテストスイートやラベルを設定する画面](/images/test-management/test-plans-mobile/7cf9f5b-newmobiletestplan.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 * 「Before all」と「After all」のテストは、常に並列レベル `1` で実行されます。CLI で設定されている場合、「Test List」のみがより高い並列化レベルで実行できます。
 * 「before all」テストの1つが失敗した場合、Test list のテストは実行されません。
 * 「Add After All」のテストは、Test list のテストが失敗しても常に実行されます。

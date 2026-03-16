@@ -497,8 +497,8 @@ $$
 他のドキュメントページへのリンク。
 
 - [Testim概要](/docs/testim-overview)
-- [はじめに](/docs/getting-started)
-- [Webテストの作成](/docs/web-testing)
+- [はじめに](/docs/setting-up-your-account)
+- [Webテストの作成](/docs/creating-your-first-codeless-test)
 
 ### アンカーリンク
 
