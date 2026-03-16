@@ -24,7 +24,7 @@ Dedicated Run Tunnel を使用すると、internal server や localhost から�
 :::info
 この機能はPro機能です。
 
-この機能は、Professional planのプロジェクトにのみ開かれています。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
+この機能は、Professional planのプロジェクトでのみ利用できます。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
 :::
 
 ## 前提条件
