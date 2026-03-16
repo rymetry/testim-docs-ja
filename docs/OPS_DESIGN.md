@@ -59,6 +59,30 @@
 - セルフチェック後に Codex CLI（`.claude/skills/codex-review/SKILL.md`）で read-only レビューを実施
 - Codex のフィードバックを修正に反映してから lint/test/build を実行する
 
+## フィードバックループ（学んだことの反映）
+
+レビューや作業で新しいパターン・ルール・ツール知見が判明した場合、対象ファイルの修正だけでなく、ガイドドキュメントにも反映する。これにより同じ問題の再発を防ぐ。
+
+**反映フロー:**
+
+1. 問題を修正する（対象ファイル）
+2. 以下の該当ドキュメントを更新する:
+
+| 発見内容 | 更新先 |
+|---------|-------|
+| 不自然な日本語パターン（直訳、カタカナ表記） | `docs/TRANSLATION_GUIDE.md` 5.1 基本方針 + 5.2 用語統一表 |
+| Markdown記法・callout・リンク形式のルール | `docs/WRITING_GUIDE.md` |
+| ツールの使い方（Codex CLI フラグ等） | `.claude/skills/` 配下の該当 SKILL.md |
+| 運用フロー・CI設定の変更 | `docs/OPS_DESIGN.md` |
+| Claude Code の動作ガイダンス | `.claude/CLAUDE.md` |
+
+3. ガイド更新を main にコミットする（`.claude/` 配下は git 管理外のためコミット不要）
+
+**例:**
+- 「開かれています」が不自然 → TRANSLATION_GUIDE.md の NG/OK 例に追加 + 用語統一表に追加
+- Codex CLI の `--path` が動かない → SKILL.md を `-C` に修正
+- GitHub Actions のスケジュール変更 → OPS_DESIGN.md と DOCS_DATE_TRACKING.md を更新
+
 ## CI の役割
 
 - `check-docs-updates.yml` で3日ごとのスケジュール（`0 0 */3 * *`）と PR 時の `lint:docs`, `test`, `build` を実行する
