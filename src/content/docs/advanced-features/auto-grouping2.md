@@ -3,7 +3,7 @@ title: 自動グルーピング
 description: Auto grouping 機能でプロジェクト内の重複ステップ列を検出し、共有グループに置き換えてテストの重複を削減する方法を説明します。
 category: 高度な編集
 order: 5053
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/auto-grouping2'
 keywords:
   - 自動グルーピング

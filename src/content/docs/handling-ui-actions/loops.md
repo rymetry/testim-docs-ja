@@ -3,7 +3,7 @@ title: グループの繰り返しループ
 description: while...do...ループとforループを使用してステップのグループを繰り返し、条件に応じた反復処理を実行する方法を学びます。
 category: 高度な編集
 order: 5039
-updated: '2026-03-17'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/loops'
 keywords:
   - testim

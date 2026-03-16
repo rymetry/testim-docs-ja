@@ -5,7 +5,7 @@ description: >-
   API action）の使い方を説明します。
 category: 高度な編集
 order: 5050
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/api-testing'
 keywords:
   - API テスト

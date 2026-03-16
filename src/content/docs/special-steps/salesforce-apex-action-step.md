@@ -5,7 +5,7 @@ description: >-
   APEX アクションステップの使い方を説明します。
 category: 高度な編集
 order: 5059
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/salesforce-apex-action-step'
 keywords:
   - Salesforce APEX

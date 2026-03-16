@@ -3,7 +3,7 @@ title: ページアクセシビリティ検証
 description: Webページ全体のアクセシビリティレベルをチェックし、アクセシビリティ違反を特定する方法を解説します。
 category: 高度な編集
 order: 5020
-updated: '2026-03-17'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/accessibility-validations'
 keywords:
   - アクセシビリティ

@@ -5,7 +5,7 @@ description: >-
   では、非表示にするパラメータを定義できます。非表示パラメータは
 category: 高度な編集
 order: 5048
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hidden-parameters'
 keywords:
   - Testim

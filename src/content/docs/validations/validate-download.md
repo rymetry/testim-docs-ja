@@ -3,7 +3,7 @@ title: ダウンロード検証
 description: ダウンロードしたファイルの内容を検証するCLIステップ。CSV、PDF、画像などのファイル形式に対応し、ファイルの内容や属性を確認できるPro機能です。
 category: 高度な編集
 order: 5009
-updated: '2026-03-17'
+updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/validate-download'
 keywords:
   - ダウンロード検証

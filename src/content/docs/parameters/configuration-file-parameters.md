@@ -3,7 +3,7 @@ title: 設定ファイルのパラメータ
 description: 設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
 category: 高度な編集
 order: 5044
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'
 keywords:
   - Testim

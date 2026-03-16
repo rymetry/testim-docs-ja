@@ -3,7 +3,7 @@ title: パラメータ
 description: パラメータの使い方をまとめて解説します。
 category: 高度な編集
 order: 5040
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters'
 keywords:
   - Testim

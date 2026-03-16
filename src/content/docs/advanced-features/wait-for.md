@@ -3,7 +3,7 @@ title: 待機（Wait for）
 description: 各種「待機」ステップを使って要素の表示・非表示、テキスト、ダウンロード完了などを待ってから処理を進める方法を説明します。
 category: 高度な編集
 order: 5049
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/wait-for'
 keywords:
   - 待機

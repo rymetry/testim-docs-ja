@@ -5,7 +5,7 @@ description: >-
   Mac 両方で同じテストを再生する方法を説明します。
 category: 高度な編集
 order: 5061
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/keyboard-shortcut-step'
 keywords:
   - キーボードショートカット

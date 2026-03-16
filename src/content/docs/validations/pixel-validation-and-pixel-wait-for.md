@@ -3,7 +3,7 @@ title: ビジュアル検証（要素・ビューポート・全ページ）
 description: ピクセルレベルでの画像比較による検証ステップ。スクリーンショットを比較してUIの見た目を検証し、レイアウト崩れやデザイン変更を検出します。
 category: 高度な編集
 order: 5014
-updated: '2026-03-17'
+updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/pixel-validation-and-pixel-wait-for'
 keywords:
   - ピクセル検証

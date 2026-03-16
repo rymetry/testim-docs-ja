@@ -5,7 +5,7 @@ description: >-
   など）の設定方法と代表的なユースケースを説明します。
 category: 高度な編集
 order: 5056
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hooks'
 keywords:
   - フック

@@ -3,7 +3,7 @@ title: UI操作の処理
 description: スクロール、ドラッグ&ドロップ、ホバーなど、特定のUI操作を処理するための特別な手順について説明します。
 category: 高度な編集
 order: 5030
-updated: '2026-03-17'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/handling-ui-actions'
 keywords:
   - UI操作

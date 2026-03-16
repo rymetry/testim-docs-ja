@@ -3,7 +3,7 @@ title: データ駆動テスト
 description: 異なるデータで同じテストを実行する方法を学びます。テストデータの追加方法と複数のデータセットでの実行方法を解説します。
 category: 高度な編集
 order: 5026
-updated: '2026-03-17'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/data-driven-testing'
 keywords:
   - データ駆動テスト

@@ -5,7 +5,7 @@ description: >-
   コードを生成・解説・修正し、テスト用スクリプトの作成を効率化する方法を説明します。
 category: 高度な編集
 order: 5060
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/coding-assistant'
 keywords:
   - コーディングアシスタント

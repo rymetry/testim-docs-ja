@@ -3,7 +3,7 @@ title: 高度なJSエディタ
 description: Monaco ベースの高度なJSエディタでカスタムステップや検証の JavaScript コードを快適に編集する方法と対応ステップを説明します。
 category: 高度な編集
 order: 5054
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/advanced-js-editor'
 keywords:
   - 高度なJSエディタ

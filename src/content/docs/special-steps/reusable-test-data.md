@@ -3,7 +3,7 @@ title: テストデータ（再利用）
 description: Test Data ファイルを使って複数テスト間でデータを再利用し、スケジューラやテスト設定から上書き・割り当てを行う方法を説明します。
 category: 高度な編集
 order: 5066
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/reusable-test-data'
 keywords:
   - テストデータ

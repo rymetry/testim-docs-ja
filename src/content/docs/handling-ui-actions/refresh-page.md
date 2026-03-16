@@ -3,7 +3,7 @@ title: ページ更新ステップ
 description: Testimでページ更新ステップを追加し、ブラウザでページの最新バージョンを表示する方法を学びます。
 category: 高度な編集
 order: 5034
-updated: '2026-03-17'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/refresh-page'
 keywords:
   - testim

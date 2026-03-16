@@ -3,7 +3,7 @@ title: ステッププロパティパネルのパラメータ
 description: ステップのプロパティパネル（JavaScript/HTML）でパラメータを定義する
 category: 高度な編集
 order: 5041
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters-in-custom-javascript-steps'
 keywords:
   - Testim

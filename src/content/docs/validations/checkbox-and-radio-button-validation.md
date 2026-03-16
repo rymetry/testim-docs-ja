@@ -3,7 +3,7 @@ title: チェックボックス／ラジオボタンの検証
 description: チェックボックスやラジオボタンの選択状態を検証するステップ。フォーム要素の状態確認に特化した検証機能を提供します。
 category: 高度な編集
 order: 5013
-updated: '2026-03-17'
+updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/checkbox-and-radio-button-validation'
 keywords:
   - チェックボックス

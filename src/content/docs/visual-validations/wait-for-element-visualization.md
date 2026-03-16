@@ -3,7 +3,7 @@ title: 要素のビジュアライゼーション待機
 description: 要素のビジュアライゼーションが条件を満たすまで待機する方法。Applitoolsとの連携により、ビジュアルマッチングを実現します。
 category: 高度な編集
 order: 5025
-updated: '2026-03-17'
+updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/wait-for-element-visualization'
 keywords:
   - ビジュアル検証

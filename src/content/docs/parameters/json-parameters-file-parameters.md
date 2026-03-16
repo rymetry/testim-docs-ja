@@ -3,7 +3,7 @@ title: JSON パラメータファイル
 description: JSON パラメータファイルでテストに値を渡す
 category: 高度な編集
 order: 5043
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/json-parameters-file-parameters'
 keywords:
   - Testim

@@ -3,7 +3,7 @@ title: ジオロケーションの設定（モバイル）
 description: Set Geolocation ステップでモバイルデバイスの位置情報（緯度・経度）を指定し、位置依存のシナリオをテストする方法を説明します。
 category: 高度な編集
 order: 5062
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/set-geolocation'
 keywords:
   - ジオロケーション

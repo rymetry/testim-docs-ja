@@ -3,7 +3,7 @@ title: キーボードを隠す（モバイル）
 description: モバイルテストで hideKeyboard が機能しないケースの理由と、カスタムアクションステップを使ってキーボードを安全に閉じる回避策を説明します。
 category: 高度な編集
 order: 5064
-updated: '2026-03-17'
+updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/hide-keyboard-mobile'
 keywords:
   - キーボードを隠す
