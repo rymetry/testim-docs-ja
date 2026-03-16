@@ -20,7 +20,7 @@ keywords:
 
 CLI アクションステップを使って MongoDB を検証する
 
-[CLI action](/docs/cli-actions) ステップで MongoDB に対してクエリや検証を実行できます。
+[CLI action](/docs/add-cli-validations-and-actions) ステップで MongoDB に対してクエリや検証を実行できます。
 
 :::note{title="Permissions Notice"}
 多くの DB は保護されているため、CLI 検証ステップを実行するマシンの IP をホワイトリストに追加する必要がある場合があります。未設定だと DB に到達できずステップが失敗します。スケジューラー経由で実行する場合などはサポートまでお問い合わせください。

@@ -56,7 +56,7 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 このパラメータのスコープはグループのループ内に限定されます。
 :::
 
-詳細は [https://help.testim.io/docs/loops#using-the-loop-iterator-parameter](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
+詳細は [ループイテレーターパラメータの使用](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
 
 ### Network Requests パラメータ
 
