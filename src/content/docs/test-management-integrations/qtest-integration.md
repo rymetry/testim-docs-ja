@@ -1,7 +1,7 @@
 ---
 title: qTest統合
 description: >-
-  TestimとqTestを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信、CLIでの使用方法を網羅しています。
+  TestimとqTestを統合してテスト実行結果をqTestプロジェクトに自動的に表示する方法を説明します。統合設定、テストケースの接続、結果の表示方法を網羅しています。
 category: 統合
 order: 12039
 updated: '2025-09-18'
@@ -13,180 +13,115 @@ keywords:
   - テストケース管理
   - テスト結果同期
   - テスト実行
-  - API連携
   - リモートグリッド
 ---
 
-# qTest統合
+qTestプロジェクトでTestimのテスト実行結果を表示します。
 
-[qTest](https://www.tricentis.com/products/unified-test-management-qtest/test-case-manager/)は、Tricentisが提供するエンタープライズ向けテスト管理プラットフォームです。TestimとqTestを統合することで、Testimのテスト実行結果を自動的にqTestに送信できます。
+## qTestとは？
 
-## 前提条件
+Tricentisの[qTestテスト管理プラットフォーム](https://www.tricentis.com/products/unified-test-management-qtest/)は、アジャイルチームに「ソフトウェアテストライフサイクル全体を通じてスピード、効率性、コラボレーションを向上させるために設計されたソフトウェアテストツールスイート」を提供します。プラットフォームには、テストケース管理のためのqTest Managerと、テストメトリクスに関するビジネスインテリジェンスのためのqTest Insightsが含まれています。
 
-- 有効なqTestアカウント
-- qTestプロジェクトへのアクセス権限
-- qTest APIトークン
+## qTest統合が必要な理由
+
+qTest統合により、qTestのテストをTestimのテストにリンクできます。Testimでテストを実行すると、テスト結果が自動的にqTestの実行結果に表示され、TestimとqTestで実行されたテストを一元的に表示できます。
 
 ## qTest統合の設定
 
-### 1. qTest APIトークンの取得
+統合を使用する前に、TestimをqTestプロジェクトに接続する必要があります（一度だけ必要なプロセスです）。
 
-1. qTestにログインします
-2. 右上のユーザーアイコンをクリックし、**Resources（リソース）** を選択します
-3. **API & SDK** をクリックします
-4. **Generate New Token（新しいトークンを生成）** をクリックします
-5. トークン名を入力し、必要な権限を選択します
-6. 生成されたAPIトークンをコピーして保存します
+**TestimをqTestに接続するには:**
 
-### 2. Testimでの統合設定
+1. **Settings（設定）** > **Integration（統合）** タブに移動します。**General** の下に様々な統合モジュールがあります。
+2. qTest統合モジュールで、**Login** をクリックします。
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **qTest** セクションを見つけます
-4. 以下の情報を入力します：
-   - **qTest URL**: qTestインスタンスのURL（例：`https://your-company.qtestnet.com`）
-   - **API Token**: 生成したAPIトークン
-5. **Connect（接続）** をクリックします
+![qTest統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 
-## テストのマッピング
+3. qTestを開き、URLからドメインをコピーして（ログイン済みであることを確認してください）、Testimの **URL** フィールドに貼り付けます。URL構造: `https://<プロジェクト名>.qtestnet.com/`。`プロジェクト名` はqTestのURLで確認できます。例: `myProject`。
 
-TestimのテストとqTestのテストケースをマッピングするには、複数の方法があります。
+![qTestのURL入力例](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
 
-### 方法1: テスト設定でマッピング
+4. Testimの **Username** フィールドに、qTestのユーザー名を入力します。
+5. **Admin** ユーザーとして **qTest** にログインし、**Resources**（下矢印）をクリックします。
 
-1. Testimのテストエディタを開きます
-2. **Settings（設定）** タブをクリックします
-3. **qTest** セクションで以下を設定します：
-   - **Project ID**: qTestプロジェクトID
-   - **Test Cycle ID**: qTestテストサイクルID（オプション）
-   - **Test Case ID**: qTestテストケースID
+![qTestのResourcesメニュー](/images/test-management-integrations/qtest-integration/103f85c-image_2.png)
 
-### 方法2: ラベルを使用したマッピング
+6. **Resources** 画面で、**API & SDK** メニューを開きます。
 
-Testimのテストにラベルを追加してqTestテストケースIDを指定できます：
+![qTestのAPI & SDKメニュー](/images/test-management-integrations/qtest-integration/dbe2722-image_3.png)
 
-```text
-qtest:TC-12345
-```
+7. qTestから **Bearer Token** をコピーし、Testimの **ApiKey** フィールドに貼り付けます。
+8. Testimで **Connect** をクリックします。
+9. Testimで、接続するqTestプロジェクトをリストから選択します。
 
-### 方法3: テスト名を使用したマッピング
+![qTestプロジェクトの選択画面](/images/test-management-integrations/qtest-integration/761db53-image_4.png)
 
-テスト名にqTestテストケースIDを含めることで自動的にマッピングできます：
+この時点で、TestimはqTestのプロジェクトに接続されましたが、特定のテストには接続されていません。
 
-```text
-[TC-12345] Login Test
-```
+:::info
+一度に1つのTMS（テスト管理システム）のみ接続できます。Testimシステムが既に別のTMSに接続されている場合は、まずそのTMSを切断してからqTestに接続する必要があります。TMSを切断すると、テスト間の接続が削除されることに注意してください。そのため、以前のTMSに再度接続する場合は、接続も再作成する必要があります。
+:::
 
-## テスト結果の送信
+## TestimのテストをqTestのテストに接続する
 
-### CLIからの送信
+統合を設定した後、Testimの特定のテストをqTestのテストに接続します。
 
-Testim CLIを使用してテストを実行し、結果をqTestに送信するには：
+**TestimのテストをqTestのテストに接続するには:**
 
-```bash
-testim --token <your-token> \
-  --project <project-id> \
-  --grid "Testim Grid" \
-  --qtest-project-id <qtest-project-id> \
-  --qtest-test-cycle <qtest-cycle-id>
-```
+1. Testimで、接続したいテストを開きます。
+2. テスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
+3. Setupステップの **Properties（プロパティ）** パネルで、**Test in qTest** の下から、最初のドロップダウンメニューでqTestプロジェクトを選択し、次に2番目のドロップダウンメニューで特定のテストを選択します。
 
-### 自動送信
+![SetupステップのPropertiesパネルでqTestテストを選択する画面](/images/test-management-integrations/qtest-integration/64df5b6-image_5.png)
 
-統合を設定すると、テスト実行後に自動的にqTestに結果が送信されます。送信される情報：
+4. **Save** をクリックします。
 
-- テストステータス（Passed/Failed/Skipped）
-- 実行時間
-- 開始・終了日時
-- エラーメッセージ（失敗の場合）
-- テスト実行へのリンク
-- スクリーンショット（失敗の場合）
+:::info
+qTestのテストケースは、最初の接続時に「approved」ステータスである必要があります。
+:::
 
-### スケジューラからの送信
+![qTestテストケースの承認ステータス](/images/test-management-integrations/qtest-integration/9721b13-image_6.png)
 
-スケジューラでqTest統合を有効にするには：
+## テストの実行とqTestでのTestimテスト結果の表示
 
-1. **Scheduler（スケジューラ）** に移動します
-2. スケジュールを作成または編集します
-3. **Advanced（詳細）** セクションで **qTest Integration** を有効にします
-4. qTestプロジェクトとテストサイクルを選択します
+qTestでテスト実行の結果を表示するには、リモートグリッドのみを使用してTestimで接続されたテストを実行する必要があります。Testimで接続されたテストを実行すると、テスト結果が関連するqTestプロジェクトの **Test Execution** タブに表示されます。Testim発の実行の名前は、以下の命名規則を使用します: `"<Testim.ioブランチ名> - <実行名>"`。
 
-## qTestでの結果確認
+:::info
+qTestでテストが変更された場合（新しいバージョン番号）、承認されたバージョンのテストのみがTestimで実行されます。つまり、**Save** のみをクリックした場合、以前の承認済みバージョンが実行され、qTestでは実行レポートから「unexecuted」ステータスとして反映されます。**Save** してから **Approve** をクリックした場合、新しい承認済みバージョンが実行されます。
+:::
 
-1. qTestにログインします
-2. 対象のプロジェクトを開きます
-3. **Test Execution（テスト実行）** タブに移動します
-4. Testimから送信された結果を確認できます
+**qTestでテスト実行を表示するには:**
 
-各結果には以下の情報が含まれます：
+1. qTest Managerで、**Test Executions** に移動します。
+2. ナビゲーションペインで、関連する実行をクリックします。以下の画面が表示されます:
 
-- テストステータス
-- 実行日時
-- 実行時間
-- ログとエラーメッセージ
-- Testimテスト結果へのリンク
-- 添付ファイル（スクリーンショット）
+![qTest ManagerのTest Executions画面](/images/test-management-integrations/qtest-integration/dfaf629-image_7.png)
 
-## 高度な設定
+右下のペインに、実行のリストが表示されます。`ID` 列はqTestのテストIDを表します。`Status` 列はTestimからのテスト実行結果を表示します。
 
-### テストサイクルの自動作成
+3. **ID** をクリックしてテストの詳細を表示します。以下の画面が表示されます:
 
-Testimのテスト実行時に、qTestで新しいテストサイクルを自動作成できます：
+![qTestでのテスト実行詳細画面](/images/test-management-integrations/qtest-integration/3a5c5d0-Screenshot_at_Jun_01_13-36-04.png)
 
-1. **Settings（設定）** > **Integration（統合）** > **qTest** に移動します
-2. **Auto-create Test Cycles（テストサイクルを自動作成）** を有効にします
-3. テストサイクル名のテンプレートを設定します（例：`Testim Run - {date}`）
+以下の詳細がTestimからqTestにプッシュされます:
 
-### カスタムフィールドのマッピング
+- **Name** - Testimのテスト名
+- **Status** - 実行のステータス。表示されるステータスはqTestステータスで、Testimステータスから以下のように変換されます（Testim → qTest）:
+  - ABORTED → Unexecuted
+  - SKIPPED（Testimでのquarantineステータス） → Blocked
+  - TIMEOUT → Failed
+  - PASSED → Passed
+  - FAILED → Failed
 
-qTestのカスタムフィールドにデータを送信するには：
+4. **Execution History** 内には、以下の情報を含む **Test Log Details** ペインがあります:
+   - Result URL - Testimのテスト結果を開きます
+   - Console Logs URL - Testimのコンソールログを開きます
+   - Network Logs URL - Testimのネットワークログを開きます
 
-1. Testimのテストパラメータでカスタムフィールドの値を設定します
-2. **Settings（設定）** > **Integration（統合）** > **qTest** でフィールドマッピングを設定します
+:::info
+スイート実行はqTestで1つの実行として表示されます。特定の実行をクリックして、スイート内のすべてのテストの結果を確認してください。
+:::
 
-### 結果のフィルタリング
-
-特定のテストのみqTestに送信するには、ラベルを使用してフィルタリングできます：
-
-```bash
-testim --token <your-token> \
-  --label "qtest-sync" \
-  --qtest-project-id <qtest-project-id>
-```
-
-## トラブルシューティング
-
-### 結果が送信されない
-
-- qTest APIトークンが有効か確認してください
-- Testimテストに正しいqTestテストケースIDが設定されているか確認してください
-- qTestプロジェクトとテストサイクルが存在するか確認してください
-- ネットワーク接続を確認してください
-
-### 認証エラー
-
-- qTest URLが正しいか確認してください（`https://`を含む）
-- APIトークンが有効で、必要な権限があるか確認してください
-- qTestアカウントがアクティブか確認してください
-
-### テストケースが見つからない
-
-- qTestテストケースIDが正しいか確認してください
-- テストケースが存在するプロジェクトを確認してください
-- テストケースがアクティブか確認してください
-
-### パフォーマンスの問題
-
-多数のテストを実行する場合、バッチ処理を使用して送信を最適化できます：
-
-```bash
-testim --token <your-token> \
-  --qtest-batch-size 50
-```
-
-## ベストプラクティス
-
-- **一貫したマッピング**: すべてのTestimテストに明確なqTestテストケースIDを設定します
-- **テストサイクルの整理**: 定期的にテストサイクルを作成して、実行結果を整理します
-- **カスタムフィールドの活用**: 追加のメタデータをqTestに送信して、詳細なレポートを作成します
-- **自動化の監視**: qTest統合が正しく動作しているか定期的に確認します
+:::warning
+qTestの必須カスタムフィールドはサポートされていません。qTestでカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
+:::
