@@ -42,7 +42,24 @@
 - 実運用で分離するなら、追加する役割は 1 つだけに絞る
   - `source-parity reviewer`: `sourceUrl` とローカル記事を比較し、本文欠落、画像未埋め込み、相対リンク残りを検出する
 
+## 定期運用（3日ごと）
+
+- 3日ごとに以下を実行する:
+  1. `npm run docs:sync-sidebar` で SIDEBAR_URLS を最新化
+  2. 新規ページ追加を検出 → 重複チェック後 GitHub Issue 作成
+  3. `npm run check:updates` で更新のあったドキュメントを検出
+  4. 更新があった場合 → 重複チェック後まとめて1つの GitHub Issue 作成
+- CronCreate（セッション内）と GitHub Actions（恒久的）の二重体制で運用する
+- 検出された Issue は次回セッションでメイン作業フローに従い対応する
+- **重複防止**: Issue 作成前に `gh issue list --state open --search/--label` で既存 Issue を検索し、既存あればコメント追加、なければ新規作成
+- GitHub Actions workflow にも同等の重複防止ロジックが組込済み（label: `documentation,update-needed`）
+
+## レビュー方針
+
+- セルフチェック後に Codex CLI（`.claude/skills/codex-review/SKILL.md`）で read-only レビューを実施
+- Codex のフィードバックを修正に反映してから lint/test/build を実行する
+
 ## CI の役割
 
-- `check-docs-updates.yml` で weekly schedule と PR 時の `lint:docs`, `test`, `build` を実行する
+- `check-docs-updates.yml` で3日ごとのスケジュール（`0 0 */3 * *`）と PR 時の `lint:docs`, `test`, `build` を実行する
 - `docs:sync-sidebar` と `check:updates` を workflow に接続し、更新差分を artifact と issue/comment で可視化する

@@ -3,8 +3,8 @@ name: Check Documentation Updates
 on:
   # pull_request:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 0 * * 1'
+  schedule:
+    - cron: '0 0 */3 * *'
 
 permissions:
   contents: read
