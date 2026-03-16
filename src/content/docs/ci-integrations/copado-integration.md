@@ -20,7 +20,7 @@ keywords:
 
 Copadoからテストを自動化するには、Copadoに[URL Calloutステップ](https://docs.copado.com/articles/#!copado-ci-cd-publication/deployment-step-url-callout)を追加し、単一のWebhook呼び出しでTestim/TTA for Salesforce REST APIを使用します。
 
-:fa-arrow-right: **Copadoを統合するには:**
+**Copadoを統合するには:**
 
 1. Testim/TTA for Salesforceで、**Settings > API**に移動します。
 2. **Generate API Key**をクリックします。  
@@ -65,7 +65,7 @@ Copadoからテストを自動化するには、Copadoに[URL Calloutステッ�
 
 テストまたはテストプランが完了、合格、または失敗するまで、Copadoデプロイを一時停止できます。
 
-:fa-arrow-right:**Copadoを一時停止するには:**
+**Copadoを一時停止するには:**
 
 1. Copadoで、**Details > Type**に移動し、**Perform callout and pause step**を選択して**Resume URL**をコピーします。
 

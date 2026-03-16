@@ -44,5 +44,10 @@ testim:
       junit: testim-report.xml
 ```
 
-> 📘 グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
-> 📘 Testimは、Node.jsのすべての[LTS/サポートされているバージョン](https://github.com/nodejs/Release/blob/main/README.md)をサポートしています。
+:::info
+グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+:::
+
+:::info
+Testimは、Node.jsのすべての[LTS/サポートされているバージョン](https://github.com/nodejs/Release/blob/main/README.md)をサポートしています。
+:::
