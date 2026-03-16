@@ -1,6 +1,6 @@
 ---
 title: TestRail統合
-description: TestimとTestRailを統合してテスト結果を自動的に同期する方法を説明します。統合設定、テストケースのマッピング、結果の送信方法を網羅しています。
+description: TestimとTestRailを統合してテスト実行結果をTestRailプロジェクトに自動的に表示する方法を説明します。統合設定、テストの接続、カスタムパラメータの送信方法を網羅しています。
 category: 統合
 order: 12040
 updated: '2025-09-18'
@@ -12,130 +12,84 @@ keywords:
   - テスト結果同期
   - テストラン
   - API連携
+  - リモートグリッド
 ---
 
-# TestRail統合
+TestRailプロジェクトでTestimのテスト実行結果を表示します。
 
-[TestRail](https://www.gurock.com/testrail/)は、Gurock社が提供するテスト管理プラットフォームです。TestimとTestRailを統合することで、Testimのテスト実行結果を自動的にTestRailに送信できます。
+TestRail統合により、TestRailのテストをTestimのテストにリンクできます。テスト実行結果がTestRailに自動的に表示され、手動テスト結果と自動テスト結果を一元的に表示できます。
 
-## 前提条件
-
-- 有効なTestRailアカウント
-- TestRailプロジェクトへのアクセス権限
-- TestRail APIキー
+:::info
+統合を切断すると、すべてのリンクが失われます。
+:::
 
 ## TestRail統合の設定
 
-### 1. TestRail APIキーの取得
+このプロセスは一度だけ必要です。
 
-1. TestRailにログインします
-2. 右上のユーザーアイコンをクリックし、**My Settings（マイ設定）** を選択します
-3. **API Keys** タブに移動します
-4. **Add Key（キーを追加）** をクリックしてAPIキーを生成します
-5. 生成されたAPIキーをコピーして保存します
+1. **Settings（設定）** に移動し、**Integration（統合）** タブに移動します。
+2. TestRailリンクの **login** をクリックします。
 
-### 2. Testimでの統合設定
+![TestRail統合のログインボタン](/images/test-management-integrations/testrail-integration/cbf1548-Untitled.png)
 
-1. Testimにログインします
-2. **Settings（設定）** > **Integration（統合）** に移動します
-3. **TestRail** セクションを見つけます
-4. 以下の情報を入力します：
-   - **TestRail URL**: TestRailインスタンスのURL（例：`https://your-company.testrail.io`）
-   - **Email**: TestRailアカウントのメールアドレス
-   - **API Key**: 生成したAPIキー
-5. **Connect（接続）** をクリックします
+3. TestRailを開き、URLからドメインをコピーして（ログイン済みであることを確認してください）、URLフィールドに貼り付けます。URL構造は `https://<プロジェクト名>.testrail.io/` で、プロジェクト名はTestRailのURLで確認できます。
 
-## テストのマッピング
+![TestRailのURL入力例](/images/test-management-integrations/testrail-integration/ea0ada5-image-20210523-052818.png)
 
-TestimのテストとTestRailのテストケースをマッピングするには、Testimのテスト設定でTestRailのテストケースIDを指定します。
+4. TestRailのユーザー名を入力します。
+5. AdminユーザーとしてTestRailにログインし、**My Settings** に移動して **API Keys** タブに移動します。**Generate Key** をクリックし、任意のキー名を入力して、生成された文字列をコピーし、**Save settings** をクリックします。このキーをTestimのApiKeyフィールドに貼り付けます。
 
-### 方法1: テスト設定でマッピング
+![TestRailでAPIキーを生成する操作](/images/test-management-integrations/testrail-integration/b291ef8-TR.gif)
 
-1. Testimのテストエディタを開きます
-2. **Settings（設定）** タブをクリックします
-3. **TestRail** セクションで以下を設定します：
-   - **Project ID**: TestRailプロジェクトID
-   - **Suite ID**: TestRailスイートID（オプション）
-   - **Test Case ID**: TestRailテストケースID（例：`C123`）
+6. **Connect** をクリックします。
 
-### 方法2: テスト名を使用したマッピング
+![TestRail統合の接続操作](/images/test-management-integrations/testrail-integration/25995c4-Integrate.gif)
 
-テスト名に TestRail テストケースIDを含めることで自動的にマッピングできます。
+7. 接続するTestRailプロジェクトを選択します。
 
-例：
+![TestRailプロジェクトの選択画面](/images/test-management-integrations/testrail-integration/1e8d54a-Screen_Shot_2021-10-14_at_12.54.26.png)
 
-```text
-C123 - Login Test
+この時点で、TestimはTestRailのプロジェクトに関連付けられましたが、特定のテストにはマッピングされていません。
+
+:::info{title="重要事項"}
+一度に1つのTMS（テスト管理システム）のみ接続できます。Testimシステムが既に別のTMSに接続されている場合は、まずそのTMSを切断してからTestRailに接続する必要があります。TMSを切断すると、テスト間の接続が削除されることに注意してください。そのため、以前のTMSに再度接続する場合は、接続も再作成する必要があります。
+:::
+
+## TestimのテストをTestRailのテストに接続する
+
+1. TestRailのテストに接続したいテストを開きます。
+2. Setupステップの **Properties（プロパティ）** パネルで、TestRailプロジェクトと接続するテストを選択します。
+3. テストを保存します。
+
+テストを実行すると、結果は関連するTestRailプロジェクトの **Test run and results** タブに表示されます。
+
+![TestimのテストをTestRailに接続する操作](/images/test-management-integrations/testrail-integration/7ad9ed6-Oct-14-2021_13-09-56.gif)
+
+## 特定の実行にTestRailのカスタムパラメータを渡す
+
+CLI実行の一部として、TestRailで使用できるカスタムパラメータを追加できます。例:
+
+- version
+- executed_by
+
+JSONは以下の形式にする必要があります:
+
+```json
+{
+  "executed_by": "rannn505",
+  "version": "v1"
+}
 ```
 
-この場合、Testimは自動的にテストケース `C123` に結果を送信します。
+これらのパラメータを渡すには、CLIコマンドの一部として `--tms-field-file` フラグを使用します。フラグの後にパラメータとその値を含むJSONファイルパスを指定します。例:
 
-## テスト結果の送信
+```shell
+--tms-field-file [tms-field-file.json]
+```
 
-### 自動送信
+## 注意事項
 
-統合を設定すると、テスト実行後に自動的にTestRailに結果が送信されます。送信される情報：
-
-- テストステータス（Passed/Failed/Blocked）
-- 実行時間
-- エラーメッセージ（失敗の場合）
-- テスト実行へのリンク
-
-### 手動送信
-
-特定のテスト結果を手動でTestRailに送信するには：
-
-1. テスト結果画面を開きます
-2. **Send to TestRail（TestRailに送信）** ボタンをクリックします
-3. 送信先のTestRailテストケースを選択します
-
-## TestRailでの結果確認
-
-1. TestRailにログインします
-2. 対象のプロジェクトを開きます
-3. **Test Runs & Results（テスト実行と結果）** セクションに移動します
-4. Testimから送信された結果を確認できます
-
-各結果には以下の情報が含まれます：
-
-- テストステータス
-- 実行日時
-- 実行時間
-- エラーメッセージとスタックトレース（失敗の場合）
-- Testimテスト結果へのリンク
-
-## 高度な設定
-
-### テストランの作成
-
-Testimのテストスイート実行時に、TestRailで新しいテストランを自動作成できます：
-
-1. **Settings（設定）** > **Integration（統合）** > **TestRail** に移動します
-2. **Auto-create Test Runs（テストランを自動作成）** を有効にします
-3. テストラン名のテンプレートを設定します（例：`Testim Run - {date}`）
-
-### カスタムフィールドのマッピング
-
-TestRailのカスタムフィールドにデータを送信するには：
-
-1. Testimのテストパラメータでカスタムフィールドの値を設定します
-2. **Settings（設定）** > **Integration（統合）** > **TestRail** でフィールドマッピングを設定します
-
-## トラブルシューティング
-
-### 結果が送信されない
-
-- TestRail APIキーが有効か確認してください
-- Testimテストに正しいTestRailテストケースIDが設定されているか確認してください
-- TestRailプロジェクトとスイートが存在するか確認してください
-
-### 認証エラー
-
-- TestRail URLが正しいか確認してください（`https://`を含む）
-- メールアドレスとAPIキーが正しいか確認してください
-- TestRailアカウントに必要な権限があるか確認してください
-
-### テストケースが見つからない
-
-- TestRailテストケースIDが正しいか確認してください（`C`プレフィックスを含む）
-- テストケースが存在するプロジェクトとスイートを確認してください
+1. Testimの実行名は常に以下の規則に従います: "Report from Testim.io - *Suite\Test name*"
+2. リモート実行の結果のみがTestRailに表示されます（ローカル実行は表示されません）。
+3. スイート実行はTestRailで1つの実行として表示されます。特定の実行をクリックして、スイート内のすべてのテストの結果を確認してください。
+4. TestRailの必須カスタムフィールドはサポートされていません。TestRailでカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
