@@ -18,11 +18,11 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 ### Step 0: ブランチ作成ルール
 
 各サブセクションごとに `main` から新ブランチを作成:
-- `codex/integrations-test-management`
-- `codex/integrations-other`
-- `codex/integrations-applitools`
-- `codex/integrations-ci`
-- `codex/integrations-overview`
+- `claude/integrations-test-management`
+- `claude/integrations-other`
+- `claude/integrations-applitools`
+- `claude/integrations-ci`
+- `claude/integrations-overview`
 
 各 PR は独立して作業。前の PR のマージを待たず並行作業可能（ファイルが重複しないため）。
 
@@ -30,7 +30,7 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 
 ### PR-A: test-management-integrations（最優先）
 
-**ブランチ**: `codex/integrations-test-management` (Issue #22)
+**ブランチ**: `claude/integrations-test-management` (Issue #22)
 
 | ファイル | 問題 | 作業 |
 |---------|------|------|
@@ -60,7 +60,7 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 
 ### PR-B: other-integrations（Issue #21）
 
-**ブランチ**: `codex/integrations-other`
+**ブランチ**: `claude/integrations-other`
 
 | ファイル | 問題 | 作業 |
 |---------|------|------|
@@ -76,7 +76,7 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 
 ### PR-C: applitools-integration（Issue #20）
 
-**ブランチ**: `codex/integrations-applitools`
+**ブランチ**: `claude/integrations-applitools`
 
 | ファイル | 問題 | 作業 |
 |---------|------|------|
@@ -91,7 +91,7 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 
 ### PR-D: ci-integrations（Issue #23）
 
-**ブランチ**: `codex/integrations-ci`
+**ブランチ**: `caude/integrations-ci`
 
 | ファイル | 問題 | 作業 |
 |---------|------|------|
@@ -110,7 +110,7 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 
 ### PR-E: integrations-overview（Issue #19）
 
-**ブランチ**: `codex/integrations-overview`
+**ブランチ**: `claude/integrations-overview`
 
 | ファイル | 問題 | 作業 |
 |---------|------|------|
