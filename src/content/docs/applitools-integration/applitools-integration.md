@@ -25,7 +25,7 @@ Testimのビジュアル検証およびwait-forステップを使用するには
 
 ## 前提条件
 
-- Professional planのプロジェクトでのみ利用できるPro機能です。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
+- Professional planのプロジェクトでのみ利用できる機能です。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
 - Applitools EyesとTestimの両方で管理者権限が必要です。
 
 ## Applitools統合のセットアップ
@@ -111,5 +111,5 @@ Applitools EyesアカウントとTestimアカウント間で情報を交換す�
 ![Applitools統合が成功しビジュアル検証ステップが有効になったことを示す画面](/images/applitools-integration/applitools-integration/446380f-Testim_265_r.png)
 
 :::info
-ビジュアル検証ステップを有効にするには、Testimからログアウトして再度ログインする必要がある場合があります。
+ビジュアル検証ステップを有効にするには、Testimからログアウトして再度ログインが必要な場合があります。
 :::
