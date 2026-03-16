@@ -17,9 +17,9 @@ keywords:
 
 Sealightsは、個々のテストのコードカバレッジを評価・定量化する品質インテリジェンスプラットフォームです。SealightsとTestimを統合することで、Testimでテストを作成・実行しながら、Sealightsを使用してテスト最適化を実行できます。テスト実行中、Testimは実行されるテストのリストをSealightsに送信し、Sealightsはアプリケーションビルドでスキップすべきテストに対するテスト最適化の推奨事項を返します。これらのテストは、Testimでの実行から自動的に除外されます。
 
-> 📘
->
-> ネイティブモバイルアプリとSalesforce環境は現在サポートされていません。ただし、Webフレームワークを使用するサービスのモバイルアプリはサポートされています。
+:::info
+ネイティブモバイルアプリとSalesforce環境は現在サポートされていません。ただし、Webフレームワークを使用するサービスのモバイルアプリはサポートされています。
+:::
 
 # 前提条件
 
@@ -33,11 +33,11 @@ SealightsとTestimの統合でテストを実行する前に、まず以下を�
 
 SealightsとTestimの統合を使用する前に、Sealights Agent Tokenを介してTestimをSealightsに接続する必要があります。このプロセスは1回のみ必要です。
 
-> 📘
->
-> Sealights統合は無料ティアのお客様にはご利用いただけません。
+:::info
+Sealights統合は無料ティアのお客様にはご利用いただけません。
+:::
 
-:fa-arrow-right:**TestimをSealightsに接続するには:**
+**TestimをSealightsに接続するには:**
 
 1. **Sealights**で、**Settings > Agent Tokens**に移動し、**Create new token**をクリックします。
 
@@ -72,9 +72,9 @@ CLIを使用してSealights統合でテストを実行する場合、Testim CLI�
 
 CLIを使用してテストが実行されると、Sealightsはこのコマンドでスキップすべきテストのリストを返し、これらは自動的にスキップされます。
 
-> 📘
->
-> `labId` CLIオプションが使用されていない場合、Testimは`labId`と`buildSessionId`の両方のオプションに`bulidSessionId`値を使用します。
+:::info
+`labId` CLIオプションが使用されていない場合、Testimは`labId`と`buildSessionId`の両方のオプションに`buildSessionId`値を使用します。
+:::
 
 ### buildSessionIdオプション
 
@@ -140,9 +140,9 @@ CLI実行中は常に、タグセクションで`Testim`を送信することを
 
 **Advanced**セクションの**Lab ID**フィールドにSealightsの`labId`を入力することで、Sealightsでテストを実行できます。スケジューラーによってテストが実行されると、Sealightsはこのバッチでスキップすべきテストのリストを返し、これらは自動的にスキップされます。
 
-:fa-arrow-right:**スケジューラーとSealights統合でテストを実行するには:**
+**スケジューラーとSealights統合でテストを実行するには:**
 
-1. Sealightsで、[labIdオプション](doc:sealights-integration-copy#labid-option)セクションの手順に従って、Lab IDを取得します。
+1. Sealightsで、[labIdオプション](#labidオプション)セクションの手順に従って、Lab IDを取得します。
 2. Testimで、[Scheduler - Web](/docs/scheduler)セクションの手順に従って、スケジューラーを構成します。
 3. スケジューラー構成画面で、**Advanced**をクリックします。
 4. **Test Optimization Configuration**の下の**Lab ID**フィールドに、Sealightsから取得したLab IDを貼り付けます。
