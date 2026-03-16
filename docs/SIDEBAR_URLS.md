@@ -1,6 +1,6 @@
 # Testim Documentation - 全サイドバーURL一覧
 
-取得日: 2026年2月1日
+取得日: 2026年3月17日
 総数: 284 URL
 
 ## 翻訳ステータス
@@ -362,6 +362,9 @@
 - ✅🔍 https://help.testim.io/docs/testim-labs
 - ✅🔍 https://help.testim.io/docs/test-flow-view
 - ✅🔍 https://help.testim.io/docs/link-directly-to-a-shared-step
+
+
+
 ---
 
 ## URL抽出方法

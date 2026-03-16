@@ -190,4 +190,4 @@ Add CLI action および/または Add API action ステップを使用してカ
 - **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。通常、次回実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
 - **Back** - Back ボタンステップを作成し、デバイスに戻るコマンドを送信します。Android のみでサポートされています。
 - **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
-- [Execute Driver Script Step (mobile)](/docs/execute-driver-script-step) - Execute Driver Script ステップを使用すると、拡張機能と検証のために Appium 2.0 以上を使用してスクリプトを実行できます。
+- [Custom Action ステップ (mobile)](/docs/custom-action-step-mobile) - Execute Driver Script ステップを使用すると、拡張機能と検証のために Appium 2.0 以上を使用してスクリプトを実行できます。

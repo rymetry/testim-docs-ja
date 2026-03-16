@@ -54,6 +54,47 @@
 - **重複防止**: Issue 作成前に `gh issue list --state open --search/--label` で既存 Issue を検索し、既存あればコメント追加、なければ新規作成
 - GitHub Actions workflow にも同等の重複防止ロジックが組込済み（label: `documentation,update-needed`）
 
+## 一括変更時の検証フロー
+
+複数ファイルを一括で変換・修正する場合、変換スクリプトと検証スクリプトを**同時に**作成し、初回コミット前に検証を通す。
+
+**必須検証項目:**
+
+1. `/docs/{slug}` リンクの参照先ファイルが全件存在するか（HTML `<a href>` 含む）
+2. callout 変換後に構文が壊れていないか（引用符の整合、タイトル長、タイプとタイトルの一致）
+3. 残存パターンがないか（`:fa-` マーカー、`> 📘` blockquote、外部 `help.testim.io` リンク）
+4. `updated` フィールドが英語原文の日付のまま維持されているか
+5. `git diff main...branch` の追加行のみを対象にした差分検証で、既存問題と新規導入を区別する
+
+**検証コマンド例:**
+
+```bash
+# 全ファイルの不正スラグ検出
+python3 -c "
+import glob, os, re
+base = 'src/content/docs'
+files = glob.glob(f'{base}/**/*.md', recursive=True)
+slugs = {os.path.splitext(os.path.basename(f))[0] for f in files}
+for f in files:
+    with open(f) as fh:
+        for i, line in enumerate(fh, 1):
+            for m in re.finditer(r'\(/docs/([a-z0-9-]+?)(?:#[^)]+)?\)', line):
+                if m.group(1) not in slugs:
+                    print(f'{os.path.relpath(f, base)}:{i} /docs/{m.group(1)}')
+"
+```
+
+## 原文スラグ変更の検知
+
+英語原文側でページのスラグが変更されることがある（例: `execute-driver-script-step` → `custom-action-step-mobile`）。変更されると旧スラグへのリンクが壊れ、新規翻訳が重複ファイルになるリスクがある。
+
+**検知方法:**
+
+- `npm run docs:sync-sidebar` で最新の英語サイドバーを取得
+- JA ファイルの sourceUrl スラグと英語サイドバーのスラグを突き合わせ
+- JA にあるが英語サイドバーにないスラグ → 原文側でリネームまたは削除された可能性
+- 新規ファイル作成前に、同一 sourceUrl を持つ既存ファイルがないか確認
+
 ## レビュー方針
 
 - セルフチェック後に Codex CLI（`.claude/skills/codex-review/SKILL.md`）で read-only レビューを実施

@@ -344,7 +344,7 @@ Add CLI actionおよび/またはAdd API actionステップを使用してカス
 
 • **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
 
-• **[Execute Driver Script Step (mobile)](/docs/execute-driver-script-step)** - Execute Driver Script stepを使用すると、Appium 2.0以降を使用してスクリプトを実行し、テストで拡張された機能と検証を行うことができます。
+• **[Custom Action ステップ (mobile)](/docs/custom-action-step-mobile)** - Execute Driver Script stepを使用すると、Appium 2.0以降を使用してスクリプトを実行し、テストで拡張された機能と検証を行うことができます。
 
 ---
 

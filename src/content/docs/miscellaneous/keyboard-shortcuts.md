@@ -37,7 +37,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
  <tbody>
   <tr>
    <td style="text-align: left;">
-    <a href="https://help.testim.io/docs/hover-step">
+    <a href="/docs/hover-step">
      ホバーステップを追加
     </a>
    </td>
@@ -101,7 +101,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="https://help.testim.io/docs/groups#creating-a-group">
+    <a href="/docs/groups#creating-a-group">
      新しいグループを追加
     </a>
    </td>
@@ -207,7 +207,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="https://help.testim.io/docs/stop-pause-debug-tests">
+    <a href="/docs/stop-pause-debug-tests">
      ブレークポイントを切り替え
     </a>
    </td>
@@ -287,7 +287,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="https://help.testim.io/docs/extract-text">
+    <a href="/docs/extract-text">
      値を抽出ステップを追加
     </a>
    </td>
