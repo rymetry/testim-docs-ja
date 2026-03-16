@@ -51,7 +51,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 「To choose an element Open base URL or Run test to relevant step」と表示された場合は、ベースURLでアプリを開くか、該当ステップまでテストを実行してから追加してください。
 :::
 
@@ -74,7 +74,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/f85f8ff-select-target.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。
 :::
 
@@ -97,7 +97,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。
 :::
 
@@ -135,7 +135,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/00ffc60-text-selection.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。  
 また、'**Expected Value**' にはパラメータ、正規表現、JavaScript式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
 :::
@@ -159,7 +159,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/5bb3fab-select-target.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
 また、'Expected Value' にはパラメータ、正規表現、JavaScript式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
 :::
@@ -244,7 +244,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 * 関数が true を返すかステップのタイムアウトに達するまでリトライします。
 * Custom wait for は再利用可能です。
 * ステップパラメータ、エクスポートパラメータなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。

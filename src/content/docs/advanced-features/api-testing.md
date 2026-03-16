@@ -181,7 +181,7 @@ Testim はヘッダーの **Content-Type** を自動的に `multipart/form-data`
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/c433a90-api-testing-3.jpg)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 ファイルを送信できるのは **Post** HTTP メソッドのみです。
 :::
 
@@ -193,13 +193,13 @@ Testim はヘッダーの **Content-Type** を自動的に `multipart/form-data`
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/09a8669-api-testing-5.jpg)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 Key 名またはファイルのどちらかが指定されていない場合、そのエントリはテスト実行時の API 呼び出しから自動的に除外されます。
 :::
 
 アップロードされたファイルはテストサーバーに保存され、テスト実行時にそのファイルが API 呼び出しの一部として送信されます。
 
-:::note{title="注意"}
+:::warning{title="注意"}
 アップロードできるファイルサイズは最大 25MB です。これを超えるファイルをアップロードしようとすると、Testim がバリデーションエラーを表示し添付をブロックします。
 :::
 

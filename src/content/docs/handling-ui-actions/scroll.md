@@ -102,7 +102,7 @@ Testimはマウスホイールステップを記録します。
 
 ![要素にスクロールステップ](/images/handling-ui-actions/scroll/b1f9c02-scroll-to-element-step.jpg)
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 要素にスクロールステップの場合、Testimは自動的にスクロール位置を**相対**位置に設定します。TestimはX軸とY軸の要素の位置をキャプチャしますが、Y軸のみがチェックされます。これは、Testimがページの上部から要素がどれだけ下にあるかを知る必要があるだけだからです。
 :::
 
@@ -128,7 +128,7 @@ Testimはマウスホイールステップを記録します。
 
 ![ページ上でスクロール](/images/handling-ui-actions/scroll/96ce8ad-scroll-on-page3.jpg)
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 ページ上でスクロールステップの場合、**スクロール位置**は自動的に**絶対**位置に設定され、X軸とY軸のチェックボックスは無効になります。Testimは、ビューポートの左上から計算されたピクセル単位で水平および垂直スクロールをキャプチャします。
 :::
 
@@ -146,7 +146,7 @@ Testimはマウスホイールステップを記録します。
 
 ![マウスホイール位置](/images/handling-ui-actions/scroll/be66724-mouse-wheel-position.jpg)
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 マウスホイールは水平にスクロールしないため、X軸の値は常に0になります。
 :::
 

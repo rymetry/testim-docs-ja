@@ -42,7 +42,7 @@ keywords:
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/213c463-deeplink.png)
 
-:::note{title="注意"}
+:::warning{title="注意"}
 メニュー上部の検索ボックスで “Deep link” と入力して検索することもできます。
 :::
 

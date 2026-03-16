@@ -36,7 +36,7 @@ Webまたはモバイルアプリケーションから直接値をコピーし�
 
 ![抽出ステップを追加](/images/handling-ui-actions/extract-text/80366ab-add-extract-step.png)
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 アプリがベースURLで開かれていない場合、上記のステップを実行する前に、最初にベースURL(Web)を開くか、アプリを開く(モバイル)ように指示される場合があります。
 :::
 
@@ -56,7 +56,7 @@ Webまたはモバイルアプリケーションから直接値をコピーし�
 
 ![抽出名](/images/handling-ui-actions/extract-text/5ac725a-extract-name.png)
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 変数名はJavaScriptの名前の制限に従います。たとえば、スペースや特殊文字は使用できません。詳細は[こちら](https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Variables)をご覧ください。
 :::
 
@@ -78,7 +78,7 @@ Webまたはモバイルアプリケーションから直接値をコピーし�
   * 最後の一致: 式に複数の一致が含まれる場合、リストの*最後の一致*を返します
   * すべての一致(配列): 式に複数の一致が含まれる場合、すべての一致を*配列*として返します
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 * テキストの一部のみを抽出したい場合は、数値/日付/正規表現に変更してください
 * 数値/日付/正規表現を抽出する場合でも、値は文字列になることに注意してください
 :::
@@ -123,7 +123,7 @@ Webまたはモバイルアプリケーションから直接値をコピーし�
 
 ![変数スコープ](/images/handling-ui-actions/extract-text/f45a71b-variable-scope.png)
 
-:::note{title="注意:"}
+:::warning{title="注意"}
 スイートスコープの変数はスイート内のすべてのテスト間で共有されるため、値が別のテストの同じ名前の変数によって上書きされないように、変数に一意の名前を付けてください。
 :::
 
