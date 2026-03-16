@@ -22,10 +22,13 @@ keywords:
 
 Salesforce 環境（本番/サンドボックス）にログイン・ログアウトの記録無しで認証できるステップです。ログインステップを追加し、接続先の情報を入力するだけで、すぐにテストの記録を開始できます。
 
-> 📘
-> Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを実行するマシンのIPを許可リストに追加するよう組織のSalesforce管理者へ依頼してください。
-> 📘 共有ステップのコピー
-> ログインステップが共有ステップの場合、「SF environment」の値を編集すると、使用中のすべてのインスタンスに反映されます。共有でないステップを同一テスト内でコピーした場合は、そのコピーに対する編集は他のコピーへ影響しません。
+:::note
+Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを実行するマシンのIPを許可リストに追加するよう組織のSalesforce管理者へ依頼してください。
+:::
+
+:::note{title="共有ステップのコピー"}
+ログインステップが共有ステップの場合、「SF environment」の値を編集すると、使用中のすべてのインスタンスに反映されます。共有でないステップを同一テスト内でコピーした場合は、そのコピーに対する編集は他のコピーへ影響しません。
+:::
 
 ### MFA 認証
 
@@ -33,9 +36,9 @@ Salesforce 環境（本番/サンドボックス）にログイン・ログア�
 
 ## Salesforce 自動ログインステップを追加する
 
-:fa-arrow-right: **追加手順:**
+**追加手順:**
 
-1. 追加したい位置の :fa-caret-right: **（矢印）** にカーソルを合わせます。
+1. 追加したい位置の **（矢印）** にカーソルを合わせます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/3e1c90c-Testim_512a.png)
 
@@ -55,8 +58,9 @@ Salesforce 環境（本番/サンドボックス）にログイン・ログア�
 
 4. メニューをスクロールし、**Salesforce auto-login** を選択します。
 
-> 📘
-> メニュー上部の検索ボックスで **Salesforce auto-login** と入力して検索することもできます。
+:::note
+メニュー上部の検索ボックスで **Salesforce auto-login** と入力して検索することもできます。
+:::
 
 **Add Step** ウィンドウが表示されます。
 
@@ -65,7 +69,7 @@ Salesforce 環境（本番/サンドボックス）にログイン・ログア�
 5. **Name** にわかりやすいステップ名を入力します。
 6. 他テストでも再利用したい場合は **Shared step** をオンのまま、保存先フォルダを選択します（詳細は[グループ](/docs/groups)）。
 7. **Create Step** をクリックします。
-8. 追加されたステップにカーソルを合わせ、**Show Properties**（:fa-cog:）アイコンをクリックします。ステップが **Editor** に追加され、右側に **Properties** パネルが表示されます。
+8. 追加されたステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。ステップが **Editor** に追加され、右側に **Properties** パネルが表示されます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/2c50d67-newproperties.png)
 
@@ -78,11 +82,11 @@ Salesforce 環境（本番/サンドボックス）にログイン・ログア�
 
 テスト／スイート／設定ファイル／他ステップで定義したパラメータを用いて接続情報を渡せます。
 
-> 📘
->
-> MFA のシークレットキーはパラメータとして扱えません。
+:::note
+MFA のシークレットキーはパラメータとして扱えません。
+:::
 
-:fa-arrow-right: **接続情報にパラメータを使う:**
+**接続情報にパラメータを使う:**
 
 1. 次のいずれかの方法でパラメータを定義します。
    * **テストデータにパラメータを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメータを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
@@ -94,7 +98,7 @@ Salesforce 環境（本番/サンドボックス）にログイン・ログア�
 ## MFA のセットアップ
 
 Salesforce 側でシークレットキーを取得し、Testim のプロパティパネルにある Secret Key に登録します。\
-:fa-arrow-right: **手順:**
+**手順:**
 
 1. Salesforce にログインし、**Setup > Users > Users** に移動して MFA を設定したいユーザーを選択します。
 

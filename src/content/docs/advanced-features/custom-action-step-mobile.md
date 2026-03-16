@@ -25,9 +25,9 @@ keywords:
 * Browserstack returns: \``Execute driver script functionality is not available unless server is started with --allow-insecure including the 'execute_driver_script' flag, e.g., --allow-insecure=execute_driver_script`
 * Headspin returns: `An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden`
 
-> 📘 ローカル実行の前提条件
->
-> 物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: `tricentis-mobile-agent start -e`
+:::note{title="ローカル実行の前提条件"}
+物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: `tricentis-mobile-agent start -e`
+:::
 
 ## VMGでサポートされるAppiumメソッド
 
@@ -42,13 +42,13 @@ keywords:
 
 `findElement(s)` は strategy に "text" を使用できません。一般的には "label" や "value" での検索が有効です。
 
-> 📘
->
-> 上記以外のメソッド利用を希望する場合は Tricentis サポートにお問い合わせください。
+:::note
+上記以外のメソッド利用を希望する場合は Tricentis サポートにお問い合わせください。
+:::
 
 ## カスタムアクション（モバイル）ステップを追加する
 
-1. 追加したい位置の矢印（:fa-caret-right:）または **+** にカーソルを合わせます。
+1. 追加したい位置の矢印（）または **+** にカーソルを合わせます。
 2. “M”（Testim 定義済みステップ）をクリックし、メニューを開きます。
 
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/0b5972d-ca1.png)
@@ -57,9 +57,9 @@ keywords:
 
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/603ef8c-customaction.png)
 
-> 📘 注意
->
-> メニュー上部の検索ボックスで Add custom action を検索しても構いません。
+:::warning{title="注意"}
+メニュー上部の検索ボックスで Add custom action を検索しても構いません。
+:::
 
 4. **Name** にわかりやすい名前を入力します。
 5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/groups) を参照してください。
@@ -86,9 +86,9 @@ keywords:
 
 <br />
 
-> 📘 注意
->
-> AUTで要素をパラメータ定義するためにブレークポイントを有効化した場合は、Toggle Breakpoint で解除してください。
+:::warning{title="注意"}
+AUTで要素をパラメータ定義するためにブレークポイントを有効化した場合は、Toggle Breakpoint で解除してください。
+:::
 
 ## 例
 

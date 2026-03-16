@@ -32,14 +32,14 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 :::
 
 :::note
-これは Professional プランの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
+これは Professional planの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
 :::
 
 ## 前提条件
 
 * CLI 検証/アクションを含むテストをローカルで実行するには、次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
 
-:fa-arrow-right: **CLI 検証/アクションを含むテストをローカルで実行するには:**
+**CLI 検証/アクションを含むテストをローカルで実行するには:**
 
 1. OS の **Command Prompt**（端末）を開きます。
 2. 次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
@@ -54,9 +54,9 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 *Add CLI action* / *Add CLI validation* のどちらも手順は同じです。
 
-:fa-arrow-right: **CLI ステップを追加するには:**
+**CLI ステップを追加するには:**
 
-1. 追加したい位置の :fa-caret-right: **（矢印）**（または最後のステップの **+**）にカーソルを合わせます。
+1. 追加したい位置の **（矢印）**（または最後のステップの **+**）にカーソルを合わせます。
 
 ![ステップ追加アイコン](/images/validations/add-cli-validations-and-actions/f982ee3-Testim_329a.png)
 

@@ -36,7 +36,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ページ上で要素が表示されるまで待機します。
 
-:fa-arrow-right: **Wait for Element Visible を追加するには:**
+**Wait for Element Visible を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -51,15 +51,15 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
 
-> 📘 注意
->
-> 「To choose an element Open base URL or Run test to relevant step」と表示された場合は、ベースURLでアプリを開くか、該当ステップまでテストを実行してから追加してください。
+:::warning{title="注意"}
+「To choose an element Open base URL or Run test to relevant step」と表示された場合は、ベースURLでアプリを開くか、該当ステップまでテストを実行してから追加してください。
+:::
 
 ## 要素の表示を待つ（モバイル）
 
 画面上で要素が表示されるまで待機する場合に **Wait for element visible** を使用します。
 
-:fa-arrow-right: **Wait for Element Visible を追加するには:**
+**Wait for Element Visible を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -74,15 +74,15 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/f85f8ff-select-target.png)
 
-> 📘 注意
->
-> 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。
+:::warning{title="注意"}
+「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。
+:::
 
 ## 要素の非表示を待つ（Web）
 
 要素がページから消えるまで待機します。
 
-:fa-arrow-right: **Wait for Element Not Visible を追加するには:**
+**Wait for Element Not Visible を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -97,15 +97,15 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png)
 
-> 📘 注意
->
-> 同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。
+:::warning{title="注意"}
+同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。
+:::
 
 ### 非表示待ちの遅延
 
 非表示の判定前に待機時間を設けたい場合があります。例えば急に要素が再表示されないことを確認したいケースです。
 
-:fa-arrow-right: **待機前の遅延を設定するには:**
+**待機前の遅延を設定するには:**
 
 1. 作成した '**Wait for Element not visible**' ステップのプロパティを開きます。
 2. **Pre-step delay** をオンにします。
@@ -120,7 +120,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 特定のテキストが表示されるまで待機します。
 
-:fa-arrow-right: **Wait for element text を追加するには:**
+**Wait for element text を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -135,16 +135,16 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/00ffc60-text-selection.png)
 
-> 📘 注意
->
-> 同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。  
-> また、'**Expected Value**' にはパラメータ、正規表現、JavaScript式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
+:::warning{title="注意"}
+同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。  
+また、'**Expected Value**' にはパラメータ、正規表現、JavaScript式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
+:::
 
 ## 要素テキストの表示を待つ（モバイル）
 
 特定のテキストが表示されるまで待機したい場合に **Wait for element text** を使用します。
 
-:fa-arrow-right: **Wait for element text を追加するには:**
+**Wait for element text を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -159,16 +159,16 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/5bb3fab-select-target.png)
 
-> 📘 注意
->
-> 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
-> また、'Expected Value' にはパラメータ、正規表現、JavaScript式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
+:::warning{title="注意"}
+「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
+また、'Expected Value' にはパラメータ、正規表現、JavaScript式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
+:::
 
 ## スリープ（Web）
 
 ステップ間で数秒待機したい場合に使用します。過度な待機は実行時間の増加につながるため使用は最小限に。
 
-:fa-arrow-right: **Sleep を追加するには:**
+**Sleep を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -187,7 +187,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ステップ間で数秒待機したい場合に使用します。待機時間が長すぎるとテスト全体の実行時間が延びるため、必要最小限に留めてください。
 
-:fa-arrow-right: **Sleep を追加するには:**
+**Sleep を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -206,7 +206,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 要素が表示されるのを待ち、期待するビジュアルと一致するか検証します。詳細は[ビジュアル検証](/docs/pixel-validation-and-pixel-wait-for) を参照してください。
 
-:fa-arrow-right: **Wait for element visualization を追加するには:**
+**Wait for element visualization を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -225,7 +225,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ビルトインの待機で足りない場合に使う、JavaScriptベースの待機ステップです。
 
-:fa-arrow-right: **Custom wait for を追加するには:**
+**Custom wait for を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。
@@ -244,17 +244,17 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
-> 📘 注意
->
-> * 関数が true を返すかステップのタイムアウトに達するまでリトライします。
-> * Custom wait for は再利用可能です。
-> * ステップパラメータ、エクスポートパラメータなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
+:::warning{title="注意"}
+* 関数が true を返すかステップのタイムアウトに達するまでリトライします。
+* Custom wait for は再利用可能です。
+* ステップパラメータ、エクスポートパラメータなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
+:::
 
 ## ダウンロード待機（Web）
 
 次のステップへ進む前に、ファイルの完全なダウンロード完了を待機したい場合に使用します。
 
-:fa-arrow-right: **Wait for Download を追加するには:**
+**Wait for Download を追加するには:**
 
 1. テストの **Test Editor** を開きます。
 2. 新しいステップを挿入したい **矢印** にカーソルを合わせ、**Testim predefined steps** をクリックします。

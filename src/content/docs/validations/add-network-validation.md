@@ -23,7 +23,7 @@ keywords:
 *network validation* ステップでは、ネットワークリクエストを検証できます。プリセットの検証ステップで、オブジェクトの配列 `networkRequests`（下表）を受け取り、この配列に対して JavaScript を実行します。
 
 :::note
-これは Professional プランの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
+これは Professional planの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
 :::
 
 :::info
@@ -34,9 +34,9 @@ keywords:
 
 *networkRequests* 配列に含まれるオブジェクトで、次の項目を検証できます：
 
-> 📘 Request/Response Body
->
-> リクエストボディとレスポンスボディのキャプチャも可能です。詳細は [Capturing Request and Response Body](#capturing-request-and-response-body) を参照してください。
+:::note{title="Request/Response Body"}
+リクエストボディとレスポンスボディのキャプチャも可能です。詳細は [Capturing Request and Response Body](#capturing-request-and-response-body) を参照してください。
+:::
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -185,9 +185,9 @@ keywords:
  </tbody>
 </table>
 
-:fa-arrow-right: **Add network validation ステップを追加するには:**
+**Add network validation ステップを追加するには:**
 
-1. ステップを追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![テストエディタのナビゲーションステップ選択画面](/images/validations/add-network-validation/a0847f8-Testim_308a.png)
 
@@ -207,9 +207,9 @@ keywords:
 
 4. メニューをスクロールして **Add network validation** を選択します。
 
-> 📘
->
-> メニュー上部の検索ボックスで検索することもできます。
+:::note
+メニュー上部の検索ボックスで検索することもできます。
+:::
 
 **Add Step** ウィンドウが表示されます。
 
@@ -242,17 +242,17 @@ keywords:
 
 11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。
 
-> 📘
->
-> HTML パラメーター以外の DOM セレクター（jQuery など）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
+:::note
+HTML パラメーター以外の DOM セレクター（jQuery など）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
+:::
 
 12. 左上の戻る矢印でエディターに戻ります。
 
 ![ネットワーク検証のJavaScriptコード例](/images/validations/add-network-validation/bc0ed89-Testim_311a.png)
 
-> 📘
->
-> HTML 要素をパラメーターとして定義するために AUT を開いた場合は、**Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
+:::note
+HTML 要素をパラメーターとして定義するために AUT を開いた場合は、**Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
+:::
 
 ステップが作成されます。
 
@@ -395,17 +395,17 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 
 # リクエストボディとレスポンスボディのキャプチャ
 
-> 📘 機能フラグ
->
-> この機能を有効にするには、サポートにお問い合わせください。
+:::note{title="機能フラグ"}
+この機能を有効にするには、サポートにお問い合わせください。
+:::
 
 ネットワーク検証の一部として、上記で説明したリクエスト/レスポンスでキャプチャされるオブジェクトの配列に加えて、リクエストボディおよび/またはレスポンスボディをキャプチャし、**add network validation** ステップを使用してボディコンテンツの検証を実行することもできます。ボディコンテンツ自体はネットワークログには表示されませんが、`networkRequests` 配列に追加されます。
 
-> 📘
->
-> このオプションを有効にすると、テストのパフォーマンスに影響する場合があります。
+:::note
+このオプションを有効にすると、テストのパフォーマンスに影響する場合があります。
+:::
 
-:fa-arrow-right: **リクエストボディとレスポンスボディのキャプチャを有効にするには:**
+**リクエストボディとレスポンスボディのキャプチャを有効にするには:**
 
 1. **Setup Step** で **Show Properties** をクリックします。
 2. **Network Capture Options** の下で、**Capture request body** および/または **Capture response body** オプションを選択します。  
@@ -419,9 +419,9 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 
 ![ネットワーク検証の実行結果画面](/images/validations/add-network-validation/557bd68-image.png)
 
-> 📘
->
-> fetch および XHR ネットワークのリクエスト/レスポンスボディのみがキャプチャされます。
+:::note
+fetch および XHR ネットワークのリクエスト/レスポンスボディのみがキャプチャされます。
+:::
 
 ### テスト例
 

@@ -24,9 +24,9 @@ keywords:
 
 ## Validate Element Attribute ステップの追加
 
-:fa-arrow-right: **Validate Element Attribute を追加するには:**
+**Validate Element Attribute を追加するには:**
 
-1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
+1. 検証を追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![ステップ追加矢印](/images/validations/validate-element-attribute/a45b667-small-screen1.png)
 
@@ -40,7 +40,7 @@ keywords:
 
 ![ステップ追加矢印](/images/validations/validate-element-attribute/3f42de6-small-screen3.png)
 
-4. 再び :fa-caret-right: **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
+4. 再び **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/validate-element-attribute/0bd37d9-Testim_237_r.png)
@@ -81,11 +81,11 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 選択要素を変更したい場合は、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。あるいは、要素を選び直さずに **Attribute name** / **Expected value** の値だけを編集することも可能です。
 
-:fa-arrow-right: **検証ステップで選択要素を再割り当てするには:**
+**検証ステップで選択要素を再割り当てするには:**
 
 1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
 2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
-3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![CLI](/images/validations/validate-element-attribute/7495290-updatedsteps.png)
 
@@ -106,9 +106,9 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
-:fa-arrow-right: **元の要素のプロパティを編集するには:**
+**元の要素のプロパティを編集するには:**
 
-1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![CLI](/images/validations/validate-element-attribute/240621e-properties.png)
 
@@ -119,9 +119,9 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 ![属性](/images/validations/validate-element-attribute/4865d83-propertiespanel.png)
 
-> 📘
->
-> **Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'clickable' と 'true'。
+:::note
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'clickable' と 'true'。
+:::
 
 ## 利用可能な属性一覧
 

@@ -24,9 +24,9 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 
 ## Adding a Validate HTML attribute step
 
-:fa-arrow-right: **To add a Validate HTML attribute step:**
+**To add a Validate HTML attribute step:**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the validation.
+1. Hover over the **(arrow symbol)** where you want to add the validation.
 
 ![ステップ追加矢印](/images/validations/html-attribute-validation/a0c5a27-Testim_233a.png)
 
@@ -42,7 +42,7 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 
 ![ステップ追加矢印](/images/validations/html-attribute-validation/c3f0d75-Testim_236a.png)
 
-4. 再び :fa-caret-right: **（矢印記号）** にカーソルを合わせ、"**M**"（Testim定義済みステップ）をクリックします。\
+4. 再び **（矢印記号）** にカーソルを合わせ、"**M**"（Testim定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/html-attribute-validation/0bd37d9-Testim_237_r.png)
@@ -66,9 +66,9 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 8. **Attribute name** フィールドに、検証したい有効なHTML属性を入力します（例：*href*、*src*、*alt*、*title* など）。
 9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：*[https://www.testim.io](https://www.testim.io)*）。
 
-> 📘
->
-> Expected value では正規表現も使用できます。例えば、https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
+:::note
+Expected value では正規表現も使用できます。例えば、https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
+:::
 
 10. **OK** をクリックします。\
     **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
@@ -78,7 +78,7 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 
 「disabled」HTML属性を検証することも可能です。
 
- :fa-arrow-right: **disabled 属性を検証するには:**
+ **disabled 属性を検証するには:**
 
 1. 上記の手順1～6を実行します。
 
@@ -100,11 +100,11 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 
 選択要素を変更したい場合、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。あるいは、要素を選び直さずに **Attribute name** / **Expected value** の値を編集することも可能です。
 
-:fa-arrow-right: **検証ステップで選択要素を再割り当てするには:**
+**検証ステップで選択要素を再割り当てするには:**
 
 1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
 2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
-3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![CLI](/images/validations/html-attribute-validation/330255f-Testim_240a.png)
 
@@ -119,15 +119,15 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 6. **Properties** パネルの **Attribute name** フィールドに、新しい要素の属性名を入力します。
 7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 
-> 📘
->
-> **Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+:::note
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+:::
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
-:fa-arrow-right: ***元の***要素のプロパティを変更するには:**
+***元の***要素のプロパティを変更するには:**
 
-1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![CLI](/images/validations/html-attribute-validation/8f90779-Testim_242a.png)
 
@@ -138,6 +138,6 @@ HTML属性検証では、要素の任意のHTML属性の値を検証できます
 2. **Properties** パネルの **Attribute name** フィールドに、要素の新しい属性名を入力します。
 3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
 
-> 📘
->
-> **Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+:::note
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+:::

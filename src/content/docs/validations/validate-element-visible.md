@@ -24,7 +24,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ## Validate element visible ステップの追加（Web）
 
-:fa-arrow-right: **Element Visible 検証を追加するには:**
+**Element Visible 検証を追加するには:**
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
@@ -67,7 +67,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ## Validate element visible ステップの追加（Mobile）
 
-:fa-arrow-right: **モバイルテストに Element Visible 検証を追加するには:**
+**モバイルテストに Element Visible 検証を追加するには:**
 
 1. 検証を追加したい位置の **>（矢印）** にカーソルを合わせます。
 
@@ -108,11 +108,11 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 選択した要素を変更したい場合、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。
 
-:fa-arrow-right: **Validate element visible ステップで選択要素を再割り当てするには:**
+**Validate element visible ステップで選択要素を再割り当てするには:**
 
 1. 再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** をクリックします。
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
-3. 対象ステップにカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
+3. 対象ステップにカーソルを合わせ、**Show Properties**をクリックします。
 
 ![Show Propertiesアイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png)
 
@@ -137,7 +137,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 選択した要素を変更したい場合、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。
 
-:fa-arrow-right: **Validate element visible ステップで選択要素を再割り当てするには:**
+**Validate element visible ステップで選択要素を再割り当てするには:**
 
 1. 対象ステップで **Show Properties** アイコンをクリックします。
 

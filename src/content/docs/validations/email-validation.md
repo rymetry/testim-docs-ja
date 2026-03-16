@@ -22,9 +22,9 @@ keywords:
 
 Testim は、恒久的および一時的なメールアドレスを提供する組み込みメールサービスを備えています。_Validate email_ ステップを使用すると、これらのメールアドレスにメールが送信されたことを検証できます。このステップは通常、アプリのサインアップまたはログインフローをテストするために使用されます。
 
-> 📘 これはPro機能です
->
-> これはProfessionalプランのプロジェクトでのみ利用可能なPro機能です。Professionalプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::note{title="これはPro機能です"}
+これはProfessionalプランのプロジェクトでのみ利用可能なPro機能です。Professionalプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::
 
 _Validate email_ ステップは、指定されたTestimメールアドレスのTestim受信箱の内容を、そのメールボックス内のすべてのメッセージの配列として受け取る事前定義された検証ステップです。メッセージは _messages_ という名前のパラメータに含まれ、次のフィールドを持ちます：
 
@@ -205,15 +205,15 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 メールを検証する準備段階として、**恒久的メール**を作成するか、**Generate email address ステップ**を使用して一時的メールアドレスを次のように生成します。
 
-> 📘
->
-> Testimは独自のメールサービスを通じて専用にメールアドレスを生成しており、サードパーティのメールサービスを利用して恒久的または一時的メールアドレスを作成する機能はありません。
+:::note
+Testimは独自のメールサービスを通じて専用にメールアドレスを生成しており、サードパーティのメールサービスを利用して恒久的または一時的メールアドレスを作成する機能はありません。
+:::
 
 # オプションA - 恒久的メールアドレスの作成
 
 このプロセスは、**Validate email** ステップを含む既存または新規のテストがあることを前提としています。
 
-:fa-arrow-right: **恒久的メールを作成するには：**
+**恒久的メールを作成するには：**
 
 1. 左メニューで **Settings** アイコンをクリックします。
 
@@ -247,9 +247,9 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 このステップでは、一時的メールアドレスを生成し、そのアドレスを他のステップで使用するための変数として保存するステップを追加します。
 
- :fa-arrow-right: **一時的メールアドレスを生成するには：**
+ **一時的メールアドレスを生成するには：**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. Hover over the **(arrow symbol)** where you want to add the step.
 
 ![ステップ追加](/images/validations/email-validation/856a8f8-Testim_298a.png)
 
@@ -269,13 +269,13 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 4. メニューをスクロールして **Generate email address** を選択します。
 
-> 📘
->
-> メニュー上部の検索ボックスで検索することもできます。
+:::note
+メニュー上部の検索ボックスで検索することもできます。
+:::
 
 **Editor** に "Generate email address" ステップが追加されます。
 
-5. 新しく作成されたステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+5. 新しく作成されたステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![ステップ追加位置](/images/validations/email-validation/fb10c5b-Testim_300a.png)
 
@@ -299,7 +299,7 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 ### 恒久的メールアドレスオプション
 
-:fa-arrow-right: **恒久的メールアドレスを見つけるには：**
+**恒久的メールアドレスを見つけるには：**
 
 1. **Settings > Email Service** に移動します。  
    恒久的メールアドレスが表示されます。  
@@ -315,7 +315,7 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 
 Email Service画面から一時的メールアドレスを表示およびコピーすることも可能です。
 
-:fa-arrow-right: **一時的メールアドレスを見つけるには：**
+**一時的メールアドレスを見つけるには：**
 
 1. **Settings > Email Service** に移動します。  
    一時的メールアドレスはタイトルに "Temporary" とマークされています。  
@@ -352,9 +352,9 @@ Validate emailステップを設定する方法は2つあります：
 
 ## Codedオプションを使用したValidation Emailステップの作成
 
-:fa-arrow-right: **validate emailステップを作成するには：**
+**validate emailステップを作成するには：**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. Hover over the **(arrow symbol)** where you want to add the step.
 
 ![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
@@ -374,9 +374,9 @@ Validate emailステップを設定する方法は2つあります：
 
 4. Scroll down through the menu and select **Validate email**.
 
-> 📘
->
-> メニュー上部の検索ボックスで検索することもできます。
+:::note
+メニュー上部の検索ボックスで検索することもできます。
+:::
 
 **Add Step** ウィンドウが表示されます。
 
@@ -403,22 +403,24 @@ Validate emailステップを設定する方法は2つあります：
 **Generate email address** ステップで定義した **Variable name** パラメータの名前を **Email address** フィールドに入力します。  
 ![メールアドレス生成ボタン](/images/validations/email-validation/3bfe619-image.png)
 
-> 🚧 **Email address** フィールドは必須です。
+:::warning
+**Email address** フィールドは必須です。
+:::
 
 10. 必要に応じて、ステップとパラメータの追加設定を行います。
 11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメータを定義している場合は、JavaScript コード内でそれらのパラメータを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/email-validation#email-validation-examples) セクションを参照してください。コードは通常、Email address フィールドに入力された値をコード内のパラメータとして使用します。
 
-> 📘
->
-> HTML パラメータ以外の DOM セレクタ（例：jQuery）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
+:::note
+HTML パラメータ以外の DOM セレクタ（例：jQuery）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
+:::
 
 12. 左上の戻る矢印でエディターに戻ります。
 
 ![戻るボタン](/images/validations/email-validation/b4b8e1e-back.png)
 
-> 📘
->
-> AUTを開いてHTML要素をパラメータとして定義した場合は、**Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
+:::note
+AUTを開いてHTML要素をパラメータとして定義した場合は、**Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
+:::
 
 ステップが作成されます。
 
@@ -476,9 +478,9 @@ exportsTest.emailLink = emailLinks[0];
 
 ## Codelessオプションを使用したValidate Emailステップの作成
 
- :fa-arrow-right: **validate emailステップを作成するには：**
+ **validate emailステップを作成するには：**
 
-1. Hover over the :fa-caret-right: **(arrow symbol)** where you want to add the step.
+1. Hover over the **(arrow symbol)** where you want to add the step.
 
 ![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
@@ -498,9 +500,9 @@ exportsTest.emailLink = emailLinks[0];
 
 4. Scroll down through the menu and select **Validate email**.
 
-> 📘
->
-> メニュー上部の検索ボックスで検索することもできます。
+:::note
+メニュー上部の検索ボックスで検索することもできます。
+:::
 
 **Add Step** ウィンドウが表示されます。
 
@@ -524,10 +526,11 @@ exportsTest.emailLink = emailLinks[0];
    1. チェックボックスを選択して有効にします。
    2. 次のいずれかを選択します：
       1. **Location** - 抽出されるテキストの位置に基づいて抽出条件を設定する場合は、このオプションを選択します。  
-      2. **Regex** - メールから抽出するテキストを定義する条件として正規表現を入力する場合は、このオプションを選択します。  
-         > 📘
-         >
-         > このセクションのエントリは大文字と小文字を区別します。
+      2. **Regex** - メールから抽出するテキストを定義する条件として正規表現を入力する場合は、このオプションを選択します。
+
+         :::note
+         このセクションのエントリは大文字と小文字を区別します。
+         :::
    3. **Location** オプションを選択した場合は、次のいずれかを選択します：
 
       1. **Extraction between** - 最初のフィールドのテキストと2番目のフィールドのテキストの間にあるテキスト/リンクを抽出する場合に選択します。最初と2番目のフィールドに文字列を入力して、開始位置（その後からテキストが抽出される）と終了位置（その前までテキストが抽出される）を定義します。

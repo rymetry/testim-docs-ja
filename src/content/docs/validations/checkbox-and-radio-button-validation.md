@@ -28,9 +28,9 @@ keywords:
 
 ## Validate checkbox/radio button ステップの追加
 
-:fa-arrow-right: **Validate checkbox / Validate radio button を追加するには:**
+**Validate checkbox / Validate radio button を追加するには:**
 
-1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）** にカーソルを合わせます。
+1. 検証を追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![ステップ追加位置の矢印記号](/images/validations/checkbox-and-radio-button-validation/0d8957c-Testim_130a.png)
 
@@ -46,7 +46,7 @@ keywords:
 
 ![Play Scenarioボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png)
 
-4. もう一度 :fa-caret-right: **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
+4. もう一度 **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/checkbox-and-radio-button-validation/9c03152-Testim_134_r.png)
@@ -58,14 +58,16 @@ keywords:
 
 6. メニューをスクロールして **Validate checkbox** または **Validate radio button** を選択します。
 
-> 📘 メニュー上部の検索ボックスで検索することもできます。
+:::note
+メニュー上部の検索ボックスで検索することもできます。
+:::
 
 7. AUT ウィンドウで、検証したいチェックボックスまたはラジオボタンを特定し、クリックして選択します。\
    ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
 ![作成されたチェックボックス検証ステップ](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png)
 
-8. 作成したステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+8. 作成したステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![Show Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png)
 
@@ -80,11 +82,11 @@ keywords:
 
 選択したチェックボックス/ラジオボタンを変更したい場合、ステップを削除して再記録する必要はありません。代わりに、別のチェックボックス/ラジオボタンに再割り当てできます。
 
-:fa-arrow-right: **検証ステップで選択したチェックボックス/ラジオボタンを再割り当てするには:**
+**検証ステップで選択したチェックボックス/ラジオボタンを再割り当てするには:**
 
 1. チェックボックス/ラジオボタンを再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** ボタンをクリックします。
 2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
-3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties** (:fa-cog:) アイコンをクリックします。
+3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
 ![ステップのShow Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png)
 

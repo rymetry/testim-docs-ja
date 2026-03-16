@@ -22,15 +22,15 @@ keywords:
 
 *Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
-> 📘 これは Pro 機能です
->
-> この機能は Professional プランのプロジェクトでのみ利用できます。Professional プランの詳細については [Testim 料金ページ](https://www.testim.io/pricing/) をご覧ください。
+:::note{title="これは Pro 機能です"}
+この機能は Professional planのプロジェクトでのみ利用できます。Professional planの詳細については [Testim 料金ページ](https://www.testim.io/pricing/) をご覧ください。
+:::
 
 ## 前提条件
 
-> 📘
->
-> このステップは Chrome または Edge Chromium でのみ実行できます。
+:::note
+このステップは Chrome または Edge Chromium でのみ実行できます。
+:::
 
 * CLI アクションステップを含むテストをローカルで実行するには、次のコマンドを実行する必要があります：**npm i -g @testim/testim-cli && testim connect**（下記参照）。
 * *Validate download* ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
@@ -38,7 +38,7 @@ keywords:
   * **Chrome 67** 以上を使用していること
   * Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
 
-:fa-arrow-right: **「Download PDFs」権限を有効にするには：**
+**「Download PDFs」権限を有効にするには：**
 
 1. Chrome ブラウザーで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 2. **Settings** をクリックします。
@@ -50,7 +50,7 @@ keywords:
 
 ![Chrome PDF設定の手順アニメーション](/images/validations/validate-download/ae3ceb4-validatedownload1020.gif)
 
-:fa-arrow-right: **CLI アクションステップを含むテストをローカルで実行するには：**
+**CLI アクションステップを含むテストをローカルで実行するには：**
 
 1. お使いのオペレーティングシステムの **コマンドプロンプト** ウィンドウを開きます。
 2. コマンドプロンプトで次のコマンドを入力します：**npm i -g @testim/testim-cli && testim connect**
@@ -61,7 +61,7 @@ keywords:
 
 ![CLIコマンド実行中の画面](/images/validations/validate-download/84cc9af-Testim_186.png)
 
-:fa-arrow-right: **Chrome ブラウザで PDF ファイルを自動的にダウンロードするように設定するには（開く代わりに）：**
+**Chrome ブラウザで PDF ファイルを自動的にダウンロードするように設定するには（開く代わりに）：**
 
 1. Chrome ブラウザーで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 
@@ -94,13 +94,13 @@ keywords:
 
 Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv、jpg、ppt、doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv、image、xls、ppt、doc、pdf。
 
-> 📘
->
-> テストの記録中にファイルをダウンロードするリンクをクリックすると、Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順8 に進んでください。
+:::note
+テストの記録中にファイルをダウンロードするリンクをクリックすると、Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順8 に進んでください。
+:::
 
-:fa-arrow-right: **Validate download ステップを追加するには:**
+**Validate download ステップを追加するには:**
 
-1. 検証を追加したい位置の :fa-caret-right: **（矢印記号）**（または最終ステップの後の **+ 記号**）にカーソルを合わせます。
+1. 検証を追加したい位置の **（矢印記号）**（または最終ステップの後の **+ 記号**）にカーソルを合わせます。
 
 ![テストステップの追加位置](/images/validations/validate-download/2258769-Testim_155a.png)
 
@@ -116,9 +116,9 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 4. メニューをスクロールして **Validate download** を選択します。
 
-> 📘
->
-> メニュー上部の検索ボックスで検索することもできます。
+:::note
+メニュー上部の検索ボックスで検索することもできます。
+:::
 
 **Add Step** ウィンドウが表示されます。
 
@@ -520,9 +520,9 @@ expectedText.forEach(item => {
  </tbody>
 </table>
 
-> 📘
->
-> JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
+:::note
+JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
+:::
 
 ### MS Word ファイル
 
@@ -597,9 +597,9 @@ return docxText.includes(expectedText);
  </tbody>
 </table>
 
-> 📘
->
-> JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
+:::note
+JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
+:::
 
 ### PDF ファイル
 

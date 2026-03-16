@@ -28,23 +28,23 @@ keywords:
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/58d5cba-open.png)
 
-> 📘
->
-> 本ステップは [VMG](/docs/virtual-mobile-grid) でのみ利用可能です。
+:::note
+本ステップは [VMG](/docs/virtual-mobile-grid) でのみ利用可能です。
+:::
 
 ## Deep Link ステップを追加する
 
-:fa-arrow-right:**追加手順:**
+**追加手順:**
 
-1. Deep Link ステップを追加したい位置の矢印（:fa-caret-right:）にカーソルを合わせます。アクションオプションが表示されます。
+1. Deep Link ステップを追加したい位置の矢印（）にカーソルを合わせます。アクションオプションが表示されます。
 2. “**M**”（Testim predefined steps）をクリックします。**Predefined steps** メニューが開きます。
 3. **Actions** メニューを展開し、**Deep link** ステップを選択します。
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/213c463-deeplink.png)
 
-> 📘 注意
->
-> メニュー上部の検索ボックスで “Deep link” と入力して検索することもできます。
+:::warning{title="注意"}
+メニュー上部の検索ボックスで “Deep link” と入力して検索することもできます。
+:::
 
 次のダイアログが表示されます。
 
@@ -56,9 +56,11 @@ keywords:
    3. parameter — アプリに渡す値（例: 電話番号）
    4. 文字列（JS式）なので引用符で囲みます
    5. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
-      > 📘
-      >
-      > 一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+
+   :::note
+   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+   :::
+
    6. ディープリンク値にパラメータを追加することもできます。通常の Testim パラメータを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
 5. **OK** をクリックします。\
    Deep Link ステップが追加されます。
