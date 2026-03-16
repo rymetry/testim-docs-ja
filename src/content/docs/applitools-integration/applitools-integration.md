@@ -19,9 +19,9 @@ AI駆動のビジュアルテストを有効にするためにApplitoolsと統�
 
 Testimのビジュアル検証およびwait-forステップを使用するには、まず[Applitools](https://applitools.com/)が提供するApplitools EyesアプリとTestimアカウントを統合する必要があります。
 
-> 📘 これはProの機能です
->
-> この機能は、プロフェッショナルプランのプロジェクトにのみ開かれています。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::info{title="これはProの機能です"}
+この機能は、プロフェッショナルプランのプロジェクトにのみ開かれています。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::
 
 ## 前提条件
 
@@ -34,7 +34,7 @@ Applitools EyesアカウントとTestimアカウント間で情報を交換す�
 
 ### ステップ1: Applitools EyesでAPIキーを作成する
 
-:fa-arrow-right: **Applitools EyesでAPIキーを作成するには:**
+**Applitools EyesでAPIキーを作成するには:**
 
 1. 管理者アカウントを使用して**Applitools Eyes**コンソールにログインします。
 2. Applitools Eyesホームページで、右上の**メインメニュー**をクリックします。
@@ -110,6 +110,6 @@ Applitools EyesアカウントとTestimアカウント間で情報を交換す�
 
 ![Applitools統合が成功しビジュアル検証ステップが有効になったことを示す画面](/images/applitools-integration/applitools-integration/446380f-Testim_265_r.png)
 
-> 📘
->
-> ビジュアル検証ステップを有効にするには、Testimからログアウトして再度ログインする必要がある場合があります。
+:::info
+ビジュアル検証ステップを有効にするには、Testimからログアウトして再度ログインする必要がある場合があります。
+:::
