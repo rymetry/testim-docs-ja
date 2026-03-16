@@ -88,7 +88,7 @@ CLIを使用してテストが実行されると、Sealightsはこのコマン�
 - [Using Go Agent - Initializing agent and Generating a session ID](https://documentation.tricentis.com/sealights/en/content/sealights/using_go_agent___initializing_agent_and_generating_a_session_id.htm)
 - [SeaLights .NET Core agent - Scanning the build binaries](https://documentation.tricentis.com/sealights/en/content/sealights/sealights__net_core_agent___scanning_the_build_binaries.htm)
 
-#### Sealights buildSessionIdを使用してTestingでテストを実行する
+#### Sealights buildSessionIdを使用してTestimでテストを実行する
 
 Testimで、[コマンドラインインターフェイス(CLI)](/docs/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
 
@@ -116,7 +116,7 @@ Sealightsで、`labId`が割り当てられたら、次の画面で見つける�
 
   ![Sealights統合用のTestim設定画面でCLIオプションが表示されている画面](/images/other-integrations/sealights-integration/319a904-sealights6.png)
 
-#### Sealights labIdを使用してTestingでテストを実行する
+#### Sealights labIdを使用してTestimでテストを実行する
 
 Testimで、[コマンドラインインターフェイス(CLI)](/docs/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
 
