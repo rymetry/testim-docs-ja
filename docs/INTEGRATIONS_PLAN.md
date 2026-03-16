@@ -129,7 +129,7 @@ Grid Management（PR #17）と bug-tracker-settings（PR #11, #12）は完了済
 3. 修正/書き直し実行
 4. セルフチェック（Agent: source parity レビュー）
 5. Codex CLI レビュー:
-   codex -s read-only exec --path . \
+   codex -s read-only exec -C . \
      "Review the Japanese documentation files changed in this branch against their English sourceUrl originals. Check: (1) all paragraphs/steps/callouts/images preserved, (2) images embedded at correct positions, (3) internal links use /docs/{slug} format, (4) Testim product names kept in English, (5) callouts use ::: directive syntax. No confirmation or questions needed. Provide concrete issues proactively."
 6. Codex フィードバック修正
 7. npm run lint:docs && npm run lint && npm run test && npm run build

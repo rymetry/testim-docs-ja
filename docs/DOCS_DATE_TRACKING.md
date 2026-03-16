@@ -49,7 +49,7 @@
 
 #### ケース2: 定期メンテナンス
 
-週次の GitHub Actions チェックでは:
+定期（3日ごと）の GitHub Actions チェックでは:
 
 1. HTMLの `updatedAt` で差分を検出
 2. イシューが作成される
@@ -138,7 +138,7 @@ npm run update:dates:apply -- --pattern recording-tests
 - `scripts/check_outdated_docs.mjs` - 更新検出
 - `scripts/fetch_all_updated_dates.mjs` - 日付一括取得
 - `scripts/update_dates_from_english.mjs` - 日付自動更新
-- `.github/workflows/check-docs-updates.yml` - 週次チェック
+- `.github/workflows/check-docs-updates.yml` - 3日ごとの定期チェック
 - `DOCS_REVIEW.md` - レビューガイドライン
 
 ---
