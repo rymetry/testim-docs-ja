@@ -206,5 +206,5 @@ keywords:
 * **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
 
 :::note
-Quarantine テストは、"--run-quarantined-tests" フラグで隔離をバイパスして CLI で実行できます。
+Quarantine テストは、隔離を解除する "--run-quarantined-tests" フラグを指定して CLI で実行できます。
 :::
