@@ -65,6 +65,8 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 
 ## モバイルテストの記録
 
+モバイルデバイスでテストを記録して、後で手動または自動で実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
+
 :::info
 **仮想/物理デバイスでの記録**
 
@@ -168,15 +170,15 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 
 テストの記録中または記録後に手動でステップを追加する際に、現在サポートされているアクションは以下のとおりです:
 
-- [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。
-- [Validate element visible](/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。
-- [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定のテキスト値も指定する点で、要素の可視性検証と似ています。
+- [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。Validate email ステップは、これらの電子メールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
+- [Validate element visible](/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
+- [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定の要素の存在に依存するという点で、要素可視性検証と似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 - [Wait for element visible](/docs/wait-for#wait-for-element-visible) - 要素がページに表示されるまで待機するために使用します。
 - [Wait for element text](/docs/wait-for#wait-for-element-text) - テストを続行する前に特定のテキストが表示されることを確認するために使用します。
 - [Sleep](/docs/wait-for#sleep) - ステップ間で一定時間待機できます。
 - [Add extract value step](/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
-- **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。
+- **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
 - [Generate email address](/docs/email-validation#generating-a-temporary-email-address) - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。
 - [Add CLI action](/docs/add-cli-validations-and-actions) - CLI 環境でカスタム Node.js スクリプトを実行します。
 - [Add API action](/docs/api-testing#adding-an-api-action-step) - API 呼び出しから返されるデータを取得する場合に使用します。
