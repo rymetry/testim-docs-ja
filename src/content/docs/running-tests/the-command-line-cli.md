@@ -40,7 +40,7 @@ npm install -g @testim/testim-cli
 
 Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タブに表示され、トークンとプロジェクト ID が含まれています。
 
-:fa-arrow-right: **基本的な CLI コマンドを表示するには:**
+**基本的な CLI コマンドを表示するには:**
 
 1. **設定 > CLI** タブに移動します。
 2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザーが開きます）(Web のみ)
@@ -76,9 +76,9 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" --report-file test-results/testim-tests-report.xml
 ```
 
-> 📘 Web のみの注記
->
-> グリッドで実行する代わりに、**--use-local-chrome-driver** を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザーで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode selenium` フラグも追加する必要があります。
+:::note{title="Web のみの注記"}
+グリッドで実行する代わりに、**--use-local-chrome-driver** を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザーで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode selenium` フラグも追加する必要があります。
+:::
 
 ## すべての CLI パラメータ
 
@@ -103,9 +103,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 `--label` または `-l` 指定されたラベルを含むすべてのテストを実行します。
 
-> 📘 注記
->
-> 指定されたラベルがテストを指していない場合、エラーが返されます。
+:::note{title="注記"}
+指定されたラベルがテストを指していない場合、エラーが返されます。
+:::
 
 `--label` 引数をさらに追加することで、複数のラベルを実行することもできます。
 
@@ -117,9 +117,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 `--name` または `-n`、実行するテストの名前。
 
-> 📘
->
-> `--name` 引数をさらに追加することで、複数のテストを名前で実行できます。
+:::note
+`--name` 引数をさらに追加することで、複数のテストを名前で実行できます。
+:::
 
 ```shell
 --name "login_to_app"
@@ -129,9 +129,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 `--testId` または `-t` または `--test-id`、実行するテストの ID。コマンドの後に、テストの ID を入力します。
 
-> 📘
->
-> `--testId` 引数をさらに追加することで、複数のテストを ID で実行できます。
+:::note
+`--testId` 引数をさらに追加することで、複数のテストを ID で実行できます。
+:::
 
 ```shell
 --testId "5e1c62b2-7c30-635b-6441-dd804126118b"
@@ -187,9 +187,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 `--params-file` テスト実行にパラメータを渡すために使用できる JSON パラメータ ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。たとえば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 (ユーザー名とパスワード) を設定できます。JSON パラメータ ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメータファイル](/docs/json-parameters-file-parameters) をお読みください。
 
-> 📘
->
-> `params-file` パスで設定されている文字列パスは相対パスである必要があり、完全なパスではありません。
+:::note
+`params-file` パスで設定されている文字列パスは相対パスである必要があり、完全なパスではありません。
+:::
 
 ```shell
 --params-file [params-file.json]
@@ -260,9 +260,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --branch <branch-name>
 ```
 
-> 📘
->
-> アーカイブされたブランチで実行すると、CLI は失敗します。
+:::note
+アーカイブされたブランチで実行すると、CLI は失敗します。
+:::
 
 #### 並列
 
@@ -281,7 +281,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --config-file [config-file.js]
 ```
 
-構成ファイルについては [こちら](configuration-file-run-hooks) をお読みください。
+構成ファイルについては [こちら](/docs/configuration-file-run-hooks) をお読みください。
 
 #### 失敗したテストの再試行
 
@@ -339,9 +339,9 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 `--set-retention` パラメータ --set-retention \[1 ～ 10 の整数] を CLI 実行に追加すると、この実行のすべてのテスト結果は、パラメータで指定された日数後に削除対象としてマークされます (保持期間)。
 
-> 📘
->
-> 弊社のプランには、デフォルトで 30 日間の保持が含まれています。より長い保持時間が必要な場合は、サポートにお問い合わせください。
+:::note
+弊社のプランには、デフォルトで 30 日間の保持が含まれています。より長い保持時間が必要な場合は、サポートにお問い合わせください。
+:::
 
 ```shell
 --set-retention <number-between-1-10>
@@ -411,9 +411,9 @@ testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "E
 たとえば、テスト計画 P を --intersect-with-label C --intersect-with-label A で実行する場合\
 Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
 
-> 📘
->
-> 交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、--intersect-with-label A と --intersect-with-label B がある場合、Testim は要求されたテストと交差する A または B のすべてのテストを実行します。
+:::note
+交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、--intersect-with-label A と --intersect-with-label B がある場合、Testim は要求されたテストと交差する A または B のすべてのテストを実行します。
+:::
 
 #### intersect-with-operand
 
