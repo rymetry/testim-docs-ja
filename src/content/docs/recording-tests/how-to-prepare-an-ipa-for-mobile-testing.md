@@ -109,6 +109,6 @@ keywords:
 
 ![右クリック](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/80c04ea-rightclick.png)
 
-13. アプリ名に「physical」という用語を追加して、このアプリビルドが仮想デバイスでの使用を目的としていることを示します。**OK**ボタンをクリックします。
+13. アプリ名に「physical」という用語を追加して、このアプリビルドが物理デバイスでの使用を目的としていることを示します。**OK**ボタンをクリックします。
 
 ![物理デバイス用に名前変更](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/e6d95f4-physical.png)
