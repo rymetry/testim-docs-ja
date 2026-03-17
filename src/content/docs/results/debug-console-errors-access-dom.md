@@ -22,7 +22,7 @@ console.log(myVar)を使用するか、Chrome DevToolsデバッガーを使用�
 
 Testimはコンソールエラーとネットワークエラーを自動的に記録します。
 
-:fa-arrow-right: **テスト実行でエラーを表示するには:**
+ **テスト実行でエラーを表示するには:**
 
 1. テスト実行または実行に移動します。
 2. テスト上部のエラーメッセージと、失敗した特定のテストステップを確認します。
@@ -37,15 +37,15 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 
 ![コンソールエラー一覧の例](/images/results/debug-console-errors-access-dom/8c191a6-consoleerrors.png)
 
-> 📘 注意:
->
-> テストログは、Chrome & Edge Chromiumブラウザでの実行にのみ表示されます。
+:::warning{title="注意"}
+テストログは、Chrome & Edge Chromiumブラウザでの実行にのみ表示されます。
+:::
 
 ## 失敗ステップのDOMを確認してデバッグする
 
 ステップが失敗すると、Testimは完全なDOMスナップショットを保存するため、後でデバッグできます。
 
-:fa-arrow-right: **エラーのDOMスナップショットを表示するには:**
+ **エラーのDOMスナップショットを表示するには:**
 
 1. テスト実行または実行に移動します。
 2. 失敗した特定のテストステップでエラーメッセージを確認します。
@@ -58,10 +58,10 @@ Testimはコンソールエラーとネットワークエラーを自動的に�
 
 ![DOMスナップショット表示画面](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png)
 
-> 📘 注意:
->
-> * DOMは、Chrome & Edge Chromiumブラウザの実行にのみ表示されます。
-> * DOMは失敗したステップにのみ表示されます。
+:::warning{title="注意"}
+* DOMは、Chrome & Edge Chromiumブラウザの実行にのみ表示されます。
+* DOMは失敗したステップにのみ表示されます。
+:::
 
 ## ステップパラメータのデバッグ
 
