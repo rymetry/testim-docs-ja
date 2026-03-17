@@ -22,8 +22,6 @@ Testim の使い方について質問してみてください
 
 Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用してソフトウェアの使用方法についてユーザーを支援します。質問（プロンプトを使用）をすることができ、関連するヘルプ情報を回答として受け取ることができます。
 
-![Testim Copilot ヘルプアシスタントの画面例](/images/overview/help-ai-assistant/c09d415-image_6.png)
-
 回答には以下の要素が含まれます。
 
 - 簡潔な要約
@@ -34,6 +32,9 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 ## ヘルプアシスタントの使用方法
 
 1. **ヘルプ**ボタンをクリックします。
+
+![ヘルプボタン](/images/overview/help-ai-assistant/c09d415-image_6.png)
+
 2. 通知を読み、**Got It** をクリックします。
 
 ![通知画面](/images/overview/help-ai-assistant/1160e83-notice.png)
@@ -42,7 +43,9 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
    - 「Type a message here」フィールドに質問を入力します。
    - または、提案された質問のいずれかをクリックします。
 
-![質問を入力](/images/overview/help-ai-assistant/5c13977-question.png)
+![質問を入力](/images/overview/help-ai-assistant/8243ad1-image_7.png)
+
+![提案された質問](/images/overview/help-ai-assistant/5c13977-question.png)
 
 4. Enter キーを押すか、**送信**ボタンをクリックします。回答が生成されて表示されます。
 
@@ -52,8 +55,7 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 
 ![リソースと例](/images/overview/help-ai-assistant/da4666a-resources.png)
 
-6. **コピー**アイコンをクリックして回答をコピーします。
-7. フィードバックは AI のさらなるトレーニングに役立ちます。サムズアップ/ダウンアイコンをクリックしてフィードバックを提供してください。テキストアイコンをクリックして、自由形式のテキストでフィードバックを入力できます。
+6. **コピー**アイコンをクリックして回答をコピーします。フィードバックは AI のさらなるトレーニングに役立ちます。サムズアップ/ダウンアイコンをクリックしてフィードバックを提供してください。テキストアイコンをクリックして、自由形式のテキストでフィードバックを入力できます。
 
 ## Testim サポートの人的支援を求める
 
@@ -65,3 +67,5 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 
 1. Testim ヘルプアシスタントウィンドウの上部にある**サポート**ボタンをクリックします。サポートボタンをクリックすると、サポートチームのメンバーとのチャットが開始されます。
 2. メッセージを入力します。
+
+![メッセージの入力](/images/overview/help-ai-assistant/fa5fdbf-image_2.png)
