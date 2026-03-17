@@ -40,48 +40,48 @@ keywords:
   <tr>
    <td>
     •
-    <a href="#step-into">
+    <a href="#ステップイン">
      ステップイン
     </a>
     <br/>
     •
-    <a href="#step-over">
+    <a href="#ステップオーバー">
      ステップオーバー
     </a>
     <br/>
     •
-    <a href="#step-out">
+    <a href="#ステップアウト">
      ステップアウト
     </a>
     <br/>
     •
-    <a href="#pause-and-continue-debugging">
+    <a href="#デバッグの一時停止と続行">
      一時停止/続行
     </a>
     <br/>
     •
-    <a href="#stop-run">
+    <a href="#実行停止">
      実行停止
     </a>
     <br/>
     •
-    <a href="#rerun">
+    <a href="#再実行">
      再実行
     </a>
    </td>
    <td>
     •
-    <a href="#running-locally-with-debugging">
+    <a href="#デバッグ付きでローカル実行">
      デバッグ付きでローカル実行
     </a>
     <br/>
     •
-    <a href="#running-locally-without-debugging">
+    <a href="#ローカル実行デバッグなし">
      デバッグなしでローカル実行
     </a>
     <br/>
     •
-    <a href="/docs/running-tests-overview#running-a-remote-web-test">
+    <a href="/docs/running-tests-overview#リモート-web-テストを実行する">
      Grid上で実行
     </a>
     <br/>
@@ -97,12 +97,12 @@ keywords:
    </td>
    <td>
     •
-    <a href="/docs/recording-additional-steps-to-fix-bugs#start-recording">
+    <a href="/docs/recording-additional-steps-to-fix-bugs#記録を開始">
      記録開始
     </a>
     <br/>
     •
-    <a href="/docs/recording-additional-steps-to-fix-bugs#start-recording-at-this-position">
+    <a href="/docs/recording-additional-steps-to-fix-bugs#この位置から記録を開始">
      この位置から記録開始
     </a>
    </td>
