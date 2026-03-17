@@ -29,7 +29,7 @@ Shared Step に直接リンク機能は、[Shared Steps ライブラリ](/docs/s
 
 2. **Shared Steps** をクリックして Shared Steps タブを開きます。
 
-![Shared Stepsボタンをクリックして共有ステップタブを開く手順を示す画面](/images/miscellaneous/link-directly-to-a-shared-step/d701b25-Testim_432b.png)
+![Shared Stepsボタンをクリックして Shared Steps タブを開く手順を示す画面](/images/miscellaneous/link-directly-to-a-shared-step/d701b25-Testim_432b.png)
 
 3. 表示したい Shared Step/グループの右側にある**下矢印**をクリックします。
 
@@ -37,11 +37,11 @@ Shared Step に直接リンク機能は、[Shared Steps ライブラリ](/docs/s
 「used by」アイコンにはゼロより大きい数字が含まれている必要があります。Shared Step/グループを使用しているテストがゼロの場合、表示・編集する前にテストに追加する必要があります。
 :::
 
-![共有ステップの右側にある下矢印をクリックして展開する手順を示す画面。「used by」アイコンの数値がゼロより大きいことが必要](/images/miscellaneous/link-directly-to-a-shared-step/0dde977-Testim_433a.png)
+![Shared Step の右側にある下矢印をクリックして展開する手順を示す画面。「used by」アイコンの数値がゼロより大きいことが必要](/images/miscellaneous/link-directly-to-a-shared-step/0dde977-Testim_433a.png)
 
 アイテムが展開され、Shared Step/グループを含むすべてのテストのリストが表示されます。
 
-![共有ステップが展開され、それを含むすべてのテストのリストが表示されている画面](/images/miscellaneous/link-directly-to-a-shared-step/ad912d7-Testim_434.png)
+![Shared Step が展開され、それを含むすべてのテストのリストが表示されている画面](/images/miscellaneous/link-directly-to-a-shared-step/ad912d7-Testim_434.png)
 
 4. Shared Step/グループを表示したいテストをダブルクリックします。
 
@@ -51,7 +51,7 @@ Shared Step に直接リンク機能は、[Shared Steps ライブラリ](/docs/s
 
 テストが開き、Shared Step/グループが選択されます。
 
-![テストが開かれ、共有ステップが選択された状態の画面](/images/miscellaneous/link-directly-to-a-shared-step/fc31f7c-Testim_435.png)
+![テストが開かれ、Shared Step が選択された状態の画面](/images/miscellaneous/link-directly-to-a-shared-step/fc31f7c-Testim_435.png)
 
 :::note
 開いたテストに Shared Step/グループの複数の出現が含まれている場合、最初の出現のみが選択されます。
