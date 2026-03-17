@@ -19,7 +19,7 @@ keywords:
 
 Tricentis Mobile Agentは、Testimテストをモバイルデバイスで実行するためのモバイル接続を管理する集中サービスです。Tricentis Mobile Agentは、Windows、Linux、およびMacオペレーティングシステムで実行できます。このソフトウェアは、ローカルのAndroidおよびiOS物理デバイス、ならびにエミュレーターやシミュレーターを含む仮想デバイスでテストを実行するために使用できます。これにより、デバイスのセットアップと構成が簡素化され、テストをより早く開始できます。
 
-:::info[情報]
+:::info{title="情報"}
 Tricentis Mobile AgentおよびiOS artifactsはローカルにインストールされ、このマシンのユーザーのみが使用できます(つまり、複数/リモートユーザー間で共有することはできません)。
 :::
 
@@ -84,15 +84,15 @@ Testimでモバイルテストを作成および実行する前に、Tricentis M
 ![Linuxのダウンロード](/images/recording-tests/configure-tricentis-mobile-agent/64e7a69-image.png)
 
 2. インストールファイルを見つけて、次の手順を実行します:
-   • 右クリックして**Properties > Permissions > Execute**を選択します。
-   • **Allow executing file as program**を選択してウィンドウを閉じます。
+   - 右クリックして**Properties > Permissions > Execute**を選択します。
+   - **Allow executing file as program**を選択してウィンドウを閉じます。
 
 3. インストールファイルを右クリックして、**Open in Terminal**を選択します。
 
 4. ターミナルで、次の手順を実行します:
-   • `./Tricentis_Mobile_Agent_1.0.0.sh`と入力し、Enterを押します。
-   • インストールを続行することを確認するために`yes`と入力し、Enterを押します。
-   • インストール先のパスを指定し、Enterを押します。これによりインストールが完了し、デスクトップショートカットが作成されます。
+   - `./Tricentis_Mobile_Agent_1.0.0.sh`と入力し、Enterを押します。
+   - インストールを続行することを確認するために`yes`と入力し、Enterを押します。
+   - インストール先のパスを指定し、Enterを押します。これによりインストールが完了し、デスクトップショートカットが作成されます。
 
 5. プロンプトが表示されたら、ターミナルで`y`キーを押してアプリケーションを起動します。または、新しく作成されたデスクトップショートカットからアプリケーションを起動します。
 
@@ -140,17 +140,17 @@ Tricentis Mobile Agentを使用したテスト自動化のためにAndroidデバ
 
 Tricentis Mobile AgentでiOSデバイスを使用するには、以下の要件を満たす必要があります:
 
-• Tricentis Mobile Agentがコンピューターにインストールされ、実行されている。
-• アクティブなApple Developerアカウントを持っている。
-• デバイスがコンピューターに接続されている。
+- Tricentis Mobile Agentがコンピューターにインストールされ、実行されている。
+- アクティブなApple Developerアカウントを持っている。
+- デバイスがコンピューターに接続されている。
 
 **iOSデバイスを準備するには:**
 
 1. iOSデバイスをコンピューターに接続します。
 
 2. iOSデバイスで、設定に移動し、以下のアクションを実行します:
-   • **UIオートメーションを有効にする** - プライバシーとセキュリティ > 開発者設定に移動し、UIオートメーションを有効にするを有効にします。
-   • **Webインスペクターを有効にする** - Safari > 詳細設定に移動し、Webインスペクターを有効にします。
+   - **UIオートメーションを有効にする** - プライバシーとセキュリティ > 開発者設定に移動し、UIオートメーションを有効にするを有効にします。
+   - **Webインスペクターを有効にする** - Safari > 詳細設定に移動し、Webインスペクターを有効にします。
 
 #### iOSイメージをアップロードする
 
@@ -198,8 +198,8 @@ WindowsオペレーティングシステムでiOSデバイスのテスト自動�
 
 iTunesのインストール後、次のいずれかのアクションを実行します:
 
-• コンピューターを再起動します。
-• iOSデバイスを再接続します。
+- コンピューターを再起動します。
+- iOSデバイスを再接続します。
 
 #### iOSシミュレーターを有効にする
 
@@ -265,12 +265,12 @@ sudo xcrun simctl shutdown all
 
 AndroidデバイスをTricentis Mobile Agentに接続する際に問題がある場合は、デバイスの開発者オプションに移動し、以下の設定を有効にしてください:
 
-• 権限の監視を無効にする(オプション)
-• USB構成の選択で、MTPまたはファイル転送を選択します。
-• 下にスクロールして、ウィンドウアニメーションスケール、トランジションアニメーションスケール、およびアニメーター継続時間スケールのアニメーションをオフにします。
-• USBケーブルをAndroidデバイスに接続するときは、次の操作を実行してください:
-  • デバイスデータへのアクセスを許可し、YESを選択します。
-  • USBデバッグを許可し、OKを選択します。
+- 権限の監視を無効にする(オプション)
+- USB構成の選択で、MTPまたはファイル転送を選択します。
+- 下にスクロールして、ウィンドウアニメーションスケール、トランジションアニメーションスケール、およびアニメーター継続時間スケールのアニメーションをオフにします。
+- USBケーブルをAndroidデバイスに接続するときは、次の操作を実行してください:
+  - デバイスデータへのアクセスを許可し、YESを選択します。
+  - USBデバッグを許可し、OKを選択します。
 
 ミラーリングまたは記録がまだ機能しない場合は、開発者オプションに移動し、信頼できるコンピューターをクリアし、プラグを抜いて再接続してください。
 
@@ -280,15 +280,11 @@ UI Automatorは、インストールされているすべてのアプリケー�
 
 Androidデバイスのパフォーマンスを向上させるには、以下のアプリケーションで最適化を無効にしてください:
 
-• テスト対象のアプリケーション
-• Android System WebView(WebViewを使用するアプリケーション用)
-• Appium Settings
-• Application Installer
-• Automation Test
-• Chrome(モバイルでのWebテスト用)
-• io.appium.uiautomator2.server
-• io.appium.uiautomator2.server.test
-
----
-
-最終更新: 約1か月前
+- テスト対象のアプリケーション
+- Android System WebView(WebViewを使用するアプリケーション用)
+- Appium Settings
+- Application Installer
+- Automation Test
+- Chrome(モバイルでのWebテスト用)
+- io.appium.uiautomator2.server
+- io.appium.uiautomator2.server.test
