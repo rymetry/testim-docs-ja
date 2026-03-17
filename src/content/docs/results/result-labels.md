@@ -44,7 +44,9 @@ keywords:
 --result-label "nightly Jenkins run" --result-label "v1.42.35"
 ```
 
-> 📘 結果ラベルは250文字を超えることはできません
+:::note
+結果ラベルは250文字を超えることはできません。
+:::
 
 ## スケジューラー経由で結果ラベルを追加する
 
