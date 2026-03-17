@@ -72,7 +72,7 @@ keywords:
 
 ![ベースURLをオーバーライドする入力フィールド](/images/running-tests/scheduler/bcbd156-defaulturl.png)
 
-:::note{title="注："}
+:::warning{title="注意"}
 テストプラン用のスケジュール実行を作成する場合、これらの設定はテストプランで決定されるため、デフォルト構成またはベース URL をオーバーライドすることはできません。
 :::
 
@@ -90,7 +90,7 @@ keywords:
 
 ![実行先グリッドの選択画面](/images/running-tests/scheduler/a07a8af-wheretorun.png)
 
-:::note{title="注："}
+:::warning{title="注意"}
 テストプラン用のスケジュール実行を作成する場合、グリッドはテストプランで決定されるため、グリッドを選択することはできません。
 :::
 
