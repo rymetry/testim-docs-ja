@@ -26,7 +26,7 @@ Testim Extensionでできることの詳細については、[Testim Extension -
 
 ## Testim Extensionのダウンロード
 
-Testim Extensionをダウンロードするには、[こちらをクリック](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)してください。
+Testim Extensionをダウンロードするには、[Chrome ウェブストア](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)からインストールしてください。
 
 ## セキュリティに関する注意事項
 
