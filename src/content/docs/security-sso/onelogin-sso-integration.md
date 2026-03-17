@@ -1,8 +1,7 @@
 ---
 title: OneLogin SSO統合
 description: >-
-  OneLogin,
-  Inc.はクラウドベースのIDおよびアクセス管理プロバイダーで、企業や組織に統合アクセス管理プラットフォームを提供しています。TestimはOneLoginと統合されており、OneLoginのユーザーはOneLoginで
+  OneLoginとTestimをSSO統合する手順を説明します。OneLoginで一度認証すれば、再度認証することなくTestimにアクセスできます。
 category: セキュリティ
 order: 18003
 updated: '2025-11-02'
