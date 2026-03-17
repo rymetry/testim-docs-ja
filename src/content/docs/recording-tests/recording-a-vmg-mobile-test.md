@@ -35,9 +35,7 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 
 - **モバイルテストプロジェクト** - モバイルテストには、Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、Tricentis サポートにお問い合わせください。
 
-:::info
-**注意:**
-
+:::warning{title="注意"}
 各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。たとえば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
 :::
 
@@ -76,6 +74,9 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 **モバイルテストを記録するには:**
 
 1. Dashboard 画面から **New Test** ボタンをクリックします。
+
+![新しいテスト](/images/recording-tests/recording-a-vmg-mobile-test/5302733-new_test.png)
+
 2. アクションメニューの **Record** ボタンをクリックして、テストの記録を開始します。
 3. Select a device ダイアログで、**Virtual Mobile Grid** が選択されていることを確認します。
 4. 以下のいずれかを実行します:
@@ -89,12 +90,8 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 
 5. ドロップダウンメニューから目的の **Device** と **OS Version** を選択します。
 
-![テスト構成](/images/recording-tests/recording-a-vmg-mobile-test/4d9063d-testconfiguration.png)
-
 6. 以下のいずれかの方法でテストするアプリケーションを選択します:
    - **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
-
-   ![新しいテスト](/images/recording-tests/recording-a-vmg-mobile-test/5302733-new_test.png)
 
    - **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
 
@@ -108,9 +105,7 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 Virtual Mobile Grid でテストを実行する場合、テストの開始には約30秒から1分かかる場合があります。これは、VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
 :::
 
-:::info
-**注意:**
-
+:::warning{title="注意"}
 各テストは単一のアプリケーションとのみ対話できます。
 :::
 
@@ -134,6 +129,8 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 10. Setup ステップの **Show Properties** ボタンをクリックします。
 
 ![プロパティ表示](/images/recording-tests/recording-a-vmg-mobile-test/ca97285-showproperties.png)
+
+![テスト構成](/images/recording-tests/recording-a-vmg-mobile-test/4d9063d-testconfiguration.png)
 
 11. Properties ペインで、以下の設定を構成します:
     - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は "untitled test" です。
