@@ -71,11 +71,9 @@ exports.config = {
 };
 ```
 
-> 📘
->
-> グリッド名の設定方法は [グリッド管理](/docs/grid-management) を参照してください。
-
-​
+:::note
+グリッド名の設定方法は [グリッド管理](/docs/grid-management) を参照してください。
+:::
 
 # 構文
 
@@ -85,10 +83,10 @@ exports.config = {
   プロパティ名の書式はCLIとは少し異なり、ハイフン（-）をキャメルケースに置き換えます。\
   例: `--base-url` → `baseUrl`
 
-> 📘
->
-> ひとつのパラメータに複数値を渡したい場合は配列を使用します。\
-> 例: `label: ["a", "b"]`
+:::note
+ひとつのパラメータに複数値を渡したい場合は配列を使用します。\
+例: `label: ["a", "b"]`
+:::
 
 - 設定フック（Config Hooks）: アプリのバックエンド準備や、単一テスト／全テストの前後でパラメータを定義するためのフックです（詳細は後述）。
 
@@ -105,7 +103,7 @@ exports.config = {
 
 以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
 
-```javascript javascript
+```javascript
 exports.config = {
  
   beforeSuite: function (suite) {
@@ -162,20 +160,13 @@ afterSuite 関数内では、その実行でエクスポートされたグロー
 構文: `suite.exportsGlobal.<param_name>`\
 グローバルエクスポートの詳細は[パラメータのエクスポート](/docs/exports-parameters)を参照してください。
 
-<br />
-
 ```javascript
 exports.config = {
-    // Function to be executed before a test starts.
-    async beforeTest(test) {
-        const baseUrl = test.config.baseUrl; // Get the current test base URL.
-        const randomAddress = await getRandomAddress();
-        test.config.baseUrl = `${baseUrl}${randomAddress}`; // Update the test base URL using a manipulation on the existing base URL.
+    afterSuite: function (suite) {
+        console.log("Global export value:", suite.exportsGlobal.<param_name>);
     }
 };
 ```
-
-<br />
 
 # 設定ファイルを使ってテストを実行する
 
