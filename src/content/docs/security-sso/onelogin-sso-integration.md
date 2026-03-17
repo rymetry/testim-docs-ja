@@ -19,9 +19,11 @@ keywords:
 
 OneLogin, Inc.はクラウドベースのIDおよびアクセス管理プロバイダーで、企業や組織に統合アクセス管理プラットフォームを提供しています。TestimはOneLoginと統合されており、OneLoginのユーザーはOneLoginで一度認証すれば、再度認証することなくTestimにアクセスできます。
 
-> 📘 SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+:::note
+SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+:::
 
-:fa-arrow-right: **Testim OneLogin統合をセットアップするには:**
+**Testim OneLogin統合をセットアップするには:**
 
 1. **OneLogin**アカウントにログインします。
 2. **Administration > Applications**に移動します。
