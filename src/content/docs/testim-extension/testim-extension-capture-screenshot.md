@@ -29,7 +29,7 @@ Testim Extensionのスクリーンショットキャプチャ機能を使用す�
 **スクリーンショットをキャプチャして注釈を付けるには:**
 
 1. Webブラウザで、キャプチャしたいWebページに移動し、**Testim Extension**アイコンをクリックします。
-2. Testimにログインしていない場合は、**Login** To **Start**をクリックします。すでにログインしている場合は、ステップ5に進みます。
+2. Testimにログインしていない場合は、**Login To Start**をクリックします。すでにログインしている場合は、ステップ5に進みます。
 3. 開いた新しいタブでログインプロセスを完了し、前のタブに戻ります。
 4. 再度**Testim Extension**アイコンをクリックします。\
    拡張機能メニューが開きます。
@@ -41,7 +41,7 @@ Testim Extensionのスクリーンショットキャプチャ機能を使用す�
 
 ![注釈ツールバー](/images/testim-extension/testim-extension-capture-screenshot/92260ba-annotation_toolbar.PNG)
 
-6. 以下の注釈ツールを使用してスクリーンショットに注釈を付けます(上から下の順):
+6. 以下の注釈ツールを使用してスクリーンショットに注釈を付けます（上から下の順）:
 
 * **矢印を追加** – このオプションを選択してから、クリックしてドラッグして矢印を描画します。これは画面上の何かを指すために使用できます。カラーセレクターを使用して色を変更できます。
 * **テキストを追加** – このオプションを選択してから、画面上の任意の場所をクリックしてテキストボックスを追加します。次に、プレースホルダーテキストを置き換えてテキストを入力します。カラーセレクターを使用して色を変更できます。
@@ -56,13 +56,13 @@ Testim Extensionのスクリーンショットキャプチャ機能を使用す�
 **注釈付きバグをバグトラッカーに送信するには:**
 
 1. Testimをバグトラッカーに接続していることを確認してください。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
-2. スクリーンショットに注釈を付けた後、注釈ツールバーで「Publish」をクリックします。
+2. スクリーンショットに注釈を付けた後、注釈ツールバーで**Publish**をクリックします。
 
 ![Publishボタン](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png)
 
-3. 接続したバグトラッカーシステムに応じて、バグ情報を入力するための異なるフォームが表示されます。以下の説明に基づいてフォームに入力し、「Publish」をクリックします。
+3. 接続したバグトラッカーシステムに応じて、バグ情報を入力するための異なるフォームが表示されます。以下の説明に基づいてフォームに入力し、**Publish**をクリックします。
 
-![3107](/images/testim-extension/testim-extension-capture-screenshot/403ffb7-trelloformwithcallouts.PNG)
+![バグ情報入力フォーム](/images/testim-extension/testim-extension-capture-screenshot/403ffb7-trelloformwithcallouts.PNG)
 
 フォームには以下の要素が含まれます:
 
