@@ -1,7 +1,7 @@
 ---
 title: Testim Extension - 自動テストを作成
-description: Testim自動テスト作成機能を使用すると、Webブラウザから直接Testimビジュアルエディターでテストを素早く記録できます。
-category: Testim Extension
+description: Testim自動テスト作成機能を使用すると、Webブラウザから直接Testim Visual Editorでテストを素早く記録できます。
+category: Testim拡張機能
 order: 17004
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/testim-extension-create-automated-test'
@@ -10,7 +10,7 @@ keywords:
   - 自動テスト作成
   - テスト記録
   - Visual Editor
-  - ベーURL
+  - ベースURL
   - テスト保存
 ---
 
@@ -18,7 +18,7 @@ Testim自動テスト作成機能を使用すると、Webブラウザから直�
 
 ## 自動テストの作成
 
-:fa-arrow-right: **自動テストを作成するには:**
+**自動テストを作成するには:**
 
 1. Webブラウザで、キャプチャしたいWebページに移動し、Testim Extensionアイコンをクリックします。
 2. Testimにログインしていない場合は、「Login To Start」をクリックします。すでにログインしている場合は、ステップ5に進みます。
