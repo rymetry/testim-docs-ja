@@ -32,8 +32,8 @@ TestimテストをPlaywright用に適応されたコードとしてエクスポ�
    ?embedMode=true&exportPuppeteer=true&exportSelenium=true&exportPlaywright=true
    ```
 
-3. テストのコードがコードビューアーに表示されます。**Playwright** タブが選択されていることを確認してください。
+   テストのコードがコードビューアーに表示されます。**Playwright** タブが選択されていることを確認してください。
 
    ![Playwrightコードビューアーに表示されたエクスポート結果](/images/project-user-management/exporting-a-testim-test-as-code-for-playwright/5d19af1-playwright1.png)
 
-4. **Copy code** をクリックして、表示されたコードをコピーします。
+3. **Copy code** をクリックして、表示されたコードをコピーします。

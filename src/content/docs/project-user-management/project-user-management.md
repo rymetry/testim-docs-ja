@@ -23,9 +23,11 @@ keywords:
 **チームメイトを追加するには:**
 
 1. メインナビゲーションで、**Users** アイコン(メインナビゲーションメニュー)をクリックします。
-2. **Project teammates** ページが表示されます。
-3. プロジェクトに招待したい各チームメイトの仕事用メールアドレスを入力します(*スペース*または*Enter*を続けて入力)。
-4. **Invite** をクリックします。
+
+   **Project teammates** ページが表示されます。
+
+2. プロジェクトに招待したい各チームメイトの仕事用メールアドレスを入力します(*スペース*または*Enter*を続けて入力)。
+3. **Invite** をクリックします。
 
 入力したアドレスにプロジェクトへの招待が送信され、**Project teammates** ページのリストに追加されます。まだ招待を受け入れていないユーザーは *Pending* と表示されます。
 
@@ -43,20 +45,22 @@ keywords:
 
 1. メインナビゲーションで、**Users** アイコンをクリックします。
 
-![Usersアイコンを経由して表示されるProject teammates画面](/images/project-user-management/project-user-management/62ec3ab-users.png)
+   ![Usersアイコンを経由して表示されるProject teammates画面](/images/project-user-management/project-user-management/62ec3ab-users.png)
 
-2. **Project teammates** ページが表示されます。
-3. 削除したいチームメイトを1人以上選択します。複数のチームメイトを選択するには **CTRL/CMD + クリック** を使用します。
-4. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「Delete users」を選択することもできます。
+   **Project teammates** ページが表示されます。
 
-![複数のチームメイトを選択して削除オプションを表示する画面](/images/project-user-management/project-user-management/aec7e20-select-delete.png)
+2. 削除したいチームメイトを1人以上選択します。複数のチームメイトを選択するには **CTRL/CMD + クリック** を使用します。
+3. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「Delete users」を選択することもできます。
 
-![右クリックメニューからDelete usersを選択する例](/images/project-user-management/project-user-management/843e879-4a1895b-rightclickdelete.png)
+   ![複数のチームメイトを選択して削除オプションを表示する画面](/images/project-user-management/project-user-management/aec7e20-select-delete.png)
 
-5. **Remove From Project** 確認が表示されます。
-6. **OK** をクリックします。
+   ![右クリックメニューからDelete usersを選択する例](/images/project-user-management/project-user-management/843e879-4a1895b-rightclickdelete.png)
 
-![Remove From Project確認ダイアログ](/images/project-user-management/project-user-management/19e6767-confirmdelete.png)
+   **Remove From Project** 確認が表示されます。
+
+4. **OK** をクリックします。
+
+   ![Remove From Project確認ダイアログ](/images/project-user-management/project-user-management/19e6767-confirmdelete.png)
 
 選択したチームメイトがプロジェクトから削除されます。
 
@@ -68,12 +72,13 @@ keywords:
 
 1. メインナビゲーションで、**Users** アイコンをクリックします。
 
-![Project teammates画面でAdd Project Ownerメニューを選ぶところ](/images/project-user-management/project-user-management/e402149-Testim_446a.png)
+   ![Project teammates画面でAdd Project Ownerメニューを選ぶところ](/images/project-user-management/project-user-management/e402149-Testim_446a.png)
 
-2. **Project teammates** ページが表示されます。
-3. プロジェクトオーナーとして追加したいチームメイトを右クリックし、**Add Project Owner** を選択します。
+   **Project teammates** ページが表示されます。
 
-![右クリックメニューからProject Owner追加を選択](/images/project-user-management/project-user-management/4feb2ce-6d483e0-Screen_Shot_2021-11-28_at_9.13.20.png)
+2. プロジェクトオーナーとして追加したいチームメイトを右クリックし、**Add Project Owner** を選択します。
+
+   ![右クリックメニューからProject Owner追加を選択](/images/project-user-management/project-user-management/4feb2ce-6d483e0-Screen_Shot_2021-11-28_at_9.13.20.png)
 
 チームメイトがプロジェクトオーナーとして追加されます。
 
@@ -81,16 +86,18 @@ keywords:
 
 1. メインナビゲーションで、**Users** アイコンをクリックします。
 
-![Project Ownerが設定された状態のProject teammates画面](/images/project-user-management/project-user-management/08f10f6-Testim_446a.png)
+   ![Project Ownerが設定された状態のProject teammates画面](/images/project-user-management/project-user-management/08f10f6-Testim_446a.png)
 
-2. **Project teammates** ページが表示されます。
-3. プロジェクトオーナーから削除したいチームメイトにカーソルを合わせ、**Remove Project Owner** をクリックします。
+   **Project teammates** ページが表示されます。
 
-![Remove Project Owner操作を行うコンテキストメニュー](/images/project-user-management/project-user-management/4ad504b-cc07442-Screen_Shot_2021-11-28_at_9.14.37.png)
+2. プロジェクトオーナーから削除したいチームメイトにカーソルを合わせ、**Remove Project Owner** をクリックします。
 
-4. **Remove Project Owner** 確認が表示されます。
-5. **Remove** をクリックします。
+   ![Remove Project Owner操作を行うコンテキストメニュー](/images/project-user-management/project-user-management/4ad504b-cc07442-Screen_Shot_2021-11-28_at_9.14.37.png)
 
-![Project Owner削除後の確認メッセージ](/images/project-user-management/project-user-management/c1cc343-Testim_452a.png)
+   **Remove Project Owner** 確認が表示されます。
+
+3. **Remove** をクリックします。
+
+   ![Project Owner削除後の確認メッセージ](/images/project-user-management/project-user-management/c1cc343-Testim_452a.png)
 
 チームメイトがプロジェクトオーナーから削除されます。
