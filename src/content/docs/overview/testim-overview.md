@@ -20,11 +20,7 @@ keywords:
 
 Testimは、コード、コードレス、または両方を組み合わせた方法で、回復力のあるエンドツーエンドテストを最速で作成できるプラットフォームです。
 
-<!-- 原文の "At Testim, we are developers and testers..." 段落は Tricentis より削除依頼を受け意図的に除外。再追加しないこと。 -->
-
-:::info
-料金プランやサブスクリプションプランについては、[https://www.testim.io/pricing/](https://www.testim.io/pricing/) をご覧ください。有料のお客様で、最近の請求書や課金に関するお問い合わせについては、担当のアカウントエグゼクティブにご連絡ください。
-:::
+<!-- 原文の "At Testim, we are developers and testers..." 段落および pricing callout は Tricentis より削除依頼を受け意図的に除外。再追加しないこと。 -->
 
 Testimは、安定したテストの高速作成と、チームが効率的にテストを拡張するのに役立つTestOpsツールを可能にする、フル機能のテスト自動化プラットフォームです。Testimは主に3つのユースケースに対応しています：
 
