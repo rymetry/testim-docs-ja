@@ -111,7 +111,7 @@ keywords:
 
 ![失敗タイプの詳細](/images/insights/reports/9e8477a-Testim_355_r.png)
 
-このペインには、ロケーターが0.75のしきい値を下回り、Testim がそれでも要素を見つけた回数が、ロケーターの総数のうち表示されます。詳細については、[スマートロケーター](/docs/core-concepts#スマートロケーター) を参照してください。
+このペインには、ロケーターが0.75のしきい値を下回り、Testim がそれでも要素を見つけた回数が、ロケーターの総数のうち表示されます。詳細については、[Smart Locators](https://help.testim.io/docs/smart-locators) を参照してください。
 
 ## 改善できる箇所
 
