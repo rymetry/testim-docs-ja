@@ -17,18 +17,18 @@ keywords:
 
 **Settings > CLI** タブでは、コマンドラインインターフェース(CLI)を使用してテストを実行するために必要な基本コードを生成できます。CLIを使用してテストを実行する方法は2つあります:
 
-- 継続的インテグレーション(CI)プラットフォームとテストを統合できます。以下の[CI統合](/docs/cli-settings#section-ci-integration)を参照してください。
-- ローカルシェルを使用できます。以下の[ローカルシェル](/docs/cli-settings#section-local-shell)を参照してください。
+- 継続的インテグレーション(CI)プラットフォームとテストを統合できます。以下の[CI統合](/docs/cli-settings#ci統合)を参照してください。
+- ローカルシェルを使用できます。以下の[ローカルシェル](/docs/cli-settings#ローカルシェル)を参照してください。
 
 CLIの使用方法と利用可能なパラメータの詳細については、[コマンドラインインターフェース(CLI)](/docs/the-command-line-cli)を参照してください。CIとの統合の詳細については、[CI統合](/docs/integrate-testim-to-your-ci)を参照してください。
 
 :::info
-CLIコマンドがブロックされている場合、現在のプランではサポートされていません。有効化する方法については[お問い合わせ](https://www.testim.io/root-cause/contact-us/)ください。
+CLIコマンドがブロックされている場合、現在のプランではサポートされていません。有効化する方法については[こちらからお問い合わせください](https://www.testim.io/root-cause/contact-us/)。
 :::
 
 ## CI統合
 
-TestimのCLIを使用して、テストをCIと統合できます。Testimは、シンプルなシェルコマンドを実行できる主要なCIすべてをサポートしています。
+TestimのCLIを使用して、テストをCIと統合できます。Testimは、シンプルなシェルコマンドを実行できるすべての主要なCIプラットフォームをサポートしています。
 
 **CIのコードを生成するには:**
 

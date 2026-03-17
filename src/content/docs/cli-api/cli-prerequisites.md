@@ -24,4 +24,4 @@ Testimはクラウドベースのアップデートを行うSaaS製品ですが�
 | コンポーネント | 要件 | 備考 |
 |---|---|---|
 | Testim CLI | 最新バージョン | 後方互換性 - 前2バージョンまでサポート |
-| Node.JS | TLS/サポート対象バージョン | 後方互換性 - 前2バージョンまでサポート。TLS/サポート対象バージョンについては [Node.js リリーススケジュール](https://github.com/nodejs/Release/blob/main/README.md)を参照してください |
+| Node.js | TLS/サポート対象バージョン | 後方互換性 - 前2バージョンまでサポート。TLS/サポート対象バージョンについては [Node.js リリーススケジュール](https://github.com/nodejs/Release/blob/main/README.md)を参照してください |
