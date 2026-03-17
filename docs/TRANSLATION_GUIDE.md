@@ -460,6 +460,9 @@ HTMLの`<video>`タグを使用：
      - NG: 「プロフェッショナルプラン」→ OK: 「Professional plan」（英語維持）
      - NG: 「無料ティア」→ OK: 「無料プラン」
      - NG: リンクに「クリックしてください」→ OK: 「ご確認ください」を優先
+     - NG: 「3番目のパーティグリッド」→ OK: 「サードパーティグリッド」
+     - NG: 「Pro プラン」→ OK: 「Professional plan」（英語維持、短縮形も正式名に統一）
+     - NG: 「注：」で `:::note` → OK: 制限事項・注意喚起は「注意」で `:::warning`（タイトルの意味で callout タイプを決める）
 
 ### 5.2 用語統一表
 
@@ -496,6 +499,8 @@ HTMLの`<video>`タグを使用：
 | Professional plan | Professional plan | プラン名は英語のまま |
 | free tier | 無料プラン | 「無料ティア」は不自然 |
 | Pro feature | Pro機能 | 「Pro」は英語のまま |
+| Pro plan | Professional plan | 短縮形も正式名で英語維持 |
+| third party / 3rd party | サードパーティ | カタカナ化。「3番目のパーティ」は不可 |
 
 ### 5.3 特殊記法
 

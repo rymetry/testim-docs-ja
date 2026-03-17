@@ -23,7 +23,7 @@ Webhook 経由でスケジューラーの結果を取得できるようにしま
 
 Webhook 経由でのスケジューラー通知機能は、スケジュール実行通知の設定オプションで URL を Webhook として追加する機能をユーザーに提供します。**通知** セクションには、通知をトリガーする時期（例：「すべての失敗時」）と通知を送信する方法の設定があります。これらの方法の 1 つは Webhook です。Testim の外部では、Webhook を使用して、レポートなどの形式のプロセスをトリガーできます。
 
-### Webhook フォーマット
+## Webhook フォーマット
 
 Webhook は、次の情報を含む JSON ペイロードを送信します：
 - status (failure | success) – 個々のテスト結果ではなく、全体的なスケジュール実行ステータスを指します。
@@ -32,9 +32,9 @@ Webhook は、次の情報を含む JSON ペイロードを送信します：
 - schedulerName
 - executionUrl
 
-> 📘
->
-> Webhook に含まれている情報は変更できません。
+:::note
+Webhook に含まれている情報は変更できません。
+:::
 
 以下は、Webhook JSON ペイロードの例です：
 
@@ -64,10 +64,11 @@ Webhook は、次の情報を含む JSON ペイロードを送信します：
 ```
 
 スケジュール実行の詳細については、[スケジューラー](/docs/scheduler) を参照してください。
+複数ブラウザでのテスト実行については、[複数ブラウザでテストを実行する](/docs/running-tests-on-multiple-browsers) を参照してください。
 
 ## スケジューラー Webhook 設定を構成する
 
-:fa-arrow-right: **スケジューラー Webhook 設定を構成するには：**
+**スケジューラー Webhook 設定を構成するには：**
 
 1. メインナビゲーションで **実行** アイコンをクリックします。
 
@@ -90,12 +91,12 @@ Webhook は、次の情報を含む JSON ペイロードを送信します：
    1. すべての失敗時
    2. 最初の失敗時
    3. すべての実行時
-5. **設定** の下で **Webhook** を選択します。
+5. **Preference** の下で **Webhook** を選択します。
 
 ![通知設定で Webhook を選択する画面](/images/running-tests/schedulers-notification-via-webhook/c10fa5c-webhookfield.png)
 
-5. 表示される **Webhook** フィールドに有効な URL を入力します。これは Testim が実行結果を POST する URL です。
+6. 表示される **Webhook** フィールドに有効な URL を入力します。これは Testim が実行結果を POST する URL です。
 
 ![Webhook URL 入力フィールドのスクリーンショット](/images/running-tests/schedulers-notification-via-webhook/bd200e6-webhook2.png)
 
-6. **保存** をクリックします。
+7. **保存** をクリックします。

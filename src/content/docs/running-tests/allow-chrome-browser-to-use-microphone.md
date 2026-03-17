@@ -26,6 +26,6 @@ keywords:
 testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-args "use-fake-device-for-media-stream"
 ```
 
-> 🚧 注意
->
-> テストの一部としてマイクを有効にすることは、モックシナリオになります
+:::warning{title="注意"}
+テストの一部としてマイクを有効にすることは、モックシナリオになります
+:::
