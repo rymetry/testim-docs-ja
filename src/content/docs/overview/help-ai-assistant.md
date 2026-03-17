@@ -61,11 +61,12 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 
 さらなる支援が必要な場合は、Testim サポートチームの人間の担当者とオンラインでチャットすることができます。サポートチームとのコミュニケーションが開始されると、関連するヘルプデスクチケットが自動的に生成されます。
 
-![サポートボタン](/images/overview/help-ai-assistant/ded1991-support.png)
-
 ### 人的支援を求めるには
 
 1. Testim ヘルプアシスタントウィンドウの上部にある**サポート**ボタンをクリックします。サポートボタンをクリックすると、サポートチームのメンバーとのチャットが開始されます。
+
+![サポートボタン](/images/overview/help-ai-assistant/ded1991-support.png)
+
 2. メッセージを入力します。
 
 ![メッセージの入力](/images/overview/help-ai-assistant/fa5fdbf-image_2.png)
