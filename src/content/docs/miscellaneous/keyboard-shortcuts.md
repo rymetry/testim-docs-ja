@@ -223,7 +223,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="doc:editing-your-tests#copying-a-step">
+    <a href="/docs/editing-your-tests#copying-a-step">
      ステップをコピー
     </a>
    </td>
@@ -239,7 +239,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="doc:editing-your-tests#cutting-a-step">
+    <a href="/docs/editing-your-tests#cutting-a-step">
      ステップをカット
     </a>
    </td>
@@ -255,7 +255,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="doc:editing-your-tests#pasting-a-step">
+    <a href="/docs/editing-your-tests#pasting-a-step">
      ステップを貼り付け
     </a>
    </td>
@@ -271,7 +271,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="doc:editing-your-tests#deleting-steps">
+    <a href="/docs/editing-your-tests#deleting-steps">
      ステップを削除
     </a>
    </td>
@@ -303,7 +303,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="doc:wait-for#wait-for-element-visible">
+    <a href="/docs/wait-for#wait-for-element-visible">
      要素の表示を待機
     </a>
    </td>
@@ -319,7 +319,7 @@ Testimには、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="doc:wait-for#wait-for-element-text">
+    <a href="/docs/wait-for#wait-for-element-text">
      要素テキストを待機
     </a>
    </td>
