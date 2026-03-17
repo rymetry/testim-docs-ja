@@ -31,13 +31,13 @@ CLI でテストを実行する場合、実行コマンドで新しいテスト�
 
 Edit Configuration パネルが表示されます。
 
-3. オプションで以下の設定を編集します:
-
 ![構成編集パネル](/images/recording-tests/setting-the-test-configuration/5192691-edittestconfiguration.png)
 
-- **Step timeout (ms)** - Testim がテストステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
-- **Step delay (ms)** - テストステップの実行間の遅延をミリ秒単位で指定します。
-- **Setup step timeout (ms)** - Testim がテストの Setup ステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
-- **Before/After hooks** - [Hooks](/docs/hooks) で説明されているように、before/after フックを指定します。
+3. オプションで以下の設定を編集します:
 
-1. 完了したら、ペインを閉じるか、Properties ペインに戻ります。
+   - **Step timeout (ms)** - Testim がテストステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
+   - **Step delay (ms)** - テストステップの実行間の遅延をミリ秒単位で指定します。
+   - **Setup step timeout (ms)** - Testim がテストの Setup ステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
+   - **Before/After hooks** - [Hooks](/docs/hooks) で説明されているように、before/after フックを指定します。
+
+4. 完了したら、ペインを閉じるか、Properties ペインに戻ります。
