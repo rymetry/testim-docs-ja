@@ -35,9 +35,7 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 
 - **モバイルテストプロジェクト** - モバイルテストには、Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、Tricentis サポートにお問い合わせください。
 
-:::info
-**注意:**
-
+:::warning{title="注意"}
 各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。たとえば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
 :::
 
@@ -65,6 +63,8 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 
 ## モバイルテストの記録
 
+モバイルデバイスでテストを記録して、後で手動または自動で実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
+
 :::info
 **仮想/物理デバイスでの記録**
 
@@ -74,6 +74,9 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 **モバイルテストを記録するには:**
 
 1. Dashboard 画面から **New Test** ボタンをクリックします。
+
+![新しいテスト](/images/recording-tests/recording-a-vmg-mobile-test/5302733-new_test.png)
+
 2. アクションメニューの **Record** ボタンをクリックして、テストの記録を開始します。
 3. Select a device ダイアログで、**Virtual Mobile Grid** が選択されていることを確認します。
 4. 以下のいずれかを実行します:
@@ -87,12 +90,8 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 
 5. ドロップダウンメニューから目的の **Device** と **OS Version** を選択します。
 
-![テスト構成](/images/recording-tests/recording-a-vmg-mobile-test/4d9063d-testconfiguration.png)
-
 6. 以下のいずれかの方法でテストするアプリケーションを選択します:
    - **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
-
-   ![新しいテスト](/images/recording-tests/recording-a-vmg-mobile-test/5302733-new_test.png)
 
    - **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
 
@@ -106,9 +105,7 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 Virtual Mobile Grid でテストを実行する場合、テストの開始には約30秒から1分かかる場合があります。これは、VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
 :::
 
-:::info
-**注意:**
-
+:::warning{title="注意"}
 各テストは単一のアプリケーションとのみ対話できます。
 :::
 
@@ -132,6 +129,8 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 10. Setup ステップの **Show Properties** ボタンをクリックします。
 
 ![プロパティ表示](/images/recording-tests/recording-a-vmg-mobile-test/ca97285-showproperties.png)
+
+![テスト構成](/images/recording-tests/recording-a-vmg-mobile-test/4d9063d-testconfiguration.png)
 
 11. Properties ペインで、以下の設定を構成します:
     - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は "untitled test" です。
@@ -168,15 +167,15 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 
 テストの記録中または記録後に手動でステップを追加する際に、現在サポートされているアクションは以下のとおりです:
 
-- [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。
-- [Validate element visible](/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。
-- [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定のテキスト値も指定する点で、要素の可視性検証と似ています。
+- [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。Validate email ステップは、これらの電子メールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
+- [Validate element visible](/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
+- [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定の要素の存在に依存するという点で、要素可視性検証と似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 - [Wait for element visible](/docs/wait-for#wait-for-element-visible) - 要素がページに表示されるまで待機するために使用します。
 - [Wait for element text](/docs/wait-for#wait-for-element-text) - テストを続行する前に特定のテキストが表示されることを確認するために使用します。
 - [Sleep](/docs/wait-for#sleep) - ステップ間で一定時間待機できます。
 - [Add extract value step](/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
-- **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。
+- **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
 - [Generate email address](/docs/email-validation#generating-a-temporary-email-address) - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。
 - [Add CLI action](/docs/add-cli-validations-and-actions) - CLI 環境でカスタム Node.js スクリプトを実行します。
 - [Add API action](/docs/api-testing#adding-an-api-action-step) - API 呼び出しから返されるデータを取得する場合に使用します。
