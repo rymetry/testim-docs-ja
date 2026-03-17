@@ -154,6 +154,7 @@ updated: '2025-11-02'
 |--------|---------|
 | `testim-overview` | 「At Testim, we are developers and testers too...」段落（企業紹介文） |
 | `testim-overview` | Pricing callout（料金プラン・サブスクリプション案内） |
+| 全ページ共通 | `https://www.testim.io/pricing/` への誘導リンク（「詳細については、[こちら](https://www.testim.io/pricing/)をご覧ください」等）。「Professional plan でのみ利用できます」の制限案内文は残し、pricing リンク部分のみ削除する |
 
 ### ルール追加・更新の手順
 
