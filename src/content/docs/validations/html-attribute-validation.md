@@ -22,11 +22,11 @@ keywords:
 
 HTML属性検証では、要素の任意のHTML属性の値を検証できます（例：*href*、*src*、*alt*、*title* など）。また、以下に説明する通り「disabled」属性の検証も可能です。
 
-## Adding a Validate HTML attribute step
+## Validate HTML attribute ステップの追加
 
-**To add a Validate HTML attribute step:**
+**Validate HTML attribute を追加するには:**
 
-1. Hover over the **(arrow symbol)** where you want to add the validation.
+1. 検証を追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![ステップ追加矢印](/images/validations/html-attribute-validation/a0c5a27-Testim_233a.png)
 
@@ -94,7 +94,7 @@ Expected value では正規表現も使用できます。例えば、https で�
    **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
    ![検証](/images/validations/html-attribute-validation/a1bbe4a-image_1.png)
 
-6. Click on the **Toggle Breakpoint** button after the validation step to remove the breakpoint.
+6. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
 ## Validate HTML attribute ステップの修正
 

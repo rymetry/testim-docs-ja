@@ -28,7 +28,7 @@ keywords:
 
 **Add custom validation / Add custom action を追加するには:**
 
-1. Hover over the **(arrow symbol)** where you want to add the validation.
+1. 検証を追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![ステップ追加位置の矢印記号](/images/validations/custom-code/b5a63dc-Testim_282a.png)
 
@@ -36,7 +36,7 @@ keywords:
 
 ![アクションオプションメニュー](/images/validations/custom-code/ba79996-Testim_283a_r.png)
 
-2. Click on the "**M**" (Testim predefined steps).\
+2. "**M**"（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![Predefined stepsメニュー](/images/validations/custom-code/dc5c5d1-Testim_270_r.png)

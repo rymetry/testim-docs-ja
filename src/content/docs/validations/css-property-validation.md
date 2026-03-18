@@ -87,9 +87,6 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 
 右側に **Properties** パネルが表示されます。
 
-4. Hover over the **Target element** thumbnail to show options, and click **Reassign**.
-右側に **Properties** パネルが表示されます。
-
 4. **Target element** のサムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。
 
 ![CLI](/images/validations/css-property-validation/d15fcbd-Testim_150a_r.png)

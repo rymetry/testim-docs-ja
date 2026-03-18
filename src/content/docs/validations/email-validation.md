@@ -249,7 +249,7 @@ Testimは独自のメールサービスを通じて専用にメールアドレ�
 
  **一時的メールアドレスを生成するには：**
 
-1. Hover over the **(arrow symbol)** where you want to add the step.
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![ステップ追加](/images/validations/email-validation/856a8f8-Testim_298a.png)
 
@@ -257,7 +257,7 @@ Testimは独自のメールサービスを通じて専用にメールアドレ�
 
 ![アクションオプション](/images/validations/email-validation/fd77ed2-Testim_283a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).  
+2. “**M**”（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/0ab4994-Testim_270_r2.png)
@@ -354,7 +354,7 @@ Validate emailステップを設定する方法は2つあります：
 
 **validate emailステップを作成するには：**
 
-1. Hover over the **(arrow symbol)** where you want to add the step.
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
@@ -362,17 +362,17 @@ Validate emailステップを設定する方法は2つあります：
 
 ![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).  
+2. “**M**”（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
-3. Click on **Validations**.  
+3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
 ![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
-4. Scroll down through the menu and select **Validate email**.
+4. メニューをスクロールして **Validate email** を選択します。
 
 :::note
 メニュー上部の検索ボックスで検索することもできます。
@@ -480,7 +480,7 @@ exportsTest.emailLink = emailLinks[0];
 
  **validate emailステップを作成するには：**
 
-1. Hover over the **(arrow symbol)** where you want to add the step.
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
@@ -488,17 +488,17 @@ exportsTest.emailLink = emailLinks[0];
 
 ![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).  
+2. “**M**”（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
-3. Click on **Validations**.  
+3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
 ![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
-4. Scroll down through the menu and select **Validate email**.
+4. メニューをスクロールして **Validate email** を選択します。
 
 :::note
 メニュー上部の検索ボックスで検索することもできます。

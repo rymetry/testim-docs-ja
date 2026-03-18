@@ -393,7 +393,7 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
  </tbody>
 </table>
 
-# リクエストボディとレスポンスボディのキャプチャ
+## リクエストボディとレスポンスボディのキャプチャ
 
 :::note{title="機能フラグ"}
 この機能を有効にするには、サポートにお問い合わせください。
