@@ -34,7 +34,7 @@ Testimは、テストの一部としてテスト対象アプリケーション(A
 :::
 
 :::note{title="これはPro機能です"}
-この機能は、Professional planのプロジェクトでのみ利用できます。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ### モックネットワークレスポンスでのテスト実行

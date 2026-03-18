@@ -21,7 +21,7 @@ keywords:
 SauceLabs、BrowserStack、LambdaTest、HeadSpin などを含む各種 Grid を使って、テストをリモート実行する方法を説明します。
 
 :::info{title="これは Pro 機能です"}
-この機能は Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細は [こちら](https://www.testim.io/pricing/) を参照してください。
+この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 web テストをリモートで実行するには Selenium Grid が必要です。mobile テストを実行するには HeadSpin が必要です。

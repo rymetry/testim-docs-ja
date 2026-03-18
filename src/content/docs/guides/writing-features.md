@@ -490,7 +490,7 @@ $$
 
 ### 外部リンク
 
-[Testim公式サイト](https://www.testim.io/) や [料金プラン](https://www.testim.io/pricing/) へのリンク
+[Testim公式サイト](https://www.testim.io/) へのリンク
 
 ### 内部リンク
 

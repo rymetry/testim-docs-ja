@@ -21,7 +21,7 @@ keywords:
 各ビューで利用可能なさまざまなフィルターを使用すると、選択したフィルターに応じて変更されたエクスポートファイルが作成されます。
 
 :::note{title="Pro機能"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細については、[料金ページ](https://www.testim.io/pricing/)をご確認ください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 実行画面からテスト結果をエクスポートする

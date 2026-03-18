@@ -21,7 +21,7 @@ Testim の監査ログは、Testim Automate のすべてのイベントを記録
 この機能は有料顧客に自動的に有効化され、プロジェクトオーナーと会社オーナーのみがアクセスできます。
 
 :::note{title="これは PRO 機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細については、[料金ページ](https://www.testim.io/pricing/)をご覧ください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 監査ログの表示

@@ -29,7 +29,7 @@ Testim のライブラリを使用して不安定なテストを簡単に見つ�
 Testim は、これらの不安定なテストを見つけ、そのステータスを決定する簡単な方法を提供します。
 
 :::note{title="これは PRO 機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細については、[料金ページ](https://www.testim.io/pricing/)をご覧ください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 不安定なテストを見つける
