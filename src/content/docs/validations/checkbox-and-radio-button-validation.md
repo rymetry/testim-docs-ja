@@ -44,7 +44,7 @@ keywords:
 
 3. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png)
+![Play Scenario ボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png)
 
 4. もう一度 **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
@@ -69,7 +69,7 @@ keywords:
 
 8. 作成したステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
-![Show Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png)
+![Show Properties アイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png)
 
 右側に **Properties パネル** が開きます。\
 9\. **Expected status** セクションで、検証したいステータスに応じて **Checked**（デフォルト）または **Unchecked** をクリックします。
@@ -88,7 +88,7 @@ keywords:
 2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
 3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
 
-![ステップのShow Propertiesアイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png)
+![ステップの Show Properties アイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png)
 
 右側に **Properties** パネルが表示されます。\
 4\. **Target checkbox/radio button** のサムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。

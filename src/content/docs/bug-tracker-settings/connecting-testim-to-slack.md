@@ -1,5 +1,5 @@
 ---
-title: TestimとSlackの連携
+title: Testim と Slack の連携
 description: Testim から指定した Slack channel に bug の説明を送るための接続手順を説明します。
 category: 統合
 order: 12036
@@ -13,21 +13,21 @@ keywords:
   - Slack channel
   - 接続設定
   - アクセス権限
-  - プロ機能
+  - PRO機能
   - 不具合通知
 ---
 
-## TestimとSlackの連携
+## Testim と Slack の連携
 
-Testim は、指定した Slack channel に bug の説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度と browser、バグのスクリーンショットが含まれます。Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
+Testim は、指定した Slack channel に bug の説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度と browser 、バグのスクリーンショットが含まれます。 Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
 
 開始前に、データの取り扱いについて [プライバシーポリシー](https://www.testim.io/privacy) を確認してください。
 
-:::info{title="プロ機能"}
+:::info{title="PRO機能"}
 この機能は Professional plan 以上で利用できます。
 :::
 
-## TestimをSlackに接続する
+## Testim を Slack に接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. Slack にログイン済みであることを確認し、**Slack** ロゴをクリックします。
@@ -46,4 +46,4 @@ Testim は、指定した Slack channel に bug の説明を公開できます�
 
 ![Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-slack/9781336-slack3.PNG)
 
-[バグ報告](/docs/bug-reporting) の手順に従って、bug capture を設定してください。
+[バグ報告](/docs/bug-reporting) の手順に従って、 bug capture を設定してください。

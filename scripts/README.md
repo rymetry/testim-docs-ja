@@ -182,6 +182,46 @@ node scripts/apply_llm_translations.mjs --section="Overview"
 
 ### 修正・正規化系
 
+#### fix-notation.py
+
+ドキュメント全体の表記揺れを一括修正する Python スクリプト。`verify-notation.py` とセットで使用する。
+
+```bash
+python3 scripts/fix-notation.py
+```
+
+**修正項目**:
+
+| カテゴリ | 修正内容 |
+|---------|---------|
+| カタカナ長音 | パラメータ→パラメーター、ブラウザー→ブラウザ、エディタ→エディター、フォルダ→フォルダー |
+| 漢字統一 | たとえば→例えば |
+| PRO機能 | Pro機能/プロ機能/PRO 機能 → PRO機能 |
+| 英日スペース | 英単語・数字と日本語の間に半角スペース挿入 |
+| 括弧 | 日本語テキスト中の半角 () → 全角（） |
+| レガシー callout | `> 📘`/`> 🚧` → `:::note`/`:::warning` |
+| callout 書式 | `::: note` → `:::note`、英語タイトル翻訳 |
+
+**処理対象**: `src/content/docs/**/*.md`（frontmatter の keywords/title/description 含む）
+
+**安全性**: コードブロック・インラインコード・URL・HTML タグ内は自動スキップ。冪等性あり（再実行しても二重変換されない）。
+
+---
+
+#### verify-notation.py
+
+`fix-notation.py` の修正結果を検証するスクリプト。残存する表記揺れを検出する。
+
+```bash
+python3 scripts/verify-notation.py
+```
+
+**検証項目**: カタカナ長音、たとえば、PRO機能、レガシー callout、callout スペース、英日スペース、半角カッコ
+
+**終了コード**: 問題あり → `1`、問題なし → `0`
+
+---
+
 #### normalize_docs.mjs
 
 ドキュメントの内容と frontmatter を正規化する。

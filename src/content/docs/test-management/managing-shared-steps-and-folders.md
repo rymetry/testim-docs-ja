@@ -21,15 +21,17 @@ keywords:
 
 1. 共有ステップライブラリ画面で、**New Folder**ボタンをクリックします。
 
-![共有ステップライブラリ画面でNew Folderボタンをクリックする画面](/images/test-management/managing-shared-steps-and-folders/2d7c63e-Testim_056c.png)
+![共有ステップライブラリ画面で New Folder ボタンをクリックする画面](/images/test-management/managing-shared-steps-and-folders/2d7c63e-Testim_056c.png)
 
 **New Folder**ウィンドウが開きます。
 
-![共有ステップ用の新しいフォルダー名を入力するNew Folderダイアログ](/images/test-management/managing-shared-steps-and-folders/ad17465-Testim_042_r.png)
+![共有ステップ用の新しいフォルダー名を入力する New Folder ダイアログ](/images/test-management/managing-shared-steps-and-folders/ad17465-Testim_042_r.png)
 
 2. **New name**フィールドに、フォルダーの名前を入力します。
 
-> 📘 新しいフォルダーの名前は、このプロジェクトに既に存在する他のフォルダーと同じにすることはできません。
+:::note
+新しいフォルダーの名前は、このプロジェクトに既に存在する他のフォルダーと同じにすることはできません。
+:::
 
 3. **OK**をクリックします。\
    フォルダーが作成されます。
@@ -43,20 +45,24 @@ keywords:
 
 1. 共有ステップまたはフォルダー名をクリックして選択します。
 
-> 📘 ctrl/cmdキーを押しながら、目的の各共有ステップとフォルダーをクリックすることで、複数の共有ステップやフォルダーを選択できます。\
-> また、キーボードでctrl/cmd + Aキーを押すことで、すべての共有ステップまたはフォルダーを選択できます。
+:::note
+ctrl/cmd キーを押しながら、目的の各共有ステップとフォルダーをクリックすることで、複数の共有ステップやフォルダーを選択できます。\
+また、キーボードで ctrl/cmd + A キーを押すことで、すべての共有ステップまたはフォルダーを選択できます。
+:::
 
 2. **Move to folder**アイコンをクリックします（または、共有ステップまたはフォルダー名を右クリックして、右クリックメニューから**Move to folder**を選択します）。
 
-![Move to folderアイコンをクリックして共有ステップの移動を開始する画面](/images/test-management/managing-shared-steps-and-folders/e69ad9d-Testim_058a.png)
+![Move to folder アイコンをクリックして共有ステップの移動を開始する画面](/images/test-management/managing-shared-steps-and-folders/e69ad9d-Testim_058a.png)
 
 **Move To**ウィンドウが開きます。
 
-![Move Toダイアログで共有ステップの移動先フォルダーを選択する画面](/images/test-management/managing-shared-steps-and-folders/9b7bee5-Testim_059_r.png)
+![Move To ダイアログで共有ステップの移動先フォルダーを選択する画面](/images/test-management/managing-shared-steps-and-folders/9b7bee5-Testim_059_r.png)
 
 3. ターゲットフォルダーをクリックします。
 
-> 📘 ターゲットフォルダーがまだ存在しない場合は、ウィンドウの左下にある**New Folder**アイコンをクリックし、新しいフォルダーの名前を入力して、OKをクリックすることで、今すぐ作成できます。
+:::note
+ターゲットフォルダーがまだ存在しない場合は、ウィンドウの左下にある**New Folder**アイコンをクリックし、新しいフォルダーの名前を入力して、 OK をクリックすることで、今すぐ作成できます。
+:::
 
 4. **Select**をクリックします。\
    アイテムが選択したフォルダーに移動されます。
@@ -71,11 +77,11 @@ keywords:
 1. フォルダー名をクリックして選択します。
 2. **Rename**アイコンをクリックします（または、テストまたはフォルダー名を右クリックして、右クリックメニューから**Rename**を選択します）。
 
-![フォルダーを選択してRenameアイコンをクリックする共有ステップライブラリ画面](/images/test-management/managing-shared-steps-and-folders/af0d84c-Testim_058b.png)
+![フォルダーを選択して Rename アイコンをクリックする共有ステップライブラリ画面](/images/test-management/managing-shared-steps-and-folders/af0d84c-Testim_058b.png)
 
 **Edit Name**ウィンドウが開きます。
 
-![Edit Nameダイアログで共有ステップフォルダーの新しい名前を入力する画面](/images/test-management/managing-shared-steps-and-folders/e01dde7-Testim_060_r.png)
+![Edit Name ダイアログで共有ステップフォルダーの新しい名前を入力する画面](/images/test-management/managing-shared-steps-and-folders/e01dde7-Testim_060_r.png)
 
 3. **New name**フィールドに、ファイルまたはフォルダーの新しい名前を入力します。
 4. **OK**をクリックします。\
@@ -83,20 +89,22 @@ keywords:
 
 ## フォルダーの削除
 
-共有ステップライブラリ画面から、1つまたは複数のフォルダーを削除できます。\
+共有ステップライブラリ画面から、 1 つまたは複数のフォルダーを削除できます。\
 :fa-arrow-right: **フォルダーを削除するには:**
 
 1. フォルダー名をクリックして選択します。
 
-> 📘 ctrl/cmdキーを押しながら、目的の各フォルダーをクリックすることで、複数のフォルダーを選択できます。
+:::note
+ctrl/cmd キーを押しながら、目的の各フォルダーをクリックすることで、複数のフォルダーを選択できます。
+:::
 
 2. **Delete**アイコンをクリックします（または、テストまたはフォルダー名を右クリックして、右クリックメニューから**Delete**を選択します）。
 
-![共有ステップフォルダーのDeleteアイコンをクリックする画面](/images/test-management/managing-shared-steps-and-folders/fd63935-Testim_058c.png)
+![共有ステップフォルダーの Delete アイコンをクリックする画面](/images/test-management/managing-shared-steps-and-folders/fd63935-Testim_058c.png)
 
 **Delete**確認ウィンドウが開きます。
 
-![共有ステップフォルダー削除時のDelete確認ダイアログ](/images/test-management/managing-shared-steps-and-folders/14401e7-Testim_061_r.png)
+![共有ステップフォルダー削除時の Delete 確認ダイアログ](/images/test-management/managing-shared-steps-and-folders/14401e7-Testim_061_r.png)
 
 3. **Delete**をクリックします。\
    フォルダーが削除されます。

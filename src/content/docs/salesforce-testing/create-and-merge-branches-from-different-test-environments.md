@@ -19,16 +19,16 @@ keywords:
   - ブランチ管理
 ---
 
-Testim for Salesforceの各テスト環境は、次の設定で構成されています:
+Testim for Salesforce の各テスト環境は、次の設定で構成されています:
 
-* 関連するSalesforce環境のURL
+* 関連する Salesforce 環境の URL
 * テスト環境が利用可能なブランチ。
 
 ![スクリーンショット](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/5f39d87-branch.png)
 
 別のテスト環境でテストを実行する場合は、新しいブランチを作成し、別のテスト環境を選択する必要があります。
 
-テストは、各ブランチの単一のテスト環境で実行されます。複数のブランチが同じテスト環境にアクセスできます。すべてのブランチは、masterと呼ばれる1つのトランクまたはメインブランチから拡張されます。ブランチでテストを作成した後、それをマスターブランチにマージできます。
+テストは、各ブランチの単一のテスト環境で実行されます。複数のブランチが同じテスト環境にアクセスできます。すべてのブランチは、 master と呼ばれる 1 つのトランクまたはメインブランチから拡張されます。ブランチでテストを作成した後、それをマスターブランチにマージできます。
 
 ## ブランチの作成
 
@@ -36,11 +36,11 @@ Testim for Salesforceの各テスト環境は、次の設定で構成されて�
 
 ![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/8d71d98-newbranch.gif)
 
-1. Testim for Salesforceで、**New Branch**アイコンを選択します。
+1. Testim for Salesforce で、**New Branch**アイコンを選択します。
 2. **New branch name**フィールドに、ブランチの名前を入力します。
-3. **Salesforce environment**フィールドで、ドロップダウンメニューからSalesforce環境を選択します
+3. **Salesforce environment**フィールドで、ドロップダウンメニューから Salesforce 環境を選択します
 4. **OK**をクリックします。\
-   すべてのブランチは、Salesforce > Environmentsの下に表示されます。また、画面上部のブランチ検索ドロップダウンでも利用できます。
+   すべてのブランチは、 Salesforce > Environments の下に表示されます。また、画面上部のブランチ検索ドロップダウンでも利用できます。
 
 ## ブランチのマージ
 
@@ -48,9 +48,9 @@ Testim for Salesforceの各テスト環境は、次の設定で構成されて�
 
 ![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/2c34ad0-mergebranch.gif)
 
-1. Testim for Salesforceで、ブランチ検索ドロップダウンから、マージするブランチを選択します。
+1. Testim for Salesforce で、ブランチ検索ドロップダウンから、マージするブランチを選択します。
 2. マージアイコンをクリックします。\
-   Merge Branchダイアログが表示されます。
+   Merge Branch ダイアログが表示されます。
 3. マージする前に変更を確認します。
 4. マージ後にブランチを削除する場合は、**Delete branch\<branch\_name> upon merge**チェックボックスを選択します。
 5. **Merge**をクリックします。

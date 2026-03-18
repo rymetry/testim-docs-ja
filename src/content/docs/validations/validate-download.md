@@ -1,6 +1,6 @@
 ---
 title: ダウンロード検証
-description: ダウンロードしたファイルの内容を検証するCLIステップ。CSV、PDF、画像などのファイル形式に対応し、ファイルの内容や属性を確認できるPro機能です。
+description: ダウンロードしたファイルの内容を検証する CLI ステップ。 CSV 、 PDF 、画像などのファイル形式に対応し、ファイルの内容や属性を確認できる PRO機能です。
 category: 高度な編集
 order: 5009
 updated: '2025-09-14'
@@ -14,15 +14,15 @@ keywords:
   - Node.js
   - CLIステップ
   - ファイル内容
-  - Pro機能
+  - PRO機能
   - ファイルチェック
 ---
 
 テスト内から Node.js スクリプトを実行してダウンロード内容が期待通りであることを検証する
 
-*Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
+*Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、 MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
-:::note{title="これは Pro 機能です"}
+:::note{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
@@ -33,14 +33,14 @@ keywords:
 :::
 
 * CLI アクションステップを含むテストをローカルで実行するには、次のコマンドを実行する必要があります：**npm i -g @testim/testim-cli && testim connect**（下記参照）。
-* *Validate download* ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
+* *Validate download* ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、 Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
 * PDF ファイルの *Validate download* ステップを含むテストには、さらに 2 つの前提条件があります：
   * **Chrome 67** 以上を使用していること
   * Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
 
-**「Download PDFs」権限を有効にするには：**
+**「 Download PDFs 」権限を有効にするには：**
 
-1. Chrome ブラウザーで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
+1. Chrome ブラウザで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 2. **Settings** をクリックします。
 3. **Privacy and security** をクリックします。
 4. **Site settings** をクリックします。
@@ -48,30 +48,30 @@ keywords:
 6. **PDF documents** をクリックします。
 7. **default behavior** で、**Download PDFs option** が選択されていることを確認します。
 
-![Chrome PDF設定の手順アニメーション](/images/validations/validate-download/ae3ceb4-validatedownload1020.gif)
+![Chrome PDF 設定の手順アニメーション](/images/validations/validate-download/ae3ceb4-validatedownload1020.gif)
 
 **CLI アクションステップを含むテストをローカルで実行するには：**
 
 1. お使いのオペレーティングシステムの **コマンドプロンプト** ウィンドウを開きます。
 2. コマンドプロンプトで次のコマンドを入力します：**npm i -g @testim/testim-cli && testim connect**
 
-![コマンドプロンプトでのCLI接続コマンド入力](/images/validations/validate-download/2ab6f86-Testim_164.png)
+![コマンドプロンプトでの CLI 接続コマンド入力](/images/validations/validate-download/2ab6f86-Testim_164.png)
 
 3. プロセスの実行が完了するまで待ちます。
 
-![CLIコマンド実行中の画面](/images/validations/validate-download/84cc9af-Testim_186.png)
+![CLI コマンド実行中の画面](/images/validations/validate-download/84cc9af-Testim_186.png)
 
 **Chrome ブラウザで PDF ファイルを自動的にダウンロードするように設定するには（開く代わりに）：**
 
-1. Chrome ブラウザーで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
+1. Chrome ブラウザで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 
-![Chromeメニューの表示](/images/validations/validate-download/8ca2d29-Testim_180a.png)
+![Chrome メニューの表示](/images/validations/validate-download/8ca2d29-Testim_180a.png)
 
 **Chrome menu** のオプションが表示されます。
 
 2. **Settings** をクリックします。
 
-![Chrome設定画面](/images/validations/validate-download/46a37c0-Testim_181a_r.png)
+![Chrome 設定画面](/images/validations/validate-download/46a37c0-Testim_181a_r.png)
 
 **Chrome Settings** ページが開きます。
 
@@ -86,16 +86,16 @@ keywords:
 
 6. **Download PDF files instead of automatically opening them in Chrome** トグルが有効（右側）になっていることを確認します。有効でない場合は、クリックして有効にします。
 
-![PDFダウンロード設定のトグル](/images/validations/validate-download/2b6f060-Testim_190a.png)
+![PDF ダウンロード設定のトグル](/images/validations/validate-download/2b6f060-Testim_190a.png)
 
 設定が有効になります。
 
 ## *Validate download* ステップの追加
 
-Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv、jpg、ppt、doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv、image、xls、ppt、doc、pdf。
+Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv 、 jpg 、 ppt 、 doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv 、 image 、 xls 、 ppt 、 doc 、 pdf 。
 
 :::note
-テストの記録中にファイルをダウンロードするリンクをクリックすると、Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順8 に進んでください。
+テストの記録中にファイルをダウンロードするリンクをクリックすると、 Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順 8 に進んでください。
 :::
 
 **Validate download ステップを追加するには:**
@@ -107,12 +107,12 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 2. 「**M**」（Testim 定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![Testim定義済みステップメニュー](/images/validations/validate-download/001f998-Testim_134_r.png)
+![Testim 定義済みステップメニュー](/images/validations/validate-download/001f998-Testim_134_r.png)
 
 3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
-![Validate downloadステップの選択](/images/validations/validate-download/75e9d7f-Testim_156_r.png)
+![Validate download ステップの選択](/images/validations/validate-download/75e9d7f-Testim_156_r.png)
 
 4. メニューをスクロールして **Validate download** を選択します。
 
@@ -122,7 +122,7 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 **Add Step** ウィンドウが表示されます。
 
-![追加されたValidate downloadステップ](/images/validations/validate-download/f9f35d5-Testim_157_r.png)
+![追加された Validate download ステップ](/images/validations/validate-download/f9f35d5-Testim_157_r.png)
 
 5. **Name the new step** フィールドに、このステップの名前を入力します。
 6. このステップをこのテストまたは他のテストで再利用可能な共有ステップにする場合は、**Shared step** の横のチェックボックスを選択したまま（デフォルト）にし、**Select shared step** フォルダーリストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。\
@@ -130,34 +130,34 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 7. **Create Step** をクリックします。\
    **function** エディターが開き、右側に **Properties** パネルが表示されます。
 
-![Validate downloadエディタ画面](/images/validations/validate-download/7d6af62-Testim_158.png)
+![Validate download エディター画面](/images/validations/validate-download/7d6af62-Testim_158.png)
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定: “Run download validation”）。
 9. 次の手順で必要なパラメーターを定義します:\
    a. **Properties** パネルで **+ PARAMS** をクリック\
-   b. **JS parameter** — ドロップダウンを **JS** にし、JavaScript パラメーターを入力\
-   c. **Package parameter** — ドロップダウンを **Package** にし、NPM パッケージ変数を入力
+   b. **JS parameter** — ドロップダウンを **JS** にし、 JavaScript パラメーターを入力\
+   c. **Package parameter** — ドロップダウンを **Package** にし、 NPM パッケージ変数を入力
 
 :::warning
 コード内で npm パッケージを使用する場合は `require` を書かず、ステップのプロパティで PACKAGE パラメーターとして渡してください。
 :::
 
-![パラメータ編集のアニメーション](/images/validations/validate-download/0e1debb-CLI_action_param.gif)
+![パラメーター編集のアニメーション](/images/validations/validate-download/0e1debb-CLI_action_param.gif)
 
   d. 追加した項目は “param” または “packageVariable” といった既定名になります。わかりやすい名前にするには **edit** アイコンから変更してください。
 
-![パラメータ設定画面](/images/validations/validate-download/75ad16c-Testim_159a_r.png)
+![パラメーター設定画面](/images/validations/validate-download/75ad16c-Testim_159a_r.png)
 
 10. **function** エディターにコードを記述します。定義したパラメーターはコード内から参照できます。
 
 :::info
-CLI ステップで非同期コードを実行する場合は、解決させたい Promise を return してください。return しない場合は同期的に扱われ、最終行の実行時点で解決されます（期待した結果に関わらず）。
+CLI ステップで非同期コードを実行する場合は、解決させたい Promise を return してください。 return しない場合は同期的に扱われ、最終行の実行時点で解決されます（期待した結果に関わらず）。
 :::
 
-![npmパッケージのインストールコード例](/images/validations/validate-download/56c3ce0-Testim_160.png)
+![npm パッケージのインストールコード例](/images/validations/validate-download/56c3ce0-Testim_160.png)
 
 :::info
-上の例のコードとパラメーターは、ダウンロードした CSV の行数が 237 行であること、A1 セルに “JURISDICTION NAME” が含まれることを検証します。
+上の例のコードとパラメーターは、ダウンロードした CSV の行数が 237 行であること、 A1 セルに “JURISDICTION NAME” が含まれることを検証します。
 :::
 
 11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: *Mark error & stop*、*Mark error & continue*、*Mark warning & continue*。
@@ -165,20 +165,20 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 13. デフォルトのタイムアウト設定（30000 ミリ秒）を上書きするには、**Properties** パネルの **Override timeout** ボタンをクリックし、希望するタイムアウト値を入力します。
 14. 左上の戻る矢印でエディターに戻ります。
 
-![CSVファイル検証のコード例](/images/validations/validate-download/ae8ec4a-Testim_160a.png)
+![CSV ファイル検証のコード例](/images/validations/validate-download/ae8ec4a-Testim_160a.png)
 
 ステップが作成されます。
 
-![Validate downloadステップの作成完了](/images/validations/validate-download/4c6be7f-Testim_161.png)
+![Validate download ステップの作成完了](/images/validations/validate-download/4c6be7f-Testim_161.png)
 
 ## Validate download の例
 
 ### CSV ファイル
 
 *Validate download* ステップで、行数や内容など CSV の高度な検証ができます。\
-以下の例では、CSV の行数が 237 行で、A1 セルに "JURISDICTION NAME" が含まれることを検証します。
+以下の例では、 CSV の行数が 237 行で、 A1 セルに "JURISDICTION NAME" が含まれることを検証します。
 
-![Excelファイル検証用パッケージのインストール](/images/validations/validate-download/daa4195-Testim_160.png)
+![Excel ファイル検証用パッケージのインストール](/images/validations/validate-download/daa4195-Testim_160.png)
 
 **Example Code:**
 
@@ -266,7 +266,7 @@ return csv({
 *Validate download* ステップで、画像タイプや寸法など画像の高度な検証ができます。\
 以下の例では、ダウンロードした画像ファイルの名前が *yellow-cat-cartoon-style-clipart*、ファイル形式が *jpg*、寸法が *573*（幅）X *600*（高さ）であることをチェックします。
 
-![Excelファイル検証のコード例](/images/validations/validate-download/09c48ec-Testim_167.png)
+![Excel ファイル検証のコード例](/images/validations/validate-download/09c48ec-Testim_167.png)
 
 **Example Code:**
 
@@ -359,9 +359,9 @@ return width === parseInt(expectedWidth) &&
 ### MS Excel ファイル
 
 *Validate download* ステップで、シート数やシート名など Excel の高度な検証ができます。\
-以下の例では、シート数が 3、最初のシート名が “Example Test” であることを検証します。
+以下の例では、シート数が 3 、最初のシート名が “Example Test” であることを検証します。
 
-![PowerPoint検証用パッケージのインストール](/images/validations/validate-download/aef9e2b-Testim_171.png)
+![PowerPoint 検証用パッケージのインストール](/images/validations/validate-download/aef9e2b-Testim_171.png)
 
 **Example code:**
 
@@ -434,9 +434,9 @@ if (sheet !== expectedPageName) {
 ### MS PowerPoint ファイル
 
 *Validate download* ステップで、スライド数や内容など PowerPoint の高度な検証ができます。\
-以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が *9* で、最初のページに *Department*、2ページ目に *Location* という単語が含まれていることをチェックします。
+以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が *9* で、最初のページに *Department*、 2 ページ目に *Location* という単語が含まれていることをチェックします。
 
-![PowerPointファイル検証のコード例](/images/validations/validate-download/4914681-Testim_175.png)
+![PowerPoint ファイル検証のコード例](/images/validations/validate-download/4914681-Testim_175.png)
 
 **Example code:**
 
@@ -521,7 +521,7 @@ expectedText.forEach(item => {
 </table>
 
 :::note
-JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
+JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。 JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
 :::
 
 ### MS Word ファイル
@@ -529,7 +529,7 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 *Validate download* ステップで、内容など Word の高度な検証ができます。\
 以下の例では、ダウンロードした Word に “Item A” というテキストが含まれることを検証します。
 
-![Wordファイル検証のコード例](/images/validations/validate-download/2775ebe-Testim_178.png)
+![Word ファイル検証のコード例](/images/validations/validate-download/2775ebe-Testim_178.png)
 
 **Example code:**
 
@@ -598,7 +598,7 @@ return docxText.includes(expectedText);
 </table>
 
 :::note
-JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
+JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。 JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
 :::
 
 ### PDF ファイル
@@ -609,9 +609,9 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 * **Chrome 67** 以上を使用していること
 * Chrome の PDF 設定で **Download PDF files instead of automatically opening them in Chrome** を有効にしていること
 
-以下の例では、PDF のページ数が 2、テキスト "A Simple PDF file" が含まれることを検証します。
+以下の例では、 PDF のページ数が 2 、テキスト "A Simple PDF file" が含まれることを検証します。
 
-![PDFファイル検証のコード例](/images/validations/validate-download/2ae00b2-Testim_179.png)
+![PDF ファイル検証のコード例](/images/validations/validate-download/2ae00b2-Testim_179.png)
 
 **Example code:**
 

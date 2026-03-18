@@ -1,5 +1,5 @@
 ---
-title: Azure AD SSO統合
+title: Azure AD SSO 統合
 description: >-
   Azure Active DirectoryとTestimをSSO統合する手順を説明します。Azure AD Seamless
   SSOにより、ユーザーは一度の認証でTestimにアクセスできます。
@@ -18,14 +18,14 @@ keywords:
   - アクセス管理
 ---
 
-Azure Active DirectoryはMicrosoftのクラウドベースのIDおよびアクセス管理サービスです。Azure ADシームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
-TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzureで一度認証すれば、再度認証することなくTestimにアクセスできます。
+Azure Active Directory は Microsoft のクラウドベースの ID およびアクセス管理サービスです。 Azure AD シームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
+Testim は Azure AD Seamless SSO と統合されており、 Azure ユーザーは Azure で一度認証すれば、再度認証することなく Testim にアクセスできます。
 
 :::info
-SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、 Testim の CSM に連絡してください。
 :::
 
-**Testim Azure AD統合をセットアップするには:**
+**Testim Azure AD 統合をセットアップするには:**
 
 1. **Azure Portal Admin**アカウントにログインします。
 2. **Enterprise application > New Application > Create your own application**に移動します。
@@ -37,7 +37,7 @@ SSOはプレミアム機能です。デプロイメントでSSO機能が有効�
 5. **Create**をクリックします。
 6. 左側のメニューで**Single sign-on**をクリックします。
 
-![SAMLオプション](/images/security-sso/azure-ad-sso-integration/0db1560-saml.png)
+![SAML オプション](/images/security-sso/azure-ad-sso-integration/0db1560-saml.png)
 
 7. **SAML**をクリックします。
 8. 別のタブで**Testim Automate**を開き、右上隅にあるユーザーアイコンをクリックします。
@@ -45,7 +45,7 @@ SSOはプレミアム機能です。デプロイメントでSSO機能が有効�
 ![ユーザーアイコン](/images/security-sso/azure-ad-sso-integration/713786e-sso1.png)
 
 9. ドロップダウンメニューで、**Settings**をクリックし、**SSO**タブをクリックします。
-10. **Testim Service Provider Details**セクションの下で、**Service Provider Metadata**をクリックしてXMLファイルをダウンロードします。
+10. **Testim Service Provider Details**セクションの下で、**Service Provider Metadata**をクリックして XML ファイルをダウンロードします。
 11. **Azure**タブに戻り、**Upload Metadata File**をクリックします。
 
 ![メタデータファイルアップロードボタン](/images/security-sso/azure-ad-sso-integration/91619bd-uploadmetadatafile.png)
@@ -62,13 +62,13 @@ SSOはプレミアム機能です。デプロイメントでSSO機能が有効�
 
 14. **Azure**タブで、**User Attribute & Claims**に移動します。
 
-![Manage Claim設定](/images/security-sso/azure-ad-sso-integration/c03a031-manageclaim.png)
+![Manage Claim 設定](/images/security-sso/azure-ad-sso-integration/c03a031-manageclaim.png)
 
 15. 以下の詳細で新しいクレームを追加します:
 
 * Email
   * Name: email
-  * Source attribute: user.mail または user.userprincipaname。組織のユーザーの1人をAzure ADに入力し、どのフィールドでメールアドレスが表示されるかを確認することで、どちらを使用するかを確認できます。
+  * Source attribute: user.mail または user.userprincipaname 。組織のユーザーの 1 人を Azure AD に入力し、どのフィールドでメールアドレスが表示されるかを確認することで、どちらを使用するかを確認できます。
 * firstName
   * Name: firstName
   * Source attribute: user.givenname
@@ -77,14 +77,14 @@ SSOはプレミアム機能です。デプロイメントでSSO機能が有効�
 * Source attribute: user.surname
 
 16. ページを閉じて、**SAML Signing Certificate**の下で**Federation Metadata XML**をダウンロードします。
-17. **Testim**タブで、**IDENTITY PROVIDER (IDP) METADATA**の下の**Upload File**をクリックし、Federation Metadata XMLファイルを選択します。
-18. すべてのユーザーがAzureを通じてのみログインでき、通常のTestimログインページを通じてログインできないようにするには、**Enable SSO**をオンにし、**Force users to login via idP**チェックボックスを選択します。
+17. **Testim**タブで、**IDENTITY PROVIDER (IDP) METADATA**の下の**Upload File**をクリックし、 Federation Metadata XML ファイルを選択します。
+18. すべてのユーザーが Azure を通じてのみログインでき、通常の Testim ログインページを通じてログインできないようにするには、**Enable SSO**をオンにし、**Force users to login via idP**チェックボックスを選択します。
 
-![SSO設定画面](/images/security-sso/azure-ad-sso-integration/eda2ac8-ssoconfiguration3.png)
+![SSO 設定画面](/images/security-sso/azure-ad-sso-integration/eda2ac8-ssoconfiguration3.png)
 
 19. **Azure**タブで、**Users and groups**画面に移動し、**Add users/group**をクリックします。
 20. **Azure**のまま、**Properties**画面に移動し、**User assignment required**オプションを必要に応じてオンまたはオフにします。
 
-![Testim Website SSO設定完了](/images/security-sso/azure-ad-sso-integration/8b155e0-testim_web_site_sso.png)
+![Testim Website SSO 設定完了](/images/security-sso/azure-ad-sso-integration/8b155e0-testim_web_site_sso.png)
 
 21. 左側のメニューで**Single sign-on**に戻り、設定をテストします。

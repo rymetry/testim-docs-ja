@@ -1,6 +1,6 @@
 ---
 title: 要素の可視性の検証
-description: 要素が画面上に表示されているかを検証するステップ。ページ上の特定要素の可視性を確認し、期待通りのUI状態であることを保証します。
+description: 要素が画面上に表示されているかを検証するステップ。ページ上の特定要素の可視性を確認し、期待通りの UI 状態であることを保証します。
 category: 高度な編集
 order: 5003
 updated: '2025-09-14'
@@ -40,7 +40,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/validations/validate-element-visible/a703f11-Screen_Shot_2021-04-18_at_6.39.03.png)
+![Play Scenario ボタン](/images/validations/validate-element-visible/a703f11-Screen_Shot_2021-04-18_at_6.39.03.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
    Predefined steps メニューが開きます。
@@ -79,19 +79,19 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 2. **Toggle Breakpoint** をクリックします。
 
-![Toggle Breakpointボタン](/images/validations/validate-element-visible/051ca7e-2.png)
+![Toggle Breakpoint ボタン](/images/validations/validate-element-visible/051ca7e-2.png)
 
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 
-![Play Scenarioボタン](/images/validations/validate-element-visible/73e5022-3.png)
+![Play Scenario ボタン](/images/validations/validate-element-visible/73e5022-3.png)
 
-4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。Predefined steps メニューが開きます。
+4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。 Predefined steps メニューが開きます。
 
-![Predefined stepsメニュー](/images/validations/validate-element-visible/ae3357c-4.png)
+![Predefined steps メニュー](/images/validations/validate-element-visible/ae3357c-4.png)
 
-5. **Validations** をクリックします。Validations セクションが展開されます。
+5. **Validations** をクリックします。 Validations セクションが展開されます。
 
-![Validationsメニュー展開](/images/validations/validate-element-visible/a79a79c-5.png)
+![Validations メニュー展開](/images/validations/validate-element-visible/a79a79c-5.png)
 
 6. メニューをスクロールして **Validate element visible** を選択します。\
 
@@ -114,20 +114,20 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 3. 対象ステップにカーソルを合わせ、**Show Properties**をクリックします。
 
-![Show Propertiesアイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png)
+![Show Properties アイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png)
 
    右側に Properties パネルが表示されます。\
 4\. **Target element** のサムネイルにカーソルを合わせます。
 
-![Testimインターフェース](/images/validations/validate-element-visible/0508833-Testim_009a_r.png)
+![Testim インターフェース](/images/validations/validate-element-visible/0508833-Testim_009a_r.png)
 
    **Target element** のオプションが表示されます。
 
-![Target elementのオプション](/images/validations/validate-element-visible/694c31a-Testim_010_r.png)
+![Target element のオプション](/images/validations/validate-element-visible/694c31a-Testim_010_r.png)
 
 5. **Reassign** をクリックします。
 
-![Reassignボタン](/images/validations/validate-element-visible/db22251-Testim_010a_r.png)
+![Reassign ボタン](/images/validations/validate-element-visible/db22251-Testim_010a_r.png)
 
 6. AUT ウィンドウで新しい要素を特定し、クリックして選択します。\
    選択した要素が Properties パネルの **Target element** に表示されます。
@@ -141,17 +141,17 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 1. 対象ステップで **Show Properties** アイコンをクリックします。
 
-![Show Propertiesアイコン](/images/validations/validate-element-visible/0d76f51-validationgear.png)
+![Show Properties アイコン](/images/validations/validate-element-visible/0d76f51-validationgear.png)
 
    右側に Properties パネルが表示されます。
 
 ![要素変更の通知](/images/validations/validate-element-visible/1953a8a-elementchanged.png)
 
-![モバイルPropertiesパネル](/images/validations/validate-element-visible/fb5abe0-mobileproperties.png)
+![モバイル Properties パネル](/images/validations/validate-element-visible/fb5abe0-mobileproperties.png)
 
 2. **Target element** のサムネイルにカーソルを合わせ、**Reassign** をクリックします。
 
-![Reassignボタン](/images/validations/validate-element-visible/623adff-reassignmobile.png)
+![Reassign ボタン](/images/validations/validate-element-visible/623adff-reassignmobile.png)
 
 4. AUT ウィンドウで新しい要素を特定し、クリックして選択します。
 

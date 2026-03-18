@@ -1,6 +1,6 @@
 ---
-title: GitHub Actions統合
-description: GitHub ActionsでTestimテストを実行する方法について説明します。ワークフロー作成手順とYAMLファイルのサンプルコードを提供します。
+title: GitHub Actions 統合
+description: GitHub Actions で Testim テストを実行する方法について説明します。ワークフロー作成手順と YAML ファイルのサンプルコードを提供します。
 category: 統合
 order: 12012
 updated: '2025-02-10'
@@ -15,9 +15,9 @@ keywords:
   - YAML設定
 ---
 
-![GitHub Actionsの継続的デプロイ図](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)
+![GitHub Actions の継続的デプロイ図](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)
 
-TestimとGitHub Actionsを統合するには、新しいGitHub-Actionワークフローを作成する必要があります:
+Testim と GitHub Actions を統合するには、新しい GitHub-Action ワークフローを作成する必要があります:
 
 以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 

@@ -17,7 +17,7 @@ keywords:
 
 Testim で作成したテストを SauceLabs の browser と mobile device 上で実行できます。
 
-この記事では、Testim 上で SauceLabs を設定する方法と、テストを実行する方法を説明します。
+この記事では、 Testim 上で SauceLabs を設定する方法と、テストを実行する方法を説明します。
 
 ## SauceLabs Grid を追加する
 

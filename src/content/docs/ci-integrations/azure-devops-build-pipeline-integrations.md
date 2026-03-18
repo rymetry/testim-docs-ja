@@ -1,6 +1,6 @@
 ---
-title: Azure DevOpsビルドパイプライン統合
-description: Azure PipelinesでTestimテストを実行する方法について説明します。YAMLファイルの設定手順とサンプルコードを提供します。
+title: Azure DevOps ビルドパイプライン統合
+description: Azure Pipelines で Testim テストを実行する方法について説明します。 YAML ファイルの設定手順とサンプルコードを提供します。
 category: 統合
 order: 12003
 updated: '2025-02-10'
@@ -17,9 +17,9 @@ keywords:
   - テスト自動実行
 ---
 
-![Azure Pipelinesロゴ](/images/ci-integrations/azure-devops-build-pipeline-integrations/5ac760e-Azure-Pipelines.png)
+![Azure Pipelines ロゴ](/images/ci-integrations/azure-devops-build-pipeline-integrations/5ac760e-Azure-Pipelines.png)
 
-[Azure pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/)とTestimを統合するには、YAMLファイルに以下の行を追加する必要があります:
+[Azure pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/)と Testim を統合するには、 YAML ファイルに以下の行を追加する必要があります:
 
 ```yaml
 steps:

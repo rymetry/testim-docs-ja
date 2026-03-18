@@ -1,6 +1,6 @@
 ---
 title: ネットワーク検証の追加
-description: ネットワークリクエストとレスポンスを検証するステップ。APIコール、Ajaxリクエスト、HTTPレスポンスの内容を確認し、通信状態を検証します。
+description: ネットワークリクエストとレスポンスを検証するステップ。 API コール、 Ajax リクエスト、 HTTP レスポンスの内容を確認し、通信状態を検証します。
 category: 高度な編集
 order: 5015
 updated: '2025-09-15'
@@ -55,7 +55,7 @@ keywords:
     url
    </td>
    <td>
-    リクエストURL
+    リクエスト URL
    </td>
   </tr>
   <tr>
@@ -63,7 +63,7 @@ keywords:
     source
    </td>
    <td>
-    URLを生成したページ
+    URL を生成したページ
    </td>
   </tr>
   <tr>
@@ -79,7 +79,7 @@ keywords:
     startTime
    </td>
    <td>
-    リクエストの読み込み開始時刻（Unix時間、ミリ秒）
+    リクエストの読み込み開始時刻（Unix 時間、ミリ秒）
    </td>
   </tr>
   <tr>
@@ -87,7 +87,7 @@ keywords:
     endTime
    </td>
    <td>
-    リクエストの読み込み完了時刻（Unix時間、ミリ秒）
+    リクエストの読み込み完了時刻（Unix 時間、ミリ秒）
    </td>
   </tr>
   <tr>
@@ -137,7 +137,7 @@ keywords:
     blockReason
    </td>
    <td>
-    ブロックされた理由（例: 広告ブロッカー、リクエスト失敗、オリジン、CORSなど）
+    ブロックされた理由（例: 広告ブロッカー、リクエスト失敗、オリジン、 CORS など）
    </td>
   </tr>
   <tr>
@@ -163,7 +163,7 @@ keywords:
     type
    </td>
    <td>
-    レスポンスに含まれるデータの種類（例: XHR, document, Imageなど）（Chromeより）
+    レスポンスに含まれるデータの種類（例: XHR, document, Image など）（Chrome より）
    </td>
   </tr>
   <tr>
@@ -179,7 +179,7 @@ keywords:
     protocol
    </td>
    <td>
-    ネットワークプロトコル（例: h2, http/1.1）（Chromeより）
+    ネットワークプロトコル（例: h2, http/1.1）（Chrome より）
    </td>
   </tr>
  </tbody>
@@ -189,13 +189,13 @@ keywords:
 
 1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
-![テストエディタのナビゲーションステップ選択画面](/images/validations/add-network-validation/a0847f8-Testim_308a.png)
+![テストエディターのナビゲーションステップ選択画面](/images/validations/add-network-validation/a0847f8-Testim_308a.png)
 
 アクションのオプションが表示されます。
 
 ![ネットワーク検証ステップの追加画面](/images/validations/add-network-validation/138a257-Testim_283a_r.png)
 
-2. **「M」**（Testim の事前定義ステップ）をクリックします。\
+2. **「 M 」**（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![追加されたネットワーク検証ステップ](/images/validations/add-network-validation/97d3be5-Testim_270_r2.png)
@@ -203,7 +203,7 @@ keywords:
 3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
-![ネットワーク検証のコードエディタ画面](/images/validations/add-network-validation/82d4e6d-Testim_303_r.png)
+![ネットワーク検証のコードエディター画面](/images/validations/add-network-validation/82d4e6d-Testim_303_r.png)
 
 4. メニューをスクロールして **Add network validation** を選択します。
 
@@ -216,21 +216,21 @@ keywords:
 ![ネットワーク検証のプロパティパネル](/images/validations/add-network-validation/d07a576-Testim_215_r.png)
 
 5. **Name the new step** フィールドに、このステップの（わかりやすい）名前を入力します。
-6. このステップを共有ステップとして他のテストでも再利用できるようにする場合は、**Shared step** の隣のチェックボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダを選択します。共有しない場合は、チェックボックスの選択を解除します。\
+6. このステップを共有ステップとして他のテストでも再利用できるようにする場合は、**Shared step** の隣のチェックボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダーを選択します。共有しない場合は、チェックボックスの選択を解除します。\
    共有ステップの詳細については、[Groups](/docs/groups) を参照してください。
 7. **Create Step** をクリックします。\
    **function** エディターが開き、右側に **Properties** パネルが表示されます。
 
 ![ナビゲーションステップ前の状態](/images/validations/add-network-validation/989f939-Testim_310.png)
 
-8. **Properties** パネルの **Description** フィールドで、必要に応じてこのステップの説明を編集します。デフォルトの説明は「Run network validation」です。
+8. **Properties** パネルの **Description** フィールドで、必要に応じてこのステップの説明を編集します。デフォルトの説明は「 Run network validation 」です。
 9. ステップに必要なパラメーターを次のように定義します:\
    a. **Properties** パネルで **+ PARAMS** ボタンをクリックします。\
-   b. **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
-   c. **HTML parameter**: HTML 要素をパラメーターとして定義する場合は、ドロップダウンリストから **HTML** を選択します。ブラウザーが開き、このステップに関連するページが表示されます。次の操作を行います:
+   b. **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、 JavaScript パラメーターを入力します。\
+   c. **HTML parameter**: HTML 要素をパラメーターとして定義する場合は、ドロップダウンリストから **HTML** を選択します。ブラウザが開き、このステップに関連するページが表示されます。次の操作を行います:
    * **AUT** ウィンドウで、関連する要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** パネルの **Target Element** ボックスに表示されます。選択した要素の表示、置き換え、設定の調整を行う場合は、[Editing Target Element Properties](/docs/editing-target-element-properties) で説明されている手順を使用してください。
 
-  d. 選択した要素には、自動的に「param」または「element」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
+  d. 選択した要素には、自動的に「 param 」または「 element 」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
 
 ![ネットワーク検証ステップの追加位置](/images/validations/add-network-validation/f5a215a-Testim_285a_r.png)
 
@@ -240,7 +240,7 @@ keywords:
 * **When to run step** – ステップを実行する条件を指定します。詳細については、[Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – Testim がテストステップの失敗を登録するデフォルトの時間制限設定を上書きし、異なる時間制限値（ミリ秒）を指定できます。
 
-11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。
+11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、 JavaScript コード内でそれらのパラメーターを参照できます。
 
 :::note
 HTML パラメーター以外の DOM セレクター（jQuery など）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
@@ -248,7 +248,7 @@ HTML パラメーター以外の DOM セレクター（jQuery など）を使用
 
 12. 左上の戻る矢印でエディターに戻ります。
 
-![ネットワーク検証のJavaScriptコード例](/images/validations/add-network-validation/bc0ed89-Testim_311a.png)
+![ネットワーク検証の JavaScript コード例](/images/validations/add-network-validation/bc0ed89-Testim_311a.png)
 
 :::note
 HTML 要素をパラメーターとして定義するために AUT を開いた場合は、**Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
@@ -326,7 +326,7 @@ return validateRequestStatuscode(singleReq)
 
 #### すべてのリクエストが成功したことを検証する
 
-![ネットワーク検証のfilterByUrl関数使用例](/images/validations/add-network-validation/3e299dd-Testim_315.png)
+![ネットワーク検証の filterByUrl 関数使用例](/images/validations/add-network-validation/3e299dd-Testim_315.png)
 
 **Example Code:**
 

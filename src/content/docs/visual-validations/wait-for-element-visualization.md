@@ -1,6 +1,6 @@
 ---
 title: 要素のビジュアライゼーション待機
-description: 要素のビジュアライゼーションが条件を満たすまで待機する方法。Applitoolsとの連携により、ビジュアルマッチングを実現します。
+description: 要素のビジュアライゼーションが条件を満たすまで待機する方法。 Applitools との連携により、ビジュアルマッチングを実現します。
 category: 高度な編集
 order: 5025
 updated: '2025-09-15'
@@ -20,9 +20,9 @@ keywords:
 
 ピクセルレベルでビジュアルの詳細を検証
 
-**要素のビジュアライゼーション待機**ステップを使用すると、テストは次のステップに進む前に特定のイベントが発生するまで一時停止して待機します。要素のビジュアライゼーション待機ステップの場合、Testim は要素がページ上に表示されるまで待機し、その後ビジュアルレベルで要素を検証します。
+**要素のビジュアライゼーション待機**ステップを使用すると、テストは次のステップに進む前に特定のイベントが発生するまで一時停止して待機します。要素のビジュアライゼーション待機ステップの場合、 Testim は要素がページ上に表示されるまで待機し、その後ビジュアルレベルで要素を検証します。
 
-ビジュアル検証および待機ステップを使用すると、ベースラインと現在のテスト実行のビジュアルの差異を高精度で比較できます。比較方法をカスタマイズするためにいくつかのパラメーターを変更できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。
+ビジュアル検証および待機ステップを使用すると、ベースラインと現在のテスト実行のビジュアルの差異を高精度で比較できます。比較方法をカスタマイズするためにいくつかのパラメーターを変更できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、 Applitools Eyes アプリとの連携が必要です。
 
 **ビジュアル検証タイプ：**
 
@@ -30,12 +30,12 @@ keywords:
 - **Viewport Visualization** — ビューポートに対するビジュアル検証。
 - **Full-page Visualization** — ページ全体に対するビジュアル検証。
 
-:::warning{title="Applitoolsライセンスについて"}
-RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしではApplitoolsによって拒否されます。詳細については、Applitoolsの担当者にお問い合わせください。
+:::warning{title="Applitools ライセンスについて"}
+RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしでは Applitools によって拒否されます。詳細については、 Applitools の担当者にお問い合わせください。
 :::
 
-:::note{title="UIとビジュアル検証の違い"}
-このステップは、Testimの「要素が表示されるまで待機」ステップとは異なります。「要素が表示されるまで待機」は要素がDOMに表示されるまで待機しますが、「要素のビジュアライゼーション待機」はその要素がベースラインと視覚的にマッチするまで待機します。
+:::note{title="UI とビジュアル検証の違い"}
+このステップは、 Testim の「要素が表示されるまで待機」ステップとは異なります。「要素が表示されるまで待機」は要素が DOM に表示されるまで待機しますが、「要素のビジュアライゼーション待機」はその要素がベースラインと視覚的にマッチするまで待機します。
 :::
 
 :::info{title="PRO機能"}
@@ -43,7 +43,7 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 :::
 
 :::note{title="テスト設定の変更について"}
-テストの設定を変更すると、ApplitoolsではTestimでは新しいベースラインが作成されますが、Testimでは作成されません。各設定ごとに新しいベースラインが必要な場合は、それぞれ個別のテストを作成する必要があります。
+テストの設定を変更すると、 Applitools では Testim では新しいベースラインが作成されますが、 Testim では作成されません。各設定ごとに新しいベースラインが必要な場合は、それぞれ個別のテストを作成する必要があります。
 :::
 
 ## 要素のビジュアライゼーション待機ステップの追加
@@ -60,21 +60,21 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 
 2. **Toggle breakpoint** ボタンをクリックします。
 
-![Toggle breakpointボタン](/images/visual-validations/wait-for-element-visualization/e46753b-Testim_268_r.png)
+![Toggle breakpoint ボタン](/images/visual-validations/wait-for-element-visualization/e46753b-Testim_268_r.png)
 
 3. **Run test** ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![Run testボタン](/images/visual-validations/wait-for-element-visualization/25f5431-Testim_277b.png)
+![Run test ボタン](/images/visual-validations/wait-for-element-visualization/25f5431-Testim_277b.png)
 
 4. 再び **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![Predefined stepsメニュー](/images/visual-validations/wait-for-element-visualization/2ab8794-Testim_270_r.png)
+![Predefined steps メニュー](/images/visual-validations/wait-for-element-visualization/2ab8794-Testim_270_r.png)
 
 5. **Wait For** をクリックします。\
    **Wait For** メニューが展開されます。
 
-![Wait Forメニュー](/images/visual-validations/wait-for-element-visualization/1140ec5-Testim_278_r.png)
+![Wait For メニュー](/images/visual-validations/wait-for-element-visualization/1140ec5-Testim_278_r.png)
 
 6. メニューをスクロールして **Wait for element visualization** を選択します。
 
@@ -83,7 +83,7 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 :::
 
 7. **AUT** ウィンドウで、待機したい要素を特定し、クリックして選択します。\
-   「Wait for element visualization」ステップが**エディター**に追加され、選択した要素のサムネイルがステップに表示されます。
+   「 Wait for element visualization 」ステップが**エディター**に追加され、選択した要素のサムネイルがステップに表示されます。
 
 ![エディターに追加されたステップ](/images/visual-validations/wait-for-element-visualization/974471e-Testim_279a.png)
 

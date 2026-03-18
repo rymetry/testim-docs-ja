@@ -13,9 +13,9 @@ keywords:
   - Testim for Salesforce
 ---
 
-> 📘 Salesforce ステップ
->
-> これは Salesforce ステップです。
+:::note{title="Salesforce ステップ"}
+これは Salesforce ステップです。
+:::
 
 **レコードを検索して移動**ステップは、レコードのテキスト検索を実行するために使用されます。システムは検索の最初の結果として表示される一致するレコードに移動します。
 
@@ -28,7 +28,7 @@ keywords:
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-findandgotorecord/ef0246d-acme.png)
 5. 検索クエリとして変数を使用したい場合は、**検索対象**フィールドをクリックし、**T** サインをクリックします。\
-   フィールドが **JS** パラメータフィールドに変わります。
+   フィールドが **JS** パラメーターフィールドに変わります。
 6. フィールドに変数名を入力します。
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-findandgotorecord/28f5b3c-companyname.png)

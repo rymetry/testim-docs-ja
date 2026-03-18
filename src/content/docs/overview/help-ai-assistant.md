@@ -1,6 +1,6 @@
 ---
 title: Testim Copilot Help Assistant
-description: Testim Copilot Help Assistantを使用して、サポートへの問い合わせやドキュメントの検索を行う方法
+description: Testim Copilot Help Assistant を使用して、サポートへの問い合わせやドキュメントの検索を行う方法
 category: 概要
 order: 1003
 updated: '2025-09-13'
@@ -40,7 +40,7 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 ![通知画面](/images/overview/help-ai-assistant/1160e83-notice.png)
 
 3. 次のいずれかを実行します。
-   - 「Type a message here」フィールドに質問を入力します。
+   - 「 Type a message here 」フィールドに質問を入力します。
    - または、提案された質問のいずれかをクリックします。
 
 ![質問を入力](/images/overview/help-ai-assistant/8243ad1-image_7.png)
@@ -59,7 +59,7 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 
 ## Testim サポートの人的支援を求める
 
-さらなる支援が必要な場合は、Testim サポートチームの人間の担当者とオンラインでチャットすることができます。サポートチームとのコミュニケーションが開始されると、関連するヘルプデスクチケットが自動的に生成されます。
+さらなる支援が必要な場合は、 Testim サポートチームの人間の担当者とオンラインでチャットすることができます。サポートチームとのコミュニケーションが開始されると、関連するヘルプデスクチケットが自動的に生成されます。
 
 ### 人的支援を求めるには
 

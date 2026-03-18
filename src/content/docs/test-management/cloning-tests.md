@@ -1,6 +1,6 @@
 ---
 title: テストのクローン作成
-description: 現在のプロジェクトまたは他のプロジェクトにテストをクローンします
+description: テストを同じプロジェクトまたは別のプロジェクトにクローンできます。共有ステップや構成の引き継ぎ動作についても説明します。
 category: テスト管理
 order: 9004
 updated: '2025-09-15'
@@ -16,7 +16,7 @@ keywords:
 
 現在のプロジェクトまたは他のプロジェクトにテストをクローンします
 
-同じプロジェクト内でテストをクローンしたり、現在選択されている Company にないプロジェクトであっても、メンバーである別のプロジェクトにクローンしたりできます。新しくクローンされたテストには、説明と名前の両方のプレフィックスとして「Clone of」が追加されます。
+同じプロジェクト内でテストをクローンしたり、現在選択されている Company にないプロジェクトであっても、メンバーである別のプロジェクトにクローンしたりできます。新しくクローンされたテストには、説明と名前の両方のプレフィックスとして「 Clone of 」が追加されます。
 
 ## クローン作成後の動作
 
@@ -68,7 +68,7 @@ keywords:
     <br/>
     • Mobile Web - デフォルトは iPhone 6/7/8 に設定されます
     <br/>
-    • Web および Mobile Native - 構成は「untitled」とラベル付けされ、プロジェクトタイプに適した値になります
+    • Web および Mobile Native - 構成は「 untitled 」とラベル付けされ、プロジェクトタイプに適した値になります
    </td>
    <td>
     テスト構成をクローンします
@@ -181,14 +181,14 @@ keywords:
 1. **Test Library** 画面（Test List > Tests）で、テスト名をクリックして選択します。**CTRL/CMD キー**を押しながら、目的のテストのそれぞれをクリックすることで、複数のテストを選択できます。テストライブラリにフォルダーがない場合は、キーボードで **CTRL/CMD キー + A** を押すことで、すべてのテストを選択することもできます。
 2. 上部の **Clone** ボタンをクリックします。
 
-   ![選択したテストに対して上部のCloneボタンをクリックするTest Library画面](/images/test-management/cloning-tests/0d3e5cb-clonetop.png)
+   ![選択したテストに対して上部の Clone ボタンをクリックする Test Library 画面](/images/test-management/cloning-tests/0d3e5cb-clonetop.png)
 
    テストを右クリックして、**Clone** オプションを選択することもできます。
 
-   ![テストを右クリックしてCloneオプションを選択するコンテキストメニュー](/images/test-management/cloning-tests/7baf98b-clonerightclick.png)
+   ![テストを右クリックして Clone オプションを選択するコンテキストメニュー](/images/test-management/cloning-tests/7baf98b-clonerightclick.png)
 3. **Clone Test** ダイアログで、**Target Project**（ターゲットプロジェクト）を選択します。デフォルトでは現在のプロジェクトが選択されています。
 
-   ![Clone Testダイアログでターゲットプロジェクトを選択する画面](/images/test-management/cloning-tests/cd000a2-image_1.png)
+   ![Clone Test ダイアログでターゲットプロジェクトを選択する画面](/images/test-management/cloning-tests/cd000a2-image_1.png)
 4. **Tests to be cloned** で、クローンしたいテストを選択します。
 5. **Confirm** をクリックします。\
-   テストが選択したプロジェクトにクローンされます。Testim は元のテストの名前を使用してテストに名前を付けます。例: 「Copy of [元のテスト名]」。
+   テストが選択したプロジェクトにクローンされます。 Testim は元のテストの名前を使用してテストに名前を付けます。例: 「 Copy of [元のテスト名]」。

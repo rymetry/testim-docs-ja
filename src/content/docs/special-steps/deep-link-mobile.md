@@ -1,6 +1,6 @@
 ---
 title: ディープリンク（モバイル）
-description: Deep Link ステップで、モバイルアプリ内の特定画面を URL スキームで直接開き、パラメータ付きのディープリンク動作を検証する方法を説明します。
+description: Deep Link ステップで、モバイルアプリ内の特定画面を URL スキームで直接開き、パラメーター付きのディープリンク動作を検証する方法を説明します。
 category: 高度な編集
 order: 5063
 updated: '2025-09-22'
@@ -13,16 +13,16 @@ keywords:
   - モバイルテスト
   - 特殊ステップ
   - VMG
-  - パラメータ
+  - パラメーター
   - Testim
   - 画面遷移
 ---
 
 アプリ内の特定画面を直接開くディープリンクを追加します。
 
-ディープリンクは、アプリを起動して特定の画面を直接開くリンクです（ホーム画面やWebではなく、アプリ内の所定位置へ遷移）。OS標準アプリやブラウザを含む端末内のアプリを開け、パラメータ（例: 電話番号）も渡せます。
+ディープリンクは、アプリを起動して特定の画面を直接開くリンクです（ホーム画面や Web ではなく、アプリ内の所定位置へ遷移）。 OS 標準アプリやブラウザを含む端末内のアプリを開け、パラメーター（例: 電話番号）も渡せます。
 
-**Deep Link** ステップでは、ディープリンクが期待通り動作するかを検証します。指定アプリの指定位置を開き、任意でパラメータを渡します。
+**Deep Link** ステップでは、ディープリンクが期待通り動作するかを検証します。指定アプリの指定位置を開き、任意でパラメーターを渡します。
 
 ディープリンク遷移後に確認ダイアログが表示される場合は、その承認ボタンをタップするステップを記録してください。
 
@@ -54,14 +54,14 @@ keywords:
    1. 構文: `schemeName://parameterValue`
    2. schemeName — 起動するアプリのスキーム名（例: `tel`, `sms`, `mailto`, `facetime` など）
    3. parameter — アプリに渡す値（例: 電話番号）
-   4. 文字列（JS式）なので引用符で囲みます
+   4. 文字列（JS 式）なので引用符で囲みます
    5. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
 
    :::note
-   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。 Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
    :::
 
-   6. ディープリンク値にパラメータを追加することもできます。通常の Testim パラメータを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
+   6. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
 5. **OK** をクリックします。\
    Deep Link ステップが追加されます。
 6. **Properties** で必要に応じて以下を設定します。

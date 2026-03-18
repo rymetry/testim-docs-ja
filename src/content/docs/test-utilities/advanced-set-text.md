@@ -1,6 +1,6 @@
 ---
 title: 動的なテキスト入力
-description: JavaScript式やパラメーターを組み合わせてSet textステップに動的な値を設定する方法を学びます。
+description: JavaScript 式やパラメーターを組み合わせて Set text ステップに動的な値を設定する方法を学びます。
 category: 高度な編集
 order: 5001
 updated: '2025-09-13'
@@ -35,8 +35,8 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 ![200](/images/test-utilities/advanced-set-text/dab7248-Testim_230_r.png)
 
 2. **Text to assign** フィールドの固定テキストを JavaScript 式に置き換えます。\
-   例）一意なユーザー名を設定するには、`'user' + Date.now()` とします。この式は文字列 'user' に、1970-01-01 00:00:00 UTC からの経過ミリ秒を連結します。\
-   **Text to assign** には、文字列（シングルまたはダブルクォート）、JavaScript 式、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を指定できます。
+   例）一意なユーザー名を設定するには、`'user' + Date.now()` とします。この式は文字列 'user' に、 1970-01-01 00:00:00 UTC からの経過ミリ秒を連結します。\
+   **Text to assign** には、文字列（シングルまたはダブルクォート）、 JavaScript 式、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を指定できます。
 
 :::info
 変数や JavaScript 式はクォートで囲まないでください。
@@ -61,7 +61,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 ![200](/images/test-utilities/advanced-set-text/6dc9ca3-Testim_232_r.png)
 
 2. **Text to assign** フィールドの固定テキストを、作成済みのパラメーターに置き換えます。\
-   **Text to assign** には、文字列（シングルまたはダブルクォート）、JavaScript 式、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を指定できます。
+   **Text to assign** には、文字列（シングルまたはダブルクォート）、 JavaScript 式、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を指定できます。
 
 :::info
 変数や JavaScript 式はクォートで囲まないでください。

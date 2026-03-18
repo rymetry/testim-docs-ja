@@ -1,6 +1,6 @@
 ---
 title: テストステータス
-description: どのテストに作業が必要かを管理するためにテストにステータスを追加します
+description: Draft ・ Evaluating ・ Active ・ Quarantine のステータスをテストに付与して、 CI への影響を制御しながら品質管理を行う方法を説明します。
 category: TestOps
 order: 15003
 updated: '2025-11-02'
@@ -20,9 +20,9 @@ keywords:
 
 どのテストに作業が必要かを管理するためにテストにステータスを追加します
 
-テストにステータスを追加して、どのテストに作業が必要かを管理できます。ステータスは、テストライブラリリストおよびテストエディタの列の1つとして表示されます。
+テストにステータスを追加して、どのテストに作業が必要かを管理できます。ステータスは、テストライブラリリストおよびテストエディターの列の 1 つとして表示されます。
 
-デフォルトでは、すべてのステータスは「Draft」とラベル付けされています。この機能を有効にすると、Testim は過去30日間に実行されたテストを自動的に識別し、「Active」とラベル付けします。その他のステータスはすべて以下に説明するように手動で適用されます。
+デフォルトでは、すべてのステータスは「 Draft 」とラベル付けされています。この機能を有効にすると、 Testim は過去 30 日間に実行されたテストを自動的に識別し、「 Active 」とラベル付けします。その他のステータスはすべて以下に説明するように手動で適用されます。
 
 テストのステータスを手動で管理することで、以下のメリットを享受できます:
 
@@ -31,12 +31,12 @@ keywords:
 * CI を失敗させることなく、段階的にテストを CI に追加できます。
 * ステータスでテストをフィルタリングすることで、プロジェクトの可視性が向上します。
 
-:::note{title="これは PRO 機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+:::note{title="これはPRO機能です"}
+この機能は、 Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::warning{title="注意"}
-この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[コマンドライン CLI](/docs/the-command-line-cli#cli-installation)をお読みください。
+この機能を使用するには、 CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。 CLI のインストールについては[コマンドライン CLI](/docs/the-command-line-cli#cli-installation)をお読みください。
 :::
 
 ## テストステータス
@@ -120,7 +120,7 @@ keywords:
  </tbody>
 </table>
 
-\*ベストプラクティスは、テストが準備完了してから CI/スケジューラーに追加することであり、Draft ステータスでは追加しないことです。
+\*ベストプラクティスは、テストが準備完了してから CI/スケジューラーに追加することであり、 Draft ステータスでは追加しないことです。
 
 ## テストステータスの表示
 
@@ -129,9 +129,9 @@ keywords:
 
 ![テストライブラリのテストステータス](/images/testops-management/test-status/ebf3e27-teststatuses1.png)
 
-### テストエディタ
+### テストエディター
 
-![テストエディタのテストステータス](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
+![テストエディターのテストステータス](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
 
 ## ステータスでテストをフィルタリング
 
@@ -140,7 +140,7 @@ keywords:
 1. **Test List --> Tests** に移動します。
 2. **Filter** ボタンをクリックします。
 
-![Filterボタン](/images/testops-management/test-status/615dd27-filter.png)
+![Filter ボタン](/images/testops-management/test-status/615dd27-filter.png)
 
 3. **Filter Test** ペインで、関連するステータスのチェックボックスを選択します。
 
@@ -163,15 +163,15 @@ keywords:
 テストステータスの一部として、不安定なテストを表示し、そのステータスをどのように管理するかを決定するオプションも追加しました。不安定なテストの詳細については、[不安定なテスト](/docs/flaky-tests)をご覧ください。
 :::
 
-**Testim のエディタからテストステータスを変更するには:**
+**Testim のエディターからテストステータスを変更するには:**
 
-1. エディタでテストを開きます。
+1. エディターでテストを開きます。
 2. 左上隅からステータスを変更します。
 
-![エディタでステータス変更](/images/testops-management/test-status/65da094-Screen_Shot_2021-01-10_at_7.41.32.png)
+![エディターでステータス変更](/images/testops-management/test-status/65da094-Screen_Shot_2021-01-10_at_7.41.32.png)
 
 :::note
-ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、3 way マージコンフリクトとして解決する必要があります。詳細については[バージョン管理（ブランチ）](/docs/version-control-branches)をご覧ください。
+ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、 3 way マージコンフリクトとして解決する必要があります。詳細については[バージョン管理（ブランチ）](/docs/version-control-branches)をご覧ください。
 :::
 
 ## テストステータスの使用
@@ -183,7 +183,7 @@ keywords:
 * 実行される **Draft テスト**は以前と同様に表示されます。これらのテストのステータスを Active に変更することをお勧めします。
 * **Evaluating テスト**はテスト実行に表示されますが、失敗した場合、失敗が無視されたことを示すインジケーターが表示されます。
 
-![Evaluatingテストの実行結果](/images/testops-management/test-status/2effede-Screen_Shot_2021-01-28_at_8.56.41.png)
+![Evaluating テストの実行結果](/images/testops-management/test-status/2effede-Screen_Shot_2021-01-28_at_8.56.41.png)
 
 * **Active テスト**は以前と同様に表示されます。
 * **Quarantine テスト**は実行されません（テスト実行には表示されません）。
@@ -193,17 +193,17 @@ keywords:
 スイート実行では、ステータスは以下のように反映されます:
 
 * 実行される **Draft テスト**は以前と同様に表示されます。これらのテストのステータスを Active に変更することをお勧めします。
-* **Evaluating テスト**はテスト実行に表示されますが、失敗した場合、CI を失敗させなかったことを示すインジケーターが表示されます。
+* **Evaluating テスト**はテスト実行に表示されますが、失敗した場合、 CI を失敗させなかったことを示すインジケーターが表示されます。
 * **Active テスト**は以前と同様に表示されます。
 * **Quarantine テスト**は実行されません（スイート実行には隔離インジケーター付きで表示されます）。
 
-![スイート実行時のQuarantineテスト](/images/testops-management/test-status/87013d7-Screen_Shot_2021-01-10_at_8.02.34.png)
+![スイート実行時の Quarantine テスト](/images/testops-management/test-status/87013d7-Screen_Shot_2021-01-10_at_8.02.34.png)
 
 ### CLI 実行
 
-* **失敗した Evaluating テスト**は、CLI 実行サマリーに FAILED-EVALUATING として表示されます。
-* **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/the-command-line-cli#the-common-parameters)をご覧ください。
-* **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
+* **失敗した Evaluating テスト**は、 CLI 実行サマリーに FAILED-EVALUATING として表示されます。
+* **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「 failure-evaluating 」として追加されます。 CLI XML レポートの詳細については、[コマンドライン CLI](/docs/the-command-line-cli#the-common-parameters)をご覧ください。
+* **Quarantine テスト**は、実行 XML に「 Skipped 」フラグ付きで追加されます。
 
 :::note
 Quarantine テストは、隔離を解除する "--run-quarantined-tests" フラグを指定して CLI で実行できます。

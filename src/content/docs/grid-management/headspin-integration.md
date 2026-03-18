@@ -16,7 +16,7 @@ keywords:
 
 Testim で作成した mobile テストを HeadSpin 上で実行できます。
 
-この記事では、Testim 上で HeadSpin Grid を設定する方法を説明します。
+この記事では、 Testim 上で HeadSpin Grid を設定する方法を説明します。
 
 ## HeadSpin Grid を追加する
 
@@ -27,7 +27,7 @@ Testim で作成した mobile テストを HeadSpin 上で実行できます。
 3. 次の field を入力します。
 
 * **Name**: 実行時に使用する Grid 名
-* **API Token**: HeadSpin 側で生成した API Token。詳細は後述します。
+* **API Token**: HeadSpin 側で生成した API Token 。詳細は後述します。
 
 ![HeadSpin Grid の Name と API Token を設定する画面](/images/grid-management/headspin-integration/29244fe-2023-01-29_17-51-47.gif)
 
@@ -42,4 +42,4 @@ Testim で作成した mobile テストを HeadSpin 上で実行できます。
 
 3. **Settings** をクリックします。
 4. **User Settings** の **API Token** section で、既存 token をコピーするか、**+New Token** button をクリックして新規 token を作成します。
-5. API Token をコピーし、Testim の API Token field に貼り付けます。
+5. API Token をコピーし、 Testim の API Token field に貼り付けます。

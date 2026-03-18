@@ -1,6 +1,6 @@
 ---
 title: ビジュアル検証テスト結果
-description: Applitools統合プロジェクトでのビジュアル検証テスト結果の確認方法について説明します。
+description: Applitools 統合プロジェクトでのビジュアル検証テスト結果の確認方法について説明します。
 category: テスト結果
 order: 7007
 updated: '2025-09-22'
@@ -14,16 +14,16 @@ keywords:
   - 実行設定
 ---
 
-プロジェクトがApplitoolsと統合されている場合、テスト結果にはビジュアル検証設定に固有の情報も含まれます。
+プロジェクトが Applitools と統合されている場合、テスト結果にはビジュアル検証設定に固有の情報も含まれます。
 
 ## テスト結果全体
 
-Applitoolsと統合されているプロジェクトでは、すべてのテスト実行で**実行設定**セクションが利用可能になります。
+Applitools と統合されているプロジェクトでは、すべてのテスト実行で**実行設定**セクションが利用可能になります。
 
-**ビジュアル検証パラメータを表示するには:**
+**ビジュアル検証パラメーターを表示するには:**
 
 1. **実行 > テスト実行**に移動し、テスト実行を開きます。
-2. テスト実行の**実行設定**セクションで、**プラス記号**をクリックして、テストが実行されたビジュアル検証パラメータ設定を表示します。詳細については、[ビジュアル検証パラメータ](/docs/pixel-validation-and-pixel-wait-for#visual-validation-parameters)を参照してください。
+2. テスト実行の**実行設定**セクションで、**プラス記号**をクリックして、テストが実行されたビジュアル検証パラメーター設定を表示します。詳細については、[ビジュアル検証パラメーター](/docs/pixel-validation-and-pixel-wait-for#visual-validation-parameters)を参照してください。
 
 ![ビジュアル検証の実行設定セクション](/images/results/visual-validation-test-results/c6419a9-run-config.jpg)
 
@@ -38,6 +38,6 @@ Applitoolsと統合されているプロジェクトでは、すべてのテス�
 **追加環境での実行からのスクリーンショットを表示するには:**
 
 1. テスト結果の**並列表示**ビューに移動します。
-2. 通知をクリックしてApplitoolsを開き、追加環境での実行からのスクリーンショットを表示します。詳細については、[ビジュアル検証](/docs/pixel-validation-and-pixel-wait-for)を参照してください。
+2. 通知をクリックして Applitools を開き、追加環境での実行からのスクリーンショットを表示します。詳細については、[ビジュアル検証](/docs/pixel-validation-and-pixel-wait-for)を参照してください。
 
-![Applitoolsへのリンク通知](/images/results/visual-validation-test-results/690b0f7-applitoolslink.png)
+![Applitools へのリンク通知](/images/results/visual-validation-test-results/690b0f7-applitoolslink.png)

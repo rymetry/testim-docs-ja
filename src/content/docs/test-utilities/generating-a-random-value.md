@@ -23,7 +23,7 @@ keywords:
 テキスト入力用の **Set text** ステップを含むテストを記録した後、そのステップの入力に毎回異なるランダム文字列を使用するよう、テスト構成を編集できます。ランダム文字列は **Generate random value** ステップで生成され、変数に格納されます（このステップは **Set text** ステップの直前に挿入します）。その後、**Set text** ステップで、**Generate random value** ステップで作成した変数を参照するように編集します。\
 ランダムなデータを生成してテストできるようにすることで、追加のテストを作成せずにカバレッジを拡張し、仕様内での失敗ケースの発見、データセットの分散、同じデータを繰り返し使ってしまうことの回避が可能になります。
 
-**「Generate random value」ステップで乱数を生成するには:**
+**「 Generate random value 」ステップで乱数を生成するには:**
 
 1. ステップを追加したい位置の **>（矢印）** にカーソルを合わせます。
 
@@ -41,7 +41,7 @@ keywords:
 3. **Actions** をクリックします。\
    Actions メニューが展開されます。
 
-![Actionsメニュー](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
+![Actions メニュー](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
 
 4. メニューをスクロールし **Generate random value** を選択します。
 
@@ -49,7 +49,7 @@ keywords:
 代替手順: メニュー上部の検索ボックスで **Generate random value** を検索しても構いません。
 :::
 
-「Generate random value」ステップが **Editor** に追加されます。\
+「 Generate random value 」ステップが **Editor** に追加されます。\
 5\. 作成したステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
 ![3848](/images/test-utilities/generating-a-random-value/a6856ec-Testim_225a.png)
@@ -79,7 +79,7 @@ keywords:
 
 テストを実行すると、生成されたランダム値（任意のプレフィックス／サフィックスを含む）が指定した変数に格納されます。
 
-**「Set text」ステップでランダム文字列を入力するよう変更するには:**
+**「 Set text 」ステップでランダム文字列を入力するよう変更するには:**
 
 1. 変更したい **Set text** ステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
@@ -92,7 +92,7 @@ keywords:
 2. **Text to assign** フィールドに、**Generate random value** ステップで使用した **Variable Name** を入力します。
 
 :::info
-**Text to assign** フィールドには、文字列（シングルまたはダブルクォートで囲む）、JavaScript 式、既存の変数、またはその組み合わせ（プラス記号で連結）を指定できます。\
+**Text to assign** フィールドには、文字列（シングルまたはダブルクォートで囲む）、 JavaScript 式、既存の変数、またはその組み合わせ（プラス記号で連結）を指定できます。\
 変数や JavaScript 式はクォートで囲まないでください。
 :::
 

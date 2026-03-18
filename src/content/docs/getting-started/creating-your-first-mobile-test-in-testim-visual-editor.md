@@ -21,10 +21,10 @@ keywords:
   - AUT Viewer
 ---
 
-このチュートリアルでは、[Virtual Mobile Grid](/docs/virtual-mobile-grid)を使ってモバイルアプリのテストを行う方法を学びます。新しいテストの作成、**Virtual Mobile Grid** からのデバイス選択、テスト対象アプリの指定、テストの記録、そして実行までの手順を順番に確認します。テストは[Enhanced mode](/docs/enhanced-mode-mobile) で記録します。Appium ベースのテストと比べて安定性・速度・柔軟性が向上します。このチュートリアルはすべてのオプションを網羅するものではなく、最初から最後までの一連の流れを具体的なシナリオで紹介します。
+このチュートリアルでは、[Virtual Mobile Grid](/docs/virtual-mobile-grid)を使ってモバイルアプリのテストを行う方法を学びます。新しいテストの作成、**Virtual Mobile Grid** からのデバイス選択、テスト対象アプリの指定、テストの記録、そして実行までの手順を順番に確認します。テストは[Enhanced mode](/docs/enhanced-mode-mobile) で記録します。 Appium ベースのテストと比べて安定性・速度・柔軟性が向上します。このチュートリアルはすべてのオプションを網羅するものではなく、最初から最後までの一連の流れを具体的なシナリオで紹介します。
 
 :::warning
-マルチスクリーン端末（フォルダブル端末やフリップ端末など）には現在対応していません。
+マルチスクリーン端末（フォルダーブル端末やフリップ端末など）には現在対応していません。
 :::
 
 ## 始める前に
@@ -34,10 +34,10 @@ keywords:
 - **モバイルテスト用プロジェクト** — モバイルテストは Web テスト用プロジェクトとは別のプロジェクトが必要です。まだモバイルプロジェクトがない場合は Tricentis サポートに連絡してください。
 
 :::info
-各プロジェクトには単一のモバイル OS が割り当てられます。異なる OS でテストを作成・実行するには別のプロジェクトが必要です。たとえば Android 用に作成されたプロジェクトでは iOS 端末向けテストを作成できません。
+各プロジェクトには単一のモバイル OS が割り当てられます。異なる OS でテストを作成・実行するには別のプロジェクトが必要です。例えば Android 用に作成されたプロジェクトでは iOS 端末向けテストを作成できません。
 :::
 
-- **Virtual Mobile Grid（VMG）** — VMG の利用に特別な統合作業は不要です。有償ライセンスには VMG が含まれます。Community ライセンスの場合は、会社オーナーまたはプロジェクトオーナーが無料トライアルに申し込めます。トライアル期間中は複数の仮想デバイス（Android / iOS）が利用可能です。詳細は[Virtual Mobile Grid](/docs/virtual-mobile-grid)を参照してください。
+- **Virtual Mobile Grid（VMG）** — VMG の利用に特別な統合作業は不要です。有償ライセンスには VMG が含まれます。 Community ライセンスの場合は、会社オーナーまたはプロジェクトオーナーが無料トライアルに申し込めます。トライアル期間中は複数の仮想デバイス（Android / iOS）が利用可能です。詳細は[Virtual Mobile Grid](/docs/virtual-mobile-grid)を参照してください。
 
 :::info
 **無料トライアルの制限**
@@ -50,7 +50,7 @@ keywords:
 :::
 
 - **アプリケーション要件** — この入門ガイドでは[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile)のみを使用するため、次の要件を満たす必要があります。
-  - ネイティブアプリ: Android は Java または Kotlin、iOS は Objective-C または Swift
+  - ネイティブアプリ: Android は Java または Kotlin 、 iOS は Objective-C または Swift
   - WebView を含むネイティブアプリ
   - React Native アプリ
   - Flutter アプリ
@@ -63,7 +63,7 @@ keywords:
 Enhanced mode は VMG でのみ利用できます。
 
 - Enhanced mode で記録したテストは VMG の仮想デバイスでのみ実行できます。
-- Appium 互換モードで記録したテストはローカルデバイス、外部グリッド、VMG を含む物理／仮想デバイスで実行できます。
+- Appium 互換モードで記録したテストはローカルデバイス、外部グリッド、 VMG を含む物理／仮想デバイスで実行できます。
 :::
 
 ### モバイルテストを記録する手順
@@ -74,7 +74,7 @@ Enhanced mode は VMG でのみ利用できます。
 4. テスト対象の **Application** を選択します。このチュートリアルでは **Demo App** カテゴリから Wikipedia アプリを使用します。**Demo App** をクリックし、目的のアプリを選択して **Done** をクリックします。
 
 :::info
-VMG でテストを実行する場合、テストの起動には 30 秒から 1 分ほどかかることがあります。VMG がクリーンなデバイスイメージから仮想デバイスを作成し、アプリをインストールするための時間です。
+VMG でテストを実行する場合、テストの起動には 30 秒から 1 分ほどかかることがあります。 VMG がクリーンなデバイスイメージから仮想デバイスを作成し、アプリをインストールするための時間です。
 :::
 
 ![VMG でのテスト起動](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/5d1fd00-gettingstedvid.gif)
@@ -83,7 +83,7 @@ VMG でテストを実行する場合、テストの起動には 30 秒から 1 
 各テストで操作できるアプリは 1 つだけです。
 :::
 
-5. **AUT (Application Under Test) Mirroring Viewer** が表示され、テスト対象のアプリが開きます。Viewer でデバイス画面を確認しながら操作すると、その内容が Testim に記録されます。
+5. **AUT (Application Under Test) Mirroring Viewer** が表示され、テスト対象のアプリが開きます。 Viewer でデバイス画面を確認しながら操作すると、その内容が Testim に記録されます。
 
 ![AUT Viewer](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/8429769-gettingstartedwithoutblue.gif)
 
@@ -93,7 +93,7 @@ VMG でテストを実行する場合、テストの起動には 30 秒から 1 
 
 ![操作対象の強調表示例](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/b4b47b7-image_20.png)
 
-6. 記録を停止するには **Stop Recording** ボタンをクリックするか、Viewer ウィンドウを閉じます。
+6. 記録を停止するには **Stop Recording** ボタンをクリックするか、 Viewer ウィンドウを閉じます。
 
 ![Stop Recording ボタン](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/92a68f8-stoprecording.png)
 
@@ -116,15 +116,15 @@ VMG でテストを実行する場合、テストの起動には 30 秒から 1 
 
 ## モバイルテストの実行
 
-テストを作成したら、Testim が記録済みのステップを自動で再現してくれます。
+テストを作成したら、 Testim が記録済みのステップを自動で再現してくれます。
 
 :::info
 **Enhanced mode での実行**
 
-Enhanced mode で記録したテストは Enhanced mode でのみ実行できます。Appium モードで実行したい場合は、Appium 互換モードで再度記録してください。
+Enhanced mode で記録したテストは Enhanced mode でのみ実行できます。 Appium モードで実行したい場合は、 Appium 互換モードで再度記録してください。
 :::
 
-### テストエディタでモバイルテストを実行する手順
+### テストエディターでモバイルテストを実行する手順
 
 1. **Test List** に移動し、実行したいテストを選択します。
 
@@ -134,7 +134,7 @@ Enhanced mode で記録したテストは Enhanced mode でのみ実行できま
 
    ![Run ボタン](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/2222b37-runtest4.png)
 
-3. テストを実行するデバイスを選択します。Enhanced mode で記録したテストは VMG 上のデバイスでのみ実行できます。
+3. テストを実行するデバイスを選択します。 Enhanced mode で記録したテストは VMG 上のデバイスでのみ実行できます。
 4. **Done** をクリックします。
 
 デバイスビューアが開き、テストのアクションが実行されます。完了するとポップアップにテストの成功可否が表示されます。
@@ -143,7 +143,7 @@ Enhanced mode で記録したテストは Enhanced mode でのみ実行できま
 
 ## テスト結果の確認
 
-Testim エディタ画面ではテスト結果を確認できます。テストの上部に合否（Passed / Failed）が表示され、各ステップ上部のカラーアイコンで結果がわかります。
+Testim エディター画面ではテスト結果を確認できます。テストの上部に合否（Passed / Failed）が表示され、各ステップ上部のカラーアイコンで結果がわかります。
 
 ![テスト結果の概要](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/8103c68-runtest3.png)
 

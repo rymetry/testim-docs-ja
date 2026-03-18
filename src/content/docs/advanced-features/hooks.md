@@ -46,13 +46,13 @@ keywords:
 
 Before/After each step フックは、テスト内の「各ステップの直前・直後」にロジックを挿入したい場合に使用します。
 
-- デバッグ用途: 各ステップの前後でログを出力し、アプリケーションの状態やパラメータの値を確認する。
+- デバッグ用途: 各ステップの前後でログを出力し、アプリケーションの状態やパラメーターの値を確認する。
 - 中間結果の検証: ステップ実行後に変数の値などをチェックし、中間状態が期待どおりか検証する。
 - ステップ間で共有するセットアップ: 複数ステップで共通して必要な前処理をまとめ、重複したロジックを減らす。
 - 進捗のモニタリング: 各ステップの結果を計測・記録し、テストの進行状況を監視する。
 
 :::note
-関連ステップが条件でスキップされる設定でも、Before/After step フックは実行されます。
+関連ステップが条件でスキップされる設定でも、 Before/After step フックは実行されます。
 :::
 
 ## フックの作成
@@ -67,7 +67,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
 フックのコピー／切り取り＆貼り付けはできません。
 :::
 
-上記の3つの方法（プロパティパネル／構成リスト／既定構成）から、どの種類のフックを設定できるかを表にまとめると次のとおりです。
+上記の 3 つの方法（プロパティパネル／構成リスト／既定構成）から、どの種類のフックを設定できるかを表にまとめると次のとおりです。
 
 <table class="md-table md-table-4cols">
  <thead>
@@ -147,7 +147,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
     V
    </td>
    <td style="text-align: left;">
-    エディタ画面には表示されません
+    エディター画面には表示されません
    </td>
   </tr>
   <tr>
@@ -160,7 +160,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
     V
    </td>
    <td style="text-align: left;">
-    エディタ画面には表示されません
+    エディター画面には表示されません
    </td>
   </tr>
  </tbody>
@@ -287,11 +287,11 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c475584-defaultconfig.gif)
 
-## Test Configuration Hooks の実行パラメータ
+## Test Configuration Hooks の実行パラメーター
 
-一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメータが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
+一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメーターが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
 
-- **After each step handler parameters** – After each step フックで利用できるオブジェクトとパラメータ:
+- **After each step handler parameters** – After each step フックで利用できるオブジェクトとパラメーター:
   - `_stepData`
     - `testName` – テスト名
     - `name` – ステップ名
@@ -307,7 +307,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
     - `failureReason` – 失敗理由（失敗時）
     - `errorType` – エラータイプ（エラーがある場合）
 
-- **After test handler parameters** – After test フックで利用できるオブジェクトとパラメータ:
+- **After test handler parameters** – After test フックで利用できるオブジェクトとパラメーター:
   - `_stepData`
     - `testName` – テスト名
   - `_stepInternalData`
@@ -321,7 +321,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ## 設定ファイル（Config File）でフックを作成する
 
-Config File は、テスト／テストスイートの実行に必要なパラメータと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
+Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
 Config File で設定できるフックタイプは次のとおりです。
 
 - **Before test** – テスト実行前に実行
@@ -332,19 +332,19 @@ Config File で設定できるフックタイプは次のとおりです。
 Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。
 
 - Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
-- フック経由で Config file パラメータを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
+- フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
 ## フックの可視化（Hooks Visualizations）
 
-Hooks を含むテストを実行すると、エディタ上でさまざまなビジュアル表示が行われます。
+Hooks を含むテストを実行すると、エディター上でさまざまなビジュアル表示が行われます。
 
 :::note
-Turbo Mode でテストを実行している場合、不要なデータ保存を避けるためフックの表示は制限されます。Turbo Mode では、フックが可視化されるのは失敗した実行のみです。
+Turbo Mode でテストを実行している場合、不要なデータ保存を避けるためフックの表示は制限されます。 Turbo Mode では、フックが可視化されるのは失敗した実行のみです。
 :::
 
 ## Before/After each step フックの可視化
 
-Before/After each step フックが設定されているステップには、実行後にステップ上へ「Hook」ボタンが表示されます（ステップにカーソルを合わせたときに表示）。
+Before/After each step フックが設定されているステップには、実行後にステップ上へ「 Hook 」ボタンが表示されます（ステップにカーソルを合わせたときに表示）。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/1946c2e-2023-01-08_19-27-53.png)
 
@@ -356,7 +356,7 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 再度 Hook ボタンをクリックすると、フック表示を閉じることができます。
 :::
 
-複数のステップに対してフックをまとめて確認したい場合は、対象ステップを複数選択し、エディタツールバーの **Hook** ボタンをクリックします。
+複数のステップに対してフックをまとめて確認したい場合は、対象ステップを複数選択し、エディターツールバーの **Hook** ボタンをクリックします。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/a8cac90-2023-01-10_11-58-24.png)
 
@@ -365,7 +365,7 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/4be982c-2023-01-09_16-20-49.png)
 
 :::note
-共有グループをフックとして使用している場合、Before/After each step フックはグループ単位ではなく「グループ内部のステップ」に対して表示されます。
+共有グループをフックとして使用している場合、 Before/After each step フックはグループ単位ではなく「グループ内部のステップ」に対して表示されます。
 :::
 
 テストステップとフックステップの関係は、円と点線の矢印で示されます。これにより、どのフックがどのステップの前後に実行されたかが視覚的に分かります。
@@ -376,12 +376,12 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 
 :::note
 フックステップ自体はビュー専用で、直接編集することはできません。ただし、通常の共有ステップと同様に、別のテストに追加してから編集することは可能です。  
-また、Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、Baseline（基準画像）は表示されず、結果側のみが表示されます。
+また、 Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、 Baseline（基準画像）は表示されず、結果側のみが表示されます。
 :::
 
 ## Before/After test フックの可視化
 
-Before/After test フックはテストごとに 1 回、テストの開始前／終了後に実行されます。実行後、最初のステップ（Setup ステップ）にカーソルを合わせると「Hook」ボタンが表示されます。
+Before/After test フックはテストごとに 1 回、テストの開始前／終了後に実行されます。実行後、最初のステップ（Setup ステップ）にカーソルを合わせると「 Hook 」ボタンが表示されます。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/26263ab-2023-01-09_14-19-57.png)
 
@@ -393,11 +393,11 @@ Hook ボタンをクリックすると、テスト前後に実行された共有
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/2be214f-hookscallouts2.png)
 
-フックステップは、フックアイコン付きのグレーのボックスとして太い枠線で表示されます。ダブルクリックすると詳細を確認でき、右上の数字はその共有ステップを使用しているテスト数を示します。Setup ステップの右側に矢印が表示されている場合は After test フックも存在し、矢印をクリックするとテスト末尾のフック表示に切り替わります。
+フックステップは、フックアイコン付きのグレーのボックスとして太い枠線で表示されます。ダブルクリックすると詳細を確認でき、右上の数字はその共有ステップを使用しているテスト数を示します。 Setup ステップの右側に矢印が表示されている場合は After test フックも存在し、矢印をクリックするとテスト末尾のフック表示に切り替わります。
 
 :::note
 フックステップ自体はその場で編集できませんが、別のテストに追加して共有ステップとして編集することは可能です。  
-Hook ステップのスクリーンショットをサイドバイサイド表示した場合、Baseline 側は表示されず、結果側のみ表示されます。
+Hook ステップのスクリーンショットをサイドバイサイド表示した場合、 Baseline 側は表示されず、結果側のみ表示されます。
 :::
 
 ## 成功／失敗条件により実行されなかったフックの確認
@@ -406,7 +406,7 @@ Hook ステップのスクリーンショットをサイドバイサイド表示
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/b8ecffe-2023-01-10_13-37-28.png)
 
-実行されなかったフックステップには、青い「info」アイコンが付き、関連する接続矢印も青で表示されます。
+実行されなかったフックステップには、青い「 info 」アイコンが付き、関連する接続矢印も青で表示されます。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/b53a405-2023-01-10_13-43-21.png)
 
@@ -424,7 +424,7 @@ Hook ボタンをクリックすると、該当するフックステップが表
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/da8c532-2023-01-10_12-24-18.png)
 
-グループ内にあるフックステップのエラーでも、1クリックで直接そのエラー箇所まで辿ることができます。  
+グループ内にあるフックステップのエラーでも、 1 クリックで直接そのエラー箇所まで辿ることができます。  
 **エラー箇所を直接表示するには:**
 
 1. **See Error** リンクをクリックします。

@@ -21,7 +21,7 @@ keywords:
 
 Custom capabilities を使用すると、利用可能なすべての Grid に対して幅広い advanced test parameter を追加できます。これらは JSON object の key-value pair として記述します。
 
-たとえば、device の system language や time zone を次のように指定できます。
+例えば、 device の system language や time zone を次のように指定できます。
 
 ```json
 {
@@ -30,7 +30,7 @@ Custom capabilities を使用すると、利用可能なすべての Grid に対
 }
 ```
 
-この例では、system language を English、time zone を London にして test automation session を開始するよう driver へ指示しています。
+この例では、 system language を English 、 time zone を London にして test automation session を開始するよう driver へ指示しています。
 
 ## 利用可能な capabilities
 
@@ -47,8 +47,8 @@ Testim の test configuration で既に定義されている一部 capability �
 すべての Custom capabilities は **Runs** page の **Custom capabilities** で作成および保存されます。新しい Custom capability を作成するには、次の手順に従います。
 
 1. **Custom capabilities** に移動し、**+** を選択します。
-2. Monaco Code Editor で、テストへ追加したい capability 名の入力を開始します。editor は利用可能な key を自動提案して補完します。
-3. key を選択し、value を定義します。
+2. Monaco Code Editor で、テストへ追加したい capability 名の入力を開始します。 editor は利用可能な key を自動提案して補完します。
+3. key を選択し、 value を定義します。
 4. **Save** を選択します。
 5. Custom capability に名前を付けます。
 
@@ -64,7 +64,7 @@ Custom capabilities を作成したら、次の手順でテストに追加しま
 
 ## CLI で Custom capabilities を使う
 
-command line interface (CLI) では、Custom capabilities 付きでテストを実行できます。次の 2 つの parameter のいずれかを使用します。
+command line interface (CLI) では、 Custom capabilities 付きでテストを実行できます。次の 2 つの parameter のいずれかを使用します。
 
 - `--custom-capabilities-name`: Testim 上で事前に作成した Custom capability を追加します。
 - `--custom-capabilities-file`: local で JSON file として作成した Custom capability を追加します。

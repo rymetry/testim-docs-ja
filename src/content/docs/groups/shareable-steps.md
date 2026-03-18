@@ -213,10 +213,10 @@ keywords:
 
 1. 共有可能な通常ステップで **Show Properties** をクリックします。
 
-   ![Show Propertiesボタン](/images/groups/shareable-steps/d887de9-showproperties.png)
+   ![Show Properties ボタン](/images/groups/shareable-steps/d887de9-showproperties.png)
 2. Properties ペインで **Shared Step** リンクをクリックします。
 
-   ![Shared Stepリンク](/images/groups/shareable-steps/54d39fb-shaedsteplink.png)
+   ![Shared Step リンク](/images/groups/shareable-steps/54d39fb-shaedsteplink.png)
 
 ## 共有ステップの再利用
 

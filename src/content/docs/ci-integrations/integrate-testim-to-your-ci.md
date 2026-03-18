@@ -1,6 +1,6 @@
 ---
-title: TestimをCIに統合する
-description: Testim CLIを使用してCI環境にテストを統合する方法について説明します。テストスイートの実行追跡とCI固有の統合ガイドのリンクを提供します。
+title: Testim を CI に統合する
+description: Testim CLI を使用して CI 環境にテストを統合する方法について説明します。テストスイートの実行追跡と CI 固有の統合ガイドのリンクを提供します。
 category: 統合
 order: 12002
 updated: '2025-02-21'
@@ -20,24 +20,24 @@ keywords:
 
 ## 仕組み
 
-テストをCIに統合するために、[Testim CLI](/docs/the-command-line-cli)を構築しました。npmを使用して簡単にインストールでき、これを使用することで、単純なシェルコマンドを実行できる主要なCIすべてに統合できます。
+テストを CI に統合するために、[Testim CLI](/docs/the-command-line-cli)を構築しました。 npm を使用して簡単にインストールでき、これを使用することで、単純なシェルコマンドを実行できる主要な CI すべてに統合できます。
 
 ## すべてのテストスイート実行を確認する
 
 どのビルドが成功または失敗したかを簡単に追跡し、ワンクリックで関連するテスト結果を開いて、失敗の理由をより深く理解できます。\
 また、テスト結果の履歴を全体的に把握できるチャートも追加しました。これは、関連する期間に応じてフィルタリングすることもできます:
 
-![テストスイート実行履歴とチャートを表示するTestim画面](/images/ci-integrations/integrate-testim-to-your-ci/eac37a2-Screen_Shot_2021-02-21_at_10.21.49.png)
+![テストスイート実行履歴とチャートを表示する Testim 画面](/images/ci-integrations/integrate-testim-to-your-ci/eac37a2-Screen_Shot_2021-02-21_at_10.21.49.png)
 
 ## 今すぐ始める
 
-1. Settings --> CLI --> CIに移動します
-2. ドロップダウンリストからCIプラットフォームを選択します
+1. Settings --> CLI --> CI に移動します
+2. ドロップダウンリストから CI プラットフォームを選択します
 3. 生成されたコマンドをコピーします
 
-![CLI設定画面でCIプラットフォームを選択しコマンドを生成する様子](/images/ci-integrations/integrate-testim-to-your-ci/78fd262-Feb-21-2021_10-25-31.gif)
+![CLI 設定画面で CI プラットフォームを選択しコマンドを生成する様子](/images/ci-integrations/integrate-testim-to-your-ci/78fd262-Feb-21-2021_10-25-31.gif)
 
-**特定のCIへの統合に関するガイドのリスト:**
+**特定の CI への統合に関するガイドのリスト:**
 
 - [Azure Pipeline Integration](/docs/azure-devops-build-pipeline-integrations)
 - [Bamboo integration](/docs/bamboo-integration)

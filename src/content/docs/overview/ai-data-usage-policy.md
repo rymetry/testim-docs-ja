@@ -1,6 +1,6 @@
 ---
-title: AIデータ使用ポリシー
-description: Testimにおける生成AIの使用とデータプライバシーに関するポリシー
+title: AI データ使用ポリシー
+description: Testim における生成 AI の使用とデータプライバシーに関するポリシー
 category: 概要
 order: 1005
 updated: '2025-10-13'
@@ -18,9 +18,9 @@ keywords:
   - 利用規約
 ---
 
-Testim AI ソリューションは、Microsoft Azure OpenAI Service の力を Testim 製品と統合しています。Microsoft は、AI サービスに対して企業レベルのデータプライバシーとデータセキュリティのコンプライアンスを提供します。また、多管轄 AI コンプライアンスプログラムを維持しています。Copilot は、データのプライバシーを損なうことなく、テストにおけるユーザーの生産性を向上させ、高品質なソフトウェアの提供を加速するように設計されています。
+Testim AI ソリューションは、 Microsoft Azure OpenAI Service の力を Testim 製品と統合しています。 Microsoft は、 AI サービスに対して企業レベルのデータプライバシーとデータセキュリティのコンプライアンスを提供します。また、多管轄 AI コンプライアンスプログラムを維持しています。 Copilot は、データのプライバシーを損なうことなく、テストにおけるユーザーの生産性を向上させ、高品質なソフトウェアの提供を加速するように設計されています。
 
-Tricentis は、製品における AI の責任ある信頼できる使用を確保することに注力しています。私たちは、透明性、プライバシーの遵守、人間の制御、公正な適用、および説明責任を含む、経済協力開発機構（OECD）の AI 原則に導かれてきました。さらに、Azure OpenAI Service の行動規範を誠実に遵守しています。
+Tricentis は、製品における AI の責任ある信頼できる使用を確保することに注力しています。私たちは、透明性、プライバシーの遵守、人間の制御、公正な適用、および説明責任を含む、経済協力開発機構（OECD）の AI 原則に導かれてきました。さらに、 Azure OpenAI Service の行動規範を誠実に遵守しています。
 
 ## 影響を受けるコンポーネント
 
@@ -30,11 +30,11 @@ Testim は以下の機能を提供しています。
 
 - [Testim Copilot コーディングアシスタント](/docs/coding-assistant) - カスタム JS コードの記述を含むテストステップの一部である JS コードの記述、理解、または修正を支援します。
 
-- [Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce) - 生成 AI 技術と高度な Salesforce 事前構築済みステップを使用して、Salesforce 環境でテストを作成および実行します。
+- [Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce) - 生成 AI 技術と高度な Salesforce 事前構築済みステップを使用して、 Salesforce 環境でテストを作成および実行します。
 
 ## 顧客データの使用
 
-顧客データは Microsoft Azure OpenAI Service モデルのトレーニングには使用されません。Microsoft は、意味のある人間の監視を提供し、Azure OpenAI Service の悪用的な使用または出力を監視および防止するために、入力および出力コンテンツを一時的に保存します。Tricentis は、顧客が AI ソリューションをどのように使用しているかに関する顧客のフィードバックやデータを含む、入力および出力コンテンツを使用および分析します。この情報は、ベンチマーク情報の提供、AI ソリューションの改善、および新しい機能、製品、サービスの開発に使用されます。さらに、Tricentis は、AI ソリューションの悪用的な使用または出力を監視および防止するために意味のある人間の監視を提供します。
+顧客データは Microsoft Azure OpenAI Service モデルのトレーニングには使用されません。 Microsoft は、意味のある人間の監視を提供し、 Azure OpenAI Service の悪用的な使用または出力を監視および防止するために、入力および出力コンテンツを一時的に保存します。 Tricentis は、顧客が AI ソリューションをどのように使用しているかに関する顧客のフィードバックやデータを含む、入力および出力コンテンツを使用および分析します。この情報は、ベンチマーク情報の提供、 AI ソリューションの改善、および新しい機能、製品、サービスの開発に使用されます。さらに、 Tricentis は、 AI ソリューションの悪用的な使用または出力を監視および防止するために意味のある人間の監視を提供します。
 
 ## データ保持
 
@@ -42,9 +42,9 @@ Testim は以下の機能を提供しています。
 
 ## データ処理
 
-ユーザープロンプトは、チャットセッションにのみ使用され、モデルトレーニングの目的やその他の目的には使用されません。追加の特殊なコンテキストがユーザープロンプトに追加され、API を通じて LLM に送信されます。
+ユーザープロンプトは、チャットセッションにのみ使用され、モデルトレーニングの目的やその他の目的には使用されません。追加の特殊なコンテキストがユーザープロンプトに追加され、 API を通じて LLM に送信されます。
 
-[データ処理補遺](https://www.tricentis.com/legal-information/data-processing-addendum)は、Copilot ソリューションを含むすべての Tricentis 製品およびサービスに適用されます。Tricentis は、グローバルなデータ保護法に従ってデータを処理および転送することに取り組んでいます。
+[データ処理補遺](https://www.tricentis.com/legal-information/data-processing-addendum)は、 Copilot ソリューションを含むすべての Tricentis 製品およびサービスに適用されます。 Tricentis は、グローバルなデータ保護法に従ってデータを処理および転送することに取り組んでいます。
 
 ## データの場所
 
@@ -59,13 +59,13 @@ Testim は以下の機能を提供しています。
 **Testim Copilot コーディングアシスタント** - 会社の登録と個別の承認が必要です。
 
 - 会社のオーナーは、サービスに登録し、特定のユーザーに利用可能な席を割り当ててアクセスを提供する必要があります。
-- ユーザーは個別に Copilot インターフェースをアクティブ化できます。たとえば、**Write code with AI** ボタンを選択します。
+- ユーザーは個別に Copilot インターフェースをアクティブ化できます。例えば、**Write code with AI** ボタンを選択します。
 - 初回使用前に、ユーザーは法的通知で **Got It** をクリックして利用規約を承認する必要があります。
 
 **Agentic Test Automation for Salesforce** - ユーザーは個別にオプトインできます。
 
 - アクティブ化するには、ユーザーは **Agentic Test Automation** ボタンを選択し、利用規約を確認して承諾してツールの使用を開始できます。利用規約を承諾すると、ユーザーには 2 か月間の無料トライアルが付与されます。
-- トライアルが終了すると、組織は AI クレジットを購入できます。AI クレジットは Tricentis ツール全体で使用され、クエリの計算難易度に応じて消費されます。**Manage Credits** を選択して、組織のクレジット購入についてお問い合わせください。
+- トライアルが終了すると、組織は AI クレジットを購入できます。 AI クレジットは Tricentis ツール全体で使用され、クエリの計算難易度に応じて消費されます。**Manage Credits** を選択して、組織のクレジット購入についてお問い合わせください。
 
 ### オプトアウト
 
@@ -73,4 +73,4 @@ Testim Copilot コーディングアシスタントの場合、会社のオー�
 
 ## 利用規約
 
-Copilot ソリューションの使用は、[Tricentis 一般利用規約](https://www.tricentis.com/legal-information/general-terms-of-use)および [Tricentis AI ソリューション製品固有の規約](https://www.tricentis.com/legal-information/ai-terms)の対象となります。AI ソリューションには、Tricentis が顧客に追加の規約を渡す必要があるサードパーティプロバイダーの技術が組み込まれている場合もあります。これらのサードパーティポリシーは[こちら](https://www.tricentis.com/legal-information/third-party-ai-policies)で入手できます。
+Copilot ソリューションの使用は、[Tricentis 一般利用規約](https://www.tricentis.com/legal-information/general-terms-of-use)および [Tricentis AI ソリューション製品固有の規約](https://www.tricentis.com/legal-information/ai-terms)の対象となります。 AI ソリューションには、 Tricentis が顧客に追加の規約を渡す必要があるサードパーティプロバイダーの技術が組み込まれている場合もあります。これらのサードパーティポリシーは[こちら](https://www.tricentis.com/legal-information/third-party-ai-policies)で入手できます。

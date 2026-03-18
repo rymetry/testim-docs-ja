@@ -1,5 +1,5 @@
 ---
-title: Salesforceテスト
+title: Salesforce テスト
 description: >-
   Testim for Salesforce（TTA for
   Salesforce）の概要と、はじめに・環境接続・テスト作成などの主要リソースへの導線をまとめます。
@@ -20,24 +20,24 @@ keywords:
   - トラブルシューティング
 ---
 
-Testim for Salesforceは、Testimのプラットフォームを活用し、高速なオーサリングとAI駆動の安定性を提供するとともに、Salesforceテストのオーサリングを大幅に簡素化し、テストの安定性を強化する専用機能を追加しています。
+Testim for Salesforce は、 Testim のプラットフォームを活用し、高速なオーサリングと AI 駆動の安定性を提供するとともに、 Salesforce テストのオーサリングを大幅に簡素化し、テストの安定性を強化する専用機能を追加しています。
 
 ## 主要なリソース
 
 ### はじめに
-Testim/TTA for Salesforceを初めて使用しますか？すぐに始められるようサポートします！
+Testim/TTA for Salesforce を初めて使用しますか？すぐに始められるようサポートします！
 [詳細を見る →](/docs/salesforce-testing-getting-started)
 
-### Salesforce環境への接続
-Salesforce環境をTestim/TTA for Salesforceに接続する方法を学びます。
+### Salesforce 環境への接続
+Salesforce 環境を Testim/TTA for Salesforce に接続する方法を学びます。
 [詳細を見る →](/docs/create-and-manage-test-environments)
 
-### Salesforceテストの作成
-手動および/または記録されたステップを追加しながら、Salesforceテストを作成する方法を学びます。
+### Salesforce テストの作成
+手動および/または記録されたステップを追加しながら、 Salesforce テストを作成する方法を学びます。
 [詳細を見る →](/docs/create-a-salesforce-test)
 
-### Salesforceステップ
-接続されたSalesforce環境のレコードやフィールドを使用したSalesforceの一般的なアクション。
+### Salesforce ステップ
+接続された Salesforce 環境のレコードやフィールドを使用した Salesforce の一般的なアクション。
 [詳細を見る →](/docs/salesforce-steps)
 
 ### テストの実行
@@ -53,9 +53,9 @@ Salesforce環境をTestim/TTA for Salesforceに接続する方法を学びます
 [詳細を見る →](/docs/test-management-overview)
 
 ### 統合
-サードパーティグリッド、CI、Applitools、Github、テスト管理などとの統合方法を学びます。
+サードパーティグリッド、 CI 、 Applitools 、 Github 、テスト管理などとの統合方法を学びます。
 [詳細を見る →](/docs/integrations-overview)
 
 ### その他のヘルプ
-さらにサポートが必要ですか？FAQおよびトラブルシューティングページをご確認ください。
+さらにサポートが必要ですか？FAQ およびトラブルシューティングページをご確認ください。
 [F.A.Q](/docs/faq) | [トラブルシューティング](/docs/troubleshoot)

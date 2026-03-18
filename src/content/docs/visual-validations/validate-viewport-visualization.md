@@ -1,6 +1,6 @@
 ---
 title: ビューポートのビジュアル検証
-description: ビューポートのピクセルレベルでのビジュアル差異を検証する方法。Applitoolsとの連携により、ベースラインと現在のテスト実行を比較します。
+description: ビューポートのピクセルレベルでのビジュアル差異を検証する方法。 Applitools との連携により、ベースラインと現在のテスト実行を比較します。
 category: 高度な編集
 order: 5023
 updated: '2025-09-15'
@@ -20,10 +20,10 @@ keywords:
 
 ピクセルレベルでビジュアルの詳細を検証
 
-**ビューポートのビジュアル検証**を使用すると、ビューポートのベースラインと現在のテスト実行の間でビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
+**ビューポートのビジュアル検証**を使用すると、ビューポートのベースラインと現在のテスト実行の間でビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、 Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
 
-:::warning{title="Applitoolsライセンスについて"}
-RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしではApplitoolsによって拒否されます。詳細については、Applitoolsの担当者にお問い合わせください。
+:::warning{title="Applitools ライセンスについて"}
+RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしでは Applitools によって拒否されます。詳細については、 Applitools の担当者にお問い合わせください。
 :::
 
 :::info{title="PRO機能"}
@@ -42,7 +42,7 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 
    ![アクションオプション](/images/visual-validations/validate-viewport-visualization/3bc96ed-Testim_267a_r.png)
 
-2. 「**M**」（Testim定義済みステップ）をクリックします。
+2. 「**M**」（Testim 定義済みステップ）をクリックします。
 
    **定義済みステップ**メニューが開きます。
 
@@ -62,7 +62,7 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 
 5. ビジュアル検証ステップが**エディター**に追加され、選択した要素のサムネイルがステップに表示されます。
 
-テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、Applitools Eyesで詳細を開いてください。
+テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、 Applitools Eyes で詳細を開いてください。
 
 :::tip
 **ビューポートのビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/keyboard-shortcuts) をご覧ください。

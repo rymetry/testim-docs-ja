@@ -14,44 +14,44 @@ keywords:
   - Locatorsパネル
 ---
 
-時間の経過とともに、アプリが変更されると、要素のロケータースコアが低下する可能性があります。ロケータースコアが70%を下回ると、Testimはテストの安定性を向上させるために、そのロケーターを自動的に改善しようとします。ロケータースコアが正常に改善されると、Testimは劣化したロケーターを改善されたロケーターに置き換えます。この置き換えは、以下で説明するように、UI内の3つの異なる場所（*Revision History*パネル、*Locators*パネル、*Test Library*画面）に表示されます。
+時間の経過とともに、アプリが変更されると、要素のロケータースコアが低下する可能性があります。ロケータースコアが 70% を下回ると、 Testim はテストの安定性を向上させるために、そのロケーターを自動的に改善しようとします。ロケータースコアが正常に改善されると、 Testim は劣化したロケーターを改善されたロケーターに置き換えます。この置き換えは、以下で説明するように、 UI 内の 3 つの異なる場所（*Revision History*パネル、*Locators*パネル、*Test Library*画面）に表示されます。
 
 テストライブラリで、自動改善されたテストでフィルタリングできます。また、テストエディターでは、どのステップが自動改善されたかを表示できます。
 
 この機能は、マスターブランチ（マスター読み取り専用ブランチではない）で実行されたテストにのみ自動的に適用されます。ユーザーは、オプションでマスター読み取り専用ブランチに対してこの機能を有効にできます。他のブランチで実行されたテストのロケーターは自動改善されません。
 
-## Revision Historyパネル
+## Revision History パネル
 
-Testimはテストリビジョンを作成し、「Testim auto improve」というラベルを付けます。また、テスト内のどのステップが自動改善されたかを表示することもできます。
+Testim はテストリビジョンを作成し、「 Testim auto improve 」というラベルを付けます。また、テスト内のどのステップが自動改善されたかを表示することもできます。
 
-![ロケーター自動改善によって作成されたTestim auto improveリビジョンを示す画面](/images/test-management/locators-auto-improve/96f61e6-Testim_478a.png)
+![ロケーター自動改善によって作成された Testim auto improve リビジョンを示す画面](/images/test-management/locators-auto-improve/96f61e6-Testim_478a.png)
 
 :fa-arrow-right: **自動改善されたステップを表示するには:**
 
 1. 自動改善されたテストを開きます。
 2. **Show improved steps**スイッチを右にトグルします。
 
-![Show improved stepsを有効にして自動改善されたステップをハイライト表示している画面](/images/test-management/locators-auto-improve/ac0724b-Testim_585b.png)
+![Show improved steps を有効にして自動改善されたステップをハイライト表示している画面](/images/test-management/locators-auto-improve/ac0724b-Testim_585b.png)
 
 自動改善されたステップが強調表示されます。
 
-## Locatorsパネル
+## Locators パネル
 
-Testimは、自動改善されたロケーターのLocatorsパネルの上部に「Locator auto improved」メッセージを挿入します。
+Testim は、自動改善されたロケーターの Locators パネルの上部に「 Locator auto improved 」メッセージを挿入します。
 
-![Locatorsパネルで自動改善されたロケーターにメッセージが表示されている画面](/images/test-management/locators-auto-improve/1b05339-Testim_479a.png)
+![Locators パネルで自動改善されたロケーターにメッセージが表示されている画面](/images/test-management/locators-auto-improve/1b05339-Testim_479a.png)
 
-## Test Library画面
+## Test Library 画面
 
-Testimは、1つ以上の劣化したロケーターが自動改善されたロケーターに置き換えられたテストの名前の後に「Ai」アイコンを挿入します。自動改善アイコンは約2週間表示されます。
+Testim は、 1 つ以上の劣化したロケーターが自動改善されたロケーターに置き換えられたテストの名前の後に「 Ai 」アイコンを挿入します。自動改善アイコンは約 2 週間表示されます。
 
-![Test Library画面でAiアイコンが表示されたテスト一覧](/images/test-management/locators-auto-improve/9113b7b-Testim_481a.png)
+![Test Library 画面で Ai アイコンが表示されたテスト一覧](/images/test-management/locators-auto-improve/9113b7b-Testim_481a.png)
 
-## Test Libraryのフィルタリング
+## Test Library のフィルタリング
 
 **Test Library** のテストリストを、自動改善されたテストでフィルタリングできます。**Test Library** のフィルタリングの詳細については、[テストリスト](/docs/test-list) を参照してください。
 
-:fa-arrow-right: **自動改善されたテストでTest Libraryをフィルタリングするには:**
+:fa-arrow-right: **自動改善されたテストで Test Library をフィルタリングするには:**
 
 1. **Test Library**画面（**Test List** > **Tests**）で、**Advanced filters**アイコンをクリックします。
 
@@ -60,13 +60,15 @@ Testimは、1つ以上の劣化したロケーターが自動改善されたロ�
 右側に**Filter Test**ペインが開きます。\
 2. **Filter Test**ペインで、下にスクロールして**Auto Improved**トグルを選択します。
 
-![自動改善対象のステップにSelf healingアイコンが表示されている画面](/images/test-management/locators-auto-improve/bcd9e8a-Testim_583b_r.png)
+![自動改善対象のステップに Self healing アイコンが表示されている画面](/images/test-management/locators-auto-improve/bcd9e8a-Testim_583b_r.png)
 
 3. **Apply**をクリックします。\
    フィルターが適用され、自動改善されたテストのみが表示されます。
 4. **Filter Test**ペインの右上にある「**X**」をクリックして閉じます。
 
-> 📘 フィルターをリセットせずに**Filter Test**ペインを閉じても、フィルターはリセットされず、フィルター基準を満たすテストのみが表示されます。すべてのテストとフォルダーを再度表示するには、**Filter Test**ペインを再度開いて**Reset filters**をクリックする必要があります。
+:::note
+フィルターをリセットせずに**Filter Test**ペインを閉じても、フィルターはリセットされず、フィルター基準を満たすテストのみが表示されます。すべてのテストとフォルダーを再度表示するには、**Filter Test**ペインを再度開いて**Reset filters**をクリックする必要があります。
+:::
 
 ## マスター読み取り専用ブランチでの自動改善の許可
 

@@ -1,6 +1,6 @@
 ---
 title: 要素アクセシビリティ検証
-description: Webページ上の特定の要素がアクセシブルかどうかをチェックし、アクセシビリティ違反を特定する方法を解説します。
+description: Web ページ上の特定の要素がアクセシブルかどうかをチェックし、アクセシビリティ違反を特定する方法を解説します。
 category: 高度な編集
 order: 5021
 updated: '2025-09-15'
@@ -18,26 +18,26 @@ keywords:
   - Edge Chromium
 ---
 
-アクセシブルなWebページとは、障害や機能制限を持つ人々が利用できるように設計されたWebページのことです。米国や欧州のほとんどの組織では、アクセシビリティ準拠が求められています。
+アクセシブルな Web ページとは、障害や機能制限を持つ人々が利用できるように設計された Web ページのことです。米国や欧州のほとんどの組織では、アクセシビリティ準拠が求められています。
 
-**要素アクセシビリティ検証**ステップを使用すると、Webページ上の特定の要素がアクセシブルにできたはずだが実装されていないかどうかをチェックできます。アクセシビリティチェックは、以下のルールに基づいています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
+**要素アクセシビリティ検証**ステップを使用すると、 Web ページ上の特定の要素がアクセシブルにできたはずだが実装されていないかどうかをチェックできます。アクセシビリティチェックは、以下のルールに基づいています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
 :::info{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::note
-このステップはChromeまたはEdge Chromiumでのみ実行できます。
+このステップは Chrome または Edge Chromium でのみ実行できます。
 :::
 
 :::info{title="アクセシビリティ検証サポート"}
-Testimのアクセシビリティステップは、業界をリードするアクセシビリティライブラリの1つである[Deque社のAxe Core](https://www.deque.com/axe/)を使用しています。アクセシビリティステップ内で検出される純粋なアクセシビリティ違反は、主にアプリケーションコードに関連するものです。そのため、これらの特定の問題への対処は、Testimサポートの範囲外となります。コード修正によるアクセシビリティ違反の是正に課題がある場合は、[Deque Axe-Core](https://www.deque.com/axe/)のissuesページにサポートを求めることをお勧めします。アクセシビリティの専門家として、これらの問題に効果的に対処するための専門的なガイダンスとソリューションを提供できます。
+Testim のアクセシビリティステップは、業界をリードするアクセシビリティライブラリの 1 つである[Deque 社の Axe Core](https://www.deque.com/axe/)を使用しています。アクセシビリティステップ内で検出される純粋なアクセシビリティ違反は、主にアプリケーションコードに関連するものです。そのため、これらの特定の問題への対処は、 Testim サポートの範囲外となります。コード修正によるアクセシビリティ違反の是正に課題がある場合は、[Deque Axe-Core](https://www.deque.com/axe/)の issues ページにサポートを求めることをお勧めします。アクセシビリティの専門家として、これらの問題に効果的に対処するための専門的なガイダンスとソリューションを提供できます。
 :::
 
 ## 要素アクセシビリティ検証ステップの追加
 
 :::note
-2022年1月以前に作成されたステップは共有されていません。共有するには、再度記録してください。
+2022 年 1 月以前に作成されたステップは共有されていません。共有するには、再度記録してください。
 :::
 
 **要素アクセシビリティ検証ステップを追加するには:**
@@ -52,13 +52,13 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 2. **Toggle Breakpoint**ボタンをクリックします。
 
-![Toggle Breakpointボタン](/images/accessibility-validations/element-accessibility-validation/848348d-Testim_359_r.png)
+![Toggle Breakpoint ボタン](/images/accessibility-validations/element-accessibility-validation/848348d-Testim_359_r.png)
 
 3. **Run test**ボタンをクリックして、ブレークポイントまでテストを実行します。
 
-![Run testボタン](/images/accessibility-validations/element-accessibility-validation/6ce633c-Testim_360a.png)
+![Run test ボタン](/images/accessibility-validations/element-accessibility-validation/6ce633c-Testim_360a.png)
 
-4. 再度矢印記号にマウスオーバーし、「M」（Testim定義済みステップ）をクリックします。
+4. 再度矢印記号にマウスオーバーし、「 M 」（Testim 定義済みステップ）をクリックします。
 
 定義済みステップメニューが開きます。
 
@@ -73,10 +73,10 @@ Testimのアクセシビリティステップは、業界をリードするア�
 6. メニューをスクロールして**Validate element accessibility**を選択します。
 
 :::note
-または、メニュー上部の検索ボックスを使用して「Validate element accessibility」を検索できます。
+または、メニュー上部の検索ボックスを使用して「 Validate element accessibility 」を検索できます。
 :::
 
-7. AUTウィンドウで、アクセシビリティを検証したい関連要素を特定し、クリックして選択します。
+7. AUT ウィンドウで、アクセシビリティを検証したい関連要素を特定し、クリックして選択します。
 
 エディターに要素アクセシビリティ検証ステップが追加されます。
 
@@ -93,23 +93,23 @@ Testimのアクセシビリティステップは、業界をリードするア�
 9. 以下の説明に従ってプロパティを設定します。
 
    - **Description** – ステップの説明。（デフォルト = Accessibility validation）
-   - **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）
+   - **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical 、 Serious 、 Moderate 、 Minor 。（デフォルト = Minor）
    - **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/accessibility-validations#section-rules-descriptions)を参照してください。デフォルトではすべてのタグが選択されています。
-   - **Exclude specific rule IDs** – 特定のルールIDを除外したい場合は、リストから選択します。また、特定のルールIDのみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
+   - **Exclude specific rule IDs** – 特定のルール ID を除外したい場合は、リストから選択します。また、特定のルール ID のみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
    - **When this step fails** – ステップが失敗した場合の動作を指定します。
    - **When to run step** – ステップを実行する条件を指定します。詳細は[条件分岐](/docs/conditions)を参照してください。
-   - **Override timeout** – Testimがテストステップの失敗を登録するデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒単位）を指定できます。
+   - **Override timeout** – Testim がテストステップの失敗を登録するデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒単位）を指定できます。
    - **Disable auto-scroll** – ビューポート外に存在する要素への自動スクロールを無効にします。
 
 ![要素アクセシビリティ検証の設定](/images/accessibility-validations/element-accessibility-validation/48398ce-element_accessibility_validation.gif)
 
 10. 検証ステップの後の**Toggle Breakpoint**ボタンをクリックして、ブレークポイントを解除します。
 
-テストを実行すると、選択した要素のアクセシビリティレベルが設定したパラメータに基づいてチェックされます。アクセシビリティ違反が見つかってステップが失敗した場合、アクセシビリティレポートを表示して詳細な結果を確認できます。
+テストを実行すると、選択した要素のアクセシビリティレベルが設定したパラメーターに基づいてチェックされます。アクセシビリティ違反が見つかってステップが失敗した場合、アクセシビリティレポートを表示して詳細な結果を確認できます。
 
 ## 要素アクセシビリティ結果の表示
 
-要素アクセシビリティ検証ステップを含むテストを実行した後、アクセシビリティ違反が見つかった場合、「Step Failed: Accessibility violations were found」というエラーメッセージが表示され、詳細なアクセシビリティ違反結果を確認できます。
+要素アクセシビリティ検証ステップを含むテストを実行した後、アクセシビリティ違反が見つかった場合、「 Step Failed: Accessibility violations were found 」というエラーメッセージが表示され、詳細なアクセシビリティ違反結果を確認できます。
 
 **要素アクセシビリティ結果を表示するには:**
 
@@ -121,13 +121,13 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 2. プロパティパネルで、**Check here for more details**リンクをクリックします。
 
-![Check here for more detailsリンク](/images/accessibility-validations/element-accessibility-validation/fe90831-Testim_365a_r.png)
+![Check here for more details リンク](/images/accessibility-validations/element-accessibility-validation/fe90831-Testim_365a_r.png)
 
 :::note
 または、エラーパネルで**Accessibility report**リンクをクリックすることもできます。
 :::
 
-![Accessibility reportリンク](/images/accessibility-validations/element-accessibility-validation/b5fd0af-Testim_364b.png)
+![Accessibility report リンク](/images/accessibility-validations/element-accessibility-validation/b5fd0af-Testim_364b.png)
 
 アクセシビリティ結果ウィンドウが表示され（以前に選択した影響レベルに基づいて）、アクセシビリティ問題のリスト、検出された発生回数、影響レベルが表示されます。
 
@@ -135,22 +135,22 @@ Testimのアクセシビリティステップは、業界をリードするア�
 
 すべての影響レベルに基づいて見つかったアクセシビリティ問題を表示したい場合は、**All impact levels**トグルをクリックします。
 
-![All impact levelsトグル](/images/accessibility-validations/element-accessibility-validation/136f7ef-Testim_366a_r.png)
+![All impact levels トグル](/images/accessibility-validations/element-accessibility-validation/136f7ef-Testim_366a_r.png)
 
-3. 結果をCSVファイルとしてダウンロードしたい場合は、ダウンロードアイコンをクリックします。（CSVファイルには、合格したものを含むすべてのアクセシビリティテストの結果が含まれます。）
+3. 結果を CSV ファイルとしてダウンロードしたい場合は、ダウンロードアイコンをクリックします。（CSV ファイルには、合格したものを含むすべてのアクセシビリティテストの結果が含まれます。）
 
 ![ダウンロードアイコン](/images/accessibility-validations/element-accessibility-validation/ecca0de-Testim_366b_r.png)
 
-4. いずれかの結果の横にある下矢印をクリックすると、以下の詳細情報が表示されます: 説明、問題の修正方法、要素のCSSセレクター。
+4. いずれかの結果の横にある下矢印をクリックすると、以下の詳細情報が表示されます: 説明、問題の修正方法、要素の CSS セレクター。
 
 ![アクセシビリティ問題の詳細](/images/accessibility-validations/element-accessibility-validation/b81df21-Testim_367a_r.png)
 
-5. アクセシビリティ問題の発生が複数見つかった場合は、要素のCSSセレクターセクションの矢印をクリックして、問題の異なるインスタンスを表示します。
+5. アクセシビリティ問題の発生が複数見つかった場合は、要素の CSS セレクターセクションの矢印をクリックして、問題の異なるインスタンスを表示します。
 
 ![複数のインスタンス表示](/images/accessibility-validations/element-accessibility-validation/edadefa-Testim_350b_r2.png)
 
 ## ルールの説明
 
-Testimは、要素のアクセシビリティレベルをチェックするために以下のライブラリを使用しています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
+Testim は、要素のアクセシビリティレベルをチェックするために以下のライブラリを使用しています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
-各ルールには、関連する影響レベル（Critical、Serious、Moderate、Minor など）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。
+各ルールには、関連する影響レベル（Critical 、 Serious 、 Moderate 、 Minor など）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。

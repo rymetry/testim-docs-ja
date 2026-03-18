@@ -1,6 +1,6 @@
 ---
-title: 設定ファイルのパラメータ
-description: 設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
+title: 設定ファイルのパラメーター
+description: 設定ファイルの beforeSuite / beforeTest フックでテストにパラメーターを渡す
 category: 高度な編集
 order: 5044
 updated: '2025-09-22'
@@ -8,7 +8,7 @@ sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'
 keywords:
   - Testim
   - 設定ファイル
-  - パラメータ
+  - パラメーター
   - beforeSuite
   - beforeTest
   - config file
@@ -16,17 +16,17 @@ keywords:
   - テストデータ
 ---
 
-設定ファイルの beforeSuite / beforeTest フックでテストにパラメータを渡す
+設定ファイルの beforeSuite / beforeTest フックでテストにパラメーターを渡す
 
-[*設定ファイル*](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメータを定義する共通JSです。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメータ定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメータを各テストへ渡せます。
+[*設定ファイル*](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメーターを定義する共通 JS です。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメーター定義を行えます。**設定ファイル**を使うと、 CLI 実行時にパラメーターを各テストへ渡せます。
 
-## パラメータのスコープ
+## パラメーターのスコープ
 
-定義したパラメータは、単一の実行（ラン）に含まれるすべてのテストに適用されます。
+定義したパラメーターは、単一の実行（ラン）に含まれるすべてのテストに適用されます。
 
 ## 設定ファイルでの定義
 
-[設定ファイル](/docs/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメータを定義できます。例：
+[設定ファイル](/docs/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメーターを定義できます。例：
 
 ```javascript
 exports.config = {
@@ -80,7 +80,7 @@ beforeSuite: function () {
 "Test 1" と "Test 2" はテスト名です。
 :::
 
-同じ例で、最初のテストに2つのデータセットを与える場合：
+同じ例で、最初のテストに 2 つのデータセットを与える場合：
 
 ```javascript
 beforeSuite: function () {
@@ -94,7 +94,7 @@ beforeSuite: function () {
 } //add comma here if there are more functions after beforeSuite
 ```
 
-後続のデータセットで一部のパラメータが欠けている場合（例: 2つ目に `password` が無い）、前のデータセットの値が引き継がれます。
+後続のデータセットで一部のパラメーターが欠けている場合（例: 2 つ目に `password` が無い）、前のデータセットの値が引き継がれます。
 
 ## 実行レベル: `return` で一括指定
 
@@ -103,7 +103,7 @@ beforeSuite: function () {
 **実行レベルで指定するには:**
 
 1. 設定ファイルを作成／編集します。
-2. `beforeSuite` または `beforeTest` の `return` にパラメータと値を記述します。
+2. `beforeSuite` または `beforeTest` の `return` にパラメーターと値を記述します。
 
 例（beforeSuite に追加）：
 
@@ -141,9 +141,9 @@ exports.config = {
 };
 ```
 
-## グローバルエクスポートパラメータ
+## グローバルエクスポートパラメーター
 
-`afterSuite` では、その実行でエクスポートされたグローバルパラメータを参照できます。構文: `suite.exportsGlobal.<param_name>`
+`afterSuite` では、その実行でエクスポートされたグローバルパラメーターを参照できます。構文: `suite.exportsGlobal.<param_name>`
 
 ## CLI での指定
 
@@ -153,4 +153,4 @@ exports.config = {
 testim -c "testimConfig.js"
 ```
 
-以降は、[ステッププロパティパネルのパラメータ](/docs/parameters-in-custom-javascript-steps) として各テストから参照できます。
+以降は、[ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) として各テストから参照できます。

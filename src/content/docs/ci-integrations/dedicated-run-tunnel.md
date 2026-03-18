@@ -1,6 +1,6 @@
 ---
 title: Dedicated Run Tunnel
-description: Dedicated Run Tunnel を使用して internal server や localhost 上のアプリを外部ブラウザ経由で実行する方法と追加ユースケースを説明します。
+description: Dedicated Run Tunnel を使用して、内部サーバーや localhost 上のアプリをリモートブラウザ経由でテストする方法を説明します。前提条件、設定手順、 SauceLabs などの外部 Grid との連携もカバーしています。
 category: 統合
 order: 12016
 updated: '2025-02-10'
@@ -17,12 +17,12 @@ keywords:
   - Testim CLI
 ---
 
-Dedicated Run Tunnel を使用すると、internal server や localhost からアプリを実行し、外部ブラウザ（proxy）で表示できます。
+Dedicated Run Tunnel を使用すると、 internal server や localhost からアプリを実行し、外部ブラウザ（proxy）で表示できます。
 
-場合によっては、Testimまたは外部プロバイダー(SauceLabsなど)が提供するリモートSelenium Gridサーバーを使用して、独自のプライベートまたは内部サーバーでテストを実行したい場合があります。
+場合によっては、 Testim または外部プロバイダー（SauceLabs など）が提供するリモート Selenium Grid サーバーを使用して、独自のプライベートまたは内部サーバーでテストを実行したい場合があります。
 
 :::info
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、 Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 前提条件
@@ -33,15 +33,15 @@ Dedicated Run Tunnel を使用すると、internal server や localhost から�
 ## 使用方法
 
 1. アプリケーションサーバーを起動します。
-2. CLIコマンドを実行するマシンが内部サーバー/localhostにアクセスできることを確認します。
-3. パラメータ(`--tunnel` - デフォルトのアプリケーションポート80)を指定して[Testim CLI](/docs/the-command-line-cli)を実行します
-4. ポート80以外のポートでアプリケーションを実行する場合は、パラメータ(`--tunnel-port \<APP PORT e.g. 80>`)を追加します
+2. CLI コマンドを実行するマシンが内部サーバー/localhost にアクセスできることを確認します。
+3. パラメーター（`--tunnel` - デフォルトのアプリケーションポート 80）を指定して[Testim CLI](/docs/the-command-line-cli)を実行します
+4. ポート 80 以外のポートでアプリケーションを実行する場合は、パラメーター（`--tunnel-port \<APP PORT e.g. 80>`）を追加します
 
 Testim CLI は、専用の tunnel address を指すようにアプリケーションの base URL を自動的に調整します。
 
 ## その他のユースケース
 
-テスト実行中、すべてのトラフィックはトンネルを開始するマシンを経由してルーティングされ、ホワイトリスト登録が実用的でない状況に対するソリューションを提供します。上記のように、テスト環境にアクセスできるマシンからCLIコマンドを開始することが重要です。さらに、このアプローチは、グリッドの地理的位置を管理し、コマンドをトリガーするマシンの場所に合わせるための回避策として機能します。
+テスト実行中、すべてのトラフィックはトンネルを開始するマシンを経由してルーティングされ、ホワイトリスト登録が実用的でない状況に対するソリューションを提供します。上記のように、テスト環境にアクセスできるマシンから CLI コマンドを開始することが重要です。さらに、このアプローチは、グリッドの地理的位置を管理し、コマンドをトリガーするマシンの場所に合わせるための回避策として機能します。
 
 ### Testim CLI でのトンネル使用例
 
@@ -50,7 +50,7 @@ testim --tunnel --tunnel-port <APP PORT default 80> --label "<YOUR LABEL>" --tok
 ```
 
 :::note
-必要に応じて HTTPS address に tunnel を使用できます。これを設定するにはサポートにお問い合わせください。**HTTPS tunnel は、Testim 提供のグリッドで実行する場合にのみ使用できます。**
+必要に応じて HTTPS address に tunnel を使用できます。これを設定するにはサポートにお問い合わせください。**HTTPS tunnel は、 Testim 提供のグリッドで実行する場合にのみ使用できます。**
 :::
 
 :::note

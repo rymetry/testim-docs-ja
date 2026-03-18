@@ -36,7 +36,7 @@ keywords:
 
 ![ドラッグ&ドロップの実行](/images/handling-ui-actions/drag-drop-step/33256cf-dd1.gif)
 
-Testimはドラッグ&ドロップステップを自動的にテストに追加します。
+Testim はドラッグ&ドロップステップを自動的にテストに追加します。
 
 ![ドラッグステップが追加された](/images/handling-ui-actions/drag-drop-step/62957a2-drag-step-added.jpg)
 
@@ -62,11 +62,11 @@ Testimはドラッグ&ドロップステップを自動的にテストに追加�
 
 ![ドラッグステップを変更](/images/handling-ui-actions/drag-drop-step/08d55e3-change-drag-step.jpg)
 
-5. Testimがページ/アプリに移動するよう指示します。テストで要素をドロップしたい**ページ上の場所をクリック**します。
+5. Testim がページ/アプリに移動するよう指示します。テストで要素をドロップしたい**ページ上の場所をクリック**します。
 
 ![ページ要素の選択](/images/handling-ui-actions/drag-drop-step/dd0132c-page-element.jpg)
 
-6. Testimは、新しく定義された場所に要素をドロップするようにドラッグ&ドロップテストステップを更新します。
+6. Testim は、新しく定義された場所に要素をドロップするようにドラッグ&ドロップテストステップを更新します。
 
 ![ドラッグされた要素が更新された](/images/handling-ui-actions/drag-drop-step/1fa8fad-dragged-element-updated.jpg)
 
@@ -90,7 +90,7 @@ Testimはドラッグ&ドロップステップを自動的にテストに追加�
 4. 無効にするには、チェックボックスの選択を解除します。
 
 :::note
-このソリューションはChrome拡張機能を通じて**ネイティブイベント**を活用するため、ChromeおよびEdgeブラウザでのみ利用可能です。
+このソリューションは Chrome 拡張機能を通じて**ネイティブイベント**を活用するため、 Chrome および Edge ブラウザでのみ利用可能です。
 
-この機能はFirefoxとSafariではサポートされておらず、これらのブラウザのSeleniumモードでは機能しないことに注意してください。
+この機能は Firefox と Safari ではサポートされておらず、これらのブラウザの Selenium モードでは機能しないことに注意してください。
 :::

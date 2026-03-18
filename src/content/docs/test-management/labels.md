@@ -16,9 +16,9 @@ keywords:
   - モニタリングテスト
 ---
 
-ラベルは、特定のスイートやテストプランに配置することなく、テストを1つ以上の特性に関連付けるために使用されます。テストには複数のラベルを設定できます。たとえば、各コード変更時に実行されるテストにタグ付けする「sanity」ラベル、各デプロイ後に統合/ステージング環境で実行されるテストにタグ付けする「nightly」ラベル、本番アプリケーションが正常に動作していることを確認するために15分ごとに実行されるテストにタグ付けする「monitor」ラベルなどがあります。
+ラベルは、特定のスイートやテストプランに配置することなく、テストを 1 つ以上の特性に関連付けるために使用されます。テストには複数のラベルを設定できます。例えば、各コード変更時に実行されるテストにタグ付けする「 sanity 」ラベル、各デプロイ後に統合/ステージング環境で実行されるテストにタグ付けする「 nightly 」ラベル、本番アプリケーションが正常に動作していることを確認するために 15 分ごとに実行されるテストにタグ付けする「 monitor 」ラベルなどがあります。
 
-ラベルは、主に2つの目的で役立ちます:
+ラベルは、主に 2 つの目的で役立ちます:
 
 * **ラベルでフィルタリング** - テストリストを整理し、ラベルでリストをフィルタリングして簡単に見つけることができます。
 * **ラベルでテストスイートを作成** – テストスイートを作成する際に、ラベルを使用して関連するテストを迅速に見つけることができます。
@@ -33,11 +33,11 @@ keywords:
 1. テストリスト画面で、テスト名をクリックして選択します。
 2. **Edit Labels**ボタンをクリックします。
 
-![テストプロパティでEdit Labelsボタンを選択する画面](/images/test-management/labels/96cd0e5-edit-labels.png)
+![テストプロパティで Edit Labels ボタンを選択する画面](/images/test-management/labels/96cd0e5-edit-labels.png)
 
 **テストを右クリック**して、**Edit Labels**オプションを選択することもできます。
 
-![テストを右クリックしてEdit Labelsオプションを開くコンテキストメニュー](/images/test-management/labels/ed79e05-editlabelsrightclick.png)
+![テストを右クリックして Edit Labels オプションを開くコンテキストメニュー](/images/test-management/labels/ed79e05-editlabelsrightclick.png)
 
 3. テストに適用する既存のラベルを選択または選択解除します。
 
@@ -45,11 +45,11 @@ keywords:
 
 4. 新しいラベルを追加するには、新しいラベルを入力し、**Create New**リンクをクリックしてから、**Apply**をクリックします。
 
-![新しいラベル名を入力してCreate Newで作成する画面](/images/test-management/labels/18b0282-newlabel.png)
+![新しいラベル名を入力して Create New で作成する画面](/images/test-management/labels/18b0282-newlabel.png)
 
-> 🚧
->
-> ラベル名にスペースを含めることはできません。
+:::warning
+ラベル名にスペースを含めることはできません。
+:::
 
 ## ラベルでテストをフィルタリング
 
@@ -60,23 +60,23 @@ keywords:
 1. **Test List > Tests**に移動します。
 2. アクションメニューの**Advanced Filters**ボタンをクリックします。
 
-![Test List画面のアクションメニューからAdvanced Filtersを開くボタン](/images/test-management/labels/dbf0508-advancedfilters.png)
+![Test List 画面のアクションメニューから Advanced Filters を開くボタン](/images/test-management/labels/dbf0508-advancedfilters.png)
 
 **Advanced Filters**パネルが表示されます。
 
-![ラベルなどの条件を設定できるAdvanced Filtersパネル](/images/test-management/labels/e740633-advancedfilterspanel.png)
+![ラベルなどの条件を設定できる Advanced Filters パネル](/images/test-management/labels/e740633-advancedfilterspanel.png)
 
 3. パネルの**Label**セクションで、フィルターのラベルを選択/選択解除し、**Apply**をクリックします。
 
-![Advanced Filtersパネル内でフィルターに使用するラベルを選択する画面](/images/test-management/labels/95aaa61-selectlabels.png)
+![Advanced Filters パネル内でフィルターに使用するラベルを選択する画面](/images/test-management/labels/95aaa61-selectlabels.png)
 
 テストリストには、選択したラベルを含むテストのみが表示されます。
 
 ![選択したラベルでフィルタリングされたテストリストの結果](/images/test-management/labels/12ab199-filteredlist.png)
 
-## CLIベースの実行でのラベルの使用
+## CLI ベースの実行でのラベルの使用
 
-CLIを実行する際、--labelパラメーターを使用して実行するラベルを選択できます:
+CLI を実行する際、--label パラメーターを使用して実行するラベルを選択できます:
 
 ```shell
 testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" --report-file test-results/testim-tests-report.xml

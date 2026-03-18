@@ -20,14 +20,14 @@ keywords:
 
 ## テスト管理統合
 
-Testimは、主要なテスト管理ツールと統合し、テスト結果を自動的に同期できます。これにより、Testimとエンタープライズテスト管理プラットフォーム間でテストケースと実行結果を一元管理できます。
+Testim は、主要なテスト管理ツールと統合し、テスト結果を自動的に同期できます。これにより、 Testim とエンタープライズテスト管理プラットフォーム間でテストケースと実行結果を一元管理できます。
 
-:::info{title="Pro機能"}
-この機能は、Professional planのプロジェクトでのみ利用できます。
+:::info{title="PRO機能"}
+この機能は、 Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 利用可能なテスト管理統合
 
-- **[TestRail](/docs/testrail-integration)**: Gurock社のテスト管理ツール
-- **[qTest](/docs/qtest-integration)**: Tricentisのエンタープライズテスト管理プラットフォーム
-- **[TTM for Jira](/docs/ttm-for-jira-integration)**: Jira Test Management（旧Test Management for Jira）
+- **[TestRail](/docs/testrail-integration)**: Gurock 社のテスト管理ツール
+- **[qTest](/docs/qtest-integration)**: Tricentis のエンタープライズテスト管理プラットフォーム
+- **[TTM for Jira](/docs/ttm-for-jira-integration)**: Jira Test Management（旧 Test Management for Jira）

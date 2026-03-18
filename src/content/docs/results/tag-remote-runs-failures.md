@@ -21,21 +21,21 @@ keywords:
 
 ## テスト結果画面からのテスト失敗のタグ付け
 
-リモートで実行された失敗したテストにタグを付け、説明を追加し、以前に報告された課題にリンクしたり、新しい課題を作成したりできます。新しい課題をバグ/課題追跡システムに公開する場合は、最初にTestimと課題追跡システム（バグトラッカーとも呼ばれます）との接続を設定する必要があります。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
+リモートで実行された失敗したテストにタグを付け、説明を追加し、以前に報告された課題にリンクしたり、新しい課題を作成したりできます。新しい課題をバグ/課題追跡システムに公開する場合は、最初に Testim と課題追跡システム（バグトラッカーとも呼ばれます）との接続を設定する必要があります。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
 
 **テスト失敗タグを追加するには:**
 
 1. テストをリモートで実行した後、テストが失敗した場合は、**Tag Test Failure**リンクをクリックします。
 
-:::danger
-「Run locally」ではなく「Run on grid」オプションを使用してテストを実行してください。
+:::warning
+「 Run locally 」ではなく「 Run on grid 」オプションを使用してテストを実行してください。
 :::
 
-![Tag Test Failureリンクの位置](/images/results/tag-remote-runs-failures/3ee72ad-tag6.png)
+![Tag Test Failure リンクの位置](/images/results/tag-remote-runs-failures/3ee72ad-tag6.png)
 
 次のダイアログが表示されます。
 
-![Tag Test Failureダイアログ](/images/results/tag-remote-runs-failures/49d2321-Screen_Shot_2021-08-21_at_7.47.29.png)
+![Tag Test Failure ダイアログ](/images/results/tag-remote-runs-failures/49d2321-Screen_Shot_2021-08-21_at_7.47.29.png)
 
 2. **Failure type**フィールドで、次のいずれかのオプションを選択します。
 
@@ -51,28 +51,28 @@ keywords:
 
 ## 失敗したテスト実行のバグレポートの作成
 
-失敗した実行へのタグ付けプロセスの一環として、バグトラッキングシステム（Jira、Slack、Trelloなど）の既存の課題にリンクするか、バグトラッキングシステムに追加される新しい課題/バグレポートを作成することで、バグレポートを作成できます。
+失敗した実行へのタグ付けプロセスの一環として、バグトラッキングシステム（Jira 、 Slack 、 Trello など）の既存の課題にリンクするか、バグトラッキングシステムに追加される新しい課題/バグレポートを作成することで、バグレポートを作成できます。
 
 **バグトラッキングシステムの既存の課題にリンクするには:**
 
-1. バグトラッキングシステムがTestimと統合されていることを確認してください。詳細および詳細な手順については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
-2. **Tag Test Failure**ダイアログの**Link to issue**フィールドに、既存の課題のURLを追加します。
+1. バグトラッキングシステムが Testim と統合されていることを確認してください。詳細および詳細な手順については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
+2. **Tag Test Failure**ダイアログの**Link to issue**フィールドに、既存の課題の URL を追加します。
 3. テスト失敗のタグ付けプロセスを完了します。
 
 **新しいバグレポートを作成するには:**
 
-1. バグトラッキングシステムがTestimと統合されていることを確認してください。詳細および詳細な手順については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
+1. バグトラッキングシステムが Testim と統合されていることを確認してください。詳細および詳細な手順については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
 2. **Tag Test Failure**ダイアログで、**Create issue**をクリックして、バグトラッキングシステムに新しい課題を作成します。\
    バグの詳細が自動的に作成され、**Publish Bug**画面が表示されます。
 
-![Jiraに作成された課題の例](/images/results/tag-remote-runs-failures/60c8974-jiraaftercreateissue.PNG)
+![Jira に作成された課題の例](/images/results/tag-remote-runs-failures/60c8974-jiraaftercreateissue.PNG)
 
 3. **Summary**フィールドに、わかりやすい要約を入力します。
-4. ProjectとTypeの選択を変更し、提案されたテキストを編集できます。
+4. Project と Type の選択を変更し、提案されたテキストを編集できます。
 5. 完了したら、**Publish**をクリックして課題を公開します。\
-   **Link to issue**フィールドには、新しく作成された課題または既存の課題のURLが含まれます。
+   **Link to issue**フィールドには、新しく作成された課題または既存の課題の URL が含まれます。
 
-![Link to issueフィールドに課題URLを設定](/images/results/tag-remote-runs-failures/c4ab431-linktoissue.png)
+![Link to issue フィールドに課題 URL を設定](/images/results/tag-remote-runs-failures/c4ab431-linktoissue.png)
 
 6. **Add**をクリックして保存します。
 
@@ -95,15 +95,15 @@ keywords:
 
 4. **ADD**をクリックして保存します。
 
-## Test Runs画面からの複数のテスト失敗のタグ付け
+## Test Runs 画面からの複数のテスト失敗のタグ付け
 
-**Test Runs画面で複数のテストにタグを付けるには:**
+**Test Runs 画面で複数のテストにタグを付けるには:**
 
 1. **Runs -> Test Runs**に移動します。
 2. 時間枠ドロップダウンメニューを使用して、該当する時間枠を設定します。\
    リストの下部にテスト実行のリストが表示されます。
 
-![Test Runs画面での複数テスト選択](/images/results/tag-remote-runs-failures/8031cf7-tag3.png)
+![Test Runs 画面での複数テスト選択](/images/results/tag-remote-runs-failures/8031cf7-tag3.png)
 
 3. リストの上部にあるバグアイコンをクリックします。
 
@@ -113,12 +113,12 @@ keywords:
 
 ![複数テストの失敗タグ付けダイアログ](/images/results/tag-remote-runs-failures/95196a8-tag4.PNG)
 
-4. **Failure Type**を選択し、説明を追加し（オプション）、課題追跡システム（Jiraなど）の課題URLを入力して課題にリンクします。
+4. **Failure Type**を選択し、説明を追加し（オプション）、課題追跡システム（Jira など）の課題 URL を入力して課題にリンクします。
 5. **Add**をクリックします。
 
 ## 提案される失敗タグ
 
-複数の失敗したテストにタグを付けた後、Testimが再発する問題を認識すると、以前の選択に基づいて失敗タグが提案されます。提案される失敗タグは、テスト結果画面の上部に表示されます。
+複数の失敗したテストにタグを付けた後、 Testim が再発する問題を認識すると、以前の選択に基づいて失敗タグが提案されます。提案される失敗タグは、テスト結果画面の上部に表示されます。
 
 **テスト結果画面から提案された失敗タグを使用するには:**
 
@@ -132,15 +132,15 @@ keywords:
 * **Confirm**をクリックして提案を受け入れます。確認後、テストは提案された選択に基づいてタグ付けされ、以前の失敗タグ（提案の基礎として使用された失敗タグ)の説明と課題へのリンクが含まれます。
 * **Edit**をクリックして別のタグを選択します。タグ付け画面が表示されます。上記の**テスト結果画面からのテスト失敗のタグ付け**セクションの手順に従ってください。
 
-**Test Runs画面から提案された失敗タグを使用するには:**
+**Test Runs 画面から提案された失敗タグを使用するには:**
 
 1. **Runs -> Test Runs**に移動します。
 2. 時間枠ドロップダウンメニューを使用して、該当する時間枠を設定します。\
    リストの下部にテスト実行のリストが表示されます。
-3. 提案された失敗タグを含むテストには、「Suggested」というラベルが付けられます。
+3. 提案された失敗タグを含むテストには、「 Suggested 」というラベルが付けられます。
 4. 提案された失敗タグにマウスを合わせます。
 
-![Test Runs画面に表示される提案失敗タグ](/images/results/tag-remote-runs-failures/c10c05c-tag8.png)
+![Test Runs 画面に表示される提案失敗タグ](/images/results/tag-remote-runs-failures/c10c05c-tag8.png)
 
 5. 次のいずれかを実行します。
 
@@ -154,12 +154,12 @@ keywords:
 **失敗レポートを表示するには:**
 
 1. **Insights -> Reports**に移動します。\
-   失敗レポートは上から3番目のレポートです。
+   失敗レポートは上から 3 番目のレポートです。
 2. ドロップダウンメニューをクリックして、レポートの時間枠を選択します。
 
-![Insightsレポートの時間枠選択](/images/results/tag-remote-runs-failures/65b3172-timeframe.PNG)
+![Insights レポートの時間枠選択](/images/results/tag-remote-runs-failures/65b3172-timeframe.PNG)
 
-3. レポートには**ドーナツチャート**と**折れ線グラフ**の2つのビューがあります。ビューモードをクリックして、ビュー間を切り替えます。
+3. レポートには**ドーナツチャート**と**折れ線グラフ**の 2 つのビューがあります。ビューモードをクリックして、ビュー間を切り替えます。
 
 ![ドーナツチャートと折れ線グラフの切り替え](/images/results/tag-remote-runs-failures/3167d19-views.png)
 

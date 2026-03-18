@@ -24,23 +24,23 @@ keywords:
 Web サイトから送信されブラウザに保存される小さなデータです。用途は多岐に渡りますが、テスト自動化ではログインフロー全体を踏まずに Cookie を直接設定して認証を高速化する、といった使い方が可能です。
 :::
 
-Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
+Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。 Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
 Cookie を扱う代表的な方法:
 
 * Cookie ステップ — Cookie 用の専用ステップを利用します。
   * Set Cookie — テストで使用する Cookie を定義する新規ステップ。*HttpOnly* や *Secure* Cookie の作成はこのステップ推奨。
-  * Get Cookie — AUT のブラウザから Cookie を取得してパラメータに保存。以降のステップ（Set Cookie を含む）で参照可能。
-* Setup ステップの「Test Data」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。Cookie のドメイン追加はこの Test Data で行うのが推奨。
-* カスタムJSステップ — テスト開始時でなくても良い場合に、任意の箇所で set/get を行う。
+  * Get Cookie — AUT のブラウザから Cookie を取得してパラメーターに保存。以降のステップ（Set Cookie を含む）で参照可能。
+* Setup ステップの「 Test Data 」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。 Cookie のドメイン追加はこの Test Data で行うのが推奨。
+* カスタム JS ステップ — テスト開始時でなくても良い場合に、任意の箇所で set/get を行う。
 * 設定ファイル＆実行フック — CLI 実行時に設定ファイル経由で Cookie を設定。スイート全体で必要な場合に有効。注: CLI から Cookie を「取得」することはできません。
 
 ## Cookie を設定する
 
-Cookie の値は、手入力または Get Cookie で取得したパラメータから設定できます。
+Cookie の値は、手入力または Get Cookie で取得したパラメーターから設定できます。
 
 ### Set Cookie ステップで設定
 
-**Set Cookie** ステップは、テストのUIから直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメータを利用します。
+**Set Cookie** ステップは、テストの UI から直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメーターを利用します。
 
 **属性を直接入力して Cookie を設定するには:**
 
@@ -73,12 +73,12 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/fd880f8-Testim_205_r.png)
 
 5. **Create new Cookie** ラジオボタンが選択されていることを確認します（既定値）。
-6. 最初の4つの **Cookie Info** フィールドに値を入力します。
+6. 最初の 4 つの **Cookie Info** フィールドに値を入力します。
 
 * **Cookie name** – Cookie 名（必須）。
 * **Cookie value** – 設定したい値（必須）。
 * **Domain** – Cookie を送信するホスト。空欄（既定）の場合はテストが実行されている Base URL が使用されます（任意）。
-* **Path** – リクエストURLに含まれている必要があるパス。空欄（既定）はルートディレクトリを意味します（任意）。
+* **Path** – リクエスト URL に含まれている必要があるパス。空欄（既定）はルートディレクトリを意味します（任意）。
 
 :::note
 文字列はシングルクォートまたはダブルクォートで囲む必要があります。
@@ -93,7 +93,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 テストを実行すると、指定した属性で Cookie が設定されます。
 
-**パラメータから Cookie を設定するには:**
+**パラメーターから Cookie を設定するには:**
 
 1. Cookie を追加したい位置の （矢印）にカーソルを合わせます。
 
@@ -128,16 +128,16 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/3d4b48c-Testim_218.png)
 
-6. **Parameter Name** に、事前に作成した Cookie パラメータ／変数の名前を入力します。詳細は [Getting Cookies using the Get Cookie step](/docs/cookies#getting-cookies-using-the-get-cookie-step) を参照してください。
+6. **Parameter Name** に、事前に作成した Cookie パラメーター／変数の名前を入力します。詳細は [Getting Cookies using the Get Cookie step](/docs/cookies#getting-cookies-using-the-get-cookie-step) を参照してください。
 7. **back arrow** をクリックしてメインの **Editor** 画面に戻ります。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/98be8c7-Testim_219a.png)
 
-テスト実行時、その時点のパラメータ値を使って Cookie が設定されます。
+テスト実行時、その時点のパラメーター値を使って Cookie が設定されます。
 
 ### Setting Cookies using the Setup step – “Test Data” property
 
-特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。
+特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、 Setup ステップの **Test Data** プロパティを使います。
 
 **Test Data プロパティで Cookie を設定するには:**
 
@@ -154,11 +154,11 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 :::
 
 2. オプションをスクロールして **Test Data** をクリックします。\
-   JavaScript エディタが開きます。
+   JavaScript エディターが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f222a38-Testim_212.png)
 
-3. エディタに Cookie を設定するコードを記述します。
+3. エディターに Cookie を設定するコードを記述します。
 
 ```javascript
 return {
@@ -219,13 +219,13 @@ return {
 :::
 
 5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
-6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダを選択します（既定値）。このステップを共有したくない場合はチェックを外します。
+6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダーを選択します（既定値）。このステップを共有したくない場合はチェックを外します。
 7. **Create Step** をクリックします。\
    **JS Editor** と右側の **Custom Action Properties** パネルが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/17ff9b7-Testim_216.png)
 
-8. エディタに Cookie を設定するコードを記述します。下記は一例です。
+8. エディターに Cookie を設定するコードを記述します。下記は一例です。
 
 ```javascript
 document.cookie = "password=SuperSecretPassword!";
@@ -234,19 +234,19 @@ document.cookie = "username=tomsmith";
 
 9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
-* **Step name** – ステップ名（既定値は手順5で入力した名前）。
+* **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
 * **Description** – ステップの説明（既定値 = *Run action*）。
 * **Share step** – ステップを共有ステップとして保存するかどうか。
-* **+ Params** – JavaScript / HTML パラメータの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+* **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
 * **When this step fails** – ステップ失敗時の挙動。
 * **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – 既定のタイムアウト時間（ステップ失敗までの時間）をミリ秒単位で上書きします。
 
-テストを実行すると、Custom Action ステップの位置で Cookie 設定処理が実行されます。
+テストを実行すると、 Custom Action ステップの位置で Cookie 設定処理が実行されます。
 
 ### 設定ファイルを使って Cookie を設定する
 
-CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメータや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。
+CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメーターや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。
 
 **設定ファイルを使って Cookie を設定するには:**
 
@@ -271,7 +271,7 @@ beforeSuite: function (suite) {
 
 ## Cookie を取得する
 
-Testim では、Cookie の値を変数に代入することで Cookie を「取得」し、テスト内で属性を再利用することができます。
+Testim では、 Cookie の値を変数に代入することで Cookie を「取得」し、テスト内で属性を再利用することができます。
 
 ### Get Cookie ステップを使って Cookie を取得する {#getting-cookies-using-the-get-cookie-step}
 
@@ -331,7 +331,7 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 ### Getting Cookies using a custom JS (JavaScript) step
 
-Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
+Get Cookie ステップを使わなくても、 custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
 
 **カスタムアクションステップで Cookie を取得するには:**
 
@@ -363,13 +363,13 @@ Get Cookie ステップを使わなくても、custom action ステップ内の 
 :::
 
 5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
-6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダを選択します（既定値）。共有不要ならチェックを外します。
+6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダーを選択します（既定値）。共有不要ならチェックを外します。
 7. **Create Step** をクリックします。\
    **JS Editor** と **Custom Action Properties** パネルが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/895c71a-Testim_221.png)
 
-8. エディタに Cookie を取得するコードを記述します。以下は、`username` と `password` という Cookie の値を取得してログ出力する例です。
+8. エディターに Cookie を取得するコードを記述します。以下は、`username` と `password` という Cookie の値を取得してログ出力する例です。
 
 ```javascript
 //create an array of the site cookies
@@ -399,12 +399,12 @@ for(var i = 0; i <cookieArray.length; i++) {
 
 9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
-* **Step name** – ステップ名（既定値は手順5で入力した名前）。
+* **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
 * **Description** – ステップの説明（既定値 = *Run action*）。
 * **Share step** – ステップを共有ステップとして保存するかどうか。
-* **+ Params** – JavaScript / HTML パラメータの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+* **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
 * **When this step fails** – ステップ失敗時の挙動。
 * **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
-テストを実行すると、Custom Action ステップ内で定義した Cookie 取得処理が実行されます。
+テストを実行すると、 Custom Action ステップ内で定義した Cookie 取得処理が実行されます。

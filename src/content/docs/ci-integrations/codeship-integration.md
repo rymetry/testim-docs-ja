@@ -1,6 +1,6 @@
 ---
-title: Codeship統合
-description: CodeshipでTestimテストを実行する方法について説明します。ローカルおよび外部Selenium Gridの設定手順を提供します。
+title: Codeship 統合
+description: Codeship で Testim テストを実行する方法について説明します。ローカルおよび外部 Selenium Grid の設定手順を提供します。
 category: 統合
 order: 12006
 updated: '2025-02-10'
@@ -14,17 +14,17 @@ keywords:
   - テスト自動実行
 ---
 
-![Codeshipロゴ](/images/ci-integrations/codeship-integration/1328260-codeship1.png)
+![Codeship ロゴ](/images/ci-integrations/codeship-integration/1328260-codeship1.png)
 
 ## プロジェクト設定
 
-[Codeship](http://codeship.com/)とTestimを統合するには、CodeshipプロジェクトのProject SettingsのTest Settingsに移動します:
+[Codeship](http://codeship.com/)と Testim を統合するには、 Codeship プロジェクトの Project Settings の Test Settings に移動します:
 
-![Codeshipのプロジェクト設定画面](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png)
+![Codeship のプロジェクト設定画面](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png)
 
-## ローカルSelenium Gridで実行
+## ローカル Selenium Grid で実行
 
-CodeShipで現在ビルド中のアプリでテストを実行する場合は、ローカルSelenium Gridで実行する必要があります。setup commandsセクションに以下の行を追加します:
+CodeShip で現在ビルド中のアプリでテストを実行する場合は、ローカル Selenium Grid で実行する必要があります。 setup commands セクションに以下の行を追加します:
 
 ```shell
 nvm install <use latest version supported by Testim>
@@ -32,7 +32,7 @@ npm install -g webdriver-manager
 npm install -g @testim/testim-cli
 ```
 
-Test Commandsセクションには、以下の行を追加します(値は適宜変更してください):
+Test Commands セクションには、以下の行を追加します（値は適宜変更してください）:
 
 ```shell
 webdriver-manager update
@@ -45,17 +45,17 @@ testim --project "<PROJECT ID>" \
 ​
 ```
 
-![Codeshipのテストコマンド設定画面](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
+![Codeship のテストコマンド設定画面](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
 
-​## 外部Selenium Gridで実行\
-アプリが公開されている利用可能なサーバーにデプロイされている場合、外部Selenium Gridでテストを実行できます。その場合、ローカルSelenium Server(webdriver-manager)は不要なので、setup commandsセクションに以下の行のみを追加します:
+​## 外部 Selenium Grid で実行\
+アプリが公開されている利用可能なサーバーにデプロイされている場合、外部 Selenium Grid でテストを実行できます。その場合、ローカル Selenium Server（webdriver-manager）は不要なので、 setup commands セクションに以下の行のみを追加します:
 
 ```shell
 nvm install <use latest version supported by Testim>
 npm install -g @testim/testim-cli
 ```
 
-​Test Commandsセクションには、以下の行を追加します(値は適宜変更してください):
+​Test Commands セクションには、以下の行を追加します（値は適宜変更してください）:
 
 ```shell
 testim --project "<PROJECT ID>" \

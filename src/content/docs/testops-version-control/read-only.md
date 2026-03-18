@@ -1,6 +1,6 @@
 ---
 title: ブランチ読み取り専用状態
-description: ブランチへの直接書き込みを許可しない（ブランチとマージを使用する場合のみ）
+description: ブランチを読み取り専用に設定することで直接変更を禁止し、すべての変更をフォーク経由のプルリクエストで行うよう制御できます。
 category: TestOps
 order: 15010
 updated: '2025-11-02'
@@ -23,8 +23,8 @@ keywords:
 Testim には、ブランチへの直接書き込みを許可しないようにブランチをロックする機能があります。\
 ブランチに書き込むには、すべてのユーザーがまず別のブランチにフォークしてから、ブランチへのマージを実行する必要があります。ブランチへのマージは[プルリクエスト](/docs/pull-requests)を通じて実行できます。
 
-:::note{title="これは PRO 機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+:::note{title="これはPRO機能です"}
+この機能は、 Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::note
@@ -33,7 +33,7 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 
 ## ブランチ読み取り専用モードの有効化
 
-ブランチ読み取り専用モードは、**Settings -> General** 画面の **Pull Requests** 設定の下にあり、プロジェクトごとに構成されます。これを有効にするには、**Protect branch from changes** トグルをオンに切り替えます。ブランチは「read-only」とラベル付けされます。
+ブランチ読み取り専用モードは、**Settings -> General** 画面の **Pull Requests** 設定の下にあり、プロジェクトごとに構成されます。これを有効にするには、**Protect branch from changes** トグルをオンに切り替えます。ブランチは「 read-only 」とラベル付けされます。
 
 ![プロジェクト設定](/images/testops-version-control/read-only/77cbaf9-project_settings.png)
 
@@ -45,7 +45,7 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 
 * ブランチの下で直接テストに保存を実行すると、別のブランチへのフォークを実行し、新しいブランチに変更を保存するように求められます
 
-![読み取り専用エディタ](/images/testops-version-control/read-only/ef453c8-Screen_Shot_2021-01-18_at_6.21.37.png)
+![読み取り専用エディター](/images/testops-version-control/read-only/ef453c8-Screen_Shot_2021-01-18_at_6.21.37.png)
 
 ### テストリスト
 
@@ -56,9 +56,9 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 * 新しいテストを作成
 * テストを削除
 * テストを複製
-* 新しいフォルダを作成
-* 別のフォルダに移動
-* フォルダを削除
+* 新しいフォルダーを作成
+* 別のフォルダーに移動
+* フォルダーを削除
 * テストのステータスを変更
 * 名前を変更
 
@@ -77,6 +77,6 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 
 ### 読み取り専用ブランチでの自動改善機能
 
-デフォルトでは、自動改善機能は読み取り専用として設定されていないブランチでのみ実行されます。ただし、ブランチが master ブランチの場合、**Allow Auto-Improve on master** をオンに設定することで、master 読み取り専用ブランチに自動改善機能を適用できます。詳細については、[読み取り専用ブランチでの自動改善の許可](/docs/locators-auto-improve#allowing-auto-improve-on-a-master-read-only-branch)を参照してください。
+デフォルトでは、自動改善機能は読み取り専用として設定されていないブランチでのみ実行されます。ただし、ブランチが master ブランチの場合、**Allow Auto-Improve on master** をオンに設定することで、 master 読み取り専用ブランチに自動改善機能を適用できます。詳細については、[読み取り専用ブランチでの自動改善の許可](/docs/locators-auto-improve#allowing-auto-improve-on-a-master-read-only-branch)を参照してください。
 
 ![自動改善設定](/images/testops-version-control/read-only/05bf593-autoimprove.png)

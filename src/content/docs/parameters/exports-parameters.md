@@ -1,13 +1,13 @@
 ---
-title: パラメータのエクスポート
-description: テスト内のステップ間、あるいは別テスト間でパラメータを受け渡す
+title: パラメーターのエクスポート
+description: exports ・ exportsTest ・ exportsGlobal を使い、ステップ間・テスト内・テスト間の各スコープでパラメーターを受け渡す方法を説明します。
 category: 高度な編集
 order: 5047
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/exports-parameters'
 keywords:
   - Testim
-  - パラメータ
+  - パラメーター
   - エクスポート
   - 変数
   - スコープ
@@ -17,9 +17,9 @@ keywords:
   - JavaScript
 ---
 
-テスト内のステップ間、あるいは別テスト間でパラメータを受け渡す
+テスト内のステップ間、あるいは別テスト間でパラメーターを受け渡す
 
-エクスポートには3種類あります。
+エクスポートには 3 種類あります。
 
 * ローカル（Local）: 同一スコープ内のステップ間で受け渡し（例: グループ内のステップ間）
 * テスト（Test）: 同一テスト内のステップ／グループ間で受け渡し
@@ -32,13 +32,13 @@ keywords:
 ## エクスポートの例
 
 :::note
-ステップ間の受け渡しはJSONシリアライズされます。JSONにシリアライズ可能な値のみ使用してください。
+ステップ間の受け渡しは JSON シリアライズされます。 JSON にシリアライズ可能な値のみ使用してください。
 :::
 
 ここではローカルのエクスポートをカスタムアクションで設定し、同じテスト内のカスタム検証で利用します。
 
 * 新規テストを作成します。
-* カスタムアクションを追加し、エディタに次を入力します。
+* カスタムアクションを追加し、エディターに次を入力します。
 
 ```javascript
 //For Local export:     
@@ -49,7 +49,7 @@ exportsTest.bestTestingTool = "Testim";
 exportsGlobal.bestTestingTool = "Testim";
 ```
 
-![パラメータのエクスポート例](/images/parameters/exports-parameters/1b18e5a-export_param1.gif)
+![パラメーターのエクスポート例](/images/parameters/exports-parameters/1b18e5a-export_param1.gif)
 
 3. カスタム検証を追加し、次を入力します。
 
@@ -76,21 +76,21 @@ exports.bestTestingTool = local;
 ```
 
 :::note
-実行後、入力パラメータとステップでエクスポートされた値は、ステップのプロパティパネルに表示されます。
+実行後、入力パラメーターとステップでエクスポートされた値は、ステップのプロパティパネルに表示されます。
 :::
 
-エクスポートした値は JS パラメータ内でも参照できます。
+エクスポートした値は JS パラメーター内でも参照できます。
 
 1. 最後のステップで '**js Param**' を追加します。
 
-![JSパラメータの追加](/images/parameters/exports-parameters/cc6cb99-image_19.png)
+![JS パラメーターの追加](/images/parameters/exports-parameters/cc6cb99-image_19.png)
 
-2. パラメータ名を "WhoIsAwesome" に変更します。
+2. パラメーター名を "WhoIsAwesome" に変更します。
 3. 値を `bestTestingTool + " is awesome!"` に設定します。
 
-![JSパラメータの設定](/images/parameters/exports-parameters/cbcab47-exports_params_2.gif)
+![JS パラメーターの設定](/images/parameters/exports-parameters/cbcab47-exports_params_2.gif)
 
-4. エディタのコードを次のように変更します。
+4. エディターのコードを次のように変更します。
 
 ```javascript
 if (WhoIsAwesome !== "Testim is awesome!") {
@@ -107,4 +107,4 @@ if (WhoIsAwesome !== "Testim is awesome!") {
   2. 配列
   3. JSON オブジェクト
 
-* 1ステップあたりのグローバルエクスポートは 2MB まで
+* 1 ステップあたりのグローバルエクスポートは 2MB まで
