@@ -24,7 +24,7 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 ブランチに書き込むには、すべてのユーザーがまず別のブランチにフォークしてから、ブランチへのマージを実行する必要があります。ブランチへのマージは[プルリクエスト](/docs/pull-requests)を通じて実行できます。
 
 :::note{title="これは PRO 機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細については、[料金ページ](https://www.testim.io/pricing/)をご覧ください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::note

@@ -20,12 +20,12 @@ AI駆動のビジュアルテストを有効にするためにApplitoolsと統�
 Testimのビジュアル検証およびwait-forステップを使用するには、まず[Applitools](https://applitools.com/)が提供するApplitools EyesアプリとTestimアカウントを統合する必要があります。
 
 :::info{title="Pro機能"}
-この機能は、Professional planのプロジェクトでのみ利用できます。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 前提条件
 
-- Professional planのプロジェクトでのみ利用できる機能です。Professional planの詳細については、[こちら](https://www.testim.io/pricing/)をご確認ください。
+- Professional plan のプロジェクトでのみ利用できる機能です。
 - Applitools EyesとTestimの両方で管理者権限が必要です。
 
 ## Applitools統合のセットアップ

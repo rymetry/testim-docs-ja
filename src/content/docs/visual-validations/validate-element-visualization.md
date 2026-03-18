@@ -23,7 +23,7 @@ keywords:
 **要素のビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyesアプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::info{title="PRO機能"}
-この機能はプロフェッショナルプランでのみ利用できます。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/) をご覧ください。
+この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 要素のビジュアル検証ステップの追加

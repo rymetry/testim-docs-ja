@@ -23,7 +23,7 @@ keywords:
 **要素アクセシビリティ検証**ステップを使用すると、Webページ上の特定の要素がアクセシブルにできたはずだが実装されていないかどうかをチェックできます。アクセシビリティチェックは、以下のルールに基づいています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
 :::info{title="これはPRO機能です"}
-この機能はプロフェッショナルプランのプロジェクトでのみ利用可能です。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をご覧ください。
+この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::note

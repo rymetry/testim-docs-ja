@@ -27,7 +27,7 @@ RCAおよびUltrafast Test Cloud（追加環境の追加）機能は、適切な
 :::
 
 :::info{title="PRO機能"}
-この機能はプロフェッショナルプランでのみ利用できます。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/) をご覧ください。
+この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::note{title="テスト設定の変更について"}

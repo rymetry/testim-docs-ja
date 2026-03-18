@@ -21,7 +21,7 @@ keywords:
 失敗したテストやバグは、bug / issue tracking system に簡単に報告できます。Testim は一般的なバグトラッカーと統合されており、ワンクリックで issue を公開できます。作成される issue には、詳細な説明とバグのスクリーンショットが含まれます。
 
 :::info{title="プロ機能"}
-この機能はProfessionalプラン以上で利用できます。プランの詳細については [Testimの料金プラン](https://www.testim.io/pricing/) を参照してください。
+この機能は Professional plan 以上で利用できます。
 :::
 
 bug や issue を tracking system に報告する方法はいくつかあります。
