@@ -27,7 +27,7 @@ keywords:
 
 プロジェクト名は、プロジェクト全体に適用される名前です。プロジェクトオーナーまたは企業オーナーのみがプロジェクト名を編集できます。
 
-:fa-arrow-right: **プロジェクト名を編集するには:**
+**プロジェクト名を編集するには:**
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
@@ -37,8 +37,7 @@ keywords:
 
 ![Project Nameセクションの編集アイコン](/images/project-user-management/project-settings/f225cca-Picture2.png)
 
-**Project Name** ウィンドウが開きます。\
-3\. **Enter a new name for this project** フィールドに、新しい名前を入力します。
+3. **Project Name** ウィンドウが開きます。**Enter a new name for this project** フィールドに、新しい名前を入力します。
 
 ![新しいプロジェクト名を入力するフィールド](/images/project-user-management/project-settings/ad8a31f-Picture3.png)
 
@@ -52,7 +51,7 @@ keywords:
 
 ベースURLは、新しいテストを作成する際に使用されるデフォルトのURLです。
 
-:fa-arrow-right: **デフォルトベースURLを編集するには:**
+**デフォルトベースURLを編集するには:**
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
@@ -62,8 +61,7 @@ keywords:
 
 ![Base URL編集用の入力ダイアログ](/images/project-user-management/project-settings/2c841e2-Picture6.png)
 
-**Test Default URL** ウィンドウが開きます。\
-3\. **Your app URL** フィールドに、テスト対象のアプリのURLを入力します。
+3. **Test Default URL** ウィンドウが開きます。**Your app URL** フィールドに、テスト対象のアプリのURLを入力します。
 
 ![344](/images/project-user-management/project-settings/38fd0c6-Picture7.png)
 
@@ -77,7 +75,7 @@ keywords:
 
 デフォルトテスト設定は、新しいテストを作成する際に使用される設定です。設定リストで利用可能なテスト設定の1つを選択できます。詳細については、[設定リスト](/docs/shared-configuration)を参照してください。
 
-:fa-arrow-right: **デフォルトテスト設定を編集するには:**
+**デフォルトテスト設定を編集するには:**
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
@@ -97,9 +95,11 @@ keywords:
 
 Testimのオートコンプリート機能は、現在記録中のテストで以前に記録された共有グループステップを自動的に使用するオプションを提供し、テスト記録プロセスを迅速化します。オートコンプリートの詳細については、[オートコンプリート](/docs/auto-complete)を参照してください。
 
-> 📘 この機能は、プロフェッショナルプランのプロジェクトのみ利用可能です。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::note{title="Pro機能"}
+この機能はProfessional planのプロジェクトでのみ利用できます。
+:::
 
-:fa-arrow-right: **オートコンプリート提案機能をオフ/オンにするには:**
+**オートコンプリート提案機能をオフ/オンにするには:**
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
@@ -113,18 +113,19 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 この設定では、非表示パラメータのリストを変更できます。CLI経由でテストを実行する際、Testimに送信されるパラメータ値を非表示にして、その値がTestimのデータベースに保存されたり、UIテスト結果に表示されたりしないようにすることができます。非表示パラメータの詳細については、[非表示パラメータ](/docs/hidden-parameters)を参照してください。
 
-:fa-arrow-right: **非表示パラメータリストを変更するには:**
+**非表示パラメータリストを変更するには:**
 
 1. **Settings > Project** ページで、**General** をクリックします。
 
 ![475](/images/project-user-management/project-settings/7be7e39-Picture14.png)
 
-現在の非表示パラメータのリストが **Hidden Parameters** セクションに表示されます。リストに現在パラメータがない場合は、**Add hidden params** リンクが表示されます。\
-2\. **Add hidden params** リンクをクリックします。
+2. 現在の非表示パラメータのリストが **Hidden Parameters** セクションに表示されます。リストに現在パラメータがない場合は、**Add hidden params** リンクが表示されます。**Add hidden params** リンクをクリックします。
 
 ![487](/images/project-user-management/project-settings/f841a78-Picture15.png)
 
-> 📘 または、リストにすでにパラメータがある場合は、パラメータリストをクリックします。
+:::note
+または、リストにすでにパラメータがある場合は、パラメータリストをクリックします。
+:::
 
 **Hidden Parameters** ウィンドウが表示されます。
 
@@ -147,7 +148,9 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 プルリクエスト設定では、プロジェクトの特定のブランチを変更から保護し、レビュアーの承認が必要なブランチとプルリクエストをレビューできるユーザーを設定できます。プルリクエスト設定はプロジェクトごとに設定されます。プロジェクトオーナーまたは企業オーナーのみがこれらの設定を変更できます。プルリクエストの詳細については、[プルリクエスト](/docs/pull-requests)を参照してください。
 
-> 📘 これはプロフェッショナルプランのプロジェクトのみ利用可能なプロ機能です。プロフェッショナルプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::note{title="Pro機能"}
+この機能はProfessional planのプロジェクトでのみ利用できます。
+:::
 
 ![521](/images/project-user-management/project-settings/cda9cf7-Picture19.png)
 
@@ -155,7 +158,7 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 この設定は、Masterブランチおよび/または選択したブランチへの直接書き込みを防ぎます(読み取り専用)。Masterブランチを選択した場合でも、[Auto-improve](/docs/locators-auto-improve)変更を許可して、テストの安定性を高めるためにテストロケータを自動的に改善することができます。
 
-:fa-arrow-right: **プロジェクトのmasterブランチをロック/アンロックするには:**
+**プロジェクトのmasterブランチをロック/アンロックするには:**
 
 1. **Protect branches from changes** トグルをオンにします。
 2. 保護したいブランチを選択します。検索ボックスを使用してブランチを検索できます。
@@ -165,7 +168,7 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 この設定は、ターゲットブランチにマージする前に、プルリクエストをレビュアーが承認する必要があるブランチと、レビュアーが誰であるかを指定します。
 
-:fa-arrow-right: **レビュアーからの承認ブランチを設定するには:**
+**レビュアーからの承認ブランチを設定するには:**
 
 1. **Require approving reviewer** トグルをオンにします。
 2. **Branches** の下で、この設定を適用したいブランチを選択します。検索ボックスを使用してブランチを検索できます。**All branches** を選択すると、すべてのブランチに設定を適用できます。
@@ -175,7 +178,7 @@ Testimのオートコンプリート機能は、現在記録中のテストで�
 
 Require approving reviewer機能を有効にしている場合、オプションで自分のプルリクエストを承認できるユーザーを選択できます。
 
-:fa-arrow-right: **自己承認を設定するには:**
+**自己承認を設定するには:**
 
 1. **Allow self approval** トグルをオンにします。
 2. この設定を適用したいユーザーを選択します。検索ボックスを使用してユーザーを検索できます。
