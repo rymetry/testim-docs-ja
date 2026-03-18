@@ -46,8 +46,8 @@ src/content/docs/
 │   └── editing-your-tests.md
 ├── validations/             # 高度な編集カテゴリの代表フォルダ
 │   └── validate-element-visible.md
-└── guides/                 # ガイドカテゴリ
-    └── writing-features.md
+└── testim-labs/             # Testim Labsカテゴリ
+    └── testim-labs.md
 ```
 
 **フォルダ選択ルール**:
@@ -126,7 +126,6 @@ keywords:
 | Salesforce Testing | Salesforceテスト | `salesforce-testing/` |
 | Testim Extension | Testim拡張機能 | `testim-extension/` |
 | Security | セキュリティ | `security-sso/` |
-| Guides | ガイド | `guides/` |
 
 **重要**: 新しいカテゴリを追加する場合は、既存の翻訳パターンに従って一貫性を保ってください。
 
@@ -340,8 +339,8 @@ public/images/
 │   │   └── demo-video.mp4
 │   └── recording-a-mobile-test/
 │       └── screenshot.png
-└── guides/                     # ガイドカテゴリ
-    └── writing-features/
+└── testim-labs/                  # Testim Labsカテゴリ
+    └── testim-labs/
         └── example.png
 ```
 

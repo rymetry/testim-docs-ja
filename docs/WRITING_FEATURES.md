@@ -1,24 +1,13 @@
----
-title: 執筆機能リファレンス
-description: Markdownファイルで使える拡張機能の完全ガイド。情報パネル、コードブロック、数式表示など、ドキュメント執筆に必要な機能を網羅的に解説します。
-category: 執筆ガイド
-order: 50
-updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/writing-features'
-keywords:
-  - markdown
-  - 執筆ガイド
-  - リファレンス
-  - callout
-  - コードブロック
----
+# 執筆機能リファレンス
+
+> このファイルは開発者向けの内部ドキュメントです。Markdownファイルで使える拡張機能の完全リファレンスです。
 
 ## このページについて
 
 このページは、**Markdownファイルで使える拡張機能の完全リファレンス**です。すべての機能の実装例と使い方を詳しく解説しています。
 
 :::tip{title="初めての方へ"}
-- **執筆ガイドが欲しい方**: プロジェクトルートの [WRITING_GUIDE.md](/WRITING_GUIDE.md) で、MarkdownとMDXの選び方や執筆フローをご紹介しています
+- **執筆ガイドが欲しい方**: プロジェクトルートの [WRITING_GUIDE.md](./WRITING_GUIDE.md) で、MarkdownとMDXの選び方や執筆フローをご紹介しています
 - **機能の詳しい使い方を知りたい方**: 下記のセクションをご参照ください
 :::
 

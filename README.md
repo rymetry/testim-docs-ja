@@ -105,9 +105,9 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
   - ベストプラクティスとFAQ
   - 執筆フロー
 
-- 🎨 **[執筆機能リファレンス](/docs/guides/writing-features)** - 実装例が豊富なリファレンス
+- 🎨 **[執筆機能リファレンス](./docs/WRITING_FEATURES.md)** - 実装例が豊富なリファレンス
   - すべての機能の詳しい使用例
-  - ブラウザでの表示イメージを確認
+  - callout・コードブロック・テーブルなど全機能の記述例
 
 - 🌐 **[TRANSLATION_GUIDE.md](./docs/TRANSLATION_GUIDE.md)** - 公式ドキュメントからの翻訳手順
 
