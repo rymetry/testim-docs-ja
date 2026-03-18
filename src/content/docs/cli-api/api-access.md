@@ -28,11 +28,11 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 完全なAPIドキュメントについては、[こちら](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml)を参照してください。
 :::
 
-:::note{title="Pro機能"}
+:::info{title="Pro機能"}
 この機能はProfessional planのプロジェクトでのみ利用できます。
 :::
 
-# APIアクセスの有効化
+## APIアクセスの有効化
 
 このAPIを使用する前に、以下の説明に従ってAPIアクセスを設定する必要があります。
 
@@ -55,7 +55,7 @@ Testim AutomateのREST APIを使用して、以下のアクションを実行で
 APIキーの値を表示できるのはこのときだけです。
 :::
 
-# APIキーの管理
+## APIキーの管理
 
 **Settings > API** 画面から、既存のキーを管理できます。**検索ボックス**にキー名を入力して、既存のキーを検索できます。
 
@@ -75,7 +75,7 @@ APIキーの値を表示できるのはこのときだけです。
 このアクションは元に戻せません。このAPIキーを復元することはできません。
 :::
 
-# APIキーの使用
+## APIキーの使用
 
 API呼び出しを実行するには、各呼び出しでヘッダーに以下の形式でAPIキーを渡す必要があります:\
 キー名 - Authorization\
