@@ -23,7 +23,7 @@ keywords:
 *network validation* ステップでは、ネットワークリクエストを検証できます。プリセットの検証ステップで、オブジェクトの配列 `networkRequests`（下表）を受け取り、この配列に対して JavaScript を実行します。
 
 :::note
-これは Professional planの機能です。詳しくは [pricing](https://www.testim.io/pricing/) を参照してください。
+これは Professional plan の機能です。
 :::
 
 :::info
@@ -34,8 +34,8 @@ keywords:
 
 *networkRequests* 配列に含まれるオブジェクトで、次の項目を検証できます：
 
-:::note{title="Request/Response Body"}
-リクエストボディとレスポンスボディのキャプチャも可能です。詳細は [Capturing Request and Response Body](#capturing-request-and-response-body) を参照してください。
+:::note{title="リクエスト/レスポンスボディ"}
+リクエストボディとレスポンスボディのキャプチャも可能です。詳細は [リクエストボディとレスポンスボディのキャプチャ](#リクエストボディとレスポンスボディのキャプチャ) を参照してください。
 :::
 
 <table class="md-table md-table-2cols">

@@ -146,7 +146,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 > 例: 固定文字列や正規表現 `new RegExp('^Hello')`、`'Hello ' + userName` のようにパラメーターと結合した式などを指定できます。
 
-## Advanced text validation（Mobile & Web）
+## Advanced text validation
 
 テキスト文字列全体を完全一致で指定するのが難しい場合があります。**Expected Value** フィールドでは、次の組み合わせでテキスト検証を作成できます：
 

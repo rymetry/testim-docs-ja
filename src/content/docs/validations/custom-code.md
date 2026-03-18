@@ -251,7 +251,7 @@ window.location.href = 'https://testim.io/';
 ```
 
 :::info{title="Chrome DevTools debugger"}
-ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](doc:advanced-debugging-options#3-chrome-devtools-debugger) を参照してください。
+ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/advanced-debugging-options#3-chrome-devtools-debugger) を参照してください。
 :::
 
 :::info

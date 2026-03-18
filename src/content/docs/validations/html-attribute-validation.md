@@ -120,7 +120,7 @@ Expected value では正規表現も使用できます。例えば、https で�
 7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と 'https://www.testim.io'
 :::
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
@@ -139,5 +139,5 @@ Expected value では正規表現も使用できます。例えば、https で�
 3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と '[https://www.testim.io'](https://www.testim.io')
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と 'https://www.testim.io'
 :::
