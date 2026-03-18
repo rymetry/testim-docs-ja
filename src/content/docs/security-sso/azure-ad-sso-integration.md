@@ -21,7 +21,7 @@ keywords:
 Azure Active DirectoryはMicrosoftのクラウドベースのIDおよびアクセス管理サービスです。Azure ADシームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
 TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzureで一度認証すれば、再度認証することなくTestimにアクセスできます。
 
-:::note
+:::info
 SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
 :::
 
