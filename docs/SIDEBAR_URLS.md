@@ -159,7 +159,7 @@
 - ✅🔍 https://help.testim.io/docs/play-from-here
 - ✅🔍 https://help.testim.io/docs/rerun-locally-with-the-same-params
 
-## Results（結果）
+## Results（テスト結果）
 
 - ✅🔍 https://help.testim.io/docs/results-overview
 - ✅🔍 https://help.testim.io/docs/test-results
@@ -263,7 +263,7 @@
 - ✅🔍 https://help.testim.io/docs/cli-settings
 - ✅🔍 https://help.testim.io/docs/cli-prerequisites
 
-## Administration（管理）
+## Administration（管理者機能）
 
 - ✅🔍 https://help.testim.io/docs/api-access
 - ✅🔍 https://help.testim.io/docs/project-user-management

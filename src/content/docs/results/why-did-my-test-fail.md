@@ -1,7 +1,7 @@
 ---
 title: テストが失敗した理由は？
 description: テスト失敗の原因を理解し、エラーメッセージの種類、一般的な原因、および修正方法を学びます。
-category: 結果
+category: テスト結果
 order: 7006
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/why-did-my-test-fail'

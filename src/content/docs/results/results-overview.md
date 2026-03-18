@@ -1,7 +1,7 @@
 ---
 title: 結果の概要
 description: テスト実行後の結果を確認する方法について説明します。エディタ、実行画面、テスト実行画面での結果表示について学びます。
-category: 結果
+category: テスト結果
 order: 7001
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/results-overview'

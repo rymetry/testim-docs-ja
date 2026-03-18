@@ -1,7 +1,7 @@
 ---
 title: テスト結果
 description: テスト実行後の結果の確認方法について説明します。全体の結果とステップごとの詳細結果の見方を学びます。
-category: 結果
+category: テスト結果
 order: 7002
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/test-results'
