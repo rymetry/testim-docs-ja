@@ -74,7 +74,8 @@ export default function SearchModal() {
   const listRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const loadingRef = useRef(false);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const loadControllerRef = useRef<AbortController | null>(null);
 
   // グルーピングとフラットナビリストを構築
   const { groups, flatResults } = useMemo(() => {
@@ -108,12 +109,13 @@ export default function SearchModal() {
   }, [selectedIndex, results]);
 
   // 検索インデックスの遅延初期化（初回オープン時にフェッチ — 未使用時の 500KB+ 転送を回避）
-  // loadingRef で in-flight ガード（open→close→open の重複フェッチを防止）
+  // loadControllerRef で in-flight ガード — cleanup で同期的に null 化して
+  // open→close→reopen のデッドロックを防止
   useEffect(() => {
-    if (!isOpen || miniSearch || loadingRef.current) return;
+    if (!isOpen || miniSearch || loadControllerRef.current) return;
 
     const controller = new AbortController();
-    loadingRef.current = true;
+    loadControllerRef.current = controller;
     setIndexStatus('loading');
 
     const loadSearchIndex = async () => {
@@ -151,14 +153,18 @@ export default function SearchModal() {
           console.error('Failed to load search index:', error);
           setIndexStatus('error');
         }
-      } finally {
-        loadingRef.current = false;
       }
     };
 
     loadSearchIndex();
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      // 同期的に ref をクリア — 非同期の finally を待たずに次の effect がフェッチを再開できる
+      if (loadControllerRef.current === controller) {
+        loadControllerRef.current = null;
+      }
+    };
   }, [isOpen, miniSearch]);
 
   // モーダルの開閉状態を ref で保持（グローバル keydown ハンドラから stale closure なしで参照するため）
@@ -172,6 +178,8 @@ export default function SearchModal() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
+        // モーダルを開く前のフォーカス位置を保存（閉じたときに復帰するため）
+        previousFocusRef.current = document.activeElement as HTMLElement | null;
         setIsOpen(true);
         return;
       }
@@ -254,6 +262,9 @@ export default function SearchModal() {
 
   // キーボードナビゲーション
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    // IME変換中はすべてのキーイベントを無視（かな/漢字変換の候補ナビゲーションを妨げない）
+    if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
+
     if (e.key === 'ArrowDown') {
       if (flatResults.length === 0) return;
       e.preventDefault();
@@ -268,8 +279,7 @@ export default function SearchModal() {
       return;
     }
 
-    // IME変換中のEnterキーは無視（日本語入力の変換確定を妨げない）
-    if (e.key === 'Enter' && !e.nativeEvent.isComposing && flatResults[selectedIndex]) {
+    if (e.key === 'Enter' && flatResults[selectedIndex]) {
       e.preventDefault();
       const target = flatResults[selectedIndex];
       const href =
@@ -305,8 +315,16 @@ export default function SearchModal() {
     setQuery('');
     setResults([]);
     setSelectedCategory(null);
-    // モーダルが閉じた後、開くきっかけとなったトリガーボタンにフォーカスを戻す
-    setTimeout(() => triggerRef.current?.focus(), 0);
+    // モーダルを開く前にフォーカスがあった要素に復帰（なければトリガーボタンにフォールバック）
+    setTimeout(() => {
+      const target = previousFocusRef.current;
+      if (target && document.contains(target)) {
+        target.focus();
+      } else {
+        triggerRef.current?.focus();
+      }
+      previousFocusRef.current = null;
+    }, 0);
   };
 
   if (!isOpen) {
