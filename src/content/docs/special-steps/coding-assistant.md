@@ -91,25 +91,25 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 利用できるプロンプト例:
 
-### ページURLを検証するコードを生成
+## ページURLを検証するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/485092a-1.png)
 
 ページURLが指定の正規表現に一致するか検証するカスタム検証ステップで使用します。
 
-### チェックボックス選択を検証するコードを生成
+## チェックボックス選択を検証するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/95f3895-2.png)
 
 特定のチェックボックスが選択済みか判定するカスタム条件で使用します。クリック前に未選択であることを確認する用途など。
 
-### リッチテキストエディタに文字入力するコードを生成
+## リッチテキストエディタに文字入力するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/c28ca84-image.png)
 
 Set text ステップで入力できないリッチテキストエディタ要素へ文字列を入力するためのコードです。
 
-### 3つのパラメータ値を比較するコードを生成
+## 3つのパラメータ値を比較するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/417615e-image_1.png)
 

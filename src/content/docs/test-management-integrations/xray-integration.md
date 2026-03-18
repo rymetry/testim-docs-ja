@@ -21,15 +21,15 @@ keywords:
 
 Xray JiraプロジェクトでTestimのテスト実行結果を表示します。
 
-### Xrayとは？
+## Xrayとは？
 
 Xrayは、テストの計画、設計、実行、およびテストレポートの生成を可能にします。Xrayはこのプロセスに特定のJira課題タイプを使用します。
 
-### Xray統合が必要な理由
+## Xray統合が必要な理由
 
 Xray統合により、TestimのテストをXrayのテストケースにリンクできます。Testimでテストを実行すると、テスト結果が自動的にXrayの実行結果に表示され、TestimとXrayで実行されたテストを一元的に表示できます。
 
-### Xray統合の設定
+## Xray統合の設定
 
 Xray統合を使用する前に、TestimをXrayプロジェクトに接続する必要があります。このプロセスは一度だけ必要です。
 
@@ -38,7 +38,7 @@ Xray統合を使用する前に、TestimをXrayプロジェクトに接続する
 - **Jira APIトークン** - Jira APIトークンを取得するには、[https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)の手順に従ってください。
 - **XrayクライアントIDとXrayクライアントシークレット** - XrayクライアントIDとクライアントシークレットを取得するには、[https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys](https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys)の手順に従ってください。
 
-#### TestimをXrayに接続する手順
+### TestimをXrayに接続する手順
 
 1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合モジュールがあります。
 2. Xray統合モジュールで、**login（ログイン）** をクリックします。
@@ -61,11 +61,11 @@ Xray統合を使用する前に、TestimをXrayプロジェクトに接続する
 
    ![関連付けたいXrayプロジェクトを選択する画面](/images/test-management-integrations/xray-integration/88115b5-image_2.png)
 
-### TestimのテストをXrayテストケースにマッピングする
+## TestimのテストをXrayテストケースにマッピングする
 
 TestimとXrayの統合を設定した後、Testimの特定のテストをXrayのテストにマッピングする準備が整います。
 
-#### TestimのテストをXrayのテストにマッピングする手順
+### TestimのテストをXrayのテストにマッピングする手順
 
 1. Testimで、マッピングしたいテストを開きます。
 2. Testimのテスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
@@ -78,7 +78,7 @@ TestimとXrayの統合を設定した後、Testimの特定のテストをXrayの
 
 4. **Save（保存）** をクリックします。
 
-### テストの実行とXrayでのTestimテスト結果の表示
+## テストの実行とXrayでのTestimテスト結果の表示
 
 Xrayでテスト実行の結果を表示するには、リモートグリッドのみを使用してTestimでマッピングされたテストを実行する必要があります。Testimでマッピングされたテストを実行すると、テスト結果が関連するXrayプロジェクトのプロジェクトボードの「To Do」列の適切なテスト実行の下に表示されます。\
 実行の名前は `"<Testim実行名><UTC時刻>"` です。

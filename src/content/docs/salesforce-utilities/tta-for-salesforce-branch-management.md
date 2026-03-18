@@ -26,7 +26,7 @@ Testim for Salesforceブランチ管理機能は、一般的なTestimブラン�
 * 各Salesforce環境は、1つ以上のブランチに関連付けられています。関連付けは、ブランチ自体の構成を通じて行われます。Salesforce環境を作成するには、[Salesforce環境の接続](/docs/create-and-manage-test-environments#connecting-a-salesforce-environment)を参照してください。
 * ある時点で、ブランチ間でマージしたい場合があります（例：フィーチャーブランチをMainブランチにマージする）。ブランチをマージするには、[ブランチのマージ](/docs/create-and-merge-branches-from-different-test-environments#merging-a-branch)セクションの指示に従ってください。
 
-### ブランチの作成
+## ブランチの作成
 
 :fa-arrow-right:**新しいブランチを作成するには:**
 
@@ -39,7 +39,7 @@ Testim for Salesforceブランチ管理機能は、一般的なTestimブラン�
    ![新しいブランチ作成ダイアログ](/images/salesforce-utilities/tta-for-salesforce-branch-management/f57b3fa-newbranch2.png)
 4. **OK**をクリックします。
 
-### ブランチのSalesforce環境の変更
+## ブランチのSalesforce環境の変更
 
 :fa-arrow-right:**ブランチのSalesforce環境を変更するには:**
 

@@ -58,7 +58,7 @@ keywords:
 5. 作成したステップで **Show Properties**をクリックし、以下の説明に従ってプロパティを設定します。\
 6. **Properties** ペインの **Step Parameters** ドロップダウンをクリックすると、現在の設定で生成された日付を確認できます。  
 
-### Generate Date のプロパティ
+## Generate Date のプロパティ
 
 <table class="md-table md-table-3cols">
  <thead>

@@ -26,7 +26,7 @@ Testimは、主要なテスト管理ツールと統合し、テスト結果を�
 この機能は、Professional planのプロジェクトでのみ利用できます。
 :::
 
-### 利用可能なテスト管理統合
+## 利用可能なテスト管理統合
 
 - **[TestRail](/docs/testrail-integration)**: Gurock社のテスト管理ツール
 - **[qTest](/docs/qtest-integration)**: Tricentisのエンタープライズテスト管理プラットフォーム

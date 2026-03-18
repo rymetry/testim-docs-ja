@@ -27,7 +27,7 @@ Testim は、指定した Slack channel に bug の説明を公開できます�
 この機能は Professional plan 以上で利用できます。
 :::
 
-### TestimをSlackに接続する
+## TestimをSlackに接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. Slack にログイン済みであることを確認し、**Slack** ロゴをクリックします。
