@@ -231,14 +231,14 @@ new RegExp("^" + "((?!" + param1 + ").)*$")
 
 パラメーターで検証値を指定する構成は、次のいずれかです。
 
-* **テストレベルのパラメーター** — データ駆動設定（Config / 外部ソース）で渡す方法。
-* **ステップレベルのパラメーター** — エクスポートして検証ステップに受け渡す方法。
+- **テストレベルのパラメーター** — データ駆動設定（Config / 外部ソース）で渡す方法。
+- **ステップレベルのパラメーター** — エクスポートして検証ステップに受け渡す方法。
 
 ### テストレベルでのパラメーター指定（Web）
 
 1. データ駆動テストの設定でパラメーターを渡します。
-   * **外部ソースからのデータ** → [Configuring data-driven tests using data from an external source](/docs/configuring-data-driven-tests-using-data-from-an-external-source)
-   * **Config ファイル** → [Configuration file](/docs/configuration-file-run-hooks), [Config file でのデータ駆動設定](/docs/configuring-data-driven-tests-using-the-config-file)
+   - **外部ソースからのデータ** → [Configuring data-driven tests using data from an external source](/docs/configuring-data-driven-tests-using-data-from-an-external-source)
+   - **Config ファイル** → [Configuration file](/docs/configuration-file-run-hooks), [Config file でのデータ駆動設定](/docs/configuring-data-driven-tests-using-the-config-file)
 
 <Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
   **画像をクリックで拡大**

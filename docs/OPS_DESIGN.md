@@ -51,7 +51,7 @@
 | `untranslated` | 未翻訳の英語テキスト行（UI 操作指示文のパターンマッチ） |
 | `legacy-callout` | レガシー callout 形式（`> 📘`, `> ❗️` 等） |
 | `jsx-callout` | JSX/MDX `<Callout>` コンポーネント残留 |
-| `h1-in-body` | 本文中の H1 見出し（`# ` で始まる行） |
+| `h1-in-body` | 本文中の H1 見出し（`#` で始まる行） |
 | `orphan-page` | `docs/SIDEBAR_URLS.md` に未掲載のページ |
 
 リモートモード（`npm run check:parity:remote`）では上記に加えて英語原文をフェッチし、見出し数・画像数・コードブロック数を比較する。
