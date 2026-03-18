@@ -289,15 +289,18 @@
   }
 
   .docs-prose .md-table-3cols th:nth-child(1),
-  .docs-prose .md-table-3cols td:nth-child(1),
-  .docs-prose .md-table-3cols th:nth-child(2),
-  .docs-prose .md-table-3cols td:nth-child(2) {
+  .docs-prose .md-table-3cols td:nth-child(1) {
     width: 25%;
     min-width: 140px;
   }
+  .docs-prose .md-table-3cols th:nth-child(2),
+  .docs-prose .md-table-3cols td:nth-child(2) {
+    width: 50%;
+  }
   .docs-prose .md-table-3cols th:nth-child(3),
   .docs-prose .md-table-3cols td:nth-child(3) {
-    width: 50%;
+    width: 25%;
+    min-width: 120px;
   }
 
   .docs-prose .md-table-4cols th:nth-child(1),
