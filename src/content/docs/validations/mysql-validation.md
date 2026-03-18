@@ -26,7 +26,7 @@ CLI アクションと SQL で MySQL を検証する
 多くの DB は保護されているため、CLI 検証ステップを実行するマシンの IP をホワイトリストに追加する必要がある場合があります。未設定だと DB に到達できずステップが失敗します。スケジューラー経由で実行する場合などはサポートまでお問い合わせください。
 :::
 
-#### **Example code:**
+## Example code
 
 ```text
 const dbName = "XXXXX";
@@ -56,7 +56,7 @@ return sequelize
   });
 ```
 
-#### **Parameters - この例で使用するパッケージと JS**
+## Parameters - この例で使用するパッケージと JS
 
  1.name: Sequelize, type: Package, value: [sequelize@latest](https://www.npmjs.com/package/sequelize)\
  2.name: mysql2, type: Package, value: [mysql2@latest](https://www.npmjs.com/package/mysql2)\

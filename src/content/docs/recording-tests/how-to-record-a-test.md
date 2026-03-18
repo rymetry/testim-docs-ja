@@ -123,7 +123,7 @@ CLI でテストを実行する際は、コマンドで別のテスト構成を�
 テスト構成のパラメーターは次のとおりです。
 
 | パラメーター | 説明 |
-|------------|------|
+| ------------ | ------ |
 | Name | 構成の名前。 |
 | Browser | テストを実行するブラウザ。Chrome、Firefox、Safari、Edge Chromium に対応しています。安定版ブラウザのみサポートしており、Beta、Dev、Canary バージョンはサポート対象外です。 |
 | OS | テストを実行する OS。Linux、Windows 11（Selenium およびカスタムグリッドのみ。Testim Grid は対象外）、Windows 10、Windows 8、Windows 8.1、Windows 7、Windows XP、macOS Sierra、macOS High Sierra、macOS Mojave、OS X El Capitan、OS X Yosemite、OS X Mavericks、OS X Mountain Lion、OS X Snow Leopard に対応しています。 |

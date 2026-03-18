@@ -22,7 +22,7 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 
 新しい高度な JS エディターは、[Monaco Editor](https://microsoft.github.io/monaco-editor/) をベースにした、より快適で効率的なコーディング体験を提供します。以下のさまざまなカスタムステップで JS の記述に利用できます（一覧は後述）。Monaco Editor は VS Code を支えるコードエディターです。
 
-### 主な機能
+## 主な機能
 
 * 構文チェック
 * 自動補完
@@ -30,7 +30,7 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 * コードナビゲーション
 * 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editingevolved)
 
-### 使用できるステップ
+## 使用できるステップ
 
 高度な JS エディターを利用できるステップ:
 

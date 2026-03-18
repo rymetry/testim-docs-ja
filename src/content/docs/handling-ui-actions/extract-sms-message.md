@@ -22,7 +22,7 @@ CLI action step と Twilio を使用して SMS メッセージを抽出する方
 
 [CLI action step](/docs/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMS メッセージの受信時刻とコンテンツの高度な検証を実行できます。
 
-#### **コード例:**
+## コード例
 
 ```javascript
 // twilio.com/consoleからのアカウントSidと認証トークン
@@ -59,9 +59,9 @@ return client.messages
 
 ## Parameters - この例で使用するパッケージと JavaScript
 
-| name | type | value |
-|------|------|-------|
+| name   | type    | value         |
+| ------ | ------- | ------------- |
 | twilio | Package | twilio@3.25.0 |
-| _ | Package | moment@latest |
+| _      | Package | moment@latest |
 
 ![設定画面のスクリーンショット](/images/handling-ui-actions/extract-sms-message/6842940-see_screenshot1.png)

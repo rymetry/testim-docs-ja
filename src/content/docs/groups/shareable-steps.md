@@ -19,7 +19,7 @@ keywords:
 共有ステップ（Shared Steps）は、特定のプロジェクト内で複数のテスト間にまたがって共有されるステップです。いくつかのステップタイプはデフォルトで共有ステップであり（明示的な設定は不要）、他のユーザーが作成するテストでも利用できます。\
 以下の表は、他のステップとグループ化せずに単独で共有できる事前定義ステップを示します。
 
-### Validations（検証）
+## Validations（検証）
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -96,7 +96,7 @@ keywords:
  </tbody>
 </table>
 
-### Wait for（待機）
+## Wait for（待機）
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -143,7 +143,7 @@ keywords:
  </tbody>
 </table>
 
-### Actions（アクション）
+## Actions（アクション）
 
 <table class="md-table md-table-2cols">
  <thead>

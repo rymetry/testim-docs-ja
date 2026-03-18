@@ -36,7 +36,7 @@ node scripts/check_source_parity.mjs --json              # JSON 出力
 ```
 
 | チェック項目 | モード | 検出内容 |
-|-------------|--------|---------|
+| ------------- | -------- | --------- |
 | `untranslated` | ローカル | 未翻訳の英語テキスト行 |
 | `legacy-callout` | ローカル | レガシー callout（`> 📘` 等） |
 | `jsx-callout` | ローカル | JSX `<Callout>` コンポーネント残留 |
@@ -108,7 +108,7 @@ npm run docs:pipeline -- --no-resume               # 最初から実行
 **実行ステップ**:
 
 | # | ステップ | スクリプト | 内容 |
-|---|---------|-----------|------|
+| --- | --------- | ----------- | ------ |
 | 1 | `url_collect` | update_sidebar_urls_from_live.mjs | サイドバー URL 収集 |
 | 2 | `placeholders` | generate_untranslated_placeholders.mjs | 未翻訳プレースホルダー作成（full のみ） |
 | 3 | `fetch` | fetch_translate_images.mjs | 英語原文・画像取得 |
@@ -193,7 +193,7 @@ python3 scripts/fix-notation.py
 **修正項目**:
 
 | カテゴリ | 修正内容 |
-|---------|---------|
+| --------- | --------- |
 | カタカナ長音 | パラメータ→パラメーター、ブラウザー→ブラウザ、エディタ→エディター、フォルダ→フォルダー |
 | 漢字統一 | たとえば→例えば |
 | PRO機能 | Pro機能/プロ機能/PRO 機能 → PRO機能 |
@@ -288,7 +288,7 @@ npm run docs:report-categories
 複数のスクリプトから利用される SIDEBAR_URLS.md パーサー。
 
 | エクスポート関数 | 用途 |
-|-----------------|------|
+| ----------------- | ------ |
 | `parseSidebarSections(text)` | Markdown テキストをセクション配列にパース |
 | `loadSidebarSections()` | ファイルから読み込んでパース |
 | `findSidebarSection(sections, name)` | セクション名で検索 |
@@ -306,7 +306,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 ```
 
 | テストファイル | 対象スクリプト |
-|--------------|--------------|
+| -------------- | -------------- |
 | `__tests__/lint_docs.test.mjs` | lint-docs.mjs |
 | `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs |
 | `__tests__/update_sidebar_urls.test.mjs` | update_sidebar_urls_from_live.mjs |
@@ -317,7 +317,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 ## npm スクリプト対応表
 
 | npm コマンド | スクリプト | 用途 |
-|-------------|-----------|------|
+| ------------- | ----------- | ------ |
 | `lint:docs` | lint-docs.mjs | 構文・frontmatter 検証 |
 | `check:parity` | check_source_parity.mjs | 翻訳品質チェック（ローカル） |
 | `check:parity:remote` | check_source_parity.mjs --remote | 翻訳品質チェック（リモート込み） |
