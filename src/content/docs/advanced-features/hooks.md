@@ -46,7 +46,7 @@ keywords:
 
 Before/After each step フックは、テスト内の「各ステップの直前・直後」にロジックを挿入したい場合に使用します。
 
-- デバッグ用途: 各ステップの前後でログを出力し、アプリケーションの状態やパラメータの値を確認する。
+- デバッグ用途: 各ステップの前後でログを出力し、アプリケーションの状態やパラメーターの値を確認する。
 - 中間結果の検証: ステップ実行後に変数の値などをチェックし、中間状態が期待どおりか検証する。
 - ステップ間で共有するセットアップ: 複数ステップで共通して必要な前処理をまとめ、重複したロジックを減らす。
 - 進捗のモニタリング: 各ステップの結果を計測・記録し、テストの進行状況を監視する。
@@ -67,7 +67,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
 フックのコピー／切り取り＆貼り付けはできません。
 :::
 
-上記の3つの方法（プロパティパネル／構成リスト／既定構成）から、どの種類のフックを設定できるかを表にまとめると次のとおりです。
+上記の 3 つの方法（プロパティパネル／構成リスト／既定構成）から、どの種類のフックを設定できるかを表にまとめると次のとおりです。
 
 <table class="md-table md-table-4cols">
  <thead>
@@ -147,7 +147,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
     V
    </td>
    <td style="text-align: left;">
-    エディタ画面には表示されません
+    エディター画面には表示されません
    </td>
   </tr>
   <tr>
@@ -160,7 +160,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
     V
    </td>
    <td style="text-align: left;">
-    エディタ画面には表示されません
+    エディター画面には表示されません
    </td>
   </tr>
  </tbody>
@@ -287,11 +287,11 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c475584-defaultconfig.gif)
 
-## Test Configuration Hooks の実行パラメータ
+## Test Configuration Hooks の実行パラメーター
 
-一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメータが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
+一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメーターが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
 
-- **After each step handler parameters** – After each step フックで利用できるオブジェクトとパラメータ:
+- **After each step handler parameters** – After each step フックで利用できるオブジェクトとパラメーター:
   - `_stepData`
     - `testName` – テスト名
     - `name` – ステップ名
@@ -307,7 +307,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
     - `failureReason` – 失敗理由（失敗時）
     - `errorType` – エラータイプ（エラーがある場合）
 
-- **After test handler parameters** – After test フックで利用できるオブジェクトとパラメータ:
+- **After test handler parameters** – After test フックで利用できるオブジェクトとパラメーター:
   - `_stepData`
     - `testName` – テスト名
   - `_stepInternalData`
@@ -321,7 +321,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ## 設定ファイル（Config File）でフックを作成する
 
-Config File は、テスト／テストスイートの実行に必要なパラメータと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
+Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
 Config File で設定できるフックタイプは次のとおりです。
 
 - **Before test** – テスト実行前に実行
@@ -332,11 +332,11 @@ Config File で設定できるフックタイプは次のとおりです。
 Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。
 
 - Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
-- フック経由で Config file パラメータを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
+- フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
 ## フックの可視化（Hooks Visualizations）
 
-Hooks を含むテストを実行すると、エディタ上でさまざまなビジュアル表示が行われます。
+Hooks を含むテストを実行すると、エディター上でさまざまなビジュアル表示が行われます。
 
 :::note
 Turbo Mode でテストを実行している場合、不要なデータ保存を避けるためフックの表示は制限されます。Turbo Mode では、フックが可視化されるのは失敗した実行のみです。
@@ -356,7 +356,7 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 再度 Hook ボタンをクリックすると、フック表示を閉じることができます。
 :::
 
-複数のステップに対してフックをまとめて確認したい場合は、対象ステップを複数選択し、エディタツールバーの **Hook** ボタンをクリックします。
+複数のステップに対してフックをまとめて確認したい場合は、対象ステップを複数選択し、エディターツールバーの **Hook** ボタンをクリックします。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/a8cac90-2023-01-10_11-58-24.png)
 
@@ -424,7 +424,7 @@ Hook ボタンをクリックすると、該当するフックステップが表
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/da8c532-2023-01-10_12-24-18.png)
 
-グループ内にあるフックステップのエラーでも、1クリックで直接そのエラー箇所まで辿ることができます。  
+グループ内にあるフックステップのエラーでも、1 クリックで直接そのエラー箇所まで辿ることができます。  
 **エラー箇所を直接表示するには:**
 
 1. **See Error** リンクをクリックします。

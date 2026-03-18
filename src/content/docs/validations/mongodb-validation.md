@@ -1,6 +1,6 @@
 ---
 title: MongoDB の検証
-description: MongoDBデータベースに接続してデータを検証するCLIステップ。ドキュメントの内容確認やクエリ実行により、データベースの状態を検証できるPro機能です。
+description: MongoDB データベースに接続してデータを検証する CLI ステップ。ドキュメントの内容確認やクエリ実行により、データベースの状態を検証できる PRO機能です。
 category: 高度な編集
 order: 5017
 updated: '2025-09-14'
@@ -9,7 +9,7 @@ keywords:
   - MongoDB
   - データベース検証
   - NoSQL
-  - DB検証
+  - DB 検証
   - データ検証
   - クエリ
   - コレクション
@@ -22,11 +22,11 @@ CLI アクションステップを使って MongoDB を検証する
 
 [CLI action](/docs/add-cli-validations-and-actions) ステップで MongoDB に対してクエリや検証を実行できます。
 
-:::note{title="Permissions Notice"}
+:::note{title="権限について"}
 多くの DB は保護されているため、CLI 検証ステップを実行するマシンの IP をホワイトリストに追加する必要がある場合があります。未設定だと DB に到達できずステップが失敗します。スケジューラー経由で実行する場合などはサポートまでお問い合わせください。
 :::
 
-#### **Example code:**
+## Example code
 
 ```text
 const MongoClient = mongodb.MongoClient;
@@ -72,7 +72,7 @@ return connect()
   .finally(() => client.close());
 ```
 
-#### **Parameters - この例で使用するパッケージと JS**
+## Parameters - この例で使用するパッケージと JS
 
 1. name: mongodb, type: Package, value: [mongodb@3.1.10](https://www.npmjs.com/package/mongodb/v/3.1.10)
 2. name: Promise, type: Package, value: [bluebird@3.5.3](https://www.npmjs.com/package/bluebird/v/3.5.3)

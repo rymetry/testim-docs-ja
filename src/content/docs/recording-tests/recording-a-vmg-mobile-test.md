@@ -1,8 +1,8 @@
 ---
-title: VMGを使用したモバイルテストの記録
+title: VMG を使用したモバイルテストの記録
 description: >-
-  Virtual Mobile Gridを使用してモバイルテストを記録する手順について説明します。Enhanced modeとAppium
-  modeの両方に対応しています。
+  Virtual Mobile Grid を使用してモバイルテストを記録する手順について説明します。Enhanced mode と Appium
+  mode の両方に対応しています。
 category: テストの記録
 order: 3005
 updated: '2025-09-13'
@@ -19,13 +19,13 @@ keywords:
 
 Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。[Mobile Apps Library](/docs/mobile-apps) に接続されています。つまり、実行しているテストがモバイルアプリを使用している場合、Virtual Mobile Grid でテストを実行する前に、そのアプリを Mobile Apps Library に追加する必要があります。
 
-Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は[Device Management](/docs/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス(Android と iOS)が利用できます。
+Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は[Device Management](/docs/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。
 
 ## モード
 
 記録は以下のモードのいずれかで実行できます:
 
-- **Enhanced mode(推奨)** - Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション(ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク)でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を参照してください。
+- **Enhanced mode（推奨）** - Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション（ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク）でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を参照してください。
 
 - **Appium mode** - このモードは、他の Appium ベースのグリッドとのテストの互換性を保証し、ローカルデバイスでのローカル実行をサポートします。一方、このモードは Appium の機能に制限されており、特にハイブリッドアプリや WebView を使用している場合、すべてのテストフローを記録できない可能性があります。既存のテストは、Appium 互換モードを使用している場合でも引き続き動作します。
 
@@ -36,10 +36,10 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 - **モバイルテストプロジェクト** - モバイルテストには、Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、Tricentis サポートにお問い合わせください。
 
 :::warning{title="注意"}
-各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。たとえば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
+各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。例えば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
 :::
 
-- **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス(Android と iOS)が利用できます。詳細については、[Virtual Mobile Grid](/docs/virtual-mobile-grid) を参照してください。
+- **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。詳細については、[Virtual Mobile Grid](/docs/virtual-mobile-grid) を参照してください。
 
 :::info
 **無料トライアルの制限**
@@ -47,8 +47,8 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 無料トライアルには以下の制限が適用されます:
 
 - 並列化なし
-- 実行時間は10分に制限
-- 1時間に1回のみ実行可能
+- 実行時間は 10 分に制限
+- 1 時間に 1 回のみ実行可能
 
 追加機能が必要な場合は、Tricentis 担当者にお問い合わせください。
 :::
@@ -102,7 +102,7 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 :::
 
 :::info
-Virtual Mobile Grid でテストを実行する場合、テストの開始には約30秒から1分かかる場合があります。これは、VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
+Virtual Mobile Grid でテストを実行する場合、テストの開始には約 30 秒から 1 分かかる場合があります。これは、VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
 :::
 
 :::warning{title="注意"}

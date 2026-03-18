@@ -9,7 +9,7 @@ keywords:
   - ターボモード
   - パフォーマンス向上
   - 実行時間短縮
-  - CLI実行
+  - CLI 実行
   - スケジュール実行
   - Chrome
   - Edge Chromium
@@ -18,9 +18,9 @@ keywords:
 
 Testim テストを大規模に効率的に実行し、パフォーマンスを向上させます。
 
-パフォーマンスを向上させ、テストの実行時間を平均30%短縮し、不要なデータの保存を回避します。
+パフォーマンスを向上させ、テストの実行時間を平均 30% 短縮し、不要なデータの保存を回避します。
 
-:::note{title="これは PRO 機能です"}
+:::note{title="これはPRO機能です"}
 この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
@@ -41,7 +41,7 @@ Testim テストを大規模に効率的に実行し、パフォーマンスを�
   * ネットワークログ
   * コンソールログ
   * DOM データ
-  * 実行パラメータ
+  * 実行パラメーター
   * アクセシビリティステップレポート
   * BASEURL
 
@@ -51,7 +51,7 @@ Testim テストを大規模に効率的に実行し、パフォーマンスを�
 
 ### CLI 経由でのターボモード実行
 
-ターボモードで実行するには、CLI コマンドで *--turbo-mode* を使用します。CLI 実行の詳細については、[コマンドラインCLI](/docs/the-command-line-cli) を参照してください。\
+ターボモードで実行するには、CLI コマンドで *--turbo-mode* を使用します。CLI 実行の詳細については、[コマンドライン CLI](/docs/the-command-line-cli) を参照してください。\
 例:
 
 ```shell
@@ -69,11 +69,11 @@ testim  --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<You
 * 上記のように、テストアーティファクトは失敗したテストに対してのみ利用可能です
 * 実行の下 - ターボモード表示が表示されます
 
-![ターボモード実行結果1](/images/insights/turbo-mode/47fe6d2-Screen_Shot_2021-10-27_at_6.23.57.png)
+![ターボモード実行結果 1](/images/insights/turbo-mode/47fe6d2-Screen_Shot_2021-10-27_at_6.23.57.png)
 
 * テスト実行の下 - ターボモードで実行された各テストには表示があります
 
-![ターボモード実行結果2](/images/insights/turbo-mode/2c63b5a-Screen_Shot_2021-10-27_at_6.25.47.png)
+![ターボモード実行結果 2](/images/insights/turbo-mode/2c63b5a-Screen_Shot_2021-10-27_at_6.25.47.png)
 
 * エディター - 各結果の左上（テストステータスの隣）に表示があります
 

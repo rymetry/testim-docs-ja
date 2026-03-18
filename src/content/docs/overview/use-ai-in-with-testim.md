@@ -1,6 +1,6 @@
 ---
-title: TestimでAIを使用する
-description: TestimのAIツール（Help Assistant、Coding Assistant、Salesforce Agentic AI Testing）の概要
+title: Testim で AI を使用する
+description: Testim の AI ツール（Help Assistant、Coding Assistant、Salesforce Agentic AI Testing）の概要
 category: 概要
 order: 1004
 updated: '2025-10-13'
@@ -13,7 +13,7 @@ keywords:
   - Salesforce
   - エージェンティックテスト
   - 自動化
-  - 生成AI
+  - 生成 AI
   - テスト効率化
 ---
 

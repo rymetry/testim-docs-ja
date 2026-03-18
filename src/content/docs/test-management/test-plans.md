@@ -9,7 +9,7 @@ keywords:
   - テストプラン
   - セットアップテスト
   - ティアダウンテスト
-  - Webテストプラン
+  - Web テストプラン
   - テスト実行順序
   - グリッド実行
   - 構成上書き
@@ -23,7 +23,7 @@ keywords:
 
 * テスト実行前に環境をセットアップする必要がある場合
 * テスト実行後に環境をクリーンアップする必要がある場合
-* 複数のブラウザーやオペレーティングシステムでテストを実行する場合
+* 複数のブラウザやオペレーティングシステムでテストを実行する場合
 
 ## 新しい Web テストプランを作成する
 
@@ -33,23 +33,23 @@ keywords:
 2. 上部ナビゲーションから **Plans** を選択します。
 3. **New Plan** ボタンをクリックします。
 
-![Test List画面のPlansタブでNew Planボタンをクリックする画面](/images/test-management/test-plans/fd4471d-new-test.png)
+![Test List 画面の Plans タブで New Plan ボタンをクリックする画面](/images/test-management/test-plans/fd4471d-new-test.png)
 
 4. 新しいテストプランの **Name**（名前）と **Description**（説明）を入力します。
 
-![WebテストプランのNameとDescriptionを入力する新規プランダイアログ](/images/test-management/test-plans/73ab5c3-newwebtestplan.png)
+![Web テストプランの Name と Description を入力する新規プランダイアログ](/images/test-management/test-plans/73ab5c3-newwebtestplan.png)
 
-5. テストプランのメインテストリストの前に一連のテストを実行したい場合は、**Add Before All** チェックボックスを選択します。1つ以上の[テストスイート](/docs/test-suites)または[テストラベル](/docs/labels)の名前を入力します。通常、これにはログインなどのセットアップ手順が含まれます。
+5. テストプランのメインテストリストの前に一連のテストを実行したい場合は、**Add Before All** チェックボックスを選択します。1 つ以上の[テストスイート](/docs/test-suites)または[テストラベル](/docs/labels)の名前を入力します。通常、これにはログインなどのセットアップ手順が含まれます。
 
-![Add Before Allセクションでセットアップ用テストスイートやラベルを設定する画面](/images/test-management/test-plans/b29d06d-newwebtestplan.png)
+![Add Before All セクションでセットアップ用テストスイートやラベルを設定する画面](/images/test-management/test-plans/b29d06d-newwebtestplan.png)
 
-6. **Test List** ボックスに、1つ以上の[テストスイート](/docs/test-suites)または[テストラベル](/docs/labels)の名前を入力します。
+6. **Test List** ボックスに、1 つ以上の[テストスイート](/docs/test-suites)または[テストラベル](/docs/labels)の名前を入力します。
 
-![Test Listセクションでプラン本体として実行するテストスイートやラベルを指定する画面](/images/test-management/test-plans/30d2400-newwebtestplan.png)
+![Test List セクションでプラン本体として実行するテストスイートやラベルを指定する画面](/images/test-management/test-plans/30d2400-newwebtestplan.png)
 
-7. テストリストの実行後に「ティアダウン」テストを追加したい場合は、**Add After All** チェックボックスを選択します。1つ以上の[テストスイート](/docs/test-suites)または[テストラベル](/docs/labels)の名前を入力します。テストプランに「ティアダウン」テストを含めることはベストプラクティスです。これらは、テストの完了後にキャッシュのクリア、データのクリーンアップ、ユーザーのログアウトなどを行うように設計されたテストです。
+7. テストリストの実行後に「ティアダウン」テストを追加したい場合は、**Add After All** チェックボックスを選択します。1 つ以上の[テストスイート](/docs/test-suites)または[テストラベル](/docs/labels)の名前を入力します。テストプランに「ティアダウン」テストを含めることはベストプラクティスです。これらは、テストの完了後にキャッシュのクリア、データのクリーンアップ、ユーザーのログアウトなどを行うように設計されたテストです。
 
-![Add After Allセクションでティアダウン用テストスイートやラベルを設定する画面](/images/test-management/test-plans/e34954a-newwebtestplan.png)
+![Add After All セクションでティアダウン用テストスイートやラベルを設定する画面](/images/test-management/test-plans/e34954a-newwebtestplan.png)
 
 :::warning{title="注意"}
 * "Before all" と "After all" のテストは、常に並列レベル `1` で実行されます。"Test List" のみが、CLI で設定されている場合、より高い並列化レベルで実行できます。
@@ -59,15 +59,15 @@ keywords:
 
 8. **Where to Run** フィールドで、テストを実行したい **Grid** を選択します。詳細については、[Grid Management](/docs/grid-management) を参照してください。
 
-![Where to Runフィールドでテストプランの実行先グリッドを選択する画面](/images/test-management/test-plans/d46f60c-newwebtestplan.png)
+![Where to Run フィールドでテストプランの実行先グリッドを選択する画面](/images/test-management/test-plans/d46f60c-newwebtestplan.png)
 
-9. **What to run on** セクションで、**Override default configurations** チェックボックスを選択して、テストを実行するブラウザー、オペレーティングシステム、解像度を手動で設定します。構成のリストから選択するか、新しい構成を作成します。詳細については、[Configurations Library](/docs/shared-configuration) を参照してください。これにより、テストのデフォルト構成が上書きされます。複数の構成を選択すると、それぞれに対して複数の実行が行われます。
+9. **What to run on** セクションで、**Override default configurations** チェックボックスを選択して、テストを実行するブラウザ、オペレーティングシステム、解像度を手動で設定します。構成のリストから選択するか、新しい構成を作成します。詳細については、[Configurations Library](/docs/shared-configuration) を参照してください。これにより、テストのデフォルト構成が上書きされます。複数の構成を選択すると、それぞれに対して複数の実行が行われます。
 
-![What to run onセクションでOverride default configurationsを使ってブラウザー構成を選択する画面](/images/test-management/test-plans/d484c9d-newwebtestplan.png)
+![What to run on セクションで Override default configurations を使ってブラウザ構成を選択する画面](/images/test-management/test-plans/d484c9d-newwebtestplan.png)
 
 10. **What to run on** セクションで、**Override Base URL** チェックボックスを選択して、Web アプリの開始 URL（例: 本番環境またはステージング環境）を設定します。詳細については、[Base URL](/docs/base-url) を参照してください。
 
-![Override Base URLオプションで開始URLを指定する画面](/images/test-management/test-plans/b5e9303-baseurl.png)
+![Override Base URL オプションで開始 URL を指定する画面](/images/test-management/test-plans/b5e9303-baseurl.png)
 
 11. **Create** ボタンをクリックして、テストプランを作成します。
 
@@ -83,7 +83,7 @@ keywords:
 CLI に異なるグリッド名を追加すると、プランで定義されたグリッドが上書きされます。
 :::
 
-:::note{title="CLI Steps"}
+:::note{title="CLI ステップ"}
 テストに CLI ステップがある場合は、実行前に CLI が実行されていることを確認してください。
 :::
 
@@ -99,8 +99,8 @@ CLI に異なるグリッド名を追加すると、プランで定義された�
 2. 実行したいプランを選択します。
 3. **Play** ボタンをクリックします。
 
-![Plansタブからプランを選択してPlayボタンで実行する画面](/images/test-management/test-plans/88d404a-Mar-22-2021_11-38-54.gif)
+![Plans タブからプランを選択して Play ボタンで実行する画面](/images/test-management/test-plans/88d404a-Mar-22-2021_11-38-54.gif)
 
 :::note
-テストの1つに CLI アクションがある場合は、CLI が実行されていることを確認してください。
+テストの 1 つに CLI アクションがある場合は、CLI が実行されていることを確認してください。
 :::

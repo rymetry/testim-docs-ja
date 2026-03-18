@@ -2,7 +2,7 @@
 title: コマンドライン インターフェース (CLI)
 description: >-
   Testim CLI のインストール方法と、プロジェクト
-  ID・トークン・グリッド・ラベル・スイート・テスト計画などのパラメータを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。
+  ID ・トークン・グリッド・ラベル・スイート・テスト計画などのパラメーターを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。
 category: テスト実行
 order: 6002
 updated: '2025-09-22'
@@ -16,7 +16,7 @@ keywords:
   - ラベル実行
   - スイート実行
   - テスト計画
-  - 実行パラメータ
+  - 実行パラメーター
   - Testim
 ---
 
@@ -43,8 +43,8 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 **基本的な CLI コマンドを表示するには:**
 
 1. **設定 > CLI** タブに移動します。
-2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザーが開きます）(Web のみ)
-3. **CI プラットフォーム** で、希望する CI プラットフォームを選択します (オプション)
+2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザが開きます）（Web のみ）
+3. **CI プラットフォーム** で、希望する CI プラットフォームを選択します （オプション）
 4. **グリッド** で、テストを実行するグリッドを選択します。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:\
    [仮想モバイルグリッド](/docs/virtual-mobile-grid)\
    [Tricentis Device Cloud](/docs/tricentis-device-cloud)\
@@ -60,32 +60,32 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 `--project`: プロジェクト ID\
 `--grid`: テストを実行するグリッドの名前。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には Appium グリッドが表示されます。
 
-5. CLI をコピーし、編集して必要に応じてパラメータを追加します。 特定のテスト、ラベル、構成など、以下のセクションで説明されているように実行できます。
+5. CLI をコピーし、編集して必要に応じてパラメーターを追加します。 特定のテスト、ラベル、構成など、以下のセクションで説明されているように実行できます。
 
-### その他の一般的なパラメータ
+### その他の一般的なパラメーター
 
-最も一般的なオプションを含む基本コマンドの例は次のとおりです (使用可能なすべてのオプションの詳細な説明については、以下を参照):
+最も一般的なオプションを含む基本コマンドの例は次のとおりです （使用可能なすべてのオプションの詳細な説明については、以下を参照）:
 
 `--project`: 上記を参照\
 `--token`: 上記を参照\
 `--label:` これを使用して、指定したラベルを含む特定のテストを実行します\
 `--grid`: 上記を参照\
-`--report-file`: テスト結果を保存する場所を指定します (CI サーバーがそれを読みます)
+`--report-file`: テスト結果を保存する場所を指定します （CI サーバーがそれを読みます）
 
 ```shell
 testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" --report-file test-results/testim-tests-report.xml
 ```
 
 :::note{title="Web のみの注記"}
-グリッドで実行する代わりに、**--use-local-chrome-driver** を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザーで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode selenium` フラグも追加する必要があります。
+グリッドで実行する代わりに、**--use-local-chrome-driver** を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode selenium` フラグも追加する必要があります。
 :::
 
-## すべての CLI パラメータ
+## すべての CLI パラメーター
 
 ### プロジェクト
 
 `--project` プロジェクト ID。\
-別のプロジェクトを選択するには、企業画面に移動し (参照 [プロジェクトとユーザー管理](/docs/project-and-user-management))、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
+別のプロジェクトを選択するには、企業画面に移動し （参照 [プロジェクトとユーザー管理](/docs/project-and-user-management)）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
 
 ```shell
 --project AOL-12323-a4b2-4762-df380
@@ -156,17 +156,17 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### レポートファイル
 
-`--report-file` または `-r`、レポートを出力する場所 (デフォルトでは出力ストリームに)。ファイルは JUnitXMLReporter 形式です。これは Testim の結果を CI ディスプレイと統合するために使用されます。通常は、CI の構築設定でそのファイルを参照するように設定する必要があるため、CLI パラメータ値と構築設定が同じ場所に設定されていることを確認してください。
+`--report-file` または `-r`、レポートを出力する場所 （デフォルトでは出力ストリームに）。ファイルは JUnitXMLReporter 形式です。これは Testim の結果を CI ディスプレイと統合するために使用されます。通常は、CI の構築設定でそのファイルを参照するように設定する必要があるため、CLI パラメーター値と構築設定が同じ場所に設定されていることを確認してください。
 
 ```shell
 -r ~/report.xml
 ```
 
-レポートファイルのクラス名をオーバーライドするには、このパラメータを追加します。
+レポートファイルのクラス名をオーバーライドするには、このパラメーターを追加します。
 
 `--override-report-file-classname com.someName`
 
-#### ベース URL (Web のみ)
+#### ベース URL （Web のみ）
 
 `--base-url`、ブラウザが開いた後の開始 URL
 
@@ -176,16 +176,16 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### テスト構成
 
-`test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメータ (例: ブラウザー、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメータなど) を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
+`test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメーター （例: ブラウザ、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメーターなど） を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
 詳細は [構成ライブラリ - Web](/docs/shared-configuration) および [構成ライブラリ - モバイル](/docs/configuration-library-mobile) をお読みください。
 
 ```shell
 --test-config "1280x1024_SXGA_chrome" --test-config "1366x768_WXGA_firefox"
 ```
 
-#### パラメータ ファイル
+#### パラメーター ファイル
 
-`--params-file` テスト実行にパラメータを渡すために使用できる JSON パラメータ ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。たとえば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 (ユーザー名とパスワード) を設定できます。JSON パラメータ ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメータファイル](/docs/json-parameters-file-parameters) をお読みください。
+`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメーターファイル](/docs/json-parameters-file-parameters) をお読みください。
 
 :::note
 `params-file` パスで設定されている文字列パスは相対パスである必要があり、完全なパスではありません。
@@ -195,7 +195,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --params-file [params-file.json]
 ```
 
-#### テストスイート (名前で)
+#### テストスイート （名前で）
 
 `--suite`、実行するテストスイート名。複数のスイートを実行できます。
 
@@ -203,7 +203,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --suite "suite_name" --suite "suite_name2"
 ```
 
-#### テストスイート (ID で)
+#### テストスイート （ID で）
 
 `suite-id`、実行するテストスイート ID を指定します。複数のスイートを実行できます。
 
@@ -211,7 +211,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --suite-id "suite1ID" --suite-id "suite2ID"
 ```
 
-#### テスト計画 (名前で)
+#### テスト計画 （名前で）
 
 `--test-plan`、実行するテスト計画名を指定します。複数の計画を実行できます。テスト計画でグリッド、テストリスト、構成などを定義するため、それを CLI からオーバーライドすることはできません。したがって、`--test-plan` を使用する場合は、これらのフラグを使用することはできません: `--testId`、`--label`、`--name`、`--browser`、`--test-config`、`--test-config-id` または `--suite`。
 
@@ -229,7 +229,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### クラス名
 
-`--override-report-file-classname` JUnitXML レポート ファイルのクラス名は、デフォルトで Testim.io です。スイート名をクラス名に含めるには、値を指定せずに以下のパラメータを追加します。クラス名を特定の名前でオーバーライドする場合は、パラメータに追加します。
+`--override-report-file-classname` JUnitXML レポート ファイルのクラス名は、デフォルトで Testim.io です。スイート名をクラス名に含めるには、値を指定せずに以下のパラメーターを追加します。クラス名を特定の名前でオーバーライドする場合は、パラメーターに追加します。
 
 ```shell
 --override-report-file-classname
@@ -246,7 +246,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### テストタイムアウト
 
-`--timeout`、タイムアウトが経過したときにテスト実行を中止するタイムアウト期間 (ミリ秒)。デフォルトは 10 分に設定されています。最大は 3 時間です。
+`--timeout`、タイムアウトが経過したときにテスト実行を中止するタイムアウト期間 （ミリ秒）。デフォルトは 10 分に設定されています。最大は 3 時間です。
 
 ```shell
 --timeout 120000
@@ -254,7 +254,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### ブランチ
 
-`--branch`、特定のブランチで実行する場合 (名前別)。
+`--branch`、特定のブランチで実行する場合 （名前別）。
 
 ```shell
 --branch <branch-name>
@@ -272,7 +272,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --parallel <parallel-count>
 ```
 
-#### 構成ファイル (Web のみ)
+#### 構成ファイル （Web のみ）
 
 `--config-file` または `-c`、外部構成ファイルからすべての構成オプションを指定します。\
 シェルでアクセス可能なパスに構成ファイルを配置し、コマンドでファイルへのパスを指定します。
@@ -295,7 +295,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 再試行のみで成功したテストは、testim ライブラリの下で簡単にフィルタリングできます。詳細については、[不安定なテスト](/docs/flaky-tests) をお読みください。
 
-#### TestRail レポートを無効にする (Web のみ)
+#### TestRail レポートを無効にする （Web のみ）
 
 `--suppress-tms-reporting` TestRail へのスイート実行結果の送信を抑止します。
 
@@ -303,9 +303,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --suppress-tms-reporting
 ```
 
-#### 専用実行トンネル (Web のみ)
+#### 専用実行トンネル （Web のみ）
 
-`--tunnel` `--tunnel-port`、トンネルを使用して、内部サーバー/localhost からアプリを実行し、外部ブラウザーで表示できます。\
+`--tunnel` `--tunnel-port`、トンネルを使用して、内部サーバー/localhost からアプリを実行し、外部ブラウザで表示できます。\
 \--tunnel  #デフォルト アプリケーション ポート 80
 
 ```shell
@@ -337,7 +337,7 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 #### データ保持を設定
 
-`--set-retention` パラメータ --set-retention \[1 ～ 10 の整数] を CLI 実行に追加すると、この実行のすべてのテスト結果は、パラメータで指定された日数後に削除対象としてマークされます (保持期間)。
+`--set-retention` パラメーター --set-retention \[1 ～ 10 の整数] を CLI 実行に追加すると、この実行のすべてのテスト結果は、パラメーターで指定された日数後に削除対象としてマークされます （保持期間）。
 
 :::note
 弊社のプランには、デフォルトで 30 日間の保持が含まれています。より長い保持時間が必要な場合は、サポートにお問い合わせください。
@@ -353,12 +353,12 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 ![CLI 実行が中止されたことを示す実行結果画面](/images/running-tests/the-command-line-cli/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png)
 
-CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを閉じることで強制的に終了することもできます (いわゆる、不正な中止)。\
+CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを閉じることで強制的に終了することもできます （いわゆる、不正な中止）。\
 これにより実行は停止しますが、ステータスはエディターで「実行中」のままになります。実行ステータスは 90 分後に「タイムアウト」に変わります。
 
-#### Chrome 追加引数を追加する (Web のみ)
+#### Chrome 追加引数を追加する （Web のみ）
 
-Chrome 追加引数を追加するには、*--chrome-extra-args* を使用します。これは必要なフラグをコンマで区切った文字列を受け取ります (フラグ間に スペースはありません)。たとえば:
+Chrome 追加引数を追加するには、*--chrome-extra-args* を使用します。これは必要なフラグをコンマで区切った文字列を受け取ります （フラグ間に スペースはありません）。例えば:
 
 ```shell
 testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-args "enable-heavy-ad-intervention,heavy-ad-privacy-mitigations"
@@ -366,7 +366,7 @@ testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-a
 
 #### カスタム エクステンションで CLI コマンドを実行
 
-*--install-custom-extension* を使用して、特定のエクステンションがインストールされた Chrome ブラウザーで CLI コマンドを実行できます。たとえば:
+*--install-custom-extension* を使用して、特定のエクステンションがインストールされた Chrome ブラウザで CLI コマンドを実行できます。例えば:
 
 ```shell
 testim --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --use-local-chrome-driver --install-custom-extension <chrome extension zipped file url or local path>
@@ -374,7 +374,7 @@ testim --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --use-local-c
 
 #### intersect-with フラグ
 
-`intersect-with` フラグを使用して、指定されたテストのサブセット (テスト計画、テストスイート、ラベルなど) を実行でき、指定されたラベルまたはスイートと交差します。テスト計画を実行する場合、交差は計画本体のテスト上で実行されます (前述のテストまたは後述のテストではありません)。\
+`intersect-with` フラグを使用して、指定されたテストのサブセット （テスト計画、テストスイート、ラベルなど） を実行でき、指定されたラベルまたはスイートと交差します。テスト計画を実行する場合、交差は計画本体のテスト上で実行されます （前述のテストまたは後述のテストではありません）。\
 以下の `intersect-with` フラグを使用できます:
 
 ```shell
@@ -395,7 +395,7 @@ testim --token "7jdSDFGbsdfrGsdrgsdrg" --project "EIPPYFgkS7oTesyRCnlj" --suite 
 testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "EIPPYFgkS7oCnlOfNtOj" --label "test" --grid "Testim-Grid" --intersect-with-suite "test1"
 ```
 
-`intersect-with` フラグは、元の実行コマンドに含まれていたすべてのテストから、Testim が指定されたラベルまたはスイートと一般的な (つまり、交差する) テストのみを実行することを定義しています。
+`intersect-with` フラグは、元の実行コマンドに含まれていたすべてのテストから、Testim が指定されたラベルまたはスイートと一般的な （つまり、交差する） テストのみを実行することを定義しています。
 
 **例えば:**\
 ラベル A - テストが含まれています: 1,2,3,4\
@@ -408,7 +408,7 @@ testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "E
 テスト計画 P を --intersect-with-label D で実行する場合 ==> テストは実行されません。
 
 複数の交差フラグを追加することが可能です。\
-たとえば、テスト計画 P を --intersect-with-label C --intersect-with-label A で実行する場合\
+例えば、テスト計画 P を --intersect-with-label C --intersect-with-label A で実行する場合\
 Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
 
 :::note
@@ -417,7 +417,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### intersect-with-operand
 
-文字列を受け入れます。値は `AND` \| `OR` のいずれかの値です。デフォルト (このパラメータが定義されていない場合)、`OR` が使用されます。これは `--intersect-with-label` フラグでのみ機能します。
+文字列を受け入れます。値は `AND` \| `OR` のいずれかの値です。デフォルト （このパラメーターが定義されていない場合）、`OR` が使用されます。これは `--intersect-with-label` フラグでのみ機能します。
 
 ### Sealights 統合
 

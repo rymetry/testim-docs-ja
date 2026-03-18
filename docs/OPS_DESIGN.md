@@ -47,7 +47,7 @@
 `npm run check:parity` で以下のローカルチェックを即時実行する:
 
 | チェック項目 | 検出内容 |
-|-------------|---------|
+| ------------- | --------- |
 | `untranslated` | 未翻訳の英語テキスト行（UI 操作指示文のパターンマッチ） |
 | `legacy-callout` | レガシー callout 形式（`> 📘`, `> ❗️` 等） |
 | `jsx-callout` | JSX/MDX `<Callout>` コンポーネント残留 |
@@ -122,7 +122,7 @@
 2. 以下の該当ドキュメントを更新する:
 
 | 発見内容 | 更新先 |
-|---------|-------|
+| --------- | ------- |
 | 不自然な日本語パターン（直訳、カタカナ表記） | `docs/TRANSLATION_GUIDE.md` 5.1 基本方針 + 5.2 用語統一表 |
 | Markdown記法・callout・リンク形式のルール | `docs/WRITING_GUIDE.md` |
 | ツールの使い方（Codex CLI フラグ等） | `.claude/skills/` 配下の該当 SKILL.md |

@@ -1,6 +1,6 @@
 ---
 title: SMS メッセージの抽出
-description: CLI action stepとTwilioを使用してSMSメッセージを抽出し、受信時刻とコンテンツの検証を行う方法を学びます。
+description: CLI action step と Twilio を使用して SMS メッセージを抽出し、受信時刻とコンテンツの検証を行う方法を学びます。
 category: 高度な編集
 order: 5038
 updated: '2025-09-18'
@@ -11,18 +11,18 @@ keywords:
   - handling-ui-actions
   - SMS
   - Twilio
-  - SMSメッセージ
+  - SMS メッセージ
   - メッセージ検証
-  - CLIアクション
+  - CLI アクション
   - テスト自動化
   - 二要素認証
 ---
 
-CLI action stepとTwilioを使用してSMSメッセージを抽出する方法を学びます。
+CLI action step と Twilio を使用して SMS メッセージを抽出する方法を学びます。
 
-[CLI action step](/docs/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMSメッセージの受信時刻とコンテンツの高度な検証を実行できます。
+[CLI action step](/docs/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMS メッセージの受信時刻とコンテンツの高度な検証を実行できます。
 
-#### **コード例:**
+## コード例
 
 ```javascript
 // twilio.com/consoleからのアカウントSidと認証トークン
@@ -59,9 +59,9 @@ return client.messages
 
 ## Parameters - この例で使用するパッケージと JavaScript
 
-| name | type | value |
-|------|------|-------|
+| name   | type    | value         |
+| ------ | ------- | ------------- |
 | twilio | Package | twilio@3.25.0 |
-| _ | Package | moment@latest |
+| _      | Package | moment@latest |
 
 ![設定画面のスクリーンショット](/images/handling-ui-actions/extract-sms-message/6842940-see_screenshot1.png)

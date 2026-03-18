@@ -1,6 +1,6 @@
 ---
 title: MySQL の検証
-description: MySQLデータベースに接続してデータを検証するCLIステップ。テーブルデータの確認やSQLクエリ実行により、データベースの状態を検証できるPro機能です。
+description: MySQL データベースに接続してデータを検証する CLI ステップ。テーブルデータの確認や SQL クエリ実行により、データベースの状態を検証できる PRO機能です。
 category: 高度な編集
 order: 5018
 updated: '2025-09-14'
@@ -9,7 +9,7 @@ keywords:
   - MySQL
   - データベース検証
   - SQL
-  - DB検証
+  - DB 検証
   - データ検証
   - クエリ
   - テーブル
@@ -22,11 +22,11 @@ CLI アクションと SQL で MySQL を検証する
 
 [CLI action step](/docs/add-cli-validations-and-actions) を使って MySQL に対してクエリや検証を実行できます。
 
-:::note{title="Permissions Notice"}
+:::note{title="権限について"}
 多くの DB は保護されているため、CLI 検証ステップを実行するマシンの IP をホワイトリストに追加する必要がある場合があります。未設定だと DB に到達できずステップが失敗します。スケジューラー経由で実行する場合などはサポートまでお問い合わせください。
 :::
 
-#### **Example code:**
+## Example code
 
 ```text
 const dbName = "XXXXX";
@@ -56,7 +56,7 @@ return sequelize
   });
 ```
 
-#### **Parameters - この例で使用するパッケージと JS**
+## Parameters - この例で使用するパッケージと JS
 
  1.name: Sequelize, type: Package, value: [sequelize@latest](https://www.npmjs.com/package/sequelize)\
  2.name: mysql2, type: Package, value: [mysql2@latest](https://www.npmjs.com/package/mysql2)\

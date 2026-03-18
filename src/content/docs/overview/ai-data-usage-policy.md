@@ -1,12 +1,12 @@
 ---
-title: AIデータ使用ポリシー
-description: Testimにおける生成AIの使用とデータプライバシーに関するポリシー
+title: AI データ使用ポリシー
+description: Testim における生成 AI の使用とデータプライバシーに関するポリシー
 category: 概要
 order: 1005
 updated: '2025-10-13'
 sourceUrl: 'https://help.testim.io/docs/ai-data-usage-policy'
 keywords:
-  - AIポリシー
+  - AI ポリシー
   - データ使用
   - プライバシー
   - セキュリティ
@@ -59,7 +59,7 @@ Testim は以下の機能を提供しています。
 **Testim Copilot コーディングアシスタント** - 会社の登録と個別の承認が必要です。
 
 - 会社のオーナーは、サービスに登録し、特定のユーザーに利用可能な席を割り当ててアクセスを提供する必要があります。
-- ユーザーは個別に Copilot インターフェースをアクティブ化できます。たとえば、**Write code with AI** ボタンを選択します。
+- ユーザーは個別に Copilot インターフェースをアクティブ化できます。例えば、**Write code with AI** ボタンを選択します。
 - 初回使用前に、ユーザーは法的通知で **Got It** をクリックして利用規約を承認する必要があります。
 
 **Agentic Test Automation for Salesforce** - ユーザーは個別にオプトインできます。

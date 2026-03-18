@@ -1,6 +1,6 @@
 ---
-title: Testim Labsについて
-description: 'Testim Labsは、新しいTestim機能に早期アクセスできるVIP機能です。Labs機能の有効化方法と利用方法を説明します。'
+title: Testim Labs について
+description: 'Testim Labs は、新しい Testim 機能に早期アクセスできる VIP 機能です。Labs 機能の有効化方法と利用方法を説明します。'
 category: Testim Labs
 order: 20001
 updated: '2025-11-02'
@@ -9,7 +9,7 @@ keywords:
   - Testim Labs
   - 新機能
   - 早期アクセス
-  - VIP機能
+  - VIP 機能
   - フィードバック
 ---
 
@@ -22,7 +22,7 @@ Labs ユーザーの場合、各機能はプロジェクトごとに有効化・
 1. **Settings > Labs** に移動します。
 2. **Request Invite** をクリックします。
 
-![Testim Labs機能へのアクセスをリクエストする画面。SettingsからLabsセクションに移動してRequest Inviteボタンをクリックする](/images/miscellaneous/testim-labs/af88e5d-Screen_Shot_2020-10-30_at_10.55.18_AM.png)
+![Testim Labs 機能へのアクセスをリクエストする画面。Settings から Labs セクションに移動して Request Invite ボタンをクリックする](/images/miscellaneous/testim-labs/af88e5d-Screen_Shot_2020-10-30_at_10.55.18_AM.png)
 
 :::info{title="受理プロセス"}
 招待をリクエストした後、内部チームがリクエストを確認し、メールで返信します。受理された場合、プロジェクトが有効になります。管理パネルに移動して、Labs スイッチを切り替える必要があります。

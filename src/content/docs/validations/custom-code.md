@@ -1,6 +1,6 @@
 ---
 title: カスタム検証とアクションの追加
-description: カスタム検証をJavaScriptで作成する方法。標準の検証ステップでは対応できない複雑な検証ロジックを実装し、テストの柔軟性を高めます。
+description: カスタム検証を JavaScript で作成する方法。標準の検証ステップでは対応できない複雑な検証ロジックを実装し、テストの柔軟性を高めます。
 category: 高度な編集
 order: 5007
 updated: '2025-09-14'
@@ -39,12 +39,12 @@ keywords:
 2. "**M**"（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
-![Predefined stepsメニュー](/images/validations/custom-code/dc5c5d1-Testim_270_r.png)
+![Predefined steps メニュー](/images/validations/custom-code/dc5c5d1-Testim_270_r.png)
 
 3. **Validations**（または **Actions**）をクリックします。\
    **Validations**（または **Actions**）メニューが展開されます。
 
-![Validationsメニュー展開](/images/validations/custom-code/e14660a-Testim_271_r.png)
+![Validations メニュー展開](/images/validations/custom-code/e14660a-Testim_271_r.png)
 
 4. **Add custom validation**（または **Add custom action**）を選択します。
 
@@ -54,7 +54,7 @@ keywords:
 
 **Add Step** ウィンドウが表示されます。
 
-![Add Stepウィンドウ](/images/validations/custom-code/4f2e39a-Testim_215_r.png)
+![Add Step ウィンドウ](/images/validations/custom-code/4f2e39a-Testim_215_r.png)
 
 5. **Name the new step** にステップ名を入力します。
 6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンのままにし（既定）、**Select shared step** のフォルダーを選択します。共有しない場合はオフにします。\
@@ -62,13 +62,13 @@ keywords:
 7. **Create Step** をクリックします。\
    **function** エディターと右側の **Properties** パネルが開きます。
 
-![functionエディターとPropertiesパネル](/images/validations/custom-code/5d95f6a-Testim_284.png)
+![function エディターと Properties パネル](/images/validations/custom-code/5d95f6a-Testim_284.png)
 
 8. **Properties** パネルの **Description** に、必要ならステップの説明を入力します（既定: “Run validation” / “Run action”）。
 9. ステップに必要なパラメーターを定義します。\
    a. **Properties** パネルで **+ PARAMS** をクリック\
    b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
-   c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザーが開き、対象ページが表示されます）。次を実施します：
+   c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザが開き、対象ページが表示されます）。次を実施します：
    * **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-target-element-properties) を参照してください。
 
   d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
@@ -222,7 +222,7 @@ JavaScript の Promise を使うと、一定時間（ミリ秒）後に resolve 
 検証が失敗した場合、`reject()` に渡した文字列はステップのプロパティパネルに表示されます。
 :::
 
-![Promise検証のコード例](/images/validations/custom-code/ba1832e-Testim_290.png)
+![Promise 検証のコード例](/images/validations/custom-code/ba1832e-Testim_290.png)
 
 **Example Code:**
 

@@ -1,13 +1,13 @@
 ---
-title: パラメータ
-description: パラメータの使い方をまとめて解説します。
+title: パラメーター
+description: パラメーターの使い方をまとめて解説します。
 category: 高度な編集
 order: 5040
 updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/parameters'
 keywords:
   - Testim
-  - パラメータ
+  - パラメーター
   - 変数
   - データ駆動テスト
   - 設定
@@ -18,65 +18,65 @@ keywords:
   - 設定ファイル
 ---
 
-パラメータの使い方をまとめて解説します。
+パラメーターの使い方をまとめて解説します。
 
-パラメータは、テストステップ／テスト／テストスイートへ情報を受け渡すための変数です。事前に値を固定せずに、異なるシナリオを切り替えて検証できます。定義方法には複数あり、方法ごとに有効範囲（スコープ）が異なります。
+パラメーターは、テストステップ／テスト／テストスイートへ情報を受け渡すための変数です。事前に値を固定せずに、異なるシナリオを切り替えて検証できます。定義方法には複数あり、方法ごとに有効範囲（スコープ）が異なります。
 
-## パラメータの定義方法
+## パラメーターの定義方法
 
-* [ステッププロパティパネルのパラメータ](/docs/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメータを定義できます。
-* [グループのパラメータ](/docs/parameters-for-groups) - グループにパラメータを定義し、他テストでも再利用できます。
-* [パラメータのエクスポート](/docs/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディタで定義したパラメータを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
-* [JSON パラメータファイル](/docs/json-parameters-file-parameters) - JSONファイルで定義し、実行時に受け渡します。
-* [設定ファイルのパラメータ](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
+* [ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメーターを定義できます。
+* [グループのパラメーター](/docs/parameters-for-groups) - グループにパラメーターを定義し、他テストでも再利用できます。
+* [パラメーターのエクスポート](/docs/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディターで定義したパラメーターを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
+* [JSON パラメーターファイル](/docs/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
+* [設定ファイルのパラメーター](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
 * [テストデータ](/docs/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
 * 値生成ステップ - [日付の生成](/docs/generating-a-date#adding-a-generate-date-step)、[メールアドレスの生成](/docs/email-validation#generating-a-temporary-email-address)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
 
-## 事前定義（標準）パラメータ
+## 事前定義（標準）パラメーター
 
-`BASE_URL`、`TESTIM_ITERATOR`、`networkRequests` は標準で利用できる特別なパラメータです。通常のパラメータと異なり、事前の定義は不要でそのまま参照できます。
+`BASE_URL`、`TESTIM_ITERATOR`、`networkRequests` は標準で利用できる特別なパラメーターです。通常のパラメーターと異なり、事前の定義は不要でそのまま参照できます。
 
-### Base URL パラメータ
+### Base URL パラメーター
 
-テスト実行のベースURL（テスト定義の値、または上書き値）が入ります。パラメータが使える場所ならどこでも利用可能です。
+テスト実行のベース URL（テスト定義の値、または上書き値）が入ります。パラメーターが使える場所ならどこでも利用可能です。
 
 :::note
 URL 文字列の前後に単一引用符が付く場合があります（例: 'BASE_URL + '/Extension''）。その場合は引用符を削除して利用してください（例: BASE_URL + '/Extension'）。
 :::
 
-データ駆動テストでの動的なベースURLとしても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。
+データ駆動テストでの動的なベース URL としても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。
 
 詳細は [Base URL](/docs/base-url) を参照してください。
 
-### Testim Iterator パラメータ
+### Testim Iterator パラメーター
 
-TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の反復回数を示します。ループのたびに1ずつ増加します。
+TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の反復回数を示します。ループのたびに 1 ずつ増加します。
 
 :::note
-このパラメータのスコープはグループのループ内に限定されます。
+このパラメーターのスコープはグループのループ内に限定されます。
 :::
 
-詳細は [ループイテレーターパラメータの使用](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
+詳細は [ループイテレーターパラメーターの使用](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
 
-### Network Requests パラメータ
+### Network Requests パラメーター
 
 `networkRequests` は、実行中に発生したネットワークリクエストをオブジェクト配列として収集します。ネットワーク検証ステップ内でのみ利用できます。詳細は [ネットワーク検証の追加](/docs/add-network-validation) を参照してください。
 
-## パラメータの使用方法
+## パラメーターの使用方法
 
-定義したパラメータは、名前をそのまま（引用符なし）で記述して参照します。
+定義したパラメーターは、名前をそのまま（引用符なし）で記述して参照します。
 
 <Image alt="The myParam is the defined parameter" align="center" src="/images/parameters/parameters/3f139cf-image.png">
-  myParam が定義済みパラメータです
+  myParam が定義済みパラメーターです
 </Image>
 
-定義したパラメータは、次の場所で使用できます。
+定義したパラメーターは、次の場所で使用できます。
 
 * プロパティパネルの任意のテキスト入力欄 - 例: テキスト検証の「期待値」、ステップの実行条件（要素テキスト）の「期待値」など。以下の入力欄は非対応です：Variable Name／Description／Date Format
-* プロパティパネルの Param セクションにある式入力欄 - ここに別のパラメータ名を設定して、値を連鎖させることもできます。
-* 任意の関数エディタ - 一部のステップ（例: カスタム検証）やカスタム条件のエディタ内で参照可能です。詳細は [高度なJSエディタ](/docs/advanced-js-editor) を参照してください。
+* プロパティパネルの Param セクションにある式入力欄 - ここに別のパラメーター名を設定して、値を連鎖させることもできます。
+* 任意の関数エディター - 一部のステップ（例: カスタム検証）やカスタム条件のエディター内で参照可能です。詳細は [高度な JS エディター](/docs/advanced-js-editor) を参照してください。
 * [API ステップ](/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。Request URL／Header／Body／Assertion／Function editor
 
-## パラメータを非表示にする
+## パラメーターを非表示にする
 
-パラメータに機微情報を含む場合は、[非表示パラメータ](/docs/hidden-parameters) の手順で値の保存・表示を抑制できます。
+パラメーターに機微情報を含む場合は、[非表示パラメーター](/docs/hidden-parameters) の手順で値の保存・表示を抑制できます。

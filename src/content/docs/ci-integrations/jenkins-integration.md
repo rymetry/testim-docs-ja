@@ -1,36 +1,36 @@
 ---
-title: Jenkins統合
-description: JenkinsでTestimテストを実行する方法について説明します。LinuxとWindows環境でのビルドステップ設定手順を提供します。
+title: Jenkins 統合
+description: Jenkins で Testim テストを実行する方法について説明します。Linux と Windows 環境でのビルドステップ設定手順を提供します。
 category: 統合
 order: 12007
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/jenkins-integration'
 keywords:
   - Jenkins
-  - CI統合
-  - Jenkinsパイプライン
+  - CI 統合
+  - Jenkins パイプライン
   - フリースタイルジョブ
   - ビルドジョブ
-  - Linuxビルド
-  - Windowsビルド
+  - Linux ビルド
+  - Windows ビルド
   - Testim CLI
   - Node.js
 ---
 
-![Jenkinsロゴ](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png)
+![Jenkins ロゴ](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png)
 
-Jenkinsとテストを統合するには、まず\
-Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsのLTS/サポートされているバージョンのいずれか)がインストールされている必要があります。
+Jenkins とテストを統合するには、まず\
+Jenkins マシンまたはそのワーカーマシンの 1 つに node.js（Node.js の LTS/サポートされているバージョンのいずれか）がインストールされている必要があります。
 
 ## 次の手順に従ってください
 
-1. Jenkinsで新しいアイテムを作成します:
+1. Jenkins で新しいアイテムを作成します:
 
-![Jenkinsで新しいジョブを作成する画面](/images/ci-integrations/jenkins-integration/56a9e41-96INjt2YRViRwuogwLgW_jenkins_new_item.PNG)
+![Jenkins で新しいジョブを作成する画面](/images/ci-integrations/jenkins-integration/56a9e41-96INjt2YRViRwuogwLgW_jenkins_new_item.PNG)
 
-2. ジョブ名(例: "Testim Tests")を入力し、"Freestyle project"を選択して"OK"をクリックします:
+2. ジョブ名（例: "Testim Tests"）を入力し、"Freestyle project"を選択して"OK"をクリックします:
 
-![JenkinsのFreestyleプロジェクト作成画面](/images/ci-integrations/jenkins-integration/ba919cf-QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG)
+![Jenkins の Freestyle プロジェクト作成画面](/images/ci-integrations/jenkins-integration/ba919cf-QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG)
 
 3. 実行ステップを追加します
 
@@ -38,10 +38,10 @@ Jenkinsマシンまたはそのワーカーマシンの1つにnode.js(Node.jsの
 
 3. "Execute Shell"ステップを追加します:
 
-![JenkinsでExecute Shellビルドステップを追加する画面](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
+![Jenkins で Execute Shell ビルドステップを追加する画面](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
 
-4. [CLIページ](/docs/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
-   以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです(sudoは不要)
+4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
+   以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです（sudo は不要）
 
 ```shell
 mkdir -p "${WORKSPACE}/.npm-packages"
@@ -69,10 +69,10 @@ testim --label "<YOUR LABEL>" \
 
 3. "Execute Windows batch command"ステップを追加します:
 
-![JenkinsでExecute Windows batch commandステップを追加する画面](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
+![Jenkins で Execute Windows batch command ステップを追加する画面](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
 
-4. [CLIページ](/docs/the-command-line-cli)で説明されているように、適切なパラメータを使用してコマンドを設定します。\
-   以下は、最新のnpmパッケージがあることを確認する最初の部分と、CLIコマンド自体を含む基本的なスクリプトテンプレートです:
+4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
+   以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell Batch
 npm install -g @testim/testim-cli
@@ -90,10 +90,10 @@ testim --label "<YOUR LABEL>" ^
 
 \--
 
-5. Jenkinsが結果を保存、分析、表示するために、標準のJUnitXMLReporter XMLファイルを生成します。Jenkinsがファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
+5. Jenkins が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。Jenkins がファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
 
-![Publish JUnit test result reportポストビルドアクションを追加する画面](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)
+![Publish JUnit test result report ポストビルドアクションを追加する画面](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)
 
-5. セクション4の"report-file"パラメータに従って、xmlファイルの値を設定します:
+5. セクション 4 の"report-file"パラメーターに従って、xml ファイルの値を設定します:
 
-![JUnitテスト結果のXMLファイルパスを設定する画面](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG)
+![JUnit テスト結果の XML ファイルパスを設定する画面](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG)

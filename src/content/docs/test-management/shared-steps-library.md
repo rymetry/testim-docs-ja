@@ -20,7 +20,7 @@ keywords:
 
 ## 共有ステップライブラリを表示する
 
-![Shared Steps Library画面に共有ステップとフォルダーの一覧が表示された画面](/images/test-management/shared-steps-library/45778d1-Testim_055.png)
+![Shared Steps Library 画面に共有ステップとフォルダーの一覧が表示された画面](/images/test-management/shared-steps-library/45778d1-Testim_055.png)
 
 共有ステップライブラリ画面には、次の情報を含む共有ステップとフォルダーのリストが表示されます:
 
@@ -31,18 +31,18 @@ keywords:
 
 ## 共有ステップライブラリをフィルタリングする
 
-ステップカテゴリ（Groups、Actions、Validations、Wait forなど）で共有ステップをフィルタリングできます。\
+ステップカテゴリ（Groups、Actions、Validations、Wait for など）で共有ステップをフィルタリングできます。\
 :fa-arrow-right: **共有ステップライブラリをフィルタリングするには:**
 
 1. **Advanced filters** アイコンをクリックします。
 
-![共有ステップライブラリでAdvanced filtersアイコンをクリックする画面](/images/test-management/shared-steps-library/923bb65-Testim_056a.png)
+![共有ステップライブラリで Advanced filters アイコンをクリックする画面](/images/test-management/shared-steps-library/923bb65-Testim_056a.png)
 
 右側に Filter Shared Steps ペインが開きます。
 
-![Filter Shared Stepsペインでステップカテゴリなどの条件を設定する画面](/images/test-management/shared-steps-library/7ff70ce-Testim_057_r.png)
+![Filter Shared Steps ペインでステップカテゴリなどの条件を設定する画面](/images/test-management/shared-steps-library/7ff70ce-Testim_057_r.png)
 
-2. Filter Shared Steps ペインで、1つ以上のフィルター条件を選択します。
+2. Filter Shared Steps ペインで、1 つ以上のフィルター条件を選択します。
 3. **Apply** をクリックします。フィルターが適用され、条件を満たす共有ステップのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/saving-a-filtered-view) を参照してください。
 
 :::note
@@ -55,7 +55,7 @@ Filter Shared Steps ペインの下部にある **Reset filters** をクリッ�
 Filter Shared Steps ペインをリセットせずに閉じても、フィルターはリセットされず、フィルター条件を満たす共有ステップのみが表示されます。すべてのテストとフォルダーを再度表示するには、Filter Shared Steps ペインを再度開き、**Reset filters** と **Apply** をクリックする必要があります。
 :::
 
-![Reset filtersとApplyを使って共有ステップのフィルターを解除する操作のアニメーション](/images/test-management/shared-steps-library/d44b4d2-Jan-28-2021_14-00-05.gif)
+![Reset filters と Apply を使って共有ステップのフィルターを解除する操作のアニメーション](/images/test-management/shared-steps-library/d44b4d2-Jan-28-2021_14-00-05.gif)
 
 ## 検索テキストボックス
 
@@ -75,7 +75,7 @@ Filter Shared Steps ペインをリセットせずに閉じても、フィルタ
 結果のリストにはフラットビューで結果が表示されるため、検索条件に一致するフォルダー内にネストされているすべての共有ステップまたはフォルダーも表示されます。結果のいずれかの場所を表示するには、その行をクリックします。場所は画面の下部に表示されます。
 :::
 
-![Search libraryボックスに名前を入力して共有ステップを検索する操作のアニメーション](/images/test-management/shared-steps-library/ba0156b-Jan-31-2021_10-37-29.gif)
+![Search library ボックスに名前を入力して共有ステップを検索する操作のアニメーション](/images/test-management/shared-steps-library/ba0156b-Jan-31-2021_10-37-29.gif)
 
 ## フォルダーを開く
 
@@ -89,7 +89,7 @@ Filter Shared Steps ペインをリセットせずに閉じても、フィルタ
 
 選択したすべての共有ステップの詳細をエクスポートするには、共有ステップを選択して **Export to CSV** アイコンをクリックします。
 
-![選択した共有ステップに対してExport to CSVアイコンをクリックする画面](/images/test-management/shared-steps-library/5360b78-Screen_Shot_2021-01-31_at_10.46.43.png)
+![選択した共有ステップに対して Export to CSV アイコンをクリックする画面](/images/test-management/shared-steps-library/5360b78-Screen_Shot_2021-01-31_at_10.46.43.png)
 
 **注意:** 検索/フィルタリング時、CSV には一致するアイテムのみが含まれます。
 
@@ -120,4 +120,4 @@ Filter Shared Steps ペインをリセットせずに閉じても、フィルタ
 3. 再表示したいステップを選択します
 4. 再表示オプションをクリックします
 
-![フィルターでshow hidden stepsを有効にし非表示ステップを再表示する操作のアニメーション](/images/test-management/shared-steps-library/ac73aaa-Feb-23-2021_12-51-21.gif)
+![フィルターで show hidden steps を有効にし非表示ステップを再表示する操作のアニメーション](/images/test-management/shared-steps-library/ac73aaa-Feb-23-2021_12-51-21.gif)

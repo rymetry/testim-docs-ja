@@ -52,7 +52,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
 
 :::warning{title="注意"}
-「To choose an element Open base URL or Run test to relevant step」と表示された場合は、ベースURLでアプリを開くか、該当ステップまでテストを実行してから追加してください。
+「To choose an element Open base URL or Run test to relevant step」と表示された場合は、ベース URL でアプリを開くか、該当ステップまでテストを実行してから追加してください。
 :::
 
 ## 要素の表示を待つ（モバイル）
@@ -98,7 +98,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/8327419-wait-for-element-visible-selection.png)
 
 :::warning{title="注意"}
-同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。
+同様のメッセージが出る場合、ベース URL でアプリを開くか該当ステップまで実行してから追加してください。
 :::
 
 ### 非表示待ちの遅延
@@ -136,8 +136,8 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/00ffc60-text-selection.png)
 
 :::warning{title="注意"}
-同様のメッセージが出る場合、ベースURLでアプリを開くか該当ステップまで実行してから追加してください。  
-また、'**Expected Value**' にはパラメータ、正規表現、JavaScript式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
+同様のメッセージが出る場合、ベース URL でアプリを開くか該当ステップまで実行してから追加してください。  
+また、'**Expected Value**' にはパラメーター、正規表現、JavaScript 式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
 :::
 
 ## 要素テキストの表示を待つ（モバイル）
@@ -161,7 +161,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 :::warning{title="注意"}
 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
-また、'Expected Value' にはパラメータ、正規表現、JavaScript式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
+また、'Expected Value' にはパラメーター、正規表現、JavaScript 式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
 :::
 
 ## スリープ（Web）
@@ -179,7 +179,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e2c3b70-sleep-step.png)
 
-4. 既定は1秒（1,000ms）です。**sleep duration** はステップのプロパティで編集します。
+4. 既定は 1 秒（1,000ms）です。**sleep duration** はステップのプロパティで編集します。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/8cf49cd-sleep-duration.png)
 
@@ -198,7 +198,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/2b5b317-mobile-sleep.png)
 
-4. 既定は1秒（1,000ms）。**sleep duration** はステップのプロパティで編集します。
+4. 既定は 1 秒（1,000ms）。**sleep duration** はステップのプロパティで編集します。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/f953339-sleep-duration.png)
 
@@ -223,7 +223,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ## カスタム待機（Web）
 
-ビルトインの待機で足りない場合に使う、JavaScriptベースの待機ステップです。
+ビルトインの待機で足りない場合に使う、JavaScript ベースの待機ステップです。
 
 **Custom wait for を追加するには:**
 
@@ -240,14 +240,14 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/da06ecb-custom-wait-name.png)
 
-5. JSエディタで関数内にコードを記述し、true/false を返すことを確認します。
+5. JS エディターで関数内にコードを記述し、true/false を返すことを確認します。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
 :::warning{title="注意"}
 * 関数が true を返すかステップのタイムアウトに達するまでリトライします。
 * Custom wait for は再利用可能です。
-* ステップパラメータ、エクスポートパラメータなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
+* ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
 :::
 
 ## ダウンロード待機（Web）
@@ -269,11 +269,11 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/fa1cbce-wait-for-download-step-name.png)
 
-5. JSエディタでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/validate-download) を参照してください。
+5. JS エディターでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/validate-download) を参照してください。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e553c48-wait-for-download.png)
 
-6. **Back Arrow** をクリックしてテストエディタに戻ります。スクリプトは自動的に保存されます。
+6. **Back Arrow** をクリックしてテストエディターに戻ります。スクリプトは自動的に保存されます。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/4a10d25-return-to-test.png)
 

@@ -1,6 +1,6 @@
 ---
 title: 編集
-description: 表示中のSalesforceレコードのフィールドを編集します。
+description: 表示中の Salesforce レコードのフィールドを編集します。
 category: Salesforceテスト
 order: 16025
 updated: '2025-12-02'
@@ -9,19 +9,19 @@ keywords:
   - Salesforce
   - レコード編集
   - フィールド
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 
-> 📘 Salesforce ステップ
->
-> これは Salesforce ステップです。
+:::note{title="Salesforce ステップ"}
+これは Salesforce ステップです。
+:::
 
 編集ステップは、Salesforce の既存のレコードを編集します。編集ステップは定義済みステップです。
 
-> 📘 レコード表示の要件
->
-> ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+:::note{title="レコード表示の要件"}
+ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+:::
 
 <br />
 
@@ -50,7 +50,7 @@ keywords:
    6. **Reset** - フィールドの値を「未入力」状態にリセットします。フィールドが空の場合、フィールドに空の文字列を入力しようとしますが、Reset オプションを選択した場合は、空の文字列を入力しようとしません。\
       Value の下に、フィールドの値を入力します。フィールドが「選択リスト」（ドロップダウンメニュー）の場合は、関連するオプションを選択します。
 
-7. **Value** フィールドには2つのモードがあります。モードを切り替えるには、フィールドをクリックし、サインをクリックして **T** と **\{JS}** を切り替えます:
+7. **Value** フィールドには 2 つのモードがあります。モードを切り替えるには、フィールドをクリックし、サインをクリックして **T** と **\{JS}** を切り替えます:
 
    T. テキストモード。値はリテラル文字列として扱われます。\
    \{JS}. JavaScript モード。値は JavaScript 式として評価されます。フィールドは JavaScript 変数と関数を評価します。

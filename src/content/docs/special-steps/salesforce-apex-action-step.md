@@ -17,10 +17,10 @@ keywords:
   - CLI エージェント
   - Testim
   - 接続情報
-  - パラメータ
+  - パラメーター
 ---
 
-APEX コードをテスト内のステップとして実行し、UI を越えた E2E 検証を可能にします。APEX コードブロックに任意のパラメータを渡せます。APEX 側の入力パラメータは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、Salesforce から返ったデータなどはステップログで確認できます。
+APEX コードをテスト内のステップとして実行し、UI を越えた E2E 検証を可能にします。APEX コードブロックに任意のパラメーターを渡せます。APEX 側の入力パラメーターは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、Salesforce から返ったデータなどはステップログで確認できます。
 
 :::warning
 Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を管理者にホワイトリスト登録してもらってください。
@@ -63,16 +63,16 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/2d49d61-Testim_567_r.png)
 
 5. **Name the new step** フィールドに、このステップのわかりやすい名前を入力します。
-6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step folder** リストから保存先フォルダを選択します。共有ステップにしない場合はチェックを外します。\
+6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step folder** リストから保存先フォルダーを選択します。共有ステップにしない場合はチェックを外します。\
    共有ステップの詳細は [グループ](/docs/groups) を参照してください。
 7. **Create Step** をクリックします。\
-   **function** エディタが開き、右側に Properties パネルが表示されます。
+   **function** エディターが開き、右側に Properties パネルが表示されます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/db6f5b8-Testim_537.png)
 
 8. **Properties** パネルの **Description** フィールドで、このステップの説明を必要に応じて編集します（既定値は “Run Salesforce Apex action”）。
 9. APEX コードを実行したい Salesforce 環境への接続情報を入力します。\
-   文字列（シングルまたはダブルクォートで囲む）またはパラメータ（クォートなし）を指定できます。パラメータの使い方の詳細は後述の [Using Parameters](/docs/salesforce-apex-action-step#using-parameters) を参照してください。
+   文字列（シングルまたはダブルクォートで囲む）またはパラメーター（クォートなし）を指定できます。パラメーターの使い方の詳細は後述の [Using Parameters](/docs/salesforce-apex-action-step#using-parameters) を参照してください。
 
 * **URL** フィールドに、対象 Salesforce 環境の URL を入力します。
 * **Username** フィールドに、Salesforce のユーザー名を入力します。
@@ -82,10 +82,10 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
 
-10. APEX 側の入力パラメータは文字列型で受け取ります。必要なパラメータを次のように定義します。\
+10. APEX 側の入力パラメーターは文字列型で受け取ります。必要なパラメーターを次のように定義します。\
     a. **Properties** パネルの **APEX Params** セクションで **+ APEX PARAMS** ボタンをクリックします。\
-    b. パラメータの **Value** を入力します。この値は自動的に *string* 型に変換されます（Step 12 で説明するコード内で別の型に変換可能です）。\
-    c. パラメータ名はデフォルトで “param” になります。わかりやすい名前に変更したい場合は **edit** アイコンをクリックして任意の名前を入力します。
+    b. パラメーターの **Value** を入力します。この値は自動的に *string* 型に変換されます（Step 12 で説明するコード内で別の型に変換可能です）。\
+    c. パラメーター名はデフォルトで “param” になります。わかりやすい名前に変更したい場合は **edit** アイコンをクリックして任意の名前を入力します。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/7007b2f-Testim_538a_r.png)
 
@@ -95,8 +95,8 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 * **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – 既定のタイムアウト時間（この時間を超えるとステップ失敗とみなされる）を上書きし、別の時間（ミリ秒）を設定します。
 
-12. **function** 欄に APEX コードを記述します。定義したパラメータをこのコード内で参照できます。
-13. 戻る矢印をクリックしてメインのエディタに戻ります。
+12. **function** 欄に APEX コードを記述します。定義したパラメーターをこのコード内で参照できます。
+13. 戻る矢印をクリックしてメインのエディターに戻ります。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/d91f582-Testim_540a_r.png)
 
@@ -109,22 +109,22 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/5f98f17-Testim_536_r.png)
 
-テストを実行すると、コードエディタ内の Step Log で Salesforce からの結果を確認できます。
+テストを実行すると、コードエディター内の Step Log で Salesforce からの結果を確認できます。
 
-### パラメータの使用
+### パラメーターの使用
 
-テスト／スイート／設定ファイル／他ステップで定義したパラメータを用いて、接続情報を渡せます。
+テスト／スイート／設定ファイル／他ステップで定義したパラメーターを用いて、接続情報を渡せます。
 
-**接続情報にパラメータを使う:**
+**接続情報にパラメーターを使う:**
 
-1. 次のいずれかの方法でパラメータを定義します。
+1. 次のいずれかの方法でパラメーターを定義します。
 
-* **テストデータにパラメータを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメータを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
-* **設定ファイルにパラメータを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメータを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
-* **カスタムステップにパラメータを追加** – カスタムステップを作成してパラメータを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
-  その後、エクスポート機能を使ってパラメータを *Salesforce APEX action* ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
+* **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
+* **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
+* **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
+  その後、エクスポート機能を使ってパラメーターを *Salesforce APEX action* ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
 
-2. *Salesforce APEX action* ステップの **URL**、**Username**、**Password** フィールドに、上記で定義したパラメータを設定します。
+2. *Salesforce APEX action* ステップの **URL**、**Username**、**Password** フィールドに、上記で定義したパラメーターを設定します。
 
 ## 例: APEX アクション
 
@@ -151,7 +151,7 @@ try {
 
 ## 実行結果ログの確認
 
-*Salesforce APEX action* ステップを含むテストを実行すると、コードエディタの Step Log から Salesforce から返却された結果を確認できます。
+*Salesforce APEX action* ステップを含むテストを実行すると、コードエディターの Step Log から Salesforce から返却された結果を確認できます。
 
 **確認手順:**
 
@@ -159,7 +159,7 @@ try {
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/324def4-Testim_564a.png)
 
-コードエディタが開き、画面下部に **Step Log** が表示されます。
+コードエディターが開き、画面下部に **Step Log** が表示されます。
 
 Salesforce からログが返っている場合、その詳細が Step Log セクションに表示されます。
 

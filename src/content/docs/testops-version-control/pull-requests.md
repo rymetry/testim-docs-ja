@@ -7,12 +7,12 @@ updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/pull-requests'
 keywords:
   - プルリクエスト
-  - TestOpsバージョン管理
+  - TestOps バージョン管理
   - コードレビュー
   - 承認プロセス
   - レビュアー
-  - PR作成
-  - PR再送信
+  - PR 作成
+  - PR 再送信
   - 変更要求
   - 承認ワークフロー
   - テストレビュー
@@ -26,7 +26,7 @@ master へのマージ時にプルリクエストを提出します
 プルリクエストを使用する前に、**Project settings** でプルリクエスト設定を有効化および構成する必要があります。詳細については、[プロジェクト設定](/docs/project-settings#pull-request-settings)を参照してください。
 :::
 
-:::note{title="これは PRO 機能です"}
+:::note{title="これはPRO機能です"}
 この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
@@ -46,10 +46,10 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 
 **プルリクエストを作成するには:**
 
-![PR作成プロセス](/images/testops-version-control/pull-requests/99a18df-Open.gif)
+![PR 作成プロセス](/images/testops-version-control/pull-requests/99a18df-Open.gif)
 
 1. ブランチに変更を加えた後、ブランチドロップダウンメニューからマージするブランチを選択し、**Merge** アイコンをクリックします。
-   **Open Pull Request** ダイアログが表示され、承認された場合にターゲットブランチにマージされるテストとフォルダが表示されます。
+   **Open Pull Request** ダイアログが表示され、承認された場合にターゲットブランチにマージされるテストとフォルダーが表示されます。
 
 2. **Next** をクリックします。
 
@@ -61,7 +61,7 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 
 **プロジェクトのすべての PR を表示するには:**
 
-![PRレビュープロセス](/images/testops-version-control/pull-requests/be05e3d-prreview2.gif)
+![PR レビュープロセス](/images/testops-version-control/pull-requests/be05e3d-prreview2.gif)
 
 1. ブランチドロップダウンメニューの横にある **PR** ボタンをクリックします。
    次の情報を含む開いている PR のリストが表示されます:
@@ -80,7 +80,7 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 2. レビューしたい PR を開きます。
 3. PR が「Require approving reviewer」とマークされている場合、次の情報が表示されます:
 
-![PR詳細](/images/testops-version-control/pull-requests/876fb0e-Testim_621.png)
+![PR 詳細](/images/testops-version-control/pull-requests/876fb0e-Testim_621.png)
 
 * ソースブランチ名とプルリクエストタイトル
 * マージ結果 - 競合の数（ある場合）
@@ -97,10 +97,10 @@ PR を送信する前に競合を解決するには、ターゲットからソ�
 
 **プルリクエストを再送信するには:**
 
-![PR再送信プロセス](/images/testops-version-control/pull-requests/7035af3-PR3.gif)
+![PR 再送信プロセス](/images/testops-version-control/pull-requests/7035af3-PR3.gif)
 
 1. レビュー担当者が要求した変更を行った後、プルリクエストを開き、**Re-Submit** をクリックします。（プルリクエストをクローズする場合は **Close PR** をクリックします。）
 
-![Re-Submit画面](/images/testops-version-control/pull-requests/325f07e-Testim_613_r.png)
+![Re-Submit 画面](/images/testops-version-control/pull-requests/325f07e-Testim_613_r.png)
 
 2. 再送信の **Comment** を入力し、**Re-Submit** をクリックします。

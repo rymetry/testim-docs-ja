@@ -1,8 +1,8 @@
 ---
-title: Salesforce向けAgentic Test Automationの使用
+title: Salesforce 向け Agentic Test Automation の使用
 description: >-
   Agentic Test
-  AutomationでAIエージェントにプロンプトを与え、Salesforce向けのテストを生成・実行する手順とプロンプト例を紹介します。
+  Automation で AI エージェントにプロンプトを与え、Salesforce 向けのテストを生成・実行する手順とプロンプト例を紹介します。
 category: Salesforceテスト
 order: 16008
 updated: '2025-12-02'
@@ -10,9 +10,9 @@ sourceUrl: 'https://help.testim.io/docs/use-agentic-test-automation-for-salesfor
 keywords:
   - Agentic Test Automation
   - Agentic Test Automation
-  - AIエージェント
+  - AI エージェント
   - プロンプト
-  - Salesforceテスト
+  - Salesforce テスト
   - テスト生成
   - テスト実行
   - 手動レビュー
@@ -20,20 +20,20 @@ keywords:
   - テスト作成
 ---
 
-AIエージェントの支援を受けて、Salesforce環境向けのユニークなテストを作成します。
+AI エージェントの支援を受けて、Salesforce 環境向けのユニークなテストを作成します。
 
-[ステップを手動で追加または記録する](/docs/create-a-salesforce-test)ことに加えて、Agentic Test Automationの支援を受けてSalesforce向けのテストを作成できます。このツールを使用すると、特別にトレーニングされたAIエージェントと協力して、Salesforce環境向けのユニークなテストを生成および実行できます。
+[ステップを手動で追加または記録する](/docs/create-a-salesforce-test)ことに加えて、Agentic Test Automation の支援を受けて Salesforce 向けのテストを作成できます。このツールを使用すると、特別にトレーニングされた AI エージェントと協力して、Salesforce 環境向けのユニークなテストを生成および実行できます。
 
 ## 前提条件
 
-* Testim Extensionをダウンロードしてインストールする - [なぜTestim Extensionが必要ですか？](/docs/why-do-you-need-testim-extension)
-* [Salesforceテスト環境をTestim/TTA for Salesforceに接続する](/docs/create-and-manage-test-environments)。
+* Testim Extension をダウンロードしてインストールする - [なぜ Testim Extension が必要ですか？](/docs/why-do-you-need-testim-extension)
+* [Salesforce テスト環境を Testim/TTA for Salesforce に接続する](/docs/create-and-manage-test-environments)。
 
-## Agentic Test Automationで新しいSalesforceテストを作成する
+## Agentic Test Automation で新しい Salesforce テストを作成する
 
 :fa-arrow-right:**新しいテストを作成するには:**
 
-1. Testim for Salesforceアカウント内のどこからでも、画面上部の**Agentic Test Automation**を選択します。
+1. Testim for Salesforce アカウント内のどこからでも、画面上部の**Agentic Test Automation**を選択します。
 2. このサービスを初めて使用する場合は、**Terms of Service**の一番下までスクロールして、**Got it**を選択してオプトインします。
 3. これで、エージェントへのプロンプトを開始できます。テストしたい内容の説明をエージェントに与えます。それが簡単なものでも複雑なものでも構いません。これを行う方法の例については、[プロンプトの作成方法](/docs/use-agentic-test-automation-for-salesforce#プロンプトの作成方法)をご覧ください。
 

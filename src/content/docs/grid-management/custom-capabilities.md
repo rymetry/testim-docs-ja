@@ -21,7 +21,7 @@ keywords:
 
 Custom capabilities を使用すると、利用可能なすべての Grid に対して幅広い advanced test parameter を追加できます。これらは JSON object の key-value pair として記述します。
 
-たとえば、device の system language や time zone を次のように指定できます。
+例えば、device の system language や time zone を次のように指定できます。
 
 ```json
 {

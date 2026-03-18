@@ -8,8 +8,8 @@ sourceUrl: 'https://help.testim.io/docs/mobile-apps'
 keywords:
   - モバイルアプリ
   - アプリライブラリ
-  - APKアップロード
-  - IPAアップロード
+  - APK アップロード
+  - IPA アップロード
   - モバイルアプリ管理
   - Mobile App ID
 ---
@@ -43,15 +43,15 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 
 1. メインメニューから **Mobile Apps Tab** に移動します。
 
-![Mobile Appsタブが選択されたメインメニュー](/images/test-management/mobile-apps/9c9184e-mobileappstab.png)
+![Mobile Apps タブが選択されたメインメニュー](/images/test-management/mobile-apps/9c9184e-mobileappstab.png)
 
 2. **New App** ボタンをクリックします。
 
-![New Appボタンが表示されたモバイルアプリライブラリ](/images/test-management/mobile-apps/3531196-newapp.png)
+![New App ボタンが表示されたモバイルアプリライブラリ](/images/test-management/mobile-apps/3531196-newapp.png)
 
-3. **APK/IPA ファイル**を選択するか、ローカルコンピューターからアップロードウィンドウにファイルをドラッグアンドドロップします。一度にアップロードできるファイルは1つだけです。
+3. **APK/IPA ファイル**を選択するか、ローカルコンピューターからアップロードウィンドウにファイルをドラッグアンドドロップします。一度にアップロードできるファイルは 1 つだけです。
 
-![APK/IPAファイルを選択する新規モバイルアプリ追加ダイアログ](/images/test-management/mobile-apps/ab59dec-addnewapp.png)
+![APK/IPA ファイルを選択する新規モバイルアプリ追加ダイアログ](/images/test-management/mobile-apps/ab59dec-addnewapp.png)
 
 4. アプリが **Mobile Apps Library** に追加されます。
 
@@ -70,7 +70,7 @@ Mobile Apps Library のアプリをローカルコンピューターにダウン
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Download File** ボタンをクリックします。
 
-![選択したモバイルアプリのDownload Fileボタン](/images/test-management/mobile-apps/28abf33-download.png)
+![選択したモバイルアプリの Download File ボタン](/images/test-management/mobile-apps/28abf33-download.png)
 
 ## Mobile Apps Library からアプリを削除する
 
@@ -81,7 +81,7 @@ Mobile Apps Library でアプリが不要になった場合は、削除できま
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Delete** ボタンをクリックします。
 
-![選択したモバイルアプリのDeleteボタン](/images/test-management/mobile-apps/ae5134d-delete.png)
+![選択したモバイルアプリの Delete ボタン](/images/test-management/mobile-apps/ae5134d-delete.png)
 
 モバイルアプリがテストで使用されている場合、削除できません。アプリを削除する前に、すべてのテストからアプリケーションを削除するか、アプリケーションを使用するすべてのテストを削除する必要があります。
 
@@ -96,11 +96,11 @@ Mobile Apps Library に含まれているモバイルアプリをグリッドで
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Copy ID** ボタンをクリックします。
 
-![モバイルアプリのMobile App IDをコピーするCopy IDボタン](/images/test-management/mobile-apps/434c659-copyid.png)
+![モバイルアプリの Mobile App ID をコピーする Copy ID ボタン](/images/test-management/mobile-apps/434c659-copyid.png)
 
 その後、必要な場所に Mobile App ID を貼り付けることができます。
 
-![CLI設定画面でコピーしたMobile App IDを使用する例](/images/test-management/mobile-apps/e67232c-useid.png)
+![CLI 設定画面でコピーした Mobile App ID を使用する例](/images/test-management/mobile-apps/e67232c-useid.png)
 
 ## Mobile Apps Library を検索する
 
@@ -119,11 +119,11 @@ Testim Mobile Apps Library にアップロードされたモバイルアプリ�
 
 :fa-arrow-right: **モバイルアプリをグリッドプロバイダーに直接アップロードするには**:
 
-1. **Mobile Apps Library** から1つ以上のアプリケーションをクリックします。
+1. **Mobile Apps Library** から 1 つ以上のアプリケーションをクリックします。
 
 2. **Upload to Grid** ボタンをクリックします。
 
-![選択したアプリに対してUpload to Gridボタンを押す画面](/images/test-management/mobile-apps/7a0a501-uploadtogridbutton.png)
+![選択したアプリに対して Upload to Grid ボタンを押す画面](/images/test-management/mobile-apps/7a0a501-uploadtogridbutton.png)
 
 3. 事前設定されたグリッドのリストから**グリッドを選択**し、**Upload** ボタンをクリックします。
 

@@ -1,7 +1,7 @@
 ---
 title: Testim Extension - スクリーンショットをキャプチャ
 description: >-
-  Testim Extensionのスクリーンショットキャプチャ機能でWebページのスクリーンショットを撮影し、注釈を追加してJira、Slack、Trelloなどのバグトラッキングシステムに送信できます。
+  Testim Extension のスクリーンショットキャプチャ機能で Web ページのスクリーンショットを撮影し、注釈を追加して Jira、Slack、Trello などのバグトラッキングシステムに送信できます。
 category: Testim拡張機能
 order: 17002
 updated: '2025-11-02'
@@ -18,23 +18,23 @@ keywords:
   - GitHub
 ---
 
-Testim Extensionのスクリーンショットキャプチャ機能を使用すると、Webページのスクリーンショットをキャプチャし、注釈（矢印、テキストなど）を追加し、Jira、Slack、Trello、GitHubなどのバグトラッキングシステムにバグ/問題として送信できます。
+Testim Extension のスクリーンショットキャプチャ機能を使用すると、Web ページのスクリーンショットをキャプチャし、注釈（矢印、テキストなど）を追加し、Jira、Slack、Trello、GitHub などのバグトラッキングシステムにバグ/問題として送信できます。
 
-バグトラッカーにバグを送信するには、まずTestimをバグトラッキングシステムに接続する必要があります。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
+バグトラッカーにバグを送信するには、まず Testim をバグトラッキングシステムに接続する必要があります。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
 
-スクリーンショットキャプチャ機能を使用するには、Testim Extensionをダウンロードする必要があります。Testim Extensionをダウンロードするには、[こちら](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)からインストールしてください。
+スクリーンショットキャプチャ機能を使用するには、Testim Extension をダウンロードする必要があります。Testim Extension をダウンロードするには、[こちら](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)からインストールしてください。
 
 ## スクリーンショットのキャプチャと注釈の追加
 
 **スクリーンショットをキャプチャして注釈を付けるには:**
 
-1. Webブラウザで、キャプチャしたいWebページに移動し、**Testim Extension**アイコンをクリックします。
-2. Testimにログインしていない場合は、**Login To Start**をクリックします。すでにログインしている場合は、ステップ5に進みます。
+1. Web ブラウザで、キャプチャしたい Web ページに移動し、**Testim Extension**アイコンをクリックします。
+2. Testim にログインしていない場合は、**Login To Start**をクリックします。すでにログインしている場合は、ステップ 5 に進みます。
 3. 開いた新しいタブでログインプロセスを完了し、前のタブに戻ります。
 4. 再度**Testim Extension**アイコンをクリックします。\
    拡張機能メニューが開きます。
 
-![Testim Extensionメニュー](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
+![Testim Extension メニュー](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
 
 5. **Capture Screenshot**をクリックします。\
    画面が固定され、注釈ツールバーが表示されます。
@@ -55,10 +55,10 @@ Testim Extensionのスクリーンショットキャプチャ機能を使用す�
 
 **注釈付きバグをバグトラッカーに送信するには:**
 
-1. Testimをバグトラッカーに接続していることを確認してください。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
+1. Testim をバグトラッカーに接続していることを確認してください。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
 2. スクリーンショットに注釈を付けた後、注釈ツールバーで**Publish**をクリックします。
 
-![Publishボタン](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png)
+![Publish ボタン](/images/testim-extension/testim-extension-capture-screenshot/a636079-publishbutton.png)
 
 3. 接続したバグトラッカーシステムに応じて、バグ情報を入力するための異なるフォームが表示されます。以下の説明に基づいてフォームに入力し、**Publish**をクリックします。
 
@@ -67,7 +67,7 @@ Testim Extensionのスクリーンショットキャプチャ機能を使用す�
 フォームには以下の要素が含まれます:
 
 * **バグトラッカーシステムを切り替え** – 歯車アイコンをクリックして、バグトラッキング設定ダイアログを開きます。詳細については、[バグトラッカー設定](/docs/bug-tracker-settings)を参照してください。
-* **Testim自動テスト** – 単一ステップの自動テストがTestimで自動的に作成され、このテストへのリンクが問題/バグレポートに含まれます。クリックしてTestimでテストにアクセスします。
+* **Testim 自動テスト** – 単一ステップの自動テストが Testim で自動的に作成され、このテストへのリンクが問題/バグレポートに含まれます。クリックして Testim でテストにアクセスします。
 * **スクリーンショット** – キャプチャされたスクリーンショットが問題/バグレポートに含まれます。
-* **Trelloでの場所** – 問題/バグが報告されるTrelloの正確な場所を指定します。
-* **問題の詳細** – Summaryフィールドで、問題/バグのタイトルを編集します。Descriptionフィールドには、問題/バグの再現方法の詳細が含まれます。編集して詳細を追加できます。
+* **Trello での場所** – 問題/バグが報告される Trello の正確な場所を指定します。
+* **問題の詳細** – Summary フィールドで、問題/バグのタイトルを編集します。Description フィールドには、問題/バグの再現方法の詳細が含まれます。編集して詳細を追加できます。

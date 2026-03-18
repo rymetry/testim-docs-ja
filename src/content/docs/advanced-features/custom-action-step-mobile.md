@@ -18,7 +18,7 @@ keywords:
   - Testim モバイル
 ---
 
-事前定義ステップにないアクションや検証を行いたい場合に、Appium を用いたスクリプトを実行できる「カスタムアクション（モバイル）」ステップを使用します。複数のモバイルコマンドをバッチ実行でき、JSパラメータも利用可能です。
+事前定義ステップにないアクションや検証を行いたい場合に、Appium を用いたスクリプトを実行できる「カスタムアクション（モバイル）」ステップを使用します。複数のモバイルコマンドをバッチ実行でき、JS パラメーターも利用可能です。
 
 カスタムアクション（モバイル）は TMA でのみ完全にサポートされます。サードパーティのグリッドでは未サポートです（例）：
 
@@ -29,7 +29,7 @@ keywords:
 物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: `tricentis-mobile-agent start -e`
 :::
 
-## VMGでサポートされるAppiumメソッド
+## VMG でサポートされる Appium メソッド
 
 次の Appium メソッドがサポートされています:
 
@@ -62,21 +62,21 @@ keywords:
 :::
 
 4. **Name** にわかりやすい名前を入力します。
-5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/groups) を参照してください。
-6. **Create Step** をクリックします。関数エディタと右側の **Properties** パネルが開きます。
+5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダーを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/groups) を参照してください。
+6. **Create Step** をクリックします。関数エディターと右側の **Properties** パネルが開きます。
 
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/795f7e2-ca3.png)
 
 7. **Properties** の **Description** を必要に応じて編集します（既定: Run shared action / Run action）。
-8. 必要なパラメータを定義します。
+8. 必要なパラメーターを定義します。
    1. **+ PARAMS** をクリック
-   2. **JS** を選択してJavaScriptパラメータを追加
+   2. **JS** を選択して JavaScript パラメーターを追加
 9. 任意のプロパティを設定します。
    1. **When this step fails** – 失敗時の動作
-   2. **When to run step** – 実行条件（Conditions参照）
+   2. **When to run step** – 実行条件（Conditions 参照）
    3. **Override timeout** – タイムアウトの上書き（ミリ秒）
-10. **function** テキストボックスにJSコードを記述します。定義したパラメータを参照できます。
-11. 戻る矢印でエディタに戻ります。
+10. **function** テキストボックスに JS コードを記述します。定義したパラメーターを参照できます。
+11. 戻る矢印でエディターに戻ります。
 
     ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/af049a0-Run_Shared_action.jpg)
 
@@ -87,14 +87,14 @@ keywords:
 <br />
 
 :::warning{title="注意"}
-AUTで要素をパラメータ定義するためにブレークポイントを有効化した場合は、Toggle Breakpoint で解除してください。
+AUT で要素をパラメーター定義するためにブレークポイントを有効化した場合は、Toggle Breakpoint で解除してください。
 :::
 
 ## 例
 
 ### デバイスのナビゲーションバーを引き下げる
 
-`performActions` の使用例です。画面左上から100ms待機後、100ピクセル下方向へドラッグして指を離します。
+`performActions` の使用例です。画面左上から 100ms 待機後、100 ピクセル下方向へドラッグして指を離します。
 
 ```javascript
 const start_x = 50
@@ -120,7 +120,7 @@ await DRIVER.performActions([
 
 <br />
 
-### xpathでボタン要素を探す
+### xpath でボタン要素を探す
 
 `findElement` の使用例です。
 

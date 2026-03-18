@@ -1,6 +1,6 @@
 ---
-title: GitLab統合
-description: GitLab CI/CDでTestimテストを実行する方法について説明します。YAMLファイルの設定手順とサンプルコードを提供します。
+title: GitLab 統合
+description: GitLab CI/CD で Testim テストを実行する方法について説明します。YAML ファイルの設定手順とサンプルコードを提供します。
 category: 統合
 order: 12011
 updated: '2025-02-10'
@@ -8,16 +8,16 @@ sourceUrl: 'https://help.testim.io/docs/gitlab-integration'
 keywords:
   - GitLab
   - GitLab CI
-  - CI統合
-  - CIパイプライン
-  - YAML設定
+  - CI 統合
+  - CI パイプライン
+  - YAML 設定
   - Testim CLI
 ---
 
-![GitLabロゴ](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png)
+![GitLab ロゴ](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png)
 
-**YAMLファイル**\
-GitLabとTestimを統合するには、YAMLファイルに以下の行を追加する必要があります:
+**YAML ファイル**\
+GitLab と Testim を統合するには、YAML ファイルに以下の行を追加する必要があります:
 
 ```yaml
 image: node:16.13.0
@@ -49,5 +49,5 @@ testim:
 :::
 
 :::info
-Testimは、Node.jsのすべての[LTS/サポートされているバージョン](https://github.com/nodejs/Release/blob/main/README.md)をサポートしています。
+Testim は、Node.js のすべての[LTS/サポートされているバージョン](https://github.com/nodejs/Release/blob/main/README.md)をサポートしています。
 :::

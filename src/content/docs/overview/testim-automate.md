@@ -1,18 +1,18 @@
 ---
-title: Webとモバイルテスト
-description: WebおよびモバイルアプリケーションのためのAI駆動型テスト自動化ツール
+title: Web とモバイルテスト
+description: Web およびモバイルアプリケーションのための AI 駆動型テスト自動化ツール
 category: 概要
 order: 1002
 updated: '2025-09-13'
 sourceUrl: 'https://help.testim.io/docs/testim-automate'
 keywords:
-  - Webテスト
+  - Web テスト
   - モバイルテスト
   - テスト自動化
   - コードレステスト
   - Smart Locators
   - テストグリッド
-  - CI統合
+  - CI 統合
   - TestOps
   - Visual Editor
   - クロスブラウザテスト
@@ -22,20 +22,20 @@ Testim Automate は、安定したテストを高速に作成できる本格的�
 
 ## コードレステスト作成
 
-Testim は、ステップを記録してテストを作成できるコードレステスト作成環境を提供します。Testim Visual Editor内で記録を開始し、アプリケーション内でクリック、メニューオプションの選択、テキスト入力などを行うだけです。その結果、Visual Editor内で編集可能なステップバイステップのテストが作成されます。テストの記録の優れた点は、Testim のアルゴリズムを使用して各要素とそのパラメータを一意に識別することです。
+Testim は、ステップを記録してテストを作成できるコードレステスト作成環境を提供します。Testim Visual Editor 内で記録を開始し、アプリケーション内でクリック、メニューオプションの選択、テキスト入力などを行うだけです。その結果、Visual Editor 内で編集可能なステップバイステップのテストが作成されます。テストの記録の優れた点は、Testim のアルゴリズムを使用して各要素とそのパラメーターを一意に識別することです。
 
 私たちの AI は Smart Locators と呼ばれるものを使用して、数百の属性を評価してスコアリングするため、要素が変更されてもテストは壊れません。開始するには、以下の入門ガイドの手順に従ってください。
 
-- Web の場合 - [Testim Visual Editorで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- モバイルの場合 - [Testim Visual Editorで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
+- Web の場合 - [Testim Visual Editor で初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
+- モバイルの場合 - [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
 
 ## テストのカスタマイズ
 
-Testim には、テストをカスタマイズするための多くの機能がビジュアルテストエディタに組み込まれています。
+Testim には、テストをカスタマイズするための多くの機能がビジュアルテストエディターに組み込まれています。
 
-### ビジュアルテストエディタ
+### ビジュアルテストエディター
 
-コードを書きたくない場合でも、エディタに多くの機能が組み込まれています。以下はいくつかの例です（ヒント: もっとたくさんあります。必要なものを検索してください）。
+コードを書きたくない場合でも、エディターに多くの機能が組み込まれています。以下はいくつかの例です（ヒント: もっとたくさんあります。必要なものを検索してください）。
 
 - [グループ](/docs/groups) - ステップをグループ化して再利用できます。グループ内にグループをネストすることもできます。グループ化は、同じステップを繰り返し作成しないようにテストを構築するのに役立ちます。実証済みのステップを再利用することで、より効率的なテストアーキテクチャを作成することもできます。
 
@@ -99,5 +99,5 @@ Smart Locators は各テスト実行で学習します。一部の属性が変�
 
 ## 次のステップ
 
-- [Testim Visual Editorで初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- [Testim Visual Editorで初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
+- [Testim Visual Editor で初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
+- [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

@@ -1,6 +1,6 @@
 ---
 title: Enhanced Mode モバイルテスト
-description: TestimのEnhanced Modeを使用したモバイルアプリケーションのテスト方法
+description: Testim の Enhanced Mode を使用したモバイルアプリケーションのテスト方法
 category: 概要
 order: 1006
 updated: '2025-09-13'
@@ -69,7 +69,7 @@ Enhanced mode で記録されたテストは Enhanced mode で実行され、Enh
 
 ### 以前に記録したテストに Enhanced mode を適用できますか？
 
-いいえ。Enhanced mode の実行には、テストの記録中にいくつかのパラメータを設定して記録する必要があります。Enhanced mode で記録されたテストは、Enhanced mode でのみ実行され、Enhanced mode で記録されていないテストは Enhanced mode で実行されません。
+いいえ。Enhanced mode の実行には、テストの記録中にいくつかのパラメーターを設定して記録する必要があります。Enhanced mode で記録されたテストは、Enhanced mode でのみ実行され、Enhanced mode で記録されていないテストは Enhanced mode で実行されません。
 
 ### テストに別のモード（Enhanced mode 以外）を選択できますか？
 

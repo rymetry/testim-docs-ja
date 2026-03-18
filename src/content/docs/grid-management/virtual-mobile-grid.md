@@ -25,11 +25,11 @@ Virtual Mobile Grid はテストの記録にも実行にも使用できます。
 
 Virtual Mobile Grid に特別な integration は不要です。有償 customer には license に含まれています。Community license でも、Company Owner または Project Owner であれば無料 trial に登録できます。trial を開始すると、Virtual Mobile Grid はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用可能になります。trial 期間中は Android と iOS のさまざまな virtual device を使用できます。
 
-:::warning{title="Test Compatibility"}
+:::warning{title="テスト互換性"}
 Virtual Mobile Grid で実行できるのは、virtual device で動作するように compile された iOS application のみです。
 :::
 
-:::info{title="OS Compatibility"}
+:::info{title="OS 互換性"}
 Virtual Mobile Grid は x86_64 Android build のみをサポートします。
 :::
 

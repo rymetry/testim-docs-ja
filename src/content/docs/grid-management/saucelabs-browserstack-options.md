@@ -20,7 +20,7 @@ SauceLabs と BrowserStack の Grid で CLI から capability を設定する方
 
 定義済み capability を含む JSON file を使うことで、SauceLabs と BrowserStack へ追加の configuration parameter を渡せます。
 
-たとえば、特定の browser version と time zone でテストを実行したい場合は、次の手順に従います。
+例えば、特定の browser version と time zone でテストを実行したい場合は、次の手順に従います。
 
 1. 次の JSON file を作成します。
 
@@ -53,7 +53,7 @@ JSON capability file の設定は、次の設定を上書きします。
 * `autoGrantPermissions`、`AutoAcceptAlerts`、video capturing 無効化などの default value
 
 :::info{title="PlatformVersion capabilities"}
-`platformVersion` capability は検証され、使用すべき Appium version を決定するために使われます。たとえば client が Appium version `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の warning が表示されます。これは mobile config / CLI flag の `osVersion` logic と同様です。
+`platformVersion` capability は検証され、使用すべき Appium version を決定するために使われます。例えば client が Appium version `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の warning が表示されます。これは mobile config / CLI flag の `osVersion` logic と同様です。
 :::
 
 ## SauceLabs
@@ -149,7 +149,7 @@ parameter の詳細は、BrowserStack の公式ドキュメントを参照して
 }
 ```
 
-:::warning{title="BrowserStack certificate error"}
+:::warning{title="BrowserStack 証明書エラー"}
 Android version 13.0 以上の device でテストしている場合、certificate issue により target device が offline のように見えることがあります。詳細と解決方法は BrowserStack の関連ドキュメントを参照してください。\
 [https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
 :::

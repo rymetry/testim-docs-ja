@@ -1,5 +1,5 @@
 ---
-title: TestimとTrelloの連携
+title: Testim と Trello の連携
 description: Testim から Trello に bug を公開するための接続手順を説明します。Testim Automate への認可と Trello への初回接続フローを確認できます。
 category: 統合
 order: 12035
@@ -7,19 +7,19 @@ updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-trello'
 keywords:
   - Testim
-  - Trello連携
+  - Trello 連携
   - バグ報告
   - バグトラッカー
-  - Trelloカード
+  - Trello カード
   - 接続設定
   - 不具合管理
 ---
 
-## TestimとTrelloの連携
+## Testim と Trello の連携
 
 Testim は、新しい bug ticket を作成します。これには、bug の詳細な説明、bug の再現手順、screen resolution と browser、bug の screenshot が含まれます。Testim を Trello に接続するには、以下で説明するように access permission を Testim Automate に付与する必要があります。
 
-## TestimをTrelloに接続する
+## Testim を Trello に接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. **Trello** ロゴをクリックします。

@@ -9,13 +9,13 @@ keywords:
   - Salesforce
   - 待機
   - ページ読み込み
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 
-> 📘 Salesforce ステップ
->
-> これは Salesforce ステップです。
+:::note{title="Salesforce ステップ"}
+これは Salesforce ステップです。
+:::
 
 ページ読み込み待機ステップは、次のステップに進む前にページが完全に読み込まれるまで待機します。
 

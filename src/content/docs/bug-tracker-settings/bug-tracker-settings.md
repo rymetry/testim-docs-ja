@@ -9,18 +9,18 @@ keywords:
   - Testim
   - バグトラッカー設定
   - バグ報告
-  - issue管理
-  - Jira連携
-  - Trello連携
-  - Slack連携
-  - GitHub連携
+  - issue 管理
+  - Jira 連携
+  - Trello 連携
+  - Slack 連携
+  - GitHub 連携
 ---
 
 ## バグトラッカー設定
 
 失敗したテストやバグは、bug / issue tracking system に簡単に報告できます。Testim は一般的なバグトラッカーと統合されており、ワンクリックで issue を公開できます。作成される issue には、詳細な説明とバグのスクリーンショットが含まれます。
 
-:::info{title="プロ機能"}
+:::info{title="PRO機能"}
 この機能は Professional plan 以上で利用できます。
 :::
 
@@ -36,7 +36,7 @@ bug や issue を tracking system に報告する方法はいくつかありま�
 
 Testim は次の bug tracking system に接続できます。
 
-- [TestimとJiraの連携](/docs/connecting-testim-to-jira)
-- [TestimとTrelloの連携](/docs/connecting-testim-to-trello)
-- [TestimとSlackの連携](/docs/connecting-testim-to-slack)
-- [TestimとGitHubの連携](/docs/connecting-testim-to-github)
+- [Testim と Jira の連携](/docs/connecting-testim-to-jira)
+- [Testim と Trello の連携](/docs/connecting-testim-to-trello)
+- [Testim と Slack の連携](/docs/connecting-testim-to-slack)
+- [Testim と GitHub の連携](/docs/connecting-testim-to-github)

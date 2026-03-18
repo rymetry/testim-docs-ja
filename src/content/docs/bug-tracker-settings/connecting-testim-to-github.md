@@ -1,5 +1,5 @@
 ---
-title: TestimとGitHubの連携
+title: Testim と GitHub の連携
 description: Testim から GitHub Issues に bug を報告するための接続手順を説明します。
 category: 統合
 order: 12037
@@ -7,20 +7,20 @@ updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
 keywords:
   - Testim
-  - GitHub連携
+  - GitHub 連携
   - GitHub Issues
   - バグトラッカー
   - バグ報告
-  - issue作成
+  - issue 作成
   - 接続設定
   - 不具合管理
 ---
 
-## TestimとGitHubの連携
+## Testim と GitHub の連携
 
 GitHub integration を使うと、Testim から直接 GitHub Issues に bug を報告できます。bug に関する情報は自動的に入力されます。
 
-## TestimをGitHubに接続する
+## Testim を GitHub に接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. **Github** ロゴをクリックします。

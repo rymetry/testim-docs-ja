@@ -10,7 +10,7 @@ keywords:
   - ダイレクトリンク
   - Shared Steps ライブラリ
   - アクセス性向上
-  - Labs機能
+  - Labs 機能
 ---
 
 :::info{title="Testim Labs 機能"}
@@ -25,11 +25,11 @@ Shared Step に直接リンク機能は、[Shared Steps ライブラリ](/docs/s
 
 1. メインナビゲーションで、**Test List** アイコンをクリックします。
 
-![メインナビゲーションのTest Listアイコンをクリックする手順を示す画面](/images/miscellaneous/link-directly-to-a-shared-step/10c510a-Testim_432a.png)
+![メインナビゲーションの Test List アイコンをクリックする手順を示す画面](/images/miscellaneous/link-directly-to-a-shared-step/10c510a-Testim_432a.png)
 
 2. **Shared Steps** をクリックして Shared Steps タブを開きます。
 
-![Shared Stepsボタンをクリックして Shared Steps タブを開く手順を示す画面](/images/miscellaneous/link-directly-to-a-shared-step/d701b25-Testim_432b.png)
+![Shared Steps ボタンをクリックして Shared Steps タブを開く手順を示す画面](/images/miscellaneous/link-directly-to-a-shared-step/d701b25-Testim_432b.png)
 
 3. 表示したい Shared Step/グループの右側にある**下矢印**をクリックします。
 
@@ -57,4 +57,4 @@ Shared Step に直接リンク機能は、[Shared Steps ライブラリ](/docs/s
 開いたテストに Shared Step/グループの複数の出現が含まれている場合、最初の出現のみが選択されます。
 :::
 
-![Shared Stepsライブラリから直接Shared Stepにアクセスする一連の手順を示すGIFアニメーション](/images/miscellaneous/link-directly-to-a-shared-step/3107af4-Jul-26-2021_12-46-44.gif)
+![Shared Steps ライブラリから直接 Shared Step にアクセスする一連の手順を示す GIF アニメーション](/images/miscellaneous/link-directly-to-a-shared-step/3107af4-Jul-26-2021_12-46-44.gif)

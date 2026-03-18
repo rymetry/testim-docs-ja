@@ -1,7 +1,7 @@
 ---
 title: ステップ
 description: >-
-  Testimのステップの種類と使い方について説明します。手動ステップと自動記録ステップの違い、検証ステップ、待機ステップ、アクションステップの詳細を解説します。
+  Testim のステップの種類と使い方について説明します。手動ステップと自動記録ステップの違い、検証ステップ、待機ステップ、アクションステップの詳細を解説します。
 category: テスト編集
 order: 4001
 updated: '2025-09-13'
@@ -18,15 +18,15 @@ keywords:
 
 ## ステップの追加方法
 
-ステップは2つの方法で追加できます：
+ステップは 2 つの方法で追加できます：
 
-- **手動ステップ** - ユーザーが矢印記号の上にマウスを移動し、事前定義ステップリストから関連するステップを選択することで、手動でステップを追加します。または、Visual EditorまたはAUTブラウザから[キーボードショートカット](/docs/keyboard-shortcuts)のいずれかを使用して、手動でステップを追加することもできます。
+- **手動ステップ** - ユーザーが矢印記号の上にマウスを移動し、事前定義ステップリストから関連するステップを選択することで、手動でステップを追加します。または、Visual Editor または AUT ブラウザから[キーボードショートカット](/docs/keyboard-shortcuts)のいずれかを使用して、手動でステップを追加することもできます。
 
 - **自動記録ステップ** - ユーザーがテスト対象アプリケーションと対話する際に、テストの記録中にステップが自動的に追加されます。
 
 ## 手動ステップ
 
-手動ステップには、検証ステップ、待機ステップ、アクションステップの3つのカテゴリがあります。
+手動ステップには、検証ステップ、待機ステップ、アクションステップの 3 つのカテゴリがあります。
 
 ### 検証ステップ
 
@@ -55,7 +55,7 @@ keywords:
     Add CLI validation
    </td>
    <td>
-    CLIステップを追加
+    CLI ステップを追加
    </td>
   </tr>
   <tr>
@@ -103,7 +103,7 @@ keywords:
     Validate CSS property
    </td>
    <td>
-    CSSプロパティを検証
+    CSS プロパティを検証
    </td>
   </tr>
   <tr>
@@ -111,7 +111,7 @@ keywords:
     Validate HTML attribute
    </td>
    <td>
-    HTML属性を検証
+    HTML 属性を検証
    </td>
   </tr>
   <tr>
@@ -135,7 +135,7 @@ keywords:
     Validate API
    </td>
    <td>
-    API検証
+    API 検証
    </td>
   </tr>
   <tr>
@@ -216,7 +216,7 @@ keywords:
     Add CLI wait for
    </td>
    <td>
-    CLIステップを追加
+    CLI ステップを追加
    </td>
   </tr>
   <tr>
@@ -313,7 +313,7 @@ keywords:
     Set Cookie
    </td>
    <td>
-    Cookieを設定
+    Cookie を設定
    </td>
   </tr>
   <tr>
@@ -321,7 +321,7 @@ keywords:
     Get Cookie
    </td>
    <td>
-    Cookieを取得
+    Cookie を取得
    </td>
   </tr>
   <tr>
@@ -345,7 +345,7 @@ keywords:
     Add CLI action
    </td>
    <td>
-    CLIステップを追加
+    CLI ステップを追加
    </td>
   </tr>
   <tr>
@@ -353,7 +353,7 @@ keywords:
     Add API action
    </td>
    <td>
-    APIアクション
+    API アクション
    </td>
   </tr>
   <tr>
@@ -430,7 +430,7 @@ keywords:
    <td>
     スクロール操作時（
     <a href="/docs/scroll">
-     Scrollステップ
+     Scroll ステップ
     </a>
     を参照）
    </td>
@@ -460,7 +460,7 @@ keywords:
     Press (Key press)
    </td>
    <td>
-    キーボードキー押下時（Enter、Tab、ESC、Page Up、Page Downなど）
+    キーボードキー押下時（Enter、Tab、ESC、Page Up、Page Down など）
    </td>
   </tr>
   <tr>
@@ -480,9 +480,9 @@ keywords:
     Drag &amp; Drop
    </td>
    <td>
-    AUT内でアーティファクトをドラッグ&amp;ドロップ時（
+    AUT 内でアーティファクトをドラッグ&amp;ドロップ時（
     <a href="/docs/drag-drop-step">
-     Drag &amp; Dropステップ
+     Drag &amp; Drop ステップ
     </a>
     を参照）
    </td>

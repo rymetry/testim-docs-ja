@@ -1,6 +1,6 @@
 ---
 title: アカウントの設定
-description: Testim Extensionのインストール方法とTestimアカウントの無料トライアル登録手順を説明します。
+description: Testim Extension のインストール方法と Testim アカウントの無料トライアル登録手順を説明します。
 category: はじめに
 order: 2001
 updated: '2025-09-13'
@@ -8,42 +8,42 @@ sourceUrl: 'https://help.testim.io/docs/setting-up-your-account'
 keywords:
   - アカウント設定
   - インストール
-  - Chrome拡張機能
+  - Chrome 拡張機能
   - サインアップ
   - 無料トライアル
   - ログイン
   - 初期設定
-  - Chromeウェブストア
+  - Chrome ウェブストア
   - パスワード設定
-  - 月間1000回実行
+  - 月間 1000 回実行
 ---
 
-この記事では、Testim Extensionのインストール方法とTestimアカウント（無料トライアル）へのサインアップ方法を説明します。これらの準備が整えば、テストの作成を始めることができます。
+この記事では、Testim Extension のインストール方法と Testim アカウント（無料トライアル）へのサインアップ方法を説明します。これらの準備が整えば、テストの作成を始めることができます。
 
-## Testim Extensionのインストール
+## Testim Extension のインストール
 
-Testim Extensionをインストールするには：
+Testim Extension をインストールするには：
 
 1. Chrome ウェブストアにアクセスして、[こちら](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)から拡張機能をダウンロードします。
 
 :::info
-**なぜTestim Extensionが必要なのか？**: 詳細は[こちら](/docs/why-do-you-need-testim-extension)をご覧ください。
+**なぜ Testim Extension が必要なのか？**: 詳細は[こちら](/docs/why-do-you-need-testim-extension)をご覧ください。
 :::
 
-2. **Chromeに追加**をクリックし、確認ウィンドウで**拡張機能を追加**をクリックします。
+2. **Chrome に追加**をクリックし、確認ウィンドウで**拡張機能を追加**をクリックします。
 
-   インストールが完了すると、Chromeツールバーに Testim アイコンが表示されます。
+   インストールが完了すると、Chrome ツールバーに Testim アイコンが表示されます。
 
 3. アイコンをクリックし、**ログイン**をクリックして開始します。
 
-![Testim Extensionアイコン](/images/getting-started/setting-up-your-account/e45eaec-Testim030.png)
+![Testim Extension アイコン](/images/getting-started/setting-up-your-account/e45eaec-Testim030.png)
 
 ## サインアップ
 
 まだアカウントを設定していない場合は、今すぐ設定する必要があります。
 
 :::tip
-**無料トライアル**: 月間1000回の実行まで無料です！7日間の無料トライアルをご利用いただけます。[お問い合わせ](https://www.testim.io/root-cause/contact-us/)いただければ、有効化いたします。
+**無料トライアル**: 月間 1000 回の実行まで無料です！7 日間の無料トライアルをご利用いただけます。[お問い合わせ](https://www.testim.io/root-cause/contact-us/)いただければ、有効化いたします。
 :::
 
 :::info
@@ -61,7 +61,7 @@ Testim Extensionをインストールするには：
 2. 適切なフィールドに**勤務先メールアドレス**、**国**、**パスワード**を入力します。
 
 :::info
-**パスワード要件**: パスワードは8文字以上で、少なくとも1つの数字、1つの記号を含み、スペースは含まないようにしてください。
+**パスワード要件**: パスワードは 8 文字以上で、少なくとも 1 つの数字、1 つの記号を含み、スペースは含まないようにしてください。
 :::
 
 ![パスワード入力画面](/images/getting-started/setting-up-your-account/fc6e714-image.png)
@@ -74,7 +74,7 @@ Testim Extensionをインストールするには：
 
 ![役割選択画面](/images/getting-started/setting-up-your-account/317a5ff-2024-09-09_15-41-34.png)
 
-6. Testimを使用したい方法を1つ以上選択し、**続行**をクリックします。
+6. Testim を使用したい方法を 1 つ以上選択し、**続行**をクリックします。
 
 ![使用方法選択画面](/images/getting-started/setting-up-your-account/c65df4a-2024-09-09_15-42-59.png)
 
@@ -85,5 +85,5 @@ Testim Extensionをインストールするには：
 これでテストの作成を開始する準備が整いました！
 
 - [最初のコードレステストの作成](/docs/creating-your-first-codeless-test)
-- [Webテストの記録方法](/docs/how-to-record-a-test)
+- [Web テストの記録方法](/docs/how-to-record-a-test)
 - [モバイルテスト入門](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

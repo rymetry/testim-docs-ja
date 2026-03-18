@@ -1,8 +1,8 @@
 ---
 title: Web テスト入門（コードレステスト）
 description: >-
-  Testimの「Space &
-  Beyond」デモサイトを使って最初のコードレスWebテストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。
+  Testim の「Space &
+  Beyond」デモサイトを使って最初のコードレス Web テストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。
 category: はじめに
 order: 2002
 updated: '2025-09-13'
@@ -13,10 +13,10 @@ keywords:
   - テスト記録
   - 検証
   - テスト結果
-  - Webテスト
+  - Web テスト
   - ログインテスト
   - バリデーション
-  - テストエディタ
+  - テストエディター
   - ローカル実行
 ---
 
@@ -45,7 +45,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ![Create Test ボタン](/images/getting-started/creating-your-first-codeless-test/8d9ef22-gettingstarted2.png)
 
-   エディタで新しいテストが開きます。ここでテストの記録、検証の追加、ステップの編集を行います。
+   エディターで新しいテストが開きます。ここでテストの記録、検証の追加、ステップの編集を行います。
 
 2. ツールバーの赤い **Record** ボタンをクリックします。
 
@@ -61,7 +61,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
    ![Space & Beyond のログイン画面](/images/getting-started/creating-your-first-codeless-test/7baa100-login.png)
 
-5. Testim エディタのブラウザに戻ります。
+5. Testim エディターのブラウザに戻ります。
    Space & Beyond サイトで実行した手順がテストウィンドウ上にアクションの一覧として表示されます。各ボックスはテスト手順のステップで、左上のアイコンは実行したアクションの種類（クリック、テキスト入力、スクロールなど）を示します。
 
 ![記録されたステップ一覧](/images/getting-started/creating-your-first-codeless-test/bcf55a9-steps.png)
@@ -71,7 +71,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ![Save Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/f78c409-savetest.png)
 
-:::warning{title="Auto Recovery"}
+:::warning{title="自動復旧"}
 新しいテストを作成したり既存テストを編集したりしたら、必ず保存してください。保存前にブラウザを閉じてしまっても、テストはブラウザのキャッシュに保存され、作業を再開できる場合があります。詳しくは[保存していないテストを復元する](/docs/recovering-a-test-that-was-not-saved)を参照してください。
 :::
 
@@ -85,7 +85,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ### 検証ステップを追加する手順
 
-1. *Space & Beyond Demo 01* テストのエディタ画面で、Click "*LOG IN*" ステップの右側にある最後の「**+**」ボタンにカーソルを合わせます。
+1. *Space & Beyond Demo 01* テストのエディター画面で、Click "*LOG IN*" ステップの右側にある最後の「**+**」ボタンにカーソルを合わせます。
 
    ![Testim の + ボタン](/images/getting-started/creating-your-first-codeless-test/177c8fc-plus.png)
 
@@ -121,7 +121,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ### テストをローカルで実行する手順
 
-1. エディタ画面でツールバーの **Play** ボタンをクリックします。
+1. エディター画面でツールバーの **Play** ボタンをクリックします。
 
 ![Play ボタン](/images/getting-started/creating-your-first-codeless-test/de7d41f-play.png)
 
@@ -131,7 +131,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ## テスト結果の確認
 
-エディタ画面ではテスト結果を確認できます。画面上部には全体の実行状況が表示され、各ステップの上にあるカラーアイコンでアクションの成功／失敗がひと目でわかります。
+エディター画面ではテスト結果を確認できます。画面上部には全体の実行状況が表示され、各ステップの上にあるカラーアイコンでアクションの成功／失敗がひと目でわかります。
 
 ![テスト結果の概要](/images/getting-started/creating-your-first-codeless-test/bdb4507-passed.png)
 

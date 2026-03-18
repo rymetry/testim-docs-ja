@@ -15,7 +15,7 @@ keywords:
   - データカバレッジ
   - ランダム文字列
   - テストユーティリティ
-  - Set textステップ
+  - Set text ステップ
 ---
 
 動的データテスト用に乱数（ランダム値）を生成するステップの作成
@@ -41,7 +41,7 @@ keywords:
 3. **Actions** をクリックします。\
    Actions メニューが展開されます。
 
-![Actionsメニュー](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
+![Actions メニュー](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
 
 4. メニューをスクロールし **Generate random value** を選択します。
 

@@ -7,7 +7,7 @@ updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/test-owner'
 keywords:
   - テストオーナー
-  - TestOps管理
+  - TestOps 管理
   - 所有権管理
   - 作業負荷分散
   - テスト責任者
@@ -22,7 +22,7 @@ keywords:
 
 テストオーナー機能により、各テストの「オーナー」を指定できます。これは、テストの責任者を識別したり、テストオーナーでテストライブラリやスイート実行結果をフィルタリングしたりするのに役立ちます。デフォルトでは、最初のテストオーナーはテストの作成者です。テストを新しいオーナーに再割り当てできます。
 
-:::note{title="これは PRO 機能です"}
+:::note{title="これはPRO機能です"}
 この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
@@ -36,13 +36,13 @@ keywords:
 
 ## テストオーナーの変更
 
-エディタで開いているテストを新しいテストオーナーに再割り当てでき、テストライブラリでは個別のテストまたは複数のテストを新しいオーナーに再割り当てできます。
+エディターで開いているテストを新しいテストオーナーに再割り当てでき、テストライブラリでは個別のテストまたは複数のテストを新しいオーナーに再割り当てできます。
 
-### エディタでテストオーナーを変更
+### エディターでテストオーナーを変更
 
-**エディタでテストオーナーを再割り当てするには:**
+**エディターでテストオーナーを再割り当てするには:**
 
-1. エディタでテストを開きます。詳細については、[テストを開く](/docs/test-list#opening-a-test)をご覧ください。
+1. エディターでテストを開きます。詳細については、[テストを開く](/docs/test-list#opening-a-test)をご覧ください。
 2. **ステッププロパティを表示**アイコンをクリックして、**テスト構成プロパティ**パネルを開きます。
 
 ![ステッププロパティを表示アイコン](/images/testops-management/test-owner/7b99d23-Testim_196a.png)
@@ -53,11 +53,11 @@ keywords:
 
 3. **Test owner** フィールドをクリックします。
 
-![Test ownerフィールド](/images/testops-management/test-owner/c7347ec-Testim_197a_r.png)
+![Test owner フィールド](/images/testops-management/test-owner/c7347ec-Testim_197a_r.png)
 
 **Replace Test Owner** ウィンドウが表示されます。
 
-![Replace Test Ownerウィンドウ](/images/testops-management/test-owner/a0e5978-Testim_194_r.png)
+![Replace Test Owner ウィンドウ](/images/testops-management/test-owner/a0e5978-Testim_194_r.png)
 
 4. 新しいオーナーを選択し、**Confirm** をクリックします。\
    ウィンドウが閉じ、新しいオーナーがリストに表示されます。
@@ -78,11 +78,11 @@ keywords:
 
 3. **Replace owner** アイコンをクリックします（またはテストを右クリックして、表示されるリストから **Replace owner** を選択します）。
 
-![Replace ownerメニュー](/images/testops-management/test-owner/b3ad2fa-Testim_193b.png)
+![Replace owner メニュー](/images/testops-management/test-owner/b3ad2fa-Testim_193b.png)
 
 **Replace Test Owner** ウィンドウが表示されます。
 
-![Replace Test Ownerウィンドウ](/images/testops-management/test-owner/3419b72-Testim_194_r.png)
+![Replace Test Owner ウィンドウ](/images/testops-management/test-owner/3419b72-Testim_194_r.png)
 
 4. 新しいオーナーを選択し、**Confirm** をクリックします。\
    ウィンドウが閉じ、新しいオーナーがリストに表示されます。
@@ -91,7 +91,7 @@ keywords:
 
 ## テストオーナーでテストライブラリとスイート実行をフィルタリング
 
-テストライブラリのテストリストを1つ以上のテストオーナーでフィルタリングでき、スイート実行のテストリストを単一のテストオーナーでフィルタリングできます。
+テストライブラリのテストリストを 1 つ以上のテストオーナーでフィルタリングでき、スイート実行のテストリストを単一のテストオーナーでフィルタリングできます。
 
 ### テストライブラリのフィルタリング
 
@@ -100,11 +100,11 @@ keywords:
 1. **テストライブラリ**（**Test List** > **Tests**）に移動します。
 2. **Advanced filters** アイコンをクリックします。
 
-![Advanced filtersアイコン](/images/testops-management/test-owner/2ccd6df-Testim_192a.png)
+![Advanced filters アイコン](/images/testops-management/test-owner/2ccd6df-Testim_192a.png)
 
 **Filter Test** ペインが右側に開きます。
 
-![Filter Testペイン](/images/testops-management/test-owner/ebac246-Testim_195_r.png)
+![Filter Test ペイン](/images/testops-management/test-owner/ebac246-Testim_195_r.png)
 
 3. **Filter Test** ペインの **Test Owner** セクションで、フィルタリングしたいオーナー（複数可）を選択します。
 
@@ -122,7 +122,7 @@ keywords:
 5. **Filter Test** ペインの右上にある「**X**」をクリックして閉じます。
 
 :::note
-フィルターをリセットせずに **Filter Test** ペインを閉じてもフィルターはリセットされず、フィルター条件を満たすテストのみが表示されます。すべてのテストとフォルダを再度表示するには、**Filter Test** ペインを再度開いて **Reset filters** をクリックしてから **Apply** をクリックする必要があります。
+フィルターをリセットせずに **Filter Test** ペインを閉じてもフィルターはリセットされず、フィルター条件を満たすテストのみが表示されます。すべてのテストとフォルダーを再度表示するには、**Filter Test** ペインを再度開いて **Reset filters** をクリックしてから **Apply** をクリックする必要があります。
 :::
 
 ### スイート実行のフィルタリング
@@ -131,13 +131,13 @@ keywords:
 
 1. **Suite Runs** リスト（**Runs** > **Suite Runs**）に移動します。
 
-![Suite Runsリスト](/images/testops-management/test-owner/911a46f-Testim_198.png)
+![Suite Runs リスト](/images/testops-management/test-owner/911a46f-Testim_198.png)
 
 2. フィルタリングしたい **Test Suite** をクリックします。\
    そのスイートのテストリストを含む新しい画面が表示されます。
 3. **Advanced filters** アイコンをクリックします。
 
-![Advanced filtersアイコン](/images/testops-management/test-owner/a1519d8-Testim_199a.png)
+![Advanced filters アイコン](/images/testops-management/test-owner/a1519d8-Testim_199a.png)
 
 高度なフィルターオプションが表示されます。\
 **All owners** の横にあるドロップダウン矢印をクリックし、フィルタリングしたいテストオーナーを選択します。

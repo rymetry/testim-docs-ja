@@ -1,7 +1,7 @@
 ---
 title: サブスクリプションプラン
 description: >-
-  Web、モバイル、Salesforce、Copilotの各プロダクトカテゴリのサブスクリプションプラン詳細と使用状況について説明します。並列化モデルの理解を提供します。
+  Web、モバイル、Salesforce、Copilot の各プロダクトカテゴリのサブスクリプションプラン詳細と使用状況について説明します。並列化モデルの理解を提供します。
 category: 管理者機能
 order: 14006
 updated: '2025-09-18'
@@ -11,36 +11,36 @@ keywords:
   - 並列実行
   - Parallel Slots
   - 使用制限
-  - Webプラン
+  - Web プラン
   - モバイルプラン
-  - Salesforceプラン
-  - Copilotプラン
+  - Salesforce プラン
+  - Copilot プラン
 ---
 
 企業オーナーのみが利用できる **Subscription** 画面には、以下の各プロダクトカテゴリのソフトウェアサブスクリプションプランの詳細と現在の使用状況が表示されます:
 
-- Web - Webアプリケーション用Testim。
-- Mobile - モバイルアプリケーション用Testim。
-- Salesforce - Salesforce用Testim。
-- Copilot - Testimコーディングアシスタント Copilot。
+- Web - Web アプリケーション用 Testim。
+- Mobile - モバイルアプリケーション用 Testim。
+- Salesforce - Salesforce 用 Testim。
+- Copilot - Testim コーディングアシスタント Copilot。
 
 プランは「実行モデル」から「並列化モデル」と呼ばれる新しいモデルに移行しました。並列化モデルでは、実行回数ではなく、並列実行の数がサブスクリプションにカウントされます。
 
-## Plans画面へのアクセス
+## Plans 画面へのアクセス
 
-**Plans画面にアクセスするには:**
+**Plans 画面にアクセスするには:**
 
 1. ユーザーアバターをクリックします。
 2. **Company** の下で、企業名をクリックします。
 3. **Plans** タブをクリックします。
 
-## Webプラン
+## Web プラン
 
-Webプラン画面には以下の情報が表示されます:
+Web プラン画面には以下の情報が表示されます:
 
 ## 並列化モデル - プラン詳細
 
-![Parallel SlotsやProjectsなどWebプランの詳細を表示する画面](/images/project-user-management/subscription-plans/7a353fc-parallelweb.png)
+![Parallel Slots や Projects など Web プランの詳細を表示する画面](/images/project-user-management/subscription-plans/7a353fc-parallelweb.png)
 
 - **Parallel Slots** - プランに含まれる並列実行の数。
 - **Projects** - プランに含まれるプロジェクトの数。
@@ -56,17 +56,17 @@ Webプラン画面には以下の情報が表示されます:
 
 ![並列化使用率の詳細を表示するポップオーバー](/images/project-user-management/subscription-plans/3893360-openpopover.png)
 
-## Testim WebとTestim Salesforceの使用制限
+## Testim Web と Testim Salesforce の使用制限
 
-すべてのユーザーに適切なパフォーマンスとリソース割り当てを確保するため、Testimは以下の使用制限を設けています:
+すべてのユーザーに適切なパフォーマンスとリソース割り当てを確保するため、Testim は以下の使用制限を設けています:
 
-- 最初の3つの並列テストは、月間合計1,000テスト実行時間に制限されます。
-- 追加の並列テストは追加料金でライセンスできます。各追加並列テストは月間200テスト実行時間を提供します。
+- 最初の 3 つの並列テストは、月間合計 1,000 テスト実行時間に制限されます。
+- 追加の並列テストは追加料金でライセンスできます。各追加並列テストは月間 200 テスト実行時間を提供します。
 
-これらの使用制限の適用は、サービス品質を維持するためにTricentisの裁量で行われます。これらの制限に関してご質問がある場合、またはプランの変更についてサポートが必要な場合は、アカウント担当者にお問い合わせください。
+これらの使用制限の適用は、サービス品質を維持するために Tricentis の裁量で行われます。これらの制限に関してご質問がある場合、またはプランの変更についてサポートが必要な場合は、アカウント担当者にお問い合わせください。
 
 :::note
-テストエディタを通じて開始されるローカル実行は、これらの使用制限にカウントされません。
+テストエディターを通じて開始されるローカル実行は、これらの使用制限にカウントされません。
 :::
 
 ## 並列化クォータにカウントされるもの
@@ -89,16 +89,16 @@ Webプラン画面には以下の情報が表示されます:
   <tr>
    <td style="text-align: left;">
     <strong>
-     テストエディタ
+     テストエディター
     </strong>
     から実行をトリガー
    </td>
    <td style="text-align: left;">
-    - ローカルブラウザを使用するWeb
+    - ローカルブラウザを使用する Web
     <br/>
-    - TMAを使用するモバイル
+    - TMA を使用するモバイル
     <br/>
-    - VMGを使用するモバイル
+    - VMG を使用するモバイル
    </td>
    <td style="text-align: left;">
     いいえ
@@ -107,7 +107,7 @@ Webプラン画面には以下の情報が表示されます:
   <tr>
    <td style="text-align: left;">
     <strong>
-     グリッド上のテストエディタ(Testimおよびサードパーティ)
+     グリッド上のテストエディター（Testim およびサードパーティ）
     </strong>
     から実行をトリガー
    </td>
@@ -175,7 +175,7 @@ Webプラン画面には以下の情報が表示されます:
     </code>
     を指定して
     <strong>
-     グリッド上のテストエディタ
+     グリッド上のテストエディター
     </strong>
     から実行をトリガー
    </td>
