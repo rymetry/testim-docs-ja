@@ -260,22 +260,47 @@ def fix_parens_segment(text):
 def _fix_parens_raw(line):
     """Convert half-width () to full-width （） in Japanese context.
     Works on the full line to handle parens that span across inline code/links.
-    Skips parens that are part of markdown link syntax [text](url).
+    Skips: markdown link URLs ](url), inline code `...`, HTML tags <...>, bare URLs.
     """
     result = []
     i = 0
     n = len(line)
 
     while i < n:
-        if line[i] == '(':
-            # Skip if this is a markdown link URL: ](url)
-            if i > 0 and line[i - 1] == ']':
-                j = find_close_paren(line, i)
-                if j != -1:
-                    result.append(line[i:j + 1])
-                    i = j + 1
-                    continue
+        # Skip inline code spans
+        if line[i] == '`':
+            j = line.find('`', i + 1)
+            if j != -1:
+                result.append(line[i:j + 1])
+                i = j + 1
+                continue
 
+        # Skip markdown link URL: ](url)
+        if i + 1 < n and line[i] == ']' and line[i + 1] == '(':
+            j = line.find(')', i + 2)
+            if j != -1:
+                result.append(line[i:j + 1])
+                i = j + 1
+                continue
+
+        # Skip HTML tags
+        if line[i] == '<' and i + 1 < n and (line[i + 1].isalpha() or line[i + 1] == '/'):
+            j = line.find('>', i + 1)
+            if j != -1:
+                result.append(line[i:j + 1])
+                i = j + 1
+                continue
+
+        # Skip bare URLs
+        if line[i:i + 4] == 'http':
+            m = re.match(r'https?://\S+', line[i:])
+            if m:
+                url = m.group(0)
+                result.append(url)
+                i += len(url)
+                continue
+
+        if line[i] == '(':
             j = find_close_paren(line, i)
             if j != -1:
                 inner = line[i + 1:j]
@@ -311,12 +336,13 @@ def fix_parens_line(line):
 # --- Legacy callout conversion ---
 
 _emoji_pattern = re.compile(
-    r'^>\s*(' + '|'.join(re.escape(e) for e in EMOJI_MAP) + r')\s*(.*)'
+    r'^(\s*)>\s*(' + '|'.join(re.escape(e) for e in EMOJI_MAP) + r')\s*(.*)'
 )
 
 
 def convert_legacy_callouts(lines, code_lines):
     """Convert > 📘/🚧/❗/👍 blockquote callouts to ::: format.
+    Handles both non-indented and indented callouts (e.g. inside list items).
     Skips lines inside code blocks.
     """
     result = []
@@ -330,8 +356,9 @@ def convert_legacy_callouts(lines, code_lines):
 
         m = _emoji_pattern.match(lines[i])
         if m:
-            emoji = m.group(1)
-            title_text = m.group(2).strip()
+            indent = m.group(1)
+            emoji = m.group(2)
+            title_text = m.group(3).strip()
 
             callout_type = EMOJI_MAP.get(emoji, 'note')
             if emoji == '\U0001f4d8' and '注意' in title_text:
@@ -339,11 +366,14 @@ def convert_legacy_callouts(lines, code_lines):
 
             body_lines = []
             i += 1
-            while i < len(lines) and lines[i].startswith('>'):
+            while i < len(lines):
+                stripped = lines[i].lstrip()
+                if not stripped.startswith('>'):
+                    break
                 # Stop if a new legacy callout starts
                 if _emoji_pattern.match(lines[i]):
                     break
-                body_content = re.sub(r'^>\s?', '', lines[i])
+                body_content = re.sub(r'^\s*>\s?', '', lines[i])
                 body_lines.append(body_content)
                 i += 1
 
@@ -359,14 +389,14 @@ def convert_legacy_callouts(lines, code_lines):
                 title_text = ''
 
             if title_text:
-                result.append(f':::{callout_type}{{title="{title_text}"}}')
+                result.append(f'{indent}:::{callout_type}{{title="{title_text}"}}')
             else:
-                result.append(f':::{callout_type}')
+                result.append(f'{indent}:::{callout_type}')
 
             for bl in body_lines:
-                result.append(bl)
+                result.append(f'{indent}{bl}' if bl.strip() else bl)
 
-            result.append(':::')
+            result.append(f'{indent}:::')
 
             # Ensure blank line after callout
             if i < len(lines) and lines[i].strip():

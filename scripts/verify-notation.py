@@ -87,8 +87,8 @@ def check_file(filepath):
         # Strip non-processable content for checks that should skip code/URLs
         clean = strip_non_processable(line)
 
-        # 1. Legacy callout remnants
-        if re.match(r'^>\s*(📘|🚧|❗|👍)', line):
+        # 1. Legacy callout remnants (including indented ones in list items)
+        if re.match(r'^\s*>\s*(📘|🚧|❗|👍)', line):
             issues.append((rel, lineno, 'legacy-callout', line.strip()[:60]))
 
         # 2. パラメータ without ー (check clean text)
@@ -119,17 +119,21 @@ def check_file(filepath):
         if re.match(r'^:{3,}\s+\w', line):
             issues.append((rel, lineno, 'callout-space', line.strip()[:60]))
 
-        # 9. Spacing: ASCII directly adjacent to Japanese (sample check)
+        # 9. Spacing: ASCII/digits directly adjacent to Japanese
+        #    Matches fix_spacing_segment: [a-zA-Z0-9%]→JP and JP→[a-zA-Z0-9]
         if not is_fm:
-            if re.search(r'[a-zA-Z]' + JP, clean):
+            # Check both directions: ASCII/digit→JP and JP→ASCII/digit
+            has_ascii_jp = re.search(r'[a-zA-Z0-9]' + JP, clean)
+            has_jp_ascii = re.search(JP + r'[a-zA-Z0-9]', clean)
+            if has_ascii_jp or has_jp_ascii:
                 # Exclude callout/directive syntax
                 if re.match(r'^:{3,}', line):
                     pass
                 # Exclude anchor fragments (#slug日本語)
-                elif re.search(r'#[a-zA-Z0-9_-]*' + JP, clean) and not re.search(r'(?<!#)[a-zA-Z]' + JP, clean.split('#')[0] if '#' in clean else clean):
+                elif re.search(r'#[a-zA-Z0-9_-]*' + JP, clean) and not re.search(r'(?<!#)[a-zA-Z0-9]' + JP, clean.split('#')[0] if '#' in clean else clean):
                     pass
                 # Exclude PRO機能 (deliberate compound term)
-                elif re.search(r'PRO機能', clean) and not re.search(r'(?<!PRO)[a-zA-Z]' + JP, clean.replace('PRO機能', '')):
+                elif re.search(r'PRO機能', clean) and not re.search(r'(?<!PRO)[a-zA-Z0-9]' + JP, clean.replace('PRO機能', '')) and not re.search(JP + r'[a-zA-Z0-9]', clean.replace('PRO機能', '')):
                     pass
                 else:
                     issues.append((rel, lineno, 'spacing-missing', line.strip()[:80]))
