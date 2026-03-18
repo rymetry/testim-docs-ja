@@ -66,6 +66,7 @@ keywords:
 * Generate email address — 変数名
 * Set cookie — 説明以外の項目
 * Get cookie — クッキー名・変数名
+* Run dev-kit — 関数名
 * API — URL と関数以外
 * Generate random value — 説明以外
 * Generate date — 説明以外
