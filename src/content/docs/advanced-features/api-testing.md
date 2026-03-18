@@ -32,7 +32,7 @@ API ステップには **Add API action** と **Validate API** の2種類があ�
 Professional plan で利用可能です。
 :::
 
-# Validate API ステップの追加
+## Validate API ステップの追加
 
 API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/validations)を参照。\
 **“Add API validation” を追加するには:**
@@ -116,7 +116,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、API ステップの前に [wait for](/docs/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
 :::
 
-## AUT コンテキスト外でリクエストを試す
+### AUT コンテキスト外でリクエストを試す
 
 テストを実行せずに、AUT（対象アプリ）コンテキスト外で素早くリクエストだけを試したい場合は、**URL** フィールドの **Send** ボタンを使います。このとき **Run additional code on request results** で設定したコードや Assertion は実行されません。\
 送信されるのは **Properties** パネルで定義されたローカルパラメータのうち、静的な値のみです。動的な値は空文字として送信されます。\
@@ -129,7 +129,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 また、このレスポンスは一時的なもので、ステップを閉じると内容はクリアされます。
 :::
 
-# Adding an API Action Step
+## Adding an API Action Step
 
 API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行いたいケースで使用します。返却データを計算に利用したり、後続ステップで利用するためにエクスポートパラメータとして保存したりできます。*header* / *body* / *status code* いずれの情報も利用可能です。\
 **“Add API action” ステップを追加するには:**
@@ -162,7 +162,7 @@ API アクションステップ（Add API action）は、レスポンスを利�
 ブラウザ経由で実行しており、直前のステップでページの読み込みが終わっていない場合、このステップは失敗することがあります。前のステップでページロードが必要な場合は、API ステップの前に wait for ステップを挿入し、ページの読み込み完了を確認してください。
 :::
 
-# Including a File and/or Text field with an API Call Using Form Data
+## Including a File and/or Text field with an API Call Using Form Data
 
 Validate API / Add API action ステップでは、フォームデータを使ってファイルやテキストフィールドを API に含めることができます。
 
@@ -215,7 +215,7 @@ Key 名またはファイルのどちらかが指定されていない場合、�
 
 設定した key:value のペアは保存され、テスト実行時に API リクエストと一緒に送信されます。
 
-## Cancel a File Upload in Progress
+### Cancel a File Upload in Progress
 
 アップロード中のファイルを途中でキャンセルすることもできます。
 
@@ -229,7 +229,7 @@ Testim がファイルのアップロードをキャンセルし、別のファ�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e25b412-api-testing-7.jpg)
 
-## Replace a File Attachment
+### Replace a File Attachment
 
 既存エントリに添付済みのファイルを別のファイルに差し替えることもできます。
 
@@ -243,7 +243,7 @@ Testim がファイルのアップロードをキャンセルし、別のファ�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0c81dc9-api-testing-5.jpg)
 
-## Exclude or Delete an Entry from the Body Section
+### Exclude or Delete an Entry from the Body Section
 
 Body セクションに定義したエントリは、一時的に無効化したり完全に削除したりできます。
 
@@ -263,7 +263,7 @@ Body セクションに定義したエントリは、一時的に無効化した
 
 エントリは完全に削除されます。
 
-# パラメータの使用 {#using-parameters}
+## パラメータの使用 {#using-parameters}
 
 API ステップでは、他のコードステップと同様にパラメータを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメータを埋め込んだり、レスポンスから値を取り出してパラメータに保存したり、Assertion の値として使用したりできます。パラメータは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
 パラメータの詳細は [Parameters](/docs/parameters) を参照してください。
@@ -273,35 +273,35 @@ API ステップでは、他のコードステップと同様にパラメータ�
 また、API ステップ内の各入力セクションでは、複雑な式はサポートされません。
 :::
 
-## 送信する HTTP リクエストでのパラメータ利用 {#using-parameters-in-the-sent-http-request}
+### 送信する HTTP リクエストでのパラメータ利用 {#using-parameters-in-the-sent-http-request}
 
 パラメータは、送信する HTTP リクエストのヘッダー／ボディ／URL に埋め込めます。これらのセクションは純粋な JS で書くと煩雑になるため、Testim ではパラメータを「二重／三重の波括弧」で簡単に埋め込めるようになっています。
 
-### Body へのパラメータ追加
+#### Body へのパラメータ追加
 
 パラメータの値をエンコードせずそのまま埋め込みたい場合は、三重波括弧を使います（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/59f09c0-Picture2.png)
 
-### URL へのパラメータ追加
+#### URL へのパラメータ追加
 
 テストの Base URL と同じホストにある API に対して呼び出しを行いたい場合は、URL 全体を記述する代わりに `{{{BASE_URL}}}` パラメータを使えます。URL フィールドで `{{{BASE_URL}}}` の後ろにパスを続けて入力してください。ここでもパラメータをエンコードしたくない場合は三重波括弧を使用します（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/753553d-image_5.png)
 
-### Header へのパラメータ追加
+#### Header へのパラメータ追加
 
 ヘッダーにパラメータを入れる場合も同様で、値をエンコードしたくない場合は `{{{param}}}` のように三重波括弧を使用します。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/82b5c47-image_3.png)
 
-## HTTP レスポンスでのパラメータ利用
+### HTTP レスポンスでのパラメータ利用
 
 Properties パネルで追加したパラメータは、API ステップ内のコードの関数シグネチャに自動的に追加されます。これにより、レスポンスを処理するコード内でパラメータを直接利用できます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/eb87221-image_9.png)
 
-## Assertion でのパラメータ利用
+### Assertion でのパラメータ利用
 
 Assertion セクションでも、比較値としてパラメータをそのまま使用できます。この場合、値には波括弧を付ける必要はありません。
 
@@ -309,7 +309,7 @@ Assertion セクションでも、比較値としてパラメータをそのま�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png)
 
-# 実行後の結果の確認
+## 実行後の結果の確認
 
 ステップ実行後は、**Response** タブで API レスポンスを確認できます。ここでは、レスポンスボディだけでなく、ステータスコードやリクエスト時間、バイナリファイルのサイズなどの追加情報も表示されます。また、送信されたリクエスト内容を確認したり、レスポンス情報をダウンロードしたりすることもできます。
 

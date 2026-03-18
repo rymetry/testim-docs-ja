@@ -15,11 +15,11 @@ keywords:
   - 不具合管理
 ---
 
-# TestimとTrelloの連携
+## TestimとTrelloの連携
 
 Testim は、新しい bug ticket を作成します。これには、bug の詳細な説明、bug の再現手順、screen resolution と browser、bug の screenshot が含まれます。Testim を Trello に接続するには、以下で説明するように access permission を Testim Automate に付与する必要があります。
 
-## TestimをTrelloに接続する
+### TestimをTrelloに接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. **Trello** ロゴをクリックします。

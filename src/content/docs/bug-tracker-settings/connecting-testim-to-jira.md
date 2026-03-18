@@ -15,7 +15,7 @@ keywords:
   - 接続設定
 ---
 
-# TestimとJiraの連携
+## TestimとJiraの連携
 
 Testim は、新しい Bug ticket を作成します。これには、bug の詳細な説明、bug の再現手順、screen resolution と browser、bug の screenshot が含まれます。次の screenshot は、説明や screenshot などを含む、実際に作成された Bug Ticket の例です。詳細については、[Bug Reporting](/docs/bug-reporting) を参照してください。
 
@@ -23,7 +23,7 @@ Testim は、新しい Bug ticket を作成します。これには、bug の詳
 
 Testim を Jira に接続するには、まず Jira に login する必要があります。初回の handshake が確立されると、その後は接続を再設定しなくても Jira に issue を作成できるようになります。
 
-## TestimをJiraに接続する
+### TestimをJiraに接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. Jira が選択されており、すでに Jira に logged in していることを確認します。
