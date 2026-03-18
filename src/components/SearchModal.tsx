@@ -105,8 +105,10 @@ export default function SearchModal() {
     activeEl?.scrollIntoView({ block: 'nearest' });
   }, [selectedIndex, results]);
 
-  // 検索インデックスの初期化
+  // 検索インデックスの遅延初期化（初回オープン時にフェッチ — 未使用時の 500KB+ 転送を回避）
   useEffect(() => {
+    if (!isOpen || miniSearch) return;
+
     const loadSearchIndex = async () => {
       try {
         const response = await fetch('/api/search.json');
@@ -142,19 +144,26 @@ export default function SearchModal() {
     };
 
     loadSearchIndex();
-  }, []);
+  }, [isOpen, miniSearch]);
 
-  // キーボードショートカット（⌘K / Ctrl+K）
+  // モーダルの開閉状態を ref で保持（グローバル keydown ハンドラから stale closure なしで参照するため）
+  const isOpenRef = useRef(isOpen);
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  // キーボードショートカット（⌘K / Ctrl+K / Escape）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setIsOpen(true);
+        return;
       }
 
+      // モーダルが開いているときのみ Escape で閉じる
       // IME変換中のEscapeは無視（日本語変換キャンセルでモーダルが閉じないように）
-      // closeModal() を経由することでフォーカス復帰も確実に行われる
-      if (e.key === 'Escape' && !e.isComposing) {
+      if (isOpenRef.current && e.key === 'Escape' && !e.isComposing) {
         closeModal();
       }
     };
@@ -402,7 +411,7 @@ export default function SearchModal() {
 
         {/* 検索結果 */}
         <div className="max-h-[60vh] overflow-y-auto px-1" ref={listRef}>
-          {query && results.length === 0 && (
+          {query.trim() && results.length === 0 && (
             <div className="px-4 py-12 text-center sm:px-6" role="status">
               <svg
                 className="mx-auto h-12 w-12 text-slate-300"
@@ -497,7 +506,7 @@ export default function SearchModal() {
             </>
           )}
 
-          {!query && (
+          {!query.trim() && (
             <div className="px-4 py-12 text-center sm:px-6">
               <svg
                 className="mx-auto h-16 w-16 text-slate-300"

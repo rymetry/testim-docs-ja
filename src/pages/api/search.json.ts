@@ -24,10 +24,11 @@ export const GET: APIRoute = async () => {
             headingSlug: '',
           },
           // 見出しdocument（見出しごとに独立）
+          // h.text に含まれる手動アンカー構文 {#slug} / ${#slug} を除去
           ...headings.map((h) => ({
             id: `${doc.id}#${h.slug}`,
             type: 'heading',
-            title: h.text,
+            title: h.text.replace(/\s*\$?\{#[^}]+\}\s*$/u, ''),
             slug: urlSlug,
             description: '',
             category: doc.data.category,
