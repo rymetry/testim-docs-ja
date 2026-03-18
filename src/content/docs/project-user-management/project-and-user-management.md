@@ -1,7 +1,7 @@
 ---
 title: プロジェクトとユーザー管理(企業レベル)
 description: 企業(アカウント)レベルでのプロジェクトとユーザーの構造、チームメイトの追加と削除、企業オーナーの管理方法について説明します。
-category: 管理
+category: 管理者機能
 order: 14003
 updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/project-and-user-management'
