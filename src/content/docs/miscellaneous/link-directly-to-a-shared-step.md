@@ -45,7 +45,7 @@ Shared Step に直接リンク機能は、[Shared Steps ライブラリ](/docs/s
 
 4. Shared Step/グループを表示したいテストをダブルクリックします。
 
-:::tip
+:::note
 または、テストを右クリックして **Open in new tab** を選択することもできます。
 :::
 
