@@ -10,7 +10,7 @@ keywords:
   - ライセンス管理
   - シート割り当て
   - Company Teammates
-  - Plans画面
+  - Plans 画面
   - 割り当て解除
 ---
 
@@ -26,8 +26,8 @@ keywords:
 4. **Copilot** ボタンをクリックします。
 
    ![Copilot User Licenses カードへのアクセス画面](/images/project-user-management/copilot-license-management/e2220b0-copilotlicense1.png)
-5. 現在割り当てられているライセンス数が、利用可能なシート総数のうちどれだけかが、 Copilot User Licenses カードに表示されます。グラフは、利用可能なシート総数（グレー）のうち、割り当て済みシート総数（緑）を示しています。
-6. **Company Teammates** の下には、企業内のすべてのユーザーのリストがあります。 Copilot に割り当てられているユーザーは「 Assigned 」と表示されます。
+5. 現在割り当てられているライセンス数が、利用可能なシート総数のうちどれだけかが、Copilot User Licenses カードに表示されます。グラフは、利用可能なシート総数（グレー）のうち、割り当て済みシート総数（緑）を示しています。
+6. **Company Teammates** の下には、企業内のすべてのユーザーのリストがあります。Copilot に割り当てられているユーザーは「Assigned」と表示されます。
 
    ![割り当て済みライセンス数と利用可能シート数を示すグラフ](/images/project-user-management/copilot-license-management/df6a668-copilotlicense2.png)
 

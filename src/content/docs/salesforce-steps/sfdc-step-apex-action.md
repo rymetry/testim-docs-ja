@@ -11,7 +11,7 @@ keywords:
   - SOQL
   - SOSL
   - エクスポート
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 
@@ -19,7 +19,7 @@ keywords:
 これは Salesforce ステップです。
 :::
 
-Salesforce APEX アクションステップを使用すると、テスト内のステップとして APEX コードを実行することで、 E2E テストを UI を超えて拡張できます。データ操作言語（DML）ステートメントを使用して Salesforce オブジェクトをプログラムで挿入、更新、マージ、削除、復元したり、 Salesforce Object Query Language（SOQL）または Salesforce Object Search Language（SOSL）ステートメントを使用して環境をクエリし、後続のステップで使用するデータをエクスポートしたりできます。
+Salesforce APEX アクションステップを使用すると、テスト内のステップとして APEX コードを実行することで、E2E テストを UI を超えて拡張できます。データ操作言語（DML）ステートメントを使用して Salesforce オブジェクトをプログラムで挿入、更新、マージ、削除、復元したり、Salesforce Object Query Language（SOQL）または Salesforce Object Search Language（SOSL）ステートメントを使用して環境をクエリし、後続のステップで使用するデータをエクスポートしたりできます。
 
 ## APEX 実行アクションステップの追加
 
@@ -30,8 +30,8 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
    **function** エディターが開き、右側に **プロパティ**パネルが開きます:
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/c0c4dc9-Picture2.png)
-3. **プロパティ**パネルの**説明**フィールドで、このステップの説明をオプションで編集します。デフォルトの説明は「 Salesforce - APEX Action 」です。
-4. function テキストボックスに、目的の APEX コードを入力します。パラメーターを定義している場合は、 APEX コードでそれらのパラメーターを参照できます。
+3. **プロパティ**パネルの**説明**フィールドで、このステップの説明をオプションで編集します。デフォルトの説明は「Salesforce - APEX Action」です。
+4. function テキストボックスに、目的の APEX コードを入力します。パラメーターを定義している場合は、APEX コードでそれらのパラメーターを参照できます。
 5. 戻る矢印をクリックして、メインエディターウィンドウに戻ります。
 
 ## パラメーターの渡し方
@@ -44,7 +44,7 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 
 2. テスト、スイート、または構成ファイルで定義されたパラメーター名をテキストボックスに入力します。
 
-3. **JS** インジケーターの横に、 APEX スクリプトで使用されるこのパラメーターの名前を付けます。これは、エディターウィンドウの関数宣言で自動的に引数として表示されます。
+3. **JS** インジケーターの横に、APEX スクリプトで使用されるこのパラメーターの名前を付けます。これは、エディターウィンドウの関数宣言で自動的に引数として表示されます。
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/fbe2f4f-Picture3.png)
 
@@ -55,18 +55,18 @@ APEX スクリプトから値をエクスポートするには、次の要件を
 1. 値をエクスポートするには **Export** 関数を使用してください。[/docs/exports-parameters#exporting-a-parameter](/docs/exports-parameters#exporting-a-parameter) を参照してください。
 2. エクスポートする値は APEX 変数に格納する必要があります。
 3. APEX 変数名とエクスポート変数名の両方は、アルファベット文字（A-z）とアンダースコアのみで構成される必要があります。
-4. APEX スクリプトに Salesforce DML 関数が含まれている場合、値のエクスポートはできません。 DML 関数が必要な場合は、複数のテストステップに分割する必要があります。
+4. APEX スクリプトに Salesforce DML 関数が含まれている場合、値のエクスポートはできません。DML 関数が必要な場合は、複数のテストステップに分割する必要があります。
 
 :::note
-パラメーターはステップ間で JSON としてシリアライズされるため、 JSON としてシリアライズできる値のみが安全に使用できます。
+パラメーターはステップ間で JSON としてシリアライズされるため、JSON としてシリアライズできる値のみが安全に使用できます。
 :::
 
 ## Salesforce APEX アクションの例
 
-このシナリオでは、 APEX 実行ステップを使用して次のことを行います:
+このシナリオでは、APEX 実行ステップを使用して次のことを行います:
 
 1. SOQL を使用して商談を検索します。商談の名前は渡されたパラメーター opportunity と一致し、これらすべての商談をリストに格納します。
-2. リストの最初の商談を取得し、 Amount 値を APEX 変数 `firstoppAmount` に割り当てます。
+2. リストの最初の商談を取得し、Amount 値を APEX 変数 `firstoppAmount` に割り当てます。
 3. `firstoppAmount` の値をエクスポート変数 `oppAmount` にエクスポートして、テストの後続のテストステップで使用できるようにします。
 
 ### コード
@@ -83,7 +83,7 @@ exportsTest.oppAmount = firstoppAmount;
 
 ## APEX アクション結果ログの表示
 
-*APEX を実行*ステップを含むテストが実行された後、 Salesforce からのテスト結果を含むステップログがコードエディターで利用できます。
+*APEX を実行*ステップを含むテストが実行された後、Salesforce からのテスト結果を含むステップログがコードエディターで利用できます。
 
 :fa-arrow-right: **APEX アクション結果ログを表示するには:**
 

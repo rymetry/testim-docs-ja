@@ -9,10 +9,10 @@ keywords:
   - GitHub Actions
   - GitHub Action
   - GitHub
-  - CI統合
-  - CIパイプライン
+  - CI 統合
+  - CI パイプライン
   - ワークフロー
-  - YAML設定
+  - YAML 設定
 ---
 
 ![GitHub Actions の継続的デプロイ図](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)

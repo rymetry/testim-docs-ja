@@ -1,6 +1,6 @@
 ---
 title: Mobile Apps
-description: Mobile Apps Library でアプリを一元管理する方法を説明します。追加、ダウンロード、削除、 ID コピー、検索、 Upload to Grid などの操作手順をカバーしています。
+description: Mobile Apps Library にアップロードしたアプリの追加、ダウンロード、削除、ID コピー、検索、Upload to Grid の手順を説明します。
 category: モバイルアプリ
 order: 10001
 updated: '2025-09-22'
@@ -8,13 +8,13 @@ sourceUrl: 'https://help.testim.io/docs/mobile-apps'
 keywords:
   - モバイルアプリ
   - アプリライブラリ
-  - APKアップロード
-  - IPAアップロード
+  - APK アップロード
+  - IPA アップロード
   - モバイルアプリ管理
   - Mobile App ID
 ---
 
-Mobile Apps Library には、アップロードされたすべてのアプリのリストが含まれています。 Mobile Apps Library の各アプリには、次の情報が表示されます:
+Mobile Apps Library には、アップロードされたすべてのアプリのリストが含まれています。Mobile Apps Library の各アプリには、次の情報が表示されます:
 
 ![モバイルアプリライブラリの一覧画面](/images/test-management/mobile-apps/beee998-mobile-apps-library.png)
 
@@ -36,7 +36,7 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 * iOS デバイス - Objective C または Swift フレームワークベースの .ipa ファイル
 
 :::note
-アップロードは 150 MB に制限されています（より大きなファイルをアップロードするには、 Tricentis サポートにお問い合わせください）。
+アップロードは 150 MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。
 :::
 
 :fa-arrow-right: **ローカルコンピューターから Mobile Apps Library にモバイルアプリを追加するには:**
@@ -58,7 +58,7 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 ![アップロード後にモバイルアプリライブラリへ追加されたアプリ](/images/test-management/mobile-apps/4b1abee-appadded.png)
 
 :::warning
-デフォルトのアップロードサイズ制限は 150MB です。より大きなファイルをアップロードする必要がある場合は、 Testim 管理者に連絡して、ファイルアップロードサイズ制限の引き上げについて相談してください。
+デフォルトのアップロードサイズ制限は 150MB です。より大きなファイルをアップロードする必要がある場合は、Testim 管理者に連絡して、ファイルアップロードサイズ制限の引き上げについて相談してください。
 :::
 
 ## Mobile Apps Library からアプリをダウンロードする
@@ -89,7 +89,7 @@ Mobile Apps Library でアプリが不要になった場合は、削除できま
 
 ## Mobile App ID をコピーする
 
-Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、 CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#running-mobile-tests-through-the-cli) を参照してください。
+Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#running-mobile-tests-through-the-cli) を参照してください。
 
 :fa-arrow-right: **Mobile App ID をコピーするには**:
 

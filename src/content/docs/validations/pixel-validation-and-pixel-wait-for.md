@@ -10,7 +10,7 @@ keywords:
   - ビジュアル検証
   - 画像比較
   - スクリーンショット
-  - UI検証
+  - UI 検証
   - レイアウト
   - 見た目検証
   - Testim
@@ -20,7 +20,7 @@ keywords:
 
 ピクセルレベルでビジュアル差分を検証する
 
-ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](https://applitools.com/) のサービスを利用しており、 Applitools Eyes との連携が必要です。
+ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](https://applitools.com/) のサービスを利用しており、Applitools Eyes との連携が必要です。
 
 開始前に、[Applitools Eyes](https://applitools.com/) と Testim を連携してください。詳しくは [Applitools integration](/docs/applitools-integration) を参照。\
 関連情報：
@@ -45,7 +45,7 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 * **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/validate-full-page-visualization)
 
 :::info
-テスト構成を変更すると Applitools 側では新しいベースラインが作られますが、 Testim 側のベースラインは変わりません。構成ごとにベースラインを分けたい場合はテストを分けて作成してください。
+テスト構成を変更すると Applitools 側では新しいベースラインが作られますが、Testim 側のベースラインは変わりません。構成ごとにベースラインを分けたい場合はテストを分けて作成してください。
 :::
 
 ## ビジュアル検証パラメーター
@@ -53,9 +53,9 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 Testim 内で変更できるビジュアル検証パラメーターは 4 つあります：
 
 * **Add Environment** – テストを実行する 1 つ以上のシミュレートされた環境設定（高度な環境を含む）を追加します。この機能には Ultrafast Test Cloud 用の追加 Applitools ライセンスが必要です。この機能ライセンスのないアカウントで追加された環境は Applitools によって拒否されます。
-* **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。 Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact 、 Strict（デフォルト）、 Content 、 Layout 。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/cmn-eyes-match-levels.html) を参照してください。 Testim でマッチレベルを編集するだけでなく、 Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
-* **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、 Applitools によって拒否されます。
-* **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。 Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
+* **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
+* **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、Applitools によって拒否されます。
+* **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
 
 これらのビジュアル検証パラメーターは次の場所で変更できます：
 
@@ -86,11 +86,11 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
     <a href="/docs/shared-configuration">
      Create a shared configuration
     </a>
-    を参照。 CLI の詳細は
+    を参照。CLI の詳細は
     <a href="/docs/the-command-line-cli">
      Command line interface: Test Config
     </a>
-    を参照。 Scheduler の詳細は
+    を参照。Scheduler の詳細は
     <a href="/docs/scheduler">
      Scheduler
     </a>

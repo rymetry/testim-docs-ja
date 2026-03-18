@@ -1,8 +1,8 @@
 ---
 title: Gearset 統合
 description: >-
-  GearsetのCIまたはデプロイジョブからWebhookを使用してTestimテストを自動化する方法について説明します。WebhookとREST
-  APIの設定手順を提供します。
+  Gearset の CI またはデプロイジョブから Webhook を使用して Testim テストを自動化する方法について説明します。Webhook と REST
+  API の設定手順を提供します。
 category: 統合
 order: 12014
 updated: '2025-02-10'
@@ -12,13 +12,13 @@ keywords:
   - Salesforce
   - Salesforce DevOps
   - リリースマネジメント
-  - CI統合
-  - CIパイプライン
+  - CI 統合
+  - CI パイプライン
   - Webhook
   - テスト自動実行
 ---
 
-Gearset の CI またはデプロイジョブからテストを自動化するには、 Gearset で Webhook を追加し、単一の Webhook 呼び出しで Testim/TTA for Salesforce REST API を使用します。
+Gearset の CI またはデプロイジョブからテストを自動化するには、Gearset で Webhook を追加し、単一の Webhook 呼び出しで Testim/TTA for Salesforce REST API を使用します。
 
 **Gearset を統合するには:**
 
@@ -32,12 +32,12 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 4. 表示された API キーをコピーし、**Done**をクリックします。このキーが表示されるのは生成時のみなので、できるだけ早くコピーしてください。
 
    ![生成された API キーをコピーする画面](/images/ci-integrations/gearset-integration/7c2ad4a-copy.png)
-5. Swagger で Testim REST API に移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、 JSON ペイロードをコピーします。
+5. Swagger で Testim REST API に移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
 
    ![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
 6. Gearset の Deployment または CI ジョブの Webhook で、以下の手順に従います:
 
-   1. **Outgoing webhook url**に、 REST API 呼び出しを入力し、 URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`
+   1. **Outgoing webhook url**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`
 
    2. **Triggers**セクションで、**Success events**を選択します。
 
@@ -49,10 +49,10 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 
    6. **Content-Type**フィールドで、**application/json**を選択します。
 
-   7. **Payload**フィールドに、 Swagger から**（ステップ 5）**の**JSON ペイロード**を貼り付けます。
+   7. **Payload**フィールドに、Swagger から**（ステップ 5）**の**JSON ペイロード**を貼り付けます。
 
       ![Gearset の Webhook 設定で JSON ペイロードを貼り付ける画面](/images/ci-integrations/gearset-integration/5c1e754-gearset_webhook.png)
 
-   8. JSON ペイロードで、`"grid" : "string"`を、 Testim/TTA for Salesforce の右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
+   8. JSON ペイロードで、`"grid" : "string"`を、Testim/TTA for Salesforce の右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
 
       ![Testim/TTA for Salesforce の Grids セクションのスクリーンショット](/images/ci-integrations/gearset-integration/c970045-gearset_grid.png)

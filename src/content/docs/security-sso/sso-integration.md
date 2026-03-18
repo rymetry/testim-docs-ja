@@ -1,6 +1,6 @@
 ---
 title: SSO 統合
-description: Okta ・ OneLogin ・ Azure AD を使った SSO 統合を設定することで、会社の ID プロバイダー経由で Testim にログインできるようになります。
+description: シングルサインオンサービスを Testim と統合する
 category: セキュリティ
 order: 18002
 updated: '2025-11-02'
@@ -8,7 +8,7 @@ sourceUrl: 'https://help.testim.io/docs/sso-integration'
 keywords:
   - SSO
   - シングルサインオン
-  - IDプロバイダー
+  - ID プロバイダー
   - Okta
   - OneLogin
   - Azure AD
@@ -18,7 +18,7 @@ keywords:
 
 シングルサインオンサービスを Testim と統合する
 
-Testim は Okta 、 OneLogin 、 AzureAD を通じた SSO（シングルサインオン）をサポートしています。 SSO 機能により、ユーザーが Testim にログインする際に、会社の ID プロバイダーを通じて認証できるようになります。ユーザーは SSO プロバイダー（ID プロバイダー（IDP）としても知られる）で一度認証すれば、セッション中に Testim や他のアプリケーションにアクセスでき、各アプリケーションで認証する必要がありません。
+Testim は Okta、OneLogin、AzureAD を通じた SSO（シングルサインオン）をサポートしています。SSO 機能により、ユーザーが Testim にログインする際に、会社の ID プロバイダーを通じて認証できるようになります。ユーザーは SSO プロバイダー（ID プロバイダー（IDP）としても知られる）で一度認証すれば、セッション中に Testim や他のアプリケーションにアクセスでき、各アプリケーションで認証する必要がありません。
 
 :::info{title="PRO機能"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
@@ -39,7 +39,7 @@ SSO はプレミアム機能であり、統合前に有効にする必要があ�
 ![ユーザーアイコン](/images/security-sso/sso-integration/1add547-sso1.png)
 
 2. ドロップダウンメニューで、**Settings**をクリックします。
-3. 画面上部に SSO タブが表示されます。 SSO メニューの横にロックアイコンが表示される場合、 SSO 機能は有効になっていません。この場合、 Testim の CSM に連絡して SSO 機能を有効にするよう依頼してください。
+3. 画面上部に SSO タブが表示されます。SSO メニューの横にロックアイコンが表示される場合、SSO 機能は有効になっていません。この場合、Testim の CSM に連絡して SSO 機能を有効にするよう依頼してください。
 
 ![SSO 設定画面](/images/security-sso/sso-integration/b377d5e-sso2.png)
 

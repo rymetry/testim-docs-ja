@@ -50,7 +50,7 @@ keywords:
    **Project teammates** ページが表示されます。
 
 2. 削除したいチームメイトを 1 人以上選択します。複数のチームメイトを選択するには **CTRL/CMD + クリック** を使用します。
-3. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「 Delete users 」を選択することもできます。
+3. **Delete User** ボタンをクリックします。または、選択したチームメイトを右クリックして「Delete users」を選択することもできます。
 
    ![複数のチームメイトを選択して削除オプションを表示する画面](/images/project-user-management/project-user-management/aec7e20-select-delete.png)
 

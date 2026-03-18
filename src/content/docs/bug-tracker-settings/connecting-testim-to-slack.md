@@ -7,7 +7,7 @@ updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-slack'
 keywords:
   - Testim
-  - Slack連携
+  - Slack 連携
   - バグトラッカー
   - バグ報告
   - Slack channel
@@ -19,7 +19,7 @@ keywords:
 
 ## Testim と Slack の連携
 
-Testim は、指定した Slack channel に bug の説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度と browser 、バグのスクリーンショットが含まれます。 Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
+Testim は、指定した Slack channel に bug の説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度と browser、バグのスクリーンショットが含まれます。Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
 
 開始前に、データの取り扱いについて [プライバシーポリシー](https://www.testim.io/privacy) を確認してください。
 
@@ -46,4 +46,4 @@ Testim は、指定した Slack channel に bug の説明を公開できます�
 
 ![Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-slack/9781336-slack3.PNG)
 
-[バグ報告](/docs/bug-reporting) の手順に従って、 bug capture を設定してください。
+[バグ報告](/docs/bug-reporting) の手順に従って、bug capture を設定してください。

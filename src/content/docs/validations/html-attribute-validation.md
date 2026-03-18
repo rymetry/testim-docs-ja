@@ -1,26 +1,26 @@
 ---
 title: HTML 属性の検証（Web）
-description: Web 要素の HTML 属性値を検証するステップ。 id 、 class 、 data 属性などの値が期待通りであることを確認し、動的な UI 要素の状態を検証します。
+description: Web 要素の HTML 属性値を検証するステップ。id、class、data 属性などの値が期待通りであることを確認し、動的な UI 要素の状態を検証します。
 category: 高度な編集
 order: 5011
 updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/html-attribute-validation'
 keywords:
-  - HTML属性
+  - HTML 属性
   - 属性検証
   - DOM
   - Web
   - 要素属性
   - タグ検証
   - HTML
-  - UI検証
+  - UI 検証
   - データ属性
   - Testim
 ---
 
 アプリ内の任意の HTML 属性を検証する
 
-HTML 属性検証では、要素の任意の HTML 属性の値を検証できます（例：*href*、*src*、*alt*、*title* など）。また、以下に説明する通り「 disabled 」属性の検証も可能です。
+HTML 属性検証では、要素の任意の HTML 属性の値を検証できます（例：*href*、*src*、*alt*、*title* など）。また、以下に説明する通り「disabled」属性の検証も可能です。
 
 ## Validate HTML attribute ステップの追加
 
@@ -58,7 +58,7 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 メニュー上部の検索ボックスで **Validate HTML attribute** を検索することもできます。
 :::
 
-7. **AUT** ウィンドウで、 HTML 属性を検証したい対象要素を特定し、クリックして選択します。\
+7. **AUT** ウィンドウで、HTML 属性を検証したい対象要素を特定し、クリックして選択します。\
    **HTML Attribute Validation** フォームが表示されます。
 
 ![検証](/images/validations/html-attribute-validation/4a3f8b9-Testim_239_r.png)
@@ -67,22 +67,22 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：*[https://www.testim.io](https://www.testim.io)*）。
 
 :::note
-Expected value では正規表現も使用できます。例えば、 https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
+Expected value では正規表現も使用できます。例えば、https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
 :::
 
 10. **OK** をクリックします。\
-    **Editor** に「 Validate HTML attribute 」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+    **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
 11. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
-### 「 disabled 」属性の検証
+### 「disabled」属性の検証
 
-「 disabled 」 HTML 属性を検証することも可能です。
+「disabled」HTML 属性を検証することも可能です。
 
  **disabled 属性を検証するには:**
 
 1. 上記の手順 1～6 を実行します。
 
-2. **AUT** ウィンドウで、「 disabled 」 HTML 属性を検証したい対象要素を特定し、クリックして選択します。\
+2. **AUT** ウィンドウで、「disabled」HTML 属性を検証したい対象要素を特定し、クリックして選択します。\
    **HTML Attribute Validation** フォームが表示されます。
 
 3. **Attribute name** に `disabled` を入力します。
@@ -91,7 +91,7 @@ Expected value では正規表現も使用できます。例えば、 https で�
    ![HTML](/images/validations/html-attribute-validation/a78b8f5-image.png)
 
 5. **OK** をクリックします。\
-   **Editor** に「 Validate HTML attribute 」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+   **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
    ![検証](/images/validations/html-attribute-validation/a1bbe4a-image_1.png)
 
 6. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。

@@ -7,7 +7,7 @@ updated: '2025-09-22'
 sourceUrl: 'https://help.testim.io/docs/export-test-list-and-test-results'
 keywords:
   - テスト結果エクスポート
-  - CSV出力
+  - CSV 出力
   - 実行画面
   - テスト実行画面
   - テストリスト
@@ -21,7 +21,7 @@ keywords:
 各ビューで利用可能なさまざまなフィルターを使用すると、選択したフィルターに応じて変更されたエクスポートファイルが作成されます。
 
 :::note{title="PRO機能"}
-この機能は、 Professional plan のプロジェクトでのみ利用できます。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 実行画面からテスト結果をエクスポートする

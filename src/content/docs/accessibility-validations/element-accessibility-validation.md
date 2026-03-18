@@ -20,7 +20,7 @@ keywords:
 
 アクセシブルな Web ページとは、障害や機能制限を持つ人々が利用できるように設計された Web ページのことです。米国や欧州のほとんどの組織では、アクセシビリティ準拠が求められています。
 
-**要素アクセシビリティ検証**ステップを使用すると、 Web ページ上の特定の要素がアクセシブルにできたはずだが実装されていないかどうかをチェックできます。アクセシビリティチェックは、以下のルールに基づいています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
+**要素アクセシビリティ検証**ステップを使用すると、Web ページ上の特定の要素がアクセシブルにできたはずだが実装されていないかどうかをチェックできます。アクセシビリティチェックは、以下のルールに基づいています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
 :::info{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
@@ -31,7 +31,7 @@ keywords:
 :::
 
 :::info{title="アクセシビリティ検証サポート"}
-Testim のアクセシビリティステップは、業界をリードするアクセシビリティライブラリの 1 つである[Deque 社の Axe Core](https://www.deque.com/axe/)を使用しています。アクセシビリティステップ内で検出される純粋なアクセシビリティ違反は、主にアプリケーションコードに関連するものです。そのため、これらの特定の問題への対処は、 Testim サポートの範囲外となります。コード修正によるアクセシビリティ違反の是正に課題がある場合は、[Deque Axe-Core](https://www.deque.com/axe/)の issues ページにサポートを求めることをお勧めします。アクセシビリティの専門家として、これらの問題に効果的に対処するための専門的なガイダンスとソリューションを提供できます。
+Testim のアクセシビリティステップは、業界をリードするアクセシビリティライブラリの 1 つである[Deque 社の Axe Core](https://www.deque.com/axe/)を使用しています。アクセシビリティステップ内で検出される純粋なアクセシビリティ違反は、主にアプリケーションコードに関連するものです。そのため、これらの特定の問題への対処は、Testim サポートの範囲外となります。コード修正によるアクセシビリティ違反の是正に課題がある場合は、[Deque Axe-Core](https://www.deque.com/axe/)の issues ページにサポートを求めることをお勧めします。アクセシビリティの専門家として、これらの問題に効果的に対処するための専門的なガイダンスとソリューションを提供できます。
 :::
 
 ## 要素アクセシビリティ検証ステップの追加
@@ -58,7 +58,7 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 ![Run test ボタン](/images/accessibility-validations/element-accessibility-validation/6ce633c-Testim_360a.png)
 
-4. 再度矢印記号にマウスオーバーし、「 M 」（Testim 定義済みステップ）をクリックします。
+4. 再度矢印記号にマウスオーバーし、「M」（Testim 定義済みステップ）をクリックします。
 
 定義済みステップメニューが開きます。
 
@@ -73,7 +73,7 @@ Testim のアクセシビリティステップは、業界をリードするア�
 6. メニューをスクロールして**Validate element accessibility**を選択します。
 
 :::note
-または、メニュー上部の検索ボックスを使用して「 Validate element accessibility 」を検索できます。
+または、メニュー上部の検索ボックスを使用して「Validate element accessibility」を検索できます。
 :::
 
 7. AUT ウィンドウで、アクセシビリティを検証したい関連要素を特定し、クリックして選択します。
@@ -93,7 +93,7 @@ Testim のアクセシビリティステップは、業界をリードするア�
 9. 以下の説明に従ってプロパティを設定します。
 
    - **Description** – ステップの説明。（デフォルト = Accessibility validation）
-   - **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical 、 Serious 、 Moderate 、 Minor 。（デフォルト = Minor）
+   - **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）
    - **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/accessibility-validations#section-rules-descriptions)を参照してください。デフォルトではすべてのタグが選択されています。
    - **Exclude specific rule IDs** – 特定のルール ID を除外したい場合は、リストから選択します。また、特定のルール ID のみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
    - **When this step fails** – ステップが失敗した場合の動作を指定します。
@@ -109,7 +109,7 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 ## 要素アクセシビリティ結果の表示
 
-要素アクセシビリティ検証ステップを含むテストを実行した後、アクセシビリティ違反が見つかった場合、「 Step Failed: Accessibility violations were found 」というエラーメッセージが表示され、詳細なアクセシビリティ違反結果を確認できます。
+要素アクセシビリティ検証ステップを含むテストを実行した後、アクセシビリティ違反が見つかった場合、「Step Failed: Accessibility violations were found」というエラーメッセージが表示され、詳細なアクセシビリティ違反結果を確認できます。
 
 **要素アクセシビリティ結果を表示するには:**
 
@@ -153,4 +153,4 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 Testim は、要素のアクセシビリティレベルをチェックするために以下のライブラリを使用しています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
-各ルールには、関連する影響レベル（Critical 、 Serious 、 Moderate 、 Minor など）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。
+各ルールには、関連する影響レベル（Critical、Serious、Moderate、Minor など）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。

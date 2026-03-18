@@ -2,7 +2,7 @@
 title: コマンドライン インターフェース (CLI)
 description: >-
   Testim CLI のインストール方法と、プロジェクト
-  ID・トークン・グリッド・ラベル・スイート・テスト計画などのパラメーターを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。
+  ID ・トークン・グリッド・ラベル・スイート・テスト計画などのパラメーターを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。
 category: テスト実行
 order: 6002
 updated: '2025-09-22'
@@ -20,11 +20,11 @@ keywords:
   - Testim
 ---
 
-コマンドラインからすべてのテストを実行し、 CI と統合します。
+コマンドラインからすべてのテストを実行し、CI と統合します。
 
 ## 前提条件
 
-CLI 経由での実行には Node.js がインストールされている必要があります。 Testim は [LTS/サポート対象](https://github.com/nodejs/Release/blob/main/README.md) の Node.js のすべてのバージョンをサポートしています。
+CLI 経由での実行には Node.js がインストールされている必要があります。Testim は [LTS/サポート対象](https://github.com/nodejs/Release/blob/main/README.md) の Node.js のすべてのバージョンをサポートしています。
 
 ## CLI インストール
 
@@ -45,7 +45,7 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 1. **設定 > CLI** タブに移動します。
 2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザが開きます）（Web のみ）
 3. **CI プラットフォーム** で、希望する CI プラットフォームを選択します （オプション）
-4. **グリッド** で、テストを実行するグリッドを選択します。 Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:\
+4. **グリッド** で、テストを実行するグリッドを選択します。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:\
    [仮想モバイルグリッド](/docs/virtual-mobile-grid)\
    [Tricentis Device Cloud](/docs/tricentis-device-cloud)\
    [Testim Headspin Mobile](/docs/headspin-integration)\
@@ -58,7 +58,7 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 基本コマンドには以下の要素が含まれています:\
 `--token`: 認証トークン\
 `--project`: プロジェクト ID\
-`--grid`: テストを実行するグリッドの名前。 Web テスト用には Selenium グリッドが表示され、モバイルテスト用には Appium グリッドが表示されます。
+`--grid`: テストを実行するグリッドの名前。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には Appium グリッドが表示されます。
 
 5. CLI をコピーし、編集して必要に応じてパラメーターを追加します。 特定のテスト、ラベル、構成など、以下のセクションで説明されているように実行できます。
 
@@ -84,8 +84,8 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 ### プロジェクト
 
-`--project` プロジェクト ID 。\
-別のプロジェクトを選択するには、企業画面に移動し（参照 [プロジェクトとユーザー管理](/docs/project-and-user-management)）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
+`--project` プロジェクト ID。\
+別のプロジェクトを選択するには、企業画面に移動し （参照 [プロジェクトとユーザー管理](/docs/project-and-user-management)）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
 
 ```shell
 --project AOL-12323-a4b2-4762-df380
@@ -127,7 +127,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### テスト ID
 
-`--testId` または `-t` または `--test-id`、実行するテストの ID 。コマンドの後に、テストの ID を入力します。
+`--testId` または `-t` または `--test-id`、実行するテストの ID。コマンドの後に、テストの ID を入力します。
 
 :::note
 `--testId` 引数をさらに追加することで、複数のテストを ID で実行できます。
@@ -146,7 +146,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### ホスト
 
-`-h` または `--host <host-name>`、 selenium グリッドを含むホスト名または IP 。このコマンドは `--grid` コマンドをオーバーライドします。
+`-h` または `--host <host-name>`、selenium グリッドを含むホスト名または IP。このコマンドは `--grid` コマンドをオーバーライドします。
 
 ```shell
 --host seleniumhost
@@ -156,7 +156,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### レポートファイル
 
-`--report-file` または `-r`、レポートを出力する場所 （デフォルトでは出力ストリームに）。ファイルは JUnitXMLReporter 形式です。これは Testim の結果を CI ディスプレイと統合するために使用されます。通常は、 CI の構築設定でそのファイルを参照するように設定する必要があるため、 CLI パラメーター値と構築設定が同じ場所に設定されていることを確認してください。
+`--report-file` または `-r`、レポートを出力する場所 （デフォルトでは出力ストリームに）。ファイルは JUnitXMLReporter 形式です。これは Testim の結果を CI ディスプレイと統合するために使用されます。通常は、CI の構築設定でそのファイルを参照するように設定する必要があるため、CLI パラメーター値と構築設定が同じ場所に設定されていることを確認してください。
 
 ```shell
 -r ~/report.xml
@@ -176,7 +176,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### テスト構成
 
-`test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメーター （例: ブラウザ、オペレーティング システム、解像度、デバイス名、 OS バージョン、ビジュアル検証パラメーターなど） を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
+`test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメーター （例: ブラウザ、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメーターなど） を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
 詳細は [構成ライブラリ - Web](/docs/shared-configuration) および [構成ライブラリ - モバイル](/docs/configuration-library-mobile) をお読みください。
 
 ```shell
@@ -185,7 +185,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### パラメーター ファイル
 
-`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。 JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメーターファイル](/docs/json-parameters-file-parameters) をお読みください。
+`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメーターファイル](/docs/json-parameters-file-parameters) をお読みください。
 
 :::note
 `params-file` パスで設定されている文字列パスは相対パスである必要があり、完全なパスではありません。
@@ -221,7 +221,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### 実行名
 
-`--override-execution-name`、 Testim スイート実行での実行の名前。
+`--override-execution-name`、Testim スイート実行での実行の名前。
 
 ```shell
 --override-execution-name "Dev Sanity"
@@ -261,7 +261,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 ```
 
 :::note
-アーカイブされたブランチで実行すると、 CLI は失敗します。
+アーカイブされたブランチで実行すると、CLI は失敗します。
 :::
 
 #### 並列
@@ -287,13 +287,13 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 `--retries`、このフラグを使用すると、失敗したテストは、テストが成功するか最大再試行回数に達するまで繰り返し実行されます。その場合、テストは失敗します。
 
-テストが 1 回以上の再試行後に成功した場合、 UI では以下のように示されます:
+テストが 1 回以上の再試行後に成功した場合、UI では以下のように示されます:
 
 ```shell
 --retries <max_num_of_retries>
 ```
 
-再試行のみで成功したテストは、 testim ライブラリの下で簡単にフィルタリングできます。詳細については、[不安定なテスト](/docs/flaky-tests) をお読みください。
+再試行のみで成功したテストは、testim ライブラリの下で簡単にフィルタリングできます。詳細については、[不安定なテスト](/docs/flaky-tests) をお読みください。
 
 #### TestRail レポートを無効にする （Web のみ）
 
@@ -327,7 +327,7 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 #### タイムアウト再試行を無効にする
 
-`--disable-timeout-retry`、デフォルトでは、テストが「テストがタイムアウトに達した」ため失敗した場合、 Testim は 1 回再実行しようとし、失敗する前に最大 3 回実行します。このデフォルト動作は、この CLI フラグを使用してテストを実行するときに無効にできます。
+`--disable-timeout-retry`、デフォルトでは、テストが「テストがタイムアウトに達した」ため失敗した場合、Testim は 1 回再実行しようとし、失敗する前に最大 3 回実行します。このデフォルト動作は、この CLI フラグを使用してテストを実行するときに無効にできます。
 
 ```Text shell
 --disable-timeout-retry
@@ -395,7 +395,7 @@ testim --token "7jdSDFGbsdfrGsdrgsdrg" --project "EIPPYFgkS7oTesyRCnlj" --suite 
 testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "EIPPYFgkS7oCnlOfNtOj" --label "test" --grid "Testim-Grid" --intersect-with-suite "test1"
 ```
 
-`intersect-with` フラグは、元の実行コマンドに含まれていたすべてのテストから、 Testim が指定されたラベルまたはスイートと一般的な （つまり、交差する） テストのみを実行することを定義しています。
+`intersect-with` フラグは、元の実行コマンドに含まれていたすべてのテストから、Testim が指定されたラベルまたはスイートと一般的な （つまり、交差する） テストのみを実行することを定義しています。
 
 **例えば:**\
 ラベル A - テストが含まれています: 1,2,3,4\
@@ -412,7 +412,7 @@ testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "E
 Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
 
 :::note
-交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、--intersect-with-label A と --intersect-with-label B がある場合、 Testim は要求されたテストと交差する A または B のすべてのテストを実行します。
+交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、--intersect-with-label A と --intersect-with-label B がある場合、Testim は要求されたテストと交差する A または B のすべてのテストを実行します。
 :::
 
 #### intersect-with-operand
@@ -421,10 +421,10 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 ### Sealights 統合
 
-[Sealights 統合](/docs/sealights-integration) を使用して CLI でテストを実行するときは、 Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
+[Sealights 統合](/docs/sealights-integration) を使用して CLI でテストを実行するときは、Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
 
 * **Sealights buildSessionId** - この ID は、実行された特定のビルドに関連しています。通常、これはアプリケーション内の特定のコンポーネントに関連しています。つまり、特定のコンポーネントをテストする場合、このオプションを使用することをお勧めします。
-* **Sealights labId** - 通常、同じ環境でホストされている複数のコンポーネントが同じ LabId を共有できます。複数のコンポーネントをテストする場合、 buildSessionId ではなく LabId を使用することをお勧めします。
+* **Sealights labId** - 通常、同じ環境でホストされている複数のコンポーネントが同じ LabId を共有できます。複数のコンポーネントをテストする場合、buildSessionId ではなく LabId を使用することをお勧めします。
 
 #### **Sealights buildSessionId**
 
@@ -448,7 +448,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### デバイス名
 
-`--device-name`、特定のデバイス モデルを選択してテストを実行します。フラグを使用しない場合、 Testim は最初に利用可能なデバイス モデルを選択します。
+`--device-name`、特定のデバイス モデルを選択してテストを実行します。フラグを使用しない場合、Testim は最初に利用可能なデバイス モデルを選択します。
 
 ```shell
 --device-name "Samsung S22"
@@ -456,7 +456,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### デバイス UDID
 
-`--device-udid`、一意のデバイス ID に基づいて特定のデバイスを選択してテストを実行します。フラグを使用しない場合、 Testim は最初に利用可能なデバイスを選択します。
+`--device-udid`、一意のデバイス ID に基づいて特定のデバイスを選択してテストを実行します。フラグを使用しない場合、Testim は最初に利用可能なデバイスを選択します。
 
 ```shell
 --device-udid "udid123456"
@@ -464,7 +464,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### OS バージョン
 
-`--os-version`、特定のオペレーティング システム バージョンを選択してテストを実行します。フラグを使用しない場合、 Testim は最初に利用可能なデバイスを選択します。
+`--os-version`、特定のオペレーティング システム バージョンを選択してテストを実行します。フラグを使用しない場合、Testim は最初に利用可能なデバイスを選択します。
 
 ```shell
 --os-version "9"

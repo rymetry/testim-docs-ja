@@ -1,25 +1,25 @@
 ---
 title: Okta SSO 統合
 description: >-
-  OktaはIDおよびアクセス管理サービスプロバイダーです。TestimはOktaと統合されており、OktaユーザーはOktaで一度認証すれば、再度認証することなくTestimにアクセスできます。
+  Okta は ID およびアクセス管理サービスプロバイダーです。Testim は Okta と統合されており、Okta ユーザーは Okta で一度認証すれば、再度認証することなく Testim にアクセスできます。
 category: セキュリティ
 order: 18004
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/okta-sso-integration'
 keywords:
   - Okta
-  - SSO統合
+  - SSO 統合
   - SAML2.0
   - シングルサインオン
-  - ID管理
+  - ID 管理
   - 認証
   - アクセス管理
 ---
 
-Okta は ID およびアクセス管理サービスプロバイダーです。 Testim は Okta と統合されており、 Okta ユーザーは Okta で一度認証すれば、再度認証することなく Testim にアクセスできます。
+Okta は ID およびアクセス管理サービスプロバイダーです。Testim は Okta と統合されており、Okta ユーザーは Okta で一度認証すれば、再度認証することなく Testim にアクセスできます。
 
 :::info
-SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、 Testim の CSM に連絡してください。
+SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、Testim の CSM に連絡してください。
 :::
 
 **Testim Okta 統合をセットアップするには:**
@@ -62,7 +62,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 16. Okta のまま、**Name ID format**フィールドで**EmailAddress**を選択します。
 17. **Application username**フィールドで**Email**を選択します。
 18. **Name**フィールドの下に**email**と入力します。
-19. **Value**の下で**user.email**を選択します。これにより、 Testim の`email`フィールドが Okta の`user.email`フィールドにマッピングされます。
+19. **Value**の下で**user.email**を選択します。これにより、Testim の`email`フィールドが Okta の`user.email`フィールドにマッピングされます。
 
 ![属性マッピング設定](/images/security-sso/okta-sso-integration/5dae2c9-okta6.PNG)
 

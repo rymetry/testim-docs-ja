@@ -1,7 +1,7 @@
 ---
 title: Testim Extension - ビデオとバグシナリオをキャプチャ
 description: >-
-  Testim Extensionのビデオキャプチャ機能でプロセスの画面録画を行い、各ステップのスクリーンショットを作成してバグトラッキングシステムに送信できます。
+  Testim Extension のビデオキャプチャ機能でプロセスの画面録画を行い、各ステップのスクリーンショットを作成してバグトラッキングシステムに送信できます。
 category: Testim拡張機能
 order: 17003
 updated: '2025-11-02'

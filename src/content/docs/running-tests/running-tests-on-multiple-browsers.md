@@ -1,8 +1,8 @@
 ---
 title: 複数ブラウザでテストを実行
 description: >-
-  Chrome・Firefox・Safari・Edge など複数ブラウザでテストを並行実行するために、構成リストと
-  CLI・スケジューラーを使ってブラウザ構成を指定する方法を説明します。
+  Chrome ・ Firefox ・ Safari ・ Edge など複数ブラウザでテストを並行実行するために、構成リストと
+  CLI ・スケジューラーを使ってブラウザ構成を指定する方法を説明します。
 category: テスト実行
 order: 6008
 updated: '2025-09-22'
@@ -18,7 +18,7 @@ keywords:
   - Testim
 ---
 
-テストは異なるブラウザで並行して実行でき、実行時間を短縮し、複数の構成を確認できます。 Chrome でのみローカルで実行することもでき、 Testim のグリッド、 Sauce Labs や Browserstack などの サードパーティグリッド、または独自の内部 Selenium ベースグリッドなど、サポートされているグリッドで Chrome およびその他のブラウザで実行できます。
+テストは異なるブラウザで並行して実行でき、実行時間を短縮し、複数の構成を確認できます。Chrome でのみローカルで実行することもでき、Testim のグリッド、Sauce Labs や Browserstack などの サードパーティグリッド、または独自の内部 Selenium ベースグリッドなど、サポートされているグリッドで Chrome およびその他のブラウザで実行できます。
 
 ブラウザを実行しているオペレーティングシステムは、使用しているグリッドに依存します。
 
@@ -103,7 +103,7 @@ keywords:
 
 ## テストを複数のブラウザで実行する方法は？
 
-テストを複数のブラウザで実行するには、 Testim Editor を使用する代わりに、 CLI または [スケジューラー](/docs/scheduler) を使用してテストを実行する必要があります。この記事では、 CLI を使用した実行に焦点を当てます。その方法をご覧ください。
+テストを複数のブラウザで実行するには、Testim Editor を使用する代わりに、CLI または [スケジューラー](/docs/scheduler) を使用してテストを実行する必要があります。この記事では、CLI を使用した実行に焦点を当てます。その方法をご覧ください。
 
 ## 構成リスト
 
@@ -130,7 +130,7 @@ keywords:
 * --test-config `<name>` を使用して、実行する構成を CLI に追加します。
 * 実行するグリッドのグリッドパラメーターを更新してください。グリッドの設定方法については、[こちら](/docs/grid-management) をお読みください。
 
-### Chrome 、 Edge Chromium 、 Safari 、 Firefox
+### Chrome、Edge Chromium、Safari、Firefox
 
 ```shell
 --test-config "My configuration"

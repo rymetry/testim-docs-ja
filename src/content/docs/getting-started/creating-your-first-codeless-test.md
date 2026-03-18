@@ -1,8 +1,8 @@
 ---
 title: Web テスト入門（コードレステスト）
 description: >-
-  Testimの「Space &
-  Beyond」デモサイトを使って最初のコードレスWebテストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。
+  Testim の「Space &
+  Beyond」デモサイトを使って最初のコードレス Web テストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。
 category: はじめに
 order: 2002
 updated: '2025-09-13'
@@ -13,7 +13,7 @@ keywords:
   - テスト記録
   - 検証
   - テスト結果
-  - Webテスト
+  - Web テスト
   - ログインテスト
   - バリデーション
   - テストエディター
@@ -22,7 +22,7 @@ keywords:
 
 ## ようこそ
 
-サインアップが完了すると、 Testim のホーム画面にリダイレクトされます。
+サインアップが完了すると、Testim のホーム画面にリダイレクトされます。
 
 ![Testim ホーム画面](/images/getting-started/creating-your-first-codeless-test/4b0e58e-gettingstarted1.png)
 
@@ -35,7 +35,7 @@ keywords:
 ## チュートリアルのユースケース
 
 Testim でテストを作成する際は、対象の Web サイトを開いてテストしたい操作を記録します。各ステップのプロパティは後から編集でき、検証（バリデーション）も追加できます。
-このチュートリアルでは Testim のデモサイト「 Space & Beyond 」を使用し、ログイン手順をテストします。
+このチュートリアルでは Testim のデモサイト「Space & Beyond」を使用し、ログイン手順をテストします。
 
 ## テストを記録する
 
@@ -51,12 +51,12 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
    ![Record ボタン](/images/getting-started/creating-your-first-codeless-test/ce98d0d-gettingstarted3.png)
 
-   既定の **Base URL** にデモサイトの URL 「[demo.testim.io](https://demo.testim.io)」が設定されている場合は、新しいブラウザウィンドウが開き、 Space & Beyond サイトが表示されます。そのままステップ 4 に進みます。 Base URL が未設定の場合は **Start A New Test** ウィンドウが開きます。
+   既定の **Base URL** にデモサイトの URL「[demo.testim.io](https://demo.testim.io)」が設定されている場合は、新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。そのままステップ 4 に進みます。Base URL が未設定の場合は **Start A New Test** ウィンドウが開きます。
 
 ![Start A New Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/d42b2ee-gettingstarted4.png)
 
-3. **Your app URL** フィールドにデモサイトの URL 「[demo.testim.io](https://demo.testim.io)」を入力し、**Create Test** をクリックします。
-   新しいブラウザウィンドウが開き、 Space & Beyond サイトが表示されます。このウィンドウが **Application Under Test (AUT)** です。このウィンドウで行った操作が記録され、 Testim のテストとして保存されます。
+3. **Your app URL** フィールドにデモサイトの URL「[demo.testim.io](https://demo.testim.io)」を入力し、**Create Test** をクリックします。
+   新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。このウィンドウが **Application Under Test (AUT)** です。このウィンドウで行った操作が記録され、Testim のテストとして保存されます。
 4. AUT のブラウザで任意のユーザー名とパスワードを使ってログインします。
 
    ![Space & Beyond のログイン画面](/images/getting-started/creating-your-first-codeless-test/7baa100-login.png)
@@ -75,17 +75,17 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 新しいテストを作成したり既存テストを編集したりしたら、必ず保存してください。保存前にブラウザを閉じてしまっても、テストはブラウザのキャッシュに保存され、作業を再開できる場合があります。詳しくは[保存していないテストを復元する](/docs/recovering-a-test-that-was-not-saved)を参照してください。
 :::
 
-7. **Name** フィールドに「 Space & Beyond Demo 01 」と入力し、**OK** をクリックします。
+7. **Name** フィールドに「Space & Beyond Demo 01」と入力し、**OK** をクリックします。
    テストが保存され、最初のテストが完成しました！
 
 ## 検証（バリデーション）の追加
 
 テストを実行すると、フロー内のステップが順番通りに実行されるかは自動で検証されます。ただし、それぞれのステップで期待した結果が得られているかを保証するものではありません。必要に応じて検証ステップを追加し、アプリケーションが期待どおりに動作していることを確認しましょう。
-このチュートリアルでは、ユーザーがログインした後にヘッダーバーの **Login** ボタンが「 HELLO, JOHN 」というテキストに置き換わることを確認する検証を追加します（このデモサイトでは入力したユーザー名に関係なく常に John が表示されます）。
+このチュートリアルでは、ユーザーがログインした後にヘッダーバーの **Login** ボタンが「HELLO, JOHN」というテキストに置き換わることを確認する検証を追加します（このデモサイトでは入力したユーザー名に関係なく常に John が表示されます）。
 
 ### 検証ステップを追加する手順
 
-1. *Space & Beyond Demo 01* テストのエディター画面で、 Click "*LOG IN*" ステップの右側にある最後の「**+**」ボタンにカーソルを合わせます。
+1. *Space & Beyond Demo 01* テストのエディター画面で、Click "*LOG IN*" ステップの右側にある最後の「**+**」ボタンにカーソルを合わせます。
 
    ![Testim の + ボタン](/images/getting-started/creating-your-first-codeless-test/177c8fc-plus.png)
 
@@ -100,7 +100,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
    ![Validations セクション](/images/getting-started/creating-your-first-codeless-test/12dda9f-validations.png)
 
 4. **Validate element text** を選択します。
-5. AUT のブラウザで「 HELLO, JOHN 」のテキストをクリックします。
+5. AUT のブラウザで「HELLO, JOHN」のテキストをクリックします。
 
 ![HELLO, JOHN テキスト](/images/getting-started/creating-your-first-codeless-test/6b89de8-hellojohn.png)
 
@@ -139,6 +139,6 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ![ステップ結果の詳細](/images/getting-started/creating-your-first-codeless-test/e9c28f4-stepresult.jpg)
 
-テストが失敗した場合は、失敗の原因に関する詳細情報が表示されます（次の例では、検証で「 Goodbye 」を期待していたのに対し、実際の値が「 Hello 」でした）。
+テストが失敗した場合は、失敗の原因に関する詳細情報が表示されます（次の例では、検証で「Goodbye」を期待していたのに対し、実際の値が「Hello」でした）。
 
 ![失敗時の結果例](/images/getting-started/creating-your-first-codeless-test/6bb34c8-failed.png)

@@ -2,7 +2,7 @@
 title: 設定ファイル
 description: >-
   Testim の CLI で使用する設定ファイル（config）で、プロジェクトやテスト実行のパラメーター、実行フック（before/after
-  test・suite）を定義する方法を説明します。
+  test ・ suite）を定義する方法を説明します。
 category: テスト実行
 order: 6011
 updated: '2025-09-22'
@@ -45,7 +45,7 @@ exports.config = {
     baseUrl: 'http://staging.example.com',
 
     // =====
-    // Hooks (フック)
+    // Hooks（フック）
     // =====
     // テスト実行の前後で処理を差し込むための複数のフックを提供します。
    
@@ -118,7 +118,7 @@ exports.config = {
 
 ## 設定フックの事前定義プロパティ
 
-各種設定フックには、テスト／スイートに関する追加情報を取得するための事前定義プロパティが用意されています。例えば、 Before Suite フックで `projectId` の値を出力できます。詳細は[設定ファイルフックの事前定義プロパティ](/docs/predefined-properties-in-config-file-hooks)を参照してください。
+各種設定フックには、テスト／スイートに関する追加情報を取得するための事前定義プロパティが用意されています。例えば、Before Suite フックで `projectId` の値を出力できます。詳細は[設定ファイルフックの事前定義プロパティ](/docs/predefined-properties-in-config-file-hooks)を参照してください。
 
 ### beforeTest フックで実行時のラベル一覧を取得する
 
@@ -178,7 +178,7 @@ exports.config = {
 testim -c "testimConfig.js"
 ```
 
-4. 設定ファイル内の値を一時的に上書きしたい場合は、 CLI で明示的に指定します。
+4. 設定ファイル内の値を一時的に上書きしたい場合は、CLI で明示的に指定します。
 
 ```shell
 testim -c "testimConfig.js" --label "nightly"

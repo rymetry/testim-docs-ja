@@ -1,18 +1,18 @@
 ---
 title: 変更履歴
-description: Testim for Salesforce の主な機能追加・改善の履歴（スクリーンショット、 Login As 、権限検証、 SSO 、 CI 統合など）をまとめます。
+description: Testim for Salesforce の主な機能追加・改善の履歴（スクリーンショット、Login As、権限検証、SSO、CI 統合など）をまとめます。
 category: Salesforceテスト
 order: 16004
 updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/changelog'
 keywords:
   - 変更履歴
-  - Salesforceテスト
+  - Salesforce テスト
   - スクリーンショット
   - Login As
   - 権限検証
   - Salesforce SSO
-  - CI統合
+  - CI 統合
   - Copado
   - Gearset
   - Document Validation
@@ -20,11 +20,11 @@ keywords:
 
 ## スクリーンショットのログ記録 2023 年 3 月
 
-Testim for Salesforce の最新バージョンでは、各テストステップのスクリーンショットをキャプチャし、 Salesforce ログに保存できるようになり、デバッグに役立ちます。これを行うには、 Log screenshots オプションを有効にするだけです。
+Testim for Salesforce の最新バージョンでは、各テストステップのスクリーンショットをキャプチャし、Salesforce ログに保存できるようになり、デバッグに役立ちます。これを行うには、Log screenshots オプションを有効にするだけです。
 
 ## Login As ステップでのユーザー間切り替え 2023 年 5 月
 
-管理者ユーザーは、単一のテストケース内でユーザー間を切り替えることができるようになりました。これを行うには、 Salesforce アカウントにサインインした後、 Log In As Salesforce ステップを使用します。
+管理者ユーザーは、単一のテストケース内でユーザー間を切り替えることができるようになりました。これを行うには、Salesforce アカウントにサインインした後、Log In As Salesforce ステップを使用します。
 
 ## 権限検証ステップ 2023 年 5 月
 
@@ -32,11 +32,11 @@ Salesforce 環境をさらに保護するために、このテストステップ
 
 ## Sign-in with Salesforce 2023 年 5 月
 
-ペルソナを作成する際に、 Salesforce シングルサインオン（SSO）を使用できるようになりました。 Sign-in with Salesforce で作成されたペルソナは、 MFA ログイン認証ステップに従う必要がありません。また、新しい Salesforce 環境を接続する際に、この方法を使用して管理者ペルソナを自動的に作成するようになりました。
+ペルソナを作成する際に、Salesforce シングルサインオン（SSO）を使用できるようになりました。Sign-in with Salesforce で作成されたペルソナは、MFA ログイン認証ステップに従う必要がありません。また、新しい Salesforce 環境を接続する際に、この方法を使用して管理者ペルソナを自動的に作成するようになりました。
 
 ## Tricentis Test Management for Jira 統合 2023 年 6 月
 
-Testim for Salesforce のテストを Tricentis Test Management for Jira のテストケースにリンクできるようになりました。 Tricentis Test Automation for Salesforce でテストを実行すると、テスト結果が Tricentis Test Management for Jira の実行結果に自動的に表示されます。詳細については、 Tricentis Test Management for Jira 統合を参照してください。
+Testim for Salesforce のテストを Tricentis Test Management for Jira のテストケースにリンクできるようになりました。Tricentis Test Automation for Salesforce でテストを実行すると、テスト結果が Tricentis Test Management for Jira の実行結果に自動的に表示されます。詳細については、Tricentis Test Management for Jira 統合を参照してください。
 
 ## デモプロジェクトの提供 2023 年 6 月
 
@@ -44,10 +44,10 @@ Testim for Salesforce のテストを Tricentis Test Management for Jira のテ�
 
 ## CI 統合 2023 年 6 月
 
-Testim for Salesforce の最新バージョンは、 Copado 統合と Gearset 統合をサポートしています。これらの CI ツールを使用して、 Salesforce への変更をデプロイできます。 Testim for Salesforce と統合することで、本番環境に変更をデプロイする前に何も壊れていないことを確認できます。
+Testim for Salesforce の最新バージョンは、Copado 統合と Gearset 統合をサポートしています。これらの CI ツールを使用して、Salesforce への変更をデプロイできます。Testim for Salesforce と統合することで、本番環境に変更をデプロイする前に何も壊れていないことを確認できます。
 
-* Copado 統合: URL Callout ステップを追加し、 Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、 Copado からのテストを自動化できるようになりました。
-* Gearset 統合: Gearset に Webhook を追加し、 Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、 Gearset の CI またはデプロイメントジョブからのテストを自動化できるようになりました。
+* Copado 統合: URL Callout ステップを追加し、Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、Copado からのテストを自動化できるようになりました。
+* Gearset 統合: Gearset に Webhook を追加し、Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、Gearset の CI またはデプロイメントジョブからのテストを自動化できるようになりました。
 
 ## CPQ Quote Line Editor ステップ 2023 年 7 月
 
@@ -55,7 +55,7 @@ Salesforce CPQ アプリケーションは、販売見積もりを生成する�
 
 ## AI テストクリエーター 2023 年 7 月
 
-接続された Salesforce 環境からのデータを使用して、一連のテストが自動的に作成されます。これは、 Salesforce 環境の現在のレコードを調べ、一意の値が必要な場所を特定することで行われます。
+接続された Salesforce 環境からのデータを使用して、一連のテストが自動的に作成されます。これは、Salesforce 環境の現在のレコードを調べ、一意の値が必要な場所を特定することで行われます。
 
 ## SOC 2 Type 1 および ISO 27001 認証取得 2023 年 8 月
 

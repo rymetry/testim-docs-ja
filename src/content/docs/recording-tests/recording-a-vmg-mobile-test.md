@@ -1,8 +1,8 @@
 ---
 title: VMG を使用したモバイルテストの記録
 description: >-
-  Virtual Mobile Gridを使用してモバイルテストを記録する手順について説明します。Enhanced modeとAppium
-  modeの両方に対応しています。
+  Virtual Mobile Grid を使用してモバイルテストを記録する手順について説明します。Enhanced mode と Appium
+  mode の両方に対応しています。
 category: テストの記録
 order: 3005
 updated: '2025-09-13'
@@ -17,29 +17,29 @@ keywords:
   - Android
 ---
 
-Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。[Mobile Apps Library](/docs/mobile-apps) に接続されています。つまり、実行しているテストがモバイルアプリを使用している場合、 Virtual Mobile Grid でテストを実行する前に、そのアプリを Mobile Apps Library に追加する必要があります。
+Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。[Mobile Apps Library](/docs/mobile-apps) に接続されています。つまり、実行しているテストがモバイルアプリを使用している場合、Virtual Mobile Grid でテストを実行する前に、そのアプリを Mobile Apps Library に追加する必要があります。
 
-Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、 Community ライセンスユーザーは、 Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、 Virtual Mobile Grid は[Device Management](/docs/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。
+Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は[Device Management](/docs/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。
 
 ## モード
 
 記録は以下のモードのいずれかで実行できます:
 
-- **Enhanced mode（推奨）** - Testim の新しい Enhanced mode は、 Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション（ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク）でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を参照してください。
+- **Enhanced mode（推奨）** - Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定した、高速で、より汎用性の高いテストを提供します。ゼロ知識アプローチと統一 API により、新しい Enhanced mode は、市場の他のツールよりもモバイルビューの構造をよく理解します。このモードは、すべてのモバイルアプリケーション（ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク）でのテストをサポートします。このモードで記録されたテストは VMG 上でのみ実行できます。詳細については、[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を参照してください。
 
-- **Appium mode** - このモードは、他の Appium ベースのグリッドとのテストの互換性を保証し、ローカルデバイスでのローカル実行をサポートします。一方、このモードは Appium の機能に制限されており、特にハイブリッドアプリや WebView を使用している場合、すべてのテストフローを記録できない可能性があります。既存のテストは、 Appium 互換モードを使用している場合でも引き続き動作します。
+- **Appium mode** - このモードは、他の Appium ベースのグリッドとのテストの互換性を保証し、ローカルデバイスでのローカル実行をサポートします。一方、このモードは Appium の機能に制限されており、特にハイブリッドアプリや WebView を使用している場合、すべてのテストフローを記録できない可能性があります。既存のテストは、Appium 互換モードを使用している場合でも引き続き動作します。
 
 ## 開始する前に
 
 開始する前に、以下を確認してください:
 
-- **モバイルテストプロジェクト** - モバイルテストには、 Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、 Tricentis サポートにお問い合わせください。
+- **モバイルテストプロジェクト** - モバイルテストには、Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、Tricentis サポートにお問い合わせください。
 
 :::warning{title="注意"}
-各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。例えば、プロジェクトが Android 用に作成された場合、 iOS デバイス用のテストを作成することはできません。
+各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。例えば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
 :::
 
-- **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、 Community ライセンスユーザーは、 Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。詳細については、[Virtual Mobile Grid](/docs/virtual-mobile-grid) を参照してください。
+- **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。詳細については、[Virtual Mobile Grid](/docs/virtual-mobile-grid) を参照してください。
 
 :::info
 **無料トライアルの制限**
@@ -50,20 +50,20 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 - 実行時間は 10 分に制限
 - 1 時間に 1 回のみ実行可能
 
-追加機能が必要な場合は、 Tricentis 担当者にお問い合わせください。
+追加機能が必要な場合は、Tricentis 担当者にお問い合わせください。
 :::
 
 - **アプリケーション要件** -
   - **Enhanced Mode** - 以下の要件が適用されます:
-    - ネイティブアプリ - Android デバイスの場合は Java または Kotlin アプリ。 iOS デバイスの場合は Objective C または Swift 。
+    - ネイティブアプリ - Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
     - WebView を含むネイティブアプリ
     - React Native アプリ
     - Flutter アプリ
-  - **Appium Mode** - このモードでは、ネイティブアプリのみがサポートされます。 Android デバイスの場合は Java または Kotlin アプリ。 iOS デバイスの場合は Objective C または Swift 。
+  - **Appium Mode** - このモードでは、ネイティブアプリのみがサポートされます。Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
 
 ## モバイルテストの記録
 
-モバイルデバイスでテストを記録して、後で手動または自動で実行できます。テスト中は、 1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
+モバイルデバイスでテストを記録して、後で手動または自動で実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
 
 :::info
 **仮想/物理デバイスでの記録**
@@ -102,7 +102,7 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 :::
 
 :::info
-Virtual Mobile Grid でテストを実行する場合、テストの開始には約 30 秒から 1 分かかる場合があります。これは、 VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
+Virtual Mobile Grid でテストを実行する場合、テストの開始には約 30 秒から 1 分かかる場合があります。これは、VMG が新しい仮想デバイスを pristine デバイスイメージから作成し、アプリをインストールするのに必要な時間です。
 :::
 
 :::warning{title="注意"}
@@ -110,7 +110,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 :::
 
 7. **Done** をクリックします。
-8. AUT (Application Under Test) Mirroring Viewer が開き、開かれたテスト対象アプリケーションが表示されます。ビューアを使用すると、デバイスを表示し、テスト対象アプリケーションと対話できます。その間、 Testim はアクションを記録します。サポートされているモバイルアクションを参照してください。
+8. AUT (Application Under Test) Mirroring Viewer が開き、開かれたテスト対象アプリケーションが表示されます。ビューアを使用すると、デバイスを表示し、テスト対象アプリケーションと対話できます。その間、Testim はアクションを記録します。サポートされているモバイルアクションを参照してください。
 
 ![記録](/images/recording-tests/recording-a-vmg-mobile-test/90125a4-recording2.gif)
 
@@ -122,7 +122,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 ![要素選択の例](/images/recording-tests/recording-a-vmg-mobile-test/b4b47b7-image_20.png)
 :::
 
-9. 記録を停止するには、**Stop Recording** ボタンをクリックするか、 Viewer ウィンドウを閉じます。
+9. 記録を停止するには、**Stop Recording** ボタンをクリックするか、Viewer ウィンドウを閉じます。
 
 ![記録停止](/images/recording-tests/recording-a-vmg-mobile-test/92a68f8-stoprecording.png)
 
@@ -155,7 +155,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 - **Tap** - ユーザーがモバイルデバイス画面上の要素をタップすることをシミュレートします。このステップを作成するには、記録中に AUT Viewer 画面でマウスをクリックします。
 - **Swipe Vertical** - ユーザーが画面を垂直方向に押してドラッグすることをシミュレートします。このステップを作成するには、マウスをクリックし、カーソルを垂直方向にドラッグしてマウスボタンを離します。
 - **Swipe Horizonal** - ユーザーが画面を水平方向に押してドラッグすることをシミュレートします。このステップを作成するには、マウスをクリックし、カーソルを水平方向にドラッグしてマウスボタンを離します。
-- **Set Custom Text** - ユーザーがアプリのテキストフィールドにテキストを入力することをシミュレートします。テキスト要素の上にマウスを置くと、要素が赤色で強調表示されます。テキスト要素をクリックすると、 Set Custom Text ウィンドウが開きます。フィールドに目的のテキストを入力し、 Send ボタンをクリックします。
+- **Set Custom Text** - ユーザーがアプリのテキストフィールドにテキストを入力することをシミュレートします。テキスト要素の上にマウスを置くと、要素が赤色で強調表示されます。テキスト要素をクリックすると、Set Custom Text ウィンドウが開きます。フィールドに目的のテキストを入力し、Send ボタンをクリックします。
 
 ## 追加のステップの追加とプロパティの編集
 
@@ -167,7 +167,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 
 テストの記録中または記録後に手動でステップを追加する際に、現在サポートされているアクションは以下のとおりです:
 
-- [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。 Validate email ステップは、これらの電子メールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
+- [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。Validate email ステップは、これらの電子メールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
 - [Validate element visible](/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
 - [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定の要素の存在に依存するという点で、要素可視性検証と似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 - [Wait for element visible](/docs/wait-for#wait-for-element-visible) - 要素がページに表示されるまで待機するために使用します。
@@ -186,7 +186,7 @@ Add CLI action および/または Add API action ステップを使用してカ
 
 - [Generate random value](/docs/generating-a-random-value) - 動的データテストのランダム値を生成します。
 - [Generate date](/docs/generating-a-date) - 事前定義されたプロパティに従って日付を生成します。
-- **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。 iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。通常、次回実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
-- **Back** - Back ボタンステップを作成し、デバイスに戻るコマンドを送信します。 Android のみでサポートされています。
+- **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。通常、次回実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
+- **Back** - Back ボタンステップを作成し、デバイスに戻るコマンドを送信します。Android のみでサポートされています。
 - **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
 - [Execute Driver Script Step (mobile)](/docs/custom-action-step-mobile) - Execute Driver Script ステップを使用すると、拡張機能と検証のために Appium 2.0 以上を使用してスクリプトを実行できます。

@@ -8,7 +8,7 @@ sourceUrl: 'https://help.testim.io/docs/sfdc-step-logout'
 keywords:
   - Salesforce
   - ログアウト
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 
@@ -16,9 +16,9 @@ keywords:
 これは Salesforce ステップです。
 :::
 
-**Log out**ステップは、 Salesforce にログインしているユーザーをログアウトします。
+**Log out**ステップは、Salesforce にログインしているユーザーをログアウトします。
 
-**Log In As Another User**ステップを使用し、ユーザーと管理者ユーザーの両方をログアウトしたい場合は、 2 つの**Log out**ステップを追加する必要があります。 1 つはユーザー用、もう 1 つは管理者ユーザー用です。
+**Log In As Another User**ステップを使用し、ユーザーと管理者ユーザーの両方をログアウトしたい場合は、2 つの**Log out**ステップを追加する必要があります。1 つはユーザー用、もう 1 つは管理者ユーザー用です。
 
 :fa-arrow-right: **Log out ステップを追加するには:**
 

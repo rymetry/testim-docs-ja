@@ -1,25 +1,25 @@
 ---
 title: OneLogin SSO 統合
 description: >-
-  OneLoginとTestimをSSO統合する手順を説明します。OneLoginで一度認証すれば、再度認証することなくTestimにアクセスできます。
+  OneLogin と Testim を SSO 統合する手順を説明します。OneLogin で一度認証すれば、再度認証することなく Testim にアクセスできます。
 category: セキュリティ
 order: 18003
 updated: '2025-11-02'
 sourceUrl: 'https://help.testim.io/docs/onelogin-sso-integration'
 keywords:
   - OneLogin
-  - SSO統合
+  - SSO 統合
   - SAML
   - シングルサインオン
-  - ID管理
+  - ID 管理
   - 認証
   - アクセス管理
 ---
 
-OneLogin, Inc.はクラウドベースの ID およびアクセス管理プロバイダーで、企業や組織に統合アクセス管理プラットフォームを提供しています。 Testim は OneLogin と統合されており、 OneLogin のユーザーは OneLogin で一度認証すれば、再度認証することなく Testim にアクセスできます。
+OneLogin, Inc.はクラウドベースの ID およびアクセス管理プロバイダーで、企業や組織に統合アクセス管理プラットフォームを提供しています。Testim は OneLogin と統合されており、OneLogin のユーザーは OneLogin で一度認証すれば、再度認証することなく Testim にアクセスできます。
 
 :::info
-SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、 Testim の CSM に連絡してください。
+SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、Testim の CSM に連絡してください。
 :::
 
 **Testim OneLogin 統合をセットアップするには:**
@@ -63,7 +63,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 21. **Field**名に*'email'*と入力します。
 22. **Include in SAML assertion**チェックボックスを選択します。
 23. **Save**をクリックします。**Value**ドロップダウンメニューが表示されます。
-24. **Value**ドロップダウンメニューで、**Email**を選択します。これにより、 Testim の email フィールドが OneLogin の Email フィールドにマッピングされます。
+24. **Value**ドロップダウンメニューで、**Email**を選択します。これにより、Testim の email フィールドが OneLogin の Email フィールドにマッピングされます。
 
 ![フィールド選択ドロップダウン](/images/security-sso/onelogin-sso-integration/cba956e-sso7.PNG)
 
@@ -74,7 +74,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 * `lastName`（`Last Name`にマッピング）
 * `profilePicture`（`Profile Picture`にマッピング） – これはオプションです
 
-27. **OneLogin**のまま、 Info 画面に戻り、**More Actions**ドロップダウンメニューをクリックします。
+27. **OneLogin**のまま、Info 画面に戻り、**More Actions**ドロップダウンメニューをクリックします。
 28. **SAML Metadata**の横にある**download**アイコンをクリックし、ファイルをローカルフォルダーに保存します。
 
 ![SSO 設定ファイルアップロード](/images/security-sso/onelogin-sso-integration/201fcf1-sso8.png)

@@ -1,8 +1,8 @@
 ---
 title: Jenkins 統合 - Docker を使用
 description: >-
-  JenkinsでDockerコンテナを使用してTestimテストを実行する方法について説明します。Docker
-  Engineのインストールとジョブ設定手順を提供します。
+  Jenkins で Docker コンテナを使用して Testim テストを実行する方法について説明します。Docker
+  Engine のインストールとジョブ設定手順を提供します。
 category: 統合
 order: 12008
 updated: '2025-02-10'
@@ -10,18 +10,18 @@ sourceUrl: 'https://help.testim.io/docs/jenkins-integration-using-docker'
 keywords:
   - Jenkins
   - Docker
-  - Dockerコンテナ
+  - Docker コンテナ
   - コンテナ実行
   - コンテナテスト
-  - CI統合
-  - CIパイプライン
+  - CI 統合
+  - CI パイプライン
   - Testim CLI
   - docker-cli
 ---
 
 ![Jenkins と Docker を使用する構成図](/images/ci-integrations/jenkins-integration-using-docker/d69aa0d-Jenkins1.png)
 
-**Docker を使用することが、 Testim CLI を使用するための最良の方法です。これにより、常に最新の npm パッケージと必要な node.js バージョンで最新の状態に保つことができます。**
+**Docker を使用することが、Testim CLI を使用するための最良の方法です。これにより、常に最新の npm パッケージと必要な node.js バージョンで最新の状態に保つことができます。**
 
 Docker コンテナを使用して Jenkins とテストを統合するには、まず Jenkins マシンまたはそのスレーブマシンの 1 つに[docker engine](https://docs.docker.com/engine/installation/)をインストールする必要があります。
 
@@ -40,7 +40,7 @@ Docker コンテナを使用して Jenkins とテストを統合するには、�
 
 ![Execute Shell ステップを追加する Jenkins の設定画面](/images/ci-integrations/jenkins-integration-using-docker/0fcc8b2-Jenkins4.PNG)
 
-4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。以下は、 Docker ファイルをプルして使用し、 CLI コマンド自体を実行するスクリプトテンプレートです:
+4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。以下は、Docker ファイルをプルして使用し、CLI コマンド自体を実行するスクリプトテンプレートです:
 
 ```shell
 TESTIM_DOCKER=testimio/docker-cli
@@ -67,10 +67,10 @@ echo "Testim finished"\
 
 ​**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
 
-5. Jenkins が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。 Jenkins がファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
+5. Jenkins が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。Jenkins がファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
 
 ![Jenkins で Publish JUnit test result report を追加する画面](/images/ci-integrations/jenkins-integration-using-docker/8c119e0-Jenkins6.PNG)
 
-6. セクション 4 の"report-file"パラメーターに従って、 xml ファイルの値を設定します:
+6. セクション 4 の"report-file"パラメーターに従って、xml ファイルの値を設定します:
 
 ![JUnit テスト結果レポートの XML ファイルパスを設定する画面](/images/ci-integrations/jenkins-integration-using-docker/d2241d4-Jenkins7.PNG)

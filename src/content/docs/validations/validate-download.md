@@ -1,6 +1,6 @@
 ---
 title: ダウンロード検証
-description: ダウンロードしたファイルの内容を検証する CLI ステップ。 CSV 、 PDF 、画像などのファイル形式に対応し、ファイルの内容や属性を確認できる PRO機能です。
+description: ダウンロードしたファイルの内容を検証する CLI ステップ。CSV、PDF、画像などのファイル形式に対応し、ファイルの内容や属性を確認できる PRO機能です。
 category: 高度な編集
 order: 5009
 updated: '2025-09-14'
@@ -12,7 +12,7 @@ keywords:
   - PDF
   - 画像検証
   - Node.js
-  - CLIステップ
+  - CLI ステップ
   - ファイル内容
   - PRO機能
   - ファイルチェック
@@ -20,7 +20,7 @@ keywords:
 
 テスト内から Node.js スクリプトを実行してダウンロード内容が期待通りであることを検証する
 
-*Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、 MS PowerPoint の場合はスライド数とその内容をチェックできます。
+*Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
 :::note{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
@@ -33,12 +33,12 @@ keywords:
 :::
 
 * CLI アクションステップを含むテストをローカルで実行するには、次のコマンドを実行する必要があります：**npm i -g @testim/testim-cli && testim connect**（下記参照）。
-* *Validate download* ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、 Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
+* *Validate download* ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
 * PDF ファイルの *Validate download* ステップを含むテストには、さらに 2 つの前提条件があります：
   * **Chrome 67** 以上を使用していること
   * Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
 
-**「 Download PDFs 」権限を有効にするには：**
+**「Download PDFs」権限を有効にするには：**
 
 1. Chrome ブラウザで、**Chrome メニュー**（右上の三点リーダー）をクリックします。
 2. **Settings** をクリックします。
@@ -92,10 +92,10 @@ keywords:
 
 ## *Validate download* ステップの追加
 
-Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv 、 jpg 、 ppt 、 doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv 、 image 、 xls 、 ppt 、 doc 、 pdf 。
+Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv、jpg、ppt、doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv、image、xls、ppt、doc、pdf。
 
 :::note
-テストの記録中にファイルをダウンロードするリンクをクリックすると、 Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順 8 に進んでください。
+テストの記録中にファイルをダウンロードするリンクをクリックすると、Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順 8 に進んでください。
 :::
 
 **Validate download ステップを追加するには:**
@@ -135,8 +135,8 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定: “Run download validation”）。
 9. 次の手順で必要なパラメーターを定義します:\
    a. **Properties** パネルで **+ PARAMS** をクリック\
-   b. **JS parameter** — ドロップダウンを **JS** にし、 JavaScript パラメーターを入力\
-   c. **Package parameter** — ドロップダウンを **Package** にし、 NPM パッケージ変数を入力
+   b. **JS parameter** — ドロップダウンを **JS** にし、JavaScript パラメーターを入力\
+   c. **Package parameter** — ドロップダウンを **Package** にし、NPM パッケージ変数を入力
 
 :::warning
 コード内で npm パッケージを使用する場合は `require` を書かず、ステップのプロパティで PACKAGE パラメーターとして渡してください。
@@ -151,13 +151,13 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 10. **function** エディターにコードを記述します。定義したパラメーターはコード内から参照できます。
 
 :::info
-CLI ステップで非同期コードを実行する場合は、解決させたい Promise を return してください。 return しない場合は同期的に扱われ、最終行の実行時点で解決されます（期待した結果に関わらず）。
+CLI ステップで非同期コードを実行する場合は、解決させたい Promise を return してください。return しない場合は同期的に扱われ、最終行の実行時点で解決されます（期待した結果に関わらず）。
 :::
 
 ![npm パッケージのインストールコード例](/images/validations/validate-download/56c3ce0-Testim_160.png)
 
 :::info
-上の例のコードとパラメーターは、ダウンロードした CSV の行数が 237 行であること、 A1 セルに “JURISDICTION NAME” が含まれることを検証します。
+上の例のコードとパラメーターは、ダウンロードした CSV の行数が 237 行であること、A1 セルに “JURISDICTION NAME” が含まれることを検証します。
 :::
 
 11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: *Mark error & stop*、*Mark error & continue*、*Mark warning & continue*。
@@ -176,7 +176,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 ### CSV ファイル
 
 *Validate download* ステップで、行数や内容など CSV の高度な検証ができます。\
-以下の例では、 CSV の行数が 237 行で、 A1 セルに "JURISDICTION NAME" が含まれることを検証します。
+以下の例では、CSV の行数が 237 行で、A1 セルに "JURISDICTION NAME" が含まれることを検証します。
 
 ![Excel ファイル検証用パッケージのインストール](/images/validations/validate-download/daa4195-Testim_160.png)
 
@@ -359,7 +359,7 @@ return width === parseInt(expectedWidth) &&
 ### MS Excel ファイル
 
 *Validate download* ステップで、シート数やシート名など Excel の高度な検証ができます。\
-以下の例では、シート数が 3 、最初のシート名が “Example Test” であることを検証します。
+以下の例では、シート数が 3、最初のシート名が “Example Test” であることを検証します。
 
 ![PowerPoint 検証用パッケージのインストール](/images/validations/validate-download/aef9e2b-Testim_171.png)
 
@@ -434,7 +434,7 @@ if (sheet !== expectedPageName) {
 ### MS PowerPoint ファイル
 
 *Validate download* ステップで、スライド数や内容など PowerPoint の高度な検証ができます。\
-以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が *9* で、最初のページに *Department*、 2 ページ目に *Location* という単語が含まれていることをチェックします。
+以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が *9* で、最初のページに *Department*、2 ページ目に *Location* という単語が含まれていることをチェックします。
 
 ![PowerPoint ファイル検証のコード例](/images/validations/validate-download/4914681-Testim_175.png)
 
@@ -521,7 +521,7 @@ expectedText.forEach(item => {
 </table>
 
 :::note
-JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。 JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
+JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
 :::
 
 ### MS Word ファイル
@@ -598,7 +598,7 @@ return docxText.includes(expectedText);
 </table>
 
 :::note
-JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。 JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
+JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
 :::
 
 ### PDF ファイル
@@ -609,7 +609,7 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 * **Chrome 67** 以上を使用していること
 * Chrome の PDF 設定で **Download PDF files instead of automatically opening them in Chrome** を有効にしていること
 
-以下の例では、 PDF のページ数が 2 、テキスト "A Simple PDF file" が含まれることを検証します。
+以下の例では、PDF のページ数が 2、テキスト "A Simple PDF file" が含まれることを検証します。
 
 ![PDF ファイル検証のコード例](/images/validations/validate-download/2ae00b2-Testim_179.png)
 

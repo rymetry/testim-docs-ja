@@ -1,6 +1,6 @@
 ---
 title: Salesforce の MFA 設定
-description: Salesforce の MFA（認証アプリ）を設定し、 Testim for Salesforce の資格情報に認証キーを登録する手順を説明します。
+description: Salesforce の MFA（認証アプリ）を設定し、Testim for Salesforce の資格情報に認証キーを登録する手順を説明します。
 category: Salesforceテスト
 order: 16038
 updated: '2025-12-02'
@@ -16,14 +16,14 @@ keywords:
   - 資格情報
 ---
 
-セットアッププロセスでは、 Salesforce からシークレットキーを取得し、ペルソナ/環境の組み合わせの資格情報を追加する際に関連フィールドにキーを入力する必要があります。最後に、 Testim for Salesforce からの Verification Code を Salesforce の Verification Code フィールドに入力する必要があります。\
+セットアッププロセスでは、Salesforce からシークレットキーを取得し、ペルソナ/環境の組み合わせの資格情報を追加する際に関連フィールドにキーを入力する必要があります。最後に、Testim for Salesforce からの Verification Code を Salesforce の Verification Code フィールドに入力する必要があります。\
 :fa-arrow-right: **MFA を設定するには:**
 
-1. Salesforce にログインし、**設定 > ユーザー > ユーザー >** に移動し、 MFA を設定するユーザーを選択します。
+1. Salesforce にログインし、**設定 > ユーザー > ユーザー >** に移動し、MFA を設定するユーザーを選択します。
 
 ![Salesforce のユーザー詳細画面](/images/salesforce-utilities/setting-mfa-for-salesforce/bc293ae-image.png)
 
-2. **アプリ登録: ワンタイムパスワード認証アプリ**で、サードパーティの認証アプリ（Google Authenticator 、 Microsoft Authenticator など）をすでに登録している場合は、シークレットキーを取得するために切断してから再接続する必要があります。
+2. **アプリ登録: ワンタイムパスワード認証アプリ**で、サードパーティの認証アプリ（Google Authenticator、Microsoft Authenticator など）をすでに登録している場合は、シークレットキーを取得するために切断してから再接続する必要があります。
    * **ユーザー詳細**で、**アプリ登録 - ワンタイムパスワード認証アプリ**設定の**切断**をクリックします。
    * サードパーティの認証アプリを登録したことがない場合は、次のステップに進みます。
 
@@ -49,7 +49,7 @@ keywords:
 
 ![シークレットキーの表示](/images/salesforce-utilities/setting-mfa-for-salesforce/7022745-pasted_image_0_4.png)
 
-この時点で、 Testim for Salesforce の目的のペルソナと環境の組み合わせに MFA を追加できます。
+この時点で、Testim for Salesforce の目的のペルソナと環境の組み合わせに MFA を追加できます。
 
 8. Testim for Salesforce で、**設定 > ペルソナ**に移動します。
 9. 目的のペルソナと環境の組み合わせで**+**ボタンをクリックします。

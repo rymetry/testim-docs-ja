@@ -9,16 +9,16 @@ keywords:
   - Testim
   - バグトラッカー設定
   - バグ報告
-  - issue管理
-  - Jira連携
-  - Trello連携
-  - Slack連携
-  - GitHub連携
+  - issue 管理
+  - Jira 連携
+  - Trello 連携
+  - Slack 連携
+  - GitHub 連携
 ---
 
 ## バグトラッカー設定
 
-失敗したテストやバグは、 bug / issue tracking system に簡単に報告できます。 Testim は一般的なバグトラッカーと統合されており、ワンクリックで issue を公開できます。作成される issue には、詳細な説明とバグのスクリーンショットが含まれます。
+失敗したテストやバグは、bug / issue tracking system に簡単に報告できます。Testim は一般的なバグトラッカーと統合されており、ワンクリックで issue を公開できます。作成される issue には、詳細な説明とバグのスクリーンショットが含まれます。
 
 :::info{title="PRO機能"}
 この機能は Professional plan 以上で利用できます。
@@ -30,7 +30,7 @@ bug や issue を tracking system に報告する方法はいくつかありま�
 
 ![失敗した実行から Create issue を選択](/images/bug-tracker-settings/bug-tracker-settings/78599fb-tagtestwithcreateissue.png)
 
-- [Testim Chrome Extension](/docs/testim-extension-overview) を使うと、 issue を [Screenshot](/docs/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
+- [Testim Chrome Extension](/docs/testim-extension-overview) を使うと、issue を [Screenshot](/docs/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
 
 ![Testim Extension から bug を Publish](/images/bug-tracker-settings/bug-tracker-settings/23ee812-publishbug.png)
 

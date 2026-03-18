@@ -20,7 +20,7 @@ keywords:
 
 アプリ内の特定画面を直接開くディープリンクを追加します。
 
-ディープリンクは、アプリを起動して特定の画面を直接開くリンクです（ホーム画面や Web ではなく、アプリ内の所定位置へ遷移）。 OS 標準アプリやブラウザを含む端末内のアプリを開け、パラメーター（例: 電話番号）も渡せます。
+ディープリンクは、アプリを起動して特定の画面を直接開くリンクです（ホーム画面や Web ではなく、アプリ内の所定位置へ遷移）。OS 標準アプリやブラウザを含む端末内のアプリを開け、パラメーター（例: 電話番号）も渡せます。
 
 **Deep Link** ステップでは、ディープリンクが期待通り動作するかを検証します。指定アプリの指定位置を開き、任意でパラメーターを渡します。
 
@@ -58,7 +58,7 @@ keywords:
    5. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
 
    :::note
-   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。 Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
    :::
 
    6. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。

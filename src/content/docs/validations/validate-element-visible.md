@@ -9,8 +9,8 @@ keywords:
   - 要素検証
   - 表示確認
   - 可視性
-  - UI検証
-  - DOM要素
+  - UI 検証
+  - DOM 要素
   - テスト
   - 自動化
   - Testim
@@ -85,11 +85,11 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![Play Scenario ボタン](/images/validations/validate-element-visible/73e5022-3.png)
 
-4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。 Predefined steps メニューが開きます。
+4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。Predefined steps メニューが開きます。
 
 ![Predefined steps メニュー](/images/validations/validate-element-visible/ae3357c-4.png)
 
-5. **Validations** をクリックします。 Validations セクションが展開されます。
+5. **Validations** をクリックします。Validations セクションが展開されます。
 
 ![Validations メニュー展開](/images/validations/validate-element-visible/a79a79c-5.png)
 

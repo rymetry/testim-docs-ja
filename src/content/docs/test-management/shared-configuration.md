@@ -1,6 +1,6 @@
 ---
 title: 共有構成
-description: 構成ライブラリでブラウザや解像度などのテスト構成を一元管理し、複数のテストや CLI 実行で共有して使用できます。
+description: 複数/すべてのテストで同じテスト構成を使用します
 category: テスト管理
 order: 9010
 updated: '2025-09-15'
@@ -11,12 +11,12 @@ keywords:
   - 構成ライブラリ
   - テスト環境設定
   - ブラウザ構成
-  - CLI実行設定
+  - CLI 実行設定
 ---
 
 複数/すべてのテストで同じテスト構成を使用します
 
-**Configuration List** ページには、ローカルで実行する場合でも CLI で実行する場合でも、作成されテストに使用できるすべてのテスト構成が表示されます。テストの構成は、テストを実行するために使用されるシステム仕様を決定します。テストをローカルで実行する場合、構成はローカル環境と一致する必要があります。 Testim Grid でテストを実行する場合、 Testim は指定した環境をシミュレートします。 CLI でテストを実行するときに `--test-config` フラグを使用してテスト構成を含めることができます。詳細については、[Test Config](/docs/the-command-line-cli) を参照してください。このリストのテスト構成は、*Configuration Library* または *Test Editor* の Setup ステップで作成および変更できます。
+**Configuration List** ページには、ローカルで実行する場合でも CLI で実行する場合でも、作成されテストに使用できるすべてのテスト構成が表示されます。テストの構成は、テストを実行するために使用されるシステム仕様を決定します。テストをローカルで実行する場合、構成はローカル環境と一致する必要があります。Testim Grid でテストを実行する場合、Testim は指定した環境をシミュレートします。CLI でテストを実行するときに `--test-config` フラグを使用してテスト構成を含めることができます。詳細については、[Test Config](/docs/the-command-line-cli) を参照してください。このリストのテスト構成は、*Configuration Library* または *Test Editor* の Setup ステップで作成および変更できます。
 
 ## 既存の構成を表示する
 
@@ -31,7 +31,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![Configuration Library に Web テスト構成の一覧が表示された画面](/images/test-management/shared-configuration/6d34e75-webconfiglibrary.png)
 
-* **Configuration Library** – 構成ライブラリで新しい構成を作成できます。この構成は、その構成で設定されたテストで実行されるすべてのステップに適用されます（CLI またはスケジューラー経由で実行されるテストを含む）。テスト構成の詳細については、[Setting the Test Configuration](/docs/how-to-record-a-test) を参照してください。 CLI の詳細については、[Command line interface: Test Config](/docs/the-command-line-cli) を参照してください。スケジューラーの詳細については、[Scheduler](/docs/scheduler) を参照してください。
+* **Configuration Library** – 構成ライブラリで新しい構成を作成できます。この構成は、その構成で設定されたテストで実行されるすべてのステップに適用されます（CLI またはスケジューラー経由で実行されるテストを含む）。テスト構成の詳細については、[Setting the Test Configuration](/docs/how-to-record-a-test) を参照してください。CLI の詳細については、[Command line interface: Test Config](/docs/the-command-line-cli) を参照してください。スケジューラーの詳細については、[Scheduler](/docs/scheduler) を参照してください。
 * **Setup Step in the Test Editor** – すべてのテストには、テストの Setup ステップのプロパティパネルからアクセスできる独自のデフォルト構成があります。テストのデフォルト構成で設定された構成パラメーターは、テストが異なる構成で CLI またはスケジューラーから実行されない限り適用されます。
 
 :::note

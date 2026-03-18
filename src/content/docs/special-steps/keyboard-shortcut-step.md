@@ -20,7 +20,7 @@ keywords:
   - ショートカット送信
 ---
 
-実行時に指定したキーボードショートカット（例: Ctrl + C）を AUT へ送信します。定義済みステップから手動で追加できます。 Windows/Mac の両方で再生をサポートし、記録環境に応じてコマンドを自動変換します（Windows で記録した Ctrl+C は、 Mac では ⌘+C に変換）。
+実行時に指定したキーボードショートカット（例: Ctrl + C）を AUT へ送信します。定義済みステップから手動で追加できます。Windows/Mac の両方で再生をサポートし、記録環境に応じてコマンドを自動変換します（Windows で記録した Ctrl+C は、Mac では ⌘+C に変換）。
 
 :::note
 実行時のテスト構成で指定された OS に合わせて送信されます（デフォルト構成が実行環境と異なる場合でも構成の OS が優先）。
@@ -96,11 +96,11 @@ keywords:
 
 **手順:**
 
-1. 追加位置の + にカーソルを合わせ、 Testim 定義済みステップを選択。
+1. 追加位置の + にカーソルを合わせ、Testim 定義済みステップを選択。
 2. **Actions** 配下の **Add keyboard shortcut** を選択。
 3. **Properties** の **Keyboard Shortcut** で次のいずれかを実行:
-   1. Windows 利用時は **Windows** 欄でショートカットを入力すると、 Mac への対応が **Mac** 欄に表示されます（Mac 実行時に使用）。
-   2. Mac 利用時は **Mac** 欄でショートカットを入力すると、 Windows への対応が **Windows** 欄に表示されます（Windows 実行時に使用）。
+   1. Windows 利用時は **Windows** 欄でショートカットを入力すると、Mac への対応が **Mac** 欄に表示されます（Mac 実行時に使用）。
+   2. Mac 利用時は **Mac** 欄でショートカットを入力すると、Windows への対応が **Windows** 欄に表示されます（Windows 実行時に使用）。
 4. 変換を無効化したい場合は **Unsync Fields** をクリックします。
 
    ![キーボードショートカットステップのスクリーンショット](/images/special-steps/keyboard-shortcut-step/7d37244-unlink.png)

@@ -10,11 +10,11 @@ keywords:
   - ビジュアライゼーション
   - フローグラフ
   - テスト構造
-  - Labs機能
+  - Labs 機能
 ---
 
 :::info{title="Testim Labs 機能"}
-Testim Labs に参加している場合は、**Settings > Labs** でこの機能が有効になっていることを確認してください。 Testim Labs と参加方法の詳細については、[Testim Labs について](/docs/testim-labs)を参照してください。
+Testim Labs に参加している場合は、**Settings > Labs** でこの機能が有効になっていることを確認してください。Testim Labs と参加方法の詳細については、[Testim Labs について](/docs/testim-labs)を参照してください。
 :::
 
 **Test Flow View**は、テストのグラフィカルなフローベースのビジュアライゼーションを提供します。
@@ -27,14 +27,14 @@ Test Flow View を使用すると、次のことができます:
 
 Test Flow View にアクセスするには、**Test List > Tests** に移動し、右上隅のグラフビューを選択します。
 
-![Test Flow View へのアクセス方法を示す画面。 Test List から Tests を選択し、右上隅のグラフビューアイコンをクリック](/images/miscellaneous/test-flow-view/a73e9a6-Screen_Shot_2021-02-18_at_9.15.43.png)
+![Test Flow View へのアクセス方法を示す画面。Test List から Tests を選択し、右上隅のグラフビューアイコンをクリック](/images/miscellaneous/test-flow-view/a73e9a6-Screen_Shot_2021-02-18_at_9.15.43.png)
 
 - プロジェクトは最初に正方形のアイコンで表されます
 - 各 Shared Step は六角形のアイコンで表されます
 - 通常のステップは円で表されます
 - フローの開始時に、同じ Shared Steps のシーケンスで始まるすべてのテストは、フローに分岐があるまで統合されます
 
-![Test Flow View の要素表現を示す画面。プロジェクト（正方形）、 Shared Step（六角形）、通常ステップ（円）がフローで表示](/images/miscellaneous/test-flow-view/0b73a63-Screen_Shot_2021-02-18_at_9.16.54.png)
+![Test Flow View の要素表現を示す画面。プロジェクト（正方形）、Shared Step（六角形）、通常ステップ（円）がフローで表示](/images/miscellaneous/test-flow-view/0b73a63-Screen_Shot_2021-02-18_at_9.16.54.png)
 
 ## Test Flow View のコントロール
 

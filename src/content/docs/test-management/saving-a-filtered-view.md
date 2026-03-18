@@ -33,7 +33,7 @@ Testim の一部の画面では、ビューをフィルタリングする機能�
 
 ![保存されたフィルタービューの一覧が表示された画面](/images/test-management/saving-a-filtered-view/a0750b7-savedfilters.png)
 
-3. ビューに必要なフィルターを適用します。以下の例では、ビューには過去 7 日間に失敗し、名前に「 Scheduler 」という単語を含む実行が表示されています。
+3. ビューに必要なフィルターを適用します。以下の例では、ビューには過去 7 日間に失敗し、名前に「Scheduler」という単語を含む実行が表示されています。
 
 ![時間フィルターや詳細フィルターを適用してビューを絞り込む画面](/images/test-management/saving-a-filtered-view/557a06f-applyfilters.png)
 

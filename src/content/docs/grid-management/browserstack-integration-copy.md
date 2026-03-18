@@ -17,10 +17,10 @@ keywords:
 
 Testim で作成したテストを LambdaTest 上で実行できます。
 
-この記事では、 Testim 上で LambdaTest を設定する方法と、テストを実行する方法を説明します。
+この記事では、Testim 上で LambdaTest を設定する方法と、テストを実行する方法を説明します。
 
 :::info
-LambdaTest integration では、 Testim は現在 [selenium testing](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/) のみをサポートしています。[Hyper Execute](https://www.lambdatest.com/support/docs/getting-started-with-hyperexecute/) を含むそれ以外の option はサポートしていません。
+LambdaTest integration では、Testim は現在 [selenium testing](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/) のみをサポートしています。[Hyper Execute](https://www.lambdatest.com/support/docs/getting-started-with-hyperexecute/) を含むそれ以外の option はサポートしていません。
 :::
 
 ## LambdaTest Grid を追加する
@@ -33,7 +33,7 @@ LambdaTest integration では、 Testim は現在 [selenium testing](https://www
 
 * **Name**: 実行時に使用する Grid 名
 * **Host**: LambdaTest の host name（例: `hub.lambdatest.com`）
-* **Port**: LambdaTest の port 。既定値は `443`
+* **Port**: LambdaTest の port。既定値は `443`
 * **Username**: LambdaTest の user name
 * **Password/access key**: 接続に使用する LambdaTest access key または password
 

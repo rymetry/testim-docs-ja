@@ -75,7 +75,7 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 * プロパティパネルの任意のテキスト入力欄 - 例: テキスト検証の「期待値」、ステップの実行条件（要素テキスト）の「期待値」など。以下の入力欄は非対応です：Variable Name／Description／Date Format
 * プロパティパネルの Param セクションにある式入力欄 - ここに別のパラメーター名を設定して、値を連鎖させることもできます。
 * 任意の関数エディター - 一部のステップ（例: カスタム検証）やカスタム条件のエディター内で参照可能です。詳細は [高度な JS エディター](/docs/advanced-js-editor) を参照してください。
-* [API ステップ](/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。 Request URL／Header／Body／Assertion／Function editor
+* [API ステップ](/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。Request URL／Header／Body／Assertion／Function editor
 
 ## パラメーターを非表示にする
 

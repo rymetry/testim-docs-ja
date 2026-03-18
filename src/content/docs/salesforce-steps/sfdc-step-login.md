@@ -9,7 +9,7 @@ keywords:
   - Salesforce
   - ログイン
   - ペルソナ
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 
@@ -17,12 +17,12 @@ keywords:
 これは Salesforce ステップです。
 :::
 
-Log in ステップは、選択された[ペルソナ](/docs/create-a-persona-and-add-users)を使用して Salesforce にログインします。 API 操作カテゴリのステップを除くすべての[Salesforce ステップ](/docs/salesforce-steps)は、 Salesforce 環境にログインする必要があります。
+Log in ステップは、選択された[ペルソナ](/docs/create-a-persona-and-add-users)を使用して Salesforce にログインします。API 操作カテゴリのステップを除くすべての[Salesforce ステップ](/docs/salesforce-steps)は、Salesforce 環境にログインする必要があります。
 
 :fa-arrow-right: **Log in ステップを追加するには:**
 
 1. エディターで、**+**ボタンをクリックしてステップを追加します。
-2. **Salesforce steps**タブの下で、**Common operations**をクリックし、 Log in ステップを選択します。\
+2. **Salesforce steps**タブの下で、**Common operations**をクリックし、Log in ステップを選択します。\
    **Log in**ステップが追加され、次の**Object**プロパティが表示されます。
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-login/793c6ea-2024-05-05_16-19-27.png)

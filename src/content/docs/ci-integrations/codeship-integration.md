@@ -7,8 +7,8 @@ updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/codeship-integration'
 keywords:
   - Codeship
-  - CI統合
-  - CIパイプライン
+  - CI 統合
+  - CI パイプライン
   - Selenium Grid
   - WebDriver Manager
   - テスト自動実行
@@ -18,13 +18,13 @@ keywords:
 
 ## プロジェクト設定
 
-[Codeship](http://codeship.com/)と Testim を統合するには、 Codeship プロジェクトの Project Settings の Test Settings に移動します:
+[Codeship](http://codeship.com/)と Testim を統合するには、Codeship プロジェクトの Project Settings の Test Settings に移動します:
 
 ![Codeship のプロジェクト設定画面](/images/ci-integrations/codeship-integration/4c258cb-codeship2.png)
 
 ## ローカル Selenium Grid で実行
 
-CodeShip で現在ビルド中のアプリでテストを実行する場合は、ローカル Selenium Grid で実行する必要があります。 setup commands セクションに以下の行を追加します:
+CodeShip で現在ビルド中のアプリでテストを実行する場合は、ローカル Selenium Grid で実行する必要があります。setup commands セクションに以下の行を追加します:
 
 ```shell
 nvm install <use latest version supported by Testim>
@@ -48,7 +48,7 @@ testim --project "<PROJECT ID>" \
 ![Codeship のテストコマンド設定画面](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
 
 ​## 外部 Selenium Grid で実行\
-アプリが公開されている利用可能なサーバーにデプロイされている場合、外部 Selenium Grid でテストを実行できます。その場合、ローカル Selenium Server（webdriver-manager）は不要なので、 setup commands セクションに以下の行のみを追加します:
+アプリが公開されている利用可能なサーバーにデプロイされている場合、外部 Selenium Grid でテストを実行できます。その場合、ローカル Selenium Server（webdriver-manager）は不要なので、setup commands セクションに以下の行のみを追加します:
 
 ```shell
 nvm install <use latest version supported by Testim>

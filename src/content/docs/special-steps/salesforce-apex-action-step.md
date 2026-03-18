@@ -20,7 +20,7 @@ keywords:
   - パラメーター
 ---
 
-APEX コードをテスト内のステップとして実行し、 UI を越えた E2E 検証を可能にします。 APEX コードブロックに任意のパラメーターを渡せます。 APEX 側の入力パラメーターは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、 Salesforce から返ったデータなどはステップログで確認できます。
+APEX コードをテスト内のステップとして実行し、UI を越えた E2E 検証を可能にします。APEX コードブロックに任意のパラメーターを渡せます。APEX 側の入力パラメーターは文字列型で受け取り、必要に応じて APEX 内で型変換してください。実行後、Salesforce から返ったデータなどはステップログで確認できます。
 
 :::warning
 Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を管理者にホワイトリスト登録してもらってください。
@@ -75,9 +75,9 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
    文字列（シングルまたはダブルクォートで囲む）またはパラメーター（クォートなし）を指定できます。パラメーターの使い方の詳細は後述の [Using Parameters](/docs/salesforce-apex-action-step#using-parameters) を参照してください。
 
 * **URL** フィールドに、対象 Salesforce 環境の URL を入力します。
-* **Username** フィールドに、 Salesforce のユーザー名を入力します。
-* **Password** フィールドに、 Salesforce のパスワードを入力します。
-* **Security Token** フィールドに、 Salesforce で発行されたセキュリティトークンを入力します。\
+* **Username** フィールドに、Salesforce のユーザー名を入力します。
+* **Password** フィールドに、Salesforce のパスワードを入力します。
+* **Security Token** フィールドに、Salesforce で発行されたセキュリティトークンを入力します。\
   セキュリティトークンは Salesforce の **My Personal Information** セクションから再発行できます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
@@ -128,11 +128,11 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 ## 例: APEX アクション
 
-*Salesforce APEX action* ステップを使うと、 Salesforce オブジェクトを直接操作できます。同じテスト内に検証用ステップを追加すれば、オブジェクトへの変更がアプリケーション上に正しく反映されたかどうかも確認できます。 1 回のステップで複数のオブジェクトをまとめて操作することも可能です。
+*Salesforce APEX action* ステップを使うと、Salesforce オブジェクトを直接操作できます。同じテスト内に検証用ステップを追加すれば、オブジェクトへの変更がアプリケーション上に正しく反映されたかどうかも確認できます。1 回のステップで複数のオブジェクトをまとめて操作することも可能です。
 
 ### 新規アカウントの検証
 
-この例では *Salesforce APEX action* ステップを使って新しいアカウントを作成します。 Salesforce 側には、アカウントオブジェクト内のカスタムテキストフィールド `mySpecialField` にアカウント名をコピーするルールが設定されているとします。追加の検証ステップで、 accountName フィールドと mySpecialField フィールドの値が同一であることを確認し、ルールが正しく適用されたかを検証します。
+この例では *Salesforce APEX action* ステップを使って新しいアカウントを作成します。Salesforce 側には、アカウントオブジェクト内のカスタムテキストフィールド `mySpecialField` にアカウント名をコピーするルールが設定されているとします。追加の検証ステップで、accountName フィールドと mySpecialField フィールドの値が同一であることを確認し、ルールが正しく適用されたかを検証します。
 
 ![2061](/images/special-steps/salesforce-apex-action-step/ec7a3f9-Testim_542.png)
 

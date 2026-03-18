@@ -27,12 +27,12 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 :::
 
 :::note{title="共有ステップのコピー"}
-ログインステップが共有ステップの場合、「 SF environment 」の値を編集すると、使用中のすべてのインスタンスに反映されます。共有でないステップを同一テスト内でコピーした場合は、そのコピーに対する編集は他のコピーへ影響しません。
+ログインステップが共有ステップの場合、「SF environment」の値を編集すると、使用中のすべてのインスタンスに反映されます。共有でないステップを同一テスト内でコピーした場合は、そのコピーに対する編集は他のコピーへ影響しません。
 :::
 
 ### MFA 認証
 
-2022 年 2 月 1 日以降、 Salesforce はログイン時の多要素認証（MFA）を必須化しました。 Testim では、 Salesforce 自動ログイン実行時に MFA を行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/salesforce-auto-login-step#setting-up-mfa) を参照してください。
+2022 年 2 月 1 日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時に MFA を行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/salesforce-auto-login-step#setting-up-mfa) を参照してください。
 
 ## Salesforce 自動ログインステップを追加する
 
@@ -97,7 +97,7 @@ MFA のシークレットキーはパラメーターとして扱えません。
 
 ## MFA のセットアップ
 
-Salesforce 側でシークレットキーを取得し、 Testim のプロパティパネルにある Secret Key に登録します。\
+Salesforce 側でシークレットキーを取得し、Testim のプロパティパネルにある Secret Key に登録します。\
 **手順:**
 
 1. Salesforce にログインし、**Setup > Users > Users** に移動して MFA を設定したいユーザーを選択します。
@@ -114,7 +114,7 @@ Salesforce 側でシークレットキーを取得し、 Testim のプロパテ�
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/167397d-image_2.png)
 
-4. ユーザー名とパスワードで Salesforce にログインし、 MFA の選択画面が表示されたら **Choose another verification method** を選択します。
+4. ユーザー名とパスワードで Salesforce にログインし、MFA の選択画面が表示されたら **Choose another verification method** を選択します。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/3eff270-pasted_image_0.png)
 

@@ -2,7 +2,7 @@
 title: 条件分岐
 description: >-
   テストステップに条件を設定して実行を制御する方法を学びます。Element、Element
-  text、Custom、Never(skip)など5種類の条件設定について詳しく解説します。
+  text、Custom、Never（skip）など 5 種類の条件設定について詳しく解説します。
 category: テスト編集
 order: 4010
 updated: '2025-09-13'
@@ -10,12 +10,12 @@ sourceUrl: 'https://help.testim.io/docs/conditions'
 keywords:
   - 条件分岐
   - When to run step
-  - Element条件
-  - Element text条件
-  - Custom条件
+  - Element 条件
+  - Element text 条件
+  - Custom 条件
   - ステップ制御
   - 条件設定
-  - JavaScript条件
+  - JavaScript 条件
   - テスト実行制御
   - ブレークポイント
 ---
@@ -27,7 +27,7 @@ keywords:
 ステップの実行条件は次の 5 種類です:
 
 * **Always Run** — このステップには条件がありません。テスト実行時に常に実行されます。すべてのステップの既定設定です。
-* **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID 、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#section-configuring-an-element-condition) を参照してください。
+* **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#section-configuring-an-element-condition) を参照してください。
 * **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/conditions#section-configuring-an-element-text-condition) を参照してください。
 * **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/conditions#section-configuring-a-custom-condition) を参照してください。
 * **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/conditions#section-configuring-a-never-run-step-condition) を参照してください。
@@ -98,7 +98,7 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 ### Element 条件を試してみましょう
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、 Login グループステップを含むサンプルテストが表示されます。 Login ボタンが可視のときにのみログインを実行する Element 条件を作成してみてください。
+[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンが可視のときにのみログインを実行する Element 条件を作成してみてください。
 
 ## Element text 条件の設定
 
@@ -120,7 +120,7 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 ![Element text 条件の設定画面](/images/conditions/conditions/230f6f2-elementtext_r.png)
 
 9. 選択した要素は **Target Element** ボックスに表示されます。
-10. **Expected value** ボックスに別の値を入力するか、正規表現、 JavaScript 式、またはパラメーターを指定します。
+10. **Expected value** ボックスに別の値を入力するか、正規表現、JavaScript 式、またはパラメーターを指定します。
 11. Properties パネルの手順に従って、要素の設定を確認・調整します。
 12. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
 13. **Toggle Breakpoint** をクリックしてブレークポイントを解除します。
@@ -129,7 +129,7 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 
 ### Element text 条件を試してみましょう
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、 Login グループステップを含むサンプルテストが表示されます。 Login ボタンのテキストが「 Log in 」と表示されているときにのみログインを実行する Element text 条件を作成してみてください。
+[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンのテキストが「Log in」と表示されているときにのみログインを実行する Element text 条件を作成してみてください。
 
 ## Custom 条件の設定
 
@@ -162,7 +162,7 @@ Custom 条件はブール値を返します。`true` を返すとステップが
 
 ![JS パラメーター設定](/images/conditions/conditions/6939ac9-custom4_r.png)
 
-* **HTML パラメーター**: ドロップダウンから **HTML** を選択するとブラウザが開きます。 AUT ウィンドウで対象要素にカーソルを合わせてクリックします。デフォルトの名前「 element 」から変更する場合は、編集アイコンをクリックしてリネームします。
+* **HTML パラメーター**: ドロップダウンから **HTML** を選択するとブラウザが開きます。AUT ウィンドウで対象要素にカーソルを合わせてクリックします。デフォルトの名前「element」から変更する場合は、編集アイコンをクリックしてリネームします。
 
 ![HTML パラメーター設定](/images/conditions/conditions/4f76e55-custom5_r.png)
 
@@ -182,7 +182,7 @@ AUT を開いた場合は、**Toggle Breakpoint** をクリックしてブレー
 
 ### Custom 条件を試してみましょう
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、 Login グループステップを含むサンプルテストが表示されます。 Login ボタンを選択する HTML パラメーターを作成し、`return loginButton.innerText === 'LOG IN';` という Custom 条件を入力して、ボタンが可視かつ正しいテキストを表示しているときにのみログインを実行するように設定してみてください。
+[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンを選択する HTML パラメーターを作成し、`return loginButton.innerText === 'LOG IN';` という Custom 条件を入力して、ボタンが可視かつ正しいテキストを表示しているときにのみログインを実行するように設定してみてください。
 
 ## Never run step 条件の設定
 

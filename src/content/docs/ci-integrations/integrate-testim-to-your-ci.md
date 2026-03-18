@@ -6,10 +6,10 @@ order: 12002
 updated: '2025-02-21'
 sourceUrl: 'https://help.testim.io/docs/integrate-testim-to-your-ci'
 keywords:
-  - CI統合
+  - CI 統合
   - 継続的インテグレーション
-  - CIツール
-  - CIパイプライン
+  - CI ツール
+  - CI パイプライン
   - Testim CLI
   - テストスイート
   - テスト結果
@@ -20,7 +20,7 @@ keywords:
 
 ## 仕組み
 
-テストを CI に統合するために、[Testim CLI](/docs/the-command-line-cli)を構築しました。 npm を使用して簡単にインストールでき、これを使用することで、単純なシェルコマンドを実行できる主要な CI すべてに統合できます。
+テストを CI に統合するために、[Testim CLI](/docs/the-command-line-cli)を構築しました。npm を使用して簡単にインストールでき、これを使用することで、単純なシェルコマンドを実行できる主要な CI すべてに統合できます。
 
 ## すべてのテストスイート実行を確認する
 

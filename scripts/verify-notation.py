@@ -10,7 +10,9 @@ from pathlib import Path
 
 DOCS_DIR = Path(__file__).resolve().parent.parent / "src" / "content" / "docs"
 
-JP = r'[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff\u3000-\u303f]'
+# Japanese character ranges — hiragana, katakana, CJK ideographs ONLY.
+# Excludes \u3000-\u303f (CJK punctuation: 「」、。（）) to match fix-notation.py.
+JP = r'[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff]'
 
 issues = []
 
@@ -44,6 +46,27 @@ def find_frontmatter(lines):
     return None, None
 
 
+def strip_inline_code(line):
+    """Remove inline code spans from line for checking."""
+    return re.sub(r'`[^`]+`', '', line)
+
+
+def strip_urls(line):
+    """Remove URLs from line for checking."""
+    return re.sub(r'https?://\S+', '', line)
+
+
+def strip_non_processable(line):
+    """Remove inline code, URLs, HTML tags, and markdown link URLs for checking."""
+    line = strip_inline_code(line)
+    line = strip_urls(line)
+    # Remove markdown link URLs: ](...)
+    line = re.sub(r'\]\([^)]*\)', ']()', line)
+    # Remove HTML tags
+    line = re.sub(r'<[^>]+>', '', line)
+    return line
+
+
 def check_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -61,33 +84,35 @@ def check_file(filepath):
             continue
 
         lineno = i + 1
+        # Strip non-processable content for checks that should skip code/URLs
+        clean = strip_non_processable(line)
 
         # 1. Legacy callout remnants
         if re.match(r'^>\s*(📘|🚧|❗|👍)', line):
             issues.append((rel, lineno, 'legacy-callout', line.strip()[:60]))
 
-        # 2. パラメータ without ー
-        if re.search(r'パラメータ(?!ー)', line):
+        # 2. パラメータ without ー (check clean text)
+        if re.search(r'パラメータ(?!ー)', clean):
             issues.append((rel, lineno, 'パラメータ→パラメーター', line.strip()[:60]))
 
         # 3. ブラウザー (should be ブラウザ)
-        if 'ブラウザー' in line:
+        if 'ブラウザー' in clean:
             issues.append((rel, lineno, 'ブラウザー→ブラウザ', line.strip()[:60]))
 
         # 4. エディタ without ー
-        if re.search(r'エディタ(?!ー)', line):
+        if re.search(r'エディタ(?!ー)', clean):
             issues.append((rel, lineno, 'エディタ→エディター', line.strip()[:60]))
 
         # 5. フォルダ without ー
-        if re.search(r'フォルダ(?!ー)', line):
+        if re.search(r'フォルダ(?!ー)', clean):
             issues.append((rel, lineno, 'フォルダ→フォルダー', line.strip()[:60]))
 
         # 6. たとえば
-        if 'たとえば' in line:
+        if 'たとえば' in clean:
             issues.append((rel, lineno, 'たとえば→例えば', line.strip()[:60]))
 
         # 7. PRO機能 variants
-        if re.search(r'プロ機能|Pro\s*機能|PRO\s+機能', line):
+        if re.search(r'プロ機能|Pro\s*機能|PRO\s+機能', clean):
             issues.append((rel, lineno, 'PRO機能統一', line.strip()[:60]))
 
         # 8. ::: with space
@@ -96,37 +121,29 @@ def check_file(filepath):
 
         # 9. Spacing: ASCII directly adjacent to Japanese (sample check)
         if not is_fm:
-            # Check for missing space: English→Japanese
-            if re.search(r'[a-zA-Z]' + JP, line):
+            if re.search(r'[a-zA-Z]' + JP, clean):
                 # Exclude callout/directive syntax
                 if re.match(r'^:{3,}', line):
                     pass
                 # Exclude anchor fragments (#slug日本語)
-                elif re.search(r'#[a-zA-Z0-9_-]*' + JP, line) and not re.search(r'(?<!#)[a-zA-Z]' + JP, line.split('#')[0] if '#' in line else line):
-                    pass
-                # Exclude HTML img/tag attributes
-                elif re.search(r'<(img|td|tr|th|a)\s', line):
-                    pass
-                # Exclude template placeholders <Name実行名>
-                elif re.search(r'<[A-Za-z.]+' + JP, line):
+                elif re.search(r'#[a-zA-Z0-9_-]*' + JP, clean) and not re.search(r'(?<!#)[a-zA-Z]' + JP, clean.split('#')[0] if '#' in clean else clean):
                     pass
                 # Exclude PRO機能 (deliberate compound term)
-                elif re.search(r'PRO機能', line) and not re.search(r'(?<!PRO)[a-zA-Z]' + JP, line.replace('PRO機能', '')):
+                elif re.search(r'PRO機能', clean) and not re.search(r'(?<!PRO)[a-zA-Z]' + JP, clean.replace('PRO機能', '')):
                     pass
                 else:
                     issues.append((rel, lineno, 'spacing-missing', line.strip()[:80]))
 
-        # 10. Half-width parens in Japanese context
+        # 10. Half-width parens in Japanese context (check clean text)
         if not is_fm:
-            # Simple check: ( followed by Japanese content
-            for m in re.finditer(r'\(([^)]*)\)', line):
+            for m in re.finditer(r'\(([^)]*)\)', clean):
                 inner = m.group(1)
                 # Skip if inside inline code (rough check)
-                before = line[:m.start()]
+                before = clean[:m.start()]
                 if before.count('`') % 2 == 1:
                     continue
                 # Skip markdown link syntax
-                if m.start() > 0 and line[m.start() - 1] == ']':
+                if m.start() > 0 and clean[m.start() - 1] == ']':
                     continue
                 if re.search(JP, inner):
                     issues.append((rel, lineno, 'half-width-parens',

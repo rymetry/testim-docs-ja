@@ -1,7 +1,7 @@
 ---
 title: qTest 統合
 description: >-
-  TestimとqTestを統合してテスト実行結果をqTestプロジェクトに自動的に表示する方法を説明します。統合設定、テストケースの接続、結果の表示方法を網羅しています。
+  Testim と qTest を統合してテスト実行結果を qTest プロジェクトに自動的に表示する方法を説明します。統合設定、テストケースの接続、結果の表示方法を網羅しています。
 category: 統合
 order: 12039
 updated: '2025-09-18'
@@ -24,11 +24,11 @@ Tricentis の[qTest テスト管理プラットフォーム](https://www.tricent
 
 ## qTest 統合が必要な理由
 
-qTest 統合により、 qTest のテストを Testim のテストにリンクできます。 Testim でテストを実行すると、テスト結果が自動的に qTest の実行結果に表示され、 Testim と qTest で実行されたテストを一元的に表示できます。
+qTest 統合により、qTest のテストを Testim のテストにリンクできます。Testim でテストを実行すると、テスト結果が自動的に qTest の実行結果に表示され、Testim と qTest で実行されたテストを一元的に表示できます。
 
 ## qTest 統合の設定
 
-統合を使用する前に、 Testim を qTest プロジェクトに接続する必要があります（一度だけ必要なプロセスです）。
+統合を使用する前に、Testim を qTest プロジェクトに接続する必要があります（一度だけ必要なプロセスです）。
 
 **Testim を qTest に接続するには:**
 
@@ -37,11 +37,11 @@ qTest 統合により、 qTest のテストを Testim のテストにリンク�
 
 ![qTest 統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 
-3. qTest を開き、 URL からドメインをコピーして（ログイン済みであることを確認してください）、 Testim の **URL** フィールドに貼り付けます。 URL 構造: `https://<プロジェクト名>.qtestnet.com/`。`プロジェクト名` は qTest の URL で確認できます。例: `myProject`。
+3. qTest を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、Testim の **URL** フィールドに貼り付けます。URL 構造: `https://<プロジェクト名>.qtestnet.com/`。`プロジェクト名` は qTest の URL で確認できます。例: `myProject`。
 
 ![qTest の URL 入力例](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
 
-4. Testim の **Username** フィールドに、 qTest のユーザー名を入力します。
+4. Testim の **Username** フィールドに、qTest のユーザー名を入力します。
 5. **Admin** ユーザーとして **qTest** にログインし、**Resources**（下矢印）をクリックします。
 
 ![qTest の Resources メニュー](/images/test-management-integrations/qtest-integration/103f85c-image_2.png)
@@ -50,21 +50,21 @@ qTest 統合により、 qTest のテストを Testim のテストにリンク�
 
 ![qTest の API & SDK メニュー](/images/test-management-integrations/qtest-integration/dbe2722-image_3.png)
 
-7. qTest から **Bearer Token** をコピーし、 Testim の **ApiKey** フィールドに貼り付けます。
+7. qTest から **Bearer Token** をコピーし、Testim の **ApiKey** フィールドに貼り付けます。
 8. Testim で **Connect** をクリックします。
 9. Testim で、接続する qTest プロジェクトをリストから選択します。
 
 ![qTest プロジェクトの選択画面](/images/test-management-integrations/qtest-integration/761db53-image_4.png)
 
-この時点で、 Testim は qTest のプロジェクトに接続されましたが、特定のテストには接続されていません。
+この時点で、Testim は qTest のプロジェクトに接続されましたが、特定のテストには接続されていません。
 
 :::info
-一度に 1 つの TMS（テスト管理システム）のみ接続できます。 Testim システムが既に別の TMS に接続されている場合は、まずその TMS を切断してから qTest に接続する必要があります。 TMS を切断すると、テスト間の接続が削除されることに注意してください。そのため、以前の TMS に再度接続する場合は、接続も再作成する必要があります。
+一度に 1 つの TMS（テスト管理システム）のみ接続できます。Testim システムが既に別の TMS に接続されている場合は、まずその TMS を切断してから qTest に接続する必要があります。TMS を切断すると、テスト間の接続が削除されることに注意してください。そのため、以前の TMS に再度接続する場合は、接続も再作成する必要があります。
 :::
 
 ## Testim のテストを qTest のテストに接続する
 
-統合を設定した後、 Testim の特定のテストを qTest のテストに接続します。
+統合を設定した後、Testim の特定のテストを qTest のテストに接続します。
 
 **Testim のテストを qTest のテストに接続するには:**
 
@@ -77,17 +77,17 @@ qTest 統合により、 qTest のテストを Testim のテストにリンク�
 4. **Save** をクリックします。
 
 :::info
-qTest のテストケースは、最初の接続時に「 approved 」ステータスである必要があります。
+qTest のテストケースは、最初の接続時に「approved」ステータスである必要があります。
 :::
 
 ![qTest テストケースの承認ステータス](/images/test-management-integrations/qtest-integration/9721b13-image_6.png)
 
 ## テストの実行と qTest での Testim テスト結果の表示
 
-qTest でテスト実行の結果を表示するには、リモートグリッドのみを使用して Testim で接続されたテストを実行する必要があります。 Testim で接続されたテストを実行すると、テスト結果が関連する qTest プロジェクトの **Test Execution** タブに表示されます。 Testim 発の実行の名前は、以下の命名規則を使用します: `"<Testim.ioブランチ名> - <実行名>"`。
+qTest でテスト実行の結果を表示するには、リモートグリッドのみを使用して Testim で接続されたテストを実行する必要があります。Testim で接続されたテストを実行すると、テスト結果が関連する qTest プロジェクトの **Test Execution** タブに表示されます。Testim 発の実行の名前は、以下の命名規則を使用します: `"<Testim.ioブランチ名> - <実行名>"`。
 
 :::info
-qTest でテストが変更された場合（新しいバージョン番号）、承認されたバージョンのテストのみが Testim で実行されます。つまり、**Save** のみをクリックした場合、以前の承認済みバージョンが実行され、 qTest では実行レポートから「 unexecuted 」ステータスとして反映されます。**Save** してから **Approve** をクリックした場合、新しい承認済みバージョンが実行されます。
+qTest でテストが変更された場合（新しいバージョン番号）、承認されたバージョンのテストのみが Testim で実行されます。つまり、**Save** のみをクリックした場合、以前の承認済みバージョンが実行され、qTest では実行レポートから「unexecuted」ステータスとして反映されます。**Save** してから **Approve** をクリックした場合、新しい承認済みバージョンが実行されます。
 :::
 
 **qTest でテスト実行を表示するには:**
@@ -106,7 +106,7 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 以下の詳細が Testim から qTest にプッシュされます:
 
 - **Name** - Testim のテスト名
-- **Status** - 実行のステータス。表示されるステータスは qTest ステータスで、 Testim ステータスから以下のように変換されます（Testim → qTest）:
+- **Status** - 実行のステータス。表示されるステータスは qTest ステータスで、Testim ステータスから以下のように変換されます（Testim → qTest）:
   - ABORTED → Unexecuted
   - SKIPPED（Testim での quarantine ステータス） → Blocked
   - TIMEOUT → Failed
@@ -123,5 +123,5 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 :::
 
 :::warning
-qTest の必須カスタムフィールドはサポートされていません。 qTest でカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
+qTest の必須カスタムフィールドはサポートされていません。qTest でカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
 :::

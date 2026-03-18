@@ -10,7 +10,7 @@ keywords:
   - Shared Steps
   - 検証
   - カスタムアクション
-  - API検証
+  - API 検証
   - CLI
   - 再利用
   - ステップ共有

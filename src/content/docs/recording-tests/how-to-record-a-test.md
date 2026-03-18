@@ -11,7 +11,7 @@ keywords:
   - テスト構成
   - Visual Editor
   - Testim Extension
-  - Webテスト
+  - Web テスト
   - 記録開始
   - AUT
   - テスト保存
@@ -24,7 +24,7 @@ Testim でテストを作成する際は、対象となる Web ページやア�
 テストはプロジェクト単位で管理されます。新しいテストを作成すると、開いているプロジェクトに自動的に保存されます。
 :::
 
-記録を開始すると、 Testim が操作をテストステップに変換し、 Visual Editor 画面に順番に表示します。記録したままでも同じ操作が再現できるかを確認できますし、 Visual Editor で次のような調整も行えます。
+記録を開始すると、Testim が操作をテストステップに変換し、Visual Editor 画面に順番に表示します。記録したままでも同じ操作が再現できるかを確認できますし、Visual Editor で次のような調整も行えます。
 
 - [ステップの削除・追加・並べ替え](/docs/editing-your-tests)
 - [条件付きステップの追加](/docs/conditions)
@@ -32,10 +32,10 @@ Testim でテストを作成する際は、対象となる Web ページやア�
 - [ステップのグループ化](/docs/groups)
 
 :::info
-Testim は幅広い Web 技術に対応しており、網羅的なテストが実施できます。一方で、 Web 技術の進化は速いため、最新技術への対応が間に合わない場合があります。現在サポート対象外の例としては Lit（[https://lit.dev/](https://lit.dev/)）があります。 Testim では対応範囲の拡大に継続的に取り組んでいます。
+Testim は幅広い Web 技術に対応しており、網羅的なテストが実施できます。一方で、Web 技術の進化は速いため、最新技術への対応が間に合わない場合があります。現在サポート対象外の例としては Lit（[https://lit.dev/](https://lit.dev/)）があります。Testim では対応範囲の拡大に継続的に取り組んでいます。
 :::
 
-テストを記録する前に、 Testim 拡張機能をインストールしておきましょう。詳しくは[Testim 拡張機能が必要な理由](/docs/why-do-you-need-testim-extension)を参照してください。
+テストを記録する前に、Testim 拡張機能をインストールしておきましょう。詳しくは[Testim 拡張機能が必要な理由](/docs/why-do-you-need-testim-extension)を参照してください。
 
 ## ステップ 1: 新しいテストを作成する
 
@@ -108,7 +108,7 @@ Base URL は入力と同時に保存されるため、保存操作は不要で�
 
 ## ステップ 3: テスト構成を設定する
 
-テスト構成はテストを実行する環境を決定します。ローカルで実行する場合は自分の環境に合わせて設定し、 Testim Grid で実行する場合はシミュレーションしたい環境を指定します。
+テスト構成はテストを実行する環境を決定します。ローカルで実行する場合は自分の環境に合わせて設定し、Testim Grid で実行する場合はシミュレーションしたい環境を指定します。
 
 :::info
 CLI でテストを実行する際は、コマンドで別のテスト構成を指定して上書きできます。詳しくは[コマンドラインインターフェース](/docs/the-command-line-cli)を参照してください。
@@ -125,14 +125,14 @@ CLI でテストを実行する際は、コマンドで別のテスト構成を�
 | パラメーター | 説明 |
 |------------|------|
 | Name | 構成の名前。 |
-| Browser | テストを実行するブラウザ。 Chrome 、 Firefox 、 Safari 、 Edge Chromium に対応しています。安定版ブラウザのみサポートしており、 Beta 、 Dev 、 Canary バージョンはサポート対象外です。 |
-| OS | テストを実行する OS 。 Linux 、 Windows 11（Selenium およびカスタムグリッドのみ。 Testim Grid は対象外）、 Windows 10 、 Windows 8 、 Windows 8.1 、 Windows 7 、 Windows XP 、 macOS Sierra 、 macOS High Sierra 、 macOS Mojave 、 OS X El Capitan 、 OS X Yosemite 、 OS X Mavericks 、 OS X Mountain Lion 、 OS X Snow Leopard に対応しています。 |
+| Browser | テストを実行するブラウザ。Chrome、Firefox、Safari、Edge Chromium に対応しています。安定版ブラウザのみサポートしており、Beta、Dev、Canary バージョンはサポート対象外です。 |
+| OS | テストを実行する OS。Linux、Windows 11（Selenium およびカスタムグリッドのみ。Testim Grid は対象外）、Windows 10、Windows 8、Windows 8.1、Windows 7、Windows XP、macOS Sierra、macOS High Sierra、macOS Mojave、OS X El Capitan、OS X Yosemite、OS X Mavericks、OS X Mountain Lion、OS X Snow Leopard に対応しています。 |
 | Resolution | テストに使用する画面解像度。 |
 | **Advanced** | |
 | Step Timeout (milliseconds) | テストステップが失敗と判定されるまでの時間（ミリ秒）。 |
 | Step Delay (milliseconds) | テストステップ間の遅延時間（ミリ秒）。 |
 | Setup step timeout (milliseconds) | テストの Setup ステップ（Base URL ステップ）が失敗と判定されるまでの時間（ミリ秒）。 |
-| **Visual Validation** | Visual Validation パラメーター（以下）は、 Applitools との連携が定義されているプロジェクトでのみ表示されます。 |
+| **Visual Validation** | Visual Validation パラメーター（以下）は、Applitools との連携が定義されているプロジェクトでのみ表示されます。 |
 | Add Environment | テスト実行用の追加環境（ブラウザ、解像度、デバイスエミュレーションなど）を追加します。 |
 | Match level | ベースラインと要素のビジュアル間の比較方法を変更します。 |
 | Enable RCA | 差異の原因に関する Root Cause Analysis（根本原因分析）を有効にします。 |
@@ -206,7 +206,7 @@ CLI でテストを実行する際は、コマンドで別のテスト構成を�
 
 ## ステップ 4: テストを記録する
 
-記録を開始すると、 Base URL を開いた新しいブラウザが表示されます。このブラウザは **AUT (Application Under Test)** と呼ばれ、ここで行った操作がテストステップとして記録されます。以下の操作は個別のステップとして認識されます。
+記録を開始すると、Base URL を開いた新しいブラウザが表示されます。このブラウザは **AUT (Application Under Test)** と呼ばれ、ここで行った操作がテストステップとして記録されます。以下の操作は個別のステップとして認識されます。
 
 - クリック
 - ダブルクリック
@@ -253,7 +253,7 @@ AUT ブラウザが Base URL を開きます。
 
 ![記録の再開](/images/recording-tests/how-to-record-a-test/3049c92-recordrestart.png)
 
-3. AUT ブラウザに戻って操作を続けます。ヘッダーバーの **Go to app** ボタンをクリックすると、 AUT ウィンドウに切り替えられます。
+3. AUT ブラウザに戻って操作を続けます。ヘッダーバーの **Go to app** ボタンをクリックすると、AUT ウィンドウに切り替えられます。
 
 ![Go to app ボタン](/images/recording-tests/how-to-record-a-test/d6208c5-gotoapp.png)
 

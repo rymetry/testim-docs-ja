@@ -1,6 +1,6 @@
 ---
 title: JSON パラメーターファイル
-description: JSON または JS 形式のパラメーターファイルを用意し、 CLI の --params-file 引数で指定することで実行時にテストへ値を渡せます。
+description: JSON パラメーターファイルでテストに値を渡す
 category: 高度な編集
 order: 5043
 updated: '2025-09-22'
@@ -8,7 +8,7 @@ sourceUrl: 'https://help.testim.io/docs/json-parameters-file-parameters'
 keywords:
   - Testim
   - パラメーター
-  - JSONファイル
+  - JSON ファイル
   - CLI
   - 実行時引数
   - 設定ファイル
@@ -50,7 +50,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 ## JavaScript（JS）形式のパラメーターファイル
 
-JSON の代わりに、 JS ファイルで値をエクスポートすることも可能です。テスト設定内でより動的に管理できます。
+JSON の代わりに、JS ファイルで値をエクスポートすることも可能です。テスト設定内でより動的に管理できます。
 
 次のような JS ファイル（例: param-file.js）を作成します。
 

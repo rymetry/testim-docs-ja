@@ -11,10 +11,10 @@ keywords:
   - セルフヒーリング
   - テスト安定性
   - Revision History
-  - Locatorsパネル
+  - Locators パネル
 ---
 
-時間の経過とともに、アプリが変更されると、要素のロケータースコアが低下する可能性があります。ロケータースコアが 70% を下回ると、 Testim はテストの安定性を向上させるために、そのロケーターを自動的に改善しようとします。ロケータースコアが正常に改善されると、 Testim は劣化したロケーターを改善されたロケーターに置き換えます。この置き換えは、以下で説明するように、 UI 内の 3 つの異なる場所（*Revision History*パネル、*Locators*パネル、*Test Library*画面）に表示されます。
+時間の経過とともに、アプリが変更されると、要素のロケータースコアが低下する可能性があります。ロケータースコアが 70% を下回ると、Testim はテストの安定性を向上させるために、そのロケーターを自動的に改善しようとします。ロケータースコアが正常に改善されると、Testim は劣化したロケーターを改善されたロケーターに置き換えます。この置き換えは、以下で説明するように、UI 内の 3 つの異なる場所（*Revision History*パネル、*Locators*パネル、*Test Library*画面）に表示されます。
 
 テストライブラリで、自動改善されたテストでフィルタリングできます。また、テストエディターでは、どのステップが自動改善されたかを表示できます。
 
@@ -22,7 +22,7 @@ keywords:
 
 ## Revision History パネル
 
-Testim はテストリビジョンを作成し、「 Testim auto improve 」というラベルを付けます。また、テスト内のどのステップが自動改善されたかを表示することもできます。
+Testim はテストリビジョンを作成し、「Testim auto improve」というラベルを付けます。また、テスト内のどのステップが自動改善されたかを表示することもできます。
 
 ![ロケーター自動改善によって作成された Testim auto improve リビジョンを示す画面](/images/test-management/locators-auto-improve/96f61e6-Testim_478a.png)
 
@@ -37,13 +37,13 @@ Testim はテストリビジョンを作成し、「 Testim auto improve 」と�
 
 ## Locators パネル
 
-Testim は、自動改善されたロケーターの Locators パネルの上部に「 Locator auto improved 」メッセージを挿入します。
+Testim は、自動改善されたロケーターの Locators パネルの上部に「Locator auto improved」メッセージを挿入します。
 
 ![Locators パネルで自動改善されたロケーターにメッセージが表示されている画面](/images/test-management/locators-auto-improve/1b05339-Testim_479a.png)
 
 ## Test Library 画面
 
-Testim は、 1 つ以上の劣化したロケーターが自動改善されたロケーターに置き換えられたテストの名前の後に「 Ai 」アイコンを挿入します。自動改善アイコンは約 2 週間表示されます。
+Testim は、1 つ以上の劣化したロケーターが自動改善されたロケーターに置き換えられたテストの名前の後に「Ai」アイコンを挿入します。自動改善アイコンは約 2 週間表示されます。
 
 ![Test Library 画面で Ai アイコンが表示されたテスト一覧](/images/test-management/locators-auto-improve/9113b7b-Testim_481a.png)
 

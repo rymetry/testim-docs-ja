@@ -1,7 +1,7 @@
 ---
 title: サブスクリプションプラン
 description: >-
-  Web、モバイル、Salesforce、Copilotの各プロダクトカテゴリのサブスクリプションプラン詳細と使用状況について説明します。並列化モデルの理解を提供します。
+  Web、モバイル、Salesforce、Copilot の各プロダクトカテゴリのサブスクリプションプラン詳細と使用状況について説明します。並列化モデルの理解を提供します。
 category: 管理者機能
 order: 14006
 updated: '2025-09-18'
@@ -11,18 +11,18 @@ keywords:
   - 並列実行
   - Parallel Slots
   - 使用制限
-  - Webプラン
+  - Web プラン
   - モバイルプラン
-  - Salesforceプラン
-  - Copilotプラン
+  - Salesforce プラン
+  - Copilot プラン
 ---
 
 企業オーナーのみが利用できる **Subscription** 画面には、以下の各プロダクトカテゴリのソフトウェアサブスクリプションプランの詳細と現在の使用状況が表示されます:
 
-- Web - Web アプリケーション用 Testim 。
-- Mobile - モバイルアプリケーション用 Testim 。
-- Salesforce - Salesforce 用 Testim 。
-- Copilot - Testim コーディングアシスタント Copilot 。
+- Web - Web アプリケーション用 Testim。
+- Mobile - モバイルアプリケーション用 Testim。
+- Salesforce - Salesforce 用 Testim。
+- Copilot - Testim コーディングアシスタント Copilot。
 
 プランは「実行モデル」から「並列化モデル」と呼ばれる新しいモデルに移行しました。並列化モデルでは、実行回数ではなく、並列実行の数がサブスクリプションにカウントされます。
 
@@ -58,7 +58,7 @@ Web プラン画面には以下の情報が表示されます:
 
 ## Testim Web と Testim Salesforce の使用制限
 
-すべてのユーザーに適切なパフォーマンスとリソース割り当てを確保するため、 Testim は以下の使用制限を設けています:
+すべてのユーザーに適切なパフォーマンスとリソース割り当てを確保するため、Testim は以下の使用制限を設けています:
 
 - 最初の 3 つの並列テストは、月間合計 1,000 テスト実行時間に制限されます。
 - 追加の並列テストは追加料金でライセンスできます。各追加並列テストは月間 200 テスト実行時間を提供します。

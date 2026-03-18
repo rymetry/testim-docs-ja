@@ -52,7 +52,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e55a7b4-wait-for-element-visible-selection.png)
 
 :::warning{title="注意"}
-「 To choose an element Open base URL or Run test to relevant step 」と表示された場合は、ベース URL でアプリを開くか、該当ステップまでテストを実行してから追加してください。
+「To choose an element Open base URL or Run test to relevant step」と表示された場合は、ベース URL でアプリを開くか、該当ステップまでテストを実行してから追加してください。
 :::
 
 ## 要素の表示を待つ（モバイル）
@@ -75,7 +75,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/f85f8ff-select-target.png)
 
 :::warning{title="注意"}
-「 To choose an element Open App or Run test to relevant step 」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。
+「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。
 :::
 
 ## 要素の非表示を待つ（Web）
@@ -137,7 +137,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 :::warning{title="注意"}
 同様のメッセージが出る場合、ベース URL でアプリを開くか該当ステップまで実行してから追加してください。  
-また、'**Expected Value**' にはパラメーター、正規表現、 JavaScript 式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
+また、'**Expected Value**' にはパラメーター、正規表現、JavaScript 式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
 :::
 
 ## 要素テキストの表示を待つ（モバイル）
@@ -160,8 +160,8 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/5bb3fab-select-target.png)
 
 :::warning{title="注意"}
-「 To choose an element Open App or Run test to relevant step 」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
-また、'Expected Value' にはパラメーター、正規表現、 JavaScript 式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
+「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
+また、'Expected Value' にはパラメーター、正規表現、JavaScript 式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
 :::
 
 ## スリープ（Web）
@@ -223,7 +223,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ## カスタム待機（Web）
 
-ビルトインの待機で足りない場合に使う、 JavaScript ベースの待機ステップです。
+ビルトインの待機で足りない場合に使う、JavaScript ベースの待機ステップです。
 
 **Custom wait for を追加するには:**
 
@@ -240,7 +240,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/da06ecb-custom-wait-name.png)
 
-5. JS エディターで関数内にコードを記述し、 true/false を返すことを確認します。
+5. JS エディターで関数内にコードを記述し、true/false を返すことを確認します。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 

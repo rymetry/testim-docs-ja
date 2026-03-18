@@ -1,8 +1,8 @@
 ---
 title: VSTS / TFS 統合
 description: >-
-  Visual Studio Team Services(VSTS)およびTeam Foundation
-  Server(TFS)でTestimテストを実行する方法について説明します。Dockerタスクの設定手順を提供します。
+  Visual Studio Team Services（VSTS）および Team Foundation
+  Server（TFS）で Testim テストを実行する方法について説明します。Docker タスクの設定手順を提供します。
 category: 統合
 order: 12010
 updated: '2025-02-10'
@@ -13,11 +13,11 @@ keywords:
   - Azure DevOps
   - Visual Studio
   - Visual Studio Team Services
-  - CI統合
-  - CIパイプライン
+  - CI 統合
+  - CI パイプライン
   - ビルドパイプライン
   - Docker
-  - Dockerタスク
+  - Docker タスク
 ---
 
 ​
@@ -67,7 +67,7 @@ run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --to
 ​ **注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
 
 9. VSTS/TFS が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。\
-   VSTS/TFS がファイルを使用するには、 Publish Test Results タスクを追加する必要があります
+   VSTS/TFS がファイルを使用するには、Publish Test Results タスクを追加する必要があります
 
 ![VSTS の Publish Test Results タスクを追加する画面](/images/ci-integrations/vsts-and-tfs-integration/a99d051-tfs10.png)
 
@@ -75,7 +75,7 @@ run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --to
 
 ![VSTS の Publish Test Results タスクで Test result format に JUnit を選択する画面](/images/ci-integrations/vsts-and-tfs-integration/c8ae6c1-tfs11.png)
 
-11. セクション 8 の"report-file"パラメーターに従って、 Test results files の値を設定します
+11. セクション 8 の"report-file"パラメーターに従って、Test results files の値を設定します
 
 ![VSTS の Publish Test Results タスクで Test results files のパスを設定する画面](/images/ci-integrations/vsts-and-tfs-integration/83f530c-tfs12.png)
 

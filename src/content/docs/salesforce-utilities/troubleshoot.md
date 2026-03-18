@@ -7,8 +7,8 @@ updated: '2025-12-10'
 sourceUrl: 'https://help.testim.io/docs/troubleshoot'
 keywords:
   - トラブルシューティング
-  - Salesforce接続
-  - IPホワイトリスト
+  - Salesforce 接続
+  - IP ホワイトリスト
   - Grid
   - ログイン履歴
   - 権限
@@ -19,10 +19,10 @@ keywords:
 
 ## Salesforce 環境に接続できない
 
-Salesforce 環境に接続するには、 Salesforce 環境が以下の要件を満たしていることを確認してください:
+Salesforce 環境に接続するには、Salesforce 環境が以下の要件を満たしていることを確認してください:
 
-* API アクセスをサポート - これには、 Enterprise 、 Performance 、 Unlimited 、および Developer Edition 組織が必要です。 Professional Edition 組織は、アドオンとして API アクセスを追加できます。 Salesforce Essentials Edition は API アクセスをサポートしていません。
-* **管理 > ユーザー > プロファイル**で、 Salesforce 環境に接続するために選択されたユーザーに対して REST API が有効になっています。
+* API アクセスをサポート - これには、Enterprise、Performance、Unlimited、および Developer Edition 組織が必要です。Professional Edition 組織は、アドオンとして API アクセスを追加できます。Salesforce Essentials Edition は API アクセスをサポートしていません。
+* **管理 > ユーザー > プロファイル**で、Salesforce 環境に接続するために選択されたユーザーに対して REST API が有効になっています。
 
   ![プロファイル設定で REST API を有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
 
@@ -40,7 +40,7 @@ Salesforce 環境に接続するには、 Salesforce 環境が以下の要件を
 
   ![ネットワークアクセスで IP をホワイトリスト登録](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
 
-* ブロックされている追加の IP アドレスをホワイトリストに登録します。**設定 > ID > ログイン履歴**で、アプリケーション「 Testim for Salesforce 」に対してブロックされている「制限付き IP 」アドレスをログイン履歴で確認してください。
+* ブロックされている追加の IP アドレスをホワイトリストに登録します。**設定 > ID > ログイン履歴**で、アプリケーション「Testim for Salesforce」に対してブロックされている「制限付き IP」アドレスをログイン履歴で確認してください。
 
   ![ログイン履歴で制限付き IP を確認](/images/salesforce-utilities/troubleshoot/32799d4-Picture2.png)
 
@@ -48,8 +48,8 @@ Salesforce 環境に接続するには、 Salesforce 環境が以下の要件を
 
 テストがローカルでは正常に実行されているのに Grid では失敗する場合は、以下を確認してください:
 
-* Azure Active Directory や Okta などの Identity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対して IAM サービスを無効にすることをお勧めします。 Grid でのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
-* IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「 TTA for Salesforce 」からの「制限付き IP 」アドレスをログイン履歴で確認してください。
+* Azure Active Directory や Okta などの Identity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対して IAM サービスを無効にすることをお勧めします。Grid でのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
+* IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付き IP」アドレスをログイン履歴で確認してください。
 
   ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
 
@@ -73,7 +73,7 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 ## Grid 上のスケジュール済みテスト実行が確認コードの入力を求められて失敗する
 
-確認コードはデバイスアクティベーションの一部であり、多要素認証とは異なります。 Salesforce にログインしてメールで送信されたコードの入力を求められる場合、デバイスアクティベーションが行われています。
+確認コードはデバイスアクティベーションの一部であり、多要素認証とは異なります。Salesforce にログインしてメールで送信されたコードの入力を求められる場合、デバイスアクティベーションが行われています。
 
 デバイスアクティベーションは、次のいずれかに当てはまる場合に発生します:
 
@@ -91,7 +91,7 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 ## 最初のテストステップでテスト実行が失敗する
 
-他の Chrome 拡張機能との競合がある場合、最初のテストステップでテスト実行が失敗することがあります。テスト実行を分離し、 Tricentis Testim Extension のみを有効にすることをお勧めします。これを行うには、以下の手順に従ってください:
+他の Chrome 拡張機能との競合がある場合、最初のテストステップでテスト実行が失敗することがあります。テスト実行を分離し、Tricentis Testim Extension のみを有効にすることをお勧めします。これを行うには、以下の手順に従ってください:
 
 1. Tricentis Testim Extension をシークレットモードで実行するように構成します。
 
@@ -101,7 +101,7 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
   ![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
 
-## Create ステップを使用して前のステップで作成したレコードが、 Find ステップを使用して Salesforce で見つからない
+## Create ステップを使用して前のステップで作成したレコードが、Find ステップを使用して Salesforce で見つからない
 
 **Create**ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/conditions#configuring-a-custom-condition)を含むステップを追加し、その後次のステップに進むことです。
 
@@ -137,28 +137,28 @@ Find Account 共有ステップには 2 つの内部ステップが含まれて�
 
 Salesforce 選択リストの自動化は困難です。選択を記録する際は、空白スペースを避けて選択リスト内のテキストを選択する必要があります。
 
-## テストがフィールドを見つけられないが、 Salesforce ステップには存在する
+## テストがフィールドを見つけられないが、Salesforce ステップには存在する
 
 これは以下の理由による可能性があります:
 
 * テストを実行している Salesforce アカウントに、このフィールドを表示するための読み取り権限がない可能性があります。\
   **可能な解決策** - このアカウントのフィールド権限を表示するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。
 * テストを実行している Salesforce アカウントのページレイアウトが、このフィールドなしで構成されている可能性があります。\
-  **可能な解決策** - ページレイアウトを検証するには、 Salesforce で設定を確認してください。
+  **可能な解決策** - ページレイアウトを検証するには、Salesforce で設定を確認してください。
 
 ## Salesforce テストが Grid で「要素が見つかりません」で失敗するが、ローカルではテストが成功する
 
 これには 2 つの可能な理由があります:
 
 1. Salesforce ページの読み込み時間が Grid とローカル実行で異なる場合があります。予期しない追加のページ読み込み時間により、このタイムアウトエラーが発生する可能性があります。\
-  **可能な解決策** - 失敗するテストステップの前に、 Salesforce ステップ[ページ読み込みを待機](/docs/sfdc-step-waitforpageload)を追加してください。このステップは、 Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
+  **可能な解決策** - 失敗するテストステップの前に、Salesforce ステップ[ページ読み込みを待機](/docs/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
 
 2. ローカル記録またはローカル実行中にユーザーがブラウザウィンドウのサイズを変更した場合。\
-   **可能な解決策** - ブラウザウィンドウのサイズを変更せず、 Grid でテストが実行されるときと同じサイズのままにすることをお勧めします。
+   **可能な解決策** - ブラウザウィンドウのサイズを変更せず、Grid でテストが実行されるときと同じサイズのままにすることをお勧めします。
 
 ## 同時 Salesforce テスト実行が、ユーザーがログアウトされるため失敗する
 
-Salesforce は、 Sign-in with Salesforce（OAuth）ではなく、ユーザー名/パスワードで認証されたアカウントからの同時ログインのみを許可します。
+Salesforce は、Sign-in with Salesforce（OAuth）ではなく、ユーザー名/パスワードで認証されたアカウントからの同時ログインのみを許可します。
 
 **可能な解決策** - 同時テスト実行には、ユーザー名/パスワードで認証されたペルソナを使用してください。詳細については、[ペルソナの作成](/docs/create-a-persona-and-add-users)を参照してください。
 
@@ -175,5 +175,5 @@ Salesforce は、 Sign-in with Salesforce（OAuth）ではなく、ユーザー�
 
 これには 2 つの可能な理由があります:
 
-* Salesforce ステップには、（Classic と Lightning の両方の）sObject のページレイアウトにあるフィールドのみが含まれます。 Lightning アプリビルダーを使用してのみ追加されたフィールドは含まれません。 Salesforce 管理者がページレイアウトからフィールドを除外したが、 Lightning アプリビルダーを使用して[動的フォーム](https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&type=5)を作成するときに追加した可能性があります。 Salesforce ステップを使用するには、 Salesforce セットアップでページレイアウトにフィールドを追加するか、テストを作成する際に Salesforce レコーダーを使用してください。
-* Salesforce ステップには、 Salesforce 環境の接続に使用される Salesforce アカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別の Salesforce アカウントで Salesforce 環境を再接続する必要がある場合があります。
+* Salesforce ステップには、（Classic と Lightning の両方の）sObject のページレイアウトにあるフィールドのみが含まれます。Lightning アプリビルダーを使用してのみ追加されたフィールドは含まれません。Salesforce 管理者がページレイアウトからフィールドを除外したが、Lightning アプリビルダーを使用して[動的フォーム](https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&type=5)を作成するときに追加した可能性があります。Salesforce ステップを使用するには、Salesforce セットアップでページレイアウトにフィールドを追加するか、テストを作成する際に Salesforce レコーダーを使用してください。
+* Salesforce ステップには、Salesforce 環境の接続に使用される Salesforce アカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別の Salesforce アカウントで Salesforce 環境を再接続する必要がある場合があります。

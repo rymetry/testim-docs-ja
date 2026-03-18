@@ -7,15 +7,15 @@ updated: '2025-12-02'
 sourceUrl: 'https://help.testim.io/docs/salesforce-steps'
 keywords:
   - Salesforce
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
   - 共通操作
   - レコード操作
-  - API操作
-  - CPQ操作
+  - API 操作
+  - CPQ 操作
 ---
 
-Salesforce ステップは、テストに手動で追加できます。これらのステップは、接続された Salesforce 環境のレコードとフィールドで事前入力された Salesforce の一般的なアクションをカバーしています。ステップは、共通操作、レコード操作、 API 操作で構成されています。
+Salesforce ステップは、テストに手動で追加できます。これらのステップは、接続された Salesforce 環境のレコードとフィールドで事前入力された Salesforce の一般的なアクションをカバーしています。ステップは、共通操作、レコード操作、API 操作で構成されています。
 
 ![操作手順アニメーション](/images/salesforce-steps/salesforce-steps/488aa39-rework_salesforce_steps.gif)
 
@@ -28,9 +28,9 @@ Salesforce の共通操作には、次の Salesforce 操作が含まれます:
 * [アプリを起動](/docs/sfdc-step-launchapp) - 起動する利用可能なアプリを選択します。
 * [ログアウト](/docs/sfdc-step-logout) - Salesforce からログアウトします。
 * [レコードを検索して移動](/docs/sfdc-step-findandgotorecord) - レコードのテキスト検索。グローバル検索を使用して、最初に一致するレコードを返します。
-* [ページ読み込み待機](/docs/sfdc-step-waitforpageload) - 次のステップに進む前に、 Salesforce がページを完全に読み込むのを待ちます。
+* [ページ読み込み待機](/docs/sfdc-step-waitforpageload) - 次のステップに進む前に、Salesforce がページを完全に読み込むのを待ちます。
 * [コンソールタブを閉じる](/docs/sfdc-step-closeconsoletabs) - Salesforce のコンソールタブを閉じます。
-* [ドキュメントの検証](/docs/sfdc-document-validation) - コーディングなしで設定できるさまざまな条件を使用して、 PDF ドキュメントの内容を検証および/または抽出します。
+* [ドキュメントの検証](/docs/sfdc-document-validation) - コーディングなしで設定できるさまざまな条件を使用して、PDF ドキュメントの内容を検証および/または抽出します。
 
 ## レコード操作
 
@@ -70,14 +70,14 @@ Salesforce のレコード操作には、次の Salesforce 操作が含まれま
 
 ## API 操作
 
-次のステップは、 API（UI 経由ではなく）を使用して Salesforce と対話します:
+次のステップは、API（UI 経由ではなく）を使用して Salesforce と対話します:
 
-* [APEX を実行](/docs/sfdc-step-apex-action) - テスト内のステップとして APEX コードを実行することで、 E2E テストを UI を超えて拡張できます。
+* [APEX を実行](/docs/sfdc-step-apex-action) - テスト内のステップとして APEX コードを実行することで、E2E テストを UI を超えて拡張できます。
 * [権限の検証](/docs/sfdc-step-permission-validation) - Salesforce オブジェクトとそのフィールドに対するユーザー権限をキャプチャ、設定、および継続的に検証できます。
 
 ## CPQ 操作
 
-Configure Price Quote Software は、営業担当者が購入者のニーズに基づいてカスタマイズされた製品と価格設定で見積もりを作成し、取引のドキュメントとのすべてのやり取りを Salesforce CRM 内で同期できる営業ツールです。 CPQ 操作カテゴリには、次のステップが含まれます:
+Configure Price Quote Software は、営業担当者が購入者のニーズに基づいてカスタマイズされた製品と価格設定で見積もりを作成し、取引のドキュメントとのすべてのやり取りを Salesforce CRM 内で同期できる営業ツールです。CPQ 操作カテゴリには、次のステップが含まれます:
 
 * [リードを商談に変換](/docs/sfdc-step-convertleadtoopportunity) - レコードをリードから商談に分類変換します。
 * [見積品目エディターアクション](/docs/sfdc-step-quotelineeditor) - 見積もりの特定の明細項目および/または見積もり全体の CPQ アプリケーションで、製品価格計算を入力・検証します。

@@ -25,7 +25,7 @@ keywords:
 
 ![ビルドフォルダーのクリア](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/2c46d36-clearbuildfolder.png)
 
-2. Xcode で、 iOS シミュレーターを選択します。
+2. Xcode で、iOS シミュレーターを選択します。
 
 ![iOS シミュレーターの選択](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/2b1d1e6-iossimulator.png)
 
@@ -53,7 +53,7 @@ keywords:
 
 ![右クリック](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/59e0a36-rightclick.png)
 
-9. アプリ名に「 virtual 」という用語を追加して、このアプリビルドが仮想デバイスでの使用を目的としていることを示します。**OK**ボタンをクリックします。
+9. アプリ名に「virtual」という用語を追加して、このアプリビルドが仮想デバイスでの使用を目的としていることを示します。**OK**ボタンをクリックします。
 
 ![名前の変更](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/714c2d1-rename.png)
 
@@ -89,7 +89,7 @@ keywords:
 
 ![再署名](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/a9a8835-resign.png)
 
-8. アプリのコンテンツを確認し、**Export**ボタンをクリックして、 IPA ファイルをコンピューターに保存します。
+8. アプリのコンテンツを確認し、**Export**ボタンをクリックして、IPA ファイルをコンピューターに保存します。
 
 ![エクスポート](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/19e1f3b-export.png)
 
@@ -109,6 +109,6 @@ keywords:
 
 ![右クリック](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/80c04ea-rightclick.png)
 
-13. アプリ名に「 physical 」という用語を追加して、このアプリビルドが物理デバイスでの使用を目的としていることを示します。**OK**ボタンをクリックします。
+13. アプリ名に「physical」という用語を追加して、このアプリビルドが物理デバイスでの使用を目的としていることを示します。**OK**ボタンをクリックします。
 
 ![物理デバイス用に名前変更](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/e6d95f4-physical.png)

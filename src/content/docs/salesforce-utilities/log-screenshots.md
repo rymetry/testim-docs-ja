@@ -8,10 +8,10 @@ sourceUrl: 'https://help.testim.io/docs/log-screenshots'
 keywords:
   - ログのスクリーンショット
   - スクリーンショット
-  - Salesforceログ
+  - Salesforce ログ
   - テスト実行
   - デバッグ
-  - Salesforceオプション
+  - Salesforce オプション
 ---
 
 テストを実行する際、各ステップのスクリーンショットをログに記録できます。スクリーンショットは、各ユーザーアクションの説明の下に小さな画像として Salesforce ログに保存されます。保存されたスクリーンショットは、デバッグやテスト実行の視覚的な証拠として役立ちます。

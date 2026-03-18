@@ -9,7 +9,7 @@ keywords:
   - Salesforce
   - アプリ
   - 起動
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 

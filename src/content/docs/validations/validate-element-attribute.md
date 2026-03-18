@@ -1,6 +1,6 @@
 ---
 title: 要素属性の検証（モバイル）
-description: 要素の属性値が期待通りであることを検証するステップ。 HTML 属性や DOM プロパティの値を確認し、要素の状態を詳細に検証できます。
+description: 要素の属性値が期待通りであることを検証するステップ。HTML 属性や DOM プロパティの値を確認し、要素の状態を詳細に検証できます。
 category: 高度な編集
 order: 5012
 updated: '2025-09-15'
@@ -8,12 +8,12 @@ sourceUrl: 'https://help.testim.io/docs/validate-element-attribute'
 keywords:
   - 属性検証
   - 要素属性
-  - DOM属性
+  - DOM 属性
   - HTML
   - プロパティ
   - 属性値
-  - UI検証
-  - Web要素
+  - UI 検証
+  - Web 要素
   - Testim
   - 動的検証
 ---
@@ -74,7 +74,7 @@ keywords:
 
 Testim はテスト実行時に、選択した要素の属性が期待値を持つかどうかを検証します。
 
-10. **OK** をクリックします。**Editor** に「 Validate element attribute 」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+10. **OK** をクリックします。**Editor** に「Validate element attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
 11. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
 ## Validate element attribute ステップの修正

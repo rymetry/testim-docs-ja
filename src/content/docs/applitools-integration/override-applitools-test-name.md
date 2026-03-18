@@ -8,7 +8,7 @@ sourceUrl: 'https://help.testim.io/docs/override-applitools-test-name'
 keywords:
   - Testim
   - Applitools
-  - Applitoolsテスト名
+  - Applitools テスト名
   - テスト名
   - オーバーライド
   - テストデータ
@@ -17,7 +17,7 @@ keywords:
 
 Applitools に送信されるテスト名をオーバーライドすることができます。これは、[テストデータ](/docs/data-driven-testing#using-test-data-in-your-tests)を使用して以下の方法で実行できます:
 
-1. パラメーター*applitoolsTestName*が、 Applitools にテスト名として送信されます
+1. パラメーター*applitoolsTestName*が、Applitools にテスト名として送信されます
 2. テストデータでこれをオーバーライドまたは変更できます。例:
 
 ```javascript
@@ -27,4 +27,4 @@ return [
   ];
 ```
 
-3. この例では、各テストデータエントリに対して、 Applitools に送信されるテスト名に言語が含まれ、 Applitools で異なるベースラインが作成されます
+3. この例では、各テストデータエントリに対して、Applitools に送信されるテスト名に言語が含まれ、Applitools で異なるベースラインが作成されます

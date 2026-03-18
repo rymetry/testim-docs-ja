@@ -7,18 +7,18 @@ updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
 keywords:
   - Testim
-  - GitHub連携
+  - GitHub 連携
   - GitHub Issues
   - バグトラッカー
   - バグ報告
-  - issue作成
+  - issue 作成
   - 接続設定
   - 不具合管理
 ---
 
 ## Testim と GitHub の連携
 
-GitHub integration を使うと、 Testim から直接 GitHub Issues に bug を報告できます。 bug に関する情報は自動的に入力されます。
+GitHub integration を使うと、Testim から直接 GitHub Issues に bug を報告できます。bug に関する情報は自動的に入力されます。
 
 ## Testim を GitHub に接続する
 
@@ -34,12 +34,12 @@ GitHub integration を使うと、 Testim から直接 GitHub Issues に bug を
 
 ![GitHub の notice 画面](/images/bug-tracker-settings/connecting-testim-to-github/7aa9766-github2.PNG)
 
-4. 画面上部の **Sign in** をクリックし、 GitHub アカウントにログインします。
+4. 画面上部の **Sign in** をクリックし、GitHub アカウントにログインします。
 5. ログイン後、**Configure** をクリックします。
 
 ![GitHub の Configure 画面](/images/bug-tracker-settings/connecting-testim-to-github/b8b4322-github3.png)
 
-6. 対象のアカウントをクリックし、 Testim.io をどこにインストールするか指定します。
+6. 対象のアカウントをクリックし、Testim.io をどこにインストールするか指定します。
 
 ![インストール先アカウントの選択](/images/bug-tracker-settings/connecting-testim-to-github/85799b1-github4.PNG)
 
@@ -47,7 +47,7 @@ GitHub integration を使うと、 Testim から直接 GitHub Issues に bug を
 
 ![GitHub App の Install](/images/bug-tracker-settings/connecting-testim-to-github/66d3537-github5.PNG)
 
-この時点で、 Testim Visual Editor の `Settings > CLI` 画面が開きます。
+この時点で、Testim Visual Editor の `Settings > CLI` 画面が開きます。
 
 8. `Settings > Bug Tracker` に戻り、**Github** をクリックします。
 9. `"You are logged in"` メッセージが表示されることを確認します。

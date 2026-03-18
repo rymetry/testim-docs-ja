@@ -1,6 +1,6 @@
 ---
 title: チーム生産性
-description: チームメンバーごとのテスト作成数・更新数をブランチ別に集計し、チームの生産性をレポートで可視化できます。
+description: チームの作業と生産性をより見やすく把握します
 category: TestOps
 order: 15014
 updated: '2025-11-02'
@@ -30,7 +30,7 @@ keywords:
 
 ### チーム生産性レポートへのアクセス
 
-チーム生産性レポートにアクセスするには、 Insights --> Reports --> Team productivity タブに移動します
+チーム生産性レポートにアクセスするには、Insights --> Reports --> Team productivity タブに移動します
 
 ![チーム生産性レポートの場所](/images/insights/team-productivity/88a14b0-Screen_Shot_2021-11-23_at_14.28.30.png)
 

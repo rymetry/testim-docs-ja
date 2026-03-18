@@ -18,8 +18,10 @@ from pathlib import Path
 
 DOCS_DIR = Path(__file__).resolve().parent.parent / "src" / "content" / "docs"
 
-# Japanese character ranges (excluding fullwidth Latin/punctuation to avoid spacing issues)
-JP = r'[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff\u3000-\u303f]'
+# Japanese character ranges — hiragana, katakana, CJK ideographs ONLY.
+# Excludes \u3000-\u303f (CJK punctuation: 「」、。（）) to prevent
+# spacing insertion around Japanese punctuation marks.
+JP = r'[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff]'
 
 EMOJI_MAP = {
     '\U0001f4d8': 'note',   # 📘
@@ -81,6 +83,78 @@ def find_frontmatter(lines):
     return None, None
 
 
+# --- Tokenization ---
+# All text transformations go through this to protect inline code, URLs, HTML.
+
+def split_processable(line):
+    """Split line into (text, processable) segments.
+    Non-processable: inline code, markdown link URLs, HTML tags.
+    """
+    segments = []
+    i = 0
+    n = len(line)
+
+    while i < n:
+        # Inline code
+        if line[i] == '`':
+            j = line.find('`', i + 1)
+            if j != -1:
+                segments.append((line[i:j + 1], False))
+                i = j + 1
+                continue
+
+        # Markdown link/image URL: ](url)
+        if i + 1 < n and line[i] == ']' and line[i + 1] == '(':
+            j = line.find(')', i + 2)
+            if j != -1:
+                segments.append((line[i:j + 1], False))
+                i = j + 1
+                continue
+
+        # HTML tag
+        if line[i] == '<' and i + 1 < n and (line[i + 1].isalpha() or line[i + 1] == '/'):
+            j = line.find('>', i + 1)
+            if j != -1:
+                segments.append((line[i:j + 1], False))
+                i = j + 1
+                continue
+
+        # Bare URL (http:// or https://)
+        if line[i:i+4] == 'http':
+            m = re.match(r'https?://\S+', line[i:])
+            if m:
+                url = m.group(0)
+                segments.append((url, False))
+                i += len(url)
+                continue
+
+        # Regular text — accumulate
+        j = i + 1
+        while j < n:
+            if line[j] == '`':
+                break
+            if j + 1 < n and line[j] == ']' and line[j + 1] == '(':
+                break
+            if line[j] == '<' and j + 1 < n and (line[j + 1].isalpha() or line[j + 1] == '/'):
+                break
+            if line[j:j+4] == 'http' and re.match(r'https?://', line[j:]):
+                break
+            j += 1
+        segments.append((line[i:j], True))
+        i = j
+
+    return segments
+
+
+def apply_to_processable(line, fn):
+    """Apply a text transformation function only to processable segments."""
+    segments = split_processable(line)
+    return ''.join(
+        fn(t) if proc else t
+        for t, proc in segments
+    )
+
+
 # --- Simple text replacements ---
 
 def fix_katakana(text):
@@ -120,55 +194,6 @@ def fix_english_titles(text):
 
 # --- Spacing ---
 
-def split_processable(line):
-    """Split line into (text, processable) segments.
-    Non-processable: inline code, markdown link URLs, HTML tags.
-    """
-    segments = []
-    i = 0
-    n = len(line)
-
-    while i < n:
-        # Inline code
-        if line[i] == '`':
-            j = line.find('`', i + 1)
-            if j != -1:
-                segments.append((line[i:j + 1], False))
-                i = j + 1
-                continue
-
-        # Markdown link/image URL: ](url)
-        if i + 1 < n and line[i] == ']' and line[i + 1] == '(':
-            j = line.find(')', i + 2)
-            if j != -1:
-                segments.append((line[i:j + 1], False))
-                i = j + 1
-                continue
-
-        # HTML tag
-        if line[i] == '<' and i + 1 < n and (line[i + 1].isalpha() or line[i + 1] == '/'):
-            j = line.find('>', i + 1)
-            if j != -1:
-                segments.append((line[i:j + 1], False))
-                i = j + 1
-                continue
-
-        # Regular text — accumulate
-        j = i + 1
-        while j < n:
-            if line[j] == '`':
-                break
-            if j + 1 < n and line[j] == ']' and line[j + 1] == '(':
-                break
-            if line[j] == '<' and j + 1 < n and (line[j + 1].isalpha() or line[j + 1] == '/'):
-                break
-            j += 1
-        segments.append((line[i:j], True))
-        i = j
-
-    return segments
-
-
 def fix_spacing_segment(text):
     """Add spaces between ASCII alphanumerics and Japanese characters."""
     text = re.sub(r'([a-zA-Z0-9%])(' + JP + ')', r'\1 \2', text)
@@ -177,11 +202,7 @@ def fix_spacing_segment(text):
 
 
 def fix_spacing_line(line):
-    segments = split_processable(line)
-    return ''.join(
-        fix_spacing_segment(t) if proc else t
-        for t, proc in segments
-    )
+    return apply_to_processable(line, fix_spacing_segment)
 
 
 # --- Parentheses ---
@@ -236,12 +257,55 @@ def fix_parens_segment(text):
     return ''.join(result)
 
 
+def _fix_parens_raw(line):
+    """Convert half-width () to full-width （） in Japanese context.
+    Works on the full line to handle parens that span across inline code/links.
+    Skips parens that are part of markdown link syntax [text](url).
+    """
+    result = []
+    i = 0
+    n = len(line)
+
+    while i < n:
+        if line[i] == '(':
+            # Skip if this is a markdown link URL: ](url)
+            if i > 0 and line[i - 1] == ']':
+                j = find_close_paren(line, i)
+                if j != -1:
+                    result.append(line[i:j + 1])
+                    i = j + 1
+                    continue
+
+            j = find_close_paren(line, i)
+            if j != -1:
+                inner = line[i + 1:j]
+                # Recursively process inner content for nested parens
+                inner = _fix_parens_raw(inner)
+
+                has_jp_inside = bool(re.search(JP, inner))
+                has_jp_before = i > 0 and bool(re.search(JP, line[i - 1]))
+                has_jp_after = j + 1 < n and bool(re.search(JP, line[j + 1]))
+
+                if has_jp_inside or has_jp_before or has_jp_after:
+                    result.append('（')
+                    result.append(inner)
+                    result.append('）')
+                    i = j + 1
+                    continue
+                else:
+                    result.append('(')
+                    result.append(inner)
+                    result.append(')')
+                    i = j + 1
+                    continue
+        result.append(line[i])
+        i += 1
+
+    return ''.join(result)
+
+
 def fix_parens_line(line):
-    segments = split_processable(line)
-    return ''.join(
-        fix_parens_segment(t) if proc else t
-        for t, proc in segments
-    )
+    return _fix_parens_raw(line)
 
 
 # --- Legacy callout conversion ---
@@ -251,12 +315,19 @@ _emoji_pattern = re.compile(
 )
 
 
-def convert_legacy_callouts(lines):
-    """Convert > 📘/🚧/❗/👍 blockquote callouts to ::: format."""
+def convert_legacy_callouts(lines, code_lines):
+    """Convert > 📘/🚧/❗/👍 blockquote callouts to ::: format.
+    Skips lines inside code blocks.
+    """
     result = []
     i = 0
 
     while i < len(lines):
+        if i in code_lines:
+            result.append(lines[i])
+            i += 1
+            continue
+
         m = _emoji_pattern.match(lines[i])
         if m:
             emoji = m.group(1)
@@ -319,7 +390,36 @@ def fix_danger_to_warning(filepath, lines):
     ]
 
 
+# --- Frontmatter helpers ---
+
+def is_fm_structural_line(line):
+    """Return True for frontmatter lines that should not be text-processed."""
+    return bool(re.match(r'^(sourceUrl|updated|order|category|---)', line))
+
+
+def is_fm_text_field_header(line):
+    """Return True for frontmatter text field headers (title:, description:)."""
+    return bool(re.match(r'^(title|description)\s*:', line))
+
+
+def is_fm_continuation_line(line):
+    """Return True for YAML folded/continuation lines (indented, no key:)."""
+    return bool(re.match(r'^  \S', line)) and ':' not in line.split()[0] if line.strip() else False
+
+
 # --- Main processing ---
+
+def apply_text_fixes(line):
+    """Apply all text-level fixes to a processable line, protecting inline code/URLs."""
+    line = apply_to_processable(line, fix_katakana)
+    line = apply_to_processable(line, fix_tatoeba)
+    line = fix_callout_space(line)
+    line = fix_english_titles(line)
+    line = fix_spacing_line(line)
+    line = apply_to_processable(line, fix_pro_label)  # after spacing
+    line = fix_parens_line(line)
+    return line
+
 
 def process_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -328,17 +428,25 @@ def process_file(filepath):
     original = content
     lines = content.split('\n')
 
-    # Step 1: Legacy callout conversion
-    lines = convert_legacy_callouts(lines)
+    # Step 1: Detect code blocks FIRST (before any transformation)
+    code_lines = find_code_blocks(lines)
 
-    # Step 2: File-specific fixes
+    # Step 2: Legacy callout conversion (now respects code blocks)
+    lines = convert_legacy_callouts(lines, code_lines)
+
+    # Step 3: Recalculate code blocks after callout conversion
+    code_lines = find_code_blocks(lines)
+
+    # Step 4: File-specific fixes
     lines = fix_danger_to_warning(filepath, lines)
 
-    # Step 3: Detect code blocks and frontmatter
-    code_lines = find_code_blocks(lines)
+    # Step 5: Detect frontmatter
     fm_start, fm_end = find_frontmatter(lines)
 
-    # Step 4: Per-line fixes
+    # Track if we're in a text field continuation in frontmatter
+    in_fm_text_field = False
+
+    # Step 6: Per-line fixes
     new_lines = []
     for i, line in enumerate(lines):
         is_code = i in code_lines
@@ -349,27 +457,59 @@ def process_file(filepath):
             continue
 
         if is_fm:
-            # Process all frontmatter text fields (title, description, keywords)
-            # Skip only structural fields: sourceUrl, updated, order, category
-            if not re.match(r'^(sourceUrl|updated|order|category|---)', line):
-                line = fix_katakana(line)
-                line = fix_tatoeba(line)
-                if line.startswith('title:') or line.startswith('description:'):
-                    line = fix_spacing_line(line)
-                    line = fix_parens_line(line)
-                line = fix_pro_label(line)  # after spacing to fix "PRO 機能"
-            new_lines.append(line)
-            continue
+            if is_fm_structural_line(line):
+                in_fm_text_field = False
+                new_lines.append(line)
+                continue
 
-        # Regular line: apply all fixes in order
-        line = fix_katakana(line)
-        line = fix_tatoeba(line)
-        line = fix_callout_space(line)
-        line = fix_english_titles(line)
-        line = fix_spacing_line(line)
-        line = fix_pro_label(line)  # after spacing to fix "PRO 機能"
-        line = fix_parens_line(line)
+            # Check if this is a text field header or continuation
+            if is_fm_text_field_header(line):
+                in_fm_text_field = True
+                # Apply all fixes including spacing and parens
+                line = apply_to_processable(line, fix_katakana)
+                line = apply_to_processable(line, fix_tatoeba)
+                line = fix_spacing_line(line)
+                line = apply_to_processable(line, fix_pro_label)
+                line = fix_parens_line(line)
+                new_lines.append(line)
+                continue
+            elif line.startswith('  ') and in_fm_text_field:
+                # Continuation line of title/description
+                line = apply_to_processable(line, fix_katakana)
+                line = apply_to_processable(line, fix_tatoeba)
+                line = fix_spacing_line(line)
+                line = apply_to_processable(line, fix_pro_label)
+                line = fix_parens_line(line)
+                new_lines.append(line)
+                continue
+            elif re.match(r'^keywords\s*:', line):
+                in_fm_text_field = False
+                # keywords header line — apply katakana/tatoeba/pro only
+                line = apply_to_processable(line, fix_katakana)
+                line = apply_to_processable(line, fix_tatoeba)
+                line = apply_to_processable(line, fix_pro_label)
+                new_lines.append(line)
+                continue
+            elif re.match(r'^\s+-\s', line):
+                # keywords list item — apply katakana/tatoeba/spacing/pro
+                in_fm_text_field = False
+                line = apply_to_processable(line, fix_katakana)
+                line = apply_to_processable(line, fix_tatoeba)
+                line = fix_spacing_line(line)
+                line = apply_to_processable(line, fix_pro_label)
+                new_lines.append(line)
+                continue
+            else:
+                in_fm_text_field = False
+                # Other frontmatter lines — apply katakana/tatoeba/pro
+                line = apply_to_processable(line, fix_katakana)
+                line = apply_to_processable(line, fix_tatoeba)
+                line = apply_to_processable(line, fix_pro_label)
+                new_lines.append(line)
+                continue
 
+        # Regular line: apply all fixes via tokenization
+        line = apply_text_fixes(line)
         new_lines.append(line)
 
     content = '\n'.join(new_lines)

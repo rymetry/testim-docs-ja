@@ -7,19 +7,19 @@ updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/teamcity-integration'
 keywords:
   - TeamCity
-  - CI統合
+  - CI 統合
   - ビルドステップ
   - ビルドパイプライン
-  - CIパイプライン
+  - CI パイプライン
   - ビルドエージェント
   - Node.js
   - Testim CLI
-  - Testimテスト
+  - Testim テスト
 ---
 
 ![TeamCity ロゴ](/images/ci-integrations/teamcity-integration/6a3c92e-4pro3hwiQxCVNwY6QQXg_teamcity-logo.png)
 
-TeamCity とテストを統合するには、まず TeamCity マシンまたはそのスレーブマシンの 1 つに node.js（12.13+、 14.15+、 16.13+）がインストールされている必要があります。
+TeamCity とテストを統合するには、まず TeamCity マシンまたはそのスレーブマシンの 1 つに node.js（12.13+、14.15+、16.13+）がインストールされている必要があります。
 
 ## 次の手順に従ってください
 
@@ -32,7 +32,7 @@ TeamCity とテストを統合するには、まず TeamCity マシンまたは�
 ![Command Line ランナータイプを選択する TeamCity の画面](/images/ci-integrations/teamcity-integration/6e50ad2-gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png)
 
 3. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用して Custom Script を設定します。\
-   以下は、最新の npm パッケージがあることを確認する最初の部分と、 CLI コマンド自体を含む基本的なスクリプトテンプレートです:
+   以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell
 set -x
@@ -54,7 +54,7 @@ set +x
 
 ![TeamCity で Custom Script ビルドステップを設定する画面](/images/ci-integrations/teamcity-integration/8360a86-xkywkbTDRDiv6XSRI8zk_09-new-build-step-form-full.png)
 
-TeamCity が結果を保存、分析、表示するために、 Testim は自動的に認識される独自の TeamCity レポート形式を生成します:
+TeamCity が結果を保存、分析、表示するために、Testim は自動的に認識される独自の TeamCity レポート形式を生成します:
 
 ![Testim の TeamCity レポート形式でテスト結果が表示されたビルド結果画面](/images/ci-integrations/teamcity-integration/947a4f9-byvxlS1TKuodnownVWwg_10-build-results.png)
 
@@ -62,4 +62,4 @@ TeamCity が結果を保存、分析、表示するために、 Testim は自動
 
 1. 実行されるテストの進行状況をテストごとに確認できます!
 2. グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
-3. 引数**--reporters teamcity, console --retries**を組み合わせて使用する場合、リトライでテストが合格しても、 teamcity は失敗と合格の両方の実行を記録し、スイートが合格してもビルドは失敗としてマークされます。
+3. 引数**--reporters teamcity, console --retries**を組み合わせて使用する場合、リトライでテストが合格しても、teamcity は失敗と合格の両方の実行を記録し、スイートが合格してもビルドは失敗としてマークされます。

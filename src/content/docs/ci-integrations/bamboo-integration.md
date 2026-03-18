@@ -1,16 +1,16 @@
 ---
 title: Bamboo 統合
-description: Bamboo で Testim テストを実行する方法について説明します。プラン作成、 Testim CLI のインストール、実行タスクの設定手順を提供します。
+description: Bamboo で Testim テストを実行する方法について説明します。プラン作成、Testim CLI のインストール、実行タスクの設定手順を提供します。
 category: 統合
 order: 12004
 updated: '2025-02-10'
 sourceUrl: 'https://help.testim.io/docs/bamboo-integration'
 keywords:
   - Bamboo
-  - CI統合
+  - CI 統合
   - ビルドプラン
   - ビルドジョブ
-  - Bambooプラン
+  - Bamboo プラン
   - Testim CLI
   - Node.js
   - テスト結果レポート
@@ -43,7 +43,7 @@ Bamboo とテストを統合するには、まず Bamboo サーバーまたは�
 ![Bamboo で npm タスクを追加する画面](/images/ci-integrations/bamboo-integration/71b903a-Bamboo5.png)
 
 2.3. タスクの説明を入力します（例: "Install Testim CLI"）\
-2.4. 既存の Node.Js 実行可能ファイルを選択するか、 Node.Js パスを使用して新しいものを追加します
+2.4. 既存の Node.Js 実行可能ファイルを選択するか、Node.Js パスを使用して新しいものを追加します
 
 ![Bamboo で Node.js 実行ファイルを選択する設定画面](/images/ci-integrations/bamboo-integration/2348387-Bamboo6.png)
 

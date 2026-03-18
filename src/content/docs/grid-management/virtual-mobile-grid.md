@@ -21,12 +21,12 @@ Virtual Mobile Grid (VMG) は、多数の iOS simulator と Android emulator を
 * 利用可能な virtual device を使って接続と設定を簡素化し、品質を向上できます。
 * 異なる device で parallel run を行い、テスト実行をスケールできます。
 
-Virtual Mobile Grid はテストの記録にも実行にも使用できます。また、[Mobile Apps Library](/docs/mobile-apps) と接続されています。つまり、 mobile app を使うテストを Virtual Mobile Grid で実行する前に、その app を Mobile Apps Library へ追加しておく必要があります。
+Virtual Mobile Grid はテストの記録にも実行にも使用できます。また、[Mobile Apps Library](/docs/mobile-apps) と接続されています。つまり、mobile app を使うテストを Virtual Mobile Grid で実行する前に、その app を Mobile Apps Library へ追加しておく必要があります。
 
-Virtual Mobile Grid に特別な integration は不要です。有償 customer には license に含まれています。 Community license でも、 Company Owner または Project Owner であれば無料 trial に登録できます。 trial を開始すると、 Virtual Mobile Grid はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用可能になります。 trial 期間中は Android と iOS のさまざまな virtual device を使用できます。
+Virtual Mobile Grid に特別な integration は不要です。有償 customer には license に含まれています。Community license でも、Company Owner または Project Owner であれば無料 trial に登録できます。trial を開始すると、Virtual Mobile Grid はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用可能になります。trial 期間中は Android と iOS のさまざまな virtual device を使用できます。
 
 :::warning{title="テスト互換性"}
-Virtual Mobile Grid で実行できるのは、 virtual device で動作するように compile された iOS application のみです。
+Virtual Mobile Grid で実行できるのは、virtual device で動作するように compile された iOS application のみです。
 :::
 
 :::info{title="OS 互換性"}
@@ -35,7 +35,7 @@ Virtual Mobile Grid は x86_64 Android build のみをサポートします。
 
 ## 無料の Virtual Mobile Grid trial を開始する
 
-Community license を利用している場合、 Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。 trial 期間は 14 日間です。 trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
+Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。trial 期間は 14 日間です。trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
 
 :fa-arrow-right: **無料の Virtual Mobile Grid trial を開始するには:**
 
@@ -47,17 +47,17 @@ Community license を利用している場合、 Company Owner または Project
 
 ![Virtual Mobile Grid trial が有効化された通知](/images/grid-management/virtual-mobile-grid/6ab7015-image_1.png)
 
-**Virtual Mobile Grid** 画面では、 trial 期間中に利用できる device を確認できます。
+**Virtual Mobile Grid** 画面では、trial 期間中に利用できる device を確認できます。
 
 ## Virtual Mobile Grid でテストを実行する
 
 Virtual Mobile Grid でテストを実行する前に、次を確認してください。
 
-* **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照してください。この configuration は CLI / CI 、 Scheduler 、 Test Plan からの実行に使用できます。
+* **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
 
 ![Virtual Mobile Grid 向け mobile configuration の設定例](/images/grid-management/virtual-mobile-grid/07dd385-image_2.png)
 
-* **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps) を参照してください。すでに ***"From Device"*** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、 From Library option を選択します。
+* **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps) を参照してください。すでに ***"From Device"*** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
 
 ### テストをリモート実行する
 
@@ -102,7 +102,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 #### CLI から変更する
 
-CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、 Mobile Apps Library にある別の app Id で上書きできます。
+CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、Mobile Apps Library にある別の app Id で上書きできます。
 
 :fa-arrow-right: **既定の app ID を上書きするには:**
 

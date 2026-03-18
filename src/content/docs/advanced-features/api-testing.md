@@ -22,7 +22,7 @@ keywords:
 
 UI テストからサーバー API を呼び出し、検証やデータ取得を簡単に行います。
 
-API テストは、テスト内で API 呼び出し（HTTP リクエスト）を行います。これにより、他ステップで使うデータの取得や、バックエンドとフロントエンドの値の整合を確認する検証が可能です。 API リクエストはヘッダー（認証情報を含む）とボディを持つ完全な HTTP リクエストです。\
+API テストは、テスト内で API 呼び出し（HTTP リクエスト）を行います。これにより、他ステップで使うデータの取得や、バックエンドとフロントエンドの値の整合を確認する検証が可能です。API リクエストはヘッダー（認証情報を含む）とボディを持つ完全な HTTP リクエストです。\
 API ステップには **Add API action** と **Validate API** の 2 種類があります。
 
 * Add API action — API 応答からデータを取得したい場合に使用（返ってくることの確認にも利用可）
@@ -63,7 +63,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png)
 
 8. **URL** フィールドで使用する HTTP リクエストメソッドを選択し、ルートエンドポイントとパスを入力します。必要に応じて URL にパラメーターを追加します。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
-9. **Header** セクションで、 API に送信するヘッダーのキーと値を入力します。ヘッダーを個別のキー／値フィールドで入力したい場合は **Key-Value**（デフォルト）を選択し、ブラウザの DevTools Network パネルからコピーした文字列などをそのまま貼り付けたい場合は **Raw** を選択します。\
+9. **Header** セクションで、API に送信するヘッダーのキーと値を入力します。ヘッダーを個別のキー／値フィールドで入力したい場合は **Key-Value**（デフォルト）を選択し、ブラウザの DevTools Network パネルからコピーした文字列などをそのまま貼り付けたい場合は **Raw** を選択します。\
    複数のヘッダーを定義している場合、左側のチェックボックスをオンにしたヘッダーを使ったリクエストが順に実行されます。ヘッダーを削除したい場合は右端の **X** をクリックします。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0277227-header.png)
@@ -79,11 +79,11 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。 Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。  
+11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。  
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
-**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。 Assertion は後述の「 Run additional code on request results 」で記述するコードよりも先に実行され、 TRUE なら成功、 FALSE なら失敗となります。 Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「 Run additional code on request results 」のコードは実行されません。<br/>\
+**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。<br/>\
 設定手順:
 
 * 1 つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
@@ -113,12 +113,12 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 17. **Params** フィールドでは、後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) で利用するパラメーターを定義します。
 
 :::note
-テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、 API ステップの前に [wait for](/docs/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
+テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、API ステップの前に [wait for](/docs/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
 :::
 
 ## AUT コンテキスト外でリクエストを試す
 
-テストを実行せずに、 AUT（対象アプリ）コンテキスト外で素早くリクエストだけを試したい場合は、**URL** フィールドの **Send** ボタンを使います。このとき **Run additional code on request results** で設定したコードや Assertion は実行されません。\
+テストを実行せずに、AUT（対象アプリ）コンテキスト外で素早くリクエストだけを試したい場合は、**URL** フィールドの **Send** ボタンを使います。このとき **Run additional code on request results** で設定したコードや Assertion は実行されません。\
 送信されるのは **Properties** パネルで定義されたローカルパラメーターのうち、静的な値のみです。動的な値は空文字として送信されます。\
 利用可能なステップパラメーターは URL フィールド下に一覧表示され、**Edit** をクリックすると **Properties** パネルで編集できます。
 
@@ -151,15 +151,15 @@ API アクションステップ（Add API action）は、レスポンスを利�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/01b1c12-Picture1.png)
 
-5. 上記「 Validate API ステップの追加」の **手順 5 〜 13** に従って、 URL ・ヘッダー・ボディ・ Assertion などを設定します（ただし目的は「検証」ではなく「応答データの利用」になります）。
-6. レスポンスデータを使った追加処理（パラメーター抽出、 DB 接続のクローズなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンスの *status code* / *response headers* / *response body* などを利用して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合は Object 、それ以外は文字列として渡されます。
+5. 上記「Validate API ステップの追加」の **手順 5〜13** に従って、URL ・ヘッダー・ボディ・ Assertion などを設定します（ただし目的は「検証」ではなく「応答データの利用」になります）。
+6. レスポンスデータを使った追加処理（パラメーター抽出、DB 接続のクローズなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンスの *status code* / *response headers* / *response body* などを利用して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合は Object、それ以外は文字列として渡されます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/5d3302a-image_2.png)
 
-7. 残りのプロパティ（送信コンテキストやリトライ設定、 Params など）は、「 Validate API ステップの追加」の **手順 14 〜 16** を参照して設定します。
+7. 残りのプロパティ（送信コンテキストやリトライ設定、Params など）は、「Validate API ステップの追加」の **手順 14〜16** を参照して設定します。
 
 :::note
-ブラウザ経由で実行しており、直前のステップでページの読み込みが終わっていない場合、このステップは失敗することがあります。前のステップでページロードが必要な場合は、 API ステップの前に wait for ステップを挿入し、ページの読み込み完了を確認してください。
+ブラウザ経由で実行しており、直前のステップでページの読み込みが終わっていない場合、このステップは失敗することがあります。前のステップでページロードが必要な場合は、API ステップの前に wait for ステップを挿入し、ページの読み込み完了を確認してください。
 :::
 
 ## Including a File and/or Text field with an API Call Using Form Data
@@ -200,7 +200,7 @@ Key 名またはファイルのどちらかが指定されていない場合、�
 アップロードされたファイルはテストサーバーに保存され、テスト実行時にそのファイルが API 呼び出しの一部として送信されます。
 
 :::warning{title="注意"}
-アップロードできるファイルサイズは最大 25MB です。これを超えるファイルをアップロードしようとすると、 Testim がバリデーションエラーを表示し添付をブロックします。
+アップロードできるファイルサイズは最大 25MB です。これを超えるファイルをアップロードしようとすると、Testim がバリデーションエラーを表示し添付をブロックします。
 :::
 
 **API 呼び出しにテキストフィールドを含めるには:**
@@ -265,17 +265,17 @@ Body セクションに定義したエントリは、一時的に無効化した
 
 ## パラメーターの使用 {#using-parameters}
 
-API ステップでは、他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメーターを埋め込んだり、レスポンスから値を取り出してパラメーターに保存したり、 Assertion の値として使用したりできます。パラメーターは in-param（依存性注入）として受け取るか、 exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
+API ステップでは、他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメーターを埋め込んだり、レスポンスから値を取り出してパラメーターに保存したり、Assertion の値として使用したりできます。パラメーターは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
 パラメーターの詳細は [Parameters](/docs/parameters) を参照してください。
 
 :::note
 配列パラメーターは `array.0.name` のような形式で参照できます。  
-また、 API ステップ内の各入力セクションでは、複雑な式はサポートされません。
+また、API ステップ内の各入力セクションでは、複雑な式はサポートされません。
 :::
 
 ## 送信する HTTP リクエストでのパラメーター利用 {#using-parameters-in-the-sent-http-request}
 
-パラメーターは、送信する HTTP リクエストのヘッダー／ボディ／URL に埋め込めます。これらのセクションは純粋な JS で書くと煩雑になるため、 Testim ではパラメーターを「二重／三重の波括弧」で簡単に埋め込めるようになっています。
+パラメーターは、送信する HTTP リクエストのヘッダー／ボディ／URL に埋め込めます。これらのセクションは純粋な JS で書くと煩雑になるため、Testim ではパラメーターを「二重／三重の波括弧」で簡単に埋め込めるようになっています。
 
 ### Body へのパラメーター追加
 
@@ -285,7 +285,7 @@ API ステップでは、他のコードステップと同様にパラメータ�
 
 ### URL へのパラメーター追加
 
-テストの Base URL と同じホストにある API に対して呼び出しを行いたい場合は、 URL 全体を記述する代わりに `{{{BASE_URL}}}` パラメーターを使えます。 URL フィールドで `{{{BASE_URL}}}` の後ろにパスを続けて入力してください。ここでもパラメーターをエンコードしたくない場合は三重波括弧を使用します（例: `{{{param}}}`）。
+テストの Base URL と同じホストにある API に対して呼び出しを行いたい場合は、URL 全体を記述する代わりに `{{{BASE_URL}}}` パラメーターを使えます。URL フィールドで `{{{BASE_URL}}}` の後ろにパスを続けて入力してください。ここでもパラメーターをエンコードしたくない場合は三重波括弧を使用します（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/753553d-image_5.png)
 
@@ -297,7 +297,7 @@ API ステップでは、他のコードステップと同様にパラメータ�
 
 ## HTTP レスポンスでのパラメーター利用
 
-Properties パネルで追加したパラメーターは、 API ステップ内のコードの関数シグネチャに自動的に追加されます。これにより、レスポンスを処理するコード内でパラメーターを直接利用できます。
+Properties パネルで追加したパラメーターは、API ステップ内のコードの関数シグネチャに自動的に追加されます。これにより、レスポンスを処理するコード内でパラメーターを直接利用できます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/eb87221-image_9.png)
 
@@ -323,8 +323,8 @@ Assertion セクションでも、比較値としてパラメーターをその�
 
 * **Download the response info** – **View Sent Request** の右側にあるダウンロードボタンをクリックすると、レスポンス全体を含んだ JSON ファイルをローカルにダウンロードできます。
 * **Assertion response** – Assertion を設定している場合、それぞれの Assertion の横に次のいずれかの結果が表示されます。
-  * **Passed** – 条件が TRUE になり、 Assertion が成功したことを示します。
-  * **Failed** – 条件が FALSE となり、 Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
+  * **Passed** – 条件が TRUE になり、Assertion が成功したことを示します。
+  * **Failed** – 条件が FALSE となり、Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/639898e-image_12.png)
 

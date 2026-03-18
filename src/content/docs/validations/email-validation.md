@@ -7,7 +7,7 @@ updated: '2025-09-14'
 sourceUrl: 'https://help.testim.io/docs/email-validation'
 keywords:
   - メール検証
-  - Eメール
+  - E メール
   - サインアップ
   - ログイン
   - メールボックス
@@ -15,7 +15,7 @@ keywords:
   - テスト用メール
   - 認証フロー
   - ユーザー登録
-  - Testim受信箱
+  - Testim 受信箱
 ---
 
 サインアップとログインフローを検証する
@@ -408,7 +408,7 @@ Validate email ステップを設定する方法は 2 つあります：
 :::
 
 10. 必要に応じて、ステップとパラメーターの追加設定を行います。
-11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、 JavaScript コード内でそれらのパラメーターを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/email-validation#email-validation-examples) セクションを参照してください。コードは通常、 Email address フィールドに入力された値をコード内のパラメーターとして使用します。
+11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/email-validation#email-validation-examples) セクションを参照してください。コードは通常、Email address フィールドに入力された値をコード内のパラメーターとして使用します。
 
 :::note
 HTML パラメーター以外の DOM セレクタ（例：jQuery）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
@@ -517,7 +517,7 @@ exportsTest.emailLink = emailLinks[0];
    ![コードレス画面](/images/validations/email-validation/873ab96-codeless_screen.png)
 
 8. **Email Filters** の下で、有効にしたい条件タイプのチェックボックスを選択して、受信箱内のメールを特定する条件を指定します。これらの条件すべてに一致するメール（つまり AND 条件）が検証されてステップが成功します。受信箱内のメールがこれらの条件のいずれにも一致しない場合、ステップは失敗します。すべての条件はオプションですが、少なくとも 1 つの条件を有効にする必要があります：
-   1. **Time range** - 受信箱で受信したメールの時間範囲を分単位で指定します。例えば、 30 と入力すると過去 30 分間に受信したメールをスキャンします。
+   1. **Time range** - 受信箱で受信したメールの時間範囲を分単位で指定します。例えば、30 と入力すると過去 30 分間に受信したメールをスキャンします。
    2. **Expected subject** - メールの件名に含まれるべきテキストまたはテキストの一部を入力します。これは部分一致でも構いません。テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメーターを含めることができます。
    3. **Expected body** - メールの本文に含まれるべきテキストまたはテキストの一部を入力します。これは部分一致でも構いません。テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメーターを含めることができます。
 
@@ -538,7 +538,7 @@ exportsTest.emailLink = emailLinks[0];
       3. **Extraction until** - メールの開始からフィールドのテキストまでのテキスト/リンクを抽出する場合に選択します。最初のフィールドに文字列を入力して終了位置（その前までテキストが抽出される）を定義します。
 
          テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメーターを含めることができます。
-   4. **Regex** オプションを選択した場合は、フィールドにテキスト抽出用の regex 条件を入力します。 regex 条件の使用例を確認するには、[こちらをクリック](https://www.sitepoint.com/demystifying-regex-with-practical-examples/)してください。
+   4. **Regex** オプションを選択した場合は、フィールドにテキスト抽出用の regex 条件を入力します。regex 条件の使用例を確認するには、[こちらをクリック](https://www.sitepoint.com/demystifying-regex-with-practical-examples/)してください。
 
 10. メールフィルタと抽出を検証する場合：
     1. **Verification email inbox address** セクションの下で、フィールドをクリックし、恒久的メールアドレスのいずれかを選択します。

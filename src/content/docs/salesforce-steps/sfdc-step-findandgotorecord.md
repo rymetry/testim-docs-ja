@@ -9,7 +9,7 @@ keywords:
   - Salesforce
   - レコード検索
   - グローバル検索
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 

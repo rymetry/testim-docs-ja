@@ -1,7 +1,7 @@
 ---
 title: Testim テストを Playwright コードとしてエクスポート
 description: >-
-  TestimテストをPlaywright用のコードに変換してエクスポートする方法について説明します。URLサフィックスを追加してコードビューアーで表示します。
+  Testim テストを Playwright 用のコードに変換してエクスポートする方法について説明します。URL サフィックスを追加してコードビューアーで表示します。
 category: 管理者機能
 order: 14008
 updated: '2025-09-18'
@@ -26,7 +26,7 @@ Testim テストを Playwright 用に適応されたコードとしてエクス�
 **Testim テストを Playwright 用コードとしてエクスポートするには:**
 
 1. エディターでテストを開きます。
-2. ブラウザで、 URL の末尾に以下のサフィックスを追加して **Enter** を押します。
+2. ブラウザで、URL の末尾に以下のサフィックスを追加して **Enter** を押します。
 
    ```text
    ?embedMode=true&exportPuppeteer=true&exportSelenium=true&exportPlaywright=true

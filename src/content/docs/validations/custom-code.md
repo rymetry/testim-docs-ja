@@ -103,7 +103,7 @@ HTML 要素をパラメーターとして選択するために AUT を開いた�
 
 #### 数値の検証（Custom validation）
 
-*Add custom validation* を使って、アプリ内の数値を検証します。次の例では、 HTML 要素の数値が 1,000 未満であることを確認します。まず文字列から非数値文字を取り除き、数値に変換しています。
+*Add custom validation* を使って、アプリ内の数値を検証します。次の例では、HTML 要素の数値が 1,000 未満であることを確認します。まず文字列から非数値文字を取り除き、数値に変換しています。
 
 ![数値検証のコード例](/images/validations/custom-code/142d406-Testim_288.png)
 

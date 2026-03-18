@@ -1,6 +1,6 @@
 ---
 title: 結果ラベル
-description: テスト実行結果にラベルを追加する方法について説明します。 CLI または Scheduler からラベルを追加できます。
+description: テスト実行結果にラベルを追加する方法について説明します。CLI または Scheduler からラベルを追加できます。
 category: テスト結果
 order: 7012
 updated: '2025-09-22'
@@ -9,7 +9,7 @@ keywords:
   - 結果ラベル
   - 実行ラベル
   - テスト実行フィルター
-  - CLIパラメーター
+  - CLI パラメーター
   - スケジューラー
   - テスト管理
 ---
@@ -32,13 +32,13 @@ keywords:
 
 ## CLI 経由で結果ラベルを追加する
 
-実行にラベルを追加するには、 CLI で以下のパラメーターを使用します:
+実行にラベルを追加するには、CLI で以下のパラメーターを使用します:
 
 ```shell
 --result-label "nightly Jenkins run"
 ```
 
-* 必要に応じて、 CLI コマンドに複数の結果ラベルを追加できます。 CLI の実行の詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。
+* 必要に応じて、CLI コマンドに複数の結果ラベルを追加できます。CLI の実行の詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。
 
 ```shell
 --result-label "nightly Jenkins run" --result-label "v1.42.35"
@@ -50,4 +50,4 @@ keywords:
 
 ## Scheduler 経由で結果ラベルを追加する
 
-スケジュールされた実行は、事前定義されたスケジュールに基づいて実行されるテスト実行です。 Scheduler を作成する際、**詳細オプション**の一部として結果ラベルを追加できます。詳細については、[Scheduler](/docs/scheduler)を参照してください。
+スケジュールされた実行は、事前定義されたスケジュールに基づいて実行されるテスト実行です。Scheduler を作成する際、**詳細オプション**の一部として結果ラベルを追加できます。詳細については、[Scheduler](/docs/scheduler)を参照してください。

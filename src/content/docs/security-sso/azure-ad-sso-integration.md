@@ -1,8 +1,8 @@
 ---
 title: Azure AD SSO 統合
 description: >-
-  Azure Active DirectoryとTestimをSSO統合する手順を説明します。Azure AD Seamless
-  SSOにより、ユーザーは一度の認証でTestimにアクセスできます。
+  Azure Active Directory と Testim を SSO 統合する手順を説明します。Azure AD Seamless
+  SSO により、ユーザーは一度の認証で Testim にアクセスできます。
 category: セキュリティ
 order: 18005
 updated: '2025-11-02'
@@ -10,7 +10,7 @@ sourceUrl: 'https://help.testim.io/docs/azure-ad-sso-integration'
 keywords:
   - Azure AD
   - Azure Active Directory
-  - SSO統合
+  - SSO 統合
   - SAML
   - シングルサインオン
   - Microsoft
@@ -18,11 +18,11 @@ keywords:
   - アクセス管理
 ---
 
-Azure Active Directory は Microsoft のクラウドベースの ID およびアクセス管理サービスです。 Azure AD シームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
-Testim は Azure AD Seamless SSO と統合されており、 Azure ユーザーは Azure で一度認証すれば、再度認証することなく Testim にアクセスできます。
+Azure Active Directory は Microsoft のクラウドベースの ID およびアクセス管理サービスです。Azure AD シームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
+Testim は Azure AD Seamless SSO と統合されており、Azure ユーザーは Azure で一度認証すれば、再度認証することなく Testim にアクセスできます。
 
 :::info
-SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、 Testim の CSM に連絡してください。
+SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、Testim の CSM に連絡してください。
 :::
 
 **Testim Azure AD 統合をセットアップするには:**
@@ -68,7 +68,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 
 * Email
   * Name: email
-  * Source attribute: user.mail または user.userprincipaname 。組織のユーザーの 1 人を Azure AD に入力し、どのフィールドでメールアドレスが表示されるかを確認することで、どちらを使用するかを確認できます。
+  * Source attribute: user.mail または user.userprincipaname。組織のユーザーの 1 人を Azure AD に入力し、どのフィールドでメールアドレスが表示されるかを確認することで、どちらを使用するかを確認できます。
 * firstName
   * Name: firstName
   * Source attribute: user.givenname
@@ -77,7 +77,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 * Source attribute: user.surname
 
 16. ページを閉じて、**SAML Signing Certificate**の下で**Federation Metadata XML**をダウンロードします。
-17. **Testim**タブで、**IDENTITY PROVIDER (IDP) METADATA**の下の**Upload File**をクリックし、 Federation Metadata XML ファイルを選択します。
+17. **Testim**タブで、**IDENTITY PROVIDER (IDP) METADATA**の下の**Upload File**をクリックし、Federation Metadata XML ファイルを選択します。
 18. すべてのユーザーが Azure を通じてのみログインでき、通常の Testim ログインページを通じてログインできないようにするには、**Enable SSO**をオンにし、**Force users to login via idP**チェックボックスを選択します。
 
 ![SSO 設定画面](/images/security-sso/azure-ad-sso-integration/eda2ac8-ssoconfiguration3.png)

@@ -7,12 +7,12 @@ updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/navigation'
 keywords:
   - ナビゲーション
-  - UI操作
+  - UI 操作
   - ページ移動
-  - URL遷移
+  - URL 遷移
   - 新しいタブ
   - テストステップ
-  - Webテスト
+  - Web テスト
   - 自動化テスト
   - アクション
   - 定義済みステップ

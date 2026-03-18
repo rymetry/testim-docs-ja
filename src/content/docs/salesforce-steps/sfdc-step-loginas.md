@@ -10,7 +10,7 @@ keywords:
   - 別のユーザーとしてログイン
   - 管理者
   - ペルソナ
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 

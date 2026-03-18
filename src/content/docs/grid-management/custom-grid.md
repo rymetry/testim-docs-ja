@@ -18,7 +18,7 @@ keywords:
 
 独自の Selenium Grid 上でテストを実行できます。
 
-この記事では、 Testim 上で独自の Selenium Grid を設定する方法を説明します。
+この記事では、Testim 上で独自の Selenium Grid を設定する方法を説明します。
 
 ## Custom Grid を追加する
 
@@ -27,14 +27,14 @@ keywords:
 1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Custom Grid** を選択します。
 2. **Next** をクリックします。
 3. **Name** field に、利用する Selenium Grid の名前を入力します。
-4. **Host** field に、 Selenium Grid の host name または IP address を入力します。
-5. **Port** field に、 Selenium Grid の port を入力します。
+4. **Host** field に、Selenium Grid の host name または IP address を入力します。
+5. **Port** field に、Selenium Grid の port を入力します。
 
 :::info
-ローカルで実行する場合でも、 Testim はテスト結果を表示して保存するために browser へ接続する必要があります。 network から [https://services.testim.io/](https://services.testim.io/) へアクセスできることを確認してください。
+ローカルで実行する場合でも、Testim はテスト結果を表示して保存するために browser へ接続する必要があります。network から [https://services.testim.io/](https://services.testim.io/) へアクセスできることを確認してください。
 :::
 
-![Custom Grid の Name 、 Host 、 Port を設定する画面](/images/grid-management/custom-grid/caabeca-2023-03-19_17-44-02.gif)
+![Custom Grid の Name、Host、Port を設定する画面](/images/grid-management/custom-grid/caabeca-2023-03-19_17-44-02.gif)
 
 ## Grid で実行する方法
 

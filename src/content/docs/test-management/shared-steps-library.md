@@ -1,6 +1,6 @@
 ---
 title: 共有ステップライブラリ
-description: プロジェクト内の共有ステップを一覧表示・フィルタリング・管理できる Shared Steps Library 画面について説明します。
+description: 共有ステップを追跡します
 category: テスト管理
 order: 9005
 updated: '2025-09-15'
@@ -31,7 +31,7 @@ keywords:
 
 ## 共有ステップライブラリをフィルタリングする
 
-ステップカテゴリ（Groups 、 Actions 、 Validations 、 Wait for など）で共有ステップをフィルタリングできます。\
+ステップカテゴリ（Groups、Actions、Validations、Wait for など）で共有ステップをフィルタリングできます。\
 :fa-arrow-right: **共有ステップライブラリをフィルタリングするには:**
 
 1. **Advanced filters** アイコンをクリックします。
@@ -42,7 +42,7 @@ keywords:
 
 ![Filter Shared Steps ペインでステップカテゴリなどの条件を設定する画面](/images/test-management/shared-steps-library/7ff70ce-Testim_057_r.png)
 
-2. Filter Shared Steps ペインで、 1 つ以上のフィルター条件を選択します。
+2. Filter Shared Steps ペインで、1 つ以上のフィルター条件を選択します。
 3. **Apply** をクリックします。フィルターが適用され、条件を満たす共有ステップのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/saving-a-filtered-view) を参照してください。
 
 :::note
@@ -52,7 +52,7 @@ Filter Shared Steps ペインの下部にある **Reset filters** をクリッ�
 4. Filter Shared Steps ペインを閉じるには、右上の **"X"** をクリックします。
 
 :::note
-Filter Shared Steps ペインをリセットせずに閉じても、フィルターはリセットされず、フィルター条件を満たす共有ステップのみが表示されます。すべてのテストとフォルダーを再度表示するには、 Filter Shared Steps ペインを再度開き、**Reset filters** と **Apply** をクリックする必要があります。
+Filter Shared Steps ペインをリセットせずに閉じても、フィルターはリセットされず、フィルター条件を満たす共有ステップのみが表示されます。すべてのテストとフォルダーを再度表示するには、Filter Shared Steps ペインを再度開き、**Reset filters** と **Apply** をクリックする必要があります。
 :::
 
 ![Reset filters と Apply を使って共有ステップのフィルターを解除する操作のアニメーション](/images/test-management/shared-steps-library/d44b4d2-Jan-28-2021_14-00-05.gif)
@@ -91,7 +91,7 @@ Filter Shared Steps ペインをリセットせずに閉じても、フィルタ
 
 ![選択した共有ステップに対して Export to CSV アイコンをクリックする画面](/images/test-management/shared-steps-library/5360b78-Screen_Shot_2021-01-31_at_10.46.43.png)
 
-**注意:** 検索/フィルタリング時、 CSV には一致するアイテムのみが含まれます。
+**注意:** 検索/フィルタリング時、CSV には一致するアイテムのみが含まれます。
 
 ## リストから共有ステップを非表示にする
 
@@ -116,7 +116,7 @@ Filter Shared Steps ペインをリセットせずに閉じても、フィルタ
 :fa-arrow-right: **非表示のステップを再表示するには:**
 
 1. フィルターを開きます
-2. 「 show hidden steps 」を選択します
+2. 「show hidden steps」を選択します
 3. 再表示したいステップを選択します
 4. 再表示オプションをクリックします
 

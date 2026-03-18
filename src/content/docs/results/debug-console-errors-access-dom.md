@@ -8,7 +8,7 @@ sourceUrl: 'https://help.testim.io/docs/debug-console-errors-access-dom'
 keywords:
   - コンソールエラー
   - ネットワークエラー
-  - DOMスナップショット
+  - DOM スナップショット
   - デバッグ
   - Chrome DevTools
   - テストログ
@@ -16,7 +16,7 @@ keywords:
 
 ## Chrome コンソールを使用したデバッグ
 
-`console.log(myVar)` を使用するか、 Chrome DevTools デバッガーを使用して、テスト実行中のエラーを確認できます（コードにデバッガーを追加）。
+console.log（myVar）を使用するか、Chrome DevTools デバッガーを使用して、テスト実行中のエラーを確認できます（コードにデバッガーを追加）。
 
 ## コンソールエラーとネットワークのデバッグ
 
@@ -38,12 +38,12 @@ Testim はコンソールエラーとネットワークエラーを自動的に�
 ![コンソールエラー一覧の例](/images/results/debug-console-errors-access-dom/8c191a6-consoleerrors.png)
 
 :::warning{title="注意"}
-テストログは、 Chrome & Edge Chromium ブラウザでの実行にのみ表示されます。
+テストログは、Chrome & Edge Chromium ブラウザでの実行にのみ表示されます。
 :::
 
 ## 失敗ステップの DOM を確認してデバッグする
 
-ステップが失敗すると、 Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。
+ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。
 
 **エラーの DOM スナップショットを表示するには:**
 
@@ -59,7 +59,7 @@ Testim はコンソールエラーとネットワークエラーを自動的に�
 ![DOM スナップショット表示画面](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png)
 
 :::warning{title="注意"}
-* DOM は、 Chrome & Edge Chromium ブラウザの実行にのみ表示されます。
+* DOM は、Chrome & Edge Chromium ブラウザの実行にのみ表示されます。
 * DOM は失敗したステップにのみ表示されます。
 :::
 

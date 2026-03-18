@@ -1,6 +1,6 @@
 ---
 title: Applitools 統合
-description: AI 駆動のビジュアルテストを有効にするための Applitools Eyes 統合方法について説明します。 API キーの作成と設定手順を提供します。
+description: AI 駆動のビジュアルテストを有効にするための Applitools Eyes 統合方法について説明します。API キーの作成と設定手順を提供します。
 category: 統合
 order: 12017
 updated: '2025-02-10'
@@ -10,7 +10,7 @@ keywords:
   - Applitools
   - Applitools Eyes
   - ビジュアルテスト
-  - AIテスト
+  - AI テスト
   - ビジュアル検証
   - 統合設定
 ---
@@ -20,7 +20,7 @@ AI 駆動のビジュアルテストを有効にするために Applitools と�
 Testim のビジュアル検証および wait-for ステップを使用するには、まず[Applitools](https://applitools.com/)が提供する Applitools Eyes アプリと Testim アカウントを統合する必要があります。
 
 :::info{title="PRO機能"}
-この機能は、 Professional plan のプロジェクトでのみ利用できます。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 前提条件
@@ -101,15 +101,15 @@ Applitools Eyes アカウントと Testim アカウント間で情報を交換�
 
 ![Applitools 統合設定ダイアログで Cloud URL や Run Key などを入力する画面](/images/applitools-integration/applitools-integration/968fe5b-Testim_262_r.png)
 
-5. **Cloud URL**フィールドに、 Applitools アプリケーションのベース URL（例: [https://eyes.applitools.com/](https://eyes.applitools.com/)）を入力します。
-6. **Run Key**と**Merge Key**フィールドに、 Applitools で以前に作成したキーを入力します。
+5. **Cloud URL**フィールドに、Applitools アプリケーションのベース URL（例: [https://eyes.applitools.com/](https://eyes.applitools.com/)）を入力します。
+6. **Run Key**と**Merge Key**フィールドに、Applitools で以前に作成したキーを入力します。
 7. **App Name**フィールドに、オプションでアプリの名前を入力します。\
    デフォルトのアプリ名は Project ID です。
 8. **Connect**をクリックします。\
-   成功アイコンが表示され、 Applitools が Testim と統合されます。ビジュアル検証および wait-for ステップの使用を開始できます。[Visual Validation](/docs/pixel-validation-and-pixel-wait-for)を参照してください。
+   成功アイコンが表示され、Applitools が Testim と統合されます。ビジュアル検証および wait-for ステップの使用を開始できます。[Visual Validation](/docs/pixel-validation-and-pixel-wait-for)を参照してください。
 
 ![Applitools 統合が成功しビジュアル検証ステップが有効になったことを示す画面](/images/applitools-integration/applitools-integration/446380f-Testim_265_r.png)
 
 :::info
-ビジュアル検証ステップを有効にするには、 Testim からログアウトして再度ログインが必要な場合があります。
+ビジュアル検証ステップを有効にするには、Testim からログアウトして再度ログインが必要な場合があります。
 :::

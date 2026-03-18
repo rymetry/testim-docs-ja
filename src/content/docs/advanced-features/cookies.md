@@ -24,13 +24,13 @@ keywords:
 Web サイトから送信されブラウザに保存される小さなデータです。用途は多岐に渡りますが、テスト自動化ではログインフロー全体を踏まずに Cookie を直接設定して認証を高速化する、といった使い方が可能です。
 :::
 
-Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。 Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
+Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
 Cookie を扱う代表的な方法:
 
 * Cookie ステップ — Cookie 用の専用ステップを利用します。
   * Set Cookie — テストで使用する Cookie を定義する新規ステップ。*HttpOnly* や *Secure* Cookie の作成はこのステップ推奨。
   * Get Cookie — AUT のブラウザから Cookie を取得してパラメーターに保存。以降のステップ（Set Cookie を含む）で参照可能。
-* Setup ステップの「 Test Data 」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。 Cookie のドメイン追加はこの Test Data で行うのが推奨。
+* Setup ステップの「Test Data」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。Cookie のドメイン追加はこの Test Data で行うのが推奨。
 * カスタム JS ステップ — テスト開始時でなくても良い場合に、任意の箇所で set/get を行う。
 * 設定ファイル＆実行フック — CLI 実行時に設定ファイル経由で Cookie を設定。スイート全体で必要な場合に有効。注: CLI から Cookie を「取得」することはできません。
 
@@ -137,7 +137,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ### Setting Cookies using the Setup step – “Test Data” property
 
-特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、 Setup ステップの **Test Data** プロパティを使います。
+特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。
 
 **Test Data プロパティで Cookie を設定するには:**
 
@@ -242,7 +242,7 @@ document.cookie = "username=tomsmith";
 * **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – 既定のタイムアウト時間（ステップ失敗までの時間）をミリ秒単位で上書きします。
 
-テストを実行すると、 Custom Action ステップの位置で Cookie 設定処理が実行されます。
+テストを実行すると、Custom Action ステップの位置で Cookie 設定処理が実行されます。
 
 ### 設定ファイルを使って Cookie を設定する
 
@@ -271,7 +271,7 @@ beforeSuite: function (suite) {
 
 ## Cookie を取得する
 
-Testim では、 Cookie の値を変数に代入することで Cookie を「取得」し、テスト内で属性を再利用することができます。
+Testim では、Cookie の値を変数に代入することで Cookie を「取得」し、テスト内で属性を再利用することができます。
 
 ### Get Cookie ステップを使って Cookie を取得する {#getting-cookies-using-the-get-cookie-step}
 
@@ -331,7 +331,7 @@ Testim では、 Cookie の値を変数に代入することで Cookie を「取
 
 ### Getting Cookies using a custom JS (JavaScript) step
 
-Get Cookie ステップを使わなくても、 custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
+Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
 
 **カスタムアクションステップで Cookie を取得するには:**
 
@@ -407,4 +407,4 @@ for(var i = 0; i <cookieArray.length; i++) {
 * **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
 * **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
-テストを実行すると、 Custom Action ステップ内で定義した Cookie 取得処理が実行されます。
+テストを実行すると、Custom Action ステップ内で定義した Cookie 取得処理が実行されます。

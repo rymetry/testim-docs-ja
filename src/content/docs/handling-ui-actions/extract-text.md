@@ -7,12 +7,14 @@ updated: '2025-09-15'
 sourceUrl: 'https://help.testim.io/docs/extract-text'
 keywords:
   - testim
+  - extract-text
+  - handling-ui-actions
   - 値の抽出
   - テキスト抽出
   - 要素抽出
   - パラメーター化
   - テスト自動化
-  - UI操作
+  - UI 操作
   - データ抽出
 ---
 
@@ -42,7 +44,7 @@ Web またはモバイルアプリケーションから直接値をコピーし�
 
 ![関連ステップ](/images/handling-ui-actions/extract-text/dcdf523-relevantstep.png)
 
-3. アプリから値を抽出したい**要素**を選択します。 Testim は**値の抽出ステップ**を作成し、選択した要素を割り当てます。
+3. アプリから値を抽出したい**要素**を選択します。Testim は**値の抽出ステップ**を作成し、選択した要素を割り当てます。
 
 ![要素を選択](/images/handling-ui-actions/extract-text/9136b57-select-element.png)
 
@@ -50,7 +52,7 @@ Web またはモバイルアプリケーションから直接値をコピーし�
 
 ![プロパティ](/images/handling-ui-actions/extract-text/1a34b50-properties.png)
 
-5. 変数の**名前**を更新します。デフォルトの名前は「 value 」です。
+5. 変数の**名前**を更新します。デフォルトの名前は「value」です。
 
 ![抽出名](/images/handling-ui-actions/extract-text/5ac725a-extract-name.png)
 
@@ -99,7 +101,7 @@ Web またはモバイルアプリケーションから直接値をコピーし�
 
 ![抽出モードタイプ](/images/handling-ui-actions/extract-text/d38aeb8-extract-mode-type.png)
 
-以下の例では、「 Adults（18+）」という文字列が値の抽出ステップによってキャプチャされました。抽出モードを**数値**に設定すると、値「 18 」のみが抽出変数に返されます。
+以下の例では、「Adults(18+)」という文字列が値の抽出ステップによってキャプチャされました。抽出モードを**数値**に設定すると、値「18」のみが抽出変数に返されます。
 
 ![数値の例](/images/handling-ui-actions/extract-text/5559177-number-example.png)
 

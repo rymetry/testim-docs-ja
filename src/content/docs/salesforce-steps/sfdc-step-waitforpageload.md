@@ -9,7 +9,7 @@ keywords:
   - Salesforce
   - 待機
   - ページ読み込み
-  - Salesforceステップ
+  - Salesforce ステップ
   - Testim for Salesforce
 ---
 

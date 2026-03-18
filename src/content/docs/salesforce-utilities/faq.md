@@ -8,9 +8,9 @@ sourceUrl: 'https://help.testim.io/docs/faq'
 keywords:
   - FAQ
   - よくある質問
-  - Salesforceリリース
+  - Salesforce リリース
   - エンドツーエンドテスト
-  - Salesforceライセンス
+  - Salesforce ライセンス
   - レコード削除
   - Apex
   - 命名規則
@@ -18,7 +18,7 @@ keywords:
 
 ## 将来の Salesforce リリースでも Testim for Salesforce が動作することをどのように保証していますか？
 
-リリース前の組織への早期アクセスを取得しているため、 Salesforce リリースの前に十分なテストを行っています。これにより、新しい Salesforce リリースがあったときにテストのメンテナンスに時間を費やす必要がありません。
+リリース前の組織への早期アクセスを取得しているため、Salesforce リリースの前に十分なテストを行っています。これにより、新しい Salesforce リリースがあったときにテストのメンテナンスに時間を費やす必要がありません。
 
 ## Testim for Salesforce はウェブサイトや他のアプリケーション全体でのエンドツーエンドテストを可能にしますか？
 
@@ -30,7 +30,7 @@ keywords:
 
 ## これは新しいツールですか、それとも Tricentis Tosca のアドオンですか？
 
-これは、 Salesforce ワークフローのテスト専用の新しいスタンドアロンツールです。
+これは、Salesforce ワークフローのテスト専用の新しいスタンドアロンツールです。
 
 ## テスト中に作成されたレコードをクリーンアップ/削除するにはどうすればよいですか？
 

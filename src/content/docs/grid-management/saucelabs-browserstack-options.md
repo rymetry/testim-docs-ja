@@ -18,7 +18,7 @@ keywords:
 
 SauceLabs と BrowserStack の Grid で CLI から capability を設定する方法を説明します。
 
-定義済み capability を含む JSON file を使うことで、 SauceLabs と BrowserStack へ追加の configuration parameter を渡せます。
+定義済み capability を含む JSON file を使うことで、SauceLabs と BrowserStack へ追加の configuration parameter を渡せます。
 
 例えば、特定の browser version と time zone でテストを実行したい場合は、次の手順に従います。
 
@@ -50,10 +50,10 @@ JSON capability file の設定は、次の設定を上書きします。
 
 * CLI flag (`deviceName`, `osVersion`)
 * Mobile Config
-* `autoGrantPermissions`、`AutoAcceptAlerts`、 video capturing 無効化などの default value
+* `autoGrantPermissions`、`AutoAcceptAlerts`、video capturing 無効化などの default value
 
 :::info{title="PlatformVersion capabilities"}
-`platformVersion` capability は検証され、使用すべき Appium version を決定するために使われます。例えば client が Appium version `1.22.2` と、 iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の warning が表示されます。これは mobile config / CLI flag の `osVersion` logic と同様です。
+`platformVersion` capability は検証され、使用すべき Appium version を決定するために使われます。例えば client が Appium version `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の warning が表示されます。これは mobile config / CLI flag の `osVersion` logic と同様です。
 :::
 
 ## SauceLabs
@@ -76,7 +76,7 @@ file の例:
 }
 ```
 
-parameter の詳細は、 SauceLabs の公式ドキュメントを参照してください。\
+parameter の詳細は、SauceLabs の公式ドキュメントを参照してください。\
 [https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options](https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options)
 
 ### SauceLabs を mobile で使用する場合
@@ -123,13 +123,13 @@ CLI に次を追加します: **--browserstack-options "config_browserstack.json
 }
 ```
 
-parameter の詳細は、 BrowserStack の公式ドキュメントを参照してください。\
+parameter の詳細は、BrowserStack の公式ドキュメントを参照してください。\
 [https://www.browserstack.com/automate/capabilities](https://www.browserstack.com/automate/capabilities)
 
 ### BrowserStack を mobile で使用する場合
 
-* Appium capability には、 prefix なしの W3C capability format を使用します。
-* BrowserStack capability には、 legacy (Wire JSON) format を使用します。
+* Appium capability には、prefix なしの W3C capability format を使用します。
+* BrowserStack capability には、legacy (Wire JSON) format を使用します。
 
 [Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
 
@@ -150,6 +150,6 @@ parameter の詳細は、 BrowserStack の公式ドキュメントを参照し�
 ```
 
 :::warning{title="BrowserStack 証明書エラー"}
-Android version 13.0 以上の device でテストしている場合、 certificate issue により target device が offline のように見えることがあります。詳細と解決方法は BrowserStack の関連ドキュメントを参照してください。\
+Android version 13.0 以上の device でテストしている場合、certificate issue により target device が offline のように見えることがあります。詳細と解決方法は BrowserStack の関連ドキュメントを参照してください。\
 [https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
 :::
