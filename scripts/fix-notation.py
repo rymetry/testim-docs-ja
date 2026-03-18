@@ -181,8 +181,10 @@ def fix_pro_label(text):
 
 
 def fix_callout_space(text):
-    """::: note → :::note (remove space between ::: and type name)."""
-    return re.sub(r'^(:{3,})\s+(\w)', r'\1\2', text)
+    """::: note → :::note (remove space between ::: and type name).
+    Handles indented directives (e.g. '   ::: note' inside list items).
+    """
+    return re.sub(r'^(\s*:{3,})\s+(\w)', r'\1\2', text)
 
 
 def fix_english_titles(text):

@@ -115,25 +115,25 @@ def check_file(filepath):
         if re.search(r'プロ機能|Pro\s*機能|PRO\s+機能', clean):
             issues.append((rel, lineno, 'PRO機能統一', line.strip()[:60]))
 
-        # 8. ::: with space
-        if re.match(r'^:{3,}\s+\w', line):
+        # 8. ::: with space (including indented directives in list items)
+        if re.match(r'^\s*:{3,}\s+\w', line):
             issues.append((rel, lineno, 'callout-space', line.strip()[:60]))
 
         # 9. Spacing: ASCII/digits directly adjacent to Japanese
         #    Matches fix_spacing_segment: [a-zA-Z0-9%]→JP and JP→[a-zA-Z0-9]
         if not is_fm:
-            # Check both directions: ASCII/digit→JP and JP→ASCII/digit
-            has_ascii_jp = re.search(r'[a-zA-Z0-9]' + JP, clean)
+            # Check both directions: ASCII/digit/%→JP and JP→ASCII/digit
+            has_ascii_jp = re.search(r'[a-zA-Z0-9%]' + JP, clean)
             has_jp_ascii = re.search(JP + r'[a-zA-Z0-9]', clean)
             if has_ascii_jp or has_jp_ascii:
                 # Exclude callout/directive syntax
                 if re.match(r'^:{3,}', line):
                     pass
                 # Exclude anchor fragments (#slug日本語)
-                elif re.search(r'#[a-zA-Z0-9_-]*' + JP, clean) and not re.search(r'(?<!#)[a-zA-Z0-9]' + JP, clean.split('#')[0] if '#' in clean else clean):
+                elif re.search(r'#[a-zA-Z0-9_-]*' + JP, clean) and not re.search(r'(?<!#)[a-zA-Z0-9%]' + JP, clean.split('#')[0] if '#' in clean else clean):
                     pass
                 # Exclude PRO機能 (deliberate compound term)
-                elif re.search(r'PRO機能', clean) and not re.search(r'(?<!PRO)[a-zA-Z0-9]' + JP, clean.replace('PRO機能', '')) and not re.search(JP + r'[a-zA-Z0-9]', clean.replace('PRO機能', '')):
+                elif re.search(r'PRO機能', clean) and not re.search(r'(?<!PRO)[a-zA-Z0-9%]' + JP, clean.replace('PRO機能', '')) and not re.search(JP + r'[a-zA-Z0-9]', clean.replace('PRO機能', '')):
                     pass
                 else:
                     issues.append((rel, lineno, 'spacing-missing', line.strip()[:80]))
