@@ -69,10 +69,12 @@ export default function SearchModal() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
+  const [indexStatus, setIndexStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const loadingRef = useRef(false);
 
   // グルーピングとフラットナビリストを構築
   const { groups, flatResults } = useMemo(() => {
@@ -106,12 +108,17 @@ export default function SearchModal() {
   }, [selectedIndex, results]);
 
   // 検索インデックスの遅延初期化（初回オープン時にフェッチ — 未使用時の 500KB+ 転送を回避）
+  // loadingRef で in-flight ガード（open→close→open の重複フェッチを防止）
   useEffect(() => {
-    if (!isOpen || miniSearch) return;
+    if (!isOpen || miniSearch || loadingRef.current) return;
+
+    const controller = new AbortController();
+    loadingRef.current = true;
+    setIndexStatus('loading');
 
     const loadSearchIndex = async () => {
       try {
-        const response = await fetch('/api/search.json');
+        const response = await fetch('/api/search.json', { signal: controller.signal });
         const docs: SearchDocument[] = await response.json();
 
         // parentTitle は storeFields のみ（検索対象外）— ページタイトル検索で無関係な
@@ -134,16 +141,24 @@ export default function SearchModal() {
 
         ms.addAll(indexDocs);
         setMiniSearch(ms);
+        setIndexStatus('ready');
 
         // ページdocumentからカテゴリ一覧を抽出
         const cats = [...new Set(docs.filter((d) => d.type === 'page').map((d) => d.category))].sort();
         setCategories(cats);
       } catch (error) {
-        console.error('Failed to load search index:', error);
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Failed to load search index:', error);
+          setIndexStatus('error');
+        }
+      } finally {
+        loadingRef.current = false;
       }
     };
 
     loadSearchIndex();
+
+    return () => controller.abort();
   }, [isOpen, miniSearch]);
 
   // モーダルの開閉状態を ref で保持（グローバル keydown ハンドラから stale closure なしで参照するため）
@@ -411,7 +426,32 @@ export default function SearchModal() {
 
         {/* 検索結果 */}
         <div className="max-h-[60vh] overflow-y-auto px-1" ref={listRef}>
-          {query.trim() && results.length === 0 && (
+          {/* インデックス読み込み中 */}
+          {query.trim() && indexStatus === 'loading' && (
+            <div className="px-4 py-12 text-center sm:px-6" role="status">
+              <svg
+                className="mx-auto h-12 w-12 animate-spin text-slate-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <p className="mt-4 text-base font-medium text-slate-600">検索インデックスを読み込み中...</p>
+            </div>
+          )}
+
+          {/* インデックス読み込みエラー */}
+          {query.trim() && indexStatus === 'error' && (
+            <div className="px-4 py-12 text-center sm:px-6" role="alert">
+              <p className="text-base font-medium text-red-600">検索インデックスの読み込みに失敗しました</p>
+              <p className="mt-2 text-sm text-slate-500">ページを再読み込みしてお試しください</p>
+            </div>
+          )}
+
+          {/* 検索結果なし（インデックス準備済みの場合のみ表示） */}
+          {query.trim() && indexStatus === 'ready' && results.length === 0 && (
             <div className="px-4 py-12 text-center sm:px-6" role="status">
               <svg
                 className="mx-auto h-12 w-12 text-slate-300"
