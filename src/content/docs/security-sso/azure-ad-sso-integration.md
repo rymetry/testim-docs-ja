@@ -1,8 +1,8 @@
 ---
 title: Azure AD SSO統合
 description: >-
-  Azure Active DirectoryはMicrosoftのクラウドベースのIDおよびアクセス管理サービスです。Azure
-  ADシームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーと
+  Azure Active DirectoryとTestimをSSO統合する手順を説明します。Azure AD Seamless
+  SSOにより、ユーザーは一度の認証でTestimにアクセスできます。
 category: セキュリティ
 order: 18005
 updated: '2025-11-02'
@@ -21,9 +21,11 @@ keywords:
 Azure Active DirectoryはMicrosoftのクラウドベースのIDおよびアクセス管理サービスです。Azure ADシームレスシングルサインオン（Azure AD Seamless SSO）を使用すると、すべてのユーザーとアプリにアクセスできます。\
 TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzureで一度認証すれば、再度認証することなくTestimにアクセスできます。
 
-> 📘 SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+:::info
+SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+:::
 
-:fa-arrow-right: **Testim Azure AD統合をセットアップするには:**
+**Testim Azure AD統合をセットアップするには:**
 
 1. **Azure Portal Admin**アカウントにログインします。
 2. **Enterprise application > New Application > Create your own application**に移動します。
@@ -48,8 +50,9 @@ TestimはAzure AD Seamless SSOと統合されており、AzureユーザーはAzu
 
 ![メタデータファイルアップロードボタン](/images/security-sso/azure-ad-sso-integration/91619bd-uploadmetadatafile.png)
 
- **Basic SAML Configuration**画面が表示されます。\
-12\. **Testim**タブに戻り、**Testim Service Provider Details**の下の**Assertion Consumer Service URL**で、**Copy**ボタンをクリックします。
+    **Basic SAML Configuration**画面が表示されます。
+
+12. **Testim**タブに戻り、**Testim Service Provider Details**の下の**Assertion Consumer Service URL**で、**Copy**ボタンをクリックします。
 
 ![Assertion Consumer Service URL](/images/security-sso/azure-ad-sso-integration/dc1324d-assertiontestim.png)
 

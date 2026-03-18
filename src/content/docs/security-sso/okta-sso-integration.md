@@ -18,9 +18,11 @@ keywords:
 
 OktaはIDおよびアクセス管理サービスプロバイダーです。TestimはOktaと統合されており、OktaユーザーはOktaで一度認証すれば、再度認証することなくTestimにアクセスできます。
 
-> 📘 SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+:::info
+SSOはプレミアム機能です。デプロイメントでSSO機能が有効になっていることを確認してください。有効になっていない場合は、TestimのCSMに連絡してください。
+:::
 
-:fa-arrow-right: **Testim Okta統合をセットアップするには:**
+**Testim Okta統合をセットアップするには:**
 
 1. **Okta Admin**アカウントにログインします。
 2. **Applications > Applications**に移動します。
@@ -98,6 +100,6 @@ OktaはIDおよびアクセス管理サービスプロバイダーです。Testi
 
 ![Testim SSOアプリケーション](/images/security-sso/okta-sso-integration/508e2c1-tempsnip1.png)
 
-32. **Settings**（:fa-cog:）ドロップダウンをクリックし、**Assign to Users**を選択します。
+32. **Settings** ドロップダウンをクリックし、**Assign to Users**を選択します。
 33. 関連するユーザーに割り当てます。\
     新しく作成されたアプリが作成され、指定されたユーザー/グループ/ロールのOktaポータルに表示されます。これ以降、これらのユーザーはOkta SSOからTestimにログインできるようになります。
