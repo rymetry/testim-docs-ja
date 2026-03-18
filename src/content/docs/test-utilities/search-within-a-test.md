@@ -3,7 +3,7 @@ title: テスト内検索
 description: テスト内のステップ、JavaScriptコード、パラメーター、URL、条件などを横断検索する方法を学びます。
 category: テスト編集
 order: 4014
-updated: '2025-09-13'
+updated: '2025-09-18'
 sourceUrl: 'https://help.testim.io/docs/search-within-a-test'
 keywords:
   - テスト内検索
@@ -66,6 +66,7 @@ keywords:
 * Generate email address — 変数名
 * Set cookie — 説明以外の項目
 * Get cookie — クッキー名・変数名
+* Run dev-kit — 関数名
 * API — URL と関数以外
 * Generate random value — 説明以外
 * Generate date — 説明以外
