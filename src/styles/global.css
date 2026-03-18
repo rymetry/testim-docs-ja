@@ -202,7 +202,7 @@
   }
   .docs-prose pre {
     @apply mt-8 overflow-x-auto rounded-2xl border border-slate-900/10 bg-slate-950 p-5 text-sm text-slate-100 shadow-lg;
-    background-image: radial-gradient(circle at top left, rgba(37, 99, 235, 0.3), transparent);
+    background-image: radial-gradient(circle at top left, rgba(37, 99, 235, 0.06), transparent);
   }
   .docs-prose pre code {
     @apply bg-transparent p-0 text-[13px] leading-6 text-slate-100;
