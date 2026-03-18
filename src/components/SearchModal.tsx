@@ -178,9 +178,18 @@ export default function SearchModal() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        // モーダルを開く前のフォーカス位置を保存（閉じたときに復帰するため）
-        previousFocusRef.current = document.activeElement as HTMLElement | null;
-        setIsOpen(true);
+        // 既に開いている場合は previousFocusRef を上書きしない
+        if (!isOpenRef.current) {
+          const active = document.activeElement;
+          // body/documentElement はフォーカス復帰先として不適切なので保存しない
+          previousFocusRef.current =
+            active instanceof HTMLElement &&
+            active !== document.body &&
+            active !== document.documentElement
+              ? active
+              : null;
+          setIsOpen(true);
+        }
         return;
       }
 
