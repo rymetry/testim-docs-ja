@@ -14,6 +14,9 @@ type SearchDocument = {
   headingSlug: string;
 };
 
+// MiniSearch に渡すインデックス用型（keywords を string に変換済み）
+type IndexedSearchDocument = Omit<SearchDocument, 'keywords'> & { keywords: string };
+
 type SearchResult = {
   id: string;
   type: 'page' | 'heading';
@@ -36,7 +39,8 @@ type ResultGroup = {
 function highlightText(text: string, terms: string[]): ReactNode {
   if (!text) return text;
   // CJKガード: 1文字termsを除外（MiniSearchはLatin向けspace-split）
-  const safeTerms = terms.filter((t) => t.length >= 2);
+  // 降順ソートで長い語を優先マッチ（例: "test"+"testing" → "testing"を先にヒット）
+  const safeTerms = [...terms.filter((t) => t.length >= 2)].sort((a, b) => b.length - a.length);
   if (!safeTerms.length) return text;
   const escaped = safeTerms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
@@ -60,11 +64,13 @@ export default function SearchModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [miniSearch, setMiniSearch] = useState<MiniSearch | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [miniSearch, setMiniSearch] = useState<MiniSearch<IndexedSearchDocument> | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // グルーピングとフラットナビリストを構築
   const { groups, flatResults } = useMemo(() => {
@@ -89,6 +95,13 @@ export default function SearchModal() {
     return { groups: gs, flatResults: flat };
   }, [results]);
 
+  // キーボード選択アイテムをスクロール追従させる
+  useEffect(() => {
+    if (!listRef.current) return;
+    const activeEl = listRef.current.querySelector<HTMLElement>(`#search-result-${selectedIndex}`);
+    activeEl?.scrollIntoView({ block: 'nearest' });
+  }, [selectedIndex]);
+
   // 検索インデックスの初期化
   useEffect(() => {
     const loadSearchIndex = async () => {
@@ -96,8 +109,10 @@ export default function SearchModal() {
         const response = await fetch('/api/search.json');
         const docs: SearchDocument[] = await response.json();
 
-        const ms = new MiniSearch<SearchDocument>({
-          fields: ['title', 'description', 'keywords', 'parentTitle'],
+        // parentTitle は storeFields のみ（検索対象外）— ページタイトル検索で無関係な
+        // 見出しが大量ヒットするのを防ぐ
+        const ms = new MiniSearch<IndexedSearchDocument>({
+          fields: ['title', 'description', 'keywords'],
           storeFields: ['type', 'title', 'slug', 'description', 'category', 'parentTitle', 'headingSlug'],
           searchOptions: {
             boost: { title: 3, description: 2, keywords: 2 },
@@ -107,12 +122,12 @@ export default function SearchModal() {
           },
         });
 
-        const indexDocs = docs.map((doc) => ({
+        const indexDocs: IndexedSearchDocument[] = docs.map((doc) => ({
           ...doc,
           keywords: Array.isArray(doc.keywords) ? doc.keywords.join(' ') : '',
         }));
 
-        ms.addAll(indexDocs as any);
+        ms.addAll(indexDocs);
         setMiniSearch(ms);
 
         // ページdocumentからカテゴリ一覧を抽出
@@ -176,6 +191,7 @@ export default function SearchModal() {
   useEffect(() => {
     if (!miniSearch || !query.trim()) {
       setResults([]);
+      setTotalCount(0);
       setSelectedIndex(0);
       return;
     }
@@ -187,6 +203,7 @@ export default function SearchModal() {
         filter: selectedCategory ? (result) => result.category === selectedCategory : undefined,
       });
 
+      setTotalCount(searchResults.length);
       const formattedResults: SearchResult[] = searchResults.slice(0, 20).map((result) => ({
         id: result.id,
         type: result.type as 'page' | 'heading',
@@ -205,6 +222,7 @@ export default function SearchModal() {
     } catch (error) {
       console.error('Search error:', error);
       setResults([]);
+      setTotalCount(0);
     }
   }, [query, miniSearch, selectedCategory]);
 
@@ -256,6 +274,7 @@ export default function SearchModal() {
           stroke="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -272,8 +291,15 @@ export default function SearchModal() {
     );
   }
 
+  const activeResultId = flatResults.length > 0 ? `search-result-${selectedIndex}` : undefined;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/50 pt-[8vh] px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/50 pt-[8vh] px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="ドキュメント検索"
+    >
       <div
         className="relative w-full max-w-3xl rounded-2xl bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
@@ -285,6 +311,7 @@ export default function SearchModal() {
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -301,20 +328,33 @@ export default function SearchModal() {
             onKeyDown={handleKeyDown}
             placeholder="キーワードを入力してドキュメントを検索..."
             className="flex-1 border-none bg-transparent text-base text-slate-900 placeholder-slate-400 outline-none sm:py-5 sm:text-lg"
+            role="combobox"
+            aria-label="検索クエリ"
+            aria-expanded={flatResults.length > 0}
+            aria-haspopup="listbox"
+            aria-controls="search-results-listbox"
+            aria-activedescendant={activeResultId}
+            aria-autocomplete="list"
           />
           <button
             onClick={closeModal}
             className="self-end rounded-md bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-200 sm:self-auto"
+            aria-label="検索を閉じる"
           >
             ESC
           </button>
         </div>
 
-        {/* カテゴリフィルター */}
-        {categories.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto border-b border-slate-200 px-4 py-2 sm:px-6">
+        {/* カテゴリフィルター（2カテゴリ以上のときのみ表示） */}
+        {categories.length > 1 && (
+          <div
+            className="flex gap-2 overflow-x-auto border-b border-slate-200 px-4 py-2 sm:px-6"
+            role="group"
+            aria-label="カテゴリフィルター"
+          >
             <button
               onClick={() => setSelectedCategory(null)}
+              aria-pressed={selectedCategory === null}
               className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition ${
                 selectedCategory === null
                   ? 'bg-blue-500 text-white'
@@ -327,6 +367,7 @@ export default function SearchModal() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
+                aria-pressed={selectedCategory === cat}
                 className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition ${
                   selectedCategory === cat
                     ? 'bg-blue-500 text-white'
@@ -340,14 +381,15 @@ export default function SearchModal() {
         )}
 
         {/* 検索結果 */}
-        <div className="max-h-[60vh] overflow-y-auto px-1">
+        <div className="max-h-[60vh] overflow-y-auto px-1" ref={listRef}>
           {query && results.length === 0 && (
-            <div className="px-4 py-12 text-center sm:px-6">
+            <div className="px-4 py-12 text-center sm:px-6" role="status">
               <svg
                 className="mx-auto h-12 w-12 text-slate-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -363,13 +405,24 @@ export default function SearchModal() {
 
           {results.length > 0 && (
             <>
-              {/* 結果件数 */}
-              <div className="px-4 pt-3 pb-1 text-xs text-slate-400 sm:px-6">
-                {flatResults.length}件の結果
+              {/* 結果件数（実際のヒット数 vs 表示数） */}
+              <div
+                className="px-4 pt-3 pb-1 text-xs text-slate-400 sm:px-6"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {totalCount > flatResults.length
+                  ? `${totalCount}件中 ${flatResults.length}件を表示`
+                  : `${totalCount}件の結果`}
               </div>
-              <ul className="py-1">
+              <ul
+                className="py-1"
+                role="listbox"
+                id="search-results-listbox"
+                aria-label="検索結果"
+              >
                 {groups.map((group) => (
-                  <li key={group.slug}>
+                  <li key={group.slug} role="none">
                     {/* ページ結果 */}
                     {group.page &&
                       (() => {
@@ -377,6 +430,9 @@ export default function SearchModal() {
                         const flatIdx = flatResults.indexOf(result);
                         return (
                           <a
+                            id={`search-result-${flatIdx}`}
+                            role="option"
+                            aria-selected={flatIdx === selectedIndex}
                             href={`/docs/${result.slug}`}
                             className={`flex flex-col gap-2 rounded-xl px-4 py-4 transition sm:px-6 ${
                               flatIdx === selectedIndex
@@ -405,17 +461,20 @@ export default function SearchModal() {
                       return (
                         <a
                           key={heading.id}
+                          id={`search-result-${flatIdx}`}
+                          role="option"
+                          aria-selected={flatIdx === selectedIndex}
                           href={`/docs/${heading.slug}#${heading.headingSlug}`}
-                          className={`flex items-center gap-2 rounded-xl px-4 py-2.5 transition sm:px-6 ${
+                          className={`flex min-w-0 items-center gap-2 rounded-xl px-4 py-2.5 transition sm:px-6 ${
                             flatIdx === selectedIndex
                               ? 'border-l-4 border-blue-500 bg-blue-50'
                               : 'border-l-4 border-transparent hover:bg-slate-50'
                           }`}
                           onMouseEnter={() => setSelectedIndex(flatIdx)}
                         >
-                          <span className="text-xs text-slate-400">{heading.parentTitle}</span>
-                          <span className="text-xs text-slate-300">#</span>
-                          <span className="text-sm font-semibold text-slate-700">
+                          <span className="shrink-0 text-xs text-slate-400">{heading.parentTitle}</span>
+                          <span className="shrink-0 text-xs text-slate-300">#</span>
+                          <span className="min-w-0 truncate text-sm font-semibold text-slate-700">
                             {highlightText(heading.title, heading.terms)}
                           </span>
                         </a>
@@ -434,6 +493,7 @@ export default function SearchModal() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -474,7 +534,7 @@ export default function SearchModal() {
       </div>
 
       {/* 背景クリックで閉じる */}
-      <div className="absolute inset-0 -z-10" onClick={closeModal} />
+      <div className="absolute inset-0 -z-10" onClick={closeModal} aria-hidden="true" />
     </div>
   );
 }
