@@ -253,10 +253,10 @@
     table-layout: fixed;
   }
   .docs-prose table thead {
-    @apply bg-slate-100;
+    @apply bg-slate-800;
   }
   .docs-prose table thead th {
-    @apply border border-slate-300 px-4 py-3 text-left font-semibold text-slate-900;
+    @apply border border-slate-700 px-4 py-3 text-left font-semibold text-white;
   }
   .docs-prose table:not(.run-types-table) thead th:first-child {
     width: 15%;
@@ -274,13 +274,16 @@
     min-width: 140px;
   }
   .docs-prose table tbody tr {
-    @apply bg-white;
+    @apply bg-white transition-colors;
   }
   .docs-prose table tbody tr:nth-child(even) {
     @apply bg-slate-50;
   }
+  .docs-prose table tbody tr:hover {
+    @apply bg-blue-50;
+  }
   .docs-prose table tbody td {
-    @apply border border-slate-300 px-4 py-3 text-slate-700;
+    @apply border border-slate-200 px-4 py-3 text-slate-700;
     vertical-align: top;
   }
   .docs-prose table th,
@@ -349,6 +352,9 @@
   .docs-prose table tbody td:first-child {
     @apply bg-slate-50;
     font-weight: 500;
+  }
+  .docs-prose table tbody tr:hover td:first-child {
+    @apply bg-blue-50;
   }
   .docs-prose table tbody td ul,
   .docs-prose table tbody td ol {
