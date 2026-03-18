@@ -153,11 +153,9 @@ export default function SearchModal() {
       }
 
       // IME変換中のEscapeは無視（日本語変換キャンセルでモーダルが閉じないように）
+      // closeModal() を経由することでフォーカス復帰も確実に行われる
       if (e.key === 'Escape' && !e.isComposing) {
-        setIsOpen(false);
-        setQuery('');
-        setResults([]);
-        setSelectedCategory(null);
+        closeModal();
       }
     };
 
@@ -318,14 +316,13 @@ export default function SearchModal() {
     );
   }
 
-  const activeResultId = flatResults.length > 0 ? `search-result-${selectedIndex}` : undefined;
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/50 pt-[8vh] px-4"
       role="dialog"
       aria-modal="true"
       aria-label="ドキュメント検索"
+      onClick={closeModal}
     >
       <div
         ref={modalRef}
@@ -357,13 +354,7 @@ export default function SearchModal() {
             onKeyDown={handleKeyDown}
             placeholder="キーワードを入力してドキュメントを検索..."
             className="flex-1 border-none bg-transparent text-base text-slate-900 placeholder-slate-400 outline-none sm:py-5 sm:text-lg"
-            role="combobox"
             aria-label="検索クエリ"
-            aria-expanded={flatResults.length > 0}
-            aria-haspopup="listbox"
-            aria-controls="search-results-listbox"
-            aria-activedescendant={activeResultId}
-            aria-autocomplete="list"
           />
           <button
             onClick={closeModal}
@@ -444,14 +435,9 @@ export default function SearchModal() {
                   ? `${totalCount}件中 ${flatResults.length}件を表示`
                   : `${totalCount}件の結果`}
               </div>
-              <ul
-                className="py-1"
-                role="listbox"
-                id="search-results-listbox"
-                aria-label="検索結果"
-              >
+              <ul className="py-1" aria-label="検索結果">
                 {groups.map((group) => (
-                  <li key={group.slug} role="none">
+                  <li key={group.slug}>
                     {/* ページ結果 */}
                     {group.page &&
                       (() => {
@@ -460,8 +446,6 @@ export default function SearchModal() {
                         return (
                           <a
                             id={`search-result-${flatIdx}`}
-                            role="option"
-                            aria-selected={flatIdx === selectedIndex}
                             href={`/docs/${result.slug}`}
                             className={`flex flex-col gap-2 rounded-xl px-4 py-4 transition sm:px-6 ${
                               flatIdx === selectedIndex
@@ -491,8 +475,6 @@ export default function SearchModal() {
                         <a
                           key={heading.id}
                           id={`search-result-${flatIdx}`}
-                          role="option"
-                          aria-selected={flatIdx === selectedIndex}
                           href={`/docs/${heading.slug}#${heading.headingSlug}`}
                           className={`flex min-w-0 items-center gap-2 rounded-xl px-4 py-2.5 transition sm:px-6 ${
                             flatIdx === selectedIndex
@@ -562,8 +544,6 @@ export default function SearchModal() {
         </div>
       </div>
 
-      {/* 背景クリックで閉じる */}
-      <div className="absolute inset-0 -z-10" onClick={closeModal} aria-hidden="true" />
     </div>
   );
 }
