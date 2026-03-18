@@ -71,6 +71,8 @@ export default function SearchModal() {
   const [categories, setCategories] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // グルーピングとフラットナビリストを構築
   const { groups, flatResults } = useMemo(() => {
@@ -96,11 +98,12 @@ export default function SearchModal() {
   }, [results]);
 
   // キーボード選択アイテムをスクロール追従させる
+  // results も依存に含めることで、クエリ変更後に selectedIndex=0 のまま結果が更新された場合も追従
   useEffect(() => {
     if (!listRef.current) return;
     const activeEl = listRef.current.querySelector<HTMLElement>(`#search-result-${selectedIndex}`);
     activeEl?.scrollIntoView({ block: 'nearest' });
-  }, [selectedIndex]);
+  }, [selectedIndex, results]);
 
   // 検索インデックスの初期化
   useEffect(() => {
@@ -149,7 +152,8 @@ export default function SearchModal() {
         setIsOpen(true);
       }
 
-      if (e.key === 'Escape') {
+      // IME変換中のEscapeは無視（日本語変換キャンセルでモーダルが閉じないように）
+      if (e.key === 'Escape' && !e.isComposing) {
         setIsOpen(false);
         setQuery('');
         setResults([]);
@@ -254,16 +258,39 @@ export default function SearchModal() {
     }
   };
 
+  // モーダル内の Tab フォーカストラップ
+  const handleModalKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab' || !modalRef.current) return;
+    const focusable = Array.from(
+      modalRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => !el.closest('[aria-hidden="true"]'));
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+
   const closeModal = () => {
     setIsOpen(false);
     setQuery('');
     setResults([]);
     setSelectedCategory(null);
+    // モーダルが閉じた後、開くきっかけとなったトリガーボタンにフォーカスを戻す
+    setTimeout(() => triggerRef.current?.focus(), 0);
   };
 
   if (!isOpen) {
     return (
       <button
+        ref={triggerRef}
         onClick={() => setIsOpen(true)}
         className="flex w-full items-center gap-2.5 justify-between rounded-lg border-2 border-slate-300 bg-white px-4 py-2 text-left text-sm text-slate-700 shadow-sm transition hover:border-blue-500 hover:bg-blue-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto sm:justify-start"
         aria-label="検索"
@@ -301,8 +328,10 @@ export default function SearchModal() {
       aria-label="ドキュメント検索"
     >
       <div
+        ref={modalRef}
         className="relative w-full max-w-3xl rounded-2xl bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleModalKeyDown}
       >
         {/* 検索入力 */}
         <div className="flex flex-col gap-4 border-b-2 border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:px-6">
