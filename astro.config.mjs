@@ -91,7 +91,7 @@ export default defineConfig({
       rehypeWrapTable,
     ],
     shikiConfig: {
-      theme: 'dracula',
+      theme: 'github-dark-dimmed',
       wrap: true,
       transformers: [{
         name: 'code-title',
