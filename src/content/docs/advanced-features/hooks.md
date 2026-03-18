@@ -55,7 +55,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
 関連ステップが条件でスキップされる設定でも、Before/After step フックは実行されます。
 :::
 
-# フックの作成
+## フックの作成
 
 フックはテスト設定の構成（Test Configuration）と／または設定ファイル（Config File）で作成します。新規／既存の構成で設定可能な方法:
 
@@ -319,7 +319,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
     - `failureReason` – 失敗理由（失敗時）
     - `errorType` – エラータイプ（エラーがある場合）
 
-# 設定ファイル（Config File）でフックを作成する
+## 設定ファイル（Config File）でフックを作成する
 
 Config File は、テスト／テストスイートの実行に必要なパラメータと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
 Config File で設定できるフックタイプは次のとおりです。
@@ -334,7 +334,7 @@ Config File 経由での Before/After フック設定の詳細手順は、以下
 - Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
 - フック経由で Config file パラメータを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
-# フックの可視化（Hooks Visualizations）
+## フックの可視化（Hooks Visualizations）
 
 Hooks を含むテストを実行すると、エディタ上でさまざまなビジュアル表示が行われます。
 

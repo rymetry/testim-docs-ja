@@ -22,7 +22,7 @@ keywords:
 
 Testim for Salesforceテストを作成する前に、Salesforce環境をTestim for Salesforceに接続する必要があります。各環境は1つ以上のブランチに関連付けられます（ブランチは1つの環境に関連付けることができます）。
 
-# Salesforce環境の接続
+## Salesforce環境の接続
 
 :fa-arrow-right: **Salesforce環境を接続するには**:
 
@@ -41,7 +41,7 @@ Testim for Salesforceテストを作成する前に、Salesforce環境をTestim 
 6. システム管理者権限を持つアカウントでログインします。
 7. **Allow**を選択して、Testim for SalesforceがID URLサービスにアクセスし、API経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
 
-# 既存のテスト環境の管理
+## 既存のテスト環境の管理
 
 既存のテスト環境を管理するには、環境の行にある**more**メニューを選択し、次のいずれかのアクションを実行します:
 

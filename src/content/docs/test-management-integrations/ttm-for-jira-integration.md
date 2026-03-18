@@ -17,7 +17,7 @@ keywords:
   - リモートグリッド
 ---
 
-# TTM for Jira統合
+## TTM for Jira統合
 
 TTM for JiraプロジェクトでTestimのテスト実行結果を表示します。
 

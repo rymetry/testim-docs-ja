@@ -15,7 +15,7 @@ keywords:
   - 接続設定
 ---
 
-# TestimとJiraの連携
+## TestimとJiraの連携
 
 Testim は、新しい Bug ticket を作成します。これには、bug の詳細な説明、bug の再現手順、screen resolution と browser、bug の screenshot が含まれます。次の screenshot は、説明や screenshot などを含む、実際に作成された Bug Ticket の例です。詳細については、[Bug Reporting](/docs/bug-reporting) を参照してください。
 

@@ -29,7 +29,7 @@ Salesforce フローステップを追加する前に、次を追加する必要
 * Salesforce フローが URL でアクセスされる場合は、Salesforce フローステップの前に[ナビゲーションステップ](/docs/navigation)を追加します。
 * Salesforce フローが Testim を使用して作成された Salesforce オブジェクトに埋め込まれている場合、Salesforce フローステップは、Salesforce オブジェクトの作成に使用されたステップの直後に配置できます（例: [作成](/docs/sfdc-step-create)ステップの直後）。
 
-# フロー画面完了ステップの作成
+## フロー画面完了ステップの作成
 
 :fa-arrow-right: **フロー画面完了ステップを追加するには:**
 

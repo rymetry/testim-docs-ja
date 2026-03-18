@@ -250,37 +250,25 @@
   .docs-prose table {
     @apply mt-8 w-full text-sm;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
   }
   .docs-prose table thead {
-    @apply bg-slate-100;
+    @apply bg-slate-800;
   }
   .docs-prose table thead th {
-    @apply border border-slate-300 px-4 py-3 text-left font-semibold text-slate-900;
-  }
-  .docs-prose table:not(.run-types-table) thead th:first-child {
-    width: 15%;
-    min-width: 120px;
-  }
-  .docs-prose table:not(.run-types-table) thead th:nth-child(2) {
-    width: 15%;
-    min-width: 120px;
-  }
-  .docs-prose table:not(.run-types-table) thead th:nth-child(3) {
-    width: 50%;
-  }
-  .docs-prose table:not(.run-types-table) thead th:nth-child(4) {
-    width: 20%;
-    min-width: 140px;
+    @apply border border-slate-700 px-4 py-3 text-left font-semibold text-white;
   }
   .docs-prose table tbody tr {
-    @apply bg-white;
+    @apply bg-white transition-colors;
   }
   .docs-prose table tbody tr:nth-child(even) {
     @apply bg-slate-50;
   }
+  .docs-prose table tbody tr:hover {
+    @apply bg-blue-50;
+  }
   .docs-prose table tbody td {
-    @apply border border-slate-300 px-4 py-3 text-slate-700;
+    @apply border border-slate-200 px-4 py-3 text-slate-700;
     vertical-align: top;
   }
   .docs-prose table th,
@@ -301,30 +289,23 @@
   }
 
   .docs-prose .md-table-3cols th:nth-child(1),
-  .docs-prose .md-table-3cols td:nth-child(1),
-  .docs-prose .md-table-3cols th:nth-child(2),
-  .docs-prose .md-table-3cols td:nth-child(2) {
+  .docs-prose .md-table-3cols td:nth-child(1) {
     width: 25%;
     min-width: 140px;
   }
-  .docs-prose .md-table-3cols th:nth-child(3),
-  .docs-prose .md-table-3cols td:nth-child(3) {
+  .docs-prose .md-table-3cols th:nth-child(2),
+  .docs-prose .md-table-3cols td:nth-child(2) {
     width: 50%;
   }
-
-  .docs-prose .md-table-4cols th:nth-child(1),
-  .docs-prose .md-table-4cols td:nth-child(1),
-  .docs-prose .md-table-4cols th:nth-child(2),
-  .docs-prose .md-table-4cols td:nth-child(2) {
-    width: 20%;
+  .docs-prose .md-table-3cols th:nth-child(3),
+  .docs-prose .md-table-3cols td:nth-child(3) {
+    width: 25%;
     min-width: 120px;
   }
-  .docs-prose .md-table-4cols th:nth-child(3),
-  .docs-prose .md-table-4cols td:nth-child(3),
-  .docs-prose .md-table-4cols th:nth-child(4),
-  .docs-prose .md-table-4cols td:nth-child(4) {
-    width: 30%;
-    min-width: 140px;
+
+  .docs-prose .md-table-4cols th,
+  .docs-prose .md-table-4cols td {
+    min-width: 100px;
   }
 
   .docs-prose .md-table-5cols th:nth-child(1),
@@ -349,6 +330,9 @@
   .docs-prose table tbody td:first-child {
     @apply bg-slate-50;
     font-weight: 500;
+  }
+  .docs-prose table tbody tr:hover td:first-child {
+    @apply bg-blue-50;
   }
   .docs-prose table tbody td ul,
   .docs-prose table tbody td ol {

@@ -19,7 +19,7 @@ keywords:
 
 Salesforceテストは、接続されたSalesforce環境に接続し、テストしたいユーザージャーニーを実行します。テストには一連のステップが含まれ、それぞれがSalesforceアプリケーションとの別のインタラクションを表します。
 
-#### ステップの種類
+## ステップの種類
 
 テストにステップを追加するには2つの方法があります:
 
@@ -27,29 +27,29 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
   - **Salesforceステップ** - Salesforceアプリケーションの使用に固有のステップ。Salesforceステップは、Salesforceアプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforceアプリケーション内でフォームなどのSalesforceオブジェクトを表示および設定したりできます。詳細については、[Salesforceステップ](/docs/salesforce-steps)を参照してください
   - **事前定義ステップ** - Webアプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](/docs/steps#manual-steps)を参照してください
   - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/shareable-steps)を参照してください。
-- **[ステップの記録](doc:create-a-salesforce-test#recording-steps)** - Recordボタンをクリックすると、Salesforceアプリケーション（ベースURL）を表示するブラウザが開きます。入力、クリックなどのすべてのインタラクションは、自動的にテストのステップに変換されます。ステップの記録は、Salesforce環境で広範なカスタマイズが行われたためにSalesforceステップを使用できない場合にも役立ちます。
+- **[ステップの記録](/docs/create-a-salesforce-test#recording-steps)** - Recordボタンをクリックすると、Salesforceアプリケーション（ベースURL）を表示するブラウザが開きます。入力、クリックなどのすべてのインタラクションは、自動的にテストのステップに変換されます。ステップの記録は、Salesforce環境で広範なカスタマイズが行われたためにSalesforceステップを使用できない場合にも役立ちます。
 
 **2つの方法を組み合わせることが可能です** - 一部のステップを手動で追加してから追加のステップを記録したり、その逆も可能です。
 
-#### セットアップステップ
+## セットアップステップ
 
 テストの最初のステップはセットアップステップです。このステップは、テストのベースURLを定義します。デフォルトでは、このURLは、最初に接続した環境に応じて、Salesforceホームページの一般的なURL（`https://login.salesforce.com`または`https://test.salesforce.com`）のいずれかになります。[Log in](/docs/sfdc-step-login)ステップが、現在のブランチ用に設定した環境に直接移動するため、これを変更する必要はありません。
 
-#### ペルソナの選択
+## ペルソナの選択
 
 ペルソナ画面（下の例を参照）では、各ペルソナ（行）に対して、各環境（列）の異なるログイン認証情報を設定できます。Salesforceテストを作成する際、**Salesforce Loginステップ**で自分が定義した任意のペルソナを選択できます。このペルソナには、テストが最初に作成された環境用に設定されたログイン認証情報があります。ただし、後でこのテストの環境を変更する場合（[ブランチのSalesforce環境の変更](doc:tta-for-salesforce-branch-management#changing-the-salesforce-environment-of-a-branch)を参照）、ペルソナ画面の設定に基づいて、システムが新しく選択された環境の関連認証情報を自動的に割り当てるため、Loginステップで異なるログイン認証情報を選択する必要はありません。したがって、別の環境を使用する場合にテストを書き直す必要はありません。
 
 ![Salesforceペルソナ設定の表](/images/salesforce-testing/create-a-salesforce-test/89ceae3-personastable.png)
 
-# 前提条件
+## 前提条件
 
 - Testim Extensionをダウンロードしてインストールする - [なぜTestim Extensionが必要ですか？](/docs/why-do-you-need-testim-extension)
 - [Salesforceテスト環境をTestim/TTA for Salesforceに接続する](/docs/create-and-manage-test-environments)。
 - [ペルソナを作成する](/docs/create-a-persona-and-add-users)。
 
-# Salesforceテストの作成
+## Salesforceテストの作成
 
-:fa-arrow-right:**新しいテストを作成するには:**
+**新しいテストを作成するには:**
 
 1. Testim for Salesforceアカウントで、**Settings > Salesforce**に移動し、画面右上の**New test**をクリックします。  
    ![新しいSalesforceテスト作成ボタン](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
@@ -214,11 +214,11 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 </tbody>
 </table>
 
-# 手動ステップの追加
+## 手動ステップの追加
 
 手動ステップは、Salesforceステップ、事前定義ステップ、または共有ステップのいずれかです。
 
-:fa-arrow-right:   **ステップを手動で追加するには:**
+**ステップを手動で追加するには:**
 
 1. **Setup step**の後、マウスを+ボタンの上に移動します。
 2. **Add Steps**ボタンをクリックします。
@@ -231,11 +231,11 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 ![Salesforce手動ステップを追加する操作](/images/salesforce-testing/create-a-salesforce-test/2752956-manualstep.gif)
 
-> 📘 ベストプラクティス - 変数命名規則
->
-> テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テストで変数を作成する際に、[ベストプラクティス - 簡単なクリーンアップのための変数命名規則](/docs/best-practice-variable-naming-convention-for-easy-cleanup)の手順に従ってください。
+:::info{title="ベストプラクティス - 変数命名規則"}
+テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テストで変数を作成する際に、[ベストプラクティス - 簡単なクリーンアップのための変数命名規則](/docs/best-practice-variable-naming-convention-for-easy-cleanup)の手順に従ってください。
+:::
 
-# ステップの記録
+## ステップの記録
 
 レコーダーを使用すると、AUT（テスト対象アプリケーション）とやり取りしながら、ステップを自動的に追加できます。この方法は、Salesforceステップに含まれていない特定のステップを追加する場合や、環境が高度にカスタマイズされているためにSalesforceステップがサポートされていない場合に特に役立ちます。レコーダーには2つの動作モードがあります:
 
@@ -248,11 +248,11 @@ Salesforceテストは、接続されたSalesforce環境に接続し、テスト
 
 ![Webモードのレコーダーアイコン](/images/salesforce-testing/create-a-salesforce-test/6dfd53b-nosalesforcemode.png)
 
-> 📘 Salesforceモードをオフにする必要がある場合
->
-> 記録されたステップがエディターに表示されない場合は、クラウドアイコンをクリックしてSalesforceモードをオフにする必要があります。
+:::info{title="Salesforceモードをオフにする必要がある場合"}
+記録されたステップがエディターに表示されない場合は、クラウドアイコンをクリックしてSalesforceモードをオフにする必要があります。
+:::
 
-:fa-arrow-right: **レコーダーを使用してステップを記録するには:**
+**レコーダーを使用してステップを記録するには:**
 
 1. 始める前に、Salesforce環境が接続されていることを確認してください。詳細については、[Salesforce環境の接続](/docs/create-and-manage-test-environments)を参照してください。
 2. テストに[Log in](/docs/sfdc-step-login)ステップを追加します。

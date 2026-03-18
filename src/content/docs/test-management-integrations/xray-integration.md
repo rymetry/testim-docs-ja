@@ -17,7 +17,7 @@ keywords:
   - ステータスマッピング
 ---
 
-# Xray統合
+## Xray統合
 
 Xray JiraプロジェクトでTestimのテスト実行結果を表示します。
 

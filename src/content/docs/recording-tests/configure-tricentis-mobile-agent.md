@@ -15,7 +15,7 @@ keywords:
   - トラブルシューティング
 ---
 
-# Tricentis Mobile Agentの構成
+## Tricentis Mobile Agentの構成
 
 Tricentis Mobile Agentは、Testimテストをモバイルデバイスで実行するためのモバイル接続を管理する集中サービスです。Tricentis Mobile Agentは、Windows、Linux、およびMacオペレーティングシステムで実行できます。このソフトウェアは、ローカルのAndroidおよびiOS物理デバイス、ならびにエミュレーターやシミュレーターを含む仮想デバイスでテストを実行するために使用できます。これにより、デバイスのセットアップと構成が簡素化され、テストをより早く開始できます。
 

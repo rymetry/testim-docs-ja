@@ -17,7 +17,7 @@ keywords:
   - 不具合通知
 ---
 
-# TestimとSlackの連携
+## TestimとSlackの連携
 
 Testim は、指定した Slack channel に bug の説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度と browser、バグのスクリーンショットが含まれます。Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
 

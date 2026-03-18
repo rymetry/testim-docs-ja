@@ -16,7 +16,7 @@ keywords:
   - 不具合管理
 ---
 
-# TestimとGitHubの連携
+## TestimとGitHubの連携
 
 GitHub integration を使うと、Testim から直接 GitHub Issues に bug を報告できます。bug に関する情報は自動的に入力されます。
 

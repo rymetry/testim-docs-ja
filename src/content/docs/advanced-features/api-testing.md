@@ -32,7 +32,7 @@ API ステップには **Add API action** と **Validate API** の2種類があ�
 Professional plan で利用可能です。
 :::
 
-# Validate API ステップの追加
+## Validate API ステップの追加
 
 API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/validations)を参照。\
 **“Add API validation” を追加するには:**
@@ -129,7 +129,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 また、このレスポンスは一時的なもので、ステップを閉じると内容はクリアされます。
 :::
 
-# Adding an API Action Step
+## Adding an API Action Step
 
 API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行いたいケースで使用します。返却データを計算に利用したり、後続ステップで利用するためにエクスポートパラメータとして保存したりできます。*header* / *body* / *status code* いずれの情報も利用可能です。\
 **“Add API action” ステップを追加するには:**
@@ -162,7 +162,7 @@ API アクションステップ（Add API action）は、レスポンスを利�
 ブラウザ経由で実行しており、直前のステップでページの読み込みが終わっていない場合、このステップは失敗することがあります。前のステップでページロードが必要な場合は、API ステップの前に wait for ステップを挿入し、ページの読み込み完了を確認してください。
 :::
 
-# Including a File and/or Text field with an API Call Using Form Data
+## Including a File and/or Text field with an API Call Using Form Data
 
 Validate API / Add API action ステップでは、フォームデータを使ってファイルやテキストフィールドを API に含めることができます。
 
@@ -263,7 +263,7 @@ Body セクションに定義したエントリは、一時的に無効化した
 
 エントリは完全に削除されます。
 
-# パラメータの使用 {#using-parameters}
+## パラメータの使用 {#using-parameters}
 
 API ステップでは、他のコードステップと同様にパラメータを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメータを埋め込んだり、レスポンスから値を取り出してパラメータに保存したり、Assertion の値として使用したりできます。パラメータは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
 パラメータの詳細は [Parameters](/docs/parameters) を参照してください。
@@ -309,7 +309,7 @@ Assertion セクションでも、比較値としてパラメータをそのま�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/7004c0f-Screen_Shot_2022-03-09_at_15.08.34.png)
 
-# 実行後の結果の確認
+## 実行後の結果の確認
 
 ステップ実行後は、**Response** タブで API レスポンスを確認できます。ここでは、レスポンスボディだけでなく、ステータスコードやリクエスト時間、バイナリファイルのサイズなどの追加情報も表示されます。また、送信されたリクエスト内容を確認したり、レスポンス情報をダウンロードしたりすることもできます。
 
