@@ -303,19 +303,9 @@
     min-width: 120px;
   }
 
-  .docs-prose .md-table-4cols th:nth-child(1),
-  .docs-prose .md-table-4cols td:nth-child(1),
-  .docs-prose .md-table-4cols th:nth-child(2),
-  .docs-prose .md-table-4cols td:nth-child(2) {
-    width: 20%;
-    min-width: 120px;
-  }
-  .docs-prose .md-table-4cols th:nth-child(3),
-  .docs-prose .md-table-4cols td:nth-child(3),
-  .docs-prose .md-table-4cols th:nth-child(4),
-  .docs-prose .md-table-4cols td:nth-child(4) {
-    width: 30%;
-    min-width: 140px;
+  .docs-prose .md-table-4cols th,
+  .docs-prose .md-table-4cols td {
+    min-width: 100px;
   }
 
   .docs-prose .md-table-5cols th:nth-child(1),
