@@ -23,7 +23,7 @@ keywords:
 Testim は、恒久的および一時的なメールアドレスを提供する組み込みメールサービスを備えています。_Validate email_ ステップを使用すると、これらのメールアドレスにメールが送信されたことを検証できます。このステップは通常、アプリのサインアップまたはログインフローをテストするために使用されます。
 
 :::note{title="これはPro機能です"}
-これはProfessionalプランのプロジェクトでのみ利用可能なPro機能です。Professionalプランの詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+これはProfessionalプランのプロジェクトでのみ利用可能なPro機能です。
 :::
 
 _Validate email_ ステップは、指定されたTestimメールアドレスのTestim受信箱の内容を、そのメールボックス内のすべてのメッセージの配列として受け取る事前定義された検証ステップです。メッセージは _messages_ という名前のパラメータに含まれ、次のフィールドを持ちます：
@@ -209,7 +209,7 @@ _Validate email_ ステップは、指定されたTestimメールアドレスの
 Testimは独自のメールサービスを通じて専用にメールアドレスを生成しており、サードパーティのメールサービスを利用して恒久的または一時的メールアドレスを作成する機能はありません。
 :::
 
-# オプションA - 恒久的メールアドレスの作成
+## オプションA - 恒久的メールアドレスの作成
 
 このプロセスは、**Validate email** ステップを含む既存または新規のテストがあることを前提としています。
 
@@ -239,7 +239,7 @@ Testimは独自のメールサービスを通じて専用にメールアドレ�
 
 ![サインアップフロー](/images/validations/email-validation/ee9773d-signupflow.png)
 
-# オプションB - 一時的メールアドレスの生成
+## オプションB - 一時的メールアドレスの生成
 
 このプロセスは、**Generate email address** と **Validate email** ステップを含む既存または新規のテストがあることを前提としています。
 
@@ -249,7 +249,7 @@ Testimは独自のメールサービスを通じて専用にメールアドレ�
 
  **一時的メールアドレスを生成するには：**
 
-1. Hover over the **(arrow symbol)** where you want to add the step.
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![ステップ追加](/images/validations/email-validation/856a8f8-Testim_298a.png)
 
@@ -257,7 +257,7 @@ Testimは独自のメールサービスを通じて専用にメールアドレ�
 
 ![アクションオプション](/images/validations/email-validation/fd77ed2-Testim_283a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).  
+2. “**M**”（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/0ab4994-Testim_270_r2.png)
@@ -291,7 +291,7 @@ Testimは独自のメールサービスを通じて専用にメールアドレ�
 8. 必要に応じて、ステップとパラメータの追加設定を行います。
 9. **variable name** フィールドのパラメータ名をコピーします（例：`emailAddress` という名前）。このパラメータは **Email Validation** ステップで使用されます。
 
-# 事前に適切なTestim受信箱にメールを送信する
+## 事前に適切なTestim受信箱にメールを送信する
 
 この時点では、恒久的または一時的な受信箱にメールはありません。新しい受信箱でメールが受信されていることをテストするために、メールサービスが新しく作成した受信箱にメールを送信するよう設定することができます。
 
@@ -341,7 +341,7 @@ Run API Actionステップを使用して、一時的/恒久的メールアド�
 
 メールサービスを通じて、恒久的/一時的メールアドレスに直接メールを送信することもできます。
 
-# Validate Emailステップの作成
+## Validate Emailステップの作成
 
 このテストの一環として、**Validate emailステップ**を追加することで、メール（例：サインアップ確認）が恒久的または一時的メールに送信されたことを確認します。
 
@@ -354,7 +354,7 @@ Validate emailステップを設定する方法は2つあります：
 
 **validate emailステップを作成するには：**
 
-1. Hover over the **(arrow symbol)** where you want to add the step.
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
@@ -362,17 +362,17 @@ Validate emailステップを設定する方法は2つあります：
 
 ![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).  
+2. “**M**”（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
-3. Click on **Validations**.  
+3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
 ![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
-4. Scroll down through the menu and select **Validate email**.
+4. メニューをスクロールして **Validate email** を選択します。
 
 :::note
 メニュー上部の検索ボックスで検索することもできます。
@@ -480,7 +480,7 @@ exportsTest.emailLink = emailLinks[0];
 
  **validate emailステップを作成するには：**
 
-1. Hover over the **(arrow symbol)** where you want to add the step.
+1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
 ![検証ステップ追加](/images/validations/email-validation/e4b6b3d-Testim_302a.png)
 
@@ -488,17 +488,17 @@ exportsTest.emailLink = emailLinks[0];
 
 ![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
-2. Click on the “**M**” (Testim predefined steps).  
+2. “**M**”（Testim の事前定義ステップ）をクリックします。\
    **Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
-3. Click on **Validations**.  
+3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
 ![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
-4. Scroll down through the menu and select **Validate email**.
+4. メニューをスクロールして **Validate email** を選択します。
 
 :::note
 メニュー上部の検索ボックスで検索することもできます。

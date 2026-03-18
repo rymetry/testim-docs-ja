@@ -23,7 +23,7 @@ keywords:
 *Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
 :::note{title="これは Pro 機能です"}
-この機能は Professional planのプロジェクトでのみ利用できます。Professional planの詳細については [Testim 料金ページ](https://www.testim.io/pricing/) をご覧ください。
+この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 ## 前提条件
@@ -109,7 +109,7 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 ![Testim定義済みステップメニュー](/images/validations/validate-download/001f998-Testim_134_r.png)
 
-3. Click on **Validations**.\
+3. **Validations** をクリックします。\
    **Validations** メニューが展開されます。
 
 ![Validate downloadステップの選択](/images/validations/validate-download/75e9d7f-Testim_156_r.png)
@@ -160,9 +160,9 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 上の例のコードとパラメーターは、ダウンロードした CSV の行数が 237 行であること、A1 セルに “JURISDICTION NAME” が含まれることを検証します。
 :::
 
-11. If you would like to specify what happens if the step fails, click the **When this step fails** down arrow in the **Properties** panel, and choose your desired option. Options are: *Mark error & stop*, *Mark error & continue*, and *Mark warning & continue*.
-12. If you would like to control when this step runs (or doesn't run), click the **When to run step** down arrow in the **Properties** panel, and choose your desired option. For more information, see [Conditions](/docs/conditions).
-13. If you would like to override the default timeout setting (30000 ms), click on the **Override timeout** button in the **Properties** panel, and enter the desired timeout limit.
+11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: *Mark error & stop*、*Mark error & continue*、*Mark warning & continue*。
+12. このステップの実行条件を制御するには、**Properties** パネルの **When to run step** の下矢印をクリックし、希望するオプションを選択します。詳細については、[Conditions](/docs/conditions) を参照してください。
+13. デフォルトのタイムアウト設定（30000 ミリ秒）を上書きするには、**Properties** パネルの **Override timeout** ボタンをクリックし、希望するタイムアウト値を入力します。
 14. 左上の戻る矢印でエディターに戻ります。
 
 ![CSVファイル検証のコード例](/images/validations/validate-download/ae8ec4a-Testim_160a.png)
@@ -521,7 +521,7 @@ expectedText.forEach(item => {
 </table>
 
 :::note
-JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
+JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
 :::
 
 ### MS Word ファイル
@@ -598,7 +598,7 @@ return docxText.includes(expectedText);
 </table>
 
 :::note
-JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.
+JSZip は .docx ファイルのみをサポートしており、.doc ファイルには対応していません。JSZip を使用したダウンロード検証では、.docx 形式を使用してください。
 :::
 
 ### PDF ファイル
