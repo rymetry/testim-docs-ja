@@ -447,7 +447,7 @@ $$
 
 :::tip{title="詳細な実装例が見たい方へ"}
 すべての機能の詳しい使用例は、
-[執筆機能リファレンス](/docs/writing-features) をご覧ください。
+[執筆機能リファレンス](./WRITING_FEATURES.md) をご覧ください。
 :::
 
 ---
@@ -542,7 +542,7 @@ src/content/docs/
 
 ## 📚 参考記事
 
-- [執筆機能デモ (MD版)](/docs/writing-features)
+- [執筆機能デモ (MD版)](./WRITING_FEATURES.md)
 - [高度な執筆機能デモ (MDX版)](/docs/advanced-features)
 
 ---
@@ -728,7 +728,7 @@ MDX が必要なのは：
 
 ### プロジェクト内ドキュメント
 
-- 📖 [**執筆機能リファレンス**](/docs/writing-features) - 全機能の詳細な実装例
+- 📖 [**執筆機能リファレンス**](./WRITING_FEATURES.md) - 全機能の詳細な実装例
 - 🌐 [**翻訳ガイド**](./TRANSLATION_GUIDE.md) - 公式ドキュメントからの翻訳手順
 - 📘 [**README**](./README.md) - プロジェクト概要とセットアップ
 
@@ -748,7 +748,7 @@ MDX が必要なのは：
 - **コードブロックには必ず言語指定とタイトルを付ける** - 読者の理解を助ける
 - **情報パネルは適切なタイプを選ぶ** - tip / warning / success / danger など
 - **執筆中は `npm run dev` でリアルタイムプレビュー** - 見た目を確認しながら書く
-- **困ったら [執筆機能リファレンス](/docs/writing-features) を参照** - 実装例が豊富
+- **困ったら [執筆機能リファレンス](./WRITING_FEATURES.md) を参照** - 実装例が豊富
 
 ---
 
