@@ -172,7 +172,8 @@ npm run update:dates:apply
 
 ## 🏆 ライセンス
 
-このプロジェクトは Testim 公式ドキュメントの非公式日本語訳です。
+このプロジェクトのソースコードは [MIT License](./LICENSE) の下で公開されています。
+翻訳コンテンツの原文の著作権は [Tricentis](https://www.tricentis.com/) に帰属します。
 
 ## 🤝 コントリビューション
 
