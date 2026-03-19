@@ -3,7 +3,7 @@ title: グループ
 description: 複数のステップをグループにまとめて再利用する方法を学びます。グループの作成、プロパティ設定、他のテストでの再利用、変更方法について解説します。
 category: テスト編集
 order: 4006
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/groups'
 keywords:
   - グループ

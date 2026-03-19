@@ -3,7 +3,7 @@ title: Applitools テスト名のオーバーライド
 description: Applitools に送信されるテスト名をテストデータを使用してオーバーライドする方法について説明します。言語別ベースラインの作成例を提供します。
 category: 統合
 order: 12018
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/override-applitools-test-name'
 keywords:
   - Testim

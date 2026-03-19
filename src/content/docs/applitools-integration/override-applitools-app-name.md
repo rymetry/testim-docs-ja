@@ -3,7 +3,7 @@ title: Applitools アプリ名のオーバーライド
 description: Applitools に送信されるアプリ名をテストデータまたはプロジェクト設定でオーバーライドする方法について説明します。
 category: 統合
 order: 12019
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/override-applitools-app-name'
 keywords:
   - Testim

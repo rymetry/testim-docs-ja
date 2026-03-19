@@ -4,7 +4,7 @@ description: >-
   Testim と qTest を統合してテスト実行結果を qTest プロジェクトに自動的に表示する方法を説明します。統合設定、テストケースの接続、結果の表示方法を網羅しています。
 category: 統合
 order: 12039
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/qtest-integration'
 keywords:
   - qTest

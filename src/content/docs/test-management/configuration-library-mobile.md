@@ -3,7 +3,7 @@ title: 構成ライブラリ - モバイル
 description: テストを実行するために使用されるシステム仕様を決定するモバイル構成を管理します
 category: テスト管理
 order: 9011
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/configuration-library-mobile'
 keywords:
   - モバイル構成

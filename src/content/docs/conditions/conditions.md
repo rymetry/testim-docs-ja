@@ -5,7 +5,7 @@ description: >-
   text、Custom、Never（skip）など 5 種類の条件設定について詳しく解説します。
 category: テスト編集
 order: 4010
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/conditions'
 keywords:
   - 条件分岐

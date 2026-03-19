@@ -5,7 +5,7 @@ description: >-
   mode の両方に対応しています。
 category: テストの記録
 order: 3005
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/recording-a-vmg-mobile-test'
 keywords:
   - VMG

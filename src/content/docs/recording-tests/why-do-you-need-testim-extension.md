@@ -5,7 +5,7 @@ description: >-
   Extension の役割と、そのセキュリティポリシーについて説明します。
 category: テストの記録
 order: 3002
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/why-do-you-need-testim-extension'
 keywords:
   - Testim Extension

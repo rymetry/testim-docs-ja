@@ -5,7 +5,7 @@ description: >-
   ID ・トークン・グリッド・ラベル・スイート・テスト計画などのパラメーターを指定してローカルおよびリモートでテストを実行し、CI と統合する手順を説明します。
 category: テスト実行
 order: 6002
-updated: '2025-09-22'
+updated: '2025-09-23'
 sourceUrl: 'https://help.testim.io/docs/the-command-line-cli'
 keywords:
   - CLI

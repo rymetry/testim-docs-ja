@@ -5,7 +5,7 @@ description: >-
   Beyond」デモサイトを使って最初のコードレス Web テストを記録し、検証を追加し、ローカルで実行して結果を確認するまでの流れと押さえておきたいポイントを詳しく解説します。
 category: はじめに
 order: 2002
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/creating-your-first-codeless-test'
 keywords:
   - はじめに

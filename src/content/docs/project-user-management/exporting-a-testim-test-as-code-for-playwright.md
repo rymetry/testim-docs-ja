@@ -4,7 +4,7 @@ description: >-
   Testim テストを Playwright 用のコードに変換してエクスポートする方法について説明します。URL サフィックスを追加してコードビューアーで表示します。
 category: 管理者機能
 order: 14008
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright'
 keywords:
   - Playwright

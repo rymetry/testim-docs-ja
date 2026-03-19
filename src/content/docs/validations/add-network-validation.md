@@ -3,7 +3,7 @@ title: ネットワーク検証の追加
 description: ネットワークリクエストとレスポンスを検証するステップ。API コール、Ajax リクエスト、HTTP レスポンスの内容を確認し、通信状態を検証します。
 category: 高度な編集
 order: 5015
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/add-network-validation'
 keywords:
   - ネットワーク検証

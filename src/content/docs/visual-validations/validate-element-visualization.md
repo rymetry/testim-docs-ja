@@ -3,7 +3,7 @@ title: 要素のビジュアル検証
 description: ピクセルレベルで要素のビジュアル差異を検証する方法。Applitools との連携により、ベースラインと現在のテスト実行を比較します。
 category: 高度な編集
 order: 5022
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/validate-element-visualization'
 keywords:
   - ビジュアル検証

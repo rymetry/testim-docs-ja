@@ -4,7 +4,7 @@ description: >-
   機密情報を安全に管理するためのシークレットマネージャーの使用方法について説明します。テスト、設定ファイル、パラメーターファイルでのシークレットの利用方法を提供します。
 category: 管理者機能
 order: 14005
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/secrets'
 keywords:
   - Secrets Manager

@@ -3,7 +3,7 @@ title: アカウントの設定
 description: Testim Extension のインストール方法と Testim アカウントの無料トライアル登録手順を説明します。
 category: はじめに
 order: 2001
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/setting-up-your-account'
 keywords:
   - アカウント設定

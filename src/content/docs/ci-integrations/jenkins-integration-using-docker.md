@@ -5,7 +5,7 @@ description: >-
   Engine のインストールとジョブ設定手順を提供します。
 category: 統合
 order: 12008
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/jenkins-integration-using-docker'
 keywords:
   - Jenkins

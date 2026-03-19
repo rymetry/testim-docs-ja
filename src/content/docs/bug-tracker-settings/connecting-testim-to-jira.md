@@ -3,7 +3,7 @@ title: Testim と Jira の連携
 description: Testim から Jira に bug を公開するための接続手順を説明します。Bug ticket に含まれる内容と Jira への初回接続フローを確認できます。
 category: 統合
 order: 12034
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-jira'
 keywords:
   - Testim

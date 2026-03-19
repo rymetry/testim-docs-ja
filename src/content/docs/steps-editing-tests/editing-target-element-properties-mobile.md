@@ -5,7 +5,7 @@ description: >-
   Locate について解説します。
 category: テスト編集
 order: 4004
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/editing-target-element-properties-mobile'
 keywords:
   - モバイル

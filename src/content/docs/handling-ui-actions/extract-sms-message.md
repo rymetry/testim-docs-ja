@@ -3,7 +3,7 @@ title: SMS メッセージの抽出
 description: CLI action step と Twilio を使用して SMS メッセージを抽出し、受信時刻とコンテンツの検証を行う方法を学びます。
 category: 高度な編集
 order: 5038
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/extract-sms-message'
 keywords:
   - testim

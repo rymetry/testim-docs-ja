@@ -3,7 +3,7 @@ title: 要素アクセシビリティ検証
 description: Web ページ上の特定の要素がアクセシブルかどうかをチェックし、アクセシビリティ違反を特定する方法を解説します。
 category: 高度な編集
 order: 5021
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/element-accessibility-validation'
 keywords:
   - アクセシビリティ

@@ -3,7 +3,7 @@ title: テスト実行 PDF レポート
 description: テスト実行結果を PDF レポートとしてエクスポートする方法について説明します。3 種類のレポート形式から選択できます。
 category: テスト結果
 order: 7015
-updated: '2025-09-22'
+updated: '2025-11-26'
 sourceUrl: 'https://help.testim.io/docs/test-run-pdf-report'
 keywords:
   - テスト結果レポート

@@ -5,7 +5,7 @@ description: >-
   Server（TFS）で Testim テストを実行する方法について説明します。Docker タスクの設定手順を提供します。
 category: 統合
 order: 12010
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/vsts-and-tfs-integration'
 keywords:
   - VSTS

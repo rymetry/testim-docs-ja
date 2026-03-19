@@ -5,7 +5,7 @@ description: >-
   Mode を使ってモバイルアプリのテストを記録し、デバイス選択から実行、結果確認までの一連の流れと注意点を学べるチュートリアルです。
 category: はじめに
 order: 2003
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: >-
   https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor
 keywords:

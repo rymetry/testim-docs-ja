@@ -5,7 +5,7 @@ description: >-
   CLI ・スケジューラーを使ってブラウザ構成を指定する方法を説明します。
 category: テスト実行
 order: 6008
-updated: '2025-09-22'
+updated: '2025-09-23'
 sourceUrl: 'https://help.testim.io/docs/running-tests-on-multiple-browsers'
 keywords:
   - 複数ブラウザ

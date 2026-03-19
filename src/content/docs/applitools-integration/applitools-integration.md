@@ -3,7 +3,7 @@ title: Applitools 統合
 description: AI 駆動のビジュアルテストを有効にするための Applitools Eyes 統合方法について説明します。API キーの作成と設定手順を提供します。
 category: 統合
 order: 12017
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/applitools-integration'
 keywords:
   - Testim

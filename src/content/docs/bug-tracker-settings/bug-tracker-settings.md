@@ -3,7 +3,7 @@ title: バグトラッカー設定
 description: Testim から bug / issue tracking system に issue を公開する方法と、接続できるバグトラッカーを説明します。
 category: 統合
 order: 12033
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/bug-tracker-settings'
 keywords:
   - Testim

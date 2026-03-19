@@ -3,7 +3,7 @@ title: テスト内検索
 description: テスト内のステップ、JavaScript コード、パラメーター、URL、条件などを横断検索する方法を学びます。
 category: テスト編集
 order: 4014
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/search-within-a-test'
 keywords:
   - テスト内検索
