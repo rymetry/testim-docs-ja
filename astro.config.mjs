@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import vercel from '@astrojs/vercel';
 
 import tailwindcss from '@tailwindcss/vite';
@@ -108,6 +108,20 @@ export default defineConfig({
         },
       }],
     },
+  },
+
+  fonts: [
+    {
+      name: 'Noto Sans JP',
+      cssVariable: '--font-noto-sans-jp',
+      provider: fontProviders.fontsource(),
+      weights: [400, 500, 600, 700],
+      styles: ['normal'],
+    },
+  ],
+
+  experimental: {
+    queuedRendering: { enabled: true },
   },
 
   integrations: [react()],

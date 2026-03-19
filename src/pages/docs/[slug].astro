@@ -1,7 +1,7 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
 import { buildNavigation, getDocs, extractSlug } from '../../lib/docs';
-import { getEntry } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 
 // Static生成用: output='static'の時のみ実行される
 export async function getStaticPaths() {
@@ -28,14 +28,13 @@ if (!docId) {
   return Astro.redirect('/404');
 }
 
-// docIdから.mdを除いたものを使用
-const entry = await getEntry('docs', docId.replace(/\.md$/, ''));
+const entry = await getEntry('docs', docId);
 
 if (!entry) {
   return Astro.redirect('/404');
 }
 
-const rendered = await entry.render();
+const rendered = await render(entry);
 
 const navSections = buildNavigation(docs);
 const { Content, headings } = rendered;

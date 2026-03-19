@@ -111,9 +111,11 @@ JS パラメーターは、定数や変数としてよく使います。グル�
 1. **プロパティパネル**で **Params** 横の **+** をクリックし、**JS** を選択します。
 
    ![JS パラメーターの追加](/images/parameters/parameters-in-custom-javascript-steps/d5ea619-plus.png)
+
 2. **編集**アイコンから名前を変更します（既定の "param" を置き換え）。
 
    ![パラメーター名の編集](/images/parameters/parameters-in-custom-javascript-steps/96cc4ee-edit.png)
+
 3. 名前の下の欄に値を入力します。文字列はクォートで囲みます（例: 'guest'）。この値はこのテスト内だけで有効です（他テストとは共有されません）。
 
 ![パラメーター値の設定](/images/parameters/parameters-in-custom-javascript-steps/898f70a-guest.png)

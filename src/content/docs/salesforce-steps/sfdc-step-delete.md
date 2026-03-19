@@ -32,4 +32,5 @@ keywords:
    **削除**ステップが追加され、次の**オブジェクトプロパティ**が表示されます。
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-delete/f1f2053-deletestep.png)
+
 4. 完了したら、**保存**をクリックします。

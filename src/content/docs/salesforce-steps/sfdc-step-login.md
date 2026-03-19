@@ -26,6 +26,7 @@ Log in ステップは、選択された[ペルソナ](/docs/create-a-persona-an
    **Log in**ステップが追加され、次の**Object**プロパティが表示されます。
 
    ![スクリーンショット](/images/salesforce-steps/sfdc-step-login/793c6ea-2024-05-05_16-19-27.png)
+
 3. **Select login persona**の下で、ドロップダウンメニューから目的のペルソナを選択します。
 4. 目的のペルソナが見つからない場合は、[ペルソナの作成](/docs/create-a-persona-and-add-users)の手順に従って新しいペルソナを作成します。
 5. 完了したら、**Save**をクリックします。

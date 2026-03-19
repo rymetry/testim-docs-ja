@@ -28,6 +28,7 @@ keywords:
    次のダイアログが表示されます。
 
    ![テスト復旧ダイアログ](/images/test-utilities/recovering-a-test-that-was-not-saved/f9d3bb2-2024-07-01_12-38-43.png)
+
 2. 次のいずれかを実行します。
    1. **Recover** をクリックして、未保存のテストを復旧します。
    2. **Dismiss** をクリックして復旧せずに続行します（この場合、下書きではなく最後に保存した状態でテストが開きます）。  

@@ -42,14 +42,17 @@ Sealights 統合は無料プランのお客様にはご利用いただけませ�
 1. **Sealights**で、**Settings > Agent Tokens**に移動し、**Create new token**をクリックします。
 
    ![Sealights の Agent Tokens 画面で新しいトークンを作成する画面](/images/other-integrations/sealights-integration/d94ca5f-sealights2.png)
+
 2. 空のフィールドにトークンの名前を入力し、**Create**をクリックします。
 3. **Actions**の下の**Copy**ボタンをクリックして、新しく作成されたトークンをコピーします。
 
    ![Sealights の Integration 設定画面で Testim 統合が表示されている画面](/images/other-integrations/sealights-integration/9eb0aac-sealights4.png)
+
 4. Testim で、**Settings > Integration > Test Optimization**タブに移動します。
 5. **login**をクリックします。
 
    ![Sealights の Integration 設定で Testim 統合にログインする画面](/images/other-integrations/sealights-integration/9f2f531-sealightsintegrationslogin.png)
+
 6. **Sealights Agent Token**に、取得した**Sealights Agent Token**を貼り付けます。\
    **Sealights URL**フィールドは、**Sealights Agent Token**に基づいて自動的に入力されます。
 7. **Connect**をクリックします。
@@ -149,6 +152,7 @@ CLI実行中は常に、タグセクションで`Testim`を送信することを
 5. オプションで、カスタムテストステージ名を使用する場合は、**Test stage name field**に入力します
 
    ![Sealights 統合を有効化した Testim スケジューラー設定画面](/images/other-integrations/sealights-integration/bc18e30-image_12.png)
+
 6. 必要に応じて追加の設定を構成します。
 
 <br />

@@ -32,6 +32,7 @@ keywords:
 2. **Hidden Parameters** セクションで **Add hidden parameter** をクリック。
 
    ![非表示パラメーターの追加](/images/parameters/hidden-parameters/8a620c6-image.png)
+
 3. パラメーター名と説明（任意）を入力し、**Create**。
 
 ## 非表示パラメーターの編集・削除

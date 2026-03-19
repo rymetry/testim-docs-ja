@@ -33,6 +33,7 @@ keywords:
    ステップ設定画面が表示されます。
 
    ![ジオロケーション設定ステップのスクリーンショット](/images/special-steps/set-geolocation/d7ff4c5-geo1.png)
+
 3. 次のいずれかを実行します。
    1. 地図上で位置を指定（拡大縮小・移動が可能）
    2. **Latitude/Longitude** を直接入力

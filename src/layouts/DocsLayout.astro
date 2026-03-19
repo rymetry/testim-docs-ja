@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 
 import type { MarkdownHeading } from 'astro';
 import NavSidebar from '../components/navigation/NavSidebar.astro';
@@ -51,6 +52,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <title>{title} | Tricentis Testim ユーザー制作日本語翻訳ドキュメント</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Font cssVariable="--font-noto-sans-jp" preload />
     <Fragment set:html={gtmHeadCode} />
   </head>
   <body class="flex min-h-screen flex-col font-sans text-slate-900 antialiased">

@@ -18,13 +18,14 @@
 │   ├── pages/           # ルーティング
 │   ├── styles/          # グローバル CSS
 │   └── types/           # TypeScript 型定義
+├── src/content.config.ts # Content Collections 定義
 ├── astro.config.mjs     # Astro 設定
 └── package.json
 ```
 
 ## 🛠️ 技術スタック
 
-- **フレームワーク**: [Astro](https://astro.build/) - 高速な静的サイト生成
+- **フレームワーク**: [Astro 6](https://astro.build/) - 高速な静的サイト生成（Content Layer API、Built-in Fonts API）
 - **スタイリング**: [Tailwind CSS v4](https://tailwindcss.com/) - ユーティリティファーストCSS
 - **コンテンツ管理**: Markdown (.md) - シンプルで書きやすい
 - **検索機能**: [MiniSearch](https://github.com/lucaong/minisearch) - クライアントサイド全文検索
@@ -39,7 +40,7 @@
 
 ### 前提条件
 
-- Node.js 18.x 以上
+- Node.js 22.12.0 以上
 - npm または pnpm
 
 ### インストール
@@ -82,8 +83,8 @@ keywords:
 ## 🎨 デザイン方針
 
 - 英語版（[help.testim.io](https://help.testim.io/)）のレイアウトと配色を踏襲
-- 日本語フォントは Noto Sans JP を使用
-- コードブロックは Dracula テーマでシンタックスハイライト
+- 日本語フォントは Noto Sans JP を使用（Astro Fonts API で自動管理）
+- コードブロックは GitHub Dark Dimmed テーマでシンタックスハイライト
 - レスポンシブデザイン対応（モバイル・タブレット・デスクトップ）
 
 ## 📚 執筆機能

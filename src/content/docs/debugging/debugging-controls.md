@@ -136,13 +136,17 @@ keywords:
 1. 次のいずれかを実行します:
    1. **デバッグ付きでローカル実行**ボタンをクリックします。
       ![デバッグ付きローカル実行](/images/debugging/debugging-controls/38a770d-runlocallywithdebug.png)
+
    2. **実行オプション**ドロップダウンメニューをクリックし、**デバッグ付きでローカル実行**オプションをクリックします。
       ![実行オプションからのデバッグ付きローカル実行の選択](/images/debugging/debugging-controls/9a27022-rundebugdropdown.png)
+
    3. **F5**キーを押します。
       テストの実行が開始され、**デバッグコントロール**メニューが表示されます。
       ![デバッグコントロールメニュー](/images/debugging/debugging-controls/b68851e-debugging_controls.png)
+
 2. テストを一時停止するには、**デバッグコントロールメニュー**で**一時停止**ボタンをクリックします。
    ![デバッグの一時停止](/images/debugging/debugging-controls/f8c64f1-pause.png)
+
    テストを一時停止すると、デバッグコントロールが表示されます。デバッグコントロールの詳細は以下を参照してください。
 3. 任意のポイントでテスト実行を停止してデバッグモードを終了するには、**停止**ボタンをクリックします。
    ![デバッグモードの停止](/images/debugging/debugging-controls/c3c750b-stop.png)

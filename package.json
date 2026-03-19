@@ -37,14 +37,14 @@
     "check:summary": "node scripts/generate_detection_reports.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.1",
-    "@astrojs/vercel": "^9.0.0",
+    "@astrojs/react": "^5.0.1",
+    "@astrojs/vercel": "^10.0.1",
     "@microflash/remark-callout-directives": "^5.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.16",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "astro": "^5.15.2",
+    "astro": "^6.0.6",
     "dotenv": "^17.2.3",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.1",
@@ -54,7 +54,7 @@
     "tailwindcss": "^4.1.16"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.8",
     "markdownlint-cli": "^0.48.0",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",

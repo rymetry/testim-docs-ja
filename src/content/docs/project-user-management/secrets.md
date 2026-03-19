@@ -50,6 +50,7 @@ Testim には、機密値を一元管理できる **Secrets Manager** が備わ�
 2. **New Secret** をクリックします。
 
    ![New Secret を作成するフォーム](/images/project-user-management/secrets/6876945-image.png)
+
 3. **Name** フィールドに、シークレットの名前を入力します。以下に説明する正しい構文に従っていることを確認してください。
 4. **Value** フィールドに、秘密にしておく値（電話番号、パスワードなど）を入力します。
 5. **Description** フィールドに、オプションでシークレットの説明を入力します。

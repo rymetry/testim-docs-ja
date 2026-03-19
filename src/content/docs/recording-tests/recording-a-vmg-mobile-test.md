@@ -120,6 +120,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 テストを記録するときは、安定性を高めるために、テキスト要素を選択し、外側のフレーム、画像、アイコンを避けるようにしてください。
 
 ![要素選択の例](/images/recording-tests/recording-a-vmg-mobile-test/b4b47b7-image_20.png)
+
 :::
 
 9. 記録を停止するには、**Stop Recording** ボタンをクリックするか、Viewer ウィンドウを閉じます。

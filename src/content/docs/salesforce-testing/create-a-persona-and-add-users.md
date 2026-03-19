@@ -38,17 +38,23 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
 1. Testim for Salesforce で、**Settings** > **Salesforce** > **Personas**に移動し、**Add Persona**ボタンをクリックします。
 
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/29532af-addpersona4.png)
+
 2. ペルソナ名を入力し、**Add**をクリックします。\
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/1019250-addpersona2.png)\
+
    ペルソナがリストに追加されます。\
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/cbf8b38-persona5.png)
+
 3. ペルソナのリストから、関連するペルソナの隣にある**+**ボタンをクリックします。\
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/7e2cd64-persona6.png)
+
 4. 次のいずれかを選択します:
    1. **Sign in with Salesforce** - この方法では、Salesforce にサインインし、Testim for Salesforce は認証後に Salesforce からトークンを受け取ります。Salesforce サインイン画面のポップアップが表示されます。関連する Salesforce アカウントにログインしてペルソナと関連付け、**Allow**をクリックしてアクセスを許可します。\
       ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/37d29b1-login.png)
+
    2. **Log in with username and password** - 以下の手順に従って、Testim for Salesforce でログイン認証情報を設定します。\
       ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/7277fad-addcredentials.png)
+
 5. **Salesforce user**フィールドで、ドロップダウンメニューから関連するユーザーを選択します。
 6. **Salesforce Password**フィールドに、関連するパスワードを入力します。
 7. ログインに MFA が必要な場合は、MFA 認証キーを入力します。MFA キーの見つけ方については、[Salesforce 用 MFA の設定](/docs/setting-mfa-for-salesforce)を参照してください。
