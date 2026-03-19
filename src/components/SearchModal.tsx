@@ -304,7 +304,7 @@ export default function SearchModal() {
     if (e.key !== 'Tab' || !modalRef.current) return;
     const focusable = Array.from(
       modalRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+        'a[href]:not([tabindex="-1"]), button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
       )
     ).filter((el) => !el.closest('[aria-hidden="true"]'));
     if (focusable.length === 0) return;
@@ -405,7 +405,12 @@ export default function SearchModal() {
             onKeyDown={handleKeyDown}
             placeholder="キーワードを入力してドキュメントを検索..."
             className="flex-1 border-none bg-transparent text-base text-slate-900 placeholder-slate-400 outline-none sm:py-5 sm:text-lg"
+            role="combobox"
             aria-label="検索クエリ"
+            aria-autocomplete="list"
+            aria-controls={flatResults.length > 0 ? 'search-listbox' : undefined}
+            aria-expanded={flatResults.length > 0}
+            aria-activedescendant={flatResults.length > 0 ? `search-result-${selectedIndex}` : undefined}
           />
           <button
             onClick={closeModal}
@@ -511,9 +516,9 @@ export default function SearchModal() {
                   ? `${totalCount}件中 ${flatResults.length}件を表示`
                   : `${totalCount}件の結果`}
               </div>
-              <ul className="py-1" aria-label="検索結果">
+              <ul className="py-1" role="listbox" id="search-listbox" aria-label="検索結果">
                 {groups.map((group) => (
-                  <li key={group.slug}>
+                  <li key={group.slug} role="group" aria-label={group.page?.title || group.headings[0]?.parentTitle || group.slug}>
                     {/* ページ結果 */}
                     {group.page &&
                       (() => {
@@ -523,6 +528,9 @@ export default function SearchModal() {
                           <a
                             id={`search-result-${flatIdx}`}
                             href={`/docs/${result.slug}`}
+                            role="option"
+                            aria-selected={flatIdx === selectedIndex}
+                            tabIndex={-1}
                             className={`flex flex-col gap-2 rounded-xl px-4 py-4 transition sm:px-6 ${
                               flatIdx === selectedIndex
                                 ? 'border-l-4 border-blue-500 bg-blue-50'
@@ -552,6 +560,9 @@ export default function SearchModal() {
                           key={heading.id}
                           id={`search-result-${flatIdx}`}
                           href={`/docs/${heading.slug}#${heading.headingSlug}`}
+                          role="option"
+                          aria-selected={flatIdx === selectedIndex}
+                          tabIndex={-1}
                           className={`flex min-w-0 items-center gap-2 rounded-xl px-4 py-2.5 transition sm:px-6 ${
                             flatIdx === selectedIndex
                               ? 'border-l-4 border-blue-500 bg-blue-50'
