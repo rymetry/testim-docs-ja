@@ -155,7 +155,7 @@ describe('resolveSourcePageInfo', () => {
     assert.equal(result.sourceDateDivergence, false);
   });
 
-  it('prefers document.updated_at when it truly diverges from the visible date', () => {
+  it('treats document/display divergence as expected rounding when document.updated_at is present', () => {
     const now = new Date('2026-03-19T00:00:00Z');
     const html = `
       <script id="ssr-props" type="application/json">{"document":{"updated_at":"2025-09-18T03:00:00.000Z"}}</script>

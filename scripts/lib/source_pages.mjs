@@ -249,7 +249,7 @@ export function resolveSourcePageInfo({ html, url, now = new Date(), exception =
   const documentDisplayDivergence = Boolean(
     documentUpdatedAt && displayRelativeDate && documentUpdatedAt !== displayRelativeDate
   );
-  // document.updated_at is authoritative; display rounding is expected
+  // document.updated_at is authoritative; display rounding is expected (#117)
   const sourceDateDivergence = documentUpdatedAt
     ? false
     : metadataDisplayDivergence;
