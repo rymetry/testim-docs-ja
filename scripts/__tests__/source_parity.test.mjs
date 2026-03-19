@@ -112,6 +112,17 @@ describe('applySuppressions', () => {
     assert.ok(filtered.some((i) => i.type === 'image-mismatch'));
   });
 
+  it('passes through non-suppressed issue types on a suppressed slug', () => {
+    const issues = buildStructuralIssues(
+      { h2Count: 9, imgCount: 9, codeBlockCount: 5 },
+      { h2Count: 1, imgCount: 0, codeBlockCount: 2 },
+    );
+
+    const filtered = applySuppressions(issues, 'salesforce-testing-overview');
+    assert.equal(filtered.length, 1);
+    assert.equal(filtered[0].type, 'codeblock-mismatch');
+  });
+
   it('passes through issues for unsuppressed slugs', () => {
     const issues = buildStructuralIssues(
       { h2Count: 8, imgCount: 10, codeBlockCount: 0 },
