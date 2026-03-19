@@ -120,9 +120,5 @@ export default defineConfig({
     },
   ],
 
-  experimental: {
-    queuedRendering: { enabled: true },
-  },
-
   integrations: [react()],
 });
