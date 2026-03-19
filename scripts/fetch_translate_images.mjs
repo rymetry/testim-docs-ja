@@ -5,14 +5,13 @@ import { promisify } from 'util';
 import { createHash } from 'crypto';
 import matter from 'gray-matter';
 import { filterItemsBySection } from './lib/sidebar.mjs';
-import { ROOT_DIR, DOCS_DIR, buildSlugIndex, toKebab } from './lib/project.mjs';
-import { stripMarkdown, generateDescription } from './lib/markdown-utils.mjs';
+import { ROOT_DIR, buildSlugIndex, toKebab } from './lib/project.mjs';
+import { generateDescription } from './lib/markdown-utils.mjs';
 
 const execFileAsync = promisify(execFile);
 
 const ROOT = ROOT_DIR;
 const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
-const DOCS_ROOT = DOCS_DIR;
 const PUBLIC_IMAGES = path.join(ROOT, 'public', 'images');
 const DEFAULT_STATE_PATH = path.join(ROOT, 'scripts', '.cache', 'docs-state.json');
 

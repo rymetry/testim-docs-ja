@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { render } from 'astro:content';
 import { getDocs, extractSlug } from '../../lib/docs';
 
 export const GET: APIRoute = async () => {
@@ -8,7 +9,7 @@ export const GET: APIRoute = async () => {
     const searchDocs = (
       await Promise.all(
         docs.map(async (doc) => {
-          const { headings } = await doc.render();
+          const { headings } = await render(doc);
           const urlSlug = extractSlug(doc);
 
           return [

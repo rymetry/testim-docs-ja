@@ -201,6 +201,7 @@ keywords:
 4. **Add Step** ダイアログで **Shared step** チェックボックスをオンにします。
 
    ![共有ステップの設定](/images/groups/shareable-steps/3a14d05-image.png)
+
 5. 共有ステップを **Root** フォルダー以外に配置したい場合は、**Select shared step folder** でフィールドをクリックし、既存フォルダーを選ぶか **Add Folder** をクリックして新しいフォルダー名を指定します。**Select** をクリックして確定します。
 
    ![フォルダーの追加](/images/groups/shareable-steps/a69521b-addfolder.png)
@@ -214,6 +215,7 @@ keywords:
 1. 共有可能な通常ステップで **Show Properties** をクリックします。
 
    ![Show Properties ボタン](/images/groups/shareable-steps/d887de9-showproperties.png)
+
 2. Properties ペインで **Shared Step** リンクをクリックします。
 
    ![Shared Step リンク](/images/groups/shareable-steps/54d39fb-shaedsteplink.png)

@@ -33,10 +33,12 @@ Testim for Salesforce ブランチ管理機能は、一般的な Testim ブラ�
 1. メニューの**新しいブランチを作成（フォークアイコン）**ボタンをクリックします。
 
    ![新しいブランチを作成（フォークアイコン）](/images/salesforce-utilities/tta-for-salesforce-branch-management/35b00be-fork.png)
+
 2. **名前**フィールドに、ブランチの名前を入力します。
 3. **Salesforce 環境**フィールドで、関連する Salesforce 環境をブランチに関連付けます。ブランチを Salesforce 環境に関連付けることは必須ではありませんが、Salesforce 関連のステップ（例：ログインステップ）を使用するには、この関連付けを実行する必要があります。
 
    ![新しいブランチ作成ダイアログ](/images/salesforce-utilities/tta-for-salesforce-branch-management/f57b3fa-newbranch2.png)
+
 4. **OK**をクリックします。
 
 ## ブランチの Salesforce 環境の変更
@@ -47,7 +49,9 @@ Testim for Salesforce ブランチ管理機能は、一般的な Testim ブラ�
 2. 目的のブランチの**環境の変更**ボタンをクリックします。
 
    ![ブランチ一覧で環境の変更を選択](/images/salesforce-utilities/tta-for-salesforce-branch-management/a0b3049-2023-12-12_17-36-35.png)
+
 3. 環境の変更ダイアログで、新しい環境の下で、ドロップダウンメニューから目的の環境を選択します。
 
    ![環境の変更ダイアログ](/images/salesforce-utilities/tta-for-salesforce-branch-management/16ed4e9-2023-12-12_17-40-40.png)
+
 4. **保存**をクリックします。

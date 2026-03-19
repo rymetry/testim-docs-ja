@@ -26,6 +26,7 @@ keywords:
 4. **Copilot** ボタンをクリックします。
 
    ![Copilot User Licenses カードへのアクセス画面](/images/project-user-management/copilot-license-management/e2220b0-copilotlicense1.png)
+
 5. 現在割り当てられているライセンス数が、利用可能なシート総数のうちどれだけかが、Copilot User Licenses カードに表示されます。グラフは、利用可能なシート総数（グレー）のうち、割り当て済みシート総数（緑）を示しています。
 6. **Company Teammates** の下には、企業内のすべてのユーザーのリストがあります。Copilot に割り当てられているユーザーは「Assigned」と表示されます。
 
@@ -39,6 +40,7 @@ keywords:
    **Assign Copilot Seats to Teammates** が表示されます:
 
    ![Assign Copilot Seats ダイアログでユーザーを選択する画面](/images/project-user-management/copilot-license-management/88be1cb-assign.png)
+
 2. 現在割り当てられていないユーザーの 1 人をクリックします。
 3. **Confirm** をクリックします。
 

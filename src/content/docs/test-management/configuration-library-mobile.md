@@ -49,6 +49,7 @@ keywords:
 
 1. **Runs > Configuration Library** に移動し、**Create New** ボタンをクリックします。\
    ![Runs メニューの Configuration Library で Create New ボタンをクリックする画面](/images/test-management/configuration-library-mobile/f184ba9-image_11.png)
+
 2. **Configuration Name** フィールドに、構成の名前を入力します。
 3. **Choose a grid** で、ドロップダウンメニューからグリッドを選択します。希望するグリッドが表示されない場合は、Testim にグリッドを追加する必要がある場合があります。詳細については、[Grid management](/docs/grid-management) を参照してください。
 4. **Configuration Type**（構成タイプ）を選択します:

@@ -1,6 +1,6 @@
 # Testim Help Docs 日本語版
 
-[Testim](https://www.testim.io/) の公式ヘルプドキュメント（[help.testim.io](https://help.testim.io/docs/testim-overview)）を日本語で提供するプロジェクトです。最新の機能や使い方を日本語で理解しやすくまとめています。
+[Tricentis Testim](https://www.testim.io/) の公式ヘルプドキュメント（[help.testim.io](https://help.testim.io/docs/testim-overview)）を日本語で提供するプロジェクトです。最新の機能や使い方を日本語でまとめています。
 
 ## 🚀 プロジェクト構成
 
@@ -18,13 +18,14 @@
 │   ├── pages/           # ルーティング
 │   ├── styles/          # グローバル CSS
 │   └── types/           # TypeScript 型定義
+├── src/content.config.ts # Content Collections 定義
 ├── astro.config.mjs     # Astro 設定
 └── package.json
 ```
 
 ## 🛠️ 技術スタック
 
-- **フレームワーク**: [Astro](https://astro.build/) - 高速な静的サイト生成
+- **フレームワーク**: [Astro 6](https://astro.build/) - 高速な静的サイト生成（Content Layer API、Built-in Fonts API）
 - **スタイリング**: [Tailwind CSS v4](https://tailwindcss.com/) - ユーティリティファーストCSS
 - **コンテンツ管理**: Markdown (.md) - シンプルで書きやすい
 - **検索機能**: [MiniSearch](https://github.com/lucaong/minisearch) - クライアントサイド全文検索
@@ -39,7 +40,7 @@
 
 ### 前提条件
 
-- Node.js 18.x 以上
+- Node.js 22.12.0 以上
 - npm または pnpm
 
 ### インストール
@@ -81,8 +82,8 @@ keywords:
 
 ## 🎨 デザイン方針
 
-- 英語版（[help.testim.io](https://help.testim.io/)）のレイアウトと配色を踏襲
-- 日本語フォントは Noto Sans JP を使用
+- Tricentis Testim Docs 公式（[help.testim.io](https://help.testim.io/)）のレイアウトを踏襲
+- 日本語フォントは Noto Sans JP を使用（Astro Fonts API で自動管理）
 - コードブロックは GitHub Dark Dimmed テーマでシンタックスハイライト
 - レスポンシブデザイン対応（モバイル・タブレット・デスクトップ）
 
@@ -130,7 +131,7 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
 ## 📅 ドキュメント更新管理
 
-英語原文の更新を自動追跡するスクリプトを提供しています。日本語翻訳が英語版に対して最新かどうかを確認し、更新が必要なドキュメントを検出できます。
+Tricentis Testim Docs 公式原文の更新を自動追跡するスクリプトを提供しています。日本語翻訳が公式に対して最新かどうかを確認し、更新が必要なドキュメントを検出できます。
 
 ### 利用可能なコマンド
 
@@ -150,9 +151,9 @@ npm run update:dates:apply
 
 ### スクリプトの詳細
 
-- **check:updates** - 日本語版と英語版の更新日を比較し、更新が必要なファイルをリスト表示
+- **check:updates** - 日本語版と公式の更新日を比較し、更新が必要なファイルをリスト表示
 - **check:dates** - すべてのドキュメントの英語原文更新日を一括取得して表示
-- **update:dates** - 英語原文の更新日で日本語ファイルを更新（変更内容のプレビューのみ）
+- **update:dates** - 公式原文の更新日で日本語ファイルを更新（変更内容のプレビューのみ）
 - **update:dates:apply** - 実際にファイルを更新（`--apply`フラグ付き）
 
 ### GitHub Actions による自動チェック
@@ -172,7 +173,6 @@ npm run update:dates:apply
 ## 🏆 ライセンス
 
 このプロジェクトは Testim 公式ドキュメントの非公式日本語訳です。
-オリジナルコンテンツの著作権は [Tricentis](https://www.tricentis.com/) に帰属します。
 
 ## 🤝 コントリビューション
 
@@ -180,10 +180,9 @@ npm run update:dates:apply
 
 ## 🔗 関連リンク
 
-- [Testim 公式サイト](https://www.testim.io/)
-- [英語版ドキュメント](https://help.testim.io/)
-- [Testim Changelog](https://help.testim.io/changelog)
-- [料金プラン](https://www.testim.io/pricing/)
+- [Tricentis Testim 公式サイト](https://www.testim.io/)
+- [Tricentis Testim Docs 公式ドキュメント](https://help.testim.io/)
+- [Tricentis Testim Docs 公式 Changelog](https://help.testim.io/changelog)
 
 ---
 

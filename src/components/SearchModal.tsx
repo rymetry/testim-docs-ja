@@ -272,7 +272,7 @@ export default function SearchModal() {
   // キーボードナビゲーション
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // IME変換中はすべてのキーイベントを無視（かな/漢字変換の候補ナビゲーションを妨げない）
-    if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
+    if (e.nativeEvent.isComposing || (e.nativeEvent as KeyboardEvent).isComposing) return;
 
     if (e.key === 'ArrowDown') {
       if (flatResults.length === 0) return;

@@ -102,7 +102,7 @@ const SIDEBAR_ORDERING = getSidebarOrdering();
 
 /** doc.id からURLに使うslug（最後のファイル名部分のみ）を抽出する */
 export function extractSlug(doc: DocEntry): string {
-  return doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
+  return doc.id.split('/').pop() || doc.id;
 }
 
 export async function getDocs(): Promise<DocEntry[]> {
@@ -126,8 +126,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
   >();
 
   docs.forEach((doc) => {
-    // doc.id は "overview/testim-overview.md" のような形式
-    // doc.slug は "overview/testim-overview" のような形式
+    // doc.id は "overview/testim-overview" のような形式（Content Layer API）
     // URLに使うslugは最後のファイル名部分のみ（例: "testim-overview"）
     const urlSlug = extractSlug(doc);
     
@@ -193,12 +192,12 @@ export function buildSearchDocuments(
       slug: urlSlug,
       description: doc.data.description,
       keywords: doc.data.keywords,
-      headings: (headingsBySlug[doc.slug] || []).map((heading) => ({
+      headings: (headingsBySlug[doc.id] || []).map((heading) => ({
         slug: heading.slug,
         text: heading.text,
         depth: heading.depth,
       })),
-      headingText: (headingsBySlug[doc.slug] || []).map((heading) => heading.text).join(' '),
+      headingText: (headingsBySlug[doc.id] || []).map((heading) => heading.text).join(' '),
     };
   });
 }

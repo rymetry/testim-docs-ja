@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
-  DOCS_DIR,
   ROOT_DIR,
   getDocSection,
 } from './project.mjs';
@@ -253,7 +252,7 @@ export function buildActionableReport(updates, parity, auditManifest, options = 
   };
 }
 
-export function renderSummaryMarkdown(updates, parity, actionableReport, auditManifest) {
+export function renderSummaryMarkdown(_updates, parity, actionableReport, auditManifest) {
   return [
     '# Docs Detection Summary',
     '',

@@ -41,6 +41,7 @@ keywords:
 1. 新しく記録したステップを追加するステップまでテストを実行します。手動ブレークポイントを配置することでこれを行うことができます（詳細については該当セクションを参照してください）。AUT が追加のステップを記録するために使用する画面を表示していることを確認してください。
 2. 追加の記録ステップを追加する 2 つのステップ間の矢印にカーソルを合わせ、**Start recording at this position**ボタンをクリックします。\
    ![Start recording at this position ボタン](/images/debugging/recording-additional-steps-to-fix-bugs/603c6fe-startrecordingatthis.png)
+
 3. AUT ウィンドウで、追加のステップを記録します。
 4. **Stop recording**ボタンをクリックして、記録を停止します。\
    ![Stop recording ボタン](/images/debugging/recording-additional-steps-to-fix-bugs/8eeb2d5-stoprecording.png)
