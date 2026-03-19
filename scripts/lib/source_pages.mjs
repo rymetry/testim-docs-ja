@@ -1,5 +1,9 @@
 const DEFAULT_USER_AGENT = 'testim-docs-ja-source-check/2.0';
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function cleanWhitespace(value) {
   return String(value ?? '')
     .replace(/<!--[\s\S]*?-->/g, ' ')
@@ -92,8 +96,9 @@ export function extractMetadataUpdatedAt(html, url = '') {
   }
 
   if (slug) {
+    const escapedSlug = escapeRegExp(slug);
     const slugPattern = new RegExp(
-      `"slug":"${slug}"[^}]{0,500}"updatedAt":"([^"]+)"`,
+      `"slug":"${escapedSlug}"[^}]{0,500}"updatedAt":"([^"]+)"`,
       'i',
     );
     const slugMatch = html.match(slugPattern);
@@ -269,4 +274,3 @@ export async function fetchSourcePageInfo(
     };
   }
 }
-

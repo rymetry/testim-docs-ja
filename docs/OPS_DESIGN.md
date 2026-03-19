@@ -143,6 +143,6 @@
 
 ## CI の役割
 
-- [`scheduled-actionable.yml`](/Users/rym/Dev/personal-projects/testim-docs-ja/.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:updates`、`check:parity`、`check:parity:remote:actionable`、`check:summary`、issue 更新 / close を実行する
-- [`deep-audit.yml`](/Users/rym/Dev/personal-projects/testim-docs-ja/.github/workflows/deep-audit.yml) では section 単位または全件の remote parity を実行し、`heading-mismatch` を含む低信頼シグナルを report-only で残す
+- [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:updates`、`check:parity`、`check:parity:remote:actionable`、`check:summary`、issue 更新 / close を実行する
+- [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件の remote parity を実行し、`heading-mismatch` を含む低信頼シグナルを report-only で残す
 - `docs-update-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する

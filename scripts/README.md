@@ -78,7 +78,7 @@ npm run check:updates
 
 各ファイルの `sourceUrl` にアクセスし、HTML の `updatedAt` を優先して source date を解決する。`updatedAt` が取れない場合だけ、ページ表示の相対日付をフォールバックで使う。
 
-運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](/Users/rym/Dev/personal-projects/testim-docs-ja/scripts/config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は `updatedAt` と表示日付が食い違うページを分離して報告する。
+運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は `updatedAt` と表示日付が食い違うページを分離して報告する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
 
 **出力**: `docs-update-status.json`。更新必要ありの場合は終了コード `1`
 
@@ -417,8 +417,8 @@ npm run lint:docs && npm test && npm run build  # 7. QA
 
 自動検知系の workflow は 2 本に分かれる:
 
-1. [`scheduled-actionable.yml`](/Users/rym/Dev/personal-projects/testim-docs-ja/.github/workflows/scheduled-actionable.yml)
-2. [`deep-audit.yml`](/Users/rym/Dev/personal-projects/testim-docs-ja/.github/workflows/deep-audit.yml)
+1. [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml)
+2. [`deep-audit.yml`](../.github/workflows/deep-audit.yml)
 
 `scheduled-actionable` は issue を create/update/close し、`deep-audit` は artifact と summary のみ残す。
 

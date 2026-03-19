@@ -73,7 +73,6 @@ export async function updateDatesFromEnglish({
 
   let updatedCount = 0;
   let noChangeCount = 0;
-  let skippedCount = 0;
   let errorCount = 0;
   let ignoredCount = 0;
 
@@ -133,7 +132,6 @@ export async function updateDatesFromEnglish({
   console.log(`⏭️  変更なし: ${noChangeCount}件`);
   console.log(`⏭️  例外適用: ${ignoredCount}件`);
   console.log(`⚠️  エラー: ${errorCount}件`);
-  console.log(`⏭️  スキップ: ${skippedCount}件`);
   console.log(`📝 処理対象: ${filesToUpdate.length}件\n`);
 
   if (!apply && updatedCount > 0) {

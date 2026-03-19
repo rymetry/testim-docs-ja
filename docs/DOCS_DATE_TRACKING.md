@@ -30,7 +30,7 @@
 - メタデータ更新とコンテンツ更新が別タイミングで行われる可能性がある
 - 一部ページでは `updatedAt` が変わっても本文が変わっていないことがある
 
-`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と一致した場合だけ適用されます。
+`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と一致した場合だけ適用されます。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
 
 ### 実運用での対応
 
@@ -65,7 +65,7 @@
 
 #### 例外レジストリ
 
-例外は [`scripts/config/date-exceptions.json`](/Users/rym/Dev/personal-projects/testim-docs-ja/scripts/config/date-exceptions.json) で管理する。キーは相対パス、値は次の 3 項目を持つ。
+例外は [`scripts/config/date-exceptions.json`](../scripts/config/date-exceptions.json) で管理する。キーは相対パス、値は次の 3 項目を持つ。
 
 - `ignoredSourceDate`
 - `reason`

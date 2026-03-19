@@ -36,6 +36,15 @@ describe('extractMetadataUpdatedAt', () => {
       '2026-01-15',
     );
   });
+
+  it('escapes regex metacharacters in slug fallback matching', () => {
+    const html =
+      '{"slug":"example.page","updatedAt":"2026-02-11T00:00:00.000Z"}{"slug":"exampleXpage","updatedAt":"2025-01-01T00:00:00.000Z"}';
+    assert.equal(
+      extractMetadataUpdatedAt(html, 'https://help.testim.io/docs/example.page'),
+      '2026-02-11',
+    );
+  });
 });
 
 describe('extractDisplayRelativeDate', () => {
@@ -125,4 +134,3 @@ describe('fetchSourcePageInfo', () => {
     assert.equal(result.resolvedSourceDate, null);
   });
 });
-
