@@ -76,9 +76,9 @@ node scripts/lint-docs.mjs --section="概要"
 npm run check:updates
 ```
 
-各ファイルの `sourceUrl` にアクセスし、HTML の `updatedAt` を `resolvedSourceDate` として保持する。同時に actionable 判定用の `comparisonSourceDate` を計算し、`updatedAt` と表示相対日付が乖離している場合は表示相対日付を優先する。
+各ファイルの `sourceUrl` にアクセスし、まず `script#ssr-props` 内の `document.updated_at` を page-specific な source date として解決する。`document.updated_at` が取れない場合は既存の metadata / 表示相対日付へ fallback する。同時に actionable 判定用の `comparisonSourceDate` を計算し、`document.updated_at` が無い場合のみ `updatedAt` と表示相対日付の乖離を見て表示相対日付を優先する。
 
-運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は `updatedAt` と表示日付が食い違うページを分離して報告する signal で、`needsUpdate` 判定自体は `comparisonSourceDate` に従う。`ignored-exception` も `comparisonSourceDate` 基準で適用する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
+運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は「現在の判定に使う source date」と表示日付が食い違うページだけを分離して報告する signal で、`document.updated_at` が取れる場合は `documentDisplayDivergence`、取れない場合だけ metadata/display の fallback divergence を使う。`metadataDisplayDivergence` は diagnostic-only とし、`needsUpdate` 判定自体は `comparisonSourceDate` に従う。`ignored-exception` も `comparisonSourceDate` 基準で適用する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
 
 **出力**: `docs-update-status.json`。更新必要ありの場合は終了コード `1`
 
@@ -265,7 +265,7 @@ npm run update:dates:apply          # 実際にファイルを更新
 node scripts/update_dates_from_english.mjs --pattern="overview"
 ```
 
-`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。自動更新で書き込む日付は `comparisonSourceDate` を使い、乖離している `metadataUpdatedAt` は signal として保持する。
+`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。自動更新で書き込む日付は `comparisonSourceDate` を使い、通常は `document.updated_at` を `Asia/Tokyo` で日付化した値を採用する。`metadataUpdatedAt` の乖離は diagnostic として保持するが、`document.updated_at` と表示日付が一致している限り top-level signal には昇格しない。
 
 ---
 
@@ -330,14 +330,14 @@ npm run docs:report-categories
 
 #### そのほかの共有ライブラリ
 
-| ファイル                  | 用途                                              |
-| ------------------------- | ------------------------------------------------- |
-| `lib/project.mjs`         | repo ルート、docs 探索、frontmatter 読み出し      |
-| `lib/source_pages.mjs`    | source date 解決、article 本文抽出                |
-| `lib/source_parity.mjs`   | parity issue 生成、severity 付与、要約集計        |
-| `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成      |
-| `lib/date_exceptions.mjs` | 例外レジストリ読み込み                            |
-| `lib/cli.mjs`             | 直実行判定などの CLI 補助                         |
+| ファイル                    | 用途                                         |
+| --------------------------- | -------------------------------------------- |
+| `lib/project.mjs`           | repo ルート、docs 探索、frontmatter 読み出し |
+| `lib/source_pages.mjs`      | source date 解決、article 本文抽出           |
+| `lib/source_parity.mjs`     | parity issue 生成、severity 付与、要約集計   |
+| `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成   |
+| `lib/date_exceptions.mjs`   | 例外レジストリ読み込み                       |
+| `lib/cli.mjs`               | 直実行判定などの CLI 補助                    |
 
 ---
 
@@ -347,45 +347,45 @@ npm run docs:report-categories
 npm test    # node --test scripts/__tests__/*.mjs
 ```
 
-| テストファイル                              | 対象スクリプト                    |
-| ------------------------------------------- | --------------------------------- |
-| `__tests__/lint_docs.test.mjs`              | lint-docs.mjs                     |
-| `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs        |
-| `__tests__/update_sidebar_urls.test.mjs`    | update_sidebar_urls_from_live.mjs |
-| `__tests__/pipeline.test.mjs`               | pipeline.mjs                      |
-| `__tests__/check_outdated_docs.test.mjs`    | check_outdated_docs.mjs           |
-| `__tests__/source_pages.test.mjs`           | lib/source_pages.mjs              |
-| `__tests__/source_parity.test.mjs`          | lib/source_parity.mjs             |
-| `__tests__/detection_reports.test.mjs`      | lib/detection_reports.mjs         |
-| `__tests__/update_dates_from_english.test.mjs` | update_dates_from_english.mjs  |
+| テストファイル                                 | 対象スクリプト                    |
+| ---------------------------------------------- | --------------------------------- |
+| `__tests__/lint_docs.test.mjs`                 | lint-docs.mjs                     |
+| `__tests__/fetch_translate_images.test.mjs`    | fetch_translate_images.mjs        |
+| `__tests__/update_sidebar_urls.test.mjs`       | update_sidebar_urls_from_live.mjs |
+| `__tests__/pipeline.test.mjs`                  | pipeline.mjs                      |
+| `__tests__/check_outdated_docs.test.mjs`       | check_outdated_docs.mjs           |
+| `__tests__/source_pages.test.mjs`              | lib/source_pages.mjs              |
+| `__tests__/source_parity.test.mjs`             | lib/source_parity.mjs             |
+| `__tests__/detection_reports.test.mjs`         | lib/detection_reports.mjs         |
+| `__tests__/update_dates_from_english.test.mjs` | update_dates_from_english.mjs     |
 
 ---
 
 ## npm スクリプト対応表
 
-| npm コマンド                  | スクリプト                                | 用途                             |
-| ----------------------------- | ----------------------------------------- | -------------------------------- |
-| `lint:docs`                   | lint-docs.mjs                             | 構文・frontmatter 検証           |
-| `check:parity`                | check_source_parity.mjs                   | 翻訳品質チェック（ローカル）     |
-| `check:parity:remote`         | check_source_parity.mjs --remote          | 翻訳品質チェック（リモート込み） |
-| `check:parity:remote:actionable` | check_source_parity.mjs --remote --actionable-only | actionable-only parity |
-| `check:updates`               | check_outdated_docs.mjs                   | 日付ベースの更新検出             |
-| `check:dates`                 | fetch_all_updated_dates.mjs               | 全日付スナップショット           |
-| `check:summary`               | generate_detection_reports.mjs            | summary / audit manifest 生成    |
-| `update:dates`                | update_dates_from_english.mjs             | 日付更新（ドライラン）           |
-| `update:dates:apply`          | update_dates_from_english.mjs --apply     | 日付更新（実行）                 |
-| `docs:sync-sidebar`           | update_sidebar_urls_from_live.mjs         | サイドバー URL 同期              |
-| `docs:sync-frontmatter`       | sync_frontmatter_from_sidebar.mjs         | frontmatter 同期（ドライラン）   |
-| `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行）         |
-| `docs:pipeline`               | pipeline.mjs                              | パイプライン（diff）             |
-| `docs:pipeline:full`          | pipeline.mjs --mode=full                  | パイプライン（full）             |
-| `docs:fetch`                  | fetch_translate_images.mjs                | 英語原文・画像取得               |
-| `docs:normalize`              | normalize_docs.mjs                        | ドキュメント正規化               |
-| `docs:fix-alt`                | fix_alt_all.mjs                           | alt テキスト一括挿入             |
-| `docs:placeholders`           | generate_untranslated_placeholders.mjs    | プレースホルダー作成             |
-| `docs:prepare-llm`            | prepare_llm_tasks.mjs                     | LLM タスク準備                   |
-| `docs:apply-llm`              | apply_llm_translations.mjs                | LLM 翻訳適用                     |
-| `docs:report-categories`      | report_frontmatter_categories.mjs         | カテゴリ集計                     |
+| npm コマンド                     | スクリプト                                         | 用途                             |
+| -------------------------------- | -------------------------------------------------- | -------------------------------- |
+| `lint:docs`                      | lint-docs.mjs                                      | 構文・frontmatter 検証           |
+| `check:parity`                   | check_source_parity.mjs                            | 翻訳品質チェック（ローカル）     |
+| `check:parity:remote`            | check_source_parity.mjs --remote                   | 翻訳品質チェック（リモート込み） |
+| `check:parity:remote:actionable` | check_source_parity.mjs --remote --actionable-only | actionable-only parity           |
+| `check:updates`                  | check_outdated_docs.mjs                            | 日付ベースの更新検出             |
+| `check:dates`                    | fetch_all_updated_dates.mjs                        | 全日付スナップショット           |
+| `check:summary`                  | generate_detection_reports.mjs                     | summary / audit manifest 生成    |
+| `update:dates`                   | update_dates_from_english.mjs                      | 日付更新（ドライラン）           |
+| `update:dates:apply`             | update_dates_from_english.mjs --apply              | 日付更新（実行）                 |
+| `docs:sync-sidebar`              | update_sidebar_urls_from_live.mjs                  | サイドバー URL 同期              |
+| `docs:sync-frontmatter`          | sync_frontmatter_from_sidebar.mjs                  | frontmatter 同期（ドライラン）   |
+| `docs:sync-frontmatter:apply`    | sync_frontmatter_from_sidebar.mjs --apply          | frontmatter 同期（実行）         |
+| `docs:pipeline`                  | pipeline.mjs                                       | パイプライン（diff）             |
+| `docs:pipeline:full`             | pipeline.mjs --mode=full                           | パイプライン（full）             |
+| `docs:fetch`                     | fetch_translate_images.mjs                         | 英語原文・画像取得               |
+| `docs:normalize`                 | normalize_docs.mjs                                 | ドキュメント正規化               |
+| `docs:fix-alt`                   | fix_alt_all.mjs                                    | alt テキスト一括挿入             |
+| `docs:placeholders`              | generate_untranslated_placeholders.mjs             | プレースホルダー作成             |
+| `docs:prepare-llm`               | prepare_llm_tasks.mjs                              | LLM タスク準備                   |
+| `docs:apply-llm`                 | apply_llm_translations.mjs                         | LLM 翻訳適用                     |
+| `docs:report-categories`         | report_frontmatter_categories.mjs                  | カテゴリ集計                     |
 
 ---
 

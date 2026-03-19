@@ -16,6 +16,8 @@ describe('classifyDateStatus', () => {
         resolvedSourceDate: '2025-09-19',
         comparisonSourceDate: '2025-09-19',
         exceptionApplied: false,
+        metadataDisplayDivergence: false,
+        documentDisplayDivergence: false,
         sourceDateDivergence: false,
       },
     });
@@ -33,6 +35,8 @@ describe('classifyDateStatus', () => {
         resolvedSourceDate: '2025-09-19',
         comparisonSourceDate: '2025-09-19',
         exceptionApplied: true,
+        metadataDisplayDivergence: false,
+        documentDisplayDivergence: false,
         sourceDateDivergence: false,
       },
     });
@@ -50,6 +54,8 @@ describe('classifyDateStatus', () => {
         resolvedSourceDate: '2025-10-01',
         comparisonSourceDate: '2025-10-01',
         exceptionApplied: false,
+        metadataDisplayDivergence: false,
+        documentDisplayDivergence: false,
         sourceDateDivergence: false,
       },
     });
@@ -68,11 +74,33 @@ describe('classifyDateStatus', () => {
         resolvedSourceDate: '2026-02-11',
         comparisonSourceDate: '2025-09-19',
         exceptionApplied: false,
+        metadataDisplayDivergence: true,
+        documentDisplayDivergence: false,
         sourceDateDivergence: true,
       },
     });
 
     assert.equal(result.status, 'source-date-divergence');
+    assert.equal(result.comparisonStatus, 'up-to-date');
+    assert.equal(result.needsUpdate, false);
+    assert.equal(result.daysBehind, null);
+  });
+
+  it('does not surface divergence when only metadata differs from the displayed document date', () => {
+    const result = classifyDateStatus({
+      localDate: '2025-09-19',
+      source: {
+        fetchError: null,
+        resolvedSourceDate: '2025-09-19',
+        comparisonSourceDate: '2025-09-19',
+        exceptionApplied: false,
+        metadataDisplayDivergence: true,
+        documentDisplayDivergence: false,
+        sourceDateDivergence: false,
+      },
+    });
+
+    assert.equal(result.status, 'up-to-date');
     assert.equal(result.comparisonStatus, 'up-to-date');
     assert.equal(result.needsUpdate, false);
     assert.equal(result.daysBehind, null);

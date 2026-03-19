@@ -3,20 +3,30 @@ import assert from 'node:assert/strict';
 
 let extractArticleHtml;
 let extractDisplayRelativeDate;
+let extractDocumentUpdatedAt;
 let extractMetadataUpdatedAt;
 let fetchSourcePageInfo;
 let parseRelativeTime;
 let resolveSourcePageInfo;
+let toIsoDateInTimeZone;
 
 before(async () => {
   ({
     extractArticleHtml,
     extractDisplayRelativeDate,
+    extractDocumentUpdatedAt,
     extractMetadataUpdatedAt,
     fetchSourcePageInfo,
     parseRelativeTime,
     resolveSourcePageInfo,
+    toIsoDateInTimeZone,
   } = await import('../lib/source_pages.mjs'));
+});
+
+describe('toIsoDateInTimeZone', () => {
+  it('normalizes absolute timestamps using the project timezone', () => {
+    assert.equal(toIsoDateInTimeZone('2025-09-18T21:08:46.000Z'), '2025-09-19');
+  });
 });
 
 describe('parseRelativeTime', () => {
@@ -27,13 +37,21 @@ describe('parseRelativeTime', () => {
   });
 });
 
+describe('extractDocumentUpdatedAt', () => {
+  it('extracts document.updated_at from ssr-props JSON', () => {
+    const html =
+      '<script id="ssr-props" type="application/json">{"document":{"updated_at":"2025-09-18T21:08:46.000Z"}}</script>';
+    assert.equal(extractDocumentUpdatedAt(html), '2025-09-19');
+  });
+});
+
 describe('extractMetadataUpdatedAt', () => {
   it('extracts updatedAt from redux state JSON', () => {
     const html =
       '<script>window.__REDUX_STATE__={"context":{"page":{"updatedAt":"2026-01-15T13:52:49.000Z"}}}</script>';
     assert.equal(
       extractMetadataUpdatedAt(html, 'https://help.testim.io/docs/example-page'),
-      '2026-01-15',
+      '2026-01-15'
     );
   });
 
@@ -42,7 +60,7 @@ describe('extractMetadataUpdatedAt', () => {
       '{"slug":"example.page","updatedAt":"2026-02-11T00:00:00.000Z"}{"slug":"exampleXpage","updatedAt":"2025-01-01T00:00:00.000Z"}';
     assert.equal(
       extractMetadataUpdatedAt(html, 'https://help.testim.io/docs/example.page'),
-      '2026-02-11',
+      '2026-02-11'
     );
   });
 });
@@ -79,7 +97,7 @@ describe('resolveSourcePageInfo', () => {
     assert.equal(result.contentRootExtractable, true);
   });
 
-  it('marks divergence and applies exceptions only for the comparison source date', () => {
+  it('marks fallback divergence and applies exceptions only for the comparison source date', () => {
     const now = new Date('2026-03-19T00:00:00Z');
     const html = `
       <script>window.__REDUX_STATE__={"context":{"page":{"updatedAt":"2026-01-15T00:00:00.000Z"}}}</script>
@@ -104,8 +122,70 @@ describe('resolveSourcePageInfo', () => {
     assert.equal(result.comparisonSourceDate, '2025-09-19');
     assert.equal(result.sourceDateKind, 'metadata-updatedAt');
     assert.equal(result.comparisonSourceKind, 'display-relative-date');
+    assert.equal(result.metadataDisplayDivergence, true);
+    assert.equal(result.documentDisplayDivergence, false);
     assert.equal(result.sourceDateDivergence, true);
     assert.equal(result.exceptionApplied, true);
+  });
+
+  it('keeps metadata divergence diagnostic-only when document.updated_at matches the displayed JST date', () => {
+    const now = new Date('2026-03-19T00:00:00Z');
+    const html = `
+      <script id="ssr-props" type="application/json">{"document":{"updated_at":"2025-09-18T21:08:46.000Z"}}</script>
+      <script>window.__REDUX_STATE__={"context":{"page":{"updatedAt":"2026-01-15T00:00:00.000Z"}}}</script>
+      <main>
+        <h1>Example</h1>
+        <p>Updated 6 months ago</p>
+      </main>
+    `;
+    const result = resolveSourcePageInfo({
+      html,
+      url: 'https://help.testim.io/docs/example',
+      now,
+    });
+    assert.equal(result.documentUpdatedAt, '2025-09-19');
+    assert.equal(result.metadataUpdatedAt, '2026-01-15');
+    assert.equal(result.displayRelativeDate, '2025-09-19');
+    assert.equal(result.resolvedSourceDate, '2025-09-19');
+    assert.equal(result.comparisonSourceDate, '2025-09-19');
+    assert.equal(result.sourceDateKind, 'document-updated-at');
+    assert.equal(result.comparisonSourceKind, 'document-updated-at');
+    assert.equal(result.metadataDisplayDivergence, true);
+    assert.equal(result.documentDisplayDivergence, false);
+    assert.equal(result.sourceDateDivergence, false);
+  });
+
+  it('prefers document.updated_at when it truly diverges from the visible date', () => {
+    const now = new Date('2026-03-19T00:00:00Z');
+    const html = `
+      <script id="ssr-props" type="application/json">{"document":{"updated_at":"2025-09-18T03:00:00.000Z"}}</script>
+      <script>window.__REDUX_STATE__={"context":{"page":{"updatedAt":"2026-01-15T00:00:00.000Z"}}}</script>
+      <main>
+        <h1>Example</h1>
+        <p>Updated 6 months ago</p>
+      </main>
+    `;
+    const result = resolveSourcePageInfo({
+      html,
+      url: 'https://help.testim.io/docs/example',
+      now,
+      exception: {
+        ignoredSourceDate: '2025-09-19',
+        reason: 'No substantive content change',
+        reviewedAt: '2026-03-19',
+      },
+    });
+    assert.equal(result.documentUpdatedAt, '2025-09-18');
+    assert.equal(result.metadataUpdatedAt, '2026-01-15');
+    assert.equal(result.displayRelativeDate, '2025-09-19');
+    assert.equal(result.resolvedSourceDate, '2025-09-18');
+    assert.equal(result.comparisonSourceDate, '2025-09-18');
+    assert.equal(result.sourceDateKind, 'document-updated-at');
+    assert.equal(result.comparisonSourceKind, 'document-updated-at');
+    assert.equal(result.metadataDisplayDivergence, true);
+    assert.equal(result.documentDisplayDivergence, true);
+    assert.equal(result.sourceDateDivergence, true);
+    assert.equal(result.exceptionApplied, false);
   });
 });
 
@@ -137,6 +217,9 @@ describe('fetchSourcePageInfo', () => {
       fetchImpl: async () => ({ ok: false, status: 503 }),
     });
     assert.equal(result.fetchError, 'HTTP 503');
+    assert.equal(result.documentUpdatedAt, null);
+    assert.equal(result.metadataDisplayDivergence, false);
+    assert.equal(result.documentDisplayDivergence, false);
     assert.equal(result.resolvedSourceDate, null);
     assert.equal(result.comparisonSourceDate, null);
   });
