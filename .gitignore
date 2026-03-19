@@ -28,6 +28,9 @@ pnpm-debug.log*
 docs-update-status.json
 docs-dates-snapshot.json
 parity-check-status.json
+docs-actionable-report.json
+docs-update-summary.md
+docs-audit-manifest.json
 
 # Pipeline generated files
 scripts/.checkpoint

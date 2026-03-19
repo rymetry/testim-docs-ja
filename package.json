@@ -29,10 +29,12 @@
     "docs:report-categories": "node scripts/report_frontmatter_categories.mjs",
     "check:parity": "node scripts/check_source_parity.mjs",
     "check:parity:remote": "node scripts/check_source_parity.mjs --remote",
+    "check:parity:remote:actionable": "node scripts/check_source_parity.mjs --remote --actionable-only",
     "check:updates": "node scripts/check_outdated_docs.mjs",
     "check:dates": "node scripts/fetch_all_updated_dates.mjs",
     "update:dates": "node scripts/update_dates_from_english.mjs",
-    "update:dates:apply": "node scripts/update_dates_from_english.mjs --apply"
+    "update:dates:apply": "node scripts/update_dates_from_english.mjs --apply",
+    "check:summary": "node scripts/generate_detection_reports.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.1",
