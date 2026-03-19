@@ -1,45 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { DOCS_DIR, SIDEBAR_PATH, findMdFiles } from './lib/project.mjs';
+import { extractJapaneseLabel, loadSidebarSections } from './lib/sidebar.mjs';
 
-const docsRoot = path.resolve('src/content/docs');
-const sidebarPath = path.resolve('docs/SIDEBAR_URLS.md');
-
-function extractJapaneseLabel(sectionTitle) {
-  const m = sectionTitle.match(/[（(]([^）)]+)[）)]/);
-  return (m ? m[1] : sectionTitle).trim();
-}
+const docsRoot = DOCS_DIR;
+const sidebarPath = SIDEBAR_PATH;
 
 function readSidebarCategories() {
   if (!fs.existsSync(sidebarPath)) return new Set();
-  const text = fs.readFileSync(sidebarPath, 'utf8');
-  const lines = text.split(/\r?\n/);
-
+  const sections = loadSidebarSections(sidebarPath);
   const out = new Set();
-  const sectionRe = /^##\s+(.+?)\s*$/;
-
-  for (const line of lines) {
-    const m = line.match(sectionRe);
-    if (!m) continue;
-    const raw = m[1].trim();
-    if (raw === '翻訳ステータス' || raw === '検証ステータス' || raw === 'URL抽出方法') continue;
-    out.add(extractJapaneseLabel(raw));
-  }
-
-  return out;
-}
-
-function walkMarkdownFiles(dir) {
-  const out = [];
-  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, ent.name);
-    if (ent.isDirectory()) out.push(...walkMarkdownFiles(p));
-    else if (ent.isFile() && ent.name.endsWith('.md')) out.push(p);
+  for (const section of sections) {
+    out.add(extractJapaneseLabel(section.rawTitle));
   }
   return out;
 }
 
-const files = walkMarkdownFiles(docsRoot);
+const files = findMdFiles(docsRoot);
 const categoryCounts = new Map();
 const missingCategory = [];
 

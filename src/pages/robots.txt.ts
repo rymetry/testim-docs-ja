@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
-
-const toBool = (value: string | undefined) => value?.toLowerCase() === 'true';
+import { toBool } from '../lib/env';
 
 export const GET: APIRoute = () => {
   // Basic認証が有効な場合はnoindex

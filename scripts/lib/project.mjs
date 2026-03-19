@@ -64,6 +64,43 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
   return candidates.some((candidate) => candidate.includes(target));
 }
 
+export function buildSlugIndex(docsDir = DOCS_DIR) {
+  /** @type {Record<string, {categoryFolder:string, filePath:string}>} */
+  const index = {};
+  const walk = (dir) => {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) walk(full);
+      else if (ent.isFile() && ent.name.endsWith('.md')) {
+        const slug = ent.name.replace(/\.md$/, '');
+        const categoryFolder = path.basename(path.dirname(full));
+        index[slug] = { categoryFolder, filePath: full };
+      }
+    }
+  };
+  walk(docsDir);
+  return index;
+}
+
+export function splitFrontmatter(md) {
+  if (!md.startsWith('---\n')) return { fm: '', body: md };
+  const end = md.indexOf('\n---', 4);
+  if (end === -1) return { fm: '', body: md };
+  const fm = md.slice(0, end + 4);
+  const body = md.slice(end + 4).replace(/^\n+/, '');
+  return { fm, body };
+}
+
+export function toKebab(str) {
+  return String(str)
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/&/g, ' ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 export function readDocFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
   const parsed = matter(content);

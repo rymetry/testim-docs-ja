@@ -88,6 +88,11 @@ export function getSectionSlugSet(sectionName, sections = loadSidebarSections())
   return new Set(section.items.map((item) => item.slug));
 }
 
+export function extractJapaneseLabel(sectionTitle) {
+  const m = sectionTitle.match(/[（(]([^）)]+)[）)]/);
+  return (m ? m[1] : sectionTitle).trim();
+}
+
 export function filterItemsBySection(items, sectionName, sections = loadSidebarSections()) {
   if (!sectionName) return items;
   const slugSet = getSectionSlugSet(sectionName, sections);
