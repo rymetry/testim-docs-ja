@@ -219,7 +219,7 @@ git commit -m "fix: 誤訳を修正"
 git push origin fix/translation-error
 
 # 3. GitHubでPRを作成
-# - base: master
+# - base: main
 # - compare: fix/translation-error
 ```
 

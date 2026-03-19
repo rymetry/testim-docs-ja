@@ -83,7 +83,7 @@ keywords:
 
 - 英語版（[help.testim.io](https://help.testim.io/)）のレイアウトと配色を踏襲
 - 日本語フォントは Noto Sans JP を使用
-- コードブロックは Dracula テーマでシンタックスハイライト
+- コードブロックは GitHub Dark Dimmed テーマでシンタックスハイライト
 - レスポンシブデザイン対応（モバイル・タブレット・デスクトップ）
 
 ## 📚 執筆機能

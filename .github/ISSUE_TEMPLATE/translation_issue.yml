@@ -1,0 +1,43 @@
+name: 翻訳の問題
+description: 誤訳、不自然な表現、未翻訳ページの報告
+labels: ["translation"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: 問題の種類
+      options:
+        - 誤訳
+        - 不自然な日本語
+        - 未翻訳ページのリクエスト
+        - 英語原文との差分
+        - その他
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: 該当ページ
+      description: ページの URL またはファイルパス
+      placeholder: "例: /docs/testim-overview または src/content/docs/overview/testim-overview.md"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 詳細
+      description: 問題の内容と、可能であれば修正案を記載してください
+      placeholder: |
+        現在の表記: ...
+        英語原文: ...
+        修正案: ...
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: 英語原文の URL
+      description: 対応する英語ページの URL（わかる場合）
+      placeholder: "例: https://help.testim.io/docs/testim-overview"
+    validations:
+      required: false
