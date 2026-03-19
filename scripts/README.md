@@ -325,14 +325,16 @@ npm run docs:report-categories
 | `findSidebarSection(sections, name)`       | セクション名で検索                        |
 | `getSectionSlugSet(section)`               | セクション内のスラグを Set で返す         |
 | `filterItemsBySection(items, sectionName)` | アイテムをセクションでフィルタ            |
+| `extractJapaneseLabel(sectionTitle)`       | セクション見出しから日本語ラベルを抽出    |
 
-**利用スクリプト**: lint-docs, fetch_translate_images, prepare_llm_tasks, apply_llm_translations, normalize_docs, generate_untranslated_placeholders
+**利用スクリプト**: lint-docs, fetch_translate_images, prepare_llm_tasks, apply_llm_translations, normalize_docs, generate_untranslated_placeholders, report_frontmatter_categories, sync_frontmatter_from_sidebar
 
 #### そのほかの共有ライブラリ
 
 | ファイル                    | 用途                                         |
 | --------------------------- | -------------------------------------------- |
-| `lib/project.mjs`           | repo ルート、docs 探索、frontmatter 読み出し |
+| `lib/project.mjs`           | repo ルート、docs 探索、slug index、FM 読出し|
+| `lib/markdown-utils.mjs`    | Markdown 除去、description 自動生成          |
 | `lib/source_pages.mjs`      | source date 解決、article 本文抽出           |
 | `lib/source_parity.mjs`     | parity issue 生成、severity 付与、要約集計   |
 | `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成   |
@@ -358,6 +360,9 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity.test.mjs`             | lib/source_parity.mjs             |
 | `__tests__/detection_reports.test.mjs`         | lib/detection_reports.mjs         |
 | `__tests__/update_dates_from_english.test.mjs` | update_dates_from_english.mjs     |
+| `__tests__/lib_project.test.mjs`               | lib/project.mjs                   |
+| `__tests__/lib_markdown_utils.test.mjs`        | lib/markdown-utils.mjs            |
+| `__tests__/lib_sidebar_label.test.mjs`         | lib/sidebar.mjs                   |
 
 ---
 
