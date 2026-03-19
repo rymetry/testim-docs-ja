@@ -1,7 +1,21 @@
 {
   "name": "testim-docs-ja",
+  "description": "Testim 公式ヘルプドキュメントの日本語ローカライゼーション",
   "type": "module",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": "rymetry",
+  "homepage": "https://github.com/rymetry/testim-docs-ja#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rymetry/testim-docs-ja.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rymetry/testim-docs-ja/issues"
+  },
+  "engines": {
+    "node": ">=18 <25"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
@@ -42,8 +56,6 @@
     "@microflash/remark-callout-directives": "^5.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.16",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
     "astro": "^6.0.6",
     "dotenv": "^17.2.3",
     "gray-matter": "^4.0.3",
@@ -56,6 +68,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
     "@types/node": "^25.5.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "markdownlint-cli": "^0.48.0",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",

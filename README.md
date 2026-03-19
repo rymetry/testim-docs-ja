@@ -82,7 +82,7 @@ keywords:
 
 ## 🎨 デザイン方針
 
-- 英語版Tricentis Testim Docs 公式（[help.testim.io](https://help.testim.io/)）のレイアウトを踏襲
+- Tricentis Testim Docs 公式（[help.testim.io](https://help.testim.io/)）のレイアウトを踏襲
 - 日本語フォントは Noto Sans JP を使用（Astro Fonts API で自動管理）
 - コードブロックは GitHub Dark Dimmed テーマでシンタックスハイライト
 - レスポンシブデザイン対応（モバイル・タブレット・デスクトップ）
@@ -172,7 +172,7 @@ npm run update:dates:apply
 
 ## 🏆 ライセンス
 
-このプロジェクトは Testim 公式ドキュメントの非公式日本語訳です。
+このプロジェクトのソースコードは [MIT License](./LICENSE) の下で公開されています。
 
 ## 🤝 コントリビューション
 

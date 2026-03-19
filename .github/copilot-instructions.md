@@ -8,9 +8,9 @@
 ## 技術スタック / アーキテクチャ
 
 - フロントエンドは Astro + TypeScript を採用し、パフォーマンスと SEO を両立する静的サイト生成を前提とする。
-- スタイリングは Tailwind CSS、アニメーションは Framer Motion を利用する。
-- フォントは Noto Sans JP と PremolJP を読み込み、可読性を確保する。
-- コンテンツは Markdown ファイルで管理し、`content/docs` など明示的なディレクトリに格納することを想定。
+- スタイリングは Tailwind CSS v4 を利用する。
+- フォントは Noto Sans JP を読み込み、可読性を確保する。
+- コンテンツは Markdown ファイルで管理し、`src/content/docs/` ディレクトリに格納する。
 
 ## コンテンツ管理
 
@@ -28,7 +28,7 @@
 ## 機能要件
 
 - `code` ブロックのシンタックスハイライト、情報パネルの強調表示、カテゴリ別ナビゲーション、全文検索などは元サイト同様に実装する。
-- 検索機能は Astro 互換のクライアントサイド検索（例: Algolia DocSearch や Pagefind）を検討し、日本語形態素解析への配慮を行う。
+- 検索機能は MiniSearch によるクライアントサイド全文検索を採用し、日本語の部分一致・ファジー検索に対応する。
 - 外部/内部リンクはリンク切れが発生しないようビルド時に検証する。
 
 ## 開発ワークフロー
@@ -36,7 +36,7 @@
 - 初回セットアップ: `npm install`
 - 開発サーバー: `npm run dev`
 - 本番ビルド: `npm run build`（ビルド成果物は `dist/` を想定）
-- Lint/format ルールを導入する場合は ESLint + Prettier を TypeScript/Markdown 両方に適用し、CI で検証する。
+- Lint は markdownlint（Markdown）、フォーマットは Prettier（Astro/TypeScript/Markdown）を適用する。
 
 ## ローカライズ指針
 
