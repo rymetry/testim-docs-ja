@@ -155,7 +155,7 @@ describe('resolveSourcePageInfo', () => {
     assert.equal(result.sourceDateDivergence, false);
   });
 
-  it('prefers document.updated_at when it truly diverges from the visible date', () => {
+  it('treats document/display divergence as expected rounding when document.updated_at is present', () => {
     const now = new Date('2026-03-19T00:00:00Z');
     const html = `
       <script id="ssr-props" type="application/json">{"document":{"updated_at":"2025-09-18T03:00:00.000Z"}}</script>
@@ -184,8 +184,30 @@ describe('resolveSourcePageInfo', () => {
     assert.equal(result.comparisonSourceKind, 'document-updated-at');
     assert.equal(result.metadataDisplayDivergence, true);
     assert.equal(result.documentDisplayDivergence, true);
-    assert.equal(result.sourceDateDivergence, true);
+    assert.equal(result.sourceDateDivergence, false);
     assert.equal(result.exceptionApplied, false);
+  });
+
+  it('treats document/display divergence as non-actionable when document.updated_at is authoritative', () => {
+    const now = new Date('2026-03-19T00:00:00Z');
+    const html = `
+      <script id="ssr-props" type="application/json">{"document":{"updated_at":"2025-09-23T07:50:53.000Z"}}</script>
+      <main>
+        <h1>Example</h1>
+        <p>Updated 6 months ago</p>
+      </main>
+    `;
+    const result = resolveSourcePageInfo({
+      html,
+      url: 'https://help.testim.io/docs/example',
+      now,
+    });
+    assert.equal(result.documentUpdatedAt, '2025-09-23');
+    assert.equal(result.displayRelativeDate, '2025-09-19');
+    assert.equal(result.comparisonSourceDate, '2025-09-23');
+    assert.equal(result.comparisonSourceKind, 'document-updated-at');
+    assert.equal(result.documentDisplayDivergence, true);
+    assert.equal(result.sourceDateDivergence, false);
   });
 });
 

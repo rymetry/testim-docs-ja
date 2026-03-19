@@ -45,7 +45,7 @@ HTML の metadata `updatedAt` は技術的に取得しやすい絶対日付で�
 - メタデータ更新とコンテンツ更新が別タイミングで行われる可能性がある
 - 一部ページでは `updatedAt` が変わっても本文が変わっていないことがある
 
-`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は「現在の判定に使う source date」と表示日付が食い違う場合だけ signal にします。`document.updated_at` が取れるページでは `documentDisplayDivergence` を使い、`metadataDisplayDivergence` は diagnostic-only です。`document.updated_at` が取れない場合のみ metadata/display の乖離を fallback signal として扱います。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
+`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は `document.updated_at` が取れない場合のみ metadata/display の乖離を fallback signal として扱います。`document.updated_at` が取れるページでは authoritative とみなし、表示相対日付（"Updated X months ago"）との乖離は月単位丸め誤差として `sourceDateDivergence=false` にします（#117）。`documentDisplayDivergence` フラグは diagnostic-only としてスナップショットに保持します。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
 
 ### 実運用での対応
 
