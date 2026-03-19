@@ -183,11 +183,13 @@ export function extractFromMd(body) {
 export function buildStructuralIssues(englishStats, japaneseStats) {
   const issues = [];
 
-  if (Math.abs(englishStats.h2Count - japaneseStats.h2Count) >= 2) {
+  const headingDelta = Math.abs(englishStats.h2Count - japaneseStats.h2Count);
+  if (headingDelta >= 2) {
     issues.push(
       withSeverity({
         type: 'heading-mismatch',
         detail: `h2: EN=${englishStats.h2Count} JA=${japaneseStats.h2Count}`,
+        delta: headingDelta,
       }),
     );
   }
@@ -198,6 +200,7 @@ export function buildStructuralIssues(englishStats, japaneseStats) {
       withSeverity({
         type: 'image-mismatch',
         detail: `EN=${englishStats.imgCount} JA=${japaneseStats.imgCount} (${imageDiff}枚不足)`,
+        delta: imageDiff,
       }),
     );
   }
@@ -208,11 +211,43 @@ export function buildStructuralIssues(englishStats, japaneseStats) {
       withSeverity({
         type: 'codeblock-mismatch',
         detail: `EN=${englishStats.codeBlockCount} JA=${japaneseStats.codeBlockCount}`,
+        delta: codeBlockDiff,
       }),
     );
   }
 
   return issues;
+}
+
+/**
+ * Per-slug suppression for known layout divergences.
+ * Each entry pins an expectedDelta — if the actual delta drifts,
+ * the suppression lifts and the issue surfaces again.
+ */
+export const PARITY_SUPPRESSIONS = {
+  'salesforce-testing-overview': [
+    {
+      type: 'heading-mismatch',
+      expectedDelta: 8,
+      reason: 'EN card layout uses 9 h2 titles; JA uses h3 text list (#115)',
+    },
+    {
+      type: 'image-mismatch',
+      expectedDelta: 9,
+      reason: 'EN embeds 9 SVG card icons; JA uses text links (#115)',
+    },
+  ],
+};
+
+export function applySuppressions(issues, slug) {
+  const entries = PARITY_SUPPRESSIONS[slug];
+  if (!entries) return issues;
+
+  return issues.filter((issue) => {
+    const suppression = entries.find((s) => s.type === issue.type);
+    if (!suppression) return true;
+    return issue.delta !== suppression.expectedDelta;
+  });
 }
 
 export async function remoteCheck(sourceUrl, mdBody, options = {}) {

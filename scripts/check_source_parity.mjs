@@ -12,6 +12,7 @@ import {
   readDocFile,
 } from './lib/project.mjs';
 import {
+  applySuppressions,
   loadSidebarSlugs,
   localCheck,
   remoteCheck,
@@ -65,7 +66,7 @@ export async function checkSourceParity({
 
     checkedCount += 1;
     const slug = path.basename(filePath, '.md');
-    const issues = [
+    let issues = [
       ...localCheck({ body: doc.body, sidebarSlugs, slug }),
     ];
 
@@ -78,6 +79,8 @@ export async function checkSourceParity({
       );
       await new Promise((resolve) => setTimeout(resolve, 150));
     }
+
+    issues = applySuppressions(issues, slug);
 
     if (issues.length === 0) {
       continue;

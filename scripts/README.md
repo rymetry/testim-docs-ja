@@ -278,7 +278,7 @@ node scripts/update_dates_from_english.mjs --pattern="overview"
 
 ---
 
-#### fix_alt_all.mjs
+### fix_alt_all.mjs
 
 alt テキストが空の画像にデフォルトの代替テキストを一括挿入する（markdownlint MD045 対応）。
 
@@ -290,7 +290,7 @@ npm run docs:fix-alt
 
 ---
 
-#### sync_frontmatter_from_sidebar.mjs
+### sync_frontmatter_from_sidebar.mjs
 
 SIDEBAR_URLS.md のセクション構造に基づいて、各ドキュメントの `category` と `order` を同期する。
 
@@ -302,7 +302,7 @@ node scripts/sync_frontmatter_from_sidebar.mjs --list-unmatched
 
 ---
 
-#### report_frontmatter_categories.mjs
+### report_frontmatter_categories.mjs
 
 frontmatter の `category` フィールドの分布を集計し、SIDEBAR_URLS.md との不整合を報告する。
 
