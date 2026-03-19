@@ -29,9 +29,11 @@ AutoRABIT からテストを自動化するには、CI ジョブで Callout URL 
 3. このキーを即座にコピーしてください。キーが表示されるのは生成時のみです。
 
    ![API キー生成画面のスクリーンショット](/images/ci-integrations/autorabit-integration/671408c-2025-02-10_11-11-43.png)
+
 4. Swagger で Testim.io Public API に移動し、テスト実行用のリモート実行 API 呼び出しのタイプ（テスト、テストプラン、テストスイート、またはテストラベル）を選択します。JSON ペイロードをコピーします。
 
    ![Swagger 上で Testim Public API ペイロードを確認する画面](/images/ci-integrations/autorabit-integration/648e981-2025-02-10_11-15-58.png)
+
 5. AutoRABIT で、新しい CI ジョブを作成する際に、Callout URL を作成して Testim でのテスト実行を自動化します。Callout URL は、デプロイ前またはデプロイ後（デプロイ成功時または失敗時）に実行するように選択できます。Callout URL 画面で、以下の設定を構成します:
 
    1. Method - POST に設定  
@@ -44,5 +46,6 @@ AutoRABIT からテストを自動化するには、CI ジョブで Callout URL 
       - "branch" : "master" の"master"を、テストが実行される Salesforce 環境を指すブランチ名に置き換えます。
 
         ![AutoRABIT の Callout URL 設定画面の例](/images/ci-integrations/autorabit-integration/da52470-2025-02-10_11-21-25.png)
+
 6. CI ジョブを保存します。\
    CI ジョブが実行されるたびに、Callout URL が Testim でのテスト実行をトリガーします。Testim にログインして結果を確認してください。

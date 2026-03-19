@@ -45,6 +45,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
 
 1. Testim for Salesforce アカウントで、**Settings > Salesforce > Environments**に移動し、**Connect a salesforce environment**を選択します。\
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
+
 2. **Select Type**フィールドで、Salesforce 環境のタイプを選択します:
    * **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
    * **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
@@ -55,6 +56,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
 5. **Connect**をクリックします。\
    Salesforce ログイン画面が表示されます。\
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/43f1fac-salesforcelogin.png)
+
 6. Salesforce アカウントにログインします。
 7. **Allow**を選択して、Testim for Salesforce が ID URL サービスにアクセスし、API 経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
 
@@ -74,6 +76,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    **Properties**ペインが表示されます。
 
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/03e8e96-propeties_pane.png)
+
 3. **Base URL**に Salesforce 環境の URL が含まれていることを確認します。
 4. 最初のステップの後、マウスを**+**ボタンの上に移動し、**+**（ステップを追加）ボタンをクリックします。
 5. **Salesforce steps**タブの下で、**Log in**ステップをクリックします。このステップは、選択されたペルソナ/ユーザーを使用して Salesforce 環境にログインします。
@@ -83,12 +86,14 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    Log in ステップが追加され、**Object**ペインが表示されます。
 
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/1fbf0ad-loginand_object.png)
+
 6. **Select login persona**の下で、ドロップダウンメニューをクリックし、テスト全体で使用する関連ペルソナを選択します。環境を接続すると、システムはデフォルトの管理者ペルソナを作成します。ただし、追加のペルソナが作成されている場合もあります。追加のペルソナを作成する場合は、[ペルソナの作成とユーザーの追加](/docs/create-a-persona-and-add-users)の手順に従ってください。
 7. **+**ボタンをクリックして、別のステップを追加します。
 8. **Salesforce steps**タブの下で、**Launch app**ステップをクリックします。このステップは、環境内で選択されたアプリを起動します。
 9. ステップの**Object**ペインで、**Select App**の下で、**Sales**オプションを選択します。
 
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/0dbd17f-salesapp.png)
+
 10. **+**ボタンをクリックして、別のステップを追加します。
 11. **Salesforce steps**タブの下で、**Record Operations**をクリックし、次に**Create**ステップをクリックします。このステップは、**Object**と**Record**を作成します。
 12. ステップの**Object**ペインで、**Select the Object**の下で、**Account**を選択します。
@@ -96,6 +101,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
     **Customer Account**フォームがペインに表示されます。
 
     ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d6e7105-createv2.png)
+
 14. 必須フィールドはアスタリスク（\*）でマークされています。この場合、`Account Name`フィールドが必須です。デプロイメントは、他のフィールドを必須として構成されている場合があります。各必須フィールドについて、**Action**の下で**Input**を選択し、**Value**フィールドをクリックして値を選択するか文字列を入力します。
 15. **+**ボタンをクリックして、別のステップを追加します。
 16. **Salesforce steps**タブの下で、**Record Operations**をクリックし、次に**Validate**ステップをクリックします。このステップは、指定された値でレコードが作成されたことを検証します。この場合、Account Name 値を検証します。

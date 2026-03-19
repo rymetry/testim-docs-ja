@@ -53,6 +53,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 
 1. Testim for Salesforce アカウントで、**Settings > Salesforce**に移動し、画面右上の**New test**をクリックします。  
    ![新しい Salesforce テスト作成ボタン](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
+
    デフォルトの**Setup Step**で新しいテストが表示されます。
 2. **Show Properties**アイコンをクリックし、**Properties Panel**で目的の設定を編集することで、ステップのプロパティを変更できます。  
    ![Salesforce テストのプロパティペイン](/images/salesforce-testing/create-a-salesforce-test/1ca3180-properties.png)
@@ -242,6 +243,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 - **Salesforce モード** - このモードは、レコーダーのクラウドアイコン（下記参照）で示され、レコーダーは Salesforce ステップを実行し、単一のステップ内で複数のアクションの実行を可能にします。このモードは、Salesforce 環境が広範囲にカスタマイズされている場合は機能しない可能性があります。このような場合、Web モードにフォールバックして、すべての個別のアクション/ステップを記録することが可能です。このモードを使用して作成されたステップは、クラウドアイコン（下記参照）でマークされます。Web モードに戻すには、レコーダーのクラウドアイコンをクリックします。
 
  ![Salesforce モードのレコーダーアイコン](/images/salesforce-testing/create-a-salesforce-test/9381461-salesforce_mode.png)
+
 ![Salesforce モードで記録されたステップ](/images/salesforce-testing/create-a-salesforce-test/de463f1-salesforcestep.png)
 
 - **Web モード** - これはレコーダーの通常モードで、レコーダー上の打ち消し線付きのクラウドアイコン（下記参照）で示されます。このモードでは、すべてのインタラクション（クリック、スクロール、テキスト追加など）が個別のステップで表されます。Salesforce モードに戻すには、レコーダーのクラウドアイコンをクリックします。
@@ -259,7 +261,9 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 3. テストを実行して環境にログインし、追加のステップを記録できるようにします。
 4. テストで、目的のステップの隣にある**+**ボタンの上にマウスを移動し、**Record**ボタンをクリックします。レコーダーは、青いクラウドアイコンで示される**Salesforce モード**で自動的に有効になります。これは、アプリケーションとのインタラクションが、関連する場合に Salesforce ステップを生成することを意味します。
 5. ![ログイン完了後の Salesforce 画面](/images/salesforce-testing/create-a-salesforce-test/1a9ac07-afterlogin.png)
+
 6. Salesforce アプリケーションとやり取りしてステップを生成します。Salesforce ステップはクラウドアイコンで示されます。
 
 ![Salesforce ステップが並んだテストフロー](/images/salesforce-testing/create-a-salesforce-test/90023bd-salesforcesteps.png)
+
 7. テストの作成が完了したら、**Save**をクリックします。

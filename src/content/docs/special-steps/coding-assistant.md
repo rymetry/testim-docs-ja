@@ -67,20 +67,24 @@ Copilot コーディングアシスタントは、以下のステップで用い
       * **Copy code** – コードをクリップボードにコピーします。
 
       ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/5b54849-copy.png)
+
    2. **Explain の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
 
       1. フローティングメニューの **Explain code with AI** アイコンをクリックします。
 
          ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/eaf33c5-explainfloating.png)
+
       2. プロンプト欄に `/explain` と入力します。\
          解説結果はチャットに表示されます。
 
          ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/f367d0f-explain.png)
+
    3. **Fix の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
 
       1. フローティングウィンドウの **Fix code with AI** アイコンをクリックします。
 
          ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/9d99571-fixcodefloating.png)
+
       2. プロンプト欄に `/fix` と入力します。\
          修正案がチャットに表示され、次の方法で利用できます。
 

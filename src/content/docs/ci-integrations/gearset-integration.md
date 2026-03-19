@@ -26,15 +26,19 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 2. **Generate API Key**をクリックします。  
 
    ![API キー生成ボタンが表示された画面](/images/ci-integrations/gearset-integration/b650ac8-generate1.png)
+
 3. キーの名前を入力し、**Generate**をクリックします。
 
    ![API キー名入力と Generate ボタンの画面](/images/ci-integrations/gearset-integration/e9d4a48-generateapi.png)
+
 4. 表示された API キーをコピーし、**Done**をクリックします。このキーが表示されるのは生成時のみなので、できるだけ早くコピーしてください。
 
    ![生成された API キーをコピーする画面](/images/ci-integrations/gearset-integration/7c2ad4a-copy.png)
+
 5. Swagger で Testim REST API に移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
 
    ![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
+
 6. Gearset の Deployment または CI ジョブの Webhook で、以下の手順に従います:
 
    1. **Outgoing webhook url**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`

@@ -304,6 +304,7 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 1. **Settings > Email Service** に移動します。  
    恒久的メールアドレスが表示されます。  
    ![設定アイコン](/images/validations/email-validation/3b33312-emailaddresses.png)
+
 2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
    ![コピーボタン](/images/validations/email-validation/bb1c588-emailaddresses2.png)
 
@@ -320,6 +321,7 @@ Email Service 画面から一時的メールアドレスを表示およびコピ
 1. **Settings > Email Service** に移動します。  
    一時的メールアドレスはタイトルに "Temporary" とマークされています。  
    ![設定アイコン](/images/validations/email-validation/f061421-image_1.png)
+
 2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
    ![コピーボタン](/images/validations/email-validation/18ef3a0-image_2.png)
 
@@ -391,6 +393,7 @@ Validate email ステップを設定する方法は 2 つあります：
 
 8. **Coded** タブをクリックします。  
    ![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)  
+
    **function** エディターが開き、右側に **Properties** パネルが開きます。
 
 9. 次のいずれかを実行します：  
@@ -549,6 +552,7 @@ exportsTest.emailLink = emailLinks[0];
 11. 次のいずれかを実行します：  
     **恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。  
     ![コピーボタン](/images/validations/email-validation/55551bf-image_3.png)  
+
     **一時的メールオプションの場合** -  
     **Generate email address** ステップで定義した **Variable name** パラメーターの名前を **Email address** フィールドに入力します。  
     ![メールアドレス生成ボタン](/images/validations/email-validation/d50b959-image_4.png)

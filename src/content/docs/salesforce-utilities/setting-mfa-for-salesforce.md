@@ -55,10 +55,12 @@ keywords:
 9. 目的のペルソナと環境の組み合わせで**+**ボタンをクリックします。
 
     ![ペルソナの資格情報を追加（＋）](/images/salesforce-utilities/setting-mfa-for-salesforce/fa12927-plus.png)
+
 10. **ユーザー名とパスワードでログイン**を選択します。\
     **資格情報の追加**ダイアログが表示されます。
 
     ![資格情報の追加ダイアログ](/images/salesforce-utilities/setting-mfa-for-salesforce/d6163b6-addcredentials.png)
+
 11. 目的の**Salesforce プロファイル**と**Salesforce ユーザー**が選択されていることを確認します。
 12. **Salesforce パスワード**を入力します。
 13. **MFA 認証キー**に、上記のステップ 7 で保存したキーを貼り付け、**保存**をクリックします。\

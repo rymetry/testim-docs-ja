@@ -913,7 +913,7 @@ grep -r "Smart Locators" src/content/docs/
 
 ### 11.1 関連ファイル
 
-- `src/content/config.ts` - コンテンツのスキーマ定義（frontmatter検証）
+- `src/content.config.ts` - コンテンツのスキーマ定義（frontmatter検証）
 - `src/lib/docs.ts` - ドキュメント取得とナビゲーション構築ロジック
 - `docs/SIDEBAR_URLS.md` - 翻訳対象URL、カテゴリ順、ページ順の正本
 - `src/components/navigation/NavSidebar.astro` - サイドバーコンポーネント

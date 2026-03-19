@@ -271,6 +271,7 @@ Simulator ソフトウェアがシステムトレイで開きます。
 テストを記録する際は、安定性を向上させるために、テキスト要素を選択し、外枠、画像、アイコンを避けるようにしてください。
 
 ![要素の選択](/images/recording-tests/recording-a-local-mobile-test/4f44670-image_20.png)
+
 :::
 
 9. 記録を停止するには、**Stop Recording**ボタンをクリックするか、ビューアーウィンドウを閉じます。

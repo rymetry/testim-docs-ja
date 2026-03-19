@@ -411,6 +411,7 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 2. **Network Capture Options** の下で、**Capture request body** および/または **Capture response body** オプションを選択します。  
 
    ![ネットワークキャプチャオプションの設定画面](/images/validations/add-network-validation/f6815ea-network_capture_options.png)
+
 3. **Save** をクリックしてテストを保存します。
 
 ## add network validation ステップへのリクエスト/レスポンスボディの追加

@@ -1,13 +1,5 @@
 @import 'tailwindcss';
 
-@font-face {
-  font-family: 'Noto Sans JP';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/NotoSansJP-VariableFont_wght.woff2') format('woff2');
-}
-
 @layer base {
   :root {
     /* アンカーオフセット（デフォルト: 小さい画面） */
@@ -21,7 +13,7 @@
   }
   html {
     font-family:
-      'Noto Sans JP',
+      var(--font-noto-sans-jp),
       'Hiragino Sans',
       'Yu Gothic',
       system-ui,
@@ -43,7 +35,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Noto Sans JP', sans-serif;
+    font-family: var(--font-noto-sans-jp), sans-serif;
     font-weight: 600;
   }
   code {

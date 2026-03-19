@@ -90,7 +90,7 @@ keywords:
 
 設定が有効になります。
 
-## *Validate download* ステップの追加
+## **Validate download** ステップの追加
 
 Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv、jpg、ppt、doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv、image、xls、ppt、doc、pdf。
 
