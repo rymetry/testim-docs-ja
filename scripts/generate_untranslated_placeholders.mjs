@@ -1,22 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { parseSidebarSections, getSectionSlugSet } from './lib/sidebar.mjs';
+import { ROOT_DIR, DOCS_DIR, toKebab } from './lib/project.mjs';
 
 // Paths
-const ROOT = process.cwd();
+const ROOT = ROOT_DIR;
 const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
-const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
-
-// Helpers
-const toKebab = (str) => {
-  return String(str)
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(/&/g, ' ') // treat & as separator
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-};
+const DOCS_ROOT = DOCS_DIR;
 
 const titleCaseFromSlug = (slug) => {
   return slug

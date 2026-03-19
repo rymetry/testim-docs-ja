@@ -1,11 +1,10 @@
 import type { MiddlewareHandler } from 'astro';
+import { toBool } from './lib/env';
 
 const UNAUTHORIZED_HEADERS = {
   'WWW-Authenticate': 'Basic realm="Protected", charset="UTF-8"',
   'X-Robots-Tag': 'noindex, nofollow',
 };
-
-const toBool = (value: string | undefined) => value?.toLowerCase() === 'true';
 
 // Edge Runtime対応: atob (Web標準API) を使用
 const decodeCredentials = (header: string | null) => {

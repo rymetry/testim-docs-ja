@@ -1,23 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { DOCS_DIR, SIDEBAR_PATH, findMdFiles } from './lib/project.mjs';
+import { extractJapaneseLabel } from './lib/sidebar.mjs';
 
-const docsRoot = path.resolve('src/content/docs');
-const sidebarPath = path.resolve('docs/SIDEBAR_URLS.md');
-
-function extractJapaneseLabel(sectionTitle) {
-  const m = sectionTitle.match(/[（(]([^）)]+)[）)]/);
-  return (m ? m[1] : sectionTitle).trim();
-}
-
-function walkMarkdownFiles(dir) {
-  const out = [];
-  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, ent.name);
-    if (ent.isDirectory()) out.push(...walkMarkdownFiles(p));
-    else if (ent.isFile() && ent.name.endsWith('.md')) out.push(p);
-  }
-  return out;
-}
+const docsRoot = DOCS_DIR;
+const sidebarPath = SIDEBAR_PATH;
 
 function parseSidebarOrdering(text) {
   const sectionRe = /^##\s+(.+?)\s*$/;
@@ -132,7 +119,7 @@ function main() {
   const sidebarText = fs.readFileSync(sidebarPath, 'utf8');
   const bySlug = parseSidebarOrdering(sidebarText);
 
-  const files = walkMarkdownFiles(docsRoot);
+  const files = findMdFiles(docsRoot);
 
   let matched = 0;
   let changed = 0;

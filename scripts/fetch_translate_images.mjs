@@ -5,12 +5,14 @@ import { promisify } from 'util';
 import { createHash } from 'crypto';
 import matter from 'gray-matter';
 import { filterItemsBySection } from './lib/sidebar.mjs';
+import { ROOT_DIR, DOCS_DIR, buildSlugIndex, toKebab } from './lib/project.mjs';
+import { stripMarkdown, generateDescription } from './lib/markdown-utils.mjs';
 
 const execFileAsync = promisify(execFile);
 
-const ROOT = process.cwd();
+const ROOT = ROOT_DIR;
 const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
-const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
+const DOCS_ROOT = DOCS_DIR;
 const PUBLIC_IMAGES = path.join(ROOT, 'public', 'images');
 const DEFAULT_STATE_PATH = path.join(ROOT, 'scripts', '.cache', 'docs-state.json');
 
@@ -21,25 +23,6 @@ const dd = String(today.getDate()).padStart(2, '0');
 const todayStr = `${yyyy}-${mm}-${dd}`;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const toKebab = (str) => String(str).toLowerCase().replace(/&/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-
-function buildSlugIndex() {
-  /** @type {Record<string, {categoryFolder:string, filePath:string}>} */
-  const index = {};
-  const walk = (dir) => {
-    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, ent.name);
-      if (ent.isDirectory()) walk(full);
-      else if (ent.isFile() && ent.name.endsWith('.md')) {
-        const slug = ent.name.replace(/\.md$/, '');
-        const categoryFolder = path.basename(path.dirname(full));
-        index[slug] = { categoryFolder, filePath: full };
-      }
-    }
-  };
-  walk(DOCS_ROOT);
-  return index;
-}
 
 function parseSidebarList(sidebarText, filterFn) {
   const lines = sidebarText.split(/\r?\n/);
@@ -186,52 +169,6 @@ export function rewriteDocLinks(markdown) {
 function extractTitle(md) {
   const m = md.match(/^#\s+(.+)$/m);
   return m ? m[1].trim() : '';
-}
-
-function stripMarkdown(text) {
-  return String(text)
-    .replace(/!\[[^\]]*]\([^)]+\)/g, ' ')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/[*_>#-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function generateDescription(title, content) {
-  const lines = content.split('\n');
-  let current = [];
-
-  const flush = () => {
-    if (!current.length) return '';
-    return stripMarkdown(current.join(' '));
-  };
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line) {
-      const candidate = flush();
-      if (candidate) return candidate.slice(0, 120);
-      current = [];
-      continue;
-    }
-    if (
-      /^#/.test(line) ||
-      /^:{3,}/.test(line) ||
-      /^```/.test(line) ||
-      /^!\[/.test(line) ||
-      /^<[^>]+>/.test(line) ||
-      /^[-*+]\s/.test(line) ||
-      /^\d+\.\s/.test(line)
-    ) {
-      continue;
-    }
-    current.push(line);
-  }
-
-  const fallback = flush();
-  if (fallback) return fallback.slice(0, 120);
-  return `${title} に関する日本語ドキュメントです。`;
 }
 
 function buildFrontmatter(item, existingFilePath, fallbackTitle) {

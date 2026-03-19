@@ -100,6 +100,11 @@ function getSidebarOrdering(): SidebarOrdering {
 
 const SIDEBAR_ORDERING = getSidebarOrdering();
 
+/** doc.id からURLに使うslug（最後のファイル名部分のみ）を抽出する */
+export function extractSlug(doc: DocEntry): string {
+  return doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
+}
+
 export async function getDocs(): Promise<DocEntry[]> {
   const docs = await getCollection('docs');
   return docs.sort((a, b) => a.data.order - b.data.order);
@@ -124,7 +129,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
     // doc.id は "overview/testim-overview.md" のような形式
     // doc.slug は "overview/testim-overview" のような形式
     // URLに使うslugは最後のファイル名部分のみ（例: "testim-overview"）
-    const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
+    const urlSlug = extractSlug(doc);
     
     const groupKey = doc.data.category;
     const sidebarItemIndex = SIDEBAR_ORDERING.itemIndexBySlug.get(urlSlug);
@@ -180,7 +185,7 @@ export function buildSearchDocuments(
 ): SearchDocument[] {
   return docs.map((doc) => {
     // URLに使うslugは最後のファイル名部分のみ
-    const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
+    const urlSlug = extractSlug(doc);
     
     return {
       id: doc.id,

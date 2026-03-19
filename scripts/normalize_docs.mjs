@@ -2,9 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
+import { DOCS_DIR, findMdFiles } from './lib/project.mjs';
+import { stripMarkdown, generateDescription } from './lib/markdown-utils.mjs';
 
-const ROOT = process.cwd();
-const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
+const DOCS_ROOT = DOCS_DIR;
 
 const REPLACEMENTS = [
   [/Tricentis Testim拡張機能/g, 'Tricentis Testim Extension'],
@@ -26,62 +27,6 @@ const FRONTMATTER_ORDER = [
   'keywords',
   'hero',
 ];
-
-function buildDocFileList(dir) {
-  const files = [];
-  const walk = (currentDir) => {
-    for (const entry of fs.readdirSync(currentDir, { withFileTypes: true })) {
-      const fullPath = path.join(currentDir, entry.name);
-      if (entry.isDirectory()) walk(fullPath);
-      else if (entry.isFile() && entry.name.endsWith('.md')) files.push(fullPath);
-    }
-  };
-  walk(dir);
-  return files;
-}
-
-function stripMarkdown(text) {
-  return String(text ?? '')
-    .replace(/!\[[^\]]*]\([^)]+\)/g, ' ')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/[*_>#]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function generateDescription(title, content) {
-  const lines = content.split('\n');
-  let paragraph = [];
-
-  const flush = () => stripMarkdown(paragraph.join(' '));
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line) {
-      const candidate = flush();
-      if (candidate) return candidate.slice(0, 120);
-      paragraph = [];
-      continue;
-    }
-    if (
-      /^#/.test(line) ||
-      /^:{3,}/.test(line) ||
-      /^```/.test(line) ||
-      /^!\[/.test(line) ||
-      /^<[^>]+>/.test(line) ||
-      /^[-*+]\s/.test(line) ||
-      /^\d+\.\s/.test(line)
-    ) {
-      continue;
-    }
-    paragraph.push(line);
-  }
-
-  const fallback = flush();
-  if (fallback) return fallback.slice(0, 120);
-  return `${title} に関する日本語ドキュメントです。`;
-}
 
 function normalizeValue(value) {
   if (Array.isArray(value)) return value.map((item) => normalizeValue(item));
@@ -134,7 +79,7 @@ async function main() {
   const args = process.argv.slice(2);
   const section = args.find((arg) => arg.startsWith('--section='))?.split('=').slice(1).join('=');
   const slugSet = section ? getSectionSlugSet(section) : null;
-  const files = buildDocFileList(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.basename(filePath, '.md')));
+  const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.basename(filePath, '.md')));
 
   let changed = 0;
   for (const filePath of files) {

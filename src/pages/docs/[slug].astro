@@ -1,17 +1,14 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
-import { buildNavigation, getDocs } from '../../lib/docs';
+import { buildNavigation, getDocs, extractSlug } from '../../lib/docs';
 import { getEntry } from 'astro:content';
 
 // Static生成用: output='static'の時のみ実行される
 export async function getStaticPaths() {
   const docs = await getDocs();
   return docs.map((doc) => {
-    // doc.id は "overview/testim-overview.md" のような形式
-    // URLパスには最後のファイル名部分のみを使用
-    const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
     return {
-      params: { slug: urlSlug },
+      params: { slug: extractSlug(doc) },
       props: { docId: doc.id },
     };
   });
@@ -23,10 +20,7 @@ const docs = await getDocs();
 // SSRモード: URLパラメータからdocIdを解決
 // Staticモード: propsからdocIdを取得
 const docId = Astro.props?.docId ?? (() => {
-  const match = docs.find((doc) => {
-    const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
-    return urlSlug === slugParam;
-  });
+  const match = docs.find((doc) => extractSlug(doc) === slugParam);
   return match?.id;
 })();
 
