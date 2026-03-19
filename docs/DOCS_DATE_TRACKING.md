@@ -8,17 +8,24 @@
 
 ### HTML の `updatedAt` と表示される日付の乖離
 
-英語原文サイト (help.testim.io) では、以下の 2 つの日付情報が存在します。
+英語原文サイト (help.testim.io) では、主に以下の 3 つの日付情報を扱います。
 
-1. **HTML メタデータの `updatedAt` フィールド**
+1. **`script#ssr-props` の `document.updated_at`**
+   - page-specific な絶対日時
+   - 例: `"updated_at":"2025-09-18T21:08:46.000Z"`
+   - actionable 判定の primary source として使う
+   - project timezone (`Asia/Tokyo`) で日付化する
+
+2. **HTML メタデータの `updatedAt` フィールド**
    - HTML ソース内の JSON データに含まれる
    - 例: `"updatedAt":"2025-11-13T13:52:49.000Z"`
-   - 取得可能な source date として扱う
+   - platform / version metadata を拾うことがある
+   - signal として保持する
 
-2. **ページに表示される相対日付**
+3. **ページに表示される相対日付**
    - ユーザーに表示される日付
    - 例: "Updated about 2 months ago"
-   - 実際の内容変更に近い actionable 判定として扱う
+   - `document.updated_at` が取れない場合の fallback として扱う
 
 ### 現在の実装
 
@@ -26,18 +33,19 @@
 
 - `resolvedSourceDate`
   - 生の source date として保持する値
-  - 原則は HTML の `updatedAt`
+  - 原則は `document.updated_at`
 - `comparisonSourceDate`
   - `needsUpdate` / `daysBehind` / `updated` 自動更新に使う値
-  - `updatedAt` と表示日付が乖離している場合は表示日付を優先
+  - まず `document.updated_at` を使う
+  - それが無い場合のみ `updatedAt` と表示日付の乖離を見て表示日付を優先する
 
-HTML の `updatedAt` は技術的に取得しやすい絶対日付ですが、以下の制限があります。
+HTML の metadata `updatedAt` は技術的に取得しやすい絶対日付ですが、以下の制限があります。
 
 - ページ表示の相対日付と一致しない場合がある
 - メタデータ更新とコンテンツ更新が別タイミングで行われる可能性がある
 - 一部ページでは `updatedAt` が変わっても本文が変わっていないことがある
 
-`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は signal として残しますが、actionable 判定自体は `comparisonSourceDate` で行います。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
+`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は metadata `updatedAt` と表示日付の不一致を signal として残しますが、actionable 判定自体は `comparisonSourceDate` で行います。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
 
 ### 実運用での対応
 
@@ -131,7 +139,7 @@ npm run update:dates:apply -- --pattern recording-tests
 
 ## トラブルシューティング
 
-### HTML に `updatedAt` が見つからない
+### `document.updated_at` が見つからない
 
 **原因:**
 
@@ -140,10 +148,10 @@ npm run update:dates:apply -- --pattern recording-tests
 
 **対応:**
 
-- スクリプトの抽出ロジックを更新する
+- `script#ssr-props` の抽出ロジックを更新する
 - または手動で source date を確認する
 
-### 日付が頻繁に変わる / 全ページ同じ `updatedAt` になる
+### 日付が頻繁に変わる / 全ページ同じ metadata `updatedAt` になる
 
 **原因:**
 

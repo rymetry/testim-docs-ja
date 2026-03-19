@@ -10,15 +10,8 @@ import {
   matchesSectionFilter,
   readDocFile,
 } from './lib/project.mjs';
-import {
-  compareIsoDates,
-  fetchSourcePageInfo,
-  toIsoDate,
-} from './lib/source_pages.mjs';
-import {
-  getDateException,
-  loadDateExceptions,
-} from './lib/date_exceptions.mjs';
+import { compareIsoDates, fetchSourcePageInfo, toIsoDate } from './lib/source_pages.mjs';
+import { getDateException, loadDateExceptions } from './lib/date_exceptions.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'docs-dates-snapshot.json');
@@ -41,10 +34,7 @@ export async function fetchAllUpdatedDates({
   const allFiles = findMdFiles(DOCS_DIR);
   const files = allFiles.filter((filePath) => {
     const doc = readDocFile(filePath);
-    return (
-      doc.data.sourceUrl &&
-      matchesSectionFilter(doc.relativePath, doc.data, section)
-    );
+    return doc.data.sourceUrl && matchesSectionFilter(doc.relativePath, doc.data, section);
   });
 
   console.log(`📄 ${files.length}個のファイルを処理中...\n`);
@@ -82,6 +72,7 @@ export async function fetchAllUpdatedDates({
         comparisonSourceDate: source.comparisonSourceDate,
         sourceDateKind: source.sourceDateKind,
         comparisonSourceKind: source.comparisonSourceKind,
+        documentUpdatedAt: source.documentUpdatedAt,
         metadataUpdatedAt: source.metadataUpdatedAt,
         displayRelativeDate: source.displayRelativeDate,
         exceptionApplied: source.exceptionApplied,
@@ -91,8 +82,7 @@ export async function fetchAllUpdatedDates({
 
     successCount += 1;
     const compare = compareIsoDates(sourceDate, localDate);
-    const comparisonStatus =
-      compare > 0 ? 'outdated' : compare < 0 ? 'newer' : 'up-to-date';
+    const comparisonStatus = compare > 0 ? 'outdated' : compare < 0 ? 'newer' : 'up-to-date';
     const status = source.exceptionApplied
       ? 'ignored-exception'
       : source.sourceDateDivergence
@@ -115,6 +105,7 @@ export async function fetchAllUpdatedDates({
       comparisonSourceDate: source.comparisonSourceDate,
       sourceDateKind: source.sourceDateKind,
       comparisonSourceKind: source.comparisonSourceKind,
+      documentUpdatedAt: source.documentUpdatedAt,
       metadataUpdatedAt: source.metadataUpdatedAt,
       displayRelativeDate: source.displayRelativeDate,
       exceptionApplied: source.exceptionApplied,
@@ -140,7 +131,7 @@ export async function fetchAllUpdatedDates({
     console.log(
       `${status} | ${item.fileName} | ${item.currentJapaneseDate} | ${
         item.fetchedEnglishDate || 'N/A'
-      }`,
+      }`
     );
   }
 
@@ -152,8 +143,7 @@ export async function fetchAllUpdatedDates({
       error: errorCount,
       needsUpdate: results.filter((item) => item.needsUpdate).length,
       newer: results.filter((item) => item.comparisonStatus === 'newer').length,
-      ignoredExceptions: results.filter((item) => item.status === 'ignored-exception')
-        .length,
+      ignoredExceptions: results.filter((item) => item.status === 'ignored-exception').length,
     },
     files: results,
   };

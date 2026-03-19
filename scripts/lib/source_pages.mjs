@@ -1,4 +1,6 @@
 const DEFAULT_USER_AGENT = 'testim-docs-ja-source-check/2.0';
+const DOCUMENT_UPDATED_AT_TIME_ZONE = 'Asia/Tokyo';
+const ISO_DATE_FORMATTERS = new Map();
 
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -39,6 +41,34 @@ export function toIsoDate(value) {
   return date.toISOString().split('T')[0];
 }
 
+function getIsoDateFormatter(timeZone) {
+  let formatter = ISO_DATE_FORMATTERS.get(timeZone);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    ISO_DATE_FORMATTERS.set(timeZone, formatter);
+  }
+  return formatter;
+}
+
+export function toIsoDateInTimeZone(value, timeZone = DOCUMENT_UPDATED_AT_TIME_ZONE) {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const formatter = getIsoDateFormatter(timeZone);
+  const parts = formatter.formatToParts(date);
+  const year = parts.find((part) => part.type === 'year')?.value;
+  const month = parts.find((part) => part.type === 'month')?.value;
+  const day = parts.find((part) => part.type === 'day')?.value;
+
+  return year && month && day ? `${year}-${month}-${day}` : null;
+}
+
 export function parseRelativeTime(text, now = new Date()) {
   const cleanText = cleanWhitespace(text);
   const patterns = [
@@ -76,10 +106,24 @@ export function extractDisplayRelativeDate(html, now = new Date()) {
   };
 }
 
+export function extractDocumentUpdatedAt(html) {
+  const ssrPropsPattern = /<script[^>]*id=(["'])ssr-props\1[^>]*>([\s\S]*?)<\/script>/i;
+  const ssrPropsMatch = html.match(ssrPropsPattern);
+  if (!ssrPropsMatch) {
+    return null;
+  }
+
+  try {
+    const ssrProps = JSON.parse(ssrPropsMatch[2]);
+    return toIsoDateInTimeZone(ssrProps?.document?.updated_at);
+  } catch {
+    return null;
+  }
+}
+
 export function extractMetadataUpdatedAt(html, url = '') {
   const slug = url ? url.split('/').pop() : '';
-  const jsonBlockPattern =
-    /<script[^>]*>window\.__REDUX_STATE__\s*=\s*({[\s\S]*?})<\/script>/i;
+  const jsonBlockPattern = /<script[^>]*>window\.__REDUX_STATE__\s*=\s*({[\s\S]*?})<\/script>/i;
   const jsonMatch = html.match(jsonBlockPattern);
 
   if (jsonMatch) {
@@ -97,10 +141,7 @@ export function extractMetadataUpdatedAt(html, url = '') {
 
   if (slug) {
     const escapedSlug = escapeRegExp(slug);
-    const slugPattern = new RegExp(
-      `"slug":"${escapedSlug}"[^}]{0,500}"updatedAt":"([^"]+)"`,
-      'i',
-    );
+    const slugPattern = new RegExp(`"slug":"${escapedSlug}"[^}]{0,500}"updatedAt":"([^"]+)"`, 'i');
     const slugMatch = html.match(slugPattern);
     if (slugMatch) {
       return toIsoDate(slugMatch[1]);
@@ -177,48 +218,42 @@ export function diffDays(later, earlier) {
   return Math.floor((laterDate - earlierDate) / (1000 * 60 * 60 * 24));
 }
 
-export function resolveSourcePageInfo({
-  html,
-  url,
-  now = new Date(),
-  exception = null,
-}) {
+export function resolveSourcePageInfo({ html, url, now = new Date(), exception = null }) {
+  const documentUpdatedAt = extractDocumentUpdatedAt(html);
   const metadataUpdatedAt = extractMetadataUpdatedAt(html, url);
-  const { displayRelativeDate, displayRelativeText } = extractDisplayRelativeDate(
-    html,
-    now,
-  );
-  const { articleHtml, contentRootExtractable, extractionStrategy } =
-    extractArticleHtml(html);
+  const { displayRelativeDate, displayRelativeText } = extractDisplayRelativeDate(html, now);
+  const { articleHtml, contentRootExtractable, extractionStrategy } = extractArticleHtml(html);
 
-  const resolvedSourceDate = metadataUpdatedAt ?? displayRelativeDate ?? null;
-  const comparisonSourceDate =
-    metadataUpdatedAt &&
-    displayRelativeDate &&
-    metadataUpdatedAt !== displayRelativeDate
+  const fallbackSourceDate =
+    metadataUpdatedAt && displayRelativeDate && metadataUpdatedAt !== displayRelativeDate
       ? displayRelativeDate
-      : resolvedSourceDate;
-  const sourceDateKind = metadataUpdatedAt
-    ? 'metadata-updatedAt'
-    : displayRelativeDate
-      ? 'display-relative-date'
-      : 'unresolved';
+      : (metadataUpdatedAt ?? displayRelativeDate ?? null);
+  const resolvedSourceDate = documentUpdatedAt ?? metadataUpdatedAt ?? displayRelativeDate ?? null;
+  const comparisonSourceDate = documentUpdatedAt ?? fallbackSourceDate;
+  const sourceDateKind = documentUpdatedAt
+    ? 'document-updated-at'
+    : metadataUpdatedAt
+      ? 'metadata-updatedAt'
+      : displayRelativeDate
+        ? 'display-relative-date'
+        : 'unresolved';
   const comparisonSourceKind =
-    comparisonSourceDate === displayRelativeDate && displayRelativeDate
-      ? 'display-relative-date'
-      : sourceDateKind;
+    comparisonSourceDate === documentUpdatedAt && documentUpdatedAt
+      ? 'document-updated-at'
+      : comparisonSourceDate === displayRelativeDate && displayRelativeDate
+        ? 'display-relative-date'
+        : sourceDateKind;
   const sourceDateDivergence = Boolean(
-    metadataUpdatedAt &&
-      displayRelativeDate &&
-      metadataUpdatedAt !== displayRelativeDate,
+    metadataUpdatedAt && displayRelativeDate && metadataUpdatedAt !== displayRelativeDate
   );
   const exceptionApplied = Boolean(
     exception?.ignoredSourceDate &&
       comparisonSourceDate &&
-      exception.ignoredSourceDate === comparisonSourceDate,
+      exception.ignoredSourceDate === comparisonSourceDate
   );
 
   return {
+    documentUpdatedAt,
     metadataUpdatedAt,
     displayRelativeDate,
     displayRelativeText,
@@ -237,7 +272,7 @@ export function resolveSourcePageInfo({
 
 export async function fetchSourcePageInfo(
   url,
-  { fetchImpl = fetch, now = new Date(), exception = null } = {},
+  { fetchImpl = fetch, now = new Date(), exception = null } = {}
 ) {
   try {
     const response = await fetchImpl(url, {
@@ -248,6 +283,7 @@ export async function fetchSourcePageInfo(
       return {
         url,
         fetchError: `HTTP ${response.status}`,
+        documentUpdatedAt: null,
         metadataUpdatedAt: null,
         displayRelativeDate: null,
         displayRelativeText: null,
@@ -274,6 +310,7 @@ export async function fetchSourcePageInfo(
     return {
       url,
       fetchError: error.message,
+      documentUpdatedAt: null,
       metadataUpdatedAt: null,
       displayRelativeDate: null,
       displayRelativeText: null,

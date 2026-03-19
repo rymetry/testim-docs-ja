@@ -10,16 +10,8 @@ import {
   matchesSectionFilter,
   readDocFile,
 } from './lib/project.mjs';
-import {
-  compareIsoDates,
-  diffDays,
-  fetchSourcePageInfo,
-  toIsoDate,
-} from './lib/source_pages.mjs';
-import {
-  getDateException,
-  loadDateExceptions,
-} from './lib/date_exceptions.mjs';
+import { compareIsoDates, diffDays, fetchSourcePageInfo, toIsoDate } from './lib/source_pages.mjs';
+import { getDateException, loadDateExceptions } from './lib/date_exceptions.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'docs-update-status.json');
@@ -62,8 +54,7 @@ export function classifyDateStatus({ localDate, source }) {
   }
 
   const compare = compareIsoDates(sourceDate, localDate);
-  const comparisonStatus =
-    compare > 0 ? 'outdated' : compare < 0 ? 'newer' : 'up-to-date';
+  const comparisonStatus = compare > 0 ? 'outdated' : compare < 0 ? 'newer' : 'up-to-date';
   const needsUpdate = compare > 0 && !source.exceptionApplied;
   const daysBehind = compare > 0 ? diffDays(sourceDate, localDate) : null;
 
@@ -141,26 +132,28 @@ export async function checkOutdatedDocs({
         console.log(
           `  ⏭️  例外適用: 日本語 ${localDate} / 原文 ${
             source.comparisonSourceDate ?? source.resolvedSourceDate
-          }\n`,
+          }\n`
         );
       } else if (classified.status === 'source-date-divergence') {
         const verb = classified.needsUpdate ? '更新候補' : '差分レビュー';
         console.log(
-          `  ⚠️  原文日付が乖離しています: metadata ${source.metadataUpdatedAt} / display ${source.displayRelativeDate} / 判定 ${
-            source.comparisonSourceDate ?? '不明'
-          } (${verb})\n`,
+          `  ⚠️  原文日付が乖離しています: document ${
+            source.documentUpdatedAt ?? 'なし'
+          } / metadata ${source.metadataUpdatedAt ?? 'なし'} / display ${
+            source.displayRelativeDate ?? 'なし'
+          } / 判定 ${source.comparisonSourceDate ?? '不明'} (${verb})\n`
         );
       } else if (classified.status === 'outdated') {
         console.log(
           `  ❌ 更新が必要: 日本語 ${localDate} → 英語 ${
             source.comparisonSourceDate ?? source.resolvedSourceDate
-          } (${classified.daysBehind}日遅れ)\n`,
+          } (${classified.daysBehind}日遅れ)\n`
         );
       } else if (classified.status === 'newer') {
         console.log(
           `  ⚠️  日本語版が新しい: 日本語 ${localDate} > 英語 ${
             source.comparisonSourceDate ?? source.resolvedSourceDate
-          }\n`,
+          }\n`
         );
       } else {
         console.log(`  ✅ 最新: ${localDate}\n`);
@@ -171,8 +164,7 @@ export async function checkOutdatedDocs({
       file: doc.relativePath,
       sourceUrl: doc.data.sourceUrl,
       japaneseUpdated: localDate ?? 'なし',
-      englishUpdated:
-        source.comparisonSourceDate ?? source.resolvedSourceDate ?? '不明',
+      englishUpdated: source.comparisonSourceDate ?? source.resolvedSourceDate ?? '不明',
       needsUpdate: classified.needsUpdate,
       daysBehind: classified.daysBehind,
       status: classified.status,
@@ -181,6 +173,7 @@ export async function checkOutdatedDocs({
       comparisonSourceDate: source.comparisonSourceDate,
       sourceDateKind: source.sourceDateKind,
       comparisonSourceKind: source.comparisonSourceKind,
+      documentUpdatedAt: source.documentUpdatedAt,
       metadataUpdatedAt: source.metadataUpdatedAt,
       displayRelativeDate: source.displayRelativeDate,
       exceptionApplied: source.exceptionApplied,
@@ -201,12 +194,10 @@ export async function checkOutdatedDocs({
   }
 
   const outdated = results.filter((result) => result.needsUpdate);
-  const upToDate = results.filter(
-    (result) => result.comparisonStatus === 'up-to-date',
-  );
+  const upToDate = results.filter((result) => result.comparisonStatus === 'up-to-date');
   const newer = results.filter((result) => result.comparisonStatus === 'newer');
   const errors = results.filter((result) =>
-    ['fetch-error', 'missing-date', 'missing-source-date'].includes(result.status),
+    ['fetch-error', 'missing-date', 'missing-source-date'].includes(result.status)
   );
 
   console.log(`${'='.repeat(80)}\n📊 チェック結果サマリー\n`);
@@ -214,9 +205,7 @@ export async function checkOutdatedDocs({
   console.log(`❌ 更新必要: ${outdated.length}件`);
   console.log(`⚠️  日本語版が新しい: ${newer.length}件`);
   console.log(`⏭️  例外適用: ${statusCounts['ignored-exception'] || 0}件`);
-  console.log(
-    `⚠️  原文日付乖離: ${statusCounts['source-date-divergence'] || 0}件`,
-  );
+  console.log(`⚠️  原文日付乖離: ${statusCounts['source-date-divergence'] || 0}件`);
   console.log(`⚠️  エラー: ${errors.length}件`);
   console.log(`⏭️  スキップ: ${skippedCount}件`);
   console.log(`📝 処理済み: ${processedCount}件 / 全${allMdFiles.length}件\n`);

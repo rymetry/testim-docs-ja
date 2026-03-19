@@ -1,20 +1,15 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs';
-import path from 'node:path';
 
 import {
   DOCS_DIR,
-  ROOT_DIR,
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
 } from './lib/project.mjs';
 import { fetchSourcePageInfo, toIsoDate } from './lib/source_pages.mjs';
-import {
-  getDateException,
-  loadDateExceptions,
-} from './lib/date_exceptions.mjs';
+import { getDateException, loadDateExceptions } from './lib/date_exceptions.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 
 export function parseArgs(argv = process.argv.slice(2)) {
@@ -23,8 +18,7 @@ export function parseArgs(argv = process.argv.slice(2)) {
 
   return {
     apply: argv.includes('--apply'),
-    pattern:
-      patternIndex >= 0 && argv[patternIndex + 1] ? argv[patternIndex + 1] : null,
+    pattern: patternIndex >= 0 && argv[patternIndex + 1] ? argv[patternIndex + 1] : null,
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
     help: argv.includes('--help') || argv.includes('-h'),
   };
@@ -45,7 +39,7 @@ export function updateFrontmatterDate(content, nextDate) {
 
   return content.replace(
     frontmatterMatch[0],
-    frontmatterMatch[0].replace(/\n---$/, `\n${newUpdatedLine}\n---`),
+    frontmatterMatch[0].replace(/\n---$/, `\n${newUpdatedLine}\n---`)
   );
 }
 
@@ -96,9 +90,7 @@ export async function updateDatesFromEnglish({
     }
 
     if (source.exceptionApplied) {
-      console.log(
-        `  ⏭️  例外適用のため更新しません: ${sourceDate}\n`,
-      );
+      console.log(`  ⏭️  例外適用のため更新しません: ${sourceDate}\n`);
       ignoredCount += 1;
       continue;
     }
@@ -112,7 +104,9 @@ export async function updateDatesFromEnglish({
     console.log(`  🔄 更新: ${localDate || 'なし'} → ${sourceDate}`);
     if (source.sourceDateDivergence) {
       console.log(
-        `  ⚠️  metadata=${source.metadataUpdatedAt} / display=${source.displayRelativeDate} / 判定=${sourceDate}`,
+        `  ⚠️  document=${source.documentUpdatedAt ?? 'なし'} / metadata=${
+          source.metadataUpdatedAt ?? 'なし'
+        } / display=${source.displayRelativeDate ?? 'なし'} / 判定=${sourceDate}`
       );
     }
 
