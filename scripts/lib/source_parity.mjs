@@ -35,6 +35,7 @@ const LEGACY_CALLOUT_RE =
   /^>\s*(?:📘|❗️?|🚧|👍|⚠️|📝|✅|❌|💡|ℹ️|⛔|🔥|💥|🎯|📌|🏷️)\s/;
 const JSX_CALLOUT_RE = /^<Callout\b/i;
 const H1_IN_BODY_RE = /^#\s+\S/;
+const FENCE_LINE_RE = /^\s*(?:(?:[-*+]\s+|\d+\.\s+))?```/;
 
 function withSeverity(issue) {
   return {
@@ -89,7 +90,7 @@ export function localCheck({ body, sidebarSlugs, slug }) {
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    if (/^\s*```/.test(line)) {
+    if (FENCE_LINE_RE.test(line)) {
       inCodeBlock = !inCodeBlock;
       continue;
     }
@@ -159,7 +160,7 @@ export function extractFromMd(body) {
   let inCodeBlock = false;
 
   for (const line of lines) {
-    if (/^\s*```/.test(line)) {
+    if (FENCE_LINE_RE.test(line)) {
       if (!inCodeBlock) codeBlockCount += 1;
       inCodeBlock = !inCodeBlock;
       continue;
@@ -201,9 +202,8 @@ export function buildStructuralIssues(englishStats, japaneseStats) {
     );
   }
 
-  if (
-    Math.abs(englishStats.codeBlockCount - japaneseStats.codeBlockCount) >= 2
-  ) {
+  const codeBlockDiff = englishStats.codeBlockCount - japaneseStats.codeBlockCount;
+  if (codeBlockDiff >= 2) {
     issues.push(
       withSeverity({
         type: 'codeblock-mismatch',

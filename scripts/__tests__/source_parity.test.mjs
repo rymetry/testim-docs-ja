@@ -20,7 +20,7 @@ before(async () => {
 });
 
 describe('extractFromMd', () => {
-  it('counts markdown, Image, img, and nested fenced code blocks', () => {
+  it('counts markdown, Image, img, and list-item fenced code blocks', () => {
     const body = `
 ## Section
 
@@ -29,20 +29,22 @@ describe('extractFromMd', () => {
 <img src="/images/three.png" alt="inline" />
 
 1. Step
-   \`\`\`js
+-   \`\`\`js
    const value = 1;
    \`\`\`
+
+![Screenshot](/images/four.png)
 `;
 
     const result = extractFromMd(body);
     assert.equal(result.h2Count, 1);
-    assert.equal(result.imgCount, 3);
+    assert.equal(result.imgCount, 4);
     assert.equal(result.codeBlockCount, 1);
   });
 });
 
 describe('buildStructuralIssues', () => {
-  it('marks heading mismatch as signal and image/code mismatch as actionable', () => {
+  it('marks heading mismatch as signal and missing image/code blocks as actionable', () => {
     const issues = buildStructuralIssues(
       { h2Count: 8, imgCount: 10, codeBlockCount: 4 },
       { h2Count: 4, imgCount: 5, codeBlockCount: 1 },
@@ -55,6 +57,18 @@ describe('buildStructuralIssues', () => {
     assert.equal(heading.severity, 'signal');
     assert.equal(image.severity, 'actionable');
     assert.equal(code.severity, 'actionable');
+  });
+
+  it('does not flag extra local code examples as a mismatch', () => {
+    const issues = buildStructuralIssues(
+      { h2Count: 2, imgCount: 4, codeBlockCount: 1 },
+      { h2Count: 2, imgCount: 4, codeBlockCount: 5 },
+    );
+
+    assert.equal(
+      issues.some((issue) => issue.type === 'codeblock-mismatch'),
+      false,
+    );
   });
 });
 
