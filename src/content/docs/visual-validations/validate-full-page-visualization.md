@@ -36,19 +36,29 @@ RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切�
 
 ## フルページのビジュアル検証ステップの追加
 
+この 2 つのステップを使うと、ビューポートまたはページ全体について、ベースラインと現在のテスト実行のビジュアル差異を比較できます。
+
 **フルページのビジュアル検証ステップを追加するには:**
 
 1. 検証を追加したい位置の矢印記号にマウスを合わせます。
 
+   ![矢印記号](/images/visual-validations/validate-full-page-visualization/2760163-Testim_275b.png)
+
    **アクションオプション**が表示されます。
+
+   ![アクションオプション](/images/visual-validations/validate-full-page-visualization/3bc96ed-Testim_267a_r.png)
 
 2. 「**M**」（Testim 定義済みステップ）をクリックします。
 
    **定義済みステップ**メニューが開きます。
 
+   ![定義済みステップメニュー](/images/visual-validations/validate-full-page-visualization/8957b3e-Testim_270_r.png)
+
 3. **検証**をクリックします。
 
    **検証**メニューが展開されます。
+
+   ![検証メニュー](/images/visual-validations/validate-full-page-visualization/d74c896-Testim_271_r.png)
 
 4. メニューをスクロールして、**フルページのビジュアル検証**を選択します。
 
@@ -56,7 +66,7 @@ RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切�
 メニュー上部の検索ボックスから**フルページのビジュアル検証**を検索することもできます。
 :::
 
-5. ビジュアル検証ステップが**エディター**に追加されます。
+5. ビジュアル検証ステップが**エディター**に追加され、選択した要素のサムネイルがステップに表示されます。
 
 テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、Applitools Eyes で詳細を開いてください。
 

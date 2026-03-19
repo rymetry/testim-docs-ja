@@ -62,13 +62,21 @@ keywords:
 
    ![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties/b363245-properties.png)
 
+   ![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties/a45b094-propertiespanel.png)
+
    プロパティパネルが右側に開きます。
+
+   ![Reassign リンク](/images/steps-editing-tests/editing-target-element-properties/8fadf6c-reassign.png)
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**Reassign** リンクをクリックします。
 
 3. AUT ブラウザウィンドウで Base URL がまだ開いていない場合、Testim は通知を表示します。通知の **Open base URL** リンクをクリックし、ターゲット要素の再割り当てを再試行してください。
 
+   ![Base URL を開く](/images/steps-editing-tests/editing-target-element-properties/f1464de-baseurl.png)
+
 4. Testim はスタンバイモードになります。AUT ブラウザで、新しいターゲット要素の上にマウスを移動し、クリックして選択します。
+
+   ![再割り当て対象の選択](/images/steps-editing-tests/editing-target-element-properties/e90a2a1-selectreassignment.png)
 
    プロパティパネルの Target element ボックスでターゲット要素が更新されます。
 
@@ -82,11 +90,23 @@ keywords:
 
 1. 再割り当てしたいステップの上にマウスを移動し、**Show Properties** ボタンをクリックします。
 
+   ![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties/4934439-properties.png)
+
+   ![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties/a45b094-propertiespanel.png)
+
    プロパティパネルが右側に開きます。
+
+   ![クリック可能な要素](/images/steps-editing-tests/editing-target-element-properties/765e00b-small-clicklogin.png)
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**Improve** リンクをクリックします。
 
 3. AUT ブラウザウィンドウで Base URL がまだ開いていない場合、Testim は通知を表示します。通知の **Open base URL** リンクまたは **Run test to relevant step** をクリックし、ターゲット要素の改善を試みてください。
+
+   ![Base URL を開く](/images/steps-editing-tests/editing-target-element-properties/f1464de-baseurl.png)
+
+   ![改善された要素](/images/steps-editing-tests/editing-target-element-properties/543c4f1-small-improve.png)
+
+   ![改善対象のボタン](/images/steps-editing-tests/editing-target-element-properties/43cfd47-small-login.png)
 
 4. Testim はスタンバイモードになります。AUT ブラウザで、ターゲット要素の上にマウスを移動し、クリックして選択します。
 
@@ -106,9 +126,13 @@ Smart Locators の属性を編集することは一般的に推奨されませ�
 
    ![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties/4934439-properties.png)
 
+   ![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties/2aaf0e7-propertiespanel.png)
+
    プロパティパネルが右側に開きます。
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**View locators** リンクをクリックします。
+
+   ![View locators リンク](/images/steps-editing-tests/editing-target-element-properties/e93f68d-viewlocators.png)
 
    ロケーターパネルが開き、Testim の AI によって決定されたターゲット要素と関連する親要素が表示されます。
 
@@ -121,6 +145,8 @@ Smart Locators の属性を編集することは一般的に推奨されませ�
    :::
 
    ![ロケーターパネル](/images/steps-editing-tests/editing-target-element-properties/827a8f3-Testim_Editing_Tests_030_r.png)
+
+   ![ロケーターパネルの別表示](/images/steps-editing-tests/editing-target-element-properties/c693307-Testim_Editing_Tests_034a_r.png)
 
    テストを実行した後、ロケーターパネルを開くと、星の重み付けに加えて、実行結果に基づくパーセンテージスコアが表示されます。
 
@@ -148,6 +174,8 @@ Smart Locators は、要素/セレクタの一意性を理解するのに役立�
 
    ![開いたロケーター](/images/steps-editing-tests/editing-target-element-properties/6061882-open.png)
 
+   ![2 色のロケーター](/images/steps-editing-tests/editing-target-element-properties/bdf07d5-twocolors.png)
+
    色は異なるロケーター間で異なり、色付け（赤、青、紫など）自体に意味はありませんが、以下のロジックが適用されます：
 
 - **ロケーター内の同じ色** - ロケーター内で同じ色を共有する要素/セレクタは、ページ内でこのセレクタに対して一意であることを示します。
@@ -159,6 +187,8 @@ Smart Locators は、要素/セレクタの一意性を理解するのに役立�
    ![インデックス要素](/images/steps-editing-tests/editing-target-element-properties/3c99754-index.png)
 
 - **ロケーターの色** - すべての要素とその重みを考慮した後、システムはロケーターの最上位の色を決定します（通常、ほとんどの要素は同じ色を共有します）。この色は、以下に示すようにロケーターレベルで表示されます。
+
+   ![ロケーターのトップカラー](/images/steps-editing-tests/editing-target-element-properties/5313ab5-top.png)
 
 ### Auto Improved Locators
 
