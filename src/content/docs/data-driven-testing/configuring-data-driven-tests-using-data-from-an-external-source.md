@@ -3,7 +3,7 @@ title: 外部ソースのデータを使用したデータ駆動テストの構�
 description: 外部ソース（CSV、データベースなど）からのデータを使用してデータ駆動テストを構成する方法を説明します。
 category: 高度な編集
 order: 5029
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: >-
   https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source
 keywords:

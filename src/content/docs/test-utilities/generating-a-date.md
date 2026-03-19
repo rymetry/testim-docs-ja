@@ -3,7 +3,7 @@ title: 日付の生成
 description: 日付や時刻を扱うテスト向けに、指定したフォーマットやタイムゾーンで日付を生成するステップの作成方法を学びます。
 category: テスト編集
 order: 4013
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/generating-a-date'
 keywords:
   - 日付生成

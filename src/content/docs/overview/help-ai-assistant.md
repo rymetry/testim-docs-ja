@@ -3,7 +3,7 @@ title: Testim Copilot Help Assistant
 description: Testim Copilot Help Assistant を使用して、サポートへの問い合わせやドキュメントの検索を行う方法
 category: 概要
 order: 1003
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/help-ai-assistant'
 keywords:
   - ヘルプアシスタント

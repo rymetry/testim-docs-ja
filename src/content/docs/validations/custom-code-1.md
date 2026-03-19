@@ -3,7 +3,7 @@ title: カスタムコードによる検証
 description: カスタム JavaScript コードを使用した検証ステップの作成方法。高度な検証ロジックや独自の検証条件を実装できる PRO機能です。
 category: 高度な編集
 order: 5006
-updated: '2025-09-14'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/custom-code-1'
 keywords:
   - カスタムコード

@@ -3,7 +3,7 @@ title: Dedicated Run Tunnel
 description: Dedicated Run Tunnel を使用して internal server や localhost 上のアプリを外部ブラウザ経由で実行する方法と追加ユースケースを説明します。
 category: 統合
 order: 12016
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/dedicated-run-tunnel'
 keywords:
   - Dedicated Run Tunnel

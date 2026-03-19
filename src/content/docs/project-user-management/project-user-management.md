@@ -3,7 +3,7 @@ title: プロジェクトユーザー管理
 description: プロジェクトにチームメイトを招待し、削除する方法について説明します。プロジェクトオーナーの割り当ても管理できます。
 category: 管理者機能
 order: 14002
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/project-user-management'
 keywords:
   - プロジェクトユーザー管理

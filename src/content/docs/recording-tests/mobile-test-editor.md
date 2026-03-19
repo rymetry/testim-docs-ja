@@ -3,7 +3,7 @@ title: モバイルテストエディター画面
 description: Testim モバイルテストエディター画面の構成要素と機能について説明します。
 category: テストの記録
 order: 3010
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/mobile-test-editor'
 keywords:
   - モバイルテストエディター

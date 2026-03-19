@@ -3,7 +3,7 @@ title: 共有ステップライブラリ
 description: 共有ステップを追跡します
 category: テスト管理
 order: 9005
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/shared-steps-library'
 keywords:
   - 共有ステップライブラリ

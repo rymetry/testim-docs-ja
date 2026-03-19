@@ -3,7 +3,7 @@ title: Testim と GitHub の連携
 description: Testim から GitHub Issues に bug を報告するための接続手順を説明します。
 category: 統合
 order: 12037
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
 keywords:
   - Testim

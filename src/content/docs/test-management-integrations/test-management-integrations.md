@@ -5,7 +5,7 @@ description: >-
   Jira との連携により、テスト結果を一元管理できます。
 category: 統合
 order: 12038
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/test-management-integrations'
 keywords:
   - テスト管理統合

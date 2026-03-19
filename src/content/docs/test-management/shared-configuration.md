@@ -3,7 +3,7 @@ title: 共有構成
 description: 複数/すべてのテストで同じテスト構成を使用します
 category: テスト管理
 order: 9010
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/shared-configuration'
 keywords:
   - 共有構成

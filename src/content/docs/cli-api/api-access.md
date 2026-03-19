@@ -5,7 +5,7 @@ description: >-
   API を使用してブランチ管理、テスト実行、結果取得などを行う方法について説明します。API キーの生成と管理手順を提供します。
 category: 管理者機能
 order: 14001
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/api-access'
 keywords:
   - REST API

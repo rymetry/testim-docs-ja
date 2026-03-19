@@ -3,7 +3,7 @@ title: Web テストの記録方法
 description: Testim で Web テストを記録する手順を、プロジェクトの準備から Base URL とテスト構成の設定、録画・一時停止・保存のポイントまで段階的に解説します。
 category: テストの記録
 order: 3001
-updated: '2025-09-13'
+updated: '2025-09-23'
 sourceUrl: 'https://help.testim.io/docs/how-to-record-a-test'
 keywords:
   - テスト記録

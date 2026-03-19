@@ -3,7 +3,7 @@ title: 共有ステップ
 description: プロジェクト内で複数のテスト間で共有できるステップについて説明します。検証、待機、アクションステップの共有方法と再利用方法を解説します。
 category: テスト編集
 order: 4009
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/shareable-steps'
 keywords:
   - 共有ステップ

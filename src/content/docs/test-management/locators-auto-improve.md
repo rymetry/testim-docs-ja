@@ -3,7 +3,7 @@ title: 'ロケーター: 自動改善'
 description: ロケータースコアが低下したときに自動的に改善される機能について説明します。
 category: テスト管理
 order: 9015
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/locators-auto-improve'
 keywords:
   - ロケーター自動改善

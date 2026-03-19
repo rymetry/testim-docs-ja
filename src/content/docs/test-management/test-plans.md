@@ -3,7 +3,7 @@ title: テストプラン
 description: すべてのテスト、セットアップ・ティアダウンテスト、および実行する構成のリストを含む Web アプリ用テストプランの作成方法を学びます
 category: テスト管理
 order: 9012
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/test-plans'
 keywords:
   - テストプラン

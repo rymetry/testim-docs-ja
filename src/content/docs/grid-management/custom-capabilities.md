@@ -5,7 +5,7 @@ description: >-
   テストへ追加し、CLI や Scheduler で利用する方法を説明します。
 category: 統合
 order: 12029
-updated: '2024-11-21'
+updated: '2025-11-21'
 sourceUrl: 'https://help.testim.io/docs/custom-capabilities'
 keywords:
   - Custom capabilities

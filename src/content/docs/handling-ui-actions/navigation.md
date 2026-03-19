@@ -3,7 +3,7 @@ title: ナビゲーションステップ
 description: テスト内で別のページに移動するナビゲーションステップの追加方法。新しいタブで開くオプションも説明します。
 category: 高度な編集
 order: 5033
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/navigation'
 keywords:
   - ナビゲーション

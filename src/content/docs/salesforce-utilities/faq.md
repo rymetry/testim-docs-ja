@@ -3,7 +3,7 @@ title: よくある質問（FAQ）
 description: Testim for Salesforce に関するよくある質問と回答をまとめます。
 category: Salesforceテスト
 order: 16034
-updated: '2025-12-02'
+updated: '2025-12-10'
 sourceUrl: 'https://help.testim.io/docs/faq'
 keywords:
   - FAQ

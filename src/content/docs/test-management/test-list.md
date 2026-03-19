@@ -3,7 +3,7 @@ title: テストリスト
 description: テストライブラリでテストを追跡および管理します
 category: テスト管理
 order: 9002
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/test-list'
 keywords:
   - テストリスト

@@ -3,7 +3,7 @@ title: 要素テキストの検証
 description: 要素に表示されているテキストが期待値と一致するかを検証するステップ。部分一致、完全一致、正規表現など柔軟な検証条件を設定できます。
 category: 高度な編集
 order: 5005
-updated: '2025-09-14'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/validate-element-text'
 keywords:
   - テキスト検証

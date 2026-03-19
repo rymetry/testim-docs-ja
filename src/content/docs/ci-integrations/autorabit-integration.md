@@ -5,7 +5,7 @@ description: >-
   URL の設定手順を提供します。
 category: 統合
 order: 12015
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/autorabit-integration'
 keywords:
   - AutoRABIT

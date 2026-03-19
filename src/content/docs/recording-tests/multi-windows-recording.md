@@ -3,7 +3,7 @@ title: 複数ウィンドウでの記録
 description: 新しいタブやポップアップウィンドウを含むテストシナリオを記録する方法と、複数ウィンドウでのテスト実行結果の確認方法を解説します。
 category: テストの記録
 order: 3003
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/multi-windows-recording'
 keywords:
   - 複数ウィンドウ

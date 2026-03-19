@@ -3,7 +3,7 @@ title: Testim と Slack の連携
 description: Testim から指定した Slack channel に bug の説明を送るための接続手順を説明します。
 category: 統合
 order: 12036
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-slack'
 keywords:
   - Testim

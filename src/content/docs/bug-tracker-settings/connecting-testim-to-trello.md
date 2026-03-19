@@ -3,7 +3,7 @@ title: Testim と Trello の連携
 description: Testim から Trello に bug を公開するための接続手順を説明します。Testim Automate への認可と Trello への初回接続フローを確認できます。
 category: 統合
 order: 12035
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-trello'
 keywords:
   - Testim

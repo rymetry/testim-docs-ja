@@ -5,7 +5,7 @@ description: >-
   API の設定とデプロイの一時停止機能を提供します。
 category: 統合
 order: 12013
-updated: '2025-02-10'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/copado-integration'
 keywords:
   - Copado

@@ -3,7 +3,7 @@ title: 値の抽出ステップ
 description: Web またはモバイルアプリケーションからテキストや値を抽出し、後のステップで使用する方法を学びます。
 category: 高度な編集
 order: 5037
-updated: '2025-09-15'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/extract-text'
 keywords:
   - testim

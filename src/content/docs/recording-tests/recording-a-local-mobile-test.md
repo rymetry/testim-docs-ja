@@ -3,7 +3,7 @@ title: ローカルデバイスを使用したモバイルテストの記録
 description: 物理デバイスまたは仮想デバイス（iOS/Android）を使用してローカル環境でモバイルテストを記録する方法について説明します。
 category: テストの記録
 order: 3006
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/recording-a-local-mobile-test'
 keywords:
   - ローカルモバイルテスト

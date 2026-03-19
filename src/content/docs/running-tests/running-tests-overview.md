@@ -5,7 +5,7 @@ description: >-
   でテストを実行するさまざまな方法と、それぞれの実行タイプがテスト実行クォータにどのようにカウントされるかを説明します。
 category: テスト実行
 order: 6001
-updated: '2025-09-22'
+updated: '2025-09-23'
 sourceUrl: 'https://help.testim.io/docs/running-tests-overview'
 keywords:
   - テスト実行

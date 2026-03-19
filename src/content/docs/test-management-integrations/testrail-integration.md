@@ -3,7 +3,7 @@ title: TestRail 統合
 description: Testim と TestRail を統合してテスト実行結果を TestRail プロジェクトに自動的に表示する方法を説明します。統合設定、テストの接続、カスタムパラメーターの送信方法を網羅しています。
 category: 統合
 order: 12040
-updated: '2025-09-18'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/testrail-integration'
 keywords:
   - TestRail

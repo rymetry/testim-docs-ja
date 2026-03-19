@@ -3,7 +3,7 @@ title: モバイルテスト用 IPA の準備方法
 description: Xcode を使用して、仮想デバイスおよび物理デバイス用の iOS アプリケーション（.app および.ipa）をビルドする方法について説明します。
 category: テストの記録
 order: 3009
-updated: '2025-09-13'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing'
 keywords:
   - IPA
