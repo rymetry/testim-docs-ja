@@ -148,6 +148,7 @@ export async function fetchAllUpdatedDates({
       needsUpdate: results.filter((item) => item.needsUpdate).length,
       newer: results.filter((item) => item.comparisonStatus === 'newer').length,
       ignoredExceptions: results.filter((item) => item.status === 'ignored-exception').length,
+      documentDisplayDivergence: results.filter((item) => item.documentDisplayDivergence).length,
     },
     files: results,
   };
