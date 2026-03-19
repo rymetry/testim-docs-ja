@@ -192,11 +192,21 @@ export function resolveSourcePageInfo({
     extractArticleHtml(html);
 
   const resolvedSourceDate = metadataUpdatedAt ?? displayRelativeDate ?? null;
+  const comparisonSourceDate =
+    metadataUpdatedAt &&
+    displayRelativeDate &&
+    metadataUpdatedAt !== displayRelativeDate
+      ? displayRelativeDate
+      : resolvedSourceDate;
   const sourceDateKind = metadataUpdatedAt
     ? 'metadata-updatedAt'
     : displayRelativeDate
       ? 'display-relative-date'
       : 'unresolved';
+  const comparisonSourceKind =
+    comparisonSourceDate === displayRelativeDate && displayRelativeDate
+      ? 'display-relative-date'
+      : sourceDateKind;
   const sourceDateDivergence = Boolean(
     metadataUpdatedAt &&
       displayRelativeDate &&
@@ -204,8 +214,8 @@ export function resolveSourcePageInfo({
   );
   const exceptionApplied = Boolean(
     exception?.ignoredSourceDate &&
-      resolvedSourceDate &&
-      exception.ignoredSourceDate === resolvedSourceDate,
+      comparisonSourceDate &&
+      exception.ignoredSourceDate === comparisonSourceDate,
   );
 
   return {
@@ -213,7 +223,9 @@ export function resolveSourcePageInfo({
     displayRelativeDate,
     displayRelativeText,
     resolvedSourceDate,
+    comparisonSourceDate,
     sourceDateKind,
+    comparisonSourceKind,
     sourceDateDivergence,
     contentRootExtractable,
     extractionStrategy,
@@ -240,7 +252,9 @@ export async function fetchSourcePageInfo(
         displayRelativeDate: null,
         displayRelativeText: null,
         resolvedSourceDate: null,
+        comparisonSourceDate: null,
         sourceDateKind: 'unresolved',
+        comparisonSourceKind: 'unresolved',
         sourceDateDivergence: false,
         contentRootExtractable: false,
         extractionStrategy: 'fetch-error',
@@ -264,7 +278,9 @@ export async function fetchSourcePageInfo(
       displayRelativeDate: null,
       displayRelativeText: null,
       resolvedSourceDate: null,
+      comparisonSourceDate: null,
       sourceDateKind: 'unresolved',
+      comparisonSourceKind: 'unresolved',
       sourceDateDivergence: false,
       contentRootExtractable: false,
       extractionStrategy: 'fetch-error',

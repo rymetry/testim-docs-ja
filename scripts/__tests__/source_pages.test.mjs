@@ -73,11 +73,13 @@ describe('resolveSourcePageInfo', () => {
       now,
     });
     assert.equal(result.resolvedSourceDate, '2025-09-19');
+    assert.equal(result.comparisonSourceDate, '2025-09-19');
     assert.equal(result.sourceDateKind, 'display-relative-date');
+    assert.equal(result.comparisonSourceKind, 'display-relative-date');
     assert.equal(result.contentRootExtractable, true);
   });
 
-  it('marks divergence and applies exceptions only for the matching source date', () => {
+  it('marks divergence and applies exceptions only for the comparison source date', () => {
     const now = new Date('2026-03-19T00:00:00Z');
     const html = `
       <script>window.__REDUX_STATE__={"context":{"page":{"updatedAt":"2026-01-15T00:00:00.000Z"}}}</script>
@@ -91,13 +93,17 @@ describe('resolveSourcePageInfo', () => {
       url: 'https://help.testim.io/docs/example',
       now,
       exception: {
-        ignoredSourceDate: '2026-01-15',
+        ignoredSourceDate: '2025-09-19',
         reason: 'No substantive content change',
         reviewedAt: '2026-03-19',
       },
     });
     assert.equal(result.metadataUpdatedAt, '2026-01-15');
     assert.equal(result.displayRelativeDate, '2025-09-19');
+    assert.equal(result.resolvedSourceDate, '2026-01-15');
+    assert.equal(result.comparisonSourceDate, '2025-09-19');
+    assert.equal(result.sourceDateKind, 'metadata-updatedAt');
+    assert.equal(result.comparisonSourceKind, 'display-relative-date');
     assert.equal(result.sourceDateDivergence, true);
     assert.equal(result.exceptionApplied, true);
   });
@@ -132,5 +138,6 @@ describe('fetchSourcePageInfo', () => {
     });
     assert.equal(result.fetchError, 'HTTP 503');
     assert.equal(result.resolvedSourceDate, null);
+    assert.equal(result.comparisonSourceDate, null);
   });
 });

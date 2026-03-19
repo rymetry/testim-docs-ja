@@ -18,19 +18,26 @@
 2. **ページに表示される相対日付**
    - ユーザーに表示される日付
    - 例: "Updated about 2 months ago"
-   - 実際の内容変更の補助情報として扱う
+   - 実際の内容変更に近い actionable 判定として扱う
 
 ### 現在の実装
 
-自動化スクリプトは HTML の `updatedAt` を source date の基準として使用します。表示される相対日付は補助的な signal です。
+自動化スクリプトは `resolvedSourceDate` と `comparisonSourceDate` を分けて扱います。
 
-これは技術的に取得しやすい絶対日付ですが、以下の制限があります。
+- `resolvedSourceDate`
+  - 生の source date として保持する値
+  - 原則は HTML の `updatedAt`
+- `comparisonSourceDate`
+  - `needsUpdate` / `daysBehind` / `updated` 自動更新に使う値
+  - `updatedAt` と表示日付が乖離している場合は表示日付を優先
+
+HTML の `updatedAt` は技術的に取得しやすい絶対日付ですが、以下の制限があります。
 
 - ページ表示の相対日付と一致しない場合がある
 - メタデータ更新とコンテンツ更新が別タイミングで行われる可能性がある
 - 一部ページでは `updatedAt` が変わっても本文が変わっていないことがある
 
-`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と一致した場合だけ適用されます。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
+`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は signal として残しますが、actionable 判定自体は `comparisonSourceDate` で行います。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
 
 ### 実運用での対応
 
@@ -46,10 +53,10 @@
 1. 英語原文のコンテンツを実際に確認する
 2. 前回の翻訳時から実質的な変更があるか判断する
 3. 変更がない場合:
-   - 日本語版の `updated` を原文追従のまま維持するか、例外レジストリに登録する
+   - `comparisonSourceDate` を基準に日本語版の `updated` を維持するか、例外レジストリに登録する
 4. 変更がある場合:
    - 翻訳を更新する
-   - `updated` は英語原文の source date に合わせる
+   - `updated` は `comparisonSourceDate` に合わせる
 
 #### ケース2: 定期メンテナンス
 
@@ -136,16 +143,18 @@ npm run update:dates:apply -- --pattern recording-tests
 - スクリプトの抽出ロジックを更新する
 - または手動で source date を確認する
 
-### 日付が頻繁に変わる
+### 日付が頻繁に変わる / 全ページ同じ `updatedAt` になる
 
 **原因:**
 
 - 英語サイトで軽微なメタデータ更新が頻繁に発生する
+- プラットフォーム側の一括メタデータ更新が走っている
 
 **対応:**
 
 - 実質的なコンテンツ変更がない場合は例外レジストリに登録する
-- `updated` フィールドを source date として一貫管理する
+- actionable 判定は `comparisonSourceDate` を優先して確認する
+- `resolvedSourceDate` と `comparisonSourceDate` の乖離件数を summary で監視する
 
 ### GitHub Actions が失敗する
 

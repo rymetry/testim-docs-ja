@@ -32,6 +32,8 @@ export function parseArgs(argv = process.argv.slice(2)) {
 }
 
 export function classifyDateStatus({ localDate, source }) {
+  const sourceDate = source.comparisonSourceDate ?? source.resolvedSourceDate;
+
   if (!localDate) {
     return {
       status: 'missing-date',
@@ -50,7 +52,7 @@ export function classifyDateStatus({ localDate, source }) {
     };
   }
 
-  if (!source.resolvedSourceDate) {
+  if (!sourceDate) {
     return {
       status: 'missing-source-date',
       comparisonStatus: null,
@@ -59,11 +61,11 @@ export function classifyDateStatus({ localDate, source }) {
     };
   }
 
-  const compare = compareIsoDates(source.resolvedSourceDate, localDate);
+  const compare = compareIsoDates(sourceDate, localDate);
   const comparisonStatus =
     compare > 0 ? 'outdated' : compare < 0 ? 'newer' : 'up-to-date';
   const needsUpdate = compare > 0 && !source.exceptionApplied;
-  const daysBehind = compare > 0 ? diffDays(source.resolvedSourceDate, localDate) : null;
+  const daysBehind = compare > 0 ? diffDays(sourceDate, localDate) : null;
 
   if (source.exceptionApplied) {
     return {
@@ -137,20 +139,28 @@ export async function checkOutdatedDocs({
     } else {
       if (classified.status === 'ignored-exception') {
         console.log(
-          `  ⏭️  例外適用: 日本語 ${localDate} / 原文 ${source.resolvedSourceDate}\n`,
+          `  ⏭️  例外適用: 日本語 ${localDate} / 原文 ${
+            source.comparisonSourceDate ?? source.resolvedSourceDate
+          }\n`,
         );
       } else if (classified.status === 'source-date-divergence') {
         const verb = classified.needsUpdate ? '更新候補' : '差分レビュー';
         console.log(
-          `  ⚠️  原文日付が乖離しています: metadata ${source.metadataUpdatedAt} / display ${source.displayRelativeDate} (${verb})\n`,
+          `  ⚠️  原文日付が乖離しています: metadata ${source.metadataUpdatedAt} / display ${source.displayRelativeDate} / 判定 ${
+            source.comparisonSourceDate ?? '不明'
+          } (${verb})\n`,
         );
       } else if (classified.status === 'outdated') {
         console.log(
-          `  ❌ 更新が必要: 日本語 ${localDate} → 英語 ${source.resolvedSourceDate} (${classified.daysBehind}日遅れ)\n`,
+          `  ❌ 更新が必要: 日本語 ${localDate} → 英語 ${
+            source.comparisonSourceDate ?? source.resolvedSourceDate
+          } (${classified.daysBehind}日遅れ)\n`,
         );
       } else if (classified.status === 'newer') {
         console.log(
-          `  ⚠️  日本語版が新しい: 日本語 ${localDate} > 英語 ${source.resolvedSourceDate}\n`,
+          `  ⚠️  日本語版が新しい: 日本語 ${localDate} > 英語 ${
+            source.comparisonSourceDate ?? source.resolvedSourceDate
+          }\n`,
         );
       } else {
         console.log(`  ✅ 最新: ${localDate}\n`);
@@ -161,12 +171,16 @@ export async function checkOutdatedDocs({
       file: doc.relativePath,
       sourceUrl: doc.data.sourceUrl,
       japaneseUpdated: localDate ?? 'なし',
-      englishUpdated: source.resolvedSourceDate ?? '不明',
+      englishUpdated:
+        source.comparisonSourceDate ?? source.resolvedSourceDate ?? '不明',
       needsUpdate: classified.needsUpdate,
       daysBehind: classified.daysBehind,
       status: classified.status,
       comparisonStatus: classified.comparisonStatus,
+      resolvedSourceDate: source.resolvedSourceDate,
+      comparisonSourceDate: source.comparisonSourceDate,
       sourceDateKind: source.sourceDateKind,
+      comparisonSourceKind: source.comparisonSourceKind,
       metadataUpdatedAt: source.metadataUpdatedAt,
       displayRelativeDate: source.displayRelativeDate,
       exceptionApplied: source.exceptionApplied,

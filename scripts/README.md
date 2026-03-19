@@ -76,9 +76,9 @@ node scripts/lint-docs.mjs --section="概要"
 npm run check:updates
 ```
 
-各ファイルの `sourceUrl` にアクセスし、HTML の `updatedAt` を優先して source date を解決する。`updatedAt` が取れない場合だけ、ページ表示の相対日付をフォールバックで使う。
+各ファイルの `sourceUrl` にアクセスし、HTML の `updatedAt` を `resolvedSourceDate` として保持する。同時に actionable 判定用の `comparisonSourceDate` を計算し、`updatedAt` と表示相対日付が乖離している場合は表示相対日付を優先する。
 
-運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は `updatedAt` と表示日付が食い違うページを分離して報告する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
+運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は `updatedAt` と表示日付が食い違うページを分離して報告する signal で、`needsUpdate` 判定自体は `comparisonSourceDate` に従う。`ignored-exception` も `comparisonSourceDate` 基準で適用する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
 
 **出力**: `docs-update-status.json`。更新必要ありの場合は終了コード `1`
 
@@ -92,7 +92,7 @@ npm run check:updates
 npm run check:dates
 ```
 
-**出力**: 日付スナップショット + コンソールテーブル。監査用の初期台帳や比較の種データとして使う
+**出力**: 日付スナップショット + コンソールテーブル。`resolvedSourceDate` / `comparisonSourceDate` / divergence 情報を含み、監査用の初期台帳や比較の種データとして使う
 
 ---
 
@@ -265,7 +265,7 @@ npm run update:dates:apply          # 実際にファイルを更新
 node scripts/update_dates_from_english.mjs --pattern="overview"
 ```
 
-`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。日付の自動更新はその前提で使う。
+`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。自動更新で書き込む日付は `comparisonSourceDate` を使い、乖離している `metadataUpdatedAt` は signal として保持する。
 
 ---
 

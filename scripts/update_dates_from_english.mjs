@@ -87,8 +87,9 @@ export async function updateDatesFromEnglish({
       now,
       exception,
     });
+    const sourceDate = source.comparisonSourceDate ?? source.resolvedSourceDate;
 
-    if (source.fetchError || !source.resolvedSourceDate) {
+    if (source.fetchError || !sourceDate) {
       console.log('  ❌ 英語版の更新日を取得できませんでした\n');
       errorCount += 1;
       continue;
@@ -96,27 +97,27 @@ export async function updateDatesFromEnglish({
 
     if (source.exceptionApplied) {
       console.log(
-        `  ⏭️  例外適用のため更新しません: ${source.resolvedSourceDate}\n`,
+        `  ⏭️  例外適用のため更新しません: ${sourceDate}\n`,
       );
       ignoredCount += 1;
       continue;
     }
 
-    if (localDate === source.resolvedSourceDate) {
-      console.log(`  ✅ 既に最新です: ${source.resolvedSourceDate}\n`);
+    if (localDate === sourceDate) {
+      console.log(`  ✅ 既に最新です: ${sourceDate}\n`);
       noChangeCount += 1;
       continue;
     }
 
-    console.log(`  🔄 更新: ${localDate || 'なし'} → ${source.resolvedSourceDate}`);
+    console.log(`  🔄 更新: ${localDate || 'なし'} → ${sourceDate}`);
     if (source.sourceDateDivergence) {
       console.log(
-        `  ⚠️  metadata=${source.metadataUpdatedAt} / display=${source.displayRelativeDate}`,
+        `  ⚠️  metadata=${source.metadataUpdatedAt} / display=${source.displayRelativeDate} / 判定=${sourceDate}`,
       );
     }
 
     if (apply) {
-      const nextContent = updateFrontmatterDate(doc.content, source.resolvedSourceDate);
+      const nextContent = updateFrontmatterDate(doc.content, sourceDate);
       fs.writeFileSync(filePath, nextContent, 'utf8');
       console.log('  ✅ ファイルを更新しました\n');
     } else {

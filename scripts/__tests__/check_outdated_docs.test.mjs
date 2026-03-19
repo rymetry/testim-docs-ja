@@ -14,6 +14,7 @@ describe('classifyDateStatus', () => {
       source: {
         fetchError: null,
         resolvedSourceDate: '2025-09-19',
+        comparisonSourceDate: '2025-09-19',
         exceptionApplied: false,
         sourceDateDivergence: false,
       },
@@ -30,6 +31,7 @@ describe('classifyDateStatus', () => {
       source: {
         fetchError: null,
         resolvedSourceDate: '2025-09-19',
+        comparisonSourceDate: '2025-09-19',
         exceptionApplied: true,
         sourceDateDivergence: false,
       },
@@ -46,6 +48,7 @@ describe('classifyDateStatus', () => {
       source: {
         fetchError: null,
         resolvedSourceDate: '2025-10-01',
+        comparisonSourceDate: '2025-10-01',
         exceptionApplied: false,
         sourceDateDivergence: false,
       },
@@ -55,5 +58,23 @@ describe('classifyDateStatus', () => {
     assert.equal(result.comparisonStatus, 'outdated');
     assert.equal(result.needsUpdate, true);
     assert.equal(result.daysBehind, 18);
+  });
+
+  it('uses the visible source date for actionable comparison when metadata diverges', () => {
+    const result = classifyDateStatus({
+      localDate: '2025-09-19',
+      source: {
+        fetchError: null,
+        resolvedSourceDate: '2026-02-11',
+        comparisonSourceDate: '2025-09-19',
+        exceptionApplied: false,
+        sourceDateDivergence: true,
+      },
+    });
+
+    assert.equal(result.status, 'source-date-divergence');
+    assert.equal(result.comparisonStatus, 'up-to-date');
+    assert.equal(result.needsUpdate, false);
+    assert.equal(result.daysBehind, null);
   });
 });

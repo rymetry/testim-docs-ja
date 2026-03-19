@@ -65,7 +65,9 @@ export async function fetchAllUpdatedDates({
     });
     const localDate = toIsoDate(doc.data.updated);
 
-    if (source.fetchError || !source.resolvedSourceDate) {
+    const sourceDate = source.comparisonSourceDate ?? source.resolvedSourceDate;
+
+    if (source.fetchError || !sourceDate) {
       errorCount += 1;
       console.log(' ❌ 取得失敗');
       results.push({
@@ -76,7 +78,10 @@ export async function fetchAllUpdatedDates({
         fetchedEnglishDate: null,
         needsUpdate: false,
         status: source.fetchError ? 'fetch-error' : 'missing-source-date',
+        resolvedSourceDate: source.resolvedSourceDate,
+        comparisonSourceDate: source.comparisonSourceDate,
         sourceDateKind: source.sourceDateKind,
+        comparisonSourceKind: source.comparisonSourceKind,
         metadataUpdatedAt: source.metadataUpdatedAt,
         displayRelativeDate: source.displayRelativeDate,
         exceptionApplied: source.exceptionApplied,
@@ -85,7 +90,7 @@ export async function fetchAllUpdatedDates({
     }
 
     successCount += 1;
-    const compare = compareIsoDates(source.resolvedSourceDate, localDate);
+    const compare = compareIsoDates(sourceDate, localDate);
     const comparisonStatus =
       compare > 0 ? 'outdated' : compare < 0 ? 'newer' : 'up-to-date';
     const status = source.exceptionApplied
@@ -96,17 +101,20 @@ export async function fetchAllUpdatedDates({
     const needsUpdate = compare > 0 && !source.exceptionApplied;
     const icon = needsUpdate ? '🔄' : status === 'ignored-exception' ? '⏭️' : '✅';
 
-    console.log(` ${icon} ${source.resolvedSourceDate}`);
+    console.log(` ${icon} ${sourceDate}`);
     results.push({
       file: doc.relativePath,
       fileName: path.basename(filePath),
       sourceUrl: doc.data.sourceUrl,
       currentJapaneseDate: localDate ?? 'なし',
-      fetchedEnglishDate: source.resolvedSourceDate,
+      fetchedEnglishDate: sourceDate,
       needsUpdate,
       status,
       comparisonStatus,
+      resolvedSourceDate: source.resolvedSourceDate,
+      comparisonSourceDate: source.comparisonSourceDate,
       sourceDateKind: source.sourceDateKind,
+      comparisonSourceKind: source.comparisonSourceKind,
       metadataUpdatedAt: source.metadataUpdatedAt,
       displayRelativeDate: source.displayRelativeDate,
       exceptionApplied: source.exceptionApplied,
