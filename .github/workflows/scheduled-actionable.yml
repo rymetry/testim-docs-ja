@@ -1,0 +1,88 @@
+name: Scheduled Actionable Docs Checks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */3 * *'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  scheduled-actionable:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Refresh sidebar seed
+        run: npm run docs:sync-sidebar
+
+      - name: Check for outdated documentation
+        id: updates
+        run: |
+          set +e
+          npm run check:updates
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Check source parity (local)
+        id: parity_local
+        run: |
+          set +e
+          npm run check:parity
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Check source parity (remote actionable)
+        id: parity_remote
+        run: |
+          set +e
+          npm run check:parity:remote:actionable
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Generate detection summary
+        run: npm run check:summary
+
+      - name: Publish step summary
+        if: always() && hashFiles('docs-update-summary.md') != ''
+        run: cat docs-update-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload detection artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scheduled-actionable-artifacts
+          path: |
+            docs-update-status.json
+            parity-check-status.json
+            docs-actionable-report.json
+            docs-update-summary.md
+            docs-audit-manifest.json
+            docs/SIDEBAR_URLS.md
+          retention-days: 30
+
+      - name: Sync detection issues
+        if: github.event_name == 'schedule' && success() && hashFiles('docs-actionable-report.json') != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const syncDetectionIssues = require('./.github/scripts/sync-detection-issues.cjs');
+            await syncDetectionIssues({
+              github,
+              context,
+              core,
+              reportPath: 'docs-actionable-report.json',
+            });

@@ -9,6 +9,7 @@ Testim Docs JA の運用スクリプト群。英語原文の同期、翻訳パ�
 npm run lint:docs              # Markdown 構文・frontmatter 検証
 npm run check:parity           # 未翻訳テキスト・レガシー callout 検出
 npm run check:updates          # 英語原文との日付比較
+npm run check:summary          # summary / audit manifest 生成
 
 # 同期・更新
 npm run docs:sync-sidebar      # SIDEBAR_URLS.md を英語サイトから最新化
@@ -31,22 +32,23 @@ npm test                       # 全テスト実行
 ```bash
 npm run check:parity                # ローカルチェックのみ（高速）
 npm run check:parity:remote         # 英語原文との構造比較も実行
+npm run check:parity:remote:actionable  # actionable-only 終了コード
 node scripts/check_source_parity.mjs --section="概要"   # セクション絞り込み
 node scripts/check_source_parity.mjs --json              # JSON 出力
 ```
 
-| チェック項目 | モード | 検出内容 |
-| ------------- | -------- | --------- |
-| `untranslated` | ローカル | 未翻訳の英語テキスト行 |
-| `legacy-callout` | ローカル | レガシー callout（`> 📘` 等） |
-| `jsx-callout` | ローカル | JSX `<Callout>` コンポーネント残留 |
-| `h1-in-body` | ローカル | 本文中の H1 見出し |
-| `orphan-page` | ローカル | SIDEBAR_URLS.md に未掲載のページ |
-| `heading-mismatch` | リモート | 英語原文との見出し数の差異 |
-| `image-mismatch` | リモート | 英語原文との画像数の差異 |
-| `codeblock-mismatch` | リモート | 英語原文とのコードブロック数の差異 |
+| チェック項目         | モード   | 検出内容                                       |
+| -------------------- | -------- | ---------------------------------------------- |
+| `untranslated`       | ローカル | 未翻訳の英語テキスト行                         |
+| `legacy-callout`     | ローカル | レガシー callout（`> 📘` 等）                  |
+| `jsx-callout`        | ローカル | JSX `<Callout>` コンポーネント残留             |
+| `h1-in-body`         | ローカル | 本文中の H1 見出し                             |
+| `orphan-page`        | ローカル | SIDEBAR_URLS.md に未掲載のページ               |
+| `heading-mismatch`   | リモート | 英語原文との見出し数の差異。signal/report-only |
+| `image-mismatch`     | リモート | 英語原文との画像数の差異。actionable           |
+| `codeblock-mismatch` | リモート | 英語原文とのコードブロック数の差異。actionable |
 
-**出力**: `parity-check-status.json`、終了コード `1`（問題あり）
+**出力**: `parity-check-status.json`。`--actionable-only` では actionable 差分がある場合だけ終了コード `1`。summary / audit manifest は `npm run check:summary` で別生成する。
 
 ---
 
@@ -74,9 +76,11 @@ node scripts/lint-docs.mjs --section="概要"
 npm run check:updates
 ```
 
-各ファイルの `sourceUrl` にアクセスし、ページ内の「Updated X days ago」テキストから英語原文の更新日を推定して比較する。
+各ファイルの `sourceUrl` にアクセスし、HTML の `updatedAt` を `resolvedSourceDate` として保持する。同時に actionable 判定用の `comparisonSourceDate` を計算し、`updatedAt` と表示相対日付が乖離している場合は表示相対日付を優先する。
 
-**出力**: `docs-update-status.json`、終了コード `1`（更新必要あり）
+運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は `updatedAt` と表示日付が食い違うページを分離して報告する signal で、`needsUpdate` 判定自体は `comparisonSourceDate` に従う。`ignored-exception` も `comparisonSourceDate` 基準で適用する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
+
+**出力**: `docs-update-status.json`。更新必要ありの場合は終了コード `1`
 
 ---
 
@@ -88,7 +92,23 @@ npm run check:updates
 npm run check:dates
 ```
 
-**出力**: `docs-dates-snapshot.json` + コンソールテーブル
+**出力**: 日付スナップショット + コンソールテーブル。`resolvedSourceDate` / `comparisonSourceDate` / divergence 情報を含み、監査用の初期台帳や比較の種データとして使う
+
+---
+
+#### generate_detection_reports.mjs
+
+`check:updates` と `check:parity` 系の JSON を読み込み、人間向け summary と監査台帳を生成する。
+
+```bash
+npm run check:summary
+```
+
+**出力**:
+
+- `docs-actionable-report.json`
+- `docs-update-summary.md`
+- `docs-audit-manifest.json`
 
 ---
 
@@ -107,13 +127,13 @@ npm run docs:pipeline -- --no-resume               # 最初から実行
 
 **実行ステップ**:
 
-| # | ステップ | スクリプト | 内容 |
-| --- | --------- | ----------- | ------ |
-| 1 | `url_collect` | update_sidebar_urls_from_live.mjs | サイドバー URL 収集 |
-| 2 | `placeholders` | generate_untranslated_placeholders.mjs | 未翻訳プレースホルダー作成（full のみ） |
-| 3 | `fetch` | fetch_translate_images.mjs | 英語原文・画像取得 |
-| 4 | `prepare_llm` | prepare_llm_tasks.mjs | LLM 翻訳タスク準備 |
-| 5 | `apply_llm` | apply_llm_translations.mjs | 翻訳結果反映 |
+| #   | ステップ       | スクリプト                             | 内容                                    |
+| --- | -------------- | -------------------------------------- | --------------------------------------- |
+| 1   | `url_collect`  | update_sidebar_urls_from_live.mjs      | サイドバー URL 収集                     |
+| 2   | `placeholders` | generate_untranslated_placeholders.mjs | 未翻訳プレースホルダー作成（full のみ） |
+| 3   | `fetch`        | fetch_translate_images.mjs             | 英語原文・画像取得                      |
+| 4   | `prepare_llm`  | prepare_llm_tasks.mjs                  | LLM 翻訳タスク準備                      |
+| 5   | `apply_llm`    | apply_llm_translations.mjs             | 翻訳結果反映                            |
 
 **チェックポイント**: `scripts/.checkpoint` に進捗を保存。同じ `mode`/`section` なら途中ステップから再開する。`--no-resume` で強制リセット。
 
@@ -192,15 +212,15 @@ python3 scripts/fix-notation.py
 
 **修正項目**:
 
-| カテゴリ | 修正内容 |
-| --------- | --------- |
-| カタカナ長音 | パラメータ→パラメーター、ブラウザー→ブラウザ、エディタ→エディター、フォルダ→フォルダー |
-| 漢字統一 | たとえば→例えば |
-| PRO機能 | Pro機能/プロ機能/PRO 機能 → PRO機能 |
-| 英日スペース | 英単語・数字と日本語の間に半角スペース挿入 |
-| 括弧 | 日本語テキスト中の半角 () → 全角（） |
-| レガシー callout | `> 📘`/`> 🚧` → `:::note`/`:::warning` |
-| callout 書式 | `::: note` → `:::note`、英語タイトル翻訳 |
+| カテゴリ         | 修正内容                                                                               |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| カタカナ長音     | パラメータ→パラメーター、ブラウザー→ブラウザ、エディタ→エディター、フォルダ→フォルダー |
+| 漢字統一         | たとえば→例えば                                                                        |
+| PRO機能          | Pro機能/プロ機能/PRO 機能 → PRO機能                                                    |
+| 英日スペース     | 英単語・数字と日本語の間に半角スペース挿入                                             |
+| 括弧             | 日本語テキスト中の半角 () → 全角（）                                                   |
+| レガシー callout | `> 📘`/`> 🚧` → `:::note`/`:::warning`                                                 |
+| callout 書式     | `::: note` → `:::note`、英語タイトル翻訳                                               |
 
 **処理対象**: `src/content/docs/**/*.md`（frontmatter の keywords/title/description 含む）
 
@@ -245,6 +265,17 @@ npm run update:dates:apply          # 実際にファイルを更新
 node scripts/update_dates_from_english.mjs --pattern="overview"
 ```
 
+`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。自動更新で書き込む日付は `comparisonSourceDate` を使い、乖離している `metadataUpdatedAt` は signal として保持する。
+
+---
+
+## 運用メモ
+
+- `scheduled-actionable` では `check:updates` と `check:parity` を主信号にする
+- `scheduled-actionable` では最終的に `check:parity:remote:actionable` の結果を `parity-check-status.json` に残す
+- `deep-audit` では `check:parity:remote` を使い、`heading-mismatch` は report-only とする
+- 監査台帳や summary artifact は人間向け要約と機械可読 JSON を分けて扱う
+
 ---
 
 #### fix_alt_all.mjs
@@ -287,15 +318,26 @@ npm run docs:report-categories
 
 複数のスクリプトから利用される SIDEBAR_URLS.md パーサー。
 
-| エクスポート関数 | 用途 |
-| ----------------- | ------ |
-| `parseSidebarSections(text)` | Markdown テキストをセクション配列にパース |
-| `loadSidebarSections()` | ファイルから読み込んでパース |
-| `findSidebarSection(sections, name)` | セクション名で検索 |
-| `getSectionSlugSet(section)` | セクション内のスラグを Set で返す |
-| `filterItemsBySection(items, sectionName)` | アイテムをセクションでフィルタ |
+| エクスポート関数                           | 用途                                      |
+| ------------------------------------------ | ----------------------------------------- |
+| `parseSidebarSections(text)`               | Markdown テキストをセクション配列にパース |
+| `loadSidebarSections()`                    | ファイルから読み込んでパース              |
+| `findSidebarSection(sections, name)`       | セクション名で検索                        |
+| `getSectionSlugSet(section)`               | セクション内のスラグを Set で返す         |
+| `filterItemsBySection(items, sectionName)` | アイテムをセクションでフィルタ            |
 
 **利用スクリプト**: lint-docs, fetch_translate_images, prepare_llm_tasks, apply_llm_translations, normalize_docs, generate_untranslated_placeholders
+
+#### そのほかの共有ライブラリ
+
+| ファイル                  | 用途                                              |
+| ------------------------- | ------------------------------------------------- |
+| `lib/project.mjs`         | repo ルート、docs 探索、frontmatter 読み出し      |
+| `lib/source_pages.mjs`    | source date 解決、article 本文抽出                |
+| `lib/source_parity.mjs`   | parity issue 生成、severity 付与、要約集計        |
+| `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成      |
+| `lib/date_exceptions.mjs` | 例外レジストリ読み込み                            |
+| `lib/cli.mjs`             | 直実行判定などの CLI 補助                         |
 
 ---
 
@@ -305,38 +347,45 @@ npm run docs:report-categories
 npm test    # node --test scripts/__tests__/*.mjs
 ```
 
-| テストファイル | 対象スクリプト |
-| -------------- | -------------- |
-| `__tests__/lint_docs.test.mjs` | lint-docs.mjs |
-| `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs |
-| `__tests__/update_sidebar_urls.test.mjs` | update_sidebar_urls_from_live.mjs |
-| `__tests__/pipeline.test.mjs` | pipeline.mjs |
+| テストファイル                              | 対象スクリプト                    |
+| ------------------------------------------- | --------------------------------- |
+| `__tests__/lint_docs.test.mjs`              | lint-docs.mjs                     |
+| `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs        |
+| `__tests__/update_sidebar_urls.test.mjs`    | update_sidebar_urls_from_live.mjs |
+| `__tests__/pipeline.test.mjs`               | pipeline.mjs                      |
+| `__tests__/check_outdated_docs.test.mjs`    | check_outdated_docs.mjs           |
+| `__tests__/source_pages.test.mjs`           | lib/source_pages.mjs              |
+| `__tests__/source_parity.test.mjs`          | lib/source_parity.mjs             |
+| `__tests__/detection_reports.test.mjs`      | lib/detection_reports.mjs         |
+| `__tests__/update_dates_from_english.test.mjs` | update_dates_from_english.mjs  |
 
 ---
 
 ## npm スクリプト対応表
 
-| npm コマンド | スクリプト | 用途 |
-| ------------- | ----------- | ------ |
-| `lint:docs` | lint-docs.mjs | 構文・frontmatter 検証 |
-| `check:parity` | check_source_parity.mjs | 翻訳品質チェック（ローカル） |
-| `check:parity:remote` | check_source_parity.mjs --remote | 翻訳品質チェック（リモート込み） |
-| `check:updates` | check_outdated_docs.mjs | 日付ベースの更新検出 |
-| `check:dates` | fetch_all_updated_dates.mjs | 全日付スナップショット |
-| `update:dates` | update_dates_from_english.mjs | 日付更新（ドライラン） |
-| `update:dates:apply` | update_dates_from_english.mjs --apply | 日付更新（実行） |
-| `docs:sync-sidebar` | update_sidebar_urls_from_live.mjs | サイドバー URL 同期 |
-| `docs:sync-frontmatter` | sync_frontmatter_from_sidebar.mjs | frontmatter 同期（ドライラン） |
-| `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行） |
-| `docs:pipeline` | pipeline.mjs | パイプライン（diff） |
-| `docs:pipeline:full` | pipeline.mjs --mode=full | パイプライン（full） |
-| `docs:fetch` | fetch_translate_images.mjs | 英語原文・画像取得 |
-| `docs:normalize` | normalize_docs.mjs | ドキュメント正規化 |
-| `docs:fix-alt` | fix_alt_all.mjs | alt テキスト一括挿入 |
-| `docs:placeholders` | generate_untranslated_placeholders.mjs | プレースホルダー作成 |
-| `docs:prepare-llm` | prepare_llm_tasks.mjs | LLM タスク準備 |
-| `docs:apply-llm` | apply_llm_translations.mjs | LLM 翻訳適用 |
-| `docs:report-categories` | report_frontmatter_categories.mjs | カテゴリ集計 |
+| npm コマンド                  | スクリプト                                | 用途                             |
+| ----------------------------- | ----------------------------------------- | -------------------------------- |
+| `lint:docs`                   | lint-docs.mjs                             | 構文・frontmatter 検証           |
+| `check:parity`                | check_source_parity.mjs                   | 翻訳品質チェック（ローカル）     |
+| `check:parity:remote`         | check_source_parity.mjs --remote          | 翻訳品質チェック（リモート込み） |
+| `check:parity:remote:actionable` | check_source_parity.mjs --remote --actionable-only | actionable-only parity |
+| `check:updates`               | check_outdated_docs.mjs                   | 日付ベースの更新検出             |
+| `check:dates`                 | fetch_all_updated_dates.mjs               | 全日付スナップショット           |
+| `check:summary`               | generate_detection_reports.mjs            | summary / audit manifest 生成    |
+| `update:dates`                | update_dates_from_english.mjs             | 日付更新（ドライラン）           |
+| `update:dates:apply`          | update_dates_from_english.mjs --apply     | 日付更新（実行）                 |
+| `docs:sync-sidebar`           | update_sidebar_urls_from_live.mjs         | サイドバー URL 同期              |
+| `docs:sync-frontmatter`       | sync_frontmatter_from_sidebar.mjs         | frontmatter 同期（ドライラン）   |
+| `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行）         |
+| `docs:pipeline`               | pipeline.mjs                              | パイプライン（diff）             |
+| `docs:pipeline:full`          | pipeline.mjs --mode=full                  | パイプライン（full）             |
+| `docs:fetch`                  | fetch_translate_images.mjs                | 英語原文・画像取得               |
+| `docs:normalize`              | normalize_docs.mjs                        | ドキュメント正規化               |
+| `docs:fix-alt`                | fix_alt_all.mjs                           | alt テキスト一括挿入             |
+| `docs:placeholders`           | generate_untranslated_placeholders.mjs    | プレースホルダー作成             |
+| `docs:prepare-llm`            | prepare_llm_tasks.mjs                     | LLM タスク準備                   |
+| `docs:apply-llm`              | apply_llm_translations.mjs                | LLM 翻訳適用                     |
+| `docs:report-categories`      | report_frontmatter_categories.mjs         | カテゴリ集計                     |
 
 ---
 
@@ -358,16 +407,19 @@ npm test && npm run build
 npm run docs:sync-sidebar          # 1. URL 最新化
 npm run check:updates              # 2. 日付差分検出
 npm run check:parity               # 3. 翻訳品質チェック
-npm run docs:pipeline              # 4. 変更分の翻訳パイプライン
-npm run lint:docs && npm test && npm run build  # 5. QA
+npm run check:parity:remote:actionable  # 4. actionable remote parity
+npm run check:summary              # 5. summary / audit manifest
+npm run docs:pipeline              # 6. 変更分の翻訳パイプライン
+npm run lint:docs && npm test && npm run build  # 7. QA
 ```
 
 ### CI 連携
 
-`.github/workflows/check-docs-updates.yml` で 3 日ごとに自動実行:
+自動検知系の workflow は 2 本に分かれる:
 
-1. `lint:docs` + `test` + `build`（lint-and-test ジョブ）
-2. `docs:sync-sidebar` → `check:updates` → `check:parity`（check-updates ジョブ）
-3. 問題検出時に GitHub Issue を自動作成/更新
+1. [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml)
+2. [`deep-audit.yml`](../.github/workflows/deep-audit.yml)
+
+`scheduled-actionable` は issue を create/update/close し、`deep-audit` は artifact と summary のみ残す。
 
 詳細は `docs/OPS_DESIGN.md` を参照。
