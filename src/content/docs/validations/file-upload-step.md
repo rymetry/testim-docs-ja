@@ -3,7 +3,7 @@ title: ファイルアップロードの検証
 description: ファイルアップロード機能をテストするステップ。ローカルファイルを選択してアップロードする操作を自動化し、ファイル入力フォームの動作を検証します。
 category: 高度な編集
 order: 5016
-updated: '2025-09-14'
+updated: '2025-09-19'
 sourceUrl: 'https://help.testim.io/docs/file-upload-step'
 keywords:
   - ファイルアップロード
@@ -92,7 +92,7 @@ OS のファイルブラウザやドラッグ＆ドロップでファイルア�
 
 1. テストの記録中、アプリ内のファイルアップロード場所に移動します。アプリ内のドラッグ＆ドロップボックス、またはローカルファイルブラウザを開くリンクの場合があります。
 2. ファイルをドラッグ＆ドロップするか、ローカルファイルブラウザの指示に従ってファイルを選択します。\
-   The file is uploaded to the Testim server, and a **File Drop** step or a **Browse For File** step is created.
+   ファイルは Testim サーバーにアップロードされ、**File Drop** ステップまたは **Browse For File** ステップが作成されます。
 
 ![ファイル](/images/validations/file-upload-step/b79925e-Testim_256a.png)
 
