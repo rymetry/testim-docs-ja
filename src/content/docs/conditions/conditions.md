@@ -89,6 +89,9 @@ Element 条件は要素の可視性に基づいてステップを実行します
 6. **Element** を選択します。
 7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。\
    選択した要素は **When to run step** セクションの **Target Element** に表示されます。
+
+![Element 条件の設定画面](/images/conditions/conditions/a8a3d48-TestimConditions01_r.png)
+
 8. Properties パネルの手順に従って、要素の設定を確認・調整します。
 9. 条件タイプ（**Visible** または **Not visible**）を指定します。
 10. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
@@ -109,21 +112,34 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 **Element text 条件を設定するには:**
 
 1. 条件を追加したいステップの左にある **>（矢印）** にカーソルを合わせます。
+
+![ステップの矢印アイコン](/images/conditions/conditions/5937c73-Testim_120a.png)
+
+   アクションのオプションが表示されます。
+
+![アクションオプションメニュー](/images/conditions/conditions/81cc951-Testim_121a.png)
+
 2. **Toggle Breakpoint** をクリックします。
+
+![Toggle Breakpoint ボタン](/images/conditions/conditions/f29f5bd-Testim_122.png)
+
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
+
+![Play Scenario ボタン](/images/conditions/conditions/176b48a-Testim_129a.png)
+
 4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。
 5. **Properties** パネルで **When to run step** をクリックします。
 6. **Element Text** を選択します。
-7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。
-8. 現在の要素の値が **Expected value** ボックスに表示されます。
+7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。\
+   現在の要素の値が **Expected value** ボックスに表示されます。
+8. 選択した要素は **Target Element** ボックスに表示されます。
+9. **Expected value** ボックスに別の値を入力するか、正規表現、JavaScript 式、またはパラメーターを指定します。
 
 ![Element text 条件の設定画面](/images/conditions/conditions/230f6f2-elementtext_r.png)
 
-9. 選択した要素は **Target Element** ボックスに表示されます。
-10. **Expected value** ボックスに別の値を入力するか、正規表現、JavaScript 式、またはパラメーターを指定します。
-11. Properties パネルの手順に従って、要素の設定を確認・調整します。
-12. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
-13. **Toggle Breakpoint** をクリックしてブレークポイントを解除します。
+10. Properties パネルの手順に従って、要素の設定を確認・調整します。
+11. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
+12. **Toggle Breakpoint** をクリックしてブレークポイントを解除します。
 
 ステップタイルに菱形アイコンが表示され、条件が追加されたことを確認できます。
 

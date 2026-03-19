@@ -93,6 +93,8 @@ iOS デバイスを接続するには、以下の要件を満たす必要があ�
 
 5. **Upload iOS image**をクリックします。
 
+<Image align="center" width="smart" src="/images/recording-tests/recording-a-local-mobile-test/8752f3b-2023-01-17_20-29-06.png" />
+
 6. デバイスに適した iOS バージョンの iOS イメージを選択します（iOS イメージは[https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)からダウンロードできます）。
 
 7. **Upload**をクリックします。
@@ -163,6 +165,8 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 
 デバイスは自動的に Testim の仮想デバイスリストに追加されます。
 
+<Image align="center" src="/images/recording-tests/recording-a-local-mobile-test/36444cd-image_23.png" />
+
 :::info{title="情報"}
 デフォルトでは、仮想デバイスはデバッグモードに事前構成されています。
 :::
@@ -199,6 +203,8 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 デバイスは自動的に Testim の仮想デバイスリストに追加されます。
 
+<Image align="center" src="/images/recording-tests/recording-a-local-mobile-test/6157466-virtualdevice.png" />
+
 ## ステップ 3 - テストするアプリケーションを準備する
 
 テストを作成する際、テストで使用するアプリを選択する必要があります。各テストには 1 つのアプリのみを含めることができます。アプリは次の 3 つの方法でテストに使用できます:
@@ -223,9 +229,15 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 2. ダッシュボード画面から**New Test**ボタンをクリックします。
 
+<Image align="center" src="/images/recording-tests/recording-a-local-mobile-test/ec1bda0-image.png" />
+
 3. テストの記録を開始するには、アクションメニューの**Record**ボタンをクリックします。
 
+<Image align="center" src="/images/recording-tests/recording-a-local-mobile-test/202f05d-image_1.png" />
+
 4. **Local Devices**を選択し、リストに表示されている物理デバイスまたは仮想デバイスの 1 つを選択します。
+
+<Image align="center" src="/images/recording-tests/recording-a-local-mobile-test/9fa3145-image_3.png" />
 
 5. **Next**をクリックして続行します。
 
@@ -266,6 +278,8 @@ Simulator ソフトウェアがシステムトレイで開きます。
 ![記録の停止](/images/recording-tests/recording-a-local-mobile-test/3e199cb-image_7.png)
 
 10. プロパティペインで、以下の設定を構成します:
+
+<Image align="center" src="/images/recording-tests/recording-a-local-mobile-test/4d9063d-testconfiguration.png" />
 
     - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は「untitled test」です。
     - **Description** - オプションで、テストの説明を入力します。
