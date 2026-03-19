@@ -3,7 +3,7 @@ import path from 'node:path';
 import matter from 'gray-matter';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
 import { ROOT_DIR, DOCS_DIR, findMdFiles } from './lib/project.mjs';
-import { stripMarkdown, generateDescription } from './lib/markdown-utils.mjs';
+import { generateDescription } from './lib/markdown-utils.mjs';
 
 const ROOT = ROOT_DIR;
 const DOCS_ROOT = DOCS_DIR;
