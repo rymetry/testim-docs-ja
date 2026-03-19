@@ -136,12 +136,15 @@ export async function checkOutdatedDocs({
         );
       } else if (classified.status === 'source-date-divergence') {
         const verb = classified.needsUpdate ? '更新候補' : '差分レビュー';
+        const divergenceKind = source.documentDisplayDivergence
+          ? 'document/display'
+          : 'metadata/display fallback';
         console.log(
           `  ⚠️  原文日付が乖離しています: document ${
             source.documentUpdatedAt ?? 'なし'
           } / metadata ${source.metadataUpdatedAt ?? 'なし'} / display ${
             source.displayRelativeDate ?? 'なし'
-          } / 判定 ${source.comparisonSourceDate ?? '不明'} (${verb})\n`
+          } / 判定 ${source.comparisonSourceDate ?? '不明'} (${divergenceKind}, ${verb})\n`
         );
       } else if (classified.status === 'outdated') {
         console.log(
@@ -176,6 +179,8 @@ export async function checkOutdatedDocs({
       documentUpdatedAt: source.documentUpdatedAt,
       metadataUpdatedAt: source.metadataUpdatedAt,
       displayRelativeDate: source.displayRelativeDate,
+      metadataDisplayDivergence: source.metadataDisplayDivergence,
+      documentDisplayDivergence: source.documentDisplayDivergence,
       exceptionApplied: source.exceptionApplied,
       contentRootExtractable: source.contentRootExtractable,
     });

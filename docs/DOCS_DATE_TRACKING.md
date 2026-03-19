@@ -45,7 +45,7 @@ HTML の metadata `updatedAt` は技術的に取得しやすい絶対日付で�
 - メタデータ更新とコンテンツ更新が別タイミングで行われる可能性がある
 - 一部ページでは `updatedAt` が変わっても本文が変わっていないことがある
 
-`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は metadata `updatedAt` と表示日付の不一致を signal として残しますが、actionable 判定自体は `comparisonSourceDate` で行います。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
+`check:updates` の出力ステータスは `outdated / up-to-date / newer / fetch-error / ignored-exception / source-date-divergence / missing-date / missing-source-date` を区別します。`ignored-exception` は例外レジストリの `ignoredSourceDate` と `comparisonSourceDate` が一致した場合だけ適用されます。`source-date-divergence` は「現在の判定に使う source date」と表示日付が食い違う場合だけ signal にします。`document.updated_at` が取れるページでは `documentDisplayDivergence` を使い、`metadataDisplayDivergence` は diagnostic-only です。`document.updated_at` が取れない場合のみ metadata/display の乖離を fallback signal として扱います。`missing-date` と `missing-source-date` は error state であり、update candidate には含めません。
 
 ### 実運用での対応
 
@@ -86,7 +86,7 @@ HTML の metadata `updatedAt` は技術的に取得しやすい絶対日付で�
 - `reason`
 - `reviewedAt`
 
-同じ source date の間だけ例外として扱い、英語原文の日付が進んだら再度 `outdated` として surfaced する。
+同じ source date の間だけ例外として扱い、英語原文の日付が進んだら再度 `outdated` として surfaced する。`ignoredSourceDate` には `comparisonSourceDate`、つまり通常は `document.updated_at` を `Asia/Tokyo` で日付化した値を入れる。
 
 ## スクリプト使用方法
 

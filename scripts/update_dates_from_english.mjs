@@ -2,12 +2,7 @@
 
 import fs from 'node:fs';
 
-import {
-  DOCS_DIR,
-  findMdFiles,
-  matchesSectionFilter,
-  readDocFile,
-} from './lib/project.mjs';
+import { DOCS_DIR, findMdFiles, matchesSectionFilter, readDocFile } from './lib/project.mjs';
 import { fetchSourcePageInfo, toIsoDate } from './lib/source_pages.mjs';
 import { getDateException, loadDateExceptions } from './lib/date_exceptions.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
@@ -103,10 +98,13 @@ export async function updateDatesFromEnglish({
 
     console.log(`  🔄 更新: ${localDate || 'なし'} → ${sourceDate}`);
     if (source.sourceDateDivergence) {
+      const divergenceKind = source.documentDisplayDivergence
+        ? 'document/display'
+        : 'metadata/display fallback';
       console.log(
         `  ⚠️  document=${source.documentUpdatedAt ?? 'なし'} / metadata=${
           source.metadataUpdatedAt ?? 'なし'
-        } / display=${source.displayRelativeDate ?? 'なし'} / 判定=${sourceDate}`
+        } / display=${source.displayRelativeDate ?? 'なし'} / 判定=${sourceDate} (${divergenceKind})`
       );
     }
 

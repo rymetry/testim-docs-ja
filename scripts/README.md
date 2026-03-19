@@ -78,7 +78,7 @@ npm run check:updates
 
 各ファイルの `sourceUrl` にアクセスし、まず `script#ssr-props` 内の `document.updated_at` を page-specific な source date として解決する。`document.updated_at` が取れない場合は既存の metadata / 表示相対日付へ fallback する。同時に actionable 判定用の `comparisonSourceDate` を計算し、`document.updated_at` が無い場合のみ `updatedAt` と表示相対日付の乖離を見て表示相対日付を優先する。
 
-運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は metadata `updatedAt` と表示日付が食い違うページを分離して報告する signal で、`needsUpdate` 判定自体は `comparisonSourceDate` に従う。`ignored-exception` も `comparisonSourceDate` 基準で適用する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
+運用上は原文追従を基本にし、実質変更なしのページは [`scripts/config/date-exceptions.json`](./config/date-exceptions.json) で管理する。`outdated` と `newer` は別々に扱い、`newer` は warning review に回す。`source-date-divergence` は「現在の判定に使う source date」と表示日付が食い違うページだけを分離して報告する signal で、`document.updated_at` が取れる場合は `documentDisplayDivergence`、取れない場合だけ metadata/display の fallback divergence を使う。`metadataDisplayDivergence` は diagnostic-only とし、`needsUpdate` 判定自体は `comparisonSourceDate` に従う。`ignored-exception` も `comparisonSourceDate` 基準で適用する。`missing-date` と `missing-source-date` は error state であり、update candidate には含めない。
 
 **出力**: `docs-update-status.json`。更新必要ありの場合は終了コード `1`
 
@@ -265,7 +265,7 @@ npm run update:dates:apply          # 実際にファイルを更新
 node scripts/update_dates_from_english.mjs --pattern="overview"
 ```
 
-`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。自動更新で書き込む日付は `comparisonSourceDate` を使い、`document.updated_at` を優先する。乖離している `metadataUpdatedAt` は signal として保持する。
+`updated` は原文追従を正とし、実質変更なしと判断したページは例外レジストリに寄せる。自動更新で書き込む日付は `comparisonSourceDate` を使い、通常は `document.updated_at` を `Asia/Tokyo` で日付化した値を採用する。`metadataUpdatedAt` の乖離は diagnostic として保持するが、`document.updated_at` と表示日付が一致している限り top-level signal には昇格しない。
 
 ---
 

@@ -75,6 +75,8 @@ export async function fetchAllUpdatedDates({
         documentUpdatedAt: source.documentUpdatedAt,
         metadataUpdatedAt: source.metadataUpdatedAt,
         displayRelativeDate: source.displayRelativeDate,
+        metadataDisplayDivergence: source.metadataDisplayDivergence,
+        documentDisplayDivergence: source.documentDisplayDivergence,
         exceptionApplied: source.exceptionApplied,
       });
       continue;
@@ -108,6 +110,8 @@ export async function fetchAllUpdatedDates({
       documentUpdatedAt: source.documentUpdatedAt,
       metadataUpdatedAt: source.metadataUpdatedAt,
       displayRelativeDate: source.displayRelativeDate,
+      metadataDisplayDivergence: source.metadataDisplayDivergence,
+      documentDisplayDivergence: source.documentDisplayDivergence,
       exceptionApplied: source.exceptionApplied,
     });
 

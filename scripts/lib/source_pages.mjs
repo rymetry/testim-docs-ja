@@ -243,9 +243,15 @@ export function resolveSourcePageInfo({ html, url, now = new Date(), exception =
       : comparisonSourceDate === displayRelativeDate && displayRelativeDate
         ? 'display-relative-date'
         : sourceDateKind;
-  const sourceDateDivergence = Boolean(
+  const metadataDisplayDivergence = Boolean(
     metadataUpdatedAt && displayRelativeDate && metadataUpdatedAt !== displayRelativeDate
   );
+  const documentDisplayDivergence = Boolean(
+    documentUpdatedAt && displayRelativeDate && documentUpdatedAt !== displayRelativeDate
+  );
+  const sourceDateDivergence = documentUpdatedAt
+    ? documentDisplayDivergence
+    : metadataDisplayDivergence;
   const exceptionApplied = Boolean(
     exception?.ignoredSourceDate &&
       comparisonSourceDate &&
@@ -261,6 +267,8 @@ export function resolveSourcePageInfo({ html, url, now = new Date(), exception =
     comparisonSourceDate,
     sourceDateKind,
     comparisonSourceKind,
+    metadataDisplayDivergence,
+    documentDisplayDivergence,
     sourceDateDivergence,
     contentRootExtractable,
     extractionStrategy,
@@ -291,6 +299,8 @@ export async function fetchSourcePageInfo(
         comparisonSourceDate: null,
         sourceDateKind: 'unresolved',
         comparisonSourceKind: 'unresolved',
+        metadataDisplayDivergence: false,
+        documentDisplayDivergence: false,
         sourceDateDivergence: false,
         contentRootExtractable: false,
         extractionStrategy: 'fetch-error',
@@ -318,6 +328,8 @@ export async function fetchSourcePageInfo(
       comparisonSourceDate: null,
       sourceDateKind: 'unresolved',
       comparisonSourceKind: 'unresolved',
+      metadataDisplayDivergence: false,
+      documentDisplayDivergence: false,
       sourceDateDivergence: false,
       contentRootExtractable: false,
       extractionStrategy: 'fetch-error',
