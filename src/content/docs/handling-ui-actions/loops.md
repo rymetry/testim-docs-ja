@@ -67,7 +67,7 @@ while... do... ループと for ループを使用してステップのグルー
 
 5. グループステップにカーソルを合わせて、**プロパティを表示**アイコンをクリックします。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/5c94cb4-Testim_094a.png" />
+![プロパティを表示アイコン](/images/handling-ui-actions/loops/5c94cb4-Testim_094a.png)
 
 グループプロパティパネルが右側に開きます。
 
@@ -96,7 +96,7 @@ while... do... ループと for ループを使用してステップのグルー
 
 ループは、グループステップタイルに表示されるループアイコンで示されるように、ステップに追加されます。このテストを実行するたびに、ループプロセスが実行されます。実行結果の表示方法については、「ループ実行結果の表示」を参照してください。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/4695ece-Testim_Image_032_r.png" />
+![ループアイコン表示](/images/handling-ui-actions/loops/4695ece-Testim_Image_032_r.png)
 
 ## 「要素テキストが〜の間」ループの設定
 
@@ -116,11 +116,11 @@ while... do... ループと for ループを使用してステップのグルー
 
 アクションオプションが表示されます。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/3bf47bc-Testim_096a_r.png" />
+![アクションオプション](/images/handling-ui-actions/loops/3bf47bc-Testim_096a_r.png)
 
 3. **ブレークポイントの切り替え**ボタンをクリックします。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/dfbc182-Testim_097_r.png" />
+![ブレークポイントの切り替え](/images/handling-ui-actions/loops/dfbc182-Testim_097_r.png)
 
 4. **シナリオを再生**ボタンをクリックして、ブレークポイントまでテストを実行します。
 
@@ -134,7 +134,7 @@ while... do... ループと for ループを使用してステップのグルー
 
 6. グループプロパティパネルで、**繰り返しグループ**をクリックします。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/eedaeda-Testim_Image_037.png" />
+![繰り返しグループ](/images/handling-ui-actions/loops/eedaeda-Testim_Image_037.png)
 
 7. **要素テキストが〜の間**ラジオボタンを選択します。
 
@@ -180,11 +180,11 @@ while... do... ループと for ループを使用してステップのグルー
 
 アクションオプションが表示されます。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/2c3f81b-Testim_083a_r.png" />
+![アクションオプション](/images/handling-ui-actions/loops/2c3f81b-Testim_083a_r.png)
 
 3. **ブレークポイントの切り替え**ボタンをクリックします。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/3b582ee-Testim_101_r.png" />
+![ブレークポイントの切り替え](/images/handling-ui-actions/loops/3b582ee-Testim_101_r.png)
 
 4. **シナリオを再生**ボタンをクリックして、ブレークポイントまでテストを実行します。
 
@@ -242,19 +242,19 @@ while... do... ループと for ループを使用してステップのグルー
 
 ![プロパティを表示](/images/handling-ui-actions/loops/b4bc73a-Capture3.PNG)
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/c18755c-Testim_111a_r.png" />
+![プロパティを表示](/images/handling-ui-actions/loops/c18755c-Testim_111a_r.png)
 
 3. グループプロパティパネルで、**繰り返しグループ**をクリックします。
 
 ![繰り返しグループ](/images/handling-ui-actions/loops/6d63491-Testim_Image_006_r.png)
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/cec147c-Testim_034_r.png" />
+![定義済みステップメニュー](/images/handling-ui-actions/loops/cec147c-Testim_034_r.png)
 
 4. **〜回ループ**ラジオボタンを選択します。**ループする値**フィールドが開きます。
 
 ![〜回ループ](/images/handling-ui-actions/loops/fb2dc35-Testim_Image_007.png)
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/988d6c6-Testim_079_r.png" />
+![アクションメニュー](/images/handling-ui-actions/loops/988d6c6-Testim_079_r.png)
 
 ![ループする値](/images/handling-ui-actions/loops/182470c-Testim_Image_008.png)
 
@@ -288,7 +288,7 @@ while... do... ループと for ループを使用してステップのグルー
 
 4. **アクション**をクリックします。アクションセクションが展開されます。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/2c12efe-Testim_Loops_Image_004.png" />
+![アクションセクション](/images/handling-ui-actions/loops/2c12efe-Testim_Loops_Image_004.png)
 
 5. メニューをスクロールダウンして、**カスタムアクションを追加**を選択します。
 
@@ -484,15 +484,15 @@ TESTIM_ITERATOR を使用して、ループステップの条件を定義でき�
 
 アクションオプションが表示されます。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/d5d3d87-Testim_113a_r.png" />
+![アクションオプション](/images/handling-ui-actions/loops/d5d3d87-Testim_113a_r.png)
 
 3. **「M」（Testim 定義済みステップ）**をクリックします。定義済みステップメニューが開きます。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/8512e3c-Testim_034_r.png" />
+![定義済みステップメニュー](/images/handling-ui-actions/loops/8512e3c-Testim_034_r.png)
 
 4. **アクション**をクリックします。アクションセクションが展開されます。
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/56ede45-Testim_079_r2.png" />
+![アクションセクション](/images/handling-ui-actions/loops/56ede45-Testim_079_r2.png)
 
 5. メニューをスクロールダウンして、**カスタムアクションを追加**を選択します。
 
@@ -560,7 +560,7 @@ HTML パラメーター以外の DOM セレクタ（例: jQuery）を使用し�
 
 ![ループアイコン](/images/handling-ui-actions/loops/6ad3321-Testim_Loops_Image_002_r.png)
 
-<Image align="center" width="smart" src="/images/handling-ui-actions/loops/87c8a8a-Testim_Loops_Image_006_r.png" />
+![ループ実行結果](/images/handling-ui-actions/loops/87c8a8a-Testim_Loops_Image_006_r.png)
 
 ### レッツトライ（ループイテレータ）
 
