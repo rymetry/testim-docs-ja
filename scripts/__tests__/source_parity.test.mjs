@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 let applySuppressions;
 let buildStructuralIssues;
+let extractFromHtml;
 let extractFromMd;
 let localCheck;
 let remoteCheck;
@@ -12,6 +13,7 @@ before(async () => {
   ({
     applySuppressions,
     buildStructuralIssues,
+    extractFromHtml,
     extractFromMd,
     localCheck,
     remoteCheck,
@@ -42,6 +44,26 @@ describe('extractFromMd', () => {
     assert.equal(result.h2Count, 1);
     assert.equal(result.imgCount, 4);
     assert.equal(result.codeBlockCount, 1);
+  });
+});
+
+describe('extractFromHtml', () => {
+  it('skips empty pre tags', () => {
+    const html = '<pre></pre><pre><code>real code</code></pre>';
+    const result = extractFromHtml(html);
+    assert.equal(result.codeBlockCount, 1);
+  });
+
+  it('skips whitespace-only pre tags', () => {
+    const html = '<pre>   \n  </pre><pre><code>x</code></pre>';
+    const result = extractFromHtml(html);
+    assert.equal(result.codeBlockCount, 1);
+  });
+
+  it('counts pre tags with visible content', () => {
+    const html = '<pre>code1</pre><pre><code>code2</code></pre><pre> code3 </pre>';
+    const result = extractFromHtml(html);
+    assert.equal(result.codeBlockCount, 3);
   });
 });
 

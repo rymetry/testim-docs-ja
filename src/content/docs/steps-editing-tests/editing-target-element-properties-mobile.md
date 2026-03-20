@@ -33,6 +33,8 @@ keywords:
 
 1. ターゲット要素をハイライトしたいステップの上にマウスを移動し、**Show Properties** ボタンをクリックします。
 
+   ![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties-mobile/6d153d2-properties.png)
+
    プロパティパネルが右側に開きます。
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**Highlight** リンクをクリックします。
@@ -49,7 +51,7 @@ keywords:
 
 1. 再割り当てしたいステップの上にマウスを移動し、**Show Properties** ボタンをクリックします。
 
-   ![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties-mobile/6d153d2-properties.png)
+   ![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties-mobile/6bd4cc7-properties.png)
 
    プロパティパネルが右側に開きます。
 
