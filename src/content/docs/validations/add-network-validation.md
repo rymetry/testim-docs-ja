@@ -414,7 +414,7 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 
 3. **Save** をクリックしてテストを保存します。
 
-## add network validation ステップへのリクエスト/レスポンスボディの追加
+### add network validation ステップへのリクエスト/レスポンスボディの追加
 
 **Network Capture Options**（リクエスト/レスポンスボディのキャプチャ）を有効にした後、**Add network validation** ステップでは、パラメーター `networkRequests` が利用可能になり、実行されたすべてのリクエストが保持されます。各リクエストオブジェクトには、`method`、`statusCode`、`resposeHeaders`、`requestBody`（新しいプロパティ）、`responseBody`（新しいプロパティ）、`headers` などのプロパティがあります。**Add network validation** ステップを追加する際、以下に示すように `requestBody` および/または `responseBody` プロパティを追加できます。
 
@@ -424,7 +424,7 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 fetch および XHR ネットワークのリクエスト/レスポンスボディのみがキャプチャされます。
 :::
 
-### テスト例
+#### テスト例
 
 次のテスト例では、ネットワーク検証ステップでリクエスト/レスポンスボディを使用しています:\
 [https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji)\

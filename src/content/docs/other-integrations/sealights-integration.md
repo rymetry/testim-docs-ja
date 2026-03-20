@@ -21,7 +21,7 @@ Sealights は、個々のテストのコードカバレッジを評価・定量�
 ネイティブモバイルアプリと Salesforce 環境は現在サポートされていません。ただし、Web フレームワークを使用するサービスのモバイルアプリはサポートされています。
 :::
 
-## 前提条件
+### 前提条件
 
 Sealights と Testim の統合でテストを実行する前に、まず以下を行う必要があります:
 
@@ -29,7 +29,7 @@ Sealights と Testim の統合でテストを実行する前に、まず以下�
 
 - AUT（Application Under Test）のフレームワークに基づいて Sealights Agents をセットアップおよび構成する - [Agents: Setup and configuration](https://documentation.tricentis.com/sealights/en/content/sealights/agents_setup_configuration.htm)を参照してください。
 
-## Sealights 統合の設定
+### Sealights 統合の設定
 
 Sealights と Testim の統合を使用する前に、Sealights Agent Token を介して Testim を Sealights に接続する必要があります。このプロセスは 1 回のみ必要です。
 
@@ -57,7 +57,7 @@ Sealights 統合は無料プランのお客様にはご利用いただけませ�
    **Sealights URL**フィールドは、**Sealights Agent Token**に基づいて自動的に入力されます。
 7. **Connect**をクリックします。
 
-## Sealights 統合でテストを実行する
+### Sealights 統合でテストを実行する
 
 Sealights 統合でのテストは、以下の方法で実行できます:
 
@@ -157,7 +157,7 @@ CLI実行中は常に、タグセクションで`Testim`を送信することを
 
 <br />
 
-## 実行されたテストリストとスキップされたテストの表示
+### 実行されたテストリストとスキップされたテストの表示
 
 ## CLI で実行されたテストリストの表示
 

@@ -246,6 +246,13 @@ export const PARITY_SUPPRESSIONS = {
       reason: 'EN <pre> is a readme.io CodeTabs container, not user-facing code (#132)',
     },
   ],
+  'validate-element-text': [
+    {
+      type: 'heading-mismatch',
+      expectedDelta: 1,
+      reason: 'EN has a second H1 "Advanced text validation" which JA represents as H2 (#131)',
+    },
+  ],
 };
 
 export function applySuppressions(issues, slug) {

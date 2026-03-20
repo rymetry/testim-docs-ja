@@ -20,7 +20,7 @@ keywords:
 
 **Test Library** 画面（**Test List -> Tests**）は、テストを管理する場所です。テストはフォルダーに配置できます。現在のプロジェクト内のすべてのフォルダーとテストがこの画面に一覧表示され、以下に説明するように、これらのテストに対してさまざまなアクションを実行できます。
 
-## テストライブラリを表示する
+### テストライブラリを表示する
 
 ![Web Test Library の Test Library 画面](/images/test-management/test-list/e75e02c-2024-11-24_16-39-18.png)
 

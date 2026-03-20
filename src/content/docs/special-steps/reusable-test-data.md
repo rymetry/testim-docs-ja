@@ -30,7 +30,7 @@ Testim のテストデータファイルは、複数テストで使うデータ�
 
 ![再利用可能なテストデータのスクリーンショット](/images/special-steps/reusable-test-data/5ad1c9f-Test_Data_Files.jpg)
 
-## Testim での使い方
+### Testim での使い方
 
 テストデータファイルの利用方法は 3 つあります。
 

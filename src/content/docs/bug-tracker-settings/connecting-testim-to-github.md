@@ -16,11 +16,11 @@ keywords:
   - 不具合管理
 ---
 
-## Testim と GitHub の連携
+### Testim と GitHub の連携
 
 GitHub integration を使うと、Testim から直接 GitHub Issues に bug を報告できます。bug に関する情報は自動的に入力されます。
 
-## Testim を GitHub に接続する
+### Testim を GitHub に接続する
 
 1. `Settings > Bug Tracker` に移動します。
 2. **Github** ロゴをクリックします。

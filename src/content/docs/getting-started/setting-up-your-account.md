@@ -80,7 +80,7 @@ Testim Extension をインストールするには：
 
 無料トライアルアカウントがアクティブ化され、[Testim Extension](/docs/why-do-you-need-testim-extension)のインストールに案内されます。
 
-## 次のステップ
+### 次のステップ
 
 これでテストの作成を開始する準備が整いました！
 

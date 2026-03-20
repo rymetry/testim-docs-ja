@@ -22,7 +22,7 @@ keywords:
 ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 :::
 
-## 削除ステップの作成
+### 削除ステップの作成
 
 :fa-arrow-right:**削除ステップを作成するには:**
 

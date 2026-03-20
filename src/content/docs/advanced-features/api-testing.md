@@ -216,7 +216,7 @@ Key 名またはファイルのどちらかが指定されていない場合、�
 
 設定した key:value のペアは保存され、テスト実行時に API リクエストと一緒に送信されます。
 
-## Cancel a File Upload in Progress
+### Cancel a File Upload in Progress
 
 アップロード中のファイルを途中でキャンセルすることもできます。
 
@@ -230,7 +230,7 @@ Testim がファイルのアップロードをキャンセルし、別のファ�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e25b412-api-testing-7.jpg)
 
-## Replace a File Attachment
+### Replace a File Attachment
 
 既存エントリに添付済みのファイルを別のファイルに差し替えることもできます。
 
@@ -274,35 +274,35 @@ API ステップでは、他のコードステップと同様にパラメータ�
 また、API ステップ内の各入力セクションでは、複雑な式はサポートされません。
 :::
 
-## 送信する HTTP リクエストでのパラメーター利用 {#using-parameters-in-the-sent-http-request}
+### 送信する HTTP リクエストでのパラメーター利用 {#using-parameters-in-the-sent-http-request}
 
 パラメーターは、送信する HTTP リクエストのヘッダー／ボディ／URL に埋め込めます。これらのセクションは純粋な JS で書くと煩雑になるため、Testim ではパラメーターを「二重／三重の波括弧」で簡単に埋め込めるようになっています。
 
-### Body へのパラメーター追加
+#### Body へのパラメーター追加
 
 パラメーターの値をエンコードせずそのまま埋め込みたい場合は、三重波括弧を使います（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/59f09c0-Picture2.png)
 
-### URL へのパラメーター追加
+#### URL へのパラメーター追加
 
 テストの Base URL と同じホストにある API に対して呼び出しを行いたい場合は、URL 全体を記述する代わりに `{{{BASE_URL}}}` パラメーターを使えます。URL フィールドで `{{{BASE_URL}}}` の後ろにパスを続けて入力してください。ここでもパラメーターをエンコードしたくない場合は三重波括弧を使用します（例: `{{{param}}}`）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/753553d-image_5.png)
 
-### Header へのパラメーター追加
+#### Header へのパラメーター追加
 
 ヘッダーにパラメーターを入れる場合も同様で、値をエンコードしたくない場合は `{{{param}}}` のように三重波括弧を使用します。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/82b5c47-image_3.png)
 
-## HTTP レスポンスでのパラメーター利用
+### HTTP レスポンスでのパラメーター利用
 
 Properties パネルで追加したパラメーターは、API ステップ内のコードの関数シグネチャに自動的に追加されます。これにより、レスポンスを処理するコード内でパラメーターを直接利用できます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/eb87221-image_9.png)
 
-## Assertion でのパラメーター利用
+### Assertion でのパラメーター利用
 
 Assertion セクションでも、比較値としてパラメーターをそのまま使用できます。この場合、値には波括弧を付ける必要はありません。
 

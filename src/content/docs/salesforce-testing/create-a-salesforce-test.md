@@ -19,7 +19,7 @@ keywords:
 
 Salesforce テストは、接続された Salesforce 環境に接続し、テストしたいユーザージャーニーを実行します。テストには一連のステップが含まれ、それぞれが Salesforce アプリケーションとの別のインタラクションを表します。
 
-## ステップの種類
+### ステップの種類
 
 テストにステップを追加するには 2 つの方法があります:
 
@@ -31,23 +31,23 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 
 **2 つの方法を組み合わせることが可能です** - 一部のステップを手動で追加してから追加のステップを記録したり、その逆も可能です。
 
-## セットアップステップ
+### セットアップステップ
 
 テストの最初のステップはセットアップステップです。このステップは、テストのベース URL を定義します。デフォルトでは、この URL は、最初に接続した環境に応じて、Salesforce ホームページの一般的な URL（`https://login.salesforce.com`または`https://test.salesforce.com`）のいずれかになります。[Log in](/docs/sfdc-step-login)ステップが、現在のブランチ用に設定した環境に直接移動するため、これを変更する必要はありません。
 
-## ペルソナの選択
+### ペルソナの選択
 
 ペルソナ画面（下の例を参照）では、各ペルソナ（行）に対して、各環境（列）の異なるログイン認証情報を設定できます。Salesforce テストを作成する際、**Salesforce Login ステップ**で自分が定義した任意のペルソナを選択できます。このペルソナには、テストが最初に作成された環境用に設定されたログイン認証情報があります。ただし、後でこのテストの環境を変更する場合（[ブランチの Salesforce 環境の変更](doc:tta-for-salesforce-branch-management#changing-the-salesforce-environment-of-a-branch)を参照）、ペルソナ画面の設定に基づいて、システムが新しく選択された環境の関連認証情報を自動的に割り当てるため、Login ステップで異なるログイン認証情報を選択する必要はありません。したがって、別の環境を使用する場合にテストを書き直す必要はありません。
 
 ![Salesforce ペルソナ設定の表](/images/salesforce-testing/create-a-salesforce-test/89ceae3-personastable.png)
 
-## 前提条件
+### 前提条件
 
 - Testim Extension をダウンロードしてインストールする - [なぜ Testim Extension が必要ですか？](/docs/why-do-you-need-testim-extension)
 - [Salesforce テスト環境を Testim/TTA for Salesforce に接続する](/docs/create-and-manage-test-environments)。
 - [ペルソナを作成する](/docs/create-a-persona-and-add-users)。
 
-## Salesforce テストの作成
+### Salesforce テストの作成
 
 **新しいテストを作成するには:**
 
@@ -215,7 +215,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 </tbody>
 </table>
 
-## 手動ステップの追加
+### 手動ステップの追加
 
 手動ステップは、Salesforce ステップ、事前定義ステップ、または共有ステップのいずれかです。
 
@@ -236,7 +236,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テストで変数を作成する際に、[ベストプラクティス - 簡単なクリーンアップのための変数命名規則](/docs/best-practice-variable-naming-convention-for-easy-cleanup)の手順に従ってください。
 :::
 
-## ステップの記録
+### ステップの記録
 
 レコーダーを使用すると、AUT（テスト対象アプリケーション）とやり取りしながら、ステップを自動的に追加できます。この方法は、Salesforce ステップに含まれていない特定のステップを追加する場合や、環境が高度にカスタマイズされているために Salesforce ステップがサポートされていない場合に特に役立ちます。レコーダーには 2 つの動作モードがあります:
 

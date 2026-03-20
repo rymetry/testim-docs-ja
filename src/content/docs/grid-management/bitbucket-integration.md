@@ -19,7 +19,7 @@ Bitbucket branch を Testim 上で管理できます。
 
 Bitbucket は、Mercurial または Git revision control system を使う source code と development project のための Atlassian 製 web ベース version control repository hosting service です。Testim の Bitbucket integration を使用すると、Bitbucket で行った version control 操作を Testim 側へ自動で mirror できます。その結果、Testim の test version を Bitbucket 側の version と一致させられます。Bitbucket で作成した branch は、同じ名前で Testim にも自動作成されます。Bitbucket で branch を merge すると、Testim 側の branch も自動で merge されます。Testim branch の詳細は [こちら](/docs/version-control-branches) を参照してください。
 
-## Bitbucket integration を設定する
+### Bitbucket integration を設定する
 
 この手順は一度だけ実行すれば十分です。
 

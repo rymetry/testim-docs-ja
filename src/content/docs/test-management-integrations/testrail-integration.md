@@ -23,7 +23,7 @@ TestRail 統合により、TestRail のテストを Testim のテストにリン
 統合を切断すると、すべてのリンクが失われます。
 :::
 
-## TestRail 統合の設定
+### TestRail 統合の設定
 
 このプロセスは一度だけ必要です。
 
@@ -55,7 +55,7 @@ TestRail 統合により、TestRail のテストを Testim のテストにリン
 一度に 1 つの TMS（テスト管理システム）のみ接続できます。Testim システムが既に別の TMS に接続されている場合は、まずその TMS を切断してから TestRail に接続する必要があります。TMS を切断すると、テスト間の接続が削除されることに注意してください。そのため、以前の TMS に再度接続する場合は、接続も再作成する必要があります。
 :::
 
-## Testim のテストを TestRail のテストに接続する
+### Testim のテストを TestRail のテストに接続する
 
 1. TestRail のテストに接続したいテストを開きます。
 2. Setup ステップの **Properties（プロパティ）** パネルで、TestRail プロジェクトと接続するテストを選択します。
@@ -65,7 +65,7 @@ TestRail 統合により、TestRail のテストを Testim のテストにリン
 
 ![Testim のテストを TestRail に接続する操作](/images/test-management-integrations/testrail-integration/7ad9ed6-Oct-14-2021_13-09-56.gif)
 
-## 特定の実行に TestRail のカスタムパラメーターを渡す
+### 特定の実行に TestRail のカスタムパラメーターを渡す
 
 CLI 実行の一部として、TestRail で使用できるカスタムパラメーターを追加できます。例:
 
@@ -87,7 +87,7 @@ JSON は以下の形式にする必要があります:
 --tms-field-file [tms-field-file.json]
 ```
 
-## 注意事項
+### 注意事項
 
 1. Testim の実行名は常に以下の規則に従います: "Report from Testim.io - *Suite\Test name*"
 2. リモート実行の結果のみが TestRail に表示されます（ローカル実行は表示されません）。

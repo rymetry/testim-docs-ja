@@ -18,7 +18,7 @@ keywords:
 
 Testim for Salesforce ブランチ管理機能は、一般的な Testim ブランチ管理機能と似ていますが、いくつかの主要な違いがあります。一般的な Testim ブランチ管理の詳細については、[ブランチ管理](/docs/version-control-branches)を参照してください。
 
-## Testim for Salesforce ブランチの使用
+### Testim for Salesforce ブランチの使用
 
 * 開始点として、各プロジェクトは単一の「main」ブランチで構成されています。
 * 追加のブランチを作成し、いつでもブランチを切り替えて、ブランチ内のテストを好きなように変更できます。1 つのブランチでの変更は、他のブランチには影響しません。新しいブランチを作成するには、[ブランチの作成](/docs/tta-for-salesforce-branch-management#creating-a-branch)を参照してください。ブランチを切り替えるには、[ブランチの切り替え](/docs/version-control-branches#switching-branches)を参照してください。

@@ -18,7 +18,7 @@ keywords:
 
 **Shared Steps Library** 画面（**Test List -> Shared Steps**）は、[共有ステップ](/docs/shareable-steps) を管理する場所です。共有ステップはフォルダーに配置できます。現在のプロジェクト内のすべての共有ステップがこの画面に一覧表示され、以下に説明するように、これらの共有ステップに対してさまざまなアクションを実行できます。
 
-## 共有ステップライブラリを表示する
+### 共有ステップライブラリを表示する
 
 ![Shared Steps Library 画面に共有ステップとフォルダーの一覧が表示された画面](/images/test-management/shared-steps-library/45778d1-Testim_055.png)
 

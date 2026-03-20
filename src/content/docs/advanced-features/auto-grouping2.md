@@ -30,7 +30,7 @@ Auto grouping は、プロジェクト全体のテストから同じステップ
 
 Auto Grouping 画面には、他のテストやグループと重複しているステップ列の候補が一覧表示されます。どの候補を共有グループに変換するかを確認し、採用した候補は新しいブランチ上で保存されます。ブランチ内の変更をレビューしてから master ブランチへマージできます。
 
-## 重複レベルスコア（Duplication level scoring）
+### 重複レベルスコア（Duplication level scoring）
 
 重複レベルスコアは、プロジェクト内にどれだけ重複したステップが残っているかを 0〜100 の数値で表します。スコアが高いほど重複が多い状態です。自動グルーピングの候補を適用していくと、このスコアを下げて重複を減らせます。
 
@@ -40,7 +40,7 @@ Auto Grouping 画面には、他のテストやグループと重複している
 * **Yellow** – 中程度の重複あり。自動グルーピングの適用を推奨
 * **Red** – 重複が多い状態。自動グルーピングの適用が強く推奨されます
 
-## 自動グルーピング候補の確認（Reviewing auto-grouping suggestion）
+### 自動グルーピング候補の確認（Reviewing auto-grouping suggestion）
 
 **自動グルーピング候補を確認するには:**
 
@@ -93,7 +93,7 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/52cf745-Screen_Shot_2020-12-06_at_11.45.31.png)
 
-## 自動グルーピング候補のフィルタリング（Filtering auto-grouping suggestions）
+### 自動グルーピング候補のフィルタリング（Filtering auto-grouping suggestions）
 
 自動グルーピング候補が多い場合は、条件で絞り込むことができます。
 
@@ -121,7 +121,7 @@ Auto Grouping 画面には、他のテストやグループと重複している
 4. **Number of Steps** で、重複ステップ数の範囲を指定したい場合は **Min. Steps** と **Max Steps** を入力します。
 5. **Apply** をクリックしてフィルターを適用します。
 
-## 自動グルーピング候補のソート（Sorting auto-grouping suggestions）
+### 自動グルーピング候補のソート（Sorting auto-grouping suggestions）
 
 同じ画面で候補の並び順も変更できます。
 
@@ -136,7 +136,7 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/dde76be-Screen_Shot_2021-02-28_at_10.17.23.png)
 
-## 候補から共有グループを作成する（Creating the shared group based on the suggestion）
+### 候補から共有グループを作成する（Creating the shared group based on the suggestion）
 
 **候補から共有グループを作成するには:**
 

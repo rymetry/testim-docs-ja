@@ -97,7 +97,7 @@ Smart Locators は各テスト実行で学習します。一部の属性が変�
 
 時間の経過とともに、アプリが変化するにつれて、要素のロケータースコアが低下する可能性があります。ロケータースコアが 70% を下回ると、Testim は自動的にそのロケーターを改善してテストの安定性を向上させようとします。詳細については、[Locators: Auto Improve](/docs/locators-auto-improve) を参照してください。
 
-## 次のステップ
+### 次のステップ
 
 - [Testim Visual Editor で初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
 - [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

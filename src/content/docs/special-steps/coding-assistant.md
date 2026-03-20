@@ -91,29 +91,29 @@ Copilot コーディングアシスタントは、以下のステップで用い
          * **Paste code at cursor** – 挿入したい位置にカーソルを置き、**Paste code at cursor** をクリックして生成コードをその位置に挿入します。
          * **Copy code** – **Copy code** ボタンをクリックして生成コードをコピーし、任意の場所に貼り付けます。
 
-## 使用例
+### 使用例
 
 利用できるプロンプト例:
 
-## ページ URL を検証するコードを生成
+### ページ URL を検証するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/485092a-1.png)
 
 ページ URL が指定の正規表現に一致するか検証するカスタム検証ステップで使用します。
 
-## チェックボックス選択を検証するコードを生成
+### チェックボックス選択を検証するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/95f3895-2.png)
 
 特定のチェックボックスが選択済みか判定するカスタム条件で使用します。クリック前に未選択であることを確認する用途など。
 
-## リッチテキストエディターに文字入力するコードを生成
+### リッチテキストエディターに文字入力するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/c28ca84-image.png)
 
 Set text ステップで入力できないリッチテキストエディター要素へ文字列を入力するためのコードです。
 
-## 3 つのパラメーター値を比較するコードを生成
+### 3 つのパラメーター値を比較するコードを生成
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/417615e-image_1.png)
 
