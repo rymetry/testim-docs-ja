@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1408 768" role="img" aria-labelledby="title desc">
+  <title id="title">TESTIM DOCS JA logo</title>
+  <desc id="desc">Brand-ready SVG logo with editable text layers and centralized color tokens for Testim Docs JA.</desc>
+  <defs>
+    <linearGradient id="brand-icon-gradient" x1="514" y1="492" x2="895" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="var(--brand-blue-900, #001F7A)"/>
+      <stop offset="55%" stop-color="var(--brand-blue-600, #0A66C2)"/>
+      <stop offset="100%" stop-color="var(--brand-blue-400, #1EA0FF)"/>
+    </linearGradient>
+    <style>
+      :root {
+        --brand-blue-900: #001F7A;
+        --brand-blue-600: #0A66C2;
+        --brand-blue-400: #1EA0FF;
+        --brand-navy-700: #0E426F;
+        --brand-navy-900: #0A243B;
+      }
+      .wordmark {
+        fill: var(--brand-navy-700, #0E426F);
+        font-family: "Avenir Next", Montserrat, Poppins, "Helvetica Neue", Arial, sans-serif;
+        text-anchor: middle;
+        font-weight: 500;
+      }
+      .title {
+        font-size: 82px;
+        letter-spacing: 1px;
+      }
+      .subtitle {
+        fill: var(--brand-navy-900, #0A243B);
+        font-size: 37px;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+      }
+    </style>
+  </defs>
+  <metadata>
+    Color tokens:
+    --brand-blue-900: #001F7A
+    --brand-blue-600: #0A66C2
+    --brand-blue-400: #1EA0FF
+    --brand-navy-700: #0E426F
+    --brand-navy-900: #0A243B
+
+    Editable groups:
+    #icon = symbol mark
+    #text-title = primary wordmark text
+    #text-subtitle = secondary descriptor text
+  </metadata>
+
+  <g id="icon" fill="url(#brand-icon-gradient)">
+    <path id="gear-check" d="M 715.00 491.50 L 692.00 491.50 L 676.00 488.50 L 672.50 484.00 L 665.50 451.00 L 639.00 440.50 L 629.00 434.50 L 626.00 433.50 L 620.00 436.50 L 595.00 453.50 L 588.00 452.50 L 578.00 444.50 L 560.50 427.00 L 551.50 415.00 L 552.50 408.00 L 570.50 380.00 L 569.50 375.00 L 560.50 358.00 L 555.50 341.00 L 552.00 338.50 L 519.00 330.50 L 515.50 327.00 L 513.50 316.00 L 513.50 285.00 L 516.50 273.00 L 523.00 269.50 L 553.00 262.50 L 556.50 258.00 L 561.50 241.00 L 570.50 223.00 L 553.50 197.00 L 550.50 190.00 L 551.50 185.00 L 557.50 177.00 L 576.00 158.50 L 591.00 147.50 L 598.00 149.50 L 625.00 167.50 L 646.00 157.50 L 662.00 152.50 L 665.50 150.00 L 672.50 116.00 L 678.00 111.50 L 695.00 109.50 L 712.00 109.50 L 732.00 112.50 L 735.50 117.00 L 742.50 151.00 L 762.00 157.50 L 781.00 167.50 L 791.00 162.50 L 813.00 147.50 L 817.00 147.50 L 817.50 151.00 L 766.00 208.50 L 748.00 199.50 L 730.00 193.50 L 708.00 190.50 L 687.00 191.50 L 664.00 197.50 L 651.00 203.50 L 633.00 215.50 L 618.50 230.00 L 607.50 246.00 L 599.50 263.00 L 593.50 289.00 L 593.50 314.00 L 597.50 333.00 L 607.50 356.00 L 615.50 368.00 L 629.00 382.50 L 646.00 395.50 L 662.00 403.50 L 677.00 408.50 L 696.00 411.50 L 712.00 411.50 L 734.00 407.50 L 750.00 401.50 L 767.00 391.50 L 786.50 374.00 L 801.50 353.00 L 809.50 334.00 L 813.50 315.00 L 813.50 288.00 L 810.50 273.00 L 842.00 237.50 L 845.50 240.00 L 851.50 259.00 L 854.00 262.50 L 886.00 269.50 L 891.00 273.50 L 893.50 280.00 L 894.50 290.00 L 894.50 313.00 L 891.50 328.00 L 884.00 332.50 L 854.00 339.50 L 851.50 343.00 L 845.50 362.00 L 837.50 377.00 L 839.50 385.00 L 855.50 409.00 L 854.50 418.00 L 843.50 431.00 L 826.00 447.50 L 817.00 453.50 L 810.00 452.50 L 782.00 433.50 L 759.00 444.50 L 743.00 449.50 L 734.50 485.00 L 729.00 489.50 L 715.00 491.50 Z M 708.00 362.50 L 697.00 362.50 L 688.00 358.50 L 634.50 304.00 L 631.50 298.00 L 630.50 288.00 L 635.50 275.00 L 641.00 269.50 L 649.00 265.50 L 663.00 265.50 L 672.00 270.50 L 702.00 301.50 L 846.00 137.50 L 859.00 131.50 L 869.00 132.50 L 877.00 136.50 L 883.50 143.00 L 886.50 151.00 L 886.50 164.00 L 881.50 174.00 L 724.50 351.00 L 718.00 357.50 L 708.00 362.50 Z" fill-rule="evenodd"/>
+  </g>
+
+  <g id="wordmark" class="wordmark">
+    <text id="text-title" class="title" x="704" y="605">TESTIM DOCS JA</text>
+    <text id="text-subtitle" class="subtitle" x="704" y="664">Unofficial Japanese Translation</text>
+  </g>
+</svg>
