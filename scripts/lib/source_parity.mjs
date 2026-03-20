@@ -144,7 +144,9 @@ export function extractFromHtml(html) {
   const h2Count = (html.match(/<h2[\s>]/gi) || []).length;
   const h3Count = (html.match(/<h3[\s>]/gi) || []).length;
   const imgCount = (html.match(/<img[\s>]/gi) || []).length;
-  const codeBlockCount = (html.match(/<pre[\s>]/gi) || []).length;
+  const codeBlockCount = (html.match(/<pre[\s>][\s\S]*?<\/pre>/gi) || [])
+    .filter((block) => block.replace(/<[^>]*>/g, '').trim().length > 0)
+    .length;
   const calloutCount = (html.match(/class="[^"]*callout[^"]*"/gi) || []).length;
 
   return { h2Count, h3Count, imgCount, codeBlockCount, calloutCount };
@@ -235,6 +237,13 @@ export const PARITY_SUPPRESSIONS = {
       type: 'image-mismatch',
       expectedDelta: 9,
       reason: 'EN embeds 9 SVG card icons; JA uses text links (#115)',
+    },
+  ],
+  'pull-requests': [
+    {
+      type: 'codeblock-mismatch',
+      expectedDelta: 1,
+      reason: 'EN <pre> is a readme.io CodeTabs container, not user-facing code (#132)',
     },
   ],
 };
