@@ -25,6 +25,11 @@ type DocsLayoutProps = {
 
 const { title, description, hero, navSections, currentSlug, headings } = Astro.props as DocsLayoutProps;
 
+const siteTitle = 'Tricentis Testim ユーザー制作日本語翻訳ドキュメント';
+const pageTitle = `${title} | ${siteTitle}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const ogImageUrl = new URL('/og-image.png', Astro.site ?? Astro.url);
+
 const GTM_ID = 'GTM-MVHF4WN9';
 
 const gtmHeadCode = `
@@ -49,9 +54,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} | Tricentis Testim ユーザー制作日本語翻訳ドキュメント</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl.href} />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl.href} />
+    <meta property="og:image" content={ogImageUrl.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:site_name" content={siteTitle} />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl.href} />
     <Font cssVariable="--font-noto-sans-jp" preload />
     <Fragment set:html={gtmHeadCode} />
   </head>
@@ -59,8 +80,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <Fragment set:html={gtmBodyCode} />
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
       <div class="mx-auto flex w-full max-w-screen-2xl flex-col items-stretch gap-3 px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
-        <a href="/" class="flex w-full items-center gap-3 sm:w-auto">
-          <img src="/logo.svg" alt="Testim Docs Logo" class="h-9 w-9 rounded-xl shadow-inner" />
+        <a href="/" class="flex w-full items-center gap-2.5 sm:w-auto">
+          <img src="/logo.svg" alt="Testim Docs JA" class="h-8 w-8 shrink-0" />
           <p class="text-sm font-semibold tracking-wide text-slate-800">
             Tricentis Testim ユーザー制作日本語翻訳ドキュメント
           </p>
@@ -155,20 +176,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <footer class="border-t border-slate-200 bg-white py-6">
       <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6">
         <div class="flex flex-col gap-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <div class="flex flex-col gap-1">
-            <p class="font-medium text-slate-700">
-              &copy; 2025 Tricentis Testim ユーザー制作日本語翻訳ドキュメント
-            </p>
-            <p class="text-slate-400">
-              このサイトは <a
-                href="https://help.testim.io/docs/testim-overview"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-blue-600 underline decoration-blue-200 hover:text-blue-700"
-              >
-                Tricentis Testim Docs（公式ドキュメント）
-              </a> のユーザー制作日本語翻訳ドキュメントです
-            </p>
+          <div class="flex items-start gap-3">
+            <img src="/logo.svg" alt="" class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+            <div class="flex flex-col gap-1">
+              <p class="font-medium text-slate-700">
+                &copy; 2025 Tricentis Testim ユーザー制作日本語翻訳ドキュメント
+              </p>
+              <p class="text-slate-400">
+                このサイトは <a
+                  href="https://help.testim.io/docs/testim-overview"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-blue-600 underline decoration-blue-200 hover:text-blue-700"
+                >
+                  Tricentis Testim Docs（公式ドキュメント）
+                </a> のユーザー制作日本語翻訳ドキュメントです
+              </p>
+            </div>
           </div>
         </div>
       </div>
