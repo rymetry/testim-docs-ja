@@ -58,6 +58,7 @@ console.log('⚙️  Output mode:', isAuthEnabled ? 'server (SSR)' : 'static');
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://testim-docs-ja.vercel.app',
   output: isAuthEnabled ? 'server' : 'static',
   // Vercel adapterは常に必要（staticでも.vercel/output生成に必須）
   adapter: vercel({}),
