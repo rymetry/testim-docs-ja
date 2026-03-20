@@ -158,6 +158,8 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 Testim は Expected Value 入力フィールドでの Regex をサポートしています。よく使われるケースを以下に示します：
 
+![Regex を使ったテキスト検証](/images/validations/validate-element-text/6ce7739-Ijhqz8PAQMODiuaQYwVv_text-validation-regex.png)
+
 #### 前方一致（Starts with）
 
 特定の単語で*始まる*テキストを検証します。残りのテキストが動的であっても検証をパスします：
@@ -222,6 +224,8 @@ new RegExp("^" + "((?!" + param1 + ").)*$")
 - [RegularExpressions 101](https://regex101.com/) は正規表現の作成とテストに役立つツールです。
 
 ### JavaScript 式を使った検証
+
+![JavaScript 式を使った検証](/images/validations/validate-element-text/b1662ca-Screen_Shot_2021-04-18_at_7.06.47.png)
 
 テキストが JavaScript 式の計算結果と等しいことを検証したい場合があります。例えば、テキストに現在の日付が表示されていることを確認するには、**Expected Value** に次の式を設定します：`new Date().toDateString()`。Testim はこの式の計算結果と要素のテキストを比較します。
 

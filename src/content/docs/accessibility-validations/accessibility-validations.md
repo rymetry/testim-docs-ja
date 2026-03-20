@@ -88,6 +88,8 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 右側にプロパティパネルが開きます。
 
+![プロパティパネル](/images/accessibility-validations/accessibility-validations/04ae060-Screen_Shot_2021-12-16_at_9.42.42.png)
+
 8. 以下の説明に従ってプロパティを設定します。
 
    - **Description** – ステップの説明。（デフォルト = Page accessibility validation）

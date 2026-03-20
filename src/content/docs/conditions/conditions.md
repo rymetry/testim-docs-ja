@@ -151,7 +151,11 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 
 Custom 条件は、単純な要素の可視性チェックを超えた、複雑な条件を JavaScript で記述できます。パラメーター（HTML 要素または JavaScript の値）を定義し、条件式内で参照することが可能です。
 
-例: `return loginButton.innerText === 'LOG IN';`
+例:
+
+```javascript
+return loginButton.innerText === 'LOG IN';
+```
 
 :::note
 Custom 条件はブール値を返します。`true` を返すとステップが実行され、`false` を返すとスキップされます。
