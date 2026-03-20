@@ -10,7 +10,7 @@ const docs = defineCollection({
     category: z.string(),
     order: z.number().default(0),
     updated: z.string(),
-    sourceUrl: z.string().url(),
+    sourceUrl: z.url(),
     hero: z
       .object({
         eyebrow: z.string().optional(),
@@ -19,13 +19,13 @@ const docs = defineCollection({
         primaryCta: z
           .object({
             label: z.string(),
-            href: z.string().url(),
+            href: z.url(),
           })
           .optional(),
         secondaryCta: z
           .object({
             label: z.string(),
-            href: z.string().url(),
+            href: z.url(),
           })
           .optional(),
       })
