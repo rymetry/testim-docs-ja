@@ -184,7 +184,7 @@ export function buildStructuralIssues(englishStats, japaneseStats) {
   const issues = [];
 
   const headingDelta = Math.abs(englishStats.h2Count - japaneseStats.h2Count);
-  if (headingDelta >= 2) {
+  if (headingDelta >= 1) {
     issues.push(
       withSeverity({
         type: 'heading-mismatch',
@@ -195,7 +195,7 @@ export function buildStructuralIssues(englishStats, japaneseStats) {
   }
 
   const imageDiff = englishStats.imgCount - japaneseStats.imgCount;
-  if (imageDiff >= 3) {
+  if (imageDiff >= 1) {
     issues.push(
       withSeverity({
         type: 'image-mismatch',
@@ -206,7 +206,7 @@ export function buildStructuralIssues(englishStats, japaneseStats) {
   }
 
   const codeBlockDiff = englishStats.codeBlockCount - japaneseStats.codeBlockCount;
-  if (codeBlockDiff >= 2) {
+  if (codeBlockDiff >= 1) {
     issues.push(
       withSeverity({
         type: 'codeblock-mismatch',
