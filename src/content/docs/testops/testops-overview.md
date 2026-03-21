@@ -29,7 +29,7 @@ keywords:
 ## TestOps - 制御、管理、インサイトでテストをスケールさせる
 
 TestOps は、自動化イニシアチブを効率的かつ効果的にスケールさせるために設計された、Testim Automate 内の一連の機能です。TestOps は、ユーザーが制御を確立および維持し、組織と管理を改善し、増大する複雑さを解きほぐすのに役立つインサイトを得るのを支援します。
-TestOps の機能は 3 つのカテゴリに整理されています。
+TestOps の機能は 3 つのカテゴリに整理されています。[Merging Branches](/docs/merging-branches)
 
 ### 制御
 

@@ -161,7 +161,13 @@ return loginButton.innerText === 'LOG IN';
 Custom 条件はブール値を返します。`true` を返すとステップが実行され、`false` を返すとスキップされます。
 :::
 
-**HTML パラメーターの前提条件**: AUT を開く必要があります。ステップの左にある矢印にカーソルを合わせ、**Toggle Breakpoint** をクリックし、**Play Scenario** をクリックしてください。
+:::warning
+ステップ 5（下記）で HTML 要素をパラメーターとして定義する場合は、まず AUT を開く必要があります。
+
+1. ステップの左にある **>（矢印）** にカーソルを合わせます。
+2. **Toggle Breakpoint** をクリックします。
+3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
+:::
 
 ![Custom 条件設定のデモ](/images/conditions/conditions/12714a6-custom_condition2.gif)
 
@@ -188,17 +194,20 @@ Custom 条件はブール値を返します。`true` を返すとステップが
 
 6. 関数テキストボックスに、定義したパラメーターを参照する JavaScript 条件を入力します。
 
-![JavaScript 条件の入力](/images/conditions/conditions/4df6f82-custom6_r.png)
-
-7. デフォルトのタイムアウト（30000ms）を変更する場合は、**Override timeout** ボタンをクリックします。
-8. 戻る矢印をクリックして、メインの Editor ウィンドウに戻ります。
-9. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
-
 :::note
 jQuery などの DOM セレクター（HTML パラメーターではなく）を使用する場合、空の配列は truthy として評価されます。`$(<query>)` ではなく `$(<query>).length` を使用してください。
 :::
 
-AUT を開いた場合は、**Toggle Breakpoint** をクリックしてブレークポイントを解除してください。
+7. デフォルトのタイムアウト（30000ms）を変更する場合は、**Override timeout** ボタンをクリックします。
+8. 戻る矢印をクリックして、メインの Editor ウィンドウに戻ります。
+
+![メインエディターに戻る](/images/conditions/conditions/4df6f82-custom6_r.png)
+
+9. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
+
+:::warning
+AUT を開いて HTML 要素をパラメーターとして定義した場合は、グループステップの前の **Toggle Breakpoint** をクリックしてブレークポイントを解除してください。
+:::
 
 ### Custom 条件を試してみましょう
 

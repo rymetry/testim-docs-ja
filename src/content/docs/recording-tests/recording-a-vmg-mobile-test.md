@@ -188,5 +188,6 @@ Add CLI action および/または Add API action ステップを使用してカ
 - [Generate date](/docs/generating-a-date) - 事前定義されたプロパティに従って日付を生成します。
 - **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。通常、次回実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
 - **Back** - Back ボタンステップを作成し、デバイスに戻るコマンドを送信します。Android のみでサポートされています。
+- **Home** - デバイスにホームコマンドを送信します。
 - **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
 - [Execute Driver Script Step (mobile)](/docs/custom-action-step-mobile) - Execute Driver Script ステップを使用すると、拡張機能と検証のために Appium 2.0 以上を使用してスクリプトを実行できます。

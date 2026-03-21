@@ -20,6 +20,8 @@ keywords:
 
 Testim の新しい Enhanced mode は、Appium ベースのテストと比較して、より安定、高速、多用途なテストを提供します。ゼロナレッジアプローチと統合 API により、新しい Enhanced mode は市場の他のツールよりもモバイルビューの構造をよく把握します。この追加の可視性により、クロスプラットフォーム（React Native、Flutter）やハイブリッドアプリなど、Appium などの他のプラットフォームでは不可能なテストフローが可能になります。Enhanced mode は、柔軟で高速かつ使いやすいクラウド内の仮想モバイルグリッドで、すべてのモバイルアプリケーション（ネイティブ、ハイブリッド、またはクロスプラットフォームフレームワーク）のテストをサポートします。
 
+![モバイルテストのセットアップ](/images/overview/enhanced-mode-mobile/26cb526-mobile-test-setup.png)
+
 :::note
 Enhanced mode は現在 VMG（仮想モバイルグリッド）でのみ利用可能です。ローカルデバイス、物理デバイス、または別のグリッドでテストする場合は、Standard Appium モードを選択してください。
 :::
@@ -54,8 +56,6 @@ Enhanced mode は、ネイティブまたはハイブリッドを含む、ほと
 ### テスト記録
 
 テストを記録する際、Enhanced mode がデフォルト/優先モバイルテスト方法として選択されます。Standard Appium 互換モードを選択することもできます。Enhanced mode を使用して記録されたテストは VMG でのみ実行されます。
-
-![モバイルテストのセットアップ](/images/overview/enhanced-mode-mobile/26cb526-mobile-test-setup.png)
 
 ### テストスケジューリング
 

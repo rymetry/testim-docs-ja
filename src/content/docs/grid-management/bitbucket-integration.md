@@ -1,5 +1,5 @@
 ---
-title: Bitbucket Integration
+title: Bitbucket 統合
 description: >-
   Bitbucket repository と Testim branch を自動で mirror する Bitbucket
   integration の有効化手順と、branch / Pull Request / merge の挙動を説明します。

@@ -35,26 +35,26 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 1. **Settings（設定）** > **Integration（統合）** タブに移動します。**General** の下に様々な統合モジュールがあります。
 2. qTest 統合モジュールで、**Login** をクリックします。
 
-![qTest 統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/4758c86-image.png)
+![qTest 統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/dbe2722-image_3.png)
 
 3. qTest を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、Testim の **URL** フィールドに貼り付けます。URL 構造: `https://<プロジェクト名>.qtestnet.com/`。`プロジェクト名` は qTest の URL で確認できます。例: `myProject`。
 
-![qTest の URL 入力例](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
+![qTest の URL 入力例](/images/test-management-integrations/qtest-integration/761db53-image_4.png)
 
 4. Testim の **Username** フィールドに、qTest のユーザー名を入力します。
 5. **Admin** ユーザーとして **qTest** にログインし、**Resources**（下矢印）をクリックします。
 
-![qTest の Resources メニュー](/images/test-management-integrations/qtest-integration/103f85c-image_2.png)
+![qTest の Resources メニュー](/images/test-management-integrations/qtest-integration/64df5b6-image_5.png)
 
 6. **Resources** 画面で、**API & SDK** メニューを開きます。
 
-![qTest の API & SDK メニュー](/images/test-management-integrations/qtest-integration/dbe2722-image_3.png)
+![qTest の API & SDK メニュー](/images/test-management-integrations/qtest-integration/9721b13-image_6.png)
 
 7. qTest から **Bearer Token** をコピーし、Testim の **ApiKey** フィールドに貼り付けます。
 8. Testim で **Connect** をクリックします。
 9. Testim で、接続する qTest プロジェクトをリストから選択します。
 
-![qTest プロジェクトの選択画面](/images/test-management-integrations/qtest-integration/761db53-image_4.png)
+![qTest プロジェクトの選択画面](/images/test-management-integrations/qtest-integration/dfaf629-image_7.png)
 
 この時点で、Testim は qTest のプロジェクトに接続されましたが、特定のテストには接続されていません。
 
@@ -72,7 +72,7 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 2. テスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
 3. Setup ステップの **Properties（プロパティ）** パネルで、**Test in qTest** の下から、最初のドロップダウンメニューで qTest プロジェクトを選択し、次に 2 番目のドロップダウンメニューで特定のテストを選択します。
 
-![Setup ステップの Properties パネルで qTest テストを選択する画面](/images/test-management-integrations/qtest-integration/64df5b6-image_5.png)
+![Setup ステップの Properties パネルで qTest テストを選択する画面](/images/test-management-integrations/qtest-integration/103f85c-image_2.png)
 
 4. **Save** をクリックします。
 
@@ -80,7 +80,7 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 qTest のテストケースは、最初の接続時に「approved」ステータスである必要があります。
 :::
 
-![qTest テストケースの承認ステータス](/images/test-management-integrations/qtest-integration/9721b13-image_6.png)
+![qTest テストケースの承認ステータス](/images/test-management-integrations/qtest-integration/3a5c5d0-Screenshot_at_Jun_01_13-36-04.png)
 
 ## テストの実行と qTest での Testim テスト結果の表示
 
@@ -95,13 +95,13 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 1. qTest Manager で、**Test Executions** に移動します。
 2. ナビゲーションペインで、関連する実行をクリックします。以下の画面が表示されます:
 
-![qTest Manager の Test Executions 画面](/images/test-management-integrations/qtest-integration/dfaf629-image_7.png)
+![qTest Manager の Test Executions 画面](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 
 右下のペインに、実行のリストが表示されます。`ID` 列は qTest のテスト ID を表します。`Status` 列は Testim からのテスト実行結果を表示します。
 
 3. **ID** をクリックしてテストの詳細を表示します。以下の画面が表示されます:
 
-![qTest でのテスト実行詳細画面](/images/test-management-integrations/qtest-integration/3a5c5d0-Screenshot_at_Jun_01_13-36-04.png)
+![qTest でのテスト実行詳細画面](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
 
 以下の詳細が Testim から qTest にプッシュされます:
 

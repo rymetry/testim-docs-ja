@@ -136,6 +136,8 @@ Smart Locators の属性を編集することは一般的に推奨されませ�
 
    ロケーターパネルが開き、Testim の AI によって決定されたターゲット要素と関連する親要素が表示されます。
 
+   ![ロケーターパネル全体](/images/steps-editing-tests/editing-target-element-properties/dcaeb9b-Testim_Editing_Tests_029a.png)
+
 3. 要素の横にある下矢印をクリックすると、Smart Locators と AI が割り当てた重みが表示されます。
 
    要素を定義する属性/セレクタのリストが表示されます。チェックマークは、ロケーターがアクティブであることを示します。各属性の横にある塗りつぶされた星の数は、AI がその属性に割り当てた相対的な重みを表します。重みが高いほど、AI はそれを考慮します。

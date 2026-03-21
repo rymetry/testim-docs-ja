@@ -47,7 +47,7 @@ keywords:
     Add custom validation
    </td>
    <td>
-    カスタム検証とアクションを追加
+    <a href="/docs/custom-code">カスタム検証とアクションを追加</a>
    </td>
   </tr>
   <tr>
@@ -55,7 +55,7 @@ keywords:
     Add CLI validation
    </td>
    <td>
-    CLI ステップを追加
+    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -63,7 +63,7 @@ keywords:
     Validate download
    </td>
    <td>
-    ダウンロード検証ステップを追加
+    <a href="/docs/validate-download#validate-download-ステップの追加">ダウンロード検証ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -71,7 +71,7 @@ keywords:
     Validate email
    </td>
    <td>
-    メール検証
+    <a href="/docs/email-validation">メール検証</a>
    </td>
   </tr>
   <tr>
@@ -79,7 +79,7 @@ keywords:
     Validate element visible
    </td>
    <td>
-    要素が表示されているか検証
+    <a href="/docs/validate-element-visible">要素が表示されているか検証</a>
    </td>
   </tr>
   <tr>
@@ -87,7 +87,7 @@ keywords:
     Validate element not visible
    </td>
    <td>
-    要素が表示されていないか検証
+    <a href="/docs/validate-element-not-visible">要素が表示されていないか検証</a>
    </td>
   </tr>
   <tr>
@@ -95,7 +95,7 @@ keywords:
     Validate element text
    </td>
    <td>
-    要素のテキストを検証
+    <a href="/docs/validate-element-text">要素のテキストを検証</a>
    </td>
   </tr>
   <tr>
@@ -103,7 +103,7 @@ keywords:
     Validate CSS property
    </td>
    <td>
-    CSS プロパティを検証
+    <a href="/docs/css-property-validation">CSS プロパティを検証</a>
    </td>
   </tr>
   <tr>
@@ -111,7 +111,7 @@ keywords:
     Validate HTML attribute
    </td>
    <td>
-    HTML 属性を検証
+    <a href="/docs/html-attribute-validation">HTML 属性を検証</a>
    </td>
   </tr>
   <tr>
@@ -119,7 +119,7 @@ keywords:
     Validate checkbox
    </td>
    <td>
-    チェックボックス/ラジオボタンを検証
+    <a href="/docs/checkbox-and-radio-button-validation">チェックボックス/ラジオボタンを検証</a>
    </td>
   </tr>
   <tr>
@@ -127,7 +127,7 @@ keywords:
     Validate radio button
    </td>
    <td>
-    チェックボックス/ラジオボタンを検証
+    <a href="/docs/checkbox-and-radio-button-validation">チェックボックス/ラジオボタンを検証</a>
    </td>
   </tr>
   <tr>
@@ -135,7 +135,7 @@ keywords:
     Validate API
    </td>
    <td>
-    API 検証
+    <a href="/docs/api-testing#validate-api-ステップの追加">API 検証</a>
    </td>
   </tr>
   <tr>
@@ -143,7 +143,7 @@ keywords:
     Validate element visualization
    </td>
    <td>
-    要素のビジュアライゼーションを検証するステップを追加
+    <a href="/docs/validate-element-visualization#要素のビジュアル検証ステップの追加">要素のビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -151,7 +151,7 @@ keywords:
     Validate viewport visualization
    </td>
    <td>
-    ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加
+    <a href="/docs/validate-viewport-visualization#ビューポートのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -159,7 +159,7 @@ keywords:
     Validate full-page visualization
    </td>
    <td>
-    ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加
+    <a href="/docs/validate-full-page-visualization#フルページのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -167,7 +167,7 @@ keywords:
     Validate page accessibility
    </td>
    <td>
-    ページアクセシビリティ検証
+    <a href="/docs/accessibility-validations">ページアクセシビリティ検証</a>
    </td>
   </tr>
   <tr>
@@ -175,7 +175,7 @@ keywords:
     Validate element accessibility
    </td>
    <td>
-    要素アクセシビリティ検証
+    <a href="/docs/element-accessibility-validation">要素アクセシビリティ検証</a>
    </td>
   </tr>
   <tr>
@@ -183,7 +183,7 @@ keywords:
     Add network validation
    </td>
    <td>
-    ネットワーク検証を追加
+    <a href="/docs/add-network-validation">ネットワーク検証を追加</a>
    </td>
   </tr>
  </tbody>
@@ -208,7 +208,7 @@ keywords:
     Add custom wait for
    </td>
    <td>
-    カスタム待機
+    <a href="/docs/wait-for#カスタム待機web">カスタム待機</a>
    </td>
   </tr>
   <tr>
@@ -216,7 +216,7 @@ keywords:
     Add CLI wait for
    </td>
    <td>
-    CLI ステップを追加
+    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -224,7 +224,7 @@ keywords:
     Wait for element visible
    </td>
    <td>
-    要素が表示されるまで待機
+    <a href="/docs/wait-for#要素の表示を待つweb">要素が表示されるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -232,7 +232,7 @@ keywords:
     Wait for element not visible
    </td>
    <td>
-    要素が非表示になるまで待機
+    <a href="/docs/wait-for#要素の非表示を待つweb">要素が非表示になるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -240,7 +240,7 @@ keywords:
     Wait for element text
    </td>
    <td>
-    要素のテキストを待機
+    <a href="/docs/wait-for#要素テキストの表示を待つweb">要素のテキストを待機</a>
    </td>
   </tr>
   <tr>
@@ -248,7 +248,7 @@ keywords:
     Wait for download
    </td>
    <td>
-    ダウンロードを待機
+    <a href="/docs/wait-for#ダウンロード待機web">ダウンロードを待機</a>
    </td>
   </tr>
   <tr>
@@ -256,7 +256,7 @@ keywords:
     Sleep
    </td>
    <td>
-    スリープ
+    <a href="/docs/wait-for#スリープweb">スリープ</a>
    </td>
   </tr>
   <tr>
@@ -264,7 +264,7 @@ keywords:
     Wait for element visualization
    </td>
    <td>
-    要素のビジュアライゼーションを待機するステップを追加
+    <a href="/docs/wait-for-element-visualization#要素のビジュアライゼーション待機ステップの追加">要素のビジュアライゼーションを待機するステップを追加</a>
    </td>
   </tr>
  </tbody>
@@ -289,7 +289,7 @@ keywords:
     Add hover action
    </td>
    <td>
-    ホバーステップ
+    <a href="/docs/hover-step#ホバーした要素への検証の追加">ホバーステップ</a>
    </td>
   </tr>
   <tr>
@@ -297,7 +297,7 @@ keywords:
     Add extract value step
    </td>
    <td>
-    値抽出ステップ
+    <a href="/docs/extract-text">値抽出ステップ</a>
    </td>
   </tr>
   <tr>
@@ -305,7 +305,7 @@ keywords:
     Generate email address
    </td>
    <td>
-    一時的なメールアドレスを生成
+    <a href="/docs/email-validation#generate-email-address-ステップの追加">一時的なメールアドレスを生成</a>
    </td>
   </tr>
   <tr>
@@ -313,7 +313,7 @@ keywords:
     Set Cookie
    </td>
    <td>
-    Cookie を設定
+    <a href="/docs/cookies#cookie-を設定する">Cookie を設定</a>
    </td>
   </tr>
   <tr>
@@ -321,7 +321,7 @@ keywords:
     Get Cookie
    </td>
    <td>
-    Cookie を取得
+    <a href="/docs/cookies#cookie-を取得する">Cookie を取得</a>
    </td>
   </tr>
   <tr>
@@ -329,7 +329,7 @@ keywords:
     Add navigation action
    </td>
    <td>
-    ナビゲーション
+    <a href="/docs/navigation">ナビゲーション</a>
    </td>
   </tr>
   <tr>
@@ -337,7 +337,7 @@ keywords:
     Add custom action
    </td>
    <td>
-    カスタム検証とアクションを追加
+    <a href="/docs/custom-code">カスタム検証とアクションを追加</a>
    </td>
   </tr>
   <tr>
@@ -345,7 +345,7 @@ keywords:
     Add CLI action
    </td>
    <td>
-    CLI ステップを追加
+    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -353,7 +353,7 @@ keywords:
     Add API action
    </td>
    <td>
-    API アクション
+    <a href="/docs/api-testing#adding-an-api-action-step">API アクション</a>
    </td>
   </tr>
   <tr>
@@ -361,7 +361,7 @@ keywords:
     Refresh
    </td>
    <td>
-    ページを更新
+    <a href="/docs/refresh-page">ページを更新</a>
    </td>
   </tr>
   <tr>
@@ -369,7 +369,7 @@ keywords:
     Generate random value
    </td>
    <td>
-    ランダム値を生成
+    <a href="/docs/generating-a-random-value">ランダム値を生成</a>
    </td>
   </tr>
   <tr>
@@ -377,7 +377,7 @@ keywords:
     Generate date
    </td>
    <td>
-    日付を生成
+    <a href="/docs/generating-a-date">日付を生成</a>
    </td>
   </tr>
  </tbody>
