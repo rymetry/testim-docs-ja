@@ -10,7 +10,7 @@
  *   node scripts/snapshot_diff.mjs --json
  */
 
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -55,7 +55,7 @@ function parseArgs(argv = process.argv.slice(2)) {
  */
 function getHeadContent(relativePath) {
   try {
-    return execSync(`git show HEAD:${relativePath}`, {
+    return execFileSync('git', ['show', `HEAD:${relativePath}`], {
       encoding: 'utf8',
       cwd: ROOT_DIR,
       stdio: ['pipe', 'pipe', 'pipe'],
