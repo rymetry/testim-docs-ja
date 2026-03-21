@@ -61,7 +61,7 @@ keywords:
 
 5. **Static Allocation** オプションを選択した場合、**Devices** セクションで、テストで使用したい特定のデバイスのチェックボックスを選択します。このデバイスのリストから、Testim は、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスを選択します。
 
-:::warning{title="注意"}
+:::note{title="注意"}
 複数のデバイスを選択した場合でも、Testim はテスト実行中に使用される 1 つのデバイスのみを選択します。このデバイスは、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスです。
 :::
 
@@ -75,7 +75,7 @@ BrowserStack と SauceLabs では、1 つのデバイスしか選択できませ
    3. **Operand** で、ルールのオペランド値を入力します。正規表現ルールの場合は、正規表現を入力します。\
       現在ルールに一致する選択したグリッドからのデバイスのリストは、以下の **Devices** セクションに表示されます。動的割り当て構成でテストを実行する場合、Testim はルール条件を満たすデバイスのセットから最初に利用可能なデバイスを検索し、そのデバイスをテストに使用します。グリッドプロバイダーがグリッド上のデバイスを更新すると、デバイスは引き続きルールを満たすかどうかに基づいて、構成で自動的に利用可能または利用不可になります。
 
-:::warning{title="注意"}
+:::note{title="注意"}
 SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。
 
 BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/app-automate/appium/dynamic-device-allocation) を参照してください。

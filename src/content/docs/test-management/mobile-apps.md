@@ -57,7 +57,7 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 
 ![アップロード後にモバイルアプリライブラリへ追加されたアプリ](/images/test-management/mobile-apps/4b1abee-appadded.png)
 
-:::warning
+:::note
 デフォルトのアップロードサイズ制限は 150MB です。より大きなファイルをアップロードする必要がある場合は、Testim 管理者に連絡して、ファイルアップロードサイズ制限の引き上げについて相談してください。
 :::
 

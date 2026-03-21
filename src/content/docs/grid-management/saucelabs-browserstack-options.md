@@ -151,5 +151,5 @@ parameter の詳細は、BrowserStack の公式ドキュメントを参照して
 
 :::warning{title="BrowserStack 証明書エラー"}
 Android version 13.0 以上の device でテストしている場合、certificate issue により target device が offline のように見えることがあります。詳細と解決方法は BrowserStack の関連ドキュメントを参照してください。\
-[https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
+[https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
 :::

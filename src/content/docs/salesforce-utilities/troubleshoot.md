@@ -26,10 +26,9 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 
   ![プロファイル設定で REST API を有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
 
-- Salesforce 環境に接続するために選択されたユーザーの権限は:
-  - API アクセス制御が有効になっている場合、「任意の API クライアントを使用」権限。
+- Salesforce 環境に接続する Salesforce アカウントには、**Approve Uninstalled Connected Apps**（インストールされていない接続アプリを承認）権限が必要です。
 
-  - API アクセス制御が有効になっていない場合、「インストールされていない接続アプリを承認」権限。
+- この権限が Sandbox で利用できない場合は、対象の Sandbox 環境で **Match Production Licenses to Sandbox Without a Refresh** ツールを実行してください。
 
 - **設定 > セキュリティ > ネットワークアクセス**で以下の IP アドレスをホワイトリストに登録します。
   - 35.85.13.117

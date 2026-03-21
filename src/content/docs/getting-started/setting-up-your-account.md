@@ -52,11 +52,10 @@ Testim Extension をインストールするには：
 
 アカウントにサインアップするには：
 
-1. サインインウィンドウの下部にある**サインアップ**をクリックします。
-
+1. サインインウィンドウの下部にある**サインアップ**をクリックします。\
    サインアップ画面が表示されます。
 
-![サインアップ画面](/images/getting-started/setting-up-your-account/0b34acc-2024-09-09_15-40-38.png)
+![サインアップ画面](/images/getting-started/setting-up-your-account/fc6e714-image.png)
 
 2. 適切なフィールドに**勤務先メールアドレス**、**国**、**パスワード**を入力します。
 
@@ -64,21 +63,21 @@ Testim Extension をインストールするには：
 **パスワード要件**: パスワードは 8 文字以上で、少なくとも 1 つの数字、1 つの記号を含み、スペースは含まないようにしてください。
 :::
 
-![パスワード入力画面](/images/getting-started/setting-up-your-account/fc6e714-image.png)
-
 3. **I'm not a robot**チャレンジを選択します。
 
 4. **開始**をクリックします。
 
 5. 体験をカスタマイズするために、あなたの役割を選択します。
 
-![役割選択画面](/images/getting-started/setting-up-your-account/317a5ff-2024-09-09_15-41-34.png)
+![役割選択画面](/images/getting-started/setting-up-your-account/0b34acc-2024-09-09_15-40-38.png)
 
 6. Testim を使用したい方法を 1 つ以上選択し、**続行**をクリックします。
 
-![使用方法選択画面](/images/getting-started/setting-up-your-account/c65df4a-2024-09-09_15-42-59.png)
+![使用方法選択画面](/images/getting-started/setting-up-your-account/317a5ff-2024-09-09_15-41-34.png)
 
 無料トライアルアカウントがアクティブ化され、[Testim Extension](/docs/why-do-you-need-testim-extension)のインストールに案内されます。
+
+![アカウントアクティベーション](/images/getting-started/setting-up-your-account/c65df4a-2024-09-09_15-42-59.png)
 
 ## 次のステップ
 

@@ -57,7 +57,7 @@ keywords:
 
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/603ef8c-customaction.png)
 
-:::warning{title="注意"}
+:::note{title="注意"}
 メニュー上部の検索ボックスで Add custom action を検索しても構いません。
 :::
 
@@ -86,7 +86,7 @@ keywords:
 
 <br />
 
-:::warning{title="注意"}
+:::note{title="注意"}
 AUT で要素をパラメーター定義するためにブレークポイントを有効化した場合は、Toggle Breakpoint で解除してください。
 :::
 

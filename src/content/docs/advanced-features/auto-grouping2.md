@@ -21,9 +21,15 @@ keywords:
 テスト内の重複ステップ列を検出し、再利用可能なグループへまとめます。
 
 :::note{title="PRO機能"}
-Professional plan で利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)。  
-自動グルーピングは master ブランチでのみ動作します（状態は毎週末に更新されます）。  
-また、本機能は Web / Mobile Web プロジェクトで利用できます。
+Professional plan で利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)。
+:::
+
+:::note
+自動グルーピングは master ブランチでのみ動作します。他のブランチでは使用できません。自動グルーピングの状態は毎週末に更新されます。
+:::
+
+:::note
+自動グルーピングは Web および Mobile Web プロジェクトでのみ使用できます。
 :::
 
 Auto grouping は、プロジェクト全体のテストから同じステップ列を検出し、共有グループに置き換えることで重複を削減する機能です。テストもコードと同じように DRY（Don't Repeat Yourself）原則を守ることで、メンテナンスが容易になります。グループ内のステップを 1 箇所変更すると、そのグループを使用しているすべてのテストに変更が反映されます。

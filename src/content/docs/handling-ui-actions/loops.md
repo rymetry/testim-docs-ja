@@ -160,10 +160,6 @@ while... do... ループと for ループを使用してステップのグルー
 
 ## 「各項目について」ループの設定
 
-### レッツトライ（各項目について）
-
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/ZWStqQOFst)をクリックして、各項目についてループを含むサンプルテストを開いてください。テストを実行して、ループ構成を調整してみてください。
-
 **各項目について**ループ（つまり for each ループ）を使用すると、類似の要素に対して同じアクション/検証のセットを実行できます。これは、複数の行を持つテーブルなど、繰り返し要素のリストをテストするのに役立ちます。
 
 **「各項目について」ループを設定するには:**
@@ -218,15 +214,11 @@ while... do... ループと for ループを使用してステップのグルー
 
 ![ループアイコン](/images/handling-ui-actions/loops/5d8487f-Testim_Image_033_r.png)
 
-### レッツトライ（〜回ループ）
-
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/ZWStqQOFst)をクリックして、各項目についてループを含むサンプルテストを開いてください。テストを実行して、構成の調整を練習してください。
-
-## 「〜回ループ」ループの設定
-
 ### レッツトライ
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/oojAc9nzab)をクリックして、「数値によるループ」for ループと「パラメーターによるループ」for ループを含むサンプルテストを開いてください。テストを実行して、構成の調整を練習してください。
+[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/ZWStqQOFst)をクリックして、**各項目について**ループを含むサンプルテストを開いてください。テストを実行して、ループ構成を調整してみてください。
+
+## 「〜回ループ」ループの設定
 
 **〜回ループ**ループ（つまり for ループ）を使用すると、指定された回数だけ同じアクション/検証のセットを実行できます。この値は、数値または数値を持つパラメーターに設定できます。
 
@@ -561,8 +553,6 @@ HTML パラメーター以外の DOM セレクタ（例: jQuery）を使用し�
 
 ![ループアイコン](/images/handling-ui-actions/loops/6ad3321-Testim_Loops_Image_002_r.png)
 
-![ループ実行結果](/images/handling-ui-actions/loops/87c8a8a-Testim_Loops_Image_006_r.png)
-
 ### レッツトライ（ループイテレータ）
 
 [こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/klrbUhXahs)をクリックして、「ループイテレータ」が使用されているサンプルテストを開いてください。テストを実行して、構成の調整を練習してください。
@@ -570,6 +560,8 @@ HTML パラメーター以外の DOM セレクタ（例: jQuery）を使用し�
 ## ループ実行結果の表示
 
 テストを実行すると、ループステップが実行された反復回数がループステップのループアイコン内に表示されます。
+
+![ループ実行結果](/images/handling-ui-actions/loops/87c8a8a-Testim_Loops_Image_006_r.png)
 
 各反復を順に確認して、それぞれの結果を個別に見ることができます。
 

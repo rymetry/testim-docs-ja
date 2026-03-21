@@ -160,9 +160,12 @@ afterSuite 関数内では、その実行でエクスポートされたグロー
 
 ```javascript
 exports.config = {
-    afterSuite: function (suite) {
-        console.log("Global export value:", suite.exportsGlobal.<param_name>);
-    }
+  // テスト開始前に実行される関数
+  async beforeTest(test) {
+    const baseUrl = test.config.baseUrl; // 現在のテストのベース URL を取得
+    const randomAddress = await getRandomAddress();
+    test.config.baseUrl = `${baseUrl}${randomAddress}`; // 既存のベース URL を操作してテストのベース URL を更新
+  },
 };
 ```
 

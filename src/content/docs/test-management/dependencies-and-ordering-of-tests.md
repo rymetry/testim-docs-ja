@@ -39,7 +39,7 @@ keywords:
 3. 各テストの前後でアクションを実行する場合（beforeAll/afterAll ではなく）。
 
 設定ファイルの詳細については、[こちら](/docs/configuration-file-run-hooks)をご覧ください。\
-設定ファイルからテストにパラメーターを渡す必要がある場合は、[こちら](/docs/configuration-file-parameters)をご覧ください。
+設定ファイルからテストにパラメーターを渡す必要がある場合は、[こちら](/docs/parameters-for-tests)をご覧ください。
 
 ## **実行順序**
 

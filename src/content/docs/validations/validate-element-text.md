@@ -140,11 +140,9 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 右側に Properties パネルが表示されます。
 
-2. **Expected value** フィールドに、検証対象のテキスト（文字列 / 正規表現 / JS 式 / パラメーター）を設定します。
+2. **Expected value** フィールドに新しい検証テキストを入力します。
 
 ![テキスト設定](/images/validations/validate-element-text/d8459d3-Testim_015b_r.png)
-
-> 例: 固定文字列や正規表現 `new RegExp('^Hello')`、`'Hello ' + userName` のようにパラメーターと結合した式などを指定できます。
 
 ## Advanced text validation
 
@@ -231,25 +229,30 @@ new RegExp('^' + '((?!' + param1 + ').)*$');
 
 ## パラメーターを使った検証
 
-### 概要
+テストまたはスイートレベルで定義されたパラメーター、あるいは設定ファイルで定義されたパラメーターを使用してテキスト要素を検証できます。別のステップで作成したパラメーターを使用する場合は、テストレベルにエクスポートする必要があります（[パラメーターのエクスポートの詳細](/docs/exports-parameters)）。
 
-パラメーターで検証値を指定する構成は、次のいずれかです。
+### パラメーターのみ
 
-- **テストレベルのパラメーター** — データ駆動設定（Config / 外部ソース）で渡す方法。
-- **ステップレベルのパラメーター** — エクスポートして検証ステップに受け渡す方法。
+パラメーターには 2 種類あります:\
+HTML: アプリ内の HTML 要素を参照できます。\
+JS（JavaScript）: 任意の JS 式を定義できます。
 
-### テストレベルでのパラメーター指定（Web）
+**Expected Value フィールドでパラメーターを使用するには:**
 
-1. データ駆動テストの設定でパラメーターを渡します。
-   - **外部ソースからのデータ** → [Configuring data-driven tests using data from an external source](/docs/configuring-data-driven-tests-using-data-from-an-external-source)
-   - **Config ファイル** → [Configuration file](/docs/configuration-file-run-hooks), [Config file でのデータ駆動設定](/docs/configuring-data-driven-tests-using-the-config-file)
+1. 以下のいずれかの方法でパラメーターを定義します。
+
+   - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/parameters-in-custom-javascript-steps)を参照してください。
+
+   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[ビジュアルエディターからのデータ駆動テストの設定](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+
+   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file)を参照してください。
 
 <Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
   **画像をクリックで拡大**
 </Image>
 
-2. パラメーターのスコープが「ステップ」の場合は、[Exports Parameters](/docs/exports-parameters) を使って Element Text 検証ステップ（またはテストレベル）へエクスポートしてください。\
-   例）`username` というパラメーターに `Hello, John` を渡す場合、カスタムアクションを追加してエディターに以下を入力します。
+2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/exports-parameters)を参照してください。\
+   例えば、`username` パラメーターに `Hello, John` という値をエクスポートするには、新しいカスタムアクションステップを追加し、エディターに以下を入力します。
 
 ```javascript
 exportsTest.usename = 'Hello, John';
@@ -271,7 +274,7 @@ exportsTest.usename = 'Hello, John';
   **画像をクリックで拡大**
 </Image>
 
-パラメーターと固定文字列を結合することも可能です。`'Hello ' + userName` のように、`+` で結合してください。
+パラメーターと固定文字列を `+` で結合することも可能です。例えば、`username` パラメーターの値を `Hello, John` ではなく `John` として定義し、Expected Value を `'Hello ' + userName` と指定できます。
 
 ### パラメーターと正規表現の組み合わせ
 

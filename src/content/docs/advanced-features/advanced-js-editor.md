@@ -28,7 +28,7 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 - 自動補完
 - シンタックスカラーリング
 - コードナビゲーション
-- 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editingevolved)
+- 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editor/editingevolved)
 
 ## 使用できるステップ
 

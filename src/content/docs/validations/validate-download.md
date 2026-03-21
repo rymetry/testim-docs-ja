@@ -519,6 +519,28 @@ expectedText.forEach(item => {
     </code>
    </td>
   </tr>
+  <tr>
+   <td>
+    _
+   </td>
+   <td>
+    Package
+   </td>
+   <td>
+    [lodash\@4.17.11]
+   </td>
+  </tr>
+  <tr>
+   <td>
+    excpectedNumOfSlides
+   </td>
+   <td>
+    JavaScript
+   </td>
+   <td>
+    '9'
+   </td>
+  </tr>
  </tbody>
 </table>
 
