@@ -45,7 +45,8 @@
     "check:summary": "node scripts/generate_detection_reports.mjs",
     "check:snapshots:fetch": "node scripts/snapshot_update.mjs",
     "check:snapshots:diff": "node scripts/snapshot_diff.mjs",
-    "check:snapshots": "node scripts/snapshot_update.mjs && node scripts/snapshot_diff.mjs"
+    "check:snapshots": "node scripts/snapshot_update.mjs && node scripts/snapshot_diff.mjs",
+    "check:snapshots:fetch:dry-run": "node scripts/snapshot_update.mjs --dry-run"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",
