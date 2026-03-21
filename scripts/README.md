@@ -31,7 +31,7 @@ npm test                       # 全テスト実行
 
 #### snapshot_update.mjs / snapshot_diff.mjs
 
-英語原文のスナップショットベースの変更検知。`<article>` の正規化 HTML をローカルに保存し、git diff で変更を検知する。
+英語原文のスナップショットベースの変更検知。各ページの生 Markdown をローカルに保存し、sidebar のみ HTML から抽出して、git diff で変更を検知する。
 
 ```bash
 npm run check:snapshots                # 取得→比較を一括実行
@@ -39,7 +39,7 @@ npm run check:snapshots:fetch          # スナップショット取得のみ
 npm run check:snapshots:diff           # コミット済み vs working tree を比較
 npm run check:snapshots:fetch -- --section="Overview"   # セクション絞り込み
 npm run check:snapshots:fetch -- --slug=testim-overview  # 単一ページ
-npm run check:snapshots:fetch -- --dry-run               # ドライラン
+npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検証のみ（ファイルは書き込まない）
 ```
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。

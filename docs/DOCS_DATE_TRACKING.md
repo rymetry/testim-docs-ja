@@ -32,10 +32,10 @@ snapshots/en/content/{slug}.md (working tree) = 最新の英語版
 
 | カテゴリ  | 検出パターン                                                 |
 | --------- | ------------------------------------------------------------ |
-| `heading` | `^#{1,6}\s`（Markdown 見出し）                               |
+| `heading` | `^ {0,3}#{1,6}\s`（Markdown 見出し）                         |
 | `image`   | `!\[`（Markdown 画像構文）                                   |
-| `code`    | ` ^``` `（コードフェンス）                                   |
-| `callout` | `^>\s*` + 絵文字（📘📙🚧❗✅👍⚠️）、または `^<Callout\b`（JSX） |
+| `code`    | ``^ {0,3}``` ``（コードフェンス）                            |
+| `callout` | `^ {0,3}>\s*` + 絵文字（📘📙🚧❗✅👍⚠️）、または `^ {0,3}<Callout\b`（JSX） |
 | `content` | その他のテキスト変更                                         |
 
 ページレベルでは `page-added`（新規）、`page-removed`（404化）、`page-changed`（内容変更）に分類されます。
@@ -66,6 +66,8 @@ npm run check:snapshots:fetch -- --slug=testim-overview
 # ドライラン
 npm run check:snapshots:fetch -- --dry-run
 ```
+
+`--dry-run` でも本文 Markdown と sidebar HTML の取得経路は検証されますが、ファイルは書き込みません。
 
 ## 運用フロー
 

@@ -19,7 +19,6 @@ import {
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
-  toRelativeDocPath,
 } from './lib/project.mjs';
 import { normalizeSidebar } from './lib/snapshot_normalize.mjs';
 import { isDirectRun } from './lib/cli.mjs';
@@ -97,6 +96,25 @@ async function fetchHtml(url) {
   return { html: await response.text(), status: response.status };
 }
 
+async function verifySidebar(url, slug, { dryRun = false } = {}) {
+  const { html, status } = await fetchHtml(url);
+  if (!html) {
+    const suffix = typeof status === 'number' ? ` (HTTP ${status})` : '';
+    return { ok: false, reason: `HTML fetch failed for ${slug}${suffix}` };
+  }
+
+  const sidebar = normalizeSidebar(html);
+  if (!sidebar.found) {
+    return { ok: false, reason: `no hub-sidebar found in ${slug}` };
+  }
+
+  if (!dryRun) {
+    fs.writeFileSync(SIDEBAR_PATH, sidebar.html);
+  }
+
+  return { ok: true };
+}
+
 export async function main(argv) {
   const args = parseArgs(argv);
   const targets = collectTargets(args);
@@ -116,7 +134,7 @@ export async function main(argv) {
   let fetched = 0;
   let notFound = 0;
   let errors = 0;
-  let sidebarSaved = false;
+  let sidebarVerified = false;
 
   for (const target of targets) {
     try {
@@ -139,21 +157,19 @@ export async function main(argv) {
         console.log(`  OK   ${target.slug}`);
         fetched += 1;
 
-        // Save sidebar from the first successful page (requires HTML fetch)
-        if (!sidebarSaved && !args.dryRun) {
+        // Verify sidebar from the first successful page. In dry-run, exercise the
+        // real HTML fetch path but skip writing sidebar.html to disk.
+        if (!sidebarVerified) {
           try {
-            const { html } = await fetchHtml(target.sourceUrl);
-            if (html) {
-              const sidebar = normalizeSidebar(html);
-              if (sidebar.found) {
-                fs.writeFileSync(SIDEBAR_PATH, sidebar.html);
-                console.log(`  OK   sidebar (from ${target.slug})`);
-                sidebarSaved = true;
-              } else {
-                console.log(`  WARN sidebar — no hub-sidebar found in ${target.slug}`);
-              }
+            const sidebarResult = await verifySidebar(target.sourceUrl, target.slug, {
+              dryRun: args.dryRun,
+            });
+            if (sidebarResult.ok) {
+              const mode = args.dryRun ? 'dry-run from' : 'from';
+              console.log(`  OK   sidebar (${mode} ${target.slug})`);
+              sidebarVerified = true;
             } else {
-              console.log(`  WARN sidebar — HTML fetch failed for ${target.slug}`);
+              console.log(`  WARN sidebar — ${sidebarResult.reason}`);
             }
           } catch (sidebarError) {
             console.log(`  WARN sidebar — ${sidebarError.message}`);
@@ -168,16 +184,25 @@ export async function main(argv) {
     await sleep(THROTTLE_MS);
   }
 
+  if (fetched > 0 && !sidebarVerified) {
+    console.log('  ERR  sidebar — failed to verify sidebar from any successfully fetched page');
+    errors += 1;
+  }
+
   console.log();
   console.log(`Done: ${fetched} fetched, ${notFound} not found, ${errors} errors`);
   if (args.dryRun) console.log('(dry-run — no files written)');
 
-  return { fetched, notFound, errors, skipped: 0 };
+  return { fetched, notFound, errors, skipped: 0, sidebarVerified };
 }
 
 if (isDirectRun(import.meta.url)) {
-  main().catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  main()
+    .then((result) => {
+      process.exit(result.errors > 0 ? 1 : 0);
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
 }
