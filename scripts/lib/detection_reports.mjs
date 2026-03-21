@@ -3,14 +3,15 @@ import path from 'node:path';
 
 import {
   ROOT_DIR,
-  getDocSection,
 } from './project.mjs';
 
-const DATE_ISSUE_TITLE = '📅 Date Drift: translated docs lag English source';
+const SNAPSHOT_ISSUE_TITLE =
+  '📸 Content Drift: English source changes detected via snapshot diff';
 const PARITY_ISSUE_TITLE =
   '🔍 Parity Regression: actionable content drift detected';
 
 function readJson(filePath) {
+  if (!fs.existsSync(filePath)) return {};
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
@@ -19,32 +20,28 @@ function formatList(values) {
   return values.map((value) => `- ${value}`).join('\n');
 }
 
-export function isParserSensitiveContent(content) {
-  return (
-    /<Image\b/i.test(content) ||
-    /<img\b/i.test(content) ||
-    /(^|\n)(?: {2,}|\t)```/.test(content)
-  );
-}
-
 function bucketPriority(bucket) {
-  if (bucket === 'high-confidence drift') return 0;
-  if (bucket === 'parser-sensitive') return 1;
-  return 2;
+  if (bucket === 'page-lifecycle') return 0;
+  if (bucket === 'structural-change') return 1;
+  return 2; // content-only
 }
 
-export function classifyAuditBucket({ content, signals }) {
-  if (isParserSensitiveContent(content)) {
-    return 'parser-sensitive';
+export function classifySnapshotBucket(change) {
+  if (change.type === 'page-added' || change.type === 'page-removed') {
+    return 'page-lifecycle';
   }
   if (
-    signals.some((signal) =>
-      ['image-mismatch', 'codeblock-mismatch'].includes(signal.type),
+    change.categories &&
+    ['heading', 'image', 'code', 'callout'].some(
+      (cat) =>
+        (change.categories[cat]?.added ?? 0) +
+          (change.categories[cat]?.removed ?? 0) >
+        0,
     )
   ) {
-    return 'high-confidence drift';
+    return 'structural-change';
   }
-  return 'date-only provisional';
+  return 'content-only';
 }
 
 export function assignReviewGroups(entries, groupCount = 6) {
@@ -55,8 +52,9 @@ export function assignReviewGroups(entries, groupCount = 6) {
   const sorted = [...entries].sort((left, right) => {
     const bucketDiff = bucketPriority(left.bucket) - bucketPriority(right.bucket);
     if (bucketDiff !== 0) return bucketDiff;
-    if (left.section !== right.section) return left.section.localeCompare(right.section);
-    return left.file.localeCompare(right.file);
+    const leftKey = left.slug ?? '';
+    const rightKey = right.slug ?? '';
+    return leftKey.localeCompare(rightKey);
   });
 
   return sorted.map((entry) => {
@@ -71,26 +69,29 @@ export function assignReviewGroups(entries, groupCount = 6) {
 }
 
 export function buildAuditManifest(
-  updates,
+  snapshot,
   parity,
-  { rootDir = ROOT_DIR, groupCount = 6 } = {},
+  { groupCount = 6 } = {},
 ) {
-  const parityByFile = new Map(
-    (parity?.files ?? []).map((file) => [file.file, file.issues ?? []]),
-  );
+  const changes = snapshot.changes ?? [];
 
-  const outdatedEntries = (updates.files ?? []).filter((file) => file.needsUpdate);
-  const manifestEntries = outdatedEntries.map((file) => {
-    const fullPath = path.join(rootDir, file.file);
-    const content = fs.existsSync(fullPath) ? fs.readFileSync(fullPath, 'utf8') : '';
-    const signals = parityByFile.get(file.file) ?? [];
-    const bucket = classifyAuditBucket({ content, signals });
+  // Build parity index by slug (extract from file path)
+  const parityBySlug = new Map();
+  for (const file of parity?.files ?? []) {
+    const slug = path.basename(file.file, '.md');
+    parityBySlug.set(slug, file.issues ?? []);
+  }
+
+  const entries = changes.map((change) => {
+    const signals = parityBySlug.get(change.slug) ?? [];
+    const bucket = classifySnapshotBucket(change);
 
     return {
-      file: file.file,
-      section: getDocSection(file.file),
-      sourceDate: file.englishUpdated,
-      localDate: file.japaneseUpdated,
+      slug: change.slug,
+      type: change.type,
+      sourceUrl: change.sourceUrl,
+      diffLines: change.diffLines,
+      categories: change.categories,
       signals: signals.map((signal) => ({
         type: signal.type,
         severity: signal.severity,
@@ -103,28 +104,15 @@ export function buildAuditManifest(
     };
   });
 
-  return assignReviewGroups(manifestEntries, groupCount);
+  return assignReviewGroups(entries, groupCount);
 }
 
-function summarizeDateStatuses(updateFiles) {
-  const statusCounts = {};
-  const comparisonStatusCounts = {};
-  for (const file of updateFiles) {
-    statusCounts[file.status] = (statusCounts[file.status] || 0) + 1;
-    if (file.comparisonStatus) {
-      comparisonStatusCounts[file.comparisonStatus] =
-        (comparisonStatusCounts[file.comparisonStatus] || 0) + 1;
-    }
-  }
-  return { statusCounts, comparisonStatusCounts };
-}
-
-function sortDateEntries(entries) {
+function sortSnapshotEntries(entries) {
+  const typeOrder = { 'page-added': 0, 'page-removed': 1, 'page-changed': 2 };
   return [...entries].sort((left, right) => {
-    const leftDays = left.daysBehind ?? -1;
-    const rightDays = right.daysBehind ?? -1;
-    if (rightDays !== leftDays) return rightDays - leftDays;
-    return left.file.localeCompare(right.file);
+    const typeDiff = (typeOrder[left.type] ?? 2) - (typeOrder[right.type] ?? 2);
+    if (typeDiff !== 0) return typeDiff;
+    return (right.diffLines || 0) - (left.diffLines || 0);
   });
 }
 
@@ -146,45 +134,56 @@ function sortParityEntries(entries) {
   });
 }
 
-export function buildActionableReport(updates, parity, auditManifest, options = {}) {
+function formatSnapshotEntry(entry) {
+  if (entry.type === 'page-added') return `\`${entry.slug}\` — NEW PAGE`;
+  if (entry.type === 'page-removed') return `\`${entry.slug}\` — REMOVED`;
+  const cats = Object.entries(entry.categories ?? {})
+    .filter(([, v]) => v.added > 0 || v.removed > 0)
+    .map(([k, v]) => `${k}:+${v.added}/-${v.removed}`)
+    .join(', ');
+  return `\`${entry.slug}\` (${entry.diffLines} lines: ${cats})`;
+}
+
+export function buildActionableReport(snapshot, parity, auditManifest, options = {}) {
   const maxEntries = options.maxEntries ?? 10;
-  const updateFiles = updates.files ?? [];
+  const snapshotChanges = snapshot.changes ?? [];
   const parityFiles = parity.files ?? [];
-  const dateEntries = updateFiles.filter((file) => file.needsUpdate);
-  const dateSummary = summarizeDateStatuses(updateFiles);
   const parityActionableFiles = parityFiles.filter((file) =>
     (file.issues ?? []).some((issue) => issue.severity === 'actionable'),
   );
 
-  const dateTopEntries = sortDateEntries(dateEntries).slice(0, maxEntries);
+  const snapshotTopEntries = sortSnapshotEntries(snapshotChanges).slice(0, maxEntries);
   const parityTopEntries = sortParityEntries(parityActionableFiles).slice(
     0,
     maxEntries,
   );
 
-  const dateIssueBody = [
+  const snapshotIssueBody = [
     '## Summary',
     '',
-    `- Checked at: ${updates.checkedAt ?? 'unknown'}`,
-    `- Actionable outdated files: ${dateEntries.length}`,
-    `- Up to date: ${dateSummary.comparisonStatusCounts['up-to-date'] || 0}`,
-    `- JA newer than source: ${dateSummary.comparisonStatusCounts.newer || 0}`,
-    `- Ignored exceptions: ${dateSummary.statusCounts['ignored-exception'] || 0}`,
-    `- Source date divergence: ${dateSummary.statusCounts['source-date-divergence'] || 0}`,
-    `- Fetch errors: ${dateSummary.statusCounts['fetch-error'] || 0}`,
+    `- Checked at: ${snapshot.checkedAt ?? 'unknown'}`,
+    `- Changed pages: ${snapshot.summary?.changed || 0}`,
+    `- Added pages: ${snapshot.summary?.added || 0}`,
+    `- Removed pages: ${snapshot.summary?.removed || 0}`,
+    `- Unchanged: ${snapshot.summary?.unchanged || 0}`,
+    `- Total snapshots: ${snapshot.summary?.totalSnapshots || 0}`,
     '',
     '## Top Entries',
     '',
-    formatList(
-      dateTopEntries.map(
-        (entry) =>
-          `\`${entry.file}\` (${entry.japaneseUpdated} -> ${entry.englishUpdated}, ${entry.daysBehind} days behind)`,
-      ),
-    ),
+    formatList(snapshotTopEntries.map(formatSnapshotEntry)),
     '',
+    ...(snapshot.sidebar?.changed
+      ? [
+          '## Sidebar Changes',
+          '',
+          `- Pages added: ${snapshot.sidebar.addedPages?.length || 0}`,
+          `- Pages removed: ${snapshot.sidebar.removedPages?.length || 0}`,
+          '',
+        ]
+      : []),
     '## Artifacts',
     '',
-    '- `docs-update-status.json`',
+    '- `snapshot-diff-status.json`',
     '- `docs-update-summary.md`',
     '- `docs-audit-manifest.json`',
   ].join('\n');
@@ -218,15 +217,18 @@ export function buildActionableReport(updates, parity, auditManifest, options = 
 
   return {
     generatedAt: new Date().toISOString(),
-    dateDrift: {
-      issueTitle: DATE_ISSUE_TITLE,
-      shouldOpenIssue: dateEntries.length > 0,
-      topEntries: dateTopEntries,
-      body: dateIssueBody,
+    snapshotDiff: {
+      issueTitle: SNAPSHOT_ISSUE_TITLE,
+      shouldOpenIssue: snapshotChanges.length > 0,
+      topEntries: snapshotTopEntries,
+      body: snapshotIssueBody,
       summary: {
-        actionableCount: dateEntries.length,
-        statusCounts: dateSummary.statusCounts,
-        comparisonStatusCounts: dateSummary.comparisonStatusCounts,
+        actionableCount: snapshotChanges.length,
+        totalSnapshots: snapshot.summary?.totalSnapshots || 0,
+        changed: snapshot.summary?.changed || 0,
+        added: snapshot.summary?.added || 0,
+        removed: snapshot.summary?.removed || 0,
+        unchanged: snapshot.summary?.unchanged || 0,
       },
     },
     parityRegression: {
@@ -252,27 +254,19 @@ export function buildActionableReport(updates, parity, auditManifest, options = 
   };
 }
 
-export function renderSummaryMarkdown(_updates, parity, actionableReport, auditManifest) {
+export function renderSummaryMarkdown(_snapshot, parity, actionableReport, auditManifest) {
   return [
     '# Docs Detection Summary',
     '',
     `Generated: ${actionableReport.generatedAt}`,
     '',
-    '## Date Drift',
+    '## Snapshot Diff',
     '',
-    `- Actionable outdated files: ${actionableReport.dateDrift.summary.actionableCount}`,
-    `- Up to date: ${
-      actionableReport.dateDrift.summary.comparisonStatusCounts['up-to-date'] || 0
-    }`,
-    `- JA newer than source: ${
-      actionableReport.dateDrift.summary.comparisonStatusCounts.newer || 0
-    }`,
-    `- Ignored exceptions: ${
-      actionableReport.dateDrift.summary.statusCounts['ignored-exception'] || 0
-    }`,
-    `- Source date divergence: ${
-      actionableReport.dateDrift.summary.statusCounts['source-date-divergence'] || 0
-    }`,
+    `- Changed pages: ${actionableReport.snapshotDiff.summary.changed}`,
+    `- Added pages: ${actionableReport.snapshotDiff.summary.added}`,
+    `- Removed pages: ${actionableReport.snapshotDiff.summary.removed}`,
+    `- Unchanged: ${actionableReport.snapshotDiff.summary.unchanged}`,
+    `- Total snapshots: ${actionableReport.snapshotDiff.summary.totalSnapshots}`,
     '',
     '## Parity',
     '',
@@ -283,13 +277,13 @@ export function renderSummaryMarkdown(_updates, parity, actionableReport, auditM
     '## Audit Manifest',
     '',
     `- Total review entries: ${auditManifest.length}`,
-    `- High-confidence drift: ${actionableReport.auditManifest.bucketCounts['high-confidence drift'] || 0}`,
-    `- Parser-sensitive: ${actionableReport.auditManifest.bucketCounts['parser-sensitive'] || 0}`,
-    `- Date-only provisional: ${actionableReport.auditManifest.bucketCounts['date-only provisional'] || 0}`,
+    `- Page lifecycle: ${actionableReport.auditManifest.bucketCounts['page-lifecycle'] || 0}`,
+    `- Structural change: ${actionableReport.auditManifest.bucketCounts['structural-change'] || 0}`,
+    `- Content only: ${actionableReport.auditManifest.bucketCounts['content-only'] || 0}`,
     '',
     '## Files',
     '',
-    '- `docs-update-status.json`',
+    '- `snapshot-diff-status.json`',
     '- `parity-check-status.json`',
     '- `docs-audit-manifest.json`',
     '- `docs-actionable-report.json`',
@@ -297,14 +291,13 @@ export function renderSummaryMarkdown(_updates, parity, actionableReport, auditM
 }
 
 export function loadDetectionInputs({
-  updatesPath = path.join(ROOT_DIR, 'docs-update-status.json'),
+  snapshotPath = path.join(ROOT_DIR, 'snapshot-diff-status.json'),
   parityPath = path.join(ROOT_DIR, 'parity-check-status.json'),
 } = {}) {
   return {
-    updates: readJson(updatesPath),
+    snapshot: readJson(snapshotPath),
     parity: readJson(parityPath),
   };
 }
 
-export { DATE_ISSUE_TITLE, PARITY_ISSUE_TITLE };
-
+export { SNAPSHOT_ISSUE_TITLE, PARITY_ISSUE_TITLE };

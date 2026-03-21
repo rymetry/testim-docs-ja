@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,11 +31,11 @@ jobs:
       - name: Refresh sidebar seed
         run: npm run docs:sync-sidebar
 
-      - name: Check for outdated documentation
-        id: updates
+      - name: Fetch and diff snapshots
+        id: snapshots
         run: |
           set +e
-          npm run check:updates
+          npm run check:snapshots
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           exit 0
 
@@ -42,14 +44,6 @@ jobs:
         run: |
           set +e
           npm run check:parity
-          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Check source parity (remote actionable)
-        id: parity_remote
-        run: |
-          set +e
-          npm run check:parity:remote:actionable
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           exit 0
 
@@ -66,7 +60,7 @@ jobs:
         with:
           name: scheduled-actionable-artifacts
           path: |
-            docs-update-status.json
+            snapshot-diff-status.json
             parity-check-status.json
             docs-actionable-report.json
             docs-update-summary.md

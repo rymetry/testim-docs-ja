@@ -21,11 +21,11 @@ const OUTPUTS = {
 };
 
 export function generateDetectionReports() {
-  const { updates, parity } = loadDetectionInputs();
-  const auditManifest = buildAuditManifest(updates, parity);
-  const actionableReport = buildActionableReport(updates, parity, auditManifest);
+  const { snapshot, parity } = loadDetectionInputs();
+  const auditManifest = buildAuditManifest(snapshot, parity);
+  const actionableReport = buildActionableReport(snapshot, parity, auditManifest);
   const summaryMarkdown = renderSummaryMarkdown(
-    updates,
+    snapshot,
     parity,
     actionableReport,
     auditManifest,
@@ -48,7 +48,7 @@ function main() {
   const { actionableReport } = generateDetectionReports();
   console.log('📄 Detection summary generated');
   console.log(
-    `  date drift actionable: ${actionableReport.dateDrift.summary.actionableCount}`,
+    `  snapshot diff actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
   );
   console.log(
     `  parity actionable: ${actionableReport.parityRegression.summary.actionableCount}`,

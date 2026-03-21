@@ -1,22 +1,14 @@
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-let applySuppressions;
-let buildStructuralIssues;
-let extractFromHtml;
 let extractFromMd;
 let localCheck;
-let remoteCheck;
 let summarizeParityResults;
 
 before(async () => {
   ({
-    applySuppressions,
-    buildStructuralIssues,
-    extractFromHtml,
     extractFromMd,
     localCheck,
-    remoteCheck,
     summarizeParityResults,
   } = await import(
     '../lib/source_parity.mjs'
@@ -47,115 +39,6 @@ describe('extractFromMd', () => {
   });
 });
 
-describe('extractFromHtml', () => {
-  it('skips empty pre tags', () => {
-    const html = '<pre></pre><pre><code>real code</code></pre>';
-    const result = extractFromHtml(html);
-    assert.equal(result.codeBlockCount, 1);
-  });
-
-  it('skips whitespace-only pre tags', () => {
-    const html = '<pre>   \n  </pre><pre><code>x</code></pre>';
-    const result = extractFromHtml(html);
-    assert.equal(result.codeBlockCount, 1);
-  });
-
-  it('counts pre tags with visible content', () => {
-    const html = '<pre>code1</pre><pre><code>code2</code></pre><pre> code3 </pre>';
-    const result = extractFromHtml(html);
-    assert.equal(result.codeBlockCount, 3);
-  });
-});
-
-describe('buildStructuralIssues', () => {
-  it('marks heading mismatch as signal and missing image/code blocks as actionable', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 8, imgCount: 10, codeBlockCount: 4 },
-      { h2Count: 4, imgCount: 5, codeBlockCount: 1 },
-    );
-
-    const heading = issues.find((issue) => issue.type === 'heading-mismatch');
-    const image = issues.find((issue) => issue.type === 'image-mismatch');
-    const code = issues.find((issue) => issue.type === 'codeblock-mismatch');
-
-    assert.equal(heading.severity, 'signal');
-    assert.equal(image.severity, 'actionable');
-    assert.equal(code.severity, 'actionable');
-  });
-
-  it('includes delta on structural issues', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 9, imgCount: 9, codeBlockCount: 5 },
-      { h2Count: 1, imgCount: 0, codeBlockCount: 2 },
-    );
-
-    const heading = issues.find((issue) => issue.type === 'heading-mismatch');
-    const image = issues.find((issue) => issue.type === 'image-mismatch');
-    const code = issues.find((issue) => issue.type === 'codeblock-mismatch');
-
-    assert.equal(heading.delta, 8);
-    assert.equal(image.delta, 9);
-    assert.equal(code.delta, 3);
-  });
-
-  it('does not flag extra local code examples as a mismatch', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 2, imgCount: 4, codeBlockCount: 1 },
-      { h2Count: 2, imgCount: 4, codeBlockCount: 5 },
-    );
-
-    assert.equal(
-      issues.some((issue) => issue.type === 'codeblock-mismatch'),
-      false,
-    );
-  });
-});
-
-describe('applySuppressions', () => {
-  it('suppresses issues when delta matches expected value', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 9, imgCount: 9, codeBlockCount: 0 },
-      { h2Count: 1, imgCount: 0, codeBlockCount: 0 },
-    );
-
-    const filtered = applySuppressions(issues, 'salesforce-testing-overview');
-    assert.equal(filtered.length, 0);
-  });
-
-  it('lifts suppression when delta drifts from expected value', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 11, imgCount: 11, codeBlockCount: 0 },
-      { h2Count: 1, imgCount: 0, codeBlockCount: 0 },
-    );
-
-    const filtered = applySuppressions(issues, 'salesforce-testing-overview');
-    assert.equal(filtered.length, 2);
-    assert.ok(filtered.some((i) => i.type === 'heading-mismatch'));
-    assert.ok(filtered.some((i) => i.type === 'image-mismatch'));
-  });
-
-  it('passes through non-suppressed issue types on a suppressed slug', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 9, imgCount: 9, codeBlockCount: 5 },
-      { h2Count: 1, imgCount: 0, codeBlockCount: 2 },
-    );
-
-    const filtered = applySuppressions(issues, 'salesforce-testing-overview');
-    assert.equal(filtered.length, 1);
-    assert.equal(filtered[0].type, 'codeblock-mismatch');
-  });
-
-  it('passes through issues for unsuppressed slugs', () => {
-    const issues = buildStructuralIssues(
-      { h2Count: 8, imgCount: 10, codeBlockCount: 0 },
-      { h2Count: 2, imgCount: 3, codeBlockCount: 0 },
-    );
-
-    const filtered = applySuppressions(issues, 'some-other-page');
-    assert.equal(filtered.length, issues.length);
-  });
-});
-
 describe('localCheck', () => {
   it('detects untranslated english lines and annotates severity', () => {
     const issues = localCheck({
@@ -168,23 +51,76 @@ describe('localCheck', () => {
     assert.equal(issues[0].type, 'untranslated');
     assert.equal(issues[0].severity, 'actionable');
   });
-});
 
-describe('remoteCheck', () => {
-  it('returns a signal when article extraction fails', async () => {
-    const issues = await remoteCheck('https://help.testim.io/docs/example', '## Local', {
-      fetchImpl: async () => ({
-        ok: true,
-        async text() {
-          return '<main><p>Updated 6 months ago</p></main>';
-        },
-      }),
-      now: new Date('2026-03-19T00:00:00Z'),
+  it('detects legacy callout (blockquote emoji pattern)', () => {
+    const issues = localCheck({
+      body: '> 📘 This is a callout\n> Some content\n',
+      sidebarSlugs: new Set(['sample']),
+      slug: 'sample',
     });
 
-    assert.equal(issues.length, 1);
-    assert.equal(issues[0].type, 'content-root-missing');
-    assert.equal(issues[0].severity, 'signal');
+    const legacyIssues = issues.filter((i) => i.type === 'legacy-callout');
+    assert.ok(legacyIssues.length > 0);
+    assert.equal(legacyIssues[0].severity, 'actionable');
+  });
+
+  it('detects JSX callout component', () => {
+    const issues = localCheck({
+      body: '<Callout type="info">Note text</Callout>\n',
+      sidebarSlugs: new Set(['sample']),
+      slug: 'sample',
+    });
+
+    const jsxIssues = issues.filter((i) => i.type === 'jsx-callout');
+    assert.ok(jsxIssues.length > 0);
+    assert.equal(jsxIssues[0].severity, 'actionable');
+  });
+
+  it('detects h1 in body (not at first line)', () => {
+    const issues = localCheck({
+      body: 'Some intro text\n# This is an H1 in body\n',
+      sidebarSlugs: new Set(['sample']),
+      slug: 'sample',
+    });
+
+    const h1Issues = issues.filter((i) => i.type === 'h1-in-body');
+    assert.ok(h1Issues.length > 0);
+    assert.equal(h1Issues[0].severity, 'actionable');
+  });
+
+  it('does not flag h1 at the first line', () => {
+    const issues = localCheck({
+      body: '# Title at first line\nSome content\n',
+      sidebarSlugs: new Set(['sample']),
+      slug: 'sample',
+    });
+
+    const h1Issues = issues.filter((i) => i.type === 'h1-in-body');
+    assert.equal(h1Issues.length, 0);
+  });
+
+  it('detects orphan page (not in sidebar)', () => {
+    const issues = localCheck({
+      body: 'Some content\n',
+      sidebarSlugs: new Set(['other-page']),
+      slug: 'missing-from-sidebar',
+    });
+
+    const orphanIssues = issues.filter((i) => i.type === 'orphan-page');
+    assert.ok(orphanIssues.length > 0);
+  });
+
+  it('skips detection inside code blocks', () => {
+    const issues = localCheck({
+      body: '```\n> 📘 Inside code block\n<Callout>Also inside</Callout>\n# H1 inside code\nClick on the **Settings** button.\n```\n',
+      sidebarSlugs: new Set(['sample']),
+      slug: 'sample',
+    });
+
+    // None of the issues inside the code block should be detected
+    const relevantTypes = ['legacy-callout', 'jsx-callout', 'h1-in-body', 'untranslated'];
+    const detected = issues.filter((i) => relevantTypes.includes(i.type));
+    assert.equal(detected.length, 0);
   });
 });
 

@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,26 +35,26 @@ jobs:
       - name: Refresh sidebar seed
         run: npm run docs:sync-sidebar
 
-      - name: Check for outdated documentation
-        id: updates
+      - name: Fetch and diff snapshots
+        id: snapshots
         run: |
           set +e
           if [ -n "$SECTION_FILTER" ]; then
-            npm run check:updates -- --section="$SECTION_FILTER"
+            npm run check:snapshots -- --section="$SECTION_FILTER"
           else
-            npm run check:updates
+            npm run check:snapshots
           fi
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Check source parity (remote full report)
-        id: parity_remote
+      - name: Check source parity (local)
+        id: parity_local
         run: |
           set +e
           if [ -n "$SECTION_FILTER" ]; then
-            npm run check:parity:remote -- --section="$SECTION_FILTER"
+            npm run check:parity -- --section="$SECTION_FILTER"
           else
-            npm run check:parity:remote
+            npm run check:parity
           fi
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           exit 0
@@ -70,7 +72,7 @@ jobs:
         with:
           name: deep-audit-artifacts
           path: |
-            docs-update-status.json
+            snapshot-diff-status.json
             parity-check-status.json
             docs-actionable-report.json
             docs-update-summary.md
