@@ -266,7 +266,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c6f2e2e-2023-01-04_13-05-48.png)
 
-   **Change Default Configuration** ダイアログが表示されます。
+**Change Default Configuration** ダイアログが表示されます。
 
 3. **Before/After Hooks** セクションで作成したいフックタイプにチェックを入れます。
 
@@ -327,7 +327,7 @@ Config File で設定できるフックタイプは次のとおりです。
 - **Before test** – テスト実行前に実行
 - **After test** – テスト実行後に実行
 - **Before Suite** – スイート実行前に実行
-- **After Suite** – スイート実行後に実行  
+- **After Suite** – スイート実行後に実行
 
 Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。
 

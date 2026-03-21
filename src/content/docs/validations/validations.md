@@ -24,30 +24,30 @@ keywords:
 アプリのテストでは、手順が正しく実行されたかどうかだけでは不十分な場合が多くあります。多くのケースで、テストステップの結果として期待した状態になっているかを検証したいでしょう。例えばログイン後、ページヘッダーに正しいユーザー名が表示されているかを確認する、などです。\
 Testim では次の種類の検証を利用できます。
 
-* **[Page Accessibility Validation](/docs/accessibility-validations)** — ページのアクセシビリティを検証します。
-* **[Element Accessibility Validation](/docs/element-accessibility-validation)** — ページ要素のアクセシビリティを検証します。
-* **[Validate Element Visualization](/docs/validate-element-visualization)** — 要素のビジュアルを検証します。
-* **[Validate Viewport Visualization](/docs/validate-viewport-visualization)** — ビューポートのビジュアルを検証します。
-* **[Validate Full Page Visualization](/docs/validate-full-page-visualization)** — ページ全体のビジュアルを検証します。
-* **[Wait for Element Visualization](/docs/wait-for-element-visualization)** — 要素のビジュアルが条件を満たすまで待機します。
-* **[Validate element visible](/docs/validate-element-visible)** — 期待する要素が可視であることを検証します。
-* **[Validate element not visible](/docs/validate-element-not-visible)** — 要素が不可視であることを検証します。
-* **[Validate element text](/docs/validate-element-text)** — 期待するテキストが表示されていることを検証します。
-* **[Add custom validation](/docs/custom-code)** — カスタムスクリプトで高度な検証を作成します。
-* **[Validate using custom code](/docs/custom-code-1)** — カスタムコードのテストステップを作成します。
-* **[Validate download](/docs/validate-download)** — ダウンロード内容が期待どおりであることを検証します。
-* **[Validate email](/docs/email-validation)** — サインアップやログインのフローでメールを検証します。
-* **[Validate CSS property](/docs/css-property-validation)** — 要素の任意の CSS プロパティを検証します。
-* **[Validate HTML attribute](/docs/html-attribute-validation)** — アプリ内の任意の HTML 属性を検証します。
-* **[Validate checkbox](/docs/checkbox-and-radio-button-validation)** — チェックボックスがオン/オフであることを検証します。
-* **[Validate radio button](/docs/checkbox-and-radio-button-validation)** — ラジオボタンがオン/オフであることを検証します。
-* **[Validate API](/docs/api-testing)** — UI の要素と API レスポンス値を突き合わせて検証します。
-* **[Visual validation (element, viewport, full-page)](/docs/pixel-validation-and-pixel-wait-for)** — ピクセルレベルでビジュアル差異を検証します。
-* **[Add network validation](/docs/add-network-validation)** — ネットワークリクエストが期待どおりに実行されたかを検証します。
-* **[Add CLI validations and actions](/docs/add-cli-validations-and-actions)** — テスト内から Node.js スクリプトを実行します。
-* **[File upload step validation](/docs/file-upload-step)** — ファイルアップロード操作を検証します。
-* **[MonboDB validation](/docs/mongodb-validation)** — CLI アクションステップで MongoDB を検証します。
-* **[My SQL validation](/docs/mysql-validation)** — CLI アクションステップと SQL で MySQL を検証します。
+- **[Page Accessibility Validation](/docs/accessibility-validations)** — ページのアクセシビリティを検証します。
+- **[Element Accessibility Validation](/docs/element-accessibility-validation)** — ページ要素のアクセシビリティを検証します。
+- **[Validate Element Visualization](/docs/validate-element-visualization)** — 要素のビジュアルを検証します。
+- **[Validate Viewport Visualization](/docs/validate-viewport-visualization)** — ビューポートのビジュアルを検証します。
+- **[Validate Full Page Visualization](/docs/validate-full-page-visualization)** — ページ全体のビジュアルを検証します。
+- **[Wait for Element Visualization](/docs/wait-for-element-visualization)** — 要素のビジュアルが条件を満たすまで待機します。
+- **[Validate element visible](/docs/validate-element-visible)** — 期待する要素が可視であることを検証します。
+- **[Validate element not visible](/docs/validate-element-not-visible)** — 要素が不可視であることを検証します。
+- **[Validate element text](/docs/validate-element-text)** — 期待するテキストが表示されていることを検証します。
+- **[Add custom validation](/docs/custom-code)** — カスタムスクリプトで高度な検証を作成します。
+- **[Validate using custom code](/docs/custom-code-1)** — カスタムコードのテストステップを作成します。
+- **[Validate download](/docs/validate-download)** — ダウンロード内容が期待どおりであることを検証します。
+- **[Validate email](/docs/email-validation)** — サインアップやログインのフローでメールを検証します。
+- **[Validate CSS property](/docs/css-property-validation)** — 要素の任意の CSS プロパティを検証します。
+- **[Validate HTML attribute](/docs/html-attribute-validation)** — アプリ内の任意の HTML 属性を検証します。
+- **[Validate checkbox](/docs/checkbox-and-radio-button-validation)** — チェックボックスがオン/オフであることを検証します。
+- **[Validate radio button](/docs/checkbox-and-radio-button-validation)** — ラジオボタンがオン/オフであることを検証します。
+- **[Validate API](/docs/api-testing)** — UI の要素と API レスポンス値を突き合わせて検証します。
+- **[Visual validation (element, viewport, full-page)](/docs/pixel-validation-and-pixel-wait-for)** — ピクセルレベルでビジュアル差異を検証します。
+- **[Add network validation](/docs/add-network-validation)** — ネットワークリクエストが期待どおりに実行されたかを検証します。
+- **[Add CLI validations and actions](/docs/add-cli-validations-and-actions)** — テスト内から Node.js スクリプトを実行します。
+- **[File upload step validation](/docs/file-upload-step)** — ファイルアップロード操作を検証します。
+- **[MonboDB validation](/docs/mongodb-validation)** — CLI アクションステップで MongoDB を検証します。
+- **[My SQL validation](/docs/mysql-validation)** — CLI アクションステップと SQL で MySQL を検証します。
 
 ## 検証ステップの表示
 

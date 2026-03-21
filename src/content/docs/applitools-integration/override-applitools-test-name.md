@@ -21,10 +21,7 @@ Applitools に送信されるテスト名をオーバーライドすることが
 2. テストデータでこれをオーバーライドまたは変更できます。例:
 
 ```javascript
-return [
-  {applitoolsTestName: 'testName_english'},
-  {applitoolsTestName: 'testName_spanish'}
-  ];
+return [{ applitoolsTestName: 'testName_english' }, { applitoolsTestName: 'testName_spanish' }];
 ```
 
 3. この例では、各テストデータエントリに対して、Applitools に送信されるテスト名に言語が含まれ、Applitools で異なるベースラインが作成されます

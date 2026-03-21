@@ -22,8 +22,8 @@ keywords:
 
 カスタムアクション（モバイル）は TMA でのみ完全にサポートされます。サードパーティのグリッドでは未サポートです（例）：
 
-* Browserstack returns: \``Execute driver script functionality is not available unless server is started with --allow-insecure including the 'execute_driver_script' flag, e.g., --allow-insecure=execute_driver_script`
-* Headspin returns: `An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden`
+- Browserstack returns: \``Execute driver script functionality is not available unless server is started with --allow-insecure including the 'execute_driver_script' flag, e.g., --allow-insecure=execute_driver_script`
+- Headspin returns: `An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden`
 
 :::note{title="ローカル実行の前提条件"}
 物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: `tricentis-mobile-agent start -e`
@@ -33,12 +33,12 @@ keywords:
 
 次の Appium メソッドがサポートされています:
 
-* `performActions`
-* `findElement`
-* `findElements`
-* `sendKeys`
-* `hideKeyboard`
-* `getWindowRect`
+- `performActions`
+- `findElement`
+- `findElements`
+- `sendKeys`
+- `hideKeyboard`
+- `getWindowRect`
 
 `findElement(s)` は strategy に "text" を使用できません。一般的には "label" や "value" での検索が有効です。
 
@@ -97,25 +97,25 @@ AUT で要素をパラメーター定義するためにブレークポイント�
 `performActions` の使用例です。画面左上から 100ms 待機後、100 ピクセル下方向へドラッグして指を離します。
 
 ```javascript
-const start_x = 50
-const start_y = 1
-const end_x = 50
-const end_y = 2000
+const start_x = 50;
+const start_y = 1;
+const end_x = 50;
+const end_y = 2000;
 
 await DRIVER.performActions([
-    {
-        "type": "pointer",
-        "id": "finger1",
-        "parameters": {"pointerType": "touch"},
-        "actions": [
-            {"type": "pointerMove", "duration": 0, "x": start_x, "y": start_y},
-            {"type": "pointerDown", "button": 0},
-            {"type": "pause", "duration": 100},
-            {"type": "pointerMove", "duration": 500, "x": end_x, "y": end_y},
-            {"type": "pointerUp", "button": 0}
-        ]
-    }
-])
+  {
+    type: 'pointer',
+    id: 'finger1',
+    parameters: { pointerType: 'touch' },
+    actions: [
+      { type: 'pointerMove', duration: 0, x: start_x, y: start_y },
+      { type: 'pointerDown', button: 0 },
+      { type: 'pause', duration: 100 },
+      { type: 'pointerMove', duration: 500, x: end_x, y: end_y },
+      { type: 'pointerUp', button: 0 },
+    ],
+  },
+]);
 ```
 
 <br />
@@ -125,7 +125,10 @@ await DRIVER.performActions([
 `findElement` の使用例です。
 
 ```javascript js
-const el = await DRIVER.findElement('xpath', "//XCUIElementTypeApplication/XCUIElementTypeWindow/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeCollectionView");
+const el = await DRIVER.findElement(
+  'xpath',
+  '//XCUIElementTypeApplication/XCUIElementTypeWindow/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeCollectionView'
+);
 /*const e2 = await DRIVER.findElement('class name', "XCUIElementTypeButton");*/
 ```
 

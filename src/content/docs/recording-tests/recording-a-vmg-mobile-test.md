@@ -83,7 +83,6 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
    - [Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を使用するには、**Enhanced mode** タブを選択します。
 
    ![Enhanced mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/ea12c91-enhancedmodetab.png)
-
    - Appium mode を使用するには、**Appium mode** タブを選択します。
 
    ![Appium mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/92b7695-appiummodetab.png)

@@ -23,10 +23,10 @@ keywords:
 
 結果ラベルは、以下のようなさまざまなオプションに使用できます:
 
-* テストされたアプリケーション環境
-* テストされたアプリケーションバージョン
-* 実行を実行したユーザー
-* CI/CD システム実行かどうか
+- テストされたアプリケーション環境
+- テストされたアプリケーションバージョン
+- 実行を実行したユーザー
+- CI/CD システム実行かどうか
 
 例: "nightly-scheduler"、"v1.42.34"、"Jenkins"、"Troubleshooting"、"Staging"
 
@@ -38,7 +38,7 @@ keywords:
 --result-label "nightly Jenkins run"
 ```
 
-* 必要に応じて、CLI コマンドに複数の結果ラベルを追加できます。CLI の実行の詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。
+- 必要に応じて、CLI コマンドに複数の結果ラベルを追加できます。CLI の実行の詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。
 
 ```shell
 --result-label "nightly Jenkins run" --result-label "v1.42.35"

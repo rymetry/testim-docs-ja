@@ -25,37 +25,46 @@ Testim for Salesforce は、Testim のプラットフォームを活用し、高
 ## 主要なリソース
 
 ### はじめに
+
 Testim/TTA for Salesforce を初めて使用しますか？すぐに始められるようサポートします！
 [詳細を見る →](/docs/salesforce-testing-getting-started)
 
 ### Salesforce 環境への接続
+
 Salesforce 環境を Testim/TTA for Salesforce に接続する方法を学びます。
 [詳細を見る →](/docs/create-and-manage-test-environments)
 
 ### Salesforce テストの作成
+
 手動および/または記録されたステップを追加しながら、Salesforce テストを作成する方法を学びます。
 [詳細を見る →](/docs/create-a-salesforce-test)
 
 ### Salesforce ステップ
+
 接続された Salesforce 環境のレコードやフィールドを使用した Salesforce の一般的なアクション。
 [詳細を見る →](/docs/salesforce-steps)
 
 ### テストの実行
+
 さまざまな方法を使用してローカルおよびリモートでテストを実行する方法を学びます。
 [詳細を見る →](/docs/running-tests-overview)
 
 ### 結果
+
 エディター、実行ラン、およびテストラン画面に表示されるテスト結果を理解します。
 [詳細を見る →](/docs/results-overview)
 
 ### テスト管理
+
 テスト、設定、テストプラン、テストスイートなどを管理する方法を学びます。
 [詳細を見る →](/docs/test-management-overview)
 
 ### 統合
+
 サードパーティグリッド、CI、Applitools、Github、テスト管理などとの統合方法を学びます。
 [詳細を見る →](/docs/integrations-overview)
 
 ### その他のヘルプ
+
 さらにサポートが必要ですか？FAQ およびトラブルシューティングページをご確認ください。
 [F.A.Q](/docs/faq) | [トラブルシューティング](/docs/troubleshoot)

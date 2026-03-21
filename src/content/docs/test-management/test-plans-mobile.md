@@ -18,9 +18,9 @@ keywords:
 
 テストプランは、次の操作を行う必要がある場合に最適です:
 
-* テスト実行前に環境をセットアップする。
-* テスト実行後に環境をクリーンアップする。
-* 複数のデバイスとオペレーティングシステムでテストを実行する。
+- テスト実行前に環境をセットアップする。
+- テスト実行後に環境をクリーンアップする。
+- 複数のデバイスとオペレーティングシステムでテストを実行する。
 
 ## 新しいモバイルテストプランの作成
 
@@ -49,10 +49,11 @@ keywords:
 ![Add After All セクションでクリーンアップ用のテストスイートやラベルを設定する画面](/images/test-management/test-plans-mobile/7cf9f5b-newmobiletestplan.png)
 
 :::warning{title="注意"}
-* 「Before all」と「After all」のテストは、常に並列レベル `1` で実行されます。CLI で設定されている場合、「Test List」のみがより高い並列化レベルで実行できます。
-* 「before all」テストの 1 つが失敗した場合、Test list のテストは実行されません。
-* 「Add After All」のテストは、Test list のテストが失敗しても常に実行されます。
-:::
+
+- 「Before all」と「After all」のテストは、常に並列レベル `1` で実行されます。CLI で設定されている場合、「Test List」のみがより高い並列化レベルで実行できます。
+- 「before all」テストの 1 つが失敗した場合、Test list のテストは実行されません。
+- 「Add After All」のテストは、Test list のテストが失敗しても常に実行されます。
+  :::
 
 8. **Where to Run**フィールドで、テストを実行する**Mobile Grid**を選択します。詳細については、[Grid Management](/docs/grid-management)を参照してください。
 

@@ -40,15 +40,14 @@ keywords:
 
 ```javascript
 exports.config = {
- 
   beforeSuite: function (suite) {
-    console.log("beforeSuite", suite);
+    console.log('beforeSuite', suite);
     return {
-      "username": "David",
-      "password": 123
-    }
+      username: 'David',
+      password: 123,
+    };
   },
-  };
+};
 ```
 
 以下は、`beforeTest`フックに追加されたテストデータの例です。このテストデータは、実行に含まれるすべてのテストで同じになります:
@@ -60,7 +59,7 @@ exports.config = {
 
   beforeTest: function (test) {
     console.log("beforeTest", test);
-    
+
     return {
       "username": "David",
       "password": 123
@@ -87,11 +86,11 @@ exports.config = {
 ```javascript
 beforeSuite: function () {
     return {
-       overrideTestData: {                 
+       overrideTestData: {
           "Test 1": {user: "dave", password : "123"},
-          "Test 2": {name: "ryan"}                    
+          "Test 2": {name: "ryan"}
         }
-    }    
+    }
 } //beforeSuiteの後に他の関数がある場合は、ここにカンマを追加します
 ```
 
@@ -104,12 +103,12 @@ beforeSuite: function () {
 ```javascript
 beforeSuite: function () {
     return {
-       overrideTestData: {                 
+       overrideTestData: {
           "Test 1": [{user: "michelle", password : "belle"},
                      {user: "paul", password : "walrus"}]
-          "Test 2": {name: "john"}                    
+          "Test 2": {name: "john"}
         }
-    }    
+    }
 } //beforeSuiteの後に他の関数がある場合は、ここにカンマを追加します
 ```
 

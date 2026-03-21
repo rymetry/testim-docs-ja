@@ -53,10 +53,11 @@ keywords:
 ![テストを右クリックして Move to Folder オプションを選択するコンテキストメニュー](/images/test-management/managing-tests-and-folders/fcdaa0c-move-to-folder-rightclick.png)
 
 :::note
-* CTRL/CMD キーを押しながら、目的のテストとフォルダーのそれぞれをクリックすることで、複数のテストやフォルダーを選択できます。
-* 一連のアイテムを選択するには、シーケンスの最初のアイテムを選択し、Tab キーを押しながらシーケンスの最後のアイテムを右クリックします。
-* キーボードで CTRL/CMD キー + A を押すことで、すべてのテストまたはフォルダーを選択することもできます。
-:::
+
+- CTRL/CMD キーを押しながら、目的のテストとフォルダーのそれぞれをクリックすることで、複数のテストやフォルダーを選択できます。
+- 一連のアイテムを選択するには、シーケンスの最初のアイテムを選択し、Tab キーを押しながらシーケンスの最後のアイテムを右クリックします。
+- キーボードで CTRL/CMD キー + A を押すことで、すべてのテストまたはフォルダーを選択することもできます。
+  :::
 
 3. **Move To** ウィンドウが開きます。テストを移動したいフォルダーを選択し、**Select** ボタンをクリックします。
 
@@ -113,7 +114,7 @@ CTRL/CMD キーを押しながら、目的のテストのそれぞれをクリ�
 ![複数のテストを選択して Change Base URL ボタンを押す画面](/images/test-management/managing-tests-and-folders/23df7a9-2023-11-05_13-11-49.png)
 
 3. 目的のベース URL を入力し、**Change** をクリックします。\
-![新しいベース URL を入力して Change をクリックするベース URL 変更ダイアログ](/images/test-management/managing-tests-and-folders/9f47ff5-2023-11-05_13-26-59.png)
+   ![新しいベース URL を入力して Change をクリックするベース URL 変更ダイアログ](/images/test-management/managing-tests-and-folders/9f47ff5-2023-11-05_13-26-59.png)
 
 ## テストのクローン作成
 
@@ -154,9 +155,10 @@ Test Library 画面から、テストまたはフォルダー、あるいは複�
 ![テストやフォルダーを右クリックして Delete を選択するコンテキストメニュー](/images/test-management/managing-tests-and-folders/f8f3e24-delete-right-click.png)
 
 :::note
-* ctrl/cmd キーを押しながら、目的のテストのそれぞれをクリックすることで、複数のテストを選択できます。
-* キーボードで ctrl/cmd キー + A を押すことで、すべてのテストとフォルダーを選択することもできます。
-:::
+
+- ctrl/cmd キーを押しながら、目的のテストのそれぞれをクリックすることで、複数のテストを選択できます。
+- キーボードで ctrl/cmd キー + A を押すことで、すべてのテストとフォルダーを選択することもできます。
+  :::
 
 **Delete** 確認ウィンドウが開きます。
 

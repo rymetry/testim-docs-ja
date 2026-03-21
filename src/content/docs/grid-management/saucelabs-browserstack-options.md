@@ -31,26 +31,26 @@ SauceLabs と BrowserStack の Grid で CLI から capability を設定する方
 }
 ```
 
-2. CLI では次を追加します: **--sauce-options  "\<aboveConfigFileName>.json"**
+2. CLI では次を追加します: **--sauce-options "\<aboveConfigFileName>.json"**
 
 capability は次のような用途に利用できます。
 
-* device allocation の制御
-* Appium version の制御
-* auto alert approval の制御
-* Grid 側で取得する data の制御
-* video の無効化
-* network log の無効化
-* build / project option capability を使った custom test result mapping
-* reset strategy の制御
+- device allocation の制御
+- Appium version の制御
+- auto alert approval の制御
+- Grid 側で取得する data の制御
+- video の無効化
+- network log の無効化
+- build / project option capability を使った custom test result mapping
+- reset strategy の制御
 
 ## capability の override rule (mobile)
 
 JSON capability file の設定は、次の設定を上書きします。
 
-* CLI flag (`deviceName`, `osVersion`)
-* Mobile Config
-* `autoGrantPermissions`、`AutoAcceptAlerts`、video capturing 無効化などの default value
+- CLI flag (`deviceName`, `osVersion`)
+- Mobile Config
+- `autoGrantPermissions`、`AutoAcceptAlerts`、video capturing 無効化などの default value
 
 :::info{title="PlatformVersion capabilities"}
 `platformVersion` capability は検証され、使用すべき Appium version を決定するために使われます。例えば client が Appium version `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の warning が表示されます。これは mobile config / CLI flag の `osVersion` logic と同様です。
@@ -60,7 +60,7 @@ JSON capability file の設定は、次の設定を上書きします。
 
 ### SauceLabs を web で使用する場合
 
-CLI に次を追加します: **--sauce-options  "config_saucelabs.json"**
+CLI に次を追加します: **--sauce-options "config_saucelabs.json"**
 
 file の例:
 
@@ -81,7 +81,7 @@ parameter の詳細は、SauceLabs の公式ドキュメントを参照してく
 
 ### SauceLabs を mobile で使用する場合
 
-* prefix なしの W3C format で Appium capability と SauceLabs option を指定します。
+- prefix なしの W3C format で Appium capability と SauceLabs option を指定します。
 
 [Appium caps](https://saucelabs.com/resources/blog/appium-desired-capabilities-tutorial)
 
@@ -128,8 +128,8 @@ parameter の詳細は、BrowserStack の公式ドキュメントを参照して
 
 ### BrowserStack を mobile で使用する場合
 
-* Appium capability には、prefix なしの W3C capability format を使用します。
-* BrowserStack capability には、legacy (Wire JSON) format を使用します。
+- Appium capability には、prefix なしの W3C capability format を使用します。
+- BrowserStack capability には、legacy (Wire JSON) format を使用します。
 
 [Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
 

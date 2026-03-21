@@ -21,8 +21,8 @@ keywords:
 
 Testim for Salesforce の各テスト環境は、次の設定で構成されています:
 
-* 関連する Salesforce 環境の URL
-* テスト環境が利用可能なブランチ。
+- 関連する Salesforce 環境の URL
+- テスト環境が利用可能なブランチ。
 
 ![スクリーンショット](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/5f39d87-branch.png)
 
@@ -52,5 +52,5 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 2. マージアイコンをクリックします。\
    Merge Branch ダイアログが表示されます。
 3. マージする前に変更を確認します。
-4. マージ後にブランチを削除する場合は、**Delete branch\<branch\_name> upon merge**チェックボックスを選択します。
+4. マージ後にブランチを削除する場合は、**Delete branch\<branch_name> upon merge**チェックボックスを選択します。
 5. **Merge**をクリックします。

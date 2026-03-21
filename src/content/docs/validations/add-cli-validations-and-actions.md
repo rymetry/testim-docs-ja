@@ -25,7 +25,7 @@ keywords:
 
 これらのスクリプトは通常のカスタムアクションと同様にテスト内から開始しますが、CLI アクション/検証では、データベースの検証・操作、画像や PDF の検証など、より高度な処理が可能です。CLI ステップの強力な点は、npm から任意のパッケージを追加して、そのステップの実行中だけスコープして使えることです。依存パッケージの定義は一般的な方法（パッケージパラメーター）に対応しています。
 
-専用の CLI ステップとして *Validate download* もあります。各種ファイルのダウンロード内容が期待どおりかを検証できます。詳細は [Validate download](/docs/validate-download) を参照してください。
+専用の CLI ステップとして _Validate download_ もあります。各種ファイルのダウンロード内容が期待どおりかを検証できます。詳細は [Validate download](/docs/validate-download) を参照してください。
 
 :::note
 CLI アクションステップ中に出力されたログは、実行で起動したターミナルと、ステップ下部の「Step Log」に保存されます。
@@ -37,7 +37,7 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 ## 前提条件
 
-* CLI 検証/アクションを含むテストをローカルで実行するには、次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
+- CLI 検証/アクションを含むテストをローカルで実行するには、次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
 
 **CLI 検証/アクションを含むテストをローカルで実行するには:**
 
@@ -52,7 +52,7 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 ## CLI ステップの追加
 
-*Add CLI action* / *Add CLI validation* のどちらも手順は同じです。
+_Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
 
 **CLI ステップを追加するには:**
 
@@ -100,7 +100,7 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 ![CLI](/images/validations/add-cli-validations-and-actions/4d4751d-CLI_action_param.gif)
 
-  d. 追加した変数は “param” / “packageVariable” といった既定名になります。編集アイコンから分かりやすい名前に変更してください。
+d. 追加した変数は “param” / “packageVariable” といった既定名になります。編集アイコンから分かりやすい名前に変更してください。
 
 ![Testim インターフェース](/images/validations/add-cli-validations-and-actions/d9532c0-Testim_331a_r.png)
 
@@ -112,7 +112,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 
 ![CLI](/images/validations/add-cli-validations-and-actions/1418058-Testim_332.png)
 
-11. ステップ失敗時の動作を指定するには、**When this step fails** を開き、*Mark error & stop* / *Mark error & continue* / *Mark warning & continue* を選択します。
+11. ステップ失敗時の動作を指定するには、**When this step fails** を開き、_Mark error & stop_ / _Mark error & continue_ / _Mark warning & continue_ を選択します。
 12. ステップの実行条件を制御するには、**When to run step** を開いて設定します（[Conditions](/docs/conditions) 参照）。
 13. 既定のタイムアウト（30000ms）を上書きする場合は、**Override timeout** をクリックして任意の値を入力します。
 14. 左上の **back** 矢印でエディターに戻ります。
@@ -125,6 +125,6 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 
 ### CLI ステップの例
 
-* [MongoDB validation](/docs/mongodb-validation)
-* [MySQL validation](/docs/mysql-validation)
-* [Extract SMS message](/docs/extract-sms-message)
+- [MongoDB validation](/docs/mongodb-validation)
+- [MySQL validation](/docs/mysql-validation)
+- [Extract SMS message](/docs/extract-sms-message)

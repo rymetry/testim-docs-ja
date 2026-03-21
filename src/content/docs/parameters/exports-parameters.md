@@ -21,9 +21,9 @@ keywords:
 
 エクスポートには 3 種類あります。
 
-* ローカル（Local）: 同一スコープ内のステップ間で受け渡し（例: グループ内のステップ間）
-* テスト（Test）: 同一テスト内のステップ／グループ間で受け渡し
-* グローバル（Global）: 同一実行内でテスト間に受け渡し（テストプラン／ラベル／テストスイート）
+- ローカル（Local）: 同一スコープ内のステップ間で受け渡し（例: グループ内のステップ間）
+- テスト（Test）: 同一テスト内のステップ／グループ間で受け渡し
+- グローバル（Global）: 同一実行内でテスト間に受け渡し（テストプラン／ラベル／テストスイート）
 
 :::warning{title="グローバルエクスポート"}
 グローバルにエクスポートした値はリモート実行でのみ利用可能です。
@@ -37,16 +37,16 @@ keywords:
 
 ここではローカルのエクスポートをカスタムアクションで設定し、同じテスト内のカスタム検証で利用します。
 
-* 新規テストを作成します。
-* カスタムアクションを追加し、エディターに次を入力します。
+- 新規テストを作成します。
+- カスタムアクションを追加し、エディターに次を入力します。
 
 ```javascript
-//For Local export:     
-exports.bestTestingTool = "Testim";
-//For Test  export:      
-exportsTest.bestTestingTool = "Testim";
-//For Global export:     
-exportsGlobal.bestTestingTool = "Testim";
+//For Local export:
+exports.bestTestingTool = 'Testim';
+//For Test  export:
+exportsTest.bestTestingTool = 'Testim';
+//For Global export:
+exportsGlobal.bestTestingTool = 'Testim';
 ```
 
 ![パラメーターのエクスポート例](/images/parameters/exports-parameters/1b18e5a-export_param1.gif)
@@ -54,8 +54,8 @@ exportsGlobal.bestTestingTool = "Testim";
 3. カスタム検証を追加し、次を入力します。
 
 ```javascript
-if (bestTestingTool !== "Testim") {
-     throw new Error("choose Testim!");
+if (bestTestingTool !== 'Testim') {
+  throw new Error('choose Testim!');
 }
 ```
 
@@ -70,7 +70,7 @@ if (bestTestingTool !== "Testim") {
 エクスポートした値は、そのステップ以降で利用できます。同一ステップ内で使いたい場合は次のようにローカル変数を使います。
 
 ```javascript
-var local = "Testim";
+var local = 'Testim';
 console.log(local);
 exports.bestTestingTool = local;
 ```
@@ -93,8 +93,8 @@ exports.bestTestingTool = local;
 4. エディターのコードを次のように変更します。
 
 ```javascript
-if (WhoIsAwesome !== "Testim is awesome!") {
-  throw new Error("choose Testim!");
+if (WhoIsAwesome !== 'Testim is awesome!') {
+  throw new Error('choose Testim!');
 }
 ```
 
@@ -102,9 +102,9 @@ if (WhoIsAwesome !== "Testim is awesome!") {
 
 注意:
 
-* エクスポートで扱える型
+- エクスポートで扱える型
   1. プリミティブ（数値、文字列、真偽値など）
   2. 配列
   3. JSON オブジェクト
 
-* 1 ステップあたりのグローバルエクスポートは 2MB まで
+- 1 ステップあたりのグローバルエクスポートは 2MB まで

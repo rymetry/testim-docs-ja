@@ -22,13 +22,13 @@ keywords:
 
 Copilot コーディングアシスタントは、以下のステップで用いる JS コードの作成・理解・修正を支援します。
 
-* [Add Custom Action](/docs/custom-code)
-* [Add Custom Validation](/docs/custom-code)
-* [Add Custom Wait For](/docs/wait-for#custom-wait-for-web)
-* [Add Network validation](/docs/add-network-validation)
-* [Add CLI Validation](/docs/add-cli-validations-and-actions)
-* [Validate Download](/docs/validate-download)
-* [Custom Condition](/docs/conditions#configuring-a-custom-condition)
+- [Add Custom Action](/docs/custom-code)
+- [Add Custom Validation](/docs/custom-code)
+- [Add Custom Wait For](/docs/wait-for#custom-wait-for-web)
+- [Add Network validation](/docs/add-network-validation)
+- [Add CLI Validation](/docs/add-cli-validations-and-actions)
+- [Validate Download](/docs/validate-download)
+- [Custom Condition](/docs/conditions#configuring-a-custom-condition)
 
 このアシスタントは OpenAI の生成 AI を Testim 用に統合・最適化したものです。チャットのプロンプト入力に加え、スラッシュ（/）で始まるコマンドも利用できます。
 
@@ -57,19 +57,15 @@ Copilot コーディングアシスタントは、以下のステップで用い
    4. /help - ドキュメントを表示
 
 7. 次のいずれかを実行します。
-
    1. **Generate の場合** – 作成したいコード内容をプロンプトに入力して送信します。生成されたコードはチャットに表示され、次の方法で利用できます。
-
-      * **Paste code at cursor** – カーソル位置にコードを貼り付けます。
+      - **Paste code at cursor** – カーソル位置にコードを貼り付けます。
 
       ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/088b93b-pastecodecursor.png)
-
-      * **Copy code** – コードをクリップボードにコピーします。
+      - **Copy code** – コードをクリップボードにコピーします。
 
       ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/5b54849-copy.png)
 
    2. **Explain の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
-
       1. フローティングメニューの **Explain code with AI** アイコンをクリックします。
 
          ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/eaf33c5-explainfloating.png)
@@ -80,16 +76,14 @@ Copilot コーディングアシスタントは、以下のステップで用い
          ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/f367d0f-explain.png)
 
    3. **Fix の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
-
       1. フローティングウィンドウの **Fix code with AI** アイコンをクリックします。
 
          ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/9d99571-fixcodefloating.png)
 
       2. プロンプト欄に `/fix` と入力します。\
          修正案がチャットに表示され、次の方法で利用できます。
-
-         * **Paste code at cursor** – 挿入したい位置にカーソルを置き、**Paste code at cursor** をクリックして生成コードをその位置に挿入します。
-         * **Copy code** – **Copy code** ボタンをクリックして生成コードをコピーし、任意の場所に貼り付けます。
+         - **Paste code at cursor** – 挿入したい位置にカーソルを置き、**Paste code at cursor** をクリックして生成コードをその位置に挿入します。
+         - **Copy code** – **Copy code** ボタンをクリックして生成コードをコピーし、任意の場所に貼り付けます。
 
 ## 使用例
 

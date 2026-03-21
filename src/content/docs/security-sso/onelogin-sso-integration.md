@@ -70,9 +70,9 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 25. 再度**Save**をクリックします。
 26. 以下のフィールドの組み合わせについて、ステップ**20 – 25**を繰り返します:
 
-* `firstName`（`First Name`にマッピング）
-* `lastName`（`Last Name`にマッピング）
-* `profilePicture`（`Profile Picture`にマッピング） – これはオプションです
+- `firstName`（`First Name`にマッピング）
+- `lastName`（`Last Name`にマッピング）
+- `profilePicture`（`Profile Picture`にマッピング） – これはオプションです
 
 27. **OneLogin**のまま、Info 画面に戻り、**More Actions**ドロップダウンメニューをクリックします。
 28. **SAML Metadata**の横にある**download**アイコンをクリックし、ファイルをローカルフォルダーに保存します。

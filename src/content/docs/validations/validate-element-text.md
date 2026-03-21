@@ -35,7 +35,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 
 ![スクリーンショット](/images/validations/validate-element-text/c2ef26f-Screen_Shot_2021-04-18_at_6.37.44.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![ステップ追加](/images/validations/validate-element-text/f9aa3c6-Testim_083a_r.png)
 
@@ -112,13 +112,13 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 ![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
-   右側に Properties パネルが表示されます。
+右側に Properties パネルが表示されます。
 
 4. **Target element** のサムネイルにカーソルを合わせます。
 
 ![テキスト設定](/images/validations/validate-element-text/5934637-Testim_015a_r.png)
 
-   **Target element** のオプションが表示されます。
+**Target element** のオプションが表示されます。
 
 ![要素設定](/images/validations/validate-element-text/79b44a7-Testim_010_r.png)
 
@@ -138,7 +138,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 ![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
-   右側に Properties パネルが表示されます。
+右側に Properties パネルが表示されます。
 
 2. **Expected value** フィールドに、検証対象のテキスト（文字列 / 正規表現 / JS 式 / パラメーター）を設定します。
 
@@ -189,7 +189,7 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 2 つの値のいずれかに一致するかを検証します。例えば param1 = "Hello"、param2 = "World" の場合、"Hello" または "World" でパスします：
 
 ```javascript
-new RegExp("^" + "(?:" + param1 + "_" + "|" + param2 + "_)" + "$")
+new RegExp('^' + '(?:' + param1 + '_' + '|' + param2 + '_)' + '$');
 ```
 
 #### 不一致の検証（Not Equal Validation）
@@ -197,7 +197,7 @@ new RegExp("^" + "(?:" + param1 + "_" + "|" + param2 + "_)" + "$")
 テキストが param1 と一致しないことを検証します。例えば param1 = "Example1" の場合、テキストが "Example1" であれば検証は失敗し、それ以外の値はパスします：
 
 ```javascript
-new RegExp("^" + "((?!" + param1 + ").)*$")
+new RegExp('^' + '((?!' + param1 + ').)*$');
 ```
 
 #### 数値の検証（正の整数のみ）
@@ -252,7 +252,7 @@ new RegExp("^" + "((?!" + param1 + ").)*$")
    例）`username` というパラメーターに `Hello, John` を渡す場合、カスタムアクションを追加してエディターに以下を入力します。
 
 ```javascript
-exportsTest.usename = "Hello, John"
+exportsTest.usename = 'Hello, John';
 ```
 
 <Image title="export_param.gif" alt={1920} align="center" src="/images/validations/validate-element-text/91597d2-export_param.gif">
@@ -280,11 +280,11 @@ exportsTest.usename = "Hello, John"
 先頭一致（パラメーターで始まる）
 
 ```javascript
-new RegExp('^' + userName)
+new RegExp('^' + userName);
 ```
 
 末尾一致（パラメーターで終わる）
 
 ```javascript
-new RegExp(userName + '$')
+new RegExp(userName + '$');
 ```

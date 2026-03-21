@@ -81,7 +81,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 
 1. 要素を再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** ボタンをクリックします。
 2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
-3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![CLI](/images/validations/css-property-validation/00517ed-Testim_148a.png)
 

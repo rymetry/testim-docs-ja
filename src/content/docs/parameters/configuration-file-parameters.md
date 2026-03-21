@@ -18,7 +18,7 @@ keywords:
 
 設定ファイルの beforeSuite / beforeTest フックでテストにパラメーターを渡す
 
-[*設定ファイル*](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメーターを定義する共通 JS です。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメーター定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメーターを各テストへ渡せます。
+[_設定ファイル_](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメーターを定義する共通 JS です。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメーター定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメーターを各テストへ渡せます。
 
 ## パラメーターのスコープ
 
@@ -44,7 +44,7 @@ exports.config = {
 
   beforeTest: function (test) {
     console.log("beforeTest", test);
-    
+
     return {
       "username": "David",
       "password": 123
@@ -68,11 +68,11 @@ exports.config = {
 ```javascript
 beforeSuite: function () {
     return {
-       overrideTestData: {                 
+       overrideTestData: {
           "Test 1": {user: "dave", password : "123"},
-          "Test 2": {name: "ryan"}                    
+          "Test 2": {name: "ryan"}
         }
-    }    
+    }
 } //add comma here if there are more functions after beforeSuite
 ```
 
@@ -85,12 +85,12 @@ beforeSuite: function () {
 ```javascript
 beforeSuite: function () {
     return {
-       overrideTestData: {                 
+       overrideTestData: {
           "Test 1": [{user: "michelle", password : "belle"},
                      {user: "paul", password : "walrus"}]
-          "Test 2": {name: "john"}                    
+          "Test 2": {name: "john"}
         }
-    }    
+    }
 } //add comma here if there are more functions after beforeSuite
 ```
 
@@ -109,15 +109,14 @@ beforeSuite: function () {
 
 ```javascript javascript
 exports.config = {
- 
   beforeSuite: function (suite) {
-    console.log("beforeSuite", suite);
+    console.log('beforeSuite', suite);
     return {
-      "username": "David",
-      "password": 123
-    }
+      username: 'David',
+      password: 123,
+    };
   },
-  };
+};
 ```
 
 例（beforeTest に追加）：
@@ -129,7 +128,7 @@ exports.config = {
 
   beforeTest: function (test) {
     console.log("beforeTest", test);
-    
+
     return {
       "username": "David",
       "password": 123

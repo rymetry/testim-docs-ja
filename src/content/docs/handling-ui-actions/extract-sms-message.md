@@ -26,35 +26,35 @@ CLI action step と Twilio を使用して SMS メッセージを抽出する方
 
 ```javascript
 // twilio.com/consoleからのアカウントSidと認証トークン
-const accountSid = "XXXXX";
-const authToken = "XXXXX";
-const fromNumber = "XXXXX";
-const toNumber = "XXXXXX";
+const accountSid = 'XXXXX';
+const authToken = 'XXXXX';
+const fromNumber = 'XXXXX';
+const toNumber = 'XXXXXX';
 const checkPeriodInMin = 5;
 
-const dateSentAfter = moment().subtract(checkPeriodInMin, "minutes");
-console.debug("dateSentAfter", dateSentAfter);
+const dateSentAfter = moment().subtract(checkPeriodInMin, 'minutes');
+console.debug('dateSentAfter', dateSentAfter);
 
 const client = twilio(accountSid, authToken);
 
 return client.messages
-    .list({
-        to: toNumber,
-        from: fromNumber,
-        dateSentAfter: dateSentAfter.format('YYYY-MM-DD')
-    })
-    .then(messages => {
-        const relevantMessages = messages.filter(msg => dateSentAfter.isBefore(msg.dateSent));
-        if (relevantMessages.length === 0) {
-            return Promise.reject(new Error("Failed to find any message"));
-        }
-        if (relevantMessages.length > 1) {
-            console.warn(`find more than one messages ${relevantMessages.length} took the first message`);
-        }
-        const firstMessages = relevantMessages[0];
-        const message = firstMessages.body;
-        exports.code = message.replace("Verification Code: ", "");
-    });
+  .list({
+    to: toNumber,
+    from: fromNumber,
+    dateSentAfter: dateSentAfter.format('YYYY-MM-DD'),
+  })
+  .then((messages) => {
+    const relevantMessages = messages.filter((msg) => dateSentAfter.isBefore(msg.dateSent));
+    if (relevantMessages.length === 0) {
+      return Promise.reject(new Error('Failed to find any message'));
+    }
+    if (relevantMessages.length > 1) {
+      console.warn(`find more than one messages ${relevantMessages.length} took the first message`);
+    }
+    const firstMessages = relevantMessages[0];
+    const message = firstMessages.body;
+    exports.code = message.replace('Verification Code: ', '');
+  });
 ```
 
 ## Parameters - この例で使用するパッケージと JavaScript
@@ -62,6 +62,6 @@ return client.messages
 | name   | type    | value         |
 | ------ | ------- | ------------- |
 | twilio | Package | twilio@3.25.0 |
-| _      | Package | moment@latest |
+| \_     | Package | moment@latest |
 
 ![設定画面のスクリーンショット](/images/handling-ui-actions/extract-sms-message/6842940-see_screenshot1.png)

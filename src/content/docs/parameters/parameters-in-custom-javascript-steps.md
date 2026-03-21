@@ -22,8 +22,8 @@ keywords:
 
 パラメーターの種類は 2 つあります。
 
-* HTML: AUT の HTML 要素を参照します
-* JS (JavaScript): 任意の JS 式を定義します
+- HTML: AUT の HTML 要素を参照します
+- JS (JavaScript): 任意の JS 式を定義します
 
 ## パラメーターのスコープ
 
@@ -68,7 +68,7 @@ keywords:
 定義したパラメーターは、そのステップ内で使用できます。例えば、次のように関数内で参照します。
 
 ```javascript
-twitter.click()
+twitter.click();
 ```
 
 テストを実行し、要素がクリックされることを確認します。

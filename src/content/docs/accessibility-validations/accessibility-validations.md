@@ -91,7 +91,6 @@ Testim のアクセシビリティステップは、業界をリードするア�
 ![プロパティパネル](/images/accessibility-validations/accessibility-validations/04ae060-Screen_Shot_2021-12-16_at_9.42.42.png)
 
 8. 以下の説明に従ってプロパティを設定します。
-
    - **Description** – ステップの説明。（デフォルト = Page accessibility validation）
    - **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）影響レベルの詳細は下記の表を参照してください。
    - **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。下記の表を参照してください。デフォルトではすべてのタグが選択されています。

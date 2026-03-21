@@ -45,7 +45,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ![Create Test ボタン](/images/getting-started/creating-your-first-codeless-test/8d9ef22-gettingstarted2.png)
 
-   エディターで新しいテストが開きます。ここでテストの記録、検証の追加、ステップの編集を行います。
+エディターで新しいテストが開きます。ここでテストの記録、検証の追加、ステップの編集を行います。
 
 2. ツールバーの赤い **Record** ボタンをクリックします。
 
@@ -85,7 +85,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ### 検証ステップを追加する手順
 
-1. *Space & Beyond Demo 01* テストのエディター画面で、Click "*LOG IN*" ステップの右側にある最後の「**+**」ボタンにカーソルを合わせます。
+1. _Space & Beyond Demo 01_ テストのエディター画面で、Click "_LOG IN_" ステップの右側にある最後の「**+**」ボタンにカーソルを合わせます。
 
    ![Testim の + ボタン](/images/getting-started/creating-your-first-codeless-test/177c8fc-plus.png)
 
@@ -104,7 +104,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ![HELLO, JOHN テキスト](/images/getting-started/creating-your-first-codeless-test/6b89de8-hellojohn.png)
 
-新しい *Text Validation* ステップがテストに追加されます。
+新しい _Text Validation_ ステップがテストに追加されます。
 
 ![Text Validation ステップ](/images/getting-started/creating-your-first-codeless-test/d6cad45-hellostep.png)
 
@@ -125,7 +125,7 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
 ![Play ボタン](/images/getting-started/creating-your-first-codeless-test/de7d41f-play.png)
 
-   新しいブラウザが開き、デモサイト上でテストのアクションが実行されます。テスト完了後、ポップアップに成功したかどうかが表示されます。
+新しいブラウザが開き、デモサイト上でテストのアクションが実行されます。テスト完了後、ポップアップに成功したかどうかが表示されます。
 
 ![テスト完了のポップアップ](/images/getting-started/creating-your-first-codeless-test/f0fa541-testcompleted.png)
 

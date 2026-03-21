@@ -24,7 +24,7 @@ keywords:
 
 利用可能なデバッグツールは次のとおりです:
 
-* [デバッグコントロール](/docs/debugging-controls)
-* [バグ解決のための新しいステップの記録](/docs/recording-additional-steps-to-fix-bugs)
-* [デバッグヘルパーパネル](/docs/debug-helper-panels)
-* [JS コードデバッグ](/docs/js-code-debugging)
+- [デバッグコントロール](/docs/debugging-controls)
+- [バグ解決のための新しいステップの記録](/docs/recording-additional-steps-to-fix-bugs)
+- [デバッグヘルパーパネル](/docs/debug-helper-panels)
+- [JS コードデバッグ](/docs/js-code-debugging)

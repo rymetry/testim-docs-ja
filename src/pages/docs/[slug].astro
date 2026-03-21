@@ -19,10 +19,12 @@ const docs = await getDocs();
 
 // SSRモード: URLパラメータからdocIdを解決
 // Staticモード: propsからdocIdを取得
-const docId = Astro.props?.docId ?? (() => {
-  const match = docs.find((doc) => extractSlug(doc) === slugParam);
-  return match?.id;
-})();
+const docId =
+  Astro.props?.docId ??
+  (() => {
+    const match = docs.find((doc) => extractSlug(doc) === slugParam);
+    return match?.id;
+  })();
 
 if (!docId) {
   return Astro.redirect('/404');

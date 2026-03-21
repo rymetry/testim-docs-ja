@@ -31,11 +31,11 @@ LambdaTest integration では、Testim は現在 [selenium testing](https://www.
 2. **Next** をクリックします。
 3. 次の field を入力します。
 
-* **Name**: 実行時に使用する Grid 名
-* **Host**: LambdaTest の host name（例: `hub.lambdatest.com`）
-* **Port**: LambdaTest の port。既定値は `443`
-* **Username**: LambdaTest の user name
-* **Password/access key**: 接続に使用する LambdaTest access key または password
+- **Name**: 実行時に使用する Grid 名
+- **Host**: LambdaTest の host name（例: `hub.lambdatest.com`）
+- **Port**: LambdaTest の port。既定値は `443`
+- **Username**: LambdaTest の user name
+- **Password/access key**: 接続に使用する LambdaTest access key または password
 
 ![LambdaTest Grid の接続情報を設定する画面](/images/grid-management/browserstack-integration-copy/9301458-gridmanagement.gif)
 
@@ -59,8 +59,8 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 Test Editor から直接 Grid 上でテストを実行できます。
 
-* **Run** ボタンの横にある options arrow をクリックします。
-* **Run on a grid** をクリックします。
+- **Run** ボタンの横にある options arrow をクリックします。
+- **Run on a grid** をクリックします。
 
 その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
 

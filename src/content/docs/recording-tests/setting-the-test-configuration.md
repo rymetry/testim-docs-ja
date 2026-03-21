@@ -34,7 +34,6 @@ Edit Configuration パネルが表示されます。
 ![構成編集パネル](/images/recording-tests/setting-the-test-configuration/5192691-edittestconfiguration.png)
 
 3. オプションで以下の設定を編集します:
-
    - **Step timeout (ms)** - Testim がテストステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
    - **Step delay (ms)** - テストステップの実行間の遅延をミリ秒単位で指定します。
    - **Setup step timeout (ms)** - Testim がテストの Setup ステップに対して失敗を登録する時間経過をミリ秒単位で指定します。

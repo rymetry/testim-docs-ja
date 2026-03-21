@@ -26,8 +26,8 @@ Testim でパラメーターを使う方法はいくつかあります（例: [�
 
 ### テスト開始前
 
-* [設定ファイルのパラメーター](/docs/configuration-file-parameters) は [パラメーターファイル](/docs/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
-* [パラメーターファイル](/docs/json-parameters-file-parameters) は [既定のテストデータ／ランデータ](/docs/data-driven-testing) を上書きします。
+- [設定ファイルのパラメーター](/docs/configuration-file-parameters) は [パラメーターファイル](/docs/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
+- [パラメーターファイル](/docs/json-parameters-file-parameters) は [既定のテストデータ／ランデータ](/docs/data-driven-testing) を上書きします。
 
 Note: テストに渡されるすべてのパラメーターは**ローカルレベル**の可視性（テスト全体を大きな 1 つのグループとみなす）を持ちます。
 
@@ -35,9 +35,9 @@ Note: テストに渡されるすべてのパラメーターは**ローカルレ
 
 可視性スコープは次の 3 種類です。
 
-* Local — 値はグループ内に存在し、グループを抜けるとアクセスできません
-* Test — テストの間有効です
-* Test Suite — 複数テスト実行をまたいで受け渡されます
+- Local — 値はグループ内に存在し、グループを抜けるとアクセスできません
+- Test — テストの間有効です
+- Test Suite — 複数テスト実行をまたいで受け渡されます
 
 ### 上書きの優先
 
@@ -62,9 +62,11 @@ console.log(x); // prints "local"
 既定値の定義に使います（設定ファイルやフックで上書きされ得る）。配列（オブジェクトの配列）を与えると同一テストを複数回実行できます。
 
 #### パラメーターファイル
+
 テスト固有ではなく、すべてのテストへ共通値（例: 共通認証情報）を渡します。
 
 #### 設定ファイル
+
 動的にパラメーター群を読み込みます。Node.js で実行されるカスタム JS が使えるため、DB や CSV など任意のソースから読み込めます。サンプルは[こちら](/docs/data-driven-testing)。
 
 Notes:
@@ -75,7 +77,7 @@ Notes:
 `beforeSuite` でテストデータを上書きする例：
 
 ```javascript
-beforeSuite() {    
+beforeSuite() {
   return {
        y: 5,
        overrideTestData: {

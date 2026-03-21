@@ -26,8 +26,8 @@ AI エージェントの支援を受けて、Salesforce 環境向けのユニー
 
 ## 前提条件
 
-* Testim Extension をダウンロードしてインストールする - [なぜ Testim Extension が必要ですか？](/docs/why-do-you-need-testim-extension)
-* [Salesforce テスト環境を Testim/TTA for Salesforce に接続する](/docs/create-and-manage-test-environments)。
+- Testim Extension をダウンロードしてインストールする - [なぜ Testim Extension が必要ですか？](/docs/why-do-you-need-testim-extension)
+- [Salesforce テスト環境を Testim/TTA for Salesforce に接続する](/docs/create-and-manage-test-environments)。
 
 ## Agentic Test Automation で新しい Salesforce テストを作成する
 
@@ -37,7 +37,7 @@ AI エージェントの支援を受けて、Salesforce 環境向けのユニー
 2. このサービスを初めて使用する場合は、**Terms of Service**の一番下までスクロールして、**Got it**を選択してオプトインします。
 3. これで、エージェントへのプロンプトを開始できます。テストしたい内容の説明をエージェントに与えます。それが簡単なものでも複雑なものでも構いません。これを行う方法の例については、[プロンプトの作成方法](/docs/use-agentic-test-automation-for-salesforce#プロンプトの作成方法)をご覧ください。
 
-  ![Agentic Test Automation のプロンプト入力画面](/images/salesforce-testing/use-agentic-test-automation-for-salesforce/ff3b908-Salesforce_AgenticeAITesting_Screenshot.png)
+![Agentic Test Automation のプロンプト入力画面](/images/salesforce-testing/use-agentic-test-automation-for-salesforce/ff3b908-Salesforce_AgenticeAITesting_Screenshot.png)
 
 4. エージェントが作業している間、時々テストステップを追加する確認を求めます。エージェントが提供する情報を確認し、ステップを追加するかどうかを確認します。
 5. エージェントがテストの作成を完了すると、テストを実行するかどうかを尋ねられます。この時点で、停止して通常どおりに[テストを手動でレビュー、編集、実行](/docs/create-a-salesforce-test)できます。または、このリクエストを確認して、エージェントにテストを実行させることができます。

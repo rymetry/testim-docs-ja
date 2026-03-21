@@ -40,7 +40,7 @@ Testim で使用する仮想デバイスを追加するには、以下のソフ�
 
 - Android デバイス: Virtual Device Manager 付き Android Studio
 - Apple デバイス: XCode iOS Simulator
-:::
+  :::
 
 ### テストに使用するモバイルアプリの変更
 

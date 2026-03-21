@@ -18,8 +18,8 @@ keywords:
 
 Virtual Mobile Grid (VMG) は、多数の iOS simulator と Android emulator を対象にテストできる Grid です。利用可能なさまざまな virtual device を使うことで、接続と設定を簡素化し、品質を高められます。
 
-* 利用可能な virtual device を使って接続と設定を簡素化し、品質を向上できます。
-* 異なる device で parallel run を行い、テスト実行をスケールできます。
+- 利用可能な virtual device を使って接続と設定を簡素化し、品質を向上できます。
+- 異なる device で parallel run を行い、テスト実行をスケールできます。
 
 Virtual Mobile Grid はテストの記録にも実行にも使用できます。また、[Mobile Apps Library](/docs/mobile-apps) と接続されています。つまり、mobile app を使うテストを Virtual Mobile Grid で実行する前に、その app を Mobile Apps Library へ追加しておく必要があります。
 
@@ -53,11 +53,11 @@ Community license を利用している場合、Company Owner または Project 
 
 Virtual Mobile Grid でテストを実行する前に、次を確認してください。
 
-* **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
+- **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
 
 ![Virtual Mobile Grid 向け mobile configuration の設定例](/images/grid-management/virtual-mobile-grid/07dd385-image_2.png)
 
-* **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps) を参照してください。すでに ***"From Device"*** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
+- **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps) を参照してください。すでに **_"From Device"_** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
 
 ### テストをリモート実行する
 
@@ -87,7 +87,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 ### From Device で記録した app を変更する
 
-***"From Device"*** option で選択した app を使ってテストを記録済みの場合は、次の方法で app を差し替えます。
+**_"From Device"_** option で選択した app を使ってテストを記録済みの場合は、次の方法で app を差し替えます。
 
 #### Editor から変更する
 

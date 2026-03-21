@@ -18,9 +18,9 @@ keywords:
 
 マッピングファイルは、リクエストとレスポンスの配列を含むエントリの配列を含む JSON ファイルです。各リクエストは、単一のレスポンスに複数回マッピングできます。JSON は、HAR ファイルにあるようなエントリを持つ必要があります。以下の要素が必須です:
 
-* リクエスト内の URL
-* レスポンス内のステータスまたはリダイレクト URL
-* **GET**呼び出しを**マッピングしない**場合は、**リクエスト**の一部としてメソッドタイプを指定
+- リクエスト内の URL
+- レスポンス内のステータスまたはリダイレクト URL
+- **GET**呼び出しを**マッピングしない**場合は、**リクエスト**の一部としてメソッドタイプを指定
 
 URL には、ワイルドカードとして\*を使用できます。これは、パターンにマッチするすべてのリクエストがキャッチされ、ファイル内のレスポンスにマッピングされることを意味します。\
 マッピングファイルはローカルに保存する必要があります。
@@ -38,10 +38,12 @@ URL には、ワイルドカードとして\*を使用できます。これは�
       },
       "response": {
         "status": 200,
-        "headers": [{
-          "name": "Content-Type",
-          "value": "application/json; charset=utf-8"
-        }],
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json; charset=utf-8"
+          }
+        ],
         "content": {
           "text": "{\"mock\": \"network\"}"
         }
@@ -63,10 +65,12 @@ URL には、ワイルドカードとして\*を使用できます。これは�
       },
       "response": {
         "status": 200,
-        "headers": [{
-          "name": "Content-Type",
-          "value": "application/json; charset=utf-8"
-        }],
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json; charset=utf-8"
+          }
+        ],
         "content": {
           "text": "{\"mock\": \"network\"}"
         }
@@ -80,42 +84,43 @@ URL には、ワイルドカードとして\*を使用できます。これは�
 
 ```json
 {
-    "entries": [
-      {
-        "request": {
-          "url": "*/urlRequestYouWantToMock/*?=yourQueryParam"
-        },
-        "response": {
-            "redirectUrl" : "https://www.google.com"
-          }
+  "entries": [
+    {
+      "request": {
+        "url": "*/urlRequestYouWantToMock/*?=yourQueryParam"
+      },
+      "response": {
+        "redirectUrl": "https://www.google.com"
       }
-    ]
-  }
+    }
+  ]
+}
 ```
 
 ### レスポンスにテキストを含むマッピングファイル
 
 ```json
 {
-    "entries": [
-      {
-        "request": {
-          "url": "*/urlRequestYouWantToMock/*?=yourQueryParam"
-        },
-        "response": {
-            "status" : 200,
-            "headers": [{
-                "name": "Content-Type",
-                "value": "text/html; charset=UTF-8"
-              }],
-              "content": {
-                "text": "mock network"
-              }
-            
+  "entries": [
+    {
+      "request": {
+        "url": "*/urlRequestYouWantToMock/*?=yourQueryParam"
+      },
+      "response": {
+        "status": 200,
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=UTF-8"
           }
+        ],
+        "content": {
+          "text": "mock network"
+        }
       }
-    ]
-  }
+    }
+  ]
+}
 ```
 
 ## ログイン用のパススルー認証を有効にするマッピングファイルの作成
@@ -126,17 +131,16 @@ URL には、ワイルドカードとして\*を使用できます。これは�
 
 ```json
 {
-"entries": [
-    
-      {
-          "request": {
-          "url": "https://your_app_domain/login/*"
-        },
-            "response": {
-            "passthrough":true
-        }
+  "entries": [
+    {
+      "request": {
+        "url": "https://your_app_domain/login/*"
+      },
+      "response": {
+        "passthrough": true
       }
-    ]
+    }
+  ]
 }
 ```
 

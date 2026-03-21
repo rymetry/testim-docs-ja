@@ -24,25 +24,25 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 
 ## 主な機能
 
-* 構文チェック
-* 自動補完
-* シンタックスカラーリング
-* コードナビゲーション
-* 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editingevolved)
+- 構文チェック
+- 自動補完
+- シンタックスカラーリング
+- コードナビゲーション
+- 機能の詳細一覧は[こちら](https://code.visualstudio.com/docs/editingevolved)
 
 ## 使用できるステップ
 
 高度な JS エディターを利用できるステップ:
 
-* [Custom action](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
-* [CLI action](/docs/add-cli-validations-and-actions)
-* [Custom validation](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
-* [CLI validation](/docs/add-cli-validations-and-actions)
-* [Download validation](/docs/validate-download)
-* [Email validation](/docs/email-validation)
-* [Network validation](/docs/add-network-validation)
-* [Custom wait for](/docs/wait-for#custom-wait-for)
-* CLI wait for
-* Download wait for
+- [Custom action](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
+- [CLI action](/docs/add-cli-validations-and-actions)
+- [Custom validation](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
+- [CLI validation](/docs/add-cli-validations-and-actions)
+- [Download validation](/docs/validate-download)
+- [Email validation](/docs/email-validation)
+- [Network validation](/docs/add-network-validation)
+- [Custom wait for](/docs/wait-for#custom-wait-for)
+- CLI wait for
+- Download wait for
 
 ![高度な JS エディターのスクリーンショット](/images/advanced-features/advanced-js-editor/37b40ca-monaco_editor4x.png)

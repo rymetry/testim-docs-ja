@@ -60,8 +60,8 @@ keywords:
    :::note
    一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
    :::
-
    6. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
+
 5. **OK** をクリックします。\
    Deep Link ステップが追加されます。
 6. **Properties** で必要に応じて以下を設定します。

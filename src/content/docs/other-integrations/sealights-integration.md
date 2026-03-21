@@ -113,7 +113,7 @@ Testim では、この`labId`を CLI を使用して Sealights 統合でテス�
 
 #### Sealights から labId を取得する
 
-Sealights で、`labId`が割り当てられたら、次の画面で見つけることができます:  
+Sealights で、`labId`が割り当てられたら、次の画面で見つけることができます:
 
 - Sealights で、**Cockpit > Live Agents Monitor**に移動します - この画面には、Sealights でインストルメント化されているすべての実行中のプロセスが表示されます。以下に示すように、これらのプロセスの一部には割り当てられた labId が含まれます:
 

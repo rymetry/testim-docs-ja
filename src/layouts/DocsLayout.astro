@@ -23,7 +23,8 @@ type DocsLayoutProps = {
   headings: MarkdownHeading[];
 };
 
-const { title, description, hero, navSections, currentSlug, headings } = Astro.props as DocsLayoutProps;
+const { title, description, hero, navSections, currentSlug, headings } =
+  Astro.props as DocsLayoutProps;
 
 const siteTitle = 'Tricentis Testim ユーザー制作日本語翻訳ドキュメント';
 const pageTitle = `${title} | ${siteTitle}`;
@@ -79,7 +80,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <body class="flex min-h-screen flex-col font-sans text-slate-900 antialiased">
     <Fragment set:html={gtmBodyCode} />
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
-      <div class="mx-auto flex w-full max-w-screen-2xl flex-col items-stretch gap-3 px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+      <div
+        class="mx-auto flex w-full max-w-screen-2xl flex-col items-stretch gap-3 px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6"
+      >
         <a href="/" class="flex w-full items-center gap-2.5 sm:w-auto">
           <img src="/logo.svg" alt="Testim Docs JA" class="h-8 w-8 shrink-0" />
           <p class="text-sm font-semibold tracking-wide text-slate-800">
@@ -99,13 +102,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 {
                   navSections.map((section) => (
                     <optgroup label={section.label}>
-                      {
-                        section.items.map((item) => (
-                          <option value={`/docs/${item.slug}`} selected={item.slug === currentSlug}>
-                            {item.title}
-                          </option>
-                        ))
-                      }
+                      {section.items.map((item) => (
+                        <option value={`/docs/${item.slug}`} selected={item.slug === currentSlug}>
+                          {item.title}
+                        </option>
+                      ))}
                     </optgroup>
                   ))
                 }
@@ -117,7 +118,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
           </div>
@@ -127,7 +132,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="mx-auto flex w-full max-w-screen-2xl flex-1 gap-8 px-4 py-10 sm:px-6 lg:gap-12">
       <aside class="hidden w-64 shrink-0 lg:block">
-        <div id="doc-sidebar-scroll" class="sticky top-30 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
+        <div
+          id="doc-sidebar-scroll"
+          class="sticky top-30 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2"
+        >
           <NavSidebar sections={navSections} currentSlug={currentSlug} />
         </div>
       </aside>
@@ -175,7 +183,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <footer class="border-t border-slate-200 bg-white py-6">
       <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6">
-        <div class="flex flex-col gap-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          class="flex flex-col gap-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between"
+        >
           <div class="flex items-start gap-3">
             <img src="/logo.svg" alt="" class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
             <div class="flex flex-col gap-1">

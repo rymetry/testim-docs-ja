@@ -29,7 +29,7 @@ keywords:
 2. プロジェクトに招待したい各チームメイトの仕事用メールアドレスを入力します（*スペース*または*Enter*を続けて入力）。
 3. **Invite** をクリックします。
 
-入力したアドレスにプロジェクトへの招待が送信され、**Project teammates** ページのリストに追加されます。まだ招待を受け入れていないユーザーは *Pending* と表示されます。
+入力したアドレスにプロジェクトへの招待が送信され、**Project teammates** ページのリストに追加されます。まだ招待を受け入れていないユーザーは _Pending_ と表示されます。
 
 ![Project teammates ページでチームメイトを招待する画面](/images/project-user-management/project-user-management/a651531-c664f51-Screen_Shot_2021-11-28_at_8.43.33.png)
 

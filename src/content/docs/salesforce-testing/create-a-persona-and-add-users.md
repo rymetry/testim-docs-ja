@@ -30,8 +30,8 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
 
 ペルソナを作成した後、次のいずれかの方法で Salesforce ユーザーを関連付けることができます:
 
-* **Sign in with Salesforce** - Salesforce サインイン画面のポップアップが表示されます。
-* **Log in with username and password** - Testim for Salesforce でログイン認証情報を設定します。
+- **Sign in with Salesforce** - Salesforce サインイン画面のポップアップが表示されます。
+- **Log in with username and password** - Testim for Salesforce でログイン認証情報を設定します。
 
 :fa-arrow-right: **Testim for Salesforce ペルソナを作成するには:**
 

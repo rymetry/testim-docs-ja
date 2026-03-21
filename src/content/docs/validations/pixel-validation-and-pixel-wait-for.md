@@ -25,9 +25,9 @@ keywords:
 開始前に、[Applitools Eyes](https://applitools.com/) と Testim を連携してください。詳しくは [Applitools integration](/docs/applitools-integration) を参照。\
 関連情報：
 
-* [https://applitools.com/docs/test-manager/viewers/tm-baseline-viewer.html](https://applitools.com/docs/test-manager/viewers/tm-baseline-viewer.html)
-* [https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-viewer.html](https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-viewer.html)
-* [https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-editor.html](https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-editor.html)
+- [https://applitools.com/docs/test-manager/viewers/tm-baseline-viewer.html](https://applitools.com/docs/test-manager/viewers/tm-baseline-viewer.html)
+- [https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-viewer.html](https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-viewer.html)
+- [https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-editor.html](https://applitools.com/docs/test-manager/viewers/tm-compare-baselines-editor.html)
 
 :::note
 RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがないと Applitools 側で拒否されます。詳細は Applitools 担当者にお問い合わせください。
@@ -39,10 +39,10 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 
 次のビジュアル検証を実行できます：
 
-* **Validate Element Visualization** — 特定要素の視覚差分を比較。参照 - [Validate Element Visualization](/docs/validate-element-visualization)
-* **Wait For Element Visualization** — 要素が可視になるまで待機し、その後視覚的に検証。参照 - [Wait For Element Visualization](/docs/wait-for-element-visualization)
-* **Viewport Visualization** — ビューポートの視覚差分を比較。参照 - [Validate Viewport Visualization](/docs/validate-viewport-visualization)
-* **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/validate-full-page-visualization)
+- **Validate Element Visualization** — 特定要素の視覚差分を比較。参照 - [Validate Element Visualization](/docs/validate-element-visualization)
+- **Wait For Element Visualization** — 要素が可視になるまで待機し、その後視覚的に検証。参照 - [Wait For Element Visualization](/docs/wait-for-element-visualization)
+- **Viewport Visualization** — ビューポートの視覚差分を比較。参照 - [Validate Viewport Visualization](/docs/validate-viewport-visualization)
+- **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/validate-full-page-visualization)
 
 :::info
 テスト構成を変更すると Applitools 側では新しいベースラインが作られますが、Testim 側のベースラインは変わりません。構成ごとにベースラインを分けたい場合はテストを分けて作成してください。
@@ -52,10 +52,10 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 
 Testim 内で変更できるビジュアル検証パラメーターは 4 つあります：
 
-* **Add Environment** – テストを実行する 1 つ以上のシミュレートされた環境設定（高度な環境を含む）を追加します。この機能には Ultrafast Test Cloud 用の追加 Applitools ライセンスが必要です。この機能ライセンスのないアカウントで追加された環境は Applitools によって拒否されます。
-* **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
-* **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、Applitools によって拒否されます。
-* **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
+- **Add Environment** – テストを実行する 1 つ以上のシミュレートされた環境設定（高度な環境を含む）を追加します。この機能には Ultrafast Test Cloud 用の追加 Applitools ライセンスが必要です。この機能ライセンスのないアカウントで追加された環境は Applitools によって拒否されます。
+- **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
+- **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、Applitools によって拒否されます。
+- **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
 
 これらのビジュアル検証パラメーターは次の場所で変更できます：
 
@@ -146,11 +146,11 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 5. **Visual validation** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
 6. **Visual validation** セクションで次のように設定を変更します：
-   * **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：*Exact*、*Strict*、*Content*、または *Layout*。
-   * **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
-   * **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
-   * **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
-   * **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
+   - **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+   - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+   - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+   - **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+   - **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
 7. **Add** をクリックします。\
    構成が作成され **Configuration Library** に追加されます。
 
@@ -158,7 +158,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 **エディターでテストレベルのビジュアル検証設定を変更するには：**
 
-1. テストのセットアップステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+1. テストのセットアップステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![テストのセットアップステップの Show Properties アイコン](/images/validations/pixel-validation-and-pixel-wait-for/3ee33fb-Testim_488a.png)
 
@@ -173,17 +173,17 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 ![Visual Validation 設定の Add Environment](/images/validations/pixel-validation-and-pixel-wait-for/f26de2d-Testim_607a_r.png)
 
 4. **Visual validation** セクションで次のように設定を変更します：
-   * **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：*Exact*、*Strict*、*Content*、または *Layout*。
-   * **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
-   * **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
-   * **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
-   * **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
+   - **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+   - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+   - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+   - **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+   - **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
 
 ### ステップレベルのビジュアル検証設定を変更する
 
 **ステップレベルのビジュアル検証設定にアクセスするには：**
 
-1. 設定を変更したいビジュアル検証ステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+1. 設定を変更したいビジュアル検証ステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![ビジュアル検証ステップの Show Properties アイコン](/images/validations/pixel-validation-and-pixel-wait-for/9ffa82b-Testim_493a.png)
 
@@ -199,9 +199,9 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 3. **Override test settings** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
 4. **Override test settings** セクションで残りの設定を次のように変更します：
-   * **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：*Exact*、*Strict*、*Content*、または *Layout*。
-   * **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
-   * **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
-   * **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+   - **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+   - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+   - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+   - **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
 
 このステップのビジュアル検証パラメーターが変更され、現在設定されているテストレベルのビジュアル検証パラメーターを上書きします。

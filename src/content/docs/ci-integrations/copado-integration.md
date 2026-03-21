@@ -23,7 +23,7 @@ Copado からテストを自動化するには、Copado に[URL Callout ステ�
 **Copado を統合するには:**
 
 1. Testim/TTA for Salesforce で、**Settings > API**に移動します。
-2. **Generate API Key**をクリックします。  
+2. **Generate API Key**をクリックします。
 
    ![API キー生成ボタンが表示された画面](/images/ci-integrations/copado-integration/b650ac8-generate1.png)
 
@@ -40,7 +40,6 @@ Copado からテストを自動化するには、Copado に[URL Callout ステ�
    ![Swagger 上で Testim REST API エンドポイントを確認する画面](/images/ci-integrations/copado-integration/7c0621b-copado_swagger.png)
 
 6. Copado Release Manager アプリで、Steps セクションに新しいステップを追加して Deployment を作成します。そのためには、以下の手順に従います:
-
    1. **Type**で、**Perform callout and continue with deployment**を選択します。
 
    2. **Method**で、**POST**を選択します。

@@ -129,7 +129,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
     // doc.id は "overview/testim-overview" のような形式（Content Layer API）
     // URLに使うslugは最後のファイル名部分のみ（例: "testim-overview"）
     const urlSlug = extractSlug(doc);
-    
+
     const groupKey = doc.data.category;
     const sidebarItemIndex = SIDEBAR_ORDERING.itemIndexBySlug.get(urlSlug);
 
@@ -137,7 +137,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
       title: doc.data.title,
       slug: urlSlug,
       description: doc.data.description,
-      order: sidebarItemIndex ?? (doc.data.order ?? 0),
+      order: sidebarItemIndex ?? doc.data.order ?? 0,
     };
 
     const preferredIndex = SIDEBAR_ORDERING.categoryIndexByLabel.get(groupKey);
@@ -185,7 +185,7 @@ export function buildSearchDocuments(
   return docs.map((doc) => {
     // URLに使うslugは最後のファイル名部分のみ
     const urlSlug = extractSlug(doc);
-    
+
     return {
       id: doc.id,
       title: doc.data.title,

@@ -23,7 +23,7 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 **Gearset を統合するには:**
 
 1. Testim/TTA for Salesforce で、**Settings > API**に移動します。
-2. **Generate API Key**をクリックします。  
+2. **Generate API Key**をクリックします。
 
    ![API キー生成ボタンが表示された画面](/images/ci-integrations/gearset-integration/b650ac8-generate1.png)
 
@@ -40,7 +40,6 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
    ![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
 
 6. Gearset の Deployment または CI ジョブの Webhook で、以下の手順に従います:
-
    1. **Outgoing webhook url**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`
 
    2. **Triggers**セクションで、**Success events**を選択します。

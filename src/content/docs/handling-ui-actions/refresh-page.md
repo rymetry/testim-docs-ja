@@ -84,7 +84,7 @@ var window = window.open(url, windowName, [windowFeatures]);
 **例:**
 
 ```javascript
-var win = window.open("d/1UhvH-KJl--mqvQVrzcmnOsE8VX3pvw/edit", "name");
+var win = window.open('d/1UhvH-KJl--mqvQVrzcmnOsE8VX3pvw/edit', 'name');
 win.location.reload();
 ```
 
@@ -107,8 +107,7 @@ win.location.reload();
 ![更新ステップにカーソルを合わせる](/images/handling-ui-actions/refresh-page/548bdd1-refresh-step-hover.jpg)
 
 2. 希望する動作に基づいてプロパティを更新します。
-
-   * **説明** - ステップの名前を変更します。
-   * **このステップが失敗した場合** - ステップが失敗した場合に何をすべきかを指定します。
-   * **ステップを実行するタイミング** - このステップをテストに含めるタイミングを指定します。条件には、要素/要素テキストの存在、またはカスタム JS 関数が含まれる場合があります。
-   * **タイムアウトを上書き** - タイムアウト後でも更新が発生するまで待機し続けます。
+   - **説明** - ステップの名前を変更します。
+   - **このステップが失敗した場合** - ステップが失敗した場合に何をすべきかを指定します。
+   - **ステップを実行するタイミング** - このステップをテストに含めるタイミングを指定します。条件には、要素/要素テキストの存在、またはカスタム JS 関数が含まれる場合があります。
+   - **タイムアウトを上書き** - タイムアウト後でも更新が発生するまで待機し続けます。

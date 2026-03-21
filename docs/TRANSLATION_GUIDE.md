@@ -51,6 +51,7 @@ src/content/docs/
 ```
 
 **フォルダ選択ルール**:
+
 - まず既存の近い記事と同じフォルダに置く
 - フォルダ名は記事のトピック単位で判断し、カテゴリ名だけで決めない
 - 公開URLはフォルダではなくファイル名で決まるため、配置先よりファイル名の整合性を優先する
@@ -59,11 +60,11 @@ src/content/docs/
 
 **重要**: ファイル名は元のURL slugと完全に一致させること。
 
-| URL | カテゴリフォルダ | ファイル名 |
-| --- | ------------- | --------- |
-| `https://help.testim.io/docs/testim-overview` | `overview/` | `testim-overview.md` |
-| `https://help.testim.io/docs/how-to-record-a-test` | `recording-tests/` | `how-to-record-a-test.md` |
-| `https://help.testim.io/docs/salesforce-overview` | `salesforce-testing/` | `salesforce-overview.md` |
+| URL                                                | カテゴリフォルダ      | ファイル名                |
+| -------------------------------------------------- | --------------------- | ------------------------- |
+| `https://help.testim.io/docs/testim-overview`      | `overview/`           | `testim-overview.md`      |
+| `https://help.testim.io/docs/how-to-record-a-test` | `recording-tests/`    | `how-to-record-a-test.md` |
+| `https://help.testim.io/docs/salesforce-overview`  | `salesforce-testing/` | `salesforce-overview.md`  |
 
 この命名規則により、元のページとの対応関係が明確になり、更新時の追跡が容易になります。
 
@@ -80,6 +81,7 @@ src/content/docs/getting-started/setting-up-your-account.md
 ```
 
 そのため、本文中の内部リンクも必ず `/docs/{slug}` 形式にしてください。
+
 - 正しい例: `/docs/testim-overview`
 - 誤った例: `/docs/overview/testim-overview`
 
@@ -103,6 +105,7 @@ keywords:
 ```
 
 補足:
+
 - `description` には原文URLや「原文: ...」のようなプレースホルダを入れず、日本語の要約を記載します
 - `sourceUrl` は原文追跡のため運用上必須です
 - `keywords` は最大10件までを目安に、日本語の検索語を設定します
@@ -111,21 +114,21 @@ keywords:
 
 公式サイトの英語カテゴリ名を日本語に翻訳します。**カテゴリ名は既存のラベルに厳密に合わせてください。** フォルダ名とは一致しない場合があります。
 
-| 英語カテゴリ名 | 日本語カテゴリ名 | 代表フォルダ例 |
-| ------------ | ------------- | ---------------- |
-| Overview | 概要 | `overview/` |
-| Getting Started | はじめに | `getting-started/` |
-| Recording Tests | テストの記録 | `recording-tests/` |
-| Editing Tests | テスト編集 | `steps-editing-tests/`, `groups/` |
-| Advanced Editing | 高度な編集 | `validations/`, `parameters/` |
-| Running Tests | テスト実行 | `running-tests/`, `test-execution/` |
-| Results | 結果 | `results/` |
-| Debugging Tests | デバッグ | `debugging/` |
-| Test Management | テスト管理 | `test-management/` |
-| Integrations | 統合 | `integrations/`, `other-integrations/` |
-| Salesforce Testing | Salesforceテスト | `salesforce-testing/` |
-| Testim Extension | Testim拡張機能 | `testim-extension/` |
-| Security | セキュリティ | `security-sso/` |
+| 英語カテゴリ名     | 日本語カテゴリ名 | 代表フォルダ例                         |
+| ------------------ | ---------------- | -------------------------------------- |
+| Overview           | 概要             | `overview/`                            |
+| Getting Started    | はじめに         | `getting-started/`                     |
+| Recording Tests    | テストの記録     | `recording-tests/`                     |
+| Editing Tests      | テスト編集       | `steps-editing-tests/`, `groups/`      |
+| Advanced Editing   | 高度な編集       | `validations/`, `parameters/`          |
+| Running Tests      | テスト実行       | `running-tests/`, `test-execution/`    |
+| Results            | 結果             | `results/`                             |
+| Debugging Tests    | デバッグ         | `debugging/`                           |
+| Test Management    | テスト管理       | `test-management/`                     |
+| Integrations       | 統合             | `integrations/`, `other-integrations/` |
+| Salesforce Testing | Salesforceテスト | `salesforce-testing/`                  |
+| Testim Extension   | Testim拡張機能   | `testim-extension/`                    |
+| Security           | セキュリティ     | `security-sso/`                        |
 
 **重要**: 新しいカテゴリを追加する場合は、既存の翻訳パターンに従って一貫性を保ってください。
 
@@ -144,6 +147,7 @@ keywords:
 ```
 
 設定ルール:
+
 - サイドバー順は `docs/SIDEBAR_URLS.md` に合わせる
 - 既存記事を編集するときは、現在の `order` の数値帯を維持する
 - 新規記事を追加するときは、同じセクション内の近い記事を見て未使用の値を割り当てる
@@ -227,13 +231,13 @@ curl -s "https://help.testim.io/docs/[page-slug]" | \
 # URLリストから一括ダウンロード＆ファイル名短縮（7文字に）
 while read url; do
   filename=$(basename "$url")
-  
+
   # ダウンロード
   if ! curl -sO "$url"; then
     echo "⚠️  ダウンロード失敗: $url"
     continue
   fi
-  
+
   # ハッシュが長い場合のみ短縮（64文字 → 7文字）
   # 例: 0b34acc112f11d6d7c724a0f...2024-09-09.png → 0b34acc-2024-09-09.png
   # 既に短い場合（e45eaec-Testim030.png）はそのまま
@@ -272,6 +276,7 @@ ReadMe.ioの画像URL形式: `[64文字のハッシュ]-[実際のファイル�
 短縮形式: `[最初の7文字]-[実際のファイル名]`
 
 例:
+
 - `0b34acc112f11d6d7c724a0f247fd2dee76fcd0587e874e40c9303545dccbbe5-2024-09-09_15-40-38.png`
 - → `0b34acc-2024-09-09_15-40-38.png`
 
@@ -345,6 +350,7 @@ public/images/
 ```
 
 **命名規則**:
+
 - カテゴリフォルダ: mdファイルのカテゴリフォルダと同じ名前（例: `overview/`, `recording-tests/`）
 - ページフォルダ: URL slugと同じ名前（例: `testim-overview/`, `help-ai-assistant/`）
 
@@ -386,9 +392,11 @@ curl -s "https://help.testim.io/docs/[page-slug]" | \
 
 ```markdown
 # 悪い例（位置が不明確）
+
 ![画像](/images/overview/page/image.png)
 
 # 良い例（文脈と一致）
+
 3. アイコンをクリックし、**ログイン**をクリックして開始します。
 
 ![Testim拡張機能アイコン](/images/getting-started/setting-up-your-account/e45eaec-Testim030.png)
@@ -427,7 +435,7 @@ HTMLの`<video>`タグを使用：
   お使いのブラウザは動画タグに対応していません。
 </video>
 
-*動画: テストの実行デモ*
+_動画: テストの実行デモ_
 ```
 
 **自動再生やループの例**:
@@ -475,31 +483,31 @@ HTMLの`<video>`タグを使用：
 
 これにより、次回以降の翻訳で同じ問題が再発することを防ぎます。
 
-| 英語 | 日本語 | 備考 |
-| ------ | -------- | ------ |
-| Smart Locators | Smart Locators | 固有技術名は英語のまま |
-| Testim Copilot | Testim Copilot | 製品名 |
-| Testim Automate | Testim Automate | 製品名 |
-| Auto Grouping | Auto Grouping | 機能名は英語のまま |
-| Scheduler | Scheduler | 機能名は英語のまま |
-| Shared Steps | Shared Steps | 機能名は英語のまま |
-| TestOps | TestOps | 製品機能名 |
-| Enhanced mode | Enhanced mode | 技術用語として英語のまま |
-| VMG | VMG（仮想モバイルグリッド） | 初出時のみ補足 |
-| codeless | コードレス | カタカナ化 |
-| test automation | テスト自動化 | 一般的な訳語 |
-| debugging | デバッグ | カタカナ化 |
-| test suite | テストスイート | カタカナ化 |
-| test case | テストケース | カタカナ化 |
-| test step | テストステップ | カタカナ化 |
-| CI/CD | CI/CD | 略語はそのまま |
-| dashboard | ダッシュボード | カタカナ化 |
-| locator | ロケーター | カタカナ化 |
-| Professional plan | Professional plan | プラン名は英語のまま |
-| free tier | 無料プラン | 「無料ティア」は不自然 |
-| Pro feature | Pro機能 | 「Pro」は英語のまま |
-| Pro plan | Professional plan | 短縮形も正式名で英語維持 |
-| third party / 3rd party | サードパーティ | カタカナ化。「3番目のパーティ」は不可 |
+| 英語                    | 日本語                      | 備考                                  |
+| ----------------------- | --------------------------- | ------------------------------------- |
+| Smart Locators          | Smart Locators              | 固有技術名は英語のまま                |
+| Testim Copilot          | Testim Copilot              | 製品名                                |
+| Testim Automate         | Testim Automate             | 製品名                                |
+| Auto Grouping           | Auto Grouping               | 機能名は英語のまま                    |
+| Scheduler               | Scheduler                   | 機能名は英語のまま                    |
+| Shared Steps            | Shared Steps                | 機能名は英語のまま                    |
+| TestOps                 | TestOps                     | 製品機能名                            |
+| Enhanced mode           | Enhanced mode               | 技術用語として英語のまま              |
+| VMG                     | VMG（仮想モバイルグリッド） | 初出時のみ補足                        |
+| codeless                | コードレス                  | カタカナ化                            |
+| test automation         | テスト自動化                | 一般的な訳語                          |
+| debugging               | デバッグ                    | カタカナ化                            |
+| test suite              | テストスイート              | カタカナ化                            |
+| test case               | テストケース                | カタカナ化                            |
+| test step               | テストステップ              | カタカナ化                            |
+| CI/CD                   | CI/CD                       | 略語はそのまま                        |
+| dashboard               | ダッシュボード              | カタカナ化                            |
+| locator                 | ロケーター                  | カタカナ化                            |
+| Professional plan       | Professional plan           | プラン名は英語のまま                  |
+| free tier               | 無料プラン                  | 「無料ティア」は不自然                |
+| Pro feature             | Pro機能                     | 「Pro」は英語のまま                   |
+| Pro plan                | Professional plan           | 短縮形も正式名で英語維持              |
+| third party / 3rd party | サードパーティ              | カタカナ化。「3番目のパーティ」は不可 |
 
 ### 5.3 特殊記法
 
@@ -646,10 +654,12 @@ ls -1 public/images/[category]/[page-slug]/*.png | \
 
 ```markdown
 # ✅ 正しい形式（先頭に / あり、カテゴリフォルダを含む）
+
 ![説明](/images/overview/page-slug/filename.png)
 <video src="/images/recording-tests/page-slug/video.mp4"></video>
 
 # ❌ 間違った形式（先頭に / が無い、またはカテゴリフォルダが無い）
+
 ![説明](images/page-slug/filename.png)
 ![説明](/images/page-slug/filename.png)
 <video src="images/page-slug/video.mp4"></video>
@@ -757,40 +767,40 @@ pages=(
 for page_info in "${pages[@]}"; do
   slug="${page_info%%:*}"
   category="${page_info##*:}"
-  
+
   echo "========================================="
   echo "処理中: $slug (カテゴリ: $category)"
   echo "========================================="
-  
+
   # 1. 画像URL抽出
   urls=$(curl -s "https://help.testim.io/docs/$slug" | \
     grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp)' | \
     grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
     sort -u)
-  
+
   count=$(echo "$urls" | grep -c "^")
   echo "画像数: $count"
-  
+
   if [ "$count" -eq 0 ]; then
     echo "⚠️  画像なし - スキップ"
     continue
   fi
-  
+
   # 2. フォルダ作成
   img_dir="public/images/$category/$slug"
   mkdir -p "$img_dir"
   cd "$img_dir"
-  
+
   # 3. ダウンロード＆短縮
   echo "$urls" | while read url; do
     [ -z "$url" ] && continue
     filename=$(basename "$url")
-    
+
     if ! curl -sO "$url"; then
       echo "⚠️  ダウンロード失敗: $url"
       continue
     fi
-    
+
     if [[ "$filename" =~ ^([a-fA-F0-9]{7})[a-fA-F0-9]{50,}(-.*) ]]; then
       short_name="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
       [ "$filename" != "$short_name" ] && mv "$filename" "$short_name"
@@ -799,10 +809,10 @@ for page_info in "${pages[@]}"; do
       echo "✓ $filename"
     fi
   done
-  
+
   cd - > /dev/null
   echo ""
-  
+
   # 4. 次のページへ
   echo "⏳ 次は開発者ツールで画像配置位置を確認してください"
   echo ""
@@ -937,6 +947,7 @@ grep -r "Smart Locators" src/content/docs/
 このガイドに従うことで、一貫性のある高品質な日本語ドキュメントページを追加・運用できます。
 
 **質問や問題が発生した場合**:
+
 1. このガイドのトラブルシューティングセクションを確認
 2. `WRITING_GUIDE.md`で記法を確認
 3. 既存の翻訳済みファイルを参考にする

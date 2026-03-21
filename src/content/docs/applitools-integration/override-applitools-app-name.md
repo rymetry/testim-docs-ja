@@ -21,10 +21,7 @@ Applitools に送信されるアプリ名をオーバーライドすることが
 2. テストデータでこれをオーバーライドまたは変更できます。例:
 
 ```javascript
-return [
-  {applitoolsAppName: 'appName_english'},
-  {applitoolsAppName: 'appName_spanish'},
-  ];
+return [{ applitoolsAppName: 'appName_english' }, { applitoolsAppName: 'appName_spanish' }];
 ```
 
 プロジェクトレベルでアプリ名をオーバーライドすることもできます。デフォルトのアプリ名は*projectId*です。オーバーライドするには、Settings -> Integration --> Applitools 統合の下に、アプリケーション名を追加します

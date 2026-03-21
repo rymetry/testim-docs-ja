@@ -184,11 +184,11 @@ Smart Locators は、要素/セレクタの一意性を理解するのに役立�
 
 - **ロケーター内の異なる色** - ロケーターで使用されている色とは異なる色を含む要素は、記録中にキャプチャされた要素/セレクタから変更されたことを示します。以下の例では、Index 要素の色が異なっていますが、その重みが非常に低かったため、ロケーターの全体的な信頼度レベルに実質的な影響はありませんでした。
 
-   ![インデックス要素](/images/steps-editing-tests/editing-target-element-properties/3c99754-index.png)
+  ![インデックス要素](/images/steps-editing-tests/editing-target-element-properties/3c99754-index.png)
 
 - **ロケーターの色** - すべての要素とその重みを考慮した後、システムはロケーターの最上位の色を決定します（通常、ほとんどの要素は同じ色を共有します）。この色は、以下に示すようにロケーターレベルで表示されます。
 
-   ![ロケーターのトップカラー](/images/steps-editing-tests/editing-target-element-properties/5313ab5-top.png)
+  ![ロケーターのトップカラー](/images/steps-editing-tests/editing-target-element-properties/5313ab5-top.png)
 
 ### Auto Improved Locators
 

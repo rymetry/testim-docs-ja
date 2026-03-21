@@ -29,6 +29,7 @@ keywords:
 それでは、最初のテストを作成しましょう！
 
 ### チュートリアルのユースケース
+
 Testim for Salesforce のテストは、Salesforce アプリケーションとのやり取りを記録し、これらのやり取りを自動的にステップに変換するレコーダーを使用するか、テストにステップを手動で追加することで作成されます。また、これら 2 つの方法を組み合わせることもできます。手動ステップには「Salesforce ステップ」を含めることができます。これらのステップは Salesforce 専用に設計されており、テスト作成プロセスを簡素化し、より深い統合とスマートな機能を可能にする方法で Salesforce オブジェクトを利用します。ただし、デプロイメントに広範なカスタマイズが含まれている場合、Salesforce ステップが完全に機能しない可能性があります。このような場合は、通常の動作モードでレコーダーを使用することをお勧めします。レコーダーの使用方法については、[Salesforce テストの作成](/docs/create-a-salesforce-test)を参照してください。このチュートリアルでは、手動ステップに焦点を当てています。
 
 このチュートリアルでは、Salesforce へのログイン、Sales アプリの起動、特定の名前のアカウントの作成、そして指定された名前のアカウントが存在することを検証するテストを扱います。
@@ -47,8 +48,8 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
 
 2. **Select Type**フィールドで、Salesforce 環境のタイプを選択します:
-   * **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
-   * **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
+   - **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
+   - **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
 3. **Environment Name**フィールドに、環境の名前を入力します
 4. 次のいずれかを実行します:
    1. 既存のブランチを使用する場合は、**Select Existing Branch**の下で、ドロップダウンメニューから目的のブランチを選択します。
@@ -69,6 +70,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d3dd794-newtest.png)
 
    エディターで新しいテストが開きます。ここでテストステップを追加します。
+
 2. 最初のステップはセットアップステップで、基本的なテスト構成を設定します。**Setup**ステップで、**Show properties**ボタンをクリックします。
 
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/9dc1f8d-showproperties.png)

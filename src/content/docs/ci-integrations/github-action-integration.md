@@ -22,6 +22,7 @@ Testim と GitHub Actions を統合するには、新しい GitHub-Action ワー
 以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 
 <!-- markdownlint-disable-next-line MD036 -->
+
 **YAML File**
 
 ```yaml
@@ -29,15 +30,15 @@ name: Testim E2E
 on: [push]
 
 jobs:
-    run-testimio-cli:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                node-version: '18.17.0'
-            - run: npm install -g @testim/testim-cli
-            - run: testim --token <TESTIM_TOKEN> --project <PROJECT_ID> --grid <GRID_NAME>
+  run-testimio-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18.17.0'
+      - run: npm install -g @testim/testim-cli
+      - run: testim --token <TESTIM_TOKEN> --project <PROJECT_ID> --grid <GRID_NAME>
 ```
 
 :::note

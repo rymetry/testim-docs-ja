@@ -30,7 +30,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 ![3851](/images/test-utilities/advanced-set-text/29a0765-Testim_229a.png)
 
-   右側に **Properties** パネルが表示されます。
+右側に **Properties** パネルが表示されます。
 
 ![200](/images/test-utilities/advanced-set-text/dab7248-Testim_230_r.png)
 
@@ -56,7 +56,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 ![3838](/images/test-utilities/advanced-set-text/f4b65c5-Testim_231a.png)
 
-   右側に **Properties** パネルが表示されます。
+右側に **Properties** パネルが表示されます。
 
 ![200](/images/test-utilities/advanced-set-text/6dc9ca3-Testim_232_r.png)
 

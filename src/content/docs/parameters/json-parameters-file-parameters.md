@@ -44,7 +44,7 @@ JSON パラメーターファイルでテストに値を渡す
 :::
 
 ```shell
-testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" 
+testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>"
 --params-file <PARAM FILE NAME e.g. params-file.json>
 ```
 
@@ -56,14 +56,14 @@ JSON の代わりに、JS ファイルで値をエクスポートすることも
 
 ```javascript
 module.exports = {
-    username: "admin"
+  username: 'admin',
 };
 ```
 
 この構文でエクスポートした値を、そのままパラメーターとして利用できます。テスト実行時は次のように JS ファイルを指定します。
 
 ```javascript
-testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" 
+testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>"
 --params-file <PARAM FILE NAME e.g. params-file.js>
 ```
 

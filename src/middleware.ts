@@ -49,7 +49,11 @@ export const onRequest: MiddlewareHandler = async ({ request }, next) => {
   const expectedUser = process.env.BASIC_AUTH_USER ?? '';
   const expectedPass = process.env.BASIC_AUTH_PASS ?? '';
 
-  if (!credentials || credentials.username !== expectedUser || credentials.password !== expectedPass) {
+  if (
+    !credentials ||
+    credentials.username !== expectedUser ||
+    credentials.password !== expectedPass
+  ) {
     return unauthorizedResponse();
   }
 
