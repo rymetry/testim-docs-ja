@@ -1,0 +1,126 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Locators: Auto Improve
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Over time, as your app changes, the locator scores of your elements can degrade. If a locator score drops below 70%, Testim automatically attempts to improve that locator in order to enhance the stability of your test. If the locator score is successfully improved, Testim replaces the degraded locator with the improved locator. This replacement is indicated in three different locations in the UI as described below: <em>Revision History</em> panel, <em>Locators</em> panel, and <em>Test Library</em> screen.
+        </p>
+        <p>You can filter the tests in your Test Library by tests that have been auto-improved. Also, in the Test Editor you can view which steps have been auto-improved.
+        </p>
+        <p>This feature is automatically applied only to tests run on the master branch (that is not a master read-only branch). Users can optionally activate this feature for master read-only branches. Tests run on other branches will not have their locators auto-improved.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Revision History Panel
+          </div><a href="#revision-history-panel"></a>
+        </h2>
+        <p>Testim creates a test revision and labels it “Testim auto improve”. You can also view which steps in a test have been auto-improved.
+        </p> <span><span><img alt="2454" src="https://files.readme.io/96f61e6-Testim_478a.png" /></span></span>
+        <p><i></i> <strong>To view which steps have been auto-improved:</strong>
+        </p>
+        <ol>
+          <li>Open a test that has been auto-improved.
+          </li>
+          <li>Toggle the <strong>Show improved steps</strong> switch to the right.
+          </li>
+        </ol> <span><span><img alt="3807" src="https://files.readme.io/ac0724b-Testim_585b.png" /></span></span>
+        <p>The steps that have been auto-improved are highlighted.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Locators Panel
+          </div><a href="#locators-panel"></a>
+        </h2>
+        <p>Testim inserts the “Locator auto improved” message at the top of the Locators panel for the locator that was auto-improved.
+        </p> <span><span><img alt="2444" src="https://files.readme.io/1b05339-Testim_479a.png" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Test Library Screen
+          </div><a href="#test-library-screen"></a>
+        </h2>
+        <p>Testim inserts an “Ai” icon after the name of the test for which one or more degraded locators were replaced with auto-improved locators. The auto improve icon is shown for approximately two weeks.
+        </p> <span><span><img alt="2452" src="https://files.readme.io/9113b7b-Testim_481a.png" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Filtering the Test Library
+          </div><a href="#filtering-the-test-library"></a>
+        </h2>
+        <p>You can filter the test list in your <strong>Test Library</strong> by tests that have been auto-improved. For more information on filtering the <strong>Test Library</strong>, see <a href="doc:test-list#section-filtering-the-test-library">Filtering the Test Library</a>.
+        </p>
+        <p><i></i> <strong>To filter the Test Library by auto-improved tests:</strong>
+        </p>
+        <ol>
+          <li>In the <strong>Test Library</strong> screen (<strong>Test List</strong> &gt; <strong>Tests</strong>) click the <strong>Advanced filters</strong> icon.
+          </li>
+        </ol> <span><span><img alt="3307" src="https://files.readme.io/1599496-Testim_575a.png" /></span></span>
+        <p>The <strong>Filter Test</strong> pane opens on the right hand side.
+          <br /> <!-- -->2. In the <strong>Filter Test</strong> pane, scroll to the bottom and select the <strong>Auto Improved</strong> toggle.
+          </p> <span><span><img alt="250" src="https://files.readme.io/bcd9e8a-Testim_583b_r.png" /></span></span>
+          <ol start="3">
+            <li>Click <strong>Apply</strong>.
+              <br /> <!-- -->The filter is applied, and only those tests that have been auto-improved are shown.
+              </li>
+              <li>Click the &quot;<strong>X</strong>&quot; in the upper right of the <strong>Filter Test</strong> pane to close it.
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <h3>
+                <div>
+                </div>
+                <div>Closing the <strong>Filter Test</strong> pane without resetting the filters will not reset them, and only the tests that meet the filter criteria will be shown. To view all of your tests and folders again, you will need to reopen the <strong>Filter Test</strong> pane and click <strong>Reset filters</strong>.
+                </div><a href="#closing-the-filter-test-pane-without-resetting-the-filters-will-not-reset-them-and-only-the-tests-that-meet-the-filter-criteria-will-be-shown-to-view-all-of-your-tests-and-folders-again-you-will-need-to-reopen-the-filter-test-pane-and-click-reset-filters"></a>
+              </h3>
+            </blockquote>
+            <h2>
+              <div>
+              </div>
+              <div>Allowing Auto Improve on a Master Read Only Branch
+              </div><a href="#allowing-auto-improve-on-a-master-read-only-branch"></a>
+            </h2>
+            <p>By default, the auto-improve feature only runs on master branches that are not set as read-only. You can modify the settings to allow the auto-improve feature to run on master read-only branches.
+            </p>
+            <p><i></i> <strong>To configure the auto-improve feature to run on master read-only branches:</strong>
+            </p>
+            <ol>
+              <li>On the <strong>Settings</strong> &gt; <strong>Project</strong> page of your master read-only branch, click <strong>Pull Requests</strong>.
+              </li>
+            </ol> <span><span><img alt="3832" src="https://files.readme.io/5667d75-Testim_577a.png" /></span></span>
+            <p>The <strong>Pull Requests</strong> tab is shown.
+              <br /> <!-- -->2. Toggle the <strong>Allow Auto-Improve on master</strong> switch to the right.
+              </p> <span><span><img alt="3435" src="https://files.readme.io/f1985b7-Testim_586a.png" /></span></span>
+              <p>The auto-improve feature is now enabled for this master read-only branch.
+              </p>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/test-suites"><span></span>
+              <div>Test suites
+              </div></a><a href="/docs/bug-reporting">
+              <div>Bug Reporting
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

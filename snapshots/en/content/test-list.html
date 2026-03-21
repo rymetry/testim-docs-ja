@@ -1,0 +1,304 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Test Library
+        </h1>
+        <div>
+          <div>
+            <p>Keep track of your tests
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The <strong>Test Library</strong> screen (<strong>Test List -&gt; Tests</strong>) is where you will manage your tests. Tests can be arranged in folders. All folders and tests within the current project are listed on this screen and you can perform a variety of actions on each of these tests, as described below.
+        </p>
+        <h1>
+          <div>
+          </div>
+          <div>Viewing the Test Library
+          </div><a href="#viewing-the-test-library"></a>
+        </h1>
+        <figure><span><span><img alt="2452" src="https://files.readme.io/e75e02c2aa3c79e6881ab015dd0b37f22e0beca61f06147ffa43d8bb37cbbe0f-2024-11-24_16-39-18.png" />
+          <figcaption>
+            <p>Web Test Library
+            </p>
+          </figcaption></span></span>
+        </figure>
+        <figure><span><span><img alt="1187" src="https://files.readme.io/20dd7c7-mobiletestlibrary.png" />
+          <figcaption>
+            <p>Mobile Test Library
+            </p>
+          </figcaption></span></span>
+        </figure>
+        <p>The Test Library screen displays a list of tests and folders with the following information:
+        </p>
+        <ul>
+          <li><strong>Name</strong> - the name of the test or folder. If Testim replaced a degraded locator for one or more of the elements in the test with an auto-improved locator, an “Ai” icon is shown after the test name for approximately two weeks. For more information, see <a href="doc:locators-auto-improve">Locators: Auto Improve</a>.
+          </li>
+          <li><strong>Owner</strong> - the owner of the test or folder.
+          </li>
+          <li><strong>App Name (mobile)</strong> - name of the mobile app used to record the test.
+          </li>
+          <li><strong>App Version (mobile)</strong> - version of the mobile app used to record the test.
+          </li>
+          <li><strong>Updated</strong> - displays the time, indicating the last update made to the test.
+          </li>
+          <li><strong>Kind</strong> - indicates whether the item is a <em>test_or _folder</em>.
+          </li>
+          <li><strong>Label</strong> - a list of labels that were added to the test. For more information, see <a href="doc:labels">Labels</a>.
+          </li>
+          <li><strong>Status</strong> - the status of the test. For more information see <a href="doc:test-status#section-test-statuses">Test Statuses</a>.
+          </li>
+          <li><strong>Last Runs</strong> - indicates the status of the last 10 remote runs. Each vertical line represents a test run. Green lines indicate passed tests. Red lines indicate failed tests. Yellow lines indicate passed tests that only passed after a retry. If less than ten tests have been run, the remaining lines will be grey. The <i></i> or <i></i> icon indicates the status of the most recent test. <i></i> indicates failed; <i></i> indicates passed. Click the indicator to access the <em>Test runs</em> screen. For more information, see <a href="doc:test-runs">Test runs</a>.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Filtering the Test Library
+          </div><a href="#filtering-the-test-library"></a>
+        </h2>
+        <p>You can filter your tests by status, label, owner, the shared steps that they contain, and tests that have been auto-improved. Tests in accounts integrated with Applitools can also filter by tests which contain Visual Validation steps.
+        </p>
+        <p><i></i> <strong>To filter the Test Library:</strong>
+        </p>
+        <ol>
+          <li>Click the <strong>Advanced filters</strong> icon.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/8492bf1aa39fea63b3d385a46a9254012174e5c71bea7d0caebfa443547ff0ca-2024-11-24_17-00-17.png" /></span></span>
+        <p>The <strong>Filter Tests</strong> pane opens on the right hand side.
+        </p> <span><span><img alt="" src="https://files.readme.io/31e9bf4181b8c457ea92fae88c0b6bef805cd2542e3d9cf63939f9d371a086de-filtertests.png" /></span></span>
+        <ol start="2">
+          <li>In the <strong>Filter Test</strong> pane select one or more filter criteria:<!-- -->
+            <ol>
+              <li><strong>Show Flaky Tests</strong> - enable this toggle to display flaky tests only. A test is considered flaky if it passed after a retry. For more information, see <a href="doc:flaky-tests">Flaky tests</a>.
+              </li>
+              <li><strong>Test Status</strong> - Statuses are manually added to help manage which test needs to be worked on. For more information, see <a href="doc:test-status">Test Status</a>. Select one or more of the following statuses:<!-- -->
+                <ol>
+                  <li>Draft - Test is still in-progress
+                  </li>
+                  <li>Evaluating - Test ready, but its stability should be validated
+                  </li>
+                  <li>Active - Test is ready and stable
+                  </li>
+                  <li>Quarantine - The test doesn’t conform to the definition of a stable test and is waiting to be fixed
+                  </li>
+                </ol>
+              </li>
+              <li><strong>Label</strong> - Labels are used to associate tests with one or more characteristics without the need to place them in a specific Suite or Test Plan. For more information, see <a href="doc:labels">Labels</a>. Select one or more of the following labels and then select one of the following operands:<!-- -->
+                <ol>
+                  <li>OR - will return tests that include one or more of the selected labels.
+                  </li>
+                  <li>AND - will only return tests that include ALL the selected labels.
+                  </li>
+                </ol>
+              </li>
+              <li><strong>Test Owner</strong> - Test Owners are users that have been selected as the “owner” for each test. For more information, see <a href="doc:test-owner">Test Owner</a>. Select one or more of the test owners in the list.
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>You can also search for criteria within each section of the Filter Test pane by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.
+          </p>
+        </blockquote>
+        <ol start="3">
+          <li>Click <strong>Apply</strong>.
+            <br /> <!-- -->The filter is applied, and only those tests that meet the criteria are shown. To learn more about saving this filtered view, see <a href="doc:saving-a-filtered-view">Saving a Filtered View</a>.
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the Filter Test pane.
+            </p>
+          </blockquote>
+          <ol start="4">
+            <li>Click the <strong>&quot;X&quot;</strong> in the upper right of the Filter Test pane to close it.
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>Closing the Filter Test pane without resetting the filters will not reset them, and only the tests that meet the filter criteria will be shown. To view all of your tests and folders again, you will need to reopen the Filter Test pane and click <strong>Reset filters</strong>.
+            </p>
+          </blockquote>
+          <h2>
+            <div>
+            </div>
+            <div>Search text box
+            </div><a href="#search-text-box"></a>
+          </h2>
+          <p>You can use the search text box to find tests or folders based on their names, descriptions, and labels. The process for searching based on labels is slightly different than searching based on names and descriptions. In both cases, you enter your search criteria in the <strong>Search library</strong> box.
+          </p>
+          <p><strong>Examples of Special Syntax:</strong>
+          </p>
+          <ul>
+            <li><strong>AND Searches:</strong> Adding a second search term (separated by a space) will act as an <strong>AND</strong> search. In the case of labels, your second term needs to be preceded by the term <strong>label:</strong>.
+            </li>
+            <li><strong>Exclusion Searches:</strong> Preceding a search term with a minus sign (without a space) will act a <strong>NOT</strong> search. If you have more than one term, be sure to add a space between the terms. In the case of labels, your second term needs to be preceded by the term <strong>label</strong>.
+            </li>
+          </ul> <span><span><img alt="" src="https://files.readme.io/f9e60e30cbbb3952b2a1c7d377860bbadda06496a7beb9890eb1dad41d51bb07-search.png" /></span></span>
+          <p><i></i> <strong>To search by names and descriptions:</strong>
+          </p>
+          <ol>
+            <li>In the Search library text box, enter any text from the name or description of the tests or folders you want to find.
+              <br /> <!-- -->The resulting list is filtered immediately as you type each character.
+              </li>
+            </ol>
+            <p><i></i> <strong>To search by labels:</strong>
+            </p>
+            <ol>
+              <li>In the Search library text box, enter the text <strong>label:</strong> followed by the complete name of the label (without a space between them).
+                <br /> <!-- -->The filtered list is shown after you enter the complete name of the label.
+                </li>
+              </ol>
+              <p><strong>Label search example:</strong>
+                <br /> <!-- -->If you&#x27;ve labeled all the tests that still fail with the &quot;Failed&quot; label, you can filter as follows:
+                </p>
+                <div>
+                  <div><button>Text</button>
+                  </div>
+                  <div><pre><code>label:Failed</code></pre>
+                  </div>
+                </div>
+                <ul>
+                  <li><strong>Exclusion</strong> - use the <code>-</code> modifier to exclude a specific label or name/string. For example, if you want to get all the tests in the label &quot;sanity&quot; that didn&#x27;t fail:
+                  </li>
+                </ul>
+                <div>
+                  <div><button>Text</button>
+                  </div>
+                  <div><pre><code>label:sanity -label:failed</code></pre>
+                  </div>
+                </div>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>Whether you search by names/descriptions or labels, the resulting list includes results in a flat view, so all tests or folders that are nested within folders that match the search criteria will also be shown. To view the location of any of the results, click on its row. The location is shown on the bottom of the screen.
+                  </p>
+                </blockquote>
+                <h2>
+                  <div>
+                  </div>
+                  <div>Opening a test
+                  </div><a href="#opening-a-test"></a>
+                </h2>
+                <p>You can open a test in the Editor by <strong>double-clicking</strong> on the desired test. If the test is inside a folder or sub-folder, you need to drill-down by double clicking on each folder and sub-folder until you reach the desired test and then double-click on the test to open it.
+                </p>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>When you open a folder, a breadcrumbs navigation appears at the top of the page, enabling you to navigate back to the root folder.
+                  </p>
+                </blockquote>
+                <h2>
+                  <div>
+                  </div>
+                  <div>Running Tests (Web)
+                  </div><a href="#running-tests-web"></a>
+                </h2>
+                <p>You can run a test or multiple tests directly from the Test Library.
+                  <br /> <i></i> <strong>To run tests:</strong>
+                  </p>
+                  <ol>
+                    <li>Click on the test name to select it.
+                    </li>
+                  </ol>
+                  <blockquote theme="📘"><span>📘</span>
+                    <p>
+                    </p>
+                    <p>You can select multiple tests by holding down the ctrl/cmd key and then clicking on each of the desired tests.
+                      <br /> <!-- -->If there are no folders in your Test Library, you can also select all of your tests by holding down the ctrl/cmd key + A on the keyboard.
+                      </p>
+                    </blockquote>
+                    <ol start="2">
+                      <li>Click the <strong>Play</strong> icon (or right-click on the test name and choose <strong>Play</strong> from the right-click menu).
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/dd0e0f168099be3a817e6f6dbb1abcf43945d2e468fa3a4c8ae9436d1e5d1eae-play.png" /></span></span>
+                    <p>The <strong>Run Test Locally</strong> window opens.
+                    </p> <span><span><img alt="" src="https://files.readme.io/54f856348574e877b202311eb8e109bffa8443cb9f644910b8db34079ad95af0-confirm.png" /></span></span>
+                    <ol start="3">
+                      <li>If you would like to run the test in <em>Incognito mode</em>, select <strong>Run in Incognito mode</strong>.
+                      </li>
+                      <li>If you would like the test to use a different base URL than the one originally configured in the test, select <strong>Override Base URL</strong> and enter the URL in the field that is shown. For more information, see <a href="doc:base-url">Base URL</a>.
+                      </li>
+                      <li>Click <strong>OK</strong>.
+                      </li>
+                    </ol>
+                    <blockquote theme="🚧"><span>🚧</span>
+                      <p>
+                      </p>
+                      <p>Avoid touching your mouse and keyboard while the test is running.
+                      </p>
+                    </blockquote>
+                    <p>The <em>Suite Runs</em> tab of the <em>Runs_screen opens at the same time as the _AUT</em> (application under test) browser. The test is run in the <em>AUT_browser, and you can view the results in the _Suite Runs</em> tab.
+                    </p>
+                    <h2>
+                      <div>
+                      </div>
+                      <div>Exporting to CSV
+                      </div><a href="#exporting-to-csv"></a>
+                    </h2>
+                    <p>You can export a list of your tests to a csv file. The following information is included for each test: <em>name, description, labels, last run status, author, app name (mobile), app version (mobile), and path</em>.
+                      <br /> <i></i> <strong>To export test information to csv:</strong>
+                      </p>
+                      <ol>
+                        <li>Click on the <strong>Export to CSV</strong> icon.
+                        </li>
+                      </ol> <span><span><img alt="" src="https://files.readme.io/5426c49146d35e03287eff893d690d21f278fe45be0824f3fdd78afdd460c33c-export.png" /></span></span>
+                      <p>The csv file is downloaded to your local machine.
+                        <br /> <strong>Note:</strong> when searching/filtering the CSV will only contain the matching items.
+                        </p>
+                        <h2>
+                          <div>
+                          </div>
+                          <div>Changing Tests&#x27; Configuration (Web)
+                          </div><a href="#changing-tests-configuration-web"></a>
+                        </h2>
+                        <p>You can change tests&#x27; configuration directly from the test library.
+                          <br /> <i></i> <strong>To edit tests&#x27; configuration:</strong>
+                          </p>
+                          <ol>
+                            <li>Select the test/s you would like to change their configuration
+                            </li>
+                            <li>Click on the &quot;Edit test config&quot; either from the top menu, or from the context menu
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/62c4e7f-Screen_Shot_2021-12-06_at_16.51.38.png" /></span></span>
+                          <ol start="3">
+                            <li>Select the configuration to apply
+                            </li>
+                            <li>Click &quot;OK&quot;
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/93790fb-Screen_Shot_2021-12-06_at_16.52.54.png" /></span></span>
+                        </div>
+                        <div>
+                          <div>
+                            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                            </p>
+                          </div>
+                        </div>
+                        <hr />
+                        <nav><a href="/docs/test-management-overview"><span></span>
+                          <div>Test Management Overview
+                          </div></a><a href="/docs/managing-tests-and-folders">
+                          <div>Managing tests and folders
+                          </div><span></span></a>
+                        </nav>
+                      </section>
+                      <section>
+                        <div>
+                          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </article>

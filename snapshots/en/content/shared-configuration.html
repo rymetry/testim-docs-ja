@@ -1,0 +1,400 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Configuration Library - Web
+        </h1>
+        <div>
+          <div>
+            <p>Use the same test configuration in multiple/all tests
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The <strong>Configuration List</strong> page shows all of the test configurations that were created and available to use for your tests, whether you run them locally or with your CLI. A test’s configuration determines the system specifications used to run the test. If you intend to run a test locally then the configuration should match your local environment. If you intend to run a test on the Testim Grid, then Testim simulates the environment that you specified. You can include a test configuration when running tests with your CLI by using the <code>--test-config</code> flag. For more information, see <a href="doc:the-command-line-cli#section-test-config">Test Config</a>. The test configurations in this list can be created and modified in the <em>Configuration Library</em> or in the Setup step in the <em>Test Editor</em>.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>View Existing Configurations
+          </div><a href="#view-existing-configurations"></a>
+        </h2>
+        <p>Within a web project, all configuration sets are stored within the Configuration Library. The following information is displayed for each configuration:
+        </p>
+        <ul>
+          <li><strong>Name</strong> - name given to identify the configuration
+          </li>
+          <li><strong>OS</strong>- the operating system used for the configuration
+          </li>
+          <li><strong>Resolution</strong>- the screen resolution used for the configuration
+          </li>
+          <li><strong>Browser</strong>- the browser used for the configuration
+          </li>
+          <li><strong>Step Timeout</strong> - the amount of time in milliseconds the test will timeout
+          </li>
+          <li><strong>Step Delay</strong> - the amount of time Testim will automatically pause between each step in the test
+          </li>
+        </ul> <span><span><img alt="" src="https://files.readme.io/6d34e75-webconfiglibrary.png" /></span></span>
+        <ul>
+          <li><strong>Configuration Library</strong> – You can create a new configuration in your configuration library. This configuration will apply to all steps run in a test that is set with that configuration (including tests run via CLI or Scheduler). For more information on test configuration, see <a href="doc:how-to-record-a-test#section-step-3-setting-the-test-configuration">Setting the Test Configuration</a>. For more information about the CLI, see <a href="doc:the-command-line-cli#section-test-config">Command line interface: Test Config</a>. For more information about the Scheduler, see <a href="doc:scheduler">Scheduler</a>.
+          </li>
+          <li><strong>Setup Step in the Test Editor</strong> – Every test has its own default configuration accessible from the property panel of the test’s Setup step. The configuration parameters that are set in the test’s default configuration will apply unless the test is run from the CLI or a scheduler with a different configuration.
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>When the test is run in the CLI, you can override the default configuration by specifying a new test configuration in the run command, see <a href="doc:the-command-line-cli">Command line interface</a>.
+          </p>
+        </blockquote>
+        <blockquote theme="🚧"><span>🚧</span>
+          <p>
+          </p>
+          <p>If you run a test locally on a system that doesn’t correspond with the test configuration, then the test will run with the available configuration and a warning message will be shown.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Creating and modifying test configurations in the Configuration Library
+          </div><a href="#creating-and-modifying-test-configurations-in-the-configuration-library"></a>
+        </h2>
+        <p>In the <strong>Configuration Library</strong> you can create new test configurations. You can also clone, modify, rename, and delete current configurations.
+        </p>
+        <h3>
+          <div>
+          </div>
+          <div>Creating a new test configuration
+          </div><a href="#creating-a-new-test-configuration"></a>
+        </h3>
+        <p><i></i> <strong>To create a new test configuration:</strong>
+        </p>
+        <ol>
+          <li>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/bde6165-Testim_502b.png" /></span></span>
+        <p>The <strong>Configuration Library</strong> is shown.
+        </p>
+        <ol start="2">
+          <li>Click the <strong>+ Create New</strong> button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/bc7aa0f-Testim_503a.png" /></span></span>
+        <p>The <strong>Add New Config</strong> settings are shown.
+        </p> <span><span><img alt="" src="https://files.readme.io/b2d6d80-Testim_504_r.png" /></span></span>
+        <ol start="3">
+          <li>Enter the basic options as follows:
+          </li>
+        </ol>
+        <ul>
+          <li>In the <strong>Name</strong> field, enter a name for this new configuration.
+          </li>
+          <li>In the <strong>Browser</strong> section, click the dropdown arrow and select your desired browser.
+          </li>
+          <li>In the <strong>OS</strong> section, click the dropdown arrow and select your desired operating system.
+          </li>
+          <li>In the <strong>Resolution</strong> section, click the dropdown arrow and select your desired resolution.
+          </li>
+        </ul>
+        <ol start="4">
+          <li>
+            <p>Click <strong>Advanced</strong>.
+              <br /> <!-- -->The advanced configuration options are shown.
+                <br /> <span><span><img alt="" src="https://files.readme.io/eac30c0-advancednative.jpg" /></span></span>
+                </p>
+              </li>
+              <li>
+                <p>In the <strong>General</strong> section, modify the <strong>Step timeout</strong>, <strong>Step delay</strong>, and <strong>Setup step timeout</strong> settings as desired. For more information, see <a href="doc:how-to-record-a-test#section-test-configuration-parameters">Test Configuration Parameters</a>.
+                </p>
+              </li>
+              <li>
+                <p>In the <strong>Native Events</strong> section, you can overwrite the default setting of how a click step will be handled with another setting just for this test configuration. By default, at the project level, the Click steps are configured to use either native or non-native events. Sometimes a test will fail because even though the “click step” passed, the click wasn’t actually executed. A possible solution is to try to configure the click steps in the test with the opposite configuration (i.e., instead of native, non-native and vice versa). Instead of changing the configuration for every click step individually, you can create a test configuration that overwrites the default native/non-native configuration and then simply run the test with this configuration to check if the opposite setting has fixed the problem. To overwrite the default Native events setting, select the <strong>Apply to click steps</strong> checkbox.
+                </p>
+              </li>
+              <li>
+                <p>Under <strong>Click event type</strong>, the current default setting is displayed. To overwrite the default setting for this test configuration, click the drop-down menu and select the other value (e.g., if it was <strong>Native click event</strong>, select <strong>Non-native click event</strong>).
+                </p> <span><span><img alt="" src="https://files.readme.io/93bbedb-3845ef1-image_1.png" /></span></span>
+                <p>After running a test with the native override, you will see an indication in the test running summary, stating whether the native or non-native override was applied, as shown in the example below in which the <strong>Native click event</strong> option was selected.
+                </p> <span><span><img alt="" src="https://files.readme.io/1a9eceb-028f074-image.png" /></span></span>
+              </li>
+              <li>
+                <p>In the <strong>Before/After hooks</strong> section, modify the settings as desired. For more information, see <a href="doc:before-after-hooks">Before &amp; after hooks</a>.
+                </p>
+              </li>
+              <li>
+                <p>Click <strong>Add</strong>.
+                  <br /> <!-- -->The configuration is created and added to the <strong>Configuration Library</strong>.
+                  </p>
+                </li>
+              </ol>
+              <h3>
+                <div>
+                </div>
+                <div>Cloning a test configuration
+                </div><a href="#cloning-a-test-configuration"></a>
+              </h3>
+              <p><i></i> <strong>To clone a test configuration:</strong>
+              </p>
+              <ol>
+                <li>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/9a234a1-Testim_502b.png" /></span></span>
+              <p>The <strong>Configuration Library</strong> is shown.
+              </p>
+              <ol start="2">
+                <li>Click on the row of the test configuration you wish to clone.
+                  <br /> <!-- -->Context tools are shown.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/b2ffc88-Testim_590a.png" /></span></span>
+                <ol start="3">
+                  <li>Click the <strong>Clone</strong> icon.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/c9eac99-Testim_590b.png" /></span></span>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>Alternatively, you can right-click the row, and select <strong>Clone</strong>.
+                  </p>
+                </blockquote>
+                <p>The <strong>Clone Configuration</strong> options are shown.
+                </p> <span><span><img alt="" src="https://files.readme.io/53958a2-Testim_591_r.png" /></span></span>
+                <ol start="4">
+                  <li>In the <strong>Name</strong> field, enter a name for the cloned configuration.
+                  </li>
+                  <li>Click <strong>Clone</strong>.
+                    <br /> <!-- -->The configuration is cloned and is shown in the <strong>Configuration Library</strong>.
+                    </li>
+                  </ol>
+                  <h3>
+                    <div>
+                    </div>
+                    <div>Modifying a test configuration
+                    </div><a href="#modifying-a-test-configuration"></a>
+                  </h3>
+                  <p><i></i> <strong>To modify a test configuration:</strong>
+                  </p>
+                  <ol>
+                    <li>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/15c8c6f-Testim_502b.png" /></span></span>
+                  <p>The <strong>Configuration Library</strong> is shown.
+                  </p>
+                  <ol start="2">
+                    <li>Double-click on the row of the test configuration you wish to modify.
+                      <br /> <!-- -->The <strong>Edit Config</strong> settings are shown.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/7ef3c8f-editconfig.jpg" /></span></span>
+                    <ol start="3">
+                      <li>Modify the basic options as follows:
+                      </li>
+                    </ol>
+                    <ul>
+                      <li>In the <strong>Name</strong> field, enter a name for this new configuration.
+                      </li>
+                      <li>In the <strong>Browser</strong> section, click the dropdown arrow and select your desired browser.
+                      </li>
+                      <li>In the <strong>OS</strong> section, click the dropdown arrow and select your desired operating system.
+                      </li>
+                      <li>In the <strong>Resolution</strong> section, click the dropdown arrow and select your desired resolution.
+                      </li>
+                    </ul>
+                    <ol start="4">
+                      <li>Click <strong>Advanced</strong>.
+                        <br /> <!-- -->The advanced configuration options are shown.
+                        </li>
+                      </ol> <span><span><img alt="" src="https://files.readme.io/6780665-editconfig2.jpg" /></span></span>
+                      <ol start="5">
+                        <li>In the <strong>General</strong> section, modify the <strong>Step timeout</strong>, <strong>Step delay</strong>, and <strong>Setup step timeout</strong> settings as desired. For more information, see <a href="doc:how-to-record-a-test#section-test-configuration-parameters">Test Configuration Parameters</a>.
+                        </li>
+                        <li>In the <strong>Native Events</strong> section, you can overwrite the default setting of how a click step will be handled with another setting just for this test configuration. By default, at the project level, the Click steps are configured to use either native or non-native events by default. Sometimes a test will fail because even though the “click step” passed, the click wasn’t actually executed. A possible solution is to try to configure the click steps in the test with the opposite configuration (i.e., instead of native, non-native and vice versa). Instead of changing the configuration for every click step individually, you can create a test configuration that overwrites the default native/non-native configuration and then simply run the test with this configuration to check if the opposite setting has fixed the problem. To overwrite the default Native events setting, select the <strong>Apply to click steps</strong> checkbox.
+                        </li>
+                        <li>Under <strong>Click event type</strong>, the current default setting is displayed. To overwrite the default setting for this test configuration, click the drop-down menu and select the other value (e.g., if it was <strong>Native click event</strong>, select <strong>Non-native click event</strong>).
+                        </li>
+                        <li>In the <strong>Before/After hooks</strong> section, modify the settings as desired. For more information, see <a href="doc:before-after-hooks">Before &amp; after hooks</a>.
+                        </li>
+                        <li>Click <strong>Change</strong>.
+                          <br /> <!-- -->The configuration is modified.
+                          </li>
+                        </ol>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>Renaming a test configuration
+                          </div><a href="#renaming-a-test-configuration"></a>
+                        </h3>
+                        <p><i></i> <strong>To rename a test configuration:</strong>
+                        </p>
+                        <ol>
+                          <li>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.
+                          </li>
+                        </ol> <span><span><img alt="" src="https://files.readme.io/efa52dd-Testim_502b.png" /></span></span>
+                        <p>The <strong>Configuration Library</strong> is shown.
+                        </p>
+                        <ol start="2">
+                          <li>Click on the row of the test configuration you wish to rename.
+                            <br /> <!-- -->Context tools are shown.
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/815c253-Testim_590a.png" /></span></span>
+                          <ol start="3">
+                            <li>Click the <strong>Rename</strong> icon.
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/cd437c4-Testim_590d.png" /></span></span>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>Alternatively, you can right-click the row, and select <strong>Rename</strong>.
+                            </p>
+                          </blockquote>
+                          <p>The <strong>Edit Name</strong> settings are shown.
+                          </p> <span><span><img alt="" src="https://files.readme.io/3519685-Testim_593_r.png" /></span></span>
+                          <ol start="4">
+                            <li>In the <strong>New name</strong> field, enter a new name for this configuration.
+                            </li>
+                            <li>Click <strong>OK</strong>.
+                              <br /> <!-- -->The configuration is renamed.
+                              </li>
+                            </ol>
+                            <h3>
+                              <div>
+                              </div>
+                              <div>Deleting a test configuration
+                              </div><a href="#deleting-a-test-configuration"></a>
+                            </h3>
+                            <p><i></i> <strong>To delete a test configuration:</strong>
+                            </p>
+                            <ol>
+                              <li>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.
+                              </li>
+                            </ol> <span><span><img alt="" src="https://files.readme.io/3dcbaab-Testim_502b.png" /></span></span>
+                            <p>The <strong>Configuration Library</strong> is shown.
+                            </p>
+                            <ol start="2">
+                              <li>Click on the row of the test configuration you wish to delete.
+                                <br /> <!-- -->Context tools are shown.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/2917eb3-Testim_590a.png" /></span></span>
+                              <ol start="3">
+                                <li>Click the <strong>Delete</strong> icon.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/ee65ecc-Testim_590c.png" /></span></span>
+                              <blockquote theme="📘"><span>📘</span>
+                                <p>
+                                </p>
+                                <p>Alternatively, you can right-click the row, and select <strong>Delete</strong>.
+                                </p>
+                              </blockquote>
+                              <p>A confirmation dialogue is shown.
+                              </p> <span><span><img alt="" src="https://files.readme.io/ac8e414-Testim_592_r.png" /></span></span>
+                              <ol start="4">
+                                <li>Click <strong>Delete</strong>.
+                                  <br /> <!-- -->The configuration is removed from the <strong>Configuration Library</strong>.
+                                  </li>
+                                </ol>
+                                <h2>
+                                  <div>
+                                  </div>
+                                  <div>Filtering the Configuration Library
+                                  </div><a href="#filtering-the-configuration-library"></a>
+                                </h2>
+                                <p>You can apply filters to the Configuration Library to only display items that meet a specific criteria.
+                                </p>
+                                <p><i></i> <strong>To filter the Configuration Library:</strong>
+                                </p>
+                                <ol>
+                                  <li>Navigate to Runs &gt; Configuration List.
+                                  </li>
+                                  <li>Click the <strong>Advanced Filters</strong> button in the action menu.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/8b46862-configadvancedfilters.png" /></span></span>
+                                <ol start="3">
+                                  <li>Select the desired filters from the <strong>Filter Configuration</strong> panel and click the <strong>Apply</strong> button.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/cd53734-configapplyfilters.png" /></span></span>
+                                <p>The list of scheduled runs is now filtered based on your filter selections. To learn more about saving this filtered view, see <a href="doc:saving-a-filtered-view">Saving a Filtered View</a>.
+                                </p>
+                                <h2>
+                                  <div>
+                                  </div>
+                                  <div>Creating and modifying test configurations in the Test Editor
+                                  </div><a href="#creating-and-modifying-test-configurations-in-the-test-editor"></a>
+                                </h2>
+                                <p>Test configurations that are modified in the <strong>Test Editor</strong> are added to the <strong>Configuration Library</strong> if the configuration includes a name and the test is saved. The newly added test configuration can be used for future tests.
+                                </p>
+                                <p><i></i> <strong>To modify a test configuration within a test:</strong>
+                                </p>
+                                <ol>
+                                  <li>Hover over a test&#x27;s <strong>Setup</strong> step (the first step) and click the <strong>Show properties</strong> (:fa-cog:) icon.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/9bdfe00-Testim_594a.png" /></span></span>
+                                <p>The <strong>Properties</strong> panel opens on the right hand side.
+                                </p> <span><span><img alt="" src="https://files.readme.io/db2fc84-Testim_595_r.png" /></span></span>
+                                <ol start="2">
+                                  <li>In the <strong>Configuration</strong> section, click on the <strong>Edit Configuration</strong> icon.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/21b9d84-Testim_596a_r.png" /></span></span>
+                                <p>The <strong>Edit Configuration</strong> settings are shown.
+                                </p> <span><span><img alt="" src="https://files.readme.io/9ebae2c-editconfig3.jpg" /></span></span>
+                                <ol start="3">
+                                  <li>Modify the options as follows:
+                                  </li>
+                                </ol>
+                                <ul>
+                                  <li>In the <strong>Name</strong> field, enter a name for this configuration. (If you don’t enter a name, the test configuration will NOT be saved in the <strong>Configuration Library</strong>.)
+                                  </li>
+                                  <li>In the <strong>Browser</strong> section, click the dropdown arrow and select your desired browser.
+                                  </li>
+                                  <li>In the <strong>OS</strong> section, click the dropdown arrow and select your desired operating system.
+                                  </li>
+                                  <li>In the <strong>Resolution</strong> section, select your desired resolution.
+                                  </li>
+                                  <li>Modify the <strong>Step timeout</strong>, <strong>Step delay</strong>, and <strong>Setup step timeout</strong> settings as desired. For more information, see <a href="doc:how-to-record-a-test#section-test-configuration-parameters">Test Configuration Parameters</a>.
+                                  </li>
+                                  <li>In the <strong>Native Events</strong> section, you can overwrite the default setting of how a click step will be handled with another setting just for this test configuration. By default, at the project level, the Click steps are configured to use either native or non-native events by default. Sometimes a test will fail because even though the “click step” passed, the click wasn’t actually executed. A possible solution is to try to configure the click steps in the test with the opposite configuration (i.e., instead of native, non-native and vice versa). Instead of changing the configuration for every click step individually, you can create a test configuration that overwrites the default native/non-native configuration and then simply run the test with this configuration to check if the opposite setting has fixed the problem. To overwrite the default Native events setting, select the <strong>Apply to click steps</strong> checkbox. Under <strong>Click event type</strong>, the current default setting is displayed. To overwrite the default setting for this test configuration, click the drop-down menu and select the other value (e.g., if it was <strong>Native click event</strong>, select <strong>Non-native click event</strong>).
+                                  </li>
+                                  <li>In the <strong>Before/After hooks</strong> section, modify the settings as desired. For more information, see <a href="doc:before-after-hooks">Before &amp; after hooks</a>.
+                                  </li>
+                                </ul>
+                                <ol start="4">
+                                  <li>Click the back arrow to close the <strong>Edit Configuration</strong> settings.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/8e94901-Testim_600a_r.png" /></span></span>
+                                <ol start="5">
+                                  <li>Click <strong>Save</strong>.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/d7f9a8b-Testim_594b.png" /></span></span>
+                                <p>The <strong>Change Message</strong> window opens.
+                                </p> <span><span><img alt="" src="https://files.readme.io/990d848-Testim_601_r.png" /></span></span>
+                                <ol start="6">
+                                  <li>In the <strong>Message</strong> field, optionally enter a description of the changes made in this version.
+                                  </li>
+                                  <li>Click <strong>OK</strong>.
+                                    <br /> <!-- -->The test is saved. If you entered a name in the <strong>Name</strong> field in the <strong>Configuration</strong> settings, the configuration will be listed in the <strong>Configuration Library</strong>.
+                                    </li>
+                                  </ol>
+                                </div>
+                                <div>
+                                  <div>
+                                    <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                                    </p>
+                                  </div>
+                                </div>
+                                <hr />
+                                <nav><a href="/docs/revisions"><span></span>
+                                  <div>Revisions
+                                  </div></a><a href="/docs/configuration-library-mobile">
+                                  <div>Configuration Library - Mobile
+                                  </div><span></span></a>
+                                </nav>
+                              </section>
+                              <section>
+                                <div>
+                                  <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                                  </div>
+                                </div>
+                              </section>
+                            </div>
+                          </article>

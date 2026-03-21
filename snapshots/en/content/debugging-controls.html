@@ -1,0 +1,233 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Debugging Controls
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The debugging controls allow test developers to locate and fix issues in their tests, while running the test without the need to wait until the test test run is completed. If a test is lacking in coverage (e.g., new features have been added to the AUT), it is also possible to add steps to the test by recording from a specific position. The controls for recording/authoring, running, and debugging the tests are conveniently grouped closely together to create a seamless development environment, where test developers can quickly write, test, and debug their tests, all in one place.
+        </p>
+        <p>The system supports the following debugging, running and recording capabilities:
+        </p>
+        <div>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <p>Debugging
+                    </p>
+                  </th>
+                  <th>
+                    <p>Running
+                    </p>
+                  </th>
+                  <th>
+                    <p>Recording
+                    </p>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p>• <a href="#step-into">Step into</a> • <a href="#step-over">Step over</a> • <a href="#step-out">Step out</a> • <a href="#pause-and-continue-debugging">Pause/Continue</a> • <a href="#stop-run">Stop Run</a> • <a href="#rerun">Rerun</a>
+                    </p>
+                  </td>
+                  <td>
+                    <p>• <a href="#running-locally-with-debugging">Run locally with debug</a>
+                      <br /> <!-- -->• <a href="#running-locally-without-debugging">Run locally without debug</a>
+                        <br /> <!-- -->• <a href="https://help.testim.io/docs/running-tests-overview#running-a-remote-web-test">Run on Grid</a>
+                          <br /> <!-- -->• <a href="doc:play-from-here">Play from here</a>
+                            <br /> <!-- -->• <a href="doc:rerun-locally-with-the-same-params">Rerun locally with the same params</a>
+                            </p>
+                          </td>
+                          <td>
+                            <p>• <a href="doc:recording-additional-steps-to-fix-bugs#start-recording">Start recording</a>
+                              <br /> <!-- -->• <a href="doc:recording-additional-steps-to-fix-bugs#start-recording-at-this-position">Start recording at position</a>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <p>The enablement or disablement of the debugging, running, and recording buttons is determined by the current editor state (e.g. running, recording...).
+                  </p>
+                  <h3>
+                    <div>
+                    </div>
+                    <div>Breakpoints
+                    </div><a href="#breakpoints"></a>
+                  </h3>
+                  <p>Breakpoints are used to pause the test execution at various stages. There are two types of breakpoints:
+                  </p>
+                  <ul>
+                    <li><strong>Manual breakpoint</strong> - breakpoint set manually by the user (See <a href="doc:stop-pause-debug-tests#insert-a-breakpoint">Insert a breakpoint</a> for more info)
+                      <br /> <span><span><img alt="" src="https://files.readme.io/4531fad-breakpoint1.png" /></span></span>
+                      </li>
+                      <li><strong>Virtual breakpoint</strong> - breakpoint created automatically by the system when debugging controls are used (e.g., step into, step out, step over and pause). Virtual breakpoints are represented by a highlighted blinking arrow.
+                        <br /> <span><span><img alt="" src="https://files.readme.io/64f42cc-breakpoint2.png" /></span></span>
+                        </li>
+                      </ul>
+                      <h1>
+                        <div>
+                        </div>
+                        <div>Running locally with Debugging
+                        </div><a href="#running-locally-with-debugging"></a>
+                      </h1>
+                      <p>Running the test locally with debugging, allows you to execute the test, while using debugging features to closely inspect certain parts of the test with more precision and control. Pausing the test execution at certain points allows you to inspect variables, step through the test, and analyze any errors or unexpected behaviors. For example, when running the test in debug mode you can pause the test at any point, step over a step to execute it, step into a group to view the execution of specific steps within this group, and more. The debug mode works on local runs only.
+                      </p>
+                      <blockquote theme="📘"><span>📘</span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>Run locally option
+                          </div><a href="#run-locally-option"></a>
+                        </h3>
+                        <p>If you want to run the test locally without debugging, so the <strong>editor will not pause when breakpoints are encountered</strong>, use the <strong>Run locally</strong> option. For more information, see <a href="https://help.testim.io/docs/debugging-controls#running-locally-without-debugging">Running locally without debugging</a>
+                        </p>
+                      </blockquote>
+                      <p><i></i> <strong>Run the test in debug mode:</strong>
+                      </p>
+                      <ol>
+                        <li>Do one of the following:<!-- -->
+                          <ol>
+                            <li>Click the <strong>Run locally with debugging</strong> button.
+                              <br /> <span><span><img alt="" src="https://files.readme.io/38a770d-runlocallywithdebug.png" /></span></span>
+                              </li>
+                              <li>Click the <strong>Run options</strong> drop down menu and then click the <strong>Run locally with debugging</strong> option.
+                                <br /> <span><span><img alt="" src="https://files.readme.io/9a27022-rundebugdropdown.png" /></span></span>
+                                </li>
+                                <li>Press <strong>F5</strong>.
+                                  <br /> <!-- -->The test begins running and the <strong>Debugging Controls</strong> menu is displayed.
+                                    <br /> <span><span><img alt="" src="https://files.readme.io/b68851e-debugging_controls.png" /></span></span>
+                                    </li>
+                                  </ol>
+                                </li>
+                                <li>To pause the test, in the <strong>Debugging Controls Menu</strong>, click the <strong>Pause</strong> button.
+                                  <br /> <span><span><img alt="" src="https://files.readme.io/f8c64f1-pause.png" /></span></span>
+                                    <br /> <!-- -->After pausing the test the debugging controls are displayed. See debugging controls details below.
+                                    </li>
+                                    <li>To stop the test run at any point and exit the debug mode, click the <strong>Stop</strong> button.
+                                      <br /> <span><span><img alt="" src="https://files.readme.io/c3c750b-stop.png" /></span></span>
+                                      </li>
+                                    </ol>
+                                    <h1>
+                                      <div>
+                                      </div>
+                                      <div>Debugging Controls Menu
+                                      </div><a href="#debugging-controls-menu"></a>
+                                    </h1>
+                                    <p>When running the test in debug mode, a <strong>Debug Controls Menu</strong> is displayed providing the following tools to navigate and run specific parts of test.
+                                    </p> <span><span><img alt="" src="https://files.readme.io/c0e290c-debuggingcontrolswcallouts.png" /></span></span>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Move Around
+                                      </div><a href="#move-around"></a>
+                                    </h2>
+                                    <p>Click and drag to move the Debugging Controls Menu around.
+                                    </p>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Pause and continue debugging
+                                      </div><a href="#pause-and-continue-debugging"></a>
+                                    </h2>
+                                    <ul>
+                                      <li><strong>Pause:</strong> Pauses the test execution at any point in the editor. When you click the &quot;pause&quot; button, the test execution will be paused at the “nearest” step.
+                                      </li>
+                                      <li><strong>Continue:</strong> Continues the test execution from the current location until the end of the test has been reached.
+                                      </li>
+                                    </ul>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Step over
+                                      </div><a href="#step-over"></a>
+                                    </h2>
+                                    <p>Use this control to skip over a group without stepping inside. When you click the &quot;step over&quot; button, the editor will execute the next step or group. If the next step is a group, the editor will execute the group without stepping inside it and stop after the group step, while marking where it stopped with a blinking arrow, also known as a <strong>virtual breakpoint</strong>. As opposed to a regular breakpoint, the virtual breakpoint is the place in the test where the system has stopped the execution.
+                                    </p> <span><span><img alt="" src="https://files.readme.io/8735a97-stepover.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/3b312df-steopover.gif" /></span></span>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Step into
+                                      </div><a href="#step-into"></a>
+                                    </h2>
+                                    <p>Use this control to step into a group to see its internal execution. When you click the &quot;step into&quot; button, the editor will open the group (display the group steps) but will not yet execute it. In this case, the virtual breakpoint will be located before the first step in the group.
+                                    </p> <span><span><img alt="" src="https://files.readme.io/f6562fe-stepinto.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/0d82c03-stepinto.gif" /></span></span>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Step out
+                                      </div><a href="#step-out"></a>
+                                    </h2>
+                                    <p>Use this control to exit the internal view of the group after executing its steps. This can be useful when you have stepped into a group and you want to execute the group&#x27;s steps and then step out of the group. For example, if you think that the problem is not in the group itself, but its caller. When you click the &quot;step out&quot; button, the system will execute the remaining steps of the group, step out of the group and place the virtual breakpoint after the group step.
+                                    </p> <span><span><img alt="" src="https://files.readme.io/64e5995-stepout.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/d8b61de-stepout.gif" /></span></span>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Rerun
+                                      </div><a href="#rerun"></a>
+                                    </h2>
+                                    <p>Use this control to run the same test again quickly and easily without having to manually stop the test and run again. This can be useful when you want to retest the same scenario or when you want to verify that a fix has resolved the issue. When you click the &quot;rerun&quot; button, the system immediately begins executing the test from its beginning.
+                                    </p> <span><span><img alt="" src="https://files.readme.io/9dc6997-rerun.gif" /></span></span>
+                                    <h2>
+                                      <div>
+                                      </div>
+                                      <div>Stop run
+                                      </div><a href="#stop-run"></a>
+                                    </h2>
+                                    <p>The <strong>stop run</strong> control can be used to stop the test execution and go into &quot;Authoring Mode&quot;. This can be useful when you have identified and fixed the problem in the test, or when you need to interrupt a long-running test or debug session.
+                                    </p>
+                                    <p><i></i> <strong>To stop the test execution:</strong>
+                                    </p>
+                                    <ul>
+                                      <li>While the test is running, click the <strong>Stop Run</strong> button.
+                                      </li>
+                                    </ul>
+                                    <h1>
+                                      <div>
+                                      </div>
+                                      <div>Running locally (without debugging)
+                                      </div><a href="#running-locally-without-debugging"></a>
+                                    </h1>
+                                    <p>This running option allows you to execute your test locally without any debugging features. When you run your test in this mode, the <strong>test run will not pause if breakpoints are encountered</strong>. This is useful when you want to quickly run your test to see its output or behavior, without the overhead of debugging.
+                                    </p>
+                                    <p><i></i> <strong>To run locally:</strong>
+                                    </p>
+                                    <ul>
+                                      <li>Click the <strong>Run options</strong> drop down menu and then click the <strong>Run locally</strong> option.
+                                      </li>
+                                    </ul> <span><span><img alt="" src="https://files.readme.io/91f0e8f-runlocally.png" /></span></span>
+                                    <p>The test will run without pausing at breakpoints.
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <div>
+                                      <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <hr />
+                                  <nav><a href="/docs/debugging-overview"><span></span>
+                                    <div>Debugging Overview
+                                    </div></a><a href="/docs/recording-additional-steps-to-fix-bugs">
+                                    <div>Recording New Steps to Resolve Bugs
+                                    </div><span></span></a>
+                                  </nav>
+                                </section>
+                                <section>
+                                  <div>
+                                    <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                                    </div>
+                                  </div>
+                                </section>
+                              </div>
+                            </article>

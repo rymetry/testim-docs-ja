@@ -1,0 +1,600 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Hooks
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>A Hook is an object that runs an existing <a href="doc:shareable-steps">Shared Step</a> or a <a href="doc:groups">Shared Group</a> before/after each step, or before/after a test. Following the creation of the hooks, the tests can be run as usual. The hooks are run as any other steps in the test. After the test is run, it is possible to visualize the hooks and their results, as described below.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Common usage examples for hooks
+          </div><a href="#common-usage-examples-for-hooks"></a>
+        </h2>
+        <h3>
+          <div>
+          </div>
+          <div>Before test hook usage examples:
+          </div><a href="#before-test-hook-usage-examples"></a>
+        </h3>
+        <p>The before test hook is used to execute a certain logic before a test.
+        </p>
+        <ul>
+          <li>Initialization of variables: can be used to initialize variables that will be used in each test.
+          </li>
+          <li>Preparation of test environment: can be used to prepare the test environment by setting up a database connection, creating necessary directories, or starting a server.
+          </li>
+          <li>Cleaning up after previous tests: can be used to clean up after previous tests and ensure that each test starts with a fresh environment.
+          </li>
+          <li>Sharing setup between tests: can be used to setup shared resources that will be used by multiple tests, reducing duplication of logic.
+          </li>
+        </ul>
+        <h3>
+          <div>
+          </div>
+          <div>After test hook usage examples:
+          </div><a href="#after-test-hook-usage-examples"></a>
+        </h3>
+        <p>The after test hook is used to execute a certain logic after a test.
+        </p>
+        <ul>
+          <li>Cleaning up test environment: can be used to clean up the test environment by closing database connections, removing temporary files, or stopping a server.
+          </li>
+          <li>Verifying results: can be used to verify the results of a test, such as checking the contents of a file, or the state of a database.
+          </li>
+          <li>Restoring original state: can be used to restore the original state of the environment, ensuring that the next test starts with a clean slate.
+          </li>
+          <li>Sharing cleanup between tests: can be used to clean up shared resources that were used by multiple tests, reducing duplication of logic.
+          </li>
+        </ul>
+        <h3>
+          <div>
+          </div>
+          <div>Before and after each step hook usage examples:
+          </div><a href="#before-and-after-each-step-hook-usage-examples"></a>
+        </h3>
+        <p>The before and after each step hooks allow you to execute logic before and after each step in a test.
+        </p>
+        <ul>
+          <li>Debugging: The before and after step hooks can be used to add &#x27;debugging&#x27; statements or to understand the state of the application before and after each step in a test.
+          </li>
+          <li>Verifying intermediate results: The after step hook can be used to verify the intermediate results of a test, such as checking the values of variables after each step.
+          </li>
+          <li>Sharing setup between steps: The before step hook can be used to set up shared resources that will be used by multiple steps, reducing duplication of logic.
+          </li>
+          <li>Monitoring progress: The after step hook can be used to monitor the progress of a test, such as logging the results of each step.
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>Before step hook and After step hooks will run even if the related step(s) is configured with a condition that causes it not to run.
+          </p>
+        </blockquote>
+        <h1>
+          <div>
+          </div>
+          <div>Creating Before/After Hooks
+          </div><a href="#creating-beforeafter-hooks"></a>
+        </h1>
+        <p>Hooks are configured within the Test Configuration settings and/or through the Config File.
+          <br /> <!-- -->The following options are available for setting the hooks by creating a new Test Configuration or editing an existing Test Configuration:
+          </p>
+          <ul>
+            <li><strong>Creating hooks via the Properties panel</strong> - this option is performed by editing the selected configuration from the test itself.
+            </li>
+            <li>**Creating hooks via the Configuration List screen **- this option is performed by creating a new configuration or editing an existing one from the Configuration List screen. The configuration will then have to be applied to the relevant test.
+            </li>
+            <li><strong>Creating hooks via the Default Configuration setting</strong> - this option is performed by editing the test’s default configuration setting. As part of this process, it is possible to edit an existing configuration or create a new one.
+            </li>
+          </ul>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>It is not possible to copy/cut and paste a hook.
+            </p>
+          </blockquote>
+          <p>The following table summarizes which type of hook can be configured through each of the methods mentioned above:
+          </p>
+          <div>
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Hook Type
+                    </th>
+                    <th>Test Configuration
+                    </th>
+                    <th>Config File
+                    </th>
+                    <th>Comments
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Before each step
+                    </td>
+                    <td>V
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>After each step
+                    </td>
+                    <td>V
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Before test
+                    </td>
+                    <td>V
+                    </td>
+                    <td>V
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>After test
+                    </td>
+                    <td>V
+                    </td>
+                    <td>V
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Before suite
+                    </td>
+                    <td>
+                    </td>
+                    <td>V
+                    </td>
+                    <td>Not presented in the editor
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>After suite
+                    </td>
+                    <td>
+                    </td>
+                    <td>V
+                    </td>
+                    <td>Not presented in the editor
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <h2>
+            <div>
+            </div>
+            <div>Creating Hooks Via the Test Configuration
+            </div><a href="#creating-hooks-via-the-test-configuration"></a>
+          </h2>
+          <p>Test Configuration Hooks can be created via the Properties panel, via the Configuration list screen, or via the test&#x27;s default configuration settings.
+          </p>
+          <p>The Some Test Configuration Hooks
+          </p>
+          <h3>
+            <div>
+            </div>
+            <div>Creating hooks via the Properties panel
+            </div><a href="#creating-hooks-via-the-properties-panel"></a>
+          </h3>
+          <p>The following hooks can be created via the **Properties panel ** in a test:
+          </p>
+          <ul>
+            <li><strong>Before test handler</strong> - will run before the test.
+            </li>
+            <li><strong>Before each step handler</strong> - will run before each step in the test
+            </li>
+            <li><strong>After each step handler</strong> - will run after each step in the test
+            </li>
+            <li>**After test handler **- will run after the test
+            </li>
+          </ul>
+          <p><i></i> <strong>To create a hook via the properties panel:</strong>
+          </p>
+          <ol>
+            <li>In the test click the <strong>Show Test Properties</strong> button.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/8c42f76-2023-01-03_14-15-34.png" /></span></span>
+          <ol start="2">
+            <li>In the <strong>Properties</strong> panel, in the <strong>Configuration</strong> section, click the <strong>Edit</strong> button.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/c4e3ae5-2023-01-03_14-33-45.png" /></span></span>
+          <p>The **Edit Configuration ** pane is displayed.
+          </p>
+          <ol start="3">
+            <li>In the <strong>Before/After Hooks</strong> section, select the checkbox of the hook type you wish to create:
+              <br /> <!-- -->_ Before test handler - will run before the test.
+                <br /> <!-- -->_ Before each step handler - will run before each step in the test
+                  <br /> <!-- -->_ After each step handler - will run after each step in the test
+                    <br /> <!-- -->_ After test handler - will run after the test
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/b9e4709-2023-01-03_14-51-20.png" /></span></span>
+                  <ol start="4">
+                    <li>Select the shared step or group from the drop-down menu.
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/bd656ae-2023-01-03_14-58-41.png" /></span></span>
+                  <ol start="5">
+                    <li>If you have selected <strong>After each step handler</strong> or <strong>After test handler</strong> options, select one of the following options under Run on:<!-- -->
+                      <ul>
+                        <li>Always - specifies that the hook will always run.
+                        </li>
+                        <li>Success - specifies that the hook will run if the step/test was successful.
+                        </li>
+                        <li>Failure - specifies that the hook will run if the step/test has failed.
+                        </li>
+                      </ul>
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/7e42513-2023-01-04_14-36-47small.png" /></span></span>
+                  <ol start="6">
+                    <li>Click <strong>Save</strong> to save the test.
+                      <br /> <!-- -->The hooks are added to the specific test.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/603e29d-propertiespanel.gif" /></span></span>
+                    <h3>
+                      <div>
+                      </div>
+                      <div>Creating hooks via the Configuration List screen
+                      </div><a href="#creating-hooks-via-the-configuration-list-screen"></a>
+                    </h3>
+                    <p>The following hooks can be created via the <strong>Configuration List</strong> screen:
+                    </p>
+                    <ul>
+                      <li>Before test handler - will run before the test.
+                      </li>
+                      <li>Before each step handler - will run before each step in the test
+                      </li>
+                      <li>After each step handler - will run after each step in the test
+                      </li>
+                      <li>After test handler - will run after the test
+                      </li>
+                    </ul>
+                    <p><i></i> <strong>To create a hook via the Configuration List screen:</strong>
+                    </p>
+                    <ol>
+                      <li>Go to <strong>Runs &gt; Configuration List</strong>.
+                      </li>
+                      <li>Click <strong>Create New</strong>.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/fea2a3f-2023-01-03_15-30-30.png" /></span></span>
+                    <ol start="3">
+                      <li>In the <strong>Add New Configuration</strong> screen click <strong>Advanced</strong>.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/50907d5-2023-01-03_15-48-32.png" /></span></span>
+                    <ol start="4">
+                      <li>In the <strong>Before/After Hooks</strong> section, select the checkbox of the hook type you wish to create:<!-- -->
+                        <ul>
+                          <li>Before test handler - will run before the test.
+                          </li>
+                          <li>Before each step handler - will run before each step in the test
+                          </li>
+                          <li>After each step handler - will run after each step in the test
+                          </li>
+                          <li>After test handler - will run after the test
+                          </li>
+                        </ul>
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/b5ea260-2023-01-03_15-49-37.png" /></span></span>
+                    <ol start="5">
+                      <li>Select the shared step or group from the drop-down menu.
+                      </li>
+                      <li>If you have selected <strong>After each step handler</strong> or <strong>After test handler</strong> options, select one of the following options under <strong>Run on</strong>:<!-- -->
+                        <ul>
+                          <li>**Always **- specifies that the hook will always run.
+                          </li>
+                          <li>**Success **- specifies that the hook will run if the step/test was successful.
+                          </li>
+                          <li>**Failure **- specifies that the hook will run if the step/test has failed.
+                          </li>
+                        </ul>
+                      </li>
+                      <li>Click <strong>Add</strong>.
+                        <br /> <!-- -->At this point the configuration with the Hooks will be available to be used in the relevant tests.
+                        </li>
+                      </ol> <span><span><img alt="" src="https://files.readme.io/0cbe19a-configlist.gif" /></span></span>
+                      <h3>
+                        <div>
+                        </div>
+                        <div>Creating hooks via the Default Configuration setting
+                        </div><a href="#creating-hooks-via-the-default-configuration-setting"></a>
+                      </h3>
+                      <p><i></i> <strong>To create a hook via the Default Configuration setting:</strong>
+                      </p>
+                      <ol>
+                        <li>In the test, in the <strong>Default Configuration</strong> setting, click the <strong>Edit</strong> button.
+                        </li>
+                      </ol> <span><span><img alt="" src="https://files.readme.io/54cf195-2023-01-04_13-02-27.png" /></span></span>
+                      <ol start="2">
+                        <li>To create a new configuration, click the** Custom (create new) +** option from the drop-down menu.
+                        </li>
+                      </ol> <span><span><img alt="" src="https://files.readme.io/c6f2e2e-2023-01-04_13-05-48.png" /></span></span>
+                      <p>The <strong>Change Default Configuration</strong> dialog is displayed.
+                      </p>
+                      <ol start="3">
+                        <li>In the <strong>Before/After Hooks</strong> section, select the checkbox of the hook type you wish to create:
+                        </li>
+                      </ol>
+                      <ul>
+                        <li>Before test handler - will run before the test.
+                        </li>
+                        <li>Before each step handler - will run before each step in the test
+                        </li>
+                        <li>After each step handler - will run after each step in the test
+                        </li>
+                        <li>After test handler - will run after the test
+                        </li>
+                      </ul> <span><span><img alt="" src="https://files.readme.io/4bfbda7-2023-01-04_13-29-01.png" /></span></span>
+                      <ol start="4">
+                        <li>Select the shared step or group from the drop-down menu.
+                        </li>
+                        <li>If you have selected **After each step handler **or **After test handler **options, select one of the following options under <strong>Run on</strong>:<!-- -->
+                          <ul>
+                            <li>Always - specifies that the hook will always run.
+                            </li>
+                            <li>Success - specifies that the hook will run if the step/test was successful.
+                            </li>
+                            <li>Failure - specifies that the hook will run if the step/test has failed.
+                            </li>
+                          </ul>
+                        </li>
+                        <li>Click <strong>Change</strong> to save.
+                          <br /> <!-- -->The test will include the new default configuration.
+                          </li>
+                        </ol> <span><span><img alt="" src="https://files.readme.io/c475584-defaultconfig.gif" /></span></span>
+                        <h2>
+                          <div>
+                          </div>
+                          <div>Test Configuration Hooks Run Parameters
+                          </div><a href="#test-configuration-hooks-run-parameters"></a>
+                        </h2>
+                        <p>The following Test Configuration Hooks have additional run parameters available only to them that can help gather more information on the test. This information is available in the step/test itself, so, for example, you can a custom step with code that will use the data in these parameters:
+                        </p>
+                        <ul>
+                          <li><strong>After each step handler parameters</strong> - the after step test configuration hook includes the following objects and parameters:<!-- -->
+                            <ul>
+                              <li>_stepData<!-- -->
+                                <ul>
+                                  <li>testName - the name of the test.
+                                  </li>
+                                  <li>name - the name of the step.
+                                  </li>
+                                </ul>
+                              </li>
+                              <li>_stepInternalData<!-- -->
+                                <ul>
+                                  <li>hookType - the type of hook (e.g., afterStep)
+                                  </li>
+                                  <li>path - the URL of the step.
+                                  </li>
+                                  <li>stepId - the ID of the step.
+                                  </li>
+                                  <li>projectId - the ID of the project.
+                                  </li>
+                                  <li>branch - the name of the branch.
+                                  </li>
+                                  <li>testId - the ID of the test.
+                                  </li>
+                                  <li>testResultId - the ID of the test result.
+                                  </li>
+                                  <li>type - the type of step (e.g., action-code-step).
+                                  </li>
+                                  <li>failureReason - the reason for failure if failed.
+                                  </li>
+                                  <li>errorType - the type of error if there is an error.
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
+                          <li><strong>After test handler parameters</strong> - the after test test configuration hook includes the following objects and parameters:<!-- -->
+                            <ul>
+                              <li>_stepData<!-- -->
+                                <ul>
+                                  <li>testName - the name of the test.
+                                  </li>
+                                </ul>
+                              </li>
+                              <li>_stepInternalData<!-- -->
+                                <ul>
+                                  <li>hookType - the type of hook (e.g., afterTest)
+                                  </li>
+                                  <li>projectId - the ID of the project.
+                                  </li>
+                                  <li>branch - the name of the branch.
+                                  </li>
+                                  <li>testId - the ID of the test.
+                                  </li>
+                                  <li>testResultId - the ID of the test result.
+                                  </li>
+                                  <li>failureReason - the reason for failure if failed.
+                                  </li>
+                                  <li>errorType - the type of error if there is an error.
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                        <h1>
+                          <div>
+                          </div>
+                          <div>Creating Hooks via the Config File
+                          </div><a href="#creating-hooks-via-the-config-file"></a>
+                        </h1>
+                        <p>The Configuration File is a common JS containing all the required parameters to run your test and/or test suite. It includes run hooks which can be used to setup the application backend and define parameters before/after a single test or all tests.
+                          <br /> <!-- -->Through the Config File it is possible to set the following hook types:
+                          </p>
+                          <ul>
+                            <li>Before test - will run before the test
+                            </li>
+                            <li>After test - will run after the test
+                            </li>
+                            <li>Before Suite - will run before the suite
+                            </li>
+                            <li>After Suite - will run after the suite
+                            </li>
+                          </ul>
+                          <p>The following guides provides detailed instructions on how to configure before/after hooks through the Config File -
+                          </p>
+                          <p>For general information about Config file - <a href="https://help.testim.io/docs/configuration-file-run-hooks">https://help.testim.io/docs/configuration-file-run-hooks</a>
+                          </p>
+                          <p>For instruction on how to add config file parameters via hooks - <a href="https://help.testim.io/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file">https://help.testim.io/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file</a>
+                          </p>
+                          <h1>
+                            <div>
+                            </div>
+                            <div>Hooks Visualizations
+                            </div><a href="#hooks-visualizations"></a>
+                          </h1>
+                          <p>After running the test that includes hooks the following visualizations will be displayed.
+                          </p>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>When running tests in Turbo Mode, hooks presentation will not be available to avoid saving unnecessary data. However, hooks will be available only for failed runs in turbo mode.
+                            </p>
+                          </blockquote>
+                          <h2>
+                            <div>
+                            </div>
+                            <div>Viewing before/after each step hooks
+                            </div><a href="#viewing-beforeafter-each-step-hooks"></a>
+                          </h2>
+                          <p>Following the execution, steps that include before/after step hooks have a “Hook” button that is displayed when hovering over the step.
+                          </p> <span><span><img alt="" src="https://files.readme.io/1946c2e-2023-01-08_19-27-53.png" /></span></span>
+                          <p>To view the shared steps/group inside the hook, click the **Hook **button. The hook steps will appear before or after the step as follows:
+                          </p> <span><span><img alt="" src="https://files.readme.io/da1ff7a-2023-01-09_14-42-53.png" /></span></span>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>To close, click the Hook button again.
+                            </p>
+                          </blockquote>
+                          <p>To open the hooks for <strong>multiple steps at the same time</strong>, select the desired steps and click the <strong>Hook</strong> button on the editor toolbar.
+                          </p> <span><span><img alt="" src="https://files.readme.io/a8cac90-2023-01-10_11-58-24.png" /></span></span>
+                          <p>If the hook is a shared group, double-clicking the hook step will open the shared group, displaying its steps.
+                          </p> <span><span><img alt="" src="https://files.readme.io/4be982c-2023-01-09_16-20-49.png" /></span></span>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>If you have selected to use a shared group, the before/after each step hooks will not appear in the group level, but rather in the group’s internal steps.
+                            </p>
+                          </blockquote>
+                          <p>The step is connected to the related hook step, which it is configured to run before/after, and the connection is indicated with a circle and dotted arrow.
+                          </p> <span><span><img alt="" src="https://files.readme.io/fde7478-hooks_with_callouts.png" /></span></span>
+                          <p>The hook step itself is indicated by a gray bottom with the hook icon and a thicker border. Just like a regular step, you can double click the hook step to view its details. The number at the top right corner indicates the number of tests that are using this shared step (the hook step is actually a shared step that is currently used as a hook).
+                          </p>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>The hook step itself can be viewed but cannot be edited. However, it is possible to edit it by adding it to a test and editing it from there, as any other shared step.
+                            </p>
+                          </blockquote>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>When clicking on the <strong>View Screenshot</strong> of a hook step to view the side-by-side view, the <strong>Baseline</strong> side will not be displayed, only the result will be displayed.
+                            </p>
+                          </blockquote>
+                          <h2>
+                            <div>
+                            </div>
+                            <div>Viewing before/after test hooks
+                            </div><a href="#viewing-beforeafter-test-hooks"></a>
+                          </h2>
+                          <p>The before/after test hooks run once before/after the test. Following the execution, the first step (setup step) will include a “Hook” button that is displayed when hovering over the step.
+                          </p> <span><span><img alt="" src="https://files.readme.io/26263ab-2023-01-09_14-19-57.png" /></span></span>
+                          <p>To view the shared steps/group inside the hook, click the Hook button. The hook steps will appear before the step as follows:
+                          </p> <span><span><img alt="" src="https://files.readme.io/fefda67-2023-01-09_14-42-53.png" /></span></span>
+                          <p>The step is connected to the related hook step (before it), which it is configured to run before the test. The connection is indicated with a circle and dotted arrow.
+                          </p> <span><span><img alt="" src="https://files.readme.io/2be214f-hookscallouts2.png" /></span></span>
+                          <p>The hook step itself is indicated by a gray bottom with the hook icon and thicker border. Just like a regular step, you can double click the hook step to view its details. The number at the top right corner indicates the number of tests that are using this shared step (the hook step is actually a shared step that is currently used as a hook). On the right side of the Setup step there is an arrow indicating that there is also an after test hook. Click on the arrow to shift to the &quot;after test hook&quot;, which is located after the last step.
+                          </p>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>The hook step itself can be viewed but cannot be edited. However, it is possible to edit it by adding it to a test and editing it from there, as any other shared step.
+                            </p>
+                          </blockquote>
+                          <blockquote theme="📘"><span>📘</span>
+                            <p>
+                            </p>
+                            <p>When clicking on the <strong>View Screenshot</strong> of a hook step to view the side-by-side view, the <strong>Baseline</strong> side will not be displayed, only the result will be displayed.
+                            </p>
+                          </blockquote>
+                          <h2>
+                            <div>
+                            </div>
+                            <div>Viewing hooks that did not run due to success/failure conditions
+                            </div><a href="#viewing-hooks-that-did-not-run-due-to-successfailure-conditions"></a>
+                          </h2>
+                          <p>When creating the hook, it is possible to configure that the hook step will run only on success/failure of the step/group. Hook steps that didn’t run due to a success/failure condition, will be marked with a blue dot, as seen below.
+                          </p> <span><span><img alt="" src="https://files.readme.io/b8ecffe-2023-01-10_13-37-28.png" /></span></span>
+                          <p>The hook step itself will include a blue ‘info’ indication and the connecting arrow will be marked in blue, as seen below.
+                          </p> <span><span><img alt="" src="https://files.readme.io/b53a405-2023-01-10_13-43-21.png" /></span></span>
+                          <p>Hover your mouse over the “info” to view the reason the step did not run.
+                          </p> <span><span><img alt="" src="https://files.readme.io/bd7554b-2023-01-10_13-46-41.png" /></span></span>
+                          <h2>
+                            <div>
+                            </div>
+                            <div>Viewing errors related to hooks
+                            </div><a href="#viewing-errors-related-to-hooks"></a>
+                          </h2>
+                          <p>Following the test execution, you may encounter error(s) in your test.
+                            <br /> <!-- -->If the error is on a hook step, a red dot on the step indicates that there is an error in the related hook step. On the left side of step (for both ‘before each step’ hook error &amp; ‘before test’ hook error) and on the right side of step (for both ‘after each step’ hook error &amp; ‘after test’ hook error).
+                            </p> <span><span><img alt="" src="https://files.readme.io/2e6d6d0-2023-01-10_13-59-44.png" /></span></span>
+                            <p>Click the hook button to view the hook step.
+                            </p> <span><span><img alt="" src="https://files.readme.io/da8c532-2023-01-10_12-24-18.png" /></span></span>
+                            <p>It is possible to view the erred steps, even if they are inside a group, with a single click.
+                              <br /> <i></i> **To drill directly down to the error: **
+                              </p>
+                              <ol>
+                                <li>Click the <strong>See Error</strong> link.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/4a6b5dd-2023-01-10_12-23-08.png" /></span></span>
+                              <p>The shared group/step that includes the error is displayed and the specific error step is highlighted.
+                              </p> <span><span><img alt="" src="https://files.readme.io/9f90f12-2023-01-10_12-24-18.png" /></span></span>
+                            </div>
+                            <div>
+                              <div>
+                                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                                </p>
+                              </div>
+                            </div>
+                            <hr />
+                            <nav><a href="/docs/custom-action-step-mobile"><span></span>
+                              <div>Custom Action Step (mobile)
+                              </div></a><a href="/docs/error-suffix-customization">
+                              <div>Error Suffix Customization
+                              </div><span></span></a>
+                            </nav>
+                          </section>
+                          <section>
+                            <div>
+                              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </article>

@@ -1,0 +1,151 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Parameter override rules
+        </h1>
+        <div>
+          <div>
+            <p>This document explains the different override rules that occur when using parameters
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>There are various ways we can use parameters within <a href="http://testim.io">Testim.io.</a> to name a few we have - <a href="https://help.testim.io/docs/data-driven-testing">Data-Driven Testing</a>, <a href="doc:groups">Groups</a>, <a href="doc:https://help.testim.io/docs/exports-parameters">Exports Parameters</a>, <a href="https://help.testim.io/docs/configuration-file-run-hooks">Configuration Files and Run Hooks</a> and the <a href="doc:parameters-for-tests">Params file</a>. Each override touches the test in different times, usually for different purposes. Let&#x27;s review them.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>The overriding Rules
+          </div><a href="#the-overriding-rules"></a>
+        </h2>
+        <p>Just like in most programming languages, where you define a variable, and the override is performed later, the variable comprises the last value assigned to it. Similarly, you can override a value in Testim.
+        </p>
+        <h4>
+          <div>
+          </div>
+          <div>Before the test begins:
+          </div><a href="#before-the-test-begins"></a>
+        </h4>
+        <ul>
+          <li><a href="https://help.testim.io/docs/configuration-file-run-hooks">Config-file&#x27;s parameters</a> overrides <a href="parameters-for-tests">params-file&#x27;s parameters</a>. Within the config-file, the <code>beforeTest</code> overrides the <code>beforeSuite</code>
+          </li>
+          <li><a href="doc:configuration-file-run-hooks">Params-file&#x27;s parameters</a> overrides <a href="doc:data-driven-testing">default Test Data/run data</a>.
+          </li>
+        </ul>
+        <p>Note: All parameters sent to a test have <strong>Local level</strong> visibility (the entire test though is considered to be a single big group).
+        </p>
+        <h4>
+          <div>
+          </div>
+          <div>During test run
+          </div><a href="#during-test-run"></a>
+        </h4>
+        <p>The three visibility scopes are:
+        </p>
+        <ul>
+          <li>Local - the variables reside in a group, and are not accessible when the group is completed
+          </li>
+          <li>Test - the variables reside in the test throughout the duration of the test.
+          </li>
+          <li>Test Suite - the variables reside across multiple test executions and are passed from test to test.
+          </li>
+        </ul>
+        <h4>
+          <div>
+          </div>
+          <div>Overriding rules
+          </div><a href="#overriding-rules"></a>
+        </h4>
+        <p>The more more local the parameter scope is, the parameter is more likely to be used, because it is considered &quot;stronger&quot; or &quot;more important&quot;. If a variable is Local (most specific), it will always be used:
+          <br /> <!-- -->e.g.
+          </p>
+          <div>
+            <div><button>JavaScript</button>
+            </div>
+            <div><pre><code>exports.x = &quot;local&quot;
+exportsTest.x = &quot;test&quot;
+exportsGlobal.x = &quot;global&quot;
+...
+console.log(x); // prints &quot;local&quot;</code></pre>
+            </div>
+          </div>
+          <blockquote theme="📘"><span>📘</span>
+            <h3>
+              <div>
+              </div>
+              <div>Parameter Scopes
+              </div><a href="#parameter-scopes"></a>
+            </h3>
+            <p>Parameters created in groups are considered as &quot;local scope&quot;. Parameters can be overridden by the same scope or a “smaller” scope. For example, a &quot;test scope&quot; parameter can be overridden by either another test scope or local scope parameter with the same name.
+            </p>
+          </blockquote>
+          <h4>
+            <div>
+            </div>
+            <div>Usage
+            </div><a href="#usage"></a>
+          </h4>
+          <p><strong>Data driven testing parameters:</strong>
+          </p>
+          <p>Mostly used to create default set of values, which will be overridden by the config file or the hooks.
+          </p>
+          <p>Note: you can provide a set of parameters (array of objects) and then run the same test several times.
+          </p>
+          <p><strong>Params file:</strong>
+            <br /> <!-- -->Similar to Data driven, but are not for a specific test. Those will be passed to all tests. E.g. common credentials
+            </p>
+            <p><strong>Config files:</strong>
+              <br /> <!-- -->Used to dynamically load a suite of parameters. You can run custom JS code, which is executed in node.js, thus giving you the ability to load and run any NPM package. Common cases are loading from DBs or CSV files. You can find <a href="doc:data-driven-testing">code examples here</a>.
+              </p>
+              <p>Notes:
+              </p>
+              <ol>
+                <li><code>beforeTest</code> and <code>beforeSuite</code> do NOT support returning a set of parameters (an array). If you pass an array, it will be treated as an object (i.e. in this context, <code>return [&quot;x&quot;, &quot;y&quot; &quot;z&quot;]</code> is ALMOST equivalent to <code>return {1: &quot;x&quot;, 2: &quot;y&quot;, ;3:&quot;z&quot;})</code>.
+                </li>
+                <li>If you use the same parameters in both the <code>beforeSuite</code> and the <code>overrideTestData</code>, the <code>beforeSuite</code> value will be used
+                </li>
+              </ol>
+              <p>To override test data in <code>beforeSuite</code>, use the following format:
+              </p>
+              <div>
+                <div><button>JavaScript</button>
+                </div>
+                <div><pre><code>beforeSuite() {    
+  return {
+       y: 5,
+       overrideTestData: {
+           &quot;testname1&quot;: [{x: 6}, {x:7}] , // runs testname1 twice
+           &quot;testname2&quot;: {y:7}          // y will be 5 because the beforeSuite object wins
+    }
+}</code></pre>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/passing-parameters-from-excel-file"><span></span>
+              <div>Passing parameters from an Excel file
+              </div></a><a href="/docs/exports-parameters">
+              <div>Exporting a Parameter
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

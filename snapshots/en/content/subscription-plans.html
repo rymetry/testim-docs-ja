@@ -1,0 +1,221 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Plans
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The <strong>Subscription</strong> screen, which is available for Company Owners only, displays the plan details and the current usage of your software subscription plans for each of the following product categories:
+        </p>
+        <ul>
+          <li>Web - Testim for web applications.
+          </li>
+          <li>Mobile - Testim for mobile applications.
+          </li>
+          <li>Salesforce - Testim for Salesforce.
+          </li>
+          <li>Copilot - Testim Copilot coding assistant.
+          </li>
+        </ul>
+        <p>The plans have transitioned from a &quot;Runs model&quot; to a new model called &quot;Parallelization model&quot;. In the Parallelization model runs are not counted towards your subscription, but rather the amount of parallel executions.
+        </p>
+        <h1>
+          <div>
+          </div>
+          <div>Accessing the Plans screen
+          </div><a href="#accessing-the-plans-screen"></a>
+        </h1>
+        <p><i></i><strong>To access the Plans screen:</strong>
+        </p>
+        <ol>
+          <li>Click on your user avatar.
+          </li>
+          <li>Under <strong>Company</strong>, click your company name.
+          </li>
+          <li>Click the <strong>Plans</strong> tab.
+          </li>
+        </ol>
+        <h1>
+          <div>
+          </div>
+          <div>Web Plans
+          </div><a href="#web-plans"></a>
+        </h1>
+        <p>The Web plans screen displays the following information:
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Parallelization Model - Plan Details
+          </div><a href="#parallelization-model---plan-details"></a>
+        </h2> <span><span><img alt="" src="https://files.readme.io/7a353fc-parallelweb.png" /></span></span>
+        <ul>
+          <li><strong>Parallel Slots</strong> - the number of parallel executions included in the plan.
+          </li>
+          <li><strong>Projects</strong> - the number of projects included in the plan.
+          </li>
+          <li><strong>Expiration Date</strong> - the date in which the plan will expire.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Parallel Model - Usage Details
+          </div><a href="#parallel-model---usage-details"></a>
+        </h2>
+        <p>The current usage of the plan is displayed at the top-right corner of the screen.
+        </p> <span><span><img alt="" src="https://files.readme.io/fad8303385614f3107c1bd017f7d3c21771d2887830a4517453f2005da72a0be-parallelpopup.png" /></span></span>
+        <p>The element includes a doughnut chart indicating the parallelization usage level and the number indicating the current usage out of the total in your plan. Click the element to view more details.
+        </p> <span><span><img alt="" src="https://files.readme.io/389336058d8942cb18b586dbf56dfa0f6e68bba41325c3010e33826a342f631a-openpopover.png" /></span></span>
+        <br />
+        <br />
+        <br />
+        <h2>
+          <div>
+          </div>
+          <div>Usage Limits for Testim Web and Testim Salesforce
+          </div><a href="#usage-limits-for-testim-web-and-testim-salesforce"></a>
+        </h2>
+        <p>To ensure adequate performance and resource allocation for all users, Testim has established the following use limits:
+        </p>
+        <ul>
+          <li>The first three (3) parallel tests are limited to a total of 1,000 monthly test run hours.
+          </li>
+          <li>Additional parallel tests may be licensed for added fees and provide 200 monthly test run hours per each additional parallel test.
+          </li>
+        </ul>
+        <p>Enforcement of these use limits is at the discretion of Tricentis to maintain service quality. Should you have any questions regarding these limits or need assistance with modifying your plan, please contact your account representative.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>Local runs that are initiated through the Test Editor test do not count against these usage limits.
+          </p>
+        </blockquote>
+        <h1>
+          <div>
+          </div>
+          <div>What is Counted Towards the Parallelism Quota
+          </div><a href="#what-is-counted-towards-the-parallelism-quota"></a>
+        </h1>
+        <br />
+        <div>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Execution Type
+                  </th>
+                  <th>Project Type
+                  </th>
+                  <th>Counted Towards Parallelism Quota
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Triggering an execution from the <strong>Test Editor</strong>
+                  </td>
+                  <td>- Web using Local Browser
+                    <br /> - Mobile using TMA
+                      <br /> - Mobile using VMG
+                      </td>
+                      <td>No
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution from the <strong>Test Editor on Grid (Testim and 3rd Party)</strong>
+                      </td>
+                      <td>Web &amp; Mobile
+                      </td>
+                      <td>Yes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution from the <strong>CLI</strong>
+                      </td>
+                      <td>Web &amp; Mobile
+                      </td>
+                      <td>Yes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution from the <strong>CLI</strong> with a <code>-use-local-chrome-driver</code> flag
+                      </td>
+                      <td>Web
+                      </td>
+                      <td>No
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution from the <strong>CLI</strong> with <code>host=localhost/127.0.0.1</code>
+                      </td>
+                      <td>Web
+                      </td>
+                      <td>Yes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution from <strong>Test Editor on Grid</strong> with <code>host=localhost/127.0.0.1</code>
+                      </td>
+                      <td>Web
+                      </td>
+                      <td>Yes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution via the <strong>Public API</strong>
+                      </td>
+                      <td>Web &amp; Mobile
+                      </td>
+                      <td>Yes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution form the following screens: <strong>Tests List / Tests Plan / Test Suite</strong>. Note - Triggering a test from any of these pages will cause the test to run on the local browser.
+                      </td>
+                      <td>Web &amp; Mobile
+                      </td>
+                      <td>No
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Triggering an execution from the <strong>Scheduler</strong>
+                      </td>
+                      <td>Web &amp; Mobile
+                      </td>
+                      <td>Yes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div>
+              <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+              </p>
+            </div>
+          </div>
+          <hr />
+          <nav><a href="/docs/secrets"><span></span>
+            <div>Secrets Manager
+            </div></a><a href="/docs/copilot-license-management">
+            <div>Copilot License Management
+            </div><span></span></a>
+          </nav>
+        </section>
+        <section>
+          <div>
+            <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>

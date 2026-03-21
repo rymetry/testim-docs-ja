@@ -1,0 +1,243 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Branch Management
+        </h1>
+        <div>
+          <div>
+            <p>Manage your tests according to your team development process.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>By managing your tests with branches, you can get test results at a much earlier stage of development. In other words, when you use branches, you&#x27;ll be able to test new features as they are being developed, instead of waiting for the final release.
+          <br /> <!-- -->When creating a branch, you &quot;freeze&quot; the state of the tests. Modifying a test in one branch does not affect how the test behaves in other branches.
+          </p>
+          <blockquote theme="📘"><span>📘</span>
+            <h3>
+              <div>
+              </div>
+              <div>This is a pro feature
+              </div><a href="#this-is-a-pro-feature"></a>
+            </h3>
+            <p>This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.
+            </p>
+          </blockquote>
+          <h2>
+            <div>
+            </div>
+            <div>Using Branches
+            </div><a href="#using-branches"></a>
+          </h2>
+          <ul>
+            <li>As a starting point, each project is composed of a single &quot;master&quot; branch.
+            </li>
+            <li>It&#x27;s a good idea to create a new branch for every branch your team develops (e.g. your git branch), and test each branch independently. Testim can be <a href="doc:github-integration">integrated with GitHub</a>, allowing you to automatically create new branches as they are created in GitHub and automatically merge tests when you merge your code.
+            </li>
+            <li>You can switch branches at any time and modify tests within a branch as you like. Modifications in one branch will not affect other branches.
+            </li>
+            <li>At a certain point you may want to merge between branches (e.g. merging a feature branch into the Master branch). To perform the merge, follow the instructions in the <a href="doc:merging-branches">Merging Branches</a> section. When you merge your (product) code, you should also merge your testing code. After the merge, consider <a href="doc:version-control-branches#section-deleting-a-branch">deleting the branch</a> .
+            </li>
+          </ul>
+          <h2>
+            <div>
+            </div>
+            <div>Popular use cases for using Branches
+            </div><a href="#popular-use-cases-for-using-branches"></a>
+          </h2>
+          <p>You&#x27;ll probably want to use branches in the following use cases:
+          </p>
+          <ul>
+            <li>To sync with your development process - Creating branches according to your different development environments makes it easier to manage, track &amp; modify your tests in parallel with the development releases.
+            </li>
+            <li>To test a new feature in a &quot;sterile&quot; environment - If the feature may affect other tests, it&#x27;s a good idea to test it independently. Once everything works fine, then merge it to another branch.
+            </li>
+            <li>To test different stages - If your deployment process goes through several stages (e.g. Canary, Dev, Stable)
+            </li>
+          </ul>
+          <h2>
+            <div>
+            </div>
+            <div>How to add a new branch?
+            </div><a href="#how-to-add-a-new-branch"></a>
+          </h2>
+          <p>Branches are added to a project and will include all the tests that existed in the source branch (e.g. the Master branch). You can add a new branch from any screen (e.g. Test List screen, a specific test, etc.). Any change you make to the tests will be automatically associated with the current branch. Other branches will not be affected.
+          </p>
+          <p><i></i> <strong>To add a new branch:</strong>
+          </p>
+          <ol>
+            <li>Click the <strong>Create New Branch (fork icon)</strong> button in the menu.
+            </li>
+            <li>Name your branch.
+            </li>
+            <li>Once created, you&#x27;ll be able to modify your tests in the new branch. This will not affect the tests of the Master branch.
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>For large projects, we will not redirect you to the new branch automatically, you will be able to switch to that branch once it will be created.
+            </p>
+          </blockquote> <span><span><img alt="" src="https://files.readme.io/4339d17-Jun-13-2021_08-14-32.gif" /></span></span>
+          <h2>
+            <div>
+            </div>
+            <div>Shared Attributes Between Branches
+            </div><a href="#shared-attributes-between-branches"></a>
+          </h2>
+          <p>There are a few attributes that when edited, trigger automatic updates across all branches, even without explicit merging. These attributes are indicated with a notice that modifying them will affect all branches immediately without requiring explicit merging (even if the ‘Master’ branch is in read only mode).
+          </p>
+          <p>For example, all fields in the Edit Config screen will be automatically merged across all branches. As displayed below, there is a notice indicating this fact:
+          </p> <span><span><img alt="" src="https://files.readme.io/77bdb14-image.png" /></span></span>
+          <p>Here is another example of a notification relating to a specific attribute:
+          </p> <span><span><img alt="" src="https://files.readme.io/958eae5-image_1.png" /></span></span>
+          <p>The following is a list of these attributes:
+          </p>
+          <ul>
+            <li>test name &amp; description
+            </li>
+            <li>test labels
+            </li>
+            <li>test configuration (both test’s ‘untitled configuration’ and ‘configuration library’ instances)
+            </li>
+            <li>suite name &amp; description
+            </li>
+            <li>shared group/step name.
+            </li>
+            <li>test plan
+            </li>
+            <li>scheduler
+            </li>
+            <li>hiding shared steps
+            </li>
+          </ul>
+          <h2>
+            <div>
+            </div>
+            <div>Switching Branches
+            </div><a href="#switching-branches"></a>
+          </h2>
+          <p>You can switch to another branch or to the master branch.
+            <br /> <i></i> <strong>To switch branch:</strong>
+            </p>
+            <ul>
+              <li>Click on the <strong>Branches</strong> drop-down menu at the top to see the list of branches and select the desired branch. The date near each branch name indicates when it was last modified.
+              </li>
+              <li>You can use the <strong>Search</strong> function to filter the list of branches.
+              </li>
+            </ul> <span><span><img alt="" src="https://files.readme.io/56eb40e-branchlist.PNG" /></span></span>
+            <blockquote theme="📘"><span>📘</span>
+              <h3>
+                <div>
+                </div>
+                <div>Note
+                </div><a href="#note"></a>
+              </h3>
+              <p>In case a test does not exist in the target branch, you&#x27;ll be directed to the tests list - There you&#x27;ll be able to see all the relevant tests that are associated with the current branch.
+              </p>
+            </blockquote>
+            <h2>
+              <div>
+              </div>
+              <div>Pinning a Branch
+              </div><a href="#pinning-a-branch"></a>
+            </h2>
+            <p>The first time you log in to Testim, the default view of your project is the master branch. The master branch is pinned as indicated with the pin icon. You can choose a different branch to pin so that every time you log in (until you pin a different branch), the data that is shown reflects your pinned branch.
+              <br /> <i></i> <strong>To pin a branch:</strong>
+              </p>
+              <ol>
+                <li>Click on the branch dropdown menu.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/2c5854d-Testim_470a.png" /></span></span>
+              <p>The project branches are shown.
+              </p>
+              <ol start="2">
+                <li>Hover over the branch you want to pin and click on the “pin” button.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/ecd5bc0-Testim_469b.png" /></span></span>
+              <p>The branch is pinned. Every time you access your project, the data from the pinned branch will be displayed.
+              </p>
+              <h2>
+                <div>
+                </div>
+                <div>Pinning another branch
+                </div><a href="#pinning-another-branch"></a>
+              </h2>
+              <p>When you pin another branch (including the master branch), the existing pin is removed for the currently pinned branch.
+              </p>
+              <h2>
+                <div>
+                </div>
+                <div>Deleting a branch
+                </div><a href="#deleting-a-branch"></a>
+              </h2>
+              <p>After the branch has been merged it is recommended to delete the branch.
+                <br /> <i></i> <strong>To delete a branch:</strong>
+                </p>
+                <ol>
+                  <li>Click on the <strong>Branches</strong> drop-down menu at the top to see the list of branches and hover your mouse on the desired branch.
+                  </li>
+                  <li>Click the <strong>Delete</strong> icon.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/cdb6eb9-delete_branch.png" /></span></span>
+                <ol start="3">
+                  <li>Click <strong>OK</strong> to confirm the deletion.
+                  </li>
+                </ol>
+                <h2>
+                  <div>
+                  </div>
+                  <div>Running a test suite on a specific branch through the CLI
+                  </div><a href="#running-a-test-suite-on-a-specific-branch-through-the-cli"></a>
+                </h2>
+                <p>To run on a specific branch, use this parameter in your CLI
+                </p>
+                <div>
+                  <div><button>Shell</button>
+                  </div>
+                  <div><pre><code>--branch &lt;branch-name&gt;</code></pre>
+                  </div>
+                </div>
+                <h2>
+                  <div>
+                  </div>
+                  <div>Branches integration with your CI
+                  </div><a href="#branches-integration-with-your-ci"></a>
+                </h2>
+                <p>In order to run the appropriate test suite for the current development branch, you can either specify the branch name for that build (--branch) or if you are using one of the following: <strong>Jenkins</strong>, <strong>CircleCI</strong> or <strong>TravisCI</strong>, the Testim CLI will automatically run tests for the same branch if the following parameter is used.
+                </p>
+                <div>
+                  <div><button>Shell</button>
+                  </div>
+                  <div><pre><code>--branch auto-detect</code></pre>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <nav><a href="/docs/testops-version-control"><span></span>
+                <div>TestOps - Version Control
+                </div></a><a href="/docs/merging-branches">
+                <div>Merging Branches
+                </div><span></span></a>
+              </nav>
+            </section>
+            <section>
+              <div>
+                <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </article>

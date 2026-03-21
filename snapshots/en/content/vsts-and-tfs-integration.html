@@ -1,0 +1,113 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>VSTS and TFS integration
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>​
+        </p> <span><span><img alt="404" src="https://files.readme.io/d30e448-tfs1.png" /></span></span>
+        <p>​In order to integrate your tests with VSTS/TFS, first you need to have docker installed on the VSTS/TFS agent.
+        </p>
+        <h3>
+          <div>
+          </div>
+          <div>Now, just follow these steps:
+          </div><a href="#now-just-follow-these-steps"></a>
+        </h3>
+        <ol>
+          <li>Go to Build page
+          </li>
+        </ol> <span><span><img alt="600" src="https://files.readme.io/e8e8d07-tfs2.png" /></span></span>
+        <p>​2. Create a new build
+        </p> <span><span><img alt="591" src="https://files.readme.io/c4affba-tfs3.png" /></span></span>
+        <p>​3. Select your repository
+        </p> <span><span><img alt="961" src="https://files.readme.io/3f92a44-tfs4.png" /></span></span>
+        <ol start="4">
+          <li>Select empty job
+          </li>
+        </ol> <span><span><img alt="961" src="https://files.readme.io/a3f06a9-tfs5.png" /></span></span>
+        <ol start="5">
+          <li>Add task
+          </li>
+        </ol> <span><span><img alt="429" src="https://files.readme.io/6175fc6-tfs6.png" /></span></span>
+        <ol start="6">
+          <li>Add Docker task
+          </li>
+        </ol> <span><span><img alt="758" src="https://files.readme.io/c4e0e7a-tfs7.png" /></span></span>
+        <ol start="7">
+          <li>Select Action: Run a Docker command
+          </li>
+        </ol> <span><span><img alt="759" src="https://files.readme.io/93a38c4-tfs8.png" /></span></span>
+        <ol start="8">
+          <li>Set the Command with the appropriate parameters, as described in the <a href="doc:the-command-line-cli">CLI page</a>. Here is the basic command template.
+          </li>
+        </ol>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --token &lt;TOKEN&gt; --project &lt;PROJECT-ID&gt; --grid &lt;GRID-NAME&gt; --report-file /opt/testim-runner/testim-sanity-$(Build.BuildId)-report.xml</code></pre>
+          </div>
+        </div> <span><span><img alt="708" src="https://files.readme.io/76b5b0e-tfs9.png" /></span></span>
+        <p>​ <strong>Note</strong>: For the grid name, read <a href="doc:grid-management">here</a> how to set up your grid.
+        </p>
+        <ol start="9">
+          <li>In order for VSTS/TFS to store, analyze and show the results, we generate a standard JUnitXMLReporter XML file.
+            <br /> <!-- -->For VSTS/TFS to use the file you need to add a Publish Test Results task
+            </li>
+          </ol> <span><span><img alt="753" src="https://files.readme.io/a99d051-tfs10.png" /></span></span>
+          <ol start="10">
+            <li>Select Test result format: JUnit
+            </li>
+          </ol> <span><span><img alt="659" src="https://files.readme.io/c8ae6c1-tfs11.png" /></span></span>
+          <ol start="11">
+            <li>Set the Test results files value, according to the &quot;report-file&quot; parameter in section 8 and set the
+            </li>
+          </ol> <span><span><img alt="654" src="https://files.readme.io/83f530c-tfs12.png" /></span></span>
+          <ol start="12">
+            <li>Set the Search folder <strong>$(Build.BinariesDirectory)</strong>
+            </li>
+          </ol> <span><span><img alt="654" src="https://files.readme.io/254a96d-tfs13.png" /></span></span>
+          <ol start="13">
+            <li>Save the build settings
+            </li>
+          </ol> <span><span><img alt="221" src="https://files.readme.io/5d80b20-tfs14.png" /></span></span>
+          <p>​
+          </p>
+          <p>​
+            <br /> <!-- -->​
+            </p>
+          </div>
+          <div>
+            <div>
+              <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+              </p>
+            </div>
+          </div>
+          <hr />
+          <div>
+            <header>
+              <div>What’s Next
+              </div>
+            </header>
+            <div>
+            </div>
+            <ul>
+              <li><a href="/docs/the-command-line-cli">Command line interface (CLI)</a><span><span></span></span>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section>
+          <div>
+            <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>

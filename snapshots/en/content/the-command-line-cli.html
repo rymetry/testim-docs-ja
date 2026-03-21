@@ -1,0 +1,792 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Command line interface (CLI)
+        </h1>
+        <div>
+          <div>
+            <p>Run all your tests from the command line and integrate with your CI
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <h2>
+          <div>
+          </div>
+          <div>Prerequisites
+          </div><a href="#prerequisites"></a>
+        </h2>
+        <p>Running via CLI requires Node.js installed. Testim supports all <a href="https://github.com/nodejs/Release/blob/main/README.md">LTS/supported</a> versions of Node.js.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>CLI Installation
+          </div><a href="#cli-installation"></a>
+        </h2>
+        <p>Install Testim package.
+        </p>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>npm install -g @testim/testim-cli</code></pre>
+          </div>
+        </div>
+        <p>That’s it!
+        </p>
+        <h4>
+          <div>
+          </div>
+          <div>Basic CLI command
+          </div><a href="#basic-cli-command"></a>
+        </h4>
+        <p>The Basic CLI command example for web and mobile is displayed in the <strong>Settings &gt;CLI</strong> tab and includes your Token and Project ID.
+        </p>
+        <p><i></i> <strong>To view your basic CLI command:</strong>
+        </p>
+        <ol>
+          <li>Go to <strong>Settings &gt; CLI</strong> tab.
+          </li>
+          <li>Click <strong>CI</strong> to run the test remotely on your CI or <strong>Local</strong> to run the test locally (this will open a local browser on your machine) (web only)
+          </li>
+          <li>Under <strong>CI Platform</strong>, select the desired CI platform (optional)
+          </li>
+          <li>Under <strong>Grid</strong>, select the desired grid on which to run the test. For web testing, Selenium grids will be displayed and for mobile testing, the following grids canl be displayed:
+            <br /> <a href="doc:virtual-mobile-grid">Virtual Mobile Grid</a>
+              <br /> <a href="doc:tricentis-device-cloud">Tricentis Device Cloud</a>
+                <br /> <a href="doc:headspin-integration">Testim Headspin Mobile</a>
+                  <br /> <a href="doc:browserstack-integration-1">Browserstack</a>
+                    <br /> <a href="doc:browserstack-integration-copy">LambdaTest</a>
+                      <br /> <!-- -->The basic CLI command is displayed at the bottom under <strong>Example</strong>.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/af52b8a-cli_command.png" /></span></span>
+                    <p>The basic command includes the following elements:
+                      <br /> <code>--token</code>: the authentication token
+                        <br /> <code>--project</code>: the project ID
+                          <br /> <code>--grid</code>: the name of the grid to run the tests on. For web testing, Selenium grids will be displayed and for mobile testing, Appium grids will be displayed.
+                          </p>
+                          <ol start="5">
+                            <li>Copy the CLI, edit and add parameters according to your needs. You can run a specific test, label, configuration, etc., as explained in the following section.
+                            </li>
+                          </ol>
+                          <h4>
+                            <div>
+                            </div>
+                            <div>Additional common parameters
+                            </div><a href="#additional-common-parameters"></a>
+                          </h4>
+                          <p>Here is an example of a basic command with the most common options (see below detailed description for all the available options):
+                          </p>
+                          <p><code>--project</code>: see above
+                            <br /> <code>--token</code>: see above
+                              <br /> <code>--label:</code> use this to run specific tests that include the specified labels
+                                <br /> <code>--grid</code>: see above
+                                  <br /> <code>--report-file</code>: specifies where to store the test results (so the CI server can read them)
+                                  </p>
+                                  <div>
+                                    <div><button>Shell</button>
+                                    </div>
+                                    <div><pre><code>testim --label &quot;&lt;YOUR LABEL&gt;&quot; --token &quot;&lt;YOUR ACCESS TOKEN&gt;&quot; --project &quot;&lt;YOUR PROJECT ID&gt;&quot; --grid &quot;&lt;Your grid name&gt;&quot; --report-file test-results/testim-tests-report.xml</code></pre>
+                                    </div>
+                                  </div>
+                                  <blockquote theme="📘"><span>📘</span>
+                                    <h3>
+                                      <div>
+                                      </div>
+                                      <div>Web-only note
+                                      </div><a href="#web-only-note"></a>
+                                    </h3>
+                                    <p>Instead of running on a grid, it is possible to use <strong>--use-local-chrome-driver</strong>. That way you can see the run in action on a clean, extension-free, Chrome browser. if <code>--use-local-chrome-driver</code> is used in combination with <code>--headless</code>, it is required to add the <code>--mode selenium</code> flag as well.
+                                    </p>
+                                  </blockquote>
+                                  <h2>
+                                    <div>
+                                    </div>
+                                    <div>All CLI Parameters
+                                    </div><a href="#all-cli-parameters"></a>
+                                  </h2>
+                                  <h4>
+                                    <div>
+                                    </div>
+                                    <div>Project:
+                                    </div><a href="#project"></a>
+                                  </h4>
+                                  <p><code>--project</code> the project ID.
+                                    <br /> <!-- -->To select a different project, go to the Company screen (see <a href="https://help.testim.io/docs/project-and-user-management">https://help.testim.io/docs/project-and-user-management</a>), select the relevant project, go to <strong>Settings &gt; CLI</strong> tab and extract the project ID from the basic CLI command example.
+                                    </p>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>--project AOL-12323-a4b2-4762-df380</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Access token
+                                      </div><a href="#access-token"></a>
+                                    </h4>
+                                    <p><code>--token</code> The access token. The access token can be obtained from the basic CLI command example, which is displayed in the <strong>Settings &gt; CLI</strong> tab screen.
+                                    </p>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>--token aaaaa-1234-1234-bbbb-1234qwer1234qwer</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Label
+                                      </div><a href="#label"></a>
+                                    </h4>
+                                    <p><code>--label</code> or <code>-l</code> Run all tests that include one of the mentioned labels.
+                                    </p>
+                                    <blockquote theme="📘"><span>📘</span>
+                                      <h3>
+                                        <div>
+                                        </div>
+                                        <div>Note
+                                        </div><a href="#note"></a>
+                                      </h3>
+                                      <p>If the specified label does not point to a test, an error will be returned.
+                                      </p>
+                                    </blockquote>
+                                    <p>Note that you can also run more than one label, by adding more <code>--label</code> arguments
+                                    </p>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>-l sanity -l custom-label2</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Test Name
+                                      </div><a href="#test-name"></a>
+                                    </h4>
+                                    <p><code>--name</code> or <code>-n</code>, the name of the test to run.
+                                    </p>
+                                    <blockquote theme="📘"><span>📘</span>
+                                      <p>
+                                      </p>
+                                      <p>You can also run more than one test by name, by adding more <code>--name</code> arguments
+                                      </p>
+                                    </blockquote>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>--name &quot;login_to_app&quot;</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Test id
+                                      </div><a href="#test-id"></a>
+                                    </h4>
+                                    <p><code>--testId</code> or <code>-t</code> or <code>--test-id</code>, the ID of the test to run. Enter the command followed by the ID if the test.
+                                    </p>
+                                    <blockquote theme="📘"><span>📘</span>
+                                      <p>
+                                      </p>
+                                      <p>You can also run more than one test by id, by adding more <code>--testId</code> arguments
+                                      </p>
+                                    </blockquote>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>--testId &quot;5e1c62b2-7c30-635b-6441-dd804126118b&quot;</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Grid Name
+                                      </div><a href="#grid-name"></a>
+                                    </h4>
+                                    <p><code>--grid</code>, the Selenium Grid name to use. You can use &quot;Testim-Grid&quot;/ your local selenium grid/ Saucelabs / Browserstack
+                                    </p>
+                                    <p><code>--grid</code> <code>&lt;grid-name&gt;</code> Note: Read <a href="doc:grid-management">here</a> how to configure your grid.
+                                    </p>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Host
+                                      </div><a href="#host"></a>
+                                    </h4>
+                                    <p><code>-h</code> or <code>--host &lt;host-name&gt;</code>, the host name or IP containing the selenium grid. This command overrides the <code>--grid</code> command.
+                                    </p>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>--host seleniumhost</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Grid ID
+                                      </div><a href="#grid-id"></a>
+                                    </h4>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Report File
+                                      </div><a href="#report-file"></a>
+                                    </h4>
+                                    <p><code> --report-file</code> or <code>-r</code>, where to print the report (by default to the output stream). The file is in the format of JUnitXMLReporter. This is used to integrate Testim results with the CI display. Usually, you&#x27;ll need to set the build config in the CI to look for that file so make sure the CLI param value and the build config are set to the same location.
+                                    </p>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>-r ~/report.xml</code></pre>
+                                      </div>
+                                    </div>
+                                    <p>To override the classname in the report file, add this parameter :
+                                    </p>
+                                    <p><code>--override-report-file-classname com.someName</code>
+                                    </p>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Base URL (web only)
+                                      </div><a href="#base-url-web-only"></a>
+                                    </h4>
+                                    <p><code>--base-url</code>, starting URL after browser opens
+                                    </p>
+                                    <div>
+                                      <div><button>Shell</button>
+                                      </div>
+                                      <div><pre><code>--base-url staging.example.com</code></pre>
+                                      </div>
+                                    </div>
+                                    <h4>
+                                      <div>
+                                      </div>
+                                      <div>Test Config
+                                      </div><a href="#test-config"></a>
+                                    </h4>
+                                    <p><code>test-config</code> specifies configuration parameters (e.g. browser, operating system, resolution, device name, OS version, visual validation parameters, etc.) that will override the configuration defined for all tests in this run. For mobile testing, the test will run on the first available device within the pool of devices configured in the test configuration.
+                                      <br /> <!-- -->Read more <a href="doc:shared-configuration">Configuration Library - Web</a> and <a href="doc:configuration-library-mobile">Configuration Library - Mobile</a>.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--test-config &quot;1280x1024_SXGA_chrome&quot; --test-config &quot;1366x768_WXGA_firefox&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Params File
+                                        </div><a href="#params-file"></a>
+                                      </h4>
+                                      <p><code>--params-file</code> uses a JSON Parameters File that can be used to pass parameters to test runs. This method allows you to define dynamic values inside your test which vary by your test environment. For example, you can set different login credentials (username and password) when you test locally and when testing in your CI. After defining the JSON Parameters File, you can pass it to Testim CLI as an argument: <code>--params-file</code> followed by the file name. Read more - <a href="https://help.testim.io/docs/json-parameters-file-parameters">https://help.testim.io/docs/json-parameters-file-parameters</a>.
+                                      </p>
+                                      <blockquote theme="📘"><span>📘</span>
+                                        <p>
+                                        </p>
+                                        <p>The string path that is set in the <code>params-file</code> path must be a relative path, and not a full path.
+                                        </p>
+                                      </blockquote>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--params-file [params-file.json]</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Test Suite (by name)
+                                        </div><a href="#test-suite-by-name"></a>
+                                      </h4>
+                                      <p><code>--suite</code>, the test suite name to run. You can run more than one suite.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--suite &quot;suite_name&quot; --suite &quot;suite_name2&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Test Suite (by ID)
+                                        </div><a href="#test-suite-by-id"></a>
+                                      </h4>
+                                      <p><code>suite-id</code>, specifies the test suite ID to run. You can run more than one suite.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--suite-id &quot;suite1ID&quot; --suite-id &quot;suite2ID&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Test Plan (by name)
+                                        </div><a href="#test-plan-by-name"></a>
+                                      </h4>
+                                      <p><code>--test-plan</code>, specifies the test plan name to run. You can run more than one plan. Since you define in the test plan the grid, test list, configuration, etc., you cannot override it from the CLI. Therefore when using <code>--test-plan</code> you cannot use these flags: <code>--testId</code>, <code>--label</code>, <code>--name</code>, <code>--browser</code>, <code>--test-config</code>, <code>--test-config-id</code> or <code>--suite</code>.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--test-plan &quot;Test Plan Demo&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Execution Name
+                                        </div><a href="#execution-name"></a>
+                                      </h4>
+                                      <p><code>--override-execution-name</code>, the name of the execution in Testim suite runs.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--override-execution-name &quot;Dev Sanity&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Class Name
+                                        </div><a href="#class-name"></a>
+                                      </h4>
+                                      <p><code>--override-report-file-classname</code> The class name in the JUnitXML report file is Testim.io by default. To have the suite name in the class name instead, add the parameter below with no value. If you are looking to override the class name with a specific name, add it to the parameter.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--override-report-file-classname
+--override-report-file-classname &quot;Regression&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Result Labels
+                                        </div><a href="#result-labels"></a>
+                                      </h4>
+                                      <p><code>--result-label</code>, the result Labels option allows you to add textual labels to your remote runs. These labels will be shown in the runs page.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--result-label &quot;V1.40&quot;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Test timeout
+                                        </div><a href="#test-timeout"></a>
+                                      </h4>
+                                      <p><code>--timeout</code>, timeout period in milliseconds to abort the test run if a timeout has elapsed. The default is set to 10 minutes. The max is 3 hours.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--timeout 120000</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Branches
+                                        </div><a href="#branches"></a>
+                                      </h4>
+                                      <p><code>--branch</code>, to run on a specific branch (by name).
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--branch &lt;branch-name&gt;</code></pre>
+                                        </div>
+                                      </div>
+                                      <blockquote theme="📘"><span>📘</span>
+                                        <p>
+                                        </p>
+                                        <p>Executing on an archived branch will cause the CLI to fail.
+                                        </p>
+                                      </blockquote>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Parallel
+                                        </div><a href="#parallel"></a>
+                                      </h4>
+                                      <p><code>--parallel</code>, how many tests should run in parallel.
+                                      </p>
+                                      <div>
+                                        <div><button>Shell</button>
+                                        </div>
+                                        <div><pre><code>--parallel &lt;parallel-count&gt;</code></pre>
+                                        </div>
+                                      </div>
+                                      <h4>
+                                        <div>
+                                        </div>
+                                        <div>Config file (web only)
+                                        </div><a href="#config-file-web-only"></a>
+                                      </h4>
+                                      <p><code>--config-file</code> or <code>-c</code>, specifies all the configuration options from external configuration File.
+                                        <br /> <!-- -->Place the config file in a path accessible by the shell, specify in the command the path to the file.
+                                        </p>
+                                        <div>
+                                          <div><button>Shell</button>
+                                          </div>
+                                          <div><pre><code>--config-file [config-file.js]</code></pre>
+                                          </div>
+                                        </div>
+                                        <p>Read more about configuration file <a href="configuration-file-run-hooks">here</a>.
+                                        </p>
+                                        <h4>
+                                          <div>
+                                          </div>
+                                          <div>Failed test retries
+                                          </div><a href="#failed-test-retries"></a>
+                                        </h4>
+                                        <p><code>--retries</code>, When this flag is used, a failed test will be executed repeatedly until either the test passes or the max number of retries has been reached - in which case the test will fail.
+                                        </p>
+                                        <p>When a test passes after one or more retries, it will be indicated in the UI as follows:
+                                        </p>
+                                        <div>
+                                          <div><button>Shell</button>
+                                          </div>
+                                          <div><pre><code>--retries &lt;max_num_of_retries&gt;</code></pre>
+                                          </div>
+                                        </div>
+                                        <p>Tests that only passed using retries, can be easily filtered under the testim library. To read more about that, see <a href="https://help.testim.io/docs/flaky-tests">here</a>.
+                                        </p>
+                                        <h4>
+                                          <div>
+                                          </div>
+                                          <div>Disable TestRail reporting (web only)
+                                          </div><a href="#disable-testrail-reporting-web-only"></a>
+                                        </h4>
+                                        <p><code>--suppress-tms-reporting</code> To suppress sending suite run results to TestRail.
+                                        </p>
+                                        <div>
+                                          <div><button>Shell</button>
+                                          </div>
+                                          <div><pre><code>--suppress-tms-reporting</code></pre>
+                                          </div>
+                                        </div>
+                                        <h4>
+                                          <div>
+                                          </div>
+                                          <div>Dedicated Run Tunnel (web only)
+                                          </div><a href="#dedicated-run-tunnel-web-only"></a>
+                                        </h4>
+                                        <p><code>--tunnel</code> <code>--tunnel-port</code>, Tunnels let you run your app from an internal server/localhost and view it in an external browser.
+                                          <br /> <!-- -->--tunnel #default application port 80
+                                          </p>
+                                          <div>
+                                            <div><button>Shell</button>
+                                            </div>
+                                            <div><pre><code>testim --tunnel --tunnel-port &lt;APP PORT default 80&gt;</code></pre>
+                                            </div>
+                                          </div>
+                                          <p>For more info check out: <a href="doc:dedicated-run-tunnel">This Article</a>
+                                          </p>
+                                          <h4>
+                                            <div>
+                                            </div>
+                                            <div>Rerun failed tests
+                                            </div><a href="#rerun-failed-tests"></a>
+                                          </h4>
+                                          <p><code>--rerun-failed-by-run-id</code>, The rerun failed tests option allows you to rerun all test which failed in a suite run.
+                                            <br /> <!-- -->Copy the suite run id from the suite&#x27;s page :
+                                            </p>
+                                            <p>Add the --rerun-failed-by-run-id flag with the suite&#x27;s run id to the CLI :
+                                            </p>
+                                            <div>
+                                              <div><button>Shell</button>
+                                              </div>
+                                              <div><pre><code>--rerun-failed-by-run-id &lt;run-id&gt;</code></pre>
+                                              </div>
+                                            </div>
+                                            <h4>
+                                              <div>
+                                              </div>
+                                              <div>Disable timeout retry
+                                              </div><a href="#disable-timeout-retry"></a>
+                                            </h4>
+                                            <p><code>--disable-timeout-retry</code>, by default, when a test fails due to &quot;test reached timeout&quot;, Testim will try to execute it once again and up to 3 times before failing it. This default behavior can be disabled when executing test using this CLI flag.
+                                            </p>
+                                            <div>
+                                              <div><button>shell</button>
+                                              </div>
+                                              <div><pre><code>--disable-timeout-retry</code></pre>
+                                              </div>
+                                            </div>
+                                            <br />
+                                            <h4>
+                                              <div>
+                                              </div>
+                                              <div>Set data retention
+                                              </div><a href="#set-data-retention"></a>
+                                            </h4>
+                                            <p><code>--set-retention</code> When you add the parameter --set-retention [whole number between 1 to 10] to a CLI run, all the test results of this execution will be marked for deletion (retention period) after the number of days specified in the parameter.
+                                            </p>
+                                            <blockquote theme="📘"><span>📘</span>
+                                              <p>
+                                              </p>
+                                              <p>Our plan includes 30 days retention by default, for longer retention time, please reach out to support.
+                                              </p>
+                                            </blockquote>
+                                            <div>
+                                              <div><button>Shell</button>
+                                              </div>
+                                              <div><pre><code>--set-retention &lt;number-between-1-10&gt;</code></pre>
+                                              </div>
+                                            </div>
+                                            <h4>
+                                              <div>
+                                              </div>
+                                              <div>Abort CLI run
+                                              </div><a href="#abort-cli-run"></a>
+                                            </h4>
+                                            <p>It is possible to abort a CLI run, by using the CTRL+c shortcut in your terminal. The run will have &quot;Aborted&quot; status under the run-list
+                                            </p> <span><span><img alt="" src="https://files.readme.io/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png" /></span></span>
+                                            <p>The CLI can also be forced to quit by pressing CTRL+C multiple times or closing the terminal window (a.k.a, ungraceful abort).
+                                              <br /> <!-- -->This will cause the run to stop executing but the status will remain &quot;Running&quot; in the editor. The run status will change to “Timeout” after 90 minutes.
+                                              </p>
+                                              <h4>
+                                                <div>
+                                                </div>
+                                                <div>Add Chrome extra arguments (web only)
+                                                </div><a href="#add-chrome-extra-arguments-web-only"></a>
+                                              </h4>
+                                              <p>To add Chrome extra arguments, use the <em>--chrome-extra-args</em> which receives a comma-separated string with the needed flags (no spaces between the flags). For example:
+                                              </p>
+                                              <div>
+                                                <div><button>Shell</button>
+                                                </div>
+                                                <div><pre><code>testim --token &quot;TOKEN&quot; --project &quot;PROJECT&quot; --grid &quot;Testim-Grid&quot; --chrome-extra-args &quot;enable-heavy-ad-intervention,heavy-ad-privacy-mitigations&quot;</code></pre>
+                                                </div>
+                                              </div>
+                                              <h4>
+                                                <div>
+                                                </div>
+                                                <div>Run CLI command with custom extensions
+                                                </div><a href="#run-cli-command-with-custom-extensions"></a>
+                                              </h4>
+                                              <p>You are able to run a CLI command on a chrome browser with specific extension/s installed on it by using <em>--install-custom-extension</em>. For example:
+                                              </p>
+                                              <div>
+                                                <div><button>Shell</button>
+                                                </div>
+                                                <div><pre><code>testim --token &quot;&lt;YOUR ACCESS TOKEN&gt;&quot; --project &quot;&lt;YOUR PROJECT ID&gt;&quot; --use-local-chrome-driver --install-custom-extension &lt;chrome extension zipped file url or local path&gt;</code></pre>
+                                                </div>
+                                              </div>
+                                              <h4>
+                                                <div>
+                                                </div>
+                                                <div>intersect-with flag
+                                                </div><a href="#intersect-with-flag"></a>
+                                              </h4>
+                                              <p>The <code>intersect-with</code> flag can be used to run a subset of the specified tests (e.g. a test plan, a test suite, a label) that are intersected with a given label or suite. When running test plans the intersection is performed on the tests in the plan’s body (not the before or after tests).
+                                                <br /> <!-- -->The following <code>intersect-with</code> flags are available:
+                                                </p>
+                                                <div>
+                                                  <div><button>Shell</button>
+                                                  </div>
+                                                  <div><pre><code>--intersect-with-label &lt;labelName&gt;
+--intersect-with-suite &lt;suiteName&gt;
+--intersect-with-suite-id &lt;suiteId&gt;</code></pre>
+                                                  </div>
+                                                </div>
+                                                <p>The following command example specifies a suite called &quot;SuiteName&quot; to run if they intersect with a label called &quot;test&quot;:
+                                                </p>
+                                                <div>
+                                                  <div><button>Shell</button>
+                                                  </div>
+                                                  <div><pre><code>testim --token “7jdSDFGbsdfrGsdrgsdrg” --project “EIPPYFgkS7oTesyRCnlj” --suite “SuiteName” --grid “Testim-Grid” --intersect-with-label “test”</code></pre>
+                                                  </div>
+                                                </div>
+                                                <p>The following command example specifies that tests with label &quot;test&quot; run if they intersect with suite &quot;test1&quot;:
+                                                </p>
+                                                <div>
+                                                  <div><button>Shell</button>
+                                                  </div>
+                                                  <div><pre><code>testim --token “7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn” --project “EIPPYFgkS7oCnlOfNtOj” --label “test” --grid “Testim-Grid” --intersect-with-suite “test1”</code></pre>
+                                                  </div>
+                                                </div>
+                                                <p>The <code>intersect-with</code> flag defines that from all the tests that were included in the original run command, Testim should only run the tests that are common (i.e., intersecting) with the specified label or suite.
+                                                </p>
+                                                <p><strong>For example:</strong>
+                                                  <br /> <!-- -->Label A - contains tests: 1,2,3,4
+                                                    <br /> <!-- -->Label B - contains tests: 5,6,7
+                                                      <br /> <!-- -->Label C - contains tests: 3,4,5
+                                                        <br /> <!-- -->Label D - contains tests: 8,9
+                                                        </p>
+                                                        <p>Test Plan P contains Labels A and B
+                                                          <br /> <!-- -->So if we run test plan P with --intersect-with-label C ==&gt; tests 3,4,5 should run
+                                                            <br /> <!-- -->If we run test plan P with --intersect-with-label D ==&gt; no tests should run
+                                                            </p>
+                                                            <p>It is possible to add multiple intersect flags.
+                                                              <br /> <!-- -->For example, to run test plan P with --intersect-with-label C --intersect-with-label A
+                                                                <br /> <!-- -->Testim will establish which tests are in the original run command and then calculate the intersect flags one after the other.
+                                                                </p>
+                                                                <blockquote theme="📘"><span>📘</span>
+                                                                  <p>
+                                                                  </p>
+                                                                  <p>The intersection is performed between the tests in the flag and the requested, not between the flags themselves. So if you have --intersect-with-label A, and --intersect-with-label B, Testim will run all the tests in A OR B, that intersect with the tests requested.
+                                                                  </p>
+                                                                </blockquote>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>intersect-with-operand
+                                                                  </div><a href="#intersect-with-operand"></a>
+                                                                </h4>
+                                                                <p>Accepts a string. Value can be one of <code>AND</code> | <code>OR</code>. By default (meaning when this parameter is not defined), <code>OR</code> is used. This only works with the <code>--intersect-with-label</code> flag.
+                                                                </p>
+                                                                <h3>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>Sealights Integration
+                                                                  </div><a href="#sealights-integration"></a>
+                                                                </h3>
+                                                                <p>When running a test with the <a href="doc:sealights-integration">Sealights Integration</a> using the CLI, you need to add one of the following IDs from Sealights as options in the Testim CLI execution command:
+                                                                </p>
+                                                                <ul>
+                                                                  <li><strong>Sealights buildSessionId</strong> - this ID relates to the specific build that was executed. Typically this is related to a specific component in an application. This means that this option is recommended if you want to test a specific component.
+                                                                  </li>
+                                                                  <li><strong>Sealights labId</strong> - typically multiple components that are hosted on the same environment may share the same LabId. So if you want to test multiple components, it is recommended to use the LabId instead of the buildSessionId.
+                                                                  </li>
+                                                                </ul>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div><strong>Sealights buildSessionId</strong>
+                                                                  </div><a href="#sealights-buildsessionid"></a>
+                                                                </h4>
+                                                                <p><code>--sealights-build-session-id</code>, runs the test with the Sealights Integration using the ID that relates to the specific build that was executed. To obtain the <code>buildSessionId</code>, follow the instructions in the <a href="doc:sealights-integration#buildsessionid-option">buildSessionID option section</a>.
+                                                                </p>
+                                                                <div>
+                                                                  <div><button>Shell</button>
+                                                                  </div>
+                                                                  <div><pre><code>--sealights-build-session-id [sealights-suid-session-id]</code></pre>
+                                                                  </div>
+                                                                </div>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div><strong>Sealights labId</strong>
+                                                                  </div><a href="#sealights-labid"></a>
+                                                                </h4>
+                                                                <p><code>--sealights-lab-id</code>, runs the test with the Sealights Integration using the Lab ID. To obtain the <code>labId</code>, follow the instructions in the <a href="doc:sealights-integration#labid-option">labId option section</a>.
+                                                                </p>
+                                                                <div>
+                                                                  <div><button>Shell</button>
+                                                                  </div>
+                                                                  <div><pre><code>--sealights-lab-id [sealights-lab-id]</code></pre>
+                                                                  </div>
+                                                                </div>
+                                                                <br />
+                                                                <h3>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>Mobile only flags
+                                                                  </div><a href="#mobile-only-flags"></a>
+                                                                </h3>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>Device name
+                                                                  </div><a href="#device-name"></a>
+                                                                </h4>
+                                                                <p><code>--device-name</code>, select a specific device model to run the test. If the flag is not used, Testim will select the first available device model.
+                                                                </p>
+                                                                <div>
+                                                                  <div><button>Shell</button>
+                                                                  </div>
+                                                                  <div><pre><code>--device-name &quot;Samsung S22&quot;</code></pre>
+                                                                  </div>
+                                                                </div>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>Device UDID
+                                                                  </div><a href="#device-udid"></a>
+                                                                </h4>
+                                                                <p><code>--device-udid</code>, select a specific device to run the test, based on its Unique Device ID. If the flag is not used, Testim will select the first available device.
+                                                                </p>
+                                                                <div>
+                                                                  <div><button>Shell</button>
+                                                                  </div>
+                                                                  <div><pre><code>--device-udid &quot;udid123456&quot;</code></pre>
+                                                                  </div>
+                                                                </div>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>OS Version
+                                                                  </div><a href="#os-version"></a>
+                                                                </h4>
+                                                                <p><code>--os-version</code>, select a specific operating system version to run the test. If the flag is not used, Testim will select the first available device.
+                                                                </p>
+                                                                <div>
+                                                                  <div><button>Shell</button>
+                                                                  </div>
+                                                                  <div><pre><code>--os-version &quot;9&quot;</code></pre>
+                                                                  </div>
+                                                                </div>
+                                                                <h4>
+                                                                  <div>
+                                                                  </div>
+                                                                  <div>App ID
+                                                                  </div><a href="#app-id"></a>
+                                                                </h4>
+                                                                <p><code>--app-id</code>, select a specific app ID of an mobile app in the Mobile Apps library to run the test. This is used if you want to override the current app that was used during the recording. To obtain the APP ID, go to the Mobile Apps screen, right-click on one of the apps listed and select <strong>Copy ID</strong>.
+                                                                </p> <span><span><img alt="" src="https://files.readme.io/097f1f4-2023-02-06_13-00-18.png" /></span></span>
+                                                                <div>
+                                                                  <div><button>Shell</button>
+                                                                  </div>
+                                                                  <div><pre><code>--app-id &quot;appID123&quot;</code></pre>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              <div>
+                                                                <div>
+                                                                  <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                                                                  </p>
+                                                                </div>
+                                                              </div>
+                                                              <hr />
+                                                              <div>
+                                                                <header>
+                                                                  <div>What’s Next
+                                                                  </div>
+                                                                </header>
+                                                                <div>
+                                                                </div>
+                                                                <ul>
+                                                                  <li><a href="/docs/test-results">Test results</a><span><span></span></span>
+                                                                  </li>
+                                                                </ul>
+                                                              </div>
+                                                            </section>
+                                                            <section>
+                                                              <div>
+                                                                <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                                                                </div>
+                                                              </div>
+                                                            </section>
+                                                          </div>
+                                                        </article>

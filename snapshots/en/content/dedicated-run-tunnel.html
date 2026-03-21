@@ -1,0 +1,121 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Dedicated run tunnel
+        </h1>
+        <div>
+          <div>
+            <p>Tunnels let you run your app from an internal server/localhost and view it in an external browser (proxy).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>In some cases you would want to run tests on your own private or internal servers, using a remote selenium grid server, either supplied by Testim or by an external provider such as SauceLabs.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>This is a pro feature
+            </div><a href="#this-is-a-pro-feature"></a>
+          </h3>
+          <p>This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Prerequisites
+          </div><a href="#prerequisites"></a>
+        </h2>
+        <ol>
+          <li>Tunnel feature enabled.
+          </li>
+          <li><a href="doc:the-command-line-cli">Testim CLI</a>
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>How to use it
+          </div><a href="#how-to-use-it"></a>
+        </h2>
+        <ol>
+          <li>Run your application server.
+          </li>
+          <li>Make sure the machine running the CLI command has access to the internal server/localhost.
+          </li>
+          <li>Run <a href="doc:the-command-line-cli">Testim CLI</a> with parameter (<code>--tunnel</code> - default application port 80)
+          </li>
+          <li>If you run your application under different port than port 80, add parameter (<code>--tunnel-port \&lt;APP PORT e.g. 80&gt;</code>)
+          </li>
+        </ol>
+        <p>Note that Testim CLI will adjust your application base URL to point to the dedicated tunnel address.
+        </p>
+        <h1>
+          <div>
+          </div>
+          <div>Additional use cases
+          </div><a href="#additional-use-cases"></a>
+        </h1>
+        <p>During test execution, all traffic is routed through the machine, that initiates the tunnel, providing a solution for situations where whitelisting may not be practical. As specified above, it is crucial to initiate the CLI command from a machine with access to the tested environment. Furthermore, this approach acts as a workaround for managing the geolocation of the grid, aligning it with the location of the machine that triggers the command.
+        </p>
+        <h4>
+          <div>
+          </div>
+          <div>Example using Testim CLI with a tunnel
+          </div><a href="#example-using-testim-cli-with-a-tunnel"></a>
+        </h4>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>testim --tunnel --tunnel-port &lt;APP PORT default 80&gt; --label &quot;&lt;YOUR LABEL&gt;&quot; --token &quot;&lt;YOUR ACCESS TOKEN&gt;&quot; --project &quot;&lt;YOUR PROJECT ID&gt;&quot; --grid &quot;&lt;Your grid name&gt;&quot; --report-file test-results/testim-tests-report.xml</code></pre>
+          </div>
+        </div>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>You can use tunnel for HTTPS address if needed, please contact support to set this up. <strong>HTTPS tunnel is only available when running on a Testim-provided grid.</strong>
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>For the grid name, read <a href="doc:grid-management">here</a> how to set up your grid.
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>Tunnel is not supported for Scheduled runs.
+          </p>
+        </blockquote>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/autorabit-integration"><span></span>
+        <div>AutoRabit Integration
+        </div></a><a href="/docs/applitools-integration">
+        <div>Applitools integration
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

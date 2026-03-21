@@ -1,0 +1,293 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Validate Element Attribute (Mobile)
+        </h1>
+        <div>
+          <div>
+            <p>Validate any element attribute in your mobile app
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The element attribute validation allows you to validate the value of attributes within your app screen elements.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Adding a Validate Element Attribute step
+          </div><a href="#adding-a-validate-element-attribute-step"></a>
+        </h2>
+        <p><i></i> <strong>To add a Validate Element Attribute step:</strong>
+        </p>
+        <ol>
+          <li>Hover over the <i></i> <strong>(arrow symbol)</strong> where you want to add the validation.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/a45b667-small-screen1.png" /></span></span>
+        <p>The <strong>action options</strong> are displayed.
+        </p>
+        <ol start="2">
+          <li>Click on the <strong>Toggle breakpoint</strong> button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/2d940f9-small-screen2.png" /></span></span>
+        <ol start="3">
+          <li>Click on the <strong>Run test</strong> button, to run the test until the breakpoint.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/3f42de6-small-screen3.png" /></span></span>
+        <ol start="4">
+          <li>Hover over the <i></i> <strong>(arrow symbol)</strong> again and click on the “<strong>M</strong>” (Testim predefined steps).
+            <br /> <!-- -->The <strong>Predefined steps</strong> menu opens.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/0bd37d9-Testim_237_r.png" /></span></span>
+          <ol start="5">
+            <li>Click on <strong>Validations</strong>. The <strong>Validations</strong> menu expands. Scroll down through the menu and select <strong>Validate element attribute</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/ee0bd01-elementattribute.png" /></span></span>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate element attribute</strong>.
+            </p>
+          </blockquote>
+          <ol start="7">
+            <li>In the <strong>AUT</strong> window, identify the relevant element for which you wish to validate an element attribute, and click on it to select it. You will need to know the element&#x27;s attribute name to configure the validation.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/d65e7f9-image_7.png" /></span></span>
+          <ol start="7">
+            <li>The <strong>Element Attribute Validation</strong> form is shown.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/6a2c9cd-elementattvalidation.png" /></span></span>
+          <ol start="8">
+            <li>In the <strong>Attribute name</strong> field, enter a valid element attribute name that you wish to validate (e.g. checkable, checked, className, clickable). For a list of possible attributes, see, <a href="https://help.testim.io/docs/validate-element-attribute#list-of-possible-attributes">List of possible attributes</a>.
+            </li>
+            <li>In the <strong>Expected value</strong> field, enter the value you wish to validate for the attribute (e.g. <code>true</code>).
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. ‘enabled’ and ‘true`.
+            </p>
+          </blockquote>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>For the expected value you can use regex.
+            </p>
+          </blockquote>
+          <p>Testim will validate whether the selected element attribute&#x27;s expected value is present when running your test.
+          </p>
+          <ol start="10">
+            <li>Click <strong>OK</strong>. The “Validate element attribute” step is added in the <strong>Editor</strong>, and a thumbnail of the selected element is shown in the step.
+            </li>
+            <li>Click on the <strong>Toggle Breakpoint</strong> button after the validation step to remove the breakpoint.
+            </li>
+          </ol>
+          <h2>
+            <div>
+            </div>
+            <div>Modifying a Validate element attribute step
+            </div><a href="#modifying-a-validate-element-attribute-step"></a>
+          </h2>
+          <p>If you want to change the element you selected, you don’t need to delete and re-record the step. Instead, you can reassign the element with a different element. Alternatively, you can modify the attribute name and/or expected value of the original element you selected without selecting a new element.
+          </p>
+          <p><i></i> <strong>To reassign the selected element in a Validation step:</strong>
+          </p>
+          <ol>
+            <li>Hover over the position to the left of the step for which you want to reassign the element and click on the <strong>Toggle breakpoint</strong> button.
+            </li>
+            <li>Click on the <strong>Run test</strong> button to run the test until the breakpoint.
+            </li>
+            <li>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/7495290-updatedsteps.png" /></span></span>
+          <p>The <strong>Properties</strong> panel opens on the right-hand side.
+          </p>
+          <ol start="4">
+            <li>Hover over the <strong>Target element</strong> thumbnail to show options, and click <strong>Reassign</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/61bac26-reassign.png" /></span></span>
+          <ol start="5">
+            <li>In the <strong>AUT</strong> window, identify the new element that you would like to select and click on it.
+              <br /> <!-- -->The selected element is shown in the <strong>Target element</strong> box in the <strong>Properties</strong> panel.
+              </li>
+              <li>In the <strong>Properties</strong> panel <strong>Attribute name</strong> field enter the attribute name for the new element.
+              </li>
+              <li>In the <strong>Properties</strong> panel <strong>Expected value</strong> field enter the expected value of the new attribute.
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. &#x27;enabled&#x27; and &#x27;true&#x27;.
+              </p>
+            </blockquote>
+            <ol start="8">
+              <li>Click on the same <strong>Toggle Breakpoint</strong> button to the left of the step for which you reassigned the element to remove the breakpoint.
+              </li>
+            </ol>
+            <p><i></i> <strong>To modify the properties of the<em>original</em> element:</strong>
+            </p>
+            <ol>
+              <li>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/240621e-properties.png" /></span></span>
+            <p>The <strong>Properties</strong> panel opens on the right-hand side.
+            </p>
+            <ol start="2">
+              <li>In the <strong>Properties</strong> panel <strong>Attribute name</strong> field enter the new attribute name for the element.
+              </li>
+              <li>In the <strong>Properties</strong> panel <strong>Expected value</strong> field enter the new expected value of the attribute.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/4865d83-propertiespanel.png" /></span></span>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. ‘clickable’ and &#x27;true&#x27;.
+              </p>
+            </blockquote>
+            <h2>
+              <div>
+              </div>
+              <div>List of possible attributes
+              </div><a href="#list-of-possible-attributes"></a>
+            </h2>
+            <h3>
+              <div>
+              </div>
+              <div>iOS attributes (using Appium)
+              </div><a href="#ios-attributes-using-appium"></a>
+            </h3>
+            <ul>
+              <li>checkable
+              </li>
+              <li>checked
+              </li>
+              <li>{class,className}
+              </li>
+              <li>clickable {content-desc,contentDescription}
+              </li>
+              <li>enabled
+              </li>
+              <li>focusable
+              </li>
+              <li>focused
+              </li>
+              <li>{long-clickable,longClickable}
+              </li>
+              <li>package
+              </li>
+              <li>password
+              </li>
+              <li>{resource-id,resourceId}
+              </li>
+              <li>scrollable
+              </li>
+              <li>selection-start
+              </li>
+              <li>selection-end
+              </li>
+              <li>selected
+              </li>
+              <li>{text,name}
+              </li>
+              <li>hint
+              </li>
+              <li>extras
+              </li>
+              <li>bounds
+              </li>
+              <li>displayed
+              </li>
+              <li>contentSize
+              </li>
+            </ul>
+            <h3>
+              <div>
+              </div>
+              <div>Android attributes
+              </div><a href="#android-attributes"></a>
+            </h3>
+            <ul>
+              <li>UID
+              </li>
+              <li>accessibilityContainer
+              </li>
+              <li>accessible
+              </li>
+              <li>enabled
+              </li>
+              <li>frame
+              </li>
+              <li>index
+              </li>
+              <li>label
+              </li>
+              <li>name
+              </li>
+              <li>rect
+              </li>
+              <li>selected
+              </li>
+              <li>type
+              </li>
+              <li>value
+              </li>
+              <li>visible
+              </li>
+              <li>wdAccessibilityContainer
+              </li>
+              <li>wdAccessible
+              </li>
+              <li>wdEnabled
+              </li>
+              <li>wdFrame
+              </li>
+              <li>wdIndex
+              </li>
+              <li>wdLabel
+              </li>
+              <li>wdName
+              </li>
+              <li>wdRect
+              </li>
+              <li>wdSelected
+              </li>
+              <li>wdType
+              </li>
+              <li>wdUID
+              </li>
+              <li>wdValue
+              </li>
+              <li>wdVisible
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div>
+              <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+              </p>
+            </div>
+          </div>
+          <hr />
+          <nav><a href="/docs/html-attribute-validation"><span></span>
+            <div>Validate HTML attribute (Web)
+            </div></a><a href="/docs/checkbox-and-radio-button-validation">
+            <div>Validate checkbox/radio button
+            </div><span></span></a>
+          </nav>
+        </section>
+        <section>
+          <div>
+            <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>

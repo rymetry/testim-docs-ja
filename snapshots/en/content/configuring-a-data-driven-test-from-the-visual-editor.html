@@ -1,0 +1,149 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Configuring a Data-driven Test From The Visual Editor
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Test Data can be added to a specific test in the UI by choosing &quot;<strong>Test Data</strong>&quot; in the Setup step&#x27;s properties panel.
+          <br /> <i></i> <strong>To add Test Data to a test:</strong>
+          </p>
+          <ol>
+            <li>In the test&#x27;s <strong>Setup</strong> step (the first step), click the <strong>Show properties</strong> button (:fa-cog:).
+            </li>
+            <li>Click on <strong>Test Data</strong>.
+            </li>
+            <li>Define the data set in the JS editor
+              <br /> <!-- -->This is a simple single data set example:<!-- -->
+                <div>
+                  <div><button>JavaScript</button>
+                  </div>
+                  <div><pre><code>return {
+    &quot;username&quot; : &quot;Matan&quot;,
+    &quot;password&quot; : &quot;123&quot;
+}</code></pre>
+                  </div>
+                </div> <!-- -->This is the dataset we defined in the example:
+              </li>
+            </ol>
+            <div>
+              <div><button>JavaScript</button>
+              </div>
+              <div><pre><code>return [{
+  &quot;username&quot;: &quot;tomsmith&quot;,
+  &quot;password&quot;: &quot;SuperSecretPassword!&quot;
+},{
+  &quot;username&quot;: &quot;david&quot;,
+  &quot;password&quot;: &quot;SecretPassword?&quot;
+}];</code></pre>
+              </div>
+            </div>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>The brackets must remain in the return line.
+              </p>
+            </blockquote>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>Only when you run your test from <a href="the-command-line-cli">Testim CLI</a>, scheduler or local suite run, the test will run multiple times, in order, each time with a different Data Set.
+              </p>
+            </blockquote> <span><span><img alt="" src="https://files.readme.io/c35c945-Data_Driven_Tests.gif" /></span></span>
+            <ol start="4">
+              <li>Click the <strong>Show Properties</strong> button (:fa-cog:) on the the step(s) that you want to add the data set to. For example, in the &quot;set username&quot; and &quot;set password&quot; steps.
+              </li>
+              <li>In the <strong>Text to assign</strong> field, replace the existing text with the name of the parameter. For example, in the <strong>Set username</strong> step, enter the <code>username</code> parameter.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/e5d7747-username_param.png" /></span></span>
+            <ol start="6">
+              <li>Run your test.
+                <br /> <!-- -->The test will run with the first Data Set:
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/ca3d466-Capture1.png" /></span></span>
+              <p>&quot;username&quot;: &quot;tomsmith&quot;, &quot;password&quot;: &quot;SuperSecretPassword!&quot;
+              </p>
+              <p>Running the test from the editor will only run the <strong>first data set</strong>. When you want to run additional data sets, you will need to use the <strong>CLI</strong>, which includes the <code>beforeSuite</code> hook that overrides test data provided in the UI, or the <a href="doc:scheduler">Scheduler</a>.
+              </p>
+              <h3>
+                <div>
+                </div>
+                <div>Adding test data by uploading a CSV/Excel file
+                </div><a href="#adding-test-data-by-uploading-a-csvexcel-file"></a>
+              </h3>
+              <p>It is also possible to upload the test data using a CSV or Excel file. After the file is uploaded its data will be added as the test data according to the following structure:
+              </p>
+              <ul>
+                <li>First row - parameter name (==&gt;Key name)
+                </li>
+                <li>Consequent rows - each row is converted to a single data set (==&gt;Key values). Maximum 1200 rows.
+                </li>
+              </ul>
+              <blockquote theme="📘"><span>📘</span>
+                <p>
+                </p>
+                <p>As part of this method the uploaded data will not be updated if the file has changed. Every update will require uploading the file again. In contrast, when using the config file method (see, <a href="doc:data-driven-testing#section-data-driven-tests-using-data-from-an-external-source">Data Driven tests using data from an external source</a>), the file will be automatically parsed on every run.
+                </p>
+              </blockquote>
+              <p><i></i> <strong>To add test data by uploading a file:</strong>
+              </p>
+              <ol>
+                <li>Prepare an Excel/CSV file according to the structure mentioned above.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/4299366-exceldata.PNG" /></span></span>
+              <ol start="2">
+                <li>In the test&#x27;s <strong>Setup</strong> step (the first step), click the <strong>Show properties</strong> button (:fa-cog:).
+                </li>
+                <li>Click on <strong>Test Data</strong>.
+                </li>
+                <li>Click <strong>Upload File</strong> and select the file you have created.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/236cb27-uploadfile.png" /></span></span>
+              <ol start="5">
+                <li>The uploaded data is displayed. You can modify this data if needed.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/2f94059-test_data.PNG" /></span></span>
+              <ol start="6">
+                <li>Use the parameters in the test steps as explained above.
+                </li>
+              </ol>
+              <blockquote theme="📘"><span>📘</span>
+                <p>
+                </p>
+                <p>Only when you run your test from <a href="the-command-line-cli">Testim CLI</a>, scheduler or local suite run, the test will run multiple times, in order, each time with a different Data Set.
+                </p>
+              </blockquote>
+              <blockquote theme="📘"><span>📘</span>
+                <p>
+                </p>
+                <p>When updating the test data in the editor You can revert back to previously saved test data through the revisions history. When changing the test data in a branch, while merging you will need to decide if you want to apply the change on the merge as well.
+                </p>
+              </blockquote>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/data-driven-testing"><span></span>
+              <div>Data-driven testing
+              </div></a><a href="/docs/configuring-data-driven-tests-using-the-config-file">
+              <div>Configuring Data-driven Tests Using the Config File
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

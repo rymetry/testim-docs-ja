@@ -1,0 +1,104 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Vision Locate
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Vision Locate mode scans the screen to find the elements using visual analysis algorithms. It essentially creates a DOM-like structure based on an image and enables identification of an element during test recording and playback, while maintaining the test&#x27;s stability despite small changes in the location of the element.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>You can switch between the DOM and Vision Locate modes during the recording.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>When should you use Vision Locate?
+          </div><a href="#when-should-you-use-vision-locate"></a>
+        </h2>
+        <ul>
+          <li>When the element does not appear in the DOM - i.e., when in DOM Locate mode, you hover your mouse over it and it is not highlighted.
+          </li>
+          <li>When the screen is in WebView.
+          </li>
+          <li>Complex scenarios where using vision may yield better results.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Which actions can be applied on an element that was identified using Vision Locate?
+          </div><a href="#which-actions-can-be-applied-on-an-element-that-was-identified-using-vision-locate"></a>
+        </h2>
+        <p>It is possible to tap on the element but it is currently not possible to apply actions on the text within the element (e.g., validate element text, wait for element text, etc.).
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Using Vision Locate
+          </div><a href="#using-vision-locate"></a>
+        </h2>
+        <p><i></i> <strong>To use Vision Locate:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>Start recording a mobile test.
+            </p>
+          </li>
+          <li>
+            <p>If you want to select a certain element on the screen and it isn&#x27;t highlighted, click the <strong>Vision Locate</strong> button on the Mirroring Toolbar.
+            </p> <span><span><img alt="" src="https://files.readme.io/45d466b8bdb3b51be1da7af92d7a0eebb456cb486a8dc5c41372e64a9a5983ce-vision_locate_testim.png" /></span></span>
+            <p>The screen is scanned by the Vision Locate feature. All the elements on the screen are identified using the vision algorithm and marked/highlighted when hovering your mouse of the element.
+            </p>
+          </li>
+          <li>
+            <p>Select the element by hovering your mouse over it. You should see it highlighted.
+              <br /> <!-- -->The Vision Locate mode is maintained until you click the <strong>DOM Locate</strong> button on the toolbar.
+              </p>
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>It is recommended to switch back to DOM Locate mode whenever possible.
+            </p>
+          </blockquote>
+          <h3>
+            <div>
+            </div>
+            <div>Test playback
+            </div><a href="#test-playback"></a>
+          </h3>
+          <p>When Vision Locate was used to find the target element of any test step, there&#x27;s an indicator showing the Vision icon in the test step&#x27;s <strong>Properties</strong> panel.
+          </p> <span><span><img alt="" src="https://files.readme.io/3520bf7d4845155597d92f1d416b945ec7691420ef9ffb45987d775b0f8addac-vision_locate_playback.png" /></span></span>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/mobile-test-mirroring-toolbar"><span></span>
+          <div>Mobile Test Mirroring Toolbar
+          </div></a><a href="/docs/steps">
+          <div>Steps
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

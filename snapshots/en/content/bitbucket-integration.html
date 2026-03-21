@@ -1,0 +1,132 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Bitbucket Integration
+        </h1>
+        <div>
+          <div>
+            <p>Manage your Bitbucket branches in Testim
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Bitbucket is a web-based version control repository hosting service by Atlassian, for source code and development projects that use either Mercurial or Git revision control systems.
+          <br /> <!-- -->Testim&#x27;s Bitbucket integration allows you to automatically mirror in Testim the version control functions performed in Bitbucket, so your test versions match the versions managed in Bitbucket. Branches that are created in Bitbucket will be also automatically created in Testim, under the same name. Merging branches in Bitbucket will automatically merge the branches in Testim.
+            <br /> <!-- -->Read more Testim branches <a href="doc:version-control-branches">here</a>.
+            </p>
+            <h3>
+              <div>
+              </div>
+              <div>Setting Bitbucket integration
+              </div><a href="#setting-bitbucket-integration"></a>
+            </h3>
+            <p>This process is required only once.
+              <br /> <i></i> <strong>To enable the Bitbucket integration:</strong>
+              </p>
+              <ol>
+                <li>In Testim, go to <strong>Settings</strong> &gt; <strong>Integration</strong> tab.
+                </li>
+                <li>Under Bitbucket, click the &quot;<strong>login</strong>&quot; link.
+                </li>
+              </ol> <span><span><img alt="934" src="https://files.readme.io/6b41669-Screen_Shot_2020-12-31_at_11.48.08.png" /></span></span>
+              <ol start="3">
+                <li>Click &quot;<strong>Grant Access</strong>&quot; button.
+                </li>
+              </ol> <span><span><img alt="1099" src="https://files.readme.io/a509649-Screen_Shot_2020-12-31_at_11.36.31.png" /></span></span>
+              <ol start="4">
+                <li>
+                  <p>Select the repository to connect to. This operation requires admin access to the repositories.
+                  </p>
+                </li>
+                <li>
+                  <p>Select the checkboxes with the desired actions:
+                  </p>
+                  <ul>
+                    <li>
+                      <p><strong>Create</strong>: Whenever a branch is created in Bitbucket, a branch will be also created in Testim.
+                      </p>
+                    </li>
+                    <li>
+                      <p><strong>Merge</strong>: Each time Bitbucket branches are merged, Testim will automatically merge your tests.
+                      </p>
+                    </li>
+                  </ul>
+                </li>
+              </ol> <span><span><img alt="970" src="https://files.readme.io/58d1cac-Screen_Shot_2020-12-31_at_11.49.03.png" /></span></span>
+              <h2>
+                <div>
+                </div>
+                <div>Using Bitbucket with Testim
+                </div><a href="#using-bitbucket-with-testim"></a>
+              </h2>
+              <p>At this point the Testim project/repository will mirror your Bitbucket repository, so if you want to create a new branch or make a Pull Request and then merge, you should do it in Bitbucket only.
+              </p>
+              <h3>
+                <div>
+                </div>
+                <div>New branch example
+                </div><a href="#new-branch-example"></a>
+              </h3>
+              <p>In the following example, we have created a new branch in Bitbucket called demo-bb-integration.
+              </p> <span><span><img alt="936" src="https://files.readme.io/e44f3b2-create1.PNG" /></span></span>
+              <p>The same branch is automatically created in Testim (which is forked from the Master) and includes all the tests that were in the Master.
+              </p> <span><span><img alt="604" src="https://files.readme.io/79fbdde-branchintestim.png" /></span></span>
+              <blockquote theme="📘"><span>📘</span>
+                <h3>
+                  <div>
+                  </div>
+                  <div>If you have created a branch in Bitbucket, in Testim the same branch will always be based on the Master branch. This means that if you want to mirror the branch structure on both sides, make sure the Pull Request is based on the Master branch and not another (non-master) branch.
+                  </div><a href="#if-you-have-created-a-branch-in-bitbucket-in-testim-the-same-branch-will-always-be-based-on-the-master-branch-this-means-that-if-you-want-to-mirror-the-branch-structure-on-both-sides-make-sure-the-pull-request-is-based-on-the-master-branch-and-not-another-non-master-branch"></a>
+                </h3>
+              </blockquote>
+              <h3>
+                <div>
+                </div>
+                <div>Pull Request and Merge
+                </div><a href="#pull-request-and-merge"></a>
+              </h3>
+              <p>In the following example, we have made a change in one of the files in Bitbucket and initiated a Pull Request, which will be created in a new branch (pr-branch).
+              </p>
+              <blockquote theme="📘"><span>📘</span>
+                <h3>
+                  <div>
+                  </div>
+                  <div>Although in Bitbucket it is possible to merge without a Pull Request, only merges which are part of a Pull Request will be mirrored in Testim.
+                  </div><a href="#although-in-bitbucket-it-is-possible-to-merge-without-a-pull-request-only-merges-which-are-part-of-a-pull-request-will-be-mirrored-in-testim"></a>
+                </h3>
+              </blockquote> <span><span><img alt="1046" src="https://files.readme.io/dd5c4c5-pullrequest.PNG" /></span></span>
+              <p>The same branch is automatically created in Testim.
+              </p> <span><span><img alt="433" src="https://files.readme.io/4bf04a3-pr2.png" /></span></span>
+              <p>After the branch is created in Testim, we can also update one of the tests to reflect the changes in the code. At this point we are ready to merge the pull request in Bitbucket.
+              </p> <span><span><img alt="526" src="https://files.readme.io/edde410-pr3.PNG" /></span></span>
+              <p>The same merge will also occur in Testim and tests that were part of <code>pr-branch</code> (with all the changes) will be merged into the Master branch in Testim.
+              </p>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/headspin-integration"><span></span>
+              <div>HeadSpin integration
+              </div></a><a href="/docs/bug-tracker-settings">
+              <div>Bug Tracker Settings
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

@@ -1,0 +1,250 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Test Data
+        </h1>
+        <div>
+          <div>
+            <p>Learn how to reuse your test data for different test runs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>A test data file in Testim helps you manage data used across multiple tests. Instead of copying the same data into every test, you can store it once under the <strong>Test Data</strong> tab in <strong>Resources</strong> and reuse it whenever you need. You can also use it to override values during a test run. This keeps your tests cleaner, easier to manage, and faster to update.
+        </p>
+        <p>You&#x27;ll find reusable test data especially helpful when:
+        </p>
+        <ul>
+          <li>You want to run multiple iterations of the the same test.
+          </li>
+          <li>You run the same test with different users or products.
+          </li>
+          <li>You&#x27;re working in a team that needs a consistent source of test data that everyone can use.
+          </li>
+        </ul>
+        <br /> <span><span><img alt="" src="https://files.readme.io/5ad1c9f3991c96149388a70a4f6706cdf8d64ce6598bf3a667362b3acfcf0f5d-Test_Data_Files.jpg" /></span></span>
+          <br />
+          <h3>
+            <div>
+            </div>
+            <div>How to use Test Data in Testim
+            </div><a href="#how-to-use-test-data-in-testim"></a>
+          </h3>
+          <p>There are three ways to use test data files in your tests:
+          </p>
+          <ol>
+            <li>Upload your test data file
+            </li>
+          </ol>
+          <p>You can upload your local test data files in CSV, JSON and Excel format to Testim. If you don&#x27;t have any test data files prepared, you can download samples. All available test data files are listed in your Test Data Library and are ready to be used in your tests.
+          </p>
+          <ol start="2">
+            <li>Override default test data with scheduler
+            </li>
+          </ol>
+          <p>In the <a href="https://dash.readme.com/project/testim/v2.0/docs/scheduler">scheduler</a>, you can use the <strong>Override test data</strong> property to replace your default test data with test data files. With this property activated, you can not only override but also add new values to your default test data.
+          </p>
+          <ol start="3">
+            <li>Assign a test data file to your test
+            </li>
+          </ol>
+          <p>You can assign either your existing test data or a test data file to a test. If you choose to use existing test data, you must first convert it into a test data file in the <strong>Testim Editor</strong>. Once the file is created, it will be added to your Test Data Library and you can assign it to your test in the <strong>Testim Editor</strong>. You can also prioritize this test data file to ensure it is used first, even if another test data is available at the test execution level.
+          </p>
+          <h2>
+            <div>
+            </div>
+            <div>Upload your test data file
+            </div><a href="#upload-your-test-data-file"></a>
+          </h2>
+          <p><i></i> <strong>To upload your test data file, follow these steps:</strong>
+          </p>
+          <ol>
+            <li>Go to <strong>Resources &gt; Test Data</strong> .
+            </li>
+            <li>Select <strong>Upload Test Data</strong>.
+            </li>
+            <li>In the dialog, enter a name and upload your test data file, then select <strong>OK</strong>.
+            </li>
+          </ol>
+          <p>Once the upload is complete, you&#x27;ll find your test data files listed in the <strong>Test Data</strong> tab.
+          </p>
+          <h2>
+            <div>
+            </div>
+            <div>Manage your test data file
+            </div><a href="#manage-your-test-data-file"></a>
+          </h2>
+          <p><i></i> <strong>Right-click on any row to use the following options:</strong>
+          </p>
+          <ul>
+            <li><strong>Edit</strong> – Opens a new window, where you can upload a new test data file to replace the existing data.
+            </li>
+            <li><strong>Download csv file</strong> – Exports the current data row as a CSV file.
+            </li>
+            <li><strong>Delete</strong> – Archives the test data file in the <strong>Deleted</strong> section, where it can be restored.
+            </li>
+          </ul>
+          <h2>
+            <div>
+            </div>
+            <div>Restore deleted test data files
+            </div><a href="#restore-deleted-test-data-files"></a>
+          </h2>
+          <p>You can restore deleted test data files within 30 days.
+          </p>
+          <p><i></i> <strong>To do so, follow this steps:</strong>
+          </p>
+          <ol>
+            <li>Go to <strong>Resources &gt; Test Data</strong>.
+            </li>
+            <li>Select <strong>Deleted</strong>.
+            </li>
+            <li>Right-click the desired test data file and select <strong>Restore</strong>.
+            </li>
+          </ol>
+          <p>The test data file, with all its values, is restored and available in the <strong>Test Data</strong> tab.
+          </p>
+          <h2>
+            <div>
+            </div>
+            <div>Override default test data with scheduler
+            </div><a href="#override-default-test-data-with-scheduler"></a>
+          </h2>
+          <p>When you create or edit a <a href="https://dash.readme.com/project/testim/v2.0/docs/scheduler">scheduler</a>, you have the option to apply the <strong>Override test data</strong> property. This replaces or adds to your default test data.
+          </p>
+          <p><i></i> <strong>To override default test data with a test data file, follow these steps:</strong>
+          </p>
+          <ol>
+            <li>Go to <strong>Runs &gt; Scheduled Runs</strong>.
+            </li>
+            <li>Select <strong>New scheduler</strong>.
+            </li>
+            <li>Toggle <strong>Override test data</strong>.
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>This override only replaces the default test data – it does not affect any override values defined within the test itself.
+            </p>
+          </blockquote>
+          <ol start="4">
+            <li>Select a test data file from the dropdown menu, or <strong>Upload data file</strong> to add a new one. You can upload test data files in CSV, JSON or Excel. Note that each file can be up to 2 MB.
+            </li>
+            <li>Select <strong>Create</strong>.
+            </li>
+          </ol>
+          <p>Your default test data values will be overwritten with your selected test data file.
+          </p>
+          <br /> <span><span><img alt="" src="https://files.readme.io/79b792796ee09134398ae7702f319228f3918b00ddf2385a86631d0b1123364f-uploading_file.jpg" /></span></span>
+            <br />
+            <h2>
+              <div>
+              </div>
+              <div>Assign a test data file to your test
+              </div><a href="#assign-a-test-data-file-to-your-test"></a>
+            </h2>
+            <p>You can use your test data files in a local test run by either converting existing test data or adding a reusable test data file. You can either do this by uploading a new one or selecting one from your library. Note that you also have the option to prioritize test data for your test.
+            </p>
+            <blockquote theme="📘"><span>📘</span>
+              <h3>
+                <div>
+                </div>
+                <div>Prioritize test data
+                </div><a href="#prioritize-test-data"></a>
+              </h3>
+              <p>If you chose to prioritize the selected test data file, it will take precedence over any data configured at the test execution level. If there are overlapping values, they won&#x27;t be overwritten. Instead, the data will be combined.
+              </p>
+            </blockquote>
+            <br /> <span><span><img alt="" src="https://files.readme.io/9cbb82042c5fbc0b6ce840fe4d78386ef722f459cdf7874e9049ef29bc3a8a85-Assign_data_file.jpg" /></span></span>
+              <h3>
+                <div>
+                </div>
+                <div>Convert your existing test data to a test data file
+                </div><a href="#convert-your-existing-test-data-to-a-test-data-file"></a>
+              </h3>
+              <p><i></i> <strong>To convert existing test data, follow these steps:</strong>
+              </p>
+              <ol>
+                <li>In Testim, select a test and open it in <strong>Editor</strong>.
+                </li>
+                <li>Select the <strong>Show step properties</strong> icon to open the <strong>Test Configuration Properties</strong> panel.
+                </li>
+                <li>Select <strong>Editor &gt; Test Data</strong>.
+                </li>
+                <li>Select <strong>Convert to file</strong> above the test data preview.
+                </li>
+                <li>In the input field, enter a name for the new test data file, then select <strong>Convert</strong>.
+                </li>
+              </ol>
+              <blockquote theme="📘"><span>📘</span>
+                <p>
+                </p>
+                <p>The existing test data will convert into a new, reusable test data file. This file replaces the embedded test data; it is automatically saved to the test data library and can be reused across tests.
+                </p>
+              </blockquote>
+              <ol start="6">
+                <li>If you want to prioritize your test data file, select the <strong>Prioritize test data</strong> checkbox.
+                </li>
+              </ol>
+              <p>The converted test data file will be assigned to this test and added to the Test Data Library. The new values will be used for your next test execution.
+              </p>
+              <h3>
+                <div>
+                </div>
+                <div>Reuse a test data file
+                </div><a href="#reuse-a-test-data-file"></a>
+              </h3>
+              <p><i></i> <strong>To reuse a test data file, follow these steps:</strong>
+              </p>
+              <ol>
+                <li>In Testim, select a test and open it in <strong>Editor</strong>.
+                </li>
+                <li>Select the <strong>Show step properties</strong> icon to open the <strong>Test Configuration Properties</strong> panel.
+                </li>
+                <li>Select <strong>Editor &gt; Reusable File</strong>.
+                </li>
+                <li>Choose a test data file from the dropdown menu, or select <strong>Upload data file</strong> to add a new one.
+                </li>
+                <li>If you want to prioritize your test data file, select the <strong>Prioritize test data</strong> checkbox.
+                </li>
+              </ol>
+              <p>The selected test data file will be added to this test and the new values will be used for your next test execution.
+              </p>
+              <h3>
+                <div>
+                </div>
+                <div>CLI
+                </div><a href="#cli"></a>
+              </h3>
+              <p>To provide a custom test data set using the CLI, you can define a value for <code>--test-data-set</code>.
+              </p>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/clear-text-mobile"><span></span>
+              <div>Clear text (mobile)
+              </div></a><a href="/docs/running-tests-overview">
+              <div>Running Tests Overview
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

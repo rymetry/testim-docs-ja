@@ -1,0 +1,332 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>TestOps Dashboard
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The TestOps Dashboard provides important statistics with quick access to tests, remote execution runs, and other activities in your project allowing you to analyze the health of your project and focus your efforts on tests that may require your attention. You can choose the branch of your project for which you want the information displayed. For more information see <a href="doc:insights#selecting-a-branch">Selecting a Branch</a>.
+        </p>
+        <p>By default, the information shown on the TestOps Dashboard is based on tests, pull requests, and audit log activities owned by any team member of the project. If you want to only view information about tests, pull requests, and audit log activities owned by you, click the <strong>Assigned to me</strong> toggle in the upper-right of the screen.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>The TestOps Dashboard only presents features available in your plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.
+          </p>
+        </blockquote>
+        <p>The TestOps Dashboard is divided into five sections:
+        </p>
+        <ul>
+          <li><strong>Remote Execution Runs</strong> – shows detailed information about the remote execution runs performed on tests.
+          </li>
+          <li><strong>Test Overview</strong> – shows how all of the tests in your project are distributed among the various test statuses.
+          </li>
+          <li><strong>Duplication Level</strong> – shows the <a href="doc:auto-grouping2">auto grouping</a> score for your project.
+          </li>
+          <li><strong>Recent Activity</strong> – shows the recent activity/events in your project.
+          </li>
+          <li><strong>Pull Requests</strong> – shows information about the pull requests for your project. (This section is only shown when the master branch is selected.)
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Assigned to Me
+          </div><a href="#assigned-to-me"></a>
+        </h2> <span><span><img alt="" src="https://files.readme.io/37cf94c-Testim_423a.png" /></span></span>
+        <p>When the <strong>Assigned to me</strong> toggle is on, the following sections are adjusted to only reflect the data specific to the logged-in user. (The data in the <em>Duplication Level</em> section does not change.)
+        </p>
+        <ul>
+          <li><strong>Remote Execution Runs</strong> – changes to <em>Remote Test Runs</em>. For more information, see <a href="doc:dashboard#remote-runs-pane---assigned-to-me">Remote Runs Pane - Assigned to Me</a>.
+          </li>
+          <li><strong>Test Overview</strong> – shows how the user’s tests are distributed among the various test statuses.
+          </li>
+          <li><strong>Recent Activity</strong> – shows the user’s recent activity/events.
+          </li>
+          <li><strong>Pull Requests</strong> – shows information about pull requests owned by the user.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Remote Execution Runs
+          </div><a href="#remote-execution-runs"></a>
+        </h2> <span><span><img alt="" src="https://files.readme.io/ee0a420-Testim_424.png" /></span></span>
+        <p>The Remote Execution Runs pane shows detailed information about the remote execution runs performed on tests in your project during the selected time period and filter. <em>Remote execution runs</em> include suite runs, plan runs, scheduled runs, and tests that ran with a label.
+        </p>
+        <p>You can select the reporting time period by using the dropdown menu in the top right corner of the pane. Options are: <em>Last 24 Hours</em> (default), <em>Last 3 Days</em>, and <em>Last 7 Days</em>. You can also filter the results, and save the filter settings.
+        </p>
+        <p>The following information describes this pane when the <strong>Assigned to me</strong> toggle is off. For information about this pane with the toggle is on, see <a href="doc:dashboard#remote-runs-pane---assigned-to-me">Remote Runs Pane - Assigned to Me</a>.
+        </p>
+        <p>The left pane shows the distribution of passed/failed remote execution runs for the selected time period/filter as follows:
+        </p>
+        <ul>
+          <li>Green – indicates the total number of remote execution runs that passed.
+          </li>
+          <li>Red – indicates the total number of remote execution runs that failed.
+          </li>
+        </ul>
+        <p>The right pane lists the last failures of your most recent executions during the selected time period and filters. The following information is shown about the most recent remote execution runs that failed during the selected time period/filter:
+        </p>
+        <ul>
+          <li>The name of the remote execution run. (You can click on the name to open the <strong>Execution Run Details</strong> page which includes detailed results of that execution. For more information, see <a href="doc:suite-runs-view#execution-run-details-view">Execution Run Details View</a>.)
+          </li>
+          <li>The reason for the most recent failure (in red).
+          </li>
+          <li>When the most recent execution was run.
+          </li>
+          <li>The number of tests in the execution that passed out of the total number of tests in that execution.
+          </li>
+          <li>The total number of times this execution failed during the selected time period (in pink). (You can click on this number to open the <strong>Execution Run Details</strong> page, filtered by this specific execution name and time period.)
+          </li>
+        </ul>
+        <p>A maximum of 50 failed execution runs are shown. To see all of your execution runs (including the runs that passed), click <strong>See all</strong> to open the <strong>Execution Runs</strong> screen. For more information, see <a href="doc:suite-runs-view">Execution runs view</a>.
+        </p>
+        <h3>
+          <div>
+          </div>
+          <div>Remote Runs Pane - Assigned to me
+          </div><a href="#remote-runs-pane---assigned-to-me"></a>
+        </h3> <span><span><img alt="" src="https://files.readme.io/38c2012-Testim_423a.png" /></span></span>
+        <p>When the <strong>Assigned to me</strong> toggle is on, this pane changes from <strong>Remote Execution Runs</strong> to <strong>Remote Test Runs</strong>, and the information shown switches from remote <em>execution runs</em> performed on tests in your project to remote <em>test runs</em> on tests in your project owned by you.
+        </p>
+        <p>The left pane shows the distribution of passed/failed remote test runs for the selected time period/filter as follows:
+        </p>
+        <ul>
+          <li>Green – indicates the total number of remote test runs that passed.
+          </li>
+          <li>Red – indicates the total number of remote test runs that failed.
+          </li>
+        </ul>
+        <p>The right pane lists the last failures of your most recent tests during the selected time period and filters. The following information is shown about the most recent remote test runs that failed during the selected time period/filter:
+        </p>
+        <ul>
+          <li>The name of the remote test that failed. (You can click on the name to open the test page for that test.)
+          </li>
+          <li>The name of the execution containing the failed test (in grey). (You can click on the name to open the <strong>Execution Run Details</strong> page which includes detailed results of that execution. For more information, see <a href="doc:suite-runs-view#execution-run-details-view">Execution Run Details View</a>.)
+          </li>
+          <li>When the test was most recently run.
+          </li>
+          <li>The total number of times this test failed during the selected time period (in pink). (You can click on this number to open the <strong>Test Run Details</strong> page, filtered by this specific execution name and time period.)
+          </li>
+        </ul>
+        <h3>
+          <div>
+          </div>
+          <div>Selecting the Time Period
+          </div><a href="#selecting-the-time-period"></a>
+        </h3>
+        <p>You can select the time period for the information shown in this pane. Changing the time period does not affect the data in the other panes on this page.
+        </p>
+        <p><i></i> <strong>To select the time period:</strong>
+        </p>
+        <ol>
+          <li>Click the time period button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/0ecbbdd-Testim_424a.png" /></span></span>
+        <p>The time period options are shown.
+        </p> <span><span><img alt="" src="https://files.readme.io/4b50102-Testim_425_r.png" /></span></span>
+        <ol start="2">
+          <li>Select your desired time period.
+            <br /> <!-- -->The data in the pane is automatically updated based on the time period specified.
+            </li>
+          </ol>
+          <h3>
+            <div>
+            </div>
+            <div>Filtering the Results
+            </div><a href="#filtering-the-results"></a>
+          </h3>
+          <p>You can filter the remote execution runs shown in this pane by suite, label, plan, scheduler, and result label. By default, the data included in the results does not include test runs that have the test status of <em>evaluating</em>; however, you can include these test runs by sliding the “Include Evaluating” toggle in the filter settings to the right. For more information on test status, see <a href="doc:test-status">Test Status</a>. For more information on result labels, see <a href="doc:result-labels">Result labels</a>.
+          </p>
+          <p><i></i> <strong>To filter the results:</strong>
+          </p>
+          <ol>
+            <li>Click the <strong>Filter</strong> button.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/0cd9b61-Testim_424b.png" /></span></span>
+          <p>The <strong>Filter Remote Runs</strong> pane opens on the right-hand side, showing the execution run types you can filter by (Execution, Label, Plan, and Scheduler) and the Result Labels you can filter by. (The Result Labels shown are based on the terms you have previously used to label your results. For more information, see <a href="doc:result-labels">Result labels</a>.)
+          </p> <span><span><img alt="" src="https://files.readme.io/8e0456e-Testim_445_r.png" /></span></span>
+          <ol start="2">
+            <li>To filter by a specific execution type, select the type and then select the desired checkbox(es) shown under that type. (You cannot choose more than one execution type to filter by.)
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/6fde101-Testim_477_r.png" /></span></span>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>You can also search for criteria by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.
+            </p>
+          </blockquote>
+          <ol start="3">
+            <li>
+              <p>To filter by Label, select the <strong>Label</strong> option, select one or more of the labels listed, and then select one of the following operands:
+              </p>
+              <ol>
+                <li>
+                  <p>OR - will return tests that include one or more of the selected labels.
+                  </p>
+                </li>
+                <li>
+                  <p>AND - will only return tests that include ALL the selected labels.
+                  </p> <span><span><img alt="" src="https://files.readme.io/f05f2263203cd35ac10afb2428dc64d6a2a9c958e832dbdf8147dde128420876-2025-01-19_16-48-25.png" /></span></span>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>To filter by result label, select the desired checkbox(es) in the <strong>Result Label</strong> section.
+              </p>
+            </li>
+          </ol>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>You can also search for criteria by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.
+            </p>
+          </blockquote>
+          <ol start="4">
+            <li>If you want to include the data from test runs with a test status of <em>evaluating</em>, click the <strong>Include Evaluating</strong> toggle. A test with the status of <em>evaluating</em> is still being evaluated by the user, so by default the data from its runs is not included. For more information on test status, see <a href="doc:test-status">Test Status</a>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/66749e3-Testim_477a_r.png" /></span></span>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>When including the <em>evaluating</em> tests, only the tests that were run on a grid or via CLI are included in the results.
+            </p>
+          </blockquote>
+          <ol start="5">
+            <li>Click <strong>Apply</strong>.
+              <br /> <!-- -->The filter is applied, and only the data that meets the criteria is shown.
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the pane.
+              </p>
+            </blockquote>
+            <ol start="6">
+              <li>Click the “<strong>X</strong>” in the upper right of the pane to close it.
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>Closing the <strong>Filter Remote Runs</strong> pane without resetting the filters will not reset them, and only the data that meets the filter criteria will be shown. To include data for all of your remote execution runs again, you will need to reopen the <strong>Filter Remote Runs</strong> pane and reset the filters.
+              </p>
+            </blockquote>
+            <ol start="7">
+              <li>If you want to save your current filter settings for the next time you access the TestOps Dashboard, click <strong>save view</strong>. (The <strong>save view</strong> option is only available when viewing the TestOps Dashboard within the context of a pinned branch.) See <a href="doc:saving-a-filtered-view">Saving a Filtered View</a> for more info. Your filter settings will be saved until you pin a different branch, at which point the filters will be reset. For more information, see <a href="doc:version-control-branches#pinning-a-branch">Pinning a Branch</a>.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/328226e-Testim_424c.png" /></span></span>
+            <h2>
+              <div>
+              </div>
+              <div>Test Overview
+              </div><a href="#test-overview"></a>
+            </h2> <span><span><img alt="" src="https://files.readme.io/3189f64-Testim_428.png" /></span></span>
+            <p>The Test Overview pane shows how all of the tests in your project are distributed among the various test statuses. (If <strong>Assigned to me</strong> is selected, this pane shows how the user’s tests are distributed among the various test statuses). The test statuses are:
+            </p>
+            <ul>
+              <li><strong>Active</strong> – these are tests that are ready and stable.
+              </li>
+              <li><strong>Quarantine</strong> – these are unstable tests, which means that they generate errors, and are waiting to be fixed.
+              </li>
+              <li><strong>Evaluating</strong> – these tests are ready but their stability should be examined.
+              </li>
+              <li><strong>Draft</strong> – these tests are not ready to be used yet (i.e. still in progress).
+              </li>
+              <li><strong>Flaky</strong> – these tests are unstable, which means that they sometimes fail and sometimes pass.
+              </li>
+            </ul>
+            <p>For more information on test status, see <a href="doc:test-status">Test Status</a>. For more information on flaky tests, see <a href="doc:flaky-tests">Flaky tests</a>.
+            </p>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>These values are not affected by the reporting time period and filters set in the Remote Execution Runs pane.
+              </p>
+            </blockquote>
+            <p>Clicking on any of these categories opens the <strong>Test Library</strong> filtered by the category you clicked on. For more information, see <a href="doc:test-list#filtering-the-test-library">Test Library</a>.
+            </p>
+            <h2>
+              <div>
+              </div>
+              <div>Duplication Level
+              </div><a href="#duplication-level"></a>
+            </h2> <span><span><img alt="" src="https://files.readme.io/b239602-Testim_429_r.png" /></span></span>
+            <p>The Duplication Level pane shows the auto grouping score for your project. Testim identifies duplicate test step sequences in your project for which you haven’t yet created a shared group, and assigns an auto grouping score to your project based on that information. A higher score indicates a higher amount of duplicate test step sequences that haven’t yet been put into a shared group. The lower the number, the “healthier” your project is.
+            </p>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>This value is not affected by the reporting time period and filters set in the Remote Execution Runs pane.
+              </p>
+            </blockquote>
+            <p>Clicking on this pane opens the <strong>Auto Grouping</strong> page. For more information on auto grouping, see <a href="doc:auto-grouping2">Auto grouping</a>.
+            </p>
+            <h2>
+              <div>
+              </div>
+              <div>Recent Activity
+              </div><a href="#recent-activity"></a>
+            </h2> <span><span><img alt="" src="https://files.readme.io/deabaf5-Testim_430_r.png" /></span></span>
+            <p>The Recent Activity pane is an activity log that shows the recent activity/events in your project. (If <strong>Assigned to me</strong> is selected, this pane shows only the user’s recent activity/events.)
+            </p>
+            <p>Each entry includes a link to the associated object/test. Project owners and company owners can click on <strong>See all</strong> to open the <strong>Audit Log</strong>. For more information, see <a href="doc:audit-log">Audit Log</a>.
+            </p>
+            <h2>
+              <div>
+              </div>
+              <div>Pull Requests
+              </div><a href="#pull-requests"></a>
+            </h2> <span><span><img alt="" src="https://files.readme.io/6a7bfda-Testim_431_r.png" /></span></span>
+            <p>The Pull Requests pane shows information about the pull requests for your project. (If <strong>Assigned to me</strong> is selected, this pane shows information only about pull requests owned by the user.) A pull request is a request made by a user who made a change to the test, asking for the change to be reviewed in order to merge it into the master branch of the project. This section is only shown when the master branch is selected.
+            </p>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>If pull requests are currently disabled for your project, the following message is shown: “Pull Request is disabled for this project. <ins>Click here</ins> to enable the feature”. Clicking on <strong>Click here</strong> takes you to the <strong>Project Settings</strong> screen where you can enable this feature.
+              </p>
+            </blockquote>
+            <p>A bar graph and the number of pull requests is shown for the three pull request categories:
+            </p>
+            <ul>
+              <li><strong>Pending</strong> – the pull request was submitted, but has not yet been reviewed.
+              </li>
+              <li><strong>Requested Changes</strong> – the reviewer of the pull request asked for changes.
+              </li>
+              <li><strong>Approved</strong> – the pull request was approved, and it is possible to merge it to the master branch.
+              </li>
+            </ul>
+            <p>Clicking on a bar in the graph takes you to the <strong>Pull requests</strong> screen, filtered by the category you clicked on.
+              <br /> <!-- -->For more information on pull requests, see <a href="doc:pull-requests">Pull Requests</a>.
+              </p>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/insights"><span></span>
+              <div>Insights
+              </div></a><a href="/docs/reports">
+              <div>Reports
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

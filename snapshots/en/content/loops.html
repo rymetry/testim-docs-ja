@@ -1,0 +1,771 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Repeat Group Loops
+        </h1>
+        <div>
+          <div>
+            <p>Repeat a group of steps using: while... do... loops &amp; for loops
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The Repeat Group Loop feature lets you execute a <a href="doc:groups">Group</a> step multiple times according to a set of predefined conditions. A “Loop” must be run on a series of steps which have already been configured as a “group”. To learn more about creating groups, see <a href="doc:groups">Groups</a>.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>The maximum number of iterations for any loop is 99 iterations.
+          </p>
+        </blockquote>
+        <p>There are 6 options for when to repeat a group:
+        </p>
+        <ul>
+          <li><strong>Don’t repeat</strong> – Use this option (default) when you don’t want your group of steps to be repeated.
+          </li>
+          <li><strong>While element</strong> – A <strong>While element</strong> loop enables you to specify whether or not to run the same set of actions/validations depending on whether or not the specified element exists (or does not exist) on the page. The element can be any DOM object, such as property ID, text, or class. See <a href="doc:loops#section-configuring-a-while-element-loop">CONFIGURING A “WHILE ELEMENT” LOOP</a>.
+          </li>
+          <li><strong>While element text is</strong> – A <strong>While element text</strong> is loop is similar to the <strong>While element</strong> loop; however, this loop enables you to specify an expected text value for the specified element. The loop will run only if the specified text exists. See <a href="doc:loops#section-configuring-a-while-element-text-is-loop">CONFIGURING A “WHILE ELEMENT TEXT IS” LOOP</a>.
+          </li>
+          <li><strong>For each item</strong> – A <strong>For each item</strong> loop (i.e. for each loop) allows you to run the same set of actions/validations on similar elements. This is useful to test a list of repeating elements, like a table with multiple rows. See <a href="doc:loops#section-configuring-a-for-each-item-loop">CONFIGURING A “FOR EACH ITEM” LOOP</a>.
+          </li>
+          <li><strong>Loop for (i.e. for loop)</strong> – A <strong>Loop for</strong> loop (i.e. a for loop) allows you to run the same set of actions/validations a specified number of times. This value can be set to a <em>number</em> or a <em>parameter</em> with a number value. See <a href="doc:loops#section-configuring-a-loop-for-loop">CONFIGURING A “LOOP FOR” LOOP</a>.
+          </li>
+          <li><strong>Custom</strong> – A <strong>Custom</strong> loop allows you to run the same set of actions/validations depending on a specific value of an element on a page. The loop will run if the value exists. You can enable custom JavaScript code for the condition. See <a href="doc:loops#section-configuring-a-custom-loop">CONFIGURING A “CUSTOM” LOOP</a>.
+          </li>
+        </ul>
+        <p>It is often necessary to keep track of the current iteration you are in while using a loop, for example when iterating through an array. For that purpose, you can use the <strong>TESTIM_ITERATOR variable</strong> in loops. See <a href="doc:loops#section-using-the-loop-iterator-variable">USING THE LOOP ITERATOR VARIABLE</a> .
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Configuring a “While element” loop
+          </div><a href="#configuring-a-while-element-loop"></a>
+        </h2>
+        <p>A <strong>While element</strong> loop enables you to specify whether or not to run the same set of actions/validations depending on whether or not the specified element exists (or does not exist) on the page. The element can be any DOM object, such as property ID, text, or class.
+        </p>
+        <p><i></i> <strong>To configure a “While element” loop:</strong>
+        </p>
+        <ol>
+          <li>Choose a group step which contains the steps you want to include in the loop.
+          </li>
+        </ol>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>Group steps can be identified by the Group icon (a picture of a folder) in the upper left-hand corner of the step.
+          </p>
+        </blockquote>
+        <ol start="2">
+          <li>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of that group step.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/1693a09-Testim_091a.png" /></span></span>
+        <p>The action options are displayed.
+        </p> <span><span><img alt="" src="https://files.readme.io/f40d741-Testim_083a_r.png" /></span></span>
+        <ol start="3">
+          <li>Click on the <strong>Toggle Breakpoint</strong> button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/4fb9e2a-Testim_092_r.png" /></span></span>
+        <ol start="4">
+          <li>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/ec526a2-Testim_093a.png" /></span></span>
+        <ol start="5">
+          <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/5c94cb4-Testim_094a.png" /></span></span>
+        <p>The <strong>Group Properties</strong> panel opens on the right-hand side.
+        </p>
+        <ol start="6">
+          <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat</strong> group.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/c449676-Testim_Image_027_r.png" /></span></span>
+        <ol start="7">
+          <li>Select the <strong>While element</strong> radio button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/4625b02-Testim_Image_028.png" /></span></span>
+        <ol start="8">
+          <li>In the AUT window, hover your mouse on the relevant element and then click on it to select it.
+            <br /> <!-- -->The selected element is shown in the <strong>Target element</strong> box in the <strong>Repeat group</strong> section of the <strong>Group Properties</strong> panel.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/45c5627-Testim_Loops_Image_012_r.png" /></span></span>
+          <ol start="9">
+            <li>If you would like to view, replace, or adjust the settings for the selected element, use the procedures described in <a href="doc:editing-your-tests#section-modifying-the-test-using-the-properties-panel">Modifying the Test Using the Properties Panel</a>.
+            </li>
+            <li>Specify the type of Element condition to apply. Options are:
+            </li>
+          </ol>
+          <ul>
+            <li><strong>Visible</strong> – the step only runs if the element is visible on the page.
+            </li>
+            <li><strong>Not visible</strong> – the step runs only if the element is not visible on the page.
+            </li>
+          </ul>
+          <ol start="11">
+            <li>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="doc:advanced-conditions-settings">Advanced Condition Settings</a>.
+            </li>
+            <li>Click on the <strong>Toggle Breakpoint</strong> button after to remove the breakpoint.
+            </li>
+          </ol>
+          <p>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will run. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+          </p> <span><span><img alt="" src="https://files.readme.io/4695ece-Testim_Image_032_r.png" /></span></span>
+          <h2>
+            <div>
+            </div>
+            <div>Configuring a “While element text is” loop
+            </div><a href="#configuring-a-while-element-text-is-loop"></a>
+          </h2>
+          <p>A <strong>While element text is</strong> loop is similar to the <strong>While element</strong> loop; however, this loop enables you to specify an expected text value for the specified element. The loop will run only if the specified text exists.
+            <br /> <i></i> <strong>To configure a “While element text is” loop:</strong>
+            </p>
+            <ol>
+              <li>Choose a group step which contains the steps you want to include in the loop.
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>Group steps can be identified by the Group icon (a picture of a folder) in the upper left-hand corner of the step.
+              </p>
+            </blockquote>
+            <ol start="2">
+              <li>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of that group step.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/5089a7f-Testim_095a.png" /></span></span>
+            <p>The action options are displayed.
+            </p> <span><span><img alt="" src="https://files.readme.io/3bf47bc-Testim_096a_r.png" /></span></span>
+            <ol start="3">
+              <li>Click on the <strong>Toggle Breakpoint</strong> button.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/dfbc182-Testim_097_r.png" /></span></span>
+            <ol start="4">
+              <li>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/86f2293-Testim_098a.png" /></span></span>
+            <ol start="5">
+              <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/068feb8-Testim_099a.png" /></span></span>
+            <p>The <strong>Group Properties</strong> panel opens on the right-hand side.
+            </p>
+            <ol start="6">
+              <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat group</strong>.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/eedaeda-Testim_Image_037.png" /></span></span>
+            <ol start="7">
+              <li>Select the <strong>While element text is</strong> radio button.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/2ae3dea-Testim_Image_038.png" /></span></span>
+            <ol start="8">
+              <li>In the AUT window, hover your mouse on the relevant element and then click on it to select it.
+                <br /> <!-- -->The selected element is shown in the <strong>Target element</strong> box in the <strong>Repeat group</strong> section of the <strong>Group Properties</strong> panel.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/01baa9d-Testim_Image_039_r.png" /></span></span>
+              <ol start="9">
+                <li>In the <strong>Expected value</strong> box, the current value for the selected element is set by default. If you would like to specify a different value, enter the value in the <strong>Expected value</strong> box. If you would like to set a range of values, enter a Regex expression, a short JS expression, or a parameter.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/9681edd-Testim_Image_063_r.png" /></span></span>
+              <ol start="10">
+                <li>If you would like to view, replace, or adjust the settings for the selected element, use the procedures described in <a href="doc:editing-your-tests#section-modifying-the-test-using-the-properties-panel">Modifying the Test Using the Properties Panel</a>.
+                </li>
+                <li>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="doc:advanced-conditions-settings">Advanced Condition Settings</a>.
+                </li>
+                <li>Click on the <strong>Toggle Breakpoint</strong> button after to remove the breakpoint.
+                </li>
+              </ol>
+              <p>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will run. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+              </p> <span><span><img alt="" src="https://files.readme.io/67007a9-Testim_Image_041.png" /></span></span>
+              <h2>
+                <div>
+                </div>
+                <div>Configuring a “For each item” loop
+                </div><a href="#configuring-a-for-each-item-loop"></a>
+              </h2>
+              <p>A <strong>For each item</strong> loop (i.e. for each loop) allows you to run the same set of actions/validations on similar elements. This is useful to test a list of repeating elements, like a table with multiple rows.
+              </p>
+              <p><i></i> <strong>To configure a “For each item” loop:</strong>
+              </p>
+              <ol>
+                <li>Choose a group step which contains the steps you want to include in the loop.
+                </li>
+              </ol>
+              <blockquote theme="📘"><span>📘</span>
+                <p>
+                </p>
+                <p>Group steps can be identified by the Group icon (a picture of a folder) in the upper left-hand corner of the step.
+                </p>
+              </blockquote>
+              <ol start="2">
+                <li>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of that group step.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/740405e-Testim_100a.png" /></span></span>
+              <p>The action options are displayed.
+              </p> <span><span><img alt="" src="https://files.readme.io/2c3f81b-Testim_083a_r.png" /></span></span>
+              <ol start="3">
+                <li>Click on the <strong>Toggle Breakpoint</strong> button.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/3b582ee-Testim_101_r.png" /></span></span>
+              <ol start="4">
+                <li>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/69671a7-Testim_102a.png" /></span></span>
+              <ol start="5">
+                <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/c10c4c3-Testim_103a.png" /></span></span>
+              <p>The <strong>Group Properties</strong> panel opens on the right-hand side.
+              </p>
+              <ol start="6">
+                <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat group</strong>.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/7eb5251-Testim_Image_022_r.png" /></span></span>
+              <ol start="7">
+                <li>Select the <strong>For each item</strong> radio button.
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/ea95fb7-Testim_Image_023.png" /></span></span>
+              <ol start="8">
+                <li>In the AUT window, using your mouse, select the first repeating relevant element (for example, the first cell of a table) to select it.
+                  <br /> <!-- -->The selected element is shown in the <strong>Target element</strong> box in the <strong>Group Properties</strong> panel, and the <strong>Max number of items</strong> field opens showing the default value as 99, meaning that this loop will run for up to 99 similar items. If you would like to set a lower limit, you may optionally enter a smaller value for the maximum number of items.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/599ba05-Testim_Image_024.png" /></span></span>
+                <ol start="9">
+                  <li>If you would like to view, replace, or adjust the settings for the selected element, use the procedures described in <a href="doc:editing-your-tests#section-modifying-the-test-using-the-properties-panel">Modifying the Test Using the Properties Panel</a>.
+                  </li>
+                  <li>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="doc:advanced-conditions-settings">Advanced Condition Settings</a>.
+                  </li>
+                  <li>Click on the <strong>Toggle Breakpoint</strong> button after to remove the breakpoint.
+                  </li>
+                </ol>
+                <p>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will run through each of the items similar to the item you selected. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+                </p> <span><span><img alt="" src="https://files.readme.io/5d8487f-Testim_Image_033_r.png" /></span></span>
+                <h3>
+                  <div>
+                  </div>
+                  <div>Try it yourself
+                  </div><a href="#try-it-yourself"></a>
+                </h3>
+                <p>Click <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/ZWStqQOFst">here</a> to open a sample test which includes a <strong>For each item</strong> loop. Try running the test and adjusting the loop configuration.
+                </p>
+                <h2>
+                  <div>
+                  </div>
+                  <div>Configuring a “Loop for” Loop
+                  </div><a href="#configuring-a-loop-for-loop"></a>
+                </h2>
+                <p>A <strong>Loop for</strong> loop (i.e. a for loop) allows you to run the same set of actions/validations a specified number of times. This value can be set to a <em>number</em> or a <em>parameter</em> with a number value.
+                </p>
+                <p><i></i> <strong>To configure a “Loop for” loop: where the value is a number:</strong>
+                </p>
+                <ol>
+                  <li>Choose a group step which contains the steps you want to include in the loop.
+                  </li>
+                </ol>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>Group steps can be identified by the Group icon (a picture of a folder) in the upper left-hand corner of the step.
+                  </p>
+                </blockquote>
+                <ol start="2">
+                  <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon. The <strong>Group Properties</strong> panel opens on the right-hand side.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/b4bc73a-Capture3.PNG" /></span></span>
+                <ol start="3">
+                  <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat group</strong>.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/6d63491-Testim_Image_006_r.png" /></span></span>
+                <ol start="4">
+                  <li>Select the <strong>Loop for</strong> radio button. The <strong>Value to loop for</strong> field opens.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/fb2dc35-Testim_Image_007.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/182470c-Testim_Image_008.png" /></span></span>
+                <ol start="5">
+                  <li>Enter a value for the number of times you want these steps to be looped through.
+                  </li>
+                </ol>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>The maximum number of iterations allowed is 99.
+                  </p>
+                </blockquote>
+                <ol start="6">
+                  <li>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="doc:advanced-conditions-settings">Advanced Condition Settings</a>.
+                  </li>
+                </ol>
+                <p>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will run. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+                </p> <span><span><img alt="" src="https://files.readme.io/a37cc8d-Testim_Image_034.png" /></span></span>
+                <p><i></i> <strong>To configure a “Loop for” loop: where the value is a parameter:</strong>
+                </p>
+                <ol>
+                  <li>Choose a group step which contains the steps you want to include in the loop.
+                  </li>
+                </ol>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>Group steps can be identified by the Group icon (a picture of a folder).
+                  </p>
+                </blockquote>
+                <ol start="2">
+                  <li>Hover over the arrow to the left of the group.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/fecc504-Testim_110a.png" /></span></span>
+                <p>The action options are displayed.
+                </p> <span><span><img alt="" src="https://files.readme.io/c18755c-Testim_111a_r.png" /></span></span>
+                <ol start="3">
+                  <li>Click on the <strong>&quot;M&quot;</strong> (Testim predefined steps).
+                    <br /> <!-- -->The Predefined steps menu opens.
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/cec147c-Testim_034_r.png" /></span></span>
+                  <ol start="4">
+                    <li>Click on <strong>Actions</strong>.
+                      <br /> <!-- -->The Actions section expands.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/988d6c6-Testim_079_r.png" /></span></span>
+                    <ol start="5">
+                      <li>Scroll down through the menu and select <strong>Add custom action</strong>.
+                      </li>
+                    </ol>
+                    <blockquote theme="📘"><span>📘</span>
+                      <p>
+                      </p>
+                      <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add custom action</strong>.
+                      </p>
+                    </blockquote>
+                    <p>The <strong>Add Step</strong> window opens.
+                      <br /> <!-- -->For more information about adding custom actions, see <a href="doc:custom-validations-and-actions#section-creating-a-custom-action">Creating a Custom Action</a>.
+                      </p> <span><span><img alt="" src="https://files.readme.io/967959b-Testim_Image_013_r.png" /></span></span>
+                      <ol start="6">
+                        <li>In the <strong>Enter a name for the new step</strong> field, enter a (meaningful) name for this step.
+                        </li>
+                        <li>If this is a shared step (to be made available to reuse in this and other tests), keep the box next to <strong>Shared step</strong> selected. This is the default. Otherwise, deselect it.
+                          <br /> <!-- -->For more information about shared steps, see <a href="doc:reuse">Reuse</a>.
+                          </li>
+                          <li>Click <strong>Create Step</strong>.
+                            <br /> <!-- -->The editor opens, and the <strong>Custom Action Properties</strong> panel opens on the right-hand side.
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/631c1dc-Testim_Image_017.png" /></span></span>
+                          <ol start="9">
+                            <li>Enter the appropriate code to pass the parameter you are exporting to the group step. (For example: exportsTest.number = 2;) For more information about exporting parameters, see <a href="doc:exports-parameters#section-adding-export-parameter">Exports Parameters</a>.
+                              <br /> <!-- -->Note: The maximum number of iterations allowed is 99.
+                              </li>
+                              <li>Optionally edit the properties in the <strong>Custom Action Properties</strong> panel.
+                              </li>
+                            </ol>
+                            <ul>
+                              <li><strong>Description</strong> - Change the description of the step.
+                              </li>
+                              <li><strong>+PARAMS</strong> - Add JavaScript or HTML parameters. For more information, see <a href="doc:parameters-in-custom-javascript-steps">Parameters in custom JavaScript steps</a>.
+                              </li>
+                              <li><strong>When this step fails</strong> - Specify what should happen if the step has failed.
+                              </li>
+                              <li><strong>When to run step</strong> - Specify when this step should be included in the test. Conditions may include the existence of an element/element text, or a custom JS function.
+                              </li>
+                              <li><strong>Override timeout</strong> - Keep waiting until the refresh occurs even after timeout.
+                              </li>
+                            </ul>
+                            <ol start="11">
+                              <li>Click the <strong>back arrow</strong> to return to the main editor window.
+                              </li>
+                            </ol> <span><span><img alt="" src="https://files.readme.io/296bcee-Testim_Image_018_r.png" /></span></span>
+                            <ol start="12">
+                              <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon. The <strong>Group Properties</strong> panel opens on the right-hand side.
+                              </li>
+                            </ol> <span><span><img alt="" src="https://files.readme.io/729e357-Capture2_r.png" /></span></span>
+                            <ol start="13">
+                              <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat group</strong>.
+                              </li>
+                            </ol> <span><span><img alt="" src="https://files.readme.io/ade40f3-Testim_Image_006_r.png" /></span></span>
+                            <ol start="14">
+                              <li>Select the <strong>Loop for</strong> radio button. The <strong>Value to loop for</strong> field opens.
+                              </li>
+                            </ol> <span><span><img alt="" src="https://files.readme.io/a01813c-Testim_Image_007.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/5227e8f-Testim_Image_008.png" /></span></span>
+                            <ol start="15">
+                              <li>Enter the parameter you used in Step 7 (above). (For example, <strong>number</strong>).
+                              </li>
+                              <li>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="doc:advanced-conditions-settings">Advanced Condition Settings</a>.
+                              </li>
+                            </ol>
+                            <p>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will run. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+                            </p> <span><span><img alt="" src="https://files.readme.io/0875ae1-Testim_Image_035_r.png" /></span></span>
+                            <h3>
+                              <div>
+                              </div>
+                              <div>Try it yourself
+                              </div><a href="#try-it-yourself-1"></a>
+                            </h3>
+                            <p>Click <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/oojAc9nzab">here</a> to open a sample test which includes a “Loop by Number” for loop and a “Loop by Parameter” for loop. Try running the test and practice adjusting the configuration.
+                            </p>
+                            <h2>
+                              <div>
+                              </div>
+                              <div>Configuring a “Custom” loop
+                              </div><a href="#configuring-a-custom-loop"></a>
+                            </h2>
+                            <p>There are times that you may want to create loops that are based on more than just validating that an element is visible or that specific text exists. You may want to check an element’s value or create more complex conditions. The <strong>Custom</strong> loop option enables you to do this by creating conditions for your loop defined as JavaScript steps.
+                              <br /> <!-- -->For example, if you would like to check the URL in order to identify whether or not you are on the login page, you could use the following custom condition in your loop:
+                              </p>
+                              <div>
+                                <div><button>Text</button>
+                                </div>
+                                <div><pre><code>return loginButton.innerText === &#x27;LOG IN&#x27;;</code></pre>
+                                </div>
+                              </div>
+                              <p>You can also define HTML or JavaScript parameters and then refer to these parameters in the step. For example, you can select an HTML element such as a button and then create a condition to check the text on that button.
+                              </p>
+                              <p><i></i> <strong>To configure a “Custom&quot; loop:</strong>
+                              </p>
+                              <ol>
+                                <li>Choose a group step which contains the steps you want to include in the loop.
+                                </li>
+                              </ol>
+                              <blockquote theme="📘"><span>📘</span>
+                                <p>
+                                </p>
+                                <p>Group steps can be identified by the Group icon (a picture of a folder) in the upper left-hand corner of the step.
+                                </p>
+                              </blockquote>
+                              <blockquote theme="🚧"><span>🚧</span>
+                                <p>
+                                </p>
+                                <p>If you will be defining an HTML element as a parameter in Step 6 (below), you first must open your AUT by doing the following:
+                                </p>
+                                <ol>
+                                  <li>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of your group step.
+                                  </li>
+                                  <li>Click on the <strong>Toggle Breakpoint</strong> button.
+                                  </li>
+                                  <li>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.
+                                  </li>
+                                </ol>
+                              </blockquote>
+                              <ol start="2">
+                                <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon. The <strong>Group Properties</strong> panel opens on the right-hand side.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/4409611-Capture_07.PNG" /></span></span>
+                              <ol start="3">
+                                <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat group</strong>.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/b67bf7a-Testim_Image_037_r.png" /></span></span>
+                              <ol start="4">
+                                <li>Select the <strong>Custom</strong> radio button.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/72e1145-Testim_Image_042.png" /></span></span>
+                              <ol start="5">
+                                <li>The <strong>Set condition</strong> window opens.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/5b61591-Testim_Image_043.png" /></span></span>
+                              <ol start="6">
+                                <li>If you would like to use parameters for your custom loop, define the parameters as follows:<!-- -->
+                                  <ul>
+                                    <li>In the right-hand pane, click the <strong>+ PARAMS</strong> button.
+                                    </li>
+                                    <li><strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.
+                                    </li>
+                                    <li><strong>HTML parameter</strong>: If you would like to define an HTML element as a parameter, select <strong>HTML</strong> from the dropdown list. The browser opens, displaying the relevant webpage for this step. Do the following:<!-- -->
+                                      <ul>
+                                        <li>In the AUT window, hover your mouse on the relevant element and then click on it to select it. The selected element is shown in the <strong>Target element</strong> box in the <strong>Properties</strong> panel.
+                                        </li>
+                                      </ul>
+                                    </li>
+                                    <li>The selected element is automatically named &quot;param&quot; or “element” (depending on whether you chose a JS parameter or HTML element parameter). To assign a relevant name to the parameter/element, click on the <strong>edit</strong> icon and enter the desired name.
+                                    </li>
+                                  </ul>
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/6f45634-Testim_Image_045.png" /></span></span>
+                              <ol start="7">
+                                <li>In the function text box, type in the desired JavaScript condition. If you have defined parameters, you can refer to those parameters in your JavaScript condition.
+                                </li>
+                              </ol>
+                              <blockquote theme="📘"><span>📘</span>
+                                <p>
+                                </p>
+                                <p>If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <code>$(&lt;query&gt;)</code>.length instead of <code>$(&lt;query&gt;)</code>.
+                                </p>
+                              </blockquote>
+                              <ol start="8">
+                                <li>If you would like to override the default timeout setting (30000 ms), click on the <strong>Override timeout</strong> button in the Custom Step <strong>Properties</strong> pane, and enter the desired timeout limit.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/32e2c33-Testim_Image_047.png" /></span></span>
+                              <ol start="9">
+                                <li>Click the <strong>back arrow</strong> to return to the main Editor window.
+                                </li>
+                              </ol> <span><span><img alt="" src="https://files.readme.io/1872b2e-Testim_Image_048_r.png" /></span></span>
+                              <ol start="10">
+                                <li>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="doc:advanced-conditions-settings">Advanced Condition Settings</a>.
+                                </li>
+                              </ol>
+                              <blockquote theme="🚧"><span>🚧</span>
+                                <p>
+                                </p>
+                                <p>If you opened your AUT to define an HTML element as a parameter, click on the <strong>Toggle Breakpoint</strong> button before your group step to remove the breakpoint.
+                                </p>
+                              </blockquote>
+                              <p>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will run. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+                              </p> <span><span><img alt="" src="https://files.readme.io/5de7f77-Testim_Image_050.png" /></span></span>
+                              <h2>
+                                <div>
+                                </div>
+                                <div>Using the Loop Iterator Parameter
+                                </div><a href="#using-the-loop-iterator-parameter"></a>
+                              </h2>
+                              <p>TESTIM_ITERATOR is an out-of-the-box parameter that allows you to keep track of and use the value of the current loop iteration. Each time a loop is run, the value of TESTIM_ITERATOR increases by one. The following are some examples of how you can use TESTIM_ITERATOR.
+                              </p>
+                              <ul>
+                                <li>Example 1 – using the value of the current loop iteration in a step of a test
+                                </li>
+                                <li>Example 2 – designate the number of times to repeat a loop by using the value of the current loop iteration in the conditions of a loop step
+                                </li>
+                              </ul>
+                              <h3>
+                                <div>
+                                </div>
+                                <div>Example 1
+                                </div><a href="#example-1"></a>
+                              </h3>
+                              <p>You can use TESTIM_ITERATOR in a step of your test that is within a loop. The value of the current iteration of the loop will be used when the step is run.
+                                <br /> <!-- -->The following procedure explains how to use TESTIM_ITERATOR for text validation in a step within a “For each item” loop.
+                                </p>
+                                <p><i></i> <strong>To use the value of the current loop iteration in a step:</strong>
+                                </p>
+                                <ol>
+                                  <li>Choose a group step which contains the step for which you would like to use the TESTIM_ITERATOR.
+                                  </li>
+                                </ol>
+                                <blockquote theme="📘"><span>📘</span>
+                                  <p>
+                                  </p>
+                                  <p>Group steps can be identified by the Group icon (a picture of a folder).
+                                  </p>
+                                </blockquote>
+                                <ol start="2">
+                                  <li>Double-click on the group tile to open the group.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/63a05a7-Testim_Loops_Image_003_r.png" /></span></span>
+                                <ol start="3">
+                                  <li>Hover over a step where you want to use the iteration value (e.g. text validation), and then click on the <strong>Show Properties</strong> (:fa-cog:) icon. The <strong>Properties</strong> panel opens on the right-hand side.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/ec64a9b-Testim_Loops_Image_007_r.png" /></span></span>
+                                <ol start="4">
+                                  <li>Edit the properties based on the type of loop you are editing, including the property based on the loop iterator. (See the explanation of configuring loops above.) For example, if you are editing a “For each item” loop, enter “&lt;array_name&gt;e **Expected valu” in the <strong>Expected value</strong> field.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/2c12efe-Testim_Loops_Image_004.png" /></span></span>
+                                <ol start="5">
+                                  <li>Click the <strong>back arrow</strong> to return to the main Editor window.
+                                  </li>
+                                </ol> <span><span><img alt="" src="https://files.readme.io/2182847-Testim_Image_062_r.png" /></span></span>
+                                <p>Whenever you run this test, the loop process will use the value of the loop iteration wherever you indicated using “TESTIM_ITERATOR” in a step. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+                                </p>
+                                <h3>
+                                  <div>
+                                  </div>
+                                  <div>Example 2
+                                  </div><a href="#example-2"></a>
+                                </h3>
+                                <p>You can use TESTIM_ITERATOR to define the conditions of a loop step, which will determine the number of times to repeat the loop.
+                                  <br /> <!-- -->The following procedure explains how to run a test that uses TESTIM_ITERATOR and the length of an array to set the loop to run once for each array element.
+                                  </p>
+                                  <p><i></i> <strong>To create a loop condition using an array and TESTIM_ITERATOR:</strong>
+                                  </p>
+                                  <ol>
+                                    <li>Choose a group step which contains the steps you want to include in the loop.
+                                    </li>
+                                  </ol>
+                                  <blockquote theme="📘"><span>📘</span>
+                                    <p>
+                                    </p>
+                                    <p>Group steps can be identified by the Group icon (a picture of a folder).
+                                    </p>
+                                  </blockquote>
+                                  <ol start="2">
+                                    <li>Hover over the arrow to the left of the group.
+                                    </li>
+                                  </ol> <span><span><img alt="" src="https://files.readme.io/1945b88-Testim_112a.png" /></span></span>
+                                  <p>The action options are displayed.
+                                  </p> <span><span><img alt="" src="https://files.readme.io/d5d3d87-Testim_113a_r.png" /></span></span>
+                                  <ol start="3">
+                                    <li>Click on the <strong>&quot;M&quot;</strong> (Testim predefined steps).
+                                      <br /> <!-- -->The Predefined steps menu opens.
+                                      </li>
+                                    </ol> <span><span><img alt="" src="https://files.readme.io/8512e3c-Testim_034_r.png" /></span></span>
+                                    <ol start="4">
+                                      <li>Click on <strong>Actions</strong>.
+                                        <br /> <!-- -->The Actions section expands.
+                                        </li>
+                                      </ol> <span><span><img alt="" src="https://files.readme.io/56ede45-Testim_079_r2.png" /></span></span>
+                                      <ol start="5">
+                                        <li>Scroll down through the menu and select <strong>Add custom action</strong>.
+                                        </li>
+                                      </ol>
+                                      <blockquote theme="📘"><span>📘</span>
+                                        <p>
+                                        </p>
+                                        <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add custom action</strong>.
+                                        </p>
+                                      </blockquote>
+                                      <p>For more information about adding custom actions, see <a href="doc:custom-validations-and-actions#section-creating-a-custom-action">Creating a Custom Action</a>.
+                                        <br /> <!-- -->The <strong>Add Step</strong> window opens.
+                                        </p> <span><span><img alt="" src="https://files.readme.io/61f003a-Testim_Image_019_r.png" /></span></span>
+                                        <ol start="6">
+                                          <li>In the <strong>Enter a name for the new step</strong> field, enter a (meaningful) name for this step.
+                                          </li>
+                                          <li>If this is a shared step (to be made available to reuse in this and other tests), keep the box next to <strong>Shared step</strong> selected. This is the default. Otherwise, deselect it.
+                                            <br /> <!-- -->For more information about shared steps, see <a href="doc:reuse">Reuse</a>.
+                                            </li>
+                                            <li>Click <strong>Create Step</strong>.
+                                              <br /> <!-- -->The condition editor opens, and the <strong>Custom Action Properties</strong> panel opens on the right-hand side.
+                                              </li>
+                                            </ol> <span><span><img alt="" src="https://files.readme.io/372d6d8-Testim_Image_056.png" /></span></span>
+                                            <ol start="9">
+                                              <li>Enter the appropriate code to create your array. (For example: exportsTest.destinations = lagstaff&quot;, &quot;Sant Cugat Del Valles&quot;, &quot;Shaheying&quot;];) For more information about ex;) For more information about exporting parameters, see <a href="doc:exports-parameters#section-adding-export-parameter">Exports Parameters</a>.
+                                              </li>
+                                              <li>Optionally edit the properties in the <strong>Custom Action Properties</strong> panel.
+                                              </li>
+                                            </ol>
+                                            <ul>
+                                              <li><strong>Description</strong> - Change the description of the step.
+                                              </li>
+                                              <li><strong>+PARAMS</strong> - Add JavaScript or HTML parameters. For more information, see <a href="doc:parameters-in-custom-javascript-steps">Parameters in custom JavaScript steps</a>
+                                              </li>
+                                              <li><strong>When this step fails</strong> - Specify what should happen if the step has failed.
+                                              </li>
+                                              <li><strong>When to run step</strong> - Specify when this step should be included in the test. Conditions may include the existence of an element/element text, or a custom JS function.
+                                              </li>
+                                              <li><strong>Override timeout</strong> - Keep waiting until the refresh occurs even after timeout.
+                                              </li>
+                                            </ul>
+                                            <ol start="11">
+                                              <li>Click the <strong>back arrow</strong> to return to the main Editor window.
+                                              </li>
+                                            </ol> <span><span><img alt="" src="https://files.readme.io/16fd5ad-Testim_Image_057.png" /></span></span>
+                                            <ol start="12">
+                                              <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon. The <strong>Group Properties</strong> panel opens on the right-hand side.
+                                              </li>
+                                            </ol> <span><span><img alt="" src="https://files.readme.io/1881828-Capture_16_r.png" /></span></span>
+                                            <ol start="13">
+                                              <li>In the <strong>Group Properties</strong> panel, click on <strong>Repeat group</strong>.
+                                              </li>
+                                            </ol> <span><span><img alt="" src="https://files.readme.io/8874ec3-Testim_Image_058_r.png" /></span></span>
+                                            <ol start="14">
+                                              <li>Select the <strong>Custom</strong> radio button. The <strong>Set condition</strong> window opens.
+                                              </li>
+                                            </ol> <span><span><img alt="" src="https://files.readme.io/a65143b-Testim_Image_042.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/502cfab-Testim_Image_043.png" /></span></span>
+                                            <ol start="15">
+                                              <li>In the <strong>function</strong> text box, type in the desired JavaScript condition using TESTIM_ITERATOR based on the array you just created, for example “return TESTIM_ITERATOR &lt; destinations.length;”.
+                                                <br /> <!-- -->If you have defined parameters, you can refer to those parameters in your JavaScript condition.
+                                                </li>
+                                              </ol>
+                                              <blockquote theme="📘"><span>📘</span>
+                                                <p>
+                                                </p>
+                                                <p>If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <code>$(&lt;query&gt;)</code>.length instead of <code>$(&lt;query&gt;)</code>.
+                                                </p>
+                                              </blockquote>
+                                              <ol start="16">
+                                                <li>If you would like to override the default timeout setting (30000 ms), click on the <strong>Override timeout</strong> button in the Custom Step <strong>Properties</strong> pane, and enter the desired timeout limit.
+                                                </li>
+                                              </ol> <span><span><img alt="" src="https://files.readme.io/aaa1cab-Testim_Image_047.png" /></span></span>
+                                              <ol start="17">
+                                                <li>Click the <strong>back arrow</strong> to return to the main Editor window.
+                                                </li>
+                                              </ol> <span><span><img alt="" src="https://files.readme.io/5d3577d-Testim_Image_059_r.png" /></span></span>
+                                              <ol start="18">
+                                                <li>The loop is added to the step as indicated by the <strong>loop</strong> icon shown on the group step tile. Whenever you run this test, the loop process will loop over the contents in the array using the value of TESTIM_ITERATOR. To learn how to view the results of the run, see <a href="doc:loops#section-viewing-loop-run-results">VIEWING LOOP RUN RESULTS</a>.
+                                                </li>
+                                              </ol> <span><span><img alt="" src="https://files.readme.io/6ad3321-Testim_Loops_Image_002_r.png" /></span></span>
+                                              <h3>
+                                                <div>
+                                                </div>
+                                                <div>Try it yourself
+                                                </div><a href="#try-it-yourself-2"></a>
+                                              </h3>
+                                              <p>Click <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/klrbUhXahs">here</a> to open a sample test in which the “Loop iterator” is used. Try running the test, and practice adjusting the configuration.
+                                              </p>
+                                              <h2>
+                                                <div>
+                                                </div>
+                                                <div>Viewing Loop Run Results
+                                                </div><a href="#viewing-loop-run-results"></a>
+                                              </h2>
+                                              <p>After running your test, the number of iterations the loop step was run is shown within the loop icon in the loop step.
+                                              </p> <span><span><img alt="" src="https://files.readme.io/87c8a8a-Testim_Loops_Image_006_r.png" /></span></span>
+                                              <p>You can go through each iteration and look at each of the results separately.
+                                                <br /> <!-- -->There are two methods for viewing loop results:
+                                                </p>
+                                                <ul>
+                                                  <li>In the properties pane for the group step, or
+                                                  </li>
+                                                  <li>By opening up the group step and viewing the iterations within the group. If one of the iterations failed, then when you open the group, you will be taken directly to the failed iteration.
+                                                  </li>
+                                                </ul>
+                                                <p><i></i> <strong>To view Run Results from the group’s properties:</strong>
+                                                </p>
+                                                <ol>
+                                                  <li>Hover over the group step and then click on the <strong>Show Properties</strong> (:fa-cog:) icon. The <strong>Group Properties</strong> panel opens on the right-hand side.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/2f8cb07-Capture_08.PNG" /></span></span>
+                                                <ol start="2">
+                                                  <li>In the <strong>Group Properties</strong> panel, click on the iteration you would like to view. The group steps for the specified iteration are shown in the editor.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/cfe58d9-Testim_Image_051.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/88e5c3a-Testim_Image_052_r.png" /></span></span>
+                                                <ol start="3">
+                                                  <li>Hover over the step you would like to view, and click on the <strong>Show Screenshot</strong> icon. The details for the specified step are shown.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/9cd383d-Testim_Loops_Image_009_r.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/1d49a1b-Testim_Image_053.png" /></span></span>
+                                                <ol start="4">
+                                                  <li>Click the <strong>right arrow</strong> to view the results of the next step in that group.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/be771d0-Testim_Loops_Image_010.png" /></span></span>
+                                                <ol start="5">
+                                                  <li>Click the <strong>X</strong> to return to the previous screen.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/2c78c61-Testim_Loops_Image_011.png" /></span></span>
+                                                <p><i></i> <strong>To view Run Results from inside the group:</strong>
+                                                </p>
+                                                <ol>
+                                                  <li>Double-click on the group tile to open the group.
+                                                  </li>
+                                                  <li>Click on the Iteration dropdown list, and choose the iteration you would like to view.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/500e31a-Testim_Image_054_r.png" /></span></span>
+                                                <ol start="3">
+                                                  <li>Hover over the step you would like to view, and click on the <strong>Show Screenshot</strong> icon. The details for the specified step are shown.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/1f78878-Capture_09_r.png" /></span></span> <span><span><img alt="" src="https://files.readme.io/82a4cd9-Testim_Image_053.png" /></span></span>
+                                                <ol start="4">
+                                                  <li>Click the <strong>right arrow</strong> to view the results of the next step in that group.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/6df5267-Testim_Loops_Image_010.png" /></span></span>
+                                                <ol start="5">
+                                                  <li>Click the <strong>X</strong> to return to the previous screen.
+                                                  </li>
+                                                </ol> <span><span><img alt="" src="https://files.readme.io/80ecbe3-Testim_Loops_Image_011.png" /></span></span>
+                                              </div>
+                                              <div>
+                                                <div>
+                                                  <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                                                  </p>
+                                                </div>
+                                              </div>
+                                              <hr />
+                                              <nav><a href="/docs/extract-sms-message"><span></span>
+                                                <div>Extract SMS message
+                                                </div></a><a href="/docs/parameters">
+                                                <div>Parameters
+                                                </div><span></span></a>
+                                              </nav>
+                                            </section>
+                                            <section>
+                                              <div>
+                                                <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                                                </div>
+                                              </div>
+                                            </section>
+                                          </div>
+                                        </article>
