@@ -1,0 +1,120 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Create
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Salesforce Step
+            </div><a href="#salesforce-step"></a>
+          </h3>
+          <p>This is a Salesforce step.
+          </p>
+        </blockquote>
+        <p>The Create step creates a record in Salesforce of the specified Object type. As part of the step, you will specify the values for each field in the record. In addition, as part of the creation process you can verify that a specified field includes a specified value. For example, in fields that are automatically populated with values. The Create step is a predefined step.
+        </p>
+        <p><i></i> <strong>To add a Create step:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>In the editor, add a step by clicking the + button.
+            </p>
+          </li>
+          <li>
+            <p>Under the <strong>Salesforce steps</strong> tab, click <strong>Record Operations</strong> and select the <strong>Create</strong> step.
+              <br /> <!-- -->The <strong>Create step</strong> is added and the following <strong>Object properties</strong> is displayed.
+              </p> <span><span><img alt="" src="https://files.readme.io/a3e93cc-object_properties.png" /></span></span>
+            </li>
+            <li>
+              <p>Click the <strong>Select the Object</strong> drop-down menu and select the desired object type. The object type determines the type of record that will be created.
+              </p>
+            </li>
+            <li>
+              <p>In some cases you will be required to also select a <strong>Record Type</strong>. This is like a sub-type of the record.
+              </p>
+              <blockquote theme="📘"><span>📘</span>
+                <p>
+                </p>
+                <p>If at this point you want to select a different Object and Record Type, click <strong>Change</strong> and select it again.
+                </p>
+              </blockquote>
+              <p>The list of fields for the record from the connected Salesforce environment is displayed. Fields that are indicated with (*) are mandatory. Hovering you mouse over the field name displays the <strong>data type</strong> and <strong>API name</strong> of the field in Salesforce.
+              </p> <span><span><img alt="" src="https://files.readme.io/b692df3-objectfields.png" /></span></span>
+            </li>
+            <li>
+              <p>For each field that you want to create, under <strong>Action</strong> select one of the following options:
+              </p>
+              <ol>
+                <li>Input - inputs the specified value into the field. If the field is not editable this action will not be listed. The action requires entering a value, as described below.
+                </li>
+                <li>Verify -this action verifies that the value in the field matches that in the record. The action requires entering a value, as described below. The action requires entering a value, as described below.
+                </li>
+                <li>Verify not visible - this action verifies that the field is not visible to the connected user. The action does not require entering a value.
+                </li>
+                <li>Store - this action stores the existing value in the record field into a specified Javascript variable. This action requires entering a name for the variable into the value field.
+                </li>
+                <li>Ignore - this action performs no action on the field. The action does not require entering a value.
+                </li>
+                <li>Reset - resets the value in the field to a &quot;no entry&quot; state. Note that if the field is empty, it will try to enter an empty string to the field, however if you select the Reset option, it will not try to enter an empty string.
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>Under <strong>Value</strong>, enter the value of the field. If the field is a &quot;pick list&quot; (drop down menu), select the relevant option.
+              </p>
+              <p>The value field has two modes, to switch between the modes click the filed and the click the sign to alternate between <strong>T</strong> and <strong>{JS}</strong>:
+              </p>
+              <ol>
+                <li>
+                  <p>T. Text mode. The value is treated as a literal string.
+                  </p>
+                </li>
+                <li>
+                  <p>{JS}. JavaScript mode. The value is evaluated as a JavaScipt expression. The field will evaluate JavaSrcipt variables and functions.
+                  </p> <span><span><img alt="" src="https://files.readme.io/0059a45-switchgif.gif" /></span></span>
+                  <blockquote theme="📘"><span>📘</span>
+                    <p>
+                    </p>
+                    <p>It is not possible to put a variable in a multiple pick list.
+                    </p>
+                  </blockquote>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>When finished, click <strong>Save</strong>.
+              </p>
+            </li>
+          </ol>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/sfdc-step-quotelineeditor"><span></span>
+          <div>Quote Line Editor Action
+          </div></a><a href="/docs/sfdc-step-validate">
+          <div>Validate
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

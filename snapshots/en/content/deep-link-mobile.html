@@ -1,0 +1,118 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Deep link (mobile)
+        </h1>
+        <div>
+          <div>
+            <p>Add a deep link to a specific location inside an app
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Deep link is a link that launches an app and opens a specific page, sending the user directly to a specific location inside an app, rather than a generic app homepage or mobile website. The deep link can open any application that is installed on the mobile device, including apps that are part of the mobile OS, as well as the mobile web browser. Deep links can include parameters. For example, a deep link that opens the phone app, while dialing a phone number that is passed as a parameter.
+        </p>
+        <p>The <strong>Deep Link</strong> step can be used to test that the deep link works. The step will open the specified app at a specified location inside the app and will optionally pass a specified parameter.
+        </p>
+        <p>In some cases opening another app after clicking a deep link displays a notification, which requires the user&#x27;s confirmation. In this case, you will need to record a step that taps the button to confirm this notice.
+        </p> <span><span><img alt="" src="https://files.readme.io/58d5cba-open.png" /></span></span>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>The Deep Link step is only available on <a href="doc:virtual-mobile-grid">VMG</a>.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Adding a Deep Link Step to your Test
+          </div><a href="#adding-a-deep-link-step-to-your-test"></a>
+        </h2>
+        <p><i></i><strong>To add a Deep Link step:</strong>
+        </p>
+        <ol>
+          <li>Hover over the (arrow symbol) where you want to add the Deep Link step. The action options are displayed.
+          </li>
+          <li>Click on the “M” (Testim predefined steps). The Predefined steps menu opens.
+          </li>
+          <li>Expand the <strong>Actions</strong> menu and select the <strong>Deep link</strong> step.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/213c463-deeplink.png" /></span></span>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note"></a>
+          </h3>
+          <p>Alternatively, you can use the search box at the top of the menu to search for Deep link.
+          </p>
+        </blockquote>
+        <p>The following dialog is displayed:
+        </p> <span><span><img alt="" src="https://files.readme.io/fdd1fcc-deeplink2.png" /></span></span>
+        <ol start="4">
+          <li>In the <strong>Value</strong> field, enter the Deep link value as follows:<!-- -->
+            <ol>
+              <li><strong>Syntax:</strong> <code>schemeName://parameterValue</code>
+              </li>
+              <li><strong>schemeName</strong> - the scheme name is the name of the app that the deep link will open. It can be one of the OS internal applications, such as <code>tel</code>, <code>sms</code>, <code>mailto</code>, <code>facetime</code>, etc. or the name of a regular mobile app.
+              </li>
+              <li><strong>parameter</strong> - the value that will be passed to the app. For example, a mobile phone number.
+              </li>
+              <li>The value is a JS expression string, so make sure to add quotes.
+              </li>
+              <li><strong>Examples</strong> - <code>&#x27;sms://12354&#x27;</code>, <code>mailto://<a href="/cdn-cgi/l/email-protection">[email&#160;protected]</a></code>, <code>facetime://1-408-555-1212</code>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>3rd party apps might support only URL-based schemes. For example: <a href="https://byby.dev/ios-deep-linking">https://byby.dev/ios-deep-linking</a>. Spotify, for example, supports only the following types of deep links: <a href="https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO">https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO</a>
+                  </p>
+                </blockquote>
+              </li>
+              <li><strong>Adding a parameter to the deep link value</strong> - it is possible to add a regular Testim parameter just like any JS expression. For example - <code>&#x27;sms://12354&#x27; + myParam</code>
+              </li>
+            </ol>
+          </li>
+          <li>Click <strong>OK</strong>.
+            <br /> <!-- -->The step is added.
+            </li>
+            <li>In the step&#x27;s <strong>Properties</strong> panel, optionally specify the following properties:<!-- -->
+              <ol>
+                <li><strong>When this step fails</strong> – Specify what to do if this step fails.
+                </li>
+                <li><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see <a href="doc:conditions">Conditions</a>.
+                </li>
+                <li><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds). Failed steps will be retried until there is insufficient remaining time for a successful run.
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/set-geolocation"><span></span>
+          <div>Set Geolocation (mobile)
+          </div></a><a href="/docs/hide-keyboard-mobile">
+          <div>Hide keyboard (mobile)
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

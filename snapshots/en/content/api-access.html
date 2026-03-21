@@ -1,0 +1,149 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Testim REST API
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Testim Automate features a REST API that can be used to perform the following actions:
+        </p>
+        <ul>
+          <li><strong>Branches</strong> - create branches, merge branches, and perform other branch management-related functions.
+          </li>
+          <li><strong>Tests</strong> - retrieve a list of all tests for a project.
+          </li>
+          <li><strong>Search for unique ID</strong> - send the name of a test, suite, test plan to receive its unique ID in the system.
+          </li>
+          <li><strong>Runs</strong> - initiate a run of a specified test, suite, label, or test plan.
+          </li>
+          <li><strong>Executions</strong> - get execution results.
+          </li>
+        </ul>
+        <blockquote theme="👍"><span>👍</span>
+          <p>
+          </p>
+          <p>To see the full API docs, see <a href="https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml">here</a>.
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>This is a pro feature
+            </div><a href="#this-is-a-pro-feature"></a>
+          </h3>
+          <p>This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.
+          </p>
+        </blockquote>
+        <h1>
+          <div>
+          </div>
+          <div>Enabling API access
+          </div><a href="#enabling-api-access"></a>
+        </h1>
+        <p>Before using this API, you will need to configure the API access, as described below.
+          <br /> <i></i> <strong>To enable API access:</strong>
+          </p>
+          <ol>
+            <li>Go to <strong>Settings --&gt; API</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/90025bb-Screen_Shot_2020-10-19_at_12.40.39.png" /></span></span>
+          <ol start="2">
+            <li>Click <strong>Generate API Key</strong>.
+            </li>
+            <li>Name your key and click <strong>Generate</strong>. The API key value is displayed.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/eb6356a-Screen_Shot_2020-10-19_at_12.42.18.png" /></span></span>
+          <ol start="4">
+            <li>Copy your API key and click <strong>Done</strong>. Use the key in the API Authorization header, as described in the <a href="doc:api-access#using-the-api-key">Using the API Key</a> section.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png" /></span></span>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>This is the only time you can view the API key value.
+            </p>
+          </blockquote>
+          <h1>
+            <div>
+            </div>
+            <div>API keys management
+            </div><a href="#api-keys-management"></a>
+          </h1>
+          <p>From the <strong>Settings &gt; API</strong> screen you can manage the existing keys. You can search for an existing key, by typing its name in the <strong>search box</strong>.
+          </p> <span><span><img alt="" src="https://files.readme.io/7728ff5-Screen_Shot_2020-10-19_at_12.52.14.png" /></span></span>
+          <p><i></i> <strong>To generate additional keys:</strong>
+          </p>
+          <ul>
+            <li>Click <strong>Generate New</strong> and follow the instructions in the above <a href="https://help.testim.io/docs/api-access#enabling-api-access">Enabling API access</a> section.
+            </li>
+          </ul>
+          <p><i></i> <strong>To revoke API access:</strong>
+          </p>
+          <ol>
+            <li>Select the relevant API key from the list.
+            </li>
+            <li>Click the <strong>Delete</strong> (trash) icon.
+            </li>
+            <li>Click <strong>Revoke</strong> to confirm the deletion.
+            </li>
+          </ol>
+          <blockquote theme="❗️"><span>❗️</span>
+            <h3>
+              <div>
+              </div>
+              <div>Warning
+              </div><a href="#warning"></a>
+            </h3>
+            <p>This action cannot be undone, you will not be able to recover this API key.
+            </p>
+          </blockquote>
+          <h1>
+            <div>
+            </div>
+            <div>Using the API key
+            </div><a href="#using-the-api-key"></a>
+          </h1>
+          <p>In order to perform the API calls, for each call, you need to pass in the header the API key in the following format:
+            <br /> <!-- -->Key name - Authorization
+              <br /> <!-- -->Key value - bearer followed by the API key
+              </p>
+              <p>For example:
+              </p>
+              <div>
+                <div><button>cURL</button>
+                </div>
+                <div><pre><code>curl -X &#x27;GET&#x27; \
+  &#x27;https://api.testim.io/branches&#x27; \
+  -H &#x27;accept: application/json&#x27; \
+  -H &#x27;Authorization: Bearer PAK-hdRIBXXXXXXXXXXX</code></pre>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/cli-prerequisites"><span></span>
+              <div>CLI Prerequisites
+              </div></a><a href="/docs/project-user-management">
+              <div>Project users management
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

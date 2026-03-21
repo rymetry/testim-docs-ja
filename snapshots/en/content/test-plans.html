@@ -1,0 +1,177 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Test Plans - Web
+        </h1>
+        <div>
+          <div>
+            <p>Learn how to create a test plan for your web app which comprises all your tests, setup &amp; teardown tests and a list of configuration to run with
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>A test plan is a container of tests, which include specific test labels and/or test suites that can be organized to run consecutively. The test plan can include tests/test suites that run before and/or after the list of tests/test suites. The test plan can include settings that override the tests&#x27; default settings.
+        </p>
+        <p>Test plans are great If you need to do:
+        </p>
+        <ul>
+          <li>Set up your environment before your tests execute.
+          </li>
+          <li>Clean up your environment after your tests execute.
+          </li>
+          <li>Run your tests on several browsers and operating systems.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Create a New Web Test Plan
+          </div><a href="#create-a-new-web-test-plan"></a>
+        </h2>
+        <p><i></i> <strong>To create a new test plan:</strong>
+        </p>
+        <ol>
+          <li>Navigate to <strong>Test List</strong> in the main menu.
+          </li>
+          <li>Select <strong>Plans</strong> from the top navigation.
+          </li>
+          <li>Click the <strong>New Plan</strong> button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/fd4471d-new-test.png" /></span></span>
+        <ol start="4">
+          <li>Enter the <strong>Name</strong> and <strong>Description</strong> for your new Test Plan.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/73ab5c3-newwebtestplan.png" /></span></span>
+        <ol start="5">
+          <li>Select the <strong>Add Before All</strong> checkbox if you want to run a set of tests prior to the Test Plan&#x27;s main test list. Enter the name of one or more <a href="https://help.testim.io/docs/test-suites">Test Suites</a> or <a href="https://help.testim.io/docs/labels">Test Labels</a>. Typically this would include setup steps, such as login, etc.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/b29d06d-newwebtestplan.png" /></span></span>
+        <ol start="6">
+          <li>Enter the name of one or more <a href="https://help.testim.io/docs/test-suites">Test Suites</a> or <a href="https://help.testim.io/docs/labels">Test Labels</a> in the <strong>Test List</strong> box.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/30d2400-newwebtestplan.png" /></span></span>
+        <ol start="7">
+          <li>Select the <strong>Add After All</strong> checkbox if you want to add &quot;teardown&quot; tests after the test list has run. Enter the name of one or more <a href="https://help.testim.io/docs/test-suites">Test Suites</a> or <a href="https://help.testim.io/docs/labels">Test Labels</a>. It is a best practice to include &quot;teardown&quot; tests in your test plan. These are tests designed to clear the cache, clean up data, log out users, etc. once the tests are complete.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/e34954a-newwebtestplan.png" /></span></span>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note"></a>
+          </h3>
+          <ul>
+            <li>The tests in &quot;Before all&quot; and &quot;After all&quot; will always run in parallel level <code>1</code>. Only the &quot;Test List&quot; can run at a higher parallelization level, if it is set in the CLI.
+            </li>
+            <li>If any of the “before all” tests fail, the tests in the Test List WON’T run. As a result, the entire execution will be marked as ‘failed’ and all remaining queued test runs will be aborted.
+            </li>
+            <li>The tests in &quot;Add After All&quot; will always run even if tests in Test list failed.
+            </li>
+          </ul>
+        </blockquote>
+        <ol start="8">
+          <li>In the <strong>Where to Run</strong> field, select the <strong>Grid</strong> you would like to execute your tests on. See <a href="https://help.testim.io/docs/grid-management">Grid Management</a> for more information.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/d46f60c-newwebtestplan.png" /></span></span>
+        <ol start="9">
+          <li>In the <strong>What to run on</strong> section, select the <strong>Override default configurations</strong> checkbox to manually set which Browsers, Operating Systems, and resolutions to run your tests on. Choose from your list of configurations or create a new one. See <a href="https://help.testim.io/docs/shared-configuration">Configurations Library</a> for more information. This will override the default configurations of the tests. Selecting multiple configurations will result in multiple executions, respectively.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/d484c9d-newwebtestplan.png" /></span></span>
+        <ol start="10">
+          <li>In the <strong>What to run on</strong> section, select the <strong>Override Base URL</strong> checkbox to set the start URL of your web app (e.g. production or staging environment). For more information, see <a href="doc:base-url">Base URL</a>.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/b5e9303-baseurl.png" /></span></span>
+        <ol start="11">
+          <li>Click the <strong>Create</strong> button to create your test plan.
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>Running your Test Plan
+          </div><a href="#running-your-test-plan"></a>
+        </h2>
+        <p>In order to execute a test plan, you&#x27;ll need to specify the plan name in your CLI command like this:
+        </p>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>--test-plan &quot;Test Plan Demo&quot;</code></pre>
+          </div>
+        </div>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>If you add a different grid name to the CLI, it will override the grid defined in the plan.
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>CLI Steps
+            </div><a href="#cli-steps"></a>
+          </h3>
+          <p>If you have CLI steps in your tests make sure the CLI is running before executing.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Share parameters between your test
+          </div><a href="#share-parameters-between-your-test"></a>
+        </h2>
+        <p>When you use a plan you can share parameters between tests e.g. create an account in the setup and use those credentials throughout all tests. See <a href="https://help.testim.io/docs/parameters">Parameters</a> for more information.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Run test plan directly from the editor
+          </div><a href="#run-test-plan-directly-from-the-editor"></a>
+        </h2>
+        <p><strong><i></i>To run a test plan directly from the editor:</strong>
+        </p>
+        <ol>
+          <li>Go to <strong>Test List &gt; Plans</strong>
+          </li>
+          <li>Select the plan/s you would like to run.
+          </li>
+          <li>Click the <strong>Play</strong> button
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/88d404a-Mar-22-2021_11-38-54.gif" /></span></span>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>If you have a CLI action in one of the tests, please make sure you have CLI running
+          </p>
+        </blockquote>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/configuration-library-mobile"><span></span>
+        <div>Configuration Library - Mobile
+        </div></a><a href="/docs/test-plans-mobile">
+        <div>Test Plans - Mobile
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

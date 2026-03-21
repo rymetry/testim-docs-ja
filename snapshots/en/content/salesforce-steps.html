@@ -1,0 +1,161 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Salesforce steps
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Salesforce steps can be manually added to the test. These steps cover common actions in Salesforce that are pre-populated with the records and fields from your connected Salesforce environments. The steps consist of common operations, record operations, and API operations.
+        </p> <span><span><img alt="" src="https://files.readme.io/488aa39-rework_salesforce_steps.gif" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Common operations
+          </div><a href="#common-operations"></a>
+        </h2>
+        <p>Salesforce common operations include the following Salesforce operations:
+        </p>
+        <ul>
+          <li><a href="doc:sfdc-step-login">Log in</a> - Logs in to your Salesforce environment. Select a persona to log in or create a new persona.
+          </li>
+          <li><a href="doc:log-in-as-salesforce-step">Log In As Another User</a> - Logs in to test with different users within a single testcase.
+          </li>
+          <li><a href="doc:sfdc-step-launchapp">Launch App</a> - Selects the available app to launch.
+          </li>
+          <li><a href="docs/sfdc-step-launchapp">Log out</a> - Logs out of Salesforce.
+          </li>
+          <li><a href="doc:sfdc-step-find">Find and go to record</a> - Text search for a record. Uses the global search to return the first matching record.
+          </li>
+          <li><a href="doc:sfdc-step-waitforpageload">Wait for page load</a> - waits for Salesforce to completely load the page before proceeding to the next step.
+          </li>
+          <li><a href="doc:sfdc-step-closeconsoletabs">Close console tabs</a> - Closes the console tabs on Salesforce.
+          </li>
+          <li><a href="https://help.testim.io/docs/sfdc-document-validation">Document validation</a> - validates and/or extracts the contents of the PDF document using a variety of conditions that can be configured without coding.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Record operations
+          </div><a href="#record-operations"></a>
+        </h2>
+        <p>Salesforce record operations include the following Salesforce operations:
+        </p>
+        <ul>
+          <li><a href="doc:sfdc-step-create">Create</a> - Creates a new record with the values in the fields.
+          </li>
+          <li><a href="doc:sfdc-step-edit">Edit</a> - Edits the current record with the values in the fields
+          </li>
+          <li><a href="doc:sfdc-step-validate">Validate</a> - Validates that the current record matches the fields. The test step passes only if all the fields match exactly.
+          </li>
+          <li><a href="docs/sfdc-step-quickactions">Quick actions</a> - Runs an available quick action on the current record. Quick actions include options such as create a new task, log a call, new event, and email. The actions will be run using the values specified in the fields.
+          </li>
+          <li><a href="doc:sfdc-step-relatedlistaction">Related list actions</a> - For the current record, runs actions on the record types in the related lists. You can run actions on the current record, such as:<!-- -->
+            <ul>
+              <li>Create - Creates a new record of the type in the related list.
+              </li>
+              <li>Verify - Validate the values or the count of records of the type in the related list. Filters can be applied to the fields of the Record(s) returned.
+              </li>
+              <li>View - View a record of the type in the related list. Filters can be applied to the fields of the record returned.
+              </li>
+            </ul>
+          </li>
+          <li><a href="doc:sfdc-step-delete">Delete</a> - Deletes the current record.
+          </li>
+          <li><a href="doc:sfdc-step-verifypicklistoptions">Verify picklist options</a> - verifies that, when creating a record, a specific options are or aren&#x27;t displayed in a drop-down menu (pick list) of a specific field.
+          </li>
+        </ul>
+        <p>For a Salesforce step that performs an action on a record, each field has an Action and Value pair.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Tooltip
+            </div><a href="#tooltip"></a>
+          </h3>
+          <p>Hovering your mouse over the name of the field will display the following information:
+          </p>
+          <ul>
+            <li>Data type - the supported data type of the field&#x27;s value (e.g., date)
+            </li>
+            <li>API name - the actual Field Name of the field. This may be different than the Field Label name that is displayed.
+            </li>
+          </ul>
+        </blockquote>
+        <p>Each field consists of <strong>Actions</strong>, such as:
+        </p>
+        <ul>
+          <li>Input - Input the value into the field.
+          </li>
+          <li>Verify - Verify that the value in the field matches that in the record.
+          </li>
+          <li>Store - Stores the value in the record into the value, which will be a Javascript variable.
+          </li>
+          <li>Ignore - Performs no action on the field.
+          </li>
+        </ul>
+        <p>Each <strong>Value</strong> can be set into the following mode:
+        </p>
+        <ul>
+          <li>T. Text mode. The value is treated as a literal string.
+          </li>
+          <li>{JS}. JavaScript mode. The value is evaluated as a JavaScipt expression. The field will evaluate JavaSrcipt variables and functions.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>API Operations
+          </div><a href="#api-operations"></a>
+        </h2>
+        <p>The following steps interact with Salesforce using API (not through the UI):
+        </p>
+        <ul>
+          <li><a href="https://help.testim.io/docs/sfdc-step-apex-action">Execute Apex </a>- allows you to extend E2E tests beyond the UI, by running APEX code as a step inside the test.
+          </li>
+          <li><a href="https://help.testim.io/docs/sfdc-step-permission-validation">Permission validation</a> - allows you to capture, set, and continuously validate user permissions on Salesforce objects and their fields.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>CPQ Operations
+          </div><a href="#cpq-operations"></a>
+        </h2>
+        <p>Configure Price Quote Software is sales tool that allows sales reps to create quotes with customized product and pricing configurations based on the buyer&#x27;s needs, and then sync all interactions with a deal&#x27;s documents, within the Salesforce CRM. The CPQ Operations category includes the following steps:
+        </p>
+        <ul>
+          <li><a href="doc:sfdc-step-convertleadtoopportunity">Convert lead to opportunity</a> - converts a record from being classified as a Lead to an Opportunity.
+          </li>
+          <li><a href="https://help.testim.io/docs/sfdc-step-quotelineeditor">Quote line editor action</a> - The Quote Line Editor Action step can be used to test the product pricing calculations in the Quote Line Editor of the CPQ application for specific line items on a quote and/or for the entire quote.
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/create-and-merge-branches-from-different-test-environments"><span></span>
+        <div>Create and merge branches from different test environments
+        </div></a><a href="/docs/sfdc-step-login">
+        <div>Log in
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

@@ -1,0 +1,198 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Web Testing Getting Started (Codeless Test)
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <h2>
+          <div>
+          </div>
+          <div>Welcome aboard!
+          </div><a href="#welcome-aboard"></a>
+        </h2>
+        <p>Upon completion of the signup process, you were redirected to the Testim Home screen.
+        </p> <span><span><img alt="" src="https://files.readme.io/4b0e58e-gettingstarted1.png" /></span></span>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>You can access this screen at any time by clicking the Testim icon in your browser toolbar or by going to <a href="https://app.testim.io/">https://app.testim.io/</a>.
+          </p>
+        </blockquote>
+        <p>Now, Let&#x27;s create your first test!
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Tutorial Use Case
+          </div><a href="#tutorial-use-case"></a>
+        </h2>
+        <p>Creating a test with Testim starts with going to the relevant website and recording the series of actions that you would like to test. Later you will be able to edit the properties for each of the steps and add validations.
+          <br /> <!-- -->For this tutorial we will be testing Testim’s demo website “Space &amp; Beyond”. We will run a test of the site’s login procedure.
+          </p>
+          <h2>
+            <div>
+            </div>
+            <div>Recording the Test
+            </div><a href="#recording-the-test"></a>
+          </h2>
+          <p><i></i> <strong>To record the test:</strong>
+          </p>
+          <ol>
+            <li>Click on <strong>Create Test</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/8d9ef22-gettingstarted2.png" /></span></span>
+          <p>A new test opens in the Editor. This is where you record the test, add validations and edit the test steps.
+          </p>
+          <ol start="2">
+            <li>
+              <p>Click on the red <strong>Record</strong> button in the toolbar.
+              </p> <span><span><img alt="" src="https://files.readme.io/ce98d0d-gettingstarted3.png" /></span></span>
+              <p>If your default <strong>Base URL</strong> is set to the demo site’s URL “<a href="http://google.com">demo.testim.io</a>”, then a new browser window opens showing the Space &amp; Beyond website. At this point, you may proceed to step 4. If no Base URL was configured, the <strong>Start A New Test</strong> window opens.
+              </p>
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/d42b2ee-gettingstarted4.png" /></span></span>
+          <ol start="3">
+            <li>
+              <p>In the <strong>Your app URL</strong> field, enter the demo site’s URL “<a href="http://google.com">demo.testim.io</a>”, then click <strong>Create Test</strong>.
+                <br /> <!-- -->A new browser window opens showing the Space &amp; Beyond website. This is the <strong>Application Under Test (AUT)</strong> window. The series of actions that you take in this window are recorded and saved as a test in Testim.
+                </p>
+              </li>
+              <li>
+                <p>In the AUT browser, log in to the system (using any username and password).
+                </p> <span><span><img alt="" src="https://files.readme.io/7baa100-login.png" /></span></span>
+              </li>
+              <li>
+                <p>Now, go back to the Testim Editor browser.
+                  <br /> <!-- -->The procedure that you did on the Space &amp; Beyond website is shown as a series of actions in the test window. Each box represents a step in the test procedure. An icon at the top left of the box indicates the type of action (click, enter text, scroll, etc.) that was performed.
+                  </p>
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/bcf55a9-steps.png" /></span></span>
+              <ol start="6">
+                <li>Click <strong>Save</strong>.
+                  <br /> <!-- -->The Save Test window is displayed.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/f78c409-savetest.png" /></span></span>
+                <blockquote theme="🚧"><span>🚧</span>
+                  <h3>
+                    <div>
+                    </div>
+                    <div>Auto Recovery
+                    </div><a href="#auto-recovery"></a>
+                  </h3>
+                  <p>Whenever you create a new test or make changes to an existing test, make sure to save the test. But don&#x27;t worry, if you close your browser before saving your test, it will be stored in your browser&#x27;s cache and you should be able to resume your work. See <a href="doc:recovering-a-test-that-was-not-saved">Recovering a test that was not saved</a> for more details.
+                  </p>
+                </blockquote>
+                <ol start="7">
+                  <li>In the <strong>Name</strong> field, enter “Space &amp; Beyond Demo 01”, then click <strong>OK</strong>.
+                    <br /> <!-- -->The test is saved.
+                      <br /> <!-- -->Congratulations, you have created your first test in Testim!
+                      </li>
+                    </ol>
+                    <h2>
+                      <div>
+                      </div>
+                      <div>Adding Validation
+                      </div><a href="#adding-validation"></a>
+                    </h2>
+                    <p>Whenever you run a test, the system automatically verifies that all of the steps in your flow are executed consecutively. However, this doesn’t ensure that each step has yielded all expected results. You can add additional validation elements to ensure that all desired results of your actions are occurring properly.
+                      <br /> <!-- -->For this tutorial we will add a validation to ensure that once the user has logged in, the Login button in the Header bar is replaced by the text “HELLO, JOHN” (on this demo site, John is always shown, independent of the username that was input.).
+                      </p>
+                      <p><i></i> <strong>To record the test:</strong>
+                      </p>
+                      <ol>
+                        <li>
+                          <p>On the Editor screen of the <em>Space &amp; Beyond Demo 01</em> test, hover over the last “<strong>+</strong>” button to the right of the Click “<em>LOG IN</em>” step.
+                          </p> <span><span><img alt="" src="https://files.readme.io/177c8fc-plus.png" /></span></span>
+                        </li>
+                      </ol>
+                      <br />
+                      <ol start="2">
+                        <li>
+                          <p>Click on the <strong>&quot;M&quot;</strong> (Testim predefined steps).
+                            <br /> <!-- -->The Predefined steps menu opens.
+                            </p> <span><span><img alt="" src="https://files.readme.io/03388a3-stepsmenu.png" /></span></span>
+                          </li>
+                          <li>
+                            <p>Click on <strong>Validations</strong>.
+                              <br /> <!-- -->The Validations section expands.
+                              </p> <span><span><img alt="" src="https://files.readme.io/12dda9f-validations.png" /></span></span>
+                            </li>
+                            <li>
+                              <p>Select <strong>Validate element text</strong>.
+                              </p>
+                            </li>
+                            <li>
+                              <p>In the AUT browser, click on the words “HELLO, JOHN”.
+                              </p>
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/6b89de8-hellojohn.png" /></span></span>
+                          <p>A new <em>Text Validation</em> step is added to your test.
+                          </p> <span><span><img alt="" src="https://files.readme.io/d6cad45-hellostep.png" /></span></span>
+                          <br />
+                          <p><i></i> <strong>To save the results for the current test version:</strong>
+                          </p>
+                          <ol>
+                            <li>Click on the <strong>Save</strong> button in the header bar.
+                            </li>
+                          </ol> <span><span><img alt="" src="https://files.readme.io/84d3a25-savetest1.png" /></span></span>
+                          <ol start="2">
+                            <li>In the <strong>Message</strong> field, enter a description of the test version (optional), then click <strong>OK</strong>.
+                              <br /> <!-- -->Congratulations! You have successfully saved your test with the added validation. Now let’s run the test.
+                              </li>
+                            </ol>
+                            <h2>
+                              <div>
+                              </div>
+                              <div>Running a Test
+                              </div><a href="#running-a-test"></a>
+                            </h2>
+                            <p><i></i> <strong>To run the test locally:</strong>
+                            </p>
+                            <ol>
+                              <li>On the Editor screen, click on the <strong>Play</strong> button in the toolbar.
+                              </li>
+                            </ol> <span><span><img alt="" src="https://files.readme.io/de7d41f-play.png" /></span></span>
+                            <p>A new browser opens and runs the test actions on the demo site. When the test is completed a pop-up window indicates whether the test was successful.
+                            </p> <span><span><img alt="" src="https://files.readme.io/f0fa541-testcompleted.png" /></span></span>
+                            <br />
+                            <h2>
+                              <div>
+                              </div>
+                              <div>Viewing Test Results
+                              </div><a href="#viewing-test-results"></a>
+                            </h2>
+                            <p>On the test Editor screen, you can view the test results. Overall run data is shown at the top of the screen. In addition, the colored icons at the top of each step indicate whether or not that action was successful.
+                            </p> <span><span><img alt="" src="https://files.readme.io/bdb4507-passed.png" /></span></span>
+                            <p>If you would like to view detailed results for a specific action, double-click on the step. The action results screen is displayed for that action.
+                            </p> <span><span><img alt="" src="https://files.readme.io/e9c28f4d9ebacc87582af8b8202408a7623c08f515955eaaa2632432a46dbd3c-stepresult.jpg" /></span></span>
+                            <p>In case of a test failure, detailed info is shown about the cause of the failure. (In the following example, the validation was set to expect “Goodbye” and the value received was “Hello”.)
+                            </p> <span><span><img alt="" src="https://files.readme.io/6bb34c8-failed.png" /></span></span>
+                          </div>
+                          <div>
+                            <div>
+                              <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                              </p>
+                            </div>
+                          </div>
+                          <hr />
+                          <nav><a href="/docs/setting-up-your-account"><span></span>
+                            <div>Setting up Your Account
+                            </div></a><a href="/docs/creating-your-first-mobile-test-in-testim-visual-editor">
+                            <div>Mobile Testing Getting Started
+                            </div><span></span></a>
+                          </nav>
+                        </section>
+                        <section>
+                          <div>
+                            <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+                    </article>

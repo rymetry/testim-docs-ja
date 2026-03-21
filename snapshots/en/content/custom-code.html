@@ -1,0 +1,410 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Add custom validations and actions
+        </h1>
+        <div>
+          <div>
+            <p>Create complex validations using custom scripts
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>There may be times when you want your test to perform an action or validation that is not included in the predefined steps menu. Using an <em>Add custom validation</em> step or an <em>Add custom action</em> step, you can create custom steps where you input your own parameters and JavaScript code. Custom action steps should be written without a return value. Custom validation steps are meant to return a boolean value. Returning <em>true</em> causes the validation to succeed, while returning <em>false</em> causes it to fail. (See examples below.)
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Adding an <em>Add custom validation</em> step or an <em>Add custom action</em> step
+          </div><a href="#adding-an-add-custom-validation-step-or-an-add-custom-action-step"></a>
+        </h2>
+        <p>The general procedure for adding an <em>Add custom validation</em> step or an <em>Add custom action</em> step is the same, regardless of the details of your validation or action. Your code and parameters change depending on your specific validation or action. Below is the general procedure followed by sample code and parameters for a few different examples.
+        </p>
+        <p><i></i> <strong>To add an<em>Add custom validation</em> step or an <em>Add custom action</em> step:</strong>
+        </p>
+        <ol>
+          <li>Hover over the <i></i> <strong>(arrow symbol)</strong> where you want to add the validation.
+          </li>
+        </ol> <span><span><img alt="3851" src="https://files.readme.io/b5a63dc-Testim_282a.png" /></span></span>
+        <p>The <strong>action options</strong> are displayed.
+        </p> <span><span><img alt="250" src="https://files.readme.io/ba79996-Testim_283a_r.png" /></span></span>
+        <ol start="2">
+          <li>Click on the “<strong>M</strong>” (Testim predefined steps).
+            <br /> <!-- -->The <strong>Predefined steps</strong> menu opens.
+            </li>
+          </ol> <span><span><img alt="200" src="https://files.readme.io/dc5c5d1-Testim_270_r.png" /></span></span>
+          <ol start="3">
+            <li>Click on <strong>Validations</strong> (or <strong>Actions</strong>).
+              <br /> <!-- -->The <strong>Validations</strong> (or <strong>Actions</strong>) menu expands.
+              </li>
+            </ol> <span><span><img alt="200" src="https://files.readme.io/e14660a-Testim_271_r.png" /></span></span>
+            <ol start="4">
+              <li>Scroll down through the menu and select <strong>Add custom validation</strong> (or <strong>Add custom action</strong>).
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <h3>
+                <div>
+                </div>
+                <div>Alternatively, you can use the search box at the top of the menu to search for <strong>Add custom validation</strong> (or <strong>Add custom action</strong>).
+                </div><a href="#alternatively-you-can-use-the-search-box-at-the-top-of-the-menu-to-search-for-add-custom-validation-or-add-custom-action"></a>
+              </h3>
+            </blockquote>
+            <p>The <strong>Add Step</strong> window is shown.
+            </p> <span><span><img alt="300" src="https://files.readme.io/4f2e39a-Testim_215_r.png" /></span></span>
+            <ol start="5">
+              <li>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.
+              </li>
+              <li>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step</strong> folder list where you want this step stored. Otherwise, deselect the checkbox.
+                <br /> <!-- -->For more information about shared steps, see <a href="doc:groups">Groups</a>.
+                </li>
+                <li>Click <strong>Create Step</strong>.
+                  <br /> <!-- -->The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.
+                  </li>
+                </ol> <span><span><img alt="3837" src="https://files.readme.io/5d95f6a-Testim_284.png" /></span></span>
+                <ol start="8">
+                  <li>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “Run validation” (or “Run action”).
+                  </li>
+                  <li>Define the parameters you will need for your step as follows:
+                    <br /> <!-- -->a. In the <strong>Properties</strong> panel, click the <strong>+ PARAMS</strong> button.
+                      <br /> <!-- -->b. <strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.
+                        <br /> <!-- -->c. <strong>HTML parameter</strong>: If you would like to define an HTML element as a parameter, select <strong>HTML</strong> from the dropdown list. The browser opens, displaying the relevant webpage for this step. Do the following:<!-- -->
+                          <ul>
+                            <li>In the <strong>AUT</strong> window, hover your mouse on the relevant element and then click on it to select it. The selected element is shown in the <strong>Target Element</strong> box in the <strong>Properties</strong> pane. If you would like to view, replace or adjust the settings for the selected element, use the procedures described in <a href="doc:editing-target-element-properties">Editing Target Element Properties</a>.
+                            </li>
+                          </ul>
+                        </li>
+                      </ol>
+                      <p>d. The selected element is automatically named “param” or “element” (depending on whether you chose a JS parameter or HTML element). To assign a relevant name to the parameter/element, click on the <strong>edit</strong> icon and enter the desired name.
+                      </p> <span><span><img alt="250" src="https://files.readme.io/9e53245-Testim_285a_r.png" /></span></span>
+                      <ol start="10">
+                        <li>Optionally fill in the following Properties:
+                        </li>
+                      </ol>
+                      <ul>
+                        <li><strong>When this step fails</strong> – Specify what to do if this step fails.
+                        </li>
+                        <li><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see <a href="doc:conditions">Conditions</a>.
+                        </li>
+                        <li><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).
+                        </li>
+                      </ul>
+                      <ol start="11">
+                        <li>In the <strong>function</strong> text box, type in the desired JavaScript code. If you have defined parameters, you can refer to those parameters in your JavaScript code.
+                        </li>
+                      </ol>
+                      <blockquote theme="📘"><span>📘</span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <code>$(&lt;query&gt;).length</code> instead of <code>$(&lt;query&gt;)</code> .
+                          </div><a href="#if-you-are-using-dom-selectors-other-than-html-parameters-eg-jquery-then-empty-arrays-are-truthy-so-you-need-to-use-querylength--instead-of-query-"></a>
+                        </h3>
+                      </blockquote>
+                      <ol start="12">
+                        <li>Click the back arrow to return to the main Editor window.
+                        </li>
+                      </ol> <span><span><img alt="500" src="https://files.readme.io/6565b36-Testim_286a_r.png" /></span></span>
+                      <blockquote theme="📘"><span>📘</span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>If you opened your AUT to define an HTML element as a parameter, click on the T<strong>oggle Breakpoint</strong> button to remove the breakpoint.
+                          </div><a href="#if-you-opened-your-aut-to-define-an-html-element-as-a-parameter-click-on-the-toggle-breakpoint-button-to-remove-the-breakpoint"></a>
+                        </h3>
+                      </blockquote>
+                      <p>The step is created.
+                      </p> <span><span><img alt="3851" src="https://files.readme.io/c26aea9-Testim_287a.png" /></span></span>
+                      <h3>
+                        <div>
+                        </div>
+                        <div>Custom validation and action examples
+                        </div><a href="#custom-validation-and-action-examples"></a>
+                      </h3>
+                      <h4>
+                        <div>
+                        </div>
+                        <div>Validating a numeric value (Custom validation)
+                        </div><a href="#validating-a-numeric-value-custom-validation"></a>
+                      </h4>
+                      <p>You can use the <em>Add custom validation</em> step to validate the value of a number in your app. This example checks to see if the numeric value of an HTML element is less than 1,000. We first remove the non-numeric characters from the string, and then convert the string to a number.
+                      </p> <span><span><img alt="3851" src="https://files.readme.io/142d406-Testim_288.png" /></span></span>
+                      <p><strong>Example Code:</strong>
+                      </p>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>// Remove  string chars (e.g &quot;__PRE_BLOCK_0__quot;) and turn the price label to a number:
+var amount = Number(amountLabel.innerText.replace(/[^\-0-9\.]+/g,&quot;&quot;));
+
+
+// Validate if the number is bigger than 1000:
+if(amount &gt; 1000) {
+  throw new Error(&#x27;Amount should not be over 1000! Actual value: &#x27; + amount);
+} else {
+  return true;
+}</code></pre>
+                        </div>
+                      </div>
+                      <p><strong>Example Parameters:</strong>
+                      </p>
+                      <div>
+                        <div>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>
+                                  <p>Name
+                                  </p>
+                                </th>
+                                <th>
+                                  <p>Type
+                                  </p>
+                                </th>
+                                <th>
+                                  <p>Value
+                                  </p>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <p>amountLabel
+                                  </p>
+                                </td>
+                                <td>
+                                  <p>HTML
+                                  </p>
+                                </td>
+                                <td>
+                                  <p>{an HTML element containing a numeral}
+                                  </p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <h4>
+                        <div>
+                        </div>
+                        <div>Comparing text elements (Custom validation)
+                        </div><a href="#comparing-text-elements-custom-validation"></a>
+                      </h4>
+                      <p>This example uses the <em>Add custom validation</em> step to compare the text of two elements in your app. When the innerText value of the two elements is the same, the step passes. If the values are different from each other, the step fails.
+                      </p> <span><span><img alt="3850" src="https://files.readme.io/d866dbe-Testim_289.png" /></span></span>
+                      <p><strong>Example Code:</strong>
+                      </p>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>var equal = firstLabel.innerText === secondLabel.innerText;
+
+if(!equal) {
+  throw new Error(&#x27;Labels are not equal. First label: &#x27; + firstLabel.innerText + 
+                  &#x27; Second label: &#x27; + secondLabel.innerText);
+}
+
+return equal;</code></pre>
+                        </div>
+                      </div>
+                      <p><strong>Example Parameters:</strong>
+                      </p>
+                      <div>
+                        <div>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>
+                                  <p>Name
+                                  </p>
+                                </th>
+                                <th>
+                                  <p>Type
+                                  </p>
+                                </th>
+                                <th>
+                                  <p>Value
+                                  </p>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <p>firstLabel
+                                  </p>
+                                </td>
+                                <td>
+                                  <p>HTML
+                                  </p>
+                                </td>
+                                <td>
+                                  <p>{an HTML element containing text}
+                                  </p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <p>secondLabel
+                                  </p>
+                                </td>
+                                <td>
+                                  <p>HTML
+                                  </p>
+                                </td>
+                                <td>
+                                  <p>{an HTML element containing text}
+                                  </p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <h4>
+                        <div>
+                        </div>
+                        <div>Asynchronous Validation via Promise (Custom validation)
+                        </div><a href="#asynchronous-validation-via-promise-custom-validation"></a>
+                      </h4>
+                      <p>A JavaScript Promise allows you to cause a function to wait for a specified amount of time (in ms) before resolving or rejecting some specific code. If the boolean value of the code is true, it is resolved, and the step passes. If it is false, the code is rejected, and the step fails. The simple example below is just for demonstration purposes and doesn’t use any parameters. (This test should pass after the 10 second timeout.)
+                      </p>
+                      <blockquote theme="📘"><span>📘</span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>If the validation fails, any text you include in the <code>reject( )</code> function invocation is displayed in the step’s property panel.
+                          </div><a href="#if-the-validation-fails-any-text-you-include-in-the-reject---function-invocation-is-displayed-in-the-steps-property-panel"></a>
+                        </h3>
+                      </blockquote> <span><span><img alt="3851" src="https://files.readme.io/ba1832e-Testim_290.png" /></span></span>
+                      <p><strong>Example Code:</strong>
+                      </p>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>return new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    if(7 === 7) {
+      resolve();
+    } else {
+      reject(&#x27;&#x27;);
+    }
+  }, 10000);
+});</code></pre>
+                        </div>
+                      </div>
+                      <h4>
+                        <div>
+                        </div>
+                        <div>Navigating to a different website (Custom action)
+                        </div><a href="#navigating-to-a-different-website-custom-action"></a>
+                      </h4>
+                      <p>This example uses the <em>Add custom action</em> step to navigate away from your test’s base URL in the Setup step and navigate to Testim’s homepage. This example does not use any parameters.
+                      </p> <span><span><img alt="3851" src="https://files.readme.io/4ec59f8-Testim_291.png" /></span></span>
+                      <p><strong>Example Code:</strong>
+                      </p>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>window.location.href = &#x27;https://testim.io/&#x27;;</code></pre>
+                        </div>
+                      </div>
+                      <blockquote theme="📘"><span>📘</span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>Chrome DevTools debugger
+                          </div><a href="#chrome-devtools-debugger"></a>
+                        </h3>
+                        <p>You can use the Chrome DevTools debugger to help you debug your code during a local test run. See <a href="doc:advanced-debugging-options#3-chrome-devtools-debugger">Chrome DevTools debugger</a>.
+                        </p>
+                      </blockquote>
+                      <blockquote theme="📘"><span>📘</span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>See custom code examples created by Testim to solve customer testing challenges. The complete list is available at <a href="https://github.com/testimio/custom-actions-examples">https://github.com/testimio/custom-actions-examples</a>.
+                          </div><a href="#see-custom-code-examples-created-by-testim-to-solve-customer-testing-challenges-the-complete-list-is-available-at-httpsgithubcomtestimiocustom-actions-examples"></a>
+                        </h3>
+                        <p>Testim users can contribute their own custom examples to this GitHub Repository following the guidelines set there.
+                        </p>
+                      </blockquote>
+                      <h2>
+                        <div>
+                        </div>
+                        <div>Examples of passing and failing synchronous validations
+                        </div><a href="#examples-of-passing-and-failing-synchronous-validations"></a>
+                      </h2>
+                      <h3>
+                        <div>
+                        </div>
+                        <div>Passing validations
+                        </div><a href="#passing-validations"></a>
+                      </h3>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>// This  validation will always succeed.
+return true;</code></pre>
+                        </div>
+                      </div>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>// This validation will always succeed.
+return 5 === 5;</code></pre>
+                        </div>
+                      </div>
+                      <h3>
+                        <div>
+                        </div>
+                        <div>Failing validations
+                        </div><a href="#failing-validations"></a>
+                      </h3>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>// This validation will always fail after it times out.
+return 5 === 6;</code></pre>
+                        </div>
+                      </div>
+                      <div>
+                        <div><button>JavaScript</button>
+                        </div>
+                        <div><pre><code>// This validation will always fail after it times out.
+throw new Error(&#x27;Validation failed!!!&#x27;);</code></pre>
+                        </div>
+                      </div>
+                      <p>When a step fails, an error message is displayed in the step’s <strong>result</strong> panel and in the <strong>Properties</strong> panel as in the example below.
+                      </p> <span><span><img alt="3851" src="https://files.readme.io/5007015-Testim_292.png" /></span></span>
+                    </div>
+                    <div>
+                      <div>
+                        <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                        </p>
+                      </div>
+                    </div>
+                    <hr />
+                    <nav><a href="/docs/custom-code-1"><span></span>
+                      <div>Validating using custom code
+                      </div></a><a href="/docs/add-cli-validations-and-actions">
+                      <div>Add CLI validations and actions
+                      </div><span></span></a>
+                    </nav>
+                  </section>
+                  <section>
+                    <div>
+                      <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </article>

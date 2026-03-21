@@ -1,0 +1,278 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Test Status
+        </h1>
+        <div>
+          <div>
+            <p>Add statuses to your tests to help manage which test needs to be worked on
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>You can add a status to your tests to help manage which test needs to be worked on. The statuses are displayed as one of the columns in the Test Library list and in the Test Editor.
+        </p>
+        <p>By default all statuses are labeled as &quot;Draft&quot;. After the feature is enabled, Testim automatically identifies tests that were run in the last 30 days and labels them as &quot;Active&quot;. All other statuses are applied manually, as described below.
+        </p>
+        <p>By manually managing the tests&#x27; statuses you can enjoy the following benefits:
+        </p>
+        <ul>
+          <li>Manually quarantine flaky/failing tests without taking them out of the CI/suite.
+          </li>
+          <li>Easily notice tests that are not connected to the CI (not active).
+          </li>
+          <li>Gradually add tests to the CI without failing the entire run.
+          </li>
+          <li>Improve project visibility by filtering tests by status.
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>This is a PRO feature
+            </div><a href="#this-is-a-pro-feature"></a>
+          </h3>
+          <p>This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/pricing/">here</a>.
+          </p>
+        </blockquote>
+        <blockquote theme="🚧"><span>🚧</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note
+            </div><a href="#note"></a>
+          </h3>
+          <p>In order to use this feature, you&#x27;ll need to upgrade your CLI version to be at least v3.135.0, read <a href="https://help.testim.io/docs/the-command-line-cli#cli-installation">here</a> about CLI installation
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Test Statuses
+          </div><a href="#test-statuses"></a>
+        </h2>
+        <p>Each test can have one of the following statuses:
+        </p>
+        <div>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Status
+                  </th>
+                  <th>Definition
+                  </th>
+                  <th>Running as part of the CI/Scheduler
+                  </th>
+                  <th>Failing scheduler/CI
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Draft
+                  </td>
+                  <td>Test is still in-progress
+                  </td>
+                  <td>Yes*
+                  </td>
+                  <td>Yes
+                  </td>
+                </tr>
+                <tr>
+                  <td>Evaluating
+                  </td>
+                  <td>Test ready, but its stability should be validated
+                  </td>
+                  <td>Yes
+                  </td>
+                  <td>No
+                  </td>
+                </tr>
+                <tr>
+                  <td>Active
+                  </td>
+                  <td>Test is ready and stable
+                  </td>
+                  <td>Yes
+                  </td>
+                  <td>Yes
+                  </td>
+                </tr>
+                <tr>
+                  <td>Quarantine
+                  </td>
+                  <td>The test doesn’t conform to the definition of a stable test and is waiting to be fixed
+                  </td>
+                  <td>No
+                  </td>
+                  <td>No
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p>*The best practice is to add a test to the CI/Scheduler only after the test is ready, and not in Draft status
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Viewing the test status
+          </div><a href="#viewing-the-test-status"></a>
+        </h2>
+        <p>The tests&#x27; statuses are displayed in the following screens:
+          <br /> <strong>Test Library screen</strong> - Test Lists -&gt; Tests
+          </p> <span><span><img alt="" src="https://files.readme.io/ebf3e27-teststatuses1.png" /></span></span>
+          <p><strong>Test Editor</strong>
+          </p> <span><span><img alt="" src="https://files.readme.io/a56ee9d-teststatuses2.png" /></span></span>
+          <h2>
+            <div>
+            </div>
+            <div>Filtering tests by status
+            </div><a href="#filtering-tests-by-status"></a>
+          </h2>
+          <p><i></i> <strong>To filter test by status:</strong>
+          </p>
+          <ol>
+            <li>Go to <strong>Test List --&gt; Tests</strong>
+            </li>
+            <li>Click the <strong>Filter</strong> button.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/615dd27-filter.png" /></span></span>
+          <ol start="3">
+            <li>In the <strong>Filter Test</strong> pane, select the checkboxes of the relevant statuses.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/ac7f5bd-teststatuses3.png" /></span></span>
+          <h2>
+            <div>
+            </div>
+            <div>Modifying the status of a test
+            </div><a href="#modifying-the-status-of-a-test"></a>
+          </h2>
+          <p>Statuses can be modified manually. All changes to the test status will appear In the <a href="https://help.testim.io/docs/revisions">revision history</a>.
+          </p>
+          <p><i></i> <strong>To change the test status through the Test Library:</strong>
+          </p>
+          <ol>
+            <li>Go to Test List --&gt; Tests
+            </li>
+            <li>In the <strong>Status</strong> column, select the relevant status.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/3eaae69-Jan-28-2021_09-43-29.gif" /></span></span>
+          <p>*<em>Note:</em> it is possible to bulk edit tests status, by selecting all the tests you would like to edit, and then clicking on change status from the top menu.
+          </p>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>As part of the test status, we also added an option to view your flaky tests and decide how to manage their status. To read more about the flaky tests, see <a href="https://help.testim.io/docs/flaky-tests">here</a>.
+            </p>
+          </blockquote>
+          <p><i></i> <strong>To change the test status through the Testim&#x27;s Editor:</strong>
+          </p>
+          <ol>
+            <li>Open the test in the editor.
+            </li>
+            <li>Change the status from the top left corner
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/65da094-Screen_Shot_2021-01-10_at_7.41.32.png" /></span></span>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>When changing the status the test is saved as a revision. If you want to merge it back to Master, you will have to resolve it as a 3 way merge conflict, to read more see <a href="https://help.testim.io/docs/version-control-branches">here</a>
+            </p>
+          </blockquote>
+          <h2>
+            <div>
+            </div>
+            <div>Using the test status
+            </div><a href="#using-the-test-status"></a>
+          </h2>
+          <h3>
+            <div>
+            </div>
+            <div>On test runs
+            </div><a href="#on-test-runs"></a>
+          </h3>
+          <p>After running the tests, the statuses will be reflected in the following way:
+          </p>
+          <ul>
+            <li><strong>Draft tests</strong> that run will appear as before. It is recommended to change these tests&#x27; status to Active.
+            </li>
+            <li><strong>Evaluating tests</strong> will appear in the test runs, but in a case of failure there will be an indication that the failure was ignored.
+            </li>
+          </ul> <span><span><img alt="" src="https://files.readme.io/2effede-Screen_Shot_2021-01-28_at_8.56.41.png" /></span></span>
+          <ul>
+            <li><strong>Active tests</strong> will appear as before.
+            </li>
+            <li><strong>Quarantine tests</strong> will not run (they will not appear in the test runs).
+            </li>
+          </ul>
+          <h3>
+            <div>
+            </div>
+            <div>On suite runs
+            </div><a href="#on-suite-runs"></a>
+          </h3>
+          <p>On suite runs, the statuses will be reflected in the following way:
+          </p>
+          <ul>
+            <li><strong>Draft tests</strong> that run will appear as before. It is recommended to change these tests&#x27; status to Active.
+            </li>
+            <li><strong>Evaluating tests</strong> will appear in the test runs, but in a case of failure, there will be an indication that they did not fail the CI.
+            </li>
+            <li><strong>Active tests</strong> will appear as before.
+            </li>
+            <li><strong>Quarantine tests</strong> will not run (they will appear in the suite run with a quarantine indication)
+            </li>
+          </ul> <span><span><img alt="" src="https://files.readme.io/87013d7-Screen_Shot_2021-01-10_at_8.02.34.png" /></span></span>
+          <h3>
+            <div>
+            </div>
+            <div>CLI runs
+            </div><a href="#cli-runs"></a>
+          </h3>
+          <ul>
+            <li><strong>Evaluating failed tests</strong> will appear in the CLI run summary as FAILED-EVALUATING
+            </li>
+            <li><strong>Evaluating failed tests</strong> will be added to the run XML report with a new status &quot;failure-evaluating&quot;, to read more about the CLI XML report, see <a href="https://help.testim.io/docs/the-command-line-cli#the-common-parameters">here</a>
+            </li>
+            <li><strong>Quarantine tests</strong> will be added to the run XML with a &quot;Skipped&quot; flag.
+            </li>
+          </ul>
+          <blockquote theme="📘"><span>📘</span>
+            <p>
+            </p>
+            <p>Quarantine tests can be run in the CLI by using the bypassed “--run-quarantined-tests” flag
+            </p>
+          </blockquote>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/testops-management"><span></span>
+          <div>TestOps - Management
+          </div></a><a href="/docs/test-owner">
+          <div>Test Owner
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

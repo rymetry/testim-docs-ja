@@ -1,0 +1,138 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Scheduler’s notification via webhook
+        </h1>
+        <div>
+          <div>
+            <p>Allow getting the scheduler’s results via webhook
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The Scheduler’s notification via webhook feature provides users the ability to add a URL as a webhook in the preference option for their scheduled runs notifications. Under the <strong>Notification</strong> section, there is a setting for when to trigger a notification (e.g., &quot;On every failure&quot;) and the method by which the notification will be sent. One of these methods is a webhook. Outside Testim, the webhook maybe used to trigger a process, such as some form of reporting, etc.
+        </p>
+        <h3>
+          <div>
+          </div>
+          <div>Webhook format
+          </div><a href="#webhook-format"></a>
+        </h3>
+        <p>The webhook sends a JSON payload containing the following information:
+          <br /> <!-- -->• status (failure | success) – refers to the overall scheduled run status, not individual test results.
+            <br /> <!-- -->• projectId
+              <br /> <!-- -->• executionId
+                <br /> <!-- -->• schedulerName
+                  <br /> <!-- -->• executionUrl
+                  </p>
+                  <blockquote theme="📘"><span>📘</span>
+                    <p>
+                    </p>
+                    <p>The information included in the webhook cannot be modified.
+                    </p>
+                  </blockquote>
+                  <p>The following is an example of a webhook JSON payload:
+                  </p>
+                  <div>
+                    <div><button>JSON</button>
+                    </div>
+                    <div><pre><code>{
+  &quot;status&quot;: &quot;failure&quot;,
+  &quot;projectId&quot;: &quot;AMaVXxXxXxXxrVrBrnSD&quot;,
+  &quot;executionId&quot;: &quot;Tv9O8XxXxUOfkoqT&quot;,
+  &quot;schedulerName&quot;: &quot;Webhook&quot;,
+  &quot;executionUrl&quot;: &quot;https://app.testim.io/#/project/AMaVXxXxXxrVrBrnSD/runs/suites/Tv9O8kPLGUOfkoqT&quot;,
+  &quot;results&quot;: {
+    &quot;passed&quot;: [],
+    &quot;failed&quot;: [
+      {
+        &quot;_id&quot;: &quot;Bo6tVDoxhrntvlY9&quot;,
+        &quot;testId&quot;: &quot;vwE96nZBQK4L2w2X&quot;,
+        &quot;name&quot;: &quot;TestName&quot;,
+        &quot;reason&quot;: &quot;Assertion failed&quot;,
+        &quot;link&quot;: &quot;https://app.testim.io/#/project/AMXxXxXxCgrVrBrnSD/branch/master/test/vwE96nZBQK4L2w2X?result-id=Bo6tVDoxhrntvlY9&quot;
+      }
+    ],
+    &quot;failed evaluating&quot;: [],
+    &quot;evaluating&quot;: [],
+    &quot;skipped&quot;: []
+  }
+}</code></pre>
+                    </div>
+                  </div>
+                  <p>For more information about scheduled runs, see <a href="doc:scheduler">Scheduler</a>.
+                  </p>
+                  <h2>
+                    <div>
+                    </div>
+                    <div>Configuring the Scheduler Webhook Settings
+                    </div><a href="#configuring-the-scheduler-webhook-settings"></a>
+                  </h2>
+                  <p><i></i> <strong>To configure the scheduler webhook settings:</strong>
+                  </p>
+                  <ol>
+                    <li>In the main navigation, click the <strong>Runs</strong> icon.
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/7bb277d5d38990749ee15c6e4fc59d1a2159da03f80d04f043d8bd0727932f93-runs.png" /></span></span>
+                  <ol start="2">
+                    <li>Click <strong>Scheduled Runs</strong> to open the <strong>Scheduled Runs</strong> tab.
+                    </li>
+                  </ol> <span><span><img alt="" src="https://files.readme.io/6e0c331e7015088086e8c3fc326d5d8667e9bd8b9bb1877c4951e85151c201c2-scheduledruns.png" /></span></span>
+                  <p>The <strong>Scheduler List</strong> page is shown.
+                  </p> <span><span><img alt="" src="https://files.readme.io/3d5057de59c5dce8b8f66f92259c62984820efadb60d88e8a932f5dd0e750a83-schedulerlibrary.png" /></span></span>
+                  <ol start="3">
+                    <li>Click on the scheduler for which you would like to set a webhook.
+                      <br /> <!-- -->The <strong>Edit Schedule Runs</strong> window opens.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/f79c48d58ab8d4f2ba3c6277b21196027ee5fcfb729ddbd9f62ee7d3dee98c62-editscheduler.png" /></span></span>
+                    <ol start="4">
+                      <li>In the Notify on field, select one of the following options:<!-- -->
+                        <ol>
+                          <li>On every failure
+                          </li>
+                          <li>On the first failure
+                          </li>
+                          <li>On every run
+                          </li>
+                        </ol>
+                      </li>
+                      <li>Under <strong>Preference</strong> select <strong>Webhook</strong>.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/c10fa5c33dfa3df7f43519d1a8b126025a571d2c95054f52d782d48ef217a977-webhookfield.png" /></span></span>
+                    <ol start="5">
+                      <li>Enter a valid URL in the <strong>Webhook</strong> field that is shown. This is the URL where Testim will POST the run result.
+                      </li>
+                    </ol> <span><span><img alt="" src="https://files.readme.io/bd200e6bcb5023dea0a893c75f2dff098e983997ca1c68842b59f2a2b9abceff-webhook2.png" /></span></span>
+                    <ol start="6">
+                      <li>Click <strong>Save</strong>.
+                      </li>
+                    </ol>
+                  </div>
+                  <div>
+                    <div>
+                      <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                      </p>
+                    </div>
+                  </div>
+                  <hr />
+                  <nav><a href="/docs/scheduler-mobile"><span></span>
+                    <div>Scheduler - Mobile
+                    </div></a><a href="/docs/running-tests-on-multiple-browsers">
+                    <div>Running tests on multiple browsers
+                    </div><span></span></a>
+                  </nav>
+                </section>
+                <section>
+                  <div>
+                    <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </article>

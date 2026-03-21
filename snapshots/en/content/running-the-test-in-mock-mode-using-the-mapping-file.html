@@ -1,0 +1,99 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Running the test in Mock mode
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>After recording a new HAR and/or uploading a custom HAR and/or a Mapping File, the mock network mode for the test will be automatically enabled.
+        </p> <span><span><img alt="264" src="https://files.readme.io/26999eb-mock9.png" /></span></span>
+        <p>You can run the test in Mock Network mode locally using the UI or remotely through the CLI.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Running the test locally through the UI
+          </div><a href="#running-the-test-locally-through-the-ui"></a>
+        </h2>
+        <p><i></i><strong>To run your test locally:</strong>
+        </p>
+        <ol>
+          <li>In the Testim Visual Editor, go to the <strong>Test List</strong> screen and click a test for which you have recorded a new HAR or uploaded a custom HAR.
+          </li>
+          <li>In the Test Editor screen, a <strong>Mock Network</strong> icon will be displayed next to the <strong>Play</strong> button, indicating that the Mock network is available.
+          </li>
+        </ol> <span><span><img alt="274" src="https://files.readme.io/173c389-mock6.png" /></span></span>
+        <ol start="3">
+          <li>Click the <strong>Play</strong> button to run the test using the mock network.
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>Running the test locally through the CLI
+          </div><a href="#running-the-test-locally-through-the-cli"></a>
+        </h2>
+        <p>If a test is in a mock mode in the editor, its default run mode will be mock also through the CLI, no further flag needed
+        </p>
+        <h3>
+          <div>
+          </div>
+          <div>Running the test using the mapping file only
+          </div><a href="#running-the-test-using-the-mapping-file-only"></a>
+        </h3>
+        <p>If you already uploaded a mapping file through the editor, this file will also be used in the CLI run. It is also possible to override the mapping file for the entire run by providing the path to the created mapping file. This option is only supported for remote runs.
+        </p>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>&gt; testim --override-map-file &lt;/path/to/mapping/file.json&gt;</code></pre>
+          </div>
+        </div>
+        <p>In that case, the hierarchy to mock a request will be
+        </p>
+        <ul>
+          <li>CLI mapping file
+          </li>
+          <li>Test mapping file
+          </li>
+          <li>HAR file
+          </li>
+          <li>Perform actual call
+          </li>
+        </ul>
+        <p>Example:
+        </p>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>testim &lt;your CLI options&gt; &lt;your CLI parameters&gt; --override-map-file &lt;documents/mappingFile.json&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/creating-a-mapping-file"><span></span>
+        <div>Creating a Mapping File
+        </div></a><a href="/docs/disabling-network-mock-mode">
+        <div>Disabling Network Mock Mode
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

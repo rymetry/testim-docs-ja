@@ -1,0 +1,63 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Advanced Conditions Settings
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Conditions in Testim can be applied to running a step or to repeating a loop (see <a href="doc:loops">Repeat Group Loops</a>).
+          <br /> <!-- -->If a condition for a step or loop is false, the default action is to skip the step or end the loop immediately. Alternatively, if a condition for a step or loop is true, the default action is to immediately execute the step or repeat the loop. Use the advanced options below if you want the system to continue checking the condition for a specific amount of time before declaring it to be true or false.
+          </p>
+          <blockquote theme="📘"><span>📘</span>
+            <h3>
+              <div>
+              </div>
+              <div>Advanced settings can be applied to the following types of conditions: Element, Element text, &amp; Custom
+                <br /> <!-- -->Advanced settings can be applied to the following types of loops: While element, While element text is, For each item, Loop for, &amp; Custom
+                </div><a href="#advanced-settings-can-be-applied-to-the-following-types-of-conditions-element-element-text--customadvanced-settings-can-be-applied-to-the-following-types-of-loops-while-element-while-element-text-is-for-each-item-loop-for--custom"></a>
+              </h3>
+            </blockquote>
+            <p><i></i> <strong>To configure advanced condition settings:</strong>
+            </p>
+            <ol>
+              <li>Configure a condition as described in <a href="doc:conditions">Conditions</a> or configure a loop as described in <a href="doc:loops">Repeat Group Loops</a>.
+              </li>
+              <li>In the Properties panel, in the <strong>When to run step</strong> section (or the <strong>Repeat group</strong> section for Loops), click on the <strong>Settings</strong> (:fa-cog:) icon. The <strong>Advanced</strong> panel opens on the right side.
+              </li>
+            </ol> <span><span><img alt="276" src="https://files.readme.io/9e54f5e-WhenToRunStepCustom.png" /></span></span> <span><span><img alt="293" src="https://files.readme.io/2d936c1-Testim_Image_031.png" /></span></span>
+            <p>Configure the advanced settings as follows:
+            </p>
+            <ul>
+              <li><strong>When a condition fails retry</strong> – Select this checkbox and specify a period of time in milliseconds for retries when the condition is false before continuing with the next steps. By default, if the condition returns false on the first try, the step is immediately skipped (or the loop will immediately stop). If you want the system to try again before moving on to the next step (or exiting the loop), use this option.
+              </li>
+              <li><strong>When a condition passes verify</strong> – By default, if the condition is true the step (or group step in a loop) will be executed. However, by selecting this option and specifying a period of time in milliseconds, the system will retry again before declaring a condition to be true and executing the step (or entering the loop). If the condition returns false on the first attempt, it will not retry again even if this option was marked.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div>
+              <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+              </p>
+            </div>
+          </div>
+          <hr />
+          <nav><a href="/docs/conditions"><span></span>
+            <div>Conditions
+            </div></a><a href="/docs/generating-a-random-value">
+            <div>Generating a random value
+            </div><span></span></a>
+          </nav>
+        </section>
+        <section>
+          <div>
+            <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>

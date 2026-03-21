@@ -1,0 +1,168 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Test suites
+        </h1>
+        <div>
+          <div>
+            <p>Learn how to organize your tests into test suites and manage their running sequence
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Test Suites give you the flexibility to manage the order between tests. You group them in suites so that you can create different groups of tests. This capability makes it easy to select which tests will be included in your suite as well as determine the order in which they will run. Test suites are supported for both Web and Mobile.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Create a new test suite
+          </div><a href="#create-a-new-test-suite"></a>
+        </h2>
+        <p><i></i> <strong>To create a new test suite:</strong>
+        </p>
+        <ol>
+          <li>Navigate to <strong>Test List &gt; Suites</strong>.
+          </li>
+          <li>Click the <strong>New Suite</strong> button or click <strong>Create Suite</strong> if there are currently no test suites.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/0bfe227-newtestsuite.png" /></span></span>
+        <ol start="3">
+          <li>Give the Test Suite a <strong>Name</strong> and <strong>Description</strong>.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/866a2f2-geninfo.png" /></span></span>
+        <ol start="4">
+          <li>Search for tests by name or label and/or select one or more tests to include in the suite.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/85b039b-tests.png" /></span></span>
+        <ol start="5">
+          <li>Click the <strong>OK</strong> button to create the Test Suite. The new suite is created and displayed in the Suites Library.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/b38b549-suitecreated.png" /></span></span>
+        <h3>
+          <div>
+          </div>
+          <div>Adding Tests to a Test Suite by Label
+          </div><a href="#adding-tests-to-a-test-suite-by-label"></a>
+        </h3>
+        <p>You can add tests to a test suite with specific <a href="doc:labels">Labels</a>.
+        </p> <span><span><img alt="" src="https://files.readme.io/9085a97-testlabels.png" /></span></span>
+        <p><i></i> <strong>To add tests to a test suite by label:</strong>
+        </p>
+        <ol>
+          <li>When adding tests to a test suite, search for the label by name.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/37cd081-label.png" /></span></span>
+        <ol start="2">
+          <li>Testim will display a list of tests with that label. Select one or more tests from the list with that label and save your test.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/b982b26-labelfiltered.png" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Edit an existing test suite
+          </div><a href="#edit-an-existing-test-suite"></a>
+        </h2>
+        <p><i></i> <strong>To edit an existing test suite:</strong>
+        </p>
+        <ol>
+          <li>Select the test suite you want to edit and click the <strong>Edit</strong> button in the action panel.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/17f71bf-editsuite.png" /></span></span>
+        <ol start="2">
+          <li>Update the suite information, add/remove tests from the suite, and click the <strong>OK</strong> button.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/029def2-editsuite2.png" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Re-Order tests in a test suite
+          </div><a href="#re-order-tests-in-a-test-suite"></a>
+        </h2>
+        <p>By default tests are ordered in the suite based on the order in which they are selected. You can arrange and change the order of the tests in a suite once the suite has been created.
+        </p>
+        <p><i></i> <strong>To re-order the tests in a test suite:</strong>
+        </p>
+        <ol>
+          <li>Double click the test suite you want to re-order.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/425cccb-doubleclick.png" /></span></span>
+        <ol start="2">
+          <li>Select a test and use the <strong>Move Up</strong> and <strong>Move Down</strong> buttons to change the order of the test in the list.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/de91845-reorder.png" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Running your Test Suite
+          </div><a href="#running-your-test-suite"></a>
+        </h2>
+        <h4>
+          <div>
+          </div>
+          <div>Using CLI
+          </div><a href="#using-cli"></a>
+        </h4>
+        <p>In order to execute a test suite, you&#x27;ll need to specify the test suite name in your CLI command like this:
+        </p>
+        <div>
+          <div><button>Shell</button>
+          </div>
+          <div><pre><code>--suite &quot;Tutorial Demo&quot;</code></pre>
+          </div>
+        </div>
+        <p>Read more about running <a href="doc:cli-settings">CLI</a> here.
+        </p>
+        <h4>
+          <div>
+          </div>
+          <div>Using Scheduler
+          </div><a href="#using-scheduler"></a>
+        </h4>
+        <p>You can run your suite from Testim scheduler.
+          <br /> <!-- -->Read <a href="https://help.testim.io/docs/scheduler">here</a> to see how.
+          </p>
+          <blockquote theme="📘"><span>📘</span>
+            <h3>
+              <div>
+              </div>
+              <div>Note:
+              </div><a href="#note"></a>
+            </h3>
+            <p>If you use parallel in your command, the order of the run is no longer guaranteed.
+            </p>
+          </blockquote>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <div>
+          <header>
+            <div>What’s Next
+            </div>
+          </header>
+          <div>
+          </div>
+          <ul>
+            <li><a href="/docs/test-plans">Test Plans</a><span><span></span></span>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

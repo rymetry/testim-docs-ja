@@ -1,0 +1,144 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Bamboo integration
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div><span><span><img alt="780" src="https://files.readme.io/1c8410c-Bamboo0.png" /></span></span>
+        <p>In order to integrate your tests with Bamboo, first you need to have Node.js (version &gt;= 6.0.0) installed on the Bamboo server or one of its agent machines.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Now, just follow these steps:
+          </div><a href="#now-just-follow-these-steps"></a>
+        </h2>
+        <h3>
+          <div>
+          </div>
+          <div>1. Create a New plan in Bamboo:
+          </div><a href="#1-create-a-new-plan-in-bamboo"></a>
+        </h3> <span><span><img alt="661" src="https://files.readme.io/0faedb6-Bamboo2.png" /></span></span>
+        <p>1.1. Enter plan name (e.g. &quot;Testim Tests&quot;), choose repository host &quot;None&quot; and click &quot;Configurate plan&quot;:
+        </p> <span><span><img alt="1016" src="https://files.readme.io/fa42a83-Bamboo3.png" /></span></span>
+        <p>1.2. Select &quot;Yes please!&quot; checkbox under &quot;Enable this plan?&quot; section:
+        </p> <span><span><img alt="643" src="https://files.readme.io/73d02b0-Bamboo4.png" /></span></span>
+        <h3>
+          <div>
+          </div>
+          <div>2. Add install Testim CLI task:
+          </div><a href="#2-add-install-testim-cli-task"></a>
+        </h3>
+        <p>​
+          <br /> <!-- -->2.1. Click on &quot;Add task&quot;:
+            <br /> <!-- -->2.2. Choose &quot;npm&quot; task:
+            </p> <span><span><img alt="903" src="https://files.readme.io/71b903a-Bamboo5.png" /></span></span>
+            <p>2.3. Enter task description (e.g &quot;Install Testim CLI&quot;)
+              <br /> <!-- -->2.4. Choose existing Node.Js executable or add new with Node.Js path
+              </p> <span><span><img alt="552" src="https://files.readme.io/2348387-Bamboo6.png" /></span></span>
+              <p>2.5. Insert Command:
+              </p>
+              <div>
+                <div><button>JavaScript</button>
+                </div>
+                <div><pre><code>install -g @testim/testim-cli</code></pre>
+                </div>
+              </div>
+              <p>2.6. Click &quot;Save&quot;:
+              </p> <span><span><img alt="611" src="https://files.readme.io/663eab3-Bamboo7.png" /></span></span>
+              <h3>
+                <div>
+                </div>
+                <div>3. Add run Testim CLI task:
+                </div><a href="#3-add-run-testim-cli-task"></a>
+              </h3>
+              <p>​
+                <br /> <!-- -->3.1. Click on &quot;Add task&quot;:
+                  <br /> <!-- -->3.2. Choose &quot;Command&quot; task:
+                  </p> <span><span><img alt="879" src="https://files.readme.io/e6c0d23-Bamboo8.png" /></span></span>
+                  <p>3.3. Enter task description (e.g &quot;Run Testim CLI&quot;)
+                    <br /> <!-- -->3.4. Choose existing &quot;Testim CLI&quot; executable or add a new &quot;Testim CLI&quot; executable:
+                    </p> <span><span><img alt="555" src="https://files.readme.io/5d5f0ba-Bamboo9.png" /></span></span>
+                    <p>3.5. Insert argument:
+                    </p>
+                    <div>
+                      <div><button>Shell</button>
+                      </div>
+                      <div><pre><code>--label &quot;&lt;YOUR LABEL&gt;&quot; --token &quot;&lt;YOUR ACCESS TOKEN&gt;&quot; --project &quot;&lt;YOUR PROJECT ID&gt;&quot;  --grid &quot;&lt;Your grid name&gt;&quot; --report-file ${bamboo.build.working.directory}/testim-tests-${bamboo.buildNumber}-report.xml</code></pre>
+                      </div>
+                    </div>
+                    <p><strong>Note</strong>: For the grid name, read <a href="doc:grid-management">here</a> how to set up your grid.
+                    </p>
+                    <p>3.6. Click &quot;Save&quot;:
+                    </p> <span><span><img alt="620" src="https://files.readme.io/9ae3664-Bamboo10.png" /></span></span>
+                    <h3>
+                      <div>
+                      </div>
+                      <div>4. Add collect test results task
+                      </div><a href="#4-add-collect-test-results-task"></a>
+                    </h3>
+                    <p>4.1. Click on &quot;Add task&quot;:
+                      <br /> <!-- -->4.2. Choose &quot;JUnit Parser&quot; task:
+                      </p> <span><span><img alt="885" src="https://files.readme.io/7736c24-Bamboo11.png" /></span></span>
+                      <p>4.3. Enter task description (e.g &quot;Collect Testim Results&quot;)
+                        <br /> <!-- -->4.4. Insert &quot;Specify custom results directories&quot;:
+                        </p>
+                        <div>
+                          <div><button>Shell</button>
+                          </div>
+                          <div><pre><code>**/testim-tests-*-report.xml</code></pre>
+                          </div>
+                        </div>
+                        <p>4.5. Click &quot;Save&quot;:
+                        </p> <span><span><img alt="607" src="https://files.readme.io/88541f8-Bamboo12.png" /></span></span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>5. Click on &quot;Create&quot;​
+                          </div><a href="#5-click-on-create"></a>
+                        </h3> <span><span><img alt="1006" src="https://files.readme.io/8e543c5-Bamboo13.png" /></span></span> <span><span><img alt="1304" src="https://files.readme.io/f4235cf-Bamboo14.png" /></span></span>
+                        <h3>
+                          <div>
+                          </div>
+                          <div>6. Run Plan
+                          </div><a href="#6-run-plan"></a>
+                        </h3>
+                        <p>6.1. Click on Run button
+                        </p> <span><span><img alt="451" src="https://files.readme.io/cde9d6d-Bamboo15.png" /></span></span>
+                        <p>6.2. Wait until plan finished
+                          <br /> <!-- -->6.2. Check Tests results
+                          </p> <span><span><img alt="488" src="https://files.readme.io/6f346c1-Bamboo16.png" /></span></span>
+                        </div>
+                        <div>
+                          <div>
+                            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                            </p>
+                          </div>
+                        </div>
+                        <hr />
+                        <div>
+                          <header>
+                            <div>What’s Next
+                            </div>
+                          </header>
+                          <div>
+                          </div>
+                          <ul>
+                            <li><a href="/docs/the-command-line-cli">Command line interface (CLI)</a><span><span></span></span>
+                            </li>
+                          </ul>
+                        </div>
+                      </section>
+                      <section>
+                        <div>
+                          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </article>

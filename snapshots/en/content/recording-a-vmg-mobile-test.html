@@ -1,0 +1,344 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Recording a Mobile Test Using VMG
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The Virtual Mobile Grid can be used to record tests as well as to run them across a wide variety of iOS simulators and Android emulators. It is connected to your <a href="doc:mobile-apps">Mobile Apps Library</a>. This means that if the test that you are running uses a mobile app, this app needs to be added to the Mobile Apps Library before running the test on the Virtual Mobile Grid.
+        </p>
+        <p>The Virtual Mobile Grid does not require any special integration. It is included in the license for paying customers. However, Community license users can to enroll in a free trial as a Company Owner or Project Owner. Once the free trial is started, the Virtual Mobile Grid is immediately available under <a href="https://help.testim.io/docs/view-local-connected-mobile-devices">Device Management</a>. During the free trial period, a variety of virtual devices (Android and iOS) will be available for you to use.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Modes
+          </div><a href="#modes"></a>
+        </h2>
+        <p>The recording can be performed in one of the following modes:
+        </p>
+        <ul>
+          <li><strong>Enhanced mode (recommended)</strong> - Testim’s new Enhanced mode delivers stable, faster, and more versatile tests compared to Appium-based testing. With its zero-knowledge approach and unified API, the new Enhanced mode sees the structure of your mobile views better than any other tool in the market. This mode supports testing across all mobile applications (native, hybrid, or cross-platform frameworks). Tests recorded in this mode can be executed on VMG only. See <a href="doc:enhanced-mode-mobile">Enhanced Mode (Mobile)</a> for more details.
+          </li>
+          <li><strong>Appium mode</strong> - This mode guarantees the compatibility of your test with other Appium-based grids and supports local executions on your local devices. On the other hand, this mode is restricted to Appium&#x27;s capabilities, meaning that you might not be able to record all your test flows, especially if you use a hybrid app or webviews. Note that existing tests will still work if you are using Appium Compatibility mode.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Before we begin
+          </div><a href="#before-we-begin"></a>
+        </h2>
+        <p>Before we begin, make sure you have the following:
+        </p>
+        <ul>
+          <li><strong>A mobile testing project</strong> - mobile testing requires a mobile testing project that is separate from the web testing project. If you do not have an existing mobile project, contact Tricentis support.
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note"></a>
+          </h3>
+          <p>Each project is assigned to a single mobile operating system. A separate project is required to create/run tests on different operating systems. For example, you cannot create a test for an iOS device if the project was created for Android.
+          </p>
+        </blockquote>
+        <ul>
+          <li><strong>Virtual Mobile Grid</strong> - The Virtual Mobile Grid does not require any special integration. It is included in the license for paying customers. However, Community license users, it is possible to enroll in a free trial as a Company Owner or Project Owner. During the free trial period, a variety of virtual devices (Android and iOS) will be available for you to use. For more information, see <a href="doc:virtual-mobile-grid">Virtual Mobile Grid</a>.
+          </li>
+        </ul>
+        <br />
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Free Trial limitations
+            </div><a href="#free-trial-limitations"></a>
+          </h3>
+          <p>The following limitations apply to the free trial:
+          </p>
+          <ul>
+            <li>No parallelization
+            </li>
+            <li>Executions are limited to 10 minutes
+            </li>
+            <li>Executions can run once every hour
+            </li>
+          </ul>
+          <p>If you need additional capabilities, please contact your Tricentis representative.
+          </p>
+        </blockquote>
+        <ul>
+          <li><strong>Application Requirements -</strong>
+            <ul>
+              <li><strong>Enhanced Mode</strong> - the following requirements apply:<!-- -->
+                <ul>
+                  <li>Native apps - For Android devices - Java or Kotlin apps. For iOS devices - Objective C or Swift.
+                  </li>
+                  <li>Native apps with Webviews
+                  </li>
+                  <li>React Native apps
+                  </li>
+                  <li>Flutter apps
+                  </li>
+                </ul>
+              </li>
+              <li><strong>Appium Mode</strong> - in this mode only native apps are supported. For Android devices - <strong>Java or Kotlin</strong> apps. For iOS devices - <strong>Objective C or Swift</strong>.
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Recording a Mobile Test
+          </div><a href="#recording-a-mobile-test"></a>
+        </h2>
+        <p>You can record a test on a mobile device to be run manually or automatically at a later time. During the test you can record only a single application from one device. However, when playing back the test, you will be able to run the same test on another device than the device used during the recording.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Virtual/Physical recording
+            </div><a href="#virtualphysical-recording"></a>
+          </h3>
+          <p>Tests that were recorded on a virtual device, such as the virtual devices provided on the Virtual Mobile Grid, can be run on virtual devices only. And tests that were recorded on physical devices can be run on a physical device only.
+          </p>
+        </blockquote>
+        <p><i></i> <strong>To record a mobile test:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>From the Dashboard screen click the <strong>New Test</strong> button.
+            </p> <span><span><img alt="" src="https://files.readme.io/5302733-new_test.png" /></span></span>
+          </li>
+          <li>
+            <p>To begin recording your test, click the <strong>Record</strong> button in the action menu.
+            </p>
+          </li>
+          <li>
+            <p>In the <strong>Select a device</strong> dialog, make sure <strong>Virtual Mobile Grid</strong> is selected.
+            </p>
+          </li>
+          <li>
+            <p>Do one of the following:
+            </p>
+            <ol>
+              <li>
+                <p>To use <a href="doc:enhanced-mode-mobile">Enhanced Mode (Mobile)</a>, select the <strong>Enhanced mode</strong> tab.
+                </p> <span><span><img alt="" src="https://files.readme.io/ea12c91ebcf0e6e6d427134bdcfce9308a06ba296f36d0e93998b3b2f6f416a0-enhancedmodetab.png" /></span></span>
+              </li>
+              <li>
+                <p>To use Appium mode, select the <strong>Appium mode</strong> tab.
+                </p> <span><span><img alt="" src="https://files.readme.io/92b76958e6b1820076226cf7ede65fc2a2cf8ddafdc64c40f7ae2a63224dfa1e-appiummodetab.png" /></span></span>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <p>Select the desired <strong>Device</strong> and <strong>OS Version</strong> from the drop-down menus.
+            </p>
+          </li>
+          <li>
+            <p>Select an <strong>Application</strong> to be tested by doing one of the following:
+            </p>
+            <ol>
+              <li><strong>To use an app from the library</strong> - click <strong>From Library</strong> and then navigate and select the desired application. Click <strong>Done</strong> to finish.
+              </li>
+              <li><strong>To upload an app</strong> - click <strong>Upload App</strong> and then from the .apk file to the designated area or click to open a file explorer to find the file.
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>App compilation compatibility (iOS only)
+            </div><a href="#app-compilation-compatibility-ios-only"></a>
+          </h3>
+          <p>If you want to record a test using a virtual device, make sure that that the app was compiled for virtual devices (.app). And vice versa, if you want to record using a physical device, make sure that the app was compiled to work on physical devices (.ipa). See <a href="doc:how-to-prepare-an-ipa-for-mobile-testing">How to Prepare a .ipa for Mobile Testing</a> for more information.
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>When running the test on Virtual Mobile Grid it may take about 30 seconds up to a minute to initiate the test. This is the time VMG needs to create a fresh virtual device from a pristine device image and install your app on it.
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note-1"></a>
+          </h3>
+          <p>Each test can only interact with a single application.
+          </p>
+        </blockquote>
+        <ol start="7">
+          <li>Click <strong>Done</strong>.
+          </li>
+          <li>An <strong>AUT (Application Under Test) Mirroring Viewer</strong> is displayed with the opened application under test. The viewer allows you to view the device and interact with the application under test, while Testim records the actions. See <a href="doc:recording-a-vmg-mobile-test#supported-mobile-actions">Supported Mobile Actions</a>
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/90125a4e26d68431edb0550f0ba266a6e101c4ccabb1965fdf3ea4abf1a7dd2d-recording2.gif" /></span></span>
+        <blockquote theme="🚧"><span>🚧</span>
+          <h3>
+            <div>
+            </div>
+            <div>Important Notice
+            </div><a href="#important-notice"></a>
+          </h3>
+          <p>When recording a test, try to choose text elements and avoid outer frames, images and icons for better stability.
+          </p>
+        </blockquote> <span><span><img alt="" src="https://files.readme.io/b4b47b7-image_20.png" /></span></span>
+        <ol start="8">
+          <li>To stop recording, click the <strong>Stop Recording</strong> button or close the Viewer window.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/92a68f8-stoprecording.png" /></span></span>
+        <ol start="9">
+          <li>
+            <p>Click the <strong>Show Properties</strong> button on the <strong>Setup step</strong>.
+            </p> <span><span><img alt="" src="https://files.readme.io/ca97285-showproperties.png" /></span></span>
+          </li>
+          <li>
+            <p>In the <strong>Properties Pane</strong>, configure the following settings:
+            </p>
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/4d9063d-testconfiguration.png" /></span></span>
+        <ul>
+          <li><strong>Test name</strong> - enter the name for the test. By default the test name is &quot;untitled test&quot;
+          </li>
+          <li><strong>Description</strong> - optionally enter a description for the test.
+          </li>
+          <li><strong>Configuration</strong> - by default the configuration is set to use any device with any OS version that is available on VMG. If you would like to use a different configuration, see <a href="doc:setting-the-test-configuration">Setting the Test Configuration</a>.
+          </li>
+          <li><strong>Test Data</strong> - allows you to configure data-driven tests by defining a Data Set in JavaScript or multiple ordered Data Sets with a JS Array literal of objects. See <a href="doc:configuring-a-data-driven-test-from-the-visual-editor">Configuring a Data-driven Test From The Visual Editor</a>.
+          </li>
+        </ul>
+        <ol start="11">
+          <li>Click <strong>Save</strong> to save the test.<!-- -->
+            <blockquote theme="🚧"><span>🚧</span>
+              <h3>
+                <div>
+                </div>
+                <div>Auto Recovery
+                </div><a href="#auto-recovery"></a>
+              </h3>
+              <p>Whenever you create a new test or make changes to an existing test, make sure to save the test. But don&#x27;t worry, if you close your browser before saving your test, it will be stored in your browser&#x27;s cache and you should be able to resume your work. See <a href="doc:recovering-a-test-that-was-not-saved">Recovering a test that was not saved</a> for more details.
+              </p>
+            </blockquote>
+          </li>
+          <li>If you want to configure additional test configuration settings, see <a href="doc:setting-the-test-configuration">Setting the Test Configuration</a>.
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>Supported Mobile Actions
+          </div><a href="#supported-mobile-actions"></a>
+        </h2>
+        <p>The following actions are currently supported when using the AUT Viewer during the recording of the test:
+        </p>
+        <ul>
+          <li><strong>Tap</strong> - simulates a user tapping an element on the mobile device screen. To create this step, click the mouse on the AUT Viewer screen during recording.
+          </li>
+          <li><strong>Swipe Vertical</strong> - simulates a user pressing and dragging their finger across the screen vertically. To create this step, click the mouse, drag the cursor in a vertical direction, and release the mouse button.
+          </li>
+          <li><strong>Swipe Horizonal</strong> - simulates a user pressing and dragging their finger across the screen horizontally. To create this step, click the mouse, drag the cursor in a horizontal direction, and release the mouse button.
+          </li>
+          <li><strong>Set Custom Text</strong> - simulates a user entering text into a text field in the app. When hovering your mouse on a text element, the element is highlighted in red. Clicking the text element open a <strong>Set Custom Text</strong> window. Enter the desired text in the field and click the <strong>Send</strong> button.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Adding additional steps and edit the properties
+          </div><a href="#adding-additional-steps-and-edit-the-properties"></a>
+        </h2>
+        <p>During the recording or after the test is saved, you can add additional predefined steps and edit the some or all of the steps&#x27; properties.
+        </p>
+        <p>To learn more about common step properties, see - <a href="doc:editing-a-steps-properties">Editing a Step’s Properties</a>
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Supported Predefined Mobile Actions
+          </div><a href="#supported-predefined-mobile-actions"></a>
+        </h2>
+        <p>The following actions are currently supported when adding steps manually during or after the recording of the test:
+        </p>
+        <ul>
+          <li><a href="https://help.testim.io/docs/email-validation"><strong>Validate email</strong></a> - Testim offers a built-in email service which provides permanent and temporary email addresses. The Validate email step can be used with these email addresses to test your app sign-up or login flows.
+          </li>
+          <li><a href="https://help.testim.io/docs/validate-element-visible"><strong>Validate element visible</strong></a> - The element visible validation allows you to check whether your element exists and is visible on the page. If your element contains a variable image or text, validation will still work. This validation verifies that the element exists and is visible, but does not check its specific content.
+          </li>
+          <li><a href="https://help.testim.io/docs/validate-element-text"><strong>Validate element text</strong></a> - An Element Text validation is similar to an Element Visible validation in that it makes the step dependent on the existence of a specific element. However, for the Element Text validation, you also specify a particular text value that must appear in the specified element.
+          </li>
+          <li><a href="https://help.testim.io/docs/wait-for#wait-for-element-visible"><strong>Wait for element visible</strong></a> - Use wait for element visible to wait for your element to be visible on the page.
+          </li>
+          <li><a href="https://help.testim.io/docs/wait-for#wait-for-element-text"><strong>Wait for element text</strong></a> - Use wait for element text to make sure a specific text appears before continuing with the test.
+          </li>
+          <li><a href="https://help.testim.io/docs/wait-for#sleep"><strong>Sleep</strong></a> - Enable waiting for a period of time between steps. - <a href="https://help.testim.io/docs/extract-text"><strong>Add extract value step</strong></a> - Lets you copy values directly from your application to be used in later steps.
+          </li>
+          <li><strong>Add set text step</strong> - adds a specified text to the selected target element.
+          </li>
+          <li><strong>Code verification</strong> - sends key strokes to the device. This is typically used to fill code verification elements, such as a one-time password code element. It is possible to add delays between characters.
+          </li>
+          <li><a href="https://help.testim.io/docs/email-validation#generating-a-temporary-email-address"><strong>Generate email address</strong></a> - generate a new random email address to be used every time you run a test, for example to test a sign-up flow multiple times with a new user each time.
+          </li>
+          <li><a href="https://help.testim.io/docs/add-cli-validations-and-actions"><strong>Add CLI action</strong></a> - executes custom Node.js scripts in your CLI environment.
+          </li>
+          <li><a href="https://help.testim.io/docs/api-testing#adding-an-api-action-step"><strong>Add API action</strong></a> - used when you want to get data that is returned from an API call. You can use this data just to check that it is returned.
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <p>
+          </p>
+          <p>Before running custom code using <strong>Add CLI action</strong> and/or Add API action steps, you will need to run <a href="https://help.testim.io/docs/the-command-line-cli">Testim CLI</a>.
+          </p>
+        </blockquote>
+        <ul>
+          <li><a href="https://help.testim.io/docs/generating-a-random-value"><strong>Generate random value</strong></a> - generates random values for dynamic data testing.
+          </li>
+          <li><a href="https://help.testim.io/docs/generating-a-date"><strong>Generate date</strong></a> - generates a date according to predefined properties.
+          </li>
+          <li><strong>Reset app</strong> - In Android this step closes the application, clears the cache and then starts the app again. In iOS this step closes and starts the application (does not clear its cache). The step is typically used to reset the app and clear its cache before the next run.
+          </li>
+          <li><strong>Back</strong> - sends a back command to the device. Supported in Android only.
+          </li>
+          <li><strong>Scroll to element text</strong> - dynamically scrolls to the selected text element.
+          </li>
+          <li><a href="doc:execute-driver-script-step">Execute Driver Script Step (mobile)</a> - The Execute Driver Script step allows you to run a script using Appium 2.0 or higher for extended capabilities and validations in your tests.
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/recording-a-mobile-test"><span></span>
+        <div>Recording a Mobile Test
+        </div></a><a href="/docs/recording-a-local-mobile-test">
+        <div>Recording a Mobile Test Using a Local Device
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

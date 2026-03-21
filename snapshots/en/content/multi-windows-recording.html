@@ -1,0 +1,161 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Recording in multiple windows
+        </h1>
+        <div>
+          <div>
+            <p>Record scenario that involves new tabs, pop-up windows or new opened windows
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Recording multiple pages is required when you need to create a test that contains links that open in a new tab or pop-up window. By default, when you create a new test, any action you make is recorded automatically if it derives from the initial recorded page.
+        </p>
+        <p><strong>For example</strong>: Let&#x27;s say you want to create a test for your company&#x27;s &quot;Contact us&quot; page.
+        </p> <span><span><img alt="1412" src="https://files.readme.io/3335429-Screen_Shot_2021-08-26_at_9.38.12.png" /></span></span>
+        <p>The page contains a form and also links to the company&#x27;s social media pages: YouTube, Twitter, Linkedin &amp; Facebook.
+        </p> <span><span><img alt="1403" src="https://files.readme.io/06a6583-Untitled.png" /></span></span>
+        <p>​Any of those links are opened in a new tab. If you&#x27;d click them while &quot;Contact us&quot; page was recorded, any interaction you&#x27;d take in these tabs would have been recorded too.
+        </p> <span><span><img alt="1236" src="https://files.readme.io/2bf79c2-Screen_Shot_2021-08-26_at_10.01.39.png" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Custom steps (JavaScript)
+          </div><a href="#custom-steps-javascript"></a>
+        </h2>
+        <p>When using custom actions with multiple tabs, by default, the step will run in the context of the first tab of the recording.
+          <br /> <!-- -->If you need to run in the context of another tab, add an <a href="doc:parameters-in-custom-javascript-steps">HTML parameter</a> to that step.
+          </p>
+          <p>You can use the custom step to open a new tab, see <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/iKXZ6Ic8Xo">here</a> for an example.
+          </p>
+          <blockquote theme="🚧"><span>🚧</span>
+            <h3>
+              <div>
+              </div>
+              <div>Note
+              </div><a href="#note"></a>
+            </h3>
+            <p>Steps will run on the tab they were recorded on, for example, if the steps were recorded on tab# 2 and then the test is running these steps on tab# 3, it will try to run them on tab# 2).
+            </p>
+          </blockquote>
+          <h2>
+            <div>
+            </div>
+            <div>My new window is blocked. What can I do?
+            </div><a href="#my-new-window-is-blocked-what-can-i-do"></a>
+          </h2>
+          <p>If your test involves opening of a new window (&quot;pop-up&quot;) and it was blocked during running the test locally, the address bar will be marked Pop-ups blocked
+          </p> <span><span><img alt="16" src="https://files.readme.io/c2a1040-XwfWobfXD_zcXU4tEwzxHPuK6dTTPG200fLzsZU7QcguWbIQzm4tk7sLDutpAUWFMAh18.png" /></span></span>
+          <p>You will probably notice this blockage the first time you run the test. The browser will detect an automatic click and will block the new tab/window. You will need to enable the popup in your browser only in the first run.
+            <br /> <!-- -->​
+            </p>
+            <h2>
+              <div>
+              </div>
+              <div>Allow pop-ups through the address bar (while the test is running)
+              </div><a href="#allow-pop-ups-through-the-address-bar-while-the-test-is-running"></a>
+            </h2>
+            <p><i></i> <strong>To allow pop-ups through the address bar:</strong>
+            </p>
+            <ol>
+              <li>On your computer, open <strong>Chrome</strong>.
+              </li>
+              <li>Find the page for which the pop-up has been blocked.
+              </li>
+              <li>In the address bar, click <strong>Pop-ups blocked</strong>.
+              </li>
+              <li>Click the <strong>link</strong> for the pop-up window you&#x27;d like to see.
+              </li>
+              <li>To always see pop-ups for the site, select <strong>Always show pop-ups from[site]</strong>
+              </li>
+            </ol>
+            <h2>
+              <div>
+              </div>
+              <div>Allow pop-ups through Chrome settings:
+              </div><a href="#allow-pop-ups-through-chrome-settings"></a>
+            </h2>
+            <p><i></i> <strong>To allow pop-ups through Chrome settings:</strong>
+            </p>
+            <ol>
+              <li>On your computer, open Chrome.
+              </li>
+              <li>At the top right, click <strong>More</strong>.
+              </li>
+              <li>Click <strong>Settings</strong>.
+              </li>
+              <li>At the bottom, click <strong>Show advanced settings</strong>.
+              </li>
+              <li>Under &quot;Privacy,&quot; click <strong>Content settings</strong>.
+              </li>
+              <li>Under &quot;Pop-ups,&quot; select an option: <strong>Allow all sites to show pop-ups</strong>
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <h3>
+                <div>
+                </div>
+                <div>Incognito mode
+                </div><a href="#incognito-mode"></a>
+              </h3>
+              <p>If you run your tests in incognito mode, the browser will not remember that you have authorized Testim and will block the new tab/window in each run. If you have multiple tabs/windows, we recommend not running in incognito mode.
+                <br /> <!-- -->​
+                </p>
+              </blockquote>
+              <h2>
+                <div>
+                </div>
+                <div>Reviewing multi-windows test results
+                </div><a href="#reviewing-multi-windows-test-results"></a>
+              </h2>
+              <p>When a test is executed on multiple windows or tabs, each step will have a numeric indication of the window/tab the step was executed in, for example, the following step was executed on the second tab:
+              </p> <span><span><img alt="424" src="https://files.readme.io/76fe2d0-Screen_Shot_2021-08-26_at_10.03.37.png" /></span></span>
+              <blockquote theme="📘"><span>📘</span>
+                <h3>
+                  <div>
+                  </div>
+                  <div>In case of multi tab application, when a step is recorded, the specific tab (e.g., tab #3) is stored. When the step is played, as part of test run, the Testim application looks for the tab based on two parameters: tab number and tab URL. The decision to run on a specific tab is based on these two parameters – so, the actual playing can result in a different tab number (e.g. tab #2) if both tabs URLs are identical.
+                  </div><a href="#in-case-of-multi-tab-application-when-a-step-is-recorded-the-specific-tab-eg-tab-3-is-stored-when-the-step-is-played-as-part-of-test-run-the-testim-application-looks-for-the-tab-based-on-two-parameters-tab-number-and-tab-url-the-decision-to-run-on-a-specific-tab-is-based-on-these-two-parameters--so-the-actual-playing-can-result-in-a-different-tab-number-eg-tab-2-if-both-tabs-urls-are-identical"></a>
+                </h3>
+              </blockquote>
+              <p>In order to see the screenshot of the step, you can click on the screenshot icon on the step. When a test fails, images of all tabs will be available :
+              </p> <span><span><img alt="2842" src="https://files.readme.io/8da0203-Screen_Shot_2021-08-26_at_10.06.50.png" /></span></span>
+              <h2>
+                <div>
+                </div>
+                <div>To conclude
+                </div><a href="#to-conclude"></a>
+              </h2>
+              <p>Any interaction will be recorded even if it was taken in a new tab, a new window or a new modal.
+                <br /> <!-- -->Needless to say, Testim also playbacks the scenario on the right window.
+                </p>
+              </div>
+              <div>
+                <div>
+                  <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <nav><a href="/docs/why-do-you-need-testim-extension"><span></span>
+                <div>Why do you need Testim extension?
+                </div></a><a href="/docs/recording-a-mobile-test">
+                <div>Recording a Mobile Test
+                </div><span></span></a>
+              </nav>
+            </section>
+            <section>
+              <div>
+                <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </article>

@@ -1,0 +1,136 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Search Within a Test
+        </h1>
+        <div>
+          <div>
+            <p>Learn how to use the search feature to find objects within a test
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The search feature allows you to search for objects within a test. The search is conducted by entering free text (at least three characters) into the search field within the test itself. The search is <strong>NOT</strong> case sensitive.
+        </p>
+        <p>The search is conducted in the following test objects (see limitations list at the bottom):
+        </p>
+        <ul>
+          <li><strong>Step description</strong> - the text that was inputted in the step&#x27;s <strong>Description</strong> field and/or the <strong>Text to assign</strong> field.
+          </li>
+          <li><strong>JS Code</strong> - any part of the JS Code that is part of a step. For example, any part of the JS Code in a <a href="doc:custom-code">Add custom validations and actions</a> step.
+          </li>
+          <li><strong>Parameters</strong> - the name and/or the value of a JS or HTML parameter inside a step.
+          </li>
+          <li><strong>Base URL</strong> - any part of the base URL.
+          </li>
+          <li><strong>URL</strong> - any part of a URL inside a <a href="doc:navigation">Navigation Step</a> or <a href="https://help.testim.io/docs/api-testing#adding-an-api-action-step">Add an API Action Step</a>
+          </li>
+          <li><strong>Test Data</strong> - any part of the Test Data in a step.
+          </li>
+          <li><strong>Condition</strong> - the any part of the Java Script condition defined in the <strong>When to run step</strong> attribute of the step when the <strong>Custom</strong> option is selected. See <a href="doc:conditions">Conditions</a>
+          </li>
+          <li><strong>Loop</strong> - the any part of the Java Script condition defined in the <strong>When to run step</strong> attribute of the step when the <strong>Loop for</strong> option is selected.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Using the search
+          </div><a href="#using-the-search"></a>
+        </h2>
+        <p><i></i> <strong>To search within a test:</strong>
+        </p>
+        <ol>
+          <li>In the test, click the <strong>Search</strong> button.
+            <br /> <span><span><img alt="" src="https://files.readme.io/e200c02-searchbutton.png" /></span></span>
+            </li>
+            <li>Type your search query. The search is NOT case sensitive. The search query should include at lease three characters.
+              <br /> <!-- -->The search results appear in the <strong>Search Results</strong> pane. Each result represents a step that includes one or more elements that matched (fully or partly) the search query. The string that matches the search is highlighted in yellow. For more information see <a href="https://help.testim.io/docs/search-within-a-test#understanding-the-search-results">Understanding the search results</a> section.
+                <br /> <span><span><img alt="" src="https://files.readme.io/f945272-searchresults.JPG" /></span></span>
+                </li>
+                <li>Click any on the search results to open the step.
+                </li>
+              </ol>
+              <h2>
+                <div>
+                </div>
+                <div>Understanding the search results
+                </div><a href="#understanding-the-search-results"></a>
+              </h2>
+              <p>The search results are grouped into categories according to the object type. Next to each category the number of occurrences is displayed. Unless explained otherwise, clicking on the result will navigate to the step where the result was found.
+              </p>
+              <ul>
+                <li><strong>Step Description</strong> - the first line of the result displays the value of the step&#x27;s <strong>Description</strong> field and/or the <strong>Text to assign</strong> field that included a match with the search string . The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step (which in this case is the value in the <strong>Text to assign</strong> field)
+                </li>
+                <li><strong>JS Code</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step. Click the result to enter the JS code editor inside the step.
+                </li>
+                <li><strong>Parameters</strong> - the first line of the result displays the name and the value of the parameter. The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step. Multiple matches will be displayed separately in different results.
+                </li>
+                <li><strong>Base URL</strong> - the first line of the result displays the Base URL value. The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step.
+                </li>
+                <li><strong>URL</strong> - the first line of the result displays the Base URL value. The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step.
+                </li>
+                <li><strong>Test Data</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step.
+                </li>
+                <li><strong>Condition</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step. Click the result to enter the JS code editor inside the step.
+                </li>
+                <li><strong>Loop</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step. Click the result to enter the JS code editor inside the step.
+                </li>
+              </ul>
+              <h3>
+                <div>
+                </div>
+                <div>Search limitations
+                </div><a href="#search-limitations"></a>
+              </h3>
+              <p>The values that CANNOT be found by using the search feature:
+              </p>
+              <ul>
+                <li>Extract value - variable name
+                </li>
+                <li>Sleep - sleep duration
+                </li>
+                <li>Generate email address -variable name
+                </li>
+                <li>Set cookie - everything except description
+                </li>
+                <li>Get cookie - cookie name &amp; variable name
+                </li>
+                <li>Run dev-kit - function name
+                </li>
+                <li>API - everything except URL and function
+                </li>
+                <li>Generate random value - everything except description
+                </li>
+                <li>Generate date - everything except description
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/generating-a-date"><span></span>
+              <div>Generating a Date
+              </div></a><a href="/docs/recovering-a-test-that-was-not-saved">
+              <div>Recovering a test that was not saved
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

@@ -1,0 +1,56 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Override Applitools&#x27; test name
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>It is possible to override the test name being sent to Applitools. This can be done using the <a href="https://help.testim.io/docs/data-driven-testing#using-test-data-in-your-tests">test data</a> in the following way:
+        </p>
+        <ol>
+          <li>The parameter <em>applitoolsTestName</em> is the one being sent to Applitools as the test name
+          </li>
+          <li>You can either override it or change it in the test data, for example:
+          </li>
+        </ol>
+        <div>
+          <div><button>JavaScript</button>
+          </div>
+          <div><pre><code>return [
+  {applitoolsTestName: &#x27;testName_english&#x27;},
+  {applitoolsTestName: &#x27;testName_spanish&#x27;}
+  ];</code></pre>
+          </div>
+        </div>
+        <ol start="3">
+          <li>In this example for every test data entry, the test name sent to Applitools will contain the language and will create a different baseline in Applitools
+          </li>
+        </ol>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/applitools-integration"><span></span>
+        <div>Applitools integration
+        </div></a><a href="/docs/override-applitools-app-name">
+        <div>Override Applitools&#x27; app name
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

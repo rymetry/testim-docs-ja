@@ -1,0 +1,57 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Hide keyboard (mobile)
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>With certain third-party providers, calling the <code>hideKeyboard</code> action may return an error that the software keyboard can&#x27;t be hidden. This is because the action is causing unexpected navigation in Appium, as certain keyboard behaviors and device states don&#x27;t respond properly to the <code>Driver.hidekeyboard()</code> call.
+        </p>
+        <p>As a workaround, you can record a custom action. For more information about how to create a custom action, see <a href="https://help.testim.io/docs/custom-action-step-mobile">Custom Action Step (mobile)</a>.
+        </p>
+        <p>Your custom action can activate either of the following keycodes, depending on your use case:
+        </p>
+        <ul>
+          <li><code>KEYCODE_BACK (4)</code> – dismiss the keyboard without submitting a form with the keycode for the Back button or gesture
+          </li>
+          <li><code>KEYCODE_ENTER (66)</code> – trigger Done or Next depending on the field type with the keycode for the Enter button
+          </li>
+        </ul>
+        <p>The following example illustrates the use of the <code>pressKeyCode</code> Appium method to close the keyboard by simulating the Back button.
+        </p>
+        <div>
+          <div><button>JavaScript</button>
+          </div>
+          <div><pre><code>// Trigger Android KEYCODE_BACK to hide keyboard
+
+await DRIVER.pressKeyCode(4);</code></pre>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/deep-link-mobile"><span></span>
+        <div>Deep link (mobile)
+        </div></a><a href="/docs/clear-text-mobile">
+        <div>Clear text (mobile)
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

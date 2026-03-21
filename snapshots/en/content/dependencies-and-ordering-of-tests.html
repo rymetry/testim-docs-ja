@@ -1,0 +1,100 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Dependencies and ordering of tests
+        </h1>
+        <div>
+          <div>
+            <p>Different aspects of dependencies and ordering of tests
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Before I begin to explain about dependencies between tests, I would like to emphasize why you do not want dependencies between tests.
+        </p>
+        <p>Best practice is to make the tests as isolated as possible.
+          <br /> <!-- -->Creating a dependency between tests will result:
+          </p>
+          <ul>
+            <li>Reduce speed - This prevents you from running tests in parallel. E.g. Your test suite might complete in hours rather than minutes.
+            </li>
+            <li>Hiding bugs - Since not only the test points to the problem will fail, All the depended tests would also fail, hiding bugs that they might find.
+            </li>
+          </ul>
+          <p>After saying that, let&#x27;s see what you can do.
+          </p>
+          <h3>
+            <div>
+            </div>
+            <div><strong>Test Plans</strong>
+            </div><a href="#test-plans"></a>
+          </h3>
+          <p>Test plans will serve you best when you need dependencies for setting up your environment before you start testing the application, and a teardown after you finish running the tests.
+          </p>
+          <p>Read more about Test Plans and how to use it <a href="doc:test-plans">here</a>.
+          </p>
+          <h3>
+            <div>
+            </div>
+            <div><strong>Configuration file</strong>
+            </div><a href="#configuration-file"></a>
+          </h3>
+          <p>Use configuration files when:
+          </p>
+          <ol>
+            <li>You need to perform actions that need more permissions than when running in the browser (e.g. reset DB to some state).
+            </li>
+            <li>You need to pass parameters to your tests which need to be calculated dynamically (e.g. create a new user).
+            </li>
+            <li>Run actions before/after each test (as opposed to beforeAll/afterAll).
+            </li>
+          </ol>
+          <p>You can read more on Configuration Files <a href="doc:configuration-file-run-hooks">here</a>.
+            <br /> <!-- -->If you need to pass a parameter from the configuration file to your test you can read about it <a href="doc:parameters-for-tests">here</a>.
+            </p>
+            <h3>
+              <div>
+              </div>
+              <div><strong>Running Order</strong>
+              </div><a href="#running-order"></a>
+            </h3>
+            <p>Although we definitely prefer to endorse the best practice of isolated tests, we did leave a way to organize the execution order. So if you really want to run the tests in a certain order, and you do not want to run in parallel you can use one of the following methods:
+            </p>
+            <ol>
+              <li><strong>Test Suite</strong> - you can create a Test suite where you can set the order in which you want to run the tests. Read more about Test suites <a href="doc:test-suites">here</a>.
+              </li>
+              <li><strong>Labels</strong> - We sort the tests by name (lexicographic), so you can add prefix numbers to your tests to make Testim run in the order you want.
+                <br /> <!-- -->E.g. &#x27;1 - my test&#x27;, &#x27;2 - my second test&#x27;
+                  <br /> <!-- -->Try to leave gaps between the numbers in case you need to add future tests in the middle.
+                    <br /> <!-- -->E.g. &#x27;100 - test1&#x27;, &#x27;110 - test1&#x27; etc. to the test names.
+                    </li>
+                  </ol>
+                </div>
+                <div>
+                  <div>
+                    <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                    </p>
+                  </div>
+                </div>
+                <hr />
+                <nav><a href="/docs/managing-shared-steps-and-folders"><span></span>
+                  <div>Managing shared steps and folders
+                  </div></a><a href="/docs/labels">
+                  <div>Labels
+                  </div><span></span></a>
+                </nav>
+              </section>
+              <section>
+                <div>
+                  <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </article>

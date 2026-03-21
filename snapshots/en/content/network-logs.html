@@ -1,0 +1,360 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Network Logs
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>Network logs include information about requests between the web browser and the site being tested. During the test execution, network logs are collected and displayed as part of the test results. The network logs can be viewed at the step level or at the test level.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Viewing the network logs at the step level
+          </div><a href="#viewing-the-network-logs-at-the-step-level"></a>
+        </h2>
+        <p><i></i> <strong>To view the network logs of a step:</strong>
+        </p>
+        <ol>
+          <li>Run the test.
+          </li>
+          <li>On the main menu, click <strong>Runs</strong>.
+          </li>
+          <li>Click the relevant execution.
+          </li>
+          <li>On the <strong>Execution</strong> screen, click the relevant test.
+            <br /> <!-- -->The test is displayed with the executed steps marked as passed or failed.
+            </li>
+            <li>Click the <strong>View Screenshot</strong> button on the relevant step.
+            </li>
+            <li>Click the <strong>Network Log</strong> tab.
+              <br /> <!-- -->You can filter your results by several elements. Clicking on a request reveals the HTTP headers associated with that request.
+              </li>
+            </ol>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>You can view the request results for previous and next steps by clicking on the arrows on the left and right sides of the screen.
+              </p>
+            </blockquote> <span><span><img alt="" src="https://files.readme.io/1eac062-network_log.gif" /></span></span>
+            <p>The information displayed for each request is described in the following table.
+            </p>
+            <div>
+              <div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Item
+                      </th>
+                      <th>Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>File
+                      </td>
+                      <td>The name of the file
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Status
+                      </td>
+                      <td>The HTTP status code
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Method
+                      </td>
+                      <td>The HTTP request method
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Domain
+                      </td>
+                      <td>The domain to which the request was made
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Type
+                      </td>
+                      <td>The request type (i.e. XHR, JS, CSS, etc.)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Size
+                      </td>
+                      <td>The response size (including headers and body)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Time
+                      </td>
+                      <td>The duration from the start of the request to the receipt of the response
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Waterfall
+                      </td>
+                      <td>A visual breakdown of the request activity
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <h3>
+              <div>
+              </div>
+              <div>Filtering request results
+              </div><a href="#filtering-request-results"></a>
+            </h3>
+            <p>You can filter your results by filename text, domain, type, and errors.
+            </p>
+            <p><i></i> <strong>To filter by filename text and domain:</strong>
+            </p>
+            <ol>
+              <li>In the Filter box, enter your filter criteria.
+              </li>
+            </ol>
+            <p><span><span><img alt="" src="https://files.readme.io/e21c0d7-Testim_074a.png" /></span></span>The results are instantly filtered based on text in the <em>File</em> and <em>Domain</em> columns.
+            </p>
+            <p><i></i> <strong>To filter by request type:</strong>
+            </p>
+            <ol>
+              <li>In the request results table header, select one of the request types. Options include <em>XHR</em>, <em>JS</em>, <em>CSS</em>, <em>Img</em>, <em>Media</em>, <em>Font</em>, <em>Doc</em>, <em>WS</em>, and <em>Manifest</em>.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/0d05487-Testim_074b.png" /></span></span>
+            <p>The results are instantly filtered based on your selection.
+            </p>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>By default &quot;All&quot; is selected. You can choose only one request type to filter at a time.
+              </p>
+            </blockquote>
+            <p><i></i> <strong>To filter by requests with errors:</strong>
+            </p>
+            <ol>
+              <li>In the request results table header, select the <strong>Errors Only</strong> checkbox.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/b45e218-Testim_074c.png" /></span></span>
+            <p>Only those results with errors are shown.
+            </p>
+            <h3>
+              <div>
+              </div>
+              <div>Viewing HTTP headers
+              </div><a href="#viewing-http-headers"></a>
+            </h3>
+            <p>You can view the HTTP header data for each request.
+            </p>
+            <p><i></i> <strong>To view the HTTP headers:</strong>
+            </p>
+            <ol>
+              <li>Click any of the rows containing request data.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/190bb8b-results-rows.png" /></span></span>
+            <p>The Headers window opens comprised of three sections: <em>General</em>, <em>Response Headers</em>, and <em>Request Headers</em>.
+            </p> <span><span><img alt="" src="https://files.readme.io/a67587b-result-headers.png" /></span></span>
+            <ol start="2">
+              <li>Close the Headers window by clicking on the <strong>X</strong> in the upper left corner.
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/3049d02-result-headers.png" /></span></span>
+            <blockquote theme="📘"><span>📘</span>
+              <p>
+              </p>
+              <p>Each of the three sections of the Headers window can be minimized and expanded by clicking on the <strong>expand arrow</strong> to the top left of each section.
+              </p>
+            </blockquote>
+            <h2>
+              <div>
+              </div>
+              <div>Viewing the network logs at the test level
+              </div><a href="#viewing-the-network-logs-at-the-test-level"></a>
+            </h2>
+            <p>You can view aggregated network logs for the entire test in one place. The test network logs can be used to debug failed test runs and better understand the test results.
+            </p>
+            <p><i></i> <strong>To view the network logs of a test:</strong>
+            </p>
+            <ol>
+              <li>Run the test.
+              </li>
+              <li>On the main menu, click <strong>Runs</strong>.
+              </li>
+              <li>Click the relevant execution.
+              </li>
+              <li>On the <strong>Execution</strong> screen, click the relevant test.
+                <br /> <!-- -->The test is displayed with the executed steps marked as passed or failed.
+                </li>
+                <li>Click the horizontal three-dot menu and click <strong>View network log</strong>.
+                  <br /> <!-- -->You can filter your results by several elements. Clicking on a request reveals the HTTP headers associated with that request.
+                  </li>
+                </ol> <span><span><img alt="" src="https://files.readme.io/661f4ae-networklogtest.gif" /></span></span>
+                <p>The information displayed for each request is described in the following table.
+                </p>
+                <div>
+                  <div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Item
+                          </th>
+                          <th>Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>File
+                          </td>
+                          <td>The name of the file
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Status
+                          </td>
+                          <td>The HTTP status code
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Method
+                          </td>
+                          <td>The HTTP request method
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Domain
+                          </td>
+                          <td>The domain to which the request was made
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Type
+                          </td>
+                          <td>The request type (i.e. XHR, JS, CSS, etc.)
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Size
+                          </td>
+                          <td>The response size (including headers and body)
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Time
+                          </td>
+                          <td>The duration from the start of the request to the receipt of the response
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Waterfall
+                          </td>
+                          <td>A visual breakdown of the request activity
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <blockquote theme="📘"><span>📘</span>
+                  <p>
+                  </p>
+                  <p>This is only supported on Chrome browsers
+                    <br /> <!-- -->The HAR file will not include the response body, due to privacy and security reasons
+                      <br /> <!-- -->To create and download a full HAR, please use the <a href="https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file#option-1---using-testim-to-create-the-har-file">mock networks</a>
+                      </p>
+                    </blockquote>
+                    <h2>
+                      <div>
+                      </div>
+                      <div>Downloading the HAR File
+                      </div><a href="#downloading-the-har-file"></a>
+                    </h2>
+                    <p><i></i> <strong>To download the HAR file:</strong>
+                    </p>
+                    <ol>
+                      <li>From the test screen, click the <strong>HAR</strong> button.
+                        <br /> <!-- -->The <strong>Network Activity</strong> screen is displayed.
+                        </li>
+                        <li>Click the <strong>Download</strong> button and save the file.
+                        </li>
+                      </ol> <span><span><img alt="" src="https://files.readme.io/f1b8915-download.png" /></span></span>
+                      <ol start="3">
+                        <li>It is recommended to upload the file to the dev tools, further debugging and analysis.
+                        </li>
+                      </ol>
+                      <h2>
+                        <div>
+                        </div>
+                        <div>Viewing the network activity
+                        </div><a href="#viewing-the-network-activity"></a>
+                      </h2>
+                      <p>The Network activity screen displays the network traffic. You can filter the network traffic by using the following filter tools:
+                      </p>
+                      <ul>
+                        <li>Filter based on filename - enter a complete or partial file name into the <strong>Filter</strong> field.
+                        </li>
+                        <li>Filter based on the request type - select on of the lister request types (e.g. XHR, JS, CSS, etc.)
+                        </li>
+                        <li>Error only filter - select the <strong>Error Only</strong> checkbox to see only requests that were responded with an error.
+                        </li>
+                      </ul> <span><span><img alt="" src="https://files.readme.io/aee6500-Screen_Shot_2020-11-24_at_8.03.42.png" /></span></span>
+                      <p>The network activity entries include the following information:
+                      </p>
+                      <ul>
+                        <li>File - the URL of the request
+                        </li>
+                        <li>Status - the HTTP response code
+                        </li>
+                        <li>Request method - the HTTP request method
+                        </li>
+                        <li>Request domain
+                        </li>
+                        <li>Request type
+                        </li>
+                        <li>Size - the response size
+                        </li>
+                        <li>Time - the time it took to get the response
+                        </li>
+                        <li>Waterfall - a graphical representation of the different stages of the request. Hover over a Waterfall to see a breakdown.
+                        </li>
+                      </ul>
+                      <p>The summary pane at the bottom contains:
+                      </p>
+                      <ul>
+                        <li>Total number of requests
+                        </li>
+                        <li>Total download size of requests
+                        </li>
+                        <li>Total size of resources loaded
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <div>
+                        <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                        </p>
+                      </div>
+                    </div>
+                    <hr />
+                    <nav><a href="/docs/compare-side-by-side-screenshots"><span></span>
+                      <div>Compare Side-by-Side Screenshots
+                      </div></a><a href="/docs/network-logs-copy">
+                      <div>Console Logs
+                      </div><span></span></a>
+                    </nav>
+                  </section>
+                  <section>
+                    <div>
+                      <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </article>

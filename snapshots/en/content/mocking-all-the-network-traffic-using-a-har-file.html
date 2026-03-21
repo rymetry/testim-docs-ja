@@ -1,0 +1,149 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Mocking network traffic using a HAR file
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The mock network responses can be based on a HAR file. The HAR file is a JSON-formatted archive file format for logging of a web browser&#x27;s interaction with a site. All the HTTP calls and responses are recorded in this file. Each request is processed by its order in the HAR file. Multiple instances of the same call can result in different responses. For example, the first call may return X, while the second call may return Y. Testim will automatically use the relevant data in the HAR file as the test run is being executed. There are two options for creating a HAR file:
+        </p>
+        <ul>
+          <li><strong>Option 1 – Using Testim to create the HAR file</strong> – in this option you will have to create your test &lt;add link&gt; and then run it once (with the &quot;Include full network in HAR&quot; setting). When running the test in Testim, a HAR file is created. Testim will use this HAR file to create mock network responses in subsequent runs of the same test. When running the test again, for which you want the mock network responses, you will need to specify that you want to use the HAR file that was recorded by Testim.
+          </li>
+          <li><strong>Option 2 – Creating your own HAR</strong> – using Chrome dev tools you can create your own HAR file and save it in a location that is accessible via URL. When running the test, for which you want the mock network responses, you will need to specify that you want to use your own HAR file and its location.
+          </li>
+        </ul>
+        <blockquote theme="🚧"><span>🚧</span>
+          <h3>
+            <div>
+            </div>
+            <div>Tests that include a login process
+            </div><a href="#tests-that-include-a-login-process"></a>
+          </h3>
+          <p>If your test includes a login process, which involves passing credentials to a server, it may not work properly when running the test on the mock network, as the login request will be timed out. To solve this issue, you should enable Pass-through Authentication when sending the login request. To do so, you will have to add a mapping file with the login request and the enabled Pass-through authentication property. For detailed instructions see <strong><a href="doc:creating-a-mapping-file#section-uploading-the-mapping-file">Uploading the mapping file</a></strong>.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Option 1 - Using Testim to create the HAR file
+          </div><a href="#option-1---using-testim-to-create-the-har-file"></a>
+        </h2>
+        <p><i></i><strong>To create a HAR file in Testim:</strong>
+        </p>
+        <ol>
+          <li>After saving your test (See <a href="doc:how-to-record-a-test">How to Record a Test</a>), click the Properties (:fa-cog:) icon. The <strong>Test Properties</strong> pane is displayed:
+          </li>
+        </ol> <span><span><img alt="258" src="https://files.readme.io/ba55bd3-mock1.PNG" /></span></span>
+        <ol start="2">
+          <li>In <strong>Mock Network</strong> property, click the arrow to open menu options.
+          </li>
+          <li>Click <strong>Record New HAR</strong>. The test will run locally and the HAR file will be created automatically.
+          </li>
+        </ol> <span><span><img alt="264" src="https://files.readme.io/1192e87-mock5.png" /></span></span>
+        <ol start="4">
+          <li>When the process finishes, click <strong>Save</strong>.
+          </li>
+        </ol> <span><span><img alt="436" src="https://files.readme.io/4d5a0c7-mock4.PNG" /></span></span>
+        <h2>
+          <div>
+          </div>
+          <div>Option 2 - Creating your own custom HAR file
+          </div><a href="#option-2---creating-your-own-custom-har-file"></a>
+        </h2>
+        <p><i></i><strong>To create your own HAR file:</strong>
+        </p>
+        <ol>
+          <li>Open Google Chrome.
+          </li>
+          <li>In Chrome, go to the webpage that you want to use in your test.
+          </li>
+          <li>Select the <strong>Chrome menu &gt; More Tools &gt; Developer Tools</strong>
+          </li>
+          <li>Select the <strong>Networks</strong> tab.
+          </li>
+          <li>Within the <strong>Networks</strong> tab, select <strong>Preserve log</strong> option.
+          </li>
+        </ol> <span><span><img alt="715" src="https://files.readme.io/99eaa6e-preserve_log.png" /></span></span>
+        <ol start="6">
+          <li>Record the log by selecting the red circle at the top left of the <strong>Networks</strong> tab.
+          </li>
+          <li>Refresh the page and allow Chrome to record browser-website interaction.
+          </li>
+          <li>Once the page is loaded, select the <strong>Console</strong> tab and right-click in the console box. A menu is displayed.
+          </li>
+          <li>Select <strong>Save as</strong> and name the file.
+          </li>
+        </ol> <span><span><img alt="559" src="https://files.readme.io/8624d01-consolesave.png" /></span></span>
+        <ol start="10">
+          <li>Go back to the <strong>Networks</strong> tab and right click on any item in the <strong>Name</strong> column.
+          </li>
+          <li>Select <strong>&quot;Save HAR with content&quot;</strong>.
+          </li>
+        </ol> <span><span><img alt="" src="https://files.readme.io/64ef4f1-saveallhar.png" /></span></span>
+        <p>The log and HAR file will be saved.
+        </p>
+        <h2>
+          <div>
+          </div>
+          <div>Uploading your custom HAR file.
+          </div><a href="#uploading-your-custom-har-file"></a>
+        </h2>
+        <p><i></i><strong>To upload your custom HAR file:</strong>
+        </p>
+        <ol>
+          <li>In the <strong>Test Properties</strong> pane, click <strong>Upload Custom HAR</strong>.
+          </li>
+        </ol> <span><span><img alt="254" src="https://files.readme.io/fc7237d-mock3.png" /></span></span>
+        <ol start="2">
+          <li>Locate the custom HAR file that you saved and click <strong>Open</strong> to upload it.
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>Running your test using the HAR file
+          </div><a href="#running-your-test-using-the-har-file"></a>
+        </h2>
+        <p><i></i><strong>To run your test using the HAR file:</strong>
+        </p>
+        <ol>
+          <li>In the Testim Visual Editor, go to the <strong>Test List</strong> screen and click a test for which you have recorded anew HAR or uploaded a custom HAR.
+          </li>
+          <li>In the Test Editor screen, a <strong>Mock Network</strong> icon will be displayed next to the <strong>Play</strong> button, indicating that the Mock network is available.
+          </li>
+        </ol> <span><span><img alt="274" src="https://files.readme.io/7a3343e-mock6.png" /></span></span>
+        <ol start="3">
+          <li>Click the <strong>Play</strong> button to run the test using the mock network.
+          </li>
+          <li>Click <strong>Save</strong>.
+          </li>
+        </ol>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/mock-network-responses"><span></span>
+        <div>Mock Network Responses
+        </div></a><a href="/docs/creating-a-mapping-file">
+        <div>Creating a Mapping File
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

@@ -1,0 +1,103 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Verify picklist options
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Salesforce Step
+            </div><a href="#salesforce-step"></a>
+          </h3>
+          <p>This is a Salesforce step.
+          </p>
+        </blockquote>
+        <p>The Verify picklist options step verifies that, when creating a record, a specific options are or aren&#x27;t displayed in a drop-down menu (pick list) of a specific field. This is typically used to check that certain users are not able to see options that are not part of their permissions when creating a record. For each picklist you can verify that specified options exist, do not exist, or that there is an exact match between the selected options and the options displayed in the field.
+        </p>
+        <p>This step can be combined with the <a href="doc:sfdc-step-loginas">Log In As Another User</a> step to test the different picklist options that are available to the various user types.
+        </p>
+        <h1>
+          <div>
+          </div>
+          <div>Creating a Verify Picklist Options Step
+          </div><a href="#creating-a-verify-picklist-options-step"></a>
+        </h1>
+        <p><i></i> <strong>To add a Verify Picklist Options step:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>In the editor, add a step by clicking the <strong>+</strong> button.
+            </p>
+          </li>
+          <li>
+            <p>Under the <strong>Salesforce steps</strong> tab, click <strong>Record operations</strong> and select <strong>Verify picklist options</strong> step.
+              <br /> <!-- -->The <strong>Verify picklist options</strong> step is added and the following <strong>Object</strong> properties is displayed.
+              </p> <span><span><img alt="" src="https://files.readme.io/2694c63-2024-05-06_15-48-25.png" /></span></span>
+            </li>
+            <li>
+              <p>Click the <strong>Select the Object</strong> drop-down menu and select the desired object type. The object type determines the type of object of the record for which you want to verify the picklist options.
+              </p>
+            </li>
+            <li>
+              <p>Under <strong>Select Record Type</strong>, select the record type of the record for which you want to verify the picklist options.
+                <br /> <!-- -->The record type/object&#x27; list of fields is displayed.
+                </p> <span><span><img alt="" src="https://files.readme.io/5643048-2024-05-06_15-59-04.png" /></span></span>
+              </li>
+              <li>
+                <p>For each field that you want to verify its picklist options, under <strong>Action</strong> select one of the following options:
+                </p>
+                <ol>
+                  <li><strong>Exact Match</strong> - select this option if you want to verify that the options selected in the <strong>Options</strong> field match all the picklist options of this field. If there are more options or fewer options, the step will fail.
+                  </li>
+                  <li><strong>Includes</strong> - select this option if you want to verify that the options selected in the <strong>Options</strong> field are included in the picklist options of this field. If one or more of the options is not included, the step will fail.
+                  </li>
+                  <li><strong>Excludes</strong> - select this option if you want to verify that the options selected in the <strong>Options</strong> field are excluded from the picklist options of this field. If any of the selected options appears in the field, the step will fail.
+                  </li>
+                  <li><strong>Reset</strong> - resets the value in the field to a &quot;no entry&quot; state. Note that if the field is empty, it will try to enter an empty string to the field, however if you select the Reset option, it will not try to enter an empty string.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                <p>Under <strong>Options</strong>, click the field to select the picklist option.
+                </p>
+              </li>
+              <li>
+                <p>Click again to select more picklist options.
+                </p>
+              </li>
+              <li>
+                <p>When finished, click <strong>Save</strong>.
+                </p>
+              </li>
+            </ol>
+          </div>
+          <div>
+            <div>
+              <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+              </p>
+            </div>
+          </div>
+          <hr />
+          <nav><a href="/docs/sfdc-step-delete"><span></span>
+            <div>Delete
+            </div></a><a href="/docs/sfdc-step-salesforce-flows">
+            <div>Salesforce Flows
+            </div><span></span></a>
+          </nav>
+        </section>
+        <section>
+          <div>
+            <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>

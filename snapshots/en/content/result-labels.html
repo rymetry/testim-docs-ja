@@ -1,0 +1,98 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Result labels
+        </h1>
+        <div>
+          <div>
+            <p>Learn how to add labels to your run results
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p><strong>&quot;Result Labels&quot;</strong> allows you to add textual labels to your remote runs.
+          <br /> <!-- -->On the <strong>&quot;Suite Runs&quot;</strong> and <strong>&quot;Test Runs&quot;</strong> pages, you can easily filter your runs by choosing a result label.
+          </p> <span><span><img alt="1893" src="https://files.readme.io/f4b59d0-ResultLabels.gif" /></span></span>
+          <p>Result labels can be used for a variety of options, such as:
+          </p>
+          <ul>
+            <li>Which application environment was tested.
+            </li>
+            <li>Which application version was tested.
+            </li>
+            <li>Which user executed the run.
+            </li>
+            <li>Is it a CI/CD system run.
+            </li>
+          </ul>
+          <p>Some examples: “nightly-scheduler”, “v1.42.34”, “Jenkins”, &quot;Troubleshooting&quot;, &quot;Staging&quot;.
+          </p>
+          <h2>
+            <div>
+            </div>
+            <div>Adding result labels through the CLI
+            </div><a href="#adding-result-labels-through-the-cli"></a>
+          </h2>
+          <p>To add a label to the run, use the following parameter in your CLI:
+          </p>
+          <div>
+            <div><button>Shell</button>
+            </div>
+            <div><pre><code>--result-label &quot;nightly Jenkins run&quot;</code></pre>
+            </div>
+          </div>
+          <ul>
+            <li>You can add as many result labels to a CLI command as needed. Read more about running CLI in - <a href="doc:the-command-line-cli">Command line interface (CLI)</a>.
+            </li>
+          </ul>
+          <div>
+            <div><button>Shell</button>
+            </div>
+            <div><pre><code>--result-label &quot;nightly Jenkins run&quot; --result-label &quot;v1.42.35&quot;</code></pre>
+            </div>
+          </div>
+          <blockquote theme="📘"><span>📘</span>
+            <h3>
+              <div>
+              </div>
+              <div>A result label can&#x27;t exceed 250 characters
+              </div><a href="#a-result-label-cant-exceed-250-characters"></a>
+            </h3>
+          </blockquote>
+          <h2>
+            <div>
+            </div>
+            <div>Adding result labels through the Scheduler
+            </div><a href="#adding-result-labels-through-the-scheduler"></a>
+          </h2>
+          <p>Scheduled runs are test runs that will run based on a predefined schedule. When creating a scheduler, as part of the <strong>Advanced Options</strong> you can add result labels. For more information - <a href="doc:scheduler">Scheduler</a>.
+          </p>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/stop-pause-debug-tests"><span></span>
+          <div>Stop, Pause &amp; Debug Tests
+          </div></a><a href="/docs/export-test-list-and-test-results">
+          <div>Export test list and test results
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

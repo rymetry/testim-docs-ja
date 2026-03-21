@@ -1,0 +1,378 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Document Validation
+        </h1>
+        <div>
+          <div>
+            <p>Validate the contents of a downloaded PDF file
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Salesforce Step
+            </div><a href="#salesforce-step"></a>
+          </h3>
+          <p>This is a Salesforce step.
+          </p>
+        </blockquote>
+        <p>The Document Validation step can be used to validate and/or extract the contents of the PDF document using a variety of conditions that can be configured without coding. The step can be automatically recorded or manually added from the list of predefined steps. The automatic option is generated during the recording of the test when a PDF file is downloaded.
+        </p>
+        <p>The following conditions and actions can be performed using this step:
+        </p>
+        <ul>
+          <li><strong>Existence check:</strong> Verify the presence of specific text within the PDF.
+          </li>
+          <li><strong>Non-existence check:</strong> Confirm the absence of certain text.
+          </li>
+          <li><strong>Key-value pair verification:</strong> Validate the correctness of key-value pairs within the PDF.
+          </li>
+          <li><strong>Table content validation:</strong> Ensure data accuracy within tables embedded in the PDF.
+          </li>
+          <li><strong>Extract content into variables:</strong> Extract the content from key-value pairs or tables into variables for later use in subsequent steps
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Before you begin
+          </div><a href="#before-you-begin"></a>
+        </h2>
+        <p>In order for the step to work you will need to configure the following settings:
+        </p>
+        <ul>
+          <li>
+            <p><strong>Enable the Download PDFs setting on your Chrome Browser:</strong> The setting is located at - <strong>Settings &gt; Privacy and security &gt; Site settings &gt; Additional content settings &gt; PDF documents</strong>. Under <strong>Default behavior</strong> make sure the <strong>Download PDFs</strong> option is selected.
+            </p> <span><span><img alt="" src="https://files.readme.io/e31ed48-downloadpdfssetting.png" /></span></span>
+          </li>
+          <li>
+            <p><strong>Enable Access to file URLs in the Testim Editor extension settings</strong> - enable the Allow access to file URLs setting in the Testim Editor Extension, as explained below.
+            </p>
+          </li>
+        </ul>
+        <p><i></i><strong>To enable the Allow access to file URLs setting:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>In Chrome Browser, click the <strong>Extensions</strong> icon.
+            </p> <span><span><img alt="" src="https://files.readme.io/4c1e0c1-extensionsicon.png" /></span></span>
+          </li>
+          <li>
+            <p>Click <strong>Manage Extensions</strong>.
+            </p> <span><span><img alt="" src="https://files.readme.io/f1de3d3-manageextensions.png" /></span></span>
+          </li>
+          <li>
+            <p>In the <strong>Testim Editor</strong> extension, click <strong>Details</strong>.
+            </p> <span><span><img alt="" src="https://files.readme.io/1708299-details.png" /></span></span>
+          </li>
+          <li>
+            <p>Enable the <strong>Allow access to file URLs</strong> setting.
+            </p> <span><span><img alt="" src="https://files.readme.io/3eac5c9-allowaccess.png" /></span></span>
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>Creating the Document Validation step automatically
+          </div><a href="#creating-the-document-validation-step-automatically"></a>
+        </h2>
+        <p>The step is created automatically during the recording of the test when a PDF file is downloaded.
+        </p>
+        <p><i></i><strong>To add a document validation step automatically:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>Record a test using the Recorder and during the recording of the test click a link to download a PDF file.
+              <br /> <!-- -->A <strong>Document Validation</strong> step is automatically created.
+              </p>
+            </li>
+            <li>
+              <p>Select the <strong>Document Validation</strong> step.
+                <br /> <!-- -->The step&#x27;s <strong>Object Pane</strong> is displayed. All conditions/actions are optional and it is possible to configure multiple conditions, which will be aggregated to validate the step (AND condition between them) see detailed configuration instructions for each condition/action below:
+                </p>
+                <ul>
+                  <li><strong>Content</strong> - performs existence or non-existence checks.
+                  </li>
+                  <li><strong>Key Value</strong> - performs key-value pair verification and extraction of content into variables.
+                  </li>
+                  <li><strong>Tables</strong> - performs table content validation and extraction of content into variables.
+                  </li>
+                </ul>
+              </li>
+            </ol> <span><span><img alt="" src="https://files.readme.io/052b47f-documentvalidation1.png" /></span></span>
+            <ol start="3">
+              <li>Edit the conditions/actions as explained below.
+              </li>
+              <li>Click <strong>Save</strong>.
+              </li>
+            </ol>
+            <h2>
+              <div>
+              </div>
+              <div>Creating the Document Validation step manually
+              </div><a href="#creating-the-document-validation-step-manually"></a>
+            </h2>
+            <p>It is possible to add the Document Validation step manually. The step will have to follow a step that would prompt the PDF download, such as an <strong>Add navigation action</strong> step or an <strong>Add API action</strong> step.
+            </p>
+            <p><i></i><strong>To add a document validation step manually:</strong>
+            </p>
+            <ol>
+              <li>In the editor, add a step by clicking the <strong>+</strong> button.
+              </li>
+              <li>Under the <strong>Salesforce</strong> steps tab, click <strong>Common operations</strong> and select <strong>Document validation</strong> step.
+                <br /> <!-- -->The step&#x27;s <strong>Object Pane</strong> is displayed. All conditions/actions are optional and it is possible to configure multiple conditions, which will be aggregated to validate the step (AND condition between them) see detailed configuration instructions for each condition/action below:<!-- -->
+                  <ul>
+                    <li><strong>Content</strong> - performs existence or non-existence checks.
+                    </li>
+                    <li><strong>Key Value</strong> - performs key-value pair verification and extraction of content into variables.
+                    </li>
+                    <li><strong>Tables</strong> - performs table content validation and extraction of content into variables.
+                    </li>
+                  </ul>
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/052b47f-documentvalidation1.png" /></span></span>
+              <ol start="3">
+                <li>Edit the conditions/actions as explained below.
+                </li>
+                <li>Click <strong>Save</strong>.
+                </li>
+              </ol>
+              <h1>
+                <div>
+                </div>
+                <div>Configuring the Content validation
+                </div><a href="#configuring-the-content-validation"></a>
+              </h1>
+              <p><i></i><strong>To configure the Content validation:</strong>
+              </p>
+              <ol>
+                <li>
+                  <p>In the <strong>Content</strong> section, click <strong>ADD</strong>.
+                  </p>
+                  <p>The condition/action configuration section is displayed:
+                  </p> <span><span><img alt="" src="https://files.readme.io/734197c-contentcondition.png" /></span></span>
+                </li>
+                <li>
+                  <p>In the <strong>Verify</strong> field, select one of the following:
+                  </p>
+                  <ol>
+                    <li><strong>Exists</strong> - to validate whether the specified text exists within the PDF document.
+                    </li>
+                    <li><strong>Not Exists</strong> - to validate that a specified text does not exist within the PDF document.
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  <p>In the <strong>Value</strong> field, enter the string that you want to validate its existence or non-existence.
+                    <br /> <!-- -->The following example checks the the non-existence of the string.
+                    </p> <span><span><img alt="" src="https://files.readme.io/8cd3a51-Picture1.png" /></span></span>
+                  </li>
+                  <li>
+                    <p>To add additional conditions, click the <strong>ADD</strong> button again and repeat the steps above.
+                    </p>
+                  </li>
+                </ol>
+                <h1>
+                  <div>
+                  </div>
+                  <div>Configuring the Key Value validation
+                  </div><a href="#configuring-the-key-value-validation"></a>
+                </h1>
+                <p>This condition validates that the key and value string combination exists in the PDF.
+                </p>
+                <p><i></i><strong>To configure the Key Value validation:</strong>
+                </p>
+                <ol>
+                  <li>
+                    <p>In the <strong>Key Value</strong> section, click <strong>ADD</strong>.
+                    </p>
+                    <p>The condition/action configuration section is displayed:
+                    </p> <span><span><img alt="" src="https://files.readme.io/610592d-keyvalue.png" /></span></span>
+                  </li>
+                  <li>
+                    <p>In the <strong>Key</strong> field, enter a combination of a label and a separator. A label is a text string and a separator, can be any symbol such as a colon, semi-colon, dash, hash, comma, etc. For example `Address:` is a key for an address field in the PDF.
+                    </p>
+                  </li>
+                  <li>
+                    <p>In the <strong>Action</strong> field, select the <strong>Verify</strong> option (checkmark icon).
+                    </p>
+                  </li>
+                  <li>
+                    <p>In the <strong>Value</strong> field, enter the string that you want to validate its existence following the specified Key string.
+                      <br /> <!-- -->The following example checks the existence of two key value pairs.
+                      </p> <span><span><img alt="" src="https://files.readme.io/866d74b-Picture3.png" /></span></span>
+                    </li>
+                    <li>
+                      <p>To add additional conditions, click the <strong>ADD</strong> button again and repeat the steps above.
+                      </p>
+                    </li>
+                  </ol>
+                  <h1>
+                    <div>
+                    </div>
+                    <div>Configuring the Key Value extraction
+                    </div><a href="#configuring-the-key-value-extraction"></a>
+                  </h1>
+                  <p>This condition extracts the value that appears following the Key string and stores it in a variable defined in the <strong>Value</strong> field. The variable can be a variable that was defined in the previous steps or it can be created ad hoc, which means that when the step is executed, the variable is created with the name specified in the <strong>Value</strong> field.
+                  </p>
+                  <p><i></i><strong>To configure the Key Value extraction:</strong>
+                  </p>
+                  <ol>
+                    <li>
+                      <p>In the <strong>Key Value</strong> section, click <strong>ADD</strong>.
+                      </p>
+                      <p>The condition/action configuration section is displayed:
+                      </p> <span><span><img alt="" src="https://files.readme.io/610592d-keyvalue.png" /></span></span>
+                    </li>
+                    <li>
+                      <p>In the <strong>Key</strong> field, enter a combination of a label and a separator. A label is a text string and a separator, can be any symbol such as a colon, semi-colon, dash, hash, comma, etc. For example `Address:` is a key for an address field in the PDF.
+                      </p>
+                    </li>
+                    <li>
+                      <p>In the <strong>Action</strong> field, select the <strong>Store</strong> option (x icon).
+                      </p>
+                    </li>
+                    <li>
+                      <p>In the <strong>Value</strong> field, enter the name of the variable that will be created or that was defined in a previous step. The value following the Key string will be stored in this variable.
+                        <br /> <!-- -->The following example will extract the value in the PDF that comes after the <code>Quote #</code> key and store it in a variable called <code>quoteNumber</code>.
+                        </p> <span><span><img alt="" src="https://files.readme.io/a4a7fe7-keyvalueextraction.png" /></span></span>
+                      </li>
+                      <li>
+                        <p>To add additional condition, click the <strong>ADD</strong> button again and repeat the steps above.
+                        </p>
+                      </li>
+                    </ol>
+                    <h1>
+                      <div>
+                      </div>
+                      <div>Configuring the Table validation
+                      </div><a href="#configuring-the-table-validation"></a>
+                    </h1>
+                    <p>Validates the existence of specified data within tables in the PDF document. After selecting the table in the document, each action is for one cell in the table.
+                    </p>
+                    <p><i></i><strong>To configure the Table validation:</strong>
+                    </p>
+                    <ol>
+                      <li>
+                        <p>In the <strong>Table</strong> section, click <strong>ADD</strong>.
+                        </p>
+                        <p>The condition/action configuration section is displayed:
+                        </p> <span><span><img alt="" src="https://files.readme.io/d5e9840-table1.png" /></span></span>
+                      </li>
+                      <li>
+                        <p>In the <strong>Table number</strong> field, enter a number indicating the location of the table in the order of appearance. For example, <code>2</code> will validate the contents from the second table.
+                        </p>
+                      </li>
+                      <li>
+                        <p>Click <strong>Add Action</strong> to specify the exact location and value of the content that you want to validate.
+                        </p>
+                      </li>
+                      <li>
+                        <p>In the <strong>Row</strong> field, enter a number indicating the location row within the table in the order of appearance.
+                        </p>
+                      </li>
+                      <li>
+                        <p>In the <strong>Column</strong> field, enter a number indicating the location column within the table in the order of appearance.
+                        </p>
+                      </li>
+                      <li>
+                        <p>In the <strong>Action</strong> field, select the <strong>Verify</strong> option (checkmark icon).
+                        </p>
+                      </li>
+                      <li>
+                        <p>In the <strong>Value</strong> field, enter the string that you want to validate its existence.
+                          <br /> <!-- -->The following example validates that the string <code>Product Name</code> appears in the first row and first column of the first table.
+                          </p>
+                        </li>
+                        <li>
+                          <p>To specify additional validations within the same table, click <strong>Add Action</strong> and repeat the steps above.
+                          </p>
+                        </li>
+                        <li>
+                          <p>To add an additional table validation, click the <strong>ADD</strong> button again and repeat the steps above.
+                          </p>
+                        </li>
+                      </ol>
+                      <h1>
+                        <div>
+                        </div>
+                        <div>Configuring the Table extraction
+                        </div><a href="#configuring-the-table-extraction"></a>
+                      </h1>
+                      <p>This condition extracts the value that appears in the specified location within the specified table and stores the value in the specified variable name. The variable can be a variable that was defined in the previous steps or it can be created ad hoc, which means that when the step is executed, the variable is created with the name specified in the <strong>Value</strong> field.
+                      </p>
+                      <p><i></i><strong>To configure the Table extraction:</strong>
+                      </p>
+                      <ol>
+                        <li>
+                          <p>In the <strong>Table</strong> section, click <strong>ADD</strong>.
+                            <br /> <!-- -->The condition/action configuration section is displayed:
+                            </p> <span><span><img alt="" src="https://files.readme.io/1de3b15-table1.png" /></span></span>
+                          </li>
+                          <li>
+                            <p>In the <strong>Table number</strong> field, enter a number indicating the location of the table in the order of appearance. For example, <code>2</code> will extracts the contents from the second table.
+                            </p>
+                          </li>
+                          <li>
+                            <p>Click <strong>Add Action</strong> to specify the exact location and value of the content that you want to extract.
+                            </p>
+                          </li>
+                          <li>
+                            <p>In the <strong>Row</strong> field, enter a number indicating the location row within the table in the order of appearance.
+                            </p>
+                          </li>
+                          <li>
+                            <p>In the <strong>Column</strong> field, enter a number indicating the location column within the table in the order of appearance.
+                            </p>
+                          </li>
+                          <li>
+                            <p>In the <strong>Action</strong> field, select the <strong>Store</strong> option (x icon).
+                            </p>
+                          </li>
+                          <li>
+                            <p>In the <strong>Value</strong> field, enter the name of the variable that will be created or that was defined in a previous step. The value in the specified location of the table will be stored in this variable.
+                              <br /> <!-- -->The following example will extract the value in the PDF that is located in the third row, second column of the first table and store it in a variable called <code>quoteTotal</code>.
+                              </p> <span><span><img alt="" src="https://files.readme.io/c2eeac1-table3.png" /></span></span>
+                            </li>
+                            <li>
+                              <p>To specify additional extraction within the same table, click <strong>Add Action</strong> and repeat the steps above.
+                              </p>
+                            </li>
+                            <li>
+                              <p>To add an additional table extraction, click the <strong>ADD</strong> button again and repeat the steps above.
+                              </p>
+                            </li>
+                          </ol>
+                        </div>
+                        <div>
+                          <div>
+                            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                            </p>
+                          </div>
+                        </div>
+                        <hr />
+                        <nav><a href="/docs/sfdc-step-permission-validation"><span></span>
+                          <div>Permission validation
+                          </div></a><a href="/docs/sfdc-step-convertleadtoopportunity">
+                          <div>Convert lead to opportunity
+                          </div><span></span></a>
+                        </nav>
+                      </section>
+                      <section>
+                        <div>
+                          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </article>

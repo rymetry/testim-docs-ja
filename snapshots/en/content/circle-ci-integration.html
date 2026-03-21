@@ -1,0 +1,72 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Circle CI integration
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div><span><span><img alt="368" src="https://files.readme.io/3eecb4e-circleci.png" /></span></span>
+        <h4>
+          <div>
+          </div>
+          <div>YAML File
+          </div><a href="#yaml-file"></a>
+        </h4>
+        <p>In order to integrate Testim with <a href="https://circleci.com/">Circle CI</a>, using Circle CI&#x27;s local Selenium Grid, you need to add these lines to your circle.yaml file:
+        </p>
+        <p><strong>YAML</strong>
+        </p>
+        <div>
+          <div><button>YAML</button>
+          </div>
+          <div><pre><code>version: 2
+jobs:
+  build:
+    environment:
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+    docker:
+    - image: testim/docker-cli
+    steps:
+      - run: mkdir -p $CIRCLE_TEST_REPORTS/testim/
+      - run: testim --project &quot;&lt;PROJECT ID&gt;&quot; --label &quot;&lt;LABEL&gt;&quot; --grid &quot;&lt;Your grid name&gt;&quot; --token &quot;&lt;TOKEN&gt;&quot; --report-file $CIRCLE_TEST_REPORTS/testim/results.xml
+      - store_artifacts:
+          path: /tmp/circleci-test-results
+      - store_test_results:
+          path: /tmp/circleci-test-results</code></pre>
+          </div>
+        </div>
+        <p><strong>Note</strong>: For the grid name, read <a href="https://help.testim.io/docs/grid-management">here</a> how to set up your grid.
+        </p>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <div>
+        <header>
+          <div>What’s Next
+          </div>
+        </header>
+        <div>
+        </div>
+        <ul>
+          <li><a href="/docs/the-command-line-cli">Command line interface (CLI)</a><span><span></span></span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

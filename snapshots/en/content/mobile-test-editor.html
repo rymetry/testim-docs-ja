@@ -1,0 +1,233 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Mobile Test Editor Screen
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The Mobile Test Editor screen displays the current mobile test and the Application Under Test (AUT) Viewer.
+        </p> <span><span><img alt="1920" src="https://files.readme.io/0b45d6b-mobiletesteditor.png" /></span></span>
+        <p>The Mobile Test Editor screen has the following sections, as displayed in the image above:
+        </p>
+        <ol>
+          <li><a href="#device-and-mobile-application-information">Device and Mobile Application Information</a> - displays information about the physical or virtual device and mobile application used for the test.
+          </li>
+          <li><a href="#mobile-test-steps">Mobile Test Steps</a> - displays the recorded steps for the mobile test.
+          </li>
+          <li><a href="#mobile-test-action-panel">Mobile Test Action Panel</a> - displays actions you can take to interact with your mobile test.
+          </li>
+          <li><a href="#application-under-test-aut-viewer">Application Under Test (AUT) Viewer</a> - a viewport that allows you to interact with a physical or virtual device connected to Testim.
+          </li>
+        </ol>
+        <h2>
+          <div>
+          </div>
+          <div>Device and Mobile Application Information
+          </div><a href="#device-and-mobile-application-information"></a>
+        </h2> <span><span><img alt="739" src="https://files.readme.io/c04932f-image_14.png" /></span></span>
+        <p>The Device and Mobile Application Information section of the test editor displays the following information:
+        </p>
+        <ul>
+          <li><strong>Target Device</strong>: displays the configuration information of the device that is currently used for the recording/playback session, including information about the target mobile device, operating system, and display resolution.
+          </li>
+          <li><strong>Application Name</strong>: displays which mobile application is being used for the test.
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note"></a>
+          </h3>
+          <p>To add virtual devices for use with Testim, you can use the following software:
+          </p>
+          <ul>
+            <li><strong>Android Devices</strong>: Android Studio with Virtual Device Manager
+            </li>
+            <li><strong>Apple Devices</strong>: XCode iOS Simulator
+            </li>
+          </ul>
+        </blockquote>
+        <h3>
+          <div>
+          </div>
+          <div>Change Mobile App Used for the Test
+          </div><a href="#change-mobile-app-used-for-the-test"></a>
+        </h3>
+        <p>The mobile test can only test one application at a time. You can change the application being tested at any time.
+        </p>
+        <p><i></i> <strong>To change the mobile app used for the test:</strong>
+        </p>
+        <ol>
+          <li>Click the <strong>Edit</strong> icon next to the current <strong>Application Name</strong>.
+          </li>
+        </ol> <span><span><img alt="768" src="https://files.readme.io/06fdee9-image_16.png" /></span></span>
+        <ol start="2">
+          <li>From the <strong>Properties</strong> panel, click the <strong>Change app</strong> link.
+          </li>
+        </ol> <span><span><img alt="334" src="https://files.readme.io/3379eae-changeapp.png" /></span></span>
+        <ol start="3">
+          <li>Select or upload a <strong>New App</strong> and click the <strong>Done</strong> button.
+          </li>
+        </ol> <span><span><img alt="856" src="https://files.readme.io/2491dd8-selectapp.png" /></span></span>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note-1"></a>
+          </h3>
+          <p>Changing to a completely different app after recording a test is not recommended. Changing apps is helpful when you want to test a new version of the same app.
+          </p>
+        </blockquote>
+        <h2>
+          <div>
+          </div>
+          <div>Mobile Test Steps
+          </div><a href="#mobile-test-steps"></a>
+        </h2> <span><span><img alt="739" src="https://files.readme.io/d0a4502-image_15.png" /></span></span>
+        <p>After you have recorded a test, the test steps will be displayed in sequence in the editor. The following information is displayed for each test step:
+        </p>
+        <ul>
+          <li>Step Number
+          </li>
+          <li>Step Type
+          </li>
+          <li>Thumbnail of the element interacted with (button, image, text, etc.)
+          </li>
+        </ul>
+        <h3>
+          <div>
+          </div>
+          <div>View Test Step Properties
+          </div><a href="#view-test-step-properties"></a>
+        </h3>
+        <p>After a test step has been recorded, you can view the test step properties.
+        </p>
+        <p><i></i> <strong>To view the test step properties:</strong>
+        </p>
+        <ol>
+          <li>Click the <strong>Show Properties</strong> icon for the step.
+          </li>
+        </ol> <span><span><img alt="342" src="https://files.readme.io/d104475-showproperties.png" /></span></span>
+        <p>The step <strong>Properties</strong> panel is displayed.
+        </p> <span><span><img alt="331" src="https://files.readme.io/157cda8-stepprops.png" /></span></span>
+        <p>The following information is displayed in the step Properties panel:
+        </p>
+        <ul>
+          <li><strong>Test Step Name:</strong> name automatically assigned to the step by Testim.
+          </li>
+          <li><strong>Target Element:</strong> the element interacted with by the user during the test (button, image, text, etc.).
+          </li>
+          <li><strong>When this step fails:</strong> instructions for how Testim should respond when a step has an error during a test run:<!-- -->
+            <ul>
+              <li><em>Mark error &amp; stop:</em> add an error indicator to the step and stop running the test.
+              </li>
+              <li><em>Mark error &amp; continue:</em> add an error indicator to the step and continue running the test.
+              </li>
+              <li><em>Mark warning &amp; continue:</em> add a warning indicator to the step and continue running the test.
+              </li>
+            </ul>
+          </li>
+          <li><strong>When to run step:</strong> lets you control when a step in your test runs or doesn’t run. The following options can be applied:<!-- -->
+            <ul>
+              <li><em>Always Run</em> - The step will run whenever you run the test.
+              </li>
+              <li><em>Element</em> - The step will run if the specified element exists (or does not exist) on the page.
+              </li>
+              <li><em>Element text</em> - The step will run if the specified text exists within a specific element.
+              </li>
+              <li><em>Custom</em> - The step will run if an element has a specific value.
+              </li>
+              <li><em>Never (skip)</em> - The step will not run.
+              </li>
+            </ul>
+          </li>
+          <li><strong>Override timeout:</strong> The “step timeout” is the time lapse (in milliseconds) which causes Testim to register a fail for a test step. The default time lapse for each step is initially set in the Setup step configuration. Selecting this checkbox allows you to override the default setting for this step and specify a different time lapse value (in milliseconds).
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Mobile Test Action Panel
+          </div><a href="#mobile-test-action-panel"></a>
+        </h2> <span><span><img alt="428" src="https://files.readme.io/8949a49-testactions.png" /></span></span>
+        <p>The Test Action Panel allows you to
+        </p>
+        <ul>
+          <li><strong>View Device</strong>: while recording a test, this button forces the AUT Viewer to move to the top of all windows.
+          </li>
+          <li><strong>Record/Pause</strong>: when not recording a test, this will display as a record button to start recording. During recording this will display as a pause button to pause recording.
+          </li>
+          <li><strong>Play</strong>: when this button is pressed Testim will automatically run your test.
+          </li>
+          <li><strong>Turn On/Off Element Highlighting</strong>: when interacting with the AUT Viewer to record mobile test steps, Testim highlights the element being interacted with in the viewer. You can turn this highlighting off.
+          </li>
+        </ul>
+        <h2>
+          <div>
+          </div>
+          <div>Application Under Test (AUT) Viewer
+          </div><a href="#application-under-test-aut-viewer"></a>
+        </h2>
+        <p>When you start recording a mobile test, the AUT Viewer is a separate window that displays an interface between your physical or virtual device. This viewer allows Testim to capture the actions taken on the device as test steps.
+        </p> <span><span><img alt="413" src="https://files.readme.io/7e3ad4d-image_17.png" /></span></span>
+        <p>The AUT Viewer displays the following information:
+        </p>
+        <ul>
+          <li><strong>Title Bar:</strong> displays the connected device and device&#x27;s operating system.
+          </li>
+          <li><strong>Display Window</strong>: displays an interface between the physical or virtual device that allows the user to interact with the device as if holding the device.
+          </li>
+          <li><strong>Recording Indication</strong>: displays an indication that the screen is being recorded
+          </li>
+        </ul>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note-2"></a>
+          </h3>
+          <p>You can drag the corners of the AUT Viewer window to resize the viewer. Testim will maintain the display ratio specific to the connected device.
+          </p>
+        </blockquote>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Note:
+            </div><a href="#note-3"></a>
+          </h3>
+          <p>Closing the AUT Viewer window will stop the test recording and in playback, it will stop and fail the test.
+          </p>
+        </blockquote>
+      </div>
+      <div>
+        <div>
+          <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+          </p>
+        </div>
+      </div>
+      <hr />
+      <nav><a href="/docs/how-to-prepare-an-ipa-for-mobile-testing"><span></span>
+        <div>How to Prepare an IPA for Mobile Testing
+        </div></a><a href="/docs/mobile-test-mirroring-toolbar">
+        <div>Mobile Test Mirroring Toolbar
+        </div><span></span></a>
+      </nav>
+    </section>
+    <section>
+      <div>
+        <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

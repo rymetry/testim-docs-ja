@@ -1,0 +1,108 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Setting MFA for Salesforce
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>The setup process requires obtaining the secret key from Salesforce and entering the key into the relevant field when adding the credentials for Persona/Environment combination. Finally the Verification Code from Testim for Salesforce should be entered back into the Verification Code field in Salesforce.
+          <br /> <i></i> <strong>To setup MFA:</strong>
+          </p>
+          <ol>
+            <li>Login to Salesforce and Navigate to <strong>Setup &gt; Users &gt; Users &gt;</strong> and select the user for which you want to set up MFA.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/bc293ae-image.png" /></span></span>
+          <ol start="2">
+            <li>If you have already registered a 3rd party Authenticator app (Google Authenticator, Microsoft Authenticator etc.) under <strong>App Registration: One-Time Password Authenticator</strong>, you will need to disconnect it and then reconnect in order to obtain the secret key.<!-- -->
+              <ul>
+                <li>Under <strong>User Details</strong>, in the <strong>App Registration - One-Time Password Authenticator</strong> setting, click <strong>Disconnect</strong>.
+                </li>
+                <li>If you have never registered a 3rd party Authenticator App, proceed to the next step.
+                </li>
+              </ul>
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/e1f92f2-image_1.png" /></span></span>
+          <ol start="3">
+            <li>Under <strong>User Details</strong>, in the <strong>App Registration - One-Time Password Authenticator</strong> setting, click <strong>Connect</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/167397d-image_2.png" /></span></span>
+          <ol start="4">
+            <li>Login into Salesforce with your user name and password, when prompted with the following notice, select <strong>Choose another verification method</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/3eff270-pasted_image_0.png" /></span></span>
+          <ol start="5">
+            <li>In the <strong>Choose a verification method</strong> screen, select <strong>Use verification codes from an authenticator app</strong> and click <strong>Continue</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/522b354-pasted_image_0_1.png" /></span></span>
+          <ol start="6">
+            <li>In the <strong>Connect an authenticator app screen</strong>, click <strong>I cant scan the QR code</strong>.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/71f0334-pasted_image_0_2.png" /></span></span>
+          <ol start="7">
+            <li>A secret key is displayed. Copy the secret key.
+            </li>
+          </ol> <span><span><img alt="" src="https://files.readme.io/7022745-pasted_image_0_4.png" /></span></span>
+          <p>At this point, you can add the MFA to the desired Persona and Environment combination on Testim for Salesforce.
+          </p>
+          <ol start="8">
+            <li>
+              <p>In Testim for Salesforce, go to <strong>Settings &gt; Personas</strong>.
+              </p>
+            </li>
+            <li>
+              <p>Click the <strong>+</strong> button on the desired Persona and Environment combination.
+              </p> <span><span><img alt="" src="https://files.readme.io/fa12927-plus.png" /></span></span>
+            </li>
+            <li>
+              <p>Select <strong>Login with Username and Password</strong>.
+                <br /> <!-- -->The <strong>Add Credentials</strong> dialog is displayed.
+                </p> <span><span><img alt="" src="https://files.readme.io/d6163b6-addcredentials.png" /></span></span>
+              </li>
+              <li>
+                <p>Make sure the desired <strong>Salesforce Profile</strong> and <strong>Salesforce User</strong> are selected.
+                </p>
+              </li>
+              <li>
+                <p>Enter the <strong>Salesforce Password</strong>.
+                </p>
+              </li>
+              <li>
+                <p>In the <strong>MFA Authenticator Key</strong>, paste the key that you have saved in step 7 above and click <strong>Save</strong>.
+                  <br /> <!-- -->A verification code is displayed:
+                  </p>
+                </li>
+              </ol> <span><span><img alt="" src="https://files.readme.io/76d0fe8-image_5.png" /></span></span>
+              <ol start="10">
+                <li>
+                  <p>Go back to Salesforce and enter the verification code that was displayed into the <strong>Verification Code</strong> and click <strong>Connect</strong>.
+                  </p> <span><span><img alt="" src="https://files.readme.io/f22ed82-7022745-pasted_image_0_4.png" /></span></span>
+                </li>
+              </ol>
+            </div>
+            <div>
+              <div>
+                <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+                </p>
+              </div>
+            </div>
+            <hr />
+            <nav><a href="/docs/methods-for-displaying-a-specific-record-during-test-execution"><span></span>
+              <div>Find and display a specific Salesforce record during test execution
+              </div></a><a href="/docs/page-layout">
+              <div>Page Layout
+              </div><span></span></a>
+            </nav>
+          </section>
+          <section>
+            <div>
+              <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>

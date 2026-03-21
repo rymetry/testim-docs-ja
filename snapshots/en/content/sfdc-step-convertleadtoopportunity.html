@@ -1,0 +1,90 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>Convert lead to opportunity
+        </h1>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Salesforce Step
+            </div><a href="#salesforce-step"></a>
+          </h3>
+          <p>This is a Salesforce step.
+          </p>
+        </blockquote>
+        <p>The <strong>Convert lead to opportunity</strong> step converts a record from being classified as a Lead to an Opportunity. Leads represent any potential marketable individual or business inside Salesforce that is not currently qualified. Opportunities represent leads that are qualified and have the potential to complete a purchase/sale. So typically Leads that perform certain qualifying actions are converted into an Opportunity.
+        </p>
+        <p>As part of the conversion process, it is possible to change the values of the <strong>Account</strong>, <strong>Contact</strong>, and <strong>Opportunity</strong> attributes of the record or use its default values.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Record display requirement
+            </div><a href="#record-display-requirement"></a>
+          </h3>
+          <p>The step itself does not navigate to the record, so you will need the system to navigate to the specific record during the execution of a test, so that the designated step will be performed when the record is displayed on Salesforce. To learn more, see <a href="https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution">Find and display a specific Salesforce record during test execution</a>1..
+          </p>
+        </blockquote>
+        <p><i></i><strong>To add a Convert lead to opportunity step:</strong>
+        </p>
+        <ol>
+          <li>
+            <p>In your test, add a step before the <strong>Convert lead to opportunity</strong> step that will navigate to the desired Lead record. To learn more, see <a href="https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution">Find and display a specific Salesforce record during test execution</a>.
+            </p>
+          </li>
+          <li>
+            <p>Add a step by clicking the <strong>+</strong> button.
+            </p>
+          </li>
+          <li>
+            <p>Under the <strong>Salesforce steps</strong> tab, click <strong>CPQ Operations</strong> and select the <strong>Convert lead to opportunity</strong> step.
+              <br /> <!-- -->The <strong>Convert lead to opportunity</strong> step is added and the following <strong>Object</strong> properties is displayed.
+              </p> <span><span><img alt="" src="https://files.readme.io/f408a44-2024-05-05_19-30-37.png" /></span></span>
+            </li>
+            <li>
+              <p>It is possible to customize the Account Contact and Opportunity information or use the default values that were configured in Salesforce:
+              </p>
+              <ol>
+                <li>To customize the values, deselect the Use default checkbox, open the relevant category and enter the desired value into the filed.
+                </li>
+                <li>To use the default values, select the Use default checkbox.
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>When finished, click <strong>Save</strong>.
+              </p>
+            </li>
+          </ol>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/sfdc-document-validation"><span></span>
+          <div>Document Validation
+          </div></a><a href="/docs/sfdc-step-quotelineeditor">
+          <div>Quote Line Editor Action
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>

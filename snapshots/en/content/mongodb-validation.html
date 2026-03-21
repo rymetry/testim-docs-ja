@@ -1,0 +1,126 @@
+<article>
+  <header>
+    <div>
+      <div>
+        <h1>MongoDB validation
+        </h1>
+        <div>
+          <div>
+            <p>Learn how to validate MongoDB using the CLI action step.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div>
+    <section>
+      <div>
+        <p>You can use the <a href="doc:cli-actions">CLI action</a> step to perform queries and run validations on MongoDB database.
+        </p>
+        <blockquote theme="📘"><span>📘</span>
+          <h3>
+            <div>
+            </div>
+            <div>Permissions Notice
+            </div><a href="#permissions-notice"></a>
+          </h3>
+          <p>As databases are usually protected, you might need to add the machine where this CLI validation step is executed on to the white list (to allow access), otherwise the step may fail when trying to reach the DB.
+            <br /> <!-- -->For further information / if you are running it via our Scheduler, please contact support.
+            </p>
+          </blockquote>
+          <h4>
+            <div>
+            </div>
+            <div><strong>Example code:</strong>
+            </div><a href="#example-code"></a>
+          </h4>
+          <div>
+            <div><button>Text</button>
+            </div>
+            <div><pre><code>const MongoClient = mongodb.MongoClient;
+// Connection URL
+const url = &quot;XXXXXX&quot;;
+query = JSON.parse(query);
+
+const client = new MongoClient(url, { useNewUrlParser: true });
+
+const connect = () =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    client.connect(function(err) {
+      if (err) {
+        return reject(err);
+      }
+      console.log(&quot;Connected successfully to server&quot;);
+      const db = client.db(dbName);
+      resolve(db);
+    });
+  });
+};
+
+const findOne = (db, collName) =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    const coll = db.collection(collName);
+    coll.findOne(query, (err, result) =&gt; {
+      if (err) {
+        return reject(err);
+      }
+      console.log(&quot;Got collection result&quot;);
+      resolve(result);
+    });
+  });
+};
+
+return connect()
+  .then(db =&gt; findOne(db, collName, query))
+  .then(result =&gt; {
+    if (!result) {
+      return Promise.reject(new Error(&quot;Failed to find object&quot;));
+    }
+  })
+  .finally(() =&gt; client.close());</code></pre>
+            </div>
+          </div>
+          <h4>
+            <div>
+            </div>
+            <div><strong>Parameters - Packages and JavaScript used in this example:</strong>
+            </div><a href="#parameters---packages-and-javascript-used-in-this-example"></a>
+          </h4>
+          <ol>
+            <li>name: mongodb, type: Package, value: <a href="https://www.npmjs.com/package/mongodb/v/3.1.10"><span>[email&#160;protected]</span></a>
+            </li>
+            <li>name: Promise, type: Package, value: <a href="https://www.npmjs.com/package/bluebird/v/3.5.3"><span>[email&#160;protected]</span></a>
+            </li>
+            <li>name: query, type: JavaScript, value: &#x27;{&quot;name&quot;:&quot;test&quot;}&#x27;
+            </li>
+            <li>name: collName, type: JavaScript, value: &#x27;users&#x27;
+            </li>
+            <li>name: dbName, type: JavaScript, value: &#x27;myproject&#x27;
+            </li>
+          </ol>
+          <p><strong>see screenshot:</strong>
+          </p> <span><span><img alt="" src="https://files.readme.io/c5c8e33-see_screenshot.png" /></span></span>
+        </div>
+        <div>
+          <div>
+            <p><i></i>Updated<!-- --> <!-- -->6 months ago<!-- -->
+            </p>
+          </div>
+        </div>
+        <hr />
+        <nav><a href="/docs/file-upload-step"><span></span>
+          <div>File upload step validation
+          </div></a><a href="/docs/mysql-validation">
+          <div>MySQL validation
+          </div><span></span></a>
+        </nav>
+      </section>
+      <section>
+        <div>
+          <div><button><svg><path></path><path></path><path></path><linearGradient><stop></stop><stop></stop></linearGradient></svg><span>Ask AI</span><span><span></span></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
