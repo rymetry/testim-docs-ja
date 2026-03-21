@@ -21,7 +21,7 @@ Testim テストを大規模に効率的に実行し、パフォーマンスを�
 パフォーマンスを向上させ、テストの実行時間を平均 30% 短縮し、不要なデータの保存を回避します。
 
 :::note{title="これはPRO機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細については、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::note

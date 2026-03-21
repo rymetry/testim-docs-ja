@@ -19,7 +19,7 @@ keywords:
 ---
 
 :::info{title="PRO機能"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。詳しくは[こちら](https://www.testim.io/pricing/)をご覧ください。
+この機能は、Professional plan のプロジェクトでのみ利用できます。
 :::
 
 Testim はさまざまなテスト管理システムと統合できます。現在、以下の統合がサポートされています:

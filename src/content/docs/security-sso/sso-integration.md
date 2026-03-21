@@ -21,7 +21,7 @@ keywords:
 Testim は Okta、OneLogin、AzureAD を通じた SSO（シングルサインオン）をサポートしています。SSO 機能により、ユーザーが Testim にログインする際に、会社の ID プロバイダーを通じて認証できるようになります。ユーザーは SSO プロバイダー（ID プロバイダー（IDP）としても知られる）で一度認証すれば、セッション中に Testim や他のアプリケーションにアクセスでき、各アプリケーションで認証する必要がありません。
 
 :::info{title="PRO機能"}
-この機能は Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細については、[こちら](https://www.testim.io/pricing/)を参照してください。
+この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
 :::info
