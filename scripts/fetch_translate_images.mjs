@@ -14,6 +14,7 @@ const ROOT = ROOT_DIR;
 const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
 const PUBLIC_IMAGES = path.join(ROOT, 'public', 'images');
 const DEFAULT_STATE_PATH = path.join(ROOT, 'scripts', '.cache', 'docs-state.json');
+const SNAPSHOTS_CONTENT_DIR = path.join(ROOT, 'snapshots', 'en', 'content');
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -61,7 +62,7 @@ function extractUpdatedFromMarkdown(content) {
   return match?.[1] ?? null;
 }
 
-export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch) {
+export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch, { fromSnapshot = false } = {}) {
   const allPages = getAllPagesList(sidebarText);
   const storedHashes = fs.existsSync(hashesPath)
     ? JSON.parse(fs.readFileSync(hashesPath, 'utf8'))
@@ -71,14 +72,25 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch)
   const changed = [];
 
   for (const page of allPages) {
-    const srcUrl = `${page.url}.md`;
     let content = '';
-    try {
-      const res = await fetchFn(srcUrl);
-      if (res.ok) content = await res.text();
-    } catch (e) {
-      console.warn(`getDiffPagesList: network error for ${page.slug} (${e?.message}); treating as changed.`);
+
+    if (fromSnapshot) {
+      const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${page.slug}.md`);
+      if (fs.existsSync(snapshotPath)) {
+        content = fs.readFileSync(snapshotPath, 'utf8');
+      }
     }
+
+    if (!content) {
+      const srcUrl = `${page.url}.md`;
+      try {
+        const res = await fetchFn(srcUrl);
+        if (res.ok) content = await res.text();
+      } catch (e) {
+        console.warn(`getDiffPagesList: network error for ${page.slug} (${e?.message}); treating as changed.`);
+      }
+    }
+
     const hash = computeHash(content);
     const previousHash =
       typeof storedHashes[page.slug] === 'string' ? storedHashes[page.slug] : storedHashes[page.slug]?.hash;
@@ -199,7 +211,7 @@ function buildFrontmatter(item, existingFilePath, fallbackTitle) {
   return matter.stringify('', frontmatter).trimEnd() + '\n\n';
 }
 
-async function processOne(item, slugIndex) {
+async function processOne(item, slugIndex, { fromSnapshot = false } = {}) {
   const hit = slugIndex[item.slug];
   if (!hit) {
     console.warn(`⚠️  No local path for slug: ${item.slug}`);
@@ -207,13 +219,23 @@ async function processOne(item, slugIndex) {
   }
   const { categoryFolder, filePath } = hit;
 
-  const srcUrl = `${item.url}.md`;
-  const res = await fetch(srcUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: 'text/markdown' } });
-  if (!res.ok) {
-    console.warn(`⚠️  Skip ${item.slug}: ${res.status}`);
-    return false;
+  let md = '';
+  if (fromSnapshot) {
+    const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${item.slug}.md`);
+    if (fs.existsSync(snapshotPath)) {
+      md = fs.readFileSync(snapshotPath, 'utf8');
+    }
   }
-  let md = await res.text();
+
+  if (!md) {
+    const srcUrl = `${item.url}.md`;
+    const res = await fetch(srcUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: 'text/markdown' } });
+    if (!res.ok) {
+      console.warn(`⚠️  Skip ${item.slug}: ${res.status}`);
+      return false;
+    }
+    md = await res.text();
+  }
 
   md = await rewriteAndDownloadMedia(md, categoryFolder, item.slug);
   md = rewriteDocLinks(md);
@@ -234,6 +256,7 @@ async function main() {
   const limit = Number(args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '0');
   const mode = parseMode(args);
   const section = parseSection(args);
+  const fromSnapshot = args.includes('--from-snapshot');
 
   const sidebarText = fs.readFileSync(SIDEBAR_FILE, 'utf8');
   const slugIndex = buildSlugIndex();
@@ -243,7 +266,7 @@ async function main() {
     list = getAllPagesList(sidebarText);
   } else if (mode === 'diff') {
     const hashesPath = DEFAULT_STATE_PATH;
-    list = await getDiffPagesList(sidebarText, hashesPath);
+    list = await getDiffPagesList(sidebarText, hashesPath, fetch, { fromSnapshot });
   } else {
     list = getUntranslatedList(sidebarText);
   }
@@ -252,7 +275,7 @@ async function main() {
   let done = 0;
   for (const item of list) {
     if (onlySlug && item.slug !== onlySlug) continue;
-    const ok = await processOne(item, slugIndex);
+    const ok = await processOne(item, slugIndex, { fromSnapshot });
     if (ok) done++;
     if (limit && done >= limit) break;
     await sleep(60);

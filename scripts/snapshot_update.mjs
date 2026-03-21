@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Fetch English source pages and save normalized HTML snapshots.
+ * Fetch English source pages and save raw Markdown snapshots.
  *
  * Usage:
  *   node scripts/snapshot_update.mjs                   # all pages
@@ -21,7 +21,7 @@ import {
   readDocFile,
   toRelativeDocPath,
 } from './lib/project.mjs';
-import { normalizeContent, normalizeSidebar } from './lib/snapshot_normalize.mjs';
+import { normalizeSidebar } from './lib/snapshot_normalize.mjs';
 import { isDirectRun } from './lib/cli.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
@@ -74,6 +74,18 @@ function collectTargets({ section, slug }) {
 
 const FETCH_TIMEOUT_MS = 30_000;
 
+async function fetchMarkdown(url) {
+  const mdUrl = `${url}.md`;
+  const response = await fetch(mdUrl, {
+    headers: { 'User-Agent': DEFAULT_USER_AGENT, Accept: 'text/markdown' },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
+  if (!response.ok) {
+    return { markdown: null, status: response.status };
+  }
+  return { markdown: await response.text(), status: response.status };
+}
+
 async function fetchHtml(url) {
   const response = await fetch(url, {
     headers: { 'User-Agent': DEFAULT_USER_AGENT },
@@ -108,8 +120,8 @@ export async function main(argv) {
 
   for (const target of targets) {
     try {
-      const { html, status } = await fetchHtml(target.sourceUrl);
-      const snapshotPath = path.join(CONTENT_DIR, `${target.slug}.html`);
+      const { markdown, status } = await fetchMarkdown(target.sourceUrl);
+      const snapshotPath = path.join(CONTENT_DIR, `${target.slug}.md`);
 
       if (status === 404) {
         if (!args.dryRun) {
@@ -117,31 +129,26 @@ export async function main(argv) {
         }
         console.log(`  404  ${target.slug}`);
         notFound += 1;
-      } else if (!html) {
+      } else if (!markdown) {
         console.log(`  SKIP ${target.slug} — HTTP ${status}`);
         errors += 1;
       } else {
-        const result = normalizeContent(html);
-        if (!result.found) {
-          console.log(`  WARN ${target.slug} — no <article> found`);
-          errors += 1;
-        } else {
-          if (!args.dryRun) {
-            fs.writeFileSync(snapshotPath, result.html);
-          }
-          console.log(`  OK   ${target.slug}`);
-          fetched += 1;
+        if (!args.dryRun) {
+          fs.writeFileSync(snapshotPath, markdown);
         }
+        console.log(`  OK   ${target.slug}`);
+        fetched += 1;
 
-        // Save sidebar from the first successful page
-        if (!sidebarSaved && result.found) {
-          const sidebar = normalizeSidebar(html);
-          if (sidebar.found) {
-            if (!args.dryRun) {
+        // Save sidebar from the first successful page (requires HTML fetch)
+        if (!sidebarSaved && !args.dryRun) {
+          const { html } = await fetchHtml(target.sourceUrl);
+          if (html) {
+            const sidebar = normalizeSidebar(html);
+            if (sidebar.found) {
               fs.writeFileSync(SIDEBAR_PATH, sidebar.html);
+              console.log(`  OK   sidebar (from ${target.slug})`);
+              sidebarSaved = true;
             }
-            console.log(`  OK   sidebar (from ${target.slug})`);
-            sidebarSaved = true;
           }
         }
       }

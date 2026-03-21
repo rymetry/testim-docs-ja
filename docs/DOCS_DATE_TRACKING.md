@@ -2,7 +2,7 @@
 
 ## 概要
 
-このプロジェクトでは、英語原文の更新状況をスナップショットベースで追跡しています。英語ページの正規化 HTML をローカルに保存し、git diff で変更を検知します。
+このプロジェクトでは、英語原文の更新状況をスナップショットベースで追跡しています。英語ページの生 Markdown（`.md` エンドポイント）をローカルに保存し、git diff で変更を検知します。
 
 ## 仕組み
 
@@ -10,22 +10,19 @@
 
 ```text
 snapshots/en/
-  content/{slug}.html   # 各ページの正規化された <article> コンテンツ
-  sidebar.html           # サイドバーナビゲーション
+  content/{slug}.md    # 各ページの生 Markdown（.md エンドポイントから取得）
+  sidebar.html          # サイドバーナビゲーション（HTML、.md エンドポイントなし）
 ```
 
-正規化処理:
-- `<article>` タグの中身をまるごと取得
-- `<style>` / `<script>` タグを除去
-- 属性をホワイトリスト方式で除去（`src`, `alt`, `href`, `colspan`, `rowspan`, `theme`, `start` のみ残す）
-- `<svg>`, `<button>`, `<i>` 等のタグはすべて保持
-- ブロック要素ごとに改行・インデントして git diff を見やすくする
+コンテンツスナップショットは `{sourceUrl}.md`（例: `https://help.testim.io/docs/test-status.md`）から取得した生 Markdown をそのまま保存します。正規化処理は不要です。
+
+サイドバーは `.md` エンドポイントがないため、HTML ページから抽出して正規化しています。
 
 ### コミット済みスナップショット = 「翻訳済みの英語原文」
 
 ```text
-snapshots/en/content/{slug}.html (committed) = この英語版を元に翻訳した
-snapshots/en/content/{slug}.html (working tree) = 最新の英語版
+snapshots/en/content/{slug}.md (committed) = この英語版を元に翻訳した
+snapshots/en/content/{slug}.md (working tree) = 最新の英語版
 差分 = まだ翻訳に反映していない英語側の変更
 ```
 
@@ -33,13 +30,13 @@ snapshots/en/content/{slug}.html (working tree) = 最新の英語版
 
 差分行を自動分類します:
 
-| カテゴリ  | 検出パターン                     |
-| --------- | -------------------------------- |
-| `heading` | `<h1>` 〜 `<h6>` タグ            |
-| `image`   | `<img>` タグ                     |
-| `code`    | `<pre>` タグ                     |
-| `callout` | `<blockquote theme="...">`       |
-| `content` | その他のテキスト変更             |
+| カテゴリ  | 検出パターン                                                 |
+| --------- | ------------------------------------------------------------ |
+| `heading` | `^#{1,6}\s`（Markdown 見出し）                               |
+| `image`   | `!\[`（Markdown 画像構文）                                   |
+| `code`    | ` ^``` `（コードフェンス）                                   |
+| `callout` | `^>\s*` + 絵文字（📘📙🚧❗✅👍⚠️）、または `^<Callout\b`（JSX） |
+| `content` | その他のテキスト変更                                         |
 
 ページレベルでは `page-added`（新規）、`page-removed`（404化）、`page-changed`（内容変更）に分類されます。
 
@@ -85,8 +82,16 @@ npm run check:snapshots:fetch -- --dry-run
 1. `npm run check:snapshots:fetch` — 最新スナップショット取得
 2. `npm run check:snapshots:diff` — 変更内容を確認
 3. 日本語ドキュメントを翻訳・更新
-4. `git add snapshots/en/content/{slug}.html src/content/docs/.../{slug}.md`
+4. `git add snapshots/en/content/{slug}.md src/content/docs/.../{slug}.md`
 5. `git commit` — スナップショットと翻訳を同時コミット → 次回は差分 0
+
+### スナップショットから翻訳入力に再利用
+
+`fetch_translate_images.mjs` は `--from-snapshot` フラグで、ネットワークフェッチの代わりにスナップショットから読み込めます:
+
+```bash
+node scripts/fetch_translate_images.mjs --mode=full --from-snapshot
+```
 
 ### 新規ページ追加時
 
@@ -102,13 +107,13 @@ npm run check:snapshots:fetch -- --dry-run
 
 ## 出力ファイル
 
-| ファイル                        | 内容                                     |
-| ------------------------------- | ---------------------------------------- |
-| `snapshot-diff-status.json`     | 変更検知結果（ページごとの差分分類）     |
-| `parity-check-status.json`      | ローカル parity チェック結果             |
-| `docs-actionable-report.json`   | Issue 作成用レポート                     |
-| `docs-update-summary.md`        | 人間向けサマリー                         |
-| `docs-audit-manifest.json`      | レビュー計画用マニフェスト               |
+| ファイル                      | 内容                                 |
+| ----------------------------- | ------------------------------------ |
+| `snapshot-diff-status.json`   | 変更検知結果（ページごとの差分分類） |
+| `parity-check-status.json`    | ローカル parity チェック結果         |
+| `docs-actionable-report.json` | Issue 作成用レポート                 |
+| `docs-update-summary.md`      | 人間向けサマリー                     |
+| `docs-audit-manifest.json`    | レビュー計画用マニフェスト           |
 
 ## 初回セットアップ
 
@@ -127,8 +132,8 @@ git commit -m "feat: 初回英語原文スナップショット"
 
 ## 関連ファイル
 
-- `scripts/lib/snapshot_normalize.mjs` — HTML 正規化コア
-- `scripts/snapshot_update.mjs` — フェッチ & 保存
+- `scripts/lib/snapshot_normalize.mjs` — サイドバー HTML 正規化
+- `scripts/snapshot_update.mjs` — フェッチ & 保存（Markdown + サイドバー HTML）
 - `scripts/snapshot_diff.mjs` — 比較 & レポート
 - `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック
 - `.github/workflows/deep-audit.yml` — 手動 deep audit

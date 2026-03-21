@@ -1,54 +1,20 @@
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-let extractArticle;
 let extractSidebar;
 let stripScriptAndStyle;
 let stripAttributes;
 let prettyPrint;
-let normalizeContent;
 let normalizeSidebar;
 
 before(async () => {
   ({
-    extractArticle,
     extractSidebar,
     stripScriptAndStyle,
     stripAttributes,
     prettyPrint,
-    normalizeContent,
     normalizeSidebar,
   } = await import('../lib/snapshot_normalize.mjs'));
-});
-
-// ---------------------------------------------------------------------------
-// extractArticle
-// ---------------------------------------------------------------------------
-describe('extractArticle', () => {
-  it('extracts <article> tag with content', () => {
-    const html = '<html><body><article class="foo"><h1>Title</h1></article></body></html>';
-    const result = extractArticle(html);
-    assert.equal(result.found, true);
-    assert.match(result.html, /^<article/);
-    assert.match(result.html, /<\/article>$/);
-    assert.match(result.html, /<h1>Title<\/h1>/);
-  });
-
-  it('returns found: false when no article tag', () => {
-    const html = '<html><body><main><h1>Title</h1></main></body></html>';
-    const result = extractArticle(html);
-    assert.equal(result.found, false);
-    assert.equal(result.html, '');
-  });
-
-  it('preserves nested elements inside article', () => {
-    const html = '<article><section><div><p>Text</p></div></section></article>';
-    const result = extractArticle(html);
-    assert.equal(result.found, true);
-    assert.match(result.html, /<section>/);
-    assert.match(result.html, /<div>/);
-    assert.match(result.html, /<p>Text<\/p>/);
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -303,78 +269,6 @@ describe('stripAttributes (edge cases)', () => {
   it('preserves whitelisted boolean-like attrs even without value', () => {
     const html = '<div hidden disabled><p>Text</p></div>';
     assert.equal(stripAttributes(html), '<div><p>Text</p></div>');
-  });
-});
-
-// ---------------------------------------------------------------------------
-// normalizeContent (end-to-end pipeline)
-// ---------------------------------------------------------------------------
-describe('normalizeContent', () => {
-  it('extracts article, strips style, strips attributes, pretty-prints', () => {
-    const html = `<html><body>
-      <article class="SuperHubDoc">
-        <style>/*! tailwindcss v4 */ .foo{}</style>
-        <header id="content-head">
-          <h1>Test Title</h1>
-        </header>
-        <section class="content-body">
-          <div class="rm-Markdown markdown-body">
-            <p class="lead">Hello world</p>
-            <img class="photo" src="test.png" alt="Test image" data-size="lg">
-            <blockquote class="callout callout_info" theme="📘">
-              <p>Important note</p>
-            </blockquote>
-          </div>
-        </section>
-      </article>
-    </body></html>`;
-
-    const result = normalizeContent(html);
-    assert.equal(result.found, true);
-
-    // Style tag removed
-    assert.ok(!result.html.includes('tailwindcss'));
-
-    // Attributes stripped except whitelist
-    assert.ok(!result.html.includes('class='));
-    assert.ok(!result.html.includes('id='));
-    assert.ok(!result.html.includes('data-size'));
-
-    // Whitelisted attributes preserved
-    assert.match(result.html, /src="test\.png"/);
-    assert.match(result.html, /alt="Test image"/);
-    assert.match(result.html, /theme="📘"/);
-
-    // Content preserved
-    assert.match(result.html, /Test Title/);
-    assert.match(result.html, /Hello world/);
-    assert.match(result.html, /Important note/);
-  });
-
-  it('returns found: false for pages without article', () => {
-    const html = '<html><body><main>No article here</main></body></html>';
-    const result = normalizeContent(html);
-    assert.equal(result.found, false);
-    assert.equal(result.html, '');
-  });
-
-  it('preserves svg, button, and i tags', () => {
-    const html = `<article>
-      <svg><path d="M0 0"></path></svg>
-      <button>Ask AI</button>
-      <i>icon</i>
-    </article>`;
-    const result = normalizeContent(html);
-    assert.match(result.html, /<svg>/);
-    assert.match(result.html, /<button>/);
-    assert.match(result.html, /<i>/);
-  });
-
-  it('is deterministic', () => {
-    const html = `<article class="x"><h1>Title</h1><p>Body <a href="u">link</a></p></article>`;
-    const r1 = normalizeContent(html);
-    const r2 = normalizeContent(html);
-    assert.equal(r1.html, r2.html);
   });
 });
 
