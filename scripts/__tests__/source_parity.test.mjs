@@ -4,15 +4,86 @@ import assert from 'node:assert/strict';
 let extractFromMd;
 let localCheck;
 let summarizeParityResults;
+let isEnglishOnlyLine;
+let loadSidebarSlugs;
+let isActionableIssue;
 
 before(async () => {
   ({
     extractFromMd,
     localCheck,
     summarizeParityResults,
+    isEnglishOnlyLine,
+    loadSidebarSlugs,
+    isActionableIssue,
   } = await import(
     '../lib/source_parity.mjs'
   ));
+});
+
+describe('isEnglishOnlyLine', () => {
+  it('detects untranslated instruction patterns', () => {
+    assert.equal(isEnglishOnlyLine('1. Click on the **Settings** button.'), true);
+    assert.equal(isEnglishOnlyLine('Hover over the element to inspect'), true);
+    assert.equal(isEnglishOnlyLine('Select the option from the list'), true);
+  });
+
+  it('returns false for lines with CJK characters', () => {
+    assert.equal(isEnglishOnlyLine('Click on the 設定 button to proceed'), false);
+  });
+
+  it('returns false for short lines', () => {
+    assert.equal(isEnglishOnlyLine('Click on'), false);
+  });
+
+  it('returns false for empty lines', () => {
+    assert.equal(isEnglishOnlyLine(''), false);
+    assert.equal(isEnglishOnlyLine('   '), false);
+  });
+
+  it('returns false for markdown syntax lines', () => {
+    assert.equal(isEnglishOnlyLine('## Click on the Settings button'), false);
+    assert.equal(isEnglishOnlyLine('- list item with text'), false);
+    assert.equal(isEnglishOnlyLine('```javascript'), false);
+    assert.equal(isEnglishOnlyLine('![alt text](image.png)'), false);
+  });
+
+  it('returns false for HTML tag lines', () => {
+    assert.equal(isEnglishOnlyLine('<table>'), false);
+    assert.equal(isEnglishOnlyLine('<img src="test.png" alt="test">'), false);
+  });
+});
+
+describe('loadSidebarSlugs', () => {
+  it('extracts slugs from sidebar URL text', () => {
+    const text = `## Overview
+- ✅ https://help.testim.io/docs/testim-overview
+- ✅ https://help.testim.io/docs/getting-started
+## Other
+- https://help.testim.io/docs/advanced-config
+`;
+    const slugs = loadSidebarSlugs(text);
+    assert.equal(slugs.size, 3);
+    assert.ok(slugs.has('testim-overview'));
+    assert.ok(slugs.has('getting-started'));
+    assert.ok(slugs.has('advanced-config'));
+  });
+
+  it('returns empty set for text without URLs', () => {
+    const slugs = loadSidebarSlugs('No URLs here');
+    assert.equal(slugs.size, 0);
+  });
+});
+
+describe('isActionableIssue', () => {
+  it('returns true for actionable severity', () => {
+    assert.equal(isActionableIssue({ severity: 'actionable' }), true);
+  });
+
+  it('returns false for signal or error severity', () => {
+    assert.equal(isActionableIssue({ severity: 'signal' }), false);
+    assert.equal(isActionableIssue({ severity: 'error' }), false);
+  });
 });
 
 describe('extractFromMd', () => {
@@ -36,6 +107,27 @@ describe('extractFromMd', () => {
     assert.equal(result.h2Count, 1);
     assert.equal(result.imgCount, 4);
     assert.equal(result.codeBlockCount, 1);
+  });
+
+  it('counts h3 headings', () => {
+    const body = '## H2\n### H3 one\n### H3 two\n';
+    const result = extractFromMd(body);
+    assert.equal(result.h2Count, 1);
+    assert.equal(result.h3Count, 2);
+  });
+
+  it('counts ::: callouts and legacy callouts', () => {
+    const body = ':::note\nSome note\n:::\n\n> 📘 Legacy callout\n';
+    const result = extractFromMd(body);
+    // ::: open + ::: close = 2 matches, plus 1 legacy
+    assert.ok(result.calloutCount >= 2);
+  });
+
+  it('returns zeros for empty body', () => {
+    const result = extractFromMd('');
+    assert.equal(result.h2Count, 0);
+    assert.equal(result.imgCount, 0);
+    assert.equal(result.codeBlockCount, 0);
   });
 });
 
@@ -147,5 +239,44 @@ describe('summarizeParityResults', () => {
     assert.equal(summary.actionableFiles, 1);
     assert.equal(summary.signalFiles, 1);
     assert.equal(summary.errorFiles, 1);
+  });
+
+  it('returns zeros for empty input', () => {
+    const summary = summarizeParityResults([]);
+    assert.equal(summary.filesWithIssues, 0);
+    assert.equal(summary.actionableFiles, 0);
+    assert.equal(summary.signalFiles, 0);
+    assert.equal(summary.errorFiles, 0);
+  });
+
+  it('counts issuesByType and issuesBySeverity', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'a.md',
+        issues: [
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'legacy-callout', severity: 'actionable' },
+        ],
+      },
+    ]);
+    assert.equal(summary.issuesByType['untranslated'], 2);
+    assert.equal(summary.issuesByType['legacy-callout'], 1);
+    assert.equal(summary.issuesBySeverity['actionable'], 3);
+  });
+
+  it('prioritizes actionable over error at file level', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'mixed.md',
+        issues: [
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'source-fetch-error', severity: 'error' },
+        ],
+      },
+    ]);
+    // File has both actionable and error → counted as actionable
+    assert.equal(summary.actionableFiles, 1);
+    assert.equal(summary.errorFiles, 0);
   });
 });

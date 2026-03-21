@@ -95,6 +95,22 @@ describe('classifyChanges', () => {
     assert.equal(result.categories.content.added, 0);
   });
 
+  it('handles empty strings', () => {
+    const result = classifyChanges('', '');
+    assert.equal(result.diffLines, 0);
+    assert.equal(result.categories.heading.added, 0);
+  });
+
+  it('undercounts duplicate identical lines (Set-based limitation)', () => {
+    // Set collapses duplicate lines — this is a known, documented limitation.
+    // Page-level detection (changed/added/removed) is unaffected.
+    const head = '<li>Item</li>\n<li>Item</li>\n<li>Item</li>';
+    const current = '<li>Item</li>';
+    const result = classifyChanges(head, current);
+    // Set sees "Item" in both → reports 0 diff instead of 2 removed
+    assert.equal(result.diffLines, 0);
+  });
+
   it('classifies callout changes', () => {
     const head = '<article>\n<p>Text</p>\n</article>';
     const current = '<article>\n<blockquote theme="📘"><p>Note</p></blockquote>\n<p>Text</p>\n</article>';

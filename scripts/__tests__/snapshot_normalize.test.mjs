@@ -263,6 +263,47 @@ describe('prettyPrint', () => {
     // hr should be indented inside div but not increase indent
     assert.match(hrLine, /^\s{2}<hr>/);
   });
+
+  it('handles multiple <pre> blocks independently', () => {
+    const html = '<div><pre>  block one  </pre><p>middle</p><pre>  block two  </pre></div>';
+    const result = prettyPrint(html);
+    assert.match(result, /<pre>  block one  <\/pre>/);
+    assert.match(result, /<pre>  block two  <\/pre>/);
+    assert.match(result, /middle/);
+  });
+
+  it('preserves <pre> blocks with attributes', () => {
+    const html = '<div><pre class="language-js"><code>const x = 1;</code></pre></div>';
+    const result = prettyPrint(html);
+    assert.match(result, /<pre class="language-js"><code>const x = 1;<\/code><\/pre>/);
+  });
+
+  it('handles empty input', () => {
+    const result = prettyPrint('');
+    assert.equal(result, '\n');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// stripAttributes (additional edge cases)
+// ---------------------------------------------------------------------------
+describe('stripAttributes (edge cases)', () => {
+  it('handles empty attribute values', () => {
+    const html = '<div class="" id=""><p>Text</p></div>';
+    assert.equal(stripAttributes(html), '<div><p>Text</p></div>');
+  });
+
+  it('handles unquoted attribute values', () => {
+    const html = '<img src=photo.png alt=test>';
+    const result = stripAttributes(html);
+    assert.match(result, /src="photo.png"/);
+    assert.match(result, /alt="test"/);
+  });
+
+  it('preserves whitelisted boolean-like attrs even without value', () => {
+    const html = '<div hidden disabled><p>Text</p></div>';
+    assert.equal(stripAttributes(html), '<div><p>Text</p></div>');
+  });
 });
 
 // ---------------------------------------------------------------------------

@@ -6,6 +6,7 @@ let buildAuditManifest;
 let classifySnapshotBucket;
 let assignReviewGroups;
 let renderSummaryMarkdown;
+let loadDetectionInputs;
 
 before(async () => {
   ({
@@ -14,6 +15,7 @@ before(async () => {
     classifySnapshotBucket,
     assignReviewGroups,
     renderSummaryMarkdown,
+    loadDetectionInputs,
   } = await import('../lib/detection_reports.mjs'));
 });
 
@@ -64,6 +66,38 @@ describe('classifySnapshotBucket', () => {
     );
   });
 
+  it('classifies code changes as structural-change', () => {
+    assert.equal(
+      classifySnapshotBucket({
+        type: 'page-changed',
+        categories: {
+          heading: { added: 0, removed: 0 },
+          image: { added: 0, removed: 0 },
+          code: { added: 2, removed: 0 },
+          callout: { added: 0, removed: 0 },
+          content: { added: 1, removed: 0 },
+        },
+      }),
+      'structural-change',
+    );
+  });
+
+  it('classifies callout changes as structural-change', () => {
+    assert.equal(
+      classifySnapshotBucket({
+        type: 'page-changed',
+        categories: {
+          heading: { added: 0, removed: 0 },
+          image: { added: 0, removed: 0 },
+          code: { added: 0, removed: 0 },
+          callout: { added: 0, removed: 1 },
+          content: { added: 0, removed: 0 },
+        },
+      }),
+      'structural-change',
+    );
+  });
+
   it('classifies content-only changes as content-only', () => {
     assert.equal(
       classifySnapshotBucket({
@@ -82,6 +116,27 @@ describe('classifySnapshotBucket', () => {
 });
 
 describe('buildAuditManifest', () => {
+  it('returns empty array for empty snapshot changes', () => {
+    const manifest = buildAuditManifest({ changes: [] }, { files: [] });
+    assert.equal(manifest.length, 0);
+  });
+
+  it('handles parity entries with no matching snapshot slug', () => {
+    const snapshot = {
+      changes: [
+        { slug: 'page-a', type: 'page-changed', sourceUrl: 'https://help.testim.io/docs/page-a', categories: { heading: { added: 0, removed: 0 }, image: { added: 0, removed: 0 }, code: { added: 0, removed: 0 }, callout: { added: 0, removed: 0 }, content: { added: 1, removed: 0 } }, diffLines: 1 },
+      ],
+    };
+    const parity = {
+      files: [
+        { file: 'src/content/docs/overview/unrelated.md', issues: [{ type: 'untranslated', severity: 'actionable', detail: 'text' }] },
+      ],
+    };
+    const manifest = buildAuditManifest(snapshot, parity);
+    assert.equal(manifest.length, 1);
+    assert.equal(manifest[0].signals.length, 0);
+  });
+
   it('buckets entries into page-lifecycle, structural-change, and content-only groups', () => {
     const snapshot = {
       changes: [
@@ -361,5 +416,16 @@ describe('renderSummaryMarkdown', () => {
     assert.match(md, /Structural change: 1/);
     assert.match(md, /Content only: 2/);
     assert.match(md, /snapshot-diff-status\.json/);
+  });
+});
+
+describe('loadDetectionInputs', () => {
+  it('returns empty objects when files do not exist', () => {
+    const result = loadDetectionInputs({
+      snapshotPath: '/nonexistent/snapshot.json',
+      parityPath: '/nonexistent/parity.json',
+    });
+    assert.deepEqual(result.snapshot, {});
+    assert.deepEqual(result.parity, {});
   });
 });
