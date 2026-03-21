@@ -27,7 +27,7 @@ Testim は、ステップを記録してテストを作成できるコードレ�
 私たちの AI は Smart Locators と呼ばれるものを使用して、数百の属性を評価してスコアリングするため、要素が変更されてもテストは壊れません。開始するには、以下の入門ガイドの手順に従ってください。
 
 - Web の場合 - [Testim Visual Editor で初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- モバイルの場合 - [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor-edited)
+- モバイルの場合 - [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)
 
 ## テストのカスタマイズ
 
@@ -75,7 +75,7 @@ Testim には、テストをカスタマイズするための多くの機能が�
 
 [テスト結果](/docs/test-results) - チームとテストスイートのパフォーマンスを測定します。テストの経時的な傾向を確認します。
 
-[バグキャプチャ](/docs/capture) - キャプチャツールを使用すると、バグレポートが本当に簡単です。スクリーンショット、ビデオをキャプチャし、エラーの説明を追加して、バグトラッカーに送信します。60 秒以内に完了します。
+[バグキャプチャ](/docs/testim-extension-capture-video-bug-scenario) - キャプチャツールを使用すると、バグレポートが本当に簡単です。スクリーンショット、ビデオをキャプチャし、エラーの説明を追加して、バグトラッカーに送信します。60 秒以内に完了します。
 
 ## TestOps: 制御、管理、インサイトでテストをスケール
 
@@ -100,4 +100,4 @@ Smart Locators は各テスト実行で学習します。一部の属性が変�
 ## 次のステップ
 
 - [Testim Visual Editor で初めてのコードレステストを作成する](/docs/creating-your-first-codeless-test)
-- [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor-edited)
+- [Testim Visual Editor で初めてのモバイルテストを作成する](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

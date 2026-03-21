@@ -24,7 +24,7 @@ Insights 画面には、_TestOps Dashboard_ と _Reports_ の 2 つのタブが�
 
 - **TestOps Dashboard** - **TestOps Dashboard** は、プロジェクト内のテスト、リモート実行実行、その他のアクティビティへの迅速なアクセスを提供する重要な統計を提供します。詳細については、[TestOps Dashboard](/docs/dashboard) を参照してください。
 
-- **Reports** - **Insights** 画面の **Reports** タブは、成功および失敗したテスト実行に関する情報、チームのアクティビティ、最も失敗したテストに関する情報など、選択した期間におけるプロジェクトの品質に関する詳細情報を表示します。会社オーナーとプロジェクトオーナーは、週次サマリーをメールで受け取ります。詳細については、[Reports](/docs/managerial-reports) を参照してください。
+- **Reports** - **Insights** 画面の **Reports** タブは、成功および失敗したテスト実行に関する情報、チームのアクティビティ、最も失敗したテストに関する情報など、選択した期間におけるプロジェクトの品質に関する詳細情報を表示します。会社オーナーとプロジェクトオーナーは、週次サマリーをメールで受け取ります。詳細については、[Reports](/docs/reports) を参照してください。
 
 ![テスト実行結果、チームアクティビティ、改善領域を表示する Insights 画面](/images/insights/insights/317734a-Testim_466a.png)
 

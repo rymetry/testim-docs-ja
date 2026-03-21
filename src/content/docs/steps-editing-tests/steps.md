@@ -55,7 +55,7 @@ keywords:
     Add CLI validation
    </td>
    <td>
-    <a href="/docs/validate-download#adding-a-cli-step">CLI ステップを追加</a>
+    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -63,7 +63,7 @@ keywords:
     Validate download
    </td>
    <td>
-    <a href="/docs/validate-download#adding-a-validate-download-validation-step">ダウンロード検証ステップを追加</a>
+    <a href="/docs/validate-download#validate-download-ステップの追加">ダウンロード検証ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -135,7 +135,7 @@ keywords:
     Validate API
    </td>
    <td>
-    <a href="/docs/api-testing#api-validation">API 検証</a>
+    <a href="/docs/api-testing#validate-api-ステップの追加">API 検証</a>
    </td>
   </tr>
   <tr>
@@ -143,7 +143,7 @@ keywords:
     Validate element visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#adding-a-validate-element-visualization-step">要素のビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/validate-element-visualization#要素のビジュアル検証ステップの追加">要素のビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -151,7 +151,7 @@ keywords:
     Validate viewport visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#adding-a-validate-viewport-visualization-or-validate-full-page-visualization-step">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/validate-viewport-visualization#ビューポートのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -159,7 +159,7 @@ keywords:
     Validate full-page visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#adding-a-validate-viewport-visualization-or-validate-full-page-visualization-step">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/validate-full-page-visualization#フルページのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -208,7 +208,7 @@ keywords:
     Add custom wait for
    </td>
    <td>
-    <a href="/docs/wait-for#custom-wait-for">カスタム待機</a>
+    <a href="/docs/wait-for#カスタム待機web">カスタム待機</a>
    </td>
   </tr>
   <tr>
@@ -216,7 +216,7 @@ keywords:
     Add CLI wait for
    </td>
    <td>
-    <a href="/docs/validate-download#adding-a-cli-step">CLI ステップを追加</a>
+    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -224,7 +224,7 @@ keywords:
     Wait for element visible
    </td>
    <td>
-    <a href="/docs/wait-for#wait-for-element-visible">要素が表示されるまで待機</a>
+    <a href="/docs/wait-for#要素の表示を待つweb">要素が表示されるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -232,7 +232,7 @@ keywords:
     Wait for element not visible
    </td>
    <td>
-    <a href="/docs/wait-for#wait-for-element-not-visible">要素が非表示になるまで待機</a>
+    <a href="/docs/wait-for#要素の非表示を待つweb">要素が非表示になるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -240,7 +240,7 @@ keywords:
     Wait for element text
    </td>
    <td>
-    <a href="/docs/wait-for#wait-for-element-text">要素のテキストを待機</a>
+    <a href="/docs/wait-for#要素テキストの表示を待つweb">要素のテキストを待機</a>
    </td>
   </tr>
   <tr>
@@ -248,7 +248,7 @@ keywords:
     Wait for download
    </td>
    <td>
-    <a href="/docs/wait-for#wait-for-download-web">ダウンロードを待機</a>
+    <a href="/docs/wait-for#ダウンロード待機web">ダウンロードを待機</a>
    </td>
   </tr>
   <tr>
@@ -256,7 +256,7 @@ keywords:
     Sleep
    </td>
    <td>
-    <a href="/docs/wait-for#sleep">スリープ</a>
+    <a href="/docs/wait-for#スリープweb">スリープ</a>
    </td>
   </tr>
   <tr>
@@ -264,7 +264,7 @@ keywords:
     Wait for element visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#adding-a-wait-for-element-visualization-step">要素のビジュアライゼーションを待機するステップを追加</a>
+    <a href="/docs/wait-for-element-visualization#要素のビジュアライゼーション待機ステップの追加">要素のビジュアライゼーションを待機するステップを追加</a>
    </td>
   </tr>
  </tbody>
@@ -289,7 +289,7 @@ keywords:
     Add hover action
    </td>
    <td>
-    <a href="/docs/hover-step#how-to-add-a-hover-state">ホバーステップ</a>
+    <a href="/docs/hover-step#ホバーした要素への検証の追加">ホバーステップ</a>
    </td>
   </tr>
   <tr>
@@ -305,7 +305,7 @@ keywords:
     Generate email address
    </td>
    <td>
-    <a href="/docs/email-validation#generating-a-temporary-email-address">一時的なメールアドレスを生成</a>
+    <a href="/docs/email-validation#generate-email-address-ステップの追加">一時的なメールアドレスを生成</a>
    </td>
   </tr>
   <tr>
@@ -313,7 +313,7 @@ keywords:
     Set Cookie
    </td>
    <td>
-    <a href="/docs/cookies#setting-cookies">Cookie を設定</a>
+    <a href="/docs/cookies#cookie-を設定する">Cookie を設定</a>
    </td>
   </tr>
   <tr>
@@ -321,7 +321,7 @@ keywords:
     Get Cookie
    </td>
    <td>
-    <a href="/docs/cookies#getting-cookies">Cookie を取得</a>
+    <a href="/docs/cookies#cookie-を取得する">Cookie を取得</a>
    </td>
   </tr>
   <tr>
@@ -345,7 +345,7 @@ keywords:
     Add CLI action
    </td>
    <td>
-    <a href="/docs/validate-download#adding-a-cli-step">CLI ステップを追加</a>
+    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -353,7 +353,7 @@ keywords:
     Add API action
    </td>
    <td>
-    <a href="/docs/api-testing#api-action">API アクション</a>
+    <a href="/docs/api-testing#adding-an-api-action-step">API アクション</a>
    </td>
   </tr>
   <tr>

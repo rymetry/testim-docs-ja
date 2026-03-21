@@ -243,9 +243,9 @@ JS（JavaScript）: 任意の JS 式を定義できます。
 
    - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/parameters-in-custom-javascript-steps)を参照してください。
 
-   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[ビジュアルエディターからのデータ駆動テストの設定](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
 
-   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file)を参照してください。
+   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/configuring-data-driven-tests-using-the-config-file)を参照してください。
 
 <Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
   **画像をクリックで拡大**
