@@ -42,10 +42,10 @@ Testim Help Docs 日本語版へのコントリビューションありがとう
 英語原文が更新された場合：
 
 ```bash
-# 更新が必要なドキュメントをチェック
-npm run check:updates
+# スナップショットで変更を検知
+npm run check:snapshots
 
-# 英語原文と日本語版を比較して更新
+# 変更内容を確認して日本語を更新し、スナップショットと一緒にコミット
 ```
 
 ### 4. バグ修正・機能改善
@@ -105,8 +105,8 @@ npm run lint
 # フォーマット
 npm run format
 
-# ドキュメント更新チェック
-npm run check:updates
+# ドキュメント変更検知
+npm run check:snapshots
 ```
 
 ## ブランチ戦略

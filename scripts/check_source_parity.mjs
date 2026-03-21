@@ -12,10 +12,8 @@ import {
   readDocFile,
 } from './lib/project.mjs';
 import {
-  applySuppressions,
   loadSidebarSlugs,
   localCheck,
-  remoteCheck,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
@@ -25,20 +23,14 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 export function parseArgs(argv = process.argv.slice(2)) {
   const sectionArg = argv.find((arg) => arg.startsWith('--section='));
   return {
-    remote: argv.includes('--remote'),
     json: argv.includes('--json'),
-    actionableOnly: argv.includes('--actionable-only'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
   };
 }
 
 export async function checkSourceParity({
-  remote = false,
   json = false,
-  actionableOnly = false,
   section = null,
-  fetchImpl = fetch,
-  now = new Date(),
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH)
     ? fs.readFileSync(SIDEBAR_PATH, 'utf8')
@@ -49,8 +41,6 @@ export async function checkSourceParity({
   if (!json) {
     console.log('🔍 Source parity チェック開始\n');
     console.log(`📄 ${allFiles.length} ファイル対象`);
-    if (remote) console.log('🌐 リモート比較モード有効');
-    if (actionableOnly) console.log('✅ actionable-only モード有効');
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     console.log('');
   }
@@ -66,21 +56,9 @@ export async function checkSourceParity({
 
     checkedCount += 1;
     const slug = path.basename(filePath, '.md');
-    let issues = [
+    const issues = [
       ...localCheck({ body: doc.body, sidebarSlugs, slug }),
     ];
-
-    if (remote && doc.data.sourceUrl) {
-      issues.push(
-        ...(await remoteCheck(doc.data.sourceUrl, doc.body, {
-          fetchImpl,
-          now,
-        })),
-      );
-      await new Promise((resolve) => setTimeout(resolve, 150));
-    }
-
-    issues = applySuppressions(issues, slug);
 
     if (issues.length === 0) {
       continue;
@@ -93,11 +71,7 @@ export async function checkSourceParity({
       issues,
     });
 
-    const shouldPrint =
-      !actionableOnly ||
-      issues.some((issue) => issue.severity === 'actionable' || issue.severity === 'error');
-
-    if (!json && shouldPrint) {
+    if (!json) {
       console.log(`❌ ${doc.relativePath}`);
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
@@ -110,8 +84,7 @@ export async function checkSourceParity({
 
   const summary = {
     checkedAt: new Date().toISOString(),
-    mode: remote ? 'remote' : 'local',
-    actionableOnly,
+    mode: 'local',
     totalFiles: allFiles.length,
     checkedFiles: checkedCount,
     ...summarizeParityResults(results),
@@ -136,10 +109,6 @@ export async function checkSourceParity({
       console.log(`  ${type}: ${count} 件`);
     }
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
-  }
-
-  if (actionableOnly) {
-    return summary.actionableFiles > 0 ? 1 : 0;
   }
 
   return summary.filesWithIssues > 0 ? 1 : 0;

@@ -129,45 +129,45 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 - レスポンシブなモーダルUI
 - アクセシブルなキーボード操作
 
-## 📅 ドキュメント更新管理
+## 📸 ドキュメント変更検知
 
-Tricentis Testim Docs 公式原文の更新を自動追跡するスクリプトを提供しています。日本語翻訳が公式に対して最新かどうかを確認し、更新が必要なドキュメントを検出できます。
+英語原文の正規化 HTML スナップショットを `snapshots/en/` に保存し、git diff で変更を検知します。コミット済みスナップショット = 翻訳済みのベースライン。
 
 ### 利用可能なコマンド
 
 ```bash
-# 更新が必要なドキュメントをチェック
-npm run check:updates
+# スナップショット取得 → 差分チェック（一括実行）
+npm run check:snapshots
 
-# 全ファイルの英語原文更新日を確認
-npm run check:dates
+# スナップショットの取得のみ
+npm run check:snapshots:fetch
 
-# 更新日を英語版に合わせる（ドライラン）
-npm run update:dates
+# 差分の確認のみ
+npm run check:snapshots:diff
 
-# 更新日を実際に更新
-npm run update:dates:apply
+# ローカル parity チェック（未翻訳行、レガシー callout 等）
+npm run check:parity
 ```
 
 ### スクリプトの詳細
 
-- **check:updates** - 日本語版と公式の更新日を比較し、更新が必要なファイルをリスト表示
-- **check:dates** - すべてのドキュメントの英語原文更新日を一括取得して表示
-- **update:dates** - 公式原文の更新日で日本語ファイルを更新（変更内容のプレビューのみ）
-- **update:dates:apply** - 実際にファイルを更新（`--apply`フラグ付き）
+- **check:snapshots** — 英語原文 HTML を取得・正規化し、コミット済みベースラインとの差分を検出
+- **check:snapshots:fetch** — 最新の英語 HTML を取得して `snapshots/en/` に保存
+- **check:snapshots:diff** — コミット済み vs working tree のスナップショットを比較
+- **check:parity** — 日本語ファイルのローカル品質チェック（未翻訳行、レガシー callout 等）
 
 ### GitHub Actions による自動チェック
 
-毎週月曜日午前9時(JST)に自動で更新チェックを実行し、更新が必要な場合はIssueを作成します。
+3日ごとに自動で変更検知を実行し、更新が必要な場合は GitHub Issue を作成・更新します。
 
-- **スケジュール実行**: 週次で自動実行
-- **手動実行**: GitHub Actionsから手動トリガー可能
-- **PR時の情報提供**: Pull Request作成時に更新状況をコメント表示
+- **スケジュール実行**: 3日ごとに自動実行
+- **手動実行**: GitHub Actions から手動トリガー可能
+- **Issue 同期**: 変更検知時は Issue を自動作成、解消時は自動クローズ
 
 ### 関連ドキュメント
 
 - [scripts/README.md](./scripts/README.md) - スクリプトの詳しい使い方
-- [DOCS_DATE_TRACKING.md](./docs/DOCS_DATE_TRACKING.md) - 日付トラッキングの仕様と注意事項
+- [DOCS_DATE_TRACKING.md](./docs/DOCS_DATE_TRACKING.md) - スナップショット変更検知の仕様
 - [DOCS_REVIEW.md](./docs/DOCS_REVIEW.md) - ドキュメントレビュー手順
 
 ## 🏆 ライセンス

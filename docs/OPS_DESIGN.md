@@ -9,13 +9,13 @@
 1. `sync`
    `npm run docs:sync-sidebar` で `docs/SIDEBAR_URLS.md` を更新する。URL 収集が 0 件なら即停止する。
 2. `diff detect`
-   `npm run docs:pipeline` または `npm run check:updates` で変更ページを検出する。既定モードは `diff`。`updated` は原文追従を正とし、実質変更なしと判断したページのみ例外レジストリで管理する。
+   `npm run check:snapshots` で英語原文の正規化 HTML スナップショットを取得・比較し、変更ページを検出する。コミット済みスナップショット = 翻訳済みベースライン、working tree = 最新英語版として git diff で差分を検知する。
 3. `translate`
    `docs:prepare-llm` でタスクを切り出し、`docs:apply-llm` で翻訳結果を反映する。
 4. `format`
    `docs:fetch` と `docs:normalize` で本文、画像、内部リンク、固有名詞、description を正規化する。
 5. `source parity qa`
-   `sourceUrl` の原文とローカル Markdown を比較し、未翻訳行、callout、本文中 H1、画像件数、コードブロック件数、見出し差分を照合する。`heading-mismatch` は低信頼シグナルとして扱い、deep-audit でのみ参照する。
+   `npm run check:parity` でローカル Markdown の品質チェックを行い、未翻訳行、レガシー callout、JSX callout、本文中 H1、orphan ページを検出する。
 6. `qa`
    `npm run lint:docs && npm test && npm run build` を通す。必要なら `--section="..."` で対象を絞る。
 7. `release`
@@ -55,34 +55,21 @@
 | `h1-in-body`     | 本文中の H1 見出し（`#` で始まる行）                    |
 | `orphan-page`    | `docs/SIDEBAR_URLS.md` に未掲載のページ                 |
 
-リモートモード（`npm run check:parity:remote`）では上記に加えて英語原文をフェッチし、article 本文 root を抽出したうえで構造差分を比較する。`image-mismatch` と `codeblock-mismatch` は actionable、`heading-mismatch` は signal/report-only とする。
+英語原文との構造差分（見出し・画像・コードブロック）はスナップショット diff で検知する。詳細は `docs/DOCS_DATE_TRACKING.md` を参照。
 
 **セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
 
-**出力**: `parity-check-status.json` に詳細結果を保存する。定期運用では要約版 artifact も別途残し、issue 本文には代表例と件数のみを載せる。
-
-### 全文比較（深い調査）
-
-全ファイルを英語原文と内容レベルで比較する場合は、以下の手順で並行エージェントを活用する:
-
-1. ファイルを `high-confidence drift`、`parser-sensitive`、`date-only provisional` に分割する
-2. 各グループに対して Agent を起動し、`sourceUrl` から英語原文を取得して本文を比較する
-3. `image-mismatch`、`codeblock-mismatch`、`untranslated`、`legacy-callout`、`jsx-callout`、`h1-in-body` を actionable、`heading-mismatch` を signal として扱う
-4. 結果を既存 Issue と突き合わせ、`date-drift` と `parity-regression` を分けて更新する
-5. deep-audit の結果は issue 化せず、artifact と summary に残す
-
-この手法で全件をカテゴリではなく信頼度で分割し、サブエージェントを 6〜8 グループに並列配置して比較する。
+**出力**: `parity-check-status.json` に詳細結果を保存する。
 
 ## 定期運用（3日ごと）
 
 - 3日ごとに `scheduled-actionable` を実行する:
   1. `npm run docs:sync-sidebar` で SIDEBAR_URLS を最新化する
-  2. `npm run check:updates` で更新のあったドキュメントを検出する
+  2. `npm run check:snapshots` でスナップショットを取得・比較し変更を検出する
   3. `npm run check:parity` でローカル品質チェックを実行する
-  4. `npm run check:parity:remote:actionable` で remote parity を実行する
-  5. `npm run check:summary` で summary / audit manifest を生成する
-  6. 更新・問題があった場合は `date-drift` と `parity-regression` に分けて GitHub Issue を作成または更新し、0 件なら close する
-- `deep-audit` は `workflow_dispatch` と `section` 指定で実行し、全件またはセクション単位の remote parity を走らせる。issue は作らず artifact と summary のみ残す
+  4. `npm run check:summary` で summary / audit manifest を生成する
+  5. 変更・問題があった場合は `snapshot-diff` と `parity-regression` に分けて GitHub Issue を作成または更新し、0 件なら close する
+- `deep-audit` は `workflow_dispatch` と `section` 指定で実行し、スナップショット diff とレポート生成を走らせる
 - 検出された Issue は次回セッションでメイン作業フローに従い対応する
 - **重複防止**: Issue 作成前に `gh issue list --state open --search/label` で既存 Issue を検索し、既存あれば更新、なければ新規作成する
 - GitHub Actions workflow にも同等の重複防止ロジックを持たせる。本文には件数、種別別件数、代表例、summary artifact への導線のみを載せる
@@ -97,8 +84,6 @@
 2. callout 変換後に構文が壊れていないか（引用符の整合、タイトル長、タイプとタイトルの一致）
 3. 残存パターンがないか（`:fa-` マーカー、`> 📘` blockquote、外部 `help.testim.io` リンク）
 4. `updated` フィールドが英語原文の日付のまま維持されているか
-5. 例外レジストリに載せるべき実質差分なしページがないか
-6. deep-audit で `heading-mismatch` だけが残る場合は signal として記録する
 7. main からの巻き戻りがないか（`git diff` の追加行に既存問題が混入していないか）
 8. 変更対象ファイル内の既存問題（fa-icon、旧 callout 等）も一緒に修正する。リンクだけ直してファイル内の他の問題を放置しない
 
@@ -143,6 +128,6 @@
 
 ## CI の役割
 
-- [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:updates`、`check:parity`、`check:parity:remote:actionable`、`check:summary`、issue 更新 / close を実行する
-- [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件の remote parity を実行し、`heading-mismatch` を含む低信頼シグナルを report-only で残す
-- `docs-update-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する
+- [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:snapshots`、`check:parity`、`check:summary`、issue 更新 / close を実行する
+- [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
+- `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する

@@ -42,13 +42,10 @@
     "docs:apply-llm": "node scripts/apply_llm_translations.mjs",
     "docs:report-categories": "node scripts/report_frontmatter_categories.mjs",
     "check:parity": "node scripts/check_source_parity.mjs",
-    "check:parity:remote": "node scripts/check_source_parity.mjs --remote",
-    "check:parity:remote:actionable": "node scripts/check_source_parity.mjs --remote --actionable-only",
-    "check:updates": "node scripts/check_outdated_docs.mjs",
-    "check:dates": "node scripts/fetch_all_updated_dates.mjs",
-    "update:dates": "node scripts/update_dates_from_english.mjs",
-    "update:dates:apply": "node scripts/update_dates_from_english.mjs --apply",
-    "check:summary": "node scripts/generate_detection_reports.mjs"
+    "check:summary": "node scripts/generate_detection_reports.mjs",
+    "check:snapshots:fetch": "node scripts/snapshot_update.mjs",
+    "check:snapshots:diff": "node scripts/snapshot_diff.mjs",
+    "check:snapshots": "node scripts/snapshot_update.mjs && node scripts/snapshot_diff.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",

@@ -13,11 +13,11 @@ function sortByUpdatedDesc(left, right) {
 function buildIssueSpecs(report) {
   return [
     {
-      key: 'date-drift',
-      title: report.dateDrift.issueTitle,
-      body: report.dateDrift.body,
-      shouldOpenIssue: report.dateDrift.shouldOpenIssue,
-      actionableCount: report.dateDrift.summary.actionableCount,
+      key: 'snapshot-diff',
+      title: report.snapshotDiff.issueTitle,
+      body: report.snapshotDiff.body,
+      shouldOpenIssue: report.snapshotDiff.shouldOpenIssue,
+      actionableCount: report.snapshotDiff.summary.actionableCount,
     },
     {
       key: 'parity-regression',

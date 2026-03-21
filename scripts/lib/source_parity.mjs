@@ -1,5 +1,3 @@
-import { fetchSourcePageInfo } from './source_pages.mjs';
-
 export const ISSUE_SEVERITY = {
   untranslated: 'actionable',
   'legacy-callout': 'actionable',
@@ -140,18 +138,6 @@ export function localCheck({ body, sidebarSlugs, slug }) {
   return issues;
 }
 
-export function extractFromHtml(html) {
-  const h2Count = (html.match(/<h2[\s>]/gi) || []).length;
-  const h3Count = (html.match(/<h3[\s>]/gi) || []).length;
-  const imgCount = (html.match(/<img[\s>]/gi) || []).length;
-  const codeBlockCount = (html.match(/<pre[\s>][\s\S]*?<\/pre>/gi) || [])
-    .filter((block) => block.replace(/<[^>]*>/g, '').trim().length > 0)
-    .length;
-  const calloutCount = (html.match(/class="[^"]*callout[^"]*"/gi) || []).length;
-
-  return { h2Count, h3Count, imgCount, codeBlockCount, calloutCount };
-}
-
 export function extractFromMd(body) {
   const lines = body.split('\n');
   let h2Count = 0;
@@ -180,106 +166,6 @@ export function extractFromMd(body) {
   }
 
   return { h2Count, h3Count, imgCount, codeBlockCount, calloutCount };
-}
-
-export function buildStructuralIssues(englishStats, japaneseStats) {
-  const issues = [];
-
-  const headingDelta = Math.abs(englishStats.h2Count - japaneseStats.h2Count);
-  if (headingDelta >= 1) {
-    issues.push(
-      withSeverity({
-        type: 'heading-mismatch',
-        detail: `h2: EN=${englishStats.h2Count} JA=${japaneseStats.h2Count}`,
-        delta: headingDelta,
-      }),
-    );
-  }
-
-  const imageDiff = englishStats.imgCount - japaneseStats.imgCount;
-  if (imageDiff >= 1) {
-    issues.push(
-      withSeverity({
-        type: 'image-mismatch',
-        detail: `EN=${englishStats.imgCount} JA=${japaneseStats.imgCount} (${imageDiff}枚不足)`,
-        delta: imageDiff,
-      }),
-    );
-  }
-
-  const codeBlockDiff = englishStats.codeBlockCount - japaneseStats.codeBlockCount;
-  if (codeBlockDiff >= 1) {
-    issues.push(
-      withSeverity({
-        type: 'codeblock-mismatch',
-        detail: `EN=${englishStats.codeBlockCount} JA=${japaneseStats.codeBlockCount}`,
-        delta: codeBlockDiff,
-      }),
-    );
-  }
-
-  return issues;
-}
-
-/**
- * Per-slug suppression for known layout divergences.
- * Each entry pins an expectedDelta — if the actual delta drifts,
- * the suppression lifts and the issue surfaces again.
- */
-export const PARITY_SUPPRESSIONS = {
-  'salesforce-testing-overview': [
-    {
-      type: 'heading-mismatch',
-      expectedDelta: 8,
-      reason: 'EN card layout uses 9 h2 titles; JA uses h3 text list (#115)',
-    },
-    {
-      type: 'image-mismatch',
-      expectedDelta: 9,
-      reason: 'EN embeds 9 SVG card icons; JA uses text links (#115)',
-    },
-  ],
-  'pull-requests': [
-    {
-      type: 'codeblock-mismatch',
-      expectedDelta: 1,
-      reason: 'EN <pre> is a readme.io CodeTabs container, not user-facing code (#132)',
-    },
-  ],
-};
-
-export function applySuppressions(issues, slug) {
-  const entries = PARITY_SUPPRESSIONS[slug];
-  if (!entries) return issues;
-
-  return issues.filter((issue) => {
-    const suppression = entries.find((s) => s.type === issue.type);
-    if (!suppression) return true;
-    return issue.delta !== suppression.expectedDelta;
-  });
-}
-
-export async function remoteCheck(sourceUrl, mdBody, options = {}) {
-  const page = await fetchSourcePageInfo(sourceUrl, options);
-  if (page.fetchError) {
-    return [
-      withSeverity({
-        type: 'source-fetch-error',
-        detail: page.fetchError,
-      }),
-    ];
-  }
-
-  if (!page.contentRootExtractable || !page.articleHtml) {
-    return [
-      withSeverity({
-        type: 'content-root-missing',
-        detail: `strategy=${page.extractionStrategy}`,
-      }),
-    ];
-  }
-
-  return buildStructuralIssues(extractFromHtml(page.articleHtml), extractFromMd(mdBody));
 }
 
 export function summarizeParityResults(results) {
