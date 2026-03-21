@@ -20,7 +20,7 @@ keywords:
 
 スクリプトを用いて高度な検証を作成する
 
-プリセットのステップメニューに無い独自のアクションや検証を行いたい場合があります。*Add custom validation* ステップや *Add custom action* ステップを使うと、任意のパラメーターと JavaScript コードを入力するカスタムステップを作成できます。カスタムアクションは戻り値を返さずに記述し、カスタム検証は真偽値を返します。*true* を返すと検証は成功、*false* を返すと失敗になります（サンプルは後述）。
+プリセットのステップメニューに無い独自のアクションや検証を行いたい場合があります。_Add custom validation_ ステップや _Add custom action_ ステップを使うと、任意のパラメーターと JavaScript コードを入力するカスタムステップを作成できます。カスタムアクションは戻り値を返さずに記述し、カスタム検証は真偽値を返します。_true_ を返すと検証は成功、_false_ を返すと失敗になります（サンプルは後述）。
 
 ## **Add custom validation** / **Add custom action** ステップの追加
 
@@ -69,17 +69,17 @@ keywords:
    a. **Properties** パネルで **+ PARAMS** をクリック\
    b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
    c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザが開き、対象ページが表示されます）。次を実施します：
-   * **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-target-element-properties) を参照してください。
+   - **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-target-element-properties) を参照してください。
 
-  d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
+d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
 
 ![パラメーター名の編集](/images/validations/custom-code/9e53245-Testim_285a_r.png)
 
 10. 必要に応じて次を設定します：
 
-* **When this step fails** – ステップ失敗時の動作を指定します。
-* **When to run step** – ステップの実行条件を指定します（[Conditions](/docs/conditions)）。
-* **Override timeout** – 既定のタイムアウト（ミリ秒）を上書きします。
+- **When this step fails** – ステップ失敗時の動作を指定します。
+- **When to run step** – ステップの実行条件を指定します（[Conditions](/docs/conditions)）。
+- **Override timeout** – 既定のタイムアウト（ミリ秒）を上書きします。
 
 11. **function** テキストボックスに JavaScript コードを記述します。定義したパラメーターはコードから参照できます。
 
@@ -103,7 +103,7 @@ HTML 要素をパラメーターとして選択するために AUT を開いた�
 
 #### 数値の検証（Custom validation）
 
-*Add custom validation* を使って、アプリ内の数値を検証します。次の例では、HTML 要素の数値が 1,000 未満であることを確認します。まず文字列から非数値文字を取り除き、数値に変換しています。
+_Add custom validation_ を使って、アプリ内の数値を検証します。次の例では、HTML 要素の数値が 1,000 未満であることを確認します。まず文字列から非数値文字を取り除き、数値に変換しています。
 
 ![数値検証のコード例](/images/validations/custom-code/142d406-Testim_288.png)
 
@@ -111,11 +111,10 @@ HTML 要素をパラメーターとして選択するために AUT を開いた�
 
 ```javascript
 // Remove  string chars (e.g "$") and turn the price label to a number:
-var amount = Number(amountLabel.innerText.replace(/[^\-0-9\.]+/g,""));
-
+var amount = Number(amountLabel.innerText.replace(/[^\-0-9\.]+/g, ''));
 
 // Validate if the number is bigger than 1000:
-if(amount > 1000) {
+if (amount > 1000) {
   throw new Error('Amount should not be over 1000! Actual value: ' + amount);
 } else {
   return true;
@@ -164,9 +163,13 @@ if(amount > 1000) {
 ```javascript
 var equal = firstLabel.innerText === secondLabel.innerText;
 
-if(!equal) {
-  throw new Error('Labels are not equal. First label: ' + firstLabel.innerText + 
-                  ' Second label: ' + secondLabel.innerText);
+if (!equal) {
+  throw new Error(
+    'Labels are not equal. First label: ' +
+      firstLabel.innerText +
+      ' Second label: ' +
+      secondLabel.innerText
+  );
 }
 
 return equal;
@@ -227,9 +230,9 @@ JavaScript の Promise を使うと、一定時間（ミリ秒）後に resolve 
 **Example Code:**
 
 ```javascript
-return new Promise(function(resolve, reject) {
-  setTimeout(function() {
-    if(7 === 7) {
+return new Promise(function (resolve, reject) {
+  setTimeout(function () {
+    if (7 === 7) {
       resolve();
     } else {
       reject('');
@@ -240,7 +243,7 @@ return new Promise(function(resolve, reject) {
 
 #### 別サイトへの遷移（Custom action）
 
-*Add custom action* を使って、テストのベース URL から Testim のホームページに遷移する例です。パラメーターは使用しません。
+_Add custom action_ を使って、テストのベース URL から Testim のホームページに遷移する例です。パラメーターは使用しません。
 
 ![ページ遷移のコード例](/images/validations/custom-code/4ec59f8-Testim_291.png)
 

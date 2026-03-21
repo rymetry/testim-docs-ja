@@ -28,7 +28,7 @@ keywords:
 
 **記録を開始するには:**
 
-* 実行が停止している間に、**Record**ボタンをクリックします。
+- 実行が停止している間に、**Record**ボタンをクリックします。
 
 ![Record ボタンの位置](/images/debugging/recording-additional-steps-to-fix-bugs/42ba6df-record.png)
 

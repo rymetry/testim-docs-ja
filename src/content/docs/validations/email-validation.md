@@ -247,7 +247,7 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 
 このステップでは、一時的メールアドレスを生成し、そのアドレスを他のステップで使用するための変数として保存するステップを追加します。
 
- **一時的メールアドレスを生成するには：**
+**一時的メールアドレスを生成するには：**
 
 1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
@@ -275,7 +275,7 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 
 **Editor** に "Generate email address" ステップが追加されます。
 
-5. 新しく作成されたステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+5. 新しく作成されたステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![ステップ追加位置](/images/validations/email-validation/fb10c5b-Testim_300a.png)
 
@@ -392,7 +392,7 @@ Validate email ステップを設定する方法は 2 つあります：
 7. **Create Step** をクリックします。
 
 8. **Coded** タブをクリックします。  
-   ![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)  
+   ![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)
 
    **function** エディターが開き、右側に **Properties** パネルが開きます。
 
@@ -439,9 +439,9 @@ _Validate email_ ステップを使用して、アプリが生成して Testim �
 
 ```javascript
 // Check if messages variable is falsy or if messages[0] is falsy
-if (messages && messages[0] ){
+if (messages && messages[0]) {
   // If either condition is true, throw an error
-  return messages[0].subject === "Thank you for signing up";
+  return messages[0].subject === 'Thank you for signing up';
 }
 return false;
 ```
@@ -455,33 +455,33 @@ _Validate email_ ステップを使用して、メールの本文内のハイパ
 **Example Code:**
 
 ```javascript
-if (!messages && !messages[0]){
-  throw new Error("Failed to find message in inbox ");
+if (!messages && !messages[0]) {
+  throw new Error('Failed to find message in inbox ');
 }
 // Define a function named getLinks which takes an HTML string as input
 function getLinks(html) {
   // Create a DOMParser object to parse HTML strings
-   var parser = new DOMParser();
+  var parser = new DOMParser();
   // Parse the HTML string into a DOM document
-   var doc = parser.parseFromString(html, "text/html");
-  // Find all anchor elements in the document 
-  var linksElements =  Array.from(doc.querySelectorAll("a"));
+  var doc = parser.parseFromString(html, 'text/html');
+  // Find all anchor elements in the document
+  var linksElements = Array.from(doc.querySelectorAll('a'));
   // Map over the array of anchor elements and extract their text and href attributes
-  return linksElements.map(linkElement => ({
-// Return an object with text and link properties
-    text:linkElement.innerText,
-    link:linkElement.getAttribute("href")
+  return linksElements.map((linkElement) => ({
+    // Return an object with text and link properties
+    text: linkElement.innerText,
+    link: linkElement.getAttribute('href'),
   }));
 }
 // Call the getLinks function with the HTML content of the first message
 var emailLinks = getLinks(messages[0].html);
 //Exports the first link in the array to the next test steps
-exportsTest.emailLink = emailLinks[0];  
+exportsTest.emailLink = emailLinks[0];
 ```
 
 ## Codeless オプションを使用した Validate Email ステップの作成
 
- **validate email ステップを作成するには：**
+**validate email ステップを作成するには：**
 
 1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
@@ -525,22 +525,22 @@ exportsTest.emailLink = emailLinks[0];
    3. **Expected body** - メールの本文に含まれるべきテキストまたはテキストの一部を入力します。これは部分一致でも構いません。テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメーターを含めることができます。
 
 9. **Email text extraction** の下で、メールフィルタによって一致したメールの本文からオプションで抽出するものを指定します。これはメールからのテキストまたはリンクのいずれかです。例えば、メールに SMS コードのようなコードが含まれている場合、この機能を使用してこのコードを抽出できます。抽出されたテキストとリンクは、実行後にステップ結果に表示されます。すべてのリンクは、抽出設定に関係なく自動的に抽出されます：
-
    1. チェックボックスを選択して有効にします。
    2. 次のいずれかを選択します：
-      1. **Location** - 抽出されるテキストの位置に基づいて抽出条件を設定する場合は、このオプションを選択します。  
+      1. **Location** - 抽出されるテキストの位置に基づいて抽出条件を設定する場合は、このオプションを選択します。
       2. **Regex** - メールから抽出するテキストを定義する条件として正規表現を入力する場合は、このオプションを選択します。
 
          :::note
          このセクションのエントリは大文字と小文字を区別します。
          :::
-   3. **Location** オプションを選択した場合は、次のいずれかを選択します：
 
+   3. **Location** オプションを選択した場合は、次のいずれかを選択します：
       1. **Extraction between** - 最初のフィールドのテキストと 2 番目のフィールドのテキストの間にあるテキスト/リンクを抽出する場合に選択します。最初と 2 番目のフィールドに文字列を入力して、開始位置（その後からテキストが抽出される）と終了位置（その前までテキストが抽出される）を定義します。
       2. **Extraction from** - フィールドのテキストからメールの終わりまでのテキスト/リンクを抽出する場合に選択します。フィールドに文字列を入力して開始位置（その後からテキストが抽出される）を定義します。
       3. **Extraction until** - メールの開始からフィールドのテキストまでのテキスト/リンクを抽出する場合に選択します。最初のフィールドに文字列を入力して終了位置（その前までテキストが抽出される）を定義します。
 
          テキストフィールドには、例えば `{{param1}}` のようにスコープ内のパラメーターを含めることができます。
+
    4. **Regex** オプションを選択した場合は、フィールドにテキスト抽出用の regex 条件を入力します。regex 条件の使用例を確認するには、[こちらをクリック](https://www.sitepoint.com/demystifying-regex-with-practical-examples/)してください。
 
 10. メールフィルタと抽出を検証する場合：
@@ -551,7 +551,7 @@ exportsTest.emailLink = emailLinks[0];
 
 11. 次のいずれかを実行します：  
     **恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。  
-    ![コピーボタン](/images/validations/email-validation/55551bf-image_3.png)  
+    ![コピーボタン](/images/validations/email-validation/55551bf-image_3.png)
 
     **一時的メールオプションの場合** -  
     **Generate email address** ステップで定義した **Variable name** パラメーターの名前を **Email address** フィールドに入力します。  

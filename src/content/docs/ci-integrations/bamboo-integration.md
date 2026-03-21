@@ -30,7 +30,7 @@ Bamboo とテストを統合するには、まず Bamboo サーバーまたは�
 
 ![Bamboo プラン設定画面でプラン名を入力する例](/images/ci-integrations/bamboo-integration/fa42a83-Bamboo3.png)
 
- 1.2. "Enable this plan?"セクションの下の"Yes please!"チェックボックスを選択します:
+1.2. "Enable this plan?"セクションの下の"Yes please!"チェックボックスを選択します:
 
 ![Bamboo プラン有効化のチェックボックス](/images/ci-integrations/bamboo-integration/73d02b0-Bamboo4.png)
 
@@ -53,7 +53,7 @@ Bamboo とテストを統合するには、まず Bamboo サーバーまたは�
 install -g @testim/testim-cli
 ```
 
-  2.6. "Save"をクリックします:
+2.6. "Save"をクリックします:
 
 ![Bamboo で Testim CLI インストールタスクを保存する画面](/images/ci-integrations/bamboo-integration/663eab3-Bamboo7.png)
 

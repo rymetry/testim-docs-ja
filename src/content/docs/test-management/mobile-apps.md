@@ -18,11 +18,11 @@ Mobile Apps Library には、アップロードされたすべてのアプリの
 
 ![モバイルアプリライブラリの一覧画面](/images/test-management/mobile-apps/beee998-mobile-apps-library.png)
 
-* **App**: アプリケーションの名前
-* **Identifier**: アップロード時にアプリファイルのメタデータから取得された一意のアプリ ID（パッケージ識別子/バンドル識別子）
-* **Version**: アップロード時にアプリファイルのメタデータから取得されたアプリのバージョン
-* **Uploaded**: アプリファイルが Mobile Apps Library に追加された日付
-* **Size**: モバイルアプリのファイルサイズ
+- **App**: アプリケーションの名前
+- **Identifier**: アップロード時にアプリファイルのメタデータから取得された一意のアプリ ID（パッケージ識別子/バンドル識別子）
+- **Version**: アップロード時にアプリファイルのメタデータから取得されたアプリのバージョン
+- **Uploaded**: アプリファイルが Mobile Apps Library に追加された日付
+- **Size**: モバイルアプリのファイルサイズ
 
 :::note
 Mobile Apps Library のアプリは、異なるテストブランチ間で利用できます。
@@ -32,8 +32,8 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 
 次のフレームワークに基づくネイティブアプリをアップロードできます:
 
-* Android デバイス - Java または Kotlin フレームワークベースの .apk ファイル
-* iOS デバイス - Objective C または Swift フレームワークベースの .ipa ファイル
+- Android デバイス - Java または Kotlin フレームワークベースの .apk ファイル
+- iOS デバイス - Objective C または Swift フレームワークベースの .ipa ファイル
 
 :::note
 アップロードは 150 MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。

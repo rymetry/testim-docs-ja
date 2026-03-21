@@ -188,7 +188,6 @@ AUT ブラウザでステップを記録することで、テストの最後ま�
    ![複数ステップ選択](/images/steps-editing-tests/editing-your-tests/eeaf9d6-Testim_281.png)
 
 2. 以下のいずれかのオプションを使用して、選択したステップを削除します：
-
    - キーボードの **Backspace** を押す
    - キーボードの **Delete** を押す
    - 上部バーの **Delete** アイコンをクリックする

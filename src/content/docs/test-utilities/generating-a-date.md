@@ -34,7 +34,7 @@ keywords:
 
 ![3665](/images/test-utilities/generating-a-date/46fca20-Testim_082b.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![アクションオプションメニュー](/images/test-utilities/generating-a-date/f22a0db-Testim_083a.png)
 
@@ -56,7 +56,7 @@ keywords:
 
 「Generate date」ステップがエディターに追加されます。\
 5. 作成したステップで **Show Properties**をクリックし、以下の説明に従ってプロパティを設定します。\
-6. **Properties** ペインの **Step Parameters** ドロップダウンをクリックすると、現在の設定で生成された日付を確認できます。  
+6. **Properties** ペインの **Step Parameters** ドロップダウンをクリックすると、現在の設定で生成された日付を確認できます。
 
 ## Generate Date のプロパティ
 

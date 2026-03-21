@@ -31,21 +31,24 @@ UI で Setup ステップのプロパティパネルから「**テストデー�
 
    ```javascript title="単一データセット"
    return {
-       "username" : "Matan",
-       "password" : "123"
-   }
+     username: 'Matan',
+     password: '123',
+   };
    ```
 
    以下は、例で定義したデータセットです:
 
    ```javascript title="複数データセット"
-   return [{
-     "username": "tomsmith",
-     "password": "SuperSecretPassword!"
-   },{
-     "username": "david",
-     "password": "SecretPassword?"
-   }];
+   return [
+     {
+       username: 'tomsmith',
+       password: 'SuperSecretPassword!',
+     },
+     {
+       username: 'david',
+       password: 'SecretPassword?',
+     },
+   ];
    ```
 
 :::note
@@ -77,8 +80,8 @@ return 行の括弧は残しておく必要があります。
 
 CSV or Excel ファイルをアップロードしてテストデータを追加することも可能です。ファイルがアップロードされると、そのデータは以下の構造に従ってテストデータとして追加されます:
 
-* 1 行目 - パラメーター名（キー名）
-* 2 行目以降 - 各行が単一のデータセットに変換されます（キー値）。最大 1200 行。
+- 1 行目 - パラメーター名（キー名）
+- 2 行目以降 - 各行が単一のデータセットに変換されます（キー値）。最大 1200 行。
 
 :::note
 この方法では、ファイルが変更されてもアップロードされたデータは更新されません。更新するたびにファイルを再度アップロードする必要があります。一方、設定ファイル方式（[外部ソースからのデータを使用したデータ駆動テスト](/docs/configuring-data-driven-tests-using-data-from-an-external-source)を参照）を使用すると、ファイルは実行ごとに自動的に解析されます。

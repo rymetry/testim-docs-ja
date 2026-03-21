@@ -1,8 +1,8 @@
 /**
- * HTML snapshot normalization for English source change detection.
+ * HTML sidebar snapshot normalization.
  *
- * Extracts content from help.testim.io pages and normalizes to a
- * deterministic, attribute-stripped HTML format suitable for git diffing.
+ * Content snapshots are stored as raw Markdown (fetched via .md endpoint).
+ * This module handles only sidebar HTML normalization for change detection.
  */
 
 /** Attributes preserved through normalization (all others stripped). */
@@ -50,16 +50,6 @@ const BLOCK_TAGS = new Set([
   'details',
   'summary',
 ]);
-
-/**
- * Extract <article>...</article> from full page HTML.
- * @returns {{ html: string, found: boolean }}
- */
-export function extractArticle(html) {
-  const match = html.match(/<article\b[\s\S]*?<\/article>/i);
-  if (!match) return { html: '', found: false };
-  return { html: match[0], found: true };
-}
 
 /**
  * Extract <nav id="hub-sidebar">...</nav> from full page HTML.
@@ -202,20 +192,6 @@ export function prettyPrint(html) {
   }
 
   return output;
-}
-
-/**
- * Full normalization pipeline for page content.
- * Extracts <article>, strips script/style, strips attributes, pretty-prints.
- * @returns {{ html: string, found: boolean }}
- */
-export function normalizeContent(html) {
-  const { html: articleHtml, found } = extractArticle(html);
-  if (!found) return { html: '', found: false };
-
-  const stripped = stripScriptAndStyle(articleHtml);
-  const cleaned = stripAttributes(stripped);
-  return { html: prettyPrint(cleaned), found: true };
 }
 
 /**

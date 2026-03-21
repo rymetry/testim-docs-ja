@@ -24,13 +24,13 @@ keywords:
 
 Testim には待機のためのビルトイン機能があります。提供される待機の種類:
 
-* 要素の表示待機（[Web](#wait-for-element-visible-web)、[モバイル](#wait-for-element-visible-mobile)）
-* 要素の非表示待機（[Web](#wait-for-element-not-visible-web)）
-* 要素テキストの表示待機（[Web](#wait-for-element-text-web)、[モバイル](#wait-for-element-text-mobile)）
-* スリープ（[Web](#sleep-web)、[モバイル](#sleep-mobile)）
-* カスタム待機（JavaScript）（[Web](#custom-wait-for-web)）
-* 要素のビジュアル待機（[Web](#wait-for-element-visualization-web)）
-* ダウンロード待機（[Web](#wait-for-download-web)）
+- 要素の表示待機（[Web](#wait-for-element-visible-web)、[モバイル](#wait-for-element-visible-mobile)）
+- 要素の非表示待機（[Web](#wait-for-element-not-visible-web)）
+- 要素テキストの表示待機（[Web](#wait-for-element-text-web)、[モバイル](#wait-for-element-text-mobile)）
+- スリープ（[Web](#sleep-web)、[モバイル](#sleep-mobile)）
+- カスタム待機（JavaScript）（[Web](#custom-wait-for-web)）
+- 要素のビジュアル待機（[Web](#wait-for-element-visualization-web)）
+- ダウンロード待機（[Web](#wait-for-download-web)）
 
 ## 要素の表示を待つ（Web）
 
@@ -245,10 +245,11 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
 :::warning{title="注意"}
-* 関数が true を返すかステップのタイムアウトに達するまでリトライします。
-* Custom wait for は再利用可能です。
-* ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
-:::
+
+- 関数が true を返すかステップのタイムアウトに達するまでリトライします。
+- Custom wait for は再利用可能です。
+- ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
+  :::
 
 ## ダウンロード待機（Web）
 

@@ -67,7 +67,7 @@ keywords:
 
 ![作成されたチェックボックス検証ステップ](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png)
 
-8. 作成したステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+8. 作成したステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![Show Properties アイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png)
 
@@ -86,7 +86,7 @@ keywords:
 
 1. チェックボックス/ラジオボタンを再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** ボタンをクリックします。
 2. **Play Scenario** ボタンをクリックして、ブレークポイントまでテストを実行します。
-3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+3. チェックボックス/ラジオボタンを再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![ステップの Show Properties アイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png)
 

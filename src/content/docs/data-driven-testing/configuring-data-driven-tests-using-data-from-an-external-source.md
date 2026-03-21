@@ -29,16 +29,16 @@ keywords:
 
 ```javascript
 // CSVからJsonオブジェクトにデータをロードするJS関数
-const csvtojson = require("csvtojson");
+const csvtojson = require('csvtojson');
 function loadCsvFile(path) {
-    return new Promise((resolve) => {
-        return csvtojson()
-            .fromFile(path)
-            .then(resolve, err => {
-                console.error("failed to read csv file", err.message);
-                resolve([]);
-            });
-    });
+  return new Promise((resolve) => {
+    return csvtojson()
+      .fromFile(path)
+      .then(resolve, (err) => {
+        console.error('failed to read csv file', err.message);
+        resolve([]);
+      });
+  });
 }
 ```
 
@@ -53,10 +53,10 @@ beforeSuite: function () {
                 BEFORE_SUITE: "BEFORE_SUITE",
                 overrideTestData: {
                 "Test 3": jsonObj,
-                "Test 4": jsonObj2,                        
-                "Test 5": jsonObj3,                         
+                "Test 4": jsonObj2,
+                "Test 5": jsonObj3,
                 // 静的なデータセットをテストに渡すこともできます
-                "Test 6": {name: "ryan"}                    
+                "Test 6": {name: "ryan"}
             }
         }
     });

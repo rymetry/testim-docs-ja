@@ -21,26 +21,25 @@ keywords:
 
 Salesforce 環境に接続するには、Salesforce 環境が以下の要件を満たしていることを確認してください:
 
-* API アクセスをサポート - これには、Enterprise、Performance、Unlimited、および Developer Edition 組織が必要です。Professional Edition 組織は、アドオンとして API アクセスを追加できます。Salesforce Essentials Edition は API アクセスをサポートしていません。
-* **管理 > ユーザー > プロファイル**で、Salesforce 環境に接続するために選択されたユーザーに対して REST API が有効になっています。
+- API アクセスをサポート - これには、Enterprise、Performance、Unlimited、および Developer Edition 組織が必要です。Professional Edition 組織は、アドオンとして API アクセスを追加できます。Salesforce Essentials Edition は API アクセスをサポートしていません。
+- **管理 > ユーザー > プロファイル**で、Salesforce 環境に接続するために選択されたユーザーに対して REST API が有効になっています。
 
   ![プロファイル設定で REST API を有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
 
-* Salesforce 環境に接続するために選択されたユーザーの権限は:
+- Salesforce 環境に接続するために選択されたユーザーの権限は:
+  - API アクセス制御が有効になっている場合、「任意の API クライアントを使用」権限。
 
-  * API アクセス制御が有効になっている場合、「任意の API クライアントを使用」権限。
+  - API アクセス制御が有効になっていない場合、「インストールされていない接続アプリを承認」権限。
 
-  * API アクセス制御が有効になっていない場合、「インストールされていない接続アプリを承認」権限。
-
-* **設定 > セキュリティ > ネットワークアクセス**で以下の IP アドレスをホワイトリストに登録します。
-  * 35.85.13.117
-  * 44.228.217.52
-  * 54.245.105.236
-  * 54.214.4.125
+- **設定 > セキュリティ > ネットワークアクセス**で以下の IP アドレスをホワイトリストに登録します。
+  - 35.85.13.117
+  - 44.228.217.52
+  - 54.245.105.236
+  - 54.214.4.125
 
   ![ネットワークアクセスで IP をホワイトリスト登録](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
 
-* ブロックされている追加の IP アドレスをホワイトリストに登録します。**設定 > ID > ログイン履歴**で、アプリケーション「Testim for Salesforce」に対してブロックされている「制限付き IP」アドレスをログイン履歴で確認してください。
+- ブロックされている追加の IP アドレスをホワイトリストに登録します。**設定 > ID > ログイン履歴**で、アプリケーション「Testim for Salesforce」に対してブロックされている「制限付き IP」アドレスをログイン履歴で確認してください。
 
   ![ログイン履歴で制限付き IP を確認](/images/salesforce-utilities/troubleshoot/32799d4-Picture2.png)
 
@@ -48,22 +47,21 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 
 テストがローカルでは正常に実行されているのに Grid では失敗する場合は、以下を確認してください:
 
-* Azure Active Directory や Okta などの Identity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対して IAM サービスを無効にすることをお勧めします。Grid でのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
-* IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付き IP」アドレスをログイン履歴で確認してください。
+- Azure Active Directory や Okta などの Identity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対して IAM サービスを無効にすることをお勧めします。Grid でのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
+- IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付き IP」アドレスをログイン履歴で確認してください。
 
   ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
 
   Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
-
-  * IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
+  - IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
 
     ![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
 
-  * IP アドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**
+  - IP アドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**
 
     ![プロファイルレベルのログイン IP アドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
 
-  * ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
+  - ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
 
     ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
 
@@ -77,9 +75,9 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 デバイスアクティベーションは、次のいずれかに当てはまる場合に発生します:
 
-* ネットワークアクセス設定で IP アドレスがホワイトリストに登録されていない
-* ホワイトリストに登録された IP 範囲が 1600 万アドレスを超えている
-* 組織が無料の Salesforce エディション（Developer Edition など）を使用している
+- ネットワークアクセス設定で IP アドレスがホワイトリストに登録されていない
+- ホワイトリストに登録された IP 範囲が 1600 万アドレスを超えている
+- 組織が無料の Salesforce エディション（Developer Edition など）を使用している
 
 ### 有料組織向けの解決策
 
@@ -95,11 +93,11 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 1. Tricentis Testim Extension をシークレットモードで実行するように構成します。
 
-  ![Chrome 拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
+![Chrome 拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
 
 2. シークレットモードでテストを実行します。
 
-  ![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
+![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
 
 ## Create ステップを使用して前のステップで作成したレコードが、Find ステップを使用して Salesforce で見つからない
 
@@ -125,11 +123,11 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 Find Account 共有ステップには 2 つの内部ステップが含まれています（ステップをダブルクリックしてアクセス）:
 
-* **Find ステップ** - レコードを見つけるための検索ステップ:
+- **Find ステップ** - レコードを見つけるための検索ステップ:
 
   ![Find ステップの例](/images/salesforce-utilities/troubleshoot/b20c5ec-find.png)
 
-* **Sleep ステップ** - 次の反復を待機するスリープステップ。
+- **Sleep ステップ** - 次の反復を待機するスリープステップ。
 
   ![Sleep ステップの例](/images/salesforce-utilities/troubleshoot/46c1a28-sleep.png)
 
@@ -141,9 +139,9 @@ Salesforce 選択リストの自動化は困難です。選択を記録する際
 
 これは以下の理由による可能性があります:
 
-* テストを実行している Salesforce アカウントに、このフィールドを表示するための読み取り権限がない可能性があります。\
+- テストを実行している Salesforce アカウントに、このフィールドを表示するための読み取り権限がない可能性があります。\
   **可能な解決策** - このアカウントのフィールド権限を表示するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。
-* テストを実行している Salesforce アカウントのページレイアウトが、このフィールドなしで構成されている可能性があります。\
+- テストを実行している Salesforce アカウントのページレイアウトが、このフィールドなしで構成されている可能性があります。\
   **可能な解決策** - ページレイアウトを検証するには、Salesforce で設定を確認してください。
 
 ## Salesforce テストが Grid で「要素が見つかりません」で失敗するが、ローカルではテストが成功する
@@ -151,7 +149,7 @@ Salesforce 選択リストの自動化は困難です。選択を記録する際
 これには 2 つの可能な理由があります:
 
 1. Salesforce ページの読み込み時間が Grid とローカル実行で異なる場合があります。予期しない追加のページ読み込み時間により、このタイムアウトエラーが発生する可能性があります。\
-  **可能な解決策** - 失敗するテストステップの前に、Salesforce ステップ[ページ読み込みを待機](/docs/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
+   **可能な解決策** - 失敗するテストステップの前に、Salesforce ステップ[ページ読み込みを待機](/docs/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
 
 2. ローカル記録またはローカル実行中にユーザーがブラウザウィンドウのサイズを変更した場合。\
    **可能な解決策** - ブラウザウィンドウのサイズを変更せず、Grid でテストが実行されるときと同じサイズのままにすることをお勧めします。
@@ -166,8 +164,8 @@ Salesforce は、Sign-in with Salesforce（OAuth）ではなく、ユーザー�
 
 レコーダーには 2 つの操作モードがあります:
 
-* **Salesforce モード** - このモードでは、レコーダーにクラウドアイコンで示され、レコーダーは Salesforce ステップを実行します。これにより、単一のステップ内で複数のアクションを実行できます。このモードを使用して作成されたステップには、クラウドアイコンが付いています。
-* **Web モード** - これはレコーダーの通常モードで、レコーダーに打ち消し線付きクラウドアイコンで示されます。このモードでは、すべてのインタラクション（クリック、スクロール、テキスト追加など）が個別のステップで表されます。
+- **Salesforce モード** - このモードでは、レコーダーにクラウドアイコンで示され、レコーダーは Salesforce ステップを実行します。これにより、単一のステップ内で複数のアクションを実行できます。このモードを使用して作成されたステップには、クラウドアイコンが付いています。
+- **Web モード** - これはレコーダーの通常モードで、レコーダーに打ち消し線付きクラウドアイコンで示されます。このモードでは、すべてのインタラクション（クリック、スクロール、テキスト追加など）が個別のステップで表されます。
 
 **可能な解決策** - 記録されたステップがエディターに表示されない場合は、クラウドアイコンをクリックして Salesforce モードをオフにする必要があります。詳細については、[ステップの記録](/docs/create-a-salesforce-test#recording-steps)を参照してください。
 
@@ -175,5 +173,5 @@ Salesforce は、Sign-in with Salesforce（OAuth）ではなく、ユーザー�
 
 これには 2 つの可能な理由があります:
 
-* Salesforce ステップには、（Classic と Lightning の両方の）sObject のページレイアウトにあるフィールドのみが含まれます。Lightning アプリビルダーを使用してのみ追加されたフィールドは含まれません。Salesforce 管理者がページレイアウトからフィールドを除外したが、Lightning アプリビルダーを使用して[動的フォーム](https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&type=5)を作成するときに追加した可能性があります。Salesforce ステップを使用するには、Salesforce セットアップでページレイアウトにフィールドを追加するか、テストを作成する際に Salesforce レコーダーを使用してください。
-* Salesforce ステップには、Salesforce 環境の接続に使用される Salesforce アカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別の Salesforce アカウントで Salesforce 環境を再接続する必要がある場合があります。
+- Salesforce ステップには、（Classic と Lightning の両方の）sObject のページレイアウトにあるフィールドのみが含まれます。Lightning アプリビルダーを使用してのみ追加されたフィールドは含まれません。Salesforce 管理者がページレイアウトからフィールドを除外したが、Lightning アプリビルダーを使用して[動的フォーム](https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&type=5)を作成するときに追加した可能性があります。Salesforce ステップを使用するには、Salesforce セットアップでページレイアウトにフィールドを追加するか、テストを作成する際に Salesforce レコーダーを使用してください。
+- Salesforce ステップには、Salesforce 環境の接続に使用される Salesforce アカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別の Salesforce アカウントで Salesforce 環境を再接続する必要がある場合があります。

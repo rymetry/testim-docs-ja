@@ -34,7 +34,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ![スクリーンショット](/images/validations/validate-element-not-visible/effce9f-Screen_Shot_2021-04-18_at_6.37.44.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![ステップ追加](/images/validations/validate-element-not-visible/5357ef7-Testim_083a_r.png)
 
@@ -71,7 +71,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ![スクリーンショット](/images/validations/validate-element-not-visible/bf63c08-Screen_Shot_2021-04-18_at_6.40.55.png)
 
-   右側に Properties パネルが表示されます。
+右側に Properties パネルが表示されます。
 
 9. **Pre-step delay (ms)** をオンにします。
 
@@ -81,7 +81,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ![検証設定](/images/validations/validate-element-not-visible/670a2b2-Testim_012a_r.png)
 
-   テスト実行時、このステップに到達すると指定時間だけ待機してから次のステップに進みます。
+テスト実行時、このステップに到達すると指定時間だけ待機してから次のステップに進みます。
 
 11. 検証ステップの後ろにある **Toggle Breakpoint** をクリックしてブレークポイントを解除します。
 
@@ -97,13 +97,13 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ![スクリーンショット](/images/validations/validate-element-not-visible/5ad089f-Screen_Shot_2021-04-18_at_6.40.55.png)
 
-   右側に Properties パネルが表示されます。
+右側に Properties パネルが表示されます。
 
 4. **Target element** のサムネイルにカーソルを合わせます。
 
 ![テキスト設定](/images/validations/validate-element-not-visible/e427d93-Testim_011a_r.png)
 
-   **Target element** のオプションが表示されます。
+**Target element** のオプションが表示されます。
 
 ![要素設定](/images/validations/validate-element-not-visible/a16fb1c-Testim_010_r.png)
 

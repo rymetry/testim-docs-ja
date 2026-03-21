@@ -254,6 +254,68 @@ describe('getDiffPagesList', () => {
     assert.equal(list.length, 1);
     assert.equal(list[0].slug, 'testim-overview');
   });
+
+  it('skips fetch when fromSnapshot is true and snapshot exists', async () => {
+    const hashesPath = path.join(tmpDir, 'page-hashes-snapshot.json');
+
+    // Use testim-overview which exists in real snapshots/en/content/
+    const sidebarText = [
+      '## Overview（概要）',
+      '',
+      '- ✅ https://help.testim.io/docs/testim-overview',
+      '',
+    ].join('\n');
+
+    let fetchCalled = false;
+    const fakeFetch = async () => { fetchCalled = true; return { ok: true, text: async () => '# Network' }; };
+
+    await getDiffPagesList(sidebarText, hashesPath, fakeFetch, { fromSnapshot: true });
+    assert.equal(fetchCalled, false, 'fetch should NOT be called when snapshot file exists');
+
+    // Verify hash was computed from the snapshot content
+    const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
+    assert.ok(saved['testim-overview'], 'hash should be persisted');
+    assert.equal(typeof saved['testim-overview'].hash, 'string');
+    assert.ok(saved['testim-overview'].hash.length > 0, 'hash should not be empty');
+  });
+
+  it('falls back to fetch when fromSnapshot is true but snapshot does not exist', async () => {
+    const hashesPath = path.join(tmpDir, 'page-hashes-fallback.json');
+
+    // Use a slug that does NOT exist in snapshots/en/content/
+    const sidebarText = [
+      '## Overview（概要）',
+      '',
+      '- ✅ https://help.testim.io/docs/zzz-nonexistent-test-page',
+      '',
+    ].join('\n');
+
+    let fetchCalled = false;
+    const fakeFetch = async () => {
+      fetchCalled = true;
+      return { ok: true, text: async () => '# Fallback Content' };
+    };
+
+    await getDiffPagesList(sidebarText, hashesPath, fakeFetch, { fromSnapshot: true });
+    assert.equal(fetchCalled, true, 'fetch should be called when snapshot file does not exist');
+  });
+
+  it('always uses fetch when fromSnapshot is false', async () => {
+    const hashesPath = path.join(tmpDir, 'page-hashes-no-snapshot.json');
+
+    const sidebarText = [
+      '## Overview（概要）',
+      '',
+      '- ✅ https://help.testim.io/docs/testim-overview',
+      '',
+    ].join('\n');
+
+    let fetchCalled = false;
+    const fakeFetch = async () => { fetchCalled = true; return { ok: true, text: async () => '# Network' }; };
+
+    await getDiffPagesList(sidebarText, hashesPath, fakeFetch, { fromSnapshot: false });
+    assert.equal(fetchCalled, true, 'fetch should be called when fromSnapshot is false');
+  });
 });
 
 // ---------------------------------------------------------------------------

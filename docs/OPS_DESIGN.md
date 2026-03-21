@@ -9,7 +9,7 @@
 1. `sync`
    `npm run docs:sync-sidebar` で `docs/SIDEBAR_URLS.md` を更新する。URL 収集が 0 件なら即停止する。
 2. `diff detect`
-   `npm run check:snapshots` で英語原文の正規化 HTML スナップショットを取得・比較し、変更ページを検出する。コミット済みスナップショット = 翻訳済みベースライン、working tree = 最新英語版として git diff で差分を検知する。
+   `npm run check:snapshots` で英語原文の Markdown スナップショットと sidebar HTML を取得・比較し、変更ページを検出する。コミット済みスナップショット = 翻訳済みベースライン、working tree = 最新英語版として git diff で差分を検知する。
 3. `translate`
    `docs:prepare-llm` でタスクを切り出し、`docs:apply-llm` で翻訳結果を反映する。
 4. `format`
@@ -84,8 +84,8 @@
 2. callout 変換後に構文が壊れていないか（引用符の整合、タイトル長、タイプとタイトルの一致）
 3. 残存パターンがないか（`:fa-` マーカー、`> 📘` blockquote、外部 `help.testim.io` リンク）
 4. `updated` フィールドが英語原文の日付のまま維持されているか
-7. main からの巻き戻りがないか（`git diff` の追加行に既存問題が混入していないか）
-8. 変更対象ファイル内の既存問題（fa-icon、旧 callout 等）も一緒に修正する。リンクだけ直してファイル内の他の問題を放置しない
+5. main からの巻き戻りがないか（`git diff` の追加行に既存問題が混入していないか）
+6. 変更対象ファイル内の既存問題（fa-icon、旧 callout 等）も一緒に修正する。リンクだけ直してファイル内の他の問題を放置しない
 
 ## 原文スラグ変更の検知
 

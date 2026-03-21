@@ -56,8 +56,8 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 Test Editor から直接 Grid 上でテストを実行できます。
 
-* **Run** ボタンの横にある options arrow をクリックします。
-* **Run on a grid** をクリックします。
+- **Run** ボタンの横にある options arrow をクリックします。
+- **Run on a grid** をクリックします。
 
 その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
 

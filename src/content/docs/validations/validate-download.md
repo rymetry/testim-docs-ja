@@ -20,7 +20,7 @@ keywords:
 
 テスト内から Node.js スクリプトを実行してダウンロード内容が期待通りであることを検証する
 
-*Validate download* ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
+_Validate download_ ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
 :::note{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
@@ -32,11 +32,11 @@ keywords:
 このステップは Chrome または Edge Chromium でのみ実行できます。
 :::
 
-* CLI アクションステップを含むテストをローカルで実行するには、次のコマンドを実行する必要があります：**npm i -g @testim/testim-cli && testim connect**（下記参照）。
-* *Validate download* ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
-* PDF ファイルの *Validate download* ステップを含むテストには、さらに 2 つの前提条件があります：
-  * **Chrome 67** 以上を使用していること
-  * Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
+- CLI アクションステップを含むテストをローカルで実行するには、次のコマンドを実行する必要があります：**npm i -g @testim/testim-cli && testim connect**（下記参照）。
+- _Validate download_ ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
+- PDF ファイルの _Validate download_ ステップを含むテストには、さらに 2 つの前提条件があります：
+  - **Chrome 67** 以上を使用していること
+  - Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
 
 **「Download PDFs」権限を有効にするには：**
 
@@ -95,7 +95,7 @@ keywords:
 Validate download ステップを追加する一般的な手順は、ダウンロードするファイル形式（csv、jpg、ppt、doc など）に関わらず同じです。コードとパラメーターは、ダウンロードするファイルの種類や検証したい属性に応じて変わります。以下の手順（CSV ファイルを例として）の後に、次のファイル形式のサンプルコードとパラメーターを示します:csv、image、xls、ppt、doc、pdf。
 
 :::note
-テストの記録中にファイルをダウンロードするリンクをクリックすると、Testim は *Click* ステップの後に空の *Validate download ステップ*（*untitled download validation* という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして *Validate Download エディター* を開き、以下の手順 8 に進んでください。
+テストの記録中にファイルをダウンロードするリンクをクリックすると、Testim は _Click_ ステップの後に空の _Validate download ステップ_（_untitled download validation_ という名前）を自動的に作成します。このステップを編集するには、ステップをダブルクリックして _Validate Download エディター_ を開き、以下の手順 8 に進んでください。
 :::
 
 **Validate download ステップを追加するには:**
@@ -144,7 +144,7 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 ![パラメーター編集のアニメーション](/images/validations/validate-download/0e1debb-CLI_action_param.gif)
 
-  d. 追加した項目は “param” または “packageVariable” といった既定名になります。わかりやすい名前にするには **edit** アイコンから変更してください。
+d. 追加した項目は “param” または “packageVariable” といった既定名になります。わかりやすい名前にするには **edit** アイコンから変更してください。
 
 ![パラメーター設定画面](/images/validations/validate-download/75ad16c-Testim_159a_r.png)
 
@@ -160,7 +160,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 上の例のコードとパラメーターは、ダウンロードした CSV の行数が 237 行であること、A1 セルに “JURISDICTION NAME” が含まれることを検証します。
 :::
 
-11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: *Mark error & stop*、*Mark error & continue*、*Mark warning & continue*。
+11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: _Mark error & stop_、_Mark error & continue_、_Mark warning & continue_。
 12. このステップの実行条件を制御するには、**Properties** パネルの **When to run step** の下矢印をクリックし、希望するオプションを選択します。詳細については、[Conditions](/docs/conditions) を参照してください。
 13. デフォルトのタイムアウト設定（30000 ミリ秒）を上書きするには、**Properties** パネルの **Override timeout** ボタンをクリックし、希望するタイムアウト値を入力します。
 14. 左上の戻る矢印でエディターに戻ります。
@@ -175,7 +175,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 
 ### CSV ファイル
 
-*Validate download* ステップで、行数や内容など CSV の高度な検証ができます。\
+_Validate download_ ステップで、行数や内容など CSV の高度な検証ができます。\
 以下の例では、CSV の行数が 237 行で、A1 セルに "JURISDICTION NAME" が含まれることを検証します。
 
 ![Excel ファイル検証用パッケージのインストール](/images/validations/validate-download/daa4195-Testim_160.png)
@@ -193,14 +193,14 @@ return csv({
     // Number of rows in CSV
    console.log("Number of rows in CSV: ", csvRow.length);
     // Value in  csvRow[0][0] in CSV
-   console.log("Value in  csvRow[0][0] in CSV: ", csvRow[0][0]);  
+   console.log("Value in  csvRow[0][0] in CSV: ", csvRow[0][0]);
     if (csvRow.length !== parseInt(expectedNumOfRows)) {
       return Promise.reject(
         new Error(`Number of rows doesn't match ${csvRow.length}`)
       );
     }
     if (csvRow[0][0] !== expectedText) {
-   
+
       return Promise.reject(
         new Error(`Failed to find expected text ${csvRow[0][0]}`)
       );
@@ -263,8 +263,8 @@ return csv({
 
 ### 画像ファイル
 
-*Validate download* ステップで、画像タイプや寸法など画像の高度な検証ができます。\
-以下の例では、ダウンロードした画像ファイルの名前が *yellow-cat-cartoon-style-clipart*、ファイル形式が *jpg*、寸法が *573*（幅）X *600*（高さ）であることをチェックします。
+_Validate download_ ステップで、画像タイプや寸法など画像の高度な検証ができます。\
+以下の例では、ダウンロードした画像ファイルの名前が _yellow-cat-cartoon-style-clipart_、ファイル形式が _jpg_、寸法が _573_（幅）X _600_（高さ）であることをチェックします。
 
 ![Excel ファイル検証のコード例](/images/validations/validate-download/09c48ec-Testim_167.png)
 
@@ -272,13 +272,15 @@ return csv({
 
 ```javascript
 var dimensions = sizeOf(fileBuffer);
-var {width, height, type} = dimensions;
-console.log("Image dimensions", JSON.stringify(dimensions));
+var { width, height, type } = dimensions;
+console.log('Image dimensions', JSON.stringify(dimensions));
 
-return width === parseInt(expectedWidth) &&
-       height === parseInt(expectedHeight) &&
-       type === expectedImageType &&
-       fileName.includes(expectedName);
+return (
+  width === parseInt(expectedWidth) &&
+  height === parseInt(expectedHeight) &&
+  type === expectedImageType &&
+  fileName.includes(expectedName)
+);
 ```
 
 **Example Parameters:**
@@ -358,7 +360,7 @@ return width === parseInt(expectedWidth) &&
 
 ### MS Excel ファイル
 
-*Validate download* ステップで、シート数やシート名など Excel の高度な検証ができます。\
+_Validate download_ ステップで、シート数やシート名など Excel の高度な検証ができます。\
 以下の例では、シート数が 3、最初のシート名が “Example Test” であることを検証します。
 
 ![PowerPoint 検証用パッケージのインストール](/images/validations/validate-download/aef9e2b-Testim_171.png)
@@ -433,8 +435,8 @@ if (sheet !== expectedPageName) {
 
 ### MS PowerPoint ファイル
 
-*Validate download* ステップで、スライド数や内容など PowerPoint の高度な検証ができます。\
-以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が *9* で、最初のページに *Department*、2 ページ目に *Location* という単語が含まれていることをチェックします。
+_Validate download_ ステップで、スライド数や内容など PowerPoint の高度な検証ができます。\
+以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が _9_ で、最初のページに _Department_、2 ページ目に _Location_ という単語が含まれていることをチェックします。
 
 ![PowerPoint ファイル検証のコード例](/images/validations/validate-download/4914681-Testim_175.png)
 
@@ -526,7 +528,7 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 
 ### MS Word ファイル
 
-*Validate download* ステップで、内容など Word の高度な検証ができます。\
+_Validate download_ ステップで、内容など Word の高度な検証ができます。\
 以下の例では、ダウンロードした Word に “Item A” というテキストが含まれることを検証します。
 
 ![Word ファイル検証のコード例](/images/validations/validate-download/2775ebe-Testim_178.png)
@@ -539,7 +541,7 @@ var doc = new Docxtemplater();
 
 doc.loadZip(zip);
 var docxText = doc.getFullText();
-console.log("text:", docxText);
+console.log('text:', docxText);
 
 return docxText.includes(expectedText);
 ```
@@ -603,11 +605,11 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 
 ### PDF ファイル
 
-*Validate download* ステップで、ページ数や内容など PDF の高度な検証ができます。
+_Validate download_ ステップで、ページ数や内容など PDF の高度な検証ができます。
 **前提条件**:
 
-* **Chrome 67** 以上を使用していること
-* Chrome の PDF 設定で **Download PDF files instead of automatically opening them in Chrome** を有効にしていること
+- **Chrome 67** 以上を使用していること
+- Chrome の PDF 設定で **Download PDF files instead of automatically opening them in Chrome** を有効にしていること
 
 以下の例では、PDF のページ数が 2、テキスト "A Simple PDF file" が含まれることを検証します。
 
@@ -617,15 +619,15 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 
 ```javascript
 return pdf(fileBuffer).then((data) => {
-  const {numpages, text} = data;
+  const { numpages, text } = data;
   // number of pages
-  console.log("numpages", numpages);
+  console.log('numpages', numpages);
   // PDF text
-  console.log("text", text);
-  if(numpages !== parseInt(expectedNumOfPages)) {
+  console.log('text', text);
+  if (numpages !== parseInt(expectedNumOfPages)) {
     return Promise.reject(new Error(`Invalid number of pages: ${numpages}`));
   }
-  if(!text.includes(expectedText)) {
+  if (!text.includes(expectedText)) {
     return Promise.reject(new Error(`Invalid pdf text: ${text}`));
   }
 });

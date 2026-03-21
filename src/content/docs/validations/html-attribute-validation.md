@@ -20,7 +20,7 @@ keywords:
 
 アプリ内の任意の HTML 属性を検証する
 
-HTML 属性検証では、要素の任意の HTML 属性の値を検証できます（例：*href*、*src*、*alt*、*title* など）。また、以下に説明する通り「disabled」属性の検証も可能です。
+HTML 属性検証では、要素の任意の HTML 属性の値を検証できます（例：_href_、_src_、_alt_、_title_ など）。また、以下に説明する通り「disabled」属性の検証も可能です。
 
 ## Validate HTML attribute ステップの追加
 
@@ -63,8 +63,8 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 
 ![検証](/images/validations/html-attribute-validation/4a3f8b9-Testim_239_r.png)
 
-8. **Attribute name** フィールドに、検証したい有効な HTML 属性を入力します（例：*href*、*src*、*alt*、*title* など）。
-9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：*[https://www.testim.io](https://www.testim.io)*）。
+8. **Attribute name** フィールドに、検証したい有効な HTML 属性を入力します（例：_href_、_src_、_alt_、_title_ など）。
+9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：_[https://www.testim.io](https://www.testim.io)_）。
 
 :::note
 Expected value では正規表現も使用できます。例えば、https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
@@ -78,7 +78,7 @@ Expected value では正規表現も使用できます。例えば、https で�
 
 「disabled」HTML 属性を検証することも可能です。
 
- **disabled 属性を検証するには:**
+**disabled 属性を検証するには:**
 
 1. 上記の手順 1～6 を実行します。
 
@@ -104,7 +104,7 @@ Expected value では正規表現も使用できます。例えば、https で�
 
 1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
 2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
-3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![CLI](/images/validations/html-attribute-validation/330255f-Testim_240a.png)
 
@@ -125,9 +125,9 @@ Expected value では正規表現も使用できます。例えば、https で�
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
-***元の***要素のプロパティを変更するには:**
+**_元の_**要素のプロパティを変更するには:\*\*
 
-1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![CLI](/images/validations/html-attribute-validation/8f90779-Testim_242a.png)
 

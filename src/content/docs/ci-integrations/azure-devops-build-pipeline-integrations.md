@@ -23,25 +23,25 @@ keywords:
 
 ```yaml
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
 
-- script: |
-    npm install -g @testim/testim-cli
-    testim --label "<LABEL>" \
-    --token "<TOKEN>" \
-    --project "<PROJECT ID>" \
-    --grid "<Your grid name>" \
-    --report-file testim-tests-report.xml
-  displayName: 'npm install testim-cli and run tests'
+  - script: |
+      npm install -g @testim/testim-cli
+      testim --label "<LABEL>" \
+      --token "<TOKEN>" \
+      --project "<PROJECT ID>" \
+      --grid "<Your grid name>" \
+      --report-file testim-tests-report.xml
+    displayName: 'npm install testim-cli and run tests'
 
-- task: PublishTestResults@2
-  displayName: 'publish testim test results'
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/testim-tests-report.xml'
+  - task: PublishTestResults@2
+    displayName: 'publish testim test results'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/testim-tests-report.xml'
 ```
 
 **注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。

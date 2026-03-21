@@ -1,0 +1,9 @@
+# Passing parameters from an Excel file
+
+Learn how to pass parameters from an Excel file into your tests
+
+As part of a [data-driven test](https://help.testim.io/docs/data-driven-testing), you may want to pass parameters from an excel file into a test. There are two ways to do it:
+
+* **Uploading an Excel/CSV file using the Testim Visual Editor** - if the Excel data includes multiple data sets that should be used in multiple runs, running the test from the editor will only run the first data set. Only when you run your test from Testim CLI, scheduler or local suite run, the test will run multiple times, in order, each time with a different data set. In addition, as part of this method the uploaded data will not be updated if the file has changed. Every update will require uploading the Excel file again. For detailed instructions see -  [Adding test data by uploading a CSV/Excel file](https://help.testim.io/docs/data-driven-testing#section-adding-test-data-by-uploading-a-csv-excel-file)
+
+* **Passing the parameters through the config file** -  Test data from the Excel file can be passed to one or multiple tests using the config file and then running the test using the CLI, while adding a flag to use the config file in this run. In this case, if the Excel data includes multiple data sets that should be used in multiple runs, the test will run multiple times, in order, each time with a different data set. In addition, the file will be automatically parsed on every run, so you can update the Excel file and the updated data will be used in the following run. For detailed instructions see -  [Data Driven tests using data from an external source](https://help.testim.io/docs/data-driven-testing#section-data-driven-tests-using-data-from-an-external-source).

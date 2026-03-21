@@ -48,8 +48,8 @@ keywords:
 
 非表示パラメーターを使用するテスト実行は [CLI](/docs/cli-settings) のみ対応です（スケジューラ不可）。CLI では次の方法で値を渡せます。
 
-* JSON パラメーターファイル — 非表示パラメーターを JSON で定義して渡す。詳細は[JSON パラメーターファイル](/docs/json-parameters-file-parameters)
-* 設定ファイル — 設定ファイルで定義して渡す。詳細は[設定ファイルのパラメーター](/docs/configuration-file-parameters)
+- JSON パラメーターファイル — 非表示パラメーターを JSON で定義して渡す。詳細は[JSON パラメーターファイル](/docs/json-parameters-file-parameters)
+- 設定ファイル — 設定ファイルで定義して渡す。詳細は[設定ファイルのパラメーター](/docs/configuration-file-parameters)
 
 ## テスト内での表示
 

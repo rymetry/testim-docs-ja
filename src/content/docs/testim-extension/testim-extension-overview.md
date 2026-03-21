@@ -27,10 +27,10 @@ Testim はテストの作成と実行に Smart Locators を使用します。拡
 
 拡張機能自体は以下の機能を実行するために使用できます:
 
-* **[スクリーンショットをキャプチャ](/docs/testim-extension-capture-screenshot)** - Web ページのスクリーンショットをキャプチャし、注釈（矢印、テキストなど）を追加でき、バグトラッキングシステムにバグ/問題として送信できます。
-* **[ビデオとバグシナリオをキャプチャ](/docs/testim-extension-capture-video-bug-scenario)** - プロセスのビデオ画面録画をキャプチャし、各ステップのスクリーンショットを作成し、バグトラッキングシステムにバグ/問題として送信できます。
-* **[自動テストを作成](/docs/testim-extension-create-automated-test)** - 現在の Web ページをベース URL として、Testim Visual Editor で新しいテストを作成します。
-* **Testim を開く** - Testim Visual Editor を開きます。
+- **[スクリーンショットをキャプチャ](/docs/testim-extension-capture-screenshot)** - Web ページのスクリーンショットをキャプチャし、注釈（矢印、テキストなど）を追加でき、バグトラッキングシステムにバグ/問題として送信できます。
+- **[ビデオとバグシナリオをキャプチャ](/docs/testim-extension-capture-video-bug-scenario)** - プロセスのビデオ画面録画をキャプチャし、各ステップのスクリーンショットを作成し、バグトラッキングシステムにバグ/問題として送信できます。
+- **[自動テストを作成](/docs/testim-extension-create-automated-test)** - 現在の Web ページをベース URL として、Testim Visual Editor で新しいテストを作成します。
+- **Testim を開く** - Testim Visual Editor を開きます。
 
 ## セキュリティに関する免責事項
 

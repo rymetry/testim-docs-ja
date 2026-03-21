@@ -219,11 +219,11 @@
     border-color: var(--color-slate-300);
     background-color: white;
   }
-  .docs-prose .task-list-item input[type="checkbox"]:checked {
+  .docs-prose .task-list-item input[type='checkbox']:checked {
     border-color: var(--color-blue-600);
     background-color: var(--color-blue-600);
   }
-  .docs-prose .task-list-item input[type="checkbox"]:checked::after {
+  .docs-prose .task-list-item input[type='checkbox']:checked::after {
     content: '';
     position: absolute;
     left: 5px;
@@ -367,7 +367,6 @@
   .docs-prose .run-types-table td img {
     @apply block max-w-full h-auto mx-auto;
   }
-
 
   /* Callout（情報パネル）スタイル */
   .docs-prose .callout {

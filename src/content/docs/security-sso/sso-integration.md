@@ -47,6 +47,6 @@ SSO はプレミアム機能であり、統合前に有効にする必要があ�
 
 デプロイメント用の SSO を設定するには、以下のガイドの手順に従ってください:
 
-* [OneLogin SSO 統合](/docs/onelogin-sso-integration)
-* [Okta SSO 統合](/docs/okta-sso-integration)
-* [Azure AD SSO 統合](/docs/azure-ad-sso-integration)
+- [OneLogin SSO 統合](/docs/onelogin-sso-integration)
+- [Okta SSO 統合](/docs/okta-sso-integration)
+- [Azure AD SSO 統合](/docs/azure-ad-sso-integration)

@@ -131,7 +131,7 @@ keywords:
 
 **リクエストタイプでフィルタリングするには:**
 
-1. リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。オプションには*XHR*、*JS*、*CSS*、*Img*、*Media*、*Font*、*Doc*、*WS*、*Manifest*が含まれます。
+1. リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。オプションには*XHR*、_JS_、_CSS_、_Img_、_Media_、_Font_、_Doc_、_WS_、*Manifest*が含まれます。
 
 ![リクエストタイプ別フィルターの例](/images/results/network-logs/0d05487-Testim_074b.png)
 
@@ -159,7 +159,7 @@ keywords:
 
 ![リクエスト一覧テーブルの例](/images/results/network-logs/190bb8b-results-rows.png)
 
-Headers ウィンドウが開き、*General*、*Response Headers*、*Request Headers*の 3 つのセクションが表示されます。
+Headers ウィンドウが開き、_General_、_Response Headers_、*Request Headers*の 3 つのセクションが表示されます。
 
 ![Headers ウィンドウに表示される情報](/images/results/network-logs/a67587b-result-headers.png)
 
@@ -290,25 +290,25 @@ Headers ウィンドウの 3 つのセクションはそれぞれ、各セクシ
 
 Network Activity 画面には、ネットワークトラフィックが表示されます。次のフィルターツールを使用して、ネットワークトラフィックをフィルタリングできます。
 
-* ファイル名に基づくフィルター - **Filter**フィールドに完全または部分的なファイル名を入力します。
-* リクエストタイプに基づくフィルター - リストされているリクエストタイプ（XHR、JS、CSS など）のいずれかを選択します。
-* エラーのみフィルター - **Error Only**チェックボックスを選択すると、エラーで応答されたリクエストのみが表示されます。
+- ファイル名に基づくフィルター - **Filter**フィールドに完全または部分的なファイル名を入力します。
+- リクエストタイプに基づくフィルター - リストされているリクエストタイプ（XHR、JS、CSS など）のいずれかを選択します。
+- エラーのみフィルター - **Error Only**チェックボックスを選択すると、エラーで応答されたリクエストのみが表示されます。
 
 ![Network Activity 画面のフィルタリング例](/images/results/network-logs/aee6500-Screen_Shot_2020-11-24_at_8.03.42.png)
 
 ネットワークアクティビティエントリには、次の情報が含まれます。
 
-* File - リクエストの URL
-* Status - HTTP レスポンスコード
-* Request method - HTTP リクエストメソッド
-* Request domain - リクエストドメイン
-* Request type - リクエストタイプ
-* Size - レスポンスサイズ
-* Time - レスポンスを取得するまでの時間
-* Waterfall - リクエストの各段階をグラフィカルに表現したもの。Waterfall にカーソルを合わせると、詳細な内訳が表示されます。
+- File - リクエストの URL
+- Status - HTTP レスポンスコード
+- Request method - HTTP リクエストメソッド
+- Request domain - リクエストドメイン
+- Request type - リクエストタイプ
+- Size - レスポンスサイズ
+- Time - レスポンスを取得するまでの時間
+- Waterfall - リクエストの各段階をグラフィカルに表現したもの。Waterfall にカーソルを合わせると、詳細な内訳が表示されます。
 
 下部のサマリーペインには、次の情報が含まれます。
 
-* リクエストの総数
-* リクエストの合計ダウンロードサイズ
-* 読み込まれたリソースの合計サイズ
+- リクエストの総数
+- リクエストの合計ダウンロードサイズ
+- 読み込まれたリソースの合計サイズ

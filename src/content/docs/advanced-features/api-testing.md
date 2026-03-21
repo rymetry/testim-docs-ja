@@ -25,8 +25,8 @@ UI テストからサーバー API を呼び出し、検証やデータ取得を
 API テストは、テスト内で API 呼び出し（HTTP リクエスト）を行います。これにより、他ステップで使うデータの取得や、バックエンドとフロントエンドの値の整合を確認する検証が可能です。API リクエストはヘッダー（認証情報を含む）とボディを持つ完全な HTTP リクエストです。\
 API ステップには **Add API action** と **Validate API** の 2 種類があります。
 
-* Add API action — API 応答からデータを取得したい場合に使用（返ってくることの確認にも利用可）
-* Validate API — API 応答の検証に使用（主にバックエンドのデータ検証）
+- Add API action — API 応答からデータを取得したい場合に使用（返ってくることの確認にも利用可）
+- Validate API — API 応答の検証に使用（主にバックエンドのデータ検証）
 
 :::note{title="PRO機能"}
 Professional plan で利用可能です。
@@ -47,7 +47,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 4. メニューをスクロールし、**Validate API** を選択します。
 
 :::note
-メニュー上部の検索ボックスに *Validate API* と入力して検索することもできます。
+メニュー上部の検索ボックスに _Validate API_ と入力して検索することもできます。
 :::
 
 **Add Step** ウィンドウが表示されます。
@@ -69,9 +69,9 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0277227-header.png)
 
 10. 認証ヘッダーを設定するには **Authorization** タブをクリックし、次のいずれかの方式を選択します。
-    * **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の認証方式を使いたい場合に選択します。この場合、認証ヘッダーは **Header** タブで手動入力する必要があります。
-    * **Basic** – エンドポイントが Basic 認証を使用する場合に選択します。ユーザー名とパスワードを入力します。
-    * **Bearer** – エンドポイントが Bearer トークン認証を使用する場合に選択します。トークンを入力します。
+    - **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の認証方式を使いたい場合に選択します。この場合、認証ヘッダーは **Header** タブで手動入力する必要があります。
+    - **Basic** – エンドポイントが Basic 認証を使用する場合に選択します。ユーザー名とパスワードを入力します。
+    - **Bearer** – エンドポイントが Bearer トークン認証を使用する場合に選択します。トークンを入力します。
 
 :::note
 **Authorization** タブで **None** 以外を選択した場合、その設定が **Header** タブで手動入力した Authorization 値を上書きします。
@@ -79,17 +79,17 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。  
+11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
 **Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。<br/>\
 設定手順:
 
-* 1 つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
-* 2 つ目のドロップダウンで比較演算子を選択します。<br/>
-* 3 つ目の入力欄に比較する値を入力します。値には波括弧なしでパラメーターを指定することもできます。<br/>
-* 追加の Assertion を設定したい場合は同じ手順で行を追加し、左のチェックボックスで有効／無効を切り替えます。<br/>
+- 1 つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
+- 2 つ目のドロップダウンで比較演算子を選択します。<br/>
+- 3 つ目の入力欄に比較する値を入力します。値には波括弧なしでパラメーターを指定することもできます。<br/>
+- 追加の Assertion を設定したい場合は同じ手順で行を追加し、左のチェックボックスで有効／無効を切り替えます。<br/>
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/9c95b25-assertions.png)
 
@@ -102,9 +102,8 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png)
 
 15. **Properties** パネルの **Send via web page** チェックボックスでは API 呼び出しの実行コンテキストを制御できます。
-
-    * チェックを外す – ブラウザコンテキストの外側から API を送信します。ブラウザの制限（CORS など）を避けたい場合に有効です。
-    * チェックを付ける – ブラウザ情報（Cookie など）も含めて送信したい場合に使用します（Cookie は自動的に送信されます）。
+    - チェックを外す – ブラウザコンテキストの外側から API を送信します。ブラウザの制限（CORS など）を避けたい場合に有効です。
+    - チェックを付ける – ブラウザ情報（Cookie など）も含めて送信したい場合に使用します（Cookie は自動的に送信されます）。
 
       ![API テストのスクリーンショット](/images/advanced-features/api-testing/3cf1b19-properties.png)
 
@@ -132,7 +131,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ## Adding an API Action Step
 
-API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行いたいケースで使用します。返却データを計算に利用したり、後続ステップで利用するためにエクスポートパラメーターとして保存したりできます。*header* / *body* / *status code* いずれの情報も利用可能です。\
+API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行いたいケースで使用します。返却データを計算に利用したり、後続ステップで利用するためにエクスポートパラメーターとして保存したりできます。_header_ / _body_ / _status code_ いずれの情報も利用可能です。\
 **“Add API action” ステップを追加するには:**
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/437b054-apiaciton.gif)
@@ -153,7 +152,7 @@ API アクションステップ（Add API action）は、レスポンスを利�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/01b1c12-Picture1.png)
 
 5. 上記「Validate API ステップの追加」の **手順 5〜13** に従って、URL ・ヘッダー・ボディ・ Assertion などを設定します（ただし目的は「検証」ではなく「応答データの利用」になります）。
-6. レスポンスデータを使った追加処理（パラメーター抽出、DB 接続のクローズなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンスの *status code* / *response headers* / *response body* などを利用して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合は Object、それ以外は文字列として渡されます。
+6. レスポンスデータを使った追加処理（パラメーター抽出、DB 接続のクローズなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンスの _status code_ / _response headers_ / _response body_ などを利用して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合は Object、それ以外は文字列として渡されます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/5d3302a-image_2.png)
 
@@ -318,14 +317,14 @@ Assertion セクションでも、比較値としてパラメーターをその�
 
 **Response** タブでは次の機能が利用できます。
 
-* **View Sent Request** – クリックすると送信されたリクエストの完全な内容を表示するウィンドウが開きます。パラメーターは実際の値に展開された状態で表示されます。この画面からレスポンス情報を JSON として **ダウンロード** したり、内容をクリップボードに **コピー** したりできます。
+- **View Sent Request** – クリックすると送信されたリクエストの完全な内容を表示するウィンドウが開きます。パラメーターは実際の値に展開された状態で表示されます。この画面からレスポンス情報を JSON として **ダウンロード** したり、内容をクリップボードに **コピー** したりできます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e6c16b6-image_11.png)
 
-* **Download the response info** – **View Sent Request** の右側にあるダウンロードボタンをクリックすると、レスポンス全体を含んだ JSON ファイルをローカルにダウンロードできます。
-* **Assertion response** – Assertion を設定している場合、それぞれの Assertion の横に次のいずれかの結果が表示されます。
-  * **Passed** – 条件が TRUE になり、Assertion が成功したことを示します。
-  * **Failed** – 条件が FALSE となり、Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
+- **Download the response info** – **View Sent Request** の右側にあるダウンロードボタンをクリックすると、レスポンス全体を含んだ JSON ファイルをローカルにダウンロードできます。
+- **Assertion response** – Assertion を設定している場合、それぞれの Assertion の横に次のいずれかの結果が表示されます。
+  - **Passed** – 条件が TRUE になり、Assertion が成功したことを示します。
+  - **Failed** – 条件が FALSE となり、Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/639898e-image_12.png)
 

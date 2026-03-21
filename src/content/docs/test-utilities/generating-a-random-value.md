@@ -29,7 +29,7 @@ keywords:
 
 ![3849](/images/test-utilities/generating-a-random-value/4924b93-Testim_223a.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![アクションオプションメニュー](/images/test-utilities/generating-a-random-value/077856e-Testim_224a_r.png)
 
@@ -54,28 +54,28 @@ keywords:
 
 ![3848](/images/test-utilities/generating-a-random-value/a6856ec-Testim_225a.png)
 
-   右側に **Properties** パネルが表示されます。
+右側に **Properties** パネルが表示されます。
 
 ![200](/images/test-utilities/generating-a-random-value/caec929-Testim_226_r.png)
 
 6. 以下の説明に従ってプロパティを設定します。
 
-* **Description** – ステップの説明。（既定値 = *Generate Random Value*）
-* **Variable name** – ランダムデータを格納する変数名。（既定値 = *randomValue*）
-* **String type** – 乱数を構成する文字の種類：
-  * **Letters Only**: 大文字・小文字の英字のみを使用します。
-  * **Numbers Only**: 数字のみを使用します。
-  * **Mixed**: 数字と大文字・小文字の英字を混在させます。*既定値*
-* **Length** – 生成する文字数。（最大 = *256*、既定値 = *12*）
-* **Add prefix** – 生成した文字列の先頭に接頭辞を追加します。接頭辞には、文字列（シングルまたはダブルクォートで囲む）、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を使用できます。
-* **Add suffix** – 生成した文字列の末尾に接尾辞を追加します。構成は **Add prefix** と同様です。
-* **Variable scope** – 変数を受け渡しできるスコープ：
-  * **Local**: 同一スコープ内のステップ間でパラメーターを受け渡しできます。
-  * **Test**: 同一テスト内のステップやグループ間で受け渡しできます。*既定値*
-  * **Suite**: 同一テストスイート内のテスト間で受け渡しできます。
-* **When this step fails** – ステップが失敗した場合の動作を指定します。
-* **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/conditions) を参照してください。
-* **Override timeout** – Testim がテストステップの失敗と見なすまでの規定待機時間を上書きし、別の時間（ミリ秒）を指定できます。
+- **Description** – ステップの説明。（既定値 = _Generate Random Value_）
+- **Variable name** – ランダムデータを格納する変数名。（既定値 = _randomValue_）
+- **String type** – 乱数を構成する文字の種類：
+  - **Letters Only**: 大文字・小文字の英字のみを使用します。
+  - **Numbers Only**: 数字のみを使用します。
+  - **Mixed**: 数字と大文字・小文字の英字を混在させます。_既定値_
+- **Length** – 生成する文字数。（最大 = _256_、既定値 = _12_）
+- **Add prefix** – 生成した文字列の先頭に接頭辞を追加します。接頭辞には、文字列（シングルまたはダブルクォートで囲む）、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を使用できます。
+- **Add suffix** – 生成した文字列の末尾に接尾辞を追加します。構成は **Add prefix** と同様です。
+- **Variable scope** – 変数を受け渡しできるスコープ：
+  - **Local**: 同一スコープ内のステップ間でパラメーターを受け渡しできます。
+  - **Test**: 同一テスト内のステップやグループ間で受け渡しできます。_既定値_
+  - **Suite**: 同一テストスイート内のテスト間で受け渡しできます。
+- **When this step fails** – ステップが失敗した場合の動作を指定します。
+- **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/conditions) を参照してください。
+- **Override timeout** – Testim がテストステップの失敗と見なすまでの規定待機時間を上書きし、別の時間（ミリ秒）を指定できます。
 
 テストを実行すると、生成されたランダム値（任意のプレフィックス／サフィックスを含む）が指定した変数に格納されます。
 
@@ -85,7 +85,7 @@ keywords:
 
 ![3849](/images/test-utilities/generating-a-random-value/4a5bd98-Testim_227a.png)
 
-   右側に **Properties** パネルが表示されます。
+右側に **Properties** パネルが表示されます。
 
 ![200](/images/test-utilities/generating-a-random-value/7a35bba-Testim_228_r.png)
 

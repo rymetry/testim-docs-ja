@@ -36,9 +36,9 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 スコアは次の 3 色で表示されます。
 
-* **Green** – 重複が少なく、良好な状態
-* **Yellow** – 中程度の重複あり。自動グルーピングの適用を推奨
-* **Red** – 重複が多い状態。自動グルーピングの適用が強く推奨されます
+- **Green** – 重複が少なく、良好な状態
+- **Yellow** – 中程度の重複あり。自動グルーピングの適用を推奨
+- **Red** – 重複が多い状態。自動グルーピングの適用が強く推奨されます
 
 ## 自動グルーピング候補の確認（Reviewing auto-grouping suggestion）
 
@@ -46,10 +46,10 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 1. メインメニューで **Auto-grouping** をクリックします。\
    画面右側の **Auto Grouping** ペイン（黒いペイン）に候補一覧が表示されます。ここには次の情報が含まれます。
-   * **Project duplication level** – プロジェクト全体の重複レベル（0〜100）。まだグループ化されていない重複ステップの量を示します。重複レベルを下げるには、一覧の候補を採用していきます。
-   * **The number of duplicate steps** – 他のテストで見つかった同一ステップ列の数。
-   * **Duplication level reduction** – 候補を採用したときに重複レベルがどれだけ下がるか（例: 現在 14% で 1% と表示されている場合、採用後は 13% になる）。
-   * **The number tests and groups** – 同じステップ列が見つかったテスト／グループの数。  
+   - **Project duplication level** – プロジェクト全体の重複レベル（0〜100）。まだグループ化されていない重複ステップの量を示します。重複レベルを下げるには、一覧の候補を採用していきます。
+   - **The number of duplicate steps** – 他のテストで見つかった同一ステップ列の数。
+   - **Duplication level reduction** – 候補を採用したときに重複レベルがどれだけ下がるか（例: 現在 14% で 1% と表示されている場合、採用後は 13% になる）。
+   - **The number tests and groups** – 同じステップ列が見つかったテスト／グループの数。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png)
 
@@ -78,11 +78,11 @@ Auto Grouping 画面には、他のテストやグループと重複している
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/e52ddfd-Dec-06-2020_11-38-33.gif)
 
 2. 候補に含めるステップを次のように編集します。
-   * グループに含めたい／含めたくないステップを選択・解除して調整します。
+   - グループに含めたい／含めたくないステップを選択・解除して調整します。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/ca23e3b-Dec-06-2020_11-41-28.gif)
 
-* **Clear all** をクリックすると選択をすべてクリアし、改めて含めたいステップだけを選択できます。
+- **Clear all** をクリックすると選択をすべてクリアし、改めて含めたいステップだけを選択できます。
 
 :::note
 グループには最低でも 3 ステップ以上含める必要があります。
@@ -105,10 +105,10 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 **FILTER & SORT STEPS DUPLICATIONS** 画面が表示され、次のフィルターオプションを利用できます。
 
-* **Test owner** – 選択したテストオーナーのテストのみ表示
-* **Test Name** – 選択したテストのみ表示
-* **Suite Name** – 選択したスイートに含まれるテストのみ表示
-* **Group Name** – 選択したグループを含むテストのみ表示
+- **Test owner** – 選択したテストオーナーのテストのみ表示
+- **Test Name** – 選択したテストのみ表示
+- **Suite Name** – 選択したスイートに含まれるテストのみ表示
+- **Group Name** – 選択したグループを含むテストのみ表示
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/282da88-Feb-28-2021_10-23-47.gif)
 
@@ -127,12 +127,12 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 ソートオプション:
 
-* **Duplication Level - Descending (default)** – 重複レベルの削減効果が大きい候補から表示
-* **Duplication level - Ascending** – 重複レベルの削減効果が小さい候補から表示
-* **Number of steps - Ascending** – 重複ステップ数が少ない候補から表示
-* **Number of steps - Descending** – 重複ステップ数が多い候補から表示
-* **Number of matches - Ascending** – 影響を受けるテスト／共有ステップ数が少ない候補から表示
-* **Number of matches - Descending** – 影響を受けるテスト／共有ステップ数が多い候補から表示
+- **Duplication Level - Descending (default)** – 重複レベルの削減効果が大きい候補から表示
+- **Duplication level - Ascending** – 重複レベルの削減効果が小さい候補から表示
+- **Number of steps - Ascending** – 重複ステップ数が少ない候補から表示
+- **Number of steps - Descending** – 重複ステップ数が多い候補から表示
+- **Number of matches - Ascending** – 影響を受けるテスト／共有ステップ数が少ない候補から表示
+- **Number of matches - Descending** – 影響を受けるテスト／共有ステップ数が多い候補から表示
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/dde76be-Screen_Shot_2021-02-28_at_10.17.23.png)
 
@@ -144,8 +144,8 @@ Auto Grouping 画面には、他のテストやグループと重複している
 2. **Create Shared Group** をクリックします。
 3. **Shared group name** フィールドに共有グループ名を入力します。
 4. **Branch** で次のいずれかを選択します。
-   * **New Branch** – 新しいブランチを作成し、ブランチ名を入力します。
-   * **Current Branch** – master 以外のブランチで作業している場合、そのブランチに新しい共有グループ入りのテストを保存します。
+   - **New Branch** – 新しいブランチを作成し、ブランチ名を入力します。
+   - **Current Branch** – master 以外のブランチで作業している場合、そのブランチに新しい共有グループ入りのテストを保存します。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/5ac239d-Screen_Shot_2020-10-27_at_12.11.32.png)
 

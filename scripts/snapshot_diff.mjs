@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Compare committed snapshots (HEAD) with working tree snapshots
+ * Compare committed Markdown snapshots (HEAD) with working tree snapshots
  * and generate a change report.
  *
  * Usage:
@@ -34,10 +34,10 @@ export const MARKER_404_RE = /^<!-- 404:/;
  * Classify changed lines by content type.
  */
 export const CHANGE_CLASSIFIERS = [
-  { type: 'heading', pattern: /<\/?h[1-6]\b/i },
-  { type: 'image', pattern: /<img\b/i },
-  { type: 'code', pattern: /<\/?pre\b/i },
-  { type: 'callout', pattern: /<blockquote\b[^>]*theme=/i },
+  { type: 'heading', pattern: /^ {0,3}#{1,6}\s|<\/?h[1-6]\b/i },
+  { type: 'image', pattern: /!\[|<Image\b|<img\b/i },
+  { type: 'code', pattern: /^ {0,3}```|<\/?pre\b/i },
+  { type: 'callout', pattern: /^ {0,3}>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^ {0,3}<Callout\b|<blockquote\b[^>]*theme=/i },
 ];
 
 function parseArgs(argv = process.argv.slice(2)) {
@@ -172,13 +172,13 @@ export async function main(argv) {
     return;
   }
 
-  const snapshotFiles = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.html'));
+  const snapshotFiles = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.md'));
   const changes = [];
 
   let unchanged = 0;
 
   for (const file of snapshotFiles) {
-    const slug = file.replace(/\.html$/, '');
+    const slug = file.replace(/\.md$/, '');
 
     // Apply section filter via sourceUrl index
     if (args.section && !sourceUrls[slug]) continue;

@@ -26,11 +26,11 @@ keywords:
 
 ステップの実行条件は次の 5 種類です:
 
-* **Always Run** — このステップには条件がありません。テスト実行時に常に実行されます。すべてのステップの既定設定です。
-* **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#section-configuring-an-element-condition) を参照してください。
-* **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/conditions#section-configuring-an-element-text-condition) を参照してください。
-* **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/conditions#section-configuring-a-custom-condition) を参照してください。
-* **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/conditions#section-configuring-a-never-run-step-condition) を参照してください。
+- **Always Run** — このステップには条件がありません。テスト実行時に常に実行されます。すべてのステップの既定設定です。
+- **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#section-configuring-an-element-condition) を参照してください。
+- **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/conditions#section-configuring-an-element-text-condition) を参照してください。
+- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/conditions#section-configuring-a-custom-condition) を参照してください。
+- **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/conditions#section-configuring-a-never-run-step-condition) を参照してください。
 
 ## Condition インジケーター
 
@@ -51,16 +51,16 @@ keywords:
 条件を設定すると、特定の状況でのみ関連するステップをテストに含めることができます。チェック対象の要素を指定することで、そのステップを実行すべきかどうかを判断できます。\
 例えば:
 
-* **ユーザーがログアウトしている場合のみログインステップを実行** — テストにログインステップが含まれている場合、すでにログインしているかどうかを確認することが重要です。例えば CI でのテストでは新しいブラウザが起動するため、最初にログインが必要になるでしょう。ローカルでテストしている場合は、すでにログイン済みかもしれません。条件を使用することで、未ログイン時にのみログインステップを実行させることができます。  
-* **テーブルが空のときのみデータを投入** — データを投入する前にテーブルが空かどうかを確認することが大切です。テーブルが空ならデータ投入ステップが実行され、すでにデータがある場合はステップがスキップされます。
+- **ユーザーがログアウトしている場合のみログインステップを実行** — テストにログインステップが含まれている場合、すでにログインしているかどうかを確認することが重要です。例えば CI でのテストでは新しいブラウザが起動するため、最初にログインが必要になるでしょう。ローカルでテストしている場合は、すでにログイン済みかもしれません。条件を使用することで、未ログイン時にのみログインステップを実行させることができます。
+- **テーブルが空のときのみデータを投入** — データを投入する前にテーブルが空かどうかを確認することが大切です。テーブルが空ならデータ投入ステップが実行され、すでにデータがある場合はステップがスキップされます。
 
 ## Element 条件の設定
 
 Element 条件では、指定要素がページに存在するかどうかに基づいて、ステップを実行するかどうかを制御します。\
 Element 条件は要素の可視性に基づいてステップを実行します。次の 2 つの条件から選択できます:
 
-* **Element visible:** 要素がページ上で可視の場合にのみステップを実行します。
-* **Element not visible:** 要素がページ上で不可視の場合にのみステップを実行します。
+- **Element visible:** 要素がページ上で可視の場合にのみステップを実行します。
+- **Element not visible:** 要素がページ上で不可視の場合にのみステップを実行します。
 
 **Element 条件を設定するには:**
 
@@ -70,7 +70,7 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 ![ステップの矢印アイコン](/images/conditions/conditions/da381a6-Testim_120a.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![アクションオプションメニュー](/images/conditions/conditions/c3d594e-Testim_121a.png)
 
@@ -115,7 +115,7 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 
 ![ステップの矢印アイコン](/images/conditions/conditions/5937c73-Testim_120a.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![アクションオプションメニュー](/images/conditions/conditions/81cc951-Testim_121a.png)
 
@@ -178,11 +178,11 @@ Custom 条件はブール値を返します。`true` を返すとステップが
 
 ![パラメーター追加](/images/conditions/conditions/5eed156-custom2_r.png)
 
-* **JavaScript パラメーター**: ドロップダウンから **JS** を選択し、パラメーターを入力します。
+- **JavaScript パラメーター**: ドロップダウンから **JS** を選択し、パラメーターを入力します。
 
 ![JS パラメーター設定](/images/conditions/conditions/6939ac9-custom4_r.png)
 
-* **HTML パラメーター**: ドロップダウンから **HTML** を選択するとブラウザが開きます。AUT ウィンドウで対象要素にカーソルを合わせてクリックします。デフォルトの名前「element」から変更する場合は、編集アイコンをクリックしてリネームします。
+- **HTML パラメーター**: ドロップダウンから **HTML** を選択するとブラウザが開きます。AUT ウィンドウで対象要素にカーソルを合わせてクリックします。デフォルトの名前「element」から変更する場合は、編集アイコンをクリックしてリネームします。
 
 ![HTML パラメーター設定](/images/conditions/conditions/4f76e55-custom5_r.png)
 

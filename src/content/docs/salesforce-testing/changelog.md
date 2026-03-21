@@ -46,8 +46,8 @@ Testim for Salesforce のテストを Tricentis Test Management for Jira のテ�
 
 Testim for Salesforce の最新バージョンは、Copado 統合と Gearset 統合をサポートしています。これらの CI ツールを使用して、Salesforce への変更をデプロイできます。Testim for Salesforce と統合することで、本番環境に変更をデプロイする前に何も壊れていないことを確認できます。
 
-* Copado 統合: URL Callout ステップを追加し、Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、Copado からのテストを自動化できるようになりました。
-* Gearset 統合: Gearset に Webhook を追加し、Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、Gearset の CI またはデプロイメントジョブからのテストを自動化できるようになりました。
+- Copado 統合: URL Callout ステップを追加し、Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、Copado からのテストを自動化できるようになりました。
+- Gearset 統合: Gearset に Webhook を追加し、Tricentis Test Automation for Salesforce REST API への単一の Webhook 呼び出しを使用して、Gearset の CI またはデプロイメントジョブからのテストを自動化できるようになりました。
 
 ## CPQ Quote Line Editor ステップ 2023 年 7 月
 

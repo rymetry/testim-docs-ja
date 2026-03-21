@@ -30,7 +30,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![ステップ追加位置の矢印](/images/validations/validate-element-visible/9718cce-Screen_Shot_2021-04-18_at_6.37.44.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![ステップ追加](/images/validations/validate-element-visible/8ecea21-Testim_083a_r.png)
 
@@ -73,7 +73,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![ステップ追加位置の矢印](/images/validations/validate-element-visible/542ad86-hover_arrow.png)
 
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 
 ![アクションオプションメニュー](/images/validations/validate-element-visible/0baf831-1.1.png)
 
@@ -116,12 +116,12 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![Show Properties アイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png)
 
-   右側に Properties パネルが表示されます。\
+右側に Properties パネルが表示されます。\
 4\. **Target element** のサムネイルにカーソルを合わせます。
 
 ![Testim インターフェース](/images/validations/validate-element-visible/0508833-Testim_009a_r.png)
 
-   **Target element** のオプションが表示されます。
+**Target element** のオプションが表示されます。
 
 ![Target element のオプション](/images/validations/validate-element-visible/694c31a-Testim_010_r.png)
 
@@ -143,7 +143,7 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![Show Properties アイコン](/images/validations/validate-element-visible/0d76f51-validationgear.png)
 
-   右側に Properties パネルが表示されます。
+右側に Properties パネルが表示されます。
 
 ![要素変更の通知](/images/validations/validate-element-visible/1953a8a-elementchanged.png)
 
@@ -157,4 +157,4 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![要素の選択](/images/validations/validate-element-visible/db6aef0-selectelement.png)
 
-   選択した要素が Properties パネルの **Target element** に表示されます。
+選択した要素が Properties パネルの **Target element** に表示されます。

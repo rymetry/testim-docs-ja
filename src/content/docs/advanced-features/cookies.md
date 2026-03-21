@@ -27,12 +27,12 @@ Web サイトから送信されブラウザに保存される小さなデータ�
 Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
 Cookie を扱う代表的な方法:
 
-* Cookie ステップ — Cookie 用の専用ステップを利用します。
-  * Set Cookie — テストで使用する Cookie を定義する新規ステップ。*HttpOnly* や *Secure* Cookie の作成はこのステップ推奨。
-  * Get Cookie — AUT のブラウザから Cookie を取得してパラメーターに保存。以降のステップ（Set Cookie を含む）で参照可能。
-* Setup ステップの「Test Data」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。Cookie のドメイン追加はこの Test Data で行うのが推奨。
-* カスタム JS ステップ — テスト開始時でなくても良い場合に、任意の箇所で set/get を行う。
-* 設定ファイル＆実行フック — CLI 実行時に設定ファイル経由で Cookie を設定。スイート全体で必要な場合に有効。注: CLI から Cookie を「取得」することはできません。
+- Cookie ステップ — Cookie 用の専用ステップを利用します。
+  - Set Cookie — テストで使用する Cookie を定義する新規ステップ。_HttpOnly_ や _Secure_ Cookie の作成はこのステップ推奨。
+  - Get Cookie — AUT のブラウザから Cookie を取得してパラメーターに保存。以降のステップ（Set Cookie を含む）で参照可能。
+- Setup ステップの「Test Data」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。Cookie のドメイン追加はこの Test Data で行うのが推奨。
+- カスタム JS ステップ — テスト開始時でなくても良い場合に、任意の箇所で set/get を行う。
+- 設定ファイル＆実行フック — CLI 実行時に設定ファイル経由で Cookie を設定。スイート全体で必要な場合に有効。注: CLI から Cookie を「取得」することはできません。
 
 ## Cookie を設定する
 
@@ -75,10 +75,10 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 5. **Create new Cookie** ラジオボタンが選択されていることを確認します（既定値）。
 6. 最初の 4 つの **Cookie Info** フィールドに値を入力します。
 
-* **Cookie name** – Cookie 名（必須）。
-* **Cookie value** – 設定したい値（必須）。
-* **Domain** – Cookie を送信するホスト。空欄（既定）の場合はテストが実行されている Base URL が使用されます（任意）。
-* **Path** – リクエスト URL に含まれている必要があるパス。空欄（既定）はルートディレクトリを意味します（任意）。
+- **Cookie name** – Cookie 名（必須）。
+- **Cookie value** – 設定したい値（必須）。
+- **Domain** – Cookie を送信するホスト。空欄（既定）の場合はテストが実行されている Base URL が使用されます（任意）。
+- **Path** – リクエスト URL に含まれている必要があるパス。空欄（既定）はルートディレクトリを意味します（任意）。
 
 :::note
 文字列はシングルクォートまたはダブルクォートで囲む必要があります。
@@ -162,14 +162,17 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ```javascript
 return {
- "cookies":[{
-    "name": "username",
-    "value": "tomsmith",
-    "domain": "http://google.com"
-  },{
-    "name": "password",
-    "value": "SuperSecretPassword!"
-  }]
+  cookies: [
+    {
+      name: 'username',
+      value: 'tomsmith',
+      domain: 'http://google.com',
+    },
+    {
+      name: 'password',
+      value: 'SuperSecretPassword!',
+    },
+  ],
 };
 ```
 
@@ -228,19 +231,19 @@ return {
 8. エディターに Cookie を設定するコードを記述します。下記は一例です。
 
 ```javascript
-document.cookie = "password=SuperSecretPassword!";
-document.cookie = "username=tomsmith";
+document.cookie = 'password=SuperSecretPassword!';
+document.cookie = 'username=tomsmith';
 ```
 
 9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
-* **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
-* **Description** – ステップの説明（既定値 = *Run action*）。
-* **Share step** – ステップを共有ステップとして保存するかどうか。
-* **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
-* **When this step fails** – ステップ失敗時の挙動。
-* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
-* **Override timeout** – 既定のタイムアウト時間（ステップ失敗までの時間）をミリ秒単位で上書きします。
+- **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
+- **Description** – ステップの説明（既定値 = _Run action_）。
+- **Share step** – ステップを共有ステップとして保存するかどうか。
+- **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+- **When this step fails** – ステップ失敗時の挙動。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **Override timeout** – 既定のタイムアウト時間（ステップ失敗までの時間）をミリ秒単位で上書きします。
 
 テストを実行すると、Custom Action ステップの位置で Cookie 設定処理が実行されます。
 
@@ -254,7 +257,7 @@ CLI からテストスイートを実行する場合、設定ファイル（Conf
 2. `beforeSuite` セクションに Cookie を設定するコードを追加します。以下は例です。
 
 ```javascript
-beforeSuite: function (suite) {   
+beforeSuite: function (suite) {
   return {
     "cookies":[
         {
@@ -316,16 +319,16 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 6. 次のプロパティを設定します。
 
-* **Description** – ステップの説明（既定値 = *Get Cookie*）。
-* **Cookie name** – 取得したい Cookie 名。文字列はシングル／ダブルクォートで囲む必要があります。
-* **Variable name** – Cookie 情報を保存する変数名（既定値 = *myCookie*）。
-* **Variable scope** – 変数をどの範囲で参照できるか:
-  * **Local**: 同一スコープ内のステップ間で共有
-  * **Test**: 同一テスト内のステップ／グループ間で共有
-  * **Suite**: 同じテストスイート内のテスト間で共有
-* **When this step fails** – ステップ失敗時の挙動。
-* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
-* **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
+- **Description** – ステップの説明（既定値 = _Get Cookie_）。
+- **Cookie name** – 取得したい Cookie 名。文字列はシングル／ダブルクォートで囲む必要があります。
+- **Variable name** – Cookie 情報を保存する変数名（既定値 = _myCookie_）。
+- **Variable scope** – 変数をどの範囲で参照できるか:
+  - **Local**: 同一スコープ内のステップ間で共有
+  - **Test**: 同一テスト内のステップ／グループ間で共有
+  - **Suite**: 同じテストスイート内のテスト間で共有
+- **When this step fails** – ステップ失敗時の挙動。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
 テスト実行時、指定した Cookie の情報が変数に保存されます。
 
@@ -373,38 +376,38 @@ Get Cookie ステップを使わなくても、custom action ステップ内の 
 
 ```javascript
 //create an array of the site cookies
-let cookieArray = document.cookie.split("; ");
-var name = "username=";
-for(var i = 0; i <cookieArray.length; i++) {
-    var c = cookieArray[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      console.log("username = " + c.substring(name.length, c.length));
-    }
+let cookieArray = document.cookie.split('; ');
+var name = 'username=';
+for (var i = 0; i < cookieArray.length; i++) {
+  var c = cookieArray[i];
+  while (c.charAt(0) == ' ') {
+    c = c.substring(1);
+  }
+  if (c.indexOf(name) == 0) {
+    console.log('username = ' + c.substring(name.length, c.length));
+  }
 }
 
-var name = "password=";
-for(var i = 0; i <cookieArray.length; i++) {
-    var c = cookieArray[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      console.log("password = " + c.substring(name.length, c.length));
-    }
+var name = 'password=';
+for (var i = 0; i < cookieArray.length; i++) {
+  var c = cookieArray[i];
+  while (c.charAt(0) == ' ') {
+    c = c.substring(1);
+  }
+  if (c.indexOf(name) == 0) {
+    console.log('password = ' + c.substring(name.length, c.length));
+  }
 }
 ```
 
 9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
-* **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
-* **Description** – ステップの説明（既定値 = *Run action*）。
-* **Share step** – ステップを共有ステップとして保存するかどうか。
-* **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
-* **When this step fails** – ステップ失敗時の挙動。
-* **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
-* **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
+- **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
+- **Description** – ステップの説明（既定値 = _Run action_）。
+- **Share step** – ステップを共有ステップとして保存するかどうか。
+- **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+- **When this step fails** – ステップ失敗時の挙動。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
 テストを実行すると、Custom Action ステップ内で定義した Cookie 取得処理が実行されます。

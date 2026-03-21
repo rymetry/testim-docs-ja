@@ -25,6 +25,7 @@ keywords:
 [Circle CI](https://circleci.com/)のローカル Selenium Grid を使用して Testim と統合するには、circle.yaml ファイルに以下の行を追加する必要があります:
 
 <!-- markdownlint-disable-next-line MD036 -->
+
 **YAML**
 
 ```yaml
@@ -34,7 +35,7 @@ jobs:
     environment:
       CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
     docker:
-    - image: testim/docker-cli
+      - image: testim/docker-cli
     steps:
       - run: mkdir -p $CIRCLE_TEST_REPORTS/testim/
       - run: testim --project "<PROJECT ID>" --label "<LABEL>" --grid "<Your grid name>" --token "<TOKEN>" --report-file $CIRCLE_TEST_REPORTS/testim/results.xml

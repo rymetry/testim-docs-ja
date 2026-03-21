@@ -122,21 +122,21 @@ CLI でテストを実行する際は、コマンドで別のテスト構成を�
 
 テスト構成のパラメーターは次のとおりです。
 
-| パラメーター | 説明 |
-| ------------ | ------ |
-| Name | 構成の名前。 |
-| Browser | テストを実行するブラウザ。Chrome、Firefox、Safari、Edge Chromium に対応しています。安定版ブラウザのみサポートしており、Beta、Dev、Canary バージョンはサポート対象外です。 |
-| OS | テストを実行する OS。Linux、Windows 11（Selenium およびカスタムグリッドのみ。Testim Grid は対象外）、Windows 10、Windows 8、Windows 8.1、Windows 7、Windows XP、macOS Sierra、macOS High Sierra、macOS Mojave、OS X El Capitan、OS X Yosemite、OS X Mavericks、OS X Mountain Lion、OS X Snow Leopard に対応しています。 |
-| Resolution | テストに使用する画面解像度。 |
-| **Advanced** | |
-| Step Timeout (milliseconds) | テストステップが失敗と判定されるまでの時間（ミリ秒）。 |
-| Step Delay (milliseconds) | テストステップ間の遅延時間（ミリ秒）。 |
-| Setup step timeout (milliseconds) | テストの Setup ステップ（Base URL ステップ）が失敗と判定されるまでの時間（ミリ秒）。 |
-| **Visual Validation** | Visual Validation パラメーター（以下）は、Applitools との連携が定義されているプロジェクトでのみ表示されます。 |
-| Add Environment | テスト実行用の追加環境（ブラウザ、解像度、デバイスエミュレーションなど）を追加します。 |
-| Match level | ベースラインと要素のビジュアル間の比較方法を変更します。 |
-| Enable RCA | 差異の原因に関する Root Cause Analysis（根本原因分析）を有効にします。 |
-| Ignore displacement diffs | 要素自体は変更されていないが、ページ上で移動したことによるビジュアルの差異を無視します。 |
+| パラメーター                      | 説明                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name                              | 構成の名前。                                                                                                                                                                                                                                                                                                            |
+| Browser                           | テストを実行するブラウザ。Chrome、Firefox、Safari、Edge Chromium に対応しています。安定版ブラウザのみサポートしており、Beta、Dev、Canary バージョンはサポート対象外です。                                                                                                                                               |
+| OS                                | テストを実行する OS。Linux、Windows 11（Selenium およびカスタムグリッドのみ。Testim Grid は対象外）、Windows 10、Windows 8、Windows 8.1、Windows 7、Windows XP、macOS Sierra、macOS High Sierra、macOS Mojave、OS X El Capitan、OS X Yosemite、OS X Mavericks、OS X Mountain Lion、OS X Snow Leopard に対応しています。 |
+| Resolution                        | テストに使用する画面解像度。                                                                                                                                                                                                                                                                                            |
+| **Advanced**                      |                                                                                                                                                                                                                                                                                                                         |
+| Step Timeout (milliseconds)       | テストステップが失敗と判定されるまでの時間（ミリ秒）。                                                                                                                                                                                                                                                                  |
+| Step Delay (milliseconds)         | テストステップ間の遅延時間（ミリ秒）。                                                                                                                                                                                                                                                                                  |
+| Setup step timeout (milliseconds) | テストの Setup ステップ（Base URL ステップ）が失敗と判定されるまでの時間（ミリ秒）。                                                                                                                                                                                                                                    |
+| **Visual Validation**             | Visual Validation パラメーター（以下）は、Applitools との連携が定義されているプロジェクトでのみ表示されます。                                                                                                                                                                                                           |
+| Add Environment                   | テスト実行用の追加環境（ブラウザ、解像度、デバイスエミュレーションなど）を追加します。                                                                                                                                                                                                                                  |
+| Match level                       | ベースラインと要素のビジュアル間の比較方法を変更します。                                                                                                                                                                                                                                                                |
+| Enable RCA                        | 差異の原因に関する Root Cause Analysis（根本原因分析）を有効にします。                                                                                                                                                                                                                                                  |
+| Ignore displacement diffs         | 要素自体は変更されていないが、ページ上で移動したことによるビジュアルの差異を無視します。                                                                                                                                                                                                                                |
 
 ### テスト構成の調整
 

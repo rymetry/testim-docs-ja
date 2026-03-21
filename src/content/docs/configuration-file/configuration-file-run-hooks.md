@@ -24,50 +24,49 @@ keywords:
 
 設定ファイルは、テストやテストスイートを実行するために必要な各種パラメーターを含む共通の JS ファイルです。単一テスト／全テストの前後でバックエンドのセットアップやパラメーター定義を行うための実行フックも含まれます。
 
-設定ファイルでは、すべてのプロパティを ***config*** という JSON としてエクスポートします。
+設定ファイルでは、すべてのプロパティを **_config_** という JSON としてエクスポートします。
 
 以下は設定ファイルの例です。
 
 ```javascript
 exports.config = {
+  project: '<your project ID>',
+  token: '<Your token>',
 
-    project: "<your project ID>",
-    token: "<Your token>",
-    
-    // 実行したいラベルを指定します。
-    // 指定したラベルが付いたすべてのテストが実行されます
-    label: "sanity",
-    
-    // 使用するSeleniumグリッド
-    grid: "<Your grid name>",
-    
-    // テストで定義されたベースURLを上書きし、別の環境で再実行します。
-    baseUrl: 'http://staging.example.com',
+  // 実行したいラベルを指定します。
+  // 指定したラベルが付いたすべてのテストが実行されます
+  label: 'sanity',
 
-    // =====
-    // Hooks（フック）
-    // =====
-    // テスト実行の前後で処理を差し込むための複数のフックを提供します。
-   
-    // スイート開始前に実行されるフック
-    beforeSuite: function (suite) {
-        console.log("beforeSuite", suite);
-    },
-    
-    // テスト開始前に実行される関数
-    beforeTest: function (test) {
-        console.log("beforeTest", test);
-    },
-    
-    // テスト終了後に実行される関数
-    afterTest: function (test) {
-        console.log("afterTest", test);
-    },
-    
-    // スイート終了後に実行されるフック
-    afterSuite: function (suite) {
-        console.log("afterSuite", suite);
-    }
+  // 使用するSeleniumグリッド
+  grid: '<Your grid name>',
+
+  // テストで定義されたベースURLを上書きし、別の環境で再実行します。
+  baseUrl: 'http://staging.example.com',
+
+  // =====
+  // Hooks（フック）
+  // =====
+  // テスト実行の前後で処理を差し込むための複数のフックを提供します。
+
+  // スイート開始前に実行されるフック
+  beforeSuite: function (suite) {
+    console.log('beforeSuite', suite);
+  },
+
+  // テスト開始前に実行される関数
+  beforeTest: function (test) {
+    console.log('beforeTest', test);
+  },
+
+  // テスト終了後に実行される関数
+  afterTest: function (test) {
+    console.log('afterTest', test);
+  },
+
+  // スイート終了後に実行されるフック
+  afterSuite: function (suite) {
+    console.log('afterSuite', suite);
+  },
 };
 ```
 
@@ -105,15 +104,14 @@ exports.config = {
 
 ```javascript
 exports.config = {
- 
   beforeSuite: function (suite) {
-    console.log("beforeSuite", suite);
+    console.log('beforeSuite', suite);
     return {
-      "username": "David",
-      "password": 123
-    }
+      username: 'David',
+      password: 123,
+    };
   },
-  };
+};
 ```
 
 ## 設定フックの事前定義プロパティ
@@ -145,12 +143,12 @@ beforeTest: function(test) {
 
 ```javascript
 exports.config = {
-    // Function to be executed before a test starts.
-    async beforeTest(test) {
-        const baseUrl = test.config.baseUrl; // Get the current test base URL.
-        const randomAddress = await getRandomAddress();
-        test.config.baseUrl = `${baseUrl}${randomAddress}`; // Update the test base URL using a manipulation on the existing base URL.
-    }
+  // Function to be executed before a test starts.
+  async beforeTest(test) {
+    const baseUrl = test.config.baseUrl; // Get the current test base URL.
+    const randomAddress = await getRandomAddress();
+    test.config.baseUrl = `${baseUrl}${randomAddress}`; // Update the test base URL using a manipulation on the existing base URL.
+  },
 };
 ```
 

@@ -11,11 +11,12 @@
 ## 検証ステータス
 
 - ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 284個
-- ✅   翻訳のみ完了: 0個
+- ✅ 翻訳のみ完了: 0個
 
 ### アイコンの意味
+
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
-- ✅   翻訳完了
+- ✅ 翻訳完了
 
 ---
 
@@ -362,6 +363,7 @@
 - ✅🔍 https://help.testim.io/docs/testim-labs
 - ✅🔍 https://help.testim.io/docs/test-flow-view
 - ✅🔍 https://help.testim.io/docs/link-directly-to-a-shared-step
+
 ---
 
 ## URL抽出方法
@@ -374,14 +376,18 @@
 
 ```javascript
 // サイドバー内の全リンクURLを抽出
-Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href).join('\n');
+Array.from(document.querySelectorAll('.hub-sidebar-content a'))
+  .map((a) => a.href)
+  .join('\n');
 ```
 
 または、重複を除いてソートする場合:
 
 ```javascript
 // 重複を除去してソート
-[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map(a => a.href))].sort().join('\n');
+[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map((a) => a.href))]
+  .sort()
+  .join('\n');
 ```
 
 ### 実行結果の保存

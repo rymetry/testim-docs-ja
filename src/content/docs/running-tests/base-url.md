@@ -40,10 +40,10 @@ Test Editor を通じてテストを実行する場合は、「Run on a grid」�
 
 さらに、テスト実行時に異なるベース URL を送信するために使用できるコンポーネントの一覧を次に示します：
 
-* [CLI](/docs/the-command-line-cli)
-* [スケジューラー](/docs/scheduler)
-* [構成ファイル](/docs/configuration-file-run-hooks)
-* [テストプラン](/docs/test-plans)
+- [CLI](/docs/the-command-line-cli)
+- [スケジューラー](/docs/scheduler)
+- [構成ファイル](/docs/configuration-file-run-hooks)
+- [テストプラン](/docs/test-plans)
 
 テスト実行中に別のベース URL でベース URL がオーバーライドされると、オーバーライドするベース URL が上部に表示されます（下の画像を参照）。この URL は「セットアップステップ」に表示されるものと異なることに注意してください。
 
@@ -53,19 +53,19 @@ Test Editor を通じてテストを実行する場合は、「Run on a grid」�
 
 4 つの状況があります：
 
-* **元のベース URL にパスが含まれておらず、オーバーライド URL にパスが含まれている場合** - この場合、新しいベース URL は元のベース URL を完全にオーバーライドします。
-* **元のベース URL にパスが含まれておらず、オーバーライド URL にもパスが含まれていない場合** - この場合、新しいベース URL は元のベース URL を完全にオーバーライドします。
-* **元のベース URL にパスが含まれており、オーバーライド URL にパスが含まれていない場合** - この場合、テスト実行でのベース URL は、**新しいベース URL + 元のパス** の組み合わせになります。例えば、元のベース URL が [http://staging.com/login](http://staging.com/login) の場合、テスト実行時にベース URL を [http://preprod.com](http://preprod.com) でオーバーライドすると、新しいベース URL は URL のホスト部分だけをオーバーライドします - [http://preprod.com/login](http://preprod.com/login)。
-* **元のベース URL にパスが含まれており、オーバーライド URL にもパスが含まれている場合** - この場合、新しいベース URL は元のベース URL を完全にオーバーライドします。
+- **元のベース URL にパスが含まれておらず、オーバーライド URL にパスが含まれている場合** - この場合、新しいベース URL は元のベース URL を完全にオーバーライドします。
+- **元のベース URL にパスが含まれておらず、オーバーライド URL にもパスが含まれていない場合** - この場合、新しいベース URL は元のベース URL を完全にオーバーライドします。
+- **元のベース URL にパスが含まれており、オーバーライド URL にパスが含まれていない場合** - この場合、テスト実行でのベース URL は、**新しいベース URL + 元のパス** の組み合わせになります。例えば、元のベース URL が [http://staging.com/login](http://staging.com/login) の場合、テスト実行時にベース URL を [http://preprod.com](http://preprod.com) でオーバーライドすると、新しいベース URL は URL のホスト部分だけをオーバーライドします - [http://preprod.com/login](http://preprod.com/login)。
+- **元のベース URL にパスが含まれており、オーバーライド URL にもパスが含まれている場合** - この場合、新しいベース URL は元のベース URL を完全にオーバーライドします。
 
 ### ナビゲーションステップでベース URL をオーバーライドする
 
 テストにナビゲーションステップも含まれており、**ナビゲーションステップの URL がセットアップステップのホストと同じ** ホストを持っている場合（下の画像を参照）。その場合、Testim は **オリジナルナビゲーションステップのホスト部分のみを置き換え** ます。これは、オーバーライドするベース URL に異なるパスが含まれていても、新しいオーバーライドするベース URL のホストです。例：
 
-* セットアップステップ - [https://demo.testim.io](https://demo.testim.io)
-* ナビゲーションステップ - [https://demo.testim.io/checkout](https://demo.testim.io/checkout)
-* オーバーライドベース URL - [https://www.google.com/doodles](https://www.google.com/doodles)
-* 結果のナビゲーションステップ - [https://www.google.com/checkout](https://www.google.com/checkout)
+- セットアップステップ - [https://demo.testim.io](https://demo.testim.io)
+- ナビゲーションステップ - [https://demo.testim.io/checkout](https://demo.testim.io/checkout)
+- オーバーライドベース URL - [https://www.google.com/doodles](https://www.google.com/doodles)
+- 結果のナビゲーションステップ - [https://www.google.com/checkout](https://www.google.com/checkout)
 
 ![ナビゲーションステップの URL オーバーライド例](/images/running-tests/base-url/6e073c9-image.png)
 
@@ -87,9 +87,9 @@ Test Editor を通じてテストを実行する場合は、「Run on a grid」�
 
 ### カスタムアクション/検証ステップでベース URL パラメーターを使用する
 
-すべてのカスタムアクション/検証では、"BASE\_URL" パラメーターを使用してテスト実行のベース URL 値を使用できます。
+すべてのカスタムアクション/検証では、"BASE_URL" パラメーターを使用してテスト実行のベース URL 値を使用できます。
 
- **カスタムアクションステップにベース URL パラメーターを追加するには：**
+**カスタムアクションステップにベース URL パラメーターを追加するには：**
 
 1. 新しい **カスタムアクションステップ** を追加する場所で **+** または **矢印** アイコンにマウスをホバーし、**Testim 定義済みステップ** ボタンをクリックします。\
    ![カスタムアクションステップの追加画面](/images/running-tests/base-url/45c6324-2023-06-13_17-20-26.jpg)
@@ -104,7 +104,7 @@ Test Editor を通じてテストを実行する場合は、「Run on a grid」�
 6. 関数エディターで、ベース URL パラメーターを使用して関数を入力します。次の例では、パラメーターを使用してコンソールログに値を出力します：
 
 ```javascript
-console.log("Base URL:" + BASE_URL)
+console.log('Base URL:' + BASE_URL);
 ```
 
 テストを実行した後、ベース URL パラメーター値がログに表示されます：
@@ -125,12 +125,12 @@ console.log("Base URL:" + BASE_URL)
 
 ![ナビゲーションアクションの選択画面](/images/running-tests/base-url/10e28bf-nav-step.jpg)
 
-3. **BASE\_URL** パラメーターを使用して URL を入力し、その後に残りの URL パスを入力します。
+3. **BASE_URL** パラメーターを使用して URL を入力し、その後に残りの URL パスを入力します。
 
 ![BASE_URL を使用したナビゲーション URL 設定例](/images/running-tests/base-url/0017136-nav-url.jpg)
 
 :::note
-URL の前後にシングルクォートマークが追加されます（例：'BASE\_URL + \'/Extension\''）。これらのシングルクォートマークを削除してください（例：BASE\_URL + \'/Extension\'）
+URL の前後にシングルクォートマークが追加されます（例：'BASE_URL + \'/Extension\''）。これらのシングルクォートマークを削除してください（例：BASE_URL + \'/Extension\'）
 :::
 
 Testim は、動的 URL を含むナビゲーションステップを保存します。

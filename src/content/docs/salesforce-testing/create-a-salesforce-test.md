@@ -55,6 +55,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
    ![新しい Salesforce テスト作成ボタン](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
 
    デフォルトの**Setup Step**で新しいテストが表示されます。
+
 2. **Show Properties**アイコンをクリックし、**Properties Panel**で目的の設定を編集することで、ステップのプロパティを変更できます。  
    ![Salesforce テストのプロパティペイン](/images/salesforce-testing/create-a-salesforce-test/1ca3180-properties.png)
 
@@ -242,7 +243,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 
 - **Salesforce モード** - このモードは、レコーダーのクラウドアイコン（下記参照）で示され、レコーダーは Salesforce ステップを実行し、単一のステップ内で複数のアクションの実行を可能にします。このモードは、Salesforce 環境が広範囲にカスタマイズされている場合は機能しない可能性があります。このような場合、Web モードにフォールバックして、すべての個別のアクション/ステップを記録することが可能です。このモードを使用して作成されたステップは、クラウドアイコン（下記参照）でマークされます。Web モードに戻すには、レコーダーのクラウドアイコンをクリックします。
 
- ![Salesforce モードのレコーダーアイコン](/images/salesforce-testing/create-a-salesforce-test/9381461-salesforce_mode.png)
+![Salesforce モードのレコーダーアイコン](/images/salesforce-testing/create-a-salesforce-test/9381461-salesforce_mode.png)
 
 ![Salesforce モードで記録されたステップ](/images/salesforce-testing/create-a-salesforce-test/de463f1-salesforcestep.png)
 

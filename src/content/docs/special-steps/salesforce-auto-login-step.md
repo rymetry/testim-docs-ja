@@ -89,11 +89,11 @@ MFA のシークレットキーはパラメーターとして扱えません。
 **接続情報にパラメーターを使う:**
 
 1. 次のいずれかの方法でパラメーターを定義します。
-   * **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
-   * **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
-   * **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
-     その後、エクスポート機能を使ってパラメーターを *Salesforce auto-login* ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
-2. *Salesforce auto-login* ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメーターを設定します。
+   - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
+   - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
+   - **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
+     その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
+2. _Salesforce auto-login_ ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメーターを設定します。
 
 ## MFA のセットアップ
 
@@ -104,9 +104,9 @@ Salesforce 側でシークレットキーを取得し、Testim のプロパテ�
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/bc293ae-image.png)
 
-2. 既に **App Registration: One-Time Password Authenticator** に Google Authenticator や Microsoft Authenticator などのサードパーティ認証アプリが登録されている場合、シークレットキーを取得するために一度切断してから再接続する必要があります。  
-   * **User Details** の **App Registration - One-Time Password Authenticator** 設定で **Disconnect** をクリックします。
-   * まだサードパーティ認証アプリを登録していない場合は、この手順はスキップして次へ進みます。
+2. 既に **App Registration: One-Time Password Authenticator** に Google Authenticator や Microsoft Authenticator などのサードパーティ認証アプリが登録されている場合、シークレットキーを取得するために一度切断してから再接続する必要があります。
+   - **User Details** の **App Registration - One-Time Password Authenticator** 設定で **Disconnect** をクリックします。
+   - まだサードパーティ認証アプリを登録していない場合は、この手順はスキップして次へ進みます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/e1f92f2-image_1.png)
 
@@ -142,6 +142,6 @@ Salesforce 側でシークレットキーを取得し、Testim のプロパテ�
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/76d0fe8-image_5.png)
 
-10. Salesforce に戻り、表示された検証コードを **Verification Code** フィールドに入力して **Connect** をクリックします。  
+10. Salesforce に戻り、表示された検証コードを **Verification Code** フィールドに入力して **Connect** をクリックします。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/d783a5c-verification_code.png)

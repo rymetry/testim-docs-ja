@@ -54,7 +54,7 @@ RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切�
 
 ![ステップ追加矢印](/images/visual-validations/wait-for-element-visualization/e9b93ef-Testim_276b.png)
 
-   **アクションオプション**が表示されます。
+**アクションオプション**が表示されます。
 
 ![アクションオプション](/images/visual-validations/wait-for-element-visualization/abc8595-Testim_267a_r.png)
 

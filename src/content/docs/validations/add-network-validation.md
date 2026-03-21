@@ -20,7 +20,7 @@ keywords:
 
 ネットワークリクエストが期待どおりに実行されたかを検証する
 
-*network validation* ステップでは、ネットワークリクエストを検証できます。プリセットの検証ステップで、オブジェクトの配列 `networkRequests`（下表）を受け取り、この配列に対して JavaScript を実行します。
+_network validation_ ステップでは、ネットワークリクエストを検証できます。プリセットの検証ステップで、オブジェクトの配列 `networkRequests`（下表）を受け取り、この配列に対して JavaScript を実行します。
 
 :::note
 これは Professional plan の機能です。
@@ -32,7 +32,7 @@ keywords:
 
 ## ネットワーク検証
 
-*networkRequests* 配列に含まれるオブジェクトで、次の項目を検証できます：
+_networkRequests_ 配列に含まれるオブジェクトで、次の項目を検証できます：
 
 :::note{title="リクエスト/レスポンスボディ"}
 リクエストボディとレスポンスボディのキャプチャも可能です。詳細は [リクエストボディとレスポンスボディのキャプチャ](#リクエストボディとレスポンスボディのキャプチャ) を参照してください。
@@ -228,17 +228,17 @@ keywords:
    a. **Properties** パネルで **+ PARAMS** ボタンをクリックします。\
    b. **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
    c. **HTML parameter**: HTML 要素をパラメーターとして定義する場合は、ドロップダウンリストから **HTML** を選択します。ブラウザが開き、このステップに関連するページが表示されます。次の操作を行います:
-   * **AUT** ウィンドウで、関連する要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** パネルの **Target Element** ボックスに表示されます。選択した要素の表示、置き換え、設定の調整を行う場合は、[Editing Target Element Properties](/docs/editing-target-element-properties) で説明されている手順を使用してください。
+   - **AUT** ウィンドウで、関連する要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** パネルの **Target Element** ボックスに表示されます。選択した要素の表示、置き換え、設定の調整を行う場合は、[Editing Target Element Properties](/docs/editing-target-element-properties) で説明されている手順を使用してください。
 
-  d. 選択した要素には、自動的に「param」または「element」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
+d. 選択した要素には、自動的に「param」または「element」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
 
 ![ネットワーク検証ステップの追加位置](/images/validations/add-network-validation/f5a215a-Testim_285a_r.png)
 
 10. 必要に応じて、次のプロパティを入力します:
 
-* **When this step fails** – このステップが失敗した場合の動作を指定します。
-* **When to run step** – ステップを実行する条件を指定します。詳細については、[Conditions](/docs/conditions) を参照してください。
-* **Override timeout** – Testim がテストステップの失敗を登録するデフォルトの時間制限設定を上書きし、異なる時間制限値（ミリ秒）を指定できます。
+- **When this step fails** – このステップが失敗した場合の動作を指定します。
+- **When to run step** – ステップを実行する条件を指定します。詳細については、[Conditions](/docs/conditions) を参照してください。
+- **Override timeout** – Testim がテストステップの失敗を登録するデフォルトの時間制限設定を上書きし、異なる時間制限値（ミリ秒）を指定できます。
 
 11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。
 
@@ -267,20 +267,22 @@ HTML 要素をパラメーターとして定義するために AUT を開いた�
 **Example Code:**
 
 ```javascript
-function validateRequestStatuscode(req){
+function validateRequestStatuscode(req) {
   //Get status code
- const statusCode = req.statusCode.toString();
+  const statusCode = req.statusCode.toString();
   //Check if we got an error
- const badReq = statusCode.startsWith('4')  || statusCode.startsWith('5');
+  const badReq = statusCode.startsWith('4') || statusCode.startsWith('5');
   //If we got an error fail the step
-  if(badReq){
-    throw new Error(`assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`); 
+  if (badReq) {
+    throw new Error(
+      `assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`
+    );
   }
 }
 
-console.table(networkRequests)
-const imageCalls = networkRequests.filter(call => call.type == "Image");
-imageCalls.forEach(validateRequestStatuscode)
+console.table(networkRequests);
+const imageCalls = networkRequests.filter((call) => call.type == 'Image');
+imageCalls.forEach(validateRequestStatuscode);
 ```
 
 #### 単一のリクエストを検証する
@@ -290,38 +292,40 @@ imageCalls.forEach(validateRequestStatuscode)
 **Example Code:**
 
 ```javascript
-if(networkRequests.length == 0){
- throw new Error('No requests were made during the time of the test') 
+if (networkRequests.length == 0) {
+  throw new Error('No requests were made during the time of the test');
 }
 
-function validateRequestStatuscode(req){
+function validateRequestStatuscode(req) {
   //Get status code
- const statusCode = req.statusCode.toString();
+  const statusCode = req.statusCode.toString();
   //Check if we got an error
- const badReq = statusCode.startsWith('4')  || statusCode.startsWith('5');
+  const badReq = statusCode.startsWith('4') || statusCode.startsWith('5');
   //If we got an error fail the step
-  if(badReq){
-    throw new Error(`assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`); 
+  if (badReq) {
+    throw new Error(
+      `assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`
+    );
   }
-  return true
+  return true;
 }
 
 //Filter the source of the request
-function filterReqestsBySource(source,req){
-  const reqSource = req.source
-  if(source === reqSource) return true
-  return false
+function filterReqestsBySource(source, req) {
+  const reqSource = req.source;
+  if (source === reqSource) return true;
+  return false;
 }
 
 //find a single request by it's url and check if they are all valid
 
-const singleReq = networkRequests.find(item => item.url == 'http://demo.testim.io/bundle.css')
+const singleReq = networkRequests.find((item) => item.url == 'http://demo.testim.io/bundle.css');
 
-if(!singleReq){
- throw new Error('Request was not found') 
+if (!singleReq) {
+  throw new Error('Request was not found');
 }
 
-return validateRequestStatuscode(singleReq)
+return validateRequestStatuscode(singleReq);
 ```
 
 #### すべてのリクエストが成功したことを検証する
@@ -331,21 +335,22 @@ return validateRequestStatuscode(singleReq)
 **Example Code:**
 
 ```javascript
-function validateRequestStatuscode(req){
+function validateRequestStatuscode(req) {
   //Get status code
- const statusCode = req.statusCode.toString();
+  const statusCode = req.statusCode.toString();
   //Check if we got an error
- const badReq = statusCode.startsWith('4')  || statusCode.startsWith('5');
+  const badReq = statusCode.startsWith('4') || statusCode.startsWith('5');
   //If we got an error fail the step
-  if(badReq){
-    throw new Error(`assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`); 
+  if (badReq) {
+    throw new Error(
+      `assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`
+    );
   }
 }
 
-
-//Check all the requests and see if they are all valid 
-networkRequests.forEach(validateRequestStatuscode)
-return true
+//Check all the requests and see if they are all valid
+networkRequests.forEach(validateRequestStatuscode);
+return true;
 ```
 
 #### 呼び出しの最大時間を検証する
@@ -355,11 +360,11 @@ return true
 **コード例:**
 
 ```javascript
-const callDur = networkRequests.map(call => call.endTime - call.startTime)
+const callDur = networkRequests.map((call) => call.endTime - call.startTime);
 
-const isOverMax = callDur.some(time => time > maxTimeInMS)
+const isOverMax = callDur.some((time) => time > maxTimeInMS);
 
-if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
+if (isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`);
 ```
 
 **パラメーター例:**
@@ -408,7 +413,7 @@ if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)
 **リクエストボディとレスポンスボディのキャプチャを有効にするには:**
 
 1. **Setup Step** で **Show Properties** をクリックします。
-2. **Network Capture Options** の下で、**Capture request body** および/または **Capture response body** オプションを選択します。  
+2. **Network Capture Options** の下で、**Capture request body** および/または **Capture response body** オプションを選択します。
 
    ![ネットワークキャプチャオプションの設定画面](/images/validations/add-network-validation/f6815ea-network_capture_options.png)
 

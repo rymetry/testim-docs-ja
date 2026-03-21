@@ -27,11 +27,11 @@ Testim で作成したテストを SauceLabs の browser と mobile device 上�
 2. **Next** をクリックします。
 3. 次の field を入力します。
 
-* **Name**: 実行時に使用する Grid 名
-* **Saucelabs User**: 接続に使用する SauceLabs key
-* **Saucelabs key**: 接続に使用する SauceLabs key
-* **Host**: SauceLabs の host name
-* **Port**: SauceLabs の port
+- **Name**: 実行時に使用する Grid 名
+- **Saucelabs User**: 接続に使用する SauceLabs key
+- **Saucelabs key**: 接続に使用する SauceLabs key
+- **Host**: SauceLabs の host name
+- **Port**: SauceLabs の port
 
 ![SauceLabs Grid の接続情報を設定する画面](/images/grid-management/saucelabs-integration/be4fb2b-Jul-24-2021_08-13-41.gif)
 
@@ -55,8 +55,8 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 Test Editor から直接 Grid 上でテストを実行できます。
 
-* **Run** ボタンの横にある options arrow をクリックします。
-* **Run on a grid** をクリックします。
+- **Run** ボタンの横にある options arrow をクリックします。
+- **Run on a grid** をクリックします。
 
 その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
 

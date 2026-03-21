@@ -306,7 +306,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 #### 専用実行トンネル （Web のみ）
 
 `--tunnel` `--tunnel-port`、トンネルを使用して、内部サーバー/localhost からアプリを実行し、外部ブラウザで表示できます。\
-\--tunnel  #デフォルト アプリケーション ポート 80
+\--tunnel #デフォルト アプリケーション ポート 80
 
 ```shell
 testim --tunnel --tunnel-port <APP PORT default 80>
@@ -358,7 +358,7 @@ CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを�
 
 #### Chrome 追加引数を追加する （Web のみ）
 
-Chrome 追加引数を追加するには、*--chrome-extra-args* を使用します。これは必要なフラグをコンマで区切った文字列を受け取ります （フラグ間に スペースはありません）。例えば:
+Chrome 追加引数を追加するには、_--chrome-extra-args_ を使用します。これは必要なフラグをコンマで区切った文字列を受け取ります （フラグ間に スペースはありません）。例えば:
 
 ```shell
 testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-args "enable-heavy-ad-intervention,heavy-ad-privacy-mitigations"
@@ -366,7 +366,7 @@ testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-a
 
 #### カスタム エクステンションで CLI コマンドを実行
 
-*--install-custom-extension* を使用して、特定のエクステンションがインストールされた Chrome ブラウザで CLI コマンドを実行できます。例えば:
+_--install-custom-extension_ を使用して、特定のエクステンションがインストールされた Chrome ブラウザで CLI コマンドを実行できます。例えば:
 
 ```shell
 testim --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --use-local-chrome-driver --install-custom-extension <chrome extension zipped file url or local path>
@@ -423,8 +423,8 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 [Sealights 統合](/docs/sealights-integration) を使用して CLI でテストを実行するときは、Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
 
-* **Sealights buildSessionId** - この ID は、実行された特定のビルドに関連しています。通常、これはアプリケーション内の特定のコンポーネントに関連しています。つまり、特定のコンポーネントをテストする場合、このオプションを使用することをお勧めします。
-* **Sealights labId** - 通常、同じ環境でホストされている複数のコンポーネントが同じ LabId を共有できます。複数のコンポーネントをテストする場合、buildSessionId ではなく LabId を使用することをお勧めします。
+- **Sealights buildSessionId** - この ID は、実行された特定のビルドに関連しています。通常、これはアプリケーション内の特定のコンポーネントに関連しています。つまり、特定のコンポーネントをテストする場合、このオプションを使用することをお勧めします。
+- **Sealights labId** - 通常、同じ環境でホストされている複数のコンポーネントが同じ LabId を共有できます。複数のコンポーネントをテストする場合、buildSessionId ではなく LabId を使用することをお勧めします。
 
 #### **Sealights buildSessionId**
 

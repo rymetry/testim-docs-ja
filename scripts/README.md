@@ -31,7 +31,7 @@ npm test                       # 全テスト実行
 
 #### snapshot_update.mjs / snapshot_diff.mjs
 
-英語原文のスナップショットベースの変更検知。`<article>` の正規化 HTML をローカルに保存し、git diff で変更を検知する。
+英語原文のスナップショットベースの変更検知。各ページの生 Markdown をローカルに保存し、sidebar のみ HTML から抽出して、git diff で変更を検知する。
 
 ```bash
 npm run check:snapshots                # 取得→比較を一括実行
@@ -39,7 +39,7 @@ npm run check:snapshots:fetch          # スナップショット取得のみ
 npm run check:snapshots:diff           # コミット済み vs working tree を比較
 npm run check:snapshots:fetch -- --section="Overview"   # セクション絞り込み
 npm run check:snapshots:fetch -- --slug=testim-overview  # 単一ページ
-npm run check:snapshots:fetch -- --dry-run               # ドライラン
+npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検証のみ（ファイルは書き込まない）
 ```
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
@@ -56,13 +56,13 @@ node scripts/check_source_parity.mjs --section="概要"   # セクション絞�
 node scripts/check_source_parity.mjs --json              # JSON 出力
 ```
 
-| チェック項目         | 検出内容                                       |
-| -------------------- | ---------------------------------------------- |
-| `untranslated`       | 未翻訳の英語テキスト行                         |
-| `legacy-callout`     | レガシー callout（`> 📘` 等）                  |
-| `jsx-callout`        | JSX `<Callout>` コンポーネント残留             |
-| `h1-in-body`         | 本文中の H1 見出し                             |
-| `orphan-page`        | SIDEBAR_URLS.md に未掲載のページ               |
+| チェック項目     | 検出内容                           |
+| ---------------- | ---------------------------------- |
+| `untranslated`   | 未翻訳の英語テキスト行             |
+| `legacy-callout` | レガシー callout（`> 📘` 等）      |
+| `jsx-callout`    | JSX `<Callout>` コンポーネント残留 |
+| `h1-in-body`     | 本文中の H1 見出し                 |
+| `orphan-page`    | SIDEBAR_URLS.md に未掲載のページ   |
 
 **出力**: `parity-check-status.json`。
 
@@ -304,14 +304,14 @@ npm run docs:report-categories
 
 #### そのほかの共有ライブラリ
 
-| ファイル                       | 用途                                          |
-| ------------------------------ | --------------------------------------------- |
-| `lib/project.mjs`              | repo ルート、docs 探索、slug index、FM 読出し |
-| `lib/markdown-utils.mjs`       | Markdown 除去、description 自動生成           |
-| `lib/snapshot_normalize.mjs`   | HTML 正規化（属性除去、pretty-print）         |
-| `lib/source_parity.mjs`        | parity issue 生成、severity 付与、要約集計    |
-| `lib/detection_reports.mjs`    | summary / issue body / audit manifest 生成    |
-| `lib/cli.mjs`                  | 直実行判定などの CLI 補助                     |
+| ファイル                     | 用途                                          |
+| ---------------------------- | --------------------------------------------- |
+| `lib/project.mjs`            | repo ルート、docs 探索、slug index、FM 読出し |
+| `lib/markdown-utils.mjs`     | Markdown 除去、description 自動生成           |
+| `lib/snapshot_normalize.mjs` | サイドバー HTML 正規化（属性除去、pretty-print） |
+| `lib/source_parity.mjs`      | parity issue 生成、severity 付与、要約集計    |
+| `lib/detection_reports.mjs`  | summary / issue body / audit manifest 生成    |
+| `lib/cli.mjs`                | 直実行判定などの CLI 補助                     |
 
 ---
 
@@ -321,44 +321,44 @@ npm run docs:report-categories
 npm test    # node --test scripts/__tests__/*.mjs
 ```
 
-| テストファイル                                 | 対象スクリプト                    |
-| ---------------------------------------------- | --------------------------------- |
-| `__tests__/lint_docs.test.mjs`                 | lint-docs.mjs                     |
-| `__tests__/fetch_translate_images.test.mjs`    | fetch_translate_images.mjs        |
-| `__tests__/update_sidebar_urls.test.mjs`       | update_sidebar_urls_from_live.mjs |
-| `__tests__/pipeline.test.mjs`                  | pipeline.mjs                      |
-| `__tests__/snapshot_normalize.test.mjs`        | lib/snapshot_normalize.mjs        |
-| `__tests__/snapshot_diff.test.mjs`             | snapshot_diff.mjs                 |
-| `__tests__/source_parity.test.mjs`             | lib/source_parity.mjs             |
-| `__tests__/detection_reports.test.mjs`         | lib/detection_reports.mjs         |
-| `__tests__/lib_project.test.mjs`               | lib/project.mjs                   |
-| `__tests__/lib_markdown_utils.test.mjs`        | lib/markdown-utils.mjs            |
-| `__tests__/lib_sidebar_label.test.mjs`         | lib/sidebar.mjs                   |
+| テストファイル                              | 対象スクリプト                    |
+| ------------------------------------------- | --------------------------------- |
+| `__tests__/lint_docs.test.mjs`              | lint-docs.mjs                     |
+| `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs        |
+| `__tests__/update_sidebar_urls.test.mjs`    | update_sidebar_urls_from_live.mjs |
+| `__tests__/pipeline.test.mjs`               | pipeline.mjs                      |
+| `__tests__/snapshot_normalize.test.mjs`     | lib/snapshot_normalize.mjs        |
+| `__tests__/snapshot_diff.test.mjs`          | snapshot_diff.mjs                 |
+| `__tests__/source_parity.test.mjs`          | lib/source_parity.mjs             |
+| `__tests__/detection_reports.test.mjs`      | lib/detection_reports.mjs         |
+| `__tests__/lib_project.test.mjs`            | lib/project.mjs                   |
+| `__tests__/lib_markdown_utils.test.mjs`     | lib/markdown-utils.mjs            |
+| `__tests__/lib_sidebar_label.test.mjs`      | lib/sidebar.mjs                   |
 
 ---
 
 ## npm スクリプト対応表
 
-| npm コマンド                     | スクリプト                                         | 用途                             |
-| -------------------------------- | -------------------------------------------------- | -------------------------------- |
-| `lint:docs`                      | lint-docs.mjs                                      | 構文・frontmatter 検証           |
-| `check:snapshots`                | snapshot_update.mjs && snapshot_diff.mjs           | スナップショット取得→比較        |
-| `check:snapshots:fetch`          | snapshot_update.mjs                                | スナップショット取得             |
-| `check:snapshots:diff`           | snapshot_diff.mjs                                  | スナップショット差分比較         |
-| `check:parity`                   | check_source_parity.mjs                            | 翻訳品質チェック（ローカル）     |
-| `check:summary`                  | generate_detection_reports.mjs                     | summary / audit manifest 生成    |
-| `docs:sync-sidebar`              | update_sidebar_urls_from_live.mjs                  | サイドバー URL 同期              |
-| `docs:sync-frontmatter`          | sync_frontmatter_from_sidebar.mjs                  | frontmatter 同期（ドライラン）   |
-| `docs:sync-frontmatter:apply`    | sync_frontmatter_from_sidebar.mjs --apply          | frontmatter 同期（実行）         |
-| `docs:pipeline`                  | pipeline.mjs                                       | パイプライン（diff）             |
-| `docs:pipeline:full`             | pipeline.mjs --mode=full                           | パイプライン（full）             |
-| `docs:fetch`                     | fetch_translate_images.mjs                         | 英語原文・画像取得               |
-| `docs:normalize`                 | normalize_docs.mjs                                 | ドキュメント正規化               |
-| `docs:fix-alt`                   | fix_alt_all.mjs                                    | alt テキスト一括挿入             |
-| `docs:placeholders`              | generate_untranslated_placeholders.mjs             | プレースホルダー作成             |
-| `docs:prepare-llm`               | prepare_llm_tasks.mjs                              | LLM タスク準備                   |
-| `docs:apply-llm`                 | apply_llm_translations.mjs                         | LLM 翻訳適用                     |
-| `docs:report-categories`         | report_frontmatter_categories.mjs                  | カテゴリ集計                     |
+| npm コマンド                  | スクリプト                                | 用途                           |
+| ----------------------------- | ----------------------------------------- | ------------------------------ |
+| `lint:docs`                   | lint-docs.mjs                             | 構文・frontmatter 検証         |
+| `check:snapshots`             | snapshot_update.mjs && snapshot_diff.mjs  | スナップショット取得→比較      |
+| `check:snapshots:fetch`       | snapshot_update.mjs                       | スナップショット取得           |
+| `check:snapshots:diff`        | snapshot_diff.mjs                         | スナップショット差分比較       |
+| `check:parity`                | check_source_parity.mjs                   | 翻訳品質チェック（ローカル）   |
+| `check:summary`               | generate_detection_reports.mjs            | summary / audit manifest 生成  |
+| `docs:sync-sidebar`           | update_sidebar_urls_from_live.mjs         | サイドバー URL 同期            |
+| `docs:sync-frontmatter`       | sync_frontmatter_from_sidebar.mjs         | frontmatter 同期（ドライラン） |
+| `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行）       |
+| `docs:pipeline`               | pipeline.mjs                              | パイプライン（diff）           |
+| `docs:pipeline:full`          | pipeline.mjs --mode=full                  | パイプライン（full）           |
+| `docs:fetch`                  | fetch_translate_images.mjs                | 英語原文・画像取得             |
+| `docs:normalize`              | normalize_docs.mjs                        | ドキュメント正規化             |
+| `docs:fix-alt`                | fix_alt_all.mjs                           | alt テキスト一括挿入           |
+| `docs:placeholders`           | generate_untranslated_placeholders.mjs    | プレースホルダー作成           |
+| `docs:prepare-llm`            | prepare_llm_tasks.mjs                     | LLM タスク準備                 |
+| `docs:apply-llm`              | apply_llm_translations.mjs                | LLM 翻訳適用                   |
+| `docs:report-categories`      | report_frontmatter_categories.mjs         | カテゴリ集計                   |
 
 ---
 

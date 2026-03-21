@@ -85,7 +85,7 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
 2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。
-3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+3. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![CLI](/images/validations/validate-element-attribute/7495290-updatedsteps.png)
 
@@ -108,7 +108,7 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 **元の要素のプロパティを編集するには:**
 
-1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties**  アイコンをクリックします。
+1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![CLI](/images/validations/validate-element-attribute/240621e-properties.png)
 
@@ -127,53 +127,53 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 ### iOS 属性（Appium 使用時）
 
-* checkable
-* checked
-* \{class,className}
-* clickable \{content-desc,contentDescription}
-* enabled
-* focusable
-* focused
-* \{long-clickable,longClickable}
-* package
-* password
-* \{resource-id,resourceId}
-* scrollable
-* selection-start
-* selection-end
-* selected
-* \{text,name}
-* hint
-* extras
-* bounds
-* displayed
-* contentSize
+- checkable
+- checked
+- \{class,className}
+- clickable \{content-desc,contentDescription}
+- enabled
+- focusable
+- focused
+- \{long-clickable,longClickable}
+- package
+- password
+- \{resource-id,resourceId}
+- scrollable
+- selection-start
+- selection-end
+- selected
+- \{text,name}
+- hint
+- extras
+- bounds
+- displayed
+- contentSize
 
 ### Android 属性
 
-* UID
-* accessibilityContainer
-* accessible
-* enabled
-* frame
-* index
-* label
-* name
-* rect
-* selected
-* type
-* value
-* visible
-* wdAccessibilityContainer
-* wdAccessible
-* wdEnabled
-* wdFrame
-* wdIndex
-* wdLabel
-* wdName
-* wdRect
-* wdSelected
-* wdType
-* wdUID
-* wdValue
-* wdVisible
+- UID
+- accessibilityContainer
+- accessible
+- enabled
+- frame
+- index
+- label
+- name
+- rect
+- selected
+- type
+- value
+- visible
+- wdAccessibilityContainer
+- wdAccessible
+- wdEnabled
+- wdFrame
+- wdIndex
+- wdLabel
+- wdName
+- wdRect
+- wdSelected
+- wdType
+- wdUID
+- wdValue
+- wdVisible

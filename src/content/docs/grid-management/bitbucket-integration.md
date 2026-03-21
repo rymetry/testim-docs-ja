@@ -36,9 +36,8 @@ Bitbucket は、Mercurial または Git revision control system を使う source
 
 4. 接続する repository を選択します。この操作には repository に対する admin access が必要です。
 5. 必要な action の checkbox を選択します。
-
-   * **Create**: Bitbucket で branch が作成されるたびに、同じ branch が Testim にも作成されます。
-   * **Merge**: Bitbucket branch が merge されるたびに、Testim でも test が自動で merge されます。
+   - **Create**: Bitbucket で branch が作成されるたびに、同じ branch が Testim にも作成されます。
+   - **Merge**: Bitbucket branch が merge されるたびに、Testim でも test が自動で merge されます。
 
 ![Bitbucket integration で Create と Merge の checkbox を選択する画面](/images/grid-management/bitbucket-integration/58d1cac-Screen_Shot_2020-12-31_at_11.49.03.png)
 

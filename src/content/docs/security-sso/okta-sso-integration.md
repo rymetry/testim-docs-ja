@@ -69,9 +69,9 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 20. **Add Another**をクリックします。
 21. 以下のフィールドの組み合わせについて、ステップ**20 – 22**を繰り返します:
 
-* `firstName`（`user.firstName`にマッピング）
-* `lastName`（`user.lastName`にマッピング）
-* `profilePicture`はマッピングされません – これはオプションです。
+- `firstName`（`user.firstName`にマッピング）
+- `lastName`（`user.lastName`にマッピング）
+- `profilePicture`はマッピングされません – これはオプションです。
 
 ![追加属性マッピング](/images/security-sso/okta-sso-integration/4bb986b-okta7.PNG)
 

@@ -24,14 +24,14 @@ keywords:
 
 検索対象（制限事項は末尾参照）
 
-* **Step description** — ステップの **Description** フィールドや **Text to assign** フィールドに入力したテキスト
-* **JS Code** — ステップ内の JavaScript コード（例: [Add custom validations and actions](/docs/custom-code) ステップ内のコード）
-* **Parameters** — ステップ内の JS/HTML パラメーター名・値
-* **Base URL** — ベース URL の任意の部分
-* **URL** — [Navigation Step](/docs/navigation) や [Add an API Action Step](/docs/api-testing#adding-an-api-action-step) 内の URL の任意の部分
-* **Test Data** — ステップ内のテストデータの任意の部分
-* **Condition** — **When to run step** で **Custom** を選択した際の JavaScript 条件（[Conditions](/docs/conditions) 参照）
-* **Loop** — **When to run step** で **Loop for** を選択した際の JavaScript 条件
+- **Step description** — ステップの **Description** フィールドや **Text to assign** フィールドに入力したテキスト
+- **JS Code** — ステップ内の JavaScript コード（例: [Add custom validations and actions](/docs/custom-code) ステップ内のコード）
+- **Parameters** — ステップ内の JS/HTML パラメーター名・値
+- **Base URL** — ベース URL の任意の部分
+- **URL** — [Navigation Step](/docs/navigation) や [Add an API Action Step](/docs/api-testing#adding-an-api-action-step) 内の URL の任意の部分
+- **Test Data** — ステップ内のテストデータの任意の部分
+- **Condition** — **When to run step** で **Custom** を選択した際の JavaScript 条件（[Conditions](/docs/conditions) 参照）
+- **Loop** — **When to run step** で **Loop for** を選択した際の JavaScript 条件
 
 ## 検索の使い方
 
@@ -50,25 +50,25 @@ keywords:
 
 検索結果はオブジェクトタイプごとのカテゴリにグループ化され、各カテゴリ名の右に該当件数が表示されます。特記がない限り、結果をクリックすると一致が見つかったステップに移動します。
 
-* **Step Description** — 1 行目に、検索語に一致した **Description** または **Text to assign** の値が表示され（一致箇所は黄色でハイライト）、2 行目にはカテゴリ名とステップ名（= **Text to assign** の値）が表示されます。
-* **JS Code** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。クリックするとステップ内の JS コードエディターを開きます。
-* **Parameters** — 1 行目にパラメーター名と値（一致箇所は黄色でハイライト）、2 行目にカテゴリ名とステップ名を表示。複数一致は別々の結果として表示されます。
-* **Base URL** — 1 行目に Base URL の値（一致箇所は黄色でハイライト）、2 行目にカテゴリ名とステップ名を表示。
-* **URL** — 1 行目に URL の値（一致箇所は黄色でハイライト）、2 行目にカテゴリ名とステップ名を表示。
-* **Test Data** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。
-* **Condition** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。クリックでステップ内の JS コードエディターを開きます。
-* **Loop** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。クリックでステップ内の JS コードエディターを開きます。
+- **Step Description** — 1 行目に、検索語に一致した **Description** または **Text to assign** の値が表示され（一致箇所は黄色でハイライト）、2 行目にはカテゴリ名とステップ名（= **Text to assign** の値）が表示されます。
+- **JS Code** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。クリックするとステップ内の JS コードエディターを開きます。
+- **Parameters** — 1 行目にパラメーター名と値（一致箇所は黄色でハイライト）、2 行目にカテゴリ名とステップ名を表示。複数一致は別々の結果として表示されます。
+- **Base URL** — 1 行目に Base URL の値（一致箇所は黄色でハイライト）、2 行目にカテゴリ名とステップ名を表示。
+- **URL** — 1 行目に URL の値（一致箇所は黄色でハイライト）、2 行目にカテゴリ名とステップ名を表示。
+- **Test Data** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。
+- **Condition** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。クリックでステップ内の JS コードエディターを開きます。
+- **Loop** — 1 行目に一致件数、2 行目にカテゴリ名とステップ名を表示。クリックでステップ内の JS コードエディターを開きます。
 
 ### 検索の制限
 
 検索機能で見つからない値:
 
-* Extract value — 変数名
-* Sleep — 待機時間
-* Generate email address — 変数名
-* Set cookie — 説明以外の項目
-* Get cookie — クッキー名・変数名
-* Run dev-kit — 関数名
-* API — URL と関数以外
-* Generate random value — 説明以外
-* Generate date — 説明以外
+- Extract value — 変数名
+- Sleep — 待機時間
+- Generate email address — 変数名
+- Set cookie — 説明以外の項目
+- Get cookie — クッキー名・変数名
+- Run dev-kit — 関数名
+- API — URL と関数以外
+- Generate random value — 説明以外
+- Generate date — 説明以外

@@ -24,13 +24,13 @@ keywords:
 
 ## パラメーターの定義方法
 
-* [ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメーターを定義できます。
-* [グループのパラメーター](/docs/parameters-for-groups) - グループにパラメーターを定義し、他テストでも再利用できます。
-* [パラメーターのエクスポート](/docs/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディターで定義したパラメーターを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
-* [JSON パラメーターファイル](/docs/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
-* [設定ファイルのパラメーター](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
-* [テストデータ](/docs/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
-* 値生成ステップ - [日付の生成](/docs/generating-a-date#adding-a-generate-date-step)、[メールアドレスの生成](/docs/email-validation#generating-a-temporary-email-address)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
+- [ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメーターを定義できます。
+- [グループのパラメーター](/docs/parameters-for-groups) - グループにパラメーターを定義し、他テストでも再利用できます。
+- [パラメーターのエクスポート](/docs/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディターで定義したパラメーターを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
+- [JSON パラメーターファイル](/docs/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
+- [設定ファイルのパラメーター](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
+- [テストデータ](/docs/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
+- 値生成ステップ - [日付の生成](/docs/generating-a-date#adding-a-generate-date-step)、[メールアドレスの生成](/docs/email-validation#generating-a-temporary-email-address)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
 
 ## 事前定義（標準）パラメーター
 
@@ -72,10 +72,10 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 
 定義したパラメーターは、次の場所で使用できます。
 
-* プロパティパネルの任意のテキスト入力欄 - 例: テキスト検証の「期待値」、ステップの実行条件（要素テキスト）の「期待値」など。以下の入力欄は非対応です：Variable Name／Description／Date Format
-* プロパティパネルの Param セクションにある式入力欄 - ここに別のパラメーター名を設定して、値を連鎖させることもできます。
-* 任意の関数エディター - 一部のステップ（例: カスタム検証）やカスタム条件のエディター内で参照可能です。詳細は [高度な JS エディター](/docs/advanced-js-editor) を参照してください。
-* [API ステップ](/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。Request URL／Header／Body／Assertion／Function editor
+- プロパティパネルの任意のテキスト入力欄 - 例: テキスト検証の「期待値」、ステップの実行条件（要素テキスト）の「期待値」など。以下の入力欄は非対応です：Variable Name／Description／Date Format
+- プロパティパネルの Param セクションにある式入力欄 - ここに別のパラメーター名を設定して、値を連鎖させることもできます。
+- 任意の関数エディター - 一部のステップ（例: カスタム検証）やカスタム条件のエディター内で参照可能です。詳細は [高度な JS エディター](/docs/advanced-js-editor) を参照してください。
+- [API ステップ](/docs/api-testing#using-parameters) - 以下のテキスト欄で二重／三重ブラケットで参照します（例: \{\{\{param}}}）。Request URL／Header／Body／Assertion／Function editor
 
 ## パラメーターを非表示にする
 

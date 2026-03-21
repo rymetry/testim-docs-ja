@@ -120,6 +120,7 @@ npm run check:snapshots
 ```
 
 **Type:**
+
 - `fix/` - バグ修正や誤訳修正
 - `feat/` - 新機能追加
 - `docs/` - ドキュメント更新
@@ -147,6 +148,7 @@ git checkout -b docs/update-translation-guide
 ```
 
 **Type:**
+
 - `fix` - バグ修正
 - `feat` - 新機能
 - `docs` - ドキュメント
@@ -279,6 +281,7 @@ Pull Requestは以下の観点でレビューされます：
 ---
 
 参考ドキュメント：
+
 - [WRITING_GUIDE.md](./docs/WRITING_GUIDE.md) - 執筆ガイド
 - [DOCS_REVIEW.md](./docs/DOCS_REVIEW.md) - レビュー手順
 - [README.md](./README.md) - プロジェクト概要

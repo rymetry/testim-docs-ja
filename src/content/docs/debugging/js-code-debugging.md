@@ -24,13 +24,13 @@ Testim の一部のステップ（以下のサポートされるステップの�
 
 ## サポートされるステップ
 
-* Add custom action（カスタムアクションの追加）
-* Add custom validation（カスタム検証の追加）
-* Add custom wait for（カスタム待機の追加）
-* Validate email（メール検証）
-* Add network validation（ネットワーク検証の追加）
-* API validate（API 検証）
-* API action（API アクション）
+- Add custom action（カスタムアクションの追加）
+- Add custom validation（カスタム検証の追加）
+- Add custom wait for（カスタム待機の追加）
+- Validate email（メール検証）
+- Add network validation（ネットワーク検証の追加）
+- API validate（API 検証）
+- API action（API アクション）
 
 ## サポートされるステップ内の JS コードのデバッグ
 
@@ -45,6 +45,7 @@ Testim の一部のステップ（以下のサポートされるステップの�
    ![デバッグモードでのローカル実行ボタン](/images/debugging/js-code-debugging/3a7d8f6-runindebug.jpg)\
 
    テストが実行され、デバッグコントロールが表示されます。
+
 3. テストがブレークポイントに達したら、デバッグコントロールメニューの**Step Into**ボタンをクリックします。\
    ![Step Into ボタン](/images/debugging/js-code-debugging/0be9e49-stepinto.jpg)\
 
@@ -62,6 +63,7 @@ Testim の一部のステップ（以下のサポートされるステップの�
    ![DEVTOOL IS OPEN メッセージ](/images/debugging/js-code-debugging/5fb0ee6-devtooldopen.jpg)\
 
    開発者ツールには、追加された JS コードの直前のコードレベルのブレークポイントが表示され、ステップからの JS コードの直前に「debugger」行が表示されます。
+
 7. この時点で、Chrome Devtools のデバッグ機能を使用して JS コードをデバッグできます。
 8. JS コードのデバッグが完了したら、AUT で**Result Script Execution**ボタンをクリックします。\
    ![Result Script Execution ボタン](/images/debugging/js-code-debugging/d025aa1-resumescriptexecution.jpg)\
