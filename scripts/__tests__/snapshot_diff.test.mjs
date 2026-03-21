@@ -26,6 +26,7 @@ describe('classifyLine (via CHANGE_CLASSIFIERS)', () => {
     assert.equal(classifyLine('## New Section'), 'heading');
     assert.equal(classifyLine('### Sub heading'), 'heading');
     assert.equal(classifyLine('# Title'), 'heading');
+    assert.equal(classifyLine('   ## Indented heading'), 'heading');
   });
 
   it('classifies image syntax', () => {
@@ -35,6 +36,7 @@ describe('classifyLine (via CHANGE_CLASSIFIERS)', () => {
   it('classifies code fence lines', () => {
     assert.equal(classifyLine('```javascript'), 'code');
     assert.equal(classifyLine('```'), 'code');
+    assert.equal(classifyLine('  ```python'), 'code');
   });
 
   it('classifies callout lines', () => {
@@ -42,12 +44,14 @@ describe('classifyLine (via CHANGE_CLASSIFIERS)', () => {
     assert.equal(classifyLine('> 👍 Success'), 'callout');
     assert.equal(classifyLine('> ⚠️ Warning message'), 'callout');
     assert.equal(classifyLine('<Callout icon="📘" theme="info">'), 'callout');
+    assert.equal(classifyLine('  <Callout icon="💡" theme="default">'), 'callout');
   });
 
   it('classifies other content', () => {
     assert.equal(classifyLine('Some text here'), 'content');
     assert.equal(classifyLine('[Link](/docs/foo)'), 'content');
     assert.equal(classifyLine('> quoted text without emoji'), 'content');
+    assert.equal(classifyLine('    ## Too much indent (4 spaces)'), 'content');
   });
 });
 

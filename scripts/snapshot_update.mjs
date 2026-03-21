@@ -141,14 +141,22 @@ export async function main(argv) {
 
         // Save sidebar from the first successful page (requires HTML fetch)
         if (!sidebarSaved && !args.dryRun) {
-          const { html } = await fetchHtml(target.sourceUrl);
-          if (html) {
-            const sidebar = normalizeSidebar(html);
-            if (sidebar.found) {
-              fs.writeFileSync(SIDEBAR_PATH, sidebar.html);
-              console.log(`  OK   sidebar (from ${target.slug})`);
-              sidebarSaved = true;
+          try {
+            const { html } = await fetchHtml(target.sourceUrl);
+            if (html) {
+              const sidebar = normalizeSidebar(html);
+              if (sidebar.found) {
+                fs.writeFileSync(SIDEBAR_PATH, sidebar.html);
+                console.log(`  OK   sidebar (from ${target.slug})`);
+                sidebarSaved = true;
+              } else {
+                console.log(`  WARN sidebar — no hub-sidebar found in ${target.slug}`);
+              }
+            } else {
+              console.log(`  WARN sidebar — HTML fetch failed for ${target.slug}`);
             }
+          } catch (sidebarError) {
+            console.log(`  WARN sidebar — ${sidebarError.message}`);
           }
         }
       }

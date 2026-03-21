@@ -34,10 +34,10 @@ export const MARKER_404_RE = /^<!-- 404:/;
  * Classify changed lines by content type.
  */
 export const CHANGE_CLASSIFIERS = [
-  { type: 'heading', pattern: /^#{1,6}\s/ },
+  { type: 'heading', pattern: /^ {0,3}#{1,6}\s/ },
   { type: 'image', pattern: /!\[/ },
-  { type: 'code', pattern: /^```/ },
-  { type: 'callout', pattern: /^>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^<Callout\b/ },
+  { type: 'code', pattern: /^ {0,3}```/ },
+  { type: 'callout', pattern: /^ {0,3}>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^ {0,3}<Callout\b/ },
 ];
 
 function parseArgs(argv = process.argv.slice(2)) {

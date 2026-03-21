@@ -223,7 +223,12 @@ async function processOne(item, slugIndex, { fromSnapshot = false } = {}) {
   if (fromSnapshot) {
     const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${item.slug}.md`);
     if (fs.existsSync(snapshotPath)) {
-      md = fs.readFileSync(snapshotPath, 'utf8');
+      const content = fs.readFileSync(snapshotPath, 'utf8');
+      if (/^<!-- 404:/.test(content)) {
+        console.warn(`⚠️  Skip ${item.slug}: snapshot contains 404 marker`);
+        return false;
+      }
+      md = content;
     }
   }
 
