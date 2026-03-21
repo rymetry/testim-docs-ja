@@ -72,9 +72,12 @@ function collectTargets({ section, slug }) {
   return targets;
 }
 
+const FETCH_TIMEOUT_MS = 30_000;
+
 async function fetchHtml(url) {
   const response = await fetch(url, {
     headers: { 'User-Agent': DEFAULT_USER_AGENT },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!response.ok) {
     return { html: null, status: response.status };
@@ -108,12 +111,15 @@ export async function main(argv) {
       const { html, status } = await fetchHtml(target.sourceUrl);
       const snapshotPath = path.join(CONTENT_DIR, `${target.slug}.html`);
 
-      if (status === 404 || !html) {
+      if (status === 404) {
         if (!args.dryRun) {
           fs.writeFileSync(snapshotPath, MARKER_404(target.sourceUrl));
         }
         console.log(`  404  ${target.slug}`);
         notFound += 1;
+      } else if (!html) {
+        console.log(`  SKIP ${target.slug} — HTTP ${status}`);
+        errors += 1;
       } else {
         const result = normalizeContent(html);
         if (!result.found) {
