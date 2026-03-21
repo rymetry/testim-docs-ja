@@ -110,6 +110,21 @@ npm run check:snapshots:fetch -- --dry-run
 | `docs-update-summary.md`        | 人間向けサマリー                         |
 | `docs-audit-manifest.json`      | レビュー計画用マニフェスト               |
 
+## 初回セットアップ
+
+新しくプロジェクトをクローンした場合、またはスナップショットが存在しない場合のベースライン構築手順:
+
+```bash
+# 1. 全ページのスナップショットを取得
+npm run check:snapshots:fetch
+
+# 2. snapshots/en/ 以下のファイルをコミット（= 翻訳済みベースライン）
+git add snapshots/
+git commit -m "feat: 初回英語原文スナップショット"
+```
+
+これ以降、`npm run check:snapshots:diff` は committed vs working tree を比較するため、翻訳に反映していない英語側の変更のみが差分として表示されます。
+
 ## 関連ファイル
 
 - `scripts/lib/snapshot_normalize.mjs` — HTML 正規化コア

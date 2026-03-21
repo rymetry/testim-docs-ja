@@ -21,7 +21,6 @@
   - 英語記事のHTMLソースから`"updatedAt":"YYYY-MM-DDTHH:mm:ss.sssZ"`または`updatedAt&quot;:&quot;YYYY-MM-DDTHH:mm:ss.sssZ&quot;`形式で抽出
   - 日付部分のみ（YYYY-MM-DD）を使用
   - 注意: 英語サイトの表示テキスト（"Updated about X months ago"）と実際のメタデータが異なる場合があるため、HTMLソースから直接取得すること
-  - 自動化ツール: `scripts/fetch_all_updated_dates.mjs`、`scripts/update_dates_from_english.mjs`を使用可能
   - 詳細は`DOCS_DATE_TRACKING.md`を参照
 - [ ] `sourceUrl`: 対応する英語記事のURLが設定されているか
   - 形式: `https://help.testim.io/docs/{path}`
