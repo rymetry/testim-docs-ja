@@ -27,16 +27,22 @@ describe('classifyLine (via CHANGE_CLASSIFIERS)', () => {
     assert.equal(classifyLine('### Sub heading'), 'heading');
     assert.equal(classifyLine('# Title'), 'heading');
     assert.equal(classifyLine('   ## Indented heading'), 'heading');
+    assert.equal(classifyLine('<h2>HTML Section</h2>'), 'heading');
+    assert.equal(classifyLine('  </h3>'), 'heading');
   });
 
   it('classifies image syntax', () => {
     assert.equal(classifyLine('![test](test.png)'), 'image');
+    assert.equal(classifyLine('<Image align="center" src="test.png" />'), 'image');
+    assert.equal(classifyLine('<img src="test.png" alt="test">'), 'image');
   });
 
   it('classifies code fence lines', () => {
     assert.equal(classifyLine('```javascript'), 'code');
     assert.equal(classifyLine('```'), 'code');
     assert.equal(classifyLine('  ```python'), 'code');
+    assert.equal(classifyLine('<pre>'), 'code');
+    assert.equal(classifyLine('  </pre>'), 'code');
   });
 
   it('classifies callout lines', () => {
@@ -45,6 +51,7 @@ describe('classifyLine (via CHANGE_CLASSIFIERS)', () => {
     assert.equal(classifyLine('> ⚠️ Warning message'), 'callout');
     assert.equal(classifyLine('<Callout icon="📘" theme="info">'), 'callout');
     assert.equal(classifyLine('  <Callout icon="💡" theme="default">'), 'callout');
+    assert.equal(classifyLine('  <blockquote theme="📘">'), 'callout');
   });
 
   it('classifies other content', () => {
@@ -75,6 +82,15 @@ describe('classifyChanges', () => {
     const result = classifyChanges(head, current);
     assert.equal(result.categories.image.removed, 1);
     assert.equal(result.categories.image.added, 0);
+  });
+
+  it('detects HTML structural changes', () => {
+    const head = '<img src="old.png" alt="old">\n<h2>Section 1</h2>\nText';
+    const current = '<Image align="center" src="new.png" />\n<h2>Section 2</h2>\nText';
+
+    const result = classifyChanges(head, current);
+    assert.ok(result.categories.image.added > 0 || result.categories.image.removed > 0);
+    assert.ok(result.categories.heading.added > 0 || result.categories.heading.removed > 0);
   });
 
   it('detects code block changes', () => {
@@ -121,6 +137,14 @@ describe('classifyChanges', () => {
   it('classifies callout changes', () => {
     const head = 'Text';
     const current = '> 📘 Note\n>\n> Note content\n\nText';
+
+    const result = classifyChanges(head, current);
+    assert.equal(result.categories.callout.added, 1);
+  });
+
+  it('classifies legacy HTML callout changes', () => {
+    const head = 'Text';
+    const current = '<blockquote theme="📘">\n<p>Note</p>\n</blockquote>\nText';
 
     const result = classifyChanges(head, current);
     assert.equal(result.categories.callout.added, 1);
