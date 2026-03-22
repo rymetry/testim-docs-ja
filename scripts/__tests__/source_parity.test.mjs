@@ -859,12 +859,22 @@ describe('table parity in compareSnapshotStructure', () => {
     assert.equal(emptyIssues.length, 1);
   });
 
-  it('detects English residual in table cell (prose-length text)', () => {
+  it('detects English residual when JA cell differs from EN but is English prose', () => {
+    // JA cell was changed but left as English prose (not a copy of EN)
     const en = '| Feature | Description |\n| --- | --- |\n| Login | Enter your credentials to access the dashboard panel |\n';
-    const ja = '| 機能 | 説明 |\n| --- | --- |\n| ログイン | Enter your credentials to access the dashboard panel |\n';
+    const ja = '| 機能 | 説明 |\n| --- | --- |\n| ログイン | Please enter your login credentials to proceed here |\n';
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
     assert.ok(residualIssues.length >= 1, 'should detect English residual in table cell');
+  });
+
+  it('does not flag English residual when EN and JA cells are identical (intentional)', () => {
+    // Step names like "Validate element visible" are intentionally English
+    const en = '| Step | Description |\n| --- | --- |\n| Validate element visible | Checks if element is shown |\n';
+    const ja = '| ステップ | 説明 |\n| --- | --- |\n| Validate element visible | 要素が表示されているか確認 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'identical EN/JA cells should not be flagged');
   });
 
   it('returns no table issues when tables match', () => {
@@ -952,9 +962,26 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.includes('--grep'));
   });
 
-  it('extracts URLs', () => {
+  it('extracts and normalizes URLs', () => {
     const tokens = extractInvariantTokens('See https://example.com/docs for details');
     assert.ok(tokens.includes('https://example.com/docs'));
+  });
+
+  it('normalizes help.testim.io URLs to /docs/slug', () => {
+    const tokens = extractInvariantTokens('Link: https://help.testim.io/docs/shareable-steps');
+    assert.ok(tokens.includes('/docs/shareable-steps'));
+    assert.ok(!tokens.some((t) => t.includes('help.testim.io')));
+  });
+
+  it('extracts /docs/slug from markdown links', () => {
+    const tokens = extractInvariantTokens('[steps](/docs/shareable-steps)');
+    assert.ok(tokens.includes('/docs/shareable-steps'));
+  });
+
+  it('does not double-count URL fragments as dot-paths', () => {
+    const tokens = extractInvariantTokens('https://help.testim.io/docs/foo');
+    // help.testim.io should NOT appear as a separate dot-path token
+    assert.ok(!tokens.some((t) => t === 'help.testim.io'));
   });
 
   it('extracts CLI flags', () => {
@@ -1023,5 +1050,13 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
     assert.equal(tokenIssues.length, 0);
+  });
+
+  it('does not flag testim.io absolute URL rewritten to relative /docs/ link', () => {
+    const en = '| Page | Link |\n| --- | --- |\n| Steps | [steps](https://help.testim.io/docs/shareable-steps) |\n';
+    const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/shareable-steps) |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.equal(tokenIssues.length, 0, 'absolute/relative testim URL should normalize to same token');
   });
 });

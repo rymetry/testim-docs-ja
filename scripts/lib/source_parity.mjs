@@ -693,60 +693,81 @@ export function extractHtmlTables(body) {
 }
 
 /**
+ * Normalize a URL to a comparable slug token.
+ * Converts https://help.testim.io/docs/foo → /docs/foo
+ */
+function normalizeUrlToken(url) {
+  return url.replace(/^https?:\/\/help\.testim\.io/, '');
+}
+
+/**
  * Extract invariant tokens from a table cell that must be preserved during translation.
- * Returns a sorted array of token strings for comparison.
- * Targets: URLs, inline code, CLI flags, dot-paths, versions, number+unit.
+ * Returns a sorted, deduplicated array of token strings for comparison.
+ * Targets: URLs (normalized), inline code, CLI flags, dot-paths, versions, number+unit.
  */
 export function extractInvariantTokens(cell) {
-  const tokens = [];
+  const tokenSet = new Set();
 
   // Inline code: `--grep`, `params.timeout`, etc.
   const codeRe = /`([^`]+)`/g;
   let m;
   while ((m = codeRe.exec(cell)) !== null) {
-    tokens.push(m[1]);
+    tokenSet.add(m[1]);
   }
 
-  // Strip inline code before extracting other tokens to avoid double-counting
-  const withoutCode = cell.replace(/`[^`]*`/g, '');
+  // Strip inline code and markdown links before extracting other tokens
+  let rest = cell.replace(/`[^`]*`/g, '');
 
-  // URLs: https://..., http://...
+  // URLs: https://..., http://... — normalize testim.io docs URLs to /docs/slug
   const urlRe = /https?:\/\/[^\s)>\]]+/g;
-  while ((m = urlRe.exec(withoutCode)) !== null) {
-    tokens.push(m[0]);
+  const urlSpans = [];
+  while ((m = urlRe.exec(rest)) !== null) {
+    tokenSet.add(normalizeUrlToken(m[0]));
+    urlSpans.push([m.index, m.index + m[0].length]);
+  }
+
+  // Remove URL spans from rest to avoid dot-path/path regex re-capturing URL fragments
+  for (let i = urlSpans.length - 1; i >= 0; i -= 1) {
+    rest = rest.slice(0, urlSpans[i][0]) + ' '.repeat(urlSpans[i][1] - urlSpans[i][0]) + rest.slice(urlSpans[i][1]);
+  }
+
+  // Also extract /docs/slug from markdown link syntax [text](/docs/slug)
+  const mdLinkRe = /\]\((\/docs\/[\w-]+)\)/g;
+  while ((m = mdLinkRe.exec(rest)) !== null) {
+    tokenSet.add(m[1]);
   }
 
   // CLI flags: --flag, -f (standalone, not inside words)
   const flagRe = /(?:^|\s)(--?[a-zA-Z][\w-]*)(?=\s|$)/g;
-  while ((m = flagRe.exec(withoutCode)) !== null) {
-    tokens.push(m[1]);
+  while ((m = flagRe.exec(rest)) !== null) {
+    tokenSet.add(m[1]);
   }
 
   // Dot-notation paths: params.timeout, test.id.value
   const dotRe = /\b([a-zA-Z_]\w*(?:\.\w+)+)\b/g;
-  while ((m = dotRe.exec(withoutCode)) !== null) {
-    tokens.push(m[1]);
+  while ((m = dotRe.exec(rest)) !== null) {
+    tokenSet.add(m[1]);
   }
 
   // Versions: v1.2.3, 2.0.0
   const verRe = /\bv?\d+\.\d+\.\d+\b/g;
-  while ((m = verRe.exec(withoutCode)) !== null) {
-    tokens.push(m[0]);
+  while ((m = verRe.exec(rest)) !== null) {
+    tokenSet.add(m[0]);
   }
 
   // Number + unit: 30sec, 500ms, 10%, 5000ms, 100px
   const numUnitRe = /\b(\d+(?:\.\d+)?\s*(?:sec|ms|s|px|em|rem|%|MB|GB|KB|min|hr))\b/gi;
-  while ((m = numUnitRe.exec(withoutCode)) !== null) {
-    tokens.push(m[1].replace(/\s+/g, ''));
+  while ((m = numUnitRe.exec(rest)) !== null) {
+    tokenSet.add(m[1].replace(/\s+/g, ''));
   }
 
-  // File paths: /api/foo, /docs/slug
+  // File paths: /api/foo, /docs/slug (not already captured by mdLinkRe)
   const pathRe = /(?:^|\s)(\/[a-zA-Z][\w/.-]+)/g;
-  while ((m = pathRe.exec(withoutCode)) !== null) {
-    tokens.push(m[1]);
+  while ((m = pathRe.exec(rest)) !== null) {
+    tokenSet.add(m[1]);
   }
 
-  return tokens.sort();
+  return [...tokenSet].sort();
 }
 
 /**
@@ -843,8 +864,9 @@ function compareTableStructure(enBody, jaBody) {
         }
 
         // English prose residual: long untranslated English text in JA cell
-        // Short labels (UI names, step names) are intentionally English in Testim docs
-        if (!jaEmpty && isUntranslatedCell(jaCell)) {
+        // Skip if EN and JA cells are identical — intentionally kept in English
+        // (Testim UI labels, step names, feature names are commonly English-only)
+        if (!jaEmpty && stripMarkdown(enCell).trim() !== stripMarkdown(jaCell).trim() && isUntranslatedCell(jaCell)) {
           issues.push(
             withSeverity({
               type: 'table-cell-english-residual',
