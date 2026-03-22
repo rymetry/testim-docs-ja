@@ -78,11 +78,3 @@ Testim Extension をインストールするには：
 無料トライアルアカウントがアクティブ化され、[Testim Extension](/docs/why-do-you-need-testim-extension)のインストールに案内されます。
 
 ![アカウントアクティベーション](/images/getting-started/setting-up-your-account/c65df4a-2024-09-09_15-42-59.png)
-
-## 次のステップ
-
-これでテストの作成を開始する準備が整いました！
-
-- [最初のコードレステストの作成](/docs/creating-your-first-codeless-test)
-- [Web テストの記録方法](/docs/how-to-record-a-test)
-- [モバイルテスト入門](/docs/creating-your-first-mobile-test-in-testim-visual-editor)

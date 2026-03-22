@@ -102,7 +102,7 @@ keywords:
    </td>
    <td>
     任意の JS 日付フォーマットを指定できます。各フォーマットについては
-    <a href="https://day.js.org/docs/display/format">
+    <a href="https://day.js.org/docs/en/display/format">
      こちら
     </a>
     を参照してください。
@@ -127,21 +127,11 @@ keywords:
    </td>
    <td>
     変数を受け渡しできるスコープ：
-    <br/>
-    <strong>
-     Local:
-    </strong>
-    同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。
-    <br/>
-    <strong>
-     Test:
-    </strong>
-    同一テスト内のステップやグループ間で受け渡しできます。
-    <br/>
-    <strong>
-     Suite:
-    </strong>
-    同一テストスイート内のテスト間で受け渡しできます。
+    <ul>
+     <li><strong>Local:</strong> 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。</li>
+     <li><strong>Test:</strong> 同一テスト内のステップやグループ間で受け渡しできます。</li>
+     <li><strong>Suite:</strong> 同一テストスイート内のテスト間で受け渡しできます。</li>
+    </ul>
    </td>
    <td>
    </td>

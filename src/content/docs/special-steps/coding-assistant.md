@@ -89,26 +89,34 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 利用できるプロンプト例:
 
-## ページ URL を検証するコードを生成
+<details>
+<summary><b>ページ URL を検証するコードを生成</b></summary>
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/485092a-1.png)
 
-ページ URL が指定の正規表現に一致するか検証するカスタム検証ステップで使用します。
+ページ URL が指定の正規表現に一致するか検証する [Add Custom Validation](/docs/custom-code) ステップで使用します。
+</details>
 
-## チェックボックス選択を検証するコードを生成
+<details>
+<summary><b>チェックボックス選択を検証するコードを生成</b></summary>
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/95f3895-2.png)
 
-特定のチェックボックスが選択済みか判定するカスタム条件で使用します。クリック前に未選択であることを確認する用途など。
+特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/conditions#configuring-a-custom-condition) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。
+</details>
 
-## リッチテキストエディターに文字入力するコードを生成
+<details>
+<summary><b>リッチテキストエディターに文字入力するコードを生成</b></summary>
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/c28ca84-image.png)
 
-Set text ステップで入力できないリッチテキストエディター要素へ文字列を入力するためのコードです。
+Set text ステップで入力できないリッチテキストエディター要素へ文字列を入力するためのコードです。カスタム検証ステップのコードにより、実行時にリッチテキストエディター要素にテキストを入力します。
+</details>
 
-## 3 つのパラメーター値を比較するコードを生成
+<details>
+<summary><b>3 つのパラメーター値を比較するコードを生成</b></summary>
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/417615e-image_1.png)
 
-テスト内で使用した複数パラメーターの値が同一であることを確認します。
+テスト内で使用した複数パラメーターの値が同一であることを確認するカスタム条件やカスタム検証ステップで使用します。
+</details>

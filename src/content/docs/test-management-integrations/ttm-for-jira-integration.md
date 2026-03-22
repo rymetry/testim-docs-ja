@@ -17,8 +17,6 @@ keywords:
   - リモートグリッド
 ---
 
-## TTM for Jira 統合
-
 TTM for Jira プロジェクトで Testim のテスト実行結果を表示します。
 
 ## TTM for Jira とは？
@@ -43,7 +41,7 @@ Testim テストを TTM for Jira にマッピングする方法は 2 つあり�
 
 TTM for Jira と Testim の統合を使用する前に、Testim を TTM for Jira プロジェクトに接続する必要があります。このプロセスは一度だけ必要です。
 
-### Testim を TTM for Jira に接続する手順
+**Testim を TTM for Jira に接続するには:**
 
 1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合モジュールがあります。
 2. TTM for Jira 統合モジュールで、**login（ログイン）** をクリックします。
@@ -70,7 +68,7 @@ TTM for Jira と Testim の統合を使用する前に、Testim を TTM for Jira
 
 Testim と TTM for Jira の統合を設定した後、Testim の特定のテストを TTM for Jira のテストにマッピングする準備が整います。
 
-### Testim のテストを TTM for Jira のテストにマッピングする手順
+**Testim のテストを TTM for Jira のテストにマッピングするには:**
 
 1. Testim で、マッピングしたいテストを開きます。
 2. Testim のテスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
@@ -93,7 +91,7 @@ Testim と TTM for Jira の統合を設定した後、Testim の特定のテス�
 - 既に TTM for Jira に手動でマッピングしたテストがある場合、この一括マッピング機能は既にマッピングされたテストをスキップします。一括マッピングプロセスに含めたい場合は、[手動でテストのマッピングを解除](#ttm-for-jiraにマッピング済みのテストのマッピング解除)できます。
   :::
 
-### Testim テストケースを自動的に一括マッピングする手順
+**Testim テストケースを自動的に一括マッピングするには:**
 
 1. **Test Library（テストライブラリ）** に移動し、**1 つ以上のテストグループまたはテストフォルダーを選択**します。以下の例では、お客様がフォルダー「aa1」を選択しており、これには 3 つのテストが含まれています。「aa1」内には、さらに 3 つのテストを含むサブフォルダー「bb1」があります。フォルダー「aa1」を選択すると、Testim は 6 つすべてのテストを TTM for Jira にマッピングします。
 
@@ -139,7 +137,7 @@ Testim と TTM for Jira の統合を設定した後、Testim の特定のテス�
 
 Testim テストプロパティで、テストが既に TTM for Jira にマッピングされているかどうかを識別できます。
 
-#### テストが TTM for Jira にマッピング済みかどうかを確認する手順
+**テストが TTM for Jira にマッピング済みかどうかを確認するには:**
 
 1. テストに移動し、**Test Properties（テストプロパティ）** パネルを開きます。
 2. **Test in TTM for Jira** セクションに移動します。このセクションに選択された Jira プロジェクトとテスト名がある場合、このテストは既に TTM for Jira にマッピングされています。
@@ -170,7 +168,7 @@ Testim 発のテスト実行の名前は、以下の命名規則を使用しま�
 データは UTC 日付を反映します。
 :::
 
-### TTM for Jira でテスト実行を表示する手順
+**TTM for Jira でテスト実行を表示するには:**
 
 1. 関連する実行をクリックして実行の詳細を取得します（[こちら](https://documentation.tricentis.com/tricentis_test_management_for_jira/content/test_execution/test_cycles_runs.htm)を参照）。
 

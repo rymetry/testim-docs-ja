@@ -23,27 +23,25 @@ Testim のすべてのステップはパラメーター化できます。これ�
 
 記録された値を JS 式で置き換えるだけです。以下にいくつかの例を示します:
 
-### ランダムメール
+**ランダムメール**
 
 ```javascript
 Math.round(Math.random() * 100000) + '@email.com';
 ```
 
-### ランダムパスワード
+**ランダムパスワード**
 
 ```javascript
 Math.random().toString(36).slice(-8);
 ```
 
-### その他のランダム値
+**その他のランダム値**
 
 ```javascript
 Date.now() + 5;
 ```
 
-### パラメーターとして定義した場合（変数の割り当て）
-
-[パラメーター](/docs/parameters)として定義した場合、変数を割り当てることもできます:
+**[パラメーター](/docs/parameters)として定義した場合、変数を割り当てることもできます:**
 
 ```javascript
 myVar + 'sdf';

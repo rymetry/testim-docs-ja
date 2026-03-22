@@ -21,6 +21,8 @@ keywords:
   - AUT Viewer
 ---
 
+## Testim モバイルテストチュートリアルへようこそ
+
 このチュートリアルでは、[Virtual Mobile Grid](/docs/virtual-mobile-grid)を使ってモバイルアプリのテストを行う方法を学びます。新しいテストの作成、**Virtual Mobile Grid** からのデバイス選択、テスト対象アプリの指定、テストの記録、そして実行までの手順を順番に確認します。テストは[Enhanced mode](/docs/enhanced-mode-mobile) で記録します。Appium ベースのテストと比べて安定性・速度・柔軟性が向上します。このチュートリアルはすべてのオプションを網羅するものではなく、最初から最後までの一連の流れを具体的なシナリオで紹介します。
 
 :::warning

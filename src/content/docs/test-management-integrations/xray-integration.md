@@ -17,8 +17,6 @@ keywords:
   - ステータスマッピング
 ---
 
-## Xray 統合
-
 Xray Jira プロジェクトで Testim のテスト実行結果を表示します。
 
 ## Xray とは？
@@ -38,7 +36,7 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 - **Jira API トークン** - Jira API トークンを取得するには、[https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)の手順に従ってください。
 - **Xray クライアント ID と Xray クライアントシークレット** - Xray クライアント ID とクライアントシークレットを取得するには、[https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys](https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys)の手順に従ってください。
 
-### Testim を Xray に接続する手順
+**Testim を Xray に接続するには:**
 
 1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合モジュールがあります。
 2. Xray 統合モジュールで、**login（ログイン）** をクリックします。
@@ -65,7 +63,7 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 
 Testim と Xray の統合を設定した後、Testim の特定のテストを Xray のテストにマッピングする準備が整います。
 
-### Testim のテストを Xray のテストにマッピングする手順
+**Testim のテストを Xray のテストにマッピングするには:**
 
 1. Testim で、マッピングしたいテストを開きます。
 2. Testim のテスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。

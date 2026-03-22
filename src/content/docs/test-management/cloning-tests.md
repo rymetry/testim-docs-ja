@@ -64,11 +64,10 @@ keywords:
    </td>
    <td>
     プロジェクトタイプに基づいてデフォルトにリセットされます:
-    <br/>
-    <br/>
-    • Mobile Web - デフォルトは iPhone 6/7/8 に設定されます
-    <br/>
-    • Web および Mobile Native - 構成は「untitled」とラベル付けされ、プロジェクトタイプに適した値になります
+    <ul>
+     <li>Mobile Web - デフォルトは iPhone 6/7/8 に設定されます</li>
+     <li>Web および Mobile Native - 構成は「untitled」とラベル付けされ、プロジェクトタイプに適した値になります</li>
+    </ul>
    </td>
    <td>
     テスト構成をクローンします

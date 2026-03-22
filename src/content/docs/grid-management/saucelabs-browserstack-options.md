@@ -58,7 +58,7 @@ JSON capability file の設定は、次の設定を上書きします。
 
 ## SauceLabs
 
-### SauceLabs を web で使用する場合
+**Web の場合:**
 
 CLI に次を追加します: **--sauce-options "config_saucelabs.json"**
 
@@ -79,7 +79,7 @@ file の例:
 parameter の詳細は、SauceLabs の公式ドキュメントを参照してください。\
 [https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options](https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options)
 
-### SauceLabs を mobile で使用する場合
+**Mobile の場合:**
 
 - prefix なしの W3C format で Appium capability と SauceLabs option を指定します。
 
@@ -103,9 +103,9 @@ parameter の詳細は、SauceLabs の公式ドキュメントを参照してく
 
 ## BrowserStack
 
-### BrowserStack を web で使用する場合
+**Web の場合:**
 
-CLI に次を追加します: **--browserstack-options "config_browserstack.json"**\
+CLI に次を追加します: **--browserstack-options "config_browserstack.json"**
 次はサポートされる代表的な override parameter の例です。
 
 ```json
@@ -126,7 +126,7 @@ CLI に次を追加します: **--browserstack-options "config_browserstack.json
 parameter の詳細は、BrowserStack の公式ドキュメントを参照してください。\
 [https://www.browserstack.com/automate/capabilities](https://www.browserstack.com/automate/capabilities)
 
-### BrowserStack を mobile で使用する場合
+**Mobile の場合:**
 
 - Appium capability には、prefix なしの W3C capability format を使用します。
 - BrowserStack capability には、legacy (Wire JSON) format を使用します。
