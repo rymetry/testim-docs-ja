@@ -10,6 +10,9 @@ let isActionableIssue;
 let extractImageSequence;
 let extractCalloutPositions;
 let extractStepCounts;
+let stripTitleH1;
+let extractBulletCounts;
+let extractParagraphCounts;
 let compareSnapshotStructure;
 
 before(async () => {
@@ -23,6 +26,9 @@ before(async () => {
     extractImageSequence,
     extractCalloutPositions,
     extractStepCounts,
+    stripTitleH1,
+    extractBulletCounts,
+    extractParagraphCounts,
     compareSnapshotStructure,
   } = await import(
     '../lib/source_parity.mjs'
@@ -446,22 +452,22 @@ describe('compareSnapshotStructure', () => {
     assert.equal(nestIssues.length, 0);
   });
 
-  it('detects step count mismatch (large difference)', () => {
-    // EN has 10 steps, JA has 5 → diff=5, pct=50% → exceeds threshold (>3 AND >10%)
+  it('detects step count mismatch (large difference — total + per-section)', () => {
+    // EN has 10 steps, JA has 5 → total fires (>3 AND >10%) + per-section fires
     const en = '## Setup\n1. A\n2. B\n3. C\n4. D\n5. E\n6. F\n7. G\n8. H\n9. I\n10. J\n';
     const ja = '## セットアップ\n1. A\n2. B\n3. C\n4. D\n5. E\n';
     const issues = compareSnapshotStructure(en, ja);
     const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
-    assert.equal(stepIssues.length, 1);
+    assert.ok(stepIssues.length >= 1, 'should detect step count mismatch');
   });
 
-  it('ignores small step count differences (EN formatting quirks)', () => {
-    // EN=3, JA=2 → diff=1, pct=33% → below threshold (diff ≤ 3)
+  it('detects small per-section step count difference (diff=1)', () => {
+    // EN=3, JA=2 → per-section fires (diff >= 1)
     const en = '## Setup\n1. Step one\n2. Step two\n3. Step three\n';
     const ja = '## セットアップ\n1. ステップ 1\n2. ステップ 2\n';
     const issues = compareSnapshotStructure(en, ja);
     const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
-    assert.equal(stepIssues.length, 0);
+    assert.equal(stepIssues.length, 1, 'should detect single-step difference');
   });
 
   it('returns no step issues when counts match', () => {
@@ -483,5 +489,120 @@ describe('compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     // Should not crash; may or may not report image issues
     assert.ok(Array.isArray(issues));
+  });
+
+  it('detects step cancel-out across sections', () => {
+    // Section A: EN=2, JA=1; Section B: EN=1, JA=2; total 3=3
+    const en = '## Section A\n1. A\n2. B\n## Section B\n1. X\n';
+    const ja = '## セクション A\n1. A\n## セクション B\n1. X\n2. Y\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.ok(stepIssues.length >= 2, 'should detect per-section mismatches');
+  });
+
+  it('detects bullet count mismatch', () => {
+    const en = '## Features\n- A\n- B\n- C\n';
+    const ja = '## 機能\n- A\n- B\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const bulletIssues = issues.filter((i) => i.type === 'bullet-count-mismatch');
+    assert.equal(bulletIssues.length, 1);
+  });
+
+  it('detects paragraph count mismatch', () => {
+    const en = '## Overview\nFirst paragraph.\n\nSecond paragraph.\n\nThird paragraph.\n';
+    const ja = '## 概要\n最初の段落。\n\n2番目の段落。\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
+    assert.equal(paraIssues.length, 1);
+  });
+
+  it('normalises EN H1 headings for section comparison', () => {
+    // EN uses H1 for sections, JA uses H2 — should still compare per-section
+    const en = '# Title\nIntro\n# Setup\n1. A\n2. B\n3. C\n';
+    const ja = '## セットアップ\n1. A\n2. B\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.ok(stepIssues.length >= 1, 'should detect step mismatch after H1 normalisation');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// stripTitleH1 tests
+// ---------------------------------------------------------------------------
+
+describe('stripTitleH1', () => {
+  it('removes first H1 and demotes remaining H1s to H2', () => {
+    const body = '# Title\nIntro\n# Section A\nContent A\n# Section B\nContent B\n';
+    const result = stripTitleH1(body);
+    assert.ok(!result.includes('# Title'), 'first H1 should be removed');
+    assert.ok(result.includes('## Section A'), 'second H1 should become H2');
+    assert.ok(result.includes('## Section B'), 'third H1 should become H2');
+  });
+
+  it('returns body unchanged when no H1 present', () => {
+    const body = '## Section A\nContent\n## Section B\nContent\n';
+    const result = stripTitleH1(body);
+    assert.equal(result, body);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractBulletCounts tests
+// ---------------------------------------------------------------------------
+
+describe('extractBulletCounts', () => {
+  it('counts bullet items per section', () => {
+    const body = '## Features\n- Item A\n- Item B\n## Other\n* Item C\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Features'), 2);
+    assert.equal(result.get('Other'), 1);
+  });
+
+  it('excludes bullets inside code blocks', () => {
+    const body = '## Section\n- Real item\n```\n- Fake item\n```\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Section'), 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractParagraphCounts tests
+// ---------------------------------------------------------------------------
+
+describe('extractParagraphCounts', () => {
+  it('counts contiguous text blocks as paragraphs', () => {
+    const body = '## Section\nFirst paragraph line 1.\nFirst paragraph line 2.\n\nSecond paragraph.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+
+  it('does not count list items or images as paragraphs', () => {
+    const body = '## Section\nParagraph text.\n\n- Bullet\n1. Step\n![img](/a.png)\n\nAnother paragraph.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractStepCounts edge case tests (Fix 1)
+// ---------------------------------------------------------------------------
+
+describe('extractStepCounts edge cases', () => {
+  it('counts steps after blockquote without empty line separator', () => {
+    const body = '## Section\n> 📘 Note\n> Content\n1. Step one\n2. Step two\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+
+  it('counts steps after directive callout', () => {
+    const body = '## Section\n:::note\nSome note\n:::\n1. Step one\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section'), 1);
+  });
+
+  it('resets callout state at heading boundary', () => {
+    const body = '## Section A\n:::note\nUnclosed note\n## Section B\n1. Step one\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section B'), 1);
   });
 });

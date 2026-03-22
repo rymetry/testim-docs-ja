@@ -9,6 +9,8 @@ export const ISSUE_SEVERITY = {
   'image-order-mismatch': 'actionable',
   'callout-nesting-mismatch': 'actionable',
   'step-count-mismatch': 'signal',
+  'bullet-count-mismatch': 'signal',
+  'paragraph-count-mismatch': 'signal',
   'heading-mismatch': 'signal',
   'content-root-missing': 'signal',
   'source-fetch-error': 'error',
@@ -266,7 +268,6 @@ export function extractStepCounts(body) {
   let currentSection = '__top__';
   let inCodeBlock = false;
   let inCallout = false;
-  let inBlockquote = false;
 
   for (const line of lines) {
     if (FENCE_LINE_RE.test(line)) {
@@ -286,18 +287,14 @@ export function extractStepCounts(body) {
       continue;
     }
 
-    // Track blockquote blocks (> lines)
-    if (/^>\s/.test(line)) {
-      inBlockquote = true;
+    // Skip blockquote lines (legacy callouts etc.) — stateless per-line check
+    if (/^>/.test(trimmed)) {
       continue;
     }
-    if (inBlockquote && !trimmed) {
-      inBlockquote = false;
-    }
-    if (inBlockquote) continue;
 
     const headingMatch = line.match(/^#{2,3}\s+(.+)/);
     if (headingMatch) {
+      inCallout = false; // Reset unclosed callout at section boundary
       currentSection = headingMatch[1].trim();
       if (!sections.has(currentSection)) {
         sections.set(currentSection, 0);
@@ -314,6 +311,183 @@ export function extractStepCounts(body) {
   }
 
   return sections;
+}
+
+/**
+ * Strip the first H1 (page title) and demote remaining H1s to H2.
+ * EN snapshots use H1 for sections while JA uses H2; this normalises them
+ * so that section-based comparisons can match by ordinal position.
+ */
+export function stripTitleH1(body) {
+  let firstH1Skipped = false;
+  return body
+    .split('\n')
+    .map((line) => {
+      if (/^# /.test(line)) {
+        if (!firstH1Skipped) {
+          firstH1Skipped = true;
+          return ''; // Remove page title H1
+        }
+        return line.replace(/^# /, '## '); // Demote section H1 to H2
+      }
+      return line;
+    })
+    .join('\n');
+}
+
+/**
+ * Count unordered list items (top-level only) per h2/h3 section.
+ * Returns a Map<sectionHeading, count>.
+ */
+export function extractBulletCounts(body) {
+  const lines = body.split('\n');
+  const sections = new Map();
+  let currentSection = '__top__';
+  let inCodeBlock = false;
+  let inCallout = false;
+
+  for (const line of lines) {
+    if (FENCE_LINE_RE.test(line)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    const trimmed = line.trim();
+    if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
+      inCallout = true;
+      continue;
+    }
+    if (inCallout && trimmed === ':::') {
+      inCallout = false;
+      continue;
+    }
+
+    if (/^>/.test(trimmed)) continue;
+
+    const headingMatch = line.match(/^#{2,3}\s+(.+)/);
+    if (headingMatch) {
+      inCallout = false;
+      currentSection = headingMatch[1].trim();
+      if (!sections.has(currentSection)) {
+        sections.set(currentSection, 0);
+      }
+      continue;
+    }
+
+    // Top-level unordered list items (no leading whitespace)
+    if (!inCallout && /^[-*+]\s/.test(line)) {
+      sections.set(currentSection, (sections.get(currentSection) || 0) + 1);
+    }
+  }
+
+  return sections;
+}
+
+/**
+ * Count text paragraphs per h2/h3 section.
+ * A paragraph is a contiguous block of non-blank content lines that are not
+ * headings, list items, images, code fences, callouts, or blockquotes.
+ * Returns a Map<sectionHeading, count>.
+ */
+export function extractParagraphCounts(body) {
+  const lines = body.split('\n');
+  const sections = new Map();
+  let currentSection = '__top__';
+  let inCodeBlock = false;
+  let inCallout = false;
+  let inParagraph = false;
+
+  for (const line of lines) {
+    if (FENCE_LINE_RE.test(line)) {
+      inCodeBlock = !inCodeBlock;
+      inParagraph = false;
+      continue;
+    }
+    if (inCodeBlock) {
+      inParagraph = false;
+      continue;
+    }
+
+    const trimmed = line.trim();
+    if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
+      inCallout = true;
+      inParagraph = false;
+      continue;
+    }
+    if (inCallout && trimmed === ':::') {
+      inCallout = false;
+      inParagraph = false;
+      continue;
+    }
+    if (inCallout) continue;
+
+    if (/^>/.test(trimmed)) {
+      inParagraph = false;
+      continue;
+    }
+
+    const headingMatch = line.match(/^#{2,3}\s+(.+)/);
+    if (headingMatch) {
+      inCallout = false;
+      currentSection = headingMatch[1].trim();
+      if (!sections.has(currentSection)) {
+        sections.set(currentSection, 0);
+      }
+      inParagraph = false;
+      continue;
+    }
+
+    // Lines that break a paragraph (structural elements)
+    if (/^\d+(?:\\)?\.\s/.test(line)) { inParagraph = false; continue; }
+    if (/^[-*+]\s/.test(line)) { inParagraph = false; continue; }
+    if (/^\s+[-*+]\s/.test(line)) { inParagraph = false; continue; }
+    if (/^!\[/.test(trimmed) || /<img\b/i.test(trimmed) || /<Image\b/.test(trimmed)) {
+      inParagraph = false;
+      continue;
+    }
+
+    if (!trimmed) {
+      inParagraph = false;
+      continue;
+    }
+
+    // Non-blank, non-structural content line — start of a new paragraph
+    if (!inParagraph) {
+      inParagraph = true;
+      sections.set(currentSection, (sections.get(currentSection) || 0) + 1);
+    }
+  }
+
+  return sections;
+}
+
+/**
+ * Compare section-level counts between EN and JA.
+ * Filters out __top__ and only compares when section counts match.
+ */
+function compareSectionCounts(enMap, jaMap, issueType, label) {
+  const issues = [];
+  const enSections = [...enMap.entries()].filter(([k]) => k !== '__top__');
+  const jaSections = [...jaMap.entries()].filter(([k]) => k !== '__top__');
+
+  if (enSections.length > 0 && enSections.length === jaSections.length) {
+    for (let i = 0; i < enSections.length; i += 1) {
+      const [enHeading, enCount] = enSections[i];
+      const [, jaCount] = jaSections[i];
+      if (enCount !== jaCount && (enCount > 0 || jaCount > 0)) {
+        const diff = jaCount - enCount;
+        issues.push(
+          withSeverity({
+            type: issueType,
+            detail: `セクション #${i + 1} "${enHeading}": ${label} EN=${enCount}, JA=${jaCount} (${diff > 0 ? '+' : ''}${diff})`,
+          }),
+        );
+      }
+    }
+  }
+
+  return issues;
 }
 
 /**
@@ -389,19 +563,24 @@ export function compareSnapshotStructure(enBody, jaBody) {
     }
   }
 
-  // --- Step count comparison ---
-  const enSteps = extractStepCounts(enBody);
-  const jaSteps = extractStepCounts(jaBody);
+  // --- Section-based comparisons (steps, bullets, paragraphs) ---
+  // Normalise EN headings: strip title H1, demote remaining H1→H2
+  const normalizedEnBody = stripTitleH1(enBody);
 
-  // Compare total step counts as a coarse signal
+  const enSteps = extractStepCounts(normalizedEnBody);
+  const jaSteps = extractStepCounts(jaBody);
+  const enBullets = extractBulletCounts(normalizedEnBody);
+  const jaBullets = extractBulletCounts(jaBody);
+  const enParagraphs = extractParagraphCounts(normalizedEnBody);
+  const jaParagraphs = extractParagraphCounts(jaBody);
+
+  // Coarse total step comparison (kept for large-scale mismatches)
   const enTotal = [...enSteps.values()].reduce((a, b) => a + b, 0);
   const jaTotal = [...jaSteps.values()].reduce((a, b) => a + b, 0);
 
   if (enTotal > 0 && jaTotal > 0 && enTotal !== jaTotal) {
     const absDiff = Math.abs(jaTotal - enTotal);
     const pctDiff = absDiff / Math.max(enTotal, jaTotal);
-    // Only flag when difference is significant (>3 steps AND >10%)
-    // Small diffs are often caused by EN formatting quirks or intentional merges
     if (absDiff > 3 && pctDiff > 0.1) {
       const diff = jaTotal - enTotal;
       const direction = diff > 0 ? '多い' : '少ない';
@@ -413,6 +592,13 @@ export function compareSnapshotStructure(enBody, jaBody) {
       );
     }
   }
+
+  // Per-section comparisons (ordinal matching, diff >= 1)
+  issues.push(
+    ...compareSectionCounts(enSteps, jaSteps, 'step-count-mismatch', 'ステップ数'),
+    ...compareSectionCounts(enBullets, jaBullets, 'bullet-count-mismatch', '箇条書き数'),
+    ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数'),
+  );
 
   return issues;
 }
