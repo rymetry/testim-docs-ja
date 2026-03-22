@@ -375,8 +375,8 @@ export function extractBulletCounts(body) {
       continue;
     }
 
-    // Top-level unordered list items (no leading whitespace)
-    if (!inCallout && /^[-*+]\s/.test(line)) {
+    // Unordered list items at any nesting level
+    if (!inCallout && /^[-*+]\s/.test(trimmed)) {
       sections.set(currentSection, (sections.get(currentSection) || 0) + 1);
     }
   }
@@ -495,21 +495,38 @@ export function extractParagraphCounts(body) {
  * Compare section-level counts between EN and JA.
  * Filters out __top__ and only compares when section counts match.
  */
-function compareSectionCounts(enMap, jaMap, issueType, label) {
+function compareSectionCounts(enMap, jaMap, issueType, label, minDiff = 1) {
   const issues = [];
   const enSections = [...enMap.entries()].filter(([k]) => k !== '__top__');
   const jaSections = [...jaMap.entries()].filter(([k]) => k !== '__top__');
 
   if (enSections.length > 0 && enSections.length === jaSections.length) {
+    // Per-section ordinal comparison
     for (let i = 0; i < enSections.length; i += 1) {
       const [enHeading, enCount] = enSections[i];
       const [, jaCount] = jaSections[i];
-      if (enCount !== jaCount && (enCount > 0 || jaCount > 0)) {
-        const diff = jaCount - enCount;
+      const diff = jaCount - enCount;
+      if (Math.abs(diff) >= minDiff && (enCount > 0 || jaCount > 0)) {
         issues.push(
           withSeverity({
             type: issueType,
             detail: `セクション #${i + 1} "${enHeading}": ${label} EN=${enCount}, JA=${jaCount} (${diff > 0 ? '+' : ''}${diff})`,
+          }),
+        );
+      }
+    }
+  } else if (enSections.length > 0 && jaSections.length > 0) {
+    // Fallback: total comparison when section counts differ
+    const enTotal = [...enMap.values()].reduce((a, b) => a + b, 0);
+    const jaTotal = [...jaMap.values()].reduce((a, b) => a + b, 0);
+    if (enTotal > 0 && jaTotal > 0 && enTotal !== jaTotal) {
+      const absDiff = Math.abs(jaTotal - enTotal);
+      if (absDiff > 3) {
+        const diff = jaTotal - enTotal;
+        issues.push(
+          withSeverity({
+            type: issueType,
+            detail: `${label}の総数が原文と異なります: EN=${enTotal}, JA=${jaTotal} (${diff > 0 ? '+' : ''}${diff})`,
           }),
         );
       }
@@ -626,7 +643,7 @@ export function compareSnapshotStructure(enBody, jaBody) {
   issues.push(
     ...compareSectionCounts(enSteps, jaSteps, 'step-count-mismatch', 'ステップ数'),
     ...compareSectionCounts(enBullets, jaBullets, 'bullet-count-mismatch', '箇条書き数'),
-    ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数'),
+    ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数', 2),
   );
 
   return issues;

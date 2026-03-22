@@ -508,12 +508,31 @@ describe('compareSnapshotStructure', () => {
     assert.equal(bulletIssues.length, 1);
   });
 
-  it('detects paragraph count mismatch', () => {
-    const en = '## Overview\nFirst paragraph.\n\nSecond paragraph.\n\nThird paragraph.\n';
-    const ja = '## 概要\n最初の段落。\n\n2番目の段落。\n';
+  it('detects paragraph count mismatch (diff >= 2)', () => {
+    // EN has 4 paragraphs, JA has 2 → diff=2, meets minDiff=2 threshold
+    const en = '## Overview\nPara 1.\n\nPara 2.\n\nPara 3.\n\nPara 4.\n';
+    const ja = '## 概要\n段落 1。\n\n段落 2。\n';
     const issues = compareSnapshotStructure(en, ja);
     const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
     assert.equal(paraIssues.length, 1);
+  });
+
+  it('ignores small paragraph reflow (diff = 1)', () => {
+    // EN has 2 paragraphs, JA has 3 → diff=1, below minDiff=2 threshold
+    const en = '## Overview\nFirst paragraph.\n\nSecond paragraph.\n';
+    const ja = '## 概要\n最初の段落。\n\n2番目の段落。\n\n追加の説明。\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
+    assert.equal(paraIssues.length, 0);
+  });
+
+  it('falls back to total comparison when section counts differ', () => {
+    // EN: 2 sections with 5+3=8 steps, JA: 1 section with 3 steps → total diff=5
+    const en = '## Section A\n1. A\n2. B\n3. C\n4. D\n5. E\n## Section B\n1. X\n2. Y\n3. Z\n';
+    const ja = '## セクション A\n1. A\n2. B\n3. C\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.ok(stepIssues.length >= 1, 'should detect mismatch via total fallback');
   });
 
   it('normalises EN H1 headings for section comparison', () => {
@@ -556,6 +575,12 @@ describe('extractBulletCounts', () => {
     const result = extractBulletCounts(body);
     assert.equal(result.get('Features'), 2);
     assert.equal(result.get('Other'), 1);
+  });
+
+  it('counts indented bullets under numbered steps', () => {
+    const body = '## Section\n1. Step one\n   - Sub item A\n   - Sub item B\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Section'), 2);
   });
 
   it('excludes bullets inside code blocks', () => {
