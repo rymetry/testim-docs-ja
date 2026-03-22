@@ -692,45 +692,6 @@ export function extractHtmlTables(body) {
 }
 
 /**
- * Detect short English phrases left untranslated by comparing EN and JA cells.
- * Only fires when the JA cell is identical to the EN cell (literal copy).
- * Requires 3+ words to avoid flagging 2-word UI labels (Config File, Match level)
- * which are commonly kept in English in Testim docs.
- */
-export function isShortLabelResidual(enCell, jaCell) {
-  const en = stripMarkdown(enCell).trim();
-  const ja = stripMarkdown(jaCell).trim();
-
-  if (!en || !ja) return false;
-  if (en !== ja) return false; // Only flag when EN text is kept as-is
-
-  if (en.length < 15 || en.length > 60) return false;
-
-  const words = en.split(/\s+/);
-  if (words.length < 3 || words.length > 6) return false;
-
-  // Skip if contains CJK (already translated)
-  if (/[\u3000-\u9FFF\uF900-\uFAFF]/.test(en)) return false;
-  // Skip camelCase/PascalCase identifiers
-  if (/^[a-z][a-zA-Z0-9]*$/.test(en)) return false;
-  // Skip dot-notation paths
-  if (/^[a-zA-Z_]\w*(?:\.\w+)+$/.test(en)) return false;
-  // Skip URLs/paths
-  if (/^(https?:\/\/|\/)/.test(en)) return false;
-  // Skip numeric values with units
-  if (/^\d+(\.\d+)?(%|ms|px|s)?$/i.test(en)) return false;
-
-  // Skip keyboard shortcuts and key combinations broadly
-  // Covers: Alt + H, Option + H, Ctrl + Shift + Enter, Delete, Backspace, etc.
-  const KEY_NAMES = /\b(Alt|Ctrl|Cmd|Shift|Option|Delete|Backspace|Enter|Return|Space|Tab|Esc|Escape|Home|End|Page Up|Page Down|F\d{1,2})\b/i;
-  if (KEY_NAMES.test(en) && /[+,]/.test(en)) return false;
-  // Skip comma-separated key/value lists (e.g., "Delete, Backspace")
-  if (/^[A-Z][a-z]+(?:\s*,\s*[A-Z][a-z]+)+$/.test(en)) return false;
-
-  return true;
-}
-
-/**
  * Extract all tables (markdown + HTML) from body, sorted by document order.
  */
 export function extractTableStructure(body) {
@@ -802,18 +763,8 @@ function compareTableStructure(enBody, jaBody) {
           continue;
         }
 
-        // Short label residual: EN cell kept as-is in JA (2-4 word labels)
-        if (!jaEmpty && isShortLabelResidual(enCell, jaCell)) {
-          issues.push(
-            withSeverity({
-              type: 'table-cell-english-residual',
-              detail: `テーブル #${t + 1} [${r + 1},${c + 1}]: "${jaCell.slice(0, 50)}"`,
-            }),
-          );
-          continue;
-        }
-
-        // Long prose residual: English prose left untranslated in JA
+        // English prose residual: long untranslated English text in JA cell
+        // Short labels (UI names, step names) are intentionally English in Testim docs
         if (!jaEmpty && isUntranslatedCell(jaCell)) {
           issues.push(
             withSeverity({

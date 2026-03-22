@@ -16,10 +16,8 @@ let extractParagraphCounts;
 let compareSnapshotStructure;
 let extractMarkdownTables;
 let extractHtmlTables;
-let extractTableStructure;
 let stripMarkdown;
 let isUntranslatedCell;
-let isShortLabelResidual;
 
 before(async () => {
   ({
@@ -38,10 +36,8 @@ before(async () => {
     compareSnapshotStructure,
     extractMarkdownTables,
     extractHtmlTables,
-    extractTableStructure,
     stripMarkdown,
     isUntranslatedCell,
-    isShortLabelResidual,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -904,12 +900,13 @@ describe('table parity in compareSnapshotStructure', () => {
     assert.equal(shapeIssues.length, 1, 'should detect table drop');
   });
 
-  it('detects short label residual (3+ word phrase kept as-is in JA)', () => {
-    const en = '| Setting | Description |\n| --- | --- |\n| timeout | Run the selected test suite |\n';
-    const ja = '| 設定 | 説明 |\n| --- | --- |\n| timeout | Run the selected test suite |\n';
+  it('does not flag short UI labels (< 20 chars) as English residual', () => {
+    // Short labels like "Config File" are intentionally English in Testim docs
+    const en = '| Setting | Value |\n| --- | --- |\n| Config File | path |\n';
+    const ja = '| 設定 | 値 |\n| --- | --- |\n| Config File | パス |\n';
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
-    assert.ok(residualIssues.length >= 1, 'should detect 3+ word phrase kept as EN');
+    assert.equal(residualIssues.length, 0, 'short UI labels should not be flagged');
   });
 
   it('compares mixed HTML/markdown tables in document order', () => {
@@ -922,46 +919,6 @@ describe('table parity in compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     // At minimum: tables are compared in document order, so X vs Y mismatch
     assert.ok(Array.isArray(issues));
-  });
-});
-
-// ---------------------------------------------------------------------------
-// isShortLabelResidual tests
-// ---------------------------------------------------------------------------
-
-describe('isShortLabelResidual', () => {
-  it('detects 3+ word English phrase kept unchanged', () => {
-    assert.equal(isShortLabelResidual('Run the selected test', 'Run the selected test'), true);
-    assert.equal(isShortLabelResidual('Open the test editor', 'Open the test editor'), true);
-  });
-
-  it('returns false for 2-word UI labels (intentional English)', () => {
-    assert.equal(isShortLabelResidual('Property Name', 'Property Name'), false);
-    assert.equal(isShortLabelResidual('Config File', 'Config File'), false);
-    assert.equal(isShortLabelResidual('Match level', 'Match level'), false);
-    assert.equal(isShortLabelResidual('Test Configuration', 'Test Configuration'), false);
-  });
-
-  it('returns false when JA is translated (different from EN)', () => {
-    assert.equal(isShortLabelResidual('Run the selected test', 'テストを実行する'), false);
-  });
-
-  it('returns false for keyboard shortcuts (Alt, Ctrl, Option)', () => {
-    assert.equal(isShortLabelResidual('Alt + H', 'Alt + H'), false);
-    assert.equal(isShortLabelResidual('Option + H', 'Option + H'), false);
-    assert.equal(isShortLabelResidual('Ctrl + Shift + Enter', 'Ctrl + Shift + Enter'), false);
-  });
-
-  it('returns false for comma-separated key lists', () => {
-    assert.equal(isShortLabelResidual('Delete, Backspace', 'Delete, Backspace'), false);
-  });
-
-  it('returns false for short cells (< 15 chars)', () => {
-    assert.equal(isShortLabelResidual('short text', 'short text'), false);
-  });
-
-  it('returns false for empty cells', () => {
-    assert.equal(isShortLabelResidual('', ''), false);
   });
 });
 
