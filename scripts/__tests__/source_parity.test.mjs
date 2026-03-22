@@ -621,6 +621,14 @@ describe('normalizeEnArtifacts', () => {
     assert.ok(!/[\u200B\u200C\u200D\uFEFF]/.test(result));
   });
 
+  it('ensures trailing newline', () => {
+    const noNewline = 'Text without trailing newline';
+    assert.ok(normalizeEnArtifacts(noNewline).endsWith('\n'));
+    const withNewline = 'Text with trailing newline\n';
+    assert.ok(normalizeEnArtifacts(withNewline).endsWith('\n'));
+    assert.ok(!normalizeEnArtifacts(withNewline).endsWith('\n\n'), 'should not double newline');
+  });
+
   it('does not remove real content that happens to contain unicode', () => {
     const body = 'This is real text with \u200B embedded\n';
     const result = normalizeEnArtifacts(body);

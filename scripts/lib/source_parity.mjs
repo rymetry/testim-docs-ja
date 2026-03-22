@@ -346,7 +346,7 @@ export function stripTitleH1(body) {
  * parity mismatches against correctly-formatted JA translations.
  */
 export function normalizeEnArtifacts(body) {
-  return body
+  const result = body
     .split('\n')
     .map((line) => {
       // Fix broken ordered list items: "5.Click" → "5. Click" (missing space)
@@ -363,6 +363,9 @@ export function normalizeEnArtifacts(body) {
       return true;
     })
     .join('\n');
+
+  // Ensure trailing newline (EN snapshots often lack it, JA files have it)
+  return result.endsWith('\n') ? result : result + '\n';
 }
 
 /**
