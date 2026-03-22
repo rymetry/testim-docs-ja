@@ -81,6 +81,24 @@ describe('loadAllowlist', () => {
     }
   });
 
+  it('throws when allowlist rule has no detailIncludes or detailRegex', () => {
+    const tmpFile = path.join(os.tmpdir(), `test-allowlist-${Date.now()}.json`);
+    fs.writeFileSync(
+      tmpFile,
+      JSON.stringify({
+        'some-slug': [{ type: 'paragraph-count-mismatch', reason: 'too coarse' }],
+      }),
+    );
+    try {
+      assert.throws(
+        () => loadAllowlist(tmpFile),
+        /must specify detailIncludes or detailRegex/,
+      );
+    } finally {
+      fs.unlinkSync(tmpFile);
+    }
+  });
+
   it('accepts allowlist with signal-severity issues', () => {
     const tmpFile = path.join(os.tmpdir(), `test-allowlist-${Date.now()}.json`);
     fs.writeFileSync(
@@ -151,10 +169,24 @@ describe('isAllowlisted', () => {
     assert.equal(isAllowlisted('test-page', issue, allowlist), false);
   });
 
+  it('returns false when rule has only slug + type (no detailIncludes/detailRegex)', () => {
+    const allowlist = {
+      'test-page': [
+        { type: 'paragraph-count-mismatch', reason: 'too coarse' },
+      ],
+    };
+    const issue = {
+      type: 'paragraph-count-mismatch',
+      severity: 'signal',
+      detail: 'セクション #1 "Overview": 段落数 EN=4, JA=2 (-2)',
+    };
+    assert.equal(isAllowlisted('test-page', issue, allowlist), false);
+  });
+
   it('returns false when slug not in allowlist', () => {
     const allowlist = {
       'other-page': [
-        { type: 'paragraph-count-mismatch', reason: 'test' },
+        { type: 'paragraph-count-mismatch', detailIncludes: 'test', reason: 'test' },
       ],
     };
     const issue = {

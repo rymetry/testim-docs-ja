@@ -61,6 +61,11 @@ export function loadAllowlist(filePath = ALLOWLIST_PATH) {
           `Allowlist error: "${slug}" rule targets "${rule.type}" (severity: ${severity}). Only signal-severity issues can be suppressed.`,
         );
       }
+      if (!rule.detailIncludes && !rule.detailRegex) {
+        throw new Error(
+          `Allowlist error: "${slug}" rule for "${rule.type}" must specify detailIncludes or detailRegex. Slug + type only suppression is not allowed.`,
+        );
+      }
     }
   }
 
@@ -79,6 +84,8 @@ export function isAllowlisted(slug, issue, allowlist) {
 
   return rules.some((rule) => {
     if (rule.type !== issue.type) return false;
+    // Require at least detailIncludes or detailRegex — slug + type only is too coarse
+    if (!rule.detailIncludes && !rule.detailRegex) return false;
     const detail = issue.detail || issue.text || '';
     if (rule.detailIncludes && !detail.includes(rule.detailIncludes)) return false;
     if (rule.detailRegex && !new RegExp(rule.detailRegex).test(detail)) return false;
