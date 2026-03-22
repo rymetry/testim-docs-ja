@@ -629,6 +629,14 @@ describe('normalizeEnArtifacts', () => {
     assert.ok(!normalizeEnArtifacts(withNewline).endsWith('\n\n'), 'should not double newline');
   });
 
+  it('strips trailing backslash from lines', () => {
+    const body = '1. Click **Create Step**.\\\n   The editor opens.\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(result.includes('Click **Create Step**.'), 'backslash should be stripped');
+    assert.ok(!result.includes('\\'), 'no backslash should remain');
+    assert.ok(result.includes('The editor opens.'), 'continuation line should be kept separate');
+  });
+
   it('does not remove real content that happens to contain unicode', () => {
     const body = 'This is real text with \u200B embedded\n';
     const result = normalizeEnArtifacts(body);

@@ -346,24 +346,32 @@ export function stripTitleH1(body) {
  * parity mismatches against correctly-formatted JA translations.
  */
 export function normalizeEnArtifacts(body) {
-  const result = body
-    .split('\n')
-    .map((line) => {
-      // Fix broken ordered list items: "5.Click" → "5. Click" (missing space)
-      // EN snapshots sometimes omit the space after the period
-      const fixedList = line.replace(/^(\d+)\.(\S)/, '$1. $2');
-      return fixedList;
-    })
-    .filter((line) => {
-      // Remove zero-width space / BOM lines (artifacts from ReadMe.io)
-      // Check raw line before trim() since trim() strips some of these chars
-      if (/^[\s\u200B\u200C\u200D\uFEFF]*$/.test(line) && /[\u200B\u200C\u200D\uFEFF]/.test(line)) {
-        return false;
-      }
-      return true;
-    })
-    .join('\n');
+  const lines = body.split('\n');
+  const processed = [];
 
+  for (let i = 0; i < lines.length; i += 1) {
+    let line = lines[i];
+
+    // Fix broken ordered list items: "5.Click" → "5. Click" (missing space)
+    line = line.replace(/^(\d+)\.(\S)/, '$1. $2');
+
+    // Remove zero-width space / BOM lines (artifacts from ReadMe.io)
+    if (/^[\s\u200B\u200C\u200D\uFEFF]*$/.test(line) && /[\u200B\u200C\u200D\uFEFF]/.test(line)) {
+      continue;
+    }
+
+    // Strip trailing backslash (hard line break marker) so paragraph counter
+    // treats "text.\" as "text." — the continuation line remains separate.
+    // This prevents the backslash itself from interfering with line comparisons
+    // while keeping EN's paragraph structure intact.
+    if (line.endsWith('\\')) {
+      line = line.slice(0, -1).trimEnd();
+    }
+
+    processed.push(line);
+  }
+
+  const result = processed.join('\n');
   // Ensure trailing newline (EN snapshots often lack it, JA files have it)
   return result.endsWith('\n') ? result : result + '\n';
 }
