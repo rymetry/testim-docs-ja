@@ -679,9 +679,10 @@ export function extractHtmlTables(body) {
         let cellHtml = cellMatch[1];
         // Preserve <code> as backtick-wrapped inline code for token extraction
         // <code>--grep</code> → `--grep`
+        // Normalize whitespace inside code (pretty-printed HTML has newlines/indent)
         cellHtml = cellHtml.replace(
           /<code\b[^>]*>([\s\S]*?)<\/code>/gi,
-          (_, content) => `\`${content.replace(/<[^>]*>/g, '')}\``,
+          (_, content) => `\`${content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()}\``,
         );
         // Preserve link destinations before stripping HTML tags
         // <a href="/docs/foo">text</a> → text [/docs/foo]
@@ -782,8 +783,9 @@ export function extractInvariantTokens(cell) {
     tokenSet.add(m[1].replace(/\s+/g, ''));
   }
 
-  // File paths: /api/foo, /docs/slug (not already captured by mdLinkRe)
-  const pathRe = /(?:^|\s)(\/[a-zA-Z][\w/.-]+)/g;
+  // File paths: require 2+ segments (/api/foo, /docs/slug) or known prefix
+  // to avoid matching prose like "CI tool /local terminal"
+  const pathRe = /(?:^|\s)(\/[a-zA-Z][\w.-]+(?:\/[\w.-]+)+)/g;
   while ((m = pathRe.exec(rest)) !== null) {
     tokenSet.add(m[1]);
   }

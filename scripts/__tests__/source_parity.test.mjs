@@ -795,6 +795,15 @@ describe('extractHtmlTables', () => {
     assert.ok(tables[0].rows[0][0].includes('`--grep`'), 'code should be preserved as backtick');
   });
 
+  it('normalizes whitespace inside <code> (pretty-printed HTML)', () => {
+    const body = '<table><tr><td><code>\n  host=localhost/127.0.0.1\n</code></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.ok(
+      tables[0].rows[0][0].includes('`host=localhost/127.0.0.1`'),
+      'whitespace inside code should be normalized',
+    );
+  });
+
   it('preserves href with #fragment', () => {
     const body = '<table><tr><td><a href="/docs/validate-download#adding-a-cli-step">Adding a CLI step</a></td></tr></table>';
     const tables = extractHtmlTables(body);
@@ -1073,9 +1082,14 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.some((t) => t.includes('30sec')));
   });
 
-  it('extracts file paths', () => {
+  it('extracts multi-segment file paths', () => {
     const tokens = extractInvariantTokens('Endpoint at /api/v1/tests');
     assert.ok(tokens.includes('/api/v1/tests'));
+  });
+
+  it('does not extract single-segment slash-prefixed words as paths', () => {
+    const tokens = extractInvariantTokens('CI tool /local terminal/Shell');
+    assert.ok(!tokens.includes('/local'), 'single-segment /local should not be a path token');
   });
 
   it('returns empty array for plain text', () => {
