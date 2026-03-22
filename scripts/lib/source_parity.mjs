@@ -17,6 +17,7 @@ export const ISSUE_SEVERITY = {
   'table-shape-mismatch': 'signal',
   'table-cell-english-residual': 'signal',
   'table-cell-empty-mismatch': 'signal',
+  'table-cell-token-mismatch': 'signal',
   'source-fetch-error': 'error',
 };
 
@@ -692,6 +693,63 @@ export function extractHtmlTables(body) {
 }
 
 /**
+ * Extract invariant tokens from a table cell that must be preserved during translation.
+ * Returns a sorted array of token strings for comparison.
+ * Targets: URLs, inline code, CLI flags, dot-paths, versions, number+unit.
+ */
+export function extractInvariantTokens(cell) {
+  const tokens = [];
+
+  // Inline code: `--grep`, `params.timeout`, etc.
+  const codeRe = /`([^`]+)`/g;
+  let m;
+  while ((m = codeRe.exec(cell)) !== null) {
+    tokens.push(m[1]);
+  }
+
+  // Strip inline code before extracting other tokens to avoid double-counting
+  const withoutCode = cell.replace(/`[^`]*`/g, '');
+
+  // URLs: https://..., http://...
+  const urlRe = /https?:\/\/[^\s)>\]]+/g;
+  while ((m = urlRe.exec(withoutCode)) !== null) {
+    tokens.push(m[0]);
+  }
+
+  // CLI flags: --flag, -f (standalone, not inside words)
+  const flagRe = /(?:^|\s)(--?[a-zA-Z][\w-]*)(?=\s|$)/g;
+  while ((m = flagRe.exec(withoutCode)) !== null) {
+    tokens.push(m[1]);
+  }
+
+  // Dot-notation paths: params.timeout, test.id.value
+  const dotRe = /\b([a-zA-Z_]\w*(?:\.\w+)+)\b/g;
+  while ((m = dotRe.exec(withoutCode)) !== null) {
+    tokens.push(m[1]);
+  }
+
+  // Versions: v1.2.3, 2.0.0
+  const verRe = /\bv?\d+\.\d+\.\d+\b/g;
+  while ((m = verRe.exec(withoutCode)) !== null) {
+    tokens.push(m[0]);
+  }
+
+  // Number + unit: 30sec, 500ms, 10%, 5000ms, 100px
+  const numUnitRe = /\b(\d+(?:\.\d+)?\s*(?:sec|ms|s|px|em|rem|%|MB|GB|KB|min|hr))\b/gi;
+  while ((m = numUnitRe.exec(withoutCode)) !== null) {
+    tokens.push(m[1].replace(/\s+/g, ''));
+  }
+
+  // File paths: /api/foo, /docs/slug
+  const pathRe = /(?:^|\s)(\/[a-zA-Z][\w/.-]+)/g;
+  while ((m = pathRe.exec(withoutCode)) !== null) {
+    tokens.push(m[1]);
+  }
+
+  return tokens.sort();
+}
+
+/**
  * Extract all tables (markdown + HTML) from body, sorted by document order.
  */
 export function extractTableStructure(body) {
@@ -761,6 +819,27 @@ function compareTableStructure(enBody, jaBody) {
             }),
           );
           continue;
+        }
+
+        // Invariant token comparison: URLs, code, flags, versions, numbers must match
+        if (!enEmpty && !jaEmpty) {
+          const enTokens = extractInvariantTokens(enCell);
+          const jaTokens = extractInvariantTokens(jaCell);
+          if (enTokens.length > 0 && enTokens.join('|') !== jaTokens.join('|')) {
+            const missing = enTokens.filter((t) => !jaTokens.includes(t));
+            const added = jaTokens.filter((t) => !enTokens.includes(t));
+            const parts = [];
+            if (missing.length > 0) parts.push(`欠落: ${missing.slice(0, 3).join(', ')}`);
+            if (added.length > 0) parts.push(`追加: ${added.slice(0, 3).join(', ')}`);
+            if (parts.length > 0) {
+              issues.push(
+                withSeverity({
+                  type: 'table-cell-token-mismatch',
+                  detail: `テーブル #${t + 1} [${r + 1},${c + 1}]: ${parts.join('; ')}`,
+                }),
+              );
+            }
+          }
         }
 
         // English prose residual: long untranslated English text in JA cell

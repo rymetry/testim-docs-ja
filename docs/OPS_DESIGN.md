@@ -72,6 +72,7 @@
 | `table-shape-mismatch`        | テーブル行数・列数の不一致               |
 | `table-cell-english-residual` | テーブルセルの英語残留                   |
 | `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致              |
+| `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致    |
 
 **`--fail-on` フラグ:**
 

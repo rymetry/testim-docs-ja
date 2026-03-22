@@ -18,6 +18,7 @@ let extractMarkdownTables;
 let extractHtmlTables;
 let stripMarkdown;
 let isUntranslatedCell;
+let extractInvariantTokens;
 
 before(async () => {
   ({
@@ -38,6 +39,7 @@ before(async () => {
     extractHtmlTables,
     stripMarkdown,
     isUntranslatedCell,
+    extractInvariantTokens,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -937,5 +939,89 @@ describe('table cell empty detection with inline code', () => {
     const issues = compareSnapshotStructure(en, ja);
     const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
     assert.equal(emptyIssues.length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractInvariantTokens tests
+// ---------------------------------------------------------------------------
+
+describe('extractInvariantTokens', () => {
+  it('extracts inline code tokens', () => {
+    const tokens = extractInvariantTokens('Use `--grep` to filter');
+    assert.ok(tokens.includes('--grep'));
+  });
+
+  it('extracts URLs', () => {
+    const tokens = extractInvariantTokens('See https://example.com/docs for details');
+    assert.ok(tokens.includes('https://example.com/docs'));
+  });
+
+  it('extracts CLI flags', () => {
+    const tokens = extractInvariantTokens('Run with --timeout 30');
+    assert.ok(tokens.includes('--timeout'));
+  });
+
+  it('extracts dot-notation paths', () => {
+    const tokens = extractInvariantTokens('Set params.timeout to 30');
+    assert.ok(tokens.includes('params.timeout'));
+  });
+
+  it('extracts versions', () => {
+    const tokens = extractInvariantTokens('Requires v2.1.0 or later');
+    assert.ok(tokens.includes('v2.1.0'));
+  });
+
+  it('extracts number+unit', () => {
+    const tokens = extractInvariantTokens('Timeout is 30sec by default');
+    assert.ok(tokens.some((t) => t.includes('30sec')));
+  });
+
+  it('extracts file paths', () => {
+    const tokens = extractInvariantTokens('Endpoint at /api/v1/tests');
+    assert.ok(tokens.includes('/api/v1/tests'));
+  });
+
+  it('returns empty array for plain text', () => {
+    const tokens = extractInvariantTokens('Plain text with no tokens');
+    assert.equal(tokens.length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// table-cell-token-mismatch tests
+// ---------------------------------------------------------------------------
+
+describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
+  it('detects number+unit change (30 sec -> 40 sec)', () => {
+    const en = '| Setting | Value |\n| --- | --- |\n| timeout | 30sec |\n';
+    const ja = '| 設定 | 値 |\n| --- | --- |\n| timeout | 40sec |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'should detect number+unit change');
+  });
+
+  it('detects URL change', () => {
+    const en = '| Link | Note |\n| --- | --- |\n| https://example.com/a | See docs |\n';
+    const ja = '| リンク | 備考 |\n| --- | --- |\n| https://example.com/b | ドキュメント参照 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'should detect URL change');
+  });
+
+  it('detects inline code change (--grep -> --group)', () => {
+    const en = '| Flag | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| フラグ | 説明 |\n| --- | --- |\n| `--group` | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'should detect code token change');
+  });
+
+  it('returns no token issues when invariant tokens match', () => {
+    const en = '| Flag | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| フラグ | 説明 |\n| --- | --- |\n| `--grep` | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.equal(tokenIssues.length, 0);
   });
 });

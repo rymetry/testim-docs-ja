@@ -83,6 +83,7 @@ npm run check:parity -- --fail-on=any                     # allowlist 除外後�
 | `table-shape-mismatch` | テーブル行数・列数の不一致 |
 | `table-cell-english-residual` | テーブルセルの英語残留 |
 | `table-cell-empty-mismatch` | テーブルセルの空/非空不一致 |
+| `table-cell-token-mismatch` | テーブルセルの invariant token 不一致 |
 
 **allowlist**: `parity-allowlist.json` で signal severity の issue を抑制可能。slug + type + (detailIncludes or detailRegex) で一致。actionable/error は抑制不可。
 
