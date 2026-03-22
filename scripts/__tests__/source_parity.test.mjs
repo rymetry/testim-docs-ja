@@ -1044,6 +1044,16 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.includes('/docs/foo-bar#section'));
   });
 
+  it('extracts /docs/slug with Japanese fragment', () => {
+    const tokens = extractInvariantTokens('[text](/docs/add-cli-validations-and-actions#cli-ステップの追加)');
+    assert.ok(tokens.some((t) => t.startsWith('/docs/add-cli-validations-and-actions#cli-')));
+  });
+
+  it('extracts full JA fragment from bracket annotation', () => {
+    const tokens = extractInvariantTokens('text [/docs/add-cli-validations-and-actions#cli-ステップの追加]');
+    assert.ok(tokens.some((t) => t.includes('ステップの追加')), 'JA fragment should not be truncated');
+  });
+
   it('extracts CLI flags', () => {
     const tokens = extractInvariantTokens('Run with --timeout 30');
     assert.ok(tokens.includes('--timeout'));
@@ -1141,5 +1151,22 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
     assert.equal(tokenIssues.length, 0, 'absolute/relative testim URL should normalize to same token');
+  });
+
+  it('does not flag fragment-only difference on same page slug', () => {
+    // EN: /docs/wait-for#wait-for-element-text → JA: /docs/wait-for (page-level link)
+    const en = '| Step | Link |\n| --- | --- |\n| Wait | [wait](/docs/wait-for#wait-for-element-text) |\n';
+    const ja = '| ステップ | リンク |\n| --- | --- |\n| Wait | [wait](/docs/wait-for) |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.equal(tokenIssues.length, 0, 'same page slug with different fragment should not mismatch');
+  });
+
+  it('still flags when page slug itself differs', () => {
+    const en = '| Step | Link |\n| --- | --- |\n| Wait | [wait](/docs/wait-for#section) |\n';
+    const ja = '| ステップ | リンク |\n| --- | --- |\n| Wait | [wait](/docs/other-page) |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'different page slugs should still mismatch');
   });
 });

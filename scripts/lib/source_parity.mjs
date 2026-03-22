@@ -747,7 +747,8 @@ export function extractInvariantTokens(cell) {
 
   // Extract link destinations from markdown [text](/docs/slug#fragment) and
   // HTML-preserved format [/docs/slug#fragment] or [https://...]
-  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[\w-]+)?|https?:\/\/[^\s)\]]+))\]?\)?/g;
+  // Fragment can contain Unicode characters (JA anchors like #cli-ステップの追加)
+  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+))\]?\)?/g;
   while ((m = linkDestRe.exec(rest)) !== null) {
     tokenSet.add(normalizeUrlToken(m[1]));
   }
@@ -866,12 +867,17 @@ function compareTableStructure(enBody, jaBody) {
         }
 
         // Invariant token comparison: URLs, code, flags, versions, numbers must match
+        // For internal /docs links, compare at page-slug level (ignore fragment differences)
         if (!enEmpty && !jaEmpty) {
-          const enTokens = extractInvariantTokens(enCell);
-          const jaTokens = extractInvariantTokens(jaCell);
-          if (enTokens.length > 0 && enTokens.join('|') !== jaTokens.join('|')) {
-            const missing = enTokens.filter((t) => !jaTokens.includes(t));
-            const added = jaTokens.filter((t) => !enTokens.includes(t));
+          const normalizeDocLink = (t) => t.replace(/^(\/docs\/[\w-]+)#.*$/, '$1');
+          const enTokens = extractInvariantTokens(enCell).map(normalizeDocLink);
+          const jaTokens = extractInvariantTokens(jaCell).map(normalizeDocLink);
+          // Deduplicate after normalization (slug + slug#fragment → single slug)
+          const enSet = [...new Set(enTokens)].sort();
+          const jaSet = [...new Set(jaTokens)].sort();
+          if (enSet.length > 0 && enSet.join('|') !== jaSet.join('|')) {
+            const missing = enSet.filter((t) => !jaSet.includes(t));
+            const added = jaSet.filter((t) => !enSet.includes(t));
             const parts = [];
             if (missing.length > 0) parts.push(`欠落: ${missing.slice(0, 3).join(', ')}`);
             if (added.length > 0) parts.push(`追加: ${added.slice(0, 3).join(', ')}`);
