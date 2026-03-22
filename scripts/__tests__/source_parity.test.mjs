@@ -792,33 +792,53 @@ describe('stripMarkdown', () => {
 });
 
 describe('isUntranslatedCell', () => {
-  it('detects English-only cell content', () => {
-    assert.equal(isUntranslatedCell('Click on the button'), true);
-    assert.equal(isUntranslatedCell('Select the option'), true);
+  it('detects English prose (20+ chars, 3+ words)', () => {
+    assert.equal(isUntranslatedCell('Click on the button to proceed with the action'), true);
+    assert.equal(isUntranslatedCell('Select the option from the dropdown menu'), true);
+    assert.equal(isUntranslatedCell('This is a description of the feature'), true);
   });
 
   it('returns false for Japanese content', () => {
-    assert.equal(isUntranslatedCell('ボタンをクリック'), false);
+    assert.equal(isUntranslatedCell('ボタンをクリックして操作を続行します'), false);
   });
 
-  it('returns false for allowed English terms', () => {
-    assert.equal(isUntranslatedCell('API'), false);
-    assert.equal(isUntranslatedCell('Testim'), false);
-    assert.equal(isUntranslatedCell('Visual Editor'), false);
-  });
-
-  it('returns false for short cells', () => {
-    assert.equal(isUntranslatedCell('A'), false);
+  it('returns false for short cells (< 20 chars)', () => {
     assert.equal(isUntranslatedCell(''), false);
+    assert.equal(isUntranslatedCell('A'), false);
+    assert.equal(isUntranslatedCell('Click on the'), false);
+    assert.equal(isUntranslatedCell('Property'), false);
+    assert.equal(isUntranslatedCell('Node.js'), false);
+  });
+
+  it('returns false for identifiers and labels (< 3 words)', () => {
+    assert.equal(isUntranslatedCell('projectId'), false);
+    assert.equal(isUntranslatedCell('Testim CLI'), false);
+    assert.equal(isUntranslatedCell('Visual Editor'), false);
+    assert.equal(isUntranslatedCell('Smart Locators'), false);
+  });
+
+  it('returns false for camelCase/PascalCase identifiers', () => {
+    assert.equal(isUntranslatedCell('projectId'), false);
+    assert.equal(isUntranslatedCell('testName'), false);
+  });
+
+  it('returns false for dot-notation paths', () => {
+    assert.equal(isUntranslatedCell('params.timeout'), false);
+    assert.equal(isUntranslatedCell('test.id.value'), false);
+  });
+
+  it('returns false for keyboard shortcuts', () => {
+    assert.equal(isUntranslatedCell('Alt + H'), false);
+    assert.equal(isUntranslatedCell('Ctrl + Shift + Enter'), false);
   });
 
   it('returns false for URLs', () => {
-    assert.equal(isUntranslatedCell('https://example.com'), false);
+    assert.equal(isUntranslatedCell('https://example.com/very/long/path/here'), false);
   });
 
-  it('returns false for numbers', () => {
+  it('returns false for numbers and units', () => {
     assert.equal(isUntranslatedCell('42'), false);
-    assert.equal(isUntranslatedCell('3.14'), false);
+    assert.equal(isUntranslatedCell('5000ms'), false);
   });
 });
 
@@ -839,9 +859,9 @@ describe('table parity in compareSnapshotStructure', () => {
     assert.equal(emptyIssues.length, 1);
   });
 
-  it('detects English residual in table cell', () => {
-    const en = '| Feature | Description |\n| --- | --- |\n| Smart Locators | AI-based element detection |\n';
-    const ja = '| 機能 | 説明 |\n| --- | --- |\n| Smart Locators | AI-based element detection |\n';
+  it('detects English residual in table cell (prose-length text)', () => {
+    const en = '| Feature | Description |\n| --- | --- |\n| Login | Enter your credentials to access the dashboard panel |\n';
+    const ja = '| 機能 | 説明 |\n| --- | --- |\n| ログイン | Enter your credentials to access the dashboard panel |\n';
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
     assert.ok(residualIssues.length >= 1, 'should detect English residual in table cell');
@@ -865,11 +885,20 @@ describe('table parity in compareSnapshotStructure', () => {
     assert.equal(shapeIssues.length, 1);
   });
 
-  it('skips cell comparison when table counts differ', () => {
+  it('reports table count mismatch when table counts differ', () => {
     const en = '| A |\n| --- |\n| 1 |\n\n| B |\n| --- |\n| 2 |\n';
     const ja = '| A |\n| --- |\n| 1 |\n';
     const issues = compareSnapshotStructure(en, ja);
-    const tableIssues = issues.filter((i) => i.type.startsWith('table-'));
-    assert.equal(tableIssues.length, 0, 'should not compare when table counts differ');
+    const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(shapeIssues.length, 1, 'should report table count mismatch');
+    assert.match(shapeIssues[0].detail, /EN=2.*JA=1/);
+  });
+
+  it('reports table drop (EN has table, JA has none)', () => {
+    const en = '| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+    const ja = 'テキストのみ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(shapeIssues.length, 1, 'should detect table drop');
   });
 });

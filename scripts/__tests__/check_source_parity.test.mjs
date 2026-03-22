@@ -81,6 +81,24 @@ describe('loadAllowlist', () => {
     }
   });
 
+  it('throws when allowlist has invalid detailRegex', () => {
+    const tmpFile = path.join(os.tmpdir(), `test-allowlist-${Date.now()}.json`);
+    fs.writeFileSync(
+      tmpFile,
+      JSON.stringify({
+        'some-slug': [{ type: 'paragraph-count-mismatch', detailRegex: '(' }],
+      }),
+    );
+    try {
+      assert.throws(
+        () => loadAllowlist(tmpFile),
+        /invalid detailRegex/,
+      );
+    } finally {
+      fs.unlinkSync(tmpFile);
+    }
+  });
+
   it('throws when allowlist rule has no detailIncludes or detailRegex', () => {
     const tmpFile = path.join(os.tmpdir(), `test-allowlist-${Date.now()}.json`);
     fs.writeFileSync(

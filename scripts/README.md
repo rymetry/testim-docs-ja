@@ -367,7 +367,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `lint` | lint:md && lint:docs | 全 lint 実行 |
 | `lint:md` | lint:md:content && lint:md:repo | markdownlint 実行 |
 | `lint:md:content` | markdownlint (docs content) | コンテンツ MD lint（MD001 無効） |
-| `lint:md:repo` | markdownlint (repo docs) | リポジトリ MD lint |
+| `lint:md:repo` | markdownlint (repo docs, .github) | リポジトリ MD lint |
 | `lint:docs` | lint-docs.mjs | 構文・frontmatter 検証 |
 | `check:snapshots` | snapshot_update.mjs && snapshot_diff.mjs | スナップショット取得→比較 |
 | `check:snapshots:fetch` | snapshot_update.mjs | スナップショット取得 |

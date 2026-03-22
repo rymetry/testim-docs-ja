@@ -66,6 +66,15 @@ export function loadAllowlist(filePath = ALLOWLIST_PATH) {
           `Allowlist error: "${slug}" rule for "${rule.type}" must specify detailIncludes or detailRegex. Slug + type only suppression is not allowed.`,
         );
       }
+      if (rule.detailRegex) {
+        try {
+          new RegExp(rule.detailRegex);
+        } catch {
+          throw new Error(
+            `Allowlist error: "${slug}" rule for "${rule.type}" has invalid detailRegex: "${rule.detailRegex}".`,
+          );
+        }
+      }
     }
   }
 

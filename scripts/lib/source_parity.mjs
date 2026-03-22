@@ -559,37 +559,44 @@ export function stripMarkdown(text) {
 }
 
 /**
- * Check if a table cell contains untranslated English text.
- * Separate from isEnglishOnlyLine — designed for short cell content.
+ * Check if a table cell contains untranslated English *prose*.
+ * Designed to catch full English sentences/phrases left untranslated,
+ * while excluding identifiers, property names, UI labels, shortcuts, etc.
  */
 export function isUntranslatedCell(cell) {
   const stripped = stripMarkdown(cell).trim();
-  if (stripped.length < 2) return false;
+  // Require substantial text — short cells are usually identifiers/labels
+  if (stripped.length < 20) return false;
 
   // Skip cells that are only URLs, code, or numbers
   if (/^https?:\/\//.test(stripped)) return false;
   if (/^[`']/.test(stripped)) return false;
   if (/^\d+(\.\d+)?%?$/.test(stripped)) return false;
 
-  // Skip known English-only terms (product names, abbreviations)
-  const ALLOWED_EN = new Set([
-    'API', 'CLI', 'CI', 'CD', 'URL', 'ID', 'JSON', 'XML', 'HTML', 'CSS',
-    'SDK', 'REST', 'HTTP', 'HTTPS', 'UI', 'N/A', 'OK', 'OS',
-    'Testim', 'Tricentis', 'Salesforce', 'Chrome', 'Firefox', 'Safari',
-    'Edge', 'Windows', 'macOS', 'Linux', 'Android', 'iOS',
-    'Visual Editor', 'Test Editor', 'Testim Automate', 'Testim Grid',
-    'Smart Locators', 'Visual AI', 'Testim Extension',
-  ]);
-  if (ALLOWED_EN.has(stripped)) return false;
+  // Skip cells with CJK characters (already has some translation)
+  if (/[\u3000-\u9FFF\uF900-\uFAFF]/.test(stripped)) return false;
 
-  // Check if CJK characters are present
-  const hasCJK = /[\u3000-\u9FFF\uF900-\uFAFF]/.test(stripped);
-  if (hasCJK) return false;
+  // Skip camelCase/PascalCase identifiers (e.g., projectId, testName)
+  if (/^[a-z][a-zA-Z0-9]*$/.test(stripped)) return false;
+  if (/^[A-Z][a-z][a-zA-Z0-9]*$/.test(stripped)) return false;
 
-  // Calculate ASCII letter ratio
+  // Skip dot-notation property paths (e.g., params.timeout, test.id)
+  if (/^[a-zA-Z_]\w*(?:\.\w+)+$/.test(stripped)) return false;
+
+  // Skip keyboard shortcuts (e.g., Alt + H, Ctrl + Shift + Enter)
+  if (/^(?:Alt|Ctrl|Cmd|Shift|Enter|Tab|Esc|Space)\b/i.test(stripped) && /\+/.test(stripped)) return false;
+
+  // Skip cells with numbers and units (e.g., 30s, 5000ms, 100px)
+  if (/^\d+\s*(?:s|ms|px|em|rem|%|MB|GB|KB)$/i.test(stripped)) return false;
+
+  // Require multiple words (single-word cells are usually identifiers/labels)
+  const words = stripped.split(/\s+/);
+  if (words.length < 3) return false;
+
+  // Must look like English prose: has spaces between words, mostly ASCII letters
   const letters = stripped.replace(/[^A-Za-z]/g, '');
   const ratio = letters.length / stripped.length;
-  return ratio > 0.5;
+  return ratio > 0.6;
 }
 
 /**
@@ -699,8 +706,18 @@ function compareTableStructure(enBody, jaBody) {
   const enTables = extractTableStructure(enBody);
   const jaTables = extractTableStructure(jaBody);
 
-  // Only compare when table counts match (ordinal matching)
-  if (enTables.length === 0 || enTables.length !== jaTables.length) {
+  // Report table count mismatch (table drop/add)
+  if (enTables.length !== jaTables.length && (enTables.length > 0 || jaTables.length > 0)) {
+    issues.push(
+      withSeverity({
+        type: 'table-shape-mismatch',
+        detail: `テーブル数: EN=${enTables.length}, JA=${jaTables.length}`,
+      }),
+    );
+    return issues; // Skip per-cell comparison when table counts differ
+  }
+
+  if (enTables.length === 0) {
     return issues;
   }
 
