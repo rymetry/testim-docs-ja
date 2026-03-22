@@ -35,8 +35,8 @@ Company Owner または Project Owner は、Tricentis Device Cloud の無料 tri
 
 ![Tricentis Device Cloud trial が有効化された通知](/images/grid-management/tricentis-device-cloud/0012b7c-trialactive.png)
 
-次に、メイン navigation menu の **Device Management** link へ移動します。\
-**Tricentis Device Cloud Shared** 画面で、trial 期間中に利用できる device を確認できます。
+3. メイン navigation menu の **Device Management** link へ移動します。\
+   **Tricentis Device Cloud Shared** 画面で、trial 期間中に利用できる device を確認できます。
 
 ![Tricentis Device Cloud Shared 画面に trial device 一覧が表示されている様子](/images/grid-management/tricentis-device-cloud/b81b106-image_3.png)
 

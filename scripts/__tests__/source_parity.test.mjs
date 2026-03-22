@@ -7,6 +7,10 @@ let summarizeParityResults;
 let isEnglishOnlyLine;
 let loadSidebarSlugs;
 let isActionableIssue;
+let extractImageSequence;
+let extractCalloutPositions;
+let extractStepCounts;
+let compareSnapshotStructure;
 
 before(async () => {
   ({
@@ -16,6 +20,10 @@ before(async () => {
     isEnglishOnlyLine,
     loadSidebarSlugs,
     isActionableIssue,
+    extractImageSequence,
+    extractCalloutPositions,
+    extractStepCounts,
+    compareSnapshotStructure,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -278,5 +286,202 @@ describe('summarizeParityResults', () => {
     // File has both actionable and error → counted as actionable
     assert.equal(summary.actionableFiles, 1);
     assert.equal(summary.errorFiles, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Snapshot structure comparison tests
+// ---------------------------------------------------------------------------
+
+describe('extractImageSequence', () => {
+  it('extracts markdown images in document order', () => {
+    const body = '![alt1](/images/aaa.png)\ntext\n![alt2](/images/bbb.png)\n';
+    const result = extractImageSequence(body);
+    assert.equal(result.length, 2);
+    assert.equal(result[0].file, 'aaa');
+    assert.equal(result[1].file, 'bbb');
+  });
+
+  it('extracts Image JSX components', () => {
+    const body = '<Image src="https://files.readme.io/abc-test.png" />\n';
+    const result = extractImageSequence(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].file, 'abc-test');
+  });
+
+  it('extracts <img> tags', () => {
+    const body = '<img src="/images/foo-bar.jpg" alt="test" />\n';
+    const result = extractImageSequence(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].file, 'foo-bar');
+  });
+
+  it('skips images inside code blocks', () => {
+    const body = '```\n![inside](/images/skip.png)\n```\n![outside](/images/keep.png)\n';
+    const result = extractImageSequence(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].file, 'keep');
+  });
+
+  it('handles multiple images on same line', () => {
+    const body = '![a](/images/one.png) text ![b](/images/two.png)\n';
+    const result = extractImageSequence(body);
+    assert.equal(result.length, 2);
+  });
+});
+
+describe('extractCalloutPositions', () => {
+  it('detects top-level directive callout', () => {
+    const body = ':::note\nSome note\n:::\n';
+    const result = extractCalloutPositions(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'note');
+    assert.equal(result[0].depth, 0);
+  });
+
+  it('detects nested directive callout (indented)', () => {
+    const body = '- list item\n  :::warning\n  content\n  :::\n';
+    const result = extractCalloutPositions(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'warning');
+    assert.equal(result[0].depth, 1);
+  });
+
+  it('detects top-level legacy callout', () => {
+    const body = '> 📘 Note\n> Content\n';
+    const result = extractCalloutPositions(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].depth, 0);
+  });
+
+  it('treats legacy callout after list item as top-level (no indent)', () => {
+    const body = '- list item\n> 🚧 Warning\n> Content\n';
+    const result = extractCalloutPositions(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].depth, 0);
+  });
+
+  it('detects indented legacy callout as nested', () => {
+    const body = '- list item\n  > 🚧 Warning\n  > Content\n';
+    const result = extractCalloutPositions(body);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].depth, 1);
+  });
+
+  it('skips callouts inside code blocks', () => {
+    const body = '```\n:::note\nInside code\n:::\n```\n';
+    const result = extractCalloutPositions(body);
+    assert.equal(result.length, 0);
+  });
+});
+
+describe('extractStepCounts', () => {
+  it('counts numbered steps per section', () => {
+    const body = '## Section A\n1. Step one\n2. Step two\n## Section B\n1. Only step\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section A'), 2);
+    assert.equal(result.get('Section B'), 1);
+  });
+
+  it('counts steps before any heading under __top__', () => {
+    const body = '1. First\n2. Second\n## Section\n1. Other\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('__top__'), 2);
+    assert.equal(result.get('Section'), 1);
+  });
+
+  it('ignores numbered items inside code blocks', () => {
+    const body = '## Steps\n1. Real step\n```\n2. Fake step\n```\n3. Real step 2\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Steps'), 2);
+  });
+});
+
+describe('compareSnapshotStructure', () => {
+  it('detects image order mismatch', () => {
+    const en = '![a](https://example.com/aaa.png)\n![b](https://example.com/bbb.png)\n';
+    const ja = '![b](/images/bbb.png)\n![a](/images/aaa.png)\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const orderIssues = issues.filter((i) => i.type === 'image-order-mismatch');
+    assert.equal(orderIssues.length, 1);
+  });
+
+  it('returns no issues when image order matches', () => {
+    const en = '![a](https://example.com/aaa.png)\n![b](https://example.com/bbb.png)\n';
+    const ja = '![a](/images/aaa.png)\n![b](/images/bbb.png)\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const orderIssues = issues.filter((i) => i.type === 'image-order-mismatch');
+    assert.equal(orderIssues.length, 0);
+  });
+
+  it('detects callout nesting mismatch (EN top-level, JA nested)', () => {
+    const en = '> 📘 Top level note\n> Content\n';
+    const ja = '- list item\n  :::note\n  Content\n  :::\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const nestIssues = issues.filter((i) => i.type === 'callout-nesting-mismatch');
+    assert.equal(nestIssues.length, 1);
+  });
+
+  it('detects callout nesting mismatch (EN indented, JA top-level)', () => {
+    const en = '- list item\n  > 📘 Indented note\n  > Content\n';
+    const ja = ':::note\nContent\n:::\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const nestIssues = issues.filter((i) => i.type === 'callout-nesting-mismatch');
+    assert.equal(nestIssues.length, 1);
+  });
+
+  it('returns no callout issues when nesting matches (both top-level)', () => {
+    const en = '> 📘 Top level note\n> Content\n';
+    const ja = ':::note\nContent\n:::\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const nestIssues = issues.filter((i) => i.type === 'callout-nesting-mismatch');
+    assert.equal(nestIssues.length, 0);
+  });
+
+  it('returns no callout issues when nesting matches (both nested)', () => {
+    const en = '- list\n  > 📘 Nested\n  > Content\n';
+    const ja = '- list\n  :::note\n  Content\n  :::\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const nestIssues = issues.filter((i) => i.type === 'callout-nesting-mismatch');
+    assert.equal(nestIssues.length, 0);
+  });
+
+  it('detects step count mismatch (large difference)', () => {
+    // EN has 10 steps, JA has 5 → diff=5, pct=50% → exceeds threshold (>3 AND >10%)
+    const en = '## Setup\n1. A\n2. B\n3. C\n4. D\n5. E\n6. F\n7. G\n8. H\n9. I\n10. J\n';
+    const ja = '## セットアップ\n1. A\n2. B\n3. C\n4. D\n5. E\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(stepIssues.length, 1);
+  });
+
+  it('ignores small step count differences (EN formatting quirks)', () => {
+    // EN=3, JA=2 → diff=1, pct=33% → below threshold (diff ≤ 3)
+    const en = '## Setup\n1. Step one\n2. Step two\n3. Step three\n';
+    const ja = '## セットアップ\n1. ステップ 1\n2. ステップ 2\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(stepIssues.length, 0);
+  });
+
+  it('returns no step issues when counts match', () => {
+    const en = '## Setup\n1. Step one\n2. Step two\n';
+    const ja = '## セットアップ\n1. ステップ 1\n2. ステップ 2\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(stepIssues.length, 0);
+  });
+
+  it('handles empty bodies gracefully', () => {
+    const issues = compareSnapshotStructure('', '');
+    assert.equal(issues.length, 0);
+  });
+
+  it('handles EN-only images without crashing', () => {
+    const en = '![a](https://example.com/aaa.png)\n';
+    const ja = 'テキストのみ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    // Should not crash; may or may not report image issues
+    assert.ok(Array.isArray(issues));
   });
 });
