@@ -328,9 +328,7 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **[Wait for element text](/docs/wait-for#wait-for-element-text)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
 
-- **[Sleep](/docs/wait-for#sleep)** - ステップ間で一定期間待機できるようにします。
-
-- **[Add extract value step](/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
+- **[Sleep](/docs/wait-for#sleep)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
 
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 

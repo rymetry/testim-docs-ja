@@ -52,11 +52,13 @@ keywords:
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/014defd-Testim_116a.png)
 
-2. **フォルダー**（Shared steps）をクリックし、共有ステップメニューを開きます。
+2. **フォルダー**（Shared steps）をクリックします。\
+   共有ステップメニューが開きます。
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/ab52494-Testim_070_r.png)
 
-3. 目的のグループを選択し、テストに追加します。
+3. 既存のグループステップのリストから、目的のグループを選択します。\
+   グループがテストに追加されます。
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/b9e1760-Testim_117.png)
 

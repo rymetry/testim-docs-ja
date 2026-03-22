@@ -120,16 +120,10 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
    </td>
    <td>
     リクエストがブロックされたかどうか
-    <br/>
-    <strong>
-     true
-    </strong>
-    = ブロック済み
-    <br/>
-    <strong>
-     false
-    </strong>
-    = ブロックされていない
+
+- **true** = ブロック済み
+- **false** = ブロックされていない
+
    </td>
   </tr>
   <tr>
@@ -146,16 +140,10 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
    </td>
    <td>
     リクエストが完了したかどうか
-    <br/>
-    <strong>
-     true
-    </strong>
-    = 完了
-    <br/>
-    <strong>
-     false
-    </strong>
-    = 保留中
+
+- **true** = 完了
+- **false** = 保留中
+
    </td>
   </tr>
   <tr>
