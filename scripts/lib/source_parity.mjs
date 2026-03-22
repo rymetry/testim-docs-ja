@@ -396,6 +396,7 @@ export function extractParagraphCounts(body) {
   let currentSection = '__top__';
   let inCodeBlock = false;
   let inCallout = false;
+  let inTable = false;
   let inParagraph = false;
 
   for (const line of lines) {
@@ -410,6 +411,22 @@ export function extractParagraphCounts(body) {
     }
 
     const trimmed = line.trim();
+
+    // Track HTML table blocks (EN snapshots use <Table>/<table>)
+    if (/^<(?:Table|table)\b/i.test(trimmed)) {
+      inTable = true;
+      inParagraph = false;
+      continue;
+    }
+    if (inTable && /^<\/(?:Table|table)>/i.test(trimmed)) {
+      inTable = false;
+      continue;
+    }
+    if (inTable) {
+      inParagraph = false;
+      continue;
+    }
+
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
       inCallout = true;
       inParagraph = false;
@@ -443,6 +460,18 @@ export function extractParagraphCounts(body) {
     if (/^[-*+]\s/.test(line)) { inParagraph = false; continue; }
     if (/^\s+[-*+]\s/.test(line)) { inParagraph = false; continue; }
     if (/^!\[/.test(trimmed) || /<img\b/i.test(trimmed) || /<Image\b/.test(trimmed)) {
+      inParagraph = false;
+      continue;
+    }
+    // Skip markdown pipe table rows
+    if (/^\|/.test(trimmed)) { inParagraph = false; continue; }
+    // Skip HTML structural tags (br, hr, div, details, etc.)
+    if (/^<\/?(br|hr|div|details|summary)\b/i.test(trimmed)) {
+      inParagraph = false;
+      continue;
+    }
+    // Skip remaining HTML block tags (thead, tbody, tr, td, th, etc.)
+    if (/^<\/?(thead|tbody|tfoot|tr|td|th)\b/i.test(trimmed)) {
       inParagraph = false;
       continue;
     }
