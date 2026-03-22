@@ -787,6 +787,19 @@ describe('extractHtmlTables', () => {
     assert.equal(tables.length, 1);
     assert.ok(tables[0].rows[0][0].includes('/docs/foo'), 'href should be preserved in cell text');
   });
+
+  it('preserves <code> as backtick-wrapped inline code', () => {
+    const body = '<table><tr><td><code>--grep</code></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.equal(tables.length, 1);
+    assert.ok(tables[0].rows[0][0].includes('`--grep`'), 'code should be preserved as backtick');
+  });
+
+  it('preserves href with #fragment', () => {
+    const body = '<table><tr><td><a href="/docs/validate-download#adding-a-cli-step">Adding a CLI step</a></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.ok(tables[0].rows[0][0].includes('#adding-a-cli-step'), 'fragment should be preserved');
+  });
 });
 
 describe('stripMarkdown', () => {
@@ -834,9 +847,12 @@ describe('isUntranslatedCell', () => {
     assert.equal(isUntranslatedCell('test.id.value'), false);
   });
 
-  it('returns false for keyboard shortcuts', () => {
+  it('returns false for keyboard shortcuts (including Mac keys)', () => {
     assert.equal(isUntranslatedCell('Alt + H'), false);
     assert.equal(isUntranslatedCell('Ctrl + Shift + Enter'), false);
+    assert.equal(isUntranslatedCell('Option + Command + X / Command + Shift + 1'), false);
+    assert.equal(isUntranslatedCell('Command + Shift + Enter'), false);
+    assert.equal(isUntranslatedCell('Delete / Backspace'), false);
   });
 
   it('returns false for URLs', () => {
@@ -885,12 +901,22 @@ describe('table parity in compareSnapshotStructure', () => {
   });
 
   it('does not flag English residual when cells differ only by whitespace', () => {
-    // "Remote run  (Testim Editor)" vs "Remote run (Testim Editor)" — cosmetic difference
     const en = '| Name | Note |\n| --- | --- |\n| Remote run  (Testim Editor) | desc |\n';
     const ja = '| 名前 | 備考 |\n| --- | --- |\n| Remote run (Testim Editor) | 説明 |\n';
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
     assert.equal(residualIssues.length, 0, 'cosmetic spacing difference should not be flagged');
+  });
+
+  it('does not flag residual when EN markdown link equals JA HTML-preserved link', () => {
+    // EN uses [text](https://help.testim.io/docs/foo#bar)
+    // JA HTML-preserved has text [/docs/foo#bar]
+    // After stripping bracket annotations, visible text should match
+    const en = '| Link |\n| --- |\n| [Adding a CLI step](https://help.testim.io/docs/validate-download#adding-a-cli-step) |\n';
+    const ja = '| リンク |\n| --- |\n| Adding a CLI step [/docs/validate-download#adding-a-cli-step] |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'href annotation should not cause residual');
   });
 
   it('returns no table issues when tables match', () => {
@@ -996,8 +1022,17 @@ describe('extractInvariantTokens', () => {
 
   it('does not double-count URL fragments as dot-paths', () => {
     const tokens = extractInvariantTokens('https://help.testim.io/docs/foo');
-    // help.testim.io should NOT appear as a separate dot-path token
     assert.ok(!tokens.some((t) => t === 'help.testim.io'));
+  });
+
+  it('extracts /docs/slug#fragment from bracket annotation', () => {
+    const tokens = extractInvariantTokens('Adding a CLI step [/docs/validate-download#adding-a-cli-step]');
+    assert.ok(tokens.includes('/docs/validate-download#adding-a-cli-step'));
+  });
+
+  it('extracts /docs/slug#fragment from markdown link', () => {
+    const tokens = extractInvariantTokens('[text](/docs/foo-bar#section)');
+    assert.ok(tokens.includes('/docs/foo-bar#section'));
   });
 
   it('extracts CLI flags', () => {

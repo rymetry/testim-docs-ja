@@ -584,8 +584,9 @@ export function isUntranslatedCell(cell) {
   // Skip dot-notation property paths (e.g., params.timeout, test.id)
   if (/^[a-zA-Z_]\w*(?:\.\w+)+$/.test(stripped)) return false;
 
-  // Skip keyboard shortcuts (e.g., Alt + H, Ctrl + Shift + Enter)
-  if (/^(?:Alt|Ctrl|Cmd|Shift|Enter|Tab|Esc|Space)\b/i.test(stripped) && /\+/.test(stripped)) return false;
+  // Skip keyboard shortcuts (e.g., Alt + H, Ctrl + Shift + Enter, Option + Command + X)
+  // Includes Mac key names and Unicode symbols (⌥⌘⌃⇧)
+  if (/(?:^|[\s+,/])(?:Alt|Ctrl|Cmd|Shift|Enter|Tab|Esc|Space|Option|Command|Control|Delete|Backspace|Return|Home|End|F\d{1,2}|[⌥⌘⌃⇧])\b/i.test(stripped) && /[+/,]/.test(stripped)) return false;
 
   // Skip cells with numbers and units (e.g., 30s, 5000ms, 100px)
   if (/^\d+\s*(?:s|ms|px|em|rem|%|MB|GB|KB)$/i.test(stripped)) return false;
@@ -675,9 +676,15 @@ export function extractHtmlTables(body) {
       const cellRegex = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi;
       let cellMatch;
       while ((cellMatch = cellRegex.exec(rowHtml)) !== null) {
+        let cellHtml = cellMatch[1];
+        // Preserve <code> as backtick-wrapped inline code for token extraction
+        // <code>--grep</code> → `--grep`
+        cellHtml = cellHtml.replace(
+          /<code\b[^>]*>([\s\S]*?)<\/code>/gi,
+          (_, content) => `\`${content.replace(/<[^>]*>/g, '')}\``,
+        );
         // Preserve link destinations before stripping HTML tags
         // <a href="/docs/foo">text</a> → text [/docs/foo]
-        let cellHtml = cellMatch[1];
         cellHtml = cellHtml.replace(
           /<a\b[^>]*\bhref\s*=\s*"([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi,
           (_, href, text) => `${text.replace(/<[^>]*>/g, '')} [${href}]`,
@@ -737,9 +744,9 @@ export function extractInvariantTokens(cell) {
     rest = rest.slice(0, urlSpans[i][0]) + ' '.repeat(urlSpans[i][1] - urlSpans[i][0]) + rest.slice(urlSpans[i][1]);
   }
 
-  // Extract link destinations from markdown [text](/docs/slug) and
-  // HTML-preserved format [/docs/slug] or [https://...]
-  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+|https?:\/\/[^\s)\]]+))\]?\)?/g;
+  // Extract link destinations from markdown [text](/docs/slug#fragment) and
+  // HTML-preserved format [/docs/slug#fragment] or [https://...]
+  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[\w-]+)?|https?:\/\/[^\s)\]]+))\]?\)?/g;
   while ((m = linkDestRe.exec(rest)) !== null) {
     tokenSet.add(normalizeUrlToken(m[1]));
   }
@@ -880,8 +887,14 @@ function compareTableStructure(enBody, jaBody) {
         // English prose residual: long untranslated English text in JA cell
         // Skip if EN and JA cells are equivalent after normalization —
         // intentionally kept in English (Testim UI labels, step names, etc.)
-        // Normalize: collapse whitespace, lowercase, trim for fuzzy equality
-        const normalizeForCompare = (s) => stripMarkdown(s).trim().replace(/\s+/g, ' ').toLowerCase();
+        // Normalize: strip markdown, remove href annotations [/docs/...],
+        // collapse whitespace, lowercase for fuzzy equality
+        const normalizeForCompare = (s) =>
+          stripMarkdown(s)
+            .replace(/\s*\[[^\]]*\]\s*/g, ' ') // Remove [/docs/foo#bar] annotations
+            .trim()
+            .replace(/\s+/g, ' ')
+            .toLowerCase();
         if (!jaEmpty && normalizeForCompare(enCell) !== normalizeForCompare(jaCell) && isUntranslatedCell(jaCell)) {
           issues.push(
             withSeverity({
