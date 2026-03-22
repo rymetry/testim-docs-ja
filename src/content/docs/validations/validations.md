@@ -53,15 +53,15 @@ Testim では次の種類の検証を利用できます。
 
 検証ステップを追加すると、エディター上で新しいステップとして表示され、ステップ左上のアイコンで種別が示されます。検証タイプごとに異なるアイコンが使用されます。以下は一部の例です。
 
-### Validate element visible
+**Validate element visible**
 
 ![表示検証](/images/validations/validations/9dc088f-Testim_019_r.png)
 
-### Validate element text
+**Validate element text**
 
 ![検証](/images/validations/validations/f7cbcdc-Testim_021_r.png)
 
-### Custom validation
+**Custom validation**
 
 ![検証](/images/validations/validations/3260e0d-Testim_018_r.png)
 

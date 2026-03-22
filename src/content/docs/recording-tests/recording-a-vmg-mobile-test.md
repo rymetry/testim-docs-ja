@@ -80,19 +80,18 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 2. アクションメニューの **Record** ボタンをクリックして、テストの記録を開始します。
 3. Select a device ダイアログで、**Virtual Mobile Grid** が選択されていることを確認します。
 4. 以下のいずれかを実行します:
-   - [Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を使用するには、**Enhanced mode** タブを選択します。
+   1. [Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を使用するには、**Enhanced mode** タブを選択します。
 
-   ![Enhanced mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/ea12c91-enhancedmodetab.png)
-   - Appium mode を使用するには、**Appium mode** タブを選択します。
+      ![Enhanced mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/ea12c91-enhancedmodetab.png)
+   2. Appium mode を使用するには、**Appium mode** タブを選択します。
 
-   ![Appium mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/92b7695-appiummodetab.png)
+      ![Appium mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/92b7695-appiummodetab.png)
 
 5. ドロップダウンメニューから目的の **Device** と **OS Version** を選択します。
 
 6. 以下のいずれかの方法でテストするアプリケーションを選択します:
-   - **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
-
-   - **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
+   1. **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
+   2. **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
 
 :::info
 **アプリコンパイルの互換性（iOS のみ）**
@@ -114,13 +113,10 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 ![記録](/images/recording-tests/recording-a-vmg-mobile-test/90125a4-recording2.gif)
 
 :::warning
-**重要なお知らせ**
-
 テストを記録するときは、安定性を高めるために、テキスト要素を選択し、外側のフレーム、画像、アイコンを避けるようにしてください。
+:::
 
 ![要素選択の例](/images/recording-tests/recording-a-vmg-mobile-test/b4b47b7-image_20.png)
-
-:::
 
 9. 記録を停止するには、**Stop Recording** ボタンをクリックするか、Viewer ウィンドウを閉じます。
 
@@ -130,13 +126,14 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 
 ![プロパティ表示](/images/recording-tests/recording-a-vmg-mobile-test/ca97285-showproperties.png)
 
+11. Properties ペインで、以下の設定を構成します:
+
 ![テスト構成](/images/recording-tests/recording-a-vmg-mobile-test/4d9063d-testconfiguration.png)
 
-11. Properties ペインで、以下の設定を構成します:
-    - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は "untitled test" です。
-    - **Description** - オプションでテストの説明を入力します。
-    - **Configuration** - デフォルトでは、構成は VMG で利用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[Setting the Test Configuration](/docs/setting-the-test-configuration) を参照してください。
-    - **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS Array リテラルで複数の順序付きデータセットを定義することにより、データ駆動型テストを構成できます。[Configuring a Data-driven Test From The Visual Editor](/docs/configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
+- **Test name** - テストの名前を入力します。デフォルトでは、テスト名は "untitled test" です。
+- **Description** - オプションでテストの説明を入力します。
+- **Configuration** - デフォルトでは、構成は VMG で利用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[Setting the Test Configuration](/docs/setting-the-test-configuration) を参照してください。
+- **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS Array リテラルで複数の順序付きデータセットを定義することにより、データ駆動型テストを構成できます。[Configuring a Data-driven Test From The Visual Editor](/docs/configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
 
 12. **Save** をクリックしてテストを保存します。
 
@@ -187,7 +184,6 @@ Add CLI action および/または Add API action ステップを使用してカ
 - [Generate random value](/docs/generating-a-random-value) - 動的データテストのランダム値を生成します。
 - [Generate date](/docs/generating-a-date) - 事前定義されたプロパティに従って日付を生成します。
 - **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。通常、次回実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
-- **Back** - Back ボタンステップを作成し、デバイスに戻るコマンドを送信します。Android のみでサポートされています。
-- **Home** - デバイスにホームコマンドを送信します。
+- **Back** - デバイスに戻るコマンドを送信します。Android のみでサポートされています。
 - **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
 - [Execute Driver Script Step (mobile)](/docs/custom-action-step-mobile) - Execute Driver Script ステップを使用すると、拡張機能と検証のために Appium 2.0 以上を使用してスクリプトを実行できます。

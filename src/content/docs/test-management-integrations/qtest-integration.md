@@ -97,9 +97,9 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 
 ![qTest Manager の Test Executions 画面](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 
-右下のペインに、実行のリストが表示されます。`ID` 列は qTest のテスト ID を表します。`Status` 列は Testim からのテスト実行結果を表示します。
-
-3. **ID** をクリックしてテストの詳細を表示します。以下の画面が表示されます:
+右下のペインに、実行のリストが表示されます。`ID` 列は qTest のテスト ID を表します。`Status` 列は Testim からのテスト実行結果を表示します。\
+3\. **ID** をクリックしてテストの詳細を表示します。\
+以下の画面が表示されます:
 
 ![qTest でのテスト実行詳細画面](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
 
@@ -122,6 +122,6 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 スイート実行は qTest で 1 つの実行として表示されます。特定の実行をクリックして、スイート内のすべてのテストの結果を確認してください。
 :::
 
-:::warning
+:::info
 qTest の必須カスタムフィールドはサポートされていません。qTest でカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
 :::

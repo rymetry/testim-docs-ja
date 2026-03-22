@@ -36,7 +36,6 @@ Bamboo とテストを統合するには、まず Bamboo サーバーまたは�
 
 ### 2. Testim CLI インストールタスクを追加します
 
-​\
 2.1. "Add task"をクリックします:\
 2.2. "npm"タスクを選択します:
 
@@ -59,7 +58,6 @@ install -g @testim/testim-cli
 
 ### 3. Testim CLI 実行タスクを追加します
 
-​\
 3.1. "Add task"をクリックします:\
 3.2. "Command"タスクを選択します:
 
@@ -100,7 +98,7 @@ install -g @testim/testim-cli
 
 ![Bamboo でテスト結果ディレクトリを指定する画面](/images/ci-integrations/bamboo-integration/88541f8-Bamboo12.png)
 
-### 5. "Create"をクリックします​
+### 5. "Create"をクリックします
 
 ![Bamboo プラン作成完了画面](/images/ci-integrations/bamboo-integration/8e543c5-Bamboo13.png)
 
