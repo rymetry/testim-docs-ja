@@ -12,6 +12,7 @@ import {
   readDocFile,
 } from './lib/project.mjs';
 import {
+  ISSUE_SEVERITY,
   compareSnapshotStructure,
   loadSidebarSlugs,
   localCheck,
@@ -23,17 +24,80 @@ const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
+const ALLOWLIST_PATH = path.join(ROOT_DIR, 'parity-allowlist.json');
+
+// Signal-only issue types that can be suppressed by the allowlist
+const ALLOWABLE_SEVERITIES = new Set(['signal']);
+
 export function parseArgs(argv = process.argv.slice(2)) {
   const sectionArg = argv.find((arg) => arg.startsWith('--section='));
+  const failOnArg = argv.find((arg) => arg.startsWith('--fail-on='));
   return {
     json: argv.includes('--json'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
+    failOn: failOnArg ? failOnArg.split('=').slice(1).join('=') : null,
   };
+}
+
+/**
+ * Load and validate allowlist from parity-allowlist.json.
+ * Returns the parsed object (slug → array of rules).
+ * Throws if any rule targets a non-signal issue type.
+ */
+export function loadAllowlist(filePath = ALLOWLIST_PATH) {
+  if (!fs.existsSync(filePath)) return {};
+  const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+  for (const [slug, rules] of Object.entries(raw)) {
+    for (const rule of rules) {
+      const severity = ISSUE_SEVERITY[rule.type];
+      if (!severity) {
+        throw new Error(
+          `Allowlist error: "${slug}" rule targets unknown issue type "${rule.type}".`,
+        );
+      }
+      if (!ALLOWABLE_SEVERITIES.has(severity)) {
+        throw new Error(
+          `Allowlist error: "${slug}" rule targets "${rule.type}" (severity: ${severity}). Only signal-severity issues can be suppressed.`,
+        );
+      }
+    }
+  }
+
+  return raw;
+}
+
+/**
+ * Check if an issue matches an allowlist rule.
+ */
+export function isAllowlisted(slug, issue, allowlist) {
+  const rules = allowlist[slug];
+  if (!rules) return false;
+
+  const severity = issue.severity || ISSUE_SEVERITY[issue.type];
+  if (!ALLOWABLE_SEVERITIES.has(severity)) return false;
+
+  return rules.some((rule) => {
+    if (rule.type !== issue.type) return false;
+    const detail = issue.detail || issue.text || '';
+    if (rule.detailIncludes && !detail.includes(rule.detailIncludes)) return false;
+    if (rule.detailRegex && !new RegExp(rule.detailRegex).test(detail)) return false;
+    return true;
+  });
+}
+
+/**
+ * Filter issues through the allowlist, removing matched signal issues.
+ */
+export function applyAllowlist(slug, issues, allowlist) {
+  if (!allowlist || Object.keys(allowlist).length === 0) return issues;
+  return issues.filter((issue) => !isAllowlisted(slug, issue, allowlist));
 }
 
 export async function checkSourceParity({
   json = false,
   section = null,
+  failOn = null,
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH)
     ? fs.readFileSync(SIDEBAR_PATH, 'utf8')
@@ -41,10 +105,19 @@ export async function checkSourceParity({
   const sidebarSlugs = loadSidebarSlugs(sidebarText);
   const allFiles = findMdFiles(DOCS_DIR);
 
+  let allowlist = {};
+  try {
+    allowlist = loadAllowlist();
+  } catch (error) {
+    console.error(`❌ ${error.message}`);
+    process.exit(1);
+  }
+
   if (!json) {
     console.log('🔍 Source parity チェック開始\n');
     console.log(`📄 ${allFiles.length} ファイル対象`);
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
+    if (failOn) console.log(`🚦 --fail-on=${failOn}`);
     console.log('');
   }
 
@@ -59,7 +132,7 @@ export async function checkSourceParity({
 
     checkedCount += 1;
     const slug = path.basename(filePath, '.md');
-    const issues = [
+    let issues = [
       ...localCheck({ body: doc.body, sidebarSlugs, slug }),
     ];
 
@@ -69,6 +142,9 @@ export async function checkSourceParity({
       const enBody = fs.readFileSync(snapshotPath, 'utf8');
       issues.push(...compareSnapshotStructure(enBody, doc.body));
     }
+
+    // Apply allowlist filtering
+    issues = applyAllowlist(slug, issues, allowlist);
 
     if (issues.length === 0) {
       continue;
@@ -121,6 +197,17 @@ export async function checkSourceParity({
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }
 
+  // Exit code logic based on --fail-on flag
+  if (failOn === 'actionable') {
+    const hasActionableOrError =
+      (summary.actionableFiles || 0) > 0 || (summary.errorFiles || 0) > 0;
+    return hasActionableOrError ? 1 : 0;
+  }
+  if (failOn === 'any') {
+    return summary.filesWithIssues > 0 ? 1 : 0;
+  }
+
+  // Default: exit 1 if any issues found
   return summary.filesWithIssues > 0 ? 1 : 0;
 }
 

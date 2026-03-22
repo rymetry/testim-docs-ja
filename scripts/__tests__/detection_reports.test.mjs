@@ -429,3 +429,48 @@ describe('loadDetectionInputs', () => {
     assert.deepEqual(result.parity, {});
   });
 });
+
+// ---------------------------------------------------------------------------
+// New signal types from Phase 2b/2c
+// ---------------------------------------------------------------------------
+
+describe('buildActionableReport with new signal types', () => {
+  it('does not open parity issue for signal-only new types', () => {
+    const snapshot = {
+      checkedAt: '2026-03-23T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-23T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        issuesByType: {
+          'section-count-mismatch': 1,
+          'table-shape-mismatch': 1,
+          'table-cell-english-residual': 2,
+          'table-cell-empty-mismatch': 1,
+        },
+        issuesBySeverity: { signal: 5 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            { type: 'section-count-mismatch', severity: 'signal', detail: 'EN=5 JA=4' },
+            { type: 'table-shape-mismatch', severity: 'signal', detail: 'テーブル #1' },
+            { type: 'table-cell-english-residual', severity: 'signal', detail: 'cell' },
+            { type: 'table-cell-english-residual', severity: 'signal', detail: 'cell2' },
+            { type: 'table-cell-empty-mismatch', severity: 'signal', detail: 'mismatch' },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+  });
+});

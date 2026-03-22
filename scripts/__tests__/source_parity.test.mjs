@@ -14,6 +14,11 @@ let stripTitleH1;
 let extractBulletCounts;
 let extractParagraphCounts;
 let compareSnapshotStructure;
+let extractMarkdownTables;
+let extractHtmlTables;
+let extractTableStructure;
+let stripMarkdown;
+let isUntranslatedCell;
 
 before(async () => {
   ({
@@ -30,6 +35,11 @@ before(async () => {
     extractBulletCounts,
     extractParagraphCounts,
     compareSnapshotStructure,
+    extractMarkdownTables,
+    extractHtmlTables,
+    extractTableStructure,
+    stripMarkdown,
+    isUntranslatedCell,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -647,5 +657,219 @@ describe('extractStepCounts edge cases', () => {
     const body = '## Section A\n:::note\nUnclosed note\n## Section B\n1. Step one\n';
     const result = extractStepCounts(body);
     assert.equal(result.get('Section B'), 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// H4 boundary tests (Phase 2b)
+// ---------------------------------------------------------------------------
+
+describe('H4 section boundary support', () => {
+  it('extractStepCounts recognises H4 as section boundary', () => {
+    const body = '## Parent\n1. A\n#### Sub\n1. B\n2. C\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Parent'), 1);
+    assert.equal(result.get('Sub'), 2);
+  });
+
+  it('extractBulletCounts recognises H4 as section boundary', () => {
+    const body = '## Parent\n- A\n#### Sub\n- B\n- C\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Parent'), 1);
+    assert.equal(result.get('Sub'), 2);
+  });
+
+  it('extractParagraphCounts recognises H4 as section boundary', () => {
+    const body = '## Parent\nPara 1.\n\n#### Sub\nPara 2.\n\nPara 3.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Parent'), 1);
+    assert.equal(result.get('Sub'), 2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// section-count-mismatch tests (Phase 2b)
+// ---------------------------------------------------------------------------
+
+describe('section-count-mismatch', () => {
+  it('detects when EN has more sections than JA (section merge)', () => {
+    const en = '# Title\n## A\nText\n## B\nText\n## C\nText\n';
+    const ja = '## A\nText\n## B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+    assert.match(sectionIssues[0].detail, /EN=3.*JA=2/);
+  });
+
+  it('detects when JA has more sections than EN (section split)', () => {
+    const en = '# Title\n## A\nText\n';
+    const ja = '## A\nText\n## B\nText\n## C\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+  });
+
+  it('returns no issue when section counts match', () => {
+    const en = '# Title\n## A\nText\n## B\nText\n';
+    const ja = '## A\nText\n## B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 0);
+  });
+
+  it('counts H4 headings in section count', () => {
+    const en = '# Title\n## A\nText\n### B\nText\n#### C\nText\n';
+    const ja = '## A\nText\n### B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+    assert.match(sectionIssues[0].detail, /EN=3.*JA=2/);
+  });
+
+  it('detects equal-total section merge via count', () => {
+    // EN has 4 sections (A, B, C, D), JA has 3 (A, B, C) — C absorbed D
+    const en = '# Title\n## A\n## B\n## C\n## D\n';
+    const ja = '## A\n## B\n## C\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+  });
+
+  it('ignores headings inside code blocks for section count', () => {
+    const en = '# Title\n## A\nText\n```\n## Fake\n```\n## B\nText\n';
+    const ja = '## A\nText\n```\n## Fake\n## AlsoFake\n```\n## B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 0, 'should not count headings inside code blocks');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Table structure comparison tests (Phase 2c)
+// ---------------------------------------------------------------------------
+
+describe('extractMarkdownTables', () => {
+  it('extracts a simple markdown table', () => {
+    const body = '## Section\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].rows.length, 3); // header + 2 data rows
+    assert.deepEqual(tables[0].rows[0], ['A', 'B']);
+    assert.deepEqual(tables[0].rows[1], ['1', '2']);
+  });
+
+  it('extracts multiple tables', () => {
+    const body = '| A |\n| --- |\n| 1 |\n\nText\n\n| B |\n| --- |\n| 2 |\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 2);
+  });
+
+  it('skips tables inside code blocks', () => {
+    const body = '```\n| A |\n| --- |\n| 1 |\n```\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 0);
+  });
+});
+
+describe('extractHtmlTables', () => {
+  it('extracts a simple HTML table', () => {
+    const body = '<table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].rows.length, 2);
+    assert.deepEqual(tables[0].rows[0], ['A', 'B']);
+    assert.deepEqual(tables[0].rows[1], ['1', '2']);
+  });
+});
+
+describe('stripMarkdown', () => {
+  it('strips links and formatting', () => {
+    assert.equal(stripMarkdown('**bold** text'), 'bold text');
+    assert.equal(stripMarkdown('[link](http://example.com)'), 'link');
+    assert.equal(stripMarkdown('`code`'), '');
+    assert.equal(stripMarkdown('![alt](img.png)'), '');
+  });
+});
+
+describe('isUntranslatedCell', () => {
+  it('detects English-only cell content', () => {
+    assert.equal(isUntranslatedCell('Click on the button'), true);
+    assert.equal(isUntranslatedCell('Select the option'), true);
+  });
+
+  it('returns false for Japanese content', () => {
+    assert.equal(isUntranslatedCell('ボタンをクリック'), false);
+  });
+
+  it('returns false for allowed English terms', () => {
+    assert.equal(isUntranslatedCell('API'), false);
+    assert.equal(isUntranslatedCell('Testim'), false);
+    assert.equal(isUntranslatedCell('Visual Editor'), false);
+  });
+
+  it('returns false for short cells', () => {
+    assert.equal(isUntranslatedCell('A'), false);
+    assert.equal(isUntranslatedCell(''), false);
+  });
+
+  it('returns false for URLs', () => {
+    assert.equal(isUntranslatedCell('https://example.com'), false);
+  });
+
+  it('returns false for numbers', () => {
+    assert.equal(isUntranslatedCell('42'), false);
+    assert.equal(isUntranslatedCell('3.14'), false);
+  });
+});
+
+describe('table parity in compareSnapshotStructure', () => {
+  it('detects table shape mismatch (different row count)', () => {
+    const en = '| A | B |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |\n';
+    const ja = '| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tableIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(tableIssues.length, 1);
+  });
+
+  it('detects table cell empty mismatch', () => {
+    const en = '| A | B |\n| --- | --- |\n| content | data |\n';
+    const ja = '| A | B |\n| --- | --- |\n| コンテンツ |  |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
+    assert.equal(emptyIssues.length, 1);
+  });
+
+  it('detects English residual in table cell', () => {
+    const en = '| Feature | Description |\n| --- | --- |\n| Smart Locators | AI-based element detection |\n';
+    const ja = '| 機能 | 説明 |\n| --- | --- |\n| Smart Locators | AI-based element detection |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.ok(residualIssues.length >= 1, 'should detect English residual in table cell');
+  });
+
+  it('returns no table issues when tables match', () => {
+    const en = '| Feature | Description |\n| --- | --- |\n| Login | Enter credentials |\n';
+    const ja = '| 機能 | 説明 |\n| --- | --- |\n| ログイン | 資格情報を入力 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tableIssues = issues.filter((i) =>
+      i.type.startsWith('table-'),
+    );
+    assert.equal(tableIssues.length, 0);
+  });
+
+  it('compares HTML tables in EN with markdown tables in JA', () => {
+    const en = '<table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
+    const ja = '| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(shapeIssues.length, 1);
+  });
+
+  it('skips cell comparison when table counts differ', () => {
+    const en = '| A |\n| --- |\n| 1 |\n\n| B |\n| --- |\n| 2 |\n';
+    const ja = '| A |\n| --- |\n| 1 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tableIssues = issues.filter((i) => i.type.startsWith('table-'));
+    assert.equal(tableIssues.length, 0, 'should not compare when table counts differ');
   });
 });

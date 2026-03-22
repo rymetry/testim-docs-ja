@@ -19,7 +19,41 @@ async function main() {
     if (sectionSlugs && !sectionSlugs.has(slug)) continue;
     const md = fs.readFileSync(info.filePath, 'utf8');
     const { body } = splitFrontmatter(md);
-    const prompt = `# 翻訳タスク (${slug})\n\n下記のMarkdown本文を日本語に翻訳してください。Markdownの構造、リンク、画像パス、コードブロックは維持してください。\n- 画像の相対パス (/images/...) は変更しない\n- ":fa-...:" のようなアイコン記法はそのまま残す\n- 表や表ヘッダー、HTMLタグは壊さない\n- リンクのURLは変更しない（アンカーテキストのみ訳す）\n\n--- 原文本文ここから ---\n\n${body}`;
+    const prompt = `# 翻訳タスク (${slug})
+
+下記のMarkdown本文を日本語に翻訳してください。
+
+## Source-First 構造マッピング
+
+翻訳時は以下の構造契約に従ってください:
+
+### 見出し
+- 原文の最初の H1（ページタイトル）→ frontmatter title: に入れる（本文に H1 は出さない）
+- 原文の 2 番目以降の H1 → H2 に降格
+- H2 / H3 / H4 → そのまま維持
+
+### リスト
+- マーカー: 原文の \`*\` → \`-\` に統一（markdownlint 互換）
+- ネストレベルは原文を維持
+
+### テーブル
+- HTML テーブル → Markdown テーブルへの変換は許容
+- 行数・列数は原文に合わせる
+
+### その他
+- 画像・callout・コードブロックの出現順序と配置を原文に合わせる
+- 段落構造を原文に合わせる
+
+## 一般ルール
+- 画像の相対パス (/images/...) は変更しない
+- ":fa-...:" のようなアイコン記法はそのまま残す
+- 表や表ヘッダー、HTMLタグは壊さない
+- リンクのURLは変更しない（アンカーテキストのみ訳す）
+- Testim の製品名・機能名・画面名は英語のまま維持
+
+--- 原文本文ここから ---
+
+${body}`;
     const outPath = path.join(TASKS_DIR, `${slug}.md`);
     fs.writeFileSync(outPath, prompt, 'utf8');
     count++;
