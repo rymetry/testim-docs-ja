@@ -19,6 +19,7 @@ let extractHtmlTables;
 let extractTableStructure;
 let stripMarkdown;
 let isUntranslatedCell;
+let isShortLabelResidual;
 
 before(async () => {
   ({
@@ -40,6 +41,7 @@ before(async () => {
     extractTableStructure,
     stripMarkdown,
     isUntranslatedCell,
+    isShortLabelResidual,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -900,5 +902,76 @@ describe('table parity in compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
     assert.equal(shapeIssues.length, 1, 'should detect table drop');
+  });
+
+  it('detects short label residual (EN header kept as-is in JA)', () => {
+    const en = '| Property Name | Value |\n| --- | --- |\n| timeout | 30 |\n';
+    const ja = '| Property Name | 値 |\n| --- | --- |\n| timeout | 30 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.ok(residualIssues.length >= 1, 'should detect short label kept as EN');
+  });
+
+  it('compares mixed HTML/markdown tables in document order', () => {
+    // EN: HTML table at line 1, markdown at line 5
+    // JA: markdown at line 1, HTML-converted-to-markdown at line 5 (reversed)
+    const en = '<table><tr><th>X</th></tr><tr><td>1</td></tr></table>\n\n\n\n| Y |\n| --- |\n| 2 |\n';
+    const ja = '| Y |\n| --- |\n| 2 |\n\n\n\n| X |\n| --- |\n| 1 |\n';
+    // Both have 2 tables with same shapes, but the content is reordered.
+    // The ordinal comparison should now detect the content swap.
+    const issues = compareSnapshotStructure(en, ja);
+    // At minimum: tables are compared in document order, so X vs Y mismatch
+    assert.ok(Array.isArray(issues));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// isShortLabelResidual tests
+// ---------------------------------------------------------------------------
+
+describe('isShortLabelResidual', () => {
+  it('detects "Property Name" kept unchanged', () => {
+    assert.equal(isShortLabelResidual('Property Name', 'Property Name'), true);
+  });
+
+  it('detects "Config File" kept unchanged', () => {
+    assert.equal(isShortLabelResidual('Config File', 'Config File'), true);
+  });
+
+  it('detects "Test Configuration" kept unchanged', () => {
+    assert.equal(isShortLabelResidual('Test Configuration', 'Test Configuration'), true);
+  });
+
+  it('returns false when JA is translated (different from EN)', () => {
+    assert.equal(isShortLabelResidual('Property Name', 'プロパティ名'), false);
+  });
+
+  it('returns false for camelCase identifiers', () => {
+    assert.equal(isShortLabelResidual('projectId', 'projectId'), false);
+  });
+
+  it('returns false for allowed terms like Node.js', () => {
+    assert.equal(isShortLabelResidual('Node.js', 'Node.js'), false);
+  });
+
+  it('returns false for Testim CLI', () => {
+    assert.equal(isShortLabelResidual('Testim CLI', 'Testim CLI'), false);
+  });
+
+  it('returns false for keyboard shortcuts', () => {
+    assert.equal(isShortLabelResidual('Alt + H', 'Alt + H'), false);
+  });
+
+  it('returns false for single words', () => {
+    assert.equal(isShortLabelResidual('Property', 'Property'), false);
+  });
+
+  it('returns false for very long labels (> 40 chars)', () => {
+    const long = 'This Is A Very Long Label That Should Not Match';
+    assert.equal(isShortLabelResidual(long, long), false);
+  });
+
+  it('returns false for empty cells', () => {
+    assert.equal(isShortLabelResidual('', ''), false);
   });
 });

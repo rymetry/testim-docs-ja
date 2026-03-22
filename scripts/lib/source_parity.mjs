@@ -692,10 +692,54 @@ export function extractHtmlTables(body) {
 }
 
 /**
- * Extract all tables (markdown + HTML) from body.
+ * Detect short English labels left untranslated by comparing EN and JA cells.
+ * Only fires when the JA cell is identical to the EN cell (literal copy).
+ * Targets 2-4 word labels like "Property Name", "Config File", "Test Configuration".
+ */
+export function isShortLabelResidual(enCell, jaCell) {
+  const en = stripMarkdown(enCell).trim();
+  const ja = stripMarkdown(jaCell).trim();
+
+  if (!en || !ja) return false;
+  if (en !== ja) return false; // Only flag when EN text is kept as-is
+
+  if (en.length < 6 || en.length > 40) return false;
+
+  const words = en.split(/\s+/);
+  if (words.length < 2 || words.length > 4) return false;
+
+  // Skip if contains CJK (already translated)
+  if (/[\u3000-\u9FFF\uF900-\uFAFF]/.test(en)) return false;
+  // Skip camelCase identifiers
+  if (/^[a-z][a-zA-Z0-9]*$/.test(en)) return false;
+  // Skip PascalCase single tokens
+  if (/^[A-Z][a-z][a-zA-Z0-9]*$/.test(en) && words.length === 1) return false;
+  // Skip dot-notation paths
+  if (/^[a-zA-Z_]\w*(?:\.\w+)+$/.test(en)) return false;
+  // Skip URLs/paths
+  if (/^(https?:\/\/|\/)/.test(en)) return false;
+  // Skip numeric values with units
+  if (/^\d+(\.\d+)?(%|ms|px|s)?$/i.test(en)) return false;
+  // Skip keyboard shortcuts
+  if (/^(Alt|Ctrl|Cmd|Shift)\b/i.test(en) && /\+/.test(en)) return false;
+
+  // Skip known English-only terms that should stay untranslated
+  const ALLOWED = new Set([
+    'Testim CLI', 'Node.js', 'Visual Editor', 'Test Editor',
+    'Testim Automate', 'Testim Grid', 'Smart Locators', 'Visual AI',
+    'Testim Extension', 'Salesforce Testing',
+  ]);
+  if (ALLOWED.has(en)) return false;
+
+  return true;
+}
+
+/**
+ * Extract all tables (markdown + HTML) from body, sorted by document order.
  */
 export function extractTableStructure(body) {
-  return [...extractMarkdownTables(body), ...extractHtmlTables(body)];
+  return [...extractMarkdownTables(body), ...extractHtmlTables(body)]
+    .sort((a, b) => a.line - b.line);
 }
 
 /**
@@ -760,7 +804,18 @@ function compareTableStructure(enBody, jaBody) {
           continue;
         }
 
-        // English residual check on JA cells
+        // Short label residual: EN cell kept as-is in JA (2-4 word labels)
+        if (!jaEmpty && isShortLabelResidual(enCell, jaCell)) {
+          issues.push(
+            withSeverity({
+              type: 'table-cell-english-residual',
+              detail: `テーブル #${t + 1} [${r + 1},${c + 1}]: "${jaCell.slice(0, 50)}"`,
+            }),
+          );
+          continue;
+        }
+
+        // Long prose residual: English prose left untranslated in JA
         if (!jaEmpty && isUntranslatedCell(jaCell)) {
           issues.push(
             withSeverity({
