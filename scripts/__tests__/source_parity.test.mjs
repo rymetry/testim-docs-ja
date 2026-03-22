@@ -19,6 +19,7 @@ let extractHtmlTables;
 let stripMarkdown;
 let isUntranslatedCell;
 let extractInvariantTokens;
+let normalizeEnArtifacts;
 
 before(async () => {
   ({
@@ -40,6 +41,7 @@ before(async () => {
     stripMarkdown,
     isUntranslatedCell,
     extractInvariantTokens,
+    normalizeEnArtifacts,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -590,6 +592,57 @@ describe('stripTitleH1', () => {
     const body = '## Section A\nContent\n## Section B\nContent\n';
     const result = stripTitleH1(body);
     assert.equal(result, body);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// normalizeEnArtifacts tests
+// ---------------------------------------------------------------------------
+
+describe('normalizeEnArtifacts', () => {
+  it('fixes broken ordered list items without space after period', () => {
+    const body = '1. Normal step\n5.Click on **Validations**.\n6. Another step\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(result.includes('5. Click on **Validations**.'), 'should add space after 5.');
+    assert.ok(result.includes('1. Normal step'), 'should not change correct items');
+  });
+
+  it('removes zero-width space lines', () => {
+    const body = 'Real content\n\n\u200B\n\nMore content\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(!result.includes('\u200B'), 'zero-width spaces should be removed');
+    assert.ok(result.includes('Real content'));
+    assert.ok(result.includes('More content'));
+  });
+
+  it('removes multiple zero-width space variants', () => {
+    const body = 'Text\n\u200B\n\u200C\n\uFEFF\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(!/[\u200B\u200C\u200D\uFEFF]/.test(result));
+  });
+
+  it('does not remove real content that happens to contain unicode', () => {
+    const body = 'This is real text with \u200B embedded\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(result.includes('real text'), 'should keep lines with real content');
+  });
+
+  it('skips step-count mismatch caused by EN broken numbering', () => {
+    // EN has "5.Click" (no space) which is NOT counted as a step
+    // After normalization, "5. Click" IS counted → JA and EN match
+    const en = '# Title\n## Section\n1. Step one\n5.Click on button\n6. Step three\n';
+    const ja = '## セクション\n1. ステップ 1\n5. ボタンをクリック\n6. ステップ 3\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(stepIssues.length, 0, 'EN broken numbering should be normalized');
+  });
+
+  it('skips paragraph-count mismatch caused by zero-width space lines', () => {
+    const en = '# Title\n## Section\nParagraph 1.\n\nParagraph 2.\n\n\u200B\n\n\u200B\n';
+    const ja = '## セクション\n段落 1。\n\n段落 2。\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
+    assert.equal(paraIssues.length, 0, 'zero-width space paragraphs should not count');
   });
 });
 

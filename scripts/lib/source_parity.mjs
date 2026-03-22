@@ -341,6 +341,31 @@ export function stripTitleH1(body) {
 }
 
 /**
+ * Normalise known EN snapshot artifacts before structural comparison.
+ * These are formatting bugs in the English source that should not cause
+ * parity mismatches against correctly-formatted JA translations.
+ */
+export function normalizeEnArtifacts(body) {
+  return body
+    .split('\n')
+    .map((line) => {
+      // Fix broken ordered list items: "5.Click" → "5. Click" (missing space)
+      // EN snapshots sometimes omit the space after the period
+      const fixedList = line.replace(/^(\d+)\.(\S)/, '$1. $2');
+      return fixedList;
+    })
+    .filter((line) => {
+      // Remove zero-width space / BOM lines (artifacts from ReadMe.io)
+      // Check raw line before trim() since trim() strips some of these chars
+      if (/^[\s\u200B\u200C\u200D\uFEFF]*$/.test(line) && /[\u200B\u200C\u200D\uFEFF]/.test(line)) {
+        return false;
+      }
+      return true;
+    })
+    .join('\n');
+}
+
+/**
  * Count unordered list items (top-level only) per h2/h3 section.
  * Returns a Map<sectionHeading, count>.
  */
@@ -995,8 +1020,8 @@ export function compareSnapshotStructure(enBody, jaBody) {
   issues.push(...compareTableStructure(enBody, jaBody));
 
   // --- Section-based comparisons (steps, bullets, paragraphs) ---
-  // Normalise EN headings: strip title H1, demote remaining H1→H2
-  const normalizedEnBody = stripTitleH1(enBody);
+  // Normalise EN: strip title H1, demote remaining H1→H2, fix EN artifacts
+  const normalizedEnBody = normalizeEnArtifacts(stripTitleH1(enBody));
 
   // --- Section count mismatch (H2-H4 key count comparison) ---
   // Count headings outside code blocks for accurate comparison
