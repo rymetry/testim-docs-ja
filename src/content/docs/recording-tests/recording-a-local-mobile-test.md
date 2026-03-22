@@ -165,7 +165,7 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 
 デバイスは自動的に Testim の仮想デバイスリストに追加されます。
 
-![仮想デバイスリスト](/images/recording-tests/recording-a-local-mobile-test/36444cd-image_23.png)
+![仮想デバイスリスト](/images/recording-tests/recording-a-local-mobile-test/6157466-virtualdevice.png)
 
 :::info{title="情報"}
 デフォルトでは、仮想デバイスはデバッグモードに事前構成されています。
@@ -203,7 +203,7 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 デバイスは自動的に Testim の仮想デバイスリストに追加されます。
 
-![仮想デバイスリスト](/images/recording-tests/recording-a-local-mobile-test/6157466-virtualdevice.png)
+![仮想デバイスリスト](/images/recording-tests/recording-a-local-mobile-test/36444cd-image_23.png)
 
 ## ステップ 3 - テストするアプリケーションを準備する
 

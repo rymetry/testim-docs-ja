@@ -123,9 +123,10 @@ Auto Grouping 画面には、他のテストやグループと重複している
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/4b25c4d-testname.PNG)
 
-3. **Show all** をクリックしてすべての候補を表示し、必要な項目を選択します。
-4. **Number of Steps** で、重複ステップ数の範囲を指定したい場合は **Min. Steps** と **Max Steps** を入力します。
-5. **Apply** をクリックしてフィルターを適用します。
+3. **Show all** をクリックしてすべての項目を表示します。
+4. 関連する項目を選択します。
+5. **Number of Steps** で、重複ステップ数の範囲を指定したい場合は **Min. Steps** と **Max Steps** を入力します。
+6. **Apply** をクリックしてフィルターを適用します。
 
 ## 自動グルーピング候補のソート（Sorting auto-grouping suggestions）
 

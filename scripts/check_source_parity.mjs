@@ -12,11 +12,14 @@ import {
   readDocFile,
 } from './lib/project.mjs';
 import {
+  compareSnapshotStructure,
   loadSidebarSlugs,
   localCheck,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
+
+const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
@@ -59,6 +62,13 @@ export async function checkSourceParity({
     const issues = [
       ...localCheck({ body: doc.body, sidebarSlugs, slug }),
     ];
+
+    // Snapshot structure comparison (image order, callout nesting, step counts)
+    const snapshotPath = path.join(SNAPSHOTS_DIR, `${slug}.md`);
+    if (fs.existsSync(snapshotPath)) {
+      const enBody = fs.readFileSync(snapshotPath, 'utf8');
+      issues.push(...compareSnapshotStructure(enBody, doc.body));
+    }
 
     if (issues.length === 0) {
       continue;

@@ -60,7 +60,9 @@ keywords:
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/b9e1760-Testim_117.png)
 
-4. そのグループ左の **>（矢印）** にカーソルを合わせ、**Toggle Breakpoint** をクリックします。
+4. そのグループ左の **>（矢印）** にカーソルを合わせます。\
+   アクションオプションが表示されます。
+5. **Toggle Breakpoint** をクリックします。
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/c007533-Testim_118_r.png)
 

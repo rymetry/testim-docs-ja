@@ -39,4 +39,6 @@ scripts/.cache/
 .takt/
 
 # Local assistant settings
-.claude/
+.claude/worktrees
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
