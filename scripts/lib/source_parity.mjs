@@ -675,8 +675,14 @@ export function extractHtmlTables(body) {
       const cellRegex = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi;
       let cellMatch;
       while ((cellMatch = cellRegex.exec(rowHtml)) !== null) {
-        // Strip HTML tags from cell content
-        const cellText = cellMatch[1].replace(/<[^>]*>/g, '').trim();
+        // Preserve link destinations before stripping HTML tags
+        // <a href="/docs/foo">text</a> → text [/docs/foo]
+        let cellHtml = cellMatch[1];
+        cellHtml = cellHtml.replace(
+          /<a\b[^>]*\bhref\s*=\s*"([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi,
+          (_, href, text) => `${text.replace(/<[^>]*>/g, '')} [${href}]`,
+        );
+        const cellText = cellHtml.replace(/<[^>]*>/g, '').trim();
         cells.push(cellText);
       }
       if (cells.length > 0) {
@@ -731,10 +737,11 @@ export function extractInvariantTokens(cell) {
     rest = rest.slice(0, urlSpans[i][0]) + ' '.repeat(urlSpans[i][1] - urlSpans[i][0]) + rest.slice(urlSpans[i][1]);
   }
 
-  // Also extract /docs/slug from markdown link syntax [text](/docs/slug)
-  const mdLinkRe = /\]\((\/docs\/[\w-]+)\)/g;
-  while ((m = mdLinkRe.exec(rest)) !== null) {
-    tokenSet.add(m[1]);
+  // Extract link destinations from markdown [text](/docs/slug) and
+  // HTML-preserved format [/docs/slug] or [https://...]
+  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+|https?:\/\/[^\s)\]]+))\]?\)?/g;
+  while ((m = linkDestRe.exec(rest)) !== null) {
+    tokenSet.add(normalizeUrlToken(m[1]));
   }
 
   // CLI flags: --flag, -f (standalone, not inside words)
@@ -743,10 +750,17 @@ export function extractInvariantTokens(cell) {
     tokenSet.add(m[1]);
   }
 
-  // Dot-notation paths: params.timeout, test.id.value
+  // Dot-notation paths: params.timeout, test.id.value, config.setting
+  // Require 3+ segments OR known API/config prefixes to avoid noise from
+  // abbreviations (i.e, e.g) and product names (Node.js, Node.JS)
+  const KNOWN_DOT_PREFIXES = /^(params|test|config|step|suite|browser|element|window|document|process|module|exports)\./;
   const dotRe = /\b([a-zA-Z_]\w*(?:\.\w+)+)\b/g;
   while ((m = dotRe.exec(rest)) !== null) {
-    tokenSet.add(m[1]);
+    const path = m[1];
+    const segments = path.split('.').length;
+    if (segments >= 3 || KNOWN_DOT_PREFIXES.test(path)) {
+      tokenSet.add(path);
+    }
   }
 
   // Versions: v1.2.3, 2.0.0
@@ -864,9 +878,11 @@ function compareTableStructure(enBody, jaBody) {
         }
 
         // English prose residual: long untranslated English text in JA cell
-        // Skip if EN and JA cells are identical — intentionally kept in English
-        // (Testim UI labels, step names, feature names are commonly English-only)
-        if (!jaEmpty && stripMarkdown(enCell).trim() !== stripMarkdown(jaCell).trim() && isUntranslatedCell(jaCell)) {
+        // Skip if EN and JA cells are equivalent after normalization —
+        // intentionally kept in English (Testim UI labels, step names, etc.)
+        // Normalize: collapse whitespace, lowercase, trim for fuzzy equality
+        const normalizeForCompare = (s) => stripMarkdown(s).trim().replace(/\s+/g, ' ').toLowerCase();
+        if (!jaEmpty && normalizeForCompare(enCell) !== normalizeForCompare(jaCell) && isUntranslatedCell(jaCell)) {
           issues.push(
             withSeverity({
               type: 'table-cell-english-residual',

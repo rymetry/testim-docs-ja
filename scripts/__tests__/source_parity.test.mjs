@@ -780,6 +780,13 @@ describe('extractHtmlTables', () => {
     assert.deepEqual(tables[0].rows[0], ['A', 'B']);
     assert.deepEqual(tables[0].rows[1], ['1', '2']);
   });
+
+  it('preserves link href in cell content', () => {
+    const body = '<table><tr><td><a href="/docs/foo">Link text</a></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.equal(tables.length, 1);
+    assert.ok(tables[0].rows[0][0].includes('/docs/foo'), 'href should be preserved in cell text');
+  });
 });
 
 describe('stripMarkdown', () => {
@@ -875,6 +882,15 @@ describe('table parity in compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
     assert.equal(residualIssues.length, 0, 'identical EN/JA cells should not be flagged');
+  });
+
+  it('does not flag English residual when cells differ only by whitespace', () => {
+    // "Remote run  (Testim Editor)" vs "Remote run (Testim Editor)" — cosmetic difference
+    const en = '| Name | Note |\n| --- | --- |\n| Remote run  (Testim Editor) | desc |\n';
+    const ja = '| 名前 | 備考 |\n| --- | --- |\n| Remote run (Testim Editor) | 説明 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'cosmetic spacing difference should not be flagged');
   });
 
   it('returns no table issues when tables match', () => {
@@ -989,9 +1005,27 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.includes('--timeout'));
   });
 
-  it('extracts dot-notation paths', () => {
+  it('extracts dot-notation paths with known prefix', () => {
     const tokens = extractInvariantTokens('Set params.timeout to 30');
     assert.ok(tokens.includes('params.timeout'));
+  });
+
+  it('extracts dot-paths with 3+ segments', () => {
+    const tokens = extractInvariantTokens('Use test.id.value here');
+    assert.ok(tokens.includes('test.id.value'));
+  });
+
+  it('does not extract i.e, e.g, Node.js as dot-paths', () => {
+    const tokens = extractInvariantTokens('i.e this works, e.g with Node.js');
+    assert.ok(!tokens.includes('i.e'));
+    assert.ok(!tokens.includes('e.g'));
+    assert.ok(!tokens.includes('Node.js'));
+  });
+
+  it('extracts href from HTML-preserved table cells', () => {
+    // extractHtmlTables preserves hrefs as "text [/docs/slug]"
+    const tokens = extractInvariantTokens('steps [/docs/shareable-steps]');
+    assert.ok(tokens.includes('/docs/shareable-steps'));
   });
 
   it('extracts versions', () => {
