@@ -535,6 +535,24 @@ describe('compareSnapshotStructure', () => {
     assert.ok(stepIssues.length >= 1, 'should detect mismatch via total fallback');
   });
 
+  it('detects total=0 on JA side (section drop)', () => {
+    // EN has steps, JA section is empty → jaTotal=0, should still report
+    const en = '## Setup\n1. A\n2. B\n3. C\n';
+    const ja = '## セットアップ\nテキストのみ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.ok(stepIssues.length >= 1, 'should detect when JA has zero steps');
+  });
+
+  it('detects small total diff when section counts differ (diff=2)', () => {
+    // EN: 2 sections, JA: 1 section, total diff=2 → should fire (>= max(minDiff=1, 2))
+    const en = '## Section A\n1. A\n## Section B\n1. X\n2. Y\n';
+    const ja = '## セクション A\n1. A\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.ok(stepIssues.length >= 1, 'should detect diff=2 via total fallback');
+  });
+
   it('normalises EN H1 headings for section comparison', () => {
     // EN uses H1 for sections, JA uses H2 — should still compare per-section
     const en = '# Title\nIntro\n# Setup\n1. A\n2. B\n3. C\n';

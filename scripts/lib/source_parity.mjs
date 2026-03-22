@@ -515,13 +515,14 @@ function compareSectionCounts(enMap, jaMap, issueType, label, minDiff = 1) {
         );
       }
     }
-  } else if (enSections.length > 0 && jaSections.length > 0) {
+  } else if (enSections.length > 0 || jaSections.length > 0) {
     // Fallback: total comparison when section counts differ
     const enTotal = [...enMap.values()].reduce((a, b) => a + b, 0);
     const jaTotal = [...jaMap.values()].reduce((a, b) => a + b, 0);
-    if (enTotal > 0 && jaTotal > 0 && enTotal !== jaTotal) {
+    if (enTotal !== jaTotal && (enTotal > 0 || jaTotal > 0)) {
       const absDiff = Math.abs(jaTotal - enTotal);
-      if (absDiff > 3) {
+      // Use minDiff with a floor of 2 for total comparison (noisier than per-section)
+      if (absDiff >= Math.max(minDiff, 2)) {
         const diff = jaTotal - enTotal;
         issues.push(
           withSeverity({
