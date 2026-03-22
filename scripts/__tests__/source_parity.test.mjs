@@ -544,13 +544,33 @@ describe('compareSnapshotStructure', () => {
     assert.ok(stepIssues.length >= 1, 'should detect when JA has zero steps');
   });
 
-  it('detects small total diff when section counts differ (diff=2)', () => {
-    // EN: 2 sections, JA: 1 section, total diff=2 → should fire (>= max(minDiff=1, 2))
-    const en = '## Section A\n1. A\n## Section B\n1. X\n2. Y\n';
-    const ja = '## セクション A\n1. A\n';
+  it('detects small total diff when section counts differ (diff=1)', () => {
+    // EN: 2 sections (2+1=3 steps), JA: 1 section (2 steps) → diff=1 → fires
+    const en = '## Section A\n1. A\n2. B\n## Section B\n1. X\n';
+    const ja = '## セクション A\n1. A\n2. B\n';
     const issues = compareSnapshotStructure(en, ja);
     const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
-    assert.ok(stepIssues.length >= 1, 'should detect diff=2 via total fallback');
+    assert.ok(stepIssues.length >= 1, 'should detect diff=1 via total fallback');
+  });
+
+  it('emits section-count-mismatch when EN/JA section counts differ', () => {
+    const en = '## Section A\n1. A\n## Section B\n1. B\n';
+    const ja = '## セクション A\n1. A\n2. B\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+    assert.ok(sectionIssues[0].detail.includes('EN=2'));
+    assert.ok(sectionIssues[0].detail.includes('JA=1'));
+  });
+
+  it('detects section merge with equal totals via section-count-mismatch', () => {
+    // EN: 2 sections (1+1=2 steps), JA: 1 section (2 steps) → total same but structure differs
+    const en = '## Section A\n1. A\n## Section B\n1. B\n';
+    const ja = '## セクション A\n1. A\n2. B\n';
+    const issues = compareSnapshotStructure(en, ja);
+    // Even though step totals match, section-count-mismatch should fire
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
   });
 
   it('normalises EN H1 headings for section comparison', () => {

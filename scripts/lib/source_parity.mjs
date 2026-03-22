@@ -11,6 +11,7 @@ export const ISSUE_SEVERITY = {
   'step-count-mismatch': 'signal',
   'bullet-count-mismatch': 'signal',
   'paragraph-count-mismatch': 'signal',
+  'section-count-mismatch': 'signal',
   'heading-mismatch': 'signal',
   'content-root-missing': 'signal',
   'source-fetch-error': 'error',
@@ -521,8 +522,7 @@ function compareSectionCounts(enMap, jaMap, issueType, label, minDiff = 1) {
     const jaTotal = [...jaMap.values()].reduce((a, b) => a + b, 0);
     if (enTotal !== jaTotal && (enTotal > 0 || jaTotal > 0)) {
       const absDiff = Math.abs(jaTotal - enTotal);
-      // Use minDiff with a floor of 2 for total comparison (noisier than per-section)
-      if (absDiff >= Math.max(minDiff, 2)) {
+      if (absDiff >= minDiff) {
         const diff = jaTotal - enTotal;
         issues.push(
           withSeverity({
@@ -620,6 +620,22 @@ export function compareSnapshotStructure(enBody, jaBody) {
   const jaBullets = extractBulletCounts(jaBody);
   const enParagraphs = extractParagraphCounts(normalizedEnBody);
   const jaParagraphs = extractParagraphCounts(jaBody);
+
+  // --- Section count comparison ---
+  const enSectionKeys = [...enSteps.keys()].filter((k) => k !== '__top__');
+  const jaSectionKeys = [...jaSteps.keys()].filter((k) => k !== '__top__');
+
+  if (
+    enSectionKeys.length !== jaSectionKeys.length &&
+    (enSectionKeys.length > 0 || jaSectionKeys.length > 0)
+  ) {
+    issues.push(
+      withSeverity({
+        type: 'section-count-mismatch',
+        detail: `セクション数が原文と異なります: EN=${enSectionKeys.length}, JA=${jaSectionKeys.length}`,
+      }),
+    );
+  }
 
   // Coarse total step comparison (kept for large-scale mismatches)
   const enTotal = [...enSteps.values()].reduce((a, b) => a + b, 0);
