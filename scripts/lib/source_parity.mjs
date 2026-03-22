@@ -692,9 +692,10 @@ export function extractHtmlTables(body) {
 }
 
 /**
- * Detect short English labels left untranslated by comparing EN and JA cells.
+ * Detect short English phrases left untranslated by comparing EN and JA cells.
  * Only fires when the JA cell is identical to the EN cell (literal copy).
- * Targets 2-4 word labels like "Property Name", "Config File", "Test Configuration".
+ * Requires 3+ words to avoid flagging 2-word UI labels (Config File, Match level)
+ * which are commonly kept in English in Testim docs.
  */
 export function isShortLabelResidual(enCell, jaCell) {
   const en = stripMarkdown(enCell).trim();
@@ -703,33 +704,28 @@ export function isShortLabelResidual(enCell, jaCell) {
   if (!en || !ja) return false;
   if (en !== ja) return false; // Only flag when EN text is kept as-is
 
-  if (en.length < 6 || en.length > 40) return false;
+  if (en.length < 15 || en.length > 60) return false;
 
   const words = en.split(/\s+/);
-  if (words.length < 2 || words.length > 4) return false;
+  if (words.length < 3 || words.length > 6) return false;
 
   // Skip if contains CJK (already translated)
   if (/[\u3000-\u9FFF\uF900-\uFAFF]/.test(en)) return false;
-  // Skip camelCase identifiers
+  // Skip camelCase/PascalCase identifiers
   if (/^[a-z][a-zA-Z0-9]*$/.test(en)) return false;
-  // Skip PascalCase single tokens
-  if (/^[A-Z][a-z][a-zA-Z0-9]*$/.test(en) && words.length === 1) return false;
   // Skip dot-notation paths
   if (/^[a-zA-Z_]\w*(?:\.\w+)+$/.test(en)) return false;
   // Skip URLs/paths
   if (/^(https?:\/\/|\/)/.test(en)) return false;
   // Skip numeric values with units
   if (/^\d+(\.\d+)?(%|ms|px|s)?$/i.test(en)) return false;
-  // Skip keyboard shortcuts
-  if (/^(Alt|Ctrl|Cmd|Shift)\b/i.test(en) && /\+/.test(en)) return false;
 
-  // Skip known English-only terms that should stay untranslated
-  const ALLOWED = new Set([
-    'Testim CLI', 'Node.js', 'Visual Editor', 'Test Editor',
-    'Testim Automate', 'Testim Grid', 'Smart Locators', 'Visual AI',
-    'Testim Extension', 'Salesforce Testing',
-  ]);
-  if (ALLOWED.has(en)) return false;
+  // Skip keyboard shortcuts and key combinations broadly
+  // Covers: Alt + H, Option + H, Ctrl + Shift + Enter, Delete, Backspace, etc.
+  const KEY_NAMES = /\b(Alt|Ctrl|Cmd|Shift|Option|Delete|Backspace|Enter|Return|Space|Tab|Esc|Escape|Home|End|Page Up|Page Down|F\d{1,2})\b/i;
+  if (KEY_NAMES.test(en) && /[+,]/.test(en)) return false;
+  // Skip comma-separated key/value lists (e.g., "Delete, Backspace")
+  if (/^[A-Z][a-z]+(?:\s*,\s*[A-Z][a-z]+)+$/.test(en)) return false;
 
   return true;
 }
@@ -792,8 +788,10 @@ function compareTableStructure(enBody, jaBody) {
         const jaCell = (jaTable.rows[r]?.[c] || '').trim();
 
         // Empty mismatch: EN non-empty, JA empty (or vice versa)
-        const enEmpty = stripMarkdown(enCell).length === 0;
-        const jaEmpty = stripMarkdown(jaCell).length === 0;
+        // Use raw trimmed content (not stripMarkdown) so code-only cells
+        // like `--grep` are not treated as empty
+        const enEmpty = enCell.length === 0;
+        const jaEmpty = jaCell.length === 0;
         if (enEmpty !== jaEmpty) {
           issues.push(
             withSeverity({

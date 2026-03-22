@@ -904,12 +904,12 @@ describe('table parity in compareSnapshotStructure', () => {
     assert.equal(shapeIssues.length, 1, 'should detect table drop');
   });
 
-  it('detects short label residual (EN header kept as-is in JA)', () => {
-    const en = '| Property Name | Value |\n| --- | --- |\n| timeout | 30 |\n';
-    const ja = '| Property Name | 値 |\n| --- | --- |\n| timeout | 30 |\n';
+  it('detects short label residual (3+ word phrase kept as-is in JA)', () => {
+    const en = '| Setting | Description |\n| --- | --- |\n| timeout | Run the selected test suite |\n';
+    const ja = '| 設定 | 説明 |\n| --- | --- |\n| timeout | Run the selected test suite |\n';
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
-    assert.ok(residualIssues.length >= 1, 'should detect short label kept as EN');
+    assert.ok(residualIssues.length >= 1, 'should detect 3+ word phrase kept as EN');
   });
 
   it('compares mixed HTML/markdown tables in document order', () => {
@@ -930,48 +930,55 @@ describe('table parity in compareSnapshotStructure', () => {
 // ---------------------------------------------------------------------------
 
 describe('isShortLabelResidual', () => {
-  it('detects "Property Name" kept unchanged', () => {
-    assert.equal(isShortLabelResidual('Property Name', 'Property Name'), true);
+  it('detects 3+ word English phrase kept unchanged', () => {
+    assert.equal(isShortLabelResidual('Run the selected test', 'Run the selected test'), true);
+    assert.equal(isShortLabelResidual('Open the test editor', 'Open the test editor'), true);
   });
 
-  it('detects "Config File" kept unchanged', () => {
-    assert.equal(isShortLabelResidual('Config File', 'Config File'), true);
-  });
-
-  it('detects "Test Configuration" kept unchanged', () => {
-    assert.equal(isShortLabelResidual('Test Configuration', 'Test Configuration'), true);
+  it('returns false for 2-word UI labels (intentional English)', () => {
+    assert.equal(isShortLabelResidual('Property Name', 'Property Name'), false);
+    assert.equal(isShortLabelResidual('Config File', 'Config File'), false);
+    assert.equal(isShortLabelResidual('Match level', 'Match level'), false);
+    assert.equal(isShortLabelResidual('Test Configuration', 'Test Configuration'), false);
   });
 
   it('returns false when JA is translated (different from EN)', () => {
-    assert.equal(isShortLabelResidual('Property Name', 'プロパティ名'), false);
+    assert.equal(isShortLabelResidual('Run the selected test', 'テストを実行する'), false);
   });
 
-  it('returns false for camelCase identifiers', () => {
-    assert.equal(isShortLabelResidual('projectId', 'projectId'), false);
-  });
-
-  it('returns false for allowed terms like Node.js', () => {
-    assert.equal(isShortLabelResidual('Node.js', 'Node.js'), false);
-  });
-
-  it('returns false for Testim CLI', () => {
-    assert.equal(isShortLabelResidual('Testim CLI', 'Testim CLI'), false);
-  });
-
-  it('returns false for keyboard shortcuts', () => {
+  it('returns false for keyboard shortcuts (Alt, Ctrl, Option)', () => {
     assert.equal(isShortLabelResidual('Alt + H', 'Alt + H'), false);
+    assert.equal(isShortLabelResidual('Option + H', 'Option + H'), false);
+    assert.equal(isShortLabelResidual('Ctrl + Shift + Enter', 'Ctrl + Shift + Enter'), false);
   });
 
-  it('returns false for single words', () => {
-    assert.equal(isShortLabelResidual('Property', 'Property'), false);
+  it('returns false for comma-separated key lists', () => {
+    assert.equal(isShortLabelResidual('Delete, Backspace', 'Delete, Backspace'), false);
   });
 
-  it('returns false for very long labels (> 40 chars)', () => {
-    const long = 'This Is A Very Long Label That Should Not Match';
-    assert.equal(isShortLabelResidual(long, long), false);
+  it('returns false for short cells (< 15 chars)', () => {
+    assert.equal(isShortLabelResidual('short text', 'short text'), false);
   });
 
   it('returns false for empty cells', () => {
     assert.equal(isShortLabelResidual('', ''), false);
+  });
+});
+
+describe('table cell empty detection with inline code', () => {
+  it('detects empty mismatch when EN has code-only cell and JA is empty', () => {
+    const en = '| Option | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| オプション | 説明 |\n| --- | --- |\n|  | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
+    assert.equal(emptyIssues.length, 1, 'should detect code-only cell dropped');
+  });
+
+  it('does not flag when both cells have inline code', () => {
+    const en = '| Option | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| オプション | 説明 |\n| --- | --- |\n| `--grep` | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
+    assert.equal(emptyIssues.length, 0);
   });
 });
