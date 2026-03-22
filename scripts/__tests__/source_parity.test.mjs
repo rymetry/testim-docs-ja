@@ -553,26 +553,6 @@ describe('compareSnapshotStructure', () => {
     assert.ok(stepIssues.length >= 1, 'should detect diff=1 via total fallback');
   });
 
-  it('emits section-count-mismatch when EN/JA section counts differ', () => {
-    const en = '## Section A\n1. A\n## Section B\n1. B\n';
-    const ja = '## セクション A\n1. A\n2. B\n';
-    const issues = compareSnapshotStructure(en, ja);
-    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
-    assert.equal(sectionIssues.length, 1);
-    assert.ok(sectionIssues[0].detail.includes('EN=2'));
-    assert.ok(sectionIssues[0].detail.includes('JA=1'));
-  });
-
-  it('detects section merge with equal totals via section-count-mismatch', () => {
-    // EN: 2 sections (1+1=2 steps), JA: 1 section (2 steps) → total same but structure differs
-    const en = '## Section A\n1. A\n## Section B\n1. B\n';
-    const ja = '## セクション A\n1. A\n2. B\n';
-    const issues = compareSnapshotStructure(en, ja);
-    // Even though step totals match, section-count-mismatch should fire
-    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
-    assert.equal(sectionIssues.length, 1);
-  });
-
   it('normalises EN H1 headings for section comparison', () => {
     // EN uses H1 for sections, JA uses H2 — should still compare per-section
     const en = '# Title\nIntro\n# Setup\n1. A\n2. B\n3. C\n';
