@@ -51,18 +51,41 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 日本語ドキュメントの翻訳品質をローカルチェックする。
 
 ```bash
-npm run check:parity                # ローカルチェック
-node scripts/check_source_parity.mjs --section="概要"   # セクション絞り込み
-node scripts/check_source_parity.mjs --json              # JSON 出力
+npm run check:parity                                      # ローカルチェック
+node scripts/check_source_parity.mjs --section="概要"     # セクション絞り込み
+node scripts/check_source_parity.mjs --json               # JSON 出力
+npm run check:parity -- --fail-on=actionable              # actionable + error で exit 1
+npm run check:parity -- --fail-on=any                     # allowlist 除外後に issue > 0 で exit 1
 ```
 
-| チェック項目     | 検出内容                           |
-| ---------------- | ---------------------------------- |
-| `untranslated`   | 未翻訳の英語テキスト行             |
-| `legacy-callout` | レガシー callout（`> 📘` 等）      |
-| `jsx-callout`    | JSX `<Callout>` コンポーネント残留 |
-| `h1-in-body`     | 本文中の H1 見出し                 |
-| `orphan-page`    | SIDEBAR_URLS.md に未掲載のページ   |
+**ローカルチェック（actionable）:**
+
+| チェック項目 | 検出内容 |
+| --- | --- |
+| `untranslated` | 未翻訳の英語テキスト行 |
+| `legacy-callout` | レガシー callout（`> 📘` 等） |
+| `jsx-callout` | JSX `<Callout>` コンポーネント残留 |
+| `h1-in-body` | 本文中の H1 見出し |
+| `orphan-page` | SIDEBAR_URLS.md に未掲載のページ |
+| `image-mismatch` | 画像数の不一致 |
+| `codeblock-mismatch` | コードブロック数の不一致 |
+| `image-order-mismatch` | 画像の配置順が原文と異なる |
+| `callout-nesting-mismatch` | callout のネストレベルが原文と異なる |
+
+**スナップショット構造比較（signal）:**
+
+| チェック項目 | 検出内容 |
+| --- | --- |
+| `section-count-mismatch` | H2-H4 セクション数の不一致 |
+| `step-count-mismatch` | 番号付きステップ数の不一致 |
+| `bullet-count-mismatch` | 箇条書き数の不一致 |
+| `paragraph-count-mismatch` | 段落数の不一致（diff >= 2） |
+| `table-shape-mismatch` | テーブル行数・列数の不一致 |
+| `table-cell-english-residual` | テーブルセルの英語残留 |
+| `table-cell-empty-mismatch` | テーブルセルの空/非空不一致 |
+| `table-cell-token-mismatch` | テーブルセルの invariant token 不一致 |
+
+**allowlist**: `parity-allowlist.json` で signal severity の issue を抑制可能。slug + type + (detailIncludes or detailRegex) で一致。actionable/error は抑制不可。
 
 **出力**: `parity-check-status.json`。
 
@@ -304,14 +327,14 @@ npm run docs:report-categories
 
 #### そのほかの共有ライブラリ
 
-| ファイル                     | 用途                                          |
-| ---------------------------- | --------------------------------------------- |
-| `lib/project.mjs`            | repo ルート、docs 探索、slug index、FM 読出し |
-| `lib/markdown-utils.mjs`     | Markdown 除去、description 自動生成           |
+| ファイル | 用途 |
+| --- | --- |
+| `lib/project.mjs` | repo ルート、docs 探索、slug index、FM 読出し |
+| `lib/markdown-utils.mjs` | Markdown 除去、description 自動生成 |
 | `lib/snapshot_normalize.mjs` | サイドバー HTML 正規化（属性除去、pretty-print） |
-| `lib/source_parity.mjs`      | parity issue 生成、severity 付与、要約集計    |
-| `lib/detection_reports.mjs`  | summary / issue body / audit manifest 生成    |
-| `lib/cli.mjs`                | 直実行判定などの CLI 補助                     |
+| `lib/source_parity.mjs` | parity issue 生成、severity 付与、要約集計 |
+| `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成 |
+| `lib/cli.mjs` | 直実行判定などの CLI 補助 |
 
 ---
 
@@ -323,6 +346,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 
 | テストファイル                              | 対象スクリプト                    |
 | ------------------------------------------- | --------------------------------- |
+| `__tests__/check_source_parity.test.mjs`    | check_source_parity.mjs           |
 | `__tests__/lint_docs.test.mjs`              | lint-docs.mjs                     |
 | `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs        |
 | `__tests__/update_sidebar_urls.test.mjs`    | update_sidebar_urls_from_live.mjs |
@@ -339,26 +363,30 @@ npm test    # node --test scripts/__tests__/*.mjs
 
 ## npm スクリプト対応表
 
-| npm コマンド                  | スクリプト                                | 用途                           |
-| ----------------------------- | ----------------------------------------- | ------------------------------ |
-| `lint:docs`                   | lint-docs.mjs                             | 構文・frontmatter 検証         |
-| `check:snapshots`             | snapshot_update.mjs && snapshot_diff.mjs  | スナップショット取得→比較      |
-| `check:snapshots:fetch`       | snapshot_update.mjs                       | スナップショット取得           |
-| `check:snapshots:diff`        | snapshot_diff.mjs                         | スナップショット差分比較       |
-| `check:parity`                | check_source_parity.mjs                   | 翻訳品質チェック（ローカル）   |
-| `check:summary`               | generate_detection_reports.mjs            | summary / audit manifest 生成  |
-| `docs:sync-sidebar`           | update_sidebar_urls_from_live.mjs         | サイドバー URL 同期            |
-| `docs:sync-frontmatter`       | sync_frontmatter_from_sidebar.mjs         | frontmatter 同期（ドライラン） |
-| `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行）       |
-| `docs:pipeline`               | pipeline.mjs                              | パイプライン（diff）           |
-| `docs:pipeline:full`          | pipeline.mjs --mode=full                  | パイプライン（full）           |
-| `docs:fetch`                  | fetch_translate_images.mjs                | 英語原文・画像取得             |
-| `docs:normalize`              | normalize_docs.mjs                        | ドキュメント正規化             |
-| `docs:fix-alt`                | fix_alt_all.mjs                           | alt テキスト一括挿入           |
-| `docs:placeholders`           | generate_untranslated_placeholders.mjs    | プレースホルダー作成           |
-| `docs:prepare-llm`            | prepare_llm_tasks.mjs                     | LLM タスク準備                 |
-| `docs:apply-llm`              | apply_llm_translations.mjs                | LLM 翻訳適用                   |
-| `docs:report-categories`      | report_frontmatter_categories.mjs         | カテゴリ集計                   |
+| npm コマンド | スクリプト | 用途 |
+| --- | --- | --- |
+| `lint` | lint:md && lint:docs | 全 lint 実行 |
+| `lint:md` | lint:md:content && lint:md:repo | markdownlint 実行 |
+| `lint:md:content` | markdownlint (docs content) | コンテンツ MD lint（MD001 無効） |
+| `lint:md:repo` | markdownlint (repo docs, .github) | リポジトリ MD lint |
+| `lint:docs` | lint-docs.mjs | 構文・frontmatter 検証 |
+| `check:snapshots` | snapshot_update.mjs && snapshot_diff.mjs | スナップショット取得→比較 |
+| `check:snapshots:fetch` | snapshot_update.mjs | スナップショット取得 |
+| `check:snapshots:diff` | snapshot_diff.mjs | スナップショット差分比較 |
+| `check:parity` | check_source_parity.mjs | 翻訳品質チェック（ローカル） |
+| `check:summary` | generate_detection_reports.mjs | summary / audit manifest 生成 |
+| `docs:sync-sidebar` | update_sidebar_urls_from_live.mjs | サイドバー URL 同期 |
+| `docs:sync-frontmatter` | sync_frontmatter_from_sidebar.mjs | frontmatter 同期（ドライラン） |
+| `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行） |
+| `docs:pipeline` | pipeline.mjs | パイプライン（diff） |
+| `docs:pipeline:full` | pipeline.mjs --mode=full | パイプライン（full） |
+| `docs:fetch` | fetch_translate_images.mjs | 英語原文・画像取得 |
+| `docs:normalize` | normalize_docs.mjs | ドキュメント正規化 |
+| `docs:fix-alt` | fix_alt_all.mjs | alt テキスト一括挿入 |
+| `docs:placeholders` | generate_untranslated_placeholders.mjs | プレースホルダー作成 |
+| `docs:prepare-llm` | prepare_llm_tasks.mjs | LLM タスク準備 |
+| `docs:apply-llm` | apply_llm_translations.mjs | LLM 翻訳適用 |
+| `docs:report-categories` | report_frontmatter_categories.mjs | カテゴリ集計 |
 
 ---
 

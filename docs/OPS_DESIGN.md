@@ -47,15 +47,43 @@
 
 `npm run check:parity` で以下のローカルチェックを即時実行する:
 
-| チェック項目     | 検出内容                                                |
-| ---------------- | ------------------------------------------------------- |
-| `untranslated`   | 未翻訳の英語テキスト行（UI 操作指示文のパターンマッチ） |
-| `legacy-callout` | レガシー callout 形式（`> 📘`, `> ❗️` 等）              |
-| `jsx-callout`    | JSX/MDX `<Callout>` コンポーネント残留                  |
-| `h1-in-body`     | 本文中の H1 見出し（`#` で始まる行）                    |
-| `orphan-page`    | `docs/SIDEBAR_URLS.md` に未掲載のページ                 |
+**ローカルチェック（severity: actionable）:**
 
-英語原文との構造差分（見出し・画像・コードブロック）はスナップショット diff で検知する。詳細は `docs/DOCS_DATE_TRACKING.md` を参照。
+| チェック項目              | 検出内容                                                |
+| ------------------------- | ------------------------------------------------------- |
+| `untranslated`            | 未翻訳の英語テキスト行（UI 操作指示文のパターンマッチ） |
+| `legacy-callout`          | レガシー callout 形式（`> 📘`, `> ❗️` 等）              |
+| `jsx-callout`             | JSX/MDX `<Callout>` コンポーネント残留                  |
+| `h1-in-body`              | 本文中の H1 見出し（`#` で始まる行）                    |
+| `orphan-page`             | `docs/SIDEBAR_URLS.md` に未掲載のページ                 |
+| `image-mismatch`          | 画像数の不一致                                          |
+| `codeblock-mismatch`      | コードブロック数の不一致                                |
+| `image-order-mismatch`    | 画像の配置順が原文と異なる                              |
+| `callout-nesting-mismatch`| callout のネストレベルが原文と異なる                    |
+
+**スナップショット構造比較（severity: signal）:**
+
+| チェック項目                  | 検出内容                                  |
+| ----------------------------- | ----------------------------------------- |
+| `section-count-mismatch`      | H2-H4 セクション数の不一致               |
+| `step-count-mismatch`         | 番号付きステップ数の不一致               |
+| `bullet-count-mismatch`       | 箇条書き数の不一致                       |
+| `paragraph-count-mismatch`    | 段落数の不一致（diff >= 2）              |
+| `table-shape-mismatch`        | テーブル行数・列数の不一致               |
+| `table-cell-english-residual` | テーブルセルの英語残留                   |
+| `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致              |
+| `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致    |
+
+**`--fail-on` フラグ:**
+
+```bash
+npm run check:parity -- --fail-on=actionable  # actionable + error で exit 1
+npm run check:parity -- --fail-on=any         # allowlist 除外後に issue > 0 で exit 1
+```
+
+**allowlist**: `parity-allowlist.json` で signal severity の issue を抑制可能。slug + type + (detailIncludes or detailRegex) の条件で一致。actionable/error は抑制不可。未知の issue type はエラーになる。
+
+**デフォルト動作**: `--fail-on` なしの場合、問題ファイルが 1 件以上あれば exit 1。
 
 **セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
 
@@ -130,4 +158,5 @@
 
 - [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:snapshots`、`check:parity`、`check:summary`、issue 更新 / close を実行する
 - [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
+- [`pr-parity-check.yml`](../.github/workflows/pr-parity-check.yml) では PR に対して `check:parity -- --fail-on=actionable` を実行する（移行完了後に `--fail-on=any` へ切り替え予定）
 - `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する

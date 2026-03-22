@@ -13,6 +13,11 @@ export const ISSUE_SEVERITY = {
   'paragraph-count-mismatch': 'signal',
   'heading-mismatch': 'signal',
   'content-root-missing': 'signal',
+  'section-count-mismatch': 'signal',
+  'table-shape-mismatch': 'signal',
+  'table-cell-english-residual': 'signal',
+  'table-cell-empty-mismatch': 'signal',
+  'table-cell-token-mismatch': 'signal',
   'source-fetch-error': 'error',
 };
 
@@ -292,7 +297,7 @@ export function extractStepCounts(body) {
       continue;
     }
 
-    const headingMatch = line.match(/^#{2,3}\s+(.+)/);
+    const headingMatch = line.match(/^#{2,4}\s+(.+)/);
     if (headingMatch) {
       inCallout = false; // Reset unclosed callout at section boundary
       currentSection = headingMatch[1].trim();
@@ -365,7 +370,7 @@ export function extractBulletCounts(body) {
 
     if (/^>/.test(trimmed)) continue;
 
-    const headingMatch = line.match(/^#{2,3}\s+(.+)/);
+    const headingMatch = line.match(/^#{2,4}\s+(.+)/);
     if (headingMatch) {
       inCallout = false;
       currentSection = headingMatch[1].trim();
@@ -444,7 +449,7 @@ export function extractParagraphCounts(body) {
       continue;
     }
 
-    const headingMatch = line.match(/^#{2,3}\s+(.+)/);
+    const headingMatch = line.match(/^#{2,4}\s+(.+)/);
     if (headingMatch) {
       inCallout = false;
       currentSection = headingMatch[1].trim();
@@ -536,6 +541,383 @@ function compareSectionCounts(enMap, jaMap, issueType, label, minDiff = 1) {
   return issues;
 }
 
+// ---------------------------------------------------------------------------
+// Table structure comparison helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Strip markdown formatting from a cell value.
+ */
+export function stripMarkdown(text) {
+  return text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '') // images
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links → text
+    .replace(/`[^`]*`/g, '') // inline code
+    .replace(/\*\*([^*]*)\*\*/g, '$1') // bold
+    .replace(/\*([^*]*)\*/g, '$1') // italic
+    .replace(/~~([^~]*)~~/g, '$1') // strikethrough
+    .trim();
+}
+
+/**
+ * Check if a table cell contains untranslated English *prose*.
+ * Designed to catch full English sentences/phrases left untranslated,
+ * while excluding identifiers, property names, UI labels, shortcuts, etc.
+ */
+export function isUntranslatedCell(cell) {
+  const stripped = stripMarkdown(cell).trim();
+  // Require substantial text — short cells are usually identifiers/labels
+  if (stripped.length < 20) return false;
+
+  // Skip cells that are only URLs, code, or numbers
+  if (/^https?:\/\//.test(stripped)) return false;
+  if (/^[`']/.test(stripped)) return false;
+  if (/^\d+(\.\d+)?%?$/.test(stripped)) return false;
+
+  // Skip cells with CJK characters (already has some translation)
+  if (/[\u3000-\u9FFF\uF900-\uFAFF]/.test(stripped)) return false;
+
+  // Skip camelCase/PascalCase identifiers (e.g., projectId, testName)
+  if (/^[a-z][a-zA-Z0-9]*$/.test(stripped)) return false;
+  if (/^[A-Z][a-z][a-zA-Z0-9]*$/.test(stripped)) return false;
+
+  // Skip dot-notation property paths (e.g., params.timeout, test.id)
+  if (/^[a-zA-Z_]\w*(?:\.\w+)+$/.test(stripped)) return false;
+
+  // Skip keyboard shortcuts (e.g., Alt + H, Ctrl + Shift + Enter, Option + Command + X)
+  // Includes Mac key names and Unicode symbols (⌥⌘⌃⇧)
+  if (/(?:^|[\s+,/])(?:Alt|Ctrl|Cmd|Shift|Enter|Tab|Esc|Space|Option|Command|Control|Delete|Backspace|Return|Home|End|F\d{1,2}|[⌥⌘⌃⇧])\b/i.test(stripped) && /[+/,]/.test(stripped)) return false;
+
+  // Skip cells with numbers and units (e.g., 30s, 5000ms, 100px)
+  if (/^\d+\s*(?:s|ms|px|em|rem|%|MB|GB|KB)$/i.test(stripped)) return false;
+
+  // Require multiple words (single-word cells are usually identifiers/labels)
+  const words = stripped.split(/\s+/);
+  if (words.length < 3) return false;
+
+  // Must look like English prose: has spaces between words, mostly ASCII letters
+  const letters = stripped.replace(/[^A-Za-z]/g, '');
+  const ratio = letters.length / stripped.length;
+  return ratio > 0.6;
+}
+
+/**
+ * Parse markdown pipe tables from body.
+ * Returns array of { rows: string[][], line: number }.
+ * Each row is an array of cell strings.
+ */
+export function extractMarkdownTables(body) {
+  const lines = body.split('\n');
+  const tables = [];
+  let currentTable = null;
+  let inCodeBlock = false;
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (FENCE_LINE_RE.test(line)) {
+      inCodeBlock = !inCodeBlock;
+      if (currentTable) {
+        tables.push(currentTable);
+        currentTable = null;
+      }
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    const trimmed = line.trim();
+    if (/^\|(.+)\|$/.test(trimmed)) {
+      // Check if this is a separator row (| --- | --- |)
+      const isSeparator = /^\|[\s:|-]+\|$/.test(trimmed);
+      const cells = trimmed
+        .slice(1, -1) // remove leading/trailing pipes
+        .split('|')
+        .map((c) => c.trim());
+
+      if (!currentTable) {
+        currentTable = { rows: [], line: i + 1 };
+      }
+      if (!isSeparator) {
+        currentTable.rows.push(cells);
+      }
+    } else {
+      if (currentTable) {
+        tables.push(currentTable);
+        currentTable = null;
+      }
+    }
+  }
+
+  if (currentTable) {
+    tables.push(currentTable);
+  }
+
+  return tables;
+}
+
+/**
+ * Parse HTML tables from body (EN snapshots often use HTML).
+ * Returns array of { rows: string[][], line: number }.
+ */
+export function extractHtmlTables(body) {
+  const tables = [];
+  const tableRegex = /<table\b[^>]*>([\s\S]*?)<\/table>/gi;
+  let match;
+
+  while ((match = tableRegex.exec(body)) !== null) {
+    const tableHtml = match[1];
+    const lineNum = body.slice(0, match.index).split('\n').length;
+    const rows = [];
+
+    const rowRegex = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+    let rowMatch;
+    while ((rowMatch = rowRegex.exec(tableHtml)) !== null) {
+      const rowHtml = rowMatch[1];
+      const cells = [];
+      const cellRegex = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi;
+      let cellMatch;
+      while ((cellMatch = cellRegex.exec(rowHtml)) !== null) {
+        let cellHtml = cellMatch[1];
+        // Preserve <code> as backtick-wrapped inline code for token extraction
+        // <code>--grep</code> → `--grep`
+        // Normalize whitespace inside code (pretty-printed HTML has newlines/indent)
+        cellHtml = cellHtml.replace(
+          /<code\b[^>]*>([\s\S]*?)<\/code>/gi,
+          (_, content) => `\`${content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()}\``,
+        );
+        // Preserve link destinations before stripping HTML tags
+        // <a href="/docs/foo">text</a> → text [/docs/foo]
+        cellHtml = cellHtml.replace(
+          /<a\b[^>]*\bhref\s*=\s*"([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi,
+          (_, href, text) => `${text.replace(/<[^>]*>/g, '')} [${href}]`,
+        );
+        const cellText = cellHtml.replace(/<[^>]*>/g, '').trim();
+        cells.push(cellText);
+      }
+      if (cells.length > 0) {
+        rows.push(cells);
+      }
+    }
+
+    if (rows.length > 0) {
+      tables.push({ rows, line: lineNum });
+    }
+  }
+
+  return tables;
+}
+
+/**
+ * Normalize a URL to a comparable slug token.
+ * Converts https://help.testim.io/docs/foo → /docs/foo
+ */
+function normalizeUrlToken(url) {
+  return url.replace(/^https?:\/\/help\.testim\.io/, '');
+}
+
+/**
+ * Extract invariant tokens from a table cell that must be preserved during translation.
+ * Returns a sorted, deduplicated array of token strings for comparison.
+ * Targets: URLs (normalized), inline code, CLI flags, dot-paths, versions, number+unit.
+ */
+export function extractInvariantTokens(cell) {
+  const tokenSet = new Set();
+
+  // Inline code: `--grep`, `params.timeout`, etc.
+  const codeRe = /`([^`]+)`/g;
+  let m;
+  while ((m = codeRe.exec(cell)) !== null) {
+    tokenSet.add(m[1]);
+  }
+
+  // Strip inline code and markdown links before extracting other tokens
+  let rest = cell.replace(/`[^`]*`/g, '');
+
+  // URLs: https://..., http://... — normalize testim.io docs URLs to /docs/slug
+  const urlRe = /https?:\/\/[^\s)>\]]+/g;
+  const urlSpans = [];
+  while ((m = urlRe.exec(rest)) !== null) {
+    tokenSet.add(normalizeUrlToken(m[0]));
+    urlSpans.push([m.index, m.index + m[0].length]);
+  }
+
+  // Remove URL spans from rest to avoid dot-path/path regex re-capturing URL fragments
+  for (let i = urlSpans.length - 1; i >= 0; i -= 1) {
+    rest = rest.slice(0, urlSpans[i][0]) + ' '.repeat(urlSpans[i][1] - urlSpans[i][0]) + rest.slice(urlSpans[i][1]);
+  }
+
+  // Extract link destinations from markdown [text](/docs/slug#fragment) and
+  // HTML-preserved format [/docs/slug#fragment] or [https://...]
+  // Fragment can contain Unicode characters (JA anchors like #cli-ステップの追加)
+  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+))\]?\)?/g;
+  while ((m = linkDestRe.exec(rest)) !== null) {
+    tokenSet.add(normalizeUrlToken(m[1]));
+  }
+
+  // CLI flags: --flag, -f (standalone, not inside words)
+  const flagRe = /(?:^|\s)(--?[a-zA-Z][\w-]*)(?=\s|$)/g;
+  while ((m = flagRe.exec(rest)) !== null) {
+    tokenSet.add(m[1]);
+  }
+
+  // Dot-notation paths: params.timeout, test.id.value, config.setting
+  // Require 3+ segments OR known API/config prefixes to avoid noise from
+  // abbreviations (i.e, e.g) and product names (Node.js, Node.JS)
+  const KNOWN_DOT_PREFIXES = /^(params|test|config|step|suite|browser|element|window|document|process|module|exports)\./;
+  const dotRe = /\b([a-zA-Z_]\w*(?:\.\w+)+)\b/g;
+  while ((m = dotRe.exec(rest)) !== null) {
+    const path = m[1];
+    const segments = path.split('.').length;
+    if (segments >= 3 || KNOWN_DOT_PREFIXES.test(path)) {
+      tokenSet.add(path);
+    }
+  }
+
+  // Versions: v1.2.3, 2.0.0
+  const verRe = /\bv?\d+\.\d+\.\d+\b/g;
+  while ((m = verRe.exec(rest)) !== null) {
+    tokenSet.add(m[0]);
+  }
+
+  // Number + unit: 30sec, 500ms, 10%, 5000ms, 100px
+  const numUnitRe = /\b(\d+(?:\.\d+)?\s*(?:sec|ms|s|px|em|rem|%|MB|GB|KB|min|hr))\b/gi;
+  while ((m = numUnitRe.exec(rest)) !== null) {
+    tokenSet.add(m[1].replace(/\s+/g, ''));
+  }
+
+  // File paths: require 2+ segments (/api/foo, /docs/slug) or known prefix
+  // to avoid matching prose like "CI tool /local terminal"
+  const pathRe = /(?:^|\s)(\/[a-zA-Z][\w.-]+(?:\/[\w.-]+)+)/g;
+  while ((m = pathRe.exec(rest)) !== null) {
+    tokenSet.add(m[1]);
+  }
+
+  return [...tokenSet].sort();
+}
+
+/**
+ * Extract all tables (markdown + HTML) from body, sorted by document order.
+ */
+export function extractTableStructure(body) {
+  return [...extractMarkdownTables(body), ...extractHtmlTables(body)]
+    .sort((a, b) => a.line - b.line);
+}
+
+/**
+ * Compare tables between EN and JA for structural and content issues.
+ */
+function compareTableStructure(enBody, jaBody) {
+  const issues = [];
+  const enTables = extractTableStructure(enBody);
+  const jaTables = extractTableStructure(jaBody);
+
+  // Report table count mismatch (table drop/add)
+  if (enTables.length !== jaTables.length && (enTables.length > 0 || jaTables.length > 0)) {
+    issues.push(
+      withSeverity({
+        type: 'table-shape-mismatch',
+        detail: `テーブル数: EN=${enTables.length}, JA=${jaTables.length}`,
+      }),
+    );
+    return issues; // Skip per-cell comparison when table counts differ
+  }
+
+  if (enTables.length === 0) {
+    return issues;
+  }
+
+  for (let t = 0; t < enTables.length; t += 1) {
+    const enTable = enTables[t];
+    const jaTable = jaTables[t];
+
+    const enRows = enTable.rows.length;
+    const jaRows = jaTable.rows.length;
+    const enCols = enTable.rows[0]?.length || 0;
+    const jaCols = jaTable.rows[0]?.length || 0;
+
+    // Shape comparison (row/column count)
+    if (enRows !== jaRows || enCols !== jaCols) {
+      issues.push(
+        withSeverity({
+          type: 'table-shape-mismatch',
+          detail: `テーブル #${t + 1}: EN=${enRows}行×${enCols}列, JA=${jaRows}行×${jaCols}列`,
+        }),
+      );
+      continue; // Skip cell-level comparison if shape differs
+    }
+
+    // Cell-level comparison
+    for (let r = 0; r < enRows; r += 1) {
+      for (let c = 0; c < enCols; c += 1) {
+        const enCell = (enTable.rows[r]?.[c] || '').trim();
+        const jaCell = (jaTable.rows[r]?.[c] || '').trim();
+
+        // Empty mismatch: EN non-empty, JA empty (or vice versa)
+        // Use raw trimmed content (not stripMarkdown) so code-only cells
+        // like `--grep` are not treated as empty
+        const enEmpty = enCell.length === 0;
+        const jaEmpty = jaCell.length === 0;
+        if (enEmpty !== jaEmpty) {
+          issues.push(
+            withSeverity({
+              type: 'table-cell-empty-mismatch',
+              detail: `テーブル #${t + 1} [${r + 1},${c + 1}]: EN=${enEmpty ? '空' : '非空'}, JA=${jaEmpty ? '空' : '非空'}`,
+            }),
+          );
+          continue;
+        }
+
+        // Invariant token comparison: URLs, code, flags, versions, numbers must match
+        // For internal /docs links, compare at page-slug level (ignore fragment differences)
+        if (!enEmpty && !jaEmpty) {
+          const normalizeDocLink = (t) => t.replace(/^(\/docs\/[\w-]+)#.*$/, '$1');
+          const enTokens = extractInvariantTokens(enCell).map(normalizeDocLink);
+          const jaTokens = extractInvariantTokens(jaCell).map(normalizeDocLink);
+          // Deduplicate after normalization (slug + slug#fragment → single slug)
+          const enSet = [...new Set(enTokens)].sort();
+          const jaSet = [...new Set(jaTokens)].sort();
+          if (enSet.length > 0 && enSet.join('|') !== jaSet.join('|')) {
+            const missing = enSet.filter((t) => !jaSet.includes(t));
+            const added = jaSet.filter((t) => !enSet.includes(t));
+            const parts = [];
+            if (missing.length > 0) parts.push(`欠落: ${missing.slice(0, 3).join(', ')}`);
+            if (added.length > 0) parts.push(`追加: ${added.slice(0, 3).join(', ')}`);
+            if (parts.length > 0) {
+              issues.push(
+                withSeverity({
+                  type: 'table-cell-token-mismatch',
+                  detail: `テーブル #${t + 1} [${r + 1},${c + 1}]: ${parts.join('; ')}`,
+                }),
+              );
+            }
+          }
+        }
+
+        // English prose residual: long untranslated English text in JA cell
+        // Skip if EN and JA cells are equivalent after normalization —
+        // intentionally kept in English (Testim UI labels, step names, etc.)
+        // Normalize: strip markdown, remove href annotations [/docs/...],
+        // collapse whitespace, lowercase for fuzzy equality
+        const normalizeForCompare = (s) =>
+          stripMarkdown(s)
+            .replace(/\s*\[[^\]]*\]\s*/g, ' ') // Remove [/docs/foo#bar] annotations
+            .trim()
+            .replace(/\s+/g, ' ')
+            .toLowerCase();
+        if (!jaEmpty && normalizeForCompare(enCell) !== normalizeForCompare(jaCell) && isUntranslatedCell(jaCell)) {
+          issues.push(
+            withSeverity({
+              type: 'table-cell-english-residual',
+              detail: `テーブル #${t + 1} [${r + 1},${c + 1}]: "${jaCell.slice(0, 50)}"`,
+            }),
+          );
+        }
+      }
+    }
+  }
+
+  return issues;
+}
+
 /**
  * Compare EN snapshot with JA translation for structural issues.
  * Returns an array of issue objects.
@@ -609,9 +991,34 @@ export function compareSnapshotStructure(enBody, jaBody) {
     }
   }
 
+  // --- Table structure comparison ---
+  issues.push(...compareTableStructure(enBody, jaBody));
+
   // --- Section-based comparisons (steps, bullets, paragraphs) ---
   // Normalise EN headings: strip title H1, demote remaining H1→H2
   const normalizedEnBody = stripTitleH1(enBody);
+
+  // --- Section count mismatch (H2-H4 key count comparison) ---
+  // Count headings outside code blocks for accurate comparison
+  const countSectionHeadings = (body) => {
+    let count = 0;
+    let inCode = false;
+    for (const line of body.split('\n')) {
+      if (FENCE_LINE_RE.test(line)) { inCode = !inCode; continue; }
+      if (!inCode && /^#{2,4}\s+/.test(line)) count += 1;
+    }
+    return count;
+  };
+  const enSectionCount = countSectionHeadings(normalizedEnBody);
+  const jaSectionCount = countSectionHeadings(jaBody);
+  if (enSectionCount > 0 && enSectionCount !== jaSectionCount) {
+    issues.push(
+      withSeverity({
+        type: 'section-count-mismatch',
+        detail: `H2-H4 セクション数: EN=${enSectionCount}, JA=${jaSectionCount}`,
+      }),
+    );
+  }
 
   const enSteps = extractStepCounts(normalizedEnBody);
   const jaSteps = extractStepCounts(jaBody);

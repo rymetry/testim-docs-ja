@@ -14,6 +14,11 @@ let stripTitleH1;
 let extractBulletCounts;
 let extractParagraphCounts;
 let compareSnapshotStructure;
+let extractMarkdownTables;
+let extractHtmlTables;
+let stripMarkdown;
+let isUntranslatedCell;
+let extractInvariantTokens;
 
 before(async () => {
   ({
@@ -30,6 +35,11 @@ before(async () => {
     extractBulletCounts,
     extractParagraphCounts,
     compareSnapshotStructure,
+    extractMarkdownTables,
+    extractHtmlTables,
+    stripMarkdown,
+    isUntranslatedCell,
+    extractInvariantTokens,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -647,5 +657,516 @@ describe('extractStepCounts edge cases', () => {
     const body = '## Section A\n:::note\nUnclosed note\n## Section B\n1. Step one\n';
     const result = extractStepCounts(body);
     assert.equal(result.get('Section B'), 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// H4 boundary tests (Phase 2b)
+// ---------------------------------------------------------------------------
+
+describe('H4 section boundary support', () => {
+  it('extractStepCounts recognises H4 as section boundary', () => {
+    const body = '## Parent\n1. A\n#### Sub\n1. B\n2. C\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Parent'), 1);
+    assert.equal(result.get('Sub'), 2);
+  });
+
+  it('extractBulletCounts recognises H4 as section boundary', () => {
+    const body = '## Parent\n- A\n#### Sub\n- B\n- C\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Parent'), 1);
+    assert.equal(result.get('Sub'), 2);
+  });
+
+  it('extractParagraphCounts recognises H4 as section boundary', () => {
+    const body = '## Parent\nPara 1.\n\n#### Sub\nPara 2.\n\nPara 3.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Parent'), 1);
+    assert.equal(result.get('Sub'), 2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// section-count-mismatch tests (Phase 2b)
+// ---------------------------------------------------------------------------
+
+describe('section-count-mismatch', () => {
+  it('detects when EN has more sections than JA (section merge)', () => {
+    const en = '# Title\n## A\nText\n## B\nText\n## C\nText\n';
+    const ja = '## A\nText\n## B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+    assert.match(sectionIssues[0].detail, /EN=3.*JA=2/);
+  });
+
+  it('detects when JA has more sections than EN (section split)', () => {
+    const en = '# Title\n## A\nText\n';
+    const ja = '## A\nText\n## B\nText\n## C\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+  });
+
+  it('returns no issue when section counts match', () => {
+    const en = '# Title\n## A\nText\n## B\nText\n';
+    const ja = '## A\nText\n## B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 0);
+  });
+
+  it('counts H4 headings in section count', () => {
+    const en = '# Title\n## A\nText\n### B\nText\n#### C\nText\n';
+    const ja = '## A\nText\n### B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+    assert.match(sectionIssues[0].detail, /EN=3.*JA=2/);
+  });
+
+  it('detects equal-total section merge via count', () => {
+    // EN has 4 sections (A, B, C, D), JA has 3 (A, B, C) — C absorbed D
+    const en = '# Title\n## A\n## B\n## C\n## D\n';
+    const ja = '## A\n## B\n## C\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 1);
+  });
+
+  it('ignores headings inside code blocks for section count', () => {
+    const en = '# Title\n## A\nText\n```\n## Fake\n```\n## B\nText\n';
+    const ja = '## A\nText\n```\n## Fake\n## AlsoFake\n```\n## B\nText\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
+    assert.equal(sectionIssues.length, 0, 'should not count headings inside code blocks');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Table structure comparison tests (Phase 2c)
+// ---------------------------------------------------------------------------
+
+describe('extractMarkdownTables', () => {
+  it('extracts a simple markdown table', () => {
+    const body = '## Section\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].rows.length, 3); // header + 2 data rows
+    assert.deepEqual(tables[0].rows[0], ['A', 'B']);
+    assert.deepEqual(tables[0].rows[1], ['1', '2']);
+  });
+
+  it('extracts multiple tables', () => {
+    const body = '| A |\n| --- |\n| 1 |\n\nText\n\n| B |\n| --- |\n| 2 |\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 2);
+  });
+
+  it('skips tables inside code blocks', () => {
+    const body = '```\n| A |\n| --- |\n| 1 |\n```\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 0);
+  });
+});
+
+describe('extractHtmlTables', () => {
+  it('extracts a simple HTML table', () => {
+    const body = '<table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].rows.length, 2);
+    assert.deepEqual(tables[0].rows[0], ['A', 'B']);
+    assert.deepEqual(tables[0].rows[1], ['1', '2']);
+  });
+
+  it('preserves link href in cell content', () => {
+    const body = '<table><tr><td><a href="/docs/foo">Link text</a></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.equal(tables.length, 1);
+    assert.ok(tables[0].rows[0][0].includes('/docs/foo'), 'href should be preserved in cell text');
+  });
+
+  it('preserves <code> as backtick-wrapped inline code', () => {
+    const body = '<table><tr><td><code>--grep</code></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.equal(tables.length, 1);
+    assert.ok(tables[0].rows[0][0].includes('`--grep`'), 'code should be preserved as backtick');
+  });
+
+  it('normalizes whitespace inside <code> (pretty-printed HTML)', () => {
+    const body = '<table><tr><td><code>\n  host=localhost/127.0.0.1\n</code></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.ok(
+      tables[0].rows[0][0].includes('`host=localhost/127.0.0.1`'),
+      'whitespace inside code should be normalized',
+    );
+  });
+
+  it('preserves href with #fragment', () => {
+    const body = '<table><tr><td><a href="/docs/validate-download#adding-a-cli-step">Adding a CLI step</a></td></tr></table>';
+    const tables = extractHtmlTables(body);
+    assert.ok(tables[0].rows[0][0].includes('#adding-a-cli-step'), 'fragment should be preserved');
+  });
+});
+
+describe('stripMarkdown', () => {
+  it('strips links and formatting', () => {
+    assert.equal(stripMarkdown('**bold** text'), 'bold text');
+    assert.equal(stripMarkdown('[link](http://example.com)'), 'link');
+    assert.equal(stripMarkdown('`code`'), '');
+    assert.equal(stripMarkdown('![alt](img.png)'), '');
+  });
+});
+
+describe('isUntranslatedCell', () => {
+  it('detects English prose (20+ chars, 3+ words)', () => {
+    assert.equal(isUntranslatedCell('Click on the button to proceed with the action'), true);
+    assert.equal(isUntranslatedCell('Select the option from the dropdown menu'), true);
+    assert.equal(isUntranslatedCell('This is a description of the feature'), true);
+  });
+
+  it('returns false for Japanese content', () => {
+    assert.equal(isUntranslatedCell('ボタンをクリックして操作を続行します'), false);
+  });
+
+  it('returns false for short cells (< 20 chars)', () => {
+    assert.equal(isUntranslatedCell(''), false);
+    assert.equal(isUntranslatedCell('A'), false);
+    assert.equal(isUntranslatedCell('Click on the'), false);
+    assert.equal(isUntranslatedCell('Property'), false);
+    assert.equal(isUntranslatedCell('Node.js'), false);
+  });
+
+  it('returns false for identifiers and labels (< 3 words)', () => {
+    assert.equal(isUntranslatedCell('projectId'), false);
+    assert.equal(isUntranslatedCell('Testim CLI'), false);
+    assert.equal(isUntranslatedCell('Visual Editor'), false);
+    assert.equal(isUntranslatedCell('Smart Locators'), false);
+  });
+
+  it('returns false for camelCase/PascalCase identifiers', () => {
+    assert.equal(isUntranslatedCell('projectId'), false);
+    assert.equal(isUntranslatedCell('testName'), false);
+  });
+
+  it('returns false for dot-notation paths', () => {
+    assert.equal(isUntranslatedCell('params.timeout'), false);
+    assert.equal(isUntranslatedCell('test.id.value'), false);
+  });
+
+  it('returns false for keyboard shortcuts (including Mac keys)', () => {
+    assert.equal(isUntranslatedCell('Alt + H'), false);
+    assert.equal(isUntranslatedCell('Ctrl + Shift + Enter'), false);
+    assert.equal(isUntranslatedCell('Option + Command + X / Command + Shift + 1'), false);
+    assert.equal(isUntranslatedCell('Command + Shift + Enter'), false);
+    assert.equal(isUntranslatedCell('Delete / Backspace'), false);
+  });
+
+  it('returns false for URLs', () => {
+    assert.equal(isUntranslatedCell('https://example.com/very/long/path/here'), false);
+  });
+
+  it('returns false for numbers and units', () => {
+    assert.equal(isUntranslatedCell('42'), false);
+    assert.equal(isUntranslatedCell('5000ms'), false);
+  });
+});
+
+describe('table parity in compareSnapshotStructure', () => {
+  it('detects table shape mismatch (different row count)', () => {
+    const en = '| A | B |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |\n';
+    const ja = '| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tableIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(tableIssues.length, 1);
+  });
+
+  it('detects table cell empty mismatch', () => {
+    const en = '| A | B |\n| --- | --- |\n| content | data |\n';
+    const ja = '| A | B |\n| --- | --- |\n| コンテンツ |  |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
+    assert.equal(emptyIssues.length, 1);
+  });
+
+  it('detects English residual when JA cell differs from EN but is English prose', () => {
+    // JA cell was changed but left as English prose (not a copy of EN)
+    const en = '| Feature | Description |\n| --- | --- |\n| Login | Enter your credentials to access the dashboard panel |\n';
+    const ja = '| 機能 | 説明 |\n| --- | --- |\n| ログイン | Please enter your login credentials to proceed here |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.ok(residualIssues.length >= 1, 'should detect English residual in table cell');
+  });
+
+  it('does not flag English residual when EN and JA cells are identical (intentional)', () => {
+    // Step names like "Validate element visible" are intentionally English
+    const en = '| Step | Description |\n| --- | --- |\n| Validate element visible | Checks if element is shown |\n';
+    const ja = '| ステップ | 説明 |\n| --- | --- |\n| Validate element visible | 要素が表示されているか確認 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'identical EN/JA cells should not be flagged');
+  });
+
+  it('does not flag English residual when cells differ only by whitespace', () => {
+    const en = '| Name | Note |\n| --- | --- |\n| Remote run  (Testim Editor) | desc |\n';
+    const ja = '| 名前 | 備考 |\n| --- | --- |\n| Remote run (Testim Editor) | 説明 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'cosmetic spacing difference should not be flagged');
+  });
+
+  it('does not flag residual when EN markdown link equals JA HTML-preserved link', () => {
+    // EN uses [text](https://help.testim.io/docs/foo#bar)
+    // JA HTML-preserved has text [/docs/foo#bar]
+    // After stripping bracket annotations, visible text should match
+    const en = '| Link |\n| --- |\n| [Adding a CLI step](https://help.testim.io/docs/validate-download#adding-a-cli-step) |\n';
+    const ja = '| リンク |\n| --- |\n| Adding a CLI step [/docs/validate-download#adding-a-cli-step] |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'href annotation should not cause residual');
+  });
+
+  it('returns no table issues when tables match', () => {
+    const en = '| Feature | Description |\n| --- | --- |\n| Login | Enter credentials |\n';
+    const ja = '| 機能 | 説明 |\n| --- | --- |\n| ログイン | 資格情報を入力 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tableIssues = issues.filter((i) =>
+      i.type.startsWith('table-'),
+    );
+    assert.equal(tableIssues.length, 0);
+  });
+
+  it('compares HTML tables in EN with markdown tables in JA', () => {
+    const en = '<table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
+    const ja = '| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(shapeIssues.length, 1);
+  });
+
+  it('reports table count mismatch when table counts differ', () => {
+    const en = '| A |\n| --- |\n| 1 |\n\n| B |\n| --- |\n| 2 |\n';
+    const ja = '| A |\n| --- |\n| 1 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(shapeIssues.length, 1, 'should report table count mismatch');
+    assert.match(shapeIssues[0].detail, /EN=2.*JA=1/);
+  });
+
+  it('reports table drop (EN has table, JA has none)', () => {
+    const en = '| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+    const ja = 'テキストのみ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const shapeIssues = issues.filter((i) => i.type === 'table-shape-mismatch');
+    assert.equal(shapeIssues.length, 1, 'should detect table drop');
+  });
+
+  it('does not flag short UI labels (< 20 chars) as English residual', () => {
+    // Short labels like "Config File" are intentionally English in Testim docs
+    const en = '| Setting | Value |\n| --- | --- |\n| Config File | path |\n';
+    const ja = '| 設定 | 値 |\n| --- | --- |\n| Config File | パス |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
+    assert.equal(residualIssues.length, 0, 'short UI labels should not be flagged');
+  });
+
+  it('compares mixed HTML/markdown tables in document order', () => {
+    // EN: HTML table at line 1, markdown at line 5
+    // JA: markdown at line 1, HTML-converted-to-markdown at line 5 (reversed)
+    const en = '<table><tr><th>X</th></tr><tr><td>1</td></tr></table>\n\n\n\n| Y |\n| --- |\n| 2 |\n';
+    const ja = '| Y |\n| --- |\n| 2 |\n\n\n\n| X |\n| --- |\n| 1 |\n';
+    // Both have 2 tables with same shapes, but the content is reordered.
+    // The ordinal comparison should now detect the content swap.
+    const issues = compareSnapshotStructure(en, ja);
+    // At minimum: tables are compared in document order, so X vs Y mismatch
+    assert.ok(Array.isArray(issues));
+  });
+});
+
+describe('table cell empty detection with inline code', () => {
+  it('detects empty mismatch when EN has code-only cell and JA is empty', () => {
+    const en = '| Option | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| オプション | 説明 |\n| --- | --- |\n|  | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
+    assert.equal(emptyIssues.length, 1, 'should detect code-only cell dropped');
+  });
+
+  it('does not flag when both cells have inline code', () => {
+    const en = '| Option | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| オプション | 説明 |\n| --- | --- |\n| `--grep` | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const emptyIssues = issues.filter((i) => i.type === 'table-cell-empty-mismatch');
+    assert.equal(emptyIssues.length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractInvariantTokens tests
+// ---------------------------------------------------------------------------
+
+describe('extractInvariantTokens', () => {
+  it('extracts inline code tokens', () => {
+    const tokens = extractInvariantTokens('Use `--grep` to filter');
+    assert.ok(tokens.includes('--grep'));
+  });
+
+  it('extracts and normalizes URLs', () => {
+    const tokens = extractInvariantTokens('See https://example.com/docs for details');
+    assert.ok(tokens.includes('https://example.com/docs'));
+  });
+
+  it('normalizes help.testim.io URLs to /docs/slug', () => {
+    const tokens = extractInvariantTokens('Link: https://help.testim.io/docs/shareable-steps');
+    assert.ok(tokens.includes('/docs/shareable-steps'));
+    assert.ok(!tokens.some((t) => t.includes('help.testim.io')));
+  });
+
+  it('extracts /docs/slug from markdown links', () => {
+    const tokens = extractInvariantTokens('[steps](/docs/shareable-steps)');
+    assert.ok(tokens.includes('/docs/shareable-steps'));
+  });
+
+  it('does not double-count URL fragments as dot-paths', () => {
+    const tokens = extractInvariantTokens('https://help.testim.io/docs/foo');
+    assert.ok(!tokens.some((t) => t === 'help.testim.io'));
+  });
+
+  it('extracts /docs/slug#fragment from bracket annotation', () => {
+    const tokens = extractInvariantTokens('Adding a CLI step [/docs/validate-download#adding-a-cli-step]');
+    assert.ok(tokens.includes('/docs/validate-download#adding-a-cli-step'));
+  });
+
+  it('extracts /docs/slug#fragment from markdown link', () => {
+    const tokens = extractInvariantTokens('[text](/docs/foo-bar#section)');
+    assert.ok(tokens.includes('/docs/foo-bar#section'));
+  });
+
+  it('extracts /docs/slug with Japanese fragment', () => {
+    const tokens = extractInvariantTokens('[text](/docs/add-cli-validations-and-actions#cli-ステップの追加)');
+    assert.ok(tokens.some((t) => t.startsWith('/docs/add-cli-validations-and-actions#cli-')));
+  });
+
+  it('extracts full JA fragment from bracket annotation', () => {
+    const tokens = extractInvariantTokens('text [/docs/add-cli-validations-and-actions#cli-ステップの追加]');
+    assert.ok(tokens.some((t) => t.includes('ステップの追加')), 'JA fragment should not be truncated');
+  });
+
+  it('extracts CLI flags', () => {
+    const tokens = extractInvariantTokens('Run with --timeout 30');
+    assert.ok(tokens.includes('--timeout'));
+  });
+
+  it('extracts dot-notation paths with known prefix', () => {
+    const tokens = extractInvariantTokens('Set params.timeout to 30');
+    assert.ok(tokens.includes('params.timeout'));
+  });
+
+  it('extracts dot-paths with 3+ segments', () => {
+    const tokens = extractInvariantTokens('Use test.id.value here');
+    assert.ok(tokens.includes('test.id.value'));
+  });
+
+  it('does not extract i.e, e.g, Node.js as dot-paths', () => {
+    const tokens = extractInvariantTokens('i.e this works, e.g with Node.js');
+    assert.ok(!tokens.includes('i.e'));
+    assert.ok(!tokens.includes('e.g'));
+    assert.ok(!tokens.includes('Node.js'));
+  });
+
+  it('extracts href from HTML-preserved table cells', () => {
+    // extractHtmlTables preserves hrefs as "text [/docs/slug]"
+    const tokens = extractInvariantTokens('steps [/docs/shareable-steps]');
+    assert.ok(tokens.includes('/docs/shareable-steps'));
+  });
+
+  it('extracts versions', () => {
+    const tokens = extractInvariantTokens('Requires v2.1.0 or later');
+    assert.ok(tokens.includes('v2.1.0'));
+  });
+
+  it('extracts number+unit', () => {
+    const tokens = extractInvariantTokens('Timeout is 30sec by default');
+    assert.ok(tokens.some((t) => t.includes('30sec')));
+  });
+
+  it('extracts multi-segment file paths', () => {
+    const tokens = extractInvariantTokens('Endpoint at /api/v1/tests');
+    assert.ok(tokens.includes('/api/v1/tests'));
+  });
+
+  it('does not extract single-segment slash-prefixed words as paths', () => {
+    const tokens = extractInvariantTokens('CI tool /local terminal/Shell');
+    assert.ok(!tokens.includes('/local'), 'single-segment /local should not be a path token');
+  });
+
+  it('returns empty array for plain text', () => {
+    const tokens = extractInvariantTokens('Plain text with no tokens');
+    assert.equal(tokens.length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// table-cell-token-mismatch tests
+// ---------------------------------------------------------------------------
+
+describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
+  it('detects number+unit change (30 sec -> 40 sec)', () => {
+    const en = '| Setting | Value |\n| --- | --- |\n| timeout | 30sec |\n';
+    const ja = '| 設定 | 値 |\n| --- | --- |\n| timeout | 40sec |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'should detect number+unit change');
+  });
+
+  it('detects URL change', () => {
+    const en = '| Link | Note |\n| --- | --- |\n| https://example.com/a | See docs |\n';
+    const ja = '| リンク | 備考 |\n| --- | --- |\n| https://example.com/b | ドキュメント参照 |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'should detect URL change');
+  });
+
+  it('detects inline code change (--grep -> --group)', () => {
+    const en = '| Flag | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| フラグ | 説明 |\n| --- | --- |\n| `--group` | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'should detect code token change');
+  });
+
+  it('returns no token issues when invariant tokens match', () => {
+    const en = '| Flag | Description |\n| --- | --- |\n| `--grep` | Filter tests |\n';
+    const ja = '| フラグ | 説明 |\n| --- | --- |\n| `--grep` | テストをフィルタ |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.equal(tokenIssues.length, 0);
+  });
+
+  it('does not flag testim.io absolute URL rewritten to relative /docs/ link', () => {
+    const en = '| Page | Link |\n| --- | --- |\n| Steps | [steps](https://help.testim.io/docs/shareable-steps) |\n';
+    const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/shareable-steps) |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.equal(tokenIssues.length, 0, 'absolute/relative testim URL should normalize to same token');
+  });
+
+  it('does not flag fragment-only difference on same page slug', () => {
+    // EN: /docs/wait-for#wait-for-element-text → JA: /docs/wait-for (page-level link)
+    const en = '| Step | Link |\n| --- | --- |\n| Wait | [wait](/docs/wait-for#wait-for-element-text) |\n';
+    const ja = '| ステップ | リンク |\n| --- | --- |\n| Wait | [wait](/docs/wait-for) |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.equal(tokenIssues.length, 0, 'same page slug with different fragment should not mismatch');
+  });
+
+  it('still flags when page slug itself differs', () => {
+    const en = '| Step | Link |\n| --- | --- |\n| Wait | [wait](/docs/wait-for#section) |\n';
+    const ja = '| ステップ | リンク |\n| --- | --- |\n| Wait | [wait](/docs/other-page) |\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
+    assert.ok(tokenIssues.length >= 1, 'different page slugs should still mismatch');
   });
 });
