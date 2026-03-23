@@ -26,7 +26,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 **JavaScript 式でテキストを設定するには:**
 
-1. 変更したい **Set text** ステップ（例: Set username）にカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
+1. 変更したい **Set text** ステップ（例: Set username）にカーソルを合わせ、**Show Properties**（歯車アイコン）をクリックします。
 
 ![3851](/images/test-utilities/advanced-set-text/29a0765-Testim_229a.png)
 
@@ -52,7 +52,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 **パラメーターでテキストを設定するには:**
 
-1. 変更したい **Set text** ステップ（例: Set username）にカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
+1. 変更したい **Set text** ステップ（例: Set username）にカーソルを合わせ、**Show Properties**（歯車アイコン）をクリックします。
 
 ![3838](/images/test-utilities/advanced-set-text/f4b65c5-Testim_231a.png)
 

@@ -187,12 +187,12 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
     });
   }
 
-  // :fa-arrow-right: residue check (code blocks already stripped)
+  // :fa-*: residue check — ReadMe.io FontAwesome syntax (code blocks already stripped)
   bodyWithoutCodeLines.forEach((line, i) => {
-    if (/:fa-arrow-right:/.test(line)) {
+    if (/:fa-[a-z][a-z-]*:/.test(line)) {
       err(
-        'legacy-fa-arrow-right',
-        '":fa-arrow-right:" は "**太字テキスト**" 形式に変換してください',
+        'legacy-fa-icon',
+        '":fa-*:" は ReadMe.io 固有構文です。テキストまたは絵文字に置換してください',
         toAbsoluteLine(i + 1, bodyStart)
       );
     }
