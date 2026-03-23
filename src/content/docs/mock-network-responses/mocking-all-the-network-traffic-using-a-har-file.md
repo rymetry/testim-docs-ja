@@ -65,7 +65,7 @@ HAR ファイルを作成する方法は 2 つあります:
 ![コンソールのログ保存メニュー](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/8624d01-consolesave.png)
 
 10. **ネットワーク**タブに戻り、**名前**列の任意の項目を右クリックします。
-11. **「コンテンツ付きで HAR を保存」**を選択します。
+11. **「コンテンツ付きで HAR を保存」** を選択します。
 
 ![コンテンツ付きで HAR を保存するメニュー](/images/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file/64ef4f1-saveallhar.png)
 

@@ -79,7 +79,7 @@ run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --to
 
 ![VSTS の Publish Test Results タスクで Test results files のパスを設定する画面](/images/ci-integrations/vsts-and-tfs-integration/83f530c-tfs12.png)
 
-12. Search folder を**$(Build.BinariesDirectory)**に設定します
+12. Search folder を **$(Build.BinariesDirectory)** に設定します
 
 ![VSTS の Publish Test Results タスクで Search folder に$（Build.BinariesDirectory）を指定する画面](/images/ci-integrations/vsts-and-tfs-integration/254a96d-tfs13.png)
 

@@ -61,7 +61,7 @@ keywords:
 
 **物理デバイスで使用する.ipa ファイルを準備するには:**
 
-1. Xcode で、**Any iOS Device (arm64)**を選択します。
+1. Xcode で、**Any iOS Device (arm64)** を選択します。
 
 ![arm64 の選択](/images/recording-tests/how-to-prepare-an-ipa-for-mobile-testing/541a31f-arm.png)
 

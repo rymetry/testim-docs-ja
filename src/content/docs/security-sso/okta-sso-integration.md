@@ -58,7 +58,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 ![Okta SAML 設定](/images/security-sso/okta-sso-integration/7ecca0b-okta5.png)
 
 14. **Testim Automate**タブに戻り、**SERVICE PROVIDER ENTITY ID/AUDIENCE**コードをコピーします。
-15. **Okta**タブで、このコードを**Audience URI (SP Entity ID)**フィールドに貼り付けます。
+15. **Okta**タブで、このコードを **Audience URI (SP Entity ID)** フィールドに貼り付けます。
 16. Okta のまま、**Name ID format**フィールドで**EmailAddress**を選択します。
 17. **Application username**フィールドで**Email**を選択します。
 18. **Name**フィールドの下に**email**と入力します。

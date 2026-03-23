@@ -281,10 +281,10 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 ![テスト構成](/images/recording-tests/recording-a-local-mobile-test/4d9063d-testconfiguration.png)
 
-    - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は「untitled test」です。
-    - **Description** - オプションで、テストの説明を入力します。
-    - **Configuration** - デフォルトでは、構成は VMG で使用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[テスト構成の設定](/docs/setting-the-test-configuration)を参照してください。
-    - **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS 配列リテラルで複数の順序付きデータセットを定義することで、データ駆動テストを構成できます。[Visual Editor からのデータ駆動テストの構成](/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+- **Test name** - テストの名前を入力します。デフォルトでは、テスト名は「untitled test」です。
+- **Description** - オプションで、テストの説明を入力します。
+- **Configuration** - デフォルトでは、構成は VMG で使用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[テスト構成の設定](/docs/setting-the-test-configuration)を参照してください。
+- **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS 配列リテラルで複数の順序付きデータセットを定義することで、データ駆動テストを構成できます。[Visual Editor からのデータ駆動テストの構成](/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
 
 11. **Save**をクリックしてテストを保存します。
 
