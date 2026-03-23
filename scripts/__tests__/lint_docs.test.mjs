@@ -395,3 +395,41 @@ describe('edge cases', () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// legacy-fa-icon check
+// ---------------------------------------------------------------------------
+describe('legacy-fa-icon check', () => {
+  it('detects :fa-arrow-right: in body', () => {
+    const content = makeDoc({ body: ':fa-arrow-right: **テストを作成するには:**\n' });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    const e = errors.find((e) => e.rule === 'legacy-fa-icon');
+    assert.ok(e, 'expected legacy-fa-icon error for :fa-arrow-right:');
+    assert.equal(e.level, 'error');
+  });
+
+  it('detects :fa-cog: in body', () => {
+    const content = makeDoc({ body: '**Properties**（:fa-cog:）をクリック\n' });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    const e = errors.find((e) => e.rule === 'legacy-fa-icon');
+    assert.ok(e, 'expected legacy-fa-icon error for :fa-cog:');
+  });
+
+  it('detects :fa-check: in body', () => {
+    const content = makeDoc({ body: ':fa-check: は合格を示します。\n' });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    assert.ok(errors.some((e) => e.rule === 'legacy-fa-icon'));
+  });
+
+  it('no error when :fa-*: is inside a code block', () => {
+    const content = makeDoc({ body: '```\n:fa-arrow-right: text\n```\n' });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    assert.equal(errorsOf(['legacy-fa-icon'], errors).length, 0);
+  });
+
+  it('no error when no :fa-*: pattern exists', () => {
+    const content = makeDoc({ body: '**テストを作成するには:**\n' });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    assert.equal(errorsOf(['legacy-fa-icon'], errors).length, 0);
+  });
+});
