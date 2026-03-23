@@ -35,7 +35,7 @@ keywords:
 
 構成の詳細を開かずに、モバイル構成に割り当てられている特定のデバイスを表示できます。
 
-:fa-arrow-right: **保存されたモバイル構成で利用可能なデバイスを表示するには:**
+**保存されたモバイル構成で利用可能なデバイスを表示するには:**
 
 1. 構成ライブラリで特定のモバイル構成を選択します。アクションメニューから **Check available devices button**（利用可能なデバイスを確認）ボタンをクリックします。\
    ![選択したモバイル構成に対して Check available devices ボタンをクリックする画面](/images/test-management/configuration-library-mobile/73aa8b5-image_9.png)
@@ -45,7 +45,7 @@ keywords:
 
 ## 新しい構成を追加する
 
-:fa-arrow-right: **新しい構成を追加するには:**
+**新しい構成を追加するには:**
 
 1. **Runs > Configuration Library** に移動し、**Create New** ボタンをクリックします。\
    ![Runs メニューの Configuration Library で Create New ボタンをクリックする画面](/images/test-management/configuration-library-mobile/f184ba9-image_11.png)
@@ -110,7 +110,7 @@ BrowserStack 固有のルールの詳細については、[BrowserStack Select D
 
 ### テスト構成のクローン作成
 
-:fa-arrow-right: **テスト構成をクローンするには:**
+**テスト構成をクローンするには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。\
    **Configuration Library** が表示されます。
@@ -130,7 +130,7 @@ BrowserStack 固有のルールの詳細については、[BrowserStack Select D
 
 ### テスト構成の名前変更
 
-:fa-arrow-right: **テスト構成の名前を変更するには:**
+**テスト構成の名前を変更するには:**
 
 1. メインメニューで、**Runs > Configuration List** に移動します。
 
@@ -154,7 +154,7 @@ BrowserStack 固有のルールの詳細については、[BrowserStack Select D
 
 ### テスト構成の変更
 
-:fa-arrow-right: **テスト構成を変更するには:**
+**テスト構成を変更するには:**
 
 1. メインメニューで、**Runs > Configuration List** に移動します。
 
@@ -171,7 +171,7 @@ BrowserStack 固有のルールの詳細については、[BrowserStack Select D
 
 ### テスト構成の削除
 
-:fa-arrow-right: **テスト構成を削除するには:**
+**テスト構成を削除するには:**
 
 1. 左側のメニューで、**Runs > Configuration List** に移動します。
 

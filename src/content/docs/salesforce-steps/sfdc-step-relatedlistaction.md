@@ -42,7 +42,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 ## 新しい関連リストオブジェクトの作成（Create）
 
-:fa-arrow-right:**レコードに新しい関連リストオブジェクトを作成するには:**
+**レコードに新しい関連リストオブジェクトを作成するには:**
 
 1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
@@ -73,7 +73,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 ## 関連リストオブジェクトの検証（Verify）
 
-:fa-arrow-right:**関連リストオブジェクトを検証するには:**
+**関連リストオブジェクトを検証するには:**
 
 1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
@@ -113,7 +113,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 ## 関連リストオブジェクトの表示（View）
 
-:fa-arrow-right:**関連リストオブジェクトを表示するには:**
+**関連リストオブジェクトを表示するには:**
 
 1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。

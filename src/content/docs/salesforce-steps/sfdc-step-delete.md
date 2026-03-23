@@ -24,7 +24,7 @@ keywords:
 
 ## 削除ステップの作成
 
-:fa-arrow-right:**削除ステップを作成するには:**
+**削除ステップを作成するには:**
 
 1. テストで、削除ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。

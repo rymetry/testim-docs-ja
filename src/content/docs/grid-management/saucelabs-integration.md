@@ -21,7 +21,7 @@ Testim で作成したテストを SauceLabs の browser と mobile device 上�
 
 ## SauceLabs Grid を追加する
 
-:fa-arrow-right: **SauceLabs Grid を追加するには:**
+**SauceLabs Grid を追加するには:**
 
 1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
 2. **Next** をクリックします。

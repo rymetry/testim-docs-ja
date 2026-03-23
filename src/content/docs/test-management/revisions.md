@@ -28,7 +28,7 @@ keywords:
 
 ## テストリビジョンの表示
 
-:fa-arrow-right: **テストのすべてのリビジョンを表示するには:**
+**テストのすべてのリビジョンを表示するには:**
 
 1. **Test Properties** （:fa-cog:）をクリックします。
 2. **See old revision**をクリックします。\
@@ -42,7 +42,7 @@ Testim は、劣化したロケーターを自動改善されたロケーター�
 
 ![ロケーター自動改善後に作成された Testim auto improve リビジョンを示す画面](/images/test-management/revisions/4cf4abe-Testim_478a.png)
 
-:fa-arrow-right: **自動改善されたステップを表示するには:**
+**自動改善されたステップを表示するには:**
 
 1. 自動改善されたテストを開きます。
 2. **Show improved steps**スイッチを右にトグルします。

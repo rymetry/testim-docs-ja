@@ -17,7 +17,7 @@ keywords:
 ---
 
 セットアッププロセスでは、Salesforce からシークレットキーを取得し、ペルソナ/環境の組み合わせの資格情報を追加する際に関連フィールドにキーを入力する必要があります。最後に、Testim for Salesforce からの Verification Code を Salesforce の Verification Code フィールドに入力する必要があります。\
-:fa-arrow-right: **MFA を設定するには:**
+**MFA を設定するには:**
 
 1. Salesforce にログインし、**設定 > ユーザー > ユーザー >** に移動し、MFA を設定するユーザーを選択します。
 

@@ -20,7 +20,7 @@ keywords:
 
 **Log In As Another User**ステップは、管理者ユーザーのみが使用できます。つまり、**Log In As Another User**ステップの前に、テストが管理者アカウントにログインする**Log in**ステップを追加する必要があります。管理者としてログインした後、**Log In As Another User**ステップを使用して、単一のテスト内で異なるユーザーとしてログインできます。
 
-:fa-arrow-right:**Log In As Another User ステップを追加するには:**
+**Log In As Another User ステップを追加するには:**
 
 1. **+**ボタンをクリックし、**Salesforce**ステップタブの下で、**Common operations**をクリックして**Log in as another user**ステップを選択することで、**Log in as another user**ステップを追加します。\
    次の**Properties Tab**が表示されます。

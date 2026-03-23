@@ -19,7 +19,7 @@ keywords:
 
 **Launch App**ステップは、選択された Salesforce アプリを開きます。
 
-:fa-arrow-right: **Launch App ステップを追加するには:**
+**Launch App ステップを追加するには:**
 
 1. エディターで、+ボタンをクリックしてステップを追加します。
 2. **Salesforce steps**タブの下で、**Common operations**をクリックし、**Launch app**ステップを選択します。\

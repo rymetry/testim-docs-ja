@@ -42,7 +42,7 @@ Testim for Salesforce のテストは、Salesforce アプリケーションと�
 
 Testim for Salesforce テストを作成する前に、Salesforce 環境を Testim for Salesforce に接続する必要があります。Salesforce 環境がすでに接続されている場合は、次のステップにスキップできます。
 
-:fa-arrow-right: **Salesforce 環境を接続するには**:
+**Salesforce 環境を接続するには**:
 
 1. Testim for Salesforce アカウントで、**Settings > Salesforce > Environments**に移動し、**Connect a salesforce environment**を選択します。\
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
@@ -63,7 +63,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
 
 ## テストの作成
 
-:fa-arrow-right: **新しいテストを作成するには:**
+**新しいテストを作成するには:**
 
 1. **New Test**をクリックします。
 
@@ -127,7 +127,7 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
 
 ## テストの実行
 
-:fa-arrow-right: **ローカルでテストを実行するには:**
+**ローカルでテストを実行するには:**
 
 1. エディター画面で、**Run**ボタンをクリックします。
 

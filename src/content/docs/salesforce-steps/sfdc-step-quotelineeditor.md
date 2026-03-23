@@ -26,7 +26,7 @@ keywords:
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-quotelineeditor/f9d6097-example.png)
 
-:fa-arrow-right:**見積品目エディターアクションステップを追加するには:**
+**見積品目エディターアクションステップを追加するには:**
 
 1. エディターで、**+** ボタンをクリックしてステップを追加します。
 2. **Salesforce** ステップタブの下で、**CPQ 操作**をクリックし、**見積品目エディターアクション**ステップを選択します。\

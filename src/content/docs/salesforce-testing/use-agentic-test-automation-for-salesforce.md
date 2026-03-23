@@ -31,7 +31,7 @@ AI エージェントの支援を受けて、Salesforce 環境向けのユニー
 
 ## Agentic Test Automation で新しい Salesforce テストを作成する
 
-:fa-arrow-right:**新しいテストを作成するには:**
+**新しいテストを作成するには:**
 
 1. Testim for Salesforce アカウント内のどこからでも、画面上部の**Agentic Test Automation**を選択します。
 2. このサービスを初めて使用する場合は、**Terms of Service**の一番下までスクロールして、**Got it**を選択してオプトインします。

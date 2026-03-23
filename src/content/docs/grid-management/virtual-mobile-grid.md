@@ -37,7 +37,7 @@ Virtual Mobile Grid は x86_64 Android build のみをサポートします。
 
 Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。trial 期間は 14 日間です。trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
 
-:fa-arrow-right: **無料の Virtual Mobile Grid trial を開始するには:**
+**無料の Virtual Mobile Grid trial を開始するには:**
 
 1. **Device Management** 画面へ移動し、**Virtual Mobile Grid** tab を開いて **Start A Trial** をクリックします。
 
@@ -91,7 +91,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 #### Editor から変更する
 
-:fa-arrow-right: **Editor から app を変更するには:**
+**Editor から app を変更するには:**
 
 1. **Setup Step** で **Show Properties** をクリックします。
 2. **Properties** pane の **Application name** の下にある **Change app** link をクリックします。
@@ -104,7 +104,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、Mobile Apps Library にある別の app Id で上書きできます。
 
-:fa-arrow-right: **既定の app ID を上書きするには:**
+**既定の app ID を上書きするには:**
 
 1. **Settings > CLI** へ移動します。
 2. **Grid** drop-down menu で **Virtual Mobile Grid** を選択します。
@@ -116,7 +116,7 @@ CLI でテストを実行する場合は、テスト記録時に使われた既�
 
 #### scheduler から変更する
 
-:fa-arrow-right: **scheduler で既定の app を上書きするには:**
+**scheduler で既定の app を上書きするには:**
 
 1. **Runs > Scheduled Runs** へ移動します。
 2. 対象の scheduler を開きます。
@@ -126,7 +126,7 @@ CLI でテストを実行する場合は、テスト記録時に使われた既�
 
 #### test plan から変更する
 
-:fa-arrow-right: **test plan で既定の app を上書きするには:**
+**test plan で既定の app を上書きするには:**
 
 1. **Test List > Plans** へ移動します。
 2. 対象の test plan を開きます。

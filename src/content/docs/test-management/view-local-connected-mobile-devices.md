@@ -18,7 +18,7 @@ Local Devices セクションでは、Tricentis Mobile Agent（TMA）に接続�
 
 ## 接続されている Local Devices の表示
 
-:fa-arrow-right: **接続されているデバイスを表示するには:**
+**接続されているデバイスを表示するには:**
 
 1. メインナビゲーションメニューから**Mobile Devices**ボタンをクリックします。
 
@@ -32,7 +32,7 @@ Local Devices セクションでは、Tricentis Mobile Agent（TMA）に接続�
 
 device UDID は簡単にコピーでき、例えば CLI を通じて特定のデバイスでテストを実行するために使用できます。
 
-:fa-arrow-right: **デバイス UDID をコピーするには:**
+**デバイス UDID をコピーするには:**
 
 1. UDID にカーソルを合わせます。\
    コピーアイコンが表示されます。

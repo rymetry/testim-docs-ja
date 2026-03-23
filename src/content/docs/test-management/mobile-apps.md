@@ -39,7 +39,7 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 アップロードは 150 MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。
 :::
 
-:fa-arrow-right: **ローカルコンピューターから Mobile Apps Library にモバイルアプリを追加するには:**
+**ローカルコンピューターから Mobile Apps Library にモバイルアプリを追加するには:**
 
 1. メインメニューから **Mobile Apps Tab** に移動します。
 
@@ -65,7 +65,7 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 
 Mobile Apps Library のアプリをローカルコンピューターにダウンロードできます。
 
-:fa-arrow-right: **Mobile Apps Library からアプリをダウンロードするには:**
+**Mobile Apps Library からアプリをダウンロードするには:**
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Download File** ボタンをクリックします。
@@ -76,7 +76,7 @@ Mobile Apps Library のアプリをローカルコンピューターにダウン
 
 Mobile Apps Library でアプリが不要になった場合は、削除できます。
 
-:fa-arrow-right: **Mobile Apps Library からアプリを削除するには**:
+**Mobile Apps Library からアプリを削除するには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Delete** ボタンをクリックします。
@@ -91,7 +91,7 @@ Mobile Apps Library でアプリが不要になった場合は、削除できま
 
 Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#running-mobile-tests-through-the-cli) を参照してください。
 
-:fa-arrow-right: **Mobile App ID をコピーするには**:
+**Mobile App ID をコピーするには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Copy ID** ボタンをクリックします。
@@ -106,7 +106,7 @@ Mobile Apps Library に含まれているモバイルアプリをグリッドで
 
 Mobile Apps Library で名前でモバイルアプリを検索できます。
 
-:fa-arrow-right: **Mobile Apps Library でアプリを検索するには**:
+**Mobile Apps Library でアプリを検索するには**:
 
 1. **Mobile Apps Library** に移動します。
 2. 検索ボックスに検索したいモバイルアプリの **Name**（名前）を入力します。モバイルアプリは、検索条件に一致するアプリのリストを自動的にフィルタリングします。
@@ -117,7 +117,7 @@ Mobile Apps Library で名前でモバイルアプリを検索できます。
 
 Testim Mobile Apps Library にアップロードされたモバイルアプリは、グリッドプロバイダーのアプリストレージに手動でアップロードできます。これにより、テストを実行するときに Testim がアプリケーションをグリッドにロードするのを待つことなく、グリッドでアプリケーションを実行できます。
 
-:fa-arrow-right: **モバイルアプリをグリッドプロバイダーに直接アップロードするには**:
+**モバイルアプリをグリッドプロバイダーに直接アップロードするには**:
 
 1. **Mobile Apps Library** から 1 つ以上のアプリケーションをクリックします。
 

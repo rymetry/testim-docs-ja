@@ -549,6 +549,32 @@ export function extractParagraphCounts(body) {
 }
 
 /**
+ * Extract headings with their level from Markdown body in document order.
+ * Skips lines inside code fences.
+ * Returns an array of { level, text } objects.
+ */
+export function extractHeadingSequence(body) {
+  const lines = body.split('\n');
+  const headings = [];
+  let inCodeBlock = false;
+
+  for (const line of lines) {
+    if (FENCE_LINE_RE.test(line)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    const match = line.match(/^(#{2,6})\s+(.+)/);
+    if (match) {
+      headings.push({ level: match[1].length, text: match[2].trim() });
+    }
+  }
+
+  return headings;
+}
+
+/**
  * Compare section-level counts between EN and JA.
  * Filters out __top__ and only compares when section counts match.
  */
@@ -1099,6 +1125,31 @@ export function compareSnapshotStructure(enBody, jaBody) {
         detail: `H2-H4 セクション数: EN=${enSectionCount}, JA=${jaSectionCount}`,
       }),
     );
+  }
+
+  // --- Heading level mismatch (ordinal comparison) ---
+  const enHeadings = extractHeadingSequence(normalizedEnBody);
+  const jaHeadings = extractHeadingSequence(jaBody);
+  const headingCompareLen = Math.min(enHeadings.length, jaHeadings.length);
+  if (headingCompareLen > 0) {
+    const mismatches = [];
+    for (let i = 0; i < headingCompareLen; i += 1) {
+      if (enHeadings[i].level !== jaHeadings[i].level) {
+        mismatches.push({ index: i, en: enHeadings[i], ja: jaHeadings[i] });
+      }
+    }
+    if (mismatches.length > 0) {
+      const examples = mismatches
+        .slice(0, 3)
+        .map((m) => `EN H${m.en.level} '${m.en.text}' → JA H${m.ja.level}`)
+        .join('; ');
+      issues.push(
+        withSeverity({
+          type: 'heading-mismatch',
+          detail: `見出しレベル不一致 (${mismatches.length}件): ${examples}`,
+        }),
+      );
+    }
   }
 
   const enSteps = extractStepCounts(normalizedEnBody);
