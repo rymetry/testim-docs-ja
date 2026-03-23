@@ -248,7 +248,7 @@ JS（JavaScript）: 任意の JS 式を定義できます。
    - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/configuring-data-driven-tests-using-the-config-file)を参照してください。
 
 <Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
-  <strong>画像をクリックで拡大</strong>
+  **画像をクリックで拡大**
 </Image>
 
 2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/exports-parameters)を参照してください。\
@@ -259,19 +259,19 @@ exportsTest.usename = 'Hello, John';
 ```
 
 <Image title="export_param.gif" alt={1920} align="center" src="/images/validations/validate-element-text/91597d2-export_param.gif">
-  <strong>画像をクリックで拡大</strong>
+  **画像をクリックで拡大**
 </Image>
 
 3. **Element text validation** ステップを作成し、**Expected value** にパラメーターを指定します。
 
 <Image title="textvalidation3.gif" alt={1920} align="center" src="/images/validations/validate-element-text/ec83fac-textvalidation3.gif">
-  <strong>画像をクリックで拡大</strong>
+  **画像をクリックで拡大**
 </Image>
 
 テスト実行後、**Element text validation** ステップが期待するパラメーター値と一致することを確認できます。
 
 <Image title="validation2.png" alt={1842} align="center" src="/images/validations/validate-element-text/6a9b523-validation2.png">
-  <strong>画像をクリックで拡大</strong>
+  **画像をクリックで拡大**
 </Image>
 
 パラメーターと固定文字列を `+` で結合することも可能です。例えば、`username` パラメーターの値を `Hello, John` ではなく `John` として定義し、Expected Value を `'Hello ' + userName` と指定できます。
