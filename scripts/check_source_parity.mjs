@@ -13,6 +13,8 @@ import {
 } from './lib/project.mjs';
 import {
   ISSUE_SEVERITY,
+  checkSidebarCoverage,
+  checkSourceSnapshotMissing,
   compareSnapshotStructure,
   loadSidebarSlugs,
   localCheck,
@@ -32,10 +34,12 @@ const ALLOWABLE_SEVERITIES = new Set(['signal']);
 export function parseArgs(argv = process.argv.slice(2)) {
   const sectionArg = argv.find((arg) => arg.startsWith('--section='));
   const failOnArg = argv.find((arg) => arg.startsWith('--fail-on='));
+  const slugArg = argv.find((arg) => arg.startsWith('--slug='));
   return {
     json: argv.includes('--json'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
     failOn: failOnArg ? failOnArg.split('=').slice(1).join('=') : null,
+    slug: slugArg ? slugArg.split('=').slice(1).join('=') : null,
   };
 }
 
@@ -114,6 +118,7 @@ export async function checkSourceParity({
   json = false,
   section = null,
   failOn = null,
+  slug = null,
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH)
     ? fs.readFileSync(SIDEBAR_PATH, 'utf8')
@@ -132,6 +137,7 @@ export async function checkSourceParity({
   if (!json) {
     console.log('🔍 Source parity チェック開始\n');
     console.log(`📄 ${allFiles.length} ファイル対象`);
+    if (slug) console.log(`🔎 スラグ絞り込み: ${slug}`);
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     if (failOn) console.log(`🚦 --fail-on=${failOn}`);
     console.log('');
@@ -141,26 +147,36 @@ export async function checkSourceParity({
   let checkedCount = 0;
 
   for (const filePath of allFiles) {
+    if (slug && path.basename(filePath, '.md') !== slug) {
+      continue;
+    }
     const doc = readDocFile(filePath);
-    if (!matchesSectionFilter(doc.relativePath, doc.data, section)) {
+    if (!slug && !matchesSectionFilter(doc.relativePath, doc.data, section)) {
       continue;
     }
 
     checkedCount += 1;
-    const slug = path.basename(filePath, '.md');
+    const fileSlug = path.basename(filePath, '.md');
     let issues = [
-      ...localCheck({ body: doc.body, sidebarSlugs, slug }),
+      ...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug }),
     ];
 
+    // sourceUrl/snapshot consistency check
+    issues.push(...checkSourceSnapshotMissing({
+      slug: fileSlug,
+      sourceUrl: doc.data.sourceUrl || '',
+      snapshotsDir: SNAPSHOTS_DIR,
+    }));
+
     // Snapshot structure comparison (image order, callout nesting, step counts)
-    const snapshotPath = path.join(SNAPSHOTS_DIR, `${slug}.md`);
+    const snapshotPath = path.join(SNAPSHOTS_DIR, `${fileSlug}.md`);
     if (fs.existsSync(snapshotPath)) {
       const enBody = fs.readFileSync(snapshotPath, 'utf8');
       issues.push(...compareSnapshotStructure(enBody, doc.body));
     }
 
     // Apply allowlist filtering
-    issues = applyAllowlist(slug, issues, allowlist);
+    issues = applyAllowlist(fileSlug, issues, allowlist);
 
     if (issues.length === 0) {
       continue;
@@ -182,6 +198,16 @@ export async function checkSourceParity({
         console.log(`   [${issue.type}/${issue.severity}]${location} ${detail}${artifactNote}`);
       }
       console.log('');
+    }
+  }
+
+  // Sidebar coverage check: detect pages in SIDEBAR_URLS.md without local files
+  // Skip in --slug mode (single-page check should not report unrelated global issues)
+  if (!slug) {
+    const existingSlugs = new Set(allFiles.map(f => path.basename(f, '.md')));
+    const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
+    if (coverageIssues.length > 0) {
+      results.push({ file: 'SIDEBAR_URLS.md', sourceUrl: '', category: '', issues: coverageIssues });
     }
   }
 

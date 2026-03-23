@@ -48,12 +48,29 @@ function toAbsoluteLine(bodyLineNumber, bodyStartLine) {
 }
 
 /**
+ * Convert heading text to a kebab-case slug (matching Astro / GitHub behaviour).
+ * Strips inline code, bold/italic markers, and link syntax before slugifying.
+ */
+export function toKebab(text) {
+  return text
+    .replace(/`[^`]*`/g, (m) => m.slice(1, -1))  // inline code → content only
+    .replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1')      // bold / italic
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')       // [text](url) → text
+    .toLowerCase()
+    .replace(/[^\w\s-\u3000-\u9fff\uff00-\uffef]/g, '') // keep word chars, CJK, spaces, hyphens
+    .replace(/[\s\u3000]+/g, '-')                        // spaces → hyphens
+    .replace(/-+/g, '-')                                 // collapse multiple hyphens
+    .replace(/^-|-$/g, '');                              // trim leading/trailing hyphens
+}
+
+/**
  * Lint a single markdown document.
  * @param {string} content - full file content
  * @param {string} filePath - path for error reporting
+ * @param {{ allSlugs?: Set<string>, headingsBySlug?: Map<string, Set<string>> }} [opts]
  * @returns {LintError[]}
  */
-export function lintContent(content, filePath) {
+export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}) {
   /** @type {LintError[]} */
   const errors = [];
 
@@ -95,6 +112,65 @@ export function lintContent(content, filePath) {
       );
     }
   });
+
+  // --- Link target existence checks (markdown + HTML) ---
+  if (allSlugs) {
+    const bodyStripped = stripCode(body);
+    const strippedLines = bodyStripped.split('\n');
+
+    strippedLines.forEach((line, i) => {
+      // Check A: Markdown links — [text](/docs/{slug}) or [text](/docs/{slug}#fragment)
+      const mdLinkRe = /\]\(\/(docs\/([a-z0-9-]+))(#[^)]+)?\)/g;
+      let mdMatch;
+      while ((mdMatch = mdLinkRe.exec(line)) !== null) {
+        const slug = mdMatch[2];
+        const fragment = mdMatch[3]; // includes leading '#'
+        if (!allSlugs.has(slug)) {
+          err(
+            'link-target-missing',
+            `Internal link target does not exist: /docs/${slug}`,
+            toAbsoluteLine(i + 1, bodyStart)
+          );
+        } else if (fragment && headingsBySlug) {
+          // Check C: Fragment existence
+          const fragId = fragment.slice(1); // strip '#'
+          const headings = headingsBySlug.get(slug);
+          if (headings && !headings.has(fragId)) {
+            warn(
+              'link-fragment-missing',
+              `Fragment "${fragment}" not found in /docs/${slug}`,
+              toAbsoluteLine(i + 1, bodyStart)
+            );
+          }
+        }
+      }
+
+      // Check B: HTML <a href="/docs/..."> links
+      const htmlLinkRe = /<a\b[^>]*href=["']\/(docs\/([a-z0-9-]+))(#[^"']*)?\s*["'][^>]*>/gi;
+      let htmlMatch;
+      while ((htmlMatch = htmlLinkRe.exec(line)) !== null) {
+        const slug = htmlMatch[2];
+        const fragment = htmlMatch[3]; // includes leading '#'
+        if (!allSlugs.has(slug)) {
+          err(
+            'link-target-missing',
+            `Internal link target does not exist: /docs/${slug}`,
+            toAbsoluteLine(i + 1, bodyStart)
+          );
+        } else if (fragment && headingsBySlug) {
+          const fragId = fragment.slice(1);
+          const headings = headingsBySlug.get(slug);
+          if (headings && !headings.has(fragId)) {
+            warn(
+              'link-fragment-missing',
+              `Fragment "${fragment}" not found in /docs/${slug}`,
+              toAbsoluteLine(i + 1, bodyStart)
+            );
+          }
+        }
+      }
+    });
+  }
 
   const bodyWithoutCode = stripCode(body);
   const bodyWithoutCodeLines = bodyWithoutCode.split('\n');
@@ -182,12 +258,45 @@ async function main() {
     files = files.filter((file) => slugSet.has(path.basename(file, '.md')));
   }
 
+  // Build slug index and heading map from ALL docs (not just filtered files)
+  const allFiles = [];
+  for (const entry of fs.readdirSync(DOCS_ROOT, { recursive: true })) {
+    if (entry.endsWith('.md')) {
+      allFiles.push(path.join(DOCS_ROOT, entry));
+    }
+  }
+  const allSlugs = new Set();
+  const headingsBySlug = new Map();
+  for (const f of allFiles) {
+    const slug = path.basename(f, '.md');
+    allSlugs.add(slug);
+    const raw = fs.readFileSync(f, 'utf8');
+    const { body: rawBody } = parseFrontmatter(raw);
+    const headings = new Set();
+    for (const ln of rawBody.split('\n')) {
+      const hm = ln.match(/^#{2,4}\s+(.+)/);
+      if (hm) {
+        const headingText = hm[1].trim();
+        // Prefer explicit heading ID {#custom-id} over auto-generated kebab
+        const explicitId = headingText.match(/\{#([^}]+)\}\s*$/);
+        if (explicitId) {
+          headings.add(explicitId[1]);
+          // Also index the auto-generated kebab (without the {#...} suffix)
+          headings.add(toKebab(headingText.replace(/\s*\{#[^}]+\}\s*$/, '')));
+        } else {
+          headings.add(toKebab(headingText));
+        }
+      }
+    }
+    headingsBySlug.set(slug, headings);
+  }
+
   let totalErrors = 0;
   let totalWarnings = 0;
 
   for (const file of files) {
     const content = fs.readFileSync(file, 'utf8');
-    const errors = lintContent(content, file);
+    const errors = lintContent(content, file, { allSlugs, headingsBySlug });
     for (const e of errors) {
       const loc = e.line ? `:${e.line}` : '';
       const rel = path.relative(ROOT, e.file);

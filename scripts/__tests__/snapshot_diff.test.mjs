@@ -4,9 +4,10 @@ import assert from 'node:assert/strict';
 let classifyChanges;
 let CHANGE_CLASSIFIERS;
 let MARKER_404_RE;
+let parseArgs;
 
 before(async () => {
-  ({ classifyChanges, CHANGE_CLASSIFIERS, MARKER_404_RE } = await import(
+  ({ classifyChanges, CHANGE_CLASSIFIERS, MARKER_404_RE, parseArgs } = await import(
     '../snapshot_diff.mjs'
   ));
 });
@@ -161,5 +162,24 @@ describe('MARKER_404_RE', () => {
 
   it('does not match normal content', () => {
     assert.ok(!MARKER_404_RE.test('# Title\n\nSome content'));
+  });
+});
+
+describe('parseArgs', () => {
+  it('parses --slug=testim-overview', () => {
+    const args = parseArgs(['--slug=testim-overview']);
+    assert.equal(args.slug, 'testim-overview');
+  });
+
+  it('returns null slug when not specified', () => {
+    const args = parseArgs(['--json']);
+    assert.equal(args.slug, null);
+  });
+
+  it('parses --section and --slug together', () => {
+    const args = parseArgs(['--section=Overview', '--slug=testim-overview', '--json']);
+    assert.equal(args.section, 'Overview');
+    assert.equal(args.slug, 'testim-overview');
+    assert.equal(args.json, true);
   });
 });

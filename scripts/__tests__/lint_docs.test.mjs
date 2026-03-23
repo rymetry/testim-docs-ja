@@ -10,8 +10,9 @@ import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
 
 let lintContent;
+let toKebab;
 before(async () => {
-  ({ lintContent } = await import('../lint-docs.mjs'));
+  ({ lintContent, toKebab } = await import('../lint-docs.mjs'));
 });
 
 // ---------------------------------------------------------------------------
@@ -238,6 +239,134 @@ describe('Markdown syntax: callout directives', () => {
     const content = makeDoc({ body: '::::info{title="補足"}\nContent\n::::\n' });
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errorsOf(['callout-unknown-type'], errors).length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// E. Internal link target existence
+// ---------------------------------------------------------------------------
+describe('internal link target existence', () => {
+  const slugs = new Set(['testim-overview', 'getting-started', 'advanced-features']);
+  const headings = new Map([
+    ['testim-overview', new Set(['overview', 'features', 'getting-started-section'])],
+    ['getting-started', new Set(['installation', 'first-test'])],
+    ['advanced-features', new Set(['custom-actions', 'data-driven'])],
+  ]);
+
+  it('returns error for markdown link to nonexistent slug', () => {
+    const content = makeDoc({
+      body: 'See [page](/docs/nonexistent-page) for details.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing error');
+    assert.equal(e.level, 'error');
+    assert.match(e.message, /nonexistent-page/);
+  });
+
+  it('no error for markdown link to existing slug', () => {
+    const content = makeDoc({
+      body: 'See [overview](/docs/testim-overview) for details.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+
+  it('returns error for HTML <a href> link to nonexistent slug', () => {
+    const content = makeDoc({
+      body: 'See <a href="/docs/nonexistent-page">page</a> for details.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing error for HTML link');
+    assert.equal(e.level, 'error');
+  });
+
+  it('no error for HTML <a href> link to existing slug', () => {
+    const content = makeDoc({
+      body: 'See <a href="/docs/getting-started">start</a> here.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+
+  it('returns warning for markdown link with nonexistent fragment', () => {
+    const content = makeDoc({
+      body: 'See [section](/docs/testim-overview#nonexistent-section) here.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    const e = errors.find((e) => e.rule === 'link-fragment-missing');
+    assert.ok(e, 'expected link-fragment-missing warning');
+    assert.equal(e.level, 'warning');
+    assert.match(e.message, /nonexistent-section/);
+  });
+
+  it('no warning for markdown link with existing fragment', () => {
+    const content = makeDoc({
+      body: 'See [section](/docs/testim-overview#features) here.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-fragment-missing'], errors).length, 0);
+  });
+
+  it('returns warning for HTML link with nonexistent fragment', () => {
+    const content = makeDoc({
+      body: 'See <a href="/docs/getting-started#bad-section">link</a>.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    const e = errors.find((e) => e.rule === 'link-fragment-missing');
+    assert.ok(e, 'expected link-fragment-missing warning for HTML link');
+    assert.equal(e.level, 'warning');
+  });
+
+  it('skips link-target check when allSlugs is not provided', () => {
+    const content = makeDoc({
+      body: 'See [page](/docs/nonexistent-page) for details.\n',
+    });
+    // No opts → backward compatible, no link-target-missing errors
+    const errors = lintContent(content, 'test.md');
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+
+  it('skips links inside code blocks', () => {
+    const content = makeDoc({
+      body: '```\nSee [page](/docs/nonexistent-page).\n```\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+
+  it('skips links inside inline code', () => {
+    const content = makeDoc({
+      body: 'Use `[page](/docs/nonexistent-page)` syntax.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// F. toKebab helper
+// ---------------------------------------------------------------------------
+describe('toKebab', () => {
+  it('converts simple heading to kebab-case', () => {
+    assert.equal(toKebab('Getting Started'), 'getting-started');
+  });
+
+  it('handles special characters', () => {
+    assert.equal(toKebab('Step 1: Install'), 'step-1-install');
+  });
+
+  it('strips inline code backticks', () => {
+    assert.equal(toKebab('Using `testim` CLI'), 'using-testim-cli');
+  });
+
+  it('strips bold/italic markers', () => {
+    assert.equal(toKebab('**Bold** and *italic*'), 'bold-and-italic');
+  });
+
+  it('strips markdown link syntax', () => {
+    assert.equal(toKebab('See [Testim](https://example.com)'), 'see-testim');
   });
 });
 

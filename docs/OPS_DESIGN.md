@@ -60,6 +60,7 @@
 | `codeblock-mismatch`      | コードブロック数の不一致                                |
 | `image-order-mismatch`    | 画像の配置順が原文と異なる                              |
 | `callout-nesting-mismatch`| callout のネストレベルが原文と異なる                    |
+| `sidebar-missing-file`    | SIDEBAR_URLS.md に掲載だがローカルファイルが存在しない  |
 
 **スナップショット構造比較（severity: signal）:**
 
@@ -73,6 +74,7 @@
 | `table-cell-english-residual` | テーブルセルの英語残留                   |
 | `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致              |
 | `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致    |
+| `source-snapshot-missing`     | sourceUrl があるが EN スナップショットが存在しない |
 
 **`--fail-on` フラグ:**
 
@@ -108,6 +110,32 @@ npm run check:parity -- --fail-on=any         # allowlist 除外後に issue > 0
 
 - `EN uses <details> blocks` — EN が `<details>` を使用
 - `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
+
+## チェックの保証範囲
+
+| 保証する | 保証しない |
+| --- | --- |
+| 構造パリティ（見出し・リスト・段落・テーブル） | UI 表示崩れ |
+| リンク実在（slug + fragment） | 自然な日本語 |
+| 画像ファイル実在 | 文体品質 |
+| frontmatter 整合 | 厳密な Astro レンダリング |
+| 原文構造差分 | セマンティックな翻訳精度 |
+
+### 日常運用（ページ単位）
+
+```bash
+npm run check:parity -- --slug=testim-overview
+npm run check:snapshots:diff -- --slug=testim-overview
+npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
+```
+
+### 定期運用（全文）
+
+```bash
+npm run lint:docs          # リンク実在 + frontmatter + 構文
+npm run check:parity       # 構造パリティ全件
+npm run test && npm run build
+```
 
 ## 定期運用（3日ごと）
 

@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 export const ISSUE_SEVERITY = {
   untranslated: 'actionable',
   'legacy-callout': 'actionable',
@@ -18,6 +21,8 @@ export const ISSUE_SEVERITY = {
   'table-cell-english-residual': 'signal',
   'table-cell-empty-mismatch': 'signal',
   'table-cell-token-mismatch': 'signal',
+  'sidebar-missing-file': 'actionable',
+  'source-snapshot-missing': 'signal',
   'source-fetch-error': 'error',
 };
 
@@ -1137,6 +1142,41 @@ export function compareSnapshotStructure(enBody, jaBody) {
     }
   }
 
+  return issues;
+}
+
+/**
+ * Detect pages listed in SIDEBAR_URLS.md that have no corresponding local file.
+ * Reverse of orphan-page detection.
+ */
+export function checkSidebarCoverage({ sidebarSlugs, existingSlugs }) {
+  const issues = [];
+  for (const slug of sidebarSlugs) {
+    if (!existingSlugs.has(slug)) {
+      issues.push(withSeverity({
+        type: 'sidebar-missing-file',
+        detail: `SIDEBAR_URLS.md に掲載だがローカルファイルが存在しない: ${slug}`,
+      }));
+    }
+  }
+  return issues;
+}
+
+/**
+ * Check sourceUrl/slug/snapshot consistency for a single document.
+ * If sourceUrl is present, verify that the EN snapshot file exists.
+ */
+export function checkSourceSnapshotMissing({ slug, sourceUrl, snapshotsDir }) {
+  const issues = [];
+  if (!sourceUrl) return issues;
+
+  const snapshotPath = path.join(snapshotsDir, `${slug}.md`);
+  if (!fs.existsSync(snapshotPath)) {
+    issues.push(withSeverity({
+      type: 'source-snapshot-missing',
+      detail: `sourceUrl があるが EN スナップショットが存在しない: ${slug}`,
+    }));
+  }
   return issues;
 }
 

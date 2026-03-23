@@ -40,10 +40,11 @@ export const CHANGE_CLASSIFIERS = [
   { type: 'callout', pattern: /^ {0,3}>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^ {0,3}<Callout\b|<blockquote\b[^>]*theme=/i },
 ];
 
-function parseArgs(argv = process.argv.slice(2)) {
-  const args = { section: null, json: false };
+export function parseArgs(argv = process.argv.slice(2)) {
+  const args = { section: null, slug: null, json: false };
   for (const arg of argv) {
     if (arg.startsWith('--section=')) args.section = arg.slice('--section='.length);
+    else if (arg.startsWith('--slug=')) args.slug = arg.slice('--slug='.length);
     else if (arg === '--json') args.json = true;
   }
   return args;
@@ -180,8 +181,11 @@ export async function main(argv) {
   for (const file of snapshotFiles) {
     const slug = file.replace(/\.md$/, '');
 
+    // Apply slug filter (takes priority over section)
+    if (args.slug && slug !== args.slug) continue;
+
     // Apply section filter via sourceUrl index
-    if (args.section && !sourceUrls[slug]) continue;
+    if (!args.slug && args.section && !sourceUrls[slug]) continue;
 
     const snapshotPath = path.join(CONTENT_DIR, file);
     const relPath = path.relative(ROOT_DIR, snapshotPath);
@@ -234,13 +238,16 @@ export async function main(argv) {
     });
   }
 
-  // Sidebar diff
-  const sidebar = diffSidebar();
+  // Sidebar diff (skip in --slug mode — not relevant for single-page checks)
+  const sidebar = args.slug ? { changed: false, addedPages: [], removedPages: [] } : diffSidebar();
+
+  // Scope summary to filtered files when --slug is active
+  const scopedTotal = args.slug ? 1 : snapshotFiles.length;
 
   const report = {
     checkedAt: new Date().toISOString(),
     summary: {
-      totalSnapshots: snapshotFiles.length,
+      totalSnapshots: scopedTotal,
       changed: changes.filter((c) => c.type === 'page-changed').length,
       added: changes.filter((c) => c.type === 'page-added').length,
       removed: changes.filter((c) => c.type === 'page-removed').length,
