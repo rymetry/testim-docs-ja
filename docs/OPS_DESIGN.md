@@ -158,5 +158,4 @@ npm run check:parity -- --fail-on=any         # allowlist 除外後に issue > 0
 
 - [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:snapshots`、`check:parity`、`check:summary`、issue 更新 / close を実行する
 - [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
-- [`pr-parity-check.yml`](../.github/workflows/pr-parity-check.yml) では PR に対して `check:parity -- --fail-on=actionable` を実行する（移行完了後に `--fail-on=any` へ切り替え予定）
 - `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する

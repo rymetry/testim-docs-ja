@@ -139,19 +139,6 @@ git commit -m "feat: 初回英語原文スナップショット"
 - `scripts/snapshot_diff.mjs` — 比較 & レポート
 - `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック
 - `.github/workflows/deep-audit.yml` — 手動 deep audit
-- `.github/workflows/pr-parity-check.yml` — PR ごとの parity チェック
-
-## PR Parity Check
-
-PR ごとに `check:parity -- --fail-on=actionable` を実行する CI ゲート。
-
-### Stage 1（移行中）
-
-`--fail-on=actionable` で actionable + error severity のみブロック。signal は情報提供のみ。
-
-### Stage 2（移行完了後）
-
-`--fail-on=any` に切り替え、allowlist 除外後の全 issue でブロック。
 
 ---
 
