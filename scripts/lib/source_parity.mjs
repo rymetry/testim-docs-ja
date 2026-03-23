@@ -998,11 +998,8 @@ export function detectEnArtifacts(enBody) {
 export function compareSnapshotStructure(enBody, jaBody) {
   const issues = [];
 
-  // Detect EN-side artifacts for annotation
+  // Detect EN-side artifacts (attached to issues as separate field)
   const enArtifacts = detectEnArtifacts(enBody);
-  const artifactSuffix = enArtifacts.length > 0
-    ? ` [${enArtifacts.join('; ')}]`
-    : '';
 
   // --- Image order comparison ---
   const enImages = extractImageSequence(enBody);
@@ -1132,12 +1129,11 @@ export function compareSnapshotStructure(enBody, jaBody) {
     ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数', 2),
   );
 
-  // Annotate issues with EN-side artifact info so reviewers know the cause
-  if (artifactSuffix) {
+  // Attach EN-side artifact info as separate field (not in detail)
+  // This keeps detail stable for allowlist matching (detailIncludes/detailRegex)
+  if (enArtifacts.length > 0) {
     for (const issue of issues) {
-      if (issue.detail) {
-        issue.detail += artifactSuffix;
-      }
+      issue.artifacts = enArtifacts;
     }
   }
 

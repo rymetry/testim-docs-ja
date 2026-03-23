@@ -104,10 +104,10 @@ npm run check:parity -- --fail-on=any         # allowlist 除外後に issue > 0
 
 ### EN アーティファクト注釈
 
-`detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、signal の detail に注釈を付与する:
+`detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は allowlist の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
 
-- `[EN uses <details> blocks]` — EN が `<details>` を使用（JA は `##` 見出しに変換している場合）
-- `[EN body largely wrapped in code fence]` — EN 本文の 50% 以上がコードフェンス内
+- `EN uses <details> blocks` — EN が `<details>` を使用
+- `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
 
 ## 定期運用（3日ごと）
 
