@@ -175,11 +175,10 @@ keywords:
    </td>
    <td>
     ステップが失敗した場合、デフォルトの動作は、ステップにエラーをマークしてテストを停止することです。このデフォルトの動作を上書きできます。このプロパティのオプションは次のとおりです：
-    <ul>
-     <li><strong>Mark error &amp; stop</strong>（デフォルト）- このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止して失敗します。</li>
-     <li><strong>Mark error &amp; continue</strong> - このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止しませんが、失敗します。</li>
-     <li><strong>Mark warning &amp; continue</strong> - このオプションを選択すると、失敗したステップはオレンジ色でマークされ、警告を示します。テストは停止せず、失敗もしません。</li>
-    </ul>
+
+* **Mark error & stop**（デフォルト）- このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止して失敗します。
+* **Mark error & continue** - このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止しませんが、失敗します。
+* **Mark warning & continue** - このオプションを選択すると、失敗したステップはオレンジ色でマークされ、警告を示します。テストは停止せず、失敗もしません。
    </td>
    <td>
     <a href="/docs/why-did-my-test-fail">Why did my test fail?</a>
@@ -196,13 +195,12 @@ keywords:
    </td>
    <td>
     「when to run step」機能を使用すると、テストのステップをいつ実行するか、または実行しないかを制御できます。以下のオプションを適用できます：
-    <ul>
-     <li><strong>Always Run</strong> - テストを実行するたびにステップが実行されます。</li>
-     <li><strong>Element</strong> - 指定された要素がページに存在する（または存在しない）場合にステップが実行されます。</li>
-     <li><strong>Element text</strong> - 特定の要素内に指定されたテキストが存在する場合にステップが実行されます。</li>
-     <li><strong>Custom</strong> - 要素が特定の値を持つ場合にステップが実行されます。</li>
-     <li><strong>Never (skip)</strong> - ステップは実行されません。</li>
-    </ul>
+
+* **Always Run** - テストを実行するたびにステップが実行されます。
+* **Element** - 指定された要素がページに存在する（または存在しない）場合にステップが実行されます。
+* **Element text** - 特定の要素内に指定されたテキストが存在する場合にステップが実行されます。
+* **Custom** - 要素が特定の値を持つ場合にステップが実行されます。
+* **Never (skip)** - ステップは実行されません。
    </td>
    <td>
     <a href="/docs/conditions">Conditions</a>
@@ -597,20 +595,18 @@ keywords:
    </td>
    <td>
     これらのタイプのステップで Testim が使用する変数のスコープを選択できます。デフォルトでは、変数スコープは Test に設定されています。変更したい場合は、Variable scope ドロップダウンをクリックして、次の 3 つのオプションのいずれかを選択します：
-    <ul>
-     <li><strong>Local</strong>: 同じグループ内（グループ内で宣言されている場合）またはテスト内（テストレベルから宣言されている場合）のステップ間でパラメーターを渡すことができます。</li>
-     <li><strong>Test</strong>: 同じテスト内のステップとグループ間でパラメーターを渡すことができます。</li>
-     <li><strong>Suite</strong>: 同じテストスイート内のテスト間でパラメーターを渡すことができます。</li>
-    </ul>
+
+* **Local**: 同じグループ内（グループ内で宣言されている場合）またはテスト内（テストレベルから宣言されている場合）のステップ間でパラメーターを渡すことができます。
+* **Test**: 同じテスト内のステップとグループ間でパラメーターを渡すことができます。
+* **Suite**: 同じテストスイート内のテスト間でパラメーターを渡すことができます。
    </td>
    <td>
    </td>
   </tr>
   <tr>
    <td>
-    <strong>
-     PARAMS
-    </strong>
+
+* PARAMS
    </td>
    <td>
     Add custom action, Add API action, Add custom validation, Validate API, Add network validation, Add custom wait for

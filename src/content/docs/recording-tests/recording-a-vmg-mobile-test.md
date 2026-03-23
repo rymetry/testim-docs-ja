@@ -169,8 +169,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 - [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定の要素の存在に依存するという点で、要素可視性検証と似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 - [Wait for element visible](/docs/wait-for#wait-for-element-visible) - 要素がページに表示されるまで待機するために使用します。
 - [Wait for element text](/docs/wait-for#wait-for-element-text) - テストを続行する前に特定のテキストが表示されることを確認するために使用します。
-- [Sleep](/docs/wait-for#sleep) - ステップ間で一定時間待機できます。
-- [Add extract value step](/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
+- [Sleep](/docs/wait-for#sleep) - ステップ間で一定時間待機できます。 - [Add extract value step](/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 - **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
 - [Generate email address](/docs/email-validation#generating-a-temporary-email-address) - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。

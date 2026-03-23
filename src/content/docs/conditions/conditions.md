@@ -109,9 +109,9 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 Element text 条件は Element 条件に類似しますが、指定した要素に特定のテキスト値が含まれる場合にのみステップを実行します。条件には正規表現、短い JavaScript 式、またはパラメーターを使用できます。
 
-![Element text 条件設定のデモ](/images/conditions/conditions/59391e6-element_text_condition.gif)
-
 **Element text 条件を設定するには:**
+
+![Element text 条件設定のデモ](/images/conditions/conditions/59391e6-element_text_condition.gif)
 
 1. 条件を追加したいステップの左にある **>（矢印）** にカーソルを合わせます。
 
@@ -129,12 +129,12 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 
 ![Play Scenario ボタン](/images/conditions/conditions/176b48a-Testim_129a.png)
 
-4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。
+4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\
    右側に **Properties** パネルが開きます。
-5. **Properties** パネルで **When to run step** をクリックします。
+5. **Properties** パネルで **When to run step** をクリックします。\
    オプションが表示されます。
 6. **Element Text** を選択します。
-7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。
+7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。\
    現在の要素の値が **Expected value** ボックスに表示されます。
 8. 選択した要素は **When to run step** セクションの **Target Element** ボックスに表示されます。
 9. 現在の値以外の値を指定したい場合は、**Expected value** ボックスに値を入力します。値の範囲を設定したい場合は、正規表現、JavaScript 式、またはパラメーターを入力します。
@@ -164,6 +164,10 @@ HTML または JavaScript パラメーターを定義し、条件内でそれら
 
 Custom 条件はブール値を返すステップとして記述します。`true` を返すとステップが実行され、`false` を返すとスキップされます。
 
+**Custom 条件を設定するには:**
+
+![Custom 条件設定のデモ](/images/conditions/conditions/12714a6-custom_condition2.gif)
+
 :::warning
 ステップ 5（下記）で HTML 要素をパラメーターとして定義する場合は、まず AUT を開く必要があります。
 
@@ -172,12 +176,10 @@ Custom 条件はブール値を返すステップとして記述します。`tru
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 :::
 
-![Custom 条件設定のデモ](/images/conditions/conditions/12714a6-custom_condition2.gif)
-
-**Custom 条件を設定するには:**
-
-1. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。
-2. **Properties** パネルで **When to run step** をクリックします。
+1. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\
+   右側に **Properties** パネルが開きます。
+2. **Properties** パネルで **When to run step** をクリックします。\
+   オプションが表示されます。
 3. **Custom** を選択します。
 4. **Set condition** ウィンドウが開きます。
 
@@ -186,7 +188,8 @@ Custom 条件はブール値を返すステップとして記述します。`tru
 5. カスタム条件にパラメーターを使用する場合は、次のように定義します:
    - 右側のペインで **+ PARAMS** ボタンをクリックします。
    - **JavaScript パラメーター:** ドロップダウンから **JS** を選択し、JavaScript パラメーターを入力します。
-   - **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、Properties パネルの手順に従ってください。
+   - **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。次の手順を実行します:
+     - AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-your-tests#section-modifying-the-test-using-the-properties-panel)の手順に従ってください。
 
 ![パラメーター追加](/images/conditions/conditions/5eed156-custom2_r.png)
 
@@ -214,6 +217,8 @@ jQuery などの DOM セレクター（HTML パラメーターではなく）を
 AUT を開いて HTML 要素をパラメーターとして定義した場合は、グループステップの前の **Toggle Breakpoint** をクリックしてブレークポイントを解除してください。
 :::
 
+ステップタイルに菱形アイコンが表示され、条件が追加されたことを確認できます。
+
 ### Custom 条件を試してみましょう
 
 [こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンを選択する HTML パラメーターを作成し、`return loginButton.innerText === 'LOG IN';` という Custom 条件を入力して、ボタンが可視かつ正しいテキストを表示しているときにのみログインを実行するように設定してみてください。
@@ -224,9 +229,11 @@ Never（skip）条件は、テストステップを一時的に無効化しな�
 
 **Never run step 条件を設定するには:**
 
-1. 対象のステップをクリックします（青いボックスでハイライトされます）。
-2. **Show Properties** をクリックします。
-3. **Properties** パネルで **When to run step** をクリックします。
-4. **Never (skip)** を選択します。
-
-再設定するまで、テスト実行時にこのステップはスキップされます。菱形アイコンは **When to run step** オプションが有効であることを示します。
+1. 対象のステップをクリックします。\
+   青いボックスでハイライトされます。
+2. **Show Properties** をクリックします。\
+   右側に **Properties** パネルが開きます。
+3. **Properties** パネルで **When to run step** をクリックします。\
+   オプションが表示されます。
+4. **Never (skip)** を選択します。\
+   再設定するまで、テスト実行時にこのステップはスキップされます。菱形アイコンは **When to run step** オプションが有効であることを示します。

@@ -42,89 +42,17 @@ Testim でテストを実行する複数の方法があります。
 
 テスト実行モデルのサブスクリプションには、テスト実行の最大数が付属しています。ローカルエディター実行はこのカウントから除外されますが、以下の表に示す他の実行タイプは含まれます。
 
-<table class="run-types-table">
-  <colgroup>
-    <col class="run-types-col-type" />
-    <col class="run-types-col-illustration" />
-    <col class="run-types-col-location" />
-    <col class="run-types-col-quota" />
-    <col class="run-types-col-notes" />
-  </colgroup>
-  <thead>
-    <tr>
-      <th>実行タイプ</th>
-      <th>イラスト</th>
-      <th>実行場所</th>
-      <th>実行クォータにカウント</th>
-      <th>注記</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>ローカルエディター実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/obwoaogsvcsoy09mlx2q.png" alt="ローカルエディター実行のUI例" /></td>
-      <td>ローカル</td>
-      <td>いいえ</td>
-      <td>「ローカルで実行」「デバッグなしでローカルで実行」の 2 種類のローカルエディター実行が含まれます。</td>
-    </tr>
-    <tr>
-      <td>ローカルテスト実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/xqzcvrixxh7klhttxcvv.png" alt="ローカルテスト実行のUI例" /></td>
-      <td>ローカル</td>
-      <td>はい</td>
-      <td>安定したテストはグリッド経由で実行することを推奨します。</td>
-    </tr>
-    <tr>
-      <td>ローカルスイート実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png" alt="ローカルスイート実行のUI例" /></td>
-      <td>ローカル</td>
-      <td>はい</td>
-      <td>安定したテストはグリッド経由で実行することを推奨します。</td>
-    </tr>
-    <tr>
-      <td>ローカルテスト計画実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/tasdwyoeqgku3dgbb4yl.png" alt="ローカルテスト計画実行のUI例" /></td>
-      <td>ローカル</td>
-      <td>はい</td>
-      <td>安定したテストはグリッド経由で実行することを推奨します。</td>
-    </tr>
-    <tr>
-      <td>ローカル CI 実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/etuuumjl8mnaf6yi8swg.png" alt="ローカル CI 実行のUI例" /></td>
-      <td>ローカル</td>
-      <td>はい</td>
-      <td>CI ツールやローカルターミナル／シェルから CLI コマンドを実行する必要があります。</td>
-    </tr>
-    <tr>
-      <td>グリッド上で実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/aliqt4hzl7exfzihlyhr.png" alt="グリッド上でのテスト実行のUI例" /></td>
-      <td>リモート</td>
-      <td>はい</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>スケジューラー （自動）</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/butca7hm2m9ynmildilk.png" alt="スケジューラー自動実行のUI例" /></td>
-      <td>リモート</td>
-      <td>はい</td>
-      <td>一度スケジューラーを作成してアクティブにすると、関連するテストは構成された時間に自動的に実行されます。</td>
-    </tr>
-    <tr>
-      <td>スケジューラー （手動）</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/jjslea2li1v9c3dfg9yn.png" alt="スケジューラー手動実行のUI例" /></td>
-      <td>リモート</td>
-      <td>はい</td>
-      <td>スケジューラーのアクティブステータスに関係なく、すぐに実行されます。</td>
-    </tr>
-    <tr>
-      <td>リモート CI 実行</td>
-      <td><img src="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/tt27za73qdynpxbl58o8.png" alt="リモート CI 実行のUI例" /></td>
-      <td>リモート</td>
-      <td>はい</td>
-      <td>CLI コマンドを実行する必要があります。ターミナル／シェルから実行することも、Azure パイプラインなど複数ある CI オプションの 1 つとして実行することもできます。</td>
-    </tr>
-  </tbody>
-</table>
+| 実行タイプ | イラスト | 実行場所 | 実行クォータにカウント | 注記 |
+| :--- | :--- | :--- | :--- | :--- |
+| ローカルエディター実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/obwoaogsvcsoy09mlx2q.png) | ローカル | いいえ | 「ローカルで実行」「デバッグなしでローカルで実行」の 2 種類のローカルエディター実行が含まれます。 |
+| ローカルテスト実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/xqzcvrixxh7klhttxcvv.png) | ローカル | はい | 安定したテストはグリッド経由で実行することを推奨します。 |
+| ローカルスイート実行 | ![suites](https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png) | ローカル | はい | 安定したテストはグリッド経由で実行することを推奨します。 |
+| ローカルテスト計画実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/tasdwyoeqgku3dgbb4yl.png) | ローカル | はい | 安定したテストはグリッド経由で実行することを推奨します。 |
+| ローカル CI 実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/etuuumjl8mnaf6yi8swg.png) | ローカル | はい | CI ツールやローカルターミナル／シェルから CLI コマンドを実行する必要があります。 |
+| グリッド上で実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/aliqt4hzl7exfzihlyhr.png) | リモート | はい | |
+| スケジューラー （自動） | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/butca7hm2m9ynmildilk.png) | リモート | はい | 一度スケジューラーを作成してアクティブにすると、関連するテストは構成された時間に自動的に実行されます。 |
+| スケジューラー （手動） | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/jjslea2li1v9c3dfg9yn.png) | リモート | はい | スケジューラーのアクティブステータスに関係なく、すぐに実行されます。 |
+| リモート CI 実行 | ![test](https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/tt27za73qdynpxbl58o8.png) | リモート | はい | CLI コマンドを実行する必要があります。ターミナル／シェルから実行することも、Azure パイプラインなど複数ある CI オプションの 1 つとして実行することもできます。 |
 
 ## Testim UI でテストスクリーンを通じて単一のテストを実行する （Web & モバイル）
 

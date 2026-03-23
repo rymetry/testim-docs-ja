@@ -101,11 +101,7 @@ keywords:
     Date Format
    </td>
    <td>
-    任意の JS 日付フォーマットを指定できます。各フォーマットについては
-    <a href="https://day.js.org/docs/en/display/format">
-     こちら
-    </a>
-    を参照してください。
+    任意の JS 日付フォーマットを指定できます。各フォーマットについては<a href="https://day.js.org/docs/en/display/format">こちら</a>を参照してください。
    </td>
    <td>
     既定値 - 'YYYY-MM-DD'
@@ -126,12 +122,13 @@ keywords:
     Variable Scope
    </td>
    <td>
-    変数を受け渡しできるスコープ：
-    <ul>
-     <li><strong>Local:</strong> 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。</li>
-     <li><strong>Test:</strong> 同一テスト内のステップやグループ間で受け渡しできます。</li>
-     <li><strong>Suite:</strong> 同一テストスイート内のテスト間で受け渡しできます。</li>
-    </ul>
+    変数を受け渡しできるスコープ:
+
+* **Local:** 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。
+
+* **Test:** 同一テスト内のステップやグループ間で受け渡しできます。
+
+* **Suite:** 同一テストスイート内のテスト間で受け渡しできます。
    </td>
    <td>
    </td>
@@ -151,11 +148,7 @@ keywords:
     When to run step
    </td>
    <td>
-    ステップの実行条件を指定します。詳細は
-    <a href="/docs/conditions">
-     Conditions
-    </a>
-    を参照してください。
+    ステップの実行条件を指定します。詳細は <a href="/docs/conditions">Conditions</a> を参照してください。
    </td>
    <td>
    </td>
