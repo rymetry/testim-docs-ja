@@ -37,7 +37,8 @@ npm test                       # 全テスト実行
 npm run check:snapshots                # 取得→比較を一括実行
 npm run check:snapshots:fetch          # スナップショット取得のみ
 npm run check:snapshots:diff           # コミット済み vs working tree を比較
-npm run check:snapshots:fetch -- --section="Overview"   # セクション絞り込み
+npm run check:snapshots:diff -- --slug=testim-overview   # 単一ページ
+npm run check:snapshots:fetch -- --section="Overview"    # セクション絞り込み
 npm run check:snapshots:fetch -- --slug=testim-overview  # 単一ページ
 npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検証のみ（ファイルは書き込まない）
 ```
@@ -52,6 +53,7 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 ```bash
 npm run check:parity                                      # ローカルチェック
+npm run check:parity -- --slug=testim-overview            # 単一ページ
 node scripts/check_source_parity.mjs --section="概要"     # セクション絞り込み
 node scripts/check_source_parity.mjs --json               # JSON 出力
 npm run check:parity -- --fail-on=actionable              # actionable + error で exit 1
@@ -71,6 +73,7 @@ npm run check:parity -- --fail-on=any                     # allowlist 除外後�
 | `codeblock-mismatch` | コードブロック数の不一致 |
 | `image-order-mismatch` | 画像の配置順が原文と異なる |
 | `callout-nesting-mismatch` | callout のネストレベルが原文と異なる |
+| `sidebar-missing-file` | SIDEBAR_URLS.md に掲載だがローカルファイルが存在しない |
 
 **スナップショット構造比較（signal）:**
 
@@ -84,6 +87,7 @@ npm run check:parity -- --fail-on=any                     # allowlist 除外後�
 | `table-cell-english-residual` | テーブルセルの英語残留 |
 | `table-cell-empty-mismatch` | テーブルセルの空/非空不一致 |
 | `table-cell-token-mismatch` | テーブルセルの invariant token 不一致 |
+| `source-snapshot-missing` | sourceUrl があるが EN スナップショットが存在しない |
 
 **allowlist**: `parity-allowlist.json` で signal severity の issue を抑制可能。slug + type + (detailIncludes or detailRegex) で一致。actionable/error は抑制不可。
 
@@ -391,6 +395,22 @@ npm test    # node --test scripts/__tests__/*.mjs
 ---
 
 ## 運用フロー
+
+### 日常運用（ページ単位）
+
+```bash
+npm run check:parity -- --slug=testim-overview
+npm run check:snapshots:diff -- --slug=testim-overview
+npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
+```
+
+### 定期運用（全文）
+
+```bash
+npm run lint:docs          # リンク実在 + frontmatter + 構文
+npm run check:parity       # 構造パリティ全件
+npm run test && npm run build
+```
 
 ### 初回セクション整備
 

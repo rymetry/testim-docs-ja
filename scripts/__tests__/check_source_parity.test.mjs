@@ -37,6 +37,16 @@ describe('parseArgs', () => {
     assert.equal(args.json, true);
     assert.equal(args.failOn, 'actionable');
   });
+
+  it('parses --slug=testim-overview', () => {
+    const args = parseArgs(['--slug=testim-overview']);
+    assert.equal(args.slug, 'testim-overview');
+  });
+
+  it('returns null slug when not specified', () => {
+    const args = parseArgs(['--json']);
+    assert.equal(args.slug, null);
+  });
 });
 
 describe('loadAllowlist', () => {

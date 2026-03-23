@@ -20,6 +20,8 @@ let stripMarkdown;
 let isUntranslatedCell;
 let extractInvariantTokens;
 let normalizeEnArtifacts;
+let checkSidebarCoverage;
+let checkSourceSnapshotMissing;
 
 before(async () => {
   ({
@@ -42,6 +44,8 @@ before(async () => {
     isUntranslatedCell,
     extractInvariantTokens,
     normalizeEnArtifacts,
+    checkSidebarCoverage,
+    checkSourceSnapshotMissing,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -1259,5 +1263,72 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
     assert.ok(tokenIssues.length >= 1, 'different page slugs should still mismatch');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// checkSidebarCoverage tests
+// ---------------------------------------------------------------------------
+
+describe('checkSidebarCoverage', () => {
+  it('detects sidebar slugs with no local file', () => {
+    const sidebarSlugs = new Set(['testim-overview', 'getting-started', 'missing-page']);
+    const existingSlugs = new Set(['testim-overview', 'getting-started']);
+    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
+    assert.equal(issues.length, 1);
+    assert.equal(issues[0].type, 'sidebar-missing-file');
+    assert.equal(issues[0].severity, 'actionable');
+    assert.ok(issues[0].detail.includes('missing-page'));
+  });
+
+  it('returns empty when all sidebar slugs have files', () => {
+    const sidebarSlugs = new Set(['testim-overview', 'getting-started']);
+    const existingSlugs = new Set(['testim-overview', 'getting-started', 'extra-file']);
+    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
+    assert.equal(issues.length, 0);
+  });
+
+  it('returns empty when sidebar is empty', () => {
+    const sidebarSlugs = new Set();
+    const existingSlugs = new Set(['testim-overview']);
+    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
+    assert.equal(issues.length, 0);
+  });
+
+  it('detects multiple missing files', () => {
+    const sidebarSlugs = new Set(['a', 'b', 'c']);
+    const existingSlugs = new Set(['a']);
+    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
+    assert.equal(issues.length, 2);
+    const slugsInDetail = issues.map(i => i.detail);
+    assert.ok(slugsInDetail.some(d => d.includes('b')));
+    assert.ok(slugsInDetail.some(d => d.includes('c')));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// checkSourceSnapshotMissing tests
+// ---------------------------------------------------------------------------
+
+describe('checkSourceSnapshotMissing', () => {
+  it('reports missing snapshot when sourceUrl is present', () => {
+    const issues = checkSourceSnapshotMissing({
+      slug: 'nonexistent-page',
+      sourceUrl: 'https://help.testim.io/docs/nonexistent-page',
+      snapshotsDir: '/tmp/no-such-snapshots-dir',
+    });
+    assert.equal(issues.length, 1);
+    assert.equal(issues[0].type, 'source-snapshot-missing');
+    assert.equal(issues[0].severity, 'signal');
+    assert.ok(issues[0].detail.includes('nonexistent-page'));
+  });
+
+  it('returns empty when sourceUrl is absent', () => {
+    const issues = checkSourceSnapshotMissing({
+      slug: 'some-page',
+      sourceUrl: '',
+      snapshotsDir: '/tmp/no-such-snapshots-dir',
+    });
+    assert.equal(issues.length, 0);
   });
 });
