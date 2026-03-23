@@ -238,13 +238,16 @@ export async function main(argv) {
     });
   }
 
-  // Sidebar diff
-  const sidebar = diffSidebar();
+  // Sidebar diff (skip in --slug mode — not relevant for single-page checks)
+  const sidebar = args.slug ? { changed: false, addedPages: [], removedPages: [] } : diffSidebar();
+
+  // Scope summary to filtered files when --slug is active
+  const scopedTotal = args.slug ? 1 : snapshotFiles.length;
 
   const report = {
     checkedAt: new Date().toISOString(),
     summary: {
-      totalSnapshots: snapshotFiles.length,
+      totalSnapshots: scopedTotal,
       changed: changes.filter((c) => c.type === 'page-changed').length,
       added: changes.filter((c) => c.type === 'page-added').length,
       removed: changes.filter((c) => c.type === 'page-removed').length,

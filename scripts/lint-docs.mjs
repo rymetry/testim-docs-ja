@@ -276,7 +276,16 @@ async function main() {
     for (const ln of rawBody.split('\n')) {
       const hm = ln.match(/^#{2,4}\s+(.+)/);
       if (hm) {
-        headings.add(toKebab(hm[1].trim()));
+        const headingText = hm[1].trim();
+        // Prefer explicit heading ID {#custom-id} over auto-generated kebab
+        const explicitId = headingText.match(/\{#([^}]+)\}\s*$/);
+        if (explicitId) {
+          headings.add(explicitId[1]);
+          // Also index the auto-generated kebab (without the {#...} suffix)
+          headings.add(toKebab(headingText.replace(/\s*\{#[^}]+\}\s*$/, '')));
+        } else {
+          headings.add(toKebab(headingText));
+        }
       }
     }
     headingsBySlug.set(slug, headings);

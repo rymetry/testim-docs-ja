@@ -202,10 +202,13 @@ export async function checkSourceParity({
   }
 
   // Sidebar coverage check: detect pages in SIDEBAR_URLS.md without local files
-  const existingSlugs = new Set(allFiles.map(f => path.basename(f, '.md')));
-  const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
-  if (coverageIssues.length > 0) {
-    results.push({ file: 'SIDEBAR_URLS.md', sourceUrl: '', category: '', issues: coverageIssues });
+  // Skip in --slug mode (single-page check should not report unrelated global issues)
+  if (!slug) {
+    const existingSlugs = new Set(allFiles.map(f => path.basename(f, '.md')));
+    const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
+    if (coverageIssues.length > 0) {
+      results.push({ file: 'SIDEBAR_URLS.md', sourceUrl: '', category: '', issues: coverageIssues });
+    }
   }
 
   const summary = {
