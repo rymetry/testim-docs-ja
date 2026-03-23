@@ -16,24 +16,15 @@
 
 ## 検証項目
 
-各ファイルのfrontmatter(---で囲まれた部分)について:
+### Frontmatter
+
+frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の「frontmatter 必須ルール」セクションを参照。レビュー時は特に以下を確認:
 
 - [ ] `title`: 原文から適切に日本語翻訳されているか
-- [ ] `description`: 記事の要約が日本語で適切に記載されているか
-- [ ] `category`: 原文から適切に日本語翻訳されているか
-- [ ] `updated`: YYYY-MM-DD形式の日付が設定されているか
-  - 英語記事のHTMLソースから`"updatedAt":"YYYY-MM-DDTHH:mm:ss.sssZ"`または`updatedAt&quot;:&quot;YYYY-MM-DDTHH:mm:ss.sssZ&quot;`形式で抽出
-  - 日付部分のみ（YYYY-MM-DD）を使用
-  - 注意: 英語サイトの表示テキスト（"Updated about X months ago"）と実際のメタデータが異なる場合があるため、HTMLソースから直接取得すること
-  - 詳細は`DOCS_DATE_TRACKING.md`を参照
-- [ ] `sourceUrl`: 対応する英語記事のURLが設定されているか
-  - 形式: `https://help.testim.io/docs/{path}`
-  - 将来的な更新追跡のために必須
-- [ ] `keywords`: 記事内容から抽出した日本語の検索キーワードが設定されているか
-  - 上限10件まで
-  - 英語のkeywordsを直訳するのではなく、記事内容に基づいて日本語で適切に設定
-  - 記事の主要なトピック、機能名、技術用語、ユースケースなどを含む
-  - ユーザーが検索しそうな単語を優先
+- [ ] `description`: 記事の要約が日本語で適切に記載されているか（プレースホルダ禁止）
+- [ ] `updated`: 英語原文の日付に追従しているか（JA 編集日に変更しないこと。詳細は `DOCS_DATE_TRACKING.md` 参照）
+- [ ] `sourceUrl`: `https://help.testim.io/docs/{slug}` 形式で設定されているか
+- [ ] `keywords`: 記事内容に基づいた日本語検索キーワードが設定されているか（上限 10 件）
 
 本文について:
 
@@ -59,41 +50,16 @@
 - 原文の画像が 3 枚なら、日本語ページでも原則 3 枚を本文に配置していること
 - 装飾画像やロゴを除外した場合は、その理由をレビュー時に説明できること
 
-## ルーティングシステムの重要事項
+## ルーティングとリンク規則
 
-**このプロジェクトのルーティングは、フォルダ構造を無視してファイル名のみを使用します。**
+ルーティングはフォルダ構造を無視してファイル名のみで URL を決定する（例: `src/content/docs/groups/groups.md` → `/docs/groups`）。
 
-- ファイルパス: `src/content/docs/groups/groups.md`
-- 生成されるURL: `/docs/groups` (フォルダ名は含まれない)
+内部リンクの形式・変換ルールの詳細は `docs/WRITING_GUIDE.md` の「内部リンク規則」セクションを参照。
 
-詳細は `src/lib/docs.ts` の `buildNavigation` 関数を参照:
-
-```typescript
-// URLに使うslugは最後のファイル名部分のみ
-const urlSlug = doc.id.replace(/\.md$/, '').split('/').pop() || doc.slug;
-```
-
-**注意:** ファイル名の重複がないため、このシステムは正常に機能します。
-
-## リンク変換ルール
-
-### 内部リンクの正しい形式
-
-- ❌ 間違い: `/docs/カテゴリ/ファイル名` (フォルダ構造を含む)
-- ✅ 正しい: `/docs/ファイル名` (ファイル名のみ)
-
-### 変換手順
-
-1. 記事本文内の全リンクをスキャン
-2. `https://help.testim.io/docs/{path}` または `/docs/{category}/{filename}` 形式のリンクを抽出
-3. `/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/` 内で対応する `.md` ファイルの存在を確認
-   - 英語URL `https://help.testim.io/docs/testim-overview` → ファイル検索パターン `**/testim-overview.md`
-4. ファイルが存在する場合:
-   - リンクをファイル名のみの形式に変更: `/docs/{filename}`
-   - 例: `[テキスト](https://help.testim.io/docs/testim-overview)` → `[テキスト](/docs/testim-overview)`
-   - 例: `[Groups](/docs/groups/groups)` → `[Groups](/docs/groups)`
-5. ファイルが存在しない場合:
-   - 元の外部リンクを維持
+要点:
+- 正しい形式: `/docs/{slug}`（フォルダ名を含めない）
+- `https://help.testim.io/docs/{slug}` は対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する
+- 対応する JA ファイルが存在しない場合は元の外部リンクを維持する
 
 ## 出力形式
 

@@ -45,49 +45,13 @@
 
 ## Source Parity チェック
 
-`npm run check:parity` で以下のローカルチェックを即時実行する:
+`npm run check:parity` で日本語ドキュメントの翻訳品質をローカルチェックする。
 
-**ローカルチェック（severity: actionable）:**
-
-| チェック項目              | 検出内容                                                |
-| ------------------------- | ------------------------------------------------------- |
-| `untranslated`            | 未翻訳の英語テキスト行（UI 操作指示文のパターンマッチ） |
-| `legacy-callout`          | レガシー callout 形式（`> 📘`, `> ❗️` 等）              |
-| `jsx-callout`             | JSX/MDX `<Callout>` コンポーネント残留                  |
-| `h1-in-body`              | 本文中の H1 見出し（`#` で始まる行）                    |
-| `orphan-page`             | `docs/SIDEBAR_URLS.md` に未掲載のページ                 |
-| `image-mismatch`          | 画像数の不一致                                          |
-| `codeblock-mismatch`      | コードブロック数の不一致                                |
-| `image-order-mismatch`    | 画像の配置順が原文と異なる                              |
-| `callout-nesting-mismatch`| callout のネストレベルが原文と異なる                    |
-| `sidebar-missing-file`    | SIDEBAR_URLS.md に掲載だがローカルファイルが存在しない  |
-
-**スナップショット構造比較（severity: signal）:**
-
-| チェック項目                  | 検出内容                                  |
-| ----------------------------- | ----------------------------------------- |
-| `section-count-mismatch`      | H2-H4 セクション数の不一致               |
-| `step-count-mismatch`         | 番号付きステップ数の不一致               |
-| `bullet-count-mismatch`       | 箇条書き数の不一致                       |
-| `paragraph-count-mismatch`    | 段落数の不一致（diff >= 2）              |
-| `table-shape-mismatch`        | テーブル行数・列数の不一致               |
-| `table-cell-english-residual` | テーブルセルの英語残留                   |
-| `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致              |
-| `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致    |
-| `source-snapshot-missing`     | sourceUrl があるが EN スナップショットが存在しない |
-
-**`--fail-on` フラグ:**
-
-```bash
-npm run check:parity -- --fail-on=actionable  # actionable + error で exit 1
-npm run check:parity -- --fail-on=any         # allowlist 除外後に issue > 0 で exit 1
-```
-
-**allowlist**: `parity-allowlist.json` で signal severity の issue を抑制可能。slug + type + (detailIncludes or detailRegex) の条件で一致。actionable/error は抑制不可。未知の issue type はエラーになる。
-
-**デフォルト動作**: `--fail-on` なしの場合、問題ファイルが 1 件以上あれば exit 1。
+チェック項目の詳細（actionable / signal の一覧、`--fail-on` フラグ、allowlist、出力形式）は `scripts/README.md` を参照。
 
 **セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
+
+**単一ページ**: `npm run check:parity -- --slug=testim-overview`
 
 **出力**: `parity-check-status.json` に詳細結果を保存する。
 
