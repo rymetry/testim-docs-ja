@@ -67,4 +67,7 @@ Salesforce 環境を Testim/TTA for Salesforce に接続する方法を学びま
 ### その他のヘルプ
 
 さらにサポートが必要ですか？FAQ およびトラブルシューティングページをご確認ください。
-[F.A.Q](/docs/faq) | [トラブルシューティング](/docs/troubleshoot)
+
+[F.A.Q](/docs/faq)
+
+[トラブルシューティング](/docs/troubleshoot)

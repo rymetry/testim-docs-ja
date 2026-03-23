@@ -520,9 +520,7 @@ expectedText.forEach(item => {
    </td>
   </tr>
   <tr>
-   <td>
-    _
-   </td>
+   <td />
    <td>
     Package
    </td>

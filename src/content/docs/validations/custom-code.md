@@ -146,7 +146,7 @@ if (amount > 1000) {
     HTML
    </td>
    <td>
-    {an HTML element containing a numeral}
+    {数値を含む HTML 要素}
    </td>
   </tr>
  </tbody>
@@ -200,7 +200,7 @@ return equal;
     HTML
    </td>
    <td>
-    {an HTML element containing text}
+    {テキストを含む HTML 要素}
    </td>
   </tr>
   <tr>
@@ -211,7 +211,7 @@ return equal;
     HTML
    </td>
    <td>
-    {an HTML element containing text}
+    {テキストを含む HTML 要素}
    </td>
   </tr>
  </tbody>

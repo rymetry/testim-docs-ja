@@ -29,15 +29,10 @@ Enhanced mode は現在 VMG（仮想モバイルグリッド）でのみ利用�
 ## Enhanced mode の利点
 
 - **より豊富なビュー階層** - スクリプトは「見る」ことができない要素とは相互作用できません。Enhanced mode は、React Native や Flutter アプリでも、市場のどのツールよりもモバイルビューの構造をよく把握する、より豊富なビュー階層を持っています。
-
 - **高速スキャン** - ビュー階層全体を 500ms 未満でスキャンします。
-
 - **ゼロナレッジ** - Appium では、テストを作成する際に使用する「Appium ドライバー」（例：ネイティブドライバー、ウェブビュードライバー、React Native ドライバー、Flutter ドライバー）を知る必要があります。Enhanced mode は統合 API を提供し、アプリの基盤となる技術に関する知識を必要としません。
-
 - **クロスプラットフォームアプリケーションフレームワークの強化されたサポート** - React Native や Flutter を含む人気のクロスプラットフォームアプリケーションフレームワークの使用を可能にします。
-
 - **ハイブリッドアプリのサポート** - 埋め込まれたウェブビューを持つアプリケーションの使用を可能にします。
-
 - **テストの安定性向上** - すべてのモバイルアプリケーションのテストの安定性を向上させ、メンテナンスを削減し、テスト作成時間と労力を削減します。
 
 ## サポートされているフレームワーク
@@ -53,17 +48,9 @@ Enhanced mode は、ネイティブまたはハイブリッドを含む、ほと
 
 ## Testim で Enhanced mode を使用する方法
 
-### テスト記録
-
-テストを記録する際、Enhanced mode がデフォルト/優先モバイルテスト方法として選択されます。Standard Appium 互換モードを選択することもできます。Enhanced mode を使用して記録されたテストは VMG でのみ実行されます。
-
-### テストスケジューリング
-
-Enhanced mode で記録されたテストは Enhanced mode で実行され、Enhanced mode で記録されていないテストは Enhanced mode で実行されません。
-
-### CLI 実行
-
-Enhanced mode で記録されたテストは Enhanced mode で実行され、Enhanced mode で記録されていないテストは Enhanced mode で実行されません。
+- **テスト記録** - テストを記録する際、**Enhanced mode** がデフォルト/優先モバイルテスト方法として選択されます。**Standard Appium** 互換モードを選択することもできます。Enhanced mode を使用して記録されたテストは VMG でのみ実行されます。
+- **テストスケジューリング** - Enhanced mode で記録されたテストは Enhanced mode で実行され、Enhanced mode で記録されていないテストは Enhanced mode で実行されません。
+- **CLI 実行** - Enhanced mode で記録されたテストは Enhanced mode で実行され、Enhanced mode で記録されていないテストは Enhanced mode で実行されません。
 
 ## FAQ
 

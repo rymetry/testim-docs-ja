@@ -24,7 +24,11 @@ keywords:
 
 ![Web Test Library の Test Library 画面](/images/test-management/test-list/e75e02c-2024-11-24_16-39-18.png)
 
+Web Test Library
+
 ![Mobile Test Library の Test Library 画面](/images/test-management/test-list/20dd7c7-mobiletestlibrary.png)
+
+Mobile Test Library
 
 テストライブラリ画面には、次の情報を含むテストとフォルダーのリストが表示されます:
 

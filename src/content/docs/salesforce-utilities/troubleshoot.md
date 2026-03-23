@@ -48,8 +48,7 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 
 - Azure Active Directory や Okta などの Identity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対して IAM サービスを無効にすることをお勧めします。Grid でのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
 - IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付き IP」アドレスをログイン履歴で確認してください。
-
-  ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
+- ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
 
   Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
   - IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
@@ -70,7 +69,9 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 ## Grid 上のスケジュール済みテスト実行が確認コードの入力を求められて失敗する
 
-確認コードはデバイスアクティベーションの一部であり、多要素認証とは異なります。Salesforce にログインしてメールで送信されたコードの入力を求められる場合、デバイスアクティベーションが行われています。
+確認コードはデバイスアクティベーションの一部であり、多要素認証とは異なります。
+
+Salesforce にログインしてメールで送信されたコードの入力を求められる場合、デバイスアクティベーションが行われています。
 
 デバイスアクティベーションは、次のいずれかに当てはまる場合に発生します:
 
@@ -78,13 +79,10 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 - ホワイトリストに登録された IP 範囲が 1600 万アドレスを超えている
 - 組織が無料の Salesforce エディション（Developer Edition など）を使用している
 
-### 有料組織向けの解決策
+有料組織のデバイスアクティベーションを停止するには、以下の手順を実行してください:
 
-デバイスアクティベーションを防止するには、以下の手順を実行してください:
-
-1. **設定 > セキュリティ > ネットワークアクセス**に移動し、会社レベルの IP アドレス範囲を Grid のすべてのアドレスを含めるように更新します。
-
-2. **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**に移動し、プロファイルレベルの IP 範囲が 1600 万アドレスを超えないようにします。
+- **設定 > セキュリティ > ネットワークアクセス**に移動し、会社レベルの IP アドレス範囲を[Grid](/docs/testim-grid-ips)のすべての IP アドレスを含めるように更新します。
+- **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**に移動し、プロファイルレベルの IP 範囲が 1600 万アドレスを超えないようにします。
 
 ## 最初のテストステップでテスト実行が失敗する
 
@@ -92,11 +90,11 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 1. Tricentis Testim Extension をシークレットモードで実行するように構成します。
 
-![Chrome 拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
+   ![Chrome 拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
 
 2. シークレットモードでテストを実行します。
 
-![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
+   ![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
 
 ## Create ステップを使用して前のステップで作成したレコードが、Find ステップを使用して Salesforce で見つからない
 

@@ -234,19 +234,13 @@ while... do... ループと for ループを使用してステップのグルー
 
 ![プロパティを表示](/images/handling-ui-actions/loops/b4bc73a-Capture3.PNG)
 
-![プロパティを表示](/images/handling-ui-actions/loops/c18755c-Testim_111a_r.png)
-
 3. グループプロパティパネルで、**繰り返しグループ**をクリックします。
 
 ![繰り返しグループ](/images/handling-ui-actions/loops/6d63491-Testim_Image_006_r.png)
 
-![定義済みステップメニュー](/images/handling-ui-actions/loops/cec147c-Testim_034_r.png)
-
 4. **〜回ループ**ラジオボタンを選択します。**ループする値**フィールドが開きます。
 
 ![〜回ループ](/images/handling-ui-actions/loops/fb2dc35-Testim_Image_007.png)
-
-![アクションメニュー](/images/handling-ui-actions/loops/988d6c6-Testim_079_r.png)
 
 ![ループする値](/images/handling-ui-actions/loops/182470c-Testim_Image_008.png)
 
@@ -276,11 +270,17 @@ while... do... ループと for ループを使用してステップのグルー
 
 アクションオプションが表示されます。
 
-3. **「M」（Testim 定義済みステップ）**をクリックします。定義済みステップメニューが開きます。
+![アクションオプション](/images/handling-ui-actions/loops/c18755c-Testim_111a_r.png)
 
-4. **アクション**をクリックします。アクションセクションが展開されます。
+3. **「M」（Testim 定義済みステップ）**をクリックします。\
+   定義済みステップメニューが開きます。
 
-![アクションセクション](/images/handling-ui-actions/loops/2c12efe-Testim_Loops_Image_004.png)
+![定義済みステップメニュー](/images/handling-ui-actions/loops/cec147c-Testim_034_r.png)
+
+4. **アクション**をクリックします。\
+   アクションセクションが展開されます。
+
+![アクションセクション](/images/handling-ui-actions/loops/988d6c6-Testim_079_r.png)
 
 5. メニューをスクロールダウンして、**カスタムアクションを追加**を選択します。
 
@@ -288,21 +288,20 @@ while... do... ループと for ループを使用してステップのグルー
 または、メニュー上部の検索ボックスを使用して「カスタムアクションを追加」を検索できます。
 :::
 
-ステップの追加ウィンドウが開きます。カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)を参照してください。
+ステップの追加ウィンドウが開きます。\
+カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)を参照してください。
 
 ![カスタムアクションを追加](/images/handling-ui-actions/loops/967959b-Testim_Image_013_r.png)
 
 6. **新しいステップの名前を入力**フィールドに、このステップの（意味のある）名前を入力します。
-
-7. これが共有ステップ（このテストおよび他のテストで再利用できるようにする）の場合は、**共有ステップ**の横のボックスを選択したままにします。これがデフォルトです。それ以外の場合は、選択を解除します。共有ステップの詳細については、[再利用](/docs/shareable-steps)を参照してください。
-
-8. **ステップを作成**をクリックします。エディターが開き、カスタムアクションプロパティパネルが右側に開きます。
+7. これが共有ステップ（このテストおよび他のテストで再利用できるようにする）の場合は、**共有ステップ**の横のボックスを選択したままにします。これがデフォルトです。それ以外の場合は、選択を解除します。\
+   共有ステップの詳細については、[再利用](/docs/shareable-steps)を参照してください。
+8. **ステップを作成**をクリックします。\
+   エディターが開き、カスタムアクションプロパティパネルが右側に開きます。
 
 ![エディター](/images/handling-ui-actions/loops/631c1dc-Testim_Image_017.png)
 
-9. グループステップにエクスポートするパラメーターを渡すための適切なコードを入力します。（例: exportsTest.number = 2;） エクスポートパラメーターの詳細については、[エクスポートパラメーター](/docs/exports-parameters#section-adding-export-parameter)を参照してください。
-
-注意: 許可される最大反復回数は 99 回です。
+9. グループステップにエクスポートするパラメーターを渡すための適切なコードを入力します。（例: exportsTest.number = 2;） エクスポートパラメーターの詳細については、[エクスポートパラメーター](/docs/exports-parameters#section-adding-export-parameter)を参照してください。なお、許可される最大反復回数は 99 回です。
 
 10. オプションで、カスタムアクションプロパティパネルのプロパティを編集します。
 
@@ -368,9 +367,9 @@ HTML または JavaScript パラメーターを定義してから、ステップ
 1. グループステップの左側にある **>（矢印）** にカーソルを合わせます。
 2. **Toggle Breakpoint** をクリックします。
 3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
-   :::
+:::
 
-4. グループステップにカーソルを合わせて、**プロパティを表示**アイコンをクリックします。グループプロパティパネルが右側に開きます。
+2. グループステップにカーソルを合わせて、**プロパティを表示**アイコンをクリックします。グループプロパティパネルが右側に開きます。
 
 ![プロパティを表示](/images/handling-ui-actions/loops/4409611-Capture_07.PNG)
 
@@ -451,6 +450,8 @@ TESTIM_ITERATOR は、現在のループ反復の値を追跡して使用でき�
 
 4. 編集しているループのタイプに基づいて、ループイテレータに基づくプロパティを含むプロパティを編集します。（上記のループの設定の説明を参照してください。）例えば、「各項目について」ループを編集している場合は、**期待値**フィールドに「<配列名>[TESTIM_ITERATOR]」を入力します。
 
+![期待値フィールド](/images/handling-ui-actions/loops/2c12efe-Testim_Loops_Image_004.png)
+
 5. 戻る矢印をクリックして、メインエディターウィンドウに戻ります。
 
 ![戻る](/images/handling-ui-actions/loops/2182847-Testim_Image_062_r.png)
@@ -479,11 +480,13 @@ TESTIM_ITERATOR を使用して、ループステップの条件を定義でき�
 
 ![アクションオプション](/images/handling-ui-actions/loops/d5d3d87-Testim_113a_r.png)
 
-3. **「M」（Testim 定義済みステップ）**をクリックします。定義済みステップメニューが開きます。
+3. **「M」（Testim 定義済みステップ）**をクリックします。\
+   定義済みステップメニューが開きます。
 
 ![定義済みステップメニュー](/images/handling-ui-actions/loops/8512e3c-Testim_034_r.png)
 
-4. **アクション**をクリックします。アクションセクションが展開されます。
+4. **アクション**をクリックします。\
+   アクションセクションが展開されます。
 
 ![アクションセクション](/images/handling-ui-actions/loops/56ede45-Testim_079_r2.png)
 
@@ -493,15 +496,16 @@ TESTIM_ITERATOR を使用して、ループステップの条件を定義でき�
 または、メニュー上部の検索ボックスを使用して「カスタムアクションを追加」を検索できます。
 :::
 
-カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)を参照してください。ステップの追加ウィンドウが開きます。
+カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)を参照してください。\
+ステップの追加ウィンドウが開きます。
 
 ![カスタムアクションを追加](/images/handling-ui-actions/loops/61f003a-Testim_Image_019_r.png)
 
 6. **新しいステップの名前を入力**フィールドに、このステップの（意味のある）名前を入力します。
-
-7. これが共有ステップ（このテストおよび他のテストで再利用できるようにする）の場合は、**共有ステップ**の横のボックスを選択したままにします。これがデフォルトです。それ以外の場合は、選択を解除します。共有ステップの詳細については、[再利用](/docs/shareable-steps)を参照してください。
-
-8. **ステップを作成**をクリックします。条件エディターが開き、カスタムアクションプロパティパネルが右側に開きます。
+7. これが共有ステップ（このテストおよび他のテストで再利用できるようにする）の場合は、**共有ステップ**の横のボックスを選択したままにします。これがデフォルトです。それ以外の場合は、選択を解除します。\
+   共有ステップの詳細については、[再利用](/docs/shareable-steps)を参照してください。
+8. **ステップを作成**をクリックします。\
+   条件エディターが開き、カスタムアクションプロパティパネルが右側に開きます。
 
 ![エディター](/images/handling-ui-actions/loops/372d6d8-Testim_Image_056.png)
 
@@ -563,9 +567,7 @@ HTML パラメーター以外の DOM セレクタ（例: jQuery）を使用し�
 
 ![ループ実行結果](/images/handling-ui-actions/loops/87c8a8a-Testim_Loops_Image_006_r.png)
 
-各反復を順に確認して、それぞれの結果を個別に見ることができます。
-
-ループ結果を表示する方法は 2 つあります:
+各反復を順に確認して、それぞれの結果を個別に見ることができます。ループ結果を表示する方法は 2 つあります:
 
 - グループステップのプロパティペインで、または
 - グループステップを開いて、グループ内の反復を表示します。反復の 1 つが失敗した場合、グループを開くと、失敗した反復に直接移動します。

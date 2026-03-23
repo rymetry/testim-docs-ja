@@ -16,17 +16,12 @@ keywords:
 
 ステップは、[グループ](/docs/groups)と共に、テストの基本的な構成要素です。ステップには、ほぼすべてのテスト要件を満たすために、さまざまなアクションと検証を実行できます。各ステップには特定のプロパティがあり、[ステップのプロパティパネル](/docs/editing-a-steps-properties)で確認できます。一部のステップは[共有ステップ](/docs/shareable-steps)として個別に共有できますが、他のステップは共有のために追加のステップとグループ化する必要があります。
 
-## ステップの追加方法
-
 ステップは 2 つの方法で追加できます：
 
-- **手動ステップ** - ユーザーが矢印記号の上にマウスを移動し、事前定義ステップリストから関連するステップを選択することで、手動でステップを追加します。または、Visual Editor または AUT ブラウザから[キーボードショートカット](/docs/keyboard-shortcuts)のいずれかを使用して、手動でステップを追加することもできます。
-
-- **自動記録ステップ** - ユーザーがテスト対象アプリケーションと対話する際に、テストの記録中にステップが自動的に追加されます。
+- **[手動ステップ](#手動ステップ)** - ユーザーが矢印記号の上にマウスを移動し、事前定義ステップリストから関連するステップを選択することで、手動でステップを追加します。または、Visual Editor または AUT ブラウザから[キーボードショートカット](/docs/keyboard-shortcuts)のいずれかを使用して、手動でステップを追加することもできます。
+- **[自動記録ステップ](#自動記録ステップ)** - ユーザーがテスト対象アプリケーションと対話する際に、テストの記録中にステップが自動的に追加されます。
 
 ## 手動ステップ
-
-手動ステップには、検証ステップ、待機ステップ、アクションステップの 3 つのカテゴリがあります。
 
 ### 検証ステップ
 
@@ -55,7 +50,7 @@ keywords:
     Add CLI validation
    </td>
    <td>
-    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
+    <a href="/docs/validate-download#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -143,7 +138,7 @@ keywords:
     Validate element visualization
    </td>
    <td>
-    <a href="/docs/validate-element-visualization#要素のビジュアル検証ステップの追加">要素のビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#要素のビジュアル検証ステップの追加">要素のビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -151,7 +146,7 @@ keywords:
     Validate viewport visualization
    </td>
    <td>
-    <a href="/docs/validate-viewport-visualization#ビューポートのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#ビューポートのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -159,7 +154,7 @@ keywords:
     Validate full-page visualization
    </td>
    <td>
-    <a href="/docs/validate-full-page-visualization#フルページのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#フルページのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -216,7 +211,7 @@ keywords:
     Add CLI wait for
    </td>
    <td>
-    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
+    <a href="/docs/validate-download#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -264,7 +259,7 @@ keywords:
     Wait for element visualization
    </td>
    <td>
-    <a href="/docs/wait-for-element-visualization#要素のビジュアライゼーション待機ステップの追加">要素のビジュアライゼーションを待機するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#要素のビジュアライゼーション待機ステップの追加">要素のビジュアライゼーションを待機するステップを追加</a>
    </td>
   </tr>
  </tbody>
@@ -345,7 +340,7 @@ keywords:
     Add CLI action
    </td>
    <td>
-    <a href="/docs/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
+    <a href="/docs/validate-download#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>

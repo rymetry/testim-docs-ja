@@ -94,11 +94,11 @@ Web プラン画面には以下の情報が表示されます:
     から実行をトリガー
    </td>
    <td style="text-align: left;">
-    - ローカルブラウザを使用する Web
+    ローカルブラウザを使用する Web
     <br/>
-    - TMA を使用するモバイル
+    TMA を使用するモバイル
     <br/>
-    - VMG を使用するモバイル
+    VMG を使用するモバイル
    </td>
    <td style="text-align: left;">
     いいえ

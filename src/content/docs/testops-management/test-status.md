@@ -129,7 +129,7 @@ keywords:
 
 ![テストライブラリのテストステータス](/images/testops-management/test-status/ebf3e27-teststatuses1.png)
 
-### テストエディター
+**テストエディター**
 
 ![テストエディターのテストステータス](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
 

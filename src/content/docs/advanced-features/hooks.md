@@ -321,7 +321,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ## 設定ファイル（Config File）でフックを作成する
 
-Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。  
+Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。
 Config File で設定できるフックタイプは次のとおりです。
 
 - **Before test** – テスト実行前に実行
@@ -331,8 +331,9 @@ Config File で設定できるフックタイプは次のとおりです。
 
 Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。
 
-- Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
-- フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
+Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
+
+フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
 ## フックの可視化（Hooks Visualizations）
 
@@ -375,8 +376,11 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 フックステップ自体は、フックアイコン付きのグレーのボックスとして表示され、通常のステップより太い枠線で区別されます。共有ステップと同様に、フックステップをダブルクリックすることで詳細を確認できます。右上の数字は、その共有ステップを利用しているテスト数を示します（フックは共有ステップとして管理されています）。
 
 :::note
-フックステップ自体はビュー専用で、直接編集することはできません。ただし、通常の共有ステップと同様に、別のテストに追加してから編集することは可能です。  
-また、Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、Baseline（基準画像）は表示されず、結果側のみが表示されます。
+フックステップ自体はビュー専用で、直接編集することはできません。ただし、通常の共有ステップと同様に、別のテストに追加してから編集することは可能です。
+:::
+
+:::note
+Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、Baseline（基準画像）は表示されず、結果側のみが表示されます。
 :::
 
 ## Before/After test フックの可視化
@@ -396,7 +400,10 @@ Hook ボタンをクリックすると、テスト前後に実行された共有
 フックステップは、フックアイコン付きのグレーのボックスとして太い枠線で表示されます。ダブルクリックすると詳細を確認でき、右上の数字はその共有ステップを使用しているテスト数を示します。Setup ステップの右側に矢印が表示されている場合は After test フックも存在し、矢印をクリックするとテスト末尾のフック表示に切り替わります。
 
 :::note
-フックステップ自体はその場で編集できませんが、別のテストに追加して共有ステップとして編集することは可能です。  
+フックステップ自体はその場で編集できませんが、別のテストに追加して共有ステップとして編集することは可能です。
+:::
+
+:::note
 Hook ステップのスクリーンショットをサイドバイサイド表示した場合、Baseline 側は表示されず、結果側のみ表示されます。
 :::
 
