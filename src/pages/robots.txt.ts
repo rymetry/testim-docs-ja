@@ -6,7 +6,12 @@ export const GET: APIRoute = () => {
   const authEnabled = toBool(process.env.BASIC_AUTH_ENABLED);
   const body = authEnabled
     ? ['User-agent: *', 'Disallow: /'].join('\n')
-    : ['User-agent: *', 'Allow: /'].join('\n');
+    : [
+        'User-agent: *',
+        'Allow: /',
+        '',
+        'Sitemap: https://testim-docs-ja.vercel.app/sitemap-index.xml',
+      ].join('\n');
 
   return new Response(body, {
     headers: {

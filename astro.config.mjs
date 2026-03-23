@@ -12,6 +12,7 @@ import remarkCalloutDirectives from '@microflash/remark-callout-directives';
 import { visit, SKIP } from 'unist-util-visit';
 
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
@@ -121,5 +122,11 @@ export default defineConfig({
     },
   ],
 
-  integrations: [react()],
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/404') && !page.includes('/api/'),
+    }),
+  ],
 });
