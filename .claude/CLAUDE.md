@@ -13,24 +13,24 @@ Japanese localization of Testim Help Documentation (help.testim.io). Built with 
 | `npm run dev` | Dev server at http://localhost:4321 |
 | `npm run build` | Production build (runs `astro check` + build) |
 | `npm run check` | TypeScript/Astro type checking only |
-| `npm run lint` | Full lint (`lint:md` + `lint:docs`) |
-| `npm run lint:md` | Markdownlint (`lint:md:content` + `lint:md:repo`) |
+| `npm run lint` | All lint (`lint:md` + `lint:docs`) |
 | `npm run lint:docs` | WRITING_GUIDE compliance (frontmatter, links, callouts, feature names, image existence) |
 | `npm run lint:fix` | Auto-fix markdown lint issues |
 | `npm run format` | Format with Prettier (Astro, TS, MD) |
-| `npm run format:check` | Check formatting compliance |
 | `npm run test` | Run tests in `scripts/__tests__/` |
 | `npm run check:parity` | Source parity check (structure, tables, allowlist, EN normalization) |
-| `npm run check:snapshots` | EN snapshot fetch + diff |
+| `npm run check:snapshots` | EN snapshot fetch + diff (change detection) |
 | `npm run docs:pipeline` | Run full doc sync pipeline (fetch, translate, etc.) |
 
-### Single-page commands
+**Single-page commands:**
 
-| Command | Purpose |
-|---------|---------|
-| `npm run check:parity -- --slug=testim-overview` | Single page parity check |
-| `npm run check:snapshots:diff -- --slug=testim-overview` | Single page snapshot diff |
-| `npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md` | Single file lint |
+```bash
+npm run check:parity -- --slug=testim-overview
+npm run check:snapshots:diff -- --slug=testim-overview
+npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
+```
+
+Full reference: `scripts/README.md`
 
 ## Architecture
 
@@ -45,15 +45,17 @@ Japanese localization of Testim Help Documentation (help.testim.io). Built with 
 ## Authority Sources
 
 - **`docs/SIDEBAR_URLS.md`** — Master list of all documentation URLs, categories, and page ordering. Single source of truth for what pages exist and their structure.
-- **`docs/WRITING_GUIDE.md`** — Authoritative rules for content formatting, frontmatter, links, callouts, source-first structure contract, and Testim terminology English retention.
+- **`docs/WRITING_GUIDE.md`** — Authoritative rules for content formatting, frontmatter, links, callouts, source-first structure contract (heading mapping, `:fa-arrow-right:` handling, `<details>` preservation, JA-only section removal), Testim terminology English retention.
 - **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
-- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, parity check details, EN normalization, review policy, feedback loop.
+- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop.
+- **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection mechanism.
+- **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
 
 ## Content Rules
 
 Content rules are defined in the authority sources. Do not duplicate rules here — refer to:
 
-- **`docs/WRITING_GUIDE.md`** for frontmatter, internal links (`/docs/{slug}`), callouts (`:::`), source-first structure (heading mapping, `:fa-arrow-right:` → bold, `<details>` preservation, JA-only section removal), Testim terminology English retention
+- **`docs/WRITING_GUIDE.md`** for frontmatter, internal links (`/docs/{slug}`), callouts (`:::`), source-first structure contract (heading mapping, `:fa-arrow-right:` → bold text, `<details>` preservation, JA-only section removal), Testim terminology English retention
 - **`docs/TRANSLATION_GUIDE.md`** for natural Japanese, NG/OK patterns, terminology table, media handling
 
 ## Review & Feedback
