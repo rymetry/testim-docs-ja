@@ -344,7 +344,7 @@ keywords:
     これは、このステップの実行時に Testim が探している値です。この値は、ステップが作成されたときに最初に設定されました。値を変更するには、フィールド内をクリックして内容を編集します。注：Expected value フィールドでは、パラメーター、正規表現、JavaScript 式を使用できます。
    </td>
    <td>
-    <a href="/docs/advanced-text-validations">Advanced text validation</a>
+    <a href="/docs/validate-element-text#パラメーターを使った検証">Advanced text validation</a>
    </td>
   </tr>
   <tr>
@@ -438,7 +438,7 @@ keywords:
     共有ステップを編集している場合、1 か所で変更すると、プロジェクトのすべてのインスタンスで変更されます。特定のテストのみのステップを変更するには、Replace with a clone をクリックします。
    </td>
    <td>
-    <a href="/docs/reuse#how-to-change-only-one-instance-of-a-group">How to change only one instance of a group</a>
+    <a href="/docs/groups#共有グループの特定のインスタンスのみをクローンで置き換える">How to change only one instance of a group</a>
    </td>
   </tr>
   <tr>

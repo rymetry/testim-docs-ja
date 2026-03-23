@@ -969,8 +969,40 @@ function compareTableStructure(enBody, jaBody) {
  * Compare EN snapshot with JA translation for structural issues.
  * Returns an array of issue objects.
  */
+/**
+ * Detect known EN snapshot artifacts that cause false positives.
+ * Returns an array of artifact descriptions for annotation.
+ */
+export function detectEnArtifacts(enBody) {
+  const artifacts = [];
+  if (/<details\b/i.test(enBody)) {
+    artifacts.push('EN uses <details> blocks');
+  }
+  // Code fence wrapping part of the body (not just inline code blocks)
+  const lines = enBody.split('\n');
+  let fenceDepth = 0;
+  let fencedLines = 0;
+  for (const line of lines) {
+    if (/^```/.test(line.trim())) {
+      fenceDepth = fenceDepth === 0 ? 1 : 0;
+    } else if (fenceDepth > 0) {
+      fencedLines += 1;
+    }
+  }
+  if (fencedLines > lines.length * 0.5) {
+    artifacts.push('EN body largely wrapped in code fence');
+  }
+  return artifacts;
+}
+
 export function compareSnapshotStructure(enBody, jaBody) {
   const issues = [];
+
+  // Detect EN-side artifacts for annotation
+  const enArtifacts = detectEnArtifacts(enBody);
+  const artifactSuffix = enArtifacts.length > 0
+    ? ` [${enArtifacts.join('; ')}]`
+    : '';
 
   // --- Image order comparison ---
   const enImages = extractImageSequence(enBody);
@@ -1099,6 +1131,15 @@ export function compareSnapshotStructure(enBody, jaBody) {
     ...compareSectionCounts(enBullets, jaBullets, 'bullet-count-mismatch', '箇条書き数'),
     ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数', 2),
   );
+
+  // Annotate issues with EN-side artifact info so reviewers know the cause
+  if (artifactSuffix) {
+    for (const issue of issues) {
+      if (issue.detail) {
+        issue.detail += artifactSuffix;
+      }
+    }
+  }
 
   return issues;
 }
