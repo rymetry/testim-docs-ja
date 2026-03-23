@@ -124,9 +124,13 @@ export default defineConfig({
 
   integrations: [
     react(),
-    sitemap({
-      filter: (page) =>
-        !page.includes('/404') && !page.includes('/api/'),
-    }),
+    ...(!isAuthEnabled
+      ? [
+          sitemap({
+            filter: (page) =>
+              !page.includes('/404') && !page.includes('/api/'),
+          }),
+        ]
+      : []),
   ],
 });
