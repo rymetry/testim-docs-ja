@@ -52,7 +52,7 @@ keywords:
 この時点で、Testim for Salesforce の目的のペルソナと環境の組み合わせに MFA を追加できます。
 
 8. Testim for Salesforce で、**設定 > ペルソナ**に移動します。
-9. 目的のペルソナと環境の組み合わせで**+**ボタンをクリックします。
+9. 目的のペルソナと環境の組み合わせで **+** ボタンをクリックします。
 
    ![ペルソナの資格情報を追加（＋）](/images/salesforce-utilities/setting-mfa-for-salesforce/fa12927-plus.png)
 

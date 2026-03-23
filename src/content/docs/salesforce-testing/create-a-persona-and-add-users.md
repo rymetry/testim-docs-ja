@@ -45,7 +45,7 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
    ペルソナがリストに追加されます。\
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/cbf8b38-persona5.png)
 
-3. ペルソナのリストから、関連するペルソナの隣にある**+**ボタンをクリックします。\
+3. ペルソナのリストから、関連するペルソナの隣にある **+** ボタンをクリックします。\
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/7e2cd64-persona6.png)
 
 4. 次のいずれかを選択します:

@@ -30,7 +30,7 @@ Testim for Salesforce ブランチ管理機能は、一般的な Testim ブラ�
 
 **新しいブランチを作成するには:**
 
-1. メニューの**新しいブランチを作成（フォークアイコン）**ボタンをクリックします。
+1. メニューの **新しいブランチを作成（フォークアイコン）** ボタンをクリックします。
 
    ![新しいブランチを作成（フォークアイコン）](/images/salesforce-utilities/tta-for-salesforce-branch-management/35b00be-fork.png)
 

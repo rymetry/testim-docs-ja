@@ -28,7 +28,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 2. **Administration > Applications**に移動します。
 3. **Add App**をクリックします。
 4. 検索フィールドに*'SAML Test Connector'*と入力します。
-5. **'SAML Test Connector (advanced)'**オプションをクリックします。
+5. **'SAML Test Connector (advanced)'** オプションをクリックします。
 
 ![SAML Test Connector 選択画面](/images/security-sso/onelogin-sso-integration/cc41ee8-sso3.png)
 
@@ -56,7 +56,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 17. **OneLogin**タブで、このコードを**Single Logout URL**フィールドに貼り付けます。
 18. **Save**をクリックします。
 19. **OneLogin**タブのまま、**Parameters**画面に移動します。
-20. **+**ボタンをクリックしてパラメーターを追加します。
+20. **+** ボタンをクリックしてパラメーターを追加します。
 
 ![パラメーター追加フォーム](/images/security-sso/onelogin-sso-integration/ab6ffb7-sso6.png)
 
@@ -95,7 +95,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 33. **Users > Users**に移動します。
 34. 目的のユーザーレコードをクリックします。ユーザーの User Info 画面が表示されます。
 35. **Applications**に移動します。
-36. **+**ボタンをクリックして新しいアプリケーションを追加します。
+36. **+** ボタンをクリックして新しいアプリケーションを追加します。
 37. ドロップダウンメニューから新しく作成したアプリケーション（例: Testim SSO）を選択し、**Continue**をクリックします。\
     プロパティのリストが表示されます。これらは Testim と OneLogin 間でマッピングされたフィールドです。
 38. **Save**をクリックします。\

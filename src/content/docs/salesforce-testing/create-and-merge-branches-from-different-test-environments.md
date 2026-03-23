@@ -44,7 +44,7 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 
 ## ブランチのマージ
 
-:fa-arrow: **ブランチをマージするには:**
+**ブランチをマージするには:**
 
 ![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/2c34ad0-mergebranch.gif)
 

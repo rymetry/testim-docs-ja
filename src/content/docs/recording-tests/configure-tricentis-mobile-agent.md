@@ -35,7 +35,7 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 
 1. Testim で、上部の Tricentis Mobile Agent アイコンをクリックします。
 
-2. ドロップダウンメニューから**Download for Windows (x64)**を選択します。
+2. ドロップダウンメニューから**Download for Windows (x64)** を選択します。
 
 3. ダウンロードアイコンをクリックします。
 
@@ -55,7 +55,7 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 
 1. Testim で、上部の Tricentis Mobile Agent アイコンをクリックします。
 
-2. ドロップダウンメニューから**Download for Mac (x64)**を選択します。
+2. ドロップダウンメニューから**Download for Mac (x64)** を選択します。
 
 3. ダウンロードアイコンをクリックします。
 
@@ -75,7 +75,7 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 
 1. Testim で、上部の Tricentis Mobile Agent アイコンをクリックします。
 
-2. ドロップダウンメニューから**Download for Linux (x64)**を選択します。
+2. ドロップダウンメニューから**Download for Linux (x64)** を選択します。
 
 3. ダウンロードアイコンをクリックします。
 

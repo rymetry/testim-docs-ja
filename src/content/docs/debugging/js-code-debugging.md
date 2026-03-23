@@ -58,7 +58,7 @@ Testim の一部のステップ（以下のサポートされるステップの�
    AUT が**Code Debugging**メッセージとともに表示されます。\
    ![AUT ウィンドウに表示される Code Debugging メッセージ](/images/debugging/js-code-debugging/aed5a6a-debugging.jpg)
 
-5. AUT の Web ブラウザで、**Chrome Dev Tools（Win - 'Ctrl + Shift + I'と'F12'、ブラウザの右クリックから'Inspect'、Mac - 'Ctrl + Option + I'、ブラウザの右クリックから'Inspect'）**を開きます。
+5. AUT の Web ブラウザで、**Chrome Dev Tools（Win - 'Ctrl + Shift + I'と'F12'、ブラウザの右クリックから'Inspect'、Mac - 'Ctrl + Option + I'、ブラウザの右クリックから'Inspect'）** を開きます。
 6. メッセージ自体で、**DEVTOOL IS OPEN**ボタンをクリックします。**Don't show again in this session**チェックボックスを選択したままにしておくと、このセッション中（つまり、同じテスト内の他のステップ）にこのステップを実行する必要がなくなります。\
    ![DEVTOOL IS OPEN メッセージ](/images/debugging/js-code-debugging/5fb0ee6-devtooldopen.jpg)\
 

@@ -29,8 +29,8 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 
 1. **Azure Portal Admin**アカウントにログインします。
 2. **Enterprise application > New Application > Create your own application**に移動します。
-3. **What's the name of your app?**の下に、アプリケーションの名前を入力します（例: Testim Website SSO）。
-4. **Choose Integrate any other application you don't find in the gallery (Non-gallery)**オプションを選択します。
+3. **What's the name of your app?** の下に、アプリケーションの名前を入力します（例: Testim Website SSO）。
+4. **Choose Integrate any other application you don't find in the gallery (Non-gallery)** オプションを選択します。
 
 ![アプリケーション作成画面](/images/security-sso/azure-ad-sso-integration/ef57db2-createyourownapplication.png)
 
@@ -50,7 +50,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 
 ![メタデータファイルアップロードボタン](/images/security-sso/azure-ad-sso-integration/91619bd-uploadmetadatafile.png)
 
-    **Basic SAML Configuration**画面が表示されます。
+**Basic SAML Configuration** 画面が表示されます。
 
 12. **Testim**タブに戻り、**Testim Service Provider Details**の下の**Assertion Consumer Service URL**で、**Copy**ボタンをクリックします。
 
