@@ -643,6 +643,28 @@ describe('normalizeEnArtifacts', () => {
     assert.ok(result.includes('real text'), 'should keep lines with real content');
   });
 
+  it('does not convert sub-step numbering like 1.1.', () => {
+    const body = '1.1. Sub step A\n2.3. Sub step B\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(result.includes('1.1. Sub step A'), 'sub-step numbering should be preserved');
+    assert.ok(result.includes('2.3. Sub step B'), 'sub-step numbering should be preserved');
+  });
+
+  it('strips inline zero-width spaces from lines', () => {
+    const body = '\u200B5. Step with leading ZWS\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(result.includes('5. Step with leading ZWS'), 'inline ZWS should be stripped');
+    assert.ok(!result.includes('\u200B'));
+  });
+
+  it('strips wrapping code fence from EN body', () => {
+    const body = '```mdx\n## Section\n1. Step one\n```\n';
+    const result = normalizeEnArtifacts(body);
+    assert.ok(result.includes('## Section'), 'content inside fence should be unwrapped');
+    assert.ok(result.includes('1. Step one'));
+    assert.ok(!result.includes('```mdx'), 'fence markers should be removed');
+  });
+
   it('skips step-count mismatch caused by EN broken numbering', () => {
     // EN has "5.Click" (no space) which is NOT counted as a step
     // After normalization, "5. Click" IS counted → JA and EN match

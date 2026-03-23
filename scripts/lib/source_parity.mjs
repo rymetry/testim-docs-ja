@@ -346,24 +346,35 @@ export function stripTitleH1(body) {
  * parity mismatches against correctly-formatted JA translations.
  */
 export function normalizeEnArtifacts(body) {
-  const lines = body.split('\n');
+  // Strip wrapping code fence: some EN snapshots wrap entire body in ```mdx ... ```
+  let normalized = body;
+  const wrappingFence = /^```\w*\n([\s\S]*)\n```\s*$/.exec(normalized.trim());
+  if (wrappingFence) {
+    normalized = wrappingFence[1];
+  }
+
+  const lines = normalized.split('\n');
   const processed = [];
 
   for (let i = 0; i < lines.length; i += 1) {
     let line = lines[i];
 
-    // Fix broken ordered list items: "5.Click" → "5. Click" (missing space)
-    line = line.replace(/^(\d+)\.(\S)/, '$1. $2');
+    // Strip inline zero-width spaces / BOM chars (ReadMe.io artifacts)
+    line = line.replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
 
-    // Remove zero-width space / BOM lines (artifacts from ReadMe.io)
-    if (/^[\s\u200B\u200C\u200D\uFEFF]*$/.test(line) && /[\u200B\u200C\u200D\uFEFF]/.test(line)) {
+    // Fix broken ordered list items: "5.Click" → "5. Click" (missing space)
+    // But skip sub-step numbering like "1.1." "2.3." which are intentional
+    if (/^\d+\.\D/.test(line) && !/^\d+\.\d+\./.test(line)) {
+      line = line.replace(/^(\d+)\.(\S)/, '$1. $2');
+    }
+
+    // Remove zero-width-space-only lines (already stripped inline above, so these become empty)
+    // Skip if originally was a ZWS-only line
+    if (/^[\s]*$/.test(line) && lines[i] !== line && lines[i].trim().length > 0) {
       continue;
     }
 
-    // Strip trailing backslash (hard line break marker) so paragraph counter
-    // treats "text.\" as "text." — the continuation line remains separate.
-    // This prevents the backslash itself from interfering with line comparisons
-    // while keeping EN's paragraph structure intact.
+    // Strip trailing backslash (hard line break marker)
     if (line.endsWith('\\')) {
       line = line.slice(0, -1).trimEnd();
     }
@@ -958,8 +969,37 @@ function compareTableStructure(enBody, jaBody) {
  * Compare EN snapshot with JA translation for structural issues.
  * Returns an array of issue objects.
  */
+/**
+ * Detect known EN snapshot artifacts that cause false positives.
+ * Returns an array of artifact descriptions for annotation.
+ */
+export function detectEnArtifacts(enBody) {
+  const artifacts = [];
+  if (/<details\b/i.test(enBody)) {
+    artifacts.push('EN uses <details> blocks');
+  }
+  // Code fence wrapping part of the body (not just inline code blocks)
+  const lines = enBody.split('\n');
+  let fenceDepth = 0;
+  let fencedLines = 0;
+  for (const line of lines) {
+    if (/^```/.test(line.trim())) {
+      fenceDepth = fenceDepth === 0 ? 1 : 0;
+    } else if (fenceDepth > 0) {
+      fencedLines += 1;
+    }
+  }
+  if (fencedLines > lines.length * 0.5) {
+    artifacts.push('EN body largely wrapped in code fence');
+  }
+  return artifacts;
+}
+
 export function compareSnapshotStructure(enBody, jaBody) {
   const issues = [];
+
+  // Detect EN-side artifacts (attached to issues as separate field)
+  const enArtifacts = detectEnArtifacts(enBody);
 
   // --- Image order comparison ---
   const enImages = extractImageSequence(enBody);
@@ -1088,6 +1128,14 @@ export function compareSnapshotStructure(enBody, jaBody) {
     ...compareSectionCounts(enBullets, jaBullets, 'bullet-count-mismatch', '箇条書き数'),
     ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数', 2),
   );
+
+  // Attach EN-side artifact info as separate field (not in detail)
+  // This keeps detail stable for allowlist matching (detailIncludes/detailRegex)
+  if (enArtifacts.length > 0) {
+    for (const issue of issues) {
+      issue.artifacts = enArtifacts;
+    }
+  }
 
   return issues;
 }

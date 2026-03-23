@@ -178,7 +178,8 @@ export async function checkSourceParity({
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
         const detail = issue.detail || issue.text || '';
-        console.log(`   [${issue.type}/${issue.severity}]${location} ${detail}`);
+        const artifactNote = issue.artifacts?.length ? ` [${issue.artifacts.join('; ')}]` : '';
+        console.log(`   [${issue.type}/${issue.severity}]${location} ${detail}${artifactNote}`);
       }
       console.log('');
     }
