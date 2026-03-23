@@ -24,7 +24,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 ## JavaScript 式でテキストを設定する
 
-:fa-arrow-right: **JavaScript 式でテキストを設定するには:**
+**JavaScript 式でテキストを設定するには:**
 
 1. 変更したい **Set text** ステップ（例: Set username）にカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 
@@ -50,7 +50,7 @@ JavaScript とパラメーターを組み合わせて動的なテキストを設
 
 パラメーターをテキストとして使用するには、事前に別ステップや別テストで作成されている必要があります。詳細は [Parameters](/docs/parameters) を参照してください。
 
-:fa-arrow-right: **パラメーターでテキストを設定するには:**
+**パラメーターでテキストを設定するには:**
 
 1. 変更したい **Set text** ステップ（例: Set username）にカーソルを合わせ、**Show Properties**（:fa-cog:）をクリックします。
 

@@ -21,7 +21,7 @@ Testim で作成したテストを BrowserStack 上で実行できます。
 
 ## BrowserStack Grid を追加する
 
-:fa-arrow-right: **BrowserStack Grid を追加するには:**
+**BrowserStack Grid を追加するには:**
 
 1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Browserstack** を選択します。
 2. **Next** をクリックします。

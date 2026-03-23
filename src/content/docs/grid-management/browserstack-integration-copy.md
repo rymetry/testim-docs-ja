@@ -25,7 +25,7 @@ LambdaTest integration では、Testim は現在 [selenium testing](https://www.
 
 ## LambdaTest Grid を追加する
 
-:fa-arrow-right: **LambdaTest Grid を追加するには:**
+**LambdaTest Grid を追加するには:**
 
 1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **LambdaTest** を選択します。
 2. **Next** をクリックします。

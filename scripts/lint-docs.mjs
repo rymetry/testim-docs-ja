@@ -187,6 +187,17 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
     });
   }
 
+  // :fa-arrow-right: residue check (code blocks already stripped)
+  bodyWithoutCodeLines.forEach((line, i) => {
+    if (/:fa-arrow-right:/.test(line)) {
+      err(
+        'legacy-fa-arrow-right',
+        '":fa-arrow-right:" は "**太字テキスト**" 形式に変換してください',
+        toAbsoluteLine(i + 1, bodyStart)
+      );
+    }
+  });
+
   let inCodeBlock = false;
   bodyLines.forEach((line, i) => {
     if (/^```/.test(line)) {

@@ -33,7 +33,7 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
 - **Sign in with Salesforce** - Salesforce サインイン画面のポップアップが表示されます。
 - **Log in with username and password** - Testim for Salesforce でログイン認証情報を設定します。
 
-:fa-arrow-right: **Testim for Salesforce ペルソナを作成するには:**
+**Testim for Salesforce ペルソナを作成するには:**
 
 1. Testim for Salesforce で、**Settings** > **Salesforce** > **Personas**に移動し、**Add Persona**ボタンをクリックします。
 

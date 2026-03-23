@@ -27,7 +27,7 @@ keywords:
 ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 :::
 
-:fa-arrow-right:**リードを商談に変換ステップを追加するには:**
+**リードを商談に変換ステップを追加するには:**
 
 1. テストで、**リードを商談に変換**ステップの前に、目的のリードレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。

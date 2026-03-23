@@ -25,7 +25,7 @@ keywords:
 
 <br />
 
-:fa-arrow-right:**検証ステップを追加するには:**
+**検証ステップを追加するには:**
 
 1. テストで、検証ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。

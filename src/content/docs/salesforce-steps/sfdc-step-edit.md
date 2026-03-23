@@ -25,7 +25,7 @@ keywords:
 
 <br />
 
-:fa-arrow-right:**編集ステップを追加するには:**
+**編集ステップを追加するには:**
 
 1. テストで、**編集**ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 

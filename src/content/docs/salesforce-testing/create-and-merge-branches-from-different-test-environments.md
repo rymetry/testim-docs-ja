@@ -32,7 +32,7 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 
 ## ブランチの作成
 
-:fa-arrow-right:**新しいブランチを作成するには:**
+**新しいブランチを作成するには:**
 
 ![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/8d71d98-newbranch.gif)
 
@@ -44,7 +44,7 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 
 ## ブランチのマージ
 
-:fa-arrow: :fa-arrow-right: **ブランチをマージするには:**
+:fa-arrow: **ブランチをマージするには:**
 
 ![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/2c34ad0-mergebranch.gif)
 

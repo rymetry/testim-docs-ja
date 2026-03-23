@@ -62,7 +62,7 @@ mobile テストには次の Grid を使用できます。
 
 ## Adding a grid
 
-:fa-arrow-right: **新しい Grid を追加するには:**
+**新しい Grid を追加するには:**
 
 1. Testim の画面右上で、User Name のイニシャルが表示された丸いアイコンをクリックします。
 2. **Account** の下にある **Grids** をクリックします。

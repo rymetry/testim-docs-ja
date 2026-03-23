@@ -22,7 +22,7 @@ keywords:
 
 ## Custom Grid を追加する
 
-:fa-arrow-right: **Custom Grid を追加するには:**
+**Custom Grid を追加するには:**
 
 1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Custom Grid** を選択します。
 2. **Next** をクリックします。

@@ -22,6 +22,7 @@ let extractInvariantTokens;
 let normalizeEnArtifacts;
 let checkSidebarCoverage;
 let checkSourceSnapshotMissing;
+let extractHeadingSequence;
 
 before(async () => {
   ({
@@ -46,6 +47,7 @@ before(async () => {
     normalizeEnArtifacts,
     checkSidebarCoverage,
     checkSourceSnapshotMissing,
+    extractHeadingSequence,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -576,6 +578,102 @@ describe('compareSnapshotStructure', () => {
     const issues = compareSnapshotStructure(en, ja);
     const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
     assert.ok(stepIssues.length >= 1, 'should detect step mismatch after H1 normalisation');
+  });
+
+  it('detects heading level mismatch (EN H3 → JA H2)', () => {
+    const en = '## Overview\nIntro\n### Details\nContent\n### More\nMore content\n';
+    const ja = '## 概要\nイントロ\n## 詳細\nコンテンツ\n## その他\nその他のコンテンツ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const headingIssues = issues.filter((i) => i.type === 'heading-mismatch');
+    assert.equal(headingIssues.length, 1, 'should detect heading level mismatch');
+    assert.ok(headingIssues[0].detail.includes('2件'), 'should report 2 mismatches');
+    assert.ok(headingIssues[0].detail.includes("EN H3 'Details'"), 'should include example');
+    assert.ok(headingIssues[0].severity === 'signal', 'severity should be signal');
+  });
+
+  it('returns no heading-mismatch when levels match', () => {
+    const en = '## Overview\nIntro\n### Details\nContent\n';
+    const ja = '## 概要\nイントロ\n### 詳細\nコンテンツ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const headingIssues = issues.filter((i) => i.type === 'heading-mismatch');
+    assert.equal(headingIssues.length, 0);
+  });
+
+  it('compares up to the shorter heading array length', () => {
+    // EN has 3 headings, JA has 2 — compare first 2 only (count mismatch is separate)
+    const en = '## A\n### B\n### C\n';
+    const ja = '## A\n### B\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const headingIssues = issues.filter((i) => i.type === 'heading-mismatch');
+    assert.equal(headingIssues.length, 0, 'matching levels should not trigger heading-mismatch');
+  });
+
+  it('ignores headings inside code blocks', () => {
+    const en = '## Overview\n```\n### Not a heading\n```\n### Real\nContent\n';
+    const ja = '## 概要\n```\n### コードブロック内\n```\n### 本物\nコンテンツ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const headingIssues = issues.filter((i) => i.type === 'heading-mismatch');
+    assert.equal(headingIssues.length, 0);
+  });
+
+  it('limits examples to 3 in heading-mismatch detail', () => {
+    // 4 mismatches: EN H3 → JA H2 for all sub-headings
+    const en = '## Top\n### A\n### B\n### C\n### D\n';
+    const ja = '## トップ\n## A\n## B\n## C\n## D\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const headingIssues = issues.filter((i) => i.type === 'heading-mismatch');
+    assert.equal(headingIssues.length, 1);
+    assert.ok(headingIssues[0].detail.includes('4件'), 'should report 4 mismatches');
+    // Count occurrences of "EN H" in detail — should be at most 3
+    const exampleCount = (headingIssues[0].detail.match(/EN H\d/g) || []).length;
+    assert.ok(exampleCount <= 3, 'should show at most 3 examples');
+  });
+
+  it('normalises EN H1 to H2 before heading level comparison', () => {
+    // EN: # Title, # Section → normalised to (removed), ## Section
+    // JA: ## Section — should match after normalisation
+    const en = '# Title\nIntro\n# Section\nContent\n';
+    const ja = '## セクション\nコンテンツ\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const headingIssues = issues.filter((i) => i.type === 'heading-mismatch');
+    assert.equal(headingIssues.length, 0, 'H1→H2 normalisation should prevent false positive');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractHeadingSequence tests
+// ---------------------------------------------------------------------------
+
+describe('extractHeadingSequence', () => {
+  it('extracts headings with correct levels', () => {
+    const body = '## Overview\nText\n### Details\nMore\n#### Sub\n';
+    const headings = extractHeadingSequence(body);
+    assert.deepEqual(headings, [
+      { level: 2, text: 'Overview' },
+      { level: 3, text: 'Details' },
+      { level: 4, text: 'Sub' },
+    ]);
+  });
+
+  it('skips headings inside code blocks', () => {
+    const body = '## Real\n```\n### Fake\n```\n### Also Real\n';
+    const headings = extractHeadingSequence(body);
+    assert.equal(headings.length, 2);
+    assert.equal(headings[0].text, 'Real');
+    assert.equal(headings[1].text, 'Also Real');
+  });
+
+  it('returns empty array for body with no headings', () => {
+    const body = 'Just text\nMore text\n';
+    const headings = extractHeadingSequence(body);
+    assert.equal(headings.length, 0);
+  });
+
+  it('ignores H1 headings', () => {
+    const body = '# Title\n## Section\n';
+    const headings = extractHeadingSequence(body);
+    assert.equal(headings.length, 1);
+    assert.equal(headings[0].level, 2);
   });
 });
 

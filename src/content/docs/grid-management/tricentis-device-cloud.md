@@ -24,7 +24,7 @@ TDC では、複数ユーザーで共有する shared device と、自分専用�
 
 Company Owner または Project Owner は、Tricentis Device Cloud の無料 trial を開始できます。無料 trial をスキップして有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
 
-:fa-arrow-right: **無料の Tricentis Device Cloud trial を開始するには:**
+**無料の Tricentis Device Cloud trial を開始するには:**
 
 1. **Device Management > Real Devices Cloud** tab に移動します。
 2. **Start A Trial** をクリックします。

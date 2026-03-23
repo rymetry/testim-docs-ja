@@ -135,7 +135,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 テスト実行時、その時点のパラメーター値を使って Cookie が設定されます。
 
-### Setting Cookies using the Setup step – “Test Data” property
+### Setup ステップの「Test Data」プロパティを使って Cookie を設定する
 
 特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。
 
@@ -188,7 +188,7 @@ return {
 
 テストを実行すると、ページ読み込み前に Cookie がロードされた状態でテストが開始されます。
 
-### Setting Cookies using a custom JS (JavaScript) step
+### カスタム JS（JavaScript）ステップを使って Cookie を設定する
 
 特定のタイミングで Cookie を設定したいが、テスト開始直後である必要はない場合は、**Custom JavaScript** ステップ（custom action）を使って任意の位置で Cookie を設定できます。
 
@@ -332,7 +332,7 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 テスト実行時、指定した Cookie の情報が変数に保存されます。
 
-### Getting Cookies using a custom JS (JavaScript) step
+### カスタム JS（JavaScript）ステップを使って Cookie を取得する
 
 Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
 

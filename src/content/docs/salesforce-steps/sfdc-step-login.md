@@ -19,7 +19,7 @@ keywords:
 
 Log in ステップは、選択された[ペルソナ](/docs/create-a-persona-and-add-users)を使用して Salesforce にログインします。API 操作カテゴリのステップを除くすべての[Salesforce ステップ](/docs/salesforce-steps)は、Salesforce 環境にログインする必要があります。
 
-:fa-arrow-right: **Log in ステップを追加するには:**
+**Log in ステップを追加するには:**
 
 1. エディターで、**+**ボタンをクリックしてステップを追加します。
 2. **Salesforce steps**タブの下で、**Common operations**をクリックし、Log in ステップを選択します。\
