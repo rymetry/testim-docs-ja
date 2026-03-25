@@ -30,6 +30,7 @@ const RETRY_DELAY_MS = 2000; // リトライ間隔（ミリ秒）
 const REQUEST_DELAY_MS = 1000; // リクエスト間隔（ミリ秒）
 const REQUEST_TIMEOUT_MS = 10000; // リクエストタイムアウト（ミリ秒）
 const EXPECTED_HOST = 'docs.tricentis.com'; // リダイレクト先として許可するホスト
+const EXPECTED_PATH_RE = /^\/testim\/content\/.+\.htm$/; // リダイレクト先として許可するパスパターン
 
 /**
  * SIDEBAR_URLS.md から help.testim.io の URL を全件抽出する
@@ -89,11 +90,14 @@ async function resolveRedirect(url) {
         return { error: 'リダイレクトなし（200 応答）。移行先が検出できません', status };
       }
 
-      // 最終到達先のホストを検証
+      // 最終到達先のホストとパスを検証
       if (status === 200 && finalUrl !== url) {
-        const finalHost = new URL(finalUrl).hostname;
-        if (finalHost !== EXPECTED_HOST) {
-          return { error: `予期しないリダイレクト先: ${finalUrl}（ホスト ${finalHost} は ${EXPECTED_HOST} ではありません）`, status };
+        const parsed = new URL(finalUrl);
+        if (parsed.hostname !== EXPECTED_HOST) {
+          return { error: `予期しないホスト: ${parsed.hostname}（期待: ${EXPECTED_HOST}）URL: ${finalUrl}`, status };
+        }
+        if (!EXPECTED_PATH_RE.test(parsed.pathname)) {
+          return { error: `予期しないパス: ${parsed.pathname}（期待: /testim/content/.../*.htm）URL: ${finalUrl}`, status };
         }
         return { new_url: finalUrl, status };
       }
