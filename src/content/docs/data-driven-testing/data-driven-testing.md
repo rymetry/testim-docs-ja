@@ -4,7 +4,7 @@ description: 異なるデータで同じテストを実行する方法を学び�
 category: 高度な編集
 order: 5026
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/data-driven-testing'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/index.htm'
 keywords:
   - データ駆動テスト
   - テストデータ

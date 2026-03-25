@@ -4,7 +4,7 @@ description: 要素の CSS プロパティ値を検証するステップ。color
 category: 高度な編集
 order: 5019
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/css-property-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/css-property-validation.htm'
 keywords:
   - CSS プロパティ
   - CSS 検証

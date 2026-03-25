@@ -4,7 +4,7 @@ description: Sealights と Testim を統合してテスト最適化を実現す�
 category: 統合
 order: 12021
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/sealights-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/sealights-integration.htm'
 keywords:
   - Testim
   - Sealights

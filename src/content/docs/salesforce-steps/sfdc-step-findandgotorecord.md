@@ -4,7 +4,7 @@ description: テキスト検索で一致するレコードを探し、最初の�
 category: Salesforceテスト
 order: 16015
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-findandgotorecord'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-findandgotorecord.htm'
 keywords:
   - Salesforce
   - レコード検索

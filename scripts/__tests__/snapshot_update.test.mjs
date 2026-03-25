@@ -47,7 +47,7 @@ describe('snapshot_update main', () => {
     assert.equal(result.sidebarVerified, true);
     assert.equal(calls.length, 2);
     assert.ok(calls.some((href) => href.endsWith('.md')));
-    assert.ok(calls.some((href) => href === 'https://help.testim.io/docs/testim-overview'));
+    assert.ok(calls.some((href) => href === 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'));
   });
 
   it('returns an error when no sidebar can be verified from fetched pages', async () => {

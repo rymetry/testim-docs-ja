@@ -4,7 +4,7 @@ description: プロジェクト内で複数のテスト間で共有できるス�
 category: テスト編集
 order: 4009
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/shareable-steps'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/shareable-steps.htm'
 keywords:
   - 共有ステップ
   - Shared Steps

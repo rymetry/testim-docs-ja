@@ -4,7 +4,7 @@ description: Excel/CSV のデータをテストにパラメーターとして渡
 category: 高度な編集
 order: 5045
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/passing-parameters-from-excel-file'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/passing-parameters-from-excel-file.htm'
 keywords:
   - Testim
   - Excel

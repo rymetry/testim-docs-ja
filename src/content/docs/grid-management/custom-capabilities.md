@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12029
 updated: '2025-11-21'
-sourceUrl: 'https://help.testim.io/docs/custom-capabilities'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/custom-capabilities.htm'
 keywords:
   - Custom capabilities
   - Grid

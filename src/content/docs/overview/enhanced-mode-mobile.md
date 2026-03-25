@@ -4,7 +4,7 @@ description: Testim の Enhanced Mode を使用したモバイルアプリケー
 category: 概要
 order: 1006
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/enhanced-mode-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/enhanced-mode-mobile.htm'
 keywords:
   - Enhanced Mode
   - モバイルテスト

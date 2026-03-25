@@ -57,7 +57,16 @@ function normalizeFile(filePath) {
   const data = { ...(parsed.data ?? {}) };
   let content = parsed.content ?? '';
 
-  data.sourceUrl = data.sourceUrl || `https://help.testim.io/docs/${slug}`;
+  // sourceUrl must come from url_mapping.json; no longer generate a default from slug alone
+  if (!data.sourceUrl) {
+    try {
+      const mappingPath = new URL('./url_mapping.json', import.meta.url).pathname;
+      const { mappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
+      if (mappings[slug]) {
+        data.sourceUrl = mappings[slug].new_url;
+      }
+    } catch { /* mapping file unavailable — leave sourceUrl empty for lint to catch */ }
+  }
 
   data.title = normalizeValue(data.title || slug.replace(/-/g, ' '));
   data.description =

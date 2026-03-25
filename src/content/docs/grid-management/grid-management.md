@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12022
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/grid-management'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/index.htm'
 keywords:
   - Grid Management
   - Testim Grid

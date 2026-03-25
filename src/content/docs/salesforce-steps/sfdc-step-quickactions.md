@@ -4,7 +4,7 @@ description: レコードのクイックアクション（タスク作成、通�
 category: Salesforceテスト
 order: 16027
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-quickactions'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-quickactions.htm'
 keywords:
   - Salesforce
   - クイックアクション

@@ -4,7 +4,7 @@ description: カスタム検証を JavaScript で作成する方法。標準の�
 category: 高度な編集
 order: 5007
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/custom-code'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/custom-code.htm'
 keywords:
   - カスタム検証
   - JavaScript

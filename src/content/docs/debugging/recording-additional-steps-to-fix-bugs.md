@@ -4,7 +4,7 @@ description: デバッグ中に不足しているステップを追加する方�
 category: デバッグ
 order: 8003
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/recording-additional-steps-to-fix-bugs'
+sourceUrl: 'https://docs.tricentis.com/testim/content/debugging-tests/recording-additional-steps-to-fix-bugs.htm'
 keywords:
   - ステップ追加
   - 途中から記録

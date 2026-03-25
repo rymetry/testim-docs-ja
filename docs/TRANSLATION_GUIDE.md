@@ -1,6 +1,6 @@
 # Testim ドキュメント日本語版 - 翻訳ガイド
 
-このガイドでは、Testim 公式ドキュメント（https://help.testim.io/docs/）から新しいページを日本語翻訳して追加する手順を説明します。
+このガイドでは、Testim 公式ドキュメント（https://docs.tricentis.com/testim/）から新しいページを日本語翻訳して追加する手順を説明します。
 
 翻訳作業では、公式サイトの表示に加えて `docs/SIDEBAR_URLS.md` をこのリポジトリ内の正本として扱ってください。カテゴリ順、ページ順、翻訳対象の有無は、まずこのファイルを基準に確認します。
 
@@ -14,7 +14,7 @@
 
 1. **カテゴリ名**（h2見出し）: 例「Testim Overview」「Getting Started」「Salesforce Testing」など
 2. **各ページのタイトルと順序**: カテゴリ内での表示順
-3. **URL slug**: `https://help.testim.io/docs/[この部分]`
+3. **URL slug**: `https://docs.tricentis.com/testim/content/{category}/[この部分].htm`
 
 ### 1.2 翻訳対象の選定
 
@@ -60,11 +60,11 @@ src/content/docs/
 
 **重要**: ファイル名は元のURL slugと完全に一致させること。
 
-| URL                                                | カテゴリフォルダ      | ファイル名                |
-| -------------------------------------------------- | --------------------- | ------------------------- |
-| `https://help.testim.io/docs/testim-overview`      | `overview/`           | `testim-overview.md`      |
-| `https://help.testim.io/docs/how-to-record-a-test` | `recording-tests/`    | `how-to-record-a-test.md` |
-| `https://help.testim.io/docs/salesforce-overview`  | `salesforce-testing/` | `salesforce-overview.md`  |
+| URL                                                                                  | カテゴリフォルダ      | ファイル名                |
+| ------------------------------------------------------------------------------------ | --------------------- | ------------------------- |
+| `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm`       | `overview/`           | `testim-overview.md`      |
+| `https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test.htm` | `recording-tests/`    | `how-to-record-a-test.md` |
+| `https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-overview.htm` | `salesforce-testing/` | `salesforce-overview.md`  |
 
 この命名規則により、元のページとの対応関係が明確になり、更新時の追跡が容易になります。
 
@@ -96,7 +96,7 @@ description: '日本語説明文（SEO用、100-160文字推奨。原文URLの�
 category: '既存カテゴリ名に合わせた日本語ラベル'
 order: 1001
 updated: 'YYYY-MM-DD'
-sourceUrl: 'https://help.testim.io/docs/testim-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'
 keywords:
   - キーワード1
   - キーワード2
@@ -161,7 +161,7 @@ keywords:
 
 ```bash
 # 画像と動画の両方を抽出（完全版 - 漏れを防ぐ）
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   sort -u
 ```
@@ -172,7 +172,7 @@ curl -s "https://help.testim.io/docs/[page-slug]" | \
 
 ```bash
 # help-ai-assistantページのメディアを抽出
-curl -s "https://help.testim.io/docs/help-ai-assistant" | \
+curl -s "https://docs.tricentis.com/testim/content/overview/testim-overview/help-ai-assistant.htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   sort -u
 
@@ -187,7 +187,7 @@ curl -s "https://help.testim.io/docs/help-ai-assistant" | \
 
 ```bash
 # 抽出した画像数を確認
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   sort -u | wc -l
 ```
@@ -204,7 +204,7 @@ curl -s "https://help.testim.io/docs/[page-slug]" | \
 
 ```bash
 # コンテンツ画像のみを抽出（ロゴ・アイコン除外）
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
   sort -u
@@ -223,7 +223,7 @@ cd public/images/[category-folder]/[page-slug]
 
 # 3. メディアファイルを一括ダウンロード（自動短縮版 - 推奨）
 # 抽出したURLリストをファイルに保存
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
   sort -u > urls.txt
@@ -297,7 +297,7 @@ mkdir -p public/images/overview/help-ai-assistant
 cd public/images/overview/help-ai-assistant
 
 # URLを抽出してファイルに保存
-curl -s "https://help.testim.io/docs/help-ai-assistant" | \
+curl -s "https://docs.tricentis.com/testim/content/overview/testim-overview/help-ai-assistant.htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
   sort -u > urls.txt
@@ -371,12 +371,12 @@ public/images/
 
 ```bash
 # 画像URLとその前後50文字のテキストを表示
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -B 2 -A 2 "files.readme.io.*\.png" | \
   grep -v "^--$"
 
 # より詳細な情報が必要な場合（前後200文字）
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   sed 's/<img/\n<img/g' | \
   grep -A 1 -B 1 "files.readme.io.*\.png"
 ```
@@ -537,7 +537,7 @@ Callout（`:::` ディレクティブ）、コードブロック、リスト、�
 npm run dev
 ```
 
-ブラウザで http://localhost:4321 を開き、左サイドバーを公式サイト（https://help.testim.io/docs/）と見比べてください。
+ブラウザで http://localhost:4321 を開き、左サイドバーを公式サイト（https://docs.tricentis.com/testim/）と見比べてください。
 
 ## 7. 実装確認コマンド
 
@@ -618,12 +618,12 @@ find src/content/docs -name "*.md" | sort
 
 ```bash
 # 1. 公式ページから全画像URLを抽出（漏れなし版）
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp)' | \
   sort -u
 
 # 2. 抽出した画像数を確認
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp)' | \
   sort -u | wc -l
 # 例: 13個の画像が見つかった
@@ -634,7 +634,7 @@ ls -1 public/images/[category]/[page-slug]/*.png | wc -l
 
 # 4. 不足分を特定
 # 抽出したURLリストとダウンロード済みファイルを比較
-curl -s "https://help.testim.io/docs/[page-slug]" | \
+curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp)' | \
   grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
   sort -u > expected.txt
@@ -703,7 +703,7 @@ category: 概要
 ```yaml
 category: 'カテゴリ名'
 order: 1001
-sourceUrl: 'https://help.testim.io/docs/example-slug'
+sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/example-slug.htm'
 ```
 
 2. ファイルが適切なフォルダに配置されているか確認：
@@ -779,7 +779,7 @@ for page_info in "${pages[@]}"; do
   echo "========================================="
 
   # 1. 画像URL抽出
-  urls=$(curl -s "https://help.testim.io/docs/$slug" | \
+  urls=$(curl -s "https://docs.tricentis.com/testim/content/$category/$slug.htm" | \
     grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp)' | \
     grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
     sort -u)
@@ -833,7 +833,7 @@ echo "✅ 全ての画像ダウンロードが完了しました"
 
 ```bash
 # 1. 画像数の確認
-echo "抽出: $(curl -s "https://help.testim.io/docs/$slug" | \
+echo "抽出: $(curl -s "https://docs.tricentis.com/testim/content/$category/$slug.htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.png' | \
   grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | wc -l)"
 
@@ -887,7 +887,7 @@ touch src/content/docs/[new-category-folder]/[page-slug].md
 # 3. frontmatterで新しいカテゴリ名と sourceUrl を設定
 # category: '新しいカテゴリ名'
 # order: 1001
-# sourceUrl: 'https://help.testim.io/docs/[page-slug]'
+# sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/[page-slug].htm'
 ```
 
 ### 10.2 既存ページを更新する場合
@@ -938,7 +938,7 @@ grep -r "Smart Locators" src/content/docs/
 
 ### 11.2 公式リソース
 
-- **Testim 公式ドキュメント**: https://help.testim.io/docs/
+- **Testim 公式ドキュメント**: https://docs.tricentis.com/testim/
 - **Testim 公式サイト**: https://www.testim.io/
 - **メディアCDN**: https://files.readme.io/
 

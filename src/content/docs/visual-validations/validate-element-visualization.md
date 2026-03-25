@@ -4,7 +4,7 @@ description: ピクセルレベルで要素のビジュアル差異を検証す�
 category: 高度な編集
 order: 5022
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validate-element-visualization'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-visualization.htm'
 keywords:
   - ビジュアル検証
   - applitools

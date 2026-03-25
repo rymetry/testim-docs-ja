@@ -4,7 +4,7 @@ description: 要素が画面上に表示されていないことを検証する�
 category: 高度な編集
 order: 5004
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validate-element-not-visible'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-not-visible.htm'
 keywords:
   - 要素検証
   - 非表示確認

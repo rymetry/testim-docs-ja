@@ -4,7 +4,7 @@ description: Testim CLI を使用するために必要なシステム要件と�
 category: 設定
 order: 13002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/cli-prerequisites'
+sourceUrl: 'https://docs.tricentis.com/testim/content/settings/cli-prerequisites.htm'
 keywords:
   - CLI 前提
   - Node.js

@@ -4,7 +4,7 @@ description: Bamboo で Testim テストを実行する方法について説明�
 category: 統合
 order: 12004
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/bamboo-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/bamboo-integration.htm'
 keywords:
   - Bamboo
   - CI 統合

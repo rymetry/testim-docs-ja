@@ -4,7 +4,7 @@ description: 要素が画面上に表示されているかを検証するステ�
 category: 高度な編集
 order: 5003
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validate-element-visible'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-visible.htm'
 keywords:
   - 要素検証
   - 表示確認

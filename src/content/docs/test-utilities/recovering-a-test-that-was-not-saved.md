@@ -4,7 +4,7 @@ description: ブラウザキャッシュに自動保存された下書きから�
 category: テスト編集
 order: 4015
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/recovering-a-test-that-was-not-saved'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/recovering-a-test-that-was-not-saved.htm'
 keywords:
   - テスト復旧
   - 自動保存

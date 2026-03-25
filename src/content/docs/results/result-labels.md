@@ -4,7 +4,7 @@ description: テスト実行結果にラベルを追加する方法について�
 category: テスト結果
 order: 7012
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/result-labels'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/result-labels.htm'
 keywords:
   - 結果ラベル
   - 実行ラベル

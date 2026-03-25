@@ -4,7 +4,7 @@ description: バグをキャプチャして報告する方法と、Jira、Slack�
 category: テスト管理
 order: 9016
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/bug-reporting'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/bug-reporting.htm'
 keywords:
   - バグ報告
   - バグレポート

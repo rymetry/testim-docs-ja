@@ -4,7 +4,7 @@ description: Testim CLI を使用して CI 環境にテストを統合する方�
 category: 統合
 order: 12002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/integrate-testim-to-your-ci'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/index.htm'
 keywords:
   - CI 統合
   - 継続的インテグレーション

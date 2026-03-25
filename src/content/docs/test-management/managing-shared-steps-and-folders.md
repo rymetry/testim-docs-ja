@@ -4,7 +4,7 @@ description: 共有ステップライブラリでのフォルダーの作成、�
 category: テスト管理
 order: 9006
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/managing-shared-steps-and-folders'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/shared-steps-library/managing-shared-steps-and-folders.htm'
 keywords:
   - 共有ステップ管理
   - 共有ステップ

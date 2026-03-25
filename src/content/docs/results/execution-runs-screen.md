@@ -4,7 +4,7 @@ description: 実行ラン画面で実行の結果と統計を表示。実行リ�
 category: テスト結果
 order: 7009
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/execution-runs-screen'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/execution-runs-screen.htm'
 keywords:
   - 実行ラン
   - テスト実行一覧

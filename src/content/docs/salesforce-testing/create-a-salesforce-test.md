@@ -4,7 +4,7 @@ description: Salesforce 環境に接続し、ペルソナやモックネット�
 category: Salesforceテスト
 order: 16007
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/create-a-salesforce-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/index.htm'
 keywords:
   - Salesforce テスト
   - テスト作成

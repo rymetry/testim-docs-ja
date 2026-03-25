@@ -4,7 +4,7 @@ description: while...do...ループと for ループを使用してステップ�
 category: 高度な編集
 order: 5039
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/loops'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/loops.htm'
 keywords:
   - testim
   - loops

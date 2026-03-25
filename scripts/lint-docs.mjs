@@ -19,7 +19,7 @@ const PUBLIC_ROOT = path.join(ROOT, 'public');
 /** @typedef {{ file: string, line: number | null, rule: string, message: string, level: 'error' | 'warning' }} LintError */
 
 const VALID_CALLOUT_TYPES = new Set(['note', 'warning', 'tip', 'danger', 'success', 'info']);
-const VALID_SOURCE_URL_RE = /^https:\/\/help\.testim\.io\/docs\/[a-z0-9-]+$/;
+const VALID_SOURCE_URL_RE = /^https:\/\/docs\.tricentis\.com\/testim\/content\/[a-z0-9-]+(?:\/[a-z0-9-]+)*(?:\/index)?\.htm$/;
 
 function parseFrontmatter(content) {
   const parsed = matter(content);
@@ -84,7 +84,7 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
   if (!fm.sourceUrl || fm.sourceUrl === 'undefined') {
     err('sourceUrl-required', 'frontmatter: sourceUrl is required');
   } else if (!VALID_SOURCE_URL_RE.test(fm.sourceUrl)) {
-    err('sourceUrl-format', `frontmatter: sourceUrl must match https://help.testim.io/docs/{slug} (got: ${fm.sourceUrl})`);
+    err('sourceUrl-format', `frontmatter: sourceUrl must match https://docs.tricentis.com/testim/content/.../{slug}.htm (got: ${fm.sourceUrl})`);
   }
 
   if (fm.description !== undefined) {

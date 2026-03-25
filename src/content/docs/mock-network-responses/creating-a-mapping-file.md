@@ -4,7 +4,7 @@ description: ネットワークモック用のマッピングファイルの作�
 category: テスト実行
 order: 6015
 updated: '2025-11-11'
-sourceUrl: 'https://help.testim.io/docs/creating-a-mapping-file'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/creating-a-mapping-file.htm'
 keywords:
   - マッピングファイル
   - ネットワークモック

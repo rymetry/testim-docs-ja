@@ -4,7 +4,7 @@ description: テスト内のステップとして Apex コードを実行し、�
 category: Salesforceテスト
 order: 16018
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-apex-action'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-apex-action.htm'
 keywords:
   - Salesforce
   - Apex

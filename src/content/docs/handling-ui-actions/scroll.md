@@ -4,7 +4,7 @@ description: Testim でスクロールステップの動作を理解し、要素
 category: 高度な編集
 order: 5035
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/scroll'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/scroll.htm'
 keywords:
   - testim
   - scroll

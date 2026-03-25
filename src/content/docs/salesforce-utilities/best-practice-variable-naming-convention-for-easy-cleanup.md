@@ -5,7 +5,7 @@ category: Salesforceテスト
 order: 16036
 updated: '2025-12-02'
 sourceUrl: >-
-  https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
+  https://docs.tricentis.com/testim/content/salesforce-testing/best-practice-variable-naming-convention-for-easy-cleanup.htm
 keywords:
   - 変数命名規則
   - クリーンアップ

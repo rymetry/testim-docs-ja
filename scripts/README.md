@@ -156,7 +156,7 @@ npm run docs:pipeline -- --no-resume               # 最初から実行
 
 #### update_sidebar_urls_from_live.mjs
 
-英語サイト（help.testim.io）のサイドバーをスクレイピングし、`docs/SIDEBAR_URLS.md` を更新する。
+英語サイト（docs.tricentis.com/testim）のサイドバーをスクレイピングし、`docs/SIDEBAR_URLS.md` を更新する。
 
 ```bash
 npm run docs:sync-sidebar

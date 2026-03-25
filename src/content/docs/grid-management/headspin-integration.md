@@ -5,7 +5,7 @@ description: >-
 category: 統合
 order: 12031
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/headspin-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/headspin-integration.htm'
 keywords:
   - HeadSpin
   - API Token

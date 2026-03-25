@@ -6,7 +6,7 @@ description: >-
 category: TestOps
 order: 15012
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/dashboard'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/insights/dashboard.htm'
 keywords:
   - TestOps ダッシュボード
   - リモート実行

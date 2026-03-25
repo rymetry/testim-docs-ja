@@ -4,7 +4,7 @@ description: テストをテストスイートに整理し、実行順序を管�
 category: テスト管理
 order: 9014
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/test-suites'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/test-suites.htm'
 keywords:
   - テストスイート
   - テスト実行順序

@@ -5,7 +5,7 @@ description: >-
 category: Testim拡張機能
 order: 17001
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/testim-extension-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testim-extension/testim-extension-overview.htm'
 keywords:
   - Testim Extension
   - Chrome 拡張機能

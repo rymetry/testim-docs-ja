@@ -6,7 +6,7 @@ description: >-
 category: テスト実行
 order: 6002
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/the-command-line-cli'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/the-command-line-cli/index.htm'
 keywords:
   - CLI
   - コマンドライン

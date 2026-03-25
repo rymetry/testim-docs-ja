@@ -4,7 +4,7 @@ description: テスト実行中の停止、一時停止、ステップバイス�
 category: テスト結果
 order: 7011
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/stop-pause-debug-tests'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/stop-pause-debug-tests.htm'
 keywords:
   - テスト停止
   - 一時停止

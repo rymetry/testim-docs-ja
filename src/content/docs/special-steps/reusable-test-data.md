@@ -4,7 +4,7 @@ description: Test Data ファイルを使って複数テスト間でデータを
 category: 高度な編集
 order: 5066
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/reusable-test-data'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/reusable-test-data.htm'
 keywords:
   - テストデータ
   - 再利用可能データ

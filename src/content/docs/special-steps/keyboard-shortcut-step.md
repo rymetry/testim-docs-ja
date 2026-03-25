@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5061
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/keyboard-shortcut-step'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/keyboard-shortcut-step.htm'
 keywords:
   - キーボードショートカット
   - ショートカットステップ

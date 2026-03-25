@@ -4,7 +4,7 @@ description: 共有ステップを追跡します
 category: テスト管理
 order: 9005
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/shared-steps-library'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/shared-steps-library/index.htm'
 keywords:
   - 共有ステップライブラリ
   - 共有ステップ

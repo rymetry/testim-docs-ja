@@ -5,7 +5,7 @@ description: >-
 category: テスト編集
 order: 4001
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/steps'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/steps.htm'
 keywords:
   - ステップ
   - テスト編集

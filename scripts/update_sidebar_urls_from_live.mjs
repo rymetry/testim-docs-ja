@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LIVE_URL = 'https://help.testim.io/docs/testim-overview';
+const LIVE_URL = 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm';
 const SIDEBAR_URLS_PATH = path.resolve('docs/SIDEBAR_URLS.md');
 
 const JP_LABEL_BY_EN = {
@@ -52,6 +52,7 @@ function decodeHtmlEntities(s) {
 export function normalizeUrl(href) {
   if (!href) return null;
   if (href.startsWith('http://') || href.startsWith('https://')) {
+    if (href.startsWith('https://docs.tricentis.com/testim/')) return href;
     if (href.startsWith('https://help.testim.io/docs/')) return href;
     if (href.startsWith('http://help.testim.io/docs/')) return href.replace('http://', 'https://');
     return null;
@@ -62,7 +63,7 @@ export function normalizeUrl(href) {
 
 export function parseExistingStatusMap(text) {
   const statusByUrl = new Map();
-  const re = /^-\s+(✅🔍|✅)\s+(https:\/\/help\.testim\.io\/docs\/[^\s#]+)\s*$/;
+  const re = /^-\s+(✅🔍|✅)\s+(https:\/\/(?:help\.testim\.io\/docs|docs\.tricentis\.com\/testim\/content)\/[^\s#]+)\s*$/;
   for (const line of text.split(/\r?\n/)) {
     const m = line.match(re);
     if (m) statusByUrl.set(m[2], m[1]);
@@ -187,13 +188,13 @@ export function buildOutput({ sections, statusByUrl, existingHeader }) {
 }
 
 export async function fetchSitemap(fetchFn = fetch) {
-  const SITEMAP_URL = 'https://help.testim.io/sitemap.xml';
+  const SITEMAP_URL = 'https://docs.tricentis.com/testim/sitemap.xml';
   try {
     const res = await fetchFn(SITEMAP_URL);
     if (!res.ok) return [];
     const xml = await res.text();
     const urls = [];
-    for (const m of xml.matchAll(/<loc>(https:\/\/help\.testim\.io\/docs\/[^<]+)<\/loc>/g)) {
+    for (const m of xml.matchAll(/<loc>(https:\/\/docs\.tricentis\.com\/testim\/content\/[^<]+)<\/loc>/g)) {
       urls.push(m[1]);
     }
     return urls;

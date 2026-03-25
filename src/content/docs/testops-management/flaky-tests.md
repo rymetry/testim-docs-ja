@@ -4,7 +4,7 @@ description: Testim のライブラリを使用して不安定なテストを簡
 category: TestOps
 order: 15005
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/flaky-tests'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-management/flaky-tests.htm'
 keywords:
   - 不安定なテスト
   - TestOps 管理

@@ -4,7 +4,7 @@ description: Testim モバイルテストエディター画面の構成要素と
 category: テストの記録
 order: 3010
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/mobile-test-editor'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/mobile-test-editor.htm'
 keywords:
   - モバイルテストエディター
   - AUT Viewer

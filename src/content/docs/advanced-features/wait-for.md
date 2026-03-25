@@ -4,7 +4,7 @@ description: 各種「待機」ステップを使って要素の表示・非表�
 category: 高度な編集
 order: 5049
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/wait-for'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/wait-for.htm'
 keywords:
   - 待機
   - 要素の表示

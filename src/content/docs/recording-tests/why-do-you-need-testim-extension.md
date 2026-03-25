@@ -6,7 +6,7 @@ description: >-
 category: テストの記録
 order: 3002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/why-do-you-need-testim-extension'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension.htm'
 keywords:
   - Testim Extension
   - Smart Locators

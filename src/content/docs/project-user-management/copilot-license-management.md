@@ -4,7 +4,7 @@ description: 企業オーナーが Copilot ライセンスを管理し、ユー�
 category: 管理者機能
 order: 14007
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/copilot-license-management'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/copilot-license-management.htm'
 keywords:
   - Copilot
   - ライセンス管理

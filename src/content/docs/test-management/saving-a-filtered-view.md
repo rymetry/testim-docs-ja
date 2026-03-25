@@ -4,7 +4,7 @@ description: フィルタリングしたビューを保存して、リストを�
 category: テスト管理
 order: 9017
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/saving-a-filtered-view'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/saving-a-filtered-view.htm'
 keywords:
   - フィルタービュー
   - ビュー保存

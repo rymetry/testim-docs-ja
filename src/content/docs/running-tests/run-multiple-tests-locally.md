@@ -6,7 +6,7 @@ description: >-
 category: テスト実行
 order: 6009
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/run-multiple-tests-locally'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/run-multiple-tests-locally.htm'
 keywords:
   - ローカル実行
   - 複数テスト

@@ -4,7 +4,7 @@ description: モバイルテストで hideKeyboard が機能しないケース�
 category: 高度な編集
 order: 5064
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/hide-keyboard-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/deep-link-mobile/hide-keyboard-mobile.htm'
 keywords:
   - キーボードを隠す
   - hideKeyboard

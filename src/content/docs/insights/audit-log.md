@@ -6,7 +6,7 @@ description: >-
 category: TestOps
 order: 15015
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/audit-log'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/audit-log.htm'
 keywords:
   - 監査ログ
   - イベント記録

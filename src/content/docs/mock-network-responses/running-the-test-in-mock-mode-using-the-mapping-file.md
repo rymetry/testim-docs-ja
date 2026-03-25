@@ -5,7 +5,7 @@ category: テスト実行
 order: 6016
 updated: '2025-11-11'
 sourceUrl: >-
-  https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file
+  https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file.htm
 keywords:
   - モックモード
   - ネットワークモック

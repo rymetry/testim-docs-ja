@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5060
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/coding-assistant'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/coding-assistant.htm'
 keywords:
   - コーディングアシスタント
   - Copilot

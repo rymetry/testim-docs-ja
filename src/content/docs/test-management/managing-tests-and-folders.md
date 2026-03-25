@@ -4,7 +4,7 @@ description: フォルダーとラベルを使用してテストを整理し、�
 category: テスト管理
 order: 9003
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/managing-tests-and-folders'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/test-list/managing-tests-and-folders.htm'
 keywords:
   - テスト管理
   - テストフォルダー

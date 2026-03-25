@@ -4,7 +4,7 @@ description: ベースラインスクリーンショットとテスト実行結�
 category: テスト結果
 order: 7003
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/compare-side-by-side-screenshots'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/compare-side-by-side-screenshots.htm'
 keywords:
   - スクリーンショット比較
   - ベースライン画像

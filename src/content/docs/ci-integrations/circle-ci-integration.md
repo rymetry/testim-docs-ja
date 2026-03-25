@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12005
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/circle-ci-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/circle-ci-integration.htm'
 keywords:
   - CircleCI
   - Circle CI

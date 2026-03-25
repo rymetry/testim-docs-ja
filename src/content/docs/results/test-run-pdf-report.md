@@ -4,7 +4,7 @@ description: テスト実行結果を PDF レポートとしてエクスポー�
 category: テスト結果
 order: 7015
 updated: '2025-11-26'
-sourceUrl: 'https://help.testim.io/docs/test-run-pdf-report'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-run-pdf-report.htm'
 keywords:
   - テスト結果レポート
   - PDF レポート

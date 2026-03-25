@@ -4,7 +4,7 @@ description: ピクセルレベルでの画像比較による検証ステップ�
 category: 高度な編集
 order: 5014
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/pixel-validation-and-pixel-wait-for'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm'
 keywords:
   - ピクセル検証
   - ビジュアル検証

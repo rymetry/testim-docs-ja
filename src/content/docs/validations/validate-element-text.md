@@ -4,7 +4,7 @@ description: 要素に表示されているテキストが期待値と一致す�
 category: 高度な編集
 order: 5005
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validate-element-text'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-text.htm'
 keywords:
   - テキスト検証
   - 要素テキスト

@@ -5,7 +5,7 @@ description: >-
 category: 設定
 order: 13001
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/cli-settings'
+sourceUrl: 'https://docs.tricentis.com/testim/content/settings/cli-settings.htm'
 keywords:
   - CLI
   - CLI 設定

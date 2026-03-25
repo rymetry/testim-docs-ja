@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5050
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/api-testing'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/api-testing.htm'
 keywords:
   - API テスト
   - HTTP リクエスト

@@ -4,7 +4,7 @@ description: Testim の組み込みメールサービスを使用してメール
 category: 高度な編集
 order: 5010
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/email-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/email-validation.htm'
 keywords:
   - メール検証
   - E メール

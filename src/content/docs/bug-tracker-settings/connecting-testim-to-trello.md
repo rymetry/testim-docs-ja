@@ -4,7 +4,7 @@ description: Testim から Trello に bug を公開するための接続手順�
 category: 統合
 order: 12035
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-trello'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-trello.htm'
 keywords:
   - Testim
   - Trello 連携

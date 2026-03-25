@@ -5,7 +5,7 @@ description: >-
 category: セキュリティ
 order: 18001
 updated: '2026-02-11'
-sourceUrl: 'https://help.testim.io/docs/testim-grid-ips'
+sourceUrl: 'https://docs.tricentis.com/testim/content/security/testim-grid-ips.htm'
 keywords:
   - IP ホワイトリスト
   - Testim Grid

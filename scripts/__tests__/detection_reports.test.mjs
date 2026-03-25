@@ -124,7 +124,7 @@ describe('buildAuditManifest', () => {
   it('handles parity entries with no matching snapshot slug', () => {
     const snapshot = {
       changes: [
-        { slug: 'page-a', type: 'page-changed', sourceUrl: 'https://help.testim.io/docs/page-a', categories: { heading: { added: 0, removed: 0 }, image: { added: 0, removed: 0 }, code: { added: 0, removed: 0 }, callout: { added: 0, removed: 0 }, content: { added: 1, removed: 0 } }, diffLines: 1 },
+        { slug: 'page-a', type: 'page-changed', sourceUrl: 'https://docs.tricentis.com/testim/content/overview/page-a.htm', categories: { heading: { added: 0, removed: 0 }, image: { added: 0, removed: 0 }, code: { added: 0, removed: 0 }, callout: { added: 0, removed: 0 }, content: { added: 1, removed: 0 } }, diffLines: 1 },
       ],
     };
     const parity = {
@@ -143,14 +143,14 @@ describe('buildAuditManifest', () => {
         {
           slug: 'new-page',
           type: 'page-added',
-          sourceUrl: 'https://help.testim.io/docs/new-page',
+          sourceUrl: 'https://docs.tricentis.com/testim/content/overview/new-page.htm',
           categories: null,
           diffLines: 0,
         },
         {
           slug: 'changed-heading',
           type: 'page-changed',
-          sourceUrl: 'https://help.testim.io/docs/changed-heading',
+          sourceUrl: 'https://docs.tricentis.com/testim/content/overview/changed-heading.htm',
           categories: {
             heading: { added: 1, removed: 0 },
             image: { added: 0, removed: 0 },
@@ -163,7 +163,7 @@ describe('buildAuditManifest', () => {
         {
           slug: 'text-tweak',
           type: 'page-changed',
-          sourceUrl: 'https://help.testim.io/docs/text-tweak',
+          sourceUrl: 'https://docs.tricentis.com/testim/content/overview/text-tweak.htm',
           categories: {
             heading: { added: 0, removed: 0 },
             image: { added: 0, removed: 0 },
@@ -240,7 +240,7 @@ describe('buildActionableReport', () => {
         {
           slug: 'page-a',
           type: 'page-changed',
-          sourceUrl: 'https://help.testim.io/docs/page-a',
+          sourceUrl: 'https://docs.tricentis.com/testim/content/overview/page-a.htm',
           categories: {
             heading: { added: 0, removed: 0 },
             image: { added: 1, removed: 0 },
@@ -253,7 +253,7 @@ describe('buildActionableReport', () => {
         {
           slug: 'page-b',
           type: 'page-changed',
-          sourceUrl: 'https://help.testim.io/docs/page-b',
+          sourceUrl: 'https://docs.tricentis.com/testim/content/overview/page-b.htm',
           categories: {
             heading: { added: 0, removed: 0 },
             image: { added: 0, removed: 0 },
@@ -266,7 +266,7 @@ describe('buildActionableReport', () => {
         {
           slug: 'new-page',
           type: 'page-added',
-          sourceUrl: 'https://help.testim.io/docs/new-page',
+          sourceUrl: 'https://docs.tricentis.com/testim/content/overview/new-page.htm',
           categories: null,
           diffLines: 0,
         },

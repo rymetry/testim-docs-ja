@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12027
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/browserstack-integration-1'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-1.htm'
 keywords:
   - BrowserStack
   - Grid

@@ -4,7 +4,7 @@ description: ブランチへの直接書き込みを許可しない（ブラン�
 category: TestOps
 order: 15010
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/read-only'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-version-control/read-only.htm'
 keywords:
   - 読み取り専用ブランチ
   - TestOps バージョン管理

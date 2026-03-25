@@ -4,7 +4,7 @@ description: プロジェクトにチームメイトを招待し、削除する�
 category: 管理者機能
 order: 14002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/project-user-management'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/project-user-management.htm'
 keywords:
   - プロジェクトユーザー管理
   - ユーザー招待

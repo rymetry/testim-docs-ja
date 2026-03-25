@@ -5,7 +5,7 @@ category: Salesforceテスト
 order: 16009
 updated: '2025-12-02'
 sourceUrl: >-
-  https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
+  https://docs.tricentis.com/testim/content/salesforce-testing/create-and-merge-branches-from-different-test-environments.htm
 keywords:
   - ブランチ
   - テスト環境

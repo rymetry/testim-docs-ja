@@ -4,7 +4,7 @@ description: 要素のビジュアライゼーションが条件を満たすま�
 category: 高度な編集
 order: 5025
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/wait-for-element-visualization'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/wait-for-element-visualization.htm'
 keywords:
   - ビジュアル検証
   - applitools

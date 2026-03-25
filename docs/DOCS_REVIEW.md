@@ -9,7 +9,7 @@
 
 1. SIDEBAR_URLS.mdファイルから{SECTION_NAME}セクションの全記事URLリストを取得
 2. 各URLのパス名に対応するmdファイルを特定
-   - 例: `https://help.testim.io/docs/testim-overview` → `testim-overview.md`
+   - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `testim-overview.md`
 3. 英語記事と日本語mdファイルのペアごとに以下の検証項目を確認
 4. 記事本文内のリンクを確認し、content/docs内に対応する日本語mdファイルがあれば内部リンクに変更
 5. プロジェクトディレクトリで`npm run lint`を実行してlintエラーを確認
@@ -23,7 +23,7 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 - [ ] `title`: 原文から適切に日本語翻訳されているか
 - [ ] `description`: 記事の要約が日本語で適切に記載されているか（プレースホルダ禁止）
 - [ ] `updated`: 英語原文の日付に追従しているか（JA 編集日に変更しないこと。詳細は `DOCS_DATE_TRACKING.md` 参照）
-- [ ] `sourceUrl`: `https://help.testim.io/docs/{slug}` 形式で設定されているか
+- [ ] `sourceUrl`: `https://docs.tricentis.com/testim/content/.../{slug}.htm` 形式で設定されているか
 - [ ] `keywords`: 記事内容に基づいた日本語検索キーワードが設定されているか（上限 10 件）
 
 本文について:
@@ -35,8 +35,8 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 - [ ] 画像ファイルの存在確認だけでなく、本文中の配置順も原文と一致しているか
 - [ ] 本文末尾に更新日(updated, 最終更新日等)の記載がないか
 - [ ] 記事内のリンクが適切に処理されているか
-  - 外部リンク(`https://help.testim.io/docs/...`)で、対応する日本語mdファイルが`/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/`配下に存在する場合、内部リンクに変更されているか
-  - 例: `https://help.testim.io/docs/testim-overview` → `/docs/testim-overview` (該当mdファイルが存在する場合)
+  - 外部リンク(`https://docs.tricentis.com/testim/content/...`)で、対応する日本語mdファイルが`/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/`配下に存在する場合、内部リンクに変更されているか
+  - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `/docs/testim-overview` (該当mdファイルが存在する場合)
   - 対応する日本語ファイルが存在しない場合は、元の外部リンクのまま維持
 
 ファイル全体について:
@@ -58,7 +58,7 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 
 要点:
 - 正しい形式: `/docs/{slug}`（フォルダ名を含めない）
-- `https://help.testim.io/docs/{slug}` は対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する
+- `https://docs.tricentis.com/testim/content/.../{slug}.htm` は対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する
 - 対応する JA ファイルが存在しない場合は元の外部リンクを維持する
 
 ## 出力形式
@@ -101,7 +101,7 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 
 - **ファイル名**: `xxx.md`
 - **変更すべきリンク**:
-  - 現在: `https://help.testim.io/docs/example`
+  - 現在: `https://docs.tricentis.com/testim/content/{category}/example.htm`
   - 変更後: `/docs/example`
 
 ### 🔍 Lintエラー

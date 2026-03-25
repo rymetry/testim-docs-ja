@@ -5,7 +5,7 @@ category: 高度な編集
 order: 5029
 updated: '2025-09-19'
 sourceUrl: >-
-  https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source
+  https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source.htm
 keywords:
   - testim
   - configuring-data-driven-tests-using-data-from-an-external-source

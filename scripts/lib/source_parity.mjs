@@ -83,8 +83,21 @@ export function isEnglishOnlyLine(line) {
 }
 
 export function loadSidebarSlugs(sidebarText) {
-  const urls = sidebarText.match(/https:\/\/help\.testim\.io\/docs\/([\w-]+)/g) || [];
-  return new Set(urls.map((url) => url.split('/').pop()));
+  // Match new docs.tricentis.com URLs and extract slug
+  const newUrls = [...sidebarText.matchAll(/https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm/g)];
+  const newSlugs = newUrls.map((m) => {
+    const url = m[0];
+    // /slug/index.htm → slug; /slug.htm → slug
+    const match = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
+    return match ? match[1] : null;
+  }).filter(Boolean);
+  // Also match legacy help.testim.io URLs for backward compatibility
+  const oldUrls = [...sidebarText.matchAll(/https:\/\/help\.testim\.io\/docs\/([\w-]+)/g)];
+  const slugs = new Set([
+    ...newSlugs,
+    ...oldUrls.map((m) => m[1]),
+  ]);
+  return slugs;
 }
 
 export function localCheck({ body, sidebarSlugs, slug }) {
@@ -786,9 +799,15 @@ export function extractHtmlTables(body) {
 
 /**
  * Normalize a URL to a comparable slug token.
- * Converts https://help.testim.io/docs/foo → /docs/foo
+ * Converts https://help.testim.io/docs/foo or https://docs.tricentis.com/testim/content/.../foo.htm → /docs/foo
  */
 function normalizeUrlToken(url) {
+  // Normalize both old (help.testim.io) and new (docs.tricentis.com) URLs to /docs/slug
+  if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
+    // /slug/index.htm → slug; /slug.htm → slug
+    const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm/) || url.match(/\/([a-z0-9-]+)\.htm/);
+    if (slugMatch) return `/docs/${slugMatch[1]}`;
+  }
   return url.replace(/^https?:\/\/help\.testim\.io/, '');
 }
 

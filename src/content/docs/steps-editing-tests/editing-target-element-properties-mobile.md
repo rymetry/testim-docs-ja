@@ -6,7 +6,7 @@ description: >-
 category: テスト編集
 order: 4004
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/editing-target-element-properties-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-target-element-properties-mobile.htm'
 keywords:
   - モバイル
   - ターゲット要素

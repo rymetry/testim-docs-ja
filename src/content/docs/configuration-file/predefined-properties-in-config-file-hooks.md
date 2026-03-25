@@ -4,7 +4,7 @@ description: 設定ファイルの Before/After Suite ・ Test フックで参�
 category: テスト実行
 order: 6012
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/predefined-properties-in-config-file-hooks'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.htm'
 keywords:
   - 設定ファイル
   - run hooks

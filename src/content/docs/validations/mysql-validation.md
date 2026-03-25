@@ -4,7 +4,7 @@ description: MySQL データベースに接続してデータを検証する CLI
 category: 高度な編集
 order: 5018
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/mysql-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/mysql-validation.htm'
 keywords:
   - MySQL
   - データベース検証

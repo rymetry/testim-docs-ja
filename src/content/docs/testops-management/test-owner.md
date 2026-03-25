@@ -4,7 +4,7 @@ description: テストにオーナーを割り当てて、作業負荷をスケ�
 category: TestOps
 order: 15004
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/test-owner'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-management/test-owner.htm'
 keywords:
   - テストオーナー
   - TestOps 管理

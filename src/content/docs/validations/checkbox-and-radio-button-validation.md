@@ -4,7 +4,7 @@ description: チェックボックスやラジオボタンの選択状態を検�
 category: 高度な編集
 order: 5013
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/checkbox-and-radio-button-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/checkbox-and-radio-button-validation.htm'
 keywords:
   - チェックボックス
   - ラジオボタン

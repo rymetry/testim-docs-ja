@@ -4,7 +4,7 @@ description: テスト実行中のコンソールログの確認方法につい�
 category: テスト結果
 order: 7005
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/network-logs-copy'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/network-logs-copy.htm'
 keywords:
   - コンソールログ
   - テストログ

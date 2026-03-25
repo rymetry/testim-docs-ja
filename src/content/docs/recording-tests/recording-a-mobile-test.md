@@ -4,7 +4,7 @@ description: Testim でモバイルテストを記録するための 2 つの方
 category: テストの記録
 order: 3004
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/recording-a-mobile-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/index.htm'
 keywords:
   - モバイルテスト
   - テスト記録

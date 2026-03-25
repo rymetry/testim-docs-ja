@@ -4,7 +4,7 @@ description: 企業（アカウント）レベルでのプロジェクトとユ�
 category: 管理者機能
 order: 14003
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/project-and-user-management'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/project-and-user-management.htm'
 keywords:
   - 企業管理
   - 組織構造

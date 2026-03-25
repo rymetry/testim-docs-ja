@@ -5,7 +5,7 @@ description: >-
 category: 管理者機能
 order: 14006
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/subscription-plans'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/subscription-plans/index.htm'
 keywords:
   - サブスクリプションプラン
   - 並列実行

@@ -4,7 +4,7 @@ description: master へのマージ時にプルリクエストを提出します
 category: TestOps
 order: 15009
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/pull-requests'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-version-control/pull-requests.htm'
 keywords:
   - プルリクエスト
   - TestOps バージョン管理

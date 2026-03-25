@@ -6,7 +6,7 @@ description: >-
 category: TestOps
 order: 15008
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/merging-branches'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-version-control/merging-branches.htm'
 keywords:
   - ブランチマージ
   - TestOps バージョン管理

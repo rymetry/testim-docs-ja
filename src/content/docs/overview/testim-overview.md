@@ -4,7 +4,7 @@ description: Testim は、コード、コードレス、または両方を組み
 category: 概要
 order: 1001
 updated: '2025-11-13'
-sourceUrl: 'https://help.testim.io/docs/testim-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'
 keywords:
   - Testim 概要
   - テスト自動化
@@ -29,5 +29,5 @@ Testim は、安定したテストの高速作成と、チームが効率的に�
 - モバイルアプリテスト - Testim は、デバイスとアプリケーションの管理を簡素化し、モバイルアプリケーションのテストをより簡単にします。ユーザーは、同じ機能と Testim エクスペリエンスを使用して、ローコードテストを迅速に作成できます。詳細については、[最初のモバイルテストの作成](/docs/creating-your-first-mobile-test-in-testim-visual-editor) をご覧ください。
 
 :::info{title="変更履歴"}
-Testim の新機能をご確認ください。新機能の継続的なリストを Testim の[変更履歴](https://help.testim.io/changelog)で公開しています。
+Testim の新機能をご確認ください。新機能の継続的なリストを Testim の[変更履歴](https://docs.tricentis.com/testim/changelog)で公開しています。
 :::

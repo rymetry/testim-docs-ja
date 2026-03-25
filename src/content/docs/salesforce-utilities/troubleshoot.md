@@ -4,7 +4,7 @@ description: Testim for Salesforce で起こりやすい接続・実行失敗な
 category: Salesforceテスト
 order: 16033
 updated: '2025-12-10'
-sourceUrl: 'https://help.testim.io/docs/troubleshoot'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/troubleshoot.htm'
 keywords:
   - トラブルシューティング
   - Salesforce 接続

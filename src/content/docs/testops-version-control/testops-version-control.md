@@ -7,7 +7,7 @@ description: >-
 category: TestOps
 order: 15006
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/testops-version-control'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-version-control/index.htm'
 keywords:
   - TestOps バージョン管理
   - ブランチ管理

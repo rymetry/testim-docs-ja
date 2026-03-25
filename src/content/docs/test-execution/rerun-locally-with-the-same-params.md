@@ -4,7 +4,7 @@ description: 過去のテスト実行と同じパラメーターを使用して�
 category: テスト実行
 order: 6020
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/rerun-locally-with-the-same-params'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/rerun-locally-with-the-same-params.htm'
 keywords:
   - ローカル再実行
   - 同じパラメーター

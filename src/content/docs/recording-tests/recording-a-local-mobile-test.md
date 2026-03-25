@@ -4,7 +4,7 @@ description: 物理デバイスまたは仮想デバイス（iOS/Android）を�
 category: テストの記録
 order: 3006
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/recording-a-local-mobile-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/recording-a-local-mobile-test.htm'
 keywords:
   - ローカルモバイルテスト
   - TMA

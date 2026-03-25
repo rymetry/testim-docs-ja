@@ -4,7 +4,7 @@ description: 事前定義された Salesforce ステップに加えて、必要�
 category: Salesforceテスト
 order: 16032
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/record-tests-with-salesforce'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/record-tests-with-salesforce.htm'
 keywords:
   - テストの記録
   - 記録ステップ

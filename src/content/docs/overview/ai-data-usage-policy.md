@@ -4,7 +4,7 @@ description: Testim における生成 AI の使用とデータプライバシ�
 category: 概要
 order: 1005
 updated: '2025-10-13'
-sourceUrl: 'https://help.testim.io/docs/ai-data-usage-policy'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/ai-data-usage-policy.htm'
 keywords:
   - AI ポリシー
   - データ使用

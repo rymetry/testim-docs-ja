@@ -6,7 +6,7 @@ description: >-
 category: テスト編集
 order: 4010
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/conditions'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/conditions/index.htm'
 keywords:
   - 条件分岐
   - When to run step

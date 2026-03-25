@@ -157,7 +157,7 @@ describe('classifyChanges', () => {
 // ---------------------------------------------------------------------------
 describe('MARKER_404_RE', () => {
   it('detects 404 marker', () => {
-    assert.ok(MARKER_404_RE.test('<!-- 404: page not found at https://help.testim.io/docs/foo -->'));
+    assert.ok(MARKER_404_RE.test('<!-- 404: page not found at https://docs.tricentis.com/testim/content/overview/foo.htm -->'));
   });
 
   it('does not match normal content', () => {

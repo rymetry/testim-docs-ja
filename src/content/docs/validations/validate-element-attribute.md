@@ -4,7 +4,7 @@ description: 要素の属性値が期待通りであることを検証するス�
 category: 高度な編集
 order: 5012
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validate-element-attribute'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-attribute.htm'
 keywords:
   - 属性検証
   - 要素属性

@@ -6,7 +6,7 @@ description: >-
 category: テスト実行
 order: 6004
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/base-url'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/base-url.htm'
 keywords:
   - ベース URL
   - URL オーバーライド

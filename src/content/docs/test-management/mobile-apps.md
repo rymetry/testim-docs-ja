@@ -4,7 +4,7 @@ description: Mobile Apps Library にアップロードしたアプリの追加�
 category: モバイルアプリ
 order: 10001
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/mobile-apps'
+sourceUrl: 'https://docs.tricentis.com/testim/content/mobile-apps/mobile-apps.htm'
 keywords:
   - モバイルアプリ
   - アプリライブラリ

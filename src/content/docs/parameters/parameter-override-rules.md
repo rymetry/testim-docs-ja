@@ -4,7 +4,7 @@ description: パラメーター使用時に発生する上書き（オーバー�
 category: 高度な編集
 order: 5046
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/parameter-override-rules'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameter-override-rules.htm'
 keywords:
   - Testim
   - パラメーター

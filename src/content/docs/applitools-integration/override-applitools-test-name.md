@@ -4,7 +4,7 @@ description: Applitools に送信されるテスト名をテストデータを�
 category: 統合
 order: 12018
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/override-applitools-test-name'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-test-name.htm'
 keywords:
   - Testim
   - Applitools

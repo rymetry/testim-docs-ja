@@ -4,7 +4,7 @@ description: ユーザー権限（オブジェクト/フィールド）を取得
 category: Salesforceテスト
 order: 16019
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-permission-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-permission-validation.htm'
 keywords:
   - Salesforce
   - 権限

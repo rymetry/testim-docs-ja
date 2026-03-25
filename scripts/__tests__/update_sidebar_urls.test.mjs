@@ -55,26 +55,33 @@ describe('normalizeUrl', () => {
   it('returns null for /other/ path', () => {
     assert.equal(normalizeUrl('/other/testim-overview'), null);
   });
+
+  it('returns docs.tricentis.com URL as-is', () => {
+    assert.equal(
+      normalizeUrl('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'),
+      'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
 // parseExistingStatusMap
 // ---------------------------------------------------------------------------
 describe('parseExistingStatusMap', () => {
-  it('parses ✅🔍 status lines', () => {
-    const text = '- ✅🔍 https://help.testim.io/docs/testim-overview\n';
+  it('parses ✅🔍 status lines with new URL', () => {
+    const text = '- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm\n';
     const map = parseExistingStatusMap(text);
-    assert.equal(map.get('https://help.testim.io/docs/testim-overview'), '✅🔍');
+    assert.equal(map.get('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'), '✅🔍');
   });
 
-  it('parses ✅ status lines', () => {
-    const text = '- ✅ https://help.testim.io/docs/testim-overview\n';
+  it('parses ✅ status lines with new URL', () => {
+    const text = '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm\n';
     const map = parseExistingStatusMap(text);
-    assert.equal(map.get('https://help.testim.io/docs/testim-overview'), '✅');
+    assert.equal(map.get('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'), '✅');
   });
 
   it('ignores non-matching lines', () => {
-    const text = '## Overview（概要）\n- ⏳ https://help.testim.io/docs/testim-overview\n';
+    const text = '## Overview（概要）\n- ⏳ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm\n';
     const map = parseExistingStatusMap(text);
     assert.equal(map.size, 0);
   });
@@ -120,27 +127,27 @@ describe('buildOutput', () => {
   const sections = [
     {
       title: 'Overview',
-      urls: ['https://help.testim.io/docs/testim-overview'],
+      urls: ['https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'],
     },
   ];
 
   it('includes each URL in the output', () => {
     const out = buildOutput({ sections, statusByUrl: new Map(), existingHeader: '' });
-    assert.match(out, /https:\/\/help\.testim\.io\/docs\/testim-overview/);
+    assert.match(out, /https:\/\/docs\.tricentis\.com\/testim\/content\/overview\/testim-overview\/index\.htm/);
   });
 
   it('uses ✅🔍 as default status when URL is not in statusByUrl', () => {
     const out = buildOutput({ sections, statusByUrl: new Map(), existingHeader: '' });
-    assert.match(out, /✅🔍\s+https:\/\/help\.testim\.io\/docs\/testim-overview/);
+    assert.match(out, /✅🔍\s+https:\/\/docs\.tricentis\.com\/testim\/content\/overview\/testim-overview\/index\.htm/);
   });
 
   it('uses existing ✅ status when URL is already in statusByUrl', () => {
     const statusByUrl = new Map([
-      ['https://help.testim.io/docs/testim-overview', '✅'],
+      ['https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm', '✅'],
     ]);
     const out = buildOutput({ sections, statusByUrl, existingHeader: '' });
-    assert.match(out, /✅\s+https:\/\/help\.testim\.io\/docs\/testim-overview/);
-    assert.doesNotMatch(out, /✅🔍\s+https:\/\/help\.testim\.io\/docs\/testim-overview/);
+    assert.match(out, /✅\s+https:\/\/docs\.tricentis\.com\/testim\/content\/overview\/testim-overview\/index\.htm/);
+    assert.doesNotMatch(out, /✅🔍\s+https:\/\/docs\.tricentis\.com\/testim\/content\/overview\/testim-overview\/index\.htm/);
   });
 
   it('includes section heading', () => {
@@ -150,11 +157,11 @@ describe('buildOutput', () => {
 
   it('global deduplication: URL in two sections appears once', () => {
     const dup = [
-      { title: 'A', urls: ['https://help.testim.io/docs/foo'] },
-      { title: 'B', urls: ['https://help.testim.io/docs/foo'] },
+      { title: 'A', urls: ['https://docs.tricentis.com/testim/content/overview/foo.htm'] },
+      { title: 'B', urls: ['https://docs.tricentis.com/testim/content/overview/foo.htm'] },
     ];
     const out = buildOutput({ sections: dup, statusByUrl: new Map(), existingHeader: '' });
-    const count = (out.match(/https:\/\/help\.testim\.io\/docs\/foo/g) || []).length;
+    const count = (out.match(/https:\/\/docs\.tricentis\.com\/testim\/content\/overview\/foo\.htm/g) || []).length;
     assert.equal(count, 1);
   });
 });
@@ -163,19 +170,19 @@ describe('buildOutput', () => {
 // fetchSitemap (new function — will fail until implemented)
 // ---------------------------------------------------------------------------
 describe('fetchSitemap', () => {
-  it('parses <loc> entries for help.testim.io/docs/', async () => {
+  it('parses <loc> entries for docs.tricentis.com/testim/content/', async () => {
     const xml = `<?xml version="1.0"?>
 <urlset>
-  <url><loc>https://help.testim.io/docs/testim-overview</loc></url>
-  <url><loc>https://help.testim.io/docs/getting-started</loc></url>
-  <url><loc>https://help.testim.io/</loc></url>
+  <url><loc>https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm</loc></url>
+  <url><loc>https://docs.tricentis.com/testim/content/getting-started/getting-started.htm</loc></url>
+  <url><loc>https://docs.tricentis.com/testim/</loc></url>
 </urlset>`;
     // fetchSitemap(fetchFn) — implementation accepts injectable fetch for testability
     const fakeFetch = async () => ({ ok: true, text: async () => xml });
     const urls = await fetchSitemap(fakeFetch);
     assert.deepEqual(urls, [
-      'https://help.testim.io/docs/testim-overview',
-      'https://help.testim.io/docs/getting-started',
+      'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+      'https://docs.tricentis.com/testim/content/getting-started/getting-started.htm',
     ]);
   });
 
@@ -191,8 +198,8 @@ describe('fetchSitemap', () => {
     assert.deepEqual(urls, []);
   });
 
-  it('ignores non-docs URLs in sitemap', async () => {
-    const xml = `<urlset><url><loc>https://help.testim.io/changelog</loc></url></urlset>`;
+  it('ignores non-content URLs in sitemap', async () => {
+    const xml = `<urlset><url><loc>https://docs.tricentis.com/testim/changelog</loc></url></urlset>`;
     const fakeFetch = async () => ({ ok: true, text: async () => xml });
     const urls = await fetchSitemap(fakeFetch);
     assert.deepEqual(urls, []);
@@ -204,7 +211,7 @@ describe('fetchSitemap', () => {
 // ---------------------------------------------------------------------------
 describe('CLI exit behavior', () => {
   it('exits with code 1 when totalUrls is 0', async () => {
-    // Mock fetch: sitemap returns no /docs/ URLs, HTML has empty nav
+    // Mock fetch: sitemap returns no /content/ URLs, HTML has empty nav
     const mockFetch = async (url) => ({
       ok: true,
       text: async () => {
@@ -275,12 +282,12 @@ describe('fetchNavSections urlFilter unification', () => {
       <nav id="hub-sidebar">
         <section>
           <h2>Getting Started</h2>
-          <a href="https://help.testim.io/docs/intro">Intro</a>
-          <a href="https://help.testim.io/docs/unlisted">Unlisted</a>
+          <a href="https://docs.tricentis.com/testim/content/getting-started/intro.htm">Intro</a>
+          <a href="https://docs.tricentis.com/testim/content/getting-started/unlisted.htm">Unlisted</a>
         </section>
       </nav>`;
     const sitemapXml = `<urlset>
-      <url><loc>https://help.testim.io/docs/intro</loc></url>
+      <url><loc>https://docs.tricentis.com/testim/content/getting-started/intro.htm</loc></url>
     </urlset>`;
     const mockFetch = async (url) => ({
       ok: true,
@@ -303,7 +310,7 @@ describe('fetchNavSections urlFilter unification', () => {
       fs.default.mkdirSync = origMkdirSync;
     }
 
-    assert.ok(writtenContent.includes('https://help.testim.io/docs/intro'), 'sitemap URL must be in output');
-    assert.ok(!writtenContent.includes('https://help.testim.io/docs/unlisted'), 'non-sitemap URL must be excluded');
+    assert.ok(writtenContent.includes('https://docs.tricentis.com/testim/content/getting-started/intro.htm'), 'sitemap URL must be in output');
+    assert.ok(!writtenContent.includes('unlisted'), 'non-sitemap URL must be excluded');
   });
 });

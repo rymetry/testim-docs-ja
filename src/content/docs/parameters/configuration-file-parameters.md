@@ -4,7 +4,7 @@ description: 設定ファイルの beforeSuite / beforeTest フックでテス�
 category: 高度な編集
 order: 5044
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/configuration-file-parameters'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/configuration-file-parameters.htm'
 keywords:
   - Testim
   - 設定ファイル

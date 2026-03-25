@@ -4,7 +4,7 @@ description: ネットワークリクエストとレスポンスを検証する�
 category: 高度な編集
 order: 5015
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/add-network-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/add-network-validation.htm'
 keywords:
   - ネットワーク検証
   - API 検証

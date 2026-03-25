@@ -4,7 +4,7 @@ description: 条件やループの高度な設定方法を学びます。条件�
 category: テスト編集
 order: 4011
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/advanced-conditions-settings'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/conditions/advanced-conditions-settings.htm'
 keywords:
   - 拡張条件設定
   - 条件リトライ

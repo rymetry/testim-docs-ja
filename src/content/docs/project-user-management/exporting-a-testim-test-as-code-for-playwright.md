@@ -5,7 +5,7 @@ description: >-
 category: 管理者機能
 order: 14008
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/exporting-a-testim-test-as-code-for-playwright.htm'
 keywords:
   - Playwright
   - コードエクスポート

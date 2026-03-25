@@ -4,7 +4,7 @@ description: エラーサフィックス機能でステップ失敗時のメッ�
 category: 高度な編集
 order: 5057
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/error-suffix-customization'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/error-suffix-customization.htm'
 keywords:
   - エラーサフィックス
   - エラーメッセージ

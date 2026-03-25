@@ -89,10 +89,10 @@ describe('isEnglishOnlyLine', () => {
 describe('loadSidebarSlugs', () => {
   it('extracts slugs from sidebar URL text', () => {
     const text = `## Overview
-- ✅ https://help.testim.io/docs/testim-overview
-- ✅ https://help.testim.io/docs/getting-started
+- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
+- ✅ https://docs.tricentis.com/testim/content/getting-started/getting-started.htm
 ## Other
-- https://help.testim.io/docs/advanced-config
+- https://docs.tricentis.com/testim/content/settings/advanced-config.htm
 `;
     const slugs = loadSidebarSlugs(text);
     assert.equal(slugs.size, 3);
@@ -1111,10 +1111,10 @@ describe('table parity in compareSnapshotStructure', () => {
   });
 
   it('does not flag residual when EN markdown link equals JA HTML-preserved link', () => {
-    // EN uses [text](https://help.testim.io/docs/foo#bar)
+    // EN uses [text](https://docs.tricentis.com/testim/content/.../foo.htm#bar)
     // JA HTML-preserved has text [/docs/foo#bar]
     // After stripping bracket annotations, visible text should match
-    const en = '| Link |\n| --- |\n| [Adding a CLI step](https://help.testim.io/docs/validate-download#adding-a-cli-step) |\n';
+    const en = '| Link |\n| --- |\n| [Adding a CLI step](https://docs.tricentis.com/testim/content/validations/validate-download.htm#adding-a-cli-step) |\n';
     const ja = '| リンク |\n| --- |\n| Adding a CLI step [/docs/validate-download#adding-a-cli-step] |\n';
     const issues = compareSnapshotStructure(en, ja);
     const residualIssues = issues.filter((i) => i.type === 'table-cell-english-residual');
@@ -1211,10 +1211,10 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.includes('https://example.com/docs'));
   });
 
-  it('normalizes help.testim.io URLs to /docs/slug', () => {
-    const tokens = extractInvariantTokens('Link: https://help.testim.io/docs/shareable-steps');
+  it('normalizes docs.tricentis.com URLs to /docs/slug', () => {
+    const tokens = extractInvariantTokens('Link: https://docs.tricentis.com/testim/content/editing/shareable-steps.htm');
     assert.ok(tokens.includes('/docs/shareable-steps'));
-    assert.ok(!tokens.some((t) => t.includes('help.testim.io')));
+    assert.ok(!tokens.some((t) => t.includes('docs.tricentis.com')));
   });
 
   it('extracts /docs/slug from markdown links', () => {
@@ -1223,8 +1223,8 @@ describe('extractInvariantTokens', () => {
   });
 
   it('does not double-count URL fragments as dot-paths', () => {
-    const tokens = extractInvariantTokens('https://help.testim.io/docs/foo');
-    assert.ok(!tokens.some((t) => t === 'help.testim.io'));
+    const tokens = extractInvariantTokens('https://docs.tricentis.com/testim/content/overview/foo.htm');
+    assert.ok(!tokens.some((t) => t === 'docs.tricentis.com'));
   });
 
   it('extracts /docs/slug#fragment from bracket annotation', () => {
@@ -1338,8 +1338,8 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
     assert.equal(tokenIssues.length, 0);
   });
 
-  it('does not flag testim.io absolute URL rewritten to relative /docs/ link', () => {
-    const en = '| Page | Link |\n| --- | --- |\n| Steps | [steps](https://help.testim.io/docs/shareable-steps) |\n';
+  it('does not flag tricentis.com absolute URL rewritten to relative /docs/ link', () => {
+    const en = '| Page | Link |\n| --- | --- |\n| Steps | [steps](https://docs.tricentis.com/testim/content/editing/shareable-steps.htm) |\n';
     const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/shareable-steps) |\n';
     const issues = compareSnapshotStructure(en, ja);
     const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
@@ -1412,7 +1412,7 @@ describe('checkSourceSnapshotMissing', () => {
   it('reports missing snapshot when sourceUrl is present', () => {
     const issues = checkSourceSnapshotMissing({
       slug: 'nonexistent-page',
-      sourceUrl: 'https://help.testim.io/docs/nonexistent-page',
+      sourceUrl: 'https://docs.tricentis.com/testim/content/overview/nonexistent-page.htm',
       snapshotsDir: '/tmp/no-such-snapshots-dir',
     });
     assert.equal(issues.length, 1);

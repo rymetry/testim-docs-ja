@@ -5,7 +5,7 @@ description: >-
 category: 管理者機能
 order: 14005
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/secrets'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/secrets.htm'
 keywords:
   - Secrets Manager
   - シークレット

@@ -4,7 +4,7 @@ description: 失敗したリモート実行にタグを付けてデータを収�
 category: テスト結果
 order: 7014
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/tag-remote-runs-failures'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/tag-remote-runs-failures.htm'
 keywords:
   - 失敗タイプタグ
   - リモート実行

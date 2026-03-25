@@ -4,7 +4,7 @@ description: ステップのプロパティパネル（JavaScript/HTML）でパ�
 category: 高度な編集
 order: 5041
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/parameters-in-custom-javascript-steps'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameters-in-custom-javascript-steps.htm'
 keywords:
   - Testim
   - パラメーター

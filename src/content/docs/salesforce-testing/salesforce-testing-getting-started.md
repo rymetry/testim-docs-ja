@@ -4,7 +4,7 @@ description: Salesforce 環境の接続から、テストの作成・保存・�
 category: Salesforceテスト
 order: 16002
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/salesforce-testing-getting-started'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-getting-started.htm'
 keywords:
   - Salesforce テスト
   - チュートリアル

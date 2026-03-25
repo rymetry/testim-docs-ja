@@ -4,7 +4,7 @@ description: 日付や時刻を扱うテスト向けに、指定したフォー�
 category: テスト編集
 order: 4013
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/generating-a-date'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/generating-a-date.htm'
 keywords:
   - 日付生成
   - Generate date

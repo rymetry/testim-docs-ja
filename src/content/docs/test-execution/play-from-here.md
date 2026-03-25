@@ -4,7 +4,7 @@ description: テストを特定の位置から実行する「ここから再生�
 category: テスト実行
 order: 6019
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/play-from-here'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/play-from-here.htm'
 keywords:
   - ここから再生
   - テスト実行

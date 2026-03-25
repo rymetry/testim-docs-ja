@@ -4,7 +4,7 @@ description: 品質トレンドの概要を把握します
 category: TestOps
 order: 15013
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/reports'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/insights/reports.htm'
 keywords:
   - レポート
   - テスト実行結果
@@ -111,7 +111,7 @@ keywords:
 
 ![失敗タイプの詳細](/images/insights/reports/9e8477a-Testim_355_r.png)
 
-このペインには、ロケーターが 0.75 のしきい値を下回り、Testim がそれでも要素を見つけた回数が、ロケーターの総数のうち表示されます。詳細については、[Smart Locators](https://help.testim.io/docs/smart-locators) を参照してください。
+このペインには、ロケーターが 0.75 のしきい値を下回り、Testim がそれでも要素を見つけた回数が、ロケーターの総数のうち表示されます。詳細については、[Smart Locators](https://docs.tricentis.com/testim/content/overview/smart-locators.htm) を参照してください。
 
 ## 改善できる箇所
 

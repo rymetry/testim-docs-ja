@@ -4,7 +4,7 @@ description: リードを商談に変換し、取引先・取引先責任者・�
 category: Salesforceテスト
 order: 16021
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-convertleadtoopportunity'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-convertleadtoopportunity.htm'
 keywords:
   - Salesforce
   - リード

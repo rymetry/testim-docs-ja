@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12023
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/tricentis-device-cloud'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/tricentis-device-cloud.htm'
 keywords:
   - Tricentis Device Cloud
   - TDC

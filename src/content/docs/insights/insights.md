@@ -6,7 +6,7 @@ description: >-
 category: TestOps
 order: 15011
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/insights'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/insights/index.htm'
 keywords:
   - インサイト
   - ダッシュボード

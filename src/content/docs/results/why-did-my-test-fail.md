@@ -4,7 +4,7 @@ description: テスト失敗の原因を理解し、エラーメッセージの�
 category: テスト結果
 order: 7006
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/why-did-my-test-fail'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/why-did-my-test-fail.htm'
 keywords:
   - テスト失敗
   - エラーメッセージ

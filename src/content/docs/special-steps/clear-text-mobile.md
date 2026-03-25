@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5065
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/clear-text-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/clear-text-mobile.htm'
 keywords:
   - Clear Text
   - テキストクリア

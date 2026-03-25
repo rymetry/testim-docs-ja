@@ -4,7 +4,7 @@ description: Xcode を使用して、仮想デバイスおよび物理デバイ�
 category: テストの記録
 order: 3009
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/how-to-prepare-an-ipa-for-mobile-testing.htm'
 keywords:
   - IPA
   - iOS

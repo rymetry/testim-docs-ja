@@ -4,7 +4,7 @@ description: Testim の AI ツール（Help Assistant、Coding Assistant、Sales
 category: 概要
 order: 1004
 updated: '2025-10-13'
-sourceUrl: 'https://help.testim.io/docs/use-ai-in-with-testim'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/index.htm'
 keywords:
   - AI
   - Copilot

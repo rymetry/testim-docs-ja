@@ -4,7 +4,7 @@ description: テストにラベルを追加して整理し、フィルタリン�
 category: テスト管理
 order: 9008
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/labels'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/labels.htm'
 keywords:
   - テストラベル
   - テスト整理

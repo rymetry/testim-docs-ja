@@ -4,7 +4,7 @@ description: 指定したフィールド値で新しい Salesforce レコード�
 category: Salesforceテスト
 order: 16023
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-create'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-create.htm'
 keywords:
   - Salesforce
   - レコード作成

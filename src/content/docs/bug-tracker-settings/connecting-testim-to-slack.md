@@ -4,7 +4,7 @@ description: Testim から指定した Slack channel に bug の説明を送る�
 category: 統合
 order: 12036
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-slack'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-slack.htm'
 keywords:
   - Testim
   - Slack 連携

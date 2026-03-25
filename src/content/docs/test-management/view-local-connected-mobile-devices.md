@@ -4,7 +4,7 @@ description: Tricentis Mobile Agent に接続された物理および仮想モ�
 category: デバイス管理
 order: 11001
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/view-local-connected-mobile-devices'
+sourceUrl: 'https://docs.tricentis.com/testim/content/device-management/view-local-connected-mobile-devices.htm'
 keywords:
   - ローカルモバイルデバイス
   - Tricentis Mobile Agent

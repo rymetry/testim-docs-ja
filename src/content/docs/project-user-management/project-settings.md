@@ -4,7 +4,7 @@ description: プロジェクトの一般設定とプルリクエスト設定の�
 category: 管理者機能
 order: 14004
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/project-settings'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/project-settings.htm'
 keywords:
   - プロジェクト設定
   - プロジェクト名

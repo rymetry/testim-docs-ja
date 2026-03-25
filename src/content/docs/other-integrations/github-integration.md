@@ -4,7 +4,7 @@ description: Testim で GitHub ブランチを管理し、Git Issues でバグ�
 category: 統合
 order: 12020
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/github-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/github-integration.htm'
 keywords:
   - Testim
   - GitHub

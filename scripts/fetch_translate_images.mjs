@@ -37,12 +37,15 @@ function parseSidebarList(sidebarText, filterFn) {
       order = 0;
       continue;
     }
-    const m = line.match(/^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/help\.testim\.io\/docs\/([a-z0-9\-]+))\s*$/);
+    const m = line.match(/^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/);
     if (m && current) {
       order += 1;
       if (!filterFn(m[1])) continue;
       const url = m[2];
-      const slug = m[3];
+      // Extract slug: /slug/index.htm → slug; /slug.htm → slug
+      const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
+      if (!slugMatch) continue;
+      const slug = slugMatch[1];
       out.push({ categoryEnglish: current.english, categoryJapanese: current.japanese, url, slug, order });
     }
   }

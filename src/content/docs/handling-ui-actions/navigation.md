@@ -4,7 +4,7 @@ description: テスト内で別のページに移動するナビゲーション�
 category: 高度な編集
 order: 5033
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/navigation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/navigation.htm'
 keywords:
   - ナビゲーション
   - UI 操作

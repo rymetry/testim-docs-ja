@@ -5,7 +5,7 @@ category: 高度な編集
 order: 5027
 updated: '2025-09-19'
 sourceUrl: >-
-  https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor
+  https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm
 keywords:
   - データ駆動テスト
   - テストデータ
