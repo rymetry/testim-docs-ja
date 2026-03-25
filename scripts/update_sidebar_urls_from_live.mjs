@@ -239,7 +239,15 @@ export async function main(fetchFn = fetch) {
       const unplaced = sitemapUrls.filter((u) => !placed.has(u));
       if (unplaced.length > 0) sections.push({ title: 'Other', urls: unplaced });
     } catch (e) {
-      console.warn(`HTML section fetch failed (${e?.message}); using flat sitemap section.`);
+      // NOTE: MadCap Flare には nav#hub-sidebar が存在しないため、ここに落ちる。
+      // フラットな 'All' セクションで SIDEBAR_URLS.md を上書きするとカテゴリ構造が壊れるため、
+      // 既存ファイルがある場合は上書きを中止する。Phase C (#160) で要改修。
+      console.warn(`HTML section fetch failed (${e?.message}).`);
+      if (fs.existsSync(SIDEBAR_URLS_PATH)) {
+        console.error('既存の SIDEBAR_URLS.md を保護するため、上書きを中止します。');
+        console.error('Phase C (#160) で MadCap Flare 対応が必要です。');
+        process.exit(1);
+      }
       sections = [{ title: 'All', urls: sitemapUrls }];
     }
   } else {

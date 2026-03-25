@@ -97,6 +97,12 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch,
       }
     }
 
+    // コンテンツが取得できなかった場合: 空ハッシュを保存せず changed 扱い
+    if (!content) {
+      changed.push(page);
+      continue;
+    }
+
     const hash = computeHash(content);
     const previousHash =
       typeof storedHashes[page.slug] === 'string' ? storedHashes[page.slug] : storedHashes[page.slug]?.hash;
