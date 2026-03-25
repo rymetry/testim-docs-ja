@@ -3,25 +3,25 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 
 const title = 'Tricentis Testim ユーザー制作日本語翻訳ドキュメント';
 const description =
-  'Tricentis Testim のヘルプドキュメントを日本語に翻訳したサイトです';
+  'Tricentis Testim の公式ヘルプドキュメントを日本語に翻訳した非公式サイトです';
 ---
 
 <HomeLayout title={title} description={description}>
   <!-- Hero -->
-  <section class="bg-white px-4 py-16 sm:px-6 sm:py-24">
+  <section class="bg-linear-to-br from-blue-600 via-blue-500 to-sky-400 px-4 py-16 sm:px-6 sm:py-24">
     <div class="mx-auto max-w-3xl text-center">
       <img src="/logo.svg" alt="" class="mx-auto h-14 w-14" aria-hidden="true" />
-      <h1 class="mt-6 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+      <h1 class="mt-6 text-3xl font-bold tracking-tight text-white sm:text-4xl">
         Tricentis Testim<br />
         ユーザー制作日本語翻訳ドキュメント
       </h1>
-      <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-500">
-        Tricentis Testim の公式ヘルプドキュメントを日本語に翻訳したサイトです。
+      <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-blue-100">
+        Tricentis Testim の公式ヘルプドキュメントを日本語に翻訳した非公式サイトです。
       </p>
       <div class="mt-8">
         <a
           href="/docs/testim-overview"
-          class="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-md"
+          class="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
         >
           ドキュメントを読む
           <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@ const description =
   <section class="border-t border-slate-200 bg-white px-4 py-16 sm:px-6">
     <div class="mx-auto max-w-2xl text-center">
       <p class="text-sm leading-relaxed text-slate-500">
-        Tricentis Testim の公式英語ドキュメントを日本語に翻訳したサイトです。テスト自動化に取り組む日本語ユーザーの皆さんが、より快適にドキュメントを活用できることを目指しています。
+        このサイトは Tricentis Testim の公式英語ドキュメントを日本語に翻訳した非公式サイトです。テスト自動化に取り組む日本語ユーザーの皆さんが、より快適にドキュメントを活用できることを目指しています。
       </p>
     </div>
   </section>
