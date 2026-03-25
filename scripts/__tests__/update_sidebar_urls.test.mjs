@@ -23,6 +23,9 @@ describe('normalizeUrl', () => {
     assert.equal(normalizeUrl('https://example.com/docs/foo'), null);
   });
 
+  // NOTE: normalizeUrl() は Phase C（パイプライン改修）まで旧ドメインも許容する。
+  // Phase C 完了後にこれらのテストを新ドメインのみに更新すること。
+  // See: https://github.com/rymetry/testim-docs-ja/issues/160
   it('returns https URL for help.testim.io/docs/ absolute input', () => {
     assert.equal(
       normalizeUrl('https://help.testim.io/docs/testim-overview'),

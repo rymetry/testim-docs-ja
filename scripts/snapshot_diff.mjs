@@ -28,14 +28,14 @@ const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
 const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.html');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 
-/** Look up new-domain sourceUrl for a slug via url_mapping.json, falling back to slug-based URL. */
+/** Look up new-domain sourceUrl for a slug via url_mapping.json. Returns null when not found. */
 function fallbackSourceUrl(slug) {
   try {
     const mappingPath = path.join(ROOT_DIR, 'scripts', 'url_mapping.json');
     const { mappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
     if (mappings[slug]) return mappings[slug].new_url;
   } catch { /* ignore */ }
-  return `https://docs.tricentis.com/testim/content/${slug}.htm`;
+  return null;
 }
 
 export const MARKER_404_RE = /^<!-- 404:/;
