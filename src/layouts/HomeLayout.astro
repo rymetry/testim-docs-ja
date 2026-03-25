@@ -34,7 +34,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 `;
 ---
 
-<html lang="ja" class="h-full">
+<html lang="ja" class="h-full bg-slate-50">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -63,20 +63,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <body class="flex min-h-screen flex-col font-sans text-slate-900 antialiased">
     <Fragment set:html={gtmBodyCode} />
 
-    <!-- Header — transparent over hero, becomes solid on scroll via hero bg -->
-    <header class="absolute top-0 z-50 w-full">
-      <div class="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-4 py-5 sm:px-6">
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+      <div class="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-4 py-4 sm:px-6">
         <a href="/" class="flex items-center gap-2.5">
-          <img src="/logo.svg" alt="Testim Docs JA" class="h-7 w-7 shrink-0" />
-          <p class="text-sm font-semibold tracking-wide text-slate-300">
-            Testim Docs <span class="text-slate-500">JA</span>
+          <img src="/logo.svg" alt="Testim Docs JA" class="h-8 w-8 shrink-0" />
+          <p class="text-sm font-semibold tracking-wide text-slate-800">
+            Tricentis Testim ユーザー制作日本語翻訳ドキュメント
           </p>
-        </a>
-        <a
-          href="/docs/testim-overview"
-          class="rounded-lg border border-slate-700 px-4 py-1.5 text-xs font-medium text-slate-300 transition-all hover:border-slate-500 hover:text-white"
-        >
-          ドキュメントへ
         </a>
       </div>
     </header>
