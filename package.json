@@ -49,7 +49,8 @@
     "check:snapshots:fetch": "node scripts/snapshot_update.mjs",
     "check:snapshots:diff": "node scripts/snapshot_diff.mjs",
     "check:snapshots": "node scripts/snapshot_update.mjs && node scripts/snapshot_diff.mjs",
-    "check:snapshots:fetch:dry-run": "node scripts/snapshot_update.mjs --dry-run"
+    "check:snapshots:fetch:dry-run": "node scripts/snapshot_update.mjs --dry-run",
+    "generate:url-mapping": "node scripts/generate_url_mapping.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",
