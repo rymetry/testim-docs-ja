@@ -121,6 +121,11 @@ describe('extractUrls', () => {
     const urls = extractUrls('<a href="/docs/testim-overview">O</a>');
     assert.deepEqual(urls, ['https://help.testim.io/docs/testim-overview']);
   });
+
+  it('extracts new domain URLs from anchor tags', () => {
+    const urls = extractUrls('<a href="https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm">O</a>');
+    assert.deepEqual(urls, ['https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm']);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -246,6 +251,8 @@ describe('CLI exit behavior', () => {
 // DRY: fetchNavSections unifies sitemap and no-sitemap branches (regression)
 // ---------------------------------------------------------------------------
 describe('fetchNavSections urlFilter unification', () => {
+  // NOTE: mock HTML では旧ドメイン URL を使用。normalizeUrl() が Phase C まで旧ドメインを許容するため。
+  // Phase C (#160) 完了後に新ドメイン URL に更新すること。
   it('no-sitemap path: all nav URLs are included (urlFilter = () => true)', async () => {
     const navHtml = `
       <nav id="hub-sidebar">

@@ -805,7 +805,7 @@ function normalizeUrlToken(url) {
   // Normalize both old (help.testim.io) and new (docs.tricentis.com) URLs to /docs/slug
   if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
     // /slug/index.htm → slug; /slug.htm → slug
-    const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm/) || url.match(/\/([a-z0-9-]+)\.htm/);
+    const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
     if (slugMatch) return `/docs/${slugMatch[1]}`;
   }
   return url.replace(/^https?:\/\/help\.testim\.io/, '');

@@ -53,6 +53,8 @@ export function normalizeUrl(href) {
   if (!href) return null;
   if (href.startsWith('http://') || href.startsWith('https://')) {
     if (href.startsWith('https://docs.tricentis.com/testim/')) return href;
+    // NOTE: 旧ドメイン（help.testim.io）の許容は Phase C (#160) まで維持する。
+    // Phase C 完了後に旧ドメイン分岐を削除すること。
     if (href.startsWith('https://help.testim.io/docs/')) return href;
     if (href.startsWith('http://help.testim.io/docs/')) return href.replace('http://', 'https://');
     return null;
@@ -74,7 +76,7 @@ export function parseExistingStatusMap(text) {
 async function fetchHtml(url, fetchFn = fetch) {
   const res = await fetchFn(url, {
     headers: {
-      // Readme のWAF対策でUAがないと403になることがある
+      // WAF 対策: UA なしだとアクセスが拒否される場合がある
       'User-Agent':
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0 Safari/537.36',
       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -85,6 +87,8 @@ async function fetchHtml(url, fetchFn = fetch) {
   return await res.text();
 }
 
+// NOTE: nav#hub-sidebar は旧 readme.io の HTML 構造。MadCap Flare では存在しない。
+// Phase C (#160) で要改修。main() の try/catch でフォールバック処理される。
 function extractHubSidebar(html) {
   const m = html.match(/<nav[^>]*\bid="hub-sidebar"[^>]*>[\s\S]*?<\/nav>/i);
   if (!m) throw new Error('nav#hub-sidebar not found in HTML');

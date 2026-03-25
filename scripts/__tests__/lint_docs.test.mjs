@@ -72,6 +72,15 @@ describe('frontmatter: sourceUrl', () => {
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errorsOf(['sourceUrl-required', 'sourceUrl-format'], errors).length, 0);
   });
+
+  it('no error for valid sourceUrl with .htm format', () => {
+    const content = makeDoc({
+      fm: { sourceUrl: 'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm' },
+    });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    const e = errors.find((e) => e.rule === 'sourceUrl-format');
+    assert.ok(!e, 'should not report error for valid .htm sourceUrl');
+  });
 });
 
 describe('frontmatter: description placeholder', () => {

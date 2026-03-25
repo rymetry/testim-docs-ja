@@ -105,6 +105,17 @@ describe('loadSidebarSlugs', () => {
     const slugs = loadSidebarSlugs('No URLs here');
     assert.equal(slugs.size, 0);
   });
+
+  it('extracts slugs from mixed old and new domain URLs', () => {
+    const text = `## Overview
+- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
+## Getting Started
+- ✅ https://help.testim.io/docs/setting-up-your-account
+`;
+    const slugs = loadSidebarSlugs(text);
+    assert.ok(slugs.has('testim-overview'), 'new domain slug extracted');
+    assert.ok(slugs.has('setting-up-your-account'), 'old domain slug extracted');
+  });
 });
 
 describe('isActionableIssue', () => {

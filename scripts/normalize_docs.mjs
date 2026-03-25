@@ -53,7 +53,7 @@ function orderFrontmatter(data) {
   return ordered;
 }
 
-function normalizeFile(filePath) {
+function normalizeFile(filePath, urlMappings) {
   const slug = path.basename(filePath, '.md');
   const raw = fs.readFileSync(filePath, 'utf8');
   const parsed = matter(raw);
@@ -61,14 +61,8 @@ function normalizeFile(filePath) {
   let content = parsed.content ?? '';
 
   // sourceUrl must come from url_mapping.json; no longer generate a default from slug alone
-  if (!data.sourceUrl) {
-    try {
-      const mappingPath = path.join(__dirname, 'url_mapping.json');
-      const { mappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
-      if (mappings[slug]) {
-        data.sourceUrl = mappings[slug].new_url;
-      }
-    } catch { /* mapping file unavailable — leave sourceUrl empty for lint to catch */ }
+  if (!data.sourceUrl && urlMappings[slug]) {
+    data.sourceUrl = urlMappings[slug].new_url;
   }
 
   data.title = normalizeValue(data.title || slug.replace(/-/g, ' '));
@@ -94,9 +88,16 @@ async function main() {
   const slugSet = section ? getSectionSlugSet(section) : null;
   const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.basename(filePath, '.md')));
 
+  // Load url_mapping.json once for all files (avoid re-reading per file)
+  let urlMappings = {};
+  try {
+    const mappingPath = path.join(__dirname, 'url_mapping.json');
+    ({ mappings: urlMappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8')));
+  } catch { /* mapping file unavailable — leave empty for lint to catch */ }
+
   let changed = 0;
   for (const filePath of files) {
-    if (normalizeFile(filePath)) {
+    if (normalizeFile(filePath, urlMappings)) {
       changed += 1;
       console.log(`✓ Normalized ${path.relative(ROOT, filePath)}`);
     }

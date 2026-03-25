@@ -85,6 +85,9 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch,
     }
 
     if (!content) {
+      // WARNING: docs.tricentis.com (MadCap Flare) は .md エンドポイント未対応。
+      // --from-snapshot フラグでローカルスナップショットを使う場合は問題ない。
+      // ネットワーク取得パスは Phase C (#160) で要改修。
       const srcUrl = `${page.url}.md`;
       try {
         const res = await fetchFn(srcUrl);
@@ -236,6 +239,9 @@ async function processOne(item, slugIndex, { fromSnapshot = false } = {}) {
   }
 
   if (!md) {
+    // WARNING: docs.tricentis.com (MadCap Flare) は .md エンドポイント未対応。
+    // --from-snapshot フラグでローカルスナップショットを使う場合は問題ない。
+    // ネットワーク取得パスは Phase C (#160) で要改修。
     const srcUrl = `${item.url}.md`;
     const res = await fetch(srcUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: 'text/markdown' } });
     if (!res.ok) {

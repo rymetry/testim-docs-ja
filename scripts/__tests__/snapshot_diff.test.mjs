@@ -183,3 +183,8 @@ describe('parseArgs', () => {
     assert.equal(args.json, true);
   });
 });
+
+// ---------------------------------------------------------------------------
+// fallbackSourceUrl — not exported from snapshot_diff.mjs (private function).
+// Unit test は追加不可。Phase C (#160) でリファクタリング時にエクスポートを検討。
+// ---------------------------------------------------------------------------
