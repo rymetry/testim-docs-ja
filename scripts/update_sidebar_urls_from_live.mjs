@@ -244,9 +244,9 @@ export async function main(fetchFn = fetch) {
       // 既存ファイルがある場合は上書きを中止する。Phase C (#160) で要改修。
       console.warn(`HTML section fetch failed (${e?.message}).`);
       if (fs.existsSync(SIDEBAR_URLS_PATH)) {
-        console.error('既存の SIDEBAR_URLS.md を保護するため、上書きを中止します。');
-        console.error('Phase C (#160) で MadCap Flare 対応が必要です。');
-        process.exit(1);
+        console.warn('既存の SIDEBAR_URLS.md を保持します（ライブサイトからの更新はスキップ）。');
+        console.warn('Phase C (#160) で MadCap Flare 対応が必要です。');
+        return;
       }
       sections = [{ title: 'All', urls: sitemapUrls }];
     }
