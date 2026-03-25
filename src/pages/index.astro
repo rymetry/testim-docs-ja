@@ -8,20 +8,20 @@ const description =
 
 <HomeLayout title={title} description={description}>
   <!-- Hero -->
-  <section class="bg-linear-to-br from-blue-600 via-blue-500 to-sky-400 px-4 py-16 sm:px-6 sm:py-24">
+  <section class="bg-slate-900 px-4 py-16 sm:px-6 sm:py-24">
     <div class="mx-auto max-w-3xl text-center">
       <img src="/logo.svg" alt="" class="mx-auto h-14 w-14" aria-hidden="true" />
       <h1 class="mt-6 text-3xl font-bold tracking-tight text-white sm:text-4xl">
         Tricentis Testim<br />
         ユーザー制作日本語翻訳ドキュメント
       </h1>
-      <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-blue-100">
+      <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-400">
         Tricentis Testim の公式ヘルプドキュメントを日本語に翻訳した非公式サイトです。
       </p>
       <div class="mt-8">
         <a
           href="/docs/testim-overview"
-          class="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+          class="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-md"
         >
           ドキュメントを読む
           <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -34,97 +34,94 @@ const description =
 
   <!-- Navigation Cards -->
   <section class="bg-slate-50 px-4 py-16 sm:px-6">
-    <div class="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
-      <!-- ドキュメント -->
-      <a
-        href="/docs/testim-overview"
-        class="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
-      >
-        <div class="inline-flex rounded-xl bg-blue-50 p-2.5 text-blue-600">
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-          </svg>
-        </div>
-        <h2 class="mt-4 text-base font-semibold text-slate-900 group-hover:text-blue-600">
-          ドキュメントを読む
-        </h2>
-        <p class="mt-1.5 text-sm leading-relaxed text-slate-500">
-          テスト自動化の基本からCI/CD連携まで、日本語翻訳ドキュメント。
-        </p>
-      </a>
-
-      <!-- Tips（準備中） -->
-      <div class="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-6">
-        <div class="inline-flex rounded-xl bg-slate-50 p-2.5 text-slate-300">
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-          </svg>
-        </div>
-        <h2 class="mt-4 text-base font-semibold text-slate-400">Tips</h2>
-        <p class="mt-1.5 text-sm text-slate-400">実践的なヒントやテクニック集</p>
-        <span class="mt-3 inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-400">
-          準備中
-        </span>
-      </div>
-
-      <!-- Tricentis ステータス -->
-      <a
-        href="https://status.tricentis.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
-      >
-        <div class="inline-flex rounded-xl bg-blue-50 p-2.5 text-blue-600">
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18.364 5.636a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M12 12h.01"></path>
-          </svg>
-        </div>
-        <div class="mt-4 flex items-center gap-1.5">
-          <h2 class="text-base font-semibold text-slate-900 group-hover:text-blue-600">
-            Tricentis ステータス
-          </h2>
-          <svg class="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
-          </svg>
-        </div>
-        <p class="mt-1.5 text-sm leading-relaxed text-slate-500">
-          Tricentis サービスの稼働状況を確認できます。
-        </p>
-      </a>
-
-      <!-- GitHub -->
-      <a
-        href="https://github.com/rymetry/testim-docs-ja"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
-      >
-        <div class="inline-flex rounded-xl bg-blue-50 p-2.5 text-blue-600">
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
-          </svg>
-        </div>
-        <div class="mt-4 flex items-center gap-1.5">
-          <h2 class="text-base font-semibold text-slate-900 group-hover:text-blue-600">
-            GitHub リポジトリ
-          </h2>
-          <svg class="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
-          </svg>
-        </div>
-        <p class="mt-1.5 text-sm leading-relaxed text-slate-500">
-          ソースコードの閲覧や翻訳への貢献ができます。
-        </p>
-      </a>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section class="border-t border-slate-200 bg-white px-4 py-16 sm:px-6">
-    <div class="mx-auto max-w-2xl text-center">
-      <p class="text-sm leading-relaxed text-slate-500">
-        このサイトは Tricentis Testim の公式英語ドキュメントを日本語に翻訳した非公式サイトです。テスト自動化に取り組む日本語ユーザーの皆さんが、より快適にドキュメントを活用できることを目指しています。
+    <div class="mx-auto max-w-3xl">
+      <p class="mb-8 text-center text-sm leading-relaxed text-slate-500">
+        テスト自動化に取り組む日本語ユーザーの皆さんが、より快適にドキュメントを活用できることを目指しています。
       </p>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <!-- ドキュメント -->
+        <a
+          href="/docs/testim-overview"
+          class="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
+        >
+          <div class="inline-flex rounded-xl bg-blue-50 p-2.5 text-blue-600">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <h2 class="mt-4 text-base font-semibold text-slate-900 group-hover:text-blue-600">
+            ドキュメントを読む
+          </h2>
+          <p class="mt-1.5 text-sm leading-relaxed text-slate-500">
+            テスト自動化の基本からCI/CD連携まで、日本語翻訳ドキュメント。
+          </p>
+        </a>
+
+        <!-- Tips（準備中） -->
+        <div class="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-6">
+          <div class="inline-flex rounded-xl bg-slate-50 p-2.5 text-slate-300">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <h2 class="mt-4 text-base font-semibold text-slate-400">Tips</h2>
+          <p class="mt-1.5 text-sm text-slate-400">実践的なヒントやテクニック集</p>
+          <span class="mt-3 inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-400">
+            準備中
+          </span>
+        </div>
+
+        <!-- Tricentis ステータス -->
+        <a
+          href="https://status.tricentis.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
+        >
+          <div class="inline-flex rounded-xl bg-blue-50 p-2.5 text-blue-600">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.364 5.636a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M12 12h.01"></path>
+            </svg>
+          </div>
+          <div class="mt-4 flex items-center gap-1.5">
+            <h2 class="text-base font-semibold text-slate-900 group-hover:text-blue-600">
+              Tricentis ステータス
+            </h2>
+            <svg class="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
+            </svg>
+          </div>
+          <p class="mt-1.5 text-sm leading-relaxed text-slate-500">
+            Tricentis サービスの稼働状況を確認できます。
+          </p>
+        </a>
+
+        <!-- GitHub -->
+        <a
+          href="https://github.com/rymetry/testim-docs-ja"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
+        >
+          <div class="inline-flex rounded-xl bg-blue-50 p-2.5 text-blue-600">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+            </svg>
+          </div>
+          <div class="mt-4 flex items-center gap-1.5">
+            <h2 class="text-base font-semibold text-slate-900 group-hover:text-blue-600">
+              GitHub リポジトリ
+            </h2>
+            <svg class="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
+            </svg>
+          </div>
+          <p class="mt-1.5 text-sm leading-relaxed text-slate-500">
+            ソースコードの閲覧や翻訳への貢献ができます。
+          </p>
+        </a>
+      </div>
     </div>
   </section>
 </HomeLayout>
