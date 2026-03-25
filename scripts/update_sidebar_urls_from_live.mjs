@@ -15,7 +15,7 @@ const JP_LABEL_BY_EN = {
   'Debugging Tests': 'デバッグ',
   'Test Management': 'テスト管理',
   'Mobile Apps': 'モバイルアプリ',
-  'device managment': 'デバイス管理',
+  'device management': 'デバイス管理',
   Integrations: '統合',
   Settings: '設定',
   Administration: '管理',
@@ -59,6 +59,7 @@ export function normalizeUrl(href) {
     if (href.startsWith('http://help.testim.io/docs/')) return href.replace('http://', 'https://');
     return null;
   }
+  // NOTE: 旧ドメインの相対パスフォールバック。Phase C (#160) で削除すること。
   if (href.startsWith('/docs/')) return `https://help.testim.io${href}`;
   return null;
 }

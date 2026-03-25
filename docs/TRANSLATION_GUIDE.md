@@ -172,6 +172,7 @@ curl -s "https://docs.tricentis.com/testim/content/{category}/[page-slug].htm" |
 
 ```bash
 # help-ai-assistantページのメディアを抽出
+# ※ URL はページ構造により異なる場合があります。実際の URL は SIDEBAR_URLS.md で確認してください。
 curl -s "https://docs.tricentis.com/testim/content/overview/testim-overview/help-ai-assistant.htm" | \
   grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp|mp4|webm|mov)' | \
   sort -u
