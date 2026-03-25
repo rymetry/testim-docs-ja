@@ -1,16 +1,28 @@
 #!/usr/bin/env node
 
 /**
- * URL マッピング生成スクリプト
+ * URL マッピング生成スクリプト（スポット利用・使い切り）
  *
  * 旧 help.testim.io の URL から新 docs.tricentis.com の URL へのマッピングを生成する。
  * 301 リダイレクトを辿って新しい URL を検出し、JSON ファイルに出力する。
+ *
+ * ■ 用途:
+ *   Issue #157 Phase A（URL 移行）のために1回実行し、url_mapping.json を生成する。
+ *   生成物は Phase B（一括置換）のインプットとして使用する。
+ *
+ * ■ 利用後の扱い:
+ *   Phase B 完了後、このスクリプトと url_mapping.json は不要になる。
+ *   - generate_url_mapping.mjs → 削除
+ *   - url_mapping.json → 削除（git log に履歴は残る）
+ *   - url_mapping.partial.json → 生成されていれば削除
+ *   - package.json の "generate:url-mapping" スクリプト → 削除
  *
  * 使い方:
  *   node scripts/generate_url_mapping.mjs
  *
  * 出力:
- *   scripts/url_mapping.json
+ *   scripts/url_mapping.json（全件成功時のみ）
+ *   scripts/url_mapping.partial.json（失敗がある場合）
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
