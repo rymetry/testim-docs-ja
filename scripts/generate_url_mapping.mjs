@@ -24,10 +24,12 @@ const ROOT = resolve(__dirname, '..');
 // === 設定 ===
 const SIDEBAR_PATH = resolve(ROOT, 'docs/SIDEBAR_URLS.md');
 const OUTPUT_PATH = resolve(__dirname, 'url_mapping.json');
+const PARTIAL_OUTPUT_PATH = resolve(__dirname, 'url_mapping.partial.json');
 const MAX_RETRIES = 3; // 最大リトライ回数
 const RETRY_DELAY_MS = 2000; // リトライ間隔（ミリ秒）
 const REQUEST_DELAY_MS = 1000; // リクエスト間隔（ミリ秒）
 const REQUEST_TIMEOUT_MS = 10000; // リクエストタイムアウト（ミリ秒）
+const EXPECTED_HOST = 'docs.tricentis.com'; // リダイレクト先として許可するホスト
 
 /**
  * SIDEBAR_URLS.md から help.testim.io の URL を全件抽出する
@@ -87,9 +89,13 @@ async function resolveRedirect(url) {
         return { error: 'リダイレクトなし（200 応答）。移行先が検出できません', status };
       }
 
-      // 最終到達先が 200 で、かつ元 URL と異なる = リダイレクト成功
+      // 最終到達先のホストを検証
       if (status === 200 && finalUrl !== url) {
-        return { new_url: finalUrl, status: 301 };
+        const finalHost = new URL(finalUrl).hostname;
+        if (finalHost !== EXPECTED_HOST) {
+          return { error: `予期しないリダイレクト先: ${finalUrl}（ホスト ${finalHost} は ${EXPECTED_HOST} ではありません）`, status };
+        }
+        return { new_url: finalUrl, status };
       }
 
       // 522: Cloudflare タイムアウト — リトライ対象
@@ -169,12 +175,11 @@ async function main() {
     failures,
   };
 
-  if (failures.length > 0 && existsSync(OUTPUT_PATH)) {
-    // 失敗がある場合は既存マッピングを上書きせず、別ファイルに出力
-    const partialPath = OUTPUT_PATH.replace('.json', '.partial.json');
-    writeFileSync(partialPath, JSON.stringify(output, null, 2) + '\n', 'utf-8');
-    console.log(`\n⚠ ${failures.length} 件の失敗があるため、既存の ${OUTPUT_PATH} を保護しました`);
-    console.log(`  部分結果: ${partialPath}`);
+  if (failures.length > 0) {
+    // 失敗がある場合は常に .partial.json に出力し、正規ファイルには書き込まない
+    writeFileSync(PARTIAL_OUTPUT_PATH, JSON.stringify(output, null, 2) + '\n', 'utf-8');
+    console.log(`\n⚠ ${failures.length} 件の失敗があるため、正規出力 (${OUTPUT_PATH}) には書き込みません`);
+    console.log(`  部分結果: ${PARTIAL_OUTPUT_PATH}`);
   } else {
     writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + '\n', 'utf-8');
   }
