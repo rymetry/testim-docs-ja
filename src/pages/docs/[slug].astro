@@ -42,7 +42,7 @@ const navSections = buildNavigation(docs);
 const { Content, headings } = rendered;
 
 const slug = slugParam;
-const { title, description, hero } = entry.data;
+const { title, description, hero, sourceUrl } = entry.data;
 ---
 
 <DocsLayout
@@ -52,6 +52,7 @@ const { title, description, hero } = entry.data;
   navSections={navSections}
   currentSlug={slug}
   headings={headings}
+  sourceUrl={sourceUrl}
 >
   <Content />
 </DocsLayout>
