@@ -2,7 +2,7 @@
 
 ## プロジェクト概要
 
-- 目標は `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` の日本語版クローンを構築し、最新情報を Markdown ベースで提供すること。
+- 目標は `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` の日本語版を構築し、最新情報を Markdown ベースで提供すること。
 - 英語原文との差分を最小化しつつ、日本人ユーザーが理解しやすい表現と情報設計に置き換える。
 
 ## 技術スタック / アーキテクチャ
