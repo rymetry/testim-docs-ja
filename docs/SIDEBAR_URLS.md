@@ -376,7 +376,10 @@
 
 ```javascript
 // サイドバー内の全リンクURLを抽出
-Array.from(document.querySelectorAll('.hub-sidebar-content a'))
+// ※ セレクターは MadCap Flare のナビゲーション構造に合わせて調整すること
+//   旧 readme.io: '.hub-sidebar-content a'
+//   MadCap Flare: ナビゲーション要素を DevTools で確認して指定
+Array.from(document.querySelectorAll('nav a[href*="/testim/content/"]'))
   .map((a) => a.href)
   .join('\n');
 ```
@@ -385,7 +388,7 @@ Array.from(document.querySelectorAll('.hub-sidebar-content a'))
 
 ```javascript
 // 重複を除去してソート
-[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map((a) => a.href))]
+[...new Set(Array.from(document.querySelectorAll('nav a[href*="/testim/content/"]')).map((a) => a.href))]
   .sort()
   .join('\n');
 ```
