@@ -28,6 +28,16 @@ const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
 const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.html');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 
+/** Look up new-domain sourceUrl for a slug via url_mapping.json. Returns null when not found. */
+function fallbackSourceUrl(slug) {
+  try {
+    const mappingPath = path.join(ROOT_DIR, 'scripts', 'url_mapping.json');
+    const { mappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
+    if (mappings[slug]) return mappings[slug].new_url;
+  } catch { /* ignore */ }
+  return null;
+}
+
 export const MARKER_404_RE = /^<!-- 404:/;
 
 /**
@@ -203,7 +213,7 @@ export async function main(argv) {
       changes.push({
         slug,
         type: 'page-added',
-        sourceUrl: sourceUrls[slug] || `https://help.testim.io/docs/${slug}`,
+        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug),
         categories: null,
         diffLines: 0,
       });
@@ -215,7 +225,7 @@ export async function main(argv) {
       changes.push({
         slug,
         type: 'page-removed',
-        sourceUrl: sourceUrls[slug] || `https://help.testim.io/docs/${slug}`,
+        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug),
         categories: null,
         diffLines: 0,
       });
@@ -232,7 +242,7 @@ export async function main(argv) {
     changes.push({
       slug,
       type: 'page-changed',
-      sourceUrl: sourceUrls[slug] || `https://help.testim.io/docs/${slug}`,
+      sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug),
       categories,
       diffLines,
     });

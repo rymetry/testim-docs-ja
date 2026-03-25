@@ -4,7 +4,7 @@ description: Web およびモバイルアプリケーションのための AI �
 category: 概要
 order: 1002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/testim-automate'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/testim-automate.htm'
 keywords:
   - Web テスト
   - モバイルテスト

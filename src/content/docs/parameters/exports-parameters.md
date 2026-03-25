@@ -4,7 +4,7 @@ description: テスト内のステップ間、あるいは別テスト間でパ�
 category: 高度な編集
 order: 5047
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/exports-parameters'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/exports-parameters.htm'
 keywords:
   - Testim
   - パラメーター

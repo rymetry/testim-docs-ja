@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12042
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/xray-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/test-management-integrations/xray-integration.htm'
 keywords:
   - Xray
   - Jira 連携

@@ -4,7 +4,7 @@ description: チームの作業と生産性をより見やすく把握します
 category: TestOps
 order: 15014
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/team-productivity'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/insights/team-productivity.htm'
 keywords:
   - チーム生産性
   - 生産性レポート

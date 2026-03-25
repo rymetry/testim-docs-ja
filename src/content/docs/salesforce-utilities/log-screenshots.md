@@ -4,7 +4,7 @@ description: テスト実行時に各ステップのスクリーンショット�
 category: Salesforceテスト
 order: 16031
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/log-screenshots'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/log-screenshots.htm'
 keywords:
   - ログのスクリーンショット
   - スクリーンショット

@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12028
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/browserstack-integration-copy'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-copy.htm'
 keywords:
   - LambdaTest
   - Grid

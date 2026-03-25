@@ -14,7 +14,7 @@ snapshots/en/
   sidebar.html          # サイドバーナビゲーション（HTML、.md エンドポイントなし）
 ```
 
-コンテンツスナップショットは `{sourceUrl}.md`（例: `https://help.testim.io/docs/test-status.md`）から取得した生 Markdown をそのまま保存します。正規化処理は不要です。
+コンテンツスナップショットは `{sourceUrl}.md`（例: `https://docs.tricentis.com/testim/content/results/test-status.htm`）から取得した生 Markdown をそのまま保存します。正規化処理は不要です。
 
 サイドバーは `.md` エンドポイントがないため、HTML ページから抽出して正規化しています。
 

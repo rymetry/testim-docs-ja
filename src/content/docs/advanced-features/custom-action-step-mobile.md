@@ -4,7 +4,7 @@ description: モバイル向けカスタムアクションステップで Appium
 category: 高度な編集
 order: 5055
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/custom-action-step-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/custom-action-step-mobile.htm'
 keywords:
   - カスタムアクション
   - モバイルテスト

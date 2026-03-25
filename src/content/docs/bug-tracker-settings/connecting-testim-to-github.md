@@ -4,7 +4,7 @@ description: Testim から GitHub Issues に bug を報告するための接続�
 category: 統合
 order: 12037
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-github'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-github.htm'
 keywords:
   - Testim
   - GitHub 連携

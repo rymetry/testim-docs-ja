@@ -4,7 +4,7 @@ description: ステップ作成後にプロパティを編集する方法を学�
 category: テスト編集
 order: 4005
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/editing-a-steps-properties'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-a-steps-properties.htm'
 keywords:
   - ステッププロパティ
   - プロパティ編集

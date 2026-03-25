@@ -4,7 +4,7 @@ description: グループ作成時に他の適用可能なテストへ自動的�
 category: テスト編集
 order: 4007
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/auto-grouping'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/groups/auto-grouping.htm'
 keywords:
   - 自動グループ化
   - Auto-grouping

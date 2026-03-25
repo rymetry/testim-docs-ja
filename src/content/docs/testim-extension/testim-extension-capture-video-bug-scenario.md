@@ -5,7 +5,7 @@ description: >-
 category: Testim拡張機能
 order: 17003
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/testim-extension-capture-video-bug-scenario'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testim-extension/testim-extension-capture-video-bug-scenario.htm'
 keywords:
   - Testim Extension
   - ビデオキャプチャ

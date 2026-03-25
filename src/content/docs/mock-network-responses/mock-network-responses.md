@@ -5,7 +5,7 @@ description: >-
 category: テスト実行
 order: 6013
 updated: '2025-11-11'
-sourceUrl: 'https://help.testim.io/docs/mock-network-responses'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/index.htm'
 keywords:
   - ネットワークモック
   - モックネットワークレスポンス

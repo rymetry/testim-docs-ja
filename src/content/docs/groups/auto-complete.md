@@ -4,7 +4,7 @@ description: 共有グループを活用してテスト記録を効率化する�
 category: テスト編集
 order: 4008
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/auto-complete'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/groups/auto-complete.htm'
 keywords:
   - オートコンプリート
   - Auto complete

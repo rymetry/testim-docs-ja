@@ -6,7 +6,7 @@ description: >-
 category: テスト実行
 order: 6005
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/scheduler'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/scheduler.htm'
 keywords:
   - スケジューラー
   - スケジュール実行

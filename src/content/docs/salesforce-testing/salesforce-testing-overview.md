@@ -6,7 +6,7 @@ description: >-
 category: Salesforceテスト
 order: 16001
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/salesforce-testing-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-overview.htm'
 keywords:
   - Salesforce テスト
   - Testim for Salesforce

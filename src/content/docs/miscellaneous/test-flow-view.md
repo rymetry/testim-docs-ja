@@ -4,7 +4,7 @@ description: 'Test Flow View は、テストのグラフィカルなフローベ
 category: Testim Labs
 order: 20002
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/test-flow-view'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testim-labs/test-flow-view.htm'
 keywords:
   - Test Flow View
   - ビジュアライゼーション

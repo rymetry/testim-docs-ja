@@ -4,7 +4,7 @@ description: テストを実行するために使用されるシステム仕様�
 category: テスト管理
 order: 9011
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/configuration-library-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/configuration-library-mobile.htm'
 keywords:
   - モバイル構成
   - 構成ライブラリ

@@ -6,7 +6,7 @@ description: >-
 category: テスト結果
 order: 7010
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/test-runs'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-runs.htm'
 keywords:
   - テスト実行
   - 実行統計

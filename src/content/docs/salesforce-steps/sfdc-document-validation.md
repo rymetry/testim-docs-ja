@@ -4,7 +4,7 @@ description: ダウンロードした PDF の内容を、条件に基づいて�
 category: Salesforceテスト
 order: 16020
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-document-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-document-validation.htm'
 keywords:
   - Salesforce
   - PDF

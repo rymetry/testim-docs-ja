@@ -4,7 +4,7 @@ description: 既存テストの編集方法を学びます。新しいステッ�
 category: テスト編集
 order: 4002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/editing-your-tests'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/index.htm'
 keywords:
   - テスト編集
   - ステップ追加

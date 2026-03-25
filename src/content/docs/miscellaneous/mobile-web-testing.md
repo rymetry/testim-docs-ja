@@ -4,7 +4,7 @@ description: モバイルデバイスエミュレーターでアプリケーシ�
 category: ガイド
 order: 19001
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/mobile-web-testing'
+sourceUrl: 'https://docs.tricentis.com/testim/content/guides/mobile-web-testing.htm'
 keywords:
   - モバイル Web テスト
   - モバイルデバイス

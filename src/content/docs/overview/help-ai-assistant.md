@@ -4,7 +4,7 @@ description: Testim Copilot Help Assistant を使用して、サポートへの�
 category: 概要
 order: 1003
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/help-ai-assistant'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/help-ai-assistant.htm'
 keywords:
   - ヘルプアシスタント
   - AI

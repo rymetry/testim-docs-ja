@@ -4,7 +4,7 @@ description: Web ページ全体のアクセシビリティレベルをチェッ
 category: 高度な編集
 order: 5020
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/accessibility-validations'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/accessibility-validations.htm'
 keywords:
   - アクセシビリティ
   - WCAG

@@ -4,7 +4,7 @@ description: 新しいタブやポップアップウィンドウを含むテス�
 category: テストの記録
 order: 3003
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/multi-windows-recording'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/multi-windows-recording.htm'
 keywords:
   - 複数ウィンドウ
   - テスト記録

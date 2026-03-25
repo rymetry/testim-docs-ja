@@ -4,7 +4,7 @@ description: ネットワークモックモードを無効化する方法につ�
 category: テスト実行
 order: 6017
 updated: '2025-11-11'
-sourceUrl: 'https://help.testim.io/docs/disabling-network-mock-mode'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/disabling-network-mock-mode.htm'
 keywords:
   - ネットワークモック
   - モックモード

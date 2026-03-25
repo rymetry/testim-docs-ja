@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5056
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/hooks'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/hooks.htm'
 keywords:
   - フック
   - Before test

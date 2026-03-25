@@ -6,7 +6,7 @@ description: >-
 category: セキュリティ
 order: 18005
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/azure-ad-sso-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/security/sso-integration/azure-ad-sso-integration.htm'
 keywords:
   - Azure AD
   - Azure Active Directory

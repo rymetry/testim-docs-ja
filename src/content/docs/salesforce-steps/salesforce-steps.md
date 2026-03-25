@@ -4,7 +4,7 @@ description: Salesforce 環境での共通操作・レコード操作・ API 操
 category: Salesforceテスト
 order: 16010
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/salesforce-steps'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/index.htm'
 keywords:
   - Salesforce
   - Salesforce ステップ

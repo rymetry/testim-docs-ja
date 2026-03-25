@@ -4,7 +4,7 @@ description: GitHub Actions で Testim テストを実行する方法につい�
 category: 統合
 order: 12012
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/github-action-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/github-action-integration.htm'
 keywords:
   - GitHub Actions
   - GitHub Action

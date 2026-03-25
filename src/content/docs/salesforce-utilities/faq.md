@@ -4,7 +4,7 @@ description: Testim for Salesforce に関するよくある質問と回答をま
 category: Salesforceテスト
 order: 16034
 updated: '2025-12-10'
-sourceUrl: 'https://help.testim.io/docs/faq'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/faq.htm'
 keywords:
   - FAQ
   - よくある質問

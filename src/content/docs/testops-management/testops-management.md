@@ -6,7 +6,7 @@ description: >-
 category: TestOps
 order: 15002
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/testops-management'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-management/index.htm'
 keywords:
   - TestOps
   - TestOps 管理

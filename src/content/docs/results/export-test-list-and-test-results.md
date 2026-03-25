@@ -4,7 +4,7 @@ description: テスト結果を CSV ファイルにエクスポートする方�
 category: テスト結果
 order: 7013
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/export-test-list-and-test-results'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/export-test-list-and-test-results.htm'
 keywords:
   - テスト結果エクスポート
   - CSV 出力

@@ -5,7 +5,7 @@ description: >-
 category: テスト実行
 order: 6014
 updated: '2025-11-11'
-sourceUrl: 'https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file.htm'
 keywords:
   - HAR ファイル
   - ネットワークトラフィック

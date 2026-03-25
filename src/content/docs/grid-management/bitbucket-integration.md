@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12032
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/bitbucket-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/bitbucket-integration.htm'
 keywords:
   - Bitbucket
   - branch

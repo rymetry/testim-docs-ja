@@ -4,7 +4,7 @@ description: Chrome 開発者ツールを使用したデバッグ、コンソー
 category: テスト結果
 order: 7008
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/debug-console-errors-access-dom'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/debug-console-errors-access-dom.htm'
 keywords:
   - コンソールエラー
   - ネットワークエラー

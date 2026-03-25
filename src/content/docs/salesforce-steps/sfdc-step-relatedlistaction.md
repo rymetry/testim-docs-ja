@@ -4,7 +4,7 @@ description: 関連リスト内のレコードを作成・検証・表示しま�
 category: Salesforceテスト
 order: 16026
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-relatedlistaction'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction.htm'
 keywords:
   - Salesforce
   - 関連リスト

@@ -4,7 +4,7 @@ description: テスト実行後の結果の確認方法について説明しま�
 category: テスト結果
 order: 7002
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/test-results'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/index.htm'
 keywords:
   - テスト結果
   - ステップ結果

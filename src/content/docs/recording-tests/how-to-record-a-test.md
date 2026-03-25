@@ -4,7 +4,7 @@ description: Testim で Web テストを記録する手順を、プロジェク�
 category: テストの記録
 order: 3001
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/how-to-record-a-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/index.htm'
 keywords:
   - テスト記録
   - Base URL

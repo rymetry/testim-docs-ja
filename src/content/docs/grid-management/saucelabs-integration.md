@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12026
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/saucelabs-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-integration.htm'
 keywords:
   - SauceLabs
   - Grid

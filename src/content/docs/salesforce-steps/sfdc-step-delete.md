@@ -4,7 +4,7 @@ description: 表示中の Salesforce レコードを削除します。
 category: Salesforceテスト
 order: 16028
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-delete'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-delete.htm'
 keywords:
   - Salesforce
   - レコード削除

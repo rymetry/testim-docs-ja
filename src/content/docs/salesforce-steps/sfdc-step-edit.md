@@ -4,7 +4,7 @@ description: 表示中の Salesforce レコードのフィールドを編集し�
 category: Salesforceテスト
 order: 16025
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-edit'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-edit.htm'
 keywords:
   - Salesforce
   - レコード編集

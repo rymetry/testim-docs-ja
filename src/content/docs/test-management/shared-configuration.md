@@ -4,7 +4,7 @@ description: 複数/すべてのテストで同じテスト構成を使用しま
 category: テスト管理
 order: 9010
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/shared-configuration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/shared-configuration.htm'
 keywords:
   - 共有構成
   - テスト構成

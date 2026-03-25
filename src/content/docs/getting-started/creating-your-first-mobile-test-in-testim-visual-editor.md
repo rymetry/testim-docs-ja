@@ -7,7 +7,7 @@ category: はじめに
 order: 2003
 updated: '2025-09-19'
 sourceUrl: >-
-  https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor
+  https://docs.tricentis.com/testim/content/getting-started/creating-your-first-mobile-test-in-testim-visual-editor.htm
 keywords:
   - モバイルテスト
   - Virtual Mobile Grid

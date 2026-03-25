@@ -4,7 +4,7 @@ description: Testim から bug / issue tracking system に issue を公開する
 category: 統合
 order: 12033
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/bug-tracker-settings'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/index.htm'
 keywords:
   - Testim
   - バグトラッカー設定

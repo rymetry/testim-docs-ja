@@ -4,7 +4,7 @@ description: Deep Link ステップで、モバイルアプリ内の特定画面
 category: 高度な編集
 order: 5063
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/deep-link-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/deep-link-mobile/index.htm'
 keywords:
   - ディープリンク
   - Deep Link

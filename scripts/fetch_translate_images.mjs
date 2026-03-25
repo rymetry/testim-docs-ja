@@ -37,12 +37,15 @@ function parseSidebarList(sidebarText, filterFn) {
       order = 0;
       continue;
     }
-    const m = line.match(/^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/help\.testim\.io\/docs\/([a-z0-9\-]+))\s*$/);
+    const m = line.match(/^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/);
     if (m && current) {
       order += 1;
       if (!filterFn(m[1])) continue;
       const url = m[2];
-      const slug = m[3];
+      // Extract slug: /slug/index.htm → slug; /slug.htm → slug
+      const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
+      if (!slugMatch) continue;
+      const slug = slugMatch[1];
       out.push({ categoryEnglish: current.english, categoryJapanese: current.japanese, url, slug, order });
     }
   }
@@ -82,6 +85,9 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch,
     }
 
     if (!content) {
+      // WARNING: docs.tricentis.com (MadCap Flare) は .md エンドポイント未対応。
+      // --from-snapshot フラグでローカルスナップショットを使う場合は問題ない。
+      // ネットワーク取得パスは Phase C (#160) で要改修。
       const srcUrl = `${page.url}.md`;
       try {
         const res = await fetchFn(srcUrl);
@@ -89,6 +95,12 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch,
       } catch (e) {
         console.warn(`getDiffPagesList: network error for ${page.slug} (${e?.message}); treating as changed.`);
       }
+    }
+
+    // コンテンツが取得できなかった場合: 空ハッシュを保存せず changed 扱い
+    if (!content) {
+      changed.push(page);
+      continue;
     }
 
     const hash = computeHash(content);
@@ -233,6 +245,12 @@ async function processOne(item, slugIndex, { fromSnapshot = false } = {}) {
   }
 
   if (!md) {
+    // WARNING: docs.tricentis.com (MadCap Flare) は .md エンドポイント未対応。
+    // ネットワーク取得パスは Phase C (#160) で要改修。
+    if (item.url.includes('docs.tricentis.com')) {
+      console.warn(`⚠️  Skip ${item.slug}: MadCap Flare は .md 未対応です（--from-snapshot を使用してください）`);
+      return false;
+    }
     const srcUrl = `${item.url}.md`;
     const res = await fetch(srcUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: 'text/markdown' } });
     if (!res.ok) {

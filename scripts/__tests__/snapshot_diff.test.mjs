@@ -157,7 +157,7 @@ describe('classifyChanges', () => {
 // ---------------------------------------------------------------------------
 describe('MARKER_404_RE', () => {
   it('detects 404 marker', () => {
-    assert.ok(MARKER_404_RE.test('<!-- 404: page not found at https://help.testim.io/docs/foo -->'));
+    assert.ok(MARKER_404_RE.test('<!-- 404: page not found at https://docs.tricentis.com/testim/content/overview/foo.htm -->'));
   });
 
   it('does not match normal content', () => {
@@ -183,3 +183,8 @@ describe('parseArgs', () => {
     assert.equal(args.json, true);
   });
 });
+
+// ---------------------------------------------------------------------------
+// fallbackSourceUrl — not exported from snapshot_diff.mjs (private function).
+// Unit test は追加不可。Phase C (#160) でリファクタリング時にエクスポートを検討。
+// ---------------------------------------------------------------------------

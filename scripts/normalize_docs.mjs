@@ -1,9 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
 import { ROOT_DIR, DOCS_DIR, findMdFiles } from './lib/project.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const ROOT = ROOT_DIR;
 const DOCS_ROOT = DOCS_DIR;
@@ -50,14 +53,17 @@ function orderFrontmatter(data) {
   return ordered;
 }
 
-function normalizeFile(filePath) {
+function normalizeFile(filePath, urlMappings) {
   const slug = path.basename(filePath, '.md');
   const raw = fs.readFileSync(filePath, 'utf8');
   const parsed = matter(raw);
   const data = { ...(parsed.data ?? {}) };
   let content = parsed.content ?? '';
 
-  data.sourceUrl = data.sourceUrl || `https://help.testim.io/docs/${slug}`;
+  // sourceUrl must come from url_mapping.json; no longer generate a default from slug alone
+  if (!data.sourceUrl && urlMappings[slug]) {
+    data.sourceUrl = urlMappings[slug].new_url;
+  }
 
   data.title = normalizeValue(data.title || slug.replace(/-/g, ' '));
   data.description =
@@ -82,9 +88,16 @@ async function main() {
   const slugSet = section ? getSectionSlugSet(section) : null;
   const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.basename(filePath, '.md')));
 
+  // Load url_mapping.json once for all files (avoid re-reading per file)
+  let urlMappings = {};
+  try {
+    const mappingPath = path.join(__dirname, 'url_mapping.json');
+    ({ mappings: urlMappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8')));
+  } catch { /* mapping file unavailable — leave empty for lint to catch */ }
+
   let changed = 0;
   for (const filePath of files) {
-    if (normalizeFile(filePath)) {
+    if (normalizeFile(filePath, urlMappings)) {
       changed += 1;
       console.log(`✓ Normalized ${path.relative(ROOT, filePath)}`);
     }

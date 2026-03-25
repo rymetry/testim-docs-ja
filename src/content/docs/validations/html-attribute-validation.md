@@ -4,7 +4,7 @@ description: Web 要素の HTML 属性値を検証するステップ。id、clas
 category: 高度な編集
 order: 5011
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/html-attribute-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/html-attribute-validation.htm'
 keywords:
   - HTML 属性
   - 属性検証

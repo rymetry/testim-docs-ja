@@ -4,7 +4,7 @@ description: Applitools 統合プロジェクトでのビジュアル検証テ�
 category: テスト結果
 order: 7007
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/visual-validation-test-results'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/visual-validation-test-results.htm'
 keywords:
   - ビジュアル検証
   - Applitools

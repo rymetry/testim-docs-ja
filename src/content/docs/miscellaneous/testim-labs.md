@@ -4,7 +4,7 @@ description: 'Testim Labs は、新しい Testim 機能に早期アクセスで�
 category: Testim Labs
 order: 20001
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/testim-labs'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testim-labs/testim-labs.htm'
 keywords:
   - Testim Labs
   - 新機能

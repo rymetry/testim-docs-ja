@@ -4,7 +4,7 @@ description: パラメーターの使い方をまとめて解説します。
 category: 高度な編集
 order: 5040
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/parameters'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/index.htm'
 keywords:
   - Testim
   - パラメーター

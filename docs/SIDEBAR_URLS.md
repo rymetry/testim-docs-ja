@@ -22,347 +22,347 @@
 
 ## Overview（概要）
 
-- ✅🔍 https://help.testim.io/docs/testim-overview
-- ✅🔍 https://help.testim.io/docs/testim-automate
-- ✅🔍 https://help.testim.io/docs/help-ai-assistant
-- ✅🔍 https://help.testim.io/docs/use-ai-in-with-testim
-- ✅🔍 https://help.testim.io/docs/ai-data-usage-policy
-- ✅🔍 https://help.testim.io/docs/enhanced-mode-mobile
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/testim-automate.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/help-ai-assistant.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/ai-data-usage-policy.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/enhanced-mode-mobile.htm
 
 ## Getting Started（はじめに）
 
-- ✅🔍 https://help.testim.io/docs/setting-up-your-account
-- ✅🔍 https://help.testim.io/docs/creating-your-first-codeless-test
-- ✅🔍 https://help.testim.io/docs/creating-your-first-mobile-test-in-testim-visual-editor
+- ✅🔍 https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/getting-started/creating-your-first-codeless-test.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/getting-started/creating-your-first-mobile-test-in-testim-visual-editor.htm
 
 ## Recording Tests（テストの記録）
 
-- ✅🔍 https://help.testim.io/docs/how-to-record-a-test
-- ✅🔍 https://help.testim.io/docs/why-do-you-need-testim-extension
-- ✅🔍 https://help.testim.io/docs/multi-windows-recording
-- ✅🔍 https://help.testim.io/docs/recording-a-mobile-test
-- ✅🔍 https://help.testim.io/docs/recording-a-vmg-mobile-test
-- ✅🔍 https://help.testim.io/docs/recording-a-local-mobile-test
-- ✅🔍 https://help.testim.io/docs/setting-the-test-configuration
-- ✅🔍 https://help.testim.io/docs/configure-tricentis-mobile-agent
-- ✅🔍 https://help.testim.io/docs/how-to-prepare-an-ipa-for-mobile-testing
-- ✅🔍 https://help.testim.io/docs/mobile-test-editor
-- ✅🔍 https://help.testim.io/docs/mobile-test-mirroring-toolbar
-- ✅🔍 https://help.testim.io/docs/vision-locate
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/multi-windows-recording.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/recording-a-local-mobile-test.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/setting-the-test-configuration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/how-to-prepare-an-ipa-for-mobile-testing.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/mobile-test-editor.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/mobile-test-mirroring-toolbar.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/vision-locate.htm
 
 ## Editing Tests（テスト編集）
 
-- ✅🔍 https://help.testim.io/docs/steps
-- ✅🔍 https://help.testim.io/docs/editing-your-tests
-- ✅🔍 https://help.testim.io/docs/editing-target-element-properties
-- ✅🔍 https://help.testim.io/docs/editing-target-element-properties-mobile
-- ✅🔍 https://help.testim.io/docs/editing-a-steps-properties
-- ✅🔍 https://help.testim.io/docs/groups
-- ✅🔍 https://help.testim.io/docs/auto-grouping
-- ✅🔍 https://help.testim.io/docs/auto-complete
-- ✅🔍 https://help.testim.io/docs/shareable-steps
-- ✅🔍 https://help.testim.io/docs/conditions
-- ✅🔍 https://help.testim.io/docs/advanced-conditions-settings
-- ✅🔍 https://help.testim.io/docs/generating-a-random-value
-- ✅🔍 https://help.testim.io/docs/generating-a-date
-- ✅🔍 https://help.testim.io/docs/search-within-a-test
-- ✅🔍 https://help.testim.io/docs/recovering-a-test-that-was-not-saved
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/steps.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-target-element-properties.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-target-element-properties-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-a-steps-properties.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/groups/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/groups/auto-grouping.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/groups/auto-complete.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/shareable-steps.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/conditions/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/conditions/advanced-conditions-settings.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/generating-a-random-value.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/generating-a-date.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/search-within-a-test.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/recovering-a-test-that-was-not-saved.htm
 
 ## Advanced Editing（高度な編集）
 
-- ✅🔍 https://help.testim.io/docs/advanced-set-text
-- ✅🔍 https://help.testim.io/docs/validations
-- ✅🔍 https://help.testim.io/docs/validate-element-visible
-- ✅🔍 https://help.testim.io/docs/validate-element-not-visible
-- ✅🔍 https://help.testim.io/docs/validate-element-text
-- ✅🔍 https://help.testim.io/docs/custom-code-1
-- ✅🔍 https://help.testim.io/docs/custom-code
-- ✅🔍 https://help.testim.io/docs/add-cli-validations-and-actions
-- ✅🔍 https://help.testim.io/docs/validate-download
-- ✅🔍 https://help.testim.io/docs/email-validation
-- ✅🔍 https://help.testim.io/docs/html-attribute-validation
-- ✅🔍 https://help.testim.io/docs/validate-element-attribute
-- ✅🔍 https://help.testim.io/docs/checkbox-and-radio-button-validation
-- ✅🔍 https://help.testim.io/docs/pixel-validation-and-pixel-wait-for
-- ✅🔍 https://help.testim.io/docs/add-network-validation
-- ✅🔍 https://help.testim.io/docs/file-upload-step
-- ✅🔍 https://help.testim.io/docs/mongodb-validation
-- ✅🔍 https://help.testim.io/docs/mysql-validation
-- ✅🔍 https://help.testim.io/docs/css-property-validation
-- ✅🔍 https://help.testim.io/docs/accessibility-validations
-- ✅🔍 https://help.testim.io/docs/element-accessibility-validation
-- ✅🔍 https://help.testim.io/docs/validate-element-visualization
-- ✅🔍 https://help.testim.io/docs/validate-viewport-visualization
-- ✅🔍 https://help.testim.io/docs/validate-full-page-visualization
-- ✅🔍 https://help.testim.io/docs/wait-for-element-visualization
-- ✅🔍 https://help.testim.io/docs/data-driven-testing
-- ✅🔍 https://help.testim.io/docs/configuring-a-data-driven-test-from-the-visual-editor
-- ✅🔍 https://help.testim.io/docs/configuring-data-driven-tests-using-the-config-file
-- ✅🔍 https://help.testim.io/docs/configuring-data-driven-tests-using-data-from-an-external-source
-- ✅🔍 https://help.testim.io/docs/handling-ui-actions
-- ✅🔍 https://help.testim.io/docs/auto-scroll
-- ✅🔍 https://help.testim.io/docs/drag-drop-step
-- ✅🔍 https://help.testim.io/docs/navigation
-- ✅🔍 https://help.testim.io/docs/refresh-page
-- ✅🔍 https://help.testim.io/docs/scroll
-- ✅🔍 https://help.testim.io/docs/hover-step
-- ✅🔍 https://help.testim.io/docs/extract-text
-- ✅🔍 https://help.testim.io/docs/extract-sms-message
-- ✅🔍 https://help.testim.io/docs/loops
-- ✅🔍 https://help.testim.io/docs/parameters
-- ✅🔍 https://help.testim.io/docs/parameters-in-custom-javascript-steps
-- ✅🔍 https://help.testim.io/docs/parameters-for-groups
-- ✅🔍 https://help.testim.io/docs/json-parameters-file-parameters
-- ✅🔍 https://help.testim.io/docs/configuration-file-parameters
-- ✅🔍 https://help.testim.io/docs/passing-parameters-from-excel-file
-- ✅🔍 https://help.testim.io/docs/parameter-override-rules
-- ✅🔍 https://help.testim.io/docs/exports-parameters
-- ✅🔍 https://help.testim.io/docs/hidden-parameters
-- ✅🔍 https://help.testim.io/docs/wait-for
-- ✅🔍 https://help.testim.io/docs/api-testing
-- ✅🔍 https://help.testim.io/docs/cookies
-- ✅🔍 https://help.testim.io/docs/group-context
-- ✅🔍 https://help.testim.io/docs/auto-grouping2
-- ✅🔍 https://help.testim.io/docs/advanced-js-editor
-- ✅🔍 https://help.testim.io/docs/custom-action-step-mobile
-- ✅🔍 https://help.testim.io/docs/hooks
-- ✅🔍 https://help.testim.io/docs/error-suffix-customization
-- ✅🔍 https://help.testim.io/docs/salesforce-auto-login-step
-- ✅🔍 https://help.testim.io/docs/salesforce-apex-action-step
-- ✅🔍 https://help.testim.io/docs/coding-assistant
-- ✅🔍 https://help.testim.io/docs/keyboard-shortcut-step
-- ✅🔍 https://help.testim.io/docs/set-geolocation
-- ✅🔍 https://help.testim.io/docs/deep-link-mobile
-- ✅🔍 https://help.testim.io/docs/hide-keyboard-mobile
-- ✅🔍 https://help.testim.io/docs/clear-text-mobile
-- ✅🔍 https://help.testim.io/docs/reusable-test-data
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/advanced-set-text.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-visible.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-not-visible.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-text.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/custom-code-1.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/custom-code.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/add-cli-validations-and-actions.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-download.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/email-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/html-attribute-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-attribute.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/checkbox-and-radio-button-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/add-network-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/file-upload-step.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/mongodb-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/mysql-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/css-property-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/accessibility-validations.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/element-accessibility-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-visualization.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-viewport-visualization.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-full-page-visualization.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/validations/wait-for-element-visualization.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/auto-scroll.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/drag-drop-step.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/navigation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/refresh-page.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/scroll.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/hover-step.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/extract-text.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/extract-sms-message.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/loops.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameters-in-custom-javascript-steps.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameters-for-groups.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/json-parameters-file-parameters.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/configuration-file-parameters.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/passing-parameters-from-excel-file.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameter-override-rules.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/exports-parameters.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/parameters/hidden-parameters.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/wait-for.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/api-testing.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/cookies.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/group-context.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/groups/auto-grouping2.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/advanced-js-editor.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/custom-action-step-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/hooks.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/error-suffix-customization.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/salesforce-auto-login-step.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/salesforce-apex-action-step.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/coding-assistant.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/keyboard-shortcut-step.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/set-geolocation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/deep-link-mobile/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/deep-link-mobile/hide-keyboard-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/clear-text-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/reusable-test-data.htm
 
 ## Running Tests（テスト実行）
 
-- ✅🔍 https://help.testim.io/docs/running-tests-overview
-- ✅🔍 https://help.testim.io/docs/the-command-line-cli
-- ✅🔍 https://help.testim.io/docs/allow-chrome-browser-to-use-microphone
-- ✅🔍 https://help.testim.io/docs/base-url
-- ✅🔍 https://help.testim.io/docs/scheduler
-- ✅🔍 https://help.testim.io/docs/scheduler-mobile
-- ✅🔍 https://help.testim.io/docs/schedulers-notification-via-webhook
-- ✅🔍 https://help.testim.io/docs/running-tests-on-multiple-browsers
-- ✅🔍 https://help.testim.io/docs/run-multiple-tests-locally
-- ✅🔍 https://help.testim.io/docs/run-in-incognito
-- ✅🔍 https://help.testim.io/docs/configuration-file-run-hooks
-- ✅🔍 https://help.testim.io/docs/predefined-properties-in-config-file-hooks
-- ✅🔍 https://help.testim.io/docs/mock-network-responses
-- ✅🔍 https://help.testim.io/docs/mocking-all-the-network-traffic-using-a-har-file
-- ✅🔍 https://help.testim.io/docs/creating-a-mapping-file
-- ✅🔍 https://help.testim.io/docs/running-the-test-in-mock-mode-using-the-mapping-file
-- ✅🔍 https://help.testim.io/docs/disabling-network-mock-mode
-- ✅🔍 https://help.testim.io/docs/mock-network-responses-troubleshooting
-- ✅🔍 https://help.testim.io/docs/play-from-here
-- ✅🔍 https://help.testim.io/docs/rerun-locally-with-the-same-params
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/running-tests-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/the-command-line-cli/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/base-url.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/scheduler.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/scheduler-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/schedulers-notification-via-webhook.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/running-tests-on-multiple-browsers.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/run-multiple-tests-locally.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/run-in-incognito.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/configuration-file-run-hooks/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/creating-a-mapping-file.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/disabling-network-mock-mode.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/mock-network-responses-troubleshooting.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/play-from-here.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/running-tests/rerun-locally-with-the-same-params.htm
 
 ## Results（テスト結果）
 
-- ✅🔍 https://help.testim.io/docs/results-overview
-- ✅🔍 https://help.testim.io/docs/test-results
-- ✅🔍 https://help.testim.io/docs/compare-side-by-side-screenshots
-- ✅🔍 https://help.testim.io/docs/network-logs
-- ✅🔍 https://help.testim.io/docs/network-logs-copy
-- ✅🔍 https://help.testim.io/docs/why-did-my-test-fail
-- ✅🔍 https://help.testim.io/docs/visual-validation-test-results
-- ✅🔍 https://help.testim.io/docs/debug-console-errors-access-dom
-- ✅🔍 https://help.testim.io/docs/execution-runs-screen
-- ✅🔍 https://help.testim.io/docs/test-runs
-- ✅🔍 https://help.testim.io/docs/stop-pause-debug-tests
-- ✅🔍 https://help.testim.io/docs/result-labels
-- ✅🔍 https://help.testim.io/docs/export-test-list-and-test-results
-- ✅🔍 https://help.testim.io/docs/tag-remote-runs-failures
-- ✅🔍 https://help.testim.io/docs/test-run-pdf-report
+- ✅🔍 https://docs.tricentis.com/testim/content/results/results-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/compare-side-by-side-screenshots.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/network-logs.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/network-logs-copy.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/why-did-my-test-fail.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/visual-validation-test-results.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/debug-console-errors-access-dom.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/execution-runs-screen.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-runs.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/stop-pause-debug-tests.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/result-labels.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/export-test-list-and-test-results.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/tag-remote-runs-failures.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/results/test-run-pdf-report.htm
 
 ## Debugging Tests（デバッグ）
 
-- ✅🔍 https://help.testim.io/docs/debugging-overview
-- ✅🔍 https://help.testim.io/docs/debugging-controls
-- ✅🔍 https://help.testim.io/docs/recording-additional-steps-to-fix-bugs
-- ✅🔍 https://help.testim.io/docs/debug-helper-panels
-- ✅🔍 https://help.testim.io/docs/js-code-debugging
+- ✅🔍 https://docs.tricentis.com/testim/content/debugging-tests/debugging-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/debugging-tests/debugging-controls.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/debugging-tests/recording-additional-steps-to-fix-bugs.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/debugging-tests/debug-helper-panels.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/debugging-tests/js-code-debugging.htm
 
 ## Test Management（テスト管理）
 
-- ✅🔍 https://help.testim.io/docs/test-management-overview
-- ✅🔍 https://help.testim.io/docs/test-list
-- ✅🔍 https://help.testim.io/docs/managing-tests-and-folders
-- ✅🔍 https://help.testim.io/docs/cloning-tests
-- ✅🔍 https://help.testim.io/docs/shared-steps-library
-- ✅🔍 https://help.testim.io/docs/managing-shared-steps-and-folders
-- ✅🔍 https://help.testim.io/docs/dependencies-and-ordering-of-tests
-- ✅🔍 https://help.testim.io/docs/labels
-- ✅🔍 https://help.testim.io/docs/revisions
-- ✅🔍 https://help.testim.io/docs/shared-configuration
-- ✅🔍 https://help.testim.io/docs/configuration-library-mobile
-- ✅🔍 https://help.testim.io/docs/test-plans
-- ✅🔍 https://help.testim.io/docs/test-plans-mobile
-- ✅🔍 https://help.testim.io/docs/test-suites
-- ✅🔍 https://help.testim.io/docs/locators-auto-improve
-- ✅🔍 https://help.testim.io/docs/bug-reporting
-- ✅🔍 https://help.testim.io/docs/saving-a-filtered-view
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-management-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-list/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-list/managing-tests-and-folders.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-list/cloning-tests.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/shared-steps-library/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/shared-steps-library/managing-shared-steps-and-folders.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/dependencies-and-ordering-of-tests.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/labels.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/revisions.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/shared-configuration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/configuration-library-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-plans.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-plans-mobile.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/test-suites.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/locators-auto-improve.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/bug-reporting.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/test-management/saving-a-filtered-view.htm
 
 ## Mobile Apps（モバイルアプリ）
 
-- ✅🔍 https://help.testim.io/docs/mobile-apps
+- ✅🔍 https://docs.tricentis.com/testim/content/mobile-apps/mobile-apps.htm
 
 ## device managment（デバイス管理）
 
-- ✅🔍 https://help.testim.io/docs/view-local-connected-mobile-devices
+- ✅🔍 https://docs.tricentis.com/testim/content/device-management/view-local-connected-mobile-devices.htm
 
 ## Integrations（統合）
 
-- ✅🔍 https://help.testim.io/docs/integrations-overview
-- ✅🔍 https://help.testim.io/docs/integrate-testim-to-your-ci
-- ✅🔍 https://help.testim.io/docs/azure-devops-build-pipeline-integrations
-- ✅🔍 https://help.testim.io/docs/bamboo-integration
-- ✅🔍 https://help.testim.io/docs/circle-ci-integration
-- ✅🔍 https://help.testim.io/docs/codeship-integration
-- ✅🔍 https://help.testim.io/docs/jenkins-integration
-- ✅🔍 https://help.testim.io/docs/jenkins-integration-using-docker
-- ✅🔍 https://help.testim.io/docs/teamcity-integration
-- ✅🔍 https://help.testim.io/docs/vsts-and-tfs-integration
-- ✅🔍 https://help.testim.io/docs/gitlab-integration
-- ✅🔍 https://help.testim.io/docs/github-action-integration
-- ✅🔍 https://help.testim.io/docs/copado-integration
-- ✅🔍 https://help.testim.io/docs/gearset-integration
-- ✅🔍 https://help.testim.io/docs/autorabit-integration
-- ✅🔍 https://help.testim.io/docs/dedicated-run-tunnel
-- ✅🔍 https://help.testim.io/docs/applitools-integration
-- ✅🔍 https://help.testim.io/docs/override-applitools-test-name
-- ✅🔍 https://help.testim.io/docs/override-applitools-app-name
-- ✅🔍 https://help.testim.io/docs/github-integration
-- ✅🔍 https://help.testim.io/docs/sealights-integration
-- ✅🔍 https://help.testim.io/docs/grid-management
-- ✅🔍 https://help.testim.io/docs/tricentis-device-cloud
-- ✅🔍 https://help.testim.io/docs/virtual-mobile-grid
-- ✅🔍 https://help.testim.io/docs/custom-grid
-- ✅🔍 https://help.testim.io/docs/saucelabs-integration
-- ✅🔍 https://help.testim.io/docs/browserstack-integration-1
-- ✅🔍 https://help.testim.io/docs/browserstack-integration-copy
-- ✅🔍 https://help.testim.io/docs/custom-capabilities
-- ✅🔍 https://help.testim.io/docs/saucelabs-browserstack-options
-- ✅🔍 https://help.testim.io/docs/headspin-integration
-- ✅🔍 https://help.testim.io/docs/bitbucket-integration
-- ✅🔍 https://help.testim.io/docs/bug-tracker-settings
-- ✅🔍 https://help.testim.io/docs/connecting-testim-to-jira
-- ✅🔍 https://help.testim.io/docs/connecting-testim-to-trello
-- ✅🔍 https://help.testim.io/docs/connecting-testim-to-slack
-- ✅🔍 https://help.testim.io/docs/connecting-testim-to-github
-- ✅🔍 https://help.testim.io/docs/test-management-integrations
-- ✅🔍 https://help.testim.io/docs/qtest-integration
-- ✅🔍 https://help.testim.io/docs/testrail-integration
-- ✅🔍 https://help.testim.io/docs/ttm-for-jira-integration
-- ✅🔍 https://help.testim.io/docs/xray-integration
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrations-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/azure-devops-build-pipeline-integrations.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/bamboo-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/circle-ci-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/codeship-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/jenkins-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/teamcity-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/gitlab-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/github-action-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/copado-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/gearset-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/autorabit-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/dedicated-run-tunnel.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/applitools-integration/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-test-name.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-app-name.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/github-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/sealights-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/tricentis-device-cloud.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/virtual-mobile-grid.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/custom-grid.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-1.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-copy.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/custom-capabilities.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-browserstack-options.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/headspin-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/bitbucket-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-jira.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-trello.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-slack.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-github.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/test-management-integrations/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/test-management-integrations/qtest-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/test-management-integrations/testrail-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/test-management-integrations/ttm-for-jira-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/test-management-integrations/xray-integration.htm
 
 ## Settings（設定）
 
-- ✅🔍 https://help.testim.io/docs/cli-settings
-- ✅🔍 https://help.testim.io/docs/cli-prerequisites
+- ✅🔍 https://docs.tricentis.com/testim/content/settings/cli-settings.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/settings/cli-prerequisites.htm
 
 ## Administration（管理者機能）
 
-- ✅🔍 https://help.testim.io/docs/api-access
-- ✅🔍 https://help.testim.io/docs/project-user-management
-- ✅🔍 https://help.testim.io/docs/project-and-user-management
-- ✅🔍 https://help.testim.io/docs/project-settings
-- ✅🔍 https://help.testim.io/docs/secrets
-- ✅🔍 https://help.testim.io/docs/subscription-plans
-- ✅🔍 https://help.testim.io/docs/copilot-license-management
-- ✅🔍 https://help.testim.io/docs/exporting-a-testim-test-as-code-for-playwright
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/api-access.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/project-user-management.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/project-and-user-management.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/project-settings.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/secrets.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/subscription-plans/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/copilot-license-management.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/exporting-a-testim-test-as-code-for-playwright.htm
 
 ## TestOps（TestOps）
 
-- ✅🔍 https://help.testim.io/docs/testops-overview
-- ✅🔍 https://help.testim.io/docs/testops-management
-- ✅🔍 https://help.testim.io/docs/test-status
-- ✅🔍 https://help.testim.io/docs/test-owner
-- ✅🔍 https://help.testim.io/docs/flaky-tests
-- ✅🔍 https://help.testim.io/docs/testops-version-control
-- ✅🔍 https://help.testim.io/docs/version-control-branches
-- ✅🔍 https://help.testim.io/docs/merging-branches
-- ✅🔍 https://help.testim.io/docs/pull-requests
-- ✅🔍 https://help.testim.io/docs/read-only
-- ✅🔍 https://help.testim.io/docs/insights
-- ✅🔍 https://help.testim.io/docs/dashboard
-- ✅🔍 https://help.testim.io/docs/reports
-- ✅🔍 https://help.testim.io/docs/team-productivity
-- ✅🔍 https://help.testim.io/docs/audit-log
-- ✅🔍 https://help.testim.io/docs/turbo-mode
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-management/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-management/test-status.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-management/test-owner.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-management/flaky-tests.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-version-control/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-version-control/version-control-branches.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-version-control/merging-branches.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-version-control/pull-requests.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-version-control/read-only.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/insights/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/insights/dashboard.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/insights/reports.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/insights/team-productivity.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/audit-log.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testops/turbo-mode.htm
 
 ## Salesforce Testing（Salesforceテスト）
 
-- ✅🔍 https://help.testim.io/docs/salesforce-testing-overview
-- ✅🔍 https://help.testim.io/docs/salesforce-testing-getting-started
-- ✅🔍 https://help.testim.io/docs/core-concepts
-- ✅🔍 https://help.testim.io/docs/changelog
-- ✅🔍 https://help.testim.io/docs/create-and-manage-test-environments
-- ✅🔍 https://help.testim.io/docs/create-a-persona-and-add-users
-- ✅🔍 https://help.testim.io/docs/create-a-salesforce-test
-- ✅🔍 https://help.testim.io/docs/use-agentic-test-automation-for-salesforce
-- ✅🔍 https://help.testim.io/docs/create-and-merge-branches-from-different-test-environments
-- ✅🔍 https://help.testim.io/docs/salesforce-steps
-- ✅🔍 https://help.testim.io/docs/sfdc-step-login
-- ✅🔍 https://help.testim.io/docs/sfdc-step-loginas
-- ✅🔍 https://help.testim.io/docs/sfdc-step-launchapp
-- ✅🔍 https://help.testim.io/docs/sfdc-step-logout
-- ✅🔍 https://help.testim.io/docs/sfdc-step-findandgotorecord
-- ✅🔍 https://help.testim.io/docs/sfdc-step-waitforpageload
-- ✅🔍 https://help.testim.io/docs/sfdc-step-closeconsoletabs
-- ✅🔍 https://help.testim.io/docs/sfdc-step-apex-action
-- ✅🔍 https://help.testim.io/docs/sfdc-step-permission-validation
-- ✅🔍 https://help.testim.io/docs/sfdc-document-validation
-- ✅🔍 https://help.testim.io/docs/sfdc-step-convertleadtoopportunity
-- ✅🔍 https://help.testim.io/docs/sfdc-step-quotelineeditor
-- ✅🔍 https://help.testim.io/docs/sfdc-step-create
-- ✅🔍 https://help.testim.io/docs/sfdc-step-validate
-- ✅🔍 https://help.testim.io/docs/sfdc-step-edit
-- ✅🔍 https://help.testim.io/docs/sfdc-step-relatedlistaction
-- ✅🔍 https://help.testim.io/docs/sfdc-step-quickactions
-- ✅🔍 https://help.testim.io/docs/sfdc-step-delete
-- ✅🔍 https://help.testim.io/docs/sfdc-step-verifypicklistoptions
-- ✅🔍 https://help.testim.io/docs/sfdc-step-salesforce-flows
-- ✅🔍 https://help.testim.io/docs/log-screenshots
-- ✅🔍 https://help.testim.io/docs/record-tests-with-salesforce
-- ✅🔍 https://help.testim.io/docs/troubleshoot
-- ✅🔍 https://help.testim.io/docs/faq
-- ✅🔍 https://help.testim.io/docs/tta-for-salesforce-branch-management
-- ✅🔍 https://help.testim.io/docs/best-practice-variable-naming-convention-for-easy-cleanup
-- ✅🔍 https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
-- ✅🔍 https://help.testim.io/docs/setting-mfa-for-salesforce
-- ✅🔍 https://help.testim.io/docs/page-layout
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-getting-started.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/core-concepts.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/changelog.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-and-manage-test-environments.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-persona-and-add-users.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-and-merge-branches-from-different-test-environments.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-login.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-loginas.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-launchapp.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-logout.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-findandgotorecord.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-waitforpageload.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-closeconsoletabs.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-apex-action.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-permission-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-document-validation.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-convertleadtoopportunity.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-quotelineeditor.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-create.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-validate.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-edit.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-quickactions.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-delete.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-verifypicklistoptions.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/log-screenshots.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/record-tests-with-salesforce.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/troubleshoot.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/faq.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/tta-for-salesforce-branch-management.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/best-practice-variable-naming-convention-for-easy-cleanup.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/setting-mfa-for-salesforce.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/page-layout.htm
 
 ## Testim Extension（Testim拡張機能）
 
-- ✅🔍 https://help.testim.io/docs/testim-extension-overview
-- ✅🔍 https://help.testim.io/docs/testim-extension-capture-screenshot
-- ✅🔍 https://help.testim.io/docs/testim-extension-capture-video-bug-scenario
-- ✅🔍 https://help.testim.io/docs/testim-extension-create-automated-test
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-extension/testim-extension-overview.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-extension/testim-extension-capture-screenshot.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-extension/testim-extension-capture-video-bug-scenario.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-extension/testim-extension-create-automated-test.htm
 
 ## Security（セキュリティ）
 
-- ✅🔍 https://help.testim.io/docs/testim-grid-ips
-- ✅🔍 https://help.testim.io/docs/sso-integration
-- ✅🔍 https://help.testim.io/docs/onelogin-sso-integration
-- ✅🔍 https://help.testim.io/docs/okta-sso-integration
-- ✅🔍 https://help.testim.io/docs/azure-ad-sso-integration
+- ✅🔍 https://docs.tricentis.com/testim/content/security/testim-grid-ips.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/security/sso-integration/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/security/sso-integration/onelogin-sso-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/security/sso-integration/okta-sso-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/security/sso-integration/azure-ad-sso-integration.htm
 
 ## Guides（ガイド）
 
-- ✅🔍 https://help.testim.io/docs/mobile-web-testing
-- ✅🔍 https://help.testim.io/docs/keyboard-shortcuts
-- ✅🔍 https://help.testim.io/docs/generate-random-data-with-js
-- ✅🔍 https://help.testim.io/docs/best-practices-for-handling-logins
+- ✅🔍 https://docs.tricentis.com/testim/content/guides/mobile-web-testing.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/guides/keyboard-shortcuts.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/guides/generate-random-data-with-js.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/guides/best-practices-for-handling-logins.htm
 
 ## Testim Labs（Testim Labs）
 
-- ✅🔍 https://help.testim.io/docs/testim-labs
-- ✅🔍 https://help.testim.io/docs/test-flow-view
-- ✅🔍 https://help.testim.io/docs/link-directly-to-a-shared-step
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-labs/testim-labs.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-labs/test-flow-view.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/testim-labs/link-directly-to-a-shared-step.htm
 
 ---
 
@@ -370,13 +370,16 @@
 
 ### ブラウザ開発者ツールで実行するコード
 
-1. https://help.testim.io/docs/testim-overview を開く
+1. https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm を開く
 2. サイドバーのすべてのトグル（"Show subpages for"）を展開
 3. ブラウザの開発者ツール（F12）のコンソールで以下を実行:
 
 ```javascript
 // サイドバー内の全リンクURLを抽出
-Array.from(document.querySelectorAll('.hub-sidebar-content a'))
+// ※ セレクターは MadCap Flare のナビゲーション構造に合わせて調整すること
+//   旧 readme.io: '.hub-sidebar-content a'
+//   MadCap Flare: ナビゲーション要素を DevTools で確認して指定
+Array.from(document.querySelectorAll('nav a[href*="/testim/content/"]'))
   .map((a) => a.href)
   .join('\n');
 ```
@@ -385,7 +388,7 @@ Array.from(document.querySelectorAll('.hub-sidebar-content a'))
 
 ```javascript
 // 重複を除去してソート
-[...new Set(Array.from(document.querySelectorAll('.hub-sidebar-content a')).map((a) => a.href))]
+[...new Set(Array.from(document.querySelectorAll('nav a[href*="/testim/content/"]')).map((a) => a.href))]
   .sort()
   .join('\n');
 ```

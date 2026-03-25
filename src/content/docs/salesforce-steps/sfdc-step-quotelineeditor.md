@@ -4,7 +4,7 @@ description: CPQ の見積品目エディターで、入力・検証・値の保
 category: Salesforceテスト
 order: 16022
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-quotelineeditor'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-quotelineeditor.htm'
 keywords:
   - Salesforce
   - CPQ

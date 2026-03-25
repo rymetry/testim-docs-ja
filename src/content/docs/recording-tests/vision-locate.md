@@ -4,7 +4,7 @@ description: Vision Locate モードの使用方法と、視覚分析アルゴ�
 category: テストの記録
 order: 3012
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/vision-locate'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/vision-locate.htm'
 keywords:
   - Vision Locate
   - 視覚分析

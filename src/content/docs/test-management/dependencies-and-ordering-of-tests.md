@@ -4,7 +4,7 @@ description: テスト間の依存関係と実行順序の管理方法につい�
 category: テスト管理
 order: 9007
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/dependencies-and-ordering-of-tests'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/dependencies-and-ordering-of-tests.htm'
 keywords:
   - テスト依存関係
   - テスト実行順序

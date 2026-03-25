@@ -4,7 +4,7 @@ description: Dedicated Run Tunnel を使用して internal server や localhost 
 category: 統合
 order: 12016
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/dedicated-run-tunnel'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/dedicated-run-tunnel.htm'
 keywords:
   - Dedicated Run Tunnel
   - トンネル

@@ -4,7 +4,7 @@ description: GitLab CI/CD で Testim テストを実行する方法について�
 category: 統合
 order: 12011
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/gitlab-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/gitlab-integration.htm'
 keywords:
   - GitLab
   - GitLab CI

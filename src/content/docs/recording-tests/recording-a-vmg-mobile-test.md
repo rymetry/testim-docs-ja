@@ -6,7 +6,7 @@ description: >-
 category: テストの記録
 order: 3005
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/recording-a-vmg-mobile-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test.htm'
 keywords:
   - VMG
   - Virtual Mobile Grid

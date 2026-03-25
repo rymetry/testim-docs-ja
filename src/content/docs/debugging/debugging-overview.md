@@ -4,7 +4,7 @@ description: Testim のデバッグツールの概要。実行時のデバッグ
 category: デバッグ
 order: 8001
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/debugging-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/debugging-tests/debugging-overview.htm'
 keywords:
   - デバッグ概要
   - デバッグ

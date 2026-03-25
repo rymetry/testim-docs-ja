@@ -4,7 +4,7 @@ description: Salesforce テストの基本概念（ステップ、レコーダ�
 category: Salesforceテスト
 order: 16003
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/core-concepts'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/core-concepts.htm'
 keywords:
   - コアコンセプト
   - Salesforce テスト

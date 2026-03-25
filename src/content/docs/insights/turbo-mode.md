@@ -4,7 +4,7 @@ description: Testim テストを大規模に効率的に実行し、パフォー
 category: TestOps
 order: 15016
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/turbo-mode'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/turbo-mode.htm'
 keywords:
   - ターボモード
   - パフォーマンス向上

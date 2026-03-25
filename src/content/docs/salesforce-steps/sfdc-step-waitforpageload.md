@@ -4,7 +4,7 @@ description: 次のステップに進む前に、ページの読み込み完了�
 category: Salesforceテスト
 order: 16016
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-waitforpageload'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-waitforpageload.htm'
 keywords:
   - Salesforce
   - 待機

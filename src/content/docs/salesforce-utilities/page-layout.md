@@ -4,7 +4,7 @@ description: Salesforce のページレイアウトがステップで選択で�
 category: Salesforceテスト
 order: 16039
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/page-layout'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/page-layout.htm'
 keywords:
   - ページレイアウト
   - レコード操作

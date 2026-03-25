@@ -6,7 +6,7 @@ description: >-
 category: 管理者機能
 order: 14001
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/api-access'
+sourceUrl: 'https://docs.tricentis.com/testim/content/administration/api-access.htm'
 keywords:
   - REST API
   - API アクセス

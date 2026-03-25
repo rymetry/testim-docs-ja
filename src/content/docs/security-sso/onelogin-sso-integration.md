@@ -5,7 +5,7 @@ description: >-
 category: セキュリティ
 order: 18003
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/onelogin-sso-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/security/sso-integration/onelogin-sso-integration.htm'
 keywords:
   - OneLogin
   - SSO 統合

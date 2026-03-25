@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12030
 updated: '2025-11-21'
-sourceUrl: 'https://help.testim.io/docs/saucelabs-browserstack-options'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-browserstack-options.htm'
 keywords:
   - SauceLabs
   - BrowserStack

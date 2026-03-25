@@ -62,8 +62,8 @@ describe('getUntranslatedList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
-      '- ⏳ https://help.testim.io/docs/getting-started',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+      '- ⏳ https://docs.tricentis.com/testim/content/getting-started/getting-started.htm',
       '',
     ].join('\n');
 
@@ -77,7 +77,7 @@ describe('getUntranslatedList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
     assert.deepEqual(getUntranslatedList(sidebarText), []);
@@ -87,8 +87,8 @@ describe('getUntranslatedList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ⏳ https://help.testim.io/docs/page-a',
-      '- ⏳ https://help.testim.io/docs/page-b',
+      '- ⏳ https://docs.tricentis.com/testim/content/overview/page-a.htm',
+      '- ⏳ https://docs.tricentis.com/testim/content/overview/page-b.htm',
       '',
     ].join('\n');
     const list = getUntranslatedList(sidebarText);
@@ -105,8 +105,8 @@ describe('getAllPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
-      '- ⏳ https://help.testim.io/docs/getting-started',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+      '- ⏳ https://docs.tricentis.com/testim/content/getting-started/getting-started.htm',
       '',
     ].join('\n');
     const list = getAllPagesList(sidebarText);
@@ -119,7 +119,7 @@ describe('getAllPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅🔍 https://help.testim.io/docs/testim-overview',
+      '- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
     const list = getAllPagesList(sidebarText);
@@ -131,7 +131,7 @@ describe('getAllPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ⏳ https://help.testim.io/docs/getting-started',
+      '- ⏳ https://docs.tricentis.com/testim/content/getting-started/getting-started.htm',
       '',
     ].join('\n');
     const list = getAllPagesList(sidebarText);
@@ -160,7 +160,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
 
@@ -181,7 +181,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
 
@@ -204,8 +204,8 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/page-a',
-      '- ✅ https://help.testim.io/docs/page-b',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/page-a.htm',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/page-b.htm',
       '',
     ].join('\n');
 
@@ -220,7 +220,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/my-page',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/my-page.htm',
       '',
     ].join('\n');
 
@@ -230,7 +230,7 @@ describe('getDiffPagesList', () => {
     const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
     assert.ok('my-page' in saved, 'hash for my-page must be persisted');
     assert.equal(typeof saved['my-page'], 'object');
-    assert.equal(saved['my-page'].sourceUrl, 'https://help.testim.io/docs/my-page');
+    assert.equal(saved['my-page'].sourceUrl, 'https://docs.tricentis.com/testim/content/overview/my-page.htm');
     assert.equal(typeof saved['my-page'].hash, 'string');
   });
 
@@ -245,7 +245,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
 
@@ -262,7 +262,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
 
@@ -286,7 +286,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/zzz-nonexistent-test-page',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/zzz-nonexistent-test-page.htm',
       '',
     ].join('\n');
 
@@ -306,7 +306,7 @@ describe('getDiffPagesList', () => {
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://help.testim.io/docs/testim-overview',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
       '',
     ].join('\n');
 

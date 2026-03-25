@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5048
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/hidden-parameters'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/hidden-parameters.htm'
 keywords:
   - Testim
   - パラメーター

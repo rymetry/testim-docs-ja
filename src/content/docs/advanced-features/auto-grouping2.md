@@ -4,7 +4,7 @@ description: Auto grouping 機能でプロジェクト内の重複ステップ�
 category: 高度な編集
 order: 5053
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/auto-grouping2'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/auto-grouping2.htm'
 keywords:
   - 自動グルーピング
   - auto grouping

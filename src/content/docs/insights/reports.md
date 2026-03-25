@@ -4,7 +4,7 @@ description: 品質トレンドの概要を把握します
 category: TestOps
 order: 15013
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/reports'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/insights/reports.htm'
 keywords:
   - レポート
   - テスト実行結果

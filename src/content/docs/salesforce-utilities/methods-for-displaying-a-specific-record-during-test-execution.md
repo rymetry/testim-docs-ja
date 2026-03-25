@@ -5,7 +5,7 @@ category: Salesforceテスト
 order: 16037
 updated: '2025-12-02'
 sourceUrl: >-
-  https://help.testim.io/docs/methods-for-displaying-a-specific-record-during-test-execution
+  https://docs.tricentis.com/testim/content/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution.htm
 keywords:
   - レコード表示
   - ナビゲーション

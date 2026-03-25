@@ -5,7 +5,7 @@ description: >-
 category: 高度な編集
 order: 5002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validations'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/index.htm'
 keywords:
   - 検証
   - テスト

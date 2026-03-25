@@ -4,7 +4,7 @@ description: テスト内のステップ、JavaScript コード、パラメー�
 category: テスト編集
 order: 4014
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/search-within-a-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/search-within-a-test.htm'
 keywords:
   - テスト内検索
   - 検索機能

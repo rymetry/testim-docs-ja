@@ -4,7 +4,7 @@ description: Testim 自動テスト作成機能を使用すると、Web ブラ�
 category: Testim拡張機能
 order: 17004
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/testim-extension-create-automated-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testim-extension/testim-extension-create-automated-test.htm'
 keywords:
   - Testim Extension
   - 自動テスト作成

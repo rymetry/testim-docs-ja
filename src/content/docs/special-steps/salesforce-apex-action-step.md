@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5059
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/salesforce-apex-action-step'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/salesforce-apex-action-step.htm'
 keywords:
   - Salesforce APEX
   - APEX アクション

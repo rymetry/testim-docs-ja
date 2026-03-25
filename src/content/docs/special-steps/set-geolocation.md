@@ -4,7 +4,7 @@ description: Set Geolocation ステップでモバイルデバイスの位置情
 category: 高度な編集
 order: 5062
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/set-geolocation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/set-geolocation.htm'
 keywords:
   - ジオロケーション
   - 位置情報

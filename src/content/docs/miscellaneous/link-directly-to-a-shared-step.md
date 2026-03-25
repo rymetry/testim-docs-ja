@@ -4,7 +4,7 @@ description: 'Shared Steps ライブラリから Shared Step やグループに�
 category: Testim Labs
 order: 20003
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/link-directly-to-a-shared-step'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testim-labs/link-directly-to-a-shared-step.htm'
 keywords:
   - Shared Steps
   - ダイレクトリンク

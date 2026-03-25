@@ -6,7 +6,7 @@ description: >-
 category: はじめに
 order: 2002
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/creating-your-first-codeless-test'
+sourceUrl: 'https://docs.tricentis.com/testim/content/getting-started/creating-your-first-codeless-test.htm'
 keywords:
   - はじめに
   - コードレステスト

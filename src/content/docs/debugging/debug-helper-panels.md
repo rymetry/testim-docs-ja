@@ -4,7 +4,7 @@ description: テストのデバッグ中に問題を見つけて修正するた�
 category: デバッグ
 order: 8004
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/debug-helper-panels'
+sourceUrl: 'https://docs.tricentis.com/testim/content/debugging-tests/debug-helper-panels.htm'
 keywords:
   - デバッグヘルパー
   - コンソールログ

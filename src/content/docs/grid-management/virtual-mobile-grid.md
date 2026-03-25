@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12024
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/virtual-mobile-grid'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/virtual-mobile-grid.htm'
 keywords:
   - Virtual Mobile Grid
   - VMG

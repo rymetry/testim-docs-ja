@@ -4,7 +4,7 @@ description: Chrome DevTools を使用してコードベースのステップ内
 category: デバッグ
 order: 8005
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/js-code-debugging'
+sourceUrl: 'https://docs.tricentis.com/testim/content/debugging-tests/js-code-debugging.htm'
 keywords:
   - JavaScript デバッグ
   - JS コード

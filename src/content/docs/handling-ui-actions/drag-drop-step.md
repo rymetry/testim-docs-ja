@@ -4,7 +4,7 @@ description: ドラッグ&ドロップステップの記録と変更方法。ド
 category: 高度な編集
 order: 5032
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/drag-drop-step'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/drag-drop-step.htm'
 keywords:
   - ドラッグアンドドロップ
   - UI 操作

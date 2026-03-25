@@ -38,6 +38,6 @@ body:
     attributes:
       label: 英語原文の URL
       description: 対応する英語ページの URL（わかる場合）
-      placeholder: "例: https://help.testim.io/docs/testim-overview"
+      placeholder: "例: https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm"
     validations:
       required: false

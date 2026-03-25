@@ -4,7 +4,7 @@ description: テスト、設定、およびリソースを管理するための�
 category: テスト管理
 order: 9001
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/test-management-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/test-management-overview.htm'
 keywords:
   - テスト管理
   - テストライブラリ

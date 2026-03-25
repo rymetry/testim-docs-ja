@@ -5,7 +5,7 @@ description: >-
 category: セキュリティ
 order: 18004
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/okta-sso-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/security/sso-integration/okta-sso-integration.htm'
 keywords:
   - Okta
   - SSO 統合

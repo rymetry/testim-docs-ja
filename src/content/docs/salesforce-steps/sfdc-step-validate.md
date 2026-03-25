@@ -4,7 +4,7 @@ description: 既存レコードのフィールド値が期待値と一致する�
 category: Salesforceテスト
 order: 16024
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-validate'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-validate.htm'
 keywords:
   - Salesforce
   - レコード検証

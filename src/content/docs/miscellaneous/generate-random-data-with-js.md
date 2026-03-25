@@ -4,7 +4,7 @@ description: ランダムデータ（ユーザー名、パスワード、メー�
 category: ガイド
 order: 19003
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/generate-random-data-with-js'
+sourceUrl: 'https://docs.tricentis.com/testim/content/guides/generate-random-data-with-js.htm'
 keywords:
   - ランダムデータ生成
   - JavaScript

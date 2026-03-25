@@ -4,7 +4,7 @@ description: ロケータースコアが低下したときに自動的に改善�
 category: テスト管理
 order: 9015
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/locators-auto-improve'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/locators-auto-improve.htm'
 keywords:
   - ロケーター自動改善
   - ロケータースコア

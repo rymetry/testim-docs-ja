@@ -4,7 +4,7 @@ description: Testim Extension のインストール方法と Testim アカウン
 category: はじめに
 order: 2001
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/setting-up-your-account'
+sourceUrl: 'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm'
 keywords:
   - アカウント設定
   - インストール

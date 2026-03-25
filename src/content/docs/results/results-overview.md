@@ -4,7 +4,7 @@ description: テスト実行後の結果を確認する方法について説明�
 category: テスト結果
 order: 7001
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/results-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/results-overview.htm'
 keywords:
   - テスト結果
   - 実行ラン

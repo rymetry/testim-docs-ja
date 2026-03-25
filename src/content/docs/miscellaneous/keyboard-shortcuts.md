@@ -4,7 +4,7 @@ description: より迅速で簡単なテスト作成のためのキーボード�
 category: ガイド
 order: 19002
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/keyboard-shortcuts'
+sourceUrl: 'https://docs.tricentis.com/testim/content/guides/keyboard-shortcuts.htm'
 keywords:
   - キーボードショートカット
   - ショートカットキー

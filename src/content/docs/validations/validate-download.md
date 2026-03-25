@@ -4,7 +4,7 @@ description: ダウンロードしたファイルの内容を検証する CLI �
 category: 高度な編集
 order: 5009
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/validate-download'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-download.htm'
 keywords:
   - ダウンロード検証
   - ファイル検証

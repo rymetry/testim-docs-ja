@@ -4,7 +4,7 @@ description: ビューポート外の要素に自動的にスクロールする�
 category: 高度な編集
 order: 5031
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/auto-scroll'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/auto-scroll.htm'
 keywords:
   - 自動スクロール
   - UI 操作

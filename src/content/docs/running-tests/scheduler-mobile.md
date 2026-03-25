@@ -5,7 +5,7 @@ description: >-
 category: テスト実行
 order: 6006
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/scheduler-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/scheduler-mobile.htm'
 keywords:
   - スケジューラー
   - モバイルテスト

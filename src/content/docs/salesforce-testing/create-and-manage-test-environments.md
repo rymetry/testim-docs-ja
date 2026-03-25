@@ -6,7 +6,7 @@ description: >-
 category: Salesforceテスト
 order: 16005
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/create-and-manage-test-environments'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/create-and-manage-test-environments.htm'
 keywords:
   - Salesforce 環境接続
   - Environments

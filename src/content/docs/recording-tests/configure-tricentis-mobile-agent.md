@@ -4,7 +4,7 @@ description: Tricentis Mobile Agent（TMA）のインストール、接続、デ
 category: テストの記録
 order: 3008
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/configure-tricentis-mobile-agent'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent.htm'
 keywords:
   - Tricentis Mobile Agent
   - TMA

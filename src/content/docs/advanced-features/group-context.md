@@ -4,7 +4,7 @@ description: グループコンテキスト機能を使って、同じグルー�
 category: 高度な編集
 order: 5052
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/group-context'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/group-context.htm'
 keywords:
   - グループコンテキスト
   - 共有グループ

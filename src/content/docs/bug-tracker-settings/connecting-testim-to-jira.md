@@ -4,7 +4,7 @@ description: Testim から Jira に bug を公開するための接続手順を�
 category: 統合
 order: 12034
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/connecting-testim-to-jira'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-jira.htm'
 keywords:
   - Testim
   - Jira 連携

@@ -4,7 +4,7 @@ description: Web ページ上の特定の要素がアクセシブルかどうか
 category: 高度な編集
 order: 5021
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/element-accessibility-validation'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/element-accessibility-validation.htm'
 keywords:
   - アクセシビリティ
   - 要素検証

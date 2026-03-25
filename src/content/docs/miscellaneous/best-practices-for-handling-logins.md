@@ -4,7 +4,7 @@ description: すべてのテストでログインを再利用する方法を見�
 category: ガイド
 order: 19004
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/best-practices-for-handling-logins'
+sourceUrl: 'https://docs.tricentis.com/testim/content/guides/best-practices-for-handling-logins.htm'
 keywords:
   - ログイン処理
   - ベストプラクティス

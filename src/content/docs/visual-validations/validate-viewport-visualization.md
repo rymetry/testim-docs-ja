@@ -4,7 +4,7 @@ description: ビューポートのピクセルレベルでのビジュアル差�
 category: 高度な編集
 order: 5023
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/validate-viewport-visualization'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-viewport-visualization.htm'
 keywords:
   - ビジュアル検証
   - applitools

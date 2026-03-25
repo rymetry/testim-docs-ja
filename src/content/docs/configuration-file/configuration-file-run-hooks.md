@@ -6,7 +6,7 @@ description: >-
 category: テスト実行
 order: 6011
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/configuration-file-run-hooks'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/configuration-file-run-hooks/index.htm'
 keywords:
   - 設定ファイル
   - config ファイル

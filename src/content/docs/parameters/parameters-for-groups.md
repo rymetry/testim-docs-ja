@@ -4,7 +4,7 @@ description: グループへパラメーターを渡して再利用性を高め�
 category: 高度な編集
 order: 5042
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/parameters-for-groups'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameters-for-groups.htm'
 keywords:
   - Testim
   - グループ

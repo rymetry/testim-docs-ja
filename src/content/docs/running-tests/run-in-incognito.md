@@ -4,7 +4,7 @@ description: Chrome のシークレットモードを使って Cookie やログ�
 category: テスト実行
 order: 6010
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/run-in-incognito'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/run-in-incognito.htm'
 keywords:
   - シークレットモード
   - Chrome

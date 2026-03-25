@@ -6,7 +6,7 @@ description: >-
 category: 高度な編集
 order: 5058
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/salesforce-auto-login-step'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/salesforce-auto-login-step.htm'
 keywords:
   - Salesforce 自動ログイン
   - Salesforce ログイン

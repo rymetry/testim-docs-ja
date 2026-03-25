@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12025
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/custom-grid'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/custom-grid.htm'
 keywords:
   - Custom Grid
   - Selenium Grid

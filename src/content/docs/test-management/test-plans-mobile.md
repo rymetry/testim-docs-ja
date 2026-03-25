@@ -4,7 +4,7 @@ description: すべてのテスト、セットアップ・クリーンアップ�
 category: テスト管理
 order: 9013
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/test-plans-mobile'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/test-plans-mobile.htm'
 keywords:
   - モバイルテストプラン
   - モバイルテスト実行

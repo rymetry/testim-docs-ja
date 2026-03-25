@@ -4,7 +4,7 @@ description: Jenkins で Testim テストを実行する方法について説明
 category: 統合
 order: 12007
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/jenkins-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/jenkins-integration.htm'
 keywords:
   - Jenkins
   - CI 統合

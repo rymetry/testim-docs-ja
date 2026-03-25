@@ -4,7 +4,7 @@ description: Testim と TestRail を統合してテスト実行結果を TestRai
 category: 統合
 order: 12040
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/testrail-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/test-management-integrations/testrail-integration.htm'
 keywords:
   - TestRail
   - テスト管理ツール

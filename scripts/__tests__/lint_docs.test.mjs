@@ -24,7 +24,7 @@ function makeDoc(overrides = {}) {
     description: "A description.",
     category: "Overview",
     updated: "2026-01-01",
-    sourceUrl: "https://help.testim.io/docs/testim-overview",
+    sourceUrl: "https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm",
     ...overrides.fm,
   };
   const fmLines = Object.entries(fm)
@@ -57,10 +57,10 @@ describe('frontmatter: sourceUrl', () => {
     assert.ok(e, 'expected sourceUrl-format error');
   });
 
-  it('returns error when sourceUrl has folder prefix', () => {
-    // /docs/{folder}/{slug} form is invalid; must be /docs/{slug}
+  it('returns error when sourceUrl has old domain format', () => {
+    // old help.testim.io format is no longer valid
     const content = makeDoc({
-      fm: { sourceUrl: 'https://help.testim.io/docs/overview/testim-overview' },
+      fm: { sourceUrl: 'https://help.testim.io/docs/testim-overview' },
     });
     const errors = lintContent(content, 'src/content/docs/test.md');
     const e = errors.find((e) => e.rule === 'sourceUrl-format');
@@ -72,11 +72,20 @@ describe('frontmatter: sourceUrl', () => {
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errorsOf(['sourceUrl-required', 'sourceUrl-format'], errors).length, 0);
   });
+
+  it('no error for valid sourceUrl with .htm format', () => {
+    const content = makeDoc({
+      fm: { sourceUrl: 'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm' },
+    });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    const e = errors.find((e) => e.rule === 'sourceUrl-format');
+    assert.ok(!e, 'should not report error for valid .htm sourceUrl');
+  });
 });
 
 describe('frontmatter: description placeholder', () => {
   it('returns error when description starts with "原文:"', () => {
-    const content = makeDoc({ fm: { description: '原文: https://help.testim.io/docs/foo' } });
+    const content = makeDoc({ fm: { description: '原文: https://docs.tricentis.com/testim/content/overview/foo.htm' } });
     const errors = lintContent(content, 'src/content/docs/test.md');
     const e = errors.find((e) => e.rule === 'description-placeholder');
     assert.ok(e, 'expected description-placeholder error');
@@ -146,7 +155,7 @@ describe('internal link format', () => {
 
   it('no error for external links', () => {
     const content = makeDoc({
-      body: 'See [Testim](https://help.testim.io/docs/overview/testim-overview).\n',
+      body: 'See [Testim](https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm).\n',
     });
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errorsOf(['internal-link-format'], errors).length, 0);

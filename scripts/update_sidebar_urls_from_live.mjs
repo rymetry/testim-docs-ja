@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LIVE_URL = 'https://help.testim.io/docs/testim-overview';
+const LIVE_URL = 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm';
 const SIDEBAR_URLS_PATH = path.resolve('docs/SIDEBAR_URLS.md');
 
 const JP_LABEL_BY_EN = {
@@ -15,7 +15,7 @@ const JP_LABEL_BY_EN = {
   'Debugging Tests': 'デバッグ',
   'Test Management': 'テスト管理',
   'Mobile Apps': 'モバイルアプリ',
-  'device managment': 'デバイス管理',
+  'device management': 'デバイス管理',
   Integrations: '統合',
   Settings: '設定',
   Administration: '管理',
@@ -52,17 +52,21 @@ function decodeHtmlEntities(s) {
 export function normalizeUrl(href) {
   if (!href) return null;
   if (href.startsWith('http://') || href.startsWith('https://')) {
+    if (href.startsWith('https://docs.tricentis.com/testim/')) return href;
+    // NOTE: 旧ドメイン（help.testim.io）の許容は Phase C (#160) まで維持する。
+    // Phase C 完了後に旧ドメイン分岐を削除すること。
     if (href.startsWith('https://help.testim.io/docs/')) return href;
     if (href.startsWith('http://help.testim.io/docs/')) return href.replace('http://', 'https://');
     return null;
   }
+  // NOTE: 旧ドメインの相対パスフォールバック。Phase C (#160) で削除すること。
   if (href.startsWith('/docs/')) return `https://help.testim.io${href}`;
   return null;
 }
 
 export function parseExistingStatusMap(text) {
   const statusByUrl = new Map();
-  const re = /^-\s+(✅🔍|✅)\s+(https:\/\/help\.testim\.io\/docs\/[^\s#]+)\s*$/;
+  const re = /^-\s+(✅🔍|✅)\s+(https:\/\/(?:help\.testim\.io\/docs|docs\.tricentis\.com\/testim\/content)\/[^\s#]+)\s*$/;
   for (const line of text.split(/\r?\n/)) {
     const m = line.match(re);
     if (m) statusByUrl.set(m[2], m[1]);
@@ -73,7 +77,7 @@ export function parseExistingStatusMap(text) {
 async function fetchHtml(url, fetchFn = fetch) {
   const res = await fetchFn(url, {
     headers: {
-      // Readme のWAF対策でUAがないと403になることがある
+      // WAF 対策: UA なしだとアクセスが拒否される場合がある
       'User-Agent':
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0 Safari/537.36',
       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -84,6 +88,8 @@ async function fetchHtml(url, fetchFn = fetch) {
   return await res.text();
 }
 
+// NOTE: nav#hub-sidebar は旧 readme.io の HTML 構造。MadCap Flare では存在しない。
+// Phase C (#160) で要改修。main() の try/catch でフォールバック処理される。
 function extractHubSidebar(html) {
   const m = html.match(/<nav[^>]*\bid="hub-sidebar"[^>]*>[\s\S]*?<\/nav>/i);
   if (!m) throw new Error('nav#hub-sidebar not found in HTML');
@@ -187,13 +193,13 @@ export function buildOutput({ sections, statusByUrl, existingHeader }) {
 }
 
 export async function fetchSitemap(fetchFn = fetch) {
-  const SITEMAP_URL = 'https://help.testim.io/sitemap.xml';
+  const SITEMAP_URL = 'https://docs.tricentis.com/testim/sitemap.xml';
   try {
     const res = await fetchFn(SITEMAP_URL);
     if (!res.ok) return [];
     const xml = await res.text();
     const urls = [];
-    for (const m of xml.matchAll(/<loc>(https:\/\/help\.testim\.io\/docs\/[^<]+)<\/loc>/g)) {
+    for (const m of xml.matchAll(/<loc>(https:\/\/docs\.tricentis\.com\/testim\/content\/[^<]+)<\/loc>/g)) {
       urls.push(m[1]);
     }
     return urls;
@@ -233,7 +239,15 @@ export async function main(fetchFn = fetch) {
       const unplaced = sitemapUrls.filter((u) => !placed.has(u));
       if (unplaced.length > 0) sections.push({ title: 'Other', urls: unplaced });
     } catch (e) {
-      console.warn(`HTML section fetch failed (${e?.message}); using flat sitemap section.`);
+      // NOTE: MadCap Flare には nav#hub-sidebar が存在しないため、ここに落ちる。
+      // フラットな 'All' セクションで SIDEBAR_URLS.md を上書きするとカテゴリ構造が壊れるため、
+      // 既存ファイルがある場合は上書きを中止する。Phase C (#160) で要改修。
+      console.warn(`HTML section fetch failed (${e?.message}).`);
+      if (fs.existsSync(SIDEBAR_URLS_PATH)) {
+        console.warn('既存の SIDEBAR_URLS.md を保持します（ライブサイトからの更新はスキップ）。');
+        console.warn('Phase C (#160) で MadCap Flare 対応が必要です。');
+        return;
+      }
       sections = [{ title: 'All', urls: sitemapUrls }];
     }
   } else {

@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12008
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/jenkins-integration-using-docker'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker.htm'
 keywords:
   - Jenkins
   - Docker

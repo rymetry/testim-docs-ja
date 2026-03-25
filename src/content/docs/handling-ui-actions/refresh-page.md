@@ -4,7 +4,7 @@ description: Testim でページ更新ステップを追加し、ブラウザで
 category: 高度な編集
 order: 5034
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/refresh-page'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/refresh-page.htm'
 keywords:
   - testim
   - refresh-page

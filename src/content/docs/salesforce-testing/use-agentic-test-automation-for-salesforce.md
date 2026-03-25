@@ -6,7 +6,7 @@ description: >-
 category: Salesforceテスト
 order: 16008
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/use-agentic-test-automation-for-salesforce'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce.htm'
 keywords:
   - Agentic Test Automation
   - Agentic Test Automation

@@ -4,7 +4,7 @@ description: Testim for Salesforce のブランチ作成・切り替え・環境
 category: Salesforceテスト
 order: 16035
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/tta-for-salesforce-branch-management'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/tta-for-salesforce-branch-management.htm'
 keywords:
   - ブランチ管理
   - Testim for Salesforce

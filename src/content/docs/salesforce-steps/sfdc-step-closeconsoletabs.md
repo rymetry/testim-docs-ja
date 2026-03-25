@@ -4,7 +4,7 @@ description: Salesforce コンソールアプリの全タブを閉じ、テス�
 category: Salesforceテスト
 order: 16017
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-closeconsoletabs'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-closeconsoletabs.htm'
 keywords:
   - Salesforce
   - コンソール

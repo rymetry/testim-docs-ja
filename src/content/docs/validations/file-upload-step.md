@@ -4,7 +4,7 @@ description: ファイルアップロード機能をテストするステップ�
 category: 高度な編集
 order: 5016
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/file-upload-step'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/validations/file-upload-step.htm'
 keywords:
   - ファイルアップロード
   - アップロード

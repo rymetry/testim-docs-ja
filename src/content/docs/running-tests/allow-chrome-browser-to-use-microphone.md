@@ -4,7 +4,7 @@ description: Chrome でテストを実行する際に、モックマイクを有
 category: テスト実行
 order: 6003
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/allow-chrome-browser-to-use-microphone'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.htm'
 keywords:
   - Chrome
   - マイク

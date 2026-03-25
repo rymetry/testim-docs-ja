@@ -4,7 +4,7 @@ description: Salesforce の MFA（認証アプリ）を設定し、Testim for Sa
 category: Salesforceテスト
 order: 16038
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/setting-mfa-for-salesforce'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/setting-mfa-for-salesforce.htm'
 keywords:
   - MFA
   - 多要素認証

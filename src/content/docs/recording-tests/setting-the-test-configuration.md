@@ -4,7 +4,7 @@ description: モバイルテストの構成パラメーターを設定し、デ�
 category: テストの記録
 order: 3007
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/setting-the-test-configuration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/setting-the-test-configuration.htm'
 keywords:
   - テスト構成
   - モバイルテスト設定

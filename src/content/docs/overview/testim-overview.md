@@ -4,7 +4,7 @@ description: Testim は、コード、コードレス、または両方を組み
 category: 概要
 order: 1001
 updated: '2025-11-13'
-sourceUrl: 'https://help.testim.io/docs/testim-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'
 keywords:
   - Testim 概要
   - テスト自動化

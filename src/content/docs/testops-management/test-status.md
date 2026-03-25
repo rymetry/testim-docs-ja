@@ -4,7 +4,7 @@ description: どのテストに作業が必要かを管理するためにテス�
 category: TestOps
 order: 15003
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/test-status'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-management/test-status.htm'
 keywords:
   - テストステータス
   - TestOps 管理

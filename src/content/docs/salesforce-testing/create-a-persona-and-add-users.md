@@ -4,7 +4,7 @@ description: ペルソナ（ユーザータイプ）を作成し、Salesforce �
 category: Salesforceテスト
 order: 16006
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/create-a-persona-and-add-users'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/create-a-persona-and-add-users.htm'
 keywords:
   - ペルソナ
   - Salesforce ユーザー

@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12038
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/test-management-integrations'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/test-management-integrations/index.htm'
 keywords:
   - テスト管理統合
   - テスト管理ツール

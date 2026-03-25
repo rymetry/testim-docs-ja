@@ -4,7 +4,7 @@ description: ステップレベルとテストレベルでのネットワーク�
 category: テスト結果
 order: 7004
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/network-logs'
+sourceUrl: 'https://docs.tricentis.com/testim/content/results/test-results/network-logs.htm'
 keywords:
   - ネットワークログ
   - HAR ファイル

@@ -6,7 +6,7 @@ description: >-
 category: TestOps
 order: 15001
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/testops-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-overview.htm'
 keywords:
   - TestOps
   - テスト運用

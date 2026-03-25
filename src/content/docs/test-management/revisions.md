@@ -4,7 +4,7 @@ description: テストの変更履歴を管理し、以前のバージョンに�
 category: テスト管理
 order: 9009
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/revisions'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/revisions.htm'
 keywords:
   - リビジョン
   - バージョン管理

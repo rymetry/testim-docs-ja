@@ -4,7 +4,7 @@ description: AI 駆動のビジュアルテストを有効にするための App
 category: 統合
 order: 12017
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/applitools-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/applitools-integration/index.htm'
 keywords:
   - Testim
   - Applitools

@@ -4,7 +4,7 @@ description: 動的データテスト用に乱数を生成するステップの�
 category: テスト編集
 order: 4012
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/generating-a-random-value'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/generating-a-random-value.htm'
 keywords:
   - ランダム値生成
   - Generate random value

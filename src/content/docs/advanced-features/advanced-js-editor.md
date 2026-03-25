@@ -4,7 +4,7 @@ description: Monaco ベースの高度な JS エディターでカスタムス�
 category: 高度な編集
 order: 5054
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/advanced-js-editor'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/advanced-js-editor.htm'
 keywords:
   - 高度な JS エディター
   - Monaco Editor

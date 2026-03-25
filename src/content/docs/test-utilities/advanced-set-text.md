@@ -4,7 +4,7 @@ description: JavaScript 式やパラメーターを組み合わせて Set text �
 category: 高度な編集
 order: 5001
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/advanced-set-text'
+sourceUrl: 'https://docs.tricentis.com/testim/content/advanced-editing/advanced-set-text.htm'
 keywords:
   - 動的テキスト
   - Set text ステップ

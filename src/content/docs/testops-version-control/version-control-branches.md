@@ -4,7 +4,7 @@ description: チームの開発プロセスに応じてテストを管理しま�
 category: TestOps
 order: 15007
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/version-control-branches'
+sourceUrl: 'https://docs.tricentis.com/testim/content/testops/testops-version-control/version-control-branches.htm'
 keywords:
   - ブランチ管理
   - TestOps バージョン管理

@@ -4,7 +4,7 @@ description: 管理者ユーザーとして、別のユーザーに切り替え�
 category: Salesforceテスト
 order: 16012
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-loginas'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-loginas.htm'
 keywords:
   - Salesforce
   - 別のユーザーとしてログイン

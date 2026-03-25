@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12010
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/vsts-and-tfs-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration.htm'
 keywords:
   - VSTS
   - TFS

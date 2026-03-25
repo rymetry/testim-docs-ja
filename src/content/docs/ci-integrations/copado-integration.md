@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12013
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/copado-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/copado-integration.htm'
 keywords:
   - Copado
   - Salesforce

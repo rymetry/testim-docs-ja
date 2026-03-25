@@ -4,7 +4,7 @@ description: すべてのテスト、セットアップ・ティアダウンテ�
 category: テスト管理
 order: 9012
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/test-plans'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/test-plans.htm'
 keywords:
   - テストプラン
   - セットアップテスト

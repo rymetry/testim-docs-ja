@@ -4,7 +4,7 @@ description: テスト開発者がテストの問題を特定・修正するた�
 category: デバッグ
 order: 8002
 updated: '2025-09-22'
-sourceUrl: 'https://help.testim.io/docs/debugging-controls'
+sourceUrl: 'https://docs.tricentis.com/testim/content/debugging-tests/debugging-controls.htm'
 keywords:
   - デバッグコントロール
   - デバッグ

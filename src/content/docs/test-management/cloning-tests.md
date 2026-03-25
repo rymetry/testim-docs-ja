@@ -4,7 +4,7 @@ description: 現在のプロジェクトまたは他のプロジェクトにテ�
 category: テスト管理
 order: 9004
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/cloning-tests'
+sourceUrl: 'https://docs.tricentis.com/testim/content/test-management/test-list/cloning-tests.htm'
 keywords:
   - テストクローン
   - テストコピー

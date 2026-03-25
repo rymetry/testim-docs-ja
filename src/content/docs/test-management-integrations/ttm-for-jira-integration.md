@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12041
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/ttm-for-jira-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/test-management-integrations/ttm-for-jira-integration.htm'
 keywords:
   - TTM for Jira
   - Tricentis Test Management

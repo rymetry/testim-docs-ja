@@ -4,7 +4,7 @@ description: ネットワークモック使用時のトラブルシューティ�
 category: テスト実行
 order: 6018
 updated: '2025-11-11'
-sourceUrl: 'https://help.testim.io/docs/mock-network-responses-troubleshooting'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/mock-network-responses-troubleshooting.htm'
 keywords:
   - ネットワークモック
   - モックレスポンス

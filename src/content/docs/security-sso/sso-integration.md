@@ -4,7 +4,7 @@ description: シングルサインオンサービスを Testim と統合する
 category: セキュリティ
 order: 18002
 updated: '2025-11-02'
-sourceUrl: 'https://help.testim.io/docs/sso-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/security/sso-integration/index.htm'
 keywords:
   - SSO
   - シングルサインオン

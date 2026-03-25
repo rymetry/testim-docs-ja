@@ -4,7 +4,7 @@ description: ターゲット要素の編集方法を学びます。要素のハ�
 category: テスト編集
 order: 4003
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/editing-target-element-properties'
+sourceUrl: 'https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-target-element-properties.htm'
 keywords:
   - ターゲット要素
   - Smart Locators

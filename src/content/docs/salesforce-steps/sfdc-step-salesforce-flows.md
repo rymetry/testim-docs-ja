@@ -4,7 +4,7 @@ description: フロービルダーで作成した画面フローを、フィー�
 category: Salesforceテスト
 order: 16030
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-salesforce-flows'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows.htm'
 keywords:
   - Salesforce
   - フロー

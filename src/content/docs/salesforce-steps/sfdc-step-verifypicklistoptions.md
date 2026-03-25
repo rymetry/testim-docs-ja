@@ -4,7 +4,7 @@ description: 選択リスト（ドロップダウン）に表示される/され
 category: Salesforceテスト
 order: 16029
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-verifypicklistoptions'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-verifypicklistoptions.htm'
 keywords:
   - Salesforce
   - 選択リスト

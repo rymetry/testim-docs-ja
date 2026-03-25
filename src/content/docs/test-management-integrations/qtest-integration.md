@@ -5,7 +5,7 @@ description: >-
 category: 統合
 order: 12039
 updated: '2025-09-19'
-sourceUrl: 'https://help.testim.io/docs/qtest-integration'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/test-management-integrations/qtest-integration.htm'
 keywords:
   - qTest
   - Tricentis Test Management

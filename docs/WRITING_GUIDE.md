@@ -43,7 +43,7 @@
 ---
 title: 'ページタイトル（日本語）'
 description: 'ページの説明（100文字以内、プレースホルダ禁止）'
-sourceUrl: 'https://help.testim.io/docs/{slug}'
+sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/{slug}.htm'
 updated: '2025-11-02'
 ---
 ```
@@ -52,12 +52,12 @@ updated: '2025-11-02'
 | ------------- | ---- | ----------------------------------------------------------------------- |
 | `title`       | ✅   | 日本語タイトル                                                          |
 | `description` | ✅   | 具体的な説明文。「説明文」「TODO」「原文: ...」などのプレースホルダ禁止 |
-| `sourceUrl`   | ✅   | 英語原文 URL（`https://help.testim.io/docs/{slug}`）必須                |
+| `sourceUrl`   | ✅   | 英語原文 URL（`https://docs.tricentis.com/testim/content/.../{slug}.htm`）必須 |
 | `updated`     | ✅   | 更新日（`YYYY-MM-DD` 形式）                                             |
 
 追加ルール:
 
-- `sourceUrl` は `https://help.testim.io/docs/{slug}` の 1 スラッグ形式のみ許可
+- `sourceUrl` は `https://docs.tricentis.com/testim/content/.../{slug}.htm` 形式のみ許可
 - `updated` は英語原文に追従させる（JA ファイルの編集日に変更しないこと）
 - `description` は本文から読める内容を 1-2 文で要約する
 - frontmatter の欠落は build 前に修正する
@@ -84,7 +84,7 @@ updated: '2025-11-02'
 
 - アンカー付きリンクも `/docs/{slug}#section-name` を使用する
 - `/docs/{folder}/{slug}` 形式は lint でエラーになる
-- 本文中の `https://help.testim.io/docs/{slug}` は、対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する（HTML `<a href>` 含む）
+- 本文中の `https://docs.tricentis.com/testim/content/.../{slug}.htm` は、対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する（HTML `<a href>` 含む）
 - `/docs/{slug}` のスラグが実在するファイルを指しているか必ず検証する。英語原文側でスラグがリネームされている場合があるため、ファイル名との突き合わせが必要
 
 ---

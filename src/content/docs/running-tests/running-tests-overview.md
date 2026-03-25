@@ -6,7 +6,7 @@ description: >-
 category: テスト実行
 order: 6001
 updated: '2025-09-23'
-sourceUrl: 'https://help.testim.io/docs/running-tests-overview'
+sourceUrl: 'https://docs.tricentis.com/testim/content/running-tests/running-tests-overview.htm'
 keywords:
   - テスト実行
   - ローカル実行

@@ -4,7 +4,7 @@ description: ペルソナを選択して Salesforce 環境にログインしま�
 category: Salesforceテスト
 order: 16011
 updated: '2025-12-02'
-sourceUrl: 'https://help.testim.io/docs/sfdc-step-login'
+sourceUrl: 'https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-login.htm'
 keywords:
   - Salesforce
   - ログイン
