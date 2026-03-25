@@ -91,7 +91,7 @@ export function loadSidebarSlugs(sidebarText) {
     const match = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
     return match ? match[1] : null;
   }).filter(Boolean);
-  // Also match legacy help.testim.io URLs for backward compatibility
+  // NOTE: 旧ドメイン（help.testim.io）の後方互換。Phase C (#160) で削除すること。
   const oldUrls = [...sidebarText.matchAll(/https:\/\/help\.testim\.io\/docs\/([\w-]+)/g)];
   const slugs = new Set([
     ...newSlugs,
@@ -808,6 +808,7 @@ function normalizeUrlToken(url) {
     const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
     if (slugMatch) return `/docs/${slugMatch[1]}`;
   }
+  // NOTE: 旧ドメイン（help.testim.io）の後方互換。Phase C (#160) で削除すること。
   return url.replace(/^https?:\/\/help\.testim\.io/, '');
 }
 
