@@ -13,7 +13,7 @@
  *   scripts/url_mapping.json
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -59,7 +59,8 @@ function extractSlug(url) {
 }
 
 /**
- * 1 件の URL に対してリダイレクト先を取得する（リトライ付き）
+ * 1 件の URL に対して最終リダイレクト先を取得する（リトライ付き）
+ * 中間リダイレクトを全て辿り、最終到達 URL を返す。
  */
 async function resolveRedirect(url) {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
@@ -67,8 +68,9 @@ async function resolveRedirect(url) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
+      // redirect: 'follow' で最終到達先まで自動的に辿る
       const res = await fetch(url, {
-        redirect: 'manual',
+        redirect: 'follow',
         signal: controller.signal,
         headers: {
           'User-Agent': 'testim-docs-ja/url-mapping-generator',
@@ -78,19 +80,16 @@ async function resolveRedirect(url) {
       clearTimeout(timeoutId);
 
       const status = res.status;
+      const finalUrl = res.url; // fetch が辿った最終 URL
 
-      // 3xx リダイレクト: Location ヘッダーから新 URL を取得
-      if (status >= 300 && status < 400) {
-        const location = res.headers.get('location');
-        if (location) {
-          return { new_url: location, status };
-        }
-        return { error: `リダイレクト応答に Location ヘッダーがありません (${status})`, status };
+      // 最終 URL が元 URL と同じ = リダイレクトが発生していない
+      if (finalUrl === url) {
+        return { error: 'リダイレクトなし（200 応答）。移行先が検出できません', status };
       }
 
-      // 200: リダイレクトなし（旧 URL がそのまま有効）
-      if (status === 200) {
-        return { new_url: url, status };
+      // 最終到達先が 200 で、かつ元 URL と異なる = リダイレクト成功
+      if (status === 200 && finalUrl !== url) {
+        return { new_url: finalUrl, status: 301 };
       }
 
       // 522: Cloudflare タイムアウト — リトライ対象
@@ -104,7 +103,7 @@ async function resolveRedirect(url) {
       }
 
       // その他のエラー
-      return { error: `予期しないステータス: ${status}`, status };
+      return { error: `予期しないステータス: ${status} (最終URL: ${finalUrl})`, status };
     } catch (err) {
       if (attempt < MAX_RETRIES) {
         const msg = err.name === 'AbortError' ? 'タイムアウト' : err.message;
@@ -160,7 +159,7 @@ async function main() {
     }
   }
 
-  // 3. 結果を JSON に出力
+  // 3. 結果を JSON に出力（失敗がある場合は既存ファイルを保護）
   const output = {
     generated_at: new Date().toISOString(),
     total: urls.length,
@@ -170,21 +169,31 @@ async function main() {
     failures,
   };
 
-  writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + '\n', 'utf-8');
+  if (failures.length > 0 && existsSync(OUTPUT_PATH)) {
+    // 失敗がある場合は既存マッピングを上書きせず、別ファイルに出力
+    const partialPath = OUTPUT_PATH.replace('.json', '.partial.json');
+    writeFileSync(partialPath, JSON.stringify(output, null, 2) + '\n', 'utf-8');
+    console.log(`\n⚠ ${failures.length} 件の失敗があるため、既存の ${OUTPUT_PATH} を保護しました`);
+    console.log(`  部分結果: ${partialPath}`);
+  } else {
+    writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + '\n', 'utf-8');
+  }
 
   // 4. サマリー表示
   console.log('\n=== 完了 ===');
   console.log(`合計: ${urls.length} 件`);
   console.log(`成功: ${successCount} 件`);
   console.log(`失敗: ${failures.length} 件`);
-  console.log(`出力: ${OUTPUT_PATH}`);
 
   if (failures.length > 0) {
     console.log('\n=== 失敗した URL ===');
     for (const f of failures) {
       console.log(`  - ${f.slug}: ${f.error}`);
     }
+    process.exit(1);
   }
+
+  console.log(`出力: ${OUTPUT_PATH}`);
 }
 
 main().catch((err) => {
