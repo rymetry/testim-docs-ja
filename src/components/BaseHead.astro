@@ -1,0 +1,49 @@
+---
+import { Font } from 'astro:assets';
+import { SITE } from '../lib/site';
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+
+const pageTitle = `${title} | ${SITE.title}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const ogImageUrl = new URL('/og-image.png', Astro.site ?? Astro.url);
+
+const gtmHeadCode = `
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${SITE.gtmId}');</script>
+<!-- End Google Tag Manager -->
+`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href={canonicalUrl.href} />
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl.href} />
+<meta property="og:image" content={ogImageUrl.href} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:site_name" content={SITE.title} />
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl.href} />
+<Font cssVariable="--font-noto-sans-jp" preload />
+<Fragment set:html={gtmHeadCode} />
