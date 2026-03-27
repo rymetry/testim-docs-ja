@@ -11,10 +11,10 @@ import { SITE } from '../lib/site';
         <img src={SITE.logo} alt="" class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
         <div class="flex flex-col gap-1">
           <p class="font-medium text-slate-700">
-            &copy; 2025 {SITE.title}
+            {SITE.title}
           </p>
           <p class="text-slate-400">
-            このサイトは <a
+            &copy; 2025 {SITE.author} &mdash; <a
               href={SITE.officialDocs}
               target="_blank"
               rel="noopener noreferrer"
