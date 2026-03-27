@@ -37,7 +37,7 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 export function buildSidebarUrlMap(sidebarText) {
   const map = new Map();
   if (!sidebarText) return map;
-  for (const m of sidebarText.matchAll(TRICENTIS_URL_RE)) {
+  for (const m of sidebarText.matchAll(new RegExp(TRICENTIS_URL_RE, 'g'))) {
     const url = m[0];
     const slug = extractSlugFn(url);
     if (slug && !map.has(slug)) map.set(slug, url);

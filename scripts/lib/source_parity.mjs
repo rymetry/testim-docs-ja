@@ -86,7 +86,7 @@ export function isEnglishOnlyLine(line) {
 
 export function loadSidebarSlugs(sidebarText) {
   const slugs = new Set();
-  for (const m of sidebarText.matchAll(TRICENTIS_URL_RE)) {
+  for (const m of sidebarText.matchAll(new RegExp(TRICENTIS_URL_RE, 'g'))) {
     const slug = extractSlugFromUrl(m[0]);
     if (slug) slugs.add(slug);
   }
