@@ -192,12 +192,6 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    // fakeFetch returns different content → hash will differ
-    const fakeFetch = async () => ({
-      ok: true,
-      text: async () => '# New Content\n\nChanged body.',
-    });
-
     const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 1);
     assert.equal(list[0].slug, 'testim-overview');
@@ -215,8 +209,6 @@ describe('getDiffPagesList', () => {
       `- ✅ https://docs.tricentis.com/testim/content/overview/${tmpSlug}.htm`,
       '',
     ].join('\n');
-
-    const fakeFetch = async () => ({ ok: false, status: 500 });
 
     try {
       fs.mkdirSync(snapshotDir, { recursive: true });
@@ -246,7 +238,6 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const fakeFetch = async () => ({ ok: true, text: async () => '# Content' });
     const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 2);
   });
@@ -261,7 +252,6 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const fakeFetch = async () => ({ ok: false, status: 500 });
     const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 1, 'Missing HTML snapshot should be treated as changed');
     assert.equal(list[0].slug, 'zzz-nonexistent-test-page');
@@ -280,15 +270,11 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    let fetchCalled = false;
-    const fakeFetch = async () => { fetchCalled = true; return { ok: true, text: async () => 'X' }; };
-
     try {
       fs.mkdirSync(snapshotDir, { recursive: true });
       fs.writeFileSync(snapshotPath, '<h1>HTML Content</h1>');
 
       await getDiffPagesList(sidebarText, hashesPath);
-      assert.equal(fetchCalled, false, 'fetch should NOT be called — reads from HTML snapshot');
 
       const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
       assert.ok(saved[tmpSlug], 'hash should be persisted');
