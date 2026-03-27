@@ -7,7 +7,7 @@ updated: '2025-09-22'
 sourceUrl: 'https://docs.tricentis.com/testim/content/results/results-overview.htm'
 keywords:
   - テスト結果
-  - 実行ラン
+  - 実行結果一覧
   - テスト実行
   - 結果画面
   - 結果概要

@@ -515,6 +515,8 @@ _動画: テストの実行デモ_
 | Pro feature             | Pro機能                     | 「Pro」は英語のまま                   |
 | Pro plan                | Professional plan           | 短縮形も正式名で英語維持              |
 | third party / 3rd party | サードパーティ              | カタカナ化。「3番目のパーティ」は不可 |
+| Execution Runs Screen   | 実行結果一覧                | 画面タイトル。「実行ラン画面」は不可  |
+| execution run(s)        | 実行                        | 個別インスタンス。文脈で区別          |
 
 ### 5.3 特殊記法
 
