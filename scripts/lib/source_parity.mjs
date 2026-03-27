@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { extractSlug as extractSlugFromUrl, TRICENTIS_URL_RE } from './madcap_toc.mjs';
+import { extractSlug as extractSlugFromUrl, matchAllTricentisUrls } from './madcap_toc.mjs';
 
 export const ISSUE_SEVERITY = {
   untranslated: 'actionable',
@@ -86,7 +86,7 @@ export function isEnglishOnlyLine(line) {
 
 export function loadSidebarSlugs(sidebarText) {
   const slugs = new Set();
-  for (const m of sidebarText.matchAll(new RegExp(TRICENTIS_URL_RE, 'g'))) {
+  for (const m of matchAllTricentisUrls(sidebarText)) {
     const slug = extractSlugFromUrl(m[0]);
     if (slug) slugs.add(slug);
   }

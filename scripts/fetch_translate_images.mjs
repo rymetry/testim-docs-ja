@@ -149,9 +149,9 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl
 
   // Resolve MadCap relative paths to absolute URLs using sourceUrl as base.
   // The replace strips the last path segment (filename) to get the parent directory,
-  // matching HTML <base> / relative path semantics:
-  //   .../testim-overview/index.htm → .../testim-overview/  (images/ resolves correctly)
-  //   .../testim-automate.htm       → .../                  (images/ resolves correctly)
+  // matching HTML relative path semantics:
+  //   .../slug-dir/index.htm  → .../slug-dir/  (images/foo.png → .../slug-dir/images/foo.png)
+  //   .../slug-name.htm       → .../           (images/foo.png → .../images/foo.png)
   const relativePaths = Array.from(new Set(markdown.match(relativeImgRegex) || []));
   const madcapBase = sourceUrl ? sourceUrl.replace(/\/[^/]*$/, '/') : '';
   const resolvedRelatives = relativePaths

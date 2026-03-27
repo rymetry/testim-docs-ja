@@ -92,7 +92,7 @@ export function extractMainContent(html) {
   let pos = startMatch.index + startMatch[0].length;
   const openRe = /<div\b/gi;
   const closeRe = /<\/div>/gi;
-  let lastCloseMatch = null;
+  let lastCloseIndex = -1;
 
   while (depth > 0 && pos < html.length) {
     openRe.lastIndex = pos;
@@ -107,14 +107,14 @@ export function extractMainContent(html) {
       pos = openMatch.index + openMatch[0].length;
     } else {
       depth -= 1;
-      lastCloseMatch = closeMatch;
+      lastCloseIndex = closeMatch.index;
       pos = closeMatch.index + closeMatch[0].length;
     }
   }
 
-  if (depth !== 0 || !lastCloseMatch) return null;
+  if (depth !== 0 || lastCloseIndex < 0) return null;
 
-  return html.slice(startMatch.index + startMatch[0].length, pos - lastCloseMatch[0].length);
+  return html.slice(startMatch.index + startMatch[0].length, lastCloseIndex);
 }
 
 /**

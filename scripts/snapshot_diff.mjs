@@ -23,7 +23,7 @@ import {
   readDocFile,
 } from './lib/project.mjs';
 import { isDirectRun } from './lib/cli.mjs';
-import { extractSlug as extractSlugFn, extractSlugsFromSnapshot, TRICENTIS_URL_RE } from './lib/madcap_toc.mjs';
+import { extractSlug as extractSlugFn, extractSlugsFromSnapshot, matchAllTricentisUrls } from './lib/madcap_toc.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -37,7 +37,7 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 export function buildSidebarUrlMap(sidebarText) {
   const map = new Map();
   if (!sidebarText) return map;
-  for (const m of sidebarText.matchAll(new RegExp(TRICENTIS_URL_RE, 'g'))) {
+  for (const m of matchAllTricentisUrls(sidebarText)) {
     const url = m[0];
     const slug = extractSlugFn(url);
     if (slug && !map.has(slug)) map.set(slug, url);

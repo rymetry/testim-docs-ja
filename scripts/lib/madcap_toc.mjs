@@ -14,8 +14,17 @@ const TOC_PATH = 'Data/Tocs';
 const DEFAULT_USER_AGENT = 'testim-docs-ja-snapshot/1.0';
 const FETCH_TIMEOUT_MS = 30_000;
 
-/** Regex matching docs.tricentis.com content URLs ending in .htm (no /g flag — use new RegExp(TRICENTIS_URL_RE, 'g') for matchAll) */
+/**
+ * Regex matching docs.tricentis.com content URLs ending in .htm.
+ * Intentionally omits /g to avoid shared lastIndex state across callers;
+ * use {@link matchAllTricentisUrls} for matchAll iteration.
+ */
 export const TRICENTIS_URL_RE = /https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm/;
+
+/** Return all Tricentis content URL matches from the given text. */
+export function matchAllTricentisUrls(text) {
+  return text.matchAll(new RegExp(TRICENTIS_URL_RE, 'g'));
+}
 
 /**
  * Parse a MadCap Flare AMD module (`define({...})`) and return the inner object.
