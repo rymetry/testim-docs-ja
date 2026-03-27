@@ -10,6 +10,7 @@ type Props = {
 
 const { title, description } = Astro.props;
 
+// GTM noscript: <head> 側の script タグは BaseHead.astro に定義
 const gtmBodyCode = `
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${SITE.gtmId}"

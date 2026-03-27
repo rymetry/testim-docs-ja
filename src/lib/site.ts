@@ -6,6 +6,6 @@ export const SITE = {
   officialDocs:
     'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
   github: 'https://github.com/rymetry/testim-docs-ja',
-  x: 'https://x.com/rymetry',
+  xTwitter: 'https://x.com/rymetry',
   statusPage: 'https://status.tricentis.com/',
 } as const;

@@ -10,7 +10,7 @@ import SidebarScrollRestore from '../components/SidebarScrollRestore.astro';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import type { NavItem } from '../types/navigation';
 
-type DocsLayoutProps = {
+type Props = {
   title: string;
   description: string;
   hero?: {
@@ -27,7 +27,7 @@ type DocsLayoutProps = {
 };
 
 const { title, description, hero, navSections, currentSlug, headings, sourceUrl } =
-  Astro.props as DocsLayoutProps;
+  Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
