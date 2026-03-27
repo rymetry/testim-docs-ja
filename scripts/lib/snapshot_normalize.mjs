@@ -1,8 +1,8 @@
 /**
- * HTML sidebar snapshot normalization.
- *
- * Content snapshots are stored as raw Markdown (fetched via .md endpoint).
- * This module handles only sidebar HTML normalization for change detection.
+ * @deprecated This module is no longer used in production.
+ * Sidebar extraction has been replaced by MadCap Flare TOC parsing
+ * in madcap_toc.mjs. Content snapshots are now stored as HTML.
+ * Retained for potential rollback only.
  */
 
 /** Attributes preserved through normalization (all others stripped). */

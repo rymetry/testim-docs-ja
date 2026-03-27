@@ -2,7 +2,7 @@
 
 ## 概要
 
-このプロジェクトでは、英語原文の更新状況をスナップショットベースで追跡しています。英語ページの生 Markdown（`.md` エンドポイント）をローカルに保存し、git diff で変更を検知します。
+このプロジェクトでは、英語原文の更新状況をスナップショットベースで追跡しています。英語ページの HTML コンテンツ（`#mc-main-content`）をローカルに保存し、git diff で変更を検知します。
 
 ## 仕組み
 
@@ -10,19 +10,19 @@
 
 ```text
 snapshots/en/
-  content/{slug}.md    # 各ページの生 Markdown（.md エンドポイントから取得）
-  sidebar.html          # サイドバーナビゲーション（HTML、.md エンドポイントなし）
+  content/{slug}.html  # 各ページの HTML コンテンツ（#mc-main-content の innerHTML）
+  sidebar.json         # サイドバーナビゲーション（MadCap Flare TOC データから生成）
 ```
 
-コンテンツスナップショットは `{sourceUrl}.md`（例: `https://docs.tricentis.com/testim/content/results/test-status.htm`）から取得した生 Markdown をそのまま保存します。正規化処理は不要です。
+コンテンツスナップショットは各ページの HTML を取得し、`<div id="mc-main-content">` の内部 HTML を抽出してそのまま保存します。
 
-サイドバーは `.md` エンドポイントがないため、HTML ページから抽出して正規化しています。
+サイドバーは MadCap Flare の TOC データファイル（`Data/Tocs/Main.js` + チャンクファイル）を解析し、セクション構造をJSON形式で保存します。
 
 ### コミット済みスナップショット = 「翻訳済みの英語原文」
 
 ```text
-snapshots/en/content/{slug}.md (committed) = この英語版を元に翻訳した
-snapshots/en/content/{slug}.md (working tree) = 最新の英語版
+snapshots/en/content/{slug}.html (committed) = この英語版を元に翻訳した
+snapshots/en/content/{slug}.html (working tree) = 最新の英語版
 差分 = まだ翻訳に反映していない英語側の変更
 ```
 
@@ -32,10 +32,10 @@ snapshots/en/content/{slug}.md (working tree) = 最新の英語版
 
 | カテゴリ  | 検出パターン                                                 |
 | --------- | ------------------------------------------------------------ |
-| `heading` | `^ {0,3}#{1,6}\s`（Markdown 見出し）                         |
-| `image`   | `!\[`（Markdown 画像構文）                                   |
-| `code`    | ``^ {0,3}``` ``（コードフェンス）                            |
-| `callout` | `^ {0,3}>\s*` + 絵文字（📘📙🚧❗✅👍⚠️）、または `^ {0,3}<Callout\b`（JSX） |
+| `heading` | `<h1>`〜`<h6>` タグ                                         |
+| `image`   | `<img>` タグ                                                 |
+| `code`    | `<pre>`, `<code>` タグ                                       |
+| `callout` | `<blockquote>` + テーマ属性                                  |
 | `content` | その他のテキスト変更                                         |
 
 ページレベルでは `page-added`（新規）、`page-removed`（404化）、`page-changed`（内容変更）に分類されます。
@@ -67,7 +67,7 @@ npm run check:snapshots:fetch -- --slug=testim-overview
 npm run check:snapshots:fetch -- --dry-run
 ```
 
-`--dry-run` でも本文 Markdown と sidebar HTML の取得経路は検証されますが、ファイルは書き込みません。
+`--dry-run` でもHTML取得とTOCデータ取得の経路は検証されますが、ファイルは書き込みません。
 
 ## 運用フロー
 
@@ -84,15 +84,15 @@ npm run check:snapshots:fetch -- --dry-run
 1. `npm run check:snapshots:fetch` — 最新スナップショット取得
 2. `npm run check:snapshots:diff` — 変更内容を確認
 3. 日本語ドキュメントを翻訳・更新
-4. `git add snapshots/en/content/{slug}.md src/content/docs/.../{slug}.md`
+4. `git add snapshots/en/content/{slug}.html src/content/docs/.../{slug}.md`
 5. `git commit` — スナップショットと翻訳を同時コミット → 次回は差分 0
 
 ### スナップショットから翻訳入力に再利用
 
-`fetch_translate_images.mjs` は `--from-snapshot` フラグで、ネットワークフェッチの代わりにスナップショットから読み込めます:
+`fetch_translate_images.mjs` はスナップショットから自動的に読み込みます（HTML → turndown で Markdown 変換）:
 
 ```bash
-node scripts/fetch_translate_images.mjs --mode=full --from-snapshot
+node scripts/fetch_translate_images.mjs --mode=full
 ```
 
 ### 新規ページ追加時
@@ -134,12 +134,12 @@ git commit -m "feat: 初回英語原文スナップショット"
 
 ## 関連ファイル
 
-- `scripts/lib/snapshot_normalize.mjs` — サイドバー HTML 正規化
-- `scripts/snapshot_update.mjs` — フェッチ & 保存（Markdown + サイドバー HTML）
+- `scripts/lib/madcap_toc.mjs` — MadCap Flare TOC データ解析
+- `scripts/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON）
 - `scripts/snapshot_diff.mjs` — 比較 & レポート
 - `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック
 - `.github/workflows/deep-audit.yml` — 手動 deep audit
 
 ---
 
-最終更新: 2026-03-23
+最終更新: 2026-03-27

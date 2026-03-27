@@ -6,7 +6,9 @@ import { createHash } from 'crypto';
 import matter from 'gray-matter';
 import { filterItemsBySection } from './lib/sidebar.mjs';
 import { ROOT_DIR, buildSlugIndex, toKebab } from './lib/project.mjs';
+import { extractSlug } from './lib/madcap_toc.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
+import turndown from './lib/turndown.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -42,10 +44,8 @@ function parseSidebarList(sidebarText, filterFn) {
       order += 1;
       if (!filterFn(m[1])) continue;
       const url = m[2];
-      // Extract slug: /slug/index.htm → slug; /slug.htm → slug
-      const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
-      if (!slugMatch) continue;
-      const slug = slugMatch[1];
+      const slug = extractSlug(url);
+      if (!slug) continue;
       out.push({ categoryEnglish: current.english, categoryJapanese: current.japanese, url, slug, order });
     }
   }
@@ -60,12 +60,7 @@ export function getAllPagesList(sidebarText) {
   return parseSidebarList(sidebarText, () => true);
 }
 
-function extractUpdatedFromMarkdown(content) {
-  const match = content.match(/^updated:\s*['"]?([0-9]{4}-[0-9]{2}-[0-9]{2})['"]?\s*$/m);
-  return match?.[1] ?? null;
-}
-
-export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch, { fromSnapshot = false } = {}) {
+export async function getDiffPagesList(sidebarText, hashesPath) {
   const allPages = getAllPagesList(sidebarText);
   const storedHashes = fs.existsSync(hashesPath)
     ? JSON.parse(fs.readFileSync(hashesPath, 'utf8'))
@@ -75,30 +70,16 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch,
   const changed = [];
 
   for (const page of allPages) {
+    const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${page.slug}.html`);
     let content = '';
-
-    if (fromSnapshot) {
-      const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${page.slug}.md`);
-      if (fs.existsSync(snapshotPath)) {
-        content = fs.readFileSync(snapshotPath, 'utf8');
-      }
+    try {
+      content = fs.readFileSync(snapshotPath, 'utf8');
+    } catch (e) {
+      if (e.code !== 'ENOENT') throw e;
     }
 
     if (!content) {
-      // WARNING: docs.tricentis.com (MadCap Flare) は .md エンドポイント未対応。
-      // --from-snapshot フラグでローカルスナップショットを使う場合は問題ない。
-      // ネットワーク取得パスは Phase C (#160) で要改修。
-      const srcUrl = `${page.url}.md`;
-      try {
-        const res = await fetchFn(srcUrl);
-        if (res.ok) content = await res.text();
-      } catch (e) {
-        console.warn(`getDiffPagesList: network error for ${page.slug} (${e?.message}); treating as changed.`);
-      }
-    }
-
-    // コンテンツが取得できなかった場合: 空ハッシュを保存せず changed 扱い
-    if (!content) {
+      console.warn(`getDiffPagesList: no snapshot for ${page.slug}; treating as changed. Run check:snapshots:fetch first.`);
       changed.push(page);
       continue;
     }
@@ -112,7 +93,6 @@ export async function getDiffPagesList(sidebarText, hashesPath, fetchFn = fetch,
     newHashes[page.slug] = {
       sourceUrl: page.url,
       hash,
-      updated: extractUpdatedFromMarkdown(content),
       checkedAt: new Date().toISOString(),
     };
   }
@@ -223,7 +203,7 @@ function buildFrontmatter(item, existingFilePath, fallbackTitle) {
   return matter.stringify('', frontmatter).trimEnd() + '\n\n';
 }
 
-async function processOne(item, slugIndex, { fromSnapshot = false } = {}) {
+async function processOne(item, slugIndex) {
   const hit = slugIndex[item.slug];
   if (!hit) {
     console.warn(`⚠️  No local path for slug: ${item.slug}`);
@@ -232,32 +212,26 @@ async function processOne(item, slugIndex, { fromSnapshot = false } = {}) {
   const { categoryFolder, filePath } = hit;
 
   let md = '';
-  if (fromSnapshot) {
-    const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${item.slug}.md`);
-    if (fs.existsSync(snapshotPath)) {
-      const content = fs.readFileSync(snapshotPath, 'utf8');
-      if (/^<!-- 404:/.test(content)) {
-        console.warn(`⚠️  Skip ${item.slug}: snapshot contains 404 marker`);
-        return false;
-      }
-      md = content;
+
+  // Read from HTML snapshot and convert to Markdown
+  const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${item.slug}.html`);
+  if (fs.existsSync(snapshotPath)) {
+    const content = fs.readFileSync(snapshotPath, 'utf8');
+    if (/^<!-- 404:/.test(content)) {
+      console.warn(`⚠️  Skip ${item.slug}: snapshot contains 404 marker`);
+      return false;
+    }
+    try {
+      md = turndown.turndown(content);
+    } catch (e) {
+      console.warn(`⚠️  Skip ${item.slug}: turndown conversion failed: ${e.message}`);
+      return false;
     }
   }
 
   if (!md) {
-    // WARNING: docs.tricentis.com (MadCap Flare) は .md エンドポイント未対応。
-    // ネットワーク取得パスは Phase C (#160) で要改修。
-    if (item.url.includes('docs.tricentis.com')) {
-      console.warn(`⚠️  Skip ${item.slug}: MadCap Flare は .md 未対応です（--from-snapshot を使用してください）`);
-      return false;
-    }
-    const srcUrl = `${item.url}.md`;
-    const res = await fetch(srcUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: 'text/markdown' } });
-    if (!res.ok) {
-      console.warn(`⚠️  Skip ${item.slug}: ${res.status}`);
-      return false;
-    }
-    md = await res.text();
+    console.warn(`⚠️  Skip ${item.slug}: no HTML snapshot. Run check:snapshots:fetch first.`);
+    return false;
   }
 
   md = await rewriteAndDownloadMedia(md, categoryFolder, item.slug);
@@ -279,8 +253,6 @@ async function main() {
   const limit = Number(args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '0');
   const mode = parseMode(args);
   const section = parseSection(args);
-  const fromSnapshot = args.includes('--from-snapshot');
-
   const sidebarText = fs.readFileSync(SIDEBAR_FILE, 'utf8');
   const slugIndex = buildSlugIndex();
 
@@ -289,7 +261,7 @@ async function main() {
     list = getAllPagesList(sidebarText);
   } else if (mode === 'diff') {
     const hashesPath = DEFAULT_STATE_PATH;
-    list = await getDiffPagesList(sidebarText, hashesPath, fetch, { fromSnapshot });
+    list = await getDiffPagesList(sidebarText, hashesPath);
   } else {
     list = getUntranslatedList(sidebarText);
   }
@@ -298,7 +270,7 @@ async function main() {
   let done = 0;
   for (const item of list) {
     if (onlySlug && item.slug !== onlySlug) continue;
-    const ok = await processOne(item, slugIndex, { fromSnapshot });
+    const ok = await processOne(item, slugIndex);
     if (ok) done++;
     if (limit && done >= limit) break;
     await sleep(60);

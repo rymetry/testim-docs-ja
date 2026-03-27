@@ -106,7 +106,7 @@ describe('loadSidebarSlugs', () => {
     assert.equal(slugs.size, 0);
   });
 
-  it('extracts slugs from mixed old and new domain URLs', () => {
+  it('ignores old domain URLs', () => {
     const text = `## Overview
 - ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
 ## Getting Started
@@ -114,7 +114,7 @@ describe('loadSidebarSlugs', () => {
 `;
     const slugs = loadSidebarSlugs(text);
     assert.ok(slugs.has('testim-overview'), 'new domain slug extracted');
-    assert.ok(slugs.has('setting-up-your-account'), 'old domain slug extracted');
+    assert.ok(!slugs.has('setting-up-your-account'), 'old domain slug ignored');
   });
 });
 

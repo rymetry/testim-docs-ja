@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Compare committed Markdown snapshots (HEAD) with working tree snapshots
+ * Compare committed HTML snapshots (HEAD) with working tree snapshots
  * and generate a change report.
  *
  * Usage:
  *   node scripts/snapshot_diff.mjs
  *   node scripts/snapshot_diff.mjs --section="Overview"
+ *   node scripts/snapshot_diff.mjs --slug=testim-overview
  *   node scripts/snapshot_diff.mjs --json
  */
 
@@ -22,31 +23,47 @@ import {
   readDocFile,
 } from './lib/project.mjs';
 import { isDirectRun } from './lib/cli.mjs';
+import { extractSlug as extractSlugFn, extractSlugsFromSnapshot, TRICENTIS_URL_RE } from './lib/madcap_toc.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
-const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.html');
+const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.json');
+const SIDEBAR_URLS_PATH = path.join(ROOT_DIR, 'docs', 'SIDEBAR_URLS.md');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 
-/** Look up new-domain sourceUrl for a slug via url_mapping.json. Returns null when not found. */
-function fallbackSourceUrl(slug) {
-  try {
-    const mappingPath = path.join(ROOT_DIR, 'scripts', 'url_mapping.json');
-    const { mappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
-    if (mappings[slug]) return mappings[slug].new_url;
-  } catch { /* ignore */ }
-  return null;
+/**
+ * Build a slug → URL map from SIDEBAR_URLS.md text (one-time parse).
+ */
+export function buildSidebarUrlMap(sidebarText) {
+  const map = new Map();
+  if (!sidebarText) return map;
+  for (const m of sidebarText.matchAll(TRICENTIS_URL_RE)) {
+    const url = m[0];
+    const slug = extractSlugFn(url);
+    if (slug && !map.has(slug)) map.set(slug, url);
+  }
+  return map;
+}
+
+/**
+ * Look up sourceUrl for a slug via a pre-built sidebar URL map.
+ */
+export function fallbackSourceUrl(slug, sidebarUrlMap) {
+  if (!sidebarUrlMap) return null;
+  return sidebarUrlMap.get(slug) ?? null;
 }
 
 export const MARKER_404_RE = /^<!-- 404:/;
 
 /**
  * Classify changed lines by content type.
+ * Primarily targets HTML snapshot content; Markdown patterns retained for
+ * backward compatibility with any previously committed .md snapshots.
  */
 export const CHANGE_CLASSIFIERS = [
   { type: 'heading', pattern: /^ {0,3}#{1,6}\s|<\/?h[1-6]\b/i },
   { type: 'image', pattern: /!\[|<Image\b|<img\b/i },
-  { type: 'code', pattern: /^ {0,3}```|<\/?pre\b/i },
+  { type: 'code', pattern: /^ {0,3}```|<\/?pre\b|<\/?code\b/i },
   { type: 'callout', pattern: /^ {0,3}>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^ {0,3}<Callout\b|<blockquote\b[^>]*theme=/i },
 ];
 
@@ -71,8 +88,10 @@ function getHeadContent(relativePath) {
       cwd: ROOT_DIR,
       stdio: ['pipe', 'pipe', 'pipe'],
     });
-  } catch {
-    return null;
+  } catch (e) {
+    // Exit code 128 = file not found in HEAD (expected for new files)
+    if (e.status === 128) return null;
+    throw new Error(`git show failed for ${relativePath}: ${e.stderr?.toString().trim() || e.message}`);
   }
 }
 
@@ -142,7 +161,7 @@ function buildSourceUrlIndex({ section }) {
 }
 
 /**
- * Diff sidebar snapshot (HEAD vs working tree).
+ * Diff sidebar snapshot (HEAD vs working tree) using JSON format.
  */
 function diffSidebar() {
   const sidebarRelPath = path.relative(ROOT_DIR, SIDEBAR_PATH);
@@ -156,8 +175,14 @@ function diffSidebar() {
 
   if (!headContent) {
     // New sidebar (first time)
-    const pages = [...currentContent.matchAll(/href="\/docs\/([\w-]+)"/g)].map((m) => m[1]);
-    return { changed: true, addedPages: pages, removedPages: [] };
+    try {
+      const snapshot = JSON.parse(currentContent);
+      const pages = [...extractSlugsFromSnapshot(snapshot)];
+      return { changed: true, addedPages: pages, removedPages: [] };
+    } catch (e) {
+      console.warn(`diffSidebar: failed to parse new sidebar JSON: ${e.message}`);
+      return { changed: true, addedPages: [], removedPages: [] };
+    }
   }
 
   if (headContent === currentContent) {
@@ -165,13 +190,21 @@ function diffSidebar() {
   }
 
   // Extract page slugs from both versions
-  const headPages = new Set([...headContent.matchAll(/href="\/docs\/([\w-]+)"/g)].map((m) => m[1]));
-  const currentPages = new Set([...currentContent.matchAll(/href="\/docs\/([\w-]+)"/g)].map((m) => m[1]));
+  try {
+    const headSnapshot = JSON.parse(headContent);
+    const currentSnapshot = JSON.parse(currentContent);
 
-  const addedPages = [...currentPages].filter((p) => !headPages.has(p));
-  const removedPages = [...headPages].filter((p) => !currentPages.has(p));
+    const headPages = extractSlugsFromSnapshot(headSnapshot);
+    const currentPages = extractSlugsFromSnapshot(currentSnapshot);
 
-  return { changed: true, addedPages, removedPages };
+    const addedPages = [...currentPages].filter((p) => !headPages.has(p));
+    const removedPages = [...headPages].filter((p) => !currentPages.has(p));
+
+    return { changed: true, addedPages, removedPages };
+  } catch (e) {
+    console.warn(`diffSidebar: failed to parse sidebar JSON for diff: ${e.message}`);
+    return { changed: true, addedPages: [], removedPages: [] };
+  }
 }
 
 export async function main(argv) {
@@ -183,13 +216,19 @@ export async function main(argv) {
     return;
   }
 
-  const snapshotFiles = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.md'));
+  // Build slug→URL map from SIDEBAR_URLS.md once for O(1) fallback lookups
+  const sidebarText = fs.existsSync(SIDEBAR_URLS_PATH)
+    ? fs.readFileSync(SIDEBAR_URLS_PATH, 'utf8')
+    : '';
+  const sidebarUrlMap = buildSidebarUrlMap(sidebarText);
+
+  const snapshotFiles = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.html'));
   const changes = [];
 
   let unchanged = 0;
 
   for (const file of snapshotFiles) {
-    const slug = file.replace(/\.md$/, '');
+    const slug = file.replace(/\.html$/, '');
 
     // Apply slug filter (takes priority over section)
     if (args.slug && slug !== args.slug) continue;
@@ -213,7 +252,7 @@ export async function main(argv) {
       changes.push({
         slug,
         type: 'page-added',
-        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug),
+        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap),
         categories: null,
         diffLines: 0,
       });
@@ -225,7 +264,7 @@ export async function main(argv) {
       changes.push({
         slug,
         type: 'page-removed',
-        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug),
+        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap),
         categories: null,
         diffLines: 0,
       });
@@ -242,7 +281,7 @@ export async function main(argv) {
     changes.push({
       slug,
       type: 'page-changed',
-      sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug),
+      sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap),
       categories,
       diffLines,
     });

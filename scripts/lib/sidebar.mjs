@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { extractSlug } from './madcap_toc.mjs';
+
 const ROOT = path.resolve(fileURLToPath(import.meta.url), '../../..');
 export const SIDEBAR_URLS_PATH = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
 
@@ -48,13 +50,14 @@ export function parseSidebarSections(sidebarText) {
     }
 
     const itemMatch = line.match(
-      /^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/help\.testim\.io\/docs\/([a-z0-9-]+))\s*$/
+      /^\-\s*(✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/
     );
     if (itemMatch && current) {
+      const url = itemMatch[2];
       current.items.push({
         status: itemMatch[1],
-        url: itemMatch[2],
-        slug: itemMatch[3],
+        url,
+        slug: extractSlug(url),
       });
     }
   }

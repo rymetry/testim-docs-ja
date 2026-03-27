@@ -31,7 +31,7 @@ npm test                       # 全テスト実行
 
 #### snapshot_update.mjs / snapshot_diff.mjs
 
-英語原文のスナップショットベースの変更検知。各ページの生 Markdown をローカルに保存し、sidebar のみ HTML から抽出して、git diff で変更を検知する。
+英語原文のスナップショットベースの変更検知。各ページの HTML コンテンツ（`#mc-main-content`）をローカルに保存し、MadCap Flare TOC データからサイドバー JSON を生成して、git diff で変更を検知する。
 
 ```bash
 npm run check:snapshots                # 取得→比較を一括実行
@@ -335,7 +335,8 @@ npm run docs:report-categories
 | --- | --- |
 | `lib/project.mjs` | repo ルート、docs 探索、slug index、FM 読出し |
 | `lib/markdown-utils.mjs` | Markdown 除去、description 自動生成 |
-| `lib/snapshot_normalize.mjs` | サイドバー HTML 正規化（属性除去、pretty-print） |
+| `lib/madcap_toc.mjs` | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成 |
+| `lib/snapshot_normalize.mjs` | サイドバー HTML 正規化（レガシー、現在未使用） |
 | `lib/source_parity.mjs` | parity issue 生成、severity 付与、要約集計 |
 | `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成 |
 | `lib/cli.mjs` | 直実行判定などの CLI 補助 |

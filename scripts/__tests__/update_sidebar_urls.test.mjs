@@ -23,28 +23,8 @@ describe('normalizeUrl', () => {
     assert.equal(normalizeUrl('https://example.com/docs/foo'), null);
   });
 
-  // NOTE: normalizeUrl() は Phase C（パイプライン改修）まで旧ドメインも許容する。
-  // Phase C 完了後にこれらのテストを新ドメインのみに更新すること。
-  // See: https://github.com/rymetry/testim-docs-ja/issues/160
-  it('returns https URL for help.testim.io/docs/ absolute input', () => {
-    assert.equal(
-      normalizeUrl('https://help.testim.io/docs/testim-overview'),
-      'https://help.testim.io/docs/testim-overview'
-    );
-  });
-
-  it('normalizes http to https', () => {
-    assert.equal(
-      normalizeUrl('http://help.testim.io/docs/testim-overview'),
-      'https://help.testim.io/docs/testim-overview'
-    );
-  });
-
-  it('prepends base for /docs/ relative path', () => {
-    assert.equal(
-      normalizeUrl('/docs/testim-overview'),
-      'https://help.testim.io/docs/testim-overview'
-    );
+  it('returns null for old domain URL', () => {
+    assert.equal(normalizeUrl('https://help.testim.io/docs/testim-overview'), null);
   });
 
   it('returns null for null input', () => {
@@ -55,8 +35,8 @@ describe('normalizeUrl', () => {
     assert.equal(normalizeUrl(''), null);
   });
 
-  it('returns null for /other/ path', () => {
-    assert.equal(normalizeUrl('/other/testim-overview'), null);
+  it('returns null for relative path', () => {
+    assert.equal(normalizeUrl('/docs/testim-overview'), null);
   });
 
   it('returns docs.tricentis.com URL as-is', () => {
@@ -98,16 +78,16 @@ describe('parseExistingStatusMap', () => {
 // extractUrls
 // ---------------------------------------------------------------------------
 describe('extractUrls', () => {
-  it('extracts testim help doc URLs from anchor tags', () => {
+  it('extracts docs.tricentis.com URLs from anchor tags', () => {
     const html =
-      '<section><a href="https://help.testim.io/docs/testim-overview">OV</a></section>';
+      '<section><a href="https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm">OV</a></section>';
     const urls = extractUrls(html);
-    assert.deepEqual(urls, ['https://help.testim.io/docs/testim-overview']);
+    assert.deepEqual(urls, ['https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm']);
   });
 
   it('deduplicates URLs', () => {
     const html =
-      '<a href="/docs/foo">1</a><a href="/docs/foo">2</a>';
+      '<a href="https://docs.tricentis.com/testim/content/overview/foo.htm">1</a><a href="https://docs.tricentis.com/testim/content/overview/foo.htm">2</a>';
     const urls = extractUrls(html);
     assert.equal(urls.length, 1);
   });
@@ -117,14 +97,9 @@ describe('extractUrls', () => {
     assert.equal(urls.length, 0);
   });
 
-  it('normalizes relative /docs/ paths', () => {
-    const urls = extractUrls('<a href="/docs/testim-overview">O</a>');
-    assert.deepEqual(urls, ['https://help.testim.io/docs/testim-overview']);
-  });
-
-  it('extracts new domain URLs from anchor tags', () => {
-    const urls = extractUrls('<a href="https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm">O</a>');
-    assert.deepEqual(urls, ['https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm']);
+  it('ignores old domain URLs', () => {
+    const urls = extractUrls('<a href="https://help.testim.io/docs/testim-overview">O</a>');
+    assert.equal(urls.length, 0);
   });
 });
 
@@ -219,13 +194,10 @@ describe('fetchSitemap', () => {
 // ---------------------------------------------------------------------------
 describe('CLI exit behavior', () => {
   it('exits with code 1 when totalUrls is 0', async () => {
-    // Mock fetch: sitemap returns no /content/ URLs, HTML has empty nav
-    const mockFetch = async (url) => ({
+    // Mock fetch: TOC and sitemap both return empty data
+    const mockFetch = async () => ({
       ok: true,
-      text: async () => {
-        if (url.includes('sitemap')) return '<urlset></urlset>';
-        return '<html><nav id="hub-sidebar"></nav></html>';
-      },
+      text: async () => '<urlset></urlset>',
     });
 
     let exitCode;
@@ -248,27 +220,20 @@ describe('CLI exit behavior', () => {
 });
 
 // ---------------------------------------------------------------------------
-// DRY: fetchNavSections unifies sitemap and no-sitemap branches (regression)
+// TOC-based main() integration
 // ---------------------------------------------------------------------------
-describe('fetchNavSections urlFilter unification', () => {
-  // NOTE: mock HTML では旧ドメイン URL を使用。normalizeUrl() が Phase C まで旧ドメインを許容するため。
-  // Phase C (#160) 完了後に新ドメイン URL に更新すること。
-  it('no-sitemap path: all nav URLs are included (urlFilter = () => true)', async () => {
-    const navHtml = `
-      <nav id="hub-sidebar">
-        <section>
-          <h2>Getting Started</h2>
-          <a href="https://help.testim.io/docs/intro">Intro</a>
-          <a href="https://help.testim.io/docs/setup">Setup</a>
-        </section>
-      </nav>`;
-    const mockFetch = async (url) => ({
-      ok: true,
-      text: async () => {
-        if (url.includes('sitemap')) return '<urlset></urlset>';
-        return `<html>${navHtml}</html>`;
-      },
-    });
+describe('main() with TOC data', () => {
+  it('uses TOC data to build sections and writes output', async () => {
+    // Mock TOC JS files
+    const mainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0,n:[{i:1,c:0}]}]}});";
+    const chunkJs = "define({'/content/overview/index.htm':{i:[0],t:['Overview'],b:['']},'/content/overview/testim-overview/index.htm':{i:[1],t:['Testim overview'],b:['']}});";
+
+    const mockFetch = async (url) => {
+      if (url.includes('Main.js')) return { ok: true, text: async () => mainJs };
+      if (url.includes('Mock_Chunk0.js')) return { ok: true, text: async () => chunkJs };
+      if (url.includes('sitemap')) return { ok: false, status: 404 };
+      return { ok: false, status: 404 };
+    };
 
     let writtenContent = '';
     const fs = await import('node:fs');
@@ -283,44 +248,41 @@ describe('fetchNavSections urlFilter unification', () => {
       fs.default.mkdirSync = origMkdirSync;
     }
 
-    assert.ok(writtenContent.includes('https://help.testim.io/docs/intro'), 'intro URL must be in output');
-    assert.ok(writtenContent.includes('https://help.testim.io/docs/setup'), 'setup URL must be in output');
+    assert.ok(writtenContent.includes('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'), 'page URL must be in output');
+    assert.ok(writtenContent.includes('## Overview'), 'section heading must be in output');
   });
 
-  it('sitemap path: only sitemap URLs are kept (urlFilter = sitemapSet.has)', async () => {
-    const navHtml = `
-      <nav id="hub-sidebar">
-        <section>
-          <h2>Getting Started</h2>
-          <a href="https://docs.tricentis.com/testim/content/getting-started/intro.htm">Intro</a>
-          <a href="https://docs.tricentis.com/testim/content/getting-started/unlisted.htm">Unlisted</a>
-        </section>
-      </nav>`;
+  it('falls back to sitemap when TOC fetch fails and no existing file', async () => {
     const sitemapXml = `<urlset>
-      <url><loc>https://docs.tricentis.com/testim/content/getting-started/intro.htm</loc></url>
+      <url><loc>https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm</loc></url>
     </urlset>`;
-    const mockFetch = async (url) => ({
-      ok: true,
-      text: async () => {
-        if (url.includes('sitemap')) return sitemapXml;
-        return `<html>${navHtml}</html>`;
-      },
-    });
+
+    const mockFetch = async (url) => {
+      if (url.includes('Data/Tocs')) throw new Error('TOC unavailable');
+      if (url.includes('sitemap')) return { ok: true, text: async () => sitemapXml };
+      return { ok: false, status: 404 };
+    };
 
     let writtenContent = '';
     const fs = await import('node:fs');
     const origWriteFileSync = fs.default.writeFileSync;
     const origMkdirSync = fs.default.mkdirSync;
+    const origExistsSync = fs.default.existsSync;
     fs.default.mkdirSync = () => {};
     fs.default.writeFileSync = (_p, content) => { writtenContent = content; };
+    // Simulate no existing SIDEBAR_URLS.md so sitemap fallback is allowed
+    fs.default.existsSync = (p) => {
+      if (String(p).includes('SIDEBAR_URLS.md')) return false;
+      return origExistsSync(p);
+    };
     try {
       await main(mockFetch);
     } finally {
       fs.default.writeFileSync = origWriteFileSync;
       fs.default.mkdirSync = origMkdirSync;
+      fs.default.existsSync = origExistsSync;
     }
 
-    assert.ok(writtenContent.includes('https://docs.tricentis.com/testim/content/getting-started/intro.htm'), 'sitemap URL must be in output');
-    assert.ok(!writtenContent.includes('unlisted'), 'non-sitemap URL must be excluded');
+    assert.ok(writtenContent.includes('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'), 'sitemap URL must be in output');
   });
 });

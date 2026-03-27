@@ -368,31 +368,26 @@
 
 ## URL抽出方法
 
-### ブラウザ開発者ツールで実行するコード
+### 自動取得（推奨）
+
+MadCap Flare の TOC データを解析して自動取得します:
+
+```bash
+npm run docs:sync-sidebar
+```
+
+このコマンドは `Data/Tocs/Main.js` + チャンクファイルを解析し、セクション構造付きでこのファイルを更新します。TOC 取得に失敗した場合はサイトマップからフラットなURLリストにフォールバックします。
+
+### 手動確認（ブラウザ開発者ツール）
+
+自動取得で問題がある場合、ブラウザの開発者ツールで確認できます:
 
 1. https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm を開く
-2. サイドバーのすべてのトグル（"Show subpages for"）を展開
-3. ブラウザの開発者ツール（F12）のコンソールで以下を実行:
+2. ブラウザの開発者ツール（F12）のコンソールで以下を実行:
 
 ```javascript
-// サイドバー内の全リンクURLを抽出
-// ※ セレクターは MadCap Flare のナビゲーション構造に合わせて調整すること
-//   旧 readme.io: '.hub-sidebar-content a'
-//   MadCap Flare: ナビゲーション要素を DevTools で確認して指定
+// MadCap Flare サイドバー内の全リンクURLを抽出
 Array.from(document.querySelectorAll('nav a[href*="/testim/content/"]'))
   .map((a) => a.href)
   .join('\n');
 ```
-
-または、重複を除いてソートする場合:
-
-```javascript
-// 重複を除去してソート
-[...new Set(Array.from(document.querySelectorAll('nav a[href*="/testim/content/"]')).map((a) => a.href))]
-  .sort()
-  .join('\n');
-```
-
-### 実行結果の保存
-
-結果をコピーして、このファイルを更新してください。

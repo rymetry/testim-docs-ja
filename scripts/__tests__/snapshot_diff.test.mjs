@@ -5,9 +5,11 @@ let classifyChanges;
 let CHANGE_CLASSIFIERS;
 let MARKER_404_RE;
 let parseArgs;
+let fallbackSourceUrl;
+let buildSidebarUrlMap;
 
 before(async () => {
-  ({ classifyChanges, CHANGE_CLASSIFIERS, MARKER_404_RE, parseArgs } = await import(
+  ({ classifyChanges, CHANGE_CLASSIFIERS, MARKER_404_RE, parseArgs, fallbackSourceUrl, buildSidebarUrlMap } = await import(
     '../snapshot_diff.mjs'
   ));
 });
@@ -44,6 +46,8 @@ describe('classifyLine (via CHANGE_CLASSIFIERS)', () => {
     assert.equal(classifyLine('  ```python'), 'code');
     assert.equal(classifyLine('<pre>'), 'code');
     assert.equal(classifyLine('  </pre>'), 'code');
+    assert.equal(classifyLine('<code>inline</code>'), 'code');
+    assert.equal(classifyLine('</code>'), 'code');
   });
 
   it('classifies callout lines', () => {
@@ -185,6 +189,43 @@ describe('parseArgs', () => {
 });
 
 // ---------------------------------------------------------------------------
-// fallbackSourceUrl — not exported from snapshot_diff.mjs (private function).
-// Unit test は追加不可。Phase C (#160) でリファクタリング時にエクスポートを検討。
+// fallbackSourceUrl
 // ---------------------------------------------------------------------------
+describe('buildSidebarUrlMap', () => {
+  const sidebarText = `## Overview（概要）
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
+- ✅ https://docs.tricentis.com/testim/content/getting-started/getting-started.htm
+`;
+
+  it('builds a map from slug to URL', () => {
+    const map = buildSidebarUrlMap(sidebarText);
+    assert.equal(map.get('testim-overview'), 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm');
+    assert.equal(map.get('getting-started'), 'https://docs.tricentis.com/testim/content/getting-started/getting-started.htm');
+  });
+
+  it('returns empty map for empty text', () => {
+    assert.equal(buildSidebarUrlMap('').size, 0);
+    assert.equal(buildSidebarUrlMap(null).size, 0);
+  });
+});
+
+describe('fallbackSourceUrl', () => {
+  const sidebarText = `## Overview（概要）
+- ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
+- ✅ https://docs.tricentis.com/testim/content/getting-started/getting-started.htm
+`;
+
+  it('finds URL for a known slug via buildSidebarUrlMap', () => {
+    const map = buildSidebarUrlMap(sidebarText);
+    assert.equal(fallbackSourceUrl('testim-overview', map), 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm');
+  });
+
+  it('returns null for unknown slug', () => {
+    const map = buildSidebarUrlMap(sidebarText);
+    assert.equal(fallbackSourceUrl('nonexistent-page', map), null);
+  });
+
+  it('returns null when map is null', () => {
+    assert.equal(fallbackSourceUrl('testim-overview', null), null);
+  });
+});
