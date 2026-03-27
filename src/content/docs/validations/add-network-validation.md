@@ -119,10 +119,7 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
     isBlocked
    </td>
    <td>
-    リクエストがブロックされたかどうか
-
-- **true** = ブロック済み
-- **false** = ブロックされていない
+    リクエストがブロックされたかどうか（true = ブロック済み、false = ブロックされていない）
 
    </td>
   </tr>
@@ -139,10 +136,7 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
     isDone
    </td>
    <td>
-    リクエストが完了したかどうか
-
-- **true** = 完了
-- **false** = 保留中
+    リクエストが完了したかどうか（true = 完了、false = 保留中）
 
    </td>
   </tr>
@@ -409,7 +403,11 @@ if (isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`);
 
 ## add network validation ステップへのリクエスト/レスポンスボディの追加
 
-**Network Capture Options**（リクエスト/レスポンスボディのキャプチャ）を有効にした後、**Add network validation** ステップでは、パラメーター `networkRequests` が利用可能になり、実行されたすべてのリクエストが保持されます。各リクエストオブジェクトには、`method`、`statusCode`、`resposeHeaders`、`requestBody`（新しいプロパティ）、`responseBody`（新しいプロパティ）、`headers` などのプロパティがあります。**Add network validation** ステップを追加する際、以下に示すように `requestBody` および/または `responseBody` プロパティを追加できます。
+**Network Capture Options**（リクエスト/レスポンスボディのキャプチャ）を有効にした後、
+
+**Add network validation** ステップでは、パラメーター `networkRequests` が利用可能になり、実行されたすべての
+
+リクエストが保持されます。各リクエストオブジェクトには、`method`、`statusCode`、`resposeHeaders`、`requestBody`（新しいプロパティ）、`responseBody`（新しいプロパティ）、`headers` などのプロパティがあります。**Add network validation** ステップを追加する際、以下に示すように `requestBody` および/または `responseBody` プロパティを追加できます。
 
 ![ネットワーク検証の実行結果画面](/images/validations/add-network-validation/557bd68-image.png)
 
@@ -419,6 +417,8 @@ fetch および XHR ネットワークのリクエスト/レスポンスボデ�
 
 ### テスト例
 
-次のテスト例では、ネットワーク検証ステップでリクエスト/レスポンスボディを使用しています:\
-[https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji)\
+次のテスト例では、ネットワーク検証ステップでリクエスト/レスポンスボディを使用しています:
+
+[https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji)
+
 ボディペイロードをコンソールに出力します。

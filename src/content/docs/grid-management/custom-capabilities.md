@@ -34,8 +34,7 @@ Custom capabilities を使用すると、利用可能なすべての Grid に対
 
 ## 利用可能な capabilities
 
-多数の capability から選択できます。利用可否はテストを実行する Grid に依存するため、開始前に対象 Grid が何をサポートしているかを確認してください。
-
+多数の capability から選択できます。利用可否はテストを実行する Grid に依存するため、開始前に対象 Grid が何をサポートしているかを確認してください。\
 Testim の test configuration で既に定義されている一部 capability は上書きできません。対象には次のものが含まれます。
 
 - `platformName` / `platform`
@@ -77,8 +76,7 @@ CLI を使って SauceLabs / BrowserStack Grid で capability を扱う方法の
 
 ## Custom capabilities を使ってテストを schedule する
 
-Custom capability をテストへ追加したら、[テストを schedule](/docs/scheduler-mobile) できます。
-
+Custom capability をテストへ追加したら、[テストを schedule](/docs/scheduler-mobile) できます。\
 scheduled test run で Custom capabilities を上書きすることもできます。手順は次のとおりです。
 
 1. 通常どおり test の scheduling を開始します。

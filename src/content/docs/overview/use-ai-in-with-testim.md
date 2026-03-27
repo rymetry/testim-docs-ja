@@ -25,22 +25,17 @@ Testim には、あなたの仕事をより簡単にするために設計され�
 
 Testim ソフトウェアに関するヘルプが必要ですか？テストの検証方法の説明など基本的なことから、テスト実行を安定させるためのヒントなどのより複雑な質問まで、Testim Copilot ヘルプアシスタントに質問できます。
 
-![Testim Copilot ヘルプアシスタントに質問](/images/overview/use-ai-in-with-testim/8e5294d-image_7.png)
+![Testim Copilot ヘルプアシスタントに質問](/images/overview/use-ai-in-with-testim/8e5294d-8243ad1-image_7.png)
 
-Testim に関する質問があれば、Testim Copilot ヘルプアシスタントに何でも質問してください。
-
-Copilot を使用して、Testim の質問に関連する情報（ドキュメントやその他のリソースへのリンクを含む）を取得します。開始するには、**ヘルプ**ボタンをクリックするだけです。
-
-[Testim Copilot ヘルプアシスタント](/docs/help-ai-assistant)の詳細をご覧ください。
+Copilot を使用して、Testim の質問に関連する情報（ドキュメントやその他のリソースへのリンクを含む）を取得します。開始するには、**ヘルプ**ボタンをクリックするだけです。[Testim Copilot ヘルプアシスタント](/docs/help-ai-assistant)の詳細をご覧ください。
 
 ## コーディングのヘルプを取得
 
 テスト内の JavaScript コードの記述、理解、修正にヘルプが必要ですか？Testim Copilot コーディングアシスタントを使用して、カスタム JavaScript コードを使用する任意のテストステップに関するヘルプを取得できます。
 
-![Copilot がコーディングをサポート](/images/overview/use-ai-in-with-testim/f5ab918-codingassistant.png)
+![Copilot がコーディングをサポート](/images/overview/use-ai-in-with-testim/f5ab918-e2c25d1-codingassistant.png)
 
-生成、修正、または JavaScript コードの説明が必要な場合でも、Copilot がお手伝いします。
-
+生成、修正、または JavaScript コードの説明が必要な場合でも、Copilot がお手伝いします。\
 [Testim Copilot コーディングアシスタント](/docs/coding-assistant)の詳細をご覧ください。
 
 ## Salesforce 向けテストの作成
@@ -49,6 +44,5 @@ Copilot を使用して、Testim の質問に関連する情報（ドキュメ�
 
 ![Salesforce 環境用の独自のテストを生成](/images/overview/use-ai-in-with-testim/443eb6b-Salesforce_AgenticeAITesting_Screenshot.png)
 
-Salesforce 環境用の独自のテストを生成して実行します。
-
+Salesforce 環境用の独自のテストを生成して実行します。\
 [Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce)の詳細をご覧ください。

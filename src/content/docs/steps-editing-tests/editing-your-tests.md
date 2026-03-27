@@ -39,7 +39,7 @@ AUT ブラウザでステップを記録することで、テストの最後ま�
 
    ![記録中の AUT ブラウザ](/images/steps-editing-tests/editing-your-tests/934bfe8-Testim_Editing_Tests_002.png)
 
-2. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/how-to-record-a-test#step-4---recording-the-test)を参照してください。
+2. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/how-to-record-a-test#テスト構成のパラメーター)を参照してください。
 
 3. 新しいステップの記録が完了したら、**Stop Recording** ボタンをクリックします。
 
@@ -65,7 +65,7 @@ AUT ブラウザでステップを記録することで、テストの最後ま�
 
    ![記録中の AUT ブラウザ](/images/steps-editing-tests/editing-your-tests/804671e-Testim_Editing_Tests_002.png)
 
-3. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/how-to-record-a-test#step-4---recording-the-test)を参照してください。
+3. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/how-to-record-a-test#テスト構成のパラメーター)を参照してください。
 
 4. 新しいステップの記録が完了したら、**Stop Recording** ボタンをクリックします。
 
@@ -85,9 +85,7 @@ AUT ブラウザでステップを記録することで、テストの最後ま�
 
    ![コピー対象の選択](/images/steps-editing-tests/editing-your-tests/0a39c28-Screen_Shot_2021-03-13_at_8.35.15.png)
 
-   :::note
    エディターでステップをドラッグ&ドロップした後、トーストメッセージをクリックすることで元に戻すことができます。
-   :::
 
    ![ステップのドラッグ&ドロップ](/images/steps-editing-tests/editing-your-tests/d49ea2e-Jun-22-2021_12-49-24.gif)
 
@@ -159,7 +157,7 @@ AUT ブラウザでステップを記録することで、テストの最後ま�
 
    ![事前定義ステップメニュー](/images/steps-editing-tests/editing-your-tests/ab56d53-Testim_034_r.png)
 
-3. メニューから多数のオプションの中から 1 つを選択して目的のステップを作成し、ドキュメントの他の箇所で説明されているようにステップを編集します。例えば、カスタムアクションを追加する場合は、[カスタムアクションの作成](/docs/custom-code#add-custom-validation--add-custom-action-ステップの追加)を参照してください。
+3. メニューから多数のオプションの中から 1 つを選択して目的のステップを作成し、ドキュメントの他の箇所で説明されているようにステップを編集します。例えば、カスタムアクションを追加する場合は、[カスタムアクションの作成](/docs/custom-code#add-custom-validation-add-custom-action-ステップの追加)を参照してください。
 
 ## ステップの削除
 

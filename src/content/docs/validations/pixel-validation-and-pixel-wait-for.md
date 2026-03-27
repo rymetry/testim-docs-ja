@@ -102,10 +102,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
     テストエディター内のセットアップステップ
    </td>
    <td>
-    テスト内の各ステップに適用。ただし次の場合を除く：
-
-    - テストが異なる設定で CLI またはスケジューラから実行される場合、または
-    - ステップレベルでビジュアル検証パラメーターがオーバーライドされている特定ステップの場合。
+    テスト内の各ステップに適用。ただし次の場合を除く：テストが異なる設定で CLI またはスケジューラから実行される場合、またはステップレベルでビジュアル検証パラメーターがオーバーライドされている特定ステップの場合。
    </td>
    <td>
    </td>
@@ -137,7 +134,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 ![Configuration Library の+ Create New ボタン](/images/validations/pixel-validation-and-pixel-wait-for/3e415da-Testim_503a.png)
 
-3. [Configuration List](/docs/shared-configuration#creating-and-modifying-test-configurations-in-the-configuration-library) に記載されている基本設定を入力します。
+3. [Configuration List](/docs/shared-configuration#構成ライブラリでテスト構成を作成および変更する) に記載されている基本設定を入力します。
 4. **Advanced** をクリックし、[Test Configuration](/docs/how-to-record-a-test) に説明されている詳細設定を入力します。\
    詳細設定が表示されます。
 
@@ -145,13 +142,17 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 5. **Visual validation** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
 6. **Visual validation** セクションで次のように設定を変更します：
-   - **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
-   - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
-   - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
-   - **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
-   - **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
-7. **Add** をクリックします。\
-   構成が作成され **Configuration Library** に追加されます。
+
+**Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+
+- **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+- **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+- **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+- **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
+
+7. **Add** をクリックします。
+
+構成が作成され **Configuration Library** に追加されます。
 
 ### エディターでテストレベルのビジュアル検証設定を変更する
 
@@ -172,11 +173,13 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 ![Visual Validation 設定の Add Environment](/images/validations/pixel-validation-and-pixel-wait-for/f26de2d-Testim_607a_r.png)
 
 4. **Visual validation** セクションで次のように設定を変更します：
-   - **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
-   - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
-   - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
-   - **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
-   - **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
+
+**Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+
+- **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+- **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+- **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+- **Visual validation timeout** - ビジュアル検証ステップが失敗と判定されるまでの時間（ミリ秒）を変更します。
 
 ### ステップレベルのビジュアル検証設定を変更する
 
@@ -198,9 +201,11 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 3. **Override test settings** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
 4. **Override test settings** セクションで残りの設定を次のように変更します：
-   - **Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
-   - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
-   - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
-   - **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
+
+**Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+
+- **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
+- **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
+- **Ignore displacement diffs** - このタイプの位置移動によるビジュアル差異を無視するようシステムを設定します。
 
 このステップのビジュアル検証パラメーターが変更され、現在設定されているテストレベルのビジュアル検証パラメーターを上書きします。

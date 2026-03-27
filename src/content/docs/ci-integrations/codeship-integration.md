@@ -47,7 +47,8 @@ testim --project "<PROJECT ID>" \
 
 ![Codeship のテストコマンド設定画面](/images/ci-integrations/codeship-integration/2e37bfe-codeship3.png)
 
-​## 外部 Selenium Grid で実行\
+## 外部 Selenium Grid で実行
+
 アプリが公開されている利用可能なサーバーにデプロイされている場合、外部 Selenium Grid でテストを実行できます。その場合、ローカル Selenium Server（webdriver-manager）は不要なので、setup commands セクションに以下の行のみを追加します:
 
 ```shell
@@ -55,7 +56,7 @@ nvm install <use latest version supported by Testim>
 npm install -g @testim/testim-cli
 ```
 
-​Test Commands セクションには、以下の行を追加します（値は適宜変更してください）:
+Test Commands セクションには、以下の行を追加します（値は適宜変更してください）:
 
 ```shell
 testim --project "<PROJECT ID>" \

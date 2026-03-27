@@ -91,14 +91,17 @@ Testim のアクセシビリティステップは、業界をリードするア�
 ![プロパティパネル](/images/accessibility-validations/element-accessibility-validation/2b9a324-Screen_Shot_2021-12-22_at_6.15.33.png)
 
 9. 以下の説明に従ってプロパティを設定します。
-   - **Description** – ステップの説明。（デフォルト = Accessibility validation）
-   - **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）
-   - **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/accessibility-validations#section-rules-descriptions)を参照してください。デフォルトではすべてのタグが選択されています。
-   - **Exclude specific rule IDs** – 特定のルール ID を除外したい場合は、リストから選択します。また、特定のルール ID のみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
-   - **When this step fails** – ステップが失敗した場合の動作を指定します。
-   - **When to run step** – ステップを実行する条件を指定します。詳細は[条件分岐](/docs/conditions)を参照してください。
-   - **Override timeout** – Testim がテストステップの失敗を登録するデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒単位）を指定できます。
-   - **Disable auto-scroll** – ビューポート外に存在する要素への自動スクロールを無効にします。
+
+**Description** – ステップの説明。（デフォルト = Accessibility validation）
+
+**Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）
+
+- **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/accessibility-validations#ルールの説明)を参照してください。デフォルトではすべてのタグが選択されています。
+- **Exclude specific rule IDs** – 特定のルール ID を除外したい場合は、リストから選択します。また、特定のルール ID のみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
+- **When this step fails** – ステップが失敗した場合の動作を指定します。
+- **When to run step** – ステップを実行する条件を指定します。詳細は[条件分岐](/docs/conditions)を参照してください。
+- **Override timeout** – Testim がテストステップの失敗を登録するデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒単位）を指定できます。
+- **Disable auto-scroll** – ビューポート外に存在する要素への自動スクロールを無効にします。
 
 ![要素アクセシビリティ検証の設定](/images/accessibility-validations/element-accessibility-validation/48398ce-element_accessibility_validation.gif)
 
@@ -109,7 +112,6 @@ Testim のアクセシビリティステップは、業界をリードするア�
 ## 要素アクセシビリティ結果の表示
 
 要素アクセシビリティ検証ステップを含むテストを実行した後、アクセシビリティ違反が見つかった場合、「Step Failed: Accessibility violations were found」というエラーメッセージが表示され、詳細なアクセシビリティ違反結果を確認できます。
-
 **要素アクセシビリティ結果を表示するには:**
 
 1. 失敗した要素アクセシビリティ検証ステップにマウスオーバーし、**プロパティを表示**（歯車アイコン）をクリックします。
@@ -151,5 +153,4 @@ Testim のアクセシビリティステップは、業界をリードするア�
 ## ルールの説明
 
 Testim は、要素のアクセシビリティレベルをチェックするために以下のライブラリを使用しています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
-
 各ルールには、関連する影響レベル（Critical、Serious、Moderate、Minor など）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。

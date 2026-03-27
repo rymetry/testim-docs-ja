@@ -39,7 +39,7 @@ keywords:
 
 ## グループにコンテキストを設定する
 
-カスタムコンテキストを割り当てる際は、DOM の最も大きい要素（例: Body）を選ぶことを推奨します（詳細は[DOM で最も大きい要素を選ぶ](/docs/group-context#selecting-the-largest-element-in-the-dom)）。以下は共有グループを新しいコンテキストで再利用する前提の手順です（グループの作成は[こちら](/docs/groups#creating-a-group)）。\
+カスタムコンテキストを割り当てる際は、DOM の最も大きい要素（例: Body）を選ぶことを推奨します（詳細は[DOM で最も大きい要素を選ぶ](/docs/group-context#dom-で最も大きい要素を選ぶ)）。以下は共有グループを新しいコンテキストで再利用する前提の手順です（グループの作成は[こちら](/docs/groups#グループの作成)）。\
 **設定手順:**
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/3d67f16-Jan-31-2021_08-33-20.gif)
@@ -105,7 +105,6 @@ Testim が、提供されたコンテキスト内で実行すべきステップ�
 ### DOM で最も大きい要素を選ぶ
 
 コンテキスト選択時は、DOM で最も大きい要素（例: Body）を選択すると、すべてのステップがコンテキストに含まれます。
-
 **選び方:**
 
 1. **Properties** の **Context** で **Custom** を選んだ後、キーボードの **Q** で **Context selection mode** に入ります。

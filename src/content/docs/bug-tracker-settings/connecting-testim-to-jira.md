@@ -33,6 +33,8 @@ Testim を Jira に接続するには、まず Jira に login する必要があ
 
 logged in していない場合は、**Log in** リンクをクリックして Jira に login します。
 
-4. **Select** をクリックします。**Select** ボタンは **Selected** に置き換わります。
+4. **Select** をクリックします。
+
+**Select** ボタンは **Selected** に置き換わります。
 
 ![Jira 接続後に Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-jira/ac0f29a-jira2.png)

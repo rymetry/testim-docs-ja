@@ -28,9 +28,7 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 
 ## qTest 統合の設定
 
-統合を使用する前に、Testim を qTest プロジェクトに接続する必要があります（一度だけ必要なプロセスです）。
-
-**Testim を qTest に接続するには:**
+統合を使用する前に、Testim を qTest プロジェクトに接続する必要があります（一度だけ必要なプロセスです）。→ **Testim を qTest に接続するには:**
 
 1. **Settings（設定）** > **Integration（統合）** タブに移動します。**General** の下に様々な統合モジュールがあります。
 2. qTest 統合モジュールで、**Login** をクリックします。
@@ -64,9 +62,7 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 
 ## Testim のテストを qTest のテストに接続する
 
-統合を設定した後、Testim の特定のテストを qTest のテストに接続します。
-
-**Testim のテストを qTest のテストに接続するには:**
+統合を設定した後、Testim の特定のテストを qTest のテストに接続します。→ **Testim のテストを qTest のテストに接続するには:**
 
 1. Testim で、接続したいテストを開きます。
 2. テスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
@@ -93,7 +89,10 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 **qTest でテスト実行を表示するには:**
 
 1. qTest Manager で、**Test Executions** に移動します。
-2. ナビゲーションペインで、関連する実行をクリックします。以下の画面が表示されます:
+
+2. ナビゲーションペインで、関連する実行をクリックします。
+
+以下の画面が表示されます:
 
 ![qTest Manager の Test Executions 画面](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 

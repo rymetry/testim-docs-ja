@@ -30,13 +30,13 @@ snapshots/en/content/{slug}.html (working tree) = 最新の英語版
 
 差分行を自動分類します:
 
-| カテゴリ  | 検出パターン                                                 |
-| --------- | ------------------------------------------------------------ |
-| `heading` | `<h1>`〜`<h6>` タグ                                         |
-| `image`   | `<img>` タグ                                                 |
-| `code`    | `<pre>`, `<code>` タグ                                       |
-| `callout` | `<blockquote>` + テーマ属性                                  |
-| `content` | その他のテキスト変更                                         |
+| カテゴリ | 検出パターン |
+| --- | --- |
+| `heading` | `<h1>`〜`<h6>` タグ |
+| `image` | `<img>` タグ |
+| `code` | `<pre>`, `<code>` タグ |
+| `callout` | `<blockquote>` + テーマ属性 |
+| `content` | その他のテキスト変更 |
 
 ページレベルでは `page-added`（新規）、`page-removed`（404化）、`page-changed`（内容変更）に分類されます。
 

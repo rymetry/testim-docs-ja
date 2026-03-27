@@ -77,6 +77,6 @@ Testim には、ブランチへの直接書き込みを許可しないように�
 
 ### 読み取り専用ブランチでの自動改善機能
 
-デフォルトでは、自動改善機能は読み取り専用として設定されていないブランチでのみ実行されます。ただし、ブランチが master ブランチの場合、**Allow Auto-Improve on master** をオンに設定することで、master 読み取り専用ブランチに自動改善機能を適用できます。詳細については、[読み取り専用ブランチでの自動改善の許可](/docs/locators-auto-improve#allowing-auto-improve-on-a-master-read-only-branch)を参照してください。
+デフォルトでは、自動改善機能は読み取り専用として設定されていないブランチでのみ実行されます。ただし、ブランチが master ブランチの場合、**Allow Auto-Improve on master** をオンに設定することで、master 読み取り専用ブランチに自動改善機能を適用できます。詳細については、[読み取り専用ブランチでの自動改善の許可](/docs/locators-auto-improve#マスター読み取り専用ブランチでの自動改善の許可)を参照してください。
 
 ![自動改善設定](/images/testops-version-control/read-only/05bf593-autoimprove.png)

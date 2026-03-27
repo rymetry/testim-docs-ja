@@ -321,19 +321,14 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ## 設定ファイル（Config File）でフックを作成する
 
-Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。
-Config File で設定できるフックタイプは次のとおりです。
+Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。Config File で設定できるフックタイプは次のとおりです。
 
 - **Before test** – テスト実行前に実行
 - **After test** – テスト実行後に実行
 - **Before Suite** – スイート実行前に実行
 - **After Suite** – スイート実行後に実行
 
-Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。
-
-Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)
-
-フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
+Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#設定ファイルでの定義](/docs/configuration-file-parameters#設定ファイルでの定義)
 
 ## フックの可視化（Hooks Visualizations）
 

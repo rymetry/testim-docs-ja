@@ -36,7 +36,7 @@ keywords:
 :::
 
 :::warning{title="注意"}
-この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[コマンドライン CLI](/docs/the-command-line-cli#cli-installation)をお読みください。
+この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[コマンドライン CLI](/docs/the-command-line-cli#cli-インストール)をお読みください。
 :::
 
 ## テストステータス
@@ -124,7 +124,8 @@ keywords:
 
 ## テストステータスの表示
 
-テストのステータスは以下の画面に表示されます：\
+テストのステータスは以下の画面に表示されます：
+
 **テストライブラリ画面** - Test Lists -> Tests
 
 ![テストライブラリのテストステータス](/images/testops-management/test-status/ebf3e27-teststatuses1.png)
@@ -148,8 +149,7 @@ keywords:
 
 ## テストのステータスを変更
 
-ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](/docs/revisions)に表示されます。
-
+ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](/docs/revisions)に表示されます。\
 **テストライブラリからテストステータスを変更するには:**
 
 1. Test List --> Tests に移動します。
@@ -202,7 +202,7 @@ keywords:
 ### CLI 実行
 
 - **失敗した Evaluating テスト**は、CLI 実行サマリーに FAILED-EVALUATING として表示されます。
-- **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/the-command-line-cli#the-common-parameters)をご覧ください。
+- **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/the-command-line-cli#前提条件)をご覧ください。
 - **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
 
 :::note

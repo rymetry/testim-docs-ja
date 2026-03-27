@@ -637,8 +637,9 @@ export function stripMarkdown(text) {
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '') // images
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links → text
     .replace(/`[^`]*`/g, '') // inline code
-    .replace(/\*\*([^*]*)\*\*/g, '$1') // bold
-    .replace(/\*([^*]*)\*/g, '$1') // italic
+    .replace(/\*\*([^*]*)\*\*/g, '$1') // bold **text**
+    .replace(/\*([^*]*)\*/g, '$1') // italic *text*
+    .replace(/(?<![a-zA-Z0-9])_([^_]+)_(?![a-zA-Z0-9])/g, '$1') // italic _text_ (not foo_bar_baz)
     .replace(/~~([^~]*)~~/g, '$1') // strikethrough
     .trim();
 }
@@ -791,11 +792,19 @@ export function extractHtmlTables(body) {
 }
 
 /**
- * Normalize a docs.tricentis.com URL to a comparable `/docs/{slug}` token.
+ * Normalize a URL or relative .htm path to a comparable `/docs/{slug}` token.
+ * Handles absolute docs.tricentis.com URLs and MadCap relative .htm paths
+ * (produced by turndown from EN snapshots).
  */
 function normalizeUrlToken(url) {
   if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
     const slug = extractSlugFromUrl(url);
+    if (slug) return `/docs/${slug}`;
+  }
+  // MadCap relative .htm paths: ../path/slug.htm or slug.htm
+  if (/\.htm(?:[?#]|$)/.test(url)) {
+    const withSlash = url.startsWith('/') ? url : '/' + url;
+    const slug = extractSlugFromUrl(withSlash.replace(/[?#].*$/, ''));
     if (slug) return `/docs/${slug}`;
   }
   return url;
@@ -832,12 +841,20 @@ export function extractInvariantTokens(cell) {
     rest = rest.slice(0, urlSpans[i][0]) + ' '.repeat(urlSpans[i][1] - urlSpans[i][0]) + rest.slice(urlSpans[i][1]);
   }
 
-  // Extract link destinations from markdown [text](/docs/slug#fragment) and
-  // HTML-preserved format [/docs/slug#fragment] or [https://...]
+  // Extract link destinations from markdown [text](/docs/slug#fragment),
+  // HTML-preserved format [/docs/slug#fragment] or [https://...],
+  // and MadCap relative .htm links [text](slug.htm) or [text](../path/slug.htm)
   // Fragment can contain Unicode characters (JA anchors like #cli-ステップの追加)
-  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+))\]?\)?/g;
+  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+|[^\s)\]]*\.htm(?:#[^\]\)\s]*)?))\]?\)?/g;
+  const linkSpans = [];
   while ((m = linkDestRe.exec(rest)) !== null) {
     tokenSet.add(normalizeUrlToken(m[1]));
+    linkSpans.push([m.index, m.index + m[0].length]);
+  }
+
+  // Remove link spans to prevent dot-path regex from re-capturing .htm as dot-path
+  for (let i = linkSpans.length - 1; i >= 0; i -= 1) {
+    rest = rest.slice(0, linkSpans[i][0]) + ' '.repeat(linkSpans[i][1] - linkSpans[i][0]) + rest.slice(linkSpans[i][1]);
   }
 
   // CLI flags: --flag, -f (standalone, not inside words)
@@ -1173,25 +1190,21 @@ export function compareSnapshotStructure(enBody, jaBody) {
   const jaTotal = [...jaSteps.values()].reduce((a, b) => a + b, 0);
 
   if (enTotal > 0 && jaTotal > 0 && enTotal !== jaTotal) {
-    const absDiff = Math.abs(jaTotal - enTotal);
-    const pctDiff = absDiff / Math.max(enTotal, jaTotal);
-    if (absDiff > 3 && pctDiff > 0.1) {
-      const diff = jaTotal - enTotal;
-      const direction = diff > 0 ? '多い' : '少ない';
-      issues.push(
-        withSeverity({
-          type: 'step-count-mismatch',
-          detail: `番号付きステップ数が原文と異なります: EN=${enTotal}, JA=${jaTotal} (${Math.abs(diff)} ${direction})`,
-        }),
-      );
-    }
+    const diff = jaTotal - enTotal;
+    const direction = diff > 0 ? '多い' : '少ない';
+    issues.push(
+      withSeverity({
+        type: 'step-count-mismatch',
+        detail: `番号付きステップ数が原文と異なります: EN=${enTotal}, JA=${jaTotal} (${Math.abs(diff)} ${direction})`,
+      }),
+    );
   }
 
   // Per-section comparisons (ordinal matching, diff >= 1)
   issues.push(
     ...compareSectionCounts(enSteps, jaSteps, 'step-count-mismatch', 'ステップ数'),
     ...compareSectionCounts(enBullets, jaBullets, 'bullet-count-mismatch', '箇条書き数'),
-    ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数', 2),
+    ...compareSectionCounts(enParagraphs, jaParagraphs, 'paragraph-count-mismatch', '段落数'),
   );
 
   // Attach EN-side artifact info as separate field (not in detail)

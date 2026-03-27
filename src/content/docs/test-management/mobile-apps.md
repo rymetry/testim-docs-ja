@@ -63,9 +63,7 @@ Mobile Apps Library のアプリは、異なるテストブランチ間で利用
 
 ## Mobile Apps Library からアプリをダウンロードする
 
-Mobile Apps Library のアプリをローカルコンピューターにダウンロードできます。
-
-**Mobile Apps Library からアプリをダウンロードするには:**
+Mobile Apps Library のアプリをローカルコンピューターにダウンロードできます。→ **Mobile Apps Library からアプリをダウンロードするには:**
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Download File** ボタンをクリックします。
@@ -74,9 +72,7 @@ Mobile Apps Library のアプリをローカルコンピューターにダウン
 
 ## Mobile Apps Library からアプリを削除する
 
-Mobile Apps Library でアプリが不要になった場合は、削除できます。
-
-**Mobile Apps Library からアプリを削除するには**:
+Mobile Apps Library でアプリが不要になった場合は、削除できます。→ **Mobile Apps Library からアプリを削除するには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Delete** ボタンをクリックします。
@@ -89,9 +85,7 @@ Mobile Apps Library でアプリが不要になった場合は、削除できま
 
 ## Mobile App ID をコピーする
 
-Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#running-mobile-tests-through-the-cli) を参照してください。
-
-**Mobile App ID をコピーするには**:
+Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests-overview#cli-を通じてモバイル-テストを実行する) を参照してください。→ **Mobile App ID をコピーするには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Copy ID** ボタンをクリックします。
@@ -104,9 +98,7 @@ Mobile Apps Library に含まれているモバイルアプリをグリッドで
 
 ## Mobile Apps Library を検索する
 
-Mobile Apps Library で名前でモバイルアプリを検索できます。
-
-**Mobile Apps Library でアプリを検索するには**:
+Mobile Apps Library で名前でモバイルアプリを検索できます。→ **Mobile Apps Library でアプリを検索するには**:
 
 1. **Mobile Apps Library** に移動します。
 2. 検索ボックスに検索したいモバイルアプリの **Name**（名前）を入力します。モバイルアプリは、検索条件に一致するアプリのリストを自動的にフィルタリングします。
@@ -115,9 +107,7 @@ Mobile Apps Library で名前でモバイルアプリを検索できます。
 
 ## グリッドプロバイダーへのモバイルアプリの直接アップロード
 
-Testim Mobile Apps Library にアップロードされたモバイルアプリは、グリッドプロバイダーのアプリストレージに手動でアップロードできます。これにより、テストを実行するときに Testim がアプリケーションをグリッドにロードするのを待つことなく、グリッドでアプリケーションを実行できます。
-
-**モバイルアプリをグリッドプロバイダーに直接アップロードするには**:
+Testim Mobile Apps Library にアップロードされたモバイルアプリは、グリッドプロバイダーのアプリストレージに手動でアップロードできます。これにより、テストを実行するときに Testim がアプリケーションをグリッドにロードするのを待つことなく、グリッドでアプリケーションを実行できます。→ **モバイルアプリをグリッドプロバイダーに直接アップロードするには**:
 
 1. **Mobile Apps Library** から 1 つ以上のアプリケーションをクリックします。
 

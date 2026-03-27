@@ -30,9 +30,7 @@ keywords:
 
 ### チュートリアルのユースケース
 
-Testim for Salesforce のテストは、Salesforce アプリケーションとのやり取りを記録し、これらのやり取りを自動的にステップに変換するレコーダーを使用するか、テストにステップを手動で追加することで作成されます。また、これら 2 つの方法を組み合わせることもできます。手動ステップには「Salesforce ステップ」を含めることができます。これらのステップは Salesforce 専用に設計されており、テスト作成プロセスを簡素化し、より深い統合とスマートな機能を可能にする方法で Salesforce オブジェクトを利用します。ただし、デプロイメントに広範なカスタマイズが含まれている場合、Salesforce ステップが完全に機能しない可能性があります。このような場合は、通常の動作モードでレコーダーを使用することをお勧めします。レコーダーの使用方法については、[Salesforce テストの作成](/docs/create-a-salesforce-test)を参照してください。このチュートリアルでは、手動ステップに焦点を当てています。
-
-このチュートリアルでは、Salesforce へのログイン、Sales アプリの起動、特定の名前のアカウントの作成、そして指定された名前のアカウントが存在することを検証するテストを扱います。
+Testim for Salesforce のテストは、Salesforce アプリケーションとのやり取りを記録し、これらのやり取りを自動的にステップに変換するレコーダーを使用するか、テストにステップを手動で追加することで作成されます。また、これら 2 つの方法を組み合わせることもできます。手動ステップには「Salesforce ステップ」を含めることができます。これらのステップは Salesforce 専用に設計されており、テスト作成プロセスを簡素化し、より深い統合とスマートな機能を可能にする方法で Salesforce オブジェクトを利用します。ただし、デプロイメントに広範なカスタマイズが含まれている場合、Salesforce ステップが完全に機能しない可能性があります。このような場合は、通常の動作モードでレコーダーを使用することをお勧めします。レコーダーの使用方法については、[Salesforce テストの作成](/docs/create-a-salesforce-test)を参照してください。このチュートリアルでは、手動ステップに焦点を当てています。このチュートリアルでは、Salesforce へのログイン、Sales アプリの起動、特定の名前のアカウントの作成、そして指定された名前のアカウントが存在することを検証するテストを扱います。
 
 ### 前提条件
 
@@ -40,9 +38,7 @@ Testim for Salesforce のテストは、Salesforce アプリケーションと�
 
 ## ステップ 1 - Salesforce 環境への接続
 
-Testim for Salesforce テストを作成する前に、Salesforce 環境を Testim for Salesforce に接続する必要があります。Salesforce 環境がすでに接続されている場合は、次のステップにスキップできます。
-
-**Salesforce 環境を接続するには**:
+Testim for Salesforce テストを作成する前に、Salesforce 環境を Testim for Salesforce に接続する必要があります。Salesforce 環境がすでに接続されている場合は、次のステップにスキップできます。**Salesforce 環境を接続するには**:
 
 1. Testim for Salesforce アカウントで、**Settings > Salesforce > Environments**に移動し、**Connect a salesforce environment**を選択します。\
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
@@ -52,14 +48,20 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    - **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
 3. **Environment Name**フィールドに、環境の名前を入力します
 4. 次のいずれかを実行します:
-   1. 既存のブランチを使用する場合は、**Select Existing Branch**の下で、ドロップダウンメニューから目的のブランチを選択します。
-   2. 新しいブランチを作成する場合は、**Create New Branch**フィールドにブランチの名前を入力します。
-5. **Connect**をクリックします。\
-   Salesforce ログイン画面が表示されます。\
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/43f1fac-salesforcelogin.png)
 
-6. Salesforce アカウントにログインします。
-7. **Allow**を選択して、Testim for Salesforce が ID URL サービスにアクセスし、API 経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
+5. 既存のブランチを使用する場合は、**Select Existing Branch**の下で、ドロップダウンメニューから目的のブランチを選択します。
+
+6. 新しいブランチを作成する場合は、**Create New Branch**フィールドにブランチの名前を入力します。
+
+7. **Connect**をクリックします。
+
+Salesforce ログイン画面が表示されます。
+
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/43f1fac-salesforcelogin.png)
+
+8. Salesforce アカウントにログインします。
+
+9. **Allow**を選択して、Testim for Salesforce が ID URL サービスにアクセスし、API 経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
 
 ## テストの作成
 

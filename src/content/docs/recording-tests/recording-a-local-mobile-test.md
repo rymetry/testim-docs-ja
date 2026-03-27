@@ -43,11 +43,11 @@ keywords:
 
 ## ステップ 1 - TMA に接続する
 
-最初のステップとして、TMA を Testim に接続する必要があります。[Tricentis Mobile Agent の接続](/docs/configure-tricentis-mobile-agent#connect-the-tricentis-mobile-agent-to-testim)セクションの手順に従ってください。
+最初のステップとして、TMA を Testim に接続する必要があります。[Tricentis Mobile Agent の接続](/docs/configure-tricentis-mobile-agent#tricentis-mobile-agent-を-testim-に接続する)セクションの手順に従ってください。
 
 ## ステップ 2 - デバイスを接続する
 
-### 物理 Android デバイスの接続
+## 物理 Android デバイスの接続
 
 Android デバイスを接続するには、以下の要件を満たす必要があります:
 
@@ -67,7 +67,7 @@ Tricentis Mobile Agent がデバイスを認識すると、デバイスがリス
 
 ![TMA に接続されたデバイス](/images/recording-tests/recording-a-local-mobile-test/ec4cb63-4db538d-tma-connected-device.png)
 
-### 物理 iOS デバイスの接続
+## 物理 iOS デバイスの接続
 
 iOS デバイスを接続するには、以下の要件を満たす必要があります:
 
@@ -75,9 +75,7 @@ iOS デバイスを接続するには、以下の要件を満たす必要があ�
 - アクティブな Apple Developer アカウントを持っている。
 - 以下で説明されているすべてのステップを完了する。
 
-プロセスの詳細については、以下のビデオチュートリアルを参照してください - [https://www.youtube.com/watch?v=eQqh_PFc6qc&ab_channel=TricentisAcademy](https://www.youtube.com/watch?v=eQqh_PFc6qc&ab_channel=TricentisAcademy)
-
-**物理 iOS デバイスを接続するには:**
+プロセスの詳細については、以下のビデオチュートリアルを参照してください - [https://www.youtube.com/watch?v=eQqh_PFc6qc&ab_channel=TricentisAcademy](https://www.youtube.com/watch?v=eQqh_PFc6qc&ab_channel=TricentisAcademy) **物理 iOS デバイスを接続するには:**
 
 1. 物理 iOS デバイスをローカルコンピューターに接続します（例: USB ケーブルを使用して携帯電話を接続）。
 
@@ -125,7 +123,7 @@ iOS デバイスを接続するには、以下の要件を満たす必要があ�
 
 ![接続された iOS デバイス](/images/recording-tests/recording-a-local-mobile-test/1781fa5-image_13.png)
 
-### 仮想 Android デバイスの接続
+## 仮想 Android デバイスの接続
 
 Android デバイスを接続するには、以下の要件を満たす必要があります:
 
@@ -171,7 +169,7 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 デフォルトでは、仮想デバイスはデバッグモードに事前構成されています。
 :::
 
-### 仮想 iOS デバイスの接続
+## 仮想 iOS デバイスの接続
 
 iOS デバイスを接続するには、以下の要件を満たす必要があります:
 
@@ -183,9 +181,7 @@ iOS デバイスを接続するには、以下の要件を満たす必要があ�
 仮想 iOS デバイスオプションには、Apple Developer アカウントは必要ありません。
 :::
 
-以下の手順では Xcode を使用していますが、他のソフトウェアも使用できます。
-
-**仮想 iOS デバイスを接続するには:**
+以下の手順では Xcode を使用していますが、他のソフトウェアも使用できます。**仮想 iOS デバイスを接続するには:**
 
 1. TMA がインストールされ、現在実行されていることを確認します。
 
@@ -211,7 +207,7 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **ローカルデバイスアプリ** - 接続されたデバイス（物理デバイスまたは仮想デバイス）上のアプリの 1 つを使用できます。これらのアプリは、デバイスが TMA に接続されている場合にテストで使用できます。
 
-- **モバイルアプリライブラリ** - モバイルアプリライブラリの既存のアプリを使用できます。この場合、他のユーザーはローカルデバイスにアプリがインストールされていなくても、共通のアプリをテストに使用できます。[ローカルコンピューターからモバイルアプリを追加する](/docs/mobile-apps#add-mobile-app-from-local-computer)セクションの手順に従って、テストを記録する前にアプリを追加することもできます。モバイルアプリライブラリでアプリを管理する方法の詳細については、[モバイルアプリ](/docs/mobile-apps)を参照してください。
+- **モバイルアプリライブラリ** - モバイルアプリライブラリの既存のアプリを使用できます。この場合、他のユーザーはローカルデバイスにアプリがインストールされていなくても、共通のアプリをテストに使用できます。[ローカルコンピューターからモバイルアプリを追加する](/docs/mobile-apps#ローカルコンピューターからモバイルアプリを追加する)セクションの手順に従って、テストを記録する前にアプリを追加することもできます。モバイルアプリライブラリでアプリを管理する方法の詳細については、[モバイルアプリ](/docs/mobile-apps)を参照してください。
 
 - **アプリのアップロード** - テスト作成の一部として、アプリをアップロードできます。
 
@@ -310,11 +306,9 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 ## ステップ 5 - 追加のステップを追加してプロパティを編集する
 
-記録中またはテスト保存後に、追加の事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。
+記録中またはテスト保存後に、追加の事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。一般的なステッププロパティの詳細については、[ステップのプロパティの編集](/docs/editing-a-steps-properties)を参照してください。
 
-一般的なステッププロパティの詳細については、[ステップのプロパティの編集](/docs/editing-a-steps-properties)を参照してください。
-
-### サポートされている事前定義済みモバイルアクション
+## サポートされている事前定義済みモバイルアクション
 
 テストの記録中または記録後にステップを手動で追加する際、以下のアクションが現在サポートされています:
 
@@ -324,17 +318,17 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **[Validate element text](/docs/validate-element-text)** - 要素テキスト検証は、要素の存在に依存するという点で要素可視性検証に似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 
-- **[Wait for element visible](/docs/wait-for#wait-for-element-visible)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
+- **[Wait for element visible](/docs/wait-for#要素の表示を待つ（モバイル）)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
 
-- **[Wait for element text](/docs/wait-for#wait-for-element-text)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
+- **[Wait for element text](/docs/wait-for#要素の表示を待つ（モバイル）)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
 
-- **[Sleep](/docs/wait-for#sleep)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
+- **[Sleep](/docs/wait-for#要素の表示を待つ（モバイル）)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
 
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 
 - **Code verification** - デバイスにキーストロークを送信します。これは通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
 
-- **[Generate email address](/docs/email-validation#generating-a-temporary-email-address)** - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。例えば、毎回新しいユーザーでサインアップフローを複数回テストする場合などです。
+- **[Generate email address](/docs/email-validation#テストの関連ステップで恒久的メールを使用する)** - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。例えば、毎回新しいユーザーでサインアップフローを複数回テストする場合などです。
 
 - **[Add CLI action](/docs/add-cli-validations-and-actions)** - CLI 環境でカスタム Node.js スクリプトを実行します。
 

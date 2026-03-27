@@ -136,7 +136,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 1. 対象ステップにカーソルを合わせ、**Show Properties**をクリックします。
 
-![スクリーンショット](/images/validations/validate-element-text/705a94f-Screen_Shot_2021-04-18_at_6.40.55.png)
+![スクリーンショット](/images/validations/validate-element-text/4ddc295-screen_shot_2021-04-18_at_6.40.55.png)
 
 右側に Properties パネルが表示されます。
 
@@ -152,13 +152,13 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 - JavaScript 式
 - パラメーター
 
-### 正規表現（Regex）を使った検証
+## 正規表現（Regex）を使った検証
 
 Testim は Expected Value 入力フィールドでの Regex をサポートしています。よく使われるケースを以下に示します：
 
 ![Regex を使ったテキスト検証](/images/validations/validate-element-text/6ce7739-Ijhqz8PAQMODiuaQYwVv_text-validation-regex.png)
 
-#### 前方一致（Starts with）
+### 前方一致（Starts with）
 
 特定の単語で*始まる*テキストを検証します。残りのテキストが動的であっても検証をパスします：
 
@@ -166,7 +166,7 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 /^My text/
 ```
 
-#### 後方一致（Ends with）
+### 後方一致（Ends with）
 
 特定の単語で*終わる*テキストを検証します。残りのテキストが動的であっても検証をパスします：
 
@@ -174,7 +174,7 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 /my text$/
 ```
 
-#### 部分一致（Contains）
+### 部分一致（Contains）
 
 特定の単語を*含む*テキストを検証します。残りのテキストが動的であっても検証をパスします：
 
@@ -182,7 +182,7 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 /my text/
 ```
 
-#### 複数の選択肢（OR）とパラメーター
+### 複数の選択肢（OR）とパラメーター
 
 2 つの値のいずれかに一致するかを検証します。例えば param1 = "Hello"、param2 = "World" の場合、"Hello" または "World" でパスします：
 
@@ -190,7 +190,7 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 new RegExp('^' + '(?:' + param1 + '_' + '|' + param2 + '_)' + '$');
 ```
 
-#### 不一致の検証（Not Equal Validation）
+### 不一致の検証（Not Equal Validation）
 
 テキストが param1 と一致しないことを検証します。例えば param1 = "Example1" の場合、テキストが "Example1" であれば検証は失敗し、それ以外の値はパスします：
 
@@ -198,7 +198,7 @@ new RegExp('^' + '(?:' + param1 + '_' + '|' + param2 + '_)' + '$');
 new RegExp('^' + '((?!' + param1 + ').)*$');
 ```
 
-#### 数値の検証（正の整数のみ）
+### 数値の検証（正の整数のみ）
 
 テキストが正の整数（数字 0〜9）のみで構成されていることを検証します。例えば "12345" はパスしますが、"12a34" や "-123" は失敗します：
 
@@ -206,7 +206,7 @@ new RegExp('^' + '((?!' + param1 + ').)*$');
 /^\d+$/
 ```
 
-#### 数値の検証（正・負・小数）
+### 数値の検証（正・負・小数）
 
 正の数、負の数、小数のみで構成されていることを検証します。例えば "123"、"-123"、"3.14"、"-0.5" はパスしますが、"12a" や "." は失敗します：
 
@@ -221,17 +221,17 @@ new RegExp('^' + '((?!' + param1 + ').)*$');
 - [RegularExpressions 101](https://regex101.com/) は正規表現の作成とテストに役立つツールです。
 :::
 
-### JavaScript 式を使った検証
+## JavaScript 式を使った検証
 
 ![JavaScript 式を使った検証](/images/validations/validate-element-text/b1662ca-Screen_Shot_2021-04-18_at_7.06.47.png)
 
 テキストが JavaScript 式の計算結果と等しいことを検証したい場合があります。例えば、テキストに現在の日付が表示されていることを確認するには、**Expected Value** に次の式を設定します：`new Date().toDateString()`。Testim はこの式の計算結果と要素のテキストを比較します。
 
-### パラメーターを使った検証
+## パラメーターを使った検証
 
 テストまたはスイートレベルで定義されたパラメーター、あるいは設定ファイルで定義されたパラメーターを使用してテキスト要素を検証できます。別のステップで作成したパラメーターを使用する場合は、テストレベルにエクスポートする必要があります（[パラメーターのエクスポートの詳細](/docs/exports-parameters)）。
 
-#### パラメーターのみ
+### パラメーターのみ
 
 パラメーターには 2 種類あります:\
 HTML: アプリ内の HTML 要素を参照できます。\
@@ -276,7 +276,7 @@ exportsTest.usename = 'Hello, John';
 
 パラメーターと固定文字列を `+` で結合することも可能です。例えば、`username` パラメーターの値を `Hello, John` ではなく `John` として定義し、Expected Value を `'Hello ' + userName` と指定できます。
 
-#### パラメーターと正規表現の組み合わせ
+### パラメーターと正規表現の組み合わせ
 
 **Expected value** フィールドで正規表現を返す関数を使うと、パラメーターと Regex を組み合わせられます。
 

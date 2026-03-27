@@ -25,7 +25,6 @@ keywords:
 ## **Add custom validation** / **Add custom action** ステップの追加
 
 検証やアクションの詳細に関わらず、手順は共通です。実際に記述するコードやパラメーターはユースケースに応じて変わります。以下に共通手順と、いくつかの例のコードとパラメーターを示します。
-
 **Add custom validation / Add custom action を追加するには:**
 
 1. 検証を追加したい位置の **（矢印記号）** にカーソルを合わせます。

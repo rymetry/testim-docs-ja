@@ -30,7 +30,7 @@ keywords:
 - [JSON パラメーターファイル](/docs/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
 - [設定ファイルのパラメーター](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
 - [テストデータ](/docs/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
-- 値生成ステップ - [日付の生成](/docs/generating-a-date#adding-a-generate-date-step)、[メールアドレスの生成](/docs/email-validation#generating-a-temporary-email-address)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
+- 値生成ステップ - [日付の生成](/docs/generating-a-date#生成日付ステップを追加する)、[メールアドレスの生成](/docs/email-validation#テストの関連ステップで恒久的メールを使用する)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
 
 ## 事前定義（標準）パラメーター
 
@@ -44,8 +44,7 @@ keywords:
 URL 文字列の前後に単一引用符が付く場合があります（例: 'BASE_URL + '/Extension''）。その場合は引用符を削除して利用してください（例: BASE_URL + '/Extension'）。
 :::
 
-データ駆動テストでの動的なベース URL としても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。
-
+データ駆動テストでの動的なベース URL としても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。\
 詳細は [Base URL](/docs/base-url) を参照してください。
 
 ### Testim Iterator パラメーター
@@ -56,7 +55,7 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 このパラメーターのスコープはグループのループ内に限定されます。
 :::
 
-詳細は [ループイテレーターパラメーターの使用](/docs/loops#using-the-loop-iterator-parameter) を参照してください。
+詳細は [ループイテレーターパラメーターの使用](/docs/loops#ループイテレータパラメーターの使用) を参照してください。
 
 ### Network Requests パラメーター
 
@@ -66,11 +65,9 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 
 定義したパラメーターは、名前をそのまま（引用符なし）で記述して参照します。
 
-<Image alt="The myParam is the defined parameter" align="center" src="/images/parameters/parameters/3f139cf-image.png">
-  myParam が定義済みパラメーターです
-</Image>
+![myParam が定義済みパラメーターです](/images/parameters/parameters/3f139cf-image.png)
 
-定義したパラメーターは、次の場所で使用できます。
+myParam が定義済みパラメーターです。定義したパラメーターは、次の場所で使用できます。
 
 - **プロパティパネルの任意のテキスト入力欄** - プロパティパネルの任意のテキスト入力欄で利用できます。例: テキスト検証の「期待値」、ステップの実行条件（要素テキスト）の「期待値」など。以下の入力欄はパラメーターの使用に非対応です:
   - Variable Name

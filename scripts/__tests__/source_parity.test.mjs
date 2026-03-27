@@ -496,7 +496,7 @@ describe('compareSnapshotStructure', () => {
     const ja = '## セットアップ\n1. ステップ 1\n2. ステップ 2\n';
     const issues = compareSnapshotStructure(en, ja);
     const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
-    assert.equal(stepIssues.length, 1, 'should detect single-step difference');
+    assert.equal(stepIssues.length, 2, 'total check + per-section check both fire at diff=1');
   });
 
   it('returns no step issues when counts match', () => {
@@ -546,13 +546,13 @@ describe('compareSnapshotStructure', () => {
     assert.equal(paraIssues.length, 1);
   });
 
-  it('ignores small paragraph reflow (diff = 1)', () => {
-    // EN has 2 paragraphs, JA has 3 → diff=1, below minDiff=2 threshold
+  it('detects paragraph reflow (diff = 1)', () => {
+    // EN has 2 paragraphs, JA has 3 → diff=1, detected at minDiff=1
     const en = '## Overview\nFirst paragraph.\n\nSecond paragraph.\n';
     const ja = '## 概要\n最初の段落。\n\n2番目の段落。\n\n追加の説明。\n';
     const issues = compareSnapshotStructure(en, ja);
     const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
-    assert.equal(paraIssues.length, 0);
+    assert.equal(paraIssues.length, 1);
   });
 
   it('falls back to total comparison when section counts differ', () => {
@@ -1022,6 +1022,29 @@ describe('stripMarkdown', () => {
     assert.equal(stripMarkdown('`code`'), '');
     assert.equal(stripMarkdown('![alt](img.png)'), '');
   });
+
+  it('strips *italic* (asterisk form)', () => {
+    assert.equal(stripMarkdown('*italic* text'), 'italic text');
+  });
+
+  it('strips _italic_ (underscore form)', () => {
+    assert.equal(stripMarkdown('_italic_ text'), 'italic text');
+    assert.equal(stripMarkdown('_Generate random value_'), 'Generate random value');
+  });
+
+  it('does not strip underscores in identifiers', () => {
+    assert.equal(stripMarkdown('foo_bar_baz'), 'foo_bar_baz');
+    assert.equal(stripMarkdown('config_file_path'), 'config_file_path');
+    assert.equal(stripMarkdown('overrideTestData_v2'), 'overrideTestData_v2');
+  });
+
+  it('handles mixed italic and identifiers', () => {
+    assert.equal(stripMarkdown('config_file_path is _important_'), 'config_file_path is important');
+  });
+
+  it('strips ~~strikethrough~~', () => {
+    assert.equal(stripMarkdown('~~deleted~~ text'), 'deleted text');
+  });
 });
 
 describe('isUntranslatedCell', () => {
@@ -1309,6 +1332,27 @@ describe('extractInvariantTokens', () => {
   it('returns empty array for plain text', () => {
     const tokens = extractInvariantTokens('Plain text with no tokens');
     assert.equal(tokens.length, 0);
+  });
+
+  it('normalizes MadCap relative .htm links to /docs/slug', () => {
+    const tokens = extractInvariantTokens('[Drag & Drop Step](drag-drop-step.htm)');
+    assert.ok(tokens.includes('/docs/drag-drop-step'), `Expected /docs/drag-drop-step in ${JSON.stringify(tokens)}`);
+    assert.ok(!tokens.includes('step.htm'), 'Should not include raw step.htm as dot-path');
+  });
+
+  it('normalizes .htm with directory path', () => {
+    const tokens = extractInvariantTokens('[text](../editing/shareable-steps.htm)');
+    assert.ok(tokens.includes('/docs/shareable-steps'), `Expected /docs/shareable-steps in ${JSON.stringify(tokens)}`);
+  });
+
+  it('normalizes .htm with fragment', () => {
+    const tokens = extractInvariantTokens('[text](slug.htm#section)');
+    assert.ok(tokens.includes('/docs/slug'), `Expected /docs/slug in ${JSON.stringify(tokens)}`);
+  });
+
+  it('normalizes .htm with query parameter', () => {
+    const tokens = extractInvariantTokens('[text](slug.htm?param=1)');
+    assert.ok(tokens.includes('/docs/slug'), `Expected /docs/slug in ${JSON.stringify(tokens)}`);
   });
 });
 

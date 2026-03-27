@@ -43,7 +43,7 @@ Testim CLI は、専用の tunnel address を指すようにアプリケーシ�
 
 テスト実行中、すべてのトラフィックはトンネルを開始するマシンを経由してルーティングされ、ホワイトリスト登録が実用的でない状況に対するソリューションを提供します。上記のように、テスト環境にアクセスできるマシンから CLI コマンドを開始することが重要です。さらに、このアプローチは、グリッドの地理的位置を管理し、コマンドをトリガーするマシンの場所に合わせるための回避策として機能します。
 
-### Testim CLI でのトンネル使用例
+#### Testim CLI でのトンネル使用例
 
 ```shell
 testim --tunnel --tunnel-port <APP PORT default 80> --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" --report-file test-results/testim-tests-report.xml

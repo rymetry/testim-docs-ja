@@ -106,19 +106,22 @@ mobile テストには次の Grid を使用できます。
 
 次のいずれかの方法で、テストをリモート実行できます。
 
-[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)\
+[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
+
 Grid 名を指定して `--grid` parameter を追加します。
 
-[Scheduler](/docs/scheduler)\
+[Scheduler](/docs/scheduler)
+
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Test Plan](/docs/test-plans)\
+[Test Plan](/docs/test-plans)
+
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
 ### editor からの実行 (web)
 
-web テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote web test](/docs/running-tests-overview#running-a-remote-web-test) を参照してください。
+web テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote web test](/docs/running-tests-overview#リモート-web-テストを実行する) を参照してください。
 
 ### editor からの実行 (mobile)
 
-mobile テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote mobile test](/docs/running-tests-overview#running-a-remote-mobile-test) を参照してください。
+mobile テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote mobile test](/docs/running-tests-overview#リモート-モバイル-テストを実行する) を参照してください。

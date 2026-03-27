@@ -25,7 +25,8 @@ keywords:
 <table class="md-table md-table-3cols">
  <thead>
   <tr>
-   <th />
+   <th>
+   </th>
    <th>
     別のプロジェクトへのクローン作成
    </th>
@@ -62,10 +63,7 @@ keywords:
     テスト構成
    </td>
    <td>
-    プロジェクトタイプに基づいてデフォルトにリセットされます:
-
-* Mobile Web - デフォルトは iPhone 6/7/8 に設定されます。
-* Web および Mobile Native - 構成は「untitled」とラベル付けされ、プロジェクトタイプに適した値になります。
+    プロジェクトタイプに基づいてデフォルトにリセットされます: Mobile Web - デフォルトは iPhone 6/7/8 に設定されます。Web および Mobile Native - 構成は「untitled」とラベル付けされ、プロジェクトタイプに適した値になります。
    </td>
    <td>
     テスト構成をクローンします

@@ -61,7 +61,7 @@ keywords:
 
 ![検証](/images/validations/validate-element-attribute/6a2c9cd-elementattvalidation.png)
 
-8. **Attribute name** に検証したい属性名（例: checkable, checked, className, clickable）を入力します。利用可能な属性一覧は [List of possible attributes](/docs/validate-element-attribute#list-of-possible-attributes) を参照。
+8. **Attribute name** に検証したい属性名（例: checkable, checked, className, clickable）を入力します。利用可能な属性一覧は [List of possible attributes](/docs/validate-element-attribute#利用可能な属性一覧) を参照。
 9. **Expected value** に期待値を入力します（例: `true`）。
 
 :::note
@@ -79,9 +79,7 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 ## Validate element attribute ステップの修正
 
-選択要素を変更したい場合は、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。あるいは、要素を選び直さずに **Attribute name** / **Expected value** の値だけを編集することも可能です。
-
-**検証ステップで選択要素を再割り当てするには:**
+選択要素を変更したい場合は、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。あるいは、要素を選び直さずに **Attribute name** / **Expected value** の値だけを編集することも可能です。**検証ステップで選択要素を再割り当てするには:**
 
 1. 要素を再割り当てしたいステップの左側にカーソルを合わせ、**Toggle breakpoint** ボタンをクリックします。
 2. **Run test** ボタンをクリックし、ブレークポイントまでテストを実行します。

@@ -428,7 +428,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### **Sealights buildSessionId**
 
-`--sealights-build-session-id`、実行された特定のビルドに関連する ID を使用して Sealights 統合でテストを実行します。`buildSessionId` を取得するには、[buildSessionID オプション セクション](/docs/sealights-integration#buildsessionid-option) の指示に従います。
+`--sealights-build-session-id`、実行された特定のビルドに関連する ID を使用して Sealights 統合でテストを実行します。`buildSessionId` を取得するには、[buildSessionID オプション セクション](/docs/sealights-integration#buildsessionid-オプション) の指示に従います。
 
 ```shell
 --sealights-build-session-id [sealights-suid-session-id]
@@ -436,7 +436,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### **Sealights labId**
 
-`--sealights-lab-id`、ラボ ID を使用して Sealights 統合でテストを実行します。`labId` を取得するには、[labId オプション セクション](/docs/sealights-integration#labid-option) の指示に従います。
+`--sealights-lab-id`、ラボ ID を使用して Sealights 統合でテストを実行します。`labId` を取得するには、[labId オプション セクション](/docs/sealights-integration#labidオプション) の指示に従います。
 
 ```shell
 --sealights-lab-id [sealights-lab-id]

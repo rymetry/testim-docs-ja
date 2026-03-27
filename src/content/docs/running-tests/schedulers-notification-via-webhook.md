@@ -82,20 +82,25 @@ Webhook に含まれている情報は変更できません。
 ![スケジューラーリストページの画面](/images/running-tests/schedulers-notification-via-webhook/3d5057d-schedulerlibrary.png)
 
 3. Webhook を設定したいスケジューラーをクリックします。
-   **スケジュール実行を編集** ウィンドウが開きます。
+
+**スケジュール実行を編集** ウィンドウが開きます。
 
 ![スケジュール実行を編集するウィンドウ](/images/running-tests/schedulers-notification-via-webhook/f79c48d-editscheduler.png)
 
 4. 「通知する」フィールドで、次のいずれかのオプションを選択します：
-   1. すべての失敗時
-   2. 最初の失敗時
-   3. すべての実行時
-5. **Preference** の下で **Webhook** を選択します。
+
+5. すべての失敗時
+
+6. 最初の失敗時
+
+7. すべての実行時
+
+8. **Preference** の下で **Webhook** を選択します。
 
 ![通知設定で Webhook を選択する画面](/images/running-tests/schedulers-notification-via-webhook/c10fa5c-webhookfield.png)
 
-6. 表示される **Webhook** フィールドに有効な URL を入力します。これは Testim が実行結果を POST する URL です。
+9. 表示される **Webhook** フィールドに有効な URL を入力します。これは Testim が実行結果を POST する URL です。
 
 ![Webhook URL 入力フィールドのスクリーンショット](/images/running-tests/schedulers-notification-via-webhook/bd200e6-webhook2.png)
 
-7. **保存** をクリックします。
+10. **保存** をクリックします。

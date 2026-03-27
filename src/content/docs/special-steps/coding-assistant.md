@@ -24,11 +24,11 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 - [Add Custom Action](/docs/custom-code)
 - [Add Custom Validation](/docs/custom-code)
-- [Add Custom Wait For](/docs/wait-for#custom-wait-for-web)
+- [Add Custom Wait For](/docs/wait-for#カスタム待機（web）)
 - [Add Network validation](/docs/add-network-validation)
 - [Add CLI Validation](/docs/add-cli-validations-and-actions)
 - [Validate Download](/docs/validate-download)
-- [Custom Condition](/docs/conditions#configuring-a-custom-condition)
+- [Custom Condition](/docs/conditions#custom-条件の設定)
 
 このアシスタントは OpenAI の生成 AI を Testim 用に統合・最適化したものです。チャットのプロンプト入力に加え、スラッシュ（/）で始まるコマンドも利用できます。
 
@@ -51,39 +51,52 @@ Copilot コーディングアシスタントは、以下のステップで用い
 5. 「/」（スラッシュ）キーを押します。
 
 6. 次のコマンドから選択します:
-   1. /generate - プロンプトに基づく JS コードを生成
-   2. /explain - エディターで選択中のコードを解説
-   3. /fix - エディターで選択中のコードの修正案を提示
-   4. /help - ドキュメントを表示
 
-7. 次のいずれかを実行します。
-   1. **Generate の場合** – 作成したいコード内容をプロンプトに入力して送信します。生成されたコードはチャットに表示され、次の方法で利用できます。
-      - **Paste code at cursor** – カーソル位置にコードを貼り付けます。
+7. /generate - プロンプトに基づく JS コードを生成します。詳細は下記をご覧ください。
 
-      ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/088b93b-pastecodecursor.png)
-      - **Copy code** – コードをクリップボードにコピーします。
+8. /explain - エディターで選択中のコードを解説します。詳細は下記をご覧ください。
 
-      ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/5b54849-copy.png)
+9. /fix - エディターで選択中のコードの修正案を提示します。詳細は下記をご覧ください。
 
-   2. **Explain の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
-      1. フローティングメニューの **Explain code with AI** アイコンをクリックします。
+10. /help - ドキュメントを表示します。
 
-         ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/eaf33c5-explainfloating.png)
+11. 次のいずれかを実行します。
 
-      2. プロンプト欄に `/explain` と入力します。\
-         解説結果はチャットに表示されます。
+12. **Generate の場合** – 作成したいコード内容をプロンプトに入力して送信します。生成されたコードはチャットに表示され、次の方法で利用できます。
 
-         ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/f367d0f-explain.png)
+- **Paste code at cursor** – カーソル位置にコードを貼り付けます。
 
-   3. **Fix の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
-      1. フローティングウィンドウの **Fix code with AI** アイコンをクリックします。
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/088b93b-pastecodecursor.png)
 
-         ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/9d99571-fixcodefloating.png)
+- **Copy code** – コードをクリップボードにコピーします。
 
-      2. プロンプト欄に `/fix` と入力します。\
-         修正案がチャットに表示され、次の方法で利用できます。
-         - **Paste code at cursor** – 挿入したい位置にカーソルを置き、**Paste code at cursor** をクリックして生成コードをその位置に挿入します。
-         - **Copy code** – **Copy code** ボタンをクリックして生成コードをコピーし、任意の場所に貼り付けます。
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/5b54849-copy.png)
+
+13. **Explain の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
+
+14. フローティングメニューの **Explain code with AI** アイコンをクリックします。
+
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/eaf33c5-explainfloating.png)
+
+15. プロンプト欄に `/explain` と入力します。
+
+解説結果はチャットに表示されます。
+
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/f367d0f-explain.png)
+
+16. **Fix の場合** – エディターで対象コードを選択し、次のいずれかを実行します。
+
+17. フローティングウィンドウの **Fix code with AI** アイコンをクリックします。
+
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/9d99571-fixcodefloating.png)
+
+18. プロンプト欄に `/fix` と入力します。
+
+修正案がチャットに表示され、次の方法で利用できます。
+
+- **Paste code at cursor** – 挿入したい位置にカーソルを置き、**Paste code at cursor** をクリックして生成コードをその位置に挿入します。
+
+- **Copy code** – **Copy code** ボタンをクリックして生成コードをコピーし、任意の場所に貼り付けます。
 
 ## 使用例
 
@@ -102,7 +115,7 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/95f3895-2.png)
 
-特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/conditions#configuring-a-custom-condition) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。
+特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/conditions#custom-条件の設定) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。
 </details>
 
 <details>

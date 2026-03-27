@@ -34,14 +34,16 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    - **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
 3. **Environment Name**フィールドに、環境の名前を入力します
 4. 次のいずれかを実行します:
-   1. 既存のブランチを使用する場合は、**Select Existing Branch**の下で、ドロップダウンメニューから目的のブランチを選択します。
-   2. 新しいブランチを作成する場合は、**Create New Branch**フィールドにブランチの名前を入力します。
-5. **Connect**をクリックします。\
-   Salesforce ログイン画面が表示されます。\
-   ![スクリーンショット](/images/salesforce-testing/create-and-manage-test-environments/43f1fac-salesforcelogin.png)
+5. 既存のブランチを使用する場合は、**Select Existing Branch**の下で、ドロップダウンメニューから目的のブランチを選択します。
+6. 新しいブランチを作成する場合は、**Create New Branch**フィールドにブランチの名前を入力します。
+7. **Connect**をクリックします。
 
-6. システム管理者権限を持つアカウントでログインします。
-7. **Allow**を選択して、Testim for Salesforce が ID URL サービスにアクセスし、API 経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
+Salesforce ログイン画面が表示されます。
+
+![スクリーンショット](/images/salesforce-testing/create-and-manage-test-environments/43f1fac-salesforcelogin.png)
+
+8. システム管理者権限を持つアカウントでログインします。
+9. **Allow**を選択して、Testim for Salesforce が ID URL サービスにアクセスし、API 経由でユーザーデータを管理し、いつでもリクエストを実行できるようにします。
 
 ## 既存のテスト環境の管理
 

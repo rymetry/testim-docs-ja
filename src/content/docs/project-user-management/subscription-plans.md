@@ -152,10 +152,7 @@ Web プラン画面には以下の情報が表示されます:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <code>
-     host=localhost/127.0.0.1
-    </code>
-    を指定して
+    host=localhost/127.0.0.1 を指定して
     <strong>
      CLI
     </strong>
@@ -170,10 +167,7 @@ Web プラン画面には以下の情報が表示されます:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <code>
-     host=localhost/127.0.0.1
-    </code>
-    を指定して
+    host=localhost/127.0.0.1 を指定して
     <strong>
      グリッド上のテストエディター
     </strong>
@@ -215,6 +209,11 @@ Web プラン画面には以下の情報が表示されます:
     いいえ
    </td>
   </tr>
+ </tbody>
+</table>
+
+<table class="md-table md-table-3cols">
+ <tbody>
   <tr>
    <td style="text-align: left;">
     <strong>

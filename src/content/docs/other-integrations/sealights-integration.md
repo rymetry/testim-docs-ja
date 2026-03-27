@@ -129,11 +129,7 @@ Testim で、[コマンドラインインターフェイス（CLI）](/docs/the-
 
 ### test-stageオプション
 
-通常、Sealights統合ではテストステージ名Testim Automationを使用します。ただし、これをオーバーライドしてカスタム名を使用できます。
-
-CLI実行中は常に、タグセクションで`Testim`を送信することをお勧めします。このベストプラクティスにより、テストの起源が識別されます。
-
-カスタムテストステージ名を使用する場合は、[コマンドラインインターフェイス(CLI)](/docs/the-command-line-cli)を使用し、実行に次のオプションを追加できます:
+通常、Sealights統合ではテストステージ名Testim Automationを使用します。ただし、これをオーバーライドしてカスタム名を使用できます。CLI実行中は常に、タグセクションで`Testim`を送信することをお勧めします。このベストプラクティスにより、テストの起源が識別されます。カスタムテストステージ名を使用する場合は、[コマンドラインインターフェイス(CLI)](/docs/the-command-line-cli)を使用し、実行に次のオプションを追加できます:
 
 - ```shell
   --sealights-test-stage [sealights-test-stage-name]
@@ -141,9 +137,7 @@ CLI実行中は常に、タグセクションで`Testim`を送信することを
 
 ## スケジューラーを使用して Sealights 統合でテストを実行する
 
-**Advanced**セクションの**Lab ID**フィールドに Sealights の`labId`を入力することで、Sealights でテストを実行できます。スケジューラーによってテストが実行されると、Sealights はこのバッチでスキップすべきテストのリストを返し、これらは自動的にスキップされます。
-
-**スケジューラーと Sealights 統合でテストを実行するには:**
+**Advanced**セクションの**Lab ID**フィールドに Sealights の`labId`を入力することで、Sealights でテストを実行できます。スケジューラーによってテストが実行されると、Sealights はこのバッチでスキップすべきテストのリストを返し、これらは自動的にスキップされます。**スケジューラーと Sealights 統合でテストを実行するには:**
 
 1. Sealights で、[labId オプション](#labidオプション)セクションの手順に従って、Lab ID を取得します。
 2. Testim で、[Scheduler - Web](/docs/scheduler)セクションの手順に従って、スケジューラーを構成します。
@@ -162,7 +156,6 @@ CLI実行中は常に、タグセクションで`Testim`を送信することを
 ## CLI で実行されたテストリストの表示
 
 CLI を使用してテストを実行した後、テストの実行ステータスとテストが除外/スキップされたかどうかの表示を含むテストリストを表示できます。
-
 以下の例では、Function 1 テストのみが実行され、他のテストは"excluded by Sealights"となっています。画面下部の実行サマリーには、23 件のテストがスキップされたことも示されています。
 
 ![Sealights により一部テストが skipped 扱いになっている Testim の実行結果一覧](/images/other-integrations/sealights-integration/3a2008c-testlistwith_skipped.png)

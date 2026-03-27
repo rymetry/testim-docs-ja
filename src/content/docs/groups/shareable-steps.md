@@ -19,7 +19,7 @@ keywords:
 共有ステップ（Shared Steps）は、特定のプロジェクト内で複数のテスト間にまたがって共有されるステップです。いくつかのステップタイプはデフォルトで共有ステップであり（明示的な設定は不要）、他のユーザーが作成するテストでも利用できます。\
 以下の表は、他のステップとグループ化せずに単独で共有できる事前定義ステップを示します。
 
-## Validations（検証）
+### Validations（検証）
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -48,7 +48,7 @@ keywords:
     Add CLI validation
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#adding-a-cli-step">
+    <a href="/docs/validate-download#前提条件">
      Adding a CLI step
     </a>
    </td>
@@ -58,7 +58,7 @@ keywords:
     Validate download
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#adding-a-validate-download-validation-step">
+    <a href="/docs/validate-download#前提条件">
      Adding a Validate download validation step
     </a>
    </td>
@@ -78,7 +78,7 @@ keywords:
     Validate API
    </td>
    <td style="text-align: left;">
-    <a href="/docs/api-testing#api-validation">
+    <a href="/docs/api-testing#実行後の結果の確認">
      API Validation
     </a>
    </td>
@@ -96,7 +96,7 @@ keywords:
  </tbody>
 </table>
 
-## Wait for（待機）
+### Wait for（待機）
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -115,7 +115,7 @@ keywords:
     Add custom wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#custom-wait-for">
+    <a href="/docs/wait-for#要素の表示を待つ（モバイル）">
      Custom Wait for
     </a>
    </td>
@@ -125,7 +125,7 @@ keywords:
     Add CLI wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#adding-a-cli-step">
+    <a href="/docs/validate-download#前提条件">
      Adding a CLI step
     </a>
    </td>
@@ -135,7 +135,7 @@ keywords:
     Wait for download
    </td>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#wait-for-download-web">
+    <a href="/docs/wait-for#ダウンロード待機（web）">
      Wait for Download
     </a>
    </td>
@@ -143,7 +143,7 @@ keywords:
  </tbody>
 </table>
 
-## Actions（アクション）
+### Actions（アクション）
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -172,7 +172,7 @@ keywords:
     Add CLI action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#adding-a-cli-step">
+    <a href="/docs/validate-download#前提条件">
      Adding a CLI step
     </a>
    </td>
@@ -182,7 +182,7 @@ keywords:
     Add API action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/api-testing#api-action">
+    <a href="/docs/api-testing#実行後の結果の確認">
      API Action
     </a>
    </td>
@@ -192,7 +192,8 @@ keywords:
 
 ## 新しい共有ステップの作成
 
-上記の共有可能なステップについては、テストに追加する際に共有ステップとして指定できます。\
+上記の共有可能なステップについては、テストに追加する際に共有ステップとして指定できます。
+
 **共有ステップを追加するには:**
 
 1. ステップを追加したい位置の（矢印）にカーソルを合わせます。

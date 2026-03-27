@@ -128,6 +128,8 @@ Enhanced mode で記録したテストは Enhanced mode でのみ実行できま
 
 ### テストエディターでモバイルテストを実行する手順
 
+**テストエディターでモバイルテストを実行するには:**
+
 1. **Test List** に移動し、実行したいテストを選択します。
 
 ![Test List](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/5cf3463-test-list.png)
@@ -149,8 +151,6 @@ Testim エディター画面ではテスト結果を確認できます。テス�
 
 ![テスト結果の概要](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/8103c68-runtest3.png)
 
-特定のアクションの詳細を確認するには、そのステップをダブルクリックします。該当アクションの結果画面が表示されます。
-
-テストが失敗した場合は、失敗の原因に関する詳細情報が表示されます。
+特定のアクションの詳細を確認するには、そのステップをダブルクリックします。該当アクションの結果画面が表示されます。テストが失敗した場合は、失敗の原因に関する詳細情報が表示されます。
 
 ![失敗時の結果例](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/3cdb29d-Test_failed.png)

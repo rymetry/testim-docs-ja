@@ -51,20 +51,22 @@ keywords:
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/fdd1fcc-deeplink2.png)
 
 4. **Value** に次の形式で値を入力します。
-   1. 構文: `schemeName://parameterValue`
-   2. schemeName — 起動するアプリのスキーム名（例: `tel`, `sms`, `mailto`, `facetime` など）
-   3. parameter — アプリに渡す値（例: 電話番号）
-   4. 文字列（JS 式）なので引用符で囲みます
-   5. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
+5. 構文: `schemeName://parameterValue`
+6. schemeName — 起動するアプリのスキーム名（例: `tel`, `sms`, `mailto`, `facetime` など）
+7. parameter — アプリに渡す値（例: 電話番号）
+8. 文字列（JS 式）なので引用符で囲みます
+9. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
 
-   :::note
-   一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
-   :::
-   6. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
+:::note
+一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
+:::
 
-5. **OK** をクリックします。\
-   Deep Link ステップが追加されます。
-6. **Properties** で必要に応じて以下を設定します。
-   1. **When this step fails** – 失敗時の動作
-   2. **When to run step** – 実行条件（[Conditions](/docs/conditions)）
-   3. **Override timeout** – タイムアウトの上書き（ミリ秒）。成功に必要な残時間がある限りリトライします。
+10. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
+11. **OK** をクリックします。
+
+Deep Link ステップが追加されます。
+
+12. **Properties** で必要に応じて以下を設定します。
+13. **When this step fails** – 失敗時の動作
+14. **When to run step** – 実行条件（[Conditions](/docs/conditions)）
+15. **Override timeout** – タイムアウトの上書き（ミリ秒）。成功に必要な残時間がある限りリトライします。

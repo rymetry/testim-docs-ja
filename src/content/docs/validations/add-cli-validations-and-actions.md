@@ -53,7 +53,6 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 ## CLI ステップの追加
 
 _Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
-
 **CLI ステップを追加するには:**
 
 1. 追加したい位置の **（矢印）**（または最後のステップの **+**）にカーソルを合わせます。
@@ -124,6 +123,8 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 ![CLI](/images/validations/add-cli-validations-and-actions/a1d4d65-Testim_333.png)
 
 ### CLI ステップの例
+
+以下は CLI ステップを使用した例です。
 
 - [MongoDB validation](/docs/mongodb-validation)
 - [MySQL validation](/docs/mysql-validation)
