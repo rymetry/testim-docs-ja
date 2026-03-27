@@ -17,7 +17,7 @@ const FETCH_TIMEOUT_MS = 30_000;
 /**
  * Regex matching docs.tricentis.com content URLs ending in .htm.
  * Intentionally omits /g to avoid shared lastIndex state across callers;
- * use {@link matchAllTricentisUrls} for matchAll iteration.
+ * use `matchAllTricentisUrls()` for matchAll iteration.
  */
 export const TRICENTIS_URL_RE = /https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm/;
 
