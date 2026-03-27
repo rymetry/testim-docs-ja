@@ -83,7 +83,8 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
-**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。<br/>\
+**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。
+
 設定手順:
 
 - 1 つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
@@ -93,24 +94,24 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/9c95b25-assertions.png)
 
-13. Assertion では表現しきれない複雑な検証や追加処理（失敗時にカスタムエラーメッセージを投げるなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンス結果を受け取って任意の JavaScript コードを実行できます。パラメーターも利用可能で、詳しくは後述の Using Parameters を参照してください。
+12. Assertion では表現しきれない複雑な検証や追加処理（失敗時にカスタムエラーメッセージを投げるなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンス結果を受け取って任意の JavaScript コードを実行できます。パラメーターも利用可能で、詳しくは後述の Using Parameters を参照してください。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/a99b5db-run_additional_code.png)
 
-14. **Show step properties** をクリックして、ステップのプロパティパネルを開きます。
+13. **Show step properties** をクリックして、ステップのプロパティパネルを開きます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png)
 
-15. **Properties** パネルの **Send via web page** チェックボックスでは API 呼び出しの実行コンテキストを制御できます。
+14. **Properties** パネルの **Send via web page** チェックボックスでは API 呼び出しの実行コンテキストを制御できます。
     - チェックを外す – ブラウザコンテキストの外側から API を送信します。ブラウザの制限（CORS など）を避けたい場合に有効です。
     - チェックを付ける – ブラウザ情報（Cookie など）も含めて送信したい場合に使用します（Cookie は自動的に送信されます）。
 
-      ![API テストのスクリーンショット](/images/advanced-features/api-testing/3cf1b19-properties.png)
+![API テストのスクリーンショット](/images/advanced-features/api-testing/3cf1b19-properties.png)
 
-16. **Allow API request retry** では、リクエストが失敗した場合に再送を行うかどうかを制御します。
-    1. チェックを付ける – リクエスト自体が失敗したとき（エラーステータスコードのとき）のみ再送を行います。
-    2. チェックを外す – ステータスコードがエラーであっても再送は行わず、検証と追加コードの実行に進みます。例えば「エラーコードであること」を Assertion で期待している場合などに有用です。
-17. **Params** フィールドでは、後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) で利用するパラメーターを定義します。
+15. **Allow API request retry** では、リクエストが失敗した場合に再送を行うかどうかを制御します。
+16. チェックを付ける – リクエスト自体が失敗したとき（エラーステータスコードのとき）のみ再送を行います。
+17. チェックを外す – ステータスコードがエラーであっても再送は行わず、検証と追加コードの実行に進みます。例えば「エラーコードであること」を Assertion で期待している場合などに有用です。
+18. **Params** フィールドでは、後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) で利用するパラメーターを定義します。
 
 :::note
 テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、API ステップの前に [wait for](/docs/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
@@ -164,8 +165,7 @@ API アクションステップ（Add API action）は、レスポンスを利�
 
 ## Including a File and/or Text field with an API Call Using Form Data
 
-Validate API / Add API action ステップでは、フォームデータを使ってファイルやテキストフィールドを API に含めることができます。
-
+Validate API / Add API action ステップでは、フォームデータを使ってファイルやテキストフィールドを API に含めることができます。\
 **API 呼び出しにファイルを含めるには:**
 
 1. 対象テストで Validate API または API Action ステップを追加します（前述手順参照）。
@@ -217,8 +217,7 @@ Key 名またはファイルのどちらかが指定されていない場合、�
 
 ## Cancel a File Upload in Progress
 
-アップロード中のファイルを途中でキャンセルすることもできます。
-
+アップロード中のファイルを途中でキャンセルすることもできます。\
 **アップロード中のファイルをキャンセルするには:**
 
 1. アップロード中のエントリの右側にある **“X”** をクリックします。
@@ -231,8 +230,7 @@ Testim がファイルのアップロードをキャンセルし、別のファ�
 
 ## Replace a File Attachment
 
-既存エントリに添付済みのファイルを別のファイルに差し替えることもできます。
-
+既存エントリに添付済みのファイルを別のファイルに差し替えることもできます。\
 **ファイル添付を別のファイルに置き換えるには:**
 
 1. 既存のファイルが添付されているエントリの **“X”** をクリックします。
@@ -246,15 +244,13 @@ Testim がファイルのアップロードをキャンセルし、別のファ�
 ## Exclude or Delete an Entry from the Body Section
 
 Body セクションに定義したエントリは、一時的に無効化したり完全に削除したりできます。
-
 **API 呼び出しからエントリだけ除外するには:**
 
 1. テストから除外したいエントリの左側にあるチェックボックスをオフにします。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/de72f68-api-testing-10.jpg)
 
-テスト実行時、そのエントリはリクエストから除外されますが、定義自体は残るため、あとから再度有効化できます。
-
+テスト実行時、そのエントリはリクエストから除外されますが、定義自体は残るため、あとから再度有効化できます。\
 **Body セクションからエントリを完全に削除するには:**
 
 1. 削除したい Body エントリ右側の **“X”** をクリックします。

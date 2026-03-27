@@ -22,15 +22,13 @@ keywords:
 
 テストに条件（Condition）を追加する
 
-"when to run step" 機能を使うと、テスト内の各ステップを実行するかしないかを制御できます。グループステップを含むあらゆるステップに「実行条件（when to run）」を設定できます。
-
-ステップの実行条件は次の 5 種類です:
+"when to run step" 機能を使うと、テスト内の各ステップを実行するかしないかを制御できます。グループステップを含むあらゆるステップに「実行条件（when to run）」を設定できます。ステップの実行条件は次の 5 種類です:
 
 - **Always Run** — このステップには条件がありません。テスト実行時に常に実行されます。すべてのステップの既定設定です。
-- **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#section-configuring-an-element-condition) を参照してください。
-- **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/conditions#section-configuring-an-element-text-condition) を参照してください。
-- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/conditions#section-configuring-a-custom-condition) を参照してください。
-- **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/conditions#section-configuring-a-never-run-step-condition) を参照してください。
+- **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#element-条件の設定) を参照してください。
+- **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/conditions#element-text-条件の設定) を参照してください。
+- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/conditions#custom-条件の設定) を参照してください。
+- **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/conditions#never-run-step-条件の設定) を参照してください。
 
 ## Condition インジケーター
 
@@ -107,8 +105,7 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 ## Element text 条件の設定
 
-Element text 条件は Element 条件に類似しますが、指定した要素に特定のテキスト値が含まれる場合にのみステップを実行します。条件には正規表現、短い JavaScript 式、またはパラメーターを使用できます。
-
+Element text 条件は Element 条件に類似しますが、指定した要素に特定のテキスト値が含まれる場合にのみステップを実行します。条件には正規表現、短い JavaScript 式、またはパラメーターを使用できます。\
 **Element text 条件を設定するには:**
 
 ![Element text 条件設定のデモ](/images/conditions/conditions/59391e6-element_text_condition.gif)
@@ -153,17 +150,14 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 
 ## Custom 条件の設定
 
-要素の可視性や特定テキストの存在を検証するだけでは不十分な場合があります。要素の値をチェックしたり、より複雑な条件を定義したい場合に Custom 条件を使用します。JavaScript ステップとして条件を作成できます。
+要素の可視性や特定テキストの存在を検証するだけでは不十分な場合があります。要素の値をチェックしたり、より複雑な条件を定義したい場合に Custom 条件を使用します。JavaScript ステップとして条件を作成できます。\
 例えば、ログインページにいるかどうかを URL で判定するには、次のようなカスタム条件を使用できます:
 
 ```javascript
 return loginButton.innerText === 'LOG IN';
 ```
 
-HTML または JavaScript パラメーターを定義し、条件内でそれらを参照することもできます。例えば、HTML 要素としてボタンを選択し、そのボタンのテキストをチェックする条件を作成できます。
-
-Custom 条件はブール値を返すステップとして記述します。`true` を返すとステップが実行され、`false` を返すとスキップされます。
-
+HTML または JavaScript パラメーターを定義し、条件内でそれらを参照することもできます。例えば、HTML 要素としてボタンを選択し、そのボタンのテキストをチェックする条件を作成できます。Custom 条件はブール値を返すステップとして記述します。`true` を返すとステップが実行され、`false` を返すとスキップされます。\
 **Custom 条件を設定するには:**
 
 ![Custom 条件設定のデモ](/images/conditions/conditions/12714a6-custom_condition2.gif)
@@ -189,7 +183,7 @@ Custom 条件はブール値を返すステップとして記述します。`tru
    - 右側のペインで **+ PARAMS** ボタンをクリックします。
    - **JavaScript パラメーター:** ドロップダウンから **JS** を選択し、JavaScript パラメーターを入力します。
    - **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。次の手順を実行します:
-     - AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-your-tests#section-modifying-the-test-using-the-properties-panel)の手順に従ってください。
+     - AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-your-tests#ステップの追加削除)の手順に従ってください。
 
 ![パラメーター追加](/images/conditions/conditions/5eed156-custom2_r.png)
 
@@ -225,8 +219,7 @@ AUT を開いて HTML 要素をパラメーターとして定義した場合は�
 
 ## Never run step 条件の設定
 
-Never（skip）条件は、テストステップを一時的に無効化しながらも、将来の再利用に備えてステップ自体を保持する場合に使用します。
-
+Never（skip）条件は、テストステップを一時的に無効化しながらも、将来の再利用に備えてステップ自体を保持する場合に使用します。\
 **Never run step 条件を設定するには:**
 
 1. 対象のステップをクリックします。\

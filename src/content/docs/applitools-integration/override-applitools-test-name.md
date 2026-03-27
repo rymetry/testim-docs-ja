@@ -15,7 +15,7 @@ keywords:
   - ベースライン
 ---
 
-Applitools に送信されるテスト名をオーバーライドすることができます。これは、[テストデータ](/docs/data-driven-testing#using-test-data-in-your-tests)を使用して以下の方法で実行できます:
+Applitools に送信されるテスト名をオーバーライドすることができます。これは、[テストデータ](/docs/data-driven-testing#データ駆動テストの一般的な用途)を使用して以下の方法で実行できます:
 
 1. パラメーター*applitoolsTestName*が、Applitools にテスト名として送信されます
 2. テストデータでこれをオーバーライドまたは変更できます。例:

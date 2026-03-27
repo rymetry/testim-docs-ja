@@ -96,9 +96,7 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 
 ## Tricentis Mobile Agent を Testim に接続する
 
-Tricentis Mobile Agent をインストールした後、Testim に接続する必要があります。
-
-**Tricentis Mobile Agent に接続するには:**
+Tricentis Mobile Agent をインストールした後、Testim に接続する必要があります。→ **Tricentis Mobile Agent に接続するには:**
 
 1. Tricentis Mobile Agent アイコンをクリックします。
 
@@ -118,9 +116,7 @@ Tricentis Mobile Agent を Testim に接続した後、デバイスを接続し�
 
 ### Android デバイスを準備する
 
-Tricentis Mobile Agent を使用したテスト自動化のために Android デバイスを準備するには、次の手順に従ってください。
-
-**Android デバイスを準備するには:**
+Tricentis Mobile Agent を使用したテスト自動化のために Android デバイスを準備するには、次の手順に従ってください。→ **Android デバイスを準備するには:**
 
 1. Android デバイスをコンピューターに接続し、電話データへのアクセスを許可します。
 
@@ -152,9 +148,7 @@ Tricentis Mobile Agent で iOS デバイスを使用するには、以下の要�
 
 #### iOS イメージをアップロードする
 
-iOS デバイスを開発者モードで実行し、開発証明書を使用して WebDriverAgent（WDA）をインストールするには、iOS イメージが必要です。iOS イメージは、Xcode（iOS IDE）によって生成される zip フォルダーです。また、GitHub から iOS イメージをダウンロードすることもできます - [https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)。
-
-**iOS イメージをアップロードするには:**
+iOS デバイスを開発者モードで実行し、開発証明書を使用して WebDriverAgent（WDA）をインストールするには、iOS イメージが必要です。iOS イメージは、Xcode（iOS IDE）によって生成される zip フォルダーです。また、GitHub から iOS イメージをダウンロードすることもできます - [https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)。→ **iOS イメージをアップロードするには:**
 
 1. 関連する iOS イメージを[https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)からダウンロードできます。
 
@@ -166,17 +160,11 @@ iOS デバイスを開発者モードで実行し、開発証明書を使用し�
 
 #### Apple チーム ID を取得する
 
-コンピューターに接続された iOS デバイスを自動化するには、Apple チーム ID が必要です。Apple チーム ID は、チームを一意に識別するために Apple によって生成される 10 文字の文字列です。Apple チーム ID は、[Apple Developer アカウント](https://idmsa.apple.com/IDMSWebAuth/signin?appIdKey=891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757&path=%2Faccount%2F&rv=1)から取得できます。
-
-Apple Developer アカウントのメンバーシップセクションから、Apple チーム ID を取得します。Apple チーム ID の取得方法については、[Apple オンラインヘルプ](https://developer.apple.com/support/)を参照してください。
-
-iOS デバイスを接続して構成したら、[Tricentis Mobile Agent で追加の構成手順](https://documentation.tricentis.com/tricentis_mobile_agent/content/user_manual/additional_configuration_ios.htm)を実行する必要があります。
+コンピューターに接続された iOS デバイスを自動化するには、Apple チーム ID が必要です。Apple チーム ID は、チームを一意に識別するために Apple によって生成される 10 文字の文字列です。Apple チーム ID は、[Apple Developer アカウント](https://idmsa.apple.com/IDMSWebAuth/signin?appIdKey=891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757&path=%2Faccount%2F&rv=1)から取得できます。Apple Developer アカウントのメンバーシップセクションから、Apple チーム ID を取得します。Apple チーム ID の取得方法については、[Apple オンラインヘルプ](https://developer.apple.com/support/)を参照してください。iOS デバイスを接続して構成したら、[Tricentis Mobile Agent で追加の構成手順](https://documentation.tricentis.com/tricentis_mobile_agent/content/user_manual/additional_configuration_ios.htm)を実行する必要があります。
 
 #### Tricentis Mobile Agent iOS Artifacts を構成する
 
-Tricentis Mobile Agent で iOS デバイスを使用するには、以下の追加の構成手順を実行する必要があります。
-
-**iOS artifacts を構成するには:**
+Tricentis Mobile Agent で iOS デバイスを使用するには、以下の追加の構成手順を実行する必要があります。→ **iOS artifacts を構成するには:**
 
 1. Tricentis Mobile Agent で、**iOS artifacts**に移動します。
 
@@ -192,9 +180,7 @@ Tricentis Mobile Agent で iOS デバイスを使用するには、以下の追�
 
 #### iTunes をインストールする
 
-Windows オペレーティングシステムで iOS デバイスのテスト自動化を実行するには、[iTunes をインストール](https://support.apple.com/downloads/itunes)する必要があります。必ず App Store から iTunes をダウンロードしてください。
-
-iTunes のインストール後、次のいずれかのアクションを実行します:
+Windows オペレーティングシステムで iOS デバイスのテスト自動化を実行するには、[iTunes をインストール](https://support.apple.com/downloads/itunes)する必要があります。必ず App Store から iTunes をダウンロードしてください。iTunes のインストール後、次のいずれかのアクションを実行します:
 
 - コンピューターを再起動します。
 - iOS デバイスを再接続します。
@@ -225,9 +211,7 @@ iOS シミュレーターで WDA を起動する際にエラーが発生した�
 
 ### エージェントログをダウンロードする
 
-サポートチームにサポートを依頼する際、Tricentis Mobile Agent ログの情報を提供するよう求められることがあります。
-
-**Tricentis Mobile Agent ログをダウンロードするには:**
+サポートチームにサポートを依頼する際、Tricentis Mobile Agent ログの情報を提供するよう求められることがあります。→ **Tricentis Mobile Agent ログをダウンロードするには:**
 
 1. Tricentis Mobile Agent の**Agent Settings**タブに移動します。
 
@@ -247,15 +231,11 @@ sudo xcode-select -s $(ls -td /Applications/Xcode* | head -1)/Contents/Developer
 
 iOS シミュレーターで WDA を起動する際に次のようなエラーが発生した場合:
 
-```text
 2021-07-18 02:22:22.461 ERROR 37497 qtp499764573-13 i.t.a.i.n Failed trying to start WDA on 2D3C1771-938B-43D7-A95C-5CCB834CE63E for unknown reason java.util.concurrent.ExecutionException: java.io.IOException: There was a problem connecting to the simulator with the udid of 2D3C1771-938B-43D7-A95C-5CCB834CE63E
-```
 
 次のコマンドを実行して、マシンで実行されているすべての XCode シミュレーターをシャットダウンしてみてください:
 
-```bash
 sudo xcrun simctl shutdown all
-```
 
 その後、テストを再度実行してみてください。Tricentis Mobile Agent が自動的にシミュレーターを起動します。
 
@@ -274,9 +254,7 @@ Android デバイスを Tricentis Mobile Agent に接続する際に問題があ
 
 ### Android デバイスでの UI Automator クラッシュ
 
-UI Automator は、インストールされているすべてのアプリケーションで機能的な UI テストを行うための Android テストフレームワークです。Android デバイスの実行中に UI Automator に関連する問題が発生した場合は、使用している自動化ツールの電源制限を確認してください。
-
-Android デバイスのパフォーマンスを向上させるには、以下のアプリケーションで最適化を無効にしてください:
+UI Automator は、インストールされているすべてのアプリケーションで機能的な UI テストを行うための Android テストフレームワークです。Android デバイスの実行中に UI Automator に関連する問題が発生した場合は、使用している自動化ツールの電源制限を確認してください。Android デバイスのパフォーマンスを向上させるには、以下のアプリケーションで最適化を無効にしてください:
 
 - テスト対象のアプリケーション
 - Android System WebView（WebView を使用するアプリケーション用）

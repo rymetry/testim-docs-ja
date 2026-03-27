@@ -60,9 +60,7 @@ JSON capability file の設定は、次の設定を上書きします。
 
 **Web の場合:**
 
-CLI に次を追加します: **--sauce-options "config_saucelabs.json"**
-
-file の例:
+CLI に次を追加します: **--sauce-options "config_saucelabs.json"** file の例:
 
 ```json
 {
@@ -105,8 +103,7 @@ parameter の詳細は、SauceLabs の公式ドキュメントを参照してく
 
 **Web の場合:**
 
-CLI に次を追加します: **--browserstack-options "config_browserstack.json"**
-次はサポートされる代表的な override parameter の例です。
+CLI に次を追加します: **--browserstack-options "config_browserstack.json"** 次はサポートされる代表的な override parameter の例です。
 
 ```json
 {
@@ -123,7 +120,8 @@ CLI に次を追加します: **--browserstack-options "config_browserstack.json
 }
 ```
 
-parameter の詳細は、BrowserStack の公式ドキュメントを参照してください。\
+parameter の詳細は、BrowserStack の公式ドキュメントを参照してください。
+
 [https://www.browserstack.com/automate/capabilities](https://www.browserstack.com/automate/capabilities)
 
 **Mobile の場合:**

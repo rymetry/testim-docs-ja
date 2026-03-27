@@ -35,15 +35,22 @@ AutoRABIT からテストを自動化するには、CI ジョブで Callout URL 
    ![Swagger 上で Testim Public API ペイロードを確認する画面](/images/ci-integrations/autorabit-integration/648e981-2025-02-10_11-15-58.png)
 
 5. AutoRABIT で、新しい CI ジョブを作成する際に、Callout URL を作成して Testim でのテスト実行を自動化します。Callout URL は、デプロイ前またはデプロイ後（デプロイ成功時または失敗時）に実行するように選択できます。Callout URL 画面で、以下の設定を構成します:
-   1. Method - POST に設定
-   2. URL - ステップ 2 の REST API 呼び出しを使用し、URL の末尾にテスト、プラン、スイート ID、またはラベルを追加します。例: [https://api.testim.io/tests/run/234](https://api.testim.io/tests/run/234)
-   3. Authorization - "Custom"を選択し、"Bearer YOUR-API-KEY"を追加します。YOUR-API-KEY はステップ 3 のものです。
-   4. Content - Type - "JSON (application/json)"を選択
-   5. Content - ステップ 4 の Swagger から JSON ペイロードを貼り付けます。JSON ペイロードの key:value ペアで:
-      - "grid" : "string" の"string"を、Testim Salesforce の右上のプロフィールの Grids セクションにあるグリッド名の 1 つに置き換えます。
-      - "branch" : "master" の"master"を、テストが実行される Salesforce 環境を指すブランチ名に置き換えます。
 
-        ![AutoRABIT の Callout URL 設定画面の例](/images/ci-integrations/autorabit-integration/da52470-2025-02-10_11-21-25.png)
+6. Method - POST に設定
 
-6. CI ジョブを保存します。\
-   CI ジョブが実行されるたびに、Callout URL が Testim でのテスト実行をトリガーします。Testim にログインして結果を確認してください。
+7. URL - ステップ 2 の REST API 呼び出しを使用し、URL の末尾にテスト、プラン、スイート ID、またはラベルを追加します。例: [https://api.testim.io/tests/run/234](https://api.testim.io/tests/run/234)
+
+8. Authorization - "Custom"を選択し、"Bearer YOUR-API-KEY"を追加します。YOUR-API-KEY はステップ 3 のものです。
+
+9. Content - Type - "JSON (application/json)"を選択
+
+10. Content - ステップ 4 の Swagger から JSON ペイロードを貼り付けます。JSON ペイロードの key:value ペアで:
+
+    - "grid" : "string" の"string"を、Testim Salesforce の右上のプロフィールの Grids セクションにあるグリッド名の 1 つに置き換えます。
+    - "branch" : "master" の"master"を、テストが実行される Salesforce 環境を指すブランチ名に置き換えます。
+
+![AutoRABIT の Callout URL 設定画面の例](/images/ci-integrations/autorabit-integration/da52470-2025-02-10_11-21-25.png)
+
+11. CI ジョブを保存します。
+
+CI ジョブが実行されるたびに、Callout URL が Testim でのテスト実行をトリガーします。Testim にログインして結果を確認してください。

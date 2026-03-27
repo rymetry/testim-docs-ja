@@ -377,6 +377,25 @@ describe('toKebab', () => {
   it('strips markdown link syntax', () => {
     assert.equal(toKebab('See [Testim](https://example.com)'), 'see-testim');
   });
+
+  it('preserves Japanese (CJK) characters', () => {
+    assert.equal(toKebab('ルールの説明'), 'ルールの説明');
+  });
+
+  it('converts Japanese heading with parenthesized qualifier', () => {
+    assert.equal(toKebab('要素の表示を待つ（web）'), '要素の表示を待つ（web）');
+  });
+
+  it('handles mixed Japanese and ASCII', () => {
+    assert.equal(toKebab('DOM で最も大きい要素を選ぶ'), 'dom-で最も大きい要素を選ぶ');
+  });
+
+  it('handles mixed English and Japanese with slash', () => {
+    assert.equal(
+      toKebab('Add Custom Validation / Add Custom Action ステップの追加'),
+      'add-custom-validation-add-custom-action-ステップの追加',
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------

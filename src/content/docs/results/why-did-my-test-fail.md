@@ -66,7 +66,7 @@ Testim は、次のような異なる警告タイプを識別します。
 - 要素がビューポートに表示されない場合は、それに到達するために[スクロールステップを追加](/docs/scroll)する必要があるかもしれません。
 - 要素は、マウスが別の要素の上にホバーしたときにのみ表示されることがあります（例：ドロップダウンメニュー）。ホバーステップは自動的に記録されないため、要素を表示するために記録する必要があるかもしれません。詳細については、[ホバーステップ](/docs/hover-step)を参照してください。
 - ステップのプロパティで「要素が表示されている必要がある」チェックボックスをオフにします。時々、ビジネスロジックにとって表示検証が不要な場合があり、その場合はオフにできます。システムにオーバーレイがある場合は、迅速な解決策になります。詳細については、[ターゲット要素プロパティの編集](/docs/editing-target-element-properties)を参照してください。
-- 失敗したステップの DOM を確認します。ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップの DOM の表示によるデバッグ](/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
+- 失敗したステップの DOM を確認します。ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップの DOM の表示によるデバッグ](/docs/debug-console-errors-access-dom#失敗ステップの-dom-を確認してデバッグする)を参照してください。
 
 ### 2. Element not Found
 
@@ -85,8 +85,8 @@ Testim は、次のような異なる警告タイプを識別します。
 - スクリーンショットの進行状況を表示して、前のステップがページへのナビゲーションに失敗したかどうかを判断します。
 - すべてのフォーム送信情報が正しいことを確認します。詳細については、[パラメーター](/docs/parameters)を参照してください。
 - ページの読み込みが完了しなかった、または読み込みに遅延がある場合は、[待機ステップを追加](/docs/wait-for)して、Testim にターゲット要素が表示されるまで待機するように強制します。
-- 要素が表示されているが認識されない場合は、[ターゲット要素の改善](/docs/editing-target-element-properties#improving-the-target-element)を試してください。
-- 失敗したステップの DOM を確認します。ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップの DOM の表示によるデバッグ](/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
+- 要素が表示されているが認識されない場合は、[ターゲット要素の改善](/docs/editing-target-element-properties#ターゲット要素の改善)を試してください。
+- 失敗したステップの DOM を確認します。ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップの DOM の表示によるデバッグ](/docs/debug-console-errors-access-dom#失敗ステップの-dom-を確認してデバッグする)を参照してください。
 
 ### 3. Tab not Found
 
@@ -115,7 +115,7 @@ Testim は、次のような異なる警告タイプを識別します。
 
 - サイドバイサイドのスクリーンショットを比較して、テスト内でフレームが表示されていたかどうかを判断します。
 - [DOM](/docs/debug-console-errors-access-dom)を検査して、期待されたフレームが読み込まれたことを検証します。
-- ターゲット要素が iframe 内になくなった場合は、失敗したテストステップの[ターゲット要素を再割り当て](/docs/editing-target-element-properties#reassigningimproving-the-target-element)します。
+- ターゲット要素が iframe 内になくなった場合は、失敗したテストステップの[ターゲット要素を再割り当て](/docs/editing-target-element-properties#ターゲット要素のハイライト)します。
 
 ### 5. JavaScript Error
 
@@ -128,7 +128,7 @@ Testim は、次のような異なる警告タイプを識別します。
 
 **どうすればよいか？**
 
-- [カスタムステップ/アクション](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)または標準ステップの[JS パラメーター](/docs/parameters)の JavaScript コードを確認します。
+- [カスタムステップ/アクション](/docs/custom-code#add-custom-validation-add-custom-action-ステップの追加)または標準ステップの[JS パラメーター](/docs/parameters)の JavaScript コードを確認します。
 - アサーションが失敗した場合は、このメッセージをより有益なエラーに置き換えます。詳細については、[カスタム検証とアクションの追加](/docs/custom-code)を参照してください。
 
 ### 6. Could not get Browser
@@ -162,7 +162,7 @@ Testim は、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 - ブラウザがグリッド上に存在することを確認します。存在しない場合は、追加のヘルプについてグリッドプロバイダーに連絡できます。
-- IE、Edge、Firefox、Safari ブラウザは、[selenium モードで実行](/docs/the-command-line-cli#mode-selenium)する必要があります。CLI に「--mode selenium」が含まれていることを確認してください。
+- IE、Edge、Firefox、Safari ブラウザは、[selenium モードで実行](/docs/the-command-line-cli#前提条件)する必要があります。CLI に「--mode selenium」が含まれていることを確認してください。
 
 ### 8. Page is not Available
 
@@ -207,7 +207,7 @@ Testim は、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 - テストを手動で実行して、ターゲット要素がクリックできることを確認します。
-- クリックステップの前に短い[「スリープステップ」](/docs/wait-for#sleep-web)または[「待機ステップ」](/docs/wait-for)を追加して、ページが完全に読み込まれ、クリック/テキスト設定イベントがトリガーされる準備ができていることを確認します。
+- クリックステップの前に短い[「スリープステップ」](/docs/wait-for#スリープ（web）)または[「待機ステップ」](/docs/wait-for)を追加して、ページが完全に読み込まれ、クリック/テキスト設定イベントがトリガーされる準備ができていることを確認します。
 - テキスト設定/クリックステップのプロパティを更新して、「Native Events」を許可/削除します。
 
 ### 11. Concurrency Limit Reached
@@ -234,7 +234,7 @@ Testim は、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 - テストのステップ数を減らします。
-- 必要に応じてデフォルトのテストタイムアウト（10 分）を上書きします: [/docs/the-command-line-cli#test-timeout](/docs/the-command-line-cli#test-timeout)
+- 必要に応じてデフォルトのテストタイムアウト（10 分）を上書きします: [/docs/the-command-line-cli#テストタイムアウト](/docs/the-command-line-cli#テストタイムアウト)
 
 ### 13. API Step Failed
 
@@ -276,6 +276,6 @@ Testim グリッドマシンは最大 4K 解像度をサポートしているた
 テスト失敗の原因を特定するのに役立つ 4 つの主なトラブルシューティング手順があります。
 
 - スクリーンショットの比較: 成功した元のテストと最近失敗したテストのスクリーンショットを比較することで、失敗の原因となった UI の変更を特定できます。詳細については、[サイドバイサイドスクリーンショットの比較](/docs/compare-side-by-side-screenshots)を参照してください。
-- 失敗したステップの DOM の確認: ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップの DOM の表示によるデバッグ](/docs/debug-console-errors-access-dom#debug-by-seeing-the-failed-step-dom)を参照してください。
+- 失敗したステップの DOM の確認: ステップが失敗すると、Testim は完全な DOM スナップショットを保存するため、後でデバッグできます。詳細については、[失敗したステップの DOM の表示によるデバッグ](/docs/debug-console-errors-access-dom#失敗ステップの-dom-を確認してデバッグする)を参照してください。
 - コンソールログ: エラーメッセージや警告、情報などのコンソールレベルの情報を表示します。詳細については、[コンソールログ](/docs/network-logs-copy)を参照してください。
 - ネットワークログ: ネットワーク接続とリソースのダウンロードまたはアップロードを追跡します。このログは、リソースが期待どおりに転送されていることを確認する必要がある場合に使用されます。詳細については、[ネットワークログ](/docs/network-logs)を参照してください。

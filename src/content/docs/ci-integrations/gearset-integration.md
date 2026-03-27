@@ -40,22 +40,23 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
    ![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
 
 6. Gearset の Deployment または CI ジョブの Webhook で、以下の手順に従います:
-   1. **Outgoing webhook url**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`
 
-   2. **Triggers**セクションで、**Success events**を選択します。
+7. **Outgoing webhook url**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`
 
-   3. **Payload**フィールドで、**Custom**を選択します。
+8. **Triggers**セクションで、**Success events**を選択します。
 
-   4. **Authentication**フィールドで、**Authorization**を選択します。
+9. **Payload**フィールドで、**Custom**を選択します。
 
-   5. **Credentials**フィールドに、**ステップ 4**の API キーを`Bearer YOUR-API-KEY`形式で追加します。
+10. **Authentication**フィールドで、**Authorization**を選択します。
 
-   6. **Content-Type**フィールドで、**application/json**を選択します。
+11. **Credentials**フィールドに、**ステップ 4**の API キーを`Bearer YOUR-API-KEY`形式で追加します。
 
-   7. **Payload**フィールドに、Swagger から**（ステップ 5）**の**JSON ペイロード**を貼り付けます。
+12. **Content-Type**フィールドで、**application/json**を選択します。
 
-      ![Gearset の Webhook 設定で JSON ペイロードを貼り付ける画面](/images/ci-integrations/gearset-integration/5c1e754-gearset_webhook.png)
+13. **Payload**フィールドに、Swagger から**（ステップ 5）**の**JSON ペイロード**を貼り付けます。
 
-   8. JSON ペイロードで、`"grid" : "string"`を、Testim/TTA for Salesforce の右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
+![Gearset の Webhook 設定で JSON ペイロードを貼り付ける画面](/images/ci-integrations/gearset-integration/5c1e754-gearset_webhook.png)
 
-      ![Testim/TTA for Salesforce の Grids セクションのスクリーンショット](/images/ci-integrations/gearset-integration/c970045-gearset_grid.png)
+14. JSON ペイロードで、`"grid" : "string"`を、Testim/TTA for Salesforce の右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
+
+![Testim/TTA for Salesforce の Grids セクションのスクリーンショット](/images/ci-integrations/gearset-integration/c970045-gearset_grid.png)

@@ -33,10 +33,13 @@ _Validate download_ ステップは専用の [CLI ステップ](/docs/add-cli-va
 :::
 
 - CLI アクションステップを含むテストをローカルで実行するには、次のコマンドを実行する必要があります：**npm i -g @testim/testim-cli && testim connect**（下記参照）。
-- _Validate download_ ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
-- PDF ファイルの _Validate download_ ステップを含むテストには、さらに 2 つの前提条件があります：
-  - **Chrome 67** 以上を使用していること
-  - Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
+
+_Validate download_ ステップを含むテストにはファイル URL へのアクセスが必要です。これらのテストを実行するには、Testim Editor Chrome 拡張機能で **Allow access to file URLs** 権限を有効にする必要があります（下記参照）。
+
+PDF ファイルの _Validate download_ ステップを含むテストには、さらに 2 つの前提条件があります：
+
+- **Chrome 67** 以上を使用していること
+- Chrome ブラウザの PDF 設定が次のように設定されていることを確認してください：**Download PDF files instead of automatically opening them in Chrome**（下記参照）。
 
 **「Download PDFs」権限を有効にするには：**
 
@@ -520,7 +523,8 @@ expectedText.forEach(item => {
    </td>
   </tr>
   <tr>
-   <td />
+   <td>
+   </td>
    <td>
     Package
    </td>
@@ -626,6 +630,7 @@ JSZip は .docx ファイルのみをサポートしており、.doc ファイ�
 ### PDF ファイル
 
 _Validate download_ ステップで、ページ数や内容など PDF の高度な検証ができます。
+
 **前提条件**:
 
 - **Chrome 67** 以上を使用していること
@@ -692,6 +697,11 @@ return pdf(fileBuffer).then((data) => {
     '2'
    </td>
   </tr>
+ </tbody>
+</table>
+
+<table class="md-table md-table-3cols">
+ <tbody>
   <tr>
    <td style="text-align: left;">
     expectedText

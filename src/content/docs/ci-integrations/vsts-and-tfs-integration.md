@@ -20,23 +20,21 @@ keywords:
   - Docker タスク
 ---
 
-​
-
 ![VSTS と TFS のロゴ](/images/ci-integrations/vsts-and-tfs-integration/d30e448-tfs1.png)
 
-​VSTS/TFS とテストを統合するには、まず VSTS/TFS エージェントに Docker がインストールされている必要があります。
+VSTS/TFS とテストを統合するには、まず VSTS/TFS エージェントに Docker がインストールされている必要があります。
 
-## 次の手順に従ってください
+### 次の手順に従ってください
 
 1. Build ページに移動します
 
 ![VSTS ビルドページの画面](/images/ci-integrations/vsts-and-tfs-integration/e8e8d07-tfs2.png)
 
-​2. 新しいビルドを作成します
+2. 新しいビルドを作成します
 
 ![新しいビルド定義を作成する VSTS の画面](/images/ci-integrations/vsts-and-tfs-integration/c4affba-tfs3.png)
 
-​3. リポジトリを選択します
+3. リポジトリを選択します
 
 ![リポジトリを選択する VSTS の画面](/images/ci-integrations/vsts-and-tfs-integration/3f92a44-tfs4.png)
 
@@ -66,8 +64,9 @@ run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --to
 
 ​ **注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
 
-9. VSTS/TFS が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。\
-   VSTS/TFS がファイルを使用するには、Publish Test Results タスクを追加する必要があります
+9. VSTS/TFS が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。
+
+VSTS/TFS がファイルを使用するには、Publish Test Results タスクを追加する必要があります
 
 ![VSTS の Publish Test Results タスクを追加する画面](/images/ci-integrations/vsts-and-tfs-integration/a99d051-tfs10.png)
 
@@ -86,8 +85,3 @@ run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --to
 13. ビルド設定を保存します
 
 ![VSTS でビルド定義を保存する画面](/images/ci-integrations/vsts-and-tfs-integration/5d80b20-tfs14.png)
-
-​
-
-​\
-​

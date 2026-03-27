@@ -113,7 +113,7 @@ keywords:
 
 このリストには使用可能なすべての構成が含まれています。このリストから 1 つを使用するか、新しい構成を作成できます。
 
-### 新しい構成を作成する
+#### 新しい構成を作成する
 
 - 「**新規作成**」をクリックします。
 - 構成の名前を追加します
@@ -130,7 +130,7 @@ keywords:
 - --test-config `<name>` を使用して、実行する構成を CLI に追加します。
 - 実行するグリッドのグリッドパラメーターを更新してください。グリッドの設定方法については、[こちら](/docs/grid-management) をお読みください。
 
-### Chrome、Edge Chromium、Safari、Firefox
+#### Chrome、Edge Chromium、Safari、Firefox
 
 ```shell
 --test-config "My configuration"

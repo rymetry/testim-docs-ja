@@ -22,7 +22,6 @@ Bitbucket は、Mercurial または Git revision control system を使う source
 ### Bitbucket integration を設定する
 
 この手順は一度だけ実行すれば十分です。
-
 **Bitbucket integration を有効にするには:**
 
 1. Testim で **Settings** > **Integration** tab に移動します。

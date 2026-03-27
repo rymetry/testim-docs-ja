@@ -40,34 +40,36 @@ Copado からテストを自動化するには、Copado に[URL Callout ステ�
    ![Swagger 上で Testim REST API エンドポイントを確認する画面](/images/ci-integrations/copado-integration/7c0621b-copado_swagger.png)
 
 6. Copado Release Manager アプリで、Steps セクションに新しいステップを追加して Deployment を作成します。そのためには、以下の手順に従います:
-   1. **Type**で、**Perform callout and continue with deployment**を選択します。
 
-   2. **Method**で、**POST**を選択します。
+7. **Type**で、**Perform callout and continue with deployment**を選択します。
 
-   3. **Dynamic URL Parameters**の選択を解除します。
+8. **Method**で、**POST**を選択します。
 
-   4. **URL**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`。
+9. **Dynamic URL Parameters**の選択を解除します。
 
-   5. 以下のヘッダーを追加します:
-      1. Authorization に、ステップ 4 の API キーを**Bearer YOUR-API-KEY**形式で入力します。
-      2. **Content-Type**に**application/json**を入力します。
+10. **URL**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`。
 
-   6. **Body**に、Swagger から（ステップ 5）の JSON ペイロードを貼り付けます。
+11. 以下のヘッダーを追加します:
 
-      ![Copado の URL Callout ステップで Body を設定する画面](/images/ci-integrations/copado-integration/b00424d-copado_steps.png)
+12. Authorization に、ステップ 4 の API キーを**Bearer YOUR-API-KEY**形式で入力します。
 
-   7. JSON ペイロードで、`"grid" : "string"`を、Testim/TTA for Salesforce の右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
+13. **Content-Type**に**application/json**を入力します。
 
-      ![Testim/TTA for Salesforce の Grids セクションのスクリーンショット](/images/ci-integrations/copado-integration/4049e1e-copado_grid.png)
+14. **Body**に、Swagger から（ステップ 5）の JSON ペイロードを貼り付けます。
 
-   8. テストするには、ステップを保存して**Deploy > Deploy All**をクリックします。
+![Copado の URL Callout ステップで Body を設定する画面](/images/ci-integrations/copado-integration/b00424d-copado_steps.png)
 
-      テストが完了したら、Steps セクションで View Results をクリックします。このデプロイは、Continuous Integration（CI）でも実行できます。
+15. JSON ペイロードで、`"grid" : "string"`を、Testim/TTA for Salesforce の右上のプロフィールの**Grids**セクションからグリッド名に置き換えます。
+
+![Testim/TTA for Salesforce の Grids セクションのスクリーンショット](/images/ci-integrations/copado-integration/4049e1e-copado_grid.png)
+
+16. テストするには、ステップを保存して**Deploy > Deploy All**をクリックします。
+
+テストが完了したら、Steps セクションで View Results をクリックします。このデプロイは、Continuous Integration（CI）でも実行できます。
 
 ## テストが完了するまで、またはテスト結果に基づいて Copado デプロイを一時停止する
 
 テストまたはテストプランが完了、合格、または失敗するまで、Copado デプロイを一時停止できます。
-
 **Copado を一時停止するには:**
 
 1. Copado で、**Details > Type**に移動し、**Perform callout and pause step**を選択して**Resume URL**をコピーします。

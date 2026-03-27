@@ -35,9 +35,7 @@ Virtual Mobile Grid は x86_64 Android build のみをサポートします。
 
 ## 無料の Virtual Mobile Grid trial を開始する
 
-Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。trial 期間は 14 日間です。trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
-
-**無料の Virtual Mobile Grid trial を開始するには:**
+Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。trial 期間は 14 日間です。trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。→ **無料の Virtual Mobile Grid trial を開始するには:**
 
 1. **Device Management** 画面へ移動し、**Virtual Mobile Grid** tab を開いて **Start A Trial** をクリックします。
 
@@ -79,7 +77,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Remote Run through the Editor](/docs/running-tests-overview#running-a-remote-mobile-test)
+[Remote Run through the Editor](/docs/running-tests-overview#リモート-モバイル-テストを実行する)
 
 **Run on a grid** option で **Virtual Mobile Grid** と該当する configuration を選択します。
 
@@ -102,9 +100,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 #### CLI から変更する
 
-CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、Mobile Apps Library にある別の app Id で上書きできます。
-
-**既定の app ID を上書きするには:**
+CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、Mobile Apps Library にある別の app Id で上書きできます。→ **既定の app ID を上書きするには:**
 
 1. **Settings > CLI** へ移動します。
 2. **Grid** drop-down menu で **Virtual Mobile Grid** を選択します。

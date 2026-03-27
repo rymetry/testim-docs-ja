@@ -30,7 +30,7 @@ Testim のテストデータファイルは、複数テストで使うデータ�
 
 ![再利用可能なテストデータのスクリーンショット](/images/special-steps/reusable-test-data/5ad1c9f-Test_Data_Files.jpg)
 
-## Testim での使い方
+### Testim での使い方
 
 テストデータファイルの利用方法は 3 つあります。
 
@@ -66,8 +66,7 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 
 ## 削除したテストデータの復元
 
-削除から 30 日以内であれば復元できます。
-
+削除から 30 日以内であれば復元できます。\
 **手順:**
 
 1. **Resources > Test Data** を開きます。
@@ -79,7 +78,6 @@ CSV/JSON/Excel 形式のローカルファイルをアップロードできま�
 ## スケジューラで既定のテストデータを上書き
 
 [scheduler](https://dash.readme.com/project/testim/v2.0/docs/scheduler) 作成/編集時に **Override test data** を有効化して、既定のデータを置換/追加できます。
-
 **上書き手順:**
 
 1. Testim 画面で **Runs > Scheduled Runs** を開きます。

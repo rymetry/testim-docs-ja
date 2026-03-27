@@ -98,7 +98,7 @@ exports.config = {
 - Before Suite: スイートの前に実行
 - After Suite: スイートの後に実行
 
-フックの詳細は [Hooks](/docs/hooks#creating-hooks-via-the-test-configuration) を参照してください。
+フックの詳細は [Hooks](/docs/hooks#テスト構成から作成) を参照してください。
 
 以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
 
@@ -154,8 +154,10 @@ exports.config = {
 
 ## グローバルエクスポートパラメーター
 
-afterSuite 関数内では、その実行でエクスポートされたグローバルパラメーターを参照できます。\
-構文: `suite.exportsGlobal.<param_name>`\
+afterSuite 関数内では、その実行でエクスポートされたグローバルパラメーターを参照できます。
+
+**構文**: `suite.exportsGlobal.<param_name>`
+
 グローバルエクスポートの詳細は[パラメーターのエクスポート](/docs/exports-parameters)を参照してください。
 
 ```javascript

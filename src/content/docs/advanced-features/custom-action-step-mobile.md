@@ -68,15 +68,24 @@ keywords:
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/795f7e2-ca3.png)
 
 7. **Properties** の **Description** を必要に応じて編集します（既定: Run shared action / Run action）。
+
 8. 必要なパラメーターを定義します。
-   1. **+ PARAMS** をクリック
-   2. **JS** を選択して JavaScript パラメーターを追加
-9. 任意のプロパティを設定します。
-   1. **When this step fails** – 失敗時の動作
-   2. **When to run step** – 実行条件（Conditions 参照）
-   3. **Override timeout** – タイムアウトの上書き（ミリ秒）
-10. **function** テキストボックスに JS コードを記述します。定義したパラメーターを参照できます。
-11. 戻る矢印でエディターに戻ります。
+
+9. **+ PARAMS** をクリックします。
+
+10. **JS** を選択して JavaScript パラメーターを追加します。
+
+11. 任意のプロパティを設定します。
+
+12. **When this step fails** – 失敗時の動作を指定します。
+
+13. **When to run step** – 実行条件を指定します（Conditions 参照）。
+
+14. **Override timeout** – タイムアウトの上書き（ミリ秒）を指定します。
+
+15. **function** テキストボックスに JS コードを記述します。定義したパラメーターを参照できます。
+
+16. 戻る矢印でエディターに戻ります。
 
     ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/af049a0-Run_Shared_action.jpg)
 

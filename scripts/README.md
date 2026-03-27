@@ -82,7 +82,7 @@ npm run check:parity -- --fail-on=any                     # allowlist 除外後�
 | `section-count-mismatch` | H2-H4 セクション数の不一致 |
 | `step-count-mismatch` | 番号付きステップ数の不一致 |
 | `bullet-count-mismatch` | 箇条書き数の不一致 |
-| `paragraph-count-mismatch` | 段落数の不一致（diff >= 2） |
+| `paragraph-count-mismatch` | 段落数の不一致（diff >= 1） |
 | `table-shape-mismatch` | テーブル行数・列数の不一致 |
 | `table-cell-english-residual` | テーブルセルの英語残留 |
 | `table-cell-empty-mismatch` | テーブルセルの空/非空不一致 |
@@ -337,6 +337,7 @@ npm run docs:report-categories
 | `lib/markdown-utils.mjs` | Markdown 除去、description 自動生成 |
 | `lib/madcap_toc.mjs` | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成 |
 | `lib/snapshot_normalize.mjs` | サイドバー HTML 正規化（レガシー、現在未使用） |
+| `lib/turndown.mjs` | TurndownService + MadCap Flare カスタムルール（callout, ordered-list, table） |
 | `lib/source_parity.mjs` | parity issue 生成、severity 付与、要約集計 |
 | `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成 |
 | `lib/cli.mjs` | 直実行判定などの CLI 補助 |
@@ -363,6 +364,9 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/lib_project.test.mjs`            | lib/project.mjs                   |
 | `__tests__/lib_markdown_utils.test.mjs`     | lib/markdown-utils.mjs            |
 | `__tests__/lib_sidebar_label.test.mjs`      | lib/sidebar.mjs                   |
+| `__tests__/turndown.test.mjs`               | lib/turndown.mjs                  |
+| `__tests__/snapshot_update.test.mjs`        | snapshot_update.mjs               |
+| `__tests__/madcap_toc.test.mjs`             | lib/madcap_toc.mjs                |
 
 ---
 
@@ -377,13 +381,15 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `lint:docs` | lint-docs.mjs | 構文・frontmatter 検証 |
 | `check:snapshots` | snapshot_update.mjs && snapshot_diff.mjs | スナップショット取得→比較 |
 | `check:snapshots:fetch` | snapshot_update.mjs | スナップショット取得 |
+| `check:snapshots:fetch:dry-run` | snapshot_update.mjs --dry-run | スナップショット取得（ドライラン） |
 | `check:snapshots:diff` | snapshot_diff.mjs | スナップショット差分比較 |
 | `check:parity` | check_source_parity.mjs | 翻訳品質チェック（ローカル） |
 | `check:summary` | generate_detection_reports.mjs | summary / audit manifest 生成 |
 | `docs:sync-sidebar` | update_sidebar_urls_from_live.mjs | サイドバー URL 同期 |
 | `docs:sync-frontmatter` | sync_frontmatter_from_sidebar.mjs | frontmatter 同期（ドライラン） |
 | `docs:sync-frontmatter:apply` | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行） |
-| `docs:pipeline` | pipeline.mjs | パイプライン（diff） |
+| `docs:pipeline` | pipeline.mjs | パイプライン（デフォルト） |
+| `docs:pipeline:diff` | pipeline.mjs --mode=diff | パイプライン（diff） |
 | `docs:pipeline:full` | pipeline.mjs --mode=full | パイプライン（full） |
 | `docs:fetch` | fetch_translate_images.mjs | 英語原文・画像取得 |
 | `docs:normalize` | normalize_docs.mjs | ドキュメント正規化 |

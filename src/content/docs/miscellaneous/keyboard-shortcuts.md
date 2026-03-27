@@ -303,7 +303,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#要素の表示を待つweb">
+    <a href="/docs/wait-for#要素の表示を待つ（web）">
      要素の表示を待機
     </a>
    </td>
@@ -317,9 +317,14 @@ Testim には、テスト作成を高速化するために使用できる一連�
     エディター
    </td>
   </tr>
+ </tbody>
+</table>
+
+<table class="md-table md-table-4cols">
+ <tbody>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#要素テキストの表示を待つweb">
+    <a href="/docs/wait-for#要素テキストの表示を待つ（web）">
      要素テキストを待機
     </a>
    </td>

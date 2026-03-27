@@ -82,7 +82,9 @@ keywords:
 
 ![グループの追加](/images/parameters/parameters-for-groups/c3bace7-addinglogingroup.PNG)
 
-2. グループの**プロパティを表示**。パラメーターは存在しますが値は未設定です。
+2. グループの **Show Properties** アイコン（歯車）をクリックします。
+
+パラメーターは存在しますが、値は未設定です。
 
 ![未設定のパラメーター](/images/parameters/parameters-for-groups/5ccad01-notassigned.png)
 

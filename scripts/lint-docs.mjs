@@ -57,7 +57,7 @@ export function toKebab(text) {
     .replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1')      // bold / italic
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')       // [text](url) → text
     .toLowerCase()
-    .replace(/[^\w\s-\u3000-\u9fff\uff00-\uffef]/g, '') // keep word chars, CJK, spaces, hyphens
+    .replace(/[^\w\s\-\u3000-\u9fff\uff00-\uffef]/g, '') // keep word chars, CJK, spaces, hyphens
     .replace(/[\s\u3000]+/g, '-')                        // spaces → hyphens
     .replace(/-+/g, '-')                                 // collapse multiple hyphens
     .replace(/^-|-$/g, '');                              // trim leading/trailing hyphens

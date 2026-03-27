@@ -41,7 +41,6 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 ### Set Cookie ステップで設定
 
 **Set Cookie** ステップは、テストの UI から直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメーターを利用します。
-
 **属性を直接入力して Cookie を設定するには:**
 
 1. 追加したい位置の （矢印）にカーソルを合わせます。
@@ -92,7 +91,6 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/55825e1-Testim_206a_r.png)
 
 テストを実行すると、指定した属性で Cookie が設定されます。
-
 **パラメーターから Cookie を設定するには:**
 
 1. Cookie を追加したい位置の （矢印）にカーソルを合わせます。
@@ -238,7 +236,9 @@ document.cookie = 'username=tomsmith';
 9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
 - **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
-- **Description** – ステップの説明（既定値 = _Run action_）。
+
+**Description** – ステップの説明（既定値 = _Run action_）。
+
 - **Share step** – ステップを共有ステップとして保存するかどうか。
 - **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
 - **When this step fails** – ステップ失敗時の挙動。
@@ -279,7 +279,6 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 ### Get Cookie ステップを使って Cookie を取得する {#getting-cookies-using-the-get-cookie-step}
 
 **Get Cookie** ステップを使うと、テスト中の UI から直接 Cookie を読み取り、その値を変数に保存できます。
-
 **Get Cookie ステップで Cookie を取得するには:**
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif)
@@ -319,9 +318,12 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 6. 次のプロパティを設定します。
 
-- **Description** – ステップの説明（既定値 = _Get Cookie_）。
+**Description** – ステップの説明（既定値 = _Get Cookie_）。
+
 - **Cookie name** – 取得したい Cookie 名。文字列はシングル／ダブルクォートで囲む必要があります。
-- **Variable name** – Cookie 情報を保存する変数名（既定値 = _myCookie_）。
+
+**Variable name** – Cookie 情報を保存する変数名（既定値 = _myCookie_）。
+
 - **Variable scope** – 変数をどの範囲で参照できるか:
   - **Local**: 同一スコープ内のステップ間で共有
   - **Test**: 同一テスト内のステップ／グループ間で共有
@@ -403,7 +405,9 @@ for (var i = 0; i < cookieArray.length; i++) {
 9. 必要に応じて **Custom Action Properties** パネルのプロパティを設定します。
 
 - **Step name** – ステップ名（既定値は手順 5 で入力した名前）。
-- **Description** – ステップの説明（既定値 = _Run action_）。
+
+**Description** – ステップの説明（既定値 = _Run action_）。
+
 - **Share step** – ステップを共有ステップとして保存するかどうか。
 - **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
 - **When this step fails** – ステップ失敗時の挙動。

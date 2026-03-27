@@ -60,11 +60,11 @@ src/content/docs/
 
 **重要**: ファイル名は元のURL slugと完全に一致させること。
 
-| URL                                                                                  | カテゴリフォルダ      | ファイル名                |
-| ------------------------------------------------------------------------------------ | --------------------- | ------------------------- |
-| `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm`       | `overview/`           | `testim-overview.md`      |
-| `https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test.htm` | `recording-tests/`    | `how-to-record-a-test.md` |
-| `https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-overview.htm` | `salesforce-testing/` | `salesforce-overview.md`  |
+| URL | カテゴリフォルダ | ファイル名 |
+| --- | --- | --- |
+| `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` | `overview/` | `testim-overview.md` |
+| `https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test.htm` | `recording-tests/` | `how-to-record-a-test.md` |
+| `https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-overview.htm` | `salesforce-testing/` | `salesforce-overview.md` |
 
 この命名規則により、元のページとの対応関係が明確になり、更新時の追跡が容易になります。
 

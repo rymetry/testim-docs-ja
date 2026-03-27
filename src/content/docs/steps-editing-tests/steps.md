@@ -50,7 +50,7 @@ keywords:
     Add CLI validation
    </td>
    <td>
-    <a href="/docs/validate-download#cli-ステップの追加">CLI ステップを追加</a>
+    <a href="/docs/validate-download#前提条件">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -138,7 +138,7 @@ keywords:
     Validate element visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#要素のビジュアル検証ステップの追加">要素のビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#ビジュアル検証パラメーター">要素のビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -146,7 +146,7 @@ keywords:
     Validate viewport visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#ビューポートのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#ビジュアル検証パラメーター">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -154,7 +154,7 @@ keywords:
     Validate full-page visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#フルページのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#ビジュアル検証パラメーター">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -203,7 +203,7 @@ keywords:
     Add custom wait for
    </td>
    <td>
-    <a href="/docs/wait-for#カスタム待機web">カスタム待機</a>
+    <a href="/docs/wait-for#カスタム待機（web）">カスタム待機</a>
    </td>
   </tr>
   <tr>
@@ -211,7 +211,7 @@ keywords:
     Add CLI wait for
    </td>
    <td>
-    <a href="/docs/validate-download#cli-ステップの追加">CLI ステップを追加</a>
+    <a href="/docs/validate-download#前提条件">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -219,7 +219,7 @@ keywords:
     Wait for element visible
    </td>
    <td>
-    <a href="/docs/wait-for#要素の表示を待つweb">要素が表示されるまで待機</a>
+    <a href="/docs/wait-for#要素の表示を待つ（web）">要素が表示されるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -227,7 +227,7 @@ keywords:
     Wait for element not visible
    </td>
    <td>
-    <a href="/docs/wait-for#要素の非表示を待つweb">要素が非表示になるまで待機</a>
+    <a href="/docs/wait-for#要素の非表示を待つ（web）">要素が非表示になるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -235,7 +235,7 @@ keywords:
     Wait for element text
    </td>
    <td>
-    <a href="/docs/wait-for#要素テキストの表示を待つweb">要素のテキストを待機</a>
+    <a href="/docs/wait-for#要素テキストの表示を待つ（web）">要素のテキストを待機</a>
    </td>
   </tr>
   <tr>
@@ -243,7 +243,7 @@ keywords:
     Wait for download
    </td>
    <td>
-    <a href="/docs/wait-for#ダウンロード待機web">ダウンロードを待機</a>
+    <a href="/docs/wait-for#ダウンロード待機（web）">ダウンロードを待機</a>
    </td>
   </tr>
   <tr>
@@ -251,7 +251,7 @@ keywords:
     Sleep
    </td>
    <td>
-    <a href="/docs/wait-for#スリープweb">スリープ</a>
+    <a href="/docs/wait-for#スリープ（web）">スリープ</a>
    </td>
   </tr>
   <tr>
@@ -259,7 +259,7 @@ keywords:
     Wait for element visualization
    </td>
    <td>
-    <a href="/docs/pixel-validation-and-pixel-wait-for#要素のビジュアライゼーション待機ステップの追加">要素のビジュアライゼーションを待機するステップを追加</a>
+    <a href="/docs/pixel-validation-and-pixel-wait-for#ビジュアル検証パラメーター">要素のビジュアライゼーションを待機するステップを追加</a>
    </td>
   </tr>
  </tbody>
@@ -340,7 +340,7 @@ keywords:
     Add CLI action
    </td>
    <td>
-    <a href="/docs/validate-download#cli-ステップの追加">CLI ステップを追加</a>
+    <a href="/docs/validate-download#前提条件">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -379,8 +379,6 @@ keywords:
 </table>
 
 ## 自動記録ステップ
-
-テスト対象アプリケーション（AUT）での操作中に自動的に記録されるステップです。
 
 <table class="md-table md-table-2cols">
  <thead>
@@ -470,6 +468,11 @@ keywords:
     を参照）
    </td>
   </tr>
+ </tbody>
+</table>
+
+<table class="md-table md-table-2cols">
+ <tbody>
   <tr>
    <td>
     Drag &amp; Drop

@@ -36,7 +36,6 @@ keywords:
 ## プロパティの設定
 
 プロパティパネルに表示されるプロパティのリストは、選択されたステップのタイプによって異なります。ほとんどのタイプのステップに関連するプロパティがいくつかあり、特定の専門的なタイプのステップにのみ関連するプロパティもあります。
-
 以下の表は、さまざまなプロパティの設定方法と、関連機能のより詳細なドキュメントへのリンクを示しています。
 
 <table class="md-table md-table-4cols">
@@ -232,7 +231,7 @@ keywords:
     値にプレフィックス文字列を追加します。例えば、「User」を追加すると、すべての値が User で始まります：User47、User65、User32。
    </td>
    <td>
-    <a href="/docs/generating-a-random-value#generate-random-value-step">Generate Random Value Step</a>
+    <a href="/docs/generating-a-random-value#自分で試してみましょう">Generate Random Value Step</a>
    </td>
   </tr>
   <tr>
@@ -248,7 +247,7 @@ keywords:
     値にサフィックス文字列を追加します。
    </td>
    <td>
-    <a href="/docs/generating-a-random-value#generate-random-value-step">Generate Random Value Step</a>
+    <a href="/docs/generating-a-random-value#自分で試してみましょう">Generate Random Value Step</a>
    </td>
   </tr>
   <tr>
@@ -264,7 +263,7 @@ keywords:
     失敗した場合に API リクエストを再試行します。
    </td>
    <td>
-    <a href="/docs/api-testing#api-validation">API Validation</a>
+    <a href="/docs/api-testing#実行後の結果の確認">API Validation</a>
    </td>
   </tr>
   <tr>
@@ -328,7 +327,7 @@ keywords:
     このプロパティは、チェックボックスまたはラジオボタンのチェック済みまたは未チェック状態を検証する場合に適用されます。デフォルト設定は Checked です。設定を変更するには、Unchecked ラジオボタンをクリックします。注：チェックボックスとラジオボタンの検証は、ネイティブのチェックボックスまたはラジオ入力要素でのみ使用できます。基礎となる入力を使用しないカスタムチェックボックスの実装はサポートされていません。
    </td>
    <td>
-    <a href="/docs/checkbox-and-radio-button-validation#how-to-add">How to Add Checkbox and Radio Button Validation</a>
+    <a href="/docs/checkbox-and-radio-button-validation#validate-checkboxradio-button-ステップの追加">How to Add Checkbox and Radio Button Validation</a>
    </td>
   </tr>
   <tr>
@@ -376,7 +375,7 @@ keywords:
     生成される値の長さを指定します。
    </td>
    <td>
-    <a href="/docs/generating-a-random-value#generate-random-value-step">Generate Random Value Step</a>
+    <a href="/docs/generating-a-random-value#自分で試してみましょう">Generate Random Value Step</a>
    </td>
   </tr>
   <tr>
@@ -501,7 +500,7 @@ keywords:
     このプロパティは、次のステップに進む前にテストが待機する時間を設定します。デフォルトは 1 秒（1,000 ms）です。この値を変更するには、フィールド内をクリックして、新しいスリープ値（ms）を編集します。
    </td>
    <td>
-    <a href="/docs/wait-for#sleep">Wait for</a>
+    <a href="/docs/wait-for#要素の表示を待つ（モバイル）">Wait for</a>
    </td>
   </tr>
   <tr>
@@ -517,7 +516,7 @@ keywords:
     生成される文字列のタイプ。文字のみ、数字のみ、またはその両方の混合が含まれます。
    </td>
    <td>
-    <a href="/docs/generating-a-random-value#generate-random-value-step">Generating a Random Value Step</a>
+    <a href="/docs/generating-a-random-value#自分で試してみましょう">Generating a Random Value Step</a>
    </td>
   </tr>
   <tr>
@@ -549,7 +548,7 @@ keywords:
     テスト中に別のページに移動するための URL を指定します。
    </td>
    <td>
-    <a href="/docs/navigation#how-to-add-parameter">How to Add a Parameter</a>
+    <a href="/docs/navigation">How to Add a Parameter</a>
    </td>
   </tr>
   <tr>
@@ -609,7 +608,7 @@ keywords:
 * PARAMS
    </td>
    <td>
-    Add custom action, Add API action, Add custom validation, Validate API, Add network validation, Add custom wait for
+    Add custom action, Add API action, Add custom validation, Validate API, Add network validation, and Add custom wait for
    </td>
    <td>
     パラメーターは、事前に情報がわからなくても、さまざまなシナリオをテストするためにステップで使用できます。PARAMS の横にある+をクリックすると、Testim でステップで使用する HTML パラメーターと JS パラメーターを定義できます。

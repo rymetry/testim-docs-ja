@@ -16,29 +16,7 @@ keywords:
   - mobile configuration
 ---
 
-Testim Mobile は Tricentis Device Cloud (TDC) と組み合わせることで、サポート付きで Grid 上の実機 iOS / Android device を利用できます。さらに、machine learning を活用した analytics により、mobile app の usability や performance に関する insight も得られます。
-
-TDC では、複数ユーザーで共有する shared device と、自分専用の dedicated private device の両方が提供されます。Tricentis Device Cloud は特別な integration を必要とせず、Company Owner または Project Owner として申し込める無料 trial も含まれています。trial を開始すると、その shared resource はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用できるようになります。trial 期間中は、Android と iOS の shared trial device を使用できます。
-
-## 無料の Tricentis Device Cloud trial を開始する
-
-Company Owner または Project Owner は、Tricentis Device Cloud の無料 trial を開始できます。無料 trial をスキップして有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。
-
-**無料の Tricentis Device Cloud trial を開始するには:**
-
-1. **Device Management > Real Devices Cloud** tab に移動します。
-2. **Start A Trial** をクリックします。
-
-![Real Devices Cloud tab で Start A Trial をクリックする画面](/images/grid-management/tricentis-device-cloud/c299505-image_4.png)
-
-数秒後に trial が **activated** され、次の通知が表示されます。
-
-![Tricentis Device Cloud trial が有効化された通知](/images/grid-management/tricentis-device-cloud/0012b7c-trialactive.png)
-
-3. メイン navigation menu の **Device Management** link へ移動します。\
-   **Tricentis Device Cloud Shared** 画面で、trial 期間中に利用できる device を確認できます。
-
-![Tricentis Device Cloud Shared 画面に trial device 一覧が表示されている様子](/images/grid-management/tricentis-device-cloud/b81b106-image_3.png)
+Testim Mobile は Tricentis Device Cloud (TDC) と組み合わせることで、サポート付きで Grid 上の実機 iOS / Android device を利用できます。さらに、machine learning を活用した analytics により、mobile app の usability や performance に関する insight も得られます。TDC では、複数ユーザーで共有する shared device と、自分専用の dedicated private device の両方が提供されます。Tricentis Device Cloud は特別な integration を必要としません。
 
 ## Tricentis Device Cloud でテストを実行する
 

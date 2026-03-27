@@ -34,14 +34,14 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 
 高度な JS エディターを利用できるステップ:
 
-- [Custom action](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
+- [Custom action](/docs/custom-code#add-custom-validation-add-custom-action-ステップの追加)
 - [CLI action](/docs/add-cli-validations-and-actions)
-- [Custom validation](/docs/custom-code#adding-an-add-custom-validation-step-or-an-add-custom-action-step)
+- [Custom validation](/docs/custom-code#add-custom-validation-add-custom-action-ステップの追加)
 - [CLI validation](/docs/add-cli-validations-and-actions)
 - [Download validation](/docs/validate-download)
 - [Email validation](/docs/email-validation)
 - [Network validation](/docs/add-network-validation)
-- [Custom wait for](/docs/wait-for#custom-wait-for)
+- [Custom wait for](/docs/wait-for#要素の表示を待つ（モバイル）)
 - CLI wait for
 - Download wait for
 

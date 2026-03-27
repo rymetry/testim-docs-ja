@@ -30,9 +30,7 @@ TTM for Jira は[Atlassian Marketplace](https://marketplace.atlassian.com/apps/1
 
 ## TTM for Jira 統合が必要な理由
 
-TTM for Jira 統合により、Testim のテストを TTM for Jira のテストケースにリンクできます。Testim でテストを実行すると、テスト結果が自動的に TTM for Jira の実行結果に表示され、Testim と TTM for Jira で実行されたテストを一元的に表示できます。
-
-Testim テストを TTM for Jira にマッピングする方法は 2 つあります：
+TTM for Jira 統合により、Testim のテストを TTM for Jira のテストケースにリンクできます。Testim でテストを実行すると、テスト結果が自動的に TTM for Jira の実行結果に表示され、Testim と TTM for Jira で実行されたテストを一元的に表示できます。Testim テストを TTM for Jira にマッピングする方法は 2 つあります：
 
 - [Testim テストを TTM for Jira に手動でマッピング](#testimのテストをttm-for-jiraに手動でマッピングする)
 - [Testim テストグループ/フォルダーを TTM for Jira に一括作成およびマッピング](#ttm-for-jiraへのテストケースの一括作成とマッピング)
@@ -66,9 +64,7 @@ TTM for Jira と Testim の統合を使用する前に、Testim を TTM for Jira
 
 ## Testim のテストを TTM for Jira に手動でマッピングする
 
-Testim と TTM for Jira の統合を設定した後、Testim の特定のテストを TTM for Jira のテストにマッピングする準備が整います。
-
-**Testim のテストを TTM for Jira のテストにマッピングするには:**
+Testim と TTM for Jira の統合を設定した後、Testim の特定のテストを TTM for Jira のテストにマッピングする準備が整います。**Testim のテストを TTM for Jira のテストにマッピングするには:**
 
 1. Testim で、マッピングしたいテストを開きます。
 2. Testim のテスト内で、**Setup** ステップ（最初のステップ）の **Properties（プロパティ）** アイコンをクリックします。
@@ -108,36 +104,36 @@ Testim と TTM for Jira の統合を設定した後、Testim の特定のテス�
 ![TTM for Jira プロジェクト選択とフォルダーパスオプション設定画面](/images/test-management-integrations/ttm-for-jira-integration/5ca389d-ttm4jira.png)
 
 4. **Folder Path in TTM for Jira** セクションで、Testim が TTM for Jira で作成するフォルダーパスオプションを選択します。
-   1. **Create the same Testim folder path（同じ Testim フォルダーパスを作成）**: Jira のテストケースは、Testim のテストケースと同じ名前と階層を使用します。
-   2. **Create all test cases in My test cases folder（すべてのテストケースを My test cases フォルダーに作成）**: Jira のすべてのテストケースが単一の「My Test Cases」フォルダーに追加されます。
+
+5. **Create the same Testim folder path（同じ Testim フォルダーパスを作成）**: Jira のテストケースは、Testim のテストケースと同じ名前と階層を使用します。
+
+6. **Create all test cases in My test cases folder（すべてのテストケースを My test cases フォルダーに作成）**: Jira のすべてのテストケースが単一の「My Test Cases」フォルダーに追加されます。
 
 ![TTM for Jira への一括作成とマッピング設定ダイアログ](/images/test-management-integrations/ttm-for-jira-integration/330c79b-image_2.png)
 
-5. **Create & Map** ボタンをクリックします。Testim はプログレスバーを表示します。
+7. **Create & Map** ボタンをクリックします。Testim はプログレスバーを表示します。
 
 ![TTM for Jira 一括マッピング処理の進行状況バー](/images/test-management-integrations/ttm-for-jira-integration/3750ea9-ttm4jira.png)
 
-6. Testim は選択された Testim テストを反復処理し、Testim テストケース名と選択したフォルダー構造を使用して TTM for Jira でテストケースを作成します。
+8. Testim は選択された Testim テストを反復処理し、Testim テストケース名と選択したフォルダー構造を使用して TTM for Jira でテストケースを作成します。
 
 ![TTM for Jira に作成されたテストケースの一覧](/images/test-management-integrations/ttm-for-jira-integration/8997b82-ttm4jira.png)
 
-7. 操作の終了時に、Testim はマッピング結果を表示します。すべてのテストが正常にマッピングされた場合、100% 完了メッセージが表示されます。
+9. 操作の終了時に、Testim はマッピング結果を表示します。すべてのテストが正常にマッピングされた場合、100% 完了メッセージが表示されます。
 
 ![一括マッピングが 100% 完了したことを示すメッセージ](/images/test-management-integrations/ttm-for-jira-integration/a63029e-ttm4jira.png)
 
-8. マッピングに失敗したテストがある場合、正常にマッピングされたテストの総数と失敗したマッピングの名前を含むメッセージが表示されます。❗アイコンをクリックすると、失敗に関する追加の詳細を表示できます。
+10. マッピングに失敗したテストがある場合、正常にマッピングされたテストの総数と失敗したマッピングの名前を含むメッセージが表示されます。❗アイコンをクリックすると、失敗に関する追加の詳細を表示できます。
 
 ![マッピング失敗テストとエラー詳細を表示する画面](/images/test-management-integrations/ttm-for-jira-integration/b12eefd-ttm4jira.png)
 
-9. テストまたは TTM for Jira 設定を調整した後、**Retry all** リンクをクリックすると、Testim は**失敗したテストのみ**を再度 TTM for Jira にマッピングしようとします。
+11. テストまたは TTM for Jira 設定を調整した後、**Retry all** リンクをクリックすると、Testim は**失敗したテストのみ**を再度 TTM for Jira にマッピングしようとします。
 
 ![Retry all リンクで失敗したテストのみを再マッピングする画面](/images/test-management-integrations/ttm-for-jira-integration/151d26f-ttm4jira.png)
 
 ### テストが TTM for Jira にマッピング済みかどうかを確認する方法
 
-Testim テストプロパティで、テストが既に TTM for Jira にマッピングされているかどうかを識別できます。
-
-**テストが TTM for Jira にマッピング済みかどうかを確認するには:**
+Testim テストプロパティで、テストが既に TTM for Jira にマッピングされているかどうかを識別できます。**テストが TTM for Jira にマッピング済みかどうかを確認するには:**
 
 1. テストに移動し、**Test Properties（テストプロパティ）** パネルを開きます。
 2. **Test in TTM for Jira** セクションに移動します。このセクションに選択された Jira プロジェクトとテスト名がある場合、このテストは既に TTM for Jira にマッピングされています。

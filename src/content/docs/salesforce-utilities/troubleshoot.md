@@ -98,7 +98,7 @@ Salesforce にログインしてメールで送信されたコードの入力を
 
 ## Create ステップを使用して前のステップで作成したレコードが、Find ステップを使用して Salesforce で見つからない
 
-**Create**ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/conditions#configuring-a-custom-condition)を含むステップを追加し、その後次のステップに進むことです。
+**Create**ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/conditions#custom-条件の設定)を含むステップを追加し、その後次のステップに進むことです。
 
 カスタム条件を含む追加されるステップは、こちらのデモプロジェクトで共有ステップとして見つけることができます - [https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs](https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs)
 
@@ -164,7 +164,7 @@ Salesforce は、Sign-in with Salesforce（OAuth）ではなく、ユーザー�
 - **Salesforce モード** - このモードでは、レコーダーにクラウドアイコンで示され、レコーダーは Salesforce ステップを実行します。これにより、単一のステップ内で複数のアクションを実行できます。このモードを使用して作成されたステップには、クラウドアイコンが付いています。
 - **Web モード** - これはレコーダーの通常モードで、レコーダーに打ち消し線付きクラウドアイコンで示されます。このモードでは、すべてのインタラクション（クリック、スクロール、テキスト追加など）が個別のステップで表されます。
 
-**可能な解決策** - 記録されたステップがエディターに表示されない場合は、クラウドアイコンをクリックして Salesforce モードをオフにする必要があります。詳細については、[ステップの記録](/docs/create-a-salesforce-test#recording-steps)を参照してください。
+**可能な解決策** - 記録されたステップがエディターに表示されない場合は、クラウドアイコンをクリックして Salesforce モードをオフにする必要があります。詳細については、[ステップの記録](/docs/create-a-salesforce-test#ステップの記録)を参照してください。
 
 ## Salesforce ステップにフィールドが存在しない
 

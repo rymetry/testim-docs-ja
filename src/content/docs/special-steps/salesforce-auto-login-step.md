@@ -30,9 +30,9 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 ログインステップが共有ステップの場合、「SF environment」の値を編集すると、使用中のすべてのインスタンスに反映されます。共有でないステップを同一テスト内でコピーした場合は、そのコピーに対する編集は他のコピーへ影響しません。
 :::
 
-## MFA 認証
+### MFA 認証
 
-2022 年 2 月 1 日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時に MFA を行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/salesforce-auto-login-step#setting-up-mfa) を参照してください。
+2022 年 2 月 1 日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時に MFA を行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/salesforce-auto-login-step#mfa-のセットアップ) を参照してください。
 
 ## Salesforce 自動ログインステップを追加する
 
@@ -67,7 +67,10 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/9bcc036-2d49d61-Testim_567_r.png)
 
 5. **Name** にわかりやすいステップ名を入力します。
-6. 他テストでも再利用したい場合は **Shared step** をオンのまま、保存先フォルダーを選択します（詳細は[グループ](/docs/groups)）。
+6. 他テストでも再利用したい場合は **Shared step** をオンのまま、保存先フォルダーを選択します。不要な場合はチェックボックスを解除します。
+
+共有ステップの詳細については、[グループ](/docs/groups)を参照してください。
+
 7. **Create Step** をクリックします。
 8. 追加されたステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。ステップが **Editor** に追加され、右側に **Properties** パネルが表示されます。
 
@@ -75,7 +78,7 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 
 9. **Login URL** に環境のログイン URL を入力します。
 10. **Username** と **Password** に認証情報を入力します。
-11. MFA を使う場合は [Setting up MFA](/docs/salesforce-auto-login-step#setting-up-mfa) に従います。\
+11. MFA を使う場合は [Setting up MFA](/docs/salesforce-auto-login-step#mfa-のセットアップ) に従います。\
     これで設定は完了です。
 
 ### パラメーターの使用
@@ -89,8 +92,8 @@ MFA のシークレットキーはパラメーターとして扱えません。
 **接続情報にパラメーターを使う:**
 
 1. 次のいずれかの方法でパラメーターを定義します。
-   - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#section-configuring-a-data-driven-test-from-the-visual-editor) を参照してください。
-   - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#section-configuring-data-driven-tests-using-the-config-file) を参照してください。
+   - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+   - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
    - **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
      その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
 2. _Salesforce auto-login_ ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメーターを設定します。

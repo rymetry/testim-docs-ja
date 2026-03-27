@@ -80,18 +80,22 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 2. アクションメニューの **Record** ボタンをクリックして、テストの記録を開始します。
 3. Select a device ダイアログで、**Virtual Mobile Grid** が選択されていることを確認します。
 4. 以下のいずれかを実行します:
-   1. [Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を使用するには、**Enhanced mode** タブを選択します。
 
-      ![Enhanced mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/ea12c91-enhancedmodetab.png)
-   2. Appium mode を使用するには、**Appium mode** タブを選択します。
+5. [Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile) を使用するには、**Enhanced mode** タブを選択します。
 
-      ![Appium mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/92b7695-appiummodetab.png)
+![Enhanced mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/ea12c91-enhancedmodetab.png)
 
-5. ドロップダウンメニューから目的の **Device** と **OS Version** を選択します。
+6. Appium mode を使用するには、**Appium mode** タブを選択します。
 
-6. 以下のいずれかの方法でテストするアプリケーションを選択します:
-   1. **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
-   2. **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
+![Appium mode タブ](/images/recording-tests/recording-a-vmg-mobile-test/92b7695-appiummodetab.png)
+
+7. ドロップダウンメニューから目的の **Device** と **OS Version** を選択します。
+
+8. 以下のいずれかの方法でテストするアプリケーションを選択します:
+
+9. **ライブラリからアプリを使用する** - **From Library** をクリックし、目的のアプリケーションに移動して選択します。**Done** をクリックして完了します。
+
+10. **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
 
 :::info
 **アプリコンパイルの互換性（iOS のみ）**
@@ -107,8 +111,9 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 各テストは単一のアプリケーションとのみ対話できます。
 :::
 
-7. **Done** をクリックします。
-8. AUT (Application Under Test) Mirroring Viewer が開き、開かれたテスト対象アプリケーションが表示されます。ビューアを使用すると、デバイスを表示し、テスト対象アプリケーションと対話できます。その間、Testim はアクションを記録します。サポートされているモバイルアクションを参照してください。
+11. **Done** をクリックします。
+
+12. AUT (Application Under Test) Mirroring Viewer が開き、開かれたテスト対象アプリケーションが表示されます。ビューアを使用すると、デバイスを表示し、テスト対象アプリケーションと対話できます。その間、Testim はアクションを記録します。サポートされているモバイルアクションを参照してください。
 
 ![記録](/images/recording-tests/recording-a-vmg-mobile-test/90125a4-recording2.gif)
 
@@ -156,8 +161,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 
 ## 追加のステップの追加とプロパティの編集
 
-記録中またはテストが保存された後、事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。
-
+記録中またはテストが保存された後、事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。\
 一般的なステップのプロパティについて詳しく知るには、[Editing a Step's Properties](/docs/editing-a-steps-properties) を参照してください。
 
 ## サポートされている事前定義済みモバイルアクション
@@ -167,12 +171,12 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 - [Validate email](/docs/email-validation) - Testim は、永続的および一時的な電子メールアドレスを提供する組み込みの電子メールサービスを提供します。Validate email ステップは、これらの電子メールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
 - [Validate element visible](/docs/validate-element-visible) - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
 - [Validate element text](/docs/validate-element-text) - 要素テキスト検証は、特定の要素の存在に依存するという点で、要素可視性検証と似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
-- [Wait for element visible](/docs/wait-for#wait-for-element-visible) - 要素がページに表示されるまで待機するために使用します。
-- [Wait for element text](/docs/wait-for#wait-for-element-text) - テストを続行する前に特定のテキストが表示されることを確認するために使用します。
-- [Sleep](/docs/wait-for#sleep) - ステップ間で一定時間待機できます。 - [Add extract value step](/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
+- [Wait for element visible](/docs/wait-for#要素の表示を待つ（モバイル）) - 要素がページに表示されるまで待機するために使用します。
+- [Wait for element text](/docs/wait-for) - テストを続行する前に特定のテキストが表示されることを確認するために使用します。
+- [Sleep](/docs/wait-for) - ステップ間で一定時間待機できます。 - [Add extract value step](/docs/extract-text) - アプリケーションから直接値をコピーして、後のステップで使用できます。
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 - **Code verification** - デバイスにキーストロークを送信します。通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
-- [Generate email address](/docs/email-validation#generating-a-temporary-email-address) - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。
+- [Generate email address](/docs/email-validation#テストの関連ステップで恒久的メールを使用する) - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。
 - [Add CLI action](/docs/add-cli-validations-and-actions) - CLI 環境でカスタム Node.js スクリプトを実行します。
 - [Add API action](/docs/api-testing#adding-an-api-action-step) - API 呼び出しから返されるデータを取得する場合に使用します。
 

@@ -87,9 +87,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 
 ## Validate element not visible ステップの修正
 
-選択した要素を変更したい場合、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。
-
-**Validate element not visible ステップで選択要素を再割り当てするには:**
+選択した要素を変更したい場合、ステップを削除して録り直す必要はありません。別の要素に再割り当てできます。→ **Validate element not visible ステップで選択要素を再割り当てするには:**
 
 1. 再割り当てしたいステップの左側の位置にカーソルを合わせ、**Toggle Breakpoint** をクリックします。
 2. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
