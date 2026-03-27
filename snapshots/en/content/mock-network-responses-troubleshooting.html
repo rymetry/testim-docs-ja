@@ -1,0 +1,54 @@
+
+                                        <h1>Troubleshooting - mock network responses</h1>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Issue</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Possible Cause</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Solution</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Mocked requests return as ‘undefined’</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Some development and testing extensions rely on the same mechanism to intercept network requests as Testim. Having them enabled will interfere with HAR recording, and in general, can cause unexpected results. For example, the Tampermonkey extension is known to cause this issue.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">
+                                                            <ol>
+                                                                <li value="1">
+                                                                    <p>Make sure you disabled  3rd party extensions that might interfere with your network. </p>
+                                                                </li>
+                                                                <li value="2">
+                                                                    <p>Work in incognito mode (as long those other extensions don’t also run in incognito) while recording HAR data.</p>
+                                                                </li>
+                                                            </ol>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">When running a test mocked with HAR data, the page itself shows the contents of one of the subsequent AJAX requests made on the page, and that request isn’t being mocked at all</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body2">
+                                                        <p class="tableBody">This happens because Testim doesn’t record the initial request made by the browser in order to load the page (the request fetching the page’s HTML) but does listen and mock it when running the test.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body2">
+                                                        <p class="tableBody">Using a passthrough entry matching the url of page (the base url) would be the correct choice.</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    

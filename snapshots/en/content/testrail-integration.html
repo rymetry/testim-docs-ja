@@ -1,0 +1,91 @@
+
+                                        <h1>TestRail integration</h1>
+                                        <p>TestRail integration allows you to link a test in TestRail to a test in Testim. The test run results will automatically be shown in TestRails giving you full visibility to both your manual test results as well as your automated tests in a single view.</p>
+                                        <div class="note">
+                                            <p>Disconnecting the integration will lose all links.</p>
+                                        </div>
+                                        <h3><a name="setting-testrail-integration"></a>Setting TestRail integration</h3>
+                                        <p>This process is required only once.</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to "Settings", and then to "Integration" tab.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click "login" to TestRail link.</p>
+                                            </li>
+                                            <img src="images/cbf1548-untitled.png" title="Untitled.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Open TestRail, copy the domain from the URL (make sure you are logged in) and paste it into the URL field. The URL structure should be https://&amp;lt;projectName&amp;gt;.testrail.io/, where projectName is available in TestRail URL. For example, the projectName in the account below is ranhadar1</p>
+                                            </li>
+                                            <img src="images/ea0ada5-image-20210523-052818.png" title="image-20210523-052818.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Enter your TestRail username.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Log into TestRail as Admin user, navigate to "My Settings" and then to "API Keys" tab. Click "Generate Key", enter any key name, copy the generated string and click "Save settings". Paste this key into the ApiKey field.</p>
+                                            </li>
+                                            <img src="images/b291ef8-tr.gif" title="TR.gif" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Click "Connect"</p>
+                                            </li>
+                                            <img src="images/25995c4-integrate.gif" title="Integrate.gif" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Choose the TestRail projects to connect to.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/1e8d54a-screen_shot_2021-10-14_at_12.54.26.png" title="Screen Shot 2021-10-14 at 12.54.26.png" class="ScreenshotFullsize" />
+                                        <p>At this point Testim is associated to a project in TestRail, but not mapped to a specific test.</p>
+                                        <div class="note">
+                                            <p>Important Note You may connect one TMS (Test Management System) at a time. So, if your Testim system is already connected to another TMS, you will need to disconnect this TMS first and only then connect TestRail. Note that by disconnecting the TMS, you will remove the connections between the tests. So, if you want to connect to the previous TMS again you will have to recreate the connections as well.</p>
+                                        </div>
+                                        <h3><a name="connecting-a-test-in-testim-to-a-testrail-test"></a>Connecting a test in Testim to a TestRail test</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the test you would like to connect to a TestRail test</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the setup steps' properties panel, choose the TestRail project and test to connect to</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>save the test</p>
+                                            </li>
+                                        </ol>
+                                        <p>After running the test, the result will be presented in the relevant TestRail project under the "<strong>Test run and results</strong>" tab.</p>
+                                        <img src="images/7ad9ed6-oct-14-2021_13-09-56.gif" title="Oct-14-2021 13-09-56.gif" class="ScreenshotFullsize" />
+                                        <h3><a name="pass-custom-parameters-to-testrail-for-a-specific-run"></a>Pass custom parameters to TestRail for a specific run</h3>
+                                        <p>As part of a <a href="../../running-tests/the-command-line-cli/index.htm">CLI run</a>, you are able to add any custom parameters that can be consumed by TestRail, for example:</p>
+                                        <ul>
+                                            <li>
+                                                <p>version</p>
+                                            </li>
+                                            <li>
+                                                <p>executed_by</p>
+                                            </li>
+                                        </ul>
+                                        <p>The JSON should be as followed:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />"executed_by": "rannn505",<br />"version" : "v1"<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>In order to pass these parameters use the <em>--tms-field-file</em> flag as part of your CLI command. The flag should be followed by a JSON file path that will contain the parameters and their values.<br /> For example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--tms-field-file [tms-field-file.json]</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="note"></a>Note:</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Testim runs names will always follow this convention:<br /></p>
+                                            </li>
+                                            <p>"Report from <a href="http://testim.io/">Testim.io</a> - <em>Suite\Test name</em>"</p>
+                                            <li value="2">
+                                                <p>Only remote runs results will be shown in TestRail (local runs will not be shown).</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Suite runs will be presented as one run in TestRail, click the certain run in order to see the results of all tests in the suite.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Mandatory custom fields in TestRail are not supported. Making a custom field on TestRail mandatory may cause the integration to stop working.</p>
+                                            </li>
+                                        </ol>
+                                    

@@ -1,0 +1,30 @@
+
+                                        <h1>Codeship integration</h1>
+                                        <img src="images/1328260-codeship1.png" title="codeship1.png" class="ScreenshotFullsize" />
+                                        <h2><a name="project-configuration"></a>Project configuration</h2>
+                                        <p>In order to integrate Testim with <a href="http://codeship.com/">Codeship</a>, go to your Test Settings under the Project Settings in your Codeship project:</p>
+                                        <img src="images/4c258cb-codeship2.png" title="codeship2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="run-with-local-selenium-grid"></a>Run with local Selenium Grid</h2>
+                                        <p>When you want to run your tests on your current built app in CodeShip, you'll need to run with local Selenium Grid. Add these lines to the setup commands section:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>nvm install &lt;use latest version supported by Testim&gt;<br />npm install -g webdriver-manager<br />npm install -g @testim/testim-cli</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>And these lines to the Test Commands section (with your values):</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>webdriver-manager update<br />nohup bash -c "webdriver-manager start 2&gt;&amp;1 &amp;" sleep 5<br />testim --project "&lt;PROJECT ID&gt;" §§§LINEBREAK§§§<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--label "&lt;LABEL&gt;" §§§LINEBREAK§§§<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--grid "&lt;Your grid name&gt;" §§§LINEBREAK§§§<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--base-url "&lt;YOUR LOCAL WEB APP URL, e.g. http://localhost:3000&gt;"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--token "&lt;TOKEN&gt;"<br />​</code></pre>
+                                            </div>
+                                        </div>
+                                        <img src="images/2e37bfe-codeship3.png" title="codeship3.png" class="ScreenshotFullsize" />
+                                        <p>​## Run with external Selenium Grid<br /> When your app is deployed on a publicly available server, you can run your tests on an external Selenium Grid. In that case, you don't need the local Selenium Server (webdriver-manager), so just add these lines to the setup commands section:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>nvm install &lt;use latest version supported by Testim&gt;<br />npm install -g @testim/testim-cli</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>​And these lines to the Test Commands section (with your values):</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --project "&lt;PROJECT ID&gt;" §§§LINEBREAK§§§<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--label "&lt;LABEL&gt;" §§§LINEBREAK§§§<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--grid "&lt;Your grid name&gt;" §§§LINEBREAK§§§<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;--token "&lt;TOKEN&gt;"</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Note</strong>:  For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                    

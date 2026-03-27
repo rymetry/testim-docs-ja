@@ -1,0 +1,95 @@
+
+                                        <h1>Validation</h1>
+                                        <p>When testing an app, it isn’t enough just to know that the steps ran effectively. In many cases, you will also want to verify that the expected result was produced by the test step. For example, after logging in, you may want to verify that the correct username is now shown in the page header.<br /> The following types of validations are available:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong><a href="accessibility-validations.htm">Page Accessibility Validation</a></strong> – Validate page accessibility.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="element-accessibility-validation.htm">Element Accessibility Validation</a></strong> – Validate page element accessibility.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-element-visualization.htm">Validate Element Visualization</a></strong> – Record file upload interactions.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-viewport-visualization.htm">Validate Viewport Visualization</a></strong> – Record file upload interactions.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-full-page-visualization.htm">Validate Full Page Visualization</a></strong> – Record file upload interactions.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="wait-for-element-visualization.htm">Wait for Element Visualization</a></strong> – Record file upload interactions.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-element-visible.htm">Validate element visible</a></strong> – Validate that the expected element is visible.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-element-not-visible.htm">Validate element not visible</a></strong> – Validate that an element is not visible.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-element-text.htm">Validate element text</a></strong> – Validate that the expected text is visible.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="custom-code.htm">Add custom validation</a></strong> – Create complex validations using custom scripts.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="custom-code-1.htm">Validate using custom code</a></strong> – Create a test step with custom code.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="validate-download.htm">Validate download</a></strong> – Validate that the download content is as expected.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="email-validation.htm">Validate email</a></strong> – Validate sign-up and login flows.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="css-property-validation.htm">Validate CSS property</a></strong> – Validate any CSS property of an element.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="html-attribute-validation.htm">Validate HTML attribute</a></strong> – Validate any HTML attribute in your app.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="checkbox-and-radio-button-validation.htm">Validate checkbox</a></strong> – Validate whether a checkbox is checked or unchecked.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="checkbox-and-radio-button-validation.htm">Validate radio button</a></strong> – Validate whether a radio button is checked or unchecked.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="../api-testing.htm#api-validation">Validate API</a></strong> – Validate API response values against elements in the UI.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="pixel-validation-and-pixel-wait-for.htm">Visual validation (element, viewport, full-page)</a></strong>  – Validate visual details down to the pixel level.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="add-network-validation.htm">Add network validation</a></strong> – Validate that network requests were executed as expected.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="add-cli-validations-and-actions.htm">Add CLI validations and actions</a></strong> – Execute node.js scripts from within your tests.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="file-upload-step.htm">File upload step validation</a></strong> – Record file upload interactions.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="mongodb-validation.htm">MonboDB validation</a></strong> – Validate MongoDB using a CLI action step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="mysql-validation.htm">My SQL validation</a></strong> – Validate MySQL using a CLI action step and SQL queries.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="validation-step-display"></a>Validation Step Display</h2>
+                                        <p>When you add a validation step, it is shown in the Editor as a new step in your test, indicated by an icon in the upper-left corner of the test step. Each type of validation step is represented by a different icon. The following are a few examples of the icons shown for various types of validations.</p>
+                                        <p><strong>Validate element visible</strong>
+                                        </p>
+                                        <img src="images/9dc088f-testim_019_r.png" title="Testim 019_r.png" class="ScreenshotFullsize" />
+                                        <p><strong>Validate element text</strong>
+                                        </p>
+                                        <img src="images/f7cbcdc-testim_021_r.png" class="ScreenshotFullsize" />
+                                        <p><strong>Custom validation</strong>
+                                        </p>
+                                        <img src="images/3260e0d-testim_018_r.png" class="ScreenshotFullsize" />
+                                        <h2><a name="validation-test-results"></a>Validation Test Results</h2>
+                                        <p>When you run your test, each validation step will either pass or fail depending on whether or not the validation criteria were met. If the validation step passes, the icon in the upper-left of the test step is shown in green, and there is a message in the Properties panel showing that it passed.</p>
+                                        <img src="images/9373384076d1aa60f511228c7ed591c15ff47c36384c7680b85a28f7e277fb04-3280147-screen_shot_2021.jpg" class="ScreenshotFullsize" />
+                                        <p>If a validation step fails, the icon in the upper-left corner of the test step turns red, and there is a message in the Properties panel showing that the step failed. Additionally, a red bar will appear at the top of the Editor indicating that the step failed. The red bar shows the expected and actual values for the failed step. There is also a <strong>See error</strong> link that can be clicked in order to open the full error message.</p>
+                                        <img src="images/ecfa22f-screen_shot_2021-04-18_at_6.35.08.png" title="Screen Shot 2021-04-18 at 6.35.08.png" class="ScreenshotFullsize" />
+                                        <p>For more information, see <a href="../../results/test-results/index.htm">Test results</a>.</p>
+                                    

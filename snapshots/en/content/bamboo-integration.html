@@ -1,0 +1,55 @@
+
+                                        <h1>Bamboo integration</h1>
+                                        <img src="images/1c8410c-bamboo0.png" title="Bamboo0.png" class="ScreenshotFullsize" />
+                                        <p>In order to integrate your tests with Bamboo, first you need to have Node.js (version &gt;= 6.0.0) installed on the Bamboo server or one of its agent machines.</p>
+                                        <h2><a name="now-just-follow-these-steps"></a>Now, just follow these steps:</h2>
+                                        <h3><a name="1-create-a-new-plan-in-bamboo"></a>1. Create a New plan in Bamboo:</h3>
+                                        <img src="images/0faedb6-bamboo2.png" title="Bamboo2.png" class="ScreenshotFullsize" />
+                                        <p>1.1. Enter plan name (e.g. "Testim Tests"), choose repository host "None" and click "Configurate plan":</p>
+                                        <img src="images/fa42a83-bamboo3.png" title="Bamboo3.png" class="ScreenshotFullsize" />
+                                        <p>1.2. Select "Yes please!" checkbox under "Enable this plan?" section:</p>
+                                        <img src="images/73d02b0-bamboo4.png" title="Bamboo4.png" class="ScreenshotFullsize" />
+                                        <h3><a name="2-add-install-testim-cli-task"></a>2. Add install Testim CLI task:</h3>
+                                        <p>​<br /> 2.1. Click on "Add task":<br /> 2.2. Choose "npm" task:</p>
+                                        <img src="images/71b903a-bamboo5.png" title="Bamboo5.png" class="ScreenshotFullsize" />
+                                        <p>2.3. Enter task description (e.g "Install Testim CLI")<br /> 2.4. Choose existing Node.Js executable or add new with Node.Js path</p>
+                                        <img src="images/2348387-bamboo6.png" title="Bamboo6.png" class="ScreenshotFullsize" />
+                                        <p>2.5. Insert Command:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>install -g @testim/testim-cli</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>2.6. Click "Save":</p>
+                                        <img src="images/663eab3-bamboo7.png" title="Bamboo7.png" class="ScreenshotFullsize" />
+                                        <h3><a name="3-add-run-testim-cli-task"></a>3. Add run Testim CLI task:</h3>
+                                        <p>​<br /> 3.1. Click on "Add task":<br /> 3.2. Choose "Command" task:</p>
+                                        <img src="images/e6c0d23-bamboo8.png" title="​Bamboo8.png" class="ScreenshotFullsize" />
+                                        <p>3.3. Enter task description (e.g "Run Testim CLI")<br /> 3.4. Choose existing "Testim CLI" executable or add a new "Testim CLI" executable:</p>
+                                        <img src="images/5d5f0ba-bamboo9.png" title="​Bamboo9.png" class="ScreenshotFullsize" />
+                                        <p>3.5. Insert argument:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--label "&lt;YOUR LABEL&gt;" --token "&lt;YOUR ACCESS TOKEN&gt;" --project "&lt;YOUR PROJECT ID&gt;"&#160;&#160;--grid "&lt;Your grid name&gt;" --report-file ${bamboo.build.working.directory}/testim-tests-${bamboo.buildNumber}-report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Note</strong>:  For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                        <p>3.6. Click "Save":</p>
+                                        <img src="images/9ae3664-bamboo10.png" title="​Bamboo10.png" class="ScreenshotFullsize" />
+                                        <h3><a name="4-add-collect-test-results-task"></a>4. Add collect test results task</h3>
+                                        <p>4.1. Click on "Add task":<br /> 4.2. Choose "JUnit Parser" task:</p>
+                                        <img src="images/7736c24-bamboo11.png" title="​Bamboo11.png" class="ScreenshotFullsize" />
+                                        <p>4.3. Enter task description (e.g "Collect Testim Results")<br /> 4.4. Insert "Specify custom results directories":</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>**/testim-tests-*-report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>4.5. Click "Save":</p>
+                                        <img src="images/88541f8-bamboo12.png" title="​Bamboo12.png" class="ScreenshotFullsize" />
+                                        <h3><a name="5-click-on-create"></a>5. Click on "Create"​</h3>
+                                        <img src="images/8e543c5-bamboo13.png" title="​Bamboo13.png" class="ScreenshotFullsize" />
+                                        <img src="images/f4235cf-bamboo14.png" title="​Bamboo14.png" class="ScreenshotFullsize" />
+                                        <h3><a name="6-run-plan"></a>6. Run Plan</h3>
+                                        <p>6.1. Click on Run button</p>
+                                        <img src="images/cde9d6d-bamboo15.png" title="Bamboo15.png" class="ScreenshotFullsize" />
+                                        <p>6.2. Wait until plan finished<br /> 6.2. Check Tests results</p>
+                                        <img src="images/6f346c1-bamboo16.png" title="Bamboo16.png" class="ScreenshotFullsize" />
+                                    

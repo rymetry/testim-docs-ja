@@ -1,0 +1,422 @@
+
+                                        <h1>Running Tests Overview</h1>
+                                        <p>There are multiple ways to run tests on Testim:</p>
+                                        <p><strong>Local runs</strong>
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="#running-a-single-test-through-the-test-screen-on-testim-automate-ui-web--mobile">Test Editor</a> (Web &amp; Mobile)</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#running-a-single-or-multiple-tests-through-the-test-list-on-testim-ui-web-only">Test List</a> (Web only)</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#running-tests-through-the-suites-screen-on-testim-ui-web-only">Suite List</a> (Web only)</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#running-tests-through-the-plans-screen-on-testim-ui-web-only">Plans List</a> (Web only)</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#running-tests-through-the-plans-screen-on-testim-ui-web-only">CLI</a> (Web &amp; Mobile)</p>
+                                            </li>
+                                        </ul>
+                                        <p><strong>Remote Runs</strong>
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="#running-a-remote-web-test">Test Editor</a> (Web &amp;Mobile)</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#running-tests-through-scheduler-on-testim-ui-web-only">Scheduler</a> (Web only)</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#running-tests-through-the-cli-web--mobile">CLI</a> (Web &amp; Mobile)</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="how-are-test-runs-counted-towards-a-test-runs-model-plan"></a>How are test runs counted towards a Test Runs model plan</h1>
+                                        <p>Test runs model subscription come with a maximal number of test runs. Local editor runs are exempt from this count, while other run types are included, as described in the table below.</p>
+                                        <table style="width: 100%;mc-table-style: url('../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Run type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Illustration</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Run location</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Counted towards run quota</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Notes</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Local editor runs</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/obwoaogsvcsoy09mlx2q.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Local</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">No</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">This includes the two types of local editor runs: ‘run locally’ and ‘run locally without debug’</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Local test execution</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/xqzcvrixxh7klhttxcvv.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Local</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">It is recommended to run stable tests via grid.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Local suite execution</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png">suites</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Local</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">It is recommended to run stable tests via grid.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Local test plan execution</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/tasdwyoeqgku3dgbb4yl.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Local</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">It is recommended to run stable tests via grid.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Local CI run</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/etuuumjl8mnaf6yi8swg.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Local</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Need to run the CLI command via CI tool /local terminal/Shell</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Run test on grid</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/aliqt4hzl7exfzihlyhr.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Remote</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Scheduler (automatic)</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528287/New%20images/butca7hm2m9ynmildilk.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Remote</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Once scheduler is created and active, the relevant tests will run automatically at the configured time.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Scheduler (manual)</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/jjslea2li1v9c3dfg9yn.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Remote</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Will run immediately, regardless of the scheduler active status</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">Remote CI run</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">!<a href="https://res.cloudinary.com/dl74xtazm/image/upload/v1692528288/New%20images/tt27za73qdynpxbl58o8.png">test</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">Remote</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">
+                                                            <ul>
+                                                                <li>
+                                                                    <p>Need to run the CLI command - Can be run from your terminal/shell - Azure pipeline is one of several CI options</p>
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h1><a name="running-a-single-test-through-the-test-screen-on-testim-ui-web-amp-mobile"></a>Running a single test through the test screen on Testim UI (web &amp; mobile)</h1>
+                                        <p>You can run a single test locally or remotely on the Grid using the Testim Automate UI. You can also run the test locally or remotely in Incognito mode.</p>
+                                        <h2><a name="running-a-local-web-test"></a>Running a local web test</h2>
+                                        <p>→ <strong>To run a web test locally:</strong> In the Editor screen, click the <strong>Run test</strong> button.</p>
+                                        <img src="images/d35670c-run.png" title="run.png" class="ScreenshotFullsize" />
+                                        <h2><a name="running-a-local-mobile-test"></a>Running a local mobile test</h2>
+                                        <p>→ <strong>To run a mobile test locally:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Run</strong> button in the action menu.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/c7c7791-image_8.png" title="image (8).png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If a <strong>Target device</strong> setting for the test is not present (e.g., when you run the test from Test Library), you will be asked to select a device. Select the relevant  physical or virtual device and then click <strong>Done</strong>.  The selected device will be saved as the Target Device for the current session.</p>
+                                        </div>
+                                        <p>The device viewer window opens and runs the test actions. When the test is completed, a pop-up window indicates whether the test was successful.</p>
+                                        <img src="images/c09003f-image_9.png" title="image (9).png" class="ScreenshotFullsize" />
+                                        <h2><a name="running-a-remote-web-test"></a>Running a remote web test</h2>
+                                        <p>You can run a single test remotely on a grid using the test editor. → <strong>To run a web test remotely:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Editor screen, click the drop-down menu next to the <strong>Run test</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Run on a grid</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/f9349a4-2023-02-05_17-39-19.png" title="2023-02-05_17-39-19.png" class="ScreenshotFullsize" />
+                                        <p>If you want to change the grid settings, click <strong>Edit</strong>. For more information on grid management, see <a href="../integrations/grid-management/index.htm">Grid management</a>.</p>
+                                        <h2><a name="running-a-remote-mobile-test"></a>Running a remote mobile test</h2>
+                                        <p>Running a mobile test remotely requires a grid connection and <a href="../test-management/configuration-library-mobile.htm">Mobile Configuration</a>. The mobile configuration will determine specific mobile devices to use in the run, however if a mobile configuration is not provided, Testim will use the first available mobile device from the selected grid. You can run a single test remotely on a grid using the test editor. For more information on grid management, see <a href="../integrations/grid-management/index.htm">Grid management</a>. → <strong>To run a mobile test remotely:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Editor screen, click the drop-down menu next to the <strong>Run test</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the <strong>Run on a grid</strong> option to run the test with the default grid and configuration.</p>
+                                            </li>
+                                            <img src="images/b0306b9-runongrid.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Edit</strong> link to select a grid to run on and a different device and mobile app that will override the original test settings.</p>
+                                            </li>
+                                            <img src="images/e89ec9f-choosegrid.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click the <strong>Run</strong> button to run the test remotely.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/fee31b2-choosegrid.png" class="ScreenshotFullsize" />
+                                        <h1><a name="running-a-single-or-multiple-tests-through-the-test-list-on-testim-ui-web-only"></a>Running a single or multiple tests through the Test List on Testim UI (web only)</h1>
+                                        <p>You can run one or more tests from Testim’s Test List. Tests run in this way will only run locally. → <strong>To run a test from the Test List:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the Test List screen select the test or tests you wish to run. Select multiple tests by holding the Ctrl (windows) or Command (mac) key while left-clicking on the tests.</p>
+                                            </li>
+                                            <img src="images/834e475-run2.png" title="run2.png" class="ScreenshotFullsize" />
+                                            <p>The selected tests are highlighted.</p>
+                                            <li value="2">
+                                                <p>Click the <strong>Play</strong> button.</p>
+                                            </li>
+                                            <img src="images/4e677da-run3.png" title="run3.png" class="ScreenshotFullsize" />
+                                            <p>A confirmation window is shown.</p>
+                                            <img src="images/eb4fc34-run4.png" title="run4.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select the appropriate check boxes and click <strong>OK</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <p>A browser opens and runs the test/s. You can view the run status during the run. When the run is completed, the Runs screen is shown with information about the run. For more information, see <a href="../results/execution-runs-screen.htm">Execution Runs Screen</a>.</p>
+                                        <img src="images/69ffd79-run5.png" title="run5.png" class="ScreenshotFullsize" />
+                                        <h1><a name="running-tests-through-scheduler-on-testim-ui-web-only"></a>Running tests through Scheduler on Testim UI (web only)</h1>
+                                        <p>You can schedule tests to run on a predefined schedule. In order to schedule a test run, the test must have a Label or be part of a Test Suite. Tests run in this way will only run remotely on the grid. For more information, see <a href="scheduler.htm">Scheduler</a>.</p>
+                                        <h1><a name="running-tests-through-the-suites-screen-on-testim-ui-web-only"></a>Running tests through the Suites screen on Testim UI (web only)</h1>
+                                        <p>Using the Test Suites feature, you have the flexibility to group your tests and manage the order in which they will run. Tests run in this way will only run locally. For more information, see <a href="../test-management/test-suites.htm">Test suites</a>.</p>
+                                        <h1><a name="running-tests-through-the-plans-screen-on-testim-ui-web-only"></a>Running tests through the Plans screen on Testim UI (web only)</h1>
+                                        <p>Using the Test Plans feature, you can run multiple tests, while configuring the environment on which they will run. Tests in the test plans can run locally and/or remotely through the CLI. For more information, see <a href="../test-management/test-plans.htm">Test plans</a>.</p>
+                                        <h1><a name="running-tests-through-the-cli-web-amp-mobile"></a>Running Tests through the CLI (web &amp; mobile)</h1>
+                                        <p>You can run your tests through the command line interface and integrate with your CI platform. Testim offers a CLI command generator that creates the basic command based on the selected configuration. The command can be then copied to the CLI and additional flags can be then added.  For more information, see <a href="the-command-line-cli/index.htm">Command line interface (CLI)</a>.</p>
+                                        <h2><a name="running-web-tests-through-the-cli"></a>Running web tests through the CLI</h2>
+                                        <p>You can run the test locally or remotely through a Grid.</p>
+                                        <h3><a name="running-web-tests-remotely-through-the-cli"></a>Running web tests remotely through the CLI</h3>
+                                        <p>If you want to run it through a Grid, you will have to configure the grid in advance by following the instruction in <a href="../integrations/grid-management/index.htm">Grid management</a>. <br /> The following grids are available for web testing:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Testim cloud grid</strong> - Testim can set up a grid with the required number of browsers and browser type. If you don't already have it, contact us to find out which option fits you.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Local grids</strong> - If you have a selenium grid, we can integrate with it.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Third party grids</strong> - Testim can integrate with third party grids like <a href="../integrations/grid-management/saucelabs-integration.htm">Saucelabs</a> and <a href="../integrations/grid-management/browserstack-integration-1.htm">Browserstack</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <p>→<strong>To run a remote web test through the CLI:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>If you want to run through a Grid, you will have to configure the grid in advance by following the instruction <a href="../integrations/grid-management/index.htm">Grid Management</a>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Go to <strong>Settings &gt; CLI</strong> tab.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Make sure the <strong>CI</strong> option is selected (default).</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Grid</strong>, select the desired grid on which to run the test.</p>
+                                            </li>
+                                            <p>The basic CLI command is displayed at the bottom under <strong>Example</strong>. The basic command includes the following elements: --token: the authentication token --project: the project ID --grid: the name of the grid to run the tests on.</p>
+                                            <li value="5">
+                                                <p>Copy the CLI command, edit and add parameters according to your needs.</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="running-web-tests-locally-through-the-cli"></a>Running web tests locally through the CLI</h3>
+                                        <p>→<strong>To run a local web test through the CLI:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; CLI</strong> tab.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Local</strong>.</p>
+                                            </li>
+                                            <img src="images/9a52dff-local.jpg" class="ScreenshotFullsize" />
+                                            <p>The basic CLI command is displayed at the bottom under <strong>Example</strong>. The basic command includes the following elements:</p>
+                                            <p><span class="FileOrFilePath">--token</span>: the authentication token</p>
+                                            <p><span class="FileOrFilePath">--project</span>: the project ID</p>
+                                            <p><span class="FileOrFilePath">--use-local-chrome-driver:</span> - runs the test on a local, clean, extension-free Chrome browser.</p>
+                                            <p><span class="FileOrFilePath">--user</span> - your user ID. The user ID is generated automatically by the system. Specifying this User ID will trigger the execution under your user. If this tag is not included in the CLI command, the execution will run under a general CI user.</p>
+                                            <li value="3">
+                                                <p>Copy the CLI command, edit and add parameters according to your needs.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="running-mobile-tests-through-the-cli"></a>Running mobile tests through the CLI</h2>
+                                        <p>You can run the test locally or remotely through a third party Grid.</p>
+                                        <h3><a name="running-mobile-tests-remotely-through-the-cli"></a>Running mobile tests remotely through the CLI</h3>
+                                        <p>→ <strong>To run a mobile test remotely through the CLI:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>If you want to run the through a Grid, you will have to configure the grid in advance by following the instruction in <a href="../integrations/grid-management/index.htm">Grid management</a>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Go to <strong>Settings &gt; CLI</strong> tab.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Make sure the <strong>CI</strong> option is selected (default).</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Grid</strong>, select the desired grid on which to run the test.</p>
+                                            </li>
+                                            <p>The basic CLI command is displayed at the bottom under <strong>Example</strong>. The basic command includes the following elements:</p>
+                                            <p><span class="FileOrFilePath">--token</span>: the authentication token</p>
+                                            <p><span class="FileOrFilePath">--project</span>: the project ID</p>
+                                            <p><span class="FileOrFilePath">--grid</span>: the name of the grid to run the tests on.</p>
+                                            <p><span class="FileOrFilePath">--mode</span>: For mobile testing, <span class="FileOrFilePath">appium</span> grids will be displayed.</p>
+                                            <li value="5">
+                                                <p>Copy the CLI, edit and add parameters according to your needs.</p>
+                                            </li>
+                                        </ol>
+                                        <p>You can run a specific test, label, configuration, and other labels, as explained in <a href="the-command-line-cli/index.htm">Command line interface (CLI)</a>.</p>
+                                        <h3><a name="running-mobile-tests-locally-through-the-cli"></a>Running mobile tests locally through the CLI</h3>
+                                        <p>The locally run mobile tests can be executed on a single device only (no parallel executions). It is possible to run serially with one device, which is connected locally or a virtual device. → <strong>To run a mobile test locally through the CLI:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; CLI</strong> tab.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Local</strong>.</p>
+                                            </li>
+                                            <img src="images/628e67d-localmobile.png" class="ScreenshotFullsize" />
+                                            <p>The basic CLI command is displayed at the bottom under <strong>Example</strong>. The basic command includes the following elements:</p>
+                                            <p><span class="FileOrFilePath">--token</span>: the authentication token</p>
+                                            <p><span class="FileOrFilePath">--project</span>: the project ID</p>
+                                            <p><span class="FileOrFilePath">local-tma-url</span>: the URL of the local TMA (Tricentis Mobile Agent) on your machine. This URL can be obtained by opening <a href="../recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent.htm">TMA</a> and copying the URL from the address bar.</p>
+                                            <p><span class="FileOrFilePath">--user</span>:  your user ID. The user ID is generated automatically by the system. Specifying this User ID will trigger the execution under your user. If this tag is not included in the CLI command, the execution will run under a general CI user.</p>
+                                            <p><span class="FileOrFilePath">--mode</span>: the mode of the run. For mobile tests, the mode is always <span class="FileOrFilePath">appium</span>.</p>
+                                            <p><span class="FileOrFilePath">--device-udid</span>:  (mandatory) enter the local device UDID. This can be a physical device that is connected to the computer or a virtual device that is provided by Xcode or Android Studio. This ID can be obtained by opening <strong>TMA &gt; Device Management</strong>, clicking <strong>Device Management</strong> on the top menu, and copying the UDID of the device.</p>
+                                            <div class="note">
+                                                <p>It is possible to select only a single UDID for the execution (no parallel executions).</p>
+                                            </div>
+                                            <img src="images/1f8899d-udid.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Copy the CLI command, edit and add parameters according to your needs.</p>
+                                            </li>
+                                        </ol>
+                                        <p>You can run a specific test, label, configuration, and other labels, as explained in <a href="the-command-line-cli/index.htm">Command line interface (CLI)</a>.</p>
+                                        <h1><a name="tests-timeouts"></a>Tests' Timeouts</h1>
+                                        <p>By default, all tests will timeout after 10 minutes. However in the following cases, you can set a different timeout setting:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>When using the Scheduler</strong> - as part of the scheduler Advanced Options configuration, it is possible to set the <strong>Test timeout (seconds)</strong> setting. In any case, the maximal test timeout period is 3 hours. For more information, see <a href="scheduler.htm#advanced-scheduler-options">Scheduler</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When running through the CLI</strong> - when running the test through the CLI, it is possible to add a <span class="FileOrFilePath">--timeout</span> flag that defines a timeout period in milliseconds to abort the test run if a timeout has elapsed. For more information, see <a href="the-command-line-cli/index.htm#test-timeout">Command line interface (CLI)</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When running web test remotely via the test editor</strong> - when running the test remotely on grid through the test editor, it is possible to set test timeout in seconds to abort the test run if a timeout has elapsed. For more information, see <a href="#running-a-remote-web-test">Running a remote web test</a></p>
+                                            </li>
+                                        </ul>
+                                    

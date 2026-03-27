@@ -1,0 +1,19 @@
+
+                                        <h1>Override Applitools' test name</h1>
+                                        <p>It is possible to override the test name being sent to Applitools. This can be done using the <a href="../../advanced-editing/data-driven-testing/index.htm#using-test-data-in-your-tests">test data</a> in the following way:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>The parameter <em>applitoolsTestName</em> is the one being sent to Applitools as the test name</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>You can either override it or change it in the test data, for example:</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>return [<br />&#160;&#160;{applitoolsTestName: 'testName_english'},<br />&#160;&#160;{applitoolsTestName: 'testName_spanish'}<br />&#160;&#160;];</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="3">
+                                                <p>In this example for every test data entry, the test name sent to Applitools will contain the language and will create a different baseline in Applitools</p>
+                                            </li>
+                                        </ol>
+                                    

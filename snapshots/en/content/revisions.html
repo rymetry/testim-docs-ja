@@ -1,0 +1,49 @@
+
+                                        <h1>Revisions</h1>
+                                        <p>Every time you make a change to a test and save it, the version of the test before the change is automatically stored. Each of these versions of the test is called a revision.<br /> Revisions gives you the power to always look back at your changes and revert back to an older revision.</p>
+                                        <h2><a name="how-are-revisions-created"></a>How are revisions created?</h2>
+                                        <p>Revisions are created automatically. You don't have to do anything.<br /> In the following example there is a test called "login_test", in which the step that sets the password was updated. After saving the test, the following dialog is displayed, prompting to optionally specify the purpose of the change:</p>
+                                        <img src="images/4bf97f1-change_message.png" title="change_message.PNG" class="ScreenshotFullsize" />
+                                        <p>Click <strong>OK</strong>, and that's it! a new revision is created.</p>
+                                        <h2><a name="viewing-the-test-revisions"></a>Viewing the test revisions</h2>
+                                        <p>→ <strong>To see the all the revisions of a test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the <strong>Test Properties</strong> (:fa-cog:).</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>See old revision</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>A list of revisions is displayed, containing the change message, the name of the user who made the change, and date in which it was made:</p>
+                                        <img src="images/0930cee-revisions.gif" title="revisions.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="automated-revisions-following-a-locators-auto-improve-process"></a>Automated revisions following a Locator’s auto-improve process</h2>
+                                        <p>Testim automatically creates a new revision after it replaces a degraded locator with an auto-improved locator. The new revision is labeled in the <strong>Revision History</strong> panel as “Testim auto improve”. For more information, see <a href="locators-auto-improve.htm">Locators: Auto Improve</a>. You can also view which steps in a test have been auto-improved.</p>
+                                        <img src="images/4cf4abe-testim_478a.png" title="Testim 478a.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To view which steps have been auto-improved:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open a test that has been auto-improved.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Toggle the <strong>Show improved steps</strong> switch to the right.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/cadf2a8-testim_585b.png" title="Testim 585b.png" class="ScreenshotFullsize" />
+                                        <p>The steps that have been auto-improved are highlighted.</p>
+                                        <h2><a name="accessing-a-previous-revision"></a>Accessing a previous revision</h2>
+                                        <p>To view a revision, simply hover the revision you want to view, and click <strong>View</strong>:</p>
+                                        <img src="images/55ba93b-revisions2.gif" title="revisions2.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="reverting-to-a-previous-revision"></a>Reverting to a previous revision</h2>
+                                        <p>To revert to a previous revision, access the previous revision and click <strong>Save</strong>.</p>
+                                        <img src="images/a59b3e9-revisions3.gif" title="revisions3.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="tests-with-shared-step"></a>Tests with shared step</h2>
+                                        <p>Shared steps (e.g. a group step, or one of the custom Javascript steps) may be changed in a different test. If you use a shared step that was changed in another test, you will also see this change in the revisions list.</p>
+                                        <img src="images/0b89bb9-shared.png" title="shared.PNG" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If you're in a custom JavaScript step and want to revert to an old version, you'll need to step out and re-enter the step to view a previous version.</p>
+                                        </div>
+                                        <h2><a name="reverting-changes-with-a-shared-step"></a>Reverting changes with a shared step</h2>
+                                        <p>If you choose to open an older revision of the test, it will also open the older revision of the shared steps that were being used in that revision. So, if a shared step was changed while saving previous revision, all of the instances of the folder will be affected too.</p>
+                                        <img src="images/61b8751-revert.png" title="revert.PNG" class="ScreenshotFullsize" />
+                                    

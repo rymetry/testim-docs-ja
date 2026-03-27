@@ -1,0 +1,53 @@
+
+                                        <h1>Create and merge branches from different test environments</h1>
+                                        <p>Each Test Environment in Testim for Salesforce is configured with the following settings:</p>
+                                        <ul>
+                                            <li>
+                                                <p>The URL of the related Salesforce environment</p>
+                                            </li>
+                                            <li>
+                                                <p>The branches that the Test Environment is available on.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/5f39d87-branch.png" class="ScreenshotFullsize" />
+                                        <p>If you want to run your test on a different Test Environment, you will need to create a new branch and select a different Test Environment. Tests are run on a single Test Environment for each branch. Several branches can have access to the same Test Environment.  All branches extend from one trunk or main branch, called the master. After creating your test on a branch, you can  merge it to the master branch.</p>
+                                        <h1><a name="creating-a-branch"></a>Creating a branch</h1>
+                                        <p>→<strong>To create a new branch:</strong></p>
+                                        <img src="images/8d71d98-newbranch.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>In your Testim for Salesforce, select the <strong>New Branch</strong> icon.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>New branch name</strong> field, enter a name for the branch.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Salesforce environment</strong> field, select a Salesforce environment from the drop down menu</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>You can see all branches under Salesforce &gt; Environments. They're also available in the branch search drop-down at the top of the screen.</p>
+                                        <h1><a name="merging-a-branch"></a>Merging a Branch</h1>
+                                        <p>:fa-arrow: → <strong>To merge a branch:</strong></p>
+                                        <img src="images/2c34ad0-mergebranch.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Testim for Salesforce, in the branch search dropdown, select the branch you want to merge.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the merge icon.<br /></p>
+                                            </li>
+                                            <p>The Merge Branch dialog is displayed.</p>
+                                            <li value="3">
+                                                <p>Review the changes before merging.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>If you want to delete the branch after the merge, select the <strong>Delete branch&lt;branch_name&gt; upon merge</strong> checkbox.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Merge</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

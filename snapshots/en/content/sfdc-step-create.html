@@ -1,0 +1,63 @@
+
+                                        <h1>Create</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The Create step creates a record in Salesforce of the specified Object type. As part of the step, you will specify the values for each field in the record. In addition, as part of the creation process you can verify that a specified field includes a specified value. For example, in fields that are automatically populated with values. The Create step is a predefined step. → <strong>To add a Create step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the editor, add a step by clicking the + button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the <strong>Salesforce steps</strong> tab, click <strong>Record Operations</strong> and select the <strong>Create</strong> step.<br /></p>
+                                            </li>
+                                            <p>The <strong>Create step</strong> is added and the following <strong>Object properties</strong> is displayed.</p>
+                                            <img src="images/a3e93cc-object_properties.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Select the Object</strong> drop-down menu and select the desired object type. The object type determines the type of record that will be created.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In some cases you will be required to also select a <strong>Record Type</strong>. This is like a sub-type of the record.</p>
+                                            </li>
+                                            <p>&gt; &gt; &gt; If at this point you want to select a different Object and Record Type, click <strong>Change</strong> and select it again. The list of fields for the record from the connected Salesforce environment is displayed. Fields that are indicated with (*) are mandatory. Hovering you mouse over the field name displays the <strong>data type</strong> and <strong>API name</strong> of the field in Salesforce.</p>
+                                            <img src="images/b692df3-objectfields.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>For each field that you want to create, under <strong>Action</strong> select one of the following options:</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Input - inputs the specified value into the field. If the field is not editable this action will not be listed. The action  requires entering a value, as described below.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Verify -this action verifies that the value in the field matches that in the record. The action  requires entering a value, as described below. The action requires entering a value, as described below.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Verify not visible - this action verifies that the field is not visible to the connected user. The action does not require entering a value.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Store - this action stores the existing value in the record field into a specified Javascript variable. This action requires entering a name for the variable into the value field.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>Ignore - this action performs no action on the field. The action does not require entering a value.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Reset - resets the value in the field to a "no entry" state. Note that if the field is empty, it will try to enter  an empty string to the field, however if you select the Reset option, it will not try to enter an empty string.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Under <strong>Value</strong>, enter the value of the field. If the field is a "pick list" (drop down menu), select the relevant option.</p>
+                                            </li>
+                                        </ol>
+                                        <p>The value field has two modes, to switch between the modes click the filed and the click the sign to alternate between <strong>T</strong> and <strong>{JS}</strong>:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>T. Text mode. The value is treated as a literal string.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>{JS}. JavaScript mode. The value is evaluated as a JavaScipt expression. The field will evaluate JavaSrcipt variables and functions.</p>
+                                            </li>
+                                            <img src="images/0059a45-switchgif.gif" class="ScreenshotFullsize" />
+                                            <p>&gt; &gt; &gt; It is not possible to put a variable in a multiple pick list.</p>
+                                            <li value="3">
+                                                <p>When finished, click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

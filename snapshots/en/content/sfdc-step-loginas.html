@@ -1,0 +1,45 @@
+
+                                        <h1>Log In As Another User</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p><strong>The Log In As Another User</strong> step can be used by Admin user only. This means that before the <strong>Log In As Another User</strong> step you will need to add a <strong>Log in</strong> step in which the test will log in to your Admin account. After it logs in as an Admin, you can use the <strong>Log In As Another User</strong> step to log in as different users within a single test.</p>
+                                        <p>→<strong>To add a Log In As Another User step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Add a <strong>Log in as another user</strong> step by clicking the <strong>+</strong> button and under the <strong>Salesforce</strong> steps tab, click <strong>Common operations</strong> and select <strong>Log in as another user</strong> step.<br /></p>
+                                            </li>
+                                            <p>The following <strong>Properties Tab</strong> is displayed.</p>
+                                            <img src="images/02cc7f3fcb3adf6183b839e319839f4a6dcf3b51fc063a61d02e2ad9427a0c07-2024-05-05_15-07-06.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Do one of the following:</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>If you want to select a <strong>Persona</strong> that has been already defined through the <a href="../create-a-persona-and-add-users.htm">Creating a persona</a> process, select the desired persona from the <strong>Select persona</strong> drop-down menu.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>If you want to use a username that has not been defined as a persona, in the <strong>Input Username</strong> field, enter the user name by doing one of the following:</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Username string</strong> -  to enter a username as a string type the string into field. The string is automatically surrounded by a single quotation mark.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>Username variable</strong> - You can also enter JavaScript code and use a variable for the username so that each execution of the test will use a unique username from the test data. Click the <strong>T</strong> icon and enter a JS code. See  <a href="../../advanced-editing/data-driven-testing/index.htm">Data-driven testing</a> to learn more.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>Navigation options</strong> section, select any of the following options:</p>
+                                            </li>
+                                            <li value="8">
+                                                <p><strong>Stay on current page after log in as</strong> - select this option if you want to make sure that you stay on the same page after logging in as another user.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Return to current page after log out</strong> - elect this option if you want to make sure that you stay on the same page after logging out.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>At the end of the test, add a <strong>Log out</strong> step, to switch back to Admin so that you can log in as a different user again.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>When done, click <strong>Save</strong> to save the test.</p>
+                                            </li>
+                                        </ol>
+                                    

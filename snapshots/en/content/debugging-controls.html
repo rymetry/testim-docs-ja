@@ -1,0 +1,197 @@
+
+                                        <h1>Debugging Controls</h1>
+                                        <p>The debugging controls allow test developers to locate and fix issues in their tests, while running the test without the need to wait until the test test run is completed. If a test is lacking in coverage (e.g., new features have been added to the AUT), it is also possible to add steps to the test by recording from a specific position. The controls for recording/authoring, running, and debugging the tests are conveniently grouped closely together to create a seamless development environment, where test developers can quickly write, test, and debug their tests, all in one place. The system supports the following debugging, running and recording capabilities:</p>
+                                        <table style="width: 100%;mc-table-style: url('../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Debugging</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Running</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Recording</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">
+                                                            <ul>
+                                                                <li>
+                                                                    <p><a href="#step-into">Step into</a>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="#step-over">Step over</a>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="#step-out">Step out</a>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="#pause-and-continue-debugging">Pause/Continue</a>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="#stop-run">Stop Run</a>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="#rerun">Rerun</a>
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">
+                                                            <ul>
+                                                                <li>
+                                                                    <p><a href="#running-locally-with-debugging">Run locally with debug</a>
+                                                                        <br />
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="#running-locally-without-debugging">Run locally without debug</a>
+                                                                        <br />
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="../running-tests/running-tests-overview.htm#running-a-remote-web-test">Run on Grid</a>
+                                                                        <br />
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="../running-tests/play-from-here.htm">Play from here</a>
+                                                                        <br />
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="../running-tests/rerun-locally-with-the-same-params.htm">Rerun locally with the same params</a>
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">
+                                                            <ul>
+                                                                <li>
+                                                                    <p><a href="recording-additional-steps-to-fix-bugs.htm#start-recording">Start recording</a>
+                                                                        <br />
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p><a href="recording-additional-steps-to-fix-bugs.htm#start-recording-at-this-position">Start recording at position</a>
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>The enablement or disablement of the debugging, running, and recording buttons is determined by the current editor state (e.g. running, recording...).</p>
+                                        <h3><a name="breakpoints"></a>Breakpoints</h3>
+                                        <p>Breakpoints are used to pause the test execution at various stages. There are two types of breakpoints:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Manual breakpoint</strong> - breakpoint set manually by the user (See <a href="../results/stop-pause-debug-tests.htm#insert-a-breakpoint">Insert a breakpoint</a> for more info)<br /></p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/4531fad-breakpoint1.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Virtual breakpoint</strong> - breakpoint created automatically by the system when debugging controls are used (e.g., step into, step out, step over and pause). Virtual breakpoints are represented by a highlighted blinking arrow.<br /></p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/64f42cc-breakpoint2.png" class="ScreenshotFullsize" />
+                                        <h1><a name="running-locally-with-debugging"></a>Running locally with Debugging</h1>
+                                        <p>Running the test locally with debugging, allows you to execute the test, while using debugging features to closely inspect certain parts of the test with more precision and control. Pausing the test execution at certain points allows you to inspect variables, step through the test, and analyze any errors or unexpected behaviors. For example, when running the test in debug mode you can pause the test at any point, step over a step to execute it, step into a group to view the execution of specific steps within this group, and more. The debug mode works on local runs only.</p>
+                                        <div class="note">
+                                            <p>Run locally option If you want to run the test locally without debugging, so the <strong>editor will not pause when breakpoints are encountered</strong>, use the <strong>Run locally</strong> option. For more information, see <a href="#running-locally-without-debugging">Running locally without debugging</a></p>
+                                        </div>
+                                        <p>→ <strong>Run the test in debug mode:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Do one of the following:</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Run locally with debugging</strong> button.<br /></p>
+                                            </li>
+                                            <img src="images/38a770d-runlocallywithdebug.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Run options</strong> drop down menu and then click the <strong>Run locally with debugging</strong> option.<br /></p>
+                                            </li>
+                                            <img src="images/9a27022-rundebugdropdown.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Press <strong>F5</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The test begins running and the <strong>Debugging Controls</strong> menu is displayed.<br /></p>
+                                        <img src="images/b68851e-debugging_controls.png" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>To pause the test, in the <strong>Debugging Controls Menu</strong>, click the <strong>Pause</strong> button.<br /></p>
+                                            </li>
+                                            <img src="images/f8c64f1-pause.png" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>After pausing the test the debugging controls are displayed. See debugging controls details below.</p>
+                                            <li value="2">
+                                                <p>To stop the test run at any point and exit the debug mode, click the <strong>Stop</strong> button.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/c3c750b-stop.png" class="ScreenshotFullsize" />
+                                        <h1><a name="debugging-controls-menu"></a>Debugging Controls Menu</h1>
+                                        <p>When running the test in debug mode, a <strong>Debug Controls Menu</strong> is displayed providing the following tools to navigate and run specific parts of test.</p>
+                                        <img src="images/c0e290c-debuggingcontrolswcallouts.png" class="ScreenshotFullsize" />
+                                        <h2><a name="move-around"></a>Move Around</h2>
+                                        <p>Click and drag to move the Debugging Controls Menu around.</p>
+                                        <h2><a name="pause-and-continue-debugging"></a>Pause and continue debugging</h2>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Pause:</strong> Pauses the test execution at any point in the editor. When you click the "pause" button, the test execution will be paused at the “nearest” step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Continue:</strong> Continues the test execution from the current location until the end of the test has been reached.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="step-over"></a>Step over</h2>
+                                        <p>Use this control to skip over a group without stepping inside. When you click the "step over" button, the editor will execute the next step or group. If the next step is a group, the editor will execute the group without stepping inside it and stop after the group step, while marking where it stopped with a blinking arrow, also known as a <strong>virtual breakpoint</strong>. As opposed to a regular breakpoint, the virtual breakpoint is the place in the test where the system has stopped the execution.</p>
+                                        <img src="images/8735a97-stepover.png" title="stepover.png" class="ScreenshotFullsize" />
+                                        <img src="images/3b312df-steopover.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="step-into"></a>Step into</h2>
+                                        <p>Use this control to step into a group to see its internal execution.  When you click the "step into" button, the editor will open the group (display the group steps) but will not yet execute it. In this case, the virtual breakpoint will be located before the first step in the group.</p>
+                                        <img src="images/f6562fe-stepinto.png" title="stepinto.png" class="ScreenshotFullsize" />
+                                        <img src="images/0d82c03-stepinto.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="step-out"></a>Step out</h2>
+                                        <p>Use this control to exit the internal view of the group after executing its steps. This can be useful when you have stepped into a group and you want to execute the group's steps and then step out of the group. For example, if you think that the problem is not in the group itself, but its caller. When you click the "step out" button, the system will execute the remaining steps of the group, step out of the group and place the virtual breakpoint after the group step.</p>
+                                        <img src="images/64e5995-stepout.png" title="stepout.png" class="ScreenshotFullsize" />
+                                        <img src="images/d8b61de-stepout.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="rerun"></a>Rerun</h2>
+                                        <p>Use this control to run the same test again quickly and easily without having to manually stop the test and run again. This can be useful when you want to retest the same scenario or when you want to verify that a fix has resolved the issue.  When you click the "rerun" button, the system immediately begins executing the test from its beginning.</p>
+                                        <img src="images/9dc6997-rerun.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="stop-run"></a>Stop run</h2>
+                                        <p>The <strong>stop run</strong> control can be used to stop the test execution and go into "Authoring Mode". This can be useful when you have identified and fixed the problem in the test, or when you need to interrupt a long-running test or debug session. → <strong>To stop the test execution:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>While the test is running, click the <strong>Stop Run</strong> button.</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="running-locally-without-debugging"></a>Running locally (without debugging)</h1>
+                                        <p>This running option allows you to execute your test locally without any debugging features. When you run your test in this mode, the <strong>test run will not pause if breakpoints are encountered</strong>. This is useful when you want to quickly run your test to see its output or behavior, without the overhead of debugging. → <strong>To run locally:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>Click the <strong>Run options</strong> drop down menu and then click the <strong>Run locally</strong> option.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/91f0e8f-runlocally.png" class="ScreenshotFullsize" />
+                                        <p>The test will run without pausing at breakpoints.</p>
+                                    

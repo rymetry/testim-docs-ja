@@ -1,0 +1,120 @@
+
+                                        <h1>Page Accessibility Validation</h1>
+                                        <p>Accessible web pages are web pages that are designed in a way that people with disabilities or impairments can use them. Most US and EU organizations require accessibility compliance. Using the <em>Validate page accessibility</em> step, you can check the accessibility level of your web page, while identifying elements in your web page that could have been made accessible, but were not. The accessibility checks are based on rules, which are listed here: <a href="https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md">https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md</a>).</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This is a pro feature only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>The <em>Validate page accessibility</em> step feature is only available when using the Chrome browser.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Accessibility Validation Support Testim Accessibility steps use one of the leading accessibility libraries, <a href="https://www.deque.com/axe/">Axe Core by Deque</a>. Note that pure accessibility violations detected within the Accessibility step are primarily related to your application code. As such, addressing these specific issues falls outside the scope of Testim's support. If you encounter challenges in rectifying accessibility violations through code fixes, we advise you to seek assistance from <a href="https://www.deque.com/axe/">Deque Axe-Core</a> issues page. As accessibility experts, they can provide specialized guidance and solutions to address these issues effectively.</p>
+                                        </div>
+                                        <h2><a name="adding-a-validate-page-accessibility-step"></a>Adding a Validate page accessibility step</h2>
+                                        <p>The Validate page accessibility step should be placed in the part of your test where the desired page to be tested is currently open in the AUT. If your test involves navigating to more than one page, be sure that the step is placed in the testing sequence where the desired page is open.</p>
+                                        <div class="note">
+                                            <p>Steps created before Jan 2022 are not shared. To make them shared, please record them again.</p>
+                                        </div>
+                                        <p>→ <strong>To add a Validate page accessibility step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/04ebd5b-testim_340a.png" title="Testim 340a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/4b0c617-testim_283a_r_action_options.png" title="Testim 283a_r action options.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/96c08f9-testim_341_r.png" title="Testim 341_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Run test</strong> button to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/c1f821e-testim_342a.png" title="Testim 342a.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> again and click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/ea60818-testim_270_r2_predefined_steps.png" title="Testim 270_r2 predefined steps.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click on <strong>Validations</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands.</p>
+                                            <img src="images/e0f49dc-testim_271_r2_validations_menu.png" title="Testim 271_r2 validations menu.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Scroll down through the menu and select <strong>Validate page accessibility</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate page accessibility</strong>.</p>
+                                            </div>
+                                            <p>A <em>Validate page accessibility</em> step is added in the <strong>Editor</strong>.</p>
+                                            <img src="images/e967a00-testim_343a.png" title="Testim 343a.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Hover over the newly created step, and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/170105b-testim_344a.png" title="Testim 344a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/04ae060-screen_shot_2021-12-16_at_9.42.42.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Fill in the properties as described below.</p>
+                                            </li>
+                                            <p><em> <strong>Description</strong> – The description of the step. (Default = </em>Page accessibility validation*)</p>
+                                            <p><em> <strong>Fail test from impact level</strong> – The minimal impact level that will fail the test. Options are: </em>Critical<em>, </em>Serious<em>, </em>Moderate<em>, and </em>Minor<em>. (Default = </em>Minor*) The impact levels of the different rules are shown in the table <a href="#section-rules-descriptions">below</a>.</p>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Run only specific tags</strong> – Click in this field and choose the protocols you wish to test from the dropdown options available. See table <a href="#section-rules-descriptions">below</a>. By default all tags are selected.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Exclude specific rule IDs</strong> – If you wish to exclude specific rule IDs, select them from the list. In addition if you wish to only check specific rule IDs, you can select all and then un-select the ones you would like to test.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>When this step fails</strong> – Specify what to do if the step fails.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more info, see <a href="../../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).</p>
+                                                </li>
+                                            </ul>
+                                            <li value="9">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after the Validation step to remove the breakpoint.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>When the test is run, the accessibility level of your page will be checked against the parameters you set. If accessibility violations are found and the step fails, you can view the accessibility report to see detailed results.</p>
+                                        <h2><a name="viewing-the-page-accessibility-results"></a>Viewing the page accessibility results</h2>
+                                        <p>After a test with a <em>Validate page accessibility</em> step is run, if accessibility violations are found, a <em>Step Failed: Accessibility violations were found</em> error message is shown, and you can view detailed accessibility violation results. → <strong>To view the page accessibility results:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the failed <em>Validate page accessibility</em> step, and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/791f79c-testim_345a.png" title="Testim 345a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="2">
+                                                <p>In the <strong>Properties</strong> panel, click the <strong>Check here for more details</strong> link.</p>
+                                            </li>
+                                            <img src="images/08c719f-screen_shot_2021-12-20_at_8.27.57.png" title="Screen Shot 2021-12-20 at 8.27.57.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, in the error panel, you can click on the <strong>Accessibility report</strong> link.</p>
+                                            </div>
+                                            <img src="images/2b2619c-testim_345b.png" title="Testim 345b.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Accessibility Result</strong> window is shown (based on the impact level  you chose previously), displaying a list of accessibility issues, the number of occurrences that were found, and their impact levels.</p>
+                                            <img src="images/f450ae7-testim_348z_r.png" title="Testim 348z_r.png" class="ScreenshotFullsize" />
+                                            <p>If you would like to show the accessibility issues found based on all of the impact levels, click the <strong>All impact level</strong> toggle.</p>
+                                            <img src="images/7e6519c-testim_349za_r.png" title="Testim 349za_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>If you would like to download the results as a CSV file, click the <strong>download</strong> icon. (The CSV file includes the results of all of the accessibility tests, including those that passed.)</p>
+                                            </li>
+                                            <img src="images/f155939-testim_349zb_r.png" title="Testim 349zb_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click the <strong>down arrow</strong> next to any of the results to show the following detailed information: <em>Description</em>, <em>How To Fix The Problem</em>, and <em>Element CSS Selector</em>.</p>
+                                            </li>
+                                            <img src="images/47bcc8a-testim_350a_r2.png" title="Testim 350a_r2.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>If more than one occurrence of an accessibility issue was found, click the <strong>arrows</strong> in the <strong>Element CSS Selector</strong> section to show the different instances of the issue.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/09ff7dd-testim_350b_r2.png" title="Testim 350b_r2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="rules-descriptions"></a>Rules Descriptions</h2>
+                                        <p>Testim uses the following library to check the element accessibility level: <a href="https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md">https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md</a>. Each rule has an associated impact level (e.g. Critical, Serious, Moderate, or Minor) and associated tags. When configuring the accessibility check, you can limit the check to certain tags and/or impact levels.</p>
+                                    

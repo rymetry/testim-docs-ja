@@ -1,0 +1,85 @@
+
+                                        <h1>Groups Parameters</h1>
+                                        <p><a href="../../editing-tests/groups/index.htm">Groups</a> can include parameters, which are variables that can be used to pass information into a test step. By using parameters in a test, you can test different scenarios without knowing the information in advance. For example, when testing a login scenario, you can use parameters to switch between various username and password options, such as a <em>registered_user versus a _guest</em> user, etc.<br /></p>
+                                        <p>If the group is shared between multiple tests, the group parameters will be also available across all the tests and you will only need to set specific values for these parameters.<br /> You can add parameters to groups the exact same way you define parameters in the <a href="parameters-in-custom-javascript-steps.htm">Step Properties Panel Parameters</a>. First you will need to <a href="../../editing-tests/groups/index.htm">create a group</a>, add parameters, assign these parameters to specific steps in the group and then add values to these parameters.</p>
+                                        <h2><a name="parameter-scope"></a>Parameter Scope</h2>
+                                        <p>The scope of the defined parameter is within the group itself. This means that all the steps within the group can use the parameter. If its a shared group, the parameter can be shared across multiple tests that use the shared group.<br /> Parameters created in groups are considered as "local scope". Parameters can be overridden by the same scope or a “smaller” scope. For example, a "test scope" parameter can be overridden by either another test scope or local scope parameter with the same name.</p>
+                                        <div class="caution">
+                                            <p>Shared parameters If its a shared group/step, the  JS/HTML parameters themselves will be shared across tests, <strong>but not their inner values</strong>, so the parameters can be reused in other tests with other values. Deleting a parameter from a shared step or group will have a cascading effect on all instances of that step or group, and this action cannot be undone.</p>
+                                        </div>
+                                        <h2><a name="adding-parameters-to-a-group"></a>Adding Parameters to a Group</h2>
+                                        <p>→ <strong>To add parameters to a group:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a group by following the instructions in the <a href="../../editing-tests/groups/index.htm">Groups</a>  section. In this example we will create a "Login group" that includes typical login steps.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the group's <strong>Show Properties</strong> icon (:fa-cog:).</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the <strong>+</strong> icon next to <strong>Params</strong> and then click <strong>JS</strong>.</p>
+                                            </li>
+                                            <img src="images/8e504bc-paramsjs.png" title="paramsjs.PNG" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Enter a name for the first parameter, by clicking the <strong>Edit</strong> icon and then replacing the "param" text with the new name.</p>
+                                            </li>
+                                            <img src="images/0d72468-edit.png" title="edit.png" class="ScreenshotFullsize" />
+                                            <p>​5. Enter a value in the field below the parameter name. If the value is a constant string value use ' ' around it. For example, 'guest'. This value will be available in this test only (i.e., the value will not be shared across tests.</p>
+                                            <li value="5">
+                                                <p>Repeat <strong>steps 4-5</strong> to add additional parameters.</p>
+                                            </li>
+                                            <img src="images/4c19442-example.png" title="example.PNG" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Click <strong>Save</strong> and then <strong>OK</strong>.​</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="assigning-parameters-to-steps-in-a-group"></a>Assigning Parameters to Steps in a Group</h2>
+                                        <p>→ <strong>To assign parameters to steps in a group:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Double-click the group step to view the group's internal steps.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Note If it’s a shared group you will need to confirm that the changes will be applied on all related tests.</p>
+                                            </div>
+                                            <li value="2">
+                                                <p>Select the relevant step to assign the parameter and click the <strong>Show Properties</strong> icon (:fa-cog:). For example, we will select the <strong>"Set text"</strong>&amp;#x73;tep to assign the <span class="FileOrFilePath">username</span> parameter.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Text to assign</strong> field, replace the current static value to the parameter's name (e.g. username).</p>
+                                            </li>
+                                            <img src="images/a5856f1-texttoassign.png" title="texttoassign.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Repeat steps 1-3 to assign additional parameters to steps. For example, we will assign the password parameter to the Set password step.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Save</strong> and <strong>OK</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <p>That's it!<br /> We have created a login group with parameters, that can be easily reused in other tests with a different set of values without the need to change the group itself.</p>
+                                        <h2><a name="reusing-the-group-with-the-parameters"></a>Reusing the Group with the Parameters</h2>
+                                        <p>→ <strong>To reuse the group with parameters:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Add the group to another test by following the instructions in the <a href="../../editing-tests/groups/index.htm">Reusing a Group</a>  section. In this group, the parameters are already assigned to the relevant steps, but the values are empty.</p>
+                                            </li>
+                                            <img src="images/c3bace7-addinglogingroup.png" title="addinglogingroup.PNG" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the group's <strong>Show Properties</strong> icon (:fa-cog:).<br /></p>
+                                            </li>
+                                            <p>Notice that the parameters exist, but the values are not assigned.</p>
+                                            <img src="images/5ccad01-notassigned.png" title="notassigned.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Assign Now</strong>drop-down menu and select <strong>JS</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the empty field, enter the relevant value. If the value is a constant string value use ' ' around it.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Repeat <strong>steps 3-4</strong> for additional parameters.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click <strong>Save</strong> and <strong>OK</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

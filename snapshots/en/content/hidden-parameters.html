@@ -1,0 +1,45 @@
+
+                                        <h1>Hidden parameters</h1>
+                                        <p>When you use <a href="index.htm">parameters</a> in your tests, the values that are used during run time are saved and shown in the UI, as this is very useful for debugging and understanding the root cause of the failure. However, sometimes the information is sensitive, so you want the value to be hidden. Testim features the ability to define which parameters will be hidden. The hidden parameters will not be saved in Testim's Cloud at any point, so the "Rerun with same parameters" feature will not be available.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h2><a name="add-a-hidden-parameter"></a>Add a hidden parameter</h2>
+                                        <p>To add a hidden parameter, follow these steps:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the main menu, select <strong>Resources</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the <strong>Hidden Parameters</strong> section, click <strong>Add hidden parameter</strong>.</p>
+                                            </li>
+                                            <img src="images/8a620c67961ff63c9a3ec7f75879b2ea8f31a024bbf494d95e0a7ba1f951e33d-image.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Type the name of a parameter you want to add and a description (optional). Then select <strong>Create</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="edit-or-delete-a-hidden-parameter"></a>Edit or delete a hidden parameter</h2>
+                                        <p>To edit or delete a hidden parameter, follow the steps:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select <strong>Resources</strong> from the main menu and then select the <strong>Hidden Parameters</strong> section to see all your hidden parameters.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Right-click on the parameter you want to edit and select <strong>Edit</strong>. To delete the parameter, select <strong>Delete</strong> instead.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d3dc1ceb5e01ad3f8c0dfd745287e03d791fd9c3f520ded6ec566072a31f0826-image.png" class="ScreenshotFullsize" />
+                                        <h2><a name="run-a-test-with-hidden-parameters"></a>Run a test with hidden parameters</h2>
+                                        <p>Running a test that is using a hidden parameter is available only via <a href="../../running-tests/the-command-line-cli/index.htm">CLI</a>. It is not possible to use the Scheduler to run tests with hidden parameters.<br /> You can pass a hidden parameter value to a CLI run by using one of the following options:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Pass it through a JSON Parameters File</strong> - You can define parameters in a JSON Parameters File and then pass the hidden parameters to test runs. For more information, see <a href="json-parameters-file-parameters.htm">JSON Parameters File Parameters</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Pass it through the Configuration File</strong> -  You can define parameters in a Configuration File and then pass the hidden parameters to test runs. For more information, see <a href="configuration-file-parameters.htm">Configuration File Parameters</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="hidden-parameters-in-a-test"></a>Hidden parameters in a test</h2>
+                                        <p>The Hidden parameters values will appear as <strong></strong>* in the UI:</p>
+                                        <img src="images/fac42c05074591bd2d940d57de80b74e7f56eb9f2cf304ba60ae1302933b8887-step_passed.png" class="ScreenshotFullsize" />
+                                    

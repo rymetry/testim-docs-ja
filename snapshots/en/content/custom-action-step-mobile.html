@@ -1,0 +1,131 @@
+
+                                        <h1>Custom Action Step (mobile)</h1>
+                                        <p>There may be times when you want your test to perform an action or validation that is not included in the predefined steps menu. The Custom Action (mobile) step allows you to run a script using Appium for extended capabilities and validations in your tests. The script can run multiple mobile commands in batch and can also use JavaScript parameters. The Custom Action (mobile) step is fully supported only in TMA. Third-party grids aren't supported, for example:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Browserstack returns: Execute driver script functionality is not available unless server is started with --allow-insecure including the 'execute_driver_script' flag, e.g., --allow-insecure=execute_driver_script`</p>
+                                            </li>
+                                            <li>
+                                                <p>Headspin returns: <span class="FileOrFilePath">An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden</span></p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Prerequisites for running the step locally When running a test that includes this step on a local physical local device or emulator, you will need to execute the following CLI command in your local terminal of the machine before executing the test: <span class="FileOrFilePath">tricentis-mobile-agent start -e</span></p>
+                                        </div>
+                                        <h2><a name="supported-appium-methods-on-vmg"></a>Supported Appium methods on VMG</h2>
+                                        <p>The following Appium methods are supported:</p>
+                                        <ul>
+                                            <li>
+                                                <p><span class="FileOrFilePath">performActions</span>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">findElement</span>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">findElements</span>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">sendKeys</span>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">hideKeyboard</span>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">getWindowRect</span>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <p><span class="FileOrFilePath">findElement(s)</span> doesn't work with "text" as the strategy - in general, searching by "label" or "value" works best.</p>
+                                        <div class="note">
+                                            <p>If you want to use addition methods, which are not listed above, contact Tricentis Support.</p>
+                                        </div>
+                                        <h2><a name="adding-a-custom-action-mobile-step-to-your-test"></a>Adding a Custom Action (mobile) Step to your Test</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the  (arrow symbol) or the <strong>+</strong> where you want to add the Custom Action step. The action options are displayed.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the “M” (Testim predefined steps). The Predefined steps menu opens.</p>
+                                            </li>
+                                            <img src="images/0b5972d-ca1.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Expand the <strong>Actions</strong> menu and select the <strong>Add custom action</strong> step.</p>
+                                            </li>
+                                            <img src="images/603ef8c-customaction.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: Alternatively, you can use the search box at the top of the menu to search for Add custom action.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>In the <strong>Name</strong> the new step field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to Shared step selected (default), and choose a folder from the <strong>Select shared step folder</strong> list where you want this step stored. Otherwise, deselect the checkbox. For more information about shared steps, see <a href="../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click <strong>Create Step</strong>. The function editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            </li>
+                                            <img src="images/795f7e2-ca3.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “Run shared action” (or “Run action”).</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Define the parameters you will need for your step as follows:</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>In the <strong>Properties</strong> panel, click the <strong>+ PARAMS</strong> button.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p><strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Optionally fill in the following Properties:</p>
+                                            </li>
+                                            <li value="12">
+                                                <p><strong>When this step fails</strong> – Specify what to do if this step fails.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see Conditions.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).</p>
+                                            </li>
+                                            <li value="15">
+                                                <p>In the <strong>function</strong> text box, type in the desired JavaScript code. If you have defined parameters, you can refer to those parameters in your JavaScript code.</p>
+                                            </li>
+                                            <li value="16">
+                                                <p>Click the back arrow to return to the main Editor window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/af049a04d124482609c685f2dd8d595d1b573ac766b9ec7c8a827d6e6c57ba4f-run_shared_action.jpg" class="ScreenshotFullsize" />
+                                        <p>The step is created.</p>
+                                        <img src="images/0b1c350-customaction3.png" class="ScreenshotFullsize" />
+                                        <br />
+                                        <div class="note">
+                                            <p>Note: If you opened your AUT to define an element as a parameter, click on the Toggle Breakpoint button to remove the breakpoint.</p>
+                                        </div>
+                                        <h2><a name="custom-action-step-examples"></a>Custom Action Step Examples</h2>
+                                        <h3><a name="pulling-the-navigation-bar-of-the-device"></a>Pulling the navigation bar of the device</h3>
+                                        <p>The following example illustrates the use of the <span class="FileOrFilePath">performActions</span> Appium method in a Custom Action step. In this case the code includes an action to press on the top left of the screen, wait 100 milliseconds, pull down by 100 pixels, and then release.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const start_x = 50<br />const start_y = 1<br />const end_x = 50<br />const end_y = 2000<br /><br />await DRIVER.performActions([<br />&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"type": "pointer",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"id": "finger1",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"parameters": {"pointerType": "touch"},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"actions": [<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{"type": "pointerMove", "duration": 0, "x": start_x, "y": start_y},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{"type": "pointerDown", "button": 0},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{"type": "pause", "duration": 100},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{"type": "pointerMove", "duration": 500, "x": end_x, "y": end_y},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{"type": "pointerUp", "button": 0}<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;]<br />&#160;&#160;&#160;&#160;}<br />])</code></pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h3><a name="finding-a-button-element-via-xpath"></a>Finding a button element via xpath</h3>
+                                        <p>The following example illustrates the use of the <span class="FileOrFilePath">findElement</span> Appium method in a Custom Action step.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const el = await DRIVER.findElement('xpath', "//XCUIElementTypeApplication/XCUIElementTypeWindow/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeCollectionView");<br />/*const e2 = await DRIVER.findElement('class name', "XCUIElementTypeButton");*/</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="typing-on-the-keyboard"></a>Typing on the keyboard</h3>
+                                        <p>The following example illustrates the use of the <span class="FileOrFilePath">sendKeys</span> and <span class="FileOrFilePath">hideKeyboard</span> Appium methods. The code types the string when the keyboard is displayed and then hides the keyboard.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>await DRIVER.sendKeys('abcdef');<br />await DRIVER.hideKeyboard();</code></pre>
+                                            </div>
+                                        </div>
+                                    

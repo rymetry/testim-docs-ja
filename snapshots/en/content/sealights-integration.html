@@ -1,0 +1,185 @@
+
+                                        <h1>Sealights Integration</h1>
+                                        <p>Sealights is a quality intelligence platform that assesses and quantifies code coverage for individual tests. You can integrate Sealights with Testim, enabling you to create and run tests in Testim while using Sealights to perform test optimization. During the execution of the tests, Testim sends the list of tests that will be executed to Sealights and  Sealights returns its test optimization recommendations for tests that should be skipped in the application build. These tests are then automatically excluded for the execution in Testim.</p>
+                                        <div class="note">
+                                            <p>Native mobile apps and Salesforce environments are currently not supported. However, mobile apps are supported for services that use the Web frameworks.</p>
+                                        </div>
+                                        <h1><a name="prerequisites"></a>Prerequisites</h1>
+                                        <p>Before running a test in Testim with Sealights integration, you first need to:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Create a Sealights account</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <p>Setup and configure the Sealights Agents based on your AUT's (Application Under Test) framework - see, <a href="https://documentation.tricentis.com/sealights/en/content/sealights/agents_setup_configuration.htm">Agents: Setup and configuration</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="setting-the-sealights-integration"></a>Setting the Sealights integration</h1>
+                                        <p>Before using the Sealights and Testim integration, you will need to connect Testim to Sealights through the Sealights Agent Token. This process is required only once.</p>
+                                        <div class="note">
+                                            <p>Sealights integration is not available to free tier customers.</p>
+                                        </div>
+                                        <p>→<strong>To connect Testim to Sealights:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In <strong>Sealights</strong>, go to <strong>Settings &gt; Agent Tokens</strong> and click <strong>Create new token</strong>.</p>
+                                            </li>
+                                            <img src="images/d94ca5f4d01671008eae2aadc1dc16d713111a3dd4a0f1bd974a29e50fe532b0-sealights2.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the empty field, enter a name for the token and click <strong>Create</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Copy the newly created token by clicking the <strong>Copy</strong> button under <strong>Actions</strong>.</p>
+                                            </li>
+                                            <img src="images/9eb0aac459a4d36025501de9a1eef17bc3a2f6742447e6ac79bf41838b37db8f-sealights4.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In Testim, go to <strong>Settings &gt; Integration &gt; Test Optimization</strong> tab.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>login</strong>.</p>
+                                            </li>
+                                            <img src="images/9f2f531c6d15d5ce3df3f616d1e0ffd9e5befd2067a8e3fd47bcf9182f73a8f3-sealightsintegrationslogin.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>Sealights Agent Token</strong>,  paste the <strong>Sealights Agent Token</strong> that was obtained.<br /></p>
+                                            </li>
+                                            <p>The <strong>Sealights URL</strong> field is populate automatically based on the <strong>Sealights Agent Token</strong>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Connect</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h1><a name="running-a-test-with-sealights-integration"></a>Running a Test with Sealights Integration</h1>
+                                        <p>Tests with Sealights integration can be executed using the following methods:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>CLI</strong> - by adding a CLI option that includes either the Sealights <span class="FileOrFilePath">buildSessionId</span> or the Sealights <span class="FileOrFilePath">labId</span>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Scheduler</strong> - by entering the Sealights <span class="FileOrFilePath">labId</span> to the <strong>Lab ID</strong> field in the <strong>Advanced</strong> section.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>API</strong> (coming soon)</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="using-the-cli-to-run-tests-with-sealights-integration"></a>Using the CLI to run tests with Sealights integration</h2>
+                                        <p>When running a test with the Sealights Integration using the CLI, you need to add one of the following IDs from Sealights as options in the Testim CLI execution command:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Sealights buildSessionId</strong> - this ID relates to the specific build that was executed. Typically this is related to a specific component in an application. This means that this option is recommended if you want to test a specific component.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Sealights labId</strong> - typically multiple components that are hosted on the same environment may share the same LabId. So if you want to test multiple components, it is recommended to use the LabId instead of the buildSessionId.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Sealights test-stage</strong> - typically your test stage name in Sealights is Testim Automation. If you want to use a different test stage name, this option is recommended.</p>
+                                            </li>
+                                        </ul>
+                                        <p>When the tests are executed using the CLI, Sealights returns a list of tests in this command that should be skipped and these are automatically skipped.</p>
+                                        <div class="note">
+                                            <p>If <span class="FileOrFilePath">labId</span> CLI option is not used, Testim will use the <span class="FileOrFilePath">bulidSessionId</span> value for both <span class="FileOrFilePath">labId</span> and <span class="FileOrFilePath">buildSessionId</span> options.</p>
+                                        </div>
+                                        <h3><a name="buildsessionid-option"></a>buildSessionId option</h3>
+                                        <h4><a name="obtaining-the-buildsessionid-from-sealights"></a>Obtaining the buildSessionId from Sealights</h4>
+                                        <p>For every component build that is being tested, you will have to obtain its Session ID from Sealights, by following the relevant instructions for the framework that you are using:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="https://documentation.tricentis.com/sealights/en/content/sealights/using_node_js_agent___generating_a_session_id.htm">Using Node.js Agent - Generating a session ID</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="https://documentation.tricentis.com/sealights/en/content/sealights/using_java_agents___generating_a_session_id.htm">Using Java Agents - Generating a session ID</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="https://documentation.tricentis.com/sealights/en/content/sealights/using_python_agent___generating_a_session_id.htm">Using Python Agent - Generating a session ID</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="https://documentation.tricentis.com/sealights/en/content/sealights/using_go_agent___initializing_agent_and_generating_a_session_id.htm">Using Go Agent - Initializing agent and Generating a session ID</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="https://documentation.tricentis.com/sealights/en/content/sealights/sealights__net_core_agent___scanning_the_build_binaries.htm">SeaLights .NET Core agent - Scanning the build binaries</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <h4><a name="executing-tests-in-testing-using-the-sealights-buildsessionid"></a>Executing test(s) in Testing using the Sealights buildSessionId</h4>
+                                        <p>In Testim, run the test(s) using the <a href="../running-tests/the-command-line-cli/index.htm">Command line interface (CLI)</a>, while adding the following option to the execution:</p>
+                                        <ul>
+                                            <li>
+                                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                    <div class="codeSnippetBody"><pre><code>--sealights-build-session-id [sealights-suid-session-id]</code></pre>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="labid-option"></a>labId option</h3>
+                                        <p>In Sealights, the <span class="FileOrFilePath">labId</span> is an identifier that you can assign to various components that share the same characteristics, such as components that are hosted on the same environment. You can assign a <span class="FileOrFilePath">labId</span> to the components when running them using the Sealights agent. For example, in the following Sealights command, which uses the Node.js test listener agent, you can assign a <span class="FileOrFilePath">labId</span> as part of the command:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>npx slnodejs run --tokenfile ./path/to/sltoken.txt --buildsessionidfile buildSessionId [--labid &lt;Lab ID&gt;] --workspacepath "." --useinitialcolor true -- /your/backend/server/command</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>In Testim, this <span class="FileOrFilePath">labId</span> can be used as the CLI option when running a test with the Sealights Integration using the CLI.</p>
+                                        <h4><a name="obtaining-the-labid-from-sealights"></a>Obtaining the labId from Sealights</h4>
+                                        <p>In Sealights, once the <span class="FileOrFilePath">labId</span> has been assigned, you may find it in the following screen:</p>
+                                        <ul>
+                                            <li>
+                                                <p>In Sealights, go to <strong>Cockpit &gt; Live Agents Monitor</strong> - this screen displays all the running processes that are instrumented in Sealights. Some of these processes will include an assigned labId as showed below:</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/319a904886d6e56b97fd101bf997eddbc0f8be6a04c43dd49df3f83c09259b76-sealights6.png" class="ScreenshotFullsize" />
+                                        <h4><a name="executing-tests-in-testing-using-the-sealights-labid"></a>Executing test(s) in Testing using the Sealights labId</h4>
+                                        <p>In Testim, run the test(s) using the <a href="../running-tests/the-command-line-cli/index.htm">Command line interface (CLI)</a>, while adding the following option to the execution:</p>
+                                        <ul>
+                                            <li>
+                                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                    <div class="codeSnippetBody"><pre><code>--sealights-lab-id [sealights-lab-id]</code></pre>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="test-stage-option"></a>test-stage option</h3>
+                                        <p>Typically, the Sealights integration uses the test stage name Testim Automation. But you can override this and use a custom name. We recommend that you always send <span class="FileOrFilePath">Testim</span> in the tag sections during any CLI run. This best practice identifies the origins of your tests. If you want to use a custom test stage name, you can use the <a href="../running-tests/the-command-line-cli/index.htm">Command line interface (CLI)</a> while adding the following option to the execution:</p>
+                                        <ul>
+                                            <li>
+                                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                    <div class="codeSnippetBody"><pre><code>--sealights-test-stage [sealights-test-stage-name]</code></pre>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="using-the-scheduler-to-run-tests-with-sealights-integration"></a>Using the Scheduler to run tests with Sealights integration</h2>
+                                        <p>You can run tests with Sealights by entering the Sealights <span class="FileOrFilePath">labId</span> to the <strong>Lab ID</strong> field in the <strong>Advanced</strong> section. When the tests are executed by the Scheduler, Sealights returns a list of tests in this batch that should be skipped and these are automatically skipped. →<strong>To run tests with Scheduler and Sealights integration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Sealights, obtain the Lab ID, by following the instructions in the labId option section.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In Testim, configure the Scheduler, by following the instructions in the <a href="../running-tests/scheduler.htm">Scheduler - Web</a> section.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the Scheduler configuration screen, click <strong>Advanced</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Test Optimization Configuration</strong>, in the <strong>Lab ID</strong> field, paste the Lab ID that you have obtained from Sealights.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Optionally, if you use custom Test stage name, enter it in the <strong>Test stage name field</strong></p>
+                                            </li>
+                                            <img src="images/bc18e3067f7237605da4a0913aacbc0b5fdcd3f2dd5e39233a297a81dcf010f2-image_12.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Configure addition settings as needed.</p>
+                                            </li>
+                                        </ol>
+                                        <br />
+                                        <h1><a name="viewing-executed-test-list-and-skipped-tests"></a>Viewing Executed Test List and Skipped Tests</h1>
+                                        <h2><a name="viewing-the-executed-test-list-in-the-cli"></a>Viewing the Executed Test List in the CLI</h2>
+                                        <p>After executing the tests using the CLI, you can view the test list, which includes the test execution status and an indication of whether the test has been excluded/skipped. In the example below we can see that only the Function 1 test was executed and the other tests were "excluded by Sealights". The execution summary at the bottom of the screen also indicates that 23 tests were skipped.</p>
+                                        <img src="images/3a2008ccae733afc7b4e728b7f3fdfbd359716198d09d375d6645fff1de341e2-testlistwith_skipped.png" class="ScreenshotFullsize" />
+                                        <h2><a name="viewing-the-executed-list-in-the-testim-ui"></a>Viewing the Executed List in the Testim UI</h2>
+                                        <p>In the <a href="../results/execution-runs-screen.htm">Execution Runs Screen</a>, you can view the executed tests list. Under the Status column, you will see an indicator of tests that the test was excluded by Test Optimization.</p>
+                                        <img src="images/86c65098a0456e26b975e9bd580d73048f87210c9aef8244484a6141a4305e9e-testlistui.png" class="ScreenshotFullsize" />
+                                        <p>Hovering over the <strong>i</strong> icon reveals a notice that the test was excluded by Sealights.</p>
+                                        <img src="images/d4a8e26c6ba574869f2683415525f4433aeec6c0c33faca235d0a83c95ce23c9-excludedbysealights.png" class="ScreenshotFullsize" />
+                                    

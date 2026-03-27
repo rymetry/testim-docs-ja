@@ -1,0 +1,61 @@
+
+                                        <h1>Locators: Auto Improve</h1>
+                                        <p>Over time, as your app changes, the locator scores of your elements can degrade. If a locator score drops below 70%, Testim automatically attempts to improve that locator in order to enhance the stability of your test. If the locator score is successfully improved, Testim replaces the degraded locator with the improved locator. This replacement is indicated in three different locations in the UI as described below: <em>Revision History</em> panel, <em>Locators</em> panel, and  <em>Test Library</em> screen. You can filter the tests in your Test Library by tests that have been auto-improved. Also, in the Test Editor you can view which steps have been auto-improved. This feature is automatically applied only to tests run on the master branch (that is not a master read-only branch). Users can optionally activate this feature for master read-only branches. Tests run on other branches will not have their locators auto-improved.</p>
+                                        <h2><a name="revision-history-panel"></a>Revision History Panel</h2>
+                                        <p>Testim creates a test revision and labels it “Testim auto improve”. You can also view which steps in a test have been auto-improved.</p>
+                                        <img src="images/96f61e6-testim_478a.png" title="Testim 478a.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To view which steps have been auto-improved:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open a test that has been auto-improved.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Toggle the <strong>Show improved steps</strong> switch to the right.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ac0724b-testim_585b.png" title="Testim 585b.png" class="ScreenshotFullsize" />
+                                        <p>The steps that have been auto-improved are highlighted.</p>
+                                        <h2><a name="locators-panel"></a>Locators Panel</h2>
+                                        <p>Testim inserts the “Locator auto improved” message at the top of the Locators panel for the locator that was auto-improved.</p>
+                                        <img src="images/1b05339-testim_479a.png" title="Testim 479a.png" class="ScreenshotFullsize" />
+                                        <h2><a name="test-library-screen"></a>Test Library Screen</h2>
+                                        <p>Testim inserts an “Ai” icon after the name of the test for which one or more degraded locators were replaced with auto-improved locators. The auto improve icon is shown for approximately two weeks.</p>
+                                        <img src="images/9113b7b-testim_481a.png" title="Testim 481a.png" class="ScreenshotFullsize" />
+                                        <h2><a name="filtering-the-test-library"></a>Filtering the Test Library</h2>
+                                        <p>You can filter the test list in your <strong>Test Library</strong> by tests that have been auto-improved. For more information on filtering the <strong>Test Library</strong>, see <a href="test-list/index.htm#section-filtering-the-test-library">Filtering the Test Library</a>. → <strong>To filter the Test Library by auto-improved tests:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Test Library</strong> screen (<strong>Test List</strong> &gt; <strong>Tests</strong>) click the <strong>Advanced filters</strong> icon.</p>
+                                            </li>
+                                            <img src="images/1599496-testim_575a.png" title="Testim 575a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Filter Test</strong> pane opens on the right hand side.<br /></p>
+                                            <li value="2">
+                                                <p>In the <strong>Filter Test</strong> pane, scroll to the bottom and select the <strong>Auto Improved</strong> toggle.</p>
+                                            </li>
+                                            <img src="images/bcd9e8a-testim_583b_r.png" title="Testim 583b_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click <strong>Apply</strong>.<br /></p>
+                                            </li>
+                                            <p>The filter is applied, and only those tests that have been auto-improved are shown.</p>
+                                            <li value="4">
+                                                <p>Click the "<strong>X</strong>" in the upper right of the <strong>Filter Test</strong> pane to close it.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Closing the <strong>Filter Test</strong> pane without resetting the filters will not reset them, and only the tests that meet the filter criteria will be shown. To view all of your tests and folders again, you will need to reopen the <strong>Filter Test</strong> pane and click <strong>Reset filters</strong>.</p>
+                                        </div>
+                                        <h2><a name="allowing-auto-improve-on-a-master-read-only-branch"></a>Allowing Auto Improve on a Master Read Only Branch</h2>
+                                        <p>By default, the auto-improve feature only runs on master branches that are not set as read-only. You can modify the settings to allow the auto-improve feature to run on master read-only branches. → <strong>To configure the auto-improve feature to run on master read-only branches:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the <strong>Settings</strong> &gt; <strong>Project</strong> page of your master read-only branch, click <strong>Pull Requests</strong>.</p>
+                                            </li>
+                                            <img src="images/5667d75-testim_577a.png" title="Testim 577a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Pull Requests</strong> tab is shown.<br /></p>
+                                            <li value="2">
+                                                <p>Toggle the <strong>Allow Auto-Improve on master</strong> switch to the right.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/f1985b7-testim_586a.png" title="Testim 586a.png" class="ScreenshotFullsize" />
+                                        <p>The auto-improve feature is now enabled for this master read-only branch.</p>
+                                    

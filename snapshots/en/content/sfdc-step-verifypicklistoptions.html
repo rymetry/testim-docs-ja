@@ -1,0 +1,51 @@
+
+                                        <h1>Verify picklist options</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The Verify picklist options step verifies that, when creating a record, a specific options are or aren't displayed in a drop-down menu (pick list) of a specific field. This is typically used to check that certain users are not able to see options that are not part of their permissions when creating a record. For each picklist you can verify that specified options exist, do not exist, or that there is an exact match between the selected options and the options displayed in the field. This step can be combined with the <a href="sfdc-step-loginas.htm">Log In As Another User</a> step to test the different picklist options that are available to the various user types.</p>
+                                        <h1><a name="creating-a-verify-picklist-options-step"></a>Creating a Verify Picklist Options Step</h1>
+                                        <p>→ <strong>To add a Verify Picklist Options step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the editor, add a step by clicking the <strong>+</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the <strong>Salesforce steps</strong> tab, click <strong>Record operations</strong> and select <strong>Verify picklist options</strong> step.<br /></p>
+                                            </li>
+                                            <p>The <strong>Verify picklist options</strong> step is added and the following <strong>Object</strong> properties is displayed.</p>
+                                            <img src="images/2694c63-2024-05-06_15-48-25.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Select the Object</strong> drop-down menu and select the desired object type. The object type determines the type of object of the record for which you want to verify the picklist options.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Select Record Type</strong>, select the record type of the record for which you want to verify the picklist options.<br /></p>
+                                            </li>
+                                            <p>The record type/object' list of fields is displayed.</p>
+                                            <img src="images/5643048-2024-05-06_15-59-04.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>For each field that you want to verify its picklist options, under <strong>Action</strong> select one of the following options:</p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>Exact Match</strong> - select this option if you want to verify that the options selected in the <strong>Options</strong> field match all the picklist options of this field. If there are more options or fewer options, the step will fail.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p><strong>Includes</strong> -  select this option if you want to verify that the options selected in the <strong>Options</strong> field are included in the picklist options of this field. If one or more of the options is not included, the step will fail.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p><strong>Excludes</strong> - select this option if you want to verify that the options selected in the <strong>Options</strong> field are excluded from the picklist options of this field. If any of the selected options appears in the field, the step will fail.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Reset</strong> - resets the value in the field to a "no entry" state. Note that if the field is empty, it will try to enter an empty string to the field, however if you select the Reset option, it will not try to enter an empty string.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>Under <strong>Options</strong>, click the field to select the picklist option.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Click again to select more picklist options.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>When finished, click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

@@ -1,0 +1,78 @@
+
+                                        <h1>Test suites</h1>
+                                        <p>Test Suites give you the flexibility to manage the order between tests. You group them in suites so that you can create different groups of tests. This capability makes it easy to select which tests will be included in your suite as well as determine the order in which they will run. Test suites are supported for both Web and Mobile.</p>
+                                        <h2><a name="create-a-new-test-suite"></a>Create a new test suite</h2>
+                                        <p>→ <strong>To create a new test suite:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to <strong>Test List &gt; Suites</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>New Suite</strong> button or click <strong>Create Suite</strong> if there are currently no test suites.</p>
+                                            </li>
+                                            <img src="images/0bfe227-newtestsuite.png" title="newtestsuite.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Give the Test Suite a <strong>Name</strong> and <strong>Description</strong>.</p>
+                                            </li>
+                                            <img src="images/866a2f2-geninfo.png" title="geninfo.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Search for tests by name or label and/or select one or more tests to include in the suite.</p>
+                                            </li>
+                                            <img src="images/85b039b-tests.png" title="tests.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click the <strong>OK</strong> button to create the Test Suite. The new suite is created and displayed in the Suites Library.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/b38b549-suitecreated.png" title="suitecreated.png" class="ScreenshotFullsize" />
+                                        <h3><a name="adding-tests-to-a-test-suite-by-label"></a>Adding Tests to a Test Suite by Label</h3>
+                                        <p>You can add tests to a test suite with specific <a href="labels.htm">Labels</a>.</p>
+                                        <img src="images/9085a97-testlabels.png" title="testlabels.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To add tests to a test suite by label:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>When adding tests to a test suite, search for the label by name.</p>
+                                            </li>
+                                            <img src="images/37cd081-label.png" title="label.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Testim will display a list of tests with that label. Select one or more tests from the list with that label and save your test.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/b982b26-labelfiltered.png" title="labelfiltered.png" class="ScreenshotFullsize" />
+                                        <h2><a name="edit-an-existing-test-suite"></a>Edit an existing test suite</h2>
+                                        <p>→ <strong>To edit an existing test suite:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select the test suite you want to edit and click the <strong>Edit</strong> button in the action panel.</p>
+                                            </li>
+                                            <img src="images/17f71bf-editsuite.png" title="editsuite.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Update the suite information, add/remove tests from the suite, and click the <strong>OK</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/029def2-editsuite2.png" title="editsuite2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="re-order-tests-in-a-test-suite"></a>Re-Order tests in a test suite</h2>
+                                        <p>By default tests are ordered in the suite based on the order in which they are selected. You can arrange and change the order of the tests in a suite once the suite has been created. → <strong>To re-order the tests in a test suite:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Double click the test suite you want to re-order.</p>
+                                            </li>
+                                            <img src="images/425cccb-doubleclick.png" title="doubleclick.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select a test and use the <strong>Move Up</strong> and <strong>Move Down</strong> buttons to change the order of the test in the list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/de91845-reorder.png" title="reorder.png" class="ScreenshotFullsize" />
+                                        <h2><a name="running-your-test-suite"></a>Running your Test Suite</h2>
+                                        <h4><a name="using-cli"></a>Using CLI</h4>
+                                        <p>In order to execute a test suite, you'll need to specify the test suite name in your CLI command like this:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--suite "Tutorial Demo"</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Read more about running <a href="../settings/cli-settings.htm">CLI</a> here.</p>
+                                        <h4><a name="using-scheduler"></a>Using Scheduler</h4>
+                                        <p>You can run your suite from Testim scheduler.<br /> Read <a href="../running-tests/scheduler.htm">here</a> to see how.</p>
+                                        <div class="note">
+                                            <p>Note: If you use parallel in your command, the order of the run is no longer guaranteed.</p>
+                                        </div>
+                                    

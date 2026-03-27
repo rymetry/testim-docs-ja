@@ -1,0 +1,72 @@
+
+                                        <h1>Branch Read Only State</h1>
+                                        <p>Testim features the ability to lock the branch, so that writing directly to the branch is not allowed.<br /> In order to write to the branch, all users will need to first fork to another branch and then perform a merge to the branch. The merge to a branch can be done through a <a href="pull-requests.htm">Pull Request</a>.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Only the <strong>project owner</strong> or the <strong>company owner</strong> can configure the branch to be read-only.</p>
+                                        </div>
+                                        <h2><a name="enabling-the-branch-read-only-mode"></a>Enabling the branch read-only mode</h2>
+                                        <p>The branch read-only mode is located under the <strong>Pull Requests</strong> settings, in the <strong>Settings -&gt; General</strong> screen and is configured per project. To enable it, switch on the <strong>Protect branch from changes</strong> toggle. The branch will be labeled as "read-only".</p>
+                                        <img src="images/77cbaf9-project_settings.png" title="project settings.png" class="ScreenshotFullsize" />
+                                        <h2><a name="branch-as-read-only-behavior"></a>Branch as read-only behavior</h2>
+                                        <p>When enabling the branch to be read-only, the current activities will be affected.</p>
+                                        <h3><a name="testim-editor"></a>Testim Editor</h3>
+                                        <ul>
+                                            <li>
+                                                <p>When performing a save to a test directly under the branch, we will ask you to perform a fork to another branch, and save the changes on the new branch</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/ef453c8-screen_shot_2021-01-18_at_6.21.37.png" title="Screen Shot 2021-01-18 at 6.21.37.png" class="ScreenshotFullsize" />
+                                        <h3><a name="test-list"></a>Test List</h3>
+                                        <h4><a name="tests"></a>Tests</h4>
+                                        <p>The following actions will be disabled:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Create a new test</p>
+                                            </li>
+                                            <li>
+                                                <p>Delete test</p>
+                                            </li>
+                                            <li>
+                                                <p>Clone test</p>
+                                            </li>
+                                            <li>
+                                                <p>Create a new folder</p>
+                                            </li>
+                                            <li>
+                                                <p>Move to another folder</p>
+                                            </li>
+                                            <li>
+                                                <p>Delete folder</p>
+                                            </li>
+                                            <li>
+                                                <p>Change test's status</p>
+                                            </li>
+                                            <li>
+                                                <p>Rename</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/a5dab70-untitled_2.png" title="Untitled 2.png" class="ScreenshotFullsize" />
+                                        <h4><a name="suites"></a>Suites</h4>
+                                        <p>The following actions will be disabled:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Create suite</p>
+                                            </li>
+                                            <li>
+                                                <p>Copy suite</p>
+                                            </li>
+                                            <li>
+                                                <p>Delete suite</p>
+                                            </li>
+                                            <li>
+                                                <p>Edit suite</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/1f237b2-untitled_3.png" title="Untitled 3.png" class="ScreenshotFullsize" />
+                                        <h3><a name="auto-improve-feature-on-read-only-branches"></a>Auto-Improve feature on read-only branches</h3>
+                                        <p>By default, the auto-improve feature only runs on branches that are not set as read-only. However, if the branch is a master branch, it is possible to set the <strong>Allow Auto-Improve on master</strong> on, which will apply the auto improve feature on a master read-only branch. For more information see <a href="../../test-management/locators-auto-improve.htm#section-allowing-auto-improve-on-a-master-read-only-branch">Allowing Auto Improve on a Read Only Branch</a>.</p>
+                                        <img src="images/05bf593-autoimprove.png" title="autoimprove.png" class="ScreenshotFullsize" />
+                                    

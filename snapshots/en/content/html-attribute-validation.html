@@ -1,0 +1,138 @@
+
+                                        <h1>Validate HTML attribute (Web)</h1>
+                                        <p>The HTML attribute validation allows you to validate the value of any HTML attribute of an element (e.g. <em>href</em>, <em>src</em>, <em>alt</em>, <em>title</em>, etc.). It is also possible to validate a "disabled" attribute, as explained below.</p>
+                                        <h2><a name="adding-a-validate-html-attribute-step"></a>Adding a Validate HTML attribute step</h2>
+                                        <p>→ <strong>To add a Validate HTML attribute step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the validation.</p>
+                                            </li>
+                                            <img src="images/a0c5a27-testim_233a.png" title="Testim 233a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/9ad04c9-testim_234a_r.png" title="Testim 234a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/3040109-testim_235_r.png" title="Testim 235_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Run test</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/c3f0d75-testim_236a.png" title="Testim 236a.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> again and click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/0bd37d9-testim_237_r.png" title="Testim 237_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click on <strong>Validations</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands.</p>
+                                            <img src="images/e3e4f2e-testim_238_r.png" title="Testim 238_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Scroll down through the menu and select <strong>Validate HTML attribute</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate HTML attribute</strong>.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>In the <strong>AUT</strong> window, identify the relevant element for which you wish to validate an HTML attribute, and click on it to select it.<br /></p>
+                                            </li>
+                                            <p>The <strong>HTML Attribute Validation</strong> form is shown.</p>
+                                            <img src="images/4a3f8b9-testim_239_r.png" title="Testim 239_r.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>Attribute name</strong> field, enter a valid HTML attribute that you wish to validate (e.g. <em>href</em>, <em>src</em>, <em>alt</em>, <em>title</em>, etc.).</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>In the <strong>Expected value</strong> field, enter the value you wish to validate for the attribute (e.g. <em><a href="https://www.testim.io">https://www.testim.io</a></em>).</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>For the expected value you can use regex. For example, 'href' that starts with https will have the following regex:/^https/</p>
+                                            </div>
+                                            <li value="10">
+                                                <p>Click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                            <p>The “Validate HTML attribute” step is added in the <strong>Editor</strong>, and a thumbnail of the selected element is shown in the step.</p>
+                                            <li value="11">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after the validation step to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="validating-a-disabled-attribute"></a>Validating a "disabled" attribute</h3>
+                                        <p>It is also possible to validate a "disabled" HTML attribute. → <strong>To validate a disabled attribute:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Perform steps 1-6 above.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>AUT</strong> window, identify the relevant element for which you wish to validate the "disabled" HTML attribute, and click on it to select it.<br /></p>
+                                            </li>
+                                            <p>The <strong>HTML Attribute Validation</strong> form is shown.</p>
+                                            <li value="3">
+                                                <p>In the <strong>Attribute name</strong> field, enter the value 'disabled'.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the <strong>Expected value</strong> field, do not enter any value.</p>
+                                            </li>
+                                            <img src="images/a78b8f5-image.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                            <p>The “Validate HTML attribute” step is added in the <strong>Editor</strong>, and a thumbnail of the selected element is shown in the step.</p>
+                                            <img src="images/a1bbe4a-image_1.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after the validation step to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="modifying-a-validate-html-attribute-step"></a>Modifying a Validate HTML attribute step</h2>
+                                        <p>If you want to change the element you selected, you don’t need to delete and re-record the step. Instead, you can reassign the element with a different element. Alternatively, you can modify the attribute name and/or expected value of the original element you selected without selecting a new element. → <strong>To reassign the selected element in a Validation step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the position to the left of the step for which you want to reassign the element and click on the <strong>Toggle breakpoint</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the <strong>Run test</strong> button to run the test until the breakpoint.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/330255f-testim_240a.png" title="Testim 240a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="4">
+                                                <p>Hover over the <strong>Target element</strong> thumbnail to show options, and click <strong>Reassign</strong>.</p>
+                                            </li>
+                                            <img src="images/1272545-testim_241a_r.png" title="Testim 241a_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>AUT</strong> window, identify the new element that you would like to select and click on it.<br /></p>
+                                            </li>
+                                            <p>The selected element is shown in the <strong>Target element</strong> box in the <strong>Properties</strong> panel.</p>
+                                            <li value="6">
+                                                <p>In the <strong>Properties</strong> panel <strong>Attribute name</strong> field enter the attribute name for the new element.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>Properties</strong> panel <strong>Expected value</strong> field enter the expected value of the new attribute.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. ‘href’ and ‘<a href="https://www.testim.io’">https://www.testim.io’</a>.</p>
+                                            </div>
+                                            <li value="8">
+                                                <p>Click on the same <strong>Toggle Breakpoint</strong> button to the left of the step for which you reassigned the element to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <p>→ <strong>To modify the properties of the<em>original</em> element:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/8f90779-testim_242a.png" title="Testim 242a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/aa817ce-testim_241_r.png" title="Testim 241_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Properties</strong> panel <strong>Attribute name</strong> field enter the new attribute name for the element.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Properties</strong> panel <strong>Expected value</strong> field enter the new expected value of the attribute.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. ‘href’ and ‘<a href="https://www.testim.io’">https://www.testim.io’</a>.</p>
+                                        </div>
+                                    

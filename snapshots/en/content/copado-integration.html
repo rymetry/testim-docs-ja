@@ -1,0 +1,84 @@
+
+                                        <h1>Copado Integration</h1>
+                                        <p>To automate testing from Copado, add the <a href="https://docs.copado.com/articles/#!copado-ci-cd-publication/deployment-step-url-callout">URL Callout step</a> in Copado and use a single webhook call to the Testim/TTA for Salesforce REST API . → <strong>To integrate Copado:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Testim/TTA for Salesforce, go to <strong>Settings &gt; API</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Generate API Key</strong>.</p>
+                                            </li>
+                                            <img src="images/b650ac8-generate1.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Enter a name for the key and click <strong>Generate</strong>.</p>
+                                            </li>
+                                            <img src="images/0aab69d-generateapi.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Copy the API key that is displayed and click <strong>Done</strong>. The only time this key is visible is when it is generated, so copy it as soon as you can.</p>
+                                            </li>
+                                            <img src="images/1b473ef-apikey.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Go to the <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml">Testim REST API</a> in Swagger and select a type of remote execution API call, such as Test, Test Plan, Test Suite, or Test Label, and copy the JSON payload.</p>
+                                            </li>
+                                            <img src="images/7c0621b-copado_swagger.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the Copado Release Manager App, create a Deployment by adding a new step in the Steps section. To do so, follow these steps:</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>Type</strong>, select <strong>Perform callout and continue with deployment</strong>.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>In the <strong>Method</strong>, select <strong>POST</strong>.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Unselect the <strong>Dynamic URL Parameters</strong>.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>In the <strong>URL</strong>, enter the REST API call and append the Test, Test Plan, or Suite ID at the end of the URL. For example, <span class="FileOrFilePath">https://api.testim.io/tests/run/234</span>.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Add the following headers:</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Authorization and enter the API key from step 4 in the format <strong>Bearer YOUR-API-KEY</strong>.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p><strong>Content-Type</strong> and enter <strong>application/json</strong>.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>In the <strong>Body</strong>, paste the JSON payload from Swagger (step 5).</p>
+                                            </li>
+                                            <img src="images/b00424d-copado_steps.png" class="ScreenshotFullsize" />
+                                            <li value="15">
+                                                <p>In the JSON payload, replace <span class="FileOrFilePath">"grid" : "string"</span> with the name of a grid from the <strong>Grids</strong> section of your profile in the top right of Testim/TTA for Salesforce.</p>
+                                            </li>
+                                            <img src="images/4049e1e-copado_grid.png" class="ScreenshotFullsize" />
+                                            <li value="16">
+                                                <p>To test, save the step and click <strong>Deploy &gt; Deploy All</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <p>When the test is completed, click View Results in the Steps section. This deployment can also be done on Continuous Integration (CI).</p>
+                                        <h2><a name="pausing-copado-deployment-until-test-is-complete-or-based-on-test-result"></a>Pausing Copado deployment until test is complete or based on test result</h2>
+                                        <p>You can pause the Copado deployment until a test or test plan is completed, passed, or failed. →<strong>To pause Copado:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Copado, navigate to <strong>Details &gt; Type</strong> and select <strong>Perform callout and pause step</strong> and copy the <strong>Resume URL</strong>.</p>
+                                            </li>
+                                            <img src="images/a87ef04-copado_pause_step1.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In Testim/TTA for Salesforce, create an <strong>Add API action</strong> step in the editor and make it a shared step.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Add API action</strong> step, enter the <strong>Resume URL</strong> (step 1) and disable <strong>Send via web page</strong> in the properties.</p>
+                                            </li>
+                                            <img src="images/612d721-copado_pause_step3.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Go to <strong>Runs &gt; Configuration</strong> list, create a new configuration, select <strong>After test handler</strong>, and select the shared step (step 2).</p>
+                                            </li>
+                                            <img src="images/e032878-copado_pause_step4.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the test or test plan settings, select the newly created configuration (step 4).</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/70f00d2-copado_pause_step5.png" class="ScreenshotFullsize" />
+                                    

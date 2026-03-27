@@ -1,0 +1,135 @@
+
+                                        <h1>Extract Value Step</h1>
+                                        <p>Imagine the following, you have text in your application and you want to validate that it appears on another page, or you may have a value that you want to use in some calculation at a later step.<br /> If you answered yes to any of these questions, you came to the right place.<br /> Let's see how we can easily extract text and use it...</p>
+                                        <h2><a name="add-extract-value-step-to-a-test"></a>Add Extract Value Step to a Test</h2>
+                                        <p>→ <strong>To add an extract value step to your test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the arrow menu where you want to add the new step and select <strong>Testim predefined steps</strong>.</p>
+                                            </li>
+                                            <img src="images/bc506cc-predefined-steps.png" title="predefined-steps.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Search for <strong>Add extract value step</strong> and select the step from the list.</p>
+                                            </li>
+                                            <img src="images/80366ab-add-extract-step.png" title="add-extract-step.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: If you do not already have your app opened to the Base URL, you may be directed to first open the Base URL (web) or Open App (mobile) before running the step above (web).</p>
+                                            </div>
+                                            <img src="images/376956a-open-base-url.png" title="open-base-url.png" class="ScreenshotFullsize" />
+                                            <img src="images/dcdf523-relevantstep.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select the <strong>element</strong> you want to extract the value from your app. Testim will create the <strong>Extract Value step</strong> and assign the element you selected.</p>
+                                            </li>
+                                            <img src="images/9136b57-select-element.png" title="select-element.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Open the <strong>Properties panel</strong> for the Extract Value step.</p>
+                                            </li>
+                                            <img src="images/1a34b50-properties.png" title="properties.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Update <strong>Name</strong> of your variable. The default name will be "value".</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/5ac725a-extract-name.png" title="extract-name.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: Variable names are subject to the name limitations in JavaScript. So, for example, spaces and special characters are not allowed. You can read more <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Variables">here</a>.</p>
+                                        </div>
+                                        <h2><a name="set-the-extract-mode"></a>Set the Extract Mode</h2>
+                                        <p>The Extract Mode of an Extract Value step determines the value and format of the contents of your extract variable. The following extract modes are available:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Entire String (default)</strong>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Number</strong>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <p><em> First Number: if the string contains more than one number, return the </em>first number* in the list</p>
+                                        <p><em> Last Number: if the string contains more than one number, return the </em>last number* in the list</p>
+                                        <p><em> All numbers (array): if the string contains more than one number, return all numbers as an </em>array*.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Date</strong>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <p><em> First Date: if the string contains more than one date, return the </em>first date* in the list</p>
+                                        <p><em> Last Date: if the string contains more than one date, return the </em>last date* in the list</p>
+                                        <p><em> All dates (array): if the string contains more than one date, return all dates as an </em>array*.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Regular Expression</strong>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <p><em> First Match: if the expression contains more than one match, return the </em>first match* in the list</p>
+                                        <p><em> Last Match: if the expression contains more than one match, return the </em>last match* in the list</p>
+                                        <p><em> All matches (array): if the expression contains more than one match, return all matches as an </em>array*.</p>
+                                        <div class="note">
+                                            <p>Note: <em> Change to either Number/Date/Regular Exp if you would like to extract only just part of the text </em> Please note that even when extracting  Number/Date/Regular Exp the value will be a string</p>
+                                        </div>
+                                        <p>→ <strong>To update the Extract Mode of your step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the <strong>Properties panel</strong> for the Extract Value step.</p>
+                                            </li>
+                                            <img src="images/f7c15b0-properties.png" title="properties.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select the <strong>Extract Mode</strong> you want to use.</p>
+                                            </li>
+                                            <img src="images/90befed-extract-mode.png" title="extract-mode.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Extract Mode Details</strong> icon to select the specific type of extract value.</p>
+                                            </li>
+                                            <img src="images/05c57d3-extract-mode-details.png" title="extract-mode-details.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Select the <strong>Extract Mode Type</strong> from the list of options.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d38aeb8-extract-mode-type.png" title="extract-mode-type.png" class="ScreenshotFullsize" />
+                                        <p>In the example below, the string "Adults(18+)" was captured by the Extract Value step. With the Extract Mode set to <strong>Number</strong>, just the value "18" will be returned in the extract variable.</p>
+                                        <img src="images/5559177-number-example.png" title="number-example.png" class="ScreenshotFullsize" />
+                                        <h2><a name="set-scope-of-extract-variable"></a>Set Scope of Extract Variable</h2>
+                                        <p>Once an Extract Value step runs and saves the extract variable, the value from the variable can be used.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Local</strong>: the variable is only available to the current user when run locally in the Test Editor.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test</strong>: the variable is available to any user within the scope of the current test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Suite</strong>: the variable is available to all tests within the Test Suite to which the test belongs.</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To change the Extract Variable scope:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the <strong>Properties panel</strong> for the Extract Value step.</p>
+                                            </li>
+                                            <img src="images/e0a2607-properties.png" title="properties.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select the <strong>Variable Scope</strong> you want to apply to the extract variable.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/f45a71b-variable-scope.png" title="variable-scope.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: Since suite-scoped variables are shared between all the tests in the suite, make sure to give the variable a unique name so that its value will not be overwritten by a same name variable from another test.</p>
+                                        </div>
+                                        <h2><a name="use-extracted-value"></a>Use extracted value</h2>
+                                        <p>You can use your new parameter in a validation, set text, custom steps, etc. In the example below, we'll use it to validate text on another page. → <strong>To use the extract variable:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Record a text validation step. (Learn more about text validation <a href="validations/index.htm">here</a>)</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Open the <strong>properties panel</strong> of the text validation step.</p>
+                                            </li>
+                                            <img src="images/e403d66-text-properties.png" title="text-properties.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Replace the constant value typed in the <strong>Expected value field</strong> with the parameter you created.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/15ab428-use-variable.png" title="use-variable.png" class="ScreenshotFullsize" />
+                                    

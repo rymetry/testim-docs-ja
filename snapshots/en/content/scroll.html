@@ -1,0 +1,151 @@
+
+                                        <h1>Scroll Step</h1>
+                                        <p>Scroll steps are automatically added to your tests each time you scroll on the page. In most cases the recorded scroll steps work seamlessly in your test. For the rare cases where scroll steps need adjustment, you have the ability to change the settings of each step to ensure the test functions exactly as you need it to.</p>
+                                        <p><strong>Scroll Step Types</strong>:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Scroll to Element</strong>: this scroll step is automatically recorded when you scroll and interact with a specific element on the page.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Scroll on Page</strong>: this scroll step is automatically recorded when you scroll vertically or horizontally on the page using the mouse wheel or moving the browser scroll bars.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Mouse Wheel</strong>: this scroll step is automatically recorded when you use the mouse wheel to interact with a page element, such as zooming on a map.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="recording-scroll-steps"></a>Recording Scroll Steps</h2>
+                                        <h3><a name="how-to-record-a-scroll-to-element-step"></a>How to Record a Scroll to Element Step</h3>
+                                        <p>The Scroll to Element step will be <strong>automatically recorded</strong> when you scroll and interact with an element on the page. → <strong>To record a Scroll to Element step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your test and begin recording.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Scroll on the page using the mouse wheel or browser scroll bar.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Interact with a page element, such as clicking a button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/9aba7bf-scroll-to-element.gif" title="scroll-to-element.gif" class="ScreenshotFullsize" />
+                                        <p>In the example above, Testim records a Scroll to Element step with the "Load More" button as the target element.</p>
+                                        <img src="images/6a4ea3c-scroll-to-element-step2.jpg" title="scroll-to-element-step2.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="how-to-record-a-scroll-on-page-step"></a>How to Record a Scroll on Page Step</h3>
+                                        <p>The Scroll on Page step will be <strong>automatically recorded</strong> when a scroll is made on the page and there is no interaction with an element after scrolling. → <strong>To record a Scroll on Page step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your test and begin recording.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Scroll on the page using the mouse wheel or browser scroll bar.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/2494302-scroll-on-page.gif" title="scroll-on-page.gif" class="ScreenshotFullsize" />
+                                        <p>Testim records a Scroll on Page step with no target element.</p>
+                                        <img src="images/7d9655b-scroll-on-page.jpg" title="scroll-on-page.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="how-to-record-a-mouse-wheel-step"></a>How to Record a Mouse Wheel Step</h3>
+                                        <p>Some applications implement advanced interactions using the mouse wheel (e.g., zooming in/out on a map). In these cases, the recorded step will be a mouse wheel step, instead of a scroll step.</p>
+                                        <div class="caution">
+                                            <p>Important To provide the best recording experience, by default Testim will record mouse wheel actions as Scroll to Element or Scroll on Page steps. If you need to record mouse wheel steps <a href="https://www.testim.io/contact-us/">contact your Testim administrator</a> to request this feature.</p>
+                                        </div>
+                                        <p>→ <strong>To record a Mouse Wheel step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your test and begin recording.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Interact with an advanced page element using the mouse wheel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/19af227-mouse-wheel.gif" title="mouse-wheel.gif" class="ScreenshotFullsize" />
+                                        <p>Testim records a Mouse Wheel step.</p>
+                                        <img src="images/98a0f0a-mouse-wheel-step.jpg" title="mouse-wheel-step.jpg" class="ScreenshotFullsize" />
+                                        <h2><a name="fine-tuning-scroll-steps"></a>Fine Tuning Scroll Steps</h2>
+                                        <p>If your page layout changes or you notice the scroll step is not behaving as you expect, you can adjust the settings of scroll steps for better results.</p>
+                                        <h3><a name="adjusting-a-scroll-to-element-step"></a>Adjusting a Scroll to Element Step</h3>
+                                        <p>When a scroll to Element Step is recorded, Testim captures the location of the element on the page using scroll positioning as well as the element's hierarchical location in the DOM. → <strong>To adjust a Scroll to Element Step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Show Properties</strong> button on the step.</p>
+                                            </li>
+                                            <img src="images/f564ce0-scroll-step-properties.jpg" title="scroll-step-properties.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Adjust the <strong>Scroll Position</strong> of the step by changing the X axis (horizontal) and Y axis (vertical) scroll values.</p>
+                                            </li>
+                                            <img src="images/b1f9c02-scroll-to-element-step.jpg" title="scroll-to-element-step.jpg" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: For Scroll to Element steps, Testim automatically set the Scroll Position is automatically to <strong>Relative</strong> positioning. Testim captures the X and Y axis location of the element, but only the Y axis is checked. This is because Testim only needs to know how far down from the top of the page the element is located.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>Hover over the <strong>Target Element</strong> in the properties panel and make additional adjustments as needed.</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Reassign</strong>: change the target element by re-recording the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Improve</strong>: recapture the details of the same target element by re-recording the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>View Locators</strong>: update the target element's HTML references such as content, CSS classes, and parent/child objects in the DOM. This will improve Testim's ability to accurately locate the target element in the DOM.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/44ac933-target-element-hover.jpg" title="target-element-hover.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="adjusting-a-scroll-on-page-step"></a>Adjusting a Scroll on Page Step</h3>
+                                        <p>When a scroll on Page step is recorded, Testim captures the scroll position of the page. → <strong>To adjust a Scroll on Page step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Show Properties</strong> button on the Scroll on Page step.</p>
+                                            </li>
+                                            <img src="images/ffd87c6-scroll-on-page-settings.jpg" title="scroll-on-page-settings.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Adjust the <strong>Scroll Position</strong> of the step by changing the X axis (horizontal) and Y axis (vertical) scroll values.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/96ce8ad-scroll-on-page3.jpg" title="scroll-on-page3.jpg" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: For Scroll on Page steps, the <strong>Scroll Position</strong> is automatically set to <strong>Absolute</strong> positioning and the X and Y axis checkboxes are disabled. Testim captures the horizontal and vertical scrolling in pixels as calculated from the top-left of the viewport.</p>
+                                        </div>
+                                        <h3><a name="adjusting-a-mouse-wheel-step"></a>Adjusting a Mouse Wheel Step</h3>
+                                        <p>When a Mouse Wheel step is recorded, Testim captures the target element and the wheel position change related to the target element. → <strong>To adjust a Mouse Wheel step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Show Properties</strong> button on the Mouse Wheel step.</p>
+                                            </li>
+                                            <img src="images/2fd9ad2-mouse-wheel-properties.jpg" title="mouse-wheel-properties.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Adjust the <strong>Wheel Position</strong> of the step by changing the Y axis properties.</p>
+                                            </li>
+                                            <img src="images/be66724-mouse-wheel-position.jpg" title="mouse-wheel-position.jpg" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: The X axis value will always be 0 since mouse wheels do not scroll horizontally.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>Hover over the <strong>Target Element</strong> in the properties panel and make additional adjustments as needed.</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Reassign</strong>: change the target element by re-recording the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Improve</strong>: recapture the details of the same target element by re-recording the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>View Locators</strong>: update the target element's HTML references such as content, CSS classes, and parent/child objects in the DOM. This will improve Testim's ability to accurately locate the target element in the DOM.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/9d7fcdd-target-element-hover.jpg" title="target-element-hover.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="using-dynamic-scroll"></a>Using Dynamic Scroll</h3>
+                                        <p>In most cases page elements are loaded into the DOM on the initial page load. In these cases Testim has no trouble completing the Scroll to Element steps of the test. In some cases, page elements are not loaded into the DOM until the user scrolls (e.g., lazy load images). By turning on <strong>Dynamic Scroll</strong>, Testim will imitate the scrolling of a user to force a page element to load into the DOM. → <strong>To add Dynamic Scroll to your scroll step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the Scroll Step in your test and click the <strong>Show Properties</strong> icon.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select <strong>Dynamic scroll</strong> in the properties panel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/da7a521-dynamic-scroll.jpg" title="dynamic-scroll.jpg" class="ScreenshotFullsize" />
+                                    

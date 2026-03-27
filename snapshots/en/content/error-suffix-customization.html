@@ -1,0 +1,20 @@
+
+                                        <h1>Error Suffix Customization</h1>
+                                        <p>As part of the step's properties configuration, you can add a custom message as a suffix to the error message that is displayed when the step fails. The suffix can include a string as well as parameters. → <strong>To add an error suffix:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Show Properties</strong> button to open the step's Properties Pane.<br /></p>
+                                            </li>
+                                            <img src="images/3df46b7-showproperties.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Error suffix</strong> field, enter the string and/parameters that will be displayed if the step has failed. For example, just a string - 'my custom error', or combining a string with a parameter - ‘my custom error’ + <span class="FileOrFilePath">Param1</span>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/115d4d0-errorsuffix1.png" class="ScreenshotFullsize" />
+                                        <p>When the step fails, the error will be displayed combining the system error with the custom error suffix as follows:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>&lt;testim error&gt;. Details: &lt;user error&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <img src="images/0253da5-errorsuffix2.png" class="ScreenshotFullsize" />
+                                    

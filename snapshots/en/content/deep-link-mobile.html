@@ -1,0 +1,65 @@
+
+                                        <h1>Deep link (mobile)</h1>
+                                        <p>Deep link is a link that launches an app and opens a specific page, sending the user directly to a specific location inside an app, rather than a generic app homepage or mobile website. The deep link can open any application that is installed on the mobile device, including apps that are part of the mobile OS, as well as the mobile web browser. Deep links can include parameters. For example, a deep link that opens the phone app, while dialing a phone number that is passed as a parameter. The <strong>Deep Link</strong> step can be used to test that the deep link works. The step will open the specified app at a specified location inside the app and will optionally pass a specified parameter. In some cases opening another app after clicking  a deep link displays a notification, which requires the user's confirmation. In this case, you will need to record a step that taps the button to confirm this notice.</p>
+                                        <img src="images/58d5cba-open.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>The Deep Link step is only available on <a href="../../integrations/grid-management/virtual-mobile-grid.htm">VMG</a>.</p>
+                                        </div>
+                                        <h2><a name="adding-a-deep-link-step-to-your-test"></a>Adding a Deep Link Step to your Test</h2>
+                                        <p>→<strong>To add a Deep Link step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the  (arrow symbol) where you want to add the Deep Link step. The action options are displayed.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the “M” (Testim predefined steps). The Predefined steps menu opens.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Expand the <strong>Actions</strong> menu and select the <strong>Deep link</strong> step.</p>
+                                            </li>
+                                            <img src="images/213c463-deeplink.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: Alternatively, you can use the search box at the top of the menu to search for Deep link.</p>
+                                            </div>
+                                            <p>The following dialog is displayed:</p>
+                                            <img src="images/fdd1fcc-deeplink2.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the <strong>Value</strong> field, enter the Deep link value as follows:</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Syntax:</strong> <span class="FileOrFilePath">schemeName://parameterValue</span></p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>schemeName</strong> - the scheme name is the name of the app that the deep link will open. It can be one of the OS internal applications, such as <span class="FileOrFilePath">tel</span>, <span class="FileOrFilePath">sms</span>, <span class="FileOrFilePath">mailto</span>, <span class="FileOrFilePath">facetime</span>, etc. or the name of a regular mobile app.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p><strong>parameter</strong> - the value that will be passed to the app. For example, a mobile phone number.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>The value is a JS expression string, so make sure to add quotes.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Examples</strong> - <span class="FileOrFilePath">'sms://12354'</span>,  <span class="FileOrFilePath">mailto://example@email.com</span>, <span class="FileOrFilePath">facetime://1-408-555-1212</span></p>
+                                            </li>
+                                            <p>&gt; &gt; &gt; 3rd party apps might support only URL-based schemes. For example: <a href="https://byby.dev/ios-deep-linking">https://byby.dev/ios-deep-linking</a>. Spotify, for example, supports only the following types of deep links: <a href="https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO">https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO</a></p>
+                                            <li value="10">
+                                                <p><strong>Adding a parameter to the deep link value</strong> - it is possible to add a regular Testim parameter just like any JS expression. For example - <span class="FileOrFilePath">'sms://12354' + myParam</span></p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                            <p>The step is added.</p>
+                                            <li value="12">
+                                                <p>In the step's <strong>Properties</strong> panel, optionally specify the following properties:</p>
+                                            </li>
+                                            <li value="13">
+                                                <p><strong>When this step fails</strong> – Specify what to do if this step fails.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see <a href="../../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                            </li>
+                                            <li value="15">
+                                                <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds). Failed steps will be retried until there is insufficient remaining time for a successful run.</p>
+                                            </li>
+                                        </ol>
+                                    

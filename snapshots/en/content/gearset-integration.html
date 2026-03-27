@@ -1,0 +1,54 @@
+
+                                        <h1>Gearset Integration</h1>
+                                        <p>Automate testing from CI or deployment job in Gearset by adding a webhook in Gearset and using a single webhook call to the Testim/TTA for Salesforce REST API. → <strong>To integrate Gearset:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Testim/TTA for Salesforce, go to <strong>Settings &gt; API</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Generate API Key</strong>.</p>
+                                            </li>
+                                            <img src="images/b650ac8-generate1.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Enter a name for the key and click <strong>Generate</strong>.</p>
+                                            </li>
+                                            <img src="images/e9d4a48-generateapi.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Copy the API key that is displayed and click <strong>Done</strong>. The only time this key is visible is when it is generated, so copy it as soon as you can.</p>
+                                            </li>
+                                            <img src="images/7c2ad4a-copy.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Go to the <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml">Testim REST API</a> in Swagger and select a type of remote execution API call, such as Test, Test Plan, Test Suite, or Test Label, and copy the JSON payload.</p>
+                                            </li>
+                                            <img src="images/05e5bea-gearset_api.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the Gearset, Deployment or CI job in the webhook, by following these steps:</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>Outgoing webhook url</strong>, enter the REST API call and append the Test, Test Plan, or Suite ID at the end of the URL. For example, <span class="FileOrFilePath">https://api.testim.io/tests/run/234</span></p>
+                                            </li>
+                                            <li value="8">
+                                                <p>In the <strong>Triggers</strong> section, select <strong>Success events</strong>.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>In the <strong>Payload</strong> field, select <strong>Custom</strong>.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>In the <strong>Authentication</strong> field, select <strong>Authorization</strong>.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>In the <strong>Credentials</strong> field, add the API key from <strong>step 4</strong> in the format <span class="FileOrFilePath">Bearer YOUR-API-KEY</span>.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>In the <strong>Content-Type</strong> field, select <strong>application/json</strong>.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>In the <strong>Payload</strong> field, paste the <strong>JSON payload</strong> from Swagger <strong>(step 5)</strong>.</p>
+                                            </li>
+                                            <img src="images/5c1e754-gearset_webhook.png" class="ScreenshotFullsize" />
+                                            <li value="14">
+                                                <p>In the JSON payload, replace <span class="FileOrFilePath">"grid" : "string"</span> with the name of a grid from the <strong>Grids</strong> section of your profile in the top right of Testim/TTA for Salesforce.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/c970045-gearset_grid.png" class="ScreenshotFullsize" />
+                                    

@@ -1,0 +1,236 @@
+
+                                        <h1>Validate element text</h1>
+                                        <p>An Element Text validation is similar to an Element Visible validation in that it makes the step dependent on the existence of a specific element. However, for the Element Text validation, you also specify a particular text value that must appear in the specified element. You can easily validate multiple text elements as well.<br /> The text being validated can be given as a specific string or a range of values represented as a Regex expression, a short JS expression, or a parameter. See <a href="#advanced-text-validation">Advanced text validation</a>.</p>
+                                        <div class="note">
+                                            <p>Note (Web Only): You can use a keyboard shortcut to record text validation from your application during recording. Just use Ctrl +'v' and select the text you want to validate.</p>
+                                        </div>
+                                        <h2><a name="adding-a-validate-element-text-step-web"></a>Adding a Validate element text step (Web)</h2>
+                                        <p>→ <strong>To add an Element Text validation:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>&gt; (arrow symbol)</strong> where you want to add the validation.</p>
+                                            </li>
+                                            <img src="images/c2ef26f-screen_shot_2021-04-18_at_6.37.44.png" title="Screen Shot 2021-04-18 at 6.37.44.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/f9aa3c6-testim_083a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/388d9b8-testim_085_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/b22feac-screen_shot_2021-04-18_at_6.39.03.png" title="Screen Shot 2021-04-18 at 6.39.03.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the position again and click on the <strong>"M"</strong> (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The Predefined steps menu opens.</p>
+                                            <img src="images/46a723c-testim_034_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click on <strong>Validations</strong>.<br /></p>
+                                            </li>
+                                            <p>The Validations section expands.</p>
+                                            <img src="images/9d4b608-testim_035_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Scroll down through the menu and select <strong>Validate element text</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate element text</strong>.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>In the AUT window, select the relevant element that you wish to validate by clicking on it.<br /></p>
+                                            </li>
+                                            <p>The step is created, and a thumbnail of the selected element is shown in the step.</p>
+                                            <img src="images/1915d47-testim_090.png" title="Testim 090.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Additionally, you can select multiple text elements to validate by pressing the ‘Ctrl’ key and clicking on multiple elements. A reusable group will be created, which includes all of the validations.</p>
+                                            </div>
+                                            <li value="8">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after the Validation step to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="adding-a-validate-element-text-step-mobile"></a>Adding a Validate element text step (Mobile)</h2>
+                                        <p>→ <strong>To add an Element Text validation:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>&gt; (arrow symbol)</strong> where you want to add the validation and click the <strong>Testim predefined steps</strong> button.</p>
+                                            </li>
+                                            <img src="images/c16fd83-predefined-steps.png" title="predefined-steps.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select <strong>Validate element text</strong> under the <strong>Validations</strong> group.</p>
+                                            </li>
+                                            <img src="images/e3ba3d9-validateelementtext.png" title="validateelementtext.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: Alternatively, you can use the search box at the top of the menu to search for Validate element text.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>The AUT will open. Select the text element on the screen you want to validate.</p>
+                                            </li>
+                                            <img src="images/90346f6-selectelement.png" title="selectelement.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>The <strong>Text Validation step</strong> is created, and a thumbnail of the selected element is shown in the step.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/2665c9c-textvalidationstep.png" title="textvalidationstep.png" class="ScreenshotFullsize" />
+                                        <h2><a name="modifying-a-validate-element-text-step-mobile-amp-web"></a>Modifying a Validate element text step (Mobile &amp; Web)</h2>
+                                        <p>If you want to change the element or text you selected, you don’t need to delete and re-record the step. Instead, you can just reassign the element with a different element, or you can edit the text of the initial element that is being validated.</p>
+                                        <h3><a name="reassigning-the-selected-element"></a>Reassigning the selected element</h3>
+                                        <p>→ <strong>To reassign the selected element in a Validate element text step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the position to the left of the step for which you want to reassign the element and click on the <strong>Toggle Breakpoint</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/705a94f-screen_shot_2021-04-18_at_6.40.55.png" title="Screen Shot 2021-04-18 at 6.40.55.png" class="ScreenshotFullsize" />
+                                            <p>The Properties panel opens on the right-hand side.</p>
+                                            <li value="4">
+                                                <p>Hover over the <strong>Target element</strong> thumbnail.</p>
+                                            </li>
+                                            <img src="images/5934637-testim_015a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Target element</strong> options are shown.</p>
+                                            <img src="images/79b44a7-testim_010_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Reassign</strong>.</p>
+                                            </li>
+                                            <img src="images/17dc6a7-testim_010a_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the AUT browser, identify the relevant element and click on it to select it.<br /></p>
+                                            </li>
+                                            <p>The selected element is shown in the Target element box in the Properties panel.</p>
+                                            <li value="7">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button to the left of the step for which you reassigned the element to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="editing-the-validation-text"></a>Editing the validation text</h3>
+                                        <p>→ <strong>To edit the validation text of the initial element:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the step for which you want to edit the validation text and click on the<strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/4ddc295-screen_shot_2021-04-18_at_6.40.55.png" title="Screen Shot 2021-04-18 at 6.40.55.png" class="ScreenshotFullsize" />
+                                            <p>The Properties panel opens on the right-hand side.</p>
+                                            <li value="2">
+                                                <p>In the <strong>Expected value</strong> field, enter the new validation text.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d8459d3-testim_015b_r.png" class="ScreenshotFullsize" />
+                                        <h1><a name="advanced-text-validation-mobile-amp-web"></a>Advanced text validation (Mobile &amp; Web)</h1>
+                                        <p>In many cases it is difficult to specify an entire text string that will be matched in its entirety to the text that you want to validate. In the <strong>Expected Value</strong> field, you can create text validations by combining:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Regular expressions (partial strings)</p>
+                                            </li>
+                                            <li>
+                                                <p>JavaScript expressions</p>
+                                            </li>
+                                            <li>
+                                                <p>Parameters</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="using-regular-expression-regex"></a>Using Regular Expression (Regex)</h2>
+                                        <p>Testim supports Regex inside the Expected Value input. These are the most common cases:</p>
+                                        <h3><a name="starts-with"></a>Starts with</h3>
+                                        <p>Validates that the text that <em>starts</em> with a certain word, allowing the rest of the text to be dynamic, and still pass the validation:<br /></p>
+                                        <p><span class="FileOrFilePath">/^My text/</span>
+                                        </p>
+                                        <img src="images/6ce7739-ijhqz8paqmodiuaqywvv_text-validation-regex.png" title="Ijhqz8PAQMODiuaQYwVv_text-validation-regex.png" class="ScreenshotFullsize" />
+                                        <h3><a name="ends-with"></a>Ends with</h3>
+                                        <p>Validates that the text that <em>ends</em> with a certain word, allowing the rest of the text to be dynamic, and still pass the validation:<br /></p>
+                                        <p><span class="FileOrFilePath">/my text$/</span>
+                                        </p>
+                                        <h3><a name="contains"></a>Contains</h3>
+                                        <p>Validates that the text that <em>contains</em> a certain word, allowing the rest of the text to be dynamic, and still pass the validation:<br /></p>
+                                        <p><span class="FileOrFilePath">/my text/</span>
+                                        </p>
+                                        <h3><a name="multiple-options-or-with-parameters"></a>Multiple Options (OR) with Parameters</h3>
+                                        <p>Validates against two possible values, where the text can match either param1 or param2. For example,  If param1 = "Hello" and param2 = "World", it will pass for “Hello”, “World”:<br /></p>
+                                        <p><span class="FileOrFilePath">new RegExp("^" + "(?:" + param1 + "<em>" + "|" + param2 + "</em>)" + "$")</span>
+                                        </p>
+                                        <h3><a name="not-equal-validation"></a>Not Equal Validation</h3>
+                                        <p>Validates that the text does not match param1. For example, if param1 = "Example1", this regex will fail validation if the text is exactly "Example1" but pass for any other value:<br /></p>
+                                        <p><span class="FileOrFilePath">new RegExp("^" + "((?!" + param1 + ").)*$")</span>
+                                        </p>
+                                        <h3><a name="validating-numbers-only-digits"></a>Validating Numbers (Only Digits)</h3>
+                                        <p>Validates that the text consists only of positive whole numbers (digits 0-9). For example, "12345" will pass, but "12a34" or "-123" will fail:<br /></p>
+                                        <p><span class="FileOrFilePath">/^d+$/</span>
+                                        </p>
+                                        <h3><a name="validating-any-number-positive-negative-and-decimals"></a>Validating Any Number (Positive, Negative, and Decimals)</h3>
+                                        <p>Validates that the values consist positive numbers, negative numbers, or decimals only. For example, "123", "-123", "3.14", and "-0.5" will pass, but "12a" or "." will fail:<br /></p>
+                                        <p><span class="FileOrFilePath">/^-?d+(.d+)?$/</span>
+                                        </p>
+                                        <p>Of course you can create and use any other valid Regex that you may need.</p>
+                                        <div class="note">
+                                            <p>Tips <em> <a href="http://regexone.com/">RegexOne</a> is a great place to learn and practice regular expressions. </em> <a href="https://regex101.com/">RegularExpressions 101</a> is a great tool for developing and testing a regular expression.</p>
+                                        </div>
+                                        <br />
+                                        <h2><a name="using-javascript-expression"></a>Using JavaScript expression</h2>
+                                        <p>In some cases, you may want to validate that a text equals the result of a JavaScript expression. For example, making sure that the the text holds the current date. In this case you can set the Expected Value to this simple expression: <span class="FileOrFilePath">new Date().toDateString()</span>, and Testim will compare the calculated string result of this expression. See a failed validation:</p>
+                                        <img src="images/b1662ca-screen_shot_2021-04-18_at_7.06.47.png" title="Screen Shot 2021-04-18 at 7.06.47.png" class="ScreenshotFullsize" />
+                                        <h2><a name="using-a-parameter"></a>Using a parameter</h2>
+                                        <p>You can also use parameters, which were defined in the test or suite level or were defined in the config file to validate the text element.  If you use a parameter that was created in a different step, you will have to export it to the test level (<a href="../parameters/index.htm">more about exporting parameters</a>).</p>
+                                        <h3><a name="parameter-only"></a>Parameter only</h3>
+                                        <p>There are 2 types of parameters:<br /> HTML: Allows you to refer to HTML Elements in your app.<br /> JS (JavaScript): Allows you do define any JS expression. → <strong>To use a parameter in the Expected Value field:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Define a parameter in one of the following ways:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Add a parameter to a Custom step (web only)</strong> - you can create a Custom step and then add a parameter to this Custom Step. For detailed instructions, see - <a href="../parameters/parameters-in-custom-javascript-steps.htm">Parameters in custom JavaScript steps</a>.</p>
+                                                </li>
+                                            </ul>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Add a parameter to the test data</strong> - you can also define the parameter by adding <strong>Test Data</strong> to the <strong>Setup</strong> step (the first step of the test). For detailed instructions, see <a href="../data-driven-testing/index.htm#section-configuring-a-data-driven-test-from-the-visual-editor">Configuring a data driven test from the visual editor</a></p>
+                                                </li>
+                                            </ul>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Add a parameter to the config file (web only)</strong> - you can add the parameter to the <a href="../../running-tests/configuration-file-run-hooks/index.htm">Configuration file</a>. For detailed instructions, see <a href="../data-driven-testing/index.htm#section-configuring-data-driven-tests-using-the-config-file">Configuring Data Driven Tests using the Config file</a>.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/fbf2f95-untitled_project.gif" class="ScreenshotFullsize" />
+                                            <p><strong>Click on the gif to enlarge</strong>
+                                            </p>
+                                            <p>&lt;/Image&gt;</p>
+                                            <li value="2">
+                                                <p>If the scope of the parameter was define in a step level, you need to pass the parameter to the Element text validation step or to the test level, by exporting the parameter. For detailed instructions, see <a href="../parameters/exports-parameters.htm">Exports Parameters</a>.<br /></p>
+                                            </li>
+                                            <p>For example, to export a <span class="FileOrFilePath">username</span> parameter with the value <span class="FileOrFilePath">Hello, John</span>, we will add a new custom action step and type the following in the editor:</p>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>exportsTest.usename= "Hello, John"</code></pre>
+                                                </div>
+                                            </div>
+                                            <img src="images/91597d2-export_param.gif" class="ScreenshotFullsize" />
+                                            <p><strong>Click on the gif to enlarge</strong>
+                                            </p>
+                                            <p>&lt;/Image&gt;</p>
+                                            <li value="3">
+                                                <p>Create an <strong>Element text validation</strong> step and add the parameter to the <strong>Expected value</strong> field.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ec83fac-textvalidation3.gif" class="ScreenshotFullsize" />
+                                        <p><strong>Click on the gif to enlarge</strong>
+                                        </p>
+                                        <p>&lt;/Image&gt; After running the test you will see that <strong>Element text validation</strong> step will match the expected parameter value.</p>
+                                        <img src="images/6a9b523-validation2.png" class="ScreenshotFullsize" />
+                                        <p><strong>Click on the image to enlarge</strong>
+                                        </p>
+                                        <p>&lt;/Image&gt; You can also combine the parameter with an exact string by adding a '+' between them. For example, instead of setting the <span class="FileOrFilePath">username</span> parameter value to <span class="FileOrFilePath">Hello, John</span>, we can define it as <span class="FileOrFilePath">John</span> and then specify the Expected Value as:<br /> 'Hello ' + userName`</p>
+                                        <h3><a name="combining-a-parameter-with-regex"></a>Combining a parameter with Regex.</h3>
+                                        <p>It is possible to combine the parameter and with Regex by defining a regex function in the <strong>Expected value</strong> field.<br /> For example a combination that <strong>start with</strong> the parameter will look like this:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>new RegExp("^" +userName)</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>A combination that <strong>ends with</strong>the parameter will look like this:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>new RegExp(userName+"$")</code></pre>
+                                            </div>
+                                        </div>
+                                    

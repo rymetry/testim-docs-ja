@@ -1,0 +1,51 @@
+
+                                        <h1>Generate random data with JS</h1>
+                                        <p>Any step in Testim can be parameterized. This means that a set-text step can not only have a value of the literal (e.g. "[john@yourapp.io]()", "passw0rd!") which was recorded but any JS expression.</p>
+                                        <img src="images/0ad0468-untitled.png" title="Untitled.png" class="ScreenshotFullsize" />
+                                        <h2><a name="how-to-assign-random-data-to-a-step"></a>How to assign Random Data to a step?</h2>
+                                        <p>Just replace the recorded value with JS expressions. Here are few examples:<br /></p>
+                                        <p><strong>Random email</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>Math.round(Math.random()*100000)+"@email.com"</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Random password</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>Math.random().toString(36).slice(-8)</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>More random values</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>Date.now()+5</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>You can also assign variables if you defined them as<a href="../advanced-editing/parameters/index.htm">parameters</a>:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>myVar + "sdf"</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Tip:</strong> Consider using variables when you need to use the same random string several times (e.g. validate that the random email is later shown on a different page).Creating variables in a test (e.g. "myVar") is done by:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Passing params to a shared step (group/custom-js)</p>
+                                            </li>
+                                            <li>
+                                                <p>Exporting a value from the custom JS step into the containing group, e.g. add exports.myVar = "testim"; to your JS step.This will create the variable named "myVar" in the scope of the parent (containing) group. You can see an example in the <a href="../advanced-editing/parameters/exports-parameters.htm">export parameters doc</a> (follow this link and search for exports.bestTestingTool = "Testim").</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="learn-more"></a>Learn more</h2>
+                                        <ul>
+                                            <li>
+                                                <p><a href="../advanced-editing/parameters/index.htm">Parameters</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../advanced-editing/data-driven-testing/index.htm">Data Driven Testing</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    

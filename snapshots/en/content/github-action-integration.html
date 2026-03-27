@@ -1,0 +1,14 @@
+
+                                        <h1>GitHub Actions Integration</h1>
+                                        <img src="images/28e7267-continuous-deployment-con-github-actions.png" title="Continuous-Deployment-con-GitHub-Actions.png" class="ScreenshotFullsize" />
+                                        <p>In order to integrate Testim with GitHub Actions, you need to create a new GitHub-Action workflow: Follow these instructions: <a href="https://docs.github.com/en/actions/quickstart">https://docs.github.com/en/actions/quickstart</a></p>
+                                        <p><strong>YAML File</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>name: Testim E2E<br />on: [push]<br /><br />jobs:<br />&#160;&#160;&#160;&#160;run-testimio-cli:<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;runs-on: ubuntu-latest<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;steps:<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;- uses: actions/checkout@v2<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;- uses: actions/setup-node@v2<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;with:<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;node-version: '18.17.0'<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;- run: npm install -g @testim/testim-cli<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;- run: testim --token &lt;TESTIM_TOKEN&gt; --project &lt;PROJECT_ID&gt; --grid &lt;GRID_NAME&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Best practice to work with sensitive data (e.g project token) is to use <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">encrypted secrets</a></p>
+                                        </div>
+                                    

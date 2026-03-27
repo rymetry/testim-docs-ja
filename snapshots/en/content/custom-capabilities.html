@@ -1,0 +1,91 @@
+
+                                        <h1>Custom test capabilities</h1>
+                                        <p>Custom capabilities allow you to add a wide range of advanced test parameters on all available grids. They are encoded as key-value pairs using JSON objects. For example, the system language of the device or time zone:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;&#160;&#160;"appium:language": "en",<br />&#160;&#160;&#160;&#160;"appium:timeZone": "Europe/London"<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>In this example, we are instructing the drivers to start the test automation session with English as the system language and London as the time zone.</p>
+                                        <h2><a name="available-capabilities"></a>Available capabilities</h2>
+                                        <p>You can choose from a wide range of capabilities. Their availability depends on the grid where your tests run, so make sure to check what’s supported by the grid before you start. Please note that you can't overwrite some capabilities that are already defined by Testim's test configurations. These capabilities include:</p>
+                                        <ul>
+                                            <li>
+                                                <p><span class="FileOrFilePath">platformName </span>/ <span class="FileOrFilePath">platform</span></p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">app</span>/<span class="FileOrFilePath">bundleId</span>/<span class="FileOrFilePath">appPackage</span></p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">chromiumOptions.extensions</span>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="create-custom-capabilities"></a>Create custom capabilities</h2>
+                                        <p>All custom capabilities are created and stored on the <strong>Runs</strong> page under <strong>Custom capabilities</strong>. Follow these steps to create a new custom capability:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Custom capabilities</strong> and select <strong>+</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the Monaco Code Editor, start typing the name of the capability you'd like to add to the test. The editor will automatically suggest and fill in the available keys.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select your keys and define their values.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Select <strong>Save</strong>.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Name your custom capability.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="add-custom-capabilities-to-a-test"></a>Add custom capabilities to a test</h2>
+                                        <p>After you have created the custom capabilities, it's time to add them to your tests. To do so, follow these steps:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open a test from your test library.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select <strong>Show step properties</strong> in the top right corner.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Choose the custom capability you created earlier from the <strong>Custom capabilities</strong> list.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>If you haven't created a custom capability in advance, select <strong>Add new one</strong>. You'll redirect to the <strong>Custom capabilities</strong> page, where you can create a new one following the steps from the instructions above.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Run your test.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="use-custom-capabilities-with-cli"></a>Use custom capabilities with CLI</h2>
+                                        <p>You can run your tests with custom capabilities using the command line interface (CLI). To do so, use one of the two parameters:</p>
+                                        <ul>
+                                            <li>
+                                                <p><span class="FileOrFilePath">--custom-capabilities-name</span> to add a custom capability that you created in advance in Testim.</p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">--custom-capabilities-file</span> to add a custom capability that you created locally as a JSON file.</p>
+                                            </li>
+                                        </ul>
+                                        <p>These two parameters can't be used at the same time.</p>
+                                        <div class="note">
+                                            <p>If you'd like to learn more about working with capabilities using CLI specifically on Saucelabs and BrowserStack grids, check out <a href="https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-browserstack-options.htm">Test capabilities for Saucelabs &amp; BrowserStack in CLI</a>.</p>
+                                        </div>
+                                        <h2><a name="schedule-tests-with-custom-capabilities"></a>Schedule tests with custom capabilities</h2>
+                                        <p>Once you add a custom capability to a test, you can go ahead and <a href="../../running-tests/scheduler-mobile.htm">schedule your test</a>. You can also override custom capabilities in the scheduled test runs. To do so, follow these steps:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Start scheduling a test as usual.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In scheduler settings, go to <strong>What to run on</strong> and select <strong>Override custom capabilities</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select the new custom capabilities. These custom capabilities will only add to this scheduled run, without changing the original custom capabilities of the test.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Select <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

@@ -1,0 +1,103 @@
+
+                                        <h1>Mocking network traffic using a HAR file</h1>
+                                        <p>The mock network responses can be based on a HAR file. The HAR file is a JSON-formatted archive file format for logging of a web browser's interaction with a site. All the HTTP calls and responses are recorded in this file. Each request is processed by its order in the HAR file. Multiple instances of the same call can result in different responses. For example, the first call may return X, while the second call may return Y. Testim will automatically use the relevant data in the HAR file as the test run is being executed. There are two options for creating a HAR file:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Option 1 – Using Testim to create the HAR file</strong> – in this option you will have to create your test &amp;lt;add link&amp;gt; and then run it once (with the "Include full network in HAR" setting). When running the test in Testim, a HAR file is created. Testim will use this HAR file to create mock network responses in subsequent runs of the same test. When running the test again, for which you want the mock network responses, you will need to specify that you want to use the HAR file that was recorded by Testim.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Option 2 – Creating your own HAR</strong> – using Chrome dev tools you can create your own HAR file and save it in a location that is accessible via URL. When running the test, for which you want the mock network responses, you will need to specify that you want to use your own HAR file and its location.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="caution">
+                                            <p>Tests that include a login process If your test includes a login process, which involves passing credentials to a server, it may not work properly when running the test on the mock network, as the login request will be timed out. To solve this issue, you should enable Pass-through Authentication when sending the login request. To do so, you will have to add a mapping file with the login request and the enabled Pass-through authentication property. For detailed instructions see <strong><a href="creating-a-mapping-file.htm#section-uploading-the-mapping-file">Uploading the mapping file</a></strong>.</p>
+                                        </div>
+                                        <h2><a name="option-1-using-testim-to-create-the-har-file"></a>Option 1 - Using Testim to create the HAR file</h2>
+                                        <p>→<strong>To create a HAR file in Testim:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>After saving your test (See <a href="../../recording-tests/how-to-record-a-test/index.htm">How to Record a Test</a>), click the Properties (:fa-cog:) icon. The <strong>Test Properties</strong> pane is displayed:</p>
+                                            </li>
+                                            <img src="images/ba55bd3-mock1.png" title="mock1.PNG" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In <strong>Mock Network</strong> property, click the arrow to open menu options.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Record New HAR</strong>. The test will run locally and the HAR file will be created automatically.</p>
+                                            </li>
+                                            <img src="images/1192e87-mock5.png" title="mock5.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>When the process finishes, click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/4d5a0c7-mock4.png" title="mock4.PNG" class="ScreenshotFullsize" />
+                                        <h2><a name="option-2-creating-your-own-custom-har-file"></a>Option 2 - Creating your own custom HAR file</h2>
+                                        <p>→<strong>To create your own HAR file:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open Google Chrome.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In Chrome, go to the webpage that you want to use in your test.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select the <strong>Chrome menu &gt; More Tools &gt; Developer Tools</strong></p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Select the <strong>Networks</strong> tab.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Within the <strong>Networks</strong> tab, select <strong>Preserve log</strong> option.</p>
+                                            </li>
+                                            <img src="images/99eaa6e-preserve_log.png" title="preserve_log.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Record the log by selecting the red circle at the top left of the <strong>Networks</strong> tab.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Refresh the page and allow Chrome to record browser-website interaction.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Once the page is loaded, select the <strong>Console</strong> tab and right-click in the console box. A menu is displayed.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Select <strong>Save as</strong> and name the file.</p>
+                                            </li>
+                                            <img src="images/8624d01-consolesave.png" title="consolesave.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Go back to the <strong>Networks</strong> tab and right click on any item in the <strong>Name</strong> column.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Select <strong>"Save HAR with content"</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/64ef4f1-saveallhar.png" class="ScreenshotFullsize" />
+                                        <p>The log and HAR file will be saved.</p>
+                                        <h2><a name="uploading-your-custom-har-file"></a>Uploading your custom HAR file.</h2>
+                                        <p>→<strong>To upload your custom HAR file:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Test Properties</strong> pane, click <strong>Upload Custom HAR</strong>.</p>
+                                            </li>
+                                            <img src="images/fc7237d-mock3.png" title="mock3.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Locate the custom HAR file that you saved and click <strong>Open</strong> to upload it.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="running-your-test-using-the-har-file"></a>Running your test using the HAR file</h2>
+                                        <p>→<strong>To run your test using the HAR file:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Testim Visual Editor, go to the <strong>Test List</strong> screen and click a test for which you have recorded anew HAR or uploaded a custom HAR.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the Test Editor screen, a <strong>Mock Network</strong> icon will be displayed next to the <strong>Play</strong> button, indicating that the Mock network is available.</p>
+                                            </li>
+                                            <img src="images/7a3343e-mock6.png" title="mock6.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Play</strong> button to run the test using the mock network.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

@@ -1,0 +1,102 @@
+
+                                        <h1>Step Properties Panel Parameters</h1>
+                                        <p>Most step types include the ability to define a parameter in <strong>PARAMS</strong> field, located in the <strong>Properties</strong> panel. There are 2 types of parameters:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>HTML</strong>: Allows you to refer to HTML Elements in your app.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>JS (JavaScript)</strong>: Allows you do define any JS expression.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="parameter-scope"></a>Parameter Scope</h3>
+                                        <p>The scope of the defined parameter is within the step itself. For example, if you defined the parameter in the <strong>Add custom action</strong> step, this parameter will be available to the JS function defined in the same step.</p>
+                                        <h2><a name="defining-an-html-parameter-in-a-steps-properties-panel"></a>Defining an HTML parameter in a step's Properties panel</h2>
+                                        <p>The following procedure uses the Custom Action step as an example, but it applies to all steps that include the PARAMS field in the Properties panel.</p>
+                                        <div class="caution">
+                                            <p>Shared parameter If its a shared group/step, the JS/HTML parameters themselves will be shared across tests, <strong>but not their inner values</strong>, so the parameters can be reused in other tests with other values. Deleting a parameter from a shared step or group will have a cascading effect on all instances of that step or group, and this action cannot be undone.</p>
+                                        </div>
+                                        <p>→ <strong>To define an HTML parameter:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In a new or existing test, add a step for which you want to define the parameter. For example, add an <strong>Add Custom Action</strong> step ('+' ⇒ Testim predefined steps ⇒ Actions ⇒ <strong>Add Custom Action</strong>)  .</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>Add Step</strong> dialog, enter a name for the step. For example, 'Click'.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Function editor</strong> pane is displayed on the left and the <strong>Properties</strong> pane on the right.</p>
+                                            <img src="images/f73cb06-function.jpg" title="function.jpg" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click on the '+' icon next to the <strong>PARAMS</strong> field, and select HTML.</p>
+                                            </li>
+                                            <img src="images/45bd5ce-selecthtml.jpg" title="selecthtml.jpg" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the AUT, select an element for which you want to assign the parameter. For example, the Twitter icon at the bottom of the page.</p>
+                                            </li>
+                                            <img src="images/6e230ca-twittericon.jpg" title="twittericon.jpg" class="ScreenshotFullsize" />
+                                            <p>A snippet of the selected element is displayed in the PARAMS section.</p>
+                                            <img src="images/fe4964c-snippet.jpg" title="snippet.jpg" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Double-click the name next to the HTML title and type a new name.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/c719269-name.jpg" title="name.jpg" class="ScreenshotFullsize" />
+                                        <p>At this stage the HTML parameter is defined and ready to be used.</p>
+                                        <h2><a name="using-the-parameter-in-the-step"></a>Using the parameter in the step</h2>
+                                        <p>The defined parameter can be used within the step itself.<br /> For example, you can define a function that uses the parameter.<br /> In the <strong>Function</strong> pane, type a function that uses the parameter:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>twitter.click()</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Run the test and see that the element is clicked.</p>
+                                        <div class="note">
+                                            <p>In order to use Jquery in your custom validations and actions, your site needs to have Jquery installed.</p>
+                                        </div>
+                                        <h2><a name="reusing-the-step-and-assigning-a-different-parameter"></a>Reusing the step and assigning a different parameter</h2>
+                                        <p>The scope of the parameter that we have defined is within the step itself, but it is possible to reuse this step to create another step of the same type (e.g. Custom Action) and then simply reassign the parameter to another element (e.g., instead of the Twitter icon, we will now assign the LinkedIn icon). → <strong>To reuse the step and assign a different parameter:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the same test, add the shared step that we have previously created from the <strong>Shared Steps</strong> menu. For example,  <strong>'+'</strong> ⇒ <strong>Shared steps</strong> ⇒ <strong>Click</strong></p>
+                                            </li>
+                                            <img src="images/0f78633-sharedsteps.jpg" title="sharedsteps.jpg" class="ScreenshotFullsize" />
+                                            <p>The shared step is duplicated.</p>
+                                            <img src="images/ed59427-duplicated.jpg" title="duplicated.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Double-click the new step to edit it.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>The previous parameter still exists, but you are required to assign a new HTML element, by clicking the Assign HTML button.</p>
+                                            </li>
+                                            <img src="images/94de6da-assignhtml.jpg" title="assignhtml.jpg" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Choose another element. For example, the LinkedIn icon at the bottom of the page.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/8b65e10-linkedin.jpg" title="linkedin.jpg" class="ScreenshotFullsize" />
+                                        <p>When you will run the test both buttons will be clicked.</p>
+                                        <h2><a name="adding-javascript-parameter-in-the-steps-properties-panel"></a>Adding JavaScript parameter in the step's Properties panel</h2>
+                                        <p>JavaScript parameters are commonly used for constants and variables.<br /> We will mainly use those when we want to forward values to a group or to other reusable steps.<br /> You can find examples for using JS params <a href="parameters-for-groups.htm">here</a>. →<strong>To add a JavaScript parameter:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Properties Panel</strong>, click the <strong>+</strong> button next to <strong>Params</strong> and then click <strong>JS</strong>.</p>
+                                            </li>
+                                            <img src="images/d5ea619-plus.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Enter a name for the first parameter, by clicking the <strong>Edit</strong> icon and then replace the "param" text with the new name.</p>
+                                            </li>
+                                            <img src="images/96cc4ee-edit.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Enter a value in the field below the parameter name. If the value is a constant string value use ' ' around it. For example, 'guest'. This value will be available in this test only (i.e., the value will not be shared across tests.</p>
+                                            </li>
+                                            <img src="images/898f70a-guest.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Repeat steps <strong>1-3</strong> to add additional parameters.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Save</strong> and then <strong>OK</strong>.​</p>
+                                            </li>
+                                        </ol>
+                                    

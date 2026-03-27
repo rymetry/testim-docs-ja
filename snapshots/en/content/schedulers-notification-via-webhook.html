@@ -1,0 +1,59 @@
+
+                                        <h1>Scheduler’s notification via webhook</h1>
+                                        <p>The Scheduler’s notification via webhook feature provides users the ability to add a URL as a webhook in the preference option for their scheduled runs notifications. Under the <strong>Notification</strong> section, there is a setting for when to trigger a notification (e.g., "On every failure") and the method by which the notification will be sent. One of these methods is a webhook. Outside Testim, the webhook maybe used to trigger a process, such as some form of reporting, etc.</p>
+                                        <h3><a name="webhook-format"></a>Webhook format</h3>
+                                        <p>The webhook sends a JSON payload containing the following information:<br /> &amp;#x9;•	status (failure | success) – refers to the overall scheduled run status, not individual test results.<br /> &amp;#x9;•	projectId<br /> &amp;#x9;•	executionId<br /> &amp;#x9;•	schedulerName<br /> &amp;#x9;•	executionUrl</p>
+                                        <div class="note">
+                                            <p>The information included in the webhook cannot be modified.</p>
+                                        </div>
+                                        <p>The following is an example of a webhook JSON payload:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;"status": "failure",<br />&#160;&#160;"projectId": "AMaVXxXxXxXxrVrBrnSD",<br />&#160;&#160;"executionId": "Tv9O8XxXxUOfkoqT",<br />&#160;&#160;"schedulerName": "Webhook",<br />&#160;&#160;"executionUrl": "https://app.testim.io/#/project/AMaVXxXxXxrVrBrnSD/runs/suites/Tv9O8kPLGUOfkoqT",<br />&#160;&#160;"results": {<br />&#160;&#160;&#160;&#160;"passed": [],<br />&#160;&#160;&#160;&#160;"failed": [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"_id": "Bo6tVDoxhrntvlY9",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"testId": "vwE96nZBQK4L2w2X",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"name": "TestName",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"reason": "Assertion failed",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"link": "https://app.testim.io/#/project/AMXxXxXxCgrVrBrnSD/branch/master/test/vwE96nZBQK4L2w2X?result-id=Bo6tVDoxhrntvlY9"<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;],<br />&#160;&#160;&#160;&#160;"failed evaluating": [],<br />&#160;&#160;&#160;&#160;"evaluating": [],<br />&#160;&#160;&#160;&#160;"skipped": []<br />&#160;&#160;}<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>For more information about scheduled runs, see <a href="scheduler.htm">Scheduler</a>.</p>
+                                        <h2><a name="configuring-the-scheduler-webhook-settings"></a>Configuring the Scheduler Webhook Settings</h2>
+                                        <p>→ <strong>To configure the scheduler webhook settings:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the main navigation, click the <strong>Runs</strong> icon.</p>
+                                            </li>
+                                            <img src="images/7bb277d5d38990749ee15c6e4fc59d1a2159da03f80d04f043d8bd0727932f93-runs.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Scheduled Runs</strong> to open the <strong>Scheduled Runs</strong> tab.</p>
+                                            </li>
+                                            <img src="images/6e0c331e7015088086e8c3fc326d5d8667e9bd8b9bb1877c4951e85151c201c2-scheduledruns.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Scheduler List</strong> page is shown.</p>
+                                            <img src="images/3d5057de59c5dce8b8f66f92259c62984820efadb60d88e8a932f5dd0e750a83-schedulerlibrary.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the scheduler for which you would like to set a webhook.<br /></p>
+                                            </li>
+                                            <p>The <strong>Edit Schedule Runs</strong> window opens.</p>
+                                            <img src="images/f79c48d58ab8d4f2ba3c6277b21196027ee5fcfb729ddbd9f62ee7d3dee98c62-editscheduler.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the Notify on field, select one of the following options:</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>On every failure</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>On the first failure</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>On every run</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Under <strong>Preference</strong> select <strong>Webhook</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/c10fa5c33dfa3df7f43519d1a8b126025a571d2c95054f52d782d48ef217a977-webhookfield.png" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Enter a valid URL in the <strong>Webhook</strong> field that is shown. This is the URL where Testim will POST the run result.</p>
+                                            </li>
+                                            <img src="images/bd200e6bcb5023dea0a893c75f2dff098e983997ca1c68842b59f2a2b9abceff-webhook2.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

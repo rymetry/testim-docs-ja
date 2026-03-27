@@ -1,0 +1,144 @@
+
+                                        <h1>Salesforce Auto-Login Step</h1>
+                                        <p>The <em>Salesforce auto-login</em> step allows the test to login to the Salesforce environment (or sandbox) without the need to record login or logout steps. After you add the login step and enter the details of the environment you are testing, you can start recording your test.</p>
+                                        <div class="note">
+                                            <p>If your Salesforce environment is protected with 2-factor authentication, you will need your organization’s Salesforce administrator to whitelist the IP for the machine from which you are running your tests in order for the auto login step to pass.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Copying a shared login step If you copy and paste a login step, if this step is a shared step, editing the values of the "SF environment" will  cause a change in all the used instances of this shared step. However, if <em>its not a shared step</em> and its copied and pasted inside the test, it is possible to edit the step’s values and it will not affect the other copies of the login step.</p>
+                                        </div>
+                                        <h3><a name="mfa-authentication"></a>MFA Authentication</h3>
+                                        <p>As of Feb 1 2022 Salesforce announced it will enforce multifactor authentication (MFA) when logging in to their environment. To support automatic login using MFA, Testim has implemented a software-based authenticator that will perform MFA when the Salesforce Auto-login step is executed. To enable this feature, follow the instructions in the <a href="#setting-up-mfa">Setting up MFA</a> section below.</p>
+                                        <h2><a name="adding-a-salesforce-auto-login-step"></a>Adding a Salesforce Auto-Login Step</h2>
+                                        <p>→ <strong>To add a Salesforce auto-login step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/3e1c90c-testim_512a.png" title="Testim 512a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action items</strong> are displayed.</p>
+                                            <img src="images/9b114f6-testim_566.png" title="Testim 566.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/c70c927-testim_544_r.png" title="Testim 544_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Salesforce</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Salesforce</strong> menu expands.</p>
+                                            <img src="images/cedf632-testim_545_r.png" title="Testim 545_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Salesforce auto-login</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Salesforce auto-login</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/9bcc036-2d49d61-testim_567_r.png" title="2d49d61-Testim_567_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name</strong> the new step field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the Select shared step folder list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Hover over the step and click on the Show Properties (:fa-cog:) icon. The step is added in the <strong>Editor</strong>, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            </li>
+                                            <img src="images/2c50d67-newproperties.png" title="newproperties.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>In the <strong>Login URL</strong> field, enter the login of your Salesforce environment.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>In the <strong>Username</strong> and <strong>Password</strong> fields, enter your login credentials.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>If you need to use MFA, follow the steps in the <a href="#setting-up-mfa">Setting up MFA</a> section).<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The <em>Salesforce auto-login</em> step is configured.</p>
+                                        <h3><a name="using-parameters"></a>Using parameters</h3>
+                                        <p>You can use parameters which were defined in the test or suite level, in the config file, or in another step to enter your connection properties for your Salesforce environment.</p>
+                                        <div class="note">
+                                            <p>When using MFA, the value of the MFA secret key cannot be used as a parameter.</p>
+                                        </div>
+                                        <p>→ <strong>To use parameters to enter your connection properties:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Define parameters in one of the following ways:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Add a parameter to the test data</strong> – You can define a parameter by adding <strong>Test Data</strong> to the <strong>Setup</strong> step (the first step of the test). For detailed instructions, see <a href="data-driven-testing/index.htm#section-configuring-a-data-driven-test-from-the-visual-editor">Configuring a data driven test from the visual editor</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Add a parameter to the config file</strong> – You can add a parameter to the <a href="../running-tests/configuration-file-run-hooks/index.htm">Configuration file</a>. For detailed instructions, see <a href="data-driven-testing/index.htm#section-configuring-data-driven-tests-using-the-config-file">Configuring Data Driven Tests using the Config file</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Add a parameter to a Custom step</strong> – You can create a Custom step and then add a parameter to this Custom Step. For detailed instructions, see <a href="parameters/parameters-in-custom-javascript-steps.htm">Parameters in custom JavaScript steps</a>.<br /></p>
+                                                </li>
+                                            </ul>
+                                            <p>You then need to pass the parameter to the <em>Salesforce auto-login</em> step or to the test level, by exporting the parameter. For detailed instructions, see <a href="parameters/exports-parameters.htm">Exports Parameters</a>.</p>
+                                            <li value="2">
+                                                <p>In your <em>Salesforce auto-login</em> step, add the parameters to the <strong>URL</strong>, <strong>Username</strong>, and <strong>Password</strong> fields.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="setting-up-mfa"></a>Setting up MFA</h2>
+                                        <p>The setup process requires obtaining the secret key from Salesforce and entering the key into the Secret Key field in the Properties panel in Testim.<br /> → <strong>To setup MFA:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Login to Salesforce and Navigate to <strong>Setup &gt; Users &gt; Users &gt;</strong> and select the user for which you want to set up MFA.</p>
+                                            </li>
+                                            <img src="images/bc293ae-image.png" title="image.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>If you have already registered a 3rd party Authenticator app (Google Authenticator, Microsoft Authenticator etc.) under <strong>App Registration: One-Time Password Authenticator</strong>, you will need to disconnect it and then reconnect in order to obtain the secret key.</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>Under <strong>User Details</strong>, in the <strong>App Registration - One-Time Password Authenticator</strong> setting, click <strong>Disconnect</strong>.</p>
+                                                </li>
+                                                <li>
+                                                    <p>If you have never registered a 3rd party Authenticator App, proceed to the next step.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/e1f92f2-image_1.png" title="image (1).png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Under <strong>User Details</strong>, in the <strong>App Registration - One-Time Password Authenticator</strong> setting, click <strong>Connect</strong>.</p>
+                                            </li>
+                                            <img src="images/167397d-image_2.png" title="image (2).png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Login into Salesforce with your user name and password, when prompted with the following notice, select <strong>Choose another verification method</strong>.</p>
+                                            </li>
+                                            <img src="images/3eff270-pasted_image_0.png" title="pasted image 0.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Choose a verification method</strong> screen, select <strong>Use verification codes from an authenticator app</strong> and click <strong>Continue</strong>.</p>
+                                            </li>
+                                            <img src="images/522b354-pasted_image_0_1.png" title="pasted image 0 (1).png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>Connect an authenticator app screen</strong>, click <strong>I cant scan the QR code</strong>.</p>
+                                            </li>
+                                            <img src="images/71f0334-pasted_image_0_2.png" title="pasted image 0 (2).png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>A secret key is displayed. Copy the secret key.</p>
+                                            </li>
+                                            <img src="images/7022745-pasted_image_0_4.png" title="pasted image 0 (4).png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>When adding the Salesforce Auto-Login step (see - <a href="#adding-a-salesforce-auto-login-step">Adding a Salesforce Login Step</a>, in the step's <strong>Properties Panel</strong>, under <strong>Login with MFA</strong>, click the <strong>ADD KEY</strong> button.</p>
+                                            </li>
+                                            <img src="images/79bffd0-image_3.png" title="image (3).png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>Paste the key that you have copied from Salesforce into the <strong>Your Key</strong> field and click <strong>Add</strong>.</p>
+                                            </li>
+                                            <img src="images/33e9456-image_4.png" title="image (4).png" class="ScreenshotFullsize" />
+                                            <p>A verification code is displayed:</p>
+                                            <img src="images/76d0fe8-image_5.png" title="image (5).png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Go back to Salesforce and enter the verification code that was displayed into the <strong>Verification Code</strong> and click <strong>Connect</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d783a5c-verification_code.png" title="verification_code.png" class="ScreenshotFullsize" />
+                                    

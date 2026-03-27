@@ -1,0 +1,60 @@
+
+                                        <h1>Debug console errors, access DOM</h1>
+                                        <h2><a name="debug-using-chrome-console"></a>Debug using Chrome Console</h2>
+                                        <p>You can use console.log(myVar) or use the chrome DevTools debugger to see errors while running the test (add a debugger to the code).</p>
+                                        <h2><a name="debug-console-errors-and-network"></a>Debug console errors and network</h2>
+                                        <p>Testim records console errors and network errors automatically. → <strong>To view errors in a test run:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your text run or execution.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>View the error messages at the top of the test and the specific test step that failed.</p>
+                                            </li>
+                                            <img src="images/1b081be-displayed-errors.png" title="displayed-errors.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Open the console log.</p>
+                                            </li>
+                                            <img src="images/154a7ab-vewconsolelog.png" title="vewconsolelog.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>View the console log to gain insight in the specific errors.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/8c191a6-consoleerrors.png" title="consoleerrors.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: The test logs will only appear for runs on Chrome &amp; Edge Chromium browser.</p>
+                                        </div>
+                                        <h2><a name="debug-by-seeing-the-failed-step-dom"></a>Debug by seeing the failed step DOM</h2>
+                                        <p>When a step fails, Testim saves a complete DOM snapshot, so you can later debug. → <strong>To view the DOM snapshot of an error:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your text run or execution.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>View the error messages at the specific test step that failed.</p>
+                                            </li>
+                                            <img src="images/1400173-steperror.png" title="steperror.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>To view the DOM snapshot, hover over the step and click the <strong>View screenshot</strong> button or click the <strong>View DOM</strong> link in the step's properties panel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/a6ac0aa-viewdom1.png" title="viewdom1.png" class="ScreenshotFullsize" />
+                                        <img src="images/986c536-viewdom2.png" title="viewdom2.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: <em> The DOM will only appear on Chrome &amp; Edge Chromium browser runs. </em> The DOM will only appear on failed steps.</p>
+                                        </div>
+                                        <h2><a name="debug-step-parameters"></a>Debug Step parameters</h2>
+                                        <p>In the properties panel you can see in each step all the parameters used during the run. These parameters can help you understand what happened in each step during the run.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Incoming params</strong>:  All incoming parameters that could be used in this step. Parameters can come from the exports in previous steps, from global exports carried out from previous  tests in the suite, from data driven parameters, group / step parameters, etc.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Local exports</strong>: Export parameters created in this step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Global exports</strong>: Global export parameters created in this step.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/e5d13c5-step_params.gif" title="step params.gif" class="ScreenshotFullsize" />
+                                    

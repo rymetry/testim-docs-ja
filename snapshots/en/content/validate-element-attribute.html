@@ -1,0 +1,263 @@
+
+                                        <h1>Validate Element Attribute (Mobile)</h1>
+                                        <p>The element attribute validation allows you to validate the value of attributes within your app screen elements.</p>
+                                        <h2><a name="adding-a-validate-element-attribute-step"></a>Adding a Validate Element Attribute step</h2>
+                                        <p>→ <strong>To add a Validate Element Attribute step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the validation.</p>
+                                            </li>
+                                            <img src="images/a45b667-small-screen1.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/2d940f9-small-screen2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Run test</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/3f42de6-small-screen3.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> again and click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/0bd37d9-testim_237_r.png" title="Testim 237_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click on <strong>Validations</strong>. The <strong>Validations</strong> menu expands. Scroll down through the menu and select <strong>Validate element attribute</strong>.</p>
+                                            </li>
+                                            <img src="images/ee0bd01-elementattribute.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate element attribute</strong>.</p>
+                                            </div>
+                                            <li value="6">
+                                                <p>In the <strong>AUT</strong> window, identify the relevant element for which you wish to validate an element attribute, and click on it to select it. You will need to know the element's attribute name to configure the validation.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d65e7f9-image_7.png" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>The <strong>Element Attribute Validation</strong> form is shown.</p>
+                                            </li>
+                                            <img src="images/6a2c9cd-elementattvalidation.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Attribute name</strong> field, enter a valid element attribute name that you wish to validate (e.g. checkable, checked, className, clickable). For a list of possible attributes, see, <a href="#list-of-possible-attributes">List of possible attributes</a>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Expected value</strong> field, enter the value you wish to validate for the attribute (e.g. <span class="FileOrFilePath">true</span>).</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. ‘enabled’ and ‘true`.</p>
+                                            </div>
+                                            <div class="note">
+                                                <p>For the expected value you can use regex.</p>
+                                            </div>
+                                            <p>Testim will validate whether the selected element attribute's expected value is present when running your test.</p>
+                                            <li value="4">
+                                                <p>Click <strong>OK</strong>. The “Validate element attribute” step is added in the <strong>Editor</strong>, and a thumbnail of the selected element is shown in the step.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after the validation step to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="modifying-a-validate-element-attribute-step"></a>Modifying a Validate element attribute step</h2>
+                                        <p>If you want to change the element you selected, you don’t need to delete and re-record the step. Instead, you can reassign the element with a different element. Alternatively, you can modify the attribute name and/or expected value of the original element you selected without selecting a new element. → <strong>To reassign the selected element in a Validation step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the position to the left of the step for which you want to reassign the element and click on the <strong>Toggle breakpoint</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the <strong>Run test</strong> button to run the test until the breakpoint.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/7495290-updatedsteps.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="4">
+                                                <p>Hover over the <strong>Target element</strong> thumbnail to show options, and click <strong>Reassign</strong>.</p>
+                                            </li>
+                                            <img src="images/61bac26-reassign.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>AUT</strong> window, identify the new element that you would like to select and click on it.<br /></p>
+                                            </li>
+                                            <p>The selected element is shown in the <strong>Target element</strong> box in the <strong>Properties</strong> panel.</p>
+                                            <li value="6">
+                                                <p>In the <strong>Properties</strong> panel <strong>Attribute name</strong> field enter the attribute name for the new element.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>Properties</strong> panel <strong>Expected value</strong> field enter the expected value of the new attribute.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. 'enabled' and 'true'.</p>
+                                            </div>
+                                            <li value="8">
+                                                <p>Click on the same <strong>Toggle Breakpoint</strong> button to the left of the step for which you reassigned the element to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <p>→ <strong>To modify the properties of the<em>original</em> element:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the step for which you want to reassign the element and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/240621e-properties.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="2">
+                                                <p>In the <strong>Properties</strong> panel <strong>Attribute name</strong> field enter the new attribute name for the element.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Properties</strong> panel <strong>Expected value</strong> field enter the new expected value of the attribute.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/4865d83-propertiespanel.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>When modifying the value of the <strong>Attribute name</strong> and <strong>Expected value</strong> in the <strong>Properties</strong> panel, make sure they are enclosed in single quotes: e.g. ‘clickable’ and 'true'.</p>
+                                        </div>
+                                        <h2><a name="list-of-possible-attributes"></a>List of possible attributes</h2>
+                                        <h3><a name="ios-attributes-using-appium"></a>iOS attributes (using Appium)</h3>
+                                        <ul>
+                                            <li>
+                                                <p>checkable</p>
+                                            </li>
+                                            <li>
+                                                <p>checked</p>
+                                            </li>
+                                            <li>
+                                                <p>{class,className}</p>
+                                            </li>
+                                            <li>
+                                                <p>clickable {content-desc,contentDescription}</p>
+                                            </li>
+                                            <li>
+                                                <p>enabled</p>
+                                            </li>
+                                            <li>
+                                                <p>focusable</p>
+                                            </li>
+                                            <li>
+                                                <p>focused</p>
+                                            </li>
+                                            <li>
+                                                <p>{long-clickable,longClickable}</p>
+                                            </li>
+                                            <li>
+                                                <p>package</p>
+                                            </li>
+                                            <li>
+                                                <p>password</p>
+                                            </li>
+                                            <li>
+                                                <p>{resource-id,resourceId}</p>
+                                            </li>
+                                            <li>
+                                                <p>scrollable</p>
+                                            </li>
+                                            <li>
+                                                <p>selection-start</p>
+                                            </li>
+                                            <li>
+                                                <p>selection-end</p>
+                                            </li>
+                                            <li>
+                                                <p>selected</p>
+                                            </li>
+                                            <li>
+                                                <p>{text,name}</p>
+                                            </li>
+                                            <li>
+                                                <p>hint</p>
+                                            </li>
+                                            <li>
+                                                <p>extras</p>
+                                            </li>
+                                            <li>
+                                                <p>bounds</p>
+                                            </li>
+                                            <li>
+                                                <p>displayed</p>
+                                            </li>
+                                            <li>
+                                                <p>contentSize</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="android-attributes"></a>Android attributes</h3>
+                                        <ul>
+                                            <li>
+                                                <p>UID</p>
+                                            </li>
+                                            <li>
+                                                <p>accessibilityContainer</p>
+                                            </li>
+                                            <li>
+                                                <p>accessible</p>
+                                            </li>
+                                            <li>
+                                                <p>enabled</p>
+                                            </li>
+                                            <li>
+                                                <p>frame</p>
+                                            </li>
+                                            <li>
+                                                <p>index</p>
+                                            </li>
+                                            <li>
+                                                <p>label</p>
+                                            </li>
+                                            <li>
+                                                <p>name</p>
+                                            </li>
+                                            <li>
+                                                <p>rect</p>
+                                            </li>
+                                            <li>
+                                                <p>selected</p>
+                                            </li>
+                                            <li>
+                                                <p>type</p>
+                                            </li>
+                                            <li>
+                                                <p>value</p>
+                                            </li>
+                                            <li>
+                                                <p>visible</p>
+                                            </li>
+                                            <li>
+                                                <p>wdAccessibilityContainer</p>
+                                            </li>
+                                            <li>
+                                                <p>wdAccessible</p>
+                                            </li>
+                                            <li>
+                                                <p>wdEnabled</p>
+                                            </li>
+                                            <li>
+                                                <p>wdFrame</p>
+                                            </li>
+                                            <li>
+                                                <p>wdIndex</p>
+                                            </li>
+                                            <li>
+                                                <p>wdLabel</p>
+                                            </li>
+                                            <li>
+                                                <p>wdName</p>
+                                            </li>
+                                            <li>
+                                                <p>wdRect</p>
+                                            </li>
+                                            <li>
+                                                <p>wdSelected</p>
+                                            </li>
+                                            <li>
+                                                <p>wdType</p>
+                                            </li>
+                                            <li>
+                                                <p>wdUID</p>
+                                            </li>
+                                            <li>
+                                                <p>wdValue</p>
+                                            </li>
+                                            <li>
+                                                <p>wdVisible</p>
+                                            </li>
+                                        </ul>
+                                    

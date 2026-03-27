@@ -1,0 +1,212 @@
+
+                                        <h1>Reports</h1>
+                                        <p>The <strong>Reports</strong> tab on the <strong>Insights</strong> section shows detailed information about the quality of your project over a selected time period, including information about successful and failed test runs, the activity of your team, and information about which tests have failed the most. You can choose the branch of your project for which you want the information displayed. For more information see <a href="index.htm#selecting-a-branch">Selecting a Branch</a>. This page includes the following sections:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Tests Run Results</strong> – shows information about the active tests during the selected time period.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Your Team’s Activity</strong> – shows information about your team’s new and updated tests during the selected time period.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Testim’s Activity</strong> – shows information about the number of times Testim’s locators were used to identify a modified element in your runs.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Where Can You Improve?</strong> – shows information about the three tests that have failed the most during the selected time period.</p>
+                                            </li>
+                                        </ul>
+                                        <p>You can select the reporting time period by using the dropdown menu in the top right corner of the page. Options are: <em>Today</em>, <em>Yesterday</em>, <em>Last 7 Days</em> (default), <em>Last 30 Days</em>, <em>Last 3 Months</em>, and <em>Custom</em>. You can also filter your results. The following users will receive a "Testim weekly report" summary via email:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Company owners - by default, receive a weekly report via email for all company projects.</p>
+                                            </li>
+                                            <li>
+                                                <p>Project owners - by default, receive a weekly report via email for their specific project(s).</p>
+                                            </li>
+                                            <li>
+                                                <p>Company and project owners - can configure to send weekly reports to additional users by adding their email addresses under the <strong>Reports</strong> tab in project settings.</p>
+                                            </li>
+                                        </ul>
+                                        <p>Company owners and project owners can access an additional company-level report. For more information, see <a href="#company-level-report">Company-level Report</a>.</p>
+                                        <h2><a name="tests-run-results"></a>Tests Run Results</h2>
+                                        <p>The Tests Run Results section includes information about your tests, and passed and failed test runs for the currently selected time period. A <em>test run</em> is defined as a single execution of a single test with specific parameters, run in a specific browser. An <em>execution</em> includes test/s that were run by means of the CLI/scheduler/UI list, where you can select multiple tests to be run by a single command. The <strong>Tests Run Results</strong> section includes the following panes:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Passed Test Runs</strong> – shows detailed information about the test runs that have passed during the selected time period.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Running Tests</strong> – shows detailed information about the tests that were run during the selected time period.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Avg. Duration</strong> – shows information about the test run duration.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Failure Types</strong> – shows detailed information about the test runs that have failed during the selected time period, based on how you tagged those failed tests. For more information about tagging failed tests, see <a href="../../results/tag-remote-runs-failures.htm">Tagging failed runs with failure types</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="passed-test-runs"></a>Passed Test Runs</h3>
+                                        <img src="images/72d272b-testim_351.png" title="Testim 351.png" class="ScreenshotFullsize" />
+                                        <p>The left side of this pane shows the following test run information for the selected time period:</p>
+                                        <ul>
+                                            <li>
+                                                <p>The percentage of test runs that passed.</p>
+                                            </li>
+                                            <li>
+                                                <p>The number of test runs that passed out of the total number of test runs.</p>
+                                            </li>
+                                            <li>
+                                                <p>The number of executions that passed out of the total number of executions.</p>
+                                            </li>
+                                            <li>
+                                                <p>The percentage change of the success rate compared to the previous period.</p>
+                                            </li>
+                                            <li>
+                                                <p>The (rounded) percentage of test runs that passed during the previous period.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The right side of this pane contains a graph showing the percentage of test runs that passed during the selected time period. Hover over a specific date to see detailed information about the test runs that passed on that date.</p>
+                                        <h3><a name="running-tests"></a>Running Tests</h3>
+                                        <img src="images/39eca9d-testim_352a.png" title="Testim 352a.png" class="ScreenshotFullsize" />
+                                        <p>This pane includes information about your running tests. A <em>running</em> test is defined as a test that ran at least one time in the selected period.<br /> The left side of this pane shows the following information for the selected time period:</p>
+                                        <ul>
+                                            <li>
+                                                <p>The number of running tests out of the total number of tests in your Test Library.</p>
+                                            </li>
+                                            <li>
+                                                <p>The percentage change of running tests from the previous time period to this time period.</p>
+                                            </li>
+                                            <li>
+                                                <p>The number of tests that were run during the selected time period.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The right side of this pane contains a bar graph showing the number of active tests out of the total number of tests in your Test Library for each day of the selected time period. Hover over the bar of a specific date to see the number of running tests out of the total number of tests for that day.</p>
+                                        <h3><a name="avg-duration"></a>Avg. Duration</h3>
+                                        <img src="images/8ceb5e5-testim_352b_r.png" title="Testim 352b_r.png" class="ScreenshotFullsize" />
+                                        <p>This pane shows the following information about the test run duration. <em>Test run duration</em> is defined as the running time for one run of a single test.</p>
+                                        <ul>
+                                            <li>
+                                                <p>The average duration for all test runs during the selected time period.</p>
+                                            </li>
+                                            <li>
+                                                <p>The percentage change of the average duration of all of the test runs from the previous time period to the current time period.</p>
+                                            </li>
+                                            <li>
+                                                <p>The average duration for all of the test runs during the previous time period.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="failure-types"></a>Failure Types</h3>
+                                        <img src="images/523676f-testim_353a.png" title="Testim 353a.png" class="ScreenshotFullsize" />
+                                        <img src="images/a39285c-testim_354a.png" title="Testim 354a.png" class="ScreenshotFullsize" />
+                                        <p>The left side of this pane shows the percentage for each of the failure types that you tagged your failed tests with during the selected time period. It also shows the percentage for the previous time period. By default, only tests that you tagged are included in these figures. To see the entire failed distribution, click the <strong>Show untagged</strong> toggle. The right side of this pane contains a chart showing the distribution of how you tagged your failed test runs during the selected time period. You can toggle the view between a donut chart (default) and line chart by clicking on the corresponding button in the top right corner of the pane. When the view is in line chart mode, you can hover over a specific date to see the number of failed tests assigned to each failure type on that date. For more information about failure tagging, see <a href="../../results/tag-remote-runs-failures.htm">Tagging failed runs with failure types</a>.</p>
+                                        <h2><a name="your-teams-activity"></a>Your Team’s Activity</h2>
+                                        <img src="images/62cde1e-testim_356.png" title="Testim 356.png" class="ScreenshotFullsize" />
+                                        <p>This section contains one pane showing info about your team’s activity during the selected time period. The left side of the pane shows the number of new tests created by your team during the selected time period, and the change in the number of new tests created compared to the previous time period. The right side of the pane shows the number of tests updated by your team during the selected time period, and the number of tests updated by your team during the previous time period.</p>
+                                        <h2><a name="testims-activity"></a>Testim’s Activity</h2>
+                                        <img src="images/9e8477a-testim_355_r.png" title="Testim 355_r.png" class="ScreenshotFullsize" />
+                                        <p>This pane shows the number of times a locator was below the 0.75 threshold, and Testim still found the element, out of the total number of locators. For more information, see <a href="../../salesforce-testing/core-concepts.htm#smart-locators">Smart Locators</a>.</p>
+                                        <h2><a name="where-can-you-improve"></a>Where Can You Improve?</h2>
+                                        <img src="images/5224124-testim_339.png" title="Testim 339.png" class="ScreenshotFullsize" />
+                                        <p>This section lists the three tests that have failed the most during the selected time period. Click on any of the listed tests to open the <strong>Test Runs</strong> page showing detailed statistics of past runs filtered by the test you chose. For more information, see <a href="doc:test-runs-1">Test Runs Screen</a>. Click on <strong>Show All Tests</strong> to list all of the tests that have failed five or more times during the selected time period. Tests that have been run less than five times during the selected time period are not displayed in the list.</p>
+                                        <h2><a name="filtering-the-results"></a>Filtering the Results</h2>
+                                        <p>You can filter the data shown in the results by execution run type (suite, plan, scheduler, label, and test), branch, result label, and browser. By default, the data included in the results does not include test runs that have the test status of <em>evaluating</em>; however, you can include these test runs by sliding the <strong>Include Evaluating</strong> toggle in the <strong>Filter</strong> settings to the right. For more information on test status, see <a href="../testops-management/test-status.htm">Test Status</a>. For more information on result labels, see <a href="../../results/result-labels.htm">Result labels</a>.<br /> → <strong>To filter the results:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Filter</strong> button.</p>
+                                            </li>
+                                            <img src="images/0e0361d-testim_471a.png" title="Testim 471a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Filter</strong> pane opens on the right-hand side, showing the execution run types you can filter by (Suite, Plan, Scheduler, Label, and Test) and the Branch, Result Labels, and Browsers you can filter by. ( <strong>Only the options that are relevant for the chosen time frame are shown.</strong>&amp;#x54;he Result Labels shown are based on the terms you have previously used to label your results. For more information, see <a href="../../results/result-labels.htm">Result labels</a>.)</p>
+                                            <img src="images/73e8e57-testim_474_r.png" title="Testim 474_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>To filter by a specific execution type, select the type and then select the desired checkbox(es) shown under that type. (You cannot choose more than one execution type to filter by.)</p>
+                                            </li>
+                                            <img src="images/3bb3d46-testim_475_r.png" title="Testim 475_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>You can also search for criteria by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>To filter by branch, select the desired checkbox(es) in the <strong>Branch</strong> section. By default, the filter is automatically selected to the branch currently selected at the top of the screen.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>To filter by result label, select the desired checkbox(es) in the <strong>Result Label</strong> section.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>To filter by browser, select the desired checkbox(es) in the <strong>Browser</strong> section.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If you want to include the data from test runs with a test status of <em>evaluating</em>, click the <strong>Include Evaluating</strong> toggle. A test with the status of <em>evaluating</em> is still being evaluated by the user, so by default the data from its runs is not included. For more information on test status, see <a href="../testops-management/test-status.htm">Test Status</a>.</p>
+                                            </li>
+                                            <img src="images/06e10a5-testim_476a_r.png" title="Testim 476a_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>When including the <em>evaluating</em> tests, only the tests that were run on a grid or via CLI are included in the results.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>Click <strong>Apply</strong>.<br /></p>
+                                            </li>
+                                            <p>The filter is applied, and only the data that meets the criteria is shown.</p>
+                                            <div class="note">
+                                                <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the pane.</p>
+                                            </div>
+                                            <li value="8">
+                                                <p>Click the “<strong>X</strong>” in the upper right of the pane to close it.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Closing the <strong>Filter</strong> pane without resetting the filters will not reset them, and only the data that meets the filter criteria will be shown. To show unfiltered data again, you will need to reopen the <strong>Filter</strong> pane and reset the filters.</p>
+                                        </div>
+                                        <h2><a name="company-level-report"></a>Company-level Report</h2>
+                                        <p>In addition to the report described above, company owners and project owners can access a more comprehensive, company-level report. Company owners will see all of the information above for all of the projects within the company. Project owners will only see information for their own projects. This report can be filtered by project.</p>
+                                        <h3><a name="viewing-the-company-level-report"></a>Viewing the Company-level Report</h3>
+                                        <p>→ <strong>To view the company-level report:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on your <strong>account profile image</strong>.</p>
+                                            </li>
+                                            <img src="images/9fd9f62-testim_398a.png" title="Testim 398a.png" class="ScreenshotFullsize" />
+                                            <p>The account menu opens.</p>
+                                            <li value="2">
+                                                <p>Click <strong>Reports</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/faed44f-testim_399a_r.png" title="Testim 399a_r.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Alternatively on the <strong>Accounts Dashboard</strong>, click <strong>Reports</strong>.</p>
+                                        </div>
+                                        <p>The company-level report opens. For more information about each section, see above.</p>
+                                        <img src="images/4de5dbb-testim_404.png" title="Testim 404.png" class="ScreenshotFullsize" />
+                                        <h3><a name="filtering-the-company-level-report"></a>Filtering the Company-level Report</h3>
+                                        <p>You can filter company-level reports by project. By default, the data included in the report does not include tests that have the test status of <em>evaluating</em>. There is an option in the filter settings to include the data from these tests.<br /> → <strong>To filter a company-level report:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the <strong>Filter</strong> button.</p>
+                                            </li>
+                                            <img src="images/4f03ad0-testim_400a.png" title="Testim 400a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Filter</strong> pane opens on the right hand side.</p>
+                                            <img src="images/38c8e08-testim_405_r.png" title="Testim 405_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Project</strong> section, select one or more projects to filter by.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>You can also search for a project by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>If you want to include the data from tests with a test status of <em>evaluating</em>, click the <strong>Include Evaluating</strong> toggle.</p>
+                                            </li>
+                                            <img src="images/45333ed-testim_405a_r.png" title="Testim 405a_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>When including the <em>evaluating</em> tests, only the tests that were run on a grid or via CLI are included in the report.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>Click <strong>Apply</strong>.<br /></p>
+                                            </li>
+                                            <p>The filter is applied, and the report data is updated.</p>
+                                            <div class="note">
+                                                <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the <strong>Filter</strong> pane.</p>
+                                            </div>
+                                            <li value="5">
+                                                <p>Click the “<strong>X</strong>” in the upper right of the <strong>Filter</strong> pane to close it.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Closing the <strong>Filter</strong> pane without resetting the filters will not reset them, and only the selected projects will be shown. To include data for all of your projects again, you will need to reopen the <strong>Filter</strong> pane and reset the filters.</p>
+                                        </div>
+                                    

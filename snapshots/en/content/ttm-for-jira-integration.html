@@ -1,0 +1,242 @@
+
+                                        <h1>TTM for Jira Integration</h1>
+                                        <h2><a name="what-is-ttm-for-jira"></a>What is TTM for Jira?</h2>
+                                        <p><a href="https://www.tricentis.com/products/test-management-jira">Tricentis Test Management (TTM) for Jira</a> is an end-to-end test management inside Jira that keeps QA and development aligned, which allows you to collaborate and build quality into your software from idea to production.</p>
+                                        <p>TTM for Jira is in the <a href="https://marketplace.atlassian.com/apps/1228672/tricentis-test-management-for-jira">Atlassian Marketplace</a>, designed specifically for organizations who want to place test management directly within Jira. With TTM for Jira, QA, development, and the business can collaborate closely to deliver quality software together.</p>
+                                        <ul>
+                                            <li>
+                                                <p>To setup TTM for Jira please follow the instructions <a href="https://documentation.tricentis.com/tricentis_test_management_for_jira/content/admins/admins_overview.htm">here</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>To view TTM for Jira documentation see <a href="https://documentation.tricentis.com/tricentis_test_management_for_jira/content/introduction.htm">here</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="why-do-i-need-a-ttm-for-jira-integration"></a>Why do I need a TTM for Jira integration?</h2>
+                                        <p>The TTM for Jira integration allows you to link a test in Testim to a test case in TTM for Jira. After running the test in Testim, the test results will be automatically displayed in TTM for Jira execution results, giving you a single view of the tests that were executed in Testim and in TTM for Jira. You can map Testim tests to TTM for Jira in two ways:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="#manually-map-a-test-in-testim-to-ttm-for-jira">Manually map a single Testim test to TTM for Jira</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="#bulk-create--map-test-cases-to-ttm-for-jira">Bulk create &amp; map Testim test groups/folders to TTM for Jira</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="setting-up-ttm-for-jira-integration"></a>Setting up TTM for Jira Integration</h2>
+                                        <p>Before using the TTM for Jira and Testim integration, you will need to connect Testim to the desired TTM for Jira project(s). This process is required only once. → <strong>To connect Testim to TTM for Jira:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; Integrations</strong> tab. Under <strong>Test Management</strong> you will find various integration<br /></p>
+                                            </li>
+                                            <p>modules.</p>
+                                            <li value="2">
+                                                <p>In the TTM for Jira integration module, click <strong>login</strong>.</p>
+                                            </li>
+                                            <img src="images/ae5b0d9-ttmlogin.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Open TTM for Jira and create an API key and copy it – see <a href="https://documentation.tricentis.com/tricentis_test_management_for_jira/content/admins/settings.htm">Configure Tricentis Test Management for Jira</a> for more information.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Paste it in the <strong>API Key</strong> field in Testim.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>In Testim, click <strong>Connect</strong></p>
+                                            </li>
+                                            <img src="images/cea53ae-addttmapikey.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In Testim, select the TTM for Jira project(s) from the list that you would like to associate.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/768edf2-slectproject.png" class="ScreenshotFullsize" />
+                                        <p>At this point Testim is associated to a project in TTM for Jira, but not mapped to a specific test.</p>
+                                        <div class="note">
+                                            <p>Note: You may connect one TMS (Test Management System) at a time. So, if your Testim system is already connected to another TMS, you will need to disconnect this TMS first and only then connect TTM for Jira. Note that by disconnecting the TMS, you will remove the connections between the tests. So, if you want to connect to the previous TMS again you will have to recreate the connections as well.</p>
+                                        </div>
+                                        <h2><a name="manually-map-a-test-in-testim-to-ttm-for-jira"></a>Manually Map a test in Testim to TTM for Jira</h2>
+                                        <p>After setting up the integration between Testim and TTM for Jira, you are ready to map a specific test in Testim to a test in TTM for Jira. → <strong>To map a test in Testim to a test in TTM for Jira:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Testim, open the test that you would like to be mapped.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Inside the test in Testim, click the <strong>Properties</strong> icon on the <strong>Setup</strong> step (the first step).</p>
+                                            </li>
+                                            <img src="images/56e072e-setupstepprops.png" title="setupstepprops.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the setup step's <strong>Properties</strong> panel, under Test in TTM for Jira, select the TTM for Jira project from the first drop-down menu and then the specific test from the second drop-down menu. There can be multiple mapped test cases</p>
+                                            </li>
+                                            <img src="images/7957825-maptotest.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click Test <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="bulk-create-amp-map-test-cases-to-ttm-for-jira"></a>Bulk Create &amp; Map Test Cases to TTM for Jira</h2>
+                                        <p>For customers who have an existing Testim app with a large number of tests and wish to start working<br /> with TTM for Jira, our bulk creation and mapping feature offers a convenient solution. Customers can select a group of tests from the Testim test library and Testim will automatically create test cases in TTM for Jira and map Testim test cases to the newly created Jira test cases.</p>
+                                        <div class="note">
+                                            <p>Note: <em> This bulk mapping options is best suited for customers that don't currently have any tests in TTM for Jira, but this is not a requirement to use the bulk mapping feature. </em> If you have already manually mapped any tests to TTM for Jira, this bulk mapping feature will skip any tests already mapped. You can <a href="#unmap-a-test-already-mapped-to-ttm-for-jira">manually unmap a test</a> if you want to include it in the bulk mapping process.</p>
+                                        </div>
+                                        <p>→ <strong>To automatically bulk map Testim test cases to TTM for Jira:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the <strong>Test Library</strong> and <strong>select one or more groups of tests or test folders</strong>. In the example below, the customer has selected folder "aa1" which contains 3 tests. Within "aa1" is a subfolder "bb1" that contains 3 additional tests. With folder "aa1" selected, Testim will map all 6 tests to TTM for Jira.</p>
+                                            </li>
+                                            <img src="images/a2c0d7b-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <img src="images/6e12533-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the <strong>Create &amp; map TTM for Jira tests</strong> button in the quick navigation menu.</p>
+                                            </li>
+                                            <img src="images/1ea3500-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select the <strong>TTM for Jira Project</strong> where the test cases will be created.</p>
+                                            </li>
+                                            <img src="images/5ca389d-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the <strong>Folder Path in TTM for Jira</strong> section, select the folder paths option you want Testim to create in TTM for Jira.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Create the same Testim folder path</strong>: your test cases in Jira will use the same names and hierarchy as your test cases in Testim.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>Create all test caes in My test cases folder</strong>: all test cases in Jira will be added to a single "My Test Cases" folder.</p>
+                                            </li>
+                                            <img src="images/330c79b-image_2.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Click the <strong>Create &amp; Map</strong> button. Testim will display a progress bar.</p>
+                                            </li>
+                                            <img src="images/3750ea9-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Testim will iterate through the selected Testim tests and create test cases in TTM for Jira using the Testim test case names and your selected folder structure.</p>
+                                            </li>
+                                            <img src="images/8997b82-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>At the end of the operation, Testim will display the mapping results. If all tests were mapped successfully, you will see a 100% completion message.</p>
+                                            </li>
+                                            <img src="images/a63029e-ttm4jira.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>If any tests failed to map, you will see a message containing the total number of successful tests mapped and the names of any failed mappings. You can hover over the icon to view additional details about the failure.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/b12eefd-ttm4jira.png" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>After making any adjustments to your tests or TTM for Jira settings, click the <strong>Retry all</strong> link and Testim will attempt to map <strong>only the failed</strong> tests to TTM for Jira again.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/151d26f-ttm4jira.png" class="ScreenshotFullsize" />
+                                        <h3><a name="how-to-know-if-a-test-is-already-mapped-to-ttm-for-jira"></a>How to Know if a Test is Already Mapped to TTM for Jira</h3>
+                                        <p>You can identify if a test has already been mapped to TTM for Jira in the Testim test properties. → <strong>To see if a test has already been mapped to TTM for Jira:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the test and open the <strong>Test Properties</strong> panel.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Navigate to the <strong>Test in TTM for Jira</strong> section. If this section has a selected Jira project and Test Name, this test has already been mapped to TTM for Jira.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/7c5dd59-ttm4jira.png" class="ScreenshotFullsize" />
+                                        <h3><a name="unmap-a-test-already-mapped-to-ttm-for-jira"></a>Unmap a Test Already Mapped to TTM for Jira</h3>
+                                        <p>You can manually unmap a test from TTM for Jira in the Testim test properties.</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the test and open the <strong>Test Properties</strong> panel.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Navigate to the <strong>Test in TTM for Jira</strong> section. Clear the values from the Jira Project and Test Name fields.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/36345a8-ttm4jira.png" class="ScreenshotFullsize" />
+                                        <h2><a name="running-a-test-and-viewing-the-testim-test-results-in-ttm-for-jira"></a>Running a test and viewing the Testim test results in TTM for Jira</h2>
+                                        <p>To view the result of a test execution in TTM for Jira, you will need to run the mapped test in Testim using a Remote Grid only. After running a mapped test in Testim, the test result will be displayed in the relevant TTM for Jira relevant project under the ‘Test Execution’ tab (<a href="https://documentation.tricentis.com/tricentis_test_management_for_jira/content/test_execution/test_cycles_runs.htm">see here</a>).</p>
+                                        <img src="images/40ba92d-testexectab.png" class="ScreenshotFullsize" />
+                                        <p>The names of Testim-originated test runs will use the following naming convention:</p>
+                                        <ul>
+                                            <li>
+                                                <p>“Testim.io <span class="FileOrFilePath">&lt;branchName&gt; : &lt;executionName&gt;" <strong>&lt;YYYY-MM-DD&gt;</strong></span> or</p>
+                                            </li>
+                                            <li>
+                                                <p>“Testim.io <span class="FileOrFilePath">&lt;branchName&gt;” <strong>&lt;YYYY-MM-DD&gt;</strong></span> (If there is no execution name)</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Note Data will reflect the UTC date.</p>
+                                        </div>
+                                        <p>→ <strong>To view a test execution in TTM for Jira:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the relevant execution and get execution details (<a href="https://documentation.tricentis.com/tricentis_test_management_for_jira/content/test_execution/test_cycles_runs.htm">see here</a>).</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="upon-testim-test-run-execution-end"></a>Upon Testim test run execution end</h3>
+                                        <p>The following details are pushed from testim to TTM for Jira:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Name</strong> - the name of the test in Testim.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Status</strong> - the status of the execution. The status displayed is the TTM for Jira status, which was translated from the Testim status as follows (Testim &gt; TTM for Jira):</p>
+                                            </li>
+                                        </ul>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Testim</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">TTM for Jira</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">ABORTED</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Unexecuted</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">SKIPPED (When test is in "Quarantine" status)</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">Blocked</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">TIMEOUT</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Failed</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">PASSED</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">Passed</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">FAILED</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body1">
+                                                        <p class="tableBody">Failed</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <blockquote>
+                                            <p>Note: Changing these statuses in TTM for JIRA may cause interruption in the integration</p>
+                                        </blockquote>
+                                        <div class="note">
+                                            <p>Note: Mandatory custom fields in TTM for Jira are not supported. Making a custom field on TTM for Jira<br /> mandatory may cause the integration to stop working.</p>
+                                        </div>
+                                    

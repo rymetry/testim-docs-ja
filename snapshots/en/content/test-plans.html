@@ -1,0 +1,95 @@
+
+                                        <h1>Test Plans - Web</h1>
+                                        <p>A test plan is a container of tests, which include specific test labels and/or test suites that can be organized to run consecutively. The test plan can include tests/test suites that run before and/or after the list of tests/test suites. The test plan can include settings that override the tests' default settings. Test plans are great If you need to do:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Set up your environment before your tests execute.</p>
+                                            </li>
+                                            <li>
+                                                <p>Clean up your environment after your tests execute.</p>
+                                            </li>
+                                            <li>
+                                                <p>Run your tests on several browsers and operating systems.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="create-a-new-web-test-plan"></a>Create a New Web Test Plan</h2>
+                                        <p>→ <strong>To create a new test plan:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to <strong>Test List</strong> in the main menu.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select <strong>Plans</strong> from the top navigation.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the <strong>New Plan</strong> button.</p>
+                                            </li>
+                                            <img src="images/fd4471d-new-test.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Enter the <strong>Name</strong> and <strong>Description</strong> for your new Test Plan.</p>
+                                            </li>
+                                            <img src="images/73ab5c3-newwebtestplan.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Select the <strong>Add Before All</strong> checkbox if you want to run a set of tests prior to the Test Plan's main test list. Enter the name of one or more <a href="test-suites.htm">Test Suites</a> or <a href="labels.htm">Test Labels</a>. Typically this would include setup steps, such as login, etc.</p>
+                                            </li>
+                                            <img src="images/b29d06d-newwebtestplan.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Enter the name of one or more <a href="test-suites.htm">Test Suites</a> or <a href="labels.htm">Test Labels</a> in the <strong>Test List</strong> box.</p>
+                                            </li>
+                                            <img src="images/30d2400-newwebtestplan.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Select the <strong>Add After All</strong> checkbox if you want to add "teardown" tests after the test list has run. Enter the name of one or more <a href="test-suites.htm">Test Suites</a> or <a href="labels.htm">Test Labels</a>. It is a best practice to include "teardown" tests in your test plan. These are tests designed to clear the cache, clean up data, log out users, etc. once the tests are complete.</p>
+                                            </li>
+                                            <img src="images/e34954a-newwebtestplan.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: <em> The tests in "Before all" and "After all" will always run in parallel level <span class="FileOrFilePath">1</span>. Only the "Test List" can run at a higher parallelization level, if it is set in the CLI. </em> If any of the “before all” tests fail, the tests in the Test List WON’T run. As a result, the entire execution will be marked as ‘failed’ and all remaining queued test runs will be aborted. * The tests in "Add After All" will always run even if tests in Test list failed.</p>
+                                            </div>
+                                            <li value="8">
+                                                <p>In the <strong>Where to Run</strong> field, select the <strong>Grid</strong> you would like to execute your tests on. See <a href="../integrations/grid-management/index.htm">Grid Management</a> for more information.</p>
+                                            </li>
+                                            <img src="images/d46f60c-newwebtestplan.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>In the <strong>What to run on</strong> section, select the <strong>Override default configurations</strong> checkbox to manually set which Browsers, Operating Systems, and resolutions to run your tests on. Choose from your list of configurations or create a new one. See <a href="shared-configuration.htm">Configurations Library</a> for more information. This will override the default configurations of the tests. Selecting multiple configurations will result in multiple executions, respectively.</p>
+                                            </li>
+                                            <img src="images/d484c9d-newwebtestplan.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>In the <strong>What to run on</strong> section, select the <strong>Override Base URL</strong> checkbox to set the start URL of your web app (e.g. production or staging environment). For more information, see <a href="../running-tests/base-url.htm">Base URL</a>.</p>
+                                            </li>
+                                            <img src="images/b5e9303-baseurl.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Click the <strong>Create</strong> button to create your test plan.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="running-your-test-plan"></a>Running your Test Plan</h2>
+                                        <p>In order to execute a test plan, you'll need to specify the plan name in your CLI command like this:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--test-plan "Test Plan Demo"</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>If you add a different grid name to the CLI, it will override the grid defined in the plan.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>CLI Steps If you have CLI steps in your tests make sure the CLI is running before executing.</p>
+                                        </div>
+                                        <h2><a name="share-parameters-between-your-test"></a>Share parameters between your test</h2>
+                                        <p>When you use a plan you can share parameters between tests e.g. create an account in the setup and use those credentials throughout all tests. See <a href="../advanced-editing/parameters/index.htm">Parameters</a> for more information.</p>
+                                        <h2><a name="run-test-plan-directly-from-the-editor"></a>Run test plan directly from the editor</h2>
+                                        <p><strong>→To run a test plan directly from the editor:</strong>
+                                        </p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Test List &gt; Plans</strong></p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select the plan/s you would like to run.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the <strong>Play</strong> button</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/88d404a-mar-22-2021_11-38-54.gif" title="Mar-22-2021 11-38-54.gif" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If you have a CLI action in one of the tests, please make sure you have CLI running</p>
+                                        </div>
+                                    

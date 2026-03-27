@@ -1,0 +1,72 @@
+
+                                        <h1>Setting MFA for Salesforce</h1>
+                                        <p>The setup process requires obtaining the secret key from Salesforce and entering the key into the relevant field when adding the credentials for Persona/Environment combination. Finally the Verification Code from Testim for Salesforce should be entered back into the Verification Code field in Salesforce.<br /> → <strong>To setup MFA:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Login to Salesforce and Navigate to <strong>Setup &gt; Users &gt; Users &gt;</strong> and select the user for which you want to set up MFA.</p>
+                                            </li>
+                                            <img src="images/bc293ae-image.png" title="image.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>If you have already registered a 3rd party Authenticator app (Google Authenticator, Microsoft Authenticator etc.) under <strong>App Registration: One-Time Password Authenticator</strong>, you will need to disconnect it and then reconnect in order to obtain the secret key.</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>Under <strong>User Details</strong>, in the <strong>App Registration - One-Time Password Authenticator</strong> setting, click <strong>Disconnect</strong>.</p>
+                                                </li>
+                                                <li>
+                                                    <p>If you have never registered a 3rd party Authenticator App, proceed to the next step.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/e1f92f2-image_1.png" title="image (1).png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Under <strong>User Details</strong>, in the <strong>App Registration - One-Time Password Authenticator</strong> setting, click <strong>Connect</strong>.</p>
+                                            </li>
+                                            <img src="images/167397d-image_2.png" title="image (2).png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Login into Salesforce with your user name and password, when prompted with the following notice, select <strong>Choose another verification method</strong>.</p>
+                                            </li>
+                                            <img src="images/3eff270-pasted_image_0.png" title="pasted image 0.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Choose a verification method</strong> screen, select <strong>Use verification codes from an authenticator app</strong> and click <strong>Continue</strong>.</p>
+                                            </li>
+                                            <img src="images/522b354-pasted_image_0_1.png" title="pasted image 0 (1).png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>Connect an authenticator app screen</strong>, click <strong>I cant scan the QR code</strong>.</p>
+                                            </li>
+                                            <img src="images/71f0334-pasted_image_0_2.png" title="pasted image 0 (2).png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>A secret key is displayed. Copy the secret key.</p>
+                                            </li>
+                                            <img src="images/7022745-pasted_image_0_4.png" title="pasted image 0 (4).png" class="ScreenshotFullsize" />
+                                            <p>At this point, you can add the MFA to the desired Persona and Environment combination on Testim for Salesforce.</p>
+                                            <li value="8">
+                                                <p>In Testim for Salesforce, go to <strong>Settings &gt; Personas</strong>.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Click the <strong>+</strong> button on the desired Persona and Environment combination.</p>
+                                            </li>
+                                            <img src="images/fa12927-plus.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Select <strong>Login with Username and Password</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Add Credentials</strong> dialog is displayed.</p>
+                                            <img src="images/d6163b6-addcredentials.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Make sure the desired <strong>Salesforce Profile</strong> and <strong>Salesforce User</strong> are selected.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Enter the <strong>Salesforce Password</strong>.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>In the <strong>MFA Authenticator Key</strong>, paste the key that you have saved in step 7 above and click <strong>Save</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>A verification code is displayed:</p>
+                                        <img src="images/76d0fe8-image_5.png" title="image (5).png" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go back to Salesforce and enter the verification code that was displayed into the <strong>Verification Code</strong> and click <strong>Connect</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/f22ed82-7022745-pasted_image_0_4.png" class="ScreenshotFullsize" />
+                                    

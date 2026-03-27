@@ -1,0 +1,72 @@
+
+                                        <h1>Drag &amp; Drop Step</h1>
+                                        <p>Drag &amp; Drop interactions are automatically recorded when recording a test. → <strong>To add a Drag &amp; Drop step to your test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a new test and click the <strong>Record</strong> button on the action menu.</p>
+                                            </li>
+                                            <img src="images/99455e3-record-button.jpg" title="record-button.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Navigate to your app or page and use the drag &amp; drop function.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Elements cannot be dragged and dropped between tabs/frames.</p>
+                                        </div>
+                                        <img src="images/33256cf-dd1.gif" title="d&amp;d1.gif" class="ScreenshotFullsize" />
+                                        <p>Testim will automatically add the drag &amp; drop step to your test.</p>
+                                        <img src="images/62957a2-drag-step-added.jpg" title="drag-step-added.jpg" class="ScreenshotFullsize" />
+                                        <h2><a name="modify-the-drop-target"></a>Modify the "Drop" Target</h2>
+                                        <p>By default, when you run a test with a drag &amp; drop step, the dragged element will be dropped at the same page location as the original recording. However, once a drag &amp; drop step is created, you can update the step to have the element dropped at any page location. → <strong>To modify the drop target:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select the <strong>Drag</strong> test step.</p>
+                                            </li>
+                                            <img src="images/6709e58-drag-step-added.jpg" title="drag-step-added.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Show Step Properties</strong> in the action menu.</p>
+                                            </li>
+                                            <img src="images/37573df-show-step-properties-gear-icon.jpg" title="show-step-properties-gear-icon.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select <strong>Drop on specified Element</strong>.</p>
+                                            </li>
+                                            <img src="images/5630460-drop-specified-element.jpg" title="drop-specified-element.jpg" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Confirm you want to <strong>Change Drag Step</strong>.</p>
+                                            </li>
+                                            <img src="images/08d55e3-change-drag-step.jpg" title="change-drag-step.jpg" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Testim will instruct you to navigate to your page/app. <strong>Click on the page location</strong> where you would like the element to be dropped in the test.</p>
+                                            </li>
+                                            <img src="images/dd0132c-page-element.jpg" title="page-element.jpg" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Testim will update the drag &amp; drop test step to drop the element at the newly defined location.</p>
+                                            </li>
+                                            <img src="images/1fa8fad-dragged-element-updated.jpg" title="dragged-element-updated.jpg" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>To modify the drop location again, navigate to the <strong>Step Properties</strong>, hover over the current <strong>Dropped on element</strong> setting, and click the <strong>Reassign</strong> link.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/00c87cf-reassign-link.jpg" title="reassign-link.jpg" class="ScreenshotFullsize" />
+                                        <br />
+                                        <h2><a name="use-native-events"></a>Use Native events</h2>
+                                        <p>In the <strong>Native Events</strong> section, you can overwrite the default setting of how a Drag and Drop step will be handled with another setting just for this test configuration. By default, at the project level, the Drag and Drop steps are configured to use either native or non-native events. To enable or disable the <strong>Native Events</strong> execution, follow these steps:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open your test case and navigate to the drag &amp; drop step you want to edit.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Show properties</strong> icon for that step.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Properties</strong> menu, select the <strong>Native events</strong> checkbox to enable it.</p>
+                                            </li>
+                                            <img src="images/dbac9aacb128114426ba61dd72d1c2f624c5efd26ccbffaf03a4acff99568b49-image.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>To disable it, unselect the checkbox.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>As this solution leverages <strong>Native events</strong> through a Chrome extension, it is available only on Chrome and Edge browsers. Please note that this functionality isn't supported on Firefox and Safari, and it does not function in Selenium mode for these browsers.</p>
+                                        </div>
+                                    

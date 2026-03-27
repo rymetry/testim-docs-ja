@@ -1,0 +1,119 @@
+
+                                        <h1>Add CLI validations and actions</h1>
+                                        <p>In addition to writing <a href="custom-code.htm">custom validations and actions</a> (which execute in the browser run-time environment), you can also create custom Node.js scripts that are executed in your CLI environment. These scripts are initiated from inside a test just like a standard custom action. However, unlike custom validations and actions, CLI actions and validations open the gateway for some very advanced actions such as database validation and manipulation, image and PDF validations, and other validations. The real power of CLI steps comes from the ability to add any node package directly from npm (or any other source) and have those packages scoped to the CLI step during the execution of the test. We support all of the standard methods for defining package dependencies. In addition to the <em>Add CLI validation</em> and <em>Add CLI action</em> steps, there is also the <em>Validate download</em> step, which is a specialized CLI step which allows you to validate that the download content of various file types are as expected. For more information, see <a href="validate-download.htm">Validate download</a>.</p>
+                                        <div class="note">
+                                            <p>Logs generated during the CLI action step will be displayed in the terminal, initiated in the execution, and preserved within the step in the 'Step Log' section at the bottom.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h2><a name="prerequisites"></a>Prerequisites</h2>
+                                        <ul>
+                                            <li>
+                                                <p>In order to locally run tests which contain CLI validation or action steps, the following command needs to be executed: <strong>npm i -g @testim/testim-cli &amp;&amp; testim connect</strong> (see below).</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To locally run tests which contain CLI validation or action steps:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the <strong>Command Prompt</strong> window for your operating system.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the command prompt, enter the following command: <strong>npm i -g @testim/testim-cli &amp;&amp; testim connect</strong></p>
+                                            </li>
+                                            <img src="images/2ab6f86-testim_164.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Wait for the process to execute.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/84cc9af-testim_186.png" title="Testim 186.png" class="ScreenshotFullsize" />
+                                        <h2><a name="adding-a-cli-step"></a>Adding a CLI step</h2>
+                                        <p>The general procedure for adding a CLI step is the same regardless of whether you are adding an <em>Add CLI action</em> step or an <em>Add CLI validation</em> step. → <strong>To add a CLI step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> (or <strong>+ symbol</strong> after the final step) where you want to add the CLI step.</p>
+                                            </li>
+                                            <img src="images/f982ee3-testim_329a.png" title="Testim 329a.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/2d8835c-testim_270_r2.png" title="Testim 270_r2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong> (or <strong>Actions</strong>).<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> (or <strong>Actions</strong>) menu expands.</p>
+                                            <img src="images/6485d77-testim_271_r2.png" title="Testim 271_r2.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Add CLI validation</strong> (or <strong>Add CLI action</strong>).</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add CLI validation</strong> (or <strong>Add CLI action</strong>).</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/62c3379-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step</strong> folder list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/3c8168d-testim_330.png" title="Testim 330.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “<em>Run CLI validation</em>” (or “<em>Run CLI action</em>”).</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Define the parameters you will need for your step as follows:<br /></p>
+                                            </li>
+                                            <p>a. In the <strong>Properties</strong> panel, click the <strong>+ PARAMS</strong> button.<br /> b. <strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.<br /> c. <strong>Package parameter</strong>: If you would like to add an NPM package variable, select <strong>Package</strong> from the dropdown list and type in the package variable.</p>
+                                            <div class="note">
+                                                <p>In case your code uses an npm package, make sure NOT to <span class="FileOrFilePath">require</span> it, but rather replace the <span class="FileOrFilePath">require</span> line with a PACKAGE parameter in the step properties.</p>
+                                            </div>
+                                            <img src="images/4d4751d-cli_action_param.gif" title="CLI_action_param.gif" class="ScreenshotFullsize" />
+                                            <p>d. The selected element is automatically named “param” or “packageVariable” (depending on whether you chose a JS parameter or NPM package variable). To assign a relevant name to the parameter/variable, click on the <strong>edit</strong> icon and enter the desired name.</p>
+                                            <img src="images/d9532c0-testim_331a_r.png" title="Testim 331a_r.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>In the <strong>function</strong> editor, enter your desired code. If you have defined parameters, you can refer to those parameters in your code.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>To run async code in the CLI step, you have to return the promise you wish to resolve. Without returning it, the step will run synchronously and will resolve when the last line of code is executed, regardless of the expected results.</p>
+                                            </div>
+                                            <img src="images/1418058-testim_332.png" title="Testim 332.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>If you would like to specify what happens if the step fails, click the <strong>When this step fails</strong> down arrow in the <strong>Properties</strong> panel, and choose your desired option. Options are: <em>Mark error &amp; stop</em>, <em>Mark error &amp; continue</em>, and <em>Mark warning &amp; continue</em>.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>If you would like to control when this step runs (or doesn’t run), click the <strong>When to run step</strong> down arrow in the <strong>Properties</strong> panel, and choose your desired option. For more information, see <a href="../../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>If you would like to override the default timeout setting (30000 ms), click on the <strong>Override timeout</strong> button in the <strong>Properties</strong> panel, and enter the desired timeout limit.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>Click the <strong>back arrow</strong> to return to the main <strong>Editor</strong> window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/31b0037-testim_332a.png" title="Testim 332a.png" class="ScreenshotFullsize" />
+                                        <p>The step is created.</p>
+                                        <img src="images/a1d4d65-testim_333.png" title="Testim 333.png" class="ScreenshotFullsize" />
+                                        <h3><a name="cli-step-examples"></a>CLI step examples</h3>
+                                        <p>Below are examples that use CLI steps.</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="mongodb-validation.htm">MongoDB validation</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="mysql-validation.htm">MySQL validation</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../extract-sms-message.htm">Extract SMS message</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    

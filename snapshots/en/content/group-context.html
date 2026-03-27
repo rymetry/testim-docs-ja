@@ -1,0 +1,101 @@
+
+                                        <h1>Group context</h1>
+                                        <p>The <strong>Group Context</strong> feature enables you to run groups of steps on other, slightly different, elements (contexts), without the need to manually reconfigure the steps. When setting a context for a group step, the locators in its steps are automatically and dynamically changed to fit the new context.<br /> For example, if you created a group of steps for booking a reservation to Madan and you want to run that group for booking a reservation to Shenji, instead of manually changing the step details, Group Context will automatically make the appropriate adjustments for you.</p>
+                                        <div class="note">
+                                            <p>For background information about <em>Groups_and _Shared Groups</em>, see <a href="../editing-tests/groups/index.htm">Groups</a>.</p>
+                                        </div>
+                                        <p>Examples of when you may want to use this feature include:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Repeating elements</strong> – when you have similar elements repeating in the page and want to execute the same steps on each of them.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Table rows</strong> – when you want to execute the same steps on each row in a table.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Tabs or frames</strong> – when you want to use a group of steps, which were recorded on one tab, in another tab. In this case you should group all the steps that involve using the second tab in a group and then set the group context by following the instructions below.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>In case of multi tab application, when a step is recorded, the specific tab (e.g., tab #3) is stored. When the step is played, as part of test run, the Testim application looks for the tab based on two parameters: tab number and tab URL. The decision to run on a specific tab is based on these two parameters – so, the actual playing can result in a different tab number (e.g. tab #2) if both tabs URLs are identical.</p>
+                                        </div>
+                                        <h2><a name="setting-a-context-for-a-group"></a>Setting a context for a group</h2>
+                                        <p>When assigning custom context, it is recommended to assign the largest element in the DOM (e.g., the Body element). For detailed instructions see - <a href="#selecting-the-largest-element-in-the-dom">Selecting the largest element in the DOM</a>. The following procedure assumes that you have already created a shared group step that you would like to reuse in a new context. The procedure for creating a group is described <a href="../editing-tests/groups/index.htm#creating-a-group">here</a>.<br /> → <strong>To set a context for a group:</strong></p>
+                                        <img src="images/3d67f16-jan-31-2021_08-33-20.gif" title="Jan-31-2021 08-33-20.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>&gt; (arrow symbol)</strong> where you want to add your step.</p>
+                                            </li>
+                                            <img src="images/8acff4c-testim_115a.png" title="Testim 115a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/014defd-testim_116a.png" title="Testim 116a.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>folder</strong> (Shared steps).<br /></p>
+                                            </li>
+                                            <p>The Shared steps menu opens.</p>
+                                            <img src="images/ab52494-testim_070_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select the desired group from the list of existing group steps.<br /></p>
+                                            </li>
+                                            <p>The group is added to your test.</p>
+                                            <img src="images/b9e1760-testim_117.png" title="Testim 117.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of that group step.<br /></p>
+                                            </li>
+                                            <p>The action options are displayed.</p>
+                                            <li value="5">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/c007533-testim_118_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/42c85ed-testim_119a.png" title="Testim 119a.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Hover over the group step you just added and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/cbec1d6-testim_001a.png" title="Testim 001a.png" class="ScreenshotFullsize" />
+                                            <p>The Properties panel opens on the right-hand side.</p>
+                                            <li value="8">
+                                                <p>Click the <strong>down arrow</strong> next to Context, and select <strong>Custom</strong>.</p>
+                                            </li>
+                                            <img src="images/5c07e48-testim_002a.png" class="ScreenshotFullsize" />
+                                            <p>The AUT browser opens.</p>
+                                            <li value="9">
+                                                <p>In the AUT browser, identify the relevant element (context) you would like your group to run on, and click on it to select it. It is important to select the largest element in the DOM. For detailed instructions see - <a href="#selecting-the-largest-element-in-the-dom">Selecting the largest element in the DOM</a></p>
+                                            </li>
+                                            <div class="note">
+                                                <p>By default, when selecting context for a group, the application will be in "Context selection mode". In this mode the repeating elements on the page will be highlighted to help with the selection. To exit this mode and return to the normal selection mode, click Q on your keyboard.</p>
+                                            </div>
+                                            <li value="10">
+                                                <p>The selected element is shown in the <strong>Target element</strong> box in the Context section of the <strong>Properties</strong> panel.</p>
+                                            </li>
+                                            <img src="images/2402cd0-testim_003.png" title="Testim 003.png" class="ScreenshotFullsize" />
+                                            <p>The new context is automatically applied to the group step, with no additional need for you to reassign the step.</p>
+                                            <li value="11">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Testim automatically identifies which steps in the group should run on the provided context, and which should run outside of it.</p>
+                                        </div>
+                                        <h3><a name="selecting-the-largest-element-in-the-dom"></a>Selecting the largest element in the DOM</h3>
+                                        <p>When performing the context selection, select the largest element in the DOM (e.g., Body), so that all the steps will be included in the context. →<strong>To select the largest element in the DOM:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>After selecting the <strong>Custom</strong> option in the <strong>Context</strong> section of the <strong>Properties</strong> panel, press <strong>Q</strong> (on your keyboard) to enter into the <strong>Context selection mode</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>On the designated browser tab (for which the group was created) select any element on the page.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>On your keyboard, press the <strong>Up</strong> arrow multiple times until you reach the largest element in the DOM (e.g., Body).</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>When you have reached the body element, press <strong>Enter</strong> to select it.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/268664d-groupcontext.gif" class="ScreenshotFullsize" />
+                                        <h3><a name="try-it-yourself"></a>Try it yourself</h3>
+                                        <p>Click <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/HGAvmbTcfT">here</a> to view a test where a group step has been applied to more than one context. Use the shared group step “book” to create a new booking for a different destination in the app by changing the Context of the group step.</p>
+                                    

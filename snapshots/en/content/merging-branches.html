@@ -1,0 +1,234 @@
+
+                                        <h1>Merging Branches</h1>
+                                        <p>Merging two branches will mix steps or add entire tests from the selected branch into the currently displayed branch, which can be the master branch or any other branch. After the merge the source branch will still exist until you specifically delete it. In the case of a conflict, you will be able to review the conflicted steps and decide which of the conflicting steps to take. → <strong>To merge two branches:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the target branch to which you want to merge. For example, if you want to merge to Master, select it from the Branches drop-down menu.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Branches</strong> drop-down menu and hover your mouse over the source branch.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the <strong>Merge</strong> icon.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/2a9c092-sourcemerge.png" title="sourcemerge.PNG" class="ScreenshotFullsize" />
+                                        <p>The <strong>Merge Branch</strong> dialog displays a summary of all the changes that will be merged. At this point you should review the changes, see <strong>Reviewing Changes</strong> section below.</p>
+                                        <h2><a name="reviewing-changes"></a>Reviewing changes</h2>
+                                        <p>Before merging branches, a pop-up will be displayed detailing the changes that are about to take place during the merge.<br /> The changes are divided into these categories:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Tests</p>
+                                            </li>
+                                            <li>
+                                                <p>Shared Steps (groups, custom actions, etc.)</p>
+                                            </li>
+                                            <li>
+                                                <p>Suites</p>
+                                            </li>
+                                            <li>
+                                                <p>Folders</p>
+                                            </li>
+                                        </ul>
+                                        <p>At the top level, you will be able to see what changed in each category - how many new items were created, updated, or deleted. Expanding each item will display more details about the individual changes along with the ability to view the source branch and the target branch, and in case of conflicts compare between the two, while selecting the preferred change to merge, as explained in detail in the <strong>Resolving Conflicts</strong> section.</p>
+                                        <h2><a name="merge-cherry-pick"></a>Merge cherry-pick</h2>
+                                        <p>You can cherry-pick which tests and suites (i.e. merge items) you would like to include in the merge. By default, all items are selected. Unchecked items will not be included in merge, however, unless the source branch is deleted, they will be available for merging if you merge again. → <strong>To cherry-pick merge items:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the summary drop-down to view the individual items.</p>
+                                            </li>
+                                            <img src="images/f3e40eb-merge_dropdown.png" title="merge_dropdown.png" class="ScreenshotFullsize" />
+                                            <p>The list includes details of the differences between the source and the target branches (e.g. number of new steps, number of changed steps, or deleted steps.</p>
+                                            <img src="images/6b13a35-c9cef4f-screen_shot_2020-06-23_at_15.45.46.png" title="c9cef4f-Screen_Shot_2020-06-23_at_15.45.46.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>If you don't want to include a test or a suite in the merge, unselect it and this will remove it from the merge.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>When finished, click <strong>Merge</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>All the steps from the selected branch will be merged into the currently displayed branch, which can be the master branch or any other branch.</p>
+                                        <div class="note">
+                                            <p>If the <a href="pull-requests.htm">Pull Requests</a> feature is enabled, cherry-picking will only become available once the PR is approved.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Note If you are unsure about selecting/deselecting an item, you can view the item in the source/target by expanding the changes summary and clicking <strong>View Source/View Target</strong>.</p>
+                                        </div>
+                                        <h2><a name="resolving-conflicts"></a>Resolving Conflicts</h2>
+                                        <p>When merging two branches there can be conflicts between specific steps of a test and between shared steps. For example, a step that was changed in the source, but meanwhile was deleted in the target. You will not be able to proceed with the merge process before resolving all the conflicts.<br /> As part of the <strong>Reviewing Merge Changes</strong> process, if there are conflicts, the number of conflicts will be indicated at the top of the <strong>Merge Branch</strong> screen and by the specific item that has the conflicts.</p>
+                                        <img src="images/ffa92c7-mergewithconflicts.png" title="mergewithconflicts.png" class="ScreenshotFullsize" />
+                                        <h2><a name="resolving-conflicts-between-shared-steps"></a>Resolving conflicts between shared steps</h2>
+                                        <p>Groups and shared steps (e.g. CLI Action, API Action, etc.) are merged separately not in a specific test, because these items can be used by several tests.</p>
+                                        <p><em> In shared groups all the properties, except </em>parameter values<em> and </em>group context*, are shared between tests, and therefore if conflicts arise, they should be resolved at the Shared Step level, which is a separate list of conflicts for shared steps.</p>
+                                        <ul>
+                                            <li>
+                                                <p>In _CLI/API Action _all the properties, except parameter values, are shared between tests, and therefore if conflicts arise, they should be resolved at the Shared Step level.</p>
+                                            </li>
+                                        </ul>
+                                        <p>To resolve the conflict between shared steps, click <strong>Compare</strong> next to the shared step that includes conflicts:</p>
+                                        <img src="images/8a021ca-compareshared.png" title="compareshared.png" class="ScreenshotFullsize" />
+                                        <p>The <strong>Compare</strong> shared steps screen is displayed:</p>
+                                        <img src="images/6a292c3-shared_compare_screen_callouts.png" class="ScreenshotFullsize" />
+                                        <p>The part of the shared step that has the conflict is highlighted.<br /> The <strong>Compare Shared Step</strong> screen features three columns:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Source (right) – the shared step in the Source branch. If the shared step is a group, the group properties are displayed followed by all the steps within this group.</p>
+                                            </li>
+                                            <li>
+                                                <p>Target (left) – the shared step in the Target branch. If the shared step is a group, the group properties are displayed followed by all the steps within this group.</p>
+                                            </li>
+                                            <li>
+                                                <p>Merge (center) – the shared step in the final merged branch.</p>
+                                            </li>
+                                        </ul>
+                                        <p>At the top of the list are the shared step properties. If it is a group, a conflicted step (in the Source or Target) within the group includes the following elements:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Step object – the same object that appears in the test.</p>
+                                            </li>
+                                            <li>
+                                                <p>Conflict reason – the action that was performed on this step for which the conflict was created. For example, in the source this step was deleted and in the target this step was edited.</p>
+                                            </li>
+                                            <li>
+                                                <p>Recommended version indicator – indicates that this action was performed later than the opposite version.</p>
+                                            </li>
+                                        </ul>
+                                        <p>A CLI/API Action shared step compare screen will look like this:</p>
+                                        <img src="images/b08a1d1-compare_custom_step.png" title="compare_custom_step.PNG" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To resolve the shared step conflict:</strong></p>
+                                        <div class="note">
+                                            <p>Note If you do not want to manually select which version to merge for this test, you can click the <strong>Resolve all button</strong> at the top and then click Confirm. To learn more, see <a href="#section-resolving-all-conflicts-automatically-without-comparing">Resolving all conflicts automatically</a></p>
+                                        </div>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Place the chosen version in the <strong>Merge</strong> (center) column by clicking the relevant arrow (left/right).</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>If the <strong>Jump to the next conflict</strong> is selected (default), the next conflict will be highlighted. If it is not selected, click the <strong>Next conflict</strong> button.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>When done resolving all the conflicts in the test, click <strong>Confirm</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Repeat steps 1-4 for each shared step that includes conflicts.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Do one of the following:</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p>If there are no conflicts at the test level, when done resolving all the remaining conflicts on all the shared steps, click <strong>Merge</strong>. All the shared steps from the selected branch will be merged into the currently displayed branch, which can be the master branch or any other branch.</p>
+                                            </li>
+                                            <li>
+                                                <p>If there are conflicts at the test level, resolve these conflicts by following the instructions in the next section.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="resolving-conflicts-between-tests"></a>Resolving conflicts between tests</h2>
+                                        <p>To resolve the conflicts between tests, click <strong>Compare</strong> next to the test that includes conflicts.</p>
+                                        <img src="images/e1888e3-testconflict_comparelink.png" title="testconflict_comparelink.png" class="ScreenshotFullsize" />
+                                        <p>The <strong>Compare</strong> screen is displayed:</p>
+                                        <img src="images/1cc4137-screen_shot_2021-02-09_at_6.28.59.png" title="Screen Shot 2021-02-09 at 6.28.59.png" class="ScreenshotFullsize" />
+                                        <p>The <strong>Compare</strong> screen features three columns:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Source (right)</strong> – the test in the Source branch.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Target (left)</strong> – the test in the Target branch.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Merge (center)</strong> – the test final merged branch.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The first step contains the test properties which are revisioned:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Test data</p>
+                                            </li>
+                                            <li>
+                                                <p>Base URL</p>
+                                            </li>
+                                            <li>
+                                                <p>Recorded HAR when applicable</p>
+                                            </li>
+                                            <li>
+                                                <p>Test status</p>
+                                            </li>
+                                            <li>
+                                                <p>Capture request/response body configuration when applicable</p>
+                                            </li>
+                                            <li>
+                                                <p>Test owner</p>
+                                            </li>
+                                        </ul>
+                                        <p>You will need to decide whether to use the properties from the source or the target (by default the latest is selected) Each step that includes a conflict is highlighted. The conflicted step (in the Source or Target) includes the following elements:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Step object</strong> – the same object that appears in the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Conflict reason</strong> – the action that was performed on this step for which the conflict was created. For example, in the source this step was deleted and in the target this step was edited.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Recommended version indicator</strong> – indicates that this action was performed later than the opposite version.</p>
+                                            </li>
+                                        </ul>
+                                        <p>A test can include a shared step, such as a shared group, that has conflicts that relate to parameter values and/or group context, which should be resolved in the specific test context. For this reason the shared group may appear in the test conflict resolution screen, while displaying the specific reason for the conflict (e.g. the specific parameter value that was changed).</p>
+                                        <img src="images/844f324-step_compare_callouts.png" title="step_compare_callouts.PNG" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To resolve the conflict:</strong></p>
+                                        <div class="note">
+                                            <p>Note Note: if you do not want to manually select which version to merge for this test, you can click the <strong>Resolve all</strong> button at the top and then click <strong>Confirm</strong>.</p>
+                                        </div>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Place the chosen version in the Merge (center) column by clicking the relevant arrow (left/right).</p>
+                                            </li>
+                                            <img src="images/62021e4-beforeafter.png" title="beforeafter.PNG" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note If you are not sure which of the two versions to select, you can view each of the versions in context, by clicking <strong>View in Editor</strong>, which is located at the top of the column. The branch will open on the specific test in a new tab.</p>
+                                            </div>
+                                            <div class="note">
+                                                <p>Note In some cases the <strong>Recommended version indicator</strong> will indicate that this action was performed later than the opposite version. This may help in deciding which version to choose.</p>
+                                            </div>
+                                            <li value="2">
+                                                <p>If the <strong>Jump to the next conflict</strong> is selected (default), the next conflict will be highlighted. If it is not selected, click the <strong>Next conflict</strong> button.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>When done resolving all the conflicts in the test click <strong>Confirm</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Repeat steps 1-4 for each test that includes conflicts.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>When done solving all the remaining conflicts on all the tests, click <strong>Merge</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>All the steps from the selected branch will be merged into the currently displayed branch, which can be the master branch or any other branch.</p>
+                                        <div class="note">
+                                            <p>Tip The merging process will not begin until you have resolved all the conflicts in all tests. However, if you want to resolve conflicts in some tests and leave the other conflicts for a later time, you can deselect the tests that you want to leave them for a later time, see <a href="#section-merge-cherry-pick">Merge Cherry-pick</a> section above. The deselected tests will not be part of the merge process at this time.</p>
+                                        </div>
+                                        <h2><a name="resolving-all-conflicts-automatically-without-comparing"></a>Resolving all conflicts automatically without comparing</h2>
+                                        <p>There is an option to resolve all conflicts at once without comparing specific conflicts and without selecting a specific version manually. In this case, Testim will automatically select the version that was changed later in time. → <strong>To resolve all conflicts automatically:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>From the <strong>Merge Branch</strong> screen, click <strong>Resolve all</strong> .</p>
+                                            </li>
+                                            <img src="images/6df160f-resolveall2.png" title="resolveall2.png" class="ScreenshotFullsize" />
+                                            <p>The following message appears confirming that all conflicts were resolved.</p>
+                                            <img src="images/58d49c3-resolved2.png" title="resolved2.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Merge</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>All the steps from the selected branch will be merged into the currently displayed branch, which can be the master branch or any other branch.</p>
+                                        <h2><a name="deleting-the-source-branch-when-merging"></a>Deleting the source branch when merging</h2>
+                                        <p>When merging the branches it is possible to automatically delete the source branch after the merge occurs. This can be done when merging following a pull request and also without a pull request. → <strong>To automatically delete the source branch:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>On the <strong>Merge Branch</strong> or Pull Request screen, select the "Delete branch x upon merge".<br /></p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/6a86a0c-small-image_1.png" class="ScreenshotFullsize" />
+                                        <img src="images/984c0e3-small-image.png" class="ScreenshotFullsize" />
+                                    

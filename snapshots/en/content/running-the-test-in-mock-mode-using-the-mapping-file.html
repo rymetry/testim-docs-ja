@@ -1,0 +1,48 @@
+
+                                        <h1>Running the test in Mock mode</h1>
+                                        <p>After recording a new HAR and/or uploading a custom HAR and/or a Mapping File, the mock network mode for the test will be automatically enabled.</p>
+                                        <img src="images/26999eb-mock9.png" title="mock9.png" class="ScreenshotFullsize" />
+                                        <p>You can run the test in Mock Network mode locally using the UI or remotely through the CLI.</p>
+                                        <h2><a name="running-the-test-locally-through-the-ui"></a>Running the test locally through the UI</h2>
+                                        <p>→<strong>To run your test locally:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Testim Visual Editor, go to the <strong>Test List</strong> screen and click a test for which you have recorded a new HAR or uploaded a custom HAR.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the Test Editor screen, a <strong>Mock Network</strong> icon will be displayed next to the <strong>Play</strong> button, indicating that the Mock network is available.</p>
+                                            </li>
+                                            <img src="images/173c389-mock6.png" title="mock6.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Play</strong> button to run the test using the mock network.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="running-the-test-locally-through-the-cli"></a>Running the test locally through the CLI </h2>
+                                        <p>If a test is in a mock mode in the editor, its default run mode will be mock also through the CLI, no further flag needed</p>
+                                        <h3><a name="running-the-test-using-the-mapping-file-only"></a>Running the test using the mapping file only</h3>
+                                        <p>If you already uploaded a mapping file through the editor, this file will also be used in the CLI run. It is also possible to override the mapping file for the entire run by providing the path to the created mapping file. This option is only supported for remote runs.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>&gt; testim --override-map-file &lt;/path/to/mapping/file.json&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>In that case, the hierarchy to mock a request will be</p>
+                                        <ul>
+                                            <li>
+                                                <p>CLI mapping file</p>
+                                            </li>
+                                            <li>
+                                                <p>Test mapping file</p>
+                                            </li>
+                                            <li>
+                                                <p>HAR file</p>
+                                            </li>
+                                            <li>
+                                                <p>Perform actual call</p>
+                                            </li>
+                                        </ul>
+                                        <p>Example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim &lt;your CLI options&gt; &lt;your CLI parameters&gt; --override-map-file &lt;documents/mappingFile.json&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                    

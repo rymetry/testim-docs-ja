@@ -1,0 +1,115 @@
+
+                                        <h1>Salesforce steps</h1>
+                                        <p>Salesforce steps can be manually added to the test. These steps cover common actions in Salesforce that are pre-populated with the records and fields from your connected Salesforce environments. The steps consist of common operations, record operations, and API operations.</p>
+                                        <img src="images/488aa39-rework_salesforce_steps.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="common-operations"></a>Common operations</h2>
+                                        <p>Salesforce common operations include the following Salesforce operations:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="sfdc-step-login.htm">Log in</a> - Logs in to your Salesforce environment. Select a persona to log in or create a new persona.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="doc:log-in-as-salesforce-step">Log In As Another User</a> - Logs in to test with different users within a single testcase.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-launchapp.htm">Launch App</a> - Selects the available app to launch.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-launchapp.htm">Log out</a> - Logs out of Salesforce.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-findandgotorecord.htm">Find and go to record</a> - Text search for a record. Uses the global search to return the first matching record.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-waitforpageload.htm">Wait for page load</a> - waits for Salesforce to completely load the page before proceeding to the next step.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-closeconsoletabs.htm">Close console tabs</a> - Closes the console tabs on Salesforce.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-document-validation.htm">Document validation</a> - validates and/or extracts the contents of the PDF document using a variety of conditions that can be configured without coding.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="record-operations"></a>Record operations</h2>
+                                        <p>Salesforce record operations include the following Salesforce operations:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="sfdc-step-create.htm">Create</a> - Creates a new record with the values in the fields.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-edit.htm">Edit</a> - Edits the current record with the values in the fields</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-validate.htm">Validate</a> - Validates that the current record matches the fields. The test step passes only if all the fields match exactly.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-quickactions.htm">Quick actions</a> - Runs an available quick action on the current record. Quick actions include options such as create a new task, log a call, new event, and email. The actions will be run using the values specified in the fields.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-relatedlistaction.htm">Related list actions</a> - For the current record, runs actions on the record types in the related lists. You can run actions on the current record, such as:</p>
+                                            </li>
+                                            <li>
+                                                <p>Create - Creates a new record of the type in the related list.</p>
+                                            </li>
+                                            <li>
+                                                <p>Verify - Validate the values or the count of records of the type in the related list. Filters can be applied to the fields of the Record(s) returned.</p>
+                                            </li>
+                                            <li>
+                                                <p>View - View a record of the type in the related list. Filters can be applied to the fields of the record returned.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-delete.htm">Delete</a> - Deletes the current record.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-verifypicklistoptions.htm">Verify picklist options</a> - verifies that, when creating a record, a specific options are or aren't displayed in a drop-down menu (pick list) of a specific field.</p>
+                                            </li>
+                                        </ul>
+                                        <p>For a Salesforce step that performs an action on a record, each field has an Action and Value pair.</p>
+                                        <div class="note">
+                                            <p>Tooltip Hovering your mouse over the name of the field will display the following information: <em> Data type - the supported data type of the field's value (e.g., date) </em> API name - the actual Field Name of the field. This may be different than the Field Label name that is displayed.</p>
+                                        </div>
+                                        <p>Each field consists of <strong>Actions</strong>, such as:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Input - Input the value into the field.</p>
+                                            </li>
+                                            <li>
+                                                <p>Verify - Verify that the value in the field matches that in the record.</p>
+                                            </li>
+                                            <li>
+                                                <p>Store - Stores the value in the record into the value, which will be a Javascript variable.</p>
+                                            </li>
+                                            <li>
+                                                <p>Ignore - Performs no action on the field.</p>
+                                            </li>
+                                        </ul>
+                                        <p>Each <strong>Value</strong> can be set into the following mode:</p>
+                                        <ul>
+                                            <li>
+                                                <p>T. Text mode. The value is treated as a literal string.</p>
+                                            </li>
+                                            <li>
+                                                <p>{JS}. JavaScript mode. The value is evaluated as a JavaScipt expression. The field will evaluate JavaSrcipt variables and functions.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="api-operations"></a>API Operations</h2>
+                                        <p>The following steps interact with Salesforce using API (not through the UI):</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="sfdc-step-apex-action.htm">Execute Apex </a>- allows you to extend E2E tests beyond the UI, by running APEX code as a step inside the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-permission-validation.htm">Permission validation</a> - allows you to capture, set, and continuously validate user permissions on Salesforce objects and their fields.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="cpq-operations"></a>CPQ Operations</h2>
+                                        <p>Configure Price Quote Software is sales tool that allows sales reps to create quotes with customized product and pricing configurations based on the buyer's needs, and then sync all interactions with a deal's documents, within the Salesforce CRM. The CPQ Operations category includes the following steps:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="sfdc-step-convertleadtoopportunity.htm">Convert lead to opportunity</a> - converts a record from being classified as a Lead to an Opportunity.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="sfdc-step-quotelineeditor.htm">Quote line editor action</a> - The Quote Line Editor Action step can be used to test the product pricing calculations in the Quote Line Editor of the CPQ application for specific line items on a quote and/or for the entire quote.</p>
+                                            </li>
+                                        </ul>
+                                    

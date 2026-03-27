@@ -1,0 +1,79 @@
+
+                                        <h1>Testim REST API</h1>
+                                        <p>Testim Automate features a REST API that can be used to perform the following actions:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Branches</strong> - create branches, merge branches, and perform other branch management-related functions.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Tests</strong> - retrieve a list of all tests for a project.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Search for unique ID</strong> - send the name of a test, suite, test plan to receive its unique ID in the system.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Runs</strong> - initiate a run of a specified test, suite, label, or test plan.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Executions</strong> - get execution results.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>To see the full API docs, see <a href="https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml">here</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h1><a name="enabling-api-access"></a>Enabling API access</h1>
+                                        <p>Before using this API, you will need to configure the API access, as described below.<br /> → <strong>To enable API access:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings --&gt; API</strong>.</p>
+                                            </li>
+                                            <img src="images/90025bb-screen_shot_2020-10-19_at_12.40.39.png" title="Screen Shot 2020-10-19 at 12.40.39.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Generate API Key</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Name your key and click <strong>Generate</strong>.  The API key value is displayed.</p>
+                                            </li>
+                                            <img src="images/eb6356a-screen_shot_2020-10-19_at_12.42.18.png" title="Screen Shot 2020-10-19 at 12.42.18.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Copy your API key and click <strong>Done</strong>. Use the key in the API Authorization header, as described in the <a href="#using-the-api-key">Using the API Key</a> section.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/216e57f-screen_shot_2020-10-19_at_12.50.40.png" title="Screen Shot 2020-10-19 at 12.50.40.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>This is the only time you can view the API key value.</p>
+                                        </div>
+                                        <h1><a name="api-keys-management"></a>API keys management</h1>
+                                        <p>From the <strong>Settings &gt; API</strong> screen you can manage the existing keys. You can search for an existing key, by typing its name in the <strong>search box</strong>.</p>
+                                        <img src="images/7728ff5-screen_shot_2020-10-19_at_12.52.14.png" title="Screen Shot 2020-10-19 at 12.52.14.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To generate additional keys:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>Click <strong>Generate New</strong> and follow the instructions in the above <a href="#enabling-api-access">Enabling API access</a> section.</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To revoke API access:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select the relevant API key from the list.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Delete</strong> (trash) icon.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Revoke</strong> to confirm the deletion.</p>
+                                            </li>
+                                        </ol>
+                                        <blockquote>
+                                            <p>Warning This action cannot be undone, you will not be able to recover this API key.</p>
+                                        </blockquote>
+                                        <h1><a name="using-the-api-key"></a>Using the API key</h1>
+                                        <p>In order to perform the API calls, for each call, you need to pass in the header the API key in the following format:<br /> Key name - Authorization<br /> Key value - bearer followed by the API key For example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>curl -X 'GET' §§§LINEBREAK§§§<br />&#160;&#160;'https://api.testim.io/branches' §§§LINEBREAK§§§<br />&#160;&#160;-H 'accept: application/json' §§§LINEBREAK§§§<br />&#160;&#160;-H 'Authorization: Bearer PAK-hdRIBXXXXXXXXXXX</code></pre>
+                                            </div>
+                                        </div>
+                                    

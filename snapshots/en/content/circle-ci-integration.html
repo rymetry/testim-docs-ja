@@ -1,0 +1,13 @@
+
+                                        <h1>Circle CI integration</h1>
+                                        <img src="images/3eecb4e-circleci.png" title="circleci.png" class="ScreenshotFullsize" />
+                                        <h4><a name="yaml-file"></a>YAML File</h4>
+                                        <p>In order to integrate Testim with <a href="https://circleci.com/">Circle CI</a>, using Circle CI's local Selenium Grid, you need to add these lines to your circle.yaml file:</p>
+                                        <p><strong>YAML</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>version: 2<br />jobs:<br />&#160;&#160;build:<br />&#160;&#160;&#160;&#160;environment:<br />&#160;&#160;&#160;&#160;&#160;&#160;CIRCLE_TEST_REPORTS: /tmp/circleci-test-results<br />&#160;&#160;&#160;&#160;docker:<br />&#160;&#160;&#160;&#160;- image: testim/docker-cli<br />&#160;&#160;&#160;&#160;steps:<br />&#160;&#160;&#160;&#160;&#160;&#160;- run: mkdir -p $CIRCLE_TEST_REPORTS/testim/<br />&#160;&#160;&#160;&#160;&#160;&#160;- run: testim --project "&lt;PROJECT ID&gt;" --label "&lt;LABEL&gt;" --grid "&lt;Your grid name&gt;" --token "&lt;TOKEN&gt;" --report-file $CIRCLE_TEST_REPORTS/testim/results.xml<br />&#160;&#160;&#160;&#160;&#160;&#160;- store_artifacts:<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;path: /tmp/circleci-test-results<br />&#160;&#160;&#160;&#160;&#160;&#160;- store_test_results:<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;path: /tmp/circleci-test-results</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Note</strong>: For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                    

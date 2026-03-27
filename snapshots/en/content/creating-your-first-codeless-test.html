@@ -1,0 +1,110 @@
+
+                                        <h1>Web Testing Getting Started (Codeless Test)</h1>
+                                        <h2><a name="welcome-aboard"></a>Welcome aboard!</h2>
+                                        <p>Upon completion of the signup process, you were redirected to the Testim Home screen.</p>
+                                        <img src="images/4b0e58e-gettingstarted1.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>You can access this screen at any time by clicking the Testim icon in your browser toolbar or by going to <a href="https://app.testim.io/">https://app.testim.io/</a>.</p>
+                                        </div>
+                                        <p>Now, Let's create your first test!</p>
+                                        <h2><a name="tutorial-use-case"></a>Tutorial Use Case</h2>
+                                        <p>Creating a test with Testim starts with going to the relevant website and recording the series of actions that you would like to test. Later you will be able to edit the properties for each of the steps and add validations.<br /> For this tutorial we will be testing Testim’s demo website “Space &amp; Beyond”. We will run a test of the site’s login procedure.</p>
+                                        <h2><a name="recording-the-test"></a>Recording the Test</h2>
+                                        <p>→ <strong>To record the test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on <strong>Create Test</strong>.</p>
+                                            </li>
+                                            <img src="images/8d9ef22-gettingstarted2.png" class="ScreenshotFullsize" />
+                                            <p>A new test opens in the Editor. This is where you record the test, add validations and edit the test steps.</p>
+                                            <li value="2">
+                                                <p>Click on the red <strong>Record</strong> button in the toolbar.</p>
+                                            </li>
+                                            <img src="images/ce98d0d-gettingstarted3.png" class="ScreenshotFullsize" />
+                                            <p>If your default <strong>Base URL</strong> is set to the demo site’s URL “<a href="http://google.com">demo.testim.io</a>”, then a new browser window opens showing the Space &amp; Beyond website. At this point, you may proceed to step 4. If no Base URL was configured, the <strong>Start A New Test</strong> window opens.</p>
+                                            <img src="images/d42b2ee-gettingstarted4.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the <strong>Your app URL</strong> field, enter the demo site’s URL “<a href="http://google.com">demo.testim.io</a>”, then click <strong>Create Test</strong>.<br /></p>
+                                            </li>
+                                            <p>A new browser window opens showing the Space &amp; Beyond website. This is the <strong>Application Under Test (AUT)</strong> window. The series of actions that you take in this window are recorded and saved as a test in Testim.</p>
+                                            <li value="4">
+                                                <p>In the AUT browser, log in to the system (using any username and password).</p>
+                                            </li>
+                                            <img src="images/7baa100-login.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Now, go back to the Testim Editor browser.<br /></p>
+                                            </li>
+                                            <p>The procedure that you did on the Space &amp; Beyond website is shown as a series of actions in the test window. Each box represents a step in the test procedure. An icon at the top left of the box indicates the type of action (click, enter text, scroll, etc.) that was performed.</p>
+                                            <img src="images/bcf55a9-steps.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Click <strong>Save</strong>.<br /></p>
+                                            </li>
+                                            <p>The Save Test window is displayed.</p>
+                                            <img src="images/f78c409-savetest.png" class="ScreenshotFullsize" />
+                                            <div class="caution">
+                                                <p>Auto Recovery Whenever you create a new test or make changes to an existing test, make sure to save the test. But don't worry, if you close your browser before saving your test, it will be stored in your browser's cache and you should be able to resume your work. See <a href="../editing-tests/recovering-a-test-that-was-not-saved.htm">Recovering a test that was not saved</a> for more details.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>In the <strong>Name</strong> field, enter “Space &amp; Beyond Demo 01”, then click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The test is saved.<br /> Congratulations, you have created your first test in Testim!</p>
+                                        <h2><a name="adding-validation"></a>Adding Validation</h2>
+                                        <p>Whenever you run a test, the system automatically verifies that all of the steps in your flow are executed consecutively. However, this doesn’t ensure that each step has yielded all expected results. You can add additional validation elements to ensure that all desired results of your actions are occurring properly.<br /> For this tutorial we will add a validation to ensure that once the user has logged in, the Login button in the Header bar is replaced by the text “HELLO, JOHN” (on this demo site, John is always shown, independent of the username that was input.). → <strong>To record the test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the Editor screen of the <em>Space &amp; Beyond Demo 01</em> test, hover over the last “<strong>+</strong>” button to the right of the Click “<em>LOG IN</em>” step.</p>
+                                            </li>
+                                            <img src="images/177c8fc-plus.png" class="ScreenshotFullsize" />
+                                            <br />
+                                            <li value="2">
+                                                <p>Click on the <strong>"M"</strong> (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The Predefined steps menu opens.</p>
+                                            <img src="images/03388a3-stepsmenu.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong>.<br /></p>
+                                            </li>
+                                            <p>The Validations section expands.</p>
+                                            <img src="images/12dda9f-validations.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Select <strong>Validate element text</strong>.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>In the AUT browser, click on the words “HELLO, JOHN”.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/6b89de8-hellojohn.png" class="ScreenshotFullsize" />
+                                        <p>A new <em>Text Validation</em> step is added to your test.</p>
+                                        <img src="images/d6cad45-hellostep.png" class="ScreenshotFullsize" />
+                                        <br />
+                                        <p>→ <strong>To save the results for the current test version:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the <strong>Save</strong> button in the header bar.</p>
+                                            </li>
+                                            <img src="images/84d3a25-savetest1.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Message</strong> field, enter a description of the test version (optional), then click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>Congratulations! You have successfully saved your test with the added validation. Now let’s run the test.</p>
+                                        <h2><a name="running-a-test"></a>Running a Test</h2>
+                                        <p>→ <strong>To run the test locally:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the Editor screen, click on the <strong>Play</strong> button in the toolbar.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/de7d41f-play.png" class="ScreenshotFullsize" />
+                                        <p>A new browser opens and runs the test actions on the demo site. When the test is completed a pop-up window indicates whether the test was successful.</p>
+                                        <img src="images/f0fa541-testcompleted.png" class="ScreenshotFullsize" />
+                                        <br />
+                                        <h2><a name="viewing-test-results"></a>Viewing Test Results</h2>
+                                        <p>On the test Editor screen, you can view the test results. Overall run data is shown at the top of the screen. In addition, the colored icons at the top of each step indicate whether or not that action was successful.</p>
+                                        <img src="images/bdb4507-passed.png" class="ScreenshotFullsize" />
+                                        <p>If you would like to view detailed results for a specific action, double-click on the step. The action results screen is displayed for that action.</p>
+                                        <img src="images/e9c28f4d9ebacc87582af8b8202408a7623c08f515955eaaa2632432a46dbd3c-stepresult.jpg" class="ScreenshotFullsize" />
+                                        <p>In case of a test failure, detailed info is shown about the cause of the failure. (In the following example, the validation was set to expect “Goodbye” and the value received was “Hello”.)</p>
+                                        <img src="images/6bb34c8-failed.png" class="ScreenshotFullsize" />
+                                    

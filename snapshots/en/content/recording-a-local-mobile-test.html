@@ -1,0 +1,409 @@
+
+                                        <h1>Recording a Mobile Test Using a Local Device</h1>
+                                        <p>Mobile tests can be recorded and run locally on both physical and virtual iOS and Android devices. The recording itself can be performed on Windows, Macs or Linux computers using a web browser. When you record a mobile test, Testim converts each action into a test step which is shown on the Testim Visual Editor screen. However, you can always manually add additional steps to the test by <a href="../../editing-tests/editing-your-tests/index.htm">Editing Tests</a>. The tests are added to the <a href="../../test-management/test-list/index.htm">Test Library</a> and can be run at any time.</p>
+                                        <div class="caution">
+                                            <p>Multi-screen devices (e.g., Foldable/Flip phones) are currently not supported.</p>
+                                        </div>
+                                        <h2><a name="before-you-begin"></a>Before you begin</h2>
+                                        <p>Before you begin, make sure you have the following:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>A mobile testing project</strong> - mobile testing requires a mobile testing project that is separate from the web testing project. If you do not have an existing mobile project, contact Tricentis support.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Each project is assigned to a single mobile operating system. A separate project is required to create/run tests on different operating systems. For example, you cannot create a test for an iOS device if the project was created for Android.</p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Tricentis Mobile Agent</strong> - in order to create and run mobile tests on Testim, you need to install the <strong>Tricentis Mobile Agent (TMA)</strong>. This agent manages the physical devices connected to your workstation (e.g., phone or tablet) and simulators/emulators, running on your workstation. To install, connect the TMA to Testim, and configure your device, see - <a href="configure-tricentis-mobile-agent.htm">Configure Tricentis Mobile Agent</a></p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Each user that want to run local mobile tests needs to install and configure the Tricentis Mobile Agent on their computer.</p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Application to test</strong> - for Android - <strong>Java, Kotlin</strong>; for iOS - <strong>Objective-C, Swift</strong></p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="step-1-connect-to-tma"></a>Step 1 - Connect to TMA</h1>
+                                        <p>As a first step you will need to connect the TMA to Testim. Follow the instructions in the following section - <a href="configure-tricentis-mobile-agent.htm#connect-the-tricentis-mobile-agent-to-testim">Connect the Tricentis Mobile Agent</a></p>
+                                        <h1><a name="step-2-connect-a-device"></a>Step 2 - Connect a Device</h1>
+                                        <h2><a name="connecting-a-physical-android-device"></a>Connecting a physical Android device</h2>
+                                        <p>To connect your Android device, you must meet the following requirements:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Tricentis Mobile Agent is installed and running on your computer.</p>
+                                            </li>
+                                            <li>
+                                                <p>Your device is in "Debug Mode" - see below.</p>
+                                            </li>
+                                            <li>
+                                                <p>Complete all the steps described below.</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To connect a new physical Android device:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Connect a physical Android device to your local computer (e.g., connect a mobile phone using a USB cable).</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>For Android devices, the device needs to run in "Debug Mode" - <a href="https://developer.android.com/studio/debug/dev-options#enable">Enable developer options and USB debugging</a>. After enabling debug mode, go to <strong>Settings &gt; Developer</strong> options and enable the <strong>USB debugging</strong> option. For more details, see the relevant section in the <a href="configure-tricentis-mobile-agent.htm">https://help.testim.io/docs/configure-tricentis-mobile-agent</a>.</p>
+                                        </div>
+                                        <p>Once the Tricentis Mobile Agent recognizes the device, it will be listed:</p>
+                                        <img src="images/ec4cb63-4db538d-tma-connected-device.png" title="4db538d-tma-connected-device.png" class="ScreenshotFullsize" />
+                                        <h2><a name="connecting-a-physical-ios-device"></a>Connecting a physical iOS device</h2>
+                                        <p>To connect your iOS device, you must meet the following requirements:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Tricentis Mobile Agent is installed and running on your computer.</p>
+                                            </li>
+                                            <li>
+                                                <p>You have an active Apple Developer Account.</p>
+                                            </li>
+                                            <li>
+                                                <p>Complete all the steps described below.</p>
+                                            </li>
+                                        </ul>
+                                        <p>For more information about the process, see the following video tutorial - <a href="https://www.youtube.com/watch?v=eQqh_PFc6qc\&amp;ab_channel=TricentisAcademy">https://www.youtube.com/watch?v=eQqh_PFc6qc&amp;ab_channel=TricentisAcademy</a> → <strong>To connect a new physical iOS device:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Connect a physical iOS device to your local computer (e.g., connect a mobile phone using a USB cable).</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>On your iOS device, go to <strong>Settings</strong> and perform the following actions:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>Enable UI automation - go to <strong>Privacy &amp; Security &gt; Developer settings</strong> and enable <strong>Enable UI automation</strong>.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Enable web inspector - go to <strong>Safari &gt; Advanced</strong> and enable <strong>Web Inspector</strong>.</p>
+                                                </li>
+                                            </ul>
+                                            <li value="3">
+                                                <p>On the computer, on Testim, click the <strong>Tricentis Mobile Agent</strong> icon and then click the <strong>Open TMA Console</strong> link.</p>
+                                            </li>
+                                            <img src="images/5898953-image_12.png" title="image (12).png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>On the TMA Console, go to <strong>Device Management</strong></p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Upload iOS image</strong>.</p>
+                                            </li>
+                                            <img src="images/8752f3b-2023-01-17_20-29-06.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Select an iOS image with the appropriate iOS version for the device (you can download the iOS image from <a href="https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport">https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport</a></p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Click <strong>Upload</strong>.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Get your <strong>Apple team ID</strong> from the <strong>Membership</strong> section of your <strong>Apple developer account</strong>. For information on how to get your Apple team ID, see <a href="https://developer.apple.com/support/">https://developer.apple.com/support/</a>.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>On TMA Console, go to <strong>iOS artifacts</strong>.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>In the <strong>Insert Apple team ID</strong> text field, enter your Apple team ID. If you clear the Apple team ID, this also removes the existing <strong>Certificate Signing Request (CSR)</strong>, certificate, and provisioning profile.</p>
+                                            </li>
+                                            <img src="images/8e15426-2023-01-17_20-38-47.png" title="2023-01-17_20-38-47.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Under <strong>Certificate Signing Request (CSR)</strong>, click <strong>Generate new CSR</strong>, and download the CSR file. The signed certificate has an expiry date. If the certificate expires, you need to create a new CSR or you can't run your tests. Generating a new CSR removes the previous CSR's signed certificate and provisioning profile.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Under <strong>Certificate</strong>, click <strong>Upload</strong>. This certificate confirms the match between the Apple team ID and the CSR. The certificate is stored in a .p12 file that you must upload to Tricentis Mobile Agent. If you upload another certificate, this removes the existing provisioning profile.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>Under <strong>Provisioning profile</strong>, click <strong>Upload</strong>.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>Go <strong>Agent Settings</strong>.</p>
+                                            </li>
+                                            <li value="15">
+                                                <p>Make sure that <strong>Debugging mode</strong> is enabled (left toggle).</p>
+                                            </li>
+                                            <img src="images/b70cd4f-2023-01-17_21-02-30.png" title="2023-01-17_21-02-30.png" class="ScreenshotFullsize" />
+                                            <li value="16">
+                                                <p>If you are using a <strong>Windows computer</strong>,  you must <a href="https://support.apple.com/downloads/itunes">install iTunes</a>. Make sure you download iTunes from the App store. After the installation of iTunes, restart your computer and reconnect your iOS device.</p>
+                                            </li>
+                                        </ol>
+                                        <p>At this point you will see your iOS device connected under the physical devices list.</p>
+                                        <img src="images/1781fa5-image_13.png" title="image (13).png" class="ScreenshotFullsize" />
+                                        <h2><a name="connecting-a-virtual-android-device"></a>Connecting a virtual Android device</h2>
+                                        <p>To connect your Android device, you must meet the following requirements:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Tricentis Mobile Agent is installed and running on your computer.</p>
+                                            </li>
+                                            <li>
+                                                <p>An Android Simulator/IDE, such as <a href="https://developer.android.com/studio">Android Studio</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>Complete all the steps described below.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The following procedure uses Android Studio, however other software can be used. → <strong>To connect a virtual Android device:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In <strong>Android Studio</strong>, click the kebab menu (three vertical dots) and click <strong>Virtual Device Manager</strong>.</p>
+                                            </li>
+                                            <img src="images/d90fde5-2023-01-18_12-34-52.png" title="2023-01-18_12-34-52.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Create Device</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select the desired device definition that meets the mobile platform <a href="https://documentation.tricentis.com/tricentis_mobile_agent/content/user_manual/system_requirements.htm">system requirements</a>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>Next</strong>.</p>
+                                            </li>
+                                            <img src="images/c1ef05f-2023-01-18_12-59-06.png" title="2023-01-18_12-59-06.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>To optionally improve the device performance, click <strong>Show Advanced Settings</strong>.</p>
+                                            </li>
+                                            <img src="images/ad142e3-2023-01-18_13-07-10.png" title="2023-01-18_13-07-10.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Scroll down to the <strong>Memory and Storage</strong> parameters and increase the values in the <strong>RAM</strong>, <strong>VM heap</strong>, and <strong>Internal Storage</strong> parameters. Note that this may require more resources from the computer running it.</p>
+                                            </li>
+                                            <img src="images/4c319fe-2023-01-18_13-12-41.png" title="2023-01-18_13-12-41.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Click <strong>Finish</strong>.<br /></p>
+                                            </li>
+                                            <p>The configured device will be available in the <strong>Device Manager</strong> screen.</p>
+                                            <li value="8">
+                                                <p>To run the device, click the <strong>Play</strong> icon.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/3f29a39-2023-01-18_13-20-07.png" title="2023-01-18_13-20-07.png" class="ScreenshotFullsize" />
+                                        <p>The device will be automatically added to the <strong>Virtual Devices</strong> list in Testim.</p>
+                                        <img src="images/6157466-virtualdevice.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>By default, virtual devices are pre-configured to be in Debug Mode.</p>
+                                        </div>
+                                        <h2><a name="connecting-a-virtual-ios-device"></a>Connecting a virtual iOS device</h2>
+                                        <p>To connect an iOS device, you must meet the following requirements:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Tricentis Mobile Agent is installed and running on your computer.</p>
+                                            </li>
+                                            <li>
+                                                <p>An iOS Simulator/IDE, such as <a href="https://developer.apple.com/xcode/">Xcode</a>. Xcode is supported on Mac only.</p>
+                                            </li>
+                                            <li>
+                                                <p>Complete all the steps described below.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>The virtual iOS device option does not require an Apple developer account.</p>
+                                        </div>
+                                        <p>The following procedure uses Xcode, however other software can be used. → <strong>To connect a virtual iOS device:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Make sure TMA has been installed and is currently running.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Make sure Xcode is installed. If not, download it from the <a href="https://apps.apple.com/us/app/xcode/id497799835?mt=12">Mac App Store</a>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In Xcode, from the main menu go to <strong>Xcode &gt; Open developer tool &gt; Simulator</strong>.</p>
+                                            </li>
+                                            <img src="images/f695d02-image_21.png" title="image (21).png" class="ScreenshotFullsize" />
+                                            <p>The Simulator software opens in the system tray.</p>
+                                            <li value="4">
+                                                <p>Right-click on the <strong>Simulator</strong> icon and select <strong>Device</strong> and then select the desired device from the list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/bae9199-image_22.png" title="image (22).png" class="ScreenshotFullsize" />
+                                        <p>The device will be automatically added to the <strong>Virtual Devices</strong> list in Testim.</p>
+                                        <img src="images/36444cd-image_23.png" class="ScreenshotFullsize" />
+                                        <h1><a name="step-3-prepare-an-application-to-be-tested"></a>Step 3 - Prepare an application to be tested</h1>
+                                        <p>When creating a test you will need to select which app the test will use. Each test can include one app only. Apps are available for testing in three ways:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Local device apps</strong> - you can use one of the apps on your connected device (physical or virtual device). These apps will be available to the test when the device is connected to TMA.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Mobile Apps Library</strong> - you can use an existing app in Mobile App Library. In this case other users can use a common app for testing without it having to be already installed on their local device. It is possible to add the app before recording the test, by following the instructions in the <a href="../../mobile-apps/mobile-apps.htm#add-mobile-app-from-local-computer">Add Mobile App from Local Computer</a> section. For more information on how to manage apps in the Mobile Apps Library, see - <a href="../../mobile-apps/mobile-apps.htm">Mobile Apps</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Uploading the app</strong> - as part of the test creation, you can upload the app.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>App compilation compatibility (iOS only) If you want to record a test using a virtual device, make sure that that the app was compiled for virtual devices (.app). And vice versa, if you want to record using a physical device, make sure that the app was compiled to work on physical devices (.ipa). See <a href="how-to-prepare-an-ipa-for-mobile-testing.htm">How to Prepare a .ipa for Mobile Testing</a> for more information.</p>
+                                        </div>
+                                        <h1><a name="step-4-record-the-test"></a>Step 4 - Record the test</h1>
+                                        <p>You can record a test on a mobile device to be run automatically at a later time. During the test you can record only a single application from one device.  However, when playing back the test, you will be able to run the same test on another device than the device used during the recording. → <strong>To record a mobile test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Make sure a physical or virtual device is connected, by ensuring that the <strong>Tricentis Mobile Agent indicator</strong> is green.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>From the <strong>Dashboard</strong> screen click the <strong>New Test</strong> button.</p>
+                                            </li>
+                                            <img src="images/ec1bda0-image.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>To begin recording your test, click the <strong>Record</strong> button in the action menu.</p>
+                                            </li>
+                                            <img src="images/202f05d-image_1.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Select <strong>Local Devices</strong> and then select one of the physical or virtual devices displayed in the list.</p>
+                                            </li>
+                                            <img src="images/9fa3145-image_3.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Next</strong> to continue.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Select an <strong>Application</strong> to be tested using the following options:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>From library</strong> - select this option to use one of the existing apps in the Mobile Apps Library and then select the relevant app from the list.</p>
+                                                </li>
+                                            </ul>
+                                            <div class="note">
+                                                <p>Each test can only interact with a single application. If you are recording a test on a device that does not have the selected app from the Mobile Apps Library installed, the app will be automatically installed on the local device.</p>
+                                            </div>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>From device</strong> - select this option to use an existing app from your connected device and then select the relevant app from the list.</p>
+                                                </li>
+                                            </ul>
+                                            <div class="note">
+                                                <p>Changing device after recording When changing a device after recording, the selected app must be installed on the device to perform additional recording or playback.</p>
+                                            </div>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Upload app</strong> - select this option to add a new app to the <a href="../../mobile-apps/mobile-apps.htm">Mobile Apps</a> Library from your local computer. Supported file types include for Android devices - .apk files based on Java or Kotlin frameworks;  for iOS devices - .ipa files based Objective C or Swift frameworks. Upload is limited to 150 MB (to upload larger files, contact Tricentis support).</p>
+                                                </li>
+                                            </ul>
+                                            <li value="7">
+                                                <p>Click <strong>Done</strong> to finish</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>An <a href="mobile-test-editor.htm">AUT Mirroring Viewer</a> is displayed with the opened application under test. The viewer allows you  to view the device and interact with the application under test, while Testim records the actions. For more information about the supported actions, see <a href="index.htm#supported-mobile-actions"><strong>Supported Mobile Actions</strong></a> section below.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Test steps are only recorded by taking actions on the AUT Mirroring Viewer. Taking actions directly on the device will not record test steps.</p>
+                                            </div>
+                                            <img src="images/4ef00e8-mobiletestingv2.gif" title="mobiletestingv2.gif" class="ScreenshotFullsize" />
+                                            <div class="caution">
+                                                <p>Important Notice When recording a test try to choose text elements and avoid outer frames, images and icons for better stability</p>
+                                            </div>
+                                            <img src="images/4f44670-image_20.png" title="image (20).png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>To stop recording, click the <strong>Stop Recording</strong> button or close the Viewer window.</p>
+                                            </li>
+                                            <img src="images/3e199cb-image_7.png" title="image (7).png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>In the <strong>Properties Pane</strong>, configure the following settings:</p>
+                                            </li>
+                                            <img src="images/4d9063d-testconfiguration.png" class="ScreenshotFullsize" />
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Test name</strong> - enter the name for the test. By default the test name is "untitled test"</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Description</strong> - optionally enter a description for the test.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Configuration</strong> - by default the configuration is set to use any device with any OS version that is available on VMG. If you would like to use a different configuration, see <a href="setting-the-test-configuration.htm">Setting the Test Configuration</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Test Data</strong> - allows you to configure data-driven tests by defining a Data Set in JavaScript or multiple ordered Data Sets with a JS Array literal of objects. See <a href="../../advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm">Configuring a Data-driven Test From The Visual Editor</a>.</p>
+                                                </li>
+                                            </ul>
+                                            <li value="11">
+                                                <p>Click <strong>Save</strong> to save the test.</p>
+                                            </li>
+                                            <p>&gt;  Auto Recovery &gt; &gt; Whenever you create a new test or make changes to an existing test, make sure to save the test. But don't worry, if you close your browser before saving your test, it will be stored in your browser's cache and you should be able to resume your work. See <a href="../../editing-tests/recovering-a-test-that-was-not-saved.htm">Recovering a test that was not saved</a> for more details.</p>
+                                            <li value="12">
+                                                <p>If you want to configure additional test configuration settings, see <a href="setting-the-test-configuration.htm">Setting the Test Configuration</a>.</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="supported-mobile-actions"></a>Supported Mobile Actions</h3>
+                                        <p>The following actions are currently supported when using the AUT Viewer during the recording of the test:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Tap</strong> - simulates a user tapping an element on the mobile device screen. To create this step, click the mouse on the AUT Viewer screen during recording.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Swipe Vertical</strong> - simulates a user pressing and dragging their finger across the screen vertically. To create this step, click the mouse, drag the cursor in a vertical direction, and release the mouse button.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Swipe Horizonal</strong> - simulates a user pressing and dragging their finger across the screen horizontally. To create this step, click the mouse, drag the cursor in a horizontal direction, and release the mouse button.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Set Custom Text</strong> - simulates a user entering text into a text field in the app. When hovering your mouse on a text element, the element is highlighted in red. Clicking the text element open a Set Custom Text Window. Enter the desired text in the field and click the Send button.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/f316ba0-image_19.png" title="image (19).png" class="ScreenshotFullsize" />
+                                        <h1><a name="step-6-add-additional-steps-and-edit-the-properties"></a>Step 6 - Add additional steps and edit the properties</h1>
+                                        <p>During the recording or after the test is saved, you can add additional predefined steps  and edit the some or all of the steps' properties. To learn more about common step properties, see - <a href="../../editing-tests/editing-your-tests/editing-a-steps-properties.htm">Editing a Step’s Properties</a></p>
+                                        <h2><a name="supported-predefined-mobile-actions"></a>Supported Predefined Mobile Actions</h2>
+                                        <p>The following actions are currently supported when adding steps manually during or after the recording of the test:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="../../advanced-editing/validations/email-validation.htm"><strong>Validate email</strong></a> - Testim offers a built-in email service which provides permanent and temporary email addresses. The Validate email step can be used with these email addresses to test your app sign-up or login flows.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/validations/validate-element-visible.htm"><strong>Validate element visible</strong></a> - The element visible validation allows you to check whether your element exists and is visible on the page. If your element contains a variable image or text, validation will still work. This validation verifies that the element exists and is visible, but does not check its specific content.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/validations/validate-element-text.htm"><strong>Validate element text</strong></a> - An Element Text validation is similar to an Element Visible validation in that it makes the step dependent on the existence of a specific element. However, for the Element Text validation, you also specify a particular text value that must appear in the specified element.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/wait-for.htm#wait-for-element-visible"><strong>Wait for element visible</strong></a> - Use wait for element visible to wait for your element to be visible on the page.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/wait-for.htm#wait-for-element-text"><strong>Wait for element text</strong></a> - Use wait for element text to make sure a specific text appears before continuing with the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/wait-for.htm#sleep"><strong>Sleep</strong></a> - Enable waiting for a period of time between steps. - <a href="../../advanced-editing/extract-text.htm"><strong>Add extract value step</strong></a> - Lets you copy values directly from your application to be used in later steps.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Add set text step</strong> - adds a specified text to the selected target element.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Code verification</strong> - sends key strokes to the device. This is typically used to fill code verification elements, such as a one-time password code element. It is possible to add delays between characters.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/validations/email-validation.htm#generating-a-temporary-email-address"><strong>Generate email address</strong></a> - generate a new random email address to be used every time you run a test, for example to test a sign-up flow multiple times with a new user each time.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/validations/add-cli-validations-and-actions.htm"><strong>Add CLI action</strong></a> - executes custom Node.js scripts  in your CLI environment.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../advanced-editing/api-testing.htm#adding-an-api-action-step"><strong>Add API action</strong></a> - used when you want to get data that is returned from an API call. You can use this data just to check that it is returned.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Before running custom code using <strong>Add CLI action</strong> and/or Add API action steps, you will need to run <a href="../../running-tests/the-command-line-cli/index.htm">Testim CLI</a>.</p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><a href="../../editing-tests/generating-a-random-value.htm"><strong>Generate random value</strong></a> - generates random values for dynamic data testing.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../editing-tests/generating-a-date.htm"><strong>Generate date</strong></a> - generates a date according to predefined properties.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Reset app</strong> - In Android this step closes the application, clears the cache and then starts the app again. In iOS this step closes and starts the application (does not clear its cache). The step is typically used to reset the app and clear its cache before the next run.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Back</strong> - creates a Back button step, which sends a back command to the device. Supported in Android only.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Home</strong> - create a Home Button step, which sends a home command to the device.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Scroll to element text</strong> - dynamically scrolls to the selected text element.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="doc:execute-driver-script-step">Execute Driver Script Step (mobile)</a> - The Execute Driver Script step allows you to run a script using Appium 2.0 or higher for extended capabilities and validations in your tests.</p>
+                                            </li>
+                                        </ul>
+                                    
