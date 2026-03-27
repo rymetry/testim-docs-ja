@@ -67,7 +67,24 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
+  // #178: コーデック別画像最適化デフォルト（Astro 6.1）
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        webp: { effort: 6, quality: 80 },
+        png: { compressionLevel: 9 },
+      },
+    },
+  },
+
   markdown: {
+    // #177: 日本語向け SmartyPants 設定（Astro 6.1）
+    // 日本語では「」『』を直接書くため、英語向き curly quotes 変換を無効化
+    smartypants: {
+      quotes: false,
+      ellipses: false,
+    },
     remarkPlugins: [
       remarkGfm,  // GitHub Flavored Markdown (テーブル、タスクリスト、脚注など)
       remarkDirective,        // カスタムディレクティブ
