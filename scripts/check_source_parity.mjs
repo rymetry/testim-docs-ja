@@ -21,6 +21,7 @@ import {
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
+import turndown from './lib/turndown.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
@@ -169,10 +170,16 @@ export async function checkSourceParity({
     }));
 
     // Snapshot structure comparison (image order, callout nesting, step counts)
-    const snapshotPath = path.join(SNAPSHOTS_DIR, `${fileSlug}.md`);
+    // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
+    const snapshotPath = path.join(SNAPSHOTS_DIR, `${fileSlug}.html`);
     if (fs.existsSync(snapshotPath)) {
-      const enBody = fs.readFileSync(snapshotPath, 'utf8');
-      issues.push(...compareSnapshotStructure(enBody, doc.body));
+      const enHtml = fs.readFileSync(snapshotPath, 'utf8');
+      try {
+        const enBody = turndown.turndown(enHtml);
+        issues.push(...compareSnapshotStructure(enBody, doc.body));
+      } catch (e) {
+        console.warn(`turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`);
+      }
     }
 
     // Apply allowlist filtering

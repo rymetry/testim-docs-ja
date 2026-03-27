@@ -19,7 +19,10 @@ Japanese localization of Testim Help Documentation (docs.tricentis.com/testim). 
 | `npm run format` | Format with Prettier (Astro, TS, MD) |
 | `npm run test` | Run tests in `scripts/__tests__/` |
 | `npm run check:parity` | Source parity check (structure, tables, allowlist, EN normalization) |
-| `npm run check:snapshots` | EN snapshot fetch + diff (change detection) |
+| `npm run check:snapshots` | EN HTML snapshot fetch + diff (change detection) |
+| `npm run check:snapshots:fetch` | Fetch EN HTML snapshots only |
+| `npm run check:snapshots:diff` | Diff committed vs working tree snapshots only |
+| `npm run docs:sync-sidebar` | Update SIDEBAR_URLS.md from MadCap Flare TOC data |
 | `npm run docs:pipeline` | Run full doc sync pipeline (fetch, translate, etc.) |
 
 **Single-page commands:**
@@ -41,6 +44,10 @@ Full reference: `scripts/README.md`
 - **Layout**: `src/layouts/DocsLayout.astro` wraps all doc pages with sidebar (`NavSidebar.astro`) and TOC (`TableOfContents.astro`).
 - **Auth mode**: `BASIC_AUTH_ENABLED` env var toggles between SSR+auth (review) and static (production). See `src/middleware.ts`.
 - **Doc pipeline**: `scripts/pipeline.mjs` orchestrates fetching English sources, generating placeholders, and preparing LLM translation tasks. Checkpoint-based resume via `scripts/.checkpoint`.
+- **Snapshot pipeline**:
+  - **コンテンツ**: 各ページの HTML から `#mc-main-content` を抽出し `snapshots/en/content/{slug}.html` に保存
+  - **サイドバー**: MadCap Flare TOC データ (`scripts/lib/madcap_toc.mjs`) を解析し `snapshots/en/sidebar.json` に保存
+  - **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換後、JA 翻訳と構造比較
 
 ## Authority Sources
 
@@ -48,7 +55,7 @@ Full reference: `scripts/README.md`
 - **`docs/WRITING_GUIDE.md`** — Authoritative rules for content formatting, frontmatter, links, callouts, source-first structure contract (heading mapping, `:fa-arrow-right:` handling, `<details>` preservation, JA-only section removal), Testim terminology English retention.
 - **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
 - **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop.
-- **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection mechanism.
+- **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection: HTML snapshot format, sidebar JSON structure, diff classification, CI workflow, and translation sync process.
 - **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
 
 ## Content Rules

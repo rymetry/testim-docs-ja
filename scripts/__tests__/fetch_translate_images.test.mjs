@@ -12,6 +12,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 let rewriteDocLinks, getUntranslatedList, getAllPagesList, getDiffPagesList, parseMode;
+let ROOT;
 before(async () => {
   ({
     rewriteDocLinks,
@@ -20,6 +21,8 @@ before(async () => {
     getDiffPagesList,
     parseMode,
   } = await import('../fetch_translate_images.mjs'));
+  const project = await import('../lib/project.mjs');
+  ROOT = project.ROOT_DIR;
 });
 
 // ---------------------------------------------------------------------------
@@ -51,6 +54,31 @@ describe('rewriteDocLinks', () => {
     const md = 'See [foo](doc:foo) and [bar](doc:bar).';
     const result = rewriteDocLinks(md);
     assert.equal(result, 'See [foo](/docs/foo) and [bar](/docs/bar).');
+  });
+
+  it('rewrites MadCap relative .htm link (simple)', () => {
+    const result = rewriteDocLinks('[link](testim-automate.htm)');
+    assert.equal(result, '[link](/docs/testim-automate)');
+  });
+
+  it('rewrites MadCap relative .htm link with path prefix', () => {
+    const result = rewriteDocLinks('[link](../editing-tests/conditions/index.htm)');
+    assert.equal(result, '[link](/docs/conditions)');
+  });
+
+  it('rewrites MadCap .htm link preserving fragment', () => {
+    const result = rewriteDocLinks('[link](why-did-my-test-fail.htm#13-api-step-failed)');
+    assert.equal(result, '[link](/docs/why-did-my-test-fail#13-api-step-failed)');
+  });
+
+  it('rewrites MadCap /slug/index.htm to /docs/slug', () => {
+    const result = rewriteDocLinks('[link](validations/index.htm)');
+    assert.equal(result, '[link](/docs/validations)');
+  });
+
+  it('rewrites MadCap deeply nested relative .htm link', () => {
+    const result = rewriteDocLinks('[link](../../salesforce-testing/salesforce-testing-overview.htm)');
+    assert.equal(result, '[link](/docs/salesforce-testing-overview)');
   });
 });
 
@@ -170,30 +198,39 @@ describe('getDiffPagesList', () => {
       text: async () => '# New Content\n\nChanged body.',
     });
 
-    const list = await getDiffPagesList(sidebarText, hashesPath, fakeFetch);
+    const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 1);
     assert.equal(list[0].slug, 'testim-overview');
   });
 
   it('excludes page when hash is unchanged', async () => {
     const hashesPath = path.join(tmpDir, 'page-hashes-same.json');
+    const snapshotDir = path.join(ROOT, 'snapshots', 'en', 'content');
+    const tmpSlug = 'test-hash-unchanged';
+    const snapshotPath = path.join(snapshotDir, `${tmpSlug}.html`);
 
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+      `- ✅ https://docs.tricentis.com/testim/content/overview/${tmpSlug}.htm`,
       '',
     ].join('\n');
 
-    const content = '# Stable Content\n\nNo changes.';
+    const fakeFetch = async () => ({ ok: false, status: 500 });
 
-    // First call: compute hash and save
-    const fakeFetch = async () => ({ ok: true, text: async () => content });
-    await getDiffPagesList(sidebarText, hashesPath, fakeFetch);
+    try {
+      fs.mkdirSync(snapshotDir, { recursive: true });
+      fs.writeFileSync(snapshotPath, '<h1>Stable Content</h1><p>No changes.</p>');
 
-    // Second call with same content: no diff
-    const list2 = await getDiffPagesList(sidebarText, hashesPath, fakeFetch);
-    assert.equal(list2.length, 0);
+      // First call: compute hash and save
+      await getDiffPagesList(sidebarText, hashesPath);
+
+      // Second call with same content: no diff
+      const list2 = await getDiffPagesList(sidebarText, hashesPath);
+      assert.equal(list2.length, 0);
+    } finally {
+      if (fs.existsSync(snapshotPath)) fs.unlinkSync(snapshotPath);
+    }
   });
 
   it('treats missing hash file as all-changed (first run)', async () => {
@@ -210,79 +247,13 @@ describe('getDiffPagesList', () => {
     ].join('\n');
 
     const fakeFetch = async () => ({ ok: true, text: async () => '# Content' });
-    const list = await getDiffPagesList(sidebarText, hashesPath, fakeFetch);
+    const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 2);
   });
 
-  it('updates hashes file after execution', async () => {
-    const hashesPath = path.join(tmpDir, 'page-hashes-update.json');
+  it('treats missing HTML snapshot as changed', async () => {
+    const hashesPath = path.join(tmpDir, 'page-hashes-missing-snap.json');
 
-    const sidebarText = [
-      '## Overview（概要）',
-      '',
-      '- ✅ https://docs.tricentis.com/testim/content/overview/my-page.htm',
-      '',
-    ].join('\n');
-
-    const fakeFetch = async () => ({ ok: true, text: async () => '# Body' });
-    await getDiffPagesList(sidebarText, hashesPath, fakeFetch);
-
-    const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
-    assert.ok('my-page' in saved, 'hash for my-page must be persisted');
-    assert.equal(typeof saved['my-page'], 'object');
-    assert.equal(saved['my-page'].sourceUrl, 'https://docs.tricentis.com/testim/content/overview/my-page.htm');
-    assert.equal(typeof saved['my-page'].hash, 'string');
-  });
-
-  it('treats fetch network error as changed', async () => {
-    const hashesPath = path.join(tmpDir, 'page-hashes-network-error.json');
-    fs.writeFileSync(
-      hashesPath,
-      JSON.stringify({ 'testim-overview': 'some-existing-hash' }),
-      'utf8'
-    );
-
-    const sidebarText = [
-      '## Overview（概要）',
-      '',
-      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
-      '',
-    ].join('\n');
-
-    const fakeFetch = async () => { throw new Error('network error'); };
-    const list = await getDiffPagesList(sidebarText, hashesPath, fakeFetch);
-    assert.equal(list.length, 1);
-    assert.equal(list[0].slug, 'testim-overview');
-  });
-
-  it('skips fetch when fromSnapshot is true and snapshot exists', async () => {
-    const hashesPath = path.join(tmpDir, 'page-hashes-snapshot.json');
-
-    // Use testim-overview which exists in real snapshots/en/content/
-    const sidebarText = [
-      '## Overview（概要）',
-      '',
-      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
-      '',
-    ].join('\n');
-
-    let fetchCalled = false;
-    const fakeFetch = async () => { fetchCalled = true; return { ok: true, text: async () => '# Network' }; };
-
-    await getDiffPagesList(sidebarText, hashesPath, fakeFetch, { fromSnapshot: true });
-    assert.equal(fetchCalled, false, 'fetch should NOT be called when snapshot file exists');
-
-    // Verify hash was computed from the snapshot content
-    const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
-    assert.ok(saved['testim-overview'], 'hash should be persisted');
-    assert.equal(typeof saved['testim-overview'].hash, 'string');
-    assert.ok(saved['testim-overview'].hash.length > 0, 'hash should not be empty');
-  });
-
-  it('falls back to fetch when fromSnapshot is true but snapshot does not exist', async () => {
-    const hashesPath = path.join(tmpDir, 'page-hashes-fallback.json');
-
-    // Use a slug that does NOT exist in snapshots/en/content/
     const sidebarText = [
       '## Overview（概要）',
       '',
@@ -290,31 +261,41 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    let fetchCalled = false;
-    const fakeFetch = async () => {
-      fetchCalled = true;
-      return { ok: true, text: async () => '# Fallback Content' };
-    };
-
-    await getDiffPagesList(sidebarText, hashesPath, fakeFetch, { fromSnapshot: true });
-    assert.equal(fetchCalled, true, 'fetch should be called when snapshot file does not exist');
+    const fakeFetch = async () => ({ ok: false, status: 500 });
+    const list = await getDiffPagesList(sidebarText, hashesPath);
+    assert.equal(list.length, 1, 'Missing HTML snapshot should be treated as changed');
+    assert.equal(list[0].slug, 'zzz-nonexistent-test-page');
   });
 
-  it('always uses fetch when fromSnapshot is false', async () => {
-    const hashesPath = path.join(tmpDir, 'page-hashes-no-snapshot.json');
+  it('reads from HTML snapshot without network fetch', async () => {
+    const hashesPath = path.join(tmpDir, 'page-hashes-html-read.json');
+    const snapshotDir = path.join(ROOT, 'snapshots', 'en', 'content');
+    const tmpSlug = 'test-html-read-snapshot';
+    const snapshotPath = path.join(snapshotDir, `${tmpSlug}.html`);
 
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+      `- ✅ https://docs.tricentis.com/testim/content/overview/${tmpSlug}.htm`,
       '',
     ].join('\n');
 
     let fetchCalled = false;
-    const fakeFetch = async () => { fetchCalled = true; return { ok: true, text: async () => '# Network' }; };
+    const fakeFetch = async () => { fetchCalled = true; return { ok: true, text: async () => 'X' }; };
 
-    await getDiffPagesList(sidebarText, hashesPath, fakeFetch, { fromSnapshot: false });
-    assert.equal(fetchCalled, true, 'fetch should be called when fromSnapshot is false');
+    try {
+      fs.mkdirSync(snapshotDir, { recursive: true });
+      fs.writeFileSync(snapshotPath, '<h1>HTML Content</h1>');
+
+      await getDiffPagesList(sidebarText, hashesPath);
+      assert.equal(fetchCalled, false, 'fetch should NOT be called — reads from HTML snapshot');
+
+      const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
+      assert.ok(saved[tmpSlug], 'hash should be persisted');
+      assert.equal(typeof saved[tmpSlug].hash, 'string');
+    } finally {
+      if (fs.existsSync(snapshotPath)) fs.unlinkSync(snapshotPath);
+    }
   });
 });
 

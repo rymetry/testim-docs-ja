@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { extractSlug as extractSlugFromUrl, TRICENTIS_URL_RE } from './madcap_toc.mjs';
+
 export const ISSUE_SEVERITY = {
   untranslated: 'actionable',
   'legacy-callout': 'actionable',
@@ -83,20 +85,11 @@ export function isEnglishOnlyLine(line) {
 }
 
 export function loadSidebarSlugs(sidebarText) {
-  // Match new docs.tricentis.com URLs and extract slug
-  const newUrls = [...sidebarText.matchAll(/https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm/g)];
-  const newSlugs = newUrls.map((m) => {
-    const url = m[0];
-    // /slug/index.htm → slug; /slug.htm → slug
-    const match = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
-    return match ? match[1] : null;
-  }).filter(Boolean);
-  // NOTE: 旧ドメイン（help.testim.io）の後方互換。Phase C (#160) で削除すること。
-  const oldUrls = [...sidebarText.matchAll(/https:\/\/help\.testim\.io\/docs\/([\w-]+)/g)];
-  const slugs = new Set([
-    ...newSlugs,
-    ...oldUrls.map((m) => m[1]),
-  ]);
+  const slugs = new Set();
+  for (const m of sidebarText.matchAll(TRICENTIS_URL_RE)) {
+    const slug = extractSlugFromUrl(m[0]);
+    if (slug) slugs.add(slug);
+  }
   return slugs;
 }
 
@@ -798,18 +791,14 @@ export function extractHtmlTables(body) {
 }
 
 /**
- * Normalize a URL to a comparable slug token.
- * Converts https://help.testim.io/docs/foo or https://docs.tricentis.com/testim/content/.../foo.htm → /docs/foo
+ * Normalize a docs.tricentis.com URL to a comparable `/docs/{slug}` token.
  */
 function normalizeUrlToken(url) {
-  // Normalize both old (help.testim.io) and new (docs.tricentis.com) URLs to /docs/slug
   if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
-    // /slug/index.htm → slug; /slug.htm → slug
-    const slugMatch = url.match(/\/([a-z0-9-]+)\/index\.htm$/) || url.match(/\/([a-z0-9-]+)\.htm$/);
-    if (slugMatch) return `/docs/${slugMatch[1]}`;
+    const slug = extractSlugFromUrl(url);
+    if (slug) return `/docs/${slug}`;
   }
-  // NOTE: 旧ドメイン（help.testim.io）の後方互換。Phase C (#160) で削除すること。
-  return url.replace(/^https?:\/\/help\.testim\.io/, '');
+  return url;
 }
 
 /**
@@ -1241,7 +1230,7 @@ export function checkSourceSnapshotMissing({ slug, sourceUrl, snapshotsDir }) {
   const issues = [];
   if (!sourceUrl) return issues;
 
-  const snapshotPath = path.join(snapshotsDir, `${slug}.md`);
+  const snapshotPath = path.join(snapshotsDir, `${slug}.html`);
   if (!fs.existsSync(snapshotPath)) {
     issues.push(withSeverity({
       type: 'source-snapshot-missing',

@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LIVE_URL = 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm';
+import { fetchTocData, resolveUrl } from './lib/madcap_toc.mjs';
+
 const SIDEBAR_URLS_PATH = path.resolve('docs/SIDEBAR_URLS.md');
 
 const JP_LABEL_BY_EN = {
@@ -15,11 +16,11 @@ const JP_LABEL_BY_EN = {
   'Debugging Tests': 'デバッグ',
   'Test Management': 'テスト管理',
   'Mobile Apps': 'モバイルアプリ',
-  'device management': 'デバイス管理',
+  'Device Management': 'デバイス管理',
   Integrations: '統合',
   Settings: '設定',
   Administration: '管理',
-  TestOps: 'TestOps',
+  Testops: 'TestOps',
   'Salesforce Testing': 'Salesforceテスト',
   'Testim Extension': 'Testim拡張機能',
   Security: 'セキュリティ',
@@ -35,76 +36,20 @@ function todayJa() {
   return `${yyyy}年${mm}月${dd}日`;
 }
 
-function stripTags(s) {
-  return s.replace(/<[^>]+>/g, '');
-}
-
-function decodeHtmlEntities(s) {
-  return s
-    .replace(/&amp;/g, '&')
-    .replace(/&#39;/g, "'")
-    .replace(/&#x27;/g, "'")
-    .replace(/&quot;/g, '"')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>');
-}
-
 export function normalizeUrl(href) {
   if (!href) return null;
-  if (href.startsWith('http://') || href.startsWith('https://')) {
-    if (href.startsWith('https://docs.tricentis.com/testim/')) return href;
-    // NOTE: 旧ドメイン（help.testim.io）の許容は Phase C (#160) まで維持する。
-    // Phase C 完了後に旧ドメイン分岐を削除すること。
-    if (href.startsWith('https://help.testim.io/docs/')) return href;
-    if (href.startsWith('http://help.testim.io/docs/')) return href.replace('http://', 'https://');
-    return null;
-  }
-  // NOTE: 旧ドメインの相対パスフォールバック。Phase C (#160) で削除すること。
-  if (href.startsWith('/docs/')) return `https://help.testim.io${href}`;
+  if (href.startsWith('https://docs.tricentis.com/testim/')) return href;
   return null;
 }
 
 export function parseExistingStatusMap(text) {
   const statusByUrl = new Map();
-  const re = /^-\s+(✅🔍|✅)\s+(https:\/\/(?:help\.testim\.io\/docs|docs\.tricentis\.com\/testim\/content)\/[^\s#]+)\s*$/;
+  const re = /^-\s+(✅🔍|✅)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s#]+)\s*$/;
   for (const line of text.split(/\r?\n/)) {
     const m = line.match(re);
     if (m) statusByUrl.set(m[2], m[1]);
   }
   return statusByUrl;
-}
-
-async function fetchHtml(url, fetchFn = fetch) {
-  const res = await fetchFn(url, {
-    headers: {
-      // WAF 対策: UA なしだとアクセスが拒否される場合がある
-      'User-Agent':
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0 Safari/537.36',
-      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.9',
-    },
-  });
-  if (!res.ok) throw new Error(`fetch failed: ${res.status} ${res.statusText}`);
-  return await res.text();
-}
-
-// NOTE: nav#hub-sidebar は旧 readme.io の HTML 構造。MadCap Flare では存在しない。
-// Phase C (#160) で要改修。main() の try/catch でフォールバック処理される。
-function extractHubSidebar(html) {
-  const m = html.match(/<nav[^>]*\bid="hub-sidebar"[^>]*>[\s\S]*?<\/nav>/i);
-  if (!m) throw new Error('nav#hub-sidebar not found in HTML');
-  return m[0];
-}
-
-function extractSections(navHtml) {
-  const parts = navHtml.split(/<section\b/gi).slice(1);
-  return parts.map((p) => `<section${p}`);
-}
-
-function extractH2(sectionHtml) {
-  const m = sectionHtml.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/i);
-  if (!m) return null;
-  return decodeHtmlEntities(stripTags(m[1]).replace(/\s+/g, ' ').trim());
 }
 
 export function extractUrls(sectionHtml) {
@@ -192,11 +137,17 @@ export function buildOutput({ sections, statusByUrl, existingHeader }) {
   return [...headerLines, ...body, ...(footer.length ? ['', ...footer] : [])].join('\n') + '\n';
 }
 
+/**
+ * Fetch sitemap as a fallback URL source when TOC data is unavailable.
+ */
 export async function fetchSitemap(fetchFn = fetch) {
   const SITEMAP_URL = 'https://docs.tricentis.com/testim/sitemap.xml';
   try {
     const res = await fetchFn(SITEMAP_URL);
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.warn(`fetchSitemap: HTTP ${res.status} from ${SITEMAP_URL}`);
+      return [];
+    }
     const xml = await res.text();
     const urls = [];
     for (const m of xml.matchAll(/<loc>(https:\/\/docs\.tricentis\.com\/testim\/content\/[^<]+)<\/loc>/g)) {
@@ -204,24 +155,19 @@ export async function fetchSitemap(fetchFn = fetch) {
     }
     return urls;
   } catch (e) {
-    console.warn(`fetchSitemap: failed (${e?.message}). Falling back.`);
+    console.warn(`fetchSitemap: failed (${e?.message}).`);
     return [];
   }
 }
 
-/** Fetch HTML sections from LIVE_URL, filtering URLs with urlFilter. */
-async function fetchNavSections(urlFilter, fetchFn) {
-  const html = await fetchHtml(LIVE_URL, fetchFn);
-  const nav = extractHubSidebar(html);
-  const sectionHtmls = extractSections(nav);
-  const sections = [];
-  for (const sectionHtml of sectionHtmls) {
-    const title = extractH2(sectionHtml);
-    if (!title) continue;
-    const urls = extractUrls(sectionHtml).filter(urlFilter);
-    sections.push({ title, urls });
-  }
-  return sections;
+/**
+ * Convert TOC sections to the format expected by buildOutput.
+ */
+function tocSectionsToOutputSections(tocSections) {
+  return tocSections.map((section) => ({
+    title: section.title,
+    urls: section.pages.map((page) => resolveUrl(page.url)),
+  }));
 }
 
 export async function main(fetchFn = fetch) {
@@ -229,29 +175,28 @@ export async function main(fetchFn = fetch) {
   const statusByUrl = parseExistingStatusMap(existing);
 
   let sections = [];
-  const sitemapUrls = await fetchSitemap(fetchFn);
 
-  if (sitemapUrls.length > 0) {
-    try {
-      const sitemapSet = new Set(sitemapUrls);
-      sections = await fetchNavSections((u) => sitemapSet.has(u), fetchFn);
-      const placed = new Set(sections.flatMap((s) => s.urls));
-      const unplaced = sitemapUrls.filter((u) => !placed.has(u));
-      if (unplaced.length > 0) sections.push({ title: 'Other', urls: unplaced });
-    } catch (e) {
-      // NOTE: MadCap Flare には nav#hub-sidebar が存在しないため、ここに落ちる。
-      // フラットな 'All' セクションで SIDEBAR_URLS.md を上書きするとカテゴリ構造が壊れるため、
-      // 既存ファイルがある場合は上書きを中止する。Phase C (#160) で要改修。
-      console.warn(`HTML section fetch failed (${e?.message}).`);
+  // Primary: fetch TOC data from MadCap Flare
+  try {
+    const { sections: tocSections } = await fetchTocData({ fetchFn });
+    if (tocSections.length > 0) {
+      sections = tocSectionsToOutputSections(tocSections);
+    }
+  } catch (e) {
+    console.warn(`TOC fetch failed (${e?.message}). Trying sitemap fallback.`);
+  }
+
+  // Fallback: use sitemap for a flat URL list
+  if (sections.length === 0) {
+    const sitemapUrls = await fetchSitemap(fetchFn);
+    if (sitemapUrls.length > 0) {
       if (fs.existsSync(SIDEBAR_URLS_PATH)) {
-        console.warn('既存の SIDEBAR_URLS.md を保持します（ライブサイトからの更新はスキップ）。');
-        console.warn('Phase C (#160) で MadCap Flare 対応が必要です。');
+        console.warn('WARNING: TOC fetch failed. Sitemap fallback would replace section structure with flat "All" list.');
+        console.warn('Preserving existing SIDEBAR_URLS.md to prevent data loss.');
         return;
       }
       sections = [{ title: 'All', urls: sitemapUrls }];
     }
-  } else {
-    sections = await fetchNavSections(() => true, fetchFn);
   }
 
   const totalUrls = new Set(sections.flatMap((s) => s.urls)).size;
