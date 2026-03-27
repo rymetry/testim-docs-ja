@@ -137,17 +137,33 @@ async function downloadAsset(url, destDir) {
   return { name: targetName, path: destPath };
 }
 
-async function rewriteAndDownloadMedia(markdown, categoryFolder, slug) {
+async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl) {
   const mediaDir = path.join(PUBLIC_IMAGES, categoryFolder, slug);
   const localPrefix = `/images/${categoryFolder}/${slug}`;
-  const urlRegex = new RegExp('https://files\\.readme\\.io/[a-zA-Z0-9_.-]+\\.(?:png|jpg|jpeg|gif|webp|mp4|webm|mov)', 'gi');
-  const urls = Array.from(new Set(markdown.match(urlRegex) || []));
+
+  // Collect absolute URLs (legacy readme.io) and MadCap relative image paths
+  const absoluteUrlRegex = /https:\/\/files\.readme\.io\/[a-zA-Z0-9_.-]+\.(?:png|jpg|jpeg|gif|webp|mp4|webm|mov)/gi;
+  const relativeImgRegex = /images\/[a-zA-Z0-9_.-]+\.(?:png|jpg|jpeg|gif|webp|mp4|webm|mov)/gi;
+
+  const absoluteUrls = Array.from(new Set(markdown.match(absoluteUrlRegex) || []));
+
+  // Resolve MadCap relative paths to absolute URLs using sourceUrl as base
+  const relativePaths = Array.from(new Set(markdown.match(relativeImgRegex) || []));
+  const madcapBase = sourceUrl ? sourceUrl.replace(/\/[^/]*$/, '/') : '';
+  const resolvedRelatives = relativePaths
+    .filter(() => madcapBase)
+    .map((relPath) => ({ original: relPath, url: madcapBase + relPath }));
+
+  const allDownloads = [
+    ...absoluteUrls.map((url) => ({ original: url, url })),
+    ...resolvedRelatives,
+  ];
 
   const pairs = [];
-  for (const url of urls) {
+  for (const { original, url } of allDownloads) {
     try {
       const { name } = await downloadAsset(url, mediaDir);
-      pairs.push({ original: url, local: `${localPrefix}/${name}` });
+      pairs.push({ original, local: `${localPrefix}/${name}` });
     } catch (e) {
       console.warn(`⚠️  Failed to download ${url}: ${e.message}`);
     }
@@ -163,10 +179,19 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug) {
 }
 
 export function rewriteDocLinks(markdown) {
-  return markdown.replace(/\]\(doc:([a-z0-9\-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
-    const tail = frag || '';
-    return `](/docs/${slug}${tail})`;
+  // Legacy readme.io doc: links
+  let result = markdown.replace(/\]\(doc:([a-z0-9-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
+    return `](/docs/${slug}${frag || ''})`;
   });
+  // MadCap Flare relative .htm links (e.g. ../path/slug.htm, slug/index.htm)
+  result = result.replace(/\]\(([^)#]*\.htm)(#[^)]*)?\)/g, (_match, rawPath, fragment) => {
+    // extractSlug expects absolute-style paths; prepend / for relative paths
+    const path = rawPath.startsWith('/') ? rawPath : '/' + rawPath;
+    const slug = extractSlug(path);
+    if (!slug) return _match;
+    return `](/docs/${slug}${fragment || ''})`;
+  });
+  return result;
 }
 
 function extractTitle(md) {
@@ -234,7 +259,7 @@ async function processOne(item, slugIndex) {
     return false;
   }
 
-  md = await rewriteAndDownloadMedia(md, categoryFolder, item.slug);
+  md = await rewriteAndDownloadMedia(md, categoryFolder, item.slug, item.url);
   md = rewriteDocLinks(md);
 
   const title = extractTitle(md) || item.slug.replace(/-/g, ' ');

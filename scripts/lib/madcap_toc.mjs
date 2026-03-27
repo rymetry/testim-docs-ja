@@ -56,6 +56,9 @@ export function parseAmdModule(jsText) {
  * Build a reverse lookup: index → { url, title } from chunk data.
  *
  * Chunk data is keyed by URL path, with values { i: [index], t: [title], b: [breadcrumb] }.
+ * MadCap Flare stores section-only headings (nodes with no own page) in a
+ * special `___` entry whose `i` and `t` arrays contain multiple parallel
+ * elements — one per heading.  Regular page entries have a single element.
  */
 export function buildIndexLookup(chunkDataList) {
   const lookup = new Map();
@@ -65,9 +68,9 @@ export function buildIndexLookup(chunkDataList) {
         console.warn(`buildIndexLookup: skipping malformed entry for "${urlPath}" (missing i/t arrays)`);
         continue;
       }
-      const index = meta.i[0];
-      const title = meta.t[0];
-      lookup.set(index, { url: urlPath, title });
+      for (let k = 0; k < meta.i.length; k++) {
+        lookup.set(meta.i[k], { url: urlPath, title: meta.t[k] ?? '' });
+      }
     }
   }
   return lookup;

@@ -55,6 +55,31 @@ describe('rewriteDocLinks', () => {
     const result = rewriteDocLinks(md);
     assert.equal(result, 'See [foo](/docs/foo) and [bar](/docs/bar).');
   });
+
+  it('rewrites MadCap relative .htm link (simple)', () => {
+    const result = rewriteDocLinks('[link](testim-automate.htm)');
+    assert.equal(result, '[link](/docs/testim-automate)');
+  });
+
+  it('rewrites MadCap relative .htm link with path prefix', () => {
+    const result = rewriteDocLinks('[link](../editing-tests/conditions/index.htm)');
+    assert.equal(result, '[link](/docs/conditions)');
+  });
+
+  it('rewrites MadCap .htm link preserving fragment', () => {
+    const result = rewriteDocLinks('[link](why-did-my-test-fail.htm#13-api-step-failed)');
+    assert.equal(result, '[link](/docs/why-did-my-test-fail#13-api-step-failed)');
+  });
+
+  it('rewrites MadCap /slug/index.htm to /docs/slug', () => {
+    const result = rewriteDocLinks('[link](validations/index.htm)');
+    assert.equal(result, '[link](/docs/validations)');
+  });
+
+  it('rewrites MadCap deeply nested relative .htm link', () => {
+    const result = rewriteDocLinks('[link](../../salesforce-testing/salesforce-testing-overview.htm)');
+    assert.equal(result, '[link](/docs/salesforce-testing-overview)');
+  });
 });
 
 // ---------------------------------------------------------------------------

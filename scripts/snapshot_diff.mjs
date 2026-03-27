@@ -185,11 +185,7 @@ function diffSidebar() {
     }
   }
 
-  if (headContent === currentContent) {
-    return { changed: false, addedPages: [], removedPages: [] };
-  }
-
-  // Extract page slugs from both versions
+  // Compare by slug sets (ignores fetchedAt and other metadata changes)
   try {
     const headSnapshot = JSON.parse(headContent);
     const currentSnapshot = JSON.parse(currentContent);
@@ -200,7 +196,8 @@ function diffSidebar() {
     const addedPages = [...currentPages].filter((p) => !headPages.has(p));
     const removedPages = [...headPages].filter((p) => !currentPages.has(p));
 
-    return { changed: true, addedPages, removedPages };
+    const changed = addedPages.length > 0 || removedPages.length > 0;
+    return { changed, addedPages, removedPages };
   } catch (e) {
     console.warn(`diffSidebar: failed to parse sidebar JSON for diff: ${e.message}`);
     return { changed: true, addedPages: [], removedPages: [] };

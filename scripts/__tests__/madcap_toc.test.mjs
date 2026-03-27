@@ -81,6 +81,21 @@ describe('buildIndexLookup', () => {
     assert.equal(lookup.get(1).title, 'Page A');
     assert.equal(lookup.get(2).title, 'Page B');
   });
+
+  it('handles ___ multi-index entry for section headings', () => {
+    const chunks = [
+      {
+        '/content/page.htm': { i: [10], t: ['A Page'], b: [''] },
+        '___': { i: [1, 8, 12], t: ['Overview', 'Getting Started', 'Recording'], b: ['', '', ''] },
+      },
+    ];
+    const lookup = buildIndexLookup(chunks);
+    assert.equal(lookup.size, 4);
+    assert.equal(lookup.get(1).title, 'Overview');
+    assert.equal(lookup.get(8).title, 'Getting Started');
+    assert.equal(lookup.get(12).title, 'Recording');
+    assert.equal(lookup.get(10).title, 'A Page');
+  });
 });
 
 // ---------------------------------------------------------------------------
