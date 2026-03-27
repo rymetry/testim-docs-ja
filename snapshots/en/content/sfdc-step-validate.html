@@ -1,0 +1,65 @@
+
+                                        <h1>Validate</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The Validate step validates that an existing record in Salesforce matches the expected values in the specified fields. The test step passes only if all the fields match exactly. The Validate step is a predefined step.</p>
+                                        <div class="note">
+                                            <p>Record display requirement The step itself does not navigate to the record, so you will need the system to navigate to the specific record during the execution of a test, so that the designated step will be performed when the record is displayed on Salesforce. To learn more, see <a href="../methods-for-displaying-a-specific-record-during-test-execution.htm">Find and display a specific Salesforce record during test execution</a>.</p>
+                                        </div>
+                                        <br />
+                                        <p>→<strong>To add a Validate step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In your test, add a step before the validate step that will navigate to the desired record. To learn more, see <a href="../methods-for-displaying-a-specific-record-during-test-execution.htm">Find and display a specific Salesforce record during test execution</a>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Add a step by clicking the + button.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Under the <strong>Salesforce steps</strong> tab, click <strong>Record Operations</strong> and select the <strong>Validate</strong> step.<br /></p>
+                                            </li>
+                                            <p>The Validate step is added and the following Object properties is displayed.</p>
+                                            <img src="images/77f2be9-validate1.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click the <strong>Select the Object</strong> drop-down menu and select the desired object type. The object type determines the type of record that will be validated.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>In some cases you will be required to also select a <strong>Record Type</strong>. This is like a sub-type of the record.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>For each field that you want to validate, under Action select one of the following options:</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Verify -this action verifies that the value in the field matches that in the record. The action requires entering a value, as described below. The action requires entering a value, as described below.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Verify not visible - this action verifies that the field is not visible to the connected user. The action does not require entering a value.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Store - this action stores the existing value in the record field into a specified Javascript variable. This action requires entering a name for the variable into the value field.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>Ignore - this action performs no action on the field. The action does not require entering a value.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Reset - resets the value in the field to a "no entry" state. Note that if the field is empty, it will try to enter an empty string to the field, however if you select the Reset option, it will not try to enter an empty string.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Under Value, enter the value of the field. If the field is a "pick list" (drop down menu), select the relevant option. The value field has two modes, to switch between the modes click the filed and the click the sign to alternate between <strong>T</strong> and <strong>{JS}</strong>:</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>T. Text mode. The value is treated as a literal string.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>{JS}. JavaScript mode. The value is evaluated as a JavaScipt expression. The field will evaluate JavaSrcipt variables and functions.</p>
+                                            </li>
+                                            <img src="images/97e5e6d-switchgif.gif" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>It is not possible to put a variable in a multiple pick list.</p>
+                                            </div>
+                                            <li value="15">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

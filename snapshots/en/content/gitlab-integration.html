@@ -1,0 +1,18 @@
+
+                                        <h1>GitLab integration</h1>
+                                        <img src="images/6744632-gitlab-logo-gray-rgb.png" title="gitlab-logo-gray-rgb.png" class="ScreenshotFullsize" />
+                                        <p><strong>YAML File</strong>
+                                            <br />
+                                        </p>
+                                        <p>In order to integrate Testim with GitLab, you need to add these lines to your YAML file:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>image: node:16.13.0<br />stages:<br />&#160;&#160;- e2e<br />testim:<br />&#160;&#160;stage: e2e<br />&#160;&#160;image: docker:git<br />&#160;&#160;variables:<br />&#160;&#160;&#160;&#160;TESTIM_DOCKER: testim/docker-cli<br />&#160;&#160;&#160;&#160;TESTIM_TOKEN: &lt;TESTIM_TOKEN&gt;<br />&#160;&#160;&#160;&#160;TESTIM_PROJECT: &lt;TESTIM_PROJECT&gt;<br />&#160;&#160;&#160;&#160;TESTIM_LABEL: &lt;TESTIM_LABEL&gt;<br />&#160;&#160;&#160;&#160;GRID_NAME: &lt;GRID_NAME&gt;<br />&#160;&#160;services:<br />&#160;&#160;&#160;&#160;- docker:stable-dind<br />&#160;&#160;script:<br />&#160;&#160;&#160;&#160;- docker pull $TESTIM_DOCKER<br />&#160;&#160;&#160;&#160;- docker run --rm -v "$(pwd)":/opt/testim-runner $TESTIM_DOCKER --token $TESTIM_TOKEN --project $TESTIM_PROJECT --label "$TESTIM_LABEL" --grid $GRID_NAME -r /opt/testim-runner/testim-report.xml<br />&#160;&#160;artifacts:<br />&#160;&#160;&#160;&#160;paths:<br />&#160;&#160;&#160;&#160;&#160;&#160;- testim-report.xml<br />&#160;&#160;&#160;&#160;reports:<br />&#160;&#160;&#160;&#160;&#160;&#160;junit: testim-report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>For the grid name, <a href="../grid-management/index.htm">read here</a> how to set up your grid.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Testim supports all <a href="https://github.com/nodejs/Release/blob/main/README.md">LTS/supported versions</a> of Node.js.</p>
+                                        </div>
+                                    

@@ -1,0 +1,89 @@
+
+                                        <h1>Execute APEX</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The Salesforce APEX action step allows you to extend E2E tests beyond the UI, by running APEX code as a step inside the test. It allows you to run APEX code to programmatically insert, update, merge, delete, and restore Salesforce objects using Data Manipulation Language (DML) statements or to query your environment using Salesforce Object Query Language (SOQL) or Salesforce Object Search Language (SOSL) statements and exporting data to be used in subsequent steps.</p>
+                                        <h2><a name="adding-an-execute-apex-action-step"></a>Adding an Execute APEX Action Step</h2>
+                                        <p>→ <strong>To add an Execute APEX action step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the editor, add a step by clicking the <strong>+</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the <strong>Salesforce steps</strong> tab, click <strong>API operations</strong> and select <strong>Execute Apex</strong> step.<br /></p>
+                                            </li>
+                                            <p>The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side:</p>
+                                            <img src="images/c0c4dc9-picture2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “Salesforce - APEX Action”.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the function text box, type in the desired APEX code. If you have defined parameters, you can refer to those parameters in your APEX code.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click the back arrow to return to the main Editor window</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="passing-parameters"></a>Passing parameters</h2>
+                                        <p>You can use defined parameters to pass values defined in the test or suite level, in the config file, or in another step to your APEX function (currently only String values are supported). → <strong>To add an Execute APEX action step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Properties</strong> panel add a parameter by clicking the <strong>+</strong> in the <strong>PARAMS</strong> section.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Enter the parameter name defined in test, suite, or config file in the text box.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Next to the <strong>JS</strong> indicator, give this parameter a name that will be used in the APEX script. This will automatically appear as an argument in the function declaration in the editor window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/fbe2f4f-picture3.png" class="ScreenshotFullsize" />
+                                        <h2><a name="exporting-values"></a>Exporting Values</h2>
+                                        <p>Exporting values from an APEX script must meet the following requirements:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Use of the <strong>Export</strong> function to export the value, please refer to <a href="../../advanced-editing/parameters/exports-parameters.htm#exporting-a-parameter">https://help.testim.io/docs/exports-parameters#exporting-a-parameter</a></p>
+                                            </li>
+                                            <li value="2">
+                                                <p>The value to be exported must be stored in an APEX variable.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>The APEX variable name and the export variable name both must only consist of alphabet characters (A-z) and underscores.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Exporting of values is not possible when an APEX script contains a Salesforce DML function. Where DML functions are required, this needs to split over multiple test steps.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Since parameters are serialized between steps as JSON - only values that may be serialized as JSON may be safely used.</p>
+                                        </div>
+                                        <h2><a name="salesforce-apex-action-example"></a>Salesforce APEX Action Example</h2>
+                                        <p>In this scenario we will use the Execute Apex step to:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Search for Opportunities using SOQL, where the name of the Opportunity matches the parameter opportunity passed in, and store all of these Opportunities in a list.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Take the first Opportunity in the list and assign the Amount value to the APEX variable <span class="FileOrFilePath">firstoppAmount</span>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Export the value in <span class="FileOrFilePath">firstoppAmount</span> in the export variable <span class="FileOrFilePath">oppAmount</span>, so that can be used in subsequent test steps in the test.</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="code"></a>Code:</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>function f(opportunity: any) {<br />List&lt;Opportunity&gt; firstOpportunity = [SELECT Id, Name FROM Opportunity WHERE Name LIKE :opportunity AND isDeleted = false];<br />int firstoppAmount = firstOpportunity[0].Amount;<br />exportsTest.oppAmount = firstoppAmount;<br />&#160;&#160;}</code></pre>
+                                            </div>
+                                        </div>
+                                        <img src="images/da0a612-picture4.png" class="ScreenshotFullsize" />
+                                        <h2><a name="viewing-the-apex-action-result-log"></a>Viewing the APEX Action Result Log</h2>
+                                        <p>After a test containing a <em>Execute Apex</em> step is run, a step log is available in the code editor with your test results from Salesforce. → <strong>To view the APEX action result log:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Double-click on the <em>Salesforce APEX action</em> step for which you wish to view the Result Log.</p>
+                                            </li>
+                                        </ol>
+                                        <p>The <strong>code editor</strong> opens, and the <strong>Step Log</strong> is shown at the bottom of the screen. If there is a log received from Salesforce, the details will be shown in the Step Log section.</p>
+                                        <img src="images/825fff5-view_apex_action_2.png" class="ScreenshotFullsize" />
+                                    

@@ -1,0 +1,40 @@
+
+                                        <h1>TeamCity integration</h1>
+                                        <img src="images/6a3c92e-4pro3hwiqxcvnwy6qqxg_teamcity-logo.png" title="4pro3hwiQxCVNwY6QQXg_teamcity-logo.png" class="ScreenshotFullsize" />
+                                        <p>In order to integrate your tests with TeamCity, first you need to have node.js (12.13+ ,14.15+ and 16.13+) installed on the TeamCity machine or one of its slave machines.</p>
+                                        <h2><a name="now-just-follow-these-steps"></a>Now, just follow these steps:</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a New Build Step in your project:</p>
+                                            </li>
+                                            <img src="images/6bdc599-irvily05qoshdya5bxqr_06-add-build-step.png" title="irViLY05QOSHdya5bXqR_06-add-build-step.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Choose "Command Line" runner type:</p>
+                                            </li>
+                                            <img src="images/6e50ad2-gujv3nuqs3mxzyjn9mm9_08-new-build-step-type.png" title="gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Set the Custom Script with the appropriate parameters, as described in the <a href="../../running-tests/the-command-line-cli/index.htm">CLI page</a>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>Here is the basic script template, containing the first part that makes sure you have the latest npm package, and the CLI command itself:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>set -x<br />mkdir -p "%system.teamcity.build.workingDir%/.npm-packages"<br />prefix=%system.teamcity.build.workingDir%/.npm-packages<br />NPM_PACKAGES="%system.teamcity.build.workingDir%/.npm-packages"<br />export PATH="$PATH:$NPM_PACKAGES/bin"<br />export NODE_PATH="$NODE_PATH:$NPM_PACKAGES/lib/node_modules"<br />npm config set prefix %system.teamcity.build.workingDir%/.npm-packages<br />npm install -g @testim/testim-cli<br />set +x<br />%system.teamcity.build.workingDir%/.npm-packages/bin/testim §§§LINEBREAK§§§<br />&#160;--label "&lt;YOUR LABEL&gt;" §§§LINEBREAK§§§<br />&#160;--token "&lt;YOUR ACCESS TOKEN&gt;" §§§LINEBREAK§§§<br />&#160;--project "&lt;YOUR PROJECT ID&gt;" §§§LINEBREAK§§§<br />&#160;--grid "&lt;Your grid name&gt;" §§§LINEBREAK§§§<br />&#160;--reporters teamcity,console</code></pre>
+                                            </div>
+                                        </div>
+                                        <img src="images/8360a86-xkywkbtdrdiv6xsri8zk_09-new-build-step-form-full.png" title="xkywkbTDRDiv6XSRI8zk_09-new-build-step-form-full.png" class="ScreenshotFullsize" />
+                                        <p>In order for TeamCity to store, analyze and show the results, Testim generates a unique TeamCity report format which is automatically recognized:</p>
+                                        <img src="images/947a4f9-byvxls1tkuodnownvwwg_10-build-results.png" title="byvxlS1TKuodnownVWwg_10-build-results.png" class="ScreenshotFullsize" />
+                                        <p><strong>Note:</strong>
+                                        </p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>You can see its progress test-by-test as they are executed!</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>When using the arguments  <strong>--reporters teamcity, console --retries</strong> combined, even if a test passed on a retry, teamcity will record both the failed and passed executions and the build will be marked as failure even though the suite might pass.</p>
+                                            </li>
+                                        </ol>
+                                    

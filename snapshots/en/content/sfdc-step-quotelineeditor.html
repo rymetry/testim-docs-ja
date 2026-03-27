@@ -1,0 +1,96 @@
+
+                                        <h1>Quote Line Editor Action</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The <strong>Quote Line Editor Action</strong> step can be used to test the product pricing calculations in the Quote Line Editor of the CPQ application for specific line items on a quote and/or for the entire quote. As part of the testing, the step can be configured to input values into the CPQ quote and also to validate that a certain value is displayed as expected. For example, the step can be used to <em>input</em> the quantity <span class="FileOrFilePath">40</span> into the <span class="FileOrFilePath">quantity</span> field and then validate that the value <span class="FileOrFilePath">EUR 720,000</span> is displayed in the calculated <span class="FileOrFilePath">Net Total</span> field.  As in any step, any value can also be a <a href="../../advanced-editing/parameters/index.htm">parameter</a> and it is possible to store the value found in the quote line/record into a parameter in Testim for Salesforce, which can be used in later steps in the test. Each step can include multiple validations/actions/inputs in a single step, which will be executed consecutively by order. So, for example, one action includes a validation that the <strong>Net Total</strong> is 720 Euros and then the next action inputs the value 30 in the <strong>Additional discount</strong> field. This discount will change the Net Total value, so we can add another action to validate the Net Total field again with the new value (after the discount) of 560 Euros.</p>
+                                        <img src="images/f9d6097-example.png" class="ScreenshotFullsize" />
+                                        <p>→<strong>To add a Quote Line Editor Action step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the editor, add a step by clicking the <strong>+</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the <strong>Salesforce</strong> steps tab, click <strong>CPQ Operations</strong> and select <strong>Quote Line Editor Action</strong> step.<br /></p>
+                                            </li>
+                                            <p>The following <strong>Properties Tab</strong> is displayed:</p>
+                                            <img src="images/f434ecd-cpq1.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Under the <strong>Group Name</strong> section, in the <strong>Group Name</strong> field, optionally specify the name of the relevant Table/Section in the quote. If a Group Name is not specified, the action will apply on the first table that appears on the screen.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under the <strong>Select Row</strong> section, select the relevant row in the table by doing one of the following:</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Row number</strong> - enter the number of the row. For example, for the first line, enter the value <span class="FileOrFilePath">1</span>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>By filter</strong> - this option selects the row by matching a specified value to one or more values in the specified column. For example, filtering by the value found in the <em>Product Code</em> column.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e573302-cpq2.png" class="ScreenshotFullsize" />
+                                        <p>Click <strong>Add</strong> and specify the following:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p><strong>Column</strong> - select the name of the column from the drop-down menu.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p><strong>Operator</strong> - select the operator that will apply on the condition. The following operators are available:</p>
+                                            </li>
+                                            <li value="3">
+                                                <p><span class="FileOrFilePath">==</span> - for the value to be equal to value in the <strong>Value</strong> field.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p><span class="FileOrFilePath">!=</span> - for the value to NOT be equal to value in the <strong>Value</strong> field.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Value</strong> - the value in the filter. This can be also a parameter.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click <strong>Add</strong> again to add another condition to the filter.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Under the <strong>Actions</strong> section, add the actions that you would like to apply on the quote (i.e., validations, inputs, and storing of values from the CPQ).</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/6079c5d-cpq3.png" class="ScreenshotFullsize" />
+                                        <p>Click <strong>Add</strong> and specify the following:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p><strong>Column</strong> - select the name of the column from the drop-down menu.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p><strong>Action</strong> - select one of the following actions:</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Input - select this option to input a value to the selected field. For example, if you want the CPQ to calculate a discount you can use this action to input the discount value (e.g., 30) in the Discount field.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Verify - select this option to verify that a field in the CPQ includes a value that matches the specified value. For example, if you want to verify that the total price, including the discount, was properly calculated.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Store - select this option to  store the value found in the quote line/record into a parameter in Testim for Salesforce, which can be used in later steps in the test.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Reset -  resets the configuration of the Action.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p><strong>Value</strong> - enter the value or use a parameter.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p><strong>Input option</strong> - the value that will be inputted into the specified field.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Verify option</strong> - the value that will be used to verify against the current value in the field.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p><strong>Store option</strong> - the name of the variable in Testim for Salesforce in which the value from the specified field will be stored.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p><strong>Reset option</strong> - not applicable.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Repeat <strong>step 5</strong> to add additional Actions. It is possible to add multiple actions relating to a single field in CPQ. For example to verify its value before making an Input action and after the Input action.</p>
+                                            </li>
+                                        </ol>
+                                    

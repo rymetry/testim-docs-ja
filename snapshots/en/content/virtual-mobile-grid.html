@@ -1,0 +1,142 @@
+
+                                        <h1>Virtual Mobile Grid</h1>
+                                        <p>The Virtual Mobile Grid (VMG) enables testing across a wide variety of iOS simulators and Android emulators. Enjoy a cloud based grid which allows you to:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Simplify connectivity and configuration and improve quality through the use of a range of available virtual devices.</p>
+                                            </li>
+                                            <li>
+                                                <p>Scale testability through the use of parallel runs across different devices.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The Virtual Mobile Grid can be used to record tests as well as to run them. It is connected to your <a href="../../mobile-apps/mobile-apps.htm">Mobile Apps Library</a>.  This means that if the test that you are running uses a mobile app, this app needs to be added to the Mobile Apps Library before running the test on the Virtual Mobile Grid. The Virtual Mobile Grid does not require any special integration. It is included in the license for paying customers. However, for Community license, it is possible to enroll in a free trial as a Company Owner or Project Owner. Once the free trial is started, the Virtual Mobile Grid is immediately available under <a href="../../device-management/view-local-connected-mobile-devices.htm">Device Management</a>.  During the free trial period, a variety of virtual devices (Android and iOS) will be available for you to use.</p>
+                                        <div class="caution">
+                                            <p>Test Compatibility Only iOS applications that were compiled to work with virtual devices can be executed on the "Virtual Mobile Grid".</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>OS Compatibility Virtual mobile grid supports x86_64 Android builds only.</p>
+                                        </div>
+                                        <h2><a name="how-to-start-a-free-virtual-mobile-grid-trial"></a>How to Start a Free Virtual Mobile Grid Trial</h2>
+                                        <p>If you are using a Community license, as the Company Owner or Project Owner, you can start a free trial of Virtual Mobile Grid. The trial duration is 14 days. During the trial period you will be able to run a single execution at a time for all projects (iOS and Android). If you want to skip the free trial and move directly to the paid version, <a href="https://www.testim.io/contact-us/">contact us</a>. → <strong>To start a free trial of Virtual Mobile Grid:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to the <strong>Device Management</strong> screen and on the click the <strong>Virtual Mobile Grid</strong> tab, click <strong>Start A Trial</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/52a46cf-image.png" class="ScreenshotFullsize" />
+                                        <p>After a few seconds your trial is <strong>activated</strong> and the following notice is displayed.</p>
+                                        <img src="images/6ab7015-image_1.png" class="ScreenshotFullsize" />
+                                        <p>On the <strong>Virtual Mobile Grid</strong> screen, you will see the devices available for you during the trial period.</p>
+                                        <h2><a name="how-to-run-tests-on-virtual-mobile-grid"></a>How to Run Tests on Virtual Mobile Grid</h2>
+                                        <p>Before running a test on Virtual Mobile Grid, make sure you have done the following:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Mobile Configuration:</strong>  make sure you have created a mobile configuration that is compatible with Virtual Mobile Grid: <a href="../../test-management/configuration-library-mobile.htm">Configuration Library - Mobile</a>. This configuration can be used to run tests through the CLI/CI, Scheduler, or a Test Plan.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/07dd385-image_2.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Apps Library</strong> - make sure that you have added the app under test to the Apps Library: <a href="../../mobile-apps/mobile-apps.htm">Mobile Apps</a>. If the test has already been recorded with an app that was selected using the <strong><em>"From Device"</em></strong> option, in the <strong>Setup step</strong> of the test, in the <strong>Properties</strong> pane, click the <strong>change app</strong> link and select the From Library option.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="running-the-test-remotely"></a>Running the test remotely</h3>
+                                        <p>Using the configuration that is configured with the Virtual Mobile Grid, you can run your tests remotely using one of the following methods:</p>
+                                        <div class="note">
+                                            <p>Make sure you have the relevant mobile app in your <a href="../../mobile-apps/mobile-apps.htm">Mobile Apps Library</a>.</p>
+                                        </div>
+                                        <p><a href="../../running-tests/the-command-line-cli/index.htm">CLI</a> /&#160;<a href="../integrate-testim-to-your-ci/index.htm">CI</a></p>
+                                        <p>Add --grid parameter with the grid name.</p>
+                                        <p><a href="../../running-tests/scheduler-mobile.htm">Scheduler</a>
+                                        </p>
+                                        <p>Use <strong>Grid</strong> field to choose on which grid to run your tests.</p>
+                                        <p><a href="../../test-management/test-plans-mobile.htm">Test Plan</a>
+                                        </p>
+                                        <p>Use <strong>Grid</strong> field to choose on which grid to run your tests.</p>
+                                        <p><a href="../../running-tests/running-tests-overview.htm#running-a-remote-mobile-test">Remote Run through the Editor</a>
+                                        </p>
+                                        <p>Under the <strong>Run on a grid</strong> option, select <strong>Virtual Mobile Grid</strong> and the relevant configuration.</p>
+                                        <img src="images/81f27e0-image_3.png" class="ScreenshotFullsize" />
+                                        <h3><a name="changing-the-app-when-recorded-from-device"></a>Changing the app when recorded from device</h3>
+                                        <p>If the test has already been recorded with an app that was selected using the <strong><em>"From Device"</em></strong> option, do the following:</p>
+                                        <h4><a name="from-the-editor"></a>From the Editor</h4>
+                                        <p>→ <strong>To change the app from the Editor:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In  the <strong>Setup Step</strong> click <strong>Show Properties</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>Properties</strong> pane, under <strong>Application name</strong>, click the <strong>Change app</strong> link.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select the From <strong>Library option</strong> and then select the relevant app from the list.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>Done</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/87bb169-changeappgif.gif" class="ScreenshotFullsize" />
+                                        <h4><a name="from-the-cli"></a>From the CLI</h4>
+                                        <p>When running the test through the CLI, it is possible to override the default app Id, which was used in the recording of the test, with an app Id of the app in the Mobile Apps Library. → <strong>To override the default app ID:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; CLI</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>Grid</strong> drop-down menu, select <strong>Virtual Mobile Grid</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Copy the command example to your command prompt.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Go to <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Select the relevant app and then click the <strong>Copy ID</strong> button.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>In the command prompt add the <span class="FileOrFilePath">--app-id</span> flag followed by the copied ID.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Run the CLI command.</p>
+                                            </li>
+                                        </ol>
+                                        <h4><a name="from-the-scheduler"></a>From the scheduler</h4>
+                                        <p>→ <strong>To override the default app in the scheduler:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Runs &gt; Scheduled Runs</strong></p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Open the relevant scheduler.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Under <strong>What to run on</strong>, select the <strong>Override application</strong> checkbox.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Select from library</strong>, select the relevant application.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h4><a name="from-the-test-plan"></a>From the test plan</h4>
+                                        <p>→ <strong>To override the default app in the scheduler:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Test List &gt; Plans</strong></p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Open the relevant test plan.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Under <strong>What to run on</strong>, select the <strong>Override application</strong> checkbox.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Select from library</strong>, select the relevant application.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

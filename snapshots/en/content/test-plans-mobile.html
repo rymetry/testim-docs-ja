@@ -1,0 +1,78 @@
+
+                                        <h1>Test Plans - Mobile</h1>
+                                        <p>A test plan is a container of tests, which include specific test labels and/or test suites that can be organized to run consecutively. The test plan can include tests/test suites that run before and/or after the list of tests/test suites. The test plan can include settings that override the tests' default settings. Test plans are great If you need to do:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Set up your environment before your tests execute.</p>
+                                            </li>
+                                            <li>
+                                                <p>Clean up your environment after your tests execute.</p>
+                                            </li>
+                                            <li>
+                                                <p>Run your tests on several devices and operating systems.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="create-a-new-mobile-test-plan"></a>Create a New Mobile Test Plan</h2>
+                                        <p>→ <strong>To create a new test plan:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to <strong>Test List</strong> in the main menu.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select <strong>Plans</strong> from the top navigation.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the <strong>New Plan</strong> button.</p>
+                                            </li>
+                                            <img src="images/fd4471d-new-test.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Enter the <strong>Name</strong> and <strong>Description</strong> for your new Test Plan.</p>
+                                            </li>
+                                            <img src="images/37d604b-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Select the <strong>Add Before All</strong> checkbox if you want to run a set of tests prior to Test Plan's main test list. Enter the name of one or more <a href="test-suites.htm">Test Suites</a> or <a href="labels.htm">Test Labels</a>. Typically this would include setup steps, such as login, etc.</p>
+                                            </li>
+                                            <img src="images/1aeb540-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Enter the name of one or more <a href="test-suites.htm">Test Suites</a> or <a href="labels.htm">Test Labels</a> in the <strong>Test List</strong> box</p>
+                                            </li>
+                                            <img src="images/d77b93b-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Select the <strong>Add After All</strong> checkbox if you want to add "teardown" tests after the test list has run. Enter hte name of one or more <a href="test-suites.htm">Test Suites</a> or <a href="labels.htm">Test Labels</a>. It is a best practice to include "teardown" tests in your test plan. These are tests designed to clear the cache, clean up data, log out users, etc. once the tests are complete.</p>
+                                            </li>
+                                            <img src="images/7cf9f5b-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: <em> The tests in "Before all" and "After all" will always run in parallel level <span class="FileOrFilePath">1</span>. Only the "Test List" can run at a higher parallelization level, if it is set in the CLI. </em> The tests in Test list WON'T be executed if one of the "before all" tests failed. * The tests in "Add After All" will always run even if tests in Test list failed.</p>
+                                            </div>
+                                            <li value="8">
+                                                <p>In the <strong>Where to Run</strong> field, select the <strong>Mobile Grid</strong> you would like to execute your tests on. See <a href="../integrations/grid-management/index.htm">Grid Management</a> for more information.</p>
+                                            </li>
+                                            <img src="images/103e4f6-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>When selecting <strong>Override default configurations</strong>, only configurations associated with the selected grid will be displayed.</p>
+                                            </div>
+                                            <li value="9">
+                                                <p>In the <strong>What to run on</strong> section, select the <strong>Override default configurations</strong> checkbox to override the default configurations of the tests with the selected configurations. Only configurations that are supported by the selected grid will be displayed. Choose from your list of configurations or create a new one. See <a href="configuration-library-mobile.htm">Configurations Library</a> for more information. Selecting multiple configurations will result in multiple executions, respectively. Each configuration will trigger an execution that will run a on a single device that is automatically selected from the grid.</p>
+                                            </li>
+                                            <img src="images/5093526-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>In the <strong>What to run on</strong> section, select the <strong>Override Application</strong> checkbox to override the default mobile app that was configured in the tests by a different application for your test plan.</p>
+                                            </li>
+                                            <img src="images/072107c-newmobiletestplan.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Click the <strong>Create</strong> button to create your test plan.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="running-your-test-plan"></a>Running your Test Plan</h2>
+                                        <p>In order to execute a test plan, you'll need to specify the plan name in your CLI command like this:</p>
+                                        <p><span class="FileOrFilePath">--test-plan "Test Plan Demo"</span>
+                                        </p>
+                                        <div class="note">
+                                            <p>If you add a different grid name to the CLI, it overrides the grid defined in the plan.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>CLI steps If you have CLI steps in your tests make sure the CLI is running before executing.</p>
+                                        </div>
+                                        <h2><a name="share-parameters-between-your-test"></a>Share parameters between your test</h2>
+                                        <p>When you use a plan you can share parameters between tests e.g. create an account in the setup and use those credentials throughout all tests. See <a href="../advanced-editing/parameters/index.htm">Parameters</a> for more information.</p>
+                                    

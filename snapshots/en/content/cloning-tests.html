@@ -1,0 +1,184 @@
+
+                                        <h1>Cloning tests</h1>
+                                        <p>You can clone tests within the same project or clone them to another project to which you are a member, even if the project is not in the currently selected Company. The new cloned test will have “Clone of” added as a prefix to both the description and the name.</p>
+                                        <h2><a name="what-happens-after-cloning"></a>What happens after cloning</h2>
+                                        <br />
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">
+                                                        </p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Cloning to another project</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Cloning to same project</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Branch settings</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Cloned to the master branch of the target project</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">The same branch as the original test.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Shared steps</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Will become unshared and duplicated. If multiple tests use the same shared step, each test will receive its own copy of the step, breaking any links between them.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Clones the shared step without duplicating.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Test configuration</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Will reset to default based on the project type:  
+<ul><li><p>Mobile Web - Default will be set to iPhone 6/7/8.</p></li><li><p>Web and Mobile Native - The configuration will be labeled as “untitled” with values appropriate for the project type.</p></li></ul></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Clones the test configuration.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Mobile native apps</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Tests with library apps will be cloned without the app. You will have to assign the app manually. Tests with apps from a device will keep the app details.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Clones the native apps without the need for reassignment.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Test owner</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Test owner will not be assigned to the test.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Remains with the same test owner</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test labels</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Test revisions</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Will not be cloned; the test will be created with a new single revision</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Will not be cloned; the test will be created with a new single revision</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Latest test results</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Will not be cloned</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Will not be cloned</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Step parameters</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test data</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Network capture options</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">Mock-network files</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body2">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body2">
+                                                        <p class="tableBody">Will be copied without changes</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br />
+                                        <p>→<strong>To clone a test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the <strong>Test Library</strong> screen (Test List &gt; Tests), click on the test name to select it. You can select multiple tests by holding down the <strong>CTRL/CMD key</strong> and then clicking on each of the desired tests. If there are no folders in your Test Library, you can also select all of your tests by holding down the <strong>CTRL/CMD key + A</strong> on the keyboard.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Clone</strong> button at the top.</p>
+                                            </li>
+                                            <img src="images/0d3e5cbe6becad9725ac73084aa9f8feb6b68b262cc08373aa5796b7e53543de-clonetop.png" class="ScreenshotFullsize" />
+                                            <p>You can also right-click a test and select the <strong>Clone</strong> option.</p>
+                                            <img src="images/7baf98b9a96ee916fb032c02822cf545b9198acff09fd83a1cda428722132882-clonerightclick.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the <strong>Clone Test</strong> dialog, select the <strong>Target Project</strong>. The current project is selected by default.</p>
+                                            </li>
+                                            <img src="images/cd000a2ae1b7abb13f5ccfb10364a589b394dd5a4a1307fd837f3de7e8d3dcb4-image_1.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Under <strong>Tests to be cloned</strong>, select that tests that you would like to clone.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Confirm</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The tests are cloned to the selected project. Testim will name the test using the original test's name. For example: "Copy of [original test name]".</p>
+                                    

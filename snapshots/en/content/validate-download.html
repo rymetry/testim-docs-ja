@@ -1,0 +1,613 @@
+
+                                        <h1>Validate download</h1>
+                                        <p>The <em>Validate download</em> step is a specialized <a href="add-cli-validations-and-actions.htm">CLI step</a> which allows you to validate that the download content of various file types are as expected. You can check the relevant parameters for each type of file. For example: for csv files, you can check the number of rows and the content; for image files, you can check image type and dimensions; for MS PowerPoint, you can check the number of slides and their content.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h2><a name="prerequisites"></a>Prerequisites</h2>
+                                        <div class="note">
+                                            <p>This step can run only on either Chrome or Edge Chromium.</p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p>In order to locally run tests which contain CLI action steps, the following command needs to be executed: <strong>npm i -g @testim/testim-cli &amp;&amp; testim connect</strong> (see below).</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> Tests which include a </em>Validate download* step require access to file URLs. In order to run these tests, you will need to enable the <strong>Allow access to file URLs</strong> permission in the Testim Editor Chrome extension (see below).</p>
+                                        <p><em> For tests which include a </em>Validate download* step for a PDF file, there are two additional prerequisites:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Ensure that you are running <strong>Chrome version 67</strong> or above.</p>
+                                            </li>
+                                            <li>
+                                                <p>Ensure that your Chrome browser PDF settings are set to the following: <strong>Download PDF files instead of automatically opening them in Chrome</strong> (see below).</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To enable the “Download PDFs” permission:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Chrome browser, click on the <strong>Chrome menu</strong> (three dots at the top right).</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on <strong>Settings</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click on <strong>Privacy and security</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>Site settings</strong>.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Additional content settings</strong>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click <strong>PDF documents</strong>.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Under <strong>default behavior</strong>, make sure <strong>Download PDFs option</strong> is selected.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ae3ceb4-validatedownload1020.gif" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To locally run tests which contain CLI action steps:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the <strong>Command Prompt</strong> window for your operating system.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the command prompt, enter the following command: <strong>npm i -g @testim/testim-cli &amp;&amp; testim connect</strong></p>
+                                            </li>
+                                            <img src="images/2ab6f86-testim_164.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Wait for the process to execute.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/84cc9af-testim_186.png" title="Testim 186.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To set your Chrome browser to automatically download PDF files (instead of opening them):</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Chrome browser, click on the <strong>Chrome menu</strong> (three dots at the top right).</p>
+                                            </li>
+                                            <img src="images/8ca2d29-testim_180a.png" title="Testim 180a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Chrome menu</strong> options are shown.</p>
+                                            <li value="2">
+                                                <p>Click on <strong>Settings</strong>.</p>
+                                            </li>
+                                            <img src="images/46a37c0-testim_181a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Chrome Settings</strong> page opens.</p>
+                                            <li value="3">
+                                                <p>Scroll down to the <strong>Privacy and security</strong> section and click on <strong>Site Settings</strong>.</p>
+                                            </li>
+                                            <img src="images/24609eb-testim_187a.png" title="Testim 187a.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down to the <strong>Additional content settings</strong> section. If the section is not expanded, click on it to expand it.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>In the <strong>Additional content settings</strong> section, scroll down to <strong>PDF documents</strong> and click on it.</p>
+                                            </li>
+                                            <img src="images/dbf04ff-testim_189a.png" title="Testim 189a.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Verify that the <strong>Download PDF files instead of automatically opening them in Chrome</strong> toggle is enabled (to the right). If it isn’t, click it to enable it.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/2b6f060-testim_190a.png" title="Testim 190a.png" class="ScreenshotFullsize" />
+                                        <p>The setting is enabled.</p>
+                                        <h2><a name="adding-a-validate-download-step"></a>Adding a <em>Validate download</em> step</h2>
+                                        <p>The general procedure for adding a Validate download step is the same, regardless of what file type you are downloading (e.g. csv, jpg, ppt, doc, etc.). Your code and parameters will change depending on the type of file you are downloading, and the aspect of the file you want to verify. Below is the procedure (using a csv file example), followed by sample code and parameters for the following file types: csv, image, xls, ppt, doc, and pdf.</p>
+                                        <div class="note">
+                                            <p>If while recording a test you click on a link to download a file, Testim automatically creates an empty <em>Validate download step</em> (named <em>untitled download validation</em>) after the <em>Click_step. To edit this step, double click on the step to open the _Validate Download editor</em>, and proceed to Step 8 below.</p>
+                                        </div>
+                                        <p>→ <strong>To add a Validate download step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> (or <strong>+ symbol</strong> after the final step) where you want to add the validation.</p>
+                                            </li>
+                                            <img src="images/2258769-testim_155a.png" title="Testim 155a.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/001f998-testim_134_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands.</p>
+                                            <img src="images/75e9d7f-testim_156_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Validate download</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate download</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/f9f35d5-testim_157_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step</strong> folder list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/7d6af62-testim_158.png" title="Testim 158.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “<em>Run download validation</em>”.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Define the parameters you will need for your step as follows:<br /></p>
+                                            </li>
+                                            <p>a. In the <strong>Properties</strong> panel, click the <strong>+ PARAMS</strong> button.<br /> b. <strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.<br /> c. <strong>Package parameter</strong>: If you would like to add an NPM package variable, select <strong>Package</strong> from the dropdown list and type in the package variable.</p>
+                                            <div class="note">
+                                                <p>In case your code uses an npm package, make sure NOT to <span class="FileOrFilePath">require</span> it, but rather replace the <span class="FileOrFilePath">require</span> line with a PACKAGE parameter in the step properties.</p>
+                                            </div>
+                                            <img src="images/0e1debb-cli_action_param.gif" title="CLI_action_param.gif" class="ScreenshotFullsize" />
+                                            <p>d. The selected element is automatically named “param” or “packageVariable” (depending on whether you chose a JS parameter or NPM package variable). To assign a relevant name to the parameter/variable, click on the <strong>edit</strong> icon and enter the desired name.</p>
+                                            <img src="images/75ad16c-testim_159a_r.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>In the <strong>function</strong> editor, enter your desired code. If you have defined parameters, you can refer to those parameters in your code.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>To run async code in the CLI step, you have to return the promise you wish to resolve. Without returning it, the step will run synchronously and will resolve when the last line of code is executed, regardless of the expected results.</p>
+                                            </div>
+                                            <img src="images/56c3ce0-testim_160.png" title="Testim 160.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>The code and parameters in the example above will check if the downloaded csv file has <em>237</em> rows and if the A1 cell contains the text <em>JURISDICTION NAME</em>.</p>
+                                            </div>
+                                            <li value="11">
+                                                <p>If you would like to specify what happens if the step fails, click the <strong>When this step fails</strong> down arrow in the <strong>Properties</strong> panel, and choose your desired option. Options are: <em>Mark error &amp; stop</em>, <em>Mark error &amp; continue</em>, and <em>Mark warning &amp; continue</em>.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>If you would like to control when this step runs (or doesn’t run), click the <strong>When to run step</strong> down arrow in the <strong>Properties</strong> panel, and choose your desired option. For more information, see <a href="../../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>If you would like to override the default timeout setting (30000 ms), click on the <strong>Override timeout</strong> button in the <strong>Properties</strong> panel, and enter the desired timeout limit.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>Click the <strong>back arrow</strong> to return to the main <strong>Editor</strong> window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ae8ec4a-testim_160a.png" title="Testim 160a.png" class="ScreenshotFullsize" />
+                                        <p>The step is created.</p>
+                                        <img src="images/4c6be7f-testim_161.png" title="Testim 161.png" class="ScreenshotFullsize" />
+                                        <h2><a name="validate-download-examples"></a>Validate download examples</h2>
+                                        <h3><a name="csv-files"></a>CSV files</h3>
+                                        <p>You can use the <em>Validate download</em> step to perform advanced validations of CSV files such as number of rows and content.<br /> The code and parameters in this example check if the downloaded csv file consists of <em>237</em> rows and if the A1 cell contains the text <em>JURISDICTION NAME</em>.</p>
+                                        <img src="images/daa4195-testim_160.png" title="Testim 160.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const csvStr = fileBuffer.toString("utf8");<br />return csv({<br />&#160;&#160;noheader: true,<br />&#160;&#160;output: "csv"<br />})<br />&#160;&#160;.fromString(csvStr)<br />&#160;&#160;.then(csvRow =&gt; {<br />&#160;&#160;&#160;&#160;// Number of rows in CSV<br />&#160;&#160;&#160;&#160;&#160;&#160;console.log("Number of rows in CSV: ", csvRow.length);<br />&#160;&#160;&#160;&#160;// Value in&#160;&#160;csvRow[0][0] in CSV<br />&#160;&#160;&#160;&#160;&#160;&#160;console.log("Value in&#160;&#160;csvRow[0][0] in CSV: ", csvRow[0][0]);&#160;&#160;<br />&#160;&#160;&#160;&#160;if (csvRow.length !== parseInt(expectedNumOfRows)) {<br />&#160;&#160;&#160;&#160;&#160;&#160;return Promise.reject(<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;new Error(`Number of rows doesn't match ${csvRow.length}`)<br />&#160;&#160;&#160;&#160;&#160;&#160;);<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;if (csvRow[0][0] !== expectedText) {<br />&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;return Promise.reject(<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;new Error(`Failed to find expected text ${csvRow[0][0]}`)<br />&#160;&#160;&#160;&#160;&#160;&#160;);<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;});</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">csv</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">[csvtojson@2.0.8]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">expectedNumOfRows</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">'237'</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">expectedText</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">'JURISDICTION NAME'</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h3><a name="image-files"></a>Image files</h3>
+                                        <p>You can use the <em>Validate download</em> step to perform advanced validations of image files such as type and dimensions.<br /> The code and parameters in this example check if the downloaded image file is named <em>yellow-cat-cartoon-style-clipart</em>, is a <em>jpg_file, and has the dimensions of _573</em> (width) X <em>600</em> (height).</p>
+                                        <img src="images/09c48ec-testim_167.png" title="Testim 167.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>var dimensions = sizeOf(fileBuffer);<br />var {width, height, type} = dimensions;<br />console.log("Image dimensions", JSON.stringify(dimensions));<br /><br />return width === parseInt(expectedWidth) &amp;&amp;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;height === parseInt(expectedHeight) &amp;&amp;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;type === expectedImageType &amp;&amp;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;fileName.includes(expectedName);</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">sizeOf</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">[image-size@0.6.3]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">expectedName</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">'yellow-cat-cartoon-style-clipart'</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">expectedImageType</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">'jpg'</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">expectedWidth</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">'573'</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">expectedHeight</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">'600'</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h3><a name="ms-excel-files"></a>MS Excel files</h3>
+                                        <p>You can use the <em>Validate download</em> step to perform advanced validations of Excel files such as number of sheets and sheet names.<br /> The code and parameters in this example check if the downloaded MS Excel file consists of <em>3</em> sheets, with the first one named <em>Example Test</em>.</p>
+                                        <img src="images/aef9e2b-testim_171.png" title="Testim 171.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const { SheetNames, Sheets } = XLSX.read(fileBuffer);<br />const sheet = SheetNames[0];<br /><br />if (SheetNames.length !== parseInt(expectedNumOfSheets)) {<br />&#160;&#160;throw new Error(`Failed to validate: Number of sheets doesn't match "${expectedNumOfSheets}"`);<br />}<br /><br />if (sheet !== expectedPageName) {<br />&#160;&#160;throw new Error(`Failed to validate: Sheet 1 name doesn't match "${expectedPageName}"`);<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">XLSX</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">[xlsx@0.14.1]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">expectedNumOfSheets</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">'3'</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">expectedPageName</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">'Example Test'</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h3><a name="ms-powerpoint-files"></a>MS PowerPoint files</h3>
+                                        <p>You can use the <em>Validate download</em> step to perform advanced validations of PowerPoint files such as number of slides and content.<br /> The code and parameters in this example check if the downloaded MS PowerPoint file consists of <em>9</em> slides, with the word _Department _on the first page and the word _Location _on the second page.</p>
+                                        <img src="images/4914681-testim_175.png" title="Testim 175.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>var zip = new JSZip(fileBuffer);<br />var doc = new Docxtemplater();<br />doc.loadZip(zip);<br />const slides = Object.keys(doc.zip.files).filter(<br />&#160;&#160;fileName =&gt;<br />&#160;&#160;&#160;&#160;_.startsWith(fileName, "ppt/slides/") &amp;&amp; _.endsWith(fileName, ".xml")<br />);<br />console.log("Num of slides:", slides.length);<br /><br />if (slides.length !== parseInt(excpectedNumOfSlides)) {<br />&#160;&#160;return false;<br />}<br /><br />expectedText = JSON.parse(expectedText);<br /><br />expectedText.forEach(item =&gt; {<br />&#160;&#160;const { slideIndex, text } = item;<br />&#160;&#160;const slideText = doc.getFullText(slides[slideIndex]);<br />&#160;&#160;if (!slideText.includes(text)) {<br />&#160;&#160;&#160;&#160;throw new Error(`Failed to find ${text} in slide index: ${slideIndex}`);<br />&#160;&#160;}<br />});</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Docxtemplater</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">[docxtemplater@3.9.5]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">JSZip</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">[jszip@2.*]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">expectedText</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody"><span class="FileOrFilePath">:0,"text":"Department"},{"slideIndex":1,"text":"Location"}]</span>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">[lodash@4.17.11]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">excpectedNumOfSlides</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">'9'</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br />
+                                        <div class="note">
+                                            <p>JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.</p>
+                                        </div>
+                                        <h3><a name="ms-word-files"></a>MS Word files</h3>
+                                        <p>You can use the <em>Validate download</em> step to perform advanced validations of Word files such as content.<br /> The code and parameters in this example check if the downloaded MS Word file contains the text <em>Item A</em>.</p>
+                                        <img src="images/2775ebe-testim_178.png" title="Testim 178.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>var zip = new JSZip(fileBuffer);<br />var doc = new Docxtemplater();<br /><br />doc.loadZip(zip);<br />var docxText = doc.getFullText();<br />console.log("text:", docxText);<br /><br />return docxText.includes(expectedText);</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Docxtemplater</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">[docxtemplater@3.9.5]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">JSZip</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">[jszip@2.*]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">expectedText</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">'Item A'</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br />
+                                        <div class="note">
+                                            <p>JSZip only supports .docx files and does not work with .doc files. Ensure that you are working with the .docx format when using JSZip for download validation.</p>
+                                        </div>
+                                        <h3><a name="pdf-files"></a>PDF files</h3>
+                                        <p>You can use the _Validate download _step to perform advanced validations of PDF files such as number of pages and content.<br /></p>
+                                        <p><strong>Prerequisites</strong>:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Ensure that you are running <strong>Chrome version 67</strong> or above.</p>
+                                            </li>
+                                            <li>
+                                                <p>Ensure that your Chrome browser PDF settings are set to the following: <strong>Download PDF files instead of automatically opening them in Chrome</strong>.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The code and parameters in this example check if the downloaded pdf file consists of <em>2</em> pages and contains the text <em>A Simple PDF file</em>.</p>
+                                        <img src="images/2ae00b2-testim_179.png" title="Testim 179.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>return pdf(fileBuffer).then((data) =&gt; {<br />&#160;&#160;const {numpages, text} = data;<br />&#160;&#160;// number of pages<br />&#160;&#160;console.log("numpages", numpages);<br />&#160;&#160;// PDF text<br />&#160;&#160;console.log("text", text);<br />&#160;&#160;if(numpages !== parseInt(expectedNumOfPages)) {<br />&#160;&#160;&#160;&#160;return Promise.reject(new Error(`Invalid number of pages: ${numpages}`));<br />&#160;&#160;}<br />&#160;&#160;if(!text.includes(expectedText)) {<br />&#160;&#160;&#160;&#160;return Promise.reject(new Error(`Invalid pdf text: ${text}`));<br />&#160;&#160;}<br />});</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">pdf</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Package</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">[pdf-parse@latest]</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">expectedNumOfPages</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body2">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body2">
+                                                        <p class="tableBody">'2'</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>| expectedText       | JavaScript | 'A Simple PDF File'  |</p>
+                                    

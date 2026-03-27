@@ -1,0 +1,49 @@
+
+                                        <h1>Dedicated run tunnel</h1>
+                                        <p>In some cases you would want to run tests on your own private or internal servers, using a remote selenium grid server, either supplied by Testim or by an external provider such as SauceLabs.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h2><a name="prerequisites"></a>Prerequisites</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Tunnel feature enabled.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p><a href="../running-tests/the-command-line-cli/index.htm">Testim CLI</a>
+                                                </p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="how-to-use-it"></a>How to use it</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Run your application server.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Make sure the machine running the CLI command has access to the internal server/localhost.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Run <a href="../running-tests/the-command-line-cli/index.htm">Testim CLI</a> with parameter (<span class="FileOrFilePath">--tunnel</span> - default application port 80)</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>If you run your application under different port than port 80, add parameter (<span class="FileOrFilePath">--tunnel-port &lt;APP PORT e.g. 80&gt;</span>)</p>
+                                            </li>
+                                        </ol>
+                                        <p>Note that Testim CLI will adjust your application base URL to point to the dedicated tunnel address.</p>
+                                        <h1><a name="additional-use-cases"></a>Additional use cases</h1>
+                                        <p>During test execution, all traffic is routed through the machine, that initiates the tunnel, providing a solution for situations where whitelisting may not be practical. As specified above, it is crucial to initiate the CLI command from a machine with access to the tested environment. Furthermore, this approach acts as a workaround for managing the geolocation of the grid, aligning it with the location of the machine that triggers the command.</p>
+                                        <h4><a name="example-using-testim-cli-with-a-tunnel"></a>Example using Testim CLI with a tunnel</h4>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --tunnel --tunnel-port &lt;APP PORT default 80&gt; --label "&lt;YOUR LABEL&gt;" --token "&lt;YOUR ACCESS TOKEN&gt;" --project "&lt;YOUR PROJECT ID&gt;" --grid "&lt;Your grid name&gt;" --report-file test-results/testim-tests-report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>You can use tunnel for HTTPS address if needed, please contact support to set this up. <strong>HTTPS tunnel is only available when running on a Testim-provided grid.</strong></p>
+                                        </div>
+                                        <div class="note">
+                                            <p>For the grid name, read <a href="grid-management/index.htm">here</a> how to set up your grid.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Tunnel is not supported for Scheduled runs.</p>
+                                        </div>
+                                    

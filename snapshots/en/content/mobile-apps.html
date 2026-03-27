@@ -1,0 +1,127 @@
+
+                                        <h1>Mobile Apps</h1>
+                                        <p>The Mobile Apps Library contains a list of all apps that have been uploaded. The following information is displayed for each app in the Mobile Apps Library:</p>
+                                        <img src="images/beee998-mobile-apps-library.png" title="mobile-apps-library.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>App</strong>: Name of the application</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Identifier</strong>: unique app ID retrieved from the metadata of the app file during upload (package identifier/bundle identifier)</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Version</strong>: app version retrieved from the metadata of the app file during upload</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Uploaded</strong>: date the app file was added to the Mobile Apps Library</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Size</strong>: file size of the mobile app</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Note: Apps in the Mobile Apps Library are available across different test branches.</p>
+                                        </div>
+                                        <h2><a name="add-mobile-app-from-local-computer"></a>Add Mobile App from Local Computer</h2>
+                                        <p>It is possible to upload native apps based on the following frameworks:</p>
+                                        <ul>
+                                            <li>
+                                                <p>For Android devices - .apk files based on Java or Kotlin frameworks.</p>
+                                            </li>
+                                            <li>
+                                                <p>For iOS devices - .ipa files based Objective C or Swift frameworks.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Upload is limited to 150 MB (to upload larger files, contact Tricentis support).</p>
+                                        </div>
+                                        <p>→ <strong>To add a mobile app to the app library from your local computer:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to <strong>Mobile Apps Tab</strong> from the main menu.</p>
+                                            </li>
+                                            <img src="images/9c9184e-mobileappstab.png" title="mobileappstab.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>New App</strong> button.</p>
+                                            </li>
+                                            <img src="images/3531196-newapp.png" title="newapp.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select an <strong>APK/IPA file</strong> or drag and drop the file from your local computer onto the upload window. Only one file can be uploaded each time.</p>
+                                            </li>
+                                            <img src="images/ab59dec-addnewapp.png" title="addnewapp.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>The app is added to the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/4b1abee-appadded.png" title="appadded.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: The default upload size limit is 150MB. If you need to upload larger files, please contact your Testim Administrator to discuss increasing your file upload size limit.</p>
+                                        </div>
+                                        <h2><a name="download-an-app-from-the-mobile-apps-library"></a>Download an App from the Mobile Apps Library</h2>
+                                        <p>You can download an app in the Mobile Apps Library to your local computer. → <strong>To download an app from the Mobile Apps Library:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select an app from the list of mobile apps and click the <strong>Download File</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/28abf33-download.png" title="download.png" class="ScreenshotFullsize" />
+                                        <h2><a name="delete-an-app-from-the-mobile-apps-library"></a>Delete an App from the Mobile Apps Library</h2>
+                                        <p>If an app is non longer needed in the Mobile Apps Library, it can be deleted. → <strong>To delete an app from the Mobile Apps Library</strong>:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select an app from the list of mobile apps and click the <strong>Delete</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ae5134d-delete.png" title="delete.png" class="ScreenshotFullsize" />
+                                        <p>If a mobile app is used in a test, it cannot be deleted. You must remove the application from all tests or delete all tests that use the application before the app can be deleted.</p>
+                                        <img src="images/c14310b-cannotdelete.png" title="cannotdelete.png" class="ScreenshotFullsize" />
+                                        <h2><a name="copy-mobile-app-id"></a>Copy Mobile App ID</h2>
+                                        <p>If you want to use a mobile app that is included in the Mobile App library to run tests on the grid and the app is not yet installed on this grid, you will need to copy the <strong>Mobile App ID</strong> in order to provide it to the grid through the CLI. For more information, see <a href="../running-tests/running-tests-overview.htm#running-mobile-tests-through-the-cli">Running mobile tests through the CLI</a> → <strong>To copy the mobile app ID</strong>:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select an app from the list of mobile apps and click the <strong>Copy ID</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/434c659-copyid.png" title="copyid.png" class="ScreenshotFullsize" />
+                                        <p>You can then paste the mobile app ID wherever the reference is needed.</p>
+                                        <img src="images/e67232c-useid.png" title="useid.png" class="ScreenshotFullsize" />
+                                        <h2><a name="search-the-mobile-apps-library"></a>Search the Mobile Apps Library</h2>
+                                        <p>You can search for a mobile app by name in the Mobile Apps Library. → <strong>To search for an app in the Mobile Apps Library</strong>:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Enter the <strong>Name</strong> of the mobile app you want to search for in the search box. The mobile apps will automatically filter the list of apps that match your search criteria.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/0a994e5-search.png" title="search.png" class="ScreenshotFullsize" />
+                                        <h2><a name="direct-upload-of-mobile-app-to-grid-provider"></a>Direct Upload of Mobile App to Grid Provider</h2>
+                                        <p>Any mobile apps that have been uploaded to the Testim Mobile Apps Library can be manually uploaded to the Grid provider app storage. This allows you to run your application on the grid without having to wait until Testim loads the application to the Grid when running the test. → <strong>To upload a mobile app directly to a grid provider</strong>:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on one or more applications from the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Upload to Grid</strong> button.</p>
+                                            </li>
+                                            <img src="images/7a0a501-uploadtogridbutton.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p><strong>Select a grid</strong> from the list of pre-configured grids and click the <strong>Upload</strong> button.</p>
+                                            </li>
+                                            <img src="images/5f8536c-selectgrid.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Testim will upload your app to the selected grid.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/78329a1-uploadtogridbutton.png" class="ScreenshotFullsize" />
+                                    

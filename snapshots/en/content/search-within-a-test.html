@@ -1,0 +1,105 @@
+
+                                        <h1>Search Within a Test</h1>
+                                        <p>The search feature allows you to search for objects within a test. The search is conducted by entering free text (at least three characters) into the search field within the test itself. The search is <strong>NOT</strong> case sensitive. The search is conducted in the following test objects (see limitations list at the bottom):</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Step description</strong> - the text that was inputted in the step's <strong>Description</strong> field and/or the <strong>Text to assign</strong> field.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>JS Code</strong> -  any part of the JS Code that is part of a step. For example, any part of the JS Code in a  <a href="../advanced-editing/validations/custom-code.htm">Add custom validations and actions</a> step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Parameters</strong> - the name and/or the value of a JS or HTML parameter inside a step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Base URL</strong> - any part of the base URL.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>URL</strong> - any part of a URL inside a <a href="../advanced-editing/handling-ui-actions/navigation.htm">Navigation Step</a> or <a href="../advanced-editing/api-testing.htm#adding-an-api-action-step">Add an API Action Step</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test Data</strong> - any part of the Test Data in a step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Condition</strong> -  the any part of the Java Script condition defined in the <strong>When to run step</strong> attribute of the step when the <strong>Custom</strong> option is selected. See <a href="conditions/index.htm">Conditions</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Loop</strong> -  the any part of the Java Script condition defined in the <strong>When to run step</strong> attribute of the step when the <strong>Loop for</strong> option is selected.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="using-the-search"></a>Using the search</h2>
+                                        <p>→ <strong>To search within a test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the test, click the <strong>Search</strong> button.<br /></p>
+                                            </li>
+                                            <img src="images/e200c02-searchbutton.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Type your search query. The search is NOT case sensitive. The search query should include at lease three characters.<br /></p>
+                                            </li>
+                                            <p>The search results appear in the <strong>Search Results</strong> pane. Each result represents a step that includes one or more elements that matched (fully or partly) the search query. The string that matches the search is highlighted in yellow. For more information see <a href="#understanding-the-search-results">Understanding the search results</a> section.<br /></p>
+                                            <img src="images/f945272-searchresults.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click any on the search results to open the step.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="understanding-the-search-results"></a>Understanding the search results</h2>
+                                        <p>The search results are grouped into categories according to the object type. Next to each category the number of occurrences is displayed. Unless explained otherwise, clicking on the result will navigate to the step where the result was found.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Step Description</strong> - the first line of the result displays the value of the step's <strong>Description</strong> field and/or the <strong>Text to assign</strong> field that included a match with the search string . The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step (which in this case is the value in the <strong>Text to assign</strong> field)</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>JS Code</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step. Click the result to enter the JS code editor inside the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Parameters</strong> - the first line of the result displays the name and the value of the parameter. The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step. Multiple matches will be displayed separately in different results.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Base URL</strong> - the first line of the result displays the Base URL value. The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>URL</strong> - the first line of the result displays the Base URL value. The matching string is highlighted in yellow. The second line includes the category name followed by the name of the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test Data</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Condition</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step. Click the result to enter the JS code editor inside the step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Loop</strong> - the first line of the result displays number of occurrences that were found. The second line includes the category name followed by the name of the step. Click the result to enter the JS code editor inside the step.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="search-limitations"></a>Search limitations</h3>
+                                        <p>The values that CANNOT be found by using the search feature:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Extract value - variable name</p>
+                                            </li>
+                                            <li>
+                                                <p>Sleep - sleep duration</p>
+                                            </li>
+                                            <li>
+                                                <p>Generate email address -variable name</p>
+                                            </li>
+                                            <li>
+                                                <p>Set cookie - everything except description</p>
+                                            </li>
+                                            <li>
+                                                <p>Get cookie - cookie name &amp; variable name</p>
+                                            </li>
+                                            <li>
+                                                <p>Run dev-kit - function name</p>
+                                            </li>
+                                            <li>
+                                                <p>API - everything except URL and function</p>
+                                            </li>
+                                            <li>
+                                                <p>Generate random value - everything except description</p>
+                                            </li>
+                                            <li>
+                                                <p>Generate date - everything except description</p>
+                                            </li>
+                                        </ul>
+                                    

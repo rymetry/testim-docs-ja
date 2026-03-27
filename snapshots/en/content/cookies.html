@@ -1,0 +1,394 @@
+
+                                        <h1>Cookies</h1>
+                                        <div class="note">
+                                            <p>A cookie (also called web cookie, Internet cookie, or browser cookie) is a small piece of data sent from a website and stored on the user's computer by the web browser while the user is browsing a website. Cookies have a variety of uses but in the context of test automation, cookies can be leveraged to speed up the authentication process as the cookie can be set directly, without the need to perform the entire login flow.</p>
+                                        </div>
+                                        <p>Testim enables you to set cookies and get cookies in a variety of ways. When you “set” a cookie in Testim, you write the value of its attributes to the browser. When you “get” a cookie, you retrieve the value of the cookie in the browser and can then assign it to a variable.<br /> Testim provides a variety of ways to handle cookies.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Cookie steps</strong> – you can create specialized steps in your test to handle cookies, options are:</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> <strong>Set Cookie</strong> – create a new step in your test which defines a cookie to be used in the test. The recommended method for creating </em>HttpOnly<em> cookies and </em>Secure* cookies is through the <strong>Set Cookie</strong> step.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Get Cookie</strong> – create a new step that gets cookie data from your AUT browser and store it as a parameter. This parameter can then be used in your test steps, including a “Set cookie” step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Setup step – “Test Data” property</strong> – you can set your cookies in the Test Data property if you need your cookies for a particular test. If you need your cookies to load prior to your page loading in the browser, use this method. The recommended way of adding a domain to a cookie is through this <strong>Test Data</strong> property.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Custom JS (JavaScript) step</strong> – you can set and get your cookies in a Custom JavaScript step if you need your cookies for a particular test, but don’t necessarily need them at the start of the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Configuration File &amp; Run Hooks</strong> – you can set your cookies by using a configuration file when working through the CLI. This option is useful when you need the cookies for your entire test suite. <strong>Note</strong>: you cannot “get” cookies through the CLI.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="setting-cookies"></a>Setting Cookies</h2>
+                                        <p>Testim enables you to “set” cookie values for your tests either by entering the values directly or by getting them from variables/parameters that have been previously defined by a “Get cookie” step.</p>
+                                        <h3><a name="setting-cookies-using-the-set-cookie-step"></a>Setting Cookies using the Set Cookie step</h3>
+                                        <p>The <strong>Set Cookie</strong> step allows you to set cookies directly from the UI within the context of a test. You can set a cookie by manually entering its attributes or by using a cookie parameter from a previous <strong>Get Cookie</strong> step. Using a parameter allows you “set” the value of a cookie that you have manipulated (after using the "get cookie" to get the cookie values). → <strong>To set a cookie by entering its attributes:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/9a4e48a-testim_201a.png" title="Testim 201a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/d3b6f5e-testim_202a_r.png" title="Testim 202a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/42edd22-testim_203_r.png" title="Testim 203_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.<br /></p>
+                                            </li>
+                                            <p>The Actions menu expands.</p>
+                                            <img src="images/bab0fb0-testim_204_r.png" title="Testim 204_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Set Cookie</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Set Cookie</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Set Cookie</strong> screen is shown.</p>
+                                            <img src="images/fd880f8-testim_205_r.png" title="Testim 205_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Ensure the <strong>Create new Cookie</strong> radio button is selected (default).</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Enter your desired values in the first four <strong>Cookie Info</strong> fields.</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Cookie name</strong> – the name of the cookie. This parameter is required.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Cookie value</strong> – the value you wish to assign to the cookie. This parameter is required.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Domain</strong> – the host to which the cookie will be sent. The default Domain (blank) is the Base URL your test is running on. This parameter is optional.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Path</strong> – the path that must exist in the request URL. The default Path (blank) is the root directory. This parameter is optional.</p>
+                                                </li>
+                                            </ul>
+                                            <div class="note">
+                                                <p>Strings must be surrounded by single or double quotes.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>In the <strong>Expires (Max-Age)</strong> field, select from the dropdown your desired expiration time for your cookie (default = session).</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Select the <strong>HttpOnly</strong> checkbox if you want your cookie set to HttpOnly.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Select the <strong>Secure</strong> checkbox if you want your cookie set to Secure.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>Click the <strong>back arrow</strong> to return to the main <strong>Editor</strong> window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/55825e1-testim_206a_r.png" title="Testim 206a_r.png" class="ScreenshotFullsize" />
+                                        <p>When you run your test your cookie will be set. → <strong>To set a cookie using a cookie parameter:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/81c33b1-testim_201a.png" title="Testim 201a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/8a64224-testim_202a_r.png" title="Testim 202a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined step</strong>s menu opens.</p>
+                                            <img src="images/9634744-testim_203_r.png" title="Testim 203_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.<br /></p>
+                                            </li>
+                                            <p>The Actions menu expands.</p>
+                                            <img src="images/0e28a9c-testim_204_r.png" title="Testim 204_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Set Cookie</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Set Cookie</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Set Cookie</strong> screen is shown.</p>
+                                            <img src="images/fc68884-testim_205_r.png" title="Testim 205_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Select the <strong>Use cookie parameter</strong> radio button.<br /></p>
+                                            </li>
+                                            <p>The <strong>Parameter Name</strong> field is shown.</p>
+                                            <img src="images/3d4b48c-testim_218.png" title="Testim 218.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>Parameter Name</strong> field, enter the name of a previously created cookie parameter/variable. For more information, see <a href="#getting-cookies-using-the-get-cookie-step">Getting Cookies using the Get Cookie step</a>.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Click the <strong>back arrow</strong> to return to the main <strong>Editor</strong> window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/98be8c7-testim_219a.png" title="Testim 219a.png" class="ScreenshotFullsize" />
+                                        <p>When you run your test, your cookie will be set with the current value of the cookie parameter you entered in this step.</p>
+                                        <h3><a name="setting-cookies-using-the-setup-step-test-data-property"></a>Setting Cookies using the Setup step – “Test Data” property</h3>
+                                        <p>Set your cookies in the <strong>Test Data</strong> property of the Setup step if you need your cookies for a particular test, or if you need to have the cookies loaded before your page loads. → <strong>To set cookies in the Test Data property:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>Setup</strong> step (the first step in your test), and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/9335a8c-testim_210a.png" title="Testim 210a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Test Configuration Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/3866fe4-testim_211_r2.png" title="Testim 211_r2.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, you can double-click the <strong>Setup</strong> step, or click the <strong>Show step properties</strong> icon in the top right corner of the screen.</p>
+                                            </div>
+                                            <li value="2">
+                                                <p>Scroll down through the options, and click <strong>Test Data</strong>.<br /></p>
+                                            </li>
+                                            <p>A JavaScript editor opens.</p>
+                                            <img src="images/f222a38-testim_212.png" title="Testim 212.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the editor enter the code for setting your cookies.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>return {<br />&#160;"cookies":[{<br />&#160;&#160;&#160;&#160;"name": "username",<br />&#160;&#160;&#160;&#160;"value": "tomsmith",<br />&#160;&#160;&#160;&#160;"domain": "http://google.com"<br />&#160;&#160;},{<br />&#160;&#160;&#160;&#160;"name": "password",<br />&#160;&#160;&#160;&#160;"value": "SuperSecretPassword!"<br />&#160;&#160;}]<br />};</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p><strong>name</strong> = cookie name<br /> <strong>value</strong> = cookie value<br /> <strong>domain</strong> = cookie domain (optional)</p>
+                                        </div>
+                                        <p>Click the <strong>back arrow</strong> to return to the main <strong>Editor</strong> window.</p>
+                                        <img src="images/2dea826-testim_213a.png" title="Testim 213a.png" class="ScreenshotFullsize" />
+                                        <p>When you run your test the cookies will be loaded before your page loads.</p>
+                                        <h3><a name="setting-cookies-using-a-custom-js-javascript-step"></a>Setting Cookies using a custom JS (JavaScript) step</h3>
+                                        <p>Set your cookies in a <strong>Custom JavaScript</strong> step if you need your cookies for a particular test, but don’t necessarily need them at the start of the test. → <strong>To set cookies using JavaScript in a “custom action” step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the cookies.</p>
+                                            </li>
+                                            <img src="images/57fdc2c-testim_201a.png" title="Testim 201a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/abbdb56-testim_202a_r.png" title="Testim 202a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/2042807-testim_203_r.png" title="Testim 203_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.<br /></p>
+                                            </li>
+                                            <p>The Actions menu expands.</p>
+                                            <img src="images/bf34029-testim_204_r.png" title="Testim 204_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Add custom action</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Add Step</strong> window opens.</p>
+                                            <img src="images/f0ba274-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add custom action</strong>.</p>
+                                            </div>
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step (to be made available to reuse in this and other tests), keep the box next to <strong>Shared step</strong> selected, and select a folder in which to save the step. (This is the default.) Otherwise, deselect it.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>JS Editor</strong> opens, and the <strong>Custom Action Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/17ff9b7-testim_216.png" title="Testim 216.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>editor</strong>, enter code to set your cookies, using the following as an example.</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>document.cookie = "password=SuperSecretPassword!";<br />document.cookie = "username=tomsmith";</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="9">
+                                                <p>Optionally fill in the properties in the <strong>Custom Action Properties</strong> panel.</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Step name</strong> – The name of the step. (Default is the name you entered in Step 5.)</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> <strong>Description</strong> – The description of the step. (Default = </em>Run action*)</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Share step</strong> – Allows you to set this step as a shared step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>+ Params</strong> – Add JavaScript or HTML parameters. For more information see <a href="parameters/parameters-in-custom-javascript-steps.htm">Parameters in custom JavaScript steps</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When this step fails</strong> – Specify what to do if the step fails.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more info, see <a href="../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds)</p>
+                                            </li>
+                                        </ul>
+                                        <p>When you run your test, the cookies will be set at the location where you added the Custom Action step.</p>
+                                        <h3><a name="setting-cookies-using-a-configuration-file"></a>Setting Cookies using a Configuration File</h3>
+                                        <p>You can set your cookies by using a configuration file when working through your CLI. A configuration file is a JavaScript file containing all the required parameters to run your test suite and run hooks which can be used to set up the application backend. This option is useful when you need the cookies for your entire test suite. → <strong>To set cookies using a configuration file:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a JavaScript configuration file. See <a href="../running-tests/configuration-file-run-hooks/index.htm">Configuration file &amp; run hooks</a>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Add code to the beforeSuite section in order to set the cookies. Use the following code as a model.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>beforeSuite: function (suite) {&#160;&#160;&#160;<br />&#160;&#160;return {<br />&#160;&#160;&#160;&#160;"cookies":[<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;"name": "username",<br />&#160;&#160;&#160;&#160;&#160;&#160;"value": "tomsmith",<br />&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;"name": "password",<br />&#160;&#160;&#160;&#160;&#160;&#160;"value": "SuperSecretPassword!"<br />&#160;&#160;&#160;&#160;}]<br />&#160;&#160;};<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="getting-cookies"></a>Getting Cookies</h2>
+                                        <p>Testim enables you to “get” cookies by assigning the value of a cookie to a variable. You can then use the cookie attributes in your test.</p>
+                                        <h3><a name="getting-cookies-using-the-get-cookie-step"></a>Getting Cookies using the Get Cookie step</h3>
+                                        <p>The <strong>Get Cookie</strong> step allows you to get cookies directly from the UI within the context of a test by storing the value of a cookie in a variable. → <strong>To get a cookie using the Get Cookie step:</strong></p>
+                                        <img src="images/c7b7428-jan-31-2021_06-34-55.gif" title="Jan-31-2021 06-34-55.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/182e01a-testim_207a.png" title="Testim 207a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/42c6ecf-testim_202a_r.png" title="Testim 202a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/f95fa58-testim_203_r.png" title="Testim 203_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.<br /></p>
+                                            </li>
+                                            <p>The Actions menu expands.</p>
+                                            <img src="images/ab4f1d0-testim_204_r.png" title="Testim 204_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Get Cookie</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Get Cookie</strong>.</p>
+                                            </div>
+                                            <p>A “Get Cookie” step is added in the <strong>Editor</strong>.<br /></p>
+                                            <li value="5">
+                                                <p>Hover over the newly created step, and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/06fb384-testim_208a.png" title="Testim 208a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/e8f327d-testim_209_r.png" title="Testim 209_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Fill in the properties as described below.</p>
+                                            </li>
+                                        </ol>
+                                        <p><em> <strong>Description</strong> – The description of the step. (Default = </em>Get Cookie*)</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Cookie name</strong> – The name of the cookie you are getting. (Strings must be surrounded by single or double quotes.)</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> <strong>Variable name</strong> – The name of the variable in which you wish to store the cookie data. (Default = </em>myCookie*)</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Variable scope</strong> – The scope in which the variable can be passed:</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Local</strong>: allows you to pass parameters between steps in the same scope.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test</strong>: allows you to pass parameters between steps and groups in the same test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Suite</strong>: allows you to pass parameters between tests in the same test suite.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When this step fails</strong> – Specify what to do if the step fails.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more info, see <a href="../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds)</p>
+                                            </li>
+                                        </ul>
+                                        <p>When the test is run, the specified cookie will be stored in the variable.</p>
+                                        <h3><a name="getting-cookies-using-a-custom-js-javascript-step"></a>Getting Cookies using a custom JS (JavaScript) step</h3>
+                                        <p>You can get cookies without having to use the Get Cookie step by adding a “custom action” step, and entering your code in the JavaScript editor. → <strong>To get a cookie using JavaScript in a “custom action” step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/9e6579b-testim_220a.png" title="Testim 220a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/4daa9d3-testim_202a_r.png" title="Testim 202a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/ab3aebb-testim_203_r.png" title="Testim 203_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.<br /></p>
+                                            </li>
+                                            <p>The Actions menu expands.</p>
+                                            <img src="images/9030d32-testim_204_r.png" title="Testim 204_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Add custom action</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Add Step</strong> window opens.</p>
+                                            <img src="images/295c84e-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add custom action</strong>.</p>
+                                            </div>
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step (to be made available to reuse in this and other tests), keep the box next to <strong>Shared step</strong> selected, and select a folder in which to save the step. (This is the default.) Otherwise, deselect it.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>JS Editor</strong> opens, and the <strong>Custom Action Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/895c71a-testim_221.png" title="Testim 221.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>editor</strong>, enter code to get your cookies. The following example gets and prints the value of the cookies named <em>username</em> and <em>password</em>.</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>//create an array of the site cookies<br />let cookieArray = document.cookie.split("; ");<br />var name = "username=";<br />for(var i = 0; i &lt;cookieArray.length; i++) {<br />&#160;&#160;&#160;&#160;var c = cookieArray[i];<br />&#160;&#160;&#160;&#160;while (c.charAt(0) == ' ') {<br />&#160;&#160;&#160;&#160;&#160;&#160;c = c.substring(1);<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;if (c.indexOf(name) == 0) {<br />&#160;&#160;&#160;&#160;&#160;&#160;console.log("username = " + c.substring(name.length, c.length));<br />&#160;&#160;&#160;&#160;}<br />}<br /><br />var name = "password=";<br />for(var i = 0; i &lt;cookieArray.length; i++) {<br />&#160;&#160;&#160;&#160;var c = cookieArray[i];<br />&#160;&#160;&#160;&#160;while (c.charAt(0) == ' ') {<br />&#160;&#160;&#160;&#160;&#160;&#160;c = c.substring(1);<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;if (c.indexOf(name) == 0) {<br />&#160;&#160;&#160;&#160;&#160;&#160;console.log("password = " + c.substring(name.length, c.length));<br />&#160;&#160;&#160;&#160;}<br />}</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="9">
+                                                <p>Optionally fill in the properties in the <strong>Custom Action Properties</strong> panel.</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Step name</strong> – The name of the step. (Default is the name you entered in Step 5.)</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> <strong>Description</strong> – The description of the step. (Default = </em>Run action*)</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Share step</strong> – Allows you to set this step as a shared step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>+ Params</strong> – Add JavaScript or HTML parameters. For more information see <a href="parameters/parameters-in-custom-javascript-steps.htm">Parameters in custom JavaScript steps</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When this step fails</strong> – Specify what to do if the step fails.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more info, see <a href="../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Override timeou</strong>t – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds)</p>
+                                            </li>
+                                        </ul>
+                                        <p>When you run your test, the Get Cookies function will run as part of the Custom Action step that you have added.</p>
+                                    

@@ -1,0 +1,119 @@
+
+                                        <h1>Use Agentic Test Automation for Salesforce </h1>
+                                        <p>In addition to <a href="index.htm/#/">manually adding or recording steps</a>, you can create tests for Salesforce with the help of Agentic Test Automation. With this tool, you can work with a specially-trained AI Agent to generate and run unique tests for your Salesforce environment.</p>
+                                        <h1><a name="prerequisites"></a>Prerequisites:</h1>
+                                        <ul>
+                                            <li>
+                                                <p>Download and install the Testim Extension - <a href="../../recording-tests/how-to-record-a-test/why-do-you-need-testim-extension.htm">Why do you need Testim extension?</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../create-and-manage-test-environments.htm">Connect your Salesforce test environment to Testim/TTA for Salesforce</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="creating-a-new-salesforce-test-with-agentic-test-automation"></a>Creating a new Salesforce test with Agentic Test Automation</h1>
+                                        <p>→<strong>To create a new test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>From anywhere in your Testim for Salesforce account, select <strong>Agentic Test Automation</strong> at the top of the screen.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>If this is the first time you're using this service, scroll to the bottom of the <strong>Terms of Service</strong> and select <strong>Got it</strong> to opt in.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Now, you can start prompting the agent. Give the agent a description of what you want to test, whether that's simple or complicated. Take a look at <a href="#/#how-to-create-prompts">how to create prompts</a> for some examples of how you can do this.</p>
+                                            </li>
+                                            <img src="images/ff3b90840612a443b12f0ee23728707adfb2f9cee4a6d7d7a8f3dbaba2547e42-salesforce_agenticeaitesting_screenshot.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>As the agent works, it will occasionally ask for confirmation to add test steps. Review the information it gives you, and confirm whether or not to add the step.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>When the agent is finished creating the test, it will ask you if you want it to run the test. At this point, you can stop and <a href="index.htm">manually review, edit, and run the test</a> as you normally would. Or, you can confirm this request and have the agent run the test.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If the agent runs the test, it will validate the test and resolve any issues it finds. After the test run is complete, the agent provides a summary of the test it created, which you can add to the test as an artifact.</p>
+                                            </li>
+                                        </ol>
+                                        <h1><a name="how-to-create-prompts"></a>How to create prompts</h1>
+                                        <p>You can give the agent simple, high-level prompts, or you can create prompts that are more detailed with customizations for your organization. The more detail you give, the better the agent can tailor your test, but simple prompts cost fewer token To learn more about what your prompts can look like, check out the table below for some example prompts:</p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Use Case</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Prompt</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Complexity</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Test account management</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody"><span class="FileOrFilePath">Create a new Account.</span>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Low</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test account management with custom credentials</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody"><span class="FileOrFilePath">Create an account with the following data: Account name: Account123, Parent account: Account123_Root UAN: 111, Do not delete the account Account 123.</span>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Medium</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Test account and contact management</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody"><span class="FileOrFilePath">Create a new Account and add a new Contact for that Account.</span>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">Low</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test opportunity management</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody"><span class="FileOrFilePath">Create an Account and an Opportunity, progress the Opportunity through all stages.</span>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">Medium</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">Test activity management, but do not validate the test</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody"><span class="FileOrFilePath">Create a new Lead and log a Call and set a Task for 7 days time, do not validate either task.</span>
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">Medium</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>| Test lead conversion and validate the test             | <span class="FileOrFilePath">Create a new Lead, work through all stages to converting to an Opportunity with a new Account and Contact. Validate that a new Opportunity, Account and Contact are created, and the fields are correct from the Lead.</span> | High       |</p>
+                                    

@@ -1,0 +1,532 @@
+
+                                        <h1>Validate email</h1>
+                                        <p>Testim offers a built-in email service which provides permanent and temporary email addresses. The <em>Validate email</em> step can be used to validate that an email was sent to these email addresses. This step is typically used to test your app sign-up or login flows.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This is a pro feature only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <p>The <em>Validate email</em> step is a predefined validation step that receives your Testim inbox content of a specified Testim email address as an array of all of the messages within that mailbox, contained in a parameter named <em>messages</em> with the following fields:</p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Field name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">Return type</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">attachments</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody"><a href="http://ews-javascript-api.github.io/api/classes/complexproperties_attachmentcollection.attachmentcollection.html">AttachmentCollection</a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">from</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody"><a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddress.emailaddress.html">EmailAddress</a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">to</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody"><a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddresscollection.emailaddresscollection.html">EmailAddressCollection</a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">subject</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">date (time sent)</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Date</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">received_date</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">Date</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">message_id</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">headers</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody"><a href="http://ews-javascript-api.github.io/api/classes/complexproperties_internetmessageheadercollection.internetmessageheadercollection.html">InternetMessageHeaderCollection</a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">html</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">text</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">mail_from</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody"><a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddress.emailaddress.html">EmailAddress</a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">rcpt_to</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody"><a href="http://ews-javascript-api.github.io/api/classes/complexproperties_emailaddresscollection.emailaddresscollection.html">EmailAddressCollection</a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">size</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">number</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">projectId</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">email</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">expire_at</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">created_at</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">updated_at</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body2">
+                                                        <p class="tableBody">string</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>The email validation can use one of two types of emails to receive the emails that will be validated:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Permanent email</strong> - Testim offers a permanent email address that you can use for many purposes, including testing login flows and password reset flows. As part of the test, you will be able to validate that emails are sent to the email address, by adding this email address to the <strong>Validate Email</strong> step. This step will validate that the email was received in the permanent email address, for example, by fetching a link from the email and exporting it.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Temporary email</strong> - There are times you may need to generate a new random email address every time you run a test, for example to test a sign-up flow multiple times with a new user each time. Using the <strong>Generate email address</strong> step, a new email address is generated with every run. You will configure the <strong>Generate email address</strong> step to save the temporary email address as a parameter. And then you will be able to validate that emails are sent to the temporary email address, by adding this parameter to the <strong>Validate Email</strong> step. The <strong>Validate Email</strong> step will validate that the email was received in the temporary email address, for example, by fetching a link from the email and exporting it.</p>
+                                            </li>
+                                        </ul>
+                                        <p>As a preliminary step to validating emails, create a <strong>permanent email</strong> or use the <strong>Generate email address step</strong> to generate a temporary email address as follows.</p>
+                                        <div class="note">
+                                            <p>Testim generates email addresses exclusively through its own email service and does not have the ability to utilize third-party email services for creating permanent or temporary email addresses.</p>
+                                        </div>
+                                        <h1><a name="option-a-creating-a-permanent-email-address"></a>Option A - Creating a permanent email address</h1>
+                                        <p>The process assumes that you have an existing or new test that will include the <strong>Validate email</strong> step. → <strong>To create a permanent email:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the left menu, click on the <strong>Settings</strong> icon.</p>
+                                            </li>
+                                            <img src="images/87c09ff-settings.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the <strong>Email Service</strong> tab.</p>
+                                            </li>
+                                            <img src="images/a11da76-emailservice.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Generate Email Address</strong> button.</p>
+                                            </li>
+                                            <img src="images/16ade5a-213f19a-testim_293a.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>A random email address is generated and shown on the page. Hover your mouse over the email address and click <strong>Copy</strong>, to copy the email address or <strong>Inbox</strong> to view the email's inbox.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/b1096f1-caa2097-testim_295_r.png" class="ScreenshotFullsize" />
+                                        <h2><a name="using-the-permanent-email-in-the-relevant-steps-of-the-test"></a>Using the permanent email in the relevant steps of the test</h2>
+                                        <p>This email address can be used as an input in the test. For example, a test that validates the sign up process, in which the user enters an email and password and then receives an email with a link that should be clicked in order to confirm/validate the email. In this example, the permanent email address will be used in the sign up step, where the user enters the email address. In the example below, the permanent email address was entered to the <strong>Text to assign</strong> field of the <strong>Set text</strong> step, where the user enters the email address into the email field.</p>
+                                        <img src="images/ee9773d-signupflow.png" class="ScreenshotFullsize" />
+                                        <h1><a name="option-b-generating-a-temporary-email-address"></a>Option B - Generating a temporary email address</h1>
+                                        <p>The process assumes that you have an existing or new test that will include the <strong>Generate email address</strong> and the  <strong>Validate email</strong> steps.</p>
+                                        <h2><a name="adding-the-generate-email-address-step"></a>Adding the Generate Email Address step</h2>
+                                        <p>In this step we will add the step that will generate the temporary email address and save the address as a variable to be used in other steps. → <strong>To generate a temporary email address:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/856a8f8-testim_298a.png" title="Testim 298a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/fd77ed2-testim_283a_r.png" title="Testim 283a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).</p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/0ab4994-testim_270_r2.png" title="Testim 270_r2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.</p>
+                                            </li>
+                                            <p>The <strong>Actions</strong> menu expands.</p>
+                                            <img src="images/4502efd-testim_299_r.png" title="Testim 299_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Generate email address</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Generate email address</strong>.</p>
+                                            </div>
+                                            <p>A “Generate email address” step is added in the <strong>Editor</strong>.</p>
+                                            <li value="5">
+                                                <p>Hover over the newly created step, and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/fb10c5b-testim_300a.png" title="Testim 300a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/4952255-testim_301_r.png" title="Testim 301_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>Variable name</strong> field, enter name for the variable that will hold the temporary email address. For example, use the value <span class="FileOrFilePath">emailAddress</span>.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>Variable scope</strong> field, specify the scope in which the variable can be passed:</p>
+                                            </li>
+                                            <li value="8">
+                                                <p><strong>Local</strong>: Allows you to pass the <em>emailAddress</em> parameter between steps in the same scope. <em>This is the default</em>.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Test</strong>: Allows you to pass the <em>emailAddress</em> parameter between steps and groups in the same test.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p><strong>Suite</strong>: Allows you to pass the <em>emailAddress</em> parameter between tests in the same test suite.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Set additional settings in the step and parameters as needed.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Copy the parameter name in the <strong>variable name</strong> field. (e.g. the name <span class="FileOrFilePath">emailAddress</span>)-  This parameter will be used in the <strong>Email Validation</strong> step.</p>
+                                            </li>
+                                        </ol>
+                                        <h1><a name="sending-emails-to-the-appropriate-testim-inbox-in-advance"></a>Sending emails to the appropriate Testim inbox in advance</h1>
+                                        <p>At this point the permanent or temporary inboxes are empty from emails. To test that emails are being received in the new inbox, you may want to point the email service to send emails to the newly created inbox.</p>
+                                        <h2><a name="finding-the-email-address-of-the-inbox"></a>Finding the email address of the inbox</h2>
+                                        <h3><a name="permanent-email-address-option"></a>Permanent email address option</h3>
+                                        <p>→ <strong>To find the permanent email address:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; Email Service</strong>.</p>
+                                            </li>
+                                            <p>The permanent email addresses are displayed.</p>
+                                            <img src="images/3b33312-emailaddresses.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Hover over the relevant email and click <strong>Copy</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/bb1c588-emailaddresses2.png" class="ScreenshotFullsize" />
+                                        <h3><a name="temporary-email-address-option"></a>Temporary email address option</h3>
+                                        <p>In case of the temporary email address option, by using the <strong>Generate email address</strong> step, a new email address is generated with every run. You will configure the <strong>Generate email address</strong> step to save the temporary email address as a parameter. For example, in the following  <strong>Generate email address</strong> step, the parameter the holds the temporary email address is called <span class="FileOrFilePath">tempEmail</span>. This parameter, which holds the temporary email address, can be used to send the email address to the email service, by for example, using an API step in Testim.</p>
+                                        <img src="images/a0c8558-tempemail.png" class="ScreenshotFullsize" />
+                                        <p>It is also possible to view and copy the temporary email address from the Email Service screen. → <strong>To find the temporary email address:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; Email Service</strong>.</p>
+                                            </li>
+                                            <p>The temporary email addresses are marked with "Temporary" in the title.</p>
+                                            <img src="images/f061421-image_1.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Hover over the relevant email and click <strong>Copy</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/18ef3a0-image_2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="using-a-run-api-action-step"></a>Using a Run API Action step</h2>
+                                        <p>The Run API Action step can be used to send the temporary/permanent email address information to an email service and to invoke the service to send an email to this email address. The following test example includes a <strong>Generate email address</strong> step, which will generate a temporary email address and store this email address as a parameter called <span class="FileOrFilePath">emailAddress</span>.</p>
+                                        <img src="images/a86cebf-image.png" class="ScreenshotFullsize" />
+                                        <img src="images/5973c2a-image_1.png" class="ScreenshotFullsize" />
+                                        <p>Following the <strong>Generate email address</strong> step, there is an <strong>Run API Action</strong> step. This step sends a POST API call to the email service and uses the parameter <span class="FileOrFilePath">emailAddress</span> that was defined in the <strong>Generate email address</strong> step as an input to populate the destination email address, which is defined in the <span class="FileOrFilePath">toAddress</span> parameter in the code.</p>
+                                        <img src="images/e2ae339-image_2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="sending-emails-through-any-email-service"></a>Sending emails through any email service</h2>
+                                        <p>You can also send emails to the permanent/temporary email addresses directly through the email services.</p>
+                                        <h1><a name="creating-a-validate-email-step"></a>Creating a Validate Email Step</h1>
+                                        <p>As part of this test we want to check that the email (e.g., signup confirmation) was sent to the permanent  or temporary email, by adding a <strong>Validate email step</strong>. There are two ways to configure the Validate email step:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Coded </strong>- using a JavaScript code it is possible, for example, to check if the email inbox includes the relevant email and also the code can export the links from this email.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Codeless</strong>- this involves configuring settings from the UI that enable the step to identify the relevant email based on a variety of possible conditions and export links or texts from the email.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="creating-a-validation-email-step-using-the-coded-option"></a>Creating a Validation Email Step using the Coded Option</h2>
+                                        <p>→ <strong>To create the validate email step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/e4b6b3d-testim_302a.png" title="Testim 302a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/cbc623c-testim_283a_r.png" title="Testim 283a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).</p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/408099e-testim_270_r2.png" title="Testim 270_r2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong>.</p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands.</p>
+                                            <img src="images/056be62-testim_303_r.png" title="Testim 303_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Validate email</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate email</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/667ffe5-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step folder</strong> list where you want this step stored. Otherwise, deselect the checkbox.</p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Click the <strong>Coded</strong> tab.</p>
+                                            </li>
+                                            <img src="images/fa0a6bb-coded.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="9">
+                                                <p>Do one of the following:</p>
+                                            </li>
+                                            <p><strong>For the permanent email option</strong> - copy the permanent email address and paste it into the <strong>Email address</strong> field. This email address should be surrounded by single or double quotes.</p>
+                                            <img src="images/9489320-emailaddressfield.png" class="ScreenshotFullsize" />
+                                            <p><strong>For the temporary email option</strong> -</p>
+                                            <p>Enter the name of the <strong>Variable name</strong> parameter, which you defined in the <strong>Generate email address</strong> step,  into the <strong>Email address</strong> field.</p>
+                                            <img src="images/3bfe619-image.png" class="ScreenshotFullsize" />
+                                            <div class="caution">
+                                                <p>The <strong>Email address</strong> field is mandatory.</p>
+                                            </div>
+                                            <li value="10">
+                                                <p>Set additional settings in the step and parameters as needed.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>In the <strong>function</strong> text box, type in the desired JavaScript code. If you have defined parameters, you can refer to those parameters in your JavaScript code. See the <a href="#email-validation-examples">Email validation examples</a> section below to learn about different ways to validate the email. The code will typically use value entered into the Email address field as a parameter in the code.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <span class="FileOrFilePath">$(&lt;query&gt;).length</span> instead of <span class="FileOrFilePath">$(&lt;query&gt;)</span>.</p>
+                                            </div>
+                                            <li value="12">
+                                                <p>Click the back arrow to return to the main Editor window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/b4b8e1e-back.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If you opened your AUT to define an HTML element as a parameter, click on the <strong>Toggle Breakpoint</strong> button to remove the breakpoint.</p>
+                                        </div>
+                                        <p>The step is created.</p>
+                                        <h3><a name="coded-email-validation-examples"></a>Coded email validation examples</h3>
+                                        <h4><a name="validate-sign-up-subject-line"></a>Validate sign-up subject line</h4>
+                                        <p>You can use the <em>Validate email</em> step to validate the contents of the subject line of an email generated by your app that was sent to a Testim-generated email address.</p>
+                                        <img src="images/120320e-testim_306.png" title="Testim 306.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// Check if messages variable is falsy or if messages[0] is falsy<br />if (messages &amp;&amp; messages[0] ){<br />&#160;&#160;// If either condition is true, throw an error<br />&#160;&#160;return messages[0].subject === "Thank you for signing up";<br />}<br />return false;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="validate-links-in-body"></a>Validate links in body</h4>
+                                        <p>You can use the <em>Validate email</em> step to look for hyperlinks in the body of an email, and return the text component and link component of each link found.</p>
+                                        <img src="images/df541fc-testim_307.png" title="Testim 307.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>if (!messages &amp;&amp; !messages[0]){<br />&#160;&#160;throw new Error("Failed to find message in inbox ");<br />}<br />// Define a function named getLinks which takes an HTML string as input<br />function getLinks(html) {<br />&#160;&#160;// Create a DOMParser object to parse HTML strings<br />&#160;&#160;&#160;var parser = new DOMParser();<br />&#160;&#160;// Parse the HTML string into a DOM document<br />&#160;&#160;&#160;var doc = parser.parseFromString(html, "text/html");<br />&#160;&#160;// Find all anchor elements in the document&#160;<br />&#160;&#160;var linksElements =&#160;&#160;Array.from(doc.querySelectorAll("a"));<br />&#160;&#160;// Map over the array of anchor elements and extract their text and href attributes<br />&#160;&#160;return linksElements.map(linkElement =&gt; ({<br />// Return an object with text and link properties<br />&#160;&#160;&#160;&#160;text:linkElement.innerText,<br />&#160;&#160;&#160;&#160;link:linkElement.getAttribute("href")<br />&#160;&#160;}));<br />}<br />// Call the getLinks function with the HTML content of the first message<br />var emailLinks = getLinks(messages[0].html);<br />//Exports the first link in the array to the next test steps<br />exportsTest.emailLink = emailLinks[0];</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="creating-a-validate-email-step-using-the-codeless-option"></a>Creating a Validate Email Step using the Codeless Option</h2>
+                                        <p>→ <strong>To create the validate email step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/e4b6b3d-testim_302a.png" title="Testim 302a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/cbc623c-testim_283a_r.png" title="Testim 283a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).</p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/408099e-testim_270_r2.png" title="Testim 270_r2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong>.</p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands.</p>
+                                            <img src="images/056be62-testim_303_r.png" title="Testim 303_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Validate email</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Validate email</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/667ffe5-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step folder</strong> list where you want this step stored. Otherwise, deselect the checkbox.</p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.</p>
+                                            </li>
+                                            <img src="images/873ab96-codeless_screen.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Under <strong>Email Filters</strong>, specify the conditions to identifying the email in the inbox by selecting the checkboxes of the condition types that you want to enable. Emails that match all of these conditions (i.e., AND condition) will be validated and the step will pass, if non of emails in the inbox matches these conditions, the step will fail. All conditions are optional, but at least one condition should be active:</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Time range</strong> -  specify the time range in minutes of the emails received in the inbox. For example, enter 30 to scan the email that were received in the last 30 minutes.</p>
+                                            </li>
+                                            <li value="10">
+                                                <p><strong>Expected subject</strong> - type the text or part of the text that should be in the subject of the email to match. This can be a partial match. The text field may contain parameters that are within scope, such as <span class="FileOrFilePath">{{param1}}</span> for instance.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p><strong>Expected body</strong> - type the text or part of the text that should be in the body of the email to match. This can be a partial match. The text field may contain parameters that are within scope, such as <span class="FileOrFilePath">{{param1}}</span> for instance.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Under <strong>Email text extraction</strong>, specify what should be optionally extracted from the body of the emails that were matched by the email filters, this can be either texts from the email or links from the email. For example, if the email contains a code, similar to SMS code, you can use this feature to extract this code. The extracted texts and links will appear in the step result after its execution. All links are extracted automatically regardless of the extraction settings:</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>Select the checkbox to enable.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>Select one of the following:</p>
+                                            </li>
+                                            <li value="15">
+                                                <p><strong>Location</strong>- select this option if you want to configure conditions for extraction based on the location of the extracted texts.</p>
+                                            </li>
+                                            <li value="16">
+                                                <p><strong>Regex</strong> - select this option if you want to enter a regular expression as the condition that will define which texts will be extracted from the email.</p>
+                                            </li>
+                                            <p>&gt; &gt; &gt; Entries in this section are case sensitive.</p>
+                                            <li value="17">
+                                                <p>If you have selected the <strong>Location </strong>option, select one of the following:</p>
+                                            </li>
+                                            <li value="18">
+                                                <p><strong>Extraction between</strong> - select to extract the text/links that is between the text in the first field and the text in the second field. Type the strings in the first and second fields to define the beginning (after which the text will be extracted) and the end (before which the text will be extracted).</p>
+                                            </li>
+                                            <li value="19">
+                                                <p><strong>Extraction from</strong> - select to extract the text/links that is from the text in the field until the end of the email. Type the strings in the field to define the beginning (after which the text will be extracted).</p>
+                                            </li>
+                                            <li value="20">
+                                                <p><strong>Extraction until</strong> - select to extract the text/links that is from the beginning of the email until the text in the field. Type the strings in the first field to define the end (before which the text will be extracted).</p>
+                                            </li>
+                                            <p>The text fields may contain parameters that are within scope, such as <span class="FileOrFilePath">{{param1}}</span> for instance.</p>
+                                            <li value="21">
+                                                <p>If you have selected the <strong>Regex</strong> option, enter the regex condition for text extraction in the filed. To see usage examples of regex conditions, <a href="https://www.sitepoint.com/demystifying-regex-with-practical-examples/">click here</a>.</p>
+                                            </li>
+                                            <li value="22">
+                                                <p>If you want to verify the email filter and the extraction:</p>
+                                            </li>
+                                            <li value="23">
+                                                <p>Under <strong>Verification email inbox address</strong> section, click the field and select one of the permanent email addresses.</p>
+                                            </li>
+                                            <li value="24">
+                                                <p>Click <strong>Verify Email Filters</strong>.</p>
+                                            </li>
+                                            <p>When looking at test run, after drilling down the step, the following pane is displayed on the right. The pane displays information about emails that were captured in the specified inbox, including information about the sender, the extracted texts, and the links that were captured.</p>
+                                            <img src="images/74073d1-verify.png" class="ScreenshotFullsize" />
+                                            <li value="25">
+                                                <p>Do one of the following:</p>
+                                            </li>
+                                            <p><strong>For the permanent email option</strong> - copy the permanent email address and paste it into the <strong>Email address</strong> field. This email address should be surrounded by single or double quotes.</p>
+                                            <img src="images/55551bf-image_3.png" class="ScreenshotFullsize" />
+                                            <p><strong>For the temporary email option</strong> -</p>
+                                            <p>Enter the name of the <strong>Variable name</strong> parameter, which you defined in the <strong>Generate email address</strong> step,  into the <strong>Email address</strong> field.</p>
+                                            <img src="images/d50b959-image_4.png" class="ScreenshotFullsize" />
+                                            <li value="26">
+                                                <p>Set additional settings in the step and parameters as needed.</p>
+                                            </li>
+                                            <li value="27">
+                                                <p>Close the pane, click back to view the test, and click <strong>Save</strong> to save the changes.</p>
+                                            </li>
+                                            <li value="28">
+                                                <p>Set additional settings in the step and parameters as needed.</p>
+                                            </li>
+                                        </ol>
+                                        <p>The step is created.</p>
+                                        <h3><a name="export-parameters"></a>Export parameters</h3>
+                                        <p>After the step is created, it provides three export parameter that can be used in other steps that are located after the email validation step:</p>
+                                        <ul>
+                                            <li>
+                                                <p><span class="FileOrFilePath">emailData</span> - includes all the parameters in the filtered email</p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">emailExtractedText</span> - includes the optional extracted text</p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">emailExtractedLinks</span> - includes the optional array of extracted links.</p>
+                                            </li>
+                                        </ul>
+                                        <p><span class="FileOrFilePath">emailExtractedLinks</span> is an array; to access an entry within the array, use <span class="FileOrFilePath">emailExtractedLinks[n]</span>, where <span class="FileOrFilePath">0</span> represents the first entry.</p>
+                                    

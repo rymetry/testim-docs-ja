@@ -1,0 +1,196 @@
+
+                                        <h1>Debug Helper Panels</h1>
+                                        <p>When Testim editor is used, there are several debug helper panels available during the debugging process to assist test developers in finding and fixing issues. The following helper panels are available:</p>
+                                        <p><em> <strong><a href="#console-log-helper-panel">Console log</a></strong> - The console log panel displays messages that are printed to the console during the test's execution. Test developers can use </em>console.log( )* statements in their test code to output variables' values and other debug information. The console log is helpful for understanding what is happening inside the test and can help test developers identify errors or unexpected behavior.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong><a href="#breakpoint-manager-helper-panel">Breakpoint manager</a></strong> - The breakpoint manager panel allows test developers to easily manage breakpoints in their test. A breakpoint is a point in the test where the test will pause execution, allowing test developers to inspect variables through the test step by step. This feature is useful for identifying the source of errors or unexpected behavior in the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="#scope-helper-panel">Scope</a></strong> - The scope panel displays information about the current scope of a parameter in the test. The scope refers to the context of the variables within a parameter in the test at each given moment. The scope window can help test developers understand how the test is structured and how data is passed between different test steps.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>By default, the debug helper panels are open when you begin test debugging. Project and company owners have the ability to control the default setting of 'console log', 'breakpoint manager' and 'scope' panels from the project settings.</p>
+                                        </div>
+                                        <h2><a name="console-log-helper-panel"></a>Console Log Helper Panel</h2>
+                                        <img src="images/2cb6efa-consolelog.png" title="consolelog.png" class="ScreenshotFullsize" />
+                                        <p>The features of the console log:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Filter Messages</strong> - The console log panel allows test developers to filter the messages displayed based the log text and based on the priority level. This feature is helpful when debugging large applications with many messages, allowing test developers to quickly find and focus on the relevant information.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Log Levels</strong> - The console log supports different log levels that test developers can use to categorize their messages. The log levels are error, warning, info and verbose</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Preserve Logs</strong> - The console log panel allows test developers to preserve the logs even after the page has been reloaded or navigated away from. This feature is useful when test developers need to keep track of previous messages and refer to them later, even after the page has changed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Clear Console</strong> - The console log panel also includes a "clear" button that test developers can use to clear the messages from the console. This feature is helpful when the console log becomes cluttered with irrelevant or outdated messages, making it difficult to find the relevant information. By clearing the console, test developers can focus on the most recent messages.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="viewing-the-console-log-during-test-execution"></a>Viewing the Console Log During Test Execution</h3>
+                                        <p>The console log in the Debugging Helper will update in real-time while executing a test. → <strong>To view the console log in the Debugging Helper:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Run the test in the Test Editor.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Debugging Helper</strong> button. This will display the <strong>Console Log</strong> at the bottom of the screen.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/518bb70-small-consolelog.png" class="ScreenshotFullsize" />
+                                        <p>The console log and be expanded and minimized by clicking the arrow next to the <strong>Logs</strong> title. The number next to the <strong>Logs</strong>title displays the number of log messages.</p>
+                                        <img src="images/30d6586-small-image.png" class="ScreenshotFullsize" />
+                                        <h3><a name="filtering-console-logs"></a>Filtering Console Logs</h3>
+                                        <p>You can filter the log entries by the text and by their priority level. → <strong>To filter the console logs by text:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>In the <strong>Filter entries by log text</strong> field enter a text (can be partial text) to only display console entries that match the filter string.<br /></p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/ec8750f-small-d9944c6-small-filterconsole.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To filter the console logs by priority:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>Click the <strong>Levels</strong> drop down menu to change the level of console entries displayed in the Console Log.<br /></p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/5c8327c-small-bc77ba3-small-consolelevels.png" class="ScreenshotFullsize" />
+                                        <h3><a name="preserving-console-log-across-multiple-test-executions"></a>Preserving Console Log Across Multiple Test Executions</h3>
+                                        <p>By default when you run a test, the console log will clear. You can force Testim to preserve the console log across multiple test executions. This will append the console log with console entries across test runs, which is helpful when you want to review differences in the console across multiple test runs. → <strong>To preserve the console log:</strong></p>
+                                        <ul>
+                                            <li>
+                                                <p>Click the <strong>Preserve logs</strong> checkbox in the Console log.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/f70b8dd-small-preservelog.png" class="ScreenshotFullsize" />
+                                        <h3><a name="clearing-the-console-log"></a>Clearing the Console Log</h3>
+                                        <p>You can manually clear the console log. This is helpful when you want to clear the log in the middle of a test or you are using the Preserve Log feature. → <strong>To clear the console log:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Clear Console</strong> button in the Console Log to clear all console entries.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/564bdd9-small-clearconsole.png" class="ScreenshotFullsize" />
+                                        <h2><a name="breakpoint-manager-helper-panel"></a>Breakpoint Manager Helper Panel</h2>
+                                        <img src="images/4cc8dd1-small-5a02322-breakpointhelper.png" class="ScreenshotFullsize" />
+                                        <p>The breakpoint manager helper panel lets you manage the various breakpoints in the test, including:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Delete Breakpoints</strong> - The breakpoint manager allows test developers to delete breakpoints that they have set in their test. By deleting a single breakpoint or all breakpoints that are no longer necessary, test developers can avoid pausing the program unnecessarily and save time when debugging.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Go to Location</strong> - The breakpoint manager also allows test developers to quickly navigate to the location of a breakpoint in their test. This feature is useful when test developers have many breakpoints set in their code and need to quickly find a specific one.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Current Breakpoint</strong> - The breakpoint manager displays information about the current breakpoint, where the test has currently paused. This feature is useful when test developers need to quickly see where the program is paused and what variables are available at that point in the test.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="viewing-breakpoints-in-the-debugging-helper"></a>Viewing Breakpoints in the Debugging Helper</h3>
+                                        <p>You can view a list of all breakpoints and their locations in the Debugging Helper. → <strong>To view breakpoints in the Debugging Helper:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Run a test in the Testim Editor until the test hits a breakpoint.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Debugging Helper</strong> icon.</p>
+                                            </li>
+                                            <img src="images/a07a039-small-debugging_helper.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>This will open the <strong>Debugging Helper</strong> panel.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Expand the <strong>Breakpoints</strong> section to view the <strong>locations</strong> of all breakpoints in the test.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/7bf1530-small-debugging_helper.png" class="ScreenshotFullsize" />
+                                        <p>The Debugging Helper will highlight the currently active breakpoint.</p>
+                                        <img src="images/d0b0028-small-debugging_helper.png" class="ScreenshotFullsize" />
+                                        <p>The format of the <strong>Location</strong> for each breakpoint helps identify where in the test hierarchy each breakpoint can be found:</p>
+                                        <ul>
+                                            <li>
+                                                <p>First level breakpoints are indicated by the step number followed by the step name.</p>
+                                            </li>
+                                            <li>
+                                                <p>Inner level breakpoints, which are breakpoints placed on a step that is located inside a group, are indicated by the name of the group followed by the the step number and name.</p>
+                                            </li>
+                                            <li>
+                                                <p>Compound level breakpoints, which are breakpoints that are placed within a group that is within another group, are indicated by the ellipsis. Clicking on the ellipsis will reveal the group names.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="navigate-to-a-breakpoint-location-within-the-test"></a>Navigate to a Breakpoint Location within the Test</h3>
+                                        <p>A single test may contain many breakpoints. Breakpoints may also be present within test groups or sub test groups. → <strong>To navigate to a breakpoint location:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Locate the <strong>breakpoint</strong> in the Debugging Helper.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Go to location</strong> button to the right of the breakpoint. The breakpoint location will be <strong>highlighted</strong> in the Test Editor.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/9b270b4-small-gotobreakpoint.png" class="ScreenshotFullsize" />
+                                        <h3><a name="delete-breakpoints"></a>Delete Breakpoints</h3>
+                                        <p>You can delete breakpoints from within the Debugging Helper panel. → <strong>To delete a single breakpoint:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the Debugging Helper panel.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Navigate to the breakpoint you want to delete.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Hover over the breakpoint and click the <strong>Delete breakpoint</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/96b29dc-small-deletebreak.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To delete all breakpoints in a test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the Debugging Helper panel.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Hover over the <strong>Location</strong> section until the <strong>elipsis</strong> appears and click the <strong>Delete all breakpoints</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/24f5b52-small-deleteallbreaks.png" class="ScreenshotFullsize" />
+                                        <h2><a name="scope-helper-panel"></a>Scope Helper Panel</h2>
+                                        <p>The scope panel in the editor displays information about the variables in the test steps. The scope refers to the test “area” where a variable can be accessed and used. When the test is paused at a breakpoint, the scope panel shows information about the variables available in the current scope.</p>
+                                        <img src="images/154d502-small-image_1.png" class="ScreenshotFullsize" />
+                                        <p>The scope panel typically displays information about the name, type, and value of each variable in scope. This information can be useful when debugging tests, as it allows test developers to quickly see what data is available and how it is being used. For example, test developers can use the scope window to inspect the values of variables and identify any issues or unexpected behavior.</p>
+                                        <h3><a name="viewing-test-variables-and-scope"></a>Viewing Test Variables and Scope</h3>
+                                        <p>You can view all variables used during execution in the Debugging Helper. → <strong>To view variables and their scope:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Run the test in the Test Editor to completion or a breakpoint.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Debugging Helper</strong> button to open the Debugging Helper.</p>
+                                            </li>
+                                            <img src="images/250d3e8-small-debugging_helper.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Expand the <strong>Scope</strong> section to display all variables from the test and their scope.</p>
+                                            </li>
+                                            <img src="images/22f7fc2-small-scope.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: The Debugging Helper panel will only display variable for steps that have been executed in the test. If a test stops or pauses before the end of a test, the Debugging Helper will not display variables related to future steps that have not yet been executed.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>Click on any step earlier in the test to view all variables <strong>in scope up until that step was executed</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e1aaef3-small-prevscope.png" class="ScreenshotFullsize" />
+                                        <p>The following types of parameters are displayed in the Scope section of the Debugging Helper:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Incoming Params</strong>: variables configured to be used by a step in the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test Exports</strong>: variables created by a test and available for use by other steps in the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Global Exports</strong>: variables created by a test and available for use by other tests in the test plan.</p>
+                                            </li>
+                                        </ul>
+                                    

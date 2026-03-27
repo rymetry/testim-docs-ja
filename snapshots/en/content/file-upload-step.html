@@ -1,0 +1,94 @@
+
+                                        <h1>File upload step validation</h1>
+                                        <p>A file upload step (either “File Drop” or “Browse For File”) allows you to ensure that the file(s) you wish to upload when you run your test are always available regardless of where the test runs. When you <em>record</em> your test, the file(s) are uploaded to the Testim server. When you <em>run</em> your test, the file(s) are downloaded from the server to your local machine, and then uploaded to the AUT. You can view which file(s) have been uploaded to the Testim server for a step by opening the step’s properties.</p>
+                                        <div class="note">
+                                            <p>The upload action can work only on native input elements.</p>
+                                        </div>
+                                        <h2><a name="common-use-cases"></a>Common Use Cases</h2>
+                                        <ul>
+                                            <li>
+                                                <p>to upload a file in order to test a flow</p>
+                                            </li>
+                                            <li>
+                                                <p>to validate that only specific file types can be uploaded</p>
+                                            </li>
+                                            <li>
+                                                <p>to validate that only one file (instead of multiple) can be uploaded</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="prerequisites"></a>Prerequisites</h2>
+                                        <ul>
+                                            <li>
+                                                <p>Ensure Chrome Dev Tools is closed. File upload steps cannot run if Dev Tools is open.</p>
+                                            </li>
+                                            <li>
+                                                <p>Ensure the Chrome settings option "Ask where to save each file before downloading" is disabled. If the option is enabled you won’t be able to record file upload steps. (See below.)</p>
+                                            </li>
+                                            <li>
+                                                <p>The recommended file size to upload is up to 2 MB. If you need to test your app while uploading a bigger file, please contact your Testim representative.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>There may be times when this step fails with an "Element not visible" error because the upload file element is not visible to the user. In this case, uncheck the "Element must be visible" setting in the properties of the upload step and run the test again. (See below.)</p>
+                                        </div>
+                                        <p>→ <strong>To disable the “Ask where to save each file before downloading” setting in Chrome:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Chrome browser, click on the <strong>Chrome menu</strong> (three dots at the top right).</p>
+                                            </li>
+                                            <img src="images/66c3a04-testim_249a.png" title="Testim 249a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Chrome menu</strong> options are shown.</p>
+                                            <li value="2">
+                                                <p>Click on <strong>Settings</strong>.</p>
+                                            </li>
+                                            <img src="images/a1dc980-testim_250a_r.png" title="Testim 250a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Chrome Settings</strong> page opens.</p>
+                                            <li value="3">
+                                                <p>Click on <strong>Advanced</strong>.</p>
+                                            </li>
+                                            <img src="images/fd3f76e-testim_251a.png" title="Testim 251a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Advanced</strong> menu expands.</p>
+                                            <li value="4">
+                                                <p>Click on <strong>Downloads</strong>.</p>
+                                            </li>
+                                            <img src="images/bfff7bc-testim_252a_r.png" title="Testim 252a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Downloads</strong> settings page is shown.</p>
+                                            <li value="5">
+                                                <p>Ensure the <strong>Ask where to save each file before downloading</strong> toggle is disabled (to the left). Click on it to toggle between enabled (right) and disabled (left).</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/6631d57-testim_253a.png" title="Testim 253a.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To uncheck the "Element must be visible" setting:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the desired upload step and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/40da018-testim_254a.png" title="Testim 254a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/bf62347-testim_255_r.png" title="Testim 255_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the <strong>Element must be visible</strong> checkbox to deselect it.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="adding-a-file-upload-step"></a>Adding a file upload step</h2>
+                                        <p>The file upload step is an automatic step that is added by recording the action of uploading a file to the AUT (not a predefined step). During the recording, the uploaded file that is uploaded to the AUT is also uploaded to the grid so it is available during the execution of the test. → <strong>To create a “File Drop” or “Browse For File” step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the flow of recording your test, navigate to a location in your app to upload a file. This may be a drag and drop box in your app, or a link which opens your local file browser.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Drag and drop your file(s) or follow the prompts in your local file browser to select your file(s).<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The file is uploaded to the Testim server, and a <strong>File Drop</strong> step or a <strong>Browse For File</strong> step is created.</p>
+                                        <img src="images/b79925e-testim_256a.png" title="Testim 256a.png" class="ScreenshotFullsize" />
+                                        <p>When your run your test, the file is downloaded from the server to your local machine, and then uploaded to the AUT. → <strong>To view the lists of files in a “File Drop” or “Browse For File” step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the upload step for which you want to view the files and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/a68316e-testim_254a.png" title="Testim 254a.png" class="ScreenshotFullsize" />
+                                        <p>The <strong>Properties</strong> panel opens on the right-hand side showing the uploaded file(s).</p>
+                                        <img src="images/dd52cc2-testim_257a_r.png" title="Testim 257a_r.png" class="ScreenshotFullsize" />
+                                    

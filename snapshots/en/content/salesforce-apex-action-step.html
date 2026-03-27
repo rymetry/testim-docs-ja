@@ -1,0 +1,147 @@
+
+                                        <h1>Salesforce APEX Action Step</h1>
+                                        <p>The <em>Salesforce APEX action</em> step allows you to extend E2E tests beyond the UI, by running Apex code as a step inside the test. The <strong>Salesforce APEX action</strong> step allows you to run an APEX code block, while defining your own parameters. The “In Parameters” in your APEX code must be of the type <em>string</em>. (You can convert the string values to other types in your APEX code). After running the test, you can see the results of this step (e.g. the data that is returned from Salesforce) in the Step Log.</p>
+                                        <div class="note">
+                                            <p>If your Salesforce environment is protected with 2-factor authentication, we recommend that your organization’s Salesforce administrator whitelist the IP for the machine from which you are running your tests.</p>
+                                        </div>
+                                        <p>In order to locally run tests which contain a <em>Salesforce APEX action</em> step, the following command needs to be executed: <strong>npm i -g @testim/testim-cli &amp;&amp; testim connect</strong>. Below is the general procedure for adding a <em>Salesforce APEX action</em> step followed by sample code for an example.</p>
+                                        <h2><a name="adding-a-salesforce-apex-action-step"></a>Adding a Salesforce APEX Action Step</h2>
+                                        <p>→ <strong>To add a Salesforce APEX action step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/7be8ce7-testim_512a.png" title="Testim 512a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action items</strong> are displayed.</p>
+                                            <img src="images/afcfd40-testim_566.png" title="Testim 566.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/eb0f440-testim_544_r.png" title="Testim 544_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Salesforce</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Salesforce</strong> menu expands.</p>
+                                            <img src="images/67feeca-testim_545_r.png" title="Testim 545_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Salesforce APEX action</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Salesforce APEX action</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/2d49d61-testim_567_r.png" title="Testim 567_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step folder</strong> list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>function</strong> editor opens, and the Properties panel opens on the right-hand side.</p>
+                                            <img src="images/db6f5b8-testim_537.png" title="Testim 537.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “Run Salesforce Apex action”.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Enter your connection properties for the Salesforce environment on which you want to run the APEX code.<br /></p>
+                                            </li>
+                                            <p>You can enter strings (surrounded by single or double quotes) or parameters (not surrounded by quotes). For more information on using parameters, see <a href="#section-using-parameters">Using Parameters</a> (below).</p>
+                                            <ul>
+                                                <li>
+                                                    <p>In the <strong>URL</strong> field, enter the URL of your Salesforce environment.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>Username</strong> field, enter your Salesforce username.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>Password</strong> field, enter your Salesforce password.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>Security Token</strong> field, enter your Salesforce security token (generated in Salesforce).<br /></p>
+                                                </li>
+                                            </ul>
+                                            <p>You can reset your Salesforce security token in the <strong>My Personal Information</strong> section of Salesforce.</p>
+                                            <img src="images/433db97-testim_535.png" title="Testim 535.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>The “In Parameters” in your APEX code must be of the type <em>string</em>. Define the parameters you will need for your step as follows:<br /></p>
+                                            </li>
+                                            <p>a. In the <strong>Properties</strong> panel, in the <strong>APEX Params</strong> section, Click the <strong>+ APEX PARAMS</strong> button.<br /> b. Enter the parameter’s <strong>Value</strong>. The value will be automatically converted to type <em>string</em>. This value can be later reconverted to another type through the code described in step 12.<br /> c. The parameter is automatically named “param”. To assign a relevant name to the parameter, click on the <strong>edit</strong> icon and enter the desired name.</p>
+                                            <img src="images/7007b2f-testim_538a_r.png" title="Testim 538a_r.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Optionally fill in the following Properties:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>When this step fails</strong> – Specify what to do if this step fails.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see <a href="../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).</p>
+                                                </li>
+                                            </ul>
+                                            <li value="12">
+                                                <p>In the <strong>function</strong> text box, type in the desired APEX code. If you have defined parameters, you can refer to those parameters in your APEX code.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>Click the back arrow to return to the main Editor window.</p>
+                                            </li>
+                                            <img src="images/d91f582-testim_540a_r.png" title="Testim 540a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <em>Salesforce APEX action</em> step is configured.</p>
+                                            <img src="images/eb1a459-testim_541a.png" title="Testim 541a.png" class="ScreenshotFullsize" />
+                                            <li value="14">
+                                                <p>Before running your test, ensure that Testim’s CLI agent is running by executing the following command: <strong>npm i -g @testim/testim-cli &amp;&amp; testim connect</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>If you run your test without first executing the command, the following prompt is shown:</p>
+                                        <img src="images/5f98f17-testim_536_r.png" title="Testim 536_r.png" class="ScreenshotFullsize" />
+                                        <p>After you run your test, a step log is available in the code editor with your test results from Salesforce.</p>
+                                        <h3><a name="using-parameters"></a>Using parameters</h3>
+                                        <p>You can use parameters which were defined in the test or suite level, in the config file, or in another step to enter your connection properties for your Salesforce environment. → <strong>To use parameters to enter your connection properties:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Define parameters in one of the following ways:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Add a parameter to the test data</strong> – You can define a parameter by adding <strong>Test Data</strong> to the <strong>Setup</strong> step (the first step of the test). For detailed instructions, see <a href="data-driven-testing/index.htm#section-configuring-a-data-driven-test-from-the-visual-editor">Configuring a data driven test from the visual editor</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Add a parameter to the config file</strong> – You can add a parameter to the <a href="../running-tests/configuration-file-run-hooks/index.htm">Configuration file</a>. For detailed instructions, see <a href="data-driven-testing/index.htm#section-configuring-data-driven-tests-using-the-config-file">Configuring Data Driven Tests using the Config file</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Add a parameter to a Custom step</strong> – You can create a Custom step and then add a parameter to this Custom Step. For detailed instructions, see <a href="parameters/parameters-in-custom-javascript-steps.htm">Parameters in custom JavaScript steps</a>.<br /></p>
+                                                </li>
+                                            </ul>
+                                            <p>You then need to pass the parameter to the <em>Salesforce APEX action</em> step or to the test level, by exporting the parameter. For detailed instructions, see <a href="parameters/exports-parameters.htm">Exports Parameters</a>.</p>
+                                            <li value="2">
+                                                <p>In your <em>Salesforce APEX action</em> step, add the parameters to the <strong>URL</strong>, <strong>Username</strong>, and <strong>Password</strong> fields.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="salesforce-apex-action-example"></a>Salesforce APEX Action Example</h2>
+                                        <p>You can use the <em>Salesforce APEX action</em> step to manipulate your Salesforce objects. In the same test, you can add additional steps to verify that your Salesforce application reflected the changes that were made on the Salesforce objects. The <em>Salesforce APEX action</em> step can manipulate multiple objects at once.</p>
+                                        <h3><a name="validating-a-new-account"></a>Validating a new account</h3>
+                                        <p>In this scenario we will use the <em>Salesforce APEX action</em> step to create a new account. In Salesforce there is a rule that copies the account name to another custom text field called 'mySpecialField' in the Account Object. Additional steps validate that the rule was applied by checking that in both fields (accountName and mySpecialField) the name is the same.</p>
+                                        <img src="images/ec7a3f9-testim_542.png" title="Testim 542.png" class="ScreenshotFullsize" />
+                                        <h4><a name="example-code"></a>Example Code:</h4>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>List&lt;Account&gt; account1= [SELECT Id,Name FROM Account];<br /><br />Account newAcct = new Account(name = accountName);<br />try {<br />&#160;&#160;insert newAcct;<br />} catch (DmlException e) {<br />// Process exception here<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="viewing-the-apex-action-result-log"></a>Viewing the APEX Action Result Log</h2>
+                                        <p>After a test containing a <em>Salesforce APEX action</em> step is run, a step log is available in the code editor with your test results from Salesforce. → <strong>To view the APEX action result log:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Double-click on the <em>Salesforce APEX action</em> step for which you wish to view the Result Log.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/324def4-testim_564a.png" title="Testim 564a.png" class="ScreenshotFullsize" />
+                                        <p>The <strong>code editor</strong> opens, and the <strong>Step Log</strong> is shown at the bottom of the screen. If there is a log received from Salesforce, the details will be shown in the Step Log section.</p>
+                                        <img src="images/4d25a94-testim_539a.png" title="Testim 539a.png" class="ScreenshotFullsize" />
+                                    

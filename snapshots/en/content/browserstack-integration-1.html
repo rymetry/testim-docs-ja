@@ -1,0 +1,61 @@
+
+                                        <h1>Browserstack integration</h1>
+                                        <p>This article will review how to set your BrowserStack on Testim and how to run your tests.</p>
+                                        <h2><a name="how-to-add-a-browserstack-grid"></a>How to add a Browserstack grid</h2>
+                                        <p>→ <strong>To add a Browserstack Grid:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Follow the instructions in the <a href="index.htm#adding-a-grid">Adding a grid</a> section, while selecting the <strong>Browserstack</strong> option as the <strong>Grid Type</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Next</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Update the following fields:</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Name</strong>: The grid name to use at run time.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Host</strong>: Browserstack host name.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Port</strong>: Browserstack port</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Username</strong>: Browserstack user name.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Password/access key</strong>: Browserstack access key to connect or password.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/be4fb2b-jul-24-2021_08-13-41.gif" title="Jul-24-2021 08-13-41.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="how-to-run-on-the-grid"></a>How to run on the grid</h2>
+                                        <p>You can run your tests remotely using one of the following methods:</p>
+                                        <p><a href="../../running-tests/the-command-line-cli/index.htm">CLI</a> /&#160;<a href="../integrate-testim-to-your-ci/index.htm">CI</a></p>
+                                        <p>Add --grid parameter with the grid name.</p>
+                                        <p><a href="../../running-tests/scheduler.htm">Scheduler</a>
+                                        </p>
+                                        <p>Use Grid field to choose on which grid to run your tests.</p>
+                                        <p><a href="../../test-management/test-plans.htm">Test Plan</a>
+                                        </p>
+                                        <p>Use Grid field to choose on which grid to run your tests.</p>
+                                        <h3><a name="from-the-editor"></a>From the editor</h3>
+                                        <p>You can run your test on the grid directly from the test editor.</p>
+                                        <ul>
+                                            <li>
+                                                <p>Click on the options arrow next to the "<strong>Run</strong>" button</p>
+                                            </li>
+                                            <li>
+                                                <p>Click on "<strong>Run on a grid</strong>".</p>
+                                            </li>
+                                        </ul>
+                                        <p>To change the configuration/grid/base url for that run click on "<strong>Edit</strong>".</p>
+                                        <img src="images/0ca9bb7-jul-21-2021_13-11-22.gif" title="Jul-21-2021 13-11-22.gif" class="ScreenshotFullsize" />
+                                        <p>To pass more options to the test run , see the&#160;<a href="saucelabs-browserstack-options.htm">Saucelabs &amp; BrowserStack Options</a>.</p>
+                                        <div class="note">
+                                            <p>Grid parameter replaces the old host and port parameters.</p>
+                                        </div>
+                                    

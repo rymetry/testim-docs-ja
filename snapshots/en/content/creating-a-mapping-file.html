@@ -1,0 +1,59 @@
+
+                                        <h1>Creating a Mapping File</h1>
+                                        <p>The Mapping file is a JSON file that includes an array of entries, which includes an array of requests and responses. Each request can be mapped multiple times to a single response. The JSON should have entries like the ones found in a HAR file. The following elements are mandatory:</p>
+                                        <ul>
+                                            <li>
+                                                <p>URL in the request</p>
+                                            </li>
+                                            <li>
+                                                <p>Status in the response OR RedirectUrl</p>
+                                            </li>
+                                            <li>
+                                                <p>In case of <strong>NOT</strong> mapping a <strong>GET</strong> call, specify the method type as part of the <strong>request</strong></p>
+                                            </li>
+                                        </ul>
+                                        <p>For the URL you can use * as wildcards, which means any request that matches the pattern will be caught and mapped to the response in the file.<br /> The mapping file should be saved locally.</p>
+                                        <h2><a name="mapping-file-useful-examples"></a>Mapping file useful examples</h2>
+                                        <h3><a name="mapping-file-with-a-json-object-in-response"></a>Mapping file with a JSON object in response</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;"entries": [<br />&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;"request": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"url": "*/urlRequestYouWantToMock/*?=yourQueryParam"<br />&#160;&#160;&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;"response": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"status": 200,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"headers": [{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"name": "Content-Type",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"value": "application/json; charset=utf-8"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}],<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"content": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"text": "{\"mock\": \"network\"}"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;]<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="mapping-file-with-a-method-specified-for-non-get-mappings"></a>Mapping file with a method specified (for non GET mappings)</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;"entries": [<br />&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;"request": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"method": "POST",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"url": "*/urlRequestYouWantToMock/*?=yourQueryParam"<br />&#160;&#160;&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;"response": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"status": 200,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"headers": [{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"name": "Content-Type",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"value": "application/json; charset=utf-8"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}],<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"content": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"text": "{\"mock\": \"network\"}"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;]<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="mapping-file-with-a-redirecturl-in-response"></a>Mapping file with a redirectUrl in response</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;&#160;&#160;"entries": [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"request": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"url": "*/urlRequestYouWantToMock/*?=yourQueryParam"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"response": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"redirectUrl" : "https://www.google.com"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="mapping-file-with-a-text-in-the-response"></a>Mapping file with a text in the response</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;&#160;&#160;"entries": [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"request": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"url": "*/urlRequestYouWantToMock/*?=yourQueryParam"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"response": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"status" : 200,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"headers": [{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"name": "Content-Type",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"value": "text/html; charset=UTF-8"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}],<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"content": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"text": "mock network"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="creating-a-mapping-file-that-enables-pass-through-authentication-for-login"></a>Creating a mapping file that enables pass-through authentication for login</h2>
+                                        <p>If your test includes a login process, which involves passing credentials to a server, it may not work properly when running the test on the mock network, as the login request will be timed out. To solve this issue, you should create a mapping file that includes the login request and the enabled Pass-through authentication property. The following example enables the pass-through authentication for the login request:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />"entries": [<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"request": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"url": "https://your_app_domain/login/*"<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"response": {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"passthrough":true<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;]<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Replace the URL with your login URL.</p>
+                                        <h2><a name="uploading-the-mapping-file"></a>Uploading the Mapping File</h2>
+                                        <p>→<strong>To upload your mapping file:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Test Properties</strong> pane, click <strong>Upload Custom Mapping File</strong>.</p>
+                                            </li>
+                                            <img src="images/7858343-mock8.png" title="mock8.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Locate the custom Mapping file that you saved and click <strong>Open</strong> to upload it.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Save</strong> to save the activate.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/cbd045e-mock7.png" title="mock7.PNG" class="ScreenshotFullsize" />
+                                    

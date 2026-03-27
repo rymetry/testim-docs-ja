@@ -1,0 +1,68 @@
+
+                                        <h1>Wait For Element Visualization</h1>
+                                        <p>A Wait For step allows you to force your test to pause and wait for a certain event to occur before moving to the next step. In the case of a Wait for element visualization step, Testim waits for the element to be visible on the page and then validates the element on a visual level. The visual validation and wait-for steps allow you to compare visual differences between your baseline and your current test run with precision. You can modify several parameters to customize  the comparison method between the baseline and the test. This functionality is provided as a service by <a href="https://applitools.com/">Applitools</a>, and requires integration with their Applitools Eyes app.</p>
+                                        <div class="note">
+                                            <p>The RCA and Ultrafast Test Cloud (i.e. adding extra environments) features will be rejected by Applitools without appropriate licensing. Contact your Applitools representative for more information.</p>
+                                        </div>
+                                        <p>You can perform the following visual validations:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Element Visualization</strong> – Visual validation on a specific element.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Viewport Visualization</strong> – Visual validation on your viewport.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Full-page Visualization</strong> – Visual validation on your entire page.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>This is a PRO feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>If you change the configuration of your test, a new baseline will be created in Applitools but not in Testim. If you want a new baseline for each configuration, you need to create different tests for each one.</p>
+                                        </div>
+                                        <h2><a name="adding-a-wait-for-element-visualization-step"></a>Adding a Wait for element visualization step</h2>
+                                        <p>→ <strong>To add a Wait for element visualization step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the validation.</p>
+                                            </li>
+                                            <img src="images/e9b93ef-testim_276b.png" title="Testim 276b.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/abc8595-testim_267a_r.png" title="Testim 267a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/e46753b-testim_268_r.png" title="Testim 268_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Run test</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/25f5431-testim_277b.png" title="Testim 277b.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> again and click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/2ab8794-testim_270_r.png" title="Testim 270_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click on <strong>Wait For</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Wait For</strong> menu expands.</p>
+                                            <img src="images/1140ec5-testim_278_r.png" title="Testim 278_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Scroll down through the menu and select <strong>Wait for element visualization</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Wait for element visualization</strong>.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>In the <strong>AUT</strong> window, identify the relevant element for which you wish to wait for an HTML attribute, and click on it to select it.<br /></p>
+                                            </li>
+                                            <p>The “Wait for element visualization” step is added in the <strong>Editor</strong>, and a thumbnail of the selected element is shown in the step.</p>
+                                            <img src="images/974471e-testim_279a.png" title="Testim 279a.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after the "wait for"step to remove the breakpoint.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>When you run your test, the baseline visualization will be compared to the test run. If the step fails due to a visual validation failure, double-click the failed Wait for element visualization step to open the details in Applitools Eyes.</p>
+                                    

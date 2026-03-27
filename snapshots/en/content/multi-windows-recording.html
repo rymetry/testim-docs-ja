@@ -1,0 +1,73 @@
+
+                                        <h1>Recording in multiple windows</h1>
+                                        <p>Recording multiple pages is required when you need to create a test that contains links that open in a new tab or pop-up window. By default, when you create a new test, any action you make is recorded automatically if it derives from the initial recorded page.</p>
+                                        <p><strong>For example</strong>: Let's say you want to create a test for your company's "Contact us" page.</p>
+                                        <img src="images/3335429-screen_shot_2021-08-26_at_9.38.12.png" title="Screen Shot 2021-08-26 at 9.38.12.png" class="ScreenshotFullsize" />
+                                        <p>The page contains a form and also links to the company's social media pages: YouTube, Twitter, Linkedin &amp; Facebook.</p>
+                                        <img src="images/06a6583-untitled.png" title="Untitled.png" class="ScreenshotFullsize" />
+                                        <p>​Any of those links are opened in a new tab. If you'd click them while "Contact us" page was recorded, any interaction you'd take in these tabs would have been recorded too.</p>
+                                        <img src="images/2bf79c2-screen_shot_2021-08-26_at_10.01.39.png" title="Screen Shot 2021-08-26 at 10.01.39.png" class="ScreenshotFullsize" />
+                                        <h2><a name="custom-steps-javascript"></a>Custom steps (JavaScript)</h2>
+                                        <p>When using custom actions with multiple tabs, by default, the step will run in the context of the first tab of the recording.<br /> If you need to run in the context of another tab, add an <a href="../../advanced-editing/parameters/parameters-in-custom-javascript-steps.htm">HTML parameter</a> to that step. You can use the custom step to open a new tab, see <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/iKXZ6Ic8Xo">here</a> for an example.</p>
+                                        <div class="caution">
+                                            <p>Note Steps will run on the tab they were recorded on, for example, if the steps were recorded on tab# 2 and then the test is running these steps on tab# 3, it will try to run them on tab# 2).</p>
+                                        </div>
+                                        <h2><a name="my-new-window-is-blocked-what-can-i-do"></a>My new window is blocked. What can I do?</h2>
+                                        <p>If your test involves opening of a new window ("pop-up") and it was blocked during running the test locally, the address bar will be marked Pop-ups blocked</p>
+                                        <img src="images/c2a1040-xwfwobfxd_zcxu4tewzxhpuk6dttpg200flzszu7qcguwbiqzm4tk7sldutpauwfmah18.png" title="XwfWobfXD_zcXU4tEwzxHPuK6dTTPG200fLzsZU7QcguWbIQzm4tk7sLDutpAUWFMA=h18.png" class="ScreenshotFullsize" />
+                                        <p>You will probably notice this blockage the first time you run the test. The browser will detect an automatic click and will block the new tab/window. You will need to enable the popup in your browser only in the first run.<br /> ​</p>
+                                        <h2><a name="allow-pop-ups-through-the-address-bar-while-the-test-is-running"></a>Allow pop-ups through the address bar (while the test is running)</h2>
+                                        <p>→ <strong>To allow pop-ups through the address bar:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On your computer, open <strong>Chrome</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Find the page for which the pop-up has been blocked.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the address bar, click <strong>Pop-ups blocked</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click the <strong>link</strong> for the pop-up window you'd like to see.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>To always see pop-ups for the site, select <strong>Always show pop-ups from[site]</strong></p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="allow-pop-ups-through-chrome-settings"></a>Allow pop-ups through Chrome settings:</h2>
+                                        <p>→ <strong>To allow pop-ups through Chrome settings:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On your computer, open Chrome.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>At the top right, click <strong>More</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Settings</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>At the bottom, click <strong>Show advanced settings</strong>.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Under "Privacy," click <strong>Content settings</strong>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Under "Pop-ups," select an option: <strong>Allow all sites to show pop-ups</strong></p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Incognito mode If you run your tests in incognito mode, the browser will not remember that you have authorized Testim and will block the new tab/window in each run. If you have multiple tabs/windows, we recommend not running in incognito mode.<br /> ​</p>
+                                        </div>
+                                        <h2><a name="reviewing-multi-windows-test-results"></a>Reviewing multi-windows test results</h2>
+                                        <p>When a test is executed on multiple windows or tabs, each step will have a numeric indication of the window/tab the step was executed in, for example, the following step was executed on the second tab:</p>
+                                        <img src="images/76fe2d0-screen_shot_2021-08-26_at_10.03.37.png" title="Screen Shot 2021-08-26 at 10.03.37.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>In case of multi tab application, when a step is recorded, the specific tab (e.g., tab #3) is stored. When the step is played, as part of test run, the Testim application looks for the tab based on two parameters: tab number and tab URL. The decision to run on a specific tab is based on these two parameters – so, the actual playing can result in a different tab number (e.g. tab #2) if both tabs URLs are identical.</p>
+                                        </div>
+                                        <p>In order to see the screenshot of the step, you can click on the screenshot icon on the step. When a test fails, images of all tabs will be available :</p>
+                                        <img src="images/8da0203-screen_shot_2021-08-26_at_10.06.50.png" title="Screen Shot 2021-08-26 at 10.06.50.png" class="ScreenshotFullsize" />
+                                        <h2><a name="to-conclude"></a>To conclude</h2>
+                                        <p>Any interaction will be recorded even if it was taken in a new tab, a new window or a new modal.<br /> Needless to say, Testim also playbacks the scenario on the right window.</p>
+                                    

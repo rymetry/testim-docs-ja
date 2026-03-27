@@ -1,0 +1,34 @@
+
+                                        <h1>Find and go to record</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The <strong>Find and go to record</strong> step is used to perform a text search for the record. The system goes into the matching record that appears as the first result of the search. →<strong>To add a Find and go to record step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the editor, add a step by clicking the + button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the Salesforce steps tab, click <strong>Common Operations</strong> and select the <strong>Find and go to record</strong> step.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Select the Object</strong> field, select the type of object that you would like to search on.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the <strong>Search for</strong> field, enter a text string that matches the record that you are looking for.</p>
+                                            </li>
+                                            <img src="images/ef0246d-acme.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>If you want to use a variable as the search query, click the <strong>Search for</strong> field and then click the <strong>T</strong> sign.<br /></p>
+                                            </li>
+                                            <p>The field becomes a <strong>JS</strong> parameter field.</p>
+                                            <li value="6">
+                                                <p>Enter the variable name in the field.</p>
+                                            </li>
+                                            <img src="images/28f5b3c-companyname.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Click <strong>Save</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>When running the test, the Find step will search for a matching record and if multiple results are returned, it will go into the first result. If no results are found, the step will fail.</p>
+                                    

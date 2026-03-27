@@ -1,0 +1,62 @@
+
+                                        <h1>Configuring Data-driven Tests Using the Config File</h1>
+                                        <p>Test Data can be passed to one or multiple tests by editing the <a href="../../running-tests/configuration-file-run-hooks/index.htm">config file</a> and then running the test with the CLI, while adding a flag to use the config file in this run.  The configuration file is a common JS file containing all the required parameters to run your tests, while executing Configuration File Hooks. Through one of these hooks (e.g., <span class="FileOrFilePath">beforeSuite</span>), it is possible to add test data to the entire execution or to specified tests. This dataset can override the dataset that was defined in the visual editor.</p>
+                                        <div class="note">
+                                            <p>The Config file code is processed by the CLI that runs the test on the Testim grid, so it is possible to run JS that is supported in Node and not on the browser.</p>
+                                        </div>
+                                        <p>The Config file option offers extensive versatility and granular control over the scope in which the data is used:</p>
+                                        <h2><a name="execution-level-placing-parameters-in-the-span-classfileorfilepathreturnspan-section"></a>Execution level - placing parameters in the <span class="FileOrFilePath">return</span> section</h2>
+                                        <p>Placing the data parameters after the <span class="FileOrFilePath">return</span> section within the configuration hooks (<span class="FileOrFilePath">beforeSuite</span> hook or the <span class="FileOrFilePath">beforeTest</span> hook), will run the same data across all the tests included in the execution. → <strong>To add test data to a config file to run at the execution level:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a config file or edit an existing one.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Add the parameters and their values after the <span class="FileOrFilePath">return</span> section within the configuration hooks (<span class="FileOrFilePath">beforeSuite</span> hook or the <span class="FileOrFilePath">beforeTest</span> hook).</p>
+                                            </li>
+                                        </ol>
+                                        <p>Here is an example of test data that is added to the <span class="FileOrFilePath">beforeSuite</span> hook. This test data will be the same across all the tests included in the execution:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.config = {<br />&#160;<br />&#160;&#160;beforeSuite: function (suite) {<br />&#160;&#160;&#160;&#160;console.log("beforeSuite", suite);<br />&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;"username": "David",<br />&#160;&#160;&#160;&#160;&#160;&#160;"password": 123<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;},<br />&#160;&#160;};</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Here is an example of test data that is added to the <span class="FileOrFilePath">beforeTest</span> hook. This test data will be the same across all the tests included in the execution:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.config = {<br />&#160;&#160;.....<br />&#160;&#160;.....<br /><br />&#160;&#160;beforeTest: function (test) {<br />&#160;&#160;&#160;&#160;console.log("beforeTest", test);<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;"username": "David",<br />&#160;&#160;&#160;&#160;&#160;&#160;"password": 123<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;}<br /><br />&#160;&#160;.....<br />&#160;&#160;.....<br />};</code></pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h2><a name="test-level-adding-an-span-classfileorfilepathoverridetestdataspan-object"></a>Test level - adding an <span class="FileOrFilePath">overrideTestData</span> object</h2>
+                                        <p>Inside the <span class="FileOrFilePath">return</span> section, it is possible to add an <span class="FileOrFilePath">overrideTestData</span> object, which allows you to add the data to specified tests by test name, including specifying one parameter on one test and another parameter on another test within the same execution. → <strong>To add test data to a config file to run at the test level:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a config file or edit an existing one.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Add tests names and data sets (data sets should be in JSON format), by adding them to the <span class="FileOrFilePath">overrideTestData</span> under the <span class="FileOrFilePath">beforeSuite</span> hook. All other parts of the config file should remain/be included.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>Here is an example of a beforeSuite hook in the configuration file :</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>beforeSuite: function () {<br />&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;overrideTestData: {&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 1": {user: "dave", password : "123"},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 2": {name: "ryan"}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;}&#160;&#160;&#160;&#160;<br />} //add comma here if there are more functions after beforeSuite</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>"Test 1" and "Test 2" are names of tests.</p>
+                                        </div>
+                                        <p>Here is the same example with 2 datasets for the first test :</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>beforeSuite: function () {<br />&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;overrideTestData: {&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 1": [{user: "michelle", password : "belle"},<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{user: "paul", password : "walrus"}]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 2": {name: "john"}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;}&#160;&#160;&#160;&#160;<br />} //add comma here if there are more functions after beforeSuite</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>If the one of the data set parameters is missing from a consequent data set, for example, if the second data set did not include the password (i.e. did not include <span class="FileOrFilePath">password: walrus</span>), Testim will use the parameter data from the first data set (i.e. <span class="FileOrFilePath">belle</span>). → <strong>To run a test using the config file:</strong><br /> After creating the config file, pass the config file to the Command Line (CLI) runner as a parameter, while making sure to indicate the path to the file if needed. When you run your test from <a href="../../running-tests/the-command-line-cli/index.htm">Testim CLI</a>, the test will run multiple times, in order, each time with a different Data Set.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim -c "testimConfig.js"</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code></code></pre>
+                                            </div>
+                                        </div>
+                                        <p>If the test already included data (e.g. that was specified in the visual editor), this data will override the original test data, if the Config file includes the override function naming the specific test.</p>
+                                    

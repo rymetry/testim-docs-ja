@@ -1,0 +1,205 @@
+
+                                        <h1>Test Library</h1>
+                                        <p>The <strong>Test Library</strong> screen (<strong>Test List -&gt; Tests</strong>) is where you will manage your tests. Tests can be arranged in folders. All folders and tests within the current project are listed on this screen and you can perform a variety of actions on each of these tests, as described below.</p>
+                                        <h1><a name="viewing-the-test-library"></a>Viewing the Test Library</h1>
+                                        <img src="images/e75e02c2aa3c79e6881ab015dd0b37f22e0beca61f06147ffa43d8bb37cbbe0f-2024-11-24_16-39-18.png" class="ScreenshotFullsize" />
+                                        <p>Web Test Library &lt;/Image&gt;</p>
+                                        <img src="images/20dd7c7-mobiletestlibrary.png" class="ScreenshotFullsize" />
+                                        <p>Mobile Test Library &lt;/Image&gt; The Test Library screen displays a list of tests and folders with the following information:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Name</strong> - the name of the test or folder. If Testim replaced a degraded locator for one or more of the elements in the test with an auto-improved locator, an “Ai” icon is shown after the test name for approximately two weeks. For more information, see <a href="../locators-auto-improve.htm">Locators: Auto Improve</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Owner</strong> - the owner of the test or folder.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>App Name (mobile)</strong> - name of the mobile app used to record the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>App Version (mobile)</strong> - version of the mobile app used to record the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Updated</strong> - displays the time, indicating the last update made to the test.</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> <strong>Kind</strong> - indicates whether the item is a </em>test_or _folder*.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Label</strong> - a list of labels that were added to the test. For more information, see <a href="../labels.htm">Labels</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Status</strong> - the status of the test. For more information see <a href="../../testops/testops-management/test-status.htm#section-test-statuses">Test Statuses</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> <strong>Last Runs</strong> - indicates the status of the last 10 remote runs. Each vertical line represents a test run. Green lines indicate passed tests. Red lines indicate failed tests. Yellow lines indicate passed tests that only passed after a retry. If less than ten tests have been run, the remaining lines will be grey. The :fa-close: or :fa-check:  icon indicates the status of the most recent test. :fa-close: indicates failed; :fa-check: indicates passed. Click the indicator to access the </em>Test runs* screen. For more information, see <a href="../../results/test-runs.htm">Test runs</a>.</p>
+                                        <h2><a name="filtering-the-test-library"></a>Filtering the Test Library</h2>
+                                        <p>You can filter your tests by status, label, owner, the shared steps that they contain, and tests that have been auto-improved. Tests in accounts integrated with Applitools can also filter by tests which contain Visual Validation steps. → <strong>To filter the Test Library:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced filters</strong> icon.</p>
+                                            </li>
+                                            <img src="images/8492bf1aa39fea63b3d385a46a9254012174e5c71bea7d0caebfa443547ff0ca-2024-11-24_17-00-17.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Filter Tests</strong> pane opens on the right hand side.</p>
+                                            <img src="images/31e9bf4181b8c457ea92fae88c0b6bef805cd2542e3d9cf63939f9d371a086de-filtertests.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Filter Test</strong> pane select one or more filter criteria:</p>
+                                            </li>
+                                            <li value="3">
+                                                <p><strong>Show Flaky Tests</strong> - enable this toggle to display flaky tests only. A test is considered flaky if it passed after a retry. For more information, see <a href="../../testops/testops-management/flaky-tests.htm">Flaky tests</a>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p><strong>Test Status</strong> - Statuses are manually added to help manage which test needs to be worked on. For more information, see <a href="../../testops/testops-management/test-status.htm">Test Status</a>. Select one or more of the following statuses:</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Draft - Test is still in-progress</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Evaluating - Test ready, but its stability should be validated</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Active - Test is ready and stable</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Quarantine - The test doesn’t conform to the definition of a stable test and is waiting to be fixed</p>
+                                            </li>
+                                            <li value="9">
+                                                <p><strong>Label</strong> - Labels are used to associate tests with one or more characteristics without the need to place them in a specific Suite or Test Plan. For more information, see <a href="../labels.htm">Labels</a>. Select one or more of the following labels and then select one of the following operands:</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>OR - will return tests that include one or more of the selected labels.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>AND - will only return tests that include ALL the selected labels.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p><strong>Test Owner</strong> -  Test Owners are users that have been selected as the “owner” for each test. For more information, see <a href="../../testops/testops-management/test-owner.htm">Test Owner</a>. Select one or more of the test owners in the list.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>You can also search for criteria within each section of the Filter Test pane by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.</p>
+                                        </div>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click <strong>Apply</strong>.<br /></p>
+                                            </li>
+                                            <p>The filter is applied, and only those tests that meet the criteria are shown. To learn more about saving this filtered view, see <a href="../saving-a-filtered-view.htm">Saving a Filtered View</a>.</p>
+                                            <div class="note">
+                                                <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the Filter Test pane.</p>
+                                            </div>
+                                            <li value="2">
+                                                <p>Click the <strong>"X"</strong> in the upper right of the Filter Test pane to close it.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Closing the Filter Test pane without resetting the filters will not reset them, and only the tests that meet the filter criteria will be shown. To view all of your tests and folders again, you will need to reopen the Filter Test pane and click <strong>Reset filters</strong>.</p>
+                                        </div>
+                                        <h2><a name="search-text-box"></a>Search text box</h2>
+                                        <p>You can use the search text box to find tests or folders based on their names, descriptions, and labels. The process for searching based on labels is slightly different than searching based on names and descriptions. In both cases, you enter your search criteria in the <strong>Search library</strong> box.</p>
+                                        <p><strong>Examples of Special Syntax:</strong>
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>AND Searches:</strong> Adding a second search term (separated by a space) will act as an <strong>AND</strong> search. In the case of labels, your second term needs to be preceded by the term <strong>label:</strong>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Exclusion Searches:</strong> Preceding a search term with a minus sign (without a space) will act a <strong>NOT</strong> search. If you have more than one term, be sure to add a space between the terms. In the case of labels, your second term needs to be preceded by the term <strong>label</strong>.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/f9e60e30cbbb3952b2a1c7d377860bbadda06496a7beb9890eb1dad41d51bb07-search.png" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To search by names and descriptions:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Search library text box, enter any text from the name or description of the tests or folders you want to find.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The resulting list is filtered immediately as you type each character. → <strong>To search by labels:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Search library text box, enter the text <strong>label:</strong> followed by the complete name of the label (without a space between them).<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The filtered list is shown after you enter the complete name of the label.</p>
+                                        <p><strong>Label search example:</strong>
+                                            <br />
+                                        </p>
+                                        <p>If you've labeled all the tests that still fail with the "Failed" label, you can filter as follows:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>label:Failed</code></pre>
+                                            </div>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Exclusion</strong> - use the <span class="FileOrFilePath">-</span> modifier to exclude a specific label or name/string. For example, if you want to get all the tests in the label "sanity" that didn't fail:</p>
+                                            </li>
+                                        </ul>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>label:sanity -label:failed</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Whether you search by names/descriptions or labels, the resulting list includes results in a flat view, so all tests or folders that are nested within folders that match the search criteria will also be shown. To view the location of any of the results, click on its row. The location is shown on the bottom of the screen.</p>
+                                        </div>
+                                        <h2><a name="opening-a-test"></a>Opening a test</h2>
+                                        <p>You can open a test in the Editor by <strong>double-clicking</strong> on the desired test. If the test is inside a folder or sub-folder, you need to drill-down by double clicking on each folder and sub-folder until you reach the desired test and then double-click on the test to open it.</p>
+                                        <div class="note">
+                                            <p>When you open a folder, a breadcrumbs navigation appears at the top of the page, enabling you to navigate back to the root folder.</p>
+                                        </div>
+                                        <h2><a name="running-tests-web"></a>Running Tests (Web)</h2>
+                                        <p>You can run a test or multiple tests directly from the Test Library.<br /> → <strong>To run tests:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the test name to select it.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>You can select multiple tests by holding down the ctrl/cmd key and then clicking on each of the desired tests.<br /> If there are no folders in your Test Library, you can also select all of your tests by holding down the ctrl/cmd key + A on the keyboard.</p>
+                                            </div>
+                                            <li value="2">
+                                                <p>Click the <strong>Play</strong> icon (or right-click on the test name and choose <strong>Play</strong> from the right-click menu).</p>
+                                            </li>
+                                            <img src="images/dd0e0f168099be3a817e6f6dbb1abcf43945d2e468fa3a4c8ae9436d1e5d1eae-play.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Run Test Locally</strong> window opens.</p>
+                                            <img src="images/54f856348574e877b202311eb8e109bffa8443cb9f644910b8db34079ad95af0-confirm.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>If you would like to run the test in <em>Incognito mode</em>, select <strong>Run in Incognito mode</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>If you would like the test to use a different base URL than the one originally configured in the test, select <strong>Override Base URL</strong> and enter the URL in the field that is shown.  For more information, see <a href="../../running-tests/base-url.htm">Base URL</a>.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>OK</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="caution">
+                                            <p>Avoid touching your mouse and keyboard while the test is running.</p>
+                                        </div>
+                                        <p>The <em>Suite Runs</em> tab of the <em>Runs_screen opens at the same time as the _AUT</em> (application under test) browser. The test is run in the <em>AUT_browser, and you can view the results in the _Suite Runs</em> tab.</p>
+                                        <h2><a name="exporting-to-csv"></a>Exporting to CSV</h2>
+                                        <p>You can export a list of your tests to a csv file. The following information is included for each test: <em>name, description, labels, last run status, author, app name (mobile), app version (mobile), and path</em>.<br /> → <strong>To export test information to csv:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the <strong>Export to CSV</strong> icon.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/5426c49146d35e03287eff893d690d21f278fe45be0824f3fdd78afdd460c33c-export.png" class="ScreenshotFullsize" />
+                                        <p>The csv file is downloaded to your local machine.<br /></p>
+                                        <p><strong>Note:</strong> when searching/filtering the CSV will only contain the matching items.</p>
+                                        <h2><a name="changing-tests-configuration-web"></a>Changing Tests' Configuration (Web)</h2>
+                                        <p>You can change tests' configuration directly from the test library.<br /> → <strong>To edit tests' configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select the test/s you would like to change their configuration</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click on the "Edit test config" either from the top menu, or from the context menu</p>
+                                            </li>
+                                            <img src="images/62c4e7f-screen_shot_2021-12-06_at_16.51.38.png" title="Screen Shot 2021-12-06 at 16.51.38.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select the configuration to apply</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click "OK"</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/93790fb-screen_shot_2021-12-06_at_16.52.54.png" title="Screen Shot 2021-12-06 at 16.52.54.png" class="ScreenshotFullsize" />
+                                    

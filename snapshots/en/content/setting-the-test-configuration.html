@@ -1,0 +1,38 @@
+
+                                        <h1>Setting the Test Configuration</h1>
+                                        <p>Every test has its own default configuration accessible from the <strong>property panel</strong> of the test's <strong>Setup step</strong>. The configuration parameters that are set in the test's default configuration will apply unless the test is run from the CLI or a scheduler with a different test configuration. By default an <strong>Untitled</strong> configuration is created for every new test. This default configuration includes a rule  to run the test on any available device with any OS version. These settings (Device Name and OS version settings) cannot be modified, however it is possible to modify additional setting, as explained below.  The modified configuration will be saved in the test itself, which means that it will not be available in the configuration library (See <a href="../../test-management/configuration-library-mobile.htm">Configuration Library - Mobile</a>) for use in other tests.</p>
+                                        <div class="note">
+                                            <p>When the test is run in the CLI, you can override the default configuration by specifying a new Test Configuration in the run command, see <a href="../../running-tests/the-command-line-cli/index.htm">Command line interface</a>.</p>
+                                        </div>
+                                        <p>→ <strong>To override the default test configuration settings:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Setup Step' Show Properties</strong> icon.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>On the <strong>Properties</strong> panel, under <strong>Configuratio</strong>n, click the <strong>Edit</strong> icon.<br /></p>
+                                            </li>
+                                            <img src="images/e4593c6-editicon.jpg" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>The <strong>Edit Configuration</strong> Panel is displayed<br /></p>
+                                            <img src="images/5192691-edittestconfiguration.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Optionally edit the following settings:</p>
+                                            </li>
+                                            <li value="4">
+                                                <p><strong>Step timeout (ms)</strong> - specify the time laps in milliseconds which causes Testim to register a fail for a test step.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Step delay (ms)</strong> - specify the delay in milliseconds between running test steps.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>Setup step timeout (ms)</strong> - specify the time laps in milliseconds which causes Testim to register a fail for a test's setup step.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p><strong>Before/After hooks</strong> - specify before/after hooks, as explained in <a href="../../advanced-editing/hooks.htm">Hooks</a></p>
+                                            </li>
+                                            <li value="8">
+                                                <p>When finished close the pane or go back the <strong>Properties</strong> pane.</p>
+                                            </li>
+                                        </ol>
+                                    

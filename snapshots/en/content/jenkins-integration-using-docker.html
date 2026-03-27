@@ -1,0 +1,41 @@
+
+                                        <h1>Jenkins integration - using Docker</h1>
+                                        <img src="images/d69aa0d-jenkins1.png" title="Jenkins1.png" class="ScreenshotFullsize" />
+                                        <p><strong>Using docker is the best way for you to use the Testim CLI, that way we make sure you are always up-to-date with the latest npm package and the required node.js version.</strong>
+                                        </p>
+                                        <p>In order to integrate your tests with Jenkins using our docker container, first you need to install the <a href="https://docs.docker.com/engine/installation/">docker engine</a> on the Jenkins machine or one of its slave machines.</p>
+                                        <h2><a name="now-just-follow-these-steps"></a>Now, just follow these steps:</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a New item in Jenkins:<br /></p>
+                                            </li>
+                                            <p>​</p>
+                                            <img src="images/a2e99b5-jenkins2.png" title="Jenkins2.PNG" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Enter job name (e.g. "Testim Tests"), and choose "Freestyle project" and click "OK":</p>
+                                            </li>
+                                            <img src="images/1525473-jenkins3.png" title="Jenkins3.PNG" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Add "Execute Shell" step:</p>
+                                            </li>
+                                            <img src="images/0fcc8b2-jenkins4.png" title="Jenkins4.PNG" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Set the command with the appropriate parameters, as described in the CLI page. Here is the script template, that pulls and uses our docker file, and the run the CLI command itself:</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>TESTIM_DOCKER=testimio/docker-cli<br />TESTIM_TOKEN="&lt;YOUR ACCESS TOKEN&gt;"<br />TESTIM_PROJECT="&lt;YOUR TESTIM PROJECT ID&gt;"<br />TESTIM_LABEL="&lt;YOUR LABEL&gt;"<br />SELENIUM_GRID_NAME="&lt;YOUR SELENIUM GRID NAME&gt;"<br /><br />echo "Pulling latest version"<br />docker pull ${TESTIM_DOCKER}<br /><br />echo "Run testim-cli"<br />docker run --rm -v "${WORKSPACE}":/opt/testim-runner §§§LINEBREAK§§§<br />&#160;&#160;${TESTIM_DOCKER} §§§LINEBREAK§§§<br />&#160;&#160;--token ${TESTIM_TOKEN} §§§LINEBREAK§§§<br />&#160;&#160;--project "${TESTIM_PROJECT}" §§§LINEBREAK§§§<br />&#160;&#160;--label "${TESTIM_LABEL}" §§§LINEBREAK§§§<br />&#160;&#160;--grid ${SELENIUM_GRID_NAME} §§§LINEBREAK§§§<br />&#160;&#160;-r /opt/testim-runner/testim-sanity-$BUILD_NUMBER-report.xml<br />echo "Testim finished"§§§LINEBREAK§§§</code></pre>
+                                                </div>
+                                            </div>
+                                            <img src="images/f0d35e2-jenkins5.png" title="Jenkins5.PNG" class="ScreenshotFullsize" />
+                                            <p>​<strong>Note</strong>:  For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                            <li value="5">
+                                                <p>In order for Jenkins to store, analyze and show the results, we generate a standard JUnitXMLReporter XML file. For Jenkins to use the file you need to add a post-build action of type "Publish JUnit test result report":</p>
+                                            </li>
+                                            <img src="images/8c119e0-jenkins6.png" title="Jenkins6.PNG" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Set the xml file value, according to the "report-file" parameter in section 4:</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d2241d4-jenkins7.png" title="Jenkins7.PNG" class="ScreenshotFullsize" />
+                                        <p>​ ​</p>
+                                    

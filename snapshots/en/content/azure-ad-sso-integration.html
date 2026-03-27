@@ -1,0 +1,112 @@
+
+                                        <h1>Azure AD SSO Integration</h1>
+                                        <p>Azure Active Directory is Microsoft's cloud-based identity and access management service. With Azure AD Seamless Single Sign-On (Azure AD Seamless SSO) you can have access for all your users and apps.<br /> Testim integrates with Azure AD Seamless SSO, allowing Azure users to authenticate once in Azure and then access Testim without authenticating again.</p>
+                                        <div class="note">
+                                            <p>SSO is a premium feature. Make sure the SSO feature is enabled for your deployment. If it is not, contact your Testim CSM.</p>
+                                        </div>
+                                        <p>→ <strong>To setup the Testim Azure AD integration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Login to the <strong>Azure Portal Admin</strong> account.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Go to <strong>Enterprise application &gt; New Application &gt; Create your own application</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Under <strong>What's the name of your app?</strong>, enter a name for the application (e.g., Testim Website SSO).</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Select the <strong>Choose Integrate any other application you don’t find in the gallery (Non-gallery)</strong> option.</p>
+                                            </li>
+                                            <img src="images/ef57db2-createyourownapplication.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Create</strong>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click on <strong>Single sign-on</strong> on the left menu.</p>
+                                            </li>
+                                            <img src="images/0db1560-saml.png" title="saml.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Click on <strong>SAML</strong>.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>In another tab open <strong>Testim Automate</strong> and click the user icon, located in the top-right corner.</p>
+                                            </li>
+                                            <img src="images/713786e-sso1.png" title="sso1.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>In the drop-down menu, click <strong>Settings</strong> and click the <strong>SSO</strong> tab..</p>
+                                            </li>
+                                            <li value="10">
+                                                <p>Under the <strong>Testim Service Provider Details</strong> section, click the <strong>Service Provider Metadata</strong> to download the XML file.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Go back to the <strong>Azure</strong> tab and click <strong>Upload Metadata File</strong>.</p>
+                                            </li>
+                                            <img src="images/91619bd-uploadmetadatafile.png" title="uploadmetadatafile.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Basic SAML Configuration</strong> screen is displayed.<br /></p>
+                                            <li value="12">
+                                                <p>Go back to the <strong>Testim</strong> tab, and under <strong>Testim Service Provider Details</strong>, under <strong>Assertion Consumer Service URL</strong>, click the <strong>Copy</strong> button.</p>
+                                            </li>
+                                            <img src="images/dc1324d-assertiontestim.png" title="assertiontestim.png" class="ScreenshotFullsize" />
+                                            <li value="13">
+                                                <p>Go back to the <strong>Azure</strong> tab and paste the copied <strong>Assertion Consumer Service URL</strong> into the <em>Reply URL</em>* field and save.</p>
+                                            </li>
+                                            <img src="images/dbbfe28-basicsmlconfiguration.png" title="basicsmlconfiguration.png" class="ScreenshotFullsize" />
+                                            <li value="14">
+                                                <p>In the <strong>Azure</strong> tab, go to <strong>User Attribute &amp; Claims</strong>.</p>
+                                            </li>
+                                            <img src="images/c03a031-manageclaim.png" title="manageclaim.png" class="ScreenshotFullsize" />
+                                            <li value="15">
+                                                <p>Add a new claim with the following details:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>Email</p>
+                                                </li>
+                                                <li>
+                                                    <p>Name: email</p>
+                                                </li>
+                                                <li>
+                                                    <p>Source attribute: user.mail or user.userprincipaname. You can check which one by entering one of your organization’s users in Azure AD and then check which field you can see the email address.</p>
+                                                </li>
+                                                <li>
+                                                    <p>firstName</p>
+                                                </li>
+                                                <li>
+                                                    <p>Name: firstName</p>
+                                                </li>
+                                                <li>
+                                                    <p>Source attribute: user.givenname</p>
+                                                </li>
+                                                <li>
+                                                    <p>lastName</p>
+                                                </li>
+                                                <li>
+                                                    <p>Name: lastName</p>
+                                                </li>
+                                                <li>
+                                                    <p>Source attribute: user.surname</p>
+                                                </li>
+                                            </ul>
+                                            <li value="16">
+                                                <p>Close the page and under <strong>SAML Signing Certificate</strong>, download the <strong>Federation Metadata XML</strong>.</p>
+                                            </li>
+                                            <li value="17">
+                                                <p>In the <strong>Testim</strong> tab, under <strong>IDENTITY PROVIDER (IDP) METADATA</strong>, click <strong>Upload File</strong> and select the Federation Metadata XML file.</p>
+                                            </li>
+                                            <li value="18">
+                                                <p>To ensure all users are only able to login through Azure, and not through the regular Testim login page, toggle the <strong>Enable SSO</strong> on and select the <strong>Force users to login via idP</strong> checkbox.</p>
+                                            </li>
+                                            <img src="images/eda2ac8-ssoconfiguration3.png" title="ssoconfiguration3.png" class="ScreenshotFullsize" />
+                                            <li value="19">
+                                                <p>In the <strong>Azure</strong> tab, go to <strong>Users and groups</strong> screen and click <strong>Add users/group</strong>.</p>
+                                            </li>
+                                            <li value="20">
+                                                <p>Still in <strong>Azure</strong>, go to the <strong>Properties</strong> screen in the <strong>User assignment required</strong> option turn it ON or OFF as required.</p>
+                                            </li>
+                                            <img src="images/8b155e0-testim_web_site_sso.png" title="testim web site sso.png" class="ScreenshotFullsize" />
+                                            <li value="21">
+                                                <p>Go back to <strong>Single sign-on</strong> on the left menu and test your configuration.</p>
+                                            </li>
+                                        </ol>
+                                    

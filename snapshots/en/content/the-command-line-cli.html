@@ -1,0 +1,353 @@
+
+                                        <h1>Command line interface (CLI)</h1>
+                                        <h2><a name="prerequisites"></a>Prerequisites</h2>
+                                        <p>Running via CLI requires Node.js installed. Testim supports all <a href="https://github.com/nodejs/Release/blob/main/README.md">LTS/supported</a> versions of Node.js.</p>
+                                        <h2><a name="cli-installation"></a>CLI Installation</h2>
+                                        <p>Install Testim package.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>npm install -g @testim/testim-cli</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>That’s it!</p>
+                                        <h4><a name="basic-cli-command"></a>Basic CLI command</h4>
+                                        <p>The Basic CLI command example for web and mobile is displayed in the <strong>Settings &gt;CLI</strong> tab and includes your Token and Project ID. → <strong>To view your basic CLI command:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; CLI</strong> tab.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>CI</strong> to run the test remotely on your CI or <strong>Local</strong> to run the test locally (this will open a local browser on your machine) (web only)</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Under <strong>CI Platform</strong>, select the desired CI platform (optional)</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Grid</strong>, select the desired grid on which to run the test. For web testing, Selenium grids will be displayed and for mobile testing, the following grids canl be displayed:<br /></p>
+                                            </li>
+                                            <p><a href="../../integrations/grid-management/virtual-mobile-grid.htm">Virtual Mobile Grid</a>
+                                                <br />
+                                            </p>
+                                            <p><a href="../../integrations/grid-management/tricentis-device-cloud.htm">Tricentis Device Cloud</a>
+                                                <br />
+                                            </p>
+                                            <p><a href="../../integrations/grid-management/headspin-integration.htm">Testim Headspin Mobile</a>
+                                                <br />
+                                            </p>
+                                            <p><a href="../../integrations/grid-management/browserstack-integration-1.htm">Browserstack</a>
+                                                <br />
+                                            </p>
+                                            <p><a href="../../integrations/grid-management/browserstack-integration-copy.htm">LambdaTest</a>
+                                                <br />
+                                            </p>
+                                            <p>The basic CLI command is displayed at the bottom under <strong>Example</strong>.</p>
+                                            <img src="images/af52b8a-cli_command.png" title="cli_command.png" class="ScreenshotFullsize" />
+                                            <p>The basic command includes the following elements:<br /></p>
+                                            <p><span class="FileOrFilePath">--token</span>: the authentication token<br /></p>
+                                            <p><span class="FileOrFilePath">--project</span>: the project ID<br /></p>
+                                            <p><span class="FileOrFilePath">--grid</span>: the name of the grid to run the tests on. For web testing, Selenium grids will be displayed and for mobile testing, Appium grids will be displayed.</p>
+                                            <li value="5">
+                                                <p>Copy the CLI, edit and add parameters according to your needs. You can run a specific test, label, configuration, etc., as explained in the following section.</p>
+                                            </li>
+                                        </ol>
+                                        <h4><a name="additional-common-parameters"></a>Additional common parameters</h4>
+                                        <p>Here is an example of a basic command with the most common options (see below detailed description for all the available options):</p>
+                                        <p><span class="FileOrFilePath">--project</span>: see above<br /></p>
+                                        <p><span class="FileOrFilePath">--token</span>: see above<br /></p>
+                                        <p><span class="FileOrFilePath">--label:</span> use this to run specific tests that include the specified labels<br /></p>
+                                        <p><span class="FileOrFilePath">--grid</span>: see above<br /></p>
+                                        <p><span class="FileOrFilePath">--report-file</span>: specifies where to store the test results (so the CI server can read them)</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --label "&lt;YOUR LABEL&gt;" --token "&lt;YOUR ACCESS TOKEN&gt;" --project "&lt;YOUR PROJECT ID&gt;" --grid "&lt;Your grid name&gt;" --report-file test-results/testim-tests-report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Web-only note Instead of running on a grid, it is possible to use <strong>--use-local-chrome-driver</strong>. That way you can see the run in action on a clean, extension-free, Chrome browser. if <span class="FileOrFilePath">--use-local-chrome-driver</span> is used in combination with <span class="FileOrFilePath">--headless</span>, it is required to add the <span class="FileOrFilePath">--mode selenium</span> flag as well.</p>
+                                        </div>
+                                        <h2><a name="all-cli-parameters"></a>All CLI Parameters</h2>
+                                        <h4><a name="project"></a>Project:</h4>
+                                        <p><span class="FileOrFilePath">--project</span>  the project ID.<br /></p>
+                                        <p>To select a different project, go to the Company screen (see <a href="../../administration/project-and-user-management.htm">https://help.testim.io/docs/project-and-user-management</a>), select the relevant project, go to <strong>Settings &gt; CLI</strong> tab and extract the project ID from the basic CLI command example.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--project AOL-12323-a4b2-4762-df380</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="access-token"></a>Access token</h4>
+                                        <p><span class="FileOrFilePath">--token</span> The access token. The access token can be obtained from the basic CLI command example, which is displayed in the <strong>Settings &gt; CLI</strong> tab screen.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--token aaaaa-1234-1234-bbbb-1234qwer1234qwer</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="label"></a>Label</h4>
+                                        <p><span class="FileOrFilePath">--label</span> or <span class="FileOrFilePath">-l</span> Run all tests that include one of the mentioned labels.</p>
+                                        <div class="note">
+                                            <p>Note If the specified label does not point to a test, an error will be returned.</p>
+                                        </div>
+                                        <p>Note that you can also run more than one label, by adding more <span class="FileOrFilePath">--label</span> arguments</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>-l sanity -l custom-label2</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-name"></a>Test Name</h4>
+                                        <p><span class="FileOrFilePath">--name</span> or <span class="FileOrFilePath">-n</span>, the name of the test to run.</p>
+                                        <div class="note">
+                                            <p>You can also run more than one test by name, by adding more <span class="FileOrFilePath">--name</span> arguments</p>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--name "login_to_app"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-id"></a>Test id</h4>
+                                        <p><span class="FileOrFilePath">--testId</span> or <span class="FileOrFilePath">-t</span> or <span class="FileOrFilePath">--test-id</span>, the ID of the test to run. Enter the command followed by the ID if the test.</p>
+                                        <div class="note">
+                                            <p>You can also run more than one test by id, by adding more <span class="FileOrFilePath">--testId</span> arguments</p>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--testId "5e1c62b2-7c30-635b-6441-dd804126118b"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="grid-name"></a>Grid Name</h4>
+                                        <p><span class="FileOrFilePath">--grid</span>, the Selenium Grid name to use. You can use "Testim-Grid"/ your local selenium grid/ Saucelabs / Browserstack</p>
+                                        <p><span class="FileOrFilePath">--grid</span> <span class="FileOrFilePath">&lt;grid-name&gt;</span></p>
+                                        <p>Note: Read <a href="../../integrations/grid-management/index.htm">here</a> how to configure your grid.</p>
+                                        <h4><a name="host"></a>Host</h4>
+                                        <p><span class="FileOrFilePath">-h</span> or <span class="FileOrFilePath">--host &lt;host-name&gt;</span>, the host name or IP containing the selenium grid. This command overrides the <span class="FileOrFilePath">--grid</span> command.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--host seleniumhost</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="grid-id"></a>Grid ID</h4>
+                                        <h4><a name="report-file"></a>Report File</h4>
+                                        <p><span class="FileOrFilePath"> --report-file</span> or <span class="FileOrFilePath">-r</span>,  where to print the report (by default to the output stream). The file is in the format of JUnitXMLReporter. This is used to integrate Testim results with the CI display. Usually, you'll need to set the build config in the CI to look for that file so make sure the CLI param value and the build config are set to the same location.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>-r ~/report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>To override the classname in the report file, add this parameter :</p>
+                                        <p><span class="FileOrFilePath">--override-report-file-classname com.someName</span>
+                                        </p>
+                                        <h4><a name="base-url-web-only"></a>Base URL (web only)</h4>
+                                        <p><span class="FileOrFilePath">--base-url</span>, starting URL after browser opens</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--base-url staging.example.com</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-config"></a>Test Config</h4>
+                                        <p><span class="FileOrFilePath">test-config</span> specifies configuration parameters (e.g. browser, operating system, resolution, device name, OS version, visual validation parameters, etc.) that will override the configuration defined for all tests in this run. For mobile testing, the test will run on the first available device within the pool of devices configured in the test configuration.<br /></p>
+                                        <p>Read more <a href="../../test-management/shared-configuration.htm">Configuration Library - Web</a> and <a href="../../test-management/configuration-library-mobile.htm">Configuration Library - Mobile</a>.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--test-config "1280x1024_SXGA_chrome" --test-config "1366x768_WXGA_firefox"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="params-file"></a>Params File</h4>
+                                        <p><span class="FileOrFilePath">--params-file</span> uses a JSON Parameters File that can be used to pass parameters to test runs. This method allows you to define dynamic values inside your test which vary by your test environment. For example, you can set different login credentials (username and password) when you test locally and when testing in your CI. After defining the JSON Parameters File, you can pass it to Testim CLI as an argument: <span class="FileOrFilePath">--params-file</span> followed by the file name. Read more - <a href="../../advanced-editing/parameters/json-parameters-file-parameters.htm">https://help.testim.io/docs/json-parameters-file-parameters</a>.</p>
+                                        <div class="note">
+                                            <p>The string path that is set in the <span class="FileOrFilePath">params-file</span> path must be a relative path, and not a full path.</p>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--params-file [params-file.json]</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-suite-by-name"></a>Test Suite (by name)</h4>
+                                        <p><span class="FileOrFilePath">--suite</span>, the test suite name to run. You can run more than one suite.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--suite "suite_name" --suite "suite_name2"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-suite-by-id"></a>Test Suite (by ID)</h4>
+                                        <p><span class="FileOrFilePath">suite-id</span>, specifies the test suite ID to run. You can run more than one suite.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--suite-id "suite1ID" --suite-id "suite2ID"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-plan-by-name"></a>Test Plan (by name)</h4>
+                                        <p><span class="FileOrFilePath">--test-plan</span>, specifies the test plan name to run. You can run more than one plan.  Since you define in the test plan the grid, test list, configuration, etc., you cannot override it from the CLI. Therefore when using <span class="FileOrFilePath">--test-plan</span> you cannot use these flags: <span class="FileOrFilePath">--testId</span>, <span class="FileOrFilePath">--label</span>, <span class="FileOrFilePath">--name</span>, <span class="FileOrFilePath">--browser</span>, <span class="FileOrFilePath">--test-config</span>, <span class="FileOrFilePath">--test-config-id</span> or <span class="FileOrFilePath">--suite</span>.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--test-plan "Test Plan Demo"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="execution-name"></a>Execution Name</h4>
+                                        <p><span class="FileOrFilePath">--override-execution-name</span>, the name of the execution in Testim suite runs.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--override-execution-name "Dev Sanity"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="class-name"></a>Class Name</h4>
+                                        <p><span class="FileOrFilePath">--override-report-file-classname</span> The class name in the JUnitXML report file is Testim.io by default. To have the suite name in the class name instead, add the parameter below with no value. If you are looking to override the class name with a specific name, add it to the parameter.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--override-report-file-classname<br />--override-report-file-classname "Regression"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="result-labels"></a>Result Labels</h4>
+                                        <p><span class="FileOrFilePath">--result-label</span>, the result Labels option allows you to add textual labels to your remote runs. These labels will be shown in the runs page.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--result-label "V1.40"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="test-timeout"></a>Test timeout</h4>
+                                        <p><span class="FileOrFilePath">--timeout</span>, timeout period in milliseconds to abort the test run if a timeout has elapsed. The default is set to 10 minutes. The max is 3 hours.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--timeout 120000</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="branches"></a>Branches</h4>
+                                        <p><span class="FileOrFilePath">--branch</span>, to run on a specific branch (by name).</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--branch &lt;branch-name&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Executing on an archived branch will cause the CLI to fail.</p>
+                                        </div>
+                                        <h4><a name="parallel"></a>Parallel</h4>
+                                        <p><span class="FileOrFilePath">--parallel</span>, how many tests should run in parallel.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--parallel &lt;parallel-count&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="config-file-web-only"></a>Config file (web only)</h4>
+                                        <p><span class="FileOrFilePath">--config-file</span> or <span class="FileOrFilePath">-c</span>, specifies all the configuration options from external configuration File.<br /></p>
+                                        <p>Place the config file in a path accessible by the shell, specify in the command the path to the file.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--config-file [config-file.js]</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Read more about configuration file <a href="../configuration-file-run-hooks/index.htm">here</a>.</p>
+                                        <h4><a name="failed-test-retries"></a>Failed test retries</h4>
+                                        <p><span class="FileOrFilePath">--retries</span>, When this flag is used, a failed test will be executed repeatedly until either the test passes or the max number of retries has been reached - in which case the test will fail.</p>
+                                        <p>When a test passes after one or more retries, it will be indicated in the UI as follows:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--retries &lt;max_num_of_retries&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Tests that only passed using retries, can be easily filtered under the testim library. To read more about that, see <a href="../../testops/testops-management/flaky-tests.htm">here</a>.</p>
+                                        <h4><a name="disable-testrail-reporting-web-only"></a>Disable TestRail reporting (web only)</h4>
+                                        <p><span class="FileOrFilePath">--suppress-tms-reporting</span> To suppress sending suite run results to TestRail.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--suppress-tms-reporting</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="dedicated-run-tunnel-web-only"></a>Dedicated Run Tunnel (web only)</h4>
+                                        <p><span class="FileOrFilePath">--tunnel</span> <span class="FileOrFilePath">--tunnel-port</span>, Tunnels let you run your app from an internal server/localhost and view it in an external browser.<br /></p>
+                                        <p>--tunnel  #default application port 80</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --tunnel --tunnel-port &lt;APP PORT default 80&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>For more info check out: <a href="../../integrations/dedicated-run-tunnel.htm">This Article</a></p>
+                                        <h4><a name="rerun-failed-tests"></a>Rerun failed tests</h4>
+                                        <p><span class="FileOrFilePath">--rerun-failed-by-run-id</span>, The rerun failed tests option allows you to rerun all test which failed in a suite run.<br /></p>
+                                        <p>Copy the suite run id from the suite's page : Add the --rerun-failed-by-run-id flag with the suite's run id to the CLI :</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--rerun-failed-by-run-id &lt;run-id&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="disable-timeout-retry"></a>Disable timeout retry</h4>
+                                        <p><span class="FileOrFilePath">--disable-timeout-retry</span>, by default, when a test fails due to "test reached timeout",  Testim will try to execute it once again and up to 3 times before failing it. This default behavior can be disabled when executing test using this CLI flag.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--disable-timeout-retry</code></pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h4><a name="set-data-retention"></a>Set data retention</h4>
+                                        <p><span class="FileOrFilePath">--set-retention</span> When you add the parameter --set-retention [whole number between 1 to 10] to a CLI run, all the test results of this execution will be marked for deletion (retention period) after the number of days specified in the parameter.</p>
+                                        <div class="note">
+                                            <p>Our plan includes 30 days retention by default, for longer retention time, please reach out to support.</p>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--set-retention &lt;number-between-1-10&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="abort-cli-run"></a>Abort CLI run</h4>
+                                        <p>It is possible to abort a CLI run, by using the CTRL+c shortcut in your terminal. The run will have "Aborted" status under the run-list</p>
+                                        <img src="images/a78e858-screen_shot_2020-10-15_at_11.49.37.png" title="Screen Shot 2020-10-15 at 11.49.37.png" class="ScreenshotFullsize" />
+                                        <p>The CLI can also be forced to quit by pressing CTRL+C multiple times or closing the terminal window (a.k.a, ungraceful abort).<br /> This will cause the run to stop executing but the status will remain "Running" in the editor. The run status will change to “Timeout” after 90 minutes.</p>
+                                        <h4><a name="add-chrome-extra-arguments-web-only"></a>Add Chrome extra arguments (web only)</h4>
+                                        <p>To add Chrome extra arguments, use the <em>--chrome-extra-args</em> which receives a comma-separated string with the needed flags (no spaces between the flags). For example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-args "enable-heavy-ad-intervention,heavy-ad-privacy-mitigations"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="run-cli-command-with-custom-extensions"></a>Run CLI command with custom extensions</h4>
+                                        <p>You are able to run a CLI command on a chrome browser with specific extension/s installed on it by using <em>--install-custom-extension</em>. For example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --token "&lt;YOUR ACCESS TOKEN&gt;" --project "&lt;YOUR PROJECT ID&gt;" --use-local-chrome-driver --install-custom-extension &lt;chrome extension zipped file url or local path&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="intersect-with-flag"></a>intersect-with flag</h4>
+                                        <p>The <span class="FileOrFilePath">intersect-with</span> flag can be used to run a subset of the specified tests (e.g. a test plan, a test suite, a label) that are intersected with a given label or suite. When running test plans the intersection is performed on the tests in the plan’s body (not the before or after tests).<br /> The following <span class="FileOrFilePath">intersect-with</span> flags are available:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--intersect-with-label &lt;labelName&gt;<br />--intersect-with-suite &lt;suiteName&gt;<br />--intersect-with-suite-id &lt;suiteId&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>The following command example specifies a suite called "SuiteName" to run if they intersect with a label called "test":</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --token “7jdSDFGbsdfrGsdrgsdrg” --project “EIPPYFgkS7oTesyRCnlj” --suite “SuiteName” --grid “Testim-Grid” --intersect-with-label “test”</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>The following command example specifies that tests with label "test" run if they intersect with suite "test1":</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --token “7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn” --project “EIPPYFgkS7oCnlOfNtOj” --label “test” --grid “Testim-Grid” --intersect-with-suite “test1”</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>The <span class="FileOrFilePath">intersect-with</span> flag defines that from all the tests that were included in the original run command, Testim should only run the tests that are common (i.e., intersecting) with the specified label or suite.</p>
+                                        <p><strong>For example:</strong>
+                                            <br />
+                                        </p>
+                                        <p>Label A - contains tests: 1,2,3,4<br /> Label B - contains tests: 5,6,7<br /> Label C - contains tests: 3,4,5<br /> Label D - contains tests: 8,9 Test Plan P contains Labels A and B<br /> So if we run test plan P with --intersect-with-label C ==&gt; tests 3,4,5 should run<br /> If we run test plan P with --intersect-with-label D ==&gt; no tests should run It is possible to add multiple intersect flags.<br /> For example, to run test plan P with --intersect-with-label C --intersect-with-label A<br /> Testim will establish which tests are in the original run command and then calculate the intersect flags one after the other.</p>
+                                        <div class="note">
+                                            <p>The intersection is performed between the tests in the flag and the requested, not between the flags themselves.  So if you have --intersect-with-label A, and --intersect-with-label B, Testim will run all the tests in A OR B, that intersect with the tests requested.</p>
+                                        </div>
+                                        <h4><a name="intersect-with-operand"></a>intersect-with-operand</h4>
+                                        <p>Accepts a string. Value can be one of <span class="FileOrFilePath">AND</span> | <span class="FileOrFilePath">OR</span>. By default (meaning when this parameter is not defined), <span class="FileOrFilePath">OR</span> is used. This only works with the <span class="FileOrFilePath">--intersect-with-label</span> flag.</p>
+                                        <h3><a name="sealights-integration"></a>Sealights Integration</h3>
+                                        <p>When running a test with the <a href="../../integrations/sealights-integration.htm">Sealights Integration</a> using the CLI, you need to add one of the following IDs from Sealights as options in the Testim CLI execution command:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Sealights buildSessionId</strong> - this ID relates to the specific build that was executed. Typically this is related to a specific component in an application. This means that this option is recommended if you want to test a specific component.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Sealights labId</strong> - typically multiple components that are hosted on the same environment may share the same LabId. So if you want to test multiple components, it is recommended to use the LabId instead of the buildSessionId.</p>
+                                            </li>
+                                        </ul>
+                                        <h4><a name="sealights-buildsessionid"></a><strong>Sealights buildSessionId</strong>
+                                        </h4>
+                                        <p><span class="FileOrFilePath">--sealights-build-session-id</span>, runs the test with the Sealights Integration using the ID that relates to the specific build that was executed. To obtain the <span class="FileOrFilePath">buildSessionId</span>, follow the instructions in the <a href="../../integrations/sealights-integration.htm#buildsessionid-option">buildSessionID option section</a>.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--sealights-build-session-id [sealights-suid-session-id]</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="sealights-labid"></a><strong>Sealights labId</strong>
+                                        </h4>
+                                        <p><span class="FileOrFilePath">--sealights-lab-id</span>, runs the test with the Sealights Integration using the Lab ID. To obtain the <span class="FileOrFilePath">labId</span>, follow the instructions in the <a href="../../integrations/sealights-integration.htm#labid-option">labId option section</a>.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--sealights-lab-id [sealights-lab-id]</code></pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h3><a name="mobile-only-flags"></a>Mobile only flags</h3>
+                                        <h4><a name="device-name"></a>Device name</h4>
+                                        <p><span class="FileOrFilePath">--device-name</span>, select a specific device model to run the test. If the flag is not used, Testim will select the first available device model.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--device-name "Samsung S22"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="device-udid"></a>Device UDID</h4>
+                                        <p><span class="FileOrFilePath">--device-udid</span>, select a specific device to run the test, based on its Unique Device ID. If the flag is not used, Testim will select the first available device.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--device-udid "udid123456"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="os-version"></a>OS Version</h4>
+                                        <p><span class="FileOrFilePath">--os-version</span>, select a specific operating system version to run the test. If the flag is not used, Testim will select the first available device.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--os-version "9"</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="app-id"></a>App ID</h4>
+                                        <p><span class="FileOrFilePath">--app-id</span>, select a specific app ID of an mobile app in the Mobile Apps library to run the test. This is used if you want to override the current app that was used during the recording. To obtain the APP ID, go to the Mobile Apps screen, right-click on one of the apps listed and select <strong>Copy ID</strong>.</p>
+                                        <img src="images/097f1f4-2023-02-06_13-00-18.png" title="2023-02-06_13-00-18.png" class="ScreenshotFullsize" />
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--app-id "appID123"</code></pre>
+                                            </div>
+                                        </div>
+                                    

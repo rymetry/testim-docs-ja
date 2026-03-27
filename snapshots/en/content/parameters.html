@@ -1,0 +1,88 @@
+
+                                        <h1>Parameters</h1>
+                                        <p>Parameters are variables that can be used to pass information into a test step, a test or a Suite of tests. Parameters can be used  to test different scenarios without knowing the information ahead of time. The parameters can be defined in different ways and each method offers a different scope, where the parameters are available and can be used.</p>
+                                        <h2><a name="how-to-define-parameters"></a>How to define parameters</h2>
+                                        <ul>
+                                            <li>
+                                                <p><a href="parameters-in-custom-javascript-steps.htm">Step Properties Panel Parameters</a> - Some step types include the ability to define a parameter in PARAMS field, located in the Properties panel.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="parameters-for-groups.htm">Groups Parameters</a> - You can define parameters in a group and then reuse it inside the group across other tests.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="exports-parameters.htm">Export (out) parameters</a> - A parameter which is defined inside a Custom/CLI/Network/Download validation/action steps through the step's function editor. The parameter can be used later in other steps, either in the same group, test, or execution, depended on the defined scope of the export.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="json-parameters-file-parameters.htm">JSON Parameters File Parameters</a> - You can define parameters in a JSON Parameters File and then pass the parameters to test runs.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="configuration-file-parameters.htm">Configuration File Parameters</a> - You can define parameters in a Configuration File and then pass the parameters to test runs.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm">Test Data</a> - You can define parameters in the test data and then use them in the various steps.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Value Generation Steps</strong> - in the <a href="../../editing-tests/generating-a-date.htm#adding-a-generate-date-step">Generate Date</a>,  <a href="../validations/email-validation.htm#generating-a-temporary-email-address">Generate Email Address</a>, <a href="../extract-text.htm">Extract Value</a>, and <a href="../../editing-tests/generating-a-random-value.htm">Generate Random Value</a> steps a parameter for the date/email/etc. is defined. The parameter is defined by default (e.g., <span class="FileOrFilePath">dateValue</span> for the Generate Date step), but can be modified  by entering the name of the parameter in the <strong>Variable Name</strong> field, located in the Properties Panel.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="predefined-out-of-the-box-parameters"></a>Predefined (out of the box) parameters</h2>
+                                        <p>The <span class="FileOrFilePath">BASE_URL</span>, <span class="FileOrFilePath">TESTIM_ITERATOR</span>, and <span class="FileOrFilePath">networkRequests</span> are out-of-the-box parameters, which, unlike other parameters in Testim, do not need to be defined as a parameter, but rather used immediately.</p>
+                                        <h3><a name="base-url-parameter"></a>Base URL Parameter</h3>
+                                        <p>The parameter will be populated with the value of the base URL of the test run, which may be the original base URL of the test or an overriding value. The Base URL parameter can be used wherever parameter usage is supported.</p>
+                                        <div class="note">
+                                            <p>Single quote marks will be added before and after the URL (e.g., 'BASE_URL + '/Extension''). Delete these single quote marks (e.g. BASE_URL + '/Extension'),</p>
+                                        </div>
+                                        <p>The Base URL parameter can be used as a dynamic base URL for data-driven testing that can be modified automatically based on the data provided to the test run. For example, you want to run the same test across a variety of different websites. In this case, you will use the base URL parameter to input dynamic URLs to the test runs. For more information, see <a href="../../running-tests/base-url.htm">Base URL</a>.</p>
+                                        <h3><a name="testim-iterator-parameter"></a>Testim Iterator Parameter</h3>
+                                        <p>TESTIM_ITERATOR is an out-of-the-box parameter that is available only in group loops and allows you to keep track of and use the value of the current loop iteration. Each time a loop is run, the value of TESTIM_ITERATOR increases by one. The following are some examples of how you can use TESTIM_ITERATOR.</p>
+                                        <div class="note">
+                                            <p>The scope of this parameter is limited to the group loop only.</p>
+                                        </div>
+                                        <p>For more information, see <a href="../loops.htm#using-the-loop-iterator-parameter">https://help.testim.io/docs/loops#using-the-loop-iterator-parameter</a></p>
+                                        <h3><a name="network-requests-parameter"></a>Network Requests Parameter</h3>
+                                        <p><span class="FileOrFilePath">networkRequests</span> is an array that collects of all the test run’s network requests as objects, to be validated/used. This parameter is available ONLY within the network validation step. For more information, see <a href="../validations/add-network-validation.htm">Add network validation</a>.</p>
+                                        <h2><a name="how-to-use-parameters"></a>How to use parameters</h2>
+                                        <p>Parameters that were defined are referred in Testim by using the parameter name <strong>without quotations</strong>.</p>
+                                        <img src="images/3f139cf-image.png" class="ScreenshotFullsize" />
+                                        <p>The myParam is the defined parameter &lt;/Image&gt; Parameters that were defined can be used in the following places:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Any text input field in the Properties Panel</strong> - any text input field in the Properties Panel. For example, the "Expected Value" input field in the Text Validation step, the "Expected value" input field in the "When to run step" section (under the Element Text option). The following input fields DO NOT support the use of parameters:</p>
+                                            </li>
+                                            <li>
+                                                <p>Variable Name</p>
+                                            </li>
+                                            <li>
+                                                <p>Description</p>
+                                            </li>
+                                            <li>
+                                                <p>Date Format</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Expression field in the Param section of the Properties Panel</strong> - after defining a parameter in the Properties Panel, an expression field is displayed, where you can set a value for the parameter. In this expression field you can set the value by using ANOTHER parameter, which was already defined.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Any Function Editor panel</strong> - in some steps (e.g. custom validation step) or in custom conditions there is a Function editor panel. The defined parameters can be used in this editor. For more information, see <a href="../advanced-js-editor.htm">Advanced JS Editor</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="../api-testing.htm#using-parameters">API Step</a></strong> - The API Step includes the following text sections that support using the defined parameters:</p>
+                                            </li>
+                                            <li>
+                                                <p>Request URL - in this section the parameter is referred using double or triple brackets (e.g, {{{param}}}).</p>
+                                            </li>
+                                            <li>
+                                                <p>Header - in this section the parameter is referred using double or triple brackets (e.g, {{{param}}}).</p>
+                                            </li>
+                                            <li>
+                                                <p>Body - in this section the parameter is referred using double or triple brackets (e.g, {{{param}}}).</p>
+                                            </li>
+                                            <li>
+                                                <p>Assertion</p>
+                                            </li>
+                                            <li>
+                                                <p>Function editor</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="how-to-hide-parameters"></a>How to hide parameters</h2>
+                                        <p>Sometimes the information in a parameter may be sensitive. In this can you can hide the value of the parameter by following the instructions in the <a href="hidden-parameters.htm">Hidden parameters</a> doc.</p>
+                                    

@@ -1,0 +1,223 @@
+
+                                        <h1>TestOps Dashboard</h1>
+                                        <p>The TestOps Dashboard provides important statistics with quick access to tests, remote execution runs, and other activities in your project allowing you to analyze the health of your project and focus your efforts on tests that may require your attention. You can choose the branch of your project for which you want the information displayed. For more information see <a href="index.htm#selecting-a-branch">Selecting a Branch</a>. By default, the information shown on the TestOps Dashboard is based on tests, pull requests, and audit log activities owned by any team member of the project. If you want to only view information about tests, pull requests, and audit log activities owned by you, click the <strong>Assigned to me</strong> toggle in the upper-right of the screen.</p>
+                                        <div class="note">
+                                            <p>The TestOps Dashboard only presents features available in your plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <p>The TestOps Dashboard is divided into five sections:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Remote Execution Runs</strong> – shows detailed information about the remote execution runs performed on tests.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test Overview</strong> – shows how all of the tests in your project are distributed among the various test statuses.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Duplication Level</strong> – shows the <a href="../../advanced-editing/auto-grouping2.htm">auto grouping</a> score for your project.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Recent Activity</strong> – shows the recent activity/events in your project.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Pull Requests</strong> – shows information about the pull requests for your project. (This section is only shown when the master branch is selected.)</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="assigned-to-me"></a>Assigned to Me</h2>
+                                        <img src="images/37cf94c-testim_423a.png" title="Testim 423a.png" class="ScreenshotFullsize" />
+                                        <p>When the <strong>Assigned to me</strong> toggle is on, the following sections are adjusted to only reflect the data specific to the logged-in user. (The data in the <em>Duplication Level</em> section does not change.)</p>
+                                        <p><em> <strong>Remote Execution Runs</strong> – changes to </em>Remote Test Runs*. For more information, see <a href="#remote-runs-pane---assigned-to-me">Remote Runs Pane - Assigned to Me</a>.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test Overview</strong> – shows how the user’s tests are distributed among the various test statuses.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Recent Activity</strong> – shows the user’s recent activity/events.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Pull Requests</strong> – shows information about pull requests owned by the user.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="remote-execution-runs"></a>Remote Execution Runs</h2>
+                                        <img src="images/ee0a420-testim_424.png" title="Testim 424.png" class="ScreenshotFullsize" />
+                                        <p>The Remote Execution Runs pane shows detailed information about the remote execution runs performed on tests in your project during the selected time period and filter. <em>Remote execution runs</em> include suite runs, plan runs, scheduled runs, and tests that ran with a label. You can select the reporting time period by using the dropdown menu in the top right corner of the pane. Options are: <em>Last 24 Hours</em> (default), <em>Last 3 Days</em>, and <em>Last 7 Days</em>. You can also filter the results, and save the filter settings. The following information describes this pane when the <strong>Assigned to me</strong> toggle is off. For information about this pane with the toggle is on, see <a href="#remote-runs-pane---assigned-to-me">Remote Runs Pane - Assigned to Me</a>. The left pane shows the distribution of passed/failed remote execution runs for the selected time period/filter as follows:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Green – indicates the total number of remote execution runs that passed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Red – indicates the total number of remote execution runs that failed.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The right pane lists the last failures of your most recent executions during the selected time period and filters. The following information is shown about the most recent remote execution runs that failed during the selected time period/filter:</p>
+                                        <ul>
+                                            <li>
+                                                <p>The name of the remote execution run. (You can click on the name to open the <strong>Execution Run Details</strong> page which includes detailed results of that execution. For more information, see <a href="doc:suite-runs-view#execution-run-details-view">Execution Run Details View</a>.)</p>
+                                            </li>
+                                            <li>
+                                                <p>The reason for the most recent failure (in red).</p>
+                                            </li>
+                                            <li>
+                                                <p>When the most recent execution was run.</p>
+                                            </li>
+                                            <li>
+                                                <p>The number of tests in the execution that passed out of the total number of tests in that execution.</p>
+                                            </li>
+                                            <li>
+                                                <p>The total number of times this execution failed during the selected time period (in pink). (You can click on this number to open the <strong>Execution Run Details</strong> page, filtered by this specific execution name and time period.)</p>
+                                            </li>
+                                        </ul>
+                                        <p>A maximum of 50 failed execution runs are shown. To see all of your execution runs (including the runs that passed), click <strong>See all</strong> to open the <strong>Execution Runs</strong> screen. For more information, see <a href="doc:suite-runs-view">Execution runs view</a>.</p>
+                                        <h3><a name="remote-runs-pane-assigned-to-me"></a>Remote Runs Pane - Assigned to me</h3>
+                                        <img src="images/38c2012-testim_423a.png" title="Testim 423a.png" class="ScreenshotFullsize" />
+                                        <p>When the <strong>Assigned to me</strong> toggle is on, this pane changes from <strong>Remote Execution Runs</strong> to <strong>Remote Test Runs</strong>, and the information shown switches from remote <em>execution runs</em> performed on tests in your project to remote <em>test runs</em> on tests in your project owned by you. The left pane shows the distribution of passed/failed remote test runs for the selected time period/filter as follows:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Green – indicates the total number of remote test runs that passed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Red – indicates the total number of remote test runs that failed.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The right pane lists the last failures of your most recent tests during the selected time period and filters. The following information is shown about the most recent remote test runs that failed during the selected time period/filter:</p>
+                                        <ul>
+                                            <li>
+                                                <p>The name of the remote test that failed. (You can click on the name to open the test page for that test.)</p>
+                                            </li>
+                                            <li>
+                                                <p>The name of the execution containing the failed test (in grey). (You can click on the name to open the <strong>Execution Run Details</strong> page which includes detailed results of that execution. For more information, see <a href="doc:suite-runs-view#execution-run-details-view">Execution Run Details View</a>.)</p>
+                                            </li>
+                                            <li>
+                                                <p>When the test was most recently run.</p>
+                                            </li>
+                                            <li>
+                                                <p>The total number of times this test failed during the selected time period (in pink). (You can click on this number to open the <strong>Test Run Details</strong> page, filtered by this specific execution name and time period.)</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="selecting-the-time-period"></a>Selecting the Time Period</h3>
+                                        <p>You can select the time period for the information shown in this pane. Changing the time period does not affect the data in the other panes on this page. → <strong>To select the time period:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the time period button.</p>
+                                            </li>
+                                            <img src="images/0ecbbdd-testim_424a.png" title="Testim 424a.png" class="ScreenshotFullsize" />
+                                            <p>The time period options are shown.</p>
+                                            <img src="images/4b50102-testim_425_r.png" title="Testim 425_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select your desired time period.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The data in the pane is automatically updated based on the time period specified.</p>
+                                        <h3><a name="filtering-the-results"></a>Filtering the Results</h3>
+                                        <p>You can filter the remote execution runs shown in this pane by suite, label, plan, scheduler, and result label. By default, the data included in the results does not include test runs that have the test status of <em>evaluating</em>; however, you can include these test runs by sliding the “Include Evaluating” toggle in the filter settings to the right. For more information on test status, see <a href="../testops-management/test-status.htm">Test Status</a>. For more information on result labels, see <a href="../../results/result-labels.htm">Result labels</a>. → <strong>To filter the results:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Filter</strong> button.</p>
+                                            </li>
+                                            <img src="images/0cd9b61-testim_424b.png" title="Testim 424b.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Filter Remote Runs</strong> pane opens on the right-hand side, showing the execution run types you can filter by (Execution, Label, Plan, and Scheduler) and the Result Labels you can filter by. (The Result Labels shown are based on the terms you have previously used to label your results. For more information, see <a href="../../results/result-labels.htm">Result labels</a>.)</p>
+                                            <img src="images/8e0456e-testim_445_r.png" title="Testim 445_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>To filter by a specific execution type, select the type and then select the desired checkbox(es) shown under that type. (You cannot choose more than one execution type to filter by.)</p>
+                                            </li>
+                                            <img src="images/6fde101-testim_477_r.png" title="Testim 477_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>You can also search for criteria by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>To filter by Label, select the <strong>Label</strong> option, select one or more of the labels listed, and then select one of the following operands:</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>OR - will return tests that include one or more of the selected labels.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>AND - will only return tests that include ALL the selected labels.</p>
+                                            </li>
+                                            <img src="images/f05f2263203cd35ac10afb2428dc64d6a2a9c958e832dbdf8147dde128420876-2025-01-19_16-48-25.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>To filter by result label, select the desired checkbox(es) in the <strong>Result Label</strong> section.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>You can also search for criteria by clicking on the <strong>Search</strong> (magnifying glass) icon and entering your search criteria in the search box that opens.</p>
+                                        </div>
+                                        <ol>
+                                            <li value="1">
+                                                <p>If you want to include the data from test runs with a test status of <em>evaluating</em>, click the <strong>Include Evaluating</strong> toggle. A test with the status of <em>evaluating</em> is still being evaluated by the user, so by default the data from its runs is not included. For more information on test status, see <a href="../testops-management/test-status.htm">Test Status</a>.</p>
+                                            </li>
+                                            <img src="images/66749e3-testim_477a_r.png" title="Testim 477a_r.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>When including the <em>evaluating</em> tests, only the tests that were run on a grid or via CLI are included in the results.</p>
+                                            </div>
+                                            <li value="2">
+                                                <p>Click <strong>Apply</strong>.<br /></p>
+                                            </li>
+                                            <p>The filter is applied, and only the data that meets the criteria is shown.</p>
+                                            <div class="note">
+                                                <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the pane.</p>
+                                            </div>
+                                            <li value="3">
+                                                <p>Click the “<strong>X</strong>” in the upper right of the pane to close it.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Closing the <strong>Filter Remote Runs</strong> pane without resetting the filters will not reset them, and only the data that meets the filter criteria will be shown. To include data for all of your remote execution runs again, you will need to reopen the <strong>Filter Remote Runs</strong> pane and reset the filters.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>If you want to save your current filter settings for the next time you access the TestOps Dashboard, click <strong>save view</strong>. (The <strong>save view</strong> option is only available when viewing the TestOps Dashboard within the context of a pinned branch.) See <a href="../../test-management/saving-a-filtered-view.htm">Saving a Filtered View</a> for more info. Your filter settings will be saved until you pin a different branch, at which point the filters will be reset. For more information, see <a href="../testops-version-control/version-control-branches.htm#pinning-a-branch">Pinning a Branch</a>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/328226e-testim_424c.png" title="Testim 424c.png" class="ScreenshotFullsize" />
+                                        <h2><a name="test-overview"></a>Test Overview</h2>
+                                        <img src="images/3189f64-testim_428.png" title="Testim 428.png" class="ScreenshotFullsize" />
+                                        <p>The Test Overview pane shows how all of the tests in your project are distributed among the various test statuses. (If <strong>Assigned to me</strong> is selected, this pane shows how the user’s tests are distributed among the various test statuses). The test statuses are:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Active</strong> – these are tests that are ready and stable.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Quarantine</strong> – these are unstable tests, which means that they generate errors, and are waiting to be fixed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Evaluating</strong> – these tests are ready but their stability should be examined.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Draft</strong> – these tests are not ready to be used yet (i.e. still in progress).</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Flaky</strong> – these tests are unstable, which means that they sometimes fail and sometimes pass.</p>
+                                            </li>
+                                        </ul>
+                                        <p>For more information on test status, see <a href="../testops-management/test-status.htm">Test Status</a>. For more information on flaky tests, see <a href="../testops-management/flaky-tests.htm">Flaky tests</a>.</p>
+                                        <div class="note">
+                                            <p>These values are not affected by the reporting time period and filters set in the Remote Execution Runs pane.</p>
+                                        </div>
+                                        <p>Clicking on any of these categories opens the <strong>Test Library</strong> filtered by the category you clicked on. For more information, see <a href="../../test-management/test-list/index.htm#filtering-the-test-library">Test Library</a>.</p>
+                                        <h2><a name="duplication-level"></a>Duplication Level</h2>
+                                        <img src="images/b239602-testim_429_r.png" title="Testim 429_r.png" class="ScreenshotFullsize" />
+                                        <p>The Duplication Level pane shows the auto grouping score for your project. Testim identifies duplicate test step sequences in your project for which you haven’t yet created a shared group, and assigns an auto grouping score to your project based on that information. A higher score indicates a higher amount of duplicate test step sequences that haven’t yet been put into a shared group. The lower the number, the “healthier” your project is.</p>
+                                        <div class="note">
+                                            <p>This value is not affected by the reporting time period and filters set in the Remote Execution Runs pane.</p>
+                                        </div>
+                                        <p>Clicking on this pane opens the <strong>Auto Grouping</strong> page. For more information on auto grouping, see <a href="../../advanced-editing/auto-grouping2.htm">Auto grouping</a>.</p>
+                                        <h2><a name="recent-activity"></a>Recent Activity</h2>
+                                        <img src="images/deabaf5-testim_430_r.png" title="Testim 430_r.png" class="ScreenshotFullsize" />
+                                        <p>The Recent Activity pane is an activity log that shows the recent activity/events in your project. (If <strong>Assigned to me</strong> is selected, this pane shows only the user’s recent activity/events.) Each entry includes a link to the associated object/test. Project owners and company owners can click on <strong>See all</strong> to open the <strong>Audit Log</strong>. For more information, see <a href="../audit-log.htm">Audit Log</a>.</p>
+                                        <h2><a name="pull-requests"></a>Pull Requests</h2>
+                                        <img src="images/6a7bfda-testim_431_r.png" title="Testim 431_r.png" class="ScreenshotFullsize" />
+                                        <p>The Pull Requests pane shows information about the pull requests for your project. (If <strong>Assigned to me</strong> is selected, this pane shows information only about pull requests owned by the user.) A pull request is a request made by a user who made a change to the test, asking for the change to be reviewed in order to merge it into the master branch of the project. This section is only shown when the master branch is selected.</p>
+                                        <div class="note">
+                                            <p>If pull requests are currently disabled for your project, the following message is shown: “Pull Request is disabled for this project. &lt;ins&gt;Click here&lt;/ins&gt; to enable the feature”. Clicking on <strong>Click here</strong> takes you to the <strong>Project Settings</strong> screen where you can enable this feature.</p>
+                                        </div>
+                                        <p>A bar graph and the number of pull requests is shown for the three pull request categories:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Pending</strong> – the pull request was submitted, but has not yet been reviewed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Requested Changes</strong> – the reviewer of the pull request asked for changes.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Approved</strong> – the pull request was approved, and it is possible to merge it to the master branch.</p>
+                                            </li>
+                                        </ul>
+                                        <p>Clicking on a bar in the graph takes you to the <strong>Pull requests</strong> screen, filtered by the category you clicked on.<br /> For more information on pull requests, see <a href="../testops-version-control/pull-requests.htm">Pull Requests</a>.</p>
+                                    

@@ -1,0 +1,154 @@
+
+                                        <h1>Running tests on multiple browsers</h1>
+                                        <p>Tests can run on different browsers in parallel to speed execution and confirm multiple configurations. They can run locally on only Chrome, or on Chrome and other browsers in supported grids including Testim's grid, 3rd party grids like Sauce Labs and Browserstack, or on your own internal Selenium-based grid. The operating system running the browser will depend on the grid you are running.</p>
+                                        <p><strong>On what browsers and OS you can run your tests?</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Browser</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Testim Grid</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Selenium Grid</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">3rd Party Grid</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Chrome</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Yes - Linux</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Yes - multiple OS</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Yes - multiple OS</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Firefox</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Yes - Linux</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Yes - multiple OS</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">Yes - multiple OS</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Safari</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Yes - macOS</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Yes - macOS</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Yes - macOS</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">Edge Chromium</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body2">
+                                                        <p class="tableBody">Yes - Windows</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">Yes - Windows</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body2">
+                                                        <p class="tableBody">Yes - Windows</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h2><a name="how-to-run-your-tests-on-multiple-browsers"></a>How to run your tests on multiple browsers?</h2>
+                                        <p>To run your tests on multiple browsers, you will need to run them using CLI or using <a href="scheduler.htm">Scheduler</a> instead of using the Testim Editor. In this article we will focus on running using CLI, see how it's done.</p>
+                                        <h2><a name="configuration-list"></a>Configuration List</h2>
+                                        <p>First you need to define the configuration you want to run on. This will include: browser type, operating system and resolution.</p>
+                                        <ul>
+                                            <li>
+                                                <p>Navigate to "<strong>Runs</strong>", and then to "<strong>Configuration List</strong>" tab.</p>
+                                            </li>
+                                        </ul>
+                                        <p>This list includes all available configurations, you can use one from this list or create a new one.</p>
+                                        <h4><a name="create-new-configuration"></a>Create new configuration</h4>
+                                        <ul>
+                                            <li>
+                                                <p>Click on "<strong>Create New</strong>".</p>
+                                            </li>
+                                            <li>
+                                                <p>Add a name for your configuration</p>
+                                            </li>
+                                            <li>
+                                                <p>Choose browser, operating system and resolution.</p>
+                                            </li>
+                                            <li>
+                                                <p>Click "<strong>OK</strong>"</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/1dfe42b-multiplebrowsers.gif" title="multiplebrowsers.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="running-tests-in-cli"></a>Running tests in CLI</h2>
+                                        <p>In this section, we will focus only on what you need to add to the CLI to run on different browsers. You can read here about how to use <a href="the-command-line-cli/index.htm">CLI</a>.</p>
+                                        <ul>
+                                            <li>
+                                                <p>The basic CLI can be found on Testim setting page.</p>
+                                            </li>
+                                            <li>
+                                                <p>Add to the CLI the configuration you want to run on using --test-config <span class="FileOrFilePath">&lt;name&gt;</span>.</p>
+                                            </li>
+                                            <li>
+                                                <p>Update the grid parameter of the grid you want to run. Read <a href="../integrations/grid-management/index.htm">here</a> how to set up your grid.</p>
+                                            </li>
+                                        </ul>
+                                        <h4><a name="chrome-edge-chromium-safari-firefox"></a>Chrome, Edge Chromium, Safari, Firefox</h4>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--test-config "My configuration"</code></pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h2><a name="running-tests-in-scheduler"></a>Running tests in Scheduler</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Under <strong>Runs</strong> --&gt; <strong>Scheduled runs</strong> --&gt; Select the scheduler you would like to edit/add new scheduler</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under <strong>What to run on</strong>, select <strong>Override default config</strong>.</p>
+                                            </li>
+                                            <img src="images/5b362d1-scheduler1.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Either select which config you would like the scheduler to run, or create a new config.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>For new config, you can select which browser you would like the scheduler to run on.</p>
+                                            </li>
+                                            <img src="images/1dd5c56-scheduler2.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>ADD</strong></p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Save the scheduler.</p>
+                                            </li>
+                                        </ol>
+                                    

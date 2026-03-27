@@ -1,0 +1,19 @@
+
+                                        <h1>Disabling Network Mock Mode</h1>
+                                        <p>You can disable the network mock mode for tests that have been previously marked as enabled.</p>
+                                        <h2><a name="disabling-mock-network-mode-through-the-ui"></a>Disabling mock network mode through the UI:</h2>
+                                        <p>To disable mock network mode through the UI:<br /> In the <strong>Properties</strong> pane, under mock network toggle the <strong>Run test on mock network</strong> setting.</p>
+                                        <img src="images/26999eb-mock9.png" title="mock9.png" class="ScreenshotFullsize" />
+                                        <h2><a name="disabling-mock-network-mode-through-the-cli"></a>Disabling mock network mode through the CLI</h2>
+                                        <h2><a name="disable-mock-mode-for-the-entire-cli-run"></a>Disable mock mode for the entire CLI run</h2>
+                                        <p>If you want to cancel the mock mode for the entire CLI run, you do so by passing <span class="FileOrFilePath">--disable-mock-network</span> flag.  The mock mode will be disabled even if some of the tests have mock toggle on.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>&gt; testim --disable-mock-network</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim &lt;your CLI options&gt; &lt;your CLI parameters&gt; --mock-network-pattern</code></pre>
+                                            </div>
+                                        </div>
+                                    

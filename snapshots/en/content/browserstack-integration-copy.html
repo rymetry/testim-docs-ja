@@ -1,0 +1,63 @@
+
+                                        <h1>LambdaTest integration</h1>
+                                        <p>This article will review how to set your LambdaTest on Testim and how to run your tests.</p>
+                                        <div class="note">
+                                            <p>Within LambdaTest integration Testim currently only supports the <a href="https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/">selenium testing</a> option, excluding all other choices, including <a href="https://www.lambdatest.com/support/docs/getting-started-with-hyperexecute/">Hyper Execute</a>.</p>
+                                        </div>
+                                        <h2><a name="how-to-add-a-lambdatest-grid"></a>How to add a LambdaTest grid</h2>
+                                        <p>→ <strong>To add a LambdaTest grid:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Follow the instructions in the <a href="index.htm#adding-a-grid">Adding a grid</a> section, while selecting the <strong>LambdaTest</strong> option as the <strong>Grid Type</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Next</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Update the following fields:</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Name</strong>: The grid name to use at run time.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Host</strong>: LambdaTest host name (e.g. hub.lambdatest.com).</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Port</strong>: LambdaTest port. Default - 443</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Username</strong>: LambdaTest user name.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Password/access key</strong>: LambdaTest access key to connect or password.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/9301458-gridmanagement.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="how-to-run-on-the-grid"></a>How to run on the grid</h2>
+                                        <p>You can run your tests remotely using one of the following methods:</p>
+                                        <p><a href="../../running-tests/the-command-line-cli/index.htm">CLI</a> /&#160;<a href="../integrate-testim-to-your-ci/index.htm">CI</a></p>
+                                        <p>Add --grid parameter with the grid name.</p>
+                                        <p><a href="../../running-tests/scheduler.htm">Scheduler</a>
+                                        </p>
+                                        <p>Use Grid field to choose on which grid to run your tests.</p>
+                                        <p><a href="../../test-management/test-plans.htm">Test Plan</a>
+                                        </p>
+                                        <p>Use Grid field to choose on which grid to run your tests.</p>
+                                        <h3><a name="from-the-editor"></a>From the editor</h3>
+                                        <p>You can run your test on the grid directly from the test editor.</p>
+                                        <ul>
+                                            <li>
+                                                <p>Click on the options arrow next to the "<strong>Run</strong>" button</p>
+                                            </li>
+                                            <li>
+                                                <p>Click on "<strong>Run on a grid</strong>".</p>
+                                            </li>
+                                        </ul>
+                                        <p>To change the configuration/grid/base url for that run click on "<strong>Edit</strong>".</p>
+                                        <img src="images/2b9a380-lambdagrid.gif" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Grid parameter replaces the old host and port parameters.</p>
+                                        </div>
+                                    

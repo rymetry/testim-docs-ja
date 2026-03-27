@@ -1,0 +1,107 @@
+
+                                        <h1>Exporting a Parameter</h1>
+                                        <p>We have 3 types of exports parameters:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Local export</strong>: Allows you to pass parameters between <strong>steps</strong> in the same <strong>scope</strong> (e.g., exporting parameters in a group allows you to pass parameters between steps in the same group).</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test export</strong>: Allows you to pass parameters between <strong>steps and groups</strong> in the same <strong>test.</strong></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Global export</strong>: Allows you to pass parameters between tests in the same execution (i.e., test plan, label, or test suite).</p>
+                                            </li>
+                                        </ul>
+                                        <div class="caution">
+                                            <p>Global export Globally exported parameters will be available only in remote runs.</p>
+                                        </div>
+                                        <h2><a name="exporting-a-parameter"></a>Exporting a parameter</h2>
+                                        <div class="note">
+                                            <p>Since parameters are serialized between steps as JSON - only values that may be <a href="http://json.org/">serialized</a> as <a href="http://json.org/">JSON</a> may be safely used<em></em>.</p>
+                                        </div>
+                                        <p>Let's see how to export parameters. We will add a local export parameter in a custom action and use it later in a custom validation in the same test.</p>
+                                        <ul>
+                                            <li>
+                                                <p>Start a new test.</p>
+                                            </li>
+                                            <li>
+                                                <p>Add a new custom action and type the following in the editor:</p>
+                                            </li>
+                                        </ul>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>//For Local export:&#160;&#160;&#160;&#160;&#160;<br />exports.bestTestingTool = "Testim";<br />//For Test&#160;&#160;export:&#160;&#160;&#160;&#160;&#160;&#160;<br />exportsTest.bestTestingTool = "Testim";<br />//For Global export:&#160;&#160;&#160;&#160;&#160;<br />exportsGlobal.bestTestingTool = "Testim";</code></pre>
+                                            </div>
+                                        </div>
+                                        <img src="images/1b18e5a-export_param1.gif" title="export_param1.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Add a new custom validation and type the following in the editor:</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>if (bestTestingTool !== "Testim") {<br />&#160;&#160;&#160;&#160;&#160;throw new Error("choose Testim!");<br />}</code></pre>
+                                                </div>
+                                            </div>
+                                            <img src="images/cb9a4de-add_custom_validation.png" title="add_custom_validation.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Run the test and see that it is successful.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>When you need to use parameters inside a group in your test, also use exportsGlobal.</p>
+                                        </div>
+                                        <p>The export parameter will only be available for use after the step, so if you want to use it at the same step it was set, you can do the following:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>var local = "Testim";<br />console.log(local);<br />exports.bestTestingTool = local;</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>After running a test, the incoming parameters, and the ones exported in a step appear in its properties panel.</p>
+                                        </div>
+                                        <p>You can also use the export parameter in your JavaScript param.</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the last step and add a '<strong>js Param</strong>'.</p>
+                                            </li>
+                                            <img src="images/cc6cb99-image_19.png" title="image (19).png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Change the name of the param to "WhoIsAwesome".</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Change the value of the param in the text box to - bestTestingTool+" is awesome!"</p>
+                                            </li>
+                                            <img src="images/cbcab47-exports_params_2.gif" title="exports_params_2.gif" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the editor change the previous code to:</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>if (WhoIsAwesome !== "Testim is awesome!") {<br />&#160;&#160;throw new Error("choose Testim!");<br />}</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="5">
+                                                <p>Run the test and see that it is successful.</p>
+                                            </li>
+                                        </ol>
+                                        <p><strong>Note:</strong>
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <p>The exports variables support the following:</p>
+                                            </li>
+                                        </ul>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Primitive types - number, string, boolean, etc.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Arrays</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>JSON object</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p>Global export per step is limited to 2MB</p>
+                                            </li>
+                                        </ul>
+                                    

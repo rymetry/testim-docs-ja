@@ -1,0 +1,1535 @@
+{
+  "fetchedAt": "2026-03-27T01:59:44.489Z",
+  "baseUrl": "https://docs.tricentis.com/testim",
+  "sections": [
+    {
+      "title": "Home",
+      "pages": []
+    },
+    {
+      "title": "Overview",
+      "pages": [
+        {
+          "slug": "testim-overview",
+          "url": "https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm",
+          "title": "Testim overview"
+        },
+        {
+          "slug": "testim-automate",
+          "url": "https://docs.tricentis.com/testim/content/overview/testim-overview/testim-automate.htm",
+          "title": "Web and Mobile Testing"
+        },
+        {
+          "slug": "help-ai-assistant",
+          "url": "https://docs.tricentis.com/testim/content/overview/testim-overview/help-ai-assistant.htm",
+          "title": "Testim Copilot Help Assistant"
+        },
+        {
+          "slug": "use-ai-in-with-testim",
+          "url": "https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/index.htm",
+          "title": "Use AI in with Testim"
+        },
+        {
+          "slug": "ai-data-usage-policy",
+          "url": "https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/ai-data-usage-policy.htm",
+          "title": "AI Data Usage Policy"
+        },
+        {
+          "slug": "enhanced-mode-mobile",
+          "url": "https://docs.tricentis.com/testim/content/overview/testim-overview/enhanced-mode-mobile.htm",
+          "title": "Enhanced Mode (Mobile)"
+        }
+      ]
+    },
+    {
+      "title": "Getting Started",
+      "pages": [
+        {
+          "slug": "setting-up-your-account",
+          "url": "https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm",
+          "title": "Setting up Your Account"
+        },
+        {
+          "slug": "creating-your-first-codeless-test",
+          "url": "https://docs.tricentis.com/testim/content/getting-started/creating-your-first-codeless-test.htm",
+          "title": "Web Testing Getting Started (Codeless Test)"
+        },
+        {
+          "slug": "creating-your-first-mobile-test-in-testim-visual-editor",
+          "url": "https://docs.tricentis.com/testim/content/getting-started/creating-your-first-mobile-test-in-testim-visual-editor.htm",
+          "title": "Mobile Testing Getting Started"
+        }
+      ]
+    },
+    {
+      "title": "Recording Tests",
+      "pages": [
+        {
+          "slug": "how-to-record-a-test",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/index.htm",
+          "title": "Recording a Web Test"
+        },
+        {
+          "slug": "why-do-you-need-testim-extension",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension.htm",
+          "title": "Why do you need Testim extension?"
+        },
+        {
+          "slug": "multi-windows-recording",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test/multi-windows-recording.htm",
+          "title": "Recording in multiple windows"
+        },
+        {
+          "slug": "recording-a-mobile-test",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/index.htm",
+          "title": "Recording a Mobile Test"
+        },
+        {
+          "slug": "recording-a-vmg-mobile-test",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test.htm",
+          "title": "Recording a Mobile Test Using VMG"
+        },
+        {
+          "slug": "recording-a-local-mobile-test",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/recording-a-local-mobile-test.htm",
+          "title": "Recording a Mobile Test Using a Local Device"
+        },
+        {
+          "slug": "setting-the-test-configuration",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/setting-the-test-configuration.htm",
+          "title": "Setting the Test Configuration"
+        },
+        {
+          "slug": "configure-tricentis-mobile-agent",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent.htm",
+          "title": "Configure Tricentis Mobile Agent"
+        },
+        {
+          "slug": "how-to-prepare-an-ipa-for-mobile-testing",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/how-to-prepare-an-ipa-for-mobile-testing.htm",
+          "title": "How to Prepare an IPA for Mobile Testing"
+        },
+        {
+          "slug": "mobile-test-editor",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/mobile-test-editor.htm",
+          "title": "Mobile Test Editor Screen"
+        },
+        {
+          "slug": "mobile-test-mirroring-toolbar",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/mobile-test-mirroring-toolbar.htm",
+          "title": "Mobile Test Mirroring Toolbar"
+        },
+        {
+          "slug": "vision-locate",
+          "url": "https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/vision-locate.htm",
+          "title": "Vision Locate"
+        }
+      ]
+    },
+    {
+      "title": "Editing Tests",
+      "pages": [
+        {
+          "slug": "steps",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/steps.htm",
+          "title": "Steps"
+        },
+        {
+          "slug": "editing-your-tests",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/index.htm",
+          "title": "Editing Tests"
+        },
+        {
+          "slug": "editing-target-element-properties",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-target-element-properties.htm",
+          "title": "Editing Target Element Properties"
+        },
+        {
+          "slug": "editing-target-element-properties-mobile",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-target-element-properties-mobile.htm",
+          "title": "Editing Target Element Properties (Mobile)"
+        },
+        {
+          "slug": "editing-a-steps-properties",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/editing-your-tests/editing-a-steps-properties.htm",
+          "title": "Editing a Step’s Properties"
+        },
+        {
+          "slug": "groups",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/groups/index.htm",
+          "title": "Groups"
+        },
+        {
+          "slug": "auto-grouping",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/groups/auto-grouping.htm",
+          "title": "Apply new groups to other tests"
+        },
+        {
+          "slug": "auto-complete",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/groups/auto-complete.htm",
+          "title": "Auto complete"
+        },
+        {
+          "slug": "shareable-steps",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/shareable-steps.htm",
+          "title": "Shared Steps"
+        },
+        {
+          "slug": "conditions",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/conditions/index.htm",
+          "title": "Conditions"
+        },
+        {
+          "slug": "advanced-conditions-settings",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/conditions/advanced-conditions-settings.htm",
+          "title": "Advanced Conditions Settings"
+        },
+        {
+          "slug": "generating-a-random-value",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/generating-a-random-value.htm",
+          "title": "Generating a random value"
+        },
+        {
+          "slug": "generating-a-date",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/generating-a-date.htm",
+          "title": "Generating a Date"
+        },
+        {
+          "slug": "search-within-a-test",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/search-within-a-test.htm",
+          "title": "Search Within a Test"
+        },
+        {
+          "slug": "recovering-a-test-that-was-not-saved",
+          "url": "https://docs.tricentis.com/testim/content/editing-tests/recovering-a-test-that-was-not-saved.htm",
+          "title": "Recovering a test that was not saved"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Editing",
+      "pages": [
+        {
+          "slug": "advanced-set-text",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/advanced-set-text.htm",
+          "title": "Dynamic text input"
+        },
+        {
+          "slug": "validations",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/index.htm",
+          "title": "Validation"
+        },
+        {
+          "slug": "validate-element-visible",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-visible.htm",
+          "title": "Validate element visible"
+        },
+        {
+          "slug": "validate-element-not-visible",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-not-visible.htm",
+          "title": "Validate element not visible"
+        },
+        {
+          "slug": "validate-element-text",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-text.htm",
+          "title": "Validate element text"
+        },
+        {
+          "slug": "custom-code-1",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/custom-code-1.htm",
+          "title": "Validating using custom code"
+        },
+        {
+          "slug": "custom-code",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/custom-code.htm",
+          "title": "Add custom validations and actions"
+        },
+        {
+          "slug": "add-cli-validations-and-actions",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/add-cli-validations-and-actions.htm",
+          "title": "Add CLI validations and actions"
+        },
+        {
+          "slug": "validate-download",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-download.htm",
+          "title": "Validate download"
+        },
+        {
+          "slug": "email-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/email-validation.htm",
+          "title": "Validate email"
+        },
+        {
+          "slug": "html-attribute-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/html-attribute-validation.htm",
+          "title": "Validate HTML attribute (Web)"
+        },
+        {
+          "slug": "validate-element-attribute",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-attribute.htm",
+          "title": "Validate Element Attribute (Mobile)"
+        },
+        {
+          "slug": "checkbox-and-radio-button-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/checkbox-and-radio-button-validation.htm",
+          "title": "Validate checkbox/radio button"
+        },
+        {
+          "slug": "pixel-validation-and-pixel-wait-for",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm",
+          "title": "Visual Validation (element, viewport, full-page)"
+        },
+        {
+          "slug": "add-network-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/add-network-validation.htm",
+          "title": "Add network validation"
+        },
+        {
+          "slug": "file-upload-step",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/file-upload-step.htm",
+          "title": "File upload step validation"
+        },
+        {
+          "slug": "mongodb-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/mongodb-validation.htm",
+          "title": "MongoDB validation"
+        },
+        {
+          "slug": "mysql-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/mysql-validation.htm",
+          "title": "MySQL validation"
+        },
+        {
+          "slug": "css-property-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/css-property-validation.htm",
+          "title": "Validate CSS property"
+        },
+        {
+          "slug": "accessibility-validations",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/accessibility-validations.htm",
+          "title": "Page Accessibility Validation"
+        },
+        {
+          "slug": "element-accessibility-validation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/element-accessibility-validation.htm",
+          "title": "Element Accessibility Validation"
+        },
+        {
+          "slug": "validate-element-visualization",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-element-visualization.htm",
+          "title": "Validate Element Visualization"
+        },
+        {
+          "slug": "validate-viewport-visualization",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-viewport-visualization.htm",
+          "title": "Validate Viewport Visualization"
+        },
+        {
+          "slug": "validate-full-page-visualization",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/validate-full-page-visualization.htm",
+          "title": "Validate Full-page Visualization"
+        },
+        {
+          "slug": "wait-for-element-visualization",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/validations/wait-for-element-visualization.htm",
+          "title": "Wait For Element Visualization"
+        },
+        {
+          "slug": "data-driven-testing",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/index.htm",
+          "title": "Data-driven testing"
+        },
+        {
+          "slug": "configuring-a-data-driven-test-from-the-visual-editor",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm",
+          "title": "Configuring a Data-driven Test From The Visual Editor"
+        },
+        {
+          "slug": "configuring-data-driven-tests-using-the-config-file",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file.htm",
+          "title": "Configuring Data-driven Tests Using the Config File"
+        },
+        {
+          "slug": "configuring-data-driven-tests-using-data-from-an-external-source",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source.htm",
+          "title": "Configuring Data-driven Tests Using Data From an External Source"
+        },
+        {
+          "slug": "handling-ui-actions",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/index.htm",
+          "title": "Handling UI actions"
+        },
+        {
+          "slug": "auto-scroll",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/auto-scroll.htm",
+          "title": "Auto Scroll"
+        },
+        {
+          "slug": "drag-drop-step",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/drag-drop-step.htm",
+          "title": "Drag & Drop Step"
+        },
+        {
+          "slug": "navigation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/navigation.htm",
+          "title": "Navigation Step"
+        },
+        {
+          "slug": "refresh-page",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/refresh-page.htm",
+          "title": "Refresh Page Step"
+        },
+        {
+          "slug": "scroll",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/scroll.htm",
+          "title": "Scroll Step"
+        },
+        {
+          "slug": "hover-step",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/handling-ui-actions/hover-step.htm",
+          "title": "Hover Step"
+        },
+        {
+          "slug": "extract-text",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/extract-text.htm",
+          "title": "Extract Value Step"
+        },
+        {
+          "slug": "extract-sms-message",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/extract-sms-message.htm",
+          "title": "Extract SMS message"
+        },
+        {
+          "slug": "loops",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/loops.htm",
+          "title": "Repeat Group Loops"
+        },
+        {
+          "slug": "parameters",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/index.htm",
+          "title": "Parameters"
+        },
+        {
+          "slug": "parameters-in-custom-javascript-steps",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameters-in-custom-javascript-steps.htm",
+          "title": "Step Properties Panel Parameters"
+        },
+        {
+          "slug": "parameters-for-groups",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameters-for-groups.htm",
+          "title": "Groups Parameters"
+        },
+        {
+          "slug": "json-parameters-file-parameters",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/json-parameters-file-parameters.htm",
+          "title": "JSON Parameters File Parameters"
+        },
+        {
+          "slug": "configuration-file-parameters",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/configuration-file-parameters.htm",
+          "title": "Configuration File Parameters"
+        },
+        {
+          "slug": "passing-parameters-from-excel-file",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/passing-parameters-from-excel-file.htm",
+          "title": "Passing parameters from an Excel file"
+        },
+        {
+          "slug": "parameter-override-rules",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/parameter-override-rules.htm",
+          "title": "Parameter override rules"
+        },
+        {
+          "slug": "exports-parameters",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/exports-parameters.htm",
+          "title": "Exporting a Parameter"
+        },
+        {
+          "slug": "hidden-parameters",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/parameters/hidden-parameters.htm",
+          "title": "Hidden parameters"
+        },
+        {
+          "slug": "wait-for",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/wait-for.htm",
+          "title": "Wait for"
+        },
+        {
+          "slug": "api-testing",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/api-testing.htm",
+          "title": "API testing"
+        },
+        {
+          "slug": "cookies",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/cookies.htm",
+          "title": "Cookies"
+        },
+        {
+          "slug": "group-context",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/group-context.htm",
+          "title": "Group context"
+        },
+        {
+          "slug": "auto-grouping2",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/auto-grouping2.htm",
+          "title": "Auto grouping"
+        },
+        {
+          "slug": "advanced-js-editor",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/advanced-js-editor.htm",
+          "title": "Advanced JS Editor"
+        },
+        {
+          "slug": "custom-action-step-mobile",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/custom-action-step-mobile.htm",
+          "title": "Custom Action Step (mobile)"
+        },
+        {
+          "slug": "hooks",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/hooks.htm",
+          "title": "Hooks"
+        },
+        {
+          "slug": "error-suffix-customization",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/error-suffix-customization.htm",
+          "title": "Error Suffix Customization"
+        },
+        {
+          "slug": "salesforce-auto-login-step",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/salesforce-auto-login-step.htm",
+          "title": "Salesforce Auto-Login Step"
+        },
+        {
+          "slug": "salesforce-apex-action-step",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/salesforce-apex-action-step.htm",
+          "title": "Salesforce APEX Action Step"
+        },
+        {
+          "slug": "coding-assistant",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/coding-assistant.htm",
+          "title": "Testim Copilot Coding Assistant"
+        },
+        {
+          "slug": "keyboard-shortcut-step",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/keyboard-shortcut-step.htm",
+          "title": "Keyboard Shortcut Step"
+        },
+        {
+          "slug": "set-geolocation",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/set-geolocation.htm",
+          "title": "Set Geolocation (mobile)"
+        },
+        {
+          "slug": "deep-link-mobile",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/deep-link-mobile/index.htm",
+          "title": "Deep link (mobile)"
+        },
+        {
+          "slug": "hide-keyboard-mobile",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/deep-link-mobile/hide-keyboard-mobile.htm",
+          "title": "Hide keyboard (mobile)"
+        },
+        {
+          "slug": "clear-text-mobile",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/clear-text-mobile.htm",
+          "title": "Clear text (mobile)"
+        },
+        {
+          "slug": "reusable-test-data",
+          "url": "https://docs.tricentis.com/testim/content/advanced-editing/reusable-test-data.htm",
+          "title": "Test Data"
+        }
+      ]
+    },
+    {
+      "title": "Running Tests",
+      "pages": [
+        {
+          "slug": "running-tests-overview",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/running-tests-overview.htm",
+          "title": "Running Tests Overview"
+        },
+        {
+          "slug": "the-command-line-cli",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/the-command-line-cli/index.htm",
+          "title": "Command line interface (CLI)"
+        },
+        {
+          "slug": "allow-chrome-browser-to-use-microphone",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.htm",
+          "title": "Allow Chrome browser to use a mock microphone"
+        },
+        {
+          "slug": "base-url",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/base-url.htm",
+          "title": "Base URL"
+        },
+        {
+          "slug": "scheduler",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/scheduler.htm",
+          "title": "Scheduler - Web"
+        },
+        {
+          "slug": "scheduler-mobile",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/scheduler-mobile.htm",
+          "title": "Scheduler - Mobile"
+        },
+        {
+          "slug": "schedulers-notification-via-webhook",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/schedulers-notification-via-webhook.htm",
+          "title": "Scheduler’s notification via webhook"
+        },
+        {
+          "slug": "running-tests-on-multiple-browsers",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/running-tests-on-multiple-browsers.htm",
+          "title": "Running tests on multiple browsers"
+        },
+        {
+          "slug": "run-multiple-tests-locally",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/run-multiple-tests-locally.htm",
+          "title": "Run multiple tests locally"
+        },
+        {
+          "slug": "run-in-incognito",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/run-in-incognito.htm",
+          "title": "Run in incognito"
+        },
+        {
+          "slug": "configuration-file-run-hooks",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/configuration-file-run-hooks/index.htm",
+          "title": "Configuration File"
+        },
+        {
+          "slug": "predefined-properties-in-config-file-hooks",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.htm",
+          "title": "Predefined properties in config file hooks"
+        },
+        {
+          "slug": "mock-network-responses",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/index.htm",
+          "title": "Mock Network Responses"
+        },
+        {
+          "slug": "mocking-all-the-network-traffic-using-a-har-file",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file.htm",
+          "title": "Mocking network traffic using a HAR file"
+        },
+        {
+          "slug": "creating-a-mapping-file",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/creating-a-mapping-file.htm",
+          "title": "Creating a Mapping File"
+        },
+        {
+          "slug": "running-the-test-in-mock-mode-using-the-mapping-file",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file.htm",
+          "title": "Running the test in Mock mode"
+        },
+        {
+          "slug": "disabling-network-mock-mode",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/disabling-network-mock-mode.htm",
+          "title": "Disabling Network Mock Mode"
+        },
+        {
+          "slug": "mock-network-responses-troubleshooting",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/mock-network-responses/mock-network-responses-troubleshooting.htm",
+          "title": "Troubleshooting - mock network responses"
+        },
+        {
+          "slug": "play-from-here",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/play-from-here.htm",
+          "title": "Play from here"
+        },
+        {
+          "slug": "rerun-locally-with-the-same-params",
+          "url": "https://docs.tricentis.com/testim/content/running-tests/rerun-locally-with-the-same-params.htm",
+          "title": "Rerun locally with the same params"
+        }
+      ]
+    },
+    {
+      "title": "Results",
+      "pages": [
+        {
+          "slug": "results-overview",
+          "url": "https://docs.tricentis.com/testim/content/results/results-overview.htm",
+          "title": "Results Overview"
+        },
+        {
+          "slug": "test-results",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/index.htm",
+          "title": "Test results"
+        },
+        {
+          "slug": "compare-side-by-side-screenshots",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/compare-side-by-side-screenshots.htm",
+          "title": "Compare Side-by-Side Screenshots"
+        },
+        {
+          "slug": "network-logs",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/network-logs.htm",
+          "title": "Network Logs"
+        },
+        {
+          "slug": "network-logs-copy",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/network-logs-copy.htm",
+          "title": "Console Logs"
+        },
+        {
+          "slug": "why-did-my-test-fail",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/why-did-my-test-fail.htm",
+          "title": "Why did my test fail?"
+        },
+        {
+          "slug": "visual-validation-test-results",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/visual-validation-test-results.htm",
+          "title": "Visual Validation Test Results"
+        },
+        {
+          "slug": "debug-console-errors-access-dom",
+          "url": "https://docs.tricentis.com/testim/content/results/test-results/debug-console-errors-access-dom.htm",
+          "title": "Debug console errors, access DOM"
+        },
+        {
+          "slug": "execution-runs-screen",
+          "url": "https://docs.tricentis.com/testim/content/results/execution-runs-screen.htm",
+          "title": "Execution Runs Screen"
+        },
+        {
+          "slug": "test-runs",
+          "url": "https://docs.tricentis.com/testim/content/results/test-runs.htm",
+          "title": "Test runs"
+        },
+        {
+          "slug": "stop-pause-debug-tests",
+          "url": "https://docs.tricentis.com/testim/content/results/stop-pause-debug-tests.htm",
+          "title": "Stop, Pause & Debug Tests"
+        },
+        {
+          "slug": "result-labels",
+          "url": "https://docs.tricentis.com/testim/content/results/result-labels.htm",
+          "title": "Result labels"
+        },
+        {
+          "slug": "export-test-list-and-test-results",
+          "url": "https://docs.tricentis.com/testim/content/results/export-test-list-and-test-results.htm",
+          "title": "Export test list and test results"
+        },
+        {
+          "slug": "tag-remote-runs-failures",
+          "url": "https://docs.tricentis.com/testim/content/results/tag-remote-runs-failures.htm",
+          "title": "Tagging failed runs with failure types"
+        },
+        {
+          "slug": "test-run-pdf-report",
+          "url": "https://docs.tricentis.com/testim/content/results/test-run-pdf-report.htm",
+          "title": "Test Run PDF Report"
+        }
+      ]
+    },
+    {
+      "title": "Debugging Tests",
+      "pages": [
+        {
+          "slug": "debugging-overview",
+          "url": "https://docs.tricentis.com/testim/content/debugging-tests/debugging-overview.htm",
+          "title": "Debugging Overview"
+        },
+        {
+          "slug": "debugging-controls",
+          "url": "https://docs.tricentis.com/testim/content/debugging-tests/debugging-controls.htm",
+          "title": "Debugging Controls"
+        },
+        {
+          "slug": "recording-additional-steps-to-fix-bugs",
+          "url": "https://docs.tricentis.com/testim/content/debugging-tests/recording-additional-steps-to-fix-bugs.htm",
+          "title": "Recording New Steps to Resolve Bugs"
+        },
+        {
+          "slug": "debug-helper-panels",
+          "url": "https://docs.tricentis.com/testim/content/debugging-tests/debug-helper-panels.htm",
+          "title": "Debug Helper Panels"
+        },
+        {
+          "slug": "js-code-debugging",
+          "url": "https://docs.tricentis.com/testim/content/debugging-tests/js-code-debugging.htm",
+          "title": "JS Code Debugging"
+        }
+      ]
+    },
+    {
+      "title": "Test Management",
+      "pages": [
+        {
+          "slug": "test-management-overview",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-management-overview.htm",
+          "title": "Test Management Overview"
+        },
+        {
+          "slug": "test-list",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-list/index.htm",
+          "title": "Test Library"
+        },
+        {
+          "slug": "managing-tests-and-folders",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-list/managing-tests-and-folders.htm",
+          "title": "Managing tests and folders"
+        },
+        {
+          "slug": "cloning-tests",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-list/cloning-tests.htm",
+          "title": "Cloning tests"
+        },
+        {
+          "slug": "shared-steps-library",
+          "url": "https://docs.tricentis.com/testim/content/test-management/shared-steps-library/index.htm",
+          "title": "Shared Steps Library"
+        },
+        {
+          "slug": "managing-shared-steps-and-folders",
+          "url": "https://docs.tricentis.com/testim/content/test-management/shared-steps-library/managing-shared-steps-and-folders.htm",
+          "title": "Managing shared steps and folders"
+        },
+        {
+          "slug": "dependencies-and-ordering-of-tests",
+          "url": "https://docs.tricentis.com/testim/content/test-management/dependencies-and-ordering-of-tests.htm",
+          "title": "Dependencies and ordering of tests"
+        },
+        {
+          "slug": "labels",
+          "url": "https://docs.tricentis.com/testim/content/test-management/labels.htm",
+          "title": "Labels"
+        },
+        {
+          "slug": "revisions",
+          "url": "https://docs.tricentis.com/testim/content/test-management/revisions.htm",
+          "title": "Revisions"
+        },
+        {
+          "slug": "shared-configuration",
+          "url": "https://docs.tricentis.com/testim/content/test-management/shared-configuration.htm",
+          "title": "Configuration Library - Web"
+        },
+        {
+          "slug": "configuration-library-mobile",
+          "url": "https://docs.tricentis.com/testim/content/test-management/configuration-library-mobile.htm",
+          "title": "Configuration Library - Mobile"
+        },
+        {
+          "slug": "test-plans",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-plans.htm",
+          "title": "Test Plans - Web"
+        },
+        {
+          "slug": "test-plans-mobile",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-plans-mobile.htm",
+          "title": "Test Plans - Mobile"
+        },
+        {
+          "slug": "test-suites",
+          "url": "https://docs.tricentis.com/testim/content/test-management/test-suites.htm",
+          "title": "Test suites"
+        },
+        {
+          "slug": "locators-auto-improve",
+          "url": "https://docs.tricentis.com/testim/content/test-management/locators-auto-improve.htm",
+          "title": "Locators: Auto Improve"
+        },
+        {
+          "slug": "bug-reporting",
+          "url": "https://docs.tricentis.com/testim/content/test-management/bug-reporting.htm",
+          "title": "Bug Reporting"
+        },
+        {
+          "slug": "saving-a-filtered-view",
+          "url": "https://docs.tricentis.com/testim/content/test-management/saving-a-filtered-view.htm",
+          "title": "Saving a Filtered View"
+        }
+      ]
+    },
+    {
+      "title": "Mobile Apps",
+      "pages": [
+        {
+          "slug": "mobile-apps",
+          "url": "https://docs.tricentis.com/testim/content/mobile-apps/mobile-apps.htm",
+          "title": "Mobile Apps"
+        }
+      ]
+    },
+    {
+      "title": "Device Management",
+      "pages": [
+        {
+          "slug": "view-local-connected-mobile-devices",
+          "url": "https://docs.tricentis.com/testim/content/device-management/view-local-connected-mobile-devices.htm",
+          "title": "View Local Connected Mobile Devices"
+        }
+      ]
+    },
+    {
+      "title": "Integrations",
+      "pages": [
+        {
+          "slug": "integrations-overview",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrations-overview.htm",
+          "title": "Integrations Overview"
+        },
+        {
+          "slug": "integrate-testim-to-your-ci",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/index.htm",
+          "title": "CI integrations"
+        },
+        {
+          "slug": "azure-devops-build-pipeline-integrations",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/azure-devops-build-pipeline-integrations.htm",
+          "title": "Azure Pipelines Integration"
+        },
+        {
+          "slug": "bamboo-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/bamboo-integration.htm",
+          "title": "Bamboo integration"
+        },
+        {
+          "slug": "circle-ci-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/circle-ci-integration.htm",
+          "title": "Circle CI integration"
+        },
+        {
+          "slug": "codeship-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/codeship-integration.htm",
+          "title": "Codeship integration"
+        },
+        {
+          "slug": "jenkins-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/jenkins-integration.htm",
+          "title": "Jenkins integration"
+        },
+        {
+          "slug": "jenkins-integration-using-docker",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker.htm",
+          "title": "Jenkins integration - using Docker"
+        },
+        {
+          "slug": "teamcity-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/teamcity-integration.htm",
+          "title": "TeamCity integration"
+        },
+        {
+          "slug": "vsts-and-tfs-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration.htm",
+          "title": "VSTS and TFS integration"
+        },
+        {
+          "slug": "gitlab-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/gitlab-integration.htm",
+          "title": "GitLab integration"
+        },
+        {
+          "slug": "github-action-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/github-action-integration.htm",
+          "title": "GitHub Actions Integration"
+        },
+        {
+          "slug": "copado-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/copado-integration.htm",
+          "title": "Copado Integration"
+        },
+        {
+          "slug": "gearset-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/gearset-integration.htm",
+          "title": "Gearset Integration"
+        },
+        {
+          "slug": "autorabit-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/autorabit-integration.htm",
+          "title": "AutoRabit Integration"
+        },
+        {
+          "slug": "dedicated-run-tunnel",
+          "url": "https://docs.tricentis.com/testim/content/integrations/dedicated-run-tunnel.htm",
+          "title": "Dedicated run tunnel"
+        },
+        {
+          "slug": "applitools-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/index.htm",
+          "title": "Applitools integration"
+        },
+        {
+          "slug": "override-applitools-test-name",
+          "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-test-name.htm",
+          "title": "Override Applitools' test name"
+        },
+        {
+          "slug": "override-applitools-app-name",
+          "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-app-name.htm",
+          "title": "Override Applitools' app name"
+        },
+        {
+          "slug": "github-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/github-integration.htm",
+          "title": "GitHub integration"
+        },
+        {
+          "slug": "sealights-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/sealights-integration.htm",
+          "title": "Sealights Integration"
+        },
+        {
+          "slug": "grid-management",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/index.htm",
+          "title": "Grid management"
+        },
+        {
+          "slug": "tricentis-device-cloud",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/tricentis-device-cloud.htm",
+          "title": "Tricentis Device Cloud"
+        },
+        {
+          "slug": "virtual-mobile-grid",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/virtual-mobile-grid.htm",
+          "title": "Virtual Mobile Grid"
+        },
+        {
+          "slug": "custom-grid",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/custom-grid.htm",
+          "title": "Custom Grid"
+        },
+        {
+          "slug": "saucelabs-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-integration.htm",
+          "title": "Saucelabs integration"
+        },
+        {
+          "slug": "browserstack-integration-1",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-1.htm",
+          "title": "Browserstack integration"
+        },
+        {
+          "slug": "browserstack-integration-copy",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-copy.htm",
+          "title": "LambdaTest integration"
+        },
+        {
+          "slug": "custom-capabilities",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/custom-capabilities.htm",
+          "title": "Custom test capabilities"
+        },
+        {
+          "slug": "saucelabs-browserstack-options",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-browserstack-options.htm",
+          "title": "Test capabilities for Saucelabs & BrowserStack in CLI"
+        },
+        {
+          "slug": "headspin-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/grid-management/headspin-integration.htm",
+          "title": "HeadSpin integration"
+        },
+        {
+          "slug": "bitbucket-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/bitbucket-integration.htm",
+          "title": "Bitbucket Integration"
+        },
+        {
+          "slug": "bug-tracker-settings",
+          "url": "https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/index.htm",
+          "title": "Bug Tracker Settings"
+        },
+        {
+          "slug": "connecting-testim-to-jira",
+          "url": "https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-jira.htm",
+          "title": "Connecting Testim to Jira"
+        },
+        {
+          "slug": "connecting-testim-to-trello",
+          "url": "https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-trello.htm",
+          "title": "Connecting Testim to Trello"
+        },
+        {
+          "slug": "connecting-testim-to-slack",
+          "url": "https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-slack.htm",
+          "title": "Connecting Testim to Slack"
+        },
+        {
+          "slug": "connecting-testim-to-github",
+          "url": "https://docs.tricentis.com/testim/content/integrations/bug-tracker-settings/connecting-testim-to-github.htm",
+          "title": "Connecting Testim to Github"
+        },
+        {
+          "slug": "test-management-integrations",
+          "url": "https://docs.tricentis.com/testim/content/integrations/test-management-integrations/index.htm",
+          "title": "Test Management Integrations"
+        },
+        {
+          "slug": "qtest-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/test-management-integrations/qtest-integration.htm",
+          "title": "qTest Integration"
+        },
+        {
+          "slug": "testrail-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/test-management-integrations/testrail-integration.htm",
+          "title": "TestRail integration"
+        },
+        {
+          "slug": "ttm-for-jira-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/test-management-integrations/ttm-for-jira-integration.htm",
+          "title": "TTM for Jira Integration"
+        },
+        {
+          "slug": "xray-integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/test-management-integrations/xray-integration.htm",
+          "title": "Xray Integration"
+        }
+      ]
+    },
+    {
+      "title": "Settings",
+      "pages": [
+        {
+          "slug": "cli-settings",
+          "url": "https://docs.tricentis.com/testim/content/settings/cli-settings.htm",
+          "title": "CLI settings"
+        },
+        {
+          "slug": "cli-prerequisites",
+          "url": "https://docs.tricentis.com/testim/content/settings/cli-prerequisites.htm",
+          "title": "CLI Prerequisites"
+        }
+      ]
+    },
+    {
+      "title": "Administration",
+      "pages": [
+        {
+          "slug": "api-access",
+          "url": "https://docs.tricentis.com/testim/content/administration/api-access.htm",
+          "title": "Testim REST API"
+        },
+        {
+          "slug": "project-user-management",
+          "url": "https://docs.tricentis.com/testim/content/administration/project-user-management.htm",
+          "title": "Project users management"
+        },
+        {
+          "slug": "project-and-user-management",
+          "url": "https://docs.tricentis.com/testim/content/administration/project-and-user-management.htm",
+          "title": "Projects and users management (company level)"
+        },
+        {
+          "slug": "project-settings",
+          "url": "https://docs.tricentis.com/testim/content/administration/project-settings.htm",
+          "title": "Project settings"
+        },
+        {
+          "slug": "encrypted-credentials",
+          "url": "https://docs.tricentis.com/testim/content/administration/encrypted-credentials.htm",
+          "title": "Encrypted Credentials"
+        },
+        {
+          "slug": "secrets",
+          "url": "https://docs.tricentis.com/testim/content/administration/secrets.htm",
+          "title": "Secrets Manager"
+        },
+        {
+          "slug": "subscription-plans",
+          "url": "https://docs.tricentis.com/testim/content/administration/subscription-plans/index.htm",
+          "title": "Plans"
+        },
+        {
+          "slug": "copilot-license-management",
+          "url": "https://docs.tricentis.com/testim/content/administration/copilot-license-management.htm",
+          "title": "Copilot License Management"
+        },
+        {
+          "slug": "exporting-a-testim-test-as-code-for-playwright",
+          "url": "https://docs.tricentis.com/testim/content/administration/exporting-a-testim-test-as-code-for-playwright.htm",
+          "title": "Exporting a Testim test as code for Playwright"
+        }
+      ]
+    },
+    {
+      "title": "Testops",
+      "pages": [
+        {
+          "slug": "testops-overview",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-overview.htm",
+          "title": "TestOps Overview"
+        },
+        {
+          "slug": "testops-management",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-management/index.htm",
+          "title": "TestOps - Management"
+        },
+        {
+          "slug": "test-status",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-management/test-status.htm",
+          "title": "Test Status"
+        },
+        {
+          "slug": "test-owner",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-management/test-owner.htm",
+          "title": "Test Owner"
+        },
+        {
+          "slug": "flaky-tests",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-management/flaky-tests.htm",
+          "title": "Flaky tests"
+        },
+        {
+          "slug": "testops-version-control",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-version-control/index.htm",
+          "title": "TestOps - Version Control"
+        },
+        {
+          "slug": "version-control-branches",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-version-control/version-control-branches.htm",
+          "title": "Branch Management"
+        },
+        {
+          "slug": "merging-branches",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-version-control/merging-branches.htm",
+          "title": "Merging Branches"
+        },
+        {
+          "slug": "pull-requests",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-version-control/pull-requests.htm",
+          "title": "Pull Requests"
+        },
+        {
+          "slug": "read-only",
+          "url": "https://docs.tricentis.com/testim/content/testops/testops-version-control/read-only.htm",
+          "title": "Branch Read Only State"
+        },
+        {
+          "slug": "insights",
+          "url": "https://docs.tricentis.com/testim/content/testops/insights/index.htm",
+          "title": "Insights"
+        },
+        {
+          "slug": "dashboard",
+          "url": "https://docs.tricentis.com/testim/content/testops/insights/dashboard.htm",
+          "title": "TestOps Dashboard"
+        },
+        {
+          "slug": "reports",
+          "url": "https://docs.tricentis.com/testim/content/testops/insights/reports.htm",
+          "title": "Reports"
+        },
+        {
+          "slug": "team-productivity",
+          "url": "https://docs.tricentis.com/testim/content/testops/insights/team-productivity.htm",
+          "title": "Team Productivity"
+        },
+        {
+          "slug": "audit-log",
+          "url": "https://docs.tricentis.com/testim/content/testops/audit-log.htm",
+          "title": "Audit Log"
+        },
+        {
+          "slug": "turbo-mode",
+          "url": "https://docs.tricentis.com/testim/content/testops/turbo-mode.htm",
+          "title": "Turbo Mode"
+        }
+      ]
+    },
+    {
+      "title": "Salesforce Testing",
+      "pages": [
+        {
+          "slug": "salesforce-testing-overview",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-overview.htm",
+          "title": "Salesforce Testing"
+        },
+        {
+          "slug": "salesforce-testing-getting-started",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-getting-started.htm",
+          "title": "Salesforce Testing Getting Started"
+        },
+        {
+          "slug": "core-concepts",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/core-concepts.htm",
+          "title": "Core Concepts"
+        },
+        {
+          "slug": "changelog",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/changelog.htm",
+          "title": "Changelog"
+        },
+        {
+          "slug": "create-and-manage-test-environments",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/create-and-manage-test-environments.htm",
+          "title": "Connecting your Salesforce environment"
+        },
+        {
+          "slug": "create-a-persona-and-add-users",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/create-a-persona-and-add-users.htm",
+          "title": "Creating a persona"
+        },
+        {
+          "slug": "create-a-salesforce-test",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/index.htm",
+          "title": "Creating a Salesforce test"
+        },
+        {
+          "slug": "use-agentic-test-automation-for-salesforce",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce.htm",
+          "title": "Use Agentic Test Automation for Salesforce "
+        },
+        {
+          "slug": "create-and-merge-branches-from-different-test-environments",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/create-and-merge-branches-from-different-test-environments.htm",
+          "title": "Create and merge branches from different test environments"
+        },
+        {
+          "slug": "salesforce-steps",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/index.htm",
+          "title": "Salesforce steps"
+        },
+        {
+          "slug": "sfdc-step-login",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-login.htm",
+          "title": "Log in"
+        },
+        {
+          "slug": "sfdc-step-loginas",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-loginas.htm",
+          "title": "Log In As Another User"
+        },
+        {
+          "slug": "sfdc-step-launchapp",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-launchapp.htm",
+          "title": "Launch App"
+        },
+        {
+          "slug": "sfdc-step-logout",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-logout.htm",
+          "title": "Log out"
+        },
+        {
+          "slug": "sfdc-step-findandgotorecord",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-findandgotorecord.htm",
+          "title": "Find and go to record"
+        },
+        {
+          "slug": "sfdc-step-waitforpageload",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-waitforpageload.htm",
+          "title": "Wait for Page Load"
+        },
+        {
+          "slug": "sfdc-step-closeconsoletabs",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-closeconsoletabs.htm",
+          "title": "Close console tabs"
+        },
+        {
+          "slug": "sfdc-step-apex-action",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-apex-action.htm",
+          "title": "Execute APEX"
+        },
+        {
+          "slug": "sfdc-step-permission-validation",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-permission-validation.htm",
+          "title": "Permission validation"
+        },
+        {
+          "slug": "sfdc-document-validation",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-document-validation.htm",
+          "title": "Document Validation"
+        },
+        {
+          "slug": "sfdc-step-convertleadtoopportunity",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-convertleadtoopportunity.htm",
+          "title": "Convert lead to opportunity"
+        },
+        {
+          "slug": "sfdc-step-quotelineeditor",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-quotelineeditor.htm",
+          "title": "Quote Line Editor Action"
+        },
+        {
+          "slug": "sfdc-step-create",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-create.htm",
+          "title": "Create"
+        },
+        {
+          "slug": "sfdc-step-validate",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-validate.htm",
+          "title": "Validate"
+        },
+        {
+          "slug": "sfdc-step-edit",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-edit.htm",
+          "title": "Edit"
+        },
+        {
+          "slug": "sfdc-step-relatedlistaction",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction.htm",
+          "title": "Related List Action"
+        },
+        {
+          "slug": "sfdc-step-quickactions",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-quickactions.htm",
+          "title": "Quick Actions"
+        },
+        {
+          "slug": "sfdc-step-delete",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-delete.htm",
+          "title": "Delete"
+        },
+        {
+          "slug": "sfdc-step-verifypicklistoptions",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-verifypicklistoptions.htm",
+          "title": "Verify picklist options"
+        },
+        {
+          "slug": "sfdc-step-salesforce-flows",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows.htm",
+          "title": "Salesforce Flows"
+        },
+        {
+          "slug": "log-screenshots",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/log-screenshots.htm",
+          "title": "Log screenshots"
+        },
+        {
+          "slug": "record-tests-with-salesforce",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/record-tests-with-salesforce.htm",
+          "title": "Record tests with Salesforce"
+        },
+        {
+          "slug": "troubleshoot",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/troubleshoot.htm",
+          "title": "Troubleshooting"
+        },
+        {
+          "slug": "faq",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/faq.htm",
+          "title": "FAQ"
+        },
+        {
+          "slug": "tta-for-salesforce-branch-management",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/tta-for-salesforce-branch-management.htm",
+          "title": "Testim for Salesforce Branch Management"
+        },
+        {
+          "slug": "best-practice-variable-naming-convention-for-easy-cleanup",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/best-practice-variable-naming-convention-for-easy-cleanup.htm",
+          "title": "Best Practice - Variable Naming Convention for Easy Cleanup"
+        },
+        {
+          "slug": "methods-for-displaying-a-specific-record-during-test-execution",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution.htm",
+          "title": "Find and display a specific Salesforce record during test execution"
+        },
+        {
+          "slug": "setting-mfa-for-salesforce",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/setting-mfa-for-salesforce.htm",
+          "title": "Setting MFA for Salesforce"
+        },
+        {
+          "slug": "page-layout",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/page-layout.htm",
+          "title": "Page Layout"
+        }
+      ]
+    },
+    {
+      "title": "Testim Extension",
+      "pages": [
+        {
+          "slug": "testim-extension-overview",
+          "url": "https://docs.tricentis.com/testim/content/testim-extension/testim-extension-overview.htm",
+          "title": "Testim Extension - Overview"
+        },
+        {
+          "slug": "testim-extension-capture-screenshot",
+          "url": "https://docs.tricentis.com/testim/content/testim-extension/testim-extension-capture-screenshot.htm",
+          "title": "Testim Extension - Capture Screenshot"
+        },
+        {
+          "slug": "testim-extension-capture-video-bug-scenario",
+          "url": "https://docs.tricentis.com/testim/content/testim-extension/testim-extension-capture-video-bug-scenario.htm",
+          "title": "Testim Extension - Capture Video & Bug Scenario"
+        },
+        {
+          "slug": "testim-extension-create-automated-test",
+          "url": "https://docs.tricentis.com/testim/content/testim-extension/testim-extension-create-automated-test.htm",
+          "title": "Testim Extension - Create Automated Test"
+        }
+      ]
+    },
+    {
+      "title": "Security",
+      "pages": [
+        {
+          "slug": "testim-grid-ips",
+          "url": "https://docs.tricentis.com/testim/content/security/testim-grid-ips.htm",
+          "title": "Testim and LambdaTest Grid IPs"
+        },
+        {
+          "slug": "sso-integration",
+          "url": "https://docs.tricentis.com/testim/content/security/sso-integration/index.htm",
+          "title": "SSO Integration"
+        },
+        {
+          "slug": "onelogin-sso-integration",
+          "url": "https://docs.tricentis.com/testim/content/security/sso-integration/onelogin-sso-integration.htm",
+          "title": "OneLogin SSO Integration"
+        },
+        {
+          "slug": "okta-sso-integration",
+          "url": "https://docs.tricentis.com/testim/content/security/sso-integration/okta-sso-integration.htm",
+          "title": "Okta SSO Integration"
+        },
+        {
+          "slug": "azure-ad-sso-integration",
+          "url": "https://docs.tricentis.com/testim/content/security/sso-integration/azure-ad-sso-integration.htm",
+          "title": "Azure AD SSO Integration"
+        }
+      ]
+    },
+    {
+      "title": "Guides",
+      "pages": [
+        {
+          "slug": "mobile-web-testing",
+          "url": "https://docs.tricentis.com/testim/content/guides/mobile-web-testing.htm",
+          "title": "Mobile web testing"
+        },
+        {
+          "slug": "keyboard-shortcuts",
+          "url": "https://docs.tricentis.com/testim/content/guides/keyboard-shortcuts.htm",
+          "title": "Keyboard shortcuts"
+        },
+        {
+          "slug": "generate-random-data-with-js",
+          "url": "https://docs.tricentis.com/testim/content/guides/generate-random-data-with-js.htm",
+          "title": "Generate random data with JS"
+        },
+        {
+          "slug": "best-practices-for-handling-logins",
+          "url": "https://docs.tricentis.com/testim/content/guides/best-practices-for-handling-logins.htm",
+          "title": "Best practices for handling logins"
+        }
+      ]
+    },
+    {
+      "title": "Testim Labs",
+      "pages": [
+        {
+          "slug": "testim-labs",
+          "url": "https://docs.tricentis.com/testim/content/testim-labs/testim-labs.htm",
+          "title": "About Testim Labs"
+        },
+        {
+          "slug": "test-flow-view",
+          "url": "https://docs.tricentis.com/testim/content/testim-labs/test-flow-view.htm",
+          "title": "Test Flow View"
+        },
+        {
+          "slug": "link-directly-to-a-shared-step",
+          "url": "https://docs.tricentis.com/testim/content/testim-labs/link-directly-to-a-shared-step.htm",
+          "title": "Link Directly to a Shared Step"
+        }
+      ]
+    }
+  ]
+}

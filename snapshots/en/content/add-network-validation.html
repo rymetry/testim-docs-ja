@@ -1,0 +1,326 @@
+
+                                        <h1>Add network validation</h1>
+                                        <p>The <em>network validation</em> step allows you to validate your network requests. It is a predefined validation step that receives an array (networkRequests) of objects (see table below). This step enables you to run JavaScript code on the <em>networkRequests</em> array.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>This step can run only on either Chrome or Edge Chromium.</p>
+                                        </div>
+                                        <h2><a name="network-validation"></a>Network Validation</h2>
+                                        <p>The following objects (in the <em>networkRequests</em> array) are available to validate:</p>
+                                        <div class="note">
+                                            <p>Request/Response Body It is also possible to capture the request and response body, see <a href="#capturing-request-and-response-body">Capturing Request and Response Body</a> for more details.</p>
+                                        </div>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Object</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">Property</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">url</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The request URL.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">source</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The page that generated the URL.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">method</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The request method. (e.g. GET, POST, PUT, etc.)</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">startTime</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The Unix time (ms) when the request started loading.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">endTime</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The Unix time (ms) when the request finished loading.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">tabNumber</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The tab that was the source of the request.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">statusCode</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The response status code of the request.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">statusText</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The response status text, corresponding to the status code.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">isBlocked</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Indicates if the request was blocked.  
+<p><em> </em>true<em></em> = blocked</p><p><em> </em>false<em></em> = not blocked</p></p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">blockReason</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The reason the request was blocked, if any. (e.g. ad blocker, request failure, origin, CORS, etc.)</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">isDone</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Indicates if the request might still be pending.  
+<p><em> </em>true<em></em> = done</p><p><em> </em>false<em></em> = pending</p></p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">type</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The type of data the response contains. (e.g. XHR, document, Image etc.) (from Chrome)</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">responseSize</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The total size of the response (encoded, including the headers) in bytes.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">protocol</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body2">
+                                                        <p class="tableBody">The network protocol. (e.g. h2, http/1.1) (from Chrome)</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>→ <strong>To add an<em>Add network validation</em> step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the step.</p>
+                                            </li>
+                                            <img src="images/a0847f8-testim_308a.png" title="Testim 308a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/138a257-testim_283a_r.png" title="Testim 283a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/97d3be5-testim_270_r2.png" title="Testim 270_r2.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands.</p>
+                                            <img src="images/82d4e6d-testim_303_r.png" title="Testim 303_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Add network validation</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add network validation</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/d07a576-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step folder</strong> list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/989f939-testim_310.png" title="Testim 310.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “Run network validation”.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Define the parameters you will need for your step as follows:<br /></p>
+                                            </li>
+                                            <p>a. In the <strong>Properties</strong> panel, click the <strong>+ PARAMS</strong> button.<br /> b. <strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.<br /> c. <strong>HTML parameter</strong>: If you would like to define an HTML element as a parameter, select <strong>HTML</strong> from the dropdown list. The browser opens, displaying the relevant webpage for this step. Do the following:</p>
+                                            <ul>
+                                                <li>
+                                                    <p>In the <strong>AUT</strong> window, hover your mouse on the relevant element and then click on it to select it. The selected element is shown in the <strong>Target Element</strong> box in the <strong>Properties</strong> pane. If you would like to view, replace or adjust the settings for the selected element, use the procedures described in <a href="../../editing-tests/editing-your-tests/editing-target-element-properties.htm">Editing Target Element Properties</a>.</p>
+                                                </li>
+                                            </ul>
+                                            <p>d. The selected element is automatically named “param” or “element” (depending on whether you chose a JS parameter or HTML element). To assign a relevant name to the parameter/element, click on the <strong>edit</strong> icon and enter the desired name.</p>
+                                            <img src="images/f5a215a-testim_285a_r.png" title="Testim 285a_r.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Optionally fill in the following Properties:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>When this step fails</strong> – Specify what to do if this step fails.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see <a href="../../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).</p>
+                                                </li>
+                                            </ul>
+                                            <li value="11">
+                                                <p>In the <strong>function</strong> text box, type in the desired JavaScript code. If you have defined parameters, you can refer to those parameters in your JavaScript code.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <span class="FileOrFilePath">$(&lt;query&gt;).length</span> instead of <span class="FileOrFilePath">$(&lt;query&gt;)</span>.</p>
+                                            </div>
+                                            <li value="12">
+                                                <p>Click the back arrow to return to the main Editor window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/bc0ed89-testim_311a.png" title="Testim 311a.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If you opened your AUT to define an HTML element as a parameter, click on the <strong>Toggle Breakpoint</strong> button to remove the breakpoint.</p>
+                                        </div>
+                                        <p>The step is created.</p>
+                                        <img src="images/969f2b6-testim_312a.png" title="Testim 312a.png" class="ScreenshotFullsize" />
+                                        <h3><a name="network-validation-examples"></a>Network Validation Examples</h3>
+                                        <h4><a name="validate-all-the-image-requests"></a>Validate all the image requests</h4>
+                                        <img src="images/b4452ab-testim_313.png" title="Testim 313.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>function validateRequestStatuscode(req){<br />&#160;&#160;//Get status code<br />&#160;const statusCode = req.statusCode.toString();<br />&#160;&#160;//Check if we got an error<br />&#160;const badReq = statusCode.startsWith('4')&#160;&#160;|| statusCode.startsWith('5');<br />&#160;&#160;//If we got an error fail the step<br />&#160;&#160;if(badReq){<br />&#160;&#160;&#160;&#160;throw new Error(`assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`);&#160;<br />&#160;&#160;}<br />}<br /><br />console.table(networkRequests)<br />const imageCalls = networkRequests.filter(call =&gt; call.type == "Image");<br />imageCalls.forEach(validateRequestStatuscode)</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="validate-a-single-request"></a>Validate a single request</h4>
+                                        <img src="images/7e9fc8d-testim_314.png" title="Testim 314.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>if(networkRequests.length == 0){<br />&#160;throw new Error('No requests were made during the time of the test')&#160;<br />}<br /><br />function validateRequestStatuscode(req){<br />&#160;&#160;//Get status code<br />&#160;const statusCode = req.statusCode.toString();<br />&#160;&#160;//Check if we got an error<br />&#160;const badReq = statusCode.startsWith('4')&#160;&#160;|| statusCode.startsWith('5');<br />&#160;&#160;//If we got an error fail the step<br />&#160;&#160;if(badReq){<br />&#160;&#160;&#160;&#160;throw new Error(`assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`);&#160;<br />&#160;&#160;}<br />&#160;&#160;return true<br />}<br /><br />//Filter the source of the request<br />function filterReqestsBySource(source,req){<br />&#160;&#160;const reqSource = req.source<br />&#160;&#160;if(source === reqSource) return true<br />&#160;&#160;return false<br />}<br /><br />//find a single request by it's url and check if they are all valid<br /><br />const singleReq = networkRequests.find(item =&gt; item.url == 'http://demo.testim.io/bundle.css')<br /><br />if(!singleReq){<br />&#160;throw new Error('Request was not found')&#160;<br />}<br /><br />return validateRequestStatuscode(singleReq)</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="validate-all-requests-have-passed"></a>Validate all requests have passed</h4>
+                                        <img src="images/3e299dd-testim_315.png" title="Testim 315.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>function validateRequestStatuscode(req){<br />&#160;&#160;//Get status code<br />&#160;const statusCode = req.statusCode.toString();<br />&#160;&#160;//Check if we got an error<br />&#160;const badReq = statusCode.startsWith('4')&#160;&#160;|| statusCode.startsWith('5');<br />&#160;&#160;//If we got an error fail the step<br />&#160;&#160;if(badReq){<br />&#160;&#160;&#160;&#160;throw new Error(`assert failed for request "${req.url}" method: "${req.method}". Statusc code was ${req.statusCode}`);&#160;<br />&#160;&#160;}<br />}<br /><br /><br />//Check all the requests and see if they are all valid&#160;<br />networkRequests.forEach(validateRequestStatuscode)<br />return true</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="validate-max-time-of-call"></a>Validate max time of call</h4>
+                                        <img src="images/9880f22-testim_316.png" title="Testim 316.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const callDur = networkRequests.map(call =&gt; call.endTime - call.startTime)<br /><br />const isOverMax = callDur.some(time =&gt; time &gt; maxTimeInMS)<br /><br />if(isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`)</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameter:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">maxTimeInMS</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">JavaScript</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">{the maximum number of milliseconds allowed for the network call before the step fails}</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h1><a name="capturing-request-and-response-body"></a>Capturing Request and Response Body</h1>
+                                        <div class="note">
+                                            <p>Feature flag To enable this feature, please contact support.</p>
+                                        </div>
+                                        <p>As part of the network validation, in addition to the array of objects captured in the request/response, as described above, it is also possible to capture the request and/or response body and then use the <strong>add network validation</strong> step to perform validations on the body content. The body content itself will not be shown in the network logs, but will be added to the <span class="FileOrFilePath">networkRequests</span> array.</p>
+                                        <div class="note">
+                                            <p>Enabling this option may affect the performance of your test.</p>
+                                        </div>
+                                        <p>→ <strong>To enable the capture of the request and response body:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Setup Step</strong>, click <strong>Show Properties</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under <strong>Network Capture Options</strong>, select the <strong>Capture request body</strong> and/or <strong>Capture response body</strong> options.</p>
+                                            </li>
+                                            <img src="images/f6815ea-network_capture_options.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click <strong>Save</strong> to save the test.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="adding-the-requestresponse-body-to-the-add-network-validation-step"></a>Adding the request/response body to the add network validation step</h2>
+                                        <p>After enabling the <strong>Network Capture Options</strong> (Capturing Request/Response Body), in the<br /></p>
+                                        <p><strong>Add network validation</strong> step, the parameter <span class="FileOrFilePath">networkRequests</span> will be available and will hold all of<br /></p>
+                                        <p>the requests that were made. Each request object has the following properties: <span class="FileOrFilePath">method</span>, <span class="FileOrFilePath">statusCode</span>, <span class="FileOrFilePath">resposeHeaders</span>, <span class="FileOrFilePath">requestBody</span> (this is the new property), <span class="FileOrFilePath">responseBody</span> (this is the new property), <span class="FileOrFilePath">headers</span>, and more. When adding the <strong>Add network validation</strong> step, it is possible to add the <span class="FileOrFilePath">requestBody</span> and/or <span class="FileOrFilePath">responseBody</span> properties, as shown below.</p>
+                                        <img src="images/557bd68-image.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Only fetch and XHR network request/response body will be captured.</p>
+                                        </div>
+                                        <h3><a name="test-example"></a>Test example</h3>
+                                        <p>The following test example features the Request/Response Body in a network validation step:<br /></p>
+                                        <p><a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji">https://app.testim.io/#/project/GYXR2qZC/branch/master/test/8PsdGWbxJx7NsZji</a> and prints the<br /></p>
+                                        <p>body payload to the console.</p>
+                                    

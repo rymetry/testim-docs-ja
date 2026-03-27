@@ -1,0 +1,230 @@
+
+                                        <h1>Visual Validation (element, viewport, full-page)</h1>
+                                        <p>The visual validation and wait-for steps allow you to compare visual differences between your baseline and your current test run with precision. This functionality is provided as a service by <a href="https://applitools.com/">Applitools</a>, and requires integration with their Applitools Eyes app. Before you begin, you first need to integrate the <a href="https://applitools.com/">Applitools Eyes</a> app with Testim. For more information see <a href="../../integrations/applitools-integration/index.htm">Applitools integration</a>.<br /> For more information, see the following resources:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="https://applitools.com/docs/topics/test-manager/viewers/tm-baseline-viewer.html">https://applitools.com/docs/topics/test-manager/viewers/tm-baseline-viewer.html</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="https://applitools.com/docs/topics/test-manager/viewers/tm-compare-baselines-viewer.html">https://applitools.com/docs/topics/test-manager/viewers/tm-compare-baselines-viewer.html</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="https://applitools.com/docs/topics/test-manager/viewers/tm-compare-baselines-editor.html">https://applitools.com/docs/topics/test-manager/viewers/tm-compare-baselines-editor.html</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>The RCA and Ultrafast Test Cloud (i.e. adding extra environments) features will be rejected by Applitools without appropriate licensing. Contact your Applitools representative for more information.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>This is a PRO feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <p>You can perform the following visual validations:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Validate Element Visualization step</strong> –  compares visual differences of a specific element between your baseline and your current test run. See - <a href="validate-element-visualization.htm">Validate Element Visualization</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Wait For Element Visualization step</strong> - forces your test to pause and wait for the element to be visible on the page and then validates the element on a visual level. See - <a href="wait-for-element-visualization.htm">Wait For Element Visualization</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Viewport Visualization step</strong> – compares the visual difference between your baseline and your current test run of your viewport. See - <a href="validate-viewport-visualization.htm">Validate Viewport Visualization</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Full-page Visualization step</strong> – compares the visual difference between your baseline and your current test run of your full page. See - <a href="validate-full-page-visualization.htm">Validate Full-page Visualization</a></p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>If you change the configuration of your test, a new baseline will be created in Applitools but not in Testim. If you want a new baseline for each configuration, you need to create different tests for each one.</p>
+                                        </div>
+                                        <h2><a name="visual-validation-parameters"></a>Visual Validation Parameters</h2>
+                                        <p>There are four visual validation parameters that you can modify within Testim:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Add Environment</strong> – add one or more simulated environment configurations (including advanced environments) for your test to run on. This feature requires additional Applitools licensing for Ultrafast Test Cloud. Environments added on accounts without this feature license will be rejected by Applitools.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Match level</strong> – Sometimes you will want to change the comparison method between your baseline and your test, especially when dealing with applications that consist of dynamic content. Testim supports the following Applitools Eyes match levels: Exact, Strict (default), Content, and Layout. For more information about these levels, see <a href="https://applitools.com/docs/common/cmn-eyes-match-levels.html">Match Levels</a>. In addition to editing the Match Level in Testim, in Applitools Eyes, you can mark a region of your element, viewport, or page, and define it with a different match level.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Enable RCA</strong> – The Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches. The system gathers information from the DOM in order to understand why there was a mismatch. The results can be viewed in Applitools Eyes. This feature requires additional Applitools licensing. RCA enabling in projects with accounts that don’t have this feature license will be rejected by Applitools.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Ignore displacement diffs</strong> – Sometimes an element on a page shifts to a new location, but doesn’t change in any other way. The Ignore displacement diffs feature enables the system to ignore visual differences caused by this type of displacement. When implementing this feature, it is recommended to enable the feature on the step level and not on the configuration/test level.</p>
+                                            </li>
+                                        </ul>
+                                        <p>These visual validation parameters can be modified in the following places:</p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Modified in</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Applies to</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Additional information</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Configuration Library</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Applies to all visual validation steps run in a test that is set with that configuration (including tests run via CLI or Scheduler).</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">For more information on test configuration, see <a href="../../test-management/shared-configuration.htm#section-create-a-shared-configuration">Create a shared configuration</a>. For more information about the CLI, see <a href="../../running-tests/the-command-line-cli/index.htm#section-test-config">Command line interface: Test Config</a>. For more information about the Scheduler, see <a href="../../running-tests/scheduler.htm">Scheduler</a>.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Setup Step in the Test Editor</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Applies to each step within the test unless:  
+<ul><li><p>the test is run from the CLI or a scheduler with a different configuration, or  </p></li><li><p>the visual validation parameters are overridden on the step level for a specific step.</p></li></ul></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">Step level</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">Applies to the test level and will override test-level visual validation parameters.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h3><a name="modifying-visual-validation-settings-in-the-test-configuration"></a>Modifying visual validation settings in the test Configuration</h3>
+                                        <p>→ <strong>To modify visual validation settings in the test Configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.</p>
+                                            </li>
+                                            <img src="images/212dd99-testim_502b.png" title="Testim 502b.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Configuration Library</strong> is shown.</p>
+                                            <li value="2">
+                                                <p>Click the <strong>+ Create New</strong> button.</p>
+                                            </li>
+                                            <img src="images/3e415da-testim_503a.png" title="Testim 503a.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Enter the basic configuration, as described in <a href="../../test-management/shared-configuration.htm#creating-and-modifying-test-configurations-in-the-configuration-library">Configuration List</a></p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>Advanced</strong> and enter advanced settings as explained in <a href="../../recording-tests/how-to-record-a-test/index.htm#section-test-configuration-parameters">Test Configuration</a>.<br /></p>
+                                            </li>
+                                            <p>The advanced configuration options are shown.</p>
+                                            <img src="images/938763b-testim_602_r.png" title="Testim 602_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Visual validation</strong> section, click <strong>Add Environment</strong> and enter the desired environment settings</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>In the <strong>Visual validation</strong> section, modify the settings as follows:</p>
+                                            </li>
+                                            <p><em> <strong>Match Level</strong>- click the down arrow and choose one of the following Applitools Eyes options: </em>Exact<em>, </em>Strict<em>, </em>Content<em>, or </em>Layout*.</p>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Concurrency</strong> - specify the maximum number of Eyes test that can be executed concurrently.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Enable RCA</strong> - the Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Ignore displacement diffs</strong> - enables the system to ignore visual differences caused by this type of displacement.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Visual validation timeout</strong> - modifies the time lapse (in milliseconds) which causes the test to register a fail for visual validation steps.</p>
+                                                </li>
+                                            </ul>
+                                            <li value="7">
+                                                <p>Click <strong>Add</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The configuration is created and added to the <strong>Configuration Library</strong>.</p>
+                                        <h3><a name="modifying-test-level-visual-validation-settings-in-the-editor"></a>Modifying test-level visual validation settings in the Editor</h3>
+                                        <p>→ <strong>To modify test-level visual validation settings in the Editor:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the test’s setup step, and click the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/3ee33fb-testim_488a.png" title="Testim 488a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="2">
+                                                <p>Click the <strong>Edit Configuration</strong> icon.</p>
+                                            </li>
+                                            <img src="images/b448b7a-testim_489a_r.png" title="Testim 489a_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Under <strong>Visual Validation</strong> settings, click <strong>Add Environment</strong> and enter the desired environment settings.</p>
+                                            </li>
+                                            <img src="images/f26de2d-testim_607a_r.png" title="Testim 607a_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the <strong>Visual validation</strong> section, modify the settings as follows:</p>
+                                            </li>
+                                        </ol>
+                                        <p><em> <strong>Match Level</strong>- click the down arrow and choose one of the following Applitools Eyes options: </em>Exact<em>, </em>Strict<em>, </em>Content<em>, or </em>Layout*.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Concurrency</strong> - specify the maximum number of Eyes test that can be executed concurrently.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Enable RCA</strong> - the Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Ignore displacement diffs</strong> - enables the system to ignore visual differences caused by this type of displacement.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Visual validation timeout</strong> - modifies the time lapse (in milliseconds) which causes the test to register a fail for visual validation steps.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="modifying-step-level-visual-validation-settings"></a>Modifying step-level visual validation settings</h3>
+                                        <p>→ <strong>To access step-level visual validation settings:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the visual validation step for which you want to modify the settings, and click the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/9ffa82b-testim_493a.png" title="Testim 493a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="2">
+                                                <p>Toggle the <strong>Override test settings</strong> switch to the right.</p>
+                                            </li>
+                                            <img src="images/cf1ef6d-testim_608a_r.png" title="Testim 608a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Override test settings</strong> options are shown.</p>
+                                            <img src="images/36df0aa-testim_609_r.png" title="Testim 609_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the <strong>Override test settings</strong> section, click <strong>Add Environment</strong> and enter the desired environment settings.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the <strong>Override test settings</strong> section, modify the remaining settings as follows:</p>
+                                            </li>
+                                        </ol>
+                                        <p><em> <strong>Match Level</strong>- click the down arrow and choose one of the following Applitools Eyes options: </em>Exact<em>, </em>Strict<em>, </em>Content<em>, or </em>Layout*.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Concurrency</strong> - specify the maximum number of Eyes test that can be executed concurrently.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Enable RCA</strong> - the Enable RCA (Root Cause Analysis) feature enables root cause analysis insights into the causes of visual mismatches.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Ignore displacement diffs</strong> - enables the system to ignore visual differences caused by this type of displacement.</p>
+                                            </li>
+                                        </ul>
+                                        <p>The visual validation parameters are modified for this step, and will override any test-level visual validation parameters currently set.</p>
+                                    

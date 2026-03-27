@@ -1,0 +1,99 @@
+
+                                        <h1>Test results</h1>
+                                        <p>After a test is run, you can view the test results on the Editor screen. Overall test run information is shown as well as detailed information about each step that was run.</p>
+                                        <h2><a name="viewing-overall-test-results"></a>Viewing Overall Test Results</h2>
+                                        <img src="images/57e86af-testresultswithcallouts.png" class="ScreenshotFullsize" />
+                                        <p>On the test level, the test result displays the following information:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test result summary</strong> - The test result summary includes the following information:</p>
+                                            </li>
+                                            <li>
+                                                <p>Indication of whether the test passed or failed</p>
+                                            </li>
+                                            <li>
+                                                <p>The test run duration</p>
+                                            </li>
+                                            <li>
+                                                <p>Run configuration information (the test’s base URL, target device, application name).</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test information</strong> - click the <strong>i</strong> icon to view the test information. The test information includes the following information:</p>
+                                            </li>
+                                            <li>
+                                                <p>Ext. version - the version of the Testim extension software.</p>
+                                            </li>
+                                            <li>
+                                                <p>Source - whether the test was run locally or remotely.</p>
+                                            </li>
+                                            <li>
+                                                <p>Run mode - the framework used in the run (e.g., Appium)</p>
+                                            </li>
+                                            <li>
+                                                <p>Grid name - the grid used in the run.</p>
+                                            </li>
+                                            <li>
+                                                <p>Run config. - the test configurations used during this test run. For more information, see <a href="../../test-management/shared-configuration.htm">Configuration Library - Web</a> and <a href="../../test-management/configuration-library-mobile.htm">Configuration Library - Mobile</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>Zoom level - the Zoom level that was used in the test run.</p>
+                                            </li>
+                                            <li>
+                                                <p>OS - the operating system used in the test run.</p>
+                                            </li>
+                                            <li>
+                                                <p>Browser - the browser and the browser version used in the test run.</p>
+                                            </li>
+                                            <li>
+                                                <p>Date (UTC) - the date in UTC  in which the test was executed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Time - the time in UTC in which the test was executed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Three-dot menu</strong> - click to access to open the following menu:</p>
+                                            </li>
+                                            <li>
+                                                <p>View console log - displays the console logs for the test run. For more information, see <a href="network-logs-copy.htm">Console Logs</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>View network log - displays the network logs for the test run. For more information, see <a href="network-logs.htm">Network Logs</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>View test history - displays the <a href="../test-runs.htm">Test runs</a> screen, while filtering to the selected test.</p>
+                                            </li>
+                                            <li>
+                                                <p>View execution - displays the <a href="../execution-runs-screen.htm">Execution Runs Screen</a>, while filtering to the selected test.</p>
+                                            </li>
+                                            <li>
+                                                <p>Generate PDF run report - generates a detailed PDF report of the test run results. See ?? for more details.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Show improved steps</strong> -  toggle to display steps with automatically improved locators. For more information, see <a href="../../test-management/locators-auto-improve.htm">Locators: Auto Improve</a> .</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Step count</strong> - the step counter is a live counter that counts the total number of test steps. It counts steps and groups (including inner groups), however it does not count hooks.  The counter is updated dynamically when you add or remove steps.</p>
+                                            </li>
+                                        </ul>
+                                        <p>If a test included visual validations, see <a href="visual-validation-test-results.htm">Visual Validation Test Results</a>.</p>
+                                        <h2><a name="viewing-step-results"></a>Viewing Step Results</h2>
+                                        <p>During the test run, Testim updates each step with its results, including it's status (passed, of failed), a detailed error message if it failed, how long did it take, and a screenshot of the screen at that specific state. The same thing happens both when you run your test locally in your browser, and when you run it in your CI using the <a href="../../running-tests/the-command-line-cli/index.htm">CLI tool</a>.</p>
+                                        <img src="images/3aab71e-step-results.jpg" title="step-results.jpg" class="ScreenshotFullsize" />
+                                        <p>Hover over the warning icons at the top of the steps to get more insights such as console logs errors and warnings , network errors, or significant page change warnings. A page change warning is indicated on a test run when the confidence level of the Smart Locator for that element varies by more than 20% as compared to the recorded test. This could be an indication that the underlying code has changed and the user should "Improve" or "Reassign" the Smart Locator for that element.</p>
+                                        <img src="images/a152f4c-image.png" class="ScreenshotFullsize" />
+                                        <p>You can open view the result of each step by double-click it:</p>
+                                        <img src="images/831ca16-step-result.jpg" title="step-result.jpg" class="ScreenshotFullsize" />
+                                        <p>Or by opening the <strong>Properties</strong> panel when the step is selected:</p>
+                                        <img src="images/6720992-step-properties.jpg" title="step-properties.jpg" class="ScreenshotFullsize" />
+                                        <p>In order to see the screenshot of the step, your can either click on the screenshot icon on the step:</p>
+                                        <img src="images/cff91a3-screenshot-icon.jpg" title="screenshot-icon.jpg" class="ScreenshotFullsize" />
+                                        <p>Or the screenshot icon when the step is opened:</p>
+                                        <img src="images/266c99e-screenshot-icon2.jpg" title="screenshot-icon2.jpg" class="ScreenshotFullsize" />
+                                        <p>Both will open the Screenshot tab of the Step Details screen. Here you can compare the original screenshot taken when the step was created with the screenshot from the recent test run.</p>
+                                        <img src="images/3f45d36-screenshots.jpg" title="screenshots.jpg" class="ScreenshotFullsize" />
+                                        <p>If a test included visual validations, see <a href="visual-validation-test-results.htm">Visual Validation Test Results</a>.<br /> In order to view Network Logs  or Console for this step, click on the <strong>Network Logs</strong> or <strong>Console Logs</strong> tabs. For more information, see <a href="network-logs.htm">Network Logs</a> and <a href="network-logs-copy.htm">Console Logs</a>.</p>
+                                        <img src="images/86bec2d-screenshots-networklog.jpg" title="screenshots-networklog.jpg" class="ScreenshotFullsize" />
+                                        <div class="caution">
+                                            <p>Note By default, Testim retains the test results for 30 days.</p>
+                                        </div>
+                                    

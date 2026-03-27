@@ -1,0 +1,145 @@
+
+                                        <h1>Mobile Test Editor Screen</h1>
+                                        <p>The Mobile Test Editor screen displays the current mobile test and the Application Under Test (AUT) Viewer.</p>
+                                        <img src="images/0b45d6b-mobiletesteditor.png" title="mobiletesteditor.png" class="ScreenshotFullsize" />
+                                        <p>The Mobile Test Editor screen has the following sections, as displayed in the image above:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p><a href="#device-and-mobile-application-information">Device and Mobile Application Information</a> - displays information about the physical or virtual device and mobile application used for the test.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p><a href="#mobile-test-steps">Mobile Test Steps</a> - displays the recorded steps for the mobile test.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p><a href="#mobile-test-action-panel">Mobile Test Action Panel</a> - displays actions you can take to interact with your mobile test.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p><a href="#application-under-test-aut-viewer">Application Under Test (AUT) Viewer</a> - a viewport that allows you to interact with a physical or virtual device connected to Testim.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="device-and-mobile-application-information"></a>Device and Mobile Application Information</h2>
+                                        <img src="images/c04932f-image_14.png" title="image (14).png" class="ScreenshotFullsize" />
+                                        <p>The Device and Mobile Application Information section of the test editor displays the following information:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Target Device</strong>: displays the configuration information of the device that is currently used for the recording/playback session, including information about the target mobile device, operating system, and display resolution.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Application Name</strong>: displays which mobile application is being used for the test.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Note: To add virtual devices for use with Testim, you can use the following software: <em> <strong>Android Devices</strong>: Android Studio with Virtual Device Manager </em> <strong>Apple Devices</strong>: XCode iOS Simulator</p>
+                                        </div>
+                                        <h3><a name="change-mobile-app-used-for-the-test"></a>Change Mobile App Used for the Test</h3>
+                                        <p>The mobile test can only test one application at a time. You can change the application being tested at any time. → <strong>To change the mobile app used for the test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Edit</strong> icon next to the current <strong>Application Name</strong>.</p>
+                                            </li>
+                                            <img src="images/06fdee9-image_16.png" title="image (16).png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>From the <strong>Properties</strong> panel, click the <strong>Change app</strong> link.</p>
+                                            </li>
+                                            <img src="images/3379eae-changeapp.png" title="changeapp.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select or upload a <strong>New App</strong> and click the <strong>Done</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/2491dd8-selectapp.png" title="selectapp.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: Changing to a completely different app after recording a test is not recommended. Changing apps is helpful when you want to test a new version of the same app.</p>
+                                        </div>
+                                        <h2><a name="mobile-test-steps"></a>Mobile Test Steps</h2>
+                                        <img src="images/d0a4502-image_15.png" title="image (15).png" class="ScreenshotFullsize" />
+                                        <p>After you have recorded a test, the test steps will be displayed in sequence in the editor. The following information is displayed for each test step:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Step Number</p>
+                                            </li>
+                                            <li>
+                                                <p>Step Type</p>
+                                            </li>
+                                            <li>
+                                                <p>Thumbnail of the element interacted with (button, image, text, etc.)</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="view-test-step-properties"></a>View Test Step Properties</h3>
+                                        <p>After a test step has been recorded, you can view the test step properties. → <strong>To view the test step properties:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Show Properties</strong> icon for the step.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d104475-showproperties.png" title="showproperties.png" class="ScreenshotFullsize" />
+                                        <p>The step <strong>Properties</strong> panel is displayed.</p>
+                                        <img src="images/157cda8-stepprops.png" title="stepprops.png" class="ScreenshotFullsize" />
+                                        <p>The following information is displayed in the step Properties panel:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test Step Name:</strong> name automatically assigned to the step by Testim.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Target Element:</strong> the element interacted with by the user during the test (button, image, text, etc.).</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>When this step fails:</strong> instructions for how Testim should respond when a step has an error during a test run:</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> </em>Mark error &amp; stop:* add an error indicator to the step and stop running the test.</p>
+                                        <p><em> </em>Mark error &amp; continue:* add an error indicator to the step and continue running the test.</p>
+                                        <p><em> </em>Mark warning &amp; continue:* add a warning indicator to the step and continue running the test.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>When to run step:</strong> lets you control when a step in your test runs or doesn’t run. The following options can be applied:</p>
+                                            </li>
+                                        </ul>
+                                        <p><em> </em>Always Run* - The step will run whenever you run the test.</p>
+                                        <p><em> </em>Element* - The step will run if the specified element exists (or does not exist) on the page.</p>
+                                        <p><em> </em>Element text* - The step will run if the specified text exists within a specific element.</p>
+                                        <p><em> </em>Custom* - The step will run if an element has a specific value.</p>
+                                        <p><em> </em>Never (skip)* - The step will not run.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Override timeout:</strong> The “step timeout” is the time lapse (in milliseconds) which causes Testim to register a fail for a test step. The default time lapse for each step is initially set in the Setup step configuration. Selecting this checkbox allows you to override the default setting for this step and specify a different time lapse value (in milliseconds).</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="mobile-test-action-panel"></a>Mobile Test Action Panel</h2>
+                                        <img src="images/8949a49-testactions.png" title="testactions.png" class="ScreenshotFullsize" />
+                                        <p>The Test Action Panel allows you to</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>View Device</strong>: while recording a test, this button forces the AUT Viewer to move to the top of all windows.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Record/Pause</strong>: when not recording a test, this will display as a record button to start recording. During recording this will display as a pause button to pause recording.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Play</strong>: when this button is pressed Testim will automatically run your test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Turn On/Off Element Highlighting</strong>: when interacting with the AUT Viewer to record mobile test steps, Testim highlights the element being interacted with in the viewer. You can turn this highlighting off.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="application-under-test-aut-viewer"></a>Application Under Test (AUT) Viewer</h2>
+                                        <p>When you start recording a mobile test, the AUT Viewer is a separate window that displays an interface between your physical or virtual device. This viewer allows Testim to capture the actions taken on the device as test steps.</p>
+                                        <img src="images/7e3ad4d-image_17.png" title="image (17).png" class="ScreenshotFullsize" />
+                                        <p>The AUT Viewer displays the following information:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Title Bar:</strong> displays the connected device and device's operating system.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Display Window</strong>: displays an interface between the physical or virtual device that allows the user to interact with the device as if holding the device.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Recording Indication</strong>: displays an indication that the screen is being recorded</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Note: You can drag the corners of the AUT Viewer window to resize the viewer. Testim will maintain the display ratio specific to the connected device.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Note: Closing the AUT Viewer window will stop the test recording and in playback, it will stop and fail the test.</p>
+                                        </div>
+                                    

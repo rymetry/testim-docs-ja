@@ -1,0 +1,64 @@
+
+                                        <h1>Salesforce Flows</h1>
+                                        <div class="note">
+                                            <p>Salesforce Step This is a Salesforce step.</p>
+                                        </div>
+                                        <p>The Flow Builder in Salesforce is the declarative interface used to build individual flows. Flow Builder can be used to build code-like logic without using a programming language. The result can be a series of screens with fields that can be accessed by a specific URL or be embedded in an existing Salesforce screen, such as a pane in the Account screen. The Flow screen completion step can be used to test that Salesforce Flow works properly, by imputing values into the some or all of the fields in each Flow screen. You will need to add a Flow screen completion step for each screen in the flow. When the test is executed, the system will automatically move to the next screen in the flow and execute the next Flow screen completion step. In the last Flow screen completion step, the flow is submitted. The use of this step assumes that the Flow has already been created using the Flow Builder.</p>
+                                        <h2><a name="before-adding-the-step"></a>Before adding the step</h2>
+                                        <p>Before adding the Salesforce Flows step, you will need to add the following:</p>
+                                        <ul>
+                                            <li>
+                                                <p>If the Salesforce Flow is accessed by URL, add a <a href="../../advanced-editing/handling-ui-actions/navigation.htm">Navigation Step</a> before the Salesforce Flow step.</p>
+                                            </li>
+                                            <li>
+                                                <p>If the Salesforce Flow is embedded in an Salesforce object that was created using Testim, the Salesforce Flow step can be located immediately after the step that was used to create the Salesforce object (e.g., immediately after the <a href="sfdc-step-create.htm">Create</a> step).</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="creating-a-flow-screen-completion-step"></a>Creating a Flow Screen Completion Step</h1>
+                                        <p>→ <strong>To add a Flow Screen Completion step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the editor, add a step by clicking the <strong>+</strong> button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Under the <strong>Salesforce steps</strong> tab, click <strong>Flow operations</strong> and select <strong>Flow screen completion</strong> step.<br /></p>
+                                            </li>
+                                            <p>The <strong>Flow screen completion</strong> step is added and the following <strong>Object</strong> properties is displayed.</p>
+                                            <img src="images/d2389a0-flowsproperties.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Select Flow</strong> drop-down menu and select the desired Screen Flow. The list displays all the Unmanaged Screen Flows that were created.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click the <strong>Select Screen</strong> drop-down menu and select the desired screen. The list displays all the screens that are part of the selected Flow.<br /></p>
+                                            </li>
+                                            <p>The list of fields for this screen is displayed.</p>
+                                            <img src="images/9fb87de-flows2.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>For each field that you want to input a value to, under <strong>Action</strong> select one of the following options:</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Input - inputs the specified value into the field. If the field is not editable this action will not be listed. The action requires entering a value, as described below.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Ignore - this action performs no action on the field. The action does not require entering a value.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Reset - resets the value in the field to a "no entry" state. Note that if the field is empty, it will try to enter an empty string to the field, however if you select the Reset option, it will not try to enter an empty string.<br /></p>
+                                            </li>
+                                            <p>Under Value, enter the value of the field. If the field is a "pick list" (drop down menu), select the relevant option.</p>
+                                            <li value="9">
+                                                <p>The <strong>Value</strong> field has two modes, to switch between the modes click the filed and the click the sign to alternate between T and {JS}:<br /></p>
+                                            </li>
+                                            <p>T. Text mode. The value is treated as a literal string.<br /> {JS}. JavaScript mode. The value is evaluated as a JavaScript expression. The field will evaluate JavaScript variables and functions. &gt;  Unsupported fields &gt; &gt; In some cases the field are not supported (e.g., some custom fields, etc.). In this case, the field will appear as disabled with a "Not yet supported" notice. Nevertheless, you can still include this field in your test by adding a step using the Recorder, as described in <a href="../record-tests-with-salesforce.htm">Record tests with Salesforce</a>. Make sure that the recorded step is as added to the place in the test where the field is displayed (this is where you will add a Breakpoint and record).</p>
+                                            <li value="10">
+                                                <p>Click <strong>Save</strong> to save the step.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>If the Flow includes multiple screens, add a Flow screen completion step for each screen, by following steps 1-7 above.</p>
+                                            </li>
+                                            <p>&gt;  Final screen of the flow &gt; &gt; The final screen of the flow may not have any fields, but rather a button to submit the flow. In this case adding the <strong>Flow screen completion</strong> step will display a message that the screen has no fields to complete and that the step will submit the flow (e.g., the test will automatically click the "Finish" button).</p>
+                                            <li value="12">
+                                                <p>Click <strong>Save</strong> when done.</p>
+                                            </li>
+                                        </ol>
+                                    

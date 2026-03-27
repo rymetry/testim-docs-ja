@@ -1,0 +1,109 @@
+
+                                        <h1>Shared Steps Library</h1>
+                                        <p>The <strong>Shared Steps Library</strong> screen (<strong>Test List -&gt; Shared Steps</strong>) is where you will manage your <a href="../../editing-tests/shareable-steps.htm">Shared Steps</a> . Shared steps can be arranged in folders. All shared steps within the current project are listed on this screen and you can perform a variety of actions on each of these shared steps, as described below.</p>
+                                        <h1><a name="viewing-the-shared-steps-library"></a>Viewing the Shared Steps Library</h1>
+                                        <img src="images/45778d1-testim_055.png" title="Testim 055.png" class="ScreenshotFullsize" />
+                                        <p>The Shared Steps Library screen displays a list of shared steps and folders with the following information:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Name</strong> - the name of the shared step or folder.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Date Modified</strong> - the last date the shared step/folder was modified.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Kind</strong> - indicates whether the item is a shared step, group, or folder. If it is a shared step, the type of step will be listed (i.e. custom action, custom validation, etc.).</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Used by</strong> - the number of tests using the shared step. (Clicking on the number will take you to the Test Library, filtered by this shared step.)</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="filtering-the-shared-steps-library"></a>Filtering the Shared Steps Library</h2>
+                                        <p>You can filter your shared steps by the step category (i.e. Groups, Actions, Validations, and Wait for).<br /> → <strong>To filter the Shared Steps Library:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced filters</strong> icon.</p>
+                                            </li>
+                                            <img src="images/923bb65-testim_056a.png" title="Testim 056a.png" class="ScreenshotFullsize" />
+                                            <p>The Filter Shared Steps pane opens on the right hand side.</p>
+                                            <img src="images/7ff70ce-testim_057_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the Filter Shared Steps pane select one or more filter criteria.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Apply</strong>. The filter is applied, and only those shared steps that meet the criteria are shown. To learn more about saving this filtered view, see <a href="../saving-a-filtered-view.htm">Saving a Filtered View</a>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>You can remove the filters by clicking on <strong>Reset filters</strong> and then <strong>Apply</strong> in the bottom of the Filter Shared Steps pane.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>Click the <strong>"X"</strong> in the upper right of the Filter Shared Steps pane to close it.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>Closing the Filter Shared Steps pane without resetting the filters will not reset them, and only the shared steps that meet the filter criteria will be shown. To view all of your tests and folders again, you will need to reopen the Filter Shared Steps pane and click <strong>Reset filters</strong> and <strong>Apply</strong>.</p>
+                                        </div>
+                                        <img src="images/d44b4d2-jan-28-2021_14-00-05.gif" title="Jan-28-2021 14-00-05.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="search-text-box"></a>Search text box</h2>
+                                        <p>You can use the search text box to find shared steps or folders based on their names. You enter your search criteria in the <strong>Search library</strong> box.</p>
+                                        <div class="caution">
+                                            <p><em> Unlike searching for tests in the Test Library, using the minus sign does <strong>NOT</strong> work to add an exclusion term to your list.</em> The search criteria are case sensitive, so be sure to use proper capitalization in your search terms.</p>
+                                        </div>
+                                        <p>→ <strong>To search by names:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Search library text box, using proper capitalization, enter any text from the name of the tests or folders you want to find.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The resulting list is filtered immediately as you type each character.</p>
+                                        <div class="note">
+                                            <p>The resulting list includes results in a flat view, so all shared steps or folders that are nested within folders that match the search criteria will also be shown. To view the location of any of the results, click on its row. The location is shown on the bottom of the screen.</p>
+                                        </div>
+                                        <img src="images/ba0156b-jan-31-2021_10-37-29.gif" title="Jan-31-2021 10-37-29.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="opening-a-folder"></a>Opening a folder</h2>
+                                        <p>You can open a folder by double-clicking on the desired folder. If the shared step you are looking for is inside another folder or sub-folder, you need to drill-down by double clicking on each folder and sub-folder until you reach the desired shared step.</p>
+                                        <div class="note">
+                                            <p>When you open a folder, a breadcrumbs navigation appears at the top of the page, enabling you to navigate back to the root folder.</p>
+                                        </div>
+                                        <h2><a name="exporting-to-csv"></a>Exporting to CSV</h2>
+                                        <p>You can export the details of all the selected shared steps, by selecting the shared steps and clicking the <strong>Export to CSV</strong> icon.</p>
+                                        <img src="images/5360b78-screen_shot_2021-01-31_at_10.46.43.png" title="Screen Shot 2021-01-31 at 10.46.43.png" class="ScreenshotFullsize" />
+                                        <p><strong>Note:</strong> when searching/filtering the CSV will only contain the matching items.</p>
+                                        <h2><a name="hiding-shared-steps-from-the-list"></a>Hiding shared steps from the list</h2>
+                                        <p>You can hide shared steps from the list. Hiding them will remove them from the list, and from the add step menu in the editor.</p>
+                                        <div class="note">
+                                            <p>Hiding shared steps will also hide these steps on all branches, even without explicit merging.</p>
+                                        </div>
+                                        <p>→ <strong>To hide shared step(s):</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select the steps you would like to hide from the list</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>From the top menu or the context menu click on the hide option</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Approve the warning</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/78b6959-feb-23-2021_12-40-11.gif" title="Feb-23-2021 12-40-11.gif" class="ScreenshotFullsize" />
+                                        <div class="caution">
+                                            <p>Hidden steps are still shared between the tests that are using them</p>
+                                        </div>
+                                        <p>→ <strong>To unhide hidden steps:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the filter</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Select "show hidden steps"</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select the steps you would like to unhide</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click the un-hide option</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ac73aaa-feb-23-2021_12-51-21.gif" title="Feb-23-2021 12-51-21.gif" class="ScreenshotFullsize" />
+                                    

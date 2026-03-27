@@ -1,0 +1,42 @@
+
+                                        <h1>Result labels</h1>
+                                        <p><strong>"Result Labels"</strong> allows you to add textual labels to your remote runs.<br /></p>
+                                        <p>On the <strong>"Suite Runs"</strong> and <strong>"Test Runs"</strong> pages, you can easily filter your runs by choosing a result label.</p>
+                                        <img src="images/f4b59d0-resultlabels.gif" title="ResultLabels.gif" class="ScreenshotFullsize" />
+                                        <p>Result labels can be used for a variety of options, such as:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Which application environment was tested.</p>
+                                            </li>
+                                            <li>
+                                                <p>Which application version was tested.</p>
+                                            </li>
+                                            <li>
+                                                <p>Which user executed the run.</p>
+                                            </li>
+                                            <li>
+                                                <p>Is it a CI/CD system run.</p>
+                                            </li>
+                                        </ul>
+                                        <p>Some examples: “nightly-scheduler”, “v1.42.34”, “Jenkins”, "Troubleshooting", "Staging".</p>
+                                        <h2><a name="adding-result-labels-through-the-cli"></a>Adding result labels through the CLI</h2>
+                                        <p>To add a label to the run, use the following parameter in your CLI:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--result-label "nightly Jenkins run"</code></pre>
+                                            </div>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p>You can add as many result labels to a CLI command as needed. Read more about running CLI in - <a href="../running-tests/the-command-line-cli/index.htm">Command line interface (CLI)</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>--result-label "nightly Jenkins run" --result-label "v1.42.35"</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>A result label can't exceed 250 characters</p>
+                                        </div>
+                                        <h2><a name="adding-result-labels-through-the-scheduler"></a>Adding result labels through the Scheduler</h2>
+                                        <p>Scheduled runs are test runs that will run based on a predefined schedule. When creating a scheduler, as part of the <strong>Advanced Options</strong> you can add result labels. For more information - <a href="../running-tests/scheduler.htm">Scheduler</a>.</p>
+                                    

@@ -1,0 +1,100 @@
+
+                                        <h1>How to Prepare an IPA for Mobile Testing</h1>
+                                        <p>If you want to record a test using a virtual device, make sure that that the app was compiled for virtual devices (.app). And vice versa, if you want to record using a physical device, make sure that the app was compiled to work on physical devices (.ipa).</p>
+                                        <h2><a name="build-ipa-files-for-virtual-devices-using-xcode"></a>Build .ipa files for Virtual Devices using XCode</h2>
+                                        <p>→ <strong>To prepare an IPA file for a virtual device:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Xcode click <strong>Product &gt; Clear Build Folder</strong> in the menu to ensure the build folder is empty before preparing your app.</p>
+                                            </li>
+                                            <img src="images/2c46d36-clearbuildfolder.png" title="clearbuildfolder.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In Xcode select an <strong>iOS simulator</strong>.</p>
+                                            </li>
+                                            <img src="images/2b1d1e6-iossimulator.png" title="iossimulator.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In Xcode, click <strong>Product &gt; Build</strong> in the menu</p>
+                                            </li>
+                                            <img src="images/f5925c0-build.png" title="build.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In Xcode, navigate to <strong>Product &gt; Show Build Folder in Finder</strong>to open the file folder where the build was created.</p>
+                                            </li>
+                                            <img src="images/def30a2-showbuildfolder.png" title="showbuildfolder.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In Testim, navigate to the <strong>Mobile Apps Library</strong> and click the <strong>New App</strong> button.</p>
+                                            </li>
+                                            <img src="images/905bb85-newappbutton.png" title="newappbutton.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Browse for your <strong>internal-testing-app.app</strong> file on your computer, or drag and drop the file onto the file upload dialog box.</p>
+                                            </li>
+                                            <img src="images/ed9fb9d-browseapp.png" title="browseapp.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>The new app is added to the <strong>Mobile Apps Library</strong>.</p>
+                                            </li>
+                                            <img src="images/e5bcdda-appcreated.png" title="appcreated.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Right click your new app and select <strong>Rename Application</strong>.</p>
+                                            </li>
+                                            <img src="images/59e0a36-rightclick.png" title="rightclick.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>Append the app name with the term <strong>"virtual"</strong> to indicate this app build is meant for use on virtual devices. Click the <strong>OK</strong> button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/714c2d1-rename.png" title="rename.png" class="ScreenshotFullsize" />
+                                        <h2><a name="build-ipa-files-for-physical-devices-using-xcode"></a>Build .ipa Files for Physical Devices using Xcode</h2>
+                                        <p>→ <strong>To prepare an .ipa file for use on a physical device:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Xcode, select <strong>Any iOS Device (arm64)</strong>.</p>
+                                            </li>
+                                            <img src="images/541a31f-arm.png" title="arm.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click <strong>Product &gt; Build For &gt; Running</strong> in the menu.</p>
+                                            </li>
+                                            <img src="images/b3c5146-running.png" title="running.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Once the build is complete, click <strong>Product &gt; Archive</strong> in the menu.</p>
+                                            </li>
+                                            <img src="images/7e52090-archive.png" title="archive.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Navigate to the Xcode archive folder. Select your new app build and click the <strong>Distribute App</strong> button.</p>
+                                            </li>
+                                            <img src="images/08d8c31-distribute.png" title="distribute.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Select <strong>Ad Hoc</strong> and click the <strong>Next</strong> button.</p>
+                                            </li>
+                                            <img src="images/1d67af7-adhoc.png" title="adhoc.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>On the <strong>Ad Hoc distribution options</strong> page, click the <strong>Next</strong> button without making any changes.</p>
+                                            </li>
+                                            <img src="images/948e114-adhocoptions.png" title="adhocoptions.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>On the <strong>Re-sign</strong> page, select <strong>Automatically manage signing</strong> and click the <strong>Next</strong> button.</p>
+                                            </li>
+                                            <img src="images/a9a8835-resign.png" title="resign.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Review the app content and click the <strong>Export</strong> button and save the IPA file to your computer.</p>
+                                            </li>
+                                            <img src="images/19e1f3b-export.png" title="export.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>In Testim, navigate to the Mobile Apps Library and click the New App button.</p>
+                                            </li>
+                                            <img src="images/3e97a62-newappbutton.png" title="newappbutton.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Browse for your IPA file on your computer, or drag and drop the file onto the file upload dialog box.</p>
+                                            </li>
+                                            <img src="images/db086fd-browseapp.png" title="browseapp.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>The new app is added to the Mobile Apps Library.</p>
+                                            </li>
+                                            <img src="images/935ab92-appcreated.png" title="appcreated.png" class="ScreenshotFullsize" />
+                                            <li value="12">
+                                                <p>Right click your new app and select Rename Application.</p>
+                                            </li>
+                                            <img src="images/80c04ea-rightclick.png" title="rightclick.png" class="ScreenshotFullsize" />
+                                            <li value="13">
+                                                <p>Append the app name with the term "physical" to indicate this app build is meant for use on virtual devices. Click the OK button.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e6d95f4-physical.png" title="physical.png" class="ScreenshotFullsize" />
+                                    

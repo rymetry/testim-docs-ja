@@ -1,0 +1,209 @@
+
+                                        <h1>Test Status</h1>
+                                        <p>You can add a status to your tests to help manage which test needs to be worked on. The statuses are displayed as one of the columns in the Test Library list and in the Test Editor. By default all statuses are labeled as "Draft". After the feature is enabled, Testim automatically identifies tests that were run in the last 30 days and labels them as "Active".  All other statuses are applied manually, as described below. By manually managing the tests' statuses you can enjoy the following benefits:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Manually quarantine flaky/failing tests without taking them out of the CI/suite.</p>
+                                            </li>
+                                            <li>
+                                                <p>Easily notice tests that are not connected to the CI (not active).</p>
+                                            </li>
+                                            <li>
+                                                <p>Gradually add tests to the CI without failing the entire run.</p>
+                                            </li>
+                                            <li>
+                                                <p>Improve project visibility by filtering tests by status.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>This is a PRO feature This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <div class="caution">
+                                            <p>Note In order to use this feature, you'll need to upgrade your CLI version to be at least v3.135.0, read <a href="../../running-tests/the-command-line-cli/index.htm#cli-installation">here</a> about CLI installation</p>
+                                        </div>
+                                        <h2><a name="test-statuses"></a>Test Statuses</h2>
+                                        <p>Each test can have one of the following statuses:</p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Status</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Definition</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Running as part of the CI/Scheduler</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">Failing scheduler/CI</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Draft</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Test is still in-progress</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Yes*</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Evaluating</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Test ready, but its stability should be validated</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">No</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Active</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Test is ready and stable</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">Yes</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">Quarantine</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body2">
+                                                        <p class="tableBody">The test doesn’t conform to the definition of a stable test and is waiting to be fixed</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">No</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body2">
+                                                        <p class="tableBody">No</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>*The best practice is to add a test to the CI/Scheduler only after the test is ready, and not in Draft status</p>
+                                        <h2><a name="viewing-the-test-status"></a>Viewing the test status</h2>
+                                        <p>The tests' statuses are displayed in the following screens:<br /></p>
+                                        <p><strong>Test Library screen</strong> - Test Lists -&gt; Tests</p>
+                                        <img src="images/ebf3e27-teststatuses1.png" title="teststatuses1.png" class="ScreenshotFullsize" />
+                                        <p><strong>Test Editor</strong>
+                                        </p>
+                                        <img src="images/a56ee9d-teststatuses2.png" title="teststatuses2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="filtering-tests-by-status"></a>Filtering tests by status</h2>
+                                        <p>→ <strong>To filter test by status:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Test List --&gt; Tests</strong></p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Filter</strong> button.</p>
+                                            </li>
+                                            <img src="images/615dd27-filter.png" title="filter.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the <strong>Filter Test</strong> pane, select the checkboxes of the relevant statuses.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ac7f5bd-teststatuses3.png" title="teststatuses3.png" class="ScreenshotFullsize" />
+                                        <h2><a name="modifying-the-status-of-a-test"></a>Modifying the status of a test</h2>
+                                        <p>Statuses can be modified manually. All changes to the test status will appear In the <a href="../../test-management/revisions.htm">revision history</a>. → <strong>To change the test status through the Test Library:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to Test List --&gt; Tests</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>Status</strong> column, select the relevant status.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/3eaae69-jan-28-2021_09-43-29.gif" title="Jan-28-2021 09-43-29.gif" class="ScreenshotFullsize" />
+                                        <p><em>*Note:</em> it is possible to bulk edit tests status, by selecting all the tests you would like to edit, and then clicking on change status from the top menu.</p>
+                                        <div class="note">
+                                            <p>As part of the test status, we also added an option to view your flaky tests and decide how to manage their status. To read more about the flaky tests, see <a href="flaky-tests.htm">here</a>.</p>
+                                        </div>
+                                        <p>→ <strong>To change the test status through the Testim's Editor:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Open the test in the editor.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Change the status from the top left corner</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/65da094-screen_shot_2021-01-10_at_7.41.32.png" title="Screen Shot 2021-01-10 at 7.41.32.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>When changing the status the test is saved as a revision. If you want to merge it back to Master, you will have to resolve it as a 3 way merge conflict, to read more see <a href="../testops-version-control/version-control-branches.htm">here</a></p>
+                                        </div>
+                                        <h2><a name="using-the-test-status"></a>Using the test status</h2>
+                                        <h3><a name="on-test-runs"></a>On test runs</h3>
+                                        <p>After running the tests, the statuses will be reflected in the following way:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Draft tests</strong> that run will appear as before. It is recommended to change these tests' status to Active.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Evaluating tests</strong> will appear in the test runs, but in a case of failure there will be an indication that the failure was ignored.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/2effede-screen_shot_2021-01-28_at_8.56.41.png" title="Screen Shot 2021-01-28 at 8.56.41.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Active tests</strong> will appear as before.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Quarantine tests</strong> will not run (they will not appear in the test runs).</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="on-suite-runs"></a>On suite runs</h3>
+                                        <p>On suite runs, the statuses will be reflected in the following way:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Draft tests</strong> that run will appear as before. It is recommended to change these tests' status to Active.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Evaluating tests</strong> will appear in the test runs, but in a case of failure, there will be an indication that they did not fail the CI.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Active tests</strong> will appear as before.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Quarantine tests</strong> will not run (they will appear in the suite run with a quarantine indication)</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/87013d7-screen_shot_2021-01-10_at_8.02.34.png" title="Screen Shot 2021-01-10 at 8.02.34.png" class="ScreenshotFullsize" />
+                                        <h3><a name="cli-runs"></a>CLI runs</h3>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Evaluating failed tests</strong> will appear in the CLI run summary as FAILED-EVALUATING</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Evaluating failed tests</strong> will be added to the run XML report with a new status "failure-evaluating", to read more about the CLI XML report, see <a href="../../running-tests/the-command-line-cli/index.htm#the-common-parameters">here</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Quarantine tests</strong> will be added to the run XML with a "Skipped" flag.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Quarantine tests can be run in the CLI by using the bypassed   “--run-quarantined-tests” flag</p>
+                                        </div>
+                                    

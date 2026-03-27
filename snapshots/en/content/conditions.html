@@ -1,0 +1,253 @@
+
+                                        <h1>Conditions</h1>
+                                        <p>The "when to run step" feature lets you control when a step in your test runs or doesn’t run. You can specify a “when to run” condition for any type of step, including a group step. There are 5 options for when to run a step:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Always Run</strong> - There are no conditions for this step. This step will run whenever you run the test. This is the default setting for all test steps.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Element</strong> - The <strong>Element</strong> condition enables you to specify whether or not to run a step in the test depending on whether or not the specified element exists (or does not exist) on the page. The element can be any DOM object, such as property ID, text, or class. See <a href="#section-configuring-an-element-condition">CONFIGURING AN ELEMENT CONDITION</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Element text</strong> - The <strong>Element text</strong> condition is similar to the Element condition; however, this condition enables you to specify an expected text value for the specified element. The step in the test will run only if the specified text exists. See <a href="#section-configuring-an-element-text-condition">CONFIGURING AN ELEMENT TEXT CONDITION</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Custom</strong> - The <strong>Custom</strong> condition enables you to check for a specific value of an element on a page. The step in the test will run if the value exists. You can enable custom JavaScript code for the condition. See <a href="#section-configuring-a-custom-condition">CONFIGURING A CUSTOM CONDITION</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Never (skip)</strong> – The step never runs as long as this option is selected. This options is used when you want to temporarily disable a step of the test. This allows you to preserve this step for future use. See <a href="#section-configuring-a-never-run-step-condition">CONFIGURING A NEVER RUN STEP CONDITION</a></p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="condition-indicator"></a>Condition Indicator</h2>
+                                        <p>When you add a condition to a step, the rhombus icon is shown on the step tile.</p>
+                                        <img src="images/5a8943a-screen_shot_2021-04-07_at_8.02.33.png" title="Screen Shot 2021-04-07 at 8.02.33.png" class="ScreenshotFullsize" />
+                                        <p>When you run the test, if the condition returns a truthy value, the rhombus icon is shown in green, indicating that the step ran.</p>
+                                        <img src="images/e2d0a13-screen_shot_2021-04-27_at_6.36.08.png" title="Screen Shot 2021-04-27 at 6.36.08.png" class="ScreenshotFullsize" />
+                                        <p>If the condition returns a falsy value, the rhombus is shown in red, indicating that the step was skipped.</p>
+                                        <img src="images/ed652c5-screen_shot_2021-04-27_at_6.38.16.png" title="Screen Shot 2021-04-27 at 6.38.16.png" class="ScreenshotFullsize" />
+                                        <h2><a name="common-use-cases"></a>Common Use Cases</h2>
+                                        <p>Setting conditions enables you to include steps in a test even though they are only relevant under certain circumstances. You can specify a specific element to check for, which will determine whether or not the step should run.<br /> For example-</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Running a login step if the user is logged out</strong> – If your test includes a login step it is important to check if you are already logged in or not. When you test using CI, for example, a fresh browser is opened and you'll probably need to log in first. If you are testing locally, you are may already be logged in. By using conditions, you can cause the login steps to run only when you are not already logged in.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Populating a table with data only when it's empty</strong> – Before populating a table with data, it is important to check that the table is empty. If the table is empty, the populating table step will run. If it is already populated then the step will be skipped.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="configuring-an-element-condition"></a>Configuring an Element Condition</h2>
+                                        <p>The Element condition allows you to specify whether or not a step in the test will run, depending on whether or not the specified element exists on the page.<br /> The Element condition runs the step based on an element’s visibility on the page. There are two conditions you can choose to check for when this step will run:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Element visible:</strong> The step will run only if the element is visible on the page.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Element not visible:</strong> The step will run only if the element is not visible on the page.</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To configure an Element Condition:</strong></p>
+                                        <img src="images/8397205-conditions.gif" title="Conditions.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of the step to which you want to add a condition.</p>
+                                            </li>
+                                            <img src="images/da381a6-testim_120a.png" title="Testim 120a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/c3d594e-testim_121a.png" title="Testim 121a.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/cfcb5fc-testim_122.png" title="Testim 122.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/3fd74ed-testim_129a.png" title="Testim 129a.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the step to which you want to add a condition, and then click on the <strong>Show Properties</strong> (:fa-cog:) icon.<br /></p>
+                                            </li>
+                                            <p>The <strong>Properties panel</strong> opens on the right side.</p>
+                                            <li value="5">
+                                                <p>In the <strong>Properties</strong> panel, click on <strong>When to run step</strong>.<br /></p>
+                                            </li>
+                                            <p>The options are shown.</p>
+                                            <li value="6">
+                                                <p>Select the <strong>Element</strong> radio button.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the AUT window, hover your mouse on the relevant element and then click on it to select it.<br /></p>
+                                            </li>
+                                            <p>The selected element is shown in the <strong>Target Element</strong> box in the <strong>When to run step</strong> section.</p>
+                                            <img src="images/a8a3d48-testimconditions01_r.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>If you would like to view, replace or adjust the settings for the selected element, use the procedures described in odifying the Test Using the Properties Panel]  (doc:editing-your-tests#section-modifying-the-test-using-the-properties-panel).</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Specify the type of Element condition to apply. Options are:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>Visible – the step only runs if the element is visible on the page.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Not visible – the step runs only if the element is not visible on the page.</p>
+                                                </li>
+                                            </ul>
+                                            <li value="10">
+                                                <p>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="advanced-conditions-settings.htm">Advanced Condition Settings</a>.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <p>The condition is added to the step as indicated by the rhombus icon shown on the step tile.</p>
+                                        <h3><a name="try-it-yourself"></a>Try it yourself</h3>
+                                        <p><a href="http://bit.ly/2xFTMyW">Click here</a> to open a sample test with a Login group step. Create an Element condition to only run the login step when the Login button is visible.</p>
+                                        <h2><a name="configuring-an-element-text-condition"></a>Configuring an Element Text Condition</h2>
+                                        <p>An Element Text condition is similar to an Element condition in that it makes the step dependent on existence of a specific element. However, for an Element Text condition, you can also specify a particular text value that must appear in the specified element for the condition to be true. This can be given as a specific string or a range of values represented as a Regex expression, a short JS expression, or a parameter. → <strong>To configure an Element Text condition:</strong></p>
+                                        <img src="images/59391e6-element_text_condition.gif" title="element_text_condition.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>&gt; (arrow symbol)</strong> to the left of the step to which you want to add a condition.</p>
+                                            </li>
+                                            <img src="images/5937c73-testim_120a.png" title="Testim 120a.png" class="ScreenshotFullsize" />
+                                            <p>The action options are displayed.</p>
+                                            <img src="images/81cc951-testim_121a.png" title="Testim 121a.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button.</p>
+                                            </li>
+                                            <img src="images/f29f5bd-testim_122.png" title="Testim 122.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.</p>
+                                            </li>
+                                            <img src="images/176b48a-testim_129a.png" title="Testim 129a.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Hover over the step to which you want to add a condition and then click on the <strong>Show Properties</strong> (:fa-cog:) icon.<br /></p>
+                                            </li>
+                                            <p>The <strong>Properties</strong> panel opens on the right side.</p>
+                                            <li value="5">
+                                                <p>In the <strong>Properties</strong> panel, click on <strong>When to run step</strong>.<br /></p>
+                                            </li>
+                                            <p>The options are shown.</p>
+                                            <li value="6">
+                                                <p>Select the <strong>Element Text</strong> radio button.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the AUT window, hover your mouse on the relevant element and then click on it to select it.<br /></p>
+                                            </li>
+                                            <p>The current value of the element is shown in the <strong>Expected value</strong> box.</p>
+                                            <li value="8">
+                                                <p>The selected element is shown in the <strong>Target Element</strong> box in the <strong>When to run step</strong> section.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>If you would like to specify a value other than the current value, enter the value in the <strong>Expected value</strong> box. If you would like to set a range of values, enter a Regex expression, a short JS expression, or a parameter..</p>
+                                            </li>
+                                            <img src="images/230f6f2-elementtext_r.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>If you would like to view, replace or adjust the settings for the selected element, use the procedures described in ifying the Test Using the Properties Panel] (d (doc:editing-your-tests#section-modifying-the-test-using-the-properties-panel).</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="advanced-conditions-settings.htm">Advanced Condition Settings</a>.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Click on the <strong>Toggle Breakpoint</strong> button after to remove the breakpoint.</p>
+                                            </li>
+                                        </ol>
+                                        <p>The condition is added to the step as indicated by the rhombus icon shown on the step tile.</p>
+                                        <h3><a name="try-it-yourself"></a>Try it yourself</h3>
+                                        <p><a href="http://bit.ly/2xFTMyW">Click here</a> to open a sample test with a <strong>Login group</strong> step. Create an <strong>Element Text</strong> condition to only run the login step when the <strong>Login</strong> button is visible and showing the <strong>“Log in”</strong> text.</p>
+                                        <h2><a name="configuring-a-custom-condition"></a>Configuring a Custom Condition</h2>
+                                        <p>There are times that you may want to create conditions that include more than just validating that an element is visible or that specific text exists. You may want to check an element’s value or create more complex conditions. The Custom condition enables you to do this by creating conditions defined as JavaScript steps.<br /> For example if you would like to check the URL in order to identify whether or not you are on the login page, you could use the following custom condition:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>return loginButton.innerText === 'LOG IN';</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>You can also define HTML or JavaScript parameters and then refer to these parameters in the step. For example, you can select an HTML element such as a button and then create a condition to check the text on that button. Custom Condition steps should be written without a return value. They are meant to return a boolean value. Returning <span class="FileOrFilePath">true</span> causes the condition to succeed, while returning <span class="FileOrFilePath">false</span> causes it to fail. → <strong>To configure a Custom condition:</strong></p>
+                                        <img src="images/12714a6-custom_condition2.gif" title="custom_condition2.gif" class="ScreenshotFullsize" />
+                                        <div class="caution">
+                                            <p>If you will be defining an HTML element as a parameter in Step 5 (below), you first must open your AUT by doing the following: 1. Hover over the <strong>&gt; (arrow symbol</strong>) to the left of your group step. 2. Click on the <strong>Toggle Breakpoint</strong> button. 3. Click on the <strong>Play Scenario</strong> button, to run the test until the breakpoint.</p>
+                                        </div>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the step to which you want to add a condition and then click on the <strong>Show Properties</strong> (:fa-cog:) icon.<br /></p>
+                                            </li>
+                                            <p>The <strong>Properties</strong> panel opens on the right side.</p>
+                                            <li value="2">
+                                                <p>In the <strong>Properties</strong> panel, click on <strong>When to run step</strong>.<br /></p>
+                                            </li>
+                                            <p>The options are shown.</p>
+                                            <li value="3">
+                                                <p>Select the <strong>Custom</strong> radio button.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>The <strong>Set condition</strong> window opens.</p>
+                                            </li>
+                                            <img src="images/fc64429-setcondition.png" title="setcondition.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>If you would like to use parameters for your custom condition, define the parameters as follows:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>In the right hand pane, click the <strong>+ PARAMS</strong> button.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>JS parameter:</strong> If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>HTML parameter:</strong> If you would like to define an HTML element as a parameter, select <strong>HTML</strong> from the dropdown list. The browser opens, displaying the relevant webpage for this step. Do the following:</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the AUT window, hover your mouse on the relevant element and then click on it to select it. The selected element is shown in the <strong>Target Element</strong> box in the <strong>Properties</strong> pane. If you would like to view, replace or adjust the settings for the selected element, use the procedures described in  <a href="../editing-your-tests/index.htm#section-modifying-the-test-using-the-properties-panel">Modifying the Test Using the Properties Panel</a>.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/5eed156-custom2_r.png" title="custom2_r.png" class="ScreenshotFullsize" />
+                                            <ul>
+                                                <li>
+                                                    <p>The selected element is automatically named “element”. To assign a relevant name to the element, click on the edit icon and enter the desired name.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/6939ac9-custom4_r.png" title="custom4_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the function text box, type in the desired JavaScript condition. If you have defined parameters, you can refer to those parameters in your JavaScript condition.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Note If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <span class="FileOrFilePath">$(&lt;query&gt;).length</span> instead of <span class="FileOrFilePath">$(&lt;query&gt;)</span>.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>If you would like to override the default timeout setting (30000ms), click on the <strong>Override timeout</strong> button in the Custom Step <strong>Properties</strong> pane, and enter the desired timeout limit.</p>
+                                            </li>
+                                            <img src="images/4f76e55-custom5_r.png" title="custom5_r.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Click the <strong>back arrow</strong> to return to the main Editor window</p>
+                                            </li>
+                                            <img src="images/4df6f82-custom6_r.png" title="custom6_r.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>If you would like to adjust the settings for how long Testim checks before declaring a condition to be true or false, use the procedure described in <a href="advanced-conditions-settings.htm">Advanced Condition Settings</a>.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="caution">
+                                            <p>If you opened your AUT to define an HTML element as a parameter, click on the Toggle Breakpoint button before your group step to remove the breakpoint.</p>
+                                        </div>
+                                        <p>The condition is added to the step as indicated by the rhombus icon shown on the step tile.</p>
+                                        <h3><a name="try-it-yourself"></a>Try it yourself</h3>
+                                        <p><a href="http://bit.ly/2xFTMyW">Click here</a> to open a sample test with a Login group step. Create a custom condition to only run the login step when the Login button is visible and showing the “Log in” text. First, create an HTML parameter and select the Log in button. Then, enter the condition <span class="FileOrFilePath">“return loginButton.innerText === 'LOG IN';”</span>.</p>
+                                        <h2><a name="configuring-a-never-run-step-condition"></a>Configuring a Never Run Step Condition</h2>
+                                        <p>If you would like to temporarily disable a step of the test but preserve the step for future use, you can use the Never (skip) option in the “When to run step” settings.<br /> → <strong>To configure a Never Run Step Condition:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click on the step for which you want to add a condition.<br /></p>
+                                            </li>
+                                            <p>The step is highlighted with a blue box.</p>
+                                            <li value="2">
+                                                <p>Click the <strong>Show Properties</strong> (:fa-cog:) icon.<br /></p>
+                                            </li>
+                                            <p>The <strong>Properties</strong> panel opens on the right side.</p>
+                                            <li value="3">
+                                                <p>In the <strong>Properties</strong> panel, click on <strong>When to run step</strong>.<br /></p>
+                                            </li>
+                                            <p>The options are shown.</p>
+                                            <li value="4">
+                                                <p>Select the <strong>Never (skip)</strong> radio button.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The step will be skipped whenever the test is run (until you change the “When to run step” configuration). The rhombus icon is shown in the step tile indicating that a When to run step” option has been configured.</p>
+                                    

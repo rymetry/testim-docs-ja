@@ -1,0 +1,63 @@
+
+                                        <h1>Parameter override rules</h1>
+                                        <p>There are various ways we can use parameters within <a href="http://testim.io">Testim.io.</a> to name a few we have - <a href="../data-driven-testing/index.htm">Data-Driven Testing</a>, <a href="../../editing-tests/groups/index.htm">Groups</a>, <a href="doc:https://help.testim.io/docs/exports-parameters">Exports Parameters</a>, <a href="../../running-tests/configuration-file-run-hooks/index.htm">Configuration Files and Run Hooks</a> and the <a href="index.htm">Params file</a>. Each override touches the test in different times, usually for different purposes. Let's review them.</p>
+                                        <h2><a name="the-overriding-rules"></a>The overriding Rules</h2>
+                                        <p>Just like in most programming languages, where you define a variable, and the override is performed later, the variable comprises the last value assigned to it. Similarly, you can override a value in Testim.</p>
+                                        <h4><a name="before-the-test-begins"></a>Before the test begins:</h4>
+                                        <ul>
+                                            <li>
+                                                <p><a href="../../running-tests/configuration-file-run-hooks/index.htm">Config-file's parameters</a> overrides <a href="index.htm">params-file's parameters</a>. Within the config-file, the <span class="FileOrFilePath">beforeTest</span> overrides the <span class="FileOrFilePath">beforeSuite</span></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../../running-tests/configuration-file-run-hooks/index.htm">Params-file's parameters</a> overrides <a href="../data-driven-testing/index.htm">default Test Data/run data</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <p>Note: All parameters sent to a test have <strong>Local level</strong> visibility (the entire test though is considered to be a single big group).</p>
+                                        <h4><a name="during-test-run"></a>During test run</h4>
+                                        <p>The three visibility scopes are:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Local - the variables reside in a group, and are not accessible when the group is completed</p>
+                                            </li>
+                                            <li>
+                                                <p>Test - the variables reside in the test throughout the duration of the test.</p>
+                                            </li>
+                                            <li>
+                                                <p>Test Suite - the variables reside across multiple test executions and are passed from test to test.</p>
+                                            </li>
+                                        </ul>
+                                        <h4><a name="overriding-rules"></a>Overriding rules</h4>
+                                        <p>The more local the parameter scope is, the parameter is more likely to be used, because it is considered "stronger" or "more important". If a variable is Local (most specific), it will always be used:<br /> e.g.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.x = "local"<br />exportsTest.x = "test"<br />exportsGlobal.x = "global"<br />...<br />console.log(x); // prints "local"</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Parameter Scopes Parameters created in groups are considered as "local scope". Parameters can be overridden by the same scope or a “smaller” scope. For example, a "test scope" parameter can be overridden by either another test scope or local scope parameter with the same name.</p>
+                                        </div>
+                                        <h4><a name="usage"></a>Usage</h4>
+                                        <p><strong>Data driven testing parameters:</strong>
+                                        </p>
+                                        <p>Mostly used to create default set of values, which will be overridden by the config file or the hooks. Note: you can provide a set of parameters (array of objects) and then run the same test several times.</p>
+                                        <p><strong>Params file:</strong>
+                                            <br />
+                                        </p>
+                                        <p>Similar to Data driven, but are not for a specific test. Those will be passed to all tests. E.g. common credentials</p>
+                                        <p><strong>Config files:</strong>
+                                            <br />
+                                        </p>
+                                        <p>Used to dynamically load a suite of parameters. You can run custom JS code, which is executed in node.js, thus giving you the ability to load and run any NPM package. Common cases are loading from DBs or CSV files. You can find <a href="../data-driven-testing/index.htm">code examples here</a>. Notes:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p><span class="FileOrFilePath">beforeTest</span> and <span class="FileOrFilePath">beforeSuite</span> do NOT support returning a set of parameters (an array). If you pass an array, it will be treated as an object (i.e. in this context, <span class="FileOrFilePath">return ["x", "y" "z"]</span> is ALMOST equivalent to <span class="FileOrFilePath">return {1: "x", 2: "y", ;3:"z"})</span>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>If you use the same parameters in both the <span class="FileOrFilePath">beforeSuite</span> and the <span class="FileOrFilePath">overrideTestData</span>, the <span class="FileOrFilePath">beforeSuite</span> value will be used</p>
+                                            </li>
+                                        </ol>
+                                        <p>To override test data in <span class="FileOrFilePath">beforeSuite</span>, use the following format:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>beforeSuite() {&#160;&#160;&#160;&#160;<br />&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;y: 5,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;overrideTestData: {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"testname1": [{x: 6}, {x:7}] , // runs testname1 twice<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"testname2": {y:7}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// y will be 5 because the beforeSuite object wins<br />&#160;&#160;&#160;&#160;}<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                    

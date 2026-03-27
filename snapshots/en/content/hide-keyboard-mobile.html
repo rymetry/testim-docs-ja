@@ -1,0 +1,17 @@
+
+                                        <h1>Hide keyboard (mobile)</h1>
+                                        <p>With certain third-party providers, calling the <span class="FileOrFilePath">hideKeyboard</span> action may return an error that the software keyboard can't be hidden. This is because the action is causing unexpected navigation in Appium, as certain keyboard behaviors and device states don't respond properly to the <span class="FileOrFilePath">Driver.hidekeyboard()</span> call. As a workaround, you can record a custom action. For more information about how to create a custom action, see <a href="../custom-action-step-mobile.htm">Custom Action Step (mobile)</a>. Your custom action can activate either of the following keycodes, depending on your use case:</p>
+                                        <ul>
+                                            <li>
+                                                <p><span class="FileOrFilePath">KEYCODE_BACK (4)</span> – dismiss the keyboard without submitting a form with the keycode for the Back button or gesture</p>
+                                            </li>
+                                            <li>
+                                                <p><span class="FileOrFilePath">KEYCODE_ENTER (66)</span> – trigger Done or Next depending on the field type with the keycode for the Enter button</p>
+                                            </li>
+                                        </ul>
+                                        <p>The following example illustrates the use of the <span class="FileOrFilePath">pressKeyCode</span> Appium method to close the keyboard by simulating the Back button.</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// Trigger Android KEYCODE_BACK to hide keyboard<br /><br />await DRIVER.pressKeyCode(4);</code></pre>
+                                            </div>
+                                        </div>
+                                    

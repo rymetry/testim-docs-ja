@@ -1,0 +1,35 @@
+
+                                        <h1>MongoDB validation</h1>
+                                        <p>You can use the <a href="add-cli-validations-and-actions.htm">CLI action</a> step to perform queries and run validations on MongoDB database.</p>
+                                        <div class="note">
+                                            <p>Permissions Notice As databases are usually protected, you might need to add the machine where this CLI validation step is executed on to the white list (to allow access), otherwise the step may fail when trying to reach the DB.<br /> For further information / if you are running it via our Scheduler, please contact support.</p>
+                                        </div>
+                                        <h4><a name="example-code"></a><strong>Example code:</strong>
+                                        </h4>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const MongoClient = mongodb.MongoClient;<br />// Connection URL<br />const url = "XXXXXX";<br />query = JSON.parse(query);<br /><br />const client = new MongoClient(url, { useNewUrlParser: true });<br /><br />const connect = () =&gt; {<br />&#160;&#160;return new Promise((resolve, reject) =&gt; {<br />&#160;&#160;&#160;&#160;client.connect(function(err) {<br />&#160;&#160;&#160;&#160;&#160;&#160;if (err) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return reject(err);<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;console.log("Connected successfully to server");<br />&#160;&#160;&#160;&#160;&#160;&#160;const db = client.db(dbName);<br />&#160;&#160;&#160;&#160;&#160;&#160;resolve(db);<br />&#160;&#160;&#160;&#160;});<br />&#160;&#160;});<br />};<br /><br />const findOne = (db, collName) =&gt; {<br />&#160;&#160;return new Promise((resolve, reject) =&gt; {<br />&#160;&#160;&#160;&#160;const coll = db.collection(collName);<br />&#160;&#160;&#160;&#160;coll.findOne(query, (err, result) =&gt; {<br />&#160;&#160;&#160;&#160;&#160;&#160;if (err) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return reject(err);<br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;console.log("Got collection result");<br />&#160;&#160;&#160;&#160;&#160;&#160;resolve(result);<br />&#160;&#160;&#160;&#160;});<br />&#160;&#160;});<br />};<br /><br />return connect()<br />&#160;&#160;.then(db =&gt; findOne(db, collName, query))<br />&#160;&#160;.then(result =&gt; {<br />&#160;&#160;&#160;&#160;if (!result) {<br />&#160;&#160;&#160;&#160;&#160;&#160;return Promise.reject(new Error("Failed to find object"));<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;})<br />&#160;&#160;.finally(() =&gt; client.close());</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="parameters-packages-and-javascript-used-in-this-example"></a><strong>Parameters - Packages and JavaScript used in this example:</strong>
+                                        </h4>
+                                        <ol>
+                                            <li value="1">
+                                                <p>name: mongodb, type: Package, value: <a href="https://www.npmjs.com/package/mongodb/v/3.1.10">mongodb@3.1.10</a></p>
+                                            </li>
+                                            <li value="2">
+                                                <p>name: Promise, type: Package, value: <a href="https://www.npmjs.com/package/bluebird/v/3.5.3">bluebird@3.5.3</a></p>
+                                            </li>
+                                            <li value="3">
+                                                <p>name: query, type: JavaScript, value: '{"name":"test"}'</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>name: collName, type: JavaScript, value: 'users'</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>name: dbName, type: JavaScript, value: 'myproject'</p>
+                                            </li>
+                                        </ol>
+                                        <p><strong>see screenshot:</strong>
+                                        </p>
+                                        <img src="images/c5c8e33-see_screenshot.png" title="see screenshot.png" class="ScreenshotFullsize" />
+                                    

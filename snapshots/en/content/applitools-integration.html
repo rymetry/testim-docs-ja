@@ -1,0 +1,116 @@
+
+                                        <h1>Applitools integration</h1>
+                                        <p>In order to use Testim’s visual validation and wait-for steps, you first need to integrate your Testim account with the Applitools Eyes app provided by <a href="https://applitools.com/">Applitools</a>.</p>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h2><a name="prerequisites"></a>Prerequisites</h2>
+                                        <ul>
+                                            <li>
+                                                <p>This is a pro feature only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>You need to have admin privileges both in Applitools Eyes and in Testim.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="setting-up-applitools-integration"></a>Setting up Applitools integration</h2>
+                                        <p>You will need to exchange information between your Applitools Eyes account and your Testim account, so it is recommended to keep both consoles open in parallel.</p>
+                                        <h3><a name="step-1-create-an-api-key-in-applitools-eyes"></a>Step 1: Create an API key in Applitools Eyes</h3>
+                                        <p>→ <strong>To create an API key in Applitools Eyes:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Log in to the <strong>Applitools Eyes</strong> console using an admin account.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>On the Applitools Eyes home page, click on the <strong>main menu</strong> in the top right.</p>
+                                            </li>
+                                            <img src="images/b92e716-testim_243a.png" title="Testim 243a.png" class="ScreenshotFullsize" />
+                                            <p>The menu options are shown.</p>
+                                            <img src="images/528d244-testim_244_r.png" title="Testim 244_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Admin</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Admin panel</strong> opens.</p>
+                                            <img src="images/ef5d9c2-testim_245.png" title="Testim 245.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click on <strong>API keys</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>API keys</strong> screen opens.</p>
+                                            <img src="images/bd902b4-testim_246.png" title="Testim 246.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click the <strong>Add a new API key</strong> button.</p>
+                                            </li>
+                                            <img src="images/4539ae9-testim_246a.png" title="Testim 246a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Add API key</strong> options are shown.</p>
+                                            <img src="images/c62aa9e-testim_247_r.png" title="Testim 247_r.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Enter the options as follows:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p>In the <strong>Team</strong> field choose a team from the dropdown list.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>User</strong> field, choose the appropriate user.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>Permissions</strong> section, toggle the <strong>Execute</strong> and <strong>Merge</strong> switches to the right.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>Expiry</strong> field, optionally enter an expiration date for the API.</p>
+                                                </li>
+                                                <li>
+                                                    <p>In the <strong>Purpose</strong> field, optionally enter the purpose of this API.</p>
+                                                </li>
+                                            </ul>
+                                            <li value="7">
+                                                <p>Click the <strong>Add</strong> button.<br /></p>
+                                            </li>
+                                            <p>The key is created and shown on your <strong>API keys</strong> screen.</p>
+                                            <img src="images/fbfd882-testim_248.png" title="Testim 248.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Copy this key for use below.</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="step-2-configure-applitools-settings-in-testim"></a>Step 2: Configure Applitools settings in Testim</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Log in to <strong>Testim</strong> using an admin account.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In <strong>Testim</strong>, in the left menu click on the <strong>Settings</strong> icon.</p>
+                                            </li>
+                                            <img src="images/1ee8f1c-testim_258a.png" title="Testim 258a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Settings</strong> page opens.</p>
+                                            <li value="3">
+                                                <p>Click the <strong>Integration</strong> tab.</p>
+                                            </li>
+                                            <img src="images/d8b3082-testim_259a_r.png" title="Testim 259a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Integrations</strong> tab opens.</p>
+                                            <img src="images/564e0cb-testim_260.png" title="Testim 260.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the Applitools section, click <strong>login</strong>.</p>
+                                            </li>
+                                            <img src="images/6706450-testim_261a_r.png" title="Testim 261a_r.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Applitools integration configuration options</strong> are shown.</p>
+                                            <img src="images/968fe5b-testim_262_r.png" title="Testim 262_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Cloud URL</strong> field, enter the Applitools application base URL (e.g. <a href="https://eyes.applitools.com/">https://eyes.applitools.com/</a>).</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>In the <strong>Run Key</strong> and <strong>Merge Key</strong> fields, enter the key you previously created in Applitools.</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>In the <strong>App Name</strong> field, optionally enter a name for the app.<br /></p>
+                                            </li>
+                                            <p>The default app name is the Project ID.</p>
+                                            <li value="8">
+                                                <p>Click <strong>Connect</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>A success icon is shown, and Applitools is integrated with Testim. You can now start using the visual validation and wait-for steps. See <a href="../../advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm">Visual Validation</a>.</p>
+                                        <img src="images/446380f-testim_265_r.png" title="Testim 265_r.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>You may need to log out of Testim and log back in in order to activate the visual validation steps.</p>
+                                        </div>
+                                    

@@ -1,0 +1,58 @@
+
+                                        <h1>Testim for Salesforce Branch Management</h1>
+                                        <p>Testim for Salesforce branch management feature is similar to the general Testim branch management feature, except for some key differences. For more information about about the general Testim branch management, see <a href="../testops/testops-version-control/version-control-branches.htm">Branch Management</a>.</p>
+                                        <h1><a name="using-testim-for-salesforce-branches"></a>Using Testim for Salesforce Branches</h1>
+                                        <ul>
+                                            <li>
+                                                <p>As a starting point, each project is composed of a single "main" branch.</p>
+                                            </li>
+                                            <li>
+                                                <p>You can create additional branches and switch between branches at any time and modify tests within a branch as you like. Modifications in one branch will not affect other branches. To create a new branch, see <a href="#creating-a-branch">Creating a branch</a>. To switch between branches, see <a href="../testops/testops-version-control/version-control-branches.htm#switching-branches">Switching Branches</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>Each branch can be associated with a single <a href="create-and-manage-test-environments.htm">Salesforce environment</a>. This means that as part of the development of the test, you can associate the same branch to different environment, moving it from one environment to another (e.g. from QA environment, to Staging environment, to Production environment). To change environment in a branch, see <a href="#changing-the-salesforce-environment-of-a-branch">Changing the Salesforce Environment of a branch</a>.  Although it is not mandatory to associate the branch with a Salesforce environment, to use Salesforce related steps (e.g., Login step), you will need to perform this association.</p>
+                                            </li>
+                                            <li>
+                                                <p>Each Salesforce environment is associated with one or more branches. The association is done through the configuration of the branch itself. To create a Salesforce environment, see <a href="create-and-manage-test-environments.htm#connecting-a-salesforce-environment">Connecting a Salesforce environment</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p>At a certain point you may want to merge between branches (e.g. merging a feature branch into the Main branch). To merge branches, follow the instructions in the <a href="create-and-merge-branches-from-different-test-environments.htm#merging-a-branch">Merging Branches</a> section.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="creating-a-branch"></a>Creating a branch</h2>
+                                        <p>→<strong>To create a new branch:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Create New Branch (fork icon)</strong> button in the menu.</p>
+                                            </li>
+                                            <img src="images/35b00be-fork.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Name</strong> field, enter a name for the branch.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Salesforce environment</strong> field, associate the relevant Salesforce environment to the branch. Although it is not mandatory to associate the branch with a Salesforce environment, to use Salesforce related steps (e.g., Login step), you will need to perform this association.</p>
+                                            </li>
+                                            <img src="images/f57b3fa-newbranch2.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click <strong>OK</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="changing-the-salesforce-environment-of-a-branch"></a>Changing the Salesforce Environment of a branch</h2>
+                                        <p>→<strong>To change the Salesforce environment of a branch:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Branches</strong> drop-down menu at the top to see the list of branches.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Change environment</strong> button on the desired branch.</p>
+                                            </li>
+                                            <img src="images/a0b3049-2023-12-12_17-36-35.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the Change Environment dialog, under New Environment, select the desired environment from the drop down menu.</p>
+                                            </li>
+                                            <img src="images/16ed4e9-2023-12-12_17-40-40.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

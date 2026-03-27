@@ -1,0 +1,136 @@
+
+                                        <h1>Okta SSO Integration</h1>
+                                        <p>Okta is an identity and access management service provider. Testim integrates with Okta, allowing users of Okta to authenticate once in Okta and then access Testim without authenticating again.</p>
+                                        <div class="note">
+                                            <p>SSO is a premium feature. Make sure the SSO feature is enabled for your deployment. If it is not, contact your Testim CSM.</p>
+                                        </div>
+                                        <p>→ <strong>To setup the Testim Okta integration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Login to the <strong>Okta Admin</strong> account.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Go to <strong>Applications &gt; Applications</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Create App Integration</strong>.</p>
+                                            </li>
+                                            <img src="images/cc7a2ac-image.png" title="image.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Select the <strong>'SAML 2.0</strong> option.</p>
+                                            </li>
+                                            <img src="images/f4ab0a3-capture1.png" title="Capture1.PNG" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Next</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>General Settings</strong> screen is displayed.</p>
+                                            <img src="images/cf9a206-capture2.png" title="Capture2.PNG" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>App Name</strong> field, enter a name for the connector app, such as 'Testim SSO'..</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Click <strong>Browse</strong> to select the Testim logo and then <strong>Upload Logo</strong> to upload it (optional).</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>You can optionally add a <strong>description</strong> that will help your users know more about Testim.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Click <strong>Next</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Configure SAML</strong> screen is displayed. At this point the connector has been created. Now you need to connect it to Testim.</p>
+                                            <li value="10">
+                                                <p>In another tab open <strong>Testim Automate</strong>, and click the <strong>user</strong> icon, located in the top-right corner.</p>
+                                            </li>
+                                            <img src="images/713786e-sso1.png" title="sso1.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>In the drop-down menu, click <strong>Settings</strong> and click the <strong>SSO</strong> tab.</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Under <strong>Testim Service Provider Details</strong>, under <strong>Assertion Consumer Service URL</strong>, click the <strong>Copy</strong> button.</p>
+                                            </li>
+                                            <img src="images/f75d3f1-sso4.png" title="sso4.png" class="ScreenshotFullsize" />
+                                            <li value="13">
+                                                <p>Go back to the tab where you have <strong>Okta</strong> open and paste the copied <strong>Assertion Consumer Service URL</strong> into the <strong>Single sign on URL</strong> field.</p>
+                                            </li>
+                                            <img src="images/7ecca0b-okta5.png" title="okta5.png" class="ScreenshotFullsize" />
+                                            <li value="14">
+                                                <p>Go back to the <strong>Testim Automate</strong> tab and copy the <strong>SERVICE PROVIDER ENTITY ID/AUDIENCE</strong> code.</p>
+                                            </li>
+                                            <li value="15">
+                                                <p>In the <strong>Okta</strong> tab, paste this code into the <strong>Audience URI (SP Entity ID)</strong> field.</p>
+                                            </li>
+                                            <li value="16">
+                                                <p>Still in Okta, in the <strong>Name ID format</strong> field, select <strong>EmailAddress</strong>.</p>
+                                            </li>
+                                            <li value="17">
+                                                <p>In the <strong>Application username</strong> field, select <strong>Email</strong>.</p>
+                                            </li>
+                                            <li value="18">
+                                                <p>Under the the <strong>Name</strong> field, enter <strong>email</strong>.</p>
+                                            </li>
+                                            <li value="19">
+                                                <p>Under <strong>Value</strong> , select <strong>user.email</strong>. This maps the <span class="FileOrFilePath">email</span> field in Testim to the <span class="FileOrFilePath">user.email</span> field in Okta.</p>
+                                            </li>
+                                            <img src="images/5dae2c9-okta6.png" title="okta6.PNG" class="ScreenshotFullsize" />
+                                            <li value="20">
+                                                <p>Click <strong>Add Another</strong>.</p>
+                                            </li>
+                                            <li value="21">
+                                                <p>Repeat steps <strong>20 – 22</strong> for the following field combinations:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><span class="FileOrFilePath">firstName</span> (mapped to <span class="FileOrFilePath">user.firstName</span>)</p>
+                                                </li>
+                                                <li>
+                                                    <p><span class="FileOrFilePath">lastName</span> (mapped to <span class="FileOrFilePath">user.lastName</span>)</p>
+                                                </li>
+                                                <li>
+                                                    <p><span class="FileOrFilePath">profilePicture</span> is not mapped – this is optional.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/4bb986b-okta7.png" title="okta7.PNG" class="ScreenshotFullsize" />
+                                            <li value="22">
+                                                <p>Click <strong>Next</strong>.</p>
+                                            </li>
+                                            <li value="23">
+                                                <p>Complete the feedback and click <strong>Finish</strong>.</p>
+                                            </li>
+                                            <li value="24">
+                                                <p>In the newly created application's page, scroll down to <strong>SAML Signing Certificates</strong> section.</p>
+                                            </li>
+                                            <li value="25">
+                                                <p>Click on <strong>Actions &gt; View IdP metadata</strong>.</p>
+                                            </li>
+                                            <img src="images/8b9736c-image_1.png" title="image (1).png" class="ScreenshotFullsize" />
+                                            <li value="26">
+                                                <p>Right-click and choose "Save As".</p>
+                                            </li>
+                                            <li value="27">
+                                                <p>Go back to the <strong>Testim</strong> tab, click the <strong>Upload File</strong> button and select the <em>metadata.xml</em> file that you have just saved.</p>
+                                            </li>
+                                            <img src="images/31cb870-sso9.png" title="sso9.png" class="ScreenshotFullsize" />
+                                            <li value="28">
+                                                <p>In the same screen, enable the <strong>Enable SSO</strong> toggle.</p>
+                                            </li>
+                                            <img src="images/e687b64-sso10.png" title="sso10.png" class="ScreenshotFullsize" />
+                                            <li value="29">
+                                                <p>To ensure all users are only able to login through Okta, and not through the regular Testim login page, select the <strong>Force users to login via idP</strong> checkbox.</p>
+                                            </li>
+                                            <img src="images/1a94a23-sso11.png" title="sso11.png" class="ScreenshotFullsize" />
+                                            <li value="30">
+                                                <p>Go back to the <strong>Okta</strong> tab and associate the newly created Testim SSO connector application to the relevant Users, Groups, or Roles. In this example we will show how to add a User, but the same applies to Groups and Roles.</p>
+                                            </li>
+                                            <li value="31">
+                                                <p>Navigate to <strong>Applications &gt; Applications</strong>. The new Testim SSO connector will be displayed.</p>
+                                            </li>
+                                            <img src="images/508e2c1-tempsnip1.png" title="tempsnip1.png" class="ScreenshotFullsize" />
+                                            <li value="32">
+                                                <p>Click the <strong>Settings</strong> (:fa-cog:) drop-down and select <strong>Assign to Users</strong>.</p>
+                                            </li>
+                                            <li value="33">
+                                                <p>Assign it to the relevant user(s).<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The newly created app is created and will appear in the Okta portal of the specified users/groups/roles. From now these user(s) will be able to login to Testim from Okta SSO.</p>
+                                    

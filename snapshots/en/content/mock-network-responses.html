@@ -1,0 +1,35 @@
+
+                                        <h1>Mock Network Responses</h1>
+                                        <h2><a name="overview"></a>Overview</h2>
+                                        <p>Testim offers the ability to mock network traffic of the Application Under Test (AUT) as part of a test. During the test run, instead of performing real calls, the system will intercept the call and will return a mocked response. For example, let's say your site generates calls to an analytics system on every page that is browsed. In this case, instead of generating real calls to the analytics system, Testim will intercept the network traffic, and return "success code" responses. This feature is especially useful in development environments, where the integrations with external services are not stable, or sometimes don’t exist. The mocking of network traffic also expedites the testing process, as the system does not have to wait until a real response is returned, and in some cases can even save money if you are charged by the number of calls you send to a service. It is possible to mock network responses in two ways:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="mocking-all-the-network-traffic-using-a-har-file.htm"><strong>Mocking network traffic using a HAR file</strong></a> - The mock network responses can be based on a HAR file. The HAR file is a JSON-formatted archive file format for logging a web browser's interaction with a site. All the HTTP calls and responses are recorded in this file. Testim will automatically use the relevant data in the HAR file as the test run is being executed. See <a href="mocking-all-the-network-traffic-using-a-har-file.htm#running-your-test-using-the-har-file">here</a> for detailed instructions.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="creating-a-mapping-file.htm"><strong>Mocking specific behaviors using a Mapping file</strong></a>  -  In this option, instead of using a HAR file or in addition to using it, is to provide a Mapping file. The mapping file is a JSON file that includes specific mock behavior. In some cases, the Mapping file can be added in addition to the HAR file. For example, to mock specific calls that you are unsure if they are included in the HAR file or if you want to override the response in the HAR file with a different response. For example, the HAR file includes an error code response and you want to use the mapping file, which includes a success response. See detailed <a href="creating-a-mapping-file.htm">instructions</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="caution">
+                                            <p>Tests that include a login process If your test includes a login process, which involves passing credentials to a server, it may not work properly when running the test on the mock network, as the login request will be timed out. To solve this issue, you should enable <strong>Pass-through Authentication</strong> when sending the login request. To do so, you will have to add a mapping file with the login request and the enabled Pass-through authentication property. For detailed instructions see <a href="creating-a-mapping-file.htm#section-uploading-the-mapping-file">Uploading the mapping file</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h3><a name="running-the-test-with-mock-network-responses"></a>Running the Test with Mock Network Responses</h3>
+                                        <p>Mocked network responses will be enabled after recording a HAR file or uploading a HAR file or a mapping file. While running the test, Testim will try to match each request being made using the following algorithm:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>If a Mapping file was specified</strong> - Testim will iterate over its entries list. The first rule entry to match either only the <strong>request URL</strong> or both the <strong>URL</strong> and the <strong>HTTP method</strong> will be used to mock the response.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>If the entries list is exhausted without finding a match and a HAR file exists</strong> - Testim will iterate over its entries list matching the first not already used entry which matches both the <strong>request URL</strong> and the <strong>HTTP method</strong>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>If no match was found</strong>, the response will not be mocked and instead Testing will perform the actual request.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="caution">
+                                            <p>Please note For the mapping file, the same request can be used unlimited times.<br /> For the HAR file, if we found a match and used it, this request will not be used again.</p>
+                                        </div>
+                                    

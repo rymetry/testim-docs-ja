@@ -1,0 +1,231 @@
+
+                                        <h1>Add custom validations and actions</h1>
+                                        <p>There may be times when you want your test to perform an action or validation that is not included in the predefined steps menu. Using an <em>Add custom validation</em> step or an <em>Add custom action</em> step, you can create custom steps where you input your own parameters and JavaScript code. Custom action steps should be written without a return value. Custom validation steps are meant to return a boolean value. Returning <em>true</em> causes the validation to succeed, while returning <em>false</em> causes it to fail. (See examples below.)</p>
+                                        <h2><a name="adding-an-add-custom-validation-step-or-an-add-custom-action-step"></a>Adding an <em>Add custom validation</em> step or an <em>Add custom action</em> step</h2>
+                                        <p>The general procedure for adding an <em>Add custom validation</em> step or an <em>Add custom action</em> step is the same, regardless of the details of your validation or action. Your code and parameters change depending on your specific validation or action. Below is the general procedure followed by sample code and parameters for a few different examples. → <strong>To add an<em>Add custom validation</em> step or an <em>Add custom action</em> step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: <strong>(arrow symbol)</strong> where you want to add the validation.</p>
+                                            </li>
+                                            <img src="images/b5a63dc-testim_282a.png" title="Testim 282a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>action options</strong> are displayed.</p>
+                                            <img src="images/ba79996-testim_283a_r.png" title="Testim 283a_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the “<strong>M</strong>” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <img src="images/dc5c5d1-testim_270_r.png" title="Testim 270_r.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on <strong>Validations</strong> (or <strong>Actions</strong>).<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> (or <strong>Actions</strong>) menu expands.</p>
+                                            <img src="images/e14660a-testim_271_r.png" title="Testim 271_r.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Add custom validation</strong> (or <strong>Add custom action</strong>).</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add custom validation</strong> (or <strong>Add custom action</strong>).</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/4f2e39a-testim_215_r.png" title="Testim 215_r.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a (meaningful) name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to <strong>Shared step</strong> selected (default), and choose a folder from the <strong>Select shared step</strong> folder list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../../editing-tests/groups/index.htm">Groups</a>.</p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>function</strong> editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/5d95f6a-testim_284.png" title="Testim 284.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Description</strong> field, optionally edit the description of this step. The default description is “Run validation” (or “Run action”).</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Define the parameters you will need for your step as follows:<br /></p>
+                                            </li>
+                                            <p>a. In the <strong>Properties</strong> panel, click the <strong>+ PARAMS</strong> button.<br /> b. <strong>JS parameter</strong>: If you would like to add a JavaScript parameter, select <strong>JS</strong> from the dropdown list and type in the JavaScript parameter.<br /> c. <strong>HTML parameter</strong>: If you would like to define an HTML element as a parameter, select <strong>HTML</strong> from the dropdown list. The browser opens, displaying the relevant webpage for this step. Do the following:</p>
+                                            <ul>
+                                                <li>
+                                                    <p>In the <strong>AUT</strong> window, hover your mouse on the relevant element and then click on it to select it. The selected element is shown in the <strong>Target Element</strong> box in the <strong>Properties</strong> pane. If you would like to view, replace or adjust the settings for the selected element, use the procedures described in <a href="../../editing-tests/editing-your-tests/editing-target-element-properties.htm">Editing Target Element Properties</a>.</p>
+                                                </li>
+                                            </ul>
+                                            <p>d. The selected element is automatically named “param” or “element” (depending on whether you chose a JS parameter or HTML element). To assign a relevant name to the parameter/element, click on the <strong>edit</strong> icon and enter the desired name.</p>
+                                            <img src="images/9e53245-testim_285a_r.png" title="Testim 285a_r.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Optionally fill in the following Properties:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>When this step fails</strong> – Specify what to do if this step fails.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>When to run step</strong> – Specify conditions for when to run the step. For more information, see <a href="../../editing-tests/conditions/index.htm">Conditions</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Override timeout</strong> – Allows you to override the default time lapse setting which causes Testim to register a fail for a test step, and specify a different time lapse value (in milliseconds).</p>
+                                                </li>
+                                            </ul>
+                                            <li value="11">
+                                                <p>In the <strong>function</strong> text box, type in the desired JavaScript code. If you have defined parameters, you can refer to those parameters in your JavaScript code.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>If you are using DOM selectors other than HTML parameters (e.g. jQuery), then empty arrays are truthy, so you need to use <span class="FileOrFilePath">$(&lt;query&gt;).length</span>  instead of <span class="FileOrFilePath">$(&lt;query&gt;)</span> .</p>
+                                            </div>
+                                            <li value="12">
+                                                <p>Click the back arrow to return to the main Editor window.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/6565b36-testim_286a_r.png" title="Testim 286a_r.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If you opened your AUT to define an HTML element as a parameter, click on the T<strong>oggle Breakpoint</strong> button to remove the breakpoint.</p>
+                                        </div>
+                                        <p>The step is created.</p>
+                                        <img src="images/c26aea9-testim_287a.png" title="Testim 287a.png" class="ScreenshotFullsize" />
+                                        <h3><a name="custom-validation-and-action-examples"></a>Custom validation and action examples</h3>
+                                        <h4><a name="validating-a-numeric-value-custom-validation"></a>Validating a numeric value (Custom validation)</h4>
+                                        <p>You can use the <em>Add custom validation</em> step to validate the value of a number in your app. This example checks to see if the numeric value of an HTML element is less than 1,000. We first remove the non-numeric characters from the string, and then convert the string to a number.</p>
+                                        <img src="images/142d406-testim_288.png" title="Testim 288.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// Remove&#160;&#160;string chars (e.g "$") and turn the price label to a number:<br />var amount = Number(amountLabel.innerText.replace(/[^\-0-9\.]+/g,""));<br /><br /><br />// Validate if the number is bigger than 1000:<br />if(amount &gt; 1000) {<br />&#160;&#160;throw new Error('Amount should not be over 1000! Actual value: ' + amount);<br />} else {<br />&#160;&#160;return true;<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">amountLabel</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">HTML</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">{an HTML element containing a numeral}</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h4><a name="comparing-text-elements-custom-validation"></a>Comparing text elements (Custom validation)</h4>
+                                        <p>This example uses the <em>Add custom validation</em> step to compare the text of two elements in your app. When the innerText value of the two elements is the same, the step passes. If the values are different from each other, the step fails.</p>
+                                        <img src="images/d866dbe-testim_289.png" title="Testim 289.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>var equal = firstLabel.innerText === secondLabel.innerText;<br /><br />if(!equal) {<br />&#160;&#160;throw new Error('Labels are not equal. First label: ' + firstLabel.innerText +&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' Second label: ' + secondLabel.innerText);<br />}<br /><br />return equal;</code></pre>
+                                            </div>
+                                        </div>
+                                        <p><strong>Example Parameters:</strong>
+                                        </p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Type</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">Value</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">firstLabel</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">HTML</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">{an HTML element containing text}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">secondLabel</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body2">
+                                                        <p class="tableBody">HTML</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body2">
+                                                        <p class="tableBody">{an HTML element containing text}</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h4><a name="asynchronous-validation-via-promise-custom-validation"></a>Asynchronous Validation via Promise (Custom validation)</h4>
+                                        <p>A JavaScript Promise allows you to cause a function to wait for a specified amount of time (in ms) before resolving or rejecting some specific code. If the boolean value of the code is true, it is resolved, and the step passes. If it is false, the code is rejected, and the step fails. The simple example below is just for demonstration purposes and doesn’t use any parameters. (This test should pass after the 10 second timeout.)</p>
+                                        <div class="note">
+                                            <p>If the validation fails, any text you include in the <span class="FileOrFilePath">reject( )</span>  function invocation is displayed in the step’s property panel.</p>
+                                        </div>
+                                        <img src="images/ba1832e-testim_290.png" title="Testim 290.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>return new Promise(function(resolve, reject) {<br />&#160;&#160;setTimeout(function() {<br />&#160;&#160;&#160;&#160;if(7 === 7) {<br />&#160;&#160;&#160;&#160;&#160;&#160;resolve();<br />&#160;&#160;&#160;&#160;} else {<br />&#160;&#160;&#160;&#160;&#160;&#160;reject('');<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;}, 10000);<br />});</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="navigating-to-a-different-website-custom-action"></a>Navigating to a different website (Custom action)</h4>
+                                        <p>This example uses the <em>Add custom action</em> step to navigate away from your test’s base URL in the Setup step and navigate to Testim’s homepage. This example does not use any parameters.</p>
+                                        <img src="images/4ec59f8-testim_291.png" title="Testim 291.png" class="ScreenshotFullsize" />
+                                        <p><strong>Example Code:</strong>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>window.location.href = 'https://testim.io/';</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Chrome DevTools debugger You can use the Chrome DevTools debugger to help you debug your code during a local test run. See <a href="../../debugging-tests/debugging-controls.htm#3-chrome-devtools-debugger">Chrome DevTools debugger</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>See custom code examples created by Testim to solve customer testing challenges. The complete list is available at <a href="https://github.com/testimio/custom-actions-examples">https://github.com/testimio/custom-actions-examples</a>. Testim users can contribute their own custom examples to this GitHub Repository following the guidelines set there.</p>
+                                        </div>
+                                        <h2><a name="examples-of-passing-and-failing-synchronous-validations"></a>Examples of passing and failing synchronous validations</h2>
+                                        <h3><a name="passing-validations"></a>Passing validations</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// This&#160;&#160;validation will always succeed.<br />return true;</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// This validation will always succeed.<br />return 5 === 5;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="failing-validations"></a>Failing validations</h3>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// This validation will always fail after it times out.<br />return 5 === 6;</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>// This validation will always fail after it times out.<br />throw new Error('Validation failed!!!');</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>When a step fails, an error message is displayed in the step’s <strong>result</strong> panel and in the <strong>Properties</strong> panel as in the example below.</p>
+                                        <img src="images/5007015-testim_292.png" title="Testim 292.png" class="ScreenshotFullsize" />
+                                    

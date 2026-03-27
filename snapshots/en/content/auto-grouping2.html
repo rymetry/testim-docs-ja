@@ -1,0 +1,195 @@
+
+                                        <h1>Auto grouping</h1>
+                                        <div class="note">
+                                            <p>This is a Pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/automation-testing-pricing/">here</a>.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Auto grouping works only on master branch, not on any other branch. The auto grouping's status is refreshed weekly during the weekend.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>You can only use auto grouping for web and mobile web projects.</p>
+                                        </div>
+                                        <p>Auto grouping identifies duplicate test step sequences across your project and allows replacing them with reusable groups. Tests are like code. Similar to the DRY (don't repeat yourself) principle in coding, good test architecture should minimize duplication and simplify maintenance. Groups make maintenance easier as a step is updated in a group it updates all dependent tests. In the Auto Grouping screen, you can find a list of step sequences that match other groups or other step sequences in other tests.  You can review these auto-grouping suggestions and decide which of these should be turned into a shared group.  The tests with the newly created shared groups will be saved in a new branch, so you can review these changes before merging them into the master branch.</p>
+                                        <h3><a name="duplication-level-scoring"></a>Duplication level scoring</h3>
+                                        <p>The duplication level is a score of how many duplications you have in your project. The higher the score, the project contains more duplications.<br /> When applying auto grouping suggestions, you can reduce your score and avoid these duplications.<br /> The duplication level scoring can have one of three colors:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Green</strong> - your project has a <strong>good</strong> score and does not contain a lot of duplication levels</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Yellow</strong> - your project has a <strong>medium</strong> score in terms of duplications, it is recommended to apply auto grouping to reduce this score.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Red</strong> - Your project contains a lot of duplications, applying auto grouping is highly recommended to reduce this score</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="reviewing-auto-grouping-suggestion"></a>Reviewing auto-grouping suggestion</h1>
+                                        <p>→ <strong>To review the auto-grouping suggestions:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the main menu, click <strong>Auto-grouping</strong>.<br /></p>
+                                            </li>
+                                            <p>A list of auto-grouping suggestions will appear in the <strong>Auto Grouping</strong> pane (black).  The list includes the following information:</p>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Project duplication level</strong> - The duplication level of the project is a score from 0-100 that indicates the amount of duplicate steps that could have been grouped but were not yet grouped within the master branch. In order to reduce the duplication level, you can confirm the suggested auto-groupings listed below. For more information, see <a href="#duplication-level-scoring">Duplication level scoring</a></p>
+                                                </li>
+                                            </ul>
+                                            <div class="note">
+                                                <p>The duplication calculation is an estimate that is based on weekly offline processes (which occurs every Sunday) and doesn't reflect all updates.</p>
+                                            </div>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>The number of duplicate steps</strong> - these are the number of identical sequential steps found in other tests.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Duplication level reduction</strong> - by accepting the auto-grouping suggestion, the project duplication level will be reduced by the specified number. For example, if the project duplication level is 14% and the specified number is 1%, after accepting the suggestion, the project duplication level will be reduced to 13%.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>The number tests and groups</strong> - the number of tests and groups in which the same step sequences were found.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/1839b7d-screen_shot_2021-02-28_at_9.51.19.png" title="Screen Shot 2021-02-28 at 9.51.19.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the desired auto-grouping suggestion to view its details.<br /></p>
+                                            </li>
+                                            <p>The detailed list of tests and groups that include the duplicate steps is presented in the <strong>Test List</strong> pane.</p>
+                                            <img src="images/79c9465-screen_shot_2021-02-28_at_9.52.04.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click on the desired test/group item to view the duplicate step sequences.</p>
+                                            </li>
+                                            <img src="images/eb1a270-screen_shot_2021-02-23_at_6.14.45.png" title="Screen Shot 2021-02-23 at 6.14.45.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>To view the duplicate step sequence in the context of the entire test in the Editor screen, click <strong>Open Test</strong> icon. The test will be opened in a new tab with the duplicate steps sequence highlighted.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/bdbe859-screen_shot_2020-10-27_at_11.58.10.png" class="ScreenshotFullsize" />
+                                        <h2><a name="editing-the-auto-grouping-suggestion"></a>Editing the auto-grouping suggestion</h2>
+                                        <p>→ <strong>To edit the auto-grouping suggestions:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Auto-Grouping</strong> pane, select one of the suggestions and then click the <strong>Edit</strong> icon.</p>
+                                            </li>
+                                            <img src="images/e52ddfd-dec-06-2020_11-38-33.gif" title="Dec-06-2020 11-38-33.gif" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Edit the steps you would like to include in the following ways:</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p>Add/remove individual steps from the suggested group by selecting/deselecting them.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/ca23e3b-dec-06-2020_11-41-28.gif" title="Dec-06-2020 11-41-28.gif" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p>Click <strong>Clear all</strong> to clear all the selections, and select the desired steps for the group.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>There should be at least 3 steps.</p>
+                                        </div>
+                                        <p>At any point, you can click <strong>Select original</strong> to revert back to the original selections.<br /> After editing a suggestion, the new auto group suggestion will appear with the label <strong>Edited</strong>, and the test list will update based on the edited group.</p>
+                                        <img src="images/52cf745-screen_shot_2020-12-06_at_11.45.31.png" title="Screen Shot 2020-12-06 at 11.45.31.png" class="ScreenshotFullsize" />
+                                        <h1><a name="filtering-auto-grouping-suggestions"></a>Filtering auto-grouping suggestions</h1>
+                                        <p>You can narrow the number of auto-grouping suggestions by filtering them based to various criteria.<br /> → <strong>To filter the auto grouping suggestions:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the the <strong>Auto Grouping</strong> pane (black), click on the Filter icon.</p>
+                                            </li>
+                                            <img src="images/de78d7f-filter.png" title="filter.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>FILTER &amp; SORT STEPS DUPLICATIONS</strong> screen is displayed with the following options:</p>
+                                            <ul>
+                                                <li>
+                                                    <p>Test owner - only the tests of the selected test owners will be displayed.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Test Name - only the selected tests will be displayed.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Suite Name - only the tests in the selected Suites will be displayed.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Group Name - only the tests that include the selected groups will be displayed.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/282da88-feb-28-2021_10-23-47.gif" title="Feb-28-2021 10-23-47.gif" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the relevant filter option.<br /></p>
+                                            </li>
+                                            <p>A list of items is displayed.</p>
+                                            <img src="images/4b25c4d-testname.png" title="testname.PNG" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click <strong>Show all</strong>to display all available items.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Select the relevant items.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Under <strong>Number of Steps</strong>, if you want to filter the suggestions by the amount of duplicate steps, specify the range by entering the <strong>Min. Steps</strong> and <strong>Max Steps</strong>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click <strong>Apply</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h1><a name="sorting-auto-grouping-suggestions"></a>Sorting auto-grouping suggestions</h1>
+                                        <p>In the <strong>FILTER &amp; SORT STEPS DUPLICATIONS</strong> screen, you can select how to sort the auto-grouping suggestions:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Duplication Level - Descending (default)</strong> - suggestions that will reduce the duplication level the most will appear at the top.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Duplication level - Ascending</strong> - suggestions that will have the least impact on the duplication level  will appear at the top.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Number of steps - Ascending</strong> - suggestions have the least number of  steps will appear at the top.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Number of steps - Descending</strong> - suggestions have the most number of  steps will appear at the top.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Number of matches - Ascending</strong> - suggestions that affect the most number of tests/shared steps will appear at the top</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Number of matches - Descending</strong> - suggestions that affect the least number of tests/shared steps will appear at the top.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/dde76be-screen_shot_2021-02-28_at_10.17.23.png" title="Screen Shot 2021-02-28 at 10.17.23.png" class="ScreenshotFullsize" />
+                                        <h1><a name="creating-the-shared-group-based-on-the-suggestion"></a>Creating the shared group based on the suggestion</h1>
+                                        <p>→ <strong>To create the shared group:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Test List</strong> pane, select/deselect the tests/groups for which you want to implement the suggested auto-grouping.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>Create Shared Group</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Shared group name</strong> field, enter a name for the shared group.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Under <strong>Branch</strong> select one of the following:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>New Branch</strong> - a new branch will be created. Enter a name for the new branch in the Branch Name field.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Current Branch</strong> - if you are using a branch that is not the Master branch, the tests with the new shared group will be saved into the current branch.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/5ac239d-screen_shot_2020-10-27_at_12.11.32.png" title="Screen Shot 2020-10-27 at 12.11.32.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Next</strong>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>In case the group uses parameters, the auto-grouping feature will create new parameters for your groups. In this case, there will be an extra step for you to provide the parameter names:</p>
+                                            </li>
+                                            <img src="images/cc757a0-screen_shot_2020-10-29_at_18.53.28.png" title="Screen Shot 2020-10-29 at 18.53.28.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Click <strong>Create</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>After creating the group, you'll get a message the auto grouping was completed and you can move on to creating the next group.</p>
+                                        <img src="images/0a5c88f-screen_shot_2020-10-28_at_13.33.39.png" title="Screen Shot 2020-10-28 at 13.33.39.png" class="ScreenshotFullsize" />
+                                    

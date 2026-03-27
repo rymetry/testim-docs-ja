@@ -1,0 +1,571 @@
+
+                                        <h1>Execution Runs Screen</h1>
+                                        <p>An Execution is set of one or tests that are run as a single run. Executions can be initiated automatically (e.g., by a Scheduler) or manually (e.g., through a CLI running tests that include a certain label). The Execution Runs screen displays information about previous execution runs. These runs are grouped by Suite, Label, or Test plan (as opposed to the <a href="test-runs.htm">Test runs</a> view, which present each one of the executed tests as separate entry in its list view).</p>
+                                        <img src="images/e1d2a5a-execution-runs-1.jpg" title="execution-runs-1.jpg" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: Tests run directly in the Test Editor will not appear in the Execution Runs.</p>
+                                        </div>
+                                        <h2><a name="executions-list"></a>Executions List</h2>
+                                        <p>The execution list displays information about the individual execution runs.</p>
+                                        <img src="images/3b4daca-execution-runs-2.jpg" title="execution-runs-2.jpg" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Execution</strong>: the name of the execution. Execution Name provides additional details about how the execution was run, see Execution name conventions below for more details. Click the Execution Name to see the Execution Details.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Branch</strong>: name of the test branch of the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Browser (web)</strong>: the browser used in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Device (mobile)</strong>: the physical or virtual device used in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>OS (mobile)</strong>: the operating system of the physical or virtual device used in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Started</strong>: the time the execution began</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Duration</strong>: the duration of the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Concurrency</strong>: number of tests that ran in parallel.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Results</strong>: number of passed/failed tests</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Result labels</strong>: the result labels that were added to the run. See <a href="result-labels.htm">Result labels</a> for more info.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Status</strong>: the current execution status. The possible status values include:</p>
+                                            </li>
+                                            <li>
+                                                <p>Passed - all the tests in the execution have passed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Failed - at least one of the tests in the execution have failed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Queued - the execution is waiting to be processed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Running - the execution is being processed.</p>
+                                            </li>
+                                            <li>
+                                                <p>Aborted - the execution has been stopped/aborted.</p>
+                                            </li>
+                                            <li>
+                                                <p>Timeout - the execution has net returned a result within the configured timeout period. The timeout status is not necessarily a final status, see note below for more details.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Temporary Timeout Status If an execution's overall time takes more than 90 min, its status will change from ‘RUNNING’ to ‘TIMEOUT’. However, since there is no continuous connection between Testim and the Grid, the tests may still be running on the grid after the timeout period. In this case, when all tests are finished (and the execution is done), the execution status will be updated accordingly from ‘TIMEOUT’ to ‘FAILED’/’PASSED’.</p>
+                                        </div>
+                                        <h3><a name="execution-name-conventions"></a>Execution Name Conventions</h3>
+                                        <p>The Execution Name provides additional details about how the execution was run.</p>
+                                        <table style="width: 100%;mc-table-style: url('../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Execution Name</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">Description</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Remote run  (Testim Editor)</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">When running specific test/s remotely (on grid) from the test library</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Local suite</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">
+                                                            <ul>
+                                                                <li>
+                                                                    <p>When running specific test/s  locally from the test library</p>
+                                                                </li>
+                                                                <li>
+                                                                    <p>When running specific suite/s locally from the suite libraryIf a single test is run from the Test Editor, it will not be displayed.</p>
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody"> or<br /><p>or<br /></p></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">
+                                                            <ul>
+                                                                <li>
+                                                                    <p>When running specific suite/s and/or label/s using CLI</p>
+                                                                </li>
+                                                                <li>
+                                                                    <p>When running specific test plan/s using CLIIf multiple Test plans are run using CLI or scheduler, there will be multiple execution entries, where each test plan will have its own execution entry.</p>
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">When running specific scheduler with label or suite</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">//</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body1">
+                                                        <p class="tableBody">When running specific scheduler with test plan/s<br /><p>If multiple Test plans are run using the CLI, each test plan will have it on execution entry</p></p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h2><a name="statistics-panel"></a>Statistics Panel</h2>
+                                        <p>The statistics panel displays aggregated statistics on the execution runs currently displayed.</p>
+                                        <img src="images/d2657a6-execution-runs-3.jpg" title="execution-runs-3.jpg" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Success Rate</strong>: displays a percentage of execution runs where all tests passed. In the example above 67% (2 out of 3) execution runs in the list passed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Executions Passed</strong>: displays the total number of execution runs that passed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Average Duration</strong>: displays the average time it took Testim to complete each execution run. In the example above, there were 3 runs (1 minute, 2 minutes, and 37 seconds), for an average of 1 minute 13 seconds.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="execution-runs-graph"></a>Execution Runs Graph</h2>
+                                        <p>The execution runs graph gives you an overview of the number of executions and the tests per execution. You can drill down and inspect a specific execution to see the results of each test. You can also filter by status, time, and execution/label. Hover over the graph to view details about each run.</p>
+                                        <img src="images/1f67add-execution-runs-4.jpg" title="execution-runs-4.jpg" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>X Axis</strong>: displays a compressed timeline that includes the times when the executions took place.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Y Axis</strong>: displays the number of executions.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="hideshow-execution-runs-graph"></a>Hide/Show Execution Runs Graph</h3>
+                                        <p>→ <strong>To hide the execution runs graph:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Hide section</strong> button above the graph.</p>
+                                            </li>
+                                            <img src="images/9bc14d3-execution-runs-5.jpg" title="execution-runs-5.jpg" class="ScreenshotFullsize" />
+                                            <p>Testim will collapse and hide the graph.</p>
+                                            <li value="2">
+                                                <p>To show the graph again, click the <strong>Show section</strong> button beneath the Execution Runs title.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/6252a26-execution-runs-6.jpg" title="execution-runs-6.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim displays the graph.</p>
+                                        <h2><a name="execution-operations"></a>Execution Operations</h2>
+                                        <p>The operations panel gives you the ability to filter the execution runs list and export the list. The following actions are available:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Filter by Run Date</strong>: display only executions that were run during a designated timeframe.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Advanced Filters</strong>: display only executions based on status, browser, test plan, label, or branch.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Export Execution List</strong>: download the list of executions currently displayed in CSV format.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Search Execution List</strong>: search for execution(s) by name and only display executions that match the search criteria.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="filter-by-run-date"></a>Filter by Run Date</h3>
+                                        <p>→ <strong>To filter execution runs by date:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Filter by Date</strong> button in the operations panel.</p>
+                                            </li>
+                                            <img src="images/af82e4f-execution-runs-7.jpg" title="execution-runs-7.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select from the <strong>predefined list</strong> of filters or choose a <strong>custom</strong> date range.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/d3935f9-execution-runs-8.jpg" title="execution-runs-8.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will automatically filter the executions list based on the timeframe selected. To learn more about saving this filtered view, see <a href="../test-management/saving-a-filtered-view.htm">Saving a Filtered View</a>. The number next to the title displays the number of executions that match the selected filter:</p>
+                                        <img src="images/ec5d395-image.png" class="ScreenshotFullsize" />
+                                        <h3><a name="advanced-filters"></a>Advanced Filters</h3>
+                                        <p>→ <strong>To apply advanced filters to the executions list:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced Filters</strong> button in the operations panel.</p>
+                                            </li>
+                                            <img src="images/256b5d0-execution-runs-9.jpg" title="execution-runs-9.jpg" class="ScreenshotFullsize" />
+                                            <p>Testim displays the <strong>Filter Execution Runs</strong> panel.</p>
+                                            <img src="images/d2233ef-execution-runs-10.jpg" title="execution-runs-10.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select the desired filters and click the <strong>Apply</strong> button to apply the filters to the execution list. To learn more about saving this filtered view, see <a href="../test-management/saving-a-filtered-view.htm">Saving a Filtered View</a>.</p>
+                                            </li>
+                                            <img src="images/e2a7dfd-execution-runs-11.jpg" title="execution-runs-11.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>To remove all filters, click the <strong>Reset filters</strong> link in the advanced filters panel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e940922-execution-runs-12.jpg" title="execution-runs-12.jpg" class="ScreenshotFullsize" />
+                                        <p>The number next to the title displays the number of executions that match the selected filter:</p>
+                                        <img src="images/b58720a-image.png" class="ScreenshotFullsize" />
+                                        <h3><a name="export-execution-list"></a>Export Execution List</h3>
+                                        <p>→ <strong>To export the currently displayed execution runs list:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Export Execution List</strong> button in the operations panel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/20419f8-execution-runs-13.jpg" title="execution-runs-13.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will generate a CSV file for you to download locally.</p>
+                                        <h3><a name="search-for-execution-runs-by-name"></a>Search for Execution Runs by Name</h3>
+                                        <p>→ <strong>To search for execution runs by name:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Enter the <strong>Execution Name</strong> in the search box of the Operations Panel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/9d06ec3-execution-runs-14.jpg" title="execution-runs-14.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim displays only the execution runs with a matching execution name.</p>
+                                        <img src="images/5d143af-execution-runs-15.jpg" title="execution-runs-15.jpg" class="ScreenshotFullsize" />
+                                        <h2><a name="execution-details-screen"></a>Execution Details Screen</h2>
+                                        <p>You can view additional details of a specific execution on the Execution Details screen. → <strong>To view the details of an execution:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Double-click one of the executions in the <strong>Execution List</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/252ce9a-execution-runs-16.jpg" title="execution-runs-16.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim displays the Execution Details Screen.</p>
+                                        <img src="images/7097ad4-execution-runs-17.jpg" title="execution-runs-17.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="execution-details"></a>Execution Details</h3>
+                                        <p>At the top of the Execution Details Screen, the basic information about the execution is displayed, including:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Name of the execution</p>
+                                            </li>
+                                            <li>
+                                                <p>Total number of tests in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p>Total number of tests executed</p>
+                                            </li>
+                                            <li>
+                                                <p>Execution Run ID</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Note: The Execution Run ID is helpful when conducting detailed debugging on a specific execution.</p>
+                                        </div>
+                                        <h3><a name="execution-test-statistics"></a>Execution Test Statistics</h3>
+                                        <p>The statistics panel displays aggregated statistics for the specific execution run currently viewed, including:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Success Rate</strong>: displays a percentage of tests that passed. In the example above 100% (8 out of) tests in the list passed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Tests Passed</strong>: displays the total number of tests that passed.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Average Duration</strong>: displays the average time it took Testim to run each test in the execution. In the example above, there were 8 tests run, for an average of 11 seconds each.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="execution-test-list"></a>Execution Test List</h3>
+                                        <p>At the bottom of the Execution Details screen is a list of tests included in the execution. For each test, the following information is displayed:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test Name</strong>: the name of the test.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Browser (web)</strong>: the browser used in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Device (mobile)</strong>: the physical or virtual device used in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>OS (mobile)</strong>: the operating system of the physical or virtual device used in the execution</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Started</strong>: the time the test began</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Duration</strong>: the duration of the test run</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Result labels</strong>: the result tags.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Failure Type</strong>: if the test failed, displays the type of failure. The possible failure type values displayed are:</p>
+                                            </li>
+                                            <li>
+                                                <p>Bug in app</p>
+                                            </li>
+                                            <li>
+                                                <p>Environmental Issue</p>
+                                            </li>
+                                            <li>
+                                                <p>Invalid test data</p>
+                                            </li>
+                                            <li>
+                                                <p>Test design</p>
+                                            </li>
+                                            <li>
+                                                <p>Other</p>
+                                            </li>
+                                            <li>
+                                                <p>Untagged</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Status</strong>: the current execution status. The possible status values displayed are:</p>
+                                            </li>
+                                            <li>
+                                                <p>Passed</p>
+                                            </li>
+                                            <li>
+                                                <p>Failed</p>
+                                            </li>
+                                            <li>
+                                                <p>Queued</p>
+                                            </li>
+                                            <li>
+                                                <p>Running</p>
+                                            </li>
+                                            <li>
+                                                <p>Aborted</p>
+                                            </li>
+                                            <li>
+                                                <p>Timeout</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Temporary Timeout Status If an execution's overall time takes more than 90 min, its status will change from ‘RUNNING’ to ‘TIMEOUT’. However, since there is no continuous connection between Testim and the Grid, the tests may still be running on the grid after the timeout period. In this case, when all tests are finished (and the execution is done), the execution status will be updated accordingly from ‘TIMEOUT’ to ‘FAILED’/’PASSED’.</p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Information Icon</strong>: by hovering over the information icon you can get additional details about the test including:</p>
+                                            </li>
+                                            <li>
+                                                <p>Status</p>
+                                            </li>
+                                            <li>
+                                                <p>Base URL (web): used to conduct the test</p>
+                                            </li>
+                                            <li>
+                                                <p>Device Info (mobile): includes the device name and operating system of the physical or virtual device used to record the test</p>
+                                            </li>
+                                            <li>
+                                                <p>Application (mobile): mobile app name used to record the test</p>
+                                            </li>
+                                            <li>
+                                                <p>Test Data: used to conduct the test. Click See Test Data to view the parameters that were used in the test.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="test-operations"></a>Test Operations</h2>
+                                        <p>From the Execution Details screen you are able to take various actions and see additional technical details about the execution:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Abort an execution that is currently running</p>
+                                            </li>
+                                            <li>
+                                                <p>Rerun a single test</p>
+                                            </li>
+                                            <li>
+                                                <p>View detailed debugging information</p>
+                                            </li>
+                                            <li>
+                                                <p>View Test History</p>
+                                            </li>
+                                            <li>
+                                                <p>Tag Failure Type</p>
+                                            </li>
+                                            <li>
+                                                <p>Filter tests displayed in the Execution Details</p>
+                                            </li>
+                                            <li>
+                                                <p>View Test Details</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="abort-an-execution-currently-running"></a>Abort an Execution Currently Running</h3>
+                                        <p>When viewing the Execution Details Screen while the tests are running, you are able to abort the execution run and prevent any further tests from running. → <strong>To abort an execution run:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the Execution Runs screen, double-click an execution that is currently running.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Abort Run</strong> button:</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/9b2f2d6-execution-runs-18.jpg" title="execution-runs-18.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will stop the execution run.</p>
+                                        <div class="note">
+                                            <p>Note: The “Abort Run” button is only available for actively running remote editor runs/scheduler/local executions. See<br /> <a href="../running-tests/the-command-line-cli/index.htm">CLI</a> for more details on how to abort a CLI execution.</p>
+                                        </div>
+                                        <h3><a name="rerun-test-directly-from-execution-details-screen-web"></a>Rerun Test Directly from Execution Details Screen (Web)</h3>
+                                        <p>While on the Execution Details screen, you can rerun a test.<br /></p>
+                                        <p><a href="../running-tests/the-command-line-cli/index.htm">Command line interface (CLI)</a>
+                                            <br />
+                                        </p>
+                                        <p>→ <strong>To rerun a test from the Execution Details screen:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the Execution Details screen, select one of the tests in the test list.</p>
+                                            </li>
+                                            <img src="images/8e66ad6-execution-runs-19.jpg" title="execution-runs-19.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the <strong>Rerun with same params</strong> button in the action panel. You can also right click on any test in the test list and select <strong>Rerun with same params</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/cd2aaef-execution-runs-20.jpg" title="execution-runs-20.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will run the test as if you were in the Test Editor.</p>
+                                        <h3><a name="view-detailed-debugging-information"></a>View Detailed Debugging Information</h3>
+                                        <p>From the Execution Details Screen, you can view additional information about the run that is helpful when debugging. → <strong>To view detailed debugging information:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>From the Execution Details Screen, hover over the <strong>Information Icon</strong> in the operations panel.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/7d07e73-execution-runs-21.jpg" title="execution-runs-21.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim displays the following information:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Concurrency - the number of executions that ran concurrently with the current execution.</p>
+                                            </li>
+                                            <li>
+                                                <p>Extension Version - the version of the Testim extension that ran the execution.</p>
+                                            </li>
+                                            <li>
+                                                <p>Source - how the execution was run (local, remote, etc.)</p>
+                                            </li>
+                                            <li>
+                                                <p>CLI Version - version of the CLI used to run the extension</p>
+                                            </li>
+                                            <li>
+                                                <p>Grid Name - name of the grid used to run the execution</p>
+                                            </li>
+                                            <li>
+                                                <p>Test Data - view parameters and other test data used to run the execution</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="view-test-history"></a>View Test History</h3>
+                                        <p>From the Execution Details Screen you can view the history of a specific test in the execution. This will give you information about past test runs. → <strong>To view the test history from the Execution Details Screen:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Right click the test row and select <strong>Test History</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/cd50136-execution-runs-22.jpg" title="execution-runs-22.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim displays the test history only for that specific test.</p>
+                                        <h3><a name="tag-a-test-failure"></a>Tag a Test Failure</h3>
+                                        <p>When a test fails, you can tag the failure with a specific failure type. → <strong>To tag a failure type from the Execution Runs screen:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Right click a the failed test in the test list and select <strong>Tag failure type</strong>.</p>
+                                            </li>
+                                            <img src="images/0faac2a-execution-runs-23.jpg" title="execution-runs-23.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Complete the tag test failure screen. For more information, see <a href="tag-remote-runs-failures.htm">Tagging failed runs with failure types</a>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/3fee6aa-execution-runs-24.jpg" title="execution-runs-24.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="filter-tests-displayed-in-the-execution-results-screen"></a>Filter Tests Displayed in the Execution Results Screen</h3>
+                                        <p>By default, Testim will display all tests included in the execution on the Execution Results Screen. However, you can filter the tests for a more refined view. → <strong>To filter the tests displayed in the Execution Results Screen by Status:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced Filters</strong> button in the operations panel.</p>
+                                            </li>
+                                            <img src="images/393f537-execution-runs-9.jpg" title="execution-runs-9.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select one or more values from the <strong>Status</strong> section of the filter’s panel.</p>
+                                            </li>
+                                            <img src="images/b08df21-execution-runs-25.jpg" title="execution-runs-25.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Apply</strong> button to apply the filters to the execution list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/7486425-execution-runs-26.jpg" title="execution-runs-26.jpg" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To filter the tests displayed in the Execution Results Screen by Test Owner:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced Filters</strong> button in the operations panel.</p>
+                                            </li>
+                                            <img src="images/83134b4-execution-runs-9.jpg" title="execution-runs-9.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select one or more values from the <strong>Test Owner</strong> section of the filter’s panel.</p>
+                                            </li>
+                                            <img src="images/b461691-execution-runs-27.jpg" title="execution-runs-27.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Apply</strong> button to apply the filters to the execution list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/719cabe-execution-runs-26.jpg" title="execution-runs-26.jpg" class="ScreenshotFullsize" />
+                                        <p>→ <strong>To filter the tests displayed in the Execution Results Screen by Failure Type:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced Filters</strong> button in the operations panel.</p>
+                                            </li>
+                                            <img src="images/1437733-execution-runs-9.jpg" title="execution-runs-9.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select one or more values from the Failure Type section of the filter’s panel.</p>
+                                            </li>
+                                            <img src="images/a856dc5-execution-runs-28.jpg" title="execution-runs-28.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Click the <strong>Apply</strong> button to apply the filters to the execution list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/8293525-execution-runs-26.jpg" title="execution-runs-26.jpg" class="ScreenshotFullsize" />
+                                        <br />
+                                        <p>→ <strong>To filter the tests displayed in the Execution Results Screen by Label:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>Advanced Filters</strong> button in the operations panel.</p>
+                                            </li>
+                                            <img src="images/393f537-execution-runs-9.jpg" title="execution-runs-9.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select one or more values from the <strong>Label</strong> section of the filter’s panel.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select one of the following operands:</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>OR - will return tests that include one or more of the selected labels.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>AND - will only return tests that include ALL the selected labels.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click the <strong>Apply</strong> button to apply the filters to the execution list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/7486425-execution-runs-26.jpg" title="execution-runs-26.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="view-test-details"></a>View Test Details</h3>
+                                        <p>From the Execution Results Screen, you can navigate directly to the Test Run and view the step-by-step details of the test. This is helpful if you want to see which step of the test failed. → <strong>To view step-by-step details of a test in an execution run:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>From the Execution Results screen, double-click anywhere on test in the test list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/fc3e4c2-execution-runs-29.jpg" title="execution-runs-29.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim displays the detailed steps of the test.</p>
+                                        <img src="images/6564064-execution-runs-30.jpg" title="execution-runs-30.jpg" class="ScreenshotFullsize" />
+                                    

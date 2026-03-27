@@ -1,0 +1,19 @@
+
+                                        <h1>MySQL validation</h1>
+                                        <p>You can use the <a href="add-cli-validations-and-actions.htm">CLI action step</a> to perform queries and run validations on MySQL database.</p>
+                                        <div class="note">
+                                            <p>Permissions Notice As databases are usually protected, you might need to add the machine where this CLI validation step is executed on to the white list (to allow access), otherwise the step may fail when trying to reach the DB.<br /> For further information / if you are running it via our Scheduler, please contact support.</p>
+                                        </div>
+                                        <h4><a name="example-code"></a><strong>Example code:</strong>
+                                        </h4>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>const dbName = "XXXXX";<br />const userName = "XXXXX";<br />const password = "XXXXX";<br />const host = "XXXXX";<br />const port = XXXXX;<br /><br />const sequelize = new Sequelize(dbName, userName, password, {<br />&#160;&#160;dialect: "mysql",<br />&#160;&#160;host,<br />&#160;&#160;port<br />});<br /><br />return sequelize<br />&#160;&#160;.query("SELECT name FROM myTable where id = 1;", {<br />&#160;&#160;&#160;&#160;plain: true,<br />&#160;&#160;&#160;&#160;raw: true,<br />&#160;&#160;&#160;&#160;type: Sequelize.QueryTypes.SELECT<br />&#160;&#160;})<br />&#160;&#160;.then(myTableRows =&gt; {<br />&#160;&#160;&#160;&#160;const result = myTableRows &amp;&amp; JSON.stringify(myTableRows);<br />&#160;&#160;&#160;&#160;console.log("Query result", result);<br />&#160;&#160;&#160;&#160;if (!myTableRows || myTableRows.name !== expectedValue) {<br />&#160;&#160;&#160;&#160;&#160;&#160;return Promise.reject(new Error("Failed to find raw"));<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;});</code></pre>
+                                            </div>
+                                        </div>
+                                        <h4><a name="parameters-packages-and-javascript-used-in-this-example"></a><strong>Parameters - Packages and JavaScript used in this example:</strong>
+                                        </h4>
+                                        <p>1.name: Sequelize, type: Package, value: <a href="https://www.npmjs.com/package/sequelize">sequelize@latest</a><br /> 2.name: mysql2, type: Package, value: <a href="https://www.npmjs.com/package/mysql2">mysql2@latest</a><br /> 3.name: expectedValue, type: JavaScript, value: "fdssdf dfdf"</p>
+                                        <p><strong>see screenshot:</strong>
+                                        </p>
+                                        <img src="images/0164122-see_screenshot2.png" title="see screenshot2.png" class="ScreenshotFullsize" />
+                                    

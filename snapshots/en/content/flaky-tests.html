@@ -1,0 +1,46 @@
+
+                                        <h1>Flaky tests</h1>
+                                        <p>A test is considered flaky if it passed after a retry, meaning on the first try it failed and then after one or more retries it passed. To read more about retries and how to set them up, read <a href="../../running-tests/the-command-line-cli/index.htm#failed-test-retries">here</a>.</p>
+                                        <div class="note">
+                                            <p>A flaky test becomes normal only after 10 consecutive passes or fails without retries.</p>
+                                        </div>
+                                        <p>Testim provides you with an easy way to find these flaky tests, and decide what will be their status.</p>
+                                        <div class="note">
+                                            <p>This is a PRO feature This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h2><a name="find-your-flaky-tests"></a>Find your flaky tests</h2>
+                                        <p>This feature is part of the <strong><a href="test-status.htm">Test Status</a></strong> feature. To use this feature, make sure you have turned on the <strong>Test Status</strong> feature in the Testim LABS settings.<br /> → <strong>To view your flaky tests:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Test List ⇒ Tests</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Filter</strong> button.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the <strong>Filter Test</strong> pane, under <strong>Show only flaky tests</strong>, select the Yes checkbox.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/af759d0-jan-28-2021_11-20-25.gif" title="Jan-28-2021 11-20-25.gif" class="ScreenshotFullsize" />
+                                        <p>The tests that passed on a re-run will appear with a yellow mark in the "Last Runs" column.</p>
+                                        <img src="images/03bc19a-untitled.png" title="Untitled.png" class="ScreenshotFullsize" />
+                                        <h2><a name="changing-flaky-tests-status"></a>Changing flaky tests status</h2>
+                                        <p>Based on the reason for the flaky test, you may want to consider changing its status. The following steps are recommended for each reason:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test is still in progress and requires additional work</strong>- in this case, if you want the test to keep running,  it is recommended to change the test status to <strong>"Evaluating"</strong>. After changing the status, the test will keep running but will not fail the CI/Scheduled run.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>There is a bug in your app</strong> - in this case, you should consider two options:</p>
+                                            </li>
+                                            <li>
+                                                <p>If you would like to fix the bug immediately - make sure the test has an <strong>"Active"</strong> status, so in case it fails, the entire run will fail. In the meantime keep working on fixing the bug in your app.</p>
+                                            </li>
+                                            <li>
+                                                <p>If would like to fix the bug later - in this case you should change the test status to <strong>"Quarantine"</strong>. The test will not run as part of your CI/Scheduler. After fixing the bug you can change the test status to either <strong>"Evaluating"</strong> or <strong>"Active"</strong>.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>In case you identified a bug in your app, it is also recommended to tag the failures as "Bug in app". To learn more about result tagging, see <a href="../../results/tag-remote-runs-failures.htm">here</a>.</p>
+                                        </div>
+                                    

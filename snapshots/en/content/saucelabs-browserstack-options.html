@@ -1,0 +1,116 @@
+
+                                        <h1>Test capabilities for Saucelabs &amp; BrowserStack in CLI</h1>
+                                        <p>Using the JSON file with defined capabilities you can send more configuration parameters to Saucelabs and BrowserStack. For example, if you are looking to run a test on a specific browser version and timezone:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a JSON file with the following:</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;"screenResolution": "2560x1600",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;"timeZone": "New_York"<br />}</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="2">
+                                                <p>In the CLI, add: <strong>--sauce-options  "&lt;aboveConfigFileName&gt;.json"</strong></p>
+                                            </li>
+                                        </ol>
+                                        <p>The capabilities can be used in the following use cases:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Control devices allocation</p>
+                                            </li>
+                                            <li>
+                                                <p>Control Appium version</p>
+                                            </li>
+                                            <li>
+                                                <p>Control auto alerts approval</p>
+                                            </li>
+                                            <li>
+                                                <p>Control data captured on grid for example</p>
+                                            </li>
+                                            <li>
+                                                <p>Disable video</p>
+                                            </li>
+                                            <li>
+                                                <p>Disable network logs</p>
+                                            </li>
+                                            <li>
+                                                <p>Custom test results mapping with build and project option caps</p>
+                                            </li>
+                                            <li>
+                                                <p>Control reset strategy</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="override-rules-for-a-capability-mobile"></a>Override rules for a capability (mobile)</h2>
+                                        <p>The JSON capabilities file settings overrides the following settings:</p>
+                                        <ul>
+                                            <li>
+                                                <p>CLI Flags (deviceName, osVersion)</p>
+                                            </li>
+                                            <li>
+                                                <p>Mobile Config</p>
+                                            </li>
+                                            <li>
+                                                <p>Default values such as: <span class="FileOrFilePath">autoGrantPermissions</span>, <span class="FileOrFilePath">AutoAcceptAlerts</span>, Disable video capturing.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>PlatformVersion capabilities <span class="FileOrFilePath">platformVersion</span> capability is validated and used to compute which Appium version should be used, for example if the client requested Appium version equals “1.22.2” with <span class="FileOrFilePath">platformVersion</span> equals “17.2” on IOS run, it will automatically use Appium 2 and throw a warning to the user about it (same way as <span class="FileOrFilePath">osVersion</span> from (mobile config /cli flag) logic).</p>
+                                        </div>
+                                        <h2><a name="saucelabs"></a>SauceLabs</h2>
+                                        <p><strong>For Web:</strong>
+                                        </p>
+                                        <p>Add to your CLI: <strong>--sauce-options  "config_saucelabs.json"</strong> Example to the file:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;"browserName": "Chrome",<br />&#160;&#160;"browserVersion": "latest",<br />&#160;&#160;"platformName": "Windows 10",<br />&#160;&#160;"sauce:options": {<br />&#160;&#160;&#160;&#160;&#160;&#160;"screenResolution": "1920x1080",<br />&#160;&#160;&#160;&#160;&#160;&#160;"extendedDebugging": true<br />&#160;&#160;}<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>Sauce lab options for params: <a href="https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options">https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options</a></p>
+                                        <p><strong>For mobile:</strong>
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <p>Use W3C format for Appium (without prefix) and saucelabs options.</p>
+                                            </li>
+                                        </ul>
+                                        <p><a href="https://saucelabs.com/resources/blog/appium-desired-capabilities-tutorial">Appium caps</a>
+                                        </p>
+                                        <p><a href="https://docs.saucelabs.com/mobile-apps/automated-testing/appium/appium-versions/#virtual-devices">Appium versions</a>
+                                        </p>
+                                        <p><a href="https://docs.saucelabs.com/dev/test-configuration-options/#mobile-app-appium-capabilities-sauce-specific--optional">Saucelabs options</a>
+                                        </p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />"deviceName": "Samsung Galaxy S10+",<br />"platformVersion": "12",<br />"autoGrantPermissions": false,<br />"sauce:options": {<br />&#160;&#160;&#160;&#160;"build": "build from json file",<br />&#160;&#160;&#160;&#160;"name": "test json file caps"<br />}<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="browserstack"></a>Browserstack</h2>
+                                        <p><strong>For web:</strong>
+                                        </p>
+                                        <p>Add to your CLI:  <strong>--browserstack-options "config_browserstack.json"</strong> All supported override parameters</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;&#160;&#160;"project": "my project",<br />&#160;&#160;&#160;&#160;"build": "build 4.5",<br />&#160;&#160;&#160;&#160;"browserstack.debug": false,<br />&#160;&#160;&#160;&#160;"browserstack.console": "info",<br />&#160;&#160;&#160;&#160;"browserstack.networkLogs": true,<br />&#160;&#160;&#160;&#160;"browserstack.video": false,<br />&#160;&#160;&#160;&#160;"browserstack.timezone": "New_York",<br />&#160;&#160;&#160;&#160;"browserstack.selenium_version": "3.5.2",<br />&#160;&#160;&#160;&#160;"browser_version": 61,<br />&#160;&#160;&#160;&#160;"resolution": "2048x1536"<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>BrowserStack options for params:</p>
+                                        <p><a href="https://www.browserstack.com/automate/capabilities">https://www.browserstack.com/automate/capabilities</a>
+                                        </p>
+                                        <p><strong>For mobile:</strong>
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <p>Use W3C capabilities format for Appium capabilities without the prefix</p>
+                                            </li>
+                                            <li>
+                                                <p>Use legacy (Wire JSON) format for BrowserStack capabilities.</p>
+                                            </li>
+                                        </ul>
+                                        <p><a href="https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs">Appium caps</a>
+                                        </p>
+                                        <p><a href="https://www.browserstack.com/app-automate/capabilities?tag=jsonwire">Browserstack options</a> JSON File Example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />// need to fix project and build (W3C format changed to projectName, buildName)<br />"project": "json-project-test",<br />"build": "json-build-test",<br />"platformVersion": "12",<br />"deviceName": " Google Pixel 7",<br />"browserstack.debug": false,<br />"browserstack.console": "info",<br />"browserstack.networkLogs": true,<br />"browserstack.video": false<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="caution">
+                                            <p>Browserstack certificate error If you're testing with devices that use Android version 13.0 or greater, your target devices may appear as though they are offline due to a certificate issue. For more information on how to resolve this issue, please <a href="https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues">review Browserstack's relevant documentation</a>.</p>
+                                        </div>
+                                    

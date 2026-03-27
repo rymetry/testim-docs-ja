@@ -1,0 +1,97 @@
+
+                                        <h1>Configuration File</h1>
+                                        <p>The configuration file is a common JS containing all the required parameters to run your test and/or test suite. It includes run hooks which can be used to setup the application backend and define parameters before/after a single test or all tests. The configuration file needs to export all properties in a JSON named <strong><em>config</em></strong>. Here is an example of a configuration file:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.config = {<br /><br />&#160;&#160;&#160;&#160;project: "&lt;your project ID&gt;",<br />&#160;&#160;&#160;&#160;token: "&lt;Your token&gt;",<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Specify which label you would like to run. All tests with the&#160;<br />&#160;&#160;&#160;&#160;// specified label will be executed<br />&#160;&#160;&#160;&#160;label: "sanity",<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Your Selenium grid<br />&#160;&#160;&#160;&#160;grid: "&lt;Your grid name&gt;",<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Override the base URL defined in the test in order to run it again on a different envinronment.<br />&#160;&#160;&#160;&#160;baseUrl: 'http://staging.example.com',<br /><br />&#160;&#160;&#160;&#160;// =====<br />&#160;&#160;&#160;&#160;// Hooks<br />&#160;&#160;&#160;&#160;// =====<br />&#160;&#160;&#160;&#160;// Testim provides several hooks you can use to interfere the test&#160;<br />&#160;&#160;&#160;&#160;// process in order to enhance it and build services around it.<br />&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Hook that gets executed before the suite starts<br />&#160;&#160;&#160;&#160;beforeSuite: function (suite) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;console.log("beforeSuite", suite);<br />&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Function to be executed before a test starts.<br />&#160;&#160;&#160;&#160;beforeTest: function (test) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;console.log("beforeTest", test);<br />&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Function to be executed after a test ends.<br />&#160;&#160;&#160;&#160;afterTest: function (test) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;console.log("afterTest", test);<br />&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;// Hook that gets executed after the suite has ended<br />&#160;&#160;&#160;&#160;afterSuite: function (suite) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;console.log("afterSuite", suite);<br />&#160;&#160;&#160;&#160;}<br />};</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>For the grid name, read <a href="../../integrations/grid-management/index.htm">Grid Management</a> how to set up your grid.</p>
+                                        </div>
+                                        <p>​</p>
+                                        <h1><a name="syntax"></a>Syntax</h1>
+                                        <p>The configuration file includes the following elements:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>CLI Flags</strong> - these flags provide instructions for running the tests. The CLI Flags in the Config file support all the properties described in the <a href="../the-command-line-cli/index.htm">CLI flags</a>.<br /></p>
+                                            </li>
+                                        </ul>
+                                        <p>The name structure of the property is slightly different - replace the hyphen(-) with a capital letter.<br /> For example: <span class="FileOrFilePath">--base-url</span> =&gt; <span class="FileOrFilePath">baseUrl</span>.</p>
+                                        <div class="note">
+                                            <p>When you need to send more than one value to a parameter, use an array.<br /> For example: <span class="FileOrFilePath">label: ["a" , "b"]</span></p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Config Hooks</strong> - hooks that can be used to setup the application backend and define parameters before/after a single test or all tests. See more details below.</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="config-hooks"></a>Config Hooks</h1>
+                                        <p>The Configuration File includes run hooks that can be used to setup the application backend and define parameters before/after a single test or all tests. Through the Config File it is possible to set the following hook types:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Before test - will run before the test</p>
+                                            </li>
+                                            <li>
+                                                <p>After test - will run after the test</p>
+                                            </li>
+                                            <li>
+                                                <p>Before Suite - will run before the suite</p>
+                                            </li>
+                                            <li>
+                                                <p>After Suite - will run after the suite</p>
+                                            </li>
+                                        </ul>
+                                        <p>For more about hooks, see <a href="../../advanced-editing/hooks.htm#creating-hooks-via-the-test-configuration">Hooks</a>. Here is an example of test data that is added to the <span class="FileOrFilePath">beforeSuite</span> hook. This test data will be the same across all the tests included in the execution:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.config = {<br />&#160;<br />&#160;&#160;beforeSuite: function (suite) {<br />&#160;&#160;&#160;&#160;console.log("beforeSuite", suite);<br />&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;"username": "David",<br />&#160;&#160;&#160;&#160;&#160;&#160;"password": 123<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;},<br />&#160;&#160;};</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="predefined-properties-in-config-hooks"></a>Predefined properties in Config Hooks</h2>
+                                        <p>The various config hooks include predefined properties that can be used to gather additional information about the test/suite. For example, you can print the value of the <span class="FileOrFilePath">projectId</span> property when using the Before Suite hook. For more information, see <a href="predefined-properties-in-config-file-hooks.htm">Predefined properties in config file hooks</a>.</p>
+                                        <h3><a name="using-the-beforetest-hook-to-get-a-list-of-labels-in-runtime"></a>Using the beforeTest hook to get a list of labels in runtime</h3>
+                                        <p>As part of the <span class="FileOrFilePath">beforeTest</span> hook in the config file, it is possible to define a parameter and populate it with a list of labels that were defined for the test.<br /> In the following example, we defined a parameter called <span class="FileOrFilePath">labels</span>. This parameter will contain the list of labels that were included in the specific test, by using the <span class="FileOrFilePath">allLabels</span> predefined parameter. The parameter can then be used anywhere where parameters are used. For example, in a <strong>Custom Step</strong> you can include code that defines that if the test was tagged with label <span class="FileOrFilePath">Games</span>, the step should be skipped. To learn more about using parameters, see <a href="../../advanced-editing/parameters/configuration-file-parameters.htm">Configuration File Parameters</a></p>
+                                        <br />
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>beforeTest: function(test) {<br />&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;labels: test.allLabels<br />&#160;&#160;&#160;&#160;}<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h3><a name="using-the-beforetest-hook-to-update-the-base-url-variable"></a>Using the beforeTest hook to update the base-url variable</h3>
+                                        <p>As part of the <span class="FileOrFilePath">beforeTest</span> hook in the config file, it is possible to get the base-url of a test and to update the base-url variable with an updated value.<br /> In the following example, we get the current test base URL and then update the test base URL with a different value.<br /> To learn more about using parameters, see <a href="../../advanced-editing/parameters/configuration-file-parameters.htm">Configuration File Parameters</a></p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.config = {<br />&#160;&#160;&#160;&#160;// Function to be executed before a test starts.<br />&#160;&#160;&#160;&#160;async beforeTest(test) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;const baseUrl = test.config.baseUrl; // Get the current test base URL.<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;const randomAddress = await getRandomAddress();<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;test.config.baseUrl = `${baseUrl}${randomAddress}`; // Update the test base URL using a manipulation on the existing base URL.<br />&#160;&#160;&#160;&#160;}<br />};</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="global-exports-parameters"></a>Global exports parameters</h2>
+                                        <p>In "afterSuite" function you can use exports global parameters exported in your run.<br /></p>
+                                        <p><strong>Syntax</strong>: suite.exportsGlobal.&lt;param_name&gt;<br /></p>
+                                        <p>Read more about exports global parameters <a href="../../advanced-editing/parameters/exports-parameters.htm">here</a>.</p>
+                                        <br />
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>exports.config = {<br />&#160;&#160;&#160;&#160;// Function to be executed before a test starts.<br />&#160;&#160;&#160;&#160;async beforeTest(test) {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;const baseUrl = test.config.baseUrl; // Get the current test base URL.<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;const randomAddress = await getRandomAddress();<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;test.config.baseUrl = `${baseUrl}${randomAddress}`; // Update the test base URL using a manipulation on the existing base URL.<br />&#160;&#160;&#160;&#160;}<br />};</code></pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h1><a name="running-a-test-using-the-config-file"></a>Running a Test Using the Config File</h1>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create your configuration file (e.g. testimConfig.js)</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Pass it to the <a href="../the-command-line-cli/index.htm">Command Line (CLI) runner</a> as a parameter:</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Make sure to indicate the path to the file if needed.</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>testim -c "testimConfig.js"</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="4">
+                                                <p>If you want to override one of the values in the configuration file, simply pass it explicitly to the CLI, like this:</p>
+                                            </li>
+                                        </ol>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim -c "testimConfig.js" --label "nightly"</code></pre>
+                                            </div>
+                                        </div>
+                                    

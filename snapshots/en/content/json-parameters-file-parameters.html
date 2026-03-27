@@ -1,0 +1,33 @@
+
+                                        <h1>JSON Parameters File Parameters</h1>
+                                        <p>Using a <strong>JSON Parameters File</strong>, you can pass parameters to test runs. This method allows you to define dynamic values inside your test which vary by your test environment. For example, you can set different login credentials (username and password) when you test locally and when testing in your CI. The JSON Parameters File, which defines parameters, is created and then when running the test you can add an argument to the command that calls the JSON Parameters Files. The CLI command will pass the parameters to the tests that are included in the run.</p>
+                                        <h2><a name="parameter-scope"></a>Parameter scope</h2>
+                                        <p>The scope of the defined parameter covers all the tests in a single run (execution).</p>
+                                        <h2><a name="defining-parameters-in-a-json-parameters-file"></a>Defining parameters in a JSON Parameters File</h2>
+                                        <p>Create a JSON File in which you define the desired parameters like the following example:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>{<br />&#160;&#160;"username": "david",<br />&#160;&#160;"password": "123"<br />}</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="using-the-parameters-in-the-cli"></a>Using the parameters in the CLI</h2>
+                                        <p>After defining the JSON Parameters File, you can pass it to <a href="../../running-tests/the-command-line-cli/index.htm">Testim CLI</a> as an argument:  <strong>--params-file</strong> followed by the file name.</p>
+                                        <div class="note">
+                                            <p>The string path that is set in the <span class="FileOrFilePath">params-file</span> path must be a relative path, and not a full path.</p>
+                                        </div>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --label "&lt;YOUR LABEL&gt;" --token "&lt;YOUR ACCESS TOKEN&gt;" --project "&lt;YOUR PROJECT ID&gt;" --grid "&lt;Your grid name&gt;"&#160;<br />--params-file &lt;PARAM FILE NAME e.g. params-file.json&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <h2><a name="using-a-parameters-file-in-javascript-js-format"></a>Using a parameters file in JavaScript (JS) format</h2>
+                                        <p>In addition to using JSON format for your parameters file, you can also use a JavaScript file to export parameter values. This method provides dynamic parameter management within the test configuration. To do this, create a JS file (for example, param-file.js) with the following syntax:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>module.exports = {<br />&#160;&#160;&#160;&#160;username: "admin"<br />};</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>This syntax exports your parameters explicitly for use in JavaScript files. When running your tests, specify the JS file as the parameter file by using the following command:</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>testim --label "&lt;YOUR LABEL&gt;" --token "&lt;YOUR ACCESS TOKEN&gt;" --project "&lt;YOUR PROJECT ID&gt;" --grid "&lt;Your grid name&gt;"&#160;<br />--params-file &lt;PARAM FILE NAME e.g. params-file.js&gt;</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>At this stage, you can use the parameters from within the relevant tests using the <a href="parameters-in-custom-javascript-steps.htm">Step Properties Panel Parameters</a>.</p>
+                                    

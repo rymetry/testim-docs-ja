@@ -1,0 +1,32 @@
+
+                                        <h1>Configuring Data-driven Tests Using Data From an External Source</h1>
+                                        <p>Test data from external sources (e.g CSV, DB etc.) can be passed to one or multiple tests using the <a href="../../running-tests/configuration-file-run-hooks/index.htm">config file</a> and then running the test using the CLI, while adding a flag to use the config file in this run. → <strong>To add external test data to a config file:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a config file or edit an existing one.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Install the npm package csvtojson in order to use this functionality. See more details here: <a href="https://www.npmjs.com/package/csvtojson">https://www.npmjs.com/package/csvtojson</a>. The csvtojson npm package should be included in the Config file as shown below (<span class="FileOrFilePath">const csvtojson = require("csvtojson"</span>)</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Add a JavaScript function that loads data from an external source into JSON objects in the beginning of the config file (<span class="FileOrFilePath">loadCsvFile(path)</span>).</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>// JS function that loads data from CSV into Json objects<br />const csvtojson = require("csvtojson");<br />function loadCsvFile(path) {<br />&#160;&#160;&#160;&#160;return new Promise((resolve) =&gt; {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return csvtojson()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;.fromFile(path)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;.then(resolve, err =&gt; {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;console.error("failed to read csv file", err.message);<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;resolve([]);<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;});<br />&#160;&#160;&#160;&#160;});<br />}</code></pre>
+                                                </div>
+                                            </div>
+                                            <li value="4">
+                                                <p>Use <span class="FileOrFilePath">overrideTestData</span> in the <span class="FileOrFilePath">beforeSuite</span> to pass test names and their data sets as shown below.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>beforeSuite: function () {<br />&#160;&#160;&#160;&#160;return Promise.all([loadCsvFile('./data.csv'),<br />&#160;&#160;&#160;&#160;loadCsvFile('./data2.csv'), loadCsvFile('./data3.csv')])<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;.then(([jsonObj, jsonObj2, jsonObj3]) =&gt; {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;return {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;BEFORE_SUITE: "BEFORE_SUITE",<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;overrideTestData: {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 3": jsonObj,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 4": jsonObj2,&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 5": jsonObj3,&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// You can also pass static datasets to tests&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"Test 6": {name: "ryan"}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;});<br />} //add comma here if there are more functions after beforeSuite</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="note">
+                                            <p>Test data provided in the beforeSuite() hook in the config file overrides test data provided in the UI.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>In the CSV file the first row (header row) will contain the data keys and will be used as parameter names, and each row afterward will contain a dataset of values.</p>
+                                        </div>
+                                    

@@ -1,0 +1,42 @@
+
+                                        <h1>Dependencies and ordering of tests</h1>
+                                        <p>Before I begin to explain about dependencies between tests, I would like to emphasize why you do not want dependencies between tests. Best practice is to make the tests as isolated as possible.<br /> Creating a dependency between tests will result:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Reduce speed - This prevents you from running tests in parallel. E.g. Your test suite might complete in hours rather than minutes.</p>
+                                            </li>
+                                            <li>
+                                                <p>Hiding bugs - Since not only the test points to the problem will fail, All the depended tests would also fail, hiding bugs that they might find.</p>
+                                            </li>
+                                        </ul>
+                                        <p>After saying that, let's see what you can do.</p>
+                                        <h3><a name="test-plans"></a><strong>Test Plans</strong>
+                                        </h3>
+                                        <p>Test plans will serve you best when you need dependencies for setting up your environment before you start testing the application, and a teardown after you finish running the tests. Read more about Test Plans and how to use it <a href="test-plans.htm">here</a>.</p>
+                                        <h3><a name="configuration-file"></a><strong>Configuration file</strong>
+                                        </h3>
+                                        <p>Use configuration files when:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>You need to perform actions that need more permissions than when running in the browser (e.g. reset DB to some state).</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>You need to pass parameters to your tests which need to be calculated dynamically (e.g. create a new user).</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Run actions before/after each test (as opposed to beforeAll/afterAll).</p>
+                                            </li>
+                                        </ol>
+                                        <p>You can read more on Configuration Files <a href="../running-tests/configuration-file-run-hooks/index.htm">here</a>.<br /> If you need to pass a parameter from the configuration file to your test you can read about it <a href="../advanced-editing/parameters/index.htm">here</a>.</p>
+                                        <h3><a name="running-order"></a><strong>Running Order</strong> </h3>
+                                        <p>Although we definitely prefer to endorse the best practice of isolated tests, we did leave a way to organize the execution order. So if you really want to run the tests in a certain order, and you do not want to run in parallel you can use one of the following methods:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p><strong>Test Suite</strong> - you can create a Test suite where you can set the order in which you want to run the tests. Read more about Test suites <a href="test-suites.htm">here</a>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p><strong>Labels</strong> - We sort the tests by name (lexicographic), so you can add prefix numbers to your tests to make Testim run in the order you want.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>E.g. '1 - my test', '2 - my second test'<br /> Try to leave gaps between the numbers in case you need to add future tests in the middle.<br /> E.g. '100 - test1', '110 - test1' etc. to the test names.</p>
+                                    

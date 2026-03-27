@@ -1,0 +1,41 @@
+
+                                        <h1>Dynamic text input</h1>
+                                        <p>After recording a test that includes a <strong>Set text</strong> step (for entering text), you can edit the static text you typed during the recording and replace it with a dynamic string. This string can contain a JavaScript expression and/or a parameter which was previously defined. For more advanced applications of dynamic text, see <a href="data-driven-testing/index.htm">Data-driven testing</a>.</p>
+                                        <h2><a name="using-a-javascript-expression-to-set-text"></a>Using a JavaScript expression to set text</h2>
+                                        <p>→ <strong>To set text using a JavaScript expression:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>Set text</strong> step you wish to modify (e.g. Set username), and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/29a0765-testim_229a.png" title="Testim 229a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/dab7248-testim_230_r.png" title="Testim 230_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Text to assign</strong> field, replace the current static text with a JavaScript expression.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>For example, to set a unique user name value in an input field, you can set the value to this expression: <span class="FileOrFilePath">'user' + Date.now()</span> . In this expression the string ‘user’ is followed by a dynamic number of milliseconds elapsed since January 1, 1970, 00:00:00 UTC.<br /> The <strong>Text to assign</strong> field can include text strings (surrounded by single or double quotes), JavaScript expressions, previously created variables, or a combination (connected with plus symbols).</p>
+                                        <div class="note">
+                                            <p>Variables and JavaScript expressions should NOT be surrounded by quotes.</p>
+                                        </div>
+                                        <p>When the test is run, the text set in the field on the screen is the evaluated JavaScript expression (e.g. <span class="FileOrFilePath">user1619013809723</span>).</p>
+                                        <img src="images/b3181bc-set_text.gif" title="set_text.gif" class="ScreenshotFullsize" />
+                                        <h2><a name="using-a-parameter-to-set-text"></a>Using a parameter to set text</h2>
+                                        <p>In order to set a parameter as text, it first must have already been created in another step or test. For more information, see <a href="parameters/index.htm">Parameters</a>. → <strong>To set text using a parameter:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>Set text</strong> step you wish to modify (e.g. Set username), and click on the <strong>Show Properties</strong> (:fa-cog:) icon.</p>
+                                            </li>
+                                            <img src="images/f4b65c5-testim_231a.png" title="Testim 231a.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <img src="images/6dc9ca3-testim_232_r.png" title="Testim 232_r.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Text to assign</strong> field, replace the current static text with a previously created parameter.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The <strong>Text to assign</strong> field can include text strings (surrounded by single or double quotes), JavaScript expressions, previously created variables, or a combination (connected with plus symbols).</p>
+                                        <div class="note">
+                                            <p>Variables and JavaScript expressions should NOT be surrounded by quotes.</p>
+                                        </div>
+                                        <p>When the test is run, the text set in the field on the screen is the value of your parameter.</p>
+                                    

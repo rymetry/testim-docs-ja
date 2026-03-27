@@ -1,0 +1,100 @@
+
+                                        <h1>Best practices for handling logins</h1>
+                                        <p>When your app requires a login, you need to consider the following:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Tests should work locally and remotely.</p>
+                                            </li>
+                                            <li>
+                                                <p>Enable different credentials for different users/environments.</p>
+                                            </li>
+                                            <li>
+                                                <p>Deal with a situation where you are already logged in.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="steps-in-creating-a-good-login-process"></a>Steps in creating a good login process</h2>
+                                        <h3><a name="create-a-new-test"></a>Create a new test</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Start a new test.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Record the steps of your login process.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Run the test to see if it works.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Save.</p>
+                                            </li>
+                                        </ol>
+                                        <p>Typically, the steps in the login process will include:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click sign in button</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Enter username</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Enter password</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click log in</p>
+                                            </li>
+                                        </ol>
+                                        <p>If this is your first test, use this <a href="../getting-started/creating-your-first-codeless-test.htm">guide</a> to help you.</p>
+                                        <img src="images/546ac11-login_1.gif" title="login_1.gif" class="ScreenshotFullsize" />
+                                        <h3><a name="run-in-incognito-mode"></a>Run in Incognito mode</h3>
+                                        <p>Running in incognito mode can be very useful when creating the login process.<br /> When you run in incognito mode, you start with a clean browser every time i.e. without cookies, without a local storage, and the browser does not remember you. Learn here how to run in an incognito mode <a href="../running-tests/run-in-incognito.htm">here</a>.</p>
+                                        <h3><a name="group-your-steps"></a>Group your steps</h3>
+                                        <p>Grouping your login steps will allow reuse of these steps for the other tests.<br /> Learn how to group your login steps <a href="../editing-tests/groups/index.htm">here</a>. Note: Make sure you give your group a meaningful name.</p>
+                                        <img src="images/4dfa1e2-oct-20-2020_11-42-25.gif" title="Oct-20-2020 11-42-25.gif" class="ScreenshotFullsize" />
+                                        <h3><a name="deal-with-a-situation-where-you-are-already-logged-in"></a>Deal with a situation where you are already logged in.</h3>
+                                        <p>For this, we'll add a condition, which determines at run-time whether the step should be executed or not.<br /> E.g. the test should work when you're already logged and also when login is required. These are a few options for common conditions in the login scenario:</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Check if a login button is visible - use element condition.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Check the current URL if it matches a login page - use custom condition.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/535c34a-oct-20-2020_11-47-18.gif" title="Oct-20-2020 11-47-18.gif" class="ScreenshotFullsize" />
+                                        <p>Learn about how to add <a href="../editing-tests/conditions/index.htm">conditions</a>.</p>
+                                        <h3><a name="add-parameters"></a>Add parameters</h3>
+                                        <p>If we want to make this group more generic and allow for each reuse of the group to use different certificates, we would like to add parameters for the username and password.</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to the group properties panel (select the group and open the property panel).</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Add two JavaScript parameters - username, password</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Set the values for this parameters</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Enter the group steps.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Change the set username step, and set password step and put these parameters instead of the constants values.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/cfbed43-oct-20-2020_11-51-43.gif" title="Oct-20-2020 11-51-43.gif" class="ScreenshotFullsize" />
+                                        <p>Learn more about adding <a href="../advanced-editing/parameters/parameters-for-groups.htm">parameters to a group</a>. Now, whenever you use this group, you can set up different credentials.</p>
+                                        <h3><a name="clean-your-test"></a>Clean your test</h3>
+                                        <p>When we create a test, some of the steps that we recorded as a manual user may not be relevant to the automatic test. For example, pressing "Tab" between text fields, clicking on a text field to input data. These steps can be deleted.</p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Clear unnecessary steps. <a href="../editing-tests/editing-your-tests/index.htm">Learn more</a> on how to delete steps.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Run again to make sure you have not deleted anything you need.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Save again.</p>
+                                            </li>
+                                        </ol>
+                                        <p>Be careful, in some applications these steps are required because they do more than just focusing on the field.</p>
+                                    

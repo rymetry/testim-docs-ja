@@ -1,0 +1,80 @@
+
+                                        <h1>JS Code Debugging</h1>
+                                        <p>Some steps in Testim (see list of supported steps below) offer the ability to use JS code within the step, which is entered into the Function Editor. When the test is executed, this code is executed on the AUT, which runs on the web browser. Testim allows you to debug the JS code using the standard Chrome DevTools.  As part of this process the Chrome DevTools is opened in the AUT browser window, specifically pointing to the step's code. So users can utilize the debugging capabilities provided by Chrome DevTools. Once the debugging is complete, the session seamlessly returns focus back to the Testim Editor.</p>
+                                        <h2><a name="supported-steps"></a>Supported steps</h2>
+                                        <ul>
+                                            <li>
+                                                <p>Add custom action</p>
+                                            </li>
+                                            <li>
+                                                <p>Add custom validation</p>
+                                            </li>
+                                            <li>
+                                                <p>Add custom wait for</p>
+                                            </li>
+                                            <li>
+                                                <p>Validate email</p>
+                                            </li>
+                                            <li>
+                                                <p>Add network validation</p>
+                                            </li>
+                                            <li>
+                                                <p>API validate</p>
+                                            </li>
+                                            <li>
+                                                <p>API action</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="debugging-the-js-code-in-a-supported-step"></a>Debugging the JS Code in a supported step</h2>
+                                        <p>The procedure below shows how to debug the JS code inside a previously created Custom Action step in an existing test, but the same applies to all supported steps. → <strong>To debug the JS code:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Insert a breakpoint right before the <strong>Custom Action</strong> step. This can also be virtual breakpoint. for example, a virtual breakpoint  after a 'step over'.<br /></p>
+                                            </li>
+                                            <img src="images/26e4913-pause.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Run the test locally in debug mode.<br /></p>
+                                            </li>
+                                            <img src="images/3a7d8f6-runindebug.jpg" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>The test is run, while displaying the debugging controls.</p>
+                                            <li value="3">
+                                                <p>When the test reaches the breakpoint, click the <strong>Step Into</strong> button on the debugging controls menu.<br /></p>
+                                            </li>
+                                            <img src="images/0be9e49-stepinto.jpg" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>The following notification appears:<br /></p>
+                                            <img src="images/18b8bde-codedebugging.jpg" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click <strong>Go To AUT</strong>.<br /></p>
+                                            </li>
+                                            <img src="images/775b444-gotoaut.jpg" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>The AUT is displayed with a <strong>Code Debugging</strong> message.<br /></p>
+                                            <img src="images/aed5a6a-debugging.jpg" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>On the AUT's web browser open the <strong>Chrome Dev Tools (Win - 'Ctrl + Shift + I' &amp; 'F12' and 'Inspect' from browser right click; Mac - 'Ctrl + Option + I' and 'Inspect' from browser right click)</strong>.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>On the message itself, click the <strong>DEVTOOL IS OPEN</strong> button. If you leave the <strong>Don't show again in this session</strong> checkbox selected, you will not have to perform this step during this session, which means for other steps in the same test.<br /></p>
+                                            </li>
+                                            <img src="images/5fb0ee6-devtooldopen.jpg" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>The developer tool displays the code-level breakpoint just before the added JS code, while displaying a “debugger” line right before the JS code from the step.</p>
+                                            <li value="7">
+                                                <p>At this point you can use the Chrome Devtools debugging capabilities to debug the JS code.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>After finishing debugging the JS code, on the AUT, click the <strong>Result Script Execution</strong> button.<br /></p>
+                                            </li>
+                                            <img src="images/d025aa1-resumescriptexecution.jpg" class="ScreenshotFullsize" />
+                                            <br />
+                                            <p>The following message appears:<br /></p>
+                                            <img src="images/f4a1bde-message.jpg" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>Click the <strong>Go back to the editor</strong> link.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>Focus will go back to the Testim editor, while displaying a virtual breakpoint after the debugged step.  At this point you can proceed with the debugging process or save the test with the changes.<br /></p>
+                                        <img src="images/80326c6-virtual.jpg" class="ScreenshotFullsize" />
+                                    

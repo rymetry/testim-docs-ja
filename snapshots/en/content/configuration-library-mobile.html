@@ -1,0 +1,228 @@
+
+                                        <h1>Configuration Library - Mobile</h1>
+                                        <p>A Mobile Configuration determines the system specifications used to run the test. If you intend to run the test locally then the configuration should match your local environment. If you intend to run the test on a remote (grid) environment, then you will need to select a relevant Mobile Configuration, which specifies the attributes of the mobile device that will be used/simulates during the test run.</p>
+                                        <h2><a name="view-existing-configurations"></a>View Existing Configurations</h2>
+                                        <p>Within a mobile project all mobile configurations are stored within the Configuration Library. The following information is displayed for each configuration:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Name</strong> - name given to identify the configuration</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Grid</strong> - the grid used for the configuration</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Type</strong> - the configuration type used (static/dynamic)</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Rules</strong> - the rules set for the configuration:</p>
+                                            </li>
+                                            <li>
+                                                <p>For static allocation configurations - the number of devices selected.</p>
+                                            </li>
+                                            <li>
+                                                <p>For dynamic allocation configurations - the device selection rules that have been set.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Step Timeout</strong> - The time laps which causes Testim to register a fail for a test step.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Step Delay</strong> - the delay between executing test steps.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/9b3c88f-image_12.png" class="ScreenshotFullsize" />
+                                        <h2><a name="checking-available-devices-for-a-specific-configuration"></a>Checking available devices for a specific configuration</h2>
+                                        <p>You can view which specific devices have been allocated to a mobile configuration without opening the configuration details. → <strong>To view available devices in a saved mobile configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Select the specific mobile configuration in the Configuration Library. Click the <strong>Check available devices button</strong> from the action menu.<br /></p>
+                                            </li>
+                                            <img src="images/73aa8b5-image_9.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Testim will display the list of devices allocated to that configuration.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/31e58f9-image_10.png" class="ScreenshotFullsize" />
+                                        <h2><a name="adding-a-new-configuration"></a>Adding a New Configuration</h2>
+                                        <p>→ <strong>To add a new configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to the <strong>Runs &gt; Configuration Library</strong> and click the <strong>Create New</strong> button.<br /></p>
+                                            </li>
+                                            <img src="images/f184ba9-image_11.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>In the <strong>Configuration Name</strong> field, enter a name for the configuration,.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Under <strong>Choose a grid</strong>, select a grid from the drop-down menu. If you don't see your desired grid, you may need to add your grid to Testim, See <a href="../integrations/grid-management/index.htm">Grid management</a> for more information.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Select a <strong>Configuration Type</strong>:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>static allocation</strong> - manually select from the list of available devices (from the selected grid), which are displayed at the bottom.<br /></p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/1436e57-image_13.png" class="ScreenshotFullsize" />
+                                            <ul>
+                                                <li>
+                                                    <p><strong>dynamic allocation</strong> - create rules that allow Testim to dynamically select mobile devices from your selected grid account to be used in the configuration based on the rules criteria defined in the Rules section below. After selecting this option, skip to <strong>step 6</strong> below.<br /></p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/669b391-image_14.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>If you have selected the <strong>Static Allocation</strong> option, under the <strong>Devices</strong> section, select the checkboxes of the specific devices that you want to use in your tests. From this list of devices Testim will select the first device that is made available by the grid provider from the pool of devices that were selected.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Note Even if you have selected multiple devices, Testim will select only one device to be used during the test execution. This device is the first device that is made available by the grid provider from the pool of devices that were selected.</p>
+                                            </div>
+                                            <div class="note">
+                                                <p>In BrowserStack and SauceLabs it is possible to select one device only.</p>
+                                            </div>
+                                            <li value="6">
+                                                <p>If you selected the <strong>Dynamic Allocation</strong> option, under <strong>Rules</strong>,  define a rule to dynamically select devices that match the criteria by doing the following:</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>Under <strong>Field</strong>, select the criteria to filter the devices. For example, select <strong>OS Version</strong> to filter by the operating system version. The list of criteria may slightly differ for different grid providers, based on the features provided by that specific provider.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>Under <strong>Operator</strong>, select the operator used to filter the devices. For example, select "greater than" to select devices whose OS version is greater than the value in the operand (e.g., greater than 10). In some cases regex filter can be applied by selecting the regex option when available.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>Under <strong>Operand</strong>, enter the operand value of the rule. For regex rules, enter the regex expression.<br /></p>
+                                            </li>
+                                            <p>The list of devices from the selected grid that currently match the rules will be displayed in the <strong>Devices</strong> section below. When running tests with a dynamic allocation configuration, Testim will search for the first available device from the set of devices that meet the rule criteria and use that device for the test. If the grid provider updates a device on the grid, the device will automatically become available or unavailable in the configuration based on whether it continues to meet the rule.</p>
+                                            <div class="note">
+                                                <p>Note: For more information on SauceLabs specific rules, see <a href="https://docs.saucelabs.com/dev/test-configuration-options/index.html">SauceLabs Test Configuration Options</a> and <a href="https://saucelabs.com/products/platform-configurator">Sause Labs Platform Configurator</a>. For more inforamtion on BrowserStack specifc rules, see <a href="https://www.browserstack.com/docs/app-automate/appium/dynamic-device-allocation">BrowserStack Select Device Using Regex</a>.</p>
+                                            </div>
+                                            <div class="note">
+                                                <p>Note Even if the rule matches multiple devices, Testim will select only one device to be used during the test execution. This device is the first available device from the set of devices that meet the rule criteria.</p>
+                                            </div>
+                                            <li value="10">
+                                                <p>Click the <strong>Advanced</strong> link near the bottom to define additional advanced parameters to your configuration. Click the <strong>Back</strong> button to return to the main configuration settings.</p>
+                                            </li>
+                                            <li value="11">
+                                                <p>In the <strong>General</strong> section, optionally modify the following settings:</p>
+                                            </li>
+                                            <li value="12">
+                                                <p>Step timeout - the time lapse in milliseconds which causes Testim to register a fail for a test step.</p>
+                                            </li>
+                                            <li value="13">
+                                                <p>Step delay - the delay in milliseconds between executing test steps.</p>
+                                            </li>
+                                            <li value="14">
+                                                <p>Setup step timeout - the delay in milliseconds before executing the Setup step of the test.</p>
+                                            </li>
+                                            <li value="15">
+                                                <p>In the <strong>Before/After hooks</strong> section, modify the settings as desired. For more information, see <a href="../advanced-editing/hooks.htm">Hooks</a>.<br /></p>
+                                            </li>
+                                            <img src="images/9afddd9-image_16.png" class="ScreenshotFullsize" />
+                                            <li value="16">
+                                                <p>Click the <strong>Add</strong> button to create the new mobile configuration.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/1e95b69-image_15.png" class="ScreenshotFullsize" />
+                                        <h2><a name="using-a-mobile-configuration-to-execute-a-test"></a>Using a Mobile Configuration to Execute a Test</h2>
+                                        <p>Every test has its own default configuration accessible from the <strong>Properties</strong> panel of the test's Setup step. By default, the <strong>Device Name</strong> setting will be "Any device" and the <strong>OS Version</strong> setting will be "Any version". According to this settings, Testim will pick the first available device on the selected grid. The configuration parameters that are set in the test's default configuration will apply unless the test is run with a different test configuration.</p>
+                                        <div class="note">
+                                            <p>When the test is run in the CLI, you can override the default configuration by specifying a new test configuration in the run command, see <a href="../running-tests/the-command-line-cli/index.htm#test-config">Command Line Interface</a>.</p>
+                                        </div>
+                                        <h2><a name="cloning-renaming-modifying-and-deleting-test-configurations"></a>Cloning, renaming, modifying and deleting test configurations</h2>
+                                        <h3><a name="cloning-a-test-configuration"></a>Cloning a test configuration</h3>
+                                        <p>→ <strong>To clone a test configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Configuration Library</strong> is shown.</p>
+                                            <li value="2">
+                                                <p>Click on the row of the test configuration you wish to clone.<br /></p>
+                                            </li>
+                                            <p>Context tools are shown.</p>
+                                            <li value="3">
+                                                <p>Click the <strong>Clone</strong> icon.</p>
+                                            </li>
+                                            <img src="images/1e505f5-image.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, you can right-click the row, and select <strong>Clone</strong>.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>In the <strong>Name</strong> field, enter a name for the cloned configuration.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>Clone</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The configuration is cloned and is shown in the <strong>Configuration Library</strong>.</p>
+                                        <h3><a name="renaming-a-test-configuration"></a>Renaming a test configuration</h3>
+                                        <p>→ <strong>To rename a test configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the main menu, navigate to <strong>Runs &gt; Configuration List</strong>.</p>
+                                            </li>
+                                            <p>The <strong>Configuration Library</strong> is shown.</p>
+                                            <li value="2">
+                                                <p>Click on the row of the test configuration you wish to rename.<br /></p>
+                                            </li>
+                                            <p>Context tools are shown.</p>
+                                            <li value="3">
+                                                <p>Click the <strong>Rename</strong> icon.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can right-click the row, and select <strong>Rename</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Edit Name</strong> settings are shown.</p>
+                                            <img src="images/b9a1933-image_1.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In the <strong>New name</strong> field, enter a new name for this configuration.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click <strong>OK</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The configuration is renamed.</p>
+                                        <h3><a name="modifying-a-test-configuration"></a>Modifying a test configuration</h3>
+                                        <p>→ <strong>To modify a test configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the main menu, navigate to <strong>Runs &gt; Configuration List</strong>.</p>
+                                            </li>
+                                            <p>The <strong>Configuration Library</strong> is shown.</p>
+                                            <li value="2">
+                                                <p>Double-click on the row of the test configuration you wish to modify.<br /></p>
+                                            </li>
+                                            <p>The <strong>Edit Config</strong> settings are shown.</p>
+                                            <img src="images/4dabcb0-image_3.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Modify the basic and advanced settings based on the instructions in the <strong>Adding a new configuration</strong> section above.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Click <strong>Change</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The configuration is modified.</p>
+                                        <h3><a name="deleting-a-test-configuration"></a>Deleting a test configuration</h3>
+                                        <p>→ <strong>To delete a test configuration:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the left menu, navigate to <strong>Runs &gt; Configuration List</strong>.</p>
+                                            </li>
+                                            <p>The <strong>Configuration Library</strong> is shown.</p>
+                                            <li value="2">
+                                                <p>Click on the row of the test configuration you wish to delete.<br /></p>
+                                            </li>
+                                            <p>Context tools are shown.</p>
+                                            <li value="3">
+                                                <p>Click the <strong>Delete</strong> icon.<br /></p>
+                                            </li>
+                                            <img src="images/138a8ac-image_2.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Alternatively, you can right-click the row, and select <strong>Delete</strong>.</p>
+                                            </div>
+                                            <p>A confirmation dialogue is shown.</p>
+                                            <li value="4">
+                                                <p>Click <strong>Delete</strong>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>The configuration is removed from the <strong>Configuration Library</strong>.</p>
+                                    

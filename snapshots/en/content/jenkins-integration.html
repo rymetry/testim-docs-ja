@@ -1,0 +1,64 @@
+
+                                        <h1>Jenkins integration</h1>
+                                        <img src="images/74d3ef8-tcyedosjrgo8aagv6sqs_jenkins-logo.png" title="tCyedoSJRGO8AAGv6sqs_jenkins-logo.png" class="ScreenshotFullsize" />
+                                        <p>In order to integrate your tests with Jenkins, first, you need to have<br /> node.js (any of the LTS/supported versions of Node.js.) installed on the Jenkins machine or one of its worker machines.</p>
+                                        <h2><a name="now-just-follow-these-steps"></a>Now, just follow these steps:</h2>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Create a New item in Jenkins:</p>
+                                            </li>
+                                            <img src="images/56a9e41-96injt2yrvirwuogwlgw_jenkins_new_item.png" title="96INjt2YRViRwuogwLgW_jenkins_new_item.PNG" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Enter job name (e.g. "Testim Tests"), and choose "Freestyle project" and click "OK":</p>
+                                            </li>
+                                            <img src="images/ba919cf-qcxxosswt4uyjqarhehr_jenkins_freestyle_job.png" title="QCXXOsSWT4uYJqaRhEHR_jenkins_freestyle_job.PNG" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Add execute step</p>
+                                            </li>
+                                        </ol>
+                                        <h3><a name="linux"></a>Linux:</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Add "Execute Shell" step:</p>
+                                            </li>
+                                            <img src="images/5253260-ms0qpoj5rymckmlpfktp_jenkins_execute_shell.png" title="ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Set the command with the appropriate parameters, as described in the <a href="../../running-tests/the-command-line-cli/index.htm">CLI page</a>.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>Here is the basic script template, containing the first part that makes sure you have the latest npm package, and the CLI command itself (no sudo required)</p>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>mkdir -p "${WORKSPACE}/.npm-packages"<br />prefix=${WORKSPACE}/.npm-packages<br />NPM_PACKAGES="${WORKSPACE}/.npm-packages"<br />export PATH="$PATH:$NPM_PACKAGES/bin"<br />export NODE_PATH="$NODE_PATH:$NPM_PACKAGES/lib/node_modules"<br />npm config set prefix ${WORKSPACE}/.npm-packages<br />npm install -g @testim/testim-cli<br /><br />testim --label "&lt;YOUR LABEL&gt;" §§§LINEBREAK§§§<br />--token "&lt;YOUR ACCESS TOKEN&gt;" §§§LINEBREAK§§§<br />--project "&lt;YOUR PROJECT ID&gt;" §§§LINEBREAK§§§<br />--grid "&lt;Your grid name&gt;"&#160;&#160;§§§LINEBREAK§§§<br />--report-file test-results/testim-tests-$BUILD_NUMBER-report.xml</code></pre>
+                                            </div>
+                                        </div>
+                                        <img src="images/ff81d47-file1488700845402.png" class="ScreenshotFullsize" />
+                                        <p>Jenkins Execute Shell Command &lt;/Image&gt;</p>
+                                        <p><strong>Note:</strong> For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                        <h3><a name="windows"></a>Windows:</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Add "Execute Windows batch command" step:</p>
+                                            </li>
+                                            <img src="images/20a3651-file1488700749415.png" title="File1488700749415.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Set the command with the appropriate parameters, as described in the <a href="../../running-tests/the-command-line-cli/index.htm">CLI page</a>.<br /></p>
+                                            </li>
+                                            <p>Here is the basic script template, containing the first part that makes sure you have the latest npm package, and the CLI command itself:</p>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>npm install -g @testim/testim-cli<br /><br />testim --label "&lt;YOUR LABEL&gt;" ^<br />--token "&lt;YOUR ACCESS TOKEN&gt;" ^<br />--project "&lt;YOUR PROJECT ID&gt;" ^<br />--grid "&lt;Your grid name&gt;"&#160;&#160;^<br />--report-file test-results/testim-tests-$BUILD_NUMBER-report.xml</code></pre>
+                                                </div>
+                                            </div>
+                                            <img src="images/05fb4d0-jenkins.png" class="ScreenshotFullsize" />
+                                            <p>Jenkins Execute Windows Batch Command &lt;/Image&gt; --</p>
+                                            <li value="3">
+                                                <p>In order for Jenkins to store, analyze and show the results, we generate a standard JUnitXMLReporter XML file. For Jenkins to use the file you need to add a post-build action of type "Publish JUnit test result report":</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/0d9aac5-0h9ftprwrou7qb7ae7hc_jenkins_post_build_action.png" title="0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Set the xml file value, according to the "report-file" parameter in section 4:</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/3a10b08-ap4v4ujqj6mbgocdhmoq_jenkins_post_build_action_details.png" title="AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG" class="ScreenshotFullsize" />
+                                    

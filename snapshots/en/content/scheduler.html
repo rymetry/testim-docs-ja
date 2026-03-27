@@ -1,0 +1,233 @@
+
+                                        <h1>Scheduler - Web</h1>
+                                        <p>Scheduled runs are test runs that will run based on a predefined schedule. For example, you can schedule tests to run a nightly build or to run every 30 minutes in order to monitor your production app.  In order to schedule a test run, the test must have a <a href="../test-management/labels.htm">Label</a> or be part of a <a href="../test-management/test-suites.htm">Test suite</a>. The tests can be run in <a href="../testops/turbo-mode.htm">Turbo Mode</a>.</p>
+                                        <div class="note">
+                                            <p>If the test includes multiple data sets, the scheduler will run the test multiple times, in order, each time with a different data set. For more information see, <a href="../advanced-editing/data-driven-testing/index.htm">Data-driven testing</a>.</p>
+                                        </div>
+                                        <h2><a name="creating-a-scheduled-test-run"></a>Creating a scheduled test run</h2>
+                                        <div class="note">
+                                            <p>If you have previously created schedulers and you want the new scheduler to be based on an existing one, you can use the <a href="#section-cloning-a-scheduler">Cloning Scheduler</a> feature.</p>
+                                        </div>
+                                        <p>→ <strong>To create a new test run schedule:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Runs -&gt; Scheduled Runs</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click <strong>New scheduler</strong> or <strong>Let's Schedule</strong> (when its your first scheduled run).</p>
+                                            </li>
+                                            <img src="images/2e1dc9b-newscheduler.png" title="newscheduler.png" class="ScreenshotFullsize" />
+                                            <p>The <strong>Create a new Schedule</strong> window opens.</p>
+                                            <img src="images/225c41b-scheduler1.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>If you want the scheduler runs to run in <a href="../testops/turbo-mode.htm">Turbo Mode</a>, slide the <strong>Run in turbo mode</strong> toggle. Turbo mode will ignore step delays and test artifacts like screenshots and logs will only be saved for failed runs.</p>
+                                            </li>
+                                            <img src="images/94fc75a-scheduler2.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Under <strong>General Information</strong>, enter a <strong>name</strong> for the scheduler and, optionally, a <strong>description</strong>.</p>
+                                            </li>
+                                            <img src="images/8c3d8ec-schedulername.png" title="schedulername.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Under <strong>What to run</strong>, in the <strong>Test list</strong> filed, select one of the following:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Label(s), Suite(s)</strong>: select tests or test suites by their test label or suite name.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Test Plan(s)</strong>: select one or more test plans by the test plan name.</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/1302ffb-whattorunlabels.png" title="whattorunlabels.png" class="ScreenshotFullsize" />
+                                            <img src="images/c1ee51f-whattorunplan.png" title="whattorunplan.png" class="ScreenshotFullsize" />
+                                            <p>Start typing and then select the name of the  <a href="../test-management/labels.htm">Label</a>, <a href="../test-management/test-suites.htm">Test suite</a>, or <a href="../test-management/test-plans.htm">Test Plan</a> name of the tests that you want to include in the scheduled run. If you don't see a drop-down list, verify the correct spelling of the label/suite/plan.</p>
+                                            <li value="6">
+                                                <p>Under <strong>What to run on</strong>, select the following:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Override default configurations</strong> - select this option if you would like to override the current test configurations concerning the browser that the test will run on, screen resolution, OS, and more. After selecting this option, you can select one of the pre-configured configurations, edit a pre-configured configuration, or create a new configuration. For more information, see <a href="../recording-tests/how-to-record-a-test/index.htm#section-test-configuration-parameters">Test Configuration Parameters</a>.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Override base URL</strong> - select this option if you would like to override the current test configurations concerning the base URL. After selecting this option, enter the new <strong>Base URL</strong> .</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/d2c4bac-overridedefault.png" title="overridedefault.png" class="ScreenshotFullsize" />
+                                            <img src="images/bcbd156-defaulturl.png" title="defaulturl.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: If you are creating a scheduled run for a test plan, you will not be able to override default configurations or override the Base URL, as these settings are determined by the test plan.</p>
+                                            </div>
+                                            <li value="7">
+                                                <p>Under <strong>Timeout Configuration</strong>, by default, when test reaches timeout and the test runs again one more time. If you want to disable the timeout retry feature, turn ON the <strong>Disable test timeout retry</strong> toggle.<br /></p>
+                                            </li>
+                                            <img src="images/75e66a2-image.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Under <strong>Adjust your time schedule</strong>, select one of the following options:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Specific time</strong> - Schedule the tests to run on certain days of the week and the time of day. Use this option to automatically trigger test runs such as nightly regression testing.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Time - Set the time of day in which the scheduler will run.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Time zone - select <strong>Local</strong> to use your local machine time zone; select GMT to use the GMT time zone.</p>
+                                                </li>
+                                                <li>
+                                                    <p>Days -  By default the run is scheduled to run on every day. You can remove/edit on which days you would like it to run, by clicking the days to select/deselect them.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Monitor</strong> - Will run the tests on a set interval (e.g., every 5 minutes). Use this option to monitor the health of your application and alert when your service is down.</p>
+                                                </li>
+                                            </ul>
+                                            <li value="9">
+                                                <p>Under <strong>Where to run</strong>, select the grid you would like to execute your tests on. For more information about grid configuration, see <a href="../integrations/grid-management/index.htm">Grid management</a>.</p>
+                                            </li>
+                                            <img src="images/a07a8af-wheretorun.png" title="wheretorun.png" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: If you are creating a scheduled run for a test plan, you will not be able to select a Grid, as this is determined by the test plan.</p>
+                                            </div>
+                                            <li value="10">
+                                                <p>Under <strong>Branch</strong>, select the branch you want your schedule to run on.</p>
+                                            </li>
+                                            <img src="images/8459ce532cf540fc664f5e9722888a9ab8569461962b2131547cd8c6402cb2ff-image.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Under <strong>Notifications</strong>, select the following:</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Notify on</strong> - By default when creating a new schedule, you are set to be notified on every failure. You can change the notification preference to any of the following options:</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/fc5cfeb-screen_shot_2020-09-21_at_1.17.45_pm.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Preferences</strong> - You can specify where the notifications will be sent. The following options are available:</p>
+                                            </li>
+                                            <li>
+                                                <p>Email - To receive email notifications, select the "Email" checkbox and enter the recipients email/s.</p>
+                                            </li>
+                                            <li>
+                                                <p>Slack - To send notifications by Slack, select the "Slack" checkbox. In order to send notifications to Slack you need to set up the initial integration. For details, see <a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/748b4b5-notify.png" title="notify.png" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click <strong>Advanced</strong> to configure <a href="#section-advanced-scheduler-options">Advanced scheduler options</a>.</p>
+                                            </li>
+                                            <img src="images/ee069a6-scheduler3.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>If you are on a pro plan, you are also able to set the scheduler to run in <a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Save your scheduler by clicking <strong>Create</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <p>A new scheduled test run is created, and is automatically turned on:</p>
+                                        <img src="images/6f589a7-newscheduleradded.png" title="newscheduleradded.png" class="ScreenshotFullsize" />
+                                        <h2><a name="integrating-scheduler-with-slack"></a>Integrating Scheduler with Slack</h2>
+                                        <p>→ <strong>To integrate scheduler with Slack:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the <strong>Create a new Schedule</strong> window &gt; <strong>Notification</strong> section, click <strong>Add to Slack</strong>.</p>
+                                            </li>
+                                            <img src="images/20be5b7-testimslack.png" title="TestimSlack.png" class="ScreenshotFullsize" />
+                                            <p>You will be redirected to Slack to confirm access. Click <strong>Allow</strong>:</p>
+                                            <img src="images/7bd8ab6-648de2c-screen_shot_2020-09-10_at_9.54.47.png" title="648de2c-Screen_Shot_2020-09-10_at_9.54.47.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Add the Slack channels you would like to be notified on.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/8d6ec5b-078bd0c-screen_shot_2020-09-10_at_9.53.52.png" title="078bd0c-Screen_Shot_2020-09-10_at_9.53.52.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>You can remove/add channels, and disable the Slack notifications at any point. If you would like to select a private Slack channel that was added after you already configured the integration, you will need to disconnect it (via Slack) and then reconnect from the scheduler screen.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>If you utilize a Slack workspace with numerous channels, you may encounter difficulties in loading Slack channels from your workspace. If this occurs, reach out to Testim support and we will facilitate an alternative integration mechanism to overcome the issue.</p>
+                                        </div>
+                                        <h2><a name="advanced-scheduler-options"></a>Advanced scheduler options</h2>
+                                        <p>For advanced scheduler options such as executing tests in parallel or on a specific branch, adding result labels or extending the test timeout, click on the <strong>Advanced</strong> option:</p>
+                                        <img src="images/f27d87d202f5caed6fc6c5c4491d799586d5caf61bf131ae0289fab3170117a6-image.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Parallel</strong> - select the number of test that can run in parallel.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Parallel scheduler runs count towards your parallel limit as set by your plan and can affect CLI jobs if executed at the same time.</p>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test Optimization Configuration</strong> - This option is available <strong>only</strong> if you have <a href="../integrations/sealights-integration.htm#labid-option">Sealights</a> integration. The <a href="../integrations/sealights-integration.htm#labid-option">Lab ID</a> in the Sealights integration refers to a unique identifier for a test environment that allows tracking test coverage and performance metrics within Sealights.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Failed test retries</strong> - select the number of retries to execute if the test has failed. A failed test will be executed repeatedly until either the test passes or the max number of retries has been reached.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Add Result labels</strong> - if you have specified result labels, add them into this field. Result Labels allows you to add textual labels to your remote runs. See <a href="../results/result-labels.htm">Result labels</a> for more information.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test timeout (seconds)</strong> - select the number of seconds after which the test will be aborted. The default is 10 minutes. The max is 3 hours.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="modify-your-scheduled-test-suites"></a>Modify your scheduled test suites</h2>
+                                        <h3><a name="activate-or-pause"></a>Activate or Pause</h3>
+                                        <p>Toggle to pause or re-activate the scheduled test suites.</p>
+                                        <img src="images/b5fa7bb-activateschedule.png" class="ScreenshotFullsize" />
+                                        <h3><a name="edit"></a>Edit</h3>
+                                        <p>Double click on the scheduled test suite to edit it.</p>
+                                        <h3><a name="seeing-your-scheduled-test-suites-results"></a>Seeing your scheduled test suites results</h3>
+                                        <p>As all other tests - navigate to the "Runs" tab in the sidebar and open the scheduled test run.</p>
+                                        <h3><a name="abort-a-scheduled-run"></a>Abort a scheduled run</h3>
+                                        <p>While the suite is running you are able to stop the run. Navigate to <strong>Runs</strong> ⇒ <strong>Suite Runs</strong> ⇒ Select the test that is running ⇒ Click <strong>ABORT SCHEDULED RUN</strong>.</p>
+                                        <img src="images/ce0cfc6-screen_shot_2020-01-23_at_9.53.15.png" title="Screen Shot 2020-01-23 at 9.53.15.png" class="ScreenshotFullsize" />
+                                        <h2><a name="cloning-a-scheduler"></a>Cloning a scheduler</h2>
+                                        <p>You can clone a schedule, modify it, and save it as a new schedule, thus reducing the effort and possible errors in copying configurations manually. → <strong>To clone a scheduler:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>On the <strong>Schedule List</strong> screen, select the scheduler that you wish to clone.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Clone</strong> button.</p>
+                                            </li>
+                                            <img src="images/7660cab-copy.png" title="copy.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p><strong>Name</strong> the scheduler and click <strong>Clone</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/ae08359-clone.png" title="clone.png" class="ScreenshotFullsize" />
+                                        <p>You can now edit the new scheduler.</p>
+                                        <h2><a name="filtering-the-scheduler-library"></a>Filtering the Scheduler Library</h2>
+                                        <p>You can apply filters to the view to only see scheduled runs that meet a specific criteria. → <strong>To filter the Scheduler Library:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to <strong>Runs &gt; Scheduled Runs</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Advanced Filters</strong> button.</p>
+                                            </li>
+                                            <img src="images/972a9bd-schedulerfilter.png" title="schedulerfilter.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select from the following filters in the <strong>Filter Scheduler</strong> panel and click the <strong>Apply</strong> button.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p><strong>Show only active</strong> - when enabled, displays only the the active schedulers</p>
+                                            </li>
+                                            <li value="5">
+                                                <p><strong>Show only turbo mode</strong> - when enabled, displays only the schedulers that have turbo mode enabled</p>
+                                            </li>
+                                            <li value="6">
+                                                <p><strong>Labels</strong> - Labels are used to associate schedulers with one or more characteristics. For more information, see <a href="../test-management/labels.htm">Labels</a>. Select one or more of the following labels and then select one of the following operands:</p>
+                                            </li>
+                                            <li value="7">
+                                                <p>OR - will return schedulers that include one or more of the selected labels.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>AND - will only return schedulers that include ALL the selected labels.</p>
+                                            </li>
+                                        </ol>
+                                        <p>The list of scheduled runs is now filtered based on your filter selections. To learn more about saving this filtered view, see <a href="../test-management/saving-a-filtered-view.htm">Saving a Filtered View</a>.</p>
+                                    

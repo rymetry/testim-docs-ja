@@ -1,0 +1,161 @@
+
+                                        <h1>Xray Integration</h1>
+                                        <h2><a name="what-is-xray"></a>What is Xray?</h2>
+                                        <p>Xray allows you to plan, design, and execute tests, as well as generate test reports. Xray uses specific Jira issues types for this process.</p>
+                                        <h2><a name="why-do-i-need-xray-integration"></a>Why do I need Xray integration?</h2>
+                                        <p>The XRAY integration allows you to link a test in Testim to a test case in Xray. After running the test in Testim, the test results will be automatically displayed in Xray execution results, giving you a single view of the tests that were executed in Testim and in Xray.</p>
+                                        <h2><a name="setting-up-xray-integration"></a>Setting up Xray integration</h2>
+                                        <p>Before using the Xray integration, you will need to connect Testim to the desired Xray project. This process is required only once. To perform the integration you will need the following:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Jira API token</strong> - to obtain the Jira API token, follow the instructions in <a href="https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/">https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Xray client ID and Xray client secret</strong> - to obtain the Xray client ID and Xray client secret, follow the instructions in <a href="https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys">https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <p>→ <strong>To connect Testim to Xray:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; Integrations</strong> tab. Under <strong>Test Management</strong> you will find various integration<br /></p>
+                                            </li>
+                                            <p>modules.</p>
+                                            <li value="2">
+                                                <p>In the Xray integration module, click <strong>login</strong>.</p>
+                                            </li>
+                                            <img src="images/c11e6d6-image.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the <strong>Jira API token</strong>, <strong>Xray client ID</strong>, <strong>Xray client secret</strong> fields, paste the obtained credentials (see introduction above).</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Add the <strong>Jira username</strong>, and <strong>Jira URL</strong>.</p>
+                                            </li>
+                                            <img src="images/a4eef2a-image_1.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Connect</strong>.<br /></p>
+                                            </li>
+                                            <p>At this point Testim is associated to a project in Xray, but not mapped to a specific test.</p>
+                                            <div class="note">
+                                                <p>You may connect one TMS (Test Management System) at a time. So, if your Testim system is already connected to another TMS, you will need to disconnect this TMS first and only then connect Xray. However, by disconnecting the TMS, you will remove the connections between the tests. So, if you want to connect to the previous TMS again you will have to recreate the connections as well.</p>
+                                            </div>
+                                            <li value="6">
+                                                <p>In Testim, select the Xray project(s) from the list that you would like to associate.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/88115b5-image_2.png" class="ScreenshotFullsize" />
+                                        <h2><a name="map-a-test-in-testim-to-an-xray-test-case"></a>Map a test in Testim to an Xray test case</h2>
+                                        <p>After setting up the integration between Testim and Xray, you are ready to map a specific test in Testim to a test in Xray. → <strong>To map a test in Testim to a test in Xray:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Testim, open the test that you would like to be mapped.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Inside the test in Testim, click the <strong>Properties</strong> icon on the <strong>Setup</strong> step (the first step).</p>
+                                            </li>
+                                            <img src="images/56e072e-setupstepprops.png" title="setupstepprops.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>In the setup step's <strong>Properties</strong> panel, under Test in Xray, select the Xray project from the first drop-down menu and then the specific test from the second drop-down menu. There can be multiple mapped test cases</p>
+                                            </li>
+                                            <img src="images/54bed6c-picture3.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click Test <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <h2><a name="running-a-test-and-viewing-the-testim-test-results-in-xray"></a>Running a test and viewing the Testim test results in Xray</h2>
+                                        <p>To view the result of a test execution in Xray, you will need to run the mapped test in Testim using a Remote Grid only. After running a mapped test in Testim, the test result will be displayed in the relevant Xray project under the appropriate test execution in the project board “to do” column.<br /> The name of the execution is <span class="FileOrFilePath">“&lt;Testim execution name&gt;&lt;UTC time&gt;” </span></p>
+                                        <div class="note">
+                                            <p>The <strong>issue type</strong> of the test on Xray’s side should be <a href="https://docs.getxray.app/display/ON/Enabling+Xray+Issue+Types">Test</a>.<br /> If the Xray <strong>Test</strong> issue type is changed, the execution will not to be tested in Xray.</p>
+                                        </div>
+                                        <img src="images/4a95d2f-image_3.png" class="ScreenshotFullsize" />
+                                        <p>Click on the relevant execution and get execution details.</p>
+                                        <img src="images/c163dfb-image_4.png" class="ScreenshotFullsize" />
+                                        <p>The following details are pushed from Testim to Xray:</p>
+                                        <img src="images/ef5842d-picture7.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p>Name - the name of the test in Testim.</p>
+                                            </li>
+                                            <li>
+                                                <p>Link to test run in Testim</p>
+                                            </li>
+                                            <li>
+                                                <p>URL for console logs for the test run in Testim (web only)</p>
+                                            </li>
+                                            <li>
+                                                <p>URL for network log for the test run in Testim (web only)</p>
+                                            </li>
+                                            <li>
+                                                <p>Status - the status of the execution. The status displayed is the Xray status, which was translated from the Testim status as follows (Testim &gt; Xray):</p>
+                                            </li>
+                                        </ul>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Testim</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">Xray</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">skipped</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">TODO</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">failed</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">FAIL</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">timeout</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">FAIL</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">aborted</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">TODO</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">passed</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">PASSED</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">no Testim equivalent</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body2">
+                                                        <p class="tableBody">EXECUTING</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <blockquote>
+                                            <p>Changing these statuses in Xray may cause interruption in the integration.</p>
+                                        </blockquote>
+                                        <div class="note">
+                                            <p>Mandatory custom fields in Xray are not supported. Making a custom field on Xray mandatory may cause the integration to stop working.</p>
+                                        </div>
+                                    

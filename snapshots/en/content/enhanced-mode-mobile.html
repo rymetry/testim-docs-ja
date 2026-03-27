@@ -1,0 +1,74 @@
+
+                                        <h1>Enhanced Mode (Mobile)</h1>
+                                        <p>Testim’s new Enhanced mode delivers a more stable, faster, and more versatile tests compared to Appium-based testing. With its zero-knowledge approach and unified API, the new Enhanced mode sees the structure of your mobile views better than any other tool in the market. This additional visibility enables test flows not possible on other platforms, such as Appium, including cross-platform (React Native, Flutter) and hybrid apps. Enhanced mode supports testing across all mobile applications (native, hybrid, or cross-platform frameworks) on a flexible, fast, and easy-to-use virtual mobile grid in the cloud.</p>
+                                        <img src="images/26cb52617662927f234410dbf5999b3f2ca44b42c59ff4e9a65447b3a4465741-mobile-test-setup.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Enhanced mode is currently available on VMG (Virtual Mobile Grid) only. If you want to test on a local device, physical device, or another grid, select <strong>Standard Appium</strong> mode.</p>
+                                        </div>
+                                        <h2><a name="enhanced-mode-advantages"></a>Enhanced mode advantages</h2>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Richer view hierarchy</strong> - a script cannot interact with elements it cannot “see”. Enhanced mode has a richer view hierarchy that sees the structure of your mobile views better than any tool in the market, even in React Native and Flutter apps.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Faster scanning</strong> - scans the entire view hierarchy in less than 500ms.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Zero Knowledge</strong> - Appium requires knowing which “Appium driver” to use when writing your test (e.g., native driver, web view driver, React Native driver or the Flutter one). The Enhanced mode provides a unified API and doesn’t require any knowledge of the app’s underlying tech to work.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Enhanced support for cross-platform application frameworks</strong> - Enables the use of popular cross-platform application frameworks, including React Native and Flutter.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Supports hybrid apps</strong> - enables the use of applications with embedded web views.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Enhanced test stability</strong> - improves test stability for all mobile applications, reducing maintenance and decreasing test authoring time and effort.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="supported-frameworks"></a>Supported Frameworks</h2>
+                                        <p>Enhanced mode supports most leading frameworks, native or hybrid, including:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Webviews</p>
+                                            </li>
+                                            <li>
+                                                <p>React-native</p>
+                                            </li>
+                                            <li>
+                                                <p>Flutter</p>
+                                            </li>
+                                            <li>
+                                                <p>Swift</p>
+                                            </li>
+                                            <li>
+                                                <p>SwiftUI</p>
+                                            </li>
+                                            <li>
+                                                <p>Objective-C</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="how-to-use-the-enhanced-mode-in-testim"></a>How to use the Enhanced mode in Testim</h2>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Test recording</strong> - when recording a test, the <strong>Enhanced mode</strong> is selected as the default/preferred mobile testing method. You can also select the <strong>Standard Appium</strong> compatibility mode. Tests recorded using the Enhanced mode will run only on VMG.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Test scheduling</strong> - tests that were recorded with Enhanced mode will be executed with Enhanced mode and the tests that were not recorded with Enhanced mode will not be executed with Enhanced mode.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>CLI execution</strong> - tests that were recorded with Enhanced mode will be executed with Enhanced mode and the tests that were not recorded with Enhanced mode will not be executed with Enhanced mode.</p>
+                                            </li>
+                                        </ul>
+                                        <h2><a name="faq"></a>FAQ</h2>
+                                        <h3><a name="can-i-apply-enhanced-mode-on-previously-recorded-tests"></a>Can I apply Enhanced mode on previously recorded tests?</h3>
+                                        <p>No. Enhanced mode execution requires that some parameters are set and recorded during the recording of the test. A test that was recorded with <strong>Enhanced mode</strong> will be run exclusively with <strong>Enhanced mode</strong>, and a test not recorded with <strong>Enhanced mode</strong> won't run in <strong>Enhanced mode</strong>.</p>
+                                        <h3><a name="can-i-select-another-mode-for-my-test-not-enhanced-mode"></a>Can I select another mode for my test (not Enhanced mode)?</h3>
+                                        <p>Absolutely. You can record and run your test in <strong>Appium compatibility</strong> mode. This mode guarantees the compatibility of your test with other Appium-based grids and supports local executions on your local devices. On the other hand, this mode is restricted to Appium's capabilities, meaning that you might not be able to record all your test flows, especially if you use a hybrid app or webviews. Note that existing tests will still work if you are using Appium Compatibility mode</p>
+                                        <h3><a name="can-i-use-enhanced-mode-on-other-grids-not-just-vmg"></a>Can I use Enhanced mode on other grids (not just VMG)?</h3>
+                                        <p>Currently Enhanced mode requires the use of VMG and does not support using other grids.</p>
+                                        <h3><a name="can-i-migrate-a-test-recorded-on-enhanced-mode-to-appium-compatibility-mode"></a>Can I migrate a test recorded on Enhanced mode to Appium compatibility mode?</h3>
+                                        <p>No. This requires a re-recording the test in Enhanced mode.</p>
+                                        <h3><a name="what-happens-if-the-test-using-enhanced-mode-fails"></a>What happens if the test using Enhanced mode fails?</h3>
+                                        <p>As with the Appium compatibility mode, you will need to troubleshoot the issue and fix your app, or update the test if the failure was caused due to changes in your app. For more details, see <a href="../../results/test-results/why-did-my-test-fail.htm">Why did my test fail?</a>.</p>
+                                    

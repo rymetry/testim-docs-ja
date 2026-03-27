@@ -1,0 +1,127 @@
+
+                                        <h1>Base URL</h1>
+                                        <p>Have you ever wondered how to run the same test with different URLs?<br /> Did you want to run your suite in different environments - test, staging and possibly production and did not know what would be the best way to do it?<br /> You came to the right place.</p>
+                                        <h2><a name="what-is-a-base-url"></a>What is a base URL?</h2>
+                                        <p>The base URL in Testim is the first page in the website on which the test begins. Typically this is the root of the website's address, which typically points to the website's homepage by naming the <strong>Host</strong>. For example, <a href="http://demo.testim.io">http://demo.testim.io</a> or <a href="http://www.google.com">http://www.google.com</a>. The base URL is defined in the <strong>Setup Step</strong> of the test, which is the first step.  Additional steps in the test may include clicks on links from the first/homepage to internal pages of the same website. The URL for these pages will include the same base URL followed by a <strong>Relative Path</strong>. For example, <a href="http://demo.testim.io/signup">http://demo.testim.io/signup</a>.</p>
+                                        <img src="images/b1cff8e-baseurl.jpg" class="ScreenshotFullsize" />
+                                        <h2><a name="overriding-the-base-url-when-running-the-test"></a>Overriding the Base URL when running the test</h2>
+                                        <p>Typically, you record your tests on the development/test environment and then you want to run your tests on other environments as well. This means that the base URL and all relative URL (after clicking on the links) should change during the test run. When running remote runs using the following methods you can specify a different base URL as part of the configuration. If you are running the test through the Test Editor, you can specify it under the Run on a grid section.</p>
+                                        <img src="images/3bcd12f-runongrid.jpg" class="ScreenshotFullsize" />
+                                        <p>In addition, here's a list of components you can use to send a different base URL while running the test:</p>
+                                        <ul>
+                                            <li>
+                                                <p><a href="the-command-line-cli/index.htm">CLI</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="scheduler.htm">Scheduler</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="configuration-file-run-hooks/index.htm">Configuration File</a>
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../test-management/test-plans.htm">Test plan</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <p>When the base URL is overridden by a different base URL during the test run. The overriding base URL is displayed at the top (see image below). Notice that this URL is different than the one displayed in the Setup Step.</p>
+                                        <img src="images/2907735-fb0b21d-base-url-setup.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="overriding-the-base-url-in-the-setup-step"></a>Overriding the base URL in the Setup Step</h3>
+                                        <p>There are 4 situations:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>The original base URL does not include a path and the override URL includes a path</strong> - in this case the new base URL will completely override the original base URL.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>The original base URL does not include a path and the override URL also does not include a path</strong> - in this case the new base URL will completely override the original base URL.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>The original base URL includes a path and the override URL does not include a path</strong> - in this case the Base URL in the test execution will be a combination of the two - <strong>New Base URL + Original Path</strong>. For example, the original base URL is <a href="http://staging.com/login">http://staging.com/login</a>. If when running the test we override the base URL with following URL - <a href="http://preprod.com">http://preprod.com</a>, then the new Base URL will only override the host part of the URL - <a href="http://preprod.com/login">http://preprod.com/login</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>The original base URL includes a path and the override URL also includes a path</strong> - in this case the new base URL will completely override the original base URL.</p>
+                                            </li>
+                                        </ul>
+                                        <h3><a name="overriding-the-base-url-in-a-navigation-step"></a>Overriding the base URL in a Navigation Step</h3>
+                                        <p>If the test also includes a Navigation Step, and the URL in <strong>the navigation step has the same host as the one in Setup Step</strong>, which we are overriding (see image below). In that case, Testim <strong>will replace original navigation step host part only</strong> with the host of the new overriding base URL, even if the overriding base URL includes a different path. For example:</p>
+                                        <ul>
+                                            <li>
+                                                <p>Setup step - <a href="https://demo.testim.io">https://demo.testim.io</a></p>
+                                            </li>
+                                            <li>
+                                                <p>Navigation step - <a href="https://demo.testim.io/checkout">https://demo.testim.io/checkout</a></p>
+                                            </li>
+                                            <li>
+                                                <p>Overriding base URL - <a href="https://www.google.com/doodles">https://www.google.com/doodles</a></p>
+                                            </li>
+                                            <li>
+                                                <p>Resulting navigation step - <a href="https://www.google.com/checkout">https://www.google.com/checkout</a></p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/6e073c9-image.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>If the URL in navigation step is a parameter In case the URL in the navigation step is not hardcoded, but rather a parameter (e.g. <span class="FileOrFilePath">url</span>=<span class="FileOrFilePath">&lt;https://demo.testim.io/checkout&gt;</span>), and the host (demo.testim.io) matches the original host in the Setup Step, the same behavior applies.</p>
+                                        </div>
+                                        <h2><a name="using-the-base-url-out-of-the-box-parameter"></a>Using the Base URL Out-of-the-box Parameter</h2>
+                                        <p>The Base URL is also an out-of-the-box parameter, which, unlike other parameters in Testim, does not need to be defined as a parameter, but rather used immediately. The parameter is called -  <span class="FileOrFilePath">BASE_URL</span>. The parameter will be populated with the value of the base URL of the test run, which may be the original base URL of the test or an overriding value. The Base URL parameter can be used as a dynamic base URL for data-driven testing that can be modified automatically based on the data provided to the test run. For example, you want to run the same test across a variety of different websites. In this case, you will use the base URL parameter to input dynamic URLs to the test runs. For more information about data-driven tests, see <a href="../advanced-editing/data-driven-testing/index.htm">Data-driven testing</a></p>
+                                        <div class="note">
+                                            <p>The Base URL parameter can be used wherever parameter usage is supported. For more information, see <a href="../advanced-editing/parameters/index.htm">Parameters</a>.</p>
+                                        </div>
+                                        <h3><a name="using-the-base-url-parameter-in-a-custom-actionvalidation-step"></a>Using the Base URL parameter in a Custom Action/Validation Step</h3>
+                                        <p>In every custom action/validation, you can use the base URL value of the test run using the "BASE_URL" parameter.</p>
+                                        <p><strong>To add the Base URL parameter to a Custom Action Step:</strong>
+                                        </p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>+</strong> or <strong>Arrow</strong> icon where you want to add a new <strong>Custom Action Step</strong> and click the <strong>Testim predefined steps</strong> button.<br /></p>
+                                            </li>
+                                            <img src="images/45c6324-2023-06-13_17-20-26.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click on the <strong>Actions</strong> menu.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click <strong>Add Custom Action</strong>.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the <strong>Name</strong> the new step field, enter a (meaningful) name for this step.<br /></p>
+                                            </li>
+                                            <img src="images/e352510-2023-06-13_17-23-03.jpg" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The function editor opens, and the <strong>Properties</strong> panel opens on the right-hand side.</p>
+                                            <li value="6">
+                                                <p>In the function editor, enter the function using the base URL parameter. In the following example, we will use the parameter to print the value into the console log:</p>
+                                            </li>
+                                        </ol>
+                                        <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                            <div class="codeSnippetBody"><pre><code>console.log("Base URL:" + BASE_URL)</code></pre>
+                                            </div>
+                                        </div>
+                                        <p>After running the test the Base URL parameter value is displayed in the log:</p>
+                                        <img src="images/09475a3-2023-06-13_17-28-39.jpg" class="ScreenshotFullsize" />
+                                        <h3><a name="using-the-base-url-parameter-in-a-navigation-step"></a>Using the Base URL parameter in a Navigation Step</h3>
+                                        <p>The Base URL can be used in a navigation step to dynamically navigate to a URL that includes the Base URL of the run followed by a specified path. → <strong>To add the Base URL parameter to a Navigation Step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the <strong>+</strong> or <strong>Arrow</strong> icon where you want to add a new Navigation Step and click the <strong>Testim predefined steps</strong> button.</p>
+                                            </li>
+                                            <img src="images/0fa605c-predefined.jpg" title="predefined.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Search for <strong>Add navigation action</strong> and click it.</p>
+                                            </li>
+                                            <img src="images/10e28bf-nav-step.jpg" title="nav-step.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Input the URL using the <strong>BASE_URL</strong> parameter, followed by remaining URL path.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/0017136-nav-url.jpg" title="nav-url.jpg" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Single quote marks will be added before and after the URL (e.g., 'BASE_URL + '/Extension''). Delete these single quote marks (e.g. BASE_URL + '/Extension')</p>
+                                        </div>
+                                        <p>Testim will save the Navigation Step with your dynamic URL.</p>
+                                        <img src="images/d14049f-base-url.jpg" title="base-url.jpg" class="ScreenshotFullsize" />
+                                        <p>When the test runs the navigation step will navigate to the URL that includes the Base URL of the test run followed by the specified path.</p>
+                                    

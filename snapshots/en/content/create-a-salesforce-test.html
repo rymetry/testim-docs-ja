@@ -1,0 +1,255 @@
+
+                                        <h1>Creating a Salesforce test</h1>
+                                        <p>Salesforce tests connect to your connected Salesforce environment and carry out the user journey that you would like to test. The test includes a series of Steps, each representing another interaction with the Salesforce application.</p>
+                                        <h4><a name="types-of-steps"></a>Types of Steps</h4>
+                                        <p>There are two ways to add steps to tests:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Manually adding steps</strong> - you can add steps manually. The steps are organized in the following categories:</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Salesforce steps</strong> -  steps that are specific to the Salesforce application usage. Salesforce steps are deeply integrated into the Salesforce application, enabling the performance of multiple actions within a single step and/or the ability to display and configure Salesforce objects, such as forms, within Testim for Salesforce application. For more information, see <a href="../salesforce-steps/index.htm">Salesforce Steps</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Predefined steps</strong> - general steps that are related to the testing of a web application. For more information, see <a href="../../editing-tests/steps.htm#manual-steps">Manual Steps</a></p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Shared steps</strong> - steps that are shared between multiple tests within a certain Project. For more information, see <a href="../../editing-tests/shareable-steps.htm">Shared Steps</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong><a href="#recording-steps">Recording steps</a></strong> - after clicking the Record button, a browser opens displaying the Salesforce application (which is the base URL). Every interaction, such as every input, click, etc., is automatically turned into a step in the test. Recording of steps is useful also in cases when the Salesforce steps cannot be used due to extensive customizations done in the Salesforce environment.</p>
+                                            </li>
+                                        </ul>
+                                        <p><strong>It is possible to combine the two methods</strong> - adding some of the steps manually and then recording additional steps, and vice versa.</p>
+                                        <h4><a name="setup-step"></a>Setup Step</h4>
+                                        <p>The first step of the test is the Setup Step. This step defines the Base URL of the test. By default, this URL will be one of the generic URLs of the Salesforce homepage (<span class="FileOrFilePath">https://login.salesforce.com</span> or <span class="FileOrFilePath">https://test.salesforce.com</span>), depending on the first environment you connect. You should not need to modify this as the <a href="../salesforce-steps/sfdc-step-login.htm">Log in</a> step will take you directly to the environment you have configured for the branch you are on.</p>
+                                        <h4><a name="selecting-a-persona"></a>Selecting a Persona</h4>
+                                        <p>In the Personas screen (see example below), you can configure for each persona (rows), different login credentials for each environment (columns). When you create a Salesforce test, you can select any persona defined by you in the <strong>Salesforce Login step</strong>. This persona has a login credentials configured for the environment in which the test was first created. However, if at some point you want to change the environment of this test (see <a href="../tta-for-salesforce-branch-management.htm#changing-the-salesforce-environment-of-a-branch">Changing the Salesforce Environment of a branch</a>) you will not need to select different login credentials in the Login step, because the system automatically allocates the relevant credentials for the newly selected environment based on the Personas screen configuration. So there is no need to re-write the test when you want to use a different environment.</p>
+                                        <img src="images/89ceae3-personastable.png" class="ScreenshotFullsize" />
+                                        <h1><a name="prerequisites"></a>Prerequisites:</h1>
+                                        <ul>
+                                            <li>
+                                                <p>Download and install the Testim Extension - <a href="../../recording-tests/how-to-record-a-test/why-do-you-need-testim-extension.htm">Why do you need Testim extension?</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../create-and-manage-test-environments.htm">Connect your Salesforce test environment to Testim/TTA for Salesforce</a>.</p>
+                                            </li>
+                                            <li>
+                                                <p><a href="../create-a-persona-and-add-users.htm">Create a persona</a>.</p>
+                                            </li>
+                                        </ul>
+                                        <h1><a name="creating-a-salesforce-test"></a>Creating a Salesforce test</h1>
+                                        <p>→<strong>To create a new test:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In your Testim for Salesforce account, go to <strong>Settings &gt; Salesforce</strong> and click <strong>New test</strong> in the top right corner of the screen.</p>
+                                            </li>
+                                            <img src="images/e6d6f6e-newtest.png" class="ScreenshotFullsize" />
+                                            <p>A new test is displayed with the default <strong>Setup Step</strong>.</p>
+                                            <li value="2">
+                                                <p>You can modify the step's properties by clicking the <strong>Show Properties</strong> icon and then editing the desired setting in the <strong>Properties Panel</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/1ca3180-properties.png" class="ScreenshotFullsize" />
+                                        <p>The <strong>Setup Step</strong> includes the following properties:</p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Parameter</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadE-Column2-Header1">
+                                                        <p class="tableHeader">Description</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column1-Header1">
+                                                        <p class="tableHeader">
+                                                        </p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Base URL</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">By default, this URL will be one of the generic URLs of the Salesforce homepage (<span class="FileOrFilePath">https://login.salesforce.com</span> or <span class="FileOrFilePath">https://test.salesforce.com</span>), depending on the first environment you connect. You should not need to modify this as the Log in step will take you directly to the environment you have configured for the branch you are on.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test name</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Enter a name for the test. By default, the test is saved as 'untitled test'.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Test description</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Enter an optional description for the test.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test owner</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">By default the test owner is the user that created the test. Click to optionally select a different user from the list.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Mock network</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">Testim offers the ability to mock network traffic of the Application Under Test (AUT) as part of a test. During the test run, instead of performing real calls, the system will intercept the call and will return a mocked response. For more information, see <a href="../../running-tests/mock-network-responses/index.htm">Mock Network Responses</a>.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Salesforce options</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Enable the <strong>Log screenshots</strong> option if you want to include screenshots of steps in the Salesforce Log. This is only available for Salesforce steps, which perform multiple actions in a single step. The screenshots of Salesforce Steps include all the various actions of the step. To view the <strong>Salesforce Log</strong>, after running the test, click on the step's <strong>View Screenshot</strong> button and then click the <strong>Salesforce Log</strong> tab. For performance reasons it is not recommended to enable this feature unless needed.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Configuration</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">
+                                                        <p class="tableBody">A test’s configuration determines the system specifications used to run the test. If you want to change the test configuration, click <strong>Choose Other</strong> to select an existing test configuration or click the <strong>Edit</strong> button to create a new one. For more information, see <a href="../../test-management/shared-configuration.htm#creating-and-modifying-test-configurations-in-the-test-editor">Test Configuration  </a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Test in TTM for Jira</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">
+                                                        <p class="tableBody">Tricentis Test Management (TTM) for Jira is an end-to-end test management inside Jira that keeps QA and development aligned, which allows you to collaborate and build quality into your software from idea to production. For more information, see <a href="../../integrations/test-management-integrations/ttm-for-jira-integration.htm">TTM for Jira Integration</a></p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column1-Body2">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body1">
+                                                        <p class="tableBody">Test Data</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyB-Column2-Body1">
+                                                        <p class="tableBody">The Test Data is used for data-driven testing. For more information, see <a href="../../advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm">Configuring a Data-driven Test From The Visual Editor</a>.</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column1-Body1">
+                                                        <p class="tableBody">
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h1><a name="adding-manual-steps"></a>Adding Manual Steps</h1>
+                                        <p>Manual steps can be either Salesforce steps, Predefined steps, or shared steps. →   <strong>To add a step manually:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>After the <strong>Setup step</strong>, hover your mouse on the + button.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>Add Steps</strong> button.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the desired tab - <a href="../salesforce-steps/index.htm">Salesforce steps</a>, Predefined steps, or Shared steps.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>To search for a step, start typing its name in the search box to narrow the list.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Click the desired step from the list.</p>
+                                            </li>
+                                        </ol>
+                                        <p>If it is a <a href="../salesforce-steps/index.htm">Salesforce step</a>, the <strong>Properties</strong> pane is displayed on the right. The pane includes two tabs:</p>
+                                        <p><strong>Object</strong> - displays the Salesforce object properties for the step. These properties may include mandatory properties that require configuration.</p>
+                                        <p><strong>Properties</strong> - displays additional optional properties related to the behavior of the step.</p>
+                                        <img src="images/2752956-manualstep.gif" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Best Practice - Variable Naming Convention To automate the deletion of Records created during the execution of a testcase or suite, when creating variables in the test, follow the instructions in <a href="../best-practice-variable-naming-convention-for-easy-cleanup.htm">Best Practice - Variable Naming Convention for Easy Cleanup</a>.</p>
+                                        </div>
+                                        <h1><a name="recording-steps"></a>Recording Steps</h1>
+                                        <p>The Recorder can be used to add steps automatically, while interacting with the AUT (Application Under Test). This method is especially useful when adding specific steps that are not included in the Salesforce steps and/or a case where the environment is highly customized, so that the Salesforce steps are not supported. The recorder offers two modes of operation:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Salesforce mode</strong> - in this mode, which is indicated by a cloud icon on the recorder (see below), the recorder performs Salesforce steps, which enable the performance of multiple actions within a single step. This mode may not work if your Salesforce environment has been widely customized. In such cases, it is possible to fall back to the Web mode and record all the individual actions/steps. The steps created using this mode are marked with a cloud icon (see below). To revert to Web mode, click the cloud icon on the recorder.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/9381461-salesforce_mode.png" class="ScreenshotFullsize" />
+                                        <img src="images/de463f1-salesforcestep.png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong> Web mode</strong> - this is the regular mode of the recorder, which is indicated by a crossed out cloud icon on the recorder (see below). In this mode every interaction (e.g., click, scroll, add text, etc.) is represented by a separate step. To revert to Salesforce mode, click the cloud icon on the recorder.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/6dfd53b-nosalesforcemode.png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>When you should turn off Salesforce mode If you notice that the recorded steps are not appearing in the editor, you should turn off Salesforce mode by clicking on the cloud icon.</p>
+                                        </div>
+                                        <p>→ <strong>To record steps using the Recorder:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Before you begin, make sure your Salesforce environment is connected. For more information, see <a href="../create-and-manage-test-environments.htm">Connecting your Salesforce environment</a>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Add a <a href="../salesforce-steps/sfdc-step-login.htm">Log in</a> step to your test.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Run the test so you are logged-in to the environment to be able to record additional steps.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>In the test, hover your mouse on the <strong>+</strong> button next to the desired step and click the <strong>Record</strong> button. The recorder is automatically enabled in <strong>Salesforce Mode</strong>, which is indicated by the blue cloud icon. This means that the interactions with the application generate Salesforce steps, wherever relevant.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>
+                                                    <img src="images/1a9ac07-afterlogin.png" class="ScreenshotFullsize" />
+                                                </p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Interact with the Salesforce application to generate steps. The Salesforce steps are indicated with the cloud icon.</p>
+                                            </li>
+                                            <img src="images/90023bd-salesforcesteps.png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>When done creating the test, click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                    

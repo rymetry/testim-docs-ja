@@ -1,0 +1,121 @@
+
+                                        <h1>Network Logs</h1>
+                                        <p>Network logs include information about requests between the web browser and the site being tested. During the test execution, network logs are collected and displayed as part of the test results. The network logs can be viewed at the step level or at the test level.</p>
+                                        <h2><a name="viewing-the-network-logs-at-the-step-level"></a>Viewing the network logs at the step level</h2>
+                                        <p>→ <strong>To view the network logs of a step:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Run the test.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>On the main menu, click <strong>Runs</strong>.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Click the relevant execution.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>On the <strong>Execution</strong> screen, click the relevant test.<br /></p>
+                                            </li>
+                                            <p>The test is displayed with the executed steps marked as passed or failed.</p>
+                                            <li value="5">
+                                                <p>Click the <strong>View Screenshot</strong> button on the relevant step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Click the <strong>Network Log</strong> tab.<br /></p>
+                                            </li>
+                                        </ol>
+                                        <p>You can filter your results by several elements. Clicking on a request reveals the HTTP headers associated with that request.</p>
+                                        <div class="note">
+                                            <p>You can view the request results for previous and next steps by clicking on the arrows on the left and right sides of the screen.</p>
+                                        </div>
+                                        <img src="images/1eac062-network_log.gif" class="ScreenshotFullsize" />
+                                        <p>The information displayed for each request is described in the following table.</p>
+                                        <table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0">
+                                            <col class="TableStyle-Table_new-Column-Column1" />
+                                            <col class="TableStyle-Table_new-Column-Column2" />
+                                            <thead>
+                                                <tr class="TableStyle-Table_new-Head-Header1">
+                                                    <th class="TableStyle-Table_new-HeadE-Column1-Header1">
+                                                        <p class="tableHeader">Item</p>
+                                                    </th>
+                                                    <th class="TableStyle-Table_new-HeadD-Column2-Header1">
+                                                        <p class="tableHeader">Description</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">File</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The name of the file</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Status</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The HTTP status code</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Method</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The HTTP request method</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Domain</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The domain to which the request was made</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Type</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The request type (i.e. XHR, JS, CSS, etc.)</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body2">
+                                                        <p class="tableBody">Size</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body2">
+                                                        <p class="tableBody">The response size (including headers and body)</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body1">
+                                                    <td class="TableStyle-Table_new-BodyE-Column1-Body1">
+                                                        <p class="tableBody">Time</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyD-Column2-Body1">
+                                                        <p class="tableBody">The duration from the start of the request to the receipt of the response</p>
+                                                    </td>
+                                                </tr>
+                                                <tr class="TableStyle-Table_new-Body-Body2">
+                                                    <td class="TableStyle-Table_new-BodyB-Column1-Body2">
+                                                        <p class="tableBody">Waterfall</p>
+                                                    </td>
+                                                    <td class="TableStyle-Table_new-BodyA-Column2-Body2">
+                                                        <p class="tableBody">A visual breakdown of the request activity</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h3><a name="filtering-request-results"></a>Filtering request results</h3>
+                                        <p>You can filter your results by filename text, domain, type, and errors. → <strong>To filter by filename text and domain:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In the Filter box, enter your filter criteria.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e21c0d7-testim_074a.png" title="Testim 074a.png" class="ScreenshotFullsize" />The results are instantly filtered based on text in the <em>File</em> and <em>Domain</em> columns.
+<p>→ <strong>To filter by request type:</strong></p><ol><li value="1"><p>In the request results table header, select one of the request types. Options include <em>XHR</em>, <em>JS</em>, <em>CSS</em>, <em>Img</em>, <em>Media</em>, <em>Font</em>, <em>Doc</em>, <em>WS</em>, and <em>Manifest</em>.</p></li></ol><img src="images/0d05487-testim_074b.png" title="Testim 074b.png" class="ScreenshotFullsize" /><p>The results are instantly filtered based on your selection.</p><div class="note"><p>By default "All" is selected. You can choose only one request type to filter at a time.</p></div><p>→ <strong>To filter by requests with errors:</strong></p><ol><li value="1"><p>In the request results table header, select the <strong>Errors Only</strong> checkbox.</p></li></ol><img src="images/b45e218-testim_074c.png" title="Testim 074c.png" class="ScreenshotFullsize" /><p>Only those results with errors are shown.</p><h3><a name="viewing-http-headers"></a>Viewing HTTP headers</h3><p>You can view the HTTP header data for each request. → <strong>To view the HTTP headers:</strong></p><ol><li value="1"><p>Click any of the rows containing request data.</p></li><img src="images/190bb8b-results-rows.png" title="results-rows.png" class="ScreenshotFullsize" /><p>The Headers window opens comprised of three sections: <em>General</em>, <em>Response Headers</em>, and <em>Request Headers</em>.</p><img src="images/a67587b-result-headers.png" title="result-headers.png" class="ScreenshotFullsize" /><li value="2"><p>Close the Headers window by clicking on the <strong>X</strong> in the upper left corner.</p></li></ol><img src="images/3049d02-result-headers.png" title="result-headers.png" class="ScreenshotFullsize" /><div class="note"><p>Each of the three sections of the Headers window can be minimized and expanded by clicking on the <strong>expand arrow</strong> to the top left of each section.</p></div><h2><a name="viewing-the-network-logs-at-the-test-level"></a>Viewing the network logs at the test level</h2><p>You can view aggregated network logs for the entire test in one place. The test network logs can be used to debug failed test runs and better understand the test results. → <strong>To view the network logs of a test:</strong></p><ol><li value="1"><p>Run the test.</p></li><li value="2"><p>On the main menu, click <strong>Runs</strong>.</p></li><li value="3"><p>Click the relevant execution.</p></li><li value="4"><p>On the <strong>Execution</strong> screen, click the relevant test.<br /></p></li><p>The test is displayed with the executed steps marked as passed or failed.</p><li value="5"><p>Click the horizontal three-dot menu and click <strong>View network log</strong>.<br /></p></li></ol><p>You can filter your results by several elements. Clicking on a request reveals the HTTP headers associated with that request.</p><img src="images/661f4ae-networklogtest.gif" class="ScreenshotFullsize" /><p>The information displayed for each request is described in the following table.</p><table style="width: 100%;mc-table-style: url('../../resources/stylesheets/tables.css');" class="TableStyle-Table_new" cellspacing="0"><col class="TableStyle-Table_new-Column-Column1" /><col class="TableStyle-Table_new-Column-Column2" /><thead><tr class="TableStyle-Table_new-Head-Header1"><th class="TableStyle-Table_new-HeadE-Column1-Header1"><p class="tableHeader">Item</p></th><th class="TableStyle-Table_new-HeadD-Column2-Header1"><p class="tableHeader">Description</p></th></tr></thead><tbody><tr class="TableStyle-Table_new-Body-Body1"><td class="TableStyle-Table_new-BodyE-Column1-Body1"><p class="tableBody">File</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body1"><p class="tableBody">The name of the file</p></td></tr><tr class="TableStyle-Table_new-Body-Body2"><td class="TableStyle-Table_new-BodyE-Column1-Body2"><p class="tableBody">Status</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body2"><p class="tableBody">The HTTP status code</p></td></tr><tr class="TableStyle-Table_new-Body-Body1"><td class="TableStyle-Table_new-BodyE-Column1-Body1"><p class="tableBody">Method</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body1"><p class="tableBody">The HTTP request method</p></td></tr><tr class="TableStyle-Table_new-Body-Body2"><td class="TableStyle-Table_new-BodyE-Column1-Body2"><p class="tableBody">Domain</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body2"><p class="tableBody">The domain to which the request was made</p></td></tr><tr class="TableStyle-Table_new-Body-Body1"><td class="TableStyle-Table_new-BodyE-Column1-Body1"><p class="tableBody">Type</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body1"><p class="tableBody">The request type (i.e. XHR, JS, CSS, etc.)</p></td></tr><tr class="TableStyle-Table_new-Body-Body2"><td class="TableStyle-Table_new-BodyE-Column1-Body2"><p class="tableBody">Size</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body2"><p class="tableBody">The response size (including headers and body)</p></td></tr><tr class="TableStyle-Table_new-Body-Body1"><td class="TableStyle-Table_new-BodyE-Column1-Body1"><p class="tableBody">Time</p></td><td class="TableStyle-Table_new-BodyD-Column2-Body1"><p class="tableBody">The duration from the start of the request to the receipt of the response</p></td></tr><tr class="TableStyle-Table_new-Body-Body2"><td class="TableStyle-Table_new-BodyB-Column1-Body2"><p class="tableBody">Waterfall</p></td><td class="TableStyle-Table_new-BodyA-Column2-Body2"><p class="tableBody">A visual breakdown of the request activity</p></td></tr></tbody></table><blockquote><p>This is only supported on Chrome browsers<br /> The HAR file will not include the response body, due to privacy and security reasons<br /> To create and download a full HAR, please use the <a href="../../running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file.htm#option-1---using-testim-to-create-the-har-file">mock networks</a></p></blockquote><h2><a name="downloading-the-har-file"></a>Downloading the HAR File</h2><p>→ <strong>To download the HAR file:</strong></p><ol><li value="1"><p>From the test screen, click the <strong>HAR</strong> button.<br /></p></li><p>The <strong>Network Activity</strong> screen is displayed.</p><li value="2"><p>Click the <strong>Download</strong> button and save the file.</p></li><img src="images/f1b8915-download.png" title="download.png" class="ScreenshotFullsize" /><li value="3"><p>It is recommended to upload the file to the dev  tools, further debugging and analysis.</p></li></ol><h2><a name="viewing-the-network-activity"></a>Viewing the network activity</h2><p>The Network activity screen displays the network traffic. You can filter the network traffic by using the following filter tools:</p><ul><li><p>Filter based on filename - enter a complete or partial file name into the <strong>Filter</strong> field.</p></li><li><p>Filter based on the request type - select on of the lister request types (e.g. XHR, JS, CSS, etc.)</p></li><li><p>Error only filter - select the <strong>Error Only</strong> checkbox to see only requests that were responded with an error.</p></li></ul><img src="images/aee6500-screen_shot_2020-11-24_at_8.03.42.png" title="Screen Shot 2020-11-24 at 8.03.42.png" class="ScreenshotFullsize" /><p>The network activity entries include the following information:</p><ul><li><p>File - the URL of the request</p></li><li><p>Status - the HTTP response code</p></li><li><p>Request method - the HTTP request  method</p></li><li><p>Request domain</p></li><li><p>Request type</p></li><li><p>Size - the response  size</p></li><li><p>Time - the time it took  to get the response</p></li><li><p>Waterfall - a graphical representation of the different stages of the request. Hover over a Waterfall to see a breakdown.</p></li></ul><p>The summary pane at the bottom contains:</p><ul><li><p>Total number of requests</p></li><li><p>Total download size of requests</p></li><li><p>Total size of  resources  loaded</p></li></ul>

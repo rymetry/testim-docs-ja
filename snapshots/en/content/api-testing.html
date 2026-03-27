@@ -1,0 +1,321 @@
+
+                                        <h1>API testing</h1>
+                                        <p>API testing uses API calls (HTTP requests) within your tests. This functionality can be used to perform actions, for example, to retrieve data that can be used within the test in other steps. In addition, it can be used to perform validations, for example, to validate whether a value in the backend correlates with a value in the frontend. The API request is a full HTTP request that includes a header, including authorization parameters, and a body.<br /> There are two types of API steps: <strong>Add API action</strong> and <strong>Validate API</strong>.</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>Add API action</strong> –  used when you want to get data that is returned from an API call. You can use this data just to check that it is returned.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Validate API</strong> - should be used to validate data returned from an API call, usually validating data in the backend.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>This is a pro feature This feature is only open to projects on our professional plan. To learn more about our professional plan, click <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                        </div>
+                                        <h1><a name="adding-a-validate-api-step"></a>Adding a Validate API Step</h1>
+                                        <p>Use an API validation step to validate the response. It is possible to validate on the header, body, or status code response. Read more about validations <a href="validations/index.htm">here</a>.<br /> → <strong>To add an “Add API validation” step:</strong></p>
+                                        <img src="images/eb15a7d-validatestep.gif" title="validatestep.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: (arrow symbol) (or + symbol after the final step) where you want to add the Add API validation step.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the <strong>“M”</strong> (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <li value="3">
+                                                <p>Click on Validations.<br /></p>
+                                            </li>
+                                            <p>The <strong>Validations</strong> menu expands</p>
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select Validate API:</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <em>Validate API</em>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown</p>
+                                            <img src="images/d92c26a-picture1.png" title="Picture1.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>In the <strong>Name the new step</strong> field, enter a name for this step.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>If this is a shared step to be made available to reuse in this or other tests, keep the box next to Shared step selected (default), and choose a folder from the <strong>Select shared step</strong> folder list where you want this step stored. Otherwise, deselect the checkbox.<br /></p>
+                                            </li>
+                                            <p>For more information about shared steps, see <a href="../editing-tests/groups/index.htm">Groups</a></p>
+                                            <li value="7">
+                                                <p>Click <strong>Create Step</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Run Shared API Validation</strong> window opens.</p>
+                                            <img src="images/0442a1d-run_sharred_api_validation.png" title="run_sharred_api_validation.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>In the <strong>URL</strong> field, select the desired HTTP Request method and enter the root-endpoint and path. You can add parameters to the URL. For more information, see <a href="#using-parameters-in-the-sent-http-request">Using Parameters</a> section below.</p>
+                                            </li>
+                                            <li value="9">
+                                                <p>In the <strong>Header</strong> section, enter the header Key-Value pairs that need to be sent with your API. Select the Key-Value (default) option to enter the header in separate key and value fields. Select the Raw option to enter the values in their raw format (e.g. when copying from the browser's devtools network panel).<br /></p>
+                                            </li>
+                                            <p>You can test different requests using different headers. Select the checkboxes to the left of the headers you wish to test. Requests with checked headers are all performed, one after the other. To delete a header, select the X to the right of the header.</p>
+                                            <img src="images/0277227-header.png" title="header.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Click the <strong>Authorization</strong> tab to configure the Authorization header. Select one of the following authorization options:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>None</strong> – select this option if you do not want to send authorization parameters or if you want to use an authorization type other than Basic or Bearer. In this case you will have to manually enter the Authorization parameters under the Header tab.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Basic</strong> – select this option if the endpoint uses Basic Authorization. Enter the username and the password.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Bearer</strong> - select this option if the endpoint uses Bearer Authorization. Enter the Token.</p>
+                                                </li>
+                                            </ul>
+                                            <div class="note">
+                                                <p>Authorization types entered under the <strong>Authorization</strong> tab (other than None) override authorizations manually entered in the <strong>Header</strong> tab</p>
+                                            </div>
+                                            <img src="images/e0ec5a9-authorization.png" title="authorization.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>In the <strong>Body</strong> section, in the drop-down menu, select the data format you want to send and enter the Body of your call in the box below. For example, use the Text option for entering free text (e.g. sending a key and a value). Options are: Text, JSON, JavaScript, XML, and HTML. You can add parameters to the Body. For more information, see  <a href="#using-parameters-in-the-sent-http-request">Using Parameters</a> section below.</p>
+                                            </li>
+                                            <img src="images/ba2e285-body.png" title="body.png" class="ScreenshotFullsize" />
+                                            <p>In the <strong>Assertion</strong> section, you can optionally assert on the header, body, or status code response without manually entering code. The Assertion is run before the code in Run additional code on request results (see below). The response for the assertion can be Passed (TRUE) or Failed (FALSE). If the Assertion fails, the step and test will fail and the Run additional code on request results code won’t be executed. <br /><br /> Do the following:</p>
+                                            <ul>
+                                                <li>
+                                                    <p>In the drop-down menu, select the element on which you will perform the assertion, options include Status code, Header, Body (JSON), or Body (Text). <br /></p>
+                                                </li>
+                                                <li>
+                                                    <p>In the second field, select an operator. <br /></p>
+                                                </li>
+                                                <li>
+                                                    <p>In the third field (value), enter the value you are checking. The value can be a parameter without curly brackets. <br /></p>
+                                                </li>
+                                                <li>
+                                                    <p>Repeat the steps above to add additional assertions. To enable/disable the assertion select/deselect the checkbox.<br /></p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/9c95b25-assertions.png" title="assertions.png" class="ScreenshotFullsize" />
+                                            <li value="12">
+                                                <p>Select the <strong>Run additional code on request</strong> results switch if you want to run code that will perform additional validations that are not possible through the assertion or add additional functionality to the validation. For example, throwing an error message following a failed validation. You can add parameters to the code. For more information, see Using Parameters section below.</p>
+                                            </li>
+                                            <img src="images/a99b5db-run_additional_code.png" title="run_additional_code.png" class="ScreenshotFullsize" />
+                                            <li value="13">
+                                                <p>Click <strong>Show step properties</strong>.</p>
+                                            </li>
+                                            <img src="images/bc9b3fc-showstepproperties.png" title="showstepproperties.png" class="ScreenshotFullsize" />
+                                            <li value="14">
+                                                <p>In the <strong>Properties</strong> panel, in the <strong>Send via web page</strong> checkbox:</p>
+                                            </li>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Deselect the checkbox</strong> - if you want to send the API call outside the browser context so that browser-restrictions do not apply to it. For example, if your API doesn't support CORS.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Select the checkbox</strong> - if you need the API to also send browser information such as cookies. (They are sent automatically.)</p>
+                                                </li>
+                                            </ul>
+                                            <img src="images/3cf1b19-properties.png" class="ScreenshotFullsize" />
+                                            <li value="15">
+                                                <p>In the <strong>Allow API request retry</strong> field:</p>
+                                            </li>
+                                            <li value="16">
+                                                <p><strong>Select the checkbox</strong> - select this checkbox if you want to retry the sending of the request only if the request itself has failed (i.e., returned a failed status code).</p>
+                                            </li>
+                                            <li value="17">
+                                                <p><strong>Deselect the checkbox</strong> - even if the status code is error, Testim will still run the step with its validations and the addition code (i.e., without trying to resend the request). For example, this is useful when the assertion is set as an error code, and so there is no need to retry sending the request.</p>
+                                            </li>
+                                            <li value="18">
+                                                <p>In the <strong>Params</strong> field, add the relevant parameters, as described in  <a href="#using-parameters-in-the-sent-http-request">Using Parameters</a> section below.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>If you're running via a webpage, and the page has not finished loading, this step can fail. If the previous step requires loading, add a <a href="wait-for.htm">wait for</a> before the API step to verify that the page has finished loading.</p>
+                                        </div>
+                                        <h2><a name="checking-the-request-outside-of-the-context-of-the-aut"></a>Checking the request outside of the context of the AUT</h2>
+                                        <p>If you want to check your request for a quick response outside of the context of the AUT (without running the test), in the <strong>URL</strong> field, click the <strong>Send</strong> button. Assertions and code in the <strong>Run additional code on request results</strong> window will not be executed. Only local parameters with static values, which are defined in the <strong>Properties</strong> panel will be sent. Non-static values will be sent as empty strings.<br /> The available step parameters are listed below the <strong>URL</strong> field. You can click <strong>Edit</strong> to modify the parameter in the <strong>Properties</strong> panel.</p>
+                                        <img src="images/b763cb7-image_13.png" title="image (13).png" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>This request will not be counted against your account quota.<br /> The response is temporary, which means that upon exiting the step, the response will be cleared.</p>
+                                        </div>
+                                        <h1><a name="adding-an-api-action-step"></a>Adding an API Action Step</h1>
+                                        <p>Use an API validation step to perform additional actions, while using the API response. For example, the returned data can be used for calculations, or to save it for later use in the test (export parameter). It is possible to use the data from the <em>header</em>, <em>body</em>, or _status _code response.<br /> →<strong>To add an “Add API action” step:</strong></p>
+                                        <img src="images/437b054-apiaciton.gif" title="apiaciton.gif" class="ScreenshotFullsize" />
+                                        <ol>
+                                            <li value="1">
+                                                <p>Hover over the :fa-caret-right: (arrow symbol) (or + symbol after the final step) where you want to add the Add API action step.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Click the “M” (Testim predefined steps).<br /></p>
+                                            </li>
+                                            <p>The <strong>Predefined steps</strong> menu opens.</p>
+                                            <li value="3">
+                                                <p>Click on <strong>Actions</strong>.<br /></p>
+                                            </li>
+                                            <p>The <strong>Actions</strong> menu expands.</p>
+                                            <li value="4">
+                                                <p>Scroll down through the menu and select <strong>Add API action</strong>.</p>
+                                            </li>
+                                            <div class="note">
+                                                <p>Alternatively, you can use the search box at the top of the menu to search for <strong>Add API action</strong>.</p>
+                                            </div>
+                                            <p>The <strong>Add Step</strong> window is shown.</p>
+                                            <img src="images/01b1c12-picture1.png" title="Picture1.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Follow <strong>steps 5-13</strong> as described in the <a href="#adding-a-validate-api-step">Adding a Validate API Step</a> section above.</p>
+                                            </li>
+                                            <li value="6">
+                                                <p>Select the <strong>Run additional code on request results</strong> switch if you want to run code that will use the returned data from the API call for cases other than validation (e.g. to extract parameters, close DB connections, etc.). You can run any JavaScript code, and use the data returned from the API call, including the <em>status code</em>, <em>response headers</em>, and <em>response body</em>. If the response body content type is XML/JSON, the parameter type will be an Object, otherwise the parameter type is String.</p>
+                                            </li>
+                                            <img src="images/5d3302a-image_2.png" title="image (2).png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Follow <strong>steps 14-16</strong> as described in the <a href="#adding-a-validate-api-step">Adding a Validate API Step</a> section above.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>If you're running via a webpage, and the page has not finished loading, this step can fail. If the previous step requires loading, add a wait for before the API step to verify that the page has finished loading.</p>
+                                        </div>
+                                        <h1><a name="including-a-file-andor-text-field-with-an-api-call-using-form-data"></a>Including a File and/or Text field with an API Call Using Form Data</h1>
+                                        <p>When adding an API Action or Validate API step to a test, you have the ability to include a file attachment with the API call and/or a text field that can hold a key:value pair. → <strong>To include a file attachment in an API call:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your test and add a Validate API or API Action step as described above.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>Body</strong> section of step, select the <strong>Form Data</strong> entry type.</p>
+                                            </li>
+                                            <img src="images/f021f36-api-testing-1.jpg" title="api-testing-1.jpg" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Select the <strong>File</strong> entry type.</p>
+                                            </li>
+                                            <img src="images/aa68d56-api-testing-2.jpg" title="api-testing-2.jpg" class="ScreenshotFullsize" />
+                                            <p>Testim automatically updates the header <strong>Content-Type</strong> to “multipart/form-data.”</p>
+                                            <img src="images/c433a90-api-testing-3.jpg" title="api-testing-3.jpg" class="ScreenshotFullsize" />
+                                            <div class="note">
+                                                <p>Note: Sending a file as part of an API call only works with the <strong>Post</strong> HTTP Request method.</p>
+                                            </div>
+                                            <li value="4">
+                                                <p>Enter the <strong>Key</strong> name for the filename.</p>
+                                            </li>
+                                            <img src="images/b5a918f-api-testing-4.jpg" title="api-testing-4.jpg" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Click the <strong>Upload File</strong> button and attach a file from your computer.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/09a8669-api-testing-5.jpg" title="api-testing-5.jpg" class="ScreenshotFullsize" />
+                                        <div class="note">
+                                            <p>Note: If you do not provide the Key name or file attachment for the file entry, the API call will exclude this entry when running the test.</p>
+                                        </div>
+                                        <p>Testim will save the file to the testing server and when the test runs, the test will automatically link to the file and upload the file as part of the test.</p>
+                                        <div class="note">
+                                            <p>Note: Testim limits the file upload size to 25MB. If you try to upload a file larger than 25MB Testim will display a validation message and prevent you from attaching the file.</p>
+                                        </div>
+                                        <p>→ <strong>To include a text field in an API call:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Navigate to your test and add a Validate API or API Action step as described above.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the <strong>Body</strong> section of step, select the <strong>Form Data</strong> entry type.</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>Select the <strong>Text</strong> entry type.</p>
+                                            </li>
+                                            <li value="4">
+                                                <p>Enter the <strong>Key</strong> name for the text field.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Enter the <strong>Value</strong> of the text field.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/428ba6a-picture1.png" title="Picture1.png" class="ScreenshotFullsize" />
+                                        <p>The key:value pair of the form is saved. When the test runs, the test will send the key:value pair along with the API call.</p>
+                                        <h2><a name="cancel-a-file-upload-in-progress"></a>Cancel a File Upload in Progress</h2>
+                                        <p>You have the ability to cancel a file upload while the upload is in progress. → <strong>To Cancel a file upload in progress:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>“X”</strong> next to the entry with the file upload in progress.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e72c0ab-api-testing-6.jpg" title="api-testing-6.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will cancel the file upload and allow you reupload a different file.</p>
+                                        <img src="images/e25b412-api-testing-7.jpg" title="api-testing-7.jpg" class="ScreenshotFullsize" />
+                                        <h2><a name="replace-a-file-attachment"></a>Replace a File Attachment</h2>
+                                        <p>You have the ability to replace the file attachment for an existing entry. → <strong>To Replace the File Attachment of an existing file entry:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>“X”</strong> next to the previously attached file entry.</p>
+                                            </li>
+                                            <img src="images/0428c1c-api-testing-8.jpg" title="api-testing-8.jpg" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Click the <strong>Upload File</strong> button and attach a file from your computer to upload a new file.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/0c81dc9-api-testing-5.jpg" title="api-testing-5.jpg" class="ScreenshotFullsize" />
+                                        <h2><a name="exclude-or-delete-an-entry-from-the-body-section"></a>Exclude or Delete an Entry from the Body Section</h2>
+                                        <p>You have the ability to exclude or delete a Body entry from the API call. → <strong>To exclude an entry from the API call:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>check box</strong> to the left of the entry you want to exclude from the test.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/de72f68-api-testing-10.jpg" title="api-testing-10.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will exclude this entry from the test, but the entry will not be deleted and can be included again at any time. → <strong>To delete an entry from the API call:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Click the <strong>“X”</strong> to the right of the Body entry you want to delete.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/e7fea88-api-testing-9.jpg" title="api-testing-9.jpg" class="ScreenshotFullsize" />
+                                        <p>Testim will remove this entry.</p>
+                                        <h1><a name="using-parameters"></a>Using Parameters</h1>
+                                        <p>You can use parameters in the API step as you would in any other step that uses code. You can use parameters in the sent HTTP request, in the HTTP response, and/or as part of the Assertion. Parameter can be either in-param, as dependency injection, or out-param via the exports/exportsGlobal. You can also access any other variables in the test's scope.<br /> Read more about parameters options <a href="parameters/index.htm">here</a>.</p>
+                                        <div class="note">
+                                            <p>Arrays are supported in the following format: <span class="FileOrFilePath">array.0.name</span></p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Complex expressions are <strong>NOT</strong> supported within the API step sections.</p>
+                                        </div>
+                                        <h2><a name="using-parameters-in-the-sent-http-request"></a>Using parameters in the sent HTTP request</h2>
+                                        <p>Parameters can be used in the header, body, and URL. Since those sections are cumbersome to write in JS, we made it easy for you. In these sections you will need to add double\triple curly brackets around the parameters.</p>
+                                        <h3><a name="adding-parameters-to-the-body"></a>Adding parameters to the Body</h3>
+                                        <p>You can use triple brackets if you do not want the parameters to be encoded. e.g, {{{param}}}.</p>
+                                        <img src="images/59f09c0-picture2.png" title="Picture2.png" class="ScreenshotFullsize" />
+                                        <h3><a name="adding-parameters-to-the-url"></a>Adding parameters to the URL</h3>
+                                        <p>If you want to send the API call to an API that uses the same URL as the test's base URL, instead of writing the entire URL you can use the Base URL parameter, by writing {{{BASE_URL}}} in the URL field, followed by the rest of the URL. You can use triple brackets if you do not want the parameters to be encoded. e.g, {{{param}}}.</p>
+                                        <img src="images/753553d-image_5.png" title="image (5).png" class="ScreenshotFullsize" />
+                                        <h3><a name="adding-parameters-to-the-header"></a>Adding parameters to the Header</h3>
+                                        <p>You can use triple brackets if you do not want the parameters to be encoded. e.g, {{{param}}}.</p>
+                                        <img src="images/82b5c47-image_3.png" title="image (3).png" class="ScreenshotFullsize" />
+                                        <h2><a name="using-parameters-in-the-http-response"></a>Using parameters in the HTTP response</h2>
+                                        <p>Parameters added in the Properties panel will be automatically added to the function's signature.</p>
+                                        <img src="images/eb87221-image_9.png" title="image (9).png" class="ScreenshotFullsize" />
+                                        <h2><a name="using-parameters-in-the-assertion"></a>Using parameters in the Assertion</h2>
+                                        <p>Parameters can be added to the assertion without the need to add curly brackets.</p>
+                                        <img src="images/bb8290c-image_8.png" title="image (8).png" class="ScreenshotFullsize" />
+                                        <img src="images/7004c0f-screen_shot_2022-03-09_at_15.08.34.png" title="Screen Shot 2022-03-09 at 15.08.34.png" class="ScreenshotFullsize" />
+                                        <h1><a name="viewing-the-result-after-the-run"></a>Viewing the result after the run</h1>
+                                        <p>After running the step, you'll see the response returned from the API call in the Response tab, along with additional info, such as response status code, call duration, and the size of the binary files. You can also view the sent request and download the response info.</p>
+                                        <img src="images/a311eec-image_10.png" title="image (10).png" class="ScreenshotFullsize" />
+                                        <p>The following features are available in the <strong>Response</strong> tab:</p>
+                                        <ul>
+                                            <li>
+                                                <p><strong>View Sent Request</strong> – When you click this button a window opens showing the full request that was sent. Parameters are converted to static values. From this window you can <strong>download</strong> a JSON file of the response or <strong>copy</strong> the information shown to your clipboard.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/e6c16b6-image_11.png" title="image (11).png" class="ScreenshotFullsize" />
+                                        <ul>
+                                            <li>
+                                                <p><strong>Download the response info</strong> – When you click on the download button (arrow to the right of View Sent Request) a JSON file with the entire response is downloaded to your local device.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Assertion response</strong> – if you have configured assertions, you will see the one of the following indications next to the assertion:</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Passed</strong> – this indicates that the assertion was TRUE.</p>
+                                            </li>
+                                            <li>
+                                                <p><strong>Failed</strong> – this indicates that the assertion was FALSE. In this case the step will fail, which in turn will fail the test.</p>
+                                            </li>
+                                        </ul>
+                                        <img src="images/639898e-image_12.png" title="image (12).png" class="ScreenshotFullsize" />
+                                        <p><strong>Usage examples</strong> - <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/automate/tests/97auidmCzzUtZuoQ">click here</a></p>
+                                        <p><strong>Troubleshooting</strong> - <a href="../results/test-results/why-did-my-test-fail.htm#13-api-step-failed">click here</a></p>
+                                    

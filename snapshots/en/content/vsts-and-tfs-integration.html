@@ -1,0 +1,64 @@
+
+                                        <h1>VSTS and TFS integration</h1>
+                                        <p>​</p>
+                                        <img src="images/d30e448-tfs1.png" title="tfs1.png" class="ScreenshotFullsize" />
+                                        <p>​In order to integrate your tests with VSTS/TFS, first you need to have docker installed on the VSTS/TFS agent.</p>
+                                        <h3><a name="now-just-follow-these-steps"></a>Now, just follow these steps:</h3>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to Build page</p>
+                                            </li>
+                                            <img src="images/e8e8d07-tfs2.png" title="tfs2.png" class="ScreenshotFullsize" />
+                                            <p>​2. Create a new build</p>
+                                            <img src="images/c4affba-tfs3.png" title="tfs3.png" class="ScreenshotFullsize" />
+                                            <p>​3. Select your repository</p>
+                                            <img src="images/3f92a44-tfs4.png" title="tfs4.png" class="ScreenshotFullsize" />
+                                            <li value="2">
+                                                <p>Select empty job</p>
+                                            </li>
+                                            <img src="images/a3f06a9-tfs5.png" title="tfs5.png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Add task</p>
+                                            </li>
+                                            <img src="images/6175fc6-tfs6.png" title="tfs6.png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Add Docker task</p>
+                                            </li>
+                                            <img src="images/c4e0e7a-tfs7.png" title="tfs7.png" class="ScreenshotFullsize" />
+                                            <li value="5">
+                                                <p>Select Action: Run a Docker command</p>
+                                            </li>
+                                            <img src="images/93a38c4-tfs8.png" title="tfs8.png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>Set the Command with the appropriate parameters, as described in the <a href="../../running-tests/the-command-line-cli/index.htm">CLI page</a>. Here is the basic command template.</p>
+                                            </li>
+                                            <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                                <div class="codeSnippetBody"><pre><code>run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --token &lt;TOKEN&gt; --project &lt;PROJECT-ID&gt; --grid &lt;GRID-NAME&gt; --report-file /opt/testim-runner/testim-sanity-$(Build.BuildId)-report.xml</code></pre>
+                                                </div>
+                                            </div>
+                                            <img src="images/76b5b0e-tfs9.png" title="tfs9.png" class="ScreenshotFullsize" />
+                                            <p>​ <strong>Note</strong>:  For the grid name, read <a href="../grid-management/index.htm">here</a> how to set up your grid.</p>
+                                            <li value="7">
+                                                <p>In order for VSTS/TFS to store, analyze and show the results, we generate a standard JUnitXMLReporter XML file.<br /></p>
+                                            </li>
+                                            <p>For VSTS/TFS to use the file you need to add a Publish Test Results task</p>
+                                            <img src="images/a99d051-tfs10.png" title="tfs10.png" class="ScreenshotFullsize" />
+                                            <li value="8">
+                                                <p>Select Test result format: JUnit</p>
+                                            </li>
+                                            <img src="images/c8ae6c1-tfs11.png" title="tfs11.png" class="ScreenshotFullsize" />
+                                            <li value="9">
+                                                <p>Set the Test results files value, according to the "report-file" parameter in section 8 and set the</p>
+                                            </li>
+                                            <img src="images/83f530c-tfs12.png" title="tfs12.png" class="ScreenshotFullsize" />
+                                            <li value="10">
+                                                <p>Set the Search folder <strong>$(Build.BinariesDirectory)</strong></p>
+                                            </li>
+                                            <img src="images/254a96d-tfs13.png" title="tfs13.png" class="ScreenshotFullsize" />
+                                            <li value="11">
+                                                <p>Save the build settings</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/5d80b20-tfs14.png" title="tfs14.png" class="ScreenshotFullsize" />
+                                        <p>​ ​<br /> ​</p>
+                                    

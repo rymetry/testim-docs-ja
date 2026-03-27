@@ -1,0 +1,134 @@
+
+                                        <h1>qTest Integration</h1>
+                                        <h2><a name="what-is-qtest"></a>What is qTest?</h2>
+                                        <p>Tricentis' <a href="https://www.tricentis.com/products/unified-test-management-qtest/">qTest test management platform</a> provides Agile teams with a suite of software testing tools designed to improve speed, efficiency and collaboration throughout the software testing lifecycle. The platform's flagship product, qTest Manager transforms the test case management process, helping enterprise teams get faster and more efficient. Additionally, qTest Insights offers the testing team a self-service business intelligence tool to consolidate, manage and analyze all your test metrics.</p>
+                                        <h2><a name="why-do-i-need-qtest-integration"></a>Why do I need qTest integration?</h2>
+                                        <p>The qTest integration allows you to link a test in qTest to a test in Testim. After running the test in Testim, the test results will be automatically displayed in qTest's execution results, giving you a single view of the tests that were executed in Testim and in qTest.</p>
+                                        <h2><a name="setting-qtest-integration"></a>Setting qTest integration</h2>
+                                        <p>Before using the qTest and Testim integration, you will need to connect Testim to the desired qTest project. This process is required only once. → <strong>To connect Testim to qTest:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>Go to <strong>Settings &gt; Integration</strong> tab. Under <strong>General</strong> you will find various integration modules.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the qTest integration module, click <strong>Login</strong>.</p>
+                                            </li>
+                                            <img src="images/dbe2722-image_3.png" title="image (3).png" class="ScreenshotFullsize" />
+                                            <li value="3">
+                                                <p>Open qTest, copy the domain from the URL (make sure you are logged in and in the designated project) and paste it into the <strong>URL field</strong> in Testim. The URL structure should be <span class="FileOrFilePath">https://&lt;projectName&gt;.qtestnet.com/</span>. Replace <span class="FileOrFilePath">projectName</span> with the name of the project. For example, the <span class="FileOrFilePath">projectName</span> in the account below is myProject.</p>
+                                            </li>
+                                            <img src="images/761db53-image_4.png" title="image (4).png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>In Testim, the <strong>Username</strong> field, enter your qTest username.</p>
+                                            </li>
+                                            <li value="5">
+                                                <p>Login to <strong>qTest</strong> as an <strong>Admin</strong> user, click <strong>Resources</strong> (downwards arrow).</p>
+                                            </li>
+                                            <img src="images/64df5b6-image_5.png" title="image (5).png" class="ScreenshotFullsize" />
+                                            <li value="6">
+                                                <p>In the <strong>Resources</strong> screen, open the <strong>API &amp;SDK</strong> menu.</p>
+                                            </li>
+                                            <img src="images/9721b13-image_6.png" title="image (6).png" class="ScreenshotFullsize" />
+                                            <li value="7">
+                                                <p>Copy the <strong>Bearer Token</strong> from qTest and paste it in the ApiKey field in Testim.</p>
+                                            </li>
+                                            <li value="8">
+                                                <p>In Testim, click <strong>Connect</strong></p>
+                                            </li>
+                                            <li value="9">
+                                                <p>In Testim, select the qTest project(s) that you would like to connect to from the list.</p>
+                                            </li>
+                                        </ol>
+                                        <img src="images/dfaf629-image_7.png" title="image (7).png" class="ScreenshotFullsize" />
+                                        <p>At this point Testim is connected to a project in qTest, but not to a specific test.</p>
+                                        <div class="note">
+                                            <p>You may connect one TMS (Test Management System) at a time. So if your Testim system is already connected to another TMS, you will need to disconnect this TMS first and only then connect qTest. Note that by disconnecting the TMS, you will remove the connections between the tests. So, if you want to connect the previous TMS again you will have to recreate the connections as well.</p>
+                                        </div>
+                                        <h2><a name="connecting-a-test-in-testim-to-a-qtest-test"></a>Connecting a test in Testim to a qTest test</h2>
+                                        <p>After setting up the integration between Testim and qTest, you are ready to connect a specific test in Testim to a test in qTest. → <strong>To connect a test in Testim to a test in qTest:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In Testim, open the test that you would like to be connected.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>Inside the test in Testim, click the <strong>Properties</strong> icon (:fa-cog:) on the <strong>Setup</strong> step (the first step).</p>
+                                            </li>
+                                            <li value="3">
+                                                <p>In the setup steps' <strong>Properties</strong> panel, under Test in qTest, select the qTest project from the first drop-down menu and then the specific test from the second drop-down menu.</p>
+                                            </li>
+                                            <img src="images/103f85c-image_2.png" title="image (2).png" class="ScreenshotFullsize" />
+                                            <li value="4">
+                                                <p>Click <strong>Save</strong>.</p>
+                                            </li>
+                                        </ol>
+                                        <div class="note">
+                                            <p>qTest test case has to be "<strong>approved</strong>" upon first connection</p>
+                                        </div>
+                                        <img src="images/3a5c5d0-screenshot_at_jun_01_13-36-04.png" title="Screenshot at Jun 01 13-36-04.png" class="ScreenshotFullsize" />
+                                        <h2><a name="running-a-test-and-viewing-the-testim-test-results-in-qtest"></a>Running a test and viewing the Testim test results in qTest</h2>
+                                        <p>To view the result of a test execution in qTest, you will need to run the connected test in Testim using a Remote Grid only. After running a connected test in Testim, the test result will be displayed in the relevant qTest project under the <strong>Test Execution</strong> tab. The names of Testim-originated executions will use the following naming convention: "&amp;lt;Testim.io branch name&amp;gt; - &amp;lt;execution name&amp;gt;".</p>
+                                        <div class="note">
+                                            <p>If the test in qTest has been modified (new version number), only the approved version of the test will be executed in Testim. This means that if you only clicked <strong>Save</strong>, the <strong>previous</strong> approved version will run, and it will be reflected in qTest as status: "unexecuted" from the execution report. If you clicked <strong>Save</strong> and then <strong>Approve</strong>, the new approved version will run.</p>
+                                        </div>
+                                        <p>→ <strong>To view a test execution in qTest:</strong></p>
+                                        <ol>
+                                            <li value="1">
+                                                <p>In qTest Manager, go to <strong>Test Executions</strong>.</p>
+                                            </li>
+                                            <li value="2">
+                                                <p>In the navigation pane, click on the relevant execution.<br /></p>
+                                            </li>
+                                            <p>The following screen is displayed:</p>
+                                            <img src="images/4758c86-image.png" title="image.png" class="ScreenshotFullsize" />
+                                            <p>In the bottom-right pane, a list of executions is displayed. The <span class="FileOrFilePath">ID</span> column represents the test ID in qTest. The <span class="FileOrFilePath">Status</span> column displays the test run results coming from Testim.<br /></p>
+                                            <li value="3">
+                                                <p>Click the <strong>ID</strong> to view the test details.<br /></p>
+                                            </li>
+                                            <p>The following screen is displayed:</p>
+                                            <img src="images/cee1498-image_1.png" title="image (1).png" class="ScreenshotFullsize" />
+                                            <p>The following details are pushed to qTest from Testim:</p>
+                                            <ul>
+                                                <li>
+                                                    <p><strong>Name</strong> - the name of the test in Testim.</p>
+                                                </li>
+                                                <li>
+                                                    <p><strong>Status</strong> - the status of the execution. The status displayed is the qTest status, which was translated from the Testim status as follows (Testim -&gt; qTest):</p>
+                                                </li>
+                                                <li>
+                                                    <p>ABORTED - Unexecuted</p>
+                                                </li>
+                                                <li>
+                                                    <p>SKIPPED (quarantine status in Testim) - Blocked</p>
+                                                </li>
+                                                <li>
+                                                    <p>TIMEOUT - Failed</p>
+                                                </li>
+                                                <li>
+                                                    <p>PASSED - Passed</p>
+                                                </li>
+                                                <li>
+                                                    <p>FAILED - Failed</p>
+                                                </li>
+                                            </ul>
+                                            <li value="4">
+                                                <p>Within the <strong>Execution History</strong> there is a <strong>Test Log Details</strong> pane with the following information:</p>
+                                            </li>
+                                        </ol>
+                                        <ul>
+                                            <li>
+                                                <p>Result URL - opens the test result in Testim (i.e. displaying the result at the top).</p>
+                                            </li>
+                                            <li>
+                                                <p>Console Logs URL - opens the console log in Testim.</p>
+                                            </li>
+                                            <li>
+                                                <p>Network Logs URL - opens the network logs in Testim.</p>
+                                            </li>
+                                        </ul>
+                                        <div class="note">
+                                            <p>Suite runs will be presented as one run in qTest, click the certain run in order to see the results of all tests in the suite.</p>
+                                        </div>
+                                        <div class="note">
+                                            <p>Mandatory custom fields in qTest are not supported. Making a custom field on qTest mandatory may cause the integration to stop working.</p>
+                                        </div>
+                                    
