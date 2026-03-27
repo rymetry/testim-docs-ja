@@ -1,0 +1,35 @@
+<!-- サイドバーのスクロール位置を sessionStorage で保存・復元 -->
+<script is:inline>
+  (() => {
+    const KEY = 'doc-sidebar-scroll';
+    const getEl = () => document.getElementById('doc-sidebar-scroll');
+
+    const restore = () => {
+      const el = getEl();
+      if (!el) return;
+      try {
+        const saved = sessionStorage.getItem(KEY);
+        if (!saved) return;
+        const { top } = JSON.parse(saved);
+        if (typeof top === 'number') el.scrollTop = top;
+      } catch {}
+    };
+
+    const save = () => {
+      const el = getEl();
+      if (!el) return;
+      try {
+        sessionStorage.setItem(KEY, JSON.stringify({ top: el.scrollTop }));
+      } catch {}
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', restore, { once: true });
+    } else {
+      restore();
+    }
+
+    window.addEventListener('beforeunload', save);
+    window.addEventListener('pagehide', save);
+  })();
+</script>
