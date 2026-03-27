@@ -1,143 +1,22 @@
 ---
-import '../styles/global.css';
-import { Font } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
-type HomeLayoutProps = {
+type Props = {
   title: string;
   description: string;
 };
 
-const { title, description } = Astro.props as HomeLayoutProps;
-
-const siteTitle = 'Tricentis Testim ユーザー制作日本語翻訳ドキュメント';
-const pageTitle = `${title} | ${siteTitle}`;
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
-const ogImageUrl = new URL('/og-image.png', Astro.site ?? Astro.url);
-
-const GTM_ID = 'GTM-MVHF4WN9';
-
-const gtmHeadCode = `
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');</script>
-<!-- End Google Tag Manager -->
-`;
-
-const gtmBodyCode = `
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-`;
+const { title, description } = Astro.props;
 ---
 
-<html lang="ja" class="h-full bg-slate-50">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={canonicalUrl.href} />
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl.href} />
-    <meta property="og:image" content={ogImageUrl.href} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="ja_JP" />
-    <meta property="og:site_name" content={siteTitle} />
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl.href} />
-    <Font cssVariable="--font-noto-sans-jp" preload />
-    <Fragment set:html={gtmHeadCode} />
-  </head>
-  <body class="flex min-h-screen flex-col font-sans text-slate-900 antialiased">
-    <Fragment set:html={gtmBodyCode} />
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
 
-    <header class="border-b border-slate-200 bg-white">
-      <div class="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-4 py-4 sm:px-6">
-        <a href="/" class="flex items-center gap-2.5">
-          <img src="/logo.svg" alt="Testim Docs JA" class="h-8 w-8 shrink-0" />
-          <p class="text-sm font-semibold tracking-wide text-slate-800">
-            Tricentis Testim ユーザー制作日本語翻訳ドキュメント
-          </p>
-        </a>
-      </div>
-    </header>
+  <main class="flex-1">
+    <slot />
+  </main>
 
-    <main class="flex-1">
-      <slot />
-    </main>
-
-    <footer class="border-t border-slate-200 bg-white py-6">
-      <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6">
-        <div
-          class="flex flex-col gap-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div class="flex items-start gap-3">
-            <img src="/logo.svg" alt="" class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-            <div class="flex flex-col gap-1">
-              <p class="font-medium text-slate-700">
-                &copy; 2025 Tricentis Testim ユーザー制作日本語翻訳ドキュメント
-              </p>
-              <p class="text-slate-400">
-                このサイトは <a
-                  href="https://help.testim.io/docs/testim-overview"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-blue-600 underline decoration-blue-200 hover:text-blue-700"
-                >
-                  Tricentis Testim Docs（公式ドキュメント）
-                </a> のユーザー制作日本語翻訳ドキュメントです
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center justify-center gap-3 sm:justify-end">
-            <a
-              href="https://status.tricentis.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Tricentis ステータスページ（新しいタブで開く）"
-              class="text-slate-400 transition hover:text-slate-600"
-            >
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M18.364 5.636a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M12 12h.01"></path>
-              </svg>
-            </a>
-            <a
-              href="https://github.com/rymetry/testim-docs-ja"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub リポジトリ（新しいタブで開く）"
-              class="text-slate-400 transition hover:text-slate-600"
-            >
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
-              </svg>
-            </a>
-            <a
-              href="https://x.com/rymetry"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X（旧 Twitter）（新しいタブで開く）"
-              class="text-slate-400 transition hover:text-slate-600"
-            >
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </body>
-</html>
+  <SiteFooter />
+</BaseLayout>

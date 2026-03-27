@@ -1,9 +1,7 @@
-/**
- * @deprecated This module is no longer used in production.
- * Sidebar extraction has been replaced by MadCap Flare TOC parsing
- * in madcap_toc.mjs. Content snapshots are now stored as HTML.
- * Retained for potential rollback only.
- */
+// NOTE: This module is no longer used in production.
+// Sidebar extraction has been replaced by MadCap Flare TOC parsing
+// in madcap_toc.mjs. Content snapshots are now stored as HTML.
+// Retained for potential rollback only.
 
 /** Attributes preserved through normalization (all others stripped). */
 const ATTR_WHITELIST = new Set([

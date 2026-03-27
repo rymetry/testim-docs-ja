@@ -1,0 +1,65 @@
+<!-- .docs-prose 内の画像クリックでモーダル表示するライトボックス（リンク付き画像は除外） -->
+<script is:inline>
+  (() => {
+    const isImageLink = (img) => img.closest('a');
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'image-lightbox-backdrop';
+
+    const body = document.createElement('div');
+    body.className = 'image-lightbox-body';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'image-lightbox-close';
+    closeBtn.setAttribute('aria-label', '閉じる');
+    closeBtn.innerText = '×';
+
+    const img = document.createElement('img');
+    img.alt = '';
+    const caption = document.createElement('div');
+    caption.className = 'image-lightbox-caption';
+
+    body.appendChild(closeBtn);
+    body.appendChild(img);
+    body.appendChild(caption);
+    backdrop.appendChild(body);
+    document.body.appendChild(backdrop);
+
+    const hide = () => {
+      backdrop.classList.remove('is-visible');
+      img.src = '';
+      caption.textContent = '';
+    };
+
+    const show = (src, altText) => {
+      img.src = src;
+      img.alt = altText || '';
+      caption.textContent = altText || '';
+      backdrop.classList.add('is-visible');
+    };
+
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop || e.target === closeBtn) {
+        hide();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hide();
+    });
+
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLImageElement)) return;
+      if (!target.closest('.docs-prose')) return;
+      if (isImageLink(target)) return;
+
+      const src = target.currentSrc || target.src;
+      if (!src) return;
+
+      e.preventDefault();
+      show(src, target.alt || '');
+    });
+  })();
+</script>
