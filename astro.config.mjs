@@ -79,12 +79,8 @@ export default defineConfig({
   },
 
   markdown: {
-    // #177: 日本語向け SmartyPants 設定（Astro 6.1）
-    // 日本語では「」『』を直接書くため、英語向き curly quotes 変換を無効化
-    smartypants: {
-      quotes: false,
-      ellipses: false,
-    },
+    // #177: 日本語では curly quotes / ellipses 変換が不要なため無効化
+    smartypants: false,
     remarkPlugins: [
       remarkGfm,  // GitHub Flavored Markdown (テーブル、タスクリスト、脚注など)
       remarkDirective,        // カスタムディレクティブ

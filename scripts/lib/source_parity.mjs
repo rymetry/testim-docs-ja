@@ -460,6 +460,7 @@ export function extractParagraphCounts(body) {
   let inCodeBlock = false;
   let inCallout = false;
   let inTable = false;
+  let inHtmlComment = false;
   let inParagraph = false;
 
   for (const line of lines) {
@@ -538,8 +539,24 @@ export function extractParagraphCounts(body) {
       inParagraph = false;
       continue;
     }
+    // Skip HTML comments (single-line and multiline)
+    if (inHtmlComment) {
+      if (/-->/.test(trimmed)) {
+        inHtmlComment = false;
+      }
+      inParagraph = false;
+      continue;
+    }
+    if (/^<!--/.test(trimmed)) {
+      if (!/-->/.test(trimmed)) {
+        inHtmlComment = true;
+      }
+      inParagraph = false;
+      continue;
+    }
 
-    if (!trimmed) {
+    // Treat zero-width-space-only lines as blank
+    if (!trimmed || /^[\u200B\u200C\u200D\uFEFF]+$/.test(trimmed)) {
       inParagraph = false;
       continue;
     }

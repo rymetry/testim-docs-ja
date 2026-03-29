@@ -2,7 +2,7 @@
 title: Copilot ライセンス管理
 description: 企業オーナーが Copilot ライセンスを管理し、ユーザーにライセンスシートを割り当てる方法について説明します。
 category: 管理者機能
-order: 14007
+order: 14008
 updated: '2025-09-19'
 sourceUrl: 'https://docs.tricentis.com/testim/content/administration/copilot-license-management.htm'
 keywords:

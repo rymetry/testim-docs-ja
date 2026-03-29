@@ -5,7 +5,9 @@
  * Custom rules handle MadCap Flare HTML patterns that the default rules
  * cannot convert accurately:
  *   - <div class="note|caution"> → :::note / :::caution directives
+ *   - <a class="codeSnippetCopyButton"> → stripped (parity noise)
  *   - <ol> with interspersed <img>, <p>, <div>, <ul> siblings alongside <li>
+ *   - <table> → Markdown pipe table
  */
 
 import TurndownService from 'turndown';
@@ -35,6 +37,26 @@ turndown.addRule('madcap-callout', {
     const directive = CALLOUT_CLASS_MAP[cls];
     if (!directive) return content;
     return `\n\n:::${directive}\n${content.trim()}\n:::\n\n`;
+  },
+});
+
+// ---------------------------------------------------------------------------
+// MadCap Flare code snippet: strip <a class="codeSnippetCopyButton">
+//
+// EN HTML wraps code blocks in <div class="codeSnippet"> which contains an
+// <a class="codeSnippetCopyButton">Copy</a> link. Without this rule, turndown
+// emits "[Copy](javascript:void(0);)" as a text paragraph, inflating
+// paragraph counts in parity checks.
+// ---------------------------------------------------------------------------
+
+turndown.addRule('madcap-code-snippet-copy', {
+  filter(node) {
+    if (node.nodeName !== 'A') return false;
+    const classes = (node.getAttribute('class') || '').split(/\s+/);
+    return classes.includes('codeSnippetCopyButton');
+  },
+  replacement() {
+    return '';
   },
 });
 

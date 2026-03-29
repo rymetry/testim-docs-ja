@@ -40,7 +40,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ### Set Cookie ステップで設定
 
-**Set Cookie** ステップは、テストの UI から直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメーターを利用します。
+**Set Cookie** ステップは、テストの UI から直接 Cookie を設定します。属性を手入力するか、**Get Cookie** で取得したパラメーターを利用します。\
 **属性を直接入力して Cookie を設定するには:**
 
 1. 追加したい位置の （矢印）にカーソルを合わせます。
@@ -90,7 +90,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/55825e1-Testim_206a_r.png)
 
-テストを実行すると、指定した属性で Cookie が設定されます。
+テストを実行すると、指定した属性で Cookie が設定されます。\
 **パラメーターから Cookie を設定するには:**
 
 1. Cookie を追加したい位置の （矢印）にカーソルを合わせます。
@@ -135,8 +135,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ### Setup ステップの「Test Data」プロパティを使って Cookie を設定する
 
-特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。
-
+特定テストでのみ Cookie を読み込ませたい、あるいはページ読み込み前に Cookie を設定したい場合は、Setup ステップの **Test Data** プロパティを使います。\
 **Test Data プロパティで Cookie を設定するには:**
 
 1. テストの最初のステップである **Setup** ステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
@@ -188,8 +187,7 @@ return {
 
 ### カスタム JS（JavaScript）ステップを使って Cookie を設定する
 
-特定のタイミングで Cookie を設定したいが、テスト開始直後である必要はない場合は、**Custom JavaScript** ステップ（custom action）を使って任意の位置で Cookie を設定できます。
-
+特定のタイミングで Cookie を設定したいが、テスト開始直後である必要はない場合は、**Custom JavaScript** ステップ（custom action）を使って任意の位置で Cookie を設定できます。\
 **カスタムアクションステップで JavaScript を使って Cookie を設定するには:**
 
 1. Cookie を追加したい位置の （矢印）にカーソルを合わせます。
@@ -249,8 +247,7 @@ document.cookie = 'username=tomsmith';
 
 ### 設定ファイルを使って Cookie を設定する
 
-CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメーターや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。
-
+CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメーターや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。\
 **設定ファイルを使って Cookie を設定するには:**
 
 1. JavaScript の設定ファイルを作成します。詳細は [Configuration file & run hooks](/docs/configuration-file-run-hooks) を参照してください。
@@ -278,7 +275,7 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 ### Get Cookie ステップを使って Cookie を取得する {#getting-cookies-using-the-get-cookie-step}
 
-**Get Cookie** ステップを使うと、テスト中の UI から直接 Cookie を読み取り、その値を変数に保存できます。
+**Get Cookie** ステップを使うと、テスト中の UI から直接 Cookie を読み取り、その値を変数に保存できます。\
 **Get Cookie ステップで Cookie を取得するには:**
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/c7b7428-Jan-31-2021_06-34-55.gif)
@@ -336,8 +333,7 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 ### カスタム JS（JavaScript）ステップを使って Cookie を取得する
 
-Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。
-
+Get Cookie ステップを使わなくても、custom action ステップ内の JavaScript で Cookie の値を取得することもできます。\
 **カスタムアクションステップで Cookie を取得するには:**
 
 1. Cookie を取得したい位置の （矢印）にカーソルを合わせます。

@@ -838,6 +838,24 @@ describe('extractParagraphCounts', () => {
     const result = extractParagraphCounts(body);
     assert.equal(result.get('Section'), 2);
   });
+
+  it('does not count single-line HTML comments as paragraphs', () => {
+    const body = '## Section\nParagraph one.\n\n<!-- markdownlint-disable-next-line MD036 -->\n\nParagraph two.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+
+  it('does not count multiline HTML comments as paragraphs', () => {
+    const body = '## Section\nParagraph one.\n\n<!--\nThis is a\nmultiline comment\n-->\n\nParagraph two.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+
+  it('resumes paragraph counting after multiline comment closes', () => {
+    const body = '## Section\n<!--\ncomment\n-->\nResumed paragraph.\n';
+    const result = extractParagraphCounts(body);
+    assert.equal(result.get('Section'), 1);
+  });
 });
 
 // ---------------------------------------------------------------------------

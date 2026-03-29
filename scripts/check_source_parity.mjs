@@ -174,11 +174,19 @@ export async function checkSourceParity({
     const snapshotPath = path.join(SNAPSHOTS_DIR, `${fileSlug}.html`);
     if (fs.existsSync(snapshotPath)) {
       const enHtml = fs.readFileSync(snapshotPath, 'utf8');
+      let enBody;
       try {
-        const enBody = turndown.turndown(enHtml);
-        issues.push(...compareSnapshotStructure(enBody, doc.body));
+        enBody = turndown.turndown(enHtml);
       } catch (e) {
         console.warn(`turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`);
+        issues.push({
+          type: 'source-fetch-error',
+          detail: `HTML→Markdown 変換失敗: ${e.message}`,
+          severity: ISSUE_SEVERITY['source-fetch-error'],
+        });
+      }
+      if (enBody) {
+        issues.push(...compareSnapshotStructure(enBody, doc.body));
       }
     }
 
