@@ -88,8 +88,6 @@ testim --label "<YOUR LABEL>" ^
   Jenkins Execute Windows Batch Command
 </Image>
 
-\--
-
 5. Jenkins が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。Jenkins がファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
 
 ![Publish JUnit test result report ポストビルドアクションを追加する画面](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)

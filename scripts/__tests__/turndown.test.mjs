@@ -78,6 +78,32 @@ describe('MadCap callout rules', () => {
 });
 
 // ---------------------------------------------------------------------------
+// MadCap code snippet copy button stripping
+// ---------------------------------------------------------------------------
+describe('MadCap code snippet copy button rule', () => {
+  it('strips codeSnippetCopyButton anchor from code snippets', () => {
+    const html = '<div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a><div class="codeSnippetBody"><pre><code>const x = 1;</code></pre></div></div>';
+    const md = turndown.turndown(html);
+    assert.ok(!md.includes('Copy'), `Should not contain "Copy" text: ${md}`);
+    assert.ok(!md.includes('javascript:void'), `Should not contain javascript:void: ${md}`);
+    assert.ok(md.includes('const x = 1'), `Should preserve code content: ${md}`);
+  });
+
+  it('preserves normal anchors that are not copy buttons', () => {
+    const html = '<a href="https://example.com">Click here</a>';
+    const md = turndown.turndown(html);
+    assert.ok(md.includes('Click here'), `Should preserve link text: ${md}`);
+    assert.ok(md.includes('example.com'), `Should preserve link URL: ${md}`);
+  });
+
+  it('does not match anchors with similar but different class names', () => {
+    const html = '<a class="codeSnippetCopyButtonExtended" href="#">Extended</a>';
+    const md = turndown.turndown(html);
+    assert.ok(md.includes('Extended'), `Should preserve non-matching class: ${md}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // MadCap ordered list conversion
 // ---------------------------------------------------------------------------
 describe('MadCap ordered list rules', () => {

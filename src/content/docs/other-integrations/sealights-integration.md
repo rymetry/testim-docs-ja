@@ -101,9 +101,7 @@ Testim で、[コマンドラインインターフェイス（CLI）](/docs/the-
 
 ### labIdオプション
 
-Sealightsでは、`labId`は同じ環境でホストされているコンポーネントなど、同じ特性を共有するさまざまなコンポーネントに割り当てることができる識別子です。Sealightsエージェントを使用してコンポーネントを実行するときに、コンポーネントに`labId`を割り当てることができます。
-
-たとえば、Node.jsテストリスナーエージェントを使用する次のSealightsコマンドでは、コマンドの一部として`labId`を割り当てることができます:
+Sealightsでは、`labId`は同じ環境でホストされているコンポーネントなど、同じ特性を共有するさまざまなコンポーネントに割り当てることができる識別子です。Sealightsエージェントを使用してコンポーネントを実行するときに、コンポーネントに`labId`を割り当てることができます。たとえば、Node.jsテストリスナーエージェントを使用する次のSealightsコマンドでは、コマンドの一部として`labId`を割り当てることができます:
 
 ```shell
 npx slnodejs run --tokenfile ./path/to/sltoken.txt --buildsessionidfile buildSessionId [--labid <Lab ID>] --workspacepath "." --useinitialcolor true -- /your/backend/server/command

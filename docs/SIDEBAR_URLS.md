@@ -270,6 +270,7 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/project-user-management.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/project-and-user-management.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/project-settings.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/administration/encrypted-credentials.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/secrets.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/subscription-plans/index.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/copilot-license-management.htm

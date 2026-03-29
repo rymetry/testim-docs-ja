@@ -3,7 +3,7 @@ name: fix-doc-localization-issues
 description: |
   Process GitHub Issues for Testim docs Japanese localization.
   Fetches English originals, fixes Japanese docs (callouts, links, images, Japanese quality),
-  then creates PRs.
+  creates new pages when missing, then creates PRs.
   Triggers: "/fix-doc-localization-issues", "Issue対応", "Issue処理"
   Arguments: Space-separated Issue numbers (e.g., /fix-doc-localization-issues 40 42 43)
 ---
@@ -11,6 +11,7 @@ description: |
 # fix-doc-localization-issues Skill
 
 Fix quality issues in Japanese documentation as described in GitHub Issues, then create PRs.
+Handles both existing page fixes and new page creation.
 
 ## Arguments
 
@@ -52,7 +53,14 @@ git checkout -b claude/{topic-name}
 
 Derive the branch name from the Issue content (e.g., `claude/fix-recording-tests`).
 
-### Step 3: Compare with English Original
+### Step 3: Determine Fix or New Page
+
+Check if the target file exists in `src/content/docs/`:
+
+- **Exists** → Continue to Step 4A (fix existing page)
+- **Does not exist** → Continue to [Step 4B: Create New Page](#step-4b-create-new-page)
+
+### Step 4A: Compare with English Original (existing pages)
 
 WebFetch each target file's `sourceUrl` and verify:
 
@@ -61,7 +69,7 @@ WebFetch each target file's `sourceUrl` and verify:
 - All callouts are reflected
 - All content images are embedded in the body (not just downloaded — check placement matches the original)
 
-### Step 4: Fix Issues
+### Step 4A (cont.): Fix Issues
 
 Apply fixes based on findings. Common patterns:
 
@@ -74,6 +82,23 @@ Apply fixes based on findings. Common patterns:
 | Image not embedded | Embed at the correct position per the original |
 | Unnatural Japanese | Refer to TRANSLATION_GUIDE NG/OK patterns |
 | Mistranslated Testim terms | Revert to English (see TRANSLATION_GUIDE 5.2) |
+
+### Step 4B: Create New Page
+
+When the Issue identifies a page that does not yet exist in the repository:
+
+1. **Fetch EN original**: WebFetch the `sourceUrl` to obtain the English content
+2. **Fetch EN snapshot**: Run `npm run check:snapshots:fetch -- --slug={slug}` to save the HTML snapshot
+3. **Download images**: Run `npm run docs:fetch -- --slug={slug}` or download images referenced in the EN HTML to `public/images/{category-folder}/{slug}/`
+4. **Add to SIDEBAR_URLS.md**: Insert the URL at the correct position per `snapshots/en/sidebar.json`
+5. **Set order value**: Check adjacent files' `order` values. If inserting between existing values with no gap, shift subsequent files' `order` by +1
+6. **Create the markdown file** in `src/content/docs/{category-folder}/{slug}.md`:
+   - Frontmatter: title, description, category, order, updated, sourceUrl, keywords
+   - Follow heading mapping rules in WRITING_GUIDE (H1→title, 2nd+ H1→H2, **H2/H3/H4 はそのまま維持**)
+   - Embed all images at the positions matching the EN original
+   - Convert `<div class="note">` → `:::note`, links → `/docs/{slug}`
+   - Follow TRANSLATION_GUIDE for natural Japanese
+7. **Validate**: Run `npm run lint:docs -- --path={file}` and `npm run check:parity -- --slug={slug}`
 
 ### Step 5: Codex CLI Review (optional)
 
@@ -148,4 +173,4 @@ If you find patterns that should be added to TRANSLATION_GUIDE or WRITING_GUIDE:
 | WebFetch fails for sourceUrl | Verify URL in browser. If invalid, comment on the Issue |
 | Lint errors | Read error output, fix target files per WRITING_GUIDE |
 | Build errors | Check frontmatter YAML syntax. Run `astro check` for details |
-| Target file does not exist | Comment on the Issue. Do not create new files without asking |
+| Target file does not exist | Follow Step 4B to create the new page |
