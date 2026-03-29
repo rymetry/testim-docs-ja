@@ -86,7 +86,7 @@ Project/Company Owner は、暗号化された認証情報を使用し、テス�
 
 テストデータは **Setup** ステップの **Test Data** プロパティから追加できます。データ駆動テストの詳細については、[Configuring a Data-driven Test From The Visual Editor](/docs/configuring-a-data-driven-test-from-the-visual-editor) を参照してください。Test Data には暗号化された認証情報を含めることができます。
 
-### 認証情報の構文
+### Test Data での認証情報の構文
 
 暗号化された認証情報は以下の構文で指定します:
 
@@ -110,7 +110,7 @@ TST_CREDS.myEncryptedCredentials.password
 
 [設定ファイル](/docs/configuration-file-run-hooks)は、テストやテストスイートの実行に必要なすべてのパラメーターを含む共通の JavaScript ファイルです。単一テストまたは全テストの前後にアプリケーションバックエンドのセットアップやパラメーター定義に使用できる run hooks が含まれています。設定ファイルは `config` という名前の JSON ですべてのプロパティをエクスポートする必要があります。Config File での認証情報の定義は、他のパラメーターと同じオーバーライドルールに従います。
 
-### 認証情報の構文
+### Config File での認証情報の構文
 
 暗号化された認証情報は以下の構文で指定します:
 
@@ -129,7 +129,7 @@ TST_CREDS.<keyName>.<'username'|'password'>
 
 [JSON パラメーターファイル](/docs/json-parameters-file-parameters)を使用すると、テスト実行にパラメーターを渡すことができます。この方法を使用すると、テスト環境によって異なる動的な値をテスト内で定義できます。例えば、ローカルテスト時と CI でのテスト時に異なるログイン認証情報（ユーザー名とパスワード）を設定できます。パラメーターを定義する JSON パラメーターファイルを作成し、テスト実行時に JSON パラメーターファイルを呼び出す引数をコマンドに追加します。CLI コマンドは、実行に含まれるテストにパラメーターを渡します。
 
-### 認証情報の構文
+### Param File での認証情報の構文
 
 暗号化された認証情報は以下の構文で指定します:
 
@@ -235,7 +235,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 - **CLI** — 上記で説明した特別な `--user-access-key` フラグを追加して、通常のコマンドを使用します。
 
 ```bash
-npm i -g @Testim notification/testim-cli && testim --token <token Id> --project <project Id> --grid "Testim-Grid" --label "label #2" --user-access-key <key Id>
+npm i -g @testim/testim-cli && testim --token <token Id> --project <project Id> --grid "Testim-Grid" --label "label #2" --user-access-key <key Id>
 ```
 
 - **API** — [Testim REST API](/docs/api-access) コール（例: `POST /tests/run/{testId}`）を作成し、`user-access-key` の値を `X-User-Access-Key` フィールドに追加します。
