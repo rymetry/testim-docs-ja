@@ -43,11 +43,16 @@ function extractJapaneseLabel(sectionTitle: string): string {
   return (m ? m[1] : sectionTitle).trim();
 }
 
-/** Tricentis URL の末尾からベースネーム slug を抽出する */
+/**
+ * Tricentis URL の末尾からベースネーム slug を抽出する。
+ * `/content/overview/testim-overview/index.htm` → `testim-overview`
+ * `/content/overview/testim-automate.htm`       → `testim-automate`
+ *
+ * NOTE: scripts/lib/madcap_toc.mjs extractSlug() と同一ロジック。
+ * Astro ビルド層から scripts/ を import できないため複製。
+ */
 function extractSlugFromUrl(url: string): string | null {
-  const m =
-    url.match(/\/([a-z0-9_-]+)\/index\.htm$/i) ||
-    url.match(/\/([a-z0-9_-]+)\.htm$/i);
+  const m = url.match(/\/([a-z0-9_-]+)(?:\/index)?\.htm$/i);
   return m ? m[1].toLowerCase() : null;
 }
 
@@ -58,6 +63,7 @@ function getSidebarOrdering(): SidebarOrdering {
     const lines = text.split(/\r?\n/);
 
     const sectionRe = /^##\s+(.+?)\s*$/;
+    // ✅🔍 must precede ✅ — regex alternation is order-dependent
     const urlLineRe =
       /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
 
@@ -66,6 +72,7 @@ function getSidebarOrdering(): SidebarOrdering {
 
     let currentCategory: string | null = null;
     let globalItemIndex = 0;
+    let nullSlugCount = 0;
 
     for (const line of lines) {
       const sm = line.match(sectionRe);
@@ -86,18 +93,31 @@ function getSidebarOrdering(): SidebarOrdering {
       const um = line.match(urlLineRe);
       if (um && currentCategory) {
         const slug = extractSlugFromUrl(um[1]);
+        if (!slug) {
+          nullSlugCount++;
+          continue;
+        }
         // グローバルの並び（SIDEBAR内の出現順）を採用
-        if (slug && !itemIndexBySlug.has(slug)) {
+        if (!itemIndexBySlug.has(slug)) {
           itemIndexBySlug.set(slug, globalItemIndex++);
         }
       }
     }
 
+    if (nullSlugCount > 0) {
+      console.warn(
+        `[docs] getSidebarOrdering: ${nullSlugCount} URL(s) in SIDEBAR_URLS.md failed slug extraction`
+      );
+    }
+
     if (categoryIndexByLabel.size > 0 && itemIndexBySlug.size > 0) {
       return { categoryIndexByLabel, itemIndexBySlug };
     }
-  } catch {
-    // fall through
+  } catch (err) {
+    console.warn(
+      '[docs] getSidebarOrdering: failed to parse SIDEBAR_URLS.md, using fallback order.',
+      err instanceof Error ? err.message : err
+    );
   }
 
   // 失敗時は固定順のみ

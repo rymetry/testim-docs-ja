@@ -159,9 +159,7 @@ function collectPages(children, lookup) {
  * `/content/integrations/visual-validation/lambdatest_integration.htm` → `lambdatest_integration`
  */
 export function extractSlug(urlPath) {
-  const match =
-    urlPath.match(/\/([a-z0-9_-]+)\/index\.htm$/i) ||
-    urlPath.match(/\/([a-z0-9_-]+)\.htm$/i);
+  const match = urlPath.match(/\/([a-z0-9_-]+)(?:\/index)?\.htm$/i);
   return match ? match[1].toLowerCase() : null;
 }
 

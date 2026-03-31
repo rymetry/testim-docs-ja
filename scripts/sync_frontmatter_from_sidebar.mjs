@@ -9,6 +9,7 @@ const sidebarPath = SIDEBAR_PATH;
 
 function parseSidebarOrdering(text) {
   const sectionRe = /^##\s+(.+?)\s*$/;
+  // ✅🔍 must precede ✅ — regex alternation is order-dependent
   const urlLineRe =
     /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
 
@@ -36,7 +37,10 @@ function parseSidebarOrdering(text) {
     const um = line.match(urlLineRe);
     if (um && currentCategory) {
       const slug = extractSlug(um[1]);
-      if (!slug) continue;
+      if (!slug) {
+        console.warn(`parseSidebarOrdering: could not extract slug from URL: ${um[1]}`);
+        continue;
+      }
       const order = (categoryIndex + 1) * 1000 + (itemIndex + 1);
       if (!bySlug.has(slug)) {
         bySlug.set(slug, { category: currentCategory, categoryIndex, itemIndex, order });
