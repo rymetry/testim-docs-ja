@@ -60,38 +60,49 @@ describe('splitFrontmatter', () => {
 });
 
 describe('matchesSectionFilter', () => {
-  const relativePath = 'src/content/docs/results/test-results.md';
-  const data = { category: '結果' };
-
   it('returns true when no filter is provided', () => {
-    assert.ok(matchesSectionFilter(relativePath, data, null));
-    assert.ok(matchesSectionFilter(relativePath, data, ''));
+    assert.ok(matchesSectionFilter('src/content/docs/results/foo.md', {}, null));
+    assert.ok(matchesSectionFilter('src/content/docs/results/foo.md', {}, ''));
   });
 
-  it('matches by category (exact)', () => {
-    assert.ok(matchesSectionFilter(relativePath, data, '結果'));
+  it('resolves sidebar section by Japanese label and matches slug', () => {
+    // '概要' → Overview section → includes testim-overview
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(matchesSectionFilter(rel, { category: '概要' }, '概要'));
   });
 
-  it('matches by folder name', () => {
-    assert.ok(matchesSectionFilter(relativePath, data, 'results'));
+  it('resolves sidebar section by English name', () => {
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(matchesSectionFilter(rel, { category: '概要' }, 'Overview'));
   });
 
-  it('matches by basename', () => {
-    assert.ok(matchesSectionFilter(relativePath, data, 'test-results'));
+  it('resolves legacy alias テスト結果 → 結果', () => {
+    // execution-runs-screen is in the Results（結果）section
+    const rel = 'src/content/docs/results/execution-runs-screen.md';
+    assert.ok(matchesSectionFilter(rel, { category: 'テスト結果' }, 'テスト結果'));
   });
 
-  it('matches legacy alias via bidirectional substring (target includes candidate)', () => {
-    // --section=テスト結果 should match category '結果'
-    assert.ok(matchesSectionFilter(relativePath, data, 'テスト結果'));
+  it('resolves legacy alias 管理者機能 → 管理', () => {
+    const rel = 'src/content/docs/project-user-management/api-access.md';
+    assert.ok(matchesSectionFilter(rel, { category: '管理者機能' }, '管理者機能'));
   });
 
-  it('matches new name against legacy category via substring (candidate includes target)', () => {
-    const legacyData = { category: 'テスト結果' };
-    assert.ok(matchesSectionFilter(relativePath, legacyData, '結果'));
+  it('rejects slug not in the resolved section', () => {
+    // testim-overview is in Overview, not Results
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(!matchesSectionFilter(rel, { category: '概要' }, '結果'));
   });
 
-  it('returns false when nothing matches', () => {
-    assert.ok(!matchesSectionFilter(relativePath, data, '存在しないセクション'));
+  it('does not false-positive on substring matches like results-overview', () => {
+    // --section=Overview should NOT match results-overview (it is in Results, not Overview)
+    const rel = 'src/content/docs/results/results-overview.md';
+    assert.ok(!matchesSectionFilter(rel, { category: '結果' }, 'Overview'));
+  });
+
+  it('falls back to heuristic for unknown section names', () => {
+    const rel = 'src/content/docs/results/test-results.md';
+    // Substring match against folder name
+    assert.ok(matchesSectionFilter(rel, { category: '結果' }, 'results'));
   });
 });
 

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import matter from 'gray-matter';
+import { getSectionSlugSet } from './sidebar.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,9 +47,28 @@ export function getDocSection(relativePath) {
   return parts[3] ?? '';
 }
 
+// サイドバー解決のキャッシュ（同一セクションフィルタの再解決を避ける）
+let _cachedFilter = null;
+let _cachedSlugSet = null;
+
 export function matchesSectionFilter(relativePath, data, sectionFilter) {
   if (!sectionFilter) return true;
 
+  // サイドバーバックド解決（エイリアス対応・キャッシュ付き）
+  if (sectionFilter !== _cachedFilter) {
+    _cachedFilter = sectionFilter;
+    try {
+      _cachedSlugSet = getSectionSlugSet(sectionFilter);
+    } catch {
+      _cachedSlugSet = null;
+    }
+  }
+
+  if (_cachedSlugSet) {
+    return _cachedSlugSet.has(path.basename(relativePath, '.md'));
+  }
+
+  // サイドバーに未登録のセクション名 — ヒューリスティックフォールバック
   const target = normalizeMatchValue(sectionFilter);
   if (!target) return true;
 
@@ -61,10 +81,7 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
     .filter(Boolean)
     .map(normalizeMatchValue);
 
-  // 双方向部分一致: --section=テスト結果 が category '結果' にもマッチ（レガシーエイリアス対応）
-  return candidates.some(
-    (candidate) => candidate.includes(target) || target.includes(candidate)
-  );
+  return candidates.some((candidate) => candidate.includes(target));
 }
 
 export function buildSlugIndex(docsDir = DOCS_DIR) {
