@@ -17,14 +17,12 @@ function buildIssueSpecs(report) {
       title: report.snapshotDiff.issueTitle,
       body: report.snapshotDiff.body,
       shouldOpenIssue: report.snapshotDiff.shouldOpenIssue,
-      actionableCount: report.snapshotDiff.summary.actionableCount,
     },
     {
       key: 'parity-regression',
       title: report.parityRegression.issueTitle,
       body: report.parityRegression.body,
       shouldOpenIssue: report.parityRegression.shouldOpenIssue,
-      actionableCount: report.parityRegression.summary.actionableCount,
     },
   ];
 }
@@ -73,7 +71,6 @@ async function syncOneIssue({
   title,
   body,
   shouldOpenIssue,
-  actionableCount,
   key,
   core,
 }) {
@@ -81,7 +78,6 @@ async function syncOneIssue({
     .filter((issue) => issue.title === title)
     .sort(sortByUpdatedDesc);
   const openIssue = matching.find((issue) => issue.state === 'open') ?? null;
-  const latestClosedIssue = matching.find((issue) => issue.state === 'closed') ?? null;
 
   if (shouldOpenIssue) {
     if (openIssue) {
