@@ -100,25 +100,6 @@ async function syncOneIssue({
       return;
     }
 
-    if (latestClosedIssue) {
-      await github.rest.issues.update({
-        owner,
-        repo,
-        issue_number: latestClosedIssue.number,
-        title,
-        body,
-        state: 'open',
-      });
-      await github.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number: latestClosedIssue.number,
-        body: `Reopened after the latest scheduled actionable snapshot detected ${actionableCount} actionable ${key} file(s).`,
-      });
-      core?.info(`Reopened issue #${latestClosedIssue.number} (${key}).`);
-      return;
-    }
-
     const created = await createIssue({
       github,
       owner,
