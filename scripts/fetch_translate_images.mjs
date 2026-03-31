@@ -184,7 +184,7 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl
 
 export function rewriteDocLinks(markdown) {
   // Legacy readme.io doc: links
-  let result = markdown.replace(/\]\(doc:([a-z0-9-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
+  let result = markdown.replace(/\]\(doc:([a-z0-9_-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
     return `](/docs/${slug}${frag || ''})`;
   });
   // MadCap Flare relative .htm links (e.g. ../path/slug.htm, slug/index.htm)

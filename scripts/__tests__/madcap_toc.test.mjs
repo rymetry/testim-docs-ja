@@ -117,6 +117,14 @@ describe('extractSlug', () => {
   it('lowercases the slug', () => {
     assert.equal(extractSlug('/content/Overview/TestPage.htm'), 'testpage');
   });
+
+  it('extracts slug with underscores', () => {
+    assert.equal(extractSlug('/content/integrations/visual-validation/lambdatest_integration.htm'), 'lambdatest_integration');
+  });
+
+  it('extracts slug with underscores from index path', () => {
+    assert.equal(extractSlug('/content/integrations/visual_validation/index.htm'), 'visual_validation');
+  });
 });
 
 // ---------------------------------------------------------------------------

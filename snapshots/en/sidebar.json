@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-03-31T06:25:40.125Z",
+  "fetchedAt": "2026-03-31T06:45:19.353Z",
   "baseUrl": "https://docs.tricentis.com/testim",
   "sections": [
     {
@@ -949,12 +949,12 @@
           "title": "AutoRabit Integration"
         },
         {
-          "slug": null,
+          "slug": "visual_validation_index",
           "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/visual_validation_index.htm",
           "title": "Visual validation"
         },
         {
-          "slug": null,
+          "slug": "lambdatest_integration",
           "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/lambdatest_integration.htm",
           "title": "LambdaTest SmartUI integration"
         },

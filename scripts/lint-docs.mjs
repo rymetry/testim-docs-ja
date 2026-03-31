@@ -19,7 +19,7 @@ const PUBLIC_ROOT = path.join(ROOT, 'public');
 /** @typedef {{ file: string, line: number | null, rule: string, message: string, level: 'error' | 'warning' }} LintError */
 
 const VALID_CALLOUT_TYPES = new Set(['note', 'warning', 'tip', 'danger', 'success', 'info']);
-const VALID_SOURCE_URL_RE = /^https:\/\/docs\.tricentis\.com\/testim\/content\/[a-z0-9-]+(?:\/[a-z0-9-]+)*(?:\/index)?\.htm$/;
+const VALID_SOURCE_URL_RE = /^https:\/\/docs\.tricentis\.com\/testim\/content\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*(?:\/index)?\.htm$/;
 
 function parseFrontmatter(content) {
   const parsed = matter(content);
@@ -102,7 +102,7 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
 
   const bodyLines = body.split('\n');
   bodyLines.forEach((line, i) => {
-    const internalLinkRe = /\]\(\/docs\/([a-z0-9-]+)\/([a-z0-9-]+)(#[^)]+)?\)/g;
+    const internalLinkRe = /\]\(\/docs\/([a-z0-9_-]+)\/([a-z0-9_-]+)(#[^)]+)?\)/g;
     let m;
     while ((m = internalLinkRe.exec(line)) !== null) {
       err(
@@ -120,7 +120,7 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
 
     strippedLines.forEach((line, i) => {
       // Check A: Markdown links — [text](/docs/{slug}) or [text](/docs/{slug}#fragment)
-      const mdLinkRe = /\]\(\/(docs\/([a-z0-9-]+))(#[^)]+)?\)/g;
+      const mdLinkRe = /\]\(\/(docs\/([a-z0-9_-]+))(#[^)]+)?\)/g;
       let mdMatch;
       while ((mdMatch = mdLinkRe.exec(line)) !== null) {
         const slug = mdMatch[2];
@@ -146,7 +146,7 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
       }
 
       // Check B: HTML <a href="/docs/..."> links
-      const htmlLinkRe = /<a\b[^>]*href=["']\/(docs\/([a-z0-9-]+))(#[^"']*)?\s*["'][^>]*>/gi;
+      const htmlLinkRe = /<a\b[^>]*href=["']\/(docs\/([a-z0-9_-]+))(#[^"']*)?\s*["'][^>]*>/gi;
       let htmlMatch;
       while ((htmlMatch = htmlLinkRe.exec(line)) !== null) {
         const slug = htmlMatch[2];

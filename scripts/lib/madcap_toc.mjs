@@ -129,11 +129,12 @@ function collectPages(children, lookup) {
  * Extract slug from a MadCap Flare content URL path.
  * `/content/overview/testim-overview/index.htm` → `testim-overview`
  * `/content/overview/testim-automate.htm` → `testim-automate`
+ * `/content/integrations/visual-validation/lambdatest_integration.htm` → `lambdatest_integration`
  */
 export function extractSlug(urlPath) {
   const match =
-    urlPath.match(/\/([a-z0-9-]+)\/index\.htm$/i) ||
-    urlPath.match(/\/([a-z0-9-]+)\.htm$/i);
+    urlPath.match(/\/([a-z0-9_-]+)\/index\.htm$/i) ||
+    urlPath.match(/\/([a-z0-9_-]+)\.htm$/i);
   return match ? match[1].toLowerCase() : null;
 }
 
