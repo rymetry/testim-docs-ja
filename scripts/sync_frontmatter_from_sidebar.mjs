@@ -2,13 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { DOCS_DIR, SIDEBAR_PATH, findMdFiles } from './lib/project.mjs';
 import { extractJapaneseLabel } from './lib/sidebar.mjs';
+import { extractSlug } from './lib/madcap_toc.mjs';
 
 const docsRoot = DOCS_DIR;
 const sidebarPath = SIDEBAR_PATH;
 
 function parseSidebarOrdering(text) {
   const sectionRe = /^##\s+(.+?)\s*$/;
-  const urlRe = /^-\s+✅(?:🔍)?\s+https:\/\/help\.testim\.io\/docs\/([^\s#]+)\s*$/;
+  const urlLineRe =
+    /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
 
   /** @type {Map<string, { category: string; categoryIndex: number; itemIndex: number; order: number }>} */
   const bySlug = new Map();
@@ -31,9 +33,10 @@ function parseSidebarOrdering(text) {
       continue;
     }
 
-    const um = line.match(urlRe);
+    const um = line.match(urlLineRe);
     if (um && currentCategory) {
-      const slug = um[1];
+      const slug = extractSlug(um[1]);
+      if (!slug) continue;
       const order = (categoryIndex + 1) * 1000 + (itemIndex + 1);
       if (!bySlug.has(slug)) {
         bySlug.set(slug, { category: currentCategory, categoryIndex, itemIndex, order });

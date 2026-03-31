@@ -43,6 +43,14 @@ function extractJapaneseLabel(sectionTitle: string): string {
   return (m ? m[1] : sectionTitle).trim();
 }
 
+/** Tricentis URL の末尾からベースネーム slug を抽出する */
+function extractSlugFromUrl(url: string): string | null {
+  const m =
+    url.match(/\/([a-z0-9_-]+)\/index\.htm$/i) ||
+    url.match(/\/([a-z0-9_-]+)\.htm$/i);
+  return m ? m[1].toLowerCase() : null;
+}
+
 function getSidebarOrdering(): SidebarOrdering {
   try {
     const sidebarUrl = new URL('../../docs/SIDEBAR_URLS.md', import.meta.url);
@@ -50,7 +58,8 @@ function getSidebarOrdering(): SidebarOrdering {
     const lines = text.split(/\r?\n/);
 
     const sectionRe = /^##\s+(.+?)\s*$/;
-    const urlRe = /^-\s+✅(?:🔍)?\s+https:\/\/help\.testim\.io\/docs\/([^\s#]+)\s*$/;
+    const urlLineRe =
+      /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
 
     const categoryIndexByLabel = new Map<string, number>();
     const itemIndexBySlug = new Map<string, number>();
@@ -74,11 +83,11 @@ function getSidebarOrdering(): SidebarOrdering {
         continue;
       }
 
-      const um = line.match(urlRe);
+      const um = line.match(urlLineRe);
       if (um && currentCategory) {
-        const slug = um[1];
+        const slug = extractSlugFromUrl(um[1]);
         // グローバルの並び（SIDEBAR内の出現順）を採用
-        if (!itemIndexBySlug.has(slug)) {
+        if (slug && !itemIndexBySlug.has(slug)) {
           itemIndexBySlug.set(slug, globalItemIndex++);
         }
       }
