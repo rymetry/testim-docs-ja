@@ -3,7 +3,12 @@ const fs = require('fs');
 const DEFAULT_LABELS = ['documentation', 'automated'];
 
 function fallbackCore(core) {
-  return core ?? { info: console.log, warning: console.warn };
+  return core ?? {
+    info: console.log,
+    warning: console.warn,
+    error: console.error,
+    debug: console.debug,
+  };
 }
 
 function loadReport(reportPath) {

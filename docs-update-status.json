@@ -250,8 +250,8 @@
       "contentRootExtractable": true
     },
     {
-      "file": "src/content/docs/applitools-integration/applitools-integration.md",
-      "sourceUrl": "https://help.testim.io/docs/applitools-integration",
+      "file": "src/content/docs/visual-validation/visual-validation.md",
+      "sourceUrl": "https://help.testim.io/docs/visual-validation",
       "japaneseUpdated": "2025-09-19",
       "englishUpdated": "2025-09-19",
       "needsUpdate": false,
@@ -271,7 +271,7 @@
       "contentRootExtractable": true
     },
     {
-      "file": "src/content/docs/applitools-integration/override-applitools-app-name.md",
+      "file": "src/content/docs/visual-validation/override-applitools-app-name.md",
       "sourceUrl": "https://help.testim.io/docs/override-applitools-app-name",
       "japaneseUpdated": "2025-09-19",
       "englishUpdated": "2025-09-19",
@@ -292,7 +292,7 @@
       "contentRootExtractable": true
     },
     {
-      "file": "src/content/docs/applitools-integration/override-applitools-test-name.md",
+      "file": "src/content/docs/visual-validation/override-applitools-test-name.md",
       "sourceUrl": "https://help.testim.io/docs/override-applitools-test-name",
       "japaneseUpdated": "2025-09-19",
       "englishUpdated": "2025-09-19",

@@ -230,9 +230,9 @@
       "exceptionApplied": false
     },
     {
-      "file": "src/content/docs/applitools-integration/applitools-integration.md",
-      "fileName": "applitools-integration.md",
-      "sourceUrl": "https://help.testim.io/docs/applitools-integration",
+      "file": "src/content/docs/visual-validation/visual-validation.md",
+      "fileName": "visual-validation.md",
+      "sourceUrl": "https://help.testim.io/docs/visual-validation",
       "currentJapaneseDate": "2025-02-10",
       "fetchedEnglishDate": "2025-09-19",
       "needsUpdate": true,
@@ -250,7 +250,7 @@
       "exceptionApplied": false
     },
     {
-      "file": "src/content/docs/applitools-integration/override-applitools-app-name.md",
+      "file": "src/content/docs/visual-validation/override-applitools-app-name.md",
       "fileName": "override-applitools-app-name.md",
       "sourceUrl": "https://help.testim.io/docs/override-applitools-app-name",
       "currentJapaneseDate": "2025-02-10",
@@ -270,7 +270,7 @@
       "exceptionApplied": false
     },
     {
-      "file": "src/content/docs/applitools-integration/override-applitools-test-name.md",
+      "file": "src/content/docs/visual-validation/override-applitools-test-name.md",
       "fileName": "override-applitools-test-name.md",
       "sourceUrl": "https://help.testim.io/docs/override-applitools-test-name",
       "currentJapaneseDate": "2025-02-10",
