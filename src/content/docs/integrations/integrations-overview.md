@@ -22,10 +22,10 @@ Testim は以下のタイプの統合を提供しています:
 
 - [CI 統合](/docs/integrate-testim-to-your-ci)
 - [専用ランネル (Dedicated run tunnel)](/docs/dedicated-run-tunnel)
-- [Applitools 統合](/docs/visual-validation)
 - [GitHub 統合](/docs/github-integration)
 - [Sealights 統合](/docs/sealights-integration)
 - [グリッド管理](/docs/grid-management)
 - [Bitbucket 統合](/docs/bitbucket-integration)
 - [バグトラッカー設定](/docs/bug-tracker-settings)
+- [ビジュアル検証](/docs/visual_validation_index)
 - [テスト管理ツール連携](/docs/test-management-integrations)

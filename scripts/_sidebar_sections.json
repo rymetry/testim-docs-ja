@@ -862,6 +862,14 @@
     "jp": "Applitools統合",
     "urls": [
       {
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/visual_validation_index.htm",
+        "slug": "visual_validation_index"
+      },
+      {
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/lambdatest_integration.htm",
+        "slug": "lambdatest_integration"
+      },
+      {
         "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/index.htm",
         "slug": "visual-validation"
       },
