@@ -69,17 +69,28 @@ export function loadSidebarSections(sidebarPath = SIDEBAR_URLS_PATH) {
   return parseSidebarSections(fs.readFileSync(sidebarPath, 'utf8'));
 }
 
+// Backward-compatible aliases for renamed section labels.
+// Maps old Japanese label → current Japanese label.
+const SECTION_ALIASES = new Map([
+  ['テスト結果', '結果'],
+  ['管理者機能', '管理'],
+]);
+
 export function findSidebarSection(sections, sectionName) {
   if (!sectionName) return null;
   const normalizedTarget = normalizeSectionKey(sectionName);
 
-  return (
-    sections.find((section) =>
-      [section.rawTitle, section.english, section.japanese]
-        .filter(Boolean)
-        .some((candidate) => normalizeSectionKey(candidate) === normalizedTarget)
-    ) ?? null
+  const match = sections.find((section) =>
+    [section.rawTitle, section.english, section.japanese]
+      .filter(Boolean)
+      .some((candidate) => normalizeSectionKey(candidate) === normalizedTarget)
   );
+  if (match) return match;
+
+  const alias = SECTION_ALIASES.get(sectionName.trim());
+  if (alias) return findSidebarSection(sections, alias);
+
+  return null;
 }
 
 export function getSectionSlugSet(sectionName, sections = loadSidebarSections()) {

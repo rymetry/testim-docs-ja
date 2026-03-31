@@ -23,8 +23,6 @@
 
 ## Changelog（Changelog）
 
-- ✅🔍 https://docs.tricentis.com/testim/content/overview/changelog.htm
-
 ## Overview（概要）
 
 - ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm
@@ -307,6 +305,7 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-overview.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-getting-started.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/core-concepts.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/changelog.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-and-manage-test-environments.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-persona-and-add-users.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/index.htm

@@ -99,31 +99,35 @@ export function buildIndexLookup(chunkDataList) {
 const NON_DOC_SLUGS = new Set(['home']);
 
 export function buildSections(tree, lookup) {
-  const sections = [];
-  const seenSlugs = new Set();
+  // Pass 1: collect child pages for every section and gather all child slugs.
+  // Child pages (from collectPages) always take priority over leaf promotions.
+  const rawSections = [];
+  const childSlugs = new Set();
 
   for (const node of tree.n) {
     const sectionInfo = lookup.get(node.i);
     if (!sectionInfo) continue;
 
-    const allPages = collectPages(node.n ?? [], lookup);
+    const pages = collectPages(node.n ?? [], lookup);
+    for (const page of pages) {
+      if (page.slug) childSlugs.add(page.slug);
+    }
+    rawSections.push({ sectionInfo, pages });
+  }
 
-    // Top-level leaf nodes with a content URL are emitted as self-contained pages
-    // (e.g., Changelog has no children but is a real content page).
-    // Skip non-doc pages (Home) and slugs already claimed by another section.
-    if (allPages.length === 0 && sectionInfo.url) {
+  // Pass 2: promote leaf nodes only if their slug doesn't collide with any
+  // child page or a previously promoted leaf.
+  const promotedSlugs = new Set();
+  const sections = [];
+
+  for (const { sectionInfo, pages } of rawSections) {
+    if (pages.length === 0 && sectionInfo.url) {
       const slug = extractSlug(sectionInfo.url);
-      if (slug && !NON_DOC_SLUGS.has(slug) && !seenSlugs.has(slug)) {
-        allPages.push({ title: sectionInfo.title, url: sectionInfo.url, slug });
+      if (slug && !NON_DOC_SLUGS.has(slug) && !childSlugs.has(slug) && !promotedSlugs.has(slug)) {
+        pages.push({ title: sectionInfo.title, url: sectionInfo.url, slug });
+        promotedSlugs.add(slug);
       }
     }
-
-    // Deduplicate: drop pages whose slug was already claimed by a prior section
-    const pages = allPages.filter((page) => {
-      if (!page.slug || seenSlugs.has(page.slug)) return false;
-      seenSlugs.add(page.slug);
-      return true;
-    });
 
     sections.push({
       title: sectionInfo.title,

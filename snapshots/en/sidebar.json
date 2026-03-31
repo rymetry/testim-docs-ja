@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-03-31T07:41:32.406Z",
+  "fetchedAt": "2026-03-31T08:00:01.911Z",
   "baseUrl": "https://docs.tricentis.com/testim",
   "sections": [
     {
@@ -8,13 +8,7 @@
     },
     {
       "title": "Changelog",
-      "pages": [
-        {
-          "slug": "changelog",
-          "url": "https://docs.tricentis.com/testim/content/overview/changelog.htm",
-          "title": "Changelog"
-        }
-      ]
+      "pages": []
     },
     {
       "title": "Overview",
@@ -1268,6 +1262,11 @@
           "slug": "core-concepts",
           "url": "https://docs.tricentis.com/testim/content/salesforce-testing/core-concepts.htm",
           "title": "Core Concepts"
+        },
+        {
+          "slug": "changelog",
+          "url": "https://docs.tricentis.com/testim/content/salesforce-testing/changelog.htm",
+          "title": "Changelog"
         },
         {
           "slug": "create-and-manage-test-environments",
