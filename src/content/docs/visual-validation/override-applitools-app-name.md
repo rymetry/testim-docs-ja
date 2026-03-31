@@ -4,7 +4,7 @@ description: Applitools に送信されるアプリ名をテストデータま�
 category: 統合
 order: 12019
 updated: '2025-09-19'
-sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-app-name.htm'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-app-name.htm'
 keywords:
   - Testim
   - Applitools

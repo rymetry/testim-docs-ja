@@ -862,15 +862,23 @@
     "jp": "Applitools統合",
     "urls": [
       {
-        "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/index.htm",
-        "slug": "applitools-integration"
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/visual_validation_index.htm",
+        "slug": "visual_validation_index"
       },
       {
-        "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-test-name.htm",
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/lambdatest_integration.htm",
+        "slug": "lambdatest_integration"
+      },
+      {
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/index.htm",
+        "slug": "visual-validation"
+      },
+      {
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-test-name.htm",
         "slug": "override-applitools-test-name"
       },
       {
-        "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-app-name.htm",
+        "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-app-name.htm",
         "slug": "override-applitools-app-name"
       }
     ]

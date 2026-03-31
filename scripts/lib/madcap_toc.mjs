@@ -95,17 +95,44 @@ export function buildIndexLookup(chunkDataList) {
  * @param {Map<number, { url: string, title: string }>} lookup
  * @returns {Array<{ title: string, url: string, pages: Array<{ title: string, url: string, slug: string }> }>}
  */
+// Slugs that correspond to site-level pages, not documentation content.
+const NON_DOC_SLUGS = new Set(['home']);
+
 export function buildSections(tree, lookup) {
-  const sections = [];
+  // Pass 1: collect child pages for every section and gather all child slugs.
+  // Child pages (from collectPages) always take priority over leaf promotions.
+  const rawSections = [];
+  const childSlugs = new Set();
 
   for (const node of tree.n) {
     const sectionInfo = lookup.get(node.i);
     if (!sectionInfo) continue;
 
+    const pages = collectPages(node.n ?? [], lookup);
+    for (const page of pages) {
+      if (page.slug) childSlugs.add(page.slug);
+    }
+    rawSections.push({ sectionInfo, pages });
+  }
+
+  // Pass 2: promote leaf nodes only if their slug doesn't collide with any
+  // child page or a previously promoted leaf.
+  const promotedSlugs = new Set();
+  const sections = [];
+
+  for (const { sectionInfo, pages } of rawSections) {
+    if (pages.length === 0 && sectionInfo.url) {
+      const slug = extractSlug(sectionInfo.url);
+      if (slug && !NON_DOC_SLUGS.has(slug) && !childSlugs.has(slug) && !promotedSlugs.has(slug)) {
+        pages.push({ title: sectionInfo.title, url: sectionInfo.url, slug });
+        promotedSlugs.add(slug);
+      }
+    }
+
     sections.push({
       title: sectionInfo.title,
       url: sectionInfo.url,
-      pages: collectPages(node.n ?? [], lookup),
+      pages,
     });
   }
 
@@ -129,11 +156,12 @@ function collectPages(children, lookup) {
  * Extract slug from a MadCap Flare content URL path.
  * `/content/overview/testim-overview/index.htm` → `testim-overview`
  * `/content/overview/testim-automate.htm` → `testim-automate`
+ * `/content/integrations/visual-validation/lambdatest_integration.htm` → `lambdatest_integration`
  */
 export function extractSlug(urlPath) {
   const match =
-    urlPath.match(/\/([a-z0-9-]+)\/index\.htm$/i) ||
-    urlPath.match(/\/([a-z0-9-]+)\.htm$/i);
+    urlPath.match(/\/([a-z0-9_-]+)\/index\.htm$/i) ||
+    urlPath.match(/\/([a-z0-9_-]+)\.htm$/i);
   return match ? match[1].toLowerCase() : null;
 }
 

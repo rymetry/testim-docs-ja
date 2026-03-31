@@ -1,6 +1,7 @@
 
                                         <h1>Troubleshooting</h1>
-                                        <p>&lt;details&gt; &lt;summary&gt; &lt;b&gt;Unable to connect to your Salesforce environment &lt;/b&gt;&lt;/summary&gt; To connect to your Salesforce environment, ensure that the Salesforce environment meets the following requirements:</p>
+                                        <h2>Unable to connect to your Salesforce environment </h2>
+                                        <p>To connect to your Salesforce environment, ensure that the Salesforce environment meets the following requirements:</p>
                                         <ul>
                                             <li>
                                                 <p>Support API access - This requires Enterprise, Performance, Unlimited, and Developer Edition orgs. Professional Edition orgs can add API access as an add-on. Salesforce Essentials Edition does not support API access.</p>
@@ -44,13 +45,14 @@
                                             </li>
                                         </ul>
                                         <img src="images/32799d4-picture2.png" class="ScreenshotFullsize" />
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Scheduled test executions on the Grid are failing &lt;/b&gt;&lt;/summary&gt; If your tests are successfully executing locally, but failing on the Grid we suggest the following:</p>
+                                        <h2>Scheduled test executions on the Grid are failing </h2>
+                                        <p>If your tests are successfully executing locally, but failing on the Grid we suggest the following:</p>
                                         <ul>
                                             <li>
                                                 <p>Identity and Access Management (IAM) services such as Azure Active Directory or Okta may be interfering with the test execution. <strong>Possible solution</strong> - We recommend disabling IAM service for test accounts. Execute the test locally in incognito mode to emulate running a test on the Grid.</p>
                                             </li>
                                             <li>
-                                                <p>IP addresses may be blocked. <strong>Possible solution</strong> -  Check in the Login History for “Restricted IP” addresses from the application "TTA for Salesforce" under <strong>Settings &gt; Identity &gt;Login History</strong>.</p>
+                                                <p>IP addresses may be blocked. <strong>Possible solution</strong> -  Check in the Login History for “Restricted IP” addresses from the application "TTA for Salesforce" under <strong>Settings &gt; Identity &gt; Login History</strong>.</p>
                                             </li>
                                             <li>
                                                 <p>
@@ -77,7 +79,9 @@
                                             </li>
                                         </ul>
                                         <img src="images/e4526ac-picture5.png" class="ScreenshotFullsize" />
-                                        <p>&gt; &gt; &gt; If IP address restrictions are required, please Contact Support (<a href="https://www.testim.io/contact-us/">https://www.testim.io/contact-us/</a>)  for the required IP addresses to whitelist. &lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Scheduled test executions on the Grid are failing due to need for verification code &lt;/b&gt;&lt;/summary&gt; Verification codes are part of the device activation process and are not related to multi-factor authentication. Device activation happens when you log in and Salesforce asks you to enter a verification code that it sent via email. Device activation is triggered when one of the following occurs:</p>
+                                        <p>&gt; &gt; &gt; If IP address restrictions are required, please Contact Support (<a href="https://www.testim.io/contact-us/">https://www.testim.io/contact-us/</a>)  for the required IP addresses to whitelist. </p>
+                                        <h2>Scheduled test executions on the Grid are failing due to need for verification code </h2>
+                                        <p> Verification codes are part of the device activation process and are not related to multi-factor authentication. Device activation happens when you log in and Salesforce asks you to enter a verification code that it sent via email. Device activation is triggered when one of the following occurs:</p>
                                         <ul>
                                             <li>
                                                 <p>The IP address isn't whitelisted in Network Access settings.</p>
@@ -100,7 +104,8 @@
                                                 <p>Go to <strong>Settings &gt; Users &gt; Profile &gt; Login IP Ranges</strong> and ensure that the IP address range (Profile level) does not exceed 16 million addresses.</p>
                                             </li>
                                         </ul>
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Test execution fails in the first test step &lt;/b&gt;&lt;/summary&gt; Test execution may fail in the first test step when there is a conflict with other Chrome extensions. We recommend you to isolate the test execution to have only the Tricentis Testim extension enabled. To do so, follow these steps:</p>
+                                        <h2>Test execution fails in the first test step </h2>
+                                        <p>Test execution may fail in the first test step when there is a conflict with other Chrome extensions. We recommend you to isolate the test execution to have only the Tricentis Testim extension enabled. To do so, follow these steps:</p>
                                         <ol>
                                             <li value="1">
                                                 <p>Configure the Tricentis Testim extension to run in Incognito mode.</p>
@@ -111,7 +116,8 @@
                                             </li>
                                         </ol>
                                         <img src="images/909b048-troubleshoot_run_incognito_mode.png" class="ScreenshotFullsize" />
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Cannot find a record in Salesforce (by using the Find step) that was created in a previous step using the Create step &lt;/b&gt;&lt;/summary&gt; When creating a record in Salesforce using the <strong>Create</strong> step, there may be a time delay until the record is actually created in Salesforce and can be found using the <strong>Find</strong> step.  The solution is to add a step that includes a <strong><a href="../editing-tests/conditions/index.htm#configuring-a-custom-condition">Custom condition</a></strong> that repeatedly searches (in a loop) for a Record until it is found or until it has retried for a set number of times and only then it will proceed to the next step. The step that is added with the custom condition can be found as a Shared Step in the demo project here -  <a href="https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs">https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs</a> All you have to do is to add this shared step to your test. In the demo test the <strong>Create</strong> step is followed by the shared <strong>Find</strong> step.</p>
+                                        <h2>Cannot find a record in Salesforce </h2>
+                                        <p>When creating a record in Salesforce using the <strong>Create</strong> step, there may be a time delay until the record is actually created in Salesforce and can be found using the <strong>Find</strong> step.  The solution is to add a step that includes a <strong><a href="../editing-tests/conditions/index.htm#configuring-a-custom-condition">Custom condition</a></strong> that repeatedly searches (in a loop) for a Record until it is found or until it has retried for a set number of times and only then it will proceed to the next step. The step that is added with the custom condition can be found as a Shared Step in the demo project here -  <a href="https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs">https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs</a> All you have to do is to add this shared step to your test. In the demo test the <strong>Create</strong> step is followed by the shared <strong>Find</strong> step.</p>
                                         <img src="images/210f6e5-troubleshootfind.png" class="ScreenshotFullsize" />
                                         <p>The <strong>Find</strong> step includes a Custom condition to repeat the step until the record is found or up to four times:</p>
                                         <img src="images/f96d08f-customcondition.png" class="ScreenshotFullsize" />
@@ -130,7 +136,10 @@
                                             </li>
                                         </ul>
                                         <img src="images/46c1a28-sleep.png" class="ScreenshotFullsize" />
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Automation using the Salesforce Recorder is not selecting a value from a Salesforce pick-list &lt;/b&gt;&lt;/summary&gt; Salesforce pick-lists are challenging to automate. When recording a selection you need to select the text in the pick-list, avoiding any blank space. &lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Test is failing to find a field but it is in the Salesforce Step &lt;/b&gt;&lt;/summary&gt; This maybe due to the following reasons:</p>
+                                        <h2>Automation using the Salesforce Recorder is not selecting a value from a Salesforce pick-list</h2>
+                                        <p>Salesforce pick-lists are challenging to automate. When recording a selection you need to select the text in the pick-list, avoiding any blank space. </p>
+                                        <h2>Test is failing to find a field but it is in the Salesforce Step </h2>
+                                        <p>This maybe due to the following reasons:</p>
                                         <ul>
                                             <li>
                                                 <p>Salesforce account you are executing the test with may not have read permission to view this field.<br /></p>
@@ -144,7 +153,8 @@
                                         </ul>
                                         <p><strong>Possible solution</strong> - to validate the Page Layout check your Settings in Salesforce.</p>
                                         <br />
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Salesforce test execution fails on the Grid with “Element not found” but the test passes Locally &lt;/b&gt;&lt;/summary&gt; There are 2 possible reasons for this:</p>
+                                        <h2>Salesforce test execution fails on the Grid with “Element not found” but the test passes Locally </h2>
+                                        <p>There are 2 possible reasons for this:</p>
                                         <ol>
                                             <li value="1">
                                                 <p>Salesforce page load times maybe different between Grid and Local execution. Unexpected additional page load times can cause this timeout error.<br /></p>
@@ -155,9 +165,11 @@
                                             </li>
                                         </ol>
                                         <p><strong>Possible solution</strong> - We recommend not to re-size the browser window so that it remains the same size as when the test is executed on the Grid.</p>
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Concurrent Salesforce test executions are failing because a user gets logged out &lt;/b&gt;&lt;/summary&gt; Salesforce only allows concurrent logins from an account that has been authenticated with username/password, not with Sign-in with Salesforce (OAuth).</p>
+                                        <h2>Concurrent Salesforce test executions are failing because a user gets logged out</h2>
+                                        <p>Salesforce only allows concurrent logins from an account that has been authenticated with username/password, not with Sign-in with Salesforce (OAuth).</p>
                                         <p><strong>Possible solution -</strong> For concurrent test executions, use a Persona that has been authenticated with username/password. For more information, see <a href="create-a-persona-and-add-users.htm">Creating a persona</a>.</p>
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;When recording a test a step is missing &lt;/b&gt;&lt;/summary&gt; The recorder offers two modes of operation:</p>
+                                        <h2>When recording a test a step is missing </h2>
+                                        <p>The recorder offers two modes of operation:</p>
                                         <ul>
                                             <li>
                                                 <p><strong>Salesforce mode</strong> - in this mode, which is indicated by a cloud icon on the recorder , the recorder performs Salesforce steps, which enable the performance of multiple actions within a single step. The steps created using this mode are marked with a cloud icon.</p>
@@ -167,7 +179,8 @@
                                             </li>
                                         </ul>
                                         <p><strong>Possible solution -</strong> If you notice that the recorded steps are not appearing in the editor, you should turn off Salesforce mode by clicking on the cloud icon. For more details, see <a href="create-a-salesforce-test/index.htm#recording-steps">Recording Steps</a>.</p>
-                                        <p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt; &lt;b&gt;Fields are not present in a Salesforce Step&lt;/b&gt;&lt;/summary&gt; There are 2 possible reasons for this:</p>
+                                        <h2>Fields are not present in a Salesforce Step</h2>
+                                        <p>There are 2 possible reasons for this:</p>
                                         <ul>
                                             <li>
                                                 <p>Salesforce Steps only contain those fields in the sObject's Page Layout (for both Classic and Lightning). It does not include fields that have only been added using the Lighting App Builder. Your Salesforce admin may have excluded a field in the Page Layout, but added it when creating a <a href="https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm\&amp;type=5">Dynamic Form</a> using the Lightning App Builder. To use the Salesforce steps, in your Salesforce Setup add the field to the Page Layout, or use the Salesforce Recorder when authoring your tests.</p>
@@ -176,5 +189,4 @@
                                                 <p>Salesforce Steps only contain fields for which the Salesforce account that is used to connect your Salesforce environment, has <span class="FileOrFilePath">read</span> permission to. To check if the desired field has the required permissions within the logged-in account, add a <a href="salesforce-steps/sfdc-step-permission-validation.htm">Permission Validation</a> test step and view the permissions. You may need to reconnect your Salesforce environment with another Salesforce account that has the relevant <span class="FileOrFilePath">read</span> permission to see the missing field.</p>
                                             </li>
                                         </ul>
-                                        <p>&lt;/details&gt;</p>
                                     

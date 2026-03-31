@@ -117,6 +117,14 @@ describe('extractSlug', () => {
   it('lowercases the slug', () => {
     assert.equal(extractSlug('/content/Overview/TestPage.htm'), 'testpage');
   });
+
+  it('extracts slug with underscores', () => {
+    assert.equal(extractSlug('/content/integrations/visual-validation/lambdatest_integration.htm'), 'lambdatest_integration');
+  });
+
+  it('extracts slug with underscores from index path', () => {
+    assert.equal(extractSlug('/content/integrations/visual_validation/index.htm'), 'visual_validation');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -157,7 +165,7 @@ describe('buildSections', () => {
       ],
     };
     const lookup = new Map([
-      [0, { url: '/content/home.htm', title: 'Home' }],
+      [0, { url: '', title: 'Home' }],
       [1, { url: '/content/overview', title: 'Overview' }],
       [2, { url: '/content/overview/testim-overview/index.htm', title: 'Testim overview' }],
       [3, { url: '/content/overview/testim-automate.htm', title: 'Web and Mobile Testing' }],
@@ -170,6 +178,75 @@ describe('buildSections', () => {
     assert.equal(sections[1].title, 'Overview');
     assert.equal(sections[1].pages.length, 2);
     assert.equal(sections[1].pages[0].slug, 'testim-overview');
+  });
+
+  it('emits top-level leaf node with content URL as a self-contained page', () => {
+    const tree = {
+      n: [
+        { i: 0, c: 0 },
+        { i: 1, c: 0, n: [{ i: 2, c: 0 }] },
+      ],
+    };
+    const lookup = new Map([
+      [0, { url: '/content/changelog.htm', title: 'Changelog' }],
+      [1, { url: '/content/overview', title: 'Overview' }],
+      [2, { url: '/content/overview/testim-overview/index.htm', title: 'Testim overview' }],
+    ]);
+
+    const sections = buildSections(tree, lookup);
+    assert.equal(sections[0].title, 'Changelog');
+    assert.equal(sections[0].pages.length, 1);
+    assert.equal(sections[0].pages[0].slug, 'changelog');
+    assert.equal(sections[0].pages[0].title, 'Changelog');
+  });
+
+  it('excludes non-doc leaf slugs like home', () => {
+    const tree = { n: [{ i: 0, c: 0 }] };
+    const lookup = new Map([
+      [0, { url: '/content/home.htm', title: 'Home' }],
+    ]);
+    const sections = buildSections(tree, lookup);
+    assert.equal(sections[0].pages.length, 0);
+  });
+
+  it('skips leaf promotion when slug collides with a child page in another section', () => {
+    const tree = {
+      n: [
+        { i: 0, c: 0 },
+        { i: 1, c: 0, n: [{ i: 2, c: 0 }] },
+      ],
+    };
+    const lookup = new Map([
+      [0, { url: '/content/overview/changelog.htm', title: 'Changelog' }],
+      [1, { url: '/content/salesforce', title: 'Salesforce' }],
+      [2, { url: '/content/salesforce/changelog.htm', title: 'SF Changelog' }],
+    ]);
+    const sections = buildSections(tree, lookup);
+    // Leaf promotion skipped — 'changelog' already claimed by Salesforce child
+    assert.equal(sections[0].pages.length, 0);
+    // Child page always preserved
+    assert.equal(sections[1].pages.length, 1);
+    assert.equal(sections[1].pages[0].slug, 'changelog');
+  });
+
+  it('child pages always win regardless of section order', () => {
+    const tree = {
+      n: [
+        { i: 0, c: 0, n: [{ i: 1, c: 0 }] },
+        { i: 2, c: 0 },
+      ],
+    };
+    const lookup = new Map([
+      [0, { url: '/content/overview', title: 'Overview' }],
+      [1, { url: '/content/overview/changelog.htm', title: 'Changelog' }],
+      [2, { url: '/content/salesforce/changelog.htm', title: 'SF Changelog' }],
+    ]);
+    const sections = buildSections(tree, lookup);
+    // Child page preserved in first section
+    assert.equal(sections[0].pages.length, 1);
+    assert.equal(sections[0].pages[0].slug, 'changelog');
+    // Leaf promotion skipped — collides with child page
+    assert.equal(sections[1].pages.length, 0);
   });
 
   it('skips nodes not found in lookup', () => {

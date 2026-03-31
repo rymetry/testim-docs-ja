@@ -1,9 +1,13 @@
 {
-  "fetchedAt": "2026-03-27T01:59:44.489Z",
+  "fetchedAt": "2026-03-31T08:00:01.911Z",
   "baseUrl": "https://docs.tricentis.com/testim",
   "sections": [
     {
       "title": "Home",
+      "pages": []
+    },
+    {
+      "title": "Changelog",
       "pages": []
     },
     {
@@ -945,24 +949,34 @@
           "title": "AutoRabit Integration"
         },
         {
-          "slug": "dedicated-run-tunnel",
-          "url": "https://docs.tricentis.com/testim/content/integrations/dedicated-run-tunnel.htm",
-          "title": "Dedicated run tunnel"
+          "slug": "visual_validation_index",
+          "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/visual_validation_index.htm",
+          "title": "Visual validation"
         },
         {
-          "slug": "applitools-integration",
-          "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/index.htm",
+          "slug": "lambdatest_integration",
+          "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/lambdatest_integration.htm",
+          "title": "LambdaTest SmartUI integration"
+        },
+        {
+          "slug": "visual-validation",
+          "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/index.htm",
           "title": "Applitools integration"
         },
         {
           "slug": "override-applitools-test-name",
-          "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-test-name.htm",
+          "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-test-name.htm",
           "title": "Override Applitools' test name"
         },
         {
           "slug": "override-applitools-app-name",
-          "url": "https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-app-name.htm",
+          "url": "https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-app-name.htm",
           "title": "Override Applitools' app name"
+        },
+        {
+          "slug": "dedicated-run-tunnel",
+          "url": "https://docs.tricentis.com/testim/content/integrations/dedicated-run-tunnel.htm",
+          "title": "Dedicated run tunnel"
         },
         {
           "slug": "github-integration",
