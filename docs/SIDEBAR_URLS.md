@@ -1,24 +1,27 @@
 # Testim Documentation - 全サイドバーURL一覧
 
-取得日: 2026年2月1日
-総数: 284 URL
+取得日: 2026年3月31日
+総数: 287 URL
 
 ## 翻訳ステータス
 
-- ✅ 翻訳済み: 284個
+- ✅ 翻訳済み: 287個
 - ⏳ 未翻訳: 0個
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 284個
-- ✅ 翻訳のみ完了: 0個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 287個
+- ✅   翻訳のみ完了: 0個
 
 ### アイコンの意味
-
 - ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）
-- ✅ 翻訳完了
+- ✅   翻訳完了
 
 ---
+
+## Home（Home）
+
+## Changelog（Changelog）
 
 ## Overview（概要）
 
@@ -122,7 +125,7 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/api-testing.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/cookies.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/group-context.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/editing-tests/groups/auto-grouping2.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/auto-grouping2.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/advanced-js-editor.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/custom-action-step-mobile.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/advanced-editing/hooks.htm
@@ -160,7 +163,7 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/running-tests/play-from-here.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/running-tests/rerun-locally-with-the-same-params.htm
 
-## Results（テスト結果）
+## Results（結果）
 
 - ✅🔍 https://docs.tricentis.com/testim/content/results/results-overview.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/results/test-results/index.htm
@@ -210,7 +213,7 @@
 
 - ✅🔍 https://docs.tricentis.com/testim/content/mobile-apps/mobile-apps.htm
 
-## device managment（デバイス管理）
+## Device Management（デバイス管理）
 
 - ✅🔍 https://docs.tricentis.com/testim/content/device-management/view-local-connected-mobile-devices.htm
 
@@ -231,10 +234,12 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/copado-integration.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/gearset-integration.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/integrate-testim-to-your-ci/autorabit-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/visual-validation/visual_validation_index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/visual-validation/lambdatest_integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/visual-validation/index.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-test-name.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-app-name.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/dedicated-run-tunnel.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/applitools-integration/index.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-test-name.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/applitools-integration/override-applitools-app-name.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/github-integration.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/sealights-integration.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/index.htm
@@ -264,7 +269,7 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/settings/cli-settings.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/settings/cli-prerequisites.htm
 
-## Administration（管理者機能）
+## Administration（管理）
 
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/api-access.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/project-user-management.htm
@@ -276,7 +281,7 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/copilot-license-management.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/administration/exporting-a-testim-test-as-code-for-playwright.htm
 
-## TestOps（TestOps）
+## Testops（TestOps）
 
 - ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-overview.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/testops/testops-management/index.htm
