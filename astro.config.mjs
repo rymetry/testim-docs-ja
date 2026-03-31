@@ -63,6 +63,10 @@ export default defineConfig({
   output: isAuthEnabled ? 'server' : 'static',
   // Vercel adapterは常に必要（staticでも.vercel/output生成に必須）
   adapter: vercel({}),
+
+  redirects: {
+    '/docs/applitools-integration': '/docs/visual-validation',
+  },
   vite: {
     plugins: [tailwindcss()],
   },

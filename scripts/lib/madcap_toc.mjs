@@ -102,10 +102,21 @@ export function buildSections(tree, lookup) {
     const sectionInfo = lookup.get(node.i);
     if (!sectionInfo) continue;
 
+    const pages = collectPages(node.n ?? [], lookup);
+
+    // Top-level leaf nodes with a content URL are emitted as self-contained pages
+    // (e.g., Changelog has no children but is a real content page)
+    if (pages.length === 0 && sectionInfo.url) {
+      const slug = extractSlug(sectionInfo.url);
+      if (slug) {
+        pages.push({ title: sectionInfo.title, url: sectionInfo.url, slug });
+      }
+    }
+
     sections.push({
       title: sectionInfo.title,
       url: sectionInfo.url,
-      pages: collectPages(node.n ?? [], lookup),
+      pages,
     });
   }
 

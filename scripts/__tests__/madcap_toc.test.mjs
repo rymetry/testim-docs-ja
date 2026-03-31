@@ -165,7 +165,7 @@ describe('buildSections', () => {
       ],
     };
     const lookup = new Map([
-      [0, { url: '/content/home.htm', title: 'Home' }],
+      [0, { url: '', title: 'Home' }],
       [1, { url: '/content/overview', title: 'Overview' }],
       [2, { url: '/content/overview/testim-overview/index.htm', title: 'Testim overview' }],
       [3, { url: '/content/overview/testim-automate.htm', title: 'Web and Mobile Testing' }],
@@ -178,6 +178,26 @@ describe('buildSections', () => {
     assert.equal(sections[1].title, 'Overview');
     assert.equal(sections[1].pages.length, 2);
     assert.equal(sections[1].pages[0].slug, 'testim-overview');
+  });
+
+  it('emits top-level leaf node with content URL as a self-contained page', () => {
+    const tree = {
+      n: [
+        { i: 0, c: 0 },
+        { i: 1, c: 0, n: [{ i: 2, c: 0 }] },
+      ],
+    };
+    const lookup = new Map([
+      [0, { url: '/content/changelog.htm', title: 'Changelog' }],
+      [1, { url: '/content/overview', title: 'Overview' }],
+      [2, { url: '/content/overview/testim-overview/index.htm', title: 'Testim overview' }],
+    ]);
+
+    const sections = buildSections(tree, lookup);
+    assert.equal(sections[0].title, 'Changelog');
+    assert.equal(sections[0].pages.length, 1);
+    assert.equal(sections[0].pages[0].slug, 'changelog');
+    assert.equal(sections[0].pages[0].title, 'Changelog');
   });
 
   it('skips nodes not found in lookup', () => {

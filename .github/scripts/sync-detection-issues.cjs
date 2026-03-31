@@ -64,9 +64,10 @@ async function createIssue({ github, owner, repo, title, body, labels, log }) {
       labels,
     });
   } catch (error) {
+    const structuredErrors = error.response?.data?.errors ?? [];
     const isLabelError = error.status === 422
       && labels?.length
-      && /label/i.test(error.message ?? '');
+      && structuredErrors.some((e) => e.field === 'labels' || e.resource === 'Label');
     if (isLabelError) {
       log.warning(
         `Issue creation failed for "${title}" (${error.message}). Retrying without labels.`,

@@ -1,14 +1,26 @@
 {
-  "fetchedAt": "2026-03-31T06:45:19.353Z",
+  "fetchedAt": "2026-03-31T07:16:04.602Z",
   "baseUrl": "https://docs.tricentis.com/testim",
   "sections": [
     {
       "title": "Home",
-      "pages": []
+      "pages": [
+        {
+          "slug": "home",
+          "url": "https://docs.tricentis.com/testim/content/home.htm",
+          "title": "Home"
+        }
+      ]
     },
     {
       "title": "Changelog",
-      "pages": []
+      "pages": [
+        {
+          "slug": "changelog",
+          "url": "https://docs.tricentis.com/testim/content/overview/changelog.htm",
+          "title": "Changelog"
+        }
+      ]
     },
     {
       "title": "Overview",
