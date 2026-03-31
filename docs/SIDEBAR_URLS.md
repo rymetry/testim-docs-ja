@@ -1,16 +1,16 @@
 # Testim Documentation - 全サイドバーURL一覧
 
 取得日: 2026年3月31日
-総数: 289 URL
+総数: 287 URL
 
 ## 翻訳ステータス
 
-- ✅ 翻訳済み: 289個
+- ✅ 翻訳済み: 287個
 - ⏳ 未翻訳: 0個
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 289個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 287個
 - ✅   翻訳のみ完了: 0個
 
 ### アイコンの意味
@@ -20,8 +20,6 @@
 ---
 
 ## Home（Home）
-
-- ✅🔍 https://docs.tricentis.com/testim/content/home.htm
 
 ## Changelog（Changelog）
 
@@ -309,7 +307,6 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-overview.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-testing-getting-started.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/core-concepts.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/changelog.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-and-manage-test-environments.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-persona-and-add-users.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/salesforce-testing/create-a-salesforce-test/index.htm

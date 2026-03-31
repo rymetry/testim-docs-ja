@@ -200,6 +200,55 @@ describe('buildSections', () => {
     assert.equal(sections[0].pages[0].title, 'Changelog');
   });
 
+  it('excludes non-doc leaf slugs like home', () => {
+    const tree = { n: [{ i: 0, c: 0 }] };
+    const lookup = new Map([
+      [0, { url: '/content/home.htm', title: 'Home' }],
+    ]);
+    const sections = buildSections(tree, lookup);
+    assert.equal(sections[0].pages.length, 0);
+  });
+
+  it('skips duplicate leaf slugs already claimed by another section', () => {
+    const tree = {
+      n: [
+        { i: 0, c: 0, n: [{ i: 1, c: 0 }] },
+        { i: 2, c: 0 },
+      ],
+    };
+    const lookup = new Map([
+      [0, { url: '/content/overview', title: 'Overview' }],
+      [1, { url: '/content/overview/changelog.htm', title: 'Changelog' }],
+      [2, { url: '/content/salesforce/changelog.htm', title: 'SF Changelog' }],
+    ]);
+    const sections = buildSections(tree, lookup);
+    // First section has changelog as a child page
+    assert.equal(sections[0].pages.length, 1);
+    assert.equal(sections[0].pages[0].slug, 'changelog');
+    // Second section's leaf would collide — skipped
+    assert.equal(sections[1].pages.length, 0);
+  });
+
+  it('deduplicates child pages with the same slug across sections', () => {
+    const tree = {
+      n: [
+        { i: 0, c: 0 },
+        { i: 1, c: 0, n: [{ i: 2, c: 0 }] },
+      ],
+    };
+    const lookup = new Map([
+      [0, { url: '/content/overview/changelog.htm', title: 'Changelog' }],
+      [1, { url: '/content/salesforce', title: 'Salesforce' }],
+      [2, { url: '/content/salesforce/changelog.htm', title: 'SF Changelog' }],
+    ]);
+    const sections = buildSections(tree, lookup);
+    // Leaf promotion claims 'changelog' first
+    assert.equal(sections[0].pages.length, 1);
+    assert.equal(sections[0].pages[0].slug, 'changelog');
+    // Child page with same slug is dropped
+    assert.equal(sections[1].pages.length, 0);
+  });
+
   it('skips nodes not found in lookup', () => {
     const tree = { n: [{ i: 999, c: 0 }] };
     const lookup = new Map();

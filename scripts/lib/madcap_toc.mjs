@@ -95,23 +95,35 @@ export function buildIndexLookup(chunkDataList) {
  * @param {Map<number, { url: string, title: string }>} lookup
  * @returns {Array<{ title: string, url: string, pages: Array<{ title: string, url: string, slug: string }> }>}
  */
+// Slugs that correspond to site-level pages, not documentation content.
+const NON_DOC_SLUGS = new Set(['home']);
+
 export function buildSections(tree, lookup) {
   const sections = [];
+  const seenSlugs = new Set();
 
   for (const node of tree.n) {
     const sectionInfo = lookup.get(node.i);
     if (!sectionInfo) continue;
 
-    const pages = collectPages(node.n ?? [], lookup);
+    const allPages = collectPages(node.n ?? [], lookup);
 
     // Top-level leaf nodes with a content URL are emitted as self-contained pages
-    // (e.g., Changelog has no children but is a real content page)
-    if (pages.length === 0 && sectionInfo.url) {
+    // (e.g., Changelog has no children but is a real content page).
+    // Skip non-doc pages (Home) and slugs already claimed by another section.
+    if (allPages.length === 0 && sectionInfo.url) {
       const slug = extractSlug(sectionInfo.url);
-      if (slug) {
-        pages.push({ title: sectionInfo.title, url: sectionInfo.url, slug });
+      if (slug && !NON_DOC_SLUGS.has(slug) && !seenSlugs.has(slug)) {
+        allPages.push({ title: sectionInfo.title, url: sectionInfo.url, slug });
       }
     }
+
+    // Deduplicate: drop pages whose slug was already claimed by a prior section
+    const pages = allPages.filter((page) => {
+      if (!page.slug || seenSlugs.has(page.slug)) return false;
+      seenSlugs.add(page.slug);
+      return true;
+    });
 
     sections.push({
       title: sectionInfo.title,
