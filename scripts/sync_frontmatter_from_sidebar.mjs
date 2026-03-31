@@ -28,7 +28,14 @@ function parseSidebarOrdering(text) {
         currentCategory = null;
         continue;
       }
-      currentCategory = extractJapaneseLabel(raw);
+      const label = extractJapaneseLabel(raw);
+      // コンテンツを持たないセクション（Home, Changelog）をスキップ
+      // — categoryIndex に含めると全ページの order 値がずれる
+      if (label === 'Home' || label === 'Changelog') {
+        currentCategory = null;
+        continue;
+      }
+      currentCategory = label;
       categoryIndex += 1;
       itemIndex = 0;
       continue;

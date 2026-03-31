@@ -83,7 +83,13 @@ function getSidebarOrdering(): SidebarOrdering {
           currentCategory = null;
           continue;
         }
-        currentCategory = extractJapaneseLabel(raw);
+        const label = extractJapaneseLabel(raw);
+        // コンテンツを持たないセクション（Home, Changelog）をスキップ
+        if (label === 'Home' || label === 'Changelog') {
+          currentCategory = null;
+          continue;
+        }
+        currentCategory = label;
         if (!categoryIndexByLabel.has(currentCategory)) {
           categoryIndexByLabel.set(currentCategory, categoryIndexByLabel.size);
         }

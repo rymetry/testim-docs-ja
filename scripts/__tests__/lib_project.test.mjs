@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { buildSlugIndex, splitFrontmatter, toKebab } from '../lib/project.mjs';
+import { buildSlugIndex, matchesSectionFilter, splitFrontmatter, toKebab } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -56,6 +56,42 @@ describe('splitFrontmatter', () => {
     const md = '---\ntitle: Test\n---\n\n\nBody';
     const result = splitFrontmatter(md);
     assert.equal(result.body, 'Body');
+  });
+});
+
+describe('matchesSectionFilter', () => {
+  const relativePath = 'src/content/docs/results/test-results.md';
+  const data = { category: '結果' };
+
+  it('returns true when no filter is provided', () => {
+    assert.ok(matchesSectionFilter(relativePath, data, null));
+    assert.ok(matchesSectionFilter(relativePath, data, ''));
+  });
+
+  it('matches by category (exact)', () => {
+    assert.ok(matchesSectionFilter(relativePath, data, '結果'));
+  });
+
+  it('matches by folder name', () => {
+    assert.ok(matchesSectionFilter(relativePath, data, 'results'));
+  });
+
+  it('matches by basename', () => {
+    assert.ok(matchesSectionFilter(relativePath, data, 'test-results'));
+  });
+
+  it('matches legacy alias via bidirectional substring (target includes candidate)', () => {
+    // --section=テスト結果 should match category '結果'
+    assert.ok(matchesSectionFilter(relativePath, data, 'テスト結果'));
+  });
+
+  it('matches new name against legacy category via substring (candidate includes target)', () => {
+    const legacyData = { category: 'テスト結果' };
+    assert.ok(matchesSectionFilter(relativePath, legacyData, '結果'));
+  });
+
+  it('returns false when nothing matches', () => {
+    assert.ok(!matchesSectionFilter(relativePath, data, '存在しないセクション'));
   });
 });
 

@@ -61,7 +61,10 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
     .filter(Boolean)
     .map(normalizeMatchValue);
 
-  return candidates.some((candidate) => candidate.includes(target));
+  // 双方向部分一致: --section=テスト結果 が category '結果' にもマッチ（レガシーエイリアス対応）
+  return candidates.some(
+    (candidate) => candidate.includes(target) || target.includes(candidate)
+  );
 }
 
 export function buildSlugIndex(docsDir = DOCS_DIR) {
