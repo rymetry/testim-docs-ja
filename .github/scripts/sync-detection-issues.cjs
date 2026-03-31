@@ -2,8 +2,16 @@ const fs = require('fs');
 
 const DEFAULT_LABELS = ['documentation', 'automated'];
 
+function fallbackCore(core) {
+  return core ?? { info: console.log, warning: console.warn };
+}
+
 function loadReport(reportPath) {
-  return JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+  try {
+    return JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`Failed to load report from "${reportPath}": ${error.message}`, { cause: error });
+  }
 }
 
 function sortByUpdatedDesc(left, right) {
@@ -28,17 +36,20 @@ function buildIssueSpecs(report) {
 }
 
 async function listManagedIssues({ github, owner, repo }) {
-  const issues = await github.paginate(github.rest.issues.listForRepo, {
-    owner,
-    repo,
-    state: 'all',
-    per_page: 100,
-  });
-
-  return issues.filter((issue) => !issue.pull_request);
+  try {
+    const issues = await github.paginate(github.rest.issues.listForRepo, {
+      owner,
+      repo,
+      state: 'all',
+      per_page: 100,
+    });
+    return issues.filter((issue) => !issue.pull_request);
+  } catch (error) {
+    throw new Error(`Failed to list issues for ${owner}/${repo}: ${error.message}`, { cause: error });
+  }
 }
 
-async function createIssue({ github, owner, repo, title, body, labels, core }) {
+async function createIssue({ github, owner, repo, title, body, labels, log }) {
   try {
     return await github.rest.issues.create({
       owner,
@@ -48,9 +59,12 @@ async function createIssue({ github, owner, repo, title, body, labels, core }) {
       labels,
     });
   } catch (error) {
-    if (error.status === 422 && labels?.length) {
-      core?.warning(
-        `Creating issue without labels after validation error for "${title}".`,
+    const isLabelError = error.status === 422
+      && labels?.length
+      && /label/i.test(error.message ?? '');
+    if (isLabelError) {
+      log.warning(
+        `Issue creation failed for "${title}" (${error.message}). Retrying without labels.`,
       );
       return github.rest.issues.create({
         owner,
@@ -72,7 +86,7 @@ async function syncOneIssue({
   body,
   shouldOpenIssue,
   key,
-  core,
+  log,
 }) {
   const matching = existingIssues
     .filter((issue) => issue.title === title)
@@ -89,9 +103,9 @@ async function syncOneIssue({
           title,
           body,
         });
-        core?.info(`Updated open issue #${openIssue.number} (${key}).`);
+        log.info(`Updated open issue #${openIssue.number} (${key}).`);
       } else {
-        core?.info(`No body changes for open issue #${openIssue.number} (${key}).`);
+        log.info(`No body changes for open issue #${openIssue.number} (${key}).`);
       }
       return;
     }
@@ -103,14 +117,14 @@ async function syncOneIssue({
       title,
       body,
       labels: DEFAULT_LABELS,
-      core,
+      log,
     });
-    core?.info(`Created issue #${created.data.number} (${key}).`);
+    log.info(`Created issue #${created.data.number} (${key}).`);
     return;
   }
 
   if (!openIssue) {
-    core?.info(`No open issue to close for ${key}.`);
+    log.info(`No open issue to close for ${key}.`);
     return;
   }
 
@@ -126,7 +140,7 @@ async function syncOneIssue({
     issue_number: openIssue.number,
     state: 'closed',
   });
-  core?.info(`Closed issue #${openIssue.number} (${key}).`);
+  log.info(`Closed issue #${openIssue.number} (${key}).`);
 }
 
 module.exports = async function syncDetectionIssues({
@@ -135,6 +149,7 @@ module.exports = async function syncDetectionIssues({
   core,
   reportPath = 'docs-actionable-report.json',
 }) {
+  const log = fallbackCore(core);
   const { owner, repo } = context.repo;
   const report = loadReport(reportPath);
   const issueSpecs = buildIssueSpecs(report);
@@ -146,7 +161,7 @@ module.exports = async function syncDetectionIssues({
       owner,
       repo,
       existingIssues,
-      core,
+      log,
       ...spec,
     });
   }
