@@ -1,7 +1,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import path from 'node:path';
 
-import { buildSlugIndex, matchesSectionFilter, splitFrontmatter, toKebab } from '../lib/project.mjs';
+import { buildSlugIndex, buildDocsIndex, extractSourceContentPath, matchesSectionFilter, splitFrontmatter, toKebab } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -130,5 +131,92 @@ describe('toKebab', () => {
 
   it('returns empty string for empty input', () => {
     assert.equal(toKebab(''), '');
+  });
+});
+
+describe('extractSourceContentPath', () => {
+  it('extracts one-level path from direct .htm URL', () => {
+    const url = 'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm';
+    assert.equal(extractSourceContentPath(url), 'getting-started/setting-up-your-account');
+  });
+
+  it('strips /index suffix from directory-style URL', () => {
+    const url = 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm';
+    assert.equal(extractSourceContentPath(url), 'overview/testim-overview');
+  });
+
+  it('handles two-level nested path', () => {
+    const url = 'https://docs.tricentis.com/testim/content/integrations/visual-validation/override-applitools-app-name.htm';
+    assert.equal(extractSourceContentPath(url), 'integrations/visual-validation/override-applitools-app-name');
+  });
+
+  it('handles three-level deeply nested path', () => {
+    const url = 'https://docs.tricentis.com/testim/content/overview/testim-overview/use-ai-in-with-testim/index.htm';
+    assert.equal(extractSourceContentPath(url), 'overview/testim-overview/use-ai-in-with-testim');
+  });
+
+  it('returns null for non-tricentis URL', () => {
+    assert.equal(extractSourceContentPath('https://example.com/docs/foo'), null);
+  });
+
+  it('returns null for undefined input', () => {
+    assert.equal(extractSourceContentPath(undefined), null);
+  });
+
+  it('returns null for null input', () => {
+    assert.equal(extractSourceContentPath(null), null);
+  });
+
+  it('returns null for empty string', () => {
+    assert.equal(extractSourceContentPath(''), null);
+  });
+});
+
+describe('buildDocsIndex', () => {
+  it('returns richer index with filePath, localFolder, sourceContentPath', () => {
+    const index = buildDocsIndex();
+    const slugs = Object.keys(index);
+    assert.ok(slugs.length > 0, 'should find at least one doc');
+    const first = index[slugs[0]];
+    assert.ok(typeof first.filePath === 'string');
+    assert.ok(typeof first.localFolder === 'string');
+    assert.ok(first.sourceContentPath === null || typeof first.sourceContentPath === 'string');
+  });
+
+  it('populates sourceContentPath from sourceUrl frontmatter', () => {
+    const index = buildDocsIndex();
+    // testim-overview has a known sourceUrl
+    const entry = index['testim-overview'];
+    assert.ok(entry, 'testim-overview should exist in docs');
+    assert.ok(typeof entry.sourceContentPath === 'string', 'should have a sourceContentPath');
+    assert.ok(entry.sourceContentPath.includes('testim-overview'), 'path should contain the slug');
+  });
+
+  it('returns sourceContentPath null when sourceUrl is missing', async () => {
+    const fs = await import('node:fs');
+    const os = await import('node:os');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-index-nosrc-'));
+    fs.mkdirSync(path.join(dir, 'section'));
+    fs.writeFileSync(
+      path.join(dir, 'section', 'no-source.md'),
+      '---\ntitle: T\ncategory: C\nupdated: 2026-01-01\n---\nBody\n',
+    );
+    const index = buildDocsIndex(dir);
+    assert.equal(index['no-source'].sourceContentPath, null);
+    fs.rmSync(dir, { recursive: true });
+  });
+
+  it('throws on slug collision (two files with same basename in different folders)', async () => {
+    const fs = await import('node:fs');
+    const os = await import('node:os');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-index-test-'));
+    fs.mkdirSync(path.join(dir, 'folder-a'));
+    fs.mkdirSync(path.join(dir, 'folder-b'));
+    const fm = '---\ntitle: T\ncategory: C\nupdated: 2026-01-01\nsourceUrl: https://docs.tricentis.com/testim/content/a/page.htm\n---\n';
+    fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), fm);
+    fs.writeFileSync(path.join(dir, 'folder-b', 'page.md'), fm);
+    assert.throws(() => buildDocsIndex(dir), /Duplicate slug basename/);
+    // Cleanup
+    fs.rmSync(dir, { recursive: true });
   });
 });

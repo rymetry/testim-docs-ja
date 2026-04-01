@@ -67,13 +67,13 @@ updated: '2025-11-02'
 
 ## 🔗 内部リンク規則
 
-内部リンクは必ず `/docs/{slug}` 形式を使用してください。
+内部リンクは `/docs/{slug}` 形式（推奨）または `/docs/{folder}/{slug}` 形式の両方を使用できます。
 
 ```markdown
-✅ 正しい
+✅ 推奨（フラットスラグ）
 [Testim 概要](/docs/testim-overview)
 
-❌ 禁止（カテゴリフォルダ付き）
+✅ 許容（パス付き — lint 警告あり）
 [Testim 概要](/docs/overview/testim-overview)
 
 ❌ 禁止（`doc:` 形式はソース原稿のみ。公開ページには使わない）
@@ -82,10 +82,10 @@ updated: '2025-11-02'
 
 補足:
 
-- アンカー付きリンクも `/docs/{slug}#section-name` を使用する
-- `/docs/{folder}/{slug}` 形式は lint でエラーになる
+- アンカー付きリンクも `/docs/{slug}#section-name` または `/docs/{folder}/{slug}#section-name` を使用する
+- `/docs/{folder}/{slug}` 形式は lint で **警告** になる（エラーではない）
 - 本文中の `https://docs.tricentis.com/testim/content/.../{slug}.htm` は、対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する（HTML `<a href>` 含む）
-- `/docs/{slug}` のスラグが実在するファイルを指しているか必ず検証する。英語原文側でスラグがリネームされている場合があるため、ファイル名との突き合わせが必要
+- スラグが実在するファイルを指しているか必ず検証する。英語原文側でスラグがリネームされている場合があるため、ファイル名との突き合わせが必要
 
 ---
 

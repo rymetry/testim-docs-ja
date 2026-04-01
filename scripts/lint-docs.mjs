@@ -101,13 +101,25 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
   }
 
   const bodyLines = body.split('\n');
-  bodyLines.forEach((line, i) => {
-    const internalLinkRe = /\]\(\/docs\/([a-z0-9_-]+)\/([a-z0-9_-]+)(#[^)]+)?\)/g;
+  const bodyStrippedForFormat = stripCode(body).split('\n');
+  bodyStrippedForFormat.forEach((line, i) => {
+    // Markdown: [text](/docs/{folder}/{slug})
+    const mdFormatRe = /\]\(\/docs\/([a-z0-9_-]+)\/([a-z0-9_-]+)(#[^)]+)?\)/g;
     let m;
-    while ((m = internalLinkRe.exec(line)) !== null) {
-      err(
+    while ((m = mdFormatRe.exec(line)) !== null) {
+      warn(
         'internal-link-format',
-        `Internal link must use /docs/{slug} not /docs/{folder}/{slug} (found: /docs/${m[1]}/${m[2]})`,
+        `Prefer /docs/{slug} over /docs/{folder}/{slug} (found: /docs/${m[1]}/${m[2]})`,
+        toAbsoluteLine(i + 1, bodyStart)
+      );
+    }
+    // HTML: <a href="/docs/{folder}/{slug}">
+    const htmlFormatRe = /<a\b[^>]*href=["']\/docs\/([a-z0-9_-]+)\/([a-z0-9_-]+)(#[^\s"']*)?\s*["'][^>]*>/gi;
+    let hm;
+    while ((hm = htmlFormatRe.exec(line)) !== null) {
+      warn(
+        'internal-link-format',
+        `Prefer /docs/{slug} over /docs/{folder}/{slug} (found: /docs/${hm[1]}/${hm[2]})`,
         toAbsoluteLine(i + 1, bodyStart)
       );
     }
@@ -119,42 +131,18 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
     const strippedLines = bodyStripped.split('\n');
 
     strippedLines.forEach((line, i) => {
-      // Check A: Markdown links — [text](/docs/{slug}) or [text](/docs/{slug}#fragment)
-      const mdLinkRe = /\]\(\/(docs\/([a-z0-9_-]+))(#[^)]+)?\)/g;
+      // Check A: Markdown links — [text](/docs/{slug}) or [text](/docs/{folder}/{slug})
+      const mdLinkRe = /\]\(\/docs\/(?:([a-z0-9_-]+)\/)?([a-z0-9_-]+)(#[^)]+)?\)/g;
       let mdMatch;
       while ((mdMatch = mdLinkRe.exec(line)) !== null) {
+        const folder = mdMatch[1]; // present only for /docs/{folder}/{slug}
         const slug = mdMatch[2];
-        const fragment = mdMatch[3]; // includes leading '#'
+        const fragment = mdMatch[3];
+        const displayPath = folder ? `/docs/${folder}/${slug}` : `/docs/${slug}`;
         if (!allSlugs.has(slug)) {
           err(
             'link-target-missing',
-            `Internal link target does not exist: /docs/${slug}`,
-            toAbsoluteLine(i + 1, bodyStart)
-          );
-        } else if (fragment && headingsBySlug) {
-          // Check C: Fragment existence
-          const fragId = fragment.slice(1); // strip '#'
-          const headings = headingsBySlug.get(slug);
-          if (headings && !headings.has(fragId)) {
-            warn(
-              'link-fragment-missing',
-              `Fragment "${fragment}" not found in /docs/${slug}`,
-              toAbsoluteLine(i + 1, bodyStart)
-            );
-          }
-        }
-      }
-
-      // Check B: HTML <a href="/docs/..."> links
-      const htmlLinkRe = /<a\b[^>]*href=["']\/(docs\/([a-z0-9_-]+))(#[^"']*)?\s*["'][^>]*>/gi;
-      let htmlMatch;
-      while ((htmlMatch = htmlLinkRe.exec(line)) !== null) {
-        const slug = htmlMatch[2];
-        const fragment = htmlMatch[3]; // includes leading '#'
-        if (!allSlugs.has(slug)) {
-          err(
-            'link-target-missing',
-            `Internal link target does not exist: /docs/${slug}`,
+            `Internal link target does not exist: ${displayPath}`,
             toAbsoluteLine(i + 1, bodyStart)
           );
         } else if (fragment && headingsBySlug) {
@@ -163,7 +151,34 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
           if (headings && !headings.has(fragId)) {
             warn(
               'link-fragment-missing',
-              `Fragment "${fragment}" not found in /docs/${slug}`,
+              `Fragment "${fragment}" not found in ${displayPath}`,
+              toAbsoluteLine(i + 1, bodyStart)
+            );
+          }
+        }
+      }
+
+      // Check B: HTML <a href="/docs/..."> links
+      const htmlLinkRe = /<a\b[^>]*href=["']\/docs\/(?:([a-z0-9_-]+)\/)?([a-z0-9_-]+)(#[^\s"']*)?\s*["'][^>]*>/gi;
+      let htmlMatch;
+      while ((htmlMatch = htmlLinkRe.exec(line)) !== null) {
+        const folder = htmlMatch[1];
+        const slug = htmlMatch[2];
+        const fragment = htmlMatch[3];
+        const displayPath = folder ? `/docs/${folder}/${slug}` : `/docs/${slug}`;
+        if (!allSlugs.has(slug)) {
+          err(
+            'link-target-missing',
+            `Internal link target does not exist: ${displayPath}`,
+            toAbsoluteLine(i + 1, bodyStart)
+          );
+        } else if (fragment && headingsBySlug) {
+          const fragId = fragment.slice(1);
+          const headings = headingsBySlug.get(slug);
+          if (headings && !headings.has(fragId)) {
+            warn(
+              'link-fragment-missing',
+              `Fragment "${fragment}" not found in ${displayPath}`,
               toAbsoluteLine(i + 1, bodyStart)
             );
           }
