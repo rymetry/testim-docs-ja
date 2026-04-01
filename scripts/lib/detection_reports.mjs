@@ -76,9 +76,12 @@ export function buildAuditManifest(
   const changes = snapshot.changes ?? [];
 
   // Build parity index by slug (extract from file path)
+  const docsPrefix = path.join('src', 'content', 'docs') + path.sep;
   const parityBySlug = new Map();
   for (const file of parity?.files ?? []) {
-    const slug = path.basename(file.file, '.md');
+    const slug = file.file.startsWith(docsPrefix)
+      ? file.file.slice(docsPrefix.length).replace(/\.md$/, '')
+      : path.basename(file.file, '.md');
     parityBySlug.set(slug, file.issues ?? []);
   }
 

@@ -23,6 +23,7 @@ import {
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
+  resolveSlug,
 } from './lib/project.mjs';
 import { fetchTocData, buildSidebarSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
@@ -58,14 +59,20 @@ function parseArgs(argv = process.argv.slice(2)) {
 function collectTargets({ section, slug }) {
   const files = findMdFiles(DOCS_DIR);
   const targets = [];
+  // Resolve --slug to path-based slug (supports both basename and path-based input)
+  const resolvedSlug = slug ? resolveSlug(slug) : null;
+  if (slug && !resolvedSlug) {
+    console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
+    return [];
+  }
 
   for (const filePath of files) {
     const doc = readDocFile(filePath);
     const { data } = doc;
     if (!data.sourceUrl) continue;
 
-    const fileSlug = path.basename(filePath, '.md');
-    if (slug && fileSlug !== slug) continue;
+    const fileSlug = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
+    if (resolvedSlug && fileSlug !== resolvedSlug) continue;
     if (section && !matchesSectionFilter(doc.relativePath, data, section)) continue;
 
     targets.push({
@@ -203,7 +210,7 @@ export async function main(argv) {
 
   if (targets.length === 0) {
     console.log('No targets found.');
-    return { fetched: 0, notFound: 0, errors: 0, skipped: 0 };
+    return { fetched: 0, notFound: 0, errors: args.slug ? 1 : 0, skipped: 0 };
   }
 
   // Ensure directories exist
@@ -220,10 +227,11 @@ export async function main(argv) {
   for (const target of targets) {
     try {
       const { content, status, reason } = await fetchHtmlContent(target.sourceUrl);
-      const snapshotPath = path.join(CONTENT_DIR, `${target.slug}.html`);
+      const snapshotPath = path.join(CONTENT_DIR, target.slug + '.html');
 
       if (status === 404) {
         if (!args.dryRun) {
+          fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
           fs.writeFileSync(snapshotPath, MARKER_404(target.sourceUrl));
         }
         console.log(`  404  ${target.slug}`);
@@ -236,6 +244,7 @@ export async function main(argv) {
         errors += 1;
       } else {
         if (!args.dryRun) {
+          fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
           fs.writeFileSync(snapshotPath, content);
         }
         console.log(`  OK   ${target.slug}`);

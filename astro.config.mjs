@@ -13,6 +13,7 @@ import { visit, SKIP } from 'unist-util-visit';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import { buildRedirectMap } from './scripts/lib/redirects.mjs';
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
@@ -65,8 +66,8 @@ export default defineConfig({
   adapter: vercel({}),
 
   redirects: {
-    '/docs/applitools-integration': '/docs/visual-validation',
-    '/docs/applitools-integration/': '/docs/visual-validation',
+    ...buildRedirectMap(),
+    '/docs/applitools-integration': '/docs/integrations/visual-validation',
   },
   vite: {
     plugins: [tailwindcss()],

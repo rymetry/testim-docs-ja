@@ -141,7 +141,7 @@ function main() {
   const changedExamples = [];
 
   for (const filePath of files) {
-    const slug = path.basename(filePath, '.md');
+    const slug = path.relative(docsRoot, filePath).replace(/\.md$/, '');
     const entry = bySlug.get(slug);
     if (!entry) {
       unmatched.push(path.relative(docsRoot, filePath));

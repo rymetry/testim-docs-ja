@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
-import { ROOT_DIR, buildSlugIndex, splitFrontmatter } from './lib/project.mjs';
+import { ROOT_DIR, buildSlugIndex, splitFrontmatter, resolveSlug } from './lib/project.mjs';
 
 const ROOT = ROOT_DIR;
 const TRANS_DIR = path.join(ROOT, 'llm', 'translations');
@@ -15,10 +15,27 @@ async function main() {
   const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
   const sectionSlugs = section ? getSectionSlugSet(section) : null;
   const index = buildSlugIndex();
-  const files = fs.readdirSync(TRANS_DIR).filter((f) => f.endsWith('.md'));
+  // Support both flat (basename.md) and nested (folder/basename.md) translation files
+  const files = [];
+  const walkTransDir = (dir) => {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) { walkTransDir(full); continue; }
+      if (ent.isFile() && ent.name.endsWith('.md')) {
+        files.push(path.relative(TRANS_DIR, full));
+      }
+    }
+  };
+  walkTransDir(TRANS_DIR);
   let applied = 0;
   for (const f of files) {
-    const slug = f.replace(/\.md$/, '');
+    // Try path-based first (nested file), then fall back to basename resolution
+    const pathCandidate = f.replace(/\.md$/, '');
+    const slug = index[pathCandidate] ? pathCandidate : resolveSlug(pathCandidate.split('/').pop());
+    if (!slug) {
+      console.warn(`⚠️  Cannot resolve slug for translation file: ${f}`);
+      continue;
+    }
     if (sectionSlugs && !sectionSlugs.has(slug)) continue;
     const transPath = path.join(TRANS_DIR, f);
     const translated = fs.readFileSync(transPath, 'utf8');

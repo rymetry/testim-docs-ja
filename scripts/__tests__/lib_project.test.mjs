@@ -1,8 +1,10 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
-import { buildSlugIndex, buildDocsIndex, extractSourceContentPath, matchesSectionFilter, splitFrontmatter, toKebab } from '../lib/project.mjs';
+import { buildSlugIndex, buildDocsIndex, extractSourceContentPath, matchesSectionFilter, resolveSlug, splitFrontmatter, toKebab } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -134,6 +136,42 @@ describe('toKebab', () => {
   });
 });
 
+describe('resolveSlug', () => {
+  it('returns exact match for path-based input', () => {
+    const result = resolveSlug('overview/testim-overview');
+    assert.equal(result, 'overview/testim-overview');
+  });
+
+  it('resolves basename to path-based slug', () => {
+    const result = resolveSlug('testim-overview');
+    assert.equal(result, 'overview/testim-overview');
+  });
+
+  it('returns null for non-existent slug', () => {
+    assert.equal(resolveSlug('zzz-nonexistent-page'), null);
+  });
+
+  it('returns null for null/undefined/empty input', () => {
+    assert.equal(resolveSlug(null), null);
+    assert.equal(resolveSlug(undefined), null);
+    assert.equal(resolveSlug(''), null);
+  });
+
+  it('returns null for non-existent path-based input', () => {
+    assert.equal(resolveSlug('nonexistent/slug'), null);
+  });
+
+  it('returns null for ambiguous basename (with temp dir)', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'resolve-slug-'));
+    fs.mkdirSync(path.join(dir, 'folder-a'));
+    fs.mkdirSync(path.join(dir, 'folder-b'));
+    fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), '');
+    fs.writeFileSync(path.join(dir, 'folder-b', 'page.md'), '');
+    assert.equal(resolveSlug('page', dir), null);
+    fs.rmSync(dir, { recursive: true });
+  });
+});
+
 describe('extractSourceContentPath', () => {
   it('extracts one-level path from direct .htm URL', () => {
     const url = 'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm';
@@ -185,9 +223,9 @@ describe('buildDocsIndex', () => {
 
   it('populates sourceContentPath from sourceUrl frontmatter', () => {
     const index = buildDocsIndex();
-    // testim-overview has a known sourceUrl
-    const entry = index['testim-overview'];
-    assert.ok(entry, 'testim-overview should exist in docs');
+    // testim-overview has a known sourceUrl (path-based key)
+    const entry = index['overview/testim-overview'];
+    assert.ok(entry, 'overview/testim-overview should exist in docs');
     assert.ok(typeof entry.sourceContentPath === 'string', 'should have a sourceContentPath');
     assert.ok(entry.sourceContentPath.includes('testim-overview'), 'path should contain the slug');
   });
@@ -202,11 +240,11 @@ describe('buildDocsIndex', () => {
       '---\ntitle: T\ncategory: C\nupdated: 2026-01-01\n---\nBody\n',
     );
     const index = buildDocsIndex(dir);
-    assert.equal(index['no-source'].sourceContentPath, null);
+    assert.equal(index['section/no-source'].sourceContentPath, null);
     fs.rmSync(dir, { recursive: true });
   });
 
-  it('throws on slug collision (two files with same basename in different folders)', async () => {
+  it('allows same basename in different folders (path-based keys are unique)', async () => {
     const fs = await import('node:fs');
     const os = await import('node:os');
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-index-test-'));
@@ -215,7 +253,9 @@ describe('buildDocsIndex', () => {
     const fm = '---\ntitle: T\ncategory: C\nupdated: 2026-01-01\nsourceUrl: https://docs.tricentis.com/testim/content/a/page.htm\n---\n';
     fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), fm);
     fs.writeFileSync(path.join(dir, 'folder-b', 'page.md'), fm);
-    assert.throws(() => buildDocsIndex(dir), /Duplicate slug basename/);
+    const index = buildDocsIndex(dir);
+    assert.ok(index['folder-a/page'], 'folder-a/page should exist');
+    assert.ok(index['folder-b/page'], 'folder-b/page should exist');
     // Cleanup
     fs.rmSync(dir, { recursive: true });
   });

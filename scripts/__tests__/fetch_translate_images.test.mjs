@@ -56,29 +56,30 @@ describe('rewriteDocLinks', () => {
     assert.equal(result, 'See [foo](/docs/foo) and [bar](/docs/bar).');
   });
 
-  it('rewrites MadCap relative .htm link (simple)', () => {
+  it('rewrites MadCap relative .htm link to /docs/ slug', () => {
+    // Relative .htm paths lack full category context — slug derived from available path
     const result = rewriteDocLinks('[link](testim-automate.htm)');
-    assert.equal(result, '[link](/docs/testim-automate)');
+    assert.match(result, /\[link\]\(\/docs\/testim-automate\)/);
   });
 
   it('rewrites MadCap relative .htm link with path prefix', () => {
     const result = rewriteDocLinks('[link](../editing-tests/conditions/index.htm)');
-    assert.equal(result, '[link](/docs/conditions)');
+    assert.equal(result, '[link](/docs/editing-tests/conditions)');
   });
 
   it('rewrites MadCap .htm link preserving fragment', () => {
     const result = rewriteDocLinks('[link](why-did-my-test-fail.htm#13-api-step-failed)');
-    assert.equal(result, '[link](/docs/why-did-my-test-fail#13-api-step-failed)');
+    assert.match(result, /\[link\]\(\/docs\/why-did-my-test-fail#13-api-step-failed\)/);
   });
 
-  it('rewrites MadCap /slug/index.htm to /docs/slug', () => {
+  it('rewrites MadCap /slug/index.htm to /docs/ link', () => {
     const result = rewriteDocLinks('[link](validations/index.htm)');
     assert.equal(result, '[link](/docs/validations)');
   });
 
   it('rewrites MadCap deeply nested relative .htm link', () => {
     const result = rewriteDocLinks('[link](../../salesforce-testing/salesforce-testing-overview.htm)');
-    assert.equal(result, '[link](/docs/salesforce-testing-overview)');
+    assert.equal(result, '[link](/docs/salesforce-testing/salesforce-testing-overview)');
   });
 });
 
@@ -97,7 +98,7 @@ describe('getUntranslatedList', () => {
 
     const list = getUntranslatedList(sidebarText);
     assert.equal(list.length, 1);
-    assert.equal(list[0].slug, 'getting-started');
+    assert.equal(list[0].slug, 'getting-started/getting-started');
     assert.equal(list[0].categoryEnglish, 'Overview');
   });
 
@@ -139,8 +140,8 @@ describe('getAllPagesList', () => {
     ].join('\n');
     const list = getAllPagesList(sidebarText);
     assert.equal(list.length, 2);
-    assert.equal(list[0].slug, 'testim-overview');
-    assert.equal(list[1].slug, 'getting-started');
+    assert.equal(list[0].slug, 'overview/testim-overview');
+    assert.equal(list[1].slug, 'getting-started/getting-started');
   });
 
   it('returns ✅🔍 items', () => {
@@ -152,7 +153,7 @@ describe('getAllPagesList', () => {
     ].join('\n');
     const list = getAllPagesList(sidebarText);
     assert.equal(list.length, 1);
-    assert.equal(list[0].slug, 'testim-overview');
+    assert.equal(list[0].slug, 'overview/testim-overview');
   });
 
   it('includes ⏳ items when they exist', () => {
@@ -164,7 +165,7 @@ describe('getAllPagesList', () => {
     ].join('\n');
     const list = getAllPagesList(sidebarText);
     assert.equal(list.length, 1);
-    assert.equal(list[0].slug, 'getting-started');
+    assert.equal(list[0].slug, 'getting-started/getting-started');
   });
 });
 
@@ -194,24 +195,25 @@ describe('getDiffPagesList', () => {
 
     const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 1);
-    assert.equal(list[0].slug, 'testim-overview');
+    assert.equal(list[0].slug, 'overview/testim-overview');
   });
 
   it('excludes page when hash is unchanged', async () => {
     const hashesPath = path.join(tmpDir, 'page-hashes-same.json');
     const snapshotDir = path.join(ROOT, 'snapshots', 'en', 'content');
-    const tmpSlug = 'test-hash-unchanged';
-    const snapshotPath = path.join(snapshotDir, `${tmpSlug}.html`);
+    // Path-based slug: overview/test-hash-unchanged
+    const pathSlug = 'overview/test-hash-unchanged';
+    const snapshotPath = path.join(snapshotDir, pathSlug + '.html');
 
     const sidebarText = [
       '## Overview（概要）',
       '',
-      `- ✅ https://docs.tricentis.com/testim/content/overview/${tmpSlug}.htm`,
+      '- ✅ https://docs.tricentis.com/testim/content/overview/test-hash-unchanged.htm',
       '',
     ].join('\n');
 
     try {
-      fs.mkdirSync(snapshotDir, { recursive: true });
+      fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
       fs.writeFileSync(snapshotPath, '<h1>Stable Content</h1><p>No changes.</p>');
 
       // First call: compute hash and save
@@ -254,31 +256,32 @@ describe('getDiffPagesList', () => {
 
     const list = await getDiffPagesList(sidebarText, hashesPath);
     assert.equal(list.length, 1, 'Missing HTML snapshot should be treated as changed');
-    assert.equal(list[0].slug, 'zzz-nonexistent-test-page');
+    assert.equal(list[0].slug, 'overview/zzz-nonexistent-test-page');
   });
 
   it('reads from HTML snapshot without network fetch', async () => {
     const hashesPath = path.join(tmpDir, 'page-hashes-html-read.json');
     const snapshotDir = path.join(ROOT, 'snapshots', 'en', 'content');
-    const tmpSlug = 'test-html-read-snapshot';
-    const snapshotPath = path.join(snapshotDir, `${tmpSlug}.html`);
+    // Path-based slug: overview/test-html-read-snapshot
+    const pathSlug = 'overview/test-html-read-snapshot';
+    const snapshotPath = path.join(snapshotDir, pathSlug + '.html');
 
     const sidebarText = [
       '## Overview（概要）',
       '',
-      `- ✅ https://docs.tricentis.com/testim/content/overview/${tmpSlug}.htm`,
+      '- ✅ https://docs.tricentis.com/testim/content/overview/test-html-read-snapshot.htm',
       '',
     ].join('\n');
 
     try {
-      fs.mkdirSync(snapshotDir, { recursive: true });
+      fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
       fs.writeFileSync(snapshotPath, '<h1>HTML Content</h1>');
 
       await getDiffPagesList(sidebarText, hashesPath);
 
       const saved = JSON.parse(fs.readFileSync(hashesPath, 'utf8'));
-      assert.ok(saved[tmpSlug], 'hash should be persisted');
-      assert.equal(typeof saved[tmpSlug].hash, 'string');
+      assert.ok(saved[pathSlug], 'hash should be persisted');
+      assert.equal(typeof saved[pathSlug].hash, 'string');
     } finally {
       if (fs.existsSync(snapshotPath)) fs.unlinkSync(snapshotPath);
     }

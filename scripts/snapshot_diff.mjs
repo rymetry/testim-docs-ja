@@ -21,6 +21,7 @@ import {
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
+  resolveSlug,
 } from './lib/project.mjs';
 import { isDirectRun } from './lib/cli.mjs';
 import { extractSlug as extractSlugFn, extractSlugsFromSnapshot, matchAllTricentisUrls } from './lib/madcap_toc.mjs';
@@ -154,7 +155,7 @@ function buildSourceUrlIndex({ section }) {
     const doc = readDocFile(filePath);
     if (!doc.data.sourceUrl) continue;
     if (section && !matchesSectionFilter(doc.relativePath, doc.data, section)) continue;
-    const slug = path.basename(filePath, '.md');
+    const slug = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
     index[slug] = doc.data.sourceUrl;
   }
   return index;
@@ -204,9 +205,33 @@ function diffSidebar() {
   }
 }
 
+/**
+ * Recursively find all .html files under a directory.
+ * Returns paths relative to the base directory.
+ */
+function findHtmlFiles(dir, baseDir = dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...findHtmlFiles(fullPath, baseDir));
+    } else if (entry.name.endsWith('.html')) {
+      files.push(path.relative(baseDir, fullPath));
+    }
+  }
+  return files;
+}
+
 export async function main(argv) {
   const args = parseArgs(argv);
   const sourceUrls = buildSourceUrlIndex(args);
+  // Resolve --slug to path-based slug (supports both basename and path-based input)
+  const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
+  if (args.slug && !resolvedSlug) {
+    console.error(`❌ Unknown slug: "${args.slug}". No matching document found.`);
+    return { error: true };
+  }
 
   if (!fs.existsSync(CONTENT_DIR)) {
     console.log('No snapshots found. Run check:snapshots:fetch first.');
@@ -219,7 +244,7 @@ export async function main(argv) {
     : '';
   const sidebarUrlMap = buildSidebarUrlMap(sidebarText);
 
-  const snapshotFiles = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.html'));
+  const snapshotFiles = findHtmlFiles(CONTENT_DIR);
   const changes = [];
 
   let unchanged = 0;
@@ -228,12 +253,12 @@ export async function main(argv) {
     const slug = file.replace(/\.html$/, '');
 
     // Apply slug filter (takes priority over section)
-    if (args.slug && slug !== args.slug) continue;
+    if (resolvedSlug && slug !== resolvedSlug) continue;
 
     // Apply section filter via sourceUrl index
-    if (!args.slug && args.section && !sourceUrls[slug]) continue;
+    if (!resolvedSlug && args.section && !sourceUrls[slug]) continue;
 
-    const snapshotPath = path.join(CONTENT_DIR, file);
+    const snapshotPath = path.join(CONTENT_DIR, slug + '.html');
     const relPath = path.relative(ROOT_DIR, snapshotPath);
     const currentContent = fs.readFileSync(snapshotPath, 'utf8');
 
@@ -285,10 +310,10 @@ export async function main(argv) {
   }
 
   // Sidebar diff (skip in --slug mode — not relevant for single-page checks)
-  const sidebar = args.slug ? { changed: false, addedPages: [], removedPages: [] } : diffSidebar();
+  const sidebar = resolvedSlug ? { changed: false, addedPages: [], removedPages: [] } : diffSidebar();
 
   // Scope summary to filtered files when --slug is active
-  const scopedTotal = args.slug ? 1 : snapshotFiles.length;
+  const scopedTotal = resolvedSlug ? 1 : snapshotFiles.length;
 
   const report = {
     checkedAt: new Date().toISOString(),
@@ -335,8 +360,12 @@ export async function main(argv) {
 }
 
 if (isDirectRun(import.meta.url)) {
-  main().catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  main()
+    .then((result) => {
+      if (result?.error) process.exit(1);
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
 }

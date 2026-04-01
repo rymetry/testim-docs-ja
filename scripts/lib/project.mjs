@@ -50,6 +50,7 @@ export function getDocSection(relativePath) {
 // サイドバー解決のキャッシュ（同一セクションフィルタの再解決を避ける）
 let _cachedFilter = null;
 let _cachedSlugSet = null;
+const DOCS_PREFIX = path.join('src', 'content', 'docs') + path.sep;
 
 export function matchesSectionFilter(relativePath, data, sectionFilter) {
   if (!sectionFilter) return true;
@@ -65,7 +66,10 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
   }
 
   if (_cachedSlugSet) {
-    return _cachedSlugSet.has(path.basename(relativePath, '.md'));
+    const rel = relativePath.startsWith(DOCS_PREFIX)
+      ? relativePath.slice(DOCS_PREFIX.length).replace(/\.md$/, '')
+      : path.basename(relativePath, '.md');
+    return _cachedSlugSet.has(rel);
   }
 
   // サイドバーに未登録のセクション名 — ヒューリスティックフォールバック
@@ -92,7 +96,7 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
       const full = path.join(dir, ent.name);
       if (ent.isDirectory()) walk(full);
       else if (ent.isFile() && ent.name.endsWith('.md')) {
-        const slug = ent.name.replace(/\.md$/, '');
+        const slug = path.relative(docsDir, full).replace(/\.md$/, '');
         const categoryFolder = path.basename(path.dirname(full));
         index[slug] = { categoryFolder, filePath: full };
       }
@@ -100,6 +104,36 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
   };
   walk(docsDir);
   return index;
+}
+
+/**
+ * Resolve a CLI --slug value to a path-based slug.
+ * Accepts both basename ("testim-overview") and path-based ("overview/testim-overview").
+ * Returns null if the slug is not found or is ambiguous (logs a warning for ambiguity).
+ *
+ * @param {string | null | undefined} input
+ * @param {string} [docsDir]
+ * @returns {string | null}
+ */
+export function resolveSlug(input, docsDir = DOCS_DIR) {
+  if (!input) return null;
+  const index = buildSlugIndex(docsDir);
+  // Exact match (already path-based)
+  if (index[input]) return input;
+  // Basename resolution: find all entries whose basename matches
+  const basename = input.includes('/') ? null : input;
+  if (!basename) return null;
+  const matches = Object.keys(index).filter(
+    (slug) => slug.split('/').pop() === basename
+  );
+  if (matches.length === 1) return matches[0];
+  if (matches.length > 1) {
+    console.warn(
+      `⚠️  Ambiguous slug "${input}" matches multiple paths: ${matches.join(', ')}. Use full path.`
+    );
+    return null;
+  }
+  return null;
 }
 
 const SOURCE_URL_RE = /^https:\/\/docs\.tricentis\.com\/testim\/content\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)\.htm$/;
@@ -126,7 +160,7 @@ export function extractSourceContentPath(sourceUrl) {
 
 /**
  * Richer doc index that includes the EN source content path from frontmatter.
- * Throws Error on basename (slug) collision across different folders.
+ * Keys are path-based slugs (e.g., "overview/testim-overview").
  * @param {string} [docsDir]
  * @returns {Record<string, {filePath:string, localFolder:string, sourceContentPath:string|null}>}
  */
@@ -138,12 +172,7 @@ export function buildDocsIndex(docsDir = DOCS_DIR) {
       const full = path.join(dir, ent.name);
       if (ent.isDirectory()) { walk(full); continue; }
       if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
-      const slug = ent.name.replace(/\.md$/, '');
-      if (index[slug]) {
-        throw new Error(
-          `Duplicate slug basename '${slug}': found in "${index[slug].filePath}" and "${full}"`
-        );
-      }
+      const slug = path.relative(docsDir, full).replace(/\.md$/, '');
       const localFolder = path.basename(path.dirname(full));
       const raw = fs.readFileSync(full, 'utf8');
       const { data } = matter(raw);

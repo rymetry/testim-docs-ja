@@ -5,7 +5,7 @@ import { promisify } from 'util';
 import { createHash } from 'crypto';
 import matter from 'gray-matter';
 import { filterItemsBySection } from './lib/sidebar.mjs';
-import { ROOT_DIR, buildSlugIndex, toKebab } from './lib/project.mjs';
+import { ROOT_DIR, buildSlugIndex, toKebab, resolveSlug } from './lib/project.mjs';
 import { extractSlug } from './lib/madcap_toc.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
 import turndown from './lib/turndown.mjs';
@@ -70,7 +70,7 @@ export async function getDiffPagesList(sidebarText, hashesPath) {
   const changed = [];
 
   for (const page of allPages) {
-    const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${page.slug}.html`);
+    const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, page.slug + '.html');
     let content = '';
     try {
       content = fs.readFileSync(snapshotPath, 'utf8');
@@ -189,10 +189,14 @@ export function rewriteDocLinks(markdown) {
   });
   // MadCap Flare relative .htm links (e.g. ../path/slug.htm, slug/index.htm)
   result = result.replace(/\]\(([^)#]*\.htm)(#[^)]*)?\)/g, (_match, rawPath, fragment) => {
-    // extractSlug expects absolute-style paths; prepend / for relative paths
-    const path = rawPath.startsWith('/') ? rawPath : '/' + rawPath;
-    const slug = extractSlug(path);
+    // extractSlug expects /content/... paths; prepend /content for relative paths
+    const normalized = rawPath.replace(/^(?:\.\.\/)+/, '');
+    const p = normalized.startsWith('/content/')
+      ? normalized
+      : '/content/' + normalized;
+    let slug = extractSlug(p);
     if (!slug) return _match;
+    // Use path-based slug for links (matching [...slug].astro routing)
     return `](/docs/${slug}${fragment || ''})`;
   });
   return result;
@@ -211,7 +215,7 @@ function buildFrontmatter(item, existingFilePath, fallbackTitle) {
   const keywords =
     Array.isArray(data.keywords) && data.keywords.length > 0
       ? data.keywords
-      : ['testim', item.slug, toKebab(item.categoryEnglish)];
+      : ['testim', item.slug.split('/').pop(), toKebab(item.categoryEnglish)];
 
   const description =
     typeof data.description === 'string' && data.description.trim() && !/^原文:\s*/u.test(data.description)
@@ -239,11 +243,13 @@ async function processOne(item, slugIndex) {
     return false;
   }
   const { categoryFolder, filePath } = hit;
+  // Use basename for image folder naming (avoids nested dirs in public/images)
+  const basenameSlug = item.slug.includes('/') ? item.slug.split('/').pop() : item.slug;
 
   let md = '';
 
   // Read from HTML snapshot and convert to Markdown
-  const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${item.slug}.html`);
+  const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, item.slug + '.html');
   if (fs.existsSync(snapshotPath)) {
     const content = fs.readFileSync(snapshotPath, 'utf8');
     if (/^<!-- 404:/.test(content)) {
@@ -263,10 +269,10 @@ async function processOne(item, slugIndex) {
     return false;
   }
 
-  md = await rewriteAndDownloadMedia(md, categoryFolder, item.slug, item.url);
+  md = await rewriteAndDownloadMedia(md, categoryFolder, basenameSlug, item.url);
   md = rewriteDocLinks(md);
 
-  const title = extractTitle(md) || item.slug.replace(/-/g, ' ');
+  const title = extractTitle(md) || basenameSlug.replace(/-/g, ' ');
   md = md.replace(/^#\s+.+\n+/, '');
 
   const fm = buildFrontmatter(item, filePath, title);
@@ -278,7 +284,12 @@ async function processOne(item, slugIndex) {
 
 async function main() {
   const args = process.argv.slice(2);
-  const onlySlug = args.find((a) => a.startsWith('--slug='))?.split('=')[1];
+  const rawSlug = args.find((a) => a.startsWith('--slug='))?.split('=')[1];
+  const onlySlug = rawSlug ? resolveSlug(rawSlug) : null;
+  if (rawSlug && !onlySlug) {
+    console.error(`❌ Unknown slug: "${rawSlug}". No matching document found.`);
+    process.exit(1);
+  }
   const limit = Number(args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '0');
   const mode = parseMode(args);
   const section = parseSection(args);

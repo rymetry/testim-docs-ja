@@ -199,8 +199,8 @@ describe('buildSidebarUrlMap', () => {
 
   it('builds a map from slug to URL', () => {
     const map = buildSidebarUrlMap(sidebarText);
-    assert.equal(map.get('testim-overview'), 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm');
-    assert.equal(map.get('getting-started'), 'https://docs.tricentis.com/testim/content/getting-started/getting-started.htm');
+    assert.equal(map.get('overview/testim-overview'), 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm');
+    assert.equal(map.get('getting-started/getting-started'), 'https://docs.tricentis.com/testim/content/getting-started/getting-started.htm');
   });
 
   it('returns empty map for empty text', () => {
@@ -217,7 +217,7 @@ describe('fallbackSourceUrl', () => {
 
   it('finds URL for a known slug via buildSidebarUrlMap', () => {
     const map = buildSidebarUrlMap(sidebarText);
-    assert.equal(fallbackSourceUrl('testim-overview', map), 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm');
+    assert.equal(fallbackSourceUrl('overview/testim-overview', map), 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm');
   });
 
   it('returns null for unknown slug', () => {
@@ -226,6 +226,6 @@ describe('fallbackSourceUrl', () => {
   });
 
   it('returns null when map is null', () => {
-    assert.equal(fallbackSourceUrl('testim-overview', null), null);
+    assert.equal(fallbackSourceUrl('overview/testim-overview', null), null);
   });
 });

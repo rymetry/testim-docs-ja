@@ -70,11 +70,11 @@ updated: '2025-11-02'
 内部リンクは `/docs/{slug}` 形式（推奨）または `/docs/{folder}/{slug}` 形式の両方を使用できます。
 
 ```markdown
-✅ 推奨（フラットスラグ）
-[Testim 概要](/docs/testim-overview)
-
-✅ 許容（パス付き — lint 警告あり）
+✅ 推奨（パスベース）
 [Testim 概要](/docs/overview/testim-overview)
+
+✅ 許容（ベースネーム — リダイレクト経由で動作）
+[Testim 概要](/docs/testim-overview)
 
 ❌ 禁止（`doc:` 形式はソース原稿のみ。公開ページには使わない）
 [Testim 概要](doc:testim-overview)
@@ -82,8 +82,8 @@ updated: '2025-11-02'
 
 補足:
 
-- アンカー付きリンクも `/docs/{slug}#section-name` または `/docs/{folder}/{slug}#section-name` を使用する
-- `/docs/{folder}/{slug}` 形式は lint で **警告** になる（エラーではない）
+- アンカー付きリンクも `/docs/{folder}/{slug}#section-name` または `/docs/{slug}#section-name` を使用する
+- パスベース形式 `/docs/{folder}/{slug}` を推奨。ベースネーム形式は旧 URL 互換のリダイレクトで動作する
 - 本文中の `https://docs.tricentis.com/testim/content/.../{slug}.htm` は、対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する（HTML `<a href>` 含む）
 - スラグが実在するファイルを指しているか必ず検証する。英語原文側でスラグがリネームされている場合があるため、ファイル名との突き合わせが必要
 
