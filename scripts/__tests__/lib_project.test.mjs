@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { buildSlugIndex, splitFrontmatter, toKebab } from '../lib/project.mjs';
+import { buildSlugIndex, matchesSectionFilter, splitFrontmatter, toKebab } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -56,6 +56,53 @@ describe('splitFrontmatter', () => {
     const md = '---\ntitle: Test\n---\n\n\nBody';
     const result = splitFrontmatter(md);
     assert.equal(result.body, 'Body');
+  });
+});
+
+describe('matchesSectionFilter', () => {
+  it('returns true when no filter is provided', () => {
+    assert.ok(matchesSectionFilter('src/content/docs/results/foo.md', {}, null));
+    assert.ok(matchesSectionFilter('src/content/docs/results/foo.md', {}, ''));
+  });
+
+  it('resolves sidebar section by Japanese label and matches slug', () => {
+    // '概要' → Overview section → includes testim-overview
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(matchesSectionFilter(rel, { category: '概要' }, '概要'));
+  });
+
+  it('resolves sidebar section by English name', () => {
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(matchesSectionFilter(rel, { category: '概要' }, 'Overview'));
+  });
+
+  it('resolves legacy alias テスト結果 → 結果', () => {
+    // execution-runs-screen is in the Results（結果）section
+    const rel = 'src/content/docs/results/execution-runs-screen.md';
+    assert.ok(matchesSectionFilter(rel, { category: 'テスト結果' }, 'テスト結果'));
+  });
+
+  it('resolves legacy alias 管理者機能 → 管理', () => {
+    const rel = 'src/content/docs/project-user-management/api-access.md';
+    assert.ok(matchesSectionFilter(rel, { category: '管理者機能' }, '管理者機能'));
+  });
+
+  it('rejects slug not in the resolved section', () => {
+    // testim-overview is in Overview, not Results
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(!matchesSectionFilter(rel, { category: '概要' }, '結果'));
+  });
+
+  it('does not false-positive on substring matches like results-overview', () => {
+    // --section=Overview should NOT match results-overview (it is in Results, not Overview)
+    const rel = 'src/content/docs/results/results-overview.md';
+    assert.ok(!matchesSectionFilter(rel, { category: '結果' }, 'Overview'));
+  });
+
+  it('falls back to heuristic for unknown section names', () => {
+    const rel = 'src/content/docs/results/test-results.md';
+    // Substring match against folder name
+    assert.ok(matchesSectionFilter(rel, { category: '結果' }, 'results'));
   });
 });
 
