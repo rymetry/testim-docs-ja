@@ -135,17 +135,17 @@ describe('frontmatter: required fields', () => {
 // B. Internal link format
 // ---------------------------------------------------------------------------
 describe('internal link format', () => {
-  it('returns error for /docs/{folder}/{slug} link', () => {
+  it('returns warning (not error) for /docs/{folder}/{slug} link', () => {
     const content = makeDoc({
       body: 'See [overview](/docs/overview/testim-overview).\n',
     });
     const errors = lintContent(content, 'src/content/docs/test.md');
     const e = errors.find((e) => e.rule === 'internal-link-format');
-    assert.ok(e, 'expected internal-link-format error');
-    assert.equal(e.level, 'error');
+    assert.ok(e, 'expected internal-link-format warning');
+    assert.equal(e.level, 'warning');
   });
 
-  it('no error for /docs/{slug} link', () => {
+  it('no warning for /docs/{slug} link', () => {
     const content = makeDoc({
       body: 'See [overview](/docs/testim-overview).\n',
     });
@@ -153,12 +153,30 @@ describe('internal link format', () => {
     assert.equal(errorsOf(['internal-link-format'], errors).length, 0);
   });
 
-  it('no error for external links', () => {
+  it('no warning for external links', () => {
     const content = makeDoc({
       body: 'See [Testim](https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm).\n',
     });
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errorsOf(['internal-link-format'], errors).length, 0);
+  });
+
+  it('no warning for /docs/{folder}/{slug} link inside a code block', () => {
+    const content = makeDoc({
+      body: '```\nSee [overview](/docs/overview/testim-overview).\n```\n',
+    });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    assert.equal(errorsOf(['internal-link-format'], errors).length, 0);
+  });
+
+  it('returns warning for HTML <a href="/docs/{folder}/{slug}"> link', () => {
+    const content = makeDoc({
+      body: 'See <a href="/docs/overview/testim-overview">overview</a>.\n',
+    });
+    const errors = lintContent(content, 'src/content/docs/test.md');
+    const e = errors.find((e) => e.rule === 'internal-link-format');
+    assert.ok(e, 'expected internal-link-format warning for HTML link');
+    assert.equal(e.level, 'warning');
   });
 });
 
@@ -348,6 +366,42 @@ describe('internal link target existence', () => {
   it('skips links inside inline code', () => {
     const content = makeDoc({
       body: 'Use `[page](/docs/nonexistent-page)` syntax.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+
+  it('no error for path-based link when basename slug exists', () => {
+    const content = makeDoc({
+      body: 'See [overview](/docs/overview/testim-overview) for details.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+  });
+
+  it('returns error for path-based link when basename slug does not exist', () => {
+    const content = makeDoc({
+      body: 'See [page](/docs/overview/nonexistent-page) for details.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing for unknown slug in path-based link');
+    assert.equal(e.level, 'error');
+  });
+
+  it('returns fragment warning for path-based link with bad fragment', () => {
+    const content = makeDoc({
+      body: 'See [section](/docs/overview/testim-overview#nonexistent-section) here.\n',
+    });
+    const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
+    const e = errors.find((e) => e.rule === 'link-fragment-missing');
+    assert.ok(e, 'expected link-fragment-missing warning');
+    assert.equal(e.level, 'warning');
+  });
+
+  it('no error for path-based HTML link when basename slug exists', () => {
+    const content = makeDoc({
+      body: 'See <a href="/docs/overview/testim-overview">overview</a>.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
     assert.equal(errorsOf(['link-target-missing'], errors).length, 0);

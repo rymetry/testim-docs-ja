@@ -102,6 +102,59 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
   return index;
 }
 
+const SOURCE_URL_RE = /^https:\/\/docs\.tricentis\.com\/testim\/content\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)\.htm$/;
+
+/**
+ * Extract the EN content path from a sourceUrl.
+ *
+ * Examples:
+ *   ".../content/running-tests/play-from-here.htm"          → "running-tests/play-from-here"
+ *   ".../content/running-tests/play-from-here/index.htm"    → "running-tests/play-from-here"
+ *   ".../content/overview/testim-overview/use-ai/index.htm"  → "overview/testim-overview/use-ai"
+ *
+ * Returns null for non-matching URLs or non-string input.
+ * @param {string | undefined | null} sourceUrl
+ * @returns {string | null}
+ */
+export function extractSourceContentPath(sourceUrl) {
+  if (typeof sourceUrl !== 'string') return null;
+  const m = SOURCE_URL_RE.exec(sourceUrl);
+  if (!m) return null;
+  const raw = m[1];
+  return raw.endsWith('/index') ? raw.slice(0, -'/index'.length) : raw;
+}
+
+/**
+ * Richer doc index that includes the EN source content path from frontmatter.
+ * Throws Error on basename (slug) collision across different folders.
+ * @param {string} [docsDir]
+ * @returns {Record<string, {filePath:string, localFolder:string, sourceContentPath:string|null}>}
+ */
+export function buildDocsIndex(docsDir = DOCS_DIR) {
+  /** @type {Record<string, {filePath:string, localFolder:string, sourceContentPath:string|null}>} */
+  const index = {};
+  const walk = (dir) => {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) { walk(full); continue; }
+      if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
+      const slug = ent.name.replace(/\.md$/, '');
+      if (index[slug]) {
+        throw new Error(
+          `Duplicate slug basename '${slug}': found in "${index[slug].filePath}" and "${full}"`
+        );
+      }
+      const localFolder = path.basename(path.dirname(full));
+      const raw = fs.readFileSync(full, 'utf8');
+      const { data } = matter(raw);
+      const sourceContentPath = extractSourceContentPath(data.sourceUrl);
+      index[slug] = { filePath: full, localFolder, sourceContentPath };
+    }
+  };
+  walk(docsDir);
+  return index;
+}
+
 export function splitFrontmatter(md) {
   if (!md.startsWith('---\n')) return { fm: '', body: md };
   const end = md.indexOf('\n---', 4);

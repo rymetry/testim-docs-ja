@@ -18,7 +18,6 @@ const REPLACEMENTS = [
   [/Testim ビジュアルエディタ(?:ー)?/g, 'Testim Visual Editor'],
   [/ビジュアルエディタ(?:ー)?/g, 'Visual Editor'],
   [/エージェント型テスト自動化/g, 'Agentic Test Automation'],
-  [/\/docs\/([a-z0-9_-]+)\/([a-z0-9_-]+)(#[^)'" \t\n]+)?/g, '/docs/$2$3'],
 ];
 
 const FRONTMATTER_ORDER = [
