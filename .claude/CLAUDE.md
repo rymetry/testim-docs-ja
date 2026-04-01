@@ -38,14 +38,14 @@ Full reference: `scripts/README.md`
 ## Architecture
 
 - **Content**: Markdown files in `src/content/docs/` organized by category folders. Schema defined in `src/content.config.ts` (Zod validation).
-- **Routing**: Single dynamic route `src/pages/docs/[slug].astro` — slug is filename only, not the folder path (e.g., `overview/testim-overview.md` → `/docs/testim-overview`).
+- **Routing**: Single dynamic route `src/pages/docs/[...slug].astro` — slug is the path relative to `src/content/docs/` (e.g., `overview/testim-overview.md` → `/docs/overview/testim-overview`). Legacy basename URLs are redirected via `buildRedirectMap()` in `astro.config.mjs`.
 - **Navigation**: Built from `src/lib/docs.ts` `buildNavigation()` — groups by `category` frontmatter, ordered by `docs/SIDEBAR_URLS.md`.
 - **Search**: Client-side MiniSearch in `src/components/SearchModal.tsx` (React), with data from `/api/search.json`.
 - **Layout**: `src/layouts/DocsLayout.astro` wraps all doc pages with sidebar (`NavSidebar.astro`) and TOC (`TableOfContents.astro`).
 - **Auth mode**: `BASIC_AUTH_ENABLED` env var toggles between SSR+auth (review) and static (production). See `src/middleware.ts`.
 - **Doc pipeline**: `scripts/pipeline.mjs` orchestrates fetching English sources, generating placeholders, and preparing LLM translation tasks. Checkpoint-based resume via `scripts/.checkpoint`.
 - **Snapshot pipeline**:
-  - **コンテンツ**: 各ページの HTML から `#mc-main-content` を抽出し `snapshots/en/content/{slug}.html` に保存
+  - **コンテンツ**: 各ページの HTML から `#mc-main-content` を抽出し `snapshots/en/content/{folder}/{basename}.html` に保存
   - **サイドバー**: MadCap Flare TOC データ (`scripts/lib/madcap_toc.mjs`) を解析し `snapshots/en/sidebar.json` に保存
   - **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換後、JA 翻訳と構造比較
 

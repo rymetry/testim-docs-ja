@@ -26,7 +26,8 @@ function computeMoves() {
 
     const parts = sourceContentPath.split('/');
     const targetParent = parts.slice(0, -1).join('/');
-    const targetPath = path.join(DOCS_DIR, targetParent, `${slug}.md`);
+    const basename = slug.split('/').pop();
+    const targetPath = path.join(DOCS_DIR, targetParent, `${basename}.md`);
 
     if (filePath === targetPath) continue;
 

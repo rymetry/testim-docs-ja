@@ -14,15 +14,15 @@ export async function getStaticPaths() {
   });
 }
 
-const slugParam = Astro.params.slug ?? 'testim-overview';
+const slugParam = Astro.params.slug ?? 'overview/testim-overview';
 const docs = await getDocs();
 
-// SSRモード: URLパラメータからdocIdを解決
+// SSRモード: URLパラメータからdocIdを解決（doc.id はパスベース slug と同一）
 // Staticモード: propsからdocIdを取得
 const docId =
   Astro.props?.docId ??
   (() => {
-    const match = docs.find((doc) => extractSlug(doc) === slugParam);
+    const match = docs.find((doc) => doc.id === slugParam);
     return match?.id;
   })();
 

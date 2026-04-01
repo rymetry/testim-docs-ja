@@ -124,7 +124,7 @@ describe('buildAuditManifest', () => {
   it('handles parity entries with no matching snapshot slug', () => {
     const snapshot = {
       changes: [
-        { slug: 'page-a', type: 'page-changed', sourceUrl: 'https://docs.tricentis.com/testim/content/overview/page-a.htm', categories: { heading: { added: 0, removed: 0 }, image: { added: 0, removed: 0 }, code: { added: 0, removed: 0 }, callout: { added: 0, removed: 0 }, content: { added: 1, removed: 0 } }, diffLines: 1 },
+        { slug: 'overview/page-a', type: 'page-changed', sourceUrl: 'https://docs.tricentis.com/testim/content/overview/page-a.htm', categories: { heading: { added: 0, removed: 0 }, image: { added: 0, removed: 0 }, code: { added: 0, removed: 0 }, callout: { added: 0, removed: 0 }, content: { added: 1, removed: 0 } }, diffLines: 1 },
       ],
     };
     const parity = {
@@ -141,14 +141,14 @@ describe('buildAuditManifest', () => {
     const snapshot = {
       changes: [
         {
-          slug: 'new-page',
+          slug: 'overview/new-page',
           type: 'page-added',
           sourceUrl: 'https://docs.tricentis.com/testim/content/overview/new-page.htm',
           categories: null,
           diffLines: 0,
         },
         {
-          slug: 'changed-heading',
+          slug: 'overview/changed-heading',
           type: 'page-changed',
           sourceUrl: 'https://docs.tricentis.com/testim/content/overview/changed-heading.htm',
           categories: {
@@ -161,7 +161,7 @@ describe('buildAuditManifest', () => {
           diffLines: 4,
         },
         {
-          slug: 'text-tweak',
+          slug: 'overview/text-tweak',
           type: 'page-changed',
           sourceUrl: 'https://docs.tricentis.com/testim/content/overview/text-tweak.htm',
           categories: {
@@ -186,9 +186,9 @@ describe('buildAuditManifest', () => {
 
     const manifest = buildAuditManifest(snapshot, parity, { groupCount: 2 });
 
-    const added = manifest.find((e) => e.slug === 'new-page');
-    const structural = manifest.find((e) => e.slug === 'changed-heading');
-    const contentOnly = manifest.find((e) => e.slug === 'text-tweak');
+    const added = manifest.find((e) => e.slug === 'overview/new-page');
+    const structural = manifest.find((e) => e.slug === 'overview/changed-heading');
+    const contentOnly = manifest.find((e) => e.slug === 'overview/text-tweak');
 
     assert.equal(added.bucket, 'page-lifecycle');
     assert.equal(structural.bucket, 'structural-change');

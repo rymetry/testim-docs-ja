@@ -153,13 +153,13 @@ function collectPages(children, lookup) {
 }
 
 /**
- * Extract slug from a MadCap Flare content URL path.
- * `/content/overview/testim-overview/index.htm` → `testim-overview`
- * `/content/overview/testim-automate.htm` → `testim-automate`
- * `/content/integrations/visual-validation/lambdatest_integration.htm` → `lambdatest_integration`
+ * Extract path-based slug from a MadCap Flare content URL path.
+ * `/content/overview/testim-overview/index.htm` → `overview/testim-overview`
+ * `/content/overview/testim-automate.htm`       → `overview/testim-automate`
+ * `/content/integrations/visual-validation/lambdatest_integration.htm` → `integrations/visual-validation/lambdatest_integration`
  */
 export function extractSlug(urlPath) {
-  const match = urlPath.match(/\/([a-z0-9_-]+)(?:\/index)?\.htm$/i);
+  const match = urlPath.match(/\/content\/(.+?)(?:\/index)?\.htm$/i);
   return match ? match[1].toLowerCase() : null;
 }
 

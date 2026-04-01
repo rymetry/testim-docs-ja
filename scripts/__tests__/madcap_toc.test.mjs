@@ -103,11 +103,11 @@ describe('buildIndexLookup', () => {
 // ---------------------------------------------------------------------------
 describe('extractSlug', () => {
   it('extracts slug from /slug/index.htm path', () => {
-    assert.equal(extractSlug('/content/overview/testim-overview/index.htm'), 'testim-overview');
+    assert.equal(extractSlug('/content/overview/testim-overview/index.htm'), 'overview/testim-overview');
   });
 
   it('extracts slug from /slug.htm path', () => {
-    assert.equal(extractSlug('/content/overview/testim-automate.htm'), 'testim-automate');
+    assert.equal(extractSlug('/content/overview/testim-automate.htm'), 'overview/testim-automate');
   });
 
   it('returns null for invalid path', () => {
@@ -115,15 +115,15 @@ describe('extractSlug', () => {
   });
 
   it('lowercases the slug', () => {
-    assert.equal(extractSlug('/content/Overview/TestPage.htm'), 'testpage');
+    assert.equal(extractSlug('/content/Overview/TestPage.htm'), 'overview/testpage');
   });
 
   it('extracts slug with underscores', () => {
-    assert.equal(extractSlug('/content/integrations/visual-validation/lambdatest_integration.htm'), 'lambdatest_integration');
+    assert.equal(extractSlug('/content/integrations/visual-validation/lambdatest_integration.htm'), 'integrations/visual-validation/lambdatest_integration');
   });
 
   it('extracts slug with underscores from index path', () => {
-    assert.equal(extractSlug('/content/integrations/visual_validation/index.htm'), 'visual_validation');
+    assert.equal(extractSlug('/content/integrations/visual_validation/index.htm'), 'integrations/visual_validation');
   });
 });
 
@@ -177,7 +177,7 @@ describe('buildSections', () => {
     assert.equal(sections[0].pages.length, 0);
     assert.equal(sections[1].title, 'Overview');
     assert.equal(sections[1].pages.length, 2);
-    assert.equal(sections[1].pages[0].slug, 'testim-overview');
+    assert.equal(sections[1].pages[0].slug, 'overview/testim-overview');
   });
 
   it('emits top-level leaf node with content URL as a self-contained page', () => {
@@ -209,7 +209,7 @@ describe('buildSections', () => {
     assert.equal(sections[0].pages.length, 0);
   });
 
-  it('skips leaf promotion when slug collides with a child page in another section', () => {
+  it('promotes leaf when path-based slugs do not collide with child pages', () => {
     const tree = {
       n: [
         { i: 0, c: 0 },
@@ -222,14 +222,15 @@ describe('buildSections', () => {
       [2, { url: '/content/salesforce/changelog.htm', title: 'SF Changelog' }],
     ]);
     const sections = buildSections(tree, lookup);
-    // Leaf promotion skipped — 'changelog' already claimed by Salesforce child
-    assert.equal(sections[0].pages.length, 0);
+    // Path-based slugs are unique: overview/changelog vs salesforce/changelog
+    assert.equal(sections[0].pages.length, 1);
+    assert.equal(sections[0].pages[0].slug, 'overview/changelog');
     // Child page always preserved
     assert.equal(sections[1].pages.length, 1);
-    assert.equal(sections[1].pages[0].slug, 'changelog');
+    assert.equal(sections[1].pages[0].slug, 'salesforce/changelog');
   });
 
-  it('child pages always win regardless of section order', () => {
+  it('child pages preserved and leaf promoted when path-based slugs differ', () => {
     const tree = {
       n: [
         { i: 0, c: 0, n: [{ i: 1, c: 0 }] },
@@ -244,9 +245,10 @@ describe('buildSections', () => {
     const sections = buildSections(tree, lookup);
     // Child page preserved in first section
     assert.equal(sections[0].pages.length, 1);
-    assert.equal(sections[0].pages[0].slug, 'changelog');
-    // Leaf promotion skipped — collides with child page
-    assert.equal(sections[1].pages.length, 0);
+    assert.equal(sections[0].pages[0].slug, 'overview/changelog');
+    // Leaf promoted — path-based slug salesforce/changelog doesn't collide
+    assert.equal(sections[1].pages.length, 1);
+    assert.equal(sections[1].pages[0].slug, 'salesforce/changelog');
   });
 
   it('skips nodes not found in lookup', () => {

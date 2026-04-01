@@ -1,14 +1,19 @@
 import fs from 'fs';
 import path from 'path';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
-import { ROOT_DIR, buildSlugIndex, splitFrontmatter } from './lib/project.mjs';
+import { ROOT_DIR, buildSlugIndex, splitFrontmatter, resolveSlug } from './lib/project.mjs';
 
 const ROOT = ROOT_DIR;
 const TASKS_DIR = path.join(ROOT, 'llm', 'tasks');
 
 async function main() {
   const args = process.argv.slice(2);
-  const onlySlug = args.find((a) => a.startsWith('--slug='))?.split('=')[1];
+  const rawSlug = args.find((a) => a.startsWith('--slug='))?.split('=')[1];
+  const onlySlug = rawSlug ? resolveSlug(rawSlug) : null;
+  if (rawSlug && !onlySlug) {
+    console.error(`❌ Unknown slug: "${rawSlug}". No matching document found.`);
+    process.exit(1);
+  }
   const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
   const sectionSlugs = section ? getSectionSlugSet(section) : null;
   const index = buildSlugIndex();
@@ -54,7 +59,8 @@ async function main() {
 --- 原文本文ここから ---
 
 ${body}`;
-    const outPath = path.join(TASKS_DIR, `${slug}.md`);
+    const outPath = path.join(TASKS_DIR, slug + '.md');
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
     fs.writeFileSync(outPath, prompt, 'utf8');
     count++;
   }

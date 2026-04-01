@@ -809,9 +809,9 @@ export function extractHtmlTables(body) {
 }
 
 /**
- * Normalize a URL or relative .htm path to a comparable `/docs/{slug}` token.
- * Handles absolute docs.tricentis.com URLs and MadCap relative .htm paths
- * (produced by turndown from EN snapshots).
+ * Normalize a URL to a comparable token for table cell comparison.
+ * Absolute docs.tricentis.com URLs are normalized to `/docs/{path-slug}`.
+ * Relative .htm paths are returned as-is (no /content/ prefix for slug extraction).
  */
 function normalizeUrlToken(url) {
   if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
@@ -862,7 +862,8 @@ export function extractInvariantTokens(cell) {
   // HTML-preserved format [/docs/slug#fragment] or [https://...],
   // and MadCap relative .htm links [text](slug.htm) or [text](../path/slug.htm)
   // Fragment can contain Unicode characters (JA anchors like #cli-ステップの追加)
-  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+|[^\s)\]]*\.htm(?:#[^\]\)\s]*)?))\]?\)?/g;
+  // Path-based slugs: /docs/category/page or /docs/category/subcategory/page
+  const linkDestRe = /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:\/[\w-]+)*(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+|[^\s)\]]*\.htm(?:#[^\]\)\s]*)?))\]?\)?/g;
   const linkSpans = [];
   while ((m = linkDestRe.exec(rest)) !== null) {
     tokenSet.add(normalizeUrlToken(m[1]));

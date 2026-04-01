@@ -10,6 +10,7 @@ import {
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
+  resolveSlug,
 } from './lib/project.mjs';
 import {
   ISSUE_SEVERITY,
@@ -135,10 +136,17 @@ export async function checkSourceParity({
     process.exit(1);
   }
 
+  // Resolve --slug to path-based slug (supports both basename and path-based input)
+  const resolvedSlug = slug ? resolveSlug(slug) : null;
+  if (slug && !resolvedSlug) {
+    console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
+    return 1;
+  }
+
   if (!json) {
     console.log('🔍 Source parity チェック開始\n');
     console.log(`📄 ${allFiles.length} ファイル対象`);
-    if (slug) console.log(`🔎 スラグ絞り込み: ${slug}`);
+    if (resolvedSlug) console.log(`🔎 スラグ絞り込み: ${resolvedSlug}`);
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     if (failOn) console.log(`🚦 --fail-on=${failOn}`);
     console.log('');
@@ -148,16 +156,17 @@ export async function checkSourceParity({
   let checkedCount = 0;
 
   for (const filePath of allFiles) {
-    if (slug && path.basename(filePath, '.md') !== slug) {
+    const fileSlugForFilter = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
+    if (resolvedSlug && fileSlugForFilter !== resolvedSlug) {
       continue;
     }
     const doc = readDocFile(filePath);
-    if (!slug && !matchesSectionFilter(doc.relativePath, doc.data, section)) {
+    if (!resolvedSlug && !matchesSectionFilter(doc.relativePath, doc.data, section)) {
       continue;
     }
 
     checkedCount += 1;
-    const fileSlug = path.basename(filePath, '.md');
+    const fileSlug = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
     let issues = [
       ...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug }),
     ];
@@ -171,7 +180,7 @@ export async function checkSourceParity({
 
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
-    const snapshotPath = path.join(SNAPSHOTS_DIR, `${fileSlug}.html`);
+    const snapshotPath = path.join(SNAPSHOTS_DIR, fileSlug + '.html');
     if (fs.existsSync(snapshotPath)) {
       const enHtml = fs.readFileSync(snapshotPath, 'utf8');
       let enBody;
@@ -218,8 +227,8 @@ export async function checkSourceParity({
 
   // Sidebar coverage check: detect pages in SIDEBAR_URLS.md without local files
   // Skip in --slug mode (single-page check should not report unrelated global issues)
-  if (!slug) {
-    const existingSlugs = new Set(allFiles.map(f => path.basename(f, '.md')));
+  if (!resolvedSlug) {
+    const existingSlugs = new Set(allFiles.map(f => path.relative(DOCS_DIR, f).replace(/\.md$/, '')));
     const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
     if (coverageIssues.length > 0) {
       results.push({ file: 'SIDEBAR_URLS.md', sourceUrl: '', category: '', issues: coverageIssues });

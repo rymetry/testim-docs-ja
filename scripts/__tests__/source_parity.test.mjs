@@ -96,9 +96,9 @@ describe('loadSidebarSlugs', () => {
 `;
     const slugs = loadSidebarSlugs(text);
     assert.equal(slugs.size, 3);
-    assert.ok(slugs.has('testim-overview'));
-    assert.ok(slugs.has('getting-started'));
-    assert.ok(slugs.has('advanced-config'));
+    assert.ok(slugs.has('overview/testim-overview'));
+    assert.ok(slugs.has('getting-started/getting-started'));
+    assert.ok(slugs.has('settings/advanced-config'));
   });
 
   it('returns empty set for text without URLs', () => {
@@ -113,7 +113,7 @@ describe('loadSidebarSlugs', () => {
 - ✅ https://help.testim.io/docs/setting-up-your-account
 `;
     const slugs = loadSidebarSlugs(text);
-    assert.ok(slugs.has('testim-overview'), 'new domain slug extracted');
+    assert.ok(slugs.has('overview/testim-overview'), 'new domain slug extracted');
     assert.ok(!slugs.has('setting-up-your-account'), 'old domain slug ignored');
   });
 });
@@ -1265,7 +1265,7 @@ describe('extractInvariantTokens', () => {
 
   it('normalizes docs.tricentis.com URLs to /docs/slug', () => {
     const tokens = extractInvariantTokens('Link: https://docs.tricentis.com/testim/content/editing/shareable-steps.htm');
-    assert.ok(tokens.includes('/docs/shareable-steps'));
+    assert.ok(tokens.includes('/docs/editing/shareable-steps'));
     assert.ok(!tokens.some((t) => t.includes('docs.tricentis.com')));
   });
 
@@ -1352,25 +1352,24 @@ describe('extractInvariantTokens', () => {
     assert.equal(tokens.length, 0);
   });
 
-  it('normalizes MadCap relative .htm links to /docs/slug', () => {
+  it('preserves MadCap relative .htm links as raw tokens (no /content/ prefix)', () => {
     const tokens = extractInvariantTokens('[Drag & Drop Step](drag-drop-step.htm)');
-    assert.ok(tokens.includes('/docs/drag-drop-step'), `Expected /docs/drag-drop-step in ${JSON.stringify(tokens)}`);
-    assert.ok(!tokens.includes('step.htm'), 'Should not include raw step.htm as dot-path');
+    assert.ok(tokens.includes('drag-drop-step.htm'), `Expected raw drag-drop-step.htm in ${JSON.stringify(tokens)}`);
   });
 
-  it('normalizes .htm with directory path', () => {
+  it('preserves .htm with directory path as raw token', () => {
     const tokens = extractInvariantTokens('[text](../editing/shareable-steps.htm)');
-    assert.ok(tokens.includes('/docs/shareable-steps'), `Expected /docs/shareable-steps in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.includes('../editing/shareable-steps.htm'), `Expected raw ../editing/shareable-steps.htm in ${JSON.stringify(tokens)}`);
   });
 
-  it('normalizes .htm with fragment', () => {
+  it('preserves .htm with fragment as raw token', () => {
     const tokens = extractInvariantTokens('[text](slug.htm#section)');
-    assert.ok(tokens.includes('/docs/slug'), `Expected /docs/slug in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.includes('slug.htm#section'), `Expected raw slug.htm#section in ${JSON.stringify(tokens)}`);
   });
 
-  it('normalizes .htm with query parameter', () => {
+  it('preserves .htm with query parameter as raw token', () => {
     const tokens = extractInvariantTokens('[text](slug.htm?param=1)');
-    assert.ok(tokens.includes('/docs/slug'), `Expected /docs/slug in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.includes('slug.htm'), `Expected raw slug.htm in ${JSON.stringify(tokens)}`);
   });
 });
 
@@ -1413,7 +1412,7 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
 
   it('does not flag tricentis.com absolute URL rewritten to relative /docs/ link', () => {
     const en = '| Page | Link |\n| --- | --- |\n| Steps | [steps](https://docs.tricentis.com/testim/content/editing/shareable-steps.htm) |\n';
-    const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/shareable-steps) |\n';
+    const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/editing/shareable-steps) |\n';
     const issues = compareSnapshotStructure(en, ja);
     const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
     assert.equal(tokenIssues.length, 0, 'absolute/relative testim URL should normalize to same token');

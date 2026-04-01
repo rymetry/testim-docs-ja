@@ -44,15 +44,15 @@ function extractJapaneseLabel(sectionTitle: string): string {
 }
 
 /**
- * Tricentis URL の末尾からベースネーム slug を抽出する。
- * `/content/overview/testim-overview/index.htm` → `testim-overview`
- * `/content/overview/testim-automate.htm`       → `testim-automate`
+ * Tricentis URL からパスベース slug を抽出する。
+ * `/content/overview/testim-overview/index.htm` → `overview/testim-overview`
+ * `/content/overview/testim-automate.htm`       → `overview/testim-automate`
  *
  * NOTE: scripts/lib/madcap_toc.mjs extractSlug() と同一ロジック。
  * Astro ビルド層から scripts/ を import できないため複製。
  */
 function extractSlugFromUrl(url: string): string | null {
-  const m = url.match(/\/([a-z0-9_-]+)(?:\/index)?\.htm$/i);
+  const m = url.match(/\/content\/(.+?)(?:\/index)?\.htm$/i);
   return m ? m[1].toLowerCase() : null;
 }
 
@@ -135,9 +135,9 @@ function getSidebarOrdering(): SidebarOrdering {
 
 const SIDEBAR_ORDERING = getSidebarOrdering();
 
-/** doc.id からURLに使うslug（最後のファイル名部分のみ）を抽出する */
+/** doc.id をそのままパスベース slug として返す（例: "overview/testim-overview"） */
 export function extractSlug(doc: DocEntry): string {
-  return doc.id.split('/').pop() || doc.id;
+  return doc.id;
 }
 
 export async function getDocs(): Promise<DocEntry[]> {
@@ -162,7 +162,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
 
   docs.forEach((doc) => {
     // doc.id は "overview/testim-overview" のような形式（Content Layer API）
-    // URLに使うslugは最後のファイル名部分のみ（例: "testim-overview"）
+    // パスベース slug をそのまま URL に使用（例: "overview/testim-overview"）
     const urlSlug = extractSlug(doc);
 
     const groupKey = doc.data.category;
@@ -218,7 +218,7 @@ export function buildSearchDocuments(
   headingsBySlug: Record<string, MarkdownHeading[]>
 ): SearchDocument[] {
   return docs.map((doc) => {
-    // URLに使うslugは最後のファイル名部分のみ
+    // パスベース slug をそのまま URL に使用
     const urlSlug = extractSlug(doc);
 
     return {

@@ -34,7 +34,7 @@ describe('parseSidebarSections', () => {
     const sections = parseSidebarSections(text);
     assert.equal(sections.length, 1);
     assert.equal(sections[0].items.length, 1);
-    assert.equal(sections[0].items[0].slug, 'testim-overview');
+    assert.equal(sections[0].items[0].slug, 'overview/testim-overview');
     assert.equal(sections[0].items[0].status, '✅🔍');
   });
 
@@ -44,7 +44,7 @@ describe('parseSidebarSections', () => {
 - ✅ https://docs.tricentis.com/testim/content/settings/advanced-config.htm
 `;
     const sections = parseSidebarSections(text);
-    assert.equal(sections[0].items[0].slug, 'advanced-config');
+    assert.equal(sections[0].items[0].slug, 'settings/advanced-config');
   });
 
   it('ignores old domain URLs', () => {
@@ -62,7 +62,7 @@ describe('parseSidebarSections', () => {
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/visual-validation/lambdatest_integration.htm
 `;
     const sections = parseSidebarSections(text);
-    assert.equal(sections[0].items[0].slug, 'lambdatest_integration');
+    assert.equal(sections[0].items[0].slug, 'integrations/visual-validation/lambdatest_integration');
   });
 
   it('skips meta sections (翻訳ステータス, 検証ステータス, URL抽出方法)', () => {

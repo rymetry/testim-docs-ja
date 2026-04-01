@@ -56,12 +56,14 @@ async function main() {
       if (sectionSlugs && !sectionSlugs.has(item.slug)) continue;
 
       const slug = item.slug;
-      const filePath = path.join(categoryDir, `${slug}.md`);
+      // Use basename for the filename (slug is now path-based, e.g., overview/testim-overview)
+      const basenameSlug = slug.includes('/') ? slug.split('/').pop() : slug;
+      const filePath = path.join(categoryDir, `${basenameSlug}.md`);
       if (fs.existsSync(filePath)) continue;
 
-      const title = `【翻訳中】${titleCaseFromSlug(slug)}`;
-      const description = `${titleCaseFromSlug(slug)} の日本語ドキュメントを準備しています。`;
-      const keywords = [slug, toKebab(english), 'testim'];
+      const title = `【翻訳中】${titleCaseFromSlug(basenameSlug)}`;
+      const description = `${titleCaseFromSlug(basenameSlug)} の日本語ドキュメントを準備しています。`;
+      const keywords = [basenameSlug, toKebab(english), 'testim'];
 
       const fm = [
         '---',

@@ -53,7 +53,7 @@ function orderFrontmatter(data) {
 }
 
 function normalizeFile(filePath, urlMappings) {
-  const slug = path.basename(filePath, '.md');
+  const slug = path.relative(DOCS_ROOT, filePath).replace(/\.md$/, '');
   const raw = fs.readFileSync(filePath, 'utf8');
   const parsed = matter(raw);
   const data = { ...(parsed.data ?? {}) };
@@ -85,7 +85,7 @@ async function main() {
   const args = process.argv.slice(2);
   const section = args.find((arg) => arg.startsWith('--section='))?.split('=').slice(1).join('=');
   const slugSet = section ? getSectionSlugSet(section) : null;
-  const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.basename(filePath, '.md')));
+  const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.relative(DOCS_ROOT, filePath).replace(/\.md$/, '')));
 
   // Load url_mapping.json once for all files (avoid re-reading per file)
   let urlMappings = {};
