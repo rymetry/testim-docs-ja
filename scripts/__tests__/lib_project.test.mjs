@@ -84,7 +84,7 @@ describe('matchesSectionFilter', () => {
   });
 
   it('resolves legacy alias 管理者機能 → 管理', () => {
-    const rel = 'src/content/docs/project-user-management/api-access.md';
+    const rel = 'src/content/docs/administration/api-access.md';
     assert.ok(matchesSectionFilter(rel, { category: '管理者機能' }, '管理者機能'));
   });
 
