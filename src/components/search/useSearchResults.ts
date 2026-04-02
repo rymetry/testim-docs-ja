@@ -2,6 +2,10 @@ import { startTransition, useEffect, useState } from 'react';
 import type MiniSearch from 'minisearch';
 import type { IndexedSearchDocument, SearchResult } from './types';
 
+function isValidType(value: unknown): value is 'page' | 'heading' {
+  return value === 'page' || value === 'heading';
+}
+
 type UseSearchResultsOptions = {
   miniSearch: MiniSearch<IndexedSearchDocument> | null;
   query: string;
@@ -30,25 +34,29 @@ export function useSearchResults({ miniSearch, query, selectedCategory }: UseSea
         filter: selectedCategory ? (result) => result.category === selectedCategory : undefined,
       });
 
-      const formattedResults: SearchResult[] = searchResults.slice(0, 20).map((result) => ({
-        id: result.id,
-        type: result.type as 'page' | 'heading',
-        title: result.title,
-        slug: result.slug,
-        description: result.description || '',
-        category: result.category,
-        score: result.score,
-        terms: result.terms,
-        parentTitle: result.parentTitle || '',
-        headingSlug: result.headingSlug || '',
-      }));
+      const formattedResults: SearchResult[] = searchResults
+        .filter((result) => isValidType(result.type))
+        .slice(0, 20)
+        .map((result) => ({
+          id: result.id,
+          type: result.type as 'page' | 'heading',
+          title: String(result.title ?? ''),
+          slug: String(result.slug ?? ''),
+          description: String(result.description ?? ''),
+          category: String(result.category ?? ''),
+          score: result.score,
+          terms: result.terms,
+          parentTitle: String(result.parentTitle ?? ''),
+          headingSlug: String(result.headingSlug ?? ''),
+        }));
 
       startTransition(() => {
         setTotalCount(searchResults.length);
         setResults(formattedResults);
         setSelectedIndex(0);
       });
-    } catch {
+    } catch (error) {
+      console.error('Search error:', error);
       startTransition(() => {
         setResults([]);
         setTotalCount(0);

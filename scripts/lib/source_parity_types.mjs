@@ -1,4 +1,6 @@
-export const ISSUE_SEVERITY = {
+/** Shared severity mappings and pattern constants for the source parity checking system. */
+
+export const ISSUE_SEVERITY = Object.freeze({
   untranslated: 'actionable',
   'legacy-callout': 'actionable',
   'jsx-callout': 'actionable',
@@ -21,15 +23,9 @@ export const ISSUE_SEVERITY = {
   'sidebar-missing-file': 'actionable',
   'source-snapshot-missing': 'signal',
   'source-fetch-error': 'error',
-};
+});
 
-export const ACTIONABLE_ISSUE_TYPES = new Set(
-  Object.entries(ISSUE_SEVERITY)
-    .filter(([, severity]) => severity === 'actionable')
-    .map(([type]) => type)
-);
-
-export const UNTRANSLATED_PATTERNS = [
+export const UNTRANSLATED_PATTERNS = Object.freeze([
   /^(?:\d+\.\s*)?Hover over the\b/i,
   /^(?:\d+\.\s*)?Click on the\b/i,
   /^(?:\d+\.\s*)?Click on \*\*/i,
@@ -39,7 +35,7 @@ export const UNTRANSLATED_PATTERNS = [
   /^(?:\d+\.\s*)?The file is uploaded/i,
   /^(?:\d+\.\s*)?In the\b.*\bpanel\b/i,
   /^(?:\d+\.\s*)?From the\b.*\bdrop-?down\b/i,
-];
+]);
 
 export const LEGACY_CALLOUT_RE = /^>\s*(?:📘|❗️?|🚧|👍|⚠️|📝|✅|❌|💡|ℹ️|⛔|🔥|💥|🎯|📌|🏷️)\s/;
 export const JSX_CALLOUT_RE = /^<Callout\b/i;

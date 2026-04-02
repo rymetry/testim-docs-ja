@@ -1,20 +1,20 @@
 /**
- * tests for scripts/pipeline.mjs  (new module — will fail until implemented)
+ * tests for scripts/pipeline.mjs
  *
- * The implementation must export:
- *   parseArgs(argv: string[]): { mode: string }
+ * Exported API:
+ *   parseArgs(argv: string[]): { mode: string, section: string | null, resume: boolean }
  *   loadCheckpoint(checkpointPath: string): CheckpointData | null
  *   saveCheckpoint(checkpointPath: string, data: CheckpointData): Promise<void>
+ *   getPendingSteps(checkpoint: CheckpointData | null, opts: object): string[]
  *
  * CheckpointData = {
  *   completed_phase?: string,
  *   completed_at?: string,
- *   next_phase?: string,
+ *   next_phase?: string | null,
  *   step?: string,
+ *   section?: string | null,
  *   mode?: string,
  * }
- *
- * The implementation must also guard main() so importing does not trigger side effects.
  */
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';

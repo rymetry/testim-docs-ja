@@ -56,6 +56,7 @@ export function useSearchIndex(isOpen: boolean): SearchIndexState {
         );
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
+          console.error('Failed to load search index:', error);
           setIndexStatus('error');
         }
       } finally {

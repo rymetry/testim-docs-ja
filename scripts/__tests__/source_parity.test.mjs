@@ -23,6 +23,7 @@ let normalizeEnArtifacts;
 let checkSidebarCoverage;
 let checkSourceSnapshotMissing;
 let extractHeadingSequence;
+let classifyLine;
 
 before(async () => {
   ({
@@ -48,6 +49,7 @@ before(async () => {
     checkSidebarCoverage,
     checkSourceSnapshotMissing,
     extractHeadingSequence,
+    classifyLine,
   } = await import(
     '../lib/source_parity.mjs'
   ));
@@ -1500,5 +1502,468 @@ describe('checkSourceSnapshotMissing', () => {
       snapshotsDir: '/tmp/no-such-snapshots-dir',
     });
     assert.equal(issues.length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// classifyLine — state machine unit tests (H2)
+// ---------------------------------------------------------------------------
+describe('classifyLine', () => {
+  it('classifies a blank line', () => {
+    const result = classifyLine('');
+    assert.equal(result.kind, 'blank');
+    assert.equal(result.nextState.inParagraph, false);
+  });
+
+  it('classifies a code fence opening', () => {
+    const result = classifyLine('```js');
+    assert.equal(result.kind, 'fence');
+    assert.equal(result.nextState.inCodeBlock, true);
+  });
+
+  it('classifies lines inside code block', () => {
+    const r1 = classifyLine('```', {});
+    const r2 = classifyLine('const x = 1;', r1.nextState);
+    assert.equal(r2.kind, 'code');
+    assert.equal(r2.nextState.inCodeBlock, true);
+  });
+
+  it('classifies code fence closing', () => {
+    const r1 = classifyLine('```', {});
+    const r2 = classifyLine('some code', r1.nextState);
+    const r3 = classifyLine('```', r2.nextState);
+    assert.equal(r3.kind, 'fence');
+    assert.equal(r3.nextState.inCodeBlock, false);
+  });
+
+  it('classifies HTML table open/close', () => {
+    const r1 = classifyLine('<table>');
+    assert.equal(r1.kind, 'table-open');
+    assert.equal(r1.nextState.inTable, true);
+
+    const r2 = classifyLine('<tr><td>cell</td></tr>', r1.nextState);
+    assert.equal(r2.kind, 'table');
+
+    const r3 = classifyLine('</table>', r2.nextState);
+    assert.equal(r3.kind, 'table-close');
+    assert.equal(r3.nextState.inTable, false);
+  });
+
+  it('classifies callout open/close', () => {
+    const r1 = classifyLine(':::note');
+    assert.equal(r1.kind, 'callout-open');
+    assert.equal(r1.nextState.inCallout, true);
+
+    const r2 = classifyLine('Some callout content', r1.nextState);
+    assert.equal(r2.kind, 'callout');
+
+    const r3 = classifyLine(':::', r2.nextState);
+    assert.equal(r3.kind, 'callout-close');
+    assert.equal(r3.nextState.inCallout, false);
+  });
+
+  it('classifies blockquote', () => {
+    const result = classifyLine('> This is a quote');
+    assert.equal(result.kind, 'blockquote');
+  });
+
+  it('classifies headings (h2-h4) and updates currentSection', () => {
+    const r1 = classifyLine('## Installation');
+    assert.equal(r1.kind, 'heading');
+    assert.equal(r1.heading, 'Installation');
+    assert.equal(r1.nextState.currentSection, 'Installation');
+
+    const r2 = classifyLine('### Sub-section', r1.nextState);
+    assert.equal(r2.kind, 'heading');
+    assert.equal(r2.heading, 'Sub-section');
+  });
+
+  it('classifies ordered list items', () => {
+    const result = classifyLine('1. First item');
+    assert.equal(result.kind, 'ordered-list');
+  });
+
+  it('classifies unordered list items', () => {
+    assert.equal(classifyLine('- Item').kind, 'unordered-list');
+    assert.equal(classifyLine('* Item').kind, 'unordered-list');
+    assert.equal(classifyLine('+ Item').kind, 'unordered-list');
+    assert.equal(classifyLine('  - Nested item').kind, 'unordered-list');
+  });
+
+  it('classifies images', () => {
+    assert.equal(classifyLine('![alt](image.png)').kind, 'image');
+    assert.equal(classifyLine('<img src="image.png">').kind, 'image');
+    assert.equal(classifyLine('<Image src="image.png" />').kind, 'image');
+  });
+
+  it('classifies markdown table rows', () => {
+    assert.equal(classifyLine('| Header | Header |').kind, 'markdown-table');
+    assert.equal(classifyLine('| --- | --- |').kind, 'markdown-table');
+  });
+
+  it('classifies HTML structure elements', () => {
+    assert.equal(classifyLine('<details>').kind, 'html-structure');
+    assert.equal(classifyLine('</summary>').kind, 'html-structure');
+    assert.equal(classifyLine('<br>').kind, 'html-structure');
+  });
+
+  it('classifies HTML table structure elements', () => {
+    assert.equal(classifyLine('<thead>').kind, 'html-table-structure');
+    assert.equal(classifyLine('</td>').kind, 'html-table-structure');
+    assert.equal(classifyLine('<tr>').kind, 'html-table-structure');
+  });
+
+  it('classifies single-line HTML comments', () => {
+    const result = classifyLine('<!-- comment -->');
+    assert.equal(result.kind, 'html-comment-start');
+    assert.equal(result.nextState.inHtmlComment, false);
+  });
+
+  it('classifies multi-line HTML comments', () => {
+    const r1 = classifyLine('<!-- start of comment');
+    assert.equal(r1.kind, 'html-comment-start');
+    assert.equal(r1.nextState.inHtmlComment, true);
+
+    const r2 = classifyLine('still in comment', r1.nextState);
+    assert.equal(r2.kind, 'html-comment');
+    assert.equal(r2.nextState.inHtmlComment, true);
+
+    const r3 = classifyLine('end of comment -->', r2.nextState);
+    assert.equal(r3.kind, 'html-comment');
+    assert.equal(r3.nextState.inHtmlComment, false);
+  });
+
+  it('classifies paragraph start and continuation', () => {
+    const r1 = classifyLine('This is a paragraph.');
+    assert.equal(r1.kind, 'paragraph-start');
+    assert.equal(r1.nextState.inParagraph, true);
+
+    const r2 = classifyLine('This continues the paragraph.', r1.nextState);
+    assert.equal(r2.kind, 'paragraph');
+    assert.equal(r2.nextState.inParagraph, true);
+  });
+
+  it('resets paragraph on blank line', () => {
+    const r1 = classifyLine('Paragraph text.');
+    const r2 = classifyLine('', r1.nextState);
+    assert.equal(r2.kind, 'blank');
+    assert.equal(r2.nextState.inParagraph, false);
+
+    const r3 = classifyLine('New paragraph.', r2.nextState);
+    assert.equal(r3.kind, 'paragraph-start');
+  });
+
+  it('classifies zero-width space lines as blank', () => {
+    const result = classifyLine('\u200B\u200C');
+    assert.equal(result.kind, 'blank');
+  });
+
+  it('handles escaped ordered list numbers', () => {
+    const result = classifyLine('1\\. Escaped list');
+    assert.equal(result.kind, 'ordered-list');
+  });
+
+  it('handles callout types: warning, info, tip, caution, danger', () => {
+    for (const type of ['warning', 'info', 'tip', 'caution', 'danger']) {
+      const result = classifyLine(`:::${type}`);
+      assert.equal(result.kind, 'callout-open', `:::${type} should be callout-open`);
+    }
+  });
+
+  it('heading inside callout is classified as callout content', () => {
+    const r1 = classifyLine(':::note');
+    const r2 = classifyLine('## New Section', r1.nextState);
+    // callout check takes priority — heading is treated as callout content
+    assert.equal(r2.kind, 'callout');
+    assert.equal(r2.nextState.inCallout, true);
+  });
+
+  it('default initial state uses __top__', () => {
+    const result = classifyLine('Some text.');
+    assert.equal(result.nextState.currentSection, '__top__');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// extractParagraphCounts — behavioral equivalence (H2 continued)
+// ---------------------------------------------------------------------------
+describe('extractParagraphCounts', () => {
+  it('counts paragraphs per section', () => {
+    const body = [
+      '## Section A',
+      '',
+      'First paragraph.',
+      '',
+      'Second paragraph.',
+      '',
+      '## Section B',
+      '',
+      'Only paragraph.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('Section A'), 2);
+    assert.equal(counts.get('Section B'), 1);
+  });
+
+  it('counts top-level paragraphs before any heading', () => {
+    const body = 'Top level text.\n\nAnother paragraph.\n';
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('__top__'), 2);
+  });
+
+  it('does not count code block content as paragraphs', () => {
+    const body = [
+      '## Code Section',
+      '',
+      '```js',
+      'const x = 1;',
+      'const y = 2;',
+      '```',
+      '',
+      'Real paragraph.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('Code Section'), 1);
+  });
+
+  it('does not count callout content as separate paragraphs', () => {
+    const body = [
+      '## Callout Section',
+      '',
+      ':::note',
+      'Callout content that looks like a paragraph.',
+      ':::',
+      '',
+      'Real paragraph after callout.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('Callout Section'), 1);
+  });
+
+  it('does not count list items as paragraphs', () => {
+    const body = [
+      '## List Section',
+      '',
+      '1. First item',
+      '2. Second item',
+      '',
+      '- Bullet one',
+      '- Bullet two',
+      '',
+      'Real paragraph.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('List Section'), 1);
+  });
+
+  it('does not count HTML tables as paragraphs', () => {
+    const body = [
+      '## Table Section',
+      '',
+      '<table>',
+      '<tr><td>Cell</td></tr>',
+      '</table>',
+      '',
+      'Real paragraph.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('Table Section'), 1);
+  });
+
+  it('returns empty map for empty body', () => {
+    const counts = extractParagraphCounts('');
+    assert.equal(counts.size, 0);
+  });
+
+  it('handles multi-line paragraphs correctly', () => {
+    const body = [
+      '## Section',
+      '',
+      'First line of paragraph.',
+      'Second line of same paragraph.',
+      '',
+      'Another paragraph.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('Section'), 2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// facade re-export completeness (H3)
+// ---------------------------------------------------------------------------
+describe('source_parity.mjs facade completeness', () => {
+  let facadeExports;
+  before(async () => {
+    facadeExports = await import('../lib/source_parity.mjs');
+  });
+
+  it('re-exports all expected functions from source_parity_checks.mjs', () => {
+    const expectedFunctions = [
+      'isActionableIssue',
+      'isEnglishOnlyLine',
+      'loadSidebarSlugs',
+      'localCheck',
+      'extractFromMd',
+      'extractImageSequence',
+      'extractCalloutPositions',
+      'extractStepCounts',
+      'stripTitleH1',
+      'normalizeEnArtifacts',
+      'extractBulletCounts',
+      'classifyLine',
+      'extractParagraphCounts',
+      'extractHeadingSequence',
+      'stripMarkdown',
+      'isUntranslatedCell',
+      'extractMarkdownTables',
+      'extractHtmlTables',
+      'extractInvariantTokens',
+      'extractTableStructure',
+      'detectEnArtifacts',
+      'compareSnapshotStructure',
+      'checkSidebarCoverage',
+      'checkSourceSnapshotMissing',
+    ];
+
+    for (const name of expectedFunctions) {
+      assert.equal(typeof facadeExports[name], 'function', `${name} should be a function`);
+    }
+  });
+
+  it('re-exports summarizeParityResults from source_parity_summary.mjs', () => {
+    assert.equal(typeof facadeExports.summarizeParityResults, 'function');
+  });
+
+  it('re-exports constants from source_parity_types.mjs', () => {
+    assert.ok(facadeExports.ISSUE_SEVERITY, 'ISSUE_SEVERITY should be exported');
+    assert.ok(typeof facadeExports.ISSUE_SEVERITY === 'object');
+    assert.ok(Array.isArray(facadeExports.UNTRANSLATED_PATTERNS));
+    assert.ok(facadeExports.LEGACY_CALLOUT_RE instanceof RegExp);
+    assert.ok(facadeExports.JSX_CALLOUT_RE instanceof RegExp);
+    assert.ok(facadeExports.H1_IN_BODY_RE instanceof RegExp);
+    assert.ok(facadeExports.FENCE_LINE_RE instanceof RegExp);
+  });
+
+  it('ISSUE_SEVERITY is frozen (immutable)', () => {
+    assert.ok(Object.isFrozen(facadeExports.ISSUE_SEVERITY));
+  });
+
+  it('UNTRANSLATED_PATTERNS is frozen (immutable)', () => {
+    assert.ok(Object.isFrozen(facadeExports.UNTRANSLATED_PATTERNS));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// summarizeParityResults — priority logic (L2)
+// ---------------------------------------------------------------------------
+describe('summarizeParityResults priority logic', () => {
+  it('counts a file with actionable issues as actionableFiles', () => {
+    const results = [
+      { issues: [{ type: 'untranslated', severity: 'actionable' }] },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.actionableFiles, 1);
+    assert.equal(summary.signalFiles, 0);
+    assert.equal(summary.errorFiles, 0);
+  });
+
+  it('counts a file with signal issues as signalFiles', () => {
+    const results = [
+      { issues: [{ type: 'heading-mismatch', severity: 'signal' }] },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.signalFiles, 1);
+    assert.equal(summary.actionableFiles, 0);
+  });
+
+  it('counts a file with error issues as errorFiles', () => {
+    const results = [
+      { issues: [{ type: 'source-fetch-error', severity: 'error' }] },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.errorFiles, 1);
+  });
+
+  it('actionable takes priority over error and signal', () => {
+    const results = [
+      {
+        issues: [
+          { type: 'source-fetch-error', severity: 'error' },
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'heading-mismatch', severity: 'signal' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.actionableFiles, 1);
+    assert.equal(summary.errorFiles, 0);
+    assert.equal(summary.signalFiles, 0);
+  });
+
+  it('error takes priority over signal when no actionable', () => {
+    const results = [
+      {
+        issues: [
+          { type: 'source-fetch-error', severity: 'error' },
+          { type: 'heading-mismatch', severity: 'signal' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.errorFiles, 1);
+    assert.equal(summary.signalFiles, 0);
+  });
+
+  it('aggregates issuesByType correctly', () => {
+    const results = [
+      {
+        issues: [
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'heading-mismatch', severity: 'signal' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.issuesByType['untranslated'], 2);
+    assert.equal(summary.issuesByType['heading-mismatch'], 1);
+  });
+
+  it('aggregates issuesBySeverity correctly', () => {
+    const results = [
+      {
+        issues: [
+          { type: 'untranslated', severity: 'actionable' },
+          { type: 'heading-mismatch', severity: 'signal' },
+          { type: 'source-fetch-error', severity: 'error' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.issuesBySeverity['actionable'], 1);
+    assert.equal(summary.issuesBySeverity['signal'], 1);
+    assert.equal(summary.issuesBySeverity['error'], 1);
+  });
+
+  it('returns zero counts for empty results', () => {
+    const summary = summarizeParityResults([]);
+    assert.equal(summary.filesWithIssues, 0);
+    assert.equal(summary.actionableFiles, 0);
+    assert.equal(summary.signalFiles, 0);
+    assert.equal(summary.errorFiles, 0);
+  });
+
+  it('handles multiple files with mixed severities', () => {
+    const results = [
+      { issues: [{ type: 'untranslated', severity: 'actionable' }] },
+      { issues: [{ type: 'heading-mismatch', severity: 'signal' }] },
+      { issues: [{ type: 'source-fetch-error', severity: 'error' }] },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.filesWithIssues, 3);
+    assert.equal(summary.actionableFiles, 1);
+    assert.equal(summary.signalFiles, 1);
+    assert.equal(summary.errorFiles, 1);
   });
 });

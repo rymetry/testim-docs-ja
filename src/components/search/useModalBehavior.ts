@@ -49,8 +49,8 @@ export function useModalBehavior({
       const target = previousFocusRef.current;
       if (target && document.contains(target)) {
         target.focus();
-      } else {
-        triggerRef.current?.focus();
+      } else if (triggerRef.current && document.contains(triggerRef.current)) {
+        triggerRef.current.focus();
       }
       previousFocusRef.current = null;
     }, 0);

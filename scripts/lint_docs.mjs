@@ -332,16 +332,21 @@ async function main() {
   let totalWarnings = 0;
 
   for (const filePath of files) {
-    const content = fs.readFileSync(filePath, 'utf8');
-    const issues = lintContent(content, filePath, { allSlugs, headingsBySlug });
-    for (const issue of issues) {
-      const location = issue.line ? `:${issue.line}` : '';
-      const relativePath = path.relative(ROOT, issue.file);
-      console.log(
-        `${issue.level === 'error' ? '❌' : '⚠️ '} ${relativePath}${location} [${issue.rule}] ${issue.message}`
-      );
-      if (issue.level === 'error') totalErrors += 1;
-      else totalWarnings += 1;
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const issues = lintContent(content, filePath, { allSlugs, headingsBySlug });
+      for (const issue of issues) {
+        const location = issue.line ? `:${issue.line}` : '';
+        const relativePath = path.relative(ROOT, issue.file);
+        console.log(
+          `${issue.level === 'error' ? '❌' : '⚠️ '} ${relativePath}${location} [${issue.rule}] ${issue.message}`
+        );
+        if (issue.level === 'error') totalErrors += 1;
+        else totalWarnings += 1;
+      }
+    } catch (error) {
+      console.error(`❌ Failed to lint ${path.relative(ROOT, filePath)}: ${error.message}`);
+      totalErrors += 1;
     }
   }
 

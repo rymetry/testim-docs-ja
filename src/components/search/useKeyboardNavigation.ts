@@ -23,7 +23,7 @@ export function useKeyboardNavigation({
       `#search-result-${selectedIndex}`
     );
     activeElement?.scrollIntoView({ block: 'nearest' });
-  }, [flatResults, listRef, selectedIndex]);
+  }, [flatResults, selectedIndex]); // listRef is a stable RefObject — excluded from deps
 
   const handleInputKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
     if (event.nativeEvent.isComposing || (event.nativeEvent as KeyboardEvent).isComposing) return;

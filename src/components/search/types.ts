@@ -16,17 +16,9 @@ export type IndexedSearchDocument = Omit<SearchDocument, 'keywords'> & {
   keywords: string;
 };
 
-export type SearchResult = {
-  id: string;
-  type: 'page' | 'heading';
-  title: string;
-  slug: string;
-  description: string;
-  category: string;
+export type SearchResult = Omit<SearchDocument, 'keywords'> & {
   score: number;
   terms: string[];
-  parentTitle: string;
-  headingSlug: string;
 };
 
 export type ResultGroup = {

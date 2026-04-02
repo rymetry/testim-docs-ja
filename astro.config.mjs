@@ -22,6 +22,10 @@ config();
 // Basic認証が有効な場合はSSR、無効な場合はStatic
 const isAuthEnabled = process.env.BASIC_AUTH_ENABLED === 'true';
 
+if (process.env.NODE_ENV !== 'production') {
+  console.log(`[astro] output mode: ${isAuthEnabled ? 'server (SSR)' : 'static'}`);
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://testim-docs-ja.vercel.app',

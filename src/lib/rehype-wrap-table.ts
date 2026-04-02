@@ -1,3 +1,4 @@
+/** rehype plugin: wraps <table> elements in a responsive overflow-x-auto div. */
 import type { Element, Parent, Root } from 'hast';
 import type { Plugin } from 'unified';
 import { SKIP, visit } from 'unist-util-visit';
@@ -38,6 +39,7 @@ const rehypeWrapTable: Plugin<[], Root> = () => {
         children: [node],
       };
 
+      // rehype visitors require in-place AST mutation (unist-util-visit contract)
       parent.children[index] = wrapper;
       return SKIP;
     });

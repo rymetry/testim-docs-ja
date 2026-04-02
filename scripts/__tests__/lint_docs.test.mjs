@@ -1,10 +1,12 @@
 /**
- * tests for scripts/lint_docs.mjs  (new module — will fail until implemented)
+ * tests for scripts/lint_docs.mjs
  *
- * The implementation must export:
- *   lintContent(content: string, filePath: string): LintError[]
+ * Exported API:
+ *   lintContent(content: string, filePath: string, context?: LintContext): LintError[]
+ *   toKebab(text: string): string
  *
  *   LintError = { file: string, line: number | null, rule: string, message: string, level: 'error' | 'warning' }
+ *   LintContext = { allSlugs?: Set<string>, headingsBySlug?: Map<string, Set<string>> }
  */
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';

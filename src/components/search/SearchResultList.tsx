@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { ResultGroup, SearchIndexStatus, SearchResult } from './types';
 
 type SearchResultListProps = {
@@ -9,7 +9,7 @@ type SearchResultListProps = {
   query: string;
   results: SearchResult[];
   selectedIndex: number;
-  setSelectedIndex: (index: number) => void;
+  setSelectedIndex: Dispatch<SetStateAction<number>>;
   totalCount: number;
 };
 
