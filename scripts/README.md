@@ -336,7 +336,6 @@ npm run docs:report-categories
 | `lib/project.mjs` | repo ルート、docs 探索、slug index、FM 読出し |
 | `lib/markdown-utils.mjs` | Markdown 除去、description 自動生成 |
 | `lib/madcap_toc.mjs` | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成 |
-| `lib/snapshot_normalize.mjs` | サイドバー HTML 正規化（レガシー、現在未使用） |
 | `lib/turndown.mjs` | TurndownService + MadCap Flare カスタムルール（callout, ordered-list, table） |
 | `lib/source_parity.mjs` | parity issue 生成、severity 付与、要約集計 |
 | `lib/detection_reports.mjs` | summary / issue body / audit manifest 生成 |
@@ -357,11 +356,11 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs        |
 | `__tests__/update_sidebar_urls.test.mjs`    | update_sidebar_urls_from_live.mjs |
 | `__tests__/pipeline.test.mjs`               | pipeline.mjs                      |
-| `__tests__/snapshot_normalize.test.mjs`     | lib/snapshot_normalize.mjs        |
 | `__tests__/snapshot_diff.test.mjs`          | snapshot_diff.mjs                 |
 | `__tests__/source_parity.test.mjs`          | lib/source_parity.mjs             |
 | `__tests__/detection_reports.test.mjs`      | lib/detection_reports.mjs         |
 | `__tests__/lib_project.test.mjs`            | lib/project.mjs                   |
+| `__tests__/apply_llm_translations.test.mjs` | apply_llm_translations.mjs        |
 | `__tests__/lib_markdown_utils.test.mjs`     | lib/markdown-utils.mjs            |
 | `__tests__/lib_sidebar_label.test.mjs`      | lib/sidebar.mjs                   |
 | `__tests__/turndown.test.mjs`               | lib/turndown.mjs                  |
