@@ -23,6 +23,8 @@
 
 ## Changelog（Changelog）
 
+- ✅ https://docs.tricentis.com/testim/content/overview/changelog.htm
+
 ## Overview（概要）
 
 - ✅🔍 https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm

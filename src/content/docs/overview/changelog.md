@@ -1,8 +1,8 @@
 ---
 title: 変更履歴
 description: Testim の新機能、改善、廃止予定をまとめた変更履歴です。
-category: 概要
-order: 1007
+category: Changelog
+order: 501
 updated: '2025-06-01'
 sourceUrl: 'https://docs.tricentis.com/testim/content/overview/changelog.htm'
 keywords:

@@ -84,8 +84,8 @@ function getSidebarOrdering(): SidebarOrdering {
           continue;
         }
         const label = extractJapaneseLabel(raw);
-        // コンテンツを持たないセクション（Home, Changelog）をスキップ
-        if (label === 'Home' || label === 'Changelog') {
+        // コンテンツを持たないセクション（Home）をスキップ
+        if (label === 'Home') {
           currentCategory = null;
           continue;
         }
