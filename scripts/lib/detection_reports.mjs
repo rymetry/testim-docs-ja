@@ -247,7 +247,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       topEntries: parityTopEntries,
       body: parityIssueBody,
       summary: {
-        actionableCount: (parity.summary?.actionableFiles || 0) + (parity.summary?.signalFiles || 0),
+        issueCount: (parity.summary?.actionableFiles || 0) + (parity.summary?.signalFiles || 0),
         signalFiles: parity.summary?.signalFiles || 0,
         errorFiles: parity.summary?.errorFiles || 0,
         issuesByType: parity.summary?.issuesByType || {},

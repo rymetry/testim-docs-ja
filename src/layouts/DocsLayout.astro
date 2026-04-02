@@ -24,9 +24,10 @@ type Props = {
   currentSlug: string;
   headings: MarkdownHeading[];
   sourceUrl?: string;
+  tocDepth?: number;
 };
 
-const { title, description, hero, navSections, currentSlug, headings, sourceUrl } =
+const { title, description, hero, navSections, currentSlug, headings, sourceUrl, tocDepth } =
   Astro.props;
 ---
 
@@ -133,7 +134,7 @@ const { title, description, hero, navSections, currentSlug, headings, sourceUrl 
     </main>
 
     <aside class="hidden w-60 shrink-0 xl:block">
-      <TableOfContents headings={headings} />
+      <TableOfContents headings={headings} tocDepth={tocDepth} />
     </aside>
   </div>
 

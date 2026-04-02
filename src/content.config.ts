@@ -31,6 +31,7 @@ const docs = defineCollection({
       })
       .optional(),
     keywords: z.array(z.string()).default([]),
+    tocDepth: z.number().int().min(2).max(4).default(3),
   }),
 });
 

@@ -51,7 +51,7 @@ function main() {
     `  snapshot diff actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
   );
   console.log(
-    `  parity actionable: ${actionableReport.parityRegression.summary.actionableCount}`,
+    `  parity issues (actionable+signal): ${actionableReport.parityRegression.summary.issueCount}`,
   );
 }
 

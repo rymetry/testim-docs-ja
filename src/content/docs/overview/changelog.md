@@ -5,6 +5,7 @@ category: Changelog
 order: 501
 updated: '2025-06-01'
 sourceUrl: 'https://docs.tricentis.com/testim/content/overview/changelog.htm'
+tocDepth: 2
 keywords:
   - 変更履歴
   - 新機能
