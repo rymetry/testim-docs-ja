@@ -138,7 +138,7 @@ async function syncOneIssue({
     owner,
     repo,
     issue_number: openIssue.number,
-    body: `Closing because the latest scheduled actionable snapshot reports 0 actionable ${key} file(s).`,
+    body: `Closing because the latest scheduled check reports no actionable or signal ${key} file(s).`,
   });
   await github.rest.issues.update({
     owner,

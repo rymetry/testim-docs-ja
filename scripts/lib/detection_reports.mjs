@@ -8,7 +8,7 @@ import {
 const SNAPSHOT_ISSUE_TITLE =
   '📸 Content Drift: English source changes detected via snapshot diff';
 const PARITY_ISSUE_TITLE =
-  '🔍 Parity Regression: actionable content drift detected';
+  '🔍 Parity Regression: content drift detected';
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return {};
@@ -151,12 +151,14 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const maxEntries = options.maxEntries ?? 10;
   const snapshotChanges = snapshot.changes ?? [];
   const parityFiles = parity.files ?? [];
-  const parityActionableFiles = parityFiles.filter((file) =>
-    (file.issues ?? []).some((issue) => issue.severity === 'actionable'),
+  const parityIssueFiles = parityFiles.filter((file) =>
+    (file.issues ?? []).some(
+      (issue) => issue.severity === 'actionable' || issue.severity === 'signal',
+    ),
   );
 
   const snapshotTopEntries = sortSnapshotEntries(snapshotChanges).slice(0, maxEntries);
-  const parityTopEntries = sortParityEntries(parityActionableFiles).slice(
+  const parityTopEntries = sortParityEntries(parityIssueFiles).slice(
     0,
     maxEntries,
   );
@@ -204,8 +206,13 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     formatList(
       parityTopEntries.map((entry) => {
         const issueLabels = entry.issues
-          .filter((issue) => issue.severity === 'actionable')
-          .map((issue) => `${issue.type}${issue.detail ? ` (${issue.detail})` : ''}`)
+          .filter(
+            (issue) => issue.severity === 'actionable' || issue.severity === 'signal',
+          )
+          .map((issue) => {
+            const tag = issue.severity === 'signal' ? '[signal] ' : '';
+            return `${tag}${issue.type}${issue.detail ? ` (${issue.detail})` : ''}`;
+          })
           .join(', ');
         return `\`${entry.file}\` - ${issueLabels}`;
       }),
@@ -236,11 +243,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     },
     parityRegression: {
       issueTitle: PARITY_ISSUE_TITLE,
-      shouldOpenIssue: parityActionableFiles.length > 0,
+      shouldOpenIssue: parityIssueFiles.length > 0,
       topEntries: parityTopEntries,
       body: parityIssueBody,
       summary: {
-        actionableCount: parity.summary?.actionableFiles || 0,
+        issueCount: (parity.summary?.actionableFiles || 0) + (parity.summary?.signalFiles || 0),
         signalFiles: parity.summary?.signalFiles || 0,
         errorFiles: parity.summary?.errorFiles || 0,
         issuesByType: parity.summary?.issuesByType || {},

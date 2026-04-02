@@ -62,6 +62,7 @@ keywords:
 | `sourceUrl` | ✅ | — | 英語原文 URL（`https://docs.tricentis.com/testim/content/.../{slug}.htm`）必須 |
 | `order` | — | `0` | サイドバー内の表示順序（`docs/SIDEBAR_URLS.md` 基準） |
 | `keywords` | — | `[]` | 検索用キーワード（日本語、最大10件目安） |
+| `hideToc` | — | `false` | `true` で TOC を非表示。時系列リストなど TOC が不適切なページ用 |
 | `hero` | — | — | ヒーローセクション（トップページ用、通常の記事では不要） |
 
 追加ルール:

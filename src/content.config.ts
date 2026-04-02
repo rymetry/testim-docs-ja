@@ -31,6 +31,7 @@ const docs = defineCollection({
       })
       .optional(),
     keywords: z.array(z.string()).default([]),
+    hideToc: z.boolean().default(false),
   }),
 });
 

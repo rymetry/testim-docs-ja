@@ -50,30 +50,25 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 - IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付き IP」アドレスをログイン履歴で確認してください。
 - ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
 
-  Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
-  - IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
+Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
 
-    ![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
+- IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
 
-  - IP アドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**
+  ![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
 
-    ![プロファイルレベルのログイン IP アドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
+- IP アドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**
 
-  - ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
+  ![プロファイルレベルのログイン IP アドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
 
-    ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
+- ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
 
-:::note
+  ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
+
 IP アドレス制限が必要な場合は、ホワイトリストに登録する必要がある IP アドレスについて[サポート](https://www.testim.io/contact-us/)にお問い合わせください。
-:::
 
 ## Grid 上のスケジュール済みテスト実行が確認コードの入力を求められて失敗する
 
-確認コードはデバイスアクティベーションの一部であり、多要素認証とは異なります。
-
-Salesforce にログインしてメールで送信されたコードの入力を求められる場合、デバイスアクティベーションが行われています。
-
-デバイスアクティベーションは、次のいずれかに当てはまる場合に発生します:
+確認コードはデバイスアクティベーションの一部であり、多要素認証とは異なります。Salesforce にログインしてメールで送信されたコードの入力を求められる場合、デバイスアクティベーションが行われています。デバイスアクティベーションは、次のいずれかに当てはまる場合に発生します:
 
 - ネットワークアクセス設定で IP アドレスがホワイトリストに登録されていない
 - ホワイトリストに登録された IP 範囲が 1600 万アドレスを超えている
@@ -96,15 +91,9 @@ Salesforce にログインしてメールで送信されたコードの入力を
 
    ![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
 
-## Create ステップを使用して前のステップで作成したレコードが、Find ステップを使用して Salesforce で見つからない
+## Salesforce でレコードが見つからない
 
-**Create**ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/editing-tests/conditions#custom-条件の設定)を含むステップを追加し、その後次のステップに進むことです。
-
-カスタム条件を含む追加されるステップは、こちらのデモプロジェクトで共有ステップとして見つけることができます - [https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs](https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs)
-
-この共有ステップをテストに追加するだけです。
-
-デモテストでは、**Create**ステップの後に共有**Find**ステップが続きます。
+**Create**ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/editing-tests/conditions#custom-条件の設定)を含むステップを追加し、その後次のステップに進むことです。カスタム条件を含む追加されるステップは、こちらのデモプロジェクトで共有ステップとして見つけることができます - [https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs](https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs) この共有ステップをテストに追加するだけです。デモテストでは、**Create**ステップの後に共有**Find**ステップが続きます。
 
 ![共有 Find ステップの例](/images/salesforce-utilities/troubleshoot/210f6e5-troubleshootfind.png)
 
@@ -116,9 +105,7 @@ Salesforce にログインしてメールで送信されたコードの入力を
 
 ![カスタム条件のコード例](/images/salesforce-utilities/troubleshoot/58bdc93-code.png)
 
-カスタムコードは、レコードが見つかるまで、またはレコードの検索を 4 回試行するまで、この共有グループを繰り返すように設定されています。
-
-Find Account 共有ステップには 2 つの内部ステップが含まれています（ステップをダブルクリックしてアクセス）:
+カスタムコードは、レコードが見つかるまで、またはレコードの検索を 4 回試行するまで、この共有グループを繰り返すように設定されています。Find Account 共有ステップには 2 つの内部ステップが含まれています（ステップをダブルクリックしてアクセス）:
 
 - **Find ステップ** - レコードを見つけるための検索ステップ:
 
@@ -136,20 +123,25 @@ Salesforce 選択リストの自動化は困難です。選択を記録する際
 
 これは以下の理由による可能性があります:
 
-- テストを実行している Salesforce アカウントに、このフィールドを表示するための読み取り権限がない可能性があります。\
-  **可能な解決策** - このアカウントのフィールド権限を表示するには、[権限検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。
-- テストを実行している Salesforce アカウントのページレイアウトが、このフィールドなしで構成されている可能性があります。\
-  **可能な解決策** - ページレイアウトを検証するには、Salesforce で設定を確認してください。
+- テストを実行している Salesforce アカウントに、このフィールドを表示するための読み取り権限がない可能性があります。
+
+**可能な解決策** - このアカウントのフィールド権限を表示するには、[権限検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。
+
+- テストを実行している Salesforce アカウントのページレイアウトが、このフィールドなしで構成されている可能性があります。
+
+**可能な解決策** - ページレイアウトを検証するには、Salesforce で設定を確認してください。
 
 ## Salesforce テストが Grid で「要素が見つかりません」で失敗するが、ローカルではテストが成功する
 
 これには 2 つの可能な理由があります:
 
-1. Salesforce ページの読み込み時間が Grid とローカル実行で異なる場合があります。予期しない追加のページ読み込み時間により、このタイムアウトエラーが発生する可能性があります。\
+1. Salesforce ページの読み込み時間が Grid とローカル実行で異なる場合があります。予期しない追加のページ読み込み時間により、このタイムアウトエラーが発生する可能性があります。
+
    **可能な解決策** - 失敗するテストステップの前に、Salesforce ステップ[ページ読み込みを待機](/docs/salesforce-testing/salesforce-steps/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
 
-2. ローカル記録またはローカル実行中にユーザーがブラウザウィンドウのサイズを変更した場合。\
-   **可能な解決策** - ブラウザウィンドウのサイズを変更せず、Grid でテストが実行されるときと同じサイズのままにすることをお勧めします。
+2. ローカル記録またはローカル実行中にユーザーがブラウザウィンドウのサイズを変更した場合。
+
+**可能な解決策** - ブラウザウィンドウのサイズを変更せず、Grid でテストが実行されるときと同じサイズのままにすることをお勧めします。
 
 ## 同時 Salesforce テスト実行が、ユーザーがログアウトされるため失敗する
 

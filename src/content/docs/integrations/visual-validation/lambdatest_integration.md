@@ -14,34 +14,32 @@ keywords:
   - 統合設定
 ---
 
-LambdaTest SmartUI は、Web アプリの UI をデバイス横断でテストし、視覚的な差分やレイアウトの問題を検出するビジュアル検証ツールです。
+LambdaTest SmartUI は、Web アプリの UI をデバイス横断でテストし、視覚的な差分やレイアウトの問題を検出する[ビジュアル検証](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)ツールです。LambdaTest を Testim と統合することで、ビジュアルリグレッションの検出を自動化できます。
 
 ## 開始前の準備
 
-前提条件:
+LambdaTest と Testim を統合する前に、以下を確認してください:
 
 - LambdaTest と Testim の両方で管理者権限が必要です
-- Testim プロジェクトが Professional plan である必要があります
+- Testim プロジェクトが [Professional plan](https://www.testim.io/pricing/) である必要があります
 
-LambdaTest から以下の認証情報を取得してください:
+LambdaTest と Testim を統合するには、LambdaTest から以下の認証情報が必要です:
 
 - Username
 - Access key
 - Project token
 
-:::note
 これらの認証情報の取得方法については、[LambdaTest のガイド](https://www.lambdatest.com/support/docs/hyperexecute-how-to-get-my-username-and-access-key/)を参照してください。
-:::
 
 ## LambdaTest SmartUI の統合
+
+LambdaTest を最初のビジュアルテストプロバイダーとして使用開始するか、別のプロバイダーから LambdaTest に切り替えることができます。どちらの場合も、以下の手順に従ってください:
 
 1. **Settings > Integration > Visual testing** に移動します。
 2. LambdaTest ペインで **login** を選択します。
 3. LambdaTest から取得した **Username**、**Access key**、**Project Token** を入力します。
 4. **Connect** を選択します。
 
-統合が完了すると、LambdaTest SmartUI がビジュアルテストプロバイダーとして有効になります。
+LambdaTest SmartUI が[ビジュアルテストプロバイダー](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)として使用されるようになりました。
 
-- **初回統合の場合**: テストを設計して実行し、リグレッション検出用のベースラインを確立してください。
-- **プロバイダーの切り替え時**: Testim は新しいベースラインを作成するためにテストを自動的に再実行します。
-- **再度切り替える場合**: 既存のベースラインが再利用されます。
+初めてビジュアルテストプロバイダーを統合した場合は、テストを設計して実行し、リグレッション検出用のベースラインを確立してください。プロバイダーを切り替えた場合、Testim は新しいベースラインを記録するためにテストを自動的に再実行します。再度プロバイダーを切り替える場合は、既存のベースラインが再利用されます。
