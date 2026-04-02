@@ -204,7 +204,7 @@ describe('buildAuditManifest', () => {
 });
 
 describe('buildActionableReport', () => {
-  it('does not open a parity issue for heading-only signal entries', () => {
+  it('opens a parity issue for signal-only entries', () => {
     const snapshot = {
       checkedAt: '2026-03-19T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -229,7 +229,8 @@ describe('buildActionableReport', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
-    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.ok(report.parityRegression.body.includes('[signal]'));
   });
 
   it('opens snapshot diff issue when changes exist', () => {
@@ -435,7 +436,7 @@ describe('loadDetectionInputs', () => {
 // ---------------------------------------------------------------------------
 
 describe('buildActionableReport with new signal types', () => {
-  it('does not open parity issue for signal-only new types', () => {
+  it('opens parity issue for signal-only new types', () => {
     const snapshot = {
       checkedAt: '2026-03-23T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -471,6 +472,66 @@ describe('buildActionableReport with new signal types', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.ok(report.parityRegression.body.includes('[signal]'));
+  });
+
+  it('does not open parity issue for error-only entries', () => {
+    const snapshot = {
+      checkedAt: '2026-04-03T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-03T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 1,
+        issuesByType: { 'source-fetch-error': 1 },
+        issuesBySeverity: { error: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [{ type: 'source-fetch-error', severity: 'error', detail: 'fetch failed' }],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
     assert.equal(report.parityRegression.shouldOpenIssue, false);
+  });
+
+  it('opens parity issue when mixed error and signal entries', () => {
+    const snapshot = {
+      checkedAt: '2026-04-03T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-03T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 1,
+        issuesByType: { 'source-fetch-error': 1, 'heading-mismatch': 1 },
+        issuesBySeverity: { error: 1, signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            { type: 'source-fetch-error', severity: 'error', detail: 'fetch failed' },
+            { type: 'heading-mismatch', severity: 'signal', detail: 'h2: EN=5 JA=3' },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
   });
 });
