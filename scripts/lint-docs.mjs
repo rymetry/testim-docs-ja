@@ -10,6 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
+import { filePathToSlug } from './lib/project.mjs';
 
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), '../..');
@@ -108,57 +109,34 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
     const bodyStripped = stripCode(body);
     const strippedLines = bodyStripped.split('\n');
 
+    const validateLink = (slugPath, fragment, lineIdx) => {
+      const displayPath = `/docs/${slugPath}`;
+      if (!allSlugs.has(slugPath)) {
+        err('link-target-missing', `Internal link target does not exist: ${displayPath}`, lineIdx);
+      } else if (fragment && headingsBySlug) {
+        const fragId = fragment.slice(1);
+        const headings = headingsBySlug.get(slugPath);
+        if (headings && !headings.has(fragId)) {
+          warn('link-fragment-missing', `Fragment "${fragment}" not found in ${displayPath}`, lineIdx);
+        }
+      }
+    };
+
     strippedLines.forEach((line, i) => {
+      const lineIdx = toAbsoluteLine(i + 1, bodyStart);
+
       // Check A: Markdown links
       const mdLinkRe = /\]\(\/docs\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)(#[^)]+)?\)/g;
       let mdMatch;
       while ((mdMatch = mdLinkRe.exec(line)) !== null) {
-        const slugPath = mdMatch[1];
-        const fragment = mdMatch[2];
-        const displayPath = `/docs/${slugPath}`;
-        if (!allSlugs.has(slugPath)) {
-          err(
-            'link-target-missing',
-            `Internal link target does not exist: ${displayPath}`,
-            toAbsoluteLine(i + 1, bodyStart)
-          );
-        } else if (fragment && headingsBySlug) {
-          const fragId = fragment.slice(1);
-          const headings = headingsBySlug.get(slugPath);
-          if (headings && !headings.has(fragId)) {
-            warn(
-              'link-fragment-missing',
-              `Fragment "${fragment}" not found in ${displayPath}`,
-              toAbsoluteLine(i + 1, bodyStart)
-            );
-          }
-        }
+        validateLink(mdMatch[1], mdMatch[2], lineIdx);
       }
 
       // Check B: HTML <a href="/docs/..."> links
       const htmlLinkRe = /<a\b[^>]*href=["']\/docs\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)(#[^\s"']*)?\s*["'][^>]*>/gi;
       let htmlMatch;
       while ((htmlMatch = htmlLinkRe.exec(line)) !== null) {
-        const slugPath = htmlMatch[1];
-        const fragment = htmlMatch[2];
-        const displayPath = `/docs/${slugPath}`;
-        if (!allSlugs.has(slugPath)) {
-          err(
-            'link-target-missing',
-            `Internal link target does not exist: ${displayPath}`,
-            toAbsoluteLine(i + 1, bodyStart)
-          );
-        } else if (fragment && headingsBySlug) {
-          const fragId = fragment.slice(1);
-          const headings = headingsBySlug.get(slugPath);
-          if (headings && !headings.has(fragId)) {
-            warn(
-              'link-fragment-missing',
-              `Fragment "${fragment}" not found in ${displayPath}`,
-              toAbsoluteLine(i + 1, bodyStart)
-            );
-          }
-        }
+        validateLink(htmlMatch[1], htmlMatch[2], lineIdx);
       }
     });
   }
@@ -258,7 +236,7 @@ async function main() {
   if (section) {
     const slugSet = getSectionSlugSet(section);
     files = files.filter((file) => {
-      const slug = path.relative(DOCS_ROOT, file).replace(/\.md$/, '');
+      const slug = filePathToSlug(file, DOCS_ROOT);
       return slugSet.has(slug);
     });
   }
@@ -273,7 +251,7 @@ async function main() {
   const allSlugs = new Set();
   const headingsBySlug = new Map();
   for (const f of allFiles) {
-    const slug = path.relative(DOCS_ROOT, f).replace(/\.md$/, '');
+    const slug = filePathToSlug(f, DOCS_ROOT);
     allSlugs.add(slug);
     const raw = fs.readFileSync(f, 'utf8');
     const { body: rawBody } = parseFrontmatter(raw);

@@ -5,7 +5,7 @@ import { promisify } from 'util';
 import { createHash } from 'crypto';
 import matter from 'gray-matter';
 import { filterItemsBySection } from './lib/sidebar.mjs';
-import { ROOT_DIR, buildSlugIndex, toKebab, resolveSlug } from './lib/project.mjs';
+import { ROOT_DIR, buildSlugIndex, buildBasenameToPathMap, toKebab, resolveSlug } from './lib/project.mjs';
 import { extractSlug } from './lib/madcap_toc.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
 import turndown from './lib/turndown.mjs';
@@ -131,7 +131,8 @@ async function downloadAsset(url, destDir) {
     const buf = Buffer.from(await res.arrayBuffer());
     await fs.promises.writeFile(destPath, buf);
   } catch (e) {
-    await execFileAsync('curl', ['-sL', '--compressed', '-A', 'Mozilla/5.0 (Automation)', '-o', destPath, url]);
+    console.warn(`fetch failed for ${url}: ${e.message} — falling back to curl`);
+    await execFileAsync('curl', ['-sL', '--fail', '--compressed', '-A', 'Mozilla/5.0 (Automation)', '-o', destPath, url]);
   }
   await sleep(20);
   return { name: targetName, path: destPath };
@@ -183,55 +184,55 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl
 }
 
 /**
- * Lazy-cached basename → path-slug lookup built from the docs index.
- * Values are `null` for ambiguous basenames (those that appear in multiple folders).
- */
-let _basenameToPath = null;
-function getBasenameToPathMap() {
-  if (!_basenameToPath) {
-    const slugIndex = buildSlugIndex();
-    const map = new Map();
-    for (const slug of Object.keys(slugIndex)) {
-      const bn = slug.split('/').pop();
-      if (map.has(bn)) {
-        map.set(bn, null); // ambiguous — skip
-      } else {
-        map.set(bn, slug);
-      }
-    }
-    _basenameToPath = map; // cache only after success
-  }
-  return _basenameToPath;
-}
-
-/**
  * Resolve a basename slug to its path-based form. Already-path-based slugs pass through.
  * Returns the original basename unchanged if it is ambiguous or not found in the index.
  */
 function resolveToPathSlug(slug) {
   if (slug.includes('/')) return slug;
-  const map = getBasenameToPathMap();
-  if (!map.has(slug)) return slug; // not in index — leave as-is
+  const map = buildBasenameToPathMap();
+  if (!map.has(slug)) return slug;
   const resolved = map.get(slug);
-  return resolved ?? slug; // ambiguous (null) — fall back to original
+  return resolved ?? slug;
+}
+
+/**
+ * Normalize a relative .htm path to a path-based slug via extractSlug.
+ * Strips leading `../` and `./` prefixes, prepends `/content/` for extractSlug,
+ * then resolves the basename to a full path-based slug.
+ * Returns null if the path cannot be resolved.
+ */
+function resolveHtmPath(rawPath) {
+  const normalized = rawPath.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '');
+  // Bare index.htm cannot be resolved without page context — leave unchanged
+  if (normalized === 'index.htm') return null;
+  const contentPath = normalized.startsWith('/content/')
+    ? normalized
+    : '/content/' + normalized;
+  const slug = extractSlug(contentPath);
+  if (!slug) return null;
+  return resolveToPathSlug(slug);
 }
 
 export function rewriteDocLinks(markdown) {
-  // Legacy readme.io doc: links — resolve basename to path-based slug
+  // Stage 1: Markdown doc: links — legacy readme.io format
   let result = markdown.replace(/\]\(doc:([a-z0-9_-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
-    return `](/docs/${resolveToPathSlug(slug)}${frag || ''})`;
+    return `](/docs/${resolveToPathSlug(slug)}${frag})`;
   });
-  // MadCap Flare relative .htm links (e.g. ../path/slug.htm, slug/index.htm)
-  result = result.replace(/\]\(([^)#]*\.htm)(#[^)]*)?\)/g, (_match, rawPath, fragment) => {
-    // extractSlug expects /content/... paths; prepend /content for relative paths
-    const normalized = rawPath.replace(/^(?:\.\.\/)+/, '');
-    const p = normalized.startsWith('/content/')
-      ? normalized
-      : '/content/' + normalized;
-    let slug = extractSlug(p);
-    if (!slug) return _match;
-    // Resolve basename-only results to path-based slugs
-    return `](/docs/${resolveToPathSlug(slug)}${fragment || ''})`;
+  // Stage 2: Markdown .htm links — MadCap Flare relative paths (skip schemes/protocol-relative, handle .htm/#/)
+  result = result.replace(/\]\((?![a-z][a-z0-9+.-]*:|\/\/)([^)#]*\.htm)(?:\/#\/)?(#[^)]*)?\)/g, (_match, rawPath, fragment) => {
+    const resolved = resolveHtmPath(rawPath);
+    if (!resolved) return _match;
+    return `](/docs/${resolved}${fragment || ''})`;
+  });
+  // Stage 3: HTML <a href="doc:slug"> — narrow match excludes doc:https://
+  result = result.replace(/<a(\s[^>]*)href="doc:([a-z0-9_-]+)(#[^"]*)?"([^>]*>)/gi, (_match, pre, slug, frag = '', post) => {
+    return `<a${pre}href="/docs/${resolveToPathSlug(slug)}${frag}"${post}`;
+  });
+  // Stage 4: HTML <a href="[../]path/slug.htm"> — relative only, skip URLs with schemes or protocol-relative (also handles .htm/#/)
+  result = result.replace(/<a(\s[^>]*)href="(?![a-z][a-z0-9+.-]*:|\/\/)([^"#]*\.htm)(?:\/#\/)?(#[^"]*)?"([^>]*>)/gi, (_match, pre, rawPath, fragment = '', post) => {
+    const resolved = resolveHtmPath(rawPath);
+    if (!resolved) return _match;
+    return `<a${pre}href="/docs/${resolved}${fragment}"${post}`;
   });
   return result;
 }

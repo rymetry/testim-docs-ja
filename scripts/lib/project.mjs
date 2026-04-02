@@ -60,8 +60,13 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
     _cachedFilter = sectionFilter;
     try {
       _cachedSlugSet = getSectionSlugSet(sectionFilter);
-    } catch {
+    } catch (e) {
       _cachedSlugSet = null;
+      if (e.message?.startsWith('Unknown section')) {
+        console.warn(`matchesSectionFilter: ${e.message} — falling back to heuristic match`);
+      } else {
+        console.warn(`matchesSectionFilter: unexpected error: ${e.message}`);
+      }
     }
   }
 
@@ -88,6 +93,35 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
   return candidates.some((candidate) => candidate.includes(target));
 }
 
+/**
+ * Convert an absolute .md file path to its path-based slug.
+ * e.g. "/…/src/content/docs/overview/testim-overview.md" → "overview/testim-overview"
+ */
+export function filePathToSlug(filePath, docsDir = DOCS_DIR) {
+  return path.relative(docsDir, filePath).replace(/\.md$/, '');
+}
+
+/**
+ * Lazy-cached basename → path-slug lookup built from the docs index.
+ * Values are `null` for ambiguous basenames (those appearing in multiple folders).
+ */
+let _basenameCache = { dir: null, map: null };
+export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
+  if (_basenameCache.map && _basenameCache.dir === docsDir) return _basenameCache.map;
+  const slugIndex = buildSlugIndex(docsDir);
+  const map = new Map();
+  for (const slug of Object.keys(slugIndex)) {
+    const bn = slug.split('/').pop();
+    if (map.has(bn)) {
+      map.set(bn, null); // ambiguous — skip
+    } else {
+      map.set(bn, slug);
+    }
+  }
+  _basenameCache = { dir: docsDir, map };
+  return map;
+}
+
 export function buildSlugIndex(docsDir = DOCS_DIR) {
   /** @type {Record<string, {categoryFolder:string, filePath:string}>} */
   const index = {};
@@ -96,7 +130,7 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
       const full = path.join(dir, ent.name);
       if (ent.isDirectory()) walk(full);
       else if (ent.isFile() && ent.name.endsWith('.md')) {
-        const slug = path.relative(docsDir, full).replace(/\.md$/, '');
+        const slug = filePathToSlug(full, docsDir);
         const categoryFolder = path.basename(path.dirname(full));
         index[slug] = { categoryFolder, filePath: full };
       }
@@ -180,7 +214,7 @@ export function buildDocsIndex(docsDir = DOCS_DIR) {
       const full = path.join(dir, ent.name);
       if (ent.isDirectory()) { walk(full); continue; }
       if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
-      const slug = path.relative(docsDir, full).replace(/\.md$/, '');
+      const slug = filePathToSlug(full, docsDir);
       const localFolder = path.basename(path.dirname(full));
       const raw = fs.readFileSync(full, 'utf8');
       const { data } = matter(raw);

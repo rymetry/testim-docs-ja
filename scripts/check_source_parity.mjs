@@ -7,6 +7,7 @@ import {
   DOCS_DIR,
   ROOT_DIR,
   SIDEBAR_PATH,
+  filePathToSlug,
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
@@ -133,7 +134,7 @@ export async function checkSourceParity({
     allowlist = loadAllowlist();
   } catch (error) {
     console.error(`❌ ${error.message}`);
-    process.exit(1);
+    return 1;
   }
 
   // Resolve --slug to path-based slug (supports both basename and path-based input)
@@ -156,8 +157,8 @@ export async function checkSourceParity({
   let checkedCount = 0;
 
   for (const filePath of allFiles) {
-    const fileSlugForFilter = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
-    if (resolvedSlug && fileSlugForFilter !== resolvedSlug) {
+    const fileSlug = filePathToSlug(filePath);
+    if (resolvedSlug && fileSlug !== resolvedSlug) {
       continue;
     }
     const doc = readDocFile(filePath);
@@ -166,7 +167,6 @@ export async function checkSourceParity({
     }
 
     checkedCount += 1;
-    const fileSlug = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
     let issues = [
       ...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug }),
     ];
@@ -228,7 +228,7 @@ export async function checkSourceParity({
   // Sidebar coverage check: detect pages in SIDEBAR_URLS.md without local files
   // Skip in --slug mode (single-page check should not report unrelated global issues)
   if (!resolvedSlug) {
-    const existingSlugs = new Set(allFiles.map(f => path.relative(DOCS_DIR, f).replace(/\.md$/, '')));
+    const existingSlugs = new Set(allFiles.map(f => filePathToSlug(f)));
     const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
     if (coverageIssues.length > 0) {
       results.push({ file: 'SIDEBAR_URLS.md', sourceUrl: '', category: '', issues: coverageIssues });

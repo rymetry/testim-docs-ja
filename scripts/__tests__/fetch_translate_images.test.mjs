@@ -81,6 +81,118 @@ describe('rewriteDocLinks', () => {
     const result = rewriteDocLinks('[link](../../salesforce-testing/salesforce-testing-overview.htm)');
     assert.equal(result, '[link](/docs/salesforce-testing/salesforce-testing-overview)');
   });
+
+  // Stage 2 edge cases: external Markdown .htm links should NOT be rewritten
+  it('does not rewrite Markdown https://*.htm link', () => {
+    const md = '[link](https://example.com/page.htm)';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('does not rewrite Markdown protocol-relative //*.htm link', () => {
+    const md = '[link](//example.com/page.htm)';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  // Stage 3: HTML <a href="doc:slug">
+  it('rewrites HTML <a href="doc:slug"> to /docs/ path', () => {
+    const result = rewriteDocLinks('<a href="doc:testim-overview">overview</a>');
+    assert.equal(result, '<a href="/docs/overview/testim-overview">overview</a>');
+  });
+
+  it('rewrites HTML doc: link preserving fragment', () => {
+    const result = rewriteDocLinks('<a href="doc:testim-overview#section">link</a>');
+    assert.equal(result, '<a href="/docs/overview/testim-overview#section">link</a>');
+  });
+
+  it('does not rewrite doc:https:// (malformed legacy link)', () => {
+    const md = '<a href="doc:https://help.testim.io/docs/exports-parameters">link</a>';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('rewrites HTML doc: link with pre-href attributes', () => {
+    const result = rewriteDocLinks('<a class="foo" href="doc:testim-overview">link</a>');
+    assert.equal(result, '<a class="foo" href="/docs/overview/testim-overview">link</a>');
+  });
+
+  // Stage 4: HTML <a href="path.htm">
+  it('rewrites HTML <a href="slug.htm"> to /docs/ path', () => {
+    const result = rewriteDocLinks('<a href="testim-automate.htm">link</a>');
+    assert.equal(result, '<a href="/docs/overview/testim-overview/testim-automate">link</a>');
+  });
+
+  it('rewrites HTML <a href="../path/slug.htm"> with relative path', () => {
+    const result = rewriteDocLinks('<a href="../editing-tests/conditions/index.htm">link</a>');
+    assert.equal(result, '<a href="/docs/editing-tests/conditions">link</a>');
+  });
+
+  it('rewrites HTML .htm link preserving fragment', () => {
+    const result = rewriteDocLinks('<a href="why-did-my-test-fail.htm#13-api-step-failed">link</a>');
+    assert.equal(result, '<a href="/docs/results/test-results/why-did-my-test-fail#13-api-step-failed">link</a>');
+  });
+
+  it('does not rewrite external https://*.htm link', () => {
+    const md = '<a href="https://example.com/page.htm">link</a>';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('does not rewrite already-converted /docs/ HTML link', () => {
+    const md = '<a href="/docs/overview/testim-overview">link</a>';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('rewrites multiple HTML anchors in same line', () => {
+    const md = '<a href="doc:testim-overview">a</a> and <a href="testim-automate.htm">b</a>';
+    const result = rewriteDocLinks(md);
+    assert.equal(result, '<a href="/docs/overview/testim-overview">a</a> and <a href="/docs/overview/testim-overview/testim-automate">b</a>');
+  });
+
+  // Edge cases identified in Codex review
+  it('does not rewrite protocol-relative //example.com/*.htm link', () => {
+    const md = '<a href="//example.com/page.htm">link</a>';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('does not rewrite ftp://*.htm link', () => {
+    const md = '<a href="ftp://example.com/file.htm">link</a>';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('rewrites HTML .htm link with ./ prefix', () => {
+    const result = rewriteDocLinks('<a href="./testim-automate.htm">link</a>');
+    assert.equal(result, '<a href="/docs/overview/testim-overview/testim-automate">link</a>');
+  });
+
+  it('rewrites Markdown .htm link with ./ prefix', () => {
+    const result = rewriteDocLinks('[link](./testim-automate.htm)');
+    assert.equal(result, '[link](/docs/overview/testim-overview/testim-automate)');
+  });
+
+  // SPA hash route (.htm/#/) — strip /#/ and resolve
+  it('rewrites HTML .htm/#/ SPA link', () => {
+    const result = rewriteDocLinks('<a href="../salesforce-testing/salesforce-testing-overview.htm/#/">link</a>');
+    assert.equal(result, '<a href="/docs/salesforce-testing/salesforce-testing-overview">link</a>');
+  });
+
+  it('rewrites Markdown .htm/#/ SPA link', () => {
+    const result = rewriteDocLinks('[link](../salesforce-testing/salesforce-testing-overview.htm/#/)');
+    assert.equal(result, '[link](/docs/salesforce-testing/salesforce-testing-overview)');
+  });
+
+  // Bare index.htm — cannot resolve without page context, leave unchanged
+  it('leaves bare index.htm unchanged (no page context)', () => {
+    const md = '[link](index.htm#section)';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('leaves bare HTML index.htm unchanged', () => {
+    const md = '<a href="index.htm#adding-a-grid">link</a>';
+    assert.equal(rewriteDocLinks(md), md);
+  });
+
+  it('resolves directory-prefixed index.htm normally', () => {
+    const result = rewriteDocLinks('[link](../editing-tests/conditions/index.htm)');
+    assert.equal(result, '[link](/docs/editing-tests/conditions)');
+  });
 });
 
 // ---------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { filePathToSlug } from './project.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DOCS_DIR = path.resolve(__dirname, '..', '..', 'src', 'content', 'docs');
@@ -31,7 +32,7 @@ export function buildRedirectMap(docsDir = DEFAULT_DOCS_DIR) {
       }
       if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
       const basename = ent.name.replace(/\.md$/, '');
-      const pathSlug = path.relative(docsDir, full).replace(/\.md$/, '');
+      const pathSlug = filePathToSlug(full, docsDir);
       // Skip top-level files (no folder prefix — no redirect needed)
       if (!pathSlug.includes('/')) continue;
       const existing = byBasename.get(basename) ?? [];

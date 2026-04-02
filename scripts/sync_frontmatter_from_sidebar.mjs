@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { DOCS_DIR, SIDEBAR_PATH, findMdFiles } from './lib/project.mjs';
+import { DOCS_DIR, SIDEBAR_PATH, filePathToSlug, findMdFiles } from './lib/project.mjs';
 import { extractJapaneseLabel } from './lib/sidebar.mjs';
 import { extractSlug } from './lib/madcap_toc.mjs';
 
@@ -141,7 +141,7 @@ function main() {
   const changedExamples = [];
 
   for (const filePath of files) {
-    const slug = path.relative(docsRoot, filePath).replace(/\.md$/, '');
+    const slug = filePathToSlug(filePath);
     const entry = bySlug.get(slug);
     if (!entry) {
       unmatched.push(path.relative(docsRoot, filePath));

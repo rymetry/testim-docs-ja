@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { buildSlugIndex, buildDocsIndex, extractSourceContentPath, matchesSectionFilter, resolveSlug, splitFrontmatter, toKebab } from '../lib/project.mjs';
+import { buildSlugIndex, buildDocsIndex, buildBasenameToPathMap, extractSourceContentPath, filePathToSlug, matchesSectionFilter, resolveSlug, splitFrontmatter, toKebab } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -266,6 +266,67 @@ describe('buildDocsIndex', () => {
     assert.ok(index['folder-a/page'], 'folder-a/page should exist');
     assert.ok(index['folder-b/page'], 'folder-b/page should exist');
     // Cleanup
+    fs.rmSync(dir, { recursive: true });
+  });
+});
+
+describe('filePathToSlug', () => {
+  it('converts absolute .md path to slug', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fps-'));
+    fs.mkdirSync(path.join(dir, 'overview'));
+    fs.writeFileSync(path.join(dir, 'overview', 'page.md'), '');
+    assert.equal(filePathToSlug(path.join(dir, 'overview', 'page.md'), dir), 'overview/page');
+    fs.rmSync(dir, { recursive: true });
+  });
+
+  it('handles nested paths', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fps-'));
+    fs.mkdirSync(path.join(dir, 'a', 'b'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'a', 'b', 'c.md'), '');
+    assert.equal(filePathToSlug(path.join(dir, 'a', 'b', 'c.md'), dir), 'a/b/c');
+    fs.rmSync(dir, { recursive: true });
+  });
+
+  it('strips only .md extension', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fps-'));
+    fs.writeFileSync(path.join(dir, 'page.txt'), '');
+    assert.equal(filePathToSlug(path.join(dir, 'page.txt'), dir), 'page.txt');
+    fs.rmSync(dir, { recursive: true });
+  });
+
+  it('handles top-level file (no subfolder)', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fps-'));
+    fs.writeFileSync(path.join(dir, 'index.md'), '');
+    assert.equal(filePathToSlug(path.join(dir, 'index.md'), dir), 'index');
+    fs.rmSync(dir, { recursive: true });
+  });
+});
+
+describe('buildBasenameToPathMap', () => {
+  it('maps unique basenames to full path-slug', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bn-'));
+    fs.mkdirSync(path.join(dir, 'folder-a'));
+    fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), '');
+    const map = buildBasenameToPathMap(dir);
+    assert.equal(map.get('page'), 'folder-a/page');
+    fs.rmSync(dir, { recursive: true });
+  });
+
+  it('sets ambiguous basenames to null', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bn-'));
+    fs.mkdirSync(path.join(dir, 'folder-a'));
+    fs.mkdirSync(path.join(dir, 'folder-b'));
+    fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), '');
+    fs.writeFileSync(path.join(dir, 'folder-b', 'page.md'), '');
+    const map = buildBasenameToPathMap(dir);
+    assert.equal(map.get('page'), null);
+    fs.rmSync(dir, { recursive: true });
+  });
+
+  it('returns empty map for empty directory', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bn-'));
+    const map = buildBasenameToPathMap(dir);
+    assert.equal(map.size, 0);
     fs.rmSync(dir, { recursive: true });
   });
 });

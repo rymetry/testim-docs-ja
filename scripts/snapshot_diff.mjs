@@ -18,6 +18,7 @@ import path from 'node:path';
 import {
   DOCS_DIR,
   ROOT_DIR,
+  filePathToSlug,
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
@@ -155,7 +156,7 @@ function buildSourceUrlIndex({ section }) {
     const doc = readDocFile(filePath);
     if (!doc.data.sourceUrl) continue;
     if (section && !matchesSectionFilter(doc.relativePath, doc.data, section)) continue;
-    const slug = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
+    const slug = filePathToSlug(filePath);
     index[slug] = doc.data.sourceUrl;
   }
   return index;
@@ -182,7 +183,7 @@ function diffSidebar() {
       return { changed: true, addedPages: pages, removedPages: [] };
     } catch (e) {
       console.warn(`diffSidebar: failed to parse new sidebar JSON: ${e.message}`);
-      return { changed: true, addedPages: [], removedPages: [] };
+      return { changed: true, addedPages: [], removedPages: [], parseError: true };
     }
   }
 
@@ -201,7 +202,7 @@ function diffSidebar() {
     return { changed, addedPages, removedPages };
   } catch (e) {
     console.warn(`diffSidebar: failed to parse sidebar JSON for diff: ${e.message}`);
-    return { changed: true, addedPages: [], removedPages: [] };
+    return { changed: true, addedPages: [], removedPages: [], parseError: true };
   }
 }
 
@@ -223,6 +224,15 @@ function findHtmlFiles(dir, baseDir = dir) {
   return files;
 }
 
+function emptyErrorResult() {
+  return {
+    error: true,
+    summary: { totalSnapshots: 0, changed: 0, added: 0, removed: 0, unchanged: 0 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+}
+
 export async function main(argv) {
   const args = parseArgs(argv);
   const sourceUrls = buildSourceUrlIndex(args);
@@ -230,12 +240,12 @@ export async function main(argv) {
   const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
   if (args.slug && !resolvedSlug) {
     console.error(`❌ Unknown slug: "${args.slug}". No matching document found.`);
-    return { error: true };
+    return emptyErrorResult();
   }
 
   if (!fs.existsSync(CONTENT_DIR)) {
     console.log('No snapshots found. Run check:snapshots:fetch first.');
-    return;
+    return emptyErrorResult();
   }
 
   // Build slug→URL map from SIDEBAR_URLS.md once for O(1) fallback lookups
@@ -334,7 +344,11 @@ export async function main(argv) {
     console.log(`Snapshot diff: ${report.summary.changed} changed, ${report.summary.added} added, ${report.summary.removed} removed, ${report.summary.unchanged} unchanged`);
 
     if (sidebar.changed) {
-      console.log(`Sidebar: ${sidebar.addedPages.length} page(s) added, ${sidebar.removedPages.length} page(s) removed`);
+      if (sidebar.parseError) {
+        console.log('Sidebar: ⚠️ JSON parse error — could not compare sidebar (see warning above)');
+      } else {
+        console.log(`Sidebar: ${sidebar.addedPages.length} page(s) added, ${sidebar.removedPages.length} page(s) removed`);
+      }
     }
 
     if (changes.length > 0) {
