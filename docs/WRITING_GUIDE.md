@@ -43,17 +43,26 @@
 ---
 title: 'ページタイトル（日本語）'
 description: 'ページの説明（100文字以内、プレースホルダ禁止）'
+category: '概要'
+order: 1001
+updated: '2026-01-15'
 sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/{slug}.htm'
-updated: '2025-11-02'
+keywords:
+  - キーワード1
+  - キーワード2
 ---
 ```
 
-| フィールド | 必須 | 規則 |
-| --- | --- | --- |
-| `title` | ✅ | 日本語タイトル |
-| `description` | ✅ | 具体的な説明文。「説明文」「TODO」「原文: ...」などのプレースホルダ禁止 |
-| `sourceUrl` | ✅ | 英語原文 URL（`https://docs.tricentis.com/testim/content/.../{slug}.htm`）必須 |
-| `updated` | ✅ | 更新日（`YYYY-MM-DD` 形式） |
+| フィールド | 必須 | デフォルト | 規則 |
+| --- | --- | --- | --- |
+| `title` | ✅ | — | 日本語タイトル |
+| `description` | ✅ | — | 具体的な説明文。「説明文」「TODO」「原文: ...」などのプレースホルダ禁止 |
+| `category` | ✅ | — | `docs/SIDEBAR_URLS.md` のセクション日本語ラベルに一致させる |
+| `updated` | ✅ | — | 更新日（`YYYY-MM-DD` 形式） |
+| `sourceUrl` | ✅ | — | 英語原文 URL（`https://docs.tricentis.com/testim/content/.../{slug}.htm`）必須 |
+| `order` | — | `0` | サイドバー内の表示順序（`docs/SIDEBAR_URLS.md` 基準） |
+| `keywords` | — | `[]` | 検索用キーワード（日本語、最大10件目安） |
+| `hero` | — | — | ヒーローセクション（トップページ用、通常の記事では不要） |
 
 追加ルール:
 
@@ -62,6 +71,7 @@ updated: '2025-11-02'
 - `description` は本文から読める内容を 1-2 文で要約する
 - frontmatter の欠落は build 前に修正する
 - `sourceUrl` は追跡用メタデータではなく、本文整備の正本として扱う
+- スキーマ定義: `src/content.config.ts`（Zod バリデーション）
 
 ---
 
@@ -697,7 +707,7 @@ src/content/docs/
 
 - `remark-gfm`: GitHub Flavored Markdown
 - `remark-directive`: カスタムディレクティブ
-- `remark-callouts`: 情報パネル自動変換（カスタム）
+- `@microflash/remark-callout-directives`: 情報パネル自動変換（`:::note` 等）
 - `remark-code-meta`: コードブロックメタ情報（カスタム）
 
 ### Rehype プラグイン
@@ -931,7 +941,7 @@ MDX が必要なのは：
 
 - 📖 [**執筆機能リファレンス**](./WRITING_FEATURES.md) - 全機能の詳細な実装例
 - 🌐 [**翻訳ガイド**](./TRANSLATION_GUIDE.md) - 公式ドキュメントからの翻訳手順
-- 📘 [**README**](./README.md) - プロジェクト概要とセットアップ
+- 📘 [**README**](../README.md) - プロジェクト概要とセットアップ
 
 ### 外部リソース
 

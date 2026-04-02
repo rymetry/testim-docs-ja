@@ -28,8 +28,8 @@ Japanese localization of Testim Help Documentation (docs.tricentis.com/testim). 
 **Single-page commands:**
 
 ```bash
-npm run check:parity -- --slug=testim-overview
-npm run check:snapshots:diff -- --slug=testim-overview
+npm run check:parity -- --slug=overview/testim-overview
+npm run check:snapshots:diff -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 ```
 
@@ -41,13 +41,13 @@ Full reference: `scripts/README.md`
 - **Routing**: Single dynamic route `src/pages/docs/[...slug].astro` — slug is the path relative to `src/content/docs/` (e.g., `overview/testim-overview.md` → `/docs/overview/testim-overview`). Legacy basename URLs are redirected via `buildRedirectMap()` in `astro.config.mjs`.
 - **Navigation**: Built from `src/lib/docs.ts` `buildNavigation()` — groups by `category` frontmatter, ordered by `docs/SIDEBAR_URLS.md`.
 - **Search**: Client-side MiniSearch in `src/components/SearchModal.tsx` (React), with data from `/api/search.json`.
-- **Layout**: `src/layouts/DocsLayout.astro` wraps all doc pages with sidebar (`NavSidebar.astro`) and TOC (`TableOfContents.astro`).
+- **Layout**: `src/layouts/DocsLayout.astro` wraps all doc pages with sidebar (`src/components/navigation/NavSidebar.astro`) and TOC (`TableOfContents.astro`).
 - **Auth mode**: `BASIC_AUTH_ENABLED` env var toggles between SSR+auth (review) and static (production). See `src/middleware.ts`.
-- **Doc pipeline**: `scripts/pipeline.mjs` orchestrates fetching English sources, generating placeholders, and preparing LLM translation tasks. Checkpoint-based resume via `scripts/.checkpoint`.
+- **Doc pipeline**: `scripts/pipeline.mjs` orchestrates the full translation workflow: fetch EN sources → generate placeholders (`generate_untranslated_placeholders.mjs`) → prepare LLM tasks (`prepare_llm_tasks.mjs`) → apply LLM translations (`apply_llm_translations.mjs`). Checkpoint-based resume via `scripts/.checkpoint`.
 - **Snapshot pipeline**:
-  - **コンテンツ**: 各ページの HTML から `#mc-main-content` を抽出し `snapshots/en/content/{folder}/{basename}.html` に保存
-  - **サイドバー**: MadCap Flare TOC データ (`scripts/lib/madcap_toc.mjs`) を解析し `snapshots/en/sidebar.json` に保存
-  - **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換後、JA 翻訳と構造比較
+  - **Content**: Extracts `#mc-main-content` from each EN page HTML, saves to `snapshots/en/content/{folder}/{basename}.html`.
+  - **Sidebar**: Parses MadCap Flare TOC data (`scripts/lib/madcap_toc.mjs`), saves to `snapshots/en/sidebar.json`.
+  - **Parity comparison**: Converts HTML snapshots to Markdown via `turndown`, then compares structure with JA translations.
 
 ## Authority Sources
 

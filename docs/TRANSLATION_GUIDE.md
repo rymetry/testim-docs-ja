@@ -591,7 +591,7 @@ find src/content/docs -name "*.md" | sort
 
 - [ ] ファイル名が元のURL slugと一致している
 - [ ] ファイルが適切なカテゴリフォルダに配置されている
-- [ ] frontmatterに必要な項目（title, description, category, order, updated, sourceUrl, keywords）がすべて記載されている
+- [ ] frontmatter の必須項目（title, description, category, updated, sourceUrl）がすべて記載されている（order, keywords はオプション）
 - [ ] description が日本語の要約になっており、`原文: URL` のようなプレースホルダになっていない
 - [ ] カテゴリ名が日本語化されており、他のページと統一されている
 - [ ] orderが `docs/SIDEBAR_URLS.md` と既存の数値帯に整合している
@@ -902,13 +902,13 @@ touch src/content/docs/[new-category-folder]/[page-slug].md
 
 1. 公式サイトで更新内容を確認
 2. 該当するmdファイルを編集
-3. `updated` フィールドを現在の日付に更新
+3. `updated` フィールドを英語原文の更新日に合わせる（JA 編集日ではない）
 4. 新しいメディアファイルがあれば追加ダウンロード
 5. 削除されたメディアファイルがあれば削除
 
 ```bash
-# 更新日の変更例
-updated: '2025-11-15'  # 更新日を今日の日付に
+# 更新日の変更例（英語原文の更新日に追従）
+updated: '2026-04-01'
 ```
 
 ### 10.3 カテゴリ順序の調整
