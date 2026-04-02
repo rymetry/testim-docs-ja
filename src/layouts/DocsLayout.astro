@@ -133,9 +133,11 @@ const { title, description, hero, navSections, currentSlug, headings, sourceUrl,
       </article>
     </main>
 
-    <aside class="hidden w-60 shrink-0 xl:block">
-      {!hideToc && <TableOfContents headings={headings} />}
-    </aside>
+    {!hideToc && (
+      <aside class="hidden w-60 shrink-0 xl:block">
+        <TableOfContents headings={headings} />
+      </aside>
+    )}
   </div>
 
   <SiteFooter />
