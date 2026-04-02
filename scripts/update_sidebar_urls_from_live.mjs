@@ -1,9 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { isDirectRun } from './lib/cli.mjs';
 import { fetchTocData, resolveUrl } from './lib/madcap_toc.mjs';
+import { PROJECT_ROOT } from './lib/project.mjs';
 
-const SIDEBAR_URLS_PATH = path.resolve('docs/SIDEBAR_URLS.md');
+const SIDEBAR_URLS_PATH = path.join(PROJECT_ROOT, 'docs', 'SIDEBAR_URLS.md');
 
 const JP_LABEL_BY_EN = {
   Overview: '概要',
@@ -104,7 +106,9 @@ export function buildOutput({ sections, statusByUrl, existingHeader }) {
   headerLines.push(`- ✅   翻訳のみ完了: ${translatedOnly}個`);
   headerLines.push('');
   headerLines.push('### アイコンの意味');
-  headerLines.push('- ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）');
+  headerLines.push(
+    '- ✅🔍 翻訳完了 + 検証済み（frontmatter、keywords最適化、内部リンク化、lint確認）'
+  );
   headerLines.push('- ✅   翻訳完了');
   headerLines.push('');
   headerLines.push('---');
@@ -150,7 +154,9 @@ export async function fetchSitemap(fetchFn = fetch) {
     }
     const xml = await res.text();
     const urls = [];
-    for (const m of xml.matchAll(/<loc>(https:\/\/docs\.tricentis\.com\/testim\/content\/[^<]+)<\/loc>/g)) {
+    for (const m of xml.matchAll(
+      /<loc>(https:\/\/docs\.tricentis\.com\/testim\/content\/[^<]+)<\/loc>/g
+    )) {
       urls.push(m[1]);
     }
     return urls;
@@ -171,7 +177,9 @@ function tocSectionsToOutputSections(tocSections) {
 }
 
 export async function main(fetchFn = fetch) {
-  const existing = fs.existsSync(SIDEBAR_URLS_PATH) ? fs.readFileSync(SIDEBAR_URLS_PATH, 'utf8') : '';
+  const existing = fs.existsSync(SIDEBAR_URLS_PATH)
+    ? fs.readFileSync(SIDEBAR_URLS_PATH, 'utf8')
+    : '';
   const statusByUrl = parseExistingStatusMap(existing);
 
   let sections = [];
@@ -191,7 +199,9 @@ export async function main(fetchFn = fetch) {
     const sitemapUrls = await fetchSitemap(fetchFn);
     if (sitemapUrls.length > 0) {
       if (fs.existsSync(SIDEBAR_URLS_PATH)) {
-        console.warn('WARNING: TOC fetch failed. Sitemap fallback would replace section structure with flat "All" list.');
+        console.warn(
+          'WARNING: TOC fetch failed. Sitemap fallback would replace section structure with flat "All" list.'
+        );
         console.warn('Preserving existing SIDEBAR_URLS.md to prevent data loss.');
         return;
       }
@@ -214,7 +224,7 @@ export async function main(fetchFn = fetch) {
   console.log(`Total unique URLs: ${totalUrls}`);
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (isDirectRun(import.meta.url)) {
   main().catch((err) => {
     console.error(err);
     process.exit(1);

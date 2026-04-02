@@ -1,5 +1,6 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+import { isDirectRun } from './lib/cli.mjs';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
 import { ROOT_DIR, buildSlugIndex, splitFrontmatter, resolveSlug } from './lib/project.mjs';
 
@@ -14,7 +15,11 @@ async function main() {
     console.error(`❌ Unknown slug: "${rawSlug}". No matching document found.`);
     process.exit(1);
   }
-  const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
+  const section = args
+    .find((a) => a.startsWith('--section='))
+    ?.split('=')
+    .slice(1)
+    .join('=');
   const sectionSlugs = section ? getSectionSlugSet(section) : null;
   const index = buildSlugIndex();
   await fs.promises.mkdir(TASKS_DIR, { recursive: true });
@@ -67,7 +72,7 @@ ${body}`;
   console.log(`Prepared ${count} LLM task file(s) in ${path.relative(ROOT, TASKS_DIR)}`);
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (isDirectRun(import.meta.url)) {
   main().catch((e) => {
     console.error(e);
     process.exit(1);

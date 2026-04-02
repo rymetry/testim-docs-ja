@@ -1,5 +1,6 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+import { isDirectRun } from './lib/cli.mjs';
 import { parseSidebarSections, getSectionSlugSet } from './lib/sidebar.mjs';
 import { ROOT_DIR, DOCS_DIR, toKebab } from './lib/project.mjs';
 
@@ -24,7 +25,11 @@ const todayStr = `${yyyy}-${mm}-${dd}`;
 
 async function main() {
   const args = process.argv.slice(2);
-  const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
+  const section = args
+    .find((a) => a.startsWith('--section='))
+    ?.split('=')
+    .slice(1)
+    .join('=');
 
   if (!fs.existsSync(SIDEBAR_FILE)) {
     console.error(`Missing file: ${SIDEBAR_FILE}`);
@@ -106,7 +111,7 @@ async function main() {
   }
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (isDirectRun(import.meta.url)) {
   main().catch((e) => {
     console.error(e);
     process.exit(1);

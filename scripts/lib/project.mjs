@@ -9,6 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const ROOT_DIR = path.resolve(__dirname, '..', '..');
+export const PROJECT_ROOT = ROOT_DIR;
 export const DOCS_DIR = path.join(ROOT_DIR, 'src', 'content', 'docs');
 export const SIDEBAR_PATH = path.join(ROOT_DIR, 'docs', 'SIDEBAR_URLS.md');
 
@@ -169,9 +170,7 @@ export function resolveSlug(input, docsDir = DOCS_DIR) {
   // Basename resolution (deprecated): find all entries whose basename matches
   const basename = input.includes('/') ? null : input;
   if (!basename) return null;
-  const matches = Object.keys(index).filter(
-    (slug) => slug.split('/').pop() === basename
-  );
+  const matches = Object.keys(index).filter((slug) => slug.split('/').pop() === basename);
   if (matches.length === 1) {
     console.warn(
       `⚠️  Deprecated: basename slug "${input}" resolved to "${matches[0]}". Use the full path-based slug instead.`
@@ -187,7 +186,8 @@ export function resolveSlug(input, docsDir = DOCS_DIR) {
   return null;
 }
 
-const SOURCE_URL_RE = /^https:\/\/docs\.tricentis\.com\/testim\/content\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)\.htm$/;
+const SOURCE_URL_RE =
+  /^https:\/\/docs\.tricentis\.com\/testim\/content\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)\.htm$/;
 
 /**
  * Extract the EN content path from a sourceUrl.
@@ -221,7 +221,10 @@ export function buildDocsIndex(docsDir = DOCS_DIR) {
   const walk = (dir) => {
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, ent.name);
-      if (ent.isDirectory()) { walk(full); continue; }
+      if (ent.isDirectory()) {
+        walk(full);
+        continue;
+      }
       if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
       const slug = filePathToSlug(full, docsDir);
       const localFolder = path.basename(path.dirname(full));
@@ -265,4 +268,3 @@ export function readDocFile(filePath) {
     section: getDocSection(toRelativeDocPath(filePath)),
   };
 }
-

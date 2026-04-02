@@ -1,20 +1,20 @@
 /**
- * tests for scripts/pipeline.mjs  (new module — will fail until implemented)
+ * tests for scripts/pipeline.mjs
  *
- * The implementation must export:
- *   parseArgs(argv: string[]): { mode: string }
+ * Exported API:
+ *   parseArgs(argv: string[]): { mode: string, section: string | null, resume: boolean }
  *   loadCheckpoint(checkpointPath: string): CheckpointData | null
  *   saveCheckpoint(checkpointPath: string, data: CheckpointData): Promise<void>
+ *   getPendingSteps(checkpoint: CheckpointData | null, opts: object): string[]
  *
  * CheckpointData = {
  *   completed_phase?: string,
  *   completed_at?: string,
- *   next_phase?: string,
+ *   next_phase?: string | null,
  *   step?: string,
+ *   section?: string | null,
  *   mode?: string,
  * }
- *
- * The implementation must also guard main() so importing does not trigger side effects.
  */
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
@@ -24,7 +24,9 @@ import path from 'node:path';
 
 let parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps;
 before(async () => {
-  ({ parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps } = await import('../pipeline.mjs'));
+  ({ parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps } = await import(
+    '../pipeline.mjs'
+  ));
 });
 
 // ---------------------------------------------------------------------------
@@ -86,6 +88,34 @@ describe('checkpoint persistence', () => {
     await saveCheckpoint(cpPath, data);
     const loaded = loadCheckpoint(cpPath);
     assert.deepEqual(loaded, data);
+  });
+
+  it('returns null for invalid checkpoint JSON', () => {
+    const cpPath = path.join(tmpDir, '.checkpoint-invalid');
+    fs.writeFileSync(cpPath, '{not-json', 'utf8');
+    const loaded = loadCheckpoint(cpPath);
+    assert.equal(loaded, null);
+  });
+
+  it('rethrows filesystem read errors while loading a checkpoint', () => {
+    const cpPath = path.join(tmpDir, '.checkpoint-read-error');
+    fs.writeFileSync(cpPath, '{"step":"fetch_done"}', 'utf8');
+
+    const originalReadFileSync = fs.readFileSync;
+    fs.readFileSync = (filePath, ...args) => {
+      if (filePath === cpPath) {
+        const error = new Error('permission denied');
+        error.code = 'EACCES';
+        throw error;
+      }
+      return originalReadFileSync.call(fs, filePath, ...args);
+    };
+
+    try {
+      assert.throws(() => loadCheckpoint(cpPath), /permission denied/);
+    } finally {
+      fs.readFileSync = originalReadFileSync;
+    }
   });
 
   it('overwrites existing checkpoint on save', async () => {
@@ -155,7 +185,10 @@ describe('checkpoint step update', () => {
 
 describe('getPendingSteps', () => {
   it('returns all steps when resume is disabled', () => {
-    const steps = getPendingSteps({ step: 'fetch_done', mode: 'diff' }, { resume: false, mode: 'diff' });
+    const steps = getPendingSteps(
+      { step: 'fetch_done', mode: 'diff' },
+      { resume: false, mode: 'diff' }
+    );
     assert.deepEqual(steps, ['url_collect', 'placeholders', 'fetch', 'prepare_llm', 'apply_llm']);
   });
 

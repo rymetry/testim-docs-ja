@@ -60,17 +60,17 @@ export function loadAllowlist(filePath = ALLOWLIST_PATH) {
       const severity = ISSUE_SEVERITY[rule.type];
       if (!severity) {
         throw new Error(
-          `Allowlist error: "${slug}" rule targets unknown issue type "${rule.type}".`,
+          `Allowlist error: "${slug}" rule targets unknown issue type "${rule.type}".`
         );
       }
       if (!ALLOWABLE_SEVERITIES.has(severity)) {
         throw new Error(
-          `Allowlist error: "${slug}" rule targets "${rule.type}" (severity: ${severity}). Only signal-severity issues can be suppressed.`,
+          `Allowlist error: "${slug}" rule targets "${rule.type}" (severity: ${severity}). Only signal-severity issues can be suppressed.`
         );
       }
       if (!rule.detailIncludes && !rule.detailRegex) {
         throw new Error(
-          `Allowlist error: "${slug}" rule for "${rule.type}" must specify detailIncludes or detailRegex. Slug + type only suppression is not allowed.`,
+          `Allowlist error: "${slug}" rule for "${rule.type}" must specify detailIncludes or detailRegex. Slug + type only suppression is not allowed.`
         );
       }
       if (rule.detailRegex) {
@@ -78,7 +78,7 @@ export function loadAllowlist(filePath = ALLOWLIST_PATH) {
           new RegExp(rule.detailRegex);
         } catch {
           throw new Error(
-            `Allowlist error: "${slug}" rule for "${rule.type}" has invalid detailRegex: "${rule.detailRegex}".`,
+            `Allowlist error: "${slug}" rule for "${rule.type}" has invalid detailRegex: "${rule.detailRegex}".`
           );
         }
       }
@@ -123,9 +123,7 @@ export async function checkSourceParity({
   failOn = null,
   slug = null,
 } = {}) {
-  const sidebarText = fs.existsSync(SIDEBAR_PATH)
-    ? fs.readFileSync(SIDEBAR_PATH, 'utf8')
-    : '';
+  const sidebarText = fs.existsSync(SIDEBAR_PATH) ? fs.readFileSync(SIDEBAR_PATH, 'utf8') : '';
   const sidebarSlugs = loadSidebarSlugs(sidebarText);
   const allFiles = findMdFiles(DOCS_DIR);
 
@@ -167,16 +165,16 @@ export async function checkSourceParity({
     }
 
     checkedCount += 1;
-    let issues = [
-      ...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug }),
-    ];
+    let issues = [...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug })];
 
     // sourceUrl/snapshot consistency check
-    issues.push(...checkSourceSnapshotMissing({
-      slug: fileSlug,
-      sourceUrl: doc.data.sourceUrl || '',
-      snapshotsDir: SNAPSHOTS_DIR,
-    }));
+    issues.push(
+      ...checkSourceSnapshotMissing({
+        slug: fileSlug,
+        sourceUrl: doc.data.sourceUrl || '',
+        snapshotsDir: SNAPSHOTS_DIR,
+      })
+    );
 
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
@@ -187,7 +185,9 @@ export async function checkSourceParity({
       try {
         enBody = turndown.turndown(enHtml);
       } catch (e) {
-        console.warn(`turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`);
+        console.warn(
+          `turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`
+        );
         issues.push({
           type: 'source-fetch-error',
           detail: `HTML→Markdown 変換失敗: ${e.message}`,
@@ -228,10 +228,15 @@ export async function checkSourceParity({
   // Sidebar coverage check: detect pages in SIDEBAR_URLS.md without local files
   // Skip in --slug mode (single-page check should not report unrelated global issues)
   if (!resolvedSlug) {
-    const existingSlugs = new Set(allFiles.map(f => filePathToSlug(f)));
+    const existingSlugs = new Set(allFiles.map((f) => filePathToSlug(f)));
     const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
     if (coverageIssues.length > 0) {
-      results.push({ file: 'SIDEBAR_URLS.md', sourceUrl: '', category: '', issues: coverageIssues });
+      results.push({
+        file: 'SIDEBAR_URLS.md',
+        sourceUrl: '',
+        category: '',
+        issues: coverageIssues,
+      });
     }
   }
 
