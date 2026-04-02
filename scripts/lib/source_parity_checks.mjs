@@ -1,3 +1,4 @@
+/** Structure extraction and comparison functions for EN/JA source parity checking. */
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -1002,9 +1003,7 @@ export function compareSnapshotStructure(enBody, jaBody) {
   );
 
   if (enArtifacts.length > 0) {
-    for (const issue of issues) {
-      issue.artifacts = enArtifacts;
-    }
+    return issues.map((issue) => ({ ...issue, artifacts: enArtifacts }));
   }
 
   return issues;

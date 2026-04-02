@@ -1,3 +1,4 @@
+/** Aggregates per-file parity results into type/severity summary statistics. */
 export function summarizeParityResults(results) {
   const issuesByType = {};
   const issuesBySeverity = {};

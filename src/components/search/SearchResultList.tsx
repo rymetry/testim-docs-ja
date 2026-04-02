@@ -1,3 +1,4 @@
+/** Presentational component: renders grouped search results with term highlighting and status indicators. */
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { ResultGroup, SearchIndexStatus, SearchResult } from './types';
 
@@ -8,11 +9,13 @@ type SearchResultListProps = {
   onNavigate: (href: string) => void;
   query: string;
   results: SearchResult[];
+  searchError: boolean;
   selectedIndex: number;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
   totalCount: number;
 };
 
+/** Split text on matched search terms and wrap matches in <mark> elements. Terms shorter than 2 chars are ignored to avoid excessive CJK highlighting. */
 function highlightText(text: string, terms: string[]): ReactNode {
   if (!text) return text;
   const safeTerms = [...terms.filter((term) => term.length >= 2)].sort(
@@ -46,6 +49,7 @@ export function SearchResultList({
   onNavigate,
   query,
   results,
+  searchError,
   selectedIndex,
   setSelectedIndex,
   totalCount,
@@ -89,7 +93,14 @@ export function SearchResultList({
         </div>
       )}
 
-      {query.trim() && indexStatus === 'ready' && results.length === 0 && (
+      {query.trim() && searchError && (
+        <div className="px-4 py-12 text-center sm:px-6" role="alert">
+          <p className="text-base font-medium text-red-600">検索中にエラーが発生しました</p>
+          <p className="mt-2 text-sm text-slate-500">別のキーワードでお試しください</p>
+        </div>
+      )}
+
+      {query.trim() && indexStatus === 'ready' && !searchError && results.length === 0 && (
         <div className="px-4 py-12 text-center sm:px-6" role="status">
           <svg
             className="mx-auto h-12 w-12 text-slate-300"

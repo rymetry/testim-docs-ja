@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SearchResultList } from './search/SearchResultList';
 import { useKeyboardNavigation } from './search/useKeyboardNavigation';
 import { useModalBehavior } from './search/useModalBehavior';
@@ -27,7 +27,7 @@ export default function SearchModal() {
     },
   });
   const { miniSearch, categories, indexStatus } = useSearchIndex(isOpen);
-  const { results, totalCount, selectedIndex, setSelectedIndex } = useSearchResults({
+  const { results, totalCount, selectedIndex, setSelectedIndex, searchError } = useSearchResults({
     miniSearch,
     query,
     selectedCategory,
@@ -56,9 +56,9 @@ export default function SearchModal() {
     return { groups: nextGroups, flatResults: nextFlatResults };
   }, [results]);
 
-  const navigateTo = (href: string) => {
+  const navigateTo = useCallback((href: string) => {
     window.location.href = href;
-  };
+  }, []);
 
   const { handleInputKeyDown } = useKeyboardNavigation({
     flatResults,
@@ -196,6 +196,7 @@ export default function SearchModal() {
             onNavigate={navigateTo}
             query={query}
             results={results}
+            searchError={searchError}
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             totalCount={totalCount}

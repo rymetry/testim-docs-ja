@@ -1,3 +1,4 @@
+/** React hook: lazy-loads the MiniSearch index from /api/search.json when the modal opens. */
 import { useEffect, useRef, useState } from 'react';
 import MiniSearch from 'minisearch';
 import type { IndexedSearchDocument, SearchDocument, SearchIndexState } from './types';
@@ -55,7 +56,9 @@ export function useSearchIndex(isOpen: boolean): SearchIndexState {
           [...new Set(docs.filter((doc) => doc.type === 'page').map((doc) => doc.category))].sort()
         );
       } catch (error) {
-        if ((error as Error).name !== 'AbortError') {
+        const isAbort =
+          error instanceof DOMException && error.name === 'AbortError';
+        if (!isAbort) {
           console.error('Failed to load search index:', error);
           setIndexStatus('error');
         }

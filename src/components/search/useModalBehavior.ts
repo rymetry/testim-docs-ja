@@ -1,3 +1,4 @@
+/** React hook: search modal lifecycle — Cmd+K toggle, Escape close, focus trap, and scroll lock. */
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
 

@@ -1,5 +1,6 @@
+/** React hook: ArrowUp/Down/Enter keyboard navigation for the search result list. Guards against IME composition events. */
 import { useEffect } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
+import type { Dispatch, KeyboardEvent as ReactKeyboardEvent, RefObject, SetStateAction } from 'react';
 import type { SearchResult } from './types';
 
 type UseKeyboardNavigationOptions = {
@@ -7,7 +8,7 @@ type UseKeyboardNavigationOptions = {
   listRef: RefObject<HTMLDivElement | null>;
   onNavigate: (href: string) => void;
   selectedIndex: number;
-  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedIndex: Dispatch<SetStateAction<number>>;
 };
 
 export function useKeyboardNavigation({

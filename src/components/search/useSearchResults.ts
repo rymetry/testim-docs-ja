@@ -1,3 +1,4 @@
+/** React hook: runs MiniSearch queries against the loaded index and manages result state. */
 import { startTransition, useEffect, useState } from 'react';
 import type MiniSearch from 'minisearch';
 import type { IndexedSearchDocument, SearchResult } from './types';
@@ -16,6 +17,7 @@ export function useSearchResults({ miniSearch, query, selectedCategory }: UseSea
   const [results, setResults] = useState<SearchResult[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [searchError, setSearchError] = useState(false);
 
   useEffect(() => {
     if (!miniSearch || !query.trim()) {
@@ -23,6 +25,7 @@ export function useSearchResults({ miniSearch, query, selectedCategory }: UseSea
         setResults([]);
         setTotalCount(0);
         setSelectedIndex(0);
+        setSearchError(false);
       });
       return;
     }
@@ -54,6 +57,7 @@ export function useSearchResults({ miniSearch, query, selectedCategory }: UseSea
         setTotalCount(searchResults.length);
         setResults(formattedResults);
         setSelectedIndex(0);
+        setSearchError(false);
       });
     } catch (error) {
       console.error('Search error:', error);
@@ -61,9 +65,10 @@ export function useSearchResults({ miniSearch, query, selectedCategory }: UseSea
         setResults([]);
         setTotalCount(0);
         setSelectedIndex(0);
+        setSearchError(true);
       });
     }
   }, [miniSearch, query, selectedCategory]);
 
-  return { results, totalCount, selectedIndex, setSelectedIndex };
+  return { results, totalCount, selectedIndex, setSelectedIndex, searchError };
 }
