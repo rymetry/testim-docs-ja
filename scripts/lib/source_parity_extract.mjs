@@ -526,7 +526,8 @@ function normalizeUrlToken(url) {
   if (/\.htm(?:[?#]|$)/.test(url)) {
     // Strip relative path prefixes (../../, ../, ./) and fragment/query
     const stripped = url.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '').replace(/[?#].*$/, '');
-    const contentPath = `/content/${stripped}`;
+    // Already root-relative /content/ paths pass through directly
+    const contentPath = stripped.startsWith('/content/') ? stripped : `/content/${stripped}`;
     const slug = extractSlugFromUrl(contentPath);
     if (slug) return `/docs/${resolveToFullSlug(slug)}`;
   }

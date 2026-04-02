@@ -1379,6 +1379,12 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.some((t) => t.startsWith('/docs/')), `Expected normalized /docs/ path in ${JSON.stringify(tokens)}`);
     assert.ok(!tokens.includes('slug.htm'), 'raw .htm should not remain');
   });
+
+  it('does not double-prefix /content/ for root-relative .htm paths', () => {
+    const tokens = extractInvariantTokens('[x](/content/overview/testim-overview.htm)');
+    assert.ok(tokens.includes('/docs/overview/testim-overview'), `Expected /docs/overview/testim-overview in ${JSON.stringify(tokens)}`);
+    assert.ok(!tokens.some((t) => t.includes('/content/')), 'should not contain /content/ in output');
+  });
 });
 
 // ---------------------------------------------------------------------------
