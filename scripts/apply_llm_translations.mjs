@@ -1,21 +1,135 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
-import { ROOT_DIR, buildSlugIndex, splitFrontmatter, resolveSlug } from './lib/project.mjs';
+import { ROOT_DIR, buildSlugIndex, splitFrontmatter } from './lib/project.mjs';
+import { isDirectRun } from './lib/cli.mjs';
 
 const ROOT = ROOT_DIR;
 const TRANS_DIR = path.join(ROOT, 'llm', 'translations');
 
-async function main() {
+/**
+ * Resolve a translation file's relative path to a path-based slug.
+ * - Nested paths (containing '/') → exact-match only (no basename fallback)
+ * - Flat files (no '/') → basename fallback via resolveSlug (deprecated)
+ * @param {string} relPath - path relative to TRANS_DIR (e.g. "overview/page.md")
+ * @param {Record<string, {filePath:string}>} index - slug index from buildSlugIndex
+ * @returns {string|null}
+ */
+export function resolveTranslationSlug(relPath, index) {
+  const pathCandidate = relPath.replace(/\.md$/, '');
+  const isNested = pathCandidate.includes('/');
+
+  if (index[pathCandidate]) return pathCandidate;
+
+  // Nested paths must match exactly — no basename fallback
+  if (isNested) return null;
+
+  // Flat files: basename lookup within the provided index
+  const bn = path.basename(relPath, '.md');
+  const matches = Object.keys(index).filter((s) => s.split('/').pop() === bn);
+  if (matches.length === 1) {
+    console.warn(`⚠️  Deprecated: basename "${bn}" resolved to "${matches[0]}". Use path-based layout in llm/translations/.`);
+    return matches[0];
+  }
+  if (matches.length > 1) {
+    console.warn(`⚠️  Ambiguous basename "${bn}" matches: ${matches.join(', ')}. Use path-based layout.`);
+  }
+  return null;
+}
+
+/**
+ * Validate translated content before writing.
+ * Returns null if valid, or a skip reason string if invalid.
+ * @param {string} fm - frontmatter block from the current doc
+ * @param {string} translated - raw translated content from LLM output
+ * @returns {string|null}
+ */
+export function validateTranslation(fm, translated) {
+  if (!fm) return 'missing frontmatter in source doc';
+  const body = translated.trim();
+  if (!body) return 'empty translation file';
+  if (body.startsWith('# 翻訳タスク')) return 'untranslated prompt file (contains task header)';
+  // Detect actual YAML frontmatter block (---\n...\n---), not just a thematic break
+  if (body.startsWith('---\n') && body.indexOf('\n---', 4) !== -1) {
+    return 'translated body contains frontmatter block (double frontmatter risk)';
+  }
+  return null;
+}
+
+/**
+ * Write content to a file atomically (write tmp → rename).
+ * Uses a unique temp file in the same directory to ensure atomic rename.
+ * @param {string} filePath - target file path
+ * @param {string} content - file content to write
+ */
+export function writeFileAtomic(filePath, content) {
+  const dir = path.dirname(filePath);
+  const tmpPath = path.join(dir, `.${path.basename(filePath)}.${Date.now()}.tmp`);
+  let renamed = false;
+  try {
+    fs.writeFileSync(tmpPath, content, 'utf8');
+    fs.renameSync(tmpPath, filePath);
+    renamed = true;
+  } finally {
+    if (!renamed) {
+      try { fs.unlinkSync(tmpPath); } catch { /* write failed, tmp may not exist */ }
+    }
+  }
+}
+
+/**
+ * Process a single translation file: validate and apply to the target doc.
+ * @param {object} params
+ * @param {string} params.slug - resolved path-based slug
+ * @param {string} params.transPath - absolute path to translation file
+ * @param {{filePath:string}} params.hit - slug index entry for the target doc
+ * @returns {'applied'|'skipped'|'unchanged'|'error'} result status
+ */
+export function processOneTranslation({ slug, transPath, hit }) {
+  const translated = fs.readFileSync(transPath, 'utf8');
+  const cur = fs.readFileSync(hit.filePath, 'utf8');
+  const { fm } = splitFrontmatter(cur);
+
+  const skipReason = validateTranslation(fm, translated);
+  if (skipReason) {
+    console.warn(`⚠️  Skipped ${slug}: ${skipReason}`);
+    return 'skipped';
+  }
+
+  const final = `${fm}\n${translated.trim()}\n`;
+
+  // No-op guard: skip if content is identical
+  if (final === cur) return 'unchanged';
+
+  writeFileAtomic(hit.filePath, final);
+  console.log(`✓ Applied translation: ${path.relative(ROOT, hit.filePath)}`);
+  return 'applied';
+}
+
+/**
+ * Main entry point. Returns a summary object for testability.
+ * @param {string[]} argv - process.argv.slice(2) equivalent
+ * @returns {Promise<{applied:number, skipped:number, unchanged:number, errors:number}>}
+ */
+export async function main(argv = []) {
   if (!fs.existsSync(TRANS_DIR)) {
     console.error(`Missing dir: ${TRANS_DIR}`);
-    process.exit(1);
+    return { applied: 0, skipped: 0, unchanged: 0, errors: 1 };
   }
-  const args = process.argv.slice(2);
-  const section = args.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
-  const sectionSlugs = section ? getSectionSlugSet(section) : null;
+
+  const section = argv.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
+  let sectionSlugs = null;
+  if (section) {
+    try {
+      sectionSlugs = getSectionSlugSet(section);
+    } catch (e) {
+      console.error(`❌ Unknown section "${section}": ${e.message}`);
+      return { applied: 0, skipped: 0, unchanged: 0, errors: 1 };
+    }
+  }
   const index = buildSlugIndex();
-  // Support both flat (basename.md) and nested (folder/basename.md) translation files
+
+  // Collect translation files
   const files = [];
   const walkTransDir = (dir) => {
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -27,36 +141,64 @@ async function main() {
     }
   };
   walkTransDir(TRANS_DIR);
-  let applied = 0;
+  // Sort nested (path-based) files before flat files so the authoritative
+  // path-based layout wins when both exist for the same slug.
+  files.sort((a, b) => {
+    const aDepth = a.includes('/') ? 0 : 1;
+    const bDepth = b.includes('/') ? 0 : 1;
+    if (aDepth !== bDepth) return aDepth - bDepth;
+    return a.localeCompare(b);
+  });
+
+  const counts = { applied: 0, skipped: 0, unchanged: 0, errors: 0 };
+  const processedSlugs = new Set();
+
   for (const f of files) {
-    // Try path-based first (nested file), then fall back to basename resolution
-    const pathCandidate = f.replace(/\.md$/, '');
-    const slug = index[pathCandidate] ? pathCandidate : resolveSlug(pathCandidate.split('/').pop());
+    const slug = resolveTranslationSlug(f, index);
     if (!slug) {
-      console.warn(`⚠️  Cannot resolve slug for translation file: ${f}`);
+      // If a section filter is active and the file can't be resolved,
+      // silently skip — it may simply be out of scope.
+      if (!sectionSlugs) {
+        console.warn(`⚠️  Cannot resolve slug for translation file: ${f}`);
+        counts.skipped++;
+      }
       continue;
     }
     if (sectionSlugs && !sectionSlugs.has(slug)) continue;
-    const transPath = path.join(TRANS_DIR, f);
-    const translated = fs.readFileSync(transPath, 'utf8');
+
+    // Detect duplicate translation files targeting the same slug.
+    // Expected when both flat and nested layouts exist during migration.
+    if (processedSlugs.has(slug)) {
+      console.warn(`⚠️  Duplicate translation for slug "${slug}" (file: ${f}) — skipping, earlier file already applied`);
+      continue;
+    }
+    processedSlugs.add(slug);
+
     const hit = index[slug];
     if (!hit) {
       console.warn(`⚠️  No doc found for slug: ${slug}`);
+      counts.skipped++;
       continue;
     }
-    const cur = fs.readFileSync(hit.filePath, 'utf8');
-    const { fm } = splitFrontmatter(cur);
-    const final = `${fm}\n${translated.trim()}\n`;
-    fs.writeFileSync(hit.filePath, final, 'utf8');
-    console.log(`✓ Applied translation: ${path.relative(ROOT, hit.filePath)}`);
-    applied++;
+
+    try {
+      const result = processOneTranslation({ slug, transPath: path.join(TRANS_DIR, f), hit });
+      counts[result]++;
+    } catch (e) {
+      console.error(`❌ Error processing ${slug}: ${e.message}`);
+      counts.errors++;
+    }
   }
-  console.log(`Done. Applied ${applied} translation(s).`);
+
+  console.log(`Done. Applied ${counts.applied}, skipped ${counts.skipped}, unchanged ${counts.unchanged}, errors ${counts.errors}.`);
+  return counts;
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
-  main().catch((e) => {
+if (isDirectRun(import.meta.url)) {
+  main(process.argv.slice(2)).then((counts) => {
+    if (counts.errors > 0 || counts.skipped > 0) process.exitCode = 1;
+  }).catch((e) => {
     console.error(e);
-    process.exit(1);
+    process.exitCode = 1;
   });
 }
