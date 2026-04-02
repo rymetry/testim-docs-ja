@@ -14,6 +14,7 @@ type SidebarOrdering = {
 // フロントエンドのナビゲーション表示順のフォールバック。
 // （通常は docs/SIDEBAR_URLS.md から抽出した順を優先）
 const FALLBACK_CATEGORY_ORDER: string[] = [
+  'Changelog',
   '概要',
   'はじめに',
   'テストの記録',
