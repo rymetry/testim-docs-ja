@@ -397,46 +397,22 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `docs:prepare-llm` | prepare_llm_tasks.mjs | LLM タスク準備 |
 | `docs:apply-llm` | apply_llm_translations.mjs | LLM 翻訳適用 |
 | `docs:report-categories` | report_frontmatter_categories.mjs | カテゴリ集計 |
+| `format` | prettier --write | コードフォーマット |
+| `format:check` | prettier --check | フォーマットチェック（CI 用） |
 
 ---
 
 ## 運用フロー
 
-### 日常運用（ページ単位）
+運用フローの詳細は **[`docs/OPS_DESIGN.md`](../docs/OPS_DESIGN.md)** を参照してください。以下はクイックリファレンスです。
 
 ```bash
+# ページ単位チェック
 npm run check:parity -- --slug=overview/testim-overview
-npm run check:snapshots:diff -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
-```
 
-### 定期運用（全文）
-
-```bash
-npm run lint:docs          # リンク実在 + frontmatter + 構文
-npm run check:parity       # 構造パリティ全件
-npm run test && npm run build
-```
-
-### 初回セクション整備
-
-```bash
-npm run docs:sync-sidebar
-npm run docs:pipeline:full -- --section="Overview"
-npm run lint:docs -- --section="Overview"
-npm run check:parity
-npm test && npm run build
-```
-
-### 継続メンテナンス（3日ごと）
-
-```bash
-npm run docs:sync-sidebar          # 1. URL 最新化
-npm run check:snapshots            # 2. スナップショット取得→差分検出
-npm run check:parity               # 3. 翻訳品質チェック
-npm run check:summary              # 4. summary / audit manifest
-npm run docs:pipeline              # 5. 変更分の翻訳パイプライン
-npm run lint:docs && npm test && npm run build  # 6. QA
+# 全文チェック
+npm run lint:docs && npm run check:parity && npm test && npm run build
 ```
 
 ### CI 連携
