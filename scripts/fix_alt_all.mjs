@@ -7,9 +7,9 @@
  *   - `.gif` を含む場合は `![操作手順アニメーション](...)`
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -97,7 +97,9 @@ function main() {
       fs.writeFileSync(file, updated, 'utf8');
       changedCount++;
       changedImageCount += Math.max(0, before - after);
-      console.log(`更新: ${path.relative(rootDir, file)} (images fixed: ${Math.max(0, before - after)})`);
+      console.log(
+        `更新: ${path.relative(rootDir, file)} (images fixed: ${Math.max(0, before - after)})`
+      );
     }
   }
 

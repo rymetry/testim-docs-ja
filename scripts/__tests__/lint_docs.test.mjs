@@ -1,5 +1,5 @@
 /**
- * tests for scripts/lint-docs.mjs  (new module — will fail until implemented)
+ * tests for scripts/lint_docs.mjs  (new module — will fail until implemented)
  *
  * The implementation must export:
  *   lintContent(content: string, filePath: string): LintError[]
@@ -12,7 +12,7 @@ import assert from 'node:assert/strict';
 let lintContent;
 let toKebab;
 before(async () => {
-  ({ lintContent, toKebab } = await import('../lint-docs.mjs'));
+  ({ lintContent, toKebab } = await import('../lint_docs.mjs'));
 });
 
 // ---------------------------------------------------------------------------
@@ -20,11 +20,11 @@ before(async () => {
 // ---------------------------------------------------------------------------
 function makeDoc(overrides = {}) {
   const fm = {
-    title: "Test Page",
-    description: "A description.",
-    category: "Overview",
-    updated: "2026-01-01",
-    sourceUrl: "https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm",
+    title: 'Test Page',
+    description: 'A description.',
+    category: 'Overview',
+    updated: '2026-01-01',
+    sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
     ...overrides.fm,
   };
   const fmLines = Object.entries(fm)
@@ -75,7 +75,10 @@ describe('frontmatter: sourceUrl', () => {
 
   it('no error for valid sourceUrl with .htm format', () => {
     const content = makeDoc({
-      fm: { sourceUrl: 'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm' },
+      fm: {
+        sourceUrl:
+          'https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm',
+      },
     });
     const errors = lintContent(content, 'src/content/docs/test.md');
     const e = errors.find((e) => e.rule === 'sourceUrl-format');
@@ -85,7 +88,9 @@ describe('frontmatter: sourceUrl', () => {
 
 describe('frontmatter: description placeholder', () => {
   it('returns error when description starts with "原文:"', () => {
-    const content = makeDoc({ fm: { description: '原文: https://docs.tricentis.com/testim/content/overview/foo.htm' } });
+    const content = makeDoc({
+      fm: { description: '原文: https://docs.tricentis.com/testim/content/overview/foo.htm' },
+    });
     const errors = lintContent(content, 'src/content/docs/test.md');
     const e = errors.find((e) => e.rule === 'description-placeholder');
     assert.ok(e, 'expected description-placeholder error');
@@ -263,7 +268,11 @@ describe('Markdown syntax: callout directives', () => {
 // ---------------------------------------------------------------------------
 describe('internal link target existence', () => {
   // Path-based slugs (folder/basename)
-  const slugs = new Set(['overview/testim-overview', 'getting-started/getting-started', 'advanced-editing/advanced-features']);
+  const slugs = new Set([
+    'overview/testim-overview',
+    'getting-started/getting-started',
+    'advanced-editing/advanced-features',
+  ]);
   const headings = new Map([
     ['overview/testim-overview', new Set(['overview', 'features', 'getting-started-section'])],
     ['getting-started/getting-started', new Set(['installation', 'first-test'])],
@@ -467,7 +476,7 @@ describe('toKebab', () => {
   it('handles mixed English and Japanese with slash', () => {
     assert.equal(
       toKebab('Add Custom Validation / Add Custom Action ステップの追加'),
-      'add-custom-validation-add-custom-action-ステップの追加',
+      'add-custom-validation-add-custom-action-ステップの追加'
     );
   });
 });

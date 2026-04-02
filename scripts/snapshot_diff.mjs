@@ -25,7 +25,11 @@ import {
   resolveSlug,
 } from './lib/project.mjs';
 import { isDirectRun } from './lib/cli.mjs';
-import { extractSlug as extractSlugFn, extractSlugsFromSnapshot, matchAllTricentisUrls } from './lib/madcap_toc.mjs';
+import {
+  extractSlug as extractSlugFn,
+  extractSlugsFromSnapshot,
+  matchAllTricentisUrls,
+} from './lib/madcap_toc.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -66,7 +70,10 @@ export const CHANGE_CLASSIFIERS = [
   { type: 'heading', pattern: /^ {0,3}#{1,6}\s|<\/?h[1-6]\b/i },
   { type: 'image', pattern: /!\[|<Image\b|<img\b/i },
   { type: 'code', pattern: /^ {0,3}```|<\/?pre\b|<\/?code\b/i },
-  { type: 'callout', pattern: /^ {0,3}>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^ {0,3}<Callout\b|<blockquote\b[^>]*theme=/i },
+  {
+    type: 'callout',
+    pattern: /^ {0,3}>\s*(?:📘|📙|🚧|❗|✅|👍|⚠️)|^ {0,3}<Callout\b|<blockquote\b[^>]*theme=/i,
+  },
 ];
 
 export function parseArgs(argv = process.argv.slice(2)) {
@@ -93,7 +100,9 @@ function getHeadContent(relativePath) {
   } catch (e) {
     // Exit code 128 = file not found in HEAD (expected for new files)
     if (e.status === 128) return null;
-    throw new Error(`git show failed for ${relativePath}: ${e.stderr?.toString().trim() || e.message}`);
+    throw new Error(
+      `git show failed for ${relativePath}: ${e.stderr?.toString().trim() || e.message}`
+    );
   }
 }
 
@@ -211,17 +220,16 @@ function diffSidebar() {
  * Returns paths relative to the base directory.
  */
 function findHtmlFiles(dir, baseDir = dir) {
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const files = [];
-  for (const entry of entries) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      files.push(...findHtmlFiles(fullPath, baseDir));
-    } else if (entry.name.endsWith('.html')) {
-      files.push(path.relative(baseDir, fullPath));
+      return findHtmlFiles(fullPath, baseDir);
     }
-  }
-  return files;
+    if (entry.name.endsWith('.html')) {
+      return [path.relative(baseDir, fullPath)];
+    }
+    return [];
+  });
 }
 
 function emptyErrorResult() {
@@ -255,72 +263,72 @@ export async function main(argv) {
   const sidebarUrlMap = buildSidebarUrlMap(sidebarText);
 
   const snapshotFiles = findHtmlFiles(CONTENT_DIR);
-  const changes = [];
+  const analyses = snapshotFiles
+    .map((file) => {
+      const slug = file.replace(/\.html$/, '');
 
-  let unchanged = 0;
+      if (resolvedSlug && slug !== resolvedSlug) return null;
+      if (!resolvedSlug && args.section && !sourceUrls[slug]) return null;
 
-  for (const file of snapshotFiles) {
-    const slug = file.replace(/\.html$/, '');
+      const snapshotPath = path.join(CONTENT_DIR, `${slug}.html`);
+      const relPath = path.relative(ROOT_DIR, snapshotPath);
+      const currentContent = fs.readFileSync(snapshotPath, 'utf8');
+      const headContent = getHeadContent(relPath);
+      const sourceUrl = sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap);
+      const is404 = MARKER_404_RE.test(currentContent);
 
-    // Apply slug filter (takes priority over section)
-    if (resolvedSlug && slug !== resolvedSlug) continue;
-
-    // Apply section filter via sourceUrl index
-    if (!resolvedSlug && args.section && !sourceUrls[slug]) continue;
-
-    const snapshotPath = path.join(CONTENT_DIR, slug + '.html');
-    const relPath = path.relative(ROOT_DIR, snapshotPath);
-    const currentContent = fs.readFileSync(snapshotPath, 'utf8');
-
-    const is404 = MARKER_404_RE.test(currentContent);
-    const headContent = getHeadContent(relPath);
-
-    if (!headContent) {
-      // No committed version → new page
-      if (is404) {
-        // 404 for a page we never had → ignore
-        continue;
+      if (!headContent) {
+        if (is404) return null;
+        return {
+          kind: 'change',
+          change: {
+            slug,
+            type: 'page-added',
+            sourceUrl,
+            categories: null,
+            diffLines: 0,
+          },
+        };
       }
-      changes.push({
-        slug,
-        type: 'page-added',
-        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap),
-        categories: null,
-        diffLines: 0,
-      });
-      continue;
-    }
 
-    if (is404 && !MARKER_404_RE.test(headContent)) {
-      // Was alive, now 404
-      changes.push({
-        slug,
-        type: 'page-removed',
-        sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap),
-        categories: null,
-        diffLines: 0,
-      });
-      continue;
-    }
+      if (is404 && !MARKER_404_RE.test(headContent)) {
+        return {
+          kind: 'change',
+          change: {
+            slug,
+            type: 'page-removed',
+            sourceUrl,
+            categories: null,
+            diffLines: 0,
+          },
+        };
+      }
 
-    if (headContent === currentContent) {
-      unchanged += 1;
-      continue;
-    }
+      if (headContent === currentContent) {
+        return { kind: 'unchanged' };
+      }
 
-    // Content changed
-    const { categories, diffLines } = classifyChanges(headContent, currentContent);
-    changes.push({
-      slug,
-      type: 'page-changed',
-      sourceUrl: sourceUrls[slug] || fallbackSourceUrl(slug, sidebarUrlMap),
-      categories,
-      diffLines,
-    });
-  }
+      const { categories, diffLines } = classifyChanges(headContent, currentContent);
+      return {
+        kind: 'change',
+        change: {
+          slug,
+          type: 'page-changed',
+          sourceUrl,
+          categories,
+          diffLines,
+        },
+      };
+    })
+    .filter(Boolean);
+
+  const unchanged = analyses.filter((entry) => entry.kind === 'unchanged').length;
+  const changes = analyses.flatMap((entry) => (entry.kind === 'change' ? [entry.change] : []));
 
   // Sidebar diff (skip in --slug mode — not relevant for single-page checks)
-  const sidebar = resolvedSlug ? { changed: false, addedPages: [], removedPages: [] } : diffSidebar();
+  const sidebar = resolvedSlug
+    ? { changed: false, addedPages: [], removedPages: [] }
+    : diffSidebar();
 
   // Scope summary to filtered files when --slug is active
   const scopedTotal = resolvedSlug ? 1 : snapshotFiles.length;
@@ -341,13 +349,17 @@ export async function main(argv) {
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(report, null, 2) + '\n');
 
   if (!args.json) {
-    console.log(`Snapshot diff: ${report.summary.changed} changed, ${report.summary.added} added, ${report.summary.removed} removed, ${report.summary.unchanged} unchanged`);
+    console.log(
+      `Snapshot diff: ${report.summary.changed} changed, ${report.summary.added} added, ${report.summary.removed} removed, ${report.summary.unchanged} unchanged`
+    );
 
     if (sidebar.changed) {
       if (sidebar.parseError) {
         console.log('Sidebar: ⚠️ JSON parse error — could not compare sidebar (see warning above)');
       } else {
-        console.log(`Sidebar: ${sidebar.addedPages.length} page(s) added, ${sidebar.removedPages.length} page(s) removed`);
+        console.log(
+          `Sidebar: ${sidebar.addedPages.length} page(s) added, ${sidebar.removedPages.length} page(s) removed`
+        );
       }
     }
 

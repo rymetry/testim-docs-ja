@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
+import { isDirectRun } from './lib/cli.mjs';
 
 const ROOT = path.resolve(fileURLToPath(import.meta.url), '../..');
 const SCRIPTS_DIR = path.join(ROOT, 'scripts');
@@ -24,7 +25,12 @@ export const PIPELINE_STEPS = ['url_collect', 'placeholders', 'fetch', 'prepare_
 export function parseArgs(argv) {
   const modeFlag = argv.find((a) => a.startsWith('--mode='));
   const mode = modeFlag ? modeFlag.split('=')[1] : 'diff';
-  const section = argv.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=') ?? null;
+  const section =
+    argv
+      .find((a) => a.startsWith('--section='))
+      ?.split('=')
+      .slice(1)
+      .join('=') ?? null;
   const resume = !argv.includes('--no-resume');
 
   return { mode, section, resume };
@@ -37,7 +43,18 @@ export function parseArgs(argv) {
  */
 export function loadCheckpoint(checkpointPath) {
   if (!fs.existsSync(checkpointPath)) return null;
-  return JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+  const raw = fs.readFileSync(checkpointPath, 'utf8');
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) {
+      throw error;
+    }
+    console.warn(
+      `Invalid checkpoint at ${checkpointPath}; ignoring and restarting pipeline. ${error.message}`
+    );
+    return null;
+  }
 }
 
 /**
@@ -152,7 +169,7 @@ async function main() {
   console.log('\n✅ Pipeline complete.');
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (isDirectRun(import.meta.url)) {
   main().catch((e) => {
     console.error(e);
     process.exit(1);

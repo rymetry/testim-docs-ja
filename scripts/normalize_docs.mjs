@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
+import { isDirectRun } from './lib/cli.mjs';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
 import { ROOT_DIR, DOCS_DIR, findMdFiles, filePathToSlug } from './lib/project.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
@@ -34,11 +35,16 @@ const FRONTMATTER_ORDER = [
 function normalizeValue(value) {
   if (Array.isArray(value)) return value.map((item) => normalizeValue(item));
   if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([key, entryValue]) => [key, normalizeValue(entryValue)]));
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entryValue]) => [key, normalizeValue(entryValue)])
+    );
   }
   if (typeof value !== 'string') return value;
 
-  return REPLACEMENTS.reduce((current, [pattern, replacement]) => current.replace(pattern, replacement), value);
+  return REPLACEMENTS.reduce(
+    (current, [pattern, replacement]) => current.replace(pattern, replacement),
+    value
+  );
 }
 
 function orderFrontmatter(data) {
@@ -66,7 +72,9 @@ function normalizeFile(filePath, urlMappings) {
 
   data.title = normalizeValue(data.title || slug.replace(/-/g, ' '));
   data.description =
-    typeof data.description === 'string' && data.description.trim() && !/^原文:\s*/u.test(data.description)
+    typeof data.description === 'string' &&
+    data.description.trim() &&
+    !/^原文:\s*/u.test(data.description)
       ? normalizeValue(data.description.trim())
       : generateDescription(data.title, content);
   data.category = normalizeValue(data.category);
@@ -83,9 +91,15 @@ function normalizeFile(filePath, urlMappings) {
 
 async function main() {
   const args = process.argv.slice(2);
-  const section = args.find((arg) => arg.startsWith('--section='))?.split('=').slice(1).join('=');
+  const section = args
+    .find((arg) => arg.startsWith('--section='))
+    ?.split('=')
+    .slice(1)
+    .join('=');
   const slugSet = section ? getSectionSlugSet(section) : null;
-  const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(filePathToSlug(filePath, DOCS_ROOT)));
+  const files = findMdFiles(DOCS_ROOT).filter(
+    (filePath) => !slugSet || slugSet.has(filePathToSlug(filePath, DOCS_ROOT))
+  );
 
   // Load url_mapping.json once for all files (avoid re-reading per file)
   let urlMappings = {};
@@ -110,7 +124,7 @@ async function main() {
   console.log(`Normalized ${changed} file(s).`);
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (isDirectRun(import.meta.url)) {
   main().catch((error) => {
     console.error(error);
     process.exit(1);

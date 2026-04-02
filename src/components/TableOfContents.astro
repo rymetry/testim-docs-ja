@@ -1,7 +1,11 @@
 ---
 import type { MarkdownHeading } from 'astro';
 
-const { headings } = Astro.props as { headings: MarkdownHeading[] };
+type Props = {
+  headings: MarkdownHeading[];
+};
+
+const { headings } = Astro.props;
 const filtered = headings.filter((heading) => heading.depth > 1 && heading.depth <= 3);
 ---
 

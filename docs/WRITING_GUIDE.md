@@ -37,7 +37,7 @@
 
 ## 📋 frontmatter 必須ルール
 
-すべての記事ファイルには以下の frontmatter が必須です。`src/content.config.ts` と `scripts/lint-docs.mjs` の両方で検証されます。
+すべての記事ファイルには以下の frontmatter が必須です。`src/content.config.ts` と `scripts/lint_docs.mjs` の両方で検証されます。
 
 ```yaml
 ---
@@ -133,14 +133,14 @@ keywords:
 
 EN 原文の blockquote callout を JA の `:::` callout に変換する際は、以下のマッピングに従ってください：
 
-| EN 原文パターン | JA callout タイプ | 備考 |
-| --- | --- | --- |
-| `> 📘 Note` / `> 📘` (タイトルなし) | `:::note` | デフォルトの情報補足 |
-| `> 📘 Tip` / `> 👍` | `:::tip` | ヒント・推奨事項 |
-| `> 🚧` / `> ⚠️` | `:::warning` | 注意・警告 |
-| `> ❗` / `> ❗️` | `:::danger` | 重大な警告・破壊的操作 |
-| `<Callout theme="info">` | `:::note` | JSX形式の情報callout |
-| `<Callout theme="warning">` | `:::warning` | JSX形式の警告callout |
+| EN 原文パターン                     | JA callout タイプ | 備考                   |
+| ----------------------------------- | ----------------- | ---------------------- |
+| `> 📘 Note` / `> 📘` (タイトルなし) | `:::note`         | デフォルトの情報補足   |
+| `> 📘 Tip` / `> 👍`                 | `:::tip`          | ヒント・推奨事項       |
+| `> 🚧` / `> ⚠️`                     | `:::warning`      | 注意・警告             |
+| `> ❗` / `> ❗️`                     | `:::danger`       | 重大な警告・破壊的操作 |
+| `<Callout theme="info">`            | `:::note`         | JSX形式の情報callout   |
+| `<Callout theme="warning">`         | `:::warning`      | JSX形式の警告callout   |
 
 注意: JA タイトルが「注意」の場合は、EN 原文の絵文字に関わらず `:::warning{title="注意"}` を使用する。「注意」という日本語表現は警告の意味合いが強いため、`:::warning` が適切。
 
@@ -231,7 +231,7 @@ EN snapshot           →  JA 翻訳
 レビューや作業中に新しい記法ルールや品質基準が判明した場合は、本ガイドに追記してください。
 
 1. 該当セクション（callout、リンク、原文準拠等）にルールを追加する
-2. `npm run lint:docs` で機械検証可能なら `scripts/lint-docs.mjs` にもチェックを追加する
+2. `npm run lint:docs` で機械検証可能なら `scripts/lint_docs.mjs` にもチェックを追加する
 3. 変更を main にコミットする（`docs: WRITING_GUIDE ルール追加`）
 
 ---

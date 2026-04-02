@@ -1,11 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-import { execFile } from 'child_process';
-import { promisify } from 'util';
-import { createHash } from 'crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { promisify } from 'node:util';
 import matter from 'gray-matter';
+import { isDirectRun } from './lib/cli.mjs';
 import { filterItemsBySection } from './lib/sidebar.mjs';
-import { ROOT_DIR, buildSlugIndex, buildBasenameToPathMap, toKebab, resolveSlug } from './lib/project.mjs';
+import {
+  ROOT_DIR,
+  buildSlugIndex,
+  buildBasenameToPathMap,
+  toKebab,
+  resolveSlug,
+} from './lib/project.mjs';
 import { extractSlug } from './lib/madcap_toc.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
 import turndown from './lib/turndown.mjs';
@@ -39,14 +46,22 @@ function parseSidebarList(sidebarText, filterFn) {
       order = 0;
       continue;
     }
-    const m = line.match(/^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/);
+    const m = line.match(
+      /^\-\s*(✅🔍|✅|⏳)\s+(https?:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/
+    );
     if (m && current) {
       order += 1;
       if (!filterFn(m[1])) continue;
       const url = m[2];
       const slug = extractSlug(url);
       if (!slug) continue;
-      out.push({ categoryEnglish: current.english, categoryJapanese: current.japanese, url, slug, order });
+      out.push({
+        categoryEnglish: current.english,
+        categoryJapanese: current.japanese,
+        url,
+        slug,
+        order,
+      });
     }
   }
   return out;
@@ -79,14 +94,18 @@ export async function getDiffPagesList(sidebarText, hashesPath) {
     }
 
     if (!content) {
-      console.warn(`getDiffPagesList: no snapshot for ${page.slug}; treating as changed. Run check:snapshots:fetch first.`);
+      console.warn(
+        `getDiffPagesList: no snapshot for ${page.slug}; treating as changed. Run check:snapshots:fetch first.`
+      );
       changed.push(page);
       continue;
     }
 
     const hash = computeHash(content);
     const previousHash =
-      typeof storedHashes[page.slug] === 'string' ? storedHashes[page.slug] : storedHashes[page.slug]?.hash;
+      typeof storedHashes[page.slug] === 'string'
+        ? storedHashes[page.slug]
+        : storedHashes[page.slug]?.hash;
     if (previousHash !== hash) {
       changed.push(page);
     }
@@ -109,7 +128,11 @@ export function parseMode(argv) {
 }
 
 function parseSection(argv) {
-  return argv.find((a) => a.startsWith('--section='))?.split('=').slice(1).join('=');
+  return argv
+    .find((a) => a.startsWith('--section='))
+    ?.split('=')
+    .slice(1)
+    .join('=');
 }
 
 function computeHash(content) {
@@ -126,13 +149,24 @@ async function downloadAsset(url, destDir) {
   if (fs.existsSync(destPath)) return { name: targetName, path: destPath };
 
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: '*/*' } });
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Automation)', Accept: '*/*' },
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const buf = Buffer.from(await res.arrayBuffer());
     await fs.promises.writeFile(destPath, buf);
   } catch (e) {
     console.warn(`fetch failed for ${url}: ${e.message} — falling back to curl`);
-    await execFileAsync('curl', ['-sL', '--fail', '--compressed', '-A', 'Mozilla/5.0 (Automation)', '-o', destPath, url]);
+    await execFileAsync('curl', [
+      '-sL',
+      '--fail',
+      '--compressed',
+      '-A',
+      'Mozilla/5.0 (Automation)',
+      '-o',
+      destPath,
+      url,
+    ]);
   }
   await sleep(20);
   return { name: targetName, path: destPath };
@@ -143,7 +177,8 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl
   const localPrefix = `/images/${categoryFolder}/${slug}`;
 
   // Collect absolute URLs (legacy readme.io) and MadCap relative image paths
-  const absoluteUrlRegex = /https:\/\/files\.readme\.io\/[a-zA-Z0-9_.-]+\.(?:png|jpg|jpeg|gif|webp|mp4|webm|mov)/gi;
+  const absoluteUrlRegex =
+    /https:\/\/files\.readme\.io\/[a-zA-Z0-9_.-]+\.(?:png|jpg|jpeg|gif|webp|mp4|webm|mov)/gi;
   const relativeImgRegex = /images\/[a-zA-Z0-9_.-]+\.(?:png|jpg|jpeg|gif|webp|mp4|webm|mov)/gi;
 
   const absoluteUrls = Array.from(new Set(markdown.match(absoluteUrlRegex) || []));
@@ -179,7 +214,10 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl
     const re = new RegExp(p.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
     updated = updated.replace(re, p.local);
   }
-  updated = updated.replace(/<Image\b[^>]*src=\"([^\"]+)\"[^>]*\/>/g, (_match, src) => `![](${src})`);
+  updated = updated.replace(
+    /<Image\b[^>]*src=\"([^\"]+)\"[^>]*\/>/g,
+    (_match, src) => `![](${src})`
+  );
   return updated;
 }
 
@@ -205,9 +243,7 @@ function resolveHtmPath(rawPath) {
   const normalized = rawPath.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '');
   // Bare index.htm cannot be resolved without page context — leave unchanged
   if (normalized === 'index.htm') return null;
-  const contentPath = normalized.startsWith('/content/')
-    ? normalized
-    : '/content/' + normalized;
+  const contentPath = normalized.startsWith('/content/') ? normalized : '/content/' + normalized;
   const slug = extractSlug(contentPath);
   if (!slug) return null;
   return resolveToPathSlug(slug);
@@ -219,21 +255,30 @@ export function rewriteDocLinks(markdown) {
     return `](/docs/${resolveToPathSlug(slug)}${frag})`;
   });
   // Stage 2: Markdown .htm links — MadCap Flare relative paths (skip schemes/protocol-relative, handle .htm/#/)
-  result = result.replace(/\]\((?![a-z][a-z0-9+.-]*:|\/\/)([^)#]*\.htm)(?:\/#\/)?(#[^)]*)?\)/g, (_match, rawPath, fragment) => {
-    const resolved = resolveHtmPath(rawPath);
-    if (!resolved) return _match;
-    return `](/docs/${resolved}${fragment || ''})`;
-  });
+  result = result.replace(
+    /\]\((?![a-z][a-z0-9+.-]*:|\/\/)([^)#]*\.htm)(?:\/#\/)?(#[^)]*)?\)/g,
+    (_match, rawPath, fragment) => {
+      const resolved = resolveHtmPath(rawPath);
+      if (!resolved) return _match;
+      return `](/docs/${resolved}${fragment || ''})`;
+    }
+  );
   // Stage 3: HTML <a href="doc:slug"> — narrow match excludes doc:https://
-  result = result.replace(/<a(\s[^>]*)href="doc:([a-z0-9_-]+)(#[^"]*)?"([^>]*>)/gi, (_match, pre, slug, frag = '', post) => {
-    return `<a${pre}href="/docs/${resolveToPathSlug(slug)}${frag}"${post}`;
-  });
+  result = result.replace(
+    /<a(\s[^>]*)href="doc:([a-z0-9_-]+)(#[^"]*)?"([^>]*>)/gi,
+    (_match, pre, slug, frag = '', post) => {
+      return `<a${pre}href="/docs/${resolveToPathSlug(slug)}${frag}"${post}`;
+    }
+  );
   // Stage 4: HTML <a href="[../]path/slug.htm"> — relative only, skip URLs with schemes or protocol-relative (also handles .htm/#/)
-  result = result.replace(/<a(\s[^>]*)href="(?![a-z][a-z0-9+.-]*:|\/\/)([^"#]*\.htm)(?:\/#\/)?(#[^"]*)?"([^>]*>)/gi, (_match, pre, rawPath, fragment = '', post) => {
-    const resolved = resolveHtmPath(rawPath);
-    if (!resolved) return _match;
-    return `<a${pre}href="/docs/${resolved}${fragment}"${post}`;
-  });
+  result = result.replace(
+    /<a(\s[^>]*)href="(?![a-z][a-z0-9+.-]*:|\/\/)([^"#]*\.htm)(?:\/#\/)?(#[^"]*)?"([^>]*>)/gi,
+    (_match, pre, rawPath, fragment = '', post) => {
+      const resolved = resolveHtmPath(rawPath);
+      if (!resolved) return _match;
+      return `<a${pre}href="/docs/${resolved}${fragment}"${post}`;
+    }
+  );
   return result;
 }
 
@@ -253,7 +298,9 @@ function buildFrontmatter(item, existingFilePath, fallbackTitle) {
       : ['testim', item.slug.split('/').pop(), toKebab(item.categoryEnglish)];
 
   const description =
-    typeof data.description === 'string' && data.description.trim() && !/^原文:\s*/u.test(data.description)
+    typeof data.description === 'string' &&
+    data.description.trim() &&
+    !/^原文:\s*/u.test(data.description)
       ? data.description.trim()
       : generateDescription(data.title || fallbackTitle, body);
 
@@ -353,7 +400,7 @@ async function main() {
   console.log(`Done. Processed ${done} file(s).`);
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (isDirectRun(import.meta.url)) {
   main().catch((e) => {
     console.error(e);
     process.exit(1);
