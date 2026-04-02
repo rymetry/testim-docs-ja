@@ -1281,24 +1281,26 @@ describe('extractInvariantTokens', () => {
     assert.ok(!tokens.some((t) => t === 'docs.tricentis.com'));
   });
 
-  it('extracts /docs/slug#fragment from bracket annotation', () => {
+  it('normalizes /docs/slug#fragment to /docs/slug (fragments differ by locale)', () => {
     const tokens = extractInvariantTokens('Adding a CLI step [/docs/validate-download#adding-a-cli-step]');
-    assert.ok(tokens.includes('/docs/validate-download#adding-a-cli-step'));
+    assert.ok(tokens.includes('/docs/validate-download'));
+    assert.ok(!tokens.includes('/docs/validate-download#adding-a-cli-step'));
   });
 
-  it('extracts /docs/slug#fragment from markdown link', () => {
+  it('normalizes /docs/slug#fragment from markdown link', () => {
     const tokens = extractInvariantTokens('[text](/docs/foo-bar#section)');
-    assert.ok(tokens.includes('/docs/foo-bar#section'));
+    assert.ok(tokens.includes('/docs/foo-bar'));
+    assert.ok(!tokens.includes('/docs/foo-bar#section'));
   });
 
-  it('extracts /docs/slug with Japanese fragment', () => {
+  it('normalizes /docs/slug with Japanese fragment', () => {
     const tokens = extractInvariantTokens('[text](/docs/add-cli-validations-and-actions#cli-ステップの追加)');
-    assert.ok(tokens.some((t) => t.startsWith('/docs/add-cli-validations-and-actions#cli-')));
+    assert.ok(tokens.includes('/docs/add-cli-validations-and-actions'));
   });
 
-  it('extracts full JA fragment from bracket annotation', () => {
+  it('normalizes /docs/ bracket annotation with JA fragment', () => {
     const tokens = extractInvariantTokens('text [/docs/add-cli-validations-and-actions#cli-ステップの追加]');
-    assert.ok(tokens.some((t) => t.includes('ステップの追加')), 'JA fragment should not be truncated');
+    assert.ok(tokens.includes('/docs/add-cli-validations-and-actions'));
   });
 
   it('extracts CLI flags', () => {
@@ -1354,24 +1356,28 @@ describe('extractInvariantTokens', () => {
     assert.equal(tokens.length, 0);
   });
 
-  it('preserves MadCap relative .htm links as raw tokens (no /content/ prefix)', () => {
+  it('normalizes MadCap relative .htm links to /docs/slug', () => {
     const tokens = extractInvariantTokens('[Drag & Drop Step](drag-drop-step.htm)');
-    assert.ok(tokens.includes('drag-drop-step.htm'), `Expected raw drag-drop-step.htm in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.some((t) => t.startsWith('/docs/')), `Expected normalized /docs/ path in ${JSON.stringify(tokens)}`);
+    assert.ok(!tokens.includes('drag-drop-step.htm'), 'raw .htm should not remain');
   });
 
-  it('preserves .htm with directory path as raw token', () => {
+  it('normalizes .htm with directory path to /docs/slug', () => {
     const tokens = extractInvariantTokens('[text](../editing/shareable-steps.htm)');
-    assert.ok(tokens.includes('../editing/shareable-steps.htm'), `Expected raw ../editing/shareable-steps.htm in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.some((t) => t.startsWith('/docs/')), `Expected normalized /docs/ path in ${JSON.stringify(tokens)}`);
+    assert.ok(!tokens.includes('../editing/shareable-steps.htm'), 'raw relative path should not remain');
   });
 
-  it('preserves .htm with fragment as raw token', () => {
+  it('normalizes .htm with fragment to /docs/slug (fragment stripped)', () => {
     const tokens = extractInvariantTokens('[text](slug.htm#section)');
-    assert.ok(tokens.includes('slug.htm#section'), `Expected raw slug.htm#section in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.some((t) => t.startsWith('/docs/')), `Expected normalized /docs/ path in ${JSON.stringify(tokens)}`);
+    assert.ok(!tokens.includes('slug.htm#section'), 'raw .htm#fragment should not remain');
   });
 
-  it('preserves .htm with query parameter as raw token', () => {
+  it('normalizes .htm with query parameter to /docs/slug', () => {
     const tokens = extractInvariantTokens('[text](slug.htm?param=1)');
-    assert.ok(tokens.includes('slug.htm'), `Expected raw slug.htm in ${JSON.stringify(tokens)}`);
+    assert.ok(tokens.some((t) => t.startsWith('/docs/')), `Expected normalized /docs/ path in ${JSON.stringify(tokens)}`);
+    assert.ok(!tokens.includes('slug.htm'), 'raw .htm should not remain');
   });
 });
 

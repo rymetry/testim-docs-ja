@@ -1,5 +1,6 @@
 /** Markdown structure extraction and parsing functions for source parity analysis. */
 import { extractSlug as extractSlugFromUrl } from './madcap_toc.mjs';
+import { buildBasenameToPathMap } from './project.mjs';
 import { FENCE_LINE_RE } from './source_parity_types.mjs';
 
 export function extractFromMd(body) {
@@ -511,15 +512,27 @@ export function extractHtmlTables(body) {
   return tables;
 }
 
+function resolveToFullSlug(slug) {
+  if (slug.includes('/')) return slug;
+  const map = buildBasenameToPathMap();
+  return map.get(slug) ?? slug;
+}
+
 function normalizeUrlToken(url) {
   if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
-    const slug = extractSlugFromUrl(url);
-    if (slug) return `/docs/${slug}`;
+    const slug = extractSlugFromUrl(url.replace(/[?#].*$/, ''));
+    if (slug) return `/docs/${resolveToFullSlug(slug)}`;
   }
   if (/\.htm(?:[?#]|$)/.test(url)) {
-    const withLeadingSlash = url.startsWith('/') ? url : `/${url}`;
-    const slug = extractSlugFromUrl(withLeadingSlash.replace(/[?#].*$/, ''));
-    if (slug) return `/docs/${slug}`;
+    // Strip relative path prefixes (../../, ../, ./) and fragment/query
+    const stripped = url.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '').replace(/[?#].*$/, '');
+    const contentPath = `/content/${stripped}`;
+    const slug = extractSlugFromUrl(contentPath);
+    if (slug) return `/docs/${resolveToFullSlug(slug)}`;
+  }
+  // Normalize /docs/ paths by stripping fragments (EN/JA fragments differ by design)
+  if (url.startsWith('/docs/') && url.includes('#')) {
+    return url.replace(/#.*$/, '');
   }
   return url;
 }
