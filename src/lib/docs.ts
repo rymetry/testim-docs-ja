@@ -1,6 +1,5 @@
 import type { NavItem } from '../types/navigation';
 import type { CollectionEntry } from 'astro:content';
-import type { MarkdownHeading } from 'astro';
 import { getCollection } from 'astro:content';
 import fs from 'node:fs';
 
@@ -202,38 +201,4 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
       label: section.label,
       items: section.items.sort((a, b) => a.order - b.order),
     }));
-}
-
-export type SearchDocument = {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  keywords: string[];
-  headings: Pick<MarkdownHeading, 'slug' | 'text' | 'depth'>[];
-  headingText: string;
-};
-
-export function buildSearchDocuments(
-  docs: DocEntry[],
-  headingsBySlug: Record<string, MarkdownHeading[]>
-): SearchDocument[] {
-  return docs.map((doc) => {
-    // パスベース slug をそのまま URL に使用
-    const urlSlug = extractSlug(doc);
-
-    return {
-      id: doc.id,
-      title: doc.data.title,
-      slug: urlSlug,
-      description: doc.data.description,
-      keywords: doc.data.keywords,
-      headings: (headingsBySlug[doc.id] || []).map((heading) => ({
-        slug: heading.slug,
-        text: heading.text,
-        depth: heading.depth,
-      })),
-      headingText: (headingsBySlug[doc.id] || []).map((heading) => heading.text).join(' '),
-    };
-  });
 }
