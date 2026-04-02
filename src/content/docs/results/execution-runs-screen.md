@@ -17,7 +17,7 @@ keywords:
 
 実行の結果と統計を表示します。
 
-実行（Execution）は、単一の実行として実行される 1 つまたは複数のテストのセットです。実行は、自動的に（Scheduler など）または手動で（特定のラベルを含むテストを実行する CLI など）開始できます。Execution Runs 画面には、以前の実行に関する情報が表示されます。これらの実行は、スイート、ラベル、またはテストプランごとにグループ化されます（実行された各テストを個別のエントリとしてリスト表示する[Test runs](/docs/test-runs)ビューとは対照的です）。
+実行（Execution）は、単一の実行として実行される 1 つまたは複数のテストのセットです。実行は、自動的に（Scheduler など）または手動で（特定のラベルを含むテストを実行する CLI など）開始できます。Execution Runs 画面には、以前の実行に関する情報が表示されます。これらの実行は、スイート、ラベル、またはテストプランごとにグループ化されます（実行された各テストを個別のエントリとしてリスト表示する[Test runs](/docs/results/test-runs)ビューとは対照的です）。
 
 ![Execution Runs 画面の一覧ビュー](/images/results/execution-runs-screen/e1d2a5a-execution-runs-1.jpg)
 
@@ -40,7 +40,7 @@ keywords:
 - **Duration**: 実行の時間
 - **Concurrency**: 並列で実行されたテストの数
 - **Results**: 合格/不合格テストの数
-- **Result labels**: 実行に追加された結果ラベル。詳細については、[結果ラベル](/docs/result-labels)を参照してください。
+- **Result labels**: 実行に追加された結果ラベル。詳細については、[結果ラベル](/docs/results/result-labels)を参照してください。
 - **Status**: 現在の実行ステータス。可能なステータス値は次のとおりです。
   - Passed - 実行内のすべてのテストが合格しました。
   - Failed - 実行内の少なくとも 1 つのテストが失敗しました。
@@ -182,7 +182,7 @@ Testim がグラフを表示します。
 
 ![事前定義フィルターとカスタム範囲](/images/results/execution-runs-screen/d3935f9-execution-runs-8.jpg)
 
-Testim は、選択した期間に基づいて実行リストを自動的にフィルタリングします。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/saving-a-filtered-view)を参照してください。タイトルの横の数字は、選択したフィルターに一致する実行の数を表示します。
+Testim は、選択した期間に基づいて実行リストを自動的にフィルタリングします。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/test-management/saving-a-filtered-view)を参照してください。タイトルの横の数字は、選択したフィルターに一致する実行の数を表示します。
 
 ![フィルター適用後の実行一覧](/images/results/execution-runs-screen/ec5d395-image.png)
 
@@ -198,7 +198,7 @@ Testim が**Filter Execution Runs**パネルを表示します。
 
 ![Filter Execution Runs パネル](/images/results/execution-runs-screen/d2233ef-execution-runs-10.jpg)
 
-2. 目的のフィルターを選択し、**Apply**ボタンをクリックして実行リストにフィルターを適用します。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/saving-a-filtered-view)を参照してください。
+2. 目的のフィルターを選択し、**Apply**ボタンをクリックして実行リストにフィルターを適用します。このフィルタービューの保存について詳しくは、[フィルタービューの保存](/docs/test-management/saving-a-filtered-view)を参照してください。
 
 ![詳細フィルター適用後の一覧](/images/results/execution-runs-screen/e2a7dfd-execution-runs-11.jpg)
 
@@ -328,13 +328,13 @@ Testim が実行詳細画面を表示します。
 Testim が実行を停止します。
 
 :::warning{title="注意"}
-「Abort Run」ボタンは、アクティブに実行中のリモートエディター実行/Scheduler/ローカル実行でのみ使用できます。CLI 実行を中止する方法の詳細については、[CLI](/docs/the-command-line-cli)を参照してください。
+「Abort Run」ボタンは、アクティブに実行中のリモートエディター実行/Scheduler/ローカル実行でのみ使用できます。CLI 実行を中止する方法の詳細については、[CLI](/docs/running-tests/the-command-line-cli)を参照してください。
 :::
 
 ### 実行詳細画面から直接テストを再実行する（Web）
 
 実行詳細画面にいる間、テストを再実行できます。\
-[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)\
+[コマンドラインインターフェース（CLI）](/docs/running-tests/the-command-line-cli)\
 
 **実行詳細画面からテストを再実行するには:**
 
@@ -386,7 +386,7 @@ Testim がその特定のテストのみのテスト履歴を表示します。
 
 ![失敗テストに対する Tag failure type 操作](/images/results/execution-runs-screen/0faac2a-execution-runs-23.jpg)
 
-2. テスト失敗タグ付け画面を完了します。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/tag-remote-runs-failures)を参照してください。
+2. テスト失敗タグ付け画面を完了します。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures)を参照してください。
 
 ![失敗タイプタグ付け画面](/images/results/execution-runs-screen/3fee6aa-execution-runs-24.jpg)
 

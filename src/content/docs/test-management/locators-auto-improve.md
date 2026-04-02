@@ -49,7 +49,7 @@ Testim は、1 つ以上の劣化したロケーターが自動改善された�
 
 ## Test Library のフィルタリング
 
-**Test Library** のテストリストを、自動改善されたテストでフィルタリングできます。**Test Library** のフィルタリングの詳細については、[テストリスト](/docs/test-list) を参照してください。→ **自動改善されたテストで Test Library をフィルタリングするには:**
+**Test Library** のテストリストを、自動改善されたテストでフィルタリングできます。**Test Library** のフィルタリングの詳細については、[テストリスト](/docs/test-management/test-list) を参照してください。→ **自動改善されたテストで Test Library をフィルタリングするには:**
 
 1. **Test Library**画面（**Test List** > **Tests**）で、**Advanced filters**アイコンをクリックします。
 

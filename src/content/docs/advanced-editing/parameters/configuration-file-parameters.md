@@ -18,7 +18,7 @@ keywords:
 
 設定ファイルの beforeSuite / beforeTest フックでテストにパラメーターを渡す
 
-[_設定ファイル_](/docs/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメーターを定義する共通 JS です。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメーター定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメーターを各テストへ渡せます。
+[_設定ファイル_](/docs/running-tests/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメーターを定義する共通 JS です。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメーター定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメーターを各テストへ渡せます。
 
 ## パラメーターのスコープ
 
@@ -26,7 +26,7 @@ keywords:
 
 ## 設定ファイルでの定義
 
-[設定ファイル](/docs/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメーターを定義できます。例：
+[設定ファイル](/docs/running-tests/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメーターを定義できます。例：
 
 ```javascript
 exports.config = {
@@ -146,10 +146,10 @@ exports.config = {
 
 ## CLI での指定
 
-設定ファイルは [Testim CLI](/docs/the-command-line-cli) の **-c** 引数で指定します。
+設定ファイルは [Testim CLI](/docs/running-tests/the-command-line-cli) の **-c** 引数で指定します。
 
 ```shell
 testim -c "testimConfig.js"
 ```
 
-以降は、[ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) として各テストから参照できます。
+以降は、[ステッププロパティパネルのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) として各テストから参照できます。

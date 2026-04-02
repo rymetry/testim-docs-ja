@@ -33,7 +33,7 @@ keywords:
 ## カスタムステップ（JavaScript）
 
 複数のタブでカスタムアクションを使用する場合、デフォルトでは、ステップは記録の最初のタブのコンテキストで実行されます。\
-別のタブのコンテキストで実行する必要がある場合は、そのステップに[HTML パラメーター](/docs/parameters-in-custom-javascript-steps)を追加してください。カスタムステップを使用して新しいタブを開くこともできます。例については[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/iKXZ6Ic8Xo)を参照してください。
+別のタブのコンテキストで実行する必要がある場合は、そのステップに[HTML パラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps)を追加してください。カスタムステップを使用して新しいタブを開くこともできます。例については[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/iKXZ6Ic8Xo)を参照してください。
 
 :::warning{title="注意"}
 ステップは記録されたタブで実行されます。例えば、ステップがタブ#2 で記録され、テスト実行時にこれらのステップがタブ#3 にある場合、タブ#2 で実行しようとします。

@@ -20,7 +20,7 @@ keywords:
 
 ピクセルレベルでビジュアルの詳細を検証
 
-**ビューポートのビジュアル検証**を使用すると、ビューポートのベースラインと現在のテスト実行の間でビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
+**ビューポートのビジュアル検証**を使用すると、ビューポートのベースラインと現在のテスト実行の間でビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::warning{title="Applitools ライセンスについて"}
 RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしでは Applitools によって拒否されます。詳細については、Applitools の担当者にお問い合わせください。
@@ -65,5 +65,5 @@ RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切�
 テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、Applitools Eyes で詳細を開いてください。
 
 :::tip
-**ビューポートのビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/keyboard-shortcuts) をご覧ください。
+**ビューポートのビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/guides/keyboard-shortcuts) をご覧ください。
 :::

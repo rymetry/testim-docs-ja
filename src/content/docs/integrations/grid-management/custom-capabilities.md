@@ -71,12 +71,12 @@ command line interface (CLI) では、Custom capabilities 付きでテストを�
 この 2 つの parameter は同時には使用できません。
 
 :::info
-CLI を使って SauceLabs / BrowserStack Grid で capability を扱う方法の詳細は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/saucelabs-browserstack-options) を参照してください。
+CLI を使って SauceLabs / BrowserStack Grid で capability を扱う方法の詳細は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。
 :::
 
 ## Custom capabilities を使ってテストを schedule する
 
-Custom capability をテストへ追加したら、[テストを schedule](/docs/scheduler-mobile) できます。\
+Custom capability をテストへ追加したら、[テストを schedule](/docs/running-tests/scheduler-mobile) できます。\
 scheduled test run で Custom capabilities を上書きすることもできます。手順は次のとおりです。
 
 1. 通常どおり test の scheduling を開始します。

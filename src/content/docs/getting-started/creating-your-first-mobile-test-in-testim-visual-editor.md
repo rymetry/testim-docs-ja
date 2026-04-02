@@ -23,7 +23,7 @@ keywords:
 
 ## Testim モバイルテストチュートリアルへようこそ
 
-このチュートリアルでは、[Virtual Mobile Grid](/docs/virtual-mobile-grid)を使ってモバイルアプリのテストを行う方法を学びます。新しいテストの作成、**Virtual Mobile Grid** からのデバイス選択、テスト対象アプリの指定、テストの記録、そして実行までの手順を順番に確認します。テストは[Enhanced mode](/docs/enhanced-mode-mobile) で記録します。Appium ベースのテストと比べて安定性・速度・柔軟性が向上します。このチュートリアルはすべてのオプションを網羅するものではなく、最初から最後までの一連の流れを具体的なシナリオで紹介します。
+このチュートリアルでは、[Virtual Mobile Grid](/docs/integrations/grid-management/virtual-mobile-grid)を使ってモバイルアプリのテストを行う方法を学びます。新しいテストの作成、**Virtual Mobile Grid** からのデバイス選択、テスト対象アプリの指定、テストの記録、そして実行までの手順を順番に確認します。テストは[Enhanced mode](/docs/overview/testim-overview/enhanced-mode-mobile) で記録します。Appium ベースのテストと比べて安定性・速度・柔軟性が向上します。このチュートリアルはすべてのオプションを網羅するものではなく、最初から最後までの一連の流れを具体的なシナリオで紹介します。
 
 :::warning
 マルチスクリーン端末（フォルダーブル端末やフリップ端末など）には現在対応していません。
@@ -39,7 +39,7 @@ keywords:
 各プロジェクトには単一のモバイル OS が割り当てられます。異なる OS でテストを作成・実行するには別のプロジェクトが必要です。例えば Android 用に作成されたプロジェクトでは iOS 端末向けテストを作成できません。
 :::
 
-- **Virtual Mobile Grid（VMG）** — VMG の利用に特別な統合作業は不要です。有償ライセンスには VMG が含まれます。Community ライセンスの場合は、会社オーナーまたはプロジェクトオーナーが無料トライアルに申し込めます。トライアル期間中は複数の仮想デバイス（Android / iOS）が利用可能です。詳細は[Virtual Mobile Grid](/docs/virtual-mobile-grid)を参照してください。
+- **Virtual Mobile Grid（VMG）** — VMG の利用に特別な統合作業は不要です。有償ライセンスには VMG が含まれます。Community ライセンスの場合は、会社オーナーまたはプロジェクトオーナーが無料トライアルに申し込めます。トライアル期間中は複数の仮想デバイス（Android / iOS）が利用可能です。詳細は[Virtual Mobile Grid](/docs/integrations/grid-management/virtual-mobile-grid)を参照してください。
 
 :::info
 **無料トライアルの制限**
@@ -51,7 +51,7 @@ keywords:
 追加の機能が必要な場合は Tricentis の担当者にお問い合わせください。
 :::
 
-- **アプリケーション要件** — この入門ガイドでは[Enhanced Mode (Mobile)](/docs/enhanced-mode-mobile)のみを使用するため、次の要件を満たす必要があります。
+- **アプリケーション要件** — この入門ガイドでは[Enhanced Mode (Mobile)](/docs/overview/testim-overview/enhanced-mode-mobile)のみを使用するため、次の要件を満たす必要があります。
   - ネイティブアプリ: Android は Java または Kotlin、iOS は Objective-C または Swift
   - WebView を含むネイティブアプリ
   - React Native アプリ

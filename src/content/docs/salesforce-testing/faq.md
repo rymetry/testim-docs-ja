@@ -22,7 +22,7 @@ keywords:
 
 ## Testim for Salesforce はウェブサイトや他のアプリケーション全体でのエンドツーエンドテストを可能にしますか？
 
-テストケースに Salesforce のテストが含まれている限り、他のウェブサイト、他のアプリケーション、および外部 API をまたいでテストできます。詳細については、[Salesforce テストの作成](/docs/create-a-salesforce-test)を参照してください。
+テストケースに Salesforce のテストが含まれている限り、他のウェブサイト、他のアプリケーション、および外部 API をまたいでテストできます。詳細については、[Salesforce テストの作成](/docs/salesforce-testing/create-a-salesforce-test)を参照してください。
 
 ## Testim for Salesforce を使用する際に追加の Salesforce ライセンス費用はかかりますか？
 
@@ -34,7 +34,7 @@ keywords:
 
 ## テスト中に作成されたレコードをクリーンアップ/削除するにはどうすればよいですか？
 
-テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テスト中に作成されたレコードを見つけて削除するコードを含む[APEX 実行](/docs/sfdc-step-apex-action)ステップを実行する必要があります。ただし、レコードを識別できるようにするために、ベストプラクティスとして、固定プレフィックス（例：`TestAccount`）とランダムなサフィックスを追加した変数をレコード名に使用することをお勧めします。詳細については、[ベストプラクティス - クリーンアップを容易にする変数命名規則](/docs/best-practice-variable-naming-convention-for-easy-cleanup)を参照してください。
+テストケースまたはスイートの実行中に作成されたレコードの削除を自動化するには、テスト中に作成されたレコードを見つけて削除するコードを含む[APEX 実行](/docs/salesforce-testing/salesforce-steps/sfdc-step-apex-action)ステップを実行する必要があります。ただし、レコードを識別できるようにするために、ベストプラクティスとして、固定プレフィックス（例：`TestAccount`）とランダムなサフィックスを追加した変数をレコード名に使用することをお勧めします。詳細については、[ベストプラクティス - クリーンアップを容易にする変数命名規則](/docs/salesforce-testing/best-practice-variable-naming-convention-for-easy-cleanup)を参照してください。
 
 APEX 実行ステップでは、各 sObject について、コードは固定プレフィックスのレコード名で始まるすべてのレコードを見つけ、それらを Salesforce から削除します。すべてのレコードが削除されるように、まず関連するすべてのレコードを削除することをお勧めします。
 

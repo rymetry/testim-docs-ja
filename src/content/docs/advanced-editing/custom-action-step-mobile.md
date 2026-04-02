@@ -62,7 +62,7 @@ keywords:
 :::
 
 4. **Name** にわかりやすい名前を入力します。
-5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダーを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/groups) を参照してください。
+5. 共有ステップとして再利用したい場合は、デフォルトのチェックを保持し、**Select shared step folder** から保存先フォルダーを選びます。共有不要ならチェックを外します。共有ステップの詳細は [グループ](/docs/editing-tests/groups) を参照してください。
 6. **Create Step** をクリックします。関数エディターと右側の **Properties** パネルが開きます。
 
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/795f7e2-ca3.png)

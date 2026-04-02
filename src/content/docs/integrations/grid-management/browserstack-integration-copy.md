@@ -27,7 +27,7 @@ LambdaTest integration では、Testim は現在 [selenium testing](https://www.
 
 **LambdaTest Grid を追加するには:**
 
-1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **LambdaTest** を選択します。
+1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **LambdaTest** を選択します。
 2. **Next** をクリックします。
 3. 次の field を入力します。
 
@@ -43,15 +43,15 @@ LambdaTest integration では、Testim は現在 [selenium testing](https://www.
 
 次のいずれかの方法で、テストをリモート実行できます。
 
-[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
+[CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
 Grid 名を指定して `--grid` parameter を追加します。
 
-[Scheduler](/docs/scheduler)
+[Scheduler](/docs/running-tests/scheduler)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Test Plan](/docs/test-plans)
+[Test Plan](/docs/test-management/test-plans)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 

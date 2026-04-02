@@ -20,12 +20,12 @@ keywords:
 
 Testim は以下のタイプの統合を提供しています:
 
-- [CI 統合](/docs/integrate-testim-to-your-ci)
-- [専用ランネル (Dedicated run tunnel)](/docs/dedicated-run-tunnel)
-- [GitHub 統合](/docs/github-integration)
-- [Sealights 統合](/docs/sealights-integration)
-- [グリッド管理](/docs/grid-management)
-- [Bitbucket 統合](/docs/bitbucket-integration)
-- [バグトラッカー設定](/docs/bug-tracker-settings)
-- [ビジュアル検証](/docs/visual_validation_index)
-- [テスト管理ツール連携](/docs/test-management-integrations)
+- [CI 統合](/docs/integrations/integrate-testim-to-your-ci)
+- [専用ランネル (Dedicated run tunnel)](/docs/integrations/dedicated-run-tunnel)
+- [GitHub 統合](/docs/integrations/github-integration)
+- [Sealights 統合](/docs/integrations/sealights-integration)
+- [グリッド管理](/docs/integrations/grid-management)
+- [Bitbucket 統合](/docs/integrations/bitbucket-integration)
+- [バグトラッカー設定](/docs/integrations/bug-tracker-settings)
+- [ビジュアル検証](/docs/integrations/visual-validation/visual_validation_index)
+- [テスト管理ツール連携](/docs/integrations/test-management-integrations)

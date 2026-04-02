@@ -26,8 +26,8 @@ Testim では、独自の JavaScript コードを入力してアクションや�
 
 ## ブラウザ内で実行する場合
 
-ブラウザ内で実行する利点は DOM と直接やり取りできる点です。アプリ内要素の特定には Testim の Smart Locators も活用できます。また、多くの場合 API リクエストは認証済み（Cookie が自動的に渡されます）です。詳しくは [Add custom validations and actions](/docs/custom-code) を参照してください。
+ブラウザ内で実行する利点は DOM と直接やり取りできる点です。アプリ内要素の特定には Testim の Smart Locators も活用できます。また、多くの場合 API リクエストは認証済み（Cookie が自動的に渡されます）です。詳しくは [Add custom validations and actions](/docs/advanced-editing/validations/custom-code) を参照してください。
 
 ## ブラウザ外（Node.js）で実行する場合
 
-ブラウザ外で実行する利点は CORS 制約が無いことです。さらに、任意の NPM パッケージを利用できます。詳しくは [Validating using code in Node.js](/docs/validate-download) を参照してください。
+ブラウザ外で実行する利点は CORS 制約が無いことです。さらに、任意の NPM パッケージを利用できます。詳しくは [Validating using code in Node.js](/docs/advanced-editing/validations/validate-download) を参照してください。

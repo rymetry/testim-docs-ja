@@ -17,10 +17,10 @@ keywords:
 
 **Settings > CLI** タブでは、コマンドラインインターフェース（CLI）を使用してテストを実行するために必要な基本コードを生成できます。CLI を使用してテストを実行する方法は 2 つあります:
 
-- 継続的インテグレーション（CI）プラットフォームとテストを統合できます。以下の[CI 統合](/docs/cli-settings#ローカルシェル)を参照してください。
-- ローカルシェルを使用できます。以下の[ローカルシェル](/docs/cli-settings#ローカルシェル)を参照してください。
+- 継続的インテグレーション（CI）プラットフォームとテストを統合できます。以下の[CI 統合](/docs/settings/cli-settings#ローカルシェル)を参照してください。
+- ローカルシェルを使用できます。以下の[ローカルシェル](/docs/settings/cli-settings#ローカルシェル)を参照してください。
 
-CLI の使用方法と利用可能なパラメーターの詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。CI との統合の詳細については、[CI 統合](/docs/integrate-testim-to-your-ci)を参照してください。
+CLI の使用方法と利用可能なパラメーターの詳細については、[コマンドラインインターフェース（CLI）](/docs/running-tests/the-command-line-cli)を参照してください。CI との統合の詳細については、[CI 統合](/docs/integrations/integrate-testim-to-your-ci)を参照してください。
 
 :::info
 CLI コマンドがブロックされている場合、現在のプランではサポートされていません。有効化する方法については[こちらからお問い合わせください](https://www.testim.io/root-cause/contact-us/)。
@@ -43,7 +43,7 @@ Testim の CLI を使用して、テストを CI と統合できます。Testim 
 または、メニュー上部の検索ボックスを使用してプラットフォームを検索することもできます。
 :::
 
-3. グリッドを編集または追加する必要がある場合は、**Manage grids** をクリックします。グリッドの詳細については、[グリッド管理](/docs/grid-management)を参照してください。
+3. グリッドを編集または追加する必要がある場合は、**Manage grids** をクリックします。グリッドの詳細については、[グリッド管理](/docs/integrations/grid-management)を参照してください。
 
 ![管理グリッド画面へのリンクと説明テキスト](/images/cli-api/cli-settings/e1fb3e2-Testim_368b.png)
 
@@ -67,7 +67,7 @@ Testim の CLI を使用して、テストを CI と統合できます。Testim 
 
 ## ローカルシェル
 
-ローカルシェルを使用して、CLI でテストを実行できます。CLI の実行方法と利用可能なパラメーターの詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。
+ローカルシェルを使用して、CLI でテストを実行できます。CLI の実行方法と利用可能なパラメーターの詳細については、[コマンドラインインターフェース（CLI）](/docs/running-tests/the-command-line-cli)を参照してください。
 **シェルで使用するコードを生成するには:**
 
 1. **Settings > CLI** ページで、**Local** をクリックします。

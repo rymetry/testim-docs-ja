@@ -20,7 +20,7 @@ keywords:
   - 後処理
 ---
 
-フックは、各ステップの前後やテストの前後に、既存の[共有ステップ](/docs/shareable-steps)や[共有グループ](/docs/groups)を実行する仕組みです。設定後は通常どおりテストを実行でき、フックは他のステップ同様に実行されます。実行後、結果の可視化も可能です。
+フックは、各ステップの前後やテストの前後に、既存の[共有ステップ](/docs/editing-tests/shareable-steps)や[共有グループ](/docs/editing-tests/groups)を実行する仕組みです。設定後は通常どおりテストを実行でき、フックは他のステップ同様に実行されます。実行後、結果の可視化も可能です。
 
 ## よくある用途
 
@@ -328,7 +328,7 @@ Config File は、テスト／テストスイートの実行に必要なパラ�
 - **Before Suite** – スイート実行前に実行
 - **After Suite** – スイート実行後に実行
 
-Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [/docs/configuration-file-run-hooks](/docs/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [/docs/configuration-file-parameters#設定ファイルでの定義](/docs/configuration-file-parameters#設定ファイルでの定義)
+Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [Configuration File (Run Hooks)](/docs/running-tests/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [設定ファイルでの定義](/docs/advanced-editing/parameters/configuration-file-parameters#設定ファイルでの定義)
 
 ## フックの可視化（Hooks Visualizations）
 

@@ -27,7 +27,7 @@ Testim ソフトウェアに関するヘルプが必要ですか？テストの�
 
 ![Testim Copilot ヘルプアシスタントに質問](/images/overview/use-ai-in-with-testim/8e5294d-8243ad1-image_7.png)
 
-Copilot を使用して、Testim の質問に関連する情報（ドキュメントやその他のリソースへのリンクを含む）を取得します。開始するには、**ヘルプ**ボタンをクリックするだけです。[Testim Copilot ヘルプアシスタント](/docs/help-ai-assistant)の詳細をご覧ください。
+Copilot を使用して、Testim の質問に関連する情報（ドキュメントやその他のリソースへのリンクを含む）を取得します。開始するには、**ヘルプ**ボタンをクリックするだけです。[Testim Copilot ヘルプアシスタント](/docs/overview/testim-overview/help-ai-assistant)の詳細をご覧ください。
 
 ## コーディングのヘルプを取得
 
@@ -36,7 +36,7 @@ Copilot を使用して、Testim の質問に関連する情報（ドキュメ�
 ![Copilot がコーディングをサポート](/images/overview/use-ai-in-with-testim/f5ab918-e2c25d1-codingassistant.png)
 
 生成、修正、または JavaScript コードの説明が必要な場合でも、Copilot がお手伝いします。\
-[Testim Copilot コーディングアシスタント](/docs/coding-assistant)の詳細をご覧ください。
+[Testim Copilot コーディングアシスタント](/docs/advanced-editing/coding-assistant)の詳細をご覧ください。
 
 ## Salesforce 向けテストの作成
 
@@ -45,4 +45,4 @@ Copilot を使用して、Testim の質問に関連する情報（ドキュメ�
 ![Salesforce 環境用の独自のテストを生成](/images/overview/use-ai-in-with-testim/443eb6b-Salesforce_AgenticeAITesting_Screenshot.png)
 
 Salesforce 環境用の独自のテストを生成して実行します。\
-[Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce)の詳細をご覧ください。
+[Agentic Test Automation for Salesforce](/docs/salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce)の詳細をご覧ください。

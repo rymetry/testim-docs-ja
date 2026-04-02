@@ -54,7 +54,7 @@ VSTS/TFS とテストを統合するには、まず VSTS/TFS エージェント�
 
 ![VSTS のタスク設定で Action として Run a Docker command を選択する画面](/images/ci-integrations/vsts-and-tfs-integration/93a38c4-tfs8.png)
 
-8. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用して Command を設定します。以下は基本的なコマンドテンプレートです。
+8. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用して Command を設定します。以下は基本的なコマンドテンプレートです。
 
 ```shell
 run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --token <TOKEN> --project <PROJECT-ID> --grid <GRID-NAME> --report-file /opt/testim-runner/testim-sanity-$(Build.BuildId)-report.xml
@@ -62,7 +62,7 @@ run --rm -v $(Build.BinariesDirectory):/opt/testim-runner testim/docker-cli --to
 
 ![VSTS で Docker コマンドに Testim 用のパラメーターを設定する画面](/images/ci-integrations/vsts-and-tfs-integration/76b5b0e-tfs9.png)
 
-​ **注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+​ **注記**: グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 
 9. VSTS/TFS が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。
 

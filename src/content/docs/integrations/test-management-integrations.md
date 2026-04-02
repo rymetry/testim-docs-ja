@@ -24,6 +24,6 @@ keywords:
 
 Testim はさまざまなテスト管理システムと統合できます。現在、以下の統合がサポートされています:
 
-- [TestRail Integration](/docs/testrail-integration)
-- [qTest Integration](/docs/qtest-integration)
-- [TTM for Jira Integration](/docs/ttm-for-jira-integration)
+- [TestRail Integration](/docs/integrations/test-management-integrations/testrail-integration)
+- [qTest Integration](/docs/integrations/test-management-integrations/qtest-integration)
+- [TTM for Jira Integration](/docs/integrations/test-management-integrations/ttm-for-jira-integration)

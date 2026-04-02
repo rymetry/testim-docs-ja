@@ -38,7 +38,7 @@ keywords:
 
 ### ラベルでテストスイートにテストを追加
 
-特定の[ラベル](/docs/labels)を持つテストをテストスイートに追加できます。
+特定の[ラベル](/docs/test-management/labels)を持つテストをテストスイートに追加できます。
 
 ![ラベルを使ってテストスイートに追加するテストを絞り込む画面](/images/test-management/test-suites/9085a97-testlabels.png)
 
@@ -86,12 +86,12 @@ keywords:
 --suite "Tutorial Demo"
 ```
 
-[CLI](/docs/cli-settings)の実行の詳細については、こちらをご覧ください。
+[CLI](/docs/settings/cli-settings)の実行の詳細については、こちらをご覧ください。
 
 #### スケジューラーを使用
 
 Testim スケジューラーからスイートを実行できます。\
-方法については、[こちら](/docs/scheduler)をご覧ください。
+方法については、[こちら](/docs/running-tests/scheduler)をご覧ください。
 
 :::warning{title="注意:"}
 コマンドで parallel を使用すると、実行順序は保証されなくなります。

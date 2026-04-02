@@ -22,7 +22,7 @@ Testim で作成した mobile テストを HeadSpin 上で実行できます。
 
 **HeadSpin Grid を追加するには:**
 
-1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Testim HeadSpin Mobile** を選択します。
+1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Testim HeadSpin Mobile** を選択します。
 2. **Next** をクリックします。
 3. 次の field を入力します。
 

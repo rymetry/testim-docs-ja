@@ -132,7 +132,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 :::warning{title="注意"}
 同様のメッセージが出る場合、ベース URL でアプリを開くか該当ステップまで実行してから追加してください。  
-また、'**Expected Value**' にはパラメーター、正規表現、JavaScript 式が使用できます。詳細は[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照してください。
+また、'**Expected Value**' にはパラメーター、正規表現、JavaScript 式が使用できます。詳細は[高度なテキスト検証](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
 :::
 
 ## 要素テキストの表示を待つ（モバイル）
@@ -155,7 +155,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 :::warning{title="注意"}
 「To choose an element Open App or Run test to relevant step」と表示された場合は、アプリを開くか、該当ステップまで実行してから追加してください。  
-また、'Expected Value' にはパラメーター、正規表現、JavaScript 式が使用できます（[高度なテキスト検証](/docs/validate-element-text#advanced-text-validation) を参照）。
+また、'Expected Value' にはパラメーター、正規表現、JavaScript 式が使用できます（[高度なテキスト検証](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照）。
 :::
 
 ## スリープ（Web）
@@ -196,7 +196,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ## 要素のビジュアル待機（Web）
 
-要素が表示されるのを待ち、期待するビジュアルと一致するか検証します。詳細は[ビジュアル検証](/docs/pixel-validation-and-pixel-wait-for) を参照してください。
+要素が表示されるのを待ち、期待するビジュアルと一致するか検証します。詳細は[ビジュアル検証](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for) を参照してください。
 **Wait for element visualization を追加するには:**
 
 1. テストの **Test Editor** を開きます。
@@ -238,7 +238,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 - 関数が true を返すかステップのタイムアウトに達するまでリトライします。
 - Custom wait for は再利用可能です。
-- ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/custom-code)。
+- ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/advanced-editing/validations/custom-code)。
   :::
 
 ## ダウンロード待機（Web）
@@ -259,7 +259,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/fa1cbce-wait-for-download-step-name.png)
 
-5. JS エディターでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/validate-download) を参照してください。
+5. JS エディターでダウンロード完了の検証コードを記述します。詳細は[ダウンロードの検証](/docs/advanced-editing/validations/validate-download) を参照してください。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e553c48-wait-for-download.png)
 
@@ -269,4 +269,4 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ## Wait For ステップでターゲット要素を再割り当て
 
-作成後でも、ターゲット要素やテキストを再割り当てできます。詳細は[ターゲット要素のプロパティ編集](/docs/editing-target-element-properties#ターゲット要素のハイライト) を参照してください。
+作成後でも、ターゲット要素やテキストを再割り当てできます。詳細は[ターゲット要素のプロパティ編集](/docs/editing-tests/editing-your-tests/editing-target-element-properties#ターゲット要素のハイライト) を参照してください。

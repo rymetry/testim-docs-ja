@@ -27,7 +27,7 @@ Testim Extension をインストールするには：
 1. Chrome ウェブストアにアクセスして、[こちら](https://chrome.google.com/webstore/detail/testim-editor/pebeiooilphfmbohdbhbomomkkoghoia)から拡張機能をダウンロードします。
 
 :::info
-**なぜ Testim Extension が必要なのか？**: 詳細は[こちら](/docs/why-do-you-need-testim-extension)をご覧ください。
+**なぜ Testim Extension が必要なのか？**: 詳細は[こちら](/docs/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension)をご覧ください。
 :::
 
 2. **Chrome に追加**をクリックし、確認ウィンドウで**拡張機能を追加**をクリックします。
@@ -75,6 +75,6 @@ Testim Extension をインストールするには：
 
 ![使用方法選択画面](/images/getting-started/setting-up-your-account/317a5ff-2024-09-09_15-41-34.png)
 
-無料トライアルアカウントがアクティブ化され、[Testim Extension](/docs/why-do-you-need-testim-extension)のインストールに案内されます。
+無料トライアルアカウントがアクティブ化され、[Testim Extension](/docs/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension)のインストールに案内されます。
 
 ![アカウントアクティベーション](/images/getting-started/setting-up-your-account/c65df4a-2024-09-09_15-42-59.png)

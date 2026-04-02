@@ -18,7 +18,7 @@ keywords:
 
 パラメーター使用時に発生する上書き（オーバーライド）ルールの整理
 
-Testim でパラメーターを使う方法はいくつかあります（例: [データ駆動テスト](/docs/data-driven-testing)、[グループ](/docs/groups)、[パラメーターのエクスポート](/docs/exports-parameters)、[設定ファイルと実行フック](/docs/configuration-file-parameters)、[パラメーターファイル](/docs/json-parameters-file-parameters)）。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
+Testim でパラメーターを使う方法はいくつかあります（例: [データ駆動テスト](/docs/advanced-editing/data-driven-testing)、[グループ](/docs/editing-tests/groups)、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)、[設定ファイルと実行フック](/docs/advanced-editing/parameters/configuration-file-parameters)、[パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters)）。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
 
 ## 上書きの基本
 
@@ -26,8 +26,8 @@ Testim でパラメーターを使う方法はいくつかあります（例: [�
 
 #### テスト開始前
 
-- [設定ファイルのパラメーター](/docs/configuration-file-parameters) は [パラメーターファイル](/docs/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
-- [パラメーターファイル](/docs/json-parameters-file-parameters) は [既定のテストデータ／ランデータ](/docs/data-driven-testing) を上書きします。
+- [設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters) は [パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
+- [パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters) は [既定のテストデータ／ランデータ](/docs/advanced-editing/data-driven-testing) を上書きします。
 
 Note: テストに渡されるすべてのパラメーターは**ローカルレベル**の可視性（テスト全体を大きな 1 つのグループとみなす）を持ちます。
 
@@ -67,7 +67,7 @@ console.log(x); // prints "local"
 
 **設定ファイル:**
 
-動的にパラメーター群を読み込みます。Node.js で実行されるカスタム JS が使えるため、DB や CSV など任意のソースから読み込めます。サンプルは[こちら](/docs/data-driven-testing)。Notes:
+動的にパラメーター群を読み込みます。Node.js で実行されるカスタム JS が使えるため、DB や CSV など任意のソースから読み込めます。サンプルは[こちら](/docs/advanced-editing/data-driven-testing)。Notes:
 
 1. `beforeTest` と `beforeSuite` は配列（複数データセット）の返却をサポートしません。配列を返すとオブジェクトに準じて扱われます。
 2. `beforeSuite` と `overrideTestData` の両方で同名パラメーターを指定した場合は `beforeSuite` が優先されます。

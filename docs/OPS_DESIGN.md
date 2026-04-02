@@ -51,7 +51,7 @@
 
 **セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
 
-**単一ページ**: `npm run check:parity -- --slug=testim-overview`
+**単一ページ**: `npm run check:parity -- --slug=overview/testim-overview`
 
 **出力**: `parity-check-status.json` に詳細結果を保存する。
 
@@ -88,8 +88,8 @@
 ### 日常運用（ページ単位）
 
 ```bash
-npm run check:parity -- --slug=testim-overview
-npm run check:snapshots:diff -- --slug=testim-overview
+npm run check:parity -- --slug=overview/testim-overview
+npm run check:snapshots:diff -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 ```
 
@@ -120,7 +120,7 @@ npm run test && npm run build
 
 必須検証項目:
 
-1. `/docs/{slug}` リンクの参照先ファイルが全件存在するか（HTML `<a href>` 含む）。`#fragment` アンカーがある場合は、対象ファイル内に該当する見出しが存在するかも確認する
+1. `/docs/{folder}/{slug}` リンクの参照先ファイルが全件存在するか（HTML `<a href>` 含む）。`#fragment` アンカーがある場合は、対象ファイル内に該当する見出しが存在するかも確認する
 2. callout 変換後に構文が壊れていないか（引用符の整合、タイトル長、タイプとタイトルの一致）
 3. 残存パターンがないか（`:fa-` マーカー、`> 📘` blockquote、外部 `docs.tricentis.com` リンク）
 4. `updated` フィールドが英語原文の日付のまま維持されているか

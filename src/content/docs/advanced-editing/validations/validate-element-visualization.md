@@ -20,7 +20,7 @@ keywords:
 
 ピクセルレベルでビジュアルの詳細を検証
 
-**要素のビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/pixel-validation-and-pixel-wait-for) をご覧ください。
+**要素のビジュアル検証**ステップを使用すると、ベースラインと現在のテスト実行の間で、特定の要素のビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::info{title="PRO機能"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
@@ -75,7 +75,7 @@ keywords:
 テストを実行すると、ベースラインのビジュアライゼーションがテスト実行時のものと比較されます。ビジュアル検証の失敗によりステップが失敗した場合は、失敗したビジュアル検証ステップをダブルクリックして、Applitools Eyes で詳細を開いてください。
 
 :::tip
-**要素のビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/keyboard-shortcuts) をご覧ください。
+**要素のビジュアル検証**ステップの追加には、キーボードショートカットも使用できます。詳細は [キーボードショートカット](/docs/guides/keyboard-shortcuts) をご覧ください。
 :::
 
 :::note{title="ベースラインの作成"}

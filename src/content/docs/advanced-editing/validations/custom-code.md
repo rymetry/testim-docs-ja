@@ -57,7 +57,7 @@ keywords:
 
 5. **Name the new step** にステップ名を入力します。
 6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンのままにし（既定）、**Select shared step** のフォルダーを選択します。共有しない場合はオフにします。\
-   共有ステップについては [Groups](/docs/groups) を参照してください。
+   共有ステップについては [Groups](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
    **function** エディターと右側の **Properties** パネルが開きます。
 
@@ -68,7 +68,7 @@ keywords:
    a. **Properties** パネルで **+ PARAMS** をクリック\
    b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
    c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザが開き、対象ページが表示されます）。次を実施します：
-   - **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-target-element-properties) を参照してください。
+   - **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) を参照してください。
 
 d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
 
@@ -77,7 +77,7 @@ d. 追加した要素は "param" または "element" といった既定名にな
 10. 必要に応じて次を設定します：
 
 - **When this step fails** – ステップ失敗時の動作を指定します。
-- **When to run step** – ステップの実行条件を指定します（[Conditions](/docs/conditions)）。
+- **When to run step** – ステップの実行条件を指定します（[Conditions](/docs/editing-tests/conditions)）。
 - **Override timeout** – 既定のタイムアウト（ミリ秒）を上書きします。
 
 11. **function** テキストボックスに JavaScript コードを記述します。定義したパラメーターはコードから参照できます。
@@ -253,7 +253,7 @@ window.location.href = 'https://testim.io/';
 ```
 
 :::info{title="Chrome DevTools debugger"}
-ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/js-code-debugging) を参照してください。
+ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/debugging-tests/js-code-debugging) を参照してください。
 :::
 
 :::info

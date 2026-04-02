@@ -39,7 +39,7 @@ keywords:
 - [API](#api-での実行)
 - ユーザーが手動でテストを実行する場合
 
-[Editor](/docs/running-tests-overview) — ローカルおよびリモート（"run on grid"）実行。Libraries — [Test Library](/docs/running-tests-overview)、[Suite Library](/docs/running-tests-overview)、[Test Plans Library](/docs/running-tests-overview)。テスト実行中にシステムが暗号化された認証情報を含むことを検出すると、フラグが表示されます。
+[Editor](/docs/running-tests/running-tests-overview) — ローカルおよびリモート（"run on grid"）実行。Libraries — [Test Library](/docs/running-tests/running-tests-overview)、[Suite Library](/docs/running-tests/running-tests-overview)、[Test Plans Library](/docs/running-tests/running-tests-overview)。テスト実行中にシステムが暗号化された認証情報を含むことを検出すると、フラグが表示されます。
 
 ## Encrypted Credentials の設定
 
@@ -84,7 +84,7 @@ Project/Company Owner は、暗号化された認証情報を使用し、テス�
 
 ## Test Data への暗号化された認証情報の追加
 
-テストデータは **Setup** ステップの **Test Data** プロパティから追加できます。データ駆動テストの詳細については、[Configuring a Data-driven Test From The Visual Editor](/docs/configuring-a-data-driven-test-from-the-visual-editor) を参照してください。Test Data には暗号化された認証情報を含めることができます。
+テストデータは **Setup** ステップの **Test Data** プロパティから追加できます。データ駆動テストの詳細については、[Configuring a Data-driven Test From The Visual Editor](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor) を参照してください。Test Data には暗号化された認証情報を含めることができます。
 
 ### Test Data での認証情報の構文
 
@@ -108,7 +108,7 @@ TST_CREDS.myEncryptedCredentials.password
 
 ## Config File への暗号化された認証情報の追加
 
-[設定ファイル](/docs/configuration-file-run-hooks)は、テストやテストスイートの実行に必要なすべてのパラメーターを含む共通の JavaScript ファイルです。単一テストまたは全テストの前後にアプリケーションバックエンドのセットアップやパラメーター定義に使用できる run hooks が含まれています。設定ファイルは `config` という名前の JSON ですべてのプロパティをエクスポートする必要があります。Config File での認証情報の定義は、他のパラメーターと同じオーバーライドルールに従います。
+[設定ファイル](/docs/running-tests/configuration-file-run-hooks)は、テストやテストスイートの実行に必要なすべてのパラメーターを含む共通の JavaScript ファイルです。単一テストまたは全テストの前後にアプリケーションバックエンドのセットアップやパラメーター定義に使用できる run hooks が含まれています。設定ファイルは `config` という名前の JSON ですべてのプロパティをエクスポートする必要があります。Config File での認証情報の定義は、他のパラメーターと同じオーバーライドルールに従います。
 
 ### Config File での認証情報の構文
 
@@ -127,7 +127,7 @@ TST_CREDS.<keyName>.<'username'|'password'>
 
 ## Param File への暗号化された認証情報の追加
 
-[JSON パラメーターファイル](/docs/json-parameters-file-parameters)を使用すると、テスト実行にパラメーターを渡すことができます。この方法を使用すると、テスト環境によって異なる動的な値をテスト内で定義できます。例えば、ローカルテスト時と CI でのテスト時に異なるログイン認証情報（ユーザー名とパスワード）を設定できます。パラメーターを定義する JSON パラメーターファイルを作成し、テスト実行時に JSON パラメーターファイルを呼び出す引数をコマンドに追加します。CLI コマンドは、実行に含まれるテストにパラメーターを渡します。
+[JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters)を使用すると、テスト実行にパラメーターを渡すことができます。この方法を使用すると、テスト環境によって異なる動的な値をテスト内で定義できます。例えば、ローカルテスト時と CI でのテスト時に異なるログイン認証情報（ユーザー名とパスワード）を設定できます。パラメーターを定義する JSON パラメーターファイルを作成し、テスト実行時に JSON パラメーターファイルを呼び出す引数をコマンドに追加します。CLI コマンドは、実行に含まれるテストにパラメーターを渡します。
 
 ### Param File での認証情報の構文
 
@@ -182,7 +182,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 
 ## Scheduler での実行
 
-[Scheduler](/docs/scheduler) を使用して、暗号化された認証情報を含むテストを実行できます。ただし、暗号化された認証情報を使用したテストは権限のあるユーザーのみが実行できるため、Scheduler の Advanced Settings でテストの実行に使用するユーザーを指定する必要があります。
+[Scheduler](/docs/running-tests/scheduler) を使用して、暗号化された認証情報を含むテストを実行できます。ただし、暗号化された認証情報を使用したテストは権限のあるユーザーのみが実行できるため、Scheduler の Advanced Settings でテストの実行に使用するユーザーを指定する必要があります。
 
 :::note
 この設定は、暗号化された認証情報の使用が許可されているユーザーのみが行えます。[権限の付与](#暗号化された認証情報の使用権限の付与)を参照してください。
@@ -194,7 +194,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 
 **Scheduler で暗号化された認証情報を含むテストを実行するには:**
 
-1. [Scheduler](/docs/scheduler) のドキュメントの手順に従います。
+1. [Scheduler](/docs/running-tests/scheduler) のドキュメントの手順に従います。
 2. **Advanced** をクリックします。
 3. **Credentials** の下で、暗号化された認証情報の使用が許可されているユーザーをドロップダウンメニューから選択します。自分自身のユーザーまたはリスト内の別のユーザーを選択できます。
 
@@ -204,7 +204,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 
 ## API での実行
 
-[Testim REST API](/docs/api-access) を使用して、暗号化された認証情報を含むテストを実行できます。暗号化された認証情報を含むテストを実行し、テスト実行の完全なデータを取得するには、API コールに `--user-access-key` の値を追加する必要があります。このアクセスキーは各ユーザー固有の特別なキーで、以下の手順で User Profile 画面から取得できます。アクセスキーの値は API コールの `X-User-Access-Key` フィールドに含める必要があります。Testim REST API は、暗号化された認証情報データを含むテスト結果（暗号化された認証情報を含むスクリーンショットなど）の表示にも使用できます。
+[Testim REST API](/docs/administration/api-access) を使用して、暗号化された認証情報を含むテストを実行できます。暗号化された認証情報を含むテストを実行し、テスト実行の完全なデータを取得するには、API コールに `--user-access-key` の値を追加する必要があります。このアクセスキーは各ユーザー固有の特別なキーで、以下の手順で User Profile 画面から取得できます。アクセスキーの値は API コールの `X-User-Access-Key` フィールドに含める必要があります。Testim REST API は、暗号化された認証情報データを含むテスト結果（暗号化された認証情報を含むスクリーンショットなど）の表示にも使用できます。
 
 :::note
 User Access Key フラグは、暗号化された認証情報を使用したテストの実行権限を持つユーザーのみ機能します。[権限の付与](#暗号化された認証情報の使用権限の付与)を参照してください。
@@ -230,15 +230,15 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 
 権限のあるユーザーは、Editor、CLI、REST API を通じて Test Data の暗号化された認証情報を含むテストを実行できます。
 
-- **[Editor](/docs/running-tests-overview)** — ローカルおよびリモート（"run on grid"）実行。**Run test** ボタンをクリックするか、ドロップダウンからリモートテストを実行します。
-- **Libraries** — [Test Library](/docs/running-tests-overview)、[Suite Library](/docs/running-tests-overview)、[Test Plans Library](/docs/running-tests-overview)。**Play** ボタンをクリックします。
+- **[Editor](/docs/running-tests/running-tests-overview)** — ローカルおよびリモート（"run on grid"）実行。**Run test** ボタンをクリックするか、ドロップダウンからリモートテストを実行します。
+- **Libraries** — [Test Library](/docs/running-tests/running-tests-overview)、[Suite Library](/docs/running-tests/running-tests-overview)、[Test Plans Library](/docs/running-tests/running-tests-overview)。**Play** ボタンをクリックします。
 - **CLI** — 上記で説明した特別な `--user-access-key` フラグを追加して、通常のコマンドを使用します。
 
 ```bash
 npm i -g @testim/testim-cli && testim --token <token Id> --project <project Id> --grid "Testim-Grid" --label "label #2" --user-access-key <key Id>
 ```
 
-- **API** — [Testim REST API](/docs/api-access) コール（例: `POST /tests/run/{testId}`）を作成し、`user-access-key` の値を `X-User-Access-Key` フィールドに追加します。
+- **API** — [Testim REST API](/docs/administration/api-access) コール（例: `POST /tests/run/{testId}`）を作成し、`user-access-key` の値を `X-User-Access-Key` フィールドに追加します。
 
 ![Test Data の暗号化された認証情報を含むテスト実行のまとめ](/images/project-user-management/encrypted-credentials/66a46aa-image_1.png)
 

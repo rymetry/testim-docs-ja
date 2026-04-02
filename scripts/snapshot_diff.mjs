@@ -7,7 +7,7 @@
  * Usage:
  *   node scripts/snapshot_diff.mjs
  *   node scripts/snapshot_diff.mjs --section="Overview"
- *   node scripts/snapshot_diff.mjs --slug=testim-overview
+ *   node scripts/snapshot_diff.mjs --slug=overview/testim-overview
  *   node scripts/snapshot_diff.mjs --json
  */
 

@@ -21,11 +21,11 @@ keywords:
 
 テスト内から Node.js スクリプトを実行する
 
-ブラウザの実行環境で動作する [カスタム検証/アクション](/docs/custom-code) に加えて、CLI 環境（Node.js）で実行されるカスタムスクリプトも作成できます。
+ブラウザの実行環境で動作する [カスタム検証/アクション](/docs/advanced-editing/validations/custom-code) に加えて、CLI 環境（Node.js）で実行されるカスタムスクリプトも作成できます。
 
 これらのスクリプトは通常のカスタムアクションと同様にテスト内から開始しますが、CLI アクション/検証では、データベースの検証・操作、画像や PDF の検証など、より高度な処理が可能です。CLI ステップの強力な点は、npm から任意のパッケージを追加して、そのステップの実行中だけスコープして使えることです。依存パッケージの定義は一般的な方法（パッケージパラメーター）に対応しています。
 
-専用の CLI ステップとして _Validate download_ もあります。各種ファイルのダウンロード内容が期待どおりかを検証できます。詳細は [Validate download](/docs/validate-download) を参照してください。
+専用の CLI ステップとして _Validate download_ もあります。各種ファイルのダウンロード内容が期待どおりかを検証できます。詳細は [Validate download](/docs/advanced-editing/validations/validate-download) を参照してください。
 
 :::note
 CLI アクションステップ中に出力されたログは、実行で起動したターミナルと、ステップ下部の「Step Log」に保存されます。
@@ -81,7 +81,7 @@ _Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
 
 5. **Name the new step** にステップ名を入力します。
 6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンにし、**Select shared step** で保存先フォルダーを選びます（デフォルトはオン）。共有しない場合はオフにします。\
-   共有ステップの詳細は [Groups](/docs/groups) を参照してください。
+   共有ステップの詳細は [Groups](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
    **function** エディターと右側の **Properties** パネルが開きます。
 
@@ -112,7 +112,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 ![CLI](/images/validations/add-cli-validations-and-actions/1418058-Testim_332.png)
 
 11. ステップ失敗時の動作を指定するには、**When this step fails** を開き、_Mark error & stop_ / _Mark error & continue_ / _Mark warning & continue_ を選択します。
-12. ステップの実行条件を制御するには、**When to run step** を開いて設定します（[Conditions](/docs/conditions) 参照）。
+12. ステップの実行条件を制御するには、**When to run step** を開いて設定します（[Conditions](/docs/editing-tests/conditions) 参照）。
 13. 既定のタイムアウト（30000ms）を上書きする場合は、**Override timeout** をクリックして任意の値を入力します。
 14. 左上の **back** 矢印でエディターに戻ります。
 
@@ -126,6 +126,6 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 
 以下は CLI ステップを使用した例です。
 
-- [MongoDB validation](/docs/mongodb-validation)
-- [MySQL validation](/docs/mysql-validation)
-- [Extract SMS message](/docs/extract-sms-message)
+- [MongoDB validation](/docs/advanced-editing/validations/mongodb-validation)
+- [MySQL validation](/docs/advanced-editing/validations/mysql-validation)
+- [Extract SMS message](/docs/advanced-editing/extract-sms-message)

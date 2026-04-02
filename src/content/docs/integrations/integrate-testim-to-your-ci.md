@@ -20,7 +20,7 @@ keywords:
 
 ## 仕組み
 
-テストを CI に統合するために、[Testim CLI](/docs/the-command-line-cli)を構築しました。npm を使用して簡単にインストールでき、これを使用することで、単純なシェルコマンドを実行できる主要な CI すべてに統合できます。
+テストを CI に統合するために、[Testim CLI](/docs/running-tests/the-command-line-cli)を構築しました。npm を使用して簡単にインストールでき、これを使用することで、単純なシェルコマンドを実行できる主要な CI すべてに統合できます。
 
 ## すべてのテストスイート実行を確認する
 
@@ -39,12 +39,12 @@ keywords:
 
 **特定の CI への統合に関するガイドのリスト:**
 
-- [Azure Pipeline Integration](/docs/azure-devops-build-pipeline-integrations)
-- [Bamboo integration](/docs/bamboo-integration)
-- [Circle CI integration](/docs/circle-ci-integration)
-- [Codeship integration](/docs/codeship-integration)
-- [Jenkins Integration](/docs/jenkins-integration)
-- [Jenkins Integration - Using Docker](/docs/jenkins-integration-using-docker)
-- [TeamCity Integration](/docs/teamcity-integration)
-- [Visual Studio integration](/docs/vsts-and-tfs-integration)
-- [GitLab integration](/docs/gitlab-integration)
+- [Azure Pipeline Integration](/docs/integrations/integrate-testim-to-your-ci/azure-devops-build-pipeline-integrations)
+- [Bamboo integration](/docs/integrations/integrate-testim-to-your-ci/bamboo-integration)
+- [Circle CI integration](/docs/integrations/integrate-testim-to-your-ci/circle-ci-integration)
+- [Codeship integration](/docs/integrations/integrate-testim-to-your-ci/codeship-integration)
+- [Jenkins Integration](/docs/integrations/integrate-testim-to-your-ci/jenkins-integration)
+- [Jenkins Integration - Using Docker](/docs/integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker)
+- [TeamCity Integration](/docs/integrations/integrate-testim-to-your-ci/teamcity-integration)
+- [Visual Studio integration](/docs/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration)
+- [GitLab integration](/docs/integrations/integrate-testim-to-your-ci/gitlab-integration)

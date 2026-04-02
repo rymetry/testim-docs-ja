@@ -17,7 +17,7 @@ keywords:
 
 ローカル環境でモバイルテストを記録・実行する
 
-モバイルテストは、物理デバイスおよび仮想デバイス（iOS/Android）の両方でローカル環境での記録と実行が可能です。記録自体は、Windows、Mac、または Linux コンピューターで Web ブラウザを使用して実行できます。モバイルテストを記録すると、Testim は各アクションをテストステップに変換し、Testim Visual Editor の画面に表示します。ただし、[テストの編集](/docs/editing-your-tests)により、テストに追加のステップを手動で追加することもできます。テストは[テストライブラリ](/docs/test-list)に追加され、いつでも実行できます。
+モバイルテストは、物理デバイスおよび仮想デバイス（iOS/Android）の両方でローカル環境での記録と実行が可能です。記録自体は、Windows、Mac、または Linux コンピューターで Web ブラウザを使用して実行できます。モバイルテストを記録すると、Testim は各アクションをテストステップに変換し、Testim Visual Editor の画面に表示します。ただし、[テストの編集](/docs/editing-tests/editing-your-tests)により、テストに追加のステップを手動で追加することもできます。テストは[テストライブラリ](/docs/test-management/test-list)に追加され、いつでも実行できます。
 
 :::warning{title="警告"}
 マルチスクリーンデバイス（折りたたみ式/フリップ式電話など）は現在サポートされていません。
@@ -33,7 +33,7 @@ keywords:
 各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。例えば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
 :::
 
-- **Tricentis Mobile Agent** - Testim でモバイルテストを作成および実行するには、Tricentis Mobile Agent（TMA）をインストールする必要があります。このエージェントは、ワークステーションに接続された物理デバイス（携帯電話やタブレットなど）およびワークステーション上で実行されるシミュレーター/エミュレーターを管理します。TMA をインストールし、Testim に接続し、デバイスを構成する方法については、[Tricentis Mobile Agent の構成](/docs/configure-tricentis-mobile-agent)を参照してください。
+- **Tricentis Mobile Agent** - Testim でモバイルテストを作成および実行するには、Tricentis Mobile Agent（TMA）をインストールする必要があります。このエージェントは、ワークステーションに接続された物理デバイス（携帯電話やタブレットなど）およびワークステーション上で実行されるシミュレーター/エミュレーターを管理します。TMA をインストールし、Testim に接続し、デバイスを構成する方法については、[Tricentis Mobile Agent の構成](/docs/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent)を参照してください。
 
 :::info{title="情報"}
 ローカルモバイルテストを実行したい各ユーザーは、自分のコンピューターに Tricentis Mobile Agent をインストールして構成する必要があります。
@@ -43,7 +43,7 @@ keywords:
 
 ## ステップ 1 - TMA に接続する
 
-最初のステップとして、TMA を Testim に接続する必要があります。[Tricentis Mobile Agent の接続](/docs/configure-tricentis-mobile-agent#tricentis-mobile-agent-を-testim-に接続する)セクションの手順に従ってください。
+最初のステップとして、TMA を Testim に接続する必要があります。[Tricentis Mobile Agent の接続](/docs/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent#tricentis-mobile-agent-を-testim-に接続する)セクションの手順に従ってください。
 
 ## ステップ 2 - デバイスを接続する
 
@@ -60,7 +60,7 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 1. 物理 Android デバイスをローカルコンピューターに接続します（例: USB ケーブルを使用して携帯電話を接続）。
 
 :::info{title="情報"}
-Android デバイスの場合、デバイスを「デバッグモード」で実行する必要があります - [開発者オプションと USB デバッグを有効にする](https://developer.android.com/studio/debug/dev-options#enable)。デバッグモードを有効にした後、設定 > 開発者オプションに移動し、USB デバッグオプションを有効にします。詳細については、[Tricentis Mobile Agent の構成](/docs/configure-tricentis-mobile-agent)の関連セクションを参照してください。
+Android デバイスの場合、デバイスを「デバッグモード」で実行する必要があります - [開発者オプションと USB デバッグを有効にする](https://developer.android.com/studio/debug/dev-options#enable)。デバッグモードを有効にした後、設定 > 開発者オプションに移動し、USB デバッグオプションを有効にします。詳細については、[Tricentis Mobile Agent の構成](/docs/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent)の関連セクションを参照してください。
 :::
 
 Tricentis Mobile Agent がデバイスを認識すると、デバイスがリストに表示されます:
@@ -207,12 +207,12 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **ローカルデバイスアプリ** - 接続されたデバイス（物理デバイスまたは仮想デバイス）上のアプリの 1 つを使用できます。これらのアプリは、デバイスが TMA に接続されている場合にテストで使用できます。
 
-- **モバイルアプリライブラリ** - モバイルアプリライブラリの既存のアプリを使用できます。この場合、他のユーザーはローカルデバイスにアプリがインストールされていなくても、共通のアプリをテストに使用できます。[ローカルコンピューターからモバイルアプリを追加する](/docs/mobile-apps#ローカルコンピューターからモバイルアプリを追加する)セクションの手順に従って、テストを記録する前にアプリを追加することもできます。モバイルアプリライブラリでアプリを管理する方法の詳細については、[モバイルアプリ](/docs/mobile-apps)を参照してください。
+- **モバイルアプリライブラリ** - モバイルアプリライブラリの既存のアプリを使用できます。この場合、他のユーザーはローカルデバイスにアプリがインストールされていなくても、共通のアプリをテストに使用できます。[ローカルコンピューターからモバイルアプリを追加する](/docs/mobile-apps/mobile-apps#ローカルコンピューターからモバイルアプリを追加する)セクションの手順に従って、テストを記録する前にアプリを追加することもできます。モバイルアプリライブラリでアプリを管理する方法の詳細については、[モバイルアプリ](/docs/mobile-apps/mobile-apps)を参照してください。
 
 - **アプリのアップロード** - テスト作成の一部として、アプリをアップロードできます。
 
 :::info{title="アプリコンパイルの互換性（iOS のみ）"}
-仮想デバイスを使用してテストを記録する場合は、アプリが仮想デバイス用にコンパイルされていること（.app）を確認してください。逆に、物理デバイスを使用して記録する場合は、アプリが物理デバイスで動作するようにコンパイルされていること（.ipa）を確認してください。詳細については、[モバイルテスト用 IPA の準備方法](/docs/how-to-prepare-an-ipa-for-mobile-testing)を参照してください。
+仮想デバイスを使用してテストを記録する場合は、アプリが仮想デバイス用にコンパイルされていること（.app）を確認してください。逆に、物理デバイスを使用して記録する場合は、アプリが物理デバイスで動作するようにコンパイルされていること（.ipa）を確認してください。詳細については、[モバイルテスト用 IPA の準備方法](/docs/recording-tests/recording-a-mobile-test/how-to-prepare-an-ipa-for-mobile-testing)を参照してください。
 :::
 
 ## ステップ 4 - テストを記録する
@@ -250,11 +250,11 @@ Simulator ソフトウェアがシステムトレイで開きます。
 記録後にデバイスを変更する場合、選択したアプリを追加の記録または再生を実行するためにデバイスにインストールする必要があります。
 :::
 
-- **Upload app** - このオプションを選択して、ローカルコンピューターから[モバイルアプリ](/docs/mobile-apps)ライブラリに新しいアプリを追加します。サポートされているファイルタイプには、Android デバイス用の.apk ファイル（Java または Kotlin フレームワークベース）、iOS デバイス用の.ipa ファイル（Objective C または Swift フレームワークベース）が含まれます。アップロードは 150MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。
+- **Upload app** - このオプションを選択して、ローカルコンピューターから[モバイルアプリ](/docs/mobile-apps/mobile-apps)ライブラリに新しいアプリを追加します。サポートされているファイルタイプには、Android デバイス用の.apk ファイル（Java または Kotlin フレームワークベース）、iOS デバイス用の.ipa ファイル（Objective C または Swift フレームワークベース）が含まれます。アップロードは 150MB に制限されています（より大きなファイルをアップロードするには、Tricentis サポートにお問い合わせください）。
 
 7. **Done**をクリックして終了します。
 
-8. テスト対象のアプリケーションが開いた[AUT ミラーリングビューアー](/docs/mobile-test-editor)が表示されます。ビューアーを使用すると、デバイスを表示してテスト対象のアプリケーションと対話できます。Testim はアクションを記録します。サポートされているアクションの詳細については、以下の[サポートされているモバイルアクション](#サポートされているモバイルアクション)セクションを参照してください。
+8. テスト対象のアプリケーションが開いた[AUT ミラーリングビューアー](/docs/recording-tests/recording-a-mobile-test/mobile-test-editor)が表示されます。ビューアーを使用すると、デバイスを表示してテスト対象のアプリケーションと対話できます。Testim はアクションを記録します。サポートされているアクションの詳細については、以下の[サポートされているモバイルアクション](#サポートされているモバイルアクション)セクションを参照してください。
 
 :::info{title="情報"}
 テストステップは、AUT ミラーリングビューアーでアクションを実行することによってのみ記録されます。デバイスで直接アクションを実行しても、テストステップは記録されません。
@@ -279,16 +279,16 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **Test name** - テストの名前を入力します。デフォルトでは、テスト名は「untitled test」です。
 - **Description** - オプションで、テストの説明を入力します。
-- **Configuration** - デフォルトでは、構成は VMG で使用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[テスト構成の設定](/docs/setting-the-test-configuration)を参照してください。
-- **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS 配列リテラルで複数の順序付きデータセットを定義することで、データ駆動テストを構成できます。[Visual Editor からのデータ駆動テストの構成](/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+- **Configuration** - デフォルトでは、構成は VMG で使用可能な任意のデバイスと任意の OS バージョンを使用するように設定されています。別の構成を使用する場合は、[テスト構成の設定](/docs/recording-tests/recording-a-mobile-test/setting-the-test-configuration)を参照してください。
+- **Test Data** - JavaScript でデータセットを定義するか、オブジェクトの JS 配列リテラルで複数の順序付きデータセットを定義することで、データ駆動テストを構成できます。[Visual Editor からのデータ駆動テストの構成](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
 
 11. **Save**をクリックしてテストを保存します。
 
 :::warning{title="自動復旧"}
-新しいテストを作成したり既存のテストに変更を加えたりするときは、必ずテストを保存してください。ただし、心配しないでください。テストを保存する前にブラウザを閉じた場合でも、テストはブラウザのキャッシュに保存されているため、作業を再開できます。詳細については、[保存されなかったテストの復旧](/docs/recovering-a-test-that-was-not-saved)を参照してください。
+新しいテストを作成したり既存のテストに変更を加えたりするときは、必ずテストを保存してください。ただし、心配しないでください。テストを保存する前にブラウザを閉じた場合でも、テストはブラウザのキャッシュに保存されているため、作業を再開できます。詳細については、[保存されなかったテストの復旧](/docs/editing-tests/recovering-a-test-that-was-not-saved)を参照してください。
 :::
 
-12. 追加のテスト構成設定を構成する場合は、[テスト構成の設定](/docs/setting-the-test-configuration)を参照してください。
+12. 追加のテスト構成設定を構成する場合は、[テスト構成の設定](/docs/recording-tests/recording-a-mobile-test/setting-the-test-configuration)を参照してください。
 
 ### サポートされているモバイルアクション
 
@@ -306,41 +306,41 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 ## ステップ 5 - 追加のステップを追加してプロパティを編集する
 
-記録中またはテスト保存後に、追加の事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。一般的なステッププロパティの詳細については、[ステップのプロパティの編集](/docs/editing-a-steps-properties)を参照してください。
+記録中またはテスト保存後に、追加の事前定義されたステップを追加したり、一部またはすべてのステップのプロパティを編集したりできます。一般的なステッププロパティの詳細については、[ステップのプロパティの編集](/docs/editing-tests/editing-your-tests/editing-a-steps-properties)を参照してください。
 
 ## サポートされている事前定義済みモバイルアクション
 
 テストの記録中または記録後にステップを手動で追加する際、以下のアクションが現在サポートされています:
 
-- **[Validate email](/docs/email-validation)** - Testim は、永続的および一時的なメールアドレスを提供する組み込みのメールサービスを提供しています。Validate email ステップは、これらのメールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
+- **[Validate email](/docs/advanced-editing/validations/email-validation)** - Testim は、永続的および一時的なメールアドレスを提供する組み込みのメールサービスを提供しています。Validate email ステップは、これらのメールアドレスを使用して、アプリのサインアップまたはログインフローをテストできます。
 
-- **[Validate element visible](/docs/validate-element-visible)** - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
+- **[Validate element visible](/docs/advanced-editing/validations/validate-element-visible)** - 要素の可視性検証により、要素が存在し、ページに表示されているかどうかを確認できます。要素に可変の画像またはテキストが含まれている場合でも、検証は機能します。この検証は、要素が存在し表示されていることを確認しますが、その特定のコンテンツはチェックしません。
 
-- **[Validate element text](/docs/validate-element-text)** - 要素テキスト検証は、要素の存在に依存するという点で要素可視性検証に似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
+- **[Validate element text](/docs/advanced-editing/validations/validate-element-text)** - 要素テキスト検証は、要素の存在に依存するという点で要素可視性検証に似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 
-- **[Wait for element visible](/docs/wait-for#要素の表示を待つ（モバイル）)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
+- **[Wait for element visible](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
 
-- **[Wait for element text](/docs/wait-for#要素の表示を待つ（モバイル）)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
+- **[Wait for element text](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
 
-- **[Sleep](/docs/wait-for#要素の表示を待つ（モバイル）)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
+- **[Sleep](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/advanced-editing/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
 
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 
 - **Code verification** - デバイスにキーストロークを送信します。これは通常、ワンタイムパスワードコード要素などのコード検証要素を入力するために使用されます。文字間に遅延を追加することも可能です。
 
-- **[Generate email address](/docs/email-validation#テストの関連ステップで恒久的メールを使用する)** - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。例えば、毎回新しいユーザーでサインアップフローを複数回テストする場合などです。
+- **[Generate email address](/docs/advanced-editing/validations/email-validation#テストの関連ステップで恒久的メールを使用する)** - テストを実行するたびに使用する新しいランダムなメールアドレスを生成します。例えば、毎回新しいユーザーでサインアップフローを複数回テストする場合などです。
 
-- **[Add CLI action](/docs/add-cli-validations-and-actions)** - CLI 環境でカスタム Node.js スクリプトを実行します。
+- **[Add CLI action](/docs/advanced-editing/validations/add-cli-validations-and-actions)** - CLI 環境でカスタム Node.js スクリプトを実行します。
 
-- **[Add API action](/docs/api-testing#adding-an-api-action-step)** - API 呼び出しから返されるデータを取得する場合に使用します。このデータを使用して、返されることを確認できます。
+- **[Add API action](/docs/advanced-editing/api-testing#adding-an-api-action-step)** - API 呼び出しから返されるデータを取得する場合に使用します。このデータを使用して、返されることを確認できます。
 
 :::info{title="情報"}
-Add CLI action および/または Add API action ステップを使用してカスタムコードを実行する前に、[Testim CLI](/docs/the-command-line-cli)を実行する必要があります。
+Add CLI action および/または Add API action ステップを使用してカスタムコードを実行する前に、[Testim CLI](/docs/running-tests/the-command-line-cli)を実行する必要があります。
 :::
 
-- **[Generate random value](/docs/generating-a-random-value)** - 動的データテスト用のランダム値を生成します。
+- **[Generate random value](/docs/editing-tests/generating-a-random-value)** - 動的データテスト用のランダム値を生成します。
 
-- **[Generate date](/docs/generating-a-date)** - 事前定義されたプロパティに従って日付を生成します。
+- **[Generate date](/docs/editing-tests/generating-a-date)** - 事前定義されたプロパティに従って日付を生成します。
 
 - **Reset app** - Android では、このステップはアプリケーションを閉じ、キャッシュをクリアしてから、アプリを再起動します。iOS では、このステップはアプリケーションを閉じて起動します（キャッシュはクリアしません）。このステップは通常、次回の実行前にアプリをリセットしてキャッシュをクリアするために使用されます。
 
@@ -350,4 +350,4 @@ Add CLI action および/または Add API action ステップを使用してカ
 
 - **Scroll to element text** - 選択したテキスト要素に動的にスクロールします。
 
-- **[Execute Driver Script Step (mobile)](/docs/custom-action-step-mobile)** - Execute Driver Script step を使用すると、Appium 2.0 以降を使用してスクリプトを実行し、テストで拡張された機能と検証を行うことができます。
+- **[Execute Driver Script Step (mobile)](/docs/advanced-editing/custom-action-step-mobile)** - Execute Driver Script step を使用すると、Appium 2.0 以降を使用してスクリプトを実行し、テストで拡張された機能と検証を行うことができます。

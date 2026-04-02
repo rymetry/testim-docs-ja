@@ -8,8 +8,8 @@
 ## 実行手順
 
 1. SIDEBAR_URLS.mdファイルから{SECTION_NAME}セクションの全記事URLリストを取得
-2. 各URLのパス名に対応するmdファイルを特定
-   - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `testim-overview.md`
+2. 各URLのパス名に対応するmdファイルを特定（パスベースで解決）
+   - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `src/content/docs/overview/testim-overview.md`
 3. 英語記事と日本語mdファイルのペアごとに以下の検証項目を確認
 4. 記事本文内のリンクを確認し、content/docs内に対応する日本語mdファイルがあれば内部リンクに変更
 5. プロジェクトディレクトリで`npm run lint`を実行してlintエラーを確認
@@ -36,7 +36,7 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 - [ ] 本文末尾に更新日(updated, 最終更新日等)の記載がないか
 - [ ] 記事内のリンクが適切に処理されているか
   - 外部リンク(`https://docs.tricentis.com/testim/content/...`)で、対応する日本語mdファイルが`/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/`配下に存在する場合、内部リンクに変更されているか
-  - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `/docs/testim-overview` (該当mdファイルが存在する場合)
+  - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `/docs/overview/testim-overview` (該当mdファイルが存在する場合)
   - 対応する日本語ファイルが存在しない場合は、元の外部リンクのまま維持
 
 ファイル全体について:
@@ -52,13 +52,13 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 
 ## ルーティングとリンク規則
 
-ルーティングはフォルダ構造を無視してファイル名のみで URL を決定する（例: `src/content/docs/groups/groups.md` → `/docs/groups`）。
+ルーティングはパスベースで、フォルダ構造が URL に反映される（例: `src/content/docs/administration/groups.md` → `/docs/administration/groups`）。
 
 内部リンクの形式・変換ルールの詳細は `docs/WRITING_GUIDE.md` の「内部リンク規則」セクションを参照。
 
 要点:
-- 正しい形式: `/docs/{slug}`（フォルダ名を含めない）
-- `https://docs.tricentis.com/testim/content/.../{slug}.htm` は対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する
+- 正しい形式: `/docs/{folder}/{slug}`（パスベース）
+- `https://docs.tricentis.com/testim/content/.../{slug}.htm` は対応する JA ファイルが存在する場合 `/docs/{folder}/{slug}` に変換する
 - 対応する JA ファイルが存在しない場合は元の外部リンクを維持する
 
 ## 出力形式
@@ -102,7 +102,7 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 - **ファイル名**: `xxx.md`
 - **変更すべきリンク**:
   - 現在: `https://docs.tricentis.com/testim/content/{category}/example.htm`
-  - 変更後: `/docs/example`
+  - 変更後: `/docs/{category}/example`
 
 ### 🔍 Lintエラー
 

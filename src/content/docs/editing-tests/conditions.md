@@ -23,10 +23,10 @@ keywords:
 "when to run step" 機能を使うと、テスト内の各ステップを実行するかしないかを制御できます。グループステップを含むあらゆるステップに「実行条件（when to run）」を設定できます。ステップの実行条件は次の 5 種類です:
 
 - **Always Run** — このステップには条件がありません。テスト実行時に常に実行されます。すべてのステップの既定設定です。
-- **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/conditions#element-条件の設定) を参照してください。
-- **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/conditions#element-text-条件の設定) を参照してください。
-- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/conditions#custom-条件の設定) を参照してください。
-- **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/conditions#never-run-step-条件の設定) を参照してください。
+- **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/editing-tests/conditions#element-条件の設定) を参照してください。
+- **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/editing-tests/conditions#element-text-条件の設定) を参照してください。
+- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/editing-tests/conditions#custom-条件の設定) を参照してください。
+- **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/editing-tests/conditions#never-run-step-条件の設定) を参照してください。
 
 ## Condition インジケーター
 
@@ -92,7 +92,7 @@ Element 条件は要素の可視性に基づいてステップを実行します
 9. Element 条件のタイプを指定します。オプション:
    - Visible – 要素がページ上で可視の場合にのみステップを実行します。
    - Not visible – 要素がページ上で不可視の場合にのみステップを実行します。
-10. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
+10. 必要に応じて [拡張条件設定](/docs/editing-tests/conditions/advanced-conditions-settings) でタイムアウト設定を調整します。
 11. **Toggle Breakpoint** を再度クリックしてブレークポイントを解除します。
 
 ステップタイルに菱形アイコンが表示され、条件が追加されたことを確認できます。
@@ -137,7 +137,7 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 ![Element text 条件の設定画面](/images/conditions/conditions/230f6f2-elementtext_r.png)
 
 10. 選択した要素の設定を確認、置換、または調整したい場合は、Properties パネルの手順に従ってください。
-11. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
+11. 必要に応じて [拡張条件設定](/docs/editing-tests/conditions/advanced-conditions-settings) でタイムアウト設定を調整します。
 12. **Toggle Breakpoint** をクリックしてブレークポイントを解除します。
 
 ステップタイルに菱形アイコンが表示され、条件が追加されたことを確認できます。
@@ -181,7 +181,7 @@ HTML または JavaScript パラメーターを定義し、条件内でそれら
    - 右側のペインで **+ PARAMS** ボタンをクリックします。
    - **JavaScript パラメーター:** ドロップダウンから **JS** を選択し、JavaScript パラメーターを入力します。
    - **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。次の手順を実行します:
-     - AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-your-tests#ステップの追加削除)の手順に従ってください。
+     - AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)の手順に従ってください。
 
 ![パラメーター追加](/images/conditions/conditions/5eed156-custom2_r.png)
 
@@ -203,7 +203,7 @@ jQuery などの DOM セレクター（HTML パラメーターではなく）を
 
 ![メインエディターに戻る](/images/conditions/conditions/4df6f82-custom6_r.png)
 
-9. 必要に応じて [拡張条件設定](/docs/advanced-conditions-settings) でタイムアウト設定を調整します。
+9. 必要に応じて [拡張条件設定](/docs/editing-tests/conditions/advanced-conditions-settings) でタイムアウト設定を調整します。
 
 :::warning
 AUT を開いて HTML 要素をパラメーターとして定義した場合は、グループステップの前の **Toggle Breakpoint** をクリックしてブレークポイントを解除してください。

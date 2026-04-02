@@ -93,35 +93,35 @@ mobile テストには次の Grid を使用できます。
 
 各 Grid の設定方法の詳細は、次の記事を参照してください。
 
-- [Virtual Mobile Grid](/docs/virtual-mobile-grid)
-- [Tricentis Device Cloud (mobile)](/docs/tricentis-device-cloud)
-- [Custom Grid (web only)](/docs/custom-grid)
-- [SauceLabs integration (mobile and web)](/docs/saucelabs-integration)
-- [BrowserStack integration (mobile and web)](/docs/browserstack-integration-1)
-- [Test capabilities for SauceLabs & BrowserStack in CLI (mobile and web)](/docs/saucelabs-browserstack-options)
-- [HeadSpin integration (mobile)](/docs/headspin-integration)
-- [LambdaTest integration (web only)](/docs/browserstack-integration-copy)
+- [Virtual Mobile Grid](/docs/integrations/grid-management/virtual-mobile-grid)
+- [Tricentis Device Cloud (mobile)](/docs/integrations/grid-management/tricentis-device-cloud)
+- [Custom Grid (web only)](/docs/integrations/grid-management/custom-grid)
+- [SauceLabs integration (mobile and web)](/docs/integrations/grid-management/saucelabs-integration)
+- [BrowserStack integration (mobile and web)](/docs/integrations/grid-management/browserstack-integration-1)
+- [Test capabilities for SauceLabs & BrowserStack in CLI (mobile and web)](/docs/integrations/grid-management/saucelabs-browserstack-options)
+- [HeadSpin integration (mobile)](/docs/integrations/grid-management/headspin-integration)
+- [LambdaTest integration (web only)](/docs/integrations/grid-management/browserstack-integration-copy)
 
 ## Grid で実行する方法
 
 次のいずれかの方法で、テストをリモート実行できます。
 
-[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
+[CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
 Grid 名を指定して `--grid` parameter を追加します。
 
-[Scheduler](/docs/scheduler)
+[Scheduler](/docs/running-tests/scheduler)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Test Plan](/docs/test-plans)
+[Test Plan](/docs/test-management/test-plans)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
 ### editor からの実行 (web)
 
-web テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote web test](/docs/running-tests-overview#リモート-web-テストを実行する) を参照してください。
+web テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote web test](/docs/running-tests/running-tests-overview#リモート-web-テストを実行する) を参照してください。
 
 ### editor からの実行 (mobile)
 
-mobile テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote mobile test](/docs/running-tests-overview#リモート-モバイル-テストを実行する) を参照してください。
+mobile テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote mobile test](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する) を参照してください。

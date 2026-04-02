@@ -103,58 +103,28 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
   const bodyLines = body.split('\n');
 
   // --- Link target existence checks (markdown + HTML) ---
+  // Only path-based slugs are accepted. Basename-only links are reported as errors.
   if (allSlugs) {
-    // Build basename → path-slug reverse map for backward compat
-    const basenameToSlug = new Map();
-    for (const s of allSlugs) {
-      const bn = s.split('/').pop();
-      if (basenameToSlug.has(bn)) {
-        basenameToSlug.set(bn, null); // ambiguous — mark as null
-      } else {
-        basenameToSlug.set(bn, s);
-      }
-    }
-
-    /**
-     * Resolve a link's slug path to a path-based slug in allSlugs.
-     * Accepts full path ("overview/testim-overview") or basename ("testim-overview").
-     * Returns the resolved path-slug, or null if not found / ambiguous.
-     */
-    const resolveSlug = (slugPath) => {
-      // Direct match (path-based or single segment)
-      if (allSlugs.has(slugPath)) return slugPath;
-      // Basename-only resolution (single segment)
-      if (!slugPath.includes('/')) {
-        return basenameToSlug.get(slugPath) ?? null;
-      }
-      return null;
-    };
-
     const bodyStripped = stripCode(body);
     const strippedLines = bodyStripped.split('\n');
 
     strippedLines.forEach((line, i) => {
-      // Check A: Markdown links — [text](/docs/{slug-path}) capturing full path
+      // Check A: Markdown links
       const mdLinkRe = /\]\(\/docs\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)(#[^)]+)?\)/g;
       let mdMatch;
       while ((mdMatch = mdLinkRe.exec(line)) !== null) {
         const slugPath = mdMatch[1];
         const fragment = mdMatch[2];
         const displayPath = `/docs/${slugPath}`;
-        const resolved = resolveSlug(slugPath);
-        if (resolved === null) {
-          // Skip ambiguous basename-only links; report missing for all others
-          const bn = slugPath.includes('/') ? null : slugPath;
-          if (!bn || !basenameToSlug.has(bn)) {
-            err(
-              'link-target-missing',
-              `Internal link target does not exist: ${displayPath}`,
-              toAbsoluteLine(i + 1, bodyStart)
-            );
-          }
+        if (!allSlugs.has(slugPath)) {
+          err(
+            'link-target-missing',
+            `Internal link target does not exist: ${displayPath}`,
+            toAbsoluteLine(i + 1, bodyStart)
+          );
         } else if (fragment && headingsBySlug) {
           const fragId = fragment.slice(1);
-          const headings = headingsBySlug.get(resolved);
+          const headings = headingsBySlug.get(slugPath);
           if (headings && !headings.has(fragId)) {
             warn(
               'link-fragment-missing',
@@ -172,19 +142,15 @@ export function lintContent(content, filePath, { allSlugs, headingsBySlug } = {}
         const slugPath = htmlMatch[1];
         const fragment = htmlMatch[2];
         const displayPath = `/docs/${slugPath}`;
-        const resolved = resolveSlug(slugPath);
-        if (resolved === null) {
-          const bn = slugPath.includes('/') ? null : slugPath;
-          if (!bn || !basenameToSlug.has(bn)) {
-            err(
-              'link-target-missing',
-              `Internal link target does not exist: ${displayPath}`,
-              toAbsoluteLine(i + 1, bodyStart)
-            );
-          }
+        if (!allSlugs.has(slugPath)) {
+          err(
+            'link-target-missing',
+            `Internal link target does not exist: ${displayPath}`,
+            toAbsoluteLine(i + 1, bodyStart)
+          );
         } else if (fragment && headingsBySlug) {
           const fragId = fragment.slice(1);
-          const headings = headingsBySlug.get(resolved);
+          const headings = headingsBySlug.get(slugPath);
           if (headings && !headings.has(fragId)) {
             warn(
               'link-fragment-missing',

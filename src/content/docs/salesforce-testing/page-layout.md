@@ -19,13 +19,13 @@ keywords:
 
 Salesforce のページレイアウトとは、オブジェクトレコードページでのフィールド、関連リスト、カスタムリンクの表示を決定するフレームワークです。Salesforce では、さまざまなページレイアウトがプロファイルに割り当てられます。これは、オブジェクトレコードで作業するユーザーが、自分のプロファイルに割り当てられたページレイアウトに含まれるフィールドのみを表示することを意味します。
 
-デフォルトでは、Testim for Salesforce で[編集](/docs/sfdc-step-edit)ステップなど**レコード操作**カテゴリのステップの 1 つを構成する場合、ステップのペインに表示されるフィールドは、Testim for Salesforce と Salesforce プラットフォーム間の初期接続を構成したユーザーに Salesforce で割り当てられたページレイアウトに基づいています。
+デフォルトでは、Testim for Salesforce で[編集](/docs/salesforce-testing/salesforce-steps/sfdc-step-edit)ステップなど**レコード操作**カテゴリのステップの 1 つを構成する場合、ステップのペインに表示されるフィールドは、Testim for Salesforce と Salesforce プラットフォーム間の初期接続を構成したユーザーに Salesforce で割り当てられたページレイアウトに基づいています。
 
 ページレイアウト機能を使用すると、利用可能なページレイアウトのいずれかをレコード操作ステップの一部として選択できるようになり、さまざまな Salesforce オブジェクトレコードフィールドへのより大きな制御とアクセシビリティが可能になります。この機能は、以下のステップで利用できます:
 
-- [編集](/docs/sfdc-step-edit)
-- [作成](/docs/sfdc-step-create)
-- [検証](/docs/sfdc-step-validate)
+- [編集](/docs/salesforce-testing/salesforce-steps/sfdc-step-edit)
+- [作成](/docs/salesforce-testing/salesforce-steps/sfdc-step-create)
+- [検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-validate)
 
 :::warning{title="実行時のフィールドへのアクセス"}
 テストを実行するとき、ログインしているユーザー（ログインステップで定義されたユーザー）が選択したページレイアウトにアクセスできない場合（つまり、ユーザーがこのフィールドを表示/編集する権限を持っていない場合）、ステップは失敗します。ただし、このフィールドにアクション（入力、検証など）が定義されていない場合、Testim はこのフィールドを検索せず、テストは成功します。フィールドにアクションを追加するには、ログインしているユーザーがアクセスできることを確認してください。

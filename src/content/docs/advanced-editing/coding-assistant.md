@@ -22,13 +22,13 @@ keywords:
 
 Copilot コーディングアシスタントは、以下のステップで用いる JS コードの作成・理解・修正を支援します。
 
-- [Add Custom Action](/docs/custom-code)
-- [Add Custom Validation](/docs/custom-code)
-- [Add Custom Wait For](/docs/wait-for#カスタム待機（web）)
-- [Add Network validation](/docs/add-network-validation)
-- [Add CLI Validation](/docs/add-cli-validations-and-actions)
-- [Validate Download](/docs/validate-download)
-- [Custom Condition](/docs/conditions#custom-条件の設定)
+- [Add Custom Action](/docs/advanced-editing/validations/custom-code)
+- [Add Custom Validation](/docs/advanced-editing/validations/custom-code)
+- [Add Custom Wait For](/docs/advanced-editing/wait-for#カスタム待機（web）)
+- [Add Network validation](/docs/advanced-editing/validations/add-network-validation)
+- [Add CLI Validation](/docs/advanced-editing/validations/add-cli-validations-and-actions)
+- [Validate Download](/docs/advanced-editing/validations/validate-download)
+- [Custom Condition](/docs/editing-tests/conditions#custom-条件の設定)
 
 このアシスタントは OpenAI の生成 AI を Testim 用に統合・最適化したものです。チャットのプロンプト入力に加え、スラッシュ（/）で始まるコマンドも利用できます。
 
@@ -107,7 +107,7 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/485092a-1.png)
 
-ページ URL が指定の正規表現に一致するか検証する [Add Custom Validation](/docs/custom-code) ステップで使用します。
+ページ URL が指定の正規表現に一致するか検証する [Add Custom Validation](/docs/advanced-editing/validations/custom-code) ステップで使用します。
 </details>
 
 <details>
@@ -115,7 +115,7 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/95f3895-2.png)
 
-特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/conditions#custom-条件の設定) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。
+特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/editing-tests/conditions#custom-条件の設定) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。
 </details>
 
 <details>

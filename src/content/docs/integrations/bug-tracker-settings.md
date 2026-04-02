@@ -24,17 +24,17 @@ keywords:
 
 bug や issue を tracking system に報告する方法はいくつかあります。
 
-- [失敗した実行への失敗タイプのタグ付け](/docs/tag-remote-runs-failures) の手順の一部として、**Create issue** リンクをクリックして issue を作成できます。
+- [失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures) の手順の一部として、**Create issue** リンクをクリックして issue を作成できます。
 
 ![失敗した実行から Create issue を選択](/images/bug-tracker-settings/bug-tracker-settings/78599fb-tagtestwithcreateissue.png)
 
-- [Testim Chrome Extension](/docs/testim-extension-overview) を使うと、issue を [Screenshot](/docs/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
+- [Testim Chrome Extension](/docs/testim-extension/testim-extension-overview) を使うと、issue を [Screenshot](/docs/testim-extension/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
 
 ![Testim Extension から bug を Publish](/images/bug-tracker-settings/bug-tracker-settings/23ee812-publishbug.png)
 
 Testim は次の bug tracking system に接続できます。
 
-- [Testim と Jira の連携](/docs/connecting-testim-to-jira)
-- [Testim と Trello の連携](/docs/connecting-testim-to-trello)
-- [Testim と Slack の連携](/docs/connecting-testim-to-slack)
-- [Testim と GitHub の連携](/docs/connecting-testim-to-github)
+- [Testim と Jira の連携](/docs/integrations/bug-tracker-settings/connecting-testim-to-jira)
+- [Testim と Trello の連携](/docs/integrations/bug-tracker-settings/connecting-testim-to-trello)
+- [Testim と Slack の連携](/docs/integrations/bug-tracker-settings/connecting-testim-to-slack)
+- [Testim と GitHub の連携](/docs/integrations/bug-tracker-settings/connecting-testim-to-github)

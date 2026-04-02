@@ -41,7 +41,7 @@ Math.random().toString(36).slice(-8);
 Date.now() + 5;
 ```
 
-**[パラメーター](/docs/parameters)として定義した場合、変数を割り当てることもできます:**
+**[パラメーター](/docs/advanced-editing/parameters)として定義した場合、変数を割り当てることもできます:**
 
 ```javascript
 myVar + 'sdf';
@@ -50,9 +50,9 @@ myVar + 'sdf';
 **ヒント:** 同じランダム文字列を複数回使用する必要がある場合（例: ランダムメールが後で別のページに表示されることを検証する）は、変数の使用を検討してください。テスト内で変数を作成する（例: "myVar"）には:
 
 - 共有ステップ（グループ/カスタム JS）にパラメーターを渡す
-- カスタム JS ステップから含まれるグループに値をエクスポートする。例えば、JS ステップに exports.myVar = "testim"; を追加します。これにより、親（含まれる）グループのスコープ内に"myVar"という名前の変数が作成されます。[エクスポートパラメータードキュメント](/docs/exports-parameters)の例を参照できます（このリンクをたどって、exports.bestTestingTool = "Testim"を検索してください）。
+- カスタム JS ステップから含まれるグループに値をエクスポートする。例えば、JS ステップに exports.myVar = "testim"; を追加します。これにより、親（含まれる）グループのスコープ内に"myVar"という名前の変数が作成されます。[エクスポートパラメータードキュメント](/docs/advanced-editing/parameters/exports-parameters)の例を参照できます（このリンクをたどって、exports.bestTestingTool = "Testim"を検索してください）。
 
 ## 詳細を学ぶ
 
-- [パラメーター](/docs/parameters)
-- [データ駆動テスト](/docs/data-driven-testing)
+- [パラメーター](/docs/advanced-editing/parameters)
+- [データ駆動テスト](/docs/advanced-editing/data-driven-testing)

@@ -50,7 +50,7 @@ keywords:
    ![Runs メニューの Configuration Library で Create New ボタンをクリックする画面](/images/test-management/configuration-library-mobile/f184ba9-image_11.png)
 
 2. **Configuration Name** フィールドに、構成の名前を入力します。
-3. **Choose a grid** で、ドロップダウンメニューからグリッドを選択します。希望するグリッドが表示されない場合は、Testim にグリッドを追加する必要がある場合があります。詳細については、[Grid management](/docs/grid-management) を参照してください。
+3. **Choose a grid** で、ドロップダウンメニューからグリッドを選択します。希望するグリッドが表示されない場合は、Testim にグリッドを追加する必要がある場合があります。詳細については、[Grid management](/docs/integrations/grid-management) を参照してください。
 4. **Configuration Type**（構成タイプ）を選択します:
    - **static allocation**（静的割り当て） - 下部に表示される（選択したグリッドからの）利用可能なデバイスのリストから手動で選択します。\
      ![Static allocation で利用可能なモバイルデバイス一覧からデバイスを選択する画面](/images/test-management/configuration-library-mobile/1436e57-image_13.png)
@@ -90,7 +90,7 @@ BrowserStack 固有のルールの詳細については、[BrowserStack Select D
 12. Step timeout - Testim がテストステップの失敗を登録する原因となるミリ秒単位の時間経過
 13. Step delay - テストステップの実行間のミリ秒単位の遅延
 14. Setup step timeout - テストの Setup ステップを実行する前のミリ秒単位の遅延
-15. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Hooks](/docs/hooks) を参照してください。
+15. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Hooks](/docs/advanced-editing/hooks) を参照してください。
 
 ![Before/After hooks やタイムアウトなど詳細設定を編集する Edit Config 画面](/images/test-management/configuration-library-mobile/9afddd9-image_16.png)
 
@@ -103,7 +103,7 @@ BrowserStack 固有のルールの詳細については、[BrowserStack Select D
 すべてのテストには、テストの Setup ステップの **Properties** パネルからアクセスできる独自のデフォルト構成があります。デフォルトでは、**Device Name** 設定は「Any device」、**OS Version** 設定は「Any version」になります。この設定に従って、Testim は選択したグリッド上で最初に利用可能なデバイスを選択します。テストのデフォルト構成で設定された構成パラメーターは、テストが異なるテスト構成で実行されない限り適用されます。
 
 :::note
-テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command Line Interface](/docs/the-command-line-cli#テスト構成) を参照してください。
+テストが CLI で実行される場合、実行コマンドで新しいテスト構成を指定することでデフォルト構成を上書きできます。[Command Line Interface](/docs/running-tests/the-command-line-cli#テスト構成) を参照してください。
 :::
 
 ## テスト構成のクローン作成、名前変更、変更、削除

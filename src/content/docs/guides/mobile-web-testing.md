@@ -33,7 +33,7 @@ Testim を使用して、（モバイル Web）アプリケーションがさま
 
 ## 異なるデバイスで実行する
 
-異なるデバイスでの実行は[CLI](/docs/the-command-line-cli)を介して行われます。
+異なるデバイスでの実行は[CLI](/docs/running-tests/the-command-line-cli)を介して行われます。
 
 :::note
 すべての可能な設定は、設定ページですでに設定されています。追加の設定を追加することはできません。

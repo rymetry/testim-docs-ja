@@ -25,12 +25,12 @@ keywords:
 検索対象（制限事項は末尾参照）
 
 - **Step description** — ステップの **Description** フィールドや **Text to assign** フィールドに入力したテキスト
-- **JS Code** — ステップ内の JavaScript コード（例: [Add custom validations and actions](/docs/custom-code) ステップ内のコード）
+- **JS Code** — ステップ内の JavaScript コード（例: [Add custom validations and actions](/docs/advanced-editing/validations/custom-code) ステップ内のコード）
 - **Parameters** — ステップ内の JS/HTML パラメーター名・値
 - **Base URL** — ベース URL の任意の部分
-- **URL** — [Navigation Step](/docs/navigation) や [Add an API Action Step](/docs/api-testing#adding-an-api-action-step) 内の URL の任意の部分
+- **URL** — [Navigation Step](/docs/advanced-editing/handling-ui-actions/navigation) や [Add an API Action Step](/docs/advanced-editing/api-testing#adding-an-api-action-step) 内の URL の任意の部分
 - **Test Data** — ステップ内のテストデータの任意の部分
-- **Condition** — **When to run step** で **Custom** を選択した際の JavaScript 条件（[Conditions](/docs/conditions) 参照）
+- **Condition** — **When to run step** で **Custom** を選択した際の JavaScript 条件（[Conditions](/docs/editing-tests/conditions) 参照）
 - **Loop** — **When to run step** で **Loop for** を選択した際の JavaScript 条件
 
 ## 検索の使い方

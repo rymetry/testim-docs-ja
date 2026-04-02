@@ -10,7 +10,7 @@
  * Usage:
  *   node scripts/snapshot_update.mjs                   # all pages
  *   node scripts/snapshot_update.mjs --section="Overview"
- *   node scripts/snapshot_update.mjs --slug=testim-overview
+ *   node scripts/snapshot_update.mjs --slug=overview/testim-overview
  *   node scripts/snapshot_update.mjs --dry-run
  */
 

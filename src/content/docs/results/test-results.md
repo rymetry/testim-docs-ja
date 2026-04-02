@@ -34,26 +34,26 @@ keywords:
   - Source - テストがローカルまたはリモートで実行されたか
   - Run mode - 実行で使用されたフレームワーク（例: Appium）
   - Grid name - 実行で使用されたグリッド
-  - Run config. - このテスト実行中に使用されたテスト設定。詳細については、[設定ライブラリ - Web](/docs/shared-configuration)および[設定ライブラリ - モバイル](/docs/configuration-library-mobile)を参照してください。
+  - Run config. - このテスト実行中に使用されたテスト設定。詳細については、[設定ライブラリ - Web](/docs/test-management/shared-configuration)および[設定ライブラリ - モバイル](/docs/test-management/configuration-library-mobile)を参照してください。
   - Zoom level - テスト実行で使用されたズームレベル
   - OS - テスト実行で使用されたオペレーティングシステム
   - Browser - テスト実行で使用されたブラウザとブラウザバージョン
   - Date (UTC) - テストが実行された UTC 日付
   - Time - テストが実行された UTC 時刻
 - **3 点メニュー** - クリックして以下のメニューを開きます:
-  - コンソールログを表示 - テスト実行のコンソールログを表示します。詳細については、[コンソールログ](/docs/network-logs-copy)を参照してください。
-  - ネットワークログを表示 - テスト実行のネットワークログを表示します。詳細については、[ネットワークログ](/docs/network-logs)を参照してください。
-  - テスト履歴を表示 - 選択したテストにフィルタリングしながら、[テスト実行](/docs/test-runs)画面を表示します。
-  - 実行を表示 - 選択したテストにフィルタリングしながら、[実行画面](/docs/execution-runs-screen)を表示します。
-  - PDF 実行レポートを生成 - テスト実行結果の詳細な PDF レポートを生成します。詳細については、[テスト実行 PDF レポート](/docs/test-run-pdf-report)を参照してください。
-- **改善されたステップを表示** - 自動的に改善されたロケーターを持つステップを表示するトグル。詳細については、[ロケーター: 自動改善](/docs/locators-auto-improve)を参照してください。
+  - コンソールログを表示 - テスト実行のコンソールログを表示します。詳細については、[コンソールログ](/docs/results/test-results/network-logs-copy)を参照してください。
+  - ネットワークログを表示 - テスト実行のネットワークログを表示します。詳細については、[ネットワークログ](/docs/results/test-results/network-logs)を参照してください。
+  - テスト履歴を表示 - 選択したテストにフィルタリングしながら、[テスト実行](/docs/results/test-runs)画面を表示します。
+  - 実行を表示 - 選択したテストにフィルタリングしながら、[実行画面](/docs/results/execution-runs-screen)を表示します。
+  - PDF 実行レポートを生成 - テスト実行結果の詳細な PDF レポートを生成します。詳細については、[テスト実行 PDF レポート](/docs/results/test-run-pdf-report)を参照してください。
+- **改善されたステップを表示** - 自動的に改善されたロケーターを持つステップを表示するトグル。詳細については、[ロケーター: 自動改善](/docs/test-management/locators-auto-improve)を参照してください。
 - **ステップカウント** - ステップカウンターは、テストステップの総数をカウントするライブカウンターです。ステップとグループ（内部グループを含む）をカウントしますが、フックはカウントしません。カウンターは、ステップを追加または削除すると動的に更新されます。
 
-テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/visual-validation-test-results)を参照してください。
+テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/results/test-results/visual-validation-test-results)を参照してください。
 
 ## ステップ結果の確認
 
-テスト実行中、Testim は各ステップをその結果で更新します。これには、ステータス（成功または失敗）、失敗した場合の詳細なエラーメッセージ、所要時間、その特定の状態での画面のスクリーンショットが含まれます。これは、ブラウザでローカルにテストを実行する場合と、[CLI ツール](/docs/the-command-line-cli)を使用して CI で実行する場合の両方で同じです。
+テスト実行中、Testim は各ステップをその結果で更新します。これには、ステータス（成功または失敗）、失敗した場合の詳細なエラーメッセージ、所要時間、その特定の状態での画面のスクリーンショットが含まれます。これは、ブラウザでローカルにテストを実行する場合と、[CLI ツール](/docs/running-tests/the-command-line-cli)を使用して CI で実行する場合の両方で同じです。
 
 ![ステップ結果一覧の画面](/images/results/test-results/3aab71e-step-results.jpg)
 
@@ -81,8 +81,8 @@ keywords:
 
 ![ベースラインと最新スクリーンショットの比較](/images/results/test-results/3f45d36-screenshots.jpg)
 
-テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/visual-validation-test-results)を参照してください。\
-このステップのネットワークログまたはコンソールを表示するには、**ネットワークログ**または**コンソールログ**タブをクリックします。詳細については、[ネットワークログ](/docs/network-logs)および[コンソールログ](/docs/network-logs-copy)を参照してください。
+テストにビジュアル検証が含まれていた場合は、[ビジュアル検証テスト結果](/docs/results/test-results/visual-validation-test-results)を参照してください。\
+このステップのネットワークログまたはコンソールを表示するには、**ネットワークログ**または**コンソールログ**タブをクリックします。詳細については、[ネットワークログ](/docs/results/test-results/network-logs)および[コンソールログ](/docs/results/test-results/network-logs-copy)を参照してください。
 
 ![スクリーンショットとネットワークログタブの例](/images/results/test-results/86bec2d-screenshots-networklog.jpg)
 

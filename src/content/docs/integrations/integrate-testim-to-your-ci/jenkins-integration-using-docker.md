@@ -40,7 +40,7 @@ Docker コンテナを使用して Jenkins とテストを統合するには、�
 
 ![Execute Shell ステップを追加する Jenkins の設定画面](/images/ci-integrations/jenkins-integration-using-docker/0fcc8b2-Jenkins4.PNG)
 
-4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。以下は、Docker ファイルをプルして使用し、CLI コマンド自体を実行するスクリプトテンプレートです:
+4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。以下は、Docker ファイルをプルして使用し、CLI コマンド自体を実行するスクリプトテンプレートです:
 
 ```shell
 TESTIM_DOCKER=testimio/docker-cli
@@ -65,7 +65,7 @@ echo "Testim finished"\
 
 ![Jenkins ジョブのビルド設定画面](/images/ci-integrations/jenkins-integration-using-docker/f0d35e2-Jenkins5.PNG)
 
-​**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+​**注記**: グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 
 5. Jenkins が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。Jenkins がファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
 

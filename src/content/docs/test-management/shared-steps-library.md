@@ -16,7 +16,7 @@ keywords:
 
 共有ステップを追跡して管理します。
 
-**Shared Steps Library** 画面（**Test List -> Shared Steps**）は、[共有ステップ](/docs/shareable-steps) を管理する場所です。共有ステップはフォルダーに配置できます。現在のプロジェクト内のすべての共有ステップがこの画面に一覧表示され、以下に説明するように、これらの共有ステップに対してさまざまなアクションを実行できます。
+**Shared Steps Library** 画面（**Test List -> Shared Steps**）は、[共有ステップ](/docs/editing-tests/shareable-steps) を管理する場所です。共有ステップはフォルダーに配置できます。現在のプロジェクト内のすべての共有ステップがこの画面に一覧表示され、以下に説明するように、これらの共有ステップに対してさまざまなアクションを実行できます。
 
 ## 共有ステップライブラリを表示する
 
@@ -43,7 +43,7 @@ keywords:
 ![Filter Shared Steps ペインでステップカテゴリなどの条件を設定する画面](/images/test-management/shared-steps-library/7ff70ce-Testim_057_r.png)
 
 2. Filter Shared Steps ペインで、1 つ以上のフィルター条件を選択します。
-3. **Apply** をクリックします。フィルターが適用され、条件を満たす共有ステップのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/saving-a-filtered-view) を参照してください。
+3. **Apply** をクリックします。フィルターが適用され、条件を満たす共有ステップのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
 
 :::note
 Filter Shared Steps ペインの下部にある **Reset filters** をクリックしてから **Apply** をクリックすることで、フィルターを削除できます。

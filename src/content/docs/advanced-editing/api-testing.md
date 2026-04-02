@@ -34,7 +34,7 @@ Professional plan で利用可能です。
 
 ## Validate API ステップの追加
 
-API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/validations)を参照。\
+API 検証ステップで応答を検証します。ヘッダー／ボディ／ステータスコードで検証可能です。検証全般は[こちら](/docs/advanced-editing/validations)を参照。\
 **“Add API validation” を追加するには:**
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/eb15a7d-validatestep.gif)
@@ -56,13 +56,13 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 5. **Name the new step** フィールドに、このステップの名前を入力します。
 6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step** フォルダーリストから保存先フォルダーを選択します。共有ステップにしない場合はチェックを外します。\
-   共有ステップの詳細は [グループ](/docs/groups) を参照してください。
+   共有ステップの詳細は [グループ](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
    **Run Shared API Validation** ウィンドウが開きます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png)
 
-8. **URL** フィールドで使用する HTTP リクエストメソッドを選択し、ルートエンドポイントとパスを入力します。必要に応じて URL にパラメーターを追加します。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
+8. **URL** フィールドで使用する HTTP リクエストメソッドを選択し、ルートエンドポイントとパスを入力します。必要に応じて URL にパラメーターを追加します。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
 9. **Header** セクションで、API に送信するヘッダーのキーと値を入力します。ヘッダーを個別のキー／値フィールドで入力したい場合は **Key-Value**（デフォルト）を選択し、ブラウザの DevTools Network パネルからコピーした文字列などをそのまま貼り付けたい場合は **Raw** を選択します。\
    複数のヘッダーを定義している場合、左側のチェックボックスをオンにしたヘッダーを使ったリクエストが順に実行されます。ヘッダーを削除したい場合は右端の **X** をクリックします。
 
@@ -79,7 +79,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
+11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
@@ -111,10 +111,10 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 15. **Allow API request retry** では、リクエストが失敗した場合に再送を行うかどうかを制御します。
 16. チェックを付ける – リクエスト自体が失敗したとき（エラーステータスコードのとき）のみ再送を行います。
 17. チェックを外す – ステータスコードがエラーであっても再送は行わず、検証と追加コードの実行に進みます。例えば「エラーコードであること」を Assertion で期待している場合などに有用です。
-18. **Params** フィールドでは、後述の [Using Parameters](/docs/api-testing#using-parameters-in-the-sent-http-request) で利用するパラメーターを定義します。
+18. **Params** フィールドでは、後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) で利用するパラメーターを定義します。
 
 :::note
-テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、API ステップの前に [wait for](/docs/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
+テストをブラウザ経由で実行していて、直前のステップでページの読み込みが完了していない場合、このステップは失敗することがあります。前のステップでページロードが発生する場合は、API ステップの前に [wait for](/docs/advanced-editing/wait-for) ステップを追加し、ページの読み込み完了を確認してください。
 :::
 
 ## AUT コンテキスト外でリクエストを試す
@@ -262,7 +262,7 @@ Body セクションに定義したエントリは、一時的に無効化した
 ## パラメーターの使用 {#using-parameters}
 
 API ステップでは、他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメーターを埋め込んだり、レスポンスから値を取り出してパラメーターに保存したり、Assertion の値として使用したりできます。パラメーターは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
-パラメーターの詳細は [Parameters](/docs/parameters) を参照してください。
+パラメーターの詳細は [Parameters](/docs/advanced-editing/parameters) を参照してください。
 
 :::note
 配列パラメーターは `array.0.name` のような形式で参照できます。  
@@ -326,4 +326,4 @@ Assertion セクションでも、比較値としてパラメーターをその�
 
 **Usage examples** - 具体的な使用例は [こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/automate/tests/97auidmCzzUtZuoQ) を参照してください。
 
-**Troubleshooting** - よくあるエラーと対処方法は [こちら](/docs/why-did-my-test-fail#13-api-step-failed) を参照してください。
+**Troubleshooting** - よくあるエラーと対処方法は [こちら](/docs/results/test-results/why-did-my-test-fail#13-api-step-failed) を参照してください。

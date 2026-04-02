@@ -46,4 +46,4 @@ Testim は、指定した Slack channel に bug の説明を公開できます�
 
 ![Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-slack/9781336-slack3.PNG)
 
-[バグ報告](/docs/bug-reporting) の手順に従って、bug capture を設定してください。
+[バグ報告](/docs/test-management/bug-reporting) の手順に従って、bug capture を設定してください。

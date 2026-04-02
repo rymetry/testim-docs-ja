@@ -67,13 +67,13 @@ updated: '2025-11-02'
 
 ## 🔗 内部リンク規則
 
-内部リンクは `/docs/{slug}` 形式（推奨）または `/docs/{folder}/{slug}` 形式の両方を使用できます。
+内部リンクはパスベース `/docs/{folder}/{slug}` 形式のみを使用してください。ベースネーム形式 `/docs/{slug}` は lint エラーになります。
 
 ```markdown
-✅ 推奨（パスベース）
+✅ 正しい（パスベース）
 [Testim 概要](/docs/overview/testim-overview)
 
-✅ 許容（ベースネーム — リダイレクト経由で動作）
+❌ 禁止（ベースネーム — lint エラー。リダイレクトは外部ユーザー向けのみ）
 [Testim 概要](/docs/testim-overview)
 
 ❌ 禁止（`doc:` 形式はソース原稿のみ。公開ページには使わない）
@@ -82,9 +82,8 @@ updated: '2025-11-02'
 
 補足:
 
-- アンカー付きリンクも `/docs/{folder}/{slug}#section-name` または `/docs/{slug}#section-name` を使用する
-- パスベース形式 `/docs/{folder}/{slug}` を推奨。ベースネーム形式は旧 URL 互換のリダイレクトで動作する
-- 本文中の `https://docs.tricentis.com/testim/content/.../{slug}.htm` は、対応する JA ファイルが存在する場合 `/docs/{slug}` に変換する（HTML `<a href>` 含む）
+- アンカー付きリンクは `/docs/{folder}/{slug}#section-name` 形式を使用する
+- 本文中の `https://docs.tricentis.com/testim/content/.../{slug}.htm` は、対応する JA ファイルが存在する場合 `/docs/{folder}/{slug}` に変換する（HTML `<a href>` 含む）
 - スラグが実在するファイルを指しているか必ず検証する。英語原文側でスラグがリネームされている場合があるため、ファイル名との突き合わせが必要
 
 ---
@@ -551,7 +550,7 @@ on:
 
 # 内部リンク（他のドキュメントページ）
 
-[Testim 概要](/docs/testim-overview)
+[Testim 概要](/docs/overview/testim-overview)
 
 # アンカーリンク（同じページ内）
 
@@ -715,7 +714,7 @@ src/content/docs/
 ## 📚 参考記事
 
 - [執筆機能デモ (MD版)](./WRITING_FEATURES.md)
-- [高度な執筆機能デモ (MDX版)](/docs/advanced-features)
+- 高度な執筆機能デモ (MDX版) — 該当ページがある場合はパスベースリンクを使用
 
 ---
 
@@ -781,7 +780,7 @@ src/content/docs/
 
 - **リンクテキストは意味のある言葉にする**
   - ❌ 詳細はこちらをご覧ください
-  - ✅ 詳細は[テスト作成ガイド](/docs/creating-tests)をご覧ください
+  - ✅ 詳細は[テスト作成ガイド](/docs/getting-started/creating-your-first-codeless-test)をご覧ください
 
 - **見出しの階層を正しく使う**
   - H1 は自動生成されるため、本文では H2 から使用（本文内の `# 見出し` は TOC に表示されない）
@@ -891,14 +890,14 @@ import Tabs from '../../components/Tabs.tsx';
 
 ### Q4: 内部リンクのパスがわかりません
 
-**A:** `/docs/` 以降は**ファイル名のみ**を使用します。フォルダ構造はURLに含まれません。
+**A:** `/docs/` 以降はファイルの**パスベースの slug**を使用します。フォルダ構造が URL に反映されます。
 
 ```text
 src/content/docs/overview/testim-overview.md
-→ /docs/testim-overview
+→ /docs/overview/testim-overview
 
 src/content/docs/getting-started/creating-your-first-test.md
-→ /docs/creating-your-first-test
+→ /docs/getting-started/creating-your-first-test
 ```
 
 ### Q5: 既存ページを更新する際の注意点は？

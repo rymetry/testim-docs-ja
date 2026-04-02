@@ -21,7 +21,7 @@ keywords:
 期待するテキストが表示されていることを検証する
 
 Element Text 検証は、指定した要素の存在を前提にする点で Element Visible 検証と似ていますが、Element Text 検証ではその要素に表示される「特定のテキスト値」も指定して検証します。複数のテキスト要素をまとめて検証することもできます。\
-検証対象のテキストは、固定文字列のほか、正規表現（Regex）、短い JS 式、パラメーターなどで表せます。詳細は [Advanced text validation](/docs/validate-element-text#advanced-text-validation) を参照してください。
+検証対象のテキストは、固定文字列のほか、正規表現（Regex）、短い JS 式、パラメーターなどで表せます。詳細は [Advanced text validation](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
 
 :::note
 （Web のみの補足）記録中に、アプリ上のテキストをキーボードショートカットで直接検証として記録できます。Ctrl + 'v' を押して検証したいテキストを選択します。
@@ -229,7 +229,7 @@ new RegExp('^' + '((?!' + param1 + ').)*$');
 
 ## パラメーターを使った検証
 
-テストまたはスイートレベルで定義されたパラメーター、あるいは設定ファイルで定義されたパラメーターを使用してテキスト要素を検証できます。別のステップで作成したパラメーターを使用する場合は、テストレベルにエクスポートする必要があります（[パラメーターのエクスポートの詳細](/docs/exports-parameters)）。
+テストまたはスイートレベルで定義されたパラメーター、あるいは設定ファイルで定義されたパラメーターを使用してテキスト要素を検証できます。別のステップで作成したパラメーターを使用する場合は、テストレベルにエクスポートする必要があります（[パラメーターのエクスポートの詳細](/docs/advanced-editing/parameters/exports-parameters)）。
 
 ### パラメーターのみ
 
@@ -241,17 +241,17 @@ JS（JavaScript）: 任意の JS 式を定義できます。
 
 1. 以下のいずれかの方法でパラメーターを定義します。
 
-   - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/parameters-in-custom-javascript-steps)を参照してください。
+   - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps)を参照してください。
 
-   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
 
-   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/configuring-data-driven-tests-using-the-config-file)を参照してください。
+   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/running-tests/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file)を参照してください。
 
 <Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
   **画像をクリックで拡大**
 </Image>
 
-2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/exports-parameters)を参照してください。\
+2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。\
    例えば、`username` パラメーターに `Hello, John` という値をエクスポートするには、新しいカスタムアクションステップを追加し、エディターに以下を入力します。
 
 ```javascript

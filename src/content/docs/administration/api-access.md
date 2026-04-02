@@ -46,7 +46,7 @@ Testim Automate の REST API を使用して、以下のアクションを実行
 
 ![API キー生成後に表示されるキー値と Copy ボタン](/images/cli-api/api-access/eb6356a-Screen_Shot_2020-10-19_at_12.42.18.png)
 
-4. API キーをコピーして **Done** をクリックします。[API キーの使用](/docs/api-access#api-キーの使用)セクションの説明に従って、API 認証ヘッダーでキーを使用します。
+4. API キーをコピーして **Done** をクリックします。[API キーの使用](/docs/administration/api-access#api-キーの使用)セクションの説明に従って、API 認証ヘッダーでキーを使用します。
 
 ![API キーをコピーして Done をクリックする画面](/images/cli-api/api-access/216e57f-Screen_Shot_2020-10-19_at_12.50.40.png)
 
@@ -62,7 +62,7 @@ API キーの値を表示できるのはこのときだけです。
 
 **追加のキーを生成するには:**
 
-- **Generate New** をクリックして、上記の[API アクセスの有効化](/docs/api-access#api-アクセスの有効化)セクションの手順に従います。
+- **Generate New** をクリックして、上記の[API アクセスの有効化](/docs/administration/api-access#api-アクセスの有効化)セクションの手順に従います。
 
 **API アクセスを取り消すには:**
 

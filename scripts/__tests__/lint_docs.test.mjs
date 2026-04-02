@@ -143,10 +143,11 @@ describe('internal link format', () => {
     assert.equal(errorsOf(['internal-link-format'], errors).length, 0);
   });
 
-  it('no warning for /docs/{slug} link', () => {
+  it('no warning for /docs/{basename} link (no allSlugs provided)', () => {
     const content = makeDoc({
       body: 'See [overview](/docs/testim-overview).\n',
     });
+    // Without allSlugs, no link-target checks are performed
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errorsOf(['internal-link-format'], errors).length, 0);
   });
@@ -280,12 +281,13 @@ describe('internal link target existence', () => {
     assert.match(e.message, /nonexistent-page/);
   });
 
-  it('no error for markdown link to existing basename slug (unique)', () => {
+  it('returns error for markdown link to basename slug (not path-based)', () => {
     const content = makeDoc({
       body: 'See [overview](/docs/testim-overview) for details.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
-    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing error for basename-only link');
   });
 
   it('returns error for HTML <a href> link to nonexistent basename slug', () => {
@@ -298,41 +300,42 @@ describe('internal link target existence', () => {
     assert.equal(e.level, 'error');
   });
 
-  it('no error for HTML <a href> link to existing basename slug (unique)', () => {
+  it('returns error for HTML <a href> link to basename slug (not path-based)', () => {
     const content = makeDoc({
       body: 'See <a href="/docs/getting-started">start</a> here.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
-    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing error for basename-only HTML link');
   });
 
-  it('returns warning for markdown link with nonexistent fragment (basename)', () => {
+  it('returns error (not fragment warning) for basename link with fragment', () => {
     const content = makeDoc({
       body: 'See [section](/docs/testim-overview#nonexistent-section) here.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
-    const e = errors.find((e) => e.rule === 'link-fragment-missing');
-    assert.ok(e, 'expected link-fragment-missing warning');
-    assert.equal(e.level, 'warning');
-    assert.match(e.message, /nonexistent-section/);
+    // Basename link → target missing error takes precedence over fragment check
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing error for basename link');
+    assert.equal(errorsOf(['link-fragment-missing'], errors).length, 0);
   });
 
-  it('no warning for markdown link with existing fragment (basename)', () => {
+  it('returns error (not fragment warning) for basename link with valid fragment', () => {
     const content = makeDoc({
       body: 'See [section](/docs/testim-overview#features) here.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
-    assert.equal(errorsOf(['link-fragment-missing'], errors).length, 0);
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing for basename link even with valid fragment');
   });
 
-  it('returns warning for HTML link with nonexistent fragment (basename)', () => {
+  it('returns error for HTML basename link with fragment', () => {
     const content = makeDoc({
       body: 'See <a href="/docs/getting-started#bad-section">link</a>.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: slugs, headingsBySlug: headings });
-    const e = errors.find((e) => e.rule === 'link-fragment-missing');
-    assert.ok(e, 'expected link-fragment-missing warning for HTML link');
-    assert.equal(e.level, 'warning');
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing for basename HTML link');
   });
 
   it('skips link-target check when allSlugs is not provided', () => {
@@ -404,15 +407,15 @@ describe('internal link target existence', () => {
     assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
   });
 
-  it('skips ambiguous basename-only link without error', () => {
+  it('returns error for ambiguous basename-only link', () => {
     // Two slugs share the same basename "shared-name"
     const ambiguousSlugs = new Set(['folder-a/shared-name', 'folder-b/shared-name']);
     const content = makeDoc({
       body: 'See [page](/docs/shared-name) for details.\n',
     });
     const errors = lintContent(content, 'test.md', { allSlugs: ambiguousSlugs });
-    // Ambiguous basename → skip (no error)
-    assert.equal(errorsOf(['link-target-missing'], errors).length, 0);
+    const e = errors.find((e) => e.rule === 'link-target-missing');
+    assert.ok(e, 'expected link-target-missing error for ambiguous basename link');
   });
 
   it('returns error for path-based link with wrong folder', () => {
@@ -475,7 +478,7 @@ describe('toKebab', () => {
 describe('edge cases', () => {
   it('returns empty array for a fully valid document', () => {
     const content = makeDoc({
-      body: '## Section\n\nSome content with [link](/docs/testim-overview).\n\n```js\nconst x = 1;\n```\n',
+      body: '## Section\n\nSome content with [link](/docs/overview/testim-overview).\n\n```js\nconst x = 1;\n```\n',
     });
     const errors = lintContent(content, 'src/content/docs/test.md');
     assert.equal(errors.filter((e) => e.level === 'error').length, 0);

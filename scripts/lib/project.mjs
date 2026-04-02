@@ -111,6 +111,9 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
  * Accepts both basename ("testim-overview") and path-based ("overview/testim-overview").
  * Returns null if the slug is not found or is ambiguous (logs a warning for ambiguity).
  *
+ * **Deprecated**: Basename resolution is deprecated. Use path-based slugs directly
+ * (e.g., `--slug=overview/testim-overview` instead of `--slug=testim-overview`).
+ *
  * @param {string | null | undefined} input
  * @param {string} [docsDir]
  * @returns {string | null}
@@ -120,13 +123,18 @@ export function resolveSlug(input, docsDir = DOCS_DIR) {
   const index = buildSlugIndex(docsDir);
   // Exact match (already path-based)
   if (index[input]) return input;
-  // Basename resolution: find all entries whose basename matches
+  // Basename resolution (deprecated): find all entries whose basename matches
   const basename = input.includes('/') ? null : input;
   if (!basename) return null;
   const matches = Object.keys(index).filter(
     (slug) => slug.split('/').pop() === basename
   );
-  if (matches.length === 1) return matches[0];
+  if (matches.length === 1) {
+    console.warn(
+      `⚠️  Deprecated: basename slug "${input}" resolved to "${matches[0]}". Use the full path-based slug instead.`
+    );
+    return matches[0];
+  }
   if (matches.length > 1) {
     console.warn(
       `⚠️  Ambiguous slug "${input}" matches multiple paths: ${matches.join(', ')}. Use full path.`

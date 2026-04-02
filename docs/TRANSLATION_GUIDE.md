@@ -26,35 +26,36 @@
 
 ### 2.1 配置場所
 
-既存のトピックフォルダにページを配置します。**フォルダ構造は整理用であり、カテゴリ名や公開URLとは1対1で対応しません。**
+既存のトピックフォルダにページを配置します。**フォルダ構造は EN サイトの URL パス構造にミラーしており、公開 URL に直接反映されます。**
 
-たとえば `テスト編集` カテゴリのページでも、内容に応じて `steps-editing-tests/`、`groups/`、`conditions/`、`test-utilities/` など複数のフォルダに分かれて配置されます。
+たとえば `src/content/docs/overview/testim-overview.md` の公開 URL は `/docs/overview/testim-overview` になります。
 
 配置例：
 
 ```text
 src/content/docs/
-├── overview/        # 概要カテゴリ
-│   ├── testim-overview.md
-│   ├── getting-started.md
-│   └── testim-automate.md
-├── recording-tests/          # テストの記録カテゴリの代表フォルダ
+├── overview/                        # → /docs/overview/...
+│   ├── testim-overview.md           # → /docs/overview/testim-overview
+│   └── testim-overview/
+│       └── testim-automate.md       # → /docs/overview/testim-overview/testim-automate
+├── recording-tests/                 # → /docs/recording-tests/...
 │   ├── how-to-record-a-test.md
-│   └── recording-a-mobile-test.md
-├── steps-editing-tests/     # テスト編集カテゴリの代表フォルダ
+│   └── recording-a-mobile-test/
+│       └── recording-a-local-mobile-test.md
+├── editing-tests/                   # → /docs/editing-tests/...
 │   ├── steps.md
-│   └── editing-your-tests.md
-├── validations/             # 高度な編集カテゴリの代表フォルダ
-│   └── validate-element-visible.md
-└── testim-labs/             # Testim Labsカテゴリ
-    └── testim-labs.md
+│   └── editing-your-tests/
+│       └── editing-a-steps-properties.md
+└── advanced-editing/                # → /docs/advanced-editing/...
+    └── validations/
+        └── custom-code.md           # → /docs/advanced-editing/validations/custom-code
 ```
 
 **フォルダ選択ルール**:
 
-- まず既存の近い記事と同じフォルダに置く
+- EN サイトの URL パス構造 (`sourceUrl`) に合わせる
 - フォルダ名は記事のトピック単位で判断し、カテゴリ名だけで決めない
-- 公開URLはフォルダではなくファイル名で決まるため、配置先よりファイル名の整合性を優先する
+- **公開 URL はフォルダ構造で決まるため、配置先を間違えると URL が変わる**
 
 ### 2.2 ファイル命名規則
 
@@ -70,20 +71,20 @@ src/content/docs/
 
 ### 2.3 ルーティングの重要事項
 
-**このプロジェクトの公開URLは、フォルダ構造を無視してファイル名のみで決まります。**
+**このプロジェクトの公開 URL は、フォルダ構造を反映したパスベース形式です。**
 
 ```text
 src/content/docs/overview/testim-overview.md
-→ /docs/testim-overview
+→ /docs/overview/testim-overview
 
 src/content/docs/getting-started/setting-up-your-account.md
-→ /docs/setting-up-your-account
+→ /docs/getting-started/setting-up-your-account
 ```
 
-そのため、本文中の内部リンクも必ず `/docs/{slug}` 形式にしてください。
+そのため、本文中の内部リンクも必ず `/docs/{folder}/{slug}` 形式にしてください。
 
-- 正しい例: `/docs/testim-overview`
-- 誤った例: `/docs/overview/testim-overview`
+- 正しい例: `/docs/overview/testim-overview`
+- 誤った例: `/docs/testim-overview`（ベースネーム形式 — lint エラー）
 
 ## 3. Frontmatter 設定
 
@@ -605,7 +606,7 @@ find src/content/docs -name "*.md" | sort
 - [ ] 日本語として自然な表現になっている
 - [ ] 原文の構造（見出し階層、段落）が維持されている
 - [ ] 内部リンクが日本語版ページを指している（可能な場合）
-- [ ] 内部リンクが `/docs/{slug}` 形式で、フォルダ名を含んでいない
+- [ ] 内部リンクがパスベース `/docs/{folder}/{slug}` 形式である
 - [ ] 外部リンクが正しく機能する
 - [ ] 新規追加・大規模改稿した Callout が `:::` 記法で書かれている
 - [ ] コードブロックにtitle属性が付与されている（必要な場合）
@@ -767,23 +768,24 @@ find src/content/docs -name "[filename].md"
 #!/bin/bash
 # 複数ページを一括処理するスクリプト例
 
-# ページリスト（page-slug:category-folder形式）
-pages=(
-  "testim-overview:overview"
-  "testim-automate:overview"
-  "setting-up-your-account:getting-started"
+# ページリスト（各ページの sourceUrl をそのまま使用）
+# sourceUrl は frontmatter から取得: grep '^sourceUrl:' src/content/docs/{slug}.md
+source_urls=(
+  "https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm"
+  "https://docs.tricentis.com/testim/content/overview/testim-automate.htm"
+  "https://docs.tricentis.com/testim/content/getting-started/setting-up-your-account.htm"
 )
 
-for page_info in "${pages[@]}"; do
-  slug="${page_info%%:*}"
-  category="${page_info##*:}"
+for source_url in "${source_urls[@]}"; do
+  # sourceUrl からパスベース slug を導出
+  slug=$(echo "$source_url" | sed -E 's|.*/content/||; s|/index\.htm$||; s|\.htm$||')
 
   echo "========================================="
-  echo "処理中: $slug (カテゴリ: $category)"
+  echo "処理中: $slug ($source_url)"
   echo "========================================="
 
-  # 1. 画像URL抽出
-  urls=$(curl -s "https://docs.tricentis.com/testim/content/$category/$slug.htm" | \
+  # 1. 画像URL抽出（sourceUrl をそのまま使用 — .htm / index.htm の区別を保持）
+  urls=$(curl -s "$source_url" | \
     grep -oE 'https://files\.readme\.io/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|gif|webp)' | \
     grep -v -E '(ProductLogoMark|favicon|bullet|info2x)' | \
     sort -u)
@@ -796,8 +798,10 @@ for page_info in "${pages[@]}"; do
     continue
   fi
 
-  # 2. フォルダ作成
-  img_dir="public/images/$category/$slug"
+  # 2. フォルダ作成（slug のベースネーム部分を使用）
+  basename_slug="${slug##*/}"
+  parent_dir="${slug%/*}"
+  img_dir="public/images/$parent_dir/$basename_slug"
   mkdir -p "$img_dir"
   cd "$img_dir"
 

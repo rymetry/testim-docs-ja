@@ -28,13 +28,13 @@ Dedicated Run Tunnel を使用すると、internal server や localhost から�
 ## 前提条件
 
 1. Tunnel feature が有効になっている。
-2. [Testim CLI](/docs/the-command-line-cli)
+2. [Testim CLI](/docs/running-tests/the-command-line-cli)
 
 ## 使用方法
 
 1. アプリケーションサーバーを起動します。
 2. CLI コマンドを実行するマシンが内部サーバー/localhost にアクセスできることを確認します。
-3. パラメーター（`--tunnel` - デフォルトのアプリケーションポート 80）を指定して[Testim CLI](/docs/the-command-line-cli)を実行します
+3. パラメーター（`--tunnel` - デフォルトのアプリケーションポート 80）を指定して[Testim CLI](/docs/running-tests/the-command-line-cli)を実行します
 4. ポート 80 以外のポートでアプリケーションを実行する場合は、パラメーター（`--tunnel-port \<APP PORT e.g. 80>`）を追加します
 
 Testim CLI は、専用の tunnel address を指すようにアプリケーションの base URL を自動的に調整します。
@@ -54,7 +54,7 @@ testim --tunnel --tunnel-port <APP PORT default 80> --label "<YOUR LABEL>" --tok
 :::
 
 :::note
-grid name については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+grid name については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 :::
 
 :::note

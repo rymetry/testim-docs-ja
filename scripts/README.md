@@ -37,9 +37,9 @@ npm test                       # 全テスト実行
 npm run check:snapshots                # 取得→比較を一括実行
 npm run check:snapshots:fetch          # スナップショット取得のみ
 npm run check:snapshots:diff           # コミット済み vs working tree を比較
-npm run check:snapshots:diff -- --slug=testim-overview   # 単一ページ
+npm run check:snapshots:diff -- --slug=overview/testim-overview   # 単一ページ
 npm run check:snapshots:fetch -- --section="Overview"    # セクション絞り込み
-npm run check:snapshots:fetch -- --slug=testim-overview  # 単一ページ
+npm run check:snapshots:fetch -- --slug=overview/testim-overview  # 単一ページ
 npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検証のみ（ファイルは書き込まない）
 ```
 
@@ -53,7 +53,7 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 ```bash
 npm run check:parity                                      # ローカルチェック
-npm run check:parity -- --slug=testim-overview            # 単一ページ
+npm run check:parity -- --slug=overview/testim-overview            # 単一ページ
 node scripts/check_source_parity.mjs --section="概要"     # セクション絞り込み
 node scripts/check_source_parity.mjs --json               # JSON 出力
 npm run check:parity -- --fail-on=actionable              # actionable + error で exit 1
@@ -105,7 +105,7 @@ node scripts/lint-docs.mjs --path="src/content/docs/overview/*.md"
 node scripts/lint-docs.mjs --section="概要"
 ```
 
-**検証項目**: sourceUrl 形式、必須 frontmatter（title, category, updated）、description プレースホルダー残留、内部リンク形式（`/docs/{slug}` のみ）、Testim 機能名の英語保持、コードブロック言語指定、callout タイプ、画像ファイル存在確認
+**検証項目**: sourceUrl 形式、必須 frontmatter（title, category, updated）、description プレースホルダー残留、内部リンクターゲット存在確認（パスベース `/docs/{folder}/{slug}` 形式のみ）、Testim 機能名の英語保持、コードブロック言語指定、callout タイプ、画像ファイル存在確認
 
 **終了コード**: エラーあり → `1`
 
@@ -173,7 +173,7 @@ npm run docs:sync-sidebar
 ```bash
 npm run docs:fetch
 node scripts/fetch_translate_images.mjs --mode=full
-node scripts/fetch_translate_images.mjs --slug=testim-overview
+node scripts/fetch_translate_images.mjs --slug=overview/testim-overview
 node scripts/fetch_translate_images.mjs --section="Overview" --limit=5
 ```
 
@@ -198,7 +198,7 @@ node scripts/generate_untranslated_placeholders.mjs --section="Overview"
 
 ```bash
 npm run docs:prepare-llm
-node scripts/prepare_llm_tasks.mjs --slug=testim-overview
+node scripts/prepare_llm_tasks.mjs --slug=overview/testim-overview
 node scripts/prepare_llm_tasks.mjs --section="Overview"
 ```
 
@@ -266,7 +266,7 @@ npm run docs:normalize
 node scripts/normalize_docs.mjs --section="概要"
 ```
 
-**主な変換**: 機能名の日本語→英語置換（`Testim拡張機能` → `Testim Extension`）、リンク形式修正（`/docs/folder/slug` → `/docs/slug`）、frontmatter フィールド順序統一
+**主な変換**: 機能名の日本語→英語置換（`Testim拡張機能` → `Testim Extension`）、frontmatter フィールド順序統一
 
 ---
 
@@ -406,8 +406,8 @@ npm test    # node --test scripts/__tests__/*.mjs
 ### 日常運用（ページ単位）
 
 ```bash
-npm run check:parity -- --slug=testim-overview
-npm run check:snapshots:diff -- --slug=testim-overview
+npm run check:parity -- --slug=overview/testim-overview
+npm run check:snapshots:diff -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 ```
 

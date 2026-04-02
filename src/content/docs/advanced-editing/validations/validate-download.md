@@ -20,7 +20,7 @@ keywords:
 
 テスト内から Node.js スクリプトを実行してダウンロード内容が期待通りであることを検証する
 
-_Validate download_ ステップは専用の [CLI ステップ](/docs/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
+_Validate download_ ステップは専用の [CLI ステップ](/docs/advanced-editing/validations/add-cli-validations-and-actions)で、さまざまなファイル形式のダウンロード内容が期待通りであることを検証できます。各ファイル形式に関連するパラメーターをチェックできます。例：CSV ファイルの場合は行数と内容をチェック、画像ファイルの場合は画像タイプと寸法をチェック、MS PowerPoint の場合はスライド数とその内容をチェックできます。
 
 :::note{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
@@ -129,7 +129,7 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 5. **Name the new step** フィールドに、このステップの名前を入力します。
 6. このステップをこのテストまたは他のテストで再利用可能な共有ステップにする場合は、**Shared step** の横のチェックボックスを選択したまま（デフォルト）にし、**Select shared step** フォルダーリストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。\
-   共有ステップの詳細については [Groups](/docs/groups) を参照してください。
+   共有ステップの詳細については [Groups](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
    **function** エディターが開き、右側に **Properties** パネルが表示されます。
 
@@ -164,7 +164,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 :::
 
 11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: _Mark error & stop_、_Mark error & continue_、_Mark warning & continue_。
-12. このステップの実行条件を制御するには、**Properties** パネルの **When to run step** の下矢印をクリックし、希望するオプションを選択します。詳細については、[Conditions](/docs/conditions) を参照してください。
+12. このステップの実行条件を制御するには、**Properties** パネルの **When to run step** の下矢印をクリックし、希望するオプションを選択します。詳細については、[Conditions](/docs/editing-tests/conditions) を参照してください。
 13. デフォルトのタイムアウト設定（30000 ミリ秒）を上書きするには、**Properties** パネルの **Override timeout** ボタンをクリックし、希望するタイムアウト値を入力します。
 14. 左上の戻る矢印でエディターに戻ります。
 

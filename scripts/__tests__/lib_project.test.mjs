@@ -142,9 +142,18 @@ describe('resolveSlug', () => {
     assert.equal(result, 'overview/testim-overview');
   });
 
-  it('resolves basename to path-based slug', () => {
-    const result = resolveSlug('testim-overview');
-    assert.equal(result, 'overview/testim-overview');
+  it('resolves basename to path-based slug with deprecation warning', () => {
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      const result = resolveSlug('testim-overview');
+      assert.equal(result, 'overview/testim-overview');
+      assert.ok(warnings.length > 0, 'expected deprecation warning');
+      assert.ok(warnings[0].includes('Deprecated'), 'warning should mention Deprecated');
+    } finally {
+      console.warn = origWarn;
+    }
   });
 
   it('returns null for non-existent slug', () => {

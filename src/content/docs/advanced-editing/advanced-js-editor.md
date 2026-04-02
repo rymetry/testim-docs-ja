@@ -34,14 +34,14 @@ Monaco Editor を用いたシンタックスチェック、自動補完、配色
 
 高度な JS エディターを利用できるステップ:
 
-- [Custom action](/docs/custom-code#add-custom-validation-add-custom-action-ステップの追加)
-- [CLI action](/docs/add-cli-validations-and-actions)
-- [Custom validation](/docs/custom-code#add-custom-validation-add-custom-action-ステップの追加)
-- [CLI validation](/docs/add-cli-validations-and-actions)
-- [Download validation](/docs/validate-download)
-- [Email validation](/docs/email-validation)
-- [Network validation](/docs/add-network-validation)
-- [Custom wait for](/docs/wait-for#要素の表示を待つ（モバイル）)
+- [Custom action](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)
+- [CLI action](/docs/advanced-editing/validations/add-cli-validations-and-actions)
+- [Custom validation](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)
+- [CLI validation](/docs/advanced-editing/validations/add-cli-validations-and-actions)
+- [Download validation](/docs/advanced-editing/validations/validate-download)
+- [Email validation](/docs/advanced-editing/validations/email-validation)
+- [Network validation](/docs/advanced-editing/validations/add-network-validation)
+- [Custom wait for](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)
 - CLI wait for
 - Download wait for
 

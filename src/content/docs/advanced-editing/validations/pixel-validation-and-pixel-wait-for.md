@@ -22,7 +22,7 @@ keywords:
 
 ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](https://applitools.com/) と [LambdaTest](https://www.lambdatest.com/) によって提供されています。
 
-開始前に、[Applitools Eyes](https://applitools.com/) または [LambdaTest SmartUI](https://www.lambdatest.com/) と Testim を連携してください。詳しくは[ビジュアル検証統合ガイド](/docs/visual_validation_index)を参照。\
+開始前に、[Applitools Eyes](https://applitools.com/) または [LambdaTest SmartUI](https://www.lambdatest.com/) と Testim を連携してください。詳しくは[ビジュアル検証統合ガイド](/docs/integrations/visual-validation/visual_validation_index)を参照。\
 関連情報：
 
 - [https://applitools.com/docs/test-manager/viewers/tm-baseline-viewer.html](https://applitools.com/docs/test-manager/viewers/tm-baseline-viewer.html)
@@ -39,10 +39,10 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 
 次のビジュアル検証を実行できます：
 
-- **Validate Element Visualization** — 特定要素の視覚差分を比較。参照 - [Validate Element Visualization](/docs/validate-element-visualization)
-- **Wait For Element Visualization** — 要素が可視になるまで待機し、その後視覚的に検証。参照 - [Wait For Element Visualization](/docs/wait-for-element-visualization)
-- **Viewport Visualization** — ビューポートの視覚差分を比較。参照 - [Validate Viewport Visualization](/docs/validate-viewport-visualization)
-- **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/validate-full-page-visualization)
+- **Validate Element Visualization** — 特定要素の視覚差分を比較。参照 - [Validate Element Visualization](/docs/advanced-editing/validations/validate-element-visualization)
+- **Wait For Element Visualization** — 要素が可視になるまで待機し、その後視覚的に検証。参照 - [Wait For Element Visualization](/docs/advanced-editing/validations/wait-for-element-visualization)
+- **Viewport Visualization** — ビューポートの視覚差分を比較。参照 - [Validate Viewport Visualization](/docs/advanced-editing/validations/validate-viewport-visualization)
+- **Full-page Visualization** — ページ全体の視覚差分を比較。参照 - [Validate Full-page Visualization](/docs/advanced-editing/validations/validate-full-page-visualization)
 
 :::info
 テスト構成を変更すると Applitools 側では新しいベースラインが作られますが、Testim 側のベースラインは変わりません。構成ごとにベースラインを分けたい場合はテストを分けて作成してください。
@@ -83,15 +83,15 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
    </td>
    <td>
     テスト設定の詳細は
-    <a href="/docs/shared-configuration">
+    <a href="/docs/test-management/shared-configuration">
      Create a shared configuration
     </a>
     を参照。CLI の詳細は
-    <a href="/docs/the-command-line-cli">
+    <a href="/docs/running-tests/the-command-line-cli">
      Command line interface: Test Config
     </a>
     を参照。Scheduler の詳細は
-    <a href="/docs/scheduler">
+    <a href="/docs/running-tests/scheduler">
      Scheduler
     </a>
     を参照。
@@ -134,8 +134,8 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 ![Configuration Library の+ Create New ボタン](/images/validations/pixel-validation-and-pixel-wait-for/3e415da-Testim_503a.png)
 
-3. [Configuration List](/docs/shared-configuration#構成ライブラリでテスト構成を作成および変更する) に記載されている基本設定を入力します。
-4. **Advanced** をクリックし、[Test Configuration](/docs/how-to-record-a-test) に説明されている詳細設定を入力します。\
+3. [Configuration List](/docs/test-management/shared-configuration#構成ライブラリでテスト構成を作成および変更する) に記載されている基本設定を入力します。
+4. **Advanced** をクリックし、[Test Configuration](/docs/recording-tests/how-to-record-a-test) に説明されている詳細設定を入力します。\
    詳細設定が表示されます。
 
 ![Visual validation の詳細設定画面](/images/validations/pixel-validation-and-pixel-wait-for/938763b-Testim_602_r.png)

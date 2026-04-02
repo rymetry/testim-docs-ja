@@ -16,7 +16,7 @@ keywords:
 
 結果を CSV ファイルにエクスポートする方法を学びます。
 
-エクスポートボタンをクリックすることで、[実行画面](/docs/execution-runs-screen)、[テスト実行](/docs/test-runs)画面、[テストリスト](/docs/test-list)からテスト結果をエクスポートできます。
+エクスポートボタンをクリックすることで、[実行画面](/docs/results/execution-runs-screen)、[テスト実行](/docs/results/test-runs)画面、[テストリスト](/docs/test-management/test-list)からテスト結果をエクスポートできます。
 
 各ビューで利用可能なさまざまなフィルターを使用すると、選択したフィルターに応じて変更されたエクスポートファイルが作成されます。
 
@@ -31,7 +31,7 @@ keywords:
 **実行画面からテスト結果をエクスポートするには:**
 
 1. 実行 > 実行画面に移動します。
-2. **詳細フィルター**ボタンをクリックして、エクスポートしたい実行のリストをフィルタリングします（[実行画面](/docs/execution-runs-screen)を参照）。
+2. **詳細フィルター**ボタンをクリックして、エクスポートしたい実行のリストをフィルタリングします（[実行画面](/docs/results/execution-runs-screen)を参照）。
 
 ![実行画面の詳細フィルター](/images/results/export-test-list-and-test-results/c299194-filters.jpg)
 
@@ -46,7 +46,7 @@ keywords:
 **テスト実行画面からテスト結果をエクスポートするには:**
 
 1. 実行 > テスト実行に移動します。
-2. **詳細フィルター**ボタンをクリックして、エクスポートしたい実行のリストをフィルタリングします（[テスト実行](/docs/test-runs)を参照）。
+2. **詳細フィルター**ボタンをクリックして、エクスポートしたい実行のリストをフィルタリングします（[テスト実行](/docs/results/test-runs)を参照）。
 
 ![テスト実行画面の詳細フィルター](/images/results/export-test-list-and-test-results/84a6fc1-filters.jpg)
 
@@ -61,7 +61,7 @@ keywords:
 **テストリスト画面からテスト結果をエクスポートするには:**
 
 1. テストリスト > テストに移動します。
-2. **詳細フィルター**ボタンをクリックして、エクスポートしたい実行のリストをフィルタリングします（[テスト実行](/docs/test-runs)を参照）。
+2. **詳細フィルター**ボタンをクリックして、エクスポートしたい実行のリストをフィルタリングします（[テスト実行](/docs/results/test-runs)を参照）。
 
 ![テストリスト画面の詳細フィルター](/images/results/export-test-list-and-test-results/c163714-filters.jpg)
 

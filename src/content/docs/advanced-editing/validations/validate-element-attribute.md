@@ -61,7 +61,7 @@ keywords:
 
 ![検証](/images/validations/validate-element-attribute/6a2c9cd-elementattvalidation.png)
 
-8. **Attribute name** に検証したい属性名（例: checkable, checked, className, clickable）を入力します。利用可能な属性一覧は [List of possible attributes](/docs/validate-element-attribute#利用可能な属性一覧) を参照。
+8. **Attribute name** に検証したい属性名（例: checkable, checked, className, clickable）を入力します。利用可能な属性一覧は [List of possible attributes](/docs/advanced-editing/validations/validate-element-attribute#利用可能な属性一覧) を参照。
 9. **Expected value** に期待値を入力します（例: `true`）。
 
 :::note

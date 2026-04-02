@@ -14,7 +14,7 @@ keywords:
 ---
 
 :::info{title="Testim Labs 機能"}
-Testim Labs に参加している場合は、**Settings > Labs** でこの機能が有効になっていることを確認してください。Testim Labs と参加方法の詳細については、[Testim Labs について](/docs/testim-labs)を参照してください。
+Testim Labs に参加している場合は、**Settings > Labs** でこの機能が有効になっていることを確認してください。Testim Labs と参加方法の詳細については、[Testim Labs について](/docs/testim-labs/testim-labs)を参照してください。
 :::
 
 **Test Flow View**は、テストのグラフィカルなフローベースのビジュアライゼーションを提供します。

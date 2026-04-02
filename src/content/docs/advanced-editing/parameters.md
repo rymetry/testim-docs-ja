@@ -24,13 +24,13 @@ keywords:
 
 ## パラメーターの定義方法
 
-- [ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメーターを定義できます。
-- [グループのパラメーター](/docs/parameters-for-groups) - グループにパラメーターを定義し、他テストでも再利用できます。
-- [パラメーターのエクスポート](/docs/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディターで定義したパラメーターを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
-- [JSON パラメーターファイル](/docs/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
-- [設定ファイルのパラメーター](/docs/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
-- [テストデータ](/docs/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
-- 値生成ステップ - [日付の生成](/docs/generating-a-date#生成日付ステップを追加する)、[メールアドレスの生成](/docs/email-validation#テストの関連ステップで恒久的メールを使用する)、[値の抽出](/docs/extract-text)、[乱数の生成](/docs/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
+- [ステッププロパティパネルのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) - 一部のステップでは、プロパティパネルの PARAMS 欄でパラメーターを定義できます。
+- [グループのパラメーター](/docs/advanced-editing/parameters/parameters-for-groups) - グループにパラメーターを定義し、他テストでも再利用できます。
+- [パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters) - カスタム/CLI/ネットワーク/ダウンロードの各検証・アクションステップ内の関数エディターで定義したパラメーターを、定義したスコープに応じて同一グループ／テスト／実行内の他ステップで利用できます。
+- [JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
+- [設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
+- [テストデータ](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
+- 値生成ステップ - [日付の生成](/docs/editing-tests/generating-a-date#生成日付ステップを追加する)、[メールアドレスの生成](/docs/advanced-editing/validations/email-validation#テストの関連ステップで恒久的メールを使用する)、[値の抽出](/docs/advanced-editing/extract-text)、[乱数の生成](/docs/editing-tests/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
 
 ## 事前定義（標準）パラメーター
 
@@ -45,7 +45,7 @@ URL 文字列の前後に単一引用符が付く場合があります（例: 'B
 :::
 
 データ駆動テストでの動的なベース URL としても有用です。例えば複数サイトに同一テストを流す場合、与えるデータに応じて BASE_URL を切り替えられます。\
-詳細は [Base URL](/docs/base-url) を参照してください。
+詳細は [Base URL](/docs/running-tests/base-url) を参照してください。
 
 ### Testim Iterator パラメーター
 
@@ -55,11 +55,11 @@ TESTIM_ITERATOR はグループのループ内でのみ利用でき、現在の�
 このパラメーターのスコープはグループのループ内に限定されます。
 :::
 
-詳細は [ループイテレーターパラメーターの使用](/docs/loops#ループイテレータパラメーターの使用) を参照してください。
+詳細は [ループイテレーターパラメーターの使用](/docs/advanced-editing/loops#ループイテレータパラメーターの使用) を参照してください。
 
 ### Network Requests パラメーター
 
-`networkRequests` は、実行中に発生したネットワークリクエストをオブジェクト配列として収集します。ネットワーク検証ステップ内でのみ利用できます。詳細は [ネットワーク検証の追加](/docs/add-network-validation) を参照してください。
+`networkRequests` は、実行中に発生したネットワークリクエストをオブジェクト配列として収集します。ネットワーク検証ステップ内でのみ利用できます。詳細は [ネットワーク検証の追加](/docs/advanced-editing/validations/add-network-validation) を参照してください。
 
 ## パラメーターの使用方法
 
@@ -74,8 +74,8 @@ myParam が定義済みパラメーターです。定義したパラメーター
   - Description
   - Date Format
 - **プロパティパネルの Param セクションにある式入力欄** - パラメーターを定義すると式入力欄が表示され、そこに別の定義済みパラメーターを設定して値を連鎖させることもできます。
-- **任意の関数エディターパネル** - 一部のステップ（例: カスタム検証）やカスタム条件には関数エディターパネルがあります。定義済みパラメーターをこのエディター内で参照可能です。詳細は [高度な JS エディター](/docs/advanced-js-editor) を参照してください。
-- **[API ステップ](/docs/api-testing#using-parameters)** - API ステップには、定義済みパラメーターの使用をサポートする以下のテキストセクションがあります:
+- **任意の関数エディターパネル** - 一部のステップ（例: カスタム検証）やカスタム条件には関数エディターパネルがあります。定義済みパラメーターをこのエディター内で参照可能です。詳細は [高度な JS エディター](/docs/advanced-editing/advanced-js-editor) を参照してください。
+- **[API ステップ](/docs/advanced-editing/api-testing#using-parameters)** - API ステップには、定義済みパラメーターの使用をサポートする以下のテキストセクションがあります:
   - Request URL - このセクションでは二重または三重ブラケットでパラメーターを参照します（例: \{\{\{param}}}）。
   - Header - このセクションでは二重または三重ブラケットでパラメーターを参照します（例: \{\{\{param}}}）。
   - Body - このセクションでは二重または三重ブラケットでパラメーターを参照します（例: \{\{\{param}}}）。
@@ -84,4 +84,4 @@ myParam が定義済みパラメーターです。定義したパラメーター
 
 ## パラメーターを非表示にする
 
-パラメーターに機微情報を含む場合は、[非表示パラメーター](/docs/hidden-parameters) の手順で値の保存・表示を抑制できます。
+パラメーターに機微情報を含む場合は、[非表示パラメーター](/docs/advanced-editing/parameters/hidden-parameters) の手順で値の保存・表示を抑制できます。

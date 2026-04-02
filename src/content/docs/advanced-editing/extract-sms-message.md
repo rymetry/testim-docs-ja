@@ -20,7 +20,7 @@ keywords:
 
 CLI action step と Twilio を使用して SMS メッセージを抽出する方法を学びます。
 
-[CLI action step](/docs/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMS メッセージの受信時刻とコンテンツの高度な検証を実行できます。
+[CLI action step](/docs/advanced-editing/validations/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMS メッセージの受信時刻とコンテンツの高度な検証を実行できます。
 
 #### コード例
 

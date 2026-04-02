@@ -38,7 +38,7 @@ keywords:
 
 ## ロケーターの自動改善プロセス後の自動リビジョン
 
-Testim は、劣化したロケーターを自動改善されたロケーターに置き換えた後、自動的に新しいリビジョンを作成します。新しいリビジョンは、**Revision History**パネルで「Testim auto improve」というラベルが付けられます。詳細については、[ロケーター: 自動改善](/docs/locators-auto-improve)を参照してください。また、テスト内のどのステップが自動改善されたかを表示することもできます。
+Testim は、劣化したロケーターを自動改善されたロケーターに置き換えた後、自動的に新しいリビジョンを作成します。新しいリビジョンは、**Revision History**パネルで「Testim auto improve」というラベルが付けられます。詳細については、[ロケーター: 自動改善](/docs/test-management/locators-auto-improve)を参照してください。また、テスト内のどのステップが自動改善されたかを表示することもできます。
 
 ![ロケーター自動改善後に作成された Testim auto improve リビジョンを示す画面](/images/test-management/revisions/4cf4abe-Testim_478a.png)
 

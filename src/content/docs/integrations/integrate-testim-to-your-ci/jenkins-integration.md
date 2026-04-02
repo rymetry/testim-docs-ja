@@ -40,7 +40,7 @@ Jenkins マシンまたはそのワーカーマシンの 1 つに node.js（Node
 
 ![Jenkins で Execute Shell ビルドステップを追加する画面](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
 
-4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
+4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
    以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです（sudo は不要）
 
 ```shell
@@ -63,7 +63,7 @@ testim --label "<YOUR LABEL>" \
   Jenkins Execute Shell Command
 </Image>
 
-**注記:** グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+**注記:** グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 
 ### Windows
 
@@ -71,7 +71,7 @@ testim --label "<YOUR LABEL>" \
 
 ![Jenkins で Execute Windows batch command ステップを追加する画面](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
 
-4. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
+4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
    以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell Batch

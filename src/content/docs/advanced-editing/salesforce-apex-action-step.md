@@ -64,7 +64,7 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 5. **Name the new step** フィールドに、このステップのわかりやすい名前を入力します。
 6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step folder** リストから保存先フォルダーを選択します。共有ステップにしない場合はチェックを外します。\
-   共有ステップの詳細は [グループ](/docs/groups) を参照してください。
+   共有ステップの詳細は [グループ](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
    **function** エディターが開き、右側に Properties パネルが表示されます。
 
@@ -72,7 +72,7 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 8. **Properties** パネルの **Description** フィールドで、このステップの説明を必要に応じて編集します（既定値は “Run Salesforce Apex action”）。
 9. APEX コードを実行したい Salesforce 環境への接続情報を入力します。\
-   文字列（シングルまたはダブルクォートで囲む）またはパラメーター（クォートなし）を指定できます。パラメーターの使い方の詳細は後述の [Using Parameters](/docs/salesforce-apex-action-step#パラメーターの使用) を参照してください。
+   文字列（シングルまたはダブルクォートで囲む）またはパラメーター（クォートなし）を指定できます。パラメーターの使い方の詳細は後述の [Using Parameters](/docs/advanced-editing/salesforce-apex-action-step#パラメーターの使用) を参照してください。
 
 - **URL** フィールドに、対象 Salesforce 環境の URL を入力します。
 - **Username** フィールドに、Salesforce のユーザー名を入力します。
@@ -92,7 +92,7 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 11. 任意設定のプロパティ:
 
 - **When this step fails** – ステップが失敗した場合の挙動。
-- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – 既定のタイムアウト時間（この時間を超えるとステップ失敗とみなされる）を上書きし、別の時間（ミリ秒）を設定します。
 
 12. **function** 欄に APEX コードを記述します。定義したパラメーターをこのコード内で参照できます。
@@ -118,10 +118,10 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 1. 次のいずれかの方法でパラメーターを定義します。
 
-- **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-- **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-- **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
-  その後、エクスポート機能を使ってパラメーターを _Salesforce APEX action_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
+- **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+- **設定ファイルにパラメーターを追加** – [Configuration file](/docs/running-tests/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+- **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。\
+  その後、エクスポート機能を使ってパラメーターを _Salesforce APEX action_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
 
 2. _Salesforce APEX action_ ステップの **URL**、**Username**、**Password** フィールドに、上記で定義したパラメーターを設定します。
 

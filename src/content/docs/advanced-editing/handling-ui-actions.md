@@ -42,7 +42,7 @@ keywords:
  <tbody>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/scroll">
+    <a href="/docs/advanced-editing/handling-ui-actions/scroll">
      スクロール
     </a>
    </td>
@@ -52,7 +52,7 @@ keywords:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/auto-scroll">
+    <a href="/docs/advanced-editing/handling-ui-actions/auto-scroll">
      自動スクロール
     </a>
    </td>
@@ -62,7 +62,7 @@ keywords:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/drag-drop-step">
+    <a href="/docs/advanced-editing/handling-ui-actions/drag-drop-step">
      ドラッグ&amp;ドロップステップ
     </a>
    </td>
@@ -72,7 +72,7 @@ keywords:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/hover-step">
+    <a href="/docs/advanced-editing/handling-ui-actions/hover-step">
      ホバーステップ
     </a>
    </td>
@@ -82,7 +82,7 @@ keywords:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/navigation">
+    <a href="/docs/advanced-editing/handling-ui-actions/navigation">
      ナビゲーションステップ
     </a>
    </td>
@@ -92,7 +92,7 @@ keywords:
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/refresh-page">
+    <a href="/docs/advanced-editing/handling-ui-actions/refresh-page">
      ページの更新
     </a>
    </td>

@@ -21,9 +21,9 @@ Virtual Mobile Grid (VMG) は、多数の iOS simulator と Android emulator を
 - 利用可能な virtual device を使って接続と設定を簡素化し、品質を向上できます。
 - 異なる device で parallel run を行い、テスト実行をスケールできます。
 
-Virtual Mobile Grid はテストの記録にも実行にも使用できます。また、[Mobile Apps Library](/docs/mobile-apps) と接続されています。つまり、mobile app を使うテストを Virtual Mobile Grid で実行する前に、その app を Mobile Apps Library へ追加しておく必要があります。
+Virtual Mobile Grid はテストの記録にも実行にも使用できます。また、[Mobile Apps Library](/docs/mobile-apps/mobile-apps) と接続されています。つまり、mobile app を使うテストを Virtual Mobile Grid で実行する前に、その app を Mobile Apps Library へ追加しておく必要があります。
 
-Virtual Mobile Grid に特別な integration は不要です。有償 customer には license に含まれています。Community license でも、Company Owner または Project Owner であれば無料 trial に登録できます。trial を開始すると、Virtual Mobile Grid はすぐに [Device Management](/docs/view-local-connected-mobile-devices) で利用可能になります。trial 期間中は Android と iOS のさまざまな virtual device を使用できます。
+Virtual Mobile Grid に特別な integration は不要です。有償 customer には license に含まれています。Community license でも、Company Owner または Project Owner であれば無料 trial に登録できます。trial を開始すると、Virtual Mobile Grid はすぐに [Device Management](/docs/device-management/view-local-connected-mobile-devices) で利用可能になります。trial 期間中は Android と iOS のさまざまな virtual device を使用できます。
 
 :::warning{title="テスト互換性"}
 Virtual Mobile Grid で実行できるのは、virtual device で動作するように compile された iOS application のみです。
@@ -51,33 +51,33 @@ Community license を利用している場合、Company Owner または Project 
 
 Virtual Mobile Grid でテストを実行する前に、次を確認してください。
 
-- **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
+- **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/test-management/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
 
 ![Virtual Mobile Grid 向け mobile configuration の設定例](/images/grid-management/virtual-mobile-grid/07dd385-image_2.png)
 
-- **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps) を参照してください。すでに **_"From Device"_** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
+- **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps/mobile-apps) を参照してください。すでに **_"From Device"_** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
 
 ### テストをリモート実行する
 
 Virtual Mobile Grid 用に設定した configuration を使うことで、次のいずれかの方法でテストをリモート実行できます。
 
 :::info
-[Mobile Apps Library](/docs/mobile-apps) に対象の mobile app があることを確認してください。
+[Mobile Apps Library](/docs/mobile-apps/mobile-apps) に対象の mobile app があることを確認してください。
 :::
 
-[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
+[CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
 Grid 名を指定して `--grid` parameter を追加します。
 
-[Scheduler](/docs/scheduler-mobile)
+[Scheduler](/docs/running-tests/scheduler-mobile)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Test Plan](/docs/test-plans-mobile)
+[Test Plan](/docs/test-management/test-plans-mobile)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Remote Run through the Editor](/docs/running-tests-overview#リモート-モバイル-テストを実行する)
+[Remote Run through the Editor](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する)
 
 **Run on a grid** option で **Virtual Mobile Grid** と該当する configuration を選択します。
 

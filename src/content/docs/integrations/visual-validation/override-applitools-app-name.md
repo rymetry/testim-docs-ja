@@ -15,7 +15,7 @@ keywords:
   - プロジェクト設定
 ---
 
-Applitools に送信されるアプリ名をオーバーライドすることができます。これは、[テストデータ](/docs/data-driven-testing#データ駆動テストの一般的な用途)を使用して以下の方法で実行できます:
+Applitools に送信されるアプリ名をオーバーライドすることができます。これは、[テストデータ](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途)を使用して以下の方法で実行できます:
 
 1. パラメーター*applitoolsAppName*が、Applitools にアプリ名として送信されます
 2. テストデータでこれをオーバーライドまたは変更できます。例:

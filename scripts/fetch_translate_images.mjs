@@ -182,10 +182,44 @@ async function rewriteAndDownloadMedia(markdown, categoryFolder, slug, sourceUrl
   return updated;
 }
 
+/**
+ * Lazy-cached basename → path-slug lookup built from the docs index.
+ * Values are `null` for ambiguous basenames (those that appear in multiple folders).
+ */
+let _basenameToPath = null;
+function getBasenameToPathMap() {
+  if (!_basenameToPath) {
+    const slugIndex = buildSlugIndex();
+    const map = new Map();
+    for (const slug of Object.keys(slugIndex)) {
+      const bn = slug.split('/').pop();
+      if (map.has(bn)) {
+        map.set(bn, null); // ambiguous — skip
+      } else {
+        map.set(bn, slug);
+      }
+    }
+    _basenameToPath = map; // cache only after success
+  }
+  return _basenameToPath;
+}
+
+/**
+ * Resolve a basename slug to its path-based form. Already-path-based slugs pass through.
+ * Returns the original basename unchanged if it is ambiguous or not found in the index.
+ */
+function resolveToPathSlug(slug) {
+  if (slug.includes('/')) return slug;
+  const map = getBasenameToPathMap();
+  if (!map.has(slug)) return slug; // not in index — leave as-is
+  const resolved = map.get(slug);
+  return resolved ?? slug; // ambiguous (null) — fall back to original
+}
+
 export function rewriteDocLinks(markdown) {
-  // Legacy readme.io doc: links
+  // Legacy readme.io doc: links — resolve basename to path-based slug
   let result = markdown.replace(/\]\(doc:([a-z0-9_-]+)(#[^)]+)?\)/g, (_match, slug, frag = '') => {
-    return `](/docs/${slug}${frag || ''})`;
+    return `](/docs/${resolveToPathSlug(slug)}${frag || ''})`;
   });
   // MadCap Flare relative .htm links (e.g. ../path/slug.htm, slug/index.htm)
   result = result.replace(/\]\(([^)#]*\.htm)(#[^)]*)?\)/g, (_match, rawPath, fragment) => {
@@ -196,8 +230,8 @@ export function rewriteDocLinks(markdown) {
       : '/content/' + normalized;
     let slug = extractSlug(p);
     if (!slug) return _match;
-    // Use path-based slug for links (matching [...slug].astro routing)
-    return `](/docs/${slug}${fragment || ''})`;
+    // Resolve basename-only results to path-based slugs
+    return `](/docs/${resolveToPathSlug(slug)}${fragment || ''})`;
   });
   return result;
 }
