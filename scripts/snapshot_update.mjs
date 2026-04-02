@@ -20,6 +20,7 @@ import path from 'node:path';
 import {
   DOCS_DIR,
   ROOT_DIR,
+  filePathToSlug,
   findMdFiles,
   matchesSectionFilter,
   readDocFile,
@@ -71,7 +72,7 @@ function collectTargets({ section, slug }) {
     const { data } = doc;
     if (!data.sourceUrl) continue;
 
-    const fileSlug = path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
+    const fileSlug = filePathToSlug(filePath);
     if (resolvedSlug && fileSlug !== resolvedSlug) continue;
     if (section && !matchesSectionFilter(doc.relativePath, data, section)) continue;
 
@@ -200,6 +201,7 @@ async function verifySidebar({ dryRun = false } = {}) {
     const totalPages = sections.reduce((sum, s) => sum + s.pages.length, 0);
     return { ok: true, sectionCount: sections.length, pageCount: totalPages };
   } catch (error) {
+    console.error('verifySidebar failed:', error);
     return { ok: false, reason: error.message };
   }
 }

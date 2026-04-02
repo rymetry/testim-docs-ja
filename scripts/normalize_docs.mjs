@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
-import { ROOT_DIR, DOCS_DIR, findMdFiles } from './lib/project.mjs';
+import { ROOT_DIR, DOCS_DIR, findMdFiles, filePathToSlug } from './lib/project.mjs';
 import { generateDescription } from './lib/markdown-utils.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -53,7 +53,7 @@ function orderFrontmatter(data) {
 }
 
 function normalizeFile(filePath, urlMappings) {
-  const slug = path.relative(DOCS_ROOT, filePath).replace(/\.md$/, '');
+  const slug = filePathToSlug(filePath, DOCS_ROOT);
   const raw = fs.readFileSync(filePath, 'utf8');
   const parsed = matter(raw);
   const data = { ...(parsed.data ?? {}) };
@@ -85,14 +85,19 @@ async function main() {
   const args = process.argv.slice(2);
   const section = args.find((arg) => arg.startsWith('--section='))?.split('=').slice(1).join('=');
   const slugSet = section ? getSectionSlugSet(section) : null;
-  const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(path.relative(DOCS_ROOT, filePath).replace(/\.md$/, '')));
+  const files = findMdFiles(DOCS_ROOT).filter((filePath) => !slugSet || slugSet.has(filePathToSlug(filePath, DOCS_ROOT)));
 
   // Load url_mapping.json once for all files (avoid re-reading per file)
   let urlMappings = {};
   try {
     const mappingPath = path.join(__dirname, 'url_mapping.json');
     ({ mappings: urlMappings } = JSON.parse(fs.readFileSync(mappingPath, 'utf8')));
-  } catch { /* mapping file unavailable — leave empty for lint to catch */ }
+  } catch (e) {
+    if (e.code !== 'ENOENT') {
+      console.error(`normalize_docs: failed to load url_mapping.json: ${e.message}`);
+      console.error('URL-based normalization will be skipped for all files.');
+    }
+  }
 
   let changed = 0;
   for (const filePath of files) {

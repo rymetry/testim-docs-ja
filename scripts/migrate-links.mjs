@@ -8,28 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildSlugIndex } from './lib/project.mjs';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DOCS_DIR = path.resolve(__dirname, '..', 'src', 'content', 'docs');
-
-// ---------------------------------------------------------------------------
-// Build basename → pathSlug lookup
-// ---------------------------------------------------------------------------
-function buildBasenameToPathMap(docsDir = DOCS_DIR) {
-  const slugIndex = buildSlugIndex(docsDir);
-  /** @type {Map<string, string | null>} */
-  const map = new Map();
-  for (const slug of Object.keys(slugIndex)) {
-    const bn = slug.split('/').pop();
-    if (map.has(bn)) {
-      map.set(bn, null); // ambiguous
-    } else {
-      map.set(bn, slug);
-    }
-  }
-  return map;
-}
+import { buildBasenameToPathMap, DOCS_DIR } from './lib/project.mjs';
 
 // ---------------------------------------------------------------------------
 // Strip code blocks, inline code & HTML comments to avoid replacing links inside them
