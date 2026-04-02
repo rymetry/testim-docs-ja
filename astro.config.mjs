@@ -68,6 +68,7 @@ export default defineConfig({
   redirects: {
     ...buildRedirectMap(),
     '/docs/applitools-integration': '/docs/integrations/visual-validation',
+    '/docs/changelog': '/docs/overview/changelog',
   },
   vite: {
     plugins: [tailwindcss()],

@@ -29,9 +29,9 @@ function parseSidebarOrdering(text) {
         continue;
       }
       const label = extractJapaneseLabel(raw);
-      // コンテンツを持たないセクション（Home, Changelog）をスキップ
+      // コンテンツを持たないセクション（Home）をスキップ
       // — categoryIndex に含めると全ページの order 値がずれる
-      if (label === 'Home' || label === 'Changelog') {
+      if (label === 'Home') {
         currentCategory = null;
         continue;
       }
