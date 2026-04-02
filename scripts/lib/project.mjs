@@ -47,21 +47,20 @@ export function getDocSection(relativePath) {
   return parts[3] ?? '';
 }
 
-// サイドバー解決のキャッシュ（同一セクションフィルタの再解決を避ける）
-let _cachedFilter = null;
-let _cachedSlugSet = null;
+// サイドバー解決のキャッシュ（成功時のみ保存。失敗はキャッシュせずリトライ可能）
+const _sectionCache = new Map();
 const DOCS_PREFIX = path.join('src', 'content', 'docs') + path.sep;
 
 export function matchesSectionFilter(relativePath, data, sectionFilter) {
   if (!sectionFilter) return true;
 
-  // サイドバーバックド解決（エイリアス対応・キャッシュ付き）
-  if (sectionFilter !== _cachedFilter) {
-    _cachedFilter = sectionFilter;
+  // サイドバーバックド解決（エイリアス対応・成功キャッシュ付き）
+  let slugSet = _sectionCache.get(sectionFilter);
+  if (!slugSet) {
     try {
-      _cachedSlugSet = getSectionSlugSet(sectionFilter);
+      slugSet = getSectionSlugSet(sectionFilter);
+      _sectionCache.set(sectionFilter, slugSet);
     } catch (e) {
-      _cachedSlugSet = null;
       if (e.message?.startsWith('Unknown section')) {
         console.warn(`matchesSectionFilter: ${e.message} — falling back to heuristic match`);
       } else {
@@ -70,11 +69,11 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
     }
   }
 
-  if (_cachedSlugSet) {
+  if (slugSet) {
     const rel = relativePath.startsWith(DOCS_PREFIX)
       ? relativePath.slice(DOCS_PREFIX.length).replace(/\.md$/, '')
       : path.basename(relativePath, '.md');
-    return _cachedSlugSet.has(rel);
+    return slugSet.has(rel);
   }
 
   // サイドバーに未登録のセクション名 — ヒューリスティックフォールバック
@@ -104,10 +103,12 @@ export function filePathToSlug(filePath, docsDir = DOCS_DIR) {
 /**
  * Lazy-cached basename → path-slug lookup built from the docs index.
  * Values are `null` for ambiguous basenames (those appearing in multiple folders).
+ * Cache is keyed by docsDir to support test isolation.
  */
-let _basenameCache = { dir: null, map: null };
+const _basenameMapCache = new Map();
 export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
-  if (_basenameCache.map && _basenameCache.dir === docsDir) return _basenameCache.map;
+  const cached = _basenameMapCache.get(docsDir);
+  if (cached) return cached;
   const slugIndex = buildSlugIndex(docsDir);
   const map = new Map();
   for (const slug of Object.keys(slugIndex)) {
@@ -118,8 +119,16 @@ export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
       map.set(bn, slug);
     }
   }
-  _basenameCache = { dir: docsDir, map };
+  _basenameMapCache.set(docsDir, map);
   return map;
+}
+
+/**
+ * Reset all module-level caches. Test-only API.
+ */
+export function resetProjectCachesForTest() {
+  _sectionCache.clear();
+  _basenameMapCache.clear();
 }
 
 export function buildSlugIndex(docsDir = DOCS_DIR) {

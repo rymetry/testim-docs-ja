@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { buildSlugIndex, buildDocsIndex, buildBasenameToPathMap, extractSourceContentPath, filePathToSlug, matchesSectionFilter, resolveSlug, splitFrontmatter, toKebab } from '../lib/project.mjs';
+import { buildSlugIndex, buildDocsIndex, buildBasenameToPathMap, extractSourceContentPath, filePathToSlug, matchesSectionFilter, resolveSlug, splitFrontmatter, toKebab, resetProjectCachesForTest } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -328,5 +328,80 @@ describe('buildBasenameToPathMap', () => {
     const map = buildBasenameToPathMap(dir);
     assert.equal(map.size, 0);
     fs.rmSync(dir, { recursive: true });
+  });
+});
+
+describe('resetProjectCachesForTest', () => {
+  it('clears section cache so next call re-resolves', () => {
+    // Prime the cache with a known section
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    assert.ok(matchesSectionFilter(rel, { category: '概要' }, '概要'));
+
+    // Reset caches
+    resetProjectCachesForTest();
+
+    // Should still work (re-resolves from disk)
+    assert.ok(matchesSectionFilter(rel, { category: '概要' }, '概要'));
+  });
+
+  it('clears basename cache so next call re-scans', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'reset-'));
+    fs.mkdirSync(path.join(dir, 'a'));
+    fs.writeFileSync(path.join(dir, 'a', 'page.md'), '');
+    const map1 = buildBasenameToPathMap(dir);
+    assert.equal(map1.get('page'), 'a/page');
+
+    // Add a new file
+    fs.mkdirSync(path.join(dir, 'b'));
+    fs.writeFileSync(path.join(dir, 'b', 'page.md'), '');
+
+    // Without reset, cache returns stale data
+    const mapCached = buildBasenameToPathMap(dir);
+    assert.equal(mapCached.get('page'), 'a/page'); // stale
+
+    // After reset, cache is fresh
+    resetProjectCachesForTest();
+    const mapFresh = buildBasenameToPathMap(dir);
+    assert.equal(mapFresh.get('page'), null); // now ambiguous
+
+    fs.rmSync(dir, { recursive: true });
+  });
+});
+
+describe('matchesSectionFilter cache safety', () => {
+  it('switching filter values does not pollute cache', () => {
+    resetProjectCachesForTest();
+    const overviewPath = 'src/content/docs/overview/testim-overview.md';
+    const resultsPath = 'src/content/docs/results/execution-runs-screen.md';
+
+    // First filter: Overview
+    assert.ok(matchesSectionFilter(overviewPath, {}, '概要'));
+    assert.ok(!matchesSectionFilter(resultsPath, {}, '概要'));
+
+    // Switch to Results — should not return stale Overview results
+    assert.ok(!matchesSectionFilter(overviewPath, {}, '結果'));
+    assert.ok(matchesSectionFilter(resultsPath, {}, '結果'));
+  });
+
+  it('does not cache null on resolver failure (allows retry)', () => {
+    resetProjectCachesForTest();
+    const rel = 'src/content/docs/overview/testim-overview.md';
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      // First call with unknown section — falls back to heuristic
+      matchesSectionFilter(rel, { category: '概要' }, 'NONEXISTENT_SECTION_12345');
+      assert.ok(warnings.length > 0, 'expected warning for unknown section');
+
+      // Second call with same unknown section — should NOT hit a null cache,
+      // should re-attempt resolution (and warn again)
+      const warningsBefore = warnings.length;
+      matchesSectionFilter(rel, { category: '概要' }, 'NONEXISTENT_SECTION_12345');
+      assert.ok(warnings.length > warningsBefore, 'expected another warning (no null cache)');
+    } finally {
+      console.warn = origWarn;
+      resetProjectCachesForTest();
+    }
   });
 });
