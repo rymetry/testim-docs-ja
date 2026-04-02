@@ -24,7 +24,7 @@ keywords:
 
 この原則は自動テストでも同様に機能します。ステップをグループ化し、プロジェクト内の他のテストから呼び出せるようにすることで、テスト全体を整理できます。テスト間でグループを共有しない場合でも、Visual Editor 上に表示されるステップ数を減らすことで、テストの見通しが良くなります。
 
-グループの共有に加えて、他のステップとグループ化せずに共有できるステップもあります。詳しくは [Shareable Steps](/docs/shareable-steps) を参照してください。
+グループの共有に加えて、他のステップとグループ化せずに共有できるステップもあります。詳しくは [Shareable Steps](/docs/editing-tests/shareable-steps) を参照してください。
 
 ## グループの作成
 
@@ -37,7 +37,7 @@ keywords:
 
 3. **Group Name** フィールドにグループ名を入力します。
 4. このグループをプロジェクト内の他のテストでも使用可能にする場合は、**Shared Group** チェックボックスをオンにします。
-5. 自動グループ化を有効にする場合は、**Apply auto group on matching steps** をオンにし、[Auto-grouping](/docs/auto-grouping) の手順に従います。
+5. 自動グループ化を有効にする場合は、**Apply auto group on matching steps** をオンにし、[Auto-grouping](/docs/editing-tests/groups/auto-grouping) の手順に従います。
 6. **Confirm** をクリックします。\
    ステップは 1 つのグループステップにまとめられます。グループがテスト間で共有されている場合は **Shared** インジケーターが表示されます。
 
@@ -104,7 +104,7 @@ keywords:
    </td>
    <td>
     参照:
-    <a href="/docs/parameters-for-groups">
+    <a href="/docs/advanced-editing/parameters/parameters-for-groups">
      Parameters for groups
     </a>
    </td>
@@ -129,7 +129,7 @@ keywords:
    </td>
    <td>
     このグループステップを実行する条件を指定するブレークポイントを作成します。条件の詳細は
-    <a href="/docs/conditions">
+    <a href="/docs/editing-tests/conditions">
      Conditions
     </a>
     を参照してください。
@@ -144,7 +144,7 @@ keywords:
    </td>
    <td>
     条件に基づくループを作成します。詳細は
-    <a href="/docs/loops">
+    <a href="/docs/advanced-editing/loops">
      Loops
     </a>
     を参照してください。
@@ -159,7 +159,7 @@ keywords:
    </td>
    <td>
     ページ内や複数ページにまたがって、グループ全体を異なる要素に割り当てます。詳しくは
-    <a href="/docs/group-context">
+    <a href="/docs/advanced-editing/group-context">
      Group context
     </a>
     を参照してください。
@@ -197,10 +197,10 @@ keywords:
 
 ![グループの検索と追加](/images/groups/groups/ed12ece-Jan-29-2021_05-44-08.gif)
 
-4. ステップがパラメーターの受け渡しを前提としている場合は、[Parameters](/docs/parameters) セクションを参照し、パラメーター値を編集して割り当てるのを忘れないでください。各ステップは独自のパラメーターを受け渡します（例: 「login」を、あるテストでは「David」、別のテストでは「John」というパラメーターで呼び出す）。
+4. ステップがパラメーターの受け渡しを前提としている場合は、[Parameters](/docs/advanced-editing/parameters) セクションを参照し、パラメーター値を編集して割り当てるのを忘れないでください。各ステップは独自のパラメーターを受け渡します（例: 「login」を、あるテストでは「David」、別のテストでは「John」というパラメーターで呼び出す）。
 
 :::note
-グループのコピー / 切り取り / 貼り付けも可能です。詳しくは [Editing Tests](/docs/editing-your-tests) を参照してください。
+グループのコピー / 切り取り / 貼り付けも可能です。詳しくは [Editing Tests](/docs/editing-tests/editing-your-tests) を参照してください。
 :::
 
 **別のテストでグループを再利用するには:**

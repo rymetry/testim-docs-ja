@@ -83,7 +83,7 @@ Test Runs 画面には、選択したフィルターに従って、特定のテ�
 - **Browser** - テスト実行で使用されたブラウザを選択します。（Web のみ）
 - **Test Owner** - テストの該当する所有者を選択します。テストの所有者は、必ずしもテストを実行したユーザーではありません。
 
-このフィルター表示の保存について詳しくは、[フィルター表示の保存](/docs/saving-a-filtered-view)を参照してください。
+このフィルター表示の保存について詳しくは、[フィルター表示の保存](/docs/test-management/saving-a-filtered-view)を参照してください。
 
 ## 実行グラフ
 
@@ -104,7 +104,7 @@ CSV をダウンロードするには、**CSV Download**ボタンをクリック
 
 ## テスト失敗のタグ付け
 
-**Tag Test Failure**ボタンをクリックして、以下のリストにあるすべての失敗した実行に失敗タイプをタグ付けします。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/tag-remote-runs-failures)を参照してください。
+**Tag Test Failure**ボタンをクリックして、以下のリストにあるすべての失敗した実行に失敗タイプをタグ付けします。詳細については、[失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures)を参照してください。
 
 ![Tag Test Failure ボタンの位置](/images/results/test-runs/1084b14-tag.PNG)
 
@@ -213,7 +213,7 @@ CSV をダウンロードするには、**CSV Download**ボタンをクリック
    </td>
    <td style="text-align: left;">
     実行に追加された失敗タグ。失敗タグを追加するには、「Tag test failure」リンクをクリックします。詳細については、
-    <a href="/docs/tag-remote-runs-failures">
+    <a href="/docs/results/tag-remote-runs-failures">
      失敗した実行への失敗タイプのタグ付け
     </a>
     を参照してください。
@@ -251,7 +251,7 @@ CSV をダウンロードするには、**CSV Download**ボタンをクリック
 ## リトライの表示
 
 テスト実行にいくつかのリトライがあった場合、リトライの結果を表示できます。リトライを伴うテスト実行には、ステータスアイコンに黄色の（!）マークが付きます。\
-リトライとその設定方法について詳しくは、[CLI の失敗テストリトライ](/docs/the-command-line-cli#失敗したテストの再試行)を参照してください。
+リトライとその設定方法について詳しくは、[CLI の失敗テストリトライ](/docs/running-tests/the-command-line-cli#失敗したテストの再試行)を参照してください。
 
 ![リトライがあるテスト実行の表示例](/images/results/test-runs/47577e0-retries.png)
 

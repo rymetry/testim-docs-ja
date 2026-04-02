@@ -44,4 +44,4 @@ steps:
       testResultsFiles: '**/testim-tests-report.xml'
 ```
 
-**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+**注記**: グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。

@@ -37,14 +37,14 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 - **関連リスト項目**は **Opportunity**（Test Opp and Test Opp 2）です
 
 :::note{title="レコード表示の要件"}
-ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 :::
 
 ## 新しい関連リストオブジェクトの作成（Create）
 
 **レコードに新しい関連リストオブジェクトを作成するには:**
 
-1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**関連リストアクション**ステップを選択します。
 4. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、関連リストオブジェクトを追加したいレコードのオブジェクトのタイプ（プライマリオブジェクト）を決定します。上の例では、このオブジェクトは **Contact** になります。
@@ -86,7 +86,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 **関連リストオブジェクトを検証するには:**
 
-1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**関連リストアクション**ステップを選択します。
 4. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、関連リストオブジェクトを追加したいレコードのオブジェクトのタイプ（プライマリオブジェクト）を決定します。上の例では、このオブジェクトは **Contact** になります。
@@ -142,7 +142,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 **関連リストオブジェクトを表示するには:**
 
-1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、関連リストアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**関連リストアクション**ステップを選択します。
 4. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、関連リストオブジェクトを表示したいレコードのオブジェクトのタイプ（プライマリオブジェクト）を決定します。上の例では、このオブジェクトは **Contact** になります。

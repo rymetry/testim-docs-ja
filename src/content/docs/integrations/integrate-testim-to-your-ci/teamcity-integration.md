@@ -31,7 +31,7 @@ TeamCity とテストを統合するには、まず TeamCity マシンまたは�
 
 ![Command Line ランナータイプを選択する TeamCity の画面](/images/ci-integrations/teamcity-integration/6e50ad2-gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png)
 
-3. [CLI ページ](/docs/the-command-line-cli)で説明されているように、適切なパラメーターを使用して Custom Script を設定します。\
+3. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用して Custom Script を設定します。\
    以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell
@@ -61,5 +61,5 @@ TeamCity が結果を保存、分析、表示するために、Testim は自動�
 **注記:**
 
 1. 実行されるテストの進行状況をテストごとに確認できます!
-2. グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+2. グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 3. 引数 **--reporters teamcity, console --retries** を組み合わせて使用する場合、リトライでテストが合格しても、teamcity は失敗と合格の両方の実行を記録し、スイートが合格してもビルドは失敗としてマークされます。

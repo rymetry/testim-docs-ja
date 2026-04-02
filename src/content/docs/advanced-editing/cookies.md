@@ -126,7 +126,7 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/3d4b48c-Testim_218.png)
 
-6. **Parameter Name** に、事前に作成した Cookie パラメーター／変数の名前を入力します。詳細は [Getting Cookies using the Get Cookie step](/docs/cookies#getting-cookies-using-the-get-cookie-step) を参照してください。
+6. **Parameter Name** に、事前に作成した Cookie パラメーター／変数の名前を入力します。詳細は [Getting Cookies using the Get Cookie step](/docs/advanced-editing/cookies#getting-cookies-using-the-get-cookie-step) を参照してください。
 7. **back arrow** をクリックしてメインの **Editor** 画面に戻ります。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/98be8c7-Testim_219a.png)
@@ -238,9 +238,9 @@ document.cookie = 'username=tomsmith';
 **Description** – ステップの説明（既定値 = _Run action_）。
 
 - **Share step** – ステップを共有ステップとして保存するかどうか。
-- **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+- **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。
 - **When this step fails** – ステップ失敗時の挙動。
-- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – 既定のタイムアウト時間（ステップ失敗までの時間）をミリ秒単位で上書きします。
 
 テストを実行すると、Custom Action ステップの位置で Cookie 設定処理が実行されます。
@@ -250,7 +250,7 @@ document.cookie = 'username=tomsmith';
 CLI からテストスイートを実行する場合、設定ファイル（Configuration file）を使ってスイート全体に共通の Cookie を設定することもできます。設定ファイルはテスト／スイート実行に必要なパラメーターや実行フック（run hooks）を定義する JavaScript ファイルで、バックエンドの初期化などにも利用されます。\
 **設定ファイルを使って Cookie を設定するには:**
 
-1. JavaScript の設定ファイルを作成します。詳細は [Configuration file & run hooks](/docs/configuration-file-run-hooks) を参照してください。
+1. JavaScript の設定ファイルを作成します。詳細は [Configuration file & run hooks](/docs/running-tests/configuration-file-run-hooks) を参照してください。
 2. `beforeSuite` セクションに Cookie を設定するコードを追加します。以下は例です。
 
 ```javascript
@@ -326,7 +326,7 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
   - **Test**: 同一テスト内のステップ／グループ間で共有
   - **Suite**: 同じテストスイート内のテスト間で共有
 - **When this step fails** – ステップ失敗時の挙動。
-- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
 テスト実行時、指定した Cookie の情報が変数に保存されます。
@@ -405,9 +405,9 @@ for (var i = 0; i < cookieArray.length; i++) {
 **Description** – ステップの説明（既定値 = _Run action_）。
 
 - **Share step** – ステップを共有ステップとして保存するかどうか。
-- **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。
+- **+ Params** – JavaScript / HTML パラメーターの追加。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。
 - **When this step fails** – ステップ失敗時の挙動。
-- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/conditions) を参照してください。
+- **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。
 
 テストを実行すると、Custom Action ステップ内で定義した Cookie 取得処理が実行されます。

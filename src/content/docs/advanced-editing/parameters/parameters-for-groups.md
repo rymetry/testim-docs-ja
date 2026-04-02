@@ -18,9 +18,9 @@ keywords:
 
 グループへパラメーターを渡して再利用性を高める方法
 
-[グループ](/docs/groups) にはパラメーター（テストステップへ値を渡すための変数）を含められます。ログインの例なら、ユーザー名やパスワードをパラメーター化して、registered_user／guest など異なる組み合わせを切り替えられます。\
+[グループ](/docs/editing-tests/groups) にはパラメーター（テストステップへ値を渡すための変数）を含められます。ログインの例なら、ユーザー名やパスワードをパラメーター化して、registered_user／guest など異なる組み合わせを切り替えられます。\
 グループが複数テストで共有されている場合、グループのパラメーターは各テストで参照でき、テストごとに値だけを設定すれば再利用できます。\
-グループへの追加方法は、[ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) と同様です。まず[グループを作成](/docs/groups)し、パラメーターを追加して、グループ内の対象ステップに割り当て、値を設定します。
+グループへの追加方法は、[ステッププロパティパネルのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) と同様です。まず[グループを作成](/docs/editing-tests/groups)し、パラメーターを追加して、グループ内の対象ステップに割り当て、値を設定します。
 
 ## パラメーターのスコープ
 
@@ -35,7 +35,7 @@ keywords:
 
 **グループにパラメーターを追加するには:**
 
-1. [グループ](/docs/groups) の手順でグループを作成します（例: Login group）。
+1. [グループ](/docs/editing-tests/groups) の手順でグループを作成します（例: Login group）。
 2. グループの**プロパティを表示**アイコンをクリックします。
 3. **Params** 横の **+** をクリックし、**JS** を選択します。
 
@@ -78,7 +78,7 @@ keywords:
 
 **再利用手順:**
 
-1. [グループの再利用](/docs/groups) の手順で別テストに追加します。関連ステップへの割り当ては維持され、値のみ未設定の状態です。
+1. [グループの再利用](/docs/editing-tests/groups) の手順で別テストに追加します。関連ステップへの割り当ては維持され、値のみ未設定の状態です。
 
 ![グループの追加](/images/parameters/parameters-for-groups/c3bace7-addinglogingroup.PNG)
 

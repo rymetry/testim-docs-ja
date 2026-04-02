@@ -22,20 +22,20 @@ Testim Mobile は Tricentis Device Cloud (TDC) と組み合わせることで、
 
 Tricentis Device Cloud でテストを実行する前に、TDC と互換性のある mobile configuration を作成しておく必要があります。
 
-[Configuration Library - Mobile](/docs/configuration-library-mobile)
+[Configuration Library - Mobile](/docs/test-management/configuration-library-mobile)
 
 ![TDC 用 mobile configuration の設定例](/images/grid-management/tricentis-device-cloud/6773dc8-config.png)
 
 次のいずれかの方法で、テストをリモート実行できます。
 
-[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
+[CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
 Grid 名を指定して `--grid` parameter を追加します。
 
-[Scheduler](/docs/scheduler-mobile)
+[Scheduler](/docs/running-tests/scheduler-mobile)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Test Plan](/docs/test-plans-mobile)
+[Test Plan](/docs/test-management/test-plans-mobile)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。

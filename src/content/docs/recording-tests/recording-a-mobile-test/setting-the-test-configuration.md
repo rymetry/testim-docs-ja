@@ -15,10 +15,10 @@ keywords:
 
 すべてのテストには、テストの Setup ステップのプロパティパネルからアクセスできる独自のデフォルト構成があります。テストのデフォルト構成で設定された構成パラメーターは、CLI またはスケジューラから異なるテスト構成でテストを実行しない限り適用されます。
 
-デフォルトでは、すべての新しいテストに対して Untitled 構成が作成されます。このデフォルト構成には、利用可能な任意の OS バージョンを持つ任意のデバイスでテストを実行するルールが含まれています。これらの設定（Device Name と OS version 設定）は変更できませんが、以下で説明するように追加の設定を変更することは可能です。変更された構成はテスト自体に保存されます。つまり、他のテストで使用するために構成ライブラリ（[Configuration Library - Mobile](/docs/configuration-library-mobile) を参照）では利用できません。
+デフォルトでは、すべての新しいテストに対して Untitled 構成が作成されます。このデフォルト構成には、利用可能な任意の OS バージョンを持つ任意のデバイスでテストを実行するルールが含まれています。これらの設定（Device Name と OS version 設定）は変更できませんが、以下で説明するように追加の設定を変更することは可能です。変更された構成はテスト自体に保存されます。つまり、他のテストで使用するために構成ライブラリ（[Configuration Library - Mobile](/docs/test-management/configuration-library-mobile) を参照）では利用できません。
 
 :::info
-CLI でテストを実行する場合、実行コマンドで新しいテスト構成を指定することにより、デフォルト構成を上書きできます。[Command line interface](/docs/the-command-line-cli) を参照してください。
+CLI でテストを実行する場合、実行コマンドで新しいテスト構成を指定することにより、デフォルト構成を上書きできます。[Command line interface](/docs/running-tests/the-command-line-cli) を参照してください。
 :::
 
 **デフォルトのテスト構成設定を上書きするには:**
@@ -37,5 +37,5 @@ Edit Configuration パネルが表示されます。
 4. **Step timeout (ms)** - Testim がテストステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
 5. **Step delay (ms)** - テストステップの実行間の遅延をミリ秒単位で指定します。
 6. **Setup step timeout (ms)** - Testim がテストの Setup ステップに対して失敗を登録する時間経過をミリ秒単位で指定します。
-7. **Before/After hooks** - [Hooks](/docs/hooks) で説明されているように、before/after フックを指定します。
+7. **Before/After hooks** - [Hooks](/docs/advanced-editing/hooks) で説明されているように、before/after フックを指定します。
 8. 完了したら、ペインを閉じるか、Properties ペインに戻ります。

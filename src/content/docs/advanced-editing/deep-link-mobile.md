@@ -29,7 +29,7 @@ keywords:
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/58d5cba-open.png)
 
 :::note
-本ステップは [VMG](/docs/virtual-mobile-grid) でのみ利用可能です。
+本ステップは [VMG](/docs/integrations/grid-management/virtual-mobile-grid) でのみ利用可能です。
 :::
 
 ## Deep Link ステップを追加する
@@ -68,5 +68,5 @@ Deep Link ステップが追加されます。
 
 12. **Properties** で必要に応じて以下を設定します。
 13. **When this step fails** – 失敗時の動作
-14. **When to run step** – 実行条件（[Conditions](/docs/conditions)）
+14. **When to run step** – 実行条件（[Conditions](/docs/editing-tests/conditions)）
 15. **Override timeout** – タイムアウトの上書き（ミリ秒）。成功に必要な残時間がある限りリトライします。

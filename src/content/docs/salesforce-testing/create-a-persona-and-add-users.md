@@ -20,7 +20,7 @@ keywords:
 
 Testim for Salesforce のペルソナは、管理者、営業、顧客などのユーザータイプです。ペルソナは、テストを実行する際に Salesforce 環境にアクセスするために使用されます。ペルソナを作成した後、接続された Salesforce 環境の既存の Salesforce ユーザーの認証情報と関連付けます。これにより、テストを書き直すことなく、さまざまな環境（Dev、QA、本番など）間を切り替えることができます。
 
-このプロセスは、Salesforce 環境を Testim for Salesforce に接続していることを前提としています。詳細については、[Salesforce 環境の接続](/docs/create-and-manage-test-environments)を参照してください。
+このプロセスは、Salesforce 環境を Testim for Salesforce に接続していることを前提としています。詳細については、[Salesforce 環境の接続](/docs/salesforce-testing/create-and-manage-test-environments)を参照してください。
 
 :::note
 デフォルトでは、Salesforce 環境を接続した後、システムはこの環境に管理者ペルソナを作成し、環境へのログインに使用された認証情報を使用します。
@@ -62,7 +62,7 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
 
 8. **Salesforce Password**フィールドに、関連するパスワードを入力します。
 
-9. ログインに MFA が必要な場合は、MFA 認証キーを入力します。MFA キーの見つけ方については、[Salesforce 用 MFA の設定](/docs/setting-mfa-for-salesforce)を参照してください。
+9. ログインに MFA が必要な場合は、MFA 認証キーを入力します。MFA キーの見つけ方については、[Salesforce 用 MFA の設定](/docs/salesforce-testing/setting-mfa-for-salesforce)を参照してください。
 
 10. **Save**をクリックします。
 

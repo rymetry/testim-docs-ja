@@ -25,7 +25,7 @@ Testim は Okta、OneLogin、AzureAD を通じた SSO（シングルサインオ
 :::
 
 :::info
-SSO を使用して Testim にアクセスするには、ユーザーは特定の Testim プロジェクトに招待される必要があります。プロジェクトに招待されたユーザーのメールアドレスが有効で最新であることを確認してください（メールアドレスの変更には、その新しいメールアドレスへの新しい招待が必要です）。詳細については、[プロジェクトユーザー管理](/docs/project-user-management)を参照してください。
+SSO を使用して Testim にアクセスするには、ユーザーは特定の Testim プロジェクトに招待される必要があります。プロジェクトに招待されたユーザーのメールアドレスが有効で最新であることを確認してください（メールアドレスの変更には、その新しいメールアドレスへの新しい招待が必要です）。詳細については、[プロジェクトユーザー管理](/docs/administration/project-user-management)を参照してください。
 :::
 
 ## SSO が有効になっていることを確認する
@@ -46,6 +46,6 @@ SSO はプレミアム機能であり、統合前に有効にする必要があ�
 
 デプロイメント用の SSO を設定するには、以下のガイドの手順に従ってください:
 
-- [OneLogin SSO 統合](/docs/onelogin-sso-integration)
-- [Okta SSO 統合](/docs/okta-sso-integration)
-- [Azure AD SSO 統合](/docs/azure-ad-sso-integration)
+- [OneLogin SSO 統合](/docs/security/sso-integration/onelogin-sso-integration)
+- [Okta SSO 統合](/docs/security/sso-integration/okta-sso-integration)
+- [Azure AD SSO 統合](/docs/security/sso-integration/azure-ad-sso-integration)

@@ -38,7 +38,7 @@ keywords:
     Add custom validation
    </td>
    <td style="text-align: left;">
-    <a href="/docs/custom-code">
+    <a href="/docs/advanced-editing/validations/custom-code">
      Add custom validations and actions
     </a>
    </td>
@@ -48,7 +48,7 @@ keywords:
     Add CLI validation
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
      Adding a CLI step
     </a>
    </td>
@@ -58,7 +58,7 @@ keywords:
     Validate download
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
      Adding a Validate download validation step
     </a>
    </td>
@@ -68,7 +68,7 @@ keywords:
     Validate email
    </td>
    <td style="text-align: left;">
-    <a href="/docs/email-validation">
+    <a href="/docs/advanced-editing/validations/email-validation">
      Validate email
     </a>
    </td>
@@ -78,7 +78,7 @@ keywords:
     Validate API
    </td>
    <td style="text-align: left;">
-    <a href="/docs/api-testing#実行後の結果の確認">
+    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">
      API Validation
     </a>
    </td>
@@ -88,7 +88,7 @@ keywords:
     Add network validation
    </td>
    <td style="text-align: left;">
-    <a href="/docs/add-network-validation">
+    <a href="/docs/advanced-editing/validations/add-network-validation">
      Add network validation
     </a>
    </td>
@@ -115,7 +115,7 @@ keywords:
     Add custom wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#要素の表示を待つ（モバイル）">
+    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）">
      Custom Wait for
     </a>
    </td>
@@ -125,7 +125,7 @@ keywords:
     Add CLI wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
      Adding a CLI step
     </a>
    </td>
@@ -135,7 +135,7 @@ keywords:
     Wait for download
    </td>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#ダウンロード待機（web）">
+    <a href="/docs/advanced-editing/wait-for#ダウンロード待機（web）">
      Wait for Download
     </a>
    </td>
@@ -162,7 +162,7 @@ keywords:
     Add custom action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/custom-code">
+    <a href="/docs/advanced-editing/validations/custom-code">
      Add custom validations and actions
     </a>
    </td>
@@ -172,7 +172,7 @@ keywords:
     Add CLI action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
      Adding a CLI step
     </a>
    </td>
@@ -182,7 +182,7 @@ keywords:
     Add API action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/api-testing#実行後の結果の確認">
+    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">
      API Action
     </a>
    </td>

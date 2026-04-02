@@ -186,6 +186,6 @@ Smart Locators は、要素/セレクタの一意性を理解するのに役立�
 
 ### Auto Improved Locators
 
-Testim が元のロケーターを自動改善されたロケーターに置き換えた場合、ロケーターパネルの上部に「Locator auto improved」メッセージが表示されます。詳細については、[Locators: Auto Improve](/docs/locators-auto-improve)を参照してください。
+Testim が元のロケーターを自動改善されたロケーターに置き換えた場合、ロケーターパネルの上部に「Locator auto improved」メッセージが表示されます。詳細については、[Locators: Auto Improve](/docs/test-management/locators-auto-improve)を参照してください。
 
 ![自動改善されたロケーター](/images/steps-editing-tests/editing-target-element-properties/2f1a2ef-autoimprove.png)

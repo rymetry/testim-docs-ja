@@ -20,11 +20,11 @@ keywords:
 
 自動グループ化（auto-grouping）は、プロジェクト内のさまざまなテストを横断して再利用の機会を見つける機能です。グループの作成時に、Testim は他のテスト内でそのグループのステップ列と一致する箇所を特定し、それらのステップを新しいグループに自動置換します。自動グループ化が適用されたテストは新しいブランチに保存され、マスターブランチへマージする前に変更内容を確認できます。
 
-自動グループ化の詳細は [Auto grouping](/docs/auto-grouping2) を参照してください。
+自動グループ化の詳細は [Auto grouping](/docs/advanced-editing/auto-grouping2) を参照してください。
 
 **自動グループ化を有効にするには:**
 
-1. 新しい [Group](/docs/groups) を作成する際に、**Apply auto group on matching steps** を選択します。
+1. 新しい [Group](/docs/editing-tests/groups) を作成する際に、**Apply auto group on matching steps** を選択します。
 
 ![1689](/images/groups/auto-grouping/e63b692-auto-group1.png)
 

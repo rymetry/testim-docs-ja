@@ -380,7 +380,7 @@ Run API Action ステップを使用して、一時的/恒久的メールアド�
 5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
 6. これがこのテストまたは他のテストで再利用できるようにする共有ステップである場合は、**Shared step** の隣のボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。  
-   共有ステップの詳細については、[Groups](/docs/groups)を参照してください。
+   共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
 
 7. **Create Step** をクリックします。
 
@@ -404,7 +404,7 @@ Run API Action ステップを使用して、一時的/恒久的メールアド�
 :::
 
 10. 必要に応じて、ステップとパラメーターの追加設定を行います。
-11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/email-validation#テストの関連ステップで恒久的メールを使用する) セクションを参照してください。コードは通常、Email address フィールドに入力された値をコード内のパラメーターとして使用します。
+11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/advanced-editing/validations/email-validation#テストの関連ステップで恒久的メールを使用する) セクションを参照してください。コードは通常、Email address フィールドに入力された値をコード内のパラメーターとして使用します。
 
 :::note
 HTML パラメーター以外の DOM セレクタ（例：jQuery）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
@@ -507,7 +507,7 @@ exportsTest.emailLink = emailLinks[0];
 5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
 6. これがこのテストまたは他のテストで再利用できるようにする共有ステップである場合は、**Shared step** の隣のボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。  
-   共有ステップの詳細については、[Groups](/docs/groups)を参照してください。
+   共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
 
 7. **Create Step** をクリックします。  
    ![コードレス画面](/images/validations/email-validation/873ab96-codeless_screen.png)

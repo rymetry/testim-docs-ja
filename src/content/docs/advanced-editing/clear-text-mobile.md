@@ -30,8 +30,8 @@ Appium 側の既知の制限により、稀に入力内容がすべてクリア�
 - [https://discuss.appium.io/t/clear-elements-is-not-working/28832/9](https://discuss.appium.io/t/clear-elements-is-not-working/28832/9)
 - [https://discuss.appium.io/t/appium-15-1-doesnt-clear-the-field-in-appium-ios/28842/3](https://discuss.appium.io/t/appium-15-1-doesnt-clear-the-field-in-appium-ios/28842/3)
 
-Testim Mobile では回避策として [カスタムアクションステップ](/docs/custom-action-step-mobile) でバックスペースを送信します。例:
+Testim Mobile では回避策として [カスタムアクションステップ](/docs/advanced-editing/custom-action-step-mobile) でバックスペースを送信します。例:
 
 `await DRIVER.sendKeys('\b\b\b\b\b\b\b');`
 
-バックスペースの回数は任意です。[テストデータ](/docs/reusable-test-data) に用意した入力文字列の長さ分を送るのが一般的です。
+バックスペースの回数は任意です。[テストデータ](/docs/advanced-editing/reusable-test-data) に用意した入力文字列の長さ分を送るのが一般的です。

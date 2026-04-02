@@ -145,7 +145,7 @@ keywords:
     When to run step
    </td>
    <td>
-    ステップの実行条件を指定します。詳細は <a href="/docs/conditions">Conditions</a> を参照してください。
+    ステップの実行条件を指定します。詳細は <a href="/docs/editing-tests/conditions">Conditions</a> を参照してください。
    </td>
    <td>
    </td>

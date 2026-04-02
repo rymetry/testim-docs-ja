@@ -23,7 +23,7 @@ Testim で作成したテストを SauceLabs の browser と mobile device 上�
 
 **SauceLabs Grid を追加するには:**
 
-1. [Adding a grid](/docs/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
+1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
 2. **Next** をクリックします。
 3. 次の field を入力します。
 
@@ -39,15 +39,15 @@ Testim で作成したテストを SauceLabs の browser と mobile device 上�
 
 次のいずれかの方法で、テストをリモート実行できます。
 
-[CLI](/docs/the-command-line-cli) / [CI](/docs/integrate-testim-to-your-ci)
+[CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
 Grid 名を指定して `--grid` parameter を追加します。
 
-[Scheduler](/docs/scheduler)
+[Scheduler](/docs/running-tests/scheduler)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
-[Test Plan](/docs/test-plans)
+[Test Plan](/docs/test-management/test-plans)
 
 **Grid** field で、どの Grid 上でテストを実行するかを選択します。
 
@@ -62,4 +62,4 @@ Test Editor から直接 Grid 上でテストを実行できます。
 
 ![Test Editor から SauceLabs Grid を選んで実行する画面](/images/grid-management/saucelabs-integration/0ca9bb7-Jul-21-2021_13-11-22.gif)
 
-テスト実行に追加 option を渡したい場合は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/saucelabs-browserstack-options) を参照してください。
+テスト実行に追加 option を渡したい場合は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。

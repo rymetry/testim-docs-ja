@@ -19,10 +19,10 @@ Testim で GitHub ブランチを管理し、Git Issues でバグを公開しま
 
 GitHub で作成されたブランチは、Testim で自動的に作成されます（同じ名前）。\
 GitHub でブランチをマージすると、Testim のテストも自動的にマージされます。\
-Testim ブランチの詳細については、[こちら](/docs/version-control-branches)をご覧ください。
+Testim ブランチの詳細については、[こちら](/docs/testops/testops-version-control/version-control-branches)をご覧ください。
 
 GitHub 統合により、ブラウザから直接 Git Issues でバグを報告することもできます。関連するすべてのバグ情報が自動的に入力されます。\
-バグのキャプチャの詳細については、[こちら](/docs/bug-reporting)をご覧ください。
+バグのキャプチャの詳細については、[こちら](/docs/test-management/bug-reporting)をご覧ください。
 
 ### GitHub 統合の設定
 

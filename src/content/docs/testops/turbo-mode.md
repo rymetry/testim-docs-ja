@@ -50,7 +50,7 @@ Testim テストを大規模に効率的に実行し、パフォーマンスを�
 
 ### CLI 経由でのターボモード実行
 
-ターボモードで実行するには、CLI コマンドで _--turbo-mode_ を使用します。CLI 実行の詳細については、[コマンドライン CLI](/docs/the-command-line-cli) を参照してください。\
+ターボモードで実行するには、CLI コマンドで _--turbo-mode_ を使用します。CLI 実行の詳細については、[コマンドライン CLI](/docs/running-tests/the-command-line-cli) を参照してください。\
 例:
 
 ```shell

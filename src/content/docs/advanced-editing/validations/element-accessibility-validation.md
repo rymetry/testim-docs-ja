@@ -96,10 +96,10 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 **Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）
 
-- **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/accessibility-validations#ルールの説明)を参照してください。デフォルトではすべてのタグが選択されています。
+- **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/advanced-editing/validations/accessibility-validations#ルールの説明)を参照してください。デフォルトではすべてのタグが選択されています。
 - **Exclude specific rule IDs** – 特定のルール ID を除外したい場合は、リストから選択します。また、特定のルール ID のみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
 - **When this step fails** – ステップが失敗した場合の動作を指定します。
-- **When to run step** – ステップを実行する条件を指定します。詳細は[条件分岐](/docs/conditions)を参照してください。
+- **When to run step** – ステップを実行する条件を指定します。詳細は[条件分岐](/docs/editing-tests/conditions)を参照してください。
 - **Override timeout** – Testim がテストステップの失敗を登録するデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒単位）を指定できます。
 - **Disable auto-scroll** – ビューポート外に存在する要素への自動スクロールを無効にします。
 

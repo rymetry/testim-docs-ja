@@ -18,7 +18,7 @@ keywords:
   - PRO機能
 ---
 
-テストで[パラメーター](/docs/parameters)を使うと、実行時に使用された値が UI に保存・表示され、デバッグや原因追跡に役立ちます。一方で機微情報を扱う場合は値を表示したくないことがあります。Testim では、非表示にするパラメーターを定義できます。非表示パラメーターはクラウドに保存されないため、「同じパラメーターで再実行」は利用できません。
+テストで[パラメーター](/docs/advanced-editing/parameters)を使うと、実行時に使用された値が UI に保存・表示され、デバッグや原因追跡に役立ちます。一方で機微情報を扱う場合は値を表示したくないことがあります。Testim では、非表示にするパラメーターを定義できます。非表示パラメーターはクラウドに保存されないため、「同じパラメーターで再実行」は利用できません。
 
 :::note{title="PRO機能"}
 この機能は Professional plan で利用可能です。
@@ -46,10 +46,10 @@ keywords:
 
 ## 非表示パラメーターを使ってテストを実行
 
-非表示パラメーターを使用するテスト実行は [CLI](/docs/cli-settings) のみ対応です（スケジューラ不可）。CLI では次の方法で値を渡せます。
+非表示パラメーターを使用するテスト実行は [CLI](/docs/settings/cli-settings) のみ対応です（スケジューラ不可）。CLI では次の方法で値を渡せます。
 
-- JSON パラメーターファイル — 非表示パラメーターを JSON で定義して渡す。詳細は[JSON パラメーターファイル](/docs/json-parameters-file-parameters)
-- 設定ファイル — 設定ファイルで定義して渡す。詳細は[設定ファイルのパラメーター](/docs/configuration-file-parameters)
+- JSON パラメーターファイル — 非表示パラメーターを JSON で定義して渡す。詳細は[JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters)
+- 設定ファイル — 設定ファイルで定義して渡す。詳細は[設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters)
 
 ## テスト内での表示
 

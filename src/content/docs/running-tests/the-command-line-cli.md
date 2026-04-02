@@ -46,11 +46,11 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザが開きます）（Web のみ）
 3. **CI プラットフォーム** で、希望する CI プラットフォームを選択します （オプション）
 4. **グリッド** で、テストを実行するグリッドを選択します。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:\
-   [仮想モバイルグリッド](/docs/virtual-mobile-grid)\
-   [Tricentis Device Cloud](/docs/tricentis-device-cloud)\
-   [Testim Headspin Mobile](/docs/headspin-integration)\
-   [Browserstack](/docs/browserstack-integration-1)\
-   [LambdaTest](/docs/browserstack-integration-copy)\
+   [仮想モバイルグリッド](/docs/integrations/grid-management/virtual-mobile-grid)\
+   [Tricentis Device Cloud](/docs/integrations/grid-management/tricentis-device-cloud)\
+   [Testim Headspin Mobile](/docs/integrations/grid-management/headspin-integration)\
+   [Browserstack](/docs/integrations/grid-management/browserstack-integration-1)\
+   [LambdaTest](/docs/integrations/grid-management/browserstack-integration-copy)\
    基本的な CLI コマンドは **例** の下部に表示されます。
 
 ![設定画面に表示される基本的な CLI コマンド例](/images/running-tests/the-command-line-cli/af52b8a-cli_command.png)
@@ -85,7 +85,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 #### プロジェクト
 
 `--project` プロジェクト ID。\
-別のプロジェクトを選択するには、企業画面に移動し （参照 [プロジェクトとユーザー管理](/docs/project-and-user-management)）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
+別のプロジェクトを選択するには、企業画面に移動し （参照 [プロジェクトとユーザー管理](/docs/administration/project-and-user-management)）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
 
 ```shell
 --project AOL-12323-a4b2-4762-df380
@@ -142,7 +142,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 `--grid`、使用する Selenium グリッド名。"Testim-Grid"/ローカル selenium グリッド/ Saucelabs / Browserstack を使用できます。
 
 `--grid` `<grid-name>`
-注: グリッドを構成する方法については、[こちら](/docs/grid-management) をお読みください。
+注: グリッドを構成する方法については、[こちら](/docs/integrations/grid-management) をお読みください。
 
 #### ホスト
 
@@ -177,7 +177,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 #### テスト構成
 
 `test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメーター （例: ブラウザ、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメーターなど） を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
-詳細は [構成ライブラリ - Web](/docs/shared-configuration) および [構成ライブラリ - モバイル](/docs/configuration-library-mobile) をお読みください。
+詳細は [構成ライブラリ - Web](/docs/test-management/shared-configuration) および [構成ライブラリ - モバイル](/docs/test-management/configuration-library-mobile) をお読みください。
 
 ```shell
 --test-config "1280x1024_SXGA_chrome" --test-config "1366x768_WXGA_firefox"
@@ -185,7 +185,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### パラメーター ファイル
 
-`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメーターファイル](/docs/json-parameters-file-parameters) をお読みください。
+`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters) をお読みください。
 
 :::note
 `params-file` パスで設定されている文字列パスは相対パスである必要があり、完全なパスではありません。
@@ -281,7 +281,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --config-file [config-file.js]
 ```
 
-構成ファイルについては [こちら](/docs/configuration-file-run-hooks) をお読みください。
+構成ファイルについては [こちら](/docs/running-tests/configuration-file-run-hooks) をお読みください。
 
 #### 失敗したテストの再試行
 
@@ -293,7 +293,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --retries <max_num_of_retries>
 ```
 
-再試行のみで成功したテストは、testim ライブラリの下で簡単にフィルタリングできます。詳細については、[不安定なテスト](/docs/flaky-tests) をお読みください。
+再試行のみで成功したテストは、testim ライブラリの下で簡単にフィルタリングできます。詳細については、[不安定なテスト](/docs/testops/testops-management/flaky-tests) をお読みください。
 
 #### TestRail レポートを無効にする （Web のみ）
 
@@ -312,7 +312,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 testim --tunnel --tunnel-port <APP PORT default 80>
 ```
 
-詳細については、[この記事](/docs/dedicated-run-tunnel) をご確認ください。
+詳細については、[この記事](/docs/integrations/dedicated-run-tunnel) をご確認ください。
 
 #### 失敗したテストの再実行
 
@@ -421,14 +421,14 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 ### Sealights 統合
 
-[Sealights 統合](/docs/sealights-integration) を使用して CLI でテストを実行するときは、Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
+[Sealights 統合](/docs/integrations/sealights-integration) を使用して CLI でテストを実行するときは、Sealights の次の ID のいずれかを Testim CLI 実行コマンドのオプションとして追加する必要があります:
 
 - **Sealights buildSessionId** - この ID は、実行された特定のビルドに関連しています。通常、これはアプリケーション内の特定のコンポーネントに関連しています。つまり、特定のコンポーネントをテストする場合、このオプションを使用することをお勧めします。
 - **Sealights labId** - 通常、同じ環境でホストされている複数のコンポーネントが同じ LabId を共有できます。複数のコンポーネントをテストする場合、buildSessionId ではなく LabId を使用することをお勧めします。
 
 #### **Sealights buildSessionId**
 
-`--sealights-build-session-id`、実行された特定のビルドに関連する ID を使用して Sealights 統合でテストを実行します。`buildSessionId` を取得するには、[buildSessionID オプション セクション](/docs/sealights-integration#buildsessionid-オプション) の指示に従います。
+`--sealights-build-session-id`、実行された特定のビルドに関連する ID を使用して Sealights 統合でテストを実行します。`buildSessionId` を取得するには、[buildSessionID オプション セクション](/docs/integrations/sealights-integration#buildsessionid-オプション) の指示に従います。
 
 ```shell
 --sealights-build-session-id [sealights-suid-session-id]
@@ -436,7 +436,7 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 
 #### **Sealights labId**
 
-`--sealights-lab-id`、ラボ ID を使用して Sealights 統合でテストを実行します。`labId` を取得するには、[labId オプション セクション](/docs/sealights-integration#labidオプション) の指示に従います。
+`--sealights-lab-id`、ラボ ID を使用して Sealights 統合でテストを実行します。`labId` を取得するには、[labId オプション セクション](/docs/integrations/sealights-integration#labidオプション) の指示に従います。
 
 ```shell
 --sealights-lab-id [sealights-lab-id]

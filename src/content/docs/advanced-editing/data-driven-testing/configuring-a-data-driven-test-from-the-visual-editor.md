@@ -56,7 +56,7 @@ return 行の括弧は残しておく必要があります。
 :::
 
 :::note
-[Testim CLI](/docs/the-command-line-cli)、スケジューラー、またはローカルスイート実行からテストを実行した場合にのみ、テストは複数回実行され、毎回異なるデータセットが使用されます。
+[Testim CLI](/docs/running-tests/the-command-line-cli)、スケジューラー、またはローカルスイート実行からテストを実行した場合にのみ、テストは複数回実行され、毎回異なるデータセットが使用されます。
 :::
 
 ![データ駆動テストの設定](/images/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor/c35c945-Data_Driven_Tests.gif)
@@ -74,7 +74,7 @@ return 行の括弧は残しておく必要があります。
 
 "username": "tomsmith", "password": "SuperSecretPassword!"
 
-エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UI で提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/scheduler) を使用する必要があります。
+エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UI で提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/running-tests/scheduler) を使用する必要があります。
 
 ### CSV/Excel ファイルをアップロードしてテストデータを追加
 
@@ -84,7 +84,7 @@ CSV or Excel ファイルをアップロードしてテストデータを追加�
 - 2 行目以降 - 各行が単一のデータセットに変換されます（キー値）。最大 1200 行。
 
 :::note
-この方法では、ファイルが変更されてもアップロードされたデータは更新されません。更新するたびにファイルを再度アップロードする必要があります。一方、設定ファイル方式（[外部ソースからのデータを使用したデータ駆動テスト](/docs/configuring-data-driven-tests-using-data-from-an-external-source)を参照）を使用すると、ファイルは実行ごとに自動的に解析されます。
+この方法では、ファイルが変更されてもアップロードされたデータは更新されません。更新するたびにファイルを再度アップロードする必要があります。一方、設定ファイル方式（[外部ソースからのデータを使用したデータ駆動テスト](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)を参照）を使用すると、ファイルは実行ごとに自動的に解析されます。
 :::
 
 **ファイルをアップロードしてテストデータを追加するには:**
@@ -106,7 +106,7 @@ CSV or Excel ファイルをアップロードしてテストデータを追加�
 6. 上記で説明したように、テストステップでパラメーターを使用します。
 
 :::note
-[Testim CLI](/docs/the-command-line-cli)、スケジューラー、またはローカルスイート実行からテストを実行した場合にのみ、テストは複数回実行され、毎回異なるデータセットが使用されます。
+[Testim CLI](/docs/running-tests/the-command-line-cli)、スケジューラー、またはローカルスイート実行からテストを実行した場合にのみ、テストは複数回実行され、毎回異なるデータセットが使用されます。
 :::
 
 :::note

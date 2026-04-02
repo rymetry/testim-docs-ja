@@ -32,7 +32,7 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 
 ### MFA 認証
 
-2022 年 2 月 1 日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時に MFA を行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/salesforce-auto-login-step#mfa-のセットアップ) を参照してください。
+2022 年 2 月 1 日以降、Salesforce はログイン時の多要素認証（MFA）を必須化しました。Testim では、Salesforce 自動ログイン実行時に MFA を行うソフトウェア型オーセンティケータを実装しています。有効化手順は [Setting up MFA](/docs/advanced-editing/salesforce-auto-login-step#mfa-のセットアップ) を参照してください。
 
 ## Salesforce 自動ログインステップを追加する
 
@@ -69,7 +69,7 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 5. **Name** にわかりやすいステップ名を入力します。
 6. 他テストでも再利用したい場合は **Shared step** をオンのまま、保存先フォルダーを選択します。不要な場合はチェックボックスを解除します。
 
-共有ステップの詳細については、[グループ](/docs/groups)を参照してください。
+共有ステップの詳細については、[グループ](/docs/editing-tests/groups)を参照してください。
 
 7. **Create Step** をクリックします。
 8. 追加されたステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。ステップが **Editor** に追加され、右側に **Properties** パネルが表示されます。
@@ -78,7 +78,7 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 
 9. **Login URL** に環境のログイン URL を入力します。
 10. **Username** と **Password** に認証情報を入力します。
-11. MFA を使う場合は [Setting up MFA](/docs/salesforce-auto-login-step#mfa-のセットアップ) に従います。\
+11. MFA を使う場合は [Setting up MFA](/docs/advanced-editing/salesforce-auto-login-step#mfa-のセットアップ) に従います。\
     これで設定は完了です。
 
 ### パラメーターの使用
@@ -92,10 +92,10 @@ MFA のシークレットキーはパラメーターとして扱えません。
 **接続情報にパラメーターを使う:**
 
 1. 次のいずれかの方法でパラメーターを定義します。
-   - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-   - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-   - **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/parameters-in-custom-javascript-steps) を参照してください。\
-     その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/exports-parameters) を参照してください。
+   - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+   - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/running-tests/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+   - **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。\
+     その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
 2. _Salesforce auto-login_ ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメーターを設定します。
 
 ## MFA のセットアップ
@@ -133,7 +133,7 @@ Salesforce 側でシークレットキーを取得し、Testim のプロパテ�
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/7022745-pasted_image_0_4.png)
 
-8. Salesforce Auto-Login ステップの追加時（[Salesforce 自動ログインステップを追加する](/docs/salesforce-auto-login-step#salesforce-自動ログインステップを追加する) を参照）、ステップの **Properties Panel** 内にある **Login with MFA** セクションで **ADD KEY** ボタンをクリックします。
+8. Salesforce Auto-Login ステップの追加時（[Salesforce 自動ログインステップを追加する](/docs/advanced-editing/salesforce-auto-login-step#salesforce-自動ログインステップを追加する) を参照）、ステップの **Properties Panel** 内にある **Login with MFA** セクションで **ADD KEY** ボタンをクリックします。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/79bffd0-image_3.png)
 

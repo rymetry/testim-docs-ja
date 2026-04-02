@@ -37,7 +37,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
  <tbody>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/hover-step">
+    <a href="/docs/advanced-editing/handling-ui-actions/hover-step">
      ホバーステップを追加
     </a>
    </td>
@@ -53,7 +53,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validate-element-text">
+    <a href="/docs/advanced-editing/validations/validate-element-text">
      要素テキストを検証
     </a>
    </td>
@@ -69,7 +69,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validate-element-visible">
+    <a href="/docs/advanced-editing/validations/validate-element-visible">
      要素の表示を検証
     </a>
    </td>
@@ -85,7 +85,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/custom-code">
+    <a href="/docs/advanced-editing/validations/custom-code">
      カスタム検証とアクションを追加
     </a>
    </td>
@@ -101,7 +101,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/groups#グループの作成">
+    <a href="/docs/editing-tests/groups#グループの作成">
      新しいグループを追加
     </a>
    </td>
@@ -145,7 +145,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validate-element-visualization">
+    <a href="/docs/advanced-editing/validations/validate-element-visualization">
      要素ビジュアライゼーションを検証
     </a>
    </td>
@@ -161,7 +161,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validate-viewport-visualization">
+    <a href="/docs/advanced-editing/validations/validate-viewport-visualization">
      ビューポートビジュアライゼーションを検証
     </a>
    </td>
@@ -177,7 +177,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/validate-full-page-visualization">
+    <a href="/docs/advanced-editing/validations/validate-full-page-visualization">
      フルページビジュアライゼーションを検証
     </a>
    </td>
@@ -207,7 +207,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/stop-pause-debug-tests">
+    <a href="/docs/results/stop-pause-debug-tests">
      ブレークポイントを切り替え
     </a>
    </td>
@@ -223,7 +223,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/editing-your-tests#ステップのコピー">
+    <a href="/docs/editing-tests/editing-your-tests#ステップのコピー">
      ステップをコピー
     </a>
    </td>
@@ -239,7 +239,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/editing-your-tests#ステップのカット">
+    <a href="/docs/editing-tests/editing-your-tests#ステップのカット">
      ステップをカット
     </a>
    </td>
@@ -255,7 +255,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/editing-your-tests#ステップのペースト">
+    <a href="/docs/editing-tests/editing-your-tests#ステップのペースト">
      ステップを貼り付け
     </a>
    </td>
@@ -271,7 +271,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/editing-your-tests#ステップの削除">
+    <a href="/docs/editing-tests/editing-your-tests#ステップの削除">
      ステップを削除
     </a>
    </td>
@@ -287,7 +287,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/extract-text">
+    <a href="/docs/advanced-editing/extract-text">
      値を抽出ステップを追加
     </a>
    </td>
@@ -303,7 +303,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#要素の表示を待つ（web）">
+    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（web）">
      要素の表示を待機
     </a>
    </td>
@@ -324,7 +324,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
  <tbody>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/wait-for#要素テキストの表示を待つ（web）">
+    <a href="/docs/advanced-editing/wait-for#要素テキストの表示を待つ（web）">
      要素テキストを待機
     </a>
    </td>

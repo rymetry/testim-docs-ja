@@ -26,11 +26,11 @@ Tricentis は、製品における AI の責任ある信頼できる使用を確
 
 Testim は以下の機能を提供しています。
 
-- [Testim ヘルプアシスタント](/docs/help-ai-assistant) - 生成 AI 技術を使用して、ソフトウェアの使用方法についてユーザーを支援します。質問（プロンプトを使用）をして、関連するヘルプ情報を応答として受け取ることができます。
+- [Testim ヘルプアシスタント](/docs/overview/testim-overview/help-ai-assistant) - 生成 AI 技術を使用して、ソフトウェアの使用方法についてユーザーを支援します。質問（プロンプトを使用）をして、関連するヘルプ情報を応答として受け取ることができます。
 
-- [Testim Copilot コーディングアシスタント](/docs/coding-assistant) - カスタム JS コードの記述を含むテストステップの一部である JS コードの記述、理解、または修正を支援します。
+- [Testim Copilot コーディングアシスタント](/docs/advanced-editing/coding-assistant) - カスタム JS コードの記述を含むテストステップの一部である JS コードの記述、理解、または修正を支援します。
 
-- [Agentic Test Automation for Salesforce](/docs/use-agentic-test-automation-for-salesforce) - 生成 AI 技術と高度な Salesforce 事前構築済みステップを使用して、Salesforce 環境でテストを作成および実行します。
+- [Agentic Test Automation for Salesforce](/docs/salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce) - 生成 AI 技術と高度な Salesforce 事前構築済みステップを使用して、Salesforce 環境でテストを作成および実行します。
 
 ## 顧客データの使用
 

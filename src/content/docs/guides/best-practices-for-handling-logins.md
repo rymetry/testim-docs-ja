@@ -37,7 +37,7 @@ keywords:
 3. パスワードを入力
 4. ログインをクリック
 
-これが最初のテストの場合は、この[ガイド](/docs/creating-your-first-codeless-test)を参照してください。
+これが最初のテストの場合は、この[ガイド](/docs/getting-started/creating-your-first-codeless-test)を参照してください。
 
 ![ログインプロセスのテスト記録手順を示す GIF アニメーション。ユーザー名、パスワード入力からログインボタンクリックまでの流れ](/images/miscellaneous/best-practices-for-handling-logins/546ac11-login_1.gif)
 
@@ -45,12 +45,12 @@ keywords:
 
 シークレットモードでの実行は、ログインプロセスを作成する際に非常に便利です。\
 シークレットモードで実行すると、毎回クリーンなブラウザで開始します。つまり、Cookie、ローカルストレージなしで、ブラウザがあなたを記憶していない状態です。
-シークレットモードでの実行方法については[こちら](/docs/run-in-incognito)で学習してください。
+シークレットモードでの実行方法については[こちら](/docs/running-tests/run-in-incognito)で学習してください。
 
 ### ステップをグループ化する
 
 ログインステップをグループ化すると、これらのステップを他のテストで再利用できます。\
-ログインステップをグループ化する方法については[こちら](/docs/groups)で学習してください。
+ログインステップをグループ化する方法については[こちら](/docs/editing-tests/groups)で学習してください。
 注意: グループに意味のある名前を付けるようにしてください。
 
 ![ログインステップをグループ化して再利用可能にする手順を示す GIF アニメーション](/images/miscellaneous/best-practices-for-handling-logins/4dfa1e2-Oct-20-2020_11-42-25.gif)
@@ -66,7 +66,7 @@ keywords:
 
 ![ログイングループに条件を追加して、すでにログイン済みの状況に対応する手順を示す GIF アニメーション](/images/miscellaneous/best-practices-for-handling-logins/535c34a-Oct-20-2020_11-47-18.gif)
 
-[条件](/docs/conditions)の追加方法について学びます。
+[条件](/docs/editing-tests/conditions)の追加方法について学びます。
 
 ### パラメーターを追加する
 
@@ -80,14 +80,14 @@ keywords:
 
 ![ログイングループに username と password パラメーターを追加して汎用的にする手順を示す GIF アニメーション](/images/miscellaneous/best-practices-for-handling-logins/cfbed43-Oct-20-2020_11-51-43.gif)
 
-[グループへのパラメーターの追加](/docs/parameters-for-groups)について詳しく学びます。
+[グループへのパラメーターの追加](/docs/advanced-editing/parameters/parameters-for-groups)について詳しく学びます。
 これで、このグループを使用するたびに、異なる認証情報を設定できます。
 
 ### テストをクリーンアップする
 
 テストを作成するとき、手動ユーザーとして記録したステップの一部は、自動テストには関係ない場合があります。例えば、テキストフィールド間で「Tab」を押したり、データを入力するためにテキストフィールドをクリックしたりすることです。これらのステップは削除できます。
 
-1. 不要なステップをクリアします。ステップの削除方法について[詳細](/docs/editing-your-tests)を確認してください。
+1. 不要なステップをクリアします。ステップの削除方法について[詳細](/docs/editing-tests/editing-your-tests)を確認してください。
 2. 必要なものを削除していないことを確認するために、再度実行します。
 3. 再度保存します。
 

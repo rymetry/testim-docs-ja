@@ -37,7 +37,7 @@ JSON パラメーターファイルでテストに値を渡す
 
 ## CLI で指定する
 
-作成した JSON ファイルは、[Testim CLI](/docs/the-command-line-cli) の **--params-file** 引数で指定します。
+作成した JSON ファイルは、[Testim CLI](/docs/running-tests/the-command-line-cli) の **--params-file** 引数で指定します。
 
 :::note
 `--params-file` に指定するパスはフルパスではなく相対パスである必要があります。
@@ -67,4 +67,4 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 --params-file <PARAM FILE NAME e.g. params-file.js>
 ```
 
-以降は、[ステッププロパティパネルのパラメーター](/docs/parameters-in-custom-javascript-steps) として各テストから参照できます。
+以降は、[ステッププロパティパネルのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) として各テストから参照できます。

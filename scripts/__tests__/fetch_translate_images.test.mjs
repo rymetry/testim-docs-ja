@@ -26,40 +26,40 @@ before(async () => {
 });
 
 // ---------------------------------------------------------------------------
-// rewriteDocLinks — BUG FIX: must NOT include categoryFolder in the path
+// rewriteDocLinks — resolves doc: and .htm links to path-based /docs/ URLs
 // ---------------------------------------------------------------------------
 describe('rewriteDocLinks', () => {
-  it('rewrites (doc:slug) to /docs/{slug} — WITHOUT folder prefix', () => {
+  it('rewrites (doc:slug) to path-based /docs/{pathSlug}', () => {
     const result = rewriteDocLinks('[link](doc:testim-overview)');
-    assert.equal(result, '[link](/docs/testim-overview)');
+    assert.equal(result, '[link](/docs/overview/testim-overview)');
   });
 
-  it('preserves fragment in rewritten link', () => {
+  it('preserves fragment in rewritten doc: link', () => {
     const result = rewriteDocLinks('[link](doc:testim-overview#section)');
-    assert.equal(result, '[link](/docs/testim-overview#section)');
+    assert.equal(result, '[link](/docs/overview/testim-overview#section)');
   });
 
-  it('still generates /docs/{slug} for unknown slug (no hit in index)', () => {
+  it('falls back to basename for unknown slug (no hit in index)', () => {
     const result = rewriteDocLinks('[link](doc:unknown-page)');
     assert.equal(result, '[link](/docs/unknown-page)');
   });
 
   it('does not modify already-rewritten /docs/ links', () => {
-    const md = '[link](/docs/testim-overview)';
+    const md = '[link](/docs/overview/testim-overview)';
     const result = rewriteDocLinks(md);
     assert.equal(result, md);
   });
 
   it('rewrites multiple doc: links in same document', () => {
+    // foo and bar are not in the index — fall back to basename
     const md = 'See [foo](doc:foo) and [bar](doc:bar).';
     const result = rewriteDocLinks(md);
     assert.equal(result, 'See [foo](/docs/foo) and [bar](/docs/bar).');
   });
 
-  it('rewrites MadCap relative .htm link to /docs/ slug', () => {
-    // Relative .htm paths lack full category context — slug derived from available path
+  it('rewrites MadCap relative .htm link to path-based slug', () => {
     const result = rewriteDocLinks('[link](testim-automate.htm)');
-    assert.match(result, /\[link\]\(\/docs\/testim-automate\)/);
+    assert.equal(result, '[link](/docs/overview/testim-overview/testim-automate)');
   });
 
   it('rewrites MadCap relative .htm link with path prefix', () => {
@@ -69,12 +69,12 @@ describe('rewriteDocLinks', () => {
 
   it('rewrites MadCap .htm link preserving fragment', () => {
     const result = rewriteDocLinks('[link](why-did-my-test-fail.htm#13-api-step-failed)');
-    assert.match(result, /\[link\]\(\/docs\/why-did-my-test-fail#13-api-step-failed\)/);
+    assert.equal(result, '[link](/docs/results/test-results/why-did-my-test-fail#13-api-step-failed)');
   });
 
-  it('rewrites MadCap /slug/index.htm to /docs/ link', () => {
+  it('rewrites MadCap /slug/index.htm to path-based slug', () => {
     const result = rewriteDocLinks('[link](validations/index.htm)');
-    assert.equal(result, '[link](/docs/validations)');
+    assert.equal(result, '[link](/docs/advanced-editing/validations)');
   });
 
   it('rewrites MadCap deeply nested relative .htm link', () => {

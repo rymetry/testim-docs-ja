@@ -93,7 +93,7 @@ CLI を使用してテストが実行されると、Sealights はこのコマン
 
 #### Sealights buildSessionId を使用して Testim でテストを実行する
 
-Testim で、[コマンドラインインターフェイス（CLI）](/docs/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
+Testim で、[コマンドラインインターフェイス（CLI）](/docs/running-tests/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
 
 - ```shell
   --sealights-build-session-id [sealights-suid-session-id]
@@ -119,7 +119,7 @@ Sealights で、`labId`が割り当てられたら、次の画面で見つける
 
 #### Sealights labId を使用して Testim でテストを実行する
 
-Testim で、[コマンドラインインターフェイス（CLI）](/docs/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
+Testim で、[コマンドラインインターフェイス（CLI）](/docs/running-tests/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
 
 - ```shell
   --sealights-lab-id [sealights-lab-id]
@@ -127,7 +127,7 @@ Testim で、[コマンドラインインターフェイス（CLI）](/docs/the-
 
 ### test-stageオプション
 
-通常、Sealights統合ではテストステージ名Testim Automationを使用します。ただし、これをオーバーライドしてカスタム名を使用できます。CLI実行中は常に、タグセクションで`Testim`を送信することをお勧めします。このベストプラクティスにより、テストの起源が識別されます。カスタムテストステージ名を使用する場合は、[コマンドラインインターフェイス(CLI)](/docs/the-command-line-cli)を使用し、実行に次のオプションを追加できます:
+通常、Sealights統合ではテストステージ名Testim Automationを使用します。ただし、これをオーバーライドしてカスタム名を使用できます。CLI実行中は常に、タグセクションで`Testim`を送信することをお勧めします。このベストプラクティスにより、テストの起源が識別されます。カスタムテストステージ名を使用する場合は、[コマンドラインインターフェイス(CLI)](/docs/running-tests/the-command-line-cli)を使用し、実行に次のオプションを追加できます:
 
 - ```shell
   --sealights-test-stage [sealights-test-stage-name]
@@ -138,7 +138,7 @@ Testim で、[コマンドラインインターフェイス（CLI）](/docs/the-
 **Advanced**セクションの**Lab ID**フィールドに Sealights の`labId`を入力することで、Sealights でテストを実行できます。スケジューラーによってテストが実行されると、Sealights はこのバッチでスキップすべきテストのリストを返し、これらは自動的にスキップされます。**スケジューラーと Sealights 統合でテストを実行するには:**
 
 1. Sealights で、[labId オプション](#labidオプション)セクションの手順に従って、Lab ID を取得します。
-2. Testim で、[Scheduler - Web](/docs/scheduler)セクションの手順に従って、スケジューラーを構成します。
+2. Testim で、[Scheduler - Web](/docs/running-tests/scheduler)セクションの手順に従って、スケジューラーを構成します。
 3. スケジューラー構成画面で、**Advanced**をクリックします。
 4. **Test Optimization Configuration**の下の**Lab ID**フィールドに、Sealights から取得した Lab ID を貼り付けます。
 5. オプションで、カスタムテストステージ名を使用する場合は、**Test stage name field**に入力します
@@ -160,7 +160,7 @@ CLI を使用してテストを実行した後、テストの実行ステータ�
 
 ## Testim UI で実行されたリストの表示
 
-[Execution Runs Screen](/docs/execution-runs-screen)で、実行されたテストのリストを表示できます。Status カラムの下に、テストが Test Optimization によって除外されたことを示すインジケーターが表示されます。
+[Execution Runs Screen](/docs/results/execution-runs-screen)で、実行されたテストのリストを表示できます。Status カラムの下に、テストが Test Optimization によって除外されたことを示すインジケーターが表示されます。
 
 ![Sealights Test Optimization の対象外となったテストが UI 上で示されている画面](/images/other-integrations/sealights-integration/86c6509-testlistui.png)
 

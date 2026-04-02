@@ -36,7 +36,7 @@ keywords:
 :::
 
 :::warning{title="注意"}
-この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[コマンドライン CLI](/docs/the-command-line-cli#cli-インストール)をお読みください。
+この機能を使用するには、CLI のバージョンを最低 v3.135.0 にアップグレードする必要があります。CLI のインストールについては[コマンドライン CLI](/docs/running-tests/the-command-line-cli#cli-インストール)をお読みください。
 :::
 
 ## テストステータス
@@ -149,7 +149,7 @@ keywords:
 
 ## テストのステータスを変更
 
-ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](/docs/revisions)に表示されます。\
+ステータスは手動で変更できます。テストステータスへのすべての変更は[リビジョン履歴](/docs/test-management/revisions)に表示されます。\
 **テストライブラリからテストステータスを変更するには:**
 
 1. Test List --> Tests に移動します。
@@ -160,7 +160,7 @@ keywords:
 \*_注意:_ 編集したいすべてのテストを選択してから、トップメニューからステータス変更をクリックすることで、テストステータスを一括編集することも可能です。
 
 :::note
-テストステータスの一部として、不安定なテストを表示し、そのステータスをどのように管理するかを決定するオプションも追加しました。不安定なテストの詳細については、[不安定なテスト](/docs/flaky-tests)をご覧ください。
+テストステータスの一部として、不安定なテストを表示し、そのステータスをどのように管理するかを決定するオプションも追加しました。不安定なテストの詳細については、[不安定なテスト](/docs/testops/testops-management/flaky-tests)をご覧ください。
 :::
 
 **Testim のエディターからテストステータスを変更するには:**
@@ -171,7 +171,7 @@ keywords:
 ![エディターでステータス変更](/images/testops-management/test-status/65da094-Screen_Shot_2021-01-10_at_7.41.32.png)
 
 :::note
-ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、3 way マージコンフリクトとして解決する必要があります。詳細については[バージョン管理（ブランチ）](/docs/version-control-branches)をご覧ください。
+ステータスを変更すると、テストはリビジョンとして保存されます。それをマスターにマージし直したい場合は、3 way マージコンフリクトとして解決する必要があります。詳細については[バージョン管理（ブランチ）](/docs/testops/testops-version-control/version-control-branches)をご覧ください。
 :::
 
 ## テストステータスの使用
@@ -202,7 +202,7 @@ keywords:
 ### CLI 実行
 
 - **失敗した Evaluating テスト**は、CLI 実行サマリーに FAILED-EVALUATING として表示されます。
-- **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/the-command-line-cli#前提条件)をご覧ください。
+- **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/running-tests/the-command-line-cli#前提条件)をご覧ください。
 - **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
 
 :::note

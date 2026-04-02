@@ -74,7 +74,7 @@ keywords:
   - **Test**: 同一テスト内のステップやグループ間で受け渡しできます。_既定値_
   - **Suite**: 同一テストスイート内のテスト間で受け渡しできます。
 - **When this step fails** – ステップが失敗した場合の動作を指定します。
-- **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/conditions) を参照してください。
+- **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – Testim がテストステップの失敗と見なすまでの規定待機時間を上書きし、別の時間（ミリ秒）を指定できます。
 
 テストを実行すると、生成されたランダム値（任意のプレフィックス／サフィックスを含む）が指定した変数に格納されます。

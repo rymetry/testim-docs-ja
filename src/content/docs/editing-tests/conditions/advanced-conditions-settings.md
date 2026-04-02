@@ -16,7 +16,7 @@ keywords:
   - 高度な設定
 ---
 
-Testim の条件は、ステップの実行にもループの繰り返し（[Repeat Group Loops](/docs/loops)）にも適用できます。\
+Testim の条件は、ステップの実行にもループの繰り返し（[Repeat Group Loops](/docs/advanced-editing/loops)）にも適用できます。\
 ステップやループに設定した条件が false の場合、既定ではステップはスキップ（またはループは即座に終了）されます。逆に条件が true の場合、既定では直ちにステップを実行（またはループを繰り返し）ます。下記の拡張オプションを使うと、true/false と判定する前に一定時間、条件チェックを継続するように設定できます。
 
 :::note
@@ -27,7 +27,7 @@ Testim の条件は、ステップの実行にもループの繰り返し（[Rep
 
 **拡張条件設定を構成するには:**
 
-1. [Conditions](/docs/conditions) に従って条件を設定するか、[Repeat Group Loops](/docs/loops) に従ってループを設定します。
+1. [Conditions](/docs/editing-tests/conditions) に従って条件を設定するか、[Repeat Group Loops](/docs/advanced-editing/loops) に従ってループを設定します。
 2. Properties パネルの **When to run step** セクション（ループの場合は **Repeat group** セクション）で **Settings**をクリックします。右側に **Advanced** パネルが開きます。
 
 ![276](/images/conditions/advanced-conditions-settings/9e54f5e-WhenToRunStepCustom.png)

@@ -38,7 +38,7 @@ keywords:
 --result-label "nightly Jenkins run"
 ```
 
-- 必要に応じて、CLI コマンドに複数の結果ラベルを追加できます。CLI の実行の詳細については、[コマンドラインインターフェース（CLI）](/docs/the-command-line-cli)を参照してください。
+- 必要に応じて、CLI コマンドに複数の結果ラベルを追加できます。CLI の実行の詳細については、[コマンドラインインターフェース（CLI）](/docs/running-tests/the-command-line-cli)を参照してください。
 
 ```shell
 --result-label "nightly Jenkins run" --result-label "v1.42.35"
@@ -50,4 +50,4 @@ keywords:
 
 ## Scheduler 経由で結果ラベルを追加する
 
-スケジュールされた実行は、事前定義されたスケジュールに基づいて実行されるテスト実行です。Scheduler を作成する際、**詳細オプション**の一部として結果ラベルを追加できます。詳細については、[Scheduler](/docs/scheduler)を参照してください。
+スケジュールされた実行は、事前定義されたスケジュールに基づいて実行されるテスト実行です。Scheduler を作成する際、**詳細オプション**の一部として結果ラベルを追加できます。詳細については、[Scheduler](/docs/running-tests/scheduler)を参照してください。

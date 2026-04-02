@@ -81,28 +81,28 @@ keywords:
     </a>
     <br/>
     •
-    <a href="/docs/running-tests-overview#リモート-web-テストを実行する">
+    <a href="/docs/running-tests/running-tests-overview#リモート-web-テストを実行する">
      Grid 上で実行
     </a>
     <br/>
     •
-    <a href="/docs/play-from-here">
+    <a href="/docs/running-tests/play-from-here">
      ここから再生
     </a>
     <br/>
     •
-    <a href="/docs/rerun-locally-with-the-same-params">
+    <a href="/docs/running-tests/rerun-locally-with-the-same-params">
      同じパラメーターでローカル再実行
     </a>
    </td>
    <td>
     •
-    <a href="/docs/recording-additional-steps-to-fix-bugs#記録を開始">
+    <a href="/docs/debugging-tests/recording-additional-steps-to-fix-bugs#記録を開始">
      記録開始
     </a>
     <br/>
     •
-    <a href="/docs/recording-additional-steps-to-fix-bugs#この位置から記録を開始">
+    <a href="/docs/debugging-tests/recording-additional-steps-to-fix-bugs#この位置から記録を開始">
      この位置から記録開始
     </a>
    </td>
@@ -116,7 +116,7 @@ keywords:
 
 ブレークポイントは、さまざまな段階でテスト実行を一時停止するために使用されます。ブレークポイントには 2 つのタイプがあります:
 
-- **手動ブレークポイント** - ユーザーが手動で設定するブレークポイント（詳細は[ブレークポイントの挿入](/docs/stop-pause-debug-tests#ブレークポイントを挿入する)を参照）
+- **手動ブレークポイント** - ユーザーが手動で設定するブレークポイント（詳細は[ブレークポイントの挿入](/docs/results/stop-pause-debug-tests#ブレークポイントを挿入する)を参照）
 
   ![ブレークポイントの挿入](/images/debugging/debugging-controls/4531fad-breakpoint1.png)
 

@@ -74,7 +74,7 @@ install -g @testim/testim-cli
 --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>"  --grid "<Your grid name>" --report-file ${bamboo.build.working.directory}/testim-tests-${bamboo.buildNumber}-report.xml
 ```
 
-**注記**: グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+**注記**: グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 
 3.6. "Save"をクリックします:
 

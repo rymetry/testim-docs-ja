@@ -106,7 +106,7 @@ Applitools Eyes アカウントと Testim アカウント間で情報を交換�
 7. **App Name**フィールドに、オプションでアプリの名前を入力します。\
    デフォルトのアプリ名は Project ID です。
 8. **Connect**をクリックします。\
-   成功アイコンが表示され、Applitools が Testim と統合されます。ビジュアル検証および wait-for ステップの使用を開始できます。[Visual Validation](/docs/pixel-validation-and-pixel-wait-for)を参照してください。
+   成功アイコンが表示され、Applitools が Testim と統合されます。ビジュアル検証および wait-for ステップの使用を開始できます。[Visual Validation](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)を参照してください。
 
 ![Applitools 統合が成功しビジュアル検証ステップが有効になったことを示す画面](/images/applitools-integration/applitools-integration/446380f-Testim_265_r.png)
 

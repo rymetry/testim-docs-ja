@@ -71,14 +71,14 @@ exports.config = {
 ```
 
 :::note
-グリッド名の設定方法は [グリッド管理](/docs/grid-management) を参照してください。
+グリッド名の設定方法は [グリッド管理](/docs/integrations/grid-management) を参照してください。
 :::
 
 ## 構文
 
 設定ファイルには次の要素が含まれます。
 
-- CLI フラグ: テストの実行方法を指示します。設定ファイルで使えるフラグは、[CLI フラグ](/docs/the-command-line-cli)に記載のプロパティをすべてサポートします。\
+- CLI フラグ: テストの実行方法を指示します。設定ファイルで使えるフラグは、[CLI フラグ](/docs/running-tests/the-command-line-cli)に記載のプロパティをすべてサポートします。\
   プロパティ名の書式は CLI とは少し異なり、ハイフン（-）をキャメルケースに置き換えます。\
   例: `--base-url` → `baseUrl`
 
@@ -98,7 +98,7 @@ exports.config = {
 - Before Suite: スイートの前に実行
 - After Suite: スイートの後に実行
 
-フックの詳細は [Hooks](/docs/hooks#テスト構成から作成) を参照してください。以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
+フックの詳細は [Hooks](/docs/advanced-editing/hooks#テスト構成から作成) を参照してください。以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
 
 ```javascript
 exports.config = {
@@ -114,12 +114,12 @@ exports.config = {
 
 ## 設定フックの事前定義プロパティ
 
-各種設定フックには、テスト／スイートに関する追加情報を取得するための事前定義プロパティが用意されています。例えば、Before Suite フックで `projectId` の値を出力できます。詳細は[設定ファイルフックの事前定義プロパティ](/docs/predefined-properties-in-config-file-hooks)を参照してください。
+各種設定フックには、テスト／スイートに関する追加情報を取得するための事前定義プロパティが用意されています。例えば、Before Suite フックで `projectId` の値を出力できます。詳細は[設定ファイルフックの事前定義プロパティ](/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks)を参照してください。
 
 ### beforeTest フックで実行時のラベル一覧を取得する
 
 設定ファイルの `beforeTest` フック内で、テストに定義されたラベル一覧でパラメーターを埋めることができます。\
-次の例では `labels` というパラメーターを定義しています。このパラメーターには事前定義パラメーター `allLabels` を用いて、そのテストに付与されたラベルの一覧が入ります。以降、パラメーターが使える場所で参照できます。例えば **カスタムステップ** で、ラベルに `Games` が含まれる場合はステップをスキップする、といったコードを記述できます。パラメーターの利用については[設定ファイルのパラメーター](/docs/configuration-file-parameters)も参照してください。
+次の例では `labels` というパラメーターを定義しています。このパラメーターには事前定義パラメーター `allLabels` を用いて、そのテストに付与されたラベルの一覧が入ります。以降、パラメーターが使える場所で参照できます。例えば **カスタムステップ** で、ラベルに `Games` が含まれる場合はステップをスキップする、といったコードを記述できます。パラメーターの利用については[設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters)も参照してください。
 
 <br />
 
@@ -135,7 +135,7 @@ beforeTest: function(test) {
 
 設定ファイルの `beforeTest` フック内で、テストのベース URL を取得し、変数を任意の値に更新できます。\
 次の例では、現在のベース URL を取得して、任意の文字列を付与した URL に更新しています。\
-パラメーターの利用については[設定ファイルのパラメーター](/docs/configuration-file-parameters)も参照してください。
+パラメーターの利用については[設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters)も参照してください。
 
 ```javascript
 exports.config = {
@@ -154,7 +154,7 @@ afterSuite 関数内では、その実行でエクスポートされたグロー
 
 **構文**: `suite.exportsGlobal.<param_name>`
 
-グローバルエクスポートの詳細は[パラメーターのエクスポート](/docs/exports-parameters)を参照してください。
+グローバルエクスポートの詳細は[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。
 
 ```javascript
 exports.config = {
@@ -170,7 +170,7 @@ exports.config = {
 ## 設定ファイルを使ってテストを実行する
 
 1. 設定ファイルを作成します（例: `testimConfig.js`）。
-2. [コマンドライン（CLI）](/docs/the-command-line-cli) にパラメーターとして渡します。
+2. [コマンドライン（CLI）](/docs/running-tests/the-command-line-cli) にパラメーターとして渡します。
 3. 必要に応じて、ファイルへのパスを指定してください。
 
 ```shell

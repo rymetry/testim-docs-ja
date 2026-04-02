@@ -45,7 +45,7 @@ testim:
 ```
 
 :::info
-グリッド名については、[こちら](/docs/grid-management)でグリッドの設定方法をご確認ください。
+グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 :::
 
 :::info

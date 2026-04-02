@@ -22,12 +22,12 @@ keywords:
 
 AI エージェントの支援を受けて、Salesforce 環境向けのユニークなテストを作成します。
 
-[ステップを手動で追加または記録する](/docs/create-a-salesforce-test)ことに加えて、Agentic Test Automation の支援を受けて Salesforce 向けのテストを作成できます。このツールを使用すると、特別にトレーニングされた AI エージェントと協力して、Salesforce 環境向けのユニークなテストを生成および実行できます。
+[ステップを手動で追加または記録する](/docs/salesforce-testing/create-a-salesforce-test)ことに加えて、Agentic Test Automation の支援を受けて Salesforce 向けのテストを作成できます。このツールを使用すると、特別にトレーニングされた AI エージェントと協力して、Salesforce 環境向けのユニークなテストを生成および実行できます。
 
 ## 前提条件
 
-- Testim Extension をダウンロードしてインストールする - [なぜ Testim Extension が必要ですか？](/docs/why-do-you-need-testim-extension)
-- [Salesforce テスト環境を Testim/TTA for Salesforce に接続する](/docs/create-and-manage-test-environments)。
+- Testim Extension をダウンロードしてインストールする - [なぜ Testim Extension が必要ですか？](/docs/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension)
+- [Salesforce テスト環境を Testim/TTA for Salesforce に接続する](/docs/salesforce-testing/create-and-manage-test-environments)。
 
 ## Agentic Test Automation で新しい Salesforce テストを作成する
 
@@ -35,12 +35,12 @@ AI エージェントの支援を受けて、Salesforce 環境向けのユニー
 
 1. Testim for Salesforce アカウント内のどこからでも、画面上部の**Agentic Test Automation**を選択します。
 2. このサービスを初めて使用する場合は、**Terms of Service**の一番下までスクロールして、**Got it**を選択してオプトインします。
-3. これで、エージェントへのプロンプトを開始できます。テストしたい内容の説明をエージェントに与えます。それが簡単なものでも複雑なものでも構いません。これを行う方法の例については、[プロンプトの作成方法](/docs/use-agentic-test-automation-for-salesforce#プロンプトの作成方法)をご覧ください。
+3. これで、エージェントへのプロンプトを開始できます。テストしたい内容の説明をエージェントに与えます。それが簡単なものでも複雑なものでも構いません。これを行う方法の例については、[プロンプトの作成方法](/docs/salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce#プロンプトの作成方法)をご覧ください。
 
 ![Agentic Test Automation のプロンプト入力画面](/images/salesforce-testing/use-agentic-test-automation-for-salesforce/ff3b908-Salesforce_AgenticeAITesting_Screenshot.png)
 
 4. エージェントが作業している間、時々テストステップを追加する確認を求めます。エージェントが提供する情報を確認し、ステップを追加するかどうかを確認します。
-5. エージェントがテストの作成を完了すると、テストを実行するかどうかを尋ねられます。この時点で、停止して通常どおりに[テストを手動でレビュー、編集、実行](/docs/create-a-salesforce-test)できます。または、このリクエストを確認して、エージェントにテストを実行させることができます。
+5. エージェントがテストの作成を完了すると、テストを実行するかどうかを尋ねられます。この時点で、停止して通常どおりに[テストを手動でレビュー、編集、実行](/docs/salesforce-testing/create-a-salesforce-test)できます。または、このリクエストを確認して、エージェントにテストを実行させることができます。
 6. エージェントがテストを実行する場合、テストを検証し、見つかった問題を解決します。テスト実行が完了すると、エージェントは作成したテストの概要を提供し、これをアーティファクトとしてテストに追加できます。
 
 ## プロンプトの作成方法

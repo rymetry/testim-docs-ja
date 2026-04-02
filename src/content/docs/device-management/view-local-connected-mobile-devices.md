@@ -14,7 +14,7 @@ keywords:
   - モバイルテスト実行端末
 ---
 
-Local Devices セクションでは、Tricentis Mobile Agent（TMA）に接続されているすべての物理および仮想モバイルデバイスを表示できます。モバイルデバイスの追加と管理の詳細については、[Configure Tricentis Mobile Agent](/docs/configure-tricentis-mobile-agent)を参照してください。
+Local Devices セクションでは、Tricentis Mobile Agent（TMA）に接続されているすべての物理および仮想モバイルデバイスを表示できます。モバイルデバイスの追加と管理の詳細については、[Configure Tricentis Mobile Agent](/docs/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent)を参照してください。
 
 ## 接続されている Local Devices の表示
 

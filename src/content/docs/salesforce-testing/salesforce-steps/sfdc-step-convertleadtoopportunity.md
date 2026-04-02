@@ -24,12 +24,12 @@ keywords:
 変換プロセスの一部として、レコードの**取引先**、**取引先責任者**、**商談**属性の値を変更したり、デフォルト値を使用したりすることができます。
 
 :::note{title="レコード表示の要件"}
-ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 :::
 
 **リードを商談に変換ステップを追加するには:**
 
-1. テストで、**リードを商談に変換**ステップの前に、目的のリードレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
+1. テストで、**リードを商談に変換**ステップの前に、目的のリードレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**CPQ 操作**をクリックし、**リードを商談に変換**ステップを選択します。\
    **リードを商談に変換**ステップが追加され、次の**オブジェクト**プロパティが表示されます。

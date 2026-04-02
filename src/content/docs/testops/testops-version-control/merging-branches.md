@@ -62,7 +62,7 @@ keywords:
 選択したブランチのすべてのステップが、現在表示されているブランチ（master ブランチまたは他のブランチ）にマージされます。
 
 :::note
-[プルリクエスト](/docs/pull-requests)機能が有効になっている場合、チェリーピックは PR が承認されてから利用可能になります。
+[プルリクエスト](/docs/testops/testops-version-control/pull-requests)機能が有効になっている場合、チェリーピックは PR が承認されてから利用可能になります。
 :::
 
 :::warning{title="注意"}

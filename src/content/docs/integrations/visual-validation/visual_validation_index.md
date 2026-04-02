@@ -17,5 +17,5 @@ keywords:
 
 Testim は以下のビジュアル検証統合を提供しています:
 
-- [Applitools](/docs/visual-validation)
-- [LambdaTest SmartUI](/docs/lambdatest_integration)
+- [Applitools](/docs/integrations/visual-validation)
+- [LambdaTest SmartUI](/docs/integrations/visual-validation/lambdatest_integration)

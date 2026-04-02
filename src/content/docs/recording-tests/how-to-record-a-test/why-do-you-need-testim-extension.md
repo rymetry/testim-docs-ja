@@ -22,7 +22,7 @@ Testim は Smart Locators を使用してテストの作成と実行を行いま
 
 ![Testim Extension](/images/recording-tests/why-do-you-need-testim-extension/6829989-testim_extension.PNG)
 
-Testim Extension でできることの詳細については、[Testim Extension - 概要](/docs/testim-extension-overview)を参照してください。
+Testim Extension でできることの詳細については、[Testim Extension - 概要](/docs/testim-extension/testim-extension-overview)を参照してください。
 
 ## Testim Extension のダウンロード
 

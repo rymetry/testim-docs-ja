@@ -26,16 +26,16 @@ Testim でテストを作成する際は、対象となる Web ページやア�
 
 記録を開始すると、Testim が操作をテストステップに変換し、Visual Editor 画面に順番に表示します。記録したままでも同じ操作が再現できるかを確認できますし、Visual Editor で次のような調整も行えます。
 
-- [ステップの削除・追加・並べ替え](/docs/editing-your-tests)
-- [条件付きステップの追加](/docs/conditions)
-- [検証の追加](/docs/validations)
-- [ステップのグループ化](/docs/groups)
+- [ステップの削除・追加・並べ替え](/docs/editing-tests/editing-your-tests)
+- [条件付きステップの追加](/docs/editing-tests/conditions)
+- [検証の追加](/docs/advanced-editing/validations)
+- [ステップのグループ化](/docs/editing-tests/groups)
 
 :::info
 Testim は幅広い Web 技術に対応しており、網羅的なテストが実施できます。一方で、Web 技術の進化は速いため、最新技術への対応が間に合わない場合があります。現在サポート対象外の例としては Lit（[https://lit.dev/](https://lit.dev/)）があります。Testim では対応範囲の拡大に継続的に取り組んでいます。
 :::
 
-テストを記録する前に、Testim 拡張機能をインストールしておきましょう。詳しくは[Testim 拡張機能が必要な理由](/docs/why-do-you-need-testim-extension)を参照してください。
+テストを記録する前に、Testim 拡張機能をインストールしておきましょう。詳しくは[Testim 拡張機能が必要な理由](/docs/recording-tests/how-to-record-a-test/why-do-you-need-testim-extension)を参照してください。
 
 ## ステップ 1: 新しいテストを作成する
 
@@ -56,10 +56,10 @@ Testim は幅広い Web 技術に対応しており、網羅的なテストが�
 
 ## ステップ 2: Base URL を設定する
 
-Base URL は記録開始時に開く初期ページを指定します。詳細は[Base URL](/docs/base-url)を参照してください。
+Base URL は記録開始時に開く初期ページを指定します。詳細は[Base URL](/docs/running-tests/base-url)を参照してください。
 
 :::info
-複数ウィンドウを開く操作も記録できます。詳しくは[複数ウィンドウでの記録](/docs/multi-windows-recording)を参照してください。
+複数ウィンドウを開く操作も記録できます。詳しくは[複数ウィンドウでの記録](/docs/recording-tests/how-to-record-a-test/multi-windows-recording)を参照してください。
 :::
 
 Base URL の設定方法は次の 2 通りです。
@@ -109,7 +109,7 @@ Base URL は入力と同時に保存されるため、保存操作は不要で�
 テスト構成はテストを実行する環境を決定します。ローカルで実行する場合は自分の環境に合わせて設定し、Testim Grid で実行する場合はシミュレーションしたい環境を指定します。
 
 :::info
-CLI でテストを実行する際は、コマンドで別のテスト構成を指定して上書きできます。詳しくは[コマンドラインインターフェース](/docs/the-command-line-cli)を参照してください。
+CLI でテストを実行する際は、コマンドで別のテスト構成を指定して上書きできます。詳しくは[コマンドラインインターフェース](/docs/running-tests/the-command-line-cli)を参照してください。
 :::
 
 :::warning
@@ -201,7 +201,7 @@ CLI でテストを実行する際は、コマンドで別のテスト構成を�
 
 ### カスタム構成を作成する
 
-新しいカスタム構成を作成する手順は、[共有構成の作成](/docs/shared-configuration#既存の構成を表示する) を参照してください。
+新しいカスタム構成を作成する手順は、[共有構成の作成](/docs/test-management/shared-configuration#既存の構成を表示する) を参照してください。
 
 ## ステップ 4: テストを記録する
 
@@ -267,7 +267,7 @@ AUT ブラウザが Base URL を開きます。
 ![未保存の通知](/images/recording-tests/how-to-record-a-test/8797dbc-notsaved.png)
 
 :::warning
-**オートリカバリー**: 新しいテストを作成したり既存テストを編集したりした際は、できるだけ早く保存してください。保存前にブラウザを閉じてしまっても、テストはブラウザのキャッシュに残り、作業を再開できる場合があります。詳細は[保存していないテストを復元する](/docs/recovering-a-test-that-was-not-saved)を参照してください。
+**オートリカバリー**: 新しいテストを作成したり既存テストを編集したりした際は、できるだけ早く保存してください。保存前にブラウザを閉じてしまっても、テストはブラウザのキャッシュに残り、作業を再開できる場合があります。詳細は[保存していないテストを復元する](/docs/editing-tests/recovering-a-test-that-was-not-saved)を参照してください。
 :::
 
 **新しいテストを保存するには:**
@@ -286,4 +286,4 @@ AUT ブラウザが Base URL を開きます。
 
 ### 編集したテストを保存する
 
-既存のテストを編集した場合（追加のステップを記録する、プロパティを調整する、検証を追加する など）は、変更内容を保存する必要があります。詳しくは[テストの編集](/docs/editing-your-tests)を参照してください。
+既存のテストを編集した場合（追加のステップを記録する、プロパティを調整する、検証を追加する など）は、変更内容を保存する必要があります。詳しくは[テストの編集](/docs/editing-tests/editing-your-tests)を参照してください。
