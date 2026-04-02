@@ -8,7 +8,6 @@ type SearchResultListProps = {
   indexStatus: SearchIndexStatus;
   onNavigate: (href: string) => void;
   query: string;
-  results: SearchResult[];
   searchError: boolean;
   selectedIndex: number;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
@@ -31,7 +30,7 @@ function highlightText(text: string, terms: string[]): ReactNode {
     <>
       {parts.map((part, index) =>
         index % 2 === 1 ? (
-          <mark key={index} className="rounded bg-yellow-200 px-0.5 text-yellow-900">
+          <mark key={`${index}-${part}`} className="rounded bg-yellow-200 px-0.5 text-yellow-900">
             {part}
           </mark>
         ) : (
@@ -48,7 +47,6 @@ export function SearchResultList({
   indexStatus,
   onNavigate,
   query,
-  results,
   searchError,
   selectedIndex,
   setSelectedIndex,
@@ -100,7 +98,7 @@ export function SearchResultList({
         </div>
       )}
 
-      {query.trim() && indexStatus === 'ready' && !searchError && results.length === 0 && (
+      {query.trim() && indexStatus === 'ready' && !searchError && flatResults.length === 0 && (
         <div className="px-4 py-12 text-center sm:px-6" role="status">
           <svg
             className="mx-auto h-12 w-12 text-slate-300"
@@ -123,7 +121,7 @@ export function SearchResultList({
         </div>
       )}
 
-      {results.length > 0 && (
+      {flatResults.length > 0 && (
         <>
           <div
             className="px-4 pt-3 pb-1 text-xs text-slate-400 sm:px-6"

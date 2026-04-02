@@ -1,5 +1,5 @@
 /** React hook: ArrowUp/Down/Enter keyboard navigation for the search result list. Guards against IME composition events. */
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import type { Dispatch, KeyboardEvent as ReactKeyboardEvent, RefObject, SetStateAction } from 'react';
 import type { SearchResult } from './types';
 
@@ -26,35 +26,38 @@ export function useKeyboardNavigation({
     activeElement?.scrollIntoView({ block: 'nearest' });
   }, [flatResults, selectedIndex]); // listRef is a stable RefObject — excluded from deps
 
-  const handleInputKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (event.nativeEvent.isComposing || (event.nativeEvent as KeyboardEvent).isComposing) return;
+  const handleInputKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLInputElement>) => {
+      if (event.nativeEvent.isComposing || (event.nativeEvent as KeyboardEvent).isComposing) return;
 
-    if (event.key === 'ArrowDown') {
-      if (flatResults.length === 0) return;
-      event.preventDefault();
-      setSelectedIndex((previousIndex) => (previousIndex + 1) % flatResults.length);
-      return;
-    }
+      if (event.key === 'ArrowDown') {
+        if (flatResults.length === 0) return;
+        event.preventDefault();
+        setSelectedIndex((previousIndex) => (previousIndex + 1) % flatResults.length);
+        return;
+      }
 
-    if (event.key === 'ArrowUp') {
-      if (flatResults.length === 0) return;
-      event.preventDefault();
-      setSelectedIndex(
-        (previousIndex) => (previousIndex - 1 + flatResults.length) % flatResults.length
-      );
-      return;
-    }
+      if (event.key === 'ArrowUp') {
+        if (flatResults.length === 0) return;
+        event.preventDefault();
+        setSelectedIndex(
+          (previousIndex) => (previousIndex - 1 + flatResults.length) % flatResults.length
+        );
+        return;
+      }
 
-    if (event.key === 'Enter' && flatResults[selectedIndex]) {
-      event.preventDefault();
-      const target = flatResults[selectedIndex];
-      const href =
-        target.type === 'heading' && target.headingSlug
-          ? `/docs/${target.slug}#${target.headingSlug}`
-          : `/docs/${target.slug}`;
-      onNavigate(href);
-    }
-  };
+      if (event.key === 'Enter' && flatResults[selectedIndex]) {
+        event.preventDefault();
+        const target = flatResults[selectedIndex];
+        const href =
+          target.type === 'heading' && target.headingSlug
+            ? `/docs/${target.slug}#${target.headingSlug}`
+            : `/docs/${target.slug}`;
+        onNavigate(href);
+      }
+    },
+    [flatResults, selectedIndex, onNavigate, setSelectedIndex]
+  );
 
   return { handleInputKeyDown };
 }

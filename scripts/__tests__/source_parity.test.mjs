@@ -1682,6 +1682,24 @@ describe('classifyLine', () => {
     const result = classifyLine('Some text.');
     assert.equal(result.nextState.currentSection, '__top__');
   });
+
+  it('H5 and H6 headings fall through to paragraph (regex is #{2,4})', () => {
+    assert.equal(classifyLine('##### H5 Heading').kind, 'paragraph-start');
+    const r1 = classifyLine('##### H5 Heading');
+    assert.equal(classifyLine('###### H6 Heading', r1.nextState).kind, 'paragraph');
+  });
+
+  it('indented code fence inside list item is classified as fence', () => {
+    const result = classifyLine('  - ```python');
+    assert.equal(result.kind, 'fence');
+    assert.equal(result.nextState.inCodeBlock, true);
+  });
+
+  it('::: alone outside callout is classified as paragraph', () => {
+    // ::: without a type suffix does not match callout-open regex
+    const result = classifyLine(':::');
+    assert.equal(result.kind, 'paragraph-start');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -1754,6 +1772,19 @@ describe('extractParagraphCounts', () => {
     ].join('\n');
     const counts = extractParagraphCounts(body);
     assert.equal(counts.get('List Section'), 1);
+  });
+
+  it('does not count blockquotes as paragraphs', () => {
+    const body = [
+      '## Quote Section',
+      '',
+      '> This is a blockquote.',
+      '> It continues here.',
+      '',
+      'Real paragraph.',
+    ].join('\n');
+    const counts = extractParagraphCounts(body);
+    assert.equal(counts.get('Quote Section'), 1);
   });
 
   it('does not count HTML tables as paragraphs', () => {

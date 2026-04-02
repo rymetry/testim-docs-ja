@@ -12,9 +12,8 @@ import { isDirectRun } from './lib/cli.mjs';
 import { PROJECT_ROOT, filePathToSlug } from './lib/project.mjs';
 import { getSectionSlugSet } from './lib/sidebar.mjs';
 
-const ROOT = PROJECT_ROOT;
-const DOCS_ROOT = path.join(ROOT, 'src', 'content', 'docs');
-const PUBLIC_ROOT = path.join(ROOT, 'public');
+const DOCS_ROOT = path.join(PROJECT_ROOT, 'src', 'content', 'docs');
+const PUBLIC_ROOT = path.join(PROJECT_ROOT, 'public');
 
 /** @typedef {{ file: string, line: number | null, rule: string, message: string, level: 'error' | 'warning' }} LintError */
 /** @typedef {{ allSlugs?: Set<string>, headingsBySlug?: Map<string, Set<string>> }} LintContext */
@@ -337,7 +336,7 @@ async function main() {
       const issues = lintContent(content, filePath, { allSlugs, headingsBySlug });
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
-        const relativePath = path.relative(ROOT, issue.file);
+        const relativePath = path.relative(PROJECT_ROOT, issue.file);
         console.log(
           `${issue.level === 'error' ? '❌' : '⚠️ '} ${relativePath}${location} [${issue.rule}] ${issue.message}`
         );
@@ -345,7 +344,7 @@ async function main() {
         else totalWarnings += 1;
       }
     } catch (error) {
-      console.error(`❌ Failed to lint ${path.relative(ROOT, filePath)}: ${error.message}`);
+      console.error(`❌ Failed to lint ${path.relative(PROJECT_ROOT, filePath)}: ${error.message}`);
       totalErrors += 1;
     }
   }

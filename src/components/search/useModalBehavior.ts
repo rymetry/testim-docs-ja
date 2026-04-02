@@ -1,5 +1,5 @@
 /** React hook: search modal lifecycle — Cmd+K toggle, Escape close, focus trap, and scroll lock. */
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
 
 type UseModalBehaviorOptions = {
@@ -28,11 +28,13 @@ export function useModalBehavior({
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const isOpenRef = useRef(isOpen);
 
+  // useEffectEvent reads the latest onClose without re-subscribing effects
   const runOnClose = useEffectEvent(() => {
     onClose?.();
   });
 
-  const openModal = useEffectEvent(() => {
+  // useCallback for stable identity — safe to pass as JSX event handler props
+  const openModal = useCallback(() => {
     const active = document.activeElement;
     previousFocusRef.current =
       active instanceof HTMLElement &&
@@ -41,9 +43,9 @@ export function useModalBehavior({
         ? active
         : null;
     setIsOpen(true);
-  });
+  }, []);
 
-  const closeModal = useEffectEvent(() => {
+  const closeModal = useCallback(() => {
     setIsOpen(false);
     runOnClose();
     setTimeout(() => {
@@ -55,7 +57,7 @@ export function useModalBehavior({
       }
       previousFocusRef.current = null;
     }, 0);
-  });
+  }, [runOnClose]);
 
   useEffect(() => {
     isOpenRef.current = isOpen;
@@ -78,7 +80,7 @@ export function useModalBehavior({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [openModal, closeModal]);
 
   useEffect(() => {
     if (isOpen) {
@@ -104,7 +106,7 @@ export function useModalBehavior({
     };
   }, [isOpen]);
 
-  const handleModalKeyDown = useEffectEvent((event: ReactKeyboardEvent<HTMLDivElement>) => {
+  const handleModalKeyDown = useCallback((event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'Tab' || !modalRef.current) return;
 
     const focusable = Array.from(
@@ -124,7 +126,7 @@ export function useModalBehavior({
       event.preventDefault();
       first.focus();
     }
-  });
+  }, []);
 
   return {
     inputRef,

@@ -20,6 +20,8 @@ export default function SearchModal() {
     modalRef,
     triggerRef,
   } = useModalBehavior({
+    // setSelectedIndex is declared below by useSearchResults. This forward reference
+    // is safe because onClose is only invoked after component initialization completes.
     onClose: () => {
       setQuery('');
       setSelectedCategory(null);
@@ -195,7 +197,6 @@ export default function SearchModal() {
             indexStatus={indexStatus}
             onNavigate={navigateTo}
             query={query}
-            results={results}
             searchError={searchError}
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
