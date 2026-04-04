@@ -13,7 +13,7 @@ keywords:
   - LambdaTest
 ---
 
-ビジュアル検証ツールは、ベースラインと現在のテスト実行を比較して、UI の変更やレイアウトの問題を検出します。
+[ビジュアル検証](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)アプリは、アプリのユーザーインターフェースのベースラインと現在のテスト実行を比較して、変更やレイアウトの問題を検出します。
 
 Testim は以下のビジュアル検証統合を提供しています:
 
