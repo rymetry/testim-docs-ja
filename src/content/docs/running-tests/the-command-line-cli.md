@@ -31,7 +31,7 @@ CLI 経由での実行には Node.js がインストールされている必要�
 Testim パッケージをインストールします。
 
 ```shell
-npm install -g @testim/testim-cli
+npm install -g @testim/testim-cli && testim connect
 ```
 
 以上です！
