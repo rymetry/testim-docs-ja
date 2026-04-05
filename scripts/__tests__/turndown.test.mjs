@@ -2,9 +2,10 @@ import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
 
 let turndown;
+let preprocessEnHtml;
 
 before(async () => {
-  ({ default: turndown } = await import('../lib/turndown.mjs'));
+  ({ default: turndown, preprocessEnHtml } = await import('../lib/turndown.mjs'));
 });
 
 // ---------------------------------------------------------------------------
@@ -272,5 +273,242 @@ describe('MadCap table rules', () => {
     assert.ok(md.includes('| Name | Value |'), `Expected first row as header in: ${md}`);
     assert.ok(md.includes('| --- | --- |'), `Expected separator in: ${md}`);
     assert.ok(md.includes('| foo | bar |'), `Expected data row in: ${md}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// preprocessEnHtml: MadCap escaped callout normalization
+// ---------------------------------------------------------------------------
+describe('preprocessEnHtml', () => {
+  it('converts standalone escaped callout to note div', () => {
+    const html = '<p>&gt;  Auto Recovery &gt; &gt; Save your test before closing the browser.</p>';
+    const result = preprocessEnHtml(html);
+    assert.ok(result.includes('<div class="note">'), `Expected note div in: ${result}`);
+    assert.ok(result.includes('Save your test before closing the browser.'), 'Should preserve content');
+    assert.ok(!result.includes('&gt;'), `Should not contain escaped >: ${result}`);
+  });
+
+  it('converts triple-gt callout (no title) to note div', () => {
+    const html = '<p>&gt; &gt; &gt; 3rd party apps might support only URL-based schemes.</p>';
+    const result = preprocessEnHtml(html);
+    assert.ok(result.includes('<div class="note">'), `Expected note div in: ${result}`);
+    assert.ok(result.includes('3rd party apps'), 'Should preserve content');
+  });
+
+  it('does not convert mid-paragraph &gt; patterns (false-positive guard)', () => {
+    const html = '<p>Normal text here. &gt;  Warning &gt; &gt; Do not proceed without saving.</p>';
+    const result = preprocessEnHtml(html);
+    assert.equal(result, html, 'Mid-paragraph callout pattern should be left unchanged');
+  });
+
+  it('does not modify paragraphs without escaped callout pattern', () => {
+    const html = '<p>This is a normal paragraph with no callout.</p>';
+    const result = preprocessEnHtml(html);
+    assert.equal(result, html);
+  });
+
+  it('does not match single gt that is not a callout', () => {
+    const html = '<p>Use the &gt; operator for comparison.</p>';
+    const result = preprocessEnHtml(html);
+    assert.equal(result, html);
+  });
+
+  it('produces :::note directive after turndown conversion', () => {
+    const html = '<p>&gt;  Final screen &gt; &gt; The final screen may not have fields.</p>';
+    const processed = preprocessEnHtml(html);
+    const md = turndown.turndown(processed);
+    assert.ok(md.includes(':::note'), `Expected :::note in: ${md}`);
+    assert.ok(md.includes('The final screen may not have fields.'), `Expected content in: ${md}`);
+  });
+
+  it('handles <p> with class attribute', () => {
+    const html = '<p class="tableBody">&gt; Warning &gt; &gt; Check your config.</p>';
+    const result = preprocessEnHtml(html);
+    assert.ok(result.includes('<div class="note">'), `Expected note div in: ${result}`);
+    assert.ok(result.includes('Check your config.'), 'Should preserve content');
+  });
+
+  it('returns original when escaped callout has empty body', () => {
+    const html = '<p>&gt; Title &gt; &gt; </p>';
+    const processed = preprocessEnHtml(html);
+    assert.equal(processed, html);
+  });
+
+  it('returns original when escaped callout has empty body (no trailing space)', () => {
+    const html = '<p>&gt; Title &gt; &gt;</p>';
+    const processed = preprocessEnHtml(html);
+    assert.equal(processed, html);
+  });
+
+  it('preserves &amp; entities in callout body', () => {
+    const html = '<p>&gt; Note &gt; &gt; Use &amp;amp; for escaping.</p>';
+    const processed = preprocessEnHtml(html);
+    assert.ok(processed.includes('<div class="note">'), `Expected note div in: ${processed}`);
+    assert.ok(processed.includes('&amp;amp;'), `Expected entity preserved in: ${processed}`);
+  });
+
+  it('handles multiple escaped callouts in separate <p> elements', () => {
+    const html = '<p>&gt; A &gt; &gt; First note.</p><p>&gt; B &gt; &gt; Second note.</p>';
+    const processed = preprocessEnHtml(html);
+    const noteDivs = (processed.match(/<div class="note">/g) || []).length;
+    assert.equal(noteDivs, 2, `Expected 2 note divs, got ${noteDivs}: ${processed}`);
+  });
+
+  it('throws TypeError for non-string input', () => {
+    assert.throws(() => preprocessEnHtml(null), /expected string/i);
+    assert.throws(() => preprocessEnHtml(undefined), /expected string/i);
+    assert.throws(() => preprocessEnHtml(42), /expected string/i);
+  });
+
+  it('skips <p> with attribute containing > (safety guard)', () => {
+    const html = '<p data-val="a>b">Content &gt; T &gt; &gt; Body</p>';
+    const result = preprocessEnHtml(html);
+    // The regex may not match correctly; at minimum it should not corrupt
+    assert.ok(!result.includes('<div class="note">') || result === html,
+      `Should not produce note div from p with truncated attribute: ${result}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// preprocessEnHtml: escaped <details> unescaping
+// ---------------------------------------------------------------------------
+describe('preprocessEnHtml escaped details', () => {
+  it('unescapes details/summary inside <p> elements', () => {
+    const html = '<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Question?&lt;/b&gt;&lt;/summary&gt; Answer text. &lt;/details&gt;</p>';
+    const processed = preprocessEnHtml(html);
+    assert.ok(!processed.includes('&lt;details'), `Should not contain escaped details: ${processed}`);
+    assert.ok(processed.includes('<details>'), `Expected real <details>: ${processed}`);
+  });
+
+  it('converts unescaped details/summary to H2 after turndown', () => {
+    const html = '<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Is this a new tool?&lt;/b&gt;&lt;/summary&gt; Yes, standalone. &lt;/details&gt;</p>';
+    const processed = preprocessEnHtml(html);
+    const md = turndown.turndown(processed);
+    assert.ok(md.includes('## '), `Expected H2 heading in: ${md}`);
+    assert.ok(md.includes('standalone'), `Expected answer content in: ${md}`);
+  });
+
+  it('does not modify p elements without escaped details', () => {
+    const html = '<p>Normal paragraph text.</p>';
+    assert.equal(preprocessEnHtml(html), html);
+  });
+
+  it('handles &lt;/details&gt; followed by &lt;details&gt; in same <p>', () => {
+    const html = '<p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt;&lt;b&gt;Next Q?&lt;/b&gt;&lt;/summary&gt; Next A. &lt;/details&gt;</p>';
+    const processed = preprocessEnHtml(html);
+    assert.ok(processed.includes('<details>'), `Expected real <details>: ${processed}`);
+    assert.ok(!processed.includes('&lt;details'), `Should not contain escaped details: ${processed}`);
+  });
+
+  it('does not unescape &lt;/details&gt; without &lt;details&gt; in same <p>', () => {
+    const html = '<p>&lt;/details&gt; is the closing tag for the details element.</p>';
+    assert.equal(preprocessEnHtml(html), html);
+  });
+
+  it('restores &amp; entities inside escaped details', () => {
+    const html = '<p>&lt;details&gt;&lt;summary&gt;Q &amp;amp; A&lt;/summary&gt; Answer.&lt;/details&gt;</p>';
+    const processed = preprocessEnHtml(html);
+    assert.ok(processed.includes('Q &amp; A') || processed.includes('Q & A'), `Expected restored entity: ${processed}`);
+  });
+
+  it('handles <p> with class attribute for details', () => {
+    const html = '<p class="body">&lt;details&gt;&lt;summary&gt;Q&lt;/summary&gt;A&lt;/details&gt;</p>';
+    const processed = preprocessEnHtml(html);
+    assert.ok(processed.includes('<details>'), `Expected real <details>: ${processed}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// preprocessEnHtml composition: unescapeDetails + normalizeEscapedCallouts
+// ---------------------------------------------------------------------------
+describe('preprocessEnHtml composition', () => {
+  it('handles document with both escaped details and escaped callouts', () => {
+    const html = '<p>&lt;details&gt;&lt;summary&gt;FAQ&lt;/summary&gt; Answer.&lt;/details&gt;</p><p>&gt; Note &gt; &gt; Important info.</p>';
+    const processed = preprocessEnHtml(html);
+    assert.ok(processed.includes('<details>'), `Expected real <details>: ${processed}`);
+    assert.ok(processed.includes('<div class="note">'), `Expected note div: ${processed}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// HTML details/summary conversion
+// ---------------------------------------------------------------------------
+describe('HTML details/summary rules', () => {
+  it('converts <summary> to H2 heading', () => {
+    const html = '<details><summary><b>Question text?</b></summary> Answer here.</details>';
+    const md = turndown.turndown(html);
+    assert.ok(md.includes('## '), `Expected H2 in: ${md}`);
+    assert.ok(md.includes('Question text?'), `Expected question in: ${md}`);
+    assert.ok(md.includes('Answer here.'), `Expected answer in: ${md}`);
+  });
+
+  it('handles multiple details sections', () => {
+    const html = '<details><summary>Q1</summary>A1</details><details><summary>Q2</summary>A2</details>';
+    const md = turndown.turndown(html);
+    const headings = md.split('\n').filter(l => l.startsWith('## '));
+    assert.equal(headings.length, 2, `Expected 2 headings, got ${headings.length}: ${md}`);
+  });
+
+  it('handles <details> without <summary>', () => {
+    const html = '<details>Just content without a summary.</details>';
+    const md = turndown.turndown(html);
+    assert.ok(md.includes('Just content without a summary.'), `Expected content in: ${md}`);
+    assert.ok(!md.includes('## '), `Should not produce H2 without summary: ${md}`);
+  });
+
+  it('handles <details> with nested list elements', () => {
+    const html = '<details><summary>How?</summary><ol><li value="1">Step 1</li><li value="2">Step 2</li></ol></details>';
+    const md = turndown.turndown(html);
+    assert.ok(md.includes('## '), `Expected H2 in: ${md}`);
+    assert.ok(md.includes('1.') && md.includes('2.'), `Expected ordered list in: ${md}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// preprocessEnHtml: real snapshot fixture tests
+// ---------------------------------------------------------------------------
+describe('preprocessEnHtml real snapshot fixtures', () => {
+  it('normalizes deep-link-mobile escaped callout into :::note', async (t) => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const snapshotPath = path.join(process.cwd(), 'snapshots/en/content/advanced-editing/deep-link-mobile.html');
+    if (!fs.existsSync(snapshotPath)) {
+      t.skip('Snapshot file not available');
+      return;
+    }
+    const html = fs.readFileSync(snapshotPath, 'utf8');
+    const md = turndown.turndown(preprocessEnHtml(html));
+    assert.ok(md.includes(':::note'), `Expected :::note from escaped callout in deep-link-mobile: not found in output`);
+    assert.ok(!md.includes('\\> > >'), `Should not contain escaped > pattern after preprocessing`);
+  });
+
+  it('normalizes salesforce faq escaped details into H2 sections', async (t) => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const snapshotPath = path.join(process.cwd(), 'snapshots/en/content/salesforce-testing/faq.html');
+    if (!fs.existsSync(snapshotPath)) {
+      t.skip('Snapshot file not available');
+      return;
+    }
+    const html = fs.readFileSync(snapshotPath, 'utf8');
+    const md = turndown.turndown(preprocessEnHtml(html));
+    const headings = md.split('\n').filter(l => /^## /.test(l));
+    assert.ok(headings.length >= 4, `Expected at least 4 H2 headings from FAQ details, got ${headings.length}`);
+    assert.ok(!md.includes('&lt;details'), `Should not contain escaped <details> after preprocessing`);
+  });
+
+  it('normalizes salesforce troubleshoot escaped details', async (t) => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const snapshotPath = path.join(process.cwd(), 'snapshots/en/content/salesforce-testing/troubleshoot.html');
+    if (!fs.existsSync(snapshotPath)) {
+      t.skip('Snapshot file not available');
+      return;
+    }
+    const html = fs.readFileSync(snapshotPath, 'utf8');
+    const md = turndown.turndown(preprocessEnHtml(html));
+    const headings = md.split('\n').filter(l => /^## /.test(l));
+    assert.ok(headings.length >= 1, `Expected H2 headings from troubleshoot details, got ${headings.length}`);
+    assert.ok(!md.includes('&lt;details'), `Should not contain escaped <details> after preprocessing`);
   });
 });

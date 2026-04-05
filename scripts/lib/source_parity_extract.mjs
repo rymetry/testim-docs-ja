@@ -118,6 +118,10 @@ export function extractStepCounts(body) {
     if (inCodeBlock) continue;
 
     const trimmed = line.trim();
+
+    // Skip markdown pipe table rows so list markers inside cells are not counted.
+    if (/^\|/.test(trimmed)) continue;
+
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
       inCallout = true;
       continue;
@@ -204,6 +208,10 @@ export function extractBulletCounts(body) {
     if (inCodeBlock) continue;
 
     const trimmed = line.trim();
+
+    // Skip markdown pipe table rows so list markers inside cells are not counted.
+    if (/^\|/.test(trimmed)) continue;
+
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
       inCallout = true;
       continue;

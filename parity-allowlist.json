@@ -1,79 +1,29 @@
 {
-  "integrations/integrate-testim-to-your-ci/codeship-integration": [
+  "testops/testops-version-control/pull-requests": [
     {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Run with local Selenium Grid",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "type": "step-count-mismatch",
+      "detailIncludes": "EN=0",
+      "reason": "EN content inside <pre><code> block; no structured elements extractable"
+    },
+    {
+      "type": "bullet-count-mismatch",
+      "detailIncludes": "EN=0",
+      "reason": "EN content inside <pre><code> block; no structured elements extractable"
     },
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Run with external Selenium Grid",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "EN=1",
+      "reason": "EN content inside <pre><code> block; only wrapper paragraph extractable"
     }
   ],
-  "running-tests/mock-network-responses/disabling-network-mock-mode": [
+  "salesforce-testing/salesforce-testing-overview": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Disable mock mode for the entire CLI run",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/parameters/configuration-file-parameters": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Test level - adding an overrideTestData object",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Defining parameters in a Configuration File",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Execution level - placing parameters in the return section",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using the parameters in the CLI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/parameters/exports-parameters": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Exporting a parameter",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "results/result-labels": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Adding result labels through the CLI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "integrations/test-management-integrations/testrail-integration": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Pass custom parameters to TestRail",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/validations/validate-download": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailRegex": "(CSV|Image|MS Excel|MS PowerPoint|MS Word|PDF) files",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "EN=1",
+      "reason": "EN snapshot incomplete (361 bytes); dynamic navigation content not captured in static HTML extraction"
     }
   ],
   "advanced-editing/validations/validate-element-text": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Parameter only",
-      "reason": "EN has 'Click on the gif to enlarge' and '</Image>' artifacts as extra paragraphs; JA uses <Image> component"
-    },
     {
       "type": "paragraph-count-mismatch",
       "detailIncludes": "Starts with",
@@ -111,113 +61,12 @@
     },
     {
       "type": "paragraph-count-mismatch",
+      "detailIncludes": "Parameter only",
+      "reason": "EN has 'Click on the gif to enlarge' and '</Image>' artifacts as extra paragraphs; JA uses <Image> component"
+    },
+    {
+      "type": "paragraph-count-mismatch",
       "detailIncludes": "Combining a parameter with Regex",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "testops/testops-version-control/pull-requests": [
-    {
-      "type": "step-count-mismatch",
-      "detailIncludes": "EN=0",
-      "reason": "EN content is entirely inside <pre><code> block; no structured elements extracted"
-    },
-    {
-      "type": "bullet-count-mismatch",
-      "detailIncludes": "EN=0",
-      "reason": "EN content is entirely inside <pre><code> block; no structured elements extracted"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "EN=1",
-      "reason": "EN content is entirely inside <pre><code> block; only wrapper paragraph extracted"
-    }
-  ],
-  "running-tests/the-command-line-cli": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailRegex": "段落数",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs in all CLI parameter sections"
-    }
-  ],
-  "running-tests/base-url": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using the Base URL parameter in a Custom Action/Validation Step",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "running-tests/configuration-file-run-hooks": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Running a Test Using the Config File",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using the beforeTest hook to update the base-url variable",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Global exports parameters",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/deep-link-mobile": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Adding a Deep Link Step to your Test",
-      "reason": "EN has escaped blockquote (\\>) counted as paragraph; JA uses :::note callout"
-    }
-  ],
-  "advanced-editing/custom-action-step-mobile": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Pulling the navigation bar of the device",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Finding a button element via xpath",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Typing on the keyboard",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "running-tests/mock-network-responses/creating-a-mapping-file": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Mapping file with a JSON object in response",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Mapping file with a method specified",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Mapping file with a redirectUrl in response",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Mapping file with a text in the response",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Execution level - placing parameters in the return section",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Test level - adding an overrideTestData object",
       "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
     }
   ],
@@ -235,272 +84,11 @@
       "reason": "EN has no bullets (EN=0); JA uses bullets for structured content"
     }
   ],
-  "integrations/grid-management/saucelabs-browserstack-options": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "SauceLabs",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Browserstack",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "integrations/sealights-integration": [
-    {
-      "type": "bullet-count-mismatch",
-      "detailIncludes": "Executing test(s) in Testing using the Sealights buildSessionId",
-      "reason": "EN bullet is a [Copy](javascript:void(0);) artifact"
-    },
-    {
-      "type": "bullet-count-mismatch",
-      "detailIncludes": "Executing test(s) in Testing using the Sealights labId",
-      "reason": "EN bullet is a [Copy](javascript:void(0);) artifact"
-    },
-    {
-      "type": "bullet-count-mismatch",
-      "detailIncludes": "test-stage option",
-      "reason": "EN bullet is a [Copy](javascript:void(0);) artifact"
-    }
-  ],
   "results/execution-runs-screen": [
     {
       "type": "paragraph-count-mismatch",
       "detailIncludes": "Rerun Test Directly from Execution Details Screen",
       "reason": "EN has standalone link text artifact counted as paragraph"
-    }
-  ],
-  "advanced-editing/extract-sms-message": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Example code:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Parameters - Packages and JavaScript",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "test-management/labels": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using labels in CLI-based runs",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "integrations/integrate-testim-to-your-ci/jenkins-integration": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Linux:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/validations/email-validation": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Creating a Validate Email Step using the Codeless Option",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validate sign-up subject line",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validate links in body",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/loops": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "段落数の総数が原文と異なります",
-      "reason": "JA intro description line + EN italic paragraph format difference"
-    }
-  ],
-  "salesforce-testing/salesforce-testing-overview": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "段落数の総数が原文と異なります",
-      "reason": "EN snapshot has minimal content (EN=1); JA has full translated content"
-    }
-  ],
-  "salesforce-testing/faq": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "段落数の総数が原文と異なります",
-      "reason": "EN snapshot has minimal content (EN=3); JA has full translated content"
-    }
-  ],
-  "salesforce-testing/troubleshoot": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "段落数の総数が原文と異なります",
-      "reason": "EN snapshot uses <details> structure which collapses content; JA expands it"
-    }
-  ],
-  "guides/generate-random-data-with-js": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "How to assign Random Data to a step",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "running-tests/mock-network-responses/running-the-test-in-mock-mode-using-the-mapping-file": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Running the test using the mapping file only",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/validations/custom-code": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Passing validations",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Failing validations",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validating a numeric value",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Comparing text elements",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Asynchronous Validation via Promise",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Navigating to a different website",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "test-management/test-list": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Search text box",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/validations/mongodb-validation": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Example code:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/parameters/parameter-override-rules": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Overriding rules",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Usage",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "advanced-editing/parameters/parameters-in-custom-javascript-steps": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using the parameter in the step",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Recording a Mobile Test",
-      "reason": "EN escaped blockquote (\\>) counted as paragraph; JA uses :::warning callout"
-    }
-  ],
-  "running-tests/schedulers-notification-via-webhook": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Webhook format",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "salesforce-testing/salesforce-steps/sfdc-step-apex-action": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Code:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Creating a Flow Screen Completion Step",
-      "reason": "EN escaped blockquote (\\>) counted as paragraph; JA uses :::note callout"
-    }
-  ],
-  "integrations/integrate-testim-to-your-ci/teamcity-integration": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Now, just follow these steps:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "test-management/test-suites": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using CLI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "test-management/test-plans": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Running your Test Plan",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "test-management/test-plans-mobile": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Running your Test Plan",
-      "reason": "EN has raw CLI command as paragraph; JA uses code block"
-    }
-  ],
-  "testops/turbo-mode": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Running in turbo-mode via CLI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "testops/testops-version-control/version-control-branches": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Running a test suite on a specific branch through the CLI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Branches integration with your CI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    }
-  ],
-  "integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration": [
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Now, just follow these steps:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
     }
   ],
   "results/test-results/why-did-my-test-fail": [
@@ -510,43 +98,18 @@
       "reason": "JA deliberately joined 'Common Causes:' with its explanation using hard line break"
     }
   ],
-  "advanced-editing/validations/add-network-validation": [
+  "results/test-results/network-logs": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validate all the image requests",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validate a single request",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validate all requests have passed",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Validate max time of call",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "Filtering request results",
+      "reason": "EN has text appended to image line; JA correctly separates text to own paragraph"
     }
   ],
-  "integrations/integrate-testim-to-your-ci/bamboo-integration": [
+  "advanced-editing/loops": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Add install Testim CLI task",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Add run Testim CLI task",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Add collect test results task",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "段落数の総数が原文と異なります",
+      "reason": "JA intro description line + EN italic paragraph format difference"
     }
   ],
   "recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent": [
@@ -556,63 +119,88 @@
       "reason": "EN has bare command text as paragraph; JA correctly uses code block"
     }
   ],
-  "integrations/dedicated-run-tunnel": [
+  "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Example using Testim CLI with a tunnel",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "Step 4 - Record the test",
+      "reason": "JA has additional explanatory paragraph for clarity"
     }
   ],
-  "advanced-editing/parameters/json-parameters-file-parameters": [
+  "test-management/test-plans-mobile": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Defining parameters in a JSON Parameters File",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using the parameters in the CLI",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
-    },
-    {
-      "type": "paragraph-count-mismatch",
-      "detailIncludes": "Using a parameters file in JavaScript",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "Running your Test Plan",
+      "reason": "EN has raw CLI command as paragraph; JA uses code block"
     }
   ],
-  "advanced-editing/validations/mysql-validation": [
+  "running-tests/the-command-line-cli": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Example code:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailRegex": "段落数",
+      "reason": "EN CLI parameter sections have residual formatting artifacts after Copy button stripping"
     }
   ],
-  "results/test-results/network-logs": [
+  "salesforce-testing/faq": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Filtering request results",
-      "reason": "EN has text appended to image line; JA correctly separates text to own paragraph"
+      "detailRegex": "段落数",
+      "reason": "EN/JA paragraph structure differences in FAQ accordion content after details unescaping"
+    }
+  ],
+  "salesforce-testing/troubleshoot": [
+    {
+      "type": "paragraph-count-mismatch",
+      "detailRegex": "段落数",
+      "reason": "EN/JA paragraph structure differences in troubleshoot details content"
+    }
+  ],
+  "advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file": [
+    {
+      "type": "paragraph-count-mismatch",
+      "detailRegex": "段落数",
+      "reason": "EN code snippet formatting produces extra paragraphs after Copy button stripping"
+    }
+  ],
+  "advanced-editing/extract-sms-message": [
+    {
+      "type": "paragraph-count-mismatch",
+      "detailIncludes": "Parameters - Packages and JavaScript",
+      "reason": "EN has section content as paragraph; JA uses different formatting"
     }
   ],
   "advanced-editing/handling-ui-actions/refresh-page": [
     {
       "type": "paragraph-count-mismatch",
       "detailIncludes": "Add a Refresh Step to a New Browser Tab",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "reason": "JA has additional explanatory paragraph"
     }
   ],
-  "running-tests/running-tests-on-multiple-browsers": [
+  "advanced-editing/parameters/configuration-file-parameters": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Chrome, Edge Chromium, Safari, Firefox",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "Execution level - placing parameters in the return section",
+      "reason": "EN code snippet formatting produces extra paragraphs after Copy button stripping"
     }
   ],
-  "advanced-editing/salesforce-apex-action-step": [
+  "advanced-editing/parameters/json-parameters-file-parameters": [
     {
       "type": "paragraph-count-mismatch",
-      "detailIncludes": "Example Code:",
-      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs"
+      "detailIncludes": "Using a parameters file in JavaScript",
+      "reason": "EN code snippet formatting produces extra paragraphs after Copy button stripping"
+    }
+  ],
+  "advanced-editing/validations/email-validation": [
+    {
+      "type": "paragraph-count-mismatch",
+      "detailIncludes": "Creating a Validate Email Step using the Codeless Option",
+      "reason": "EN has extra paragraph from code snippet formatting"
+    }
+  ],
+  "testops/turbo-mode": [
+    {
+      "type": "paragraph-count-mismatch",
+      "detailIncludes": "Running in turbo-mode",
+      "reason": "JA has additional explanatory paragraph for CLI section"
     }
   ]
 }
