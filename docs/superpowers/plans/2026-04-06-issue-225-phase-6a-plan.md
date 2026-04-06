@@ -147,6 +147,7 @@ Expected: `inconclusiveCategory` 関連のアサーションで失敗（プロ�
 `scripts/lib/source_parity_align.mjs` の 3 箇所を更新:
 
 L789-795 の typedef を更新:
+
 ```javascript
 /**
  * @typedef {object} AlignResult
@@ -160,6 +161,7 @@ L789-795 の typedef を更新:
 ```
 
 L813 (heading count mismatch) の return を更新:
+
 ```javascript
   if (enSections.length !== jaSections.length) {
     return {
@@ -176,6 +178,7 @@ L813 (heading count mismatch) の return を更新:
 ```
 
 L843 (ambiguous tokenless swap) の return を更新:
+
 ```javascript
   if (ambiguousTokenlessSwap) {
     return {
@@ -194,6 +197,7 @@ L843 (ambiguous tokenless swap) の return を更新:
 ```
 
 L856 (conclusive) の return を更新:
+
 ```javascript
   return {
     diffs,
@@ -1118,6 +1122,7 @@ Expected: 新規 baseline 集計テストが pass。
 `scripts/check_source_parity.mjs` を編集:
 
 L34 付近の import に baseline を追加:
+
 ```javascript
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
 import {
@@ -1127,12 +1132,14 @@ import {
 ```
 
 L42 付近に baseline path 定数を追加:
+
 ```javascript
 const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json');
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 ```
 
 L105 付近に baseline 読込関数を追加（loadAcknowledgementsFile に倣う）:
+
 ```javascript
 function loadBaselineFileSafe(filePath = BASELINE_PATH) {
   if (!fs.existsSync(filePath)) {
@@ -1145,6 +1152,7 @@ function loadBaselineFileSafe(filePath = BASELINE_PATH) {
 L111 付近の `checkSourceParity` 関数の冒頭で baseline を読み込み、各 file の issue に tag を付ける。`tagIssuesWithAcknowledgements` の直後に `tagIssuesWithBaseline` を追加。`baselineInvalidatedSlugs` を Set で蓄積し最後に summary に渡す。
 
 L122 付近に追加:
+
 ```javascript
   let baselineData = { schemaVersion: 1, entries: [] };
   try {
@@ -1158,6 +1166,7 @@ L122 付近に追加:
 ```
 
 L259-266 の `tagIssuesWithAcknowledgements` 呼び出しの直後に baseline tagging を追加:
+
 ```javascript
     // Tag with acknowledgements (replaces applyAllowlist)
     issues = tagIssuesWithAcknowledgements(
@@ -1188,6 +1197,7 @@ L259-266 の `tagIssuesWithAcknowledgements` 呼び出しの直後に baseline t
 ```
 
 L350 付近の summary 構築箇所に invalidated slugs を渡す:
+
 ```javascript
   const summary = {
     checkedAt: new Date().toISOString(),
@@ -1200,6 +1210,7 @@ L350 付近の summary 構築箇所に invalidated slugs を渡す:
 ```
 
 L383 付近の CLI 表示に baseline summary を追加（json mode 以外）:
+
 ```javascript
     if ((summary.baselinedIssues || 0) > 0) {
       console.log(`\nbaselined: ${summary.baselinedIssues} 件 / ${summary.baselinedFiles} ファイル`);
@@ -1885,6 +1896,7 @@ baseline 生成 CLI。--regenerate と --slug=<csv> の 2 mode。
 ```bash
 git rebase main 2>&1 | tail -5
 ```
+
 Expected: clean rebase または "Already up to date"
 
 - [ ] **Step 2: parity check を実行して最新の status を作る**
@@ -1909,6 +1921,7 @@ cp parity-baseline.json /tmp/baseline-1.json
 node scripts/generate_parity_baseline.mjs --regenerate --rationale="Phase 6A frozen baseline — PREVIEW only. Regenerated at PR2 cutover. New issues fail; baselined issues do not." --review-after=2026-10-06
 diff /tmp/baseline-1.json parity-baseline.json && echo "BIT-IDENTICAL OK"
 ```
+
 Expected: `BIT-IDENTICAL OK`。entries の中身は同じはずだが、`generatedAt` と `generatedFromRunId` は実行時刻に依存するので bit-identical にはならない可能性がある。その場合は次の Step 5b を実行。
 
 - [ ] **Step 5b: bit-identical でない場合の対処（generatedAt 固定）**
@@ -1918,6 +1931,7 @@ C5 は entries の deterministic 性を検証するもので、`generatedAt` / `
 ```bash
 node -e "const a = JSON.parse(require('fs').readFileSync('/tmp/baseline-1.json','utf8')); const b = JSON.parse(require('fs').readFileSync('parity-baseline.json','utf8')); const aE = JSON.stringify(a.entries); const bE = JSON.stringify(b.entries); if (aE === bE) console.log('ENTRIES IDENTICAL'); else { console.log('DIFFER'); process.exit(1); }"
 ```
+
 Expected: `ENTRIES IDENTICAL`
 
 - [ ] **Step 6: check:parity を実行して baseline が tag されていることを確認**
@@ -1957,6 +1971,7 @@ PR2 cutover で再生成して上書きする。
 検索対象（Read で確認）: `Phase 5 PoC は Go。runtime には shadow mode で接続済み。`
 
 更新後:
+
 ```markdown
 > Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6A PR1 で frozen baseline 機構を追加（gate flip はまだ）。Phase 6A PR2 で `segment-shadow` を主 gate に昇格する。
 ```
@@ -2014,6 +2029,7 @@ npm run generate:parity-baseline -- --slug=overview/example,overview/account-set
 
 **関連 spec**: `docs/superpowers/specs/2026-04-06-issue-225-phase-6a-design.md`
 **関連 plan**: `docs/superpowers/plans/2026-04-06-issue-225-phase-6a-plan.md`
+
 ```
 
 - [ ] **Step 3: テストと lint が通ることを確認**
@@ -2110,6 +2126,7 @@ cp parity-baseline.json /tmp/baseline-cutover-1.json
 node scripts/generate_parity_baseline.mjs --regenerate --rationale="Phase 6A frozen baseline — generated at cutover. New issues fail; baselined issues do not. To pay down: see docs/OPS_DESIGN.md Phase 6A rollback section." --review-after=2026-10-06
 node -e "const a = JSON.parse(require('fs').readFileSync('/tmp/baseline-cutover-1.json','utf8')); const b = JSON.parse(require('fs').readFileSync('parity-baseline.json','utf8')); if (JSON.stringify(a.entries) === JSON.stringify(b.entries) && a.rationale === b.rationale) console.log('ENTRIES + RATIONALE IDENTICAL'); else { console.log('DIFFER'); process.exit(1); }"
 ```
+
 Expected: `ENTRIES + RATIONALE IDENTICAL`
 
 - [ ] **Step 5: Commit**
@@ -2282,6 +2299,7 @@ Expected: 全テスト pass（baseline は EN snapshot が変わらない限り 
 `scripts/lib/source_parity_align.mjs` の `parityDiffsToIssues` 関数を編集:
 
 L897 周辺:
+
 ```javascript
 export function parityDiffsToIssues(diffs) {
   if (!Array.isArray(diffs)) return [];
@@ -2412,6 +2430,7 @@ L38-48 の shadow 分岐を変更:
 shadow tagging を期待しているテストを更新:
 
 L69-84 の `tags every issue with phase=segment-shadow` テストを以下に変更:
+
 ```javascript
   it('emits issues with structured metadata for the primary gate', () => {
     const enHtml = '<h2>Setup</h2><p>Configure with <code>--proxy</code>.</p>';
@@ -2456,9 +2475,11 @@ Run: `npm run check:parity --fail-on=actionable; echo "EXIT=$?"`
 Expected: `EXIT=0`、active actionable 0、baselined N 件 / 241 ファイル
 
 issue-level の active 確認:
+
 ```bash
 node -e "const d = JSON.parse(require('fs').readFileSync('parity-check-status.json','utf8')); const active = d.files.flatMap(f => f.issues.filter(i => (i.severity === 'actionable' || i.severity === 'error') && i.baselined !== true && (i.acknowledged !== true || i.ackExpired === true))); console.log('active issue-level:', active.length); if (active.length > 0) { console.log('first 5:', active.slice(0,5)); process.exit(1); }"
 ```
+
 Expected: `active issue-level: 0`
 
 - [ ] **Step 9: 単一ページ latency を確認 (C6)**
@@ -2467,9 +2488,11 @@ Run: `time node scripts/check_source_parity.mjs --slug=overview/testim-overview 
 Expected: 10 秒以内
 
 Run: representative heavy page も計測（baseline 件数 top の slug を選んで）。`parity-check-status.json` から baseline 件数 top の slug を抽出:
+
 ```bash
 node -e "const d = JSON.parse(require('fs').readFileSync('parity-check-status.json','utf8')); const top = d.files.map(f => ({slug: f.file.replace('src/content/docs/','').replace('.md',''), n: f.issues.filter(i => i.baselined).length})).sort((a,b)=>b.n-a.n)[0]; console.log(top);"
 ```
+
 Expected: `{ slug: '...', n: ... }` を確認、その slug に対して `time check_source_parity --slug=...` を実行。
 
 - [ ] **Step 10: Commit**
@@ -2545,6 +2568,7 @@ Phase 6A cutover 後に問題が発生した場合の対応手順。Issue #225 P
 ### 判断フロー
 
 ```
+
 PR2 merge 後に問題発生
         │
         ├── false negative の疑いがある?
@@ -2559,6 +2583,7 @@ PR2 merge 後に問題発生
         │            │            ├── 1 commit で fix forward 可能?
         │            │            │      ├── Yes → forward-fix PR
         │            │            │      └── No → Path 1 (revert)
+
 ```
 
 **重要**: false negative 疑いは最優先で revert する。false positive は 
