@@ -20,7 +20,6 @@ const DETAILS_TOKEN_RE = /<\/?details\b|<summary\b/i;
 const DETAILS_OPEN_PREFIX_RE = /^<details\b/i;
 const DETAILS_CLOSE_PREFIX_RE = /^<\/details\s*>/i;
 const SUMMARY_OPEN_PREFIX_RE = /^<summary\b/i;
-const SUMMARY_CLOSE_ANYWHERE_RE = /<\/summary\s*>/i;
 const IMAGE_RE = /^(?:!\[[^\]]*\]\([^)]+\)|<Image\b|<img\b)/i;
 const UNORDERED_RE = /^(\s*)[-*+]\s+(.+)$/;
 const ORDERED_RE = /^(\s*)\d+\.\s+(.+)$/;
@@ -78,6 +77,65 @@ function findTagEnd(text, start) {
     if (ch === '>') return i;
   }
   return -1;
+}
+
+/**
+ * Scan a string for the `</summary>` close tag that matches an open at
+ * nesting depth `startDepth`. Walks character-by-character respecting
+ * quoted attribute values (via findTagEnd), increments depth on nested
+ * `<summary>` opens, decrements on `</summary>` closes, and returns the
+ * position of the close where depth reaches zero.
+ *
+ * @param {string} text
+ * @param {number} startDepth  initial depth (typically 1 when called
+ *                             immediately after consuming an outer
+ *                             `<summary>` opening tag)
+ * @returns {{depth:number, closePos:number, closeLen:number}}
+ *   - `closePos = -1` if no matching close is found in `text`
+ *   - `depth` is the final depth (useful for cross-line accumulation)
+ */
+function scanForMatchingSummaryClose(text, startDepth) {
+  let depth = startDepth;
+  let i = 0;
+  const n = text.length;
+  while (i < n) {
+    if (text[i] !== '<') {
+      i += 1;
+      continue;
+    }
+    const tail = text.slice(i);
+    // </summary> close — candidate for depth decrement
+    const closeMatch = tail.match(/^<\/summary\s*>/i);
+    if (closeMatch) {
+      depth -= 1;
+      if (depth === 0) {
+        return { depth, closePos: i, closeLen: closeMatch[0].length };
+      }
+      i += closeMatch[0].length;
+      continue;
+    }
+    // <summary> open — nested; increment depth and skip past the tag
+    if (/^<summary\b/i.test(tail)) {
+      depth += 1;
+      const tagEnd = findTagEnd(text, i + 1);
+      if (tagEnd === -1) return { depth, closePos: -1, closeLen: 0 };
+      i = tagEnd + 1;
+      continue;
+    }
+    // Any other tag — skip past it respecting quoted attribute values
+    if (tail.startsWith('</') || /^<[a-zA-Z]/.test(tail)) {
+      const tagEnd = findTagEnd(text, i + 1);
+      if (tagEnd === -1) {
+        i += 1;
+        continue;
+      }
+      i = tagEnd + 1;
+      continue;
+    }
+    // Stray '<' — treat as text
+    i += 1;
+  }
+  return { depth, closePos: -1, closeLen: 0 };
 }
 
 /**
@@ -144,27 +202,32 @@ function tokenizeDetailsLine(line) {
       continue;
     }
 
-    // <summary ...>INNER</summary> with quote-aware open-tag end scan
+    // <summary ...>INNER</summary> with quote-aware open-tag end scan and
+    // nesting-aware close matching. Nested <summary> tags are counted so
+    // the inner close does not prematurely terminate the outer range.
     if (SUMMARY_OPEN_PREFIX_RE.test(tail)) {
       const openEnd = findTagEnd(line, i + 1);
       if (openEnd === -1) break;
       const afterOpen = line.slice(openEnd + 1);
-      const closingMatch = afterOpen.match(SUMMARY_CLOSE_ANYWHERE_RE);
-      if (!closingMatch) {
-        // No close on this line — enter multi-line summary state. Everything
-        // from afterOpen to the end of the line becomes the initial buffer.
-        // Stop tokenizing the current line since subsequent content (if any
-        // on this line) is the start of the summary body.
+      const scan = scanForMatchingSummaryClose(afterOpen, 1);
+      if (scan.closePos === -1) {
+        // No matching close on this line — enter multi-line state. Carry
+        // the current nesting depth forward so subsequent lines continue
+        // to track nested <summary> pairs correctly.
         emitPendingText(i);
-        events.push({ type: 'summary-open', initialInner: afterOpen });
+        events.push({
+          type: 'summary-open',
+          initialInner: afterOpen,
+          initialDepth: scan.depth,
+        });
         cursor = line.length;
         i = line.length;
         break;
       }
       emitPendingText(i);
-      const innerText = afterOpen.slice(0, closingMatch.index);
+      const innerText = afterOpen.slice(0, scan.closePos);
       events.push({ type: 'summary', inner: innerText });
-      i = openEnd + 1 + (closingMatch.index ?? 0) + closingMatch[0].length;
+      i = openEnd + 1 + scan.closePos + scan.closeLen;
       cursor = i;
       continue;
     }
@@ -335,10 +398,13 @@ export function extractSegmentsFromMarkdown(body) {
 
   // Multi-line <summary> accumulator. When the tokenizer sees a <summary>
   // opening tag with no matching close on the same line, subsequent lines
-  // are buffered here until `</summary>` is found.
+  // are buffered here until the *matching* outer `</summary>` is found.
+  // `multilineSummaryDepth` tracks nested <summary> pairs across lines so
+  // an inner close does not prematurely terminate the outer range.
   let inMultilineSummary = false;
   let multilineSummaryBuf = [];
   let multilineSummaryStartLine = 0;
+  let multilineSummaryDepth = 1;
 
   /**
    * Emit the contents of a loose (outside `<details>`) summary fragment
@@ -376,6 +442,7 @@ export function extractSegmentsFromMarkdown(body) {
     inMultilineSummary = false;
     multilineSummaryBuf = [];
     multilineSummaryStartLine = 0;
+    multilineSummaryDepth = 1;
   };
 
   // Code fence state
@@ -415,19 +482,20 @@ export function extractSegmentsFromMarkdown(body) {
       continue;
     }
 
-    // Multi-line <summary> accumulator. When the previous line opened a
-    // <summary> tag without a matching close, subsequent lines are buffered
-    // here until `</summary>` is encountered. Any trailing content after
-    // the close tag is fed back into the main loop by mutating lines[i].
+    // Multi-line <summary> accumulator. Tracks nested <summary> depth
+    // across lines so inner close tags do not prematurely terminate the
+    // outer range. Trailing content after the matching outer close is
+    // fed back into the main loop by mutating lines[i] + `i -= 1`.
     if (inMultilineSummary) {
-      const closeMatch = line.match(SUMMARY_CLOSE_ANYWHERE_RE);
-      if (!closeMatch) {
+      const scan = scanForMatchingSummaryClose(line, multilineSummaryDepth);
+      if (scan.closePos === -1) {
         multilineSummaryBuf.push(line);
+        multilineSummaryDepth = scan.depth;
         continue;
       }
-      multilineSummaryBuf.push(line.slice(0, closeMatch.index));
+      multilineSummaryBuf.push(line.slice(0, scan.closePos));
       flushMultilineSummary(lineNo);
-      const remainder = line.slice((closeMatch.index ?? 0) + closeMatch[0].length);
+      const remainder = line.slice(scan.closePos + scan.closeLen);
       if (remainder.trim().length > 0) {
         lines[i] = remainder;
         i -= 1;
@@ -512,6 +580,9 @@ export function extractSegmentsFromMarkdown(body) {
           inMultilineSummary = true;
           multilineSummaryBuf = [ev.initialInner];
           multilineSummaryStartLine = lineNo;
+          // Carry depth forward: the tokenizer already counted any nested
+          // <summary> opens/closes in the initial inner content.
+          multilineSummaryDepth = ev.initialDepth ?? 1;
           continue;
         }
         if (ev.type === 'details-close') {

@@ -1010,6 +1010,67 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
       ['text', 'link', 'end'],
     );
   });
+
+  it('loose <summary> closes on the matching outer </summary>, not a nested one', () => {
+    // Regression: the previous naive `match(/<\/summary>/)` grabbed the
+    // first close tag, so the outer summary was truncated at the nested
+    // inner close and the real outer </summary> leaked into trailing text.
+    // Verified against EN: the correct output is paragraph + details-summary
+    // + paragraph, with no stray </summary> fragment.
+    const md = [
+      '## S',
+      '',
+      '<summary>Lead <details><summary>Q</summary></details> tail</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
+    assert.deepEqual(
+      nonHeading.map((s) => ({ k: s.segmentKind, t: s.textNorm })),
+      [
+        { k: 'paragraph', t: 'lead' },
+        { k: 'details-summary', t: 'q' },
+        { k: 'paragraph', t: 'tail' },
+      ],
+    );
+  });
+
+  it('multi-line loose <summary> tracks nesting depth across lines', () => {
+    // Multi-line variant of the previous test: inner close appears on a
+    // different line than the outer close. The multi-line handler must
+    // track summary depth across lines so the inner pair does not
+    // prematurely terminate the outer buffer.
+    const md = [
+      '## S',
+      '',
+      '<summary>',
+      'Lead',
+      '<details><summary>Q</summary></details>',
+      'tail',
+      '</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
+    // The outer loose summary delegates to EN; the inner <details>/<summary>
+    // pair becomes a details-summary, surrounded by paragraph text-node
+    // chunks from the outer summary's body.
+    const kinds = nonHeading.map((s) => s.segmentKind);
+    assert.ok(
+      kinds.includes('details-summary'),
+      `expected details-summary, got ${JSON.stringify(kinds)}`,
+    );
+    assert.ok(
+      nonHeading.some((s) => s.segmentKind === 'details-summary' && s.textNorm === 'q'),
+    );
+    // No stray "</summary>" text should appear in any segment.
+    for (const seg of nonHeading) {
+      assert.ok(
+        !seg.textNorm.includes('</summary>'),
+        `stray close tag in ${JSON.stringify(seg)}`,
+      );
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
