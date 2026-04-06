@@ -403,7 +403,6 @@ npm run docs:report-categories
 | `segment-shifted` | actionable | acknowledgeable | `high` (symmetric destination evidence) |
 | `segment-untranslated` | actionable | non-acknowledgeable | — |
 | `segment-token-gap` | actionable | non-acknowledgeable | — |
-| `segment-inconclusive` | actionable | non-acknowledgeable | — |
 
 **Runtime wiring (Phase 5 shadow mode)**:
 

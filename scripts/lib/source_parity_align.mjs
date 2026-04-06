@@ -925,3 +925,12 @@ export function parityDiffsToIssues(diffs) {
     return issue;
   });
 }
+
+// Re-exports for tests / consumers that need direct access to the helpers.
+export {
+  weightedLcs as __weightedLcs,
+  scoreSegmentMatch as __scoreSegmentMatch,
+  looksUntranslated as __looksUntranslated,
+  splitIntoSections as __splitIntoSections,
+  findBodySwapEvidence as __findBodySwapEvidence,
+};
