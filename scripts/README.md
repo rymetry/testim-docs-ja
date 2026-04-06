@@ -429,11 +429,11 @@ shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFil
 
 `segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、near-tie の曖昧ケースだけ `inconclusive` に落とす。それ以外の tokenless swap は Phase 5 の scope 外として Phase 6+ の advisory/semantic layer へ送る。
 
-> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6A PR1 で frozen baseline 機構を追加（gate flip はまだ）。Phase 6A PR2 で `segment-shadow` を主 gate に昇格する。
+> Phase 5 PoC は **Go**。Phase 6A PR1 で frozen baseline 機構を追加し、Phase 6A PR2 で `segment-*` を primary gate に昇格済み。**shadow mode は retired**。`shadowIssues` / `shadowFiles` / `shadowIssuesByType` dual emit フィールドは Phase 7 reporting 4-family 化で削除予定。
 
 ---
 
-## Phase 6A — Frozen Baseline + Gate Promotion (進行中)
+## Phase 6A — Frozen Baseline + Gate Promotion (完了)
 
 Phase 6A は Phase 5 の exact diff engine を deterministic に primary gate へ
 昇格させる Phase。`segment-shadow` 隔離を解除する代わりに、cutover 時点の
@@ -482,16 +482,27 @@ npm run generate:parity-baseline -- --regenerate        # 完全再生成
 npm run generate:parity-baseline -- --slug=overview/foo # 部分再生成
 ```
 
-**PR 構成**:
+**PR 構成（完了済）**:
 
 - **PR1 (infra, shadow 維持)**: alignment refactor (`inconclusiveCategory`),
   baseline schema/validation/match, generation script, preview baseline,
-  README 更新。Gate exit code は変わらない。
+  README 更新。Gate exit code は変わらなかった。
 - **PR2 (cutover)**: baseline 再生成 + shadow tagging 解除。`segment-*` が
-  primary gate の actionable 集計に乗る。
+  primary gate の actionable 集計に乗り、frozen baseline で既存 drift を
+  凍結。実測 exit criteria:
+  - gate: exit 0, active 0, baselined 1,035 件 / 241 ファイル
+  - Phase 5 recall benchmark 9/9 strict type 100% 維持
+  - C4 baseline-recall test: frozen baseline が新規 mutation を吸収しないことを保証
+  - C5 determinism: `generate_parity_baseline` の bit-identical (entries) 確認
+  - C6 latency: light 0.24s / heavy 0.46s / full run 5.13s（いずれも 10s 未満）
+
+**rollback playbook**: `docs/OPS_DESIGN.md` の Phase 6A Rollback section を参照。
+false negative 疑い時は即 revert (Path 1)、snapshot drift による invalidation は
+translate-first / rebaseline-as-last-resort (Path 2)。
 
 **関連 spec**: `docs/superpowers/specs/2026-04-06-issue-225-phase-6a-design.md`
 **関連 plan**: `docs/superpowers/plans/2026-04-06-issue-225-phase-6a-plan.md`
+（plan は Phase 6 完了時に削除予定の一時ドキュメント）
 
 ---
 
