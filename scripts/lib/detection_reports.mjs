@@ -121,8 +121,24 @@ function sortSnapshotEntries(entries) {
   });
 }
 
+/**
+ * An issue is "active" if it is NOT validly acknowledged.
+ * Expired acknowledgements count as active (source has changed or review date passed).
+ */
+function isActiveIssue(issue) {
+  if (issue.acknowledged !== true) return true;
+  if (issue.ackExpired === true) return true;
+  return false;
+}
+
+function isReportableParityIssue(issue) {
+  if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
+  return isActiveIssue(issue);
+}
+
 function scoreParityEntry(entry) {
   return entry.issues.reduce((score, issue) => {
+    if (!isActiveIssue(issue)) return score;
     if (issue.type === 'image-mismatch') return score + 3;
     if (issue.type === 'codeblock-mismatch') return score + 3;
     if (issue.severity === 'actionable') return score + 2;
@@ -154,10 +170,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const sourceSync = options.sourceSync ?? {};
   const snapshotChanges = snapshot.changes ?? [];
   const parityFiles = parity.files ?? [];
+  // Only files with at least one ACTIVE (non-acknowledged or expired) actionable/signal
+  // issue should drive parity-regression issue creation. Phase 3 acknowledgements are
+  // explicitly non-blocking and must not trigger regression issues.
   const parityIssueFiles = parityFiles.filter((file) =>
-    (file.issues ?? []).some(
-      (issue) => issue.severity === 'actionable' || issue.severity === 'signal',
-    ),
+    (file.issues ?? []).some(isReportableParityIssue),
   );
 
   const snapshotTopEntries = sortSnapshotEntries(snapshotChanges).slice(0, maxEntries);
@@ -196,22 +213,31 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     '- `docs-audit-manifest.json`',
   ].join('\n');
 
+  const activeActionableFiles =
+    parity.summary?.activeActionableFiles ?? parity.summary?.actionableFiles ?? 0;
+  const activeErrorFiles =
+    parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0;
+  const acknowledgedIssues = parity.summary?.acknowledgedIssues || 0;
+  const expiredAcknowledgements = parity.summary?.expiredAcknowledgements || 0;
+
   const parityIssueBody = [
     '## Summary',
     '',
     `- Checked at: ${parity.summary?.checkedAt ?? 'unknown'}`,
-    `- Actionable files: ${parity.summary?.actionableFiles || 0}`,
-    `- Signal-only files: ${parity.summary?.signalFiles || 0}`,
-    `- Error files: ${parity.summary?.errorFiles || 0}`,
+    `- Active actionable files: ${activeActionableFiles}`,
+    `- Active issue files: ${parityIssueFiles.length}`,
+    `- Error files: ${activeErrorFiles}`,
+    `- Acknowledged (non-blocking): ${acknowledgedIssues}`,
+    ...(expiredAcknowledgements > 0
+      ? [`- ⚠ Expired acknowledgements: ${expiredAcknowledgements}`]
+      : []),
     '',
     '## Top Entries',
     '',
     formatList(
       parityTopEntries.map((entry) => {
         const issueLabels = entry.issues
-          .filter(
-            (issue) => issue.severity === 'actionable' || issue.severity === 'signal',
-          )
+          .filter(isReportableParityIssue)
           .map((issue) => {
             const tag = issue.severity === 'signal' ? '[signal] ' : '';
             return `${tag}${issue.type}${issue.detail ? ` (${issue.detail})` : ''}`;
@@ -290,9 +316,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       topEntries: parityTopEntries,
       body: parityIssueBody,
       summary: {
-        issueCount: (parity.summary?.actionableFiles || 0) + (parity.summary?.signalFiles || 0),
-        signalFiles: parity.summary?.signalFiles || 0,
-        errorFiles: parity.summary?.errorFiles || 0,
+        // Phase 3: only count files with at least one ACTIVE reportable issue,
+        // ignoring validly-acknowledged issues. Expired acknowledgements remain active.
+        issueCount: parityIssueFiles.length,
+        acknowledgedIssues: parity.summary?.acknowledgedIssues || 0,
+        expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
         issuesByType: parity.summary?.issuesByType || {},
         issuesBySeverity: parity.summary?.issuesBySeverity || {},
       },
@@ -333,9 +361,19 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## Parity',
     '',
-    `- Actionable files: ${parity.summary?.actionableFiles || 0}`,
-    `- Signal-only files: ${parity.summary?.signalFiles || 0}`,
-    `- Error files: ${parity.summary?.errorFiles || 0}`,
+    // Phase 3: report active (non-acknowledged) counts so the summary matches
+    // actionableReport.parityRegression.shouldOpenIssue / issueCount.
+    `- Active actionable files: ${
+      parity.summary?.activeActionableFiles ?? parity.summary?.actionableFiles ?? 0
+    }`,
+    `- Active issue files: ${
+      parity.summary?.activeFiles ?? actionableReport?.parityRegression?.summary?.issueCount ?? 0
+    }`,
+    `- Error files: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
+    `- Acknowledged (non-blocking): ${parity.summary?.acknowledgedIssues || 0}`,
+    ...((parity.summary?.expiredAcknowledgements || 0) > 0
+      ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
+      : []),
     '',
     '## Audit Manifest',
     '',

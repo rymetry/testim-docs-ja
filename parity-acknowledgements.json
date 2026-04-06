@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "slug": "testops/testops-version-control/pull-requests",
+      "issueType": "step-count-mismatch",
+      "detailIncludes": "EN=0",
+      "sourceFingerprint": "sha256:f4cfe4f1ac274727f926a657495e48f5437e610f77f560d7353fa5a4cec3278e",
+      "reason": "EN content inside <pre><code> block; no structured elements extractable",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "testops/testops-version-control/pull-requests",
+      "issueType": "bullet-count-mismatch",
+      "detailIncludes": "EN=0",
+      "sourceFingerprint": "sha256:f4cfe4f1ac274727f926a657495e48f5437e610f77f560d7353fa5a4cec3278e",
+      "reason": "EN content inside <pre><code> block; no structured elements extractable",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "testops/testops-version-control/pull-requests",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "EN=1",
+      "sourceFingerprint": "sha256:f4cfe4f1ac274727f926a657495e48f5437e610f77f560d7353fa5a4cec3278e",
+      "reason": "EN content inside <pre><code> block; only wrapper paragraph extractable",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "salesforce-testing/salesforce-testing-overview",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "EN=1",
+      "sourceFingerprint": "sha256:497a2a801513fefc70aa228c803974aaa3a58b801788016ab27e5ac84fe51c72",
+      "reason": "EN snapshot incomplete (361 bytes); dynamic navigation content not captured in static HTML extraction",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Starts with",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Ends with",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Contains",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Multiple Options (OR) with Parameters",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Not Equal Validation",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Validating Numbers (Only Digits)",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Validating Any Number",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has regex example as plain text paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Parameter only",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN has 'Click on the gif to enlarge' and '</Image>' artifacts as extra paragraphs; JA uses <Image> component",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/validate-element-text",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Combining a parameter with Regex",
+      "sourceFingerprint": "sha256:30acccd45eaf6ccdf45e7108cd9d8e528a0f2066d4a95966795628c2089d7df4",
+      "reason": "EN [Copy](javascript:void(0);) artifacts count as paragraphs",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "editing-tests/editing-your-tests/editing-a-steps-properties",
+      "issueType": "bullet-count-mismatch",
+      "detailIncludes": "Properties Configuration",
+      "sourceFingerprint": "sha256:2dcbc8a1af377326f9b57d41d706d5ab1916e040060a9c950342406e125c5a1a",
+      "reason": "EN uses numbered list / paragraphs, JA uses bullet list for same content",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "results/test-runs",
+      "issueType": "bullet-count-mismatch",
+      "detailIncludes": "Test Runs Details",
+      "sourceFingerprint": "sha256:02797c760f11c2a65a387ff03fd119df5a8f15673a79354215608ea80656396e",
+      "reason": "EN has no bullets (EN=0); JA uses bullets for structured content",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "results/execution-runs-screen",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Rerun Test Directly from Execution Details Screen",
+      "sourceFingerprint": "sha256:57efdd32d5dec7fd073557ebf6e38b289cc414d22c45936c28392615c13f6a8e",
+      "reason": "EN has standalone link text artifact counted as paragraph",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "results/test-results/why-did-my-test-fail",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Could not resize to view-port size",
+      "sourceFingerprint": "sha256:ab28512adae8abca1eb3d2495d8d37a069c8a5c2f6a38db02116e9ad1aaa988d",
+      "reason": "JA deliberately joined 'Common Causes:' with its explanation using hard line break",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "results/test-results/network-logs",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Filtering request results",
+      "sourceFingerprint": "sha256:1621060a625d38d7546ceef2092302d8b28aeb77d2cb119bcfe16fb27c8e0cf5",
+      "reason": "EN has text appended to image line; JA correctly separates text to own paragraph",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/loops",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "段落数の総数が原文と異なります",
+      "sourceFingerprint": "sha256:3cd92044d6565c1f50aee7f962eb55d0e2e7c21e528b6de6956eeff9d6d83f65",
+      "reason": "JA intro description line + EN italic paragraph format difference",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "iOS Simulators not Detected",
+      "sourceFingerprint": "sha256:44ed29daacb1766bb66898218e551c83d7204d0b1823d0d4f49d72bf8ab1855f",
+      "reason": "EN has bare command text as paragraph; JA correctly uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Step 4 - Record the test",
+      "sourceFingerprint": "sha256:57dcb110ffdb1b8f32268467dcafe0e16faa01643dec889f46c2380a3099b645",
+      "reason": "JA has additional explanatory paragraph for clarity",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "test-management/test-plans-mobile",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Running your Test Plan",
+      "sourceFingerprint": "sha256:a98a5bf993b305d5afdb307e5bd0cdd28f3013af5e825962c93944893574496e",
+      "reason": "EN has raw CLI command as paragraph; JA uses code block",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "running-tests/the-command-line-cli",
+      "issueType": "paragraph-count-mismatch",
+      "detailRegex": "段落数",
+      "sourceFingerprint": "sha256:91b5ce27f94bf55ea52f4d3f84b8acc34b33590f7f7bdedbf53b0f898ee39c92",
+      "reason": "EN CLI parameter sections have residual formatting artifacts after Copy button stripping",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "salesforce-testing/faq",
+      "issueType": "paragraph-count-mismatch",
+      "detailRegex": "段落数",
+      "sourceFingerprint": "sha256:b4c849cc9dff430b89be4b3416dddb1a6130f266272941caf7d7f851366f4085",
+      "reason": "EN/JA paragraph structure differences in FAQ accordion content after details unescaping",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "salesforce-testing/troubleshoot",
+      "issueType": "paragraph-count-mismatch",
+      "detailRegex": "段落数",
+      "sourceFingerprint": "sha256:b805135f96569ca54cc8063134196760fb44ac039f61ead6fe956f16f72bb82e",
+      "reason": "EN/JA paragraph structure differences in troubleshoot details content",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file",
+      "issueType": "paragraph-count-mismatch",
+      "detailRegex": "段落数",
+      "sourceFingerprint": "sha256:6aa68f64a81b2d2773df96b56b4a6dfa10c3fb8d3bcea125dd7a170d64ced695",
+      "reason": "EN code snippet formatting produces extra paragraphs after Copy button stripping",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/extract-sms-message",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Parameters - Packages and JavaScript",
+      "sourceFingerprint": "sha256:b56a738065ffcf3fab14d7bc617d89b51d3fa4d1bb2610e48f7a8eace113cf99",
+      "reason": "EN has section content as paragraph; JA uses different formatting",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/handling-ui-actions/refresh-page",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Add a Refresh Step to a New Browser Tab",
+      "sourceFingerprint": "sha256:f52c33eb07e5e1d7a3e6e89edbbdc81ffcdc1a1dee6099eef8f609f4de2b00d0",
+      "reason": "JA has additional explanatory paragraph",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/parameters/configuration-file-parameters",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Execution level - placing parameters in the return section",
+      "sourceFingerprint": "sha256:fd84670cb2df9413d86e3b8391083c09a7f3665943af70744d6ae891afe58a3d",
+      "reason": "EN code snippet formatting produces extra paragraphs after Copy button stripping",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/parameters/json-parameters-file-parameters",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Using a parameters file in JavaScript",
+      "sourceFingerprint": "sha256:02d329a9b10f07490cb07c1e9a64d821f1e872c19c32bc8f6075f360c46fa8fa",
+      "reason": "EN code snippet formatting produces extra paragraphs after Copy button stripping",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "advanced-editing/validations/email-validation",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Creating a Validate Email Step using the Codeless Option",
+      "sourceFingerprint": "sha256:4f83275f79b0328d8572e496c626f3957893c51531f1f458894b9e33725cb5be",
+      "reason": "EN has extra paragraph from code snippet formatting",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    },
+    {
+      "slug": "testops/turbo-mode",
+      "issueType": "paragraph-count-mismatch",
+      "detailIncludes": "Running in turbo-mode",
+      "sourceFingerprint": "sha256:acf60266871ee83707809a6c6732a3f7a2e4d42bd3c3eba8a577cb73d4d4037b",
+      "reason": "JA has additional explanatory paragraph for CLI section",
+      "evidence": "Migrated from parity-allowlist.json on 2026-04-06",
+      "owner": "rymetry",
+      "reviewAfter": "2026-07-06"
+    }
+  ]
+}

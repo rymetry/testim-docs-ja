@@ -20,6 +20,11 @@ import {
   localCheck,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
+import {
+  computeSnapshotFingerprint,
+  validateAcknowledgements,
+  tagIssuesWithAcknowledgements,
+} from './lib/source_parity_acknowledgements.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
@@ -30,10 +35,7 @@ const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
-const ALLOWLIST_PATH = path.join(ROOT_DIR, 'parity-allowlist.json');
-
-// Signal-only issue types that can be suppressed by the allowlist
-const ALLOWABLE_SEVERITIES = new Set(['signal']);
+const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json');
 
 /**
  * Load freshness state from source-sync-status.json.
@@ -84,74 +86,13 @@ export function parseArgs(argv = process.argv.slice(2)) {
 }
 
 /**
- * Load and validate allowlist from parity-allowlist.json.
- * Returns the parsed object (slug → array of rules).
- * Throws if any rule targets a non-signal issue type.
+ * Load and validate acknowledgements from parity-acknowledgements.json.
+ * Returns { schemaVersion, entries } or empty structure if file missing.
  */
-export function loadAllowlist(filePath = ALLOWLIST_PATH) {
-  if (!fs.existsSync(filePath)) return {};
+function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
+  if (!fs.existsSync(filePath)) return { schemaVersion: 1, entries: [] };
   const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-
-  for (const [slug, rules] of Object.entries(raw)) {
-    for (const rule of rules) {
-      const severity = ISSUE_SEVERITY[rule.type];
-      if (!severity) {
-        throw new Error(
-          `Allowlist error: "${slug}" rule targets unknown issue type "${rule.type}".`
-        );
-      }
-      if (!ALLOWABLE_SEVERITIES.has(severity)) {
-        throw new Error(
-          `Allowlist error: "${slug}" rule targets "${rule.type}" (severity: ${severity}). Only signal-severity issues can be suppressed.`
-        );
-      }
-      if (!rule.detailIncludes && !rule.detailRegex) {
-        throw new Error(
-          `Allowlist error: "${slug}" rule for "${rule.type}" must specify detailIncludes or detailRegex. Slug + type only suppression is not allowed.`
-        );
-      }
-      if (rule.detailRegex) {
-        try {
-          new RegExp(rule.detailRegex);
-        } catch {
-          throw new Error(
-            `Allowlist error: "${slug}" rule for "${rule.type}" has invalid detailRegex: "${rule.detailRegex}".`
-          );
-        }
-      }
-    }
-  }
-
-  return raw;
-}
-
-/**
- * Check if an issue matches an allowlist rule.
- */
-export function isAllowlisted(slug, issue, allowlist) {
-  const rules = allowlist[slug];
-  if (!rules) return false;
-
-  const severity = issue.severity || ISSUE_SEVERITY[issue.type];
-  if (!ALLOWABLE_SEVERITIES.has(severity)) return false;
-
-  return rules.some((rule) => {
-    if (rule.type !== issue.type) return false;
-    // Require at least detailIncludes or detailRegex — slug + type only is too coarse
-    if (!rule.detailIncludes && !rule.detailRegex) return false;
-    const detail = issue.detail || issue.text || '';
-    if (rule.detailIncludes && !detail.includes(rule.detailIncludes)) return false;
-    if (rule.detailRegex && !new RegExp(rule.detailRegex).test(detail)) return false;
-    return true;
-  });
-}
-
-/**
- * Filter issues through the allowlist, removing matched signal issues.
- */
-export function applyAllowlist(slug, issues, allowlist) {
-  if (!allowlist || Object.keys(allowlist).length === 0) return issues;
-  return issues.filter((issue) => !isAllowlisted(slug, issue, allowlist));
+  return validateAcknowledgements(raw);
 }
 
 export async function checkSourceParity({
@@ -166,13 +107,16 @@ export async function checkSourceParity({
   const snapshotSlugs = collectSnapshotSlugs(SNAPSHOTS_DIR);
   const allFiles = findMdFiles(DOCS_DIR);
 
-  let allowlist = {};
+  let ackData = { schemaVersion: 1, entries: [] };
   try {
-    allowlist = loadAllowlist();
+    ackData = loadAcknowledgementsFile();
   } catch (error) {
     console.error(`❌ ${error.message}`);
     return 1;
   }
+  // Ack expiry uses UTC "today" intentionally so CI runs are timezone-independent
+  // and match reviewAfter values (also stored as plain YYYY-MM-DD / UTC dates).
+  const today = new Date().toISOString().slice(0, 10);
 
   // Resolve --slug to path-based slug (supports both basename and path-based input)
   const resolvedSlug = slug ? resolveSlug(slug) : null;
@@ -216,8 +160,12 @@ export async function checkSourceParity({
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
     const snapshotPath = path.join(SNAPSHOTS_DIR, fileSlug + '.html');
+    let snapshotFingerprint = null;
+
     if (fs.existsSync(snapshotPath)) {
       const rawEnHtml = fs.readFileSync(snapshotPath, 'utf8');
+      snapshotFingerprint = computeSnapshotFingerprint(rawEnHtml);
+
       let enBody;
       let enHtml;
       try {
@@ -251,8 +199,14 @@ export async function checkSourceParity({
       }
     }
 
-    // Apply allowlist filtering
-    issues = applyAllowlist(fileSlug, issues, allowlist);
+    // Tag with acknowledgements (replaces applyAllowlist)
+    issues = tagIssuesWithAcknowledgements(
+      fileSlug,
+      issues,
+      ackData.entries,
+      snapshotFingerprint,
+      today,
+    );
 
     if (issues.length === 0) {
       continue;
@@ -266,12 +220,37 @@ export async function checkSourceParity({
     });
 
     if (!json) {
-      console.log(`❌ ${doc.relativePath}`);
+      const allAcked = issues.every(
+        (i) => i.acknowledged === true && i.ackExpired !== true,
+      );
+      const icon = allAcked ? '⏸️' : '❌';
+      const suffix = allAcked ? ' (all acknowledged)' : '';
+      console.log(`${icon} ${doc.relativePath}${suffix}`);
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
         const detail = issue.detail || issue.text || '';
-        const artifactNote = issue.artifacts?.length ? ` [${issue.artifacts.join('; ')}]` : '';
-        console.log(`   [${issue.type}/${issue.severity}]${location} ${detail}${artifactNote}`);
+        const artifactNote = issue.artifacts?.length
+          ? ` [${issue.artifacts.join('; ')}]`
+          : '';
+        const ackTag =
+          issue.acknowledged && !issue.ackExpired
+            ? ' ⏸'
+            : issue.acknowledged && issue.ackExpired
+              ? ' ⚠expired'
+              : '';
+        console.log(
+          `   [${issue.type}/${issue.severity}]${location}${ackTag} ${detail}${artifactNote}`,
+        );
+        if (issue.acknowledged && !issue.ackExpired) {
+          console.log(
+            `     ↳ acknowledged: ${issue.ackReason} (owner: ${issue.ackOwner}, review: ${issue.ackReviewAfter})`,
+          );
+        }
+        if (issue.acknowledged && issue.ackExpired) {
+          console.log(
+            `     ↳ expired: ${issue.ackExpiryReason} (owner: ${issue.ackOwner})`,
+          );
+        }
       }
       console.log('');
     }
@@ -296,14 +275,12 @@ export async function checkSourceParity({
       freshnessState,
     });
 
-    const filteredCoverageIssues = applyAllowlist('_page-coverage-gate', coverageIssues, allowlist);
-
-    if (filteredCoverageIssues.length > 0) {
+    if (coverageIssues.length > 0) {
       results.push({
         file: '_page-coverage-gate',
         sourceUrl: '',
         category: '',
-        issues: filteredCoverageIssues,
+        issues: coverageIssues,
       });
     }
   }
@@ -326,29 +303,34 @@ export async function checkSourceParity({
   if (!json) {
     console.log(`${'='.repeat(60)}\n📊 チェック結果サマリー\n`);
     console.log(`チェック済み: ${checkedCount} / ${allFiles.length} ファイル`);
-    console.log(`問題あり: ${summary.filesWithIssues} ファイル`);
-    console.log(`actionable: ${summary.actionableFiles} ファイル`);
+    const ackedFiles = summary.filesWithIssues - summary.activeFiles;
+    console.log(`問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, acknowledged-only: ${ackedFiles})`);
+    console.log(`actionable: ${summary.actionableFiles} ファイル (active: ${summary.activeActionableFiles})`);
     console.log(`signal-only: ${summary.signalFiles} ファイル`);
-    console.log(`errors: ${summary.errorFiles} ファイル\n`);
-    console.log('問題種別:');
+    console.log(`errors: ${summary.errorFiles} ファイル`);
+    if (summary.acknowledgedIssues > 0) {
+      console.log(`acknowledged: ${summary.acknowledgedIssues} 件`);
+    }
+    if (summary.expiredAcknowledgements > 0) {
+      console.log(`expired acknowledgements: ${summary.expiredAcknowledgements} 件`);
+    }
+    console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {
       console.log(`  ${type}: ${count} 件`);
     }
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }
 
-  // Exit code logic based on --fail-on flag
+  // Exit code: fail only on active (non-acknowledged) issues
   if (failOn === 'actionable') {
-    const hasActionableOrError =
-      (summary.actionableFiles || 0) > 0 || (summary.errorFiles || 0) > 0;
-    return hasActionableOrError ? 1 : 0;
+    const hasActiveActionableOrError =
+      (summary.activeActionableFiles || 0) > 0 || (summary.activeErrorFiles || 0) > 0;
+    return hasActiveActionableOrError ? 1 : 0;
   }
   if (failOn === 'any') {
-    return summary.filesWithIssues > 0 ? 1 : 0;
+    return (summary.activeFiles || 0) > 0 ? 1 : 0;
   }
-
-  // Default: exit 1 if any issues found
-  return summary.filesWithIssues > 0 ? 1 : 0;
+  return (summary.activeFiles || 0) > 0 ? 1 : 0;
 }
 
 async function main() {

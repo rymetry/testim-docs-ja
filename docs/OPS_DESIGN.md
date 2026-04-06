@@ -47,7 +47,7 @@
 
 `npm run check:parity` で日本語ドキュメントの翻訳品質をローカルチェックする。
 
-チェック項目の詳細（actionable / signal の一覧、`--fail-on` フラグ、allowlist、出力形式）は `scripts/README.md` を参照。
+チェック項目の詳細（actionable / signal の一覧、`--fail-on` フラグ、acknowledgements、出力形式）は `scripts/README.md` を参照。
 
 **セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
 
@@ -70,7 +70,7 @@
 
 ### EN アーティファクト注釈
 
-`detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は allowlist の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
+`detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
 
 - `EN uses <details> blocks` — EN が `<details>` を使用
 - `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内

@@ -335,6 +335,150 @@ describe('buildActionableReport', () => {
     assert.match(report.snapshotDiff.body, /Sidebar Changes/);
     assert.match(report.snapshotDiff.body, /Pages added: 1/);
   });
+
+  it('does NOT open a parity issue when all issues are validly acknowledged', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        activeErrorFiles: 0,
+        acknowledgedIssues: 1,
+        issuesByType: { 'paragraph-count-mismatch': 1 },
+        issuesBySeverity: { signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'セクション #1 "Overview": 段落数 EN=4, JA=2',
+              acknowledged: true,
+              ackExpired: false,
+              ackReason: 'Intentional JA structure difference',
+              ackOwner: 'rymetry',
+              ackReviewAfter: '2026-07-06',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+    assert.equal(report.parityRegression.topEntries.length, 0);
+    // Legacy total-count fields must not leak into parityRegression.summary.
+    // Total counts would have different semantics from issueCount (active),
+    // which invites misreads by future consumers. Use issuesByType /
+    // issuesBySeverity if a full breakdown is needed.
+    assert.equal('signalFiles' in report.parityRegression.summary, false);
+    assert.equal('errorFiles' in report.parityRegression.summary, false);
+  });
+
+  it('opens a parity issue when acknowledgement is expired', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 1,
+        activeErrorFiles: 0,
+        expiredAcknowledgements: 1,
+        issuesByType: { 'paragraph-count-mismatch': 1 },
+        issuesBySeverity: { signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'expired case',
+              acknowledged: true,
+              ackExpired: true,
+              ackExpiryReason: 'fingerprint-changed',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+  });
+
+  it('filters acknowledged issues out of top entries but keeps active ones on the same file', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 1,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 1,
+        activeFiles: 1,
+        activeErrorFiles: 0,
+        acknowledgedIssues: 1,
+        issuesByType: { 'image-mismatch': 1, 'paragraph-count-mismatch': 1 },
+        issuesBySeverity: { actionable: 1, signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'image-mismatch',
+              severity: 'actionable',
+              detail: 'EN=3 JA=1',
+            },
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'acked noise',
+              acknowledged: true,
+              ackExpired: false,
+              ackReason: 'noise',
+              ackOwner: 'rymetry',
+              ackReviewAfter: '2026-07-06',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+    assert.match(report.parityRegression.body, /image-mismatch/);
+    assert.doesNotMatch(report.parityRegression.body, /acked noise/);
+  });
 });
 
 describe('assignReviewGroups', () => {
@@ -384,7 +528,15 @@ describe('renderSummaryMarkdown', () => {
   it('produces valid markdown with all sections', () => {
     const snapshot = {};
     const parity = {
-      summary: { actionableFiles: 2, signalFiles: 1, errorFiles: 0 },
+      summary: {
+        actionableFiles: 2,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 2,
+        activeErrorFiles: 0,
+        activeFiles: 3,
+        acknowledgedIssues: 0,
+      },
     };
     const actionableReport = {
       generatedAt: '2026-03-19T00:00:00Z',
@@ -411,12 +563,71 @@ describe('renderSummaryMarkdown', () => {
     assert.match(md, /Changed pages: 3/);
     assert.match(md, /Added pages: 1/);
     assert.match(md, /## Parity/);
-    assert.match(md, /Actionable files: 2/);
+    assert.match(md, /Active actionable files: 2/);
     assert.match(md, /## Audit Manifest/);
     assert.match(md, /Page lifecycle: 1/);
     assert.match(md, /Structural change: 1/);
     assert.match(md, /Content only: 2/);
     assert.match(md, /snapshot-diff-status\.json/);
+  });
+
+  it('reports 0 active files when all parity issues are acknowledged', () => {
+    // Reproduces the P2 report: issueCount 0 but markdown used to say signalFiles: 22.
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 22,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        acknowledgedIssues: 41,
+        expiredAcknowledgements: 0,
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-06T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: { issueCount: 0 },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Active actionable files: 0/);
+    assert.match(md, /Active issue files: 0/);
+    assert.match(md, /Acknowledged \(non-blocking\): 41/);
+    // The legacy counters must not appear standalone in a way that contradicts activeFiles:0.
+    assert.doesNotMatch(md, /^- Signal-only files: 22$/m);
+  });
+
+  it('surfaces expired acknowledgements as a warning line', () => {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 1,
+        acknowledgedIssues: 0,
+        expiredAcknowledgements: 1,
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-06T00:00:00Z',
+      snapshotDiff: { summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 } },
+      parityRegression: { summary: { issueCount: 1 } },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Expired acknowledgements: 1/);
   });
 });
 

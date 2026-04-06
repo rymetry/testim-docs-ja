@@ -52,7 +52,7 @@ function main() {
     `  snapshot diff actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
   );
   console.log(
-    `  parity issues (actionable+signal): ${actionableReport.parityRegression.summary.issueCount}`,
+    `  active parity issues: ${actionableReport.parityRegression.summary.issueCount}`,
   );
 }
 
