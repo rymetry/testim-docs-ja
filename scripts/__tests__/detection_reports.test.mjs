@@ -425,9 +425,81 @@ describe('loadDetectionInputs', () => {
     const result = loadDetectionInputs({
       snapshotPath: '/nonexistent/snapshot.json',
       parityPath: '/nonexistent/parity.json',
+      sourceSyncPath: '/nonexistent/sync.json',
     });
     assert.deepEqual(result.snapshot, {});
     assert.deepEqual(result.parity, {});
+    assert.deepEqual(result.sourceSync, {});
+  });
+});
+
+// ---------------------------------------------------------------------------
+// sourceSyncHealth in buildActionableReport
+// ---------------------------------------------------------------------------
+
+describe('sourceSyncHealth in buildActionableReport', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-06T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+  const emptyParity = {
+    summary: { checkedAt: '2026-04-06T00:00:00Z', actionableFiles: 0, signalFiles: 0, errorFiles: 0 },
+    files: [],
+  };
+
+  it('opens source sync issue when freshnessState is broken', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'broken',
+      summary: { targetPages: 100, fetchedPages: 0, notFoundPages: 0, errorPages: 100, sidebarVerified: false },
+      errors: [{ slug: '_sidebar', detail: 'Sidebar verification failed' }],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    assert.equal(report.sourceSyncHealth.freshnessState, 'broken');
+  });
+
+  it('opens source sync issue when freshnessState is partial', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'partial',
+      summary: { targetPages: 100, fetchedPages: 95, notFoundPages: 2, errorPages: 3, sidebarVerified: true },
+      errors: [{ slug: 'a', detail: 'HTTP 500' }],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    assert.equal(report.sourceSyncHealth.freshnessState, 'partial');
+  });
+
+  it('does not open source sync issue when fresh', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: { targetPages: 100, fetchedPages: 100, notFoundPages: 0, errorPages: 0, sidebarVerified: true },
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+  });
+
+  it('does not open source sync issue when sourceSync is empty', () => {
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync: {} });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+  });
+
+  it('includes source sync health in summary markdown', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'broken',
+      summary: { targetPages: 100, fetchedPages: 0, notFoundPages: 0, errorPages: 100, sidebarVerified: false },
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
+    assert.match(md, /Source Sync Health/);
+    assert.match(md, /broken/);
   });
 });
 

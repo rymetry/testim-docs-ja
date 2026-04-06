@@ -26,7 +26,7 @@ import {
   readDocFile,
   resolveSlug,
 } from './lib/project.mjs';
-import { fetchTocData, buildSidebarSnapshot } from './lib/madcap_toc.mjs';
+import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
 import { buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 
@@ -201,7 +201,8 @@ async function verifySidebar({ dryRun = false } = {}) {
     }
 
     const totalPages = sections.reduce((sum, s) => sum + s.pages.length, 0);
-    return { ok: true, sectionCount: sections.length, pageCount: totalPages };
+    const sidebarSlugs = [...extractSlugsFromSnapshot(snapshot)];
+    return { ok: true, sectionCount: sections.length, pageCount: totalPages, sidebarSlugs };
   } catch (error) {
     console.error('verifySidebar failed:', error);
     return { ok: false, reason: error.message };
@@ -277,15 +278,12 @@ export async function main(argv) {
     errors += 1;
   }
 
-  // Build source sync status
+  // Build source sync status (always written — metadata, not content)
   const sourceSyncStatus = buildSourceSyncStatus({ pages: pageResults, sidebarResult });
-
-  if (!args.dryRun) {
-    fs.writeFileSync(
-      SOURCE_SYNC_STATUS_PATH,
-      JSON.stringify(sourceSyncStatus, null, 2) + '\n',
-    );
-  }
+  fs.writeFileSync(
+    SOURCE_SYNC_STATUS_PATH,
+    JSON.stringify(sourceSyncStatus, null, 2) + '\n',
+  );
 
   console.log();
   console.log(`Done: ${fetched} fetched, ${notFound} not found, ${errors} errors`);

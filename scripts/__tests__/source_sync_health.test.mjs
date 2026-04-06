@@ -175,4 +175,44 @@ describe('buildSourceSyncStatus', () => {
     const result = buildSourceSyncStatus({ pages, sidebarResult: baseSidebarResult });
     assert.equal('snapshotFingerprint' in result.pages[0], false);
   });
+
+  it('sidebarFingerprint changes when sidebar slugs change', () => {
+    const pages = [{ slug: 'a', fetchStatus: 'ok' }];
+    const r1 = buildSourceSyncStatus({
+      pages,
+      sidebarResult: { ...baseSidebarResult, sidebarSlugs: ['x', 'y'] },
+    });
+    const r2 = buildSourceSyncStatus({
+      pages,
+      sidebarResult: { ...baseSidebarResult, sidebarSlugs: ['x', 'z'] },
+    });
+    assert.notEqual(r1.sidebarFingerprint, r2.sidebarFingerprint);
+  });
+
+  it('sidebarFingerprint is stable for same slugs in different order', () => {
+    const pages = [{ slug: 'a', fetchStatus: 'ok' }];
+    const r1 = buildSourceSyncStatus({
+      pages,
+      sidebarResult: { ...baseSidebarResult, sidebarSlugs: ['y', 'x'] },
+    });
+    const r2 = buildSourceSyncStatus({
+      pages,
+      sidebarResult: { ...baseSidebarResult, sidebarSlugs: ['x', 'y'] },
+    });
+    assert.equal(r1.sidebarFingerprint, r2.sidebarFingerprint);
+  });
+
+  it('sidebarFingerprint detects reorder when counts are same', () => {
+    const pages = [{ slug: 'a', fetchStatus: 'ok' }];
+    // Same sectionCount/pageCount but different slug sets
+    const r1 = buildSourceSyncStatus({
+      pages,
+      sidebarResult: { ok: true, sectionCount: 2, pageCount: 3, sidebarSlugs: ['a', 'b', 'c'] },
+    });
+    const r2 = buildSourceSyncStatus({
+      pages,
+      sidebarResult: { ok: true, sectionCount: 2, pageCount: 3, sidebarSlugs: ['a', 'b', 'd'] },
+    });
+    assert.notEqual(r1.sidebarFingerprint, r2.sidebarFingerprint);
+  });
 });

@@ -9,6 +9,8 @@ const SNAPSHOT_ISSUE_TITLE =
   '📸 Content Drift: English source changes detected via snapshot diff';
 const PARITY_ISSUE_TITLE =
   '🔍 Parity Regression: content drift detected';
+const SOURCE_SYNC_ISSUE_TITLE =
+  '⚠️ Source Sync Health: fetch degradation detected';
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return {};
@@ -149,6 +151,7 @@ function formatSnapshotEntry(entry) {
 
 export function buildActionableReport(snapshot, parity, auditManifest, options = {}) {
   const maxEntries = options.maxEntries ?? 10;
+  const sourceSync = options.sourceSync ?? {};
   const snapshotChanges = snapshot.changes ?? [];
   const parityFiles = parity.files ?? [];
   const parityIssueFiles = parityFiles.filter((file) =>
@@ -225,8 +228,48 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     '- `docs-audit-manifest.json`',
   ].join('\n');
 
+  // Source sync health
+  const freshnessState = sourceSync.freshnessState ?? null;
+  const syncShouldOpen = freshnessState === 'broken' || freshnessState === 'partial';
+  const syncSummary = sourceSync.summary ?? {};
+  const syncErrors = sourceSync.errors ?? [];
+
+  const sourceSyncBody = syncShouldOpen
+    ? [
+        '## Summary',
+        '',
+        `- Freshness state: **${freshnessState}**`,
+        `- Target pages: ${syncSummary.targetPages ?? 0}`,
+        `- Fetched pages: ${syncSummary.fetchedPages ?? 0}`,
+        `- Not found pages: ${syncSummary.notFoundPages ?? 0}`,
+        `- Error pages: ${syncSummary.errorPages ?? 0}`,
+        `- Sidebar verified: ${syncSummary.sidebarVerified ?? false}`,
+        '',
+        '## Errors',
+        '',
+        formatList(syncErrors.map((e) => `\`${e.slug}\` — ${e.detail}`)),
+        '',
+        '## Artifacts',
+        '',
+        '- `source-sync-status.json`',
+      ].join('\n')
+    : '';
+
   return {
     generatedAt: new Date().toISOString(),
+    sourceSyncHealth: {
+      issueTitle: SOURCE_SYNC_ISSUE_TITLE,
+      shouldOpenIssue: syncShouldOpen,
+      freshnessState,
+      body: sourceSyncBody,
+      summary: {
+        targetPages: syncSummary.targetPages ?? 0,
+        fetchedPages: syncSummary.fetchedPages ?? 0,
+        notFoundPages: syncSummary.notFoundPages ?? 0,
+        errorPages: syncSummary.errorPages ?? 0,
+        sidebarVerified: syncSummary.sidebarVerified ?? false,
+      },
+    },
     snapshotDiff: {
       issueTitle: SNAPSHOT_ISSUE_TITLE,
       shouldOpenIssue: snapshotChanges.length > 0,
@@ -264,11 +307,21 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   };
 }
 
-export function renderSummaryMarkdown(_snapshot, parity, actionableReport, auditManifest) {
+export function renderSummaryMarkdown(_snapshot, parity, actionableReport, auditManifest, sourceSync) {
+  const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? 'unknown';
+  const syncSummary = sourceSync?.summary ?? actionableReport?.sourceSyncHealth?.summary ?? {};
+
   return [
     '# Docs Detection Summary',
     '',
     `Generated: ${actionableReport.generatedAt}`,
+    '',
+    '## Source Sync Health',
+    '',
+    `- Freshness state: ${syncState}`,
+    `- Fetched: ${syncSummary.fetchedPages ?? 0} / ${syncSummary.targetPages ?? 0} pages`,
+    `- Errors: ${syncSummary.errorPages ?? 0}`,
+    `- Sidebar verified: ${syncSummary.sidebarVerified ?? false}`,
     '',
     '## Snapshot Diff',
     '',
@@ -303,11 +356,13 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
 export function loadDetectionInputs({
   snapshotPath = path.join(ROOT_DIR, 'snapshot-diff-status.json'),
   parityPath = path.join(ROOT_DIR, 'parity-check-status.json'),
+  sourceSyncPath = path.join(ROOT_DIR, 'source-sync-status.json'),
 } = {}) {
   return {
     snapshot: readJson(snapshotPath),
     parity: readJson(parityPath),
+    sourceSync: readJson(sourceSyncPath),
   };
 }
 
-export { SNAPSHOT_ISSUE_TITLE, PARITY_ISSUE_TITLE };
+export { SNAPSHOT_ISSUE_TITLE, PARITY_ISSUE_TITLE, SOURCE_SYNC_ISSUE_TITLE };

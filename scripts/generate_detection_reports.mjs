@@ -21,14 +21,15 @@ const OUTPUTS = {
 };
 
 export function generateDetectionReports() {
-  const { snapshot, parity } = loadDetectionInputs();
+  const { snapshot, parity, sourceSync } = loadDetectionInputs();
   const auditManifest = buildAuditManifest(snapshot, parity);
-  const actionableReport = buildActionableReport(snapshot, parity, auditManifest);
+  const actionableReport = buildActionableReport(snapshot, parity, auditManifest, { sourceSync });
   const summaryMarkdown = renderSummaryMarkdown(
     snapshot,
     parity,
     actionableReport,
     auditManifest,
+    sourceSync,
   );
 
   fs.writeFileSync(

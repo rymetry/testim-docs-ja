@@ -44,7 +44,7 @@ export function computeFreshnessState(pages, sidebarVerified) {
  *
  * @param {object} opts
  * @param {{ slug: string, fetchStatus: string, errorDetail?: string, snapshotFingerprint?: string }[]} opts.pages
- * @param {{ ok: boolean, sectionCount?: number, pageCount?: number, reason?: string }} opts.sidebarResult
+ * @param {{ ok: boolean, sectionCount?: number, pageCount?: number, reason?: string, sidebarSlugs?: string[] }} opts.sidebarResult
  * @param {Date} [opts.now]  — override for deterministic tests
  * @param {string} [opts.runSeed] — override for deterministic runId in tests
  * @returns {object}
@@ -59,10 +59,9 @@ export function buildSourceSyncStatus({ pages, sidebarResult, now, runSeed }) {
   const slugs = pages.map((p) => p.slug);
   const sourceInventoryFingerprint = fingerprint(slugs);
 
-  const sidebarKey = sidebarResult.ok
-    ? `${sidebarResult.sectionCount}:${sidebarResult.pageCount}`
-    : 'failed';
-  const sidebarFingerprint = fingerprint([sidebarKey]);
+  const sidebarFingerprint = sidebarResult.ok && sidebarResult.sidebarSlugs
+    ? fingerprint(sidebarResult.sidebarSlugs)
+    : fingerprint([`${sidebarResult.sectionCount ?? 0}:${sidebarResult.pageCount ?? 0}`]);
 
   const okCount = pages.filter((p) => p.fetchStatus === 'ok').length;
   const notFoundCount = pages.filter((p) => p.fetchStatus === 'not-found').length;
