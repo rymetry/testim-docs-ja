@@ -5,6 +5,9 @@ import {
   computeSnapshotFingerprint,
   NON_ACKNOWLEDGEABLE_TYPES,
   validateAcknowledgements,
+  isAcknowledgementExpired,
+  findMatchingAcknowledgement,
+  tagIssuesWithAcknowledgements,
 } from '../lib/source_parity_acknowledgements.mjs';
 
 // ---------------------------------------------------------------------------
@@ -203,5 +206,283 @@ describe('validateAcknowledgements', () => {
   it('accepts empty entries array', () => {
     const result = validateAcknowledgements({ schemaVersion: 1, entries: [] });
     assert.deepEqual(result.entries, []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// isAcknowledgementExpired
+// ---------------------------------------------------------------------------
+
+const FP = 'sha256:' + 'a'.repeat(64);
+const FP_OTHER = 'sha256:' + 'b'.repeat(64);
+
+describe('isAcknowledgementExpired', () => {
+  const entry = { sourceFingerprint: FP, reviewAfter: '2026-06-01' };
+
+  it('returns not expired when fingerprint matches and today is before reviewAfter', () => {
+    const result = isAcknowledgementExpired(entry, FP, '2026-05-01');
+    assert.deepEqual(result, { expired: false });
+  });
+
+  it('returns not expired ON reviewAfter date itself (inclusive)', () => {
+    const result = isAcknowledgementExpired(entry, FP, '2026-06-01');
+    assert.deepEqual(result, { expired: false });
+  });
+
+  it('returns expired with fingerprint-changed when fingerprints differ', () => {
+    const result = isAcknowledgementExpired(entry, FP_OTHER, '2026-05-01');
+    assert.deepEqual(result, { expired: true, reason: 'fingerprint-changed' });
+  });
+
+  it('returns expired with no-snapshot when currentSnapshotFingerprint is null', () => {
+    const result = isAcknowledgementExpired(entry, null, '2026-05-01');
+    assert.deepEqual(result, { expired: true, reason: 'no-snapshot' });
+  });
+
+  it('returns expired with review-date-passed when today is after reviewAfter', () => {
+    const result = isAcknowledgementExpired(entry, FP, '2026-06-02');
+    assert.deepEqual(result, { expired: true, reason: 'review-date-passed' });
+  });
+
+  it('fingerprint check takes precedence over date check', () => {
+    const result = isAcknowledgementExpired(entry, FP_OTHER, '2026-06-02');
+    assert.deepEqual(result, { expired: true, reason: 'fingerprint-changed' });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// findMatchingAcknowledgement
+// ---------------------------------------------------------------------------
+
+describe('findMatchingAcknowledgement', () => {
+  const ackEntry = {
+    slug: 'overview/testim-overview',
+    issueType: 'paragraph-count-mismatch',
+    detailIncludes: 'セクション #1',
+    sourceFingerprint: FP,
+    reason: 'EN/JA structure difference',
+    owner: 'rymetry',
+    reviewAfter: '2099-01-01',
+  };
+
+  it('returns match when slug + type + detailIncludes all match', () => {
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #1 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.ok(result !== null);
+    assert.equal(result.entry, ackEntry);
+    assert.equal(result.expired, false);
+    assert.equal(result.expiryReason, null);
+  });
+
+  it('returns null when slug does not match', () => {
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #1 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'other/slug',
+      issue,
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result, null);
+  });
+
+  it('returns null when issueType does not match', () => {
+    const issue = { type: 'heading-count-mismatch', detail: 'セクション #1 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result, null);
+  });
+
+  it('returns null when detail does not contain detailIncludes', () => {
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #99 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result, null);
+  });
+
+  it('returns match with expired=true when fingerprint changed', () => {
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #1 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [ackEntry],
+      FP_OTHER,
+      '2026-04-06',
+    );
+    assert.ok(result !== null);
+    assert.equal(result.expired, true);
+    assert.equal(result.expiryReason, 'fingerprint-changed');
+  });
+
+  it('returns null for empty entries', () => {
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #1 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result, null);
+  });
+
+  it('supports detailRegex matching', () => {
+    const regexEntry = { ...ackEntry, detailRegex: 'セクション #\\d+', detailIncludes: undefined };
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #42 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [regexEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.ok(result !== null);
+    assert.equal(result.entry, regexEntry);
+  });
+
+  it('falls back to issue.text when issue.detail is absent', () => {
+    const issue = { type: 'paragraph-count-mismatch', text: 'セクション #1 has 3 vs 2' };
+    const result = findMatchingAcknowledgement(
+      'overview/testim-overview',
+      issue,
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.ok(result !== null);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// tagIssuesWithAcknowledgements
+// ---------------------------------------------------------------------------
+
+describe('tagIssuesWithAcknowledgements', () => {
+  const ackEntry = {
+    slug: 'overview/testim-overview',
+    issueType: 'paragraph-count-mismatch',
+    detailIncludes: 'セクション #1',
+    sourceFingerprint: FP,
+    reason: 'EN/JA structure difference',
+    owner: 'rymetry',
+    reviewAfter: '2099-01-01',
+  };
+
+  const matchingIssue = {
+    type: 'paragraph-count-mismatch',
+    detail: 'セクション #1 has 3 vs 2',
+  };
+
+  const unmatchedIssue = {
+    type: 'heading-count-mismatch',
+    detail: 'heading differs',
+  };
+
+  it('tags matching issue with acknowledged metadata', () => {
+    const result = tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      [matchingIssue],
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result.length, 1);
+    assert.equal(result[0].acknowledged, true);
+    assert.equal(result[0].ackReason, 'EN/JA structure difference');
+    assert.equal(result[0].ackOwner, 'rymetry');
+    assert.equal(result[0].ackReviewAfter, '2099-01-01');
+    assert.equal(result[0].ackExpired, false);
+    assert.ok(!('ackExpiryReason' in result[0]));
+  });
+
+  it('does not modify unmatched issues (no acknowledged field)', () => {
+    const result = tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      [unmatchedIssue],
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result.length, 1);
+    assert.ok(!('acknowledged' in result[0]));
+  });
+
+  it('tags expired acknowledgement with ackExpired=true and ackExpiryReason', () => {
+    const result = tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      [matchingIssue],
+      [ackEntry],
+      FP_OTHER,
+      '2026-04-06',
+    );
+    assert.equal(result[0].ackExpired, true);
+    assert.equal(result[0].ackExpiryReason, 'fingerprint-changed');
+  });
+
+  it('preserves all original issue fields', () => {
+    const issue = { type: 'paragraph-count-mismatch', detail: 'セクション #1 has 3 vs 2', extra: 42 };
+    const result = tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      [issue],
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result[0].type, 'paragraph-count-mismatch');
+    assert.equal(result[0].detail, 'セクション #1 has 3 vs 2');
+    assert.equal(result[0].extra, 42);
+  });
+
+  it('returns empty array for empty issues', () => {
+    const result = tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      [],
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.deepEqual(result, []);
+  });
+
+  it('returns original issues when entries empty (no acknowledged field)', () => {
+    const result = tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      [matchingIssue],
+      [],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(result.length, 1);
+    assert.ok(!('acknowledged' in result[0]));
+  });
+
+  it('does not mutate original issues array', () => {
+    const originalIssues = [matchingIssue];
+    const originalRef = originalIssues[0];
+    tagIssuesWithAcknowledgements(
+      'overview/testim-overview',
+      originalIssues,
+      [ackEntry],
+      FP,
+      '2026-04-06',
+    );
+    assert.equal(originalIssues[0], originalRef);
+    assert.ok(!('acknowledged' in originalRef));
   });
 });

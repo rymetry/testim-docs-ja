@@ -102,3 +102,102 @@ export function validateAcknowledgements(parsed) {
 
   return parsed;
 }
+
+/**
+ * Check whether an acknowledgement entry has expired.
+ *
+ * Expiration is checked in priority order:
+ * 1. No snapshot available (`currentSnapshotFingerprint === null`)
+ * 2. Source content changed (`entry.sourceFingerprint !== currentSnapshotFingerprint`)
+ * 3. Review date has passed (`today > entry.reviewAfter`, reviewAfter is inclusive)
+ *
+ * @param {{ sourceFingerprint: string, reviewAfter: string }} entry
+ * @param {string | null} currentSnapshotFingerprint
+ * @param {string} today — "YYYY-MM-DD"
+ * @returns {{ expired: false } | { expired: true, reason: string }}
+ */
+export function isAcknowledgementExpired(entry, currentSnapshotFingerprint, today) {
+  if (currentSnapshotFingerprint === null) {
+    return { expired: true, reason: 'no-snapshot' };
+  }
+  if (entry.sourceFingerprint !== currentSnapshotFingerprint) {
+    return { expired: true, reason: 'fingerprint-changed' };
+  }
+  if (today.slice(0, 10) > entry.reviewAfter.slice(0, 10)) {
+    return { expired: true, reason: 'review-date-passed' };
+  }
+  return { expired: false };
+}
+
+/**
+ * Find an acknowledgement entry that matches a specific issue for a given slug.
+ * Returns the first matching entry, or null if none match.
+ *
+ * Match criteria (all must pass):
+ * 1. `entry.slug === slug`
+ * 2. `entry.issueType === issue.type`
+ * 3. If `entry.detailIncludes`: detail must include the string
+ * 4. If `entry.detailRegex`: detail must match the regex
+ *
+ * @param {string} slug
+ * @param {{ type: string, detail?: string, text?: string }} issue
+ * @param {Array<object>} entries
+ * @param {string | null} currentSnapshotFingerprint
+ * @param {string} today — "YYYY-MM-DD"
+ * @returns {{ entry: object, expired: boolean, expiryReason: string | null } | null}
+ */
+export function findMatchingAcknowledgement(slug, issue, entries, currentSnapshotFingerprint, today) {
+  const detail = issue.detail || issue.text || '';
+
+  for (const entry of entries) {
+    if (entry.slug !== slug) continue;
+    if (entry.issueType !== issue.type) continue;
+    if (entry.detailIncludes && !detail.includes(entry.detailIncludes)) continue;
+    if (entry.detailRegex && !new RegExp(entry.detailRegex).test(detail)) continue;
+
+    const expiry = isAcknowledgementExpired(entry, currentSnapshotFingerprint, today);
+    return {
+      entry,
+      expired: expiry.expired,
+      expiryReason: expiry.expired ? expiry.reason : null,
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Tag issues with acknowledgement metadata. Does NOT filter — all issues are returned.
+ * Matched issues receive additional `ack*` fields. Unmatched issues are returned unchanged.
+ * Creates a new array (immutable — does not mutate inputs).
+ *
+ * @param {string} slug
+ * @param {Array<object>} issues
+ * @param {Array<object>} entries
+ * @param {string | null} currentSnapshotFingerprint
+ * @param {string} today — "YYYY-MM-DD"
+ * @returns {Array<object>}
+ */
+export function tagIssuesWithAcknowledgements(slug, issues, entries, currentSnapshotFingerprint, today) {
+  return issues.map((issue) => {
+    const match = findMatchingAcknowledgement(slug, issue, entries, currentSnapshotFingerprint, today);
+    if (match === null) {
+      return issue;
+    }
+
+    const tagged = {
+      ...issue,
+      acknowledged: true,
+      ackReason: match.entry.reason,
+      ackOwner: match.entry.owner,
+      ackReviewAfter: match.entry.reviewAfter,
+      ackExpired: match.expired,
+    };
+
+    if (match.expired) {
+      tagged.ackExpiryReason = match.expiryReason;
+    }
+
+    return tagged;
+  });
+}
