@@ -523,10 +523,18 @@ export function dropInvariantToken(md, nth = 0) {
     /--[\w-]+/g,
   ];
   const skipKinds = new Set(['frontmatter', 'code', 'code-fence', 'blank', 'image']);
+  // Pipe-table separator rows like `| :--- | :---: |` look like CLI flag
+  // candidates to the `--[\w-]+` pattern, but stripping the dashes breaks
+  // the table separator regex used by the JA segment extractor and
+  // re-classifies the header row as a body row, producing a cascade of
+  // spurious table-cell segments. Skip those rows so token-drop stays
+  // a true diff=1 mutation.
+  const TABLE_SEPARATOR_LINE_RE = /^\s*\|\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)*\|\s*$/;
   const classified = classifyLines(md);
   const rawCandidates = [];
   for (const line of classified) {
     if (skipKinds.has(line.kind)) continue;
+    if (TABLE_SEPARATOR_LINE_RE.test(line.text)) continue;
     for (const pattern of tokenPatterns) {
       pattern.lastIndex = 0;
       let match;

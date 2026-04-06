@@ -346,6 +346,7 @@ npm run docs:report-categories
 | `lib/source_parity_segments_shared.mjs`  | canonical segment 型・正規化・fingerprint（Phase 4）                          |
 | `lib/source_parity_segments_en.mjs`      | EN HTML 直接 canonical segment extractor（Phase 4, turndown 非依存）          |
 | `lib/source_parity_segments_ja.mjs`      | JA markdown canonical segment extractor（Phase 4）                            |
+| `lib/source_parity_align.mjs`            | section-anchored exact diff engine（Phase 5、segment-missing/extra/...）      |
 | `lib/source_sync_health.mjs`             | source-sync freshness state（Phase 1）                                        |
 | `lib/mutation_corpus.mjs`                | diff=1 mutation 生成（Phase 0、Phase 5 recall 測定用）                        |
 | `lib/detection_reports.mjs`              | summary / issue body / audit manifest 生成                                    |
@@ -360,7 +361,43 @@ npm run docs:report-categories
 - **共通**: `source_parity_segments_shared.mjs` — `Segment` 型、`normalizeSegmentText`, `computeSegmentFingerprint`, `pushHeading` / `buildSectionPath`, `createSegment` factory。
 - **境界安定性ベンチマーク**: `__tests__/source_parity_segments_boundary.test.mjs` が Phase 0 manifest の 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。結果は `__tests__/fixtures/source-parity-goldens/segment-boundary-report.json` に書き出される（レビュー時に参照可）。
 
-Phase 5 で exact diff engine を組む際、この 3 ファイルを入力として section anchor + local alignment を実装する。
+##### Phase 5: exact diff engine + Go/No-Go gate
+
+`source_parity_align.mjs` は Issue #225 Phase 5 で導入された section-anchored exact diff engine。Phase 4 の canonical segments を入力として、EN / JA を最小単位で比較し、5 種の diff issue type を出力する。
+
+- **入力**: `extractSegmentsFromHtml(en)` と `extractSegmentsFromMarkdown(ja)` の出力 (gate-eligible kinds + heading)
+- **出力**: `{ diffs, sectionsAligned, inconclusive, inconclusiveReason }`
+
+**アルゴリズム**:
+
+1. EN/JA を `heading` 単位で section に分割する（最初は preface = 見出し前の本文）
+2. heading 数が一致しない場合は `inconclusive: true` を返してフォールバックさせる
+3. section ペアごとに `segmentKind` 上で classic LCS を実行（O(n×m)、section あたり通常 100 segment 未満なので sub-millisecond）
+4. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
+5. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
+
+**section anchor の仕組み**: heading カウントは Phase 4 の境界ベンチマークで EN/JA 一致が保証されているので、section index は positional で揃う。その結果、1 つの mutation が他の section にカスケードしない。
+
+**gate issue type と severity**:
+
+| type | severity | acknowledgement |
+| ---- | -------- | --------------- |
+| `segment-missing` | actionable | non-acknowledgeable |
+| `segment-extra` | actionable | acknowledgeable（翻訳側の意図的拡張がありうる） |
+| `segment-untranslated` | actionable | non-acknowledgeable |
+| `segment-token-gap` | actionable | non-acknowledgeable |
+
+**Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が Phase 0 manifest の 10 ページに対し、`mutation_corpus` の 9 種の diff=1 mutation を全部適用し、検出率を測る。検出ロジックは「mutation の影響を受けた section index で baseline / mutated の diff 集合が変化したか」を見る section-scoped fingerprint 同一性比較。結果は `__tests__/fixtures/source-parity-goldens/recall-report.json` に書き出される。
+
+**Go/No-Go の判定基準** と **Phase 5 の現状**:
+
+| Go 条件 | 閾値 | 現状 |
+| ------- | ---- | ---- |
+| diff=1 mutation の recall | 100% | **9/9 mutation type で 100%（全 strict + segment-move 含む）** |
+| cascade（単一 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
+| precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 38 |
+
+> Phase 5 PoC は **Go**。次は Phase 6（shadow mode）で旧 parity engine と並走させ、本番出力との差分を精査する。
 
 ---
 
@@ -395,6 +432,8 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
 | `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |
 | `__tests__/source_parity_segments_boundary.test.mjs` | Phase 4 境界安定性ベンチマーク          |
+| `__tests__/source_parity_align.test.mjs`             | lib/source_parity_align.mjs             |
+| `__tests__/source_parity_recall.test.mjs`            | Phase 5 diff=1 recall ベンチマーク      |
 
 ---
 

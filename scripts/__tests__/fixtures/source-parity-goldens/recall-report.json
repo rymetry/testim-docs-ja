@@ -1,0 +1,786 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "recallByType": {
+      "paragraph-delete": {
+        "applicable": 10,
+        "detected": 10,
+        "recall": 1
+      },
+      "bullet-delete": {
+        "applicable": 9,
+        "detected": 9,
+        "recall": 1
+      },
+      "step-delete": {
+        "applicable": 8,
+        "detected": 8,
+        "recall": 1
+      },
+      "callout-paragraph-delete": {
+        "applicable": 7,
+        "detected": 7,
+        "recall": 1
+      },
+      "table-cell-delete": {
+        "applicable": 3,
+        "detected": 3,
+        "recall": 1
+      },
+      "html-table-cell-delete": {
+        "applicable": 2,
+        "detected": 2,
+        "recall": 1
+      },
+      "segment-move": {
+        "applicable": 8,
+        "detected": 8,
+        "recall": 1
+      },
+      "en-residual": {
+        "applicable": 10,
+        "detected": 10,
+        "recall": 1
+      },
+      "token-drop": {
+        "applicable": 6,
+        "detected": 6,
+        "recall": 1
+      }
+    },
+    "maxCascade": 2,
+    "maxBaselineDiffsPerPage": 38,
+    "strictRecallTypes": [
+      "paragraph-delete",
+      "bullet-delete",
+      "step-delete",
+      "callout-paragraph-delete",
+      "table-cell-delete",
+      "html-table-cell-delete",
+      "en-residual",
+      "token-drop"
+    ],
+    "cascadeLimit": 6,
+    "precisionBaselineLimit": 60
+  },
+  "pages": [
+    {
+      "slug": "running-tests/the-command-line-cli",
+      "baselineDiffCount": 30,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 29,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 39,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 31,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 3,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 31,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 4,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 30,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 3,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 30,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 30,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 30,
+          "mutatedDiffCount": 31,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        }
+      }
+    },
+    {
+      "slug": "recording-tests/how-to-record-a-test",
+      "baselineDiffCount": 4,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 6,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        }
+      }
+    },
+    {
+      "slug": "advanced-editing/coding-assistant",
+      "baselineDiffCount": 16,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 16,
+          "mutatedDiffCount": 17,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 16,
+          "mutatedDiffCount": 17,
+          "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 16,
+          "mutatedDiffCount": 17,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 16,
+          "mutatedDiffCount": 16,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 16,
+          "mutatedDiffCount": 17,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": false
+        }
+      }
+    },
+    {
+      "slug": "advanced-editing/loops",
+      "baselineDiffCount": 20,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 19,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 21,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 21,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 21,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 21,
+          "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 20,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": true,
+          "affectedSectionIndex": 4,
+          "baselineDiffCount": 20,
+          "mutatedDiffCount": 21,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        }
+      }
+    },
+    {
+      "slug": "settings/cli-prerequisites",
+      "baselineDiffCount": 0,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": false
+        },
+        "table-cell-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        }
+      }
+    },
+    {
+      "slug": "running-tests/running-tests-overview",
+      "baselineDiffCount": 1,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 0,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 4,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 4,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        }
+      }
+    },
+    {
+      "slug": "test-management/shared-configuration",
+      "baselineDiffCount": 4,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 3,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 3,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 4,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        }
+      }
+    },
+    {
+      "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
+      "baselineDiffCount": 3,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 4,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 4,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 3,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 3,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": false
+        }
+      }
+    },
+    {
+      "slug": "editing-tests/steps",
+      "baselineDiffCount": 38,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 38,
+          "mutatedDiffCount": 37,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 38,
+          "mutatedDiffCount": 39,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 2,
+          "baselineDiffCount": 38,
+          "mutatedDiffCount": 38,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 38,
+          "mutatedDiffCount": 38,
+          "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 38,
+          "mutatedDiffCount": 38,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": false
+        }
+      }
+    },
+    {
+      "slug": "debugging-tests/debugging-controls",
+      "baselineDiffCount": 1,
+      "baselineInconclusive": false,
+      "mutations": {
+        "paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 0,
+          "cascadeSize": 0,
+          "detected": true,
+          "inconclusive": false
+        },
+        "bullet-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "step-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 2,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "callout-paragraph-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 2,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "table-cell-delete": {
+          "applicable": false
+        },
+        "html-table-cell-delete": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "segment-move": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "en-residual": {
+          "applicable": true,
+          "affectedSectionIndex": 0,
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "token-drop": {
+          "applicable": false
+        }
+      }
+    }
+  ]
+}
