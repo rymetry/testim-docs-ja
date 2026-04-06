@@ -20,6 +20,11 @@ import {
   localCheck,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
+import {
+  computeSnapshotFingerprint,
+  validateAcknowledgements,
+  tagIssuesWithAcknowledgements,
+} from './lib/source_parity_acknowledgements.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
@@ -30,10 +35,7 @@ const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
-const ALLOWLIST_PATH = path.join(ROOT_DIR, 'parity-allowlist.json');
-
-// Signal-only issue types that can be suppressed by the allowlist
-const ALLOWABLE_SEVERITIES = new Set(['signal']);
+const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json');
 
 /**
  * Load freshness state from source-sync-status.json.
@@ -84,74 +86,13 @@ export function parseArgs(argv = process.argv.slice(2)) {
 }
 
 /**
- * Load and validate allowlist from parity-allowlist.json.
- * Returns the parsed object (slug → array of rules).
- * Throws if any rule targets a non-signal issue type.
+ * Load and validate acknowledgements from parity-acknowledgements.json.
+ * Returns { schemaVersion, entries } or empty structure if file missing.
  */
-export function loadAllowlist(filePath = ALLOWLIST_PATH) {
-  if (!fs.existsSync(filePath)) return {};
+function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
+  if (!fs.existsSync(filePath)) return { schemaVersion: 1, entries: [] };
   const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-
-  for (const [slug, rules] of Object.entries(raw)) {
-    for (const rule of rules) {
-      const severity = ISSUE_SEVERITY[rule.type];
-      if (!severity) {
-        throw new Error(
-          `Allowlist error: "${slug}" rule targets unknown issue type "${rule.type}".`
-        );
-      }
-      if (!ALLOWABLE_SEVERITIES.has(severity)) {
-        throw new Error(
-          `Allowlist error: "${slug}" rule targets "${rule.type}" (severity: ${severity}). Only signal-severity issues can be suppressed.`
-        );
-      }
-      if (!rule.detailIncludes && !rule.detailRegex) {
-        throw new Error(
-          `Allowlist error: "${slug}" rule for "${rule.type}" must specify detailIncludes or detailRegex. Slug + type only suppression is not allowed.`
-        );
-      }
-      if (rule.detailRegex) {
-        try {
-          new RegExp(rule.detailRegex);
-        } catch {
-          throw new Error(
-            `Allowlist error: "${slug}" rule for "${rule.type}" has invalid detailRegex: "${rule.detailRegex}".`
-          );
-        }
-      }
-    }
-  }
-
-  return raw;
-}
-
-/**
- * Check if an issue matches an allowlist rule.
- */
-export function isAllowlisted(slug, issue, allowlist) {
-  const rules = allowlist[slug];
-  if (!rules) return false;
-
-  const severity = issue.severity || ISSUE_SEVERITY[issue.type];
-  if (!ALLOWABLE_SEVERITIES.has(severity)) return false;
-
-  return rules.some((rule) => {
-    if (rule.type !== issue.type) return false;
-    // Require at least detailIncludes or detailRegex — slug + type only is too coarse
-    if (!rule.detailIncludes && !rule.detailRegex) return false;
-    const detail = issue.detail || issue.text || '';
-    if (rule.detailIncludes && !detail.includes(rule.detailIncludes)) return false;
-    if (rule.detailRegex && !new RegExp(rule.detailRegex).test(detail)) return false;
-    return true;
-  });
-}
-
-/**
- * Filter issues through the allowlist, removing matched signal issues.
- */
-export function applyAllowlist(slug, issues, allowlist) {
-  if (!allowlist || Object.keys(allowlist).length === 0) return issues;
-  return issues.filter((issue) => !isAllowlisted(slug, issue, allowlist));
+  return validateAcknowledgements(raw);
 }
 
 export async function checkSourceParity({
@@ -166,13 +107,14 @@ export async function checkSourceParity({
   const snapshotSlugs = collectSnapshotSlugs(SNAPSHOTS_DIR);
   const allFiles = findMdFiles(DOCS_DIR);
 
-  let allowlist = {};
+  let ackData = { schemaVersion: 1, entries: [] };
   try {
-    allowlist = loadAllowlist();
+    ackData = loadAcknowledgementsFile();
   } catch (error) {
     console.error(`❌ ${error.message}`);
     return 1;
   }
+  const today = new Date().toISOString().slice(0, 10);
 
   // Resolve --slug to path-based slug (supports both basename and path-based input)
   const resolvedSlug = slug ? resolveSlug(slug) : null;
@@ -216,8 +158,12 @@ export async function checkSourceParity({
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
     const snapshotPath = path.join(SNAPSHOTS_DIR, fileSlug + '.html');
+    let snapshotFingerprint = null;
+
     if (fs.existsSync(snapshotPath)) {
       const rawEnHtml = fs.readFileSync(snapshotPath, 'utf8');
+      snapshotFingerprint = computeSnapshotFingerprint(rawEnHtml);
+
       let enBody;
       let enHtml;
       try {
@@ -251,8 +197,14 @@ export async function checkSourceParity({
       }
     }
 
-    // Apply allowlist filtering
-    issues = applyAllowlist(fileSlug, issues, allowlist);
+    // Tag with acknowledgements (replaces applyAllowlist)
+    issues = tagIssuesWithAcknowledgements(
+      fileSlug,
+      issues,
+      ackData.entries,
+      snapshotFingerprint,
+      today,
+    );
 
     if (issues.length === 0) {
       continue;
@@ -296,14 +248,12 @@ export async function checkSourceParity({
       freshnessState,
     });
 
-    const filteredCoverageIssues = applyAllowlist('_page-coverage-gate', coverageIssues, allowlist);
-
-    if (filteredCoverageIssues.length > 0) {
+    if (coverageIssues.length > 0) {
       results.push({
         file: '_page-coverage-gate',
         sourceUrl: '',
         category: '',
-        issues: filteredCoverageIssues,
+        issues: coverageIssues,
       });
     }
   }
