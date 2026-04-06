@@ -671,3 +671,73 @@ describe('summarizeParityResults — acknowledgement counting', () => {
     assert.equal(summary.activeErrorFiles, 1);
   });
 });
+
+// ---------------------------------------------------------------------------
+// summarizeParityResults — baseline accounting (Phase 6A PR1)
+// ---------------------------------------------------------------------------
+
+describe('summarizeParityResults — baseline accounting', () => {
+  it('counts baselined issues separately', () => {
+    const results = [
+      {
+        file: 'a.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', baselined: true, detail: 'x' },
+          { type: 'segment-extra', severity: 'actionable', phase: 'segment-shadow', baselined: true, detail: 'y' },
+          { type: 'segment-token-gap', severity: 'actionable', phase: 'segment-shadow', detail: 'z' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.baselinedIssues, 2);
+    assert.equal(summary.baselinedFiles, 1);
+    assert.deepEqual(summary.baselinedByType, {
+      'segment-missing': 1,
+      'segment-extra': 1,
+    });
+  });
+
+  it('counts baselined inconclusive entries by category', () => {
+    const results = [
+      {
+        file: 'a.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          {
+            type: 'segment-inconclusive',
+            severity: 'actionable',
+            phase: 'segment-shadow',
+            baselined: true,
+            inconclusiveCategory: 'heading-count-mismatch',
+            detail: 'inc',
+          },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.deepEqual(summary.baselinedByInconclusiveCategory, {
+      'heading-count-mismatch': 1,
+    });
+  });
+
+  it('reports baselinedFiles=0 when no baseline tags are present', () => {
+    const results = [
+      {
+        file: 'a.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', detail: 'x' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.baselinedIssues, 0);
+    assert.equal(summary.baselinedFiles, 0);
+    assert.deepEqual(summary.baselinedByType, {});
+    assert.deepEqual(summary.baselinedByInconclusiveCategory, {});
+  });
+});

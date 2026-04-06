@@ -29,6 +29,10 @@ import {
   validateAcknowledgements,
   tagIssuesWithAcknowledgements,
 } from './lib/source_parity_acknowledgements.mjs';
+import {
+  loadBaselineFile,
+  tagIssuesWithBaseline,
+} from './lib/source_parity_baseline.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
@@ -40,6 +44,8 @@ const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
 const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json');
+
+const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 
 function buildSegmentInconclusiveIssue(reason) {
   return {
@@ -108,6 +114,17 @@ function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
   return validateAcknowledgements(raw);
 }
 
+/**
+ * Load and validate parity-baseline.json (Phase 6A).
+ * Returns { schemaVersion, entries } or empty structure if file missing.
+ */
+function loadBaselineFileSafe(filePath = BASELINE_PATH) {
+  if (!fs.existsSync(filePath)) {
+    return { schemaVersion: 1, entries: [] };
+  }
+  return loadBaselineFile(filePath);
+}
+
 export async function checkSourceParity({
   json = false,
   section = null,
@@ -130,6 +147,16 @@ export async function checkSourceParity({
   // Ack expiry uses UTC "today" intentionally so CI runs are timezone-independent
   // and match reviewAfter values (also stored as plain YYYY-MM-DD / UTC dates).
   const today = new Date().toISOString().slice(0, 10);
+
+  // Phase 6A — frozen baseline. Independent from acknowledgements.
+  let baselineData = { schemaVersion: 1, entries: [] };
+  try {
+    baselineData = loadBaselineFileSafe();
+  } catch (error) {
+    console.error(`❌ ${error.message}`);
+    return 1;
+  }
+  const baselineInvalidatedSlugs = new Set();
 
   // Resolve --slug to path-based slug (supports both basename and path-based input)
   const resolvedSlug = slug ? resolveSlug(slug) : null;
@@ -265,6 +292,24 @@ export async function checkSourceParity({
       today,
     );
 
+    // Phase 6A PR1 — tag with baseline. Shadow phase tagging stays in place,
+    // so baseline-flagged issues are still excluded from the active gate
+    // by the shadow accounting in summarizeParityResults. The `baselined`
+    // metadata is recorded in parity-check-status.json so PR2 can flip the
+    // gate without changing baseline machinery.
+    {
+      const baselineResult = tagIssuesWithBaseline(
+        fileSlug,
+        issues,
+        baselineData.entries,
+        snapshotFingerprint,
+      );
+      issues = baselineResult.tagged;
+      if (baselineResult.invalidated) {
+        baselineInvalidatedSlugs.add(fileSlug);
+      }
+    }
+
     if (issues.length === 0) {
       continue;
     }
@@ -353,6 +398,7 @@ export async function checkSourceParity({
     totalFiles: allFiles.length,
     checkedFiles: checkedCount,
     ...summarizeParityResults(results),
+    baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
   };
 
   const payload = {
@@ -386,6 +432,29 @@ export async function checkSourceParity({
       );
       for (const [type, count] of Object.entries(summary.shadowIssuesByType ?? {})) {
         console.log(`  ${type}: ${count} 件`);
+      }
+    }
+    if ((summary.baselinedIssues || 0) > 0) {
+      console.log(
+        `\n[Phase 6A baseline] frozen drift (gate から除外): ${summary.baselinedIssues} 件 / ${summary.baselinedFiles} ファイル`,
+      );
+      for (const [type, count] of Object.entries(summary.baselinedByType ?? {})) {
+        console.log(`  ${type}: ${count} 件`);
+      }
+      const incCats = summary.baselinedByInconclusiveCategory ?? {};
+      if (Object.keys(incCats).length > 0) {
+        console.log('  inconclusiveCategory 別:');
+        for (const [cat, count] of Object.entries(incCats)) {
+          console.log(`    ${cat}: ${count} 件`);
+        }
+      }
+    }
+    if (summary.baselineInvalidatedSlugs && summary.baselineInvalidatedSlugs.length > 0) {
+      console.log(
+        `\n[Phase 6A baseline] invalidated slugs (snapshot 変更で baseline 失効): ${summary.baselineInvalidatedSlugs.length}`,
+      );
+      for (const slug of summary.baselineInvalidatedSlugs) {
+        console.log(`  ${slug}`);
       }
     }
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
