@@ -663,6 +663,69 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     assert.equal(bodies.length, 1);
     assert.equal(bodies[0].textNorm, 'trailing callout text.');
   });
+
+  it('preserves text surrounding a condensed <details> block on the same line', () => {
+    // Regression: the single-line details handler used to `continue` after
+    // processing any token, dropping plain text before or after the block.
+    // EN's walkBlockContainer emits such text as paragraph segments.
+    const md = [
+      '## S',
+      '',
+      'Lead <details><summary>Condensed?</summary></details> tail',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 1);
+    const paragraphs = byKind(segments, 'paragraph');
+    // Expect "Lead" and "tail" emitted as separate paragraph spans around
+    // the condensed details block (EN parses "Lead" and "tail" as text
+    // nodes adjacent to the block-level <details>).
+    assert.equal(paragraphs.length, 2);
+    assert.deepEqual(
+      paragraphs.map((p) => p.textNorm),
+      ['lead', 'tail'],
+    );
+  });
+
+  it('preserves surrounding text inside a :::note as callout-body (not paragraph)', () => {
+    // Same pattern but inside a callout — surrounding text must stay
+    // classified as callout-body because paragraphKind is 'callout-body'
+    // when the text is emitted (paragraphKind only flips to 'paragraph'
+    // between the details-open and details-close boundary).
+    const md = [
+      '## S',
+      '',
+      ':::note',
+      'Lead <details><summary>Q</summary></details> tail',
+      ':::',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 1);
+    const bodies = byKind(segments, 'callout-body');
+    assert.equal(bodies.length, 2);
+    assert.deepEqual(
+      bodies.map((b) => b.textNorm),
+      ['lead', 'tail'],
+    );
+    assert.equal(byKind(segments, 'paragraph').length, 0);
+  });
+
+  it('handles multiple condensed <details> blocks on a single line', () => {
+    const md = [
+      '## S',
+      '',
+      'A <details><summary>Q1</summary></details> B <details><summary>Q2</summary></details> C',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 2);
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.deepEqual(
+      paragraphs.map((p) => p.textNorm),
+      ['a', 'b', 'c'],
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------

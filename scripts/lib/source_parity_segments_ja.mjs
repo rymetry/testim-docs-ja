@@ -15,9 +15,9 @@ const FENCE_RE = /^(`{3,}|~{3,})/;
 const HEADING_RE = /^(#{1,6})\s+(.+?)\s*$/;
 const CALLOUT_OPEN_RE = /^:::(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$/;
 const CALLOUT_CLOSE_RE = /^:::\s*$/;
-const DETAILS_OPEN_ANYWHERE_RE = /<details\b/gi;
-const DETAILS_CLOSE_ANYWHERE_RE = /<\/details\s*>/gi;
-const SUMMARY_ALL_RE = /<summary\b[^>]*>([\s\S]*?)<\/summary>/gi;
+const DETAILS_TOKEN_RE = /<\/?details\b|<summary\b/i;
+const DETAILS_EVENT_RE =
+  /(<details\b[^>]*>)|(<summary\b[^>]*>([\s\S]*?)<\/summary>)|(<\/details\s*>)/gi;
 const IMAGE_RE = /^(?:!\[[^\]]*\]\([^)]+\)|<Image\b|<img\b)/i;
 const UNORDERED_RE = /^(\s*)[-*+]\s+(.+)$/;
 const ORDERED_RE = /^(\s*)\d+\.\s+(.+)$/;
@@ -53,6 +53,48 @@ function splitTableCells(line) {
   }
   cells.push(current.trim());
   return cells;
+}
+
+/**
+ * @typedef {{type:'text', value:string}
+ *          | {type:'details-open'}
+ *          | {type:'summary', inner:string}
+ *          | {type:'details-close'}} DetailsLineEvent
+ */
+
+/**
+ * Tokenize a markdown line into an ordered sequence of events so that
+ * `<details>` / `<summary>` / `</details>` tokens and their surrounding
+ * plain text can be processed left-to-right. This lets condensed one-liners
+ * like `Lead <details><summary>Q</summary></details> tail` emit both the
+ * surrounding paragraph text and the details-summary segment in the
+ * correct order, matching the EN walker.
+ *
+ * @param {string} line
+ * @returns {DetailsLineEvent[]}
+ */
+function tokenizeDetailsLine(line) {
+  /** @type {DetailsLineEvent[]} */
+  const events = [];
+  let cursor = 0;
+  for (const match of line.matchAll(DETAILS_EVENT_RE)) {
+    const start = match.index ?? 0;
+    if (start > cursor) {
+      events.push({ type: 'text', value: line.slice(cursor, start) });
+    }
+    if (match[1] !== undefined) {
+      events.push({ type: 'details-open' });
+    } else if (match[2] !== undefined) {
+      events.push({ type: 'summary', inner: match[3] ?? '' });
+    } else if (match[4] !== undefined) {
+      events.push({ type: 'details-close' });
+    }
+    cursor = start + match[0].length;
+  }
+  if (cursor < line.length) {
+    events.push({ type: 'text', value: line.slice(cursor) });
+  }
+  return events;
 }
 
 /**
@@ -269,38 +311,49 @@ export function extractSegmentsFromMarkdown(body) {
       // Unterminated — fall through to normal paragraph handling
     }
 
-    // <details> open/close and <summary> are handled independently on the
-    // same line so condensed one-liners like
-    //   <details><summary>Q</summary></details>
-    // still produce a details-summary segment and keep the depth stack
-    // balanced. paragraphKind is saved/restored across each <details>
-    // boundary so a details block inside a :::note does not leak
-    // 'callout-body' into the inner paragraphs.
-    const detailsOpenCount = (trimmed.match(DETAILS_OPEN_ANYWHERE_RE) || []).length;
-    const detailsCloseCount = (trimmed.match(DETAILS_CLOSE_ANYWHERE_RE) || []).length;
-    const summaryMatches = [...line.matchAll(SUMMARY_ALL_RE)];
-    if (detailsOpenCount > 0 || detailsCloseCount > 0 || summaryMatches.length > 0) {
+    // <details> / <summary> / </details> tokens on this line are handled
+    // left-to-right so condensed one-liners like
+    //   Lead <details><summary>Q</summary></details> tail
+    // emit the surrounding plain text as paragraph (or callout-body inside
+    // a callout) while the depth stack is pushed and popped in order and
+    // the summary is extracted. paragraphKind is saved/restored across
+    // each <details> boundary so a details block inside a :::note does
+    // not leak 'callout-body' into the inner paragraphs.
+    if (DETAILS_TOKEN_RE.test(line)) {
       flushParagraph();
-      for (let k = 0; k < detailsOpenCount; k += 1) {
-        detailsKindStack.push(paragraphKind);
-        paragraphKind = 'paragraph';
-        detailsDepth += 1;
-      }
-      if (summaryMatches.length > 0) {
-        const path = buildSectionPath(headingStack);
-        for (const match of summaryMatches) {
-          // Preserve link/code invariant tokens via markdown conversion so
-          // the same tokens are captured on both EN and JA sides.
-          const summaryText = htmlInlineToMarkdownText(match[1]);
-          if (summaryText.length > 0) {
-            emitter.emit(path, 'details-summary', summaryText, lineNo);
+      const events = tokenizeDetailsLine(line);
+      const pathAtLine = buildSectionPath(headingStack);
+      for (const ev of events) {
+        if (ev.type === 'text') {
+          const textSpan = ev.value.trim();
+          if (textSpan.length > 0) {
+            // Emit as the CURRENT paragraphKind so text between <details>
+            // boundaries (if present) is classified as plain 'paragraph',
+            // while text outside stays at the caller's kind (e.g.
+            // 'callout-body' inside a :::note).
+            emitter.emit(buildSectionPath(headingStack), paragraphKind, textSpan, lineNo);
           }
+          continue;
         }
-      }
-      for (let k = 0; k < detailsCloseCount; k += 1) {
-        if (detailsDepth > 0) {
-          detailsDepth -= 1;
-          paragraphKind = detailsKindStack.pop() ?? 'paragraph';
+        if (ev.type === 'details-open') {
+          detailsKindStack.push(paragraphKind);
+          paragraphKind = 'paragraph';
+          detailsDepth += 1;
+          continue;
+        }
+        if (ev.type === 'summary') {
+          const summaryText = htmlInlineToMarkdownText(ev.inner);
+          if (summaryText.length > 0) {
+            emitter.emit(pathAtLine, 'details-summary', summaryText, lineNo);
+          }
+          continue;
+        }
+        if (ev.type === 'details-close') {
+          if (detailsDepth > 0) {
+            detailsDepth -= 1;
+            paragraphKind = detailsKindStack.pop() ?? 'paragraph';
+          }
+          continue;
         }
       }
       continue;
