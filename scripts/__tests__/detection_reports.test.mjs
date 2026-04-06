@@ -335,6 +335,144 @@ describe('buildActionableReport', () => {
     assert.match(report.snapshotDiff.body, /Sidebar Changes/);
     assert.match(report.snapshotDiff.body, /Pages added: 1/);
   });
+
+  it('does NOT open a parity issue when all issues are validly acknowledged', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        activeErrorFiles: 0,
+        acknowledgedIssues: 1,
+        issuesByType: { 'paragraph-count-mismatch': 1 },
+        issuesBySeverity: { signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'セクション #1 "Overview": 段落数 EN=4, JA=2',
+              acknowledged: true,
+              ackExpired: false,
+              ackReason: 'Intentional JA structure difference',
+              ackOwner: 'rymetry',
+              ackReviewAfter: '2026-07-06',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+    assert.equal(report.parityRegression.topEntries.length, 0);
+  });
+
+  it('opens a parity issue when acknowledgement is expired', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 1,
+        activeErrorFiles: 0,
+        expiredAcknowledgements: 1,
+        issuesByType: { 'paragraph-count-mismatch': 1 },
+        issuesBySeverity: { signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'expired case',
+              acknowledged: true,
+              ackExpired: true,
+              ackExpiryReason: 'fingerprint-changed',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+  });
+
+  it('filters acknowledged issues out of top entries but keeps active ones on the same file', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 1,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 1,
+        activeFiles: 1,
+        activeErrorFiles: 0,
+        acknowledgedIssues: 1,
+        issuesByType: { 'image-mismatch': 1, 'paragraph-count-mismatch': 1 },
+        issuesBySeverity: { actionable: 1, signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'image-mismatch',
+              severity: 'actionable',
+              detail: 'EN=3 JA=1',
+            },
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'acked noise',
+              acknowledged: true,
+              ackExpired: false,
+              ackReason: 'noise',
+              ackOwner: 'rymetry',
+              ackReviewAfter: '2026-07-06',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+    assert.match(report.parityRegression.body, /image-mismatch/);
+    assert.doesNotMatch(report.parityRegression.body, /acked noise/);
+  });
 });
 
 describe('assignReviewGroups', () => {

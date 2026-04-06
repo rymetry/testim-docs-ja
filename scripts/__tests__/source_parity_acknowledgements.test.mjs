@@ -149,6 +149,31 @@ describe('validateAcknowledgements', () => {
     );
   });
 
+  it('throws on non-zero-padded reviewAfter (e.g. 2026-7-6)', () => {
+    // Lexicographic comparison breaks for unpadded dates, so reject them outright.
+    const entry = { ...validEntry, reviewAfter: '2026-7-6' };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /reviewAfter.*YYYY-MM-DD/,
+    );
+  });
+
+  it('throws on reviewAfter with extra characters (e.g. 2026-07-06T12:00:00Z)', () => {
+    const entry = { ...validEntry, reviewAfter: '2026-07-06T12:00:00Z' };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /reviewAfter.*YYYY-MM-DD/,
+    );
+  });
+
+  it('throws on unknown issueType (typo detection)', () => {
+    const entry = { ...validEntry, issueType: 'paragraph-count-missmatch' };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /unknown issueType/,
+    );
+  });
+
   it('throws on missing slug', () => {
     const { slug: _removed, ...entry } = validEntry;
     assert.throws(

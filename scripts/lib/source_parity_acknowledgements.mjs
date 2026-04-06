@@ -10,6 +10,15 @@
 
 import { createHash } from 'node:crypto';
 
+import { ISSUE_SEVERITY } from './source_parity_types.mjs';
+
+/**
+ * Strict YYYY-MM-DD date format. Required for safe lexicographic comparison
+ * in `isAcknowledgementExpired` — unpadded forms like `2026-7-6` would break
+ * that comparison.
+ */
+const REVIEW_AFTER_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 /**
  * Issue types that cannot be acknowledged — they represent hard gaps that
  * must be resolved rather than suppressed.
@@ -79,6 +88,12 @@ export function validateAcknowledgements(parsed) {
       throw new Error(`${prefix}: issueType "${entry.issueType}" cannot be acknowledged`);
     }
 
+    if (!(entry.issueType in ISSUE_SEVERITY)) {
+      throw new Error(
+        `${prefix}: unknown issueType "${entry.issueType}" (not in ISSUE_SEVERITY registry — check for typos)`,
+      );
+    }
+
     if (!entry.detailIncludes && !entry.detailRegex) {
       throw new Error(`${prefix}: must specify "detailIncludes" or "detailRegex"`);
     }
@@ -95,6 +110,11 @@ export function validateAcknowledgements(parsed) {
       throw new Error(`${prefix}: invalid sourceFingerprint format`);
     }
 
+    if (!REVIEW_AFTER_RE.test(entry.reviewAfter)) {
+      throw new Error(
+        `${prefix}: reviewAfter must be strict YYYY-MM-DD format (got "${entry.reviewAfter}")`,
+      );
+    }
     if (Number.isNaN(Date.parse(entry.reviewAfter))) {
       throw new Error(`${prefix}: invalid reviewAfter date: "${entry.reviewAfter}"`);
     }
