@@ -893,10 +893,12 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
  * metadata (`enSegmentIndex`, `jaSegmentIndex`, fingerprints, missingTokens)
  * is forwarded as-is so downstream reports can drill in.
  *
- * Each issue carries `phase: 'segment-shadow'` so the runtime gate can
- * distinguish Phase 5 shadow output from the legacy actionable signals.
- * Phase 6 will flip this to a primary gate. Phase 5's job is only to
- * prove the engine produces correct, verifiable output end-to-end.
+ * Phase 6A cutover (2026-04-06): shadow phase tagging was removed. segment-*
+ * issues now flow through the primary gate accounting in
+ * `summarizeParityResults`. The dual-emit `shadowIssues` / `shadowFiles` /
+ * `shadowIssuesByType` fields in the summary remain at 0 for backward
+ * compat through Phase 7 (reporting 4-family refactor), at which point
+ * they will be removed along with the shadow-tagging code path.
  *
  * @param {ParityDiff[]} diffs
  * @returns {Array<object>}
@@ -909,7 +911,9 @@ export function parityDiffsToIssues(diffs) {
     const issue = {
       type: diff.type,
       severity,
-      phase: 'segment-shadow',
+      // Phase 6A cutover: phase: 'segment-shadow' removed. Issues now
+      // flow through the primary gate accounting. Dual emit of shadow
+      // summary fields is handled in summarizeParityResults.
       detail: `[${sectionLabel}] ${diff.detail}`,
       sectionPath: diff.sectionPath,
       sectionIndex: diff.sectionIndex,

@@ -2,20 +2,24 @@
  * Aggregates per-file parity results into type/severity/acknowledgement
  * summary statistics.
  *
- * Phase 5 shadow issues (`issue.phase === 'segment-shadow'`) are counted
- * separately into `shadowIssues` / `shadowFiles` / `shadowIssuesByType`
- * and are NOT folded into the actionable / signal / activeFiles totals
- * that the runtime gate exit code reads. This is what lets Phase 5 wire
- * `alignSegments` into the runtime end-to-end without immediately
- * flipping ~241 baseline-drifted pages from green to red. Phase 6A PR2
- * will promote shadow issues into the primary gate.
+ * Phase 6A cutover (2026-04-06): `parityDiffsToIssues` no longer tags
+ * segment-* issues with `phase: 'segment-shadow'`. segment-* issues now
+ * flow through the primary actionable/active accounting. Pre-cutover
+ * drift is frozen by `parity-baseline.json` and excluded from active
+ * counts via `isBaselined`.
  *
- * Phase 6A PR1 adds baseline accounting (`baselinedIssues`, `baselinedFiles`,
- * `baselinedByType`, `baselinedByInconclusiveCategory`,
- * `expiredBaselineEntries`) — counted regardless of shadow phase so the same
- * fields work both before and after PR2 cutover. baseline-tagged issues are
- * also excluded from active counts so PR2 can flip the gate by simply
- * removing the shadow phase tag.
+ * The `shadowIssues` / `shadowFiles` / `shadowIssuesByType` fields are
+ * retained as dual-emit zero values for backward compatibility through
+ * Phase 7 (reporting 4-family refactor). At that point the shadow
+ * accounting branch and these fields will be removed together with
+ * `detection_reports.mjs` being rewritten. Callers that programmatically
+ * set `issue.phase = 'segment-shadow'` for historical reasons are still
+ * handled correctly (counted as shadow, excluded from active).
+ *
+ * Baseline accounting (`baselinedIssues` / `baselinedFiles` /
+ * `baselinedByType` / `baselinedByInconclusiveCategory` /
+ * `expiredBaselineEntries`) is the primary mechanism for excluding
+ * known drift from the gate exit code.
  */
 export function summarizeParityResults(results) {
   const issuesByType = {};
@@ -69,11 +73,16 @@ export function summarizeParityResults(results) {
       }
 
       if (isShadow) {
+        // Phase 6A cutover: segment-* issues no longer carry
+        // `phase: 'segment-shadow'`, so this branch is dead under normal
+        // operation. It is retained as a compatibility shim in case a
+        // caller programmatically constructs shadow-tagged issues (e.g.
+        // legacy tests or manual fixtures). Shadow-tagged issues still
+        // bypass active accounting. Phase 7 reporting refactor will
+        // remove this branch along with the dual-emit fields below.
         shadowIssues += 1;
         shadowIssuesByType[issue.type] = (shadowIssuesByType[issue.type] || 0) + 1;
         hasShadow = true;
-        // Shadow issues bypass actionable/signal/active accounting so the
-        // runtime exit code stays unchanged until Phase 6A PR2 cutover.
         continue;
       }
 

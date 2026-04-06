@@ -55,10 +55,12 @@ function buildSegmentInconclusiveIssue(reason, category) {
   return {
     type: 'segment-inconclusive',
     severity: ISSUE_SEVERITY['segment-inconclusive'],
-    phase: 'segment-shadow',
+    // Phase 6A cutover: phase: 'segment-shadow' removed. segment-inconclusive
+    // now flows through the primary gate accounting, with existing drift
+    // frozen via parity-baseline.json (keyed by inconclusiveCategory).
     inconclusiveCategory: category ?? 'align-exception',
     inconclusiveReason: reason,
-    detail: `Phase 5 alignment inconclusive [${category ?? 'align-exception'}]: ${reason}`,
+    detail: `alignment inconclusive [${category ?? 'align-exception'}]: ${reason}`,
   };
 }
 
@@ -426,8 +428,11 @@ export async function checkSourceParity({
   if (!json) {
     console.log(`${'='.repeat(60)}\n📊 チェック結果サマリー\n`);
     console.log(`チェック済み: ${checkedCount} / ${allFiles.length} ファイル`);
-    const ackedFiles = summary.filesWithIssues - summary.activeFiles;
-    console.log(`問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, acknowledged-only: ${ackedFiles})`);
+    const coveredFiles = summary.filesWithIssues - summary.activeFiles;
+    console.log(
+      `問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, ` +
+        `covered by baseline/ack: ${coveredFiles})`,
+    );
     console.log(`actionable: ${summary.actionableFiles} ファイル (active: ${summary.activeActionableFiles})`);
     console.log(`signal-only: ${summary.signalFiles} ファイル`);
     console.log(`errors: ${summary.errorFiles} ファイル`);
