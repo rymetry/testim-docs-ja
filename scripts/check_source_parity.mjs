@@ -55,10 +55,47 @@ function buildSegmentInconclusiveIssue(reason, category) {
   return {
     type: 'segment-inconclusive',
     severity: ISSUE_SEVERITY['segment-inconclusive'],
-    phase: 'segment-shadow',
+    // Phase 6A cutover: phase: 'segment-shadow' removed. segment-inconclusive
+    // now flows through the primary gate accounting, with existing drift
+    // frozen via parity-baseline.json (keyed by inconclusiveCategory).
     inconclusiveCategory: category ?? 'align-exception',
     inconclusiveReason: reason,
-    detail: `Phase 5 alignment inconclusive [${category ?? 'align-exception'}]: ${reason}`,
+    detail: `alignment inconclusive [${category ?? 'align-exception'}]: ${reason}`,
+  };
+}
+
+export function isValidAcknowledgedIssue(issue) {
+  return issue.acknowledged === true && issue.ackExpired !== true;
+}
+
+export function isNonBlockingIssue(issue) {
+  return issue.phase === 'segment-shadow' || issue.baselined === true || isValidAcknowledgedIssue(issue);
+}
+
+export function getConsoleCoverageState(issues) {
+  if (!Array.isArray(issues) || issues.length === 0) {
+    return {
+      allAcked: false,
+      allCovered: false,
+      icon: '❌',
+      suffix: '',
+    };
+  }
+
+  const allAcked = issues.every(
+    (issue) => issue.phase === 'segment-shadow' || isValidAcknowledgedIssue(issue),
+  );
+  const allCovered = issues.every((issue) => isNonBlockingIssue(issue));
+
+  return {
+    allAcked,
+    allCovered,
+    icon: allCovered ? '⏸️' : '❌',
+    suffix: allAcked
+      ? ' (all acknowledged)'
+      : allCovered
+        ? ' (covered by baseline/ack)'
+        : '',
   };
 }
 
@@ -329,9 +366,10 @@ export async function checkSourceParity({
       continue;
     }
 
-    // Hide shadow-only files from the per-file console listing so the
-    // existing CLI output stays focused on actionable / signal / error
-    // issues. Shadow issues remain in the JSON output for verification.
+    // Compatibility shim: keep legacy shadow-only fixtures out of the
+    // human-facing listing. Post-cutover, normal runtime output always has
+    // non-shadow issues and uses baseline/ack coverage to determine whether
+    // the file is blocking.
     const hasNonShadow = issues.some((i) => i.phase !== 'segment-shadow');
 
     results.push({
@@ -342,11 +380,7 @@ export async function checkSourceParity({
     });
 
     if (!json && hasNonShadow) {
-      const allAcked = issues.every(
-        (i) => i.phase === 'segment-shadow' || (i.acknowledged === true && i.ackExpired !== true),
-      );
-      const icon = allAcked ? '⏸️' : '❌';
-      const suffix = allAcked ? ' (all acknowledged)' : '';
+      const { icon, suffix } = getConsoleCoverageState(issues);
       console.log(`${icon} ${doc.relativePath}${suffix}`);
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
@@ -354,14 +388,14 @@ export async function checkSourceParity({
         const artifactNote = issue.artifacts?.length
           ? ` [${issue.artifacts.join('; ')}]`
           : '';
-        const ackTag =
-          issue.acknowledged && !issue.ackExpired
-            ? ' ⏸'
-            : issue.acknowledged && issue.ackExpired
-              ? ' ⚠expired'
-              : '';
+        const tags = [];
+        if (issue.acknowledged && !issue.ackExpired) tags.push('⏸');
+        if (issue.acknowledged && issue.ackExpired) tags.push('⚠expired');
+        if (issue.baselined && issue.baselineExpired) tags.push('🧊expired-baseline');
+        else if (issue.baselined) tags.push('🧊baseline');
+        const issueTag = tags.length > 0 ? ` ${tags.join(' ')}` : '';
         console.log(
-          `   [${issue.type}/${issue.severity}]${location}${ackTag} ${detail}${artifactNote}`,
+          `   [${issue.type}/${issue.severity}]${location}${issueTag} ${detail}${artifactNote}`,
         );
         if (issue.acknowledged && !issue.ackExpired) {
           console.log(
@@ -371,6 +405,12 @@ export async function checkSourceParity({
         if (issue.acknowledged && issue.ackExpired) {
           console.log(
             `     ↳ expired: ${issue.ackExpiryReason} (owner: ${issue.ackOwner})`,
+          );
+        }
+        if (issue.baselined) {
+          const baselineState = issue.baselineExpired ? 'expired' : 'active';
+          console.log(
+            `     ↳ baseline: ${baselineState} (review: ${issue.baselineReviewAfter ?? 'n/a'})`,
           );
         }
       }
@@ -426,8 +466,11 @@ export async function checkSourceParity({
   if (!json) {
     console.log(`${'='.repeat(60)}\n📊 チェック結果サマリー\n`);
     console.log(`チェック済み: ${checkedCount} / ${allFiles.length} ファイル`);
-    const ackedFiles = summary.filesWithIssues - summary.activeFiles;
-    console.log(`問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, acknowledged-only: ${ackedFiles})`);
+    const coveredFiles = summary.filesWithIssues - summary.activeFiles;
+    console.log(
+      `問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, ` +
+        `covered by baseline/ack: ${coveredFiles})`,
+    );
     console.log(`actionable: ${summary.actionableFiles} ファイル (active: ${summary.activeActionableFiles})`);
     console.log(`signal-only: ${summary.signalFiles} ファイル`);
     console.log(`errors: ${summary.errorFiles} ファイル`);

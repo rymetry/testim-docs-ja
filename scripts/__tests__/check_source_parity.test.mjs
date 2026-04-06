@@ -6,9 +6,18 @@ import assert from 'node:assert/strict';
 
 let parseArgs;
 let collectSnapshotSlugs;
+let isValidAcknowledgedIssue;
+let isNonBlockingIssue;
+let getConsoleCoverageState;
 
 before(async () => {
-  ({ parseArgs, collectSnapshotSlugs } = await import('../check_source_parity.mjs'));
+  ({
+    parseArgs,
+    collectSnapshotSlugs,
+    isValidAcknowledgedIssue,
+    isNonBlockingIssue,
+    getConsoleCoverageState,
+  } = await import('../check_source_parity.mjs'));
 });
 
 describe('parseArgs', () => {
@@ -81,5 +90,78 @@ describe('collectSnapshotSlugs', () => {
     } finally {
       fs.rmSync(tmpDir, { recursive: true });
     }
+  });
+});
+
+describe('CLI coverage helpers', () => {
+  it('treats only unexpired acknowledgements as valid acknowledgements', () => {
+    assert.equal(isValidAcknowledgedIssue({ acknowledged: true, ackExpired: false }), true);
+    assert.equal(isValidAcknowledgedIssue({ acknowledged: true, ackExpired: true }), false);
+    assert.equal(isValidAcknowledgedIssue({ acknowledged: false, ackExpired: false }), false);
+  });
+
+  it('treats baseline and valid acknowledgements as non-blocking', () => {
+    assert.equal(isNonBlockingIssue({ baselined: true }), true);
+    assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: false }), true);
+    assert.equal(isNonBlockingIssue({ baselined: true, baselineExpired: true }), true);
+    assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: true }), false);
+    assert.equal(isNonBlockingIssue({ severity: 'actionable' }), false);
+  });
+
+  it('reports all-acknowledged files with the acknowledged suffix', () => {
+    const state = getConsoleCoverageState([
+      { acknowledged: true, ackExpired: false },
+      { acknowledged: true, ackExpired: false },
+    ]);
+    assert.deepEqual(state, {
+      allAcked: true,
+      allCovered: true,
+      icon: '⏸️',
+      suffix: ' (all acknowledged)',
+    });
+  });
+
+  it('reports baseline plus acknowledgement mix as covered by baseline/ack', () => {
+    const state = getConsoleCoverageState([
+      { baselined: true },
+      { acknowledged: true, ackExpired: false },
+    ]);
+    assert.deepEqual(state, {
+      allAcked: false,
+      allCovered: true,
+      icon: '⏸️',
+      suffix: ' (covered by baseline/ack)',
+    });
+  });
+
+  it('keeps expired baselines non-blocking for console coverage', () => {
+    const state = getConsoleCoverageState([{ baselined: true, baselineExpired: true }]);
+    assert.deepEqual(state, {
+      allAcked: false,
+      allCovered: true,
+      icon: '⏸️',
+      suffix: ' (covered by baseline/ack)',
+    });
+  });
+
+  it('keeps expired acknowledgements and active issues blocking', () => {
+    const expiredAck = getConsoleCoverageState([{ acknowledged: true, ackExpired: true }]);
+    assert.deepEqual(expiredAck, {
+      allAcked: false,
+      allCovered: false,
+      icon: '❌',
+      suffix: '',
+    });
+
+    const mixed = getConsoleCoverageState([
+      { baselined: true },
+      { severity: 'actionable' },
+    ]);
+    assert.deepEqual(mixed, {
+      allAcked: false,
+      allCovered: false,
+      icon: '❌',
+      suffix: '',
+    });
   });
 });
