@@ -114,6 +114,8 @@ export async function checkSourceParity({
     console.error(`❌ ${error.message}`);
     return 1;
   }
+  // Ack expiry uses UTC "today" intentionally so CI runs are timezone-independent
+  // and match reviewAfter values (also stored as plain YYYY-MM-DD / UTC dates).
   const today = new Date().toISOString().slice(0, 10);
 
   // Resolve --slug to path-based slug (supports both basename and path-based input)

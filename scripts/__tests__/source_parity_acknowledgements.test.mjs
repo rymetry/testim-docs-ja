@@ -174,6 +174,38 @@ describe('validateAcknowledgements', () => {
     );
   });
 
+  it('throws on nonexistent calendar date (e.g. 2026-02-31)', () => {
+    // Date.parse accepts '2026-02-31' and normalizes it to March 3,
+    // which would silently shift expiry semantics. We must round-trip validate.
+    const entry = { ...validEntry, reviewAfter: '2026-02-31' };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /reviewAfter.*not a valid calendar date/,
+    );
+  });
+
+  it('throws on nonexistent calendar date (e.g. 2026-13-01)', () => {
+    const entry = { ...validEntry, reviewAfter: '2026-13-01' };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /reviewAfter.*not a valid calendar date/,
+    );
+  });
+
+  it('accepts leap day 2024-02-29 (valid)', () => {
+    const entry = { ...validEntry, reviewAfter: '2024-02-29' };
+    const result = validateAcknowledgements({ schemaVersion: 1, entries: [entry] });
+    assert.equal(result.entries.length, 1);
+  });
+
+  it('throws on non-leap-year Feb 29 (2025-02-29)', () => {
+    const entry = { ...validEntry, reviewAfter: '2025-02-29' };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /reviewAfter.*not a valid calendar date/,
+    );
+  });
+
   it('throws on missing slug', () => {
     const { slug: _removed, ...entry } = validEntry;
     assert.throws(
@@ -268,6 +300,21 @@ describe('isAcknowledgementExpired', () => {
   it('returns expired with review-date-passed when today is after reviewAfter', () => {
     const result = isAcknowledgementExpired(entry, FP, '2026-06-02');
     assert.deepEqual(result, { expired: true, reason: 'review-date-passed' });
+  });
+
+  it('uses lexicographic YYYY-MM-DD comparison (timezone-independent / UTC)', () => {
+    // The caller passes UTC `today` (new Date().toISOString().slice(0, 10));
+    // reviewAfter is strict YYYY-MM-DD. Both sides are timezone-independent
+    // strings, so comparison must never cross over due to local-time nuance.
+    const e = { sourceFingerprint: FP, reviewAfter: '2026-06-01' };
+    assert.deepEqual(isAcknowledgementExpired(e, FP, '2026-06-01'), { expired: false });
+    assert.deepEqual(isAcknowledgementExpired(e, FP, '2025-12-31'), { expired: false });
+    assert.deepEqual(
+      isAcknowledgementExpired(e, FP, '2026-06-02'),
+      { expired: true, reason: 'review-date-passed' },
+    );
+    // With the strict YYYY-MM-DD regex the old lexicographic bug is gone too:
+    // unpadded inputs are rejected at validation, so comparison is stable.
   });
 
   it('fingerprint check takes precedence over date check', () => {

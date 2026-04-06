@@ -363,9 +363,19 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## Parity',
     '',
-    `- Actionable files: ${parity.summary?.actionableFiles || 0}`,
-    `- Signal-only files: ${parity.summary?.signalFiles || 0}`,
-    `- Error files: ${parity.summary?.errorFiles || 0}`,
+    // Phase 3: report active (non-acknowledged) counts so the summary matches
+    // actionableReport.parityRegression.shouldOpenIssue / issueCount.
+    `- Active actionable files: ${
+      parity.summary?.activeActionableFiles ?? parity.summary?.actionableFiles ?? 0
+    }`,
+    `- Active issue files: ${
+      parity.summary?.activeFiles ?? actionableReport?.parityRegression?.summary?.issueCount ?? 0
+    }`,
+    `- Error files: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
+    `- Acknowledged (non-blocking): ${parity.summary?.acknowledgedIssues || 0}`,
+    ...((parity.summary?.expiredAcknowledgements || 0) > 0
+      ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
+      : []),
     '',
     '## Audit Manifest',
     '',

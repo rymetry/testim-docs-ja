@@ -115,8 +115,18 @@ export function validateAcknowledgements(parsed) {
         `${prefix}: reviewAfter must be strict YYYY-MM-DD format (got "${entry.reviewAfter}")`,
       );
     }
-    if (Number.isNaN(Date.parse(entry.reviewAfter))) {
-      throw new Error(`${prefix}: invalid reviewAfter date: "${entry.reviewAfter}"`);
+    // Round-trip validate the calendar date to reject impossible dates like
+    // "2026-02-31" — Date.parse would silently normalize those to March 3.
+    const [year, month, day] = entry.reviewAfter.split('-').map(Number);
+    const roundTrip = new Date(Date.UTC(year, month - 1, day));
+    if (
+      roundTrip.getUTCFullYear() !== year ||
+      roundTrip.getUTCMonth() + 1 !== month ||
+      roundTrip.getUTCDate() !== day
+    ) {
+      throw new Error(
+        `${prefix}: reviewAfter "${entry.reviewAfter}" is not a valid calendar date`,
+      );
     }
   }
 

@@ -522,7 +522,15 @@ describe('renderSummaryMarkdown', () => {
   it('produces valid markdown with all sections', () => {
     const snapshot = {};
     const parity = {
-      summary: { actionableFiles: 2, signalFiles: 1, errorFiles: 0 },
+      summary: {
+        actionableFiles: 2,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 2,
+        activeErrorFiles: 0,
+        activeFiles: 3,
+        acknowledgedIssues: 0,
+      },
     };
     const actionableReport = {
       generatedAt: '2026-03-19T00:00:00Z',
@@ -549,12 +557,71 @@ describe('renderSummaryMarkdown', () => {
     assert.match(md, /Changed pages: 3/);
     assert.match(md, /Added pages: 1/);
     assert.match(md, /## Parity/);
-    assert.match(md, /Actionable files: 2/);
+    assert.match(md, /Active actionable files: 2/);
     assert.match(md, /## Audit Manifest/);
     assert.match(md, /Page lifecycle: 1/);
     assert.match(md, /Structural change: 1/);
     assert.match(md, /Content only: 2/);
     assert.match(md, /snapshot-diff-status\.json/);
+  });
+
+  it('reports 0 active files when all parity issues are acknowledged', () => {
+    // Reproduces the P2 report: issueCount 0 but markdown used to say signalFiles: 22.
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 22,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        acknowledgedIssues: 41,
+        expiredAcknowledgements: 0,
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-06T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: { issueCount: 0 },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Active actionable files: 0/);
+    assert.match(md, /Active issue files: 0/);
+    assert.match(md, /Acknowledged \(non-blocking\): 41/);
+    // The legacy counters must not appear standalone in a way that contradicts activeFiles:0.
+    assert.doesNotMatch(md, /^- Signal-only files: 22$/m);
+  });
+
+  it('surfaces expired acknowledgements as a warning line', () => {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 1,
+        acknowledgedIssues: 0,
+        expiredAcknowledgements: 1,
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-06T00:00:00Z',
+      snapshotDiff: { summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 } },
+      parityRegression: { summary: { issueCount: 1 } },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Expired acknowledgements: 1/);
   });
 });
 
