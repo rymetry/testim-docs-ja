@@ -64,12 +64,39 @@ function buildSegmentInconclusiveIssue(reason, category) {
   };
 }
 
-function isValidAcknowledgedIssue(issue) {
+export function isValidAcknowledgedIssue(issue) {
   return issue.acknowledged === true && issue.ackExpired !== true;
 }
 
-function isNonBlockingIssue(issue) {
+export function isNonBlockingIssue(issue) {
   return issue.phase === 'segment-shadow' || issue.baselined === true || isValidAcknowledgedIssue(issue);
+}
+
+export function getConsoleCoverageState(issues) {
+  if (!Array.isArray(issues) || issues.length === 0) {
+    return {
+      allAcked: false,
+      allCovered: false,
+      icon: '❌',
+      suffix: '',
+    };
+  }
+
+  const allAcked = issues.every(
+    (issue) => issue.phase === 'segment-shadow' || isValidAcknowledgedIssue(issue),
+  );
+  const allCovered = issues.every((issue) => isNonBlockingIssue(issue));
+
+  return {
+    allAcked,
+    allCovered,
+    icon: allCovered ? '⏸️' : '❌',
+    suffix: allAcked
+      ? ' (all acknowledged)'
+      : allCovered
+        ? ' (covered by baseline/ack)'
+        : '',
+  };
 }
 
 /**
@@ -353,16 +380,7 @@ export async function checkSourceParity({
     });
 
     if (!json && hasNonShadow) {
-      const allAcked = issues.every(
-        (i) => i.phase === 'segment-shadow' || isValidAcknowledgedIssue(i),
-      );
-      const allCovered = issues.every((i) => isNonBlockingIssue(i));
-      const icon = allCovered ? '⏸️' : '❌';
-      const suffix = allAcked
-        ? ' (all acknowledged)'
-        : allCovered
-          ? ' (covered by baseline/ack)'
-          : '';
+      const { icon, suffix } = getConsoleCoverageState(issues);
       console.log(`${icon} ${doc.relativePath}${suffix}`);
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
