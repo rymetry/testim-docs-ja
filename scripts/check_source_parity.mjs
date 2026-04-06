@@ -23,7 +23,7 @@ import {
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
-import turndown from './lib/turndown.mjs';
+import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
@@ -180,19 +180,34 @@ export async function checkSourceParity({
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
     const snapshotPath = path.join(SNAPSHOTS_DIR, fileSlug + '.html');
     if (fs.existsSync(snapshotPath)) {
-      const enHtml = fs.readFileSync(snapshotPath, 'utf8');
+      const rawEnHtml = fs.readFileSync(snapshotPath, 'utf8');
       let enBody;
+      let enHtml;
       try {
-        enBody = turndown.turndown(enHtml);
+        enHtml = preprocessEnHtml(rawEnHtml);
       } catch (e) {
-        console.warn(
-          `turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`
+        console.error(
+          `preprocessEnHtml failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`
         );
         issues.push({
           type: 'source-fetch-error',
-          detail: `HTML→Markdown 変換失敗: ${e.message}`,
+          detail: `HTML前処理失敗: ${e.message}`,
           severity: ISSUE_SEVERITY['source-fetch-error'],
         });
+      }
+      if (enHtml != null) {
+        try {
+          enBody = turndown.turndown(enHtml);
+        } catch (e) {
+          console.error(
+            `turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`
+          );
+          issues.push({
+            type: 'source-fetch-error',
+            detail: `HTML→Markdown 変換失敗: ${e.message}`,
+            severity: ISSUE_SEVERITY['source-fetch-error'],
+          });
+        }
       }
       if (enBody) {
         issues.push(...compareSnapshotStructure(enBody, doc.body));

@@ -162,4 +162,143 @@ turndown.addRule('madcap-table', {
   },
 });
 
+// ---------------------------------------------------------------------------
+// HTML <details>/<summary> → ## heading + content
+//
+// MadCap FAQ pages use <details><summary><b>Question</b></summary> Answer</details>.
+// JA translations use H2 headings for each Q&A. This rule converts <summary>
+// to H2 headings so the structural comparison aligns.
+// ---------------------------------------------------------------------------
+
+turndown.addRule('html-details', {
+  filter: 'details',
+  replacement(content) {
+    return '\n\n' + content.trim() + '\n\n';
+  },
+});
+
+turndown.addRule('html-summary', {
+  filter: 'summary',
+  replacement(content) {
+    return '\n\n## ' + content.trim() + '\n\n';
+  },
+});
+
+// ---------------------------------------------------------------------------
+// EN HTML preprocessing: normalize MadCap artifacts before turndown conversion
+//
+// preprocessEnHtml() normalizes EN HTML before turndown conversion:
+//   - Unescapes HTML-entity-encoded <details> blocks in <p> elements
+//   - Converts escaped callout patterns (&gt; Title &gt; &gt; Content) to
+//     <div class="note"> for the madcap-callout rule
+//
+// NOTE: The <p> regex assumes MadCap-generated HTML where attributes never
+// contain '>' or '</p>'. If processing arbitrary HTML, use a DOM parser.
+// ---------------------------------------------------------------------------
+
+/** Detect likely attribute truncation from `>` inside attribute values. */
+function hasTruncatedAttribute(innerHtml) {
+  return /^[^<]*">/.test(innerHtml);
+}
+
+/**
+ * Unescape HTML-entity-encoded `<details><summary>` blocks inside <p> elements.
+ *
+ * MadCap sometimes serializes `<details>` FAQ accordions as escaped entities
+ * inside `<p>`, e.g. `<p>&lt;details&gt; &lt;summary&gt;...&lt;/summary&gt; ...&lt;/details&gt;</p>`.
+ * This restores them to real HTML so turndown's details/summary rules can convert them.
+ */
+function unescapeDetails(html) {
+  return html.replace(
+    /<p\b[^>]*>([\s\S]*?)<\/p>/gi,
+    (fullMatch, innerHtml) => {
+      if (hasTruncatedAttribute(innerHtml)) return fullMatch;
+
+      const trimmed = innerHtml.trim();
+      const startsWithOpen = trimmed.startsWith('&lt;details&gt;');
+      const startsWithCloseAndOpen =
+        trimmed.startsWith('&lt;/details&gt;') && trimmed.includes('&lt;details&gt;');
+      if (!startsWithOpen && !startsWithCloseAndOpen) {
+        return fullMatch;
+      }
+      const unescaped = trimmed
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, '&');
+      return unescaped;
+    }
+  );
+}
+
+/**
+ * Convert escaped callout patterns (`&gt; Title &gt; &gt; Content`)
+ * inside `<p>` elements to `<div class="note">` for the madcap-callout rule.
+ *
+ * Only matches when the first `&gt;` appears at or near the start of the `<p>`
+ * content. Mid-paragraph `&gt;` patterns (e.g. instructional text about the
+ * `>` operator) are left unchanged to prevent false positives.
+ */
+function normalizeEscapedCallouts(html) {
+  return html.replace(
+    /<p\b[^>]*>([\s\S]*?)<\/p>/gi,
+    (fullMatch, innerHtml) => {
+      if (hasTruncatedAttribute(innerHtml)) return fullMatch;
+
+      const firstGt = innerHtml.indexOf('&gt;');
+      if (firstGt === -1) return fullMatch;
+
+      // Guard: real MadCap callouts start with &gt; (possibly preceded by
+      // whitespace only). If there is substantial text before the first &gt;,
+      // this is not a callout — skip to avoid false positives.
+      const textBefore = innerHtml.slice(0, firstGt).trim();
+      if (textBefore.length > 0) return fullMatch;
+
+      const afterOpening = innerHtml.slice(firstGt + 4);
+      const sepMatch = afterOpening.match(/&gt;\s*&gt;/);
+      if (!sepMatch) return fullMatch;
+
+      const sepAbsIndex = firstGt + 4 + sepMatch.index;
+      // Title is intentionally dropped — JA translations use :::note without
+      // titles, and the madcap-callout rule only emits the directive + body.
+      const body = innerHtml.slice(sepAbsIndex + sepMatch[0].length).trim();
+
+      if (!body) return fullMatch;
+
+      const noteDiv = `<div class="note"><p>${body}</p></div>`;
+      return noteDiv;
+    }
+  );
+}
+
+/**
+ * Normalize EN HTML before turndown conversion.
+ *
+ * Chains two preprocessing steps:
+ *   1. `unescapeDetails` — restore entity-encoded `<details>` blocks
+ *   2. `normalizeEscapedCallouts` — convert escaped `>` callout patterns
+ *
+ * @param {string} html - Raw MadCap Flare HTML from EN snapshot
+ * @returns {string} Normalized HTML with escaped callouts/details restored
+ */
+export function preprocessEnHtml(html) {
+  if (typeof html !== 'string') {
+    throw new TypeError(`preprocessEnHtml expected string, got ${typeof html}`);
+  }
+  return normalizeEscapedCallouts(unescapeDetails(html));
+}
+
+/**
+ * Convert EN HTML to Markdown in a single call (preprocess + turndown).
+ *
+ * Use this instead of calling `preprocessEnHtml` + `turndown.turndown`
+ * separately to avoid the implicit two-step protocol.
+ *
+ * @param {string} html - Raw MadCap Flare HTML from EN snapshot
+ * @returns {string} Markdown output
+ */
+export function convertEnHtmlToMd(html) {
+  return turndown.turndown(preprocessEnHtml(html));
+}
+
 export default turndown;

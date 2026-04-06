@@ -432,6 +432,25 @@ describe('extractStepCounts', () => {
     const result = extractStepCounts(body);
     assert.equal(result.get('Steps'), 2);
   });
+
+  it('ignores numbered items inside markdown pipe tables', () => {
+    const body = '## Section\n1. Real step\n| Col A | Col B |\n| --- | --- |\n| 1. Fake | 2. Also fake |\n2. Another real step\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+
+  it('counts steps correctly after table with no blank line before heading', () => {
+    const body = '## Section A\n| Col A | Col B |\n| --- | --- |\n| 1. Fake | val |\n## Section B\n1. Real step\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section A'), 0);
+    assert.equal(result.get('Section B'), 1);
+  });
+
+  it('counts steps correctly after table followed by blank line', () => {
+    const body = '## S\n| A | B |\n| --- | --- |\n| x | y |\n\n1. Real step\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('S'), 1);
+  });
 });
 
 describe('compareSnapshotStructure', () => {
@@ -821,6 +840,18 @@ describe('extractBulletCounts', () => {
     const body = '## Section\n- Real item\n```\n- Fake item\n```\n';
     const result = extractBulletCounts(body);
     assert.equal(result.get('Section'), 1);
+  });
+
+  it('excludes bullets inside markdown pipe tables', () => {
+    const body = '## Section\n- Real bullet\n| Col A | Col B |\n| --- | --- |\n| - Fake bullet | - Also fake |\n- Another real bullet\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Section'), 2);
+  });
+
+  it('excludes bullets in multi-row pipe tables', () => {
+    const body = '## Props\n| Property | Description |\n| --- | --- |\n| - **A** | First |\n| - **B** | Second |\n| - **C** | Third |\nSome text after table.\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Props'), 0);
   });
 });
 
