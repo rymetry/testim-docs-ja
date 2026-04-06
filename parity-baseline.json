@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-06T13:20:38.561Z",
-  "generatedFromRunId": "2026-04-06T13:20:38.561Z#parity-check-status",
-  "rationale": "Phase 6A frozen baseline — PREVIEW only. Regenerated at PR2 cutover. New issues fail; baselined issues do not.",
+  "generatedAt": "2026-04-06T13:46:46.186Z",
+  "generatedFromRunId": "2026-04-06T13:46:46.186Z#parity-check-status",
+  "rationale": "Phase 6A frozen baseline — regenerated",
   "entries": [
     {
       "slug": "administration/api-access",

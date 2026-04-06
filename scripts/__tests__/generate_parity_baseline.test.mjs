@@ -9,6 +9,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  assertFullParityStatus,
   buildBaselineFromStatus,
   buildGenerationMeta,
   serializeBaseline,
@@ -153,6 +154,34 @@ describe('buildGenerationMeta', () => {
     });
     assert.equal(metaOverride.rationale, 'custom rationale');
     assert.equal(metaOverride.reviewAfter, '2026-12-31');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// assertFullParityStatus
+// ---------------------------------------------------------------------------
+
+describe('assertFullParityStatus', () => {
+  it('accepts a full-repo parity status', () => {
+    const status = {
+      summary: {
+        checkedAt: '2026-04-06T03:00:00Z',
+        checkedFiles: 288,
+        totalFiles: 288,
+      },
+    };
+    assert.doesNotThrow(() => assertFullParityStatus(status));
+  });
+
+  it('rejects a slug-scoped parity status', () => {
+    const status = {
+      summary: {
+        checkedAt: '2026-04-06T03:00:00Z',
+        checkedFiles: 1,
+        totalFiles: 288,
+      },
+    };
+    assert.throws(() => assertFullParityStatus(status), /full-repo run/);
   });
 });
 

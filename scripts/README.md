@@ -466,6 +466,7 @@ Phase 6A は Phase 5 の exact diff engine を deterministic に primary gate �
   page-level invalidation を含む tagging（純粋関数のみ）
 - `scripts/generate_parity_baseline.mjs` — baseline 生成 CLI
   - `--regenerate` で full、`--slug=<csv>` で partial 再生成
+  - 入力の `parity-check-status.json` は full `npm run check:parity` 実行結果が必須
   - `--rationale=<text>` / `--review-after=<YYYY-MM-DD>` で再現性を確保
   - 出力は deterministic（`parity-check-status.json` の
     `summary.checkedAt` を `generatedAt` / `generatedFromRunId` の seed に使い、

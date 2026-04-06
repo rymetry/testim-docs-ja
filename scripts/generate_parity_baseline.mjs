@@ -70,6 +70,20 @@ function getCheckedAt(status) {
   return checkedAt;
 }
 
+export function assertFullParityStatus(status) {
+  const checkedFiles = status?.summary?.checkedFiles;
+  const totalFiles = status?.summary?.totalFiles;
+  if (
+    typeof checkedFiles !== 'number' ||
+    typeof totalFiles !== 'number' ||
+    checkedFiles !== totalFiles
+  ) {
+    throw new Error(
+      'parity-check-status.json is not a full-repo run. Run `npm run check:parity` before generating baseline.',
+    );
+  }
+}
+
 /**
  * Build a fingerprint map from the snapshots directory: slug → sha256:....
  * Walks the snapshots tree once and computes computeSnapshotFingerprint per file.
@@ -338,6 +352,7 @@ async function main() {
     return 1;
   }
   const status = JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8'));
+  assertFullParityStatus(status);
   const fingerprintMap = buildFingerprintMap();
 
   const meta = buildGenerationMeta(status, args);

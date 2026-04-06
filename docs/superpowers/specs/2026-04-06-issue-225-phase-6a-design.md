@@ -244,7 +244,7 @@ node scripts/generate_parity_baseline.mjs --slug=overview/testim-overview,overvi
 
 - `--regenerate`: 既存 `parity-baseline.json` を完全上書き。runId / generatedAt 更新
 - `--slug=<csv>`: 指定 slug のエントリのみ削除 → 再生成 → 既存 baseline にマージ。他の slug のエントリは触らない
-- どちらも入力は最新の `npm run check:parity` 実行結果（`parity-check-status.json`）に依存
+- どちらも入力は最新の **full** `npm run check:parity` 実行結果（`parity-check-status.json`）に依存。`--slug` / `--section` 付きの partial status は generator が拒否する
 - 出力は **deterministic**: `parity-check-status.json` の `summary.checkedAt` を `generatedAt` / `generatedFromRunId` の seed に使い、entry 順序は `slug → issueType → sectionPath → segmentKind → index → fingerprint/token signature` で安定ソート、JSON は 2-space indent + LF 終端
 - 同じ入力で 2 回実行して bit-identical を CI で検証する（exit criteria C5）
 
