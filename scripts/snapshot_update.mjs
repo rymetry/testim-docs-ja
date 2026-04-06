@@ -7,6 +7,9 @@
  * as HTML in `snapshots/en/content/{slug}.html`. Also fetches the MadCap Flare
  * TOC data for sidebar verification and stores it as `snapshots/en/sidebar.json`.
  *
+ * Always writes `source-sync-status.json` (even in --dry-run) as fetch metadata.
+ * --dry-run skips writing snapshot HTML and sidebar JSON only.
+ *
  * Usage:
  *   node scripts/snapshot_update.mjs                   # all pages
  *   node scripts/snapshot_update.mjs --section="Overview"
@@ -288,7 +291,7 @@ export async function main(argv) {
   console.log();
   console.log(`Done: ${fetched} fetched, ${notFound} not found, ${errors} errors`);
   console.log(`Freshness: ${sourceSyncStatus.freshnessState}`);
-  if (args.dryRun) console.log('(dry-run — no files written)');
+  if (args.dryRun) console.log('(dry-run — snapshots not written, source-sync-status.json updated)');
 
   return { fetched, notFound, errors, skipped: 0, sidebarVerified: sidebarResult.ok, sourceSyncStatus };
 }
