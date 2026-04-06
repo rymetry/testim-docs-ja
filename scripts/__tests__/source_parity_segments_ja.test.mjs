@@ -800,6 +800,139 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     assert.equal(paragraphs.length, 1);
     assert.equal(paragraphs[0].textNorm, 'loose');
   });
+
+  // -------------------------------------------------------------------------
+  // Multi-line <summary> support (P2)
+  // -------------------------------------------------------------------------
+
+  it('supports a multi-line <summary> inside <details>', () => {
+    // Regression: the previous line-based tokenizer only matched summaries
+    // with the close tag on the same line. Content on subsequent lines
+    // leaked out as paragraphs and the standalone </summary> became
+    // literal text.
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>',
+      'Line 1',
+      'Line 2',
+      '</summary>',
+      '',
+      'Tail paragraph.',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'line 1 line 2');
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'tail paragraph.');
+  });
+
+  it('supports the split-line variant <details><summary>\\nQ\\n</summary></details>', () => {
+    const md = [
+      '## FAQ',
+      '',
+      '<details><summary>',
+      'Q',
+      '</summary></details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'q');
+    assert.equal(byKind(segments, 'paragraph').length, 0);
+  });
+
+  it('processes trailing content after </summary> on the close line', () => {
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>',
+      'Multi',
+      '</summary> trailing inline text',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'multi');
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'trailing inline text');
+  });
+
+  // -------------------------------------------------------------------------
+  // Loose <summary> boundary parity with EN (P3)
+  // -------------------------------------------------------------------------
+
+  it('loose <summary> with inline <code> emits one paragraph per text node (matching EN)', () => {
+    // Verified against EN extractor: loose <summary>Run <code>--proxy</code></summary>
+    // produces two paragraphs "run" and "--proxy" because EN's
+    // walkBlockContainer recurses through unknown blocks and emits each
+    // text node via its text-child branch.
+    const md = [
+      '## S',
+      '',
+      '<summary>Run <code>--proxy</code></summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 0);
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.deepEqual(
+      paragraphs.map((p) => p.textNorm),
+      ['run', '--proxy'],
+    );
+  });
+
+  it('loose <summary> with <strong> emits three paragraphs matching EN', () => {
+    const md = [
+      '## S',
+      '',
+      '<summary>A <strong>bold</strong> B</summary>',
+      '',
+    ].join('\n');
+    const paragraphs = byKind(extractSegmentsFromMarkdown(md), 'paragraph');
+    assert.deepEqual(
+      paragraphs.map((p) => p.textNorm),
+      ['a', 'bold', 'b'],
+    );
+  });
+
+  it('loose <summary> with an anchor emits three paragraphs matching EN', () => {
+    const md = [
+      '## S',
+      '',
+      '<summary>See <a href="/docs/x">link</a> text</summary>',
+      '',
+    ].join('\n');
+    const paragraphs = byKind(extractSegmentsFromMarkdown(md), 'paragraph');
+    assert.deepEqual(
+      paragraphs.map((p) => p.textNorm),
+      ['see', 'link', 'text'],
+    );
+  });
+
+  it('loose <summary> with plain text stays as a single paragraph', () => {
+    const md = [
+      '## S',
+      '',
+      '<summary>Plain text here</summary>',
+      '',
+    ].join('\n');
+    const paragraphs = byKind(extractSegmentsFromMarkdown(md), 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'plain text here');
+  });
 });
 
 // ---------------------------------------------------------------------------

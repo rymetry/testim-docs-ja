@@ -80,9 +80,36 @@ function findTagEnd(text, start) {
 }
 
 /**
+ * Split an HTML fragment into the sequence of plain-text nodes between its
+ * tags, trimming whitespace and dropping empty entries. Used to replicate
+ * EN's walkBlockContainer behaviour for loose `<summary>` content, where
+ * each text child of an unknown-block fallback is emitted as its own
+ * paragraph segment.
+ */
+function extractTextNodes(html) {
+  if (typeof html !== 'string') return [];
+  const nodes = [];
+  let cursor = 0;
+  for (const match of html.matchAll(/<[^>]+>/g)) {
+    const start = match.index ?? 0;
+    const chunk = decodeHtmlEntities(html.slice(cursor, start))
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (chunk.length > 0) nodes.push(chunk);
+    cursor = start + match[0].length;
+  }
+  const tail = decodeHtmlEntities(html.slice(cursor))
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (tail.length > 0) nodes.push(tail);
+  return nodes;
+}
+
+/**
  * @typedef {{type:'text', value:string}
  *          | {type:'details-open'}
  *          | {type:'summary', inner:string}
+ *          | {type:'summary-open', initialInner:string}
  *          | {type:'details-close'}} DetailsLineEvent
  */
 
@@ -149,11 +176,15 @@ function tokenizeDetailsLine(line) {
       const afterOpen = line.slice(openEnd + 1);
       const closingMatch = afterOpen.match(SUMMARY_CLOSE_ANYWHERE_RE);
       if (!closingMatch) {
-        // No close on this line — treat opening tag as a no-op and keep scanning.
+        // No close on this line — enter multi-line summary state. Everything
+        // from afterOpen to the end of the line becomes the initial buffer.
+        // Stop tokenizing the current line since subsequent content (if any
+        // on this line) is the start of the summary body.
         emitPendingText(i);
-        i = openEnd + 1;
-        cursor = i;
-        continue;
+        events.push({ type: 'summary-open', initialInner: afterOpen });
+        cursor = line.length;
+        i = line.length;
+        break;
       }
       emitPendingText(i);
       const innerText = afterOpen.slice(0, closingMatch.index);
@@ -327,6 +358,37 @@ export function extractSegmentsFromMarkdown(body) {
   let detailsDepth = 0;
   const detailsKindStack = [];
 
+  // Multi-line <summary> accumulator. When the tokenizer sees a <summary>
+  // opening tag with no matching close on the same line, subsequent lines
+  // are buffered here until `</summary>` is found.
+  let inMultilineSummary = false;
+  let multilineSummaryBuf = [];
+  let multilineSummaryStartLine = 0;
+
+  const flushMultilineSummary = (closingLineNo) => {
+    const joined = multilineSummaryBuf.join(' ');
+    const textNodes = extractTextNodes(joined);
+    const pathAtClose = buildSectionPath(headingStack);
+    if (detailsDepth > 0) {
+      const summaryText = htmlInlineToMarkdownText(joined);
+      if (summaryText.length > 0) {
+        emitter.emit(
+          pathAtClose,
+          'details-summary',
+          summaryText,
+          multilineSummaryStartLine || closingLineNo,
+        );
+      }
+    } else {
+      for (const node of textNodes) {
+        emitter.emit(pathAtClose, 'paragraph', node, multilineSummaryStartLine || closingLineNo);
+      }
+    }
+    inMultilineSummary = false;
+    multilineSummaryBuf = [];
+    multilineSummaryStartLine = 0;
+  };
+
   // Code fence state
   let inCodeFence = false;
   let codeFenceStartLine = 0;
@@ -361,6 +423,26 @@ export function extractSegmentsFromMarkdown(body) {
     }
     if (inCodeFence) {
       codeFenceBuf.push(line);
+      continue;
+    }
+
+    // Multi-line <summary> accumulator. When the previous line opened a
+    // <summary> tag without a matching close, subsequent lines are buffered
+    // here until `</summary>` is encountered. Any trailing content after
+    // the close tag is fed back into the main loop by mutating lines[i].
+    if (inMultilineSummary) {
+      const closeMatch = line.match(SUMMARY_CLOSE_ANYWHERE_RE);
+      if (!closeMatch) {
+        multilineSummaryBuf.push(line);
+        continue;
+      }
+      multilineSummaryBuf.push(line.slice(0, closeMatch.index));
+      flushMultilineSummary(lineNo);
+      const remainder = line.slice((closeMatch.index ?? 0) + closeMatch[0].length);
+      if (remainder.trim().length > 0) {
+        lines[i] = remainder;
+        i -= 1;
+      }
       continue;
     }
 
@@ -418,17 +500,29 @@ export function extractSegmentsFromMarkdown(body) {
           continue;
         }
         if (ev.type === 'summary') {
-          const summaryText = htmlInlineToMarkdownText(ev.inner);
-          if (summaryText.length > 0) {
-            // Only emit details-summary when we are actually inside a
-            // <details> block. Otherwise fall back to 'paragraph' kind to
-            // match EN's walkBlockContainer behaviour, which emits text
-            // children of an unknown-block fallback (standalone <summary>
-            // included) as hardcoded 'paragraph' — even when the summary
-            // is nested inside a callout.
-            const kind = detailsDepth > 0 ? 'details-summary' : 'paragraph';
-            emitter.emit(pathAtLine, kind, summaryText, lineNo);
+          if (detailsDepth > 0) {
+            // Inside a <details> — emit a single details-summary segment
+            // with markdown-converted inline content so link/code invariant
+            // tokens survive.
+            const summaryText = htmlInlineToMarkdownText(ev.inner);
+            if (summaryText.length > 0) {
+              emitter.emit(pathAtLine, 'details-summary', summaryText, lineNo);
+            }
+          } else {
+            // Loose <summary> outside any <details> — match EN's
+            // walkBlockContainer fallback, which recurses through unknown
+            // blocks and emits each text child as its own 'paragraph'.
+            const textNodes = extractTextNodes(ev.inner);
+            for (const node of textNodes) {
+              emitter.emit(pathAtLine, 'paragraph', node, lineNo);
+            }
           }
+          continue;
+        }
+        if (ev.type === 'summary-open') {
+          inMultilineSummary = true;
+          multilineSummaryBuf = [ev.initialInner];
+          multilineSummaryStartLine = lineNo;
           continue;
         }
         if (ev.type === 'details-close') {
@@ -534,6 +628,10 @@ export function extractSegmentsFromMarkdown(body) {
   }
 
   // Flush any trailing state (restore paragraphKind so final flush is sane)
+  if (inMultilineSummary) {
+    // Unterminated multi-line summary — emit what we have as a best-effort.
+    flushMultilineSummary(lines.length + lineOffset);
+  }
   if (inCallout) {
     flushParagraph();
     paragraphKind = 'paragraph';
