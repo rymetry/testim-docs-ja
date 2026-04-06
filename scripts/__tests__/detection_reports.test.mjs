@@ -379,6 +379,12 @@ describe('buildActionableReport', () => {
     assert.equal(report.parityRegression.shouldOpenIssue, false);
     assert.equal(report.parityRegression.summary.issueCount, 0);
     assert.equal(report.parityRegression.topEntries.length, 0);
+    // Legacy total-count fields must not leak into parityRegression.summary.
+    // Total counts would have different semantics from issueCount (active),
+    // which invites misreads by future consumers. Use issuesByType /
+    // issuesBySeverity if a full breakdown is needed.
+    assert.equal('signalFiles' in report.parityRegression.summary, false);
+    assert.equal('errorFiles' in report.parityRegression.summary, false);
   });
 
   it('opens a parity issue when acknowledgement is expired', () => {

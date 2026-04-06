@@ -319,8 +319,6 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         // Phase 3: only count files with at least one ACTIVE reportable issue,
         // ignoring validly-acknowledged issues. Expired acknowledgements remain active.
         issueCount: parityIssueFiles.length,
-        signalFiles: parity.summary?.signalFiles || 0,
-        errorFiles: parity.summary?.errorFiles || 0,
         acknowledgedIssues: parity.summary?.acknowledgedIssues || 0,
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
         issuesByType: parity.summary?.issuesByType || {},
