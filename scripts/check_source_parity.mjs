@@ -206,10 +206,12 @@ export async function checkSourceParity({
     checkedCount += 1;
     let issues = [...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug })];
 
-    // Per-file snapshot-missing check (freshness-aware)
-    issues.push(
-      ...checkSinglePageSnapshot(fileSlug, doc.data.sourceUrl || '', snapshotSlugs, freshnessState),
-    );
+    // Per-file snapshot-missing check (--slug mode only; global mode uses page coverage gate)
+    if (resolvedSlug) {
+      issues.push(
+        ...checkSinglePageSnapshot(fileSlug, doc.data.sourceUrl || '', snapshotSlugs, freshnessState),
+      );
+    }
 
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
