@@ -38,6 +38,7 @@ export const ISSUE_SEVERITY = Object.freeze({
   'segment-shifted': 'actionable',
   'segment-untranslated': 'actionable',
   'segment-token-gap': 'actionable',
+  'segment-inconclusive': 'actionable',
 });
 
 export const UNTRANSLATED_PATTERNS = Object.freeze([

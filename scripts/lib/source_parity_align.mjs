@@ -615,18 +615,23 @@ function findBodySwapEvidence({
 }
 
 /**
- * When the page is otherwise clean, adjacent free-form tokenless sections may
- * still be too ambiguous to certify as "no drift". Only NEAR-TIE cases are
+ * Even when other sections already produced exact diffs, adjacent free-form
+ * tokenless sections may still be too ambiguous to certify as "no drift".
+ * Only NEAR-TIE cases are
  * treated as ambiguous: if the current and swapped pairings are within a very
  * small relative margin under the only available non-semantic signal
  * (relative paragraph lengths), return an ambiguity record so the caller can
  * mark the page inconclusive instead of green.
  */
 function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
-  if (diffs.length > 0) return null;
+  const sectionHasDiff = new Set();
+  for (const diff of diffs) {
+    if (typeof diff.sectionIndex === 'number') sectionHasDiff.add(diff.sectionIndex);
+  }
 
   for (let i = 0; i < enSections.length - 1; i++) {
     const j = i + 1;
+    if (sectionHasDiff.has(i) || sectionHasDiff.has(j)) continue;
     const enI = enSections[i].body;
     const jaI = jaSections[i].body;
     const enJ = enSections[j].body;
@@ -836,7 +841,7 @@ export function alignSegments(enSegments, jaSegments) {
   );
   if (ambiguousTokenlessSwap) {
     return {
-      diffs: [],
+      diffs,
       sectionsAligned: enSections.length,
       sectionsCompared: enSections.length,
       inconclusive: true,

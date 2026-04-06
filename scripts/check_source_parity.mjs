@@ -41,6 +41,15 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
 const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json');
 
+function buildSegmentInconclusiveIssue(reason) {
+  return {
+    type: 'segment-inconclusive',
+    severity: ISSUE_SEVERITY['segment-inconclusive'],
+    phase: 'segment-shadow',
+    detail: `Phase 5 alignment inconclusive: ${reason}`,
+  };
+}
+
 /**
  * Load freshness state from source-sync-status.json.
  * Returns null if file doesn't exist or is invalid.
@@ -209,24 +218,30 @@ export async function checkSourceParity({
         // image ordering inversions).
         let segmentIssues = [];
         let alignmentInconclusive = false;
+        let alignmentInconclusiveReason = null;
         try {
           const enSegments = extractSegmentsFromHtml(rawEnHtml);
           const jaSegments = extractSegmentsFromMarkdown(doc.body);
           const alignment = alignSegments(enSegments, jaSegments);
+          segmentIssues = parityDiffsToIssues(alignment.diffs);
           if (alignment.inconclusive) {
             alignmentInconclusive = true;
-          } else {
-            segmentIssues = parityDiffsToIssues(alignment.diffs);
+            alignmentInconclusiveReason = alignment.inconclusiveReason;
           }
         } catch (e) {
           alignmentInconclusive = true;
+          alignmentInconclusiveReason = e.message;
           console.error(
             `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
           );
         }
 
         if (alignmentInconclusive) {
-          // Pure fallback: legacy coarse comparison only.
+          // Fallback: preserve any exact diffs already found, add a shadow
+          // issue that the alignment itself was inconclusive, then run the
+          // legacy coarse comparison so the page is never silently green-lit.
+          issues.push(...segmentIssues);
+          issues.push(buildSegmentInconclusiveIssue(alignmentInconclusiveReason || 'unknown reason'));
           issues.push(...compareSnapshotStructure(enBody, doc.body));
         } else {
           // Primary gate: segment-level diffs PLUS the coarse signals that

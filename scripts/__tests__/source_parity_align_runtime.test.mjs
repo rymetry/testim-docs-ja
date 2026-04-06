@@ -116,6 +116,7 @@ describe('summarizeParityResults — shadow accounting', () => {
         issues: [
           { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', detail: 'x' },
           { type: 'segment-extra', severity: 'actionable', phase: 'segment-shadow', detail: 'y' },
+          { type: 'segment-inconclusive', severity: 'actionable', phase: 'segment-shadow', detail: 'z' },
           { type: 'paragraph-count-mismatch', severity: 'signal', detail: 'count' },
         ],
       },
@@ -124,16 +125,17 @@ describe('summarizeParityResults — shadow accounting', () => {
         sourceUrl: '',
         category: '',
         issues: [
-          { type: 'segment-token-gap', severity: 'actionable', phase: 'segment-shadow', detail: 'z' },
+          { type: 'segment-token-gap', severity: 'actionable', phase: 'segment-shadow', detail: 'w' },
         ],
       },
     ];
     const summary = summarizeParityResults(results);
-    assert.equal(summary.shadowIssues, 3);
+    assert.equal(summary.shadowIssues, 4);
     assert.equal(summary.shadowFiles, 2);
     assert.deepEqual(summary.shadowIssuesByType, {
       'segment-missing': 1,
       'segment-extra': 1,
+      'segment-inconclusive': 1,
       'segment-token-gap': 1,
     });
     // Shadow issues must NOT be folded into actionable / active.
@@ -195,6 +197,7 @@ describe('check_source_parity.mjs --slug — Phase 5 runtime integration', () =>
       const sample = shadowIssues[0];
       assert.ok(
         ['segment-missing', 'segment-extra', 'segment-shifted', 'segment-untranslated', 'segment-token-gap']
+          .concat('segment-inconclusive')
           .includes(sample.type),
       );
       assert.equal(sample.severity, 'actionable');

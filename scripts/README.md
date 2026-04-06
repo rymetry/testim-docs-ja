@@ -406,7 +406,7 @@ npm run docs:report-categories
 
 **Runtime wiring (Phase 5 shadow mode)**:
 
-`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時のみ既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
+`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま、`segment-inconclusive` の shadow issue を追加し、既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
 
 shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFiles` / `shadowIssuesByType` で確認できる。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の shadow 集計、`check_source_parity --slug=...` 経由の CLI 出力を end-to-end で検証する。
 

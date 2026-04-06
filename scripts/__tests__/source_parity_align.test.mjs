@@ -675,6 +675,34 @@ describe('alignSegments — segment-shifted only fires with token destination ev
     assert.equal(result.inconclusive, true);
   });
 
+  it('keeps unrelated exact diffs when a different adjacent tokenless pair is inconclusive', () => {
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
+      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
+      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+      makeHeading('C', 0, 'C'),
+      makeSeg('C', 'paragraph', 0, 'Use `--flag` here.'),
+    ];
+    const ja = [
+      makeHeading('A-ja', 0, 'A-ja'),
+      makeSeg('A-ja', 'paragraph', 0, 'ベータ 1 の段落です。'),
+      makeSeg('A-ja', 'paragraph', 1, 'ベータ 2 の段落です。'),
+      makeHeading('B-ja', 0, 'B-ja'),
+      makeSeg('B-ja', 'paragraph', 0, 'アルファ 1 の段落です。'),
+      makeSeg('B-ja', 'paragraph', 1, 'アルファ 2 の段落です。'),
+      makeHeading('C-ja', 0, 'C-ja'),
+      makeSeg('C-ja', 'paragraph', 0, 'ここで使います。'),
+    ];
+    const result = alignSegments(en, ja);
+    assert.equal(result.inconclusive, true, 'A/B pair should still mark the page inconclusive');
+    const gaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
+    assert.equal(gaps.length, 1, 'exact diff in section C must be preserved');
+    assert.equal(gaps[0].sectionPath, 'C');
+  });
+
   it('does not emit segment-shifted when only one section pair has zero overlap', () => {
     // Two sections; only the first has disjoint tokens. There is no
     // destination section, so the alignment must NOT short-circuit to
