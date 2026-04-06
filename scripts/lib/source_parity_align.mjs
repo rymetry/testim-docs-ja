@@ -793,6 +793,12 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  * @property {boolean} inconclusive          true when alignment had to bail out
  * @property {string|null} inconclusiveReason
  * @property {'heading-count-mismatch'|'align-exception'|'tokenless-near-tie'|null} inconclusiveCategory
+ * @property {{
+ *   leftSectionPath?: string,
+ *   rightSectionPath?: string,
+ *   currentScore?: number,
+ *   swapScore?: number,
+ * } | null} inconclusiveMeta
  *   Phase 6A — structured enum for baseline lookup. The free-text
  *   `inconclusiveReason` is for human display only and must NOT be used
  *   as a baseline identity key (it changes with wording tweaks).
@@ -820,6 +826,7 @@ export function alignSegments(enSegments, jaSegments) {
       sectionsCompared: 0,
       inconclusive: true,
       inconclusiveCategory: 'heading-count-mismatch',
+      inconclusiveMeta: null,
       inconclusiveReason:
         `Heading count mismatch: EN has ${enSections.length - 1} headings, ` +
         `JA has ${jaSections.length - 1}`,
@@ -851,6 +858,12 @@ export function alignSegments(enSegments, jaSegments) {
       sectionsCompared: enSections.length,
       inconclusive: true,
       inconclusiveCategory: 'tokenless-near-tie',
+      inconclusiveMeta: {
+        leftSectionPath: ambiguousTokenlessSwap.leftSectionPath,
+        rightSectionPath: ambiguousTokenlessSwap.rightSectionPath,
+        currentScore: ambiguousTokenlessSwap.currentScore,
+        swapScore: ambiguousTokenlessSwap.swapScore,
+      },
       inconclusiveReason:
         `Tokenless adjacent sections "${buildSectionLabel(ambiguousTokenlessSwap.leftSectionPath)}" ` +
         `and "${buildSectionLabel(ambiguousTokenlessSwap.rightSectionPath)}" cannot rule out ` +
@@ -865,6 +878,7 @@ export function alignSegments(enSegments, jaSegments) {
     sectionsCompared: enSections.length,
     inconclusive: false,
     inconclusiveCategory: null,
+    inconclusiveMeta: null,
     inconclusiveReason: null,
   };
 }

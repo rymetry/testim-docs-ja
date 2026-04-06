@@ -388,7 +388,7 @@ npm run docs:report-categories
 >
 > **検出範囲の明確化**:
 > - **token-bearing section swap** (`section-body-swap` mutation type): symmetric destination evidence を満たすので `segment-shifted` (`confidence: 'high'`) として recall 100%。
-> - **tokenless free-form section swap**: Phase 5 の exact gate では `segment-shifted` を出さない。長さシグナルだけで swap を推定すると正常翻訳を false inconclusive にしやすいため、`inconclusive` に落とすのは current/swap が **ほぼ区別できない near-tie** の場合に限定する。つまり tokenless prose-only swap は基本的に Phase 5 の exact scope 外であり、本格対応は semantic signal（translation memory / embeddings）が入る Phase 6+ の課題。
+> - **tokenless free-form section swap**: Phase 5 の exact gate では `segment-shifted` を出さない。長さシグナルだけで swap を推定すると正常翻訳を false inconclusive にしやすいため、`inconclusive` に落とすのは current/swap が **ほぼ区別できない near-tie** の場合に限定する。つまり tokenless prose-only swap は基本的に Phase 5 の exact scope 外であり、Phase 6B ではこの `tokenless-near-tie` を **LLM / reviewer 向け review queue** として surfacing する。
 > - **tokenless cross-language の head/tail 段落削除**: 位置スコアが対称になるため `segment-missing` 1 件は出るが、どの段落が gap か (`enSegmentIndex`) は best-effort。中央削除は位置非対称性で正しく特定できる。
 > - **正常翻訳された tokenless free-form section**: `segment-shifted` は出ない。near-tie だけを `inconclusive` にするので、前回のように広範囲な false inconclusive は起こさない。
 
@@ -427,7 +427,7 @@ npm run docs:report-categories
 | cascade（diff=1 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
 | precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 35 |
 
-`segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、near-tie の曖昧ケースだけ `inconclusive` に落とす。それ以外の tokenless swap は Phase 5 の scope 外として Phase 6+ の advisory/semantic layer へ送る。
+`segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、near-tie の曖昧ケースだけ `inconclusive` に落とす。Phase 6B はこの `tokenless-near-tie` を **review queue** として surfacing するが、新しい semantic detector は導入しない。
 
 > Phase 5 PoC は **Go**。Phase 6A PR1 で frozen baseline 機構を追加し、Phase 6A PR2 で `segment-*` を primary gate に昇格済み。**shadow mode は retired**。`shadowIssues` / `shadowFiles` / `shadowIssuesByType` dual emit フィールドは Phase 7 reporting 4-family 化で削除予定。
 
@@ -506,6 +506,35 @@ translate-first / rebaseline-as-last-resort (Path 2)。
 
 ---
 
+## Phase 6B — Tokenless Near-Tie Review Queue
+
+Phase 6B は provider-free に再定義され、Phase 6A が既に出している
+`segment-inconclusive / tokenless-near-tie` を review queue として見やすく
+出すことに限定する。新 issue type / semantic provider / benchmark は入れない。
+queue は人手だけでなく、LLM / workflow がそのまま読める補助データとして扱う。
+
+**CLI**:
+
+```bash
+npm run check:parity -- --include-advisory
+```
+
+このフラグは `[Phase 6B review queue]` セクションを追加するだけで、
+gate exit code は変えない。`parity-check-status.json` には常に
+`advisoryQueue`、`advisoryQueueScope`、`summary.advisoryQueue*` が出力される。
+`advisoryQueue` の各 issue には `queueKey` と section pair 情報が入り、
+partial run かどうかは `advisoryQueueScope.isComplete` で判定する。
+
+**review queue の対象**:
+
+- `type === 'segment-inconclusive'`
+- `inconclusiveCategory === 'tokenless-near-tie'`
+
+**関連 spec**: `docs/superpowers/specs/2026-04-06-issue-225-phase-6b-design.md`
+**関連 plan**: `docs/superpowers/plans/2026-04-06-issue-225-phase-6b-plan.md`
+
+---
+
 ## テスト
 
 ```bash
@@ -539,7 +568,8 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_segments_boundary.test.mjs` | Phase 4 境界安定性ベンチマーク          |
 | `__tests__/source_parity_align.test.mjs`             | lib/source_parity_align.mjs             |
 | `__tests__/source_parity_recall.test.mjs`            | Phase 5 diff=1 recall ベンチマーク      |
-| `__tests__/source_parity_align_runtime.test.mjs`     | Phase 5 runtime wiring (shadow mode E2E)|
+| `__tests__/source_parity_align_runtime.test.mjs`     | Phase 6A/6B runtime integration E2E     |
+| `__tests__/source_parity_advisory_queue.test.mjs`    | Phase 6B review queue helper            |
 
 ---
 

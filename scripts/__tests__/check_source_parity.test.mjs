@@ -52,6 +52,16 @@ describe('parseArgs', () => {
     const args = parseArgs(['--json']);
     assert.equal(args.slug, null);
   });
+
+  it('parses --include-advisory', () => {
+    const args = parseArgs(['--include-advisory']);
+    assert.equal(args.includeAdvisory, true);
+  });
+
+  it('returns false includeAdvisory when not specified', () => {
+    const args = parseArgs(['--json']);
+    assert.equal(args.includeAdvisory, false);
+  });
 });
 
 describe('collectSnapshotSlugs', () => {

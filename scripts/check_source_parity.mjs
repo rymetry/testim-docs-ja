@@ -16,12 +16,15 @@ import {
 import {
   ISSUE_SEVERITY,
   alignSegments,
+  buildAdvisoryReviewQueue,
+  buildAdvisoryReviewScope,
   compareSnapshotStructure,
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
   loadSidebarSlugs,
   localCheck,
   parityDiffsToIssues,
+  summarizeAdvisoryReviewQueue,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import {
@@ -47,11 +50,15 @@ const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json'
 
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 
-function buildSegmentInconclusiveIssue(reason, category) {
+function buildSegmentInconclusiveIssue(reason, category, meta = null) {
   // category is the structured enum from alignSegments (`inconclusiveCategory`)
   // — `heading-count-mismatch`, `align-exception`, or `tokenless-near-tie`.
   // Required by parity-baseline.json so segment-inconclusive entries can be
   // identified by category rather than the volatile free-text `reason`.
+  const inconclusiveMeta =
+    meta && typeof meta === 'object' && !Array.isArray(meta)
+      ? { ...meta }
+      : null;
   return {
     type: 'segment-inconclusive',
     severity: ISSUE_SEVERITY['segment-inconclusive'],
@@ -59,6 +66,7 @@ function buildSegmentInconclusiveIssue(reason, category) {
     // now flows through the primary gate accounting, with existing drift
     // frozen via parity-baseline.json (keyed by inconclusiveCategory).
     inconclusiveCategory: category ?? 'align-exception',
+    inconclusiveMeta,
     inconclusiveReason: reason,
     detail: `alignment inconclusive [${category ?? 'align-exception'}]: ${reason}`,
   };
@@ -141,6 +149,7 @@ export function parseArgs(argv = process.argv.slice(2)) {
   const slugArg = argv.find((arg) => arg.startsWith('--slug='));
   return {
     json: argv.includes('--json'),
+    includeAdvisory: argv.includes('--include-advisory'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
     failOn: failOnArg ? failOnArg.split('=').slice(1).join('=') : null,
     slug: slugArg ? slugArg.split('=').slice(1).join('=') : null,
@@ -170,6 +179,7 @@ function loadBaselineFileSafe(filePath = BASELINE_PATH) {
 
 export async function checkSourceParity({
   json = false,
+  includeAdvisory = false,
   section = null,
   failOn = null,
   slug = null,
@@ -214,6 +224,7 @@ export async function checkSourceParity({
     if (resolvedSlug) console.log(`🔎 スラグ絞り込み: ${resolvedSlug}`);
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     if (failOn) console.log(`🚦 --fail-on=${failOn}`);
+    if (includeAdvisory) console.log('📝 Phase 6B review queue 表示: ON');
     console.log('');
   }
 
@@ -290,6 +301,7 @@ export async function checkSourceParity({
         let alignmentInconclusive = false;
         let alignmentInconclusiveReason = null;
         let alignmentInconclusiveCategory = null;
+        let alignmentInconclusiveMeta = null;
         try {
           const enSegments = extractSegmentsFromHtml(rawEnHtml);
           const jaSegments = extractSegmentsFromMarkdown(doc.body);
@@ -299,11 +311,13 @@ export async function checkSourceParity({
             alignmentInconclusive = true;
             alignmentInconclusiveReason = alignment.inconclusiveReason;
             alignmentInconclusiveCategory = alignment.inconclusiveCategory;
+            alignmentInconclusiveMeta = alignment.inconclusiveMeta ?? null;
           }
         } catch (e) {
           alignmentInconclusive = true;
           alignmentInconclusiveReason = e.message;
           alignmentInconclusiveCategory = 'align-exception';
+          alignmentInconclusiveMeta = null;
           console.error(
             `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
           );
@@ -318,6 +332,7 @@ export async function checkSourceParity({
             buildSegmentInconclusiveIssue(
               alignmentInconclusiveReason || 'unknown reason',
               alignmentInconclusiveCategory,
+              alignmentInconclusiveMeta,
             ),
           );
           issues.push(...compareSnapshotStructure(enBody, doc.body));
@@ -447,18 +462,28 @@ export async function checkSourceParity({
     }
   }
 
+  const advisoryQueueScope = buildAdvisoryReviewScope({
+    totalFiles: allFiles.length,
+    checkedFiles: checkedCount,
+    slug: resolvedSlug,
+    section,
+  });
+  const advisoryQueue = buildAdvisoryReviewQueue(results);
   const summary = {
     checkedAt: new Date().toISOString(),
     mode: 'local',
     totalFiles: allFiles.length,
     checkedFiles: checkedCount,
     ...summarizeParityResults(results),
+    ...summarizeAdvisoryReviewQueue(advisoryQueue, advisoryQueueScope),
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
   };
 
   const payload = {
     summary,
     files: results,
+    advisoryQueueScope,
+    advisoryQueue,
   };
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(payload, null, 2));
@@ -516,6 +541,33 @@ export async function checkSourceParity({
       );
       for (const slug of summary.baselineInvalidatedSlugs) {
         console.log(`  ${slug}`);
+      }
+    }
+    if (includeAdvisory) {
+      const scopeLabel = advisoryQueueScope.isComplete
+        ? 'full-repo queue'
+        : advisoryQueueScope.type === 'slug'
+          ? `partial scope: slug=${advisoryQueueScope.filters.slug}`
+          : `partial scope: section=${advisoryQueueScope.filters.section}`;
+      console.log(
+        `\n[Phase 6B review queue] tokenless-near-tie: ${summary.advisoryQueueIssues} 件 / ${summary.advisoryQueueFiles} ファイル (${scopeLabel})`,
+      );
+      console.log('  derived from existing segment-inconclusive issues only; no detector, no gate impact');
+      if (!advisoryQueueScope.isComplete) {
+        console.log('  partial queue only; use a full-repo run before workflow automation or queue-wide triage');
+      }
+      for (const entry of advisoryQueue) {
+        const state = entry.blocking ? 'blocking review' : 'baselined review';
+        console.log(`  ${entry.slug ?? entry.file} (${state})`);
+        for (const issue of entry.issues) {
+          const review = issue.baselineReviewAfter ? ` review=${issue.baselineReviewAfter}` : '';
+          const expired = issue.baselineExpired ? ' expired-baseline' : '';
+          const pair =
+            issue.leftSectionPath && issue.rightSectionPath
+              ? ` pair="${issue.leftSectionPath}" <-> "${issue.rightSectionPath}"`
+              : '';
+          console.log(`    - ${issue.detail}${review}${expired}${pair}`);
+        }
       }
     }
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);

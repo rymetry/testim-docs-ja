@@ -317,4 +317,99 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
       }
     }
   });
+
+  it('writes structured advisory queue metadata for tokenless-near-tie slug runs', () => {
+    if (existsSync(STATUS_PATH)) copyFileSync(STATUS_PATH, STATUS_BACKUP_PATH);
+
+    try {
+      const result = spawnSync(
+        process.execPath,
+        [
+          join(ROOT, 'scripts/check_source_parity.mjs'),
+          '--slug=running-tests/scheduler',
+          '--json',
+          '--include-advisory',
+        ],
+        { cwd: ROOT, encoding: 'utf8' },
+      );
+      assert.equal(
+        result.status,
+        0,
+        `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
+      );
+      const data = JSON.parse(readFileSync(STATUS_PATH, 'utf8'));
+
+      assert.equal(data.summary.advisoryQueueIssues, 1);
+      assert.equal(data.summary.advisoryQueueFiles, 1);
+      assert.equal(data.summary.advisoryQueueComplete, false);
+      assert.equal(data.summary.advisoryQueueScopeType, 'slug');
+      assert.deepEqual(data.advisoryQueueScope.filters, {
+        slug: 'running-tests/scheduler',
+        section: null,
+      });
+      assert.equal(data.advisoryQueueScope.isComplete, false);
+      assert.equal(data.advisoryQueueScope.checkedFiles, 1);
+      assert.ok(data.advisoryQueueScope.totalFiles >= 1);
+
+      const entry = data.advisoryQueue.find((item) => item.slug === 'running-tests/scheduler');
+      assert.ok(entry, 'expected scheduler page in advisory queue');
+      assert.equal(entry.issueCount, 1);
+      const issue = entry.issues[0];
+      assert.equal(
+        issue.queueKey,
+        'running-tests/scheduler|segment-inconclusive|category=tokenless-near-tie|pair=Modify your scheduled test suites > Activate or Pause=>Modify your scheduled test suites > Edit',
+      );
+      assert.equal(
+        issue.leftSectionPath,
+        'Modify your scheduled test suites > Activate or Pause',
+      );
+      assert.equal(issue.rightSectionPath, 'Modify your scheduled test suites > Edit');
+      assert.equal(typeof issue.currentScore, 'number');
+      assert.equal(typeof issue.swapScore, 'number');
+      assert.ok(issue.currentScore > 0);
+      assert.ok(issue.swapScore > 0);
+    } finally {
+      if (existsSync(STATUS_BACKUP_PATH)) {
+        copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);
+        unlinkSync(STATUS_BACKUP_PATH);
+      }
+    }
+  });
+
+  it('prints advisory queue scope notes for slug-scoped runs', () => {
+    if (existsSync(STATUS_PATH)) copyFileSync(STATUS_PATH, STATUS_BACKUP_PATH);
+
+    try {
+      const result = spawnSync(
+        process.execPath,
+        [
+          join(ROOT, 'scripts/check_source_parity.mjs'),
+          '--slug=running-tests/scheduler',
+          '--include-advisory',
+          '--fail-on=actionable',
+        ],
+        { cwd: ROOT, encoding: 'utf8' },
+      );
+      assert.equal(
+        result.status,
+        0,
+        `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
+      );
+      assert.ok(
+        result.stdout.includes('partial scope: slug=running-tests/scheduler'),
+        `stdout did not describe partial advisory queue scope:\n${result.stdout}`,
+      );
+      assert.ok(
+        result.stdout.includes(
+          'partial queue only; use a full-repo run before workflow automation or queue-wide triage',
+        ),
+        `stdout did not warn about partial advisory queue scope:\n${result.stdout}`,
+      );
+    } finally {
+      if (existsSync(STATUS_BACKUP_PATH)) {
+        copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);
+        unlinkSync(STATUS_BACKUP_PATH);
+      }
+    }
+  });
 });

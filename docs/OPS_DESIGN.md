@@ -55,6 +55,13 @@
 
 **出力**: `parity-check-status.json` に詳細結果を保存する。
 
+**Phase 6B review queue**: `npm run check:parity -- --include-advisory`
+で `tokenless-near-tie` の LLM/manual review queue を表示する。これは既存
+`segment-inconclusive` から導出した補助表示であり、gate exit code には影響しない。
+`parity-check-status.json` では `advisoryQueue` を workflow 入力として使えるが、
+partial run を避けるため `advisoryQueueScope.isComplete === true` を確認してから
+queue 全体を消費する。
+
 ### EN スナップショット正規化
 
 比較前に `normalizeEnArtifacts()` で EN 側の既知アーティファクトを正規化する:
@@ -251,4 +258,4 @@ revert すると segment-* issues は cutover 前の状態（shadow accounting �
 - baseline entries は `reviewAfter` を持つが、期限超過で自動 hard fail させない（無関係 PR が突然 red になる事故を防ぐため）
 - baseline paydown は明示的な PR で実施する（段階的縮小）
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
-- Phase 6B で `tokenless-near-tie` baseline エントリを advisory signal で triage する（Issue #225 Phase 6B spec 参照）
+- Phase 6B では `tokenless-near-tie` baseline エントリを review queue として triage する（Issue #225 Phase 6B spec 参照）
