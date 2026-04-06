@@ -901,6 +901,7 @@ describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
     const result = alignSegments(en, ja);
     assert.equal(result.inconclusive, false);
     assert.equal(result.inconclusiveCategory, null);
+    assert.equal(result.inconclusiveMeta, null);
   });
 
   it('returns inconclusiveCategory: "heading-count-mismatch" when heading counts differ', () => {
@@ -916,6 +917,7 @@ describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
     const result = alignSegments(en, ja);
     assert.equal(result.inconclusive, true);
     assert.equal(result.inconclusiveCategory, 'heading-count-mismatch');
+    assert.equal(result.inconclusiveMeta, null);
     assert.match(result.inconclusiveReason, /Heading count mismatch/);
   });
 
@@ -941,8 +943,17 @@ describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
     if (result.inconclusive) {
       assert.equal(result.inconclusiveCategory, 'tokenless-near-tie');
       assert.match(result.inconclusiveReason, /tokenless adjacent sections/i);
+      assert.deepEqual(result.inconclusiveMeta, {
+        leftSectionPath: 'Section A',
+        rightSectionPath: 'Section B',
+        currentScore: result.inconclusiveMeta.currentScore,
+        swapScore: result.inconclusiveMeta.swapScore,
+      });
+      assert.equal(typeof result.inconclusiveMeta.currentScore, 'number');
+      assert.equal(typeof result.inconclusiveMeta.swapScore, 'number');
     } else {
       assert.equal(result.inconclusiveCategory, null);
+      assert.equal(result.inconclusiveMeta, null);
     }
   });
 });

@@ -5,7 +5,7 @@
 - **Phase**: 6A（Phase 6 を 6A / 6B に分割した前半）
 - **Status**: 設計（user 承認済、writing-plans 移行待ち）
 - **Predecessor**: Phase 5 — Exact Diff Engine PoC + Go/No-Go（Go 判定済、shadow mode で runtime 接続済）
-- **Successor**: Phase 6B — Tokenless prose advisory / semantic layer（独立 spec、別 PR）
+- **Successor**: Phase 6B — Tokenless near-tie review queue / LLM triage layer（独立 spec、別 PR）
 
 ---
 
@@ -27,12 +27,12 @@ Phase 6A の責務は **Phase 5 の exact diff engine を deterministic に本�
 
 - baseline の paydown（件数削減）— cutover 後の継続運用課題で、6A の完了条件には入れない
 - Phase 7 reporting の 4 family 集計対応 — Phase 7 で実装。6A は `parity-check-status.json` に `baselined*` 系フィールドを追加するところまで
-- Tokenless free-form section の semantic / advisory 検出 — Phase 6B
+- Tokenless free-form section の review queue / LLM triage 導線追加 — Phase 6B
 - `paragraph-count-mismatch` 等の coarse signal の audit 降格 — Phase 8
 - workflow split（`ci.yml` / `scheduled-actionable.yml` / `deep-audit.yml` の役割再編）— Phase 8
 - 既存 acknowledgements の見直し / 削除 — 触らない
 - legacy `parity-allowlist.json` 関連 — Phase 3 で完了済み
-- `inconclusiveCategory` の semantic 信号での精度改善 — Phase 6B
+- `inconclusiveCategory` の queue 化 / triage automation 導線追加 — Phase 6B
 - 新 severity（`review-required` 等）の導入 — 必要なら Phase 6B / Phase 7 で再検討
 - Phase 5 alignment アルゴリズム本体の変更（weighted LCS / scoreSegmentMatch 等）— alignment は据え置き、Phase 6A は wrapper / 集計層のみ改修
 
@@ -105,7 +105,7 @@ ack 不能でも frozen baseline には載る。ack と baseline は別レイヤ
 |----------------------|---------|---------|
 | `heading-count-mismatch` | EN / JA の heading 数が一致しない | 翻訳追従、または `<pre><code>` 等で構造抽出不能なケース |
 | `align-exception` | `alignSegments` 内部で例外スロー | アルゴリズム改修または extractor 修正 |
-| `tokenless-near-tie` | tokenless free-form section で current/swap が near-tie | Phase 6B の semantic 信号 |
+| `tokenless-near-tie` | tokenless free-form section で current/swap が near-tie | Phase 6B の review queue / triage |
 
 `inconclusiveReason` は free text の説明として残すが、baseline 同定キーには **使わない**（文言変更で baseline が壊れるため）。
 
@@ -513,18 +513,17 @@ Phase 6B は **独立 spec / 独立 PR sequence** で進める。Phase 6A の me
 
 Phase 6B が Phase 6A から引き継ぐもの:
 
-- `inconclusiveCategory` の `tokenless-near-tie` 件数（Phase 6B の対応対象を直接ターゲット化できる）
+- `inconclusiveCategory` の `tokenless-near-tie` 件数（Phase 6B の review queue 対象を直接ターゲット化できる）
 - frozen baseline 機構（Phase 6B で advisory signal を追加する際にも使える）
 - Phase 5 / Phase 6A の Go 条件と test（regression 防止）
 
 Phase 6B が触る予定のもの（**Phase 6A では触らない**）:
 
-- tokenless prose-only swap 検出（advisory signal `suspected-section-swap` 等を別系統で出す）
-- translation memory / embeddings / similarity 比較
-- semantic 信号の precision / recall を別 benchmark で評価
-- semantic 信号は **gate に入れない**（advisory に留める）
+- tokenless-near-tie の review queue surfacing と構造化 metadata の整備
+- LLM / workflow が安全に消費できる queue key / scope metadata の提供
+- review queue は **gate に入れない**（advisory に留める）
 
-Phase 6B は research 性の強い phase であり、Phase 6A の deterministic cutover とは review 基準も rollback 基準も異なる。
+Phase 6B は gate 拡張ではなく triage 導線の整備であり、Phase 6A の deterministic cutover とは review 基準も rollback 基準も異なる。
 
 ---
 
