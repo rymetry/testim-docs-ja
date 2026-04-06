@@ -429,7 +429,69 @@ shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFil
 
 `segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、near-tie の曖昧ケースだけ `inconclusive` に落とす。それ以外の tokenless swap は Phase 5 の scope 外として Phase 6+ の advisory/semantic layer へ送る。
 
-> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6 で `segment-shadow` を主 gate に昇格する（NON_ACKNOWLEDGEABLE_TYPES と既存の baseline drift をどう移行するかは Phase 6 の責務）。
+> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6A PR1 で frozen baseline 機構を追加（gate flip はまだ）。Phase 6A PR2 で `segment-shadow` を主 gate に昇格する。
+
+---
+
+## Phase 6A — Frozen Baseline + Gate Promotion (進行中)
+
+Phase 6A は Phase 5 の exact diff engine を deterministic に primary gate へ
+昇格させる Phase。`segment-shadow` 隔離を解除する代わりに、cutover 時点の
+既存 drift を `parity-baseline.json` で凍結する。
+
+**設計原則**:
+
+- baseline と acknowledgement は別ファイル（責務分離）
+- baseline 同定キーは ownership ごとに分岐し、index に加えて
+  owner-side fingerprint を含める:
+  - **EN-owned** (`segment-missing`):
+    `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint`
+  - **EN-owned (token gap)** (`segment-token-gap`):
+    `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint + missingTokens`
+  - **EN+JA matched pair** (`segment-shifted`):
+    `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint + jaSourceFingerprint`
+  - **JA-owned** (`segment-extra` / `segment-untranslated`):
+    `slug + issueType + sectionPath + segmentKind + jaSegmentIndex + jaSourceFingerprint`
+  - **page-level** (`segment-inconclusive`):
+    `slug + issueType + inconclusiveCategory`
+- page-level snapshotFingerprint で conservative に invalidate（EN snapshot
+  が変わったら、そのページの baseline 全エントリを一括で剥がす）
+- `segment-inconclusive` は actionable / non-acknowledgeable のまま、
+  構造化 enum (`heading-count-mismatch` / `align-exception` /
+  `tokenless-near-tie`) で同定
+
+**ファイル**:
+
+- `scripts/lib/source_parity_baseline.mjs` — schema validation, key 生成,
+  page-level invalidation を含む tagging（純粋関数のみ）
+- `scripts/generate_parity_baseline.mjs` — baseline 生成 CLI
+  - `--regenerate` で full、`--slug=<csv>` で partial 再生成
+  - 入力の `parity-check-status.json` は full `npm run check:parity` 実行結果が必須
+  - `--rationale=<text>` / `--review-after=<YYYY-MM-DD>` で再現性を確保
+  - 出力は deterministic（`parity-check-status.json` の
+    `summary.checkedAt` を `generatedAt` / `generatedFromRunId` の seed に使い、
+    安定ソート + 2-space indent + LF 終端）
+- `parity-baseline.json` — frozen baseline file（PR1 では preview、
+  PR2 cutover で再生成）
+
+**npm script**:
+
+```bash
+npm run check:parity                                    # baseline tagging を含む実行
+npm run generate:parity-baseline -- --regenerate        # 完全再生成
+npm run generate:parity-baseline -- --slug=overview/foo # 部分再生成
+```
+
+**PR 構成**:
+
+- **PR1 (infra, shadow 維持)**: alignment refactor (`inconclusiveCategory`),
+  baseline schema/validation/match, generation script, preview baseline,
+  README 更新。Gate exit code は変わらない。
+- **PR2 (cutover)**: baseline 再生成 + shadow tagging 解除。`segment-*` が
+  primary gate の actionable 集計に乗る。
+
+**関連 spec**: `docs/superpowers/specs/2026-04-06-issue-225-phase-6a-design.md`
+**関連 plan**: `docs/superpowers/plans/2026-04-06-issue-225-phase-6a-plan.md`
 
 ---
 

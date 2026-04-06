@@ -7,13 +7,22 @@
  * and are NOT folded into the actionable / signal / activeFiles totals
  * that the runtime gate exit code reads. This is what lets Phase 5 wire
  * `alignSegments` into the runtime end-to-end without immediately
- * flipping ~230 baseline-drifted pages from green to red. Phase 6 will
- * promote shadow issues into the primary gate.
+ * flipping ~241 baseline-drifted pages from green to red. Phase 6A PR2
+ * will promote shadow issues into the primary gate.
+ *
+ * Phase 6A PR1 adds baseline accounting (`baselinedIssues`, `baselinedFiles`,
+ * `baselinedByType`, `baselinedByInconclusiveCategory`,
+ * `expiredBaselineEntries`) — counted regardless of shadow phase so the same
+ * fields work both before and after PR2 cutover. baseline-tagged issues are
+ * also excluded from active counts so PR2 can flip the gate by simply
+ * removing the shadow phase tag.
  */
 export function summarizeParityResults(results) {
   const issuesByType = {};
   const issuesBySeverity = {};
   const shadowIssuesByType = {};
+  const baselinedByType = {};
+  const baselinedByInconclusiveCategory = {};
   let actionableFiles = 0;
   let signalFiles = 0;
   let errorFiles = 0;
@@ -25,6 +34,9 @@ export function summarizeParityResults(results) {
   let expiredAcknowledgements = 0;
   let shadowIssues = 0;
   let shadowFiles = 0;
+  let baselinedIssues = 0;
+  let baselinedFiles = 0;
+  let expiredBaselineEntries = 0;
 
   for (const result of results) {
     let hasActionable = false;
@@ -34,16 +46,34 @@ export function summarizeParityResults(results) {
     let hasActiveError = false;
     let hasActiveIssue = false;
     let hasShadow = false;
+    let hasBaselined = false;
 
     for (const issue of result.issues) {
       const isShadow = issue.phase === 'segment-shadow';
+      const isBaselined = issue.baselined === true;
+
+      if (isBaselined) {
+        baselinedIssues += 1;
+        baselinedByType[issue.type] = (baselinedByType[issue.type] || 0) + 1;
+        if (issue.baselineExpired === true) {
+          expiredBaselineEntries += 1;
+        }
+        if (
+          issue.type === 'segment-inconclusive' &&
+          typeof issue.inconclusiveCategory === 'string'
+        ) {
+          baselinedByInconclusiveCategory[issue.inconclusiveCategory] =
+            (baselinedByInconclusiveCategory[issue.inconclusiveCategory] || 0) + 1;
+        }
+        hasBaselined = true;
+      }
 
       if (isShadow) {
         shadowIssues += 1;
         shadowIssuesByType[issue.type] = (shadowIssuesByType[issue.type] || 0) + 1;
         hasShadow = true;
         // Shadow issues bypass actionable/signal/active accounting so the
-        // runtime exit code stays unchanged until Phase 6 cutover.
+        // runtime exit code stays unchanged until Phase 6A PR2 cutover.
         continue;
       }
 
@@ -55,7 +85,7 @@ export function summarizeParityResults(results) {
 
       if (isValidAck) {
         acknowledgedIssues += 1;
-      } else {
+      } else if (!isBaselined) {
         hasActiveIssue = true;
       }
 
@@ -65,12 +95,12 @@ export function summarizeParityResults(results) {
 
       if (issue.severity === 'actionable') {
         hasActionable = true;
-        if (!isValidAck) hasActiveActionable = true;
+        if (!isValidAck && !isBaselined) hasActiveActionable = true;
       }
       if (issue.severity === 'signal') hasSignal = true;
       if (issue.severity === 'error') {
         hasError = true;
-        if (!isValidAck) hasActiveError = true;
+        if (!isValidAck && !isBaselined) hasActiveError = true;
       }
     }
 
@@ -82,6 +112,7 @@ export function summarizeParityResults(results) {
     if (hasActiveError) activeErrorFiles += 1;
     if (hasActiveIssue) activeFiles += 1;
     if (hasShadow) shadowFiles += 1;
+    if (hasBaselined) baselinedFiles += 1;
   }
 
   return {
@@ -100,5 +131,10 @@ export function summarizeParityResults(results) {
     shadowIssues,
     shadowFiles,
     shadowIssuesByType,
+    baselinedIssues,
+    baselinedFiles,
+    baselinedByType,
+    baselinedByInconclusiveCategory,
+    expiredBaselineEntries,
   };
 }
