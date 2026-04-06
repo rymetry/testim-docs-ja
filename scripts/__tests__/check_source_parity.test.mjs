@@ -8,9 +8,10 @@ let parseArgs;
 let loadAllowlist;
 let isAllowlisted;
 let applyAllowlist;
+let collectSnapshotSlugs;
 
 before(async () => {
-  ({ parseArgs, loadAllowlist, isAllowlisted, applyAllowlist } = await import(
+  ({ parseArgs, loadAllowlist, isAllowlisted, applyAllowlist, collectSnapshotSlugs } = await import(
     '../check_source_parity.mjs'
   ));
 });
@@ -280,5 +281,44 @@ describe('applyAllowlist', () => {
     ];
     const filtered = applyAllowlist('test-page', issues, {});
     assert.equal(filtered.length, 1);
+  });
+});
+
+describe('collectSnapshotSlugs', () => {
+  it('returns empty set for non-existent directory', () => {
+    const result = collectSnapshotSlugs('/nonexistent/path');
+    assert.equal(result.size, 0);
+  });
+
+  it('collects slugs from nested HTML files', () => {
+    const tmpDir = path.join(os.tmpdir(), `test-snapshots-${Date.now()}`);
+    const subDir = path.join(tmpDir, 'overview');
+    fs.mkdirSync(subDir, { recursive: true });
+    fs.writeFileSync(path.join(subDir, 'testim-overview.html'), '<div>test</div>');
+    fs.writeFileSync(path.join(subDir, 'changelog.html'), '<div>test</div>');
+
+    try {
+      const result = collectSnapshotSlugs(tmpDir);
+      assert.equal(result.size, 2);
+      assert.ok(result.has('overview/testim-overview'));
+      assert.ok(result.has('overview/changelog'));
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true });
+    }
+  });
+
+  it('ignores non-HTML files', () => {
+    const tmpDir = path.join(os.tmpdir(), `test-snapshots-${Date.now()}`);
+    fs.mkdirSync(tmpDir, { recursive: true });
+    fs.writeFileSync(path.join(tmpDir, 'readme.md'), '# test');
+    fs.writeFileSync(path.join(tmpDir, 'test.html'), '<div>test</div>');
+
+    try {
+      const result = collectSnapshotSlugs(tmpDir);
+      assert.equal(result.size, 1);
+      assert.ok(result.has('test'));
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true });
+    }
   });
 });
