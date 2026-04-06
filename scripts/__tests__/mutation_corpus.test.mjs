@@ -293,15 +293,81 @@ describe('deleteStep', () => {
 });
 
 // ---------------------------------------------------------------------------
-// deleteCalloutParagraph
+// deleteCalloutParagraph — block-aware within callouts
 // ---------------------------------------------------------------------------
 describe('deleteCalloutParagraph', () => {
-  it('removes content from inside a callout', () => {
+  it('removes plain text from inside a callout', () => {
     const md = ':::note\nCallout paragraph text\n:::';
     const result = deleteCalloutParagraph(md);
     assert.ok(result);
     assert.equal(result.metadata.type, 'callout-paragraph-delete');
     assert.ok(!result.mutated.includes('Callout paragraph text'));
+  });
+
+  it('removes one numbered step from inside a callout (same-level siblings are separate)', () => {
+    const md = [
+      ':::warning',
+      '手順が必要です:',
+      '',
+      '1. 最初のステップ',
+      '2. 次のステップ',
+      '3. 最後のステップ',
+      ':::',
+    ].join('\n');
+    // candidate 0 = "手順が必要です:", candidate 1 = "1. 最初のステップ"
+    const result = deleteCalloutParagraph(md, 1);
+    assert.ok(result);
+    // Each same-level step is a separate structural element → 1 line removed
+    assert.equal(result.metadata.linesRemoved, 1);
+    assert.ok(!result.mutated.includes('最初のステップ'));
+    assert.ok(result.mutated.includes('次のステップ'));
+    assert.ok(result.mutated.includes('最後のステップ'));
+  });
+
+  it('removes numbered step with continuation from inside a callout', () => {
+    const md = [
+      ':::warning',
+      '1. ステップ本文',
+      '   continuation line',
+      '2. 次のステップ',
+      ':::',
+    ].join('\n');
+    const result = deleteCalloutParagraph(md, 0);
+    assert.ok(result);
+    // Step 1 + its continuation = 2 lines
+    assert.equal(result.metadata.linesRemoved, 2);
+    assert.ok(!result.mutated.includes('ステップ本文'));
+    assert.ok(!result.mutated.includes('continuation'));
+    assert.ok(result.mutated.includes('次のステップ'));
+  });
+
+  it('removes bullet block from inside a callout', () => {
+    const md = [
+      ':::note',
+      '- bullet A',
+      '  continuation',
+      '- bullet B',
+      ':::',
+    ].join('\n');
+    const result = deleteCalloutParagraph(md, 0);
+    assert.ok(result);
+    // "- bullet A" + "  continuation" = 2 lines
+    assert.equal(result.metadata.linesRemoved, 2);
+    assert.ok(result.mutated.includes('bullet B'));
+  });
+
+  it('does not cross callout boundary', () => {
+    const md = [
+      ':::note',
+      '1. step inside',
+      ':::',
+      '',
+      '1. step outside',
+    ].join('\n');
+    const result = deleteCalloutParagraph(md, 0);
+    assert.ok(result);
+    assert.equal(result.metadata.linesRemoved, 1);
+    assert.ok(result.mutated.includes('step outside'));
   });
 
   it('returns null if no callout content', () => {
@@ -380,21 +446,51 @@ describe('deleteHtmlTableCell', () => {
 });
 
 // ---------------------------------------------------------------------------
-// moveSegment
+// moveSegment — block-aware
 // ---------------------------------------------------------------------------
 describe('moveSegment', () => {
-  it('swaps two adjacent paragraphs', () => {
-    const lines = moveSegment('Para A\n\nPara B').mutated.split('\n');
+  it('swaps two single-line paragraphs', () => {
+    const result = moveSegment('Para A\n\nPara B');
+    assert.ok(result);
+    const lines = result.mutated.split('\n');
     assert.equal(lines[0], 'Para B');
     assert.equal(lines[2], 'Para A');
+  });
+
+  it('swaps multi-line paragraph blocks', () => {
+    const md = 'Line A1\nLine A2\n\nPara B';
+    const result = moveSegment(md);
+    assert.ok(result);
+    const lines = result.mutated.split('\n');
+    // Block B should come first, then blank, then Block A
+    assert.equal(lines[0], 'Para B');
+    assert.equal(lines[1], '');
+    assert.equal(lines[2], 'Line A1');
+    assert.equal(lines[3], 'Line A2');
+  });
+
+  it('does not swap lines within the same paragraph block', () => {
+    // Two lines in the same paragraph should NOT be swapped
+    const md = 'Line one\nLine two';
+    const result = moveSegment(md);
+    // Only 1 paragraph block → no pair → null
+    assert.equal(result, null);
   });
 
   it('does not swap across headings', () => {
     assert.equal(moveSegment('Para A\n\n## Heading\n\nPara B'), null);
   });
 
-  it('returns null for identical adjacent paragraphs', () => {
+  it('returns null for identical adjacent paragraph blocks', () => {
     assert.equal(moveSegment('Same text\n\nSame text'), null);
+  });
+
+  it('preserves gap lines between blocks', () => {
+    const md = 'Block A\n\n\n\nBlock B';
+    const result = moveSegment(md);
+    assert.ok(result);
+    // Total line count should be preserved
+    assert.equal(result.mutated.split('\n').length, md.split('\n').length);
   });
 });
 

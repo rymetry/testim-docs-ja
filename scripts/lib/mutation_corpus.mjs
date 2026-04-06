@@ -256,27 +256,74 @@ export function deleteStep(md, nth = 0) {
 }
 
 /**
- * Remove one paragraph from inside a callout block.
+ * Detect the block extent of a callout-body element.
+ * If the line is a list item (bullet/step), uses listItemBlockEnd.
+ * If it's a plain text line, extends through consecutive plain callout-body lines.
+ * @param {string[]} lines
+ * @param {number} start
+ * @param {number} calloutCloseIdx - Line index of the callout's closing :::
+ * @returns {number} Exclusive end index
+ */
+function calloutBodyBlockEnd(lines, start, calloutCloseIdx) {
+  const trimmed = lines[start].trimStart();
+  // List item inside callout — reuse indent-based block detection
+  if (/^[-*+]\s/.test(trimmed) || /^\d+\.\s/.test(trimmed)) {
+    const raw = listItemBlockEnd(lines, start);
+    return Math.min(raw, calloutCloseIdx);
+  }
+  // Plain text — extend through consecutive non-blank, non-list callout lines
+  let end = start + 1;
+  while (end < calloutCloseIdx) {
+    const line = lines[end];
+    const t = line.trimStart();
+    if (t === '' || /^[-*+]\s/.test(t) || /^\d+\.\s/.test(t) || /^:::/.test(t)) break;
+    end++;
+  }
+  return end;
+}
+
+/**
+ * Remove one structural element from inside a callout block.
+ * Handles both plain paragraphs and list items block-aware.
  * @param {string} md
  * @param {number} [nth=0]
  * @returns {MutationResult | null}
  */
 export function deleteCalloutParagraph(md, nth = 0) {
   const classified = classifyLines(md);
-  const calloutBodies = classified.filter(
-    (l) => l.kind === 'callout-body' && l.text.trim().length > 0,
-  );
-  if (calloutBodies.length === 0) return null;
-  const target = calloutBodies[nth % calloutBodies.length];
   const lines = md.split('\n');
+  // Build candidate list: first line of each block within callouts
+  const candidates = [];
+  const seen = new Set();
+  for (let ci = 0; ci < classified.length; ci++) {
+    const entry = classified[ci];
+    if (entry.kind !== 'callout-body' || entry.text.trim() === '') continue;
+    if (seen.has(entry.index)) continue;
+    // Find the callout's closing :::
+    let closeIdx = lines.length;
+    for (let j = ci + 1; j < classified.length; j++) {
+      if (classified[j].kind === 'callout-close') {
+        closeIdx = classified[j].index;
+        break;
+      }
+    }
+    const blockEnd = calloutBodyBlockEnd(lines, entry.index, closeIdx);
+    // Mark all lines in this block as seen to avoid sub-elements
+    for (let li = entry.index; li < blockEnd; li++) seen.add(li);
+    candidates.push({ lineIndex: entry.index, blockEnd, closeIdx });
+  }
+  if (candidates.length === 0) return null;
+  const target = candidates[nth % candidates.length];
+  const removedText = lines.slice(target.lineIndex, target.blockEnd).join('\n');
+  const linesRemoved = target.blockEnd - target.lineIndex;
   return {
-    mutated: removeLineRange(lines, target.index, target.index + 1).join('\n'),
+    mutated: removeLineRange(lines, target.lineIndex, target.blockEnd).join('\n'),
     metadata: {
       type: 'callout-paragraph-delete',
-      lineIndex: target.index,
-      linesRemoved: 1,
-      originalText: target.text,
-      description: `callout内段落削除 (L${target.index + 1})`,
+      lineIndex: target.lineIndex,
+      linesRemoved,
+      originalText: removedText,
+      description: `callout内削除 (L${target.lineIndex + 1}-${target.blockEnd}, ${linesRemoved}行)`,
     },
   };
 }
@@ -367,39 +414,62 @@ export function deleteHtmlTableCell(md, nth = 0) {
 }
 
 /**
- * Swap two adjacent paragraphs within the same section.
+ * Swap two adjacent paragraph blocks within the same section.
+ * A paragraph block may span multiple consecutive lines.
  * @param {string} md
  * @param {number} [nth=0]
  * @returns {MutationResult | null}
  */
 export function moveSegment(md, nth = 0) {
   const classified = classifyLines(md);
-  const paragraphs = classified.filter(
-    (l) => l.kind === 'paragraph' && l.text.trim().length > 0,
-  );
+  // Collect paragraph block boundaries (deduped to block starts)
+  const blocks = [];
+  for (let i = 0; i < classified.length; i++) {
+    if (classified[i].kind !== 'paragraph' || classified[i].text.trim() === '') continue;
+    const isStart = i === 0 ||
+      classified[i - 1].kind !== 'paragraph' ||
+      classified[i - 1].index !== classified[i].index - 1;
+    if (isStart) {
+      const [bStart, bEnd] = paragraphBlockRange(classified, i);
+      blocks.push({ start: bStart, end: bEnd });
+    }
+  }
+  // Find adjacent block pairs with no heading between
   const pairs = [];
-  for (let i = 0; i < paragraphs.length - 1; i++) {
-    const a = paragraphs[i];
-    const b = paragraphs[i + 1];
-    if (a.text === b.text) continue;
-    const between = classified.slice(a.index + 1, b.index);
-    const hasHeading = between.some((l) => l.kind === 'heading');
-    if (!hasHeading) pairs.push([a, b]);
+  for (let i = 0; i < blocks.length - 1; i++) {
+    const a = blocks[i];
+    const b = blocks[i + 1];
+    const lines = md.split('\n');
+    const aText = lines.slice(a.start, a.end).join('\n');
+    const bText = lines.slice(b.start, b.end).join('\n');
+    if (aText === bText) continue;
+    const between = classified.filter(
+      (l) => l.index >= a.end && l.index < b.start,
+    );
+    if (between.some((l) => l.kind === 'heading')) continue;
+    pairs.push({ a, b, aText, bText });
   }
   if (pairs.length === 0) return null;
-  const [a, b] = pairs[nth % pairs.length];
+  const pair = pairs[nth % pairs.length];
   const lines = md.split('\n');
-  const newLines = [...lines];
-  newLines[a.index] = b.text;
-  newLines[b.index] = a.text;
+  const aLines = lines.slice(pair.a.start, pair.a.end);
+  const bLines = lines.slice(pair.b.start, pair.b.end);
+  const gapLines = lines.slice(pair.a.end, pair.b.start);
+  const newLines = [
+    ...lines.slice(0, pair.a.start),
+    ...bLines,
+    ...gapLines,
+    ...aLines,
+    ...lines.slice(pair.b.end),
+  ];
   return {
     mutated: newLines.join('\n'),
     metadata: {
       type: 'segment-move',
-      lineIndex: a.index,
+      lineIndex: pair.a.start,
       linesRemoved: 0,
-      originalText: `${a.text} \u2194 ${b.text}`,
-      description: `segment移動 (L${a.index + 1} \u2194 L${b.index + 1})`,
+      originalText: `[${pair.a.start + 1}-${pair.a.end}] \u2194 [${pair.b.start + 1}-${pair.b.end}]`,
+      description: `segment移動 (L${pair.a.start + 1}-${pair.a.end} \u2194 L${pair.b.start + 1}-${pair.b.end})`,
     },
   };
 }
