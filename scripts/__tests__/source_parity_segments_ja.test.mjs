@@ -339,6 +339,46 @@ describe('extractSegmentsFromMarkdown — callouts', () => {
     const bodies = byKind(extractSegmentsFromMarkdown(md), 'callout-body');
     assert.equal(bodies.length, 1);
   });
+
+  it('classifies unordered-list items inside a callout as unordered-list-item, not callout-body', () => {
+    // Regression: previously, lines inside :::note were all swallowed as
+    // callout-body, so list markers never reached the normal list handler.
+    // EN walkCalloutBody emits unordered-list-item for <ul><li> inside a
+    // callout; JA must match so Phase 5 segment kinds align.
+    const md = [
+      '## S',
+      '',
+      ':::note',
+      'Intro paragraph.',
+      '',
+      '- Step A',
+      '- Step B',
+      ':::',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const bodies = byKind(segments, 'callout-body');
+    const items = byKind(segments, 'unordered-list-item');
+    assert.equal(bodies.length, 1);
+    assert.equal(bodies[0].textNorm, 'intro paragraph.');
+    assert.equal(items.length, 2);
+    assert.deepEqual(items.map((i) => i.textNorm), ['step a', 'step b']);
+  });
+
+  it('classifies ordered-list items inside a callout as ordered-list-item', () => {
+    const md = [
+      '## S',
+      '',
+      ':::note',
+      '1. First',
+      '2. Second',
+      ':::',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'ordered-list-item').length, 2);
+    assert.equal(byKind(segments, 'callout-body').length, 0);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -377,6 +417,24 @@ describe('extractSegmentsFromMarkdown — tables', () => {
     const cells = byKind(extractSegmentsFromMarkdown(md), 'table-cell');
     assert.equal(cells.length, 2);
   });
+
+  it('respects escaped pipe delimiters (\\|) inside cell content', () => {
+    // Regression: `| a \| b | c |` should produce two cells ("a | b", "c"),
+    // not three. Common in code-heavy docs where cell content includes
+    // literal pipes (e.g. regex alternation, shell pipelines).
+    const md = [
+      '## Data',
+      '',
+      '| Code | Meaning |',
+      '| ---- | ------- |',
+      '| a \\| b | either a or b |',
+      '',
+    ].join('\n');
+    const cells = byKind(extractSegmentsFromMarkdown(md), 'table-cell');
+    assert.equal(cells.length, 2);
+    assert.equal(cells[0].textNorm, 'a | b');
+    assert.equal(cells[1].textNorm, 'either a or b');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -409,6 +467,49 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
       summaries.map((s) => s.textNorm),
       ['first question?', 'second question?'],
     );
+  });
+
+  it('classifies block-level content inside <details> via the normal flow', () => {
+    // Regression: previously the JA extractor flattened everything inside
+    // <details> into the paragraph buffer. EN walkDetails recurses into
+    // walkBlock for non-summary children, so lists/tables/images keep their
+    // proper segment kinds. JA must match for Phase 5 alignment on FAQ pages
+    // with structured answers.
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>Question?</summary>',
+      '',
+      '- Answer bullet A',
+      '- Answer bullet B',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 1);
+    assert.equal(byKind(segments, 'unordered-list-item').length, 2);
+    assert.equal(byKind(segments, 'paragraph').length, 0);
+  });
+
+  it('classifies paragraphs inside <details> as regular paragraph (not callout-body)', () => {
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>Q</summary>',
+      '',
+      'Regular answer paragraph.',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 1);
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'regular answer paragraph.');
   });
 });
 

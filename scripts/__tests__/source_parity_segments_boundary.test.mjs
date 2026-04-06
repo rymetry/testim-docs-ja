@@ -6,14 +6,20 @@
  * verifies that segment boundaries are stable enough to feed the Phase 5
  * exact diff engine.
  *
- * Hard assertions (structural invariants):
- *   - heading count matches exactly per page
- *   - ordered-list-item count matches exactly per page
- *   - unordered-list-item count matches exactly per page
+ * Hard assertions (structural invariants — must match exactly):
+ *   - heading count
+ *   - unordered-list-item count
+ *   - callout-body count (after the callout-block-parsing refactor)
  *
  * Soft assertions (stability score thresholds):
  *   - per-page gate-eligible stability score ≥ 0.85
  *   - mean stability score across all pages ≥ 0.95
+ *
+ * Note on ordered-list-item: the count is NOT asserted for exact equality.
+ * Translation improvements sometimes convert "1. x 2. y 3. z" embedded in a
+ * single EN paragraph into a proper numbered list on the JA side. This is a
+ * legitimate structural divergence that Phase 5's exact diff engine must
+ * handle; Phase 4 only tracks it via the stability score.
  *
  * The stability score is 1 - (total absolute count diffs / (2 * total segments))
  * across gate-eligible kinds. A score of 1.0 means every kind is identical;
@@ -129,21 +135,6 @@ describe('Phase 4 boundary stability benchmark', () => {
     }
   });
 
-  it('ordered-list-item counts match exactly between EN and JA on every page', () => {
-    const gateSet = new Set(GATE_ELIGIBLE_KINDS);
-    const manifest = loadManifest();
-    for (const page of manifest) {
-      const analysis = analyzePage(page.slug, gateSet);
-      const en = analysis.enCounts['ordered-list-item'] ?? 0;
-      const ja = analysis.jaCounts['ordered-list-item'] ?? 0;
-      assert.equal(
-        en,
-        ja,
-        `${page.slug}: ordered-list-item count mismatch (EN=${en}, JA=${ja})`,
-      );
-    }
-  });
-
   it('unordered-list-item counts match exactly between EN and JA on every page', () => {
     const gateSet = new Set(GATE_ELIGIBLE_KINDS);
     const manifest = loadManifest();
@@ -155,6 +146,25 @@ describe('Phase 4 boundary stability benchmark', () => {
         en,
         ja,
         `${page.slug}: unordered-list-item count mismatch (EN=${en}, JA=${ja})`,
+      );
+    }
+  });
+
+  it('callout-body counts match exactly between EN and JA on every page', () => {
+    // After the Phase 4 callout-block-parsing refactor, list items inside a
+    // callout are classified as list-items on both sides. The remaining
+    // callout-body segments are plain-paragraph content, which should align
+    // exactly between the two extractors.
+    const gateSet = new Set(GATE_ELIGIBLE_KINDS);
+    const manifest = loadManifest();
+    for (const page of manifest) {
+      const analysis = analyzePage(page.slug, gateSet);
+      const en = analysis.enCounts['callout-body'] ?? 0;
+      const ja = analysis.jaCounts['callout-body'] ?? 0;
+      assert.equal(
+        en,
+        ja,
+        `${page.slug}: callout-body count mismatch (EN=${en}, JA=${ja})`,
       );
     }
   });

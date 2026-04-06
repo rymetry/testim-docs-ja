@@ -25,18 +25,34 @@ const TABLE_ROW_RE = /^\|.+\|\s*$/;
 const TABLE_SEPARATOR_RE = /^\|\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|\s*$/;
 const HTML_TABLE_OPEN_RE = /^<table\b/i;
 const HTML_TABLE_CLOSE_RE = /<\/table>/i;
+const HORIZONTAL_RULE_RE = /^(-{3,}|\*{3,}|_{3,})$/;
+const ANCHOR_SUFFIX_RE = /\s*\{#[^}]*\}\s*$/;
 
 /**
- * Split a pipe table row into trimmed cells, ignoring the leading/trailing
- * pipe characters.
+ * Split a pipe table row into trimmed cells. Respects backslash-escaped pipes
+ * (`\|`) inside cell content so table rows with literal pipe characters are
+ * not over-split into phantom columns.
  */
 function splitTableCells(line) {
-  return line
-    .trim()
-    .replace(/^\|/, '')
-    .replace(/\|\s*$/, '')
-    .split('|')
-    .map((cell) => cell.trim());
+  const trimmedRow = line.trim().replace(/^\|/, '').replace(/\|\s*$/, '');
+  const cells = [];
+  let current = '';
+  for (let i = 0; i < trimmedRow.length; i++) {
+    const ch = trimmedRow[i];
+    if (ch === '\\' && trimmedRow[i + 1] === '|') {
+      current += '|';
+      i += 1;
+      continue;
+    }
+    if (ch === '|') {
+      cells.push(current.trim());
+      current = '';
+      continue;
+    }
+    current += ch;
+  }
+  cells.push(current.trim());
+  return cells;
 }
 
 /**
@@ -101,7 +117,18 @@ function makeEmitter() {
 /**
  * Extract canonical segments from a JA markdown document body.
  *
- * @param {string} body  markdown content (without frontmatter handled below)
+ * The main loop uses a `paragraphKind` variable to decide whether an
+ * accumulated plain-text run should be emitted as `paragraph` or as
+ * `callout-body`. Inside `:::note`/`:::caution` blocks `paragraphKind`
+ * flips to `callout-body`, so list items / images / tables still reach
+ * the normal classification path and keep their proper segment kinds —
+ * matching the EN walker's `walkCalloutBody` behavior.
+ *
+ * `<details>` / `</details>` lines are treated as block boundaries: only
+ * the `<summary>` is extracted as a `details-summary` segment; everything
+ * else inside flows through normal classification (again matching EN).
+ *
+ * @param {string} body  markdown content (frontmatter is stripped internally)
  * @returns {import('./source_parity_segments_shared.mjs').Segment[]}
  */
 export function extractSegmentsFromMarkdown(body) {
@@ -109,22 +136,19 @@ export function extractSegmentsFromMarkdown(body) {
 
   const rawLines = body.split('\n');
   const lines = stripFrontmatter(rawLines);
+  const lineOffset = rawLines.length - lines.length;
 
   const emitter = makeEmitter();
   let headingStack = [];
   let firstH1Consumed = false;
 
-  // Paragraph accumulator (outside callouts)
+  // Paragraph accumulator — the emit kind depends on `paragraphKind`.
   let paragraphBuf = [];
   let paragraphStartLine = 0;
+  let paragraphKind = 'paragraph';
 
-  // Callout state
+  // Callout state: only tracks whether we are currently inside a ::: block.
   let inCallout = false;
-  let calloutBuf = [];
-  let calloutStartLine = 0;
-
-  // Details state (for summary extraction only)
-  let inDetails = false;
 
   // Code fence state
   let inCodeFence = false;
@@ -134,27 +158,19 @@ export function extractSegmentsFromMarkdown(body) {
   const flushParagraph = () => {
     if (paragraphBuf.length === 0) return;
     const path = buildSectionPath(headingStack);
-    emitter.emit(path, 'paragraph', paragraphBuf.join(' '), paragraphStartLine);
+    emitter.emit(path, paragraphKind, paragraphBuf.join(' '), paragraphStartLine);
     paragraphBuf = [];
-  };
-
-  const flushCalloutBody = () => {
-    if (calloutBuf.length === 0) return;
-    const path = buildSectionPath(headingStack);
-    emitter.emit(path, 'callout-body', calloutBuf.join(' '), calloutStartLine);
-    calloutBuf = [];
   };
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const trimmed = line.trim();
-    const lineNo = i + 1 + (rawLines.length - lines.length);
+    const lineNo = i + 1 + lineOffset;
 
     // Code fence toggling — handled outside everything else
     if (FENCE_RE.test(trimmed)) {
       if (!inCodeFence) {
         flushParagraph();
-        if (inCallout) flushCalloutBody();
         inCodeFence = true;
         codeFenceStartLine = lineNo;
         codeFenceBuf = [];
@@ -174,7 +190,6 @@ export function extractSegmentsFromMarkdown(body) {
     // HTML table block — scan forward to </table>, extract tbody td cells.
     if (HTML_TABLE_OPEN_RE.test(trimmed)) {
       flushParagraph();
-      const startIdx = i;
       let endIdx = -1;
       for (let j = i; j < lines.length; j++) {
         if (HTML_TABLE_CLOSE_RE.test(lines[j])) {
@@ -183,7 +198,7 @@ export function extractSegmentsFromMarkdown(body) {
         }
       }
       if (endIdx !== -1) {
-        const tableHtml = lines.slice(startIdx, endIdx + 1).join('\n');
+        const tableHtml = lines.slice(i, endIdx + 1).join('\n');
         const cells = extractHtmlTableCells(tableHtml);
         const path = buildSectionPath(headingStack);
         for (const cell of cells) {
@@ -195,52 +210,36 @@ export function extractSegmentsFromMarkdown(body) {
       // Unterminated — fall through to normal paragraph handling
     }
 
-    // Details block — only the <summary> inside is emitted as a segment kind
-    if (DETAILS_OPEN_RE.test(trimmed)) {
+    // <details> open/close are treated as block boundaries. Only the
+    // <summary> line is special-cased; other nested content flows through
+    // normal classification so lists/tables/images keep their proper kinds.
+    if (DETAILS_OPEN_RE.test(trimmed) || DETAILS_CLOSE_RE.test(trimmed)) {
       flushParagraph();
-      inDetails = true;
       continue;
     }
-    if (inDetails && DETAILS_CLOSE_RE.test(trimmed)) {
-      inDetails = false;
-      continue;
-    }
-    if (inDetails) {
-      const summaryMatch = line.match(SUMMARY_RE);
-      if (summaryMatch) {
+    const summaryMatch = line.match(SUMMARY_RE);
+    if (summaryMatch) {
+      flushParagraph();
+      const summaryText = summaryMatch[1].replace(/<[^>]+>/g, '').trim();
+      if (summaryText.length > 0) {
         const path = buildSectionPath(headingStack);
-        emitter.emit(path, 'details-summary', summaryMatch[1].trim(), lineNo);
-      } else if (trimmed) {
-        // Treat plain text inside <details> as paragraph content
-        paragraphBuf.push(trimmed);
-        if (paragraphBuf.length === 1) paragraphStartLine = lineNo;
-      } else {
-        flushParagraph();
+        emitter.emit(path, 'details-summary', summaryText, lineNo);
       }
       continue;
     }
 
-    // Callout open/close
+    // Callout open/close — switch paragraphKind between 'paragraph' and
+    // 'callout-body' without short-circuiting the rest of the classifier.
     if (!inCallout && CALLOUT_OPEN_RE.test(trimmed)) {
       flushParagraph();
       inCallout = true;
-      calloutBuf = [];
-      calloutStartLine = lineNo;
+      paragraphKind = 'callout-body';
       continue;
     }
     if (inCallout && CALLOUT_CLOSE_RE.test(trimmed)) {
-      flushCalloutBody();
+      flushParagraph();
       inCallout = false;
-      continue;
-    }
-
-    if (inCallout) {
-      if (trimmed === '') {
-        flushCalloutBody();
-        continue;
-      }
-      if (calloutBuf.length === 0) calloutStartLine = lineNo;
-      calloutBuf.push(trimmed);
+      paragraphKind = 'paragraph';
       continue;
     }
 
@@ -250,7 +249,7 @@ export function extractSegmentsFromMarkdown(body) {
       flushParagraph();
       const level = headingMatch[1].length;
       // Strip Astro-style anchor suffix: "## Title {#anchor-id}" → "Title"
-      const text = headingMatch[2].replace(/\s*\{#[^}]*\}\s*$/, '').trim();
+      const text = headingMatch[2].replace(ANCHOR_SUFFIX_RE, '').trim();
       if (level === 1 && !firstH1Consumed) {
         firstH1Consumed = true;
         // Title — do not emit as a heading segment, do not push to stack
@@ -304,7 +303,7 @@ export function extractSegmentsFromMarkdown(body) {
     }
 
     // Horizontal rule — not a content segment; EN emits nothing for <hr/>
-    if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+    if (HORIZONTAL_RULE_RE.test(trimmed)) {
       flushParagraph();
       continue;
     }
@@ -315,14 +314,18 @@ export function extractSegmentsFromMarkdown(body) {
       continue;
     }
 
-    // Default: part of a paragraph run
+    // Default: part of a paragraph (or callout-body, depending on context)
     if (paragraphBuf.length === 0) paragraphStartLine = lineNo;
     paragraphBuf.push(trimmed);
   }
 
-  // Flush any trailing state
-  if (inCallout) flushCalloutBody();
-  flushParagraph();
+  // Flush any trailing state (restore paragraphKind so final flush is sane)
+  if (inCallout) {
+    flushParagraph();
+    paragraphKind = 'paragraph';
+  } else {
+    flushParagraph();
+  }
 
   return emitter.segments;
 }

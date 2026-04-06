@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.978167302554335,
+  "meanStabilityScore": 0.9813956212236926,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -47,7 +47,7 @@
     {
       "slug": "advanced-editing/coding-assistant",
       "enTotal": 39,
-      "jaTotal": 48,
+      "jaTotal": 44,
       "enCounts": {
         "paragraph": 9,
         "unordered-list-item": 11,
@@ -55,18 +55,18 @@
         "heading": 1
       },
       "jaCounts": {
-        "paragraph": 14,
+        "paragraph": 10,
         "unordered-list-item": 11,
         "ordered-list-item": 18,
         "heading": 1,
         "details-summary": 4
       },
-      "stabilityScore": 0.90625
+      "stabilityScore": 0.9431818181818182
     },
     {
       "slug": "advanced-editing/loops",
       "enTotal": 205,
-      "jaTotal": 209,
+      "jaTotal": 211,
       "enCounts": {
         "paragraph": 51,
         "callout-body": 16,
@@ -76,12 +76,12 @@
       },
       "jaCounts": {
         "paragraph": 54,
-        "callout-body": 17,
+        "callout-body": 16,
         "unordered-list-item": 26,
         "heading": 12,
-        "ordered-list-item": 100
+        "ordered-list-item": 103
       },
-      "stabilityScore": 0.9904306220095693
+      "stabilityScore": 0.985781990521327
     },
     {
       "slug": "settings/cli-prerequisites",
