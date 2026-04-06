@@ -22,12 +22,10 @@ import {
 } from './lib/source_parity.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
-import { extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
-import { checkPageCoverage } from './lib/source_parity_page_coverage.mjs';
+import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
-const SIDEBAR_SNAPSHOT_PATH = path.join(ROOT_DIR, 'snapshots', 'en', 'sidebar.json');
 const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
@@ -36,23 +34,6 @@ const ALLOWLIST_PATH = path.join(ROOT_DIR, 'parity-allowlist.json');
 
 // Signal-only issue types that can be suppressed by the allowlist
 const ALLOWABLE_SEVERITIES = new Set(['signal']);
-
-/**
- * Load sidebar slugs from EN sidebar snapshot (JSON), falling back to
- * SIDEBAR_URLS.md text-based extraction.
- */
-function loadSidebarSlugsWithSnapshot(sidebarText) {
-  if (fs.existsSync(SIDEBAR_SNAPSHOT_PATH)) {
-    try {
-      const snapshot = JSON.parse(fs.readFileSync(SIDEBAR_SNAPSHOT_PATH, 'utf8'));
-      const slugs = extractSlugsFromSnapshot(snapshot);
-      if (slugs.size > 0) return slugs;
-    } catch (e) {
-      console.warn(`Warning: Failed to parse sidebar snapshot, falling back to SIDEBAR_URLS.md: ${e.message}`);
-    }
-  }
-  return loadSidebarSlugs(sidebarText);
-}
 
 /**
  * Load freshness state from source-sync-status.json.
@@ -180,7 +161,7 @@ export async function checkSourceParity({
   slug = null,
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH) ? fs.readFileSync(SIDEBAR_PATH, 'utf8') : '';
-  const sidebarSlugs = loadSidebarSlugsWithSnapshot(sidebarText);
+  const sidebarSlugs = loadSidebarSlugs(sidebarText);
   const freshnessState = loadFreshnessState();
   const snapshotSlugs = collectSnapshotSlugs(SNAPSHOTS_DIR);
   const allFiles = findMdFiles(DOCS_DIR);
@@ -224,6 +205,11 @@ export async function checkSourceParity({
 
     checkedCount += 1;
     let issues = [...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug })];
+
+    // Per-file snapshot-missing check (freshness-aware)
+    issues.push(
+      ...checkSinglePageSnapshot(fileSlug, doc.data.sourceUrl || '', snapshotSlugs, freshnessState),
+    );
 
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.

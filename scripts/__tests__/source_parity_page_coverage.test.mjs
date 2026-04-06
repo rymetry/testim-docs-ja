@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 
 import {
   checkSourcePageMissingLocal,
-  checkMissingFreshSnapshot,
+  checkMissingSnapshot,
+  checkSinglePageSnapshot,
   checkPageCoverage,
 } from '../lib/source_parity_page_coverage.mjs';
 
@@ -53,55 +54,57 @@ describe('checkSourcePageMissingLocal', () => {
 });
 
 // ---------------------------------------------------------------------------
-// checkMissingFreshSnapshot
+// checkMissingSnapshot
 // ---------------------------------------------------------------------------
 
-describe('checkMissingFreshSnapshot', () => {
+describe('checkMissingSnapshot', () => {
   it('returns empty array when all slugs with sourceUrl have snapshots', () => {
     const localSourceUrls = new Map([['a', 'https://example.com/a']]);
     const snapshotSlugs = new Set(['a']);
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
     assert.deepEqual(result, []);
   });
 
-  it('returns actionable issue when freshnessState is "fresh" and snapshot missing', () => {
+  it('returns missing-fresh-snapshot (actionable) when freshnessState is "fresh"', () => {
     const localSourceUrls = new Map([['a', 'https://example.com/a']]);
     const snapshotSlugs = new Set();
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
     assert.equal(result.length, 1);
     assert.equal(result[0].type, 'missing-fresh-snapshot');
     assert.equal(result[0].severity, 'actionable');
-    assert.match(result[0].detail, /fresh/);
   });
 
-  it('returns signal issue when freshnessState is "partial" and snapshot missing', () => {
+  it('returns missing-snapshot (signal) when freshnessState is "partial"', () => {
     const localSourceUrls = new Map([['a', 'https://example.com/a']]);
     const snapshotSlugs = new Set();
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'partial');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'partial');
     assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-snapshot');
     assert.equal(result[0].severity, 'signal');
   });
 
-  it('returns signal issue when freshnessState is "broken"', () => {
+  it('returns missing-snapshot (signal) when freshnessState is "broken"', () => {
     const localSourceUrls = new Map([['a', 'https://example.com/a']]);
     const snapshotSlugs = new Set();
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'broken');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'broken');
     assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-snapshot');
     assert.equal(result[0].severity, 'signal');
   });
 
-  it('returns signal issue when freshnessState is null (no source-sync data)', () => {
+  it('returns missing-snapshot (signal) when freshnessState is null', () => {
     const localSourceUrls = new Map([['a', 'https://example.com/a']]);
     const snapshotSlugs = new Set();
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, null);
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, null);
     assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-snapshot');
     assert.equal(result[0].severity, 'signal');
   });
 
   it('skips slugs without sourceUrl (empty map)', () => {
     const localSourceUrls = new Map();
     const snapshotSlugs = new Set();
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
     assert.deepEqual(result, []);
   });
 
@@ -111,7 +114,7 @@ describe('checkMissingFreshSnapshot', () => {
       ['b', 'https://example.com/b'],
     ]);
     const snapshotSlugs = new Set();
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
     assert.equal(result.length, 2);
   });
 
@@ -121,9 +124,46 @@ describe('checkMissingFreshSnapshot', () => {
       ['b', 'https://example.com/b'],
     ]);
     const snapshotSlugs = new Set(['a']);
-    const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
+    const result = checkMissingSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
     assert.equal(result.length, 1);
     assert.match(result[0].detail, /b/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// checkSinglePageSnapshot
+// ---------------------------------------------------------------------------
+
+describe('checkSinglePageSnapshot', () => {
+  it('returns empty when sourceUrl is empty', () => {
+    const result = checkSinglePageSnapshot('a', '', new Set(), 'fresh');
+    assert.deepEqual(result, []);
+  });
+
+  it('returns empty when snapshot exists', () => {
+    const result = checkSinglePageSnapshot('a', 'https://example.com/a', new Set(['a']), 'fresh');
+    assert.deepEqual(result, []);
+  });
+
+  it('returns missing-fresh-snapshot (actionable) when fresh and no snapshot', () => {
+    const result = checkSinglePageSnapshot('a', 'https://example.com/a', new Set(), 'fresh');
+    assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-fresh-snapshot');
+    assert.equal(result[0].severity, 'actionable');
+  });
+
+  it('returns missing-snapshot (signal) when not fresh and no snapshot', () => {
+    const result = checkSinglePageSnapshot('a', 'https://example.com/a', new Set(), null);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-snapshot');
+    assert.equal(result[0].severity, 'signal');
+  });
+
+  it('returns missing-snapshot (signal) when broken and no snapshot', () => {
+    const result = checkSinglePageSnapshot('a', 'https://example.com/a', new Set(), 'broken');
+    assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-snapshot');
+    assert.equal(result[0].severity, 'signal');
   });
 });
 
@@ -178,6 +218,7 @@ describe('checkPageCoverage', () => {
       freshnessState: 'broken',
     });
     assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'missing-snapshot');
     assert.equal(result[0].severity, 'signal');
   });
 });

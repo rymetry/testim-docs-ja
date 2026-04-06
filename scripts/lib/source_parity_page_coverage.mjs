@@ -40,28 +40,50 @@ export function checkSourcePageMissingLocal(sidebarSlugs, localSlugs) {
 }
 
 /**
- * Detect JA pages with sourceUrl but no EN snapshot.
- * Severity depends on source freshness:
- *   - "fresh" → actionable (source was fully fetched, snapshot should exist)
- *   - "partial" / "broken" / null → signal (can't confirm freshness)
+ * Detect JA pages with sourceUrl but no EN snapshot (bulk check).
+ * Emits one of two distinct issue types so ISSUE_SEVERITY is canonical:
+ *   - "missing-fresh-snapshot" (actionable) when freshnessState === "fresh"
+ *   - "missing-snapshot" (signal) otherwise
  *
  * @param {Map<string, string>} localSourceUrls — slug → sourceUrl for JA files
  * @param {Set<string>} snapshotSlugs — slugs with existing EN snapshot files
  * @param {string | null} freshnessState — from source-sync-status.json
  * @returns {Array<{type: string, detail: string, severity: string}>}
  */
-export function checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, freshnessState) {
+export function checkMissingSnapshot(localSourceUrls, snapshotSlugs, freshnessState) {
   const issues = [];
   const isFresh = freshnessState === 'fresh';
   for (const [slug] of localSourceUrls) {
     if (snapshotSlugs.has(slug)) continue;
-    issues.push({
-      type: 'missing-fresh-snapshot',
-      detail: `sourceUrl があるが${isFresh ? ' fresh' : ''} EN スナップショットが存在しない: ${slug}`,
-      severity: isFresh ? 'actionable' : 'signal',
-    });
+    issues.push(
+      withSeverity({
+        type: isFresh ? 'missing-fresh-snapshot' : 'missing-snapshot',
+        detail: `sourceUrl があるが EN スナップショットが存在しない: ${slug}`,
+      }),
+    );
   }
   return issues;
+}
+
+/**
+ * Per-file snapshot-missing check (for --slug single-page mode).
+ *
+ * @param {string} slug
+ * @param {string} sourceUrl
+ * @param {Set<string>} snapshotSlugs
+ * @param {string | null} freshnessState
+ * @returns {Array<{type: string, detail: string, severity: string}>}
+ */
+export function checkSinglePageSnapshot(slug, sourceUrl, snapshotSlugs, freshnessState) {
+  if (!sourceUrl) return [];
+  if (snapshotSlugs.has(slug)) return [];
+  const isFresh = freshnessState === 'fresh';
+  return [
+    withSeverity({
+      type: isFresh ? 'missing-fresh-snapshot' : 'missing-snapshot',
+      detail: `sourceUrl があるが EN スナップショットが存在しない: ${slug}`,
+    }),
+  ];
 }
 
 /**
@@ -84,6 +106,6 @@ export function checkPageCoverage({
 }) {
   return [
     ...checkSourcePageMissingLocal(sidebarSlugs, localSlugs),
-    ...checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, freshnessState),
+    ...checkMissingSnapshot(localSourceUrls, snapshotSlugs, freshnessState),
   ];
 }
