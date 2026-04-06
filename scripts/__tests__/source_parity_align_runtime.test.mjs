@@ -1,5 +1,5 @@
 /**
- * End-to-end runtime integration test for the Phase 5 segment-level gate.
+ * End-to-end runtime integration test for the Phase 6A segment-level gate.
  *
  * Verifies that:
  *   1. `source_parity.mjs` re-exports the new alignment surface
@@ -7,11 +7,11 @@
  *      `extractSegmentsFromMarkdown`).
  *   2. The runtime `checkSourceParity()` actually invokes the new engine
  *      and writes segment-level diffs into `parity-check-status.json` as
- *      shadow-tagged issues (`phase: 'segment-shadow'`).
- *   3. Shadow issues do NOT fail the runtime exit code (Phase 5 is wired
- *      in shadow mode; Phase 6 will promote to primary gate).
- *   4. `summarizeParityResults` reports shadow issues separately under
- *      `shadowIssues` / `shadowFiles` / `shadowIssuesByType`.
+ *      primary-gate issues (no `phase: 'segment-shadow'`) with baseline
+ *      metadata when the page is part of the frozen cutover baseline.
+ *   3. Baselined issues do NOT fail the runtime exit code.
+ *   4. `summarizeParityResults` reports primary-gate issues in the
+ *      actionable totals while dual-emitting `shadowIssues* = 0`.
  *   5. The alignment + parityDiffsToIssues round trip produces issues
  *      that carry the structured metadata Phase 6 / Phase 7 reports
  *      will rely on (sectionIndex, segmentKind, fingerprints).
@@ -62,11 +62,11 @@ describe('source_parity.mjs facade — Phase 5 surface', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 2. parityDiffsToIssues — schema + shadow tagging
+// 2. parityDiffsToIssues — schema (Phase 6A cutover: primary gate)
 // ---------------------------------------------------------------------------
 
 describe('parityDiffsToIssues', () => {
-  it('tags every issue with phase=segment-shadow', () => {
+  it('emits primary-gate actionable issues without shadow phase tagging', () => {
     const enHtml = '<h2>Setup</h2><p>Configure with <code>--proxy</code>.</p>';
     const jaMd = '## セットアップ\n\nプロキシを設定します。\n';
     const enSegs = extractSegmentsFromHtml(enHtml);
@@ -75,7 +75,9 @@ describe('parityDiffsToIssues', () => {
     const issues = parityDiffsToIssues(alignment.diffs);
     assert.ok(issues.length > 0, 'expected at least one diff (token-gap on --proxy)');
     for (const issue of issues) {
-      assert.equal(issue.phase, 'segment-shadow');
+      // Phase 6A cutover (2026-04-06): shadow phase tagging removed.
+      // segment-* issues now flow through primary gate accounting.
+      assert.equal(issue.phase, undefined);
       assert.equal(issue.severity, 'actionable');
       assert.ok(issue.detail.startsWith('['), 'detail must include section label prefix');
       assert.ok(typeof issue.sectionIndex === 'number');
@@ -103,20 +105,22 @@ describe('parityDiffsToIssues', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 3. summarizeParityResults — shadow accounting
+// 3. summarizeParityResults — Phase 6A cutover accounting
 // ---------------------------------------------------------------------------
 
-describe('summarizeParityResults — shadow accounting', () => {
-  it('counts shadow issues separately from actionable / signal totals', () => {
+describe('summarizeParityResults — Phase 6A cutover', () => {
+  it('counts un-baselined segment-* as primary gate actionable', () => {
+    // Phase 6A cutover: un-baselined segment-* issues flow through
+    // primary gate accounting. No shadow phase tag.
     const results = [
       {
         file: 'a.md',
         sourceUrl: '',
         category: '',
         issues: [
-          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', detail: 'x' },
-          { type: 'segment-extra', severity: 'actionable', phase: 'segment-shadow', detail: 'y' },
-          { type: 'segment-inconclusive', severity: 'actionable', phase: 'segment-shadow', detail: 'z' },
+          { type: 'segment-missing', severity: 'actionable', detail: 'x' },
+          { type: 'segment-extra', severity: 'actionable', detail: 'y' },
+          { type: 'segment-inconclusive', severity: 'actionable', detail: 'z' },
           { type: 'paragraph-count-mismatch', severity: 'signal', detail: 'count' },
         ],
       },
@@ -125,27 +129,81 @@ describe('summarizeParityResults — shadow accounting', () => {
         sourceUrl: '',
         category: '',
         issues: [
-          { type: 'segment-token-gap', severity: 'actionable', phase: 'segment-shadow', detail: 'w' },
+          { type: 'segment-token-gap', severity: 'actionable', detail: 'w' },
         ],
       },
     ];
     const summary = summarizeParityResults(results);
-    assert.equal(summary.shadowIssues, 4);
-    assert.equal(summary.shadowFiles, 2);
-    assert.deepEqual(summary.shadowIssuesByType, {
-      'segment-missing': 1,
-      'segment-extra': 1,
-      'segment-inconclusive': 1,
-      'segment-token-gap': 1,
-    });
-    // Shadow issues must NOT be folded into actionable / active.
-    assert.equal(summary.actionableFiles, 0);
-    assert.equal(summary.activeActionableFiles, 0);
-    // The signal-only file b is not in the file count, but file a IS
-    // because it has the paragraph-count-mismatch.
-    assert.equal(summary.totalIssues, 1, 'only the non-shadow issue is counted in totalIssues');
+    // segment-* are now counted in primary totals
+    assert.equal(summary.totalIssues, 5);
+    assert.equal(summary.issuesByType['segment-missing'], 1);
+    assert.equal(summary.issuesByType['segment-extra'], 1);
+    assert.equal(summary.issuesByType['segment-inconclusive'], 1);
+    assert.equal(summary.issuesByType['segment-token-gap'], 1);
     assert.equal(summary.issuesByType['paragraph-count-mismatch'], 1);
-    assert.equal(summary.issuesByType['segment-missing'] ?? 0, 0);
+    // Both files have actionable segment issues, so actionableFiles = 2
+    assert.equal(summary.actionableFiles, 2);
+    // Without baseline, they are also active
+    assert.equal(summary.activeActionableFiles, 2);
+    // Shadow dual-emit stays at 0
+    assert.equal(summary.shadowIssues, 0);
+    assert.equal(summary.shadowFiles, 0);
+  });
+
+  it('excludes baseline-tagged segment-* from active counts', () => {
+    const results = [
+      {
+        file: 'a.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          {
+            type: 'segment-missing',
+            severity: 'actionable',
+            baselined: true,
+            detail: 'x',
+          },
+          {
+            type: 'segment-inconclusive',
+            severity: 'actionable',
+            baselined: true,
+            inconclusiveCategory: 'heading-count-mismatch',
+            detail: 'z',
+          },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.actionableFiles, 1);
+    // baselined issues do not count as active
+    assert.equal(summary.activeActionableFiles, 0);
+    assert.equal(summary.activeFiles, 0);
+    assert.equal(summary.baselinedIssues, 2);
+    assert.equal(summary.baselinedFiles, 1);
+    assert.deepEqual(summary.baselinedByInconclusiveCategory, {
+      'heading-count-mismatch': 1,
+    });
+  });
+
+  it('still handles legacy shadow-tagged issues for backward compat (dual emit)', () => {
+    // Compatibility shim: if a caller programmatically passes shadow-tagged
+    // issues, they are counted as shadow and excluded from primary totals.
+    // This path is dead under normal operation post-cutover.
+    const results = [
+      {
+        file: 'legacy.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', detail: 'legacy' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.shadowIssues, 1);
+    assert.equal(summary.shadowFiles, 1);
+    assert.equal(summary.activeActionableFiles, 0);
+    assert.equal(summary.totalIssues, 0);
   });
 });
 
@@ -153,8 +211,8 @@ describe('summarizeParityResults — shadow accounting', () => {
 // 4. End-to-end CLI invocation against a real drifted page
 // ---------------------------------------------------------------------------
 
-describe('check_source_parity.mjs --slug — Phase 5 runtime integration', () => {
-  it('emits shadow-tagged segment-* issues into parity-check-status.json', () => {
+describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () => {
+  it('emits baseline-tagged segment-* issues into parity-check-status.json', () => {
     // Backup any existing status file so the test does not destroy
     // local CI state. Restored in the `after` step below.
     if (existsSync(STATUS_PATH)) copyFileSync(STATUS_PATH, STATUS_BACKUP_PATH);
@@ -177,34 +235,81 @@ describe('check_source_parity.mjs --slug — Phase 5 runtime integration', () =>
       assert.ok(existsSync(STATUS_PATH), 'parity-check-status.json must exist');
       const data = JSON.parse(readFileSync(STATUS_PATH, 'utf8'));
 
-      // Shadow accounting populated by summarizeParityResults.
+      // Phase 6A cutover: segment-* issues flow through primary gate,
+      // but known drift is frozen via parity-baseline.json so the runtime
+      // exit code remains 0 for this drifted page.
       const summary = data.summary;
       assert.ok(
-        (summary.shadowIssues ?? 0) > 0,
-        'expected at least one shadow issue on a known-drifted page',
+        (summary.baselinedIssues ?? 0) > 0,
+        'expected at least one baseline-tagged issue on a known-drifted page',
       );
-      assert.ok((summary.shadowFiles ?? 0) >= 1);
-      assert.ok(summary.shadowIssuesByType);
+      assert.ok((summary.baselinedFiles ?? 0) >= 1);
+      assert.ok(summary.baselinedByType);
+      // Dual-emit shadow fields stay at 0 post-cutover
+      assert.equal(summary.shadowIssues ?? 0, 0);
 
-      // Per-file shadow issues are present in the issues array with
-      // phase=segment-shadow and structured metadata.
+      // Per-file segment-* issues are present with primary gate shape
+      // (no shadow phase tag) and baselined: true because the preview
+      // baseline from PR1 covers this page.
       const file = data.files.find(
         (f) => f.file === 'src/content/docs/test-management/shared-configuration.md',
       );
       assert.ok(file, 'drifted page must appear in the results');
-      const shadowIssues = file.issues.filter((i) => i.phase === 'segment-shadow');
-      assert.ok(shadowIssues.length > 0, 'drifted page must have segment-shadow issues');
-      const sample = shadowIssues[0];
-      assert.ok(
-        ['segment-missing', 'segment-extra', 'segment-shifted', 'segment-untranslated', 'segment-token-gap']
-          .concat('segment-inconclusive')
-          .includes(sample.type),
+      const segmentIssues = file.issues.filter((i) =>
+        ['segment-missing', 'segment-extra', 'segment-shifted', 'segment-untranslated', 'segment-token-gap', 'segment-inconclusive']
+          .includes(i.type),
       );
-      assert.equal(sample.severity, 'actionable');
+      assert.ok(segmentIssues.length > 0, 'drifted page must have segment-* issues');
+      for (const issue of segmentIssues) {
+        assert.equal(issue.phase, undefined, 'shadow phase tag must be gone');
+        assert.equal(issue.severity, 'actionable');
+        assert.equal(issue.baselined, true, 'existing drift must be baseline-tagged');
+      }
+      const sample = segmentIssues[0];
       assert.equal(typeof sample.sectionIndex, 'number');
       assert.equal(typeof sample.segmentKind, 'string');
       assert.ok('enSourceFingerprint' in sample);
       assert.ok('jaSourceFingerprint' in sample);
+    } finally {
+      if (existsSync(STATUS_BACKUP_PATH)) {
+        copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);
+        unlinkSync(STATUS_BACKUP_PATH);
+      }
+    }
+  });
+
+  it('prints baseline-covered files as non-blocking in the CLI output', () => {
+    if (existsSync(STATUS_PATH)) copyFileSync(STATUS_PATH, STATUS_BACKUP_PATH);
+
+    try {
+      const result = spawnSync(
+        process.execPath,
+        [
+          join(ROOT, 'scripts/check_source_parity.mjs'),
+          '--slug=test-management/shared-configuration',
+          '--fail-on=actionable',
+        ],
+        { cwd: ROOT, encoding: 'utf8' },
+      );
+      assert.equal(
+        result.status,
+        0,
+        `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
+      );
+      assert.ok(
+        result.stdout.includes(
+          '⏸️ src/content/docs/test-management/shared-configuration.md (covered by baseline/ack)',
+        ),
+        `stdout did not mark the baselined file as non-blocking:\n${result.stdout}`,
+      );
+      assert.ok(
+        result.stdout.includes('🧊baseline'),
+        `stdout did not annotate baselined issues:\n${result.stdout}`,
+      );
+      assert.ok(
+        !result.stdout.includes('❌ src/content/docs/test-management/shared-configuration.md'),
+        `stdout still marked the baselined file as blocking:\n${result.stdout}`,
+      );
     } finally {
       if (existsSync(STATUS_BACKUP_PATH)) {
         copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);

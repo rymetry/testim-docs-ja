@@ -171,3 +171,84 @@ npm run test && npm run build
 - [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:snapshots`、`check:parity`、`check:summary`、issue 更新 / close を実行する
 - [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
 - `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する
+
+---
+
+## Phase 6A Rollback Playbook
+
+Phase 6A cutover (2026-04-06) 後に問題が発生した場合の対応手順。Issue #225 Phase 6A spec の §7 を runbook 化したもの。
+
+### 判断フロー
+
+```text
+PR2 merge 後に問題発生
+    │
+    ├── false negative の疑いがある?
+    │      └── Yes → Path 1 (revert) 即時実行
+    │
+    ├── root cause 即特定可能?
+    │      ├── No → Path 1 (revert)
+    │      └── Yes
+    │            ├── snapshot 変更が起点?
+    │            │      ├── Yes → Path 2 (translate-first)
+    │            │      └── No
+    │            │            ├── 1 commit で fix forward 可能?
+    │            │            │      ├── Yes → forward-fix PR
+    │            │            │      └── No → Path 1 (revert)
+```
+
+**重要**: false negative 疑いは**最優先で revert する**。false positive は forward-fix で時間をかけて直せるが、false negative は gate の信頼性そのものを破壊するため、疑いがある段階で止める方が安全。
+
+### Path 1 — Full revert
+
+**Trigger**:
+
+- false negative の疑い（baseline match logic が新しい bug を吸収している懸念）
+- root cause が same-day で特定できない
+- 明らかな baseline 機構のバグ
+- C4 (baseline-recall) テストが過去に false negative を見逃していた疑い
+
+**手順**:
+
+1. main に取り込まれた PR2 の commit SHA を特定し、通常の squash merge なら `git revert <PR2 commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
+2. revert PR で `npm run check:parity -- --fail-on=actionable` が exit 0 を確認
+3. fast-track で merge（reviewer 1 名 + CI green）
+4. main 復旧確認後、separate issue で root cause investigation を起票
+5. 修正 + 再 cutover は PR2′ として再実施
+6. **再 cutover の前提**: 検出された failure pattern を C4 / C5 / 新規 test として regression guard を仕込んでから再実施。テスト追加なしの再 cutover は禁止
+
+revert すると segment-* issues は cutover 前の状態（shadow accounting 相当）に戻る。PR1 の infra（baseline schema, generation script, alignment 改修）は PR1 そのものの revert でない限り残るため、`generate_parity_baseline.mjs` 等のツールは引き続き使える。
+
+### Path 2 — Translate-first, rebaseline as last resort
+
+**Trigger**:
+
+- main の CI が baseline invalidation に起因して red
+- root cause が特定の slug 群への snapshot 変更（PR2 後の snapshot update PR が起点）
+- false negative の疑いがない（純粋な page-level invalidation の動作）
+
+**手順**:
+
+1. **どの slug が invalidate されたかを確認**: `parity-check-status.json` の `baselineInvalidatedSlugs` から抽出
+2. **第一選択肢: 翻訳追従**
+   - JA 翻訳を新しい EN snapshot に追従させる通常の翻訳 PR を出す
+   - baseline には触らない
+   - 翻訳完了後は新しい snapshot fingerprint で gate が自然に green に戻る
+3. **第二選択肢（justification 必須）: rebaseline**
+   - 翻訳追従が現実的でない場合のみ
+   - `node scripts/generate_parity_baseline.mjs --slug=<slug>[,<slug>...]` で部分再生成
+   - 再生成 diff を含む PR を起こし、PR description に必ず justification を記載:
+     - なぜ翻訳追従でなく rebaseline を選んだか
+     - 想定される paydown のタイミング
+     - `reviewAfter` を継承するか延長するか（延長する場合は理由）
+
+**重要**: rebaseline を「snapshot 変更時の自動的な逃げ道」にしてはならない。原則は常に **翻訳追従が第一**。rebaseline は justification がある例外的ケースに限る。
+
+### Baseline 運用ルール
+
+- `parity-baseline.json` は Phase 6A cutover 時点の既知 drift を凍結したもの
+- 新規発生の segment-* issue は baseline に載らず即 gate fail
+- baseline entries は `reviewAfter` を持つが、期限超過で自動 hard fail させない（無関係 PR が突然 red になる事故を防ぐため）
+- baseline paydown は明示的な PR で実施する（段階的縮小）
+- `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
+- Phase 6B で `tokenless-near-tie` baseline エントリを advisory signal で triage する（Issue #225 Phase 6B spec 参照）
