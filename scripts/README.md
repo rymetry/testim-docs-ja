@@ -89,7 +89,7 @@ npm run check:parity -- --fail-on=any                     # allowlist 除外後�
 | `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致              |
 | `source-snapshot-missing`     | sourceUrl があるが EN スナップショットが存在しない |
 
-**allowlist**: `parity-allowlist.json` で signal severity の issue を抑制可能。slug + type + (detailIncludes or detailRegex) で一致。actionable/error は抑制不可。
+**acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。`source-page-missing-local` / `segment-*` は acknowledgement 不可。
 
 **出力**: `parity-check-status.json`。
 
