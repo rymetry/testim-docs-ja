@@ -19,9 +19,9 @@ import { createHash } from 'node:crypto';
 export const NON_ACKNOWLEDGEABLE_TYPES = Object.freeze(
   new Set([
     'source-page-missing-local',
-    'segment-missing',
-    'segment-untranslated',
-    'segment-token-gap',
+    'segment-missing', // Reserved for Phase 4+ segment-level checks — not yet emitted
+    'segment-untranslated', // Reserved for Phase 4+ segment-level checks — not yet emitted
+    'segment-token-gap', // Reserved for Phase 4+ segment-level checks — not yet emitted
   ]),
 );
 
@@ -44,7 +44,7 @@ export function computeSnapshotFingerprint(content) {
  * @returns {object} — the validated parsed object (same reference)
  */
 export function validateAcknowledgements(parsed) {
-  if (!parsed || typeof parsed !== 'object') {
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
     throw new Error('Acknowledgements file must be a JSON object');
   }
 
