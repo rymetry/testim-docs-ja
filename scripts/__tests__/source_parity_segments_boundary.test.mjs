@@ -52,14 +52,23 @@ const REPORT_PATH = join(FIXTURES, 'segment-boundary-report.json');
 /**
  * Slugs where ordered-list-item counts are allowed to diverge between EN
  * and JA because of a known translation improvement. Each entry documents
- * WHY the drift exists so future reviewers can confirm it is still
- * intentional before adding new entries.
+ * the EXACT expected counts on both sides plus a reason, so the
+ * stale-exception guard can reject any deviation — whether the drift
+ * disappears entirely or shifts into a new shape (e.g. EN=100/JA=120 or
+ * EN=90/JA=103 would all fail the guard and force the map to be
+ * re-reviewed before the test suite is green again).
+ *
+ * @type {Readonly<Record<string, {expectedEn: number, expectedJa: number, reason: string}>>}
  */
 const KNOWN_ORDERED_DRIFTS = Object.freeze({
-  'advanced-editing/loops':
-    'EN embeds "1. x 2. y 3. z" as plain text in a single <p> inside a ' +
-    ':::warning callout; JA translation uses a proper numbered list with ' +
-    '3 items. EN=100, JA=103 → 3-item JA-side surplus.',
+  'advanced-editing/loops': {
+    expectedEn: 100,
+    expectedJa: 103,
+    reason:
+      'EN embeds "1. x 2. y 3. z" as plain text in a single <p> inside a ' +
+      ':::warning callout; JA translation uses a proper numbered list with ' +
+      '3 items. 3-item JA-side surplus.',
+  },
 });
 
 function loadManifest() {
@@ -182,20 +191,36 @@ describe('Phase 4 boundary stability benchmark', () => {
     }
   });
 
-  it('KNOWN_ORDERED_DRIFTS entries actually still drift (guard against stale exceptions)', () => {
-    // Prevents a silent cleanup: if an extractor change re-aligns a known
-    // drift, the exception should be removed instead of leaving a dead entry
-    // that masks future regressions on the same slug.
+  it('KNOWN_ORDERED_DRIFTS entries still produce the exact documented counts', () => {
+    // Strong guard: the exception only stands if the observed EN and JA
+    // counts match the documented values EXACTLY. Any deviation (drift
+    // resolved, drift grown, drift shifted, or direction flipped) fails
+    // the test and forces the map to be re-reviewed before the suite is
+    // green again. This prevents a future regression like EN=100/JA=120
+    // or EN=90/JA=103 from slipping through as a "known drift".
     const gateSet = new Set(GATE_ELIGIBLE_KINDS);
-    for (const slug of Object.keys(KNOWN_ORDERED_DRIFTS)) {
+    for (const [slug, entry] of Object.entries(KNOWN_ORDERED_DRIFTS)) {
       const analysis = analyzePage(slug, gateSet);
       const en = analysis.enCounts['ordered-list-item'] ?? 0;
       const ja = analysis.jaCounts['ordered-list-item'] ?? 0;
-      assert.notEqual(
+      assert.equal(
         en,
+        entry.expectedEn,
+        `${slug}: EN ordered-list-item count changed (expected ${entry.expectedEn}, got ${en}). ` +
+          `Update KNOWN_ORDERED_DRIFTS or remove the exception.`,
+      );
+      assert.equal(
         ja,
-        `${slug}: EN and JA ordered-list-item counts now match (EN=${en}, JA=${ja}). ` +
-          `Remove this slug from KNOWN_ORDERED_DRIFTS.`,
+        entry.expectedJa,
+        `${slug}: JA ordered-list-item count changed (expected ${entry.expectedJa}, got ${ja}). ` +
+          `Update KNOWN_ORDERED_DRIFTS or remove the exception.`,
+      );
+      // Sanity: the documented values must actually differ — an entry with
+      // expectedEn === expectedJa means no drift and the exception is moot.
+      assert.notEqual(
+        entry.expectedEn,
+        entry.expectedJa,
+        `${slug}: KNOWN_ORDERED_DRIFTS entry has identical expected counts; remove it.`,
       );
     }
   });
