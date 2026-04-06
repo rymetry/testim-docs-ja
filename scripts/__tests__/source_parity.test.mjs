@@ -1926,6 +1926,11 @@ describe('source_parity.mjs facade completeness', () => {
   it('UNTRANSLATED_PATTERNS is frozen (immutable)', () => {
     assert.ok(Object.isFrozen(facadeExports.UNTRANSLATED_PATTERNS));
   });
+
+  it('includes page coverage gate issue types', () => {
+    assert.equal(facadeExports.ISSUE_SEVERITY['source-page-missing-local'], 'actionable');
+    assert.equal(facadeExports.ISSUE_SEVERITY['missing-fresh-snapshot'], 'actionable');
+  });
 });
 
 // ---------------------------------------------------------------------------
