@@ -434,7 +434,7 @@ export function moveSegment(md, nth = 0) {
       blocks.push({ start: bStart, end: bEnd });
     }
   }
-  // Find adjacent block pairs with no heading between
+  // Find truly adjacent block pairs — only blank lines between them
   const pairs = [];
   for (let i = 0; i < blocks.length - 1; i++) {
     const a = blocks[i];
@@ -443,10 +443,13 @@ export function moveSegment(md, nth = 0) {
     const aText = lines.slice(a.start, a.end).join('\n');
     const bText = lines.slice(b.start, b.end).join('\n');
     if (aText === bText) continue;
+    // Reject if any structural element (code, table, image, heading, etc.)
+    // sits between the two paragraph blocks
     const between = classified.filter(
       (l) => l.index >= a.end && l.index < b.start,
     );
-    if (between.some((l) => l.kind === 'heading')) continue;
+    const hasStructure = between.some((l) => l.kind !== 'blank');
+    if (hasStructure) continue;
     pairs.push({ a, b, aText, bText });
   }
   if (pairs.length === 0) return null;

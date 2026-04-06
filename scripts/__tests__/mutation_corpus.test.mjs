@@ -481,6 +481,18 @@ describe('moveSegment', () => {
     assert.equal(moveSegment('Para A\n\n## Heading\n\nPara B'), null);
   });
 
+  it('does not swap across code fences', () => {
+    assert.equal(moveSegment('Para A\n\n```\ncode\n```\n\nPara B'), null);
+  });
+
+  it('does not swap across images', () => {
+    assert.equal(moveSegment('Para A\n\n![alt](/img.png)\n\nPara B'), null);
+  });
+
+  it('does not swap across tables', () => {
+    assert.equal(moveSegment('Para A\n\n| H |\n| - |\n| d |\n\nPara B'), null);
+  });
+
   it('returns null for identical adjacent paragraph blocks', () => {
     assert.equal(moveSegment('Same text\n\nSame text'), null);
   });
