@@ -1,55 +1,127 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "recallByType": {
+    "exactRecallByType": {
       "paragraph-delete": {
         "applicable": 10,
         "detected": 10,
+        "inconclusive": 0,
         "recall": 1
       },
       "bullet-delete": {
         "applicable": 9,
         "detected": 9,
+        "inconclusive": 0,
         "recall": 1
       },
       "step-delete": {
         "applicable": 8,
         "detected": 8,
+        "inconclusive": 0,
         "recall": 1
       },
       "callout-paragraph-delete": {
         "applicable": 7,
         "detected": 7,
+        "inconclusive": 0,
         "recall": 1
       },
       "table-cell-delete": {
         "applicable": 3,
         "detected": 3,
+        "inconclusive": 0,
         "recall": 1
       },
       "html-table-cell-delete": {
         "applicable": 2,
         "detected": 2,
+        "inconclusive": 0,
         "recall": 1
       },
       "segment-move": {
         "applicable": 8,
         "detected": 1,
+        "inconclusive": 0,
         "recall": 0.125
       },
       "section-body-swap": {
         "applicable": 7,
         "detected": 7,
+        "inconclusive": 0,
         "recall": 1
       },
       "en-residual": {
         "applicable": 10,
         "detected": 10,
+        "inconclusive": 0,
         "recall": 1
       },
       "token-drop": {
         "applicable": 6,
         "detected": 6,
+        "inconclusive": 0,
+        "recall": 1
+      }
+    },
+    "fallbackAwareRecallByType": {
+      "paragraph-delete": {
+        "applicable": 10,
+        "detected": 10,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "bullet-delete": {
+        "applicable": 9,
+        "detected": 9,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "step-delete": {
+        "applicable": 8,
+        "detected": 8,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "callout-paragraph-delete": {
+        "applicable": 7,
+        "detected": 7,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "table-cell-delete": {
+        "applicable": 3,
+        "detected": 3,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "html-table-cell-delete": {
+        "applicable": 2,
+        "detected": 2,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "segment-move": {
+        "applicable": 8,
+        "detected": 1,
+        "inconclusive": 0,
+        "recall": 0.125
+      },
+      "section-body-swap": {
+        "applicable": 7,
+        "detected": 7,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "en-residual": {
+        "applicable": 10,
+        "detected": 10,
+        "inconclusive": 0,
+        "recall": 1
+      },
+      "token-drop": {
+        "applicable": 6,
+        "detected": 6,
+        "inconclusive": 0,
         "recall": 1
       }
     },
@@ -83,6 +155,7 @@
           "mutatedDiffCount": 28,
           "cascadeSize": 0,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -93,6 +166,7 @@
           "mutatedDiffCount": 30,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -103,6 +177,7 @@
           "mutatedDiffCount": 30,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -113,6 +188,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 2,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -129,6 +205,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -139,6 +216,7 @@
           "mutatedDiffCount": 32,
           "cascadeSize": 2,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -149,6 +227,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -159,6 +238,7 @@
           "mutatedDiffCount": 30,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         }
       }
@@ -176,6 +256,7 @@
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -186,6 +267,7 @@
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -196,6 +278,7 @@
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -206,6 +289,7 @@
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -216,6 +300,7 @@
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "html-table-cell-delete": {
@@ -232,6 +317,7 @@
           "mutatedDiffCount": 17,
           "cascadeSize": 6,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -242,6 +328,7 @@
           "mutatedDiffCount": 6,
           "cascadeSize": 2,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -252,6 +339,7 @@
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         }
       }
@@ -269,6 +357,7 @@
           "mutatedDiffCount": 18,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -279,6 +368,7 @@
           "mutatedDiffCount": 16,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -289,6 +379,7 @@
           "mutatedDiffCount": 18,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -308,6 +399,7 @@
           "mutatedDiffCount": 17,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -321,6 +413,7 @@
           "mutatedDiffCount": 19,
           "cascadeSize": 2,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -341,6 +434,7 @@
           "mutatedDiffCount": 27,
           "cascadeSize": 0,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -351,6 +445,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -361,6 +456,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -371,6 +467,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -387,6 +484,7 @@
           "mutatedDiffCount": 28,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -397,6 +495,7 @@
           "mutatedDiffCount": 36,
           "cascadeSize": 5,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -407,6 +506,7 @@
           "mutatedDiffCount": 28,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -417,6 +517,7 @@
           "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         }
       }
@@ -434,6 +535,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -444,6 +546,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -460,6 +563,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "html-table-cell-delete": {
@@ -479,6 +583,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 2,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -489,6 +594,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         }
       }
@@ -506,6 +612,7 @@
           "mutatedDiffCount": 0,
           "cascadeSize": 0,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -516,6 +623,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -526,6 +634,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -536,6 +645,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -546,6 +656,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "html-table-cell-delete": {
@@ -559,6 +670,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -569,6 +681,7 @@
           "mutatedDiffCount": 89,
           "cascadeSize": 44,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -579,6 +692,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -589,6 +703,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         }
       }
@@ -606,6 +721,7 @@
           "mutatedDiffCount": 6,
           "cascadeSize": 0,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -616,6 +732,7 @@
           "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -626,6 +743,7 @@
           "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -636,6 +754,7 @@
           "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -652,6 +771,7 @@
           "mutatedDiffCount": 7,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -662,6 +782,7 @@
           "mutatedDiffCount": 27,
           "cascadeSize": 10,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -672,6 +793,7 @@
           "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -682,6 +804,7 @@
           "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         }
       }
@@ -699,6 +822,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 0,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -712,6 +836,7 @@
           "mutatedDiffCount": 4,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -722,6 +847,7 @@
           "mutatedDiffCount": 4,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -738,6 +864,7 @@
           "mutatedDiffCount": 3,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -751,6 +878,7 @@
           "mutatedDiffCount": 3,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -771,6 +899,7 @@
           "mutatedDiffCount": 34,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "bullet-delete": {
@@ -781,6 +910,7 @@
           "mutatedDiffCount": 36,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -800,6 +930,7 @@
           "mutatedDiffCount": 35,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "segment-move": {
@@ -810,6 +941,7 @@
           "mutatedDiffCount": 35,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -820,6 +952,7 @@
           "mutatedDiffCount": 82,
           "cascadeSize": 36,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -830,6 +963,7 @@
           "mutatedDiffCount": 35,
           "cascadeSize": 2,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {
@@ -850,7 +984,8 @@
           "mutatedDiffCount": 0,
           "cascadeSize": 0,
           "detected": true,
-          "inconclusive": true
+          "exactDetected": true,
+          "inconclusive": false
         },
         "bullet-delete": {
           "applicable": true,
@@ -860,6 +995,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "step-delete": {
@@ -870,6 +1006,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "callout-paragraph-delete": {
@@ -880,6 +1017,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "table-cell-delete": {
@@ -893,6 +1031,7 @@
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "segment-move": {
@@ -903,6 +1042,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 0,
           "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -913,6 +1053,7 @@
           "mutatedDiffCount": 25,
           "cascadeSize": 12,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "en-residual": {
@@ -923,6 +1064,7 @@
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "token-drop": {

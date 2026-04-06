@@ -420,6 +420,7 @@ function analyzePage(slug) {
       affected,
       type,
     );
+    const exactDetected = !mutatedResult.inconclusive && detected;
     const cascade = cascadeSize(
       baselineResult.diffs,
       mutatedResult.diffs,
@@ -433,6 +434,7 @@ function analyzePage(slug) {
       mutatedDiffCount: mutatedResult.diffs.length,
       cascadeSize: cascade,
       detected,
+      exactDetected,
       inconclusive: mutatedResult.inconclusive,
     };
   }
@@ -449,20 +451,23 @@ function analyzePage(slug) {
  * Aggregate per-mutation-type recall across all pages where the mutation
  * was applicable.
  */
-function aggregateRecall(pageRecords, allTypes) {
+function aggregateRecall(pageRecords, allTypes, key = 'detected') {
   const out = {};
   for (const type of allTypes) {
     let applicable = 0;
     let detected = 0;
+    let inconclusive = 0;
     for (const page of pageRecords) {
       const m = page.mutations[type];
       if (!m.applicable) continue;
       applicable += 1;
-      if (m.detected) detected += 1;
+      if (m[key]) detected += 1;
+      if (m.inconclusive) inconclusive += 1;
     }
     out[type] = {
       applicable,
       detected,
+      inconclusive,
       recall: applicable > 0 ? detected / applicable : null,
     };
   }
@@ -506,7 +511,8 @@ describe('Phase 5 — exact diff recall benchmark', () => {
     const pageRecords = manifest.map((p) => analyzePage(p.slug));
 
     const allTypes = Object.keys(MUTATION_TYPES);
-    const recallByType = aggregateRecall(pageRecords, allTypes);
+    const exactRecallByType = aggregateRecall(pageRecords, allTypes, 'exactDetected');
+    const fallbackAwareRecallByType = aggregateRecall(pageRecords, allTypes, 'detected');
     const maxCascade = maxCascadeAcrossCorpus(pageRecords);
     const maxBaselineDiffs = maxBaselineDiffsAcrossCorpus(pageRecords);
 
@@ -514,7 +520,8 @@ describe('Phase 5 — exact diff recall benchmark', () => {
     const report = {
       schemaVersion: 1,
       summary: {
-        recallByType,
+        exactRecallByType,
+        fallbackAwareRecallByType,
         maxCascade,
         maxBaselineDiffsPerPage: maxBaselineDiffs,
         strictRecallTypes: STRICT_RECALL_TYPES,
@@ -528,11 +535,12 @@ describe('Phase 5 — exact diff recall benchmark', () => {
     // Go condition 1 — recall 100% on the strict-recall set.
     const failures = [];
     for (const type of STRICT_RECALL_TYPES) {
-      const r = recallByType[type];
+      const r = exactRecallByType[type];
       if (!r || r.applicable === 0) continue;
       if (r.recall < 1.0) {
         failures.push(
-          `${type}: recall ${(r.recall * 100).toFixed(1)}% (${r.detected}/${r.applicable})`,
+          `${type}: exact recall ${(r.recall * 100).toFixed(1)}% ` +
+          `(${r.detected}/${r.applicable}, inconclusive=${r.inconclusive})`,
         );
       }
     }
@@ -546,7 +554,7 @@ describe('Phase 5 — exact diff recall benchmark', () => {
     // otherwise the corpus has drifted and recall is silently 0/0.
     for (const type of STRICT_RECALL_TYPES) {
       assert.ok(
-        recallByType[type].applicable > 0,
+        exactRecallByType[type].applicable > 0,
         `corpus regression: mutation type "${type}" is no longer applicable to any representative page`,
       );
     }
@@ -567,7 +575,7 @@ describe('Phase 5 — exact diff recall benchmark', () => {
   it('reports cross-language move detection as a separate metric (not part of the strict gate)', () => {
     const manifest = loadManifest();
     const pageRecords = manifest.map((p) => analyzePage(p.slug));
-    const recallByType = aggregateRecall(pageRecords, ['segment-move']);
+    const recallByType = aggregateRecall(pageRecords, ['segment-move'], 'exactDetected');
     const moveRecall = recallByType['segment-move'];
 
     // The move metric is informational only — we assert it exists in the

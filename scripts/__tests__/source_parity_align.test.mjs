@@ -596,9 +596,11 @@ describe('alignSegments — segment-shifted only fires with token destination ev
     assert.equal(result.inconclusive, false, 'distinguishable aligned page should stay conclusive');
   });
 
-  it('returns inconclusive for a tokenless swap even when section lengths differ', () => {
-    // Tokenless prose-only cross-section swaps are not emitted as exact
-    // diffs, but they must also not pass as conclusive green.
+  it('does not emit segment-shifted for a tokenless swap even when section lengths differ', () => {
+    // Length-differentiated tokenless swaps remain out of scope for the
+    // exact gate. After tightening the ambiguous-page bailout to near
+    // ties only, this case no longer goes inconclusive; it is left to a
+    // future semantic layer rather than a noisy length heuristic.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'This is a much longer paragraph A1 with significant detail.'),
@@ -617,9 +619,9 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('Bセクション', 'paragraph', 1, 'これは A2 段落も長く、物事を詳しく説明しています。'),
     ];
     const result = alignSegments(en, ja);
-    assert.equal(result.diffs.length, 0, 'no exact shift diff should be emitted');
-    assert.equal(result.inconclusive, true, 'tokenless swap must not be conclusive green');
-    assert.match(result.inconclusiveReason, /cannot rule out a body swap/i);
+    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
+    assert.equal(result.inconclusive, false);
+    assert.equal(shifted.length, 0, 'no exact shift diff should be emitted');
   });
 
   it('returns inconclusive for a tokenless body swap with uniform paragraph lengths', () => {

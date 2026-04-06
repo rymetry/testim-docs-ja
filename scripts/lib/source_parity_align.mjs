@@ -616,10 +616,11 @@ function findBodySwapEvidence({
 
 /**
  * When the page is otherwise clean, adjacent free-form tokenless sections may
- * still be too ambiguous to certify as "no drift". If the swapped pairing is
- * at least as plausible as the current pairing under the only available
- * non-semantic signal (relative paragraph lengths), return an ambiguity record
- * so the caller can mark the page inconclusive instead of green.
+ * still be too ambiguous to certify as "no drift". Only NEAR-TIE cases are
+ * treated as ambiguous: if the current and swapped pairings are within a very
+ * small relative margin under the only available non-semantic signal
+ * (relative paragraph lengths), return an ambiguity record so the caller can
+ * mark the page inconclusive instead of green.
  */
 function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
   if (diffs.length > 0) return null;
@@ -644,7 +645,7 @@ function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
 
     const relativeGap =
       currentScore > 0 ? Math.abs(swapScore - currentScore) / currentScore : 0;
-    if (swapScore >= currentScore || relativeGap <= TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN) {
+    if (relativeGap <= TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN) {
       return {
         leftSectionPath: enSections[i].sectionPath,
         rightSectionPath: enSections[j].sectionPath,
