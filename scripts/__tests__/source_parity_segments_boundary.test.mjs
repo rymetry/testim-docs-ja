@@ -191,6 +191,22 @@ describe('Phase 4 boundary stability benchmark', () => {
     }
   });
 
+  it('KNOWN_ORDERED_DRIFTS slugs all exist in the representative corpus manifest', () => {
+    // Guard against dead exception entries: if the representative corpus
+    // is restructured and a slug is removed, the matching exception must
+    // be removed too — otherwise the entry silently persists without
+    // running. Fail loudly so the map stays a live document of real drift.
+    const manifest = loadManifest();
+    const manifestSlugs = new Set(manifest.map((page) => page.slug));
+    for (const slug of Object.keys(KNOWN_ORDERED_DRIFTS)) {
+      assert.ok(
+        manifestSlugs.has(slug),
+        `${slug}: not present in the representative corpus manifest. ` +
+          `Remove the entry from KNOWN_ORDERED_DRIFTS.`,
+      );
+    }
+  });
+
   it('KNOWN_ORDERED_DRIFTS entries still produce the exact documented counts', () => {
     // Strong guard: the exception only stands if the observed EN and JA
     // counts match the documented values EXACTLY. Any deviation (drift
