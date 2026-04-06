@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "meanStabilityScore": 0.978167302554335,
+  "pages": [
+    {
+      "slug": "running-tests/the-command-line-cli",
+      "enTotal": 140,
+      "jaTotal": 128,
+      "enCounts": {
+        "heading": 46,
+        "paragraph": 79,
+        "ordered-list-item": 5,
+        "callout-body": 8,
+        "unordered-list-item": 2
+      },
+      "jaCounts": {
+        "paragraph": 67,
+        "heading": 46,
+        "ordered-list-item": 5,
+        "callout-body": 8,
+        "unordered-list-item": 2
+      },
+      "stabilityScore": 0.9571428571428572
+    },
+    {
+      "slug": "recording-tests/how-to-record-a-test",
+      "enTotal": 123,
+      "jaTotal": 123,
+      "enCounts": {
+        "paragraph": 34,
+        "callout-body": 11,
+        "unordered-list-item": 18,
+        "heading": 14,
+        "ordered-list-item": 21,
+        "table-cell": 25
+      },
+      "jaCounts": {
+        "paragraph": 34,
+        "callout-body": 11,
+        "unordered-list-item": 18,
+        "heading": 14,
+        "ordered-list-item": 21,
+        "table-cell": 25
+      },
+      "stabilityScore": 1
+    },
+    {
+      "slug": "advanced-editing/coding-assistant",
+      "enTotal": 39,
+      "jaTotal": 48,
+      "enCounts": {
+        "paragraph": 9,
+        "unordered-list-item": 11,
+        "ordered-list-item": 18,
+        "heading": 1
+      },
+      "jaCounts": {
+        "paragraph": 14,
+        "unordered-list-item": 11,
+        "ordered-list-item": 18,
+        "heading": 1,
+        "details-summary": 4
+      },
+      "stabilityScore": 0.90625
+    },
+    {
+      "slug": "advanced-editing/loops",
+      "enTotal": 205,
+      "jaTotal": 209,
+      "enCounts": {
+        "paragraph": 51,
+        "callout-body": 16,
+        "unordered-list-item": 26,
+        "heading": 12,
+        "ordered-list-item": 100
+      },
+      "jaCounts": {
+        "paragraph": 54,
+        "callout-body": 17,
+        "unordered-list-item": 26,
+        "heading": 12,
+        "ordered-list-item": 100
+      },
+      "stabilityScore": 0.9904306220095693
+    },
+    {
+      "slug": "settings/cli-prerequisites",
+      "enTotal": 10,
+      "jaTotal": 10,
+      "enCounts": {
+        "paragraph": 2,
+        "unordered-list-item": 2,
+        "table-cell": 6
+      },
+      "jaCounts": {
+        "paragraph": 2,
+        "unordered-list-item": 2,
+        "table-cell": 6
+      },
+      "stabilityScore": 1
+    },
+    {
+      "slug": "running-tests/running-tests-overview",
+      "enTotal": 151,
+      "jaTotal": 152,
+      "enCounts": {
+        "paragraph": 47,
+        "unordered-list-item": 14,
+        "heading": 18,
+        "table-cell": 44,
+        "ordered-list-item": 26,
+        "callout-body": 2
+      },
+      "jaCounts": {
+        "paragraph": 48,
+        "unordered-list-item": 14,
+        "heading": 18,
+        "table-cell": 44,
+        "ordered-list-item": 26,
+        "callout-body": 2
+      },
+      "stabilityScore": 0.9967105263157895
+    },
+    {
+      "slug": "test-management/shared-configuration",
+      "enTotal": 115,
+      "jaTotal": 116,
+      "enCounts": {
+        "paragraph": 36,
+        "heading": 9,
+        "unordered-list-item": 23,
+        "callout-body": 5,
+        "ordered-list-item": 42
+      },
+      "jaCounts": {
+        "paragraph": 37,
+        "heading": 9,
+        "unordered-list-item": 23,
+        "callout-body": 5,
+        "ordered-list-item": 42
+      },
+      "stabilityScore": 0.9956896551724138
+    },
+    {
+      "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
+      "enTotal": 21,
+      "jaTotal": 23,
+      "enCounts": {
+        "callout-body": 3,
+        "paragraph": 3,
+        "ordered-list-item": 15
+      },
+      "jaCounts": {
+        "callout-body": 3,
+        "paragraph": 5,
+        "ordered-list-item": 15
+      },
+      "stabilityScore": 0.9565217391304348
+    },
+    {
+      "slug": "editing-tests/steps",
+      "enTotal": 101,
+      "jaTotal": 103,
+      "enCounts": {
+        "paragraph": 2,
+        "unordered-list-item": 2,
+        "heading": 5,
+        "table-cell": 92
+      },
+      "jaCounts": {
+        "paragraph": 2,
+        "unordered-list-item": 2,
+        "heading": 5,
+        "table-cell": 94
+      },
+      "stabilityScore": 0.9902912621359223
+    },
+    {
+      "slug": "debugging-tests/debugging-controls",
+      "enTotal": 43,
+      "jaTotal": 44,
+      "enCounts": {
+        "paragraph": 16,
+        "table-cell": 3,
+        "heading": 11,
+        "unordered-list-item": 6,
+        "callout-body": 1,
+        "ordered-list-item": 6
+      },
+      "jaCounts": {
+        "paragraph": 17,
+        "table-cell": 3,
+        "heading": 11,
+        "unordered-list-item": 6,
+        "callout-body": 1,
+        "ordered-list-item": 6
+      },
+      "stabilityScore": 0.9886363636363636
+    }
+  ]
+}
