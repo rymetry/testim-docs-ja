@@ -269,9 +269,22 @@ const EXPECTED_DIFF_SIGNATURES = Object.freeze({
 });
 
 /**
+ * Inverse type pairings for deletion-style mutations. When a paragraph
+ * is removed from JA, the LCS may either (a) create a new
+ * `segment-missing/paragraph` on the EN side, or (b) eliminate a
+ * pre-existing `segment-extra/paragraph` on the JA side — depending on
+ * which interpretation maximizes the new alignment's score. Both forms
+ * are valid evidence that the mutation landed.
+ */
+const INVERSE_DIFF_TYPE = Object.freeze({
+  'segment-missing': 'segment-extra',
+  'segment-extra': 'segment-missing',
+});
+
+/**
  * Section-scoped + signature-aware detection.
  *
- * The mutation is "detected" if either of the following is true within
+ * The mutation is "detected" if any of the following is true within
  * the affected section:
  *
  *   A. There is at least one NEW diff (under canonical identity) whose
@@ -280,14 +293,22 @@ const EXPECTED_DIFF_SIGNATURES = Object.freeze({
  *
  *   B. There is at least one REMOVED baseline diff whose
  *      `jaSourceFingerprint` equals the affected JA segment's fingerprint.
- *      → "the engine had already flagged this segment as `segment-extra`,
- *        and the mutation made the surplus disappear". The deletion is
- *        still detected because the alignment correctly localized the
- *        affected segment in baseline.
+ *      → "the engine had already flagged this segment, and the mutation
+ *        made the diff disappear because the segment is now gone".
  *
- * Either form proves the alignment knows about the change. The "right
- * fingerprint" requirement on (B) keeps the metric strict — a baseline
- * diff that disappears for unrelated LCS-shift reasons is not enough.
+ *   C. There is at least one REMOVED baseline diff whose type+kind is
+ *      the *inverse* of the mutation's expected signature (e.g. a
+ *      `segment-extra/paragraph` removed when the expected new diff was
+ *      `segment-missing/paragraph`). This catches the LCS-rebalance case
+ *      where the weighted alignment finds a better matching after the
+ *      deletion and "fixes" what was previously an extra rather than
+ *      surfacing a new gap. The removal still proves the alignment
+ *      saw the structural change in the affected section.
+ *
+ * Any form proves the alignment knows about the change. The fingerprint
+ * requirement on (B) and the inverse-signature requirement on (C) keep
+ * the metric strict — a baseline diff that disappears for unrelated
+ * LCS-shift reasons (different type, different kind) does not count.
  *
  * Falls back to a global "any change" check when the mutation cannot be
  * localized to a specific JA segment (e.g. frontmatter mutation).
@@ -329,6 +350,22 @@ function isMutationDetected(baselineDiffs, mutatedDiffs, affected, mutationType)
   // (B) — removed baseline diff fingerprints the affected segment
   if (removedDiffs.some((d) => d.jaSourceFingerprint === affectedFingerprint)) {
     return true;
+  }
+
+  // (C) — a removed baseline diff matches the inverse of the expected
+  // signature (LCS rebalance after deletion).
+  if (expected) {
+    for (const sig of expected) {
+      const inverseType = INVERSE_DIFF_TYPE[sig.type];
+      if (!inverseType) continue;
+      if (
+        removedDiffs.some(
+          (d) => d.type === inverseType && (!sig.kind || sig.kind === d.segmentKind),
+        )
+      ) {
+        return true;
+      }
+    }
   }
 
   return false;

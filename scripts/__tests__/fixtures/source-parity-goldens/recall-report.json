@@ -34,8 +34,8 @@
       },
       "segment-move": {
         "applicable": 8,
-        "detected": 8,
-        "recall": 1
+        "detected": 1,
+        "recall": 0.125
       },
       "section-body-swap": {
         "applicable": 7,
@@ -110,8 +110,8 @@
           "affectedSectionIndex": 4,
           "affectedSegmentKind": "callout-body",
           "baselineDiffCount": 29,
-          "mutatedDiffCount": 25,
-          "cascadeSize": 1,
+          "mutatedDiffCount": 29,
+          "cascadeSize": 2,
           "detected": true,
           "inconclusive": false
         },
@@ -127,8 +127,8 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 29,
           "mutatedDiffCount": 29,
-          "cascadeSize": 1,
-          "detected": true,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -306,8 +306,8 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 17,
           "mutatedDiffCount": 17,
-          "cascadeSize": 1,
-          "detected": true,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -384,9 +384,9 @@
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 28,
-          "mutatedDiffCount": 29,
-          "cascadeSize": 2,
-          "detected": true,
+          "mutatedDiffCount": 28,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -394,8 +394,8 @@
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 28,
-          "mutatedDiffCount": 34,
-          "cascadeSize": 4,
+          "mutatedDiffCount": 36,
+          "cascadeSize": 5,
           "detected": true,
           "inconclusive": false
         },
@@ -595,15 +595,15 @@
     },
     {
       "slug": "test-management/shared-configuration",
-      "baselineDiffCount": 9,
+      "baselineDiffCount": 7,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 8,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 6,
           "cascadeSize": 0,
           "detected": true,
           "inconclusive": false
@@ -612,8 +612,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 10,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -622,8 +622,8 @@
           "applicable": true,
           "affectedSectionIndex": 3,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 10,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -632,8 +632,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 10,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -648,18 +648,18 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 10,
-          "cascadeSize": 2,
-          "detected": true,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 7,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 29,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 27,
           "cascadeSize": 10,
           "detected": true,
           "inconclusive": false
@@ -668,8 +668,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 9,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -678,8 +678,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 9,
-          "mutatedDiffCount": 10,
+          "baselineDiffCount": 7,
+          "mutatedDiffCount": 8,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -736,8 +736,8 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 3,
           "mutatedDiffCount": 3,
-          "cascadeSize": 1,
-          "detected": true,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -769,7 +769,7 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 35,
           "mutatedDiffCount": 34,
-          "cascadeSize": 0,
+          "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
         },
@@ -808,8 +808,8 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 35,
           "mutatedDiffCount": 35,
-          "cascadeSize": 2,
-          "detected": true,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {
@@ -828,7 +828,7 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 35,
           "mutatedDiffCount": 35,
-          "cascadeSize": 1,
+          "cascadeSize": 2,
           "detected": true,
           "inconclusive": false
         },
@@ -901,8 +901,8 @@
           "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 1,
-          "cascadeSize": 1,
-          "detected": true,
+          "cascadeSize": 0,
+          "detected": false,
           "inconclusive": false
         },
         "section-body-swap": {

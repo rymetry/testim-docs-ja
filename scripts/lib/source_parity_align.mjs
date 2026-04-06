@@ -134,41 +134,64 @@ function filterForAlignment(segments) {
 }
 
 // ---------------------------------------------------------------------------
-// Local alignment — classic LCS over an arbitrary equality predicate
+// Local alignment — weighted LCS that prefers strong content matches
 // ---------------------------------------------------------------------------
 
 /**
- * Compute the longest common subsequence of two arrays under a custom
- * equality predicate, returning the matched index pairs in order.
+ * Compute the maximum-weight monotonic alignment of two arrays under a
+ * scalar score function, returning the matched index pairs in order.
+ * Conceptually a weighted Longest Common Subsequence: each candidate pair
+ * (a[i], b[j]) has a `score` (≥ 0 to be considered a match), and the DP
+ * finds the matching that maximizes the sum of scores along a monotonic
+ * (i++, j++) path.
  *
- * Time / space: O(n * m). For canonical segment sections (max ~100 entries
- * per section in practice) this is well below 10k operations and runs in
- * sub-millisecond time per section.
+ * Why weighted instead of plain boolean LCS:
+ *   - The boolean predicate forces ties to be resolved by traceback bias
+ *     (always picking the rightmost or leftmost match), which collapses
+ *     middle deletions onto enIndex=0 / enIndex=N-1.
+ *   - With per-pair scores we can express "fingerprint match >> token
+ *     overlap >> position similarity" so the DP naturally pairs strong
+ *     anchors first and lets weak position-aware fallbacks fill the gaps.
+ *
+ * Time / space: O(n * m). Sections in practice carry ≤ 100 segments, so
+ * this stays sub-millisecond per section.
  *
  * @template T
  * @param {readonly T[]} a
  * @param {readonly T[]} b
- * @param {(x: T, y: T) => boolean} eq
+ * @param {(x: T, y: T, i: number, j: number, n: number, m: number) => number} score
  * @returns {Array<[number, number]>} matched (a-index, b-index) pairs
  */
-function lcs(a, b, eq) {
+function weightedLcs(a, b, score) {
   const n = a.length;
   const m = b.length;
   if (n === 0 || m === 0) return [];
 
+  // Pre-compute the score table once so traceback can re-read scores
+  // without invoking the score function a second time.
+  const scores = new Array(n);
+  for (let i = 0; i < n; i++) {
+    const row = new Float64Array(m);
+    for (let j = 0; j < m; j++) {
+      row[j] = score(a[i], b[j], i, j, n, m);
+    }
+    scores[i] = row;
+  }
+
   const width = m + 1;
-  const dp = new Int32Array((n + 1) * width);
+  const dp = new Float64Array((n + 1) * width);
 
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
       const here = i * width + j;
-      if (eq(a[i - 1], b[j - 1])) {
-        dp[here] = dp[here - width - 1] + 1;
-      } else {
-        const up = dp[here - width];
-        const left = dp[here - 1];
-        dp[here] = up >= left ? up : left;
-      }
+      const s = scores[i - 1][j - 1];
+      const matchPath = s > 0 ? dp[here - width - 1] + s : -Infinity;
+      const upPath = dp[here - width];
+      const leftPath = dp[here - 1];
+      let best = matchPath;
+      if (upPath > best) best = upPath;
+      if (leftPath > best) best = leftPath;
+      dp[here] = best;
     }
   }
 
@@ -176,14 +199,16 @@ function lcs(a, b, eq) {
   let i = n;
   let j = m;
   while (i > 0 && j > 0) {
-    if (eq(a[i - 1], b[j - 1])) {
+    const here = i * width + j;
+    const s = scores[i - 1][j - 1];
+    if (s > 0 && dp[here] === dp[here - width - 1] + s) {
       matched.push([i - 1, j - 1]);
       i--;
       j--;
       continue;
     }
-    const up = dp[(i - 1) * width + j];
-    const left = dp[i * width + (j - 1)];
+    const up = dp[here - width];
+    const left = dp[here - 1];
     if (up >= left) {
       i--;
     } else {
@@ -198,58 +223,115 @@ function lcs(a, b, eq) {
 // Content-aware match predicate
 // ---------------------------------------------------------------------------
 
+// Score weights — must satisfy STRONG > MEDIUM > WEAK so the weighted LCS
+// always prefers a strong anchor over weaker fallbacks. The exact magnitudes
+// only matter relative to each other.
+const SCORE_FINGERPRINT_MATCH = 1000;
+const SCORE_TEXTNORM_MATCH = 500;
+const SCORE_TOKEN_OVERLAP_BASE = 100;
+const SCORE_TOKEN_OVERLAP_PER_TOKEN = 10;
+const SCORE_WEAK_POSITION_MAX = 10;
+const SCORE_WEAK_LENGTH_MAX = 5;
+const SCORE_KIND_FLOOR = 1;
+
 /**
- * Decide whether two segments are likely the same canonical content. Used as
- * the LCS equality predicate. The hierarchy of evidence:
+ * Compute a numeric match score for a candidate segment pair under the
+ * weighted-LCS aligner. The hierarchy is:
  *
- *   1. `sourceFingerprint` equality — identical raw text (rare cross-language
- *      but common in synthetic test fixtures and for invariant-heavy lines
- *      like CLI flag headers).
- *   2. `textNorm` equality — identical normalized prose (also rare cross-lang
- *      but happens when both sides keep an English brand name, error message,
- *      or feature-name verbatim).
- *   3. Invariant token overlap — the strongest cross-language signal we have.
- *      If both sides expose tokens AND they share at least one, the segments
- *      are very likely paired. If both sides expose tokens AND they share
- *      NONE, that is strong negative evidence: bail out with `false` so the
- *      LCS does not blindly pair them by kind alone.
- *   4. Same-language penalty: when neither side has CJK characters and
- *      neither side has any invariant tokens, both are presumably ASCII
- *      English. Differing `textNorm` is therefore meaningful and counts as
- *      a non-match. This is the rule that lets the LCS correctly identify
- *      *which* paragraph was deleted in a section of distinguishable
- *      English-only segments — without it, kind-only fallback would always
- *      pin the missing diff at enIndex=0.
- *   5. Otherwise (cross-language with no distinguishing features) fall
- *      back to kind equality. The result here is a best-effort guess, and
- *      consumers (including the recall benchmark) should treat per-segment
- *      positions in this regime as approximate.
+ *   1. `sourceFingerprint` equality (1000) — identical raw text. Rare
+ *      cross-language but common for invariant-heavy lines and synthetic
+ *      test fixtures.
+ *   2. `textNorm` equality (500) — identical normalized prose.
+ *   3. Invariant token overlap (100 + 10/token). Both sides must carry
+ *      tokens. Disjoint token sets short-circuit to 0 — that is strong
+ *      negative evidence and the pair must NOT be matched.
+ *   4. Same-language penalty (0) — both sides ASCII-only with different
+ *      `textNorm`. Almost certainly not the same content.
+ *   5. Tokenless cross-language (1–15) — best-effort weak score from
+ *      normalized position similarity AND length similarity. This is
+ *      what fixes the kind-only LCS regression where a middle deletion
+ *      collapsed onto enIndex=0: position-aware scoring naturally aligns
+ *      EN[i] to JA[i] when the section has no other anchors.
+ *   6. Floor of 1 (kind match with neither textual signals nor a useful
+ *      position) — keeps the pair eligible but at the lowest possible
+ *      weight so any other match wins ties.
+ *
+ * Returns 0 when segments must NOT be matched (different kinds, disjoint
+ * tokens, ASCII-only with different text). The weighted LCS treats 0 as
+ * a hard non-match.
  *
  * @param {Segment} en
  * @param {Segment} ja
- * @returns {boolean}
+ * @param {number} enLocalIndex   index of `en` within its section body
+ * @param {number} jaLocalIndex   index of `ja` within its section body
+ * @param {number} enSectionLen   total body length of the EN section
+ * @param {number} jaSectionLen   total body length of the JA section
+ * @returns {number}
  */
-function segmentLikelyMatches(en, ja) {
-  if (en.segmentKind !== ja.segmentKind) return false;
-  if (en.sourceFingerprint && en.sourceFingerprint === ja.sourceFingerprint) return true;
-  if (en.textNorm && en.textNorm === ja.textNorm) return true;
+function scoreSegmentMatch(en, ja, enLocalIndex, jaLocalIndex, enSectionLen, jaSectionLen) {
+  if (en.segmentKind !== ja.segmentKind) return 0;
+  if (en.sourceFingerprint && en.sourceFingerprint === ja.sourceFingerprint) {
+    return SCORE_FINGERPRINT_MATCH;
+  }
+  if (en.textNorm && en.textNorm === ja.textNorm) return SCORE_TEXTNORM_MATCH;
 
   const enTokens = en.tokensInvariant ?? [];
   const jaTokens = ja.tokensInvariant ?? [];
   if (enTokens.length > 0 && jaTokens.length > 0) {
     const jaSet = new Set(jaTokens);
+    let overlap = 0;
     for (const token of enTokens) {
-      if (jaSet.has(token)) return true;
+      if (jaSet.has(token)) overlap += 1;
     }
-    return false;
+    if (overlap > 0) {
+      return SCORE_TOKEN_OVERLAP_BASE + overlap * SCORE_TOKEN_OVERLAP_PER_TOKEN;
+    }
+    return 0; // disjoint tokens — strong non-match
   }
 
-  // Same-language penalty: both sides ASCII-only and textNorm differs.
+  // Same-language penalty: both sides ASCII-only with different text.
   if (en.textNorm && ja.textNorm && !CJK_RE.test(en.textNorm) && !CJK_RE.test(ja.textNorm)) {
-    return false;
+    return 0;
   }
 
-  return true;
+  // Tokenless cross-language: weak position + length similarity score.
+  const positionScore = computeWeakPositionScore(
+    enLocalIndex,
+    jaLocalIndex,
+    enSectionLen,
+    jaSectionLen,
+  );
+  const lengthScore = computeWeakLengthScore(en.textNorm, ja.textNorm);
+  return Math.max(SCORE_KIND_FLOOR, positionScore + lengthScore);
+}
+
+/**
+ * Score how close two segment positions are within their respective
+ * section bodies. Returns 0 when fully misaligned (one at the start, the
+ * other at the end) and `SCORE_WEAK_POSITION_MAX` when normalized
+ * positions match exactly. Sections of length ≤ 1 fall back to a flat
+ * mid-range score because there is no positional information to use.
+ */
+function computeWeakPositionScore(i, j, n, m) {
+  if (n <= 1 || m <= 1) return Math.floor(SCORE_WEAK_POSITION_MAX / 2);
+  const enRatio = i / (n - 1);
+  const jaRatio = j / (m - 1);
+  const distance = Math.abs(enRatio - jaRatio);
+  return Math.max(0, Math.round(SCORE_WEAK_POSITION_MAX * (1 - distance)));
+}
+
+/**
+ * Score how similar the textual lengths of two segments are. JA tends to
+ * be more concise than EN, so this is a soft hint rather than a strong
+ * predictor. Returns 0 when both sides are empty (avoids divide-by-zero)
+ * or when the ratio collapses to nothing.
+ */
+function computeWeakLengthScore(enText, jaText) {
+  if (!enText || !jaText) return 0;
+  const minLen = Math.min(enText.length, jaText.length);
+  const maxLen = Math.max(enText.length, jaText.length);
+  if (maxLen === 0) return 0;
+  return Math.round(SCORE_WEAK_LENGTH_MAX * (minLen / maxLen));
 }
 
 /**
@@ -400,50 +482,137 @@ function diffTokenGap(section, enSeg, jaSeg, enLocalIndex, jaLocalIndex, missing
 // ---------------------------------------------------------------------------
 
 /**
+ * Count how many tokens in `query` appear in `target`.
+ *
+ * @param {Set<string>} query
+ * @param {Set<string>} target
+ * @returns {number}
+ */
+function countTokenOverlap(query, target) {
+  let overlap = 0;
+  for (const token of query) {
+    if (target.has(token)) overlap += 1;
+  }
+  return overlap;
+}
+
+/**
+ * Look for evidence that this section's body was actually relocated to a
+ * *different* section on the other side of the alignment. The check is
+ * conservative on purpose: zero token overlap on its own is NOT enough
+ * (a single mistranslated CLI flag would otherwise be flagged as a
+ * structural shift). We require:
+ *
+ *   - The current section's en/ja token sets must be completely disjoint, AND
+ *   - Some other EN section's tokens must overlap the current JA tokens at
+ *     a meaningful threshold (≥ 2 tokens AND ≥ half of jaTokens), AND
+ *   - Some other JA section's tokens must overlap the current EN tokens at
+ *     the same threshold. This symmetry requirement is what distinguishes
+ *     a true body swap from a JA section that simply lost its EN content.
+ *
+ * If all three hold, return the destination indices so the caller can
+ * emit a single `segment-shifted` diff. Otherwise return `null` and the
+ * caller should fall through to normal LCS — the section is suspect, but
+ * the right answer is `segment-token-gap` / `segment-missing` /
+ * `segment-extra`, not a structural shift.
+ */
+function findBodySwapEvidence({
+  currentEnIndex,
+  currentJaIndex,
+  enSectionTokensList,
+  jaSectionTokensList,
+}) {
+  const enTokens = enSectionTokensList[currentEnIndex];
+  const jaTokens = jaSectionTokensList[currentJaIndex];
+  if (enTokens.size === 0 || jaTokens.size === 0) return null;
+  if (countTokenOverlap(enTokens, jaTokens) > 0) return null;
+
+  const requireForJa = Math.max(2, Math.ceil(jaTokens.size * 0.5));
+  const requireForEn = Math.max(2, Math.ceil(enTokens.size * 0.5));
+
+  let bestEnDest = -1;
+  let bestEnOverlap = 0;
+  for (let k = 0; k < enSectionTokensList.length; k++) {
+    if (k === currentEnIndex) continue;
+    const overlap = countTokenOverlap(jaTokens, enSectionTokensList[k]);
+    if (overlap > bestEnOverlap) {
+      bestEnOverlap = overlap;
+      bestEnDest = k;
+    }
+  }
+  if (bestEnOverlap < requireForJa) return null;
+
+  let bestJaDest = -1;
+  let bestJaOverlap = 0;
+  for (let k = 0; k < jaSectionTokensList.length; k++) {
+    if (k === currentJaIndex) continue;
+    const overlap = countTokenOverlap(enTokens, jaSectionTokensList[k]);
+    if (overlap > bestJaOverlap) {
+      bestJaOverlap = overlap;
+      bestJaDest = k;
+    }
+  }
+  if (bestJaOverlap < requireForEn) return null;
+
+  return {
+    enDestIndex: bestEnDest,
+    jaDestIndex: bestJaDest,
+    enToOtherOverlap: bestJaOverlap,
+    jaToOtherOverlap: bestEnOverlap,
+  };
+}
+
+/**
  * Align two paired sections and return their diff list. Headings are NOT in
  * the body — section identity is implicit from positional pairing.
  *
- * Section-content validation runs first: when both sections expose invariant
- * tokens but the two token sets are completely disjoint, the bodies have
- * almost certainly been swapped between sections (positional pairing failed
- * even though heading counts agree). In that case we emit a single
- * `segment-shifted` diff and skip the within-section LCS — the LCS would
- * happily pair every paragraph by kind alone and report 0 diffs, which is
- * the false negative this guard prevents.
+ * Section-content validation runs first: when there is *symmetric* evidence
+ * that the section bodies were swapped with another pair of sections (zero
+ * overlap with the matched partner AND meaningful overlap with a different
+ * partner on the other side), we emit a single `segment-shifted` diff and
+ * skip the within-section LCS. Without that destination evidence we fall
+ * through to LCS so a single mistranslated token surfaces as
+ * `segment-token-gap` rather than a misleading `segment-shifted`.
+ *
+ * The body LCS itself is now a *weighted* alignment — see scoreSegmentMatch
+ * for the score hierarchy. The previous boolean LCS collapsed middle
+ * deletions onto enIndex=0 in tokenless sections; the position-aware
+ * weighted scoring fixes that regression.
  *
  * @param {Section} enSection
  * @param {Section} jaSection
+ * @param {{enSectionTokensList: Set<string>[], jaSectionTokensList: Set<string>[]}} crossSectionInfo
  * @returns {object[]}
  */
-function alignSection(enSection, jaSection) {
+function alignSection(enSection, jaSection, crossSectionInfo) {
   const diffs = [];
   const enBody = enSection.body;
   const jaBody = jaSection.body;
 
-  const enSectionTokens = collectSectionTokens(enSection);
-  const jaSectionTokens = collectSectionTokens(jaSection);
-  if (enSectionTokens.size > 0 && jaSectionTokens.size > 0) {
-    let overlap = 0;
-    for (const token of enSectionTokens) {
-      if (jaSectionTokens.has(token)) {
-        overlap += 1;
-        break;
-      }
-    }
-    if (overlap === 0) {
-      diffs.push(
-        diffShifted(
-          enSection,
-          'EN and JA invariant token sets have zero overlap (likely body swap)',
-          enSectionTokens,
-          jaSectionTokens,
-        ),
-      );
-      return diffs;
-    }
+  const swapEvidence = findBodySwapEvidence({
+    currentEnIndex: enSection.index,
+    currentJaIndex: jaSection.index,
+    enSectionTokensList: crossSectionInfo.enSectionTokensList,
+    jaSectionTokensList: crossSectionInfo.jaSectionTokensList,
+  });
+  if (swapEvidence) {
+    const enTokens = crossSectionInfo.enSectionTokensList[enSection.index];
+    const jaTokens = crossSectionInfo.jaSectionTokensList[jaSection.index];
+    diffs.push(
+      diffShifted(
+        enSection,
+        `EN section content best matches JA section #${swapEvidence.jaDestIndex} ` +
+          `(${swapEvidence.enToOtherOverlap} token overlap), ` +
+          `and JA section content best matches EN section #${swapEvidence.enDestIndex} ` +
+          `(${swapEvidence.jaToOtherOverlap} token overlap) — likely body swap`,
+        enTokens,
+        jaTokens,
+      ),
+    );
+    return diffs;
   }
 
-  const matched = lcs(enBody, jaBody, segmentLikelyMatches);
+  const matched = weightedLcs(enBody, jaBody, scoreSegmentMatch);
 
   const enMatchedIndices = new Set();
   const jaMatchedIndices = new Set();
@@ -550,9 +719,16 @@ export function alignSegments(enSegments, jaSegments) {
     };
   }
 
+  // Pre-compute per-section invariant token sets so the section-content
+  // validation pass in alignSection can run a cross-section best-match
+  // check without re-walking sections O(n^2) times.
+  const enSectionTokensList = enSections.map(collectSectionTokens);
+  const jaSectionTokensList = jaSections.map(collectSectionTokens);
+  const crossSectionInfo = { enSectionTokensList, jaSectionTokensList };
+
   const diffs = [];
   for (let i = 0; i < enSections.length; i++) {
-    const sectionDiffs = alignSection(enSections[i], jaSections[i]);
+    const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
     for (const diff of sectionDiffs) diffs.push(diff);
   }
 
@@ -627,4 +803,10 @@ export function parityDiffsToIssues(diffs) {
 }
 
 // Re-exports for tests / consumers that need direct access to the helpers.
-export { lcs as __lcs, looksUntranslated as __looksUntranslated, splitIntoSections as __splitIntoSections };
+export {
+  weightedLcs as __weightedLcs,
+  scoreSegmentMatch as __scoreSegmentMatch,
+  looksUntranslated as __looksUntranslated,
+  splitIntoSections as __splitIntoSections,
+  findBodySwapEvidence as __findBodySwapEvidence,
+};

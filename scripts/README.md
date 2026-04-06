@@ -372,17 +372,21 @@ npm run docs:report-categories
 
 1. EN/JA を `heading` 単位で section に分割する（最初は preface = 見出し前の本文）
 2. heading 数が一致しない場合は `inconclusive: true` を返してフォールバックさせる
-3. **Section content validation**: section ペアの invariant token 集合が完全に disjoint なら body swap と判断し `segment-shifted` を 1 件発行して当該 section の LCS を skip する（kind 列だけが揃った section 入れ替えで silent green になる reviewer の指摘ケースを防ぐ）
-4. section ペアごとに **content-aware LCS** (`segmentLikelyMatches`) を実行する。等価判定の階層は:
-   - kind 一致が必須
-   - `sourceFingerprint` 一致 → 強マッチ
-   - `textNorm` 一致 → 強マッチ
-   - 双方に invariant token があり overlap あり → 強マッチ
-   - 双方に invariant token があり overlap なし → 強非マッチ（kind だけで blind に pair しない）
-   - 双方が ASCII のみで textNorm 不一致 → 非マッチ（同言語ペナルティ。中央削除を `enIndex=0` に取り違えるのを防ぐ）
-   - それ以外（cross-language で材料なし）→ kind fallback（best-effort）
+3. **Section content validation**: section ペアの invariant token 集合が disjoint で **かつ** 別の section ペアと cross overlap が成立する場合のみ body swap と判定し `segment-shifted` を 1 件発行する（symmetric destination evidence を要求）。zero overlap 単独では発火しないので、単発の token mismatch（`--proxy` → `--token` 誤訳など）が誤って structural shift に分類されない
+4. section ペアごとに **weighted LCS** (`scoreSegmentMatch` + `weightedLcs`) を実行する。各候補ペアにスコアを付けて、累積スコアを最大化する monotonic alignment を選ぶ:
+   - kind 一致が必須（不一致 → 0）
+   - `sourceFingerprint` 一致 → 1000
+   - `textNorm` 一致 → 500
+   - 双方に invariant token があり overlap あり → 100 + 10/token
+   - 双方に invariant token があり overlap なし → 0（強い非マッチ）
+   - 双方が ASCII のみで textNorm 不一致 → 0（同言語ペナルティ）
+   - それ以外（tokenless cross-language）→ 1〜15（**正規化位置の近さ + 文字列長の類似度** によるベストエフォート weak score）
 5. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
 6. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
+
+> **Weighted LCS の効能**: boolean LCS は同 kind が連続する section で最後の matched index に偏り、tokenless な中央削除を `enSegmentIndex=0` に誤同定する欠陥があった。Weighted LCS は強い anchor（fingerprint / token）を最優先に配置し、anchor のない中央 segment は位置スコアで自然に揃うので、reviewer が指摘した `EN=[Alpha,Beta,Gamma] / JA=[アルファ,ガンマ]` の中央削除でも正しく `enSegmentIndex=1` を返す。
+>
+> **既知の限界**: tokenless cross-language の **head/tail** 削除（先頭または末尾の段落だけが削除されたケース）は、位置スコアが対称になるため検出はされるが具体 index の特定はできない。`segment-missing` 1 件は出るが `enSegmentIndex` は best-effort。Phase 6 で shadow 出力の人手 review と組み合わせるか、translation memory を導入してから primary gate に昇格させる予定。
 
 各 ParityDiff は構造化メタデータ (`enSegmentIndex`, `jaSegmentIndex`, `enSourceFingerprint`, `jaSourceFingerprint`, `missingTokens`) を持ち、Phase 6 / Phase 7 の report と issue sync が drilldown できる。
 

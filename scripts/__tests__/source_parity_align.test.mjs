@@ -524,6 +524,184 @@ describe('alignSegments — section content validation', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Reviewer regression — segment-shifted false positive
+// ---------------------------------------------------------------------------
+
+describe('alignSegments — segment-shifted only fires with destination evidence', () => {
+  it('a single mistranslated CLI flag is segment-token-gap or extra/missing — NOT segment-shifted', () => {
+    // Reviewer repro: EN section has `--proxy`, JA section has a totally
+    // different token `--token`. Token sets are disjoint, but there is
+    // no other section that "claims" the orphaned content. Previously
+    // this was misclassified as a structural shift; now it must surface
+    // as a normal token / extra / missing diff.
+    const en = [
+      makeHeading('CLI', 0, 'CLI'),
+      makeSeg('CLI', 'paragraph', 0, 'Use `--proxy` to configure the proxy server.'),
+    ];
+    const ja = [
+      makeHeading('CLI', 0, 'CLI'),
+      makeSeg('CLI', 'paragraph', 0, '`--token` を指定して認証します。'),
+    ];
+    const result = alignSegments(en, ja);
+    const types = result.diffs.map((d) => d.type);
+    assert.ok(
+      !types.includes('segment-shifted'),
+      `must not classify as segment-shifted; got types: ${JSON.stringify(types)}`,
+    );
+    assert.ok(
+      types.some((t) => t === 'segment-missing' || t === 'segment-extra' || t === 'segment-token-gap'),
+      `expected a normal diff (missing/extra/token-gap); got types: ${JSON.stringify(types)}`,
+    );
+  });
+
+  it('does not emit segment-shifted when only one section pair has zero overlap', () => {
+    // Two sections; only the first has disjoint tokens. There is no
+    // destination section, so the alignment must NOT short-circuit to
+    // segment-shifted.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Use `--alpha` for A.'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, 'Use `--beta` for B.'),
+    ];
+    const ja = [
+      makeHeading('A', 0, 'A'),
+      // JA A section has a token that exists in NEITHER EN A nor EN B
+      makeSeg('A', 'paragraph', 0, '`--gamma` を A で使います。'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, '`--beta` を B で使います。'),
+    ];
+    const result = alignSegments(en, ja);
+    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
+    assert.equal(shifted.length, 0, 'no destination section → no shift');
+  });
+
+  it('still emits segment-shifted when both sides have symmetric destination evidence', () => {
+    // True body swap: EN[A] tokens overlap JA[B], EN[B] tokens overlap
+    // JA[A]. Symmetric → segment-shifted fires.
+    const en = [
+      makeHeading('Setup', 0, 'Setup'),
+      makeSeg('Setup', 'paragraph', 0, 'Use `--proxy` and `--token` to configure.'),
+      makeHeading('Run', 0, 'Run'),
+      makeSeg('Run', 'paragraph', 0, 'Pick `--browser` and `--headless` to run.'),
+    ];
+    const ja = [
+      makeHeading('セットアップ', 0, 'セットアップ'),
+      // bodies swapped
+      makeSeg('セットアップ', 'paragraph', 0, '`--browser` と `--headless` を選びます。'),
+      makeHeading('実行', 0, '実行'),
+      makeSeg('実行', 'paragraph', 0, '`--proxy` と `--token` を設定します。'),
+    ];
+    const result = alignSegments(en, ja);
+    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
+    assert.ok(shifted.length >= 1, 'symmetric token swap must surface as segment-shifted');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Reviewer regression — tokenless cross-language middle deletion
+// ---------------------------------------------------------------------------
+
+describe('alignSegments — tokenless cross-language paragraph identification', () => {
+  it('identifies the correct enSegmentIndex when a middle JA paragraph is deleted', () => {
+    // Reviewer repro: EN=[Alpha, Beta, Gamma] / JA=[アルファ, ガンマ].
+    // Previously kind-only LCS reported enSegmentIndex=0 regardless of
+    // which paragraph was actually deleted. With weighted LCS the
+    // position+length scoring naturally aligns the surviving paragraphs
+    // to their correct EN counterparts, leaving Beta as the gap.
+    const en = [
+      makeHeading('Setup', 0, 'Setup'),
+      makeSeg('Setup', 'paragraph', 0, 'Alpha paragraph.'),
+      makeSeg('Setup', 'paragraph', 1, 'Beta paragraph.'),
+      makeSeg('Setup', 'paragraph', 2, 'Gamma paragraph.'),
+    ];
+    const ja = [
+      makeHeading('セットアップ', 0, 'セットアップ'),
+      makeSeg('セットアップ', 'paragraph', 0, 'アルファ段落です。'),
+      makeSeg('セットアップ', 'paragraph', 1, 'ガンマ段落です。'),
+    ];
+    const result = alignSegments(en, ja);
+    const missing = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missing.length, 1);
+    assert.equal(missing[0].enSegmentIndex, 1, 'middle paragraph must be the gap');
+    assert.equal(missing[0].enSourceFingerprint, en[2].sourceFingerprint);
+  });
+
+  it('identifies the trailing EN segment when textNorm-shared content has a tail gap', () => {
+    // textNorm-matching content gives the LCS strong anchors (score 500)
+    // so it can decisively identify the trailing gap. Without textNorm
+    // anchors, head/tail deletions are positionally ambiguous in tokenless
+    // cross-language sections — see the "known limitation" test below.
+    const en = [
+      makeHeading('Setup', 0, 'Setup'),
+      makeSeg('Setup', 'paragraph', 0, 'Alpha paragraph.'),
+      makeSeg('Setup', 'paragraph', 1, 'Beta paragraph.'),
+      makeSeg('Setup', 'paragraph', 2, 'Gamma paragraph.'),
+    ];
+    const ja = [
+      makeHeading('セットアップ', 0, 'セットアップ'),
+      makeSeg('セットアップ', 'paragraph', 0, 'Alpha paragraph.'),
+      makeSeg('セットアップ', 'paragraph', 1, 'Beta paragraph.'),
+      // Gamma deleted
+    ];
+    const result = alignSegments(en, ja);
+    const missing = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missing.length, 1);
+    assert.equal(missing[0].enSegmentIndex, 2, 'trailing paragraph must be the gap');
+  });
+
+  it('identifies the leading EN segment when textNorm-shared content has a head gap', () => {
+    const en = [
+      makeHeading('Setup', 0, 'Setup'),
+      makeSeg('Setup', 'paragraph', 0, 'Alpha paragraph.'),
+      makeSeg('Setup', 'paragraph', 1, 'Beta paragraph.'),
+      makeSeg('Setup', 'paragraph', 2, 'Gamma paragraph.'),
+    ];
+    const ja = [
+      makeHeading('セットアップ', 0, 'セットアップ'),
+      // Alpha deleted
+      makeSeg('セットアップ', 'paragraph', 0, 'Beta paragraph.'),
+      makeSeg('セットアップ', 'paragraph', 1, 'Gamma paragraph.'),
+    ];
+    const result = alignSegments(en, ja);
+    const missing = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missing.length, 1);
+    assert.equal(missing[0].enSegmentIndex, 0, 'leading paragraph must be the gap');
+  });
+
+  it('known limitation: tokenless cross-language head/tail deletion is positionally ambiguous', () => {
+    // EN has 3 distinguishable paragraphs, JA has 2 translated tokenless
+    // paragraphs. Without textNorm / token / fingerprint anchors, there
+    // is no signal that can decide which EN paragraph was the head gap.
+    // The weighted LCS still emits exactly one segment-missing diff (the
+    // structural change is detected), but the *which-paragraph* attribution
+    // is best-effort. Position-symmetric middle deletions are detected
+    // correctly; head / tail deletions are not.
+    const en = [
+      makeHeading('Setup', 0, 'Setup'),
+      makeSeg('Setup', 'paragraph', 0, 'Alpha paragraph.'),
+      makeSeg('Setup', 'paragraph', 1, 'Beta paragraph.'),
+      makeSeg('Setup', 'paragraph', 2, 'Gamma paragraph.'),
+    ];
+    const ja = [
+      makeHeading('セットアップ', 0, 'セットアップ'),
+      // Alpha deleted (head); JA paragraphs are tokenless and CJK
+      makeSeg('セットアップ', 'paragraph', 0, 'ベータの段落です。'),
+      makeSeg('セットアップ', 'paragraph', 1, 'ガンマの段落です。'),
+    ];
+    const result = alignSegments(en, ja);
+    const missing = result.diffs.filter((d) => d.type === 'segment-missing');
+    // Structural detection still fires — exactly one paragraph is missing.
+    assert.equal(missing.length, 1, 'one missing diff must be emitted');
+    assert.equal(missing[0].segmentKind, 'paragraph');
+    // We deliberately do NOT assert which enSegmentIndex was chosen.
+    // The Phase 6 cutover plan is to either (a) accept this as a known
+    // limitation and pair with shadow-mode review, or (b) augment the
+    // alignment with a translation memory before promoting.
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Determinism / immutability
 // ---------------------------------------------------------------------------
 
