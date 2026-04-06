@@ -31,6 +31,7 @@ export const NON_ACKNOWLEDGEABLE_TYPES = Object.freeze(
     'segment-missing', // Reserved for Phase 4+ segment-level checks — not yet emitted
     'segment-untranslated', // Reserved for Phase 4+ segment-level checks — not yet emitted
     'segment-token-gap', // Reserved for Phase 4+ segment-level checks — not yet emitted
+    'segment-inconclusive',
   ]),
 );
 

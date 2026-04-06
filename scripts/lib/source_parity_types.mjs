@@ -26,6 +26,19 @@ export const ISSUE_SEVERITY = Object.freeze({
   'missing-snapshot': 'signal',
   'source-snapshot-missing': 'signal',
   'source-fetch-error': 'error',
+  // Phase 5 exact diff gate types — emitted by source_parity_align.mjs.
+  // All five are gate-eligible (actionable). Three are also listed in
+  // NON_ACKNOWLEDGEABLE_TYPES (segment-missing, segment-untranslated,
+  // segment-token-gap); segment-extra and segment-shifted remain
+  // acknowledgeable per the Issue #225 spec because surplus content and
+  // structural shifts can be legitimate translation choices that need
+  // human review, not auto-suppression.
+  'segment-missing': 'actionable',
+  'segment-extra': 'actionable',
+  'segment-shifted': 'actionable',
+  'segment-untranslated': 'actionable',
+  'segment-token-gap': 'actionable',
+  'segment-inconclusive': 'actionable',
 });
 
 export const UNTRANSLATED_PATTERNS = Object.freeze([

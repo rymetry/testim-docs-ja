@@ -346,6 +346,7 @@ npm run docs:report-categories
 | `lib/source_parity_segments_shared.mjs`  | canonical segment 型・正規化・fingerprint（Phase 4）                          |
 | `lib/source_parity_segments_en.mjs`      | EN HTML 直接 canonical segment extractor（Phase 4, turndown 非依存）          |
 | `lib/source_parity_segments_ja.mjs`      | JA markdown canonical segment extractor（Phase 4）                            |
+| `lib/source_parity_align.mjs`            | section-anchored exact diff engine（Phase 5、segment-missing/extra/...）      |
 | `lib/source_sync_health.mjs`             | source-sync freshness state（Phase 1）                                        |
 | `lib/mutation_corpus.mjs`                | diff=1 mutation 生成（Phase 0、Phase 5 recall 測定用）                        |
 | `lib/detection_reports.mjs`              | summary / issue body / audit manifest 生成                                    |
@@ -360,7 +361,76 @@ npm run docs:report-categories
 - **共通**: `source_parity_segments_shared.mjs` — `Segment` 型、`normalizeSegmentText`, `computeSegmentFingerprint`, `pushHeading` / `buildSectionPath`, `createSegment` factory。
 - **境界安定性ベンチマーク**: `__tests__/source_parity_segments_boundary.test.mjs` が Phase 0 manifest の 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。結果は `__tests__/fixtures/source-parity-goldens/segment-boundary-report.json` に書き出される（レビュー時に参照可）。
 
-Phase 5 で exact diff engine を組む際、この 3 ファイルを入力として section anchor + local alignment を実装する。
+##### Phase 5: exact diff engine + shadow-mode runtime wiring
+
+`source_parity_align.mjs` は Issue #225 Phase 5 で導入された section-anchored exact diff engine。Phase 4 の canonical segments を入力として、EN / JA を最小単位で比較し、5 種の diff issue type を出力する。
+
+- **入力**: `extractSegmentsFromHtml(en)` と `extractSegmentsFromMarkdown(ja)` の出力 (gate-eligible kinds + heading)
+- **出力**: `{ diffs, sectionsAligned, inconclusive, inconclusiveReason }`
+
+**アルゴリズム**:
+
+1. EN/JA を `heading` 単位で section に分割する（最初は preface = 見出し前の本文）
+2. heading 数が一致しない場合は `inconclusive: true` を返してフォールバックさせる
+3. **Section content validation (high-confidence shift)**: section ペアの invariant token 集合が disjoint で **かつ** 別の section ペアと cross overlap が成立する場合のみ body swap と判定し `segment-shifted` (`confidence: 'high'`) を 1 件発行する（symmetric destination evidence を要求）。zero overlap 単独では発火しないので、単発の token mismatch（`--proxy` → `--token` 誤訳など）が誤って structural shift に分類されない
+4. section ペアごとに **weighted LCS** (`scoreSegmentMatch` + `weightedLcs`) を実行する。各候補ペアにスコアを付けて、累積スコアを最大化する monotonic alignment を選ぶ:
+   - kind 一致が必須（不一致 → 0）
+   - `sourceFingerprint` 一致 → 1000
+   - `textNorm` 一致 → 500
+   - 双方に invariant token があり overlap あり → 100 + 10/token
+   - 双方に invariant token があり overlap なし → 0（強い非マッチ）
+   - 双方が ASCII のみで textNorm 不一致 → 0（同言語ペナルティ）
+   - それ以外（tokenless cross-language）→ 1〜15（**正規化位置の近さ + 文字列長の類似度** によるベストエフォート weak score）
+5. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
+6. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
+
+> **Weighted LCS の効能**: boolean LCS は同 kind が連続する section で最後の matched index に偏り、tokenless な中央削除を `enSegmentIndex=0` に誤同定する欠陥があった。Weighted LCS は強い anchor（fingerprint / token）を最優先に配置し、anchor のない中央 segment は位置スコアで自然に揃うので、reviewer が指摘した `EN=[Alpha,Beta,Gamma] / JA=[アルファ,ガンマ]` の中央削除でも正しく `enSegmentIndex=1` を返す。
+>
+> **検出範囲の明確化**:
+> - **token-bearing section swap** (`section-body-swap` mutation type): symmetric destination evidence を満たすので `segment-shifted` (`confidence: 'high'`) として recall 100%。
+> - **tokenless free-form section swap**: Phase 5 の exact gate では `segment-shifted` を出さない。長さシグナルだけで swap を推定すると正常翻訳を false inconclusive にしやすいため、`inconclusive` に落とすのは current/swap が **ほぼ区別できない near-tie** の場合に限定する。つまり tokenless prose-only swap は基本的に Phase 5 の exact scope 外であり、本格対応は semantic signal（translation memory / embeddings）が入る Phase 6+ の課題。
+> - **tokenless cross-language の head/tail 段落削除**: 位置スコアが対称になるため `segment-missing` 1 件は出るが、どの段落が gap か (`enSegmentIndex`) は best-effort。中央削除は位置非対称性で正しく特定できる。
+> - **正常翻訳された tokenless free-form section**: `segment-shifted` は出ない。near-tie だけを `inconclusive` にするので、前回のように広範囲な false inconclusive は起こさない。
+
+各 ParityDiff は構造化メタデータ (`enSegmentIndex`, `jaSegmentIndex`, `enSourceFingerprint`, `jaSourceFingerprint`, `missingTokens`) を持ち、Phase 6 / Phase 7 の report と issue sync が drilldown できる。
+
+**gate issue type と severity**:
+
+| type | severity | acknowledgement | confidence variants |
+| ---- | -------- | --------------- | ------------------- |
+| `segment-missing` | actionable | non-acknowledgeable | — |
+| `segment-extra` | actionable | acknowledgeable（翻訳側の意図的拡張がありうる） | — |
+| `segment-shifted` | actionable | acknowledgeable | `high` (symmetric destination evidence) |
+| `segment-untranslated` | actionable | non-acknowledgeable | — |
+| `segment-token-gap` | actionable | non-acknowledgeable | — |
+| `segment-inconclusive` | actionable | non-acknowledgeable | — |
+
+**Runtime wiring (Phase 5 shadow mode)**:
+
+`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま、`segment-inconclusive` の shadow issue を追加し、既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
+
+shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFiles` / `shadowIssuesByType` で確認できる。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の shadow 集計、`check_source_parity --slug=...` 経由の CLI 出力を end-to-end で検証する。
+
+**Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が Phase 0 manifest の 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る。
+
+検出は **section-scoped + signature-aware**:
+
+- (A) 影響を受けた section の mutated 側に新しい diff があり、その `type` / `segmentKind` が mutation の期待 signature にマッチする
+- (B) baseline 側に「削除された JA 段落の `jaSourceFingerprint` を指す」diff があり、それが mutated で消えている
+
+(A) は「正しい場所で正しい種類の新規 diff が出た」、(B) は「baseline で既に flag されていた segment-extra が削除によって解消された」を捕捉する。どちらも alignment が当該 segment を正しく追跡している証拠なので detection と判定する。
+
+**Go/No-Go の判定基準** と **Phase 5 の現状**:
+
+| Go 条件 | 閾値 | 現状 |
+| ------- | ---- | ---- |
+| diff=1 mutation の recall（strict, **conclusive exact diff**） | 100% | **9/9 strict mutation type で 100%** (paragraph / bullet / step / callout / table-cell / html-table-cell / **section-body-swap** (token-bearing) / en-residual / token-drop) |
+| cascade（diff=1 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
+| precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 35 |
+
+`segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、near-tie の曖昧ケースだけ `inconclusive` に落とす。それ以外の tokenless swap は Phase 5 の scope 外として Phase 6+ の advisory/semantic layer へ送る。
+
+> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6 で `segment-shadow` を主 gate に昇格する（NON_ACKNOWLEDGEABLE_TYPES と既存の baseline drift をどう移行するかは Phase 6 の責務）。
 
 ---
 
@@ -395,6 +465,9 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
 | `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |
 | `__tests__/source_parity_segments_boundary.test.mjs` | Phase 4 境界安定性ベンチマーク          |
+| `__tests__/source_parity_align.test.mjs`             | lib/source_parity_align.mjs             |
+| `__tests__/source_parity_recall.test.mjs`            | Phase 5 diff=1 recall ベンチマーク      |
+| `__tests__/source_parity_align_runtime.test.mjs`     | Phase 5 runtime wiring (shadow mode E2E)|
 
 ---
 
