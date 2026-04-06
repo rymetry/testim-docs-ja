@@ -761,6 +761,45 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     assert.equal(summaries[0].textNorm, 'quoted');
     assert.equal(byKind(segments, 'paragraph').length, 0);
   });
+
+  it('standalone <summary> at top level emits a paragraph (not details-summary)', () => {
+    // Regression: the event walker previously emitted details-summary for
+    // any <summary>…</summary> token regardless of detailsDepth. EN only
+    // emits details-summary from inside walkDetails; a loose <summary>
+    // falls through walkBlock → walkBlockContainer which emits the text
+    // child as 'paragraph'. Verified against EN extractor output.
+    const md = [
+      '## S',
+      '',
+      '<summary>Loose</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 0);
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'loose');
+  });
+
+  it('standalone <summary> inside a :::note also emits as paragraph (matching EN)', () => {
+    // EN walkCalloutBody routes non-<p> children to walkBlock → fallback
+    // walkBlockContainer, which hardcodes the 'paragraph' kind for text
+    // children even inside a callout context. JA must match.
+    const md = [
+      '## S',
+      '',
+      ':::note',
+      '<summary>Loose</summary>',
+      ':::',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 0);
+    assert.equal(byKind(segments, 'callout-body').length, 0);
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'loose');
+  });
 });
 
 // ---------------------------------------------------------------------------

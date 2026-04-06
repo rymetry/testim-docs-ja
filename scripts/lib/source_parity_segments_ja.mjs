@@ -420,7 +420,14 @@ export function extractSegmentsFromMarkdown(body) {
         if (ev.type === 'summary') {
           const summaryText = htmlInlineToMarkdownText(ev.inner);
           if (summaryText.length > 0) {
-            emitter.emit(pathAtLine, 'details-summary', summaryText, lineNo);
+            // Only emit details-summary when we are actually inside a
+            // <details> block. Otherwise fall back to 'paragraph' kind to
+            // match EN's walkBlockContainer behaviour, which emits text
+            // children of an unknown-block fallback (standalone <summary>
+            // included) as hardcoded 'paragraph' — even when the summary
+            // is nested inside a callout.
+            const kind = detailsDepth > 0 ? 'details-summary' : 'paragraph';
+            emitter.emit(pathAtLine, kind, summaryText, lineNo);
           }
           continue;
         }
