@@ -15,6 +15,7 @@ let deleteHtmlTableCell;
 let moveSegment;
 let insertEnResidual;
 let dropInvariantToken;
+let swapSectionBodies;
 let generateAllMutations;
 let generateCorpus;
 let MUTATION_TYPES;
@@ -33,6 +34,7 @@ before(async () => {
     moveSegment,
     insertEnResidual,
     dropInvariantToken,
+    swapSectionBodies,
     generateAllMutations,
     generateCorpus,
     MUTATION_TYPES,
@@ -554,6 +556,60 @@ describe('dropInvariantToken', () => {
 });
 
 // ---------------------------------------------------------------------------
+// swapSectionBodies
+// ---------------------------------------------------------------------------
+describe('swapSectionBodies', () => {
+  it('swaps the body of two adjacent H2 sections, leaving headings in place', () => {
+    const md = [
+      '## セクション A',
+      '',
+      'A の段落です。',
+      '',
+      '## セクション B',
+      '',
+      'B の段落です。',
+    ].join('\n');
+    const result = swapSectionBodies(md, 0);
+    assert.ok(result);
+    assert.equal(result.metadata.type, 'section-body-swap');
+    // Headings preserved in original order
+    const lines = result.mutated.split('\n');
+    const headingLines = lines.filter((l) => l.startsWith('## '));
+    assert.deepEqual(headingLines, ['## セクション A', '## セクション B']);
+    // Body content swapped
+    const aIdx = lines.indexOf('## セクション A');
+    const bIdx = lines.indexOf('## セクション B');
+    assert.ok(lines.slice(aIdx, bIdx).some((l) => l === 'B の段落です。'));
+    assert.ok(lines.slice(bIdx).some((l) => l === 'A の段落です。'));
+  });
+
+  it('returns null when there are no adjacent body-bearing sections', () => {
+    const md = '## Only one section\n\nbody';
+    assert.equal(swapSectionBodies(md, 0), null);
+  });
+
+  it('skips H1 (treated as title) and uses H2/H3/H4 only', () => {
+    const md = [
+      '# Title',
+      '',
+      'preface body',
+      '',
+      '## Section A',
+      '',
+      'A body',
+      '',
+      '## Section B',
+      '',
+      'B body',
+    ].join('\n');
+    const result = swapSectionBodies(md, 0);
+    assert.ok(result);
+    // Title's H1 is untouched.
+    assert.ok(result.mutated.startsWith('# Title'));
+  });
+});
+
+// ---------------------------------------------------------------------------
 // generateAllMutations — integration
 // ---------------------------------------------------------------------------
 describe('generateAllMutations', () => {
@@ -690,7 +746,7 @@ describe('real page corpus coverage', () => {
   // pipe tables naturally cannot produce table-cell-delete, and a page whose
   // paragraphs are always separated by structural elements cannot produce
   // segment-move. Per-page type expectations are expressed via manifest traits.
-  it('all 9 mutation types are covered across corpus', () => {
+  it('all 10 mutation types are covered across corpus', () => {
     const expected = Object.keys(MUTATION_TYPES);
     for (const type of expected) {
       assert.ok(

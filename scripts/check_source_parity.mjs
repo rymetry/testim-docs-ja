@@ -15,9 +15,13 @@ import {
 } from './lib/project.mjs';
 import {
   ISSUE_SEVERITY,
+  alignSegments,
   compareSnapshotStructure,
+  extractSegmentsFromHtml,
+  extractSegmentsFromMarkdown,
   loadSidebarSlugs,
   localCheck,
+  parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import {
@@ -195,7 +199,45 @@ export async function checkSourceParity({
         }
       }
       if (enBody) {
-        issues.push(...compareSnapshotStructure(enBody, doc.body));
+        // Phase 5 segment-level exact diff. The runtime gate runs the new
+        // engine first; if it returns inconclusive (heading count mismatch
+        // or required inputs missing) the check falls back to the legacy
+        // coarse signals so the page is never silently green-lit. When
+        // alignment IS conclusive we ALSO emit the coarse complementary
+        // checks (image order, callout nesting, table shape) because they
+        // catch failures the segment engine intentionally ignores (e.g.
+        // image ordering inversions).
+        let segmentIssues = [];
+        let alignmentInconclusive = false;
+        try {
+          const enSegments = extractSegmentsFromHtml(rawEnHtml);
+          const jaSegments = extractSegmentsFromMarkdown(doc.body);
+          const alignment = alignSegments(enSegments, jaSegments);
+          if (alignment.inconclusive) {
+            alignmentInconclusive = true;
+          } else {
+            segmentIssues = parityDiffsToIssues(alignment.diffs);
+          }
+        } catch (e) {
+          alignmentInconclusive = true;
+          console.error(
+            `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
+          );
+        }
+
+        if (alignmentInconclusive) {
+          // Pure fallback: legacy coarse comparison only.
+          issues.push(...compareSnapshotStructure(enBody, doc.body));
+        } else {
+          // Primary gate: segment-level diffs PLUS the coarse signals that
+          // are complementary (image order, callout nesting, table shape).
+          // The count-based mismatches in compareSnapshotStructure are
+          // intentionally still emitted at `signal` severity per their
+          // ISSUE_SEVERITY mapping; they will be demoted to audit-only in
+          // Phase 8 when the workflow split lands.
+          issues.push(...segmentIssues);
+          issues.push(...compareSnapshotStructure(enBody, doc.body));
+        }
       }
     }
 
@@ -212,6 +254,11 @@ export async function checkSourceParity({
       continue;
     }
 
+    // Hide shadow-only files from the per-file console listing so the
+    // existing CLI output stays focused on actionable / signal / error
+    // issues. Shadow issues remain in the JSON output for verification.
+    const hasNonShadow = issues.some((i) => i.phase !== 'segment-shadow');
+
     results.push({
       file: doc.relativePath,
       sourceUrl: doc.data.sourceUrl || '',
@@ -219,9 +266,9 @@ export async function checkSourceParity({
       issues,
     });
 
-    if (!json) {
+    if (!json && hasNonShadow) {
       const allAcked = issues.every(
-        (i) => i.acknowledged === true && i.ackExpired !== true,
+        (i) => i.phase === 'segment-shadow' || (i.acknowledged === true && i.ackExpired !== true),
       );
       const icon = allAcked ? '⏸️' : '❌';
       const suffix = allAcked ? ' (all acknowledged)' : '';
@@ -317,6 +364,14 @@ export async function checkSourceParity({
     console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {
       console.log(`  ${type}: ${count} 件`);
+    }
+    if ((summary.shadowIssues || 0) > 0) {
+      console.log(
+        `\n[Phase 5 shadow] segment-* diffs (gate には影響しません): ${summary.shadowIssues} 件 / ${summary.shadowFiles} ファイル`,
+      );
+      for (const [type, count] of Object.entries(summary.shadowIssuesByType ?? {})) {
+        console.log(`  ${type}: ${count} 件`);
+      }
     }
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }

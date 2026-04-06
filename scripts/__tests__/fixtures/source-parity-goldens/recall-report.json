@@ -37,6 +37,11 @@
         "detected": 8,
         "recall": 1
       },
+      "section-body-swap": {
+        "applicable": 7,
+        "detected": 7,
+        "recall": 1
+      },
       "en-residual": {
         "applicable": 10,
         "detected": 10,
@@ -49,7 +54,7 @@
       }
     },
     "maxCascade": 2,
-    "maxBaselineDiffsPerPage": 38,
+    "maxBaselineDiffsPerPage": 35,
     "strictRecallTypes": [
       "paragraph-delete",
       "bullet-delete",
@@ -57,6 +62,7 @@
       "callout-paragraph-delete",
       "table-cell-delete",
       "html-table-cell-delete",
+      "section-body-swap",
       "en-residual",
       "token-drop"
     ],
@@ -66,14 +72,15 @@
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
-      "baselineDiffCount": 30,
+      "baselineDiffCount": 29,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 29,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 28,
           "cascadeSize": 0,
           "detected": true,
           "inconclusive": false
@@ -81,8 +88,9 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 39,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 31,
+          "affectedSegmentKind": "unordered-list-item",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 30,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -90,8 +98,9 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 3,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 31,
+          "affectedSegmentKind": "ordered-list-item",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 30,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -99,8 +108,9 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 4,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 30,
+          "affectedSegmentKind": "callout-body",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 25,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -114,17 +124,29 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 3,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 30,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 29,
           "cascadeSize": 1,
+          "detected": true,
+          "inconclusive": false
+        },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 32,
+          "cascadeSize": 2,
           "detected": true,
           "inconclusive": false
         },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 30,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -132,8 +154,9 @@
         "token-drop": {
           "applicable": true,
           "affectedSectionIndex": 1,
-          "baselineDiffCount": 30,
-          "mutatedDiffCount": 31,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 29,
+          "mutatedDiffCount": 30,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -148,6 +171,7 @@
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 4,
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
@@ -157,6 +181,7 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "unordered-list-item",
           "baselineDiffCount": 4,
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
@@ -166,6 +191,7 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
+          "affectedSegmentKind": "ordered-list-item",
           "baselineDiffCount": 4,
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
@@ -175,6 +201,7 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "callout-body",
           "baselineDiffCount": 4,
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
@@ -184,6 +211,7 @@
         "table-cell-delete": {
           "applicable": true,
           "affectedSectionIndex": 6,
+          "affectedSegmentKind": "table-cell",
           "baselineDiffCount": 4,
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
@@ -196,18 +224,30 @@
         "segment-move": {
           "applicable": false
         },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 4,
+          "mutatedDiffCount": 17,
+          "cascadeSize": 6,
+          "detected": true,
+          "inconclusive": false
+        },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
-          "cascadeSize": 1,
+          "mutatedDiffCount": 6,
+          "cascadeSize": 2,
           "detected": true,
           "inconclusive": false
         },
         "token-drop": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "callout-body",
           "baselineDiffCount": 4,
           "mutatedDiffCount": 5,
           "cascadeSize": 1,
@@ -218,14 +258,15 @@
     },
     {
       "slug": "advanced-editing/coding-assistant",
-      "baselineDiffCount": 16,
+      "baselineDiffCount": 17,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 16,
-          "mutatedDiffCount": 17,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 17,
+          "mutatedDiffCount": 18,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -233,17 +274,19 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 16,
-          "mutatedDiffCount": 17,
-          "cascadeSize": 2,
+          "affectedSegmentKind": "unordered-list-item",
+          "baselineDiffCount": 17,
+          "mutatedDiffCount": 16,
+          "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
         },
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 16,
-          "mutatedDiffCount": 17,
+          "affectedSegmentKind": "ordered-list-item",
+          "baselineDiffCount": 17,
+          "mutatedDiffCount": 18,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -260,18 +303,23 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 16,
-          "mutatedDiffCount": 16,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 17,
+          "mutatedDiffCount": 17,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
         },
+        "section-body-swap": {
+          "applicable": false
+        },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 16,
-          "mutatedDiffCount": 17,
-          "cascadeSize": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 17,
+          "mutatedDiffCount": 19,
+          "cascadeSize": 2,
           "detected": true,
           "inconclusive": false
         },
@@ -282,14 +330,15 @@
     },
     {
       "slug": "advanced-editing/loops",
-      "baselineDiffCount": 20,
+      "baselineDiffCount": 28,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 19,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 27,
           "cascadeSize": 0,
           "detected": true,
           "inconclusive": false
@@ -297,8 +346,9 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "affectedSegmentKind": "unordered-list-item",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -306,8 +356,9 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "affectedSegmentKind": "ordered-list-item",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -315,8 +366,9 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "affectedSegmentKind": "callout-body",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -330,17 +382,29 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 29,
           "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 34,
+          "cascadeSize": 4,
           "detected": true,
           "inconclusive": false
         },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 20,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 28,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -348,8 +412,9 @@
         "token-drop": {
           "applicable": true,
           "affectedSectionIndex": 4,
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 28,
+          "mutatedDiffCount": 29,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -364,6 +429,7 @@
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 0,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
@@ -373,6 +439,7 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "unordered-list-item",
           "baselineDiffCount": 0,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
@@ -388,6 +455,7 @@
         "table-cell-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "table-cell",
           "baselineDiffCount": 0,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
@@ -400,18 +468,23 @@
         "segment-move": {
           "applicable": false
         },
+        "section-body-swap": {
+          "applicable": false
+        },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 0,
-          "mutatedDiffCount": 1,
-          "cascadeSize": 1,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "inconclusive": false
         },
         "token-drop": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "table-cell",
           "baselineDiffCount": 0,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
@@ -428,6 +501,7 @@
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 0,
           "cascadeSize": 0,
@@ -437,6 +511,7 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "unordered-list-item",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -446,6 +521,7 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 4,
+          "affectedSegmentKind": "ordered-list-item",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -455,6 +531,7 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 4,
+          "affectedSegmentKind": "callout-body",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -464,6 +541,7 @@
         "table-cell-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
+          "affectedSegmentKind": "table-cell",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -476,15 +554,27 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
         },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 89,
+          "cascadeSize": 44,
+          "detected": true,
+          "inconclusive": false
+        },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
@@ -494,6 +584,7 @@
         "token-drop": {
           "applicable": true,
           "affectedSectionIndex": 1,
+          "affectedSegmentKind": "table-cell",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -504,14 +595,15 @@
     },
     {
       "slug": "test-management/shared-configuration",
-      "baselineDiffCount": 4,
+      "baselineDiffCount": 9,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 3,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 8,
           "cascadeSize": 0,
           "detected": true,
           "inconclusive": false
@@ -519,8 +611,9 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "affectedSegmentKind": "unordered-list-item",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 10,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -528,8 +621,9 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 3,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "affectedSegmentKind": "ordered-list-item",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 10,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -537,8 +631,9 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "affectedSegmentKind": "callout-body",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 10,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -552,17 +647,29 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 10,
           "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 29,
+          "cascadeSize": 10,
           "detected": true,
           "inconclusive": false
         },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 4,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 9,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -570,8 +677,9 @@
         "token-drop": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 9,
+          "mutatedDiffCount": 10,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -586,6 +694,7 @@
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 3,
           "mutatedDiffCount": 2,
           "cascadeSize": 0,
@@ -598,6 +707,7 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "ordered-list-item",
           "baselineDiffCount": 3,
           "mutatedDiffCount": 4,
           "cascadeSize": 1,
@@ -607,6 +717,7 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "callout-body",
           "baselineDiffCount": 3,
           "mutatedDiffCount": 4,
           "cascadeSize": 1,
@@ -622,15 +733,20 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 3,
           "mutatedDiffCount": 3,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
         },
+        "section-body-swap": {
+          "applicable": false
+        },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 3,
           "mutatedDiffCount": 3,
           "cascadeSize": 1,
@@ -644,14 +760,15 @@
     },
     {
       "slug": "editing-tests/steps",
-      "baselineDiffCount": 38,
+      "baselineDiffCount": 35,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 38,
-          "mutatedDiffCount": 37,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 35,
+          "mutatedDiffCount": 34,
           "cascadeSize": 0,
           "detected": true,
           "inconclusive": false
@@ -659,8 +776,9 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 38,
-          "mutatedDiffCount": 39,
+          "affectedSegmentKind": "unordered-list-item",
+          "baselineDiffCount": 35,
+          "mutatedDiffCount": 36,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -677,8 +795,9 @@
         "html-table-cell-delete": {
           "applicable": true,
           "affectedSectionIndex": 2,
-          "baselineDiffCount": 38,
-          "mutatedDiffCount": 38,
+          "affectedSegmentKind": "table-cell",
+          "baselineDiffCount": 35,
+          "mutatedDiffCount": 35,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -686,17 +805,29 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 38,
-          "mutatedDiffCount": 38,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 35,
+          "mutatedDiffCount": 35,
           "cascadeSize": 2,
+          "detected": true,
+          "inconclusive": false
+        },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 2,
+          "affectedSegmentKind": "table-cell",
+          "baselineDiffCount": 35,
+          "mutatedDiffCount": 82,
+          "cascadeSize": 36,
           "detected": true,
           "inconclusive": false
         },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
-          "baselineDiffCount": 38,
-          "mutatedDiffCount": 38,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 35,
+          "mutatedDiffCount": 35,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
@@ -714,6 +845,7 @@
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 0,
           "cascadeSize": 0,
@@ -723,6 +855,7 @@
         "bullet-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
+          "affectedSegmentKind": "unordered-list-item",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -732,6 +865,7 @@
         "step-delete": {
           "applicable": true,
           "affectedSectionIndex": 2,
+          "affectedSegmentKind": "ordered-list-item",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -741,6 +875,7 @@
         "callout-paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 2,
+          "affectedSegmentKind": "callout-body",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -753,6 +888,7 @@
         "html-table-cell-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "table-cell",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 2,
           "cascadeSize": 1,
@@ -762,15 +898,27 @@
         "segment-move": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "inconclusive": false
         },
+        "section-body-swap": {
+          "applicable": true,
+          "affectedSectionIndex": 1,
+          "affectedSegmentKind": "paragraph",
+          "baselineDiffCount": 1,
+          "mutatedDiffCount": 25,
+          "cascadeSize": 12,
+          "detected": true,
+          "inconclusive": false
+        },
         "en-residual": {
           "applicable": true,
           "affectedSectionIndex": 0,
+          "affectedSegmentKind": "paragraph",
           "baselineDiffCount": 1,
           "mutatedDiffCount": 1,
           "cascadeSize": 1,

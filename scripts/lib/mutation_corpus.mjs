@@ -579,6 +579,106 @@ export function dropInvariantToken(md, nth = 0) {
   };
 }
 
+/**
+ * Swap the BODIES of two adjacent sections in the markdown. The headings
+ * stay in place — only the body lines between them move. The intent is to
+ * exercise the section-content-validation pass in source_parity_align.mjs:
+ * heading counts and kind sequences agree, but the bodies are mis-allocated
+ * to the wrong sections, which a body-swap-aware engine should detect via
+ * `segment-shifted`.
+ *
+ * Skips frontmatter and the H1 title. Picks the first pair of adjacent
+ * H2/H3/H4 sections that both have non-empty body lines.
+ *
+ * @param {string} md
+ * @param {number} [nth=0]
+ * @returns {MutationResult | null}
+ */
+export function swapSectionBodies(md, nth = 0) {
+  const rawLines = md.split('\n');
+
+  // Find body start (skip frontmatter)
+  let bodyStart = 0;
+  if (rawLines[0]?.trim() === '---') {
+    for (let i = 1; i < rawLines.length; i += 1) {
+      if (rawLines[i].trim() === '---') {
+        bodyStart = i + 1;
+        break;
+      }
+    }
+  }
+
+  const HEADING_RE = /^(#{1,6})\s+/;
+  const FENCE_RE = /^(`{3,}|~{3,})/;
+
+  // Walk the body and collect (level, lineIndex) for headings outside code fences
+  const headings = [];
+  let inCode = false;
+  for (let i = bodyStart; i < rawLines.length; i += 1) {
+    const trimmed = rawLines[i].trimStart();
+    if (FENCE_RE.test(trimmed)) {
+      inCode = !inCode;
+      continue;
+    }
+    if (inCode) continue;
+    const m = trimmed.match(HEADING_RE);
+    if (m) headings.push({ level: m[1].length, lineIndex: i });
+  }
+
+  // Build sections: each starts at a heading's NEXT line and ends before the next heading
+  // Skip H1 (treated as title). Only consider H2/H3/H4.
+  const sections = [];
+  for (let h = 0; h < headings.length; h += 1) {
+    const heading = headings[h];
+    if (heading.level < 2 || heading.level > 4) continue;
+    const bodyStartLine = heading.lineIndex + 1;
+    const bodyEndLine = h + 1 < headings.length ? headings[h + 1].lineIndex : rawLines.length;
+    if (bodyStartLine >= bodyEndLine) continue;
+    // Body must contain at least one non-blank line
+    let hasContent = false;
+    for (let i = bodyStartLine; i < bodyEndLine; i += 1) {
+      if (rawLines[i].trim() !== '') {
+        hasContent = true;
+        break;
+      }
+    }
+    if (!hasContent) continue;
+    sections.push({ headingLine: heading.lineIndex, bodyStartLine, bodyEndLine });
+  }
+
+  // Find adjacent pairs (where one section's body ends right before the next's heading)
+  const pairs = [];
+  for (let i = 0; i + 1 < sections.length; i += 1) {
+    if (sections[i].bodyEndLine === sections[i + 1].headingLine) {
+      pairs.push([sections[i], sections[i + 1]]);
+    }
+  }
+  if (pairs.length === 0) return null;
+
+  const [a, b] = pairs[nth % pairs.length];
+  const aBody = rawLines.slice(a.bodyStartLine, a.bodyEndLine);
+  const bBody = rawLines.slice(b.bodyStartLine, b.bodyEndLine);
+
+  const newLines = [
+    ...rawLines.slice(0, a.bodyStartLine),
+    ...bBody,
+    rawLines[b.headingLine],
+    ...aBody,
+    ...rawLines.slice(b.bodyEndLine),
+  ];
+
+  return {
+    mutated: newLines.join('\n'),
+    metadata: {
+      type: 'section-body-swap',
+      lineIndex: a.bodyStartLine,
+      linesRemoved: 0,
+      originalText: `[L${a.bodyStartLine + 1}-${a.bodyEndLine}] ↔ [L${b.bodyStartLine + 1}-${b.bodyEndLine}]`,
+      description: `セクション本文入れ替え (L${a.bodyStartLine + 1}-${a.bodyEndLine} ↔ L${b.bodyStartLine + 1}-${b.bodyEndLine})`,
+    },
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Registry and generators
 // ---------------------------------------------------------------------------
@@ -592,6 +692,7 @@ export const MUTATION_TYPES = {
   'table-cell-delete': deleteTableCell,
   'html-table-cell-delete': deleteHtmlTableCell,
   'segment-move': moveSegment,
+  'section-body-swap': swapSectionBodies,
   'en-residual': insertEnResidual,
   'token-drop': dropInvariantToken,
 };

@@ -74,6 +74,11 @@ const REPORT_PATH = join(FIXTURES, 'recall-report.json');
  * 100% recall. `segment-move` is intentionally NOT in this list — see the
  * module header for the rationale and the "Move detection" reporting block
  * below.
+ *
+ * `section-body-swap` was added in response to a P1 review comment: heading
+ * counts and kind sequences agree but the bodies of two sections are
+ * exchanged. The section-content validation pass in source_parity_align.mjs
+ * must catch this via `segment-shifted`.
  */
 const STRICT_RECALL_TYPES = Object.freeze([
   'paragraph-delete',
@@ -82,6 +87,7 @@ const STRICT_RECALL_TYPES = Object.freeze([
   'callout-paragraph-delete',
   'table-cell-delete',
   'html-table-cell-delete',
+  'section-body-swap',
   'en-residual',
   'token-drop',
 ]);
@@ -154,63 +160,178 @@ function diffId(d) {
 }
 
 /**
- * Locate the *positional* section index of the JA segment that the mutation
- * targets. Section indices are positional (0 = preface, 1 = first heading's
- * section, etc.) and match across EN and JA because Phase 4's boundary test
- * already enforces that EN and JA share the same heading count per page.
+ * Locate the JA segment that the mutation targets and return both its
+ * positional section index and the segment record itself (for fingerprint
+ * matching downstream).
  *
- * EN and JA segments use different `sectionPath` strings (one English, one
- * Japanese), so positional indices are the only safe cross-language link.
+ * Two-pass implementation:
+ *   1. Walk the JA segments and use heading positions alone to decide
+ *      which section the mutation line falls into (`targetSectionIndex`).
+ *      This is critical because mutations like `swapSectionBodies` set
+ *      `lineIndex` to the line *immediately after* a heading, where no
+ *      body segment exists yet — the previous single-pass logic wrongly
+ *      attributed it to the preceding section's last body segment.
+ *   2. Walk the segments again, tracking the current section index, and
+ *      pick the body segment in `targetSectionIndex` whose `line` is
+ *      closest to the mutation line. The closest segment may be on
+ *      either side of the mutation line.
+ *
+ * Section indices are positional (0 = preface, 1 = first heading's
+ * section, etc.) and match across EN and JA because Phase 4's boundary
+ * test already enforces that EN and JA share the same heading count
+ * per page.
  *
  * @param {Segment[]} jaSegments
  * @param {number} mutationLineIndex0  0-based line index from mutation_corpus
- * @returns {number|null}  positional section index, or null if no segment
- *   sits at or before the mutation line (e.g. frontmatter mutation)
+ * @returns {{sectionIndex:number, segment:Segment}|null}
  */
-function findAffectedSectionIndex(jaSegments, mutationLineIndex0) {
+function findAffectedSegment(jaSegments, mutationLineIndex0) {
   const targetLine = mutationLineIndex0 + 1; // mutation_corpus is 0-based, segments 1-based
-  let currentSectionIndex = 0; // preface
-  let bestSectionIndex = null;
-  let bestLine = -1;
 
+  // Pass 1 — heading-based section identification.
+  let currentSection = 0;
+  let targetSection = 0;
+  for (const seg of jaSegments) {
+    if (seg.segmentKind !== 'heading') continue;
+    if (seg.line == null) continue;
+    if (seg.line <= targetLine) {
+      currentSection += 1;
+      targetSection = currentSection;
+    }
+  }
+
+  // Pass 2 — closest body segment in the target section.
+  let walkSection = 0;
+  let best = null;
+  let bestDistance = Number.POSITIVE_INFINITY;
   for (const seg of jaSegments) {
     if (seg.segmentKind === 'heading') {
-      // A heading starts a new section. If the heading itself is past the
-      // mutation line we are done — no later body segment can match.
-      if (seg.line == null || seg.line > targetLine) break;
-      currentSectionIndex += 1;
+      walkSection += 1;
       continue;
     }
     if (seg.line == null) continue;
-    if (seg.line > targetLine) continue;
-    if (seg.line >= bestLine) {
-      bestLine = seg.line;
-      bestSectionIndex = currentSectionIndex;
+    if (walkSection !== targetSection) continue;
+    const distance = Math.abs(seg.line - targetLine);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = { sectionIndex: walkSection, segment: seg };
     }
   }
-  return bestSectionIndex;
+  return best;
 }
 
 /**
- * Section-scoped detection: returns true if the affected section's diff set
- * changed in any way (added, removed, or shifted) between baseline and
- * mutated under the canonical diff identity. Falls back to global comparison
- * when the mutation could not be located in a specific section.
+ * Map a mutation_corpus mutation type to the diff signature(s) we expect
+ * the alignment engine to emit when the mutation lands. The "right diff"
+ * check uses this to verify that the engine doesn't just notice *some*
+ * change in the affected section — it must specifically surface a diff
+ * whose type and kind match the mutation's intent.
  */
-function isMutationDetected(baselineDiffs, mutatedDiffs, affectedSectionIndex) {
-  if (affectedSectionIndex === null) {
+const EXPECTED_DIFF_SIGNATURES = Object.freeze({
+  'paragraph-delete': [{ type: 'segment-missing', kind: 'paragraph' }],
+  'bullet-delete': [
+    { type: 'segment-missing', kind: 'unordered-list-item' },
+    // Bullets inside callouts are also valid targets.
+    { type: 'segment-missing', kind: 'callout-body' },
+  ],
+  'step-delete': [{ type: 'segment-missing', kind: 'ordered-list-item' }],
+  'callout-paragraph-delete': [
+    { type: 'segment-missing', kind: 'callout-body' },
+    { type: 'segment-missing', kind: 'unordered-list-item' },
+    { type: 'segment-missing', kind: 'ordered-list-item' },
+  ],
+  'table-cell-delete': [{ type: 'segment-missing', kind: 'table-cell' }],
+  'html-table-cell-delete': [{ type: 'segment-missing', kind: 'table-cell' }],
+  'en-residual': [
+    { type: 'segment-untranslated', kind: 'paragraph' },
+    { type: 'segment-untranslated', kind: 'callout-body' },
+    { type: 'segment-token-gap', kind: 'paragraph' },
+  ],
+  'token-drop': [
+    { type: 'segment-token-gap' },
+  ],
+  // Cross-language move detection is best-effort: token-gap (when paragraphs
+  // had tokens that swap visibility) is the strongest signal we get.
+  'segment-move': [
+    { type: 'segment-token-gap' },
+    { type: 'segment-missing', kind: 'paragraph' },
+    { type: 'segment-extra', kind: 'paragraph' },
+  ],
+  // Section body swap — the section-content validation pass should emit
+  // `segment-shifted` when the swap leaves token sets disjoint. The fallback
+  // signature catches partial swaps where tokens still overlap.
+  'section-body-swap': [
+    { type: 'segment-shifted' },
+    { type: 'segment-token-gap' },
+    { type: 'segment-missing' },
+    { type: 'segment-extra' },
+  ],
+});
+
+/**
+ * Section-scoped + signature-aware detection.
+ *
+ * The mutation is "detected" if either of the following is true within
+ * the affected section:
+ *
+ *   A. There is at least one NEW diff (under canonical identity) whose
+ *      type and kind match the mutation's expected signature.
+ *      → "the engine introduced a new diff in the right place".
+ *
+ *   B. There is at least one REMOVED baseline diff whose
+ *      `jaSourceFingerprint` equals the affected JA segment's fingerprint.
+ *      → "the engine had already flagged this segment as `segment-extra`,
+ *        and the mutation made the surplus disappear". The deletion is
+ *        still detected because the alignment correctly localized the
+ *        affected segment in baseline.
+ *
+ * Either form proves the alignment knows about the change. The "right
+ * fingerprint" requirement on (B) keeps the metric strict — a baseline
+ * diff that disappears for unrelated LCS-shift reasons is not enough.
+ *
+ * Falls back to a global "any change" check when the mutation cannot be
+ * localized to a specific JA segment (e.g. frontmatter mutation).
+ */
+function isMutationDetected(baselineDiffs, mutatedDiffs, affected, mutationType) {
+  if (affected === null) {
     if (baselineDiffs.length !== mutatedDiffs.length) return true;
     const baselineSet = new Set(baselineDiffs.map(diffId));
     return mutatedDiffs.some((d) => !baselineSet.has(diffId(d)));
   }
 
-  const inSection = (d) => d.sectionIndex === affectedSectionIndex;
+  const sectionIndex = affected.sectionIndex;
+  const affectedFingerprint = affected.segment.sourceFingerprint;
+
+  const inSection = (d) => d.sectionIndex === sectionIndex;
   const baselineSection = baselineDiffs.filter(inSection);
   const mutatedSection = mutatedDiffs.filter(inSection);
-
-  if (baselineSection.length !== mutatedSection.length) return true;
   const baselineIds = new Set(baselineSection.map(diffId));
-  return mutatedSection.some((d) => !baselineIds.has(diffId(d)));
+  const mutatedIds = new Set(mutatedSection.map(diffId));
+  const newDiffs = mutatedSection.filter((d) => !baselineIds.has(diffId(d)));
+  const removedDiffs = baselineSection.filter((d) => !mutatedIds.has(diffId(d)));
+
+  // (A) — new diff matches expected signature
+  const expected = EXPECTED_DIFF_SIGNATURES[mutationType];
+  if (expected) {
+    if (
+      newDiffs.some((d) =>
+        expected.some(
+          (sig) => sig.type === d.type && (!sig.kind || sig.kind === d.segmentKind),
+        ),
+      )
+    ) {
+      return true;
+    }
+  } else if (newDiffs.length > 0) {
+    return true;
+  }
+
+  // (B) — removed baseline diff fingerprints the affected segment
+  if (removedDiffs.some((d) => d.jaSourceFingerprint === affectedFingerprint)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -250,15 +371,17 @@ function analyzePage(slug) {
     const jaSegmentsMutated = extractSegmentsFromMarkdown(mutation.mutated);
     const mutatedResult = alignSegments(enSegments, jaSegmentsMutated);
 
-    const affectedSectionIndex = findAffectedSectionIndex(
+    const affected = findAffectedSegment(
       jaSegmentsOriginal,
       mutation.metadata.lineIndex,
     );
+    const affectedSectionIndex = affected ? affected.sectionIndex : null;
 
     const detected = isMutationDetected(
       baselineResult.diffs,
       mutatedResult.diffs,
-      affectedSectionIndex,
+      affected,
+      type,
     );
     const cascade = cascadeSize(
       baselineResult.diffs,
@@ -268,6 +391,7 @@ function analyzePage(slug) {
     mutations[type] = {
       applicable: true,
       affectedSectionIndex: affectedSectionIndex ?? null,
+      affectedSegmentKind: affected ? affected.segment.segmentKind : null,
       baselineDiffCount: baselineResult.diffs.length,
       mutatedDiffCount: mutatedResult.diffs.length,
       cascadeSize: cascade,
@@ -308,11 +432,20 @@ function aggregateRecall(pageRecords, allTypes) {
   return out;
 }
 
+/**
+ * Mutations that legitimately span multiple segments (so the diff=1 cascade
+ * limit does not apply). `section-body-swap` relocates an entire section's
+ * worth of content and is expected to produce ~N diffs per swap.
+ */
+const MULTI_SEGMENT_MUTATION_TYPES = Object.freeze(new Set(['section-body-swap']));
+
 function maxCascadeAcrossCorpus(pageRecords) {
   let max = 0;
   for (const page of pageRecords) {
-    for (const m of Object.values(page.mutations)) {
-      if (m.applicable && m.cascadeSize > max) max = m.cascadeSize;
+    for (const [type, m] of Object.entries(page.mutations)) {
+      if (!m.applicable) continue;
+      if (MULTI_SEGMENT_MUTATION_TYPES.has(type)) continue;
+      if (m.cascadeSize > max) max = m.cascadeSize;
     }
   }
   return max;

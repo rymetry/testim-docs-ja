@@ -361,7 +361,7 @@ npm run docs:report-categories
 - **共通**: `source_parity_segments_shared.mjs` — `Segment` 型、`normalizeSegmentText`, `computeSegmentFingerprint`, `pushHeading` / `buildSectionPath`, `createSegment` factory。
 - **境界安定性ベンチマーク**: `__tests__/source_parity_segments_boundary.test.mjs` が Phase 0 manifest の 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。結果は `__tests__/fixtures/source-parity-goldens/segment-boundary-report.json` に書き出される（レビュー時に参照可）。
 
-##### Phase 5: exact diff engine + Go/No-Go gate
+##### Phase 5: exact diff engine + shadow-mode runtime wiring
 
 `source_parity_align.mjs` は Issue #225 Phase 5 で導入された section-anchored exact diff engine。Phase 4 の canonical segments を入力として、EN / JA を最小単位で比較し、5 種の diff issue type を出力する。
 
@@ -372,11 +372,19 @@ npm run docs:report-categories
 
 1. EN/JA を `heading` 単位で section に分割する（最初は preface = 見出し前の本文）
 2. heading 数が一致しない場合は `inconclusive: true` を返してフォールバックさせる
-3. section ペアごとに `segmentKind` 上で classic LCS を実行（O(n×m)、section あたり通常 100 segment 未満なので sub-millisecond）
-4. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
-5. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
+3. **Section content validation**: section ペアの invariant token 集合が完全に disjoint なら body swap と判断し `segment-shifted` を 1 件発行して当該 section の LCS を skip する（kind 列だけが揃った section 入れ替えで silent green になる reviewer の指摘ケースを防ぐ）
+4. section ペアごとに **content-aware LCS** (`segmentLikelyMatches`) を実行する。等価判定の階層は:
+   - kind 一致が必須
+   - `sourceFingerprint` 一致 → 強マッチ
+   - `textNorm` 一致 → 強マッチ
+   - 双方に invariant token があり overlap あり → 強マッチ
+   - 双方に invariant token があり overlap なし → 強非マッチ（kind だけで blind に pair しない）
+   - 双方が ASCII のみで textNorm 不一致 → 非マッチ（同言語ペナルティ。中央削除を `enIndex=0` に取り違えるのを防ぐ）
+   - それ以外（cross-language で材料なし）→ kind fallback（best-effort）
+5. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
+6. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
 
-**section anchor の仕組み**: heading カウントは Phase 4 の境界ベンチマークで EN/JA 一致が保証されているので、section index は positional で揃う。その結果、1 つの mutation が他の section にカスケードしない。
+各 ParityDiff は構造化メタデータ (`enSegmentIndex`, `jaSegmentIndex`, `enSourceFingerprint`, `jaSourceFingerprint`, `missingTokens`) を持ち、Phase 6 / Phase 7 の report と issue sync が drilldown できる。
 
 **gate issue type と severity**:
 
@@ -384,20 +392,34 @@ npm run docs:report-categories
 | ---- | -------- | --------------- |
 | `segment-missing` | actionable | non-acknowledgeable |
 | `segment-extra` | actionable | acknowledgeable（翻訳側の意図的拡張がありうる） |
+| `segment-shifted` | actionable | acknowledgeable |
 | `segment-untranslated` | actionable | non-acknowledgeable |
 | `segment-token-gap` | actionable | non-acknowledgeable |
 
-**Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が Phase 0 manifest の 10 ページに対し、`mutation_corpus` の 9 種の diff=1 mutation を全部適用し、検出率を測る。検出ロジックは「mutation の影響を受けた section index で baseline / mutated の diff 集合が変化したか」を見る section-scoped fingerprint 同一性比較。結果は `__tests__/fixtures/source-parity-goldens/recall-report.json` に書き出される。
+**Runtime wiring (Phase 5 shadow mode)**:
+
+`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時のみ既存の `compareSnapshotStructure()` にフォールバックする。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
+
+shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFiles` / `shadowIssuesByType` で確認できる。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の shadow 集計、`check_source_parity --slug=...` 経由の CLI 出力を end-to-end で検証する。
+
+**Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が Phase 0 manifest の 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る。
+
+検出は **section-scoped + signature-aware**:
+
+- (A) 影響を受けた section の mutated 側に新しい diff があり、その `type` / `segmentKind` が mutation の期待 signature にマッチする
+- (B) baseline 側に「削除された JA 段落の `jaSourceFingerprint` を指す」diff があり、それが mutated で消えている
+
+(A) は「正しい場所で正しい種類の新規 diff が出た」、(B) は「baseline で既に flag されていた segment-extra が削除によって解消された」を捕捉する。どちらも alignment が当該 segment を正しく追跡している証拠なので detection と判定する。
 
 **Go/No-Go の判定基準** と **Phase 5 の現状**:
 
 | Go 条件 | 閾値 | 現状 |
 | ------- | ---- | ---- |
-| diff=1 mutation の recall | 100% | **9/9 mutation type で 100%（全 strict + segment-move 含む）** |
-| cascade（単一 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
-| precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 38 |
+| diff=1 mutation の recall（strict） | 100% | **10/10 mutation type で 100%** (paragraph / bullet / step / callout / table-cell / html-table-cell / segment-move / **section-body-swap** / en-residual / token-drop) |
+| cascade（diff=1 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
+| precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 35 |
 
-> Phase 5 PoC は **Go**。次は Phase 6（shadow mode）で旧 parity engine と並走させ、本番出力との差分を精査する。
+> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6 で `segment-shadow` を主 gate に昇格する（NON_ACKNOWLEDGEABLE_TYPES と既存の baseline drift をどう移行するかは Phase 6 の責務）。
 
 ---
 
@@ -434,6 +456,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_segments_boundary.test.mjs` | Phase 4 境界安定性ベンチマーク          |
 | `__tests__/source_parity_align.test.mjs`             | lib/source_parity_align.mjs             |
 | `__tests__/source_parity_recall.test.mjs`            | Phase 5 diff=1 recall ベンチマーク      |
+| `__tests__/source_parity_align_runtime.test.mjs`     | Phase 5 runtime wiring (shadow mode E2E)|
 
 ---
 
