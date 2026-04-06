@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-06T13:46:46.186Z",
-  "generatedFromRunId": "2026-04-06T13:46:46.186Z#parity-check-status",
-  "rationale": "Phase 6A frozen baseline — regenerated",
+  "generatedAt": "2026-04-06T14:28:41.182Z",
+  "generatedFromRunId": "2026-04-06T14:28:41.182Z#parity-check-status",
+  "rationale": "Phase 6A frozen baseline — generated at cutover. New issues fail; baselined issues do not. To pay down: see docs/OPS_DESIGN.md Phase 6A rollback section.",
   "entries": [
     {
       "slug": "administration/api-access",
