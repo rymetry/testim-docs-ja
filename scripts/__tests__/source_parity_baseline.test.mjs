@@ -14,12 +14,16 @@ import {
   buildBaselineKey,
   buildBaselineKeyFromEntry,
   tagIssuesWithBaseline,
+  isBaselineExpired,
   BASELINE_ELIGIBLE_TYPES,
   INCONCLUSIVE_CATEGORIES,
 } from '../lib/source_parity_baseline.mjs';
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
 const OTHER_FINGERPRINT = 'sha256:' + 'b'.repeat(64);
+const EN_SEGMENT_FINGERPRINT = 'sha256:' + 'c'.repeat(64);
+const JA_SEGMENT_FINGERPRINT = 'sha256:' + 'd'.repeat(64);
+const SHIFTED_JA_FINGERPRINT = 'sha256:' + 'e'.repeat(64);
 
 const validMissingEntry = {
   slug: 'overview/example',
@@ -28,6 +32,9 @@ const validMissingEntry = {
   segmentKind: 'paragraph',
   enSegmentIndex: 2,
   jaSegmentIndex: null,
+  enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+  jaSourceFingerprint: null,
+  missingTokens: null,
   snapshotFingerprint: VALID_FINGERPRINT,
   inconclusiveCategory: null,
   inconclusiveReason: null,
@@ -41,6 +48,9 @@ const validExtraEntry = {
   segmentKind: 'paragraph',
   enSegmentIndex: null,
   jaSegmentIndex: 3,
+  enSourceFingerprint: null,
+  jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
+  missingTokens: null,
   snapshotFingerprint: VALID_FINGERPRINT,
   inconclusiveCategory: null,
   inconclusiveReason: null,
@@ -54,9 +64,28 @@ const validInconclusiveEntry = {
   segmentKind: null,
   enSegmentIndex: null,
   jaSegmentIndex: null,
+  enSourceFingerprint: null,
+  jaSourceFingerprint: null,
+  missingTokens: null,
   snapshotFingerprint: VALID_FINGERPRINT,
   inconclusiveCategory: 'heading-count-mismatch',
   inconclusiveReason: 'Heading count mismatch: EN has 0 headings, JA has 5',
+  reviewAfter: '2026-10-06',
+};
+
+const validTokenGapEntry = {
+  slug: 'overview/example',
+  issueType: 'segment-token-gap',
+  sectionPath: 'CLI',
+  segmentKind: 'paragraph',
+  enSegmentIndex: 1,
+  jaSegmentIndex: null,
+  enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+  jaSourceFingerprint: null,
+  missingTokens: ['--proxy'],
+  snapshotFingerprint: VALID_FINGERPRINT,
+  inconclusiveCategory: null,
+  inconclusiveReason: null,
   reviewAfter: '2026-10-06',
 };
 
@@ -150,11 +179,27 @@ describe('validateBaseline', () => {
     );
   });
 
+  it('throws on segment-missing entry without enSourceFingerprint', () => {
+    const entry = { ...validMissingEntry, enSourceFingerprint: null };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /enSourceFingerprint/,
+    );
+  });
+
   it('throws on segment-extra entry without jaSegmentIndex', () => {
     const entry = { ...validExtraEntry, jaSegmentIndex: null };
     assert.throws(
       () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
       /jaSegmentIndex/,
+    );
+  });
+
+  it('throws on segment-extra entry without jaSourceFingerprint', () => {
+    const entry = { ...validExtraEntry, jaSourceFingerprint: null };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /jaSourceFingerprint/,
     );
   });
 
@@ -177,9 +222,19 @@ describe('validateBaseline', () => {
       issueType: 'segment-untranslated',
       enSegmentIndex: null,
       jaSegmentIndex: 4,
+      enSourceFingerprint: null,
+      jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
     };
     const parsed = { schemaVersion: 1, entries: [entry] };
     assert.doesNotThrow(() => validateBaseline(parsed));
+  });
+
+  it('throws on segment-token-gap entry without missingTokens', () => {
+    const entry = { ...validTokenGapEntry, missingTokens: null };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /missingTokens/,
+    );
   });
 
   it('throws on segment-inconclusive entry with unknown inconclusiveCategory', () => {
@@ -227,6 +282,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       segmentKind: 'paragraph',
       enSegmentIndex: 2,
       jaSegmentIndex: null,
+      enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
     };
     const issueKey = buildBaselineKey('overview/example', issue);
     const entryKey = buildBaselineKeyFromEntry(validMissingEntry);
@@ -240,6 +296,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       segmentKind: 'paragraph',
       enSegmentIndex: null,
       jaSegmentIndex: 3,
+      jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
     };
     const issueKey = buildBaselineKey('overview/example', issue);
     const entryKey = buildBaselineKeyFromEntry(validExtraEntry);
@@ -255,6 +312,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       segmentKind: 'paragraph',
       enSegmentIndex: null,
       jaSegmentIndex: 4,
+      jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
     };
     const entry = {
       slug: 'overview/example',
@@ -263,6 +321,9 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       segmentKind: 'paragraph',
       enSegmentIndex: null,
       jaSegmentIndex: 4,
+      enSourceFingerprint: null,
+      jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
+      missingTokens: null,
       snapshotFingerprint: VALID_FINGERPRINT,
       inconclusiveCategory: null,
       inconclusiveReason: null,
@@ -296,6 +357,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       issueType: 'segment-shifted',
       enSegmentIndex: 5,
       jaSegmentIndex: 8,
+      jaSourceFingerprint: SHIFTED_JA_FINGERPRINT,
     };
     const issue = {
       type: 'segment-shifted',
@@ -303,6 +365,8 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       segmentKind: 'paragraph',
       enSegmentIndex: 5,
       jaSegmentIndex: 8,
+      enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+      jaSourceFingerprint: SHIFTED_JA_FINGERPRINT,
     };
     const issueKey = buildBaselineKey('overview/example', issue);
     const entryKey = buildBaselineKeyFromEntry(shiftedEntry);
@@ -311,6 +375,25 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
     const issueShiftedJa = { ...issue, jaSegmentIndex: 9 };
     const issueKeyShiftedJa = buildBaselineKey('overview/example', issueShiftedJa);
     assert.equal(issueKeyShiftedJa, issueKey);
+  });
+
+  it('distinguishes segment-token-gap keys when missingTokens differ on the same anchor', () => {
+    const issueA = {
+      type: 'segment-token-gap',
+      sectionPath: 'CLI',
+      segmentKind: 'paragraph',
+      enSegmentIndex: 1,
+      enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+      missingTokens: ['--proxy'],
+    };
+    const issueB = {
+      ...issueA,
+      missingTokens: ['TESTIM_KEY'],
+    };
+    assert.notEqual(
+      buildBaselineKey('overview/example', issueA),
+      buildBaselineKey('overview/example', issueB),
+    );
   });
 });
 
@@ -328,6 +411,8 @@ describe('tagIssuesWithBaseline', () => {
       segmentKind: 'paragraph',
       enSegmentIndex: 2,
       jaSegmentIndex: null,
+      enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+      jaSourceFingerprint: null,
       ...overrides,
     };
   }
@@ -398,6 +483,40 @@ describe('tagIssuesWithBaseline', () => {
     assert.equal(result.tagged[0].baselined, true);
   });
 
+  it('does not absorb a different token-gap mutation on the same anchor', () => {
+    const issues = [
+      makeIssue({
+        type: 'segment-token-gap',
+        sectionPath: 'CLI',
+        segmentKind: 'paragraph',
+        enSegmentIndex: 1,
+        detail: '[CLI] token gap',
+        missingTokens: ['TESTIM_KEY'],
+      }),
+    ];
+    const result = tagIssuesWithBaseline(
+      'overview/example',
+      issues,
+      [validTokenGapEntry],
+      VALID_FINGERPRINT,
+    );
+    assert.equal(result.tagged[0].baselined, undefined);
+  });
+
+  it('retains baselined match but annotates expired reviewAfter', () => {
+    const issues = [makeIssue()];
+    const result = tagIssuesWithBaseline(
+      'overview/example',
+      issues,
+      [validMissingEntry],
+      VALID_FINGERPRINT,
+      '2026-10-07',
+    );
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.tagged[0].baselineReviewAfter, '2026-10-06');
+    assert.equal(result.tagged[0].baselineExpired, true);
+  });
+
   it('does not mutate input arrays (immutable)', () => {
     const issues = [makeIssue()];
     const issuesBefore = JSON.stringify(issues);
@@ -438,5 +557,15 @@ describe('tagIssuesWithBaseline', () => {
     );
     assert.equal(result.tagged[0].baselined, undefined);
     assert.equal(result.invalidated, false);
+  });
+});
+
+describe('isBaselineExpired', () => {
+  it('returns false on the reviewAfter date itself', () => {
+    assert.equal(isBaselineExpired(validMissingEntry, '2026-10-06'), false);
+  });
+
+  it('returns true after reviewAfter passes', () => {
+    assert.equal(isBaselineExpired(validMissingEntry, '2026-10-07'), true);
   });
 });

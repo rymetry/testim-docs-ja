@@ -46,6 +46,23 @@ export const INCONCLUSIVE_CATEGORIES = Object.freeze(
 const REVIEW_AFTER_RE = /^\d{4}-\d{2}-\d{2}$/;
 const FINGERPRINT_RE = /^sha256:[0-9a-f]{64}$/;
 
+function isValidFingerprint(value) {
+  return typeof value === 'string' && FINGERPRINT_RE.test(value);
+}
+
+function isValidMissingTokens(value) {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every((token) => typeof token === 'string' && token.length > 0)
+  );
+}
+
+function missingTokensSignature(value) {
+  if (!Array.isArray(value)) return '';
+  return [...new Set(value)].sort().join(',');
+}
+
 /**
  * Validate a parsed parity-baseline.json object.
  * Throws a descriptive Error on any schema violation.
@@ -125,11 +142,42 @@ export function validateBaseline(parsed) {
           `${prefix}: ${entry.issueType} entry must have numeric jaSegmentIndex (JA-owned diff)`,
         );
       }
-    } else {
-      // segment-missing / segment-shifted / segment-token-gap
+      if (!isValidFingerprint(entry.jaSourceFingerprint)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have valid jaSourceFingerprint`,
+        );
+      }
+    } else if (entry.issueType === 'segment-shifted') {
       if (typeof entry.enSegmentIndex !== 'number') {
         throw new Error(
           `${prefix}: ${entry.issueType} entry must have numeric enSegmentIndex (EN-owned diff)`,
+        );
+      }
+      if (!isValidFingerprint(entry.enSourceFingerprint)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have valid enSourceFingerprint`,
+        );
+      }
+      if (!isValidFingerprint(entry.jaSourceFingerprint)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have valid jaSourceFingerprint`,
+        );
+      }
+    } else {
+      // segment-missing / segment-token-gap
+      if (typeof entry.enSegmentIndex !== 'number') {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have numeric enSegmentIndex (EN-owned diff)`,
+        );
+      }
+      if (!isValidFingerprint(entry.enSourceFingerprint)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have valid enSourceFingerprint`,
+        );
+      }
+      if (entry.issueType === 'segment-token-gap' && !isValidMissingTokens(entry.missingTokens)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have non-empty missingTokens`,
         );
       }
     }
@@ -157,6 +205,11 @@ export function loadBaselineFile(filePath) {
  */
 const JA_OWNED_TYPES = new Set(['segment-extra', 'segment-untranslated']);
 
+export function isBaselineExpired(entry, today) {
+  if (typeof today !== 'string' || !REVIEW_AFTER_RE.test(today)) return false;
+  return today > entry.reviewAfter;
+}
+
 /**
  * Build a stable lookup key from an issue object.
  *
@@ -182,12 +235,26 @@ export function buildBaselineKey(slug, issue) {
   if (JA_OWNED_TYPES.has(issue.type)) {
     return (
       `${slug}|${issue.type}|${issue.sectionPath ?? ''}|${issue.segmentKind ?? ''}|ja|` +
-      `${issue.jaSegmentIndex ?? '_null_'}`
+      `${issue.jaSegmentIndex ?? '_null_'}|jafp=${issue.jaSourceFingerprint ?? '_null_'}`
+    );
+  }
+  if (issue.type === 'segment-token-gap') {
+    return (
+      `${slug}|${issue.type}|${issue.sectionPath ?? ''}|${issue.segmentKind ?? ''}|en|` +
+      `${issue.enSegmentIndex ?? '_null_'}|enfp=${issue.enSourceFingerprint ?? '_null_'}|` +
+      `tokens=${missingTokensSignature(issue.missingTokens)}`
+    );
+  }
+  if (issue.type === 'segment-shifted') {
+    return (
+      `${slug}|${issue.type}|${issue.sectionPath ?? ''}|${issue.segmentKind ?? ''}|en|` +
+      `${issue.enSegmentIndex ?? '_null_'}|enfp=${issue.enSourceFingerprint ?? '_null_'}|` +
+      `jafp=${issue.jaSourceFingerprint ?? '_null_'}`
     );
   }
   return (
     `${slug}|${issue.type}|${issue.sectionPath ?? ''}|${issue.segmentKind ?? ''}|en|` +
-    `${issue.enSegmentIndex ?? '_null_'}`
+    `${issue.enSegmentIndex ?? '_null_'}|enfp=${issue.enSourceFingerprint ?? '_null_'}`
   );
 }
 
@@ -205,12 +272,26 @@ export function buildBaselineKeyFromEntry(entry) {
   if (JA_OWNED_TYPES.has(entry.issueType)) {
     return (
       `${entry.slug}|${entry.issueType}|${entry.sectionPath ?? ''}|${entry.segmentKind ?? ''}|ja|` +
-      `${entry.jaSegmentIndex ?? '_null_'}`
+      `${entry.jaSegmentIndex ?? '_null_'}|jafp=${entry.jaSourceFingerprint ?? '_null_'}`
+    );
+  }
+  if (entry.issueType === 'segment-token-gap') {
+    return (
+      `${entry.slug}|${entry.issueType}|${entry.sectionPath ?? ''}|${entry.segmentKind ?? ''}|en|` +
+      `${entry.enSegmentIndex ?? '_null_'}|enfp=${entry.enSourceFingerprint ?? '_null_'}|` +
+      `tokens=${missingTokensSignature(entry.missingTokens)}`
+    );
+  }
+  if (entry.issueType === 'segment-shifted') {
+    return (
+      `${entry.slug}|${entry.issueType}|${entry.sectionPath ?? ''}|${entry.segmentKind ?? ''}|en|` +
+      `${entry.enSegmentIndex ?? '_null_'}|enfp=${entry.enSourceFingerprint ?? '_null_'}|` +
+      `jafp=${entry.jaSourceFingerprint ?? '_null_'}`
     );
   }
   return (
     `${entry.slug}|${entry.issueType}|${entry.sectionPath ?? ''}|${entry.segmentKind ?? ''}|en|` +
-    `${entry.enSegmentIndex ?? '_null_'}`
+    `${entry.enSegmentIndex ?? '_null_'}|enfp=${entry.enSourceFingerprint ?? '_null_'}`
   );
 }
 
@@ -226,9 +307,16 @@ export function buildBaselineKeyFromEntry(entry) {
  * @param {object[]} issues
  * @param {object[]} baselineEntries — full entries array, may include other slugs
  * @param {string|null} currentSnapshotFingerprint
+ * @param {string|null} [today]
  * @returns {{ tagged: object[], invalidated: boolean, matchedKeys: Set<string> }}
  */
-export function tagIssuesWithBaseline(slug, issues, baselineEntries, currentSnapshotFingerprint) {
+export function tagIssuesWithBaseline(
+  slug,
+  issues,
+  baselineEntries,
+  currentSnapshotFingerprint,
+  today = null,
+) {
   const slugEntries = baselineEntries.filter((e) => e.slug === slug);
 
   if (slugEntries.length === 0) {
@@ -264,8 +352,17 @@ export function tagIssuesWithBaseline(slug, issues, baselineEntries, currentSnap
     }
     const key = buildBaselineKey(slug, issue);
     if (entryKeyIndex.has(key)) {
+      const entry = entryKeyIndex.get(key);
       matchedKeys.add(key);
-      return { ...issue, baselined: true };
+      const taggedIssue = {
+        ...issue,
+        baselined: true,
+        baselineReviewAfter: entry.reviewAfter,
+      };
+      if (isBaselineExpired(entry, today)) {
+        taggedIssue.baselineExpired = true;
+      }
+      return taggedIssue;
     }
     return { ...issue };
   });

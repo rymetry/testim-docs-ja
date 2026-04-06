@@ -317,6 +317,7 @@ export async function checkSourceParity({
         issues,
         baselineData.entries,
         snapshotFingerprint,
+        today,
       );
       issues = baselineResult.tagged;
       if (baselineResult.invalidated) {
@@ -435,6 +436,9 @@ export async function checkSourceParity({
     }
     if (summary.expiredAcknowledgements > 0) {
       console.log(`expired acknowledgements: ${summary.expiredAcknowledgements} 件`);
+    }
+    if (summary.expiredBaselineEntries > 0) {
+      console.log(`expired baseline entries: ${summary.expiredBaselineEntries} 件`);
     }
     console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {

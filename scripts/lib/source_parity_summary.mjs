@@ -11,10 +11,11 @@
  * will promote shadow issues into the primary gate.
  *
  * Phase 6A PR1 adds baseline accounting (`baselinedIssues`, `baselinedFiles`,
- * `baselinedByType`, `baselinedByInconclusiveCategory`) — counted regardless
- * of shadow phase so the same fields work both before and after PR2 cutover.
- * baseline-tagged issues are also excluded from active counts so PR2 can
- * flip the gate by simply removing the shadow phase tag.
+ * `baselinedByType`, `baselinedByInconclusiveCategory`,
+ * `expiredBaselineEntries`) — counted regardless of shadow phase so the same
+ * fields work both before and after PR2 cutover. baseline-tagged issues are
+ * also excluded from active counts so PR2 can flip the gate by simply
+ * removing the shadow phase tag.
  */
 export function summarizeParityResults(results) {
   const issuesByType = {};
@@ -35,6 +36,7 @@ export function summarizeParityResults(results) {
   let shadowFiles = 0;
   let baselinedIssues = 0;
   let baselinedFiles = 0;
+  let expiredBaselineEntries = 0;
 
   for (const result of results) {
     let hasActionable = false;
@@ -53,6 +55,9 @@ export function summarizeParityResults(results) {
       if (isBaselined) {
         baselinedIssues += 1;
         baselinedByType[issue.type] = (baselinedByType[issue.type] || 0) + 1;
+        if (issue.baselineExpired === true) {
+          expiredBaselineEntries += 1;
+        }
         if (
           issue.type === 'segment-inconclusive' &&
           typeof issue.inconclusiveCategory === 'string'
@@ -130,5 +135,6 @@ export function summarizeParityResults(results) {
     baselinedFiles,
     baselinedByType,
     baselinedByInconclusiveCategory,
+    expiredBaselineEntries,
   };
 }

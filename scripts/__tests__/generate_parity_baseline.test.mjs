@@ -10,6 +10,7 @@ import assert from 'node:assert/strict';
 
 import {
   buildBaselineFromStatus,
+  buildGenerationMeta,
   serializeBaseline,
   mergePartialBaseline,
   defaultReviewAfter,
@@ -17,6 +18,9 @@ import {
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
 const OTHER_FINGERPRINT = 'sha256:' + 'b'.repeat(64);
+const EN_SEGMENT_FINGERPRINT = 'sha256:' + 'c'.repeat(64);
+const JA_SEGMENT_FINGERPRINT = 'sha256:' + 'd'.repeat(64);
+const TOKEN_GAP_FINGERPRINT = 'sha256:' + 'e'.repeat(64);
 
 const sampleStatus = {
   summary: {
@@ -36,7 +40,7 @@ const sampleStatus = {
           segmentKind: 'paragraph',
           enSegmentIndex: 2,
           jaSegmentIndex: null,
-          enSourceFingerprint: 'sha256:abc',
+          enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
           detail: '[Setup] EN paragraph not found',
         },
         {
@@ -47,8 +51,20 @@ const sampleStatus = {
           segmentKind: 'paragraph',
           enSegmentIndex: null,
           jaSegmentIndex: 5,
-          jaSourceFingerprint: 'sha256:def',
+          jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
           detail: '[Setup] JA paragraph has no EN counterpart',
+        },
+        {
+          type: 'segment-token-gap',
+          severity: 'actionable',
+          phase: 'segment-shadow',
+          sectionPath: 'CLI',
+          segmentKind: 'paragraph',
+          enSegmentIndex: 1,
+          jaSegmentIndex: 1,
+          enSourceFingerprint: TOKEN_GAP_FINGERPRINT,
+          missingTokens: ['TESTIM_KEY', '--proxy'],
+          detail: '[CLI] JA paragraph drops EN invariant tokens: --proxy, TESTIM_KEY',
         },
         {
           type: 'segment-inconclusive',
@@ -102,15 +118,59 @@ describe('defaultReviewAfter', () => {
 });
 
 // ---------------------------------------------------------------------------
+// buildGenerationMeta
+// ---------------------------------------------------------------------------
+
+describe('buildGenerationMeta', () => {
+  it('derives deterministic metadata from status.summary.checkedAt', () => {
+    const metaFromEarlyCall = buildGenerationMeta(sampleStatus, {
+      regenerate: true,
+      slugs: null,
+      rationale: null,
+      reviewAfter: null,
+    });
+    const metaFromLaterCall = buildGenerationMeta(sampleStatus, {
+      regenerate: true,
+      slugs: null,
+      rationale: null,
+      reviewAfter: null,
+    });
+    assert.deepEqual(metaFromEarlyCall, metaFromLaterCall);
+    assert.equal(metaFromEarlyCall.generatedAt, '2026-04-06T03:00:00Z');
+    assert.equal(
+      metaFromEarlyCall.runId,
+      '2026-04-06T03:00:00Z#parity-check-status',
+    );
+    assert.equal(metaFromEarlyCall.reviewAfter, '2026-10-06');
+  });
+
+  it('honors explicit rationale and reviewAfter overrides', () => {
+    const metaOverride = buildGenerationMeta(sampleStatus, {
+      regenerate: false,
+      slugs: ['overview/example'],
+      rationale: 'custom rationale',
+      reviewAfter: '2026-12-31',
+    });
+    assert.equal(metaOverride.rationale, 'custom rationale');
+    assert.equal(metaOverride.reviewAfter, '2026-12-31');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // buildBaselineFromStatus
 // ---------------------------------------------------------------------------
 
 describe('buildBaselineFromStatus', () => {
   it('extracts only BASELINE_ELIGIBLE_TYPES issues', () => {
     const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
-    assert.equal(baseline.entries.length, 3);
+    assert.equal(baseline.entries.length, 4);
     const types = baseline.entries.map((e) => e.issueType).sort();
-    assert.deepEqual(types, ['segment-extra', 'segment-inconclusive', 'segment-missing']);
+    assert.deepEqual(types, [
+      'segment-extra',
+      'segment-inconclusive',
+      'segment-missing',
+      'segment-token-gap',
+    ]);
   });
 
   it('uses jaSegmentIndex (not enSegmentIndex) for segment-extra entries', () => {
@@ -133,11 +193,11 @@ describe('buildBaselineFromStatus', () => {
     assert.equal(baseline.entries.length, 0);
   });
 
-  it('skips already-baselined issues (idempotent)', () => {
+  it('includes already-baselined issues so full regeneration from tagged status is lossless', () => {
     const status = JSON.parse(JSON.stringify(sampleStatus));
     status.files[0].issues[0].baselined = true;
     const baseline = buildBaselineFromStatus(status, fingerprintMap, meta);
-    assert.equal(baseline.entries.length, 2);
+    assert.equal(baseline.entries.length, 4);
   });
 
   it('attaches the page-level snapshotFingerprint to every entry', () => {
@@ -145,6 +205,16 @@ describe('buildBaselineFromStatus', () => {
     for (const entry of baseline.entries) {
       assert.equal(entry.snapshotFingerprint, VALID_FINGERPRINT);
     }
+  });
+
+  it('copies owner-side source fingerprints and token signatures into entries', () => {
+    const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
+    const missing = baseline.entries.find((e) => e.issueType === 'segment-missing');
+    const extra = baseline.entries.find((e) => e.issueType === 'segment-extra');
+    const tokenGap = baseline.entries.find((e) => e.issueType === 'segment-token-gap');
+    assert.equal(missing.enSourceFingerprint, EN_SEGMENT_FINGERPRINT);
+    assert.equal(extra.jaSourceFingerprint, JA_SEGMENT_FINGERPRINT);
+    assert.deepEqual(tokenGap.missingTokens, ['--proxy', 'TESTIM_KEY']);
   });
 });
 
@@ -181,6 +251,9 @@ describe('serializeBaseline', () => {
           segmentKind: 'paragraph',
           enSegmentIndex: 0,
           jaSegmentIndex: null,
+          enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+          jaSourceFingerprint: null,
+          missingTokens: null,
           snapshotFingerprint: VALID_FINGERPRINT,
           inconclusiveCategory: null,
           inconclusiveReason: null,
@@ -193,6 +266,9 @@ describe('serializeBaseline', () => {
           segmentKind: 'paragraph',
           enSegmentIndex: 0,
           jaSegmentIndex: null,
+          enSourceFingerprint: OTHER_FINGERPRINT,
+          jaSourceFingerprint: null,
+          missingTokens: null,
           snapshotFingerprint: VALID_FINGERPRINT,
           inconclusiveCategory: null,
           inconclusiveReason: null,
@@ -231,6 +307,9 @@ describe('mergePartialBaseline', () => {
         segmentKind: 'paragraph',
         enSegmentIndex: 0,
         jaSegmentIndex: null,
+        enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+        jaSourceFingerprint: null,
+        missingTokens: null,
         snapshotFingerprint: OTHER_FINGERPRINT,
         inconclusiveCategory: null,
         inconclusiveReason: null,
@@ -243,6 +322,9 @@ describe('mergePartialBaseline', () => {
         segmentKind: 'paragraph',
         enSegmentIndex: 1,
         jaSegmentIndex: null,
+        enSourceFingerprint: OTHER_FINGERPRINT,
+        jaSourceFingerprint: null,
+        missingTokens: null,
         snapshotFingerprint: VALID_FINGERPRINT,
         inconclusiveCategory: null,
         inconclusiveReason: null,
@@ -260,6 +342,9 @@ describe('mergePartialBaseline', () => {
         segmentKind: 'paragraph',
         enSegmentIndex: 2,
         jaSegmentIndex: null,
+        enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+        jaSourceFingerprint: null,
+        missingTokens: null,
         snapshotFingerprint: VALID_FINGERPRINT,
         inconclusiveCategory: null,
         inconclusiveReason: null,

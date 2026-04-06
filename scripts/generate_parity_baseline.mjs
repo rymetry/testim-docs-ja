@@ -4,7 +4,9 @@
  *
  * Phase 6A の frozen baseline 機構の生成側。input は直前の `check:parity` 実行
  * 結果 (`parity-check-status.json`) と各 slug の現 EN snapshot fingerprint。
- * 出力は deterministic で、CI で bit-identical を検証する。
+ * 出力は deterministic で、CI で bit-identical を検証する。デフォルトの
+ * generatedAt / generatedFromRunId は parity-check-status.json の
+ * summary.checkedAt から決定する。
  *
  * Modes:
  *   --regenerate              既存 parity-baseline.json を完全上書き
@@ -58,6 +60,16 @@ function fileEntryToSlug(filePath) {
   return filePath.replace(/^src\/content\/docs\//, '').replace(/\.md$/, '');
 }
 
+function getCheckedAt(status) {
+  const checkedAt = status?.summary?.checkedAt;
+  if (typeof checkedAt !== 'string' || Number.isNaN(Date.parse(checkedAt))) {
+    throw new Error(
+      'parity-check-status.json must include summary.checkedAt as a valid ISO timestamp',
+    );
+  }
+  return checkedAt;
+}
+
 /**
  * Build a fingerprint map from the snapshots directory: slug → sha256:....
  * Walks the snapshots tree once and computes computeSnapshotFingerprint per file.
@@ -99,40 +111,77 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
 
     for (const issue of file.issues ?? []) {
       if (!BASELINE_ELIGIBLE_TYPES.has(issue.type)) continue;
-      if (issue.baselined === true) continue;
 
       const entry = {
         slug,
         issueType: issue.type,
         snapshotFingerprint: fingerprint,
         reviewAfter: meta.reviewAfter,
+        sectionPath: null,
+        segmentKind: null,
+        enSegmentIndex: null,
+        jaSegmentIndex: null,
+        enSourceFingerprint: null,
+        jaSourceFingerprint: null,
+        missingTokens: null,
+        inconclusiveCategory: null,
+        inconclusiveReason: null,
       };
 
       if (issue.type === 'segment-inconclusive') {
-        entry.sectionPath = null;
-        entry.segmentKind = null;
-        entry.enSegmentIndex = null;
-        entry.jaSegmentIndex = null;
         entry.inconclusiveCategory = issue.inconclusiveCategory ?? null;
         entry.inconclusiveReason = issue.inconclusiveReason ?? null;
       } else if (issue.type === 'segment-extra' || issue.type === 'segment-untranslated') {
         // JA-owned diffs — use jaSegmentIndex as the anchor.
-        if (typeof issue.jaSegmentIndex !== 'number') continue; // skip unkeyable
+        if (
+          typeof issue.jaSegmentIndex !== 'number' ||
+          typeof issue.jaSourceFingerprint !== 'string'
+        ) {
+          continue;
+        }
         entry.sectionPath = issue.sectionPath ?? null;
         entry.segmentKind = issue.segmentKind ?? null;
-        entry.enSegmentIndex = null;
         entry.jaSegmentIndex = issue.jaSegmentIndex;
-        entry.inconclusiveCategory = null;
-        entry.inconclusiveReason = null;
-      } else {
-        // EN-owned diffs (segment-missing, segment-shifted, segment-token-gap).
-        if (typeof issue.enSegmentIndex !== 'number') continue; // skip unkeyable
+        entry.jaSourceFingerprint = issue.jaSourceFingerprint;
+      } else if (issue.type === 'segment-shifted') {
+        if (
+          typeof issue.enSegmentIndex !== 'number' ||
+          typeof issue.enSourceFingerprint !== 'string' ||
+          typeof issue.jaSourceFingerprint !== 'string'
+        ) {
+          continue;
+        }
         entry.sectionPath = issue.sectionPath ?? null;
         entry.segmentKind = issue.segmentKind ?? null;
         entry.enSegmentIndex = issue.enSegmentIndex;
-        entry.jaSegmentIndex = null;
-        entry.inconclusiveCategory = null;
-        entry.inconclusiveReason = null;
+        entry.enSourceFingerprint = issue.enSourceFingerprint;
+        entry.jaSourceFingerprint = issue.jaSourceFingerprint;
+      } else if (issue.type === 'segment-token-gap') {
+        if (
+          typeof issue.enSegmentIndex !== 'number' ||
+          typeof issue.enSourceFingerprint !== 'string' ||
+          !Array.isArray(issue.missingTokens) ||
+          issue.missingTokens.length === 0
+        ) {
+          continue;
+        }
+        entry.sectionPath = issue.sectionPath ?? null;
+        entry.segmentKind = issue.segmentKind ?? null;
+        entry.enSegmentIndex = issue.enSegmentIndex;
+        entry.enSourceFingerprint = issue.enSourceFingerprint;
+        entry.missingTokens = [...new Set(issue.missingTokens)].sort();
+      } else {
+        // EN-owned diffs (segment-missing).
+        if (
+          typeof issue.enSegmentIndex !== 'number' ||
+          typeof issue.enSourceFingerprint !== 'string'
+        ) {
+          continue;
+        }
+        entry.sectionPath = issue.sectionPath ?? null;
+        entry.segmentKind = issue.segmentKind ?? null;
+        entry.enSegmentIndex = issue.enSegmentIndex;
+        entry.enSourceFingerprint = issue.enSourceFingerprint;
       }
       entries.push(entry);
     }
@@ -144,6 +193,20 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
     generatedFromRunId: meta.runId,
     rationale: meta.rationale,
     entries,
+  };
+}
+
+export function buildGenerationMeta(status, args) {
+  const checkedAt = getCheckedAt(status);
+  const generatedAt = checkedAt;
+  const defaultRationale = args.regenerate
+    ? 'Phase 6A frozen baseline — regenerated'
+    : `Phase 6A frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
+  return {
+    runId: `${checkedAt}#parity-check-status`,
+    generatedAt,
+    reviewAfter: args.reviewAfter ?? defaultReviewAfter(new Date(checkedAt)),
+    rationale: args.rationale ?? defaultRationale,
   };
 }
 
@@ -169,11 +232,39 @@ function sortEntries(entries) {
     if (a.issueType === 'segment-extra' || a.issueType === 'segment-untranslated') {
       const aIdx = a.jaSegmentIndex ?? -1;
       const bIdx = b.jaSegmentIndex ?? -1;
-      return aIdx - bIdx;
+      if (aIdx !== bIdx) return aIdx - bIdx;
+      const aFp = a.jaSourceFingerprint ?? '';
+      const bFp = b.jaSourceFingerprint ?? '';
+      return aFp < bFp ? -1 : aFp > bFp ? 1 : 0;
+    }
+    if (a.issueType === 'segment-token-gap') {
+      const aIdx = a.enSegmentIndex ?? -1;
+      const bIdx = b.enSegmentIndex ?? -1;
+      if (aIdx !== bIdx) return aIdx - bIdx;
+      const aFp = a.enSourceFingerprint ?? '';
+      const bFp = b.enSourceFingerprint ?? '';
+      if (aFp !== bFp) return aFp < bFp ? -1 : 1;
+      const aTokens = Array.isArray(a.missingTokens) ? a.missingTokens.join(',') : '';
+      const bTokens = Array.isArray(b.missingTokens) ? b.missingTokens.join(',') : '';
+      return aTokens < bTokens ? -1 : aTokens > bTokens ? 1 : 0;
+    }
+    if (a.issueType === 'segment-shifted') {
+      const aIdx = a.enSegmentIndex ?? -1;
+      const bIdx = b.enSegmentIndex ?? -1;
+      if (aIdx !== bIdx) return aIdx - bIdx;
+      const aEnFp = a.enSourceFingerprint ?? '';
+      const bEnFp = b.enSourceFingerprint ?? '';
+      if (aEnFp !== bEnFp) return aEnFp < bEnFp ? -1 : 1;
+      const aJaFp = a.jaSourceFingerprint ?? '';
+      const bJaFp = b.jaSourceFingerprint ?? '';
+      return aJaFp < bJaFp ? -1 : aJaFp > bJaFp ? 1 : 0;
     }
     const aIdx = a.enSegmentIndex ?? -1;
     const bIdx = b.enSegmentIndex ?? -1;
-    return aIdx - bIdx;
+    if (aIdx !== bIdx) return aIdx - bIdx;
+    const aFp = a.enSourceFingerprint ?? '';
+    const bFp = b.enSourceFingerprint ?? '';
+    return aFp < bFp ? -1 : aFp > bFp ? 1 : 0;
   });
 }
 
@@ -249,16 +340,7 @@ async function main() {
   const status = JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8'));
   const fingerprintMap = buildFingerprintMap();
 
-  const now = new Date();
-  const defaultRationale = args.regenerate
-    ? 'Phase 6A frozen baseline — regenerated'
-    : `Phase 6A frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
-  const meta = {
-    runId: `${now.toISOString()}#${process.pid}`,
-    generatedAt: now.toISOString(),
-    reviewAfter: args.reviewAfter ?? defaultReviewAfter(now),
-    rationale: args.rationale ?? defaultRationale,
-  };
+  const meta = buildGenerationMeta(status, args);
 
   let output;
   if (args.regenerate) {

@@ -442,11 +442,16 @@ Phase 6A は Phase 5 の exact diff engine を deterministic に primary gate �
 **設計原則**:
 
 - baseline と acknowledgement は別ファイル（責務分離）
-- baseline 同定キーは ownership ごとに分岐:
-  - **EN-owned** (`segment-missing` / `segment-shifted` / `segment-token-gap`):
-    `slug + issueType + sectionPath + segmentKind + enSegmentIndex`
+- baseline 同定キーは ownership ごとに分岐し、index に加えて
+  owner-side fingerprint を含める:
+  - **EN-owned** (`segment-missing`):
+    `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint`
+  - **EN-owned (token gap)** (`segment-token-gap`):
+    `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint + missingTokens`
+  - **EN+JA matched pair** (`segment-shifted`):
+    `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint + jaSourceFingerprint`
   - **JA-owned** (`segment-extra` / `segment-untranslated`):
-    `slug + issueType + sectionPath + segmentKind + jaSegmentIndex`
+    `slug + issueType + sectionPath + segmentKind + jaSegmentIndex + jaSourceFingerprint`
   - **page-level** (`segment-inconclusive`):
     `slug + issueType + inconclusiveCategory`
 - page-level snapshotFingerprint で conservative に invalidate（EN snapshot
@@ -462,7 +467,9 @@ Phase 6A は Phase 5 の exact diff engine を deterministic に primary gate �
 - `scripts/generate_parity_baseline.mjs` — baseline 生成 CLI
   - `--regenerate` で full、`--slug=<csv>` で partial 再生成
   - `--rationale=<text>` / `--review-after=<YYYY-MM-DD>` で再現性を確保
-  - 出力は deterministic（安定ソート + 2-space indent + LF 終端）
+  - 出力は deterministic（`parity-check-status.json` の
+    `summary.checkedAt` を `generatedAt` / `generatedFromRunId` の seed に使い、
+    安定ソート + 2-space indent + LF 終端）
 - `parity-baseline.json` — frozen baseline file（PR1 では preview、
   PR2 cutover で再生成）
 

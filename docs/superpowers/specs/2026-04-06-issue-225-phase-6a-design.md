@@ -180,19 +180,25 @@ Phase 6A 後も backward compat のため `summarizeParityResults` は `shadowIs
 
 | issueType | lookup key |
 |-----------|-----------|
-| `segment-missing` / `segment-shifted` / `segment-untranslated` / `segment-token-gap` | `slug + issueType + sectionPath + segmentKind + enSegmentIndex` |
-| `segment-extra` | `slug + issueType + sectionPath + segmentKind + jaSegmentIndex` |
+| `segment-missing` | `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint` |
+| `segment-token-gap` | `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint + missingTokens` |
+| `segment-shifted` | `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint + jaSourceFingerprint` |
+| `segment-extra` / `segment-untranslated` | `slug + issueType + sectionPath + segmentKind + jaSegmentIndex + jaSourceFingerprint` |
 | `segment-inconclusive` | `slug + issueType + inconclusiveCategory` |
 
-`segment-extra` だけは EN side の index を持てないため、明示的な例外として `jaSegmentIndex` を使う。曖昧な fallback ではなく、issueType による分岐として実装する。
+owner-side fingerprint を key に含める理由は、**同じ index に載った別 drift を baseline が誤吸収しないため**。とくに `segment-token-gap` は `missingTokens` まで含めないと、同じ EN segment 上の別 token drop を既存 baseline と誤同定する。
 
-`segment-shifted` は matched-but-moved の状態を表すので EN / JA 両方の index を持つが、baseline 同定は **EN 側 anchor** (`enSegmentIndex`) のみ使う。JA 側で並び順が変わっても EN anchor が同じなら同一エントリ扱い。
+`segment-extra` / `segment-untranslated` は EN side の index を持てないため、明示的な例外として `jaSegmentIndex + jaSourceFingerprint` を使う。曖昧な fallback ではなく、issueType による分岐として実装する。
+
+`segment-shifted` は matched-but-moved の状態を表すので EN / JA 両方の fingerprint を key に含める。EN anchor は `enSegmentIndex` のままだが、destination JA 側が変わった shift は別エントリとして扱う。
 
 `segment-inconclusive` は section / segment 単位ではなくページ全体の状態を表す issue なので、`inconclusiveCategory` のみで同定する。
 
 **Schema validation rule**:
-- `segment-extra` 以外の segment-* type: `enSegmentIndex` 必須、`jaSegmentIndex` は null / 省略
-- `segment-extra`: `jaSegmentIndex` 必須、`enSegmentIndex` は null / 省略
+- `segment-missing`: `enSegmentIndex` + `enSourceFingerprint` 必須
+- `segment-token-gap`: `enSegmentIndex` + `enSourceFingerprint` + `missingTokens` 必須
+- `segment-shifted`: `enSegmentIndex` + `enSourceFingerprint` + `jaSourceFingerprint` 必須
+- `segment-extra` / `segment-untranslated`: `jaSegmentIndex` + `jaSourceFingerprint` 必須
 - `segment-inconclusive`: `enSegmentIndex` / `jaSegmentIndex` / `sectionPath` / `segmentKind` すべて null、`inconclusiveCategory` 必須
 - `validateBaseline` がこれを enforce する
 
@@ -239,7 +245,7 @@ node scripts/generate_parity_baseline.mjs --slug=overview/testim-overview,overvi
 - `--regenerate`: 既存 `parity-baseline.json` を完全上書き。runId / generatedAt 更新
 - `--slug=<csv>`: 指定 slug のエントリのみ削除 → 再生成 → 既存 baseline にマージ。他の slug のエントリは触らない
 - どちらも入力は最新の `npm run check:parity` 実行結果（`parity-check-status.json`）に依存
-- 出力は **deterministic**: entry 順序は `slug → issueType → sectionPath → segmentKind → index` で安定ソート、JSON は 2-space indent + LF 終端
+- 出力は **deterministic**: `parity-check-status.json` の `summary.checkedAt` を `generatedAt` / `generatedFromRunId` の seed に使い、entry 順序は `slug → issueType → sectionPath → segmentKind → index → fingerprint/token signature` で安定ソート、JSON は 2-space indent + LF 終端
 - 同じ入力で 2 回実行して bit-identical を CI で検証する（exit criteria C5）
 
 `package.json` に追加:

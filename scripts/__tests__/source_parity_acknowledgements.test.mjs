@@ -723,6 +723,29 @@ describe('summarizeParityResults — baseline accounting', () => {
     });
   });
 
+  it('counts expired baseline entries separately without making them active', () => {
+    const results = [
+      {
+        file: 'a.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          {
+            type: 'segment-missing',
+            severity: 'actionable',
+            phase: 'segment-shadow',
+            baselined: true,
+            baselineExpired: true,
+            detail: 'expired baseline',
+          },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.expiredBaselineEntries, 1);
+    assert.equal(summary.activeFiles, 0);
+  });
+
   it('reports baselinedFiles=0 when no baseline tags are present', () => {
     const results = [
       {
@@ -739,5 +762,6 @@ describe('summarizeParityResults — baseline accounting', () => {
     assert.equal(summary.baselinedFiles, 0);
     assert.deepEqual(summary.baselinedByType, {});
     assert.deepEqual(summary.baselinedByInconclusiveCategory, {});
+    assert.equal(summary.expiredBaselineEntries, 0);
   });
 });
