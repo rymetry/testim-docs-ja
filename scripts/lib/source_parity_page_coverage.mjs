@@ -38,3 +38,28 @@ export function checkSourcePageMissingLocal(sidebarSlugs, localSlugs) {
   }
   return issues;
 }
+
+/**
+ * Detect JA pages with sourceUrl but no EN snapshot.
+ * Severity depends on source freshness:
+ *   - "fresh" → actionable (source was fully fetched, snapshot should exist)
+ *   - "partial" / "broken" / null → signal (can't confirm freshness)
+ *
+ * @param {Map<string, string>} localSourceUrls — slug → sourceUrl for JA files
+ * @param {Set<string>} snapshotSlugs — slugs with existing EN snapshot files
+ * @param {string | null} freshnessState — from source-sync-status.json
+ * @returns {Array<{type: string, detail: string, severity: string}>}
+ */
+export function checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, freshnessState) {
+  const issues = [];
+  const isFresh = freshnessState === 'fresh';
+  for (const [slug] of localSourceUrls) {
+    if (snapshotSlugs.has(slug)) continue;
+    issues.push({
+      type: 'missing-fresh-snapshot',
+      detail: `sourceUrl があるが${isFresh ? ' fresh' : ''} EN スナップショットが存在しない: ${slug}`,
+      severity: isFresh ? 'actionable' : 'signal',
+    });
+  }
+  return issues;
+}
