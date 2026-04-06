@@ -15,9 +15,9 @@ const FENCE_RE = /^(`{3,}|~{3,})/;
 const HEADING_RE = /^(#{1,6})\s+(.+?)\s*$/;
 const CALLOUT_OPEN_RE = /^:::(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$/;
 const CALLOUT_CLOSE_RE = /^:::\s*$/;
-const DETAILS_OPEN_RE = /^<details\b/i;
-const DETAILS_CLOSE_RE = /^<\/details>\s*$/i;
-const SUMMARY_RE = /<summary\b[^>]*>([\s\S]*?)<\/summary>/i;
+const DETAILS_OPEN_ANYWHERE_RE = /<details\b/gi;
+const DETAILS_CLOSE_ANYWHERE_RE = /<\/details\s*>/gi;
+const SUMMARY_ALL_RE = /<summary\b[^>]*>([\s\S]*?)<\/summary>/gi;
 const IMAGE_RE = /^(?:!\[[^\]]*\]\([^)]+\)|<Image\b|<img\b)/i;
 const UNORDERED_RE = /^(\s*)[-*+]\s+(.+)$/;
 const ORDERED_RE = /^(\s*)\d+\.\s+(.+)$/;
@@ -79,15 +79,29 @@ function decodeHtmlEntities(text) {
  *
  * This mirrors the EN walker's renderInlineText behaviour so segments on
  * both sides expose the same invariant token set.
+ *
+ * Rewrite order matters: `<code>` must be converted to backticks BEFORE
+ * `<a>`. Otherwise the `<a>` branch's tag-strip step would drop the
+ * backticks for constructs like `<a href="X"><code>Y</code></a>`, losing
+ * the inline-code invariant token. With the correct order, the `<a>` inner
+ * is already `` `Y` `` when the link regex runs, so the backticks survive
+ * into the final markdown.
  */
 function htmlInlineToMarkdownText(html) {
   if (typeof html !== 'string') return '';
   let text = html;
 
-  // <a href="X">Y</a> → [Y](X) (skip #fragment-only and javascript: hrefs)
+  // <code>Z</code> → `Z` (run first so nesting inside <a> is preserved).
+  text = text.replace(/<code\b[^>]*>([\s\S]*?)<\/code>/gi, (_match, inner) => {
+    return `\`${inner.replace(/<[^>]+>/g, '').trim()}\``;
+  });
+
+  // <a href="X">Y</a> → [Y](X) (skip #fragment-only and javascript: hrefs).
   text = text.replace(
     /<a\b[^>]*\bhref\s*=\s*["']([^"']*)["'][^>]*>([\s\S]*?)<\/a>/gi,
     (_match, href, inner) => {
+      // Strip any remaining non-code tags from the label, but preserve the
+      // backtick characters emitted by the code rewrite above.
       const label = inner.replace(/<[^>]+>/g, '').trim();
       if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
         return label;
@@ -95,11 +109,6 @@ function htmlInlineToMarkdownText(html) {
       return `[${label}](${href})`;
     },
   );
-
-  // <code>Z</code> → `Z`
-  text = text.replace(/<code\b[^>]*>([\s\S]*?)<\/code>/gi, (_match, inner) => {
-    return `\`${inner.replace(/<[^>]+>/g, '').trim()}\``;
-  });
 
   // Strip any remaining tags
   text = text.replace(/<[^>]+>/g, ' ');
@@ -260,36 +269,39 @@ export function extractSegmentsFromMarkdown(body) {
       // Unterminated — fall through to normal paragraph handling
     }
 
-    // <details> open/close are treated as block boundaries. Only the
-    // <summary> line is special-cased; other nested content flows through
-    // normal classification so lists/tables/images keep their proper kinds.
-    // paragraphKind is saved/restored across the boundary so a <details>
-    // inside a :::note does not leak 'callout-body' into inner paragraphs.
-    if (DETAILS_OPEN_RE.test(trimmed)) {
+    // <details> open/close and <summary> are handled independently on the
+    // same line so condensed one-liners like
+    //   <details><summary>Q</summary></details>
+    // still produce a details-summary segment and keep the depth stack
+    // balanced. paragraphKind is saved/restored across each <details>
+    // boundary so a details block inside a :::note does not leak
+    // 'callout-body' into the inner paragraphs.
+    const detailsOpenCount = (trimmed.match(DETAILS_OPEN_ANYWHERE_RE) || []).length;
+    const detailsCloseCount = (trimmed.match(DETAILS_CLOSE_ANYWHERE_RE) || []).length;
+    const summaryMatches = [...line.matchAll(SUMMARY_ALL_RE)];
+    if (detailsOpenCount > 0 || detailsCloseCount > 0 || summaryMatches.length > 0) {
       flushParagraph();
-      detailsKindStack.push(paragraphKind);
-      paragraphKind = 'paragraph';
-      detailsDepth += 1;
-      continue;
-    }
-    if (DETAILS_CLOSE_RE.test(trimmed)) {
-      flushParagraph();
-      if (detailsDepth > 0) {
-        detailsDepth -= 1;
-        paragraphKind = detailsKindStack.pop() ?? 'paragraph';
+      for (let k = 0; k < detailsOpenCount; k += 1) {
+        detailsKindStack.push(paragraphKind);
+        paragraphKind = 'paragraph';
+        detailsDepth += 1;
       }
-      continue;
-    }
-    const summaryMatch = line.match(SUMMARY_RE);
-    if (summaryMatch) {
-      flushParagraph();
-      // Preserve link/code invariant tokens via markdown conversion so the
-      // same tokens are captured on both EN and JA sides. Aggressive tag
-      // stripping would drop href targets that Phase 5 exact diff compares.
-      const summaryText = htmlInlineToMarkdownText(summaryMatch[1]);
-      if (summaryText.length > 0) {
+      if (summaryMatches.length > 0) {
         const path = buildSectionPath(headingStack);
-        emitter.emit(path, 'details-summary', summaryText, lineNo);
+        for (const match of summaryMatches) {
+          // Preserve link/code invariant tokens via markdown conversion so
+          // the same tokens are captured on both EN and JA sides.
+          const summaryText = htmlInlineToMarkdownText(match[1]);
+          if (summaryText.length > 0) {
+            emitter.emit(path, 'details-summary', summaryText, lineNo);
+          }
+        }
+      }
+      for (let k = 0; k < detailsCloseCount; k += 1) {
+        if (detailsDepth > 0) {
+          detailsDepth -= 1;
+          paragraphKind = detailsKindStack.pop() ?? 'paragraph';
+        }
       }
       continue;
     }

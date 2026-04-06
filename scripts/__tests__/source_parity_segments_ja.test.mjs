@@ -597,6 +597,72 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     const summaries = byKind(segments, 'details-summary');
     assert.ok(summaries[0].tokensInvariant.includes('--proxy'));
   });
+
+  it('preserves BOTH the link and inline-code tokens for <a><code>…</code></a> in <summary>', () => {
+    // Regression: previously <a> was processed before <code>, and the <a>
+    // branch stripped inner tags, turning <code>--proxy</code> into plain
+    // text "--proxy" (without backticks). The resulting markdown
+    // "[--proxy](/docs/...)" loses the code token on JA while EN keeps
+    // both via recursive renderInlineText.
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>See <a href="/docs/running-tests/the-command-line-cli"><code>--proxy</code></a> docs</summary>',
+      '',
+      'Answer.',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    const tokens = summaries[0].tokensInvariant;
+    assert.ok(
+      tokens.includes('--proxy'),
+      `expected --proxy token, got ${JSON.stringify(tokens)}`,
+    );
+    assert.ok(
+      tokens.includes('/docs/running-tests/the-command-line-cli'),
+      `expected URL token, got ${JSON.stringify(tokens)}`,
+    );
+  });
+
+  it('extracts summary from a condensed single-line <details><summary>…</summary></details>', () => {
+    // Regression: DETAILS_OPEN_RE matched first and `continue`d, so the
+    // summary inside a one-line details block was never extracted.
+    const md = [
+      '## FAQ',
+      '',
+      '<details><summary>Condensed question?</summary></details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'condensed question?');
+  });
+
+  it('balances the details-depth stack after a condensed single-line details block', () => {
+    // Ensure open/close on the same line correctly push+pop the stack so
+    // subsequent content outside the details is not misclassified.
+    const md = [
+      '## S',
+      '',
+      ':::note',
+      '<details><summary>Q</summary></details>',
+      '',
+      'Trailing callout text.',
+      ':::',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    assert.equal(byKind(segments, 'details-summary').length, 1);
+    const bodies = byKind(segments, 'callout-body');
+    assert.equal(bodies.length, 1);
+    assert.equal(bodies[0].textNorm, 'trailing callout text.');
+  });
 });
 
 // ---------------------------------------------------------------------------
