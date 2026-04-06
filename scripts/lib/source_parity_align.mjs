@@ -56,9 +56,10 @@
  *   Tokenless cross-section body swaps are intentionally outside the Phase 5
  *   exact gate. With EN as the source of truth, this module hard-gates
  *   section-local structural drift plus token-anchored cross-section shifts.
- *   Tokenless prose-only swaps require semantic evidence (translation memory,
- *   embeddings, etc.) and are left to future advisory work rather than
- *   best-effort heuristics that create false positives on normal translations.
+ *   When adjacent tokenless prose-only sections are too ambiguous to
+ *   distinguish from a body swap, the module returns `inconclusive` rather
+ *   than silently green-lighting the page. Fully resolving those cases still
+ *   requires semantic evidence (translation memory, embeddings, etc.).
  *
  * Pure functions only: inputs are never mutated.
  *
@@ -359,6 +360,38 @@ function collectSectionTokens(section) {
   return tokens;
 }
 
+const FREE_FORM_KINDS = Object.freeze(new Set(['paragraph', 'callout-body']));
+
+function isAllFreeFormKinds(body) {
+  if (body.length === 0) return false;
+  for (const seg of body) {
+    if (!FREE_FORM_KINDS.has(seg.segmentKind)) return false;
+  }
+  return true;
+}
+
+function isTokenlessBody(body) {
+  if (body.length === 0) return false;
+  for (const seg of body) {
+    if ((seg.tokensInvariant ?? []).length > 0) return false;
+  }
+  return true;
+}
+
+function pairwiseLengthSimilaritySum(a, b) {
+  const n = Math.min(a.length, b.length);
+  let total = 0;
+  for (let k = 0; k < n; k++) {
+    const aLen = a[k].textNorm?.length ?? 0;
+    const bLen = b[k].textNorm?.length ?? 0;
+    if (aLen === 0 || bLen === 0) continue;
+    total += Math.min(aLen, bLen) / Math.max(aLen, bLen);
+  }
+  return total;
+}
+
+const TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN = 0.01;
+
 // ---------------------------------------------------------------------------
 // Untranslated heuristic
 // ---------------------------------------------------------------------------
@@ -506,6 +539,26 @@ function countTokenOverlap(query, target) {
   return overlap;
 }
 
+function findBestCrossSectionMatch(queryTokens, candidateSets, currentIndex) {
+  let bestIndex = -1;
+  let bestOverlap = 0;
+  let secondBestOverlap = 0;
+
+  for (let k = 0; k < candidateSets.length; k++) {
+    if (k === currentIndex) continue;
+    const overlap = countTokenOverlap(queryTokens, candidateSets[k]);
+    if (overlap > bestOverlap) {
+      secondBestOverlap = bestOverlap;
+      bestOverlap = overlap;
+      bestIndex = k;
+    } else if (overlap > secondBestOverlap) {
+      secondBestOverlap = overlap;
+    }
+  }
+
+  return { bestIndex, bestOverlap, secondBestOverlap };
+}
+
 /**
  * Look for evidence that this section's body was actually relocated to a
  * *different* section on the other side of the alignment. The check is
@@ -515,10 +568,14 @@ function countTokenOverlap(query, target) {
  *
  *   - The current section's en/ja token sets must be completely disjoint, AND
  *   - Some other EN section's tokens must overlap the current JA tokens at
- *     a meaningful threshold (≥ 2 tokens AND ≥ half of jaTokens), AND
+ *     a meaningful threshold (≥ half of jaTokens, minimum 1 token), AND
  *   - Some other JA section's tokens must overlap the current EN tokens at
- *     the same threshold. This symmetry requirement is what distinguishes
- *     a true body swap from a JA section that simply lost its EN content.
+ *     the same threshold, AND
+ *   - Both directions must identify the SAME destination section with a
+ *     strictly better overlap than any second-best candidate.
+ *
+ * The uniqueness requirement is what lets a one-token section swap still be
+ * classified as structural while suppressing common-token false positives.
  *
  * If all three hold, return the destination indices so the caller can
  * emit a single `segment-shifted` diff. Otherwise return `null` and the
@@ -537,39 +594,67 @@ function findBodySwapEvidence({
   if (enTokens.size === 0 || jaTokens.size === 0) return null;
   if (countTokenOverlap(enTokens, jaTokens) > 0) return null;
 
-  const requireForJa = Math.max(2, Math.ceil(jaTokens.size * 0.5));
-  const requireForEn = Math.max(2, Math.ceil(enTokens.size * 0.5));
+  const requireForJa = Math.max(1, Math.ceil(jaTokens.size * 0.5));
+  const requireForEn = Math.max(1, Math.ceil(enTokens.size * 0.5));
 
-  let bestEnDest = -1;
-  let bestEnOverlap = 0;
-  for (let k = 0; k < enSectionTokensList.length; k++) {
-    if (k === currentEnIndex) continue;
-    const overlap = countTokenOverlap(jaTokens, enSectionTokensList[k]);
-    if (overlap > bestEnOverlap) {
-      bestEnOverlap = overlap;
-      bestEnDest = k;
-    }
-  }
-  if (bestEnOverlap < requireForJa) return null;
+  const bestEnDest = findBestCrossSectionMatch(jaTokens, enSectionTokensList, currentEnIndex);
+  if (bestEnDest.bestOverlap < requireForJa) return null;
+  if (bestEnDest.bestOverlap <= bestEnDest.secondBestOverlap) return null;
 
-  let bestJaDest = -1;
-  let bestJaOverlap = 0;
-  for (let k = 0; k < jaSectionTokensList.length; k++) {
-    if (k === currentJaIndex) continue;
-    const overlap = countTokenOverlap(enTokens, jaSectionTokensList[k]);
-    if (overlap > bestJaOverlap) {
-      bestJaOverlap = overlap;
-      bestJaDest = k;
-    }
-  }
-  if (bestJaOverlap < requireForEn) return null;
+  const bestJaDest = findBestCrossSectionMatch(enTokens, jaSectionTokensList, currentJaIndex);
+  if (bestJaDest.bestOverlap < requireForEn) return null;
+  if (bestJaDest.bestOverlap <= bestJaDest.secondBestOverlap) return null;
+  if (bestEnDest.bestIndex !== bestJaDest.bestIndex) return null;
 
   return {
-    enDestIndex: bestEnDest,
-    jaDestIndex: bestJaDest,
-    enToOtherOverlap: bestJaOverlap,
-    jaToOtherOverlap: bestEnOverlap,
+    enDestIndex: bestEnDest.bestIndex,
+    jaDestIndex: bestJaDest.bestIndex,
+    enToOtherOverlap: bestJaDest.bestOverlap,
+    jaToOtherOverlap: bestEnDest.bestOverlap,
   };
+}
+
+/**
+ * When the page is otherwise clean, adjacent free-form tokenless sections may
+ * still be too ambiguous to certify as "no drift". If the swapped pairing is
+ * at least as plausible as the current pairing under the only available
+ * non-semantic signal (relative paragraph lengths), return an ambiguity record
+ * so the caller can mark the page inconclusive instead of green.
+ */
+function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
+  if (diffs.length > 0) return null;
+
+  for (let i = 0; i < enSections.length - 1; i++) {
+    const j = i + 1;
+    const enI = enSections[i].body;
+    const jaI = jaSections[i].body;
+    const enJ = enSections[j].body;
+    const jaJ = jaSections[j].body;
+
+    if (enI.length === 0 || jaI.length === 0 || enJ.length === 0 || jaJ.length === 0) continue;
+    if (!isAllFreeFormKinds(enI) || !isAllFreeFormKinds(jaI)) continue;
+    if (!isAllFreeFormKinds(enJ) || !isAllFreeFormKinds(jaJ)) continue;
+    if (!isTokenlessBody(enI) || !isTokenlessBody(jaI)) continue;
+    if (!isTokenlessBody(enJ) || !isTokenlessBody(jaJ)) continue;
+
+    const currentScore =
+      pairwiseLengthSimilaritySum(enI, jaI) + pairwiseLengthSimilaritySum(enJ, jaJ);
+    const swapScore =
+      pairwiseLengthSimilaritySum(enI, jaJ) + pairwiseLengthSimilaritySum(enJ, jaI);
+
+    const relativeGap =
+      currentScore > 0 ? Math.abs(swapScore - currentScore) / currentScore : 0;
+    if (swapScore >= currentScore || relativeGap <= TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN) {
+      return {
+        leftSectionPath: enSections[i].sectionPath,
+        rightSectionPath: enSections[j].sectionPath,
+        currentScore,
+        swapScore,
+      };
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -741,6 +826,25 @@ export function alignSegments(enSegments, jaSegments) {
   for (let i = 0; i < enSections.length; i++) {
     const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
     for (const diff of sectionDiffs) diffs.push(diff);
+  }
+
+  const ambiguousTokenlessSwap = detectAmbiguousAdjacentTokenlessSwap(
+    enSections,
+    jaSections,
+    diffs,
+  );
+  if (ambiguousTokenlessSwap) {
+    return {
+      diffs: [],
+      sectionsAligned: enSections.length,
+      sectionsCompared: enSections.length,
+      inconclusive: true,
+      inconclusiveReason:
+        `Tokenless adjacent sections "${buildSectionLabel(ambiguousTokenlessSwap.leftSectionPath)}" ` +
+        `and "${buildSectionLabel(ambiguousTokenlessSwap.rightSectionPath)}" cannot rule out ` +
+        `a body swap (current=${ambiguousTokenlessSwap.currentScore.toFixed(2)}, ` +
+        `swap=${ambiguousTokenlessSwap.swapScore.toFixed(2)})`,
+    };
   }
 
   return {

@@ -850,7 +850,7 @@
           "mutatedDiffCount": 0,
           "cascadeSize": 0,
           "detected": true,
-          "inconclusive": false
+          "inconclusive": true
         },
         "bullet-delete": {
           "applicable": true,

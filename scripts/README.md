@@ -388,9 +388,9 @@ npm run docs:report-categories
 >
 > **検出範囲の明確化**:
 > - **token-bearing section swap** (`section-body-swap` mutation type): symmetric destination evidence を満たすので `segment-shifted` (`confidence: 'high'`) として recall 100%。
-> - **tokenless free-form section swap**: Phase 5 の exact gate では **検出対象外**。EN を正とした section-local parity を hard gate にし、cross-section の prose-only swap は best-effort 推定を行わない。ここを無理に拾うと正常翻訳を誤検知するため、semantic signal（translation memory / embeddings）が入る Phase 6+ の課題として切り分けている。
+> - **tokenless free-form section swap**: Phase 5 の exact gate では `segment-shifted` を出さない。ただし **clean 判定のまま通さない** ため、隣接 tokenless free-form section で current/swap のどちらが正しいか区別できない場合は `inconclusive` を返して coarse parity へフォールバックする。semantic signal（translation memory / embeddings）が入る Phase 6+ で、ここを advisory / semantic layer として詰める。
 > - **tokenless cross-language の head/tail 段落削除**: 位置スコアが対称になるため `segment-missing` 1 件は出るが、どの段落が gap か (`enSegmentIndex`) は best-effort。中央削除は位置非対称性で正しく特定できる。
-> - **正常翻訳された tokenless free-form section**: `segment-shifted` は出ない。review で問題になった false positive を避けるため、tokenless prose-only swap 推定は実装から外している。
+> - **正常翻訳された tokenless free-form section**: `segment-shifted` は出ない。長さプロファイルなどで current pairing が明確に優勢ならそのまま clean になるが、swap を否定できないほど曖昧な場合は false green 回避のため `inconclusive` を返す。
 
 各 ParityDiff は構造化メタデータ (`enSegmentIndex`, `jaSegmentIndex`, `enSourceFingerprint`, `jaSourceFingerprint`, `missingTokens`) を持ち、Phase 6 / Phase 7 の report と issue sync が drilldown できる。
 
@@ -406,7 +406,7 @@ npm run docs:report-categories
 
 **Runtime wiring (Phase 5 shadow mode)**:
 
-`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時のみ既存の `compareSnapshotStructure()` にフォールバックする。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
+`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時のみ既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **clean か swap かを判定しきれない** ケースも含む。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
 
 shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFiles` / `shadowIssuesByType` で確認できる。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の shadow 集計、`check_source_parity --slug=...` 経由の CLI 出力を end-to-end で検証する。
 
@@ -427,7 +427,7 @@ shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFil
 | cascade（diff=1 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
 | precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 35 |
 
-`segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate の責務から外し、Phase 6+ の advisory/semantic layer で扱う。
+`segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、silent green 回避のため必要に応じて `inconclusive` に落として Phase 6+ の advisory/semantic layer へ送る。
 
 > Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6 で `segment-shadow` を主 gate に昇格する（NON_ACKNOWLEDGEABLE_TYPES と既存の baseline drift をどう移行するかは Phase 6 の責務）。
 

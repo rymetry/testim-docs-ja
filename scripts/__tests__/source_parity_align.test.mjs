@@ -567,26 +567,24 @@ describe('alignSegments — segment-shifted only fires with token destination ev
     );
   });
 
-  it('does NOT emit segment-shifted on a normal aligned tokenless prose page', () => {
-    // Tokenless prose-only sections are out of scope for cross-section
-    // shift detection. A perfectly aligned page must stay diff-free.
+  it('does NOT emit segment-shifted on a distinguishably aligned tokenless prose page', () => {
+    // Tokenless prose-only sections can still be clean when the current
+    // section pairing is materially stronger than the swap hypothesis.
     const en = [
       makeHeading('A', 0, 'A'),
-      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
-      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeSeg('A', 'paragraph', 0, 'This is a very long alpha paragraph with extensive explanatory detail and several extra clauses.'),
+      makeSeg('A', 'paragraph', 1, 'This is another very long alpha paragraph that continues the explanation with more supporting detail.'),
       makeHeading('B', 0, 'B'),
-      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
-      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+      makeSeg('B', 'paragraph', 0, 'Tiny beta one.'),
+      makeSeg('B', 'paragraph', 1, 'Tiny beta two.'),
     ];
     const ja = [
       makeHeading('Aセクション', 0, 'Aセクション'),
-      // Correctly aligned (NOT swapped). Both sections are tokenless
-      // free-form prose with multiple paragraphs.
-      makeSeg('Aセクション', 'paragraph', 0, 'アルファ 1 の段落です。'),
-      makeSeg('Aセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
+      makeSeg('Aセクション', 'paragraph', 0, 'これは非常に長いアルファ段落であり、複数の補足説明と細部を含んでいます。'),
+      makeSeg('Aセクション', 'paragraph', 1, 'これは説明をさらに続ける非常に長いアルファ段落であり、追加の補足情報も含みます。'),
       makeHeading('Bセクション', 0, 'Bセクション'),
-      makeSeg('Bセクション', 'paragraph', 0, 'ベータ 1 の段落です。'),
-      makeSeg('Bセクション', 'paragraph', 1, 'ベータ 2 の段落です。'),
+      makeSeg('Bセクション', 'paragraph', 0, '極短ベータ 1。'),
+      makeSeg('Bセクション', 'paragraph', 1, '極短ベータ 2。'),
     ];
     const result = alignSegments(en, ja);
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
@@ -595,13 +593,12 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       0,
       `aligned tokenless prose must not produce segment-shifted; got diffs: ${JSON.stringify(result.diffs.map((d) => `${d.type}/${d.confidence ?? '-'}/${d.sectionPath}`))}`,
     );
+    assert.equal(result.inconclusive, false, 'distinguishable aligned page should stay conclusive');
   });
 
-  it('does NOT emit segment-shifted for a tokenless swap even when section lengths differ', () => {
-    // Phase 5 intentionally does not hard-gate tokenless prose-only
-    // cross-section swaps. Even when paragraph lengths differ enough to
-    // support a heuristic, that heuristic is not promoted to an exact
-    // diff because it creates false positives on normal translations.
+  it('returns inconclusive for a tokenless swap even when section lengths differ', () => {
+    // Tokenless prose-only cross-section swaps are not emitted as exact
+    // diffs, but they must also not pass as conclusive green.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'This is a much longer paragraph A1 with significant detail.'),
@@ -620,18 +617,14 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('Bセクション', 'paragraph', 1, 'これは A2 段落も長く、物事を詳しく説明しています。'),
     ];
     const result = alignSegments(en, ja);
-    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
-    assert.equal(
-      shifted.length,
-      0,
-      `tokenless swap must not be hard-gated; got diffs: ${JSON.stringify(result.diffs.map((d) => `${d.type}/${d.confidence ?? '-'}`))}`,
-    );
+    assert.equal(result.diffs.length, 0, 'no exact shift diff should be emitted');
+    assert.equal(result.inconclusive, true, 'tokenless swap must not be conclusive green');
+    assert.match(result.inconclusiveReason, /cannot rule out a body swap/i);
   });
 
-  it('KNOWN LIMITATION: tokenless body swap with uniform paragraph lengths is undetectable', () => {
-    // Uniform-length tokenless swaps are also out of scope. This test
-    // pins the broader limitation: tokenless prose-only cross-section
-    // swaps are not part of the Phase 5 exact gate.
+  it('returns inconclusive for a tokenless body swap with uniform paragraph lengths', () => {
+    // Even the fully ambiguous uniform-length case must not silently
+    // pass as a clean page.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
@@ -650,12 +643,34 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('Bセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
     ];
     const result = alignSegments(en, ja);
-    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
-    assert.equal(
-      shifted.length,
-      0,
-      'uniform-length tokenless swap is the documented known limitation',
-    );
+    assert.equal(result.diffs.length, 0);
+    assert.equal(result.inconclusive, true, 'uniform tokenless swap must not be silent green');
+    assert.match(result.inconclusiveReason, /cannot rule out a body swap/i);
+  });
+
+  it('may return inconclusive for an aligned tokenless page when swap cannot be ruled out', () => {
+    // This is the tradeoff for trustworthy clean results: when current
+    // and swapped hypotheses are equally plausible, Phase 5 returns
+    // inconclusive instead of asserting that the page is definitely clean.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
+      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
+      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+    ];
+    const ja = [
+      makeHeading('A-ja', 0, 'A-ja'),
+      makeSeg('A-ja', 'paragraph', 0, 'アルファ 1 の段落です。'),
+      makeSeg('A-ja', 'paragraph', 1, 'アルファ 2 の段落です。'),
+      makeHeading('B-ja', 0, 'B-ja'),
+      makeSeg('B-ja', 'paragraph', 0, 'ベータ 1 の段落です。'),
+      makeSeg('B-ja', 'paragraph', 1, 'ベータ 2 の段落です。'),
+    ];
+    const result = alignSegments(en, ja);
+    assert.equal(result.diffs.length, 0);
+    assert.equal(result.inconclusive, true);
   });
 
   it('does not emit segment-shifted when only one section pair has zero overlap', () => {
@@ -680,25 +695,26 @@ describe('alignSegments — segment-shifted only fires with token destination ev
     assert.equal(shifted.length, 0, 'no destination section → no shift');
   });
 
-  it('still emits segment-shifted when both sides have symmetric destination evidence', () => {
-    // True body swap: EN[A] tokens overlap JA[B], EN[B] tokens overlap
-    // JA[A]. Symmetric → segment-shifted fires.
+  it('still emits segment-shifted when both sides have symmetric destination evidence with one token each', () => {
+    // A single distinctive token per section is sufficient when the
+    // cross-section destination is unique in both directions.
     const en = [
       makeHeading('Setup', 0, 'Setup'),
-      makeSeg('Setup', 'paragraph', 0, 'Use `--proxy` and `--token` to configure.'),
+      makeSeg('Setup', 'paragraph', 0, 'Use `--proxy` to configure.'),
       makeHeading('Run', 0, 'Run'),
-      makeSeg('Run', 'paragraph', 0, 'Pick `--browser` and `--headless` to run.'),
+      makeSeg('Run', 'paragraph', 0, 'Pick `--browser` to run.'),
     ];
     const ja = [
       makeHeading('セットアップ', 0, 'セットアップ'),
       // bodies swapped
-      makeSeg('セットアップ', 'paragraph', 0, '`--browser` と `--headless` を選びます。'),
+      makeSeg('セットアップ', 'paragraph', 0, '`--browser` を選びます。'),
       makeHeading('実行', 0, '実行'),
-      makeSeg('実行', 'paragraph', 0, '`--proxy` と `--token` を設定します。'),
+      makeSeg('実行', 'paragraph', 0, '`--proxy` を設定します。'),
     ];
     const result = alignSegments(en, ja);
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     assert.ok(shifted.length >= 1, 'symmetric token swap must surface as segment-shifted');
+    assert.ok(shifted.every((d) => d.confidence === 'high'));
   });
 });
 
