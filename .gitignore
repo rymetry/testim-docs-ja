@@ -25,6 +25,7 @@ pnpm-debug.log*
 .idea/
 
 # Documentation update tracking
+source-sync-status.json
 snapshot-diff-status.json
 parity-check-status.json
 docs-actionable-report.json

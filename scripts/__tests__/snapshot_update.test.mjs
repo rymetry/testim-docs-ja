@@ -81,6 +81,45 @@ describe('snapshot_update main', () => {
     assert.equal(result.sidebarVerified, false);
   });
 
+  it('includes sourceSyncStatus in main() return value', async () => {
+    const tocMainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0}]}});";
+    const tocChunkJs = "define({'/content/overview/testim-overview/index.htm':{i:[0],t:['Overview'],b:['']}});";
+    const pageHtml = '<html><body><div id="mc-main-content" role="main"><h1>Title</h1></div></body></html>';
+
+    global.fetch = async (url) => {
+      const href = String(url);
+      if (href.includes('Main.js')) return createResponse({ text: tocMainJs });
+      if (href.includes('Mock_Chunk0.js')) return createResponse({ text: tocChunkJs });
+      return createResponse({ text: pageHtml });
+    };
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=testim-overview']);
+
+    assert.ok(result.sourceSyncStatus, 'should include sourceSyncStatus');
+    assert.equal(result.sourceSyncStatus.schemaVersion, 1);
+    assert.equal(result.sourceSyncStatus.freshnessState, 'fresh');
+    assert.equal(result.sourceSyncStatus.summary.targetPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.fetchedPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.sidebarVerified, true);
+  });
+
+  it('sets freshnessState to broken when sidebar fails', async () => {
+    const pageHtml = '<html><body><div id="mc-main-content" role="main"><h1>T</h1></div></body></html>';
+
+    global.fetch = async (url) => {
+      const href = String(url);
+      if (href.includes('Data/Tocs')) return createResponse({ ok: false, status: 500 });
+      return createResponse({ text: pageHtml });
+    };
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=testim-overview']);
+
+    assert.equal(result.sourceSyncStatus.freshnessState, 'broken');
+    assert.equal(result.sourceSyncStatus.summary.sidebarVerified, false);
+  });
+
   it('handles 404 response', async () => {
     const tocMainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0}]}});";
     const tocChunkJs = "define({'/content/overview/testim-overview/index.htm':{i:[0],t:['Overview'],b:['']}});";
