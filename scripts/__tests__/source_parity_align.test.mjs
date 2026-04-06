@@ -338,30 +338,43 @@ describe('alignSegments — section anchoring', () => {
     // Real-world JA segments are written in Japanese and therefore contain
     // CJK characters; the same-language ASCII-only penalty does not fire,
     // and the kind-only fallback in segmentLikelyMatches takes over when
-    // there are no distinguishing tokens.
+    // there are no distinguishing tokens. We pin sections B and C with
+    // shared `--bflag` / `--cflag` invariant tokens so the low-confidence
+    // section guard does not fire on them; this test is specifically
+    // about cascade isolation, not the low-confidence behaviour.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'A1 paragraph.'),
       makeSeg('A', 'paragraph', 1, 'A2 paragraph.'),
       makeHeading('B', 0, 'B'),
-      makeSeg('B', 'paragraph', 0, 'B1 paragraph.'),
-      makeSeg('B', 'paragraph', 1, 'B2 paragraph.'),
+      makeSeg('B', 'paragraph', 0, 'Use `--bflag` for B1.'),
+      makeSeg('B', 'paragraph', 1, 'Use `--bflag` for B2.'),
       makeHeading('C', 0, 'C'),
-      makeSeg('C', 'paragraph', 0, 'C1 paragraph.'),
+      makeSeg('C', 'paragraph', 0, 'Use `--cflag` for C1.'),
     ];
     const ja = [
       makeHeading('Aセクション', 0, 'Aセクション'),
       makeSeg('Aセクション', 'paragraph', 0, 'A1 段落です。'),
       // A2 missing
       makeHeading('Bセクション', 0, 'Bセクション'),
-      makeSeg('Bセクション', 'paragraph', 0, 'B1 段落です。'),
-      makeSeg('Bセクション', 'paragraph', 1, 'B2 段落です。'),
+      makeSeg('Bセクション', 'paragraph', 0, '`--bflag` を B1 で使用します。'),
+      makeSeg('Bセクション', 'paragraph', 1, '`--bflag` を B2 で使用します。'),
       makeHeading('Cセクション', 0, 'Cセクション'),
-      makeSeg('Cセクション', 'paragraph', 0, 'C1 段落です。'),
+      makeSeg('Cセクション', 'paragraph', 0, '`--cflag` を C1 で使用します。'),
     ];
     const result = alignSegments(en, ja);
-    assert.equal(result.diffs.length, 1, 'no cascade — exactly one diff');
-    assert.equal(result.diffs[0].sectionPath, 'A');
+    // The cascade property: section A (with the deletion) holds exactly
+    // one diff, and that diff is the segment-missing for the deleted A2.
+    // Sections B and C must contribute zero diffs.
+    const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missingDiffs.length, 1, 'no cascade — exactly one missing diff');
+    assert.equal(missingDiffs[0].sectionPath, 'A');
+    const otherSectionDiffs = result.diffs.filter((d) => d.sectionPath !== 'A');
+    assert.equal(
+      otherSectionDiffs.length,
+      0,
+      `sections B and C must be diff-free; got: ${JSON.stringify(otherSectionDiffs.map((d) => `${d.type}/${d.sectionPath}`))}`,
+    );
   });
 });
 
@@ -552,6 +565,89 @@ describe('alignSegments — segment-shifted only fires with destination evidence
       types.some((t) => t === 'segment-missing' || t === 'segment-extra' || t === 'segment-token-gap'),
       `expected a normal diff (missing/extra/token-gap); got types: ${JSON.stringify(types)}`,
     );
+  });
+
+  it('emits a low-confidence segment-shifted for tokenless section body swaps', () => {
+    // Reviewer P1 repro: two adjacent sections whose body content is
+    // completely tokenless and free-form prose. JA bodies are swapped
+    // between sections. With no invariant tokens to anchor on, the
+    // weighted LCS aligns each section by position/length scoring and
+    // would silently return 0 diffs. The low-confidence section guard
+    // must emit a `segment-shifted` with `confidence: 'low'` per
+    // affected section so the case is no longer silent green.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
+      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
+      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+    ];
+    const ja = [
+      makeHeading('Aセクション', 0, 'Aセクション'),
+      // bodies swapped: A receives B's translated content
+      makeSeg('Aセクション', 'paragraph', 0, 'ベータ 1 の段落です。'),
+      makeSeg('Aセクション', 'paragraph', 1, 'ベータ 2 の段落です。'),
+      makeHeading('Bセクション', 0, 'Bセクション'),
+      makeSeg('Bセクション', 'paragraph', 0, 'アルファ 1 の段落です。'),
+      makeSeg('Bセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
+    ];
+    const result = alignSegments(en, ja);
+    const lowConf = result.diffs.filter(
+      (d) => d.type === 'segment-shifted' && d.confidence === 'low',
+    );
+    assert.ok(
+      lowConf.length >= 1,
+      `tokenless body swap must not be silent green; got diffs: ${JSON.stringify(result.diffs.map((d) => d.type))}`,
+    );
+    // Both affected sections should be flagged
+    const affectedSectionPaths = lowConf.map((d) => d.sectionPath).sort();
+    assert.deepEqual(affectedSectionPaths, ['A', 'B']);
+  });
+
+  it('does not emit a low-confidence shift on free-form sections that have at least one invariant token', () => {
+    // Sanity: when even one paragraph carries an invariant token, the
+    // weighted LCS finds a strong anchor and the low-confidence guard
+    // does not fire.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Use `--alpha` to start.'),
+      makeSeg('A', 'paragraph', 1, 'Continue normally.'),
+    ];
+    const ja = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, '`--alpha` を使って開始します。'),
+      makeSeg('A', 'paragraph', 1, '通常どおり続行します。'),
+    ];
+    const result = alignSegments(en, ja);
+    const lowConf = result.diffs.filter(
+      (d) => d.type === 'segment-shifted' && d.confidence === 'low',
+    );
+    assert.equal(lowConf.length, 0);
+  });
+
+  it('does not emit a low-confidence shift on sections that contain list items or table cells', () => {
+    // Structured kinds (list items, table cells) carry inherent
+    // structural signals; the LCS can anchor on them so the
+    // low-confidence guard is intentionally restricted to free-form
+    // prose sections only.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Intro.'),
+      makeSeg('A', 'unordered-list-item', 0, 'one'),
+      makeSeg('A', 'unordered-list-item', 1, 'two'),
+    ];
+    const ja = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, '紹介'),
+      makeSeg('A', 'unordered-list-item', 0, 'いち'),
+      makeSeg('A', 'unordered-list-item', 1, 'に'),
+    ];
+    const result = alignSegments(en, ja);
+    const lowConf = result.diffs.filter(
+      (d) => d.type === 'segment-shifted' && d.confidence === 'low',
+    );
+    assert.equal(lowConf.length, 0);
   });
 
   it('does not emit segment-shifted when only one section pair has zero overlap', () => {

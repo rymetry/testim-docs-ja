@@ -350,6 +350,27 @@ function collectSectionTokens(section) {
   return tokens;
 }
 
+/**
+ * Free-form gate-eligible kinds that have no inherent positional structure
+ * for the LCS to anchor on. List items, table cells, headings, and
+ * details-summary all carry strong structural signals via their kind
+ * sequence; only paragraph and callout-body are pure prose.
+ */
+const FREE_FORM_KINDS = Object.freeze(new Set(['paragraph', 'callout-body']));
+
+/**
+ * Returns true when every segment in `body` is a free-form prose kind.
+ * Used by the low-confidence detection to avoid emitting noisy unverifiable
+ * shifts on sections that already contain structured elements.
+ */
+function isAllFreeFormKinds(body) {
+  if (body.length === 0) return false;
+  for (const seg of body) {
+    if (!FREE_FORM_KINDS.has(seg.segmentKind)) return false;
+  }
+  return true;
+}
+
 // ---------------------------------------------------------------------------
 // Untranslated heuristic
 // ---------------------------------------------------------------------------
@@ -454,9 +475,48 @@ function diffShifted(section, sharedReason, enTokens, jaTokens) {
     jaSourceFingerprint: null,
     enSectionTokens: [...enTokens].sort(),
     jaSectionTokens: [...jaTokens].sort(),
+    confidence: 'high',
     detail:
       `Section "${buildSectionLabel(section.sectionPath)}" appears mis-aligned: ` +
       sharedReason,
+  };
+}
+
+/**
+ * Low-confidence variant of `segment-shifted`: emitted when a section pair
+ * has multiple body segments on both sides, the weighted LCS matched every
+ * pair using only weak (kind / position / length) signals, and the
+ * alignment cannot rule out a body swap. The diff carries `confidence: 'low'`
+ * so consumers can render it as a "review needed" warning rather than a
+ * confirmed structural shift.
+ *
+ * The reviewer's diff=1 corpus repro for this case is two adjacent sections
+ * whose bodies have been completely swapped on the JA side; with no
+ * invariant tokens to anchor the alignment, the previous engine returned
+ * `diffs: []` (silent green). Emitting this low-confidence diff is the
+ * minimum acceptable behavior the reviewer asked for: do not return
+ * silent green on tokenless multi-paragraph sections.
+ */
+function diffShiftedLowConfidence(section, enBodyLen, jaBodyLen) {
+  return {
+    type: 'segment-shifted',
+    sectionPath: section.sectionPath,
+    sectionIndex: section.index,
+    segmentKind: 'section',
+    enIndex: null,
+    jaIndex: null,
+    enSegmentIndex: null,
+    jaSegmentIndex: null,
+    enSourceFingerprint: null,
+    jaSourceFingerprint: null,
+    confidence: 'low',
+    enBodyLength: enBodyLen,
+    jaBodyLength: jaBodyLen,
+    detail:
+      `Section "${buildSectionLabel(section.sectionPath)}" alignment is ` +
+      `unverifiable: ${enBodyLen} EN body segments and ${jaBodyLen} JA body ` +
+      `segments matched only by kind/position/length (no fingerprint, ` +
+      `textNorm, or invariant token anchor). A body swap cannot be ruled out.`,
   };
 }
 
@@ -614,6 +674,57 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
 
   const matched = weightedLcs(enBody, jaBody, scoreSegmentMatch);
 
+  // Low-confidence section detection (tokenless free-form prose).
+  //
+  // When a section pair satisfies ALL of the following, the alignment
+  // cannot rule out a body swap and emits a `confidence: 'low'`
+  // `segment-shifted` diff so the case is no longer silent green:
+  //
+  //   - both bodies contain ≥ 2 segments
+  //   - every body segment on both sides is a *free-form* kind
+  //     (paragraph or callout-body). Lists, table cells, headings,
+  //     details-summary all carry inherent structure that the LCS can
+  //     anchor on, so they do not need this guard.
+  //   - the LCS matched every segment on both sides (no segment-missing
+  //     or segment-extra in this section — those would already be a
+  //     real, actionable diff)
+  //   - no matched pair scored above the weak fallback threshold
+  //     (`SCORE_TOKEN_OVERLAP_BASE`). i.e. the alignment relied entirely
+  //     on kind / position / length similarity.
+  //
+  // Only when ALL four hold do we emit the low-confidence shift. The
+  // free-form-only restriction keeps the noise down on real pages
+  // (most non-trivial sections include at least one list item or
+  // structured element) while still catching the reviewer's
+  // tokenless prose-only swap repro.
+  if (
+    enBody.length >= 2 &&
+    jaBody.length >= 2 &&
+    enBody.length === matched.length &&
+    jaBody.length === matched.length &&
+    isAllFreeFormKinds(enBody) &&
+    isAllFreeFormKinds(jaBody)
+  ) {
+    let hasStrongMatch = false;
+    for (const [enIdx, jaIdx] of matched) {
+      const score = scoreSegmentMatch(
+        enBody[enIdx],
+        jaBody[jaIdx],
+        enIdx,
+        jaIdx,
+        enBody.length,
+        jaBody.length,
+      );
+      if (score >= SCORE_TOKEN_OVERLAP_BASE) {
+        hasStrongMatch = true;
+        break;
+      }
+    }
+    if (!hasStrongMatch) {
+      diffs.push(diffShiftedLowConfidence(enSection, enBody.length, jaBody.length));
+    }
+  }
+
   const enMatchedIndices = new Set();
   const jaMatchedIndices = new Set();
   for (const [eIdx, jIdx] of matched) {
@@ -678,9 +789,12 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  * @property {string|null} enSourceFingerprint  sha256 fingerprint of the EN segment raw text
  * @property {string|null} jaSourceFingerprint  sha256 fingerprint of the JA segment raw text
  * @property {string} detail              human-readable summary
+ * @property {string} [confidence]        only on segment-shifted: 'high' (destination evidence) or 'low' (tokenless multi-segment section)
+ * @property {number} [enBodyLength]      only on low-confidence segment-shifted
+ * @property {number} [jaBodyLength]      only on low-confidence segment-shifted
  * @property {string[]} [missingTokens]   only on segment-token-gap
- * @property {string[]} [enSectionTokens] only on segment-shifted
- * @property {string[]} [jaSectionTokens] only on segment-shifted
+ * @property {string[]} [enSectionTokens] only on high-confidence segment-shifted
+ * @property {string[]} [jaSectionTokens] only on high-confidence segment-shifted
  */
 
 /**
@@ -797,6 +911,13 @@ export function parityDiffsToIssues(diffs) {
     if (Array.isArray(diff.enSectionTokens)) {
       issue.enSectionTokens = [...diff.enSectionTokens];
       issue.jaSectionTokens = [...(diff.jaSectionTokens ?? [])];
+    }
+    if (typeof diff.confidence === 'string') {
+      issue.confidence = diff.confidence;
+    }
+    if (typeof diff.enBodyLength === 'number') {
+      issue.enBodyLength = diff.enBodyLength;
+      issue.jaBodyLength = diff.jaBodyLength;
     }
     return issue;
   });

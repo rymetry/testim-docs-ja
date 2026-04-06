@@ -372,7 +372,7 @@ npm run docs:report-categories
 
 1. EN/JA を `heading` 単位で section に分割する（最初は preface = 見出し前の本文）
 2. heading 数が一致しない場合は `inconclusive: true` を返してフォールバックさせる
-3. **Section content validation**: section ペアの invariant token 集合が disjoint で **かつ** 別の section ペアと cross overlap が成立する場合のみ body swap と判定し `segment-shifted` を 1 件発行する（symmetric destination evidence を要求）。zero overlap 単独では発火しないので、単発の token mismatch（`--proxy` → `--token` 誤訳など）が誤って structural shift に分類されない
+3. **Section content validation (high-confidence shift)**: section ペアの invariant token 集合が disjoint で **かつ** 別の section ペアと cross overlap が成立する場合のみ body swap と判定し `segment-shifted` (`confidence: 'high'`) を 1 件発行する（symmetric destination evidence を要求）。zero overlap 単独では発火しないので、単発の token mismatch（`--proxy` → `--token` 誤訳など）が誤って structural shift に分類されない
 4. section ペアごとに **weighted LCS** (`scoreSegmentMatch` + `weightedLcs`) を実行する。各候補ペアにスコアを付けて、累積スコアを最大化する monotonic alignment を選ぶ:
    - kind 一致が必須（不一致 → 0）
    - `sourceFingerprint` 一致 → 1000
@@ -383,22 +383,31 @@ npm run docs:report-categories
    - それ以外（tokenless cross-language）→ 1〜15（**正規化位置の近さ + 文字列長の類似度** によるベストエフォート weak score）
 5. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
 6. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
+7. **Low-confidence section detection (low-confidence shift)**: section ペアが以下を **すべて満たす** 場合、tokenless な本文入れ替わりを否定できないので `segment-shifted` (`confidence: 'low'`) を 1 件発行する
+   - 両 body に 2 セグメント以上
+   - 全セグメントが free-form kind (paragraph または callout-body) のみ — list / table cell / heading のような structural kind が混じっていない
+   - LCS が両 body をすべて pair した（segment-missing/extra のような実 diff がそもそも無い）
+   - すべての matched ペアが weak fallback score (kind / position / length のみ、< 100) で結ばれた
 
 > **Weighted LCS の効能**: boolean LCS は同 kind が連続する section で最後の matched index に偏り、tokenless な中央削除を `enSegmentIndex=0` に誤同定する欠陥があった。Weighted LCS は強い anchor（fingerprint / token）を最優先に配置し、anchor のない中央 segment は位置スコアで自然に揃うので、reviewer が指摘した `EN=[Alpha,Beta,Gamma] / JA=[アルファ,ガンマ]` の中央削除でも正しく `enSegmentIndex=1` を返す。
 >
-> **既知の限界**: tokenless cross-language の **head/tail** 削除（先頭または末尾の段落だけが削除されたケース）は、位置スコアが対称になるため検出はされるが具体 index の特定はできない。`segment-missing` 1 件は出るが `enSegmentIndex` は best-effort。Phase 6 で shadow 出力の人手 review と組み合わせるか、translation memory を導入してから primary gate に昇格させる予定。
+> **検出範囲の明確化**:
+> - **token-bearing section swap** (`section-body-swap` mutation type): symmetric destination evidence を満たすので `segment-shifted` (`confidence: 'high'`) として recall 100%。
+> - **tokenless free-form section swap**: 内容を区別できる anchor が全く無いので、symmetric destination evidence は成立せず、`confidence: 'high'` shift は出ない。代わりに `confidence: 'low'` shift を「section の整合性が検証できない」warning として 1 件出すので silent green にはならない（reviewer の P1 指摘に対応）。具体的にどの段落が swap されたかまでは attribute できない。本格的な区別には translation memory が必要で Phase 6 以降の課題。
+> - **tokenless cross-language の head/tail 段落削除**: 位置スコアが対称になるため `segment-missing` 1 件は出るが、どの段落が gap か (`enSegmentIndex`) は best-effort。中央削除は位置非対称性で正しく特定できる。
+> - **list / table 含みの section**: structural kind が anchor になるので low-confidence guard は発火しない（false positive 抑制）。
 
 各 ParityDiff は構造化メタデータ (`enSegmentIndex`, `jaSegmentIndex`, `enSourceFingerprint`, `jaSourceFingerprint`, `missingTokens`) を持ち、Phase 6 / Phase 7 の report と issue sync が drilldown できる。
 
 **gate issue type と severity**:
 
-| type | severity | acknowledgement |
-| ---- | -------- | --------------- |
-| `segment-missing` | actionable | non-acknowledgeable |
-| `segment-extra` | actionable | acknowledgeable（翻訳側の意図的拡張がありうる） |
-| `segment-shifted` | actionable | acknowledgeable |
-| `segment-untranslated` | actionable | non-acknowledgeable |
-| `segment-token-gap` | actionable | non-acknowledgeable |
+| type | severity | acknowledgement | confidence variants |
+| ---- | -------- | --------------- | ------------------- |
+| `segment-missing` | actionable | non-acknowledgeable | — |
+| `segment-extra` | actionable | acknowledgeable（翻訳側の意図的拡張がありうる） | — |
+| `segment-shifted` | actionable | acknowledgeable | `high` (symmetric destination evidence) / `low` (tokenless free-form section, body swap cannot be ruled out) |
+| `segment-untranslated` | actionable | non-acknowledgeable | — |
+| `segment-token-gap` | actionable | non-acknowledgeable | — |
 
 **Runtime wiring (Phase 5 shadow mode)**:
 
@@ -419,11 +428,13 @@ shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFil
 
 | Go 条件 | 閾値 | 現状 |
 | ------- | ---- | ---- |
-| diff=1 mutation の recall（strict） | 100% | **10/10 mutation type で 100%** (paragraph / bullet / step / callout / table-cell / html-table-cell / segment-move / **section-body-swap** / en-residual / token-drop) |
+| diff=1 mutation の recall（strict, **token-bearing**） | 100% | **9/9 strict mutation type で 100%** (paragraph / bullet / step / callout / table-cell / html-table-cell / **section-body-swap** (token-bearing) / en-residual / token-drop) |
 | cascade（diff=1 mutation あたりの新規 diff 数） | ≤ 6 | 最大 2 |
 | precision baseline（1 ページあたりの baseline diff 数） | ≤ 60 | 最大 35 |
 
-> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6 で `segment-shadow` を主 gate に昇格する（NON_ACKNOWLEDGEABLE_TYPES と既存の baseline drift をどう移行するかは Phase 6 の責務）。
+`segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしており、tokenless prose-only swap は 7. の low-confidence guard が `confidence: 'low'` の shift で warning を出すルートで担保している（synthetic 単体テストあり）。
+
+> Phase 5 PoC は **Go**。runtime には shadow mode で接続済み。Phase 6 で `segment-shadow` を主 gate に昇格する（NON_ACKNOWLEDGEABLE_TYPES と既存の baseline drift / low-confidence shift をどう移行するかは Phase 6 の責務）。
 
 ---
 
