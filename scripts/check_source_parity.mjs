@@ -15,8 +15,6 @@ import {
 } from './lib/project.mjs';
 import {
   ISSUE_SEVERITY,
-  checkSidebarCoverage,
-  checkSourceSnapshotMissing,
   compareSnapshotStructure,
   loadSidebarSlugs,
   localCheck,
@@ -24,8 +22,11 @@ import {
 } from './lib/source_parity.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
+import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
+
+const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 
 const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 
@@ -33,6 +34,42 @@ const ALLOWLIST_PATH = path.join(ROOT_DIR, 'parity-allowlist.json');
 
 // Signal-only issue types that can be suppressed by the allowlist
 const ALLOWABLE_SEVERITIES = new Set(['signal']);
+
+/**
+ * Load freshness state from source-sync-status.json.
+ * Returns null if file doesn't exist or is invalid.
+ */
+function loadFreshnessState() {
+  if (!fs.existsSync(SOURCE_SYNC_STATUS_PATH)) return null;
+  try {
+    const data = JSON.parse(fs.readFileSync(SOURCE_SYNC_STATUS_PATH, 'utf8'));
+    return data.freshnessState ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Collect slugs that have existing EN snapshot HTML files.
+ */
+export function collectSnapshotSlugs(snapshotsDir) {
+  const slugs = new Set();
+  if (!fs.existsSync(snapshotsDir)) return slugs;
+  const walk = (dir, prefix) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        walk(path.join(dir, entry.name), prefix ? `${prefix}/${entry.name}` : entry.name);
+      } else if (entry.name.endsWith('.html')) {
+        const slug = prefix
+          ? `${prefix}/${entry.name.replace(/\.html$/, '')}`
+          : entry.name.replace(/\.html$/, '');
+        slugs.add(slug);
+      }
+    }
+  };
+  walk(snapshotsDir, '');
+  return slugs;
+}
 
 export function parseArgs(argv = process.argv.slice(2)) {
   const sectionArg = argv.find((arg) => arg.startsWith('--section='));
@@ -125,6 +162,8 @@ export async function checkSourceParity({
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH) ? fs.readFileSync(SIDEBAR_PATH, 'utf8') : '';
   const sidebarSlugs = loadSidebarSlugs(sidebarText);
+  const freshnessState = loadFreshnessState();
+  const snapshotSlugs = collectSnapshotSlugs(SNAPSHOTS_DIR);
   const allFiles = findMdFiles(DOCS_DIR);
 
   let allowlist = {};
@@ -167,14 +206,12 @@ export async function checkSourceParity({
     checkedCount += 1;
     let issues = [...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug })];
 
-    // sourceUrl/snapshot consistency check
-    issues.push(
-      ...checkSourceSnapshotMissing({
-        slug: fileSlug,
-        sourceUrl: doc.data.sourceUrl || '',
-        snapshotsDir: SNAPSHOTS_DIR,
-      })
-    );
+    // Per-file snapshot-missing check (--slug mode only; global mode uses page coverage gate)
+    if (resolvedSlug) {
+      issues.push(
+        ...checkSinglePageSnapshot(fileSlug, doc.data.sourceUrl || '', snapshotSlugs, freshnessState),
+      );
+    }
 
     // Snapshot structure comparison (image order, callout nesting, step counts)
     // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
@@ -240,17 +277,33 @@ export async function checkSourceParity({
     }
   }
 
-  // Sidebar coverage check: detect pages in SIDEBAR_URLS.md without local files
-  // Skip in --slug mode (single-page check should not report unrelated global issues)
+  // Page coverage gate: global checks (skip in --slug mode)
   if (!resolvedSlug) {
-    const existingSlugs = new Set(allFiles.map((f) => filePathToSlug(f)));
-    const coverageIssues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
-    if (coverageIssues.length > 0) {
+    const localSlugs = new Set(allFiles.map((f) => filePathToSlug(f)));
+    const localSourceUrls = new Map();
+    for (const filePath of allFiles) {
+      const doc = readDocFile(filePath);
+      if (doc.data.sourceUrl) {
+        localSourceUrls.set(filePathToSlug(filePath), doc.data.sourceUrl);
+      }
+    }
+
+    const coverageIssues = checkPageCoverage({
+      sidebarSlugs,
+      localSlugs,
+      localSourceUrls,
+      snapshotSlugs,
+      freshnessState,
+    });
+
+    const filteredCoverageIssues = applyAllowlist('_page-coverage-gate', coverageIssues, allowlist);
+
+    if (filteredCoverageIssues.length > 0) {
       results.push({
-        file: 'SIDEBAR_URLS.md',
+        file: '_page-coverage-gate',
         sourceUrl: '',
         category: '',
-        issues: coverageIssues,
+        issues: filteredCoverageIssues,
       });
     }
   }

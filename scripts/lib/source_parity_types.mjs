@@ -21,6 +21,9 @@ export const ISSUE_SEVERITY = Object.freeze({
   'table-cell-empty-mismatch': 'signal',
   'table-cell-token-mismatch': 'signal',
   'sidebar-missing-file': 'actionable',
+  'source-page-missing-local': 'actionable',
+  'missing-fresh-snapshot': 'actionable',
+  'missing-snapshot': 'signal',
   'source-snapshot-missing': 'signal',
   'source-fetch-error': 'error',
 });
