@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   checkSourcePageMissingLocal,
   checkMissingFreshSnapshot,
+  checkPageCoverage,
 } from '../lib/source_parity_page_coverage.mjs';
 
 // ---------------------------------------------------------------------------
@@ -123,5 +124,60 @@ describe('checkMissingFreshSnapshot', () => {
     const result = checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, 'fresh');
     assert.equal(result.length, 1);
     assert.match(result[0].detail, /b/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// checkPageCoverage (aggregate)
+// ---------------------------------------------------------------------------
+
+describe('checkPageCoverage', () => {
+  it('returns combined issues from all sub-checks', () => {
+    const result = checkPageCoverage({
+      sidebarSlugs: new Set(['a', 'b']),
+      localSlugs: new Set(['a']),
+      localSourceUrls: new Map([['a', 'https://example.com/a']]),
+      snapshotSlugs: new Set(),
+      freshnessState: 'fresh',
+    });
+    // b missing local + a missing snapshot
+    assert.equal(result.length, 2);
+    const types = result.map((r) => r.type);
+    assert.ok(types.includes('source-page-missing-local'));
+    assert.ok(types.includes('missing-fresh-snapshot'));
+  });
+
+  it('returns empty array when everything is covered', () => {
+    const result = checkPageCoverage({
+      sidebarSlugs: new Set(['a']),
+      localSlugs: new Set(['a']),
+      localSourceUrls: new Map([['a', 'https://example.com/a']]),
+      snapshotSlugs: new Set(['a']),
+      freshnessState: 'fresh',
+    });
+    assert.deepEqual(result, []);
+  });
+
+  it('works with empty inputs', () => {
+    const result = checkPageCoverage({
+      sidebarSlugs: new Set(),
+      localSlugs: new Set(),
+      localSourceUrls: new Map(),
+      snapshotSlugs: new Set(),
+      freshnessState: null,
+    });
+    assert.deepEqual(result, []);
+  });
+
+  it('passes freshnessState through to snapshot check', () => {
+    const result = checkPageCoverage({
+      sidebarSlugs: new Set(['a']),
+      localSlugs: new Set(['a']),
+      localSourceUrls: new Map([['a', 'https://example.com/a']]),
+      snapshotSlugs: new Set(),
+      freshnessState: 'broken',
+    });
+    assert.equal(result.length, 1);
+    assert.equal(result[0].severity, 'signal');
   });
 });

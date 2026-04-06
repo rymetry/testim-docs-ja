@@ -63,3 +63,27 @@ export function checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, freshn
   }
   return issues;
 }
+
+/**
+ * Run all page coverage gate checks.
+ *
+ * @param {object} opts
+ * @param {Set<string>} opts.sidebarSlugs — slugs from EN sidebar
+ * @param {Set<string>} opts.localSlugs — slugs from local JA files
+ * @param {Map<string, string>} opts.localSourceUrls — slug → sourceUrl
+ * @param {Set<string>} opts.snapshotSlugs — slugs with existing snapshots
+ * @param {string | null} opts.freshnessState — from source-sync-status.json
+ * @returns {Array<{type: string, detail: string, severity: string}>}
+ */
+export function checkPageCoverage({
+  sidebarSlugs,
+  localSlugs,
+  localSourceUrls,
+  snapshotSlugs,
+  freshnessState,
+}) {
+  return [
+    ...checkSourcePageMissingLocal(sidebarSlugs, localSlugs),
+    ...checkMissingFreshSnapshot(localSourceUrls, snapshotSlugs, freshnessState),
+  ];
+}
