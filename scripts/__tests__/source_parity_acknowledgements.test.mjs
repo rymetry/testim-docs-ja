@@ -9,6 +9,7 @@ import {
   findMatchingAcknowledgement,
   tagIssuesWithAcknowledgements,
 } from '../lib/source_parity_acknowledgements.mjs';
+import { summarizeParityResults } from '../lib/source_parity_summary.mjs';
 
 // ---------------------------------------------------------------------------
 // computeSnapshotFingerprint
@@ -484,5 +485,84 @@ describe('tagIssuesWithAcknowledgements', () => {
     );
     assert.equal(originalIssues[0], originalRef);
     assert.ok(!('acknowledged' in originalRef));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// summarizeParityResults — acknowledgement counting
+// ---------------------------------------------------------------------------
+
+describe('summarizeParityResults — acknowledgement counting', () => {
+  it('counts acknowledged issues separately', () => {
+    const results = [
+      {
+        file: 'test.md',
+        issues: [
+          { type: 'bullet-count-mismatch', severity: 'signal', acknowledged: true, ackExpired: false },
+          { type: 'untranslated', severity: 'actionable' },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.totalIssues, 2);
+    assert.equal(summary.acknowledgedIssues, 1);
+    assert.equal(summary.activeFiles, 1);
+  });
+
+  it('counts expired acknowledgements as active (not acknowledged)', () => {
+    const results = [
+      {
+        file: 'test.md',
+        issues: [
+          { type: 'bullet-count-mismatch', severity: 'signal', acknowledged: true, ackExpired: true },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.acknowledgedIssues, 0);
+    assert.equal(summary.expiredAcknowledgements, 1);
+    assert.equal(summary.activeFiles, 1);
+  });
+
+  it('returns activeFiles=0 when all issues are validly acknowledged', () => {
+    const results = [
+      {
+        file: 'test.md',
+        issues: [
+          { type: 'paragraph-count-mismatch', severity: 'signal', acknowledged: true, ackExpired: false },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.activeFiles, 0);
+    assert.equal(summary.acknowledgedIssues, 1);
+    assert.equal(summary.filesWithIssues, 1);
+  });
+
+  it('returns zero acknowledgement counts when no issues are acknowledged', () => {
+    const results = [
+      {
+        file: 'test.md',
+        issues: [{ type: 'untranslated', severity: 'actionable' }],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.acknowledgedIssues, 0);
+    assert.equal(summary.expiredAcknowledgements, 0);
+    assert.equal(summary.activeFiles, 1);
+  });
+
+  it('counts activeActionableFiles correctly', () => {
+    const results = [
+      {
+        file: 'test.md',
+        issues: [
+          { type: 'image-mismatch', severity: 'actionable', acknowledged: true, ackExpired: false },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.activeActionableFiles, 0);
+    assert.equal(summary.actionableFiles, 1);
   });
 });

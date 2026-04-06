@@ -218,12 +218,37 @@ export async function checkSourceParity({
     });
 
     if (!json) {
-      console.log(`❌ ${doc.relativePath}`);
+      const allAcked = issues.every(
+        (i) => i.acknowledged === true && i.ackExpired !== true,
+      );
+      const icon = allAcked ? '⏸️' : '❌';
+      const suffix = allAcked ? ' (all acknowledged)' : '';
+      console.log(`${icon} ${doc.relativePath}${suffix}`);
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
         const detail = issue.detail || issue.text || '';
-        const artifactNote = issue.artifacts?.length ? ` [${issue.artifacts.join('; ')}]` : '';
-        console.log(`   [${issue.type}/${issue.severity}]${location} ${detail}${artifactNote}`);
+        const artifactNote = issue.artifacts?.length
+          ? ` [${issue.artifacts.join('; ')}]`
+          : '';
+        const ackTag =
+          issue.acknowledged && !issue.ackExpired
+            ? ' ⏸'
+            : issue.acknowledged && issue.ackExpired
+              ? ' ⚠expired'
+              : '';
+        console.log(
+          `   [${issue.type}/${issue.severity}]${location}${ackTag} ${detail}${artifactNote}`,
+        );
+        if (issue.acknowledged && !issue.ackExpired) {
+          console.log(
+            `     ↳ acknowledged: ${issue.ackReason} (owner: ${issue.ackOwner}, review: ${issue.ackReviewAfter})`,
+          );
+        }
+        if (issue.acknowledged && issue.ackExpired) {
+          console.log(
+            `     ↳ expired: ${issue.ackExpiryReason} (owner: ${issue.ackOwner})`,
+          );
+        }
       }
       console.log('');
     }
@@ -276,29 +301,34 @@ export async function checkSourceParity({
   if (!json) {
     console.log(`${'='.repeat(60)}\n📊 チェック結果サマリー\n`);
     console.log(`チェック済み: ${checkedCount} / ${allFiles.length} ファイル`);
-    console.log(`問題あり: ${summary.filesWithIssues} ファイル`);
-    console.log(`actionable: ${summary.actionableFiles} ファイル`);
+    const ackedFiles = summary.filesWithIssues - summary.activeFiles;
+    console.log(`問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, acknowledged-only: ${ackedFiles})`);
+    console.log(`actionable: ${summary.actionableFiles} ファイル (active: ${summary.activeActionableFiles})`);
     console.log(`signal-only: ${summary.signalFiles} ファイル`);
-    console.log(`errors: ${summary.errorFiles} ファイル\n`);
-    console.log('問題種別:');
+    console.log(`errors: ${summary.errorFiles} ファイル`);
+    if (summary.acknowledgedIssues > 0) {
+      console.log(`acknowledged: ${summary.acknowledgedIssues} 件`);
+    }
+    if (summary.expiredAcknowledgements > 0) {
+      console.log(`expired acknowledgements: ${summary.expiredAcknowledgements} 件`);
+    }
+    console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {
       console.log(`  ${type}: ${count} 件`);
     }
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }
 
-  // Exit code logic based on --fail-on flag
+  // Exit code: fail only on active (non-acknowledged) issues
   if (failOn === 'actionable') {
-    const hasActionableOrError =
-      (summary.actionableFiles || 0) > 0 || (summary.errorFiles || 0) > 0;
-    return hasActionableOrError ? 1 : 0;
+    const hasActiveActionableOrError =
+      (summary.activeActionableFiles || 0) > 0 || (summary.errorFiles || 0) > 0;
+    return hasActiveActionableOrError ? 1 : 0;
   }
   if (failOn === 'any') {
-    return summary.filesWithIssues > 0 ? 1 : 0;
+    return (summary.activeFiles || 0) > 0 ? 1 : 0;
   }
-
-  // Default: exit 1 if any issues found
-  return summary.filesWithIssues > 0 ? 1 : 0;
+  return (summary.activeFiles || 0) > 0 ? 1 : 0;
 }
 
 async function main() {
