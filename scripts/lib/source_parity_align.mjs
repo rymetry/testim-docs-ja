@@ -792,6 +792,10 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  * @property {number} sectionsCompared       number of section pairs compared (== aligned in current impl)
  * @property {boolean} inconclusive          true when alignment had to bail out
  * @property {string|null} inconclusiveReason
+ * @property {'heading-count-mismatch'|'align-exception'|'tokenless-near-tie'|null} inconclusiveCategory
+ *   Phase 6A — structured enum for baseline lookup. The free-text
+ *   `inconclusiveReason` is for human display only and must NOT be used
+ *   as a baseline identity key (it changes with wording tweaks).
  */
 
 /**
@@ -815,6 +819,7 @@ export function alignSegments(enSegments, jaSegments) {
       sectionsAligned: 0,
       sectionsCompared: 0,
       inconclusive: true,
+      inconclusiveCategory: 'heading-count-mismatch',
       inconclusiveReason:
         `Heading count mismatch: EN has ${enSections.length - 1} headings, ` +
         `JA has ${jaSections.length - 1}`,
@@ -845,6 +850,7 @@ export function alignSegments(enSegments, jaSegments) {
       sectionsAligned: enSections.length,
       sectionsCompared: enSections.length,
       inconclusive: true,
+      inconclusiveCategory: 'tokenless-near-tie',
       inconclusiveReason:
         `Tokenless adjacent sections "${buildSectionLabel(ambiguousTokenlessSwap.leftSectionPath)}" ` +
         `and "${buildSectionLabel(ambiguousTokenlessSwap.rightSectionPath)}" cannot rule out ` +
@@ -858,6 +864,7 @@ export function alignSegments(enSegments, jaSegments) {
     sectionsAligned: enSections.length,
     sectionsCompared: enSections.length,
     inconclusive: false,
+    inconclusiveCategory: null,
     inconclusiveReason: null,
   };
 }
