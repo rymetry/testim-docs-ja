@@ -56,6 +56,60 @@ function splitTableCells(line) {
 }
 
 /**
+ * Decode the subset of HTML entities that appear in MadCap Flare output and
+ * in JA-authored inline HTML. Kept deliberately small — we match what the EN
+ * walker's decodeEntities covers for the same tag vocabulary.
+ */
+function decodeHtmlEntities(text) {
+  return text
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&apos;/gi, "'");
+}
+
+/**
+ * Convert an HTML inline fragment to markdown-ish plain text, preserving the
+ * invariant-token-bearing constructs (`<a href>` and `<code>`) as markdown
+ * link / inline-code syntax so createSegment's extractInvariantTokens picks
+ * them up. Other tags are stripped but their inner text is preserved.
+ *
+ * This mirrors the EN walker's renderInlineText behaviour so segments on
+ * both sides expose the same invariant token set.
+ */
+function htmlInlineToMarkdownText(html) {
+  if (typeof html !== 'string') return '';
+  let text = html;
+
+  // <a href="X">Y</a> → [Y](X) (skip #fragment-only and javascript: hrefs)
+  text = text.replace(
+    /<a\b[^>]*\bhref\s*=\s*["']([^"']*)["'][^>]*>([\s\S]*?)<\/a>/gi,
+    (_match, href, inner) => {
+      const label = inner.replace(/<[^>]+>/g, '').trim();
+      if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
+        return label;
+      }
+      return `[${label}](${href})`;
+    },
+  );
+
+  // <code>Z</code> → `Z`
+  text = text.replace(/<code\b[^>]*>([\s\S]*?)<\/code>/gi, (_match, inner) => {
+    return `\`${inner.replace(/<[^>]+>/g, '').trim()}\``;
+  });
+
+  // Strip any remaining tags
+  text = text.replace(/<[^>]+>/g, ' ');
+
+  // Decode entities and collapse whitespace
+  text = decodeHtmlEntities(text).replace(/\s+/g, ' ').trim();
+  return text;
+}
+
+/**
  * Extract `<td>` cell text blocks from an HTML table block. Only cells inside
  * `<tbody>` contribute (header `<th>` inside `<thead>` is skipped for parity
  * with the EN extractor). If no explicit `<tbody>` is present, all `<tr><td>`
@@ -69,18 +123,7 @@ function extractHtmlTableCells(tableHtml) {
     : tableHtml.replace(/<thead\b[\s\S]*?<\/thead>/gi, '');
   const tdPattern = /<td\b[^>]*>([\s\S]*?)<\/td>/gi;
   for (const match of bodyHtml.matchAll(tdPattern)) {
-    const rawInner = match[1];
-    // Strip nested HTML tags, keeping inner text; decode common entities.
-    const text = rawInner
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;/gi, ' ')
-      .replace(/&amp;/gi, '&')
-      .replace(/&lt;/gi, '<')
-      .replace(/&gt;/gi, '>')
-      .replace(/&quot;/gi, '"')
-      .replace(/&#39;/gi, "'")
-      .replace(/\s+/g, ' ')
-      .trim();
+    const text = htmlInlineToMarkdownText(match[1]);
     if (text.length > 0) cells.push(text);
   }
   return cells;
@@ -150,6 +193,13 @@ export function extractSegmentsFromMarkdown(body) {
   // Callout state: only tracks whether we are currently inside a ::: block.
   let inCallout = false;
 
+  // <details> nesting state. When we enter a <details>, paragraphKind flips
+  // to 'paragraph' (EN walkDetails → walkBlock emits regular paragraphs even
+  // when the <details> is inside a callout). We save/restore the outer kind
+  // across the boundary so trailing callout text still classifies correctly.
+  let detailsDepth = 0;
+  const detailsKindStack = [];
+
   // Code fence state
   let inCodeFence = false;
   let codeFenceStartLine = 0;
@@ -213,14 +263,30 @@ export function extractSegmentsFromMarkdown(body) {
     // <details> open/close are treated as block boundaries. Only the
     // <summary> line is special-cased; other nested content flows through
     // normal classification so lists/tables/images keep their proper kinds.
-    if (DETAILS_OPEN_RE.test(trimmed) || DETAILS_CLOSE_RE.test(trimmed)) {
+    // paragraphKind is saved/restored across the boundary so a <details>
+    // inside a :::note does not leak 'callout-body' into inner paragraphs.
+    if (DETAILS_OPEN_RE.test(trimmed)) {
       flushParagraph();
+      detailsKindStack.push(paragraphKind);
+      paragraphKind = 'paragraph';
+      detailsDepth += 1;
+      continue;
+    }
+    if (DETAILS_CLOSE_RE.test(trimmed)) {
+      flushParagraph();
+      if (detailsDepth > 0) {
+        detailsDepth -= 1;
+        paragraphKind = detailsKindStack.pop() ?? 'paragraph';
+      }
       continue;
     }
     const summaryMatch = line.match(SUMMARY_RE);
     if (summaryMatch) {
       flushParagraph();
-      const summaryText = summaryMatch[1].replace(/<[^>]+>/g, '').trim();
+      // Preserve link/code invariant tokens via markdown conversion so the
+      // same tokens are captured on both EN and JA sides. Aggressive tag
+      // stripping would drop href targets that Phase 5 exact diff compares.
+      const summaryText = htmlInlineToMarkdownText(summaryMatch[1]);
       if (summaryText.length > 0) {
         const path = buildSectionPath(headingStack);
         emitter.emit(path, 'details-summary', summaryText, lineNo);

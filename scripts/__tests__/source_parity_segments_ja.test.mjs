@@ -379,6 +379,46 @@ describe('extractSegmentsFromMarkdown — callouts', () => {
     assert.equal(byKind(segments, 'ordered-list-item').length, 2);
     assert.equal(byKind(segments, 'callout-body').length, 0);
   });
+
+  it('restores paragraphKind across <details> nested inside a callout', () => {
+    // Regression: paragraphKind previously stayed 'callout-body' across
+    // <details> boundaries, so paragraphs inside a details-in-callout were
+    // emitted as callout-body. EN walkCalloutBody → walkDetails → walkBlock
+    // emits them as regular paragraphs. Tracking must re-enter 'callout-body'
+    // after the </details> so subsequent callout text still classifies
+    // correctly.
+    const md = [
+      '## S',
+      '',
+      ':::note',
+      'Intro callout text.',
+      '',
+      '<details>',
+      '<summary>Question?</summary>',
+      '',
+      'Details answer body.',
+      '',
+      '</details>',
+      '',
+      'Trailing callout text.',
+      ':::',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'question?');
+    // The details-internal paragraph is a regular paragraph (not callout-body).
+    const paragraphs = byKind(segments, 'paragraph');
+    assert.equal(paragraphs.length, 1);
+    assert.equal(paragraphs[0].textNorm, 'details answer body.');
+    // The callout text outside the details stays callout-body.
+    const bodies = byKind(segments, 'callout-body');
+    assert.deepEqual(
+      bodies.map((b) => b.textNorm),
+      ['intro callout text.', 'trailing callout text.'],
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -510,6 +550,52 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     const paragraphs = byKind(segments, 'paragraph');
     assert.equal(paragraphs.length, 1);
     assert.equal(paragraphs[0].textNorm, 'regular answer paragraph.');
+  });
+
+  it('preserves link tokens inside <summary> so invariant tokens match EN', () => {
+    // Regression: summary extraction previously stripped nested HTML tags
+    // before passing to createSegment, dropping href targets and leaving
+    // entities undecoded. EN renderInlineText converts <a> to markdown link
+    // so the URL survives as an invariant token.
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>Run <a href="/docs/advanced-editing/loops">the loops guide</a> &amp; verify</summary>',
+      '',
+      'Answer.',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    const summary = summaries[0];
+    // Visible text has HTML tags stripped and entities decoded.
+    assert.equal(summary.textNorm, 'run the loops guide & verify');
+    // The href is captured as an invariant token.
+    assert.ok(
+      summary.tokensInvariant.includes('/docs/advanced-editing/loops'),
+      `expected token /docs/advanced-editing/loops, got ${JSON.stringify(summary.tokensInvariant)}`,
+    );
+  });
+
+  it('preserves inline code backticks inside <summary>', () => {
+    const md = [
+      '## FAQ',
+      '',
+      '<details>',
+      '<summary>How to use <code>--proxy</code>?</summary>',
+      '',
+      'Answer.',
+      '',
+      '</details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.ok(summaries[0].tokensInvariant.includes('--proxy'));
   });
 });
 

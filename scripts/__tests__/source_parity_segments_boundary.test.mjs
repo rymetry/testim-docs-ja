@@ -10,16 +10,17 @@
  *   - heading count
  *   - unordered-list-item count
  *   - callout-body count (after the callout-block-parsing refactor)
+ *   - ordered-list-item count, with narrow documented exceptions
  *
  * Soft assertions (stability score thresholds):
  *   - per-page gate-eligible stability score ≥ 0.85
  *   - mean stability score across all pages ≥ 0.95
  *
- * Note on ordered-list-item: the count is NOT asserted for exact equality.
- * Translation improvements sometimes convert "1. x 2. y 3. z" embedded in a
- * single EN paragraph into a proper numbered list on the JA side. This is a
- * legitimate structural divergence that Phase 5's exact diff engine must
- * handle; Phase 4 only tracks it via the stability score.
+ * `KNOWN_ORDERED_DRIFTS` lists slugs where EN embeds "1. x 2. y 3. z" as
+ * plain text in a single <p> while JA uses a proper numbered list. This is
+ * a legitimate translation improvement that Phase 5's exact diff engine
+ * must handle; Phase 4 keeps the invariant on the other pages so
+ * ordered-list regressions there are still caught.
  *
  * The stability score is 1 - (total absolute count diffs / (2 * total segments))
  * across gate-eligible kinds. A score of 1.0 means every kind is identical;
@@ -47,6 +48,19 @@ const ROOT = join(import.meta.dirname, '../../');
 const FIXTURES = join(ROOT, 'scripts/__tests__/fixtures/source-parity-goldens');
 const MANIFEST_PATH = join(FIXTURES, 'manifest.json');
 const REPORT_PATH = join(FIXTURES, 'segment-boundary-report.json');
+
+/**
+ * Slugs where ordered-list-item counts are allowed to diverge between EN
+ * and JA because of a known translation improvement. Each entry documents
+ * WHY the drift exists so future reviewers can confirm it is still
+ * intentional before adding new entries.
+ */
+const KNOWN_ORDERED_DRIFTS = Object.freeze({
+  'advanced-editing/loops':
+    'EN embeds "1. x 2. y 3. z" as plain text in a single <p> inside a ' +
+    ':::warning callout; JA translation uses a proper numbered list with ' +
+    '3 items. EN=100, JA=103 → 3-item JA-side surplus.',
+});
 
 function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST_PATH, 'utf8')).pages;
@@ -146,6 +160,42 @@ describe('Phase 4 boundary stability benchmark', () => {
         en,
         ja,
         `${page.slug}: unordered-list-item count mismatch (EN=${en}, JA=${ja})`,
+      );
+    }
+  });
+
+  it('ordered-list-item counts match exactly except for documented drifts', () => {
+    const gateSet = new Set(GATE_ELIGIBLE_KINDS);
+    const manifest = loadManifest();
+    for (const page of manifest) {
+      if (KNOWN_ORDERED_DRIFTS[page.slug]) continue;
+      const analysis = analyzePage(page.slug, gateSet);
+      const en = analysis.enCounts['ordered-list-item'] ?? 0;
+      const ja = analysis.jaCounts['ordered-list-item'] ?? 0;
+      assert.equal(
+        en,
+        ja,
+        `${page.slug}: ordered-list-item count mismatch (EN=${en}, JA=${ja}). ` +
+          `If this is a newly-intentional translation improvement, add the ` +
+          `slug to KNOWN_ORDERED_DRIFTS with a reason.`,
+      );
+    }
+  });
+
+  it('KNOWN_ORDERED_DRIFTS entries actually still drift (guard against stale exceptions)', () => {
+    // Prevents a silent cleanup: if an extractor change re-aligns a known
+    // drift, the exception should be removed instead of leaving a dead entry
+    // that masks future regressions on the same slug.
+    const gateSet = new Set(GATE_ELIGIBLE_KINDS);
+    for (const slug of Object.keys(KNOWN_ORDERED_DRIFTS)) {
+      const analysis = analyzePage(slug, gateSet);
+      const en = analysis.enCounts['ordered-list-item'] ?? 0;
+      const ja = analysis.jaCounts['ordered-list-item'] ?? 0;
+      assert.notEqual(
+        en,
+        ja,
+        `${slug}: EN and JA ordered-list-item counts now match (EN=${en}, JA=${ja}). ` +
+          `Remove this slug from KNOWN_ORDERED_DRIFTS.`,
       );
     }
   });
