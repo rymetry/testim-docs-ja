@@ -567,14 +567,12 @@ describe('alignSegments — segment-shifted only fires with destination evidence
     );
   });
 
-  it('emits a low-confidence segment-shifted for tokenless section body swaps', () => {
-    // Reviewer P1 repro: two adjacent sections whose body content is
-    // completely tokenless and free-form prose. JA bodies are swapped
-    // between sections. With no invariant tokens to anchor on, the
-    // weighted LCS aligns each section by position/length scoring and
-    // would silently return 0 diffs. The low-confidence section guard
-    // must emit a `segment-shifted` with `confidence: 'low'` per
-    // affected section so the case is no longer silent green.
+  it('REGRESSION: does NOT emit low-confidence shifted on a normal aligned tokenless prose page', () => {
+    // Reviewer P1 (round 4): the previous low-confidence guard fired
+    // unconditionally on every tokenless free-form multi-paragraph
+    // section, including correctly-translated ones. This negative test
+    // pins the fix: a perfectly aligned page with tokenless prose-only
+    // sections must NOT emit any segment-shifted diff.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
@@ -585,7 +583,84 @@ describe('alignSegments — segment-shifted only fires with destination evidence
     ];
     const ja = [
       makeHeading('Aセクション', 0, 'Aセクション'),
-      // bodies swapped: A receives B's translated content
+      // Correctly aligned (NOT swapped). Both sections are tokenless
+      // free-form prose with multiple paragraphs.
+      makeSeg('Aセクション', 'paragraph', 0, 'アルファ 1 の段落です。'),
+      makeSeg('Aセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
+      makeHeading('Bセクション', 0, 'Bセクション'),
+      makeSeg('Bセクション', 'paragraph', 0, 'ベータ 1 の段落です。'),
+      makeSeg('Bセクション', 'paragraph', 1, 'ベータ 2 の段落です。'),
+    ];
+    const result = alignSegments(en, ja);
+    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
+    assert.equal(
+      shifted.length,
+      0,
+      `aligned tokenless prose must not produce segment-shifted; got diffs: ${JSON.stringify(result.diffs.map((d) => `${d.type}/${d.confidence ?? '-'}/${d.sectionPath}`))}`,
+    );
+  });
+
+  it('emits a low-confidence segment-shifted for swaps where length signal differs across sections', () => {
+    // Token-free swap that DOES get caught: section A has long
+    // paragraphs and section B has short paragraphs. After the body
+    // swap, JA[A] is short content and JA[B] is long content. The
+    // pairwise length-similarity sum favours the swap hypothesis by a
+    // large margin (≥ 50% relative AND ≥ 0.5 absolute), so the
+    // cross-section swap detector emits low-confidence shifts on both
+    // affected sections.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'This is a much longer paragraph A1 with significant detail.'),
+      makeSeg('A', 'paragraph', 1, 'This is also a long paragraph A2 explaining things in detail.'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, 'Short B1.'),
+      makeSeg('B', 'paragraph', 1, 'Short B2.'),
+    ];
+    const ja = [
+      makeHeading('Aセクション', 0, 'Aセクション'),
+      // bodies swapped: short content lands in section A
+      makeSeg('Aセクション', 'paragraph', 0, '短い B1。'),
+      makeSeg('Aセクション', 'paragraph', 1, '短い B2。'),
+      makeHeading('Bセクション', 0, 'Bセクション'),
+      // long content lands in section B
+      makeSeg('Bセクション', 'paragraph', 0, 'これはより長い A1 段落で、重要な詳細を含んでいます。'),
+      makeSeg('Bセクション', 'paragraph', 1, 'これは A2 段落も長く、物事を詳しく説明しています。'),
+    ];
+    const result = alignSegments(en, ja);
+    const lowConf = result.diffs.filter(
+      (d) => d.type === 'segment-shifted' && d.confidence === 'low',
+    );
+    assert.ok(
+      lowConf.length >= 2,
+      `length-differentiable swap must trigger cross-section detector; got diffs: ${JSON.stringify(result.diffs.map((d) => `${d.type}/${d.confidence ?? '-'}`))}`,
+    );
+    const affectedSectionPaths = lowConf.map((d) => d.sectionPath).sort();
+    assert.deepEqual(affectedSectionPaths, ['A', 'B']);
+  });
+
+  it('KNOWN LIMITATION: tokenless body swap with uniform paragraph lengths is undetectable', () => {
+    // When EN[A], EN[B], JA[A], JA[B] all share similar paragraph
+    // lengths, the pairwise length-similarity sums for the current and
+    // swap hypotheses are equal — there is no length signal to
+    // discriminate. The cross-section swap detector intentionally
+    // returns no diffs in this regime; the structural change is left
+    // to translation memory or human review (Phase 6+ scope).
+    //
+    // This test pins the limitation so it is not silently "fixed" by
+    // a future change that re-introduces false positives on aligned
+    // pages. Both the negative case above AND this limitation must
+    // hold simultaneously.
+    const en = [
+      makeHeading('A', 0, 'A'),
+      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
+      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeHeading('B', 0, 'B'),
+      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
+      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+    ];
+    const ja = [
+      makeHeading('Aセクション', 0, 'Aセクション'),
+      // bodies swapped — but lengths are uniform, no length signal
       makeSeg('Aセクション', 'paragraph', 0, 'ベータ 1 の段落です。'),
       makeSeg('Aセクション', 'paragraph', 1, 'ベータ 2 の段落です。'),
       makeHeading('Bセクション', 0, 'Bセクション'),
@@ -593,22 +668,19 @@ describe('alignSegments — segment-shifted only fires with destination evidence
       makeSeg('Bセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
     ];
     const result = alignSegments(en, ja);
-    const lowConf = result.diffs.filter(
-      (d) => d.type === 'segment-shifted' && d.confidence === 'low',
+    const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
+    assert.equal(
+      shifted.length,
+      0,
+      'uniform-length tokenless swap is the documented known limitation',
     );
-    assert.ok(
-      lowConf.length >= 1,
-      `tokenless body swap must not be silent green; got diffs: ${JSON.stringify(result.diffs.map((d) => d.type))}`,
-    );
-    // Both affected sections should be flagged
-    const affectedSectionPaths = lowConf.map((d) => d.sectionPath).sort();
-    assert.deepEqual(affectedSectionPaths, ['A', 'B']);
   });
 
   it('does not emit a low-confidence shift on free-form sections that have at least one invariant token', () => {
     // Sanity: when even one paragraph carries an invariant token, the
-    // weighted LCS finds a strong anchor and the low-confidence guard
-    // does not fire.
+    // weighted LCS finds a strong anchor and the swap detector does
+    // not need to fire (and would not, since the section has an
+    // existing diff path).
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'Use `--alpha` to start.'),
@@ -628,9 +700,8 @@ describe('alignSegments — segment-shifted only fires with destination evidence
 
   it('does not emit a low-confidence shift on sections that contain list items or table cells', () => {
     // Structured kinds (list items, table cells) carry inherent
-    // structural signals; the LCS can anchor on them so the
-    // low-confidence guard is intentionally restricted to free-form
-    // prose sections only.
+    // structural signals; the cross-section swap detector skips
+    // sections that are not free-form-only.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'Intro.'),

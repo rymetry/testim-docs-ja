@@ -383,19 +383,23 @@ npm run docs:report-categories
    - それ以外（tokenless cross-language）→ 1〜15（**正規化位置の近さ + 文字列長の類似度** によるベストエフォート weak score）
 5. EN-side unmatched → `segment-missing`、JA-side unmatched → `segment-extra` または `segment-untranslated`
 6. Matched ペアごとに invariant token 集合を比較し、差分を `segment-token-gap` として出力。さらに JA 側が英文のままなら `segment-untranslated` を追加
-7. **Low-confidence section detection (low-confidence shift)**: section ペアが以下を **すべて満たす** 場合、tokenless な本文入れ替わりを否定できないので `segment-shifted` (`confidence: 'low'`) を 1 件発行する
-   - 両 body に 2 セグメント以上
+7. **Cross-section swap detection (low-confidence shift)**: section ペアが以下を **すべて満たす** 場合のみ、隣接 section と本文を **入れ替えた仮説のスコアの方が現状アライメントより十分に高い** ことを証拠に `segment-shifted` (`confidence: 'low'`) を発行する
+   - 隣接 2 section の両 body に 2 セグメント以上
    - 全セグメントが free-form kind (paragraph または callout-body) のみ — list / table cell / heading のような structural kind が混じっていない
-   - LCS が両 body をすべて pair した（segment-missing/extra のような実 diff がそもそも無い）
-   - すべての matched ペアが weak fallback score (kind / position / length のみ、< 100) で結ばれた
+   - 両 section とも既存の structural diff (`segment-missing` / `segment-extra` / `segment-token-gap` / `segment-untranslated`) を持たない
+   - **swap 仮説の優位性**: `pairwiseLengthSimilaritySum` を `(en[i]↔ja[i] + en[i+1]↔ja[i+1])` と `(en[i]↔ja[i+1] + en[i+1]↔ja[i])` で比較し、swap 側が **≥ 50% 相対** かつ **≥ 0.5 絶対** で上回った場合のみ発火
+   
+   この最後の swap 仮説優位性こそが false positive を防ぐ要点。tokenless であるだけでは発火しない。**swap した方が長さ類似性が劇的に良くなる** 場合のみ shift と判断する。length signal を独立に使うのは、weighted LCS の length スコア重みが小さく総スコアの差が出ないため。
 
 > **Weighted LCS の効能**: boolean LCS は同 kind が連続する section で最後の matched index に偏り、tokenless な中央削除を `enSegmentIndex=0` に誤同定する欠陥があった。Weighted LCS は強い anchor（fingerprint / token）を最優先に配置し、anchor のない中央 segment は位置スコアで自然に揃うので、reviewer が指摘した `EN=[Alpha,Beta,Gamma] / JA=[アルファ,ガンマ]` の中央削除でも正しく `enSegmentIndex=1` を返す。
 >
 > **検出範囲の明確化**:
 > - **token-bearing section swap** (`section-body-swap` mutation type): symmetric destination evidence を満たすので `segment-shifted` (`confidence: 'high'`) として recall 100%。
-> - **tokenless free-form section swap**: 内容を区別できる anchor が全く無いので、symmetric destination evidence は成立せず、`confidence: 'high'` shift は出ない。代わりに `confidence: 'low'` shift を「section の整合性が検証できない」warning として 1 件出すので silent green にはならない（reviewer の P1 指摘に対応）。具体的にどの段落が swap されたかまでは attribute できない。本格的な区別には translation memory が必要で Phase 6 以降の課題。
+> - **tokenless free-form section swap (length signal あり)**: 隣接セクションのパラグラフ長が現状アライメントよりも swap 仮説のほうに揃う場合、`pairwiseLengthSimilaritySum` の比較で swap 仮説優位を検出し `confidence: 'low'` shift を発行。length 差を持つ section ペアは検出可。
+> - **tokenless free-form section swap (length signal なし、uniform length)**: パラグラフ長がほぼ同じ場合、length 仮説では区別できないので **silent green ではない**が **検出もできない**。これは known limitation として regression test (\"KNOWN LIMITATION\" suite) で固定済み。本格的な区別には translation memory / 意味埋め込みが必要で Phase 6 以降の課題。
+> - **正常翻訳された tokenless free-form section**: swap 仮説の length signal が現状を上回らないので `confidence: 'low'` shift は **出ない**（reviewer の P1 round 4 で指摘された false positive を回避）。
 > - **tokenless cross-language の head/tail 段落削除**: 位置スコアが対称になるため `segment-missing` 1 件は出るが、どの段落が gap か (`enSegmentIndex`) は best-effort。中央削除は位置非対称性で正しく特定できる。
-> - **list / table 含みの section**: structural kind が anchor になるので low-confidence guard は発火しない（false positive 抑制）。
+> - **list / table 含みの section**: structural kind が anchor になるので cross-section swap detector は free-form-only 条件で skip（false positive 抑制）。
 
 各 ParityDiff は構造化メタデータ (`enSegmentIndex`, `jaSegmentIndex`, `enSourceFingerprint`, `jaSourceFingerprint`, `missingTokens`) を持ち、Phase 6 / Phase 7 の report と issue sync が drilldown できる。
 

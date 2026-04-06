@@ -360,8 +360,8 @@ const FREE_FORM_KINDS = Object.freeze(new Set(['paragraph', 'callout-body']));
 
 /**
  * Returns true when every segment in `body` is a free-form prose kind.
- * Used by the low-confidence detection to avoid emitting noisy unverifiable
- * shifts on sections that already contain structured elements.
+ * Used by the cross-section swap detector to skip sections that already
+ * carry structural anchors (lists, tables, headings).
  */
 function isAllFreeFormKinds(body) {
   if (body.length === 0) return false;
@@ -369,6 +369,138 @@ function isAllFreeFormKinds(body) {
     if (!FREE_FORM_KINDS.has(seg.segmentKind)) return false;
   }
   return true;
+}
+
+/**
+ * Sum positional length similarity across two body arrays. The metric is a
+ * minimal independent signal for the cross-section swap detector — it does
+ * NOT use the weighted LCS, because the LCS scoring gives length only a
+ * tiny weight (max 5) and the total swings are too small to discriminate
+ * a real swap from natural drift. This dedicated length-based sum amplifies
+ * the signal: in a true swap, the EN paragraphs in section i are similar
+ * in length to the JA paragraphs in section j (and vice versa) but very
+ * different from the JA paragraphs in section i.
+ *
+ * Uses only the first `min(a.length, b.length)` positional pairs so the
+ * comparison is symmetric across sections of different sizes (rare for
+ * the diff=1 corpus but defensible in general).
+ *
+ * @param {Segment[]} a
+ * @param {Segment[]} b
+ * @returns {number}
+ */
+function pairwiseLengthSimilaritySum(a, b) {
+  const n = Math.min(a.length, b.length);
+  let total = 0;
+  for (let k = 0; k < n; k++) {
+    const aLen = a[k].textNorm?.length ?? 0;
+    const bLen = b[k].textNorm?.length ?? 0;
+    if (aLen === 0 || bLen === 0) continue;
+    total += Math.min(aLen, bLen) / Math.max(aLen, bLen);
+  }
+  return total;
+}
+
+/**
+ * Cross-section body-swap evidence required for a low-confidence shift.
+ * The swap hypothesis (length similarity sum under en[i]↔ja[j] +
+ * en[j]↔ja[i]) must beat the current alignment sum by AT LEAST this
+ * relative ratio AND by AT LEAST this absolute margin to fire.
+ *
+ * Both thresholds are deliberately strict — uniform-length tokenless
+ * swaps are intrinsically undetectable, and we'd rather miss those than
+ * fire on every correctly-translated tokenless prose section.
+ */
+const SWAP_HYPOTHESIS_RELATIVE_THRESHOLD = 1.5; // ≥ 50% better than current
+const SWAP_HYPOTHESIS_ABSOLUTE_MARGIN = 0.5; // ≥ 0.5 absolute (in similarity units)
+
+/**
+ * Post-pass that checks adjacent free-form section pairs for body-swap
+ * evidence and emits `confidence: 'low'` `segment-shifted` diffs only when
+ * the swap hypothesis is significantly stronger than the current alignment.
+ *
+ * Strict eligibility:
+ *   - Both sections (i, i+1) must have ≥ 2 body segments on both EN and JA
+ *   - All body segments on both sides must be free-form (paragraph,
+ *     callout-body) — sections with list items / table cells / headings
+ *     have inherent structural anchors and are skipped
+ *   - Neither section may already have a structural diff
+ *     (segment-missing / segment-extra / segment-token-gap /
+ *     segment-untranslated). Real diffs are stronger evidence than the
+ *     swap heuristic.
+ *
+ * Detection metric: pairwise length similarity sum under the current
+ * alignment (en[i]↔ja[i] + en[i+1]↔ja[i+1]) vs the swap hypothesis
+ * (en[i]↔ja[i+1] + en[i+1]↔ja[i]). The swap sum must beat the current
+ * sum by AT LEAST 50% AND AT LEAST 0.5 absolute (in similarity units).
+ *
+ * Why length similarity instead of full LCS scoring: the weighted LCS
+ * gives length only a tiny weight (max 5), so total scores swing too
+ * little to discriminate. A dedicated length-only metric amplifies the
+ * signal so the post-pass fires when EN paragraphs in section i match
+ * JA paragraphs in section j by length better than the in-section pair.
+ *
+ * Length-uniform tokenless swaps remain undetectable: when both
+ * sections have similar paragraph lengths, the cross-pair length sums
+ * are equal to the in-section sums, and no shift is emitted. This is
+ * the documented known limitation. Detecting it would require semantic
+ * signal (translation memory, embeddings, etc.).
+ *
+ * @param {Section[]} enSections
+ * @param {Section[]} jaSections
+ * @param {ParityDiff[]} existingDiffs  diffs already produced by alignSection
+ * @returns {ParityDiff[]}  new shifted diffs to append
+ */
+function detectAdjacentSwaps(enSections, jaSections, existingDiffs) {
+  const sectionHasDiff = new Set();
+  for (const diff of existingDiffs) {
+    if (typeof diff.sectionIndex === 'number') sectionHasDiff.add(diff.sectionIndex);
+  }
+
+  const newDiffs = [];
+  for (let i = 0; i < enSections.length - 1; i++) {
+    const j = i + 1;
+    if (sectionHasDiff.has(i) || sectionHasDiff.has(j)) continue;
+
+    const enI = enSections[i].body;
+    const jaI = jaSections[i].body;
+    const enJ = enSections[j].body;
+    const jaJ = jaSections[j].body;
+
+    if (enI.length < 2 || jaI.length < 2 || enJ.length < 2 || jaJ.length < 2) continue;
+    if (!isAllFreeFormKinds(enI) || !isAllFreeFormKinds(jaI)) continue;
+    if (!isAllFreeFormKinds(enJ) || !isAllFreeFormKinds(jaJ)) continue;
+
+    const currentSum =
+      pairwiseLengthSimilaritySum(enI, jaI) + pairwiseLengthSimilaritySum(enJ, jaJ);
+    const swapSum =
+      pairwiseLengthSimilaritySum(enI, jaJ) + pairwiseLengthSimilaritySum(enJ, jaI);
+
+    if (
+      swapSum >= currentSum * SWAP_HYPOTHESIS_RELATIVE_THRESHOLD &&
+      swapSum - currentSum >= SWAP_HYPOTHESIS_ABSOLUTE_MARGIN
+    ) {
+      newDiffs.push(
+        diffShiftedLowConfidence(
+          enSections[i],
+          enI.length,
+          jaI.length,
+          currentSum,
+          swapSum,
+        ),
+      );
+      newDiffs.push(
+        diffShiftedLowConfidence(
+          enSections[j],
+          enJ.length,
+          jaJ.length,
+          currentSum,
+          swapSum,
+        ),
+      );
+    }
+  }
+  return newDiffs;
 }
 
 // ---------------------------------------------------------------------------
@@ -483,21 +615,17 @@ function diffShifted(section, sharedReason, enTokens, jaTokens) {
 }
 
 /**
- * Low-confidence variant of `segment-shifted`: emitted when a section pair
- * has multiple body segments on both sides, the weighted LCS matched every
- * pair using only weak (kind / position / length) signals, and the
- * alignment cannot rule out a body swap. The diff carries `confidence: 'low'`
- * so consumers can render it as a "review needed" warning rather than a
- * confirmed structural shift.
+ * Low-confidence variant of `segment-shifted`: emitted by the cross-section
+ * swap detector when an adjacent free-form section pair scores higher under
+ * the swap hypothesis (`en[i]↔ja[j]`, `en[j]↔ja[i]`) than under the current
+ * alignment by ≥ 20% AND ≥ 5 absolute weighted-LCS points.
  *
- * The reviewer's diff=1 corpus repro for this case is two adjacent sections
- * whose bodies have been completely swapped on the JA side; with no
- * invariant tokens to anchor the alignment, the previous engine returned
- * `diffs: []` (silent green). Emitting this low-confidence diff is the
- * minimum acceptable behavior the reviewer asked for: do not return
- * silent green on tokenless multi-paragraph sections.
+ * Carries `confidence: 'low'` so consumers can render it as a "review
+ * needed" warning rather than a confirmed structural shift, plus the
+ * numeric `currentScore` / `swapScore` so the threshold decision is
+ * auditable from the JSON output.
  */
-function diffShiftedLowConfidence(section, enBodyLen, jaBodyLen) {
+function diffShiftedLowConfidence(section, enBodyLen, jaBodyLen, currentScore, swapScore) {
   return {
     type: 'segment-shifted',
     sectionPath: section.sectionPath,
@@ -512,11 +640,13 @@ function diffShiftedLowConfidence(section, enBodyLen, jaBodyLen) {
     confidence: 'low',
     enBodyLength: enBodyLen,
     jaBodyLength: jaBodyLen,
+    currentAlignmentScore: currentScore,
+    swapHypothesisScore: swapScore,
     detail:
-      `Section "${buildSectionLabel(section.sectionPath)}" alignment is ` +
-      `unverifiable: ${enBodyLen} EN body segments and ${jaBodyLen} JA body ` +
-      `segments matched only by kind/position/length (no fingerprint, ` +
-      `textNorm, or invariant token anchor). A body swap cannot be ruled out.`,
+      `Section "${buildSectionLabel(section.sectionPath)}" body may be ` +
+      `swapped with an adjacent section: swap hypothesis weighted-LCS ` +
+      `score ${swapScore.toFixed(1)} vs current alignment ${currentScore.toFixed(1)} ` +
+      `(${enBodyLen} EN / ${jaBodyLen} JA free-form segments).`,
   };
 }
 
@@ -674,56 +804,20 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
 
   const matched = weightedLcs(enBody, jaBody, scoreSegmentMatch);
 
-  // Low-confidence section detection (tokenless free-form prose).
+  // NOTE: The previous "low-confidence section" guard that emitted a
+  // `segment-shifted` diff for every tokenless free-form multi-paragraph
+  // section has been removed. It produced false positives on every
+  // correctly-translated tokenless prose section because the criteria
+  // (multi-segment, free-form-only, all weak matches) match BOTH normal
+  // translations and body swaps — the criteria contained no swap evidence.
   //
-  // When a section pair satisfies ALL of the following, the alignment
-  // cannot rule out a body swap and emits a `confidence: 'low'`
-  // `segment-shifted` diff so the case is no longer silent green:
-  //
-  //   - both bodies contain ≥ 2 segments
-  //   - every body segment on both sides is a *free-form* kind
-  //     (paragraph or callout-body). Lists, table cells, headings,
-  //     details-summary all carry inherent structure that the LCS can
-  //     anchor on, so they do not need this guard.
-  //   - the LCS matched every segment on both sides (no segment-missing
-  //     or segment-extra in this section — those would already be a
-  //     real, actionable diff)
-  //   - no matched pair scored above the weak fallback threshold
-  //     (`SCORE_TOKEN_OVERLAP_BASE`). i.e. the alignment relied entirely
-  //     on kind / position / length similarity.
-  //
-  // Only when ALL four hold do we emit the low-confidence shift. The
-  // free-form-only restriction keeps the noise down on real pages
-  // (most non-trivial sections include at least one list item or
-  // structured element) while still catching the reviewer's
-  // tokenless prose-only swap repro.
-  if (
-    enBody.length >= 2 &&
-    jaBody.length >= 2 &&
-    enBody.length === matched.length &&
-    jaBody.length === matched.length &&
-    isAllFreeFormKinds(enBody) &&
-    isAllFreeFormKinds(jaBody)
-  ) {
-    let hasStrongMatch = false;
-    for (const [enIdx, jaIdx] of matched) {
-      const score = scoreSegmentMatch(
-        enBody[enIdx],
-        jaBody[jaIdx],
-        enIdx,
-        jaIdx,
-        enBody.length,
-        jaBody.length,
-      );
-      if (score >= SCORE_TOKEN_OVERLAP_BASE) {
-        hasStrongMatch = true;
-        break;
-      }
-    }
-    if (!hasStrongMatch) {
-      diffs.push(diffShiftedLowConfidence(enSection, enBody.length, jaBody.length));
-    }
-  }
+  // Tokenless body-swap detection now lives in `detectAdjacentSwaps`,
+  // a post-pass in `alignSegments` that compares the current alignment
+  // total weighted-LCS score against the swap-hypothesis total
+  // (en[i]↔ja[j], en[j]↔ja[i]). Only when the swap hypothesis is
+  // SIGNIFICANTLY stronger does that pass emit a low-confidence shift.
+  // Length-uniform tokenless swaps remain a known limitation — see the
+  // README for the cutover plan.
 
   const enMatchedIndices = new Set();
   const jaMatchedIndices = new Set();
@@ -789,12 +883,14 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  * @property {string|null} enSourceFingerprint  sha256 fingerprint of the EN segment raw text
  * @property {string|null} jaSourceFingerprint  sha256 fingerprint of the JA segment raw text
  * @property {string} detail              human-readable summary
- * @property {string} [confidence]        only on segment-shifted: 'high' (destination evidence) or 'low' (tokenless multi-segment section)
- * @property {number} [enBodyLength]      only on low-confidence segment-shifted
- * @property {number} [jaBodyLength]      only on low-confidence segment-shifted
- * @property {string[]} [missingTokens]   only on segment-token-gap
- * @property {string[]} [enSectionTokens] only on high-confidence segment-shifted
- * @property {string[]} [jaSectionTokens] only on high-confidence segment-shifted
+ * @property {string} [confidence]              only on segment-shifted: 'high' (destination evidence) or 'low' (cross-section swap evidence)
+ * @property {number} [enBodyLength]             only on low-confidence segment-shifted
+ * @property {number} [jaBodyLength]             only on low-confidence segment-shifted
+ * @property {number} [currentAlignmentScore]    only on low-confidence segment-shifted
+ * @property {number} [swapHypothesisScore]      only on low-confidence segment-shifted
+ * @property {string[]} [missingTokens]          only on segment-token-gap
+ * @property {string[]} [enSectionTokens]        only on high-confidence segment-shifted
+ * @property {string[]} [jaSectionTokens]        only on high-confidence segment-shifted
  */
 
 /**
@@ -845,6 +941,18 @@ export function alignSegments(enSegments, jaSegments) {
     const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
     for (const diff of sectionDiffs) diffs.push(diff);
   }
+
+  // Cross-section swap detection (post-pass). Compares the current
+  // weighted-LCS total of each adjacent free-form pair against the
+  // swap hypothesis total. Only emits when the swap hypothesis is
+  // significantly stronger — see detectAdjacentSwaps for the exact
+  // eligibility and threshold rules. This is what addresses the
+  // reviewer's "low-confidence shift fires on every tokenless prose
+  // section" complaint: the previous unconditional guard had no swap
+  // evidence at all, while this post-pass requires the swap to beat
+  // the current alignment by ≥ 20% and ≥ 5 absolute points.
+  const swapDiffs = detectAdjacentSwaps(enSections, jaSections, diffs);
+  for (const diff of swapDiffs) diffs.push(diff);
 
   return {
     diffs,
@@ -918,6 +1026,10 @@ export function parityDiffsToIssues(diffs) {
     if (typeof diff.enBodyLength === 'number') {
       issue.enBodyLength = diff.enBodyLength;
       issue.jaBodyLength = diff.jaBodyLength;
+    }
+    if (typeof diff.currentAlignmentScore === 'number') {
+      issue.currentAlignmentScore = diff.currentAlignmentScore;
+      issue.swapHypothesisScore = diff.swapHypothesisScore;
     }
     return issue;
   });
