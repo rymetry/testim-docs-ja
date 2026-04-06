@@ -64,6 +64,14 @@ function buildSegmentInconclusiveIssue(reason, category) {
   };
 }
 
+function isValidAcknowledgedIssue(issue) {
+  return issue.acknowledged === true && issue.ackExpired !== true;
+}
+
+function isNonBlockingIssue(issue) {
+  return issue.phase === 'segment-shadow' || issue.baselined === true || isValidAcknowledgedIssue(issue);
+}
+
 /**
  * Load freshness state from source-sync-status.json.
  * Returns null if file doesn't exist or is invalid.
@@ -331,9 +339,10 @@ export async function checkSourceParity({
       continue;
     }
 
-    // Hide shadow-only files from the per-file console listing so the
-    // existing CLI output stays focused on actionable / signal / error
-    // issues. Shadow issues remain in the JSON output for verification.
+    // Compatibility shim: keep legacy shadow-only fixtures out of the
+    // human-facing listing. Post-cutover, normal runtime output always has
+    // non-shadow issues and uses baseline/ack coverage to determine whether
+    // the file is blocking.
     const hasNonShadow = issues.some((i) => i.phase !== 'segment-shadow');
 
     results.push({
@@ -345,10 +354,15 @@ export async function checkSourceParity({
 
     if (!json && hasNonShadow) {
       const allAcked = issues.every(
-        (i) => i.phase === 'segment-shadow' || (i.acknowledged === true && i.ackExpired !== true),
+        (i) => i.phase === 'segment-shadow' || isValidAcknowledgedIssue(i),
       );
-      const icon = allAcked ? '⏸️' : '❌';
-      const suffix = allAcked ? ' (all acknowledged)' : '';
+      const allCovered = issues.every((i) => isNonBlockingIssue(i));
+      const icon = allCovered ? '⏸️' : '❌';
+      const suffix = allAcked
+        ? ' (all acknowledged)'
+        : allCovered
+          ? ' (covered by baseline/ack)'
+          : '';
       console.log(`${icon} ${doc.relativePath}${suffix}`);
       for (const issue of issues) {
         const location = issue.line ? `:${issue.line}` : '';
@@ -356,14 +370,14 @@ export async function checkSourceParity({
         const artifactNote = issue.artifacts?.length
           ? ` [${issue.artifacts.join('; ')}]`
           : '';
-        const ackTag =
-          issue.acknowledged && !issue.ackExpired
-            ? ' ⏸'
-            : issue.acknowledged && issue.ackExpired
-              ? ' ⚠expired'
-              : '';
+        const tags = [];
+        if (issue.acknowledged && !issue.ackExpired) tags.push('⏸');
+        if (issue.acknowledged && issue.ackExpired) tags.push('⚠expired');
+        if (issue.baselined && issue.baselineExpired) tags.push('🧊expired-baseline');
+        else if (issue.baselined) tags.push('🧊baseline');
+        const issueTag = tags.length > 0 ? ` ${tags.join(' ')}` : '';
         console.log(
-          `   [${issue.type}/${issue.severity}]${location}${ackTag} ${detail}${artifactNote}`,
+          `   [${issue.type}/${issue.severity}]${location}${issueTag} ${detail}${artifactNote}`,
         );
         if (issue.acknowledged && !issue.ackExpired) {
           console.log(
@@ -373,6 +387,12 @@ export async function checkSourceParity({
         if (issue.acknowledged && issue.ackExpired) {
           console.log(
             `     ↳ expired: ${issue.ackExpiryReason} (owner: ${issue.ackOwner})`,
+          );
+        }
+        if (issue.baselined) {
+          const baselineState = issue.baselineExpired ? 'expired' : 'active';
+          console.log(
+            `     ↳ baseline: ${baselineState} (review: ${issue.baselineReviewAfter ?? 'n/a'})`,
           );
         }
       }

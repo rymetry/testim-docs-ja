@@ -1936,8 +1936,8 @@ Expected: `ENTRIES IDENTICAL`
 
 - [ ] **Step 6: check:parity を実行して baseline が tag されていることを確認**
 
-Run: `npm run check:parity 2>&1 | grep -E "(baselined|active actionable)" | tail -10`
-Expected: `baselined: N 件 / M ファイル` と active actionable 0 が表示される。M は概ね 241 前後。
+Run: `npm run check:parity 2>&1 | grep -E "(active: 0|Phase 6A baseline|frozen drift)" | tail -10`
+Expected: `active: 0` と `[Phase 6A baseline] frozen drift (gate から除外): N 件 / M ファイル` が表示される。M は概ね 241 前後。
 
 - [ ] **Step 7: Commit**
 
@@ -2061,13 +2061,13 @@ Expected: 全テスト pass。Phase 5 recall benchmark の Go 条件が維持さ
 
 - [ ] **Final 2: gate exit code 不変**
 
-Run: `npm run check:parity --fail-on=actionable; echo "EXIT=$?"`
+Run: `npm run check:parity -- --fail-on=actionable; echo "EXIT=$?"`
 Expected: `EXIT=0`
 
 - [ ] **Final 3: baseline 集計が CLI に表示される**
 
-Run: `npm run check:parity 2>&1 | grep -A 5 "baselined:"`
-Expected: `baselined: N 件 / 241 ファイル` のような表示
+Run: `npm run check:parity 2>&1 | grep -A 5 "\\[Phase 6A baseline\\]"`
+Expected: `[Phase 6A baseline] frozen drift (gate から除外): N 件 / 241 ファイル` のような表示
 
 - [ ] **Final 4: lint と build が通る**
 
@@ -2471,8 +2471,8 @@ Expected: 全テスト pass。特に:
 
 - [ ] **Step 8: 実際の `npm run check:parity` で gate green を確認 (C1)**
 
-Run: `npm run check:parity --fail-on=actionable; echo "EXIT=$?"`
-Expected: `EXIT=0`、active actionable 0、baselined N 件 / 241 ファイル
+Run: `npm run check:parity -- --fail-on=actionable; echo "EXIT=$?"`
+Expected: `EXIT=0`、active actionable 0、`[Phase 6A baseline] frozen drift (gate から除外): N 件 / 241 ファイル`
 
 issue-level の active 確認:
 
@@ -2599,8 +2599,8 @@ forward-fix で時間をかけて直せるが、false negative は gate の信�
 - C4 (baseline-recall) テストが過去に false negative を見逃していた疑い
 
 **手順**:
-1. `git revert -m 1 <PR2 merge commit SHA>` で revert PR を起こす
-2. revert PR で `npm run check:parity --fail-on=actionable` が exit 0 を確認
+1. main に取り込まれた PR2 の commit SHA を特定し、通常の squash merge なら `git revert <PR2 commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
+2. revert PR で `npm run check:parity -- --fail-on=actionable` が exit 0 を確認
 3. fast-track で merge（reviewer 1 名 + CI green）
 4. main 復旧確認後、separate issue で root cause investigation を起票
 5. 修正 + 再 cutover は PR2′ として再実施
@@ -2665,7 +2665,7 @@ docs/OPS_DESIGN.md:
 
 | ID | 検証 | 確認方法 |
 |----|------|---------|
-| C1 | gate green | `npm run check:parity --fail-on=actionable; echo $?` → 0、issue-level active 0 |
+| C1 | gate green | `npm run check:parity -- --fail-on=actionable; echo $?` → 0、issue-level active 0 |
 | C2 | Phase 5 mutation recall 100% | `node --test scripts/__tests__/source_parity_recall.test.mjs` → pass |
 | C3 | cascade ≤ 6 | C2 の同テスト |
 | C4 | baseline が新規 mutation を吸収しない | `node --test scripts/__tests__/source_parity_baseline_recall.test.mjs` → pass |
@@ -2677,7 +2677,7 @@ docs/OPS_DESIGN.md:
 
 ```bash
 echo "=== C1 ==="
-npm run check:parity --fail-on=actionable; echo "EXIT=$?"
+npm run check:parity -- --fail-on=actionable; echo "EXIT=$?"
 echo "=== C2 / C3 ==="
 node --test scripts/__tests__/source_parity_recall.test.mjs 2>&1 | tail -5
 echo "=== C4 ==="

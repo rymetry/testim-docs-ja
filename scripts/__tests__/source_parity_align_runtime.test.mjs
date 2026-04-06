@@ -1,5 +1,5 @@
 /**
- * End-to-end runtime integration test for the Phase 5 segment-level gate.
+ * End-to-end runtime integration test for the Phase 6A segment-level gate.
  *
  * Verifies that:
  *   1. `source_parity.mjs` re-exports the new alignment surface
@@ -7,11 +7,11 @@
  *      `extractSegmentsFromMarkdown`).
  *   2. The runtime `checkSourceParity()` actually invokes the new engine
  *      and writes segment-level diffs into `parity-check-status.json` as
- *      shadow-tagged issues (`phase: 'segment-shadow'`).
- *   3. Shadow issues do NOT fail the runtime exit code (Phase 5 is wired
- *      in shadow mode; Phase 6 will promote to primary gate).
- *   4. `summarizeParityResults` reports shadow issues separately under
- *      `shadowIssues` / `shadowFiles` / `shadowIssuesByType`.
+ *      primary-gate issues (no `phase: 'segment-shadow'`) with baseline
+ *      metadata when the page is part of the frozen cutover baseline.
+ *   3. Baselined issues do NOT fail the runtime exit code.
+ *   4. `summarizeParityResults` reports primary-gate issues in the
+ *      actionable totals while dual-emitting `shadowIssues* = 0`.
  *   5. The alignment + parityDiffsToIssues round trip produces issues
  *      that carry the structured metadata Phase 6 / Phase 7 reports
  *      will rely on (sectionIndex, segmentKind, fingerprints).
@@ -270,6 +270,46 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
       assert.equal(typeof sample.segmentKind, 'string');
       assert.ok('enSourceFingerprint' in sample);
       assert.ok('jaSourceFingerprint' in sample);
+    } finally {
+      if (existsSync(STATUS_BACKUP_PATH)) {
+        copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);
+        unlinkSync(STATUS_BACKUP_PATH);
+      }
+    }
+  });
+
+  it('prints baseline-covered files as non-blocking in the CLI output', () => {
+    if (existsSync(STATUS_PATH)) copyFileSync(STATUS_PATH, STATUS_BACKUP_PATH);
+
+    try {
+      const result = spawnSync(
+        process.execPath,
+        [
+          join(ROOT, 'scripts/check_source_parity.mjs'),
+          '--slug=test-management/shared-configuration',
+          '--fail-on=actionable',
+        ],
+        { cwd: ROOT, encoding: 'utf8' },
+      );
+      assert.equal(
+        result.status,
+        0,
+        `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
+      );
+      assert.ok(
+        result.stdout.includes(
+          '⏸️ src/content/docs/test-management/shared-configuration.md (covered by baseline/ack)',
+        ),
+        `stdout did not mark the baselined file as non-blocking:\n${result.stdout}`,
+      );
+      assert.ok(
+        result.stdout.includes('🧊baseline'),
+        `stdout did not annotate baselined issues:\n${result.stdout}`,
+      );
+      assert.ok(
+        !result.stdout.includes('❌ src/content/docs/test-management/shared-configuration.md'),
+        `stdout still marked the baselined file as blocking:\n${result.stdout}`,
+      );
     } finally {
       if (existsSync(STATUS_BACKUP_PATH)) {
         copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);

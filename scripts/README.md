@@ -404,11 +404,11 @@ npm run docs:report-categories
 | `segment-untranslated` | actionable | non-acknowledgeable | — |
 | `segment-token-gap` | actionable | non-acknowledgeable | — |
 
-**Runtime wiring (Phase 5 shadow mode)**:
+**Runtime wiring (Phase 6A primary gate)**:
 
-`check_source_parity.mjs` は Phase 5 から `alignSegments()` を直接呼ぶようになった。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま、`segment-inconclusive` の shadow issue を追加し、既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。発行された segment-* issue は `phase: 'segment-shadow'` でタグ付けされ、`parity-check-status.json` に書き出されるが、`actionable` / `signal` / `activeFiles` のカウントには加算されないので **既存の CI exit code は変わらない**。Phase 6 cutover で `segment-shadow` を主 gate に昇格させる。
+`check_source_parity.mjs` は `alignSegments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。Phase 6A cutover で `phase: 'segment-shadow'` は廃止され、segment-* issue は primary gate の actionable / active 集計に入る。cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ、active 集計から除外される。
 
-shadow accounting は `summarizeParityResults()` の `shadowIssues` / `shadowFiles` / `shadowIssuesByType` で確認できる。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の shadow 集計、`check_source_parity --slug=...` 経由の CLI 出力を end-to-end で検証する。
+`shadowIssues` / `shadowFiles` / `shadowIssuesByType` は backward compat の dual emit として **0 値を維持**しているだけで、runtime 判定には使っていない。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の primary-gate / baseline 集計、`check_source_parity --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
 
 **Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が Phase 0 manifest の 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る。
 

@@ -210,8 +210,8 @@ PR2 merge 後に問題発生
 
 **手順**:
 
-1. `git revert -m 1 <PR2 merge commit SHA>` で revert PR を起こす
-2. revert PR で `npm run check:parity --fail-on=actionable` が exit 0 を確認
+1. main に取り込まれた PR2 の commit SHA を特定し、通常の squash merge なら `git revert <PR2 commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
+2. revert PR で `npm run check:parity -- --fail-on=actionable` が exit 0 を確認
 3. fast-track で merge（reviewer 1 名 + CI green）
 4. main 復旧確認後、separate issue で root cause investigation を起票
 5. 修正 + 再 cutover は PR2′ として再実施

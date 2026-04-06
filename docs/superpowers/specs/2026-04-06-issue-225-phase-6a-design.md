@@ -296,7 +296,7 @@ cutover 安全性のため **PR1 (infra) → PR2 (cutover)** の 2 PR 直列で�
   2. `npm run check:parity`
   3. `node scripts/generate_parity_baseline.mjs --regenerate`
   4. gate flip コミット
-  5. `npm run check:parity --fail-on=actionable` が exit 0 を確認
+  5. `npm run check:parity -- --fail-on=actionable` が exit 0 を確認
   - これらを 1 セットとして実行する。途中で snapshot が変わっていたら最初からやり直す
 
 ### 5.2 PR1 — Infra (shadow 維持)
@@ -358,7 +358,7 @@ cutover 安全性のため **PR1 (infra) → PR2 (cutover)** の 2 PR 直列で�
    - Phase 5 / Phase 6 のステータスを更新
 
 **PR1 acceptance**:
-- `npm run check:parity --fail-on=actionable` が exit 0（shadow のままなので gate exit code 不変）
+- `npm run check:parity -- --fail-on=actionable` が exit 0（shadow のままなので gate exit code 不変）
 - 全 test が green
 - baseline 生成 → 再実行で bit-identical
 - preview baseline ファイルが commit されている
@@ -401,7 +401,7 @@ PR2 を merge してよい条件。すべて measurable / CI で機械的に判�
 
 | ID | 条件 | 検証方法 |
 |----|------|---------|
-| **C1** | gate が green | `npm run check:parity --fail-on=actionable` が exit 0、かつ `parity-check-status.json` 上で `severity in {actionable, error}` かつ `baselined !== true` かつ `(acknowledged !== true OR ackExpired === true)` の issue が **issue-level で 0 件** |
+| **C1** | gate が green | `npm run check:parity -- --fail-on=actionable` が exit 0、かつ `parity-check-status.json` 上で `severity in {actionable, error}` かつ `baselined !== true` かつ `(acknowledged !== true OR ackExpired === true)` の issue が **issue-level で 0 件** |
 | **C2** | Phase 5 mutation recall 保持 | `node --test scripts/__tests__/source_parity_recall.test.mjs` が pass（9/9 strict mutation type 100%） |
 | **C3** | Phase 5 cascade ≤ 6 保持 | C2 と同テストの cascade assertion |
 | **C4** | **frozen baseline が新規 mutation を吸収しない** | `node --test scripts/__tests__/source_parity_baseline_recall.test.mjs` が pass。新テスト: baselined page に diff=1 mutation を適用 → 1 件の new issue が baseline lookup を通過し active として検出される。`mutation_corpus` の 9 strict mutation type 全部に対して検証する |
@@ -453,8 +453,8 @@ PR2 merge 後に問題発生
 
 **手順**:
 
-1. `git revert -m 1 <PR2 merge commit SHA>` で revert PR を起こす
-2. revert PR で `npm run check:parity --fail-on=actionable` が exit 0（shadow mode に戻る）であることを確認
+1. main に取り込まれた PR2 の commit SHA を特定し、通常の squash merge なら `git revert <PR2 commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
+2. revert PR で `npm run check:parity -- --fail-on=actionable` が exit 0（shadow mode に戻る）であることを確認
 3. fast-track で merge（reviewer 1 名 + CI green）
 4. main 復旧確認後、separate issue で root cause investigation を起票
 5. 修正 + 再 cutover は新しい PR2′ として再実施。再生成 → flip 手順は §5.1 と同じ
