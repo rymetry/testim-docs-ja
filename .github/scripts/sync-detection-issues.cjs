@@ -24,7 +24,7 @@ function sortByUpdatedDesc(left, right) {
 }
 
 function buildIssueSpecs(report) {
-  return [
+  const specs = [
     {
       key: 'snapshot-diff',
       title: report.snapshotDiff.issueTitle,
@@ -38,6 +38,17 @@ function buildIssueSpecs(report) {
       shouldOpenIssue: report.parityRegression.shouldOpenIssue,
     },
   ];
+
+  if (report.sourceSyncHealth) {
+    specs.push({
+      key: 'source-sync-health',
+      title: report.sourceSyncHealth.issueTitle,
+      body: report.sourceSyncHealth.body,
+      shouldOpenIssue: report.sourceSyncHealth.shouldOpenIssue,
+    });
+  }
+
+  return specs;
 }
 
 async function listManagedIssues({ github, owner, repo }) {

@@ -7,6 +7,9 @@
  * as HTML in `snapshots/en/content/{slug}.html`. Also fetches the MadCap Flare
  * TOC data for sidebar verification and stores it as `snapshots/en/sidebar.json`.
  *
+ * Always writes `source-sync-status.json` (even in --dry-run) as fetch metadata.
+ * --dry-run skips writing snapshot HTML and sidebar JSON only.
+ *
  * Usage:
  *   node scripts/snapshot_update.mjs                   # all pages
  *   node scripts/snapshot_update.mjs --section="Overview"
@@ -26,13 +29,15 @@ import {
   readDocFile,
   resolveSlug,
 } from './lib/project.mjs';
-import { fetchTocData, buildSidebarSnapshot } from './lib/madcap_toc.mjs';
+import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
+import { buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
 const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.json');
 
+const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 const DEFAULT_USER_AGENT = 'testim-docs-ja-snapshot/1.0';
 const THROTTLE_MS = 100;
 const MARKER_404 = (url) => `<!-- 404: page not found at ${url} -->\n`;
@@ -199,7 +204,8 @@ async function verifySidebar({ dryRun = false } = {}) {
     }
 
     const totalPages = sections.reduce((sum, s) => sum + s.pages.length, 0);
-    return { ok: true, sectionCount: sections.length, pageCount: totalPages };
+    const sidebarSlugs = [...extractSlugsFromSnapshot(snapshot)];
+    return { ok: true, sectionCount: sections.length, pageCount: totalPages, sidebarSlugs };
   } catch (error) {
     console.error('verifySidebar failed:', error);
     return { ok: false, reason: error.message };
@@ -225,6 +231,7 @@ export async function main(argv) {
   let fetched = 0;
   let notFound = 0;
   let errors = 0;
+  const pageResults = [];
 
   for (const target of targets) {
     try {
@@ -238,12 +245,14 @@ export async function main(argv) {
         }
         console.log(`  404  ${target.slug}`);
         notFound += 1;
+        pageResults.push({ slug: target.slug, fetchStatus: 'not-found' });
       } else if (!content) {
         const detail = reason === 'mc-main-content-not-found'
           ? '#mc-main-content not found (page structure changed?)'
           : `HTTP ${status}`;
         console.log(`  SKIP ${target.slug} — ${detail}`);
         errors += 1;
+        pageResults.push({ slug: target.slug, fetchStatus: 'error', errorDetail: detail });
       } else {
         if (!args.dryRun) {
           fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
@@ -251,10 +260,12 @@ export async function main(argv) {
         }
         console.log(`  OK   ${target.slug}`);
         fetched += 1;
+        pageResults.push({ slug: target.slug, fetchStatus: 'ok' });
       }
     } catch (error) {
       console.log(`  ERR  ${target.slug} — ${error.message}`);
       errors += 1;
+      pageResults.push({ slug: target.slug, fetchStatus: 'error', errorDetail: error.message });
     }
 
     await sleep(THROTTLE_MS);
@@ -270,11 +281,19 @@ export async function main(argv) {
     errors += 1;
   }
 
+  // Build source sync status (always written — metadata, not content)
+  const sourceSyncStatus = buildSourceSyncStatus({ pages: pageResults, sidebarResult });
+  fs.writeFileSync(
+    SOURCE_SYNC_STATUS_PATH,
+    JSON.stringify(sourceSyncStatus, null, 2) + '\n',
+  );
+
   console.log();
   console.log(`Done: ${fetched} fetched, ${notFound} not found, ${errors} errors`);
-  if (args.dryRun) console.log('(dry-run — no files written)');
+  console.log(`Freshness: ${sourceSyncStatus.freshnessState}`);
+  if (args.dryRun) console.log('(dry-run — snapshots not written, source-sync-status.json updated)');
 
-  return { fetched, notFound, errors, skipped: 0, sidebarVerified: sidebarResult.ok };
+  return { fetched, notFound, errors, skipped: 0, sidebarVerified: sidebarResult.ok, sourceSyncStatus };
 }
 
 if (isDirectRun(import.meta.url)) {

@@ -33,19 +33,13 @@ jobs:
 
       - name: Fetch and diff snapshots
         id: snapshots
-        run: |
-          set +e
-          npm run check:snapshots
-          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run check:snapshots
+        continue-on-error: true
 
       - name: Check source parity (local)
         id: parity_local
-        run: |
-          set +e
-          npm run check:parity
-          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run check:parity
+        continue-on-error: true
 
       - name: Generate detection summary
         run: npm run check:summary
@@ -54,12 +48,26 @@ jobs:
         if: always() && hashFiles('docs-update-summary.md') != ''
         run: cat docs-update-summary.md >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Report check outcomes
+        if: always()
+        run: |
+          if [ "$SNAPSHOTS_OUTCOME" = "failure" ]; then
+            echo "::warning::Snapshot fetch/diff reported issues (exit code non-zero)"
+          fi
+          if [ "$PARITY_OUTCOME" = "failure" ]; then
+            echo "::warning::Parity check reported issues (exit code non-zero)"
+          fi
+        env:
+          SNAPSHOTS_OUTCOME: ${{ steps.snapshots.outcome }}
+          PARITY_OUTCOME: ${{ steps.parity_local.outcome }}
+
       - name: Upload detection artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: scheduled-actionable-artifacts
           path: |
+            source-sync-status.json
             snapshot-diff-status.json
             parity-check-status.json
             docs-actionable-report.json
