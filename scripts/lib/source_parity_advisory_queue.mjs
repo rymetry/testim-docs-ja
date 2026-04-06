@@ -15,6 +15,14 @@ export function isAdvisoryReviewCandidate(issue) {
     && issue?.inconclusiveCategory === 'tokenless-near-tie';
 }
 
+export function isValidAdvisoryAcknowledgement(issue) {
+  return issue?.acknowledged === true && issue?.ackExpired !== true;
+}
+
+export function isBlockingAdvisoryReviewIssue(issue) {
+  return issue?.baselined !== true && !isValidAdvisoryAcknowledgement(issue);
+}
+
 function normalizeFiniteNumber(value) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
@@ -95,8 +103,9 @@ export function buildAdvisoryReviewQueue(results) {
 
   for (const result of results) {
     const slug = fileToSlug(result.file);
-    const advisoryIssues = (result.issues ?? [])
-      .filter(isAdvisoryReviewCandidate)
+    const advisorySourceIssues = (result.issues ?? [])
+      .filter(isAdvisoryReviewCandidate);
+    const advisoryIssues = advisorySourceIssues
       .map((issue) => {
         const meta = normalizeIssueMeta(issue);
         return {
@@ -111,6 +120,8 @@ export function buildAdvisoryReviewQueue(results) {
           currentScore: meta?.currentScore ?? null,
           swapScore: meta?.swapScore ?? null,
           baselined: issue.baselined === true,
+          acknowledged: issue.acknowledged === true,
+          ackExpired: issue.ackExpired === true,
           baselineReviewAfter: issue.baselineReviewAfter ?? null,
           baselineExpired: issue.baselineExpired === true,
         };
@@ -123,7 +134,7 @@ export function buildAdvisoryReviewQueue(results) {
       file: result.file,
       sourceUrl: result.sourceUrl ?? '',
       category: result.category ?? '',
-      blocking: advisoryIssues.some((issue) => issue.baselined !== true),
+      blocking: advisorySourceIssues.some(isBlockingAdvisoryReviewIssue),
       issueCount: advisoryIssues.length,
       issues: advisoryIssues,
     });
@@ -148,10 +159,45 @@ export function summarizeAdvisoryReviewQueue(queue, scope = null) {
     advisoryQueueIssues,
     advisoryQueueFiles: queue.length,
     advisoryQueueByCategory,
+    advisoryQueueComplete: null,
+    advisoryQueueScopeType: null,
   };
   if (scope && typeof scope === 'object') {
     summary.advisoryQueueComplete = scope.isComplete === true;
     summary.advisoryQueueScopeType = scope.type ?? null;
   }
   return summary;
+}
+
+export function buildAdvisoryArtifacts({
+  results = [],
+  totalFiles = 0,
+  checkedFiles = 0,
+  slug = null,
+  section = null,
+  buildQueue = buildAdvisoryReviewQueue,
+} = {}) {
+  const advisoryQueueScope = buildAdvisoryReviewScope({
+    totalFiles,
+    checkedFiles,
+    slug,
+    section,
+  });
+
+  try {
+    const advisoryQueue = buildQueue(results);
+    return {
+      advisoryQueueScope,
+      advisoryQueue,
+      advisoryQueueSummary: summarizeAdvisoryReviewQueue(advisoryQueue, advisoryQueueScope),
+      advisoryQueueError: null,
+    };
+  } catch (error) {
+    return {
+      advisoryQueueScope,
+      advisoryQueue: [],
+      advisoryQueueSummary: summarizeAdvisoryReviewQueue([], advisoryQueueScope),
+      advisoryQueueError: error instanceof Error ? error.message : String(error),
+    };
+  }
 }

@@ -16,15 +16,13 @@ import {
 import {
   ISSUE_SEVERITY,
   alignSegments,
-  buildAdvisoryReviewQueue,
-  buildAdvisoryReviewScope,
+  buildAdvisoryArtifacts,
   compareSnapshotStructure,
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
   loadSidebarSlugs,
   localCheck,
   parityDiffsToIssues,
-  summarizeAdvisoryReviewQueue,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
 import {
@@ -462,20 +460,28 @@ export async function checkSourceParity({
     }
   }
 
-  const advisoryQueueScope = buildAdvisoryReviewScope({
+  const {
+    advisoryQueueScope,
+    advisoryQueue,
+    advisoryQueueSummary,
+    advisoryQueueError,
+  } = buildAdvisoryArtifacts({
+    results,
     totalFiles: allFiles.length,
     checkedFiles: checkedCount,
     slug: resolvedSlug,
     section,
   });
-  const advisoryQueue = buildAdvisoryReviewQueue(results);
+  if (advisoryQueueError) {
+    console.error(`⚠ Phase 6B review queue unavailable: ${advisoryQueueError}`);
+  }
   const summary = {
     checkedAt: new Date().toISOString(),
     mode: 'local',
     totalFiles: allFiles.length,
     checkedFiles: checkedCount,
     ...summarizeParityResults(results),
-    ...summarizeAdvisoryReviewQueue(advisoryQueue, advisoryQueueScope),
+    ...advisoryQueueSummary,
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
   };
 
@@ -553,6 +559,9 @@ export async function checkSourceParity({
         `\n[Phase 6B review queue] tokenless-near-tie: ${summary.advisoryQueueIssues} 件 / ${summary.advisoryQueueFiles} ファイル (${scopeLabel})`,
       );
       console.log('  derived from existing segment-inconclusive issues only; no detector, no gate impact');
+      if (advisoryQueueError) {
+        console.log(`  queue unavailable: ${advisoryQueueError}`);
+      }
       if (!advisoryQueueScope.isComplete) {
         console.log('  partial queue only; use a full-repo run before workflow automation or queue-wide triage');
       }

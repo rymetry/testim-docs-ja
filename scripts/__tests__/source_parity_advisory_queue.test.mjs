@@ -2,10 +2,13 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  buildAdvisoryArtifacts,
   buildAdvisoryQueueIssueKey,
   buildAdvisoryReviewQueue,
   buildAdvisoryReviewScope,
+  isBlockingAdvisoryReviewIssue,
   isAdvisoryReviewCandidate,
+  isValidAdvisoryAcknowledgement,
   summarizeAdvisoryReviewQueue,
 } from '../lib/source_parity_advisory_queue.mjs';
 
@@ -35,6 +38,27 @@ describe('isAdvisoryReviewCandidate', () => {
       }),
       false,
     );
+  });
+});
+
+describe('advisory review coverage helpers', () => {
+  it('treats only unexpired acknowledgements as valid acknowledgements', () => {
+    assert.equal(isValidAdvisoryAcknowledgement({ acknowledged: true, ackExpired: false }), true);
+    assert.equal(isValidAdvisoryAcknowledgement({ acknowledged: true, ackExpired: true }), false);
+    assert.equal(isValidAdvisoryAcknowledgement({ baselined: true }), false);
+  });
+
+  it('treats baseline and valid acknowledgements as non-blocking', () => {
+    assert.equal(isBlockingAdvisoryReviewIssue({ baselined: true }), false);
+    assert.equal(
+      isBlockingAdvisoryReviewIssue({ acknowledged: true, ackExpired: false }),
+      false,
+    );
+    assert.equal(
+      isBlockingAdvisoryReviewIssue({ acknowledged: true, ackExpired: true }),
+      true,
+    );
+    assert.equal(isBlockingAdvisoryReviewIssue({ severity: 'actionable' }), true);
   });
 });
 
@@ -118,6 +142,77 @@ describe('buildAdvisoryReviewQueue', () => {
     ]);
 
     assert.deepEqual(queue, []);
+  });
+
+  it('treats acknowledged advisory issues as non-blocking', () => {
+    const queue = buildAdvisoryReviewQueue([
+      {
+        file: 'src/content/docs/overview/acknowledged.md',
+        issues: [
+          {
+            type: 'segment-inconclusive',
+            severity: 'actionable',
+            inconclusiveCategory: 'tokenless-near-tie',
+            detail: 'acknowledged advisory',
+            acknowledged: true,
+            ackExpired: false,
+          },
+        ],
+      },
+    ]);
+
+    assert.equal(queue[0].blocking, false);
+    assert.equal(queue[0].issues[0].acknowledged, true);
+    assert.equal(queue[0].issues[0].ackExpired, false);
+  });
+
+  it('falls back to stripping only the .md suffix when file is outside docs root', () => {
+    const queue = buildAdvisoryReviewQueue([
+      {
+        file: 'overview/foo.md',
+        issues: [
+          {
+            type: 'segment-inconclusive',
+            severity: 'actionable',
+            inconclusiveCategory: 'tokenless-near-tie',
+            detail: 'fallback slug path',
+          },
+        ],
+      },
+    ]);
+
+    assert.equal(queue[0].slug, 'overview/foo');
+  });
+
+  it('drops invalid inconclusiveMeta fields and falls back to category-only queue key', () => {
+    const queue = buildAdvisoryReviewQueue([
+      {
+        file: 'src/content/docs/overview/invalid-meta.md',
+        issues: [
+          {
+            type: 'segment-inconclusive',
+            severity: 'actionable',
+            inconclusiveCategory: 'tokenless-near-tie',
+            detail: 'invalid meta',
+            inconclusiveMeta: {
+              leftSectionPath: '',
+              rightSectionPath: '',
+              currentScore: Number.NaN,
+              swapScore: Number.POSITIVE_INFINITY,
+            },
+          },
+        ],
+      },
+    ]);
+
+    assert.equal(
+      queue[0].issues[0].queueKey,
+      'overview/invalid-meta|segment-inconclusive|category=tokenless-near-tie',
+    );
+    assert.equal(queue[0].issues[0].leftSectionPath, null);
+    assert.equal(queue[0].issues[0].rightSectionPath, null);
+    assert.equal(queue[0].issues[0].currentScore, null);
+    assert.equal(queue[0].issues[0].swapScore, null);
   });
 });
 
@@ -214,6 +309,8 @@ describe('summarizeAdvisoryReviewQueue', () => {
       advisoryQueueByCategory: {
         'tokenless-near-tie': 3,
       },
+      advisoryQueueComplete: null,
+      advisoryQueueScopeType: null,
     });
   });
 
@@ -234,5 +331,26 @@ describe('summarizeAdvisoryReviewQueue', () => {
 
     assert.equal(summary.advisoryQueueComplete, false);
     assert.equal(summary.advisoryQueueScopeType, 'slug');
+  });
+});
+
+describe('buildAdvisoryArtifacts', () => {
+  it('returns safe empty advisory data when queue derivation throws', () => {
+    const advisory = buildAdvisoryArtifacts({
+      results: [{ file: 'src/content/docs/example.md', issues: [] }],
+      totalFiles: 288,
+      checkedFiles: 1,
+      slug: 'overview/example',
+      buildQueue() {
+        throw new Error('boom');
+      },
+    });
+
+    assert.deepEqual(advisory.advisoryQueue, []);
+    assert.equal(advisory.advisoryQueueError, 'boom');
+    assert.equal(advisory.advisoryQueueScope.isComplete, false);
+    assert.equal(advisory.advisoryQueueSummary.advisoryQueueIssues, 0);
+    assert.equal(advisory.advisoryQueueSummary.advisoryQueueComplete, false);
+    assert.equal(advisory.advisoryQueueSummary.advisoryQueueScopeType, 'slug');
   });
 });
