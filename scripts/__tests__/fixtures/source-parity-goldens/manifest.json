@@ -3,7 +3,7 @@
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
-      "traits": ["callouts", "cli-flags", "invariant-tokens", "long"]
+      "traits": ["callouts", "cli-flags", "invariant-tokens", "steps", "long"]
     },
     {
       "slug": "recording-tests/how-to-record-a-test",
@@ -23,7 +23,7 @@
     },
     {
       "slug": "running-tests/running-tests-overview",
-      "traits": ["pipe-table", "images-in-table", "bullets"]
+      "traits": ["pipe-table", "bullets"]
     },
     {
       "slug": "test-management/shared-configuration",
@@ -32,6 +32,14 @@
     {
       "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
       "traits": ["callouts", "steps", "images", "short"]
+    },
+    {
+      "slug": "editing-tests/steps",
+      "traits": ["html-table"]
+    },
+    {
+      "slug": "debugging-tests/debugging-controls",
+      "traits": ["html-table"]
     }
   ]
 }

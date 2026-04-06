@@ -2,7 +2,7 @@
  * Synthetic mutation corpus generator for diff=1 recall testing.
  *
  * Produces minimally-mutated JA markdown content (exactly one structural change)
- * for each of 7 mutation types. Used by Phase 4–5 segment extraction / exact diff
+ * for each of 9 mutation types. Used by Phase 4–5 segment extraction / exact diff
  * engine to verify 100% recall on diff=1 mutations.
  *
  * @module mutation_corpus
@@ -10,12 +10,14 @@
 
 const FENCE_LINE_RE = /^(`{3,}|~{3,})/;
 
+// ---------------------------------------------------------------------------
+// Line classification
+// ---------------------------------------------------------------------------
+
 /**
  * @typedef {object} LineClassification
  * @property {number} index
- * @property {string} kind - 'paragraph' | 'bullet' | 'step' | 'heading' | 'table' |
- *   'callout-open' | 'callout-close' | 'callout-body' | 'code-fence' | 'code' |
- *   'frontmatter' | 'blank' | 'image' | 'details-open' | 'details-close' | 'summary'
+ * @property {string} kind
  * @property {string} text
  */
 
@@ -54,7 +56,6 @@ export function classifyLines(md) {
     const line = lines[i];
     const trimmed = line.trimStart();
 
-    // Frontmatter handling
     if (i === 0 && trimmed === '---') {
       inFrontmatter = true;
       frontmatterDashes = 1;
@@ -66,8 +67,6 @@ export function classifyLines(md) {
       result.push({ index: i, kind: 'frontmatter', text: line });
       continue;
     }
-
-    // Code fence handling
     if (FENCE_LINE_RE.test(trimmed)) {
       inCodeBlock = !inCodeBlock;
       result.push({ index: i, kind: 'code-fence', text: line });
@@ -78,7 +77,6 @@ export function classifyLines(md) {
       continue;
     }
 
-    // Content classification
     const kind = classifyContentLine(trimmed, calloutDepth > 0);
     if (kind === 'callout-open') calloutDepth++;
     if (kind === 'callout-close') calloutDepth = Math.max(0, calloutDepth - 1);
@@ -88,44 +86,125 @@ export function classifyLines(md) {
   return result;
 }
 
+// ---------------------------------------------------------------------------
+// Block-extent helpers
+// ---------------------------------------------------------------------------
+
+/** Leading whitespace count of a raw line. */
+function lineIndent(line) {
+  return line.length - line.trimStart().length;
+}
+
+/**
+ * Find the end index (exclusive) of a list item block.
+ * Includes continuation lines, child items, and blank lines between them.
+ * @param {string[]} lines - All lines of the document
+ * @param {number} start - Index of the list item line
+ * @returns {number} Exclusive end index
+ */
+export function listItemBlockEnd(lines, start) {
+  const baseIndent = lineIndent(lines[start]);
+  let end = start + 1;
+  while (end < lines.length) {
+    const line = lines[end];
+    if (line.trim() === '') {
+      // Blank line — include only if followed by deeper-indented content
+      let nextContent = end + 1;
+      while (nextContent < lines.length && lines[nextContent].trim() === '') nextContent++;
+      if (nextContent < lines.length && lineIndent(lines[nextContent]) > baseIndent) {
+        end = nextContent;
+        continue;
+      }
+      break;
+    }
+    if (lineIndent(line) <= baseIndent) break;
+    end++;
+  }
+  return end;
+}
+
+/**
+ * Find the start and end (exclusive) of a consecutive paragraph block.
+ * A paragraph block = contiguous lines all classified as 'paragraph' with no gaps.
+ * @param {LineClassification[]} classified
+ * @param {number} targetClassifiedIdx - Index within the classified array
+ * @returns {[number, number]} [startLineIdx, endLineIdx) in the original document
+ */
+export function paragraphBlockRange(classified, targetClassifiedIdx) {
+  let lo = targetClassifiedIdx;
+  while (lo > 0 && classified[lo - 1].kind === 'paragraph' &&
+         classified[lo - 1].index === classified[lo].index - 1) {
+    lo--;
+  }
+  let hi = targetClassifiedIdx;
+  while (hi < classified.length - 1 && classified[hi + 1].kind === 'paragraph' &&
+         classified[hi + 1].index === classified[hi].index + 1) {
+    hi++;
+  }
+  return [classified[lo].index, classified[hi].index + 1];
+}
+
+/** Remove lines [start, end) from an array, returning a new array. */
+function removeLineRange(lines, start, end) {
+  return [...lines.slice(0, start), ...lines.slice(end)];
+}
+
+// ---------------------------------------------------------------------------
+// Mutation result type
+// ---------------------------------------------------------------------------
+
 /**
  * @typedef {object} MutationResult
  * @property {string} mutated - The mutated markdown content
  * @property {object} metadata
  * @property {string} metadata.type - Mutation type identifier
- * @property {number} metadata.lineIndex - 0-based line index of mutation
+ * @property {number} metadata.lineIndex - 0-based line index of mutation start
+ * @property {number} metadata.linesRemoved - Number of lines removed (0 for in-place)
  * @property {string} metadata.originalText - Original text at mutation point
  * @property {string} metadata.description - Human-readable description
  */
 
+// ---------------------------------------------------------------------------
+// Mutation functions
+// ---------------------------------------------------------------------------
+
 /**
- * Remove one paragraph from the markdown.
+ * Remove one paragraph block from the markdown.
+ * A paragraph block is a sequence of consecutive paragraph lines.
  * @param {string} md
- * @param {number} [nth=0] - Which eligible paragraph to remove (0-based)
+ * @param {number} [nth=0]
  * @returns {MutationResult | null}
  */
 export function deleteParagraph(md, nth = 0) {
   const classified = classifyLines(md);
-  const paragraphs = classified.filter(
-    (l) => l.kind === 'paragraph' && l.text.trim().length > 0,
-  );
-  if (paragraphs.length === 0) return null;
-  const target = paragraphs[nth % paragraphs.length];
+  // Find paragraph block starts (first line of each consecutive paragraph run)
+  const blockStarts = [];
+  for (let i = 0; i < classified.length; i++) {
+    if (classified[i].kind !== 'paragraph' || classified[i].text.trim() === '') continue;
+    const isBlockStart = i === 0 ||
+      classified[i - 1].kind !== 'paragraph' ||
+      classified[i - 1].index !== classified[i].index - 1;
+    if (isBlockStart) blockStarts.push(i);
+  }
+  if (blockStarts.length === 0) return null;
+  const targetClassifiedIdx = blockStarts[nth % blockStarts.length];
+  const [start, end] = paragraphBlockRange(classified, targetClassifiedIdx);
   const lines = md.split('\n');
-  const newLines = lines.filter((_, i) => i !== target.index);
+  const removedText = lines.slice(start, end).join('\n');
   return {
-    mutated: newLines.join('\n'),
+    mutated: removeLineRange(lines, start, end).join('\n'),
     metadata: {
       type: 'paragraph-delete',
-      lineIndex: target.index,
-      originalText: target.text,
-      description: `段落削除 (L${target.index + 1}): "${target.text.slice(0, 60)}..."`,
+      lineIndex: start,
+      linesRemoved: end - start,
+      originalText: removedText,
+      description: `段落削除 (L${start + 1}-${end}, ${end - start}行)`,
     },
   };
 }
 
 /**
- * Remove one bullet list item.
+ * Remove one bullet list item block (including continuation/child lines).
  * @param {string} md
  * @param {number} [nth=0]
  * @returns {MutationResult | null}
@@ -136,14 +215,42 @@ export function deleteBullet(md, nth = 0) {
   if (bullets.length === 0) return null;
   const target = bullets[nth % bullets.length];
   const lines = md.split('\n');
-  const newLines = lines.filter((_, i) => i !== target.index);
+  const end = listItemBlockEnd(lines, target.index);
+  const removedText = lines.slice(target.index, end).join('\n');
   return {
-    mutated: newLines.join('\n'),
+    mutated: removeLineRange(lines, target.index, end).join('\n'),
     metadata: {
       type: 'bullet-delete',
       lineIndex: target.index,
-      originalText: target.text,
-      description: `箇条書き削除 (L${target.index + 1}): "${target.text.slice(0, 60)}..."`,
+      linesRemoved: end - target.index,
+      originalText: removedText,
+      description: `箇条書き削除 (L${target.index + 1}-${end}, ${end - target.index}行)`,
+    },
+  };
+}
+
+/**
+ * Remove one numbered step item block (including continuation/child lines).
+ * @param {string} md
+ * @param {number} [nth=0]
+ * @returns {MutationResult | null}
+ */
+export function deleteStep(md, nth = 0) {
+  const classified = classifyLines(md);
+  const steps = classified.filter((l) => l.kind === 'step');
+  if (steps.length === 0) return null;
+  const target = steps[nth % steps.length];
+  const lines = md.split('\n');
+  const end = listItemBlockEnd(lines, target.index);
+  const removedText = lines.slice(target.index, end).join('\n');
+  return {
+    mutated: removeLineRange(lines, target.index, end).join('\n'),
+    metadata: {
+      type: 'step-delete',
+      lineIndex: target.index,
+      linesRemoved: end - target.index,
+      originalText: removedText,
+      description: `手順削除 (L${target.index + 1}-${end}, ${end - target.index}行)`,
     },
   };
 }
@@ -162,14 +269,14 @@ export function deleteCalloutParagraph(md, nth = 0) {
   if (calloutBodies.length === 0) return null;
   const target = calloutBodies[nth % calloutBodies.length];
   const lines = md.split('\n');
-  const newLines = lines.filter((_, i) => i !== target.index);
   return {
-    mutated: newLines.join('\n'),
+    mutated: removeLineRange(lines, target.index, target.index + 1).join('\n'),
     metadata: {
       type: 'callout-paragraph-delete',
       lineIndex: target.index,
+      linesRemoved: 1,
       originalText: target.text,
-      description: `callout内段落削除 (L${target.index + 1}): "${target.text.slice(0, 60)}..."`,
+      description: `callout内段落削除 (L${target.index + 1})`,
     },
   };
 }
@@ -183,14 +290,12 @@ export function deleteCalloutParagraph(md, nth = 0) {
 export function deleteTableCell(md, nth = 0) {
   const classified = classifyLines(md);
   const tableRows = classified.filter((l) => l.kind === 'table');
-  // Identify separator rows — require at least one for a well-formed table
   const separatorIndices = new Set(
     tableRows
       .filter((l) => /^\|\s*:?-+:?\s*\|/.test(l.text))
       .map((l) => l.index),
   );
   if (separatorIndices.size === 0) return null;
-  // Data rows: not separator, not header (immediately before separator)
   const candidateRows = tableRows.filter((l) => {
     if (separatorIndices.has(l.index)) return false;
     if (separatorIndices.has(l.index + 1)) return false;
@@ -212,8 +317,51 @@ export function deleteTableCell(md, nth = 0) {
     metadata: {
       type: 'table-cell-delete',
       lineIndex: targetRow.index,
+      linesRemoved: 0,
       originalText: originalCell.trim(),
-      description: `table cell削除 (L${targetRow.index + 1}, col${cellIdx}): "${originalCell.trim().slice(0, 40)}..."`,
+      description: `table cell削除 (L${targetRow.index + 1}, col${cellIdx})`,
+    },
+  };
+}
+
+/**
+ * Empty one <td> cell in an HTML table.
+ * @param {string} md
+ * @param {number} [nth=0]
+ * @returns {MutationResult | null}
+ */
+export function deleteHtmlTableCell(md, nth = 0) {
+  // Match <td>...</td> blocks (potentially multi-line)
+  const tdPattern = /<td\b[^>]*>([\s\S]*?)<\/td>/gi;
+  const candidates = [];
+  let match;
+  while ((match = tdPattern.exec(md)) !== null) {
+    const content = match[1].trim();
+    if (content.length === 0) continue; // already empty
+    candidates.push({
+      fullMatch: match[0],
+      content,
+      matchIndex: match.index,
+      matchLength: match[0].length,
+    });
+  }
+  if (candidates.length === 0) return null;
+  const target = candidates[nth % candidates.length];
+  // Replace the <td>content</td> with <td></td>, preserving attributes
+  const openTagEnd = target.fullMatch.indexOf('>') + 1;
+  const openTag = target.fullMatch.slice(0, openTagEnd);
+  const replacement = `${openTag}\n   </td>`;
+  const before = md.slice(0, target.matchIndex);
+  const after = md.slice(target.matchIndex + target.matchLength);
+  const lineIndex = md.slice(0, target.matchIndex).split('\n').length - 1;
+  return {
+    mutated: before + replacement + after,
+    metadata: {
+      type: 'html-table-cell-delete',
+      lineIndex,
+      linesRemoved: 0,
+      originalText: target.content.slice(0, 80),
+      description: `HTML table cell削除 (offset ${target.matchIndex})`,
     },
   };
 }
@@ -229,17 +377,14 @@ export function moveSegment(md, nth = 0) {
   const paragraphs = classified.filter(
     (l) => l.kind === 'paragraph' && l.text.trim().length > 0,
   );
-  // Find adjacent paragraph pairs (no heading between, not identical text)
   const pairs = [];
   for (let i = 0; i < paragraphs.length - 1; i++) {
     const a = paragraphs[i];
     const b = paragraphs[i + 1];
-    if (a.text === b.text) continue; // swap would be identity
+    if (a.text === b.text) continue;
     const between = classified.slice(a.index + 1, b.index);
     const hasHeading = between.some((l) => l.kind === 'heading');
-    if (!hasHeading) {
-      pairs.push([a, b]);
-    }
+    if (!hasHeading) pairs.push([a, b]);
   }
   if (pairs.length === 0) return null;
   const [a, b] = pairs[nth % pairs.length];
@@ -252,6 +397,7 @@ export function moveSegment(md, nth = 0) {
     metadata: {
       type: 'segment-move',
       lineIndex: a.index,
+      linesRemoved: 0,
       originalText: `${a.text} \u2194 ${b.text}`,
       description: `segment移動 (L${a.index + 1} \u2194 L${b.index + 1})`,
     },
@@ -266,7 +412,6 @@ export function moveSegment(md, nth = 0) {
  */
 export function insertEnResidual(md, nth = 0) {
   const classified = classifyLines(md);
-  // Find paragraphs containing CJK characters
   const jaParagraphs = classified.filter(
     (l) =>
       l.kind === 'paragraph' &&
@@ -284,6 +429,7 @@ export function insertEnResidual(md, nth = 0) {
     metadata: {
       type: 'en-residual',
       lineIndex: target.index,
+      linesRemoved: 0,
       originalText: target.text,
       description: `EN残留 (L${target.index + 1}): JA\u2192EN置換`,
     },
@@ -297,12 +443,11 @@ export function insertEnResidual(md, nth = 0) {
  * @returns {MutationResult | null}
  */
 export function dropInvariantToken(md, nth = 0) {
-  // Order: most-specific first so dedup prefers longer matches
   const tokenPatterns = [
-    /`--[\w-]+`/g, // Backtick-wrapped CLI flags
-    /`[A-Z_]{2,}`/g, // Constants like `YOUR_TOKEN`
-    /https?:\/\/[^\s)]+/g, // URLs
-    /--[\w-]+/g, // Bare CLI flags
+    /`--[\w-]+`/g,
+    /`[A-Z_]{2,}`/g,
+    /https?:\/\/[^\s)]+/g,
+    /--[\w-]+/g,
   ];
   const skipKinds = new Set(['frontmatter', 'code', 'code-fence', 'blank', 'image']);
   const classified = classifyLines(md);
@@ -323,8 +468,6 @@ export function dropInvariantToken(md, nth = 0) {
       }
     }
   }
-  // Deduplicate: if a shorter match is fully contained within a longer match
-  // on the same line, keep only the longer match
   const candidates = rawCandidates.filter((c) => {
     const dominated = rawCandidates.some(
       (other) =>
@@ -348,18 +491,25 @@ export function dropInvariantToken(md, nth = 0) {
     metadata: {
       type: 'token-drop',
       lineIndex: target.lineIndex,
+      linesRemoved: 0,
       originalText: target.token,
       description: `token欠落 (L${target.lineIndex + 1}): "${target.token}" を除去`,
     },
   };
 }
 
+// ---------------------------------------------------------------------------
+// Registry and generators
+// ---------------------------------------------------------------------------
+
 /** All mutation functions indexed by type name. */
 export const MUTATION_TYPES = {
   'paragraph-delete': deleteParagraph,
   'bullet-delete': deleteBullet,
+  'step-delete': deleteStep,
   'callout-paragraph-delete': deleteCalloutParagraph,
   'table-cell-delete': deleteTableCell,
+  'html-table-cell-delete': deleteHtmlTableCell,
   'segment-move': moveSegment,
   'en-residual': insertEnResidual,
   'token-drop': dropInvariantToken,
@@ -395,15 +545,12 @@ export function generateCorpus(md, count = 3) {
     for (let i = 0; i < count; i++) {
       const result = fn(md, i);
       if (result !== null) {
-        // Avoid duplicates (when fewer candidates than count)
         const isDuplicate = mutations.some(
           (m) =>
             m.metadata.lineIndex === result.metadata.lineIndex &&
             m.metadata.originalText === result.metadata.originalText,
         );
-        if (!isDuplicate) {
-          mutations.push(result);
-        }
+        if (!isDuplicate) mutations.push(result);
       }
     }
     if (mutations.length > 0) {
