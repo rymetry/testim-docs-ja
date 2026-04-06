@@ -331,18 +331,36 @@ npm run docs:report-categories
 
 #### そのほかの共有ライブラリ
 
-| ファイル                        | 用途                                                                          |
-| ------------------------------- | ----------------------------------------------------------------------------- |
-| `lib/project.mjs`               | repo ルート、docs 探索、slug index、FM 読出し                                 |
-| `lib/markdown-utils.mjs`        | Markdown 除去、description 自動生成                                           |
-| `lib/madcap_toc.mjs`            | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成                  |
-| `lib/turndown.mjs`              | TurndownService + MadCap Flare カスタムルール（callout, ordered-list, table） |
-| `lib/source_parity.mjs`         | parity API の facade（checks / types / summary を再 export）                  |
-| `lib/source_parity_checks.mjs`  | parity の個別チェックロジック                                                 |
-| `lib/source_parity_types.mjs`   | parity issue type 定義・検出パターン                                          |
-| `lib/source_parity_summary.mjs` | parity 集計・要約生成                                                         |
-| `lib/detection_reports.mjs`     | summary / issue body / audit manifest 生成                                    |
-| `lib/cli.mjs`                   | 直実行判定などの CLI 補助                                                     |
+| ファイル                                 | 用途                                                                          |
+| ---------------------------------------- | ----------------------------------------------------------------------------- |
+| `lib/project.mjs`                        | repo ルート、docs 探索、slug index、FM 読出し                                 |
+| `lib/markdown-utils.mjs`                 | Markdown 除去、description 自動生成                                           |
+| `lib/madcap_toc.mjs`                     | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成                  |
+| `lib/turndown.mjs`                       | TurndownService + MadCap Flare カスタムルール（callout, ordered-list, table） |
+| `lib/source_parity.mjs`                  | parity API の facade（checks / types / summary を再 export）                  |
+| `lib/source_parity_checks.mjs`           | parity の個別チェックロジック                                                 |
+| `lib/source_parity_types.mjs`            | parity issue type 定義・検出パターン                                          |
+| `lib/source_parity_summary.mjs`          | parity 集計・要約生成                                                         |
+| `lib/source_parity_acknowledgements.mjs` | parity acknowledgement モデル（Phase 3）                                      |
+| `lib/source_parity_page_coverage.mjs`    | ページ単位の coverage gate（Phase 2）                                         |
+| `lib/source_parity_segments_shared.mjs`  | canonical segment 型・正規化・fingerprint（Phase 4）                          |
+| `lib/source_parity_segments_en.mjs`      | EN HTML 直接 canonical segment extractor（Phase 4, turndown 非依存）          |
+| `lib/source_parity_segments_ja.mjs`      | JA markdown canonical segment extractor（Phase 4）                            |
+| `lib/source_sync_health.mjs`             | source-sync freshness state（Phase 1）                                        |
+| `lib/mutation_corpus.mjs`                | diff=1 mutation 生成（Phase 0、Phase 5 recall 測定用）                        |
+| `lib/detection_reports.mjs`              | summary / issue body / audit manifest 生成                                    |
+| `lib/cli.mjs`                            | 直実行判定などの CLI 補助                                                     |
+
+##### Phase 4: canonical segment 抽出の位置づけ
+
+`source_parity_segments_*.mjs` は Issue #225 Phase 4 で導入された canonical segment extractor。Phase 5 の exact diff engine が EN / JA を比較するための最小単位 (segment) を生成する。
+
+- **EN extractor**: `source_parity_segments_en.mjs` — MadCap Flare HTML を直接 tokenize → tree → walk して segment を生成する。turndown の markdown 変換層を経由しない。
+- **JA extractor**: `source_parity_segments_ja.mjs` — JA markdown を line-by-line で分類し、pipe table / HTML table / callout / details / image / list を segment にマップする。
+- **共通**: `source_parity_segments_shared.mjs` — `Segment` 型、`normalizeSegmentText`, `computeSegmentFingerprint`, `pushHeading` / `buildSectionPath`, `createSegment` factory。
+- **境界安定性ベンチマーク**: `__tests__/source_parity_segments_boundary.test.mjs` が Phase 0 manifest の 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。結果は `__tests__/fixtures/source-parity-goldens/segment-boundary-report.json` に書き出される（レビュー時に参照可）。
+
+Phase 5 で exact diff engine を組む際、この 3 ファイルを入力として section anchor + local alignment を実装する。
 
 ---
 
@@ -352,23 +370,31 @@ npm run docs:report-categories
 npm test    # node --test scripts/__tests__/*.mjs
 ```
 
-| テストファイル                              | 対象スクリプト                    |
-| ------------------------------------------- | --------------------------------- |
-| `__tests__/check_source_parity.test.mjs`    | check_source_parity.mjs           |
-| `__tests__/lint_docs.test.mjs`              | lint_docs.mjs                     |
-| `__tests__/fetch_translate_images.test.mjs` | fetch_translate_images.mjs        |
-| `__tests__/update_sidebar_urls.test.mjs`    | update_sidebar_urls_from_live.mjs |
-| `__tests__/pipeline.test.mjs`               | pipeline.mjs                      |
-| `__tests__/snapshot_diff.test.mjs`          | snapshot_diff.mjs                 |
-| `__tests__/source_parity.test.mjs`          | lib/source_parity.mjs             |
-| `__tests__/detection_reports.test.mjs`      | lib/detection_reports.mjs         |
-| `__tests__/lib_project.test.mjs`            | lib/project.mjs                   |
-| `__tests__/apply_llm_translations.test.mjs` | apply_llm_translations.mjs        |
-| `__tests__/lib_markdown_utils.test.mjs`     | lib/markdown-utils.mjs            |
-| `__tests__/lib_sidebar_label.test.mjs`      | lib/sidebar.mjs                   |
-| `__tests__/turndown.test.mjs`               | lib/turndown.mjs                  |
-| `__tests__/snapshot_update.test.mjs`        | snapshot_update.mjs               |
-| `__tests__/madcap_toc.test.mjs`             | lib/madcap_toc.mjs                |
+| テストファイル                                       | 対象スクリプト                          |
+| ---------------------------------------------------- | --------------------------------------- |
+| `__tests__/check_source_parity.test.mjs`             | check_source_parity.mjs                 |
+| `__tests__/lint_docs.test.mjs`                       | lint_docs.mjs                           |
+| `__tests__/fetch_translate_images.test.mjs`          | fetch_translate_images.mjs              |
+| `__tests__/update_sidebar_urls.test.mjs`             | update_sidebar_urls_from_live.mjs       |
+| `__tests__/pipeline.test.mjs`                        | pipeline.mjs                            |
+| `__tests__/snapshot_diff.test.mjs`                   | snapshot_diff.mjs                       |
+| `__tests__/source_parity.test.mjs`                   | lib/source_parity.mjs                   |
+| `__tests__/detection_reports.test.mjs`               | lib/detection_reports.mjs               |
+| `__tests__/lib_project.test.mjs`                     | lib/project.mjs                         |
+| `__tests__/apply_llm_translations.test.mjs`          | apply_llm_translations.mjs              |
+| `__tests__/lib_markdown_utils.test.mjs`              | lib/markdown-utils.mjs                  |
+| `__tests__/lib_sidebar_label.test.mjs`               | lib/sidebar.mjs                         |
+| `__tests__/turndown.test.mjs`                        | lib/turndown.mjs                        |
+| `__tests__/snapshot_update.test.mjs`                 | snapshot_update.mjs                     |
+| `__tests__/madcap_toc.test.mjs`                      | lib/madcap_toc.mjs                      |
+| `__tests__/mutation_corpus.test.mjs`                 | lib/mutation_corpus.mjs                 |
+| `__tests__/source_parity_acknowledgements.test.mjs`  | lib/source_parity_acknowledgements.mjs  |
+| `__tests__/source_parity_page_coverage.test.mjs`     | lib/source_parity_page_coverage.mjs     |
+| `__tests__/source_sync_health.test.mjs`              | lib/source_sync_health.mjs              |
+| `__tests__/source_parity_segments_shared.test.mjs`   | lib/source_parity_segments_shared.mjs   |
+| `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
+| `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |
+| `__tests__/source_parity_segments_boundary.test.mjs` | Phase 4 境界安定性ベンチマーク          |
 
 ---
 
