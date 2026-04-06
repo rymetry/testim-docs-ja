@@ -322,7 +322,7 @@ export async function checkSourceParity({
   // Exit code: fail only on active (non-acknowledged) issues
   if (failOn === 'actionable') {
     const hasActiveActionableOrError =
-      (summary.activeActionableFiles || 0) > 0 || (summary.errorFiles || 0) > 0;
+      (summary.activeActionableFiles || 0) > 0 || (summary.activeErrorFiles || 0) > 0;
     return hasActiveActionableOrError ? 1 : 0;
   }
   if (failOn === 'any') {

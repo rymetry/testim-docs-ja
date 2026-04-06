@@ -57,7 +57,7 @@ npm run check:parity -- --slug=overview/testim-overview            # 単一ペ�
 node scripts/check_source_parity.mjs --section="概要"     # セクション絞り込み
 node scripts/check_source_parity.mjs --json               # JSON 出力
 npm run check:parity -- --fail-on=actionable              # actionable + error で exit 1
-npm run check:parity -- --fail-on=any                     # allowlist 除外後に issue > 0 で exit 1
+npm run check:parity -- --fail-on=any                     # acknowledgement を除いた active issue > 0 で exit 1
 ```
 
 **ローカルチェック（actionable）:**

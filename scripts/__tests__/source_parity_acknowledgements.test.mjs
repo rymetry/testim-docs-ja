@@ -565,4 +565,37 @@ describe('summarizeParityResults — acknowledgement counting', () => {
     assert.equal(summary.activeActionableFiles, 0);
     assert.equal(summary.actionableFiles, 1);
   });
+
+  it('counts expired actionable acknowledgement as active', () => {
+    const results = [
+      {
+        file: 'test.md',
+        issues: [
+          { type: 'image-mismatch', severity: 'actionable', acknowledged: true, ackExpired: true },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.activeActionableFiles, 1);
+    assert.equal(summary.actionableFiles, 1);
+    assert.equal(summary.activeFiles, 1);
+  });
+
+  it('counts activeErrorFiles separately from errorFiles', () => {
+    const results = [
+      {
+        file: 'valid-ack.md',
+        issues: [
+          { type: 'source-fetch-error', severity: 'error', acknowledged: true, ackExpired: false },
+        ],
+      },
+      {
+        file: 'unack.md',
+        issues: [{ type: 'source-fetch-error', severity: 'error' }],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.errorFiles, 2);
+    assert.equal(summary.activeErrorFiles, 1);
+  });
 });

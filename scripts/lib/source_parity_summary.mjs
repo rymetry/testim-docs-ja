@@ -6,6 +6,7 @@ export function summarizeParityResults(results) {
   let signalFiles = 0;
   let errorFiles = 0;
   let activeActionableFiles = 0;
+  let activeErrorFiles = 0;
   let activeFiles = 0;
   let totalIssues = 0;
   let acknowledgedIssues = 0;
@@ -16,6 +17,7 @@ export function summarizeParityResults(results) {
     let hasSignal = false;
     let hasError = false;
     let hasActiveActionable = false;
+    let hasActiveError = false;
     let hasActiveIssue = false;
 
     for (const issue of result.issues) {
@@ -42,6 +44,7 @@ export function summarizeParityResults(results) {
       if (issue.severity === 'signal') hasSignal = true;
       if (issue.severity === 'error') {
         hasError = true;
+        if (!isValidAck) hasActiveError = true;
       }
     }
 
@@ -50,6 +53,7 @@ export function summarizeParityResults(results) {
     else if (hasSignal) signalFiles += 1;
 
     if (hasActiveActionable) activeActionableFiles += 1;
+    if (hasActiveError) activeErrorFiles += 1;
     if (hasActiveIssue) activeFiles += 1;
   }
 
@@ -59,6 +63,7 @@ export function summarizeParityResults(results) {
     signalFiles,
     errorFiles,
     activeActionableFiles,
+    activeErrorFiles,
     activeFiles,
     totalIssues,
     acknowledgedIssues,

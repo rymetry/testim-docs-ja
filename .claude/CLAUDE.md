@@ -18,7 +18,7 @@ Japanese localization of Testim Help Documentation (docs.tricentis.com/testim). 
 | `npm run lint:fix` | Auto-fix markdown lint issues |
 | `npm run format` | Format with Prettier (Astro, TS, MD) |
 | `npm run test` | Run tests in `scripts/__tests__/` |
-| `npm run check:parity` | Source parity check (structure, tables, allowlist, EN normalization) |
+| `npm run check:parity` | Source parity check (structure, tables, acknowledgements, EN normalization) |
 | `npm run check:snapshots` | EN HTML snapshot fetch + diff (change detection) |
 | `npm run check:snapshots:fetch` | Fetch EN HTML snapshots only |
 | `npm run check:snapshots:diff` | Diff committed vs working tree snapshots only |
