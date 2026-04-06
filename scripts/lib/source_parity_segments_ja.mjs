@@ -16,8 +16,10 @@ const HEADING_RE = /^(#{1,6})\s+(.+?)\s*$/;
 const CALLOUT_OPEN_RE = /^:::(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$/;
 const CALLOUT_CLOSE_RE = /^:::\s*$/;
 const DETAILS_TOKEN_RE = /<\/?details\b|<summary\b/i;
-const DETAILS_EVENT_RE =
-  /(<details\b[^>]*>)|(<summary\b[^>]*>([\s\S]*?)<\/summary>)|(<\/details\s*>)/gi;
+const DETAILS_OPEN_PREFIX_RE = /^<details\b/i;
+const DETAILS_CLOSE_PREFIX_RE = /^<\/details\s*>/i;
+const SUMMARY_OPEN_PREFIX_RE = /^<summary\b/i;
+const SUMMARY_CLOSE_ANYWHERE_RE = /<\/summary\s*>/i;
 const IMAGE_RE = /^(?:!\[[^\]]*\]\([^)]+\)|<Image\b|<img\b)/i;
 const UNORDERED_RE = /^(\s*)[-*+]\s+(.+)$/;
 const ORDERED_RE = /^(\s*)\d+\.\s+(.+)$/;
@@ -56,6 +58,28 @@ function splitTableCells(line) {
 }
 
 /**
+ * Find the closing `>` of an HTML tag starting at `start`, respecting
+ * quoted attribute values so `<details data-x="1>0">` is tokenized
+ * correctly. Mirrors the same helper in the EN extractor.
+ */
+function findTagEnd(text, start) {
+  let quote = null;
+  for (let i = start; i < text.length; i += 1) {
+    const ch = text[i];
+    if (quote) {
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      continue;
+    }
+    if (ch === '>') return i;
+  }
+  return -1;
+}
+
+/**
  * @typedef {{type:'text', value:string}
  *          | {type:'details-open'}
  *          | {type:'summary', inner:string}
@@ -70,28 +94,80 @@ function splitTableCells(line) {
  * surrounding paragraph text and the details-summary segment in the
  * correct order, matching the EN walker.
  *
+ * The scanner is quote-aware via `findTagEnd`, so attribute values that
+ * contain ">" (e.g. `data-x="1>0"`) do not split the opening tag
+ * mid-attribute.
+ *
  * @param {string} line
  * @returns {DetailsLineEvent[]}
  */
 function tokenizeDetailsLine(line) {
   /** @type {DetailsLineEvent[]} */
   const events = [];
+  const n = line.length;
   let cursor = 0;
-  for (const match of line.matchAll(DETAILS_EVENT_RE)) {
-    const start = match.index ?? 0;
-    if (start > cursor) {
-      events.push({ type: 'text', value: line.slice(cursor, start) });
+  let i = 0;
+
+  const emitPendingText = (upto) => {
+    if (upto > cursor) {
+      events.push({ type: 'text', value: line.slice(cursor, upto) });
     }
-    if (match[1] !== undefined) {
-      events.push({ type: 'details-open' });
-    } else if (match[2] !== undefined) {
-      events.push({ type: 'summary', inner: match[3] ?? '' });
-    } else if (match[4] !== undefined) {
+  };
+
+  while (i < n) {
+    if (line[i] !== '<') {
+      i += 1;
+      continue;
+    }
+    const tail = line.slice(i);
+
+    // </details ...>
+    const closeMatch = tail.match(DETAILS_CLOSE_PREFIX_RE);
+    if (closeMatch) {
+      emitPendingText(i);
       events.push({ type: 'details-close' });
+      i += closeMatch[0].length;
+      cursor = i;
+      continue;
     }
-    cursor = start + match[0].length;
+
+    // <details ...> with quote-aware end scan
+    if (DETAILS_OPEN_PREFIX_RE.test(tail)) {
+      const tagEnd = findTagEnd(line, i + 1);
+      if (tagEnd === -1) break;
+      emitPendingText(i);
+      events.push({ type: 'details-open' });
+      i = tagEnd + 1;
+      cursor = i;
+      continue;
+    }
+
+    // <summary ...>INNER</summary> with quote-aware open-tag end scan
+    if (SUMMARY_OPEN_PREFIX_RE.test(tail)) {
+      const openEnd = findTagEnd(line, i + 1);
+      if (openEnd === -1) break;
+      const afterOpen = line.slice(openEnd + 1);
+      const closingMatch = afterOpen.match(SUMMARY_CLOSE_ANYWHERE_RE);
+      if (!closingMatch) {
+        // No close on this line — treat opening tag as a no-op and keep scanning.
+        emitPendingText(i);
+        i = openEnd + 1;
+        cursor = i;
+        continue;
+      }
+      emitPendingText(i);
+      const innerText = afterOpen.slice(0, closingMatch.index);
+      events.push({ type: 'summary', inner: innerText });
+      i = openEnd + 1 + (closingMatch.index ?? 0) + closingMatch[0].length;
+      cursor = i;
+      continue;
+    }
+
+    // Not a details/summary tag — keep scanning.
+    i += 1;
   }
-  if (cursor < line.length) {
+
+  if (cursor < n) {
     events.push({ type: 'text', value: line.slice(cursor) });
   }
   return events;

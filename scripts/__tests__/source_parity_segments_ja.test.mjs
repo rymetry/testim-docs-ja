@@ -726,6 +726,41 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
       ['a', 'b', 'c'],
     );
   });
+
+  it('details tokenizer respects ">" inside quoted attribute values', () => {
+    // Regression: the previous regex-based tokenizer used [^>]* for the
+    // details/summary opening tags, so an attribute value containing ">"
+    // split the tag mid-attribute and produced stray paragraph fragments
+    // like "0\">" or "1\">q". EN uses a quote-aware findTagEnd scanner and
+    // stayed correct — JA must match.
+    const md = [
+      '## S',
+      '',
+      '<details data-x="1>0"><summary data-y="2>1">Q</summary></details>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'q');
+    // No stray paragraph / callout-body segments from the broken split.
+    assert.equal(byKind(segments, 'paragraph').length, 0);
+    assert.equal(byKind(segments, 'callout-body').length, 0);
+  });
+
+  it('details tokenizer respects single-quoted attribute values with ">"', () => {
+    const md = [
+      "## S",
+      "",
+      "<details data-x='a>b'><summary>Quoted</summary></details>",
+      "",
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const summaries = byKind(segments, 'details-summary');
+    assert.equal(summaries.length, 1);
+    assert.equal(summaries[0].textNorm, 'quoted');
+    assert.equal(byKind(segments, 'paragraph').length, 0);
+  });
 });
 
 // ---------------------------------------------------------------------------
