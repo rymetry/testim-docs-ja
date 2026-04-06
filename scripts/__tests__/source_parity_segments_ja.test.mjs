@@ -933,6 +933,83 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     assert.equal(paragraphs.length, 1);
     assert.equal(paragraphs[0].textNorm, 'plain text here');
   });
+
+  it('loose <summary> with <img> emits image segment between text paragraphs', () => {
+    // Verified against EN: <summary>See <img src="x.png"/> now</summary>
+    // yields paragraph "see" + image "x.png" + paragraph "now".
+    const md = [
+      '## S',
+      '',
+      '<summary>See <img src="x.png"/> now</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
+    assert.deepEqual(
+      nonHeading.map((s) => s.segmentKind),
+      ['paragraph', 'image', 'paragraph'],
+    );
+    assert.equal(nonHeading[0].textNorm, 'see');
+    assert.equal(nonHeading[2].textNorm, 'now');
+  });
+
+  it('loose <summary> with <ul><li> keeps list-item kind', () => {
+    // Verified against EN: <summary>Intro<ul><li>Step</li></ul>Tail</summary>
+    // yields paragraph "intro" + unordered-list-item "step" + paragraph "tail".
+    const md = [
+      '## S',
+      '',
+      '<summary>Intro<ul><li>Step</li></ul>Tail</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
+    assert.deepEqual(
+      nonHeading.map((s) => s.segmentKind),
+      ['paragraph', 'unordered-list-item', 'paragraph'],
+    );
+    assert.deepEqual(
+      nonHeading.map((s) => s.textNorm),
+      ['intro', 'step', 'tail'],
+    );
+  });
+
+  it('loose <summary> quote-aware: <img alt="1>0" src="x.png"/>', () => {
+    // Regression: the previous extractTextNodes helper used a naive
+    // `<[^>]+>` split which broke on ">" inside quoted attribute values.
+    const md = [
+      '## S',
+      '',
+      '<summary>See <img alt="1>0" src="x.png"/> now</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
+    assert.deepEqual(
+      nonHeading.map((s) => s.segmentKind),
+      ['paragraph', 'image', 'paragraph'],
+    );
+    assert.equal(nonHeading[0].textNorm, 'see');
+    assert.equal(nonHeading[2].textNorm, 'now');
+  });
+
+  it('loose <summary> quote-aware: <a data-x="1>0" href="/docs/y">', () => {
+    // Verified against EN: <a> is treated as an unknown block and its
+    // child text becomes a paragraph, but the tokenizer must still
+    // respect quoted attribute values containing ">".
+    const md = [
+      '## S',
+      '',
+      '<summary>Text <a data-x="1>0" href="/docs/y">link</a> end</summary>',
+      '',
+    ].join('\n');
+    const segments = extractSegmentsFromMarkdown(md);
+    const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
+    assert.deepEqual(
+      nonHeading.map((s) => s.textNorm),
+      ['text', 'link', 'end'],
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------

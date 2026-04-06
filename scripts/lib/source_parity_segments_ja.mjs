@@ -10,6 +10,7 @@
  */
 
 import { createSegment, pushHeading, buildSectionPath } from './source_parity_segments_shared.mjs';
+import { extractSegmentsFromHtml } from './source_parity_segments_en.mjs';
 
 const FENCE_RE = /^(`{3,}|~{3,})/;
 const HEADING_RE = /^(#{1,6})\s+(.+?)\s*$/;
@@ -77,32 +78,6 @@ function findTagEnd(text, start) {
     if (ch === '>') return i;
   }
   return -1;
-}
-
-/**
- * Split an HTML fragment into the sequence of plain-text nodes between its
- * tags, trimming whitespace and dropping empty entries. Used to replicate
- * EN's walkBlockContainer behaviour for loose `<summary>` content, where
- * each text child of an unknown-block fallback is emitted as its own
- * paragraph segment.
- */
-function extractTextNodes(html) {
-  if (typeof html !== 'string') return [];
-  const nodes = [];
-  let cursor = 0;
-  for (const match of html.matchAll(/<[^>]+>/g)) {
-    const start = match.index ?? 0;
-    const chunk = decodeHtmlEntities(html.slice(cursor, start))
-      .replace(/\s+/g, ' ')
-      .trim();
-    if (chunk.length > 0) nodes.push(chunk);
-    cursor = start + match[0].length;
-  }
-  const tail = decodeHtmlEntities(html.slice(cursor))
-    .replace(/\s+/g, ' ')
-    .trim();
-  if (tail.length > 0) nodes.push(tail);
-  return nodes;
 }
 
 /**
@@ -365,24 +340,38 @@ export function extractSegmentsFromMarkdown(body) {
   let multilineSummaryBuf = [];
   let multilineSummaryStartLine = 0;
 
+  /**
+   * Emit the contents of a loose (outside `<details>`) summary fragment
+   * by delegating to the EN walker. EN's walkBlockContainer fallback
+   * handles element children (img, ul/ol, table, …) via the full
+   * classifier, so child elements keep their proper segment kinds and
+   * quoted attribute values with `>` are tokenized safely. The returned
+   * segments are re-emitted through the JA emitter so they inherit the
+   * current JA sectionPath and per-kind index counters.
+   */
+  const emitLooseSummaryInner = (innerHtml, startLineNo) => {
+    const enSegments = extractSegmentsFromHtml(innerHtml);
+    const pathAtLine = buildSectionPath(headingStack);
+    for (const seg of enSegments) {
+      // The EN walker embeds its own raw text via createSegment; re-emit
+      // through the JA emitter using textNorm as the raw text so the
+      // resulting segment fingerprint / token extraction is consistent
+      // with other JA-side paragraphs.
+      emitter.emit(pathAtLine, seg.segmentKind, seg.textNorm, startLineNo);
+    }
+  };
+
   const flushMultilineSummary = (closingLineNo) => {
     const joined = multilineSummaryBuf.join(' ');
-    const textNodes = extractTextNodes(joined);
-    const pathAtClose = buildSectionPath(headingStack);
+    const startLine = multilineSummaryStartLine || closingLineNo;
     if (detailsDepth > 0) {
       const summaryText = htmlInlineToMarkdownText(joined);
       if (summaryText.length > 0) {
-        emitter.emit(
-          pathAtClose,
-          'details-summary',
-          summaryText,
-          multilineSummaryStartLine || closingLineNo,
-        );
+        const pathAtClose = buildSectionPath(headingStack);
+        emitter.emit(pathAtClose, 'details-summary', summaryText, startLine);
       }
     } else {
-      for (const node of textNodes) {
-        emitter.emit(pathAtClose, 'paragraph', node, multilineSummaryStartLine || closingLineNo);
-      }
+      emitLooseSummaryInner(joined, startLine);
     }
     inMultilineSummary = false;
     multilineSummaryBuf = [];
@@ -509,13 +498,13 @@ export function extractSegmentsFromMarkdown(body) {
               emitter.emit(pathAtLine, 'details-summary', summaryText, lineNo);
             }
           } else {
-            // Loose <summary> outside any <details> — match EN's
-            // walkBlockContainer fallback, which recurses through unknown
-            // blocks and emits each text child as its own 'paragraph'.
-            const textNodes = extractTextNodes(ev.inner);
-            for (const node of textNodes) {
-              emitter.emit(pathAtLine, 'paragraph', node, lineNo);
-            }
+            // Loose <summary> outside any <details> — delegate the inner
+            // fragment to the EN walker so element children (img, ul, ol,
+            // table, …) keep their proper segment kinds, quoted attributes
+            // with ">" are handled correctly, and every text child becomes
+            // its own 'paragraph' segment. Re-emit through the JA emitter
+            // so the segments inherit the current JA sectionPath.
+            emitLooseSummaryInner(ev.inner, lineNo);
           }
           continue;
         }
