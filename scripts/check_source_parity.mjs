@@ -47,12 +47,18 @@ const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json'
 
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 
-function buildSegmentInconclusiveIssue(reason) {
+function buildSegmentInconclusiveIssue(reason, category) {
+  // category is the structured enum from alignSegments (`inconclusiveCategory`)
+  // — `heading-count-mismatch`, `align-exception`, or `tokenless-near-tie`.
+  // Required by parity-baseline.json so segment-inconclusive entries can be
+  // identified by category rather than the volatile free-text `reason`.
   return {
     type: 'segment-inconclusive',
     severity: ISSUE_SEVERITY['segment-inconclusive'],
     phase: 'segment-shadow',
-    detail: `Phase 5 alignment inconclusive: ${reason}`,
+    inconclusiveCategory: category ?? 'align-exception',
+    inconclusiveReason: reason,
+    detail: `Phase 5 alignment inconclusive [${category ?? 'align-exception'}]: ${reason}`,
   };
 }
 
@@ -246,6 +252,7 @@ export async function checkSourceParity({
         let segmentIssues = [];
         let alignmentInconclusive = false;
         let alignmentInconclusiveReason = null;
+        let alignmentInconclusiveCategory = null;
         try {
           const enSegments = extractSegmentsFromHtml(rawEnHtml);
           const jaSegments = extractSegmentsFromMarkdown(doc.body);
@@ -254,10 +261,12 @@ export async function checkSourceParity({
           if (alignment.inconclusive) {
             alignmentInconclusive = true;
             alignmentInconclusiveReason = alignment.inconclusiveReason;
+            alignmentInconclusiveCategory = alignment.inconclusiveCategory;
           }
         } catch (e) {
           alignmentInconclusive = true;
           alignmentInconclusiveReason = e.message;
+          alignmentInconclusiveCategory = 'align-exception';
           console.error(
             `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
           );
@@ -268,7 +277,12 @@ export async function checkSourceParity({
           // issue that the alignment itself was inconclusive, then run the
           // legacy coarse comparison so the page is never silently green-lit.
           issues.push(...segmentIssues);
-          issues.push(buildSegmentInconclusiveIssue(alignmentInconclusiveReason || 'unknown reason'));
+          issues.push(
+            buildSegmentInconclusiveIssue(
+              alignmentInconclusiveReason || 'unknown reason',
+              alignmentInconclusiveCategory,
+            ),
+          );
           issues.push(...compareSnapshotStructure(enBody, doc.body));
         } else {
           // Primary gate: segment-level diffs PLUS the coarse signals that

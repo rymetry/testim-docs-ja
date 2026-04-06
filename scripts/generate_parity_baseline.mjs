@@ -115,17 +115,21 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         entry.jaSegmentIndex = null;
         entry.inconclusiveCategory = issue.inconclusiveCategory ?? null;
         entry.inconclusiveReason = issue.inconclusiveReason ?? null;
-      } else if (issue.type === 'segment-extra') {
+      } else if (issue.type === 'segment-extra' || issue.type === 'segment-untranslated') {
+        // JA-owned diffs — use jaSegmentIndex as the anchor.
+        if (typeof issue.jaSegmentIndex !== 'number') continue; // skip unkeyable
         entry.sectionPath = issue.sectionPath ?? null;
         entry.segmentKind = issue.segmentKind ?? null;
         entry.enSegmentIndex = null;
-        entry.jaSegmentIndex = issue.jaSegmentIndex ?? null;
+        entry.jaSegmentIndex = issue.jaSegmentIndex;
         entry.inconclusiveCategory = null;
         entry.inconclusiveReason = null;
       } else {
+        // EN-owned diffs (segment-missing, segment-shifted, segment-token-gap).
+        if (typeof issue.enSegmentIndex !== 'number') continue; // skip unkeyable
         entry.sectionPath = issue.sectionPath ?? null;
         entry.segmentKind = issue.segmentKind ?? null;
-        entry.enSegmentIndex = issue.enSegmentIndex ?? null;
+        entry.enSegmentIndex = issue.enSegmentIndex;
         entry.jaSegmentIndex = null;
         entry.inconclusiveCategory = null;
         entry.inconclusiveReason = null;
@@ -162,7 +166,7 @@ function sortEntries(entries) {
       if (aCat !== bCat) return aCat < bCat ? -1 : 1;
       return 0;
     }
-    if (a.issueType === 'segment-extra') {
+    if (a.issueType === 'segment-extra' || a.issueType === 'segment-untranslated') {
       const aIdx = a.jaSegmentIndex ?? -1;
       const bIdx = b.jaSegmentIndex ?? -1;
       return aIdx - bIdx;

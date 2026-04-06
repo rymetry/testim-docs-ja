@@ -158,6 +158,30 @@ describe('validateBaseline', () => {
     );
   });
 
+  it('throws on segment-untranslated entry without jaSegmentIndex (JA-owned)', () => {
+    const entry = {
+      ...validMissingEntry,
+      issueType: 'segment-untranslated',
+      enSegmentIndex: null,
+      jaSegmentIndex: null,
+    };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /jaSegmentIndex/,
+    );
+  });
+
+  it('accepts a valid segment-untranslated entry with jaSegmentIndex only', () => {
+    const entry = {
+      ...validMissingEntry,
+      issueType: 'segment-untranslated',
+      enSegmentIndex: null,
+      jaSegmentIndex: 4,
+    };
+    const parsed = { schemaVersion: 1, entries: [entry] };
+    assert.doesNotThrow(() => validateBaseline(parsed));
+  });
+
   it('throws on segment-inconclusive entry with unknown inconclusiveCategory', () => {
     const entry = { ...validInconclusiveEntry, inconclusiveCategory: 'unknown' };
     assert.throws(
@@ -221,6 +245,33 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
     const entryKey = buildBaselineKeyFromEntry(validExtraEntry);
     assert.equal(issueKey, entryKey);
     assert.match(issueKey, /segment-extra/);
+    assert.ok(!issueKey.includes('|en|'));
+  });
+
+  it('uses jaSegmentIndex for segment-untranslated (JA-owned diff)', () => {
+    const issue = {
+      type: 'segment-untranslated',
+      sectionPath: 'Setup',
+      segmentKind: 'paragraph',
+      enSegmentIndex: null,
+      jaSegmentIndex: 4,
+    };
+    const entry = {
+      slug: 'overview/example',
+      issueType: 'segment-untranslated',
+      sectionPath: 'Setup',
+      segmentKind: 'paragraph',
+      enSegmentIndex: null,
+      jaSegmentIndex: 4,
+      snapshotFingerprint: VALID_FINGERPRINT,
+      inconclusiveCategory: null,
+      inconclusiveReason: null,
+      reviewAfter: '2026-10-06',
+    };
+    const issueKey = buildBaselineKey('overview/example', issue);
+    const entryKey = buildBaselineKeyFromEntry(entry);
+    assert.equal(issueKey, entryKey);
+    assert.ok(issueKey.includes('|ja|'));
     assert.ok(!issueKey.includes('|en|'));
   });
 

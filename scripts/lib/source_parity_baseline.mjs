@@ -104,7 +104,11 @@ export function validateBaseline(parsed) {
       );
     }
 
-    // issueType-specific required fields
+    // issueType-specific required fields. Ownership of the diff determines
+    // which side's index keys the baseline:
+    //   - EN-owned: segment-missing, segment-shifted, segment-token-gap → enSegmentIndex
+    //   - JA-owned: segment-extra, segment-untranslated → jaSegmentIndex
+    //   - page-level: segment-inconclusive → inconclusiveCategory
     if (entry.issueType === 'segment-inconclusive') {
       if (
         typeof entry.inconclusiveCategory !== 'string' ||
@@ -115,15 +119,17 @@ export function validateBaseline(parsed) {
             `${[...INCONCLUSIVE_CATEGORIES].join(', ')}`,
         );
       }
-    } else if (entry.issueType === 'segment-extra') {
+    } else if (entry.issueType === 'segment-extra' || entry.issueType === 'segment-untranslated') {
       if (typeof entry.jaSegmentIndex !== 'number') {
-        throw new Error(`${prefix}: segment-extra entry must have numeric jaSegmentIndex`);
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have numeric jaSegmentIndex (JA-owned diff)`,
+        );
       }
     } else {
-      // segment-missing / segment-shifted / segment-untranslated / segment-token-gap
+      // segment-missing / segment-shifted / segment-token-gap
       if (typeof entry.enSegmentIndex !== 'number') {
         throw new Error(
-          `${prefix}: ${entry.issueType} entry must have numeric enSegmentIndex`,
+          `${prefix}: ${entry.issueType} entry must have numeric enSegmentIndex (EN-owned diff)`,
         );
       }
     }
@@ -145,12 +151,21 @@ export function loadBaselineFile(filePath) {
 }
 
 /**
+ * issueType の "ownership"。EN 側がオーナーなら enSegmentIndex を baseline
+ * 同定に使う。JA 側がオーナーなら jaSegmentIndex を使う。recall test の
+ * `diffId()` (source_parity_recall.test.mjs) と整合している。
+ */
+const JA_OWNED_TYPES = new Set(['segment-extra', 'segment-untranslated']);
+
+/**
  * Build a stable lookup key from an issue object.
  *
  * Key rules (locked-in for Phase 6A):
- *   - segment-extra: `slug + issueType + sectionPath + segmentKind + jaSegmentIndex`
+ *   - JA-owned (segment-extra, segment-untranslated):
+ *       `slug + issueType + sectionPath + segmentKind + jaSegmentIndex`
+ *   - EN-owned (segment-missing, segment-shifted, segment-token-gap):
+ *       `slug + issueType + sectionPath + segmentKind + enSegmentIndex`
  *   - segment-inconclusive: `slug + issueType + inconclusiveCategory`
- *   - other segment-*: `slug + issueType + sectionPath + segmentKind + enSegmentIndex`
  *
  * The free-text `inconclusiveReason` is intentionally NOT used as part of
  * the key — it changes with wording tweaks and would silently break the
@@ -164,7 +179,7 @@ export function buildBaselineKey(slug, issue) {
   if (issue.type === 'segment-inconclusive') {
     return `${slug}|${issue.type}|category=${issue.inconclusiveCategory ?? '_null_'}`;
   }
-  if (issue.type === 'segment-extra') {
+  if (JA_OWNED_TYPES.has(issue.type)) {
     return (
       `${slug}|${issue.type}|${issue.sectionPath ?? ''}|${issue.segmentKind ?? ''}|ja|` +
       `${issue.jaSegmentIndex ?? '_null_'}`
@@ -187,7 +202,7 @@ export function buildBaselineKeyFromEntry(entry) {
   if (entry.issueType === 'segment-inconclusive') {
     return `${entry.slug}|${entry.issueType}|category=${entry.inconclusiveCategory ?? '_null_'}`;
   }
-  if (entry.issueType === 'segment-extra') {
+  if (JA_OWNED_TYPES.has(entry.issueType)) {
     return (
       `${entry.slug}|${entry.issueType}|${entry.sectionPath ?? ''}|${entry.segmentKind ?? ''}|ja|` +
       `${entry.jaSegmentIndex ?? '_null_'}`
