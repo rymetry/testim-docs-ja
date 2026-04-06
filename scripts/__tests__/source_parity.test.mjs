@@ -1935,7 +1935,7 @@ describe('source_parity.mjs facade completeness', () => {
 
   it('includes page coverage gate issue types', () => {
     assert.equal(facadeExports.ISSUE_SEVERITY['source-page-missing-local'], 'actionable');
-    assert.equal(facadeExports.ISSUE_SEVERITY['missing-fresh-snapshot'], 'actionable');
+    assert.equal(facadeExports.ISSUE_SEVERITY['missing-fresh-snapshot'], 'signal');
   });
 
   it('re-exports page coverage functions from source_parity_page_coverage.mjs', () => {

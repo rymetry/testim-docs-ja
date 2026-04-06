@@ -47,8 +47,8 @@ function loadSidebarSlugsWithSnapshot(sidebarText) {
       const snapshot = JSON.parse(fs.readFileSync(SIDEBAR_SNAPSHOT_PATH, 'utf8'));
       const slugs = extractSlugsFromSnapshot(snapshot);
       if (slugs.size > 0) return slugs;
-    } catch {
-      // Fall through to text-based extraction
+    } catch (e) {
+      console.warn(`Warning: Failed to parse sidebar snapshot, falling back to SIDEBAR_URLS.md: ${e.message}`);
     }
   }
   return loadSidebarSlugs(sidebarText);
@@ -308,12 +308,14 @@ export async function checkSourceParity({
       freshnessState,
     });
 
-    if (coverageIssues.length > 0) {
+    const filteredCoverageIssues = applyAllowlist('_page-coverage-gate', coverageIssues, allowlist);
+
+    if (filteredCoverageIssues.length > 0) {
       results.push({
         file: '_page-coverage-gate',
         sourceUrl: '',
         category: '',
-        issues: coverageIssues,
+        issues: filteredCoverageIssues,
       });
     }
   }
