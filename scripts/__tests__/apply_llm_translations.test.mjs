@@ -6,6 +6,17 @@ import path from 'node:path';
 
 let resolveTranslationSlug, validateTranslation, writeFileAtomic, processOneTranslation;
 
+async function captureWarnings(run) {
+  const warnings = [];
+  const originalWarn = console.warn;
+  console.warn = (...args) => warnings.push(args.join(' '));
+  try {
+    return { result: await run(), warnings };
+  } finally {
+    console.warn = originalWarn;
+  }
+}
+
 before(async () => {
   ({ resolveTranslationSlug, validateTranslation, writeFileAtomic, processOneTranslation } =
     await import('../apply_llm_translations.mjs'));
@@ -44,12 +55,30 @@ describe('resolveTranslationSlug', () => {
 
   it('resolves flat file via basename lookup from index', () => {
     const index = makeIndex(['results/page']);
-    assert.equal(resolveTranslationSlug('page.md', index), 'results/page');
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      assert.equal(resolveTranslationSlug('page.md', index), 'results/page');
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Deprecated: basename "page"/);
+    } finally {
+      console.warn = origWarn;
+    }
   });
 
   it('returns null for ambiguous flat basename', () => {
     const index = makeIndex(['results/page', 'overview/page']);
-    assert.equal(resolveTranslationSlug('page.md', index), null);
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      assert.equal(resolveTranslationSlug('page.md', index), null);
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Ambiguous basename "page"/);
+    } finally {
+      console.warn = origWarn;
+    }
   });
 
   it('returns null for non-existent flat basename', () => {
@@ -190,51 +219,67 @@ describe('processOneTranslation', () => {
     }
   });
 
-  it('skips when source doc has no frontmatter', () => {
+  it('skips when source doc has no frontmatter', async () => {
     const { transPath, hit, docPath, cleanup } = setup({ fm: '' });
     const original = fs.readFileSync(docPath, 'utf8');
     try {
-      const result = processOneTranslation({ slug: 'test/page', transPath, hit });
+      const { result, warnings } = await captureWarnings(() =>
+        processOneTranslation({ slug: 'test/page', transPath, hit })
+      );
       assert.equal(result, 'skipped');
       assert.equal(fs.readFileSync(hit.filePath, 'utf8'), original);
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Skipped test\/page: missing frontmatter/);
     } finally {
       cleanup();
     }
   });
 
-  it('skips when translation file is empty', () => {
+  it('skips when translation file is empty', async () => {
     const { transPath, hit, docPath, cleanup } = setup({ translated: '' });
     const original = fs.readFileSync(docPath, 'utf8');
     try {
-      const result = processOneTranslation({ slug: 'test/page', transPath, hit });
+      const { result, warnings } = await captureWarnings(() =>
+        processOneTranslation({ slug: 'test/page', transPath, hit })
+      );
       assert.equal(result, 'skipped');
       assert.equal(fs.readFileSync(hit.filePath, 'utf8'), original);
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Skipped test\/page: empty translation file/);
     } finally {
       cleanup();
     }
   });
 
-  it('skips when translation contains prompt header', () => {
+  it('skips when translation contains prompt header', async () => {
     const prompt = '# 翻訳タスク (test/page)\n\n下記のMarkdown本文を日本語に翻訳してください。\n\n--- 原文本文ここから ---\n\n# Original';
     const { transPath, hit, docPath, cleanup } = setup({ translated: prompt });
     const original = fs.readFileSync(docPath, 'utf8');
     try {
-      const result = processOneTranslation({ slug: 'test/page', transPath, hit });
+      const { result, warnings } = await captureWarnings(() =>
+        processOneTranslation({ slug: 'test/page', transPath, hit })
+      );
       assert.equal(result, 'skipped');
       assert.equal(fs.readFileSync(hit.filePath, 'utf8'), original);
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Skipped test\/page: untranslated prompt file/);
     } finally {
       cleanup();
     }
   });
 
-  it('skips when translation contains frontmatter block', () => {
+  it('skips when translation contains frontmatter block', async () => {
     const doubled = '---\ntitle: Oops\n---\n# Content';
     const { transPath, hit, docPath, cleanup } = setup({ translated: doubled });
     const original = fs.readFileSync(docPath, 'utf8');
     try {
-      const result = processOneTranslation({ slug: 'test/page', transPath, hit });
+      const { result, warnings } = await captureWarnings(() =>
+        processOneTranslation({ slug: 'test/page', transPath, hit })
+      );
       assert.equal(result, 'skipped');
       assert.equal(fs.readFileSync(hit.filePath, 'utf8'), original);
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Skipped test\/page: translated body contains frontmatter block/);
     } finally {
       cleanup();
     }

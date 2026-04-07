@@ -10,6 +10,24 @@ import assert from 'node:assert/strict';
 
 // --- dynamic import to avoid main() side effects (guard required in impl) ---
 let normalizeUrl, parseExistingStatusMap, buildOutput, extractUrls, fetchSitemap, main;
+
+function createTestLogger() {
+  return {
+    logs: [],
+    warnings: [],
+    errors: [],
+    log(...args) {
+      this.logs.push(args.join(' '));
+    },
+    warn(...args) {
+      this.warnings.push(args.join(' '));
+    },
+    error(...args) {
+      this.errors.push(args.join(' '));
+    },
+  };
+}
+
 before(async () => {
   ({ normalizeUrl, parseExistingStatusMap, buildOutput, extractUrls, fetchSitemap, main } =
     await import('../update_sidebar_urls_from_live.mjs'));
@@ -171,14 +189,20 @@ describe('fetchSitemap', () => {
 
   it('returns empty array when fetch fails', async () => {
     const fakeFetch = async () => { throw new Error('network error'); };
-    const urls = await fetchSitemap(fakeFetch);
+    const logger = createTestLogger();
+    const urls = await fetchSitemap(fakeFetch, { logger });
     assert.deepEqual(urls, []);
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /fetchSitemap: failed/);
   });
 
   it('returns empty array when HTTP response is not ok', async () => {
     const fakeFetch = async () => ({ ok: false, status: 404 });
-    const urls = await fetchSitemap(fakeFetch);
+    const logger = createTestLogger();
+    const urls = await fetchSitemap(fakeFetch, { logger });
     assert.deepEqual(urls, []);
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /fetchSitemap: HTTP 404/);
   });
 
   it('ignores non-content URLs in sitemap', async () => {
@@ -200,22 +224,22 @@ describe('CLI exit behavior', () => {
       text: async () => '<urlset></urlset>',
     });
 
+    const logger = createTestLogger();
     let exitCode;
-    const origExit = process.exit;
-    process.exit = (code) => {
+    const fakeExit = (code) => {
       exitCode = code;
       throw new Error('process.exit called');
     };
     try {
-      await main(mockFetch);
+      await main(mockFetch, { logger, exit: fakeExit });
       assert.fail('Expected process.exit to be called');
     } catch (e) {
       if (!e.message.includes('process.exit')) throw e;
-    } finally {
-      process.exit = origExit;
     }
 
     assert.equal(exitCode, 1, 'Must exit with code 1 when 0 URLs are collected');
+    assert.equal(logger.errors.length, 1);
+    assert.match(logger.errors[0], /Fatal: 0 URLs collected/);
   });
 });
 
@@ -239,10 +263,11 @@ describe('main() with TOC data', () => {
     const fs = await import('node:fs');
     const origWriteFileSync = fs.default.writeFileSync;
     const origMkdirSync = fs.default.mkdirSync;
+    const logger = createTestLogger();
     fs.default.mkdirSync = () => {};
     fs.default.writeFileSync = (_p, content) => { writtenContent = content; };
     try {
-      await main(mockFetch);
+      await main(mockFetch, { logger });
     } finally {
       fs.default.writeFileSync = origWriteFileSync;
       fs.default.mkdirSync = origMkdirSync;
@@ -250,6 +275,7 @@ describe('main() with TOC data', () => {
 
     assert.ok(writtenContent.includes('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'), 'page URL must be in output');
     assert.ok(writtenContent.includes('## Overview'), 'section heading must be in output');
+    assert.ok(logger.logs.some((line) => line.includes('Updated ')));
   });
 
   it('falls back to sitemap when TOC fetch fails and no existing file', async () => {
@@ -268,6 +294,7 @@ describe('main() with TOC data', () => {
     const origWriteFileSync = fs.default.writeFileSync;
     const origMkdirSync = fs.default.mkdirSync;
     const origExistsSync = fs.default.existsSync;
+    const logger = createTestLogger();
     fs.default.mkdirSync = () => {};
     fs.default.writeFileSync = (_p, content) => { writtenContent = content; };
     // Simulate no existing SIDEBAR_URLS.md so sitemap fallback is allowed
@@ -276,7 +303,7 @@ describe('main() with TOC data', () => {
       return origExistsSync(p);
     };
     try {
-      await main(mockFetch);
+      await main(mockFetch, { logger });
     } finally {
       fs.default.writeFileSync = origWriteFileSync;
       fs.default.mkdirSync = origMkdirSync;
@@ -284,5 +311,7 @@ describe('main() with TOC data', () => {
     }
 
     assert.ok(writtenContent.includes('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'), 'sitemap URL must be in output');
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /TOC fetch failed/);
   });
 });

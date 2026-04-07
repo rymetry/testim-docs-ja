@@ -2,6 +2,7 @@ import type { NavItem } from '../types/navigation';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import fs from 'node:fs';
+import path from 'node:path';
 
 export type DocEntry = CollectionEntry<'docs'>;
 
@@ -57,9 +58,21 @@ function extractSlugFromUrl(url: string): string | null {
 }
 
 function getSidebarOrdering(): SidebarOrdering {
+  const candidatePaths = [
+    path.join(process.cwd(), 'docs', 'SIDEBAR_URLS.md'),
+    new URL('../../docs/SIDEBAR_URLS.md', import.meta.url),
+  ];
+
   try {
-    const sidebarUrl = new URL('../../docs/SIDEBAR_URLS.md', import.meta.url);
-    const text = fs.readFileSync(sidebarUrl, 'utf8');
+    const sidebarPath = candidatePaths.find((candidate) => fs.existsSync(candidate));
+    if (!sidebarPath) {
+      return {
+        categoryIndexByLabel: new Map(FALLBACK_CATEGORY_ORDER.map((c, i) => [c, i])),
+        itemIndexBySlug: new Map(),
+      };
+    }
+
+    const text = fs.readFileSync(sidebarPath, 'utf8');
     const lines = text.split(/\r?\n/);
 
     const sectionRe = /^##\s+(.+?)\s*$/;

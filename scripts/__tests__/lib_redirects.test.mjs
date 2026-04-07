@@ -35,6 +35,27 @@ describe('buildRedirectMap', () => {
     fs.rmSync(dir, { recursive: true });
   });
 
+  it('can warn on ambiguous basenames when enabled', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'redirects-'));
+    fs.mkdirSync(path.join(dir, 'folder-a'));
+    fs.mkdirSync(path.join(dir, 'folder-b'));
+    fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), '---\ntitle: A\n---\n');
+    fs.writeFileSync(path.join(dir, 'folder-b', 'page.md'), '---\ntitle: B\n---\n');
+
+    const warnings = [];
+    const originalWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      buildRedirectMap(dir, { warnOnAmbiguous: true });
+    } finally {
+      console.warn = originalWarn;
+      fs.rmSync(dir, { recursive: true });
+    }
+
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /Skipping ambiguous basename "page"/);
+  });
+
   it('returns empty object for empty directory', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'redirects-'));
     const map = buildRedirectMap(dir);

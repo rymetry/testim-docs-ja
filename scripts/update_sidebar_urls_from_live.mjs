@@ -144,12 +144,13 @@ export function buildOutput({ sections, statusByUrl, existingHeader }) {
 /**
  * Fetch sitemap as a fallback URL source when TOC data is unavailable.
  */
-export async function fetchSitemap(fetchFn = fetch) {
+export async function fetchSitemap(fetchFn = fetch, options = {}) {
+  const { logger = console } = options;
   const SITEMAP_URL = 'https://docs.tricentis.com/testim/sitemap.xml';
   try {
     const res = await fetchFn(SITEMAP_URL);
     if (!res.ok) {
-      console.warn(`fetchSitemap: HTTP ${res.status} from ${SITEMAP_URL}`);
+      logger.warn(`fetchSitemap: HTTP ${res.status} from ${SITEMAP_URL}`);
       return [];
     }
     const xml = await res.text();
@@ -161,7 +162,7 @@ export async function fetchSitemap(fetchFn = fetch) {
     }
     return urls;
   } catch (e) {
-    console.warn(`fetchSitemap: failed (${e?.message}).`);
+    logger.warn(`fetchSitemap: failed (${e?.message}).`);
     return [];
   }
 }
@@ -176,7 +177,11 @@ function tocSectionsToOutputSections(tocSections) {
   }));
 }
 
-export async function main(fetchFn = fetch) {
+export async function main(fetchFn = fetch, options = {}) {
+  const {
+    logger = console,
+    exit = (code) => process.exit(code),
+  } = options;
   const existing = fs.existsSync(SIDEBAR_URLS_PATH)
     ? fs.readFileSync(SIDEBAR_URLS_PATH, 'utf8')
     : '';
@@ -191,18 +196,18 @@ export async function main(fetchFn = fetch) {
       sections = tocSectionsToOutputSections(tocSections);
     }
   } catch (e) {
-    console.warn(`TOC fetch failed (${e?.message}). Trying sitemap fallback.`);
+    logger.warn(`TOC fetch failed (${e?.message}). Trying sitemap fallback.`);
   }
 
   // Fallback: use sitemap for a flat URL list
   if (sections.length === 0) {
-    const sitemapUrls = await fetchSitemap(fetchFn);
+    const sitemapUrls = await fetchSitemap(fetchFn, { logger });
     if (sitemapUrls.length > 0) {
       if (fs.existsSync(SIDEBAR_URLS_PATH)) {
-        console.warn(
+        logger.warn(
           'WARNING: TOC fetch failed. Sitemap fallback would replace section structure with flat "All" list.'
         );
-        console.warn('Preserving existing SIDEBAR_URLS.md to prevent data loss.');
+        logger.warn('Preserving existing SIDEBAR_URLS.md to prevent data loss.');
         return;
       }
       sections = [{ title: 'All', urls: sitemapUrls }];
@@ -211,17 +216,18 @@ export async function main(fetchFn = fetch) {
 
   const totalUrls = new Set(sections.flatMap((s) => s.urls)).size;
   if (totalUrls === 0) {
-    console.error('Fatal: 0 URLs collected. Aborting.');
-    process.exit(1);
+    logger.error('Fatal: 0 URLs collected. Aborting.');
+    exit(1);
+    return;
   }
 
   const out = buildOutput({ sections, statusByUrl, existingHeader: existing });
   fs.mkdirSync(path.dirname(SIDEBAR_URLS_PATH), { recursive: true });
   fs.writeFileSync(SIDEBAR_URLS_PATH, out, 'utf8');
 
-  console.log(`Updated ${SIDEBAR_URLS_PATH}`);
-  console.log(`Sections: ${sections.length}`);
-  console.log(`Total unique URLs: ${totalUrls}`);
+  logger.log(`Updated ${SIDEBAR_URLS_PATH}`);
+  logger.log(`Sections: ${sections.length}`);
+  logger.log(`Total unique URLs: ${totalUrls}`);
 }
 
 if (isDirectRun(import.meta.url)) {

@@ -13,6 +13,24 @@ import path from 'node:path';
 
 let rewriteDocLinks, getUntranslatedList, getAllPagesList, getDiffPagesList, parseMode;
 let ROOT;
+
+function createTestLogger() {
+  return {
+    logs: [],
+    warnings: [],
+    errors: [],
+    log(...args) {
+      this.logs.push(args.join(' '));
+    },
+    warn(...args) {
+      this.warnings.push(args.join(' '));
+    },
+    error(...args) {
+      this.errors.push(args.join(' '));
+    },
+  };
+}
+
 before(async () => {
   ({
     rewriteDocLinks,
@@ -294,20 +312,23 @@ describe('getDiffPagesList', () => {
     const hashesPath = path.join(tmpDir, 'page-hashes.json');
     fs.writeFileSync(
       hashesPath,
-      JSON.stringify({ 'testim-overview': 'old-hash-value' }),
+      JSON.stringify({ 'zzz-diff-warning-page': 'old-hash-value' }),
       'utf8'
     );
 
     const sidebarText = [
       '## Overview（概要）',
       '',
-      '- ✅ https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+      '- ✅ https://docs.tricentis.com/testim/content/overview/zzz-diff-warning-page.htm',
       '',
     ].join('\n');
 
-    const list = await getDiffPagesList(sidebarText, hashesPath);
+    const logger = createTestLogger();
+    const list = await getDiffPagesList(sidebarText, hashesPath, { logger });
     assert.equal(list.length, 1);
-    assert.equal(list[0].slug, 'overview/testim-overview');
+    assert.equal(list[0].slug, 'overview/zzz-diff-warning-page');
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /no snapshot for overview\/zzz-diff-warning-page/);
   });
 
   it('excludes page when hash is unchanged', async () => {
@@ -352,8 +373,10 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const list = await getDiffPagesList(sidebarText, hashesPath);
+    const logger = createTestLogger();
+    const list = await getDiffPagesList(sidebarText, hashesPath, { logger });
     assert.equal(list.length, 2);
+    assert.equal(logger.warnings.length, 2);
   });
 
   it('treats missing HTML snapshot as changed', async () => {
@@ -366,9 +389,12 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const list = await getDiffPagesList(sidebarText, hashesPath);
+    const logger = createTestLogger();
+    const list = await getDiffPagesList(sidebarText, hashesPath, { logger });
     assert.equal(list.length, 1, 'Missing HTML snapshot should be treated as changed');
     assert.equal(list[0].slug, 'overview/zzz-nonexistent-test-page');
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /no snapshot for overview\/zzz-nonexistent-test-page/);
   });
 
   it('reads from HTML snapshot without network fetch', async () => {

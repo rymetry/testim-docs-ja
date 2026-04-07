@@ -17,9 +17,11 @@ const DEFAULT_DOCS_DIR = path.resolve(__dirname, '..', '..', 'src', 'content', '
  * is delegated to the hosting platform (Vercel normalizes automatically).
  *
  * @param {string} [docsDir]
+ * @param {{ warnOnAmbiguous?: boolean }} [options]
  * @returns {Record<string, string>}
  */
-export function buildRedirectMap(docsDir = DEFAULT_DOCS_DIR) {
+export function buildRedirectMap(docsDir = DEFAULT_DOCS_DIR, options = {}) {
+  const { warnOnAmbiguous = false } = options;
   /** @type {Map<string, string[]>} basename → [pathSlug, ...] */
   const byBasename = new Map();
 
@@ -47,7 +49,7 @@ export function buildRedirectMap(docsDir = DEFAULT_DOCS_DIR) {
   for (const [basename, pathSlugs] of byBasename) {
     // Skip ambiguous basenames (multiple paths)
     if (pathSlugs.length !== 1) {
-      if (pathSlugs.length > 1) {
+      if (warnOnAmbiguous && pathSlugs.length > 1) {
         console.warn(
           `[redirects] Skipping ambiguous basename "${basename}" — found in: ${pathSlugs.join(', ')}. Add explicit redirect if needed.`
         );
