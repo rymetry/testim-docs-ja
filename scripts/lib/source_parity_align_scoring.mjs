@@ -1,31 +1,29 @@
 /**
- * Shared content-aware pair scoring for the alignment + structure
- * comparators (Issue #247 PR2).
+ * alignment / structure comparator が共有するペアスコアリング
+ * (Issue #247 PR2)。
  *
- * `scoreSegmentMatch` is the pair-level equality oracle used by:
- *   - `source_parity_align.mjs` — weighted LCS inside each section body
- *   - `source_parity_structure.mjs` — content-order bijection for Stage C
+ * `scoreSegmentMatch` は以下の 2 者が共通で使うペア単位の等価性オラクル:
+ *   - `source_parity_align.mjs` — section body 内の weighted LCS
+ *   - `source_parity_structure.mjs` — Stage C の content-order bijection
  *
- * Extracted into its own module so both comparators share a single
- * scoring hierarchy (fingerprint > textNorm > token overlap > weak
- * position/length > kind floor) without a circular dependency between
- * align.mjs and structure.mjs.
+ * このファイルに切り出した目的は、両 comparator が **同一の** スコア階層
+ * (fingerprint > textNorm > token overlap > weak position/length > kind floor)
+ * を見られるようにするため。align.mjs ↔ structure.mjs の循環 import を避ける
+ * 抽出リファクタであり、挙動変更はゼロ。
  *
- * Pure functions only. No mutation, no I/O.
+ * 純粋関数のみ。mutation / I/O は一切しない。
  *
  * @module source_parity_align_scoring
  */
 
-// CJK-ish ranges that signal "JA side has been translated".
-// Hiragana, katakana, CJK unified ideographs, half/full-width, and
-// CJK compatibility — broad enough that a properly-translated JA
-// paragraph is never mistaken for English residue.
+// JA 側が翻訳済みかどうかを判定する CJK 系レンジ。
+// ひらがな・カタカナ・CJK 統合漢字・半角/全角・CJK 互換をまとめて見る。
+// ちゃんと翻訳された JA 段落が「英文残留」に誤判定されない幅を確保している。
 export const CJK_RE =
   /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF]/;
 
-// Score weights — must satisfy STRONG > MEDIUM > WEAK so the weighted
-// LCS always prefers a strong anchor over weaker fallbacks. The exact
-// magnitudes only matter relative to each other.
+// スコアの重み。weighted LCS が常に強いアンカーを優先するよう、
+// STRONG > MEDIUM > WEAK の関係を保つこと。絶対値ではなく相対関係のみが重要。
 export const SCORE_FINGERPRINT_MATCH = 1000;
 export const SCORE_TEXTNORM_MATCH = 500;
 export const SCORE_TOKEN_OVERLAP_BASE = 100;
@@ -35,11 +33,10 @@ export const SCORE_WEAK_LENGTH_MAX = 5;
 export const SCORE_KIND_FLOOR = 1;
 
 /**
- * Score how close two segment positions are within their respective
- * section bodies. Returns 0 when fully misaligned (one at the start, the
- * other at the end) and `SCORE_WEAK_POSITION_MAX` when normalized
- * positions match exactly. Sections of length ≤ 1 fall back to a flat
- * mid-range score because there is no positional information to use.
+ * 2 つの segment が各 section body 内のどれくらい近い相対位置にいるかを
+ * スコア化する。完全にズレている (片方は先頭 / もう片方は末尾) なら 0、
+ * 正規化位置が一致していれば `SCORE_WEAK_POSITION_MAX`。長さ ≤ 1 の
+ * section は位置情報が取れないので中間値にフォールバックする。
  */
 export function computeWeakPositionScore(i, j, n, m) {
   if (n <= 1 || m <= 1) return Math.floor(SCORE_WEAK_POSITION_MAX / 2);
@@ -50,10 +47,9 @@ export function computeWeakPositionScore(i, j, n, m) {
 }
 
 /**
- * Score how similar the textual lengths of two segments are. JA tends to
- * be more concise than EN, so this is a soft hint rather than a strong
- * predictor. Returns 0 when both sides are empty (avoids divide-by-zero)
- * or when the ratio collapses to nothing.
+ * 2 つの segment のテキスト長がどれくらい近いかをスコア化する。JA は EN
+ * より短くなりがちなので、強い予測力は無い弱いヒント扱い。両側空なら 0 を
+ * 返す (ゼロ割り回避)。
  */
 export function computeWeakLengthScore(enText, jaText) {
   if (!enText || !jaText) return 0;
@@ -64,30 +60,26 @@ export function computeWeakLengthScore(enText, jaText) {
 }
 
 /**
- * Compute a numeric match score for a candidate segment pair under the
- * weighted-LCS / content-bijection aligners. The hierarchy is:
+ * 候補となる segment ペアに対して数値マッチスコアを計算する。weighted LCS
+ * と Stage C content-order bijection の両方がこれを呼ぶ。階層は:
  *
- *   1. `sourceFingerprint` equality (1000) — identical raw text. Rare
- *      cross-language but common for invariant-heavy lines and synthetic
- *      test fixtures.
- *   2. `textNorm` equality (500) — identical normalized prose.
- *   3. Invariant token overlap (100 + 10/token). Both sides must carry
- *      tokens. Disjoint token sets short-circuit to 0 — that is strong
- *      negative evidence and the pair must NOT be matched.
- *   4. Same-language penalty (0) — both sides ASCII-only with different
- *      `textNorm`. Almost certainly not the same content.
- *   5. Tokenless cross-language (1–15) — best-effort weak score from
- *      normalized position similarity AND length similarity. This is
- *      what fixes the kind-only LCS regression where a middle deletion
- *      collapsed onto enIndex=0: position-aware scoring naturally aligns
- *      EN[i] to JA[i] when the section has no other anchors.
- *   6. Floor of 1 (kind match with neither textual signals nor a useful
- *      position) — keeps the pair eligible but at the lowest possible
- *      weight so any other match wins ties.
+ *   1. `sourceFingerprint` 完全一致 (1000) — raw text が同一。cross-language
+ *      では稀だが、invariant が多い行や synthetic fixture でよく当たる。
+ *   2. `textNorm` 完全一致 (500) — 正規化済み散文が同一。
+ *   3. Invariant token overlap (100 + 10/token)。両側が token を持っている
+ *      必要がある。token 集合が disjoint の場合は 0 を返す — これは強い
+ *      否定エビデンスなので、絶対にマッチさせない契約。
+ *   4. 同一言語ペナルティ (0) — 両側 ASCII のみで `textNorm` が違う。
+ *      ほぼ間違いなく別コンテンツなので 0。
+ *   5. Tokenless cross-language (1–15) — 正規化位置の近さと長さ比から作る
+ *      ベストエフォートの弱スコア。これが「kind-only LCS で中央の削除が
+ *      enIndex=0 に潰れる」regression を治した位置認識スコア。
+ *   6. 床 (1) — kind は一致するが texual signal も位置情報も無いペア。
+ *      マッチは可能だが最弱なので、他のマッチが必ず tie を割る。
  *
- * Returns 0 when segments must NOT be matched (different kinds, disjoint
- * tokens, ASCII-only with different text). The weighted LCS and the
- * structure comparator both treat 0 as a hard non-match.
+ * segment を絶対にマッチさせてはならないケース (kind 違い / token 集合
+ * disjoint / ASCII のみで別テキスト) では 0 を返す。weighted LCS も
+ * structure comparator も 0 を「ハード非マッチ」として扱う。
  *
  * @param {import('./source_parity_segments_shared.mjs').Segment} en
  * @param {import('./source_parity_segments_shared.mjs').Segment} ja
@@ -122,15 +114,15 @@ export function scoreSegmentMatch(
     if (overlap > 0) {
       return SCORE_TOKEN_OVERLAP_BASE + overlap * SCORE_TOKEN_OVERLAP_PER_TOKEN;
     }
-    return 0; // disjoint tokens — strong non-match
+    return 0; // token 集合 disjoint — 強い非マッチ
   }
 
-  // Same-language penalty: both sides ASCII-only with different text.
+  // 同一言語ペナルティ: 両側 ASCII のみで textNorm が違う場合。
   if (en.textNorm && ja.textNorm && !CJK_RE.test(en.textNorm) && !CJK_RE.test(ja.textNorm)) {
     return 0;
   }
 
-  // Tokenless cross-language: weak position + length similarity score.
+  // Tokenless cross-language: 位置と長さから作る弱スコア。
   const positionScore = computeWeakPositionScore(
     enLocalIndex,
     jaLocalIndex,

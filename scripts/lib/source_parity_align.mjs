@@ -71,7 +71,8 @@ import { GATE_ELIGIBLE_KINDS } from './source_parity_segments_shared.mjs';
 import {
   CJK_RE,
   scoreSegmentMatch,
-  // re-exported below for tests that still import from align.mjs
+  // 下で __scoreSegmentMatch として re-export している — align.mjs 経由で
+  // import している既存テストを壊さないための後方互換。
 } from './source_parity_align_scoring.mjs';
 import { compareSectionStructure } from './source_parity_structure.mjs';
 
@@ -233,11 +234,11 @@ function weightedLcs(a, b, score) {
 // ---------------------------------------------------------------------------
 // Content-aware match predicate
 // ---------------------------------------------------------------------------
-// `scoreSegmentMatch` and its scoring weight constants moved to
-// `source_parity_align_scoring.mjs` in Issue #247 PR2 so the structure
-// comparator can share the exact same scoring hierarchy without creating
-// a circular dependency back into align.mjs. See that module for the
-// full score table and rationale.
+// `scoreSegmentMatch` とスコア重み定数は Issue #247 PR2 で
+// `source_parity_align_scoring.mjs` に移した。structure comparator が
+// 同一のスコア階層を共有できるようにするための抽出で、align.mjs への
+// 循環依存を作らないことが目的。スコア表と設計根拠の詳細はそのモジュールの
+// docstring を参照。
 
 /**
  * Aggregate the union of invariant tokens contributed by every body segment
@@ -737,30 +738,28 @@ export function alignSegments(enSegments, jaSegments) {
 
   const diffs = [];
   for (let i = 0; i < enSections.length; i++) {
-    // Issue #247 PR2 — canonical block sequence comparator runs
-    // ALONGSIDE the per-section LCS, not in place of it. Each section
-    // emits at most one structure diff (Stage A/B/C return ≤ 1 diff),
-    // so structure comparator contributes a +1 per mismatched section,
-    // never a cascade multiplier. The LCS continues to emit its
-    // per-segment drill-down, which is critical for:
+    // Issue #247 PR2 — canonical block sequence comparator は section 単位
+    // LCS を **置き換えずに並行で** 走らせる。各 section は structure diff
+    // を最大 1 件しか emit しないので (Stage A/B/C は高々 1 件)、
+    // structure comparator はミスマッチ section あたり +1 diff を足すだけで
+    // cascade 乗数にはならない。LCS を生かしたままにしているのは以下の
+    // 2 点が必須だから:
     //
-    //   1. Pre-existing structural drift: a section may already have
-    //      drift at baseline time. If we suppressed LCS in that state,
-    //      any subsequent small mutation (delete a paragraph, drop a
-    //      token) would produce no new LCS diff AND no new structure
-    //      diff — the mutation would become invisible to the recall
-    //      benchmark. See the recall test's callout-paragraph-delete /
-    //      step-delete / section-body-swap cases.
+    //   1. 既存の構造ドリフト: 運用中の section には baseline 時点で既に
+    //      drift が残っていることがある。この状態で LCS を suppress すると、
+    //      後続の小さな mutation (1 段落削除、token drop) は新しい LCS diff
+    //      も新しい structure diff も生まず、recall benchmark から見ると
+    //      mutation が不可視になる。recall test の callout-paragraph-delete /
+    //      step-delete / section-body-swap を参照。
     //
-    //   2. Reviewer drill-down: structure mismatch is a section-level
-    //      headline. Reviewers still need segment-missing /
-    //      segment-extra / segment-token-gap to know which block
-    //      exactly drifted.
+    //   2. reviewer drill-down: structure mismatch は section レベルの
+    //      見出し情報だが、「どの block が」崩れたかを把握するには
+    //      segment-missing / segment-extra / segment-token-gap の per-segment
+    //      情報が依然として必要。
     //
-    // The section-level structure diff and the segment-level LCS diffs
-    // live in different counter families (`structureMismatch*` vs the
-    // legacy segment-* counters), so there is no double-counting in
-    // the gate accounting downstream.
+    // section レベルの structure diff と segment レベルの LCS diff は
+    // downstream で別カウンタ族 (`structureMismatch*` と従来の segment-*)
+    // に分かれて集計されるので、gate accounting で二重計上にはならない。
     const structureDiffs = compareSectionStructure(enSections[i], jaSections[i]);
     for (const diff of structureDiffs) diffs.push(diff);
 
@@ -815,39 +814,39 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
   'segment-shifted': 'actionable',
   'segment-untranslated': 'actionable',
   'segment-token-gap': 'actionable',
-  // Issue #247 PR2 — section-level structure diffs emitted by
-  // source_parity_structure.mjs. These flow through the same issue
-  // adapter so that reportable counters, baseline validation, and
-  // acknowledgement wiring pick them up without a parallel code path.
+  // Issue #247 PR2 — source_parity_structure.mjs から emit される
+  // section 単位の structure diff。同じ issue adapter を通すことで
+  // reportable counter / baseline validation / ack wiring が副経路を
+  //作らずそのまま拾えるようにしている。
   'section-structure-mismatch': 'actionable',
   'segment-order-mismatch': 'actionable',
 });
 
 /**
- * Convert ParityDiff records emitted by `alignSegments` into the legacy
- * `{ type, severity, detail, line? }` issue shape consumed by
- * `check_source_parity.mjs`, `tagIssuesWithAcknowledgements`, and
- * `summarizeParityResults`. Pure function — does not mutate inputs.
+ * `alignSegments` が返した ParityDiff レコードを、`check_source_parity.mjs` /
+ * `tagIssuesWithAcknowledgements` / `summarizeParityResults` が消費する
+ * 旧来の `{ type, severity, detail, line? }` 形式に変換する。純粋関数 —
+ * 入力を mutate しない。
  *
- * Each diff is mapped 1:1 to one issue. The `detail` field carries the
- * section path (so the acknowledgement matcher's `detailIncludes` /
- * `detailRegex` can target specific sections), and any extra structured
- * metadata (`enSegmentIndex`, `jaSegmentIndex`, fingerprints, missingTokens)
- * is forwarded as-is so downstream reports can drill in.
+ * 各 diff は 1:1 で 1 issue になる。`detail` には section path を埋め込んで
+ * おくことで、acknowledgement matcher の `detailIncludes` / `detailRegex` が
+ * section 単位で狙えるようになる。その他の構造化メタデータ
+ * (`enSegmentIndex` / `jaSegmentIndex` / fingerprint / missingTokens) は
+ * そのまま forward して、downstream report が drill-down できるようにする。
  *
- * Issue #247 PR2 — section-level structure diffs (`scope: 'section'`,
- * no `segmentKind` field) carry their own structured payload
- * (`structureCategory`, `enKinds`, `jaKinds`, `enSegmentCount`,
- * `jaSegmentCount`, optional `contentPermutation`). These are copied
- * through VERBATIM so that PR5 can key baseline identity off them. The
- * adapter MUST NOT synthesize a `segmentKind` for these diffs — the
- * whole point of `scope: 'section'` is to keep block-level
- * `segmentKind` values (paragraph/list/callout) untainted by the
- * section-level issue family.
+ * Issue #247 PR2 — section 単位の structure diff (`scope: 'section'` で
+ * `segmentKind` フィールドを持たない) は独自の構造化 payload
+ * (`structureCategory` / `enKinds` / `jaKinds` / `enSegmentCount` /
+ * `jaSegmentCount`、option で `contentPermutation`) を持っていて、PR5 で
+ * baseline 同定キーがここを参照する前提なので、adapter は **そのまま**
+ * コピーして forward する。これらの diff に `segmentKind` を合成しては
+ * **絶対にならない** — `scope: 'section'` を導入した目的はまさに block
+ * 単位の `segmentKind` (paragraph / list / callout) を section 単位の issue
+ * family で汚染しないためなので、ここで segmentKind を混ぜると契約崩壊。
  *
- * segment-* issues flow through the primary gate accounting in
- * `summarizeParityResults`. Pre-cutover drift is frozen via
- * `parity-baseline.json` (`isFrozenByBaseline`).
+ * segment-* 系 issue は `summarizeParityResults` の gate accounting を
+ * そのまま通る。cutover 前の drift は `parity-baseline.json` で frozen に
+ * なる (`isFrozenByBaseline` 参照)。
  *
  * @param {ParityDiff[]} diffs
  * @returns {Array<object>}
@@ -858,10 +857,10 @@ export function parityDiffsToIssues(diffs) {
     const sectionLabel = diff.sectionPath || '(preface)';
     const severity = SEGMENT_ISSUE_SEVERITY[diff.type] ?? 'actionable';
 
-    // Issue #247 PR2 — section-level structure diffs take a separate
-    // adapter branch. Their payload shape is structurally different
-    // (scope vs segmentKind, kind-multiset/sequence metadata) and must
-    // be copied through without leaking segment-level fields.
+    // Issue #247 PR2 — section 単位 structure diff は専用の adapter 分岐に
+    // 流す。payload 形状が segment 単位 diff と構造的に違う (scope vs
+    // segmentKind、kind-multiset / sequence メタデータ) ので、segment 単位の
+    // フィールドを混ぜないように切り分ける必要がある。
     if (diff.scope === 'section') {
       const issue = {
         type: diff.type,

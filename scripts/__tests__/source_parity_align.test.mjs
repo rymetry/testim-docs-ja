@@ -993,20 +993,19 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
   });
 
   it('emits exactly one section-level structure diff per mismatched section (no cascade multiplier)', () => {
-    // PR2 runs the structure comparator ALONGSIDE the weighted LCS,
-    // not in place of it. The structure comparator contributes at most
-    // +1 diff per mismatched section; the LCS is still free to emit
-    // its per-segment drill-down (segment-missing / segment-extra /
-    // segment-token-gap). This parallel contract is intentional:
-    // suppressing LCS would hide subsequent small mutations in a
-    // section that already has pre-existing structural drift (see the
-    // recall benchmark for callout-paragraph-delete / step-delete /
-    // section-body-swap).
+    // PR2 は structure comparator を weighted LCS の **代わり** ではなく
+    // **並行** で走らせる。structure comparator はミスマッチ section
+    // あたり高々 +1 diff しか足さず、LCS は変わらず per-segment の
+    // drill-down (segment-missing / segment-extra / segment-token-gap) を
+    // emit する。この並行契約は意図的: LCS を suppress してしまうと、
+    // 既に構造ドリフトを抱えた section で後続の小さな mutation が隠れて
+    // しまう (recall benchmark の callout-paragraph-delete / step-delete /
+    // section-body-swap 参照)。
     //
-    // The cascade concern is specifically about structure mismatch NOT
-    // multiplying into many structure-level diffs — i.e., one
-    // structural drift must produce exactly one `section-structure-
-    // mismatch` regardless of how many segments moved.
+    // cascade 懸念は、あくまで「structure mismatch が structure-level diff
+    // として多重化しない」こと — つまり 1 つの構造ドリフトはセグメントが
+    // 何個動いても必ず 1 件の `section-structure-mismatch` になる、という
+    // 保証のほうを指す。
     const en = [
       makeHeading('Overview', 0, 'Overview'),
       makeSeg('Overview', 'unordered-list-item', 0, '- bullet `alpha`'),
@@ -1024,14 +1023,15 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
       1,
       'exactly one section-level structure diff per mismatched section',
     );
-    // LCS still runs and may emit per-segment drill-down — assert only
-    // that the structure-mismatch counter did not multiply.
+    // LCS も並行で走るので per-segment drill-down が出る可能性はあるが、
+    // ここでは structure-mismatch counter が multiply していないことだけを
+    // assert する。
   });
 
   it('structure mismatch is limited to the affected section (no leakage to sibling sections)', () => {
-    // Section 1 has a cross-kind structure mismatch; Section 2 is
-    // perfectly aligned. The structure comparator emits for Section 1
-    // only — Section 2 must not receive any structure-mismatch diff.
+    // Section 1 に cross-kind structure mismatch、Section 2 は整合している。
+    // structure comparator は Section 1 にだけ emit するべきで、Section 2
+    // には structure-mismatch diff が 1 件も来てはならない。
     const en = [
       makeHeading('Section 1', 0, 'Section 1'),
       makeSeg('Section 1', 'callout-body', 0, 'EN callout `warn`'),
@@ -1089,11 +1089,11 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
   });
 
   it('preserves existing segment-missing behavior for pure same-kind count drift', () => {
-    // This is the critical regression test — structure comparator must
-    // NOT intercept pure same-single-kind count drift. The existing
-    // segment-missing contract (one dropped paragraph → one diff) has
-    // to stay intact so reviewers keep getting the per-segment index
-    // drill-down.
+    // これは重要な regression test — structure comparator は同種 kind
+    // のみの count drift (例: 段落が 1 つ消えただけ) を **絶対に**
+    // intercept してはいけない。既存の segment-missing 契約 (1 段落削除
+    // → 1 diff) が壊れると、reviewer が per-segment index の drill-down を
+    // 追えなくなる。
     const en = [
       makeHeading('Overview', 0, 'Overview'),
       makeSeg('Overview', 'paragraph', 0, 'EN para A `token-a`'),
@@ -1128,7 +1128,7 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
     const structureIssue = issues.find((i) => i.type === 'section-structure-mismatch');
     assert.ok(structureIssue, 'structure mismatch must be present after adapter pass');
 
-    // Contract fields.
+    // Contract フィールド。
     assert.equal(structureIssue.severity, 'actionable');
     assert.equal(structureIssue.scope, 'section');
     assert.equal(structureIssue.structureCategory, 'kind-multiset');
@@ -1139,8 +1139,8 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
     assert.equal(typeof structureIssue.detail, 'string');
     assert.ok(structureIssue.detail.length > 0);
 
-    // Forbidden fields — segment-level shape must not leak onto the
-    // section-level adapter branch.
+    // 禁止フィールド — segment 単位の shape が section 単位の adapter
+    // 分岐に漏れてはいけない。
     assert.equal(
       Object.prototype.hasOwnProperty.call(structureIssue, 'segmentKind'),
       false,
