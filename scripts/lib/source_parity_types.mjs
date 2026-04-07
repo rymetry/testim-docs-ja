@@ -41,6 +41,36 @@ export const ISSUE_SEVERITY = Object.freeze({
   'segment-inconclusive': 'actionable',
 });
 
+/**
+ * Phase 8: explicit allowlist of "coarse counting / shape" signals that are
+ * demoted to audit-only output. These types still flow into
+ * `parity-check-status.json` and are visible in the deep-audit workflow, but
+ * they no longer feed into `parityRegression.shouldOpenIssue`, the gate
+ * exit code, or the active-file accounting that drives them.
+ *
+ * IMPORTANT — this is an explicit allowlist, NOT a severity-based filter.
+ * Severity-based ("any signal") filtering would incorrectly demote
+ * `missing-snapshot` and `source-snapshot-missing`, which are gate signals
+ * for new / missing pages and must remain reportable. `content-root-missing`
+ * has no live emitter today and is intentionally left out — adding it should
+ * be a separate, deliberate decision.
+ *
+ * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.1
+ */
+export const COARSE_SIGNAL_TYPES = Object.freeze(
+  new Set([
+    'paragraph-count-mismatch',
+    'bullet-count-mismatch',
+    'step-count-mismatch',
+    'section-count-mismatch',
+    'heading-mismatch',
+    'table-shape-mismatch',
+    'table-cell-english-residual',
+    'table-cell-empty-mismatch',
+    'table-cell-token-mismatch',
+  ]),
+);
+
 export const UNTRANSLATED_PATTERNS = Object.freeze([
   /^(?:\d+\.\s*)?Hover over the\b/i,
   /^(?:\d+\.\s*)?Click on the\b/i,
