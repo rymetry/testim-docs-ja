@@ -651,8 +651,10 @@ export async function checkSourceParity({
   // a source-sync payload. Treat that as the legacy "no linkage info"
   // case (linkage='missing') and don't downgrade the result. Live runs
   // (which have a source-sync payload) MUST link cleanly.
-  const linkageBlocking =
-    sourceSyncPayload != null && linkageState !== 'linked' && linkageState !== 'missing';
+  const linkageBlocking = sourceSyncPayload != null && linkageState !== 'linked';
+  const effectiveFreshnessState = linkageState === 'stale'
+    ? 'stale'
+    : freshnessState;
 
   const summaryBase = {
     checkedAt: new Date().toISOString(),
@@ -667,7 +669,7 @@ export async function checkSourceParity({
     runScope: parityRunScope,
     // Phase 8 cleanup: source freshness reflected on the summary so
     // validators do not need to re-read source-sync-status.json.
-    freshnessState: freshnessState ?? null,
+    freshnessState: effectiveFreshnessState ?? null,
     // §3 cleanup: linkage state and the snapshot_diff runId we observed
     // (or null when none). Surfaces in detection_reports / sync guards.
     linkageState,
@@ -680,7 +682,7 @@ export async function checkSourceParity({
   // The linkage check is layered on top: if the linkage is broken
   // (stale / scope-mismatch), we degrade pass→inconclusive but keep
   // fail as fail (so a real regression still surfaces).
-  const baseResult = computeParityResult(summaryBase, freshnessState);
+  const baseResult = computeParityResult(summaryBase, effectiveFreshnessState);
   const summary = {
     ...summaryBase,
     result: linkageBlocking && baseResult === 'pass' ? 'inconclusive' : baseResult,

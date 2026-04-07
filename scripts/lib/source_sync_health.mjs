@@ -7,6 +7,8 @@
 
 import { createHash } from 'node:crypto';
 
+export const SOURCE_SYNC_STATUS_SCHEMA_VERSION = 1;
+
 /**
  * SHA-256 fingerprint of a sorted array of strings.
  * @param {string[]} items
@@ -51,11 +53,13 @@ export function computeFreshnessState(pages, sidebarVerified) {
  * snapshot-diff-status, and the parity gate's own scope) all describe
  * the same logical run. Returns one of:
  *
- *   "linked"      — source inventory fingerprint matches snapshot_diff
- *   "missing"     — snapshot_diff is missing or has no fingerprint
+ *   "linked"      — sourceSync.runId matches snapshotDiff.sourceSyncRunId,
+ *                   source inventory fingerprint matches, and all run scopes match
+ *   "missing"     — one of the required linkage fields is missing
  *   "stale"       — fingerprints disagree (inventory drifted between runs)
+ *   "run-mismatch" — snapshot_diff was built from a different source-sync run
  *   "scope-mismatch" — full parity run paired with partial snapshot_diff
- *                     (or vice versa)
+ *                     (or any differing sourceSync / snapshotDiff / parity scope)
  *
  * Callers (check_source_parity) demote `parity-check-status.json.summary.result`
  * to `inconclusive` for any value other than `linked`, even when there
@@ -64,18 +68,29 @@ export function computeFreshnessState(pages, sidebarVerified) {
  * @param {object} sourceSync — parsed source-sync-status.json
  * @param {object|null} snapshotDiff — parsed snapshot-diff-status.json
  * @param {{type: string, isComplete: boolean}} parityRunScope
- * @returns {"linked" | "missing" | "stale" | "scope-mismatch"}
+ * @returns {"linked" | "missing" | "stale" | "run-mismatch" | "scope-mismatch"}
  */
 export function validateRunLinkage(sourceSync, snapshotDiff, parityRunScope) {
   // No source-sync info → cannot prove linkage. Treat as "missing"; the
   // caller can downgrade to inconclusive based on its own policy.
-  if (!sourceSync || typeof sourceSync.sourceInventoryFingerprint !== 'string') {
+  if (
+    !sourceSync ||
+    typeof sourceSync.sourceInventoryFingerprint !== 'string' ||
+    typeof sourceSync.runId !== 'string' ||
+    !sourceSync.runScope ||
+    typeof sourceSync.runScope !== 'object'
+  ) {
     return 'missing';
   }
   if (!snapshotDiff || typeof snapshotDiff !== 'object') {
     return 'missing';
   }
-  if (typeof snapshotDiff.sourceInventoryFingerprint !== 'string') {
+  if (
+    typeof snapshotDiff.sourceInventoryFingerprint !== 'string' ||
+    typeof snapshotDiff.sourceSyncRunId !== 'string' ||
+    !snapshotDiff.runScope ||
+    typeof snapshotDiff.runScope !== 'object'
+  ) {
     return 'missing';
   }
 
@@ -83,12 +98,22 @@ export function validateRunLinkage(sourceSync, snapshotDiff, parityRunScope) {
     return 'stale';
   }
 
-  if (parityRunScope && snapshotDiff.runScope) {
-    const parityComplete = parityRunScope.isComplete === true;
-    const diffComplete = snapshotDiff.runScope.isComplete === true;
-    if (parityComplete !== diffComplete) {
-      return 'scope-mismatch';
-    }
+  if (sourceSync.runId !== snapshotDiff.sourceSyncRunId) {
+    return 'run-mismatch';
+  }
+
+  const sameScope = (left, right) =>
+    left?.type === right?.type &&
+    left?.isComplete === right?.isComplete &&
+    (left?.filters?.slug ?? null) === (right?.filters?.slug ?? null) &&
+    (left?.filters?.section ?? null) === (right?.filters?.section ?? null);
+
+  if (!sameScope(sourceSync.runScope, snapshotDiff.runScope)) {
+    return 'scope-mismatch';
+  }
+
+  if (parityRunScope && !sameScope(sourceSync.runScope, parityRunScope)) {
+    return 'scope-mismatch';
   }
 
   return 'linked';
@@ -100,11 +125,12 @@ export function validateRunLinkage(sourceSync, snapshotDiff, parityRunScope) {
  * @param {object} opts
  * @param {{ slug: string, fetchStatus: string, errorDetail?: string, snapshotFingerprint?: string }[]} opts.pages
  * @param {{ ok: boolean, sectionCount?: number, pageCount?: number, reason?: string, sidebarSlugs?: string[] }} opts.sidebarResult
+ * @param {{ type: string, isComplete: boolean, filters: { slug: string|null, section: string|null } }} opts.runScope
  * @param {Date} [opts.now]  — override for deterministic tests
  * @param {string} [opts.runSeed] — override for deterministic runId in tests
  * @returns {object}
  */
-export function buildSourceSyncStatus({ pages, sidebarResult, now, runSeed }) {
+export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, runSeed }) {
   const checkedAt = (now ?? new Date()).toISOString();
   const shortHash = runSeed
     ? createHash('sha256').update(runSeed).digest('hex').slice(0, 8)
@@ -138,12 +164,13 @@ export function buildSourceSyncStatus({ pages, sidebarResult, now, runSeed }) {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: SOURCE_SYNC_STATUS_SCHEMA_VERSION,
     runId,
     checkedAt,
     sourceInventoryFingerprint,
     sidebarFingerprint,
     freshnessState,
+    runScope,
     summary: {
       targetPages: pages.length,
       fetchedPages: okCount,

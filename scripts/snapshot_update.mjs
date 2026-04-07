@@ -59,6 +59,28 @@ function parseArgs(argv = process.argv.slice(2)) {
   return args;
 }
 
+function buildSourceSyncRunScope({ slug = null, section = null } = {}) {
+  if (slug) {
+    return {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug, section: section ?? null },
+    };
+  }
+  if (section) {
+    return {
+      type: 'section',
+      isComplete: false,
+      filters: { slug: null, section },
+    };
+  }
+  return {
+    type: 'full',
+    isComplete: true,
+    filters: { slug: null, section: null },
+  };
+}
+
 /**
  * Build list of { slug, sourceUrl, relativePath } from doc files.
  */
@@ -215,6 +237,11 @@ async function verifySidebar({ dryRun = false } = {}) {
 export async function main(argv) {
   const args = parseArgs(argv);
   const targets = collectTargets(args);
+  const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
+  const runScope = buildSourceSyncRunScope({
+    slug: resolvedSlug,
+    section: args.section,
+  });
 
   if (targets.length === 0) {
     console.log('No targets found.');
@@ -282,7 +309,11 @@ export async function main(argv) {
   }
 
   // Build source sync status (always written — metadata, not content)
-  const sourceSyncStatus = buildSourceSyncStatus({ pages: pageResults, sidebarResult });
+  const sourceSyncStatus = buildSourceSyncStatus({
+    pages: pageResults,
+    sidebarResult,
+    runScope,
+  });
   fs.writeFileSync(
     SOURCE_SYNC_STATUS_PATH,
     JSON.stringify(sourceSyncStatus, null, 2) + '\n',

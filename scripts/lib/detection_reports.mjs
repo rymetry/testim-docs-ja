@@ -66,6 +66,12 @@ export function validateSnapshotDiffStatus(parsed) {
   if (typeof parsed.checkedAt !== 'string') {
     throw new Error('snapshot-diff-status.json: missing string "checkedAt"');
   }
+  if (typeof parsed.runId !== 'string') {
+    throw new Error('snapshot-diff-status.json: runId must be a string');
+  }
+  if (parsed.sourceSyncRunId !== null && typeof parsed.sourceSyncRunId !== 'string') {
+    throw new Error('snapshot-diff-status.json: sourceSyncRunId must be string|null');
+  }
   if (!parsed.summary || typeof parsed.summary !== 'object') {
     throw new Error('snapshot-diff-status.json: missing "summary" object');
   }
@@ -112,6 +118,56 @@ export function validateParityCheckStatus(parsed) {
   return parsed;
 }
 
+export function validateSourceSyncStatus(parsed) {
+  expectObject(parsed, 'source-sync-status.json');
+  if (parsed.schemaVersion !== 1) {
+    throw new Error(
+      `source-sync-status.json: unsupported schemaVersion ${JSON.stringify(parsed.schemaVersion)} (expected 1)`,
+    );
+  }
+  if (typeof parsed.runId !== 'string') {
+    throw new Error('source-sync-status.json: runId must be a string');
+  }
+  if (typeof parsed.checkedAt !== 'string') {
+    throw new Error('source-sync-status.json: checkedAt must be a string');
+  }
+  if (
+    parsed.freshnessState !== 'fresh' &&
+    parsed.freshnessState !== 'partial' &&
+    parsed.freshnessState !== 'broken' &&
+    parsed.freshnessState !== 'stale'
+  ) {
+    throw new Error(
+      `source-sync-status.json: freshnessState must be one of fresh|partial|broken|stale, got ${JSON.stringify(parsed.freshnessState)}`,
+    );
+  }
+  if (typeof parsed.sourceInventoryFingerprint !== 'string') {
+    throw new Error('source-sync-status.json: sourceInventoryFingerprint must be a string');
+  }
+  if (typeof parsed.sidebarFingerprint !== 'string') {
+    throw new Error('source-sync-status.json: sidebarFingerprint must be a string');
+  }
+  if (!parsed.runScope || typeof parsed.runScope !== 'object') {
+    throw new Error('source-sync-status.json: runScope is required');
+  }
+  if (typeof parsed.runScope.isComplete !== 'boolean') {
+    throw new Error('source-sync-status.json: runScope.isComplete must be boolean');
+  }
+  if (!parsed.summary || typeof parsed.summary !== 'object') {
+    throw new Error('source-sync-status.json: summary is required');
+  }
+  if (typeof parsed.summary.sidebarVerified !== 'boolean') {
+    throw new Error('source-sync-status.json: summary.sidebarVerified must be boolean');
+  }
+  if (!Array.isArray(parsed.pages)) {
+    throw new Error('source-sync-status.json: pages must be an array');
+  }
+  if (!Array.isArray(parsed.errors)) {
+    throw new Error('source-sync-status.json: errors must be an array');
+  }
+  return parsed;
+}
+
 export function validateActionableReport(parsed) {
   expectObject(parsed, 'docs-actionable-report.json');
   if (parsed.schemaVersion !== ACTIONABLE_REPORT_SCHEMA_VERSION) {
@@ -151,12 +207,7 @@ export function validateDetectionInputs({ snapshot, parity, sourceSync }) {
   // sourceSync is allowed to be missing entirely (legacy / pre-Phase-1
   // runs); only check the shape if a non-empty payload is present.
   if (sourceSync && Object.keys(sourceSync).length > 0) {
-    tryValidate('sourceSync', () => {
-      expectObject(sourceSync, 'source-sync-status.json');
-      if (typeof sourceSync.freshnessState !== 'string') {
-        throw new Error('freshnessState must be a string');
-      }
-    });
+    tryValidate('sourceSync', () => validateSourceSyncStatus(sourceSync));
   }
   return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }

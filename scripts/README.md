@@ -613,8 +613,12 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 `validateDetectionInputs` を必ず通過させる。
 
 - **`snapshot-diff-status.json`** (`schemaVersion: 1`) —
-  必須 top-level: `runId`, `sourceInventoryFingerprint`, `runScope`,
-  `checkedAt`, `summary`, `changes`, `sidebar`
+  必須 top-level: `runId`, `sourceSyncRunId`, `sourceInventoryFingerprint`,
+  `runScope`, `checkedAt`, `summary`, `changes`, `sidebar`
+- **`source-sync-status.json`** (`schemaVersion: 1`) —
+  必須 top-level: `runId`, `checkedAt`, `sourceInventoryFingerprint`,
+  `sidebarFingerprint`, `freshnessState`, `runScope`, `summary`, `pages`,
+  `errors`
 - **`parity-check-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `summary` (含む `checkedAt` / `runScope` / `result` /
   `linkageState` / `freshnessState`), `files`
@@ -625,16 +629,19 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 
 `summary.result` は `pass` / `fail` / `inconclusive` のいずれか:
 
-- `pass` — fresh source、reportable issue なし、linkage が `linked` (または legacy/missing)
+- `pass` — fresh source、reportable issue なし、linkage が `linked`
 - `fail` — reportable parity issue あり、または error file あり
-- `inconclusive` — `freshnessState !== fresh` (stale / partial / broken)、または run linkage が `stale` / `scope-mismatch`
+- `inconclusive` — `freshnessState !== fresh` (stale / partial / broken)、または run linkage が `stale` / `run-mismatch` / `scope-mismatch` / `missing`
+  ただし `source-sync-status.json` 自体が存在しない legacy / PR CI run は例外で、linkage `missing` でも `pass` を妨げない
 
 `linkageState` は `validateRunLinkage` の戻り値:
 
-- `linked` — sourceInventoryFingerprint と runScope が source-sync / snapshot-diff / parity の 3 者で整合
-- `missing` — snapshot-diff か source-sync が無い (PR CI / legacy run)。`pass` を妨げない
+- `linked` — `sourceSync.runId === snapshotDiff.sourceSyncRunId` かつ
+  sourceInventoryFingerprint と runScope が source-sync / snapshot-diff / parity の 3 者で整合
+- `missing` — linkage に必要な field か artifact が無い。source-sync が存在する run では `pass` を妨げる
 - `stale` — fingerprints が不一致 (inventory drift)。`pass` を `inconclusive` に降格する
-- `scope-mismatch` — full vs partial の混在。同上
+- `run-mismatch` — snapshot-diff が別の source-sync run を参照している。同上
+- `scope-mismatch` — full vs partial、または slug/section filter の不一致。同上
 
 これらは `scheduled-actionable.yml` の `--strict` step を通った時のみ
 sync される。partial run / 壊れた artifact は `sync-detection-issues.cjs`

@@ -48,18 +48,16 @@ const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 
 /**
- * Read sourceInventoryFingerprint from source-sync-status.json so the
- * snapshot diff can advertise the same fingerprint as the parity check.
+ * Read the source-sync linkage payload so snapshot_diff can advertise the
+ * exact source-sync run it was built from.
  * Returns null when the file is missing or malformed; downstream
  * validation treats null as an unlinked / legacy run.
  */
-function readSourceInventoryFingerprint() {
+function readSourceSyncPayload() {
   if (!fs.existsSync(SOURCE_SYNC_STATUS_PATH)) return null;
   try {
     const data = JSON.parse(fs.readFileSync(SOURCE_SYNC_STATUS_PATH, 'utf8'));
-    return typeof data?.sourceInventoryFingerprint === 'string'
-      ? data.sourceInventoryFingerprint
-      : null;
+    return data && typeof data === 'object' ? data : null;
   } catch {
     return null;
   }
@@ -411,12 +409,19 @@ export async function main(argv) {
     slug: resolvedSlug,
     section: args.section,
   });
-  const sourceInventoryFingerprint = readSourceInventoryFingerprint();
+  const sourceSyncPayload = readSourceSyncPayload();
+  const sourceInventoryFingerprint =
+    typeof sourceSyncPayload?.sourceInventoryFingerprint === 'string'
+      ? sourceSyncPayload.sourceInventoryFingerprint
+      : null;
+  const sourceSyncRunId =
+    typeof sourceSyncPayload?.runId === 'string' ? sourceSyncPayload.runId : null;
   const runId = buildSnapshotDiffRunId(checkedAt, sourceInventoryFingerprint, runScope);
 
   const report = {
     schemaVersion: SNAPSHOT_DIFF_SCHEMA_VERSION,
     runId,
+    sourceSyncRunId,
     sourceInventoryFingerprint,
     runScope,
     checkedAt,

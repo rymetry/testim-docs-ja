@@ -9,6 +9,7 @@ let renderSummaryMarkdown;
 let loadDetectionInputs;
 let validateSnapshotDiffStatus;
 let validateParityCheckStatus;
+let validateSourceSyncStatus;
 let validateActionableReport;
 let validateDetectionInputs;
 let ACTIONABLE_REPORT_SCHEMA_VERSION;
@@ -23,6 +24,7 @@ before(async () => {
     loadDetectionInputs,
     validateSnapshotDiffStatus,
     validateParityCheckStatus,
+    validateSourceSyncStatus,
     validateActionableReport,
     validateDetectionInputs,
     ACTIONABLE_REPORT_SCHEMA_VERSION,
@@ -1793,6 +1795,7 @@ function validSnapshotDiff() {
   return {
     schemaVersion: 1,
     runId: '2026-04-07T00:00:00Z#snapshot-diff-deadbeef',
+    sourceSyncRunId: '2026-04-07T00:00:00Z#sync-deadbeef',
     sourceInventoryFingerprint: null,
     runScope: { type: 'full', isComplete: true, filters: { slug: null, section: null } },
     checkedAt: '2026-04-07T00:00:00Z',
@@ -1821,6 +1824,27 @@ function validActionableReport() {
     parityRegression: { shouldOpenIssue: false },
     sourceSyncHealth: { shouldOpenIssue: false },
     parityFollowup: { shouldOpenIssue: false },
+  };
+}
+
+function validSourceSyncStatus() {
+  return {
+    schemaVersion: 1,
+    runId: '2026-04-07T00:00:00Z#sync-deadbeef',
+    checkedAt: '2026-04-07T00:00:00Z',
+    sourceInventoryFingerprint: 'sha256:' + 'a'.repeat(64),
+    sidebarFingerprint: 'sha256:' + 'b'.repeat(64),
+    freshnessState: 'fresh',
+    runScope: { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+    summary: {
+      targetPages: 100,
+      fetchedPages: 100,
+      notFoundPages: 0,
+      errorPages: 0,
+      sidebarVerified: true,
+    },
+    pages: [],
+    errors: [],
   };
 }
 
@@ -1920,12 +1944,39 @@ describe('§1 cleanup — validateActionableReport', () => {
   });
 });
 
+describe('§1 cleanup — validateSourceSyncStatus', () => {
+  it('accepts a valid source-sync-status', () => {
+    assert.doesNotThrow(() => validateSourceSyncStatus(validSourceSyncStatus()));
+  });
+
+  it('throws on missing schemaVersion', () => {
+    const v = validSourceSyncStatus();
+    delete v.schemaVersion;
+    assert.throws(() => validateSourceSyncStatus(v), /unsupported schemaVersion/);
+  });
+
+  it('throws when runScope is missing', () => {
+    const v = validSourceSyncStatus();
+    delete v.runScope;
+    assert.throws(() => validateSourceSyncStatus(v), /runScope is required/);
+  });
+
+  it('throws when freshnessState is unknown', () => {
+    const v = validSourceSyncStatus();
+    v.freshnessState = 'green';
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /freshnessState must be one of fresh\|partial\|broken\|stale/,
+    );
+  });
+});
+
 describe('§1 cleanup — validateDetectionInputs', () => {
   it('returns ok=true when all three inputs are valid', () => {
     const result = validateDetectionInputs({
       snapshot: validSnapshotDiff(),
       parity: validParityStatus(),
-      sourceSync: { freshnessState: 'fresh' },
+      sourceSync: validSourceSyncStatus(),
     });
     assert.deepEqual(result, { ok: true });
   });
@@ -1945,18 +1996,18 @@ describe('§1 cleanup — validateDetectionInputs', () => {
     const result = validateDetectionInputs({
       snapshot: validSnapshotDiff(),
       parity: broken,
-      sourceSync: { freshnessState: 'fresh' },
+      sourceSync: validSourceSyncStatus(),
     });
     assert.equal(result.ok, false);
     assert.ok(result.errors.length >= 1);
     assert.match(result.errors[0], /^parity:/);
   });
 
-  it('reports sourceSync errors when freshnessState is not a string', () => {
+  it('reports sourceSync errors when schemaVersion is malformed', () => {
     const result = validateDetectionInputs({
       snapshot: validSnapshotDiff(),
       parity: validParityStatus(),
-      sourceSync: { freshnessState: 123 },
+      sourceSync: { ...validSourceSyncStatus(), schemaVersion: 'bad' },
     });
     assert.equal(result.ok, false);
     assert.ok(result.errors.some((e) => e.startsWith('sourceSync:')));
