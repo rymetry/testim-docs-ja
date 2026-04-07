@@ -115,9 +115,9 @@ isReportableParityIssue(issue):
 | `failOn` モード | 旧判定 | 新判定 |
 |---|---|---|
 | `actionable` | `activeActionableFiles + activeErrorFiles > 0` | `reportableActiveActionableFiles + activeErrorFiles > 0` |
-| `any` (default) | `activeFiles > 0` | `reportableActiveFiles > 0` |
+| `any` (default) | `activeFiles > 0` | `reportableActiveFiles + activeErrorFiles > 0` |
 
-`activeErrorFiles` は `source-fetch-error` 等の真のエラーを引き続き fail させるためそのまま使う。
+`activeErrorFiles` は `source-fetch-error` 等の真のエラーを引き続き fail させるため、**全モード**でそのまま使う。
 
 ### 3.5 `parityRegression` 経路の自動降格
 
@@ -204,6 +204,7 @@ docs-actionable-report.json (top-level runScope)
 | T6 | `detection_reports.test.mjs` + `sync_detection_issues.test.mjs` 拡張 | `buildIssueSpecs(report).length === 4`（4 family のまま）。coarse-only run で `parityRegression.shouldOpenIssue === false` |
 | T7 | `check_source_parity.test.mjs` 拡張 | `failOn=actionable` で actionable-only file が依然 fail |
 | T8 | `check_source_parity.test.mjs` 拡張 | `failOn=any` で coarse-only file が exit 0 |
+| T8b | `check_source_parity.test.mjs` 拡張 | `failOn=any` / default で error-only file が exit 1 |
 | T9 | `check_source_parity.test.mjs` 拡張 | **expired ack 付き coarse signal でも `parityRegression` 不発火 + exit 0** |
 | T10 | `check_source_parity.test.mjs` 拡張 | **expired baseline 付き coarse signal でも `parityRegression` 不発火 + exit 0** |
 | T11 | `detection_reports.test.mjs` 拡張 | `docs-update-summary.md` (renderSummaryMarkdown) で coarse signal が `## Parity` の active count には含まれず、新セクション `## Audit Signals` 側にだけ出る |
