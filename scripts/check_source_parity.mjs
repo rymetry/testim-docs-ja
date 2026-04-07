@@ -38,7 +38,7 @@ import {
   tagIssuesWithBaseline,
 } from './lib/source_parity_baseline.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
-import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
+import { convertEnHtmlToMd, preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
 import { buildRunScope, validateRunLinkage } from './lib/source_sync_health.mjs';
 export { buildRunScope };
@@ -383,7 +383,7 @@ export async function checkSourceParity({
       }
       if (enHtml != null) {
         try {
-          enBody = turndown.turndown(enHtml);
+          enBody = convertEnHtmlToMd(rawEnHtml);
         } catch (e) {
           console.error(
             `turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`

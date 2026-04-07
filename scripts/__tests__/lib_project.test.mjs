@@ -176,8 +176,17 @@ describe('resolveSlug', () => {
     fs.mkdirSync(path.join(dir, 'folder-b'));
     fs.writeFileSync(path.join(dir, 'folder-a', 'page.md'), '');
     fs.writeFileSync(path.join(dir, 'folder-b', 'page.md'), '');
-    assert.equal(resolveSlug('page', dir), null);
-    fs.rmSync(dir, { recursive: true });
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      assert.equal(resolveSlug('page', dir), null);
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /Ambiguous slug "page"/);
+    } finally {
+      console.warn = origWarn;
+      fs.rmSync(dir, { recursive: true });
+    }
   });
 });
 

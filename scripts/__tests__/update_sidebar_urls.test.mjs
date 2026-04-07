@@ -10,6 +10,29 @@ import assert from 'node:assert/strict';
 
 // --- dynamic import to avoid main() side effects (guard required in impl) ---
 let normalizeUrl, parseExistingStatusMap, buildOutput, extractUrls, fetchSitemap, main;
+
+async function captureWarnings(run) {
+  const warnings = [];
+  const originalWarn = console.warn;
+  console.warn = (...args) => warnings.push(args.join(' '));
+  try {
+    return { result: await run(), warnings };
+  } finally {
+    console.warn = originalWarn;
+  }
+}
+
+async function captureLogs(run) {
+  const logs = [];
+  const originalLog = console.log;
+  console.log = (...args) => logs.push(args.join(' '));
+  try {
+    return { result: await run(), logs };
+  } finally {
+    console.log = originalLog;
+  }
+}
+
 before(async () => {
   ({ normalizeUrl, parseExistingStatusMap, buildOutput, extractUrls, fetchSitemap, main } =
     await import('../update_sidebar_urls_from_live.mjs'));
@@ -171,14 +194,18 @@ describe('fetchSitemap', () => {
 
   it('returns empty array when fetch fails', async () => {
     const fakeFetch = async () => { throw new Error('network error'); };
-    const urls = await fetchSitemap(fakeFetch);
+    const { result: urls, warnings } = await captureWarnings(() => fetchSitemap(fakeFetch));
     assert.deepEqual(urls, []);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /fetchSitemap: failed/);
   });
 
   it('returns empty array when HTTP response is not ok', async () => {
     const fakeFetch = async () => ({ ok: false, status: 404 });
-    const urls = await fetchSitemap(fakeFetch);
+    const { result: urls, warnings } = await captureWarnings(() => fetchSitemap(fakeFetch));
     assert.deepEqual(urls, []);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /fetchSitemap: HTTP 404/);
   });
 
   it('ignores non-content URLs in sitemap', async () => {
@@ -242,7 +269,8 @@ describe('main() with TOC data', () => {
     fs.default.mkdirSync = () => {};
     fs.default.writeFileSync = (_p, content) => { writtenContent = content; };
     try {
-      await main(mockFetch);
+      const { logs } = await captureLogs(() => main(mockFetch));
+      assert.ok(logs.some((line) => line.includes('Updated ')));
     } finally {
       fs.default.writeFileSync = origWriteFileSync;
       fs.default.mkdirSync = origMkdirSync;
@@ -276,7 +304,11 @@ describe('main() with TOC data', () => {
       return origExistsSync(p);
     };
     try {
-      await main(mockFetch);
+      const { warnings } = await captureWarnings(() =>
+        captureLogs(() => main(mockFetch))
+      );
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /TOC fetch failed/);
     } finally {
       fs.default.writeFileSync = origWriteFileSync;
       fs.default.mkdirSync = origMkdirSync;
