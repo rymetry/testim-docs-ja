@@ -9,38 +9,30 @@ import {
  * Aggregates per-file parity results into type/severity/acknowledgement
  * summary statistics.
  *
- * Phase 6A cutover (2026-04-06): `parityDiffsToIssues` no longer tags
- * segment-* issues with `phase: 'segment-shadow'`. segment-* issues now
- * flow through the primary actionable/active accounting. Pre-cutover
- * drift is frozen by `parity-baseline.json` and excluded from active
- * counts via `isBaselined`.
+ * Counter contract:
  *
- * Phase 7 (reporting 4-family refactor): the shadow accounting branch and
- * the `shadowIssues` / `shadowFiles` / `shadowIssuesByType` dual-emit fields
- * have been removed. Baseline accounting (`baselinedIssues` / `baselinedFiles`
- * / `baselinedByType` / `baselinedByInconclusiveCategory` /
- * `expiredBaselineEntries`) is the primary mechanism for excluding known drift
- * from the gate exit code.
+ *   activeFiles / activeActionableFiles / activeErrorFiles
+ *     Legacy gate counters. Count files with active (non-acked,
+ *     non-frozen-baseline) issues. Coarse audit signals DO contribute
+ *     here so downstream consumers that read these fields keep their
+ *     pre-Phase-8 semantics.
  *
- * Phase 8 (audit demotion): adds `reportableActive*` and `auditSignal*`
- * counters in PARALLEL to the existing `activeFiles` / `activeActionableFiles`
- * counters. The legacy counters keep their pre-Phase-8 semantics so that
- * downstream consumers and tests are not silently rerouted; only the gate
- * exit code (`check_source_parity.mjs`) and `parityRegression` filtering
- * (`detection_reports.mjs`) switch to the new counters in later commits.
+ *   reportableActiveFiles / reportableActiveActionableFiles
+ *     Phase 8 gate counters. Count files with at least one
+ *     isReportableParityIssue()-true issue. Coarse audit signals do NOT
+ *     contribute here, even when their ack or baseline has expired —
+ *     so the gate cannot re-light on a coarse signal. Read by
+ *     check_source_parity.mjs::computeExitCode and
+ *     detection_reports.mjs::buildActionableReport.
  *
- * The contract for the new counters:
+ *   auditSignalIssues / auditSignalFiles / auditSignalsByType
+ *     Phase 8 audit channel: coarse signal totals + per-type breakdown.
  *
- *   reportableActiveFiles            = files with at least one
- *                                       isReportableParityIssue()-true issue
- *   reportableActiveActionableFiles  = same, restricted to severity=actionable
- *   auditSignalIssues                = total coarse signal issue count
- *   auditSignalFiles                 = files with at least one coarse signal
- *   auditSignalsByType               = coarse signal counts grouped by type
- *
- * Coarse signals are NEVER counted as reportable, even when their
- * acknowledgement or baseline has expired (so the gate cannot re-light on
- * them).
+ *   baselinedIssues / baselinedFiles / baselinedByType /
+ *   baselinedByInconclusiveCategory / expiredBaselineEntries
+ *     Frozen-drift accounting. parity-baseline.json keeps pre-cutover
+ *     segment-* drift out of the active gate; expired baseline entries
+ *     re-enter the gate per Phase 7 semantics.
  */
 export function summarizeParityResults(results) {
   const issuesByType = {};
@@ -60,6 +52,7 @@ export function summarizeParityResults(results) {
   let baselinedIssues = 0;
   let baselinedFiles = 0;
   let expiredBaselineEntries = 0;
+  let expiringBaselineEntries30d = 0;
   let reportableActiveFiles = 0;
   let reportableActiveActionableFiles = 0;
   let auditSignalIssues = 0;
@@ -86,6 +79,8 @@ export function summarizeParityResults(results) {
         baselinedByType[issue.type] = (baselinedByType[issue.type] || 0) + 1;
         if (issue.baselineExpired === true) {
           expiredBaselineEntries += 1;
+        } else if (issue.baselineExpiringSoon === true) {
+          expiringBaselineEntries30d += 1;
         }
         if (
           issue.type === 'segment-inconclusive' &&
@@ -171,6 +166,7 @@ export function summarizeParityResults(results) {
     baselinedByType,
     baselinedByInconclusiveCategory,
     expiredBaselineEntries,
+    expiringBaselineEntries30d,
     // Phase 8 — see header comment
     reportableActiveFiles,
     reportableActiveActionableFiles,

@@ -40,6 +40,31 @@ export function checkSourcePageMissingLocal(sidebarSlugs, localSlugs) {
 }
 
 /**
+ * Detect local JA pages that are NOT listed in the EN sidebar (orphans).
+ * The local file exists but the EN side has either removed or never had
+ * an entry for it — translation work that the EN sidebar does not cover.
+ *
+ * @param {Set<string>} localSlugs — slugs from local JA doc files
+ * @param {Set<string>} sidebarSlugs — slugs from EN sidebar snapshot
+ * @returns {Array<{type: string, detail: string, severity: string}>}
+ */
+export function checkLocalPageOrphan(localSlugs, sidebarSlugs) {
+  const issues = [];
+  if (!sidebarSlugs || sidebarSlugs.size === 0) return issues;
+  for (const slug of localSlugs) {
+    if (!sidebarSlugs.has(slug)) {
+      issues.push(
+        withSeverity({
+          type: 'local-page-orphan',
+          detail: `ローカルファイルが SIDEBAR_URLS.md に未掲載: ${slug}`,
+        }),
+      );
+    }
+  }
+  return issues;
+}
+
+/**
  * Detect JA pages with sourceUrl but no EN snapshot (bulk check).
  * Emits one of two distinct issue types so ISSUE_SEVERITY is canonical:
  *   - "missing-fresh-snapshot" (actionable) when freshnessState === "fresh"
@@ -106,6 +131,7 @@ export function checkPageCoverage({
 }) {
   return [
     ...checkSourcePageMissingLocal(sidebarSlugs, localSlugs),
+    ...checkLocalPageOrphan(localSlugs, sidebarSlugs),
     ...checkMissingSnapshot(localSourceUrls, snapshotSlugs, freshnessState),
   ];
 }

@@ -40,6 +40,7 @@ import {
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
+import { validateRunLinkage } from './lib/source_sync_health.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
@@ -50,6 +51,15 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json');
 
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
+
+/**
+ * Schema version for `parity-check-status.json`. Bumped whenever the
+ * top-level shape changes (added top-level fields like `result`,
+ * `schemaVersion`, etc.). Downstream validators MUST treat
+ * `schemaVersion !== PARITY_CHECK_STATUS_SCHEMA_VERSION` as
+ * non-loadable rather than silently coercing.
+ */
+export const PARITY_CHECK_STATUS_SCHEMA_VERSION = 1;
 
 function buildSegmentInconclusiveIssue(reason, category, meta = null) {
   // category is the structured enum from alignSegments (`inconclusiveCategory`)
@@ -63,9 +73,6 @@ function buildSegmentInconclusiveIssue(reason, category, meta = null) {
   return {
     type: 'segment-inconclusive',
     severity: ISSUE_SEVERITY['segment-inconclusive'],
-    // Phase 6A cutover: phase: 'segment-shadow' removed. segment-inconclusive
-    // now flows through the primary gate accounting, with existing drift
-    // frozen via parity-baseline.json (keyed by inconclusiveCategory).
     inconclusiveCategory: category ?? 'align-exception',
     inconclusiveMeta,
     inconclusiveReason: reason,
@@ -168,6 +175,42 @@ export function computeExitCode(summary, failOn) {
   return reportable > 0 || errorFiles > 0 ? 1 : 0;
 }
 
+/**
+ * Phase 8 cleanup: collapse a parity summary into one of three result
+ * states. The result lives at `parity-check-status.json.summary.result`
+ * and feeds the §2 fail-closed gate so downstream tools can refuse to
+ * sync detection issues from inconclusive runs without inspecting the
+ * full counter set.
+ *
+ *   pass         — no reportable parity issues, no error files, source
+ *                  sync is fresh (or freshness state is unknown for
+ *                  partial / legacy runs)
+ *   fail         — at least one reportable issue or error
+ *   inconclusive — source freshness was not "fresh" so the run cannot
+ *                  rule out gaps. We never down-grade `inconclusive` to
+ *                  `pass` even if all files happen to be clean.
+ *
+ * `freshnessState` is the value read from
+ * `source-sync-status.json.freshnessState`. Pass `null` when the file
+ * is missing (legacy runs); the helper treats null as "no freshness
+ * info available, do not block".
+ */
+export function computeParityResult(summary, freshnessState = null) {
+  if (!summary || typeof summary !== 'object') return 'inconclusive';
+  const reportable = summary.reportableActiveFiles || 0;
+  const errors = summary.activeErrorFiles || 0;
+  if (freshnessState && freshnessState !== 'fresh') {
+    // stale / partial / broken / unknown source — never call this a pass.
+    // We still report fail when there ARE reportable issues so the gate
+    // does not lose its signal, but a clean run is degraded to
+    // inconclusive instead of pass.
+    if (reportable > 0 || errors > 0) return 'fail';
+    return 'inconclusive';
+  }
+  if (reportable > 0 || errors > 0) return 'fail';
+  return 'pass';
+}
+
 export function getConsoleCoverageState(issues) {
   if (!Array.isArray(issues) || issues.length === 0) {
     return {
@@ -194,14 +237,34 @@ export function getConsoleCoverageState(issues) {
 }
 
 /**
- * Load freshness state from source-sync-status.json.
- * Returns null if file doesn't exist or is invalid.
+ * Load source-sync-status.json. Returns the parsed payload or null if
+ * the file doesn't exist / is invalid. Used both for freshness state
+ * (legacy callers) and for §3 run linkage validation (which needs the
+ * full payload, not just freshnessState).
  */
-function loadFreshnessState() {
+function loadSourceSyncPayload() {
   if (!fs.existsSync(SOURCE_SYNC_STATUS_PATH)) return null;
   try {
-    const data = JSON.parse(fs.readFileSync(SOURCE_SYNC_STATUS_PATH, 'utf8'));
-    return data.freshnessState ?? null;
+    return JSON.parse(fs.readFileSync(SOURCE_SYNC_STATUS_PATH, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+const SNAPSHOT_DIFF_STATUS_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
+
+/**
+ * Load snapshot-diff-status.json for §3 run linkage validation. Returns
+ * the parsed payload or null if missing. The parity gate does NOT
+ * require this file to exist (PR CI runs parity without first running
+ * snapshot_diff); when it is missing the linkage validator returns
+ * "missing" and the result stays at whatever computeParityResult
+ * decides from the freshness state alone.
+ */
+function loadSnapshotDiffPayload() {
+  if (!fs.existsSync(SNAPSHOT_DIFF_STATUS_PATH)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(SNAPSHOT_DIFF_STATUS_PATH, 'utf8'));
   } catch {
     return null;
   }
@@ -276,7 +339,9 @@ export async function checkSourceParity({
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH) ? fs.readFileSync(SIDEBAR_PATH, 'utf8') : '';
   const sidebarSlugs = loadSidebarSlugs(sidebarText);
-  const freshnessState = loadFreshnessState();
+  const sourceSyncPayload = loadSourceSyncPayload();
+  const freshnessState = sourceSyncPayload?.freshnessState ?? null;
+  const snapshotDiffPayload = loadSnapshotDiffPayload();
   const snapshotSlugs = collectSnapshotSlugs(SNAPSHOTS_DIR);
   const allFiles = findMdFiles(DOCS_DIR);
 
@@ -333,10 +398,20 @@ export async function checkSourceParity({
     }
 
     checkedCount += 1;
-    let issues = [...localCheck({ body: doc.body, sidebarSlugs, slug: fileSlug })];
+    let issues = [...localCheck({ body: doc.body })];
 
-    // Per-file snapshot-missing check (--slug mode only; global mode uses page coverage gate)
+    // Per-file page coverage checks (--slug mode only; global mode uses
+    // page coverage gate after the per-file loop). Mirrors the bulk
+    // checkLocalPageOrphan / checkSinglePageSnapshot semantics so a
+    // single-page run can still surface coverage gaps.
     if (resolvedSlug) {
+      if (sidebarSlugs && sidebarSlugs.size > 0 && !sidebarSlugs.has(fileSlug)) {
+        issues.push({
+          type: 'local-page-orphan',
+          severity: ISSUE_SEVERITY['local-page-orphan'],
+          detail: `ローカルファイルが SIDEBAR_URLS.md に未掲載: ${fileSlug}`,
+        });
+      }
       issues.push(
         ...checkSinglePageSnapshot(fileSlug, doc.data.sourceUrl || '', snapshotSlugs, freshnessState),
       );
@@ -430,17 +505,17 @@ export async function checkSourceParity({
         } else {
           // Primary gate: segment-level diffs PLUS the coarse signals that
           // are complementary (image order, callout nesting, table shape).
-          // The count-based mismatches in compareSnapshotStructure are
-          // intentionally still emitted at `signal` severity per their
-          // ISSUE_SEVERITY mapping; they will be demoted to audit-only in
-          // Phase 8 when the workflow split lands.
+          // Phase 8 demoted the count-based mismatches in
+          // compareSnapshotStructure to audit-only via the
+          // COARSE_SIGNAL_TYPES allowlist. They are still emitted at
+          // `signal` severity (so the audit channel can report them) but
+          // never reach parityRegression or the gate exit code.
           issues.push(...segmentIssues);
           issues.push(...compareSnapshotStructure(enBody, doc.body));
         }
       }
     }
 
-    // Tag with acknowledgements (replaces applyAllowlist)
     issues = tagIssuesWithAcknowledgements(
       fileSlug,
       issues,
@@ -449,11 +524,10 @@ export async function checkSourceParity({
       today,
     );
 
-    // Phase 6A PR1 — tag with baseline. Shadow phase tagging stays in place,
-    // so baseline-flagged issues are still excluded from the active gate
-    // by the shadow accounting in summarizeParityResults. The `baselined`
-    // metadata is recorded in parity-check-status.json so PR2 can flip the
-    // gate without changing baseline machinery.
+    // Tag with baseline. Frozen (non-expired) baseline entries are
+    // excluded from the gate via isFrozenByBaseline / isReportableParityIssue
+    // (see scripts/lib/source_parity_issue_state.mjs). Expired baseline
+    // entries re-enter the gate per Phase 7 semantics.
     {
       const baselineResult = tagIssuesWithBaseline(
         fileSlug,
@@ -562,7 +636,25 @@ export async function checkSourceParity({
   if (advisoryQueueError) {
     console.error(`⚠ Phase 6B review queue unavailable: ${advisoryQueueError}`);
   }
-  const summary = {
+  // §3 cleanup: validate run linkage between source-sync-status,
+  // snapshot-diff-status, and the parity gate's own run scope. The
+  // result is folded into computeParityResult so any non-"linked"
+  // state forces inconclusive on a clean run (we never silently turn
+  // a stale run into pass).
+  const parityRunScope = buildRunScope({ resolvedSlug, section });
+  const linkageState = validateRunLinkage(
+    sourceSyncPayload,
+    snapshotDiffPayload,
+    parityRunScope,
+  );
+  // PR CI runs parity without first running snapshot_diff and without
+  // a source-sync payload. Treat that as the legacy "no linkage info"
+  // case (linkage='missing') and don't downgrade the result. Live runs
+  // (which have a source-sync payload) MUST link cleanly.
+  const linkageBlocking =
+    sourceSyncPayload != null && linkageState !== 'linked' && linkageState !== 'missing';
+
+  const summaryBase = {
     checkedAt: new Date().toISOString(),
     mode: 'local',
     totalFiles: allFiles.length,
@@ -572,10 +664,30 @@ export async function checkSourceParity({
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
     // Phase 8 PR2: classify the run scope so downstream sync tooling can
     // refuse to act on partial runs. See buildRunScope() above.
-    runScope: buildRunScope({ resolvedSlug, section }),
+    runScope: parityRunScope,
+    // Phase 8 cleanup: source freshness reflected on the summary so
+    // validators do not need to re-read source-sync-status.json.
+    freshnessState: freshnessState ?? null,
+    // §3 cleanup: linkage state and the snapshot_diff runId we observed
+    // (or null when none). Surfaces in detection_reports / sync guards.
+    linkageState,
+    snapshotDiffRunId: snapshotDiffPayload?.runId ?? null,
+    sourceSyncRunId: sourceSyncPayload?.runId ?? null,
+    sourceInventoryFingerprint: sourceSyncPayload?.sourceInventoryFingerprint ?? null,
+  };
+  // computeParityResult depends on the full counter set, so it has to
+  // run after summarizeParityResults has been spread into summaryBase.
+  // The linkage check is layered on top: if the linkage is broken
+  // (stale / scope-mismatch), we degrade pass→inconclusive but keep
+  // fail as fail (so a real regression still surfaces).
+  const baseResult = computeParityResult(summaryBase, freshnessState);
+  const summary = {
+    ...summaryBase,
+    result: linkageBlocking && baseResult === 'pass' ? 'inconclusive' : baseResult,
   };
 
   const payload = {
+    schemaVersion: PARITY_CHECK_STATUS_SCHEMA_VERSION,
     summary,
     files: results,
     advisoryQueueScope,
@@ -603,6 +715,11 @@ export async function checkSourceParity({
     }
     if (summary.expiredBaselineEntries > 0) {
       console.log(`expired baseline entries: ${summary.expiredBaselineEntries} 件`);
+    }
+    if (summary.expiringBaselineEntries30d > 0) {
+      console.log(
+        `expiring baseline entries (≤30 日): ${summary.expiringBaselineEntries30d} 件`,
+      );
     }
     console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {

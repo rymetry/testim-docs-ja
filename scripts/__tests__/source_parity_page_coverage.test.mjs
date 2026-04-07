@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   checkSourcePageMissingLocal,
+  checkLocalPageOrphan,
   checkMissingSnapshot,
   checkSinglePageSnapshot,
   checkPageCoverage,
@@ -49,6 +50,54 @@ describe('checkSourcePageMissingLocal', () => {
     const sidebarSlugs = new Set(['a']);
     const localSlugs = new Set(['a', 'b', 'c']);
     const result = checkSourcePageMissingLocal(sidebarSlugs, localSlugs);
+    assert.deepEqual(result, []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// checkLocalPageOrphan
+// ---------------------------------------------------------------------------
+
+describe('checkLocalPageOrphan', () => {
+  it('returns empty when all local slugs are in the sidebar', () => {
+    const localSlugs = new Set(['overview/a', 'overview/b']);
+    const sidebarSlugs = new Set(['overview/a', 'overview/b', 'overview/c']);
+    const result = checkLocalPageOrphan(localSlugs, sidebarSlugs);
+    assert.deepEqual(result, []);
+  });
+
+  it('emits local-page-orphan for slugs not in sidebar', () => {
+    const localSlugs = new Set(['overview/a', 'overview/orphan']);
+    const sidebarSlugs = new Set(['overview/a']);
+    const result = checkLocalPageOrphan(localSlugs, sidebarSlugs);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].type, 'local-page-orphan');
+    assert.equal(result[0].severity, 'actionable');
+    assert.match(result[0].detail, /overview\/orphan/);
+  });
+
+  it('emits multiple orphans in stable iteration order', () => {
+    const localSlugs = new Set(['a', 'b', 'c']);
+    const sidebarSlugs = new Set(['a']);
+    const result = checkLocalPageOrphan(localSlugs, sidebarSlugs);
+    assert.equal(result.length, 2);
+    const slugs = result.map((r) => r.detail);
+    assert.ok(slugs.some((d) => d.includes('b')));
+    assert.ok(slugs.some((d) => d.includes('c')));
+  });
+
+  it('returns empty when sidebarSlugs is empty (cannot trust orphan signal without sidebar)', () => {
+    // If the sidebar load failed, every local file would look orphaned.
+    // The check guards against that by returning [] when sidebarSlugs
+    // is empty, so that a missing sidebar does not flood the gate.
+    const localSlugs = new Set(['a', 'b']);
+    const result = checkLocalPageOrphan(localSlugs, new Set());
+    assert.deepEqual(result, []);
+  });
+
+  it('returns empty when sidebarSlugs is null', () => {
+    const localSlugs = new Set(['a']);
+    const result = checkLocalPageOrphan(localSlugs, null);
     assert.deepEqual(result, []);
   });
 });
@@ -185,6 +234,22 @@ describe('checkPageCoverage', () => {
     const types = result.map((r) => r.type);
     assert.ok(types.includes('source-page-missing-local'));
     assert.ok(types.includes('missing-fresh-snapshot'));
+  });
+
+  it('emits local-page-orphan for local files not in sidebar', () => {
+    const result = checkPageCoverage({
+      sidebarSlugs: new Set(['a']),
+      localSlugs: new Set(['a', 'orphan-z']),
+      localSourceUrls: new Map([
+        ['a', 'https://example.com/a'],
+        ['orphan-z', 'https://example.com/orphan-z'],
+      ]),
+      snapshotSlugs: new Set(['a', 'orphan-z']),
+      freshnessState: 'fresh',
+    });
+    const orphan = result.find((r) => r.type === 'local-page-orphan');
+    assert.ok(orphan, 'local-page-orphan must fire');
+    assert.match(orphan.detail, /orphan-z/);
   });
 
   it('returns empty array when everything is covered', () => {

@@ -211,6 +211,41 @@ export function isBaselineExpired(entry, today) {
 }
 
 /**
+ * Pre-expiry warning window in days. The baseline `reviewAfter` cliff used
+ * to fire all 1000+ entries on the same day; the §5 stagger fixes the cliff
+ * itself, and this warning window gives a runway for paydown PRs to land
+ * before any individual entry actually re-enters the gate.
+ */
+export const BASELINE_EXPIRY_WARNING_DAYS = 30;
+
+/**
+ * Returns true when an entry's `reviewAfter` is within
+ * `BASELINE_EXPIRY_WARNING_DAYS` of `today` (inclusive of the boundary)
+ * but the entry has not yet expired.
+ *
+ * Both inputs MUST be strict YYYY-MM-DD strings; this function does not
+ * accept Date objects so callers cannot accidentally introduce timezone
+ * drift.
+ *
+ * @param {object} entry
+ * @param {string} today — strict YYYY-MM-DD
+ * @returns {boolean}
+ */
+export function isBaselineExpiringSoon(entry, today) {
+  if (typeof today !== 'string' || !REVIEW_AFTER_RE.test(today)) return false;
+  if (typeof entry.reviewAfter !== 'string' || !REVIEW_AFTER_RE.test(entry.reviewAfter)) {
+    return false;
+  }
+  if (today > entry.reviewAfter) return false; // already expired
+  const [ty, tm, td] = today.split('-').map(Number);
+  const [ry, rm, rd] = entry.reviewAfter.split('-').map(Number);
+  const todayUtc = Date.UTC(ty, tm - 1, td);
+  const reviewUtc = Date.UTC(ry, rm - 1, rd);
+  const diffDays = Math.floor((reviewUtc - todayUtc) / 86400000);
+  return diffDays >= 0 && diffDays <= BASELINE_EXPIRY_WARNING_DAYS;
+}
+
+/**
  * Build a stable lookup key from an issue object.
  *
  * Key rules (locked-in for Phase 6A):
@@ -361,6 +396,8 @@ export function tagIssuesWithBaseline(
       };
       if (isBaselineExpired(entry, today)) {
         taggedIssue.baselineExpired = true;
+      } else if (isBaselineExpiringSoon(entry, today)) {
+        taggedIssue.baselineExpiringSoon = true;
       }
       return taggedIssue;
     }

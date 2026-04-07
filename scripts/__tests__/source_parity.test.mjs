@@ -1,12 +1,10 @@
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-let extractFromMd;
 let localCheck;
 let summarizeParityResults;
 let isEnglishOnlyLine;
 let loadSidebarSlugs;
-let isActionableIssue;
 let extractImageSequence;
 let extractCalloutPositions;
 let extractStepCounts;
@@ -20,8 +18,6 @@ let stripMarkdown;
 let isUntranslatedCell;
 let extractInvariantTokens;
 let normalizeEnArtifacts;
-let checkSidebarCoverage;
-let checkSourceSnapshotMissing;
 let extractHeadingSequence;
 let classifyLine;
 let checkSourcePageMissingLocal;
@@ -31,12 +27,10 @@ let checkPageCoverage;
 
 before(async () => {
   ({
-    extractFromMd,
     localCheck,
     summarizeParityResults,
     isEnglishOnlyLine,
     loadSidebarSlugs,
-    isActionableIssue,
     extractImageSequence,
     extractCalloutPositions,
     extractStepCounts,
@@ -50,8 +44,6 @@ before(async () => {
     isUntranslatedCell,
     extractInvariantTokens,
     normalizeEnArtifacts,
-    checkSidebarCoverage,
-    checkSourceSnapshotMissing,
     extractHeadingSequence,
     classifyLine,
     checkSourcePageMissingLocal,
@@ -128,69 +120,13 @@ describe('loadSidebarSlugs', () => {
   });
 });
 
-describe('isActionableIssue', () => {
-  it('returns true for actionable severity', () => {
-    assert.equal(isActionableIssue({ severity: 'actionable' }), true);
-  });
-
-  it('returns false for signal or error severity', () => {
-    assert.equal(isActionableIssue({ severity: 'signal' }), false);
-    assert.equal(isActionableIssue({ severity: 'error' }), false);
-  });
-});
-
-describe('extractFromMd', () => {
-  it('counts markdown, Image, img, and list-item fenced code blocks', () => {
-    const body = `
-## Section
-
-![Screenshot](/images/one.png)
-<Image src="/images/two.png" alt={123} />
-<img src="/images/three.png" alt="inline" />
-
-1. Step
--   \`\`\`js
-   const value = 1;
-   \`\`\`
-
-![Screenshot](/images/four.png)
-`;
-
-    const result = extractFromMd(body);
-    assert.equal(result.h2Count, 1);
-    assert.equal(result.imgCount, 4);
-    assert.equal(result.codeBlockCount, 1);
-  });
-
-  it('counts h3 headings', () => {
-    const body = '## H2\n### H3 one\n### H3 two\n';
-    const result = extractFromMd(body);
-    assert.equal(result.h2Count, 1);
-    assert.equal(result.h3Count, 2);
-  });
-
-  it('counts ::: callouts and legacy callouts', () => {
-    const body = ':::note\nSome note\n:::\n\n> 📘 Legacy callout\n';
-    const result = extractFromMd(body);
-    // ::: open + ::: close = 2 matches, plus 1 legacy
-    assert.ok(result.calloutCount >= 2);
-  });
-
-  it('returns zeros for empty body', () => {
-    const result = extractFromMd('');
-    assert.equal(result.h2Count, 0);
-    assert.equal(result.imgCount, 0);
-    assert.equal(result.codeBlockCount, 0);
-  });
-});
-
 describe('localCheck', () => {
+  // Page-coverage responsibilities (sidebar membership, snapshot presence)
+  // moved to source_parity_page_coverage.mjs in §4 of the cleanup. localCheck
+  // is now a body-only check.
+
   it('detects untranslated english lines and annotates severity', () => {
-    const issues = localCheck({
-      body: '1. Click on the **Settings** button.\n',
-      sidebarSlugs: new Set(['sample']),
-      slug: 'sample',
-    });
+    const issues = localCheck({ body: '1. Click on the **Settings** button.\n' });
 
     assert.equal(issues.length, 1);
     assert.equal(issues[0].type, 'untranslated');
@@ -198,11 +134,7 @@ describe('localCheck', () => {
   });
 
   it('detects legacy callout (blockquote emoji pattern)', () => {
-    const issues = localCheck({
-      body: '> 📘 This is a callout\n> Some content\n',
-      sidebarSlugs: new Set(['sample']),
-      slug: 'sample',
-    });
+    const issues = localCheck({ body: '> 📘 This is a callout\n> Some content\n' });
 
     const legacyIssues = issues.filter((i) => i.type === 'legacy-callout');
     assert.ok(legacyIssues.length > 0);
@@ -210,11 +142,7 @@ describe('localCheck', () => {
   });
 
   it('detects JSX callout component', () => {
-    const issues = localCheck({
-      body: '<Callout type="info">Note text</Callout>\n',
-      sidebarSlugs: new Set(['sample']),
-      slug: 'sample',
-    });
+    const issues = localCheck({ body: '<Callout type="info">Note text</Callout>\n' });
 
     const jsxIssues = issues.filter((i) => i.type === 'jsx-callout');
     assert.ok(jsxIssues.length > 0);
@@ -222,11 +150,7 @@ describe('localCheck', () => {
   });
 
   it('detects h1 in body (not at first line)', () => {
-    const issues = localCheck({
-      body: 'Some intro text\n# This is an H1 in body\n',
-      sidebarSlugs: new Set(['sample']),
-      slug: 'sample',
-    });
+    const issues = localCheck({ body: 'Some intro text\n# This is an H1 in body\n' });
 
     const h1Issues = issues.filter((i) => i.type === 'h1-in-body');
     assert.ok(h1Issues.length > 0);
@@ -234,32 +158,25 @@ describe('localCheck', () => {
   });
 
   it('does not flag h1 at the first line', () => {
-    const issues = localCheck({
-      body: '# Title at first line\nSome content\n',
-      sidebarSlugs: new Set(['sample']),
-      slug: 'sample',
-    });
+    const issues = localCheck({ body: '# Title at first line\nSome content\n' });
 
     const h1Issues = issues.filter((i) => i.type === 'h1-in-body');
     assert.equal(h1Issues.length, 0);
   });
 
-  it('detects orphan page (not in sidebar)', () => {
-    const issues = localCheck({
-      body: 'Some content\n',
-      sidebarSlugs: new Set(['other-page']),
-      slug: 'missing-from-sidebar',
-    });
-
-    const orphanIssues = issues.filter((i) => i.type === 'orphan-page');
-    assert.ok(orphanIssues.length > 0);
+  it('does not emit page-coverage issues (responsibility moved to page coverage gate)', () => {
+    // Even when called without sidebarSlugs/slug, localCheck must not emit
+    // orphan-page or any sidebar-related issue. The bulk page coverage gate
+    // (checkLocalPageOrphan) is the canonical source.
+    const issues = localCheck({ body: 'Some content\n' });
+    const coverageTypes = ['orphan-page', 'local-page-orphan', 'source-page-missing-local'];
+    const detected = issues.filter((i) => coverageTypes.includes(i.type));
+    assert.equal(detected.length, 0);
   });
 
   it('skips detection inside code blocks', () => {
     const issues = localCheck({
       body: '```\n> 📘 Inside code block\n<Callout>Also inside</Callout>\n# H1 inside code\nClick on the **Settings** button.\n```\n',
-      sidebarSlugs: new Set(['sample']),
-      slug: 'sample',
     });
 
     // None of the issues inside the code block should be detected
@@ -1712,73 +1629,6 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
 });
 
 // ---------------------------------------------------------------------------
-// checkSidebarCoverage tests
-// ---------------------------------------------------------------------------
-
-describe('checkSidebarCoverage', () => {
-  it('detects sidebar slugs with no local file', () => {
-    const sidebarSlugs = new Set(['testim-overview', 'getting-started', 'missing-page']);
-    const existingSlugs = new Set(['testim-overview', 'getting-started']);
-    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
-    assert.equal(issues.length, 1);
-    assert.equal(issues[0].type, 'sidebar-missing-file');
-    assert.equal(issues[0].severity, 'actionable');
-    assert.ok(issues[0].detail.includes('missing-page'));
-  });
-
-  it('returns empty when all sidebar slugs have files', () => {
-    const sidebarSlugs = new Set(['testim-overview', 'getting-started']);
-    const existingSlugs = new Set(['testim-overview', 'getting-started', 'extra-file']);
-    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
-    assert.equal(issues.length, 0);
-  });
-
-  it('returns empty when sidebar is empty', () => {
-    const sidebarSlugs = new Set();
-    const existingSlugs = new Set(['testim-overview']);
-    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
-    assert.equal(issues.length, 0);
-  });
-
-  it('detects multiple missing files', () => {
-    const sidebarSlugs = new Set(['a', 'b', 'c']);
-    const existingSlugs = new Set(['a']);
-    const issues = checkSidebarCoverage({ sidebarSlugs, existingSlugs });
-    assert.equal(issues.length, 2);
-    const slugsInDetail = issues.map(i => i.detail);
-    assert.ok(slugsInDetail.some(d => d.includes('b')));
-    assert.ok(slugsInDetail.some(d => d.includes('c')));
-  });
-});
-
-// ---------------------------------------------------------------------------
-// checkSourceSnapshotMissing tests
-// ---------------------------------------------------------------------------
-
-describe('checkSourceSnapshotMissing', () => {
-  it('reports missing snapshot when sourceUrl is present', () => {
-    const issues = checkSourceSnapshotMissing({
-      slug: 'nonexistent-page',
-      sourceUrl: 'https://docs.tricentis.com/testim/content/overview/nonexistent-page.htm',
-      snapshotsDir: '/tmp/no-such-snapshots-dir',
-    });
-    assert.equal(issues.length, 1);
-    assert.equal(issues[0].type, 'source-snapshot-missing');
-    assert.equal(issues[0].severity, 'signal');
-    assert.ok(issues[0].detail.includes('nonexistent-page'));
-  });
-
-  it('returns empty when sourceUrl is absent', () => {
-    const issues = checkSourceSnapshotMissing({
-      slug: 'some-page',
-      sourceUrl: '',
-      snapshotsDir: '/tmp/no-such-snapshots-dir',
-    });
-    assert.equal(issues.length, 0);
-  });
-});
-
-// ---------------------------------------------------------------------------
 // classifyLine — state machine unit tests (H2)
 // ---------------------------------------------------------------------------
 describe('classifyLine', () => {
@@ -2104,11 +1954,9 @@ describe('source_parity.mjs facade completeness', () => {
 
   it('re-exports all expected functions from source_parity_checks.mjs', () => {
     const expectedFunctions = [
-      'isActionableIssue',
       'isEnglishOnlyLine',
       'loadSidebarSlugs',
       'localCheck',
-      'extractFromMd',
       'extractImageSequence',
       'extractCalloutPositions',
       'extractStepCounts',
@@ -2126,8 +1974,6 @@ describe('source_parity.mjs facade completeness', () => {
       'extractTableStructure',
       'detectEnArtifacts',
       'compareSnapshotStructure',
-      'checkSidebarCoverage',
-      'checkSourceSnapshotMissing',
     ];
 
     for (const name of expectedFunctions) {

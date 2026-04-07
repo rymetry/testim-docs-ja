@@ -45,16 +45,6 @@ describe('Phase 8 — COARSE_SIGNAL_TYPES allowlist', () => {
     assert.equal(COARSE_SIGNAL_TYPES.has('missing-snapshot'), false);
   });
 
-  it('does NOT include source-snapshot-missing (gate signal for missing fetches)', () => {
-    assert.equal(COARSE_SIGNAL_TYPES.has('source-snapshot-missing'), false);
-  });
-
-  it('does NOT include content-root-missing (no live emitter)', () => {
-    // content-root-missing is declared in ISSUE_SEVERITY but has no emitter.
-    // Phase 8 keeps it untouched rather than including it in the allowlist.
-    assert.equal(COARSE_SIGNAL_TYPES.has('content-root-missing'), false);
-  });
-
   it('does NOT include any segment-* type (Phase 5/6A primary gate)', () => {
     for (const type of [
       'segment-missing',
@@ -145,13 +135,6 @@ describe('Phase 8 — isCoarseAuditSignal', () => {
   it('returns false for missing-snapshot (still a gate signal)', () => {
     assert.equal(
       isCoarseAuditSignal({ type: 'missing-snapshot', severity: 'signal' }),
-      false,
-    );
-  });
-
-  it('returns false for source-snapshot-missing', () => {
-    assert.equal(
-      isCoarseAuditSignal({ type: 'source-snapshot-missing', severity: 'signal' }),
       false,
     );
   });

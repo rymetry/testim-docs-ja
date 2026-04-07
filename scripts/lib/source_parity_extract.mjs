@@ -3,35 +3,6 @@ import { extractSlug as extractSlugFromUrl } from './madcap_toc.mjs';
 import { buildBasenameToPathMap } from './project.mjs';
 import { FENCE_LINE_RE } from './source_parity_types.mjs';
 
-export function extractFromMd(body) {
-  const lines = body.split('\n');
-  let h2Count = 0;
-  let h3Count = 0;
-  let imgCount = 0;
-  let codeBlockCount = 0;
-  let calloutCount = 0;
-  let inCodeBlock = false;
-
-  for (const line of lines) {
-    if (FENCE_LINE_RE.test(line)) {
-      if (!inCodeBlock) codeBlockCount += 1;
-      inCodeBlock = !inCodeBlock;
-      continue;
-    }
-    if (inCodeBlock) continue;
-
-    if (/^##\s/.test(line)) h2Count += 1;
-    if (/^###\s/.test(line)) h3Count += 1;
-    imgCount += (line.match(/!\[/g) || []).length;
-    imgCount += (line.match(/<Image\b[^>]*\bsrc\s*=/g) || []).length;
-    imgCount += (line.match(/<img\b[^>]*\bsrc\s*=/gi) || []).length;
-    if (/^:::/.test(line.trim())) calloutCount += 1;
-    if (/^>\s*(?:📘|❗️?|🚧|👍|⚠️|📝|✅|❌|💡|ℹ️|⛔|🔥|💥|🎯|📌|🏷️)\s/.test(line)) calloutCount += 1;
-  }
-
-  return { h2Count, h3Count, imgCount, codeBlockCount, calloutCount };
-}
-
 const IMAGE_PATTERNS = [
   /!\[[^\]]*\]\(([^)]+)\)/g,
   /<Image\b[^>]*\bsrc\s*=\s*"([^"]+)"/g,

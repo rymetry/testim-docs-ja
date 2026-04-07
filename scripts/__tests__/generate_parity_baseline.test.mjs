@@ -93,7 +93,9 @@ const fingerprintMap = new Map([['overview/example', VALID_FINGERPRINT]]);
 const meta = {
   runId: 'test-run',
   generatedAt: '2026-04-06T03:00:00Z',
-  reviewAfter: '2026-10-06',
+  // Locks every entry to 2026-10-06 by overriding the staggered default,
+  // so legacy assertions that expect a single reviewAfter date keep working.
+  reviewAfterOverride: '2026-10-06',
   rationale: 'test',
 };
 
@@ -142,7 +144,9 @@ describe('buildGenerationMeta', () => {
       metaFromEarlyCall.runId,
       '2026-04-06T03:00:00Z#parity-check-status',
     );
-    assert.equal(metaFromEarlyCall.reviewAfter, '2026-10-06');
+    // No reviewAfter on meta — per-entry stagger lives in
+    // buildBaselineFromStatus. The override slot defaults to null.
+    assert.equal(metaFromEarlyCall.reviewAfterOverride, null);
   });
 
   it('honors explicit rationale and reviewAfter overrides', () => {
@@ -153,7 +157,7 @@ describe('buildGenerationMeta', () => {
       reviewAfter: '2026-12-31',
     });
     assert.equal(metaOverride.rationale, 'custom rationale');
-    assert.equal(metaOverride.reviewAfter, '2026-12-31');
+    assert.equal(metaOverride.reviewAfterOverride, '2026-12-31');
   });
 });
 
@@ -244,6 +248,140 @@ describe('buildBaselineFromStatus', () => {
     assert.equal(missing.enSourceFingerprint, EN_SEGMENT_FINGERPRINT);
     assert.equal(extra.jaSourceFingerprint, JA_SEGMENT_FINGERPRINT);
     assert.deepEqual(tokenGap.missingTokens, ['--proxy', 'TESTIM_KEY']);
+  });
+
+  it('staggers reviewAfter per slug when no override is set (§5)', () => {
+    // Two slugs from a sample status with no reviewAfterOverride. Their
+    // reviewAfter values must each be 6 months out from generatedAt plus
+    // a deterministic per-slug offset in [0, 90) days.
+    const status = {
+      summary: { checkedAt: '2026-04-06T00:00:00Z', checkedFiles: 2, totalFiles: 2 },
+      files: [
+        {
+          file: 'src/content/docs/section/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              sectionPath: 'Setup',
+              segmentKind: 'paragraph',
+              enSegmentIndex: 0,
+              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+            },
+          ],
+        },
+        {
+          file: 'src/content/docs/section/page-b.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              sectionPath: 'Setup',
+              segmentKind: 'paragraph',
+              enSegmentIndex: 0,
+              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+            },
+          ],
+        },
+      ],
+    };
+    const fpMap = new Map([
+      ['section/page-a', VALID_FINGERPRINT],
+      ['section/page-b', VALID_FINGERPRINT],
+    ]);
+    const baseline = buildBaselineFromStatus(status, fpMap, {
+      runId: 'r',
+      generatedAt: '2026-04-06T00:00:00Z',
+      reviewAfterOverride: null,
+      rationale: 'r',
+    });
+    const a = baseline.entries.find((e) => e.slug === 'section/page-a');
+    const b = baseline.entries.find((e) => e.slug === 'section/page-b');
+    assert.match(a.reviewAfter, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(b.reviewAfter, /^\d{4}-\d{2}-\d{2}$/);
+    // Different slugs MUST hit different cells of the stagger window
+    // (deterministic per-slug hash). If this ever flakes, recheck
+    // staggeredOffsetDays.
+    assert.notEqual(a.reviewAfter, b.reviewAfter);
+    // Both must be at least 6 months past generatedAt (the base date).
+    assert.ok(a.reviewAfter >= '2026-10-06');
+    assert.ok(b.reviewAfter >= '2026-10-06');
+    // And both must be within base + 90 days (stagger window).
+    assert.ok(a.reviewAfter < '2027-01-04');
+    assert.ok(b.reviewAfter < '2027-01-04');
+  });
+
+  it('staggered reviewAfter is deterministic across runs (§5)', () => {
+    const status = {
+      summary: { checkedAt: '2026-04-06T00:00:00Z', checkedFiles: 1, totalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/section/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              sectionPath: 'Setup',
+              segmentKind: 'paragraph',
+              enSegmentIndex: 0,
+              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+            },
+          ],
+        },
+      ],
+    };
+    const fpMap = new Map([['section/page-a', VALID_FINGERPRINT]]);
+    const metaNoOverride = {
+      runId: 'r',
+      generatedAt: '2026-04-06T00:00:00Z',
+      reviewAfterOverride: null,
+      rationale: 'r',
+    };
+    const a = buildBaselineFromStatus(status, fpMap, metaNoOverride);
+    const b = buildBaselineFromStatus(status, fpMap, metaNoOverride);
+    assert.equal(a.entries[0].reviewAfter, b.entries[0].reviewAfter);
+  });
+
+  it('reviewAfterOverride disables stagger and locks every entry to one date (§5)', () => {
+    const status = {
+      summary: { checkedAt: '2026-04-06T00:00:00Z', checkedFiles: 2, totalFiles: 2 },
+      files: [
+        {
+          file: 'src/content/docs/section/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              sectionPath: 'Setup',
+              segmentKind: 'paragraph',
+              enSegmentIndex: 0,
+              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+            },
+          ],
+        },
+        {
+          file: 'src/content/docs/section/page-b.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              sectionPath: 'Setup',
+              segmentKind: 'paragraph',
+              enSegmentIndex: 0,
+              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
+            },
+          ],
+        },
+      ],
+    };
+    const fpMap = new Map([
+      ['section/page-a', VALID_FINGERPRINT],
+      ['section/page-b', VALID_FINGERPRINT],
+    ]);
+    const baseline = buildBaselineFromStatus(status, fpMap, {
+      runId: 'r',
+      generatedAt: '2026-04-06T00:00:00Z',
+      reviewAfterOverride: '2027-01-15',
+      rationale: 'r',
+    });
+    for (const entry of baseline.entries) {
+      assert.equal(entry.reviewAfter, '2027-01-15');
+    }
   });
 });
 

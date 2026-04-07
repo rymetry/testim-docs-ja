@@ -1,7 +1,4 @@
 /** Comparison and validation functions for EN/JA source parity checking. */
-import fs from 'node:fs';
-import path from 'node:path';
-
 import { extractSlug as extractSlugFromUrl, matchAllTricentisUrls } from './madcap_toc.mjs';
 import {
   detectEnArtifacts,
@@ -34,10 +31,6 @@ function withSeverity(issue) {
   };
 }
 
-export function isActionableIssue(issue) {
-  return issue.severity === 'actionable';
-}
-
 export function isEnglishOnlyLine(line) {
   const trimmed = line.trim();
   if (!trimmed) return false;
@@ -62,14 +55,10 @@ export function loadSidebarSlugs(sidebarText) {
   return slugs;
 }
 
-export function localCheck({ body, sidebarSlugs, slug }) {
+export function localCheck({ body }) {
   const issues = [];
   const lines = body.split('\n');
   let inCodeBlock = false;
-
-  if (sidebarSlugs && slug && !sidebarSlugs.has(slug)) {
-    issues.push(withSeverity({ type: 'orphan-page', detail: 'SIDEBAR_URLS.md に未掲載' }));
-  }
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
@@ -412,31 +401,3 @@ export function compareSnapshotStructure(enBody, jaBody) {
   return issues;
 }
 
-export function checkSidebarCoverage({ sidebarSlugs, existingSlugs }) {
-  const issues = [];
-  for (const slug of sidebarSlugs) {
-    if (!existingSlugs.has(slug)) {
-      issues.push(
-        withSeverity({
-          type: 'sidebar-missing-file',
-          detail: `SIDEBAR_URLS.md に掲載だがローカルファイルが存在しない: ${slug}`,
-        })
-      );
-    }
-  }
-  return issues;
-}
-
-export function checkSourceSnapshotMissing({ slug, sourceUrl, snapshotsDir }) {
-  if (!sourceUrl) return [];
-
-  const snapshotPath = path.join(snapshotsDir, `${slug}.html`);
-  if (fs.existsSync(snapshotPath)) return [];
-
-  return [
-    withSeverity({
-      type: 'source-snapshot-missing',
-      detail: `sourceUrl があるが EN スナップショットが存在しない: ${slug}`,
-    }),
-  ];
-}

@@ -10,7 +10,9 @@ let isValidAcknowledgedIssue;
 let isNonBlockingIssue;
 let getConsoleCoverageState;
 let computeExitCode;
+let computeParityResult;
 let buildRunScope;
+let PARITY_CHECK_STATUS_SCHEMA_VERSION;
 
 before(async () => {
   ({
@@ -20,7 +22,9 @@ before(async () => {
     isNonBlockingIssue,
     getConsoleCoverageState,
     computeExitCode,
+    computeParityResult,
     buildRunScope,
+    PARITY_CHECK_STATUS_SCHEMA_VERSION,
   } = await import('../check_source_parity.mjs'));
 });
 
@@ -353,6 +357,58 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
 // ---------------------------------------------------------------------------
 // Phase 8 PR2: runScope on parity-check-status summary
 // ---------------------------------------------------------------------------
+
+describe('§1 cleanup — schema version constant', () => {
+  it('exports PARITY_CHECK_STATUS_SCHEMA_VERSION === 1', () => {
+    assert.equal(PARITY_CHECK_STATUS_SCHEMA_VERSION, 1);
+  });
+});
+
+describe('§1 cleanup — computeParityResult', () => {
+  it('returns "pass" when freshness is fresh and counters are clean', () => {
+    const summary = { reportableActiveFiles: 0, activeErrorFiles: 0 };
+    assert.equal(computeParityResult(summary, 'fresh'), 'pass');
+  });
+
+  it('returns "fail" when reportableActiveFiles > 0 even with fresh source', () => {
+    const summary = { reportableActiveFiles: 1, activeErrorFiles: 0 };
+    assert.equal(computeParityResult(summary, 'fresh'), 'fail');
+  });
+
+  it('returns "fail" on error files even with fresh source', () => {
+    const summary = { reportableActiveFiles: 0, activeErrorFiles: 1 };
+    assert.equal(computeParityResult(summary, 'fresh'), 'fail');
+  });
+
+  it('returns "inconclusive" when freshness is partial and counters are clean', () => {
+    const summary = { reportableActiveFiles: 0, activeErrorFiles: 0 };
+    assert.equal(computeParityResult(summary, 'partial'), 'inconclusive');
+  });
+
+  it('returns "fail" on stale source with reportable issues (signal preserved)', () => {
+    const summary = { reportableActiveFiles: 1, activeErrorFiles: 0 };
+    assert.equal(computeParityResult(summary, 'stale'), 'fail');
+  });
+
+  it('returns "inconclusive" on broken source with clean counters', () => {
+    assert.equal(
+      computeParityResult({ reportableActiveFiles: 0, activeErrorFiles: 0 }, 'broken'),
+      'inconclusive',
+    );
+  });
+
+  it('returns "pass" with clean counters and unknown freshness (legacy / no source-sync)', () => {
+    // Legacy / pre-§1 runs that have no source-sync-status.json must
+    // not be retroactively forced into "inconclusive". computeParityResult
+    // treats null freshnessState as "no info, do not block".
+    const summary = { reportableActiveFiles: 0, activeErrorFiles: 0 };
+    assert.equal(computeParityResult(summary, null), 'pass');
+  });
+
+  it('returns "inconclusive" for null summary (defensive)', () => {
+    assert.equal(computeParityResult(null, 'fresh'), 'inconclusive');
+  });
+});
 
 describe('Phase 8 PR2 — buildRunScope', () => {
   // Pure helper that maps the (resolvedSlug, section) pair into the

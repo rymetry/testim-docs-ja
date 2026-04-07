@@ -12,6 +12,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -31,11 +32,83 @@ import {
   matchAllTricentisUrls,
 } from './lib/madcap_toc.mjs';
 
+/**
+ * Schema version for `snapshot-diff-status.json`. Bumped whenever the
+ * top-level shape changes in a way that downstream consumers
+ * (`generate_detection_reports.mjs`, validation in detection inputs)
+ * need to detect.
+ */
+export const SNAPSHOT_DIFF_SCHEMA_VERSION = 1;
+
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
 const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.json');
 const SIDEBAR_URLS_PATH = path.join(ROOT_DIR, 'docs', 'SIDEBAR_URLS.md');
+const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
+
+/**
+ * Read sourceInventoryFingerprint from source-sync-status.json so the
+ * snapshot diff can advertise the same fingerprint as the parity check.
+ * Returns null when the file is missing or malformed; downstream
+ * validation treats null as an unlinked / legacy run.
+ */
+function readSourceInventoryFingerprint() {
+  if (!fs.existsSync(SOURCE_SYNC_STATUS_PATH)) return null;
+  try {
+    const data = JSON.parse(fs.readFileSync(SOURCE_SYNC_STATUS_PATH, 'utf8'));
+    return typeof data?.sourceInventoryFingerprint === 'string'
+      ? data.sourceInventoryFingerprint
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Compute a deterministic runId for snapshot_diff. The runId is the
+ * tuple `(checkedAt, sourceInventoryFingerprint, scope)` hashed via
+ * sha256 so two unrelated runs cannot collide. Format mirrors the
+ * source-sync-status runId style.
+ */
+function buildSnapshotDiffRunId(checkedAt, sourceInventoryFingerprint, scope) {
+  const seed = [
+    checkedAt,
+    sourceInventoryFingerprint ?? '_no-inventory_',
+    scope.type,
+    scope.filters?.slug ?? '',
+    scope.filters?.section ?? '',
+  ].join('|');
+  const digest = createHash('sha256').update(seed).digest('hex').slice(0, 12);
+  return `${checkedAt}#snapshot-diff-${digest}`;
+}
+
+/**
+ * Build the runScope object for snapshot_diff. Mirrors the contract used
+ * by check_source_parity.mjs::buildRunScope so downstream sync tooling
+ * can inspect both artifacts uniformly.
+ */
+export function buildSnapshotDiffRunScope({ slug = null, section = null } = {}) {
+  if (slug) {
+    return {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug, section: section ?? null },
+    };
+  }
+  if (section) {
+    return {
+      type: 'section',
+      isComplete: false,
+      filters: { slug: null, section },
+    };
+  }
+  return {
+    type: 'full',
+    isComplete: true,
+    filters: { slug: null, section: null },
+  };
+}
 
 /**
  * Build a slug → URL map from SIDEBAR_URLS.md text (one-time parse).
@@ -333,14 +406,27 @@ export async function main(argv) {
   // Scope summary to filtered files when --slug is active
   const scopedTotal = resolvedSlug ? 1 : snapshotFiles.length;
 
+  const checkedAt = new Date().toISOString();
+  const runScope = buildSnapshotDiffRunScope({
+    slug: resolvedSlug,
+    section: args.section,
+  });
+  const sourceInventoryFingerprint = readSourceInventoryFingerprint();
+  const runId = buildSnapshotDiffRunId(checkedAt, sourceInventoryFingerprint, runScope);
+
   const report = {
-    checkedAt: new Date().toISOString(),
+    schemaVersion: SNAPSHOT_DIFF_SCHEMA_VERSION,
+    runId,
+    sourceInventoryFingerprint,
+    runScope,
+    checkedAt,
     summary: {
       totalSnapshots: scopedTotal,
       changed: changes.filter((c) => c.type === 'page-changed').length,
       added: changes.filter((c) => c.type === 'page-added').length,
       removed: changes.filter((c) => c.type === 'page-removed').length,
       unchanged,
+      runScope,
     },
     changes: changes.sort((a, b) => (b.diffLines || 0) - (a.diffLines || 0)),
     sidebar,

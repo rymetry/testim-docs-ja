@@ -5,6 +5,7 @@ import {
   fingerprint,
   computeFreshnessState,
   buildSourceSyncStatus,
+  validateRunLinkage,
 } from '../lib/source_sync_health.mjs';
 
 // ---------------------------------------------------------------------------
@@ -214,5 +215,93 @@ describe('buildSourceSyncStatus', () => {
       sidebarResult: { ok: true, sectionCount: 2, pageCount: 3, sidebarSlugs: ['a', 'b', 'd'] },
     });
     assert.notEqual(r1.sidebarFingerprint, r2.sidebarFingerprint);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// validateRunLinkage (§3 cleanup)
+// ---------------------------------------------------------------------------
+
+describe('validateRunLinkage', () => {
+  const FP_A = 'sha256:' + 'a'.repeat(64);
+  const FP_B = 'sha256:' + 'b'.repeat(64);
+  const fullScope = { type: 'full', isComplete: true, filters: { slug: null, section: null } };
+  const slugScope = {
+    type: 'slug',
+    isComplete: false,
+    filters: { slug: 'overview/x', section: null },
+  };
+
+  it('returns "linked" when fingerprints match and scopes match', () => {
+    const result = validateRunLinkage(
+      { sourceInventoryFingerprint: FP_A },
+      { sourceInventoryFingerprint: FP_A, runScope: fullScope },
+      fullScope,
+    );
+    assert.equal(result, 'linked');
+  });
+
+  it('returns "missing" when sourceSync is null', () => {
+    const result = validateRunLinkage(null, { sourceInventoryFingerprint: FP_A }, fullScope);
+    assert.equal(result, 'missing');
+  });
+
+  it('returns "missing" when sourceSync has no fingerprint', () => {
+    const result = validateRunLinkage(
+      { freshnessState: 'fresh' },
+      { sourceInventoryFingerprint: FP_A },
+      fullScope,
+    );
+    assert.equal(result, 'missing');
+  });
+
+  it('returns "missing" when snapshotDiff is null', () => {
+    const result = validateRunLinkage({ sourceInventoryFingerprint: FP_A }, null, fullScope);
+    assert.equal(result, 'missing');
+  });
+
+  it('returns "missing" when snapshotDiff has no fingerprint (legacy)', () => {
+    const result = validateRunLinkage(
+      { sourceInventoryFingerprint: FP_A },
+      { runScope: fullScope }, // pre-§1 snapshot diff
+      fullScope,
+    );
+    assert.equal(result, 'missing');
+  });
+
+  it('returns "stale" when fingerprints disagree', () => {
+    const result = validateRunLinkage(
+      { sourceInventoryFingerprint: FP_A },
+      { sourceInventoryFingerprint: FP_B, runScope: fullScope },
+      fullScope,
+    );
+    assert.equal(result, 'stale');
+  });
+
+  it('returns "scope-mismatch" when parity is full but snapshotDiff is partial', () => {
+    const result = validateRunLinkage(
+      { sourceInventoryFingerprint: FP_A },
+      { sourceInventoryFingerprint: FP_A, runScope: slugScope },
+      fullScope,
+    );
+    assert.equal(result, 'scope-mismatch');
+  });
+
+  it('returns "scope-mismatch" when parity is partial but snapshotDiff is full', () => {
+    const result = validateRunLinkage(
+      { sourceInventoryFingerprint: FP_A },
+      { sourceInventoryFingerprint: FP_A, runScope: fullScope },
+      slugScope,
+    );
+    assert.equal(result, 'scope-mismatch');
+  });
+
+  it('returns "linked" when both runs are partial in the same way', () => {
+    const result = validateRunLinkage(
+      { sourceInventoryFingerprint: FP_A },
+      { sourceInventoryFingerprint: FP_A, runScope: slugScope },
+      slugScope,
+    );
+    assert.equal(result, 'linked');
   });
 });
