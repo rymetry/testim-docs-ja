@@ -5,7 +5,6 @@ import {
   ROOT_DIR,
 } from './project.mjs';
 import {
-  isActiveParityIssue,
   isReportableParityIssue,
 } from './source_parity_issue_state.mjs';
 
@@ -157,7 +156,6 @@ function scoreParityEntry(entry) {
     if (issue.type === 'image-mismatch') return score + 3;
     if (issue.type === 'codeblock-mismatch') return score + 3;
     if (issue.severity === 'actionable') return score + 2;
-    if (issue.severity === 'error') return score + 1;
     return score;
   }, 0);
 }
