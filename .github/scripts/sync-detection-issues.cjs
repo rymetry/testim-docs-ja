@@ -243,19 +243,17 @@ async function syncOneIssue({
 }
 
 /**
- * Phase 8 PR2: classify whether the actionable report came from a full
- * run or a partial (--slug / --section) run.
+ * actionable report が full run か partial (--slug / --section) run か
+ * を判定する純粋ヘルパー。
  *
  * Contract:
- *   report.runScope === undefined / null  → legacy report, sync as before
- *   report.runScope.isComplete === true   → full run, sync as before
- *   report.runScope.isComplete === false  → partial run, NO-OP + warning
+ *   report.runScope === undefined / null  → legacy report、従来通り sync
+ *   report.runScope.isComplete === true   → full run、従来通り sync
+ *   report.runScope.isComplete === false  → partial run、no-op + warning
  *
- * The legacy fallback is intentional. It keeps existing CI runs that
- * pre-date the runScope field from breaking the moment this commit
- * lands. Once Phase 8 is rolled out, the next planned tightening is to
- * make a missing runScope an error too — but that should be a
- * follow-up so we have a soft landing.
+ * legacy fallback は意図的。runScope field を持たない既存 CI run を
+ * 壊さないための互換処理で、将来的には missing runScope を error にする
+ * tightening を follow-up で検討する (soft landing 優先)。
  */
 function isPartialRunReport(report) {
   const scope = report?.runScope;
