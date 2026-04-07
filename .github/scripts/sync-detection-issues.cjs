@@ -2,6 +2,15 @@ const fs = require('fs');
 
 const DEFAULT_LABELS = ['documentation', 'automated'];
 
+/**
+ * Builds the HTML comment marker embedded in the issue body.
+ * Used to find existing issues by family key rather than by exact title string,
+ * so title edits or emoji changes never create duplicate issues.
+ */
+function buildFamilyMarker(key) {
+  return `<!-- detection-family: ${key} -->`;
+}
+
 function fallbackCore(core) {
   return core ?? {
     info: console.log,
@@ -26,13 +35,13 @@ function sortByUpdatedDesc(left, right) {
 function buildIssueSpecs(report) {
   const specs = [
     {
-      key: 'snapshot-diff',
+      key: report.snapshotDiff.key ?? 'snapshot-diff',
       title: report.snapshotDiff.issueTitle,
       body: report.snapshotDiff.body,
       shouldOpenIssue: report.snapshotDiff.shouldOpenIssue,
     },
     {
-      key: 'parity-regression',
+      key: report.parityRegression.key ?? 'parity-regression',
       title: report.parityRegression.issueTitle,
       body: report.parityRegression.body,
       shouldOpenIssue: report.parityRegression.shouldOpenIssue,
@@ -41,10 +50,19 @@ function buildIssueSpecs(report) {
 
   if (report.sourceSyncHealth) {
     specs.push({
-      key: 'source-sync-health',
+      key: report.sourceSyncHealth.key ?? 'source-sync-health',
       title: report.sourceSyncHealth.issueTitle,
       body: report.sourceSyncHealth.body,
       shouldOpenIssue: report.sourceSyncHealth.shouldOpenIssue,
+    });
+  }
+
+  if (report.parityFollowup) {
+    specs.push({
+      key: report.parityFollowup.key ?? 'parity-followup',
+      title: report.parityFollowup.issueTitle,
+      body: report.parityFollowup.body,
+      shouldOpenIssue: report.parityFollowup.shouldOpenIssue,
     });
   }
 
@@ -105,9 +123,13 @@ async function syncOneIssue({
   key,
   log,
 }) {
-  const matching = existingIssues
-    .filter((issue) => issue.title === title)
-    .sort(sortByUpdatedDesc);
+  // Prefer key-based matching (HTML comment in body) over title matching so
+  // that title renames never create duplicate issues.  Fall back to title
+  // matching for issues that were created before the marker was introduced.
+  const marker = buildFamilyMarker(key);
+  const byMarker = existingIssues.filter((issue) => issue.body?.includes(marker));
+  const byTitle = existingIssues.filter((issue) => issue.title === title);
+  const matching = (byMarker.length > 0 ? byMarker : byTitle).sort(sortByUpdatedDesc);
   const openIssue = matching.find((issue) => issue.state === 'open') ?? null;
 
   if (shouldOpenIssue) {

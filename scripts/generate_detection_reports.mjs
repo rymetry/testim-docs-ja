@@ -54,6 +54,10 @@ function main() {
   console.log(
     `  active parity issues: ${actionableReport.parityRegression.summary.issueCount}`,
   );
+  const followup = actionableReport.parityFollowup;
+  console.log(
+    `  parity followup: expired=${followup.summary.baselineDebt.expiredBaselineEntries} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugs} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
+  );
 }
 
 const isDirectRun = isDirectCliRun(import.meta.url);

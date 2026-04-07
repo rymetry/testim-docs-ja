@@ -11,6 +11,21 @@ const PARITY_ISSUE_TITLE =
   '🔍 Parity Regression: content drift detected';
 const SOURCE_SYNC_ISSUE_TITLE =
   '⚠️ Source Sync Health: fetch degradation detected';
+const PARITY_FOLLOWUP_ISSUE_TITLE =
+  '🗂️ Parity Followup: baseline debt and advisory queue';
+
+/**
+ * Family keys used in HTML body comments and by sync-detection-issues.cjs for
+ * key-based issue matching.  Embed as `<!-- detection-family: KEY -->` in the
+ * issue body so the sync script can find existing issues without relying on
+ * the exact title string.
+ */
+export const FAMILY_KEYS = {
+  SNAPSHOT_DIFF: 'snapshot-diff',
+  PARITY_REGRESSION: 'parity-regression',
+  SOURCE_SYNC_HEALTH: 'source-sync-health',
+  PARITY_FOLLOWUP: 'parity-followup',
+};
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return {};
@@ -131,9 +146,22 @@ function isActiveIssue(issue) {
   return false;
 }
 
+/**
+ * Reportable for the parityRegression gate: actionable/signal severity,
+ * not validly acknowledged, AND not frozen by a non-expired baseline entry.
+ * Expired baselines (baselineExpired: true) are re-activated and count as
+ * regression.  Non-expired baselined issues are surfaced in parityFollowup
+ * instead.
+ */
 function isReportableParityIssue(issue) {
   if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
+  if (issue.baselined === true && issue.baselineExpired !== true) return false;
   return isActiveIssue(issue);
+}
+
+function withFamilyMarker(body, key) {
+  if (!body) return '';
+  return `<!-- detection-family: ${key} -->\n${body}`;
 }
 
 function scoreParityEntry(entry) {
@@ -163,6 +191,146 @@ function formatSnapshotEntry(entry) {
     .map(([k, v]) => `${k}:+${v.added}/-${v.removed}`)
     .join(', ');
   return `\`${entry.slug}\` (${entry.diffLines} lines: ${cats})`;
+}
+
+function buildParityFollowupBody({
+  summary,
+  expiredBaselineFiles,
+  baselineInvalidatedSlugs,
+  blockingAdvisoryItems,
+  advisoryQueueIssues,
+  advisoryQueueFiles,
+  isComplete,
+  scopeType,
+}) {
+  const lines = [
+    '## Summary',
+    '',
+    `- Checked at: ${summary.checkedAt ?? 'unknown'}`,
+    `- Baselined issues: ${summary.baselinedIssues ?? 0} (${summary.baselinedFiles ?? 0} files)`,
+    `- Expired baseline entries: ${summary.expiredBaselineEntries ?? 0}`,
+    `- Baseline-invalidated slugs: ${(summary.baselineInvalidatedSlugs ?? []).length}`,
+    `- Advisory queue: ${advisoryQueueIssues} issues (${advisoryQueueFiles} files)`,
+    `  - Scope: ${scopeType ?? 'unknown'}${isComplete ? ' (complete)' : ' (partial)'}`,
+    `  - Blocking: ${blockingAdvisoryItems.length}`,
+    '',
+  ];
+
+  if (expiredBaselineFiles.length > 0) {
+    lines.push('## Expired Baseline Entries', '');
+    lines.push(
+      formatList(
+        expiredBaselineFiles.map((f) => {
+          const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
+          return `\`${f.file}\` (${f.count} entries${rv})`;
+        }),
+      ),
+    );
+    lines.push('');
+  }
+
+  if (baselineInvalidatedSlugs.length > 0) {
+    lines.push('## Baseline-Invalidated Slugs', '');
+    lines.push(
+      formatList(baselineInvalidatedSlugs.map((s) => `\`${s}\` — EN snapshot changed`)),
+    );
+    lines.push('');
+  }
+
+  if (blockingAdvisoryItems.length > 0) {
+    lines.push('## Advisory Queue — Blocking Items', '');
+    lines.push(
+      formatList(
+        blockingAdvisoryItems.map((e) => {
+          const topIssue = (e.issues ?? [])[0];
+          const cat = topIssue?.inconclusiveCategory ?? 'unknown';
+          return `\`${e.slug}\` — ${cat} (${e.issueCount} issues)`;
+        }),
+      ),
+    );
+    lines.push('');
+  }
+
+  lines.push('## Artifacts', '', '- `parity-check-status.json`');
+
+  return lines.join('\n');
+}
+
+function buildParityFollowup(parity, options = {}) {
+  const maxEntries = options.maxEntries ?? 10;
+  const summary = parity.summary ?? {};
+  const files = parity.files ?? [];
+  const advisoryQueue = parity.advisoryQueue ?? [];
+  const advisoryQueueScope = parity.advisoryQueueScope ?? null;
+
+  const expiredBaselineEntries = summary.expiredBaselineEntries ?? 0;
+  const baselineInvalidatedSlugs = summary.baselineInvalidatedSlugs ?? [];
+  const advisoryQueueIssues = summary.advisoryQueueIssues ?? 0;
+  const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
+  const isComplete = advisoryQueueScope?.isComplete ?? null;
+  const scopeType = advisoryQueueScope?.type ?? null;
+
+  const blockingAdvisoryItems = advisoryQueue.filter((e) => e.blocking);
+  const hasBlockingAdvisory = isComplete === true && blockingAdvisoryItems.length > 0;
+
+  const shouldOpenIssue =
+    expiredBaselineEntries > 0 ||
+    baselineInvalidatedSlugs.length > 0 ||
+    hasBlockingAdvisory;
+
+  const expiredBaselineFiles = [];
+  for (const file of files) {
+    const expired = (file.issues ?? []).filter(
+      (i) => i.baselined === true && i.baselineExpired === true,
+    );
+    if (expired.length > 0) {
+      expiredBaselineFiles.push({
+        file: file.file,
+        count: expired.length,
+        reviewAfter:
+          expired.map((i) => i.baselineReviewAfter).filter(Boolean)[0] ?? null,
+      });
+    }
+  }
+  expiredBaselineFiles.sort((a, b) => b.count - a.count);
+
+  const body = shouldOpenIssue
+    ? withFamilyMarker(
+        buildParityFollowupBody({
+          summary,
+          expiredBaselineFiles: expiredBaselineFiles.slice(0, maxEntries),
+          baselineInvalidatedSlugs,
+          blockingAdvisoryItems: blockingAdvisoryItems.slice(0, maxEntries),
+          advisoryQueueIssues,
+          advisoryQueueFiles,
+          isComplete,
+          scopeType,
+        }),
+        FAMILY_KEYS.PARITY_FOLLOWUP,
+      )
+    : '';
+
+  return {
+    key: FAMILY_KEYS.PARITY_FOLLOWUP,
+    issueTitle: PARITY_FOLLOWUP_ISSUE_TITLE,
+    shouldOpenIssue,
+    body,
+    summary: {
+      baselineDebt: {
+        baselinedIssues: summary.baselinedIssues ?? 0,
+        baselinedFiles: summary.baselinedFiles ?? 0,
+        expiredBaselineEntries,
+        baselineInvalidatedSlugs: baselineInvalidatedSlugs.length,
+      },
+      advisoryQueue: {
+        issues: advisoryQueueIssues,
+        files: advisoryQueueFiles,
+        blockingItems: blockingAdvisoryItems.length,
+        scopeType,
+        isComplete,
+      },
+    },
+  };
 }
 
 export function buildActionableReport(snapshot, parity, auditManifest, options = {}) {
@@ -284,10 +452,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   return {
     generatedAt: new Date().toISOString(),
     sourceSyncHealth: {
+      key: FAMILY_KEYS.SOURCE_SYNC_HEALTH,
       issueTitle: SOURCE_SYNC_ISSUE_TITLE,
       shouldOpenIssue: syncShouldOpen,
       freshnessState,
-      body: sourceSyncBody,
+      body: withFamilyMarker(sourceSyncBody, FAMILY_KEYS.SOURCE_SYNC_HEALTH),
       summary: {
         targetPages: syncSummary.targetPages ?? 0,
         fetchedPages: syncSummary.fetchedPages ?? 0,
@@ -297,10 +466,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       },
     },
     snapshotDiff: {
+      key: FAMILY_KEYS.SNAPSHOT_DIFF,
       issueTitle: SNAPSHOT_ISSUE_TITLE,
       shouldOpenIssue: snapshotChanges.length > 0,
       topEntries: snapshotTopEntries,
-      body: snapshotIssueBody,
+      body: withFamilyMarker(snapshotIssueBody, FAMILY_KEYS.SNAPSHOT_DIFF),
       summary: {
         actionableCount: snapshotChanges.length,
         totalSnapshots: snapshot.summary?.totalSnapshots || 0,
@@ -311,13 +481,14 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       },
     },
     parityRegression: {
+      key: FAMILY_KEYS.PARITY_REGRESSION,
       issueTitle: PARITY_ISSUE_TITLE,
       shouldOpenIssue: parityIssueFiles.length > 0,
       topEntries: parityTopEntries,
-      body: parityIssueBody,
+      body: withFamilyMarker(parityIssueBody, FAMILY_KEYS.PARITY_REGRESSION),
       summary: {
-        // Phase 3: only count files with at least one ACTIVE reportable issue,
-        // ignoring validly-acknowledged issues. Expired acknowledgements remain active.
+        // Only count files with at least one ACTIVE reportable issue.
+        // Validly-acknowledged and non-expired baselined issues are excluded.
         issueCount: parityIssueFiles.length,
         acknowledgedIssues: parity.summary?.acknowledgedIssues || 0,
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
@@ -325,6 +496,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         issuesBySeverity: parity.summary?.issuesBySeverity || {},
       },
     },
+    parityFollowup: buildParityFollowup(parity, options),
     auditManifest: {
       total: auditManifest.length,
       bucketCounts: auditManifest.reduce((acc, entry) => {
@@ -382,6 +554,13 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     `- Structural change: ${actionableReport.auditManifest.bucketCounts['structural-change'] || 0}`,
     `- Content only: ${actionableReport.auditManifest.bucketCounts['content-only'] || 0}`,
     '',
+    '## Parity Followup',
+    '',
+    `- Baselined: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} issues (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} files)`,
+    `- Expired baseline entries: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
+    `- Invalidated slugs: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? 0}`,
+    `- Advisory queue: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} issues (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} files, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} blocking)`,
+    '',
     '## Files',
     '',
     '- `snapshot-diff-status.json`',
@@ -403,4 +582,9 @@ export function loadDetectionInputs({
   };
 }
 
-export { SNAPSHOT_ISSUE_TITLE, PARITY_ISSUE_TITLE, SOURCE_SYNC_ISSUE_TITLE };
+export {
+  SNAPSHOT_ISSUE_TITLE,
+  PARITY_ISSUE_TITLE,
+  SOURCE_SYNC_ISSUE_TITLE,
+  PARITY_FOLLOWUP_ISSUE_TITLE,
+};

@@ -684,9 +684,9 @@ describe('summarizeParityResults — baseline accounting', () => {
         sourceUrl: '',
         category: '',
         issues: [
-          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', baselined: true, detail: 'x' },
-          { type: 'segment-extra', severity: 'actionable', phase: 'segment-shadow', baselined: true, detail: 'y' },
-          { type: 'segment-token-gap', severity: 'actionable', phase: 'segment-shadow', detail: 'z' },
+          { type: 'segment-missing', severity: 'actionable', baselined: true, detail: 'x' },
+          { type: 'segment-extra', severity: 'actionable', baselined: true, detail: 'y' },
+          { type: 'segment-token-gap', severity: 'actionable', detail: 'z' },
         ],
       },
     ];
@@ -709,7 +709,6 @@ describe('summarizeParityResults — baseline accounting', () => {
           {
             type: 'segment-inconclusive',
             severity: 'actionable',
-            phase: 'segment-shadow',
             baselined: true,
             inconclusiveCategory: 'heading-count-mismatch',
             detail: 'inc',
@@ -733,7 +732,6 @@ describe('summarizeParityResults — baseline accounting', () => {
           {
             type: 'segment-missing',
             severity: 'actionable',
-            phase: 'segment-shadow',
             baselined: true,
             baselineExpired: true,
             detail: 'expired baseline',
@@ -753,7 +751,7 @@ describe('summarizeParityResults — baseline accounting', () => {
         sourceUrl: '',
         category: '',
         issues: [
-          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', detail: 'x' },
+          { type: 'segment-missing', severity: 'actionable', detail: 'x' },
         ],
       },
     ];
