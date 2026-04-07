@@ -85,59 +85,24 @@ export function isNonBlockingIssue(issue) {
   return isNonBlockingParityIssue(issue);
 }
 
+// runScope の詳細 contract は shared helper 側
+// (`scripts/lib/source_sync_health.mjs::buildRunScope`) に集約している。
 /**
- * Phase 8 PR2: pure helper that classifies the run scope of a single
- * `checkSourceParity` invocation. The result is embedded in
- * `parity-check-status.json.summary.runScope` so downstream tools can
- * tell whether the report was produced by a full-repo run or a
- * partial (`--slug` / `--section`) run.
+ * parity-check summary を CLI exit code にマップする純粋ヘルパー。
+ * `checkSourceParity` から切り出してあり、フルパイプラインを起動せずに
+ * gate 挙動を unit test できるようにしている。
  *
- * The downstream guard in `.github/scripts/sync-detection-issues.cjs`
- * uses `runScope.isComplete === true` as the precondition for syncing
- * managed GitHub issues, so partial runs (deep-audit, manual debugging)
- * cannot accidentally overwrite the managed issue body even if their
- * artifacts are wired into the wrong workflow step.
+ * 入力:
+ *   summary  — summarizeParityResults() の出力 (または同じ shape のオブジェクト)
+ *   failOn   — 'actionable' | 'any' | null (それ以外の値は 'any' 相当)
  *
- * Inputs:
- *   slug    — value of --slug after slug resolution (null if absent)
- *   section — value of --section (null if absent)
+ * 0 (gate pass) か 1 (gate fail) を返す。gate は `reportableActive*`
+ * counters のみを参照する。coarse audit signal は ack / baseline が
+ * 期限切れでも exit code に影響しない。legacy の `activeFiles` /
+ * `activeActionableFiles` は downstream 互換のためここでは意図的に無視する。
  *
- * Returns:
- *   { type: 'full' | 'slug' | 'section',
- *     isComplete: boolean,
- *     filters: { slug: string|null, section: string|null } }
- *
- * `--slug` wins over `--section` in `checkSourceParity` (the section
- * filter is skipped when a slug is set), so the helper reports
- * `type: 'slug'` in that defensive case while still surfacing the
- * section filter for diagnostic purposes.
- *
- * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.7
- */
-/**
- * Phase 8: pure helper that maps a parity-check summary into a CLI exit
- * code. Lifted out of `checkSourceParity` so the gate behaviour is
- * unit-testable without spinning up the full pipeline.
- *
- * Inputs:
- *   summary  — output of summarizeParityResults() (or any object with the
- *              same shape, including the Phase 8 reportableActive*
- *              counters)
- *   failOn   — 'actionable' | 'any' | null (any other value defaults to
- *              the same behaviour as 'any')
- *
- * Returns 0 (gate passes) or 1 (gate fails). The gate now consumes the
- * Phase 8 `reportableActive*` counters; coarse audit signals never
- * affect the exit code, even when their ack/baseline has expired. The
- * legacy `activeFiles` / `activeActionableFiles` fields on the summary
- * are intentionally ignored here so downstream consumers that still
- * read them keep their old semantics.
- *
- * `activeErrorFiles` is still consulted in all modes so
- * `source-fetch-error` and similar real errors continue to fail the
- * gate, even when there are no reportable parity issues.
- *
- * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.4
+ * `activeErrorFiles` は全モードで参照する。`source-fetch-error` のような
+ * 実 runtime error は reportable issue が 0 件でも gate を fail させる契約。
  */
 export function computeExitCode(summary, failOn) {
   if (!summary || typeof summary !== 'object') return 0;
@@ -153,11 +118,10 @@ export function computeExitCode(summary, failOn) {
 }
 
 /**
- * Phase 8 cleanup: collapse a parity summary into one of three result
- * states. The result lives at `parity-check-status.json.summary.result`
- * and feeds the §2 fail-closed gate so downstream tools can refuse to
- * sync detection issues from inconclusive runs without inspecting the
- * full counter set.
+ * parity summary を 3 値 (pass / fail / inconclusive) に畳み込むヘルパー。
+ * 結果は `parity-check-status.json.summary.result` に乗り、downstream の
+ * fail-closed gate (sync-detection-issues.cjs) が inconclusive run からの
+ * issue 同期を拒否できるようにする。counter 全集合を読み返す必要はない。
  *
  *   pass         — no reportable parity issues, no error files, source
  *                  sync is fresh (or freshness state is unknown for
@@ -276,8 +240,8 @@ export function parseArgs(argv = process.argv.slice(2)) {
   return {
     json: argv.includes('--json'),
     includeAdvisory: argv.includes('--include-advisory'),
-    // Phase 8: opt-in CLI display of demoted coarse audit signals.
-    // Mirrors --include-advisory in role: display only, no gate impact.
+    // 降格された coarse audit signals を CLI 詳細表示する opt-in flag。
+    // --include-advisory と同じく表示専用で gate exit code には影響しない。
     includeAuditSignals: argv.includes('--include-audit-signals'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
     failOn: failOnArg ? failOnArg.split('=').slice(1).join('=') : null,
@@ -296,7 +260,7 @@ function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
 }
 
 /**
- * Load and validate parity-baseline.json (Phase 6A).
+ * parity-baseline.json をロードし validation を通す。
  * Returns { schemaVersion, entries } or empty structure if file missing.
  */
 function loadBaselineFileSafe(filePath = BASELINE_PATH) {
@@ -333,7 +297,7 @@ export async function checkSourceParity({
   // and match reviewAfter values (also stored as plain YYYY-MM-DD / UTC dates).
   const today = new Date().toISOString().slice(0, 10);
 
-  // Phase 6A — frozen baseline. Independent from acknowledgements.
+  // frozen baseline をロード。acknowledgement とは別ファイル / 別意味で管理する。
   let baselineData = { schemaVersion: 1, entries: [] };
   try {
     baselineData = loadBaselineFileSafe();
@@ -356,8 +320,8 @@ export async function checkSourceParity({
     if (resolvedSlug) console.log(`🔎 スラグ絞り込み: ${resolvedSlug}`);
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     if (failOn) console.log(`🚦 --fail-on=${failOn}`);
-    if (includeAdvisory) console.log('📝 Phase 6B review queue 表示: ON');
-    if (includeAuditSignals) console.log('🔍 Phase 8 audit signals 表示: ON');
+    if (includeAdvisory) console.log('📝 tokenless-near-tie review queue 表示: ON');
+    if (includeAuditSignals) console.log('🔍 audit signals 表示: ON');
     console.log('');
   }
 
@@ -432,14 +396,13 @@ export async function checkSourceParity({
         }
       }
       if (enBody) {
-        // Phase 5 segment-level exact diff. The runtime gate runs the new
-        // engine first; if it returns inconclusive (heading count mismatch
-        // or required inputs missing) the check falls back to the legacy
-        // coarse signals so the page is never silently green-lit. When
-        // alignment IS conclusive we ALSO emit the coarse complementary
-        // checks (image order, callout nesting, table shape) because they
-        // catch failures the segment engine intentionally ignores (e.g.
-        // image ordering inversions).
+        // segment-level exact diff をまず実行する。inconclusive (heading count
+        // mismatch / 必要な入力が無い) のときは legacy coarse signals に
+        // フォールバックし、ページが silent green になることを防ぐ。
+        // alignment が conclusive のときも coarse complementary check
+        // (image order, callout nesting, table shape) を併走させる。これらは
+        // segment engine が意図的に無視する欠陥 (画像順序の入れ替え等) を
+        // 補完的に拾う。
         let segmentIssues = [];
         let alignmentInconclusive = false;
         let alignmentInconclusiveReason = null;
@@ -467,9 +430,9 @@ export async function checkSourceParity({
         }
 
         if (alignmentInconclusive) {
-          // Fallback: preserve any exact diffs already found, add a shadow
-          // issue that the alignment itself was inconclusive, then run the
-          // legacy coarse comparison so the page is never silently green-lit.
+          // Fallback: alignment 済みの exact diff を保持し、inconclusive を
+          // 示す補助 issue を追加した上で legacy coarse 比較を併走させる。
+          // ページが silent green になることを防ぐ。
           issues.push(...segmentIssues);
           issues.push(
             buildSegmentInconclusiveIssue(
@@ -480,13 +443,11 @@ export async function checkSourceParity({
           );
           issues.push(...compareSnapshotStructure(enBody, doc.body));
         } else {
-          // Primary gate: segment-level diffs PLUS the coarse signals that
-          // are complementary (image order, callout nesting, table shape).
-          // Phase 8 demoted the count-based mismatches in
-          // compareSnapshotStructure to audit-only via the
-          // COARSE_SIGNAL_TYPES allowlist. They are still emitted at
-          // `signal` severity (so the audit channel can report them) but
-          // never reach parityRegression or the gate exit code.
+          // Primary gate: segment-level diffs に加え、補完的な coarse
+          // signals (image order, callout nesting, table shape) も併走させる。
+          // count-based mismatches は COARSE_SIGNAL_TYPES allowlist 経由で
+          // audit-only に降格済みで、`signal` severity では出るが
+          // parityRegression / gate exit code には乗らない。
           issues.push(...segmentIssues);
           issues.push(...compareSnapshotStructure(enBody, doc.body));
         }
@@ -501,10 +462,10 @@ export async function checkSourceParity({
       today,
     );
 
-    // Tag with baseline. Frozen (non-expired) baseline entries are
-    // excluded from the gate via isFrozenByBaseline / isReportableParityIssue
-    // (see scripts/lib/source_parity_issue_state.mjs). Expired baseline
-    // entries re-enter the gate per Phase 7 semantics.
+    // baseline タグ付け。frozen (非 expired) baseline entries は
+    // isFrozenByBaseline / isReportableParityIssue で gate から除外される
+    // (scripts/lib/source_parity_issue_state.mjs を参照)。期限切れ baseline
+    // entries は gate に refire する。
     {
       const baselineResult = tagIssuesWithBaseline(
         fileSlug,
@@ -611,13 +572,12 @@ export async function checkSourceParity({
     section,
   });
   if (advisoryQueueError) {
-    console.error(`⚠ Phase 6B review queue unavailable: ${advisoryQueueError}`);
+    console.error(`⚠ tokenless-near-tie review queue 構築失敗: ${advisoryQueueError}`);
   }
-  // §3 cleanup: validate run linkage between source-sync-status,
-  // snapshot-diff-status, and the parity gate's own run scope. The
-  // result is folded into computeParityResult so any non-"linked"
-  // state forces inconclusive on a clean run (we never silently turn
-  // a stale run into pass).
+  // run linkage validation: source-sync-status / snapshot-diff-status と
+  // parity gate 自身の run scope の整合を検証する。結果は computeParityResult
+  // に折り込まれ、"linked" 以外の状態では clean run でも pass→inconclusive へ
+  // 降格する (stale run を silent pass にしない)。
   const parityRunScope = buildRunScope({ slug: resolvedSlug, section });
   const linkageState = validateRunLinkage(
     sourceSyncPayload,
@@ -641,14 +601,14 @@ export async function checkSourceParity({
     ...summarizeParityResults(results),
     ...advisoryQueueSummary,
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
-    // Phase 8 PR2: classify the run scope so downstream sync tooling can
-    // refuse to act on partial runs. See buildRunScope() above.
+    // run scope を summary に出力。downstream の sync tooling は partial run
+    // での managed issue 上書きを refuse する (buildRunScope() を参照)。
     runScope: parityRunScope,
-    // Phase 8 cleanup: source freshness reflected on the summary so
-    // validators do not need to re-read source-sync-status.json.
+    // source freshness を summary に複写。validators は
+    // source-sync-status.json を再読する必要がなくなる。
     freshnessState: effectiveFreshnessState ?? null,
-    // §3 cleanup: linkage state and the snapshot_diff runId we observed
-    // (or null when none). Surfaces in detection_reports / sync guards.
+    // linkage state と snapshot_diff runId (なければ null)。
+    // detection_reports / sync guards から参照される。
     linkageState,
     snapshotDiffRunId: snapshotDiffPayload?.runId ?? null,
     sourceSyncRunId: sourceSyncPayload?.runId ?? null,
@@ -706,7 +666,7 @@ export async function checkSourceParity({
     }
     if ((summary.baselinedIssues || 0) > 0) {
       console.log(
-        `\n[Phase 6A baseline] frozen drift (gate から除外): ${summary.baselinedIssues} 件 / ${summary.baselinedFiles} ファイル`,
+        `\n[frozen baseline] 凍結 drift (gate から除外): ${summary.baselinedIssues} 件 / ${summary.baselinedFiles} ファイル`,
       );
       for (const [type, count] of Object.entries(summary.baselinedByType ?? {})) {
         console.log(`  ${type}: ${count} 件`);
@@ -721,19 +681,18 @@ export async function checkSourceParity({
     }
     if (summary.baselineInvalidatedSlugs && summary.baselineInvalidatedSlugs.length > 0) {
       console.log(
-        `\n[Phase 6A baseline] invalidated slugs (snapshot 変更で baseline 失効): ${summary.baselineInvalidatedSlugs.length}`,
+        `\n[frozen baseline] invalidated slugs (snapshot 変更で baseline 失効): ${summary.baselineInvalidatedSlugs.length}`,
       );
       for (const slug of summary.baselineInvalidatedSlugs) {
         console.log(`  ${slug}`);
       }
     }
-    // Phase 8: always print a one-line summary of demoted audit signals
-    // so they remain visible even without --include-audit-signals; the
-    // flag only controls the per-type breakdown to keep the default
-    // CLI output compact.
+    // 降格された audit signals は --include-audit-signals なしでも常に
+    // 1 行 summary を出して可視化を保つ。--include-audit-signals は
+    // type 別内訳の表示だけを切り替え、デフォルトの CLI 出力を簡潔に保つ。
     if ((summary.auditSignalIssues || 0) > 0 || includeAuditSignals) {
       console.log(
-        `\n[Phase 8 audit signals] coarse heuristics (gate から除外): ${summary.auditSignalIssues || 0} 件 / ${summary.auditSignalFiles || 0} ファイル`,
+        `\n[audit signals] coarse heuristics (gate から除外): ${summary.auditSignalIssues || 0} 件 / ${summary.auditSignalFiles || 0} ファイル`,
       );
       console.log(
         '  parity-regression issue body には載せません。deep-audit workflow と --include-audit-signals でのみ詳細を確認できます',
@@ -757,7 +716,7 @@ export async function checkSourceParity({
           ? `partial scope: slug=${advisoryQueueScope.filters.slug}`
           : `partial scope: section=${advisoryQueueScope.filters.section}`;
       console.log(
-        `\n[Phase 6B review queue] tokenless-near-tie: ${summary.advisoryQueueIssues} 件 / ${summary.advisoryQueueFiles} ファイル (${scopeLabel})`,
+        `\n[review queue] tokenless-near-tie: ${summary.advisoryQueueIssues} 件 / ${summary.advisoryQueueFiles} ファイル (${scopeLabel})`,
       );
       console.log('  derived from existing segment-inconclusive issues only; no detector, no gate impact');
       if (advisoryQueueError) {
@@ -783,13 +742,12 @@ export async function checkSourceParity({
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }
 
-  // Phase 8: gate exit code now consumes the reportableActive* counters
-  // so coarse audit signals (paragraph/bullet/step/section count, heading,
-  // table-shape, table-cell-* heuristics) cannot fail the build, even
-  // when their acknowledgement or baseline has expired. The legacy
-  // `activeFiles` / `activeActionableFiles` fields on `summary` keep
-  // their pre-Phase-8 semantics for downstream consumers but are no
-  // longer read here.
+  // gate exit code は reportableActive* counters のみ参照する。coarse
+  // audit signals (paragraph/bullet/step/section count, heading,
+  // table-shape, table-cell-* heuristics) は ack / baseline が期限切れでも
+  // build を fail させない。legacy の `activeFiles` / `activeActionableFiles`
+  // は downstream 互換のため意味を保ったまま summary に残しているが、
+  // ここでは参照しない。
   return computeExitCode(summary, failOn);
 }
 

@@ -1,5 +1,5 @@
 /**
- * EN HTML direct canonical segment extractor (Issue #225 Phase 4).
+ * EN HTML direct canonical segment extractor (Issue #225).
  *
  * Walks MadCap Flare HTML directly — without routing through turndown —
  * so segment boundaries stay stable across turndown version changes.

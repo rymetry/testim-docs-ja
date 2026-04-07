@@ -23,13 +23,12 @@ export const ISSUE_SEVERITY = Object.freeze({
   'missing-fresh-snapshot': 'actionable',
   'missing-snapshot': 'signal',
   'source-fetch-error': 'error',
-  // Phase 5 exact diff gate types — emitted by source_parity_align.mjs.
-  // All five are gate-eligible (actionable). Three are also listed in
-  // NON_ACKNOWLEDGEABLE_TYPES (segment-missing, segment-untranslated,
-  // segment-token-gap); segment-extra and segment-shifted remain
-  // acknowledgeable per the Issue #225 spec because surplus content and
-  // structural shifts can be legitimate translation choices that need
-  // human review, not auto-suppression.
+  // section-anchored exact diff gate の issue type。source_parity_align.mjs
+  // から emit される。5 種すべて gate-eligible (actionable)。うち 3 種
+  // (segment-missing, segment-untranslated, segment-token-gap) は
+  // NON_ACKNOWLEDGEABLE_TYPES にも入っており ack で抑制できない。
+  // segment-extra と segment-shifted は ack 可能で、意図的な拡張や
+  // 構造シフトを人間レビューに渡すための余地として残してある。
   'segment-missing': 'actionable',
   'segment-extra': 'actionable',
   'segment-shifted': 'actionable',
@@ -39,19 +38,16 @@ export const ISSUE_SEVERITY = Object.freeze({
 });
 
 /**
- * Phase 8: explicit allowlist of "coarse counting / shape" signals that are
- * demoted to audit-only output. These types still flow into
- * `parity-check-status.json` and are visible in the deep-audit workflow, but
- * they no longer feed into `parityRegression.shouldOpenIssue`, the gate
- * exit code, or the active-file accounting that drives them.
+ * coarse counting / shape signals の明示的 allowlist。audit-only 出力に
+ * 降格された type を列挙する。これらは引き続き `parity-check-status.json`
+ * に出力され deep-audit workflow からは見えるが、`parityRegression.shouldOpenIssue`、
+ * gate exit code、active-file accounting には乗らない。
  *
- * IMPORTANT — this is an explicit allowlist, NOT a severity-based filter.
- * Severity-based ("any signal") filtering would incorrectly demote
- * `missing-snapshot`, which is the gate signal for missing-fetch pages
- * (alongside the actionable `missing-fresh-snapshot`) and must remain
- * reportable.
- *
- * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.1
+ * 重要 — severity ベースのフィルタではなく**明示 allowlist**にしている。
+ * severity-based ("any signal") にすると `missing-snapshot` まで誤って
+ * 降格してしまう。`missing-snapshot` は新規 / 欠落ページの gate signal で
+ * あり (`missing-fresh-snapshot` の actionable 版と対になる)、必ず reportable
+ * に残す必要があるため。
  */
 export const COARSE_SIGNAL_TYPES = Object.freeze(
   new Set([

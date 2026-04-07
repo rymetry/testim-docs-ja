@@ -55,7 +55,7 @@
 
 **出力**: `parity-check-status.json` に詳細結果を保存する。
 
-**Phase 6B review queue**: `npm run check:parity -- --include-advisory`
+**tokenless-near-tie review queue**: `npm run check:parity -- --include-advisory`
 で `tokenless-near-tie` の LLM/manual review queue を表示する。これは既存
 `segment-inconclusive` から導出した補助表示であり、gate exit code には影響しない。
 `parity-check-status.json` では `advisoryQueue` を workflow 入力として使えるが、
@@ -188,9 +188,9 @@ npm run test && npm run build
 - [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
 - `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する
 
-### Phase 8 — Workflow split の契約 (DO NOT BREAK)
+### Workflow split の契約 (DO NOT BREAK)
 
-Phase 8 PR2 で workflow 間の責務を明示的に固定した。新しい workflow を
+検知パイプラインは workflow 間の責務を明示的に固定している。新しい workflow を
 追加する、または既存の workflow に check:parity 系の step を追加する際は
 次のルールを守ること。
 
@@ -199,21 +199,21 @@ Phase 8 PR2 で workflow 間の責務を明示的に固定した。新しい wor
 | 4 family の managed issue 更新 | `scheduled-actionable.yml` | **full repo のみ**（`--slug` / `--section` 禁止） | はい（`schedule` 実行時のみ） |
 | 単一 section / slug の手動デバッグ | `deep-audit.yml` | partial（`--section` 任意、`--slug` 任意） | **絶対に呼ばない** |
 
-**構造的な防壁** (PR2 で導入):
+**構造的な防壁:**
 
 1. `parity-check-status.json.summary.runScope` に `{ type, isComplete, filters }` を出力する
 2. `generate_detection_reports.mjs` が runScope を `docs-actionable-report.json` の top-level に複写する
 3. `.github/scripts/sync-detection-issues.cjs` が `report.runScope?.isComplete !== true` を検出した場合、**listManagedIssues を呼ぶ前に early return + warning** する
-4. legacy report (`runScope === null` / 欠如) は後方互換のため従来どおり sync する。Phase 8 ロールアウトが完全に終わったあと、別 PR で fail-closed に切り替える検討をする
+4. legacy report (`runScope === null` / 欠如) は後方互換のため従来どおり sync する。将来的に fail-closed へ切り替えることを検討する
 
 **やってはいけないこと**:
 
 - `scheduled-actionable.yml` に `--slug` や `--section` を追加すること（partial run になり、sync guard が managed issue 更新を止める）
 - `deep-audit.yml` に `sync-detection-issues.cjs` の呼び出しを追加すること（partial run の上書きを runtime guard 1 個に頼ることになる）
 - `parity-check-status.json` の `summary.runScope` を partial run でも `isComplete: true` にすること（guard が空回りする）
-- 新しい coarse signal type を `parity-regression` family に流すこと（Phase 8 PR1 の `COARSE_SIGNAL_TYPES` allowlist で audit-only として扱うか、新規 issue type として gate に乗せるかを review で必ず判断する）
+- 新しい coarse signal type を `parity-regression` family に流すこと（`COARSE_SIGNAL_TYPES` allowlist で audit-only として扱うか、新規 issue type として gate に乗せるかを review で必ず判断する）
 
-**Phase 8 audit-only signals を CI で確認する手順**:
+**Audit-only signals を CI で確認する手順:**
 
 ```bash
 # scheduled-actionable.yml の artifact から確認
@@ -223,11 +223,9 @@ jq '.summary | { reportableActiveFiles, reportableActiveActionableFiles, auditSi
 jq '.summary.auditSignalsByType' parity-check-status.json
 ```
 
-**関連 spec**: `docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md`
-
 ---
 
-### Detection pipeline 契約 (§1+§3 cleanup)
+### Detection pipeline 契約
 
 検知パイプラインの 3 つの artifact (`source-sync-status.json`,
 `snapshot-diff-status.json`, `parity-check-status.json`) は **schemaVersion
@@ -269,14 +267,14 @@ issue 化する。
 
 ---
 
-## Phase 6A Rollback Playbook
+## Frozen Baseline Rollback Playbook
 
-Phase 6A cutover (2026-04-06) 後に問題が発生した場合の対応手順。Issue #225 Phase 6A spec の §7 を runbook 化したもの。
+frozen baseline cutover 後に問題が発生した場合の対応手順。`segment-*` exact diff を primary gate に昇格させた構成での rollback runbook。
 
 ### 判断フロー
 
 ```text
-PR2 merge 後に問題発生
+gate に異常が出たら
     │
     ├── false negative の疑いがある?
     │      └── Yes → Path 1 (revert) 即時実行
@@ -301,25 +299,25 @@ PR2 merge 後に問題発生
 - false negative の疑い（baseline match logic が新しい bug を吸収している懸念）
 - root cause が same-day で特定できない
 - 明らかな baseline 機構のバグ
-- C4 (baseline-recall) テストが過去に false negative を見逃していた疑い
+- baseline-recall テストが過去に false negative を見逃していた疑い
 
 **手順**:
 
-1. main に取り込まれた PR2 の commit SHA を特定し、通常の squash merge なら `git revert <PR2 commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
+1. main に取り込まれた cutover commit の SHA を特定し、通常の squash merge なら `git revert <commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
 2. revert PR で `npm run check:parity -- --fail-on=actionable` が exit 0 を確認
 3. fast-track で merge（reviewer 1 名 + CI green）
 4. main 復旧確認後、separate issue で root cause investigation を起票
-5. 修正 + 再 cutover は PR2′ として再実施
-6. **再 cutover の前提**: 検出された failure pattern を C4 / C5 / 新規 test として regression guard を仕込んでから再実施。テスト追加なしの再 cutover は禁止
+5. 修正 + 再 cutover を再実施
+6. **再 cutover の前提**: 検出された failure pattern を baseline-recall / determinism / 新規 test として regression guard を仕込んでから再実施。テスト追加なしの再 cutover は禁止
 
-revert すると segment-* issues は cutover 前の状態（shadow accounting 相当）に戻る。PR1 の infra（baseline schema, generation script, alignment 改修）は PR1 そのものの revert でない限り残るため、`generate_parity_baseline.mjs` 等のツールは引き続き使える。
+revert すると segment-* issues は cutover 前の状態に戻る。baseline 機構そのもの（schema, generation script, alignment）はそのままなので、`generate_parity_baseline.mjs` 等のツールは引き続き使える。
 
 ### Path 2 — Translate-first, rebaseline as last resort
 
 **Trigger**:
 
 - main の CI が baseline invalidation に起因して red
-- root cause が特定の slug 群への snapshot 変更（PR2 後の snapshot update PR が起点）
+- root cause が特定の slug 群への snapshot 変更（snapshot update PR が起点）
 - false negative の疑いがない（純粋な page-level invalidation の動作）
 
 **手順**:
@@ -341,11 +339,11 @@ revert すると segment-* issues は cutover 前の状態（shadow accounting �
 
 ### Baseline 運用ルール
 
-- `parity-baseline.json` は Phase 6A cutover 時点の既知 drift を凍結したもの
+- `parity-baseline.json` は cutover 時点の既知 drift を凍結したもの
 - 新規発生の segment-* issue は baseline に載らず即 gate fail
-- baseline entries は `reviewAfter` を持つ。期限を過ぎた entry は **gate に再突入する** (`isFrozenByBaseline` が `false` を返し、`isReportableParityIssue` が `true` を返す)。Phase 7 で導入された semantics で、`scripts/__tests__/source_parity_issue_state.test.mjs` の "still accepts expired baseline on non-coarse actionable issues (refire)" が固定する
+- baseline entries は `reviewAfter` を持つ。期限を過ぎた entry は **gate に再突入する** (`isFrozenByBaseline` が `false` を返し、`isReportableParityIssue` が `true` を返す)。`scripts/__tests__/source_parity_issue_state.test.mjs` の "still accepts expired baseline on non-coarse actionable issues (refire)" が固定する
 - 大量 entry が同じ `reviewAfter` に集中すると cliff failure になるため、`generate_parity_baseline.mjs` は slug ハッシュで `reviewAfter` を分散させる (staggered expiry)
 - `parityFollowup` issue が **30 日以内に expire する entry** を事前警告として出す。CLI の `expiring baseline entries: N` も同様
 - baseline paydown は明示的な PR で実施する（段階的縮小）。期限切れによる自動再点火に頼ってはいけない
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
-- Phase 6B では `tokenless-near-tie` baseline エントリを review queue として triage する（Issue #225 Phase 6B spec 参照）
+- `tokenless-near-tie` baseline エントリは `--include-advisory` review queue として triage する

@@ -2,7 +2,7 @@
 /**
  * Generate parity-baseline.json from parity-check-status.json.
  *
- * Phase 6A の frozen baseline 機構の生成側。input は直前の `check:parity` 実行
+ * frozen baseline 機構の生成側。input は直前の `check:parity` 実行
  * 結果 (`parity-check-status.json`) と各 slug の現 EN snapshot fingerprint。
  * 出力は deterministic で、CI で bit-identical を検証する。デフォルトの
  * generatedAt / generatedFromRunId は parity-check-status.json の
@@ -283,8 +283,8 @@ export function buildGenerationMeta(status, args) {
   const checkedAt = getCheckedAt(status);
   const generatedAt = checkedAt;
   const defaultRationale = args.regenerate
-    ? 'Phase 6A frozen baseline — regenerated with staggered reviewAfter'
-    : `Phase 6A frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
+    ? 'frozen baseline — regenerated with staggered reviewAfter'
+    : `frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
   return {
     runId: `${checkedAt}#parity-check-status`,
     generatedAt,

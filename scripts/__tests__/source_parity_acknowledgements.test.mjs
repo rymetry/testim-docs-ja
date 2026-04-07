@@ -119,10 +119,9 @@ describe('validateAcknowledgements', () => {
     );
   });
 
-  it('throws on coarse audit signal type paragraph-count-mismatch (Phase 8)', () => {
-    // Phase 8: COARSE_SIGNAL_TYPES never reach the gate, so an
-    // acknowledgement against them is misleading and is rejected at
-    // load time.
+  it('throws on coarse audit signal type paragraph-count-mismatch', () => {
+    // COARSE_SIGNAL_TYPES never reach the gate, so an acknowledgement
+    // against them is misleading and is rejected at load time.
     const entry = {
       ...validEntry,
       issueType: 'paragraph-count-mismatch',
@@ -130,11 +129,11 @@ describe('validateAcknowledgements', () => {
     };
     assert.throws(
       () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
-      /Phase 8 audit-only coarse signal/,
+      /audit-only coarse signal/,
     );
   });
 
-  it('throws on coarse audit signal type heading-mismatch (Phase 8)', () => {
+  it('throws on coarse audit signal type heading-mismatch', () => {
     const entry = {
       ...validEntry,
       issueType: 'heading-mismatch',
@@ -142,11 +141,11 @@ describe('validateAcknowledgements', () => {
     };
     assert.throws(
       () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
-      /Phase 8 audit-only coarse signal/,
+      /audit-only coarse signal/,
     );
   });
 
-  it('throws on coarse audit signal type table-cell-token-mismatch (Phase 8)', () => {
+  it('throws on coarse audit signal type table-cell-token-mismatch', () => {
     const entry = {
       ...validEntry,
       issueType: 'table-cell-token-mismatch',
@@ -154,7 +153,7 @@ describe('validateAcknowledgements', () => {
     };
     assert.throws(
       () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
-      /Phase 8 audit-only coarse signal/,
+      /audit-only coarse signal/,
     );
   });
 

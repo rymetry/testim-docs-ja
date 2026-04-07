@@ -1,7 +1,6 @@
 /**
- * Shared issue-state predicates used by the gate, summaries, and reporting.
- * Keeping them in one place prevents subtle drift between CLI output,
- * parityRegression filtering, and summary accounting.
+ * gate / summary / reporting で共有する issue 状態判定述語。CLI 出力、
+ * parityRegression フィルタ、summary 集計が同じ基準で動くようにここに集約する。
  */
 
 import { COARSE_SIGNAL_TYPES } from './source_parity_types.mjs';
@@ -19,13 +18,10 @@ export function isActiveParityIssue(issue) {
 }
 
 /**
- * Phase 8: classifies whether an issue is one of the demoted "coarse" audit
- * signals (count / shape / table-cell heuristics). The check is type-only —
- * severity, acknowledgement state, and baseline state are all ignored, so
- * even an expired-ack or expired-baseline coarse signal is still considered
- * a coarse signal and never re-lights `parityRegression` or the gate.
- *
- * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.3
+ * coarse audit signal 判定。count / shape / table-cell heuristics 系の
+ * 降格された issue かを type だけで判定する純粋関数。severity / ack /
+ * baseline 状態は無視するため、期限切れ ack / baseline でも coarse signal は
+ * coarse signal のままで `parityRegression` / gate を再点火しない契約。
  */
 export function isCoarseAuditSignal(issue) {
   if (!issue || typeof issue !== 'object') return false;
@@ -34,10 +30,9 @@ export function isCoarseAuditSignal(issue) {
 }
 
 export function isReportableParityIssue(issue) {
-  // Phase 8: coarse signals (paragraph/bullet/step/section count, heading,
-  // table-shape, table-cell-* heuristics) are audit-only and never feed
-  // parityRegression or the gate, regardless of ack/baseline state.
-  // See docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.3
+  // coarse signals (paragraph/bullet/step/section count, heading,
+  // table-shape, table-cell-* heuristics) は audit-only で
+  // parityRegression / gate には乗らない。ack / baseline 状態は無視する。
   if (isCoarseAuditSignal(issue)) return false;
   if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
   if (isFrozenByBaseline(issue)) return false;
