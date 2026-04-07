@@ -77,6 +77,43 @@ export function isNonBlockingIssue(issue) {
   return isNonBlockingParityIssue(issue);
 }
 
+/**
+ * Phase 8: pure helper that maps a parity-check summary into a CLI exit
+ * code. Lifted out of `checkSourceParity` so the gate behaviour is
+ * unit-testable without spinning up the full pipeline.
+ *
+ * Inputs:
+ *   summary  — output of summarizeParityResults() (or any object with the
+ *              same shape, including the Phase 8 reportableActive*
+ *              counters)
+ *   failOn   — 'actionable' | 'any' | null (any other value defaults to
+ *              the same behaviour as 'any')
+ *
+ * Returns 0 (gate passes) or 1 (gate fails). The gate now consumes the
+ * Phase 8 `reportableActive*` counters; coarse audit signals never
+ * affect the exit code, even when their ack/baseline has expired. The
+ * legacy `activeFiles` / `activeActionableFiles` fields on the summary
+ * are intentionally ignored here so downstream consumers that still
+ * read them keep their old semantics.
+ *
+ * `activeErrorFiles` is still consulted for the `actionable` mode so
+ * `source-fetch-error` and similar real errors continue to fail the
+ * gate.
+ *
+ * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.4
+ */
+export function computeExitCode(summary, failOn) {
+  if (!summary || typeof summary !== 'object') return 0;
+  if (failOn === 'actionable') {
+    const reportableActionable = summary.reportableActiveActionableFiles || 0;
+    const errorFiles = summary.activeErrorFiles || 0;
+    return reportableActionable > 0 || errorFiles > 0 ? 1 : 0;
+  }
+  // Default and 'any' both look at the broader reportable bucket.
+  const reportable = summary.reportableActiveFiles || 0;
+  return reportable > 0 ? 1 : 0;
+}
+
 export function getConsoleCoverageState(issues) {
   if (!Array.isArray(issues) || issues.length === 0) {
     return {
@@ -565,16 +602,14 @@ export async function checkSourceParity({
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }
 
-  // Exit code: fail only on active (non-acknowledged) issues
-  if (failOn === 'actionable') {
-    const hasActiveActionableOrError =
-      (summary.activeActionableFiles || 0) > 0 || (summary.activeErrorFiles || 0) > 0;
-    return hasActiveActionableOrError ? 1 : 0;
-  }
-  if (failOn === 'any') {
-    return (summary.activeFiles || 0) > 0 ? 1 : 0;
-  }
-  return (summary.activeFiles || 0) > 0 ? 1 : 0;
+  // Phase 8: gate exit code now consumes the reportableActive* counters
+  // so coarse audit signals (paragraph/bullet/step/section count, heading,
+  // table-shape, table-cell-* heuristics) cannot fail the build, even
+  // when their acknowledgement or baseline has expired. The legacy
+  // `activeFiles` / `activeActionableFiles` fields on `summary` keep
+  // their pre-Phase-8 semantics for downstream consumers but are no
+  // longer read here.
+  return computeExitCode(summary, failOn);
 }
 
 async function main() {

@@ -9,6 +9,7 @@ let collectSnapshotSlugs;
 let isValidAcknowledgedIssue;
 let isNonBlockingIssue;
 let getConsoleCoverageState;
+let computeExitCode;
 
 before(async () => {
   ({
@@ -17,6 +18,7 @@ before(async () => {
     isValidAcknowledgedIssue,
     isNonBlockingIssue,
     getConsoleCoverageState,
+    computeExitCode,
   } = await import('../check_source_parity.mjs'));
 });
 
@@ -176,5 +178,138 @@ describe('CLI coverage helpers', () => {
       icon: '❌',
       suffix: '',
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 8: computeExitCode uses reportableActive* counters
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', () => {
+  // Pure helper extracted in Phase 8 PR1 commit 5 so the gate exit-code
+  // logic can be unit-tested without spinning up the full
+  // checkSourceParity pipeline. The legacy activeFiles fields are kept
+  // alongside the new reportableActive* fields to make sure the helper
+  // really is reading the new ones.
+
+  it('failOn=actionable returns 0 when no reportable actionable + no error', () => {
+    const summary = {
+      reportableActiveActionableFiles: 0,
+      activeErrorFiles: 0,
+      // legacy: should be IGNORED by Phase 8 helper even though set
+      activeActionableFiles: 5,
+      activeFiles: 5,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+  });
+
+  it('failOn=actionable returns 1 when reportableActiveActionableFiles > 0', () => {
+    const summary = {
+      reportableActiveActionableFiles: 1,
+      activeErrorFiles: 0,
+      reportableActiveFiles: 1,
+      activeActionableFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 1);
+  });
+
+  it('failOn=actionable returns 1 on error files even with no reportable issues', () => {
+    const summary = {
+      reportableActiveActionableFiles: 0,
+      activeErrorFiles: 1,
+      reportableActiveFiles: 0,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 1);
+  });
+
+  it('failOn=any returns 0 when reportableActiveFiles is 0', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      activeFiles: 5, // legacy: must be ignored
+    };
+    assert.equal(computeExitCode(summary, 'any'), 0);
+  });
+
+  it('failOn=any returns 1 when reportableActiveFiles > 0', () => {
+    const summary = {
+      reportableActiveFiles: 2,
+      activeFiles: 2,
+    };
+    assert.equal(computeExitCode(summary, 'any'), 1);
+  });
+
+  it('default failOn (null) returns 0 for coarse-only summary', () => {
+    // Coarse-only: legacy activeFiles is 1 because the file has an
+    // unacknowledged signal, but reportableActiveFiles is 0 because the
+    // signal is in COARSE_SIGNAL_TYPES. Phase 8 must return exit 0 here.
+    const summary = {
+      reportableActiveFiles: 0,
+      auditSignalFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 0);
+  });
+
+  it('default failOn (null) returns 1 when reportableActiveFiles > 0', () => {
+    const summary = {
+      reportableActiveFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 1);
+  });
+
+  it('returns 0 for coarse-only with expired ack (Phase 8 audit only)', () => {
+    // The summary that summarizeParityResults() would emit for a file
+    // with a single expired-ack coarse signal:
+    const summary = {
+      reportableActiveFiles: 0,
+      reportableActiveActionableFiles: 0,
+      auditSignalFiles: 1,
+      auditSignalIssues: 1,
+      activeFiles: 1, // legacy
+      activeActionableFiles: 0,
+      activeErrorFiles: 0,
+      expiredAcknowledgements: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+    assert.equal(computeExitCode(summary, 'any'), 0);
+    assert.equal(computeExitCode(summary, null), 0);
+  });
+
+  it('returns 0 for coarse-only with expired baseline (Phase 8 audit only)', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      reportableActiveActionableFiles: 0,
+      auditSignalFiles: 1,
+      auditSignalIssues: 1,
+      activeFiles: 1, // legacy: includes the expired-baseline coarse
+      activeActionableFiles: 0,
+      activeErrorFiles: 0,
+      expiredBaselineEntries: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+    assert.equal(computeExitCode(summary, 'any'), 0);
+    assert.equal(computeExitCode(summary, null), 0);
+  });
+
+  it('returns 1 for actionable-only file even when there are also coarse signals', () => {
+    const summary = {
+      reportableActiveFiles: 1,
+      reportableActiveActionableFiles: 1,
+      auditSignalFiles: 1,
+      activeFiles: 1,
+      activeActionableFiles: 1,
+      activeErrorFiles: 0,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 1);
+    assert.equal(computeExitCode(summary, 'any'), 1);
+  });
+
+  it('handles missing fields by defaulting to 0', () => {
+    assert.equal(computeExitCode({}, 'actionable'), 0);
+    assert.equal(computeExitCode({}, 'any'), 0);
+    assert.equal(computeExitCode({}, null), 0);
   });
 });
