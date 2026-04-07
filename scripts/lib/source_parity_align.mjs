@@ -738,20 +738,32 @@ export function alignSegments(enSegments, jaSegments) {
 
   const diffs = [];
   for (let i = 0; i < enSections.length; i++) {
-    // Issue #247 PR2 — canonical block sequence comparator は section 単位
-    // LCS を **置き換えずに並行で** 走らせる。各 section は structure diff
-    // を最大 1 件しか emit しないので (Stage A/B/C は高々 1 件)、
-    // structure comparator はミスマッチ section あたり +1 diff を足すだけで
-    // cascade 乗数にはならない。LCS を生かしたままにしているのは以下の
-    // 2 点が必須だから:
+    // Issue #247 PR2 — alignSection (weighted LCS + cross-section body
+    // swap detection) を **先に** 走らせる。理由は shift と structure
+    // mismatch の二重発火を避けるため:
     //
+    //   - cross-section body swap が起きると、section 0 と section 1 の
+    //     対応ペアは「multiset / kind 列が両方違う」という形で観測され、
+    //     何の対策もなければ structure comparator は section ごとに 1 件
+    //     ずつ section-structure-mismatch を emit してしまう。
+    //   - だが本当の診断は section-local な構造ドリフトではなく
+    //     **cross-section misalignment** で、これは alignSection の
+    //     `findBodySwapEvidence` が `segment-shifted` として既に表現
+    //     できる。そちらが headline で、structure-mismatch を被せると
+    //     `structureMismatch*` カウンタが汚れるだけ。
+    //
+    // したがって順序は (1) alignSection を先に走らせて section の diff
+    // を取る、(2) `segment-shifted` が emit されていれば structure
+    // comparator は **その section だけ** スキップする、(3) shift では
+    // ない section に対してのみ structure comparator を並行で走らせる。
+    //
+    // structure comparator を並行で生かす理由 (shift していない section):
     //   1. 既存の構造ドリフト: 運用中の section には baseline 時点で既に
     //      drift が残っていることがある。この状態で LCS を suppress すると、
     //      後続の小さな mutation (1 段落削除、token drop) は新しい LCS diff
     //      も新しい structure diff も生まず、recall benchmark から見ると
     //      mutation が不可視になる。recall test の callout-paragraph-delete /
     //      step-delete / section-body-swap を参照。
-    //
     //   2. reviewer drill-down: structure mismatch は section レベルの
     //      見出し情報だが、「どの block が」崩れたかを把握するには
     //      segment-missing / segment-extra / segment-token-gap の per-segment
@@ -759,11 +771,16 @@ export function alignSegments(enSegments, jaSegments) {
     //
     // section レベルの structure diff と segment レベルの LCS diff は
     // downstream で別カウンタ族 (`structureMismatch*` と従来の segment-*)
-    // に分かれて集計されるので、gate accounting で二重計上にはならない。
-    const structureDiffs = compareSectionStructure(enSections[i], jaSections[i]);
-    for (const diff of structureDiffs) diffs.push(diff);
-
+    // に分かれて集計されるので、shift していない section での共存は
+    // gate accounting で二重計上にならない。
     const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
+    const hasShift = sectionDiffs.some((d) => d.type === 'segment-shifted');
+
+    if (!hasShift) {
+      const structureDiffs = compareSectionStructure(enSections[i], jaSections[i]);
+      for (const diff of structureDiffs) diffs.push(diff);
+    }
+
     for (const diff of sectionDiffs) diffs.push(diff);
   }
 

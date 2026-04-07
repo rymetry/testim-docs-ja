@@ -567,59 +567,47 @@ describe('Issue #247 PR1 — isSourceUnusableIssue', () => {
   });
 });
 
-describe('Issue #247 PR1 — isReportableParityIssue accepts new taxonomy', () => {
-  // 構造保持違反を coarse audit-only に降格せず、reportable として扱う
-  // ことが PR1 契約の要。ここで reportable 契約を固定する。
+describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until PR4 cutover', () => {
+  // PR2 で structure-mismatch / source-unusable の emission を入れたが、
+  // gate cutover (= `reportableActive*` への組み込み) は Issue #247 の
+  // PR 分割案で PR4 の責務になっている。
   //
-  // 注意 — 「frozen baseline」「expired baseline」系のテストは、述語単体
-  // (isFrozenByBaseline) が baselined フラグを honor することを固定して
-  // いるだけで、PR1 時点では実際のフロー上これらのフラグが新 type に
-  // 付くことはない (`source_parity_baseline.mjs::BASELINE_ELIGIBLE_TYPES`
-  // はまだ legacy segment-* しか許容せず、loader が reject する)。
-  // 新 type の baseline wiring は PR5 で baseline 同定キーを確定してから
-  // 追加する。ここでは述語の forward-compatibility だけを保証する。
+  // PR2 時点で gate に載せると、PR1 で `BASELINE_ELIGIBLE_TYPES` に新 type
+  // を入れていない (PR5 で wiring 予定) ため、既存の segment-* drift で
+  // baseline されているページが PR2 から structure-mismatch を emit した
+  // 瞬間に gate exit 1 でブロックされる。これを避けるため `isReportable
+  // ParityIssue` で新 type を gate 経路から明示的に exclude する。
+  //
+  // PR4 の cutover では `source_parity_issue_state.mjs::isReportable
+  // ParityIssue` の `if (isStructureMismatchIssue(...) || isSourceUnusable
+  // Issue(...)) return false;` を削除するだけで、structure mismatch が
+  // `reportableActive*` に流れ込む。それまでは独立 counter
+  // (`structureMismatchIssues` / `snapshotUnusableIssues`) からだけ参照
+  // される構造化 advisory として動く。
+  //
+  // 注意 — ack / baseline 周りのテストは、新 type の述語がまだ実運用
+  // フロー上では到達しない (loader が reject する) が、forward-compatible
+  // に「ack/baseline ロジックを通っても結果が一貫する」ことを pin する。
 
-  it('accepts section-structure-mismatch (active, no ack, no baseline)', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'section-structure-mismatch',
-        severity: 'actionable',
-      }),
-      true,
-    );
-  });
+  for (const type of [
+    'section-structure-mismatch',
+    'segment-order-mismatch',
+    'snapshot-incomplete',
+    'source-unusable',
+  ]) {
+    it(`${type} is NOT reportable in PR2 even when active (gate cutover deferred to PR4)`, () => {
+      assert.equal(
+        isReportableParityIssue({
+          type,
+          severity: 'actionable',
+        }),
+        false,
+        `${type} must not be reportable until PR4 cutover`,
+      );
+    });
+  }
 
-  it('accepts segment-order-mismatch (active, no ack, no baseline)', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'segment-order-mismatch',
-        severity: 'actionable',
-      }),
-      true,
-    );
-  });
-
-  it('accepts snapshot-incomplete (active, no ack, no baseline)', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'snapshot-incomplete',
-        severity: 'actionable',
-      }),
-      true,
-    );
-  });
-
-  it('accepts source-unusable (active, no ack, no baseline)', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'source-unusable',
-        severity: 'actionable',
-      }),
-      true,
-    );
-  });
-
-  it('rejects section-structure-mismatch with valid ack (ack still wins)', () => {
+  it('valid ack on a structure mismatch keeps it non-reportable (ack already covered the gate exclusion)', () => {
     assert.equal(
       isReportableParityIssue({
         type: 'section-structure-mismatch',
@@ -631,7 +619,9 @@ describe('Issue #247 PR1 — isReportableParityIssue accepts new taxonomy', () =
     );
   });
 
-  it('rejects segment-order-mismatch with frozen baseline (baseline still wins)', () => {
+  it('frozen baseline on a structure mismatch keeps it non-reportable', () => {
+    // baseline が新 type に付くのは PR5 以降だが、述語が forward-
+    // compatible に動くことを pin。
     assert.equal(
       isReportableParityIssue({
         type: 'segment-order-mismatch',
@@ -643,7 +633,10 @@ describe('Issue #247 PR1 — isReportableParityIssue accepts new taxonomy', () =
     );
   });
 
-  it('re-fires structure mismatch when baseline expires', () => {
+  it('expired baseline on a structure mismatch is STILL non-reportable in PR2 (gate cutover is PR4)', () => {
+    // PR4 では「baseline 期限切れ → 再点火」だが、PR2 時点では gate
+    // cutover 自体が未実施なので、期限切れも reportable にならない。
+    // PR4 でこのテストを「true 期待」に flip する。
     assert.equal(
       isReportableParityIssue({
         type: 'section-structure-mismatch',
@@ -651,11 +644,13 @@ describe('Issue #247 PR1 — isReportableParityIssue accepts new taxonomy', () =
         baselined: true,
         baselineExpired: true,
       }),
-      true,
+      false,
     );
   });
 
   it('new taxonomy is NOT coarse (isCoarseAuditSignal returns false)', () => {
+    // coarse signal とは別経路で gate exclusion されている点を pin。
+    // PR4 でこの分類は変えず、isReportableParityIssue 側だけ flip する。
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',

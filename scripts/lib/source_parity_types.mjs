@@ -93,11 +93,16 @@ export const COARSE_SIGNAL_TYPES = Object.freeze(
  * として検出される「原文の全文構造を保っていない翻訳」を first-class に
  * 出すための集合。PR2 で `source_parity_align.mjs` から emit される。
  *
- * これらの type の PR1 時点での契約:
- * - coarse audit signal には**含めない** (gate に乗せる)
- * - `isReportableParityIssue()` では reportable として扱う
+ * これらの type の PR2 時点での契約:
+ * - coarse audit signal には**含めない**
  * - summary の `structureMismatchIssues` / `structureMismatchFiles` に
- *   集計される (PR4 で gate cutover)
+ *   独立 counter として集計される
+ * - **`isReportableParityIssue()` からは PR2 では除外**。PR4 の gate cutover
+ *   で `reportableActive*` に取り込むまで、gate exit code には寄与しない。
+ *   (`BASELINE_ELIGIBLE_TYPES` が PR5 まで新 type を受け付けないため、PR2
+ *   時点で gate に載せると既存 baseline 済みページが reportable に転落して
+ *   ブロックされる。`isReportableParityIssue` で gate exclusion を入れる
+ *   ことで「emission を入れる PR2」と「gate に載せる PR4」を綺麗に分ける。)
  * - **acknowledgement は可能** (NON_ACKNOWLEDGEABLE_TYPES に入れないため、
  *   意図的な差分を reviewer が ack で抑制できる)
  * - **baseline は PR1 時点では未対応**。`source_parity_baseline.mjs` の
@@ -105,8 +110,6 @@ export const COARSE_SIGNAL_TYPES = Object.freeze(
  *   許容し、新 type は拒否される。新 type の baseline 同定キー
  *   (section path / block kind / canonical sequence hash など) は PR2/PR3
  *   で emitter が fix した後、PR5 の baseline migration で設計 + wiring する。
- *   それまでは「freeze する必要がない」== active として gate に乗る前提で
- *   運用する。
  */
 export const STRUCTURE_MISMATCH_TYPES = Object.freeze(
   new Set([
@@ -122,11 +125,12 @@ export const STRUCTURE_MISMATCH_TYPES = Object.freeze(
  * structure mismatch を suppress してこちらに 1 件だけ畳む。PR3 で
  * `source_parity_checks.mjs` から emit される。
  *
- * これらの type の PR1 時点での契約:
- * - coarse audit signal には**含めない** (reportable)
- * - `isReportableParityIssue()` では reportable として扱う
+ * これらの type の PR2 時点での契約:
+ * - coarse audit signal には**含めない**
  * - summary の `snapshotUnusableIssues` / `snapshotUnusableFiles` に
- *   集計される (translation drift とは別カウント)
+ *   独立 counter として集計される (translation drift とは別カウント)
+ * - **`isReportableParityIssue()` からは PR2 では除外**。structure mismatch と
+ *   同じ理由で gate cutover は PR4 に持ち越す。
  * - **acknowledgement は可能** (snapshot 側の known 崩れを ack で抑制できる)
  * - **baseline は PR1 時点では未対応**。`BASELINE_ELIGIBLE_TYPES` は
  *   これらを許容せず、`validateBaseline` は新 type を含む entry を reject
