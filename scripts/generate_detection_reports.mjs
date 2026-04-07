@@ -56,7 +56,7 @@ function main() {
   );
   const followup = actionableReport.parityFollowup;
   console.log(
-    `  parity followup: expired=${followup.summary.baselineDebt.expiredBaselineEntries} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugs} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
+    `  parity followup: expired=${followup.summary.baselineDebt.expiredBaselineEntries} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
   );
 }
 

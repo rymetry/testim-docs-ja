@@ -13,6 +13,7 @@ const SOURCE_SYNC_ISSUE_TITLE =
   '⚠️ Source Sync Health: fetch degradation detected';
 const PARITY_FOLLOWUP_ISSUE_TITLE =
   '🗂️ Parity Followup: baseline debt and advisory queue';
+const DOCS_PREFIX = path.join('src', 'content', 'docs') + path.sep;
 
 /**
  * Family keys used in HTML body comments and by sync-detection-issues.cjs for
@@ -30,6 +31,14 @@ export const FAMILY_KEYS = {
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return {};
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function fileToSlug(filePath) {
+  if (typeof filePath !== 'string' || filePath.length === 0) return null;
+  if (filePath.startsWith(DOCS_PREFIX)) {
+    return filePath.slice(DOCS_PREFIX.length).replace(/\.md$/, '');
+  }
+  return path.basename(filePath, '.md');
 }
 
 function formatList(values) {
@@ -93,12 +102,9 @@ export function buildAuditManifest(
   const changes = snapshot.changes ?? [];
 
   // Build parity index by slug (extract from file path)
-  const docsPrefix = path.join('src', 'content', 'docs') + path.sep;
   const parityBySlug = new Map();
   for (const file of parity?.files ?? []) {
-    const slug = file.file.startsWith(docsPrefix)
-      ? file.file.slice(docsPrefix.length).replace(/\.md$/, '')
-      : path.basename(file.file, '.md');
+    const slug = fileToSlug(file.file);
     parityBySlug.set(slug, file.issues ?? []);
   }
 
@@ -183,6 +189,32 @@ function sortParityEntries(entries) {
   });
 }
 
+function buildParityEntries(files, issueFilter) {
+  return files
+    .map((file) => ({
+      ...file,
+      issues: (file.issues ?? []).filter(issueFilter),
+    }))
+    .filter((file) => file.issues.length > 0);
+}
+
+function summarizeIssueEntries(entries) {
+  const issuesByType = {};
+  const issuesBySeverity = {};
+
+  for (const entry of entries) {
+    for (const issue of entry.issues ?? []) {
+      issuesByType[issue.type] = (issuesByType[issue.type] || 0) + 1;
+      issuesBySeverity[issue.severity] = (issuesBySeverity[issue.severity] || 0) + 1;
+    }
+  }
+
+  return {
+    issuesByType,
+    issuesBySeverity,
+  };
+}
+
 function formatSnapshotEntry(entry) {
   if (entry.type === 'page-added') return `\`${entry.slug}\` — NEW PAGE`;
   if (entry.type === 'page-removed') return `\`${entry.slug}\` — REMOVED`;
@@ -193,6 +225,58 @@ function formatSnapshotEntry(entry) {
   return `\`${entry.slug}\` (${entry.diffLines} lines: ${cats})`;
 }
 
+function buildTopBaselinedPages(files, maxEntries) {
+  return files
+    .map((file) => {
+      const baselinedIssues = (file.issues ?? []).filter((issue) => issue.baselined === true);
+      if (baselinedIssues.length === 0) return null;
+
+      const expiredBaselineEntries = baselinedIssues.filter(
+        (issue) => issue.baselineExpired === true,
+      ).length;
+
+      return {
+        file: file.file,
+        slug: fileToSlug(file.file),
+        issueCount: baselinedIssues.length,
+        expiredBaselineEntries,
+      };
+    })
+    .filter(Boolean)
+    .sort((left, right) => {
+      const issueDiff = right.issueCount - left.issueCount;
+      if (issueDiff !== 0) return issueDiff;
+      const expiredDiff = right.expiredBaselineEntries - left.expiredBaselineEntries;
+      if (expiredDiff !== 0) return expiredDiff;
+      return left.file.localeCompare(right.file);
+    })
+    .slice(0, maxEntries);
+}
+
+function buildTokenlessNearTieExamples(advisoryQueue, maxEntries) {
+  return advisoryQueue
+    .map((entry) => {
+      const example = (entry.issues ?? []).find(
+        (issue) => issue.inconclusiveCategory === 'tokenless-near-tie',
+      );
+      if (!example) return null;
+
+      return {
+        slug: entry.slug ?? fileToSlug(entry.file),
+        file: entry.file,
+        queueKey: example.queueKey ?? null,
+        blocking: entry.blocking === true,
+        detail: example.detail ?? '',
+        leftSectionPath: example.leftSectionPath ?? null,
+        rightSectionPath: example.rightSectionPath ?? null,
+        currentScore: example.currentScore ?? null,
+        swapScore: example.swapScore ?? null,
+      };
+    })
+    .filter(Boolean)
+    .slice(0, maxEntries);
+}
+
 function buildParityFollowupBody({
   summary,
   expiredBaselineFiles,
@@ -200,8 +284,8 @@ function buildParityFollowupBody({
   blockingAdvisoryItems,
   advisoryQueueIssues,
   advisoryQueueFiles,
-  isComplete,
-  scopeType,
+  advisoryQueueScope,
+  includeAdvisoryInBody,
 }) {
   const lines = [
     '## Summary',
@@ -209,12 +293,19 @@ function buildParityFollowupBody({
     `- Checked at: ${summary.checkedAt ?? 'unknown'}`,
     `- Baselined issues: ${summary.baselinedIssues ?? 0} (${summary.baselinedFiles ?? 0} files)`,
     `- Expired baseline entries: ${summary.expiredBaselineEntries ?? 0}`,
-    `- Baseline-invalidated slugs: ${(summary.baselineInvalidatedSlugs ?? []).length}`,
-    `- Advisory queue: ${advisoryQueueIssues} issues (${advisoryQueueFiles} files)`,
-    `  - Scope: ${scopeType ?? 'unknown'}${isComplete ? ' (complete)' : ' (partial)'}`,
-    `  - Blocking: ${blockingAdvisoryItems.length}`,
+    `- Baseline-invalidated slugs: ${baselineInvalidatedSlugs.length}`,
     '',
   ];
+
+  if (includeAdvisoryInBody) {
+    const scopeType = advisoryQueueScope?.type ?? 'unknown';
+    lines.push(
+      `- Advisory queue: ${advisoryQueueIssues} issues (${advisoryQueueFiles} files)`,
+      `  - Scope: ${scopeType} (complete)`,
+      `  - Blocking: ${blockingAdvisoryItems.length}`,
+      '',
+    );
+  }
 
   if (expiredBaselineFiles.length > 0) {
     lines.push('## Expired Baseline Entries', '');
@@ -268,7 +359,6 @@ function buildParityFollowup(parity, options = {}) {
   const advisoryQueueIssues = summary.advisoryQueueIssues ?? 0;
   const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
   const isComplete = advisoryQueueScope?.isComplete ?? null;
-  const scopeType = advisoryQueueScope?.type ?? null;
 
   const blockingAdvisoryItems = advisoryQueue.filter((e) => e.blocking);
   const hasBlockingAdvisory = isComplete === true && blockingAdvisoryItems.length > 0;
@@ -293,6 +383,10 @@ function buildParityFollowup(parity, options = {}) {
     }
   }
   expiredBaselineFiles.sort((a, b) => b.count - a.count);
+  const reviewHints = {
+    topBaselinedPages: buildTopBaselinedPages(files, maxEntries),
+    tokenlessNearTieExamples: buildTokenlessNearTieExamples(advisoryQueue, maxEntries),
+  };
 
   const body = shouldOpenIssue
     ? withFamilyMarker(
@@ -300,11 +394,12 @@ function buildParityFollowup(parity, options = {}) {
           summary,
           expiredBaselineFiles: expiredBaselineFiles.slice(0, maxEntries),
           baselineInvalidatedSlugs,
-          blockingAdvisoryItems: blockingAdvisoryItems.slice(0, maxEntries),
+          blockingAdvisoryItems:
+            isComplete === true ? blockingAdvisoryItems.slice(0, maxEntries) : [],
           advisoryQueueIssues,
           advisoryQueueFiles,
-          isComplete,
-          scopeType,
+          advisoryQueueScope,
+          includeAdvisoryInBody: isComplete === true,
         }),
         FAMILY_KEYS.PARITY_FOLLOWUP,
       )
@@ -320,15 +415,19 @@ function buildParityFollowup(parity, options = {}) {
         baselinedIssues: summary.baselinedIssues ?? 0,
         baselinedFiles: summary.baselinedFiles ?? 0,
         expiredBaselineEntries,
-        baselineInvalidatedSlugs: baselineInvalidatedSlugs.length,
+        expiredBaselineFiles,
+        baselineInvalidatedSlugs,
+        baselineInvalidatedSlugCount: baselineInvalidatedSlugs.length,
       },
       advisoryQueue: {
         issues: advisoryQueueIssues,
         files: advisoryQueueFiles,
         blockingItems: blockingAdvisoryItems.length,
-        scopeType,
-        isComplete,
+        advisoryQueueScope,
+        advisoryQueue,
+        includedInIssueBody: isComplete === true,
       },
+      reviewHints,
     },
   };
 }
@@ -338,12 +437,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const sourceSync = options.sourceSync ?? {};
   const snapshotChanges = snapshot.changes ?? [];
   const parityFiles = parity.files ?? [];
-  // Only files with at least one ACTIVE (non-acknowledged or expired) actionable/signal
-  // issue should drive parity-regression issue creation. Phase 3 acknowledgements are
-  // explicitly non-blocking and must not trigger regression issues.
-  const parityIssueFiles = parityFiles.filter((file) =>
-    (file.issues ?? []).some(isReportableParityIssue),
-  );
+  const parityIssueFiles = buildParityEntries(parityFiles, isReportableParityIssue);
+  const parityIssueSummary = summarizeIssueEntries(parityIssueFiles);
 
   const snapshotTopEntries = sortSnapshotEntries(snapshotChanges).slice(0, maxEntries);
   const parityTopEntries = sortParityEntries(parityIssueFiles).slice(
@@ -405,7 +500,6 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     formatList(
       parityTopEntries.map((entry) => {
         const issueLabels = entry.issues
-          .filter(isReportableParityIssue)
           .map((issue) => {
             const tag = issue.severity === 'signal' ? '[signal] ' : '';
             return `${tag}${issue.type}${issue.detail ? ` (${issue.detail})` : ''}`;
@@ -492,8 +586,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         issueCount: parityIssueFiles.length,
         acknowledgedIssues: parity.summary?.acknowledgedIssues || 0,
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
-        issuesByType: parity.summary?.issuesByType || {},
-        issuesBySeverity: parity.summary?.issuesBySeverity || {},
+        issuesByType: parityIssueSummary.issuesByType,
+        issuesBySeverity: parityIssueSummary.issuesBySeverity,
       },
     },
     parityFollowup: buildParityFollowup(parity, options),
@@ -558,7 +652,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     `- Baselined: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} issues (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} files)`,
     `- Expired baseline entries: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
-    `- Invalidated slugs: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? 0}`,
+    `- Invalidated slugs: ${(actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? []).length}`,
     `- Advisory queue: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} issues (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} files, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} blocking)`,
     '',
     '## Files',

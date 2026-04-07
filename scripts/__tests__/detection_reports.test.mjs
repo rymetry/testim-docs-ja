@@ -752,6 +752,7 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.ok(report.parityFollowup.summary);
     assert.ok(report.parityFollowup.summary.baselineDebt);
     assert.ok(report.parityFollowup.summary.advisoryQueue);
+    assert.ok(report.parityFollowup.summary.reviewHints);
   });
 
   it('shouldOpenIssue = false when no follow-up debt', () => {
@@ -777,7 +778,10 @@ describe('parityFollowup in buildActionableReport', () => {
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
-    assert.equal(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugs, 1);
+    assert.deepEqual(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugs, [
+      'overview/page-a',
+    ]);
+    assert.equal(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugCount, 1);
   });
 
   it('shouldOpenIssue = true when advisory queue is complete with blocking items', () => {
@@ -792,6 +796,18 @@ describe('parityFollowup in buildActionableReport', () => {
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
     assert.equal(report.parityFollowup.summary.advisoryQueue.blockingItems, 1);
+    assert.deepEqual(report.parityFollowup.summary.advisoryQueue.advisoryQueueScope, {
+      type: 'full',
+      isComplete: true,
+      filters: {},
+      checkedFiles: 100,
+      totalFiles: 100,
+    });
+    assert.equal(report.parityFollowup.summary.advisoryQueue.advisoryQueue.length, 1);
+    assert.equal(
+      report.parityFollowup.summary.reviewHints.tokenlessNearTieExamples[0].slug,
+      'overview/page-a',
+    );
   });
 
   it('shouldOpenIssue = false when advisory has blocking items but scope is not complete', () => {
@@ -807,6 +823,64 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.equal(report.parityFollowup.shouldOpenIssue, false);
   });
 
+  it('keeps partial advisory queue in JSON but omits it from issue body', () => {
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        expiredBaselineEntries: 1,
+        advisoryQueueIssues: 2,
+        advisoryQueueFiles: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              severity: 'actionable',
+              baselined: true,
+              baselineExpired: true,
+              baselineReviewAfter: '2026-03-01',
+              detail: 'expired',
+            },
+          ],
+        },
+      ],
+      advisoryQueueScope: {
+        type: 'slug',
+        isComplete: false,
+        filters: { slug: 'overview/page-a' },
+        checkedFiles: 1,
+        totalFiles: 100,
+      },
+      advisoryQueue: [
+        {
+          slug: 'overview/page-a',
+          file: 'src/content/docs/overview/page-a.md',
+          blocking: true,
+          issueCount: 2,
+          issues: [{ inconclusiveCategory: 'tokenless-near-tie', detail: 'partial-only' }],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.equal(report.parityFollowup.summary.advisoryQueue.advisoryQueue.length, 1);
+    assert.equal(report.parityFollowup.summary.advisoryQueue.includedInIssueBody, false);
+    assert.deepEqual(report.parityFollowup.summary.advisoryQueue.advisoryQueueScope, {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: 'overview/page-a' },
+      checkedFiles: 1,
+      totalFiles: 100,
+    });
+    assert.doesNotMatch(report.parityFollowup.body, /Advisory queue:/);
+    assert.doesNotMatch(report.parityFollowup.body, /tokenless-near-tie/);
+    assert.doesNotMatch(report.parityFollowup.body, /partial-only/);
+  });
+
   it('parityFollowup body contains invalidated slugs', () => {
     const parity = {
       ...cleanParity,
@@ -816,6 +890,10 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
     assert.match(report.parityFollowup.body, /overview\/page-a/);
     assert.match(report.parityFollowup.body, /settings\/config/);
+    assert.deepEqual(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugs, [
+      'overview/page-a',
+      'settings/config',
+    ]);
   });
 
   it('parityFollowup body contains expired baseline file details', () => {
@@ -835,6 +913,7 @@ describe('parityFollowup in buildActionableReport', () => {
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
     assert.match(report.parityFollowup.body, /overview\/page-a/);
+    assert.equal(report.parityFollowup.summary.reviewHints.topBaselinedPages[0].slug, 'overview/page-a');
   });
 });
 
@@ -879,6 +958,8 @@ describe('parityRegression excludes non-expired baselined issues (Phase 7)', () 
     assert.equal(report.parityRegression.shouldOpenIssue, false);
     assert.equal(report.parityRegression.summary.issueCount, 0);
     assert.equal(report.parityRegression.topEntries.length, 0);
+    assert.deepEqual(report.parityRegression.summary.issuesByType, {});
+    assert.deepEqual(report.parityRegression.summary.issuesBySeverity, {});
   });
 
   it('opens parity issue when baselined issue has expired', () => {
@@ -934,6 +1015,12 @@ describe('parityRegression excludes non-expired baselined issues (Phase 7)', () 
     assert.equal(report.parityRegression.shouldOpenIssue, true);
     assert.doesNotMatch(report.parityRegression.body, /frozen — must not appear/);
     assert.match(report.parityRegression.body, /segment-extra/);
+    assert.deepEqual(report.parityRegression.summary.issuesByType, {
+      'segment-extra': 1,
+    });
+    assert.deepEqual(report.parityRegression.summary.issuesBySeverity, {
+      actionable: 1,
+    });
   });
 });
 
