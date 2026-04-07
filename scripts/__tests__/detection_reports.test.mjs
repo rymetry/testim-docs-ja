@@ -1610,6 +1610,69 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     assert.equal(manifest.length, 0);
   });
 
+  it('renderSummaryMarkdown puts coarse signals in the audit section, not Parity', () => {
+    // Phase 8 codex follow-up test: docs-update-summary.md must put
+    // coarse signals into a new "Audit Signals" section, never into the
+    // active counts of the "Parity" section. The Parity section should
+    // count zero active files for a coarse-only summary, and the Audit
+    // Signals section should list the coarse type breakdown.
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 1,
+        acknowledgedIssues: 0,
+        reportableActiveFiles: 0,
+        reportableActiveActionableFiles: 0,
+        auditSignalIssues: 3,
+        auditSignalFiles: 1,
+        auditSignalsByType: {
+          'paragraph-count-mismatch': 2,
+          'heading-mismatch': 1,
+        },
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-07T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: { summary: { issueCount: 0 } },
+      parityFollowup: {
+        summary: {
+          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, expiredBaselineEntries: 0, baselineInvalidatedSlugs: [] },
+          advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+
+    // Parity section: active counts must reflect Phase 8 reportable
+    // counters, NOT the legacy ones that include coarse signals.
+    assert.match(md, /## Parity/);
+    assert.match(md, /Active actionable files: 0/);
+    assert.match(md, /Active issue files: 0/);
+
+    // Audit Signals section exists and lists the coarse breakdown.
+    assert.match(md, /## Audit Signals/);
+    assert.match(md, /paragraph-count-mismatch: 2/);
+    assert.match(md, /heading-mismatch: 1/);
+
+    // Sanity: coarse signal labels must NOT show up inside the Parity
+    // section. The simplest way to test this is to extract the Parity
+    // section text and check it for the coarse type names.
+    const paritySectionMatch = md.match(/## Parity\n([\s\S]*?)(?:\n## |$)/);
+    assert.ok(paritySectionMatch, 'Parity section must exist');
+    const paritySection = paritySectionMatch[1];
+    assert.doesNotMatch(paritySection, /paragraph-count-mismatch/);
+    assert.doesNotMatch(paritySection, /heading-mismatch/);
+  });
+
   it('snapshot-driven entries still receive parity cross-reference (existing behaviour)', () => {
     // Phase 8 must NOT remove the existing parity cross-reference on
     // entries that DO have a matching snapshot change.

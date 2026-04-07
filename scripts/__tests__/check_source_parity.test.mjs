@@ -64,6 +64,22 @@ describe('parseArgs', () => {
     const args = parseArgs(['--json']);
     assert.equal(args.includeAdvisory, false);
   });
+
+  it('parses --include-audit-signals (Phase 8)', () => {
+    const args = parseArgs(['--include-audit-signals']);
+    assert.equal(args.includeAuditSignals, true);
+  });
+
+  it('returns false includeAuditSignals when not specified (Phase 8)', () => {
+    const args = parseArgs(['--json']);
+    assert.equal(args.includeAuditSignals, false);
+  });
+
+  it('parses --include-audit-signals together with --include-advisory', () => {
+    const args = parseArgs(['--include-advisory', '--include-audit-signals']);
+    assert.equal(args.includeAdvisory, true);
+    assert.equal(args.includeAuditSignals, true);
+  });
 });
 
 describe('collectSnapshotSlugs', () => {

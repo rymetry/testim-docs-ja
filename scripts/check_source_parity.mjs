@@ -182,6 +182,9 @@ export function parseArgs(argv = process.argv.slice(2)) {
   return {
     json: argv.includes('--json'),
     includeAdvisory: argv.includes('--include-advisory'),
+    // Phase 8: opt-in CLI display of demoted coarse audit signals.
+    // Mirrors --include-advisory in role: display only, no gate impact.
+    includeAuditSignals: argv.includes('--include-audit-signals'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
     failOn: failOnArg ? failOnArg.split('=').slice(1).join('=') : null,
     slug: slugArg ? slugArg.split('=').slice(1).join('=') : null,
@@ -212,6 +215,7 @@ function loadBaselineFileSafe(filePath = BASELINE_PATH) {
 export async function checkSourceParity({
   json = false,
   includeAdvisory = false,
+  includeAuditSignals = false,
   section = null,
   failOn = null,
   slug = null,
@@ -257,6 +261,7 @@ export async function checkSourceParity({
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     if (failOn) console.log(`🚦 --fail-on=${failOn}`);
     if (includeAdvisory) console.log('📝 Phase 6B review queue 表示: ON');
+    if (includeAuditSignals) console.log('🔍 Phase 8 audit signals 表示: ON');
     console.log('');
   }
 
@@ -567,6 +572,29 @@ export async function checkSourceParity({
       );
       for (const slug of summary.baselineInvalidatedSlugs) {
         console.log(`  ${slug}`);
+      }
+    }
+    // Phase 8: always print a one-line summary of demoted audit signals
+    // so they remain visible even without --include-audit-signals; the
+    // flag only controls the per-type breakdown to keep the default
+    // CLI output compact.
+    if ((summary.auditSignalIssues || 0) > 0 || includeAuditSignals) {
+      console.log(
+        `\n[Phase 8 audit signals] coarse heuristics (gate から除外): ${summary.auditSignalIssues || 0} 件 / ${summary.auditSignalFiles || 0} ファイル`,
+      );
+      console.log(
+        '  parity-regression issue body には載せません。deep-audit workflow と --include-audit-signals でのみ詳細を確認できます',
+      );
+      if (includeAuditSignals) {
+        const byType = summary.auditSignalsByType ?? {};
+        const sortedTypes = Object.keys(byType).sort();
+        if (sortedTypes.length === 0) {
+          console.log('  (no coarse signals in this run)');
+        } else {
+          for (const type of sortedTypes) {
+            console.log(`    ${type}: ${byType[type]} 件`);
+          }
+        }
       }
     }
     if (includeAdvisory) {
