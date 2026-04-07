@@ -629,6 +629,54 @@ describe('renderSummaryMarkdown', () => {
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
     assert.match(md, /Expired acknowledgements: 1/);
   });
+
+  it('marks partial advisory queue summaries as not repo-wide', () => {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        acknowledgedIssues: 0,
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-07T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: { issueCount: 0 },
+      },
+      parityFollowup: {
+        summary: {
+          baselineDebt: {
+            baselinedIssues: 1,
+            baselinedFiles: 1,
+            expiredBaselineEntries: 1,
+            baselineInvalidatedSlugs: ['overview/page-a'],
+          },
+          advisoryQueue: {
+            issues: 2,
+            files: 1,
+            blockingItems: 1,
+            advisoryQueueScope: {
+              type: 'slug',
+              isComplete: false,
+              filters: { slug: 'overview/page-a' },
+            },
+          },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; partial scope: slug=overview\/page-a, not repo-wide\)/);
+  });
 });
 
 describe('loadDetectionInputs', () => {

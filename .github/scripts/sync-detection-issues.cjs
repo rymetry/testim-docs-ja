@@ -32,6 +32,19 @@ function sortByUpdatedDesc(left, right) {
   return Date.parse(right.updated_at) - Date.parse(left.updated_at);
 }
 
+function hasFamilyMarker(issue, marker) {
+  return issue.body?.includes(marker) === true;
+}
+
+function sortMatchingIssues(marker) {
+  return (left, right) => {
+    const markerDiff =
+      Number(hasFamilyMarker(right, marker)) - Number(hasFamilyMarker(left, marker));
+    if (markerDiff !== 0) return markerDiff;
+    return sortByUpdatedDesc(left, right);
+  };
+}
+
 function buildIssueSpecs(report) {
   const specs = [
     {
@@ -112,6 +125,27 @@ async function createIssue({ github, owner, repo, title, body, labels, log }) {
   }
 }
 
+async function closeIssue({
+  github,
+  owner,
+  repo,
+  issueNumber,
+  commentBody,
+}) {
+  await github.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: issueNumber,
+    body: commentBody,
+  });
+  await github.rest.issues.update({
+    owner,
+    repo,
+    issue_number: issueNumber,
+    state: 'closed',
+  });
+}
+
 async function syncOneIssue({
   github,
   owner,
@@ -127,14 +161,18 @@ async function syncOneIssue({
   // that title renames never create duplicate issues.  Fall back to title
   // matching for issues that were created before the marker was introduced.
   const marker = buildFamilyMarker(key);
-  const byMarker = existingIssues.filter((issue) => issue.body?.includes(marker));
+  const byMarker = existingIssues.filter((issue) => hasFamilyMarker(issue, marker));
   const byTitle = existingIssues.filter((issue) => issue.title === title);
-  const matching = (byMarker.length > 0 ? byMarker : byTitle).sort(sortByUpdatedDesc);
-  const openIssue = matching.find((issue) => issue.state === 'open') ?? null;
+  const matching = [...new Map(
+    [...byMarker, ...byTitle].map((issue) => [issue.number, issue]),
+  ).values()].sort(sortMatchingIssues(marker));
+  const openIssues = matching.filter((issue) => issue.state === 'open');
+  const openIssue = openIssues[0] ?? null;
+  const duplicateOpenIssues = openIssues.slice(1);
 
   if (shouldOpenIssue) {
     if (openIssue) {
-      if (openIssue.body !== body) {
+      if (openIssue.body !== body || openIssue.title !== title) {
         await github.rest.issues.update({
           owner,
           repo,
@@ -145,6 +183,17 @@ async function syncOneIssue({
         log.info(`Updated open issue #${openIssue.number} (${key}).`);
       } else {
         log.info(`No body changes for open issue #${openIssue.number} (${key}).`);
+      }
+      for (const duplicate of duplicateOpenIssues) {
+        await closeIssue({
+          github,
+          owner,
+          repo,
+          issueNumber: duplicate.number,
+          commentBody:
+            `Closing duplicate detection issue for ${key}; family-key sync keeps one open issue per family.`,
+        });
+        log.info(`Closed duplicate issue #${duplicate.number} (${key}).`);
       }
       return;
     }
@@ -167,19 +216,17 @@ async function syncOneIssue({
     return;
   }
 
-  await github.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number: openIssue.number,
-    body: `Closing because the latest scheduled check reports no actionable or signal ${key} file(s).`,
-  });
-  await github.rest.issues.update({
-    owner,
-    repo,
-    issue_number: openIssue.number,
-    state: 'closed',
-  });
-  log.info(`Closed issue #${openIssue.number} (${key}).`);
+  for (const issue of openIssues) {
+    await closeIssue({
+      github,
+      owner,
+      repo,
+      issueNumber: issue.number,
+      commentBody:
+        `Closing because the latest scheduled check reports no actionable or signal ${key} file(s).`,
+    });
+    log.info(`Closed issue #${issue.number} (${key}).`);
+  }
 }
 
 module.exports = async function syncDetectionIssues({

@@ -277,6 +277,23 @@ function buildTokenlessNearTieExamples(advisoryQueue, maxEntries) {
     .slice(0, maxEntries);
 }
 
+function formatAdvisoryQueueScope(scope) {
+  if (!scope || typeof scope !== 'object') return 'scope unknown';
+  if (scope.isComplete === true) return 'full repo';
+
+  const slug = scope.filters?.slug ?? null;
+  if (scope.type === 'slug' && slug) {
+    return `partial scope: slug=${slug}, not repo-wide`;
+  }
+
+  const section = scope.filters?.section ?? null;
+  if (scope.type === 'section' && section) {
+    return `partial scope: section=${section}, not repo-wide`;
+  }
+
+  return 'partial scope, not repo-wide';
+}
+
 function buildParityFollowupBody({
   summary,
   expiredBaselineFiles,
@@ -653,7 +670,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     `- Baselined: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} issues (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} files)`,
     `- Expired baseline entries: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
     `- Invalidated slugs: ${(actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? []).length}`,
-    `- Advisory queue: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} issues (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} files, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} blocking)`,
+    `- Advisory queue: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} issues (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} files, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} blocking; ${formatAdvisoryQueueScope(actionableReport.parityFollowup?.summary?.advisoryQueue?.advisoryQueueScope ?? null)})`,
     '',
     '## Files',
     '',
