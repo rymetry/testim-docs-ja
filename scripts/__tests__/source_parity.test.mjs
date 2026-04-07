@@ -526,10 +526,11 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.deepEqual(summary.structureMismatchByType, {
       'section-structure-mismatch': 2,
     });
-    // and these also flow into reportableActive* since they are actionable
-    // and NOT coarse.
-    assert.equal(summary.reportableActiveFiles, 1);
-    assert.equal(summary.reportableActiveActionableFiles, 1);
+    // Issue #247 PR2 — structure mismatch は PR2 時点では `reportableActive*`
+    // (gate counter) に流れない。gate cutover は PR4 で行う。
+    // 専用の `structureMismatch*` counter からだけ参照される。
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
   });
 
   it('counts segment-order-mismatch into structureMismatch*', () => {
@@ -570,9 +571,11 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.deepEqual(summary.snapshotUnusableByType, {
       'snapshot-incomplete': 1,
     });
-    // source-unusable family also flows into reportableActive*.
-    assert.equal(summary.reportableActiveFiles, 1);
-    assert.equal(summary.reportableActiveActionableFiles, 1);
+    // Issue #247 PR2 — source-unusable family も PR2 時点では
+    // `reportableActive*` には流れない。PR4 cutover で `reportableActive*`
+    // 経路に取り込む。
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
   });
 
   it('counts source-unusable into snapshotUnusable*', () => {
@@ -633,7 +636,8 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.structureMismatchIssues, 0);
     assert.equal(summary.structureMismatchFiles, 0);
-    // reportable は ack を見ているので、これも 0 になるべき
+    // ack 有り + structure mismatch は PR2 時点でも reportable=0。
+    // (PR4 cutover 後も ack が gate exclusion の優先経路として残る。)
     assert.equal(summary.reportableActiveFiles, 0);
   });
 
@@ -655,7 +659,7 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.equal(summary.structureMismatchFiles, 0);
   });
 
-  it('includes expired ack on structure mismatch (re-fires counter)', () => {
+  it('includes expired ack on structure mismatch in structureMismatch* (counter re-fires)', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/expired-ack-structure.md',
@@ -671,11 +675,14 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.structureMismatchIssues, 1);
     assert.equal(summary.structureMismatchFiles, 1);
-    // and reportable re-fires too
-    assert.equal(summary.reportableActiveFiles, 1);
+    // Issue #247 PR2 — gate cutover は PR4。PR2 時点では expired ack が
+    // 戻ってきても `reportableActive*` には流入しない (gate 経路から
+    // 完全に exclude されているため)。PR4 cutover でこの assertion を
+    // `1` に flip する。
+    assert.equal(summary.reportableActiveFiles, 0);
   });
 
-  it('includes expired baseline on source unusable (re-fires counter)', () => {
+  it('includes expired baseline on source unusable in snapshotUnusable* (counter re-fires)', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/expired-baseline-source.md',
@@ -691,7 +698,8 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.snapshotUnusableIssues, 1);
     assert.equal(summary.snapshotUnusableFiles, 1);
-    assert.equal(summary.reportableActiveFiles, 1);
+    // Issue #247 PR2 — 同様に PR2 時点では gate に流れない。
+    assert.equal(summary.reportableActiveFiles, 0);
   });
 
   it('structure mismatch does NOT flow into auditSignal* (not coarse)', () => {

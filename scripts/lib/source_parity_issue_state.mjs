@@ -65,16 +65,44 @@ export function isReportableParityIssue(issue) {
   // coarse signals (paragraph/bullet/step/section count, heading,
   // table-shape, table-cell-* heuristics) は audit-only で
   // parityRegression / gate には乗らない。ack / baseline 状態は無視する。
-  //
-  // Issue #247 PR1: structure mismatch / source unusable は coarse に
-  // 含まれないため、ここでは特別扱い不要。いずれも reportable として
-  // 一般 actionable issue と同じ経路を通る。
   if (isCoarseAuditSignal(issue)) return false;
+
+  // Issue #247 PR2 — structure-mismatch / source-unusable は PR2 で
+  // emission を入れた段階で、PR4 の gate cutover まで `reportableActive*`
+  // (gate counter) には乗せない。専用の `structureMismatchIssues` /
+  // `snapshotUnusableIssues` counter にだけ集計する。
+  //
+  // この exclusion を入れる理由:
+  //   1. PR1 で `BASELINE_ELIGIBLE_TYPES` に新 type を入れていない (PR5 で
+  //      wiring 予定)。今 reportable に乗せると、既存の segment-* drift で
+  //      baseline されているページが PR2 から structure-mismatch を emit
+  //      した瞬間に gate exit 1 でブロックされる (新 type は baseline で
+  //      freeze できないため)。
+  //   2. 段階的 cutover の意図 — PR2 は emitter / contract を pin する
+  //      フェーズで、gate flip は PR4 の責務 (Issue #247 の PR 分割案
+  //      参照)。
+  //   3. PR4 でこの 2 行を削除するだけで cutover が完了する設計。
+  //      それまでは structure-mismatch は構造化 advisory として
+  //      `structureMismatch*` counter から見えるが、gate は再点火しない。
+  if (isStructureMismatchIssue(issue) || isSourceUnusableIssue(issue)) return false;
+
   if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
   if (isFrozenByBaseline(issue)) return false;
   return isActiveParityIssue(issue);
 }
 
 export function isNonBlockingParityIssue(issue) {
+  // Issue #247 PR2 — structure-mismatch / source-unusable は PR2 時点で
+  // gate cutover していないので (`isReportableParityIssue` も同じ理由で
+  // false を返している)、ack / baseline と同じく **非ブロッキングの
+  // advisory** として扱う。CLI の `getConsoleCoverageState` がこの述語を
+  // 使ってファイルの ⏸️ / ❌ アイコンを決めるので、structure mismatch を
+  // ここで非ブロッキングに含めないと、新 issue が emit された瞬間に
+  // baseline 済みファイルが ❌ で表示されてしまう。
+  //
+  // PR4 cutover ではこの 2 行を削除し、structure mismatch を従来の ack /
+  // baseline と同じ ブロッキング判定経路に乗せる。
+  if (isStructureMismatchIssue(issue)) return true;
+  if (isSourceUnusableIssue(issue)) return true;
   return isFrozenByBaseline(issue) || isValidAcknowledgedIssue(issue);
 }

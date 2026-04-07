@@ -114,14 +114,24 @@ function singleDiff(result) {
 // ---------------------------------------------------------------------------
 
 describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
-  // Stage A は **CROSS-KIND** ドリフト担当: list→paragraph collapse、
-  // callout→paragraph collapse、details-summary の消失、ordered↔unordered
-  // list 入れ替えなど。同種 kind のみの count drift (段落 N 個 → M 個、
-  // 他の kind は無し) は既存 weighted LCS の segment-missing /
-  // segment-extra に任せる契約で、structure comparator は二重計上しない。
-  // 下の 2 本のテストでこの契約を明示的に pin する。
+  // Stage A は block kind の **multiset (多重集合)** 不一致を捕まえる。
+  // PR2 の目的が「全文構造保持」を保証することなので、以下を全部 fire
+  // させる必要がある:
+  //
+  //   - paragraph merge (3p → 1p) / split (1p → 3p) のような同種 kind
+  //     の count drift
+  //   - list→paragraph collapse / callout→paragraph collapse /
+  //     ordered↔unordered list swap / details-summary 消失のような
+  //     cross-kind drift
+  //   - mixed-kind の数違い ([p, p, ul] vs [p, ul])
+  //
+  // どの場合も section-structure-mismatch を 1 件 emit する。LCS は
+  // alignSegments で並行に走り続けるので、segment-missing /
+  // segment-extra / segment-token-gap の per-segment drill-down は
+  // structure-mismatch の隣で常に出る (alignSegments の統合テストで
+  // 検証)。
 
-  it('A1 same-single-kind count drift (3 EN paragraphs → 1 JA paragraph) is handled by LCS, not structure comparator', () => {
+  it('A1 detects paragraph merge (3 EN paragraphs → 1 JA paragraph)', () => {
     const en = makeSection({
       sectionPath: 'Overview',
       body: [
@@ -136,17 +146,16 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
         makeSeg('Overview', 'paragraph', 0, 'CLI と network-logs と flag を 1 段落にまとめた翻訳'),
       ],
     });
-    // structure diff は emit しない — ここは segment-missing の担当領域で
-    // source_parity_align.mjs のほうが扱う。segment-missing 側の形状は
-    // source_parity_align.test.mjs の統合テストで assert している。
-    assert.deepEqual(
-      compareSectionStructure(en, ja),
-      [],
-      'pure same-single-kind count drift must fall through to LCS',
-    );
+    const diff = singleDiff(compareSectionStructure(en, ja));
+    assert.equal(diff.type, 'section-structure-mismatch');
+    assert.equal(diff.structureCategory, 'kind-multiset');
+    assert.deepEqual(diff.enKinds, ['paragraph', 'paragraph', 'paragraph']);
+    assert.deepEqual(diff.jaKinds, ['paragraph']);
+    assert.equal(diff.enSegmentCount, 3);
+    assert.equal(diff.jaSegmentCount, 1);
   });
 
-  it('A2 same-single-kind count drift (1 EN → 3 JA paragraphs) is also handled by LCS', () => {
+  it('A2 detects paragraph split (1 EN paragraph → 3 JA paragraphs)', () => {
     const en = makeSection({
       body: [makeSeg('Overview', 'paragraph', 0, 'EN single paragraph with `token-a`.')],
     });
@@ -157,11 +166,13 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
         makeSeg('Overview', 'paragraph', 2, '分割された段落 3'),
       ],
     });
-    assert.deepEqual(
-      compareSectionStructure(en, ja),
-      [],
-      'same-single-kind split belongs to LCS segment-extra path',
-    );
+    const diff = singleDiff(compareSectionStructure(en, ja));
+    assert.equal(diff.type, 'section-structure-mismatch');
+    assert.equal(diff.structureCategory, 'kind-multiset');
+    assert.deepEqual(diff.enKinds, ['paragraph']);
+    assert.deepEqual(diff.jaKinds, ['paragraph', 'paragraph', 'paragraph']);
+    assert.equal(diff.enSegmentCount, 1);
+    assert.equal(diff.jaSegmentCount, 3);
   });
 
   it('A3 detects list → paragraph collapse (3 EN list items → 1 JA paragraph)', () => {
@@ -562,14 +573,13 @@ describe('Stage precedence and fall-through contract', () => {
     assert.deepEqual(compareSectionStructure(en, ja), []);
   });
 
-  it('same-kind-set count drift with reordering falls through to LCS (no Stage A, no Stage B)', () => {
-    // Stage A ルールを kind SET 差分のみに狭めたので、この
-    // 「kind 集合は同じ / 個数は違う / 順序も違う」ケースは Stage A
-    // (set 一致なので fire しない) でも Stage B (multiset 一致が
-    // 前提なので fire しない) でも拾われず、正しく weighted LCS に
-    // フォールスルーして per-segment drill-down が生きる。Stage A と
-    // Stage B は設計上 disjoint であり「どちらが勝つか」という
-    // precedence ケースは存在しない — この contract をここで pin する。
+  it('Stage A takes precedence over Stage B when multisets differ', () => {
+    // EN は [paragraph, paragraph, unordered-list]、JA は
+    // [unordered-list, paragraph]。kind 集合は両側 {paragraph,
+    // unordered-list} で同じだが multiset は {p:2, ul:1} vs {p:1, ul:1}
+    // で違う。Stage A は multiset 不一致の段階で fire するので、kind
+    // 並び順違いを Stage B に渡すことなく section-structure-mismatch を
+    // 返す。Stage A → Stage B の優先順契約をここで pin する。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'p1'),
@@ -583,8 +593,9 @@ describe('Stage precedence and fall-through contract', () => {
         makeSeg('Overview', 'paragraph', 0, 'p'),
       ],
     });
-    const result = compareSectionStructure(en, ja);
-    assert.deepEqual(result, [], 'LCS owns count drift inside an existing kind set');
+    const diff = singleDiff(compareSectionStructure(en, ja));
+    assert.equal(diff.type, 'section-structure-mismatch');
+    assert.equal(diff.structureCategory, 'kind-multiset');
   });
 
   it('Stage B takes precedence over Stage C when multiset is same but kinds reorder', () => {

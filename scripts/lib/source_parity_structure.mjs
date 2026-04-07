@@ -187,14 +187,6 @@ function multisetsEqual(a, b) {
   return true;
 }
 
-function setsEqual(a, b) {
-  if (a.size !== b.size) return false;
-  for (const value of a) {
-    if (!b.has(value)) return false;
-  }
-  return true;
-}
-
 function sequencesEqual(a, b) {
   if (a.length !== b.length) return false;
   for (let i = 0; i < a.length; i++) {
@@ -415,51 +407,48 @@ export function compareSectionStructure(enSection, jaSection) {
     return [];
   }
 
-  // Stage A — CROSS-KIND 構造ドリフト。
+  // Stage A — block kind multiset の不一致。
   //
-  // Stage A の担当は「どの kind が存在するか」が変わる drift:
-  // list→paragraph collapse / callout→paragraph collapse /
-  // details-summary 消失 / ordered↔unordered list swap など。**同じ kind
-  // 集合の中での数の増減** (例: paragraph + list-item + callout が両側に
-  // 残ったまま paragraph が 1 つ削除される) は **意図的に scope 外** にして
-  // weighted LCS に委ねる。理由は:
+  // 「全文構造保持」を保証するという PR2 の目的に忠実に従い、block kind
+  // の **多重集合 (multiset)** が違えば section-structure-mismatch を
+  // 1 件 emit する。これにより以下が headline signal として可視化される:
   //
-  //   1. LCS は per-segment 単位で drill-down (どの EN 段落が落ちたか) を
-  //      emit するが、これが reviewer と recall benchmark の信号源になって
-  //      いる。section 単位の structure mismatch を被せるとそれが消える。
-  //   2. recall fixture の paragraph-delete / bullet-delete / step-delete /
-  //      callout-paragraph-delete / html-table-cell-delete は全て
-  //      「multi-kind section の中で 1 item 消える」形状で、これらは必ず
-  //      segment-missing として残さなければならない。
+  //   - paragraph merge (3p → 1p) / split (1p → 3p) のような同種 kind の
+  //     count drift
+  //   - list→paragraph collapse / callout→paragraph collapse /
+  //     ordered↔unordered list swap / details-summary 消失のような
+  //     cross-kind drift
+  //   - mixed-kind の数違い (例: [p, p, ul] vs [p, ul])
   //
-  // したがって Stage A は **kind SET が違う** 場合にのみ fire する。両側が
-  // 同じ distinct kind の集合を持っているなら、drift は既存 kind 語彙の
-  // 内側で起きている「個数変化」であり LCS の担当になる。
-  const enKindSet = new Set(enKinds);
-  const jaKindSet = new Set(jaKinds);
-  if (!setsEqual(enKindSet, jaKindSet)) {
+  // structure comparator は LCS と **並行** で動かす設計 (alignSegments
+  // を参照) なので、Stage A が fire しても LCS の per-segment drill-down
+  // (segment-missing / segment-extra / segment-token-gap) は通常通り出る。
+  // section-level の structure-mismatch は headline、segment-level の
+  // LCS diff は drill-down として共存する契約。
+  //
+  // 例外は cross-section body swap で、その場合は呼び出し側 (alignSegments)
+  // が `segment-shifted` を先に emit して structure comparator 自体を
+  // skip するので、ここでは考慮しなくてよい。
+  const enMultiset = buildMultiset(enKinds);
+  const jaMultiset = buildMultiset(jaKinds);
+  if (!multisetsEqual(enMultiset, jaMultiset)) {
     return [buildKindMultisetDiff(enSection, jaSection, enKinds, jaKinds)];
   }
 
   // Stage B — kind sequence (multiset 一致 / 並び順のみ不一致)。
   //
-  // Stage B は multiset が既に一致している場合にのみ走る — そうしないと
-  // 長さが違うだけなのに「reorder」と誤認してしまう。Stage A を抜けてきた
-  // count drift (同 kind 集合で個数違い) はここでも拾わずに LCS へ流す。
-  const enMultiset = buildMultiset(enKinds);
-  const jaMultiset = buildMultiset(jaKinds);
-  if (multisetsEqual(enMultiset, jaMultiset) && !sequencesEqual(enKinds, jaKinds)) {
+  // ここに来た時点で multiset は一致しているので、kind 列が違えば必ず
+  // 「mixed-kind reorder」(例: [p, ul] vs [ul, p]) のケース。
+  if (!sequencesEqual(enKinds, jaKinds)) {
     return [buildKindSequenceDiff(enSection, jaSection, enKinds, jaKinds)];
   }
 
-  // Stage C — content-order bijection。ここに来た時点で kind 列は完全一致
-  // している必要がある (そうでなければ Stage B が発火しているか、multiset
-  // が違って LCS にフォールスルーする経路)。
-  if (sequencesEqual(enKinds, jaKinds)) {
-    const permutation = detectContentOrderPermutation(enBlocks, jaBlocks);
-    if (permutation) {
-      return [buildContentOrderDiff(enSection, jaSection, enKinds, jaKinds, permutation)];
-    }
+  // Stage C — content-order bijection。ここに来た時点で multiset と
+  // kind 列の両方が完全一致している。block kind では区別できない same-kind
+  // swap / rotation を、invariant token の content bijection で検出する。
+  const permutation = detectContentOrderPermutation(enBlocks, jaBlocks);
+  if (permutation) {
+    return [buildContentOrderDiff(enSection, jaSection, enKinds, jaKinds, permutation)];
   }
 
   return [];
