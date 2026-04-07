@@ -85,30 +85,8 @@ export function isNonBlockingIssue(issue) {
   return isNonBlockingParityIssue(issue);
 }
 
-/**
- * `checkSourceParity` 一回ぶんの実行 scope を分類する純粋ヘルパー。結果は
- * `parity-check-status.json.summary.runScope` に埋め込まれ、downstream tool
- * が full-repo run か partial (`--slug` / `--section`) run かを判別できる。
- *
- * `.github/scripts/sync-detection-issues.cjs` の partial-run guard が
- * `runScope.isComplete === true` を managed GitHub issue 同期の前提条件と
- * しているため、deep-audit / 手動デバッグ run の artifact が誤って workflow
- * に紛れ込んでも managed issue body を上書きしない契約になっている。
- *
- * 入力:
- *   slug    — slug 解決後の --slug 値 (なければ null)
- *   section — --section 値 (なければ null)
- *
- * 出力:
- *   { type: 'full' | 'slug' | 'section',
- *     isComplete: boolean,
- *     filters: { slug: string|null, section: string|null } }
- *
- * `checkSourceParity` 内で `--slug` が `--section` より優先される (slug が
- * セットされていると section フィルタはスキップされる) ため、両方が指定
- * された防衛的ケースでは `type: 'slug'` を返しつつ section フィルタも
- * 診断用に保持する。
- */
+// runScope の詳細 contract は shared helper 側
+// (`scripts/lib/source_sync_health.mjs::buildRunScope`) に集約している。
 /**
  * parity-check summary を CLI exit code にマップする純粋ヘルパー。
  * `checkSourceParity` から切り出してあり、フルパイプラインを起動せずに
