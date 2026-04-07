@@ -75,7 +75,8 @@ export function getAllPagesList(sidebarText) {
   return parseSidebarList(sidebarText, () => true);
 }
 
-export async function getDiffPagesList(sidebarText, hashesPath) {
+export async function getDiffPagesList(sidebarText, hashesPath, options = {}) {
+  const { logger = console } = options;
   const allPages = getAllPagesList(sidebarText);
   const storedHashes = fs.existsSync(hashesPath)
     ? JSON.parse(fs.readFileSync(hashesPath, 'utf8'))
@@ -94,7 +95,7 @@ export async function getDiffPagesList(sidebarText, hashesPath) {
     }
 
     if (!content) {
-      console.warn(
+      logger.warn(
         `getDiffPagesList: no snapshot for ${page.slug}; treating as changed. Run check:snapshots:fetch first.`
       );
       changed.push(page);

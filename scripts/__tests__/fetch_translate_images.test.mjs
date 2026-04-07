@@ -14,15 +14,21 @@ import path from 'node:path';
 let rewriteDocLinks, getUntranslatedList, getAllPagesList, getDiffPagesList, parseMode;
 let ROOT;
 
-async function captureWarnings(run) {
-  const warnings = [];
-  const originalWarn = console.warn;
-  console.warn = (...args) => warnings.push(args.join(' '));
-  try {
-    return { result: await run(), warnings };
-  } finally {
-    console.warn = originalWarn;
-  }
+function createTestLogger() {
+  return {
+    logs: [],
+    warnings: [],
+    errors: [],
+    log(...args) {
+      this.logs.push(args.join(' '));
+    },
+    warn(...args) {
+      this.warnings.push(args.join(' '));
+    },
+    error(...args) {
+      this.errors.push(args.join(' '));
+    },
+  };
 }
 
 before(async () => {
@@ -317,13 +323,12 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const { result: list, warnings } = await captureWarnings(() =>
-      getDiffPagesList(sidebarText, hashesPath)
-    );
+    const logger = createTestLogger();
+    const list = await getDiffPagesList(sidebarText, hashesPath, { logger });
     assert.equal(list.length, 1);
     assert.equal(list[0].slug, 'overview/zzz-diff-warning-page');
-    assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /no snapshot for overview\/zzz-diff-warning-page/);
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /no snapshot for overview\/zzz-diff-warning-page/);
   });
 
   it('excludes page when hash is unchanged', async () => {
@@ -368,11 +373,10 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const { result: list, warnings } = await captureWarnings(() =>
-      getDiffPagesList(sidebarText, hashesPath)
-    );
+    const logger = createTestLogger();
+    const list = await getDiffPagesList(sidebarText, hashesPath, { logger });
     assert.equal(list.length, 2);
-    assert.equal(warnings.length, 2);
+    assert.equal(logger.warnings.length, 2);
   });
 
   it('treats missing HTML snapshot as changed', async () => {
@@ -385,13 +389,12 @@ describe('getDiffPagesList', () => {
       '',
     ].join('\n');
 
-    const { result: list, warnings } = await captureWarnings(() =>
-      getDiffPagesList(sidebarText, hashesPath)
-    );
+    const logger = createTestLogger();
+    const list = await getDiffPagesList(sidebarText, hashesPath, { logger });
     assert.equal(list.length, 1, 'Missing HTML snapshot should be treated as changed');
     assert.equal(list[0].slug, 'overview/zzz-nonexistent-test-page');
-    assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /no snapshot for overview\/zzz-nonexistent-test-page/);
+    assert.equal(logger.warnings.length, 1);
+    assert.match(logger.warnings[0], /no snapshot for overview\/zzz-nonexistent-test-page/);
   });
 
   it('reads from HTML snapshot without network fetch', async () => {
