@@ -474,6 +474,271 @@ describe('Phase 8 — existing activeFiles semantics unchanged', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR1: structureMismatch* / snapshotUnusable* counters
+//
+// 新 taxonomy 用 counter の集計契約を固定する。PR1 時点では emitter が
+// 未実装 (PR2/PR3 で追加) のため、現実運用では常にゼロだが、downstream
+// (detection_reports / CLI / schema) が受け入れる枠をここで先取りする。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', () => {
+  it('emits structureMismatch* and snapshotUnusable* fields with safe defaults', () => {
+    const summary = summarizeParityResults([]);
+    assert.equal(typeof summary.structureMismatchIssues, 'number');
+    assert.equal(typeof summary.structureMismatchFiles, 'number');
+    assert.deepEqual(summary.structureMismatchByType, {});
+    assert.equal(typeof summary.snapshotUnusableIssues, 'number');
+    assert.equal(typeof summary.snapshotUnusableFiles, 'number');
+    assert.deepEqual(summary.snapshotUnusableByType, {});
+    assert.equal(summary.structureMismatchIssues, 0);
+    assert.equal(summary.structureMismatchFiles, 0);
+    assert.equal(summary.snapshotUnusableIssues, 0);
+    assert.equal(summary.snapshotUnusableFiles, 0);
+  });
+
+  it('counts section-structure-mismatch into structureMismatch*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/running-tests/the-command-line-cli.md',
+        issues: [
+          {
+            type: 'section-structure-mismatch',
+            severity: 'actionable',
+            detail: 'Section "Options" block kinds diverge',
+          },
+          {
+            type: 'section-structure-mismatch',
+            severity: 'actionable',
+            detail: 'Section "Arguments" block kinds diverge',
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.structureMismatchIssues, 2);
+    assert.equal(summary.structureMismatchFiles, 1);
+    assert.deepEqual(summary.structureMismatchByType, {
+      'section-structure-mismatch': 2,
+    });
+    // and these also flow into reportableActive* since they are actionable
+    // and NOT coarse.
+    assert.equal(summary.reportableActiveFiles, 1);
+    assert.equal(summary.reportableActiveActionableFiles, 1);
+  });
+
+  it('counts segment-order-mismatch into structureMismatch*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/results/test-results/network-logs.md',
+        issues: [
+          {
+            type: 'segment-order-mismatch',
+            severity: 'actionable',
+            detail: 'Block 3 and 4 swapped',
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.structureMismatchIssues, 1);
+    assert.equal(summary.structureMismatchFiles, 1);
+    assert.deepEqual(summary.structureMismatchByType, {
+      'segment-order-mismatch': 1,
+    });
+  });
+
+  it('counts snapshot-incomplete into snapshotUnusable*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/salesforce-testing/salesforce-testing-overview.md',
+        issues: [
+          {
+            type: 'snapshot-incomplete',
+            severity: 'actionable',
+            detail: 'EN snapshot missing #mc-main-content body',
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.snapshotUnusableIssues, 1);
+    assert.equal(summary.snapshotUnusableFiles, 1);
+    assert.deepEqual(summary.snapshotUnusableByType, {
+      'snapshot-incomplete': 1,
+    });
+    // source-unusable family also flows into reportableActive*.
+    assert.equal(summary.reportableActiveFiles, 1);
+    assert.equal(summary.reportableActiveActionableFiles, 1);
+  });
+
+  it('counts source-unusable into snapshotUnusable*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/salesforce-testing/faq.md',
+        issues: [
+          {
+            type: 'source-unusable',
+            severity: 'actionable',
+            detail: 'All sections collapsed in <details> — canonical compare cannot proceed',
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.snapshotUnusableIssues, 1);
+    assert.equal(summary.snapshotUnusableFiles, 1);
+    assert.deepEqual(summary.snapshotUnusableByType, {
+      'source-unusable': 1,
+    });
+  });
+
+  it('does NOT double-count structure mismatch into snapshotUnusable* or vice versa', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/mixed.md',
+        issues: [
+          { type: 'section-structure-mismatch', severity: 'actionable' },
+          { type: 'snapshot-incomplete', severity: 'actionable' },
+        ],
+      },
+    ]);
+    assert.equal(summary.structureMismatchIssues, 1);
+    assert.equal(summary.structureMismatchFiles, 1);
+    assert.deepEqual(summary.structureMismatchByType, {
+      'section-structure-mismatch': 1,
+    });
+    assert.equal(summary.snapshotUnusableIssues, 1);
+    assert.equal(summary.snapshotUnusableFiles, 1);
+    assert.deepEqual(summary.snapshotUnusableByType, {
+      'snapshot-incomplete': 1,
+    });
+  });
+
+  it('excludes valid (non-expired) acks from structureMismatch*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/acked-structure.md',
+        issues: [
+          {
+            type: 'section-structure-mismatch',
+            severity: 'actionable',
+            acknowledged: true,
+            ackExpired: false,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.structureMismatchIssues, 0);
+    assert.equal(summary.structureMismatchFiles, 0);
+    // reportable は ack を見ているので、これも 0 になるべき
+    assert.equal(summary.reportableActiveFiles, 0);
+  });
+
+  it('excludes frozen (non-expired) baseline from structureMismatch*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/frozen-structure.md',
+        issues: [
+          {
+            type: 'segment-order-mismatch',
+            severity: 'actionable',
+            baselined: true,
+            baselineExpired: false,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.structureMismatchIssues, 0);
+    assert.equal(summary.structureMismatchFiles, 0);
+  });
+
+  it('includes expired ack on structure mismatch (re-fires counter)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/expired-ack-structure.md',
+        issues: [
+          {
+            type: 'section-structure-mismatch',
+            severity: 'actionable',
+            acknowledged: true,
+            ackExpired: true,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.structureMismatchIssues, 1);
+    assert.equal(summary.structureMismatchFiles, 1);
+    // and reportable re-fires too
+    assert.equal(summary.reportableActiveFiles, 1);
+  });
+
+  it('includes expired baseline on source unusable (re-fires counter)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/expired-baseline-source.md',
+        issues: [
+          {
+            type: 'snapshot-incomplete',
+            severity: 'actionable',
+            baselined: true,
+            baselineExpired: true,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.snapshotUnusableIssues, 1);
+    assert.equal(summary.snapshotUnusableFiles, 1);
+    assert.equal(summary.reportableActiveFiles, 1);
+  });
+
+  it('structure mismatch does NOT flow into auditSignal* (not coarse)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/structure.md',
+        issues: [{ type: 'section-structure-mismatch', severity: 'actionable' }],
+      },
+    ]);
+    assert.equal(summary.auditSignalIssues, 0);
+    assert.equal(summary.auditSignalFiles, 0);
+  });
+
+  it('source unusable does NOT flow into auditSignal* (not coarse)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/source.md',
+        issues: [{ type: 'snapshot-incomplete', severity: 'actionable' }],
+      },
+    ]);
+    assert.equal(summary.auditSignalIssues, 0);
+    assert.equal(summary.auditSignalFiles, 0);
+  });
+
+  it('multi-file aggregation counts files independently', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/a.md',
+        issues: [{ type: 'section-structure-mismatch', severity: 'actionable' }],
+      },
+      {
+        file: 'src/content/docs/b.md',
+        issues: [
+          { type: 'section-structure-mismatch', severity: 'actionable' },
+          { type: 'segment-order-mismatch', severity: 'actionable' },
+        ],
+      },
+      {
+        file: 'src/content/docs/c.md',
+        issues: [{ type: 'snapshot-incomplete', severity: 'actionable' }],
+      },
+    ]);
+    assert.equal(summary.structureMismatchFiles, 2);
+    assert.equal(summary.structureMismatchIssues, 3);
+    assert.deepEqual(summary.structureMismatchByType, {
+      'section-structure-mismatch': 2,
+      'segment-order-mismatch': 1,
+    });
+    assert.equal(summary.snapshotUnusableFiles, 1);
+    assert.equal(summary.snapshotUnusableIssues, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Snapshot structure comparison tests
 // ---------------------------------------------------------------------------
 

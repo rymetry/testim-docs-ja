@@ -2,6 +2,8 @@ import {
   isCoarseAuditSignal,
   isFrozenByBaseline,
   isReportableParityIssue,
+  isSourceUnusableIssue,
+  isStructureMismatchIssue,
   isValidAcknowledgedIssue,
 } from './source_parity_issue_state.mjs';
 
@@ -26,6 +28,20 @@ import {
  *   auditSignalIssues / auditSignalFiles / auditSignalsByType
  *     Audit channel: coarse signal の総数 + type 別内訳。
  *
+ *   structureMismatchIssues / structureMismatchFiles / structureMismatchByType
+ *     Issue #247 PR1 — canonical block sequence comparator 由来の structure
+ *     mismatch (section-structure-mismatch / segment-order-mismatch) の
+ *     独立 counter。ack / frozen baseline は除外し、gate に載せる予定の
+ *     active な structure violation のみカウントする。PR2 で emitter を
+ *     追加するまでは常にゼロ。PR4 で `reportableActive*` と揃えて gate
+ *     cutover する。
+ *
+ *   snapshotUnusableIssues / snapshotUnusableFiles / snapshotUnusableByType
+ *     Issue #247 PR1 — snapshot / source 起因で comparator が成立しない
+ *     ページ用の独立 counter。`snapshot-incomplete` / `source-unusable` を
+ *     translation drift と混ぜないために別枠で集計する。PR3 で emitter を
+ *     追加するまでは常にゼロ。
+ *
  *   baselinedIssues / baselinedFiles / baselinedByType /
  *   baselinedByInconclusiveCategory / expiredBaselineEntries
  *     Frozen drift accounting。parity-baseline.json が cutover 前の
@@ -38,6 +54,8 @@ export function summarizeParityResults(results) {
   const baselinedByType = {};
   const baselinedByInconclusiveCategory = {};
   const auditSignalsByType = {};
+  const structureMismatchByType = {};
+  const snapshotUnusableByType = {};
   let actionableFiles = 0;
   let signalFiles = 0;
   let errorFiles = 0;
@@ -55,6 +73,10 @@ export function summarizeParityResults(results) {
   let reportableActiveActionableFiles = 0;
   let auditSignalIssues = 0;
   let auditSignalFiles = 0;
+  let structureMismatchIssues = 0;
+  let structureMismatchFiles = 0;
+  let snapshotUnusableIssues = 0;
+  let snapshotUnusableFiles = 0;
 
   for (const result of results) {
     let hasActionable = false;
@@ -67,6 +89,8 @@ export function summarizeParityResults(results) {
     let hasReportableActive = false;
     let hasReportableActiveActionable = false;
     let hasAuditSignal = false;
+    let hasStructureMismatch = false;
+    let hasSnapshotUnusable = false;
 
     for (const issue of result.issues) {
       const isBaselined = issue.baselined === true;
@@ -100,6 +124,24 @@ export function summarizeParityResults(results) {
         auditSignalIssues += 1;
         auditSignalsByType[issue.type] = (auditSignalsByType[issue.type] || 0) + 1;
         hasAuditSignal = true;
+      }
+
+      // Issue #247 PR1 — structure mismatch / source unusable の専用 counter。
+      // ack / frozen baseline を除外して active な drift のみカウントする。
+      // PR1 時点では emitter 未実装のため実運用では常にゼロ。PR2/PR3 で
+      // emission を追加する。
+      if (isStructureMismatchIssue(issue) && !isValidAcknowledgedIssue(issue) && !isFrozen) {
+        structureMismatchIssues += 1;
+        structureMismatchByType[issue.type] =
+          (structureMismatchByType[issue.type] || 0) + 1;
+        hasStructureMismatch = true;
+      }
+
+      if (isSourceUnusableIssue(issue) && !isValidAcknowledgedIssue(issue) && !isFrozen) {
+        snapshotUnusableIssues += 1;
+        snapshotUnusableByType[issue.type] =
+          (snapshotUnusableByType[issue.type] || 0) + 1;
+        hasSnapshotUnusable = true;
       }
 
       if (isReportableParityIssue(issue)) {
@@ -143,6 +185,8 @@ export function summarizeParityResults(results) {
     if (hasReportableActive) reportableActiveFiles += 1;
     if (hasReportableActiveActionable) reportableActiveActionableFiles += 1;
     if (hasAuditSignal) auditSignalFiles += 1;
+    if (hasStructureMismatch) structureMismatchFiles += 1;
+    if (hasSnapshotUnusable) snapshotUnusableFiles += 1;
   }
 
   return {
@@ -170,5 +214,15 @@ export function summarizeParityResults(results) {
     auditSignalIssues,
     auditSignalFiles,
     auditSignalsByType,
+    // Issue #247 PR1 — structure mismatch / source unusable counters。
+    // PR2/PR3 で emitter を追加するまでは常にゼロだが、downstream
+    // (detection_reports / CLI / schema validation) が受け入れる枠を
+    // 先に確保する。
+    structureMismatchIssues,
+    structureMismatchFiles,
+    structureMismatchByType,
+    snapshotUnusableIssues,
+    snapshotUnusableFiles,
+    snapshotUnusableByType,
   };
 }
