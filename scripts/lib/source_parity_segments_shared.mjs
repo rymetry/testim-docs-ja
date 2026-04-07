@@ -1,14 +1,14 @@
 /**
- * Shared canonical segment types and helpers (Issue #225 Phase 4).
+ * Shared canonical segment types and helpers (Issue #225).
  *
  * Defines the Segment schema used by the EN HTML and JA markdown extractors,
  * along with text normalization, source fingerprinting, section path tracking,
  * and a createSegment factory.
  *
- * A Segment is the smallest unit that the future Phase 5 exact diff engine
- * compares across EN and JA. Gate-eligible kinds are the ones that an exact
- * diff regression (missing / extra / shifted) should fail on. Non-gate kinds
- * (code-block, image) are emitted for reference only.
+ * A Segment is the smallest unit that the exact diff engine compares across
+ * EN and JA. Gate-eligible kinds are the ones that an exact diff regression
+ * (missing / extra / shifted) should fail on. Non-gate kinds (code-block,
+ * image) are emitted for reference only.
  *
  * @module source_parity_segments_shared
  */
@@ -38,11 +38,11 @@ export const SEGMENT_KINDS = Object.freeze([
 const SEGMENT_KIND_SET = new Set(SEGMENT_KINDS);
 
 /**
- * Kinds that participate in the Phase 5 exact diff gate. Code blocks and raw
- * image segments are emitted for reference only and must be filtered out of
- * gate comparisons (invariant tokens capture the essential content instead).
+ * Kinds that participate in the exact diff gate. Code blocks and raw image
+ * segments are emitted for reference only and must be filtered out of gate
+ * comparisons (invariant tokens capture the essential content instead).
  *
- * `image-caption` is declared in SEGMENT_KINDS for Phase 5 expansion but is
+ * `image-caption` is declared in SEGMENT_KINDS for future expansion but is
  * not yet emitted by either extractor, so it stays out of the gate set to
  * avoid "phantom" kind mismatches during boundary benchmarking.
  */

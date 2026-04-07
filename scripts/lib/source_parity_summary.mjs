@@ -6,33 +6,31 @@ import {
 } from './source_parity_issue_state.mjs';
 
 /**
- * Aggregates per-file parity results into type/severity/acknowledgement
- * summary statistics.
+ * 各 file の parity 結果を type / severity / acknowledgement の summary
+ * 統計に集計する純粋関数。
  *
- * Counter contract:
+ * Counter 契約:
  *
  *   activeFiles / activeActionableFiles / activeErrorFiles
- *     Legacy gate counters. Count files with active (non-acked,
- *     non-frozen-baseline) issues. Coarse audit signals DO contribute
- *     here so downstream consumers that read these fields keep their
- *     pre-Phase-8 semantics.
+ *     Legacy gate counters。active (非 ack, 非 frozen-baseline) issue を
+ *     持つファイル数。**coarse audit signals もここには寄与する**ため、
+ *     audit demotion 前の意味を読み続ける downstream 消費者と互換が保たれる。
  *
  *   reportableActiveFiles / reportableActiveActionableFiles
- *     Phase 8 gate counters. Count files with at least one
- *     isReportableParityIssue()-true issue. Coarse audit signals do NOT
- *     contribute here, even when their ack or baseline has expired —
- *     so the gate cannot re-light on a coarse signal. Read by
- *     check_source_parity.mjs::computeExitCode and
- *     detection_reports.mjs::buildActionableReport.
+ *     現行 gate counters。少なくとも 1 件の isReportableParityIssue() == true
+ *     な issue を持つファイル数。coarse audit signals は ack / baseline が
+ *     期限切れでもここには寄与しない (gate を再点火しない契約)。
+ *     check_source_parity.mjs::computeExitCode と
+ *     detection_reports.mjs::buildActionableReport が読む。
  *
  *   auditSignalIssues / auditSignalFiles / auditSignalsByType
- *     Phase 8 audit channel: coarse signal totals + per-type breakdown.
+ *     Audit channel: coarse signal の総数 + type 別内訳。
  *
  *   baselinedIssues / baselinedFiles / baselinedByType /
  *   baselinedByInconclusiveCategory / expiredBaselineEntries
- *     Frozen-drift accounting. parity-baseline.json keeps pre-cutover
- *     segment-* drift out of the active gate; expired baseline entries
- *     re-enter the gate per Phase 7 semantics.
+ *     Frozen drift accounting。parity-baseline.json が cutover 前の
+ *     segment-* drift を active gate から除外する。期限切れ baseline は
+ *     gate に refire する (isFrozenByBaseline / isReportableParityIssue 参照)。
  */
 export function summarizeParityResults(results) {
   const issuesByType = {};
@@ -96,9 +94,8 @@ export function summarizeParityResults(results) {
       issuesByType[issue.type] = (issuesByType[issue.type] || 0) + 1;
       issuesBySeverity[issue.severity] = (issuesBySeverity[issue.severity] || 0) + 1;
 
-      // Phase 8: coarse signals are tracked on a separate audit channel
-      // regardless of their ack/baseline state. They never count toward
-      // the reportable counters that drive the gate.
+      // coarse signals は ack / baseline 状態に関わらず audit channel で
+      // 別管理する。gate を駆動する reportable counters には絶対に寄与しない契約。
       if (isCoarseAuditSignal(issue)) {
         auditSignalIssues += 1;
         auditSignalsByType[issue.type] = (auditSignalsByType[issue.type] || 0) + 1;
@@ -167,7 +164,7 @@ export function summarizeParityResults(results) {
     baselinedByInconclusiveCategory,
     expiredBaselineEntries,
     expiringBaselineEntries30d,
-    // Phase 8 — see header comment
+    // audit / reportable counters — header コメント参照
     reportableActiveFiles,
     reportableActiveActionableFiles,
     auditSignalIssues,

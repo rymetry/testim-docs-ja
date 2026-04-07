@@ -1,11 +1,10 @@
 /**
- * Phase 6B advisory review queue.
+ * Tokenless near-tie review queue (provider-free advisory layer)。
  *
- * Provider-free advisory layer: derives a manual review queue from existing
- * `segment-inconclusive` issues whose `inconclusiveCategory` is
- * `tokenless-near-tie`. This does NOT add a new detector, issue type, or gate
- * path; it only reshapes already-detected uncertainty into a focused review
- * list.
+ * 既存の `segment-inconclusive` issue のうち `inconclusiveCategory ===
+ * 'tokenless-near-tie'` のものから手動 review queue を導出する。新 detector
+ * / issue type / gate path は持たず、既に検出済みの不確実性を絞り込んだ
+ * review list に reshape するだけ。
  */
 
 const DOCS_PREFIX = 'src/content/docs/';

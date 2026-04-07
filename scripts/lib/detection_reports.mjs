@@ -843,11 +843,9 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
   const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? 'unknown';
   const syncSummary = sourceSync?.summary ?? actionableReport?.sourceSyncHealth?.summary ?? {};
 
-  // Phase 8: the Parity section now reports the reportableActive*
-  // counters (which exclude coarse audit signals), and a new "Audit
-  // Signals" section lists the coarse breakdown so reviewers can still
-  // see the demoted heuristics without confusing them with active
-  // parity drift.
+  // Parity section は coarse audit signals を除外した reportableActive*
+  // counters を表示する。降格された coarse heuristics は別枠の "Audit
+  // Signals" section に出して active parity drift と混同させない。
   const parityActiveActionable =
     parity.summary?.reportableActiveActionableFiles ??
     parity.summary?.activeActionableFiles ??
@@ -901,7 +899,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## Audit Signals',
     '',
-    '- Phase 8 audit-only: coarse counting / shape / table-cell heuristics',
+    '- audit-only: coarse counting / shape / table-cell heuristics',
     '- Visible to deep-audit, NOT included in parity-regression issue body',
     `- Total: ${auditSignalIssues} issues across ${auditSignalFiles} files`,
     '- By type:',

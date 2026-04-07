@@ -1,13 +1,13 @@
 name: Scheduled Actionable Docs Checks
 
-# Phase 8 contract (DO NOT BREAK):
+# Workflow split contract (DO NOT BREAK):
 # - This workflow runs `npm run check:parity` with NO scope filters
 #   (no --slug, no --section). It is the ONLY workflow that calls
 #   sync-detection-issues.cjs to update the 4 managed detection
 #   issues (snapshot-diff, parity-regression, source-sync-health,
 #   parity-followup).
 # - Adding --slug or --section here would emit a partial-run
-#   docs-actionable-report.json. The Phase 8 PR2 partial-run guard in
+#   docs-actionable-report.json. The partial-run guard in
 #   sync-detection-issues.cjs would then refuse to sync, and the
 #   managed issues would silently stop updating.
 # - For per-section / per-slug debugging, use deep-audit.yml. That
@@ -118,7 +118,7 @@ jobs:
         #   2. The strict summary step exited 0 (artifacts validated)
         #   3. docs-actionable-report.json was actually written
         # The sync script ALSO refuses partial-run reports via runScope
-        # (Phase 8 PR2 guard). These are layered defenses.
+        # (partial-run guard). These are layered defenses.
         if: |
           github.event_name == 'schedule'
           && steps.summary.outcome == 'success'

@@ -1,5 +1,5 @@
 /**
- * Section-anchored exact diff engine for canonical segments (Issue #225 Phase 5).
+ * Section-anchored exact diff engine for canonical segments (Issue #225).
  *
  * Compares an EN segment sequence to a JA segment sequence and emits exact
  * `parityDiff` records for each minimal divergence:
@@ -47,14 +47,15 @@
  *      that kept the same kind but never got translated is still surfaced.
  *
  * Heading segments are NOT diffed individually — heading count parity is
- * already enforced by Phase 4's boundary tests, and the section split here is
- * what makes the within-section LCS local rather than global. The result is
+ * already enforced by the canonical segment boundary tests, and the section
+ * split here is what makes the within-section LCS local rather than global.
+ * The result is
  * "no cascade": a single mutation in one section produces ≤ a small constant
  * number of diffs and never bleeds into adjacent sections.
  *
  * Scope boundary:
- *   Tokenless cross-section body swaps are intentionally outside the Phase 5
- *   exact gate. With EN as the source of truth, this module hard-gates
+ *   Tokenless cross-section body swaps are intentionally outside the exact
+ *   gate. With EN as the source of truth, this module hard-gates
  *   section-local structural drift plus token-anchored cross-section shifts.
  *   When adjacent tokenless prose-only sections are too ambiguous to
  *   distinguish from a body swap, the module returns `inconclusive` rather
@@ -799,7 +800,7 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  *   currentScore?: number,
  *   swapScore?: number,
  * } | null} inconclusiveMeta
- *   Phase 6A — structured enum for baseline lookup. The free-text
+ *   structured enum for baseline lookup. The free-text
  *   `inconclusiveReason` is for human display only and must NOT be used
  *   as a baseline identity key (it changes with wording tweaks).
  */

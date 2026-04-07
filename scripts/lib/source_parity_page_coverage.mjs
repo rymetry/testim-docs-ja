@@ -3,7 +3,7 @@
  *
  * Pure functions only. No filesystem I/O.
  * Consumes sidebar slugs, local file slugs, snapshot existence,
- * and source freshness state from Phase 1's source-sync-status.json.
+ * and source freshness state from `source-sync-status.json`.
  *
  * @module source_parity_page_coverage
  */

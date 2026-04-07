@@ -2,8 +2,8 @@
  * Synthetic mutation corpus generator for diff=1 recall testing.
  *
  * Produces minimally-mutated JA markdown content (exactly one structural change)
- * for each of 9 mutation types. Used by Phase 4–5 segment extraction / exact diff
- * engine to verify 100% recall on diff=1 mutations.
+ * for each of 9 mutation types. Used by canonical segment extraction / exact
+ * diff engine recall benchmarks to verify 100% detection on diff=1 mutations.
  *
  * @module mutation_corpus
  */

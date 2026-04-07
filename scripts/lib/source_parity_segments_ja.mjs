@@ -1,10 +1,10 @@
 /**
- * JA markdown canonical segment extractor (Issue #225 Phase 4).
+ * JA markdown canonical segment extractor (Issue #225).
  *
  * Walks a JA markdown document and emits a flat sequence of Segment records
- * for the future Phase 5 exact diff engine. The extractor is deliberately
- * conservative: kinds it cannot confidently classify are skipped so that
- * gate-eligible segments stay clean.
+ * for the exact diff engine. The extractor is deliberately conservative:
+ * kinds it cannot confidently classify are skipped so that gate-eligible
+ * segments stay clean.
  *
  * @module source_parity_segments_ja
  */

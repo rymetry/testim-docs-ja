@@ -28,9 +28,9 @@ const REVIEW_AFTER_RE = /^\d{4}-\d{2}-\d{2}$/;
 export const NON_ACKNOWLEDGEABLE_TYPES = Object.freeze(
   new Set([
     'source-page-missing-local',
-    'segment-missing', // Reserved for Phase 4+ segment-level checks — not yet emitted
-    'segment-untranslated', // Reserved for Phase 4+ segment-level checks — not yet emitted
-    'segment-token-gap', // Reserved for Phase 4+ segment-level checks — not yet emitted
+    'segment-missing', // segment-level hard gap — 抑制してはならない
+    'segment-untranslated', // segment-level hard gap — 抑制してはならない
+    'segment-token-gap', // segment-level hard gap — 抑制してはならない
     'segment-inconclusive',
   ]),
 );
@@ -89,12 +89,12 @@ export function validateAcknowledgements(parsed) {
       throw new Error(`${prefix}: issueType "${entry.issueType}" cannot be acknowledged`);
     }
 
-    // Phase 8: coarse audit signals are demoted to audit-only and never
-    // reach the gate, so acknowledging them is a no-op that misleads
-    // reviewers into thinking the entry suppresses something.
+    // coarse audit signals は audit-only に降格されており gate に乗らない。
+    // ack を付けても no-op になり、reviewer を「抑制した気にさせる」だけ
+    // なので validation で reject する。
     if (COARSE_SIGNAL_TYPES.has(entry.issueType)) {
       throw new Error(
-        `${prefix}: issueType "${entry.issueType}" is a Phase 8 audit-only coarse signal — acknowledgements are not allowed (they would be no-ops)`,
+        `${prefix}: issueType "${entry.issueType}" は audit-only coarse signal — acknowledgement は受け付けない (no-op になるため)`,
       );
     }
 

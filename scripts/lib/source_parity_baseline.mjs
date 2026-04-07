@@ -1,5 +1,5 @@
 /**
- * Frozen baseline mechanism for Issue #225 Phase 6A.
+ * Frozen baseline mechanism (Issue #225 で導入)。
  *
  * baseline は cutover 時点の既存 drift を凍結する仕組み。ack は「人がレビュー
  * して了承した例外」、baseline は「cutover 時点の既知 debt」で意味も生成方法
@@ -14,7 +14,7 @@
 import { readFileSync } from 'node:fs';
 
 /**
- * Phase 6A で baseline 対象になる issue type。
+ * frozen baseline 対象になる issue type。
  *
  * @type {ReadonlySet<string>}
  */
@@ -248,7 +248,7 @@ export function isBaselineExpiringSoon(entry, today) {
 /**
  * Build a stable lookup key from an issue object.
  *
- * Key rules (locked-in for Phase 6A):
+ * Key rules:
  *   - JA-owned (segment-extra, segment-untranslated):
  *       `slug + issueType + sectionPath + segmentKind + jaSegmentIndex`
  *   - EN-owned (segment-missing, segment-shifted, segment-token-gap):

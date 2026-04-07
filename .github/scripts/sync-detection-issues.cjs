@@ -273,12 +273,10 @@ module.exports = async function syncDetectionIssues({
   const { owner, repo } = context.repo;
   const report = loadReport(reportPath);
 
-  // Phase 8 PR2 partial-run guard: refuse to touch GitHub managed
-  // issues when the actionable report came from a partial run. This
-  // runs BEFORE listManagedIssues so a deep-audit / debugging run that
-  // is wired into the wrong workflow step never even pages through
-  // the issue list. See:
-  //   docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.7
+  // partial-run guard: actionable report が partial run 由来のときは
+  // managed GitHub issue を一切触らない。listManagedIssues より前に
+  // 早期 return することで、deep-audit / 手動デバッグ run が誤って
+  // workflow に紛れ込んでも managed issue を上書きしない契約。
   if (isPartialRunReport(report)) {
     const scope = report.runScope ?? {};
     const slug = scope.filters?.slug ?? null;
