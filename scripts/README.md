@@ -570,6 +570,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_recall.test.mjs`            | Phase 5 diff=1 recall ベンチマーク      |
 | `__tests__/source_parity_align_runtime.test.mjs`     | Phase 6A/6B runtime integration E2E     |
 | `__tests__/source_parity_advisory_queue.test.mjs`    | Phase 6B review queue helper            |
+| `__tests__/sync_detection_issues.test.mjs`           | Phase 7 issue sync (family-key match)   |
 
 ---
 
@@ -626,6 +627,8 @@ npm run lint:docs && npm run check:parity && npm test && npm run build
 1. [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml)
 2. [`deep-audit.yml`](../.github/workflows/deep-audit.yml)
 
-`scheduled-actionable` は issue を create/update/close し、`deep-audit` は artifact と summary のみ残す。
+`scheduled-actionable` は 4 family (`source-sync-health` / `snapshot-diff` /
+`parity-regression` / `parity-followup`) の issue を sync し、`deep-audit` は
+artifact と summary のみ残す。
 
 詳細は `docs/OPS_DESIGN.md` を参照。

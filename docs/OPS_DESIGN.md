@@ -115,11 +115,18 @@ npm run test && npm run build
   2. `npm run check:snapshots` でスナップショットを取得・比較し変更を検出する
   3. `npm run check:parity` でローカル品質チェックを実行する
   4. `npm run check:summary` で summary / audit manifest を生成する
-  5. 変更・問題があった場合は `snapshot-diff` と `parity-regression` に分けて GitHub Issue を作成または更新し、0 件なら close する
+  5. `docs-actionable-report.json` の 4 family
+     (`source-sync-health` / `snapshot-diff` / `parity-regression` /
+     `parity-followup`) ごとに GitHub Issue を create / update / close する
 - `deep-audit` は `workflow_dispatch` と `section` 指定で実行し、スナップショット diff とレポート生成を走らせる
 - 検出された Issue は次回セッションでメイン作業フローに従い対応する
-- **重複防止**: Issue 作成前に `gh issue list --state open --search/label` で既存 Issue を検索し、既存あれば更新、なければ新規作成する
-- GitHub Actions workflow にも同等の重複防止ロジックを持たせる。本文には件数、種別別件数、代表例、summary artifact への導線のみを載せる
+- **重複防止**: issue body に `<!-- detection-family: ... -->` の marker を埋め込み、
+  `sync-detection-issues.cjs` はこれを primary key として既存 Issue を照合する。
+  title は legacy fallback のみで使い、同一 family の open duplicate は次回 sync で close する
+- scheduled workflow の issue sync は `schedule` 実行時のみ有効。
+  `workflow_dispatch` は artifact / summary 生成に留める
+- 本文には件数、代表例、artifact への導線を載せ、machine-readable な follow-up payload は
+  `docs-actionable-report.json` に保持する
 
 ## 一括変更時の検証フロー
 
@@ -175,7 +182,9 @@ npm run test && npm run build
 
 ## CI の役割
 
-- [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:snapshots`、`check:parity`、`check:summary`、issue 更新 / close を実行する
+- [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml) では `docs:sync-sidebar`、`check:snapshots`、`check:parity`、`check:summary` を実行し、
+  `schedule` 実行時のみ 4 family (`source-sync-health` / `snapshot-diff` /
+  `parity-regression` / `parity-followup`) の issue を sync する
 - [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
 - `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する
 
