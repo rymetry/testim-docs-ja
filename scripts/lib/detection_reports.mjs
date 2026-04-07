@@ -8,6 +8,12 @@ import {
   isReportableParityIssue,
 } from './source_parity_issue_state.mjs';
 
+/**
+ * Schema version for `docs-actionable-report.json`. Validators MUST
+ * refuse to load any report whose `schemaVersion` does not match.
+ */
+export const ACTIONABLE_REPORT_SCHEMA_VERSION = 1;
+
 const SNAPSHOT_ISSUE_TITLE =
   '📸 Content Drift: English source changes detected via snapshot diff';
 const PARITY_ISSUE_TITLE =
@@ -34,6 +40,176 @@ export const FAMILY_KEYS = {
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return {};
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+/**
+ * §1 cleanup: strict validators for the three detection inputs. Each
+ * returns the parsed object (same reference) on success, or throws a
+ * descriptive Error. We deliberately do NOT default-fill missing
+ * fields — the §2 fail-closed pipeline relies on validation errors to
+ * refuse to sync managed issues from a half-baked run.
+ */
+
+function expectObject(value, label) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`${label}: expected JSON object, got ${value === null ? 'null' : typeof value}`);
+  }
+}
+
+export function validateSnapshotDiffStatus(parsed) {
+  expectObject(parsed, 'snapshot-diff-status.json');
+  if (parsed.schemaVersion !== 1) {
+    throw new Error(
+      `snapshot-diff-status.json: unsupported schemaVersion ${JSON.stringify(parsed.schemaVersion)} (expected 1)`,
+    );
+  }
+  if (typeof parsed.checkedAt !== 'string') {
+    throw new Error('snapshot-diff-status.json: missing string "checkedAt"');
+  }
+  if (typeof parsed.runId !== 'string') {
+    throw new Error('snapshot-diff-status.json: runId must be a string');
+  }
+  if (parsed.sourceSyncRunId !== null && typeof parsed.sourceSyncRunId !== 'string') {
+    throw new Error('snapshot-diff-status.json: sourceSyncRunId must be string|null');
+  }
+  if (!parsed.summary || typeof parsed.summary !== 'object') {
+    throw new Error('snapshot-diff-status.json: missing "summary" object');
+  }
+  if (!Array.isArray(parsed.changes)) {
+    throw new Error('snapshot-diff-status.json: "changes" must be an array');
+  }
+  if (!parsed.runScope || typeof parsed.runScope !== 'object') {
+    throw new Error('snapshot-diff-status.json: missing "runScope" object');
+  }
+  if (typeof parsed.runScope.isComplete !== 'boolean') {
+    throw new Error('snapshot-diff-status.json: runScope.isComplete must be boolean');
+  }
+  return parsed;
+}
+
+export function validateParityCheckStatus(parsed) {
+  expectObject(parsed, 'parity-check-status.json');
+  if (parsed.schemaVersion !== 1) {
+    throw new Error(
+      `parity-check-status.json: unsupported schemaVersion ${JSON.stringify(parsed.schemaVersion)} (expected 1)`,
+    );
+  }
+  if (!parsed.summary || typeof parsed.summary !== 'object') {
+    throw new Error('parity-check-status.json: missing "summary" object');
+  }
+  if (typeof parsed.summary.checkedAt !== 'string') {
+    throw new Error('parity-check-status.json: summary.checkedAt must be a string');
+  }
+  if (!Array.isArray(parsed.files)) {
+    throw new Error('parity-check-status.json: "files" must be an array');
+  }
+  if (!parsed.summary.runScope || typeof parsed.summary.runScope !== 'object') {
+    throw new Error('parity-check-status.json: summary.runScope is required');
+  }
+  if (typeof parsed.summary.runScope.isComplete !== 'boolean') {
+    throw new Error('parity-check-status.json: summary.runScope.isComplete must be boolean');
+  }
+  const result = parsed.summary.result;
+  if (result !== 'pass' && result !== 'fail' && result !== 'inconclusive') {
+    throw new Error(
+      `parity-check-status.json: summary.result must be one of pass|fail|inconclusive, got ${JSON.stringify(result)}`,
+    );
+  }
+  return parsed;
+}
+
+export function validateSourceSyncStatus(parsed) {
+  expectObject(parsed, 'source-sync-status.json');
+  if (parsed.schemaVersion !== 1) {
+    throw new Error(
+      `source-sync-status.json: unsupported schemaVersion ${JSON.stringify(parsed.schemaVersion)} (expected 1)`,
+    );
+  }
+  if (typeof parsed.runId !== 'string') {
+    throw new Error('source-sync-status.json: runId must be a string');
+  }
+  if (typeof parsed.checkedAt !== 'string') {
+    throw new Error('source-sync-status.json: checkedAt must be a string');
+  }
+  if (
+    parsed.freshnessState !== 'fresh' &&
+    parsed.freshnessState !== 'partial' &&
+    parsed.freshnessState !== 'broken' &&
+    parsed.freshnessState !== 'stale'
+  ) {
+    throw new Error(
+      `source-sync-status.json: freshnessState must be one of fresh|partial|broken|stale, got ${JSON.stringify(parsed.freshnessState)}`,
+    );
+  }
+  if (typeof parsed.sourceInventoryFingerprint !== 'string') {
+    throw new Error('source-sync-status.json: sourceInventoryFingerprint must be a string');
+  }
+  if (typeof parsed.sidebarFingerprint !== 'string') {
+    throw new Error('source-sync-status.json: sidebarFingerprint must be a string');
+  }
+  if (!parsed.runScope || typeof parsed.runScope !== 'object') {
+    throw new Error('source-sync-status.json: runScope is required');
+  }
+  if (typeof parsed.runScope.isComplete !== 'boolean') {
+    throw new Error('source-sync-status.json: runScope.isComplete must be boolean');
+  }
+  if (!parsed.summary || typeof parsed.summary !== 'object') {
+    throw new Error('source-sync-status.json: summary is required');
+  }
+  if (typeof parsed.summary.sidebarVerified !== 'boolean') {
+    throw new Error('source-sync-status.json: summary.sidebarVerified must be boolean');
+  }
+  if (!Array.isArray(parsed.pages)) {
+    throw new Error('source-sync-status.json: pages must be an array');
+  }
+  if (!Array.isArray(parsed.errors)) {
+    throw new Error('source-sync-status.json: errors must be an array');
+  }
+  return parsed;
+}
+
+export function validateActionableReport(parsed) {
+  expectObject(parsed, 'docs-actionable-report.json');
+  if (parsed.schemaVersion !== ACTIONABLE_REPORT_SCHEMA_VERSION) {
+    throw new Error(
+      `docs-actionable-report.json: unsupported schemaVersion ${JSON.stringify(parsed.schemaVersion)} (expected ${ACTIONABLE_REPORT_SCHEMA_VERSION})`,
+    );
+  }
+  for (const family of ['snapshotDiff', 'parityRegression', 'sourceSyncHealth', 'parityFollowup']) {
+    if (!parsed[family] || typeof parsed[family] !== 'object') {
+      throw new Error(`docs-actionable-report.json: missing "${family}" family`);
+    }
+    if (typeof parsed[family].shouldOpenIssue !== 'boolean') {
+      throw new Error(`docs-actionable-report.json: ${family}.shouldOpenIssue must be boolean`);
+    }
+  }
+  return parsed;
+}
+
+/**
+ * Validate the three detection inputs after they have been loaded.
+ * Returns `{ ok: true }` on success, `{ ok: false, errors: string[] }`
+ * when one or more inputs fail validation. The function never throws —
+ * the caller (e.g. `loadDetectionInputs` in strict mode) is responsible
+ * for deciding whether to continue.
+ */
+export function validateDetectionInputs({ snapshot, parity, sourceSync }) {
+  const errors = [];
+  const tryValidate = (label, runner) => {
+    try {
+      runner();
+    } catch (error) {
+      errors.push(`${label}: ${error.message}`);
+    }
+  };
+  tryValidate('snapshot', () => validateSnapshotDiffStatus(snapshot));
+  tryValidate('parity', () => validateParityCheckStatus(parity));
+  // sourceSync is allowed to be missing entirely (legacy / pre-Phase-1
+  // runs); only check the shape if a non-empty payload is present.
+  if (sourceSync && Object.keys(sourceSync).length > 0) {
+    tryValidate('sourceSync', () => validateSourceSyncStatus(sourceSync));
+  }
+  return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }
 
 function fileToSlug(filePath) {
@@ -276,6 +452,7 @@ function formatAdvisoryQueueScope(scope) {
 function buildParityFollowupBody({
   summary,
   expiredBaselineFiles,
+  expiringBaselineFiles,
   baselineInvalidatedSlugs,
   blockingAdvisoryItems,
   advisoryQueueIssues,
@@ -289,6 +466,7 @@ function buildParityFollowupBody({
     `- Checked at: ${summary.checkedAt ?? 'unknown'}`,
     `- Baselined issues: ${summary.baselinedIssues ?? 0} (${summary.baselinedFiles ?? 0} files)`,
     `- Expired baseline entries: ${summary.expiredBaselineEntries ?? 0}`,
+    `- Expiring within 30 days: ${summary.expiringBaselineEntries30d ?? 0}`,
     `- Baseline-invalidated slugs: ${baselineInvalidatedSlugs.length}`,
     '',
   ];
@@ -307,6 +485,23 @@ function buildParityFollowupBody({
     lines.push(
       formatList(
         expiredBaselineFiles.map((f) => {
+          const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
+          return `\`${f.file}\` (${f.count} entries${rv})`;
+        }),
+      ),
+    );
+    lines.push('');
+  }
+
+  if (expiringBaselineFiles && expiringBaselineFiles.length > 0) {
+    lines.push('## Expiring Within 30 Days', '');
+    lines.push(
+      '> Plan paydown PRs before these entries cross `reviewAfter` and re-enter the gate.',
+      '',
+    );
+    lines.push(
+      formatList(
+        expiringBaselineFiles.map((f) => {
           const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
           return `\`${f.file}\` (${f.count} entries${rv})`;
         }),
@@ -350,6 +545,7 @@ function buildParityFollowup(parity, options = {}) {
   const advisoryQueueScope = parity.advisoryQueueScope ?? null;
 
   const expiredBaselineEntries = summary.expiredBaselineEntries ?? 0;
+  const expiringBaselineEntries30d = summary.expiringBaselineEntries30d ?? 0;
   const baselineInvalidatedSlugs = summary.baselineInvalidatedSlugs ?? [];
   const advisoryQueueIssues = summary.advisoryQueueIssues ?? 0;
   const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
@@ -360,10 +556,12 @@ function buildParityFollowup(parity, options = {}) {
 
   const shouldOpenIssue =
     expiredBaselineEntries > 0 ||
+    expiringBaselineEntries30d > 0 ||
     baselineInvalidatedSlugs.length > 0 ||
     hasBlockingAdvisory;
 
   const expiredBaselineFiles = [];
+  const expiringBaselineFiles = [];
   for (const file of files) {
     const expired = (file.issues ?? []).filter(
       (i) => i.baselined === true && i.baselineExpired === true,
@@ -376,8 +574,26 @@ function buildParityFollowup(parity, options = {}) {
           expired.map((i) => i.baselineReviewAfter).filter(Boolean)[0] ?? null,
       });
     }
+    const expiring = (file.issues ?? []).filter(
+      (i) => i.baselined === true && i.baselineExpiringSoon === true,
+    );
+    if (expiring.length > 0) {
+      expiringBaselineFiles.push({
+        file: file.file,
+        count: expiring.length,
+        reviewAfter:
+          expiring.map((i) => i.baselineReviewAfter).filter(Boolean)[0] ?? null,
+      });
+    }
   }
   expiredBaselineFiles.sort((a, b) => b.count - a.count);
+  expiringBaselineFiles.sort((a, b) => {
+    // Earliest expiry first so reviewers see the cliff in order.
+    if ((a.reviewAfter ?? '') !== (b.reviewAfter ?? '')) {
+      return (a.reviewAfter ?? '') < (b.reviewAfter ?? '') ? -1 : 1;
+    }
+    return b.count - a.count;
+  });
   const reviewHints = {
     topBaselinedPages: buildTopBaselinedPages(files, maxEntries),
     tokenlessNearTieExamples: buildTokenlessNearTieExamples(advisoryQueue, maxEntries),
@@ -388,6 +604,7 @@ function buildParityFollowup(parity, options = {}) {
         buildParityFollowupBody({
           summary,
           expiredBaselineFiles: expiredBaselineFiles.slice(0, maxEntries),
+          expiringBaselineFiles: expiringBaselineFiles.slice(0, maxEntries),
           baselineInvalidatedSlugs,
           blockingAdvisoryItems:
             isComplete === true ? blockingAdvisoryItems.slice(0, maxEntries) : [],
@@ -411,6 +628,8 @@ function buildParityFollowup(parity, options = {}) {
         baselinedFiles: summary.baselinedFiles ?? 0,
         expiredBaselineEntries,
         expiredBaselineFiles,
+        expiringBaselineEntries30d,
+        expiringBaselineFiles,
         baselineInvalidatedSlugs,
         baselineInvalidatedSlugCount: baselineInvalidatedSlugs.length,
       },
@@ -434,6 +653,15 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const parityFiles = parity.files ?? [];
   const parityIssueFiles = buildParityEntries(parityFiles, isReportableParityIssue);
   const parityIssueSummary = summarizeIssueEntries(parityIssueFiles);
+
+  // §1+§3 cleanup: hoist runScope/result/freshness/linkage to the top
+  // of the function so the Source Sync Health and final-return blocks
+  // can both consume them without TDZ ordering tricks.
+  const runScope = parity.summary?.runScope ?? null;
+  const result = parity.summary?.result ?? null;
+  const parityFreshnessState =
+    parity.summary?.freshnessState ?? sourceSync?.freshnessState ?? null;
+  const linkageState = parity.summary?.linkageState ?? null;
 
   const snapshotTopEntries = sortSnapshotEntries(snapshotChanges).slice(0, maxEntries);
   const parityTopEntries = sortParityEntries(parityIssueFiles).slice(
@@ -513,7 +741,14 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
 
   // Source sync health
   const freshnessState = sourceSync.freshnessState ?? null;
-  const syncShouldOpen = freshnessState === 'broken' || freshnessState === 'partial';
+  // §3 cleanup: linkage failure also opens the source-sync-health issue
+  // so reviewers see "stale" / "scope-mismatch" runs in the same place
+  // they see freshness degradation. linkageState='missing' is the
+  // legacy / no-linkage case and is intentionally NOT escalated.
+  const linkageBlocking =
+    linkageState !== null && linkageState !== 'linked' && linkageState !== 'missing';
+  const syncShouldOpen =
+    freshnessState === 'broken' || freshnessState === 'partial' || linkageBlocking;
   const syncSummary = sourceSync.summary ?? {};
   const syncErrors = sourceSync.errors ?? [];
 
@@ -521,7 +756,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     ? [
         '## Summary',
         '',
-        `- Freshness state: **${freshnessState}**`,
+        `- Freshness state: **${freshnessState ?? 'unknown'}**`,
+        `- Linkage state: **${linkageState ?? 'unknown'}**`,
         `- Target pages: ${syncSummary.targetPages ?? 0}`,
         `- Fetched pages: ${syncSummary.fetchedPages ?? 0}`,
         `- Not found pages: ${syncSummary.notFoundPages ?? 0}`,
@@ -535,20 +771,18 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         '## Artifacts',
         '',
         '- `source-sync-status.json`',
+        '- `snapshot-diff-status.json`',
+        '- `parity-check-status.json`',
       ].join('\n')
     : '';
 
-  // Phase 8 PR2: hoist parity-side runScope to the actionable report
-  // top-level so .github/scripts/sync-detection-issues.cjs (which only
-  // reads docs-actionable-report.json) can refuse to sync managed
-  // issues from partial runs. A missing runScope is preserved as null
-  // so legacy parity-check-status.json files (pre-Phase-8 PR2) keep
-  // their pre-PR2 sync behaviour.
-  const runScope = parity.summary?.runScope ?? null;
-
   return {
+    schemaVersion: ACTIONABLE_REPORT_SCHEMA_VERSION,
     generatedAt: new Date().toISOString(),
     runScope,
+    result,
+    freshnessState: parityFreshnessState,
+    linkageState,
     sourceSyncHealth: {
       key: FAMILY_KEYS.SOURCE_SYNC_HEALTH,
       issueTitle: SOURCE_SYNC_ISSUE_TITLE,
@@ -700,12 +934,24 @@ export function loadDetectionInputs({
   snapshotPath = path.join(ROOT_DIR, 'snapshot-diff-status.json'),
   parityPath = path.join(ROOT_DIR, 'parity-check-status.json'),
   sourceSyncPath = path.join(ROOT_DIR, 'source-sync-status.json'),
+  strict = false,
 } = {}) {
-  return {
+  const inputs = {
     snapshot: readJson(snapshotPath),
     parity: readJson(parityPath),
     sourceSync: readJson(sourceSyncPath),
   };
+  if (strict) {
+    const validation = validateDetectionInputs(inputs);
+    if (!validation.ok) {
+      const error = new Error(
+        `Detection input validation failed:\n  - ${validation.errors.join('\n  - ')}`,
+      );
+      error.validationErrors = validation.errors;
+      throw error;
+    }
+  }
+  return inputs;
 }
 
 export {

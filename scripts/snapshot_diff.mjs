@@ -12,6 +12,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -25,17 +26,61 @@ import {
   resolveSlug,
 } from './lib/project.mjs';
 import { isDirectRun } from './lib/cli.mjs';
+import { buildRunScope } from './lib/source_sync_health.mjs';
 import {
   extractSlug as extractSlugFn,
   extractSlugsFromSnapshot,
   matchAllTricentisUrls,
 } from './lib/madcap_toc.mjs';
 
+/**
+ * Schema version for `snapshot-diff-status.json`. Bumped whenever the
+ * top-level shape changes in a way that downstream consumers
+ * (`generate_detection_reports.mjs`, validation in detection inputs)
+ * need to detect.
+ */
+export const SNAPSHOT_DIFF_SCHEMA_VERSION = 1;
+
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
 const SIDEBAR_PATH = path.join(SNAPSHOTS_DIR, 'sidebar.json');
 const SIDEBAR_URLS_PATH = path.join(ROOT_DIR, 'docs', 'SIDEBAR_URLS.md');
+const SOURCE_SYNC_STATUS_PATH = path.join(ROOT_DIR, 'source-sync-status.json');
 const OUTPUT_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
+
+/**
+ * Read the source-sync linkage payload so snapshot_diff can advertise the
+ * exact source-sync run it was built from.
+ * Returns null when the file is missing or malformed; downstream
+ * validation treats null as an unlinked / legacy run.
+ */
+function readSourceSyncPayload() {
+  if (!fs.existsSync(SOURCE_SYNC_STATUS_PATH)) return null;
+  try {
+    const data = JSON.parse(fs.readFileSync(SOURCE_SYNC_STATUS_PATH, 'utf8'));
+    return data && typeof data === 'object' ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Compute a deterministic runId for snapshot_diff. The runId is the
+ * tuple `(checkedAt, sourceInventoryFingerprint, scope)` hashed via
+ * sha256 so two unrelated runs cannot collide. Format mirrors the
+ * source-sync-status runId style.
+ */
+function buildSnapshotDiffRunId(checkedAt, sourceInventoryFingerprint, scope) {
+  const seed = [
+    checkedAt,
+    sourceInventoryFingerprint ?? '_no-inventory_',
+    scope.type,
+    scope.filters?.slug ?? '',
+    scope.filters?.section ?? '',
+  ].join('|');
+  const digest = createHash('sha256').update(seed).digest('hex').slice(0, 12);
+  return `${checkedAt}#snapshot-diff-${digest}`;
+}
 
 /**
  * Build a slug → URL map from SIDEBAR_URLS.md text (one-time parse).
@@ -333,14 +378,34 @@ export async function main(argv) {
   // Scope summary to filtered files when --slug is active
   const scopedTotal = resolvedSlug ? 1 : snapshotFiles.length;
 
+  const checkedAt = new Date().toISOString();
+  const runScope = buildRunScope({
+    slug: resolvedSlug,
+    section: args.section,
+  });
+  const sourceSyncPayload = readSourceSyncPayload();
+  const sourceInventoryFingerprint =
+    typeof sourceSyncPayload?.sourceInventoryFingerprint === 'string'
+      ? sourceSyncPayload.sourceInventoryFingerprint
+      : null;
+  const sourceSyncRunId =
+    typeof sourceSyncPayload?.runId === 'string' ? sourceSyncPayload.runId : null;
+  const runId = buildSnapshotDiffRunId(checkedAt, sourceInventoryFingerprint, runScope);
+
   const report = {
-    checkedAt: new Date().toISOString(),
+    schemaVersion: SNAPSHOT_DIFF_SCHEMA_VERSION,
+    runId,
+    sourceSyncRunId,
+    sourceInventoryFingerprint,
+    runScope,
+    checkedAt,
     summary: {
       totalSnapshots: scopedTotal,
       changed: changes.filter((c) => c.type === 'page-changed').length,
       added: changes.filter((c) => c.type === 'page-added').length,
       removed: changes.filter((c) => c.type === 'page-removed').length,
       unchanged,
+      runScope,
     },
     changes: changes.sort((a, b) => (b.diffLines || 0) - (a.diffLines || 0)),
     sidebar,

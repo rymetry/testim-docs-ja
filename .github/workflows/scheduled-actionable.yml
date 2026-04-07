@@ -54,8 +54,16 @@ jobs:
         run: npm run check:parity
         continue-on-error: true
 
-      - name: Generate detection summary
-        run: npm run check:summary
+      - name: Generate detection summary (strict)
+        # §2 fail-closed: --strict makes loadDetectionInputs validate
+        # snapshot-diff-status.json, parity-check-status.json, and (when
+        # present) source-sync-status.json against their schemaVersion
+        # contracts BEFORE writing docs-actionable-report.json. Any
+        # validation error fails this step, which then blocks the sync
+        # step below via its `steps.summary.outcome` precondition.
+        id: summary
+        run: npm run check:summary -- --strict
+        continue-on-error: true
 
       - name: Publish step summary
         if: always() && hashFiles('docs-update-summary.md') != ''
@@ -70,9 +78,24 @@ jobs:
           if [ "$PARITY_OUTCOME" = "failure" ]; then
             echo "::warning::Parity check reported issues (exit code non-zero)"
           fi
+          if [ "$SUMMARY_OUTCOME" = "failure" ]; then
+            echo "::error::Detection input validation failed — sync will be skipped"
+            {
+              echo "## ❌ Detection input validation failed"
+              echo ""
+              echo "Strict --strict validation rejected one or more of:"
+              echo "- snapshot-diff-status.json"
+              echo "- parity-check-status.json"
+              echo "- source-sync-status.json (when present)"
+              echo ""
+              echo "Managed detection issues will NOT be synced from this run."
+              echo "Inspect the artifact bundle and the previous step logs."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
         env:
           SNAPSHOTS_OUTCOME: ${{ steps.snapshots.outcome }}
           PARITY_OUTCOME: ${{ steps.parity_local.outcome }}
+          SUMMARY_OUTCOME: ${{ steps.summary.outcome }}
 
       - name: Upload detection artifacts
         if: always()
@@ -90,7 +113,16 @@ jobs:
           retention-days: 30
 
       - name: Sync detection issues
-        if: github.event_name == 'schedule' && success() && hashFiles('docs-actionable-report.json') != ''
+        # §2 fail-closed: only sync when ALL of:
+        #   1. This is a scheduled run (manual dispatches don't sync)
+        #   2. The strict summary step exited 0 (artifacts validated)
+        #   3. docs-actionable-report.json was actually written
+        # The sync script ALSO refuses partial-run reports via runScope
+        # (Phase 8 PR2 guard). These are layered defenses.
+        if: |
+          github.event_name == 'schedule'
+          && steps.summary.outcome == 'success'
+          && hashFiles('docs-actionable-report.json') != ''
         uses: actions/github-script@v7
         with:
           script: |

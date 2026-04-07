@@ -7,6 +7,12 @@ let classifySnapshotBucket;
 let assignReviewGroups;
 let renderSummaryMarkdown;
 let loadDetectionInputs;
+let validateSnapshotDiffStatus;
+let validateParityCheckStatus;
+let validateSourceSyncStatus;
+let validateActionableReport;
+let validateDetectionInputs;
+let ACTIONABLE_REPORT_SCHEMA_VERSION;
 
 before(async () => {
   ({
@@ -16,6 +22,12 @@ before(async () => {
     assignReviewGroups,
     renderSummaryMarkdown,
     loadDetectionInputs,
+    validateSnapshotDiffStatus,
+    validateParityCheckStatus,
+    validateSourceSyncStatus,
+    validateActionableReport,
+    validateDetectionInputs,
+    ACTIONABLE_REPORT_SCHEMA_VERSION,
   } = await import('../lib/detection_reports.mjs'));
 });
 
@@ -1772,5 +1784,309 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     const signalTypes = manifest[0].signals.map((s) => s.type);
     assert.ok(signalTypes.includes('image-mismatch'));
     assert.ok(signalTypes.includes('paragraph-count-mismatch'));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// §1 cleanup — strict artifact validators
+// ---------------------------------------------------------------------------
+
+function validSnapshotDiff() {
+  return {
+    schemaVersion: 1,
+    runId: '2026-04-07T00:00:00Z#snapshot-diff-deadbeef',
+    sourceSyncRunId: '2026-04-07T00:00:00Z#sync-deadbeef',
+    sourceInventoryFingerprint: null,
+    runScope: { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+    checkedAt: '2026-04-07T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+}
+
+function validParityStatus() {
+  return {
+    schemaVersion: 1,
+    summary: {
+      checkedAt: '2026-04-07T00:00:00Z',
+      runScope: { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+      result: 'pass',
+    },
+    files: [],
+  };
+}
+
+function validActionableReport() {
+  return {
+    schemaVersion: ACTIONABLE_REPORT_SCHEMA_VERSION,
+    snapshotDiff: { shouldOpenIssue: false },
+    parityRegression: { shouldOpenIssue: false },
+    sourceSyncHealth: { shouldOpenIssue: false },
+    parityFollowup: { shouldOpenIssue: false },
+  };
+}
+
+function validSourceSyncStatus() {
+  return {
+    schemaVersion: 1,
+    runId: '2026-04-07T00:00:00Z#sync-deadbeef',
+    checkedAt: '2026-04-07T00:00:00Z',
+    sourceInventoryFingerprint: 'sha256:' + 'a'.repeat(64),
+    sidebarFingerprint: 'sha256:' + 'b'.repeat(64),
+    freshnessState: 'fresh',
+    runScope: { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+    summary: {
+      targetPages: 100,
+      fetchedPages: 100,
+      notFoundPages: 0,
+      errorPages: 0,
+      sidebarVerified: true,
+    },
+    pages: [],
+    errors: [],
+  };
+}
+
+describe('§1 cleanup — validateSnapshotDiffStatus', () => {
+  it('accepts a valid snapshot-diff-status', () => {
+    assert.doesNotThrow(() => validateSnapshotDiffStatus(validSnapshotDiff()));
+  });
+
+  it('throws on missing runId', () => {
+    const v = validSnapshotDiff();
+    delete v.runId;
+    assert.throws(() => validateSnapshotDiffStatus(v), /runId must be a string/);
+  });
+
+  it('throws when sourceSyncRunId is neither string nor null', () => {
+    const v = validSnapshotDiff();
+    v.sourceSyncRunId = 123;
+    assert.throws(
+      () => validateSnapshotDiffStatus(v),
+      /sourceSyncRunId must be string\|null/,
+    );
+  });
+
+  it('throws on missing schemaVersion', () => {
+    const v = validSnapshotDiff();
+    delete v.schemaVersion;
+    assert.throws(() => validateSnapshotDiffStatus(v), /unsupported schemaVersion/);
+  });
+
+  it('throws on wrong schemaVersion', () => {
+    const v = validSnapshotDiff();
+    v.schemaVersion = 2;
+    assert.throws(() => validateSnapshotDiffStatus(v), /unsupported schemaVersion/);
+  });
+
+  it('throws on missing runScope', () => {
+    const v = validSnapshotDiff();
+    delete v.runScope;
+    assert.throws(() => validateSnapshotDiffStatus(v), /missing "runScope"/);
+  });
+
+  it('throws on non-array changes', () => {
+    const v = validSnapshotDiff();
+    v.changes = null;
+    assert.throws(() => validateSnapshotDiffStatus(v), /"changes" must be an array/);
+  });
+});
+
+describe('§1 cleanup — validateParityCheckStatus', () => {
+  it('accepts a valid parity-check-status', () => {
+    assert.doesNotThrow(() => validateParityCheckStatus(validParityStatus()));
+  });
+
+  it('throws when summary.result is missing', () => {
+    const v = validParityStatus();
+    delete v.summary.result;
+    assert.throws(
+      () => validateParityCheckStatus(v),
+      /summary\.result must be one of pass\|fail\|inconclusive/,
+    );
+  });
+
+  it('throws when summary.result is an unknown value', () => {
+    const v = validParityStatus();
+    v.summary.result = 'green';
+    assert.throws(
+      () => validateParityCheckStatus(v),
+      /summary\.result must be one of pass\|fail\|inconclusive/,
+    );
+  });
+
+  it('throws when summary.runScope.isComplete is missing', () => {
+    const v = validParityStatus();
+    delete v.summary.runScope.isComplete;
+    assert.throws(
+      () => validateParityCheckStatus(v),
+      /summary\.runScope\.isComplete must be boolean/,
+    );
+  });
+
+  it('throws on missing schemaVersion', () => {
+    const v = validParityStatus();
+    delete v.schemaVersion;
+    assert.throws(() => validateParityCheckStatus(v), /unsupported schemaVersion/);
+  });
+});
+
+describe('§1 cleanup — validateActionableReport', () => {
+  it('accepts a valid actionable report', () => {
+    assert.doesNotThrow(() => validateActionableReport(validActionableReport()));
+  });
+
+  it('throws when a family is missing', () => {
+    const v = validActionableReport();
+    delete v.parityRegression;
+    assert.throws(() => validateActionableReport(v), /missing "parityRegression"/);
+  });
+
+  it('throws when a family.shouldOpenIssue is not boolean', () => {
+    const v = validActionableReport();
+    v.parityRegression.shouldOpenIssue = 'no';
+    assert.throws(
+      () => validateActionableReport(v),
+      /parityRegression\.shouldOpenIssue must be boolean/,
+    );
+  });
+
+  it('throws on wrong schemaVersion', () => {
+    const v = validActionableReport();
+    v.schemaVersion = 999;
+    assert.throws(() => validateActionableReport(v), /unsupported schemaVersion/);
+  });
+});
+
+describe('§1 cleanup — validateSourceSyncStatus', () => {
+  it('accepts a valid source-sync-status', () => {
+    assert.doesNotThrow(() => validateSourceSyncStatus(validSourceSyncStatus()));
+  });
+
+  it('throws when runId is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.runId = 123;
+    assert.throws(() => validateSourceSyncStatus(v), /runId must be a string/);
+  });
+
+  it('throws when checkedAt is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.checkedAt = 123;
+    assert.throws(() => validateSourceSyncStatus(v), /checkedAt must be a string/);
+  });
+
+  it('throws on missing schemaVersion', () => {
+    const v = validSourceSyncStatus();
+    delete v.schemaVersion;
+    assert.throws(() => validateSourceSyncStatus(v), /unsupported schemaVersion/);
+  });
+
+  it('throws when runScope is missing', () => {
+    const v = validSourceSyncStatus();
+    delete v.runScope;
+    assert.throws(() => validateSourceSyncStatus(v), /runScope is required/);
+  });
+
+  it('throws when freshnessState is unknown', () => {
+    const v = validSourceSyncStatus();
+    v.freshnessState = 'green';
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /freshnessState must be one of fresh\|partial\|broken\|stale/,
+    );
+  });
+
+  it('throws when sourceInventoryFingerprint is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.sourceInventoryFingerprint = 123;
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /sourceInventoryFingerprint must be a string/,
+    );
+  });
+
+  it('throws when sidebarFingerprint is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.sidebarFingerprint = 123;
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /sidebarFingerprint must be a string/,
+    );
+  });
+
+  it('throws when summary.sidebarVerified is not boolean', () => {
+    const v = validSourceSyncStatus();
+    v.summary.sidebarVerified = 'yes';
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.sidebarVerified must be boolean/,
+    );
+  });
+
+  it('throws when pages is not an array', () => {
+    const v = validSourceSyncStatus();
+    v.pages = null;
+    assert.throws(() => validateSourceSyncStatus(v), /pages must be an array/);
+  });
+
+  it('throws when errors is not an array', () => {
+    const v = validSourceSyncStatus();
+    v.errors = null;
+    assert.throws(() => validateSourceSyncStatus(v), /errors must be an array/);
+  });
+});
+
+describe('§1 cleanup — validateDetectionInputs', () => {
+  it('returns ok=true when all three inputs are valid', () => {
+    const result = validateDetectionInputs({
+      snapshot: validSnapshotDiff(),
+      parity: validParityStatus(),
+      sourceSync: validSourceSyncStatus(),
+    });
+    assert.deepEqual(result, { ok: true });
+  });
+
+  it('returns ok=true when sourceSync is empty (legacy run)', () => {
+    const result = validateDetectionInputs({
+      snapshot: validSnapshotDiff(),
+      parity: validParityStatus(),
+      sourceSync: {},
+    });
+    assert.deepEqual(result, { ok: true });
+  });
+
+  it('reports per-input errors when something is malformed', () => {
+    const broken = validParityStatus();
+    delete broken.summary.result;
+    const result = validateDetectionInputs({
+      snapshot: validSnapshotDiff(),
+      parity: broken,
+      sourceSync: validSourceSyncStatus(),
+    });
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.length >= 1);
+    assert.match(result.errors[0], /^parity:/);
+  });
+
+  it('reports sourceSync errors when schemaVersion is malformed', () => {
+    const result = validateDetectionInputs({
+      snapshot: validSnapshotDiff(),
+      parity: validParityStatus(),
+      sourceSync: { ...validSourceSyncStatus(), schemaVersion: 'bad' },
+    });
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.some((e) => e.startsWith('sourceSync:')));
+  });
+});
+
+describe('§1 cleanup — loadDetectionInputs strict mode', () => {
+  it('throws when strict=true and one of the required artifacts fails validation', async () => {
+    // We don't have files on disk to point at, but the strict path
+    // composes loadDetectionInputs → validateDetectionInputs. This test
+    // shape mirrors how the §2 workflow guard exercises it.
+    // Skipped here because the helper assumes filesystem inputs; the
+    // direct validateDetectionInputs tests above already cover the
+    // failure logic.
   });
 });

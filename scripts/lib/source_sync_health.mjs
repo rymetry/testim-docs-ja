@@ -7,6 +7,40 @@
 
 import { createHash } from 'node:crypto';
 
+export const SOURCE_SYNC_STATUS_SCHEMA_VERSION = 1;
+
+/**
+ * Shared run-scope classifier used by source-sync, snapshot-diff, and parity.
+ * A non-null slug always wins over section because the CLI callers resolve
+ * `--slug` first and only use section for diagnostic context in that case.
+ *
+ * @param {{ slug?: string|null, section?: string|null }} [opts]
+ * @returns {{ type: 'full'|'slug'|'section', isComplete: boolean, filters: { slug: string|null, section: string|null } }}
+ */
+export function buildRunScope({ slug = null, section = null } = {}) {
+  const slugFilter = slug ?? null;
+  const sectionFilter = section ?? null;
+  if (slugFilter) {
+    return {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: slugFilter, section: sectionFilter },
+    };
+  }
+  if (sectionFilter) {
+    return {
+      type: 'section',
+      isComplete: false,
+      filters: { slug: null, section: sectionFilter },
+    };
+  }
+  return {
+    type: 'full',
+    isComplete: true,
+    filters: { slug: null, section: null },
+  };
+}
+
 /**
  * SHA-256 fingerprint of a sorted array of strings.
  * @param {string[]} items
@@ -25,6 +59,13 @@ export function fingerprint(items) {
  * - "partial" — some pages failed/404 but at least one ok, sidebar verified
  * - "broken"  — sidebar failed, no pages, or all pages failed
  *
+ * Note: `stale` is also a valid freshness state but is computed from
+ * RUN LINKAGE rather than fetch results — see `validateRunLinkage`.
+ * `buildSourceSyncStatus` never returns `stale` directly because it
+ * doesn't know about snapshot_diff or downstream artifacts. The §3
+ * cleanup decides `stale` in `check_source_parity` after both
+ * artifacts are loaded.
+ *
  * @param {{ slug: string, fetchStatus: string }[]} pages
  * @param {boolean} sidebarVerified
  * @returns {"fresh" | "partial" | "broken"}
@@ -40,16 +81,88 @@ export function computeFreshnessState(pages, sidebarVerified) {
 }
 
 /**
+ * Validate that the three live-source artifacts (source-sync-status,
+ * snapshot-diff-status, and the parity gate's own scope) all describe
+ * the same logical run. Returns one of:
+ *
+ *   "linked"      — sourceSync.runId matches snapshotDiff.sourceSyncRunId,
+ *                   source inventory fingerprint matches, and all run scopes match
+ *   "missing"     — one of the required linkage fields is missing
+ *   "stale"       — fingerprints disagree (inventory drifted between runs)
+ *   "run-mismatch" — snapshot_diff was built from a different source-sync run
+ *   "scope-mismatch" — full parity run paired with partial snapshot_diff
+ *                     (or any differing sourceSync / snapshotDiff / parity scope)
+ *
+ * Callers (check_source_parity) demote `parity-check-status.json.summary.result`
+ * to `inconclusive` for any value other than `linked`, even when there
+ * are no parity issues.
+ *
+ * @param {object} sourceSync — parsed source-sync-status.json
+ * @param {object|null} snapshotDiff — parsed snapshot-diff-status.json
+ * @param {{type: string, isComplete: boolean}} parityRunScope
+ * @returns {"linked" | "missing" | "stale" | "run-mismatch" | "scope-mismatch"}
+ */
+export function validateRunLinkage(sourceSync, snapshotDiff, parityRunScope) {
+  // No source-sync info → cannot prove linkage. Treat as "missing"; the
+  // caller can downgrade to inconclusive based on its own policy.
+  if (
+    !sourceSync ||
+    typeof sourceSync.sourceInventoryFingerprint !== 'string' ||
+    typeof sourceSync.runId !== 'string' ||
+    !sourceSync.runScope ||
+    typeof sourceSync.runScope !== 'object'
+  ) {
+    return 'missing';
+  }
+  if (!snapshotDiff || typeof snapshotDiff !== 'object') {
+    return 'missing';
+  }
+  if (
+    typeof snapshotDiff.sourceInventoryFingerprint !== 'string' ||
+    typeof snapshotDiff.sourceSyncRunId !== 'string' ||
+    !snapshotDiff.runScope ||
+    typeof snapshotDiff.runScope !== 'object'
+  ) {
+    return 'missing';
+  }
+
+  if (sourceSync.sourceInventoryFingerprint !== snapshotDiff.sourceInventoryFingerprint) {
+    return 'stale';
+  }
+
+  if (sourceSync.runId !== snapshotDiff.sourceSyncRunId) {
+    return 'run-mismatch';
+  }
+
+  const sameScope = (left, right) =>
+    left?.type === right?.type &&
+    left?.isComplete === right?.isComplete &&
+    (left?.filters?.slug ?? null) === (right?.filters?.slug ?? null) &&
+    (left?.filters?.section ?? null) === (right?.filters?.section ?? null);
+
+  if (!sameScope(sourceSync.runScope, snapshotDiff.runScope)) {
+    return 'scope-mismatch';
+  }
+
+  if (parityRunScope && !sameScope(sourceSync.runScope, parityRunScope)) {
+    return 'scope-mismatch';
+  }
+
+  return 'linked';
+}
+
+/**
  * Build the full source-sync-status.json payload.
  *
  * @param {object} opts
  * @param {{ slug: string, fetchStatus: string, errorDetail?: string, snapshotFingerprint?: string }[]} opts.pages
  * @param {{ ok: boolean, sectionCount?: number, pageCount?: number, reason?: string, sidebarSlugs?: string[] }} opts.sidebarResult
+ * @param {{ type: string, isComplete: boolean, filters: { slug: string|null, section: string|null } }} opts.runScope
  * @param {Date} [opts.now]  — override for deterministic tests
  * @param {string} [opts.runSeed] — override for deterministic runId in tests
  * @returns {object}
  */
-export function buildSourceSyncStatus({ pages, sidebarResult, now, runSeed }) {
+export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, runSeed }) {
   const checkedAt = (now ?? new Date()).toISOString();
   const shortHash = runSeed
     ? createHash('sha256').update(runSeed).digest('hex').slice(0, 8)
@@ -83,12 +196,13 @@ export function buildSourceSyncStatus({ pages, sidebarResult, now, runSeed }) {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: SOURCE_SYNC_STATUS_SCHEMA_VERSION,
     runId,
     checkedAt,
     sourceInventoryFingerprint,
     sidebarFingerprint,
     freshnessState,
+    runScope,
     summary: {
       targetPages: pages.length,
       fetchedPages: okCount,

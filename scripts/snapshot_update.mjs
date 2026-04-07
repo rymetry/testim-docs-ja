@@ -31,7 +31,7 @@ import {
 } from './lib/project.mjs';
 import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
-import { buildSourceSyncStatus } from './lib/source_sync_health.mjs';
+import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -215,6 +215,11 @@ async function verifySidebar({ dryRun = false } = {}) {
 export async function main(argv) {
   const args = parseArgs(argv);
   const targets = collectTargets(args);
+  const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
+  const runScope = buildRunScope({
+    slug: resolvedSlug,
+    section: args.section,
+  });
 
   if (targets.length === 0) {
     console.log('No targets found.');
@@ -282,7 +287,11 @@ export async function main(argv) {
   }
 
   // Build source sync status (always written — metadata, not content)
-  const sourceSyncStatus = buildSourceSyncStatus({ pages: pageResults, sidebarResult });
+  const sourceSyncStatus = buildSourceSyncStatus({
+    pages: pageResults,
+    sidebarResult,
+    runScope,
+  });
   fs.writeFileSync(
     SOURCE_SYNC_STATUS_PATH,
     JSON.stringify(sourceSyncStatus, null, 2) + '\n',

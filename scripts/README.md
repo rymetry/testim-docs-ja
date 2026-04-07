@@ -62,18 +62,21 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 **ローカルチェック（actionable）:**
 
-| チェック項目               | 検出内容                                               |
-| -------------------------- | ------------------------------------------------------ |
-| `untranslated`             | 未翻訳の英語テキスト行                                 |
-| `legacy-callout`           | レガシー callout（`> 📘` 等）                          |
-| `jsx-callout`              | JSX `<Callout>` コンポーネント残留                     |
-| `h1-in-body`               | 本文中の H1 見出し                                     |
-| `orphan-page`              | SIDEBAR_URLS.md に未掲載のページ                       |
-| `image-mismatch`           | 画像数の不一致                                         |
-| `codeblock-mismatch`       | コードブロック数の不一致                               |
-| `image-order-mismatch`     | 画像の配置順が原文と異なる                             |
-| `callout-nesting-mismatch` | callout のネストレベルが原文と異なる                   |
-| `sidebar-missing-file`     | SIDEBAR_URLS.md に掲載だがローカルファイルが存在しない |
+`localCheck()` は body のみを見るため、sidebar 関係の検査は **page coverage gate** に集約されている (`scripts/lib/source_parity_page_coverage.mjs`)。
+
+| チェック項目                | 検出内容                                       | エミッタ           |
+| --------------------------- | ---------------------------------------------- | ------------------ |
+| `untranslated`              | 未翻訳の英語テキスト行                         | localCheck         |
+| `legacy-callout`            | レガシー callout（`> 📘` 等）                  | localCheck         |
+| `jsx-callout`               | JSX `<Callout>` コンポーネント残留             | localCheck         |
+| `h1-in-body`                | 本文中の H1 見出し                             | localCheck         |
+| `image-mismatch`            | 画像数の不一致                                 | snapshot 比較      |
+| `codeblock-mismatch`        | コードブロック数の不一致                       | snapshot 比較      |
+| `image-order-mismatch`      | 画像の配置順が原文と異なる                     | snapshot 比較      |
+| `callout-nesting-mismatch`  | callout のネストレベルが原文と異なる           | snapshot 比較      |
+| `source-page-missing-local` | EN sidebar にあるが local 未作成               | page coverage gate |
+| `local-page-orphan`         | local file が EN sidebar に未掲載              | page coverage gate |
+| `missing-fresh-snapshot`    | sourceUrl があるが fresh な EN snapshot が無い | page coverage gate |
 
 **スナップショット構造比較（signal）:**
 
@@ -88,12 +91,18 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 | `table-cell-english-residual` | テーブルセルの英語残留                             | audit-only   |
 | `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致                        | audit-only   |
 | `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致              | audit-only   |
-| `source-snapshot-missing`     | sourceUrl があるが EN スナップショットが存在しない | gate signal  |
 | `missing-snapshot`            | EN snapshot が存在しないページ                     | gate signal  |
 
 **Phase 8 audit-only**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、Phase 5 の exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `scripts/lib/source_parity_types.mjs` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review checklist で「audit-only か gate-eligible か」を必ず判断する。
 
-**acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。`source-page-missing-local` / `segment-*` は acknowledgement 不可。
+**acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。
+
+acknowledgement の対象外:
+
+- `NON_ACKNOWLEDGEABLE_TYPES` (`source-page-missing-local`, `segment-missing`, `segment-untranslated`, `segment-token-gap`, `segment-inconclusive`) — gate を suppress すべきでない hard gap
+- `COARSE_SIGNAL_TYPES` (Phase 8 audit-only 9 種) — そもそも gate に乗らないため、ack をつけても no-op になる。validation は `validateAcknowledgements` で reject する
+
+→ どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
 **出力**: `parity-check-status.json`。
 
@@ -593,6 +602,56 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
   しないこと
 
 **関連 spec**: `docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md`
+
+---
+
+## Detection artifact 契約 (§1 cleanup)
+
+検知パイプラインが生成する 3 つの JSON artifact はすべて
+`schemaVersion` を持ち、`generate_detection_reports.mjs --strict` (CI で
+使用) は `loadDetectionInputs({ strict: true })` 経由で
+`validateDetectionInputs` を必ず通過させる。
+
+- **`snapshot-diff-status.json`** (`schemaVersion: 1`) —
+  必須 top-level: `runId`, `sourceSyncRunId`, `sourceInventoryFingerprint`,
+  `runScope`, `checkedAt`, `summary`, `changes`, `sidebar`
+- **`source-sync-status.json`** (`schemaVersion: 1`) —
+  必須 top-level: `runId`, `checkedAt`, `sourceInventoryFingerprint`,
+  `sidebarFingerprint`, `freshnessState`, `runScope`, `summary`, `pages`,
+  `errors`
+- **`parity-check-status.json`** (`schemaVersion: 1`) —
+  必須 top-level: `summary` (含む `checkedAt` / `runScope` / `result` /
+  `linkageState` / `freshnessState`), `files`
+- **`docs-actionable-report.json`** (`schemaVersion: 1`) —
+  必須 top-level: `runScope`, `result`, `freshnessState`, `linkageState`,
+  4 family (`snapshotDiff` / `parityRegression` / `sourceSyncHealth` /
+  `parityFollowup`)
+
+`summary.result` は `pass` / `fail` / `inconclusive` のいずれか:
+
+- `pass` — fresh source、reportable issue なし、linkage が `linked`
+- `fail` — reportable parity issue あり、または error file あり
+- `inconclusive` — `freshnessState !== fresh` (stale / partial / broken)、または run linkage が `stale` / `run-mismatch` / `scope-mismatch` / `missing`
+  ただし `source-sync-status.json` 自体が存在しない legacy / PR CI run は例外で、linkage `missing` でも `pass` を妨げない
+
+`source-sync-status.json.freshnessState` は source fetch そのものの状態を表し、
+`fresh` / `partial` / `broken` を emit する。これに対して
+`parity-check-status.json.summary.freshnessState` は parity gate から見た実効値で、
+run linkage が `stale` の場合は source-sync の元値に関係なく `stale` に上書きされる。
+混同を避けたいときは `linkageState` と対で読む。
+
+`linkageState` は `validateRunLinkage` の戻り値:
+
+- `linked` — `sourceSync.runId === snapshotDiff.sourceSyncRunId` かつ
+  sourceInventoryFingerprint と runScope が source-sync / snapshot-diff / parity の 3 者で整合
+- `missing` — linkage に必要な field か artifact が無い。source-sync が存在する run では `pass` を妨げる
+- `stale` — fingerprints が不一致 (inventory drift)。`pass` を `inconclusive` に降格する
+- `run-mismatch` — snapshot-diff が別の source-sync run を参照している。同上
+- `scope-mismatch` — full vs partial、または slug/section filter の不一致。同上
+
+これらは `scheduled-actionable.yml` の `--strict` step を通った時のみ
+sync される。partial run / 壊れた artifact は `sync-detection-issues.cjs`
+の §2 fail-closed step に到達する前に block される。
 
 ---
 

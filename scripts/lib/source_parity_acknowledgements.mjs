@@ -10,7 +10,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { ISSUE_SEVERITY } from './source_parity_types.mjs';
+import { COARSE_SIGNAL_TYPES, ISSUE_SEVERITY } from './source_parity_types.mjs';
 
 /**
  * Strict YYYY-MM-DD date format. Required for safe lexicographic comparison
@@ -87,6 +87,15 @@ export function validateAcknowledgements(parsed) {
 
     if (NON_ACKNOWLEDGEABLE_TYPES.has(entry.issueType)) {
       throw new Error(`${prefix}: issueType "${entry.issueType}" cannot be acknowledged`);
+    }
+
+    // Phase 8: coarse audit signals are demoted to audit-only and never
+    // reach the gate, so acknowledging them is a no-op that misleads
+    // reviewers into thinking the entry suppresses something.
+    if (COARSE_SIGNAL_TYPES.has(entry.issueType)) {
+      throw new Error(
+        `${prefix}: issueType "${entry.issueType}" is a Phase 8 audit-only coarse signal — acknowledgements are not allowed (they would be no-ops)`,
+      );
     }
 
     if (!(entry.issueType in ISSUE_SEVERITY)) {

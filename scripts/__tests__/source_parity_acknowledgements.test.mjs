@@ -73,10 +73,12 @@ const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
 
 const validEntry = {
   slug: 'overview/testim-overview',
-  issueType: 'paragraph-count-mismatch',
-  detailIncludes: 'セクション #1',
+  // image-mismatch is actionable and not in COARSE_SIGNAL_TYPES, so it
+  // remains acknowledgeable post-Phase-8.
+  issueType: 'image-mismatch',
+  detailIncludes: 'EN=3 JA=2',
   sourceFingerprint: VALID_FINGERPRINT,
-  reason: 'EN/JA structure difference',
+  reason: 'EN/JA image count difference under review',
   owner: 'rymetry',
   reviewAfter: '2026-07-06',
 };
@@ -114,6 +116,45 @@ describe('validateAcknowledgements', () => {
     assert.throws(
       () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
       /cannot be acknowledged/,
+    );
+  });
+
+  it('throws on coarse audit signal type paragraph-count-mismatch (Phase 8)', () => {
+    // Phase 8: COARSE_SIGNAL_TYPES never reach the gate, so an
+    // acknowledgement against them is misleading and is rejected at
+    // load time.
+    const entry = {
+      ...validEntry,
+      issueType: 'paragraph-count-mismatch',
+      detailIncludes: 'EN=3 JA=2',
+    };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /Phase 8 audit-only coarse signal/,
+    );
+  });
+
+  it('throws on coarse audit signal type heading-mismatch (Phase 8)', () => {
+    const entry = {
+      ...validEntry,
+      issueType: 'heading-mismatch',
+      detailIncludes: 'level mismatch',
+    };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /Phase 8 audit-only coarse signal/,
+    );
+  });
+
+  it('throws on coarse audit signal type table-cell-token-mismatch (Phase 8)', () => {
+    const entry = {
+      ...validEntry,
+      issueType: 'table-cell-token-mismatch',
+      detailIncludes: 'token diff',
+    };
+    assert.throws(
+      () => validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+      /Phase 8 audit-only coarse signal/,
     );
   });
 

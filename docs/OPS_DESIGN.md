@@ -227,6 +227,48 @@ jq '.summary.auditSignalsByType' parity-check-status.json
 
 ---
 
+### Detection pipeline 契約 (§1+§3 cleanup)
+
+検知パイプラインの 3 つの artifact (`source-sync-status.json`,
+`snapshot-diff-status.json`, `parity-check-status.json`) は **schemaVersion
+を必ず持ち**、scheduled-actionable workflow は `npm run check:summary -- --strict`
+を経由してロード時に validation する。validation が失敗した場合は
+`docs-actionable-report.json` を使った managed issue sync は走らない
+(`steps.summary.outcome == 'success'` の AND 条件)。
+
+**freshnessState** (`source-sync-status.json` 由来):
+
+| state    | 意味                                                                                          |
+| -------- | --------------------------------------------------------------------------------------------- |
+| `fresh`  | すべての対象ページ取得成功 + sidebar 取得成功                                                 |
+| `partial`| 一部ページ取得失敗、集計継続可能                                                              |
+| `broken` | sidebar 取得失敗、page 0 件、または全 page 失敗                                               |
+
+**linkageState** (`validateRunLinkage()` 由来、parity 側で計算):
+
+- **`linked`** — source-sync の `sourceInventoryFingerprint` と
+  snapshot-diff の同フィールドが一致、かつ runScope が同一
+- **`missing`** — snapshot-diff か source-sync が無い (PR CI / legacy)。
+  `pass` をブロックしない
+- **`stale`** — fingerprint 不一致 (inventory drift)。
+  `pass` を `inconclusive` に降格
+- **`scope-mismatch`** — full vs partial の混在。同上
+
+**parity-check-status.json.summary.result**:
+
+- **`pass`** — reportable issue 0、error file 0、
+  freshness が fresh または unknown、linkage が linked / missing
+- **`fail`** — reportable issue ≥ 1 または error file ≥ 1
+  (freshness / linkage の状態に関係なく fail を維持)
+- **`inconclusive`** — freshness が partial / broken / stale、
+  または linkage が stale / scope-mismatch (clean 時のみ)
+
+`inconclusive` を `pass` と等価に扱ってはならない。scheduled live check
+では `sourceSyncHealth` family が linkage failure / freshness 問題を
+issue 化する。
+
+---
+
 ## Phase 6A Rollback Playbook
 
 Phase 6A cutover (2026-04-06) 後に問題が発生した場合の対応手順。Issue #225 Phase 6A spec の §7 を runbook 化したもの。
@@ -301,7 +343,9 @@ revert すると segment-* issues は cutover 前の状態（shadow accounting �
 
 - `parity-baseline.json` は Phase 6A cutover 時点の既知 drift を凍結したもの
 - 新規発生の segment-* issue は baseline に載らず即 gate fail
-- baseline entries は `reviewAfter` を持つが、期限超過で自動 hard fail させない（無関係 PR が突然 red になる事故を防ぐため）
-- baseline paydown は明示的な PR で実施する（段階的縮小）
+- baseline entries は `reviewAfter` を持つ。期限を過ぎた entry は **gate に再突入する** (`isFrozenByBaseline` が `false` を返し、`isReportableParityIssue` が `true` を返す)。Phase 7 で導入された semantics で、`scripts/__tests__/source_parity_issue_state.test.mjs` の "still accepts expired baseline on non-coarse actionable issues (refire)" が固定する
+- 大量 entry が同じ `reviewAfter` に集中すると cliff failure になるため、`generate_parity_baseline.mjs` は slug ハッシュで `reviewAfter` を分散させる (staggered expiry)
+- `parityFollowup` issue が **30 日以内に expire する entry** を事前警告として出す。CLI の `expiring baseline entries: N` も同様
+- baseline paydown は明示的な PR で実施する（段階的縮小）。期限切れによる自動再点火に頼ってはいけない
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
 - Phase 6B では `tokenless-near-tie` baseline エントリを review queue として triage する（Issue #225 Phase 6B spec 参照）

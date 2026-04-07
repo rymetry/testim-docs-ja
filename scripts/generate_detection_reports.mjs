@@ -20,8 +20,8 @@ const OUTPUTS = {
   auditManifest: path.join(ROOT_DIR, 'docs-audit-manifest.json'),
 };
 
-export function generateDetectionReports() {
-  const { snapshot, parity, sourceSync } = loadDetectionInputs();
+export function generateDetectionReports({ strict = false } = {}) {
+  const { snapshot, parity, sourceSync } = loadDetectionInputs({ strict });
   const auditManifest = buildAuditManifest(snapshot, parity);
   const actionableReport = buildActionableReport(snapshot, parity, auditManifest, { sourceSync });
   const summaryMarkdown = renderSummaryMarkdown(
@@ -45,19 +45,35 @@ export function generateDetectionReports() {
   };
 }
 
+function parseArgs(argv = process.argv.slice(2)) {
+  return {
+    strict: argv.includes('--strict'),
+  };
+}
+
 function main() {
-  const { actionableReport } = generateDetectionReports();
-  console.log('📄 Detection summary generated');
-  console.log(
-    `  snapshot diff actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
-  );
-  console.log(
-    `  active parity issues: ${actionableReport.parityRegression.summary.issueCount}`,
-  );
-  const followup = actionableReport.parityFollowup;
-  console.log(
-    `  parity followup: expired=${followup.summary.baselineDebt.expiredBaselineEntries} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
-  );
+  const args = parseArgs();
+  try {
+    const { actionableReport } = generateDetectionReports({ strict: args.strict });
+    console.log('📄 Detection summary generated');
+    console.log(
+      `  snapshot diff actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
+    );
+    console.log(
+      `  active parity issues: ${actionableReport.parityRegression.summary.issueCount}`,
+    );
+    console.log(`  parity result: ${actionableReport.result ?? 'unknown'}`);
+    const followup = actionableReport.parityFollowup;
+    console.log(
+      `  parity followup: expired=${followup.summary.baselineDebt.expiredBaselineEntries} expiring30d=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
+    );
+  } catch (error) {
+    console.error(`❌ ${error.message}`);
+    if (error.validationErrors) {
+      for (const v of error.validationErrors) console.error(`   - ${v}`);
+    }
+    process.exit(1);
+  }
 }
 
 const isDirectRun = isDirectCliRun(import.meta.url);

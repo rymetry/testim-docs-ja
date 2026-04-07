@@ -7,8 +7,8 @@
  *      `extractSegmentsFromMarkdown`).
  *   2. The runtime `checkSourceParity()` actually invokes the new engine
  *      and writes segment-level diffs into `parity-check-status.json` as
- *      primary-gate issues (no `phase: 'segment-shadow'`) with baseline
- *      metadata when the page is part of the frozen cutover baseline.
+ *      primary-gate issues with baseline metadata when the page is part
+ *      of the frozen cutover baseline.
  *   3. Baselined issues do NOT fail the runtime exit code.
  *   4. `summarizeParityResults` reports primary-gate issues in the
  *      actionable totals.

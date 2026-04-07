@@ -5,8 +5,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 
-const require = createRequire(import.meta.url);
-const syncDetectionIssues = require('../../.github/scripts/sync-detection-issues.cjs');
+const syncDetectionIssues = createRequire(import.meta.url)(
+  '../../.github/scripts/sync-detection-issues.cjs'
+);
 
 const tmpDirs = [];
 

@@ -19,6 +19,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 import { ROOT_DIR } from './lib/project.mjs';
@@ -34,9 +35,15 @@ const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
 const DEFAULT_REVIEW_MONTHS = 6;
+/**
+ * Window over which baseline reviewAfter dates are spread out so that the
+ * cliff of mass-expiry never happens. Slug N's reviewAfter is offset by
+ * `hash(slug) % STAGGER_WINDOW_DAYS` days from the base date.
+ */
+const STAGGER_WINDOW_DAYS = 90;
 
 /**
- * Compute the default reviewAfter date — `monthsAhead` months after `now`.
+ * Compute the base reviewAfter date — `monthsAhead` months after `now`.
  * Plain UTC math, format strict YYYY-MM-DD.
  *
  * @param {Date} now
@@ -47,10 +54,60 @@ export function defaultReviewAfter(now, monthsAhead = DEFAULT_REVIEW_MONTHS) {
   const d = new Date(
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + monthsAhead, now.getUTCDate()),
   );
+  return formatYmd(d);
+}
+
+function formatYmd(d) {
   const yyyy = d.getUTCFullYear().toString();
   const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
   const dd = String(d.getUTCDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
+}
+
+/**
+ * Add `days` days to a strict YYYY-MM-DD date string.
+ *
+ * @param {string} ymd
+ * @param {number} days
+ * @returns {string}
+ */
+function addDays(ymd, days) {
+  const [year, month, day] = ymd.split('-').map(Number);
+  const utc = Date.UTC(year, month - 1, day) + days * 86400000;
+  return formatYmd(new Date(utc));
+}
+
+/**
+ * Deterministic per-slug offset, used to stagger reviewAfter dates so that
+ * a single calendar day cannot expire the entire baseline at once.
+ *
+ * The offset is `sha256(slug)` interpreted as a hex prefix, taken mod
+ * `STAGGER_WINDOW_DAYS`. Same input → same offset, no global state.
+ *
+ * @param {string} slug
+ * @returns {number} integer in [0, STAGGER_WINDOW_DAYS)
+ */
+export function staggeredOffsetDays(slug) {
+  const hex = createHash('sha256').update(slug).digest('hex').slice(0, 12);
+  const value = Number.parseInt(hex, 16);
+  return value % STAGGER_WINDOW_DAYS;
+}
+
+/**
+ * Compute the staggered reviewAfter date for a single slug. Builds the
+ * base 6-month date from `now`, then offsets it by the slug's deterministic
+ * stagger.
+ *
+ * @param {string} slug
+ * @param {Date} now
+ * @param {string} [explicitReviewAfter] — if non-null, returned verbatim
+ *   (CLI override)
+ * @returns {string}
+ */
+export function staggeredReviewAfter(slug, now, explicitReviewAfter = null) {
+  if (explicitReviewAfter) return explicitReviewAfter;
+  const base = defaultReviewAfter(now);
+  return addDays(base, staggeredOffsetDays(slug));
 }
 
 /**
@@ -118,10 +175,22 @@ export function buildFingerprintMap(snapshotsDir = SNAPSHOTS_DIR) {
  */
 export function buildBaselineFromStatus(status, fingerprintMap, meta) {
   const entries = [];
+  // baseDate drives the staggered reviewAfter computation. When the user
+  // passes --review-after, every entry uses the override verbatim (no
+  // stagger) so they can lock the whole baseline to one day for testing
+  // or planned cutovers. Otherwise we anchor on the run's checkedAt and
+  // offset per slug.
+  const baseDate = new Date(meta.generatedAt);
   for (const file of status.files ?? []) {
     const slug = fileEntryToSlug(file.file);
     const fingerprint = fingerprintMap.get(slug);
     if (!fingerprint) continue; // defensive: no snapshot, skip
+
+    const reviewAfterForSlug = staggeredReviewAfter(
+      slug,
+      baseDate,
+      meta.reviewAfterOverride ?? null,
+    );
 
     for (const issue of file.issues ?? []) {
       if (!BASELINE_ELIGIBLE_TYPES.has(issue.type)) continue;
@@ -130,7 +199,7 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         slug,
         issueType: issue.type,
         snapshotFingerprint: fingerprint,
-        reviewAfter: meta.reviewAfter,
+        reviewAfter: reviewAfterForSlug,
         sectionPath: null,
         segmentKind: null,
         enSegmentIndex: null,
@@ -214,12 +283,15 @@ export function buildGenerationMeta(status, args) {
   const checkedAt = getCheckedAt(status);
   const generatedAt = checkedAt;
   const defaultRationale = args.regenerate
-    ? 'Phase 6A frozen baseline — regenerated'
+    ? 'Phase 6A frozen baseline — regenerated with staggered reviewAfter'
     : `Phase 6A frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
   return {
     runId: `${checkedAt}#parity-check-status`,
     generatedAt,
-    reviewAfter: args.reviewAfter ?? defaultReviewAfter(new Date(checkedAt)),
+    // Per-entry reviewAfter is computed in buildBaselineFromStatus from
+    // (baseDate, slug). The CLI override is forwarded as
+    // reviewAfterOverride and disables the stagger when set.
+    reviewAfterOverride: args.reviewAfter ?? null,
     rationale: args.rationale ?? defaultRationale,
   };
 }
