@@ -31,7 +31,7 @@ import {
 } from './lib/project.mjs';
 import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
-import { buildSourceSyncStatus } from './lib/source_sync_health.mjs';
+import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -57,28 +57,6 @@ function parseArgs(argv = process.argv.slice(2)) {
     else if (arg === '--dry-run') args.dryRun = true;
   }
   return args;
-}
-
-function buildSourceSyncRunScope({ slug = null, section = null } = {}) {
-  if (slug) {
-    return {
-      type: 'slug',
-      isComplete: false,
-      filters: { slug, section: section ?? null },
-    };
-  }
-  if (section) {
-    return {
-      type: 'section',
-      isComplete: false,
-      filters: { slug: null, section },
-    };
-  }
-  return {
-    type: 'full',
-    isComplete: true,
-    filters: { slug: null, section: null },
-  };
 }
 
 /**
@@ -238,7 +216,7 @@ export async function main(argv) {
   const args = parseArgs(argv);
   const targets = collectTargets(args);
   const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
-  const runScope = buildSourceSyncRunScope({
+  const runScope = buildRunScope({
     slug: resolvedSlug,
     section: args.section,
   });

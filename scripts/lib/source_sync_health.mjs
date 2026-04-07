@@ -10,6 +10,38 @@ import { createHash } from 'node:crypto';
 export const SOURCE_SYNC_STATUS_SCHEMA_VERSION = 1;
 
 /**
+ * Shared run-scope classifier used by source-sync, snapshot-diff, and parity.
+ * A non-null slug always wins over section because the CLI callers resolve
+ * `--slug` first and only use section for diagnostic context in that case.
+ *
+ * @param {{ slug?: string|null, section?: string|null }} [opts]
+ * @returns {{ type: 'full'|'slug'|'section', isComplete: boolean, filters: { slug: string|null, section: string|null } }}
+ */
+export function buildRunScope({ slug = null, section = null } = {}) {
+  const slugFilter = slug ?? null;
+  const sectionFilter = section ?? null;
+  if (slugFilter) {
+    return {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: slugFilter, section: sectionFilter },
+    };
+  }
+  if (sectionFilter) {
+    return {
+      type: 'section',
+      isComplete: false,
+      filters: { slug: null, section: sectionFilter },
+    };
+  }
+  return {
+    type: 'full',
+    isComplete: true,
+    filters: { slug: null, section: null },
+  };
+}
+
+/**
  * SHA-256 fingerprint of a sorted array of strings.
  * @param {string[]} items
  * @returns {string} "sha256:<hex>"

@@ -26,6 +26,7 @@ import {
   resolveSlug,
 } from './lib/project.mjs';
 import { isDirectRun } from './lib/cli.mjs';
+import { buildRunScope } from './lib/source_sync_health.mjs';
 import {
   extractSlug as extractSlugFn,
   extractSlugsFromSnapshot,
@@ -79,33 +80,6 @@ function buildSnapshotDiffRunId(checkedAt, sourceInventoryFingerprint, scope) {
   ].join('|');
   const digest = createHash('sha256').update(seed).digest('hex').slice(0, 12);
   return `${checkedAt}#snapshot-diff-${digest}`;
-}
-
-/**
- * Build the runScope object for snapshot_diff. Mirrors the contract used
- * by check_source_parity.mjs::buildRunScope so downstream sync tooling
- * can inspect both artifacts uniformly.
- */
-export function buildSnapshotDiffRunScope({ slug = null, section = null } = {}) {
-  if (slug) {
-    return {
-      type: 'slug',
-      isComplete: false,
-      filters: { slug, section: section ?? null },
-    };
-  }
-  if (section) {
-    return {
-      type: 'section',
-      isComplete: false,
-      filters: { slug: null, section },
-    };
-  }
-  return {
-    type: 'full',
-    isComplete: true,
-    filters: { slug: null, section: null },
-  };
 }
 
 /**
@@ -405,7 +379,7 @@ export async function main(argv) {
   const scopedTotal = resolvedSlug ? 1 : snapshotFiles.length;
 
   const checkedAt = new Date().toISOString();
-  const runScope = buildSnapshotDiffRunScope({
+  const runScope = buildRunScope({
     slug: resolvedSlug,
     section: args.section,
   });

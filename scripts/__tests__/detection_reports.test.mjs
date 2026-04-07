@@ -1853,6 +1853,21 @@ describe('§1 cleanup — validateSnapshotDiffStatus', () => {
     assert.doesNotThrow(() => validateSnapshotDiffStatus(validSnapshotDiff()));
   });
 
+  it('throws on missing runId', () => {
+    const v = validSnapshotDiff();
+    delete v.runId;
+    assert.throws(() => validateSnapshotDiffStatus(v), /runId must be a string/);
+  });
+
+  it('throws when sourceSyncRunId is neither string nor null', () => {
+    const v = validSnapshotDiff();
+    v.sourceSyncRunId = 123;
+    assert.throws(
+      () => validateSnapshotDiffStatus(v),
+      /sourceSyncRunId must be string\|null/,
+    );
+  });
+
   it('throws on missing schemaVersion', () => {
     const v = validSnapshotDiff();
     delete v.schemaVersion;
@@ -1949,6 +1964,18 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     assert.doesNotThrow(() => validateSourceSyncStatus(validSourceSyncStatus()));
   });
 
+  it('throws when runId is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.runId = 123;
+    assert.throws(() => validateSourceSyncStatus(v), /runId must be a string/);
+  });
+
+  it('throws when checkedAt is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.checkedAt = 123;
+    assert.throws(() => validateSourceSyncStatus(v), /checkedAt must be a string/);
+  });
+
   it('throws on missing schemaVersion', () => {
     const v = validSourceSyncStatus();
     delete v.schemaVersion;
@@ -1968,6 +1995,45 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
       () => validateSourceSyncStatus(v),
       /freshnessState must be one of fresh\|partial\|broken\|stale/,
     );
+  });
+
+  it('throws when sourceInventoryFingerprint is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.sourceInventoryFingerprint = 123;
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /sourceInventoryFingerprint must be a string/,
+    );
+  });
+
+  it('throws when sidebarFingerprint is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.sidebarFingerprint = 123;
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /sidebarFingerprint must be a string/,
+    );
+  });
+
+  it('throws when summary.sidebarVerified is not boolean', () => {
+    const v = validSourceSyncStatus();
+    v.summary.sidebarVerified = 'yes';
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.sidebarVerified must be boolean/,
+    );
+  });
+
+  it('throws when pages is not an array', () => {
+    const v = validSourceSyncStatus();
+    v.pages = null;
+    assert.throws(() => validateSourceSyncStatus(v), /pages must be an array/);
+  });
+
+  it('throws when errors is not an array', () => {
+    const v = validSourceSyncStatus();
+    v.errors = null;
+    assert.throws(() => validateSourceSyncStatus(v), /errors must be an array/);
   });
 });
 

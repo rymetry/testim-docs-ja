@@ -634,6 +634,12 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 - `inconclusive` — `freshnessState !== fresh` (stale / partial / broken)、または run linkage が `stale` / `run-mismatch` / `scope-mismatch` / `missing`
   ただし `source-sync-status.json` 自体が存在しない legacy / PR CI run は例外で、linkage `missing` でも `pass` を妨げない
 
+`source-sync-status.json.freshnessState` は source fetch そのものの状態を表し、
+`fresh` / `partial` / `broken` を emit する。これに対して
+`parity-check-status.json.summary.freshnessState` は parity gate から見た実効値で、
+run linkage が `stale` の場合は source-sync の元値に関係なく `stale` に上書きされる。
+混同を避けたいときは `linkageState` と対で読む。
+
 `linkageState` は `validateRunLinkage` の戻り値:
 
 - `linked` — `sourceSync.runId === snapshotDiff.sourceSyncRunId` かつ

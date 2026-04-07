@@ -417,7 +417,7 @@ describe('Phase 8 PR2 — buildRunScope', () => {
   // issues from partial runs.
 
   it('returns full scope when neither slug nor section is set', () => {
-    assert.deepEqual(buildRunScope({ resolvedSlug: null, section: null }), {
+    assert.deepEqual(buildRunScope({ slug: null, section: null }), {
       type: 'full',
       isComplete: true,
       filters: { slug: null, section: null },
@@ -426,7 +426,7 @@ describe('Phase 8 PR2 — buildRunScope', () => {
 
   it('returns slug scope when --slug is set', () => {
     assert.deepEqual(
-      buildRunScope({ resolvedSlug: 'overview/testim-overview', section: null }),
+      buildRunScope({ slug: 'overview/testim-overview', section: null }),
       {
         type: 'slug',
         isComplete: false,
@@ -437,7 +437,7 @@ describe('Phase 8 PR2 — buildRunScope', () => {
 
   it('returns section scope when --section is set', () => {
     assert.deepEqual(
-      buildRunScope({ resolvedSlug: null, section: 'Overview' }),
+      buildRunScope({ slug: null, section: 'Overview' }),
       {
         type: 'section',
         isComplete: false,
@@ -452,7 +452,7 @@ describe('Phase 8 PR2 — buildRunScope', () => {
     // the actual scope (slug) and surface the section filter as
     // diagnostic only. Either way, isComplete stays false.
     const result = buildRunScope({
-      resolvedSlug: 'overview/testim-overview',
+      slug: 'overview/testim-overview',
       section: 'Overview',
     });
     assert.equal(result.type, 'slug');

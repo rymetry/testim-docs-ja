@@ -40,7 +40,8 @@ import {
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import turndown, { preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
-import { validateRunLinkage } from './lib/source_sync_health.mjs';
+import { buildRunScope, validateRunLinkage } from './lib/source_sync_health.mjs';
+export { buildRunScope };
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
@@ -98,8 +99,8 @@ export function isNonBlockingIssue(issue) {
  * artifacts are wired into the wrong workflow step.
  *
  * Inputs:
- *   resolvedSlug — value of --slug after slug resolution (null if absent)
- *   section      — value of --section (null if absent)
+ *   slug    — value of --slug after slug resolution (null if absent)
+ *   section — value of --section (null if absent)
  *
  * Returns:
  *   { type: 'full' | 'slug' | 'section',
@@ -107,36 +108,12 @@ export function isNonBlockingIssue(issue) {
  *     filters: { slug: string|null, section: string|null } }
  *
  * `--slug` wins over `--section` in `checkSourceParity` (the section
- * filter is skipped when `resolvedSlug` is set), so the helper reports
+ * filter is skipped when a slug is set), so the helper reports
  * `type: 'slug'` in that defensive case while still surfacing the
  * section filter for diagnostic purposes.
  *
  * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.7
  */
-export function buildRunScope({ resolvedSlug = null, section = null } = {}) {
-  const slugFilter = resolvedSlug ?? null;
-  const sectionFilter = section ?? null;
-  if (slugFilter) {
-    return {
-      type: 'slug',
-      isComplete: false,
-      filters: { slug: slugFilter, section: sectionFilter },
-    };
-  }
-  if (sectionFilter) {
-    return {
-      type: 'section',
-      isComplete: false,
-      filters: { slug: null, section: sectionFilter },
-    };
-  }
-  return {
-    type: 'full',
-    isComplete: true,
-    filters: { slug: null, section: null },
-  };
-}
-
 /**
  * Phase 8: pure helper that maps a parity-check summary into a CLI exit
  * code. Lifted out of `checkSourceParity` so the gate behaviour is
@@ -641,7 +618,7 @@ export async function checkSourceParity({
   // result is folded into computeParityResult so any non-"linked"
   // state forces inconclusive on a clean run (we never silently turn
   // a stale run into pass).
-  const parityRunScope = buildRunScope({ resolvedSlug, section });
+  const parityRunScope = buildRunScope({ slug: resolvedSlug, section });
   const linkageState = validateRunLinkage(
     sourceSyncPayload,
     snapshotDiffPayload,
