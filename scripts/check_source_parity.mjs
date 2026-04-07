@@ -21,13 +21,13 @@ import {
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
   isNonBlockingParityIssue,
-  isValidAcknowledgedIssue,
   loadSidebarSlugs,
   localCheck,
   parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
-export { isValidAcknowledgedIssue } from './lib/source_parity_issue_state.mjs';
+import { isValidAcknowledgedIssue } from './lib/source_parity_issue_state.mjs';
+export { isValidAcknowledgedIssue };
 import {
   computeSnapshotFingerprint,
   validateAcknowledgements,

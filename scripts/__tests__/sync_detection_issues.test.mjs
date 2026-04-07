@@ -18,10 +18,11 @@ function createTempReport(report) {
   return reportPath;
 }
 
-function createGithub(existingIssues) {
+function createGithub(existingIssues, options = {}) {
   const createCalls = [];
   const updateCalls = [];
   const commentCalls = [];
+  let createAttempt = 0;
 
   return {
     github: {
@@ -31,6 +32,10 @@ function createGithub(existingIssues) {
           listForRepo: {},
           create: async (params) => {
             createCalls.push(params);
+            if (typeof options.createImpl === 'function') {
+              return options.createImpl(params, createAttempt++);
+            }
+            createAttempt += 1;
             return { data: { number: 999 } };
           },
           update: async (params) => {
@@ -172,6 +177,46 @@ describe('sync-detection-issues', () => {
     ]);
   });
 
+  it('migrates a legacy title-only open issue to marker-based management', async () => {
+    const reportPath = createTempReport({
+      snapshotDiff: {
+        key: 'snapshot-diff',
+        issueTitle: 'Snapshot Diff',
+        body: '<!-- detection-family: snapshot-diff -->\nbody',
+        shouldOpenIssue: false,
+      },
+      parityRegression: {
+        key: 'parity-regression',
+        issueTitle: 'Parity Regression',
+        body: '<!-- detection-family: parity-regression -->\nnew parity body',
+        shouldOpenIssue: true,
+      },
+    });
+    const { github, createCalls, updateCalls, commentCalls } = createGithub([
+      {
+        number: 10,
+        title: 'Parity Regression',
+        body: 'legacy issue without marker',
+        state: 'open',
+        updated_at: '2026-04-07T00:00:00Z',
+      },
+    ]);
+
+    await syncDetectionIssues({ github, context, core, reportPath });
+
+    assert.deepEqual(createCalls, []);
+    assert.deepEqual(updateCalls, [
+      {
+        owner: 'rymetry',
+        repo: 'testim-docs-ja',
+        issue_number: 10,
+        title: 'Parity Regression',
+        body: '<!-- detection-family: parity-regression -->\nnew parity body',
+      },
+    ]);
+    assert.deepEqual(commentCalls, []);
+  });
+
   it('does not update an already-synced open issue when title and body are unchanged', async () => {
     const reportPath = createTempReport({
       snapshotDiff: {
@@ -245,6 +290,57 @@ describe('sync-detection-issues', () => {
         title: 'Parity Regression',
         body: '<!-- detection-family: parity-regression -->\nnew parity body',
         labels: ['documentation', 'automated'],
+      },
+    ]);
+    assert.deepEqual(updateCalls, []);
+    assert.deepEqual(commentCalls, []);
+  });
+
+  it('retries issue creation without labels when GitHub rejects labels', async () => {
+    const reportPath = createTempReport({
+      snapshotDiff: {
+        key: 'snapshot-diff',
+        issueTitle: 'Snapshot Diff',
+        body: '<!-- detection-family: snapshot-diff -->\nbody',
+        shouldOpenIssue: false,
+      },
+      parityRegression: {
+        key: 'parity-regression',
+        issueTitle: 'Parity Regression',
+        body: '<!-- detection-family: parity-regression -->\nnew parity body',
+        shouldOpenIssue: true,
+      },
+    });
+    const labelError = Object.assign(new Error('Validation Failed'), {
+      status: 422,
+      response: {
+        data: {
+          errors: [{ field: 'labels' }],
+        },
+      },
+    });
+    const { github, createCalls, updateCalls, commentCalls } = createGithub([], {
+      createImpl: async (_params, attempt) => {
+        if (attempt === 0) throw labelError;
+        return { data: { number: 1000 } };
+      },
+    });
+
+    await syncDetectionIssues({ github, context, core, reportPath });
+
+    assert.deepEqual(createCalls, [
+      {
+        owner: 'rymetry',
+        repo: 'testim-docs-ja',
+        title: 'Parity Regression',
+        body: '<!-- detection-family: parity-regression -->\nnew parity body',
+        labels: ['documentation', 'automated'],
+      },
+      {
+        owner: 'rymetry',
+        repo: 'testim-docs-ja',
+        title: 'Parity Regression',
+        body: '<!-- detection-family: parity-regression -->\nnew parity body',
       },
     ]);
     assert.deepEqual(updateCalls, []);

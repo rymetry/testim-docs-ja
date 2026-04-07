@@ -153,7 +153,7 @@ function withFamilyMarker(body, key) {
 
 function scoreParityEntry(entry) {
   return entry.issues.reduce((score, issue) => {
-    if (!isActiveParityIssue(issue)) return score;
+    if (!isReportableParityIssue(issue)) return score;
     if (issue.type === 'image-mismatch') return score + 3;
     if (issue.type === 'codeblock-mismatch') return score + 3;
     if (issue.severity === 'actionable') return score + 2;
