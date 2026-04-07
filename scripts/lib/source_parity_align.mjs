@@ -909,10 +909,10 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
  *
  * Phase 6A cutover (2026-04-06): shadow phase tagging was removed. segment-*
  * issues now flow through the primary gate accounting in
- * `summarizeParityResults`. The dual-emit `shadowIssues` / `shadowFiles` /
- * `shadowIssuesByType` fields in the summary remain at 0 for backward
- * compat through Phase 7 (reporting 4-family refactor), at which point
- * they will be removed along with the shadow-tagging code path.
+ * `summarizeParityResults`. Phase 7 (reporting 4-family refactor, 2026-04-07)
+ * completed the cleanup: the `shadowIssues` / `shadowFiles` /
+ * `shadowIssuesByType` dual-emit fields and the shadow accounting branch were
+ * removed from `summarizeParityResults`.
  *
  * @param {ParityDiff[]} diffs
  * @returns {Array<object>}

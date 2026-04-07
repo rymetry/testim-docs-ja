@@ -408,7 +408,7 @@ npm run docs:report-categories
 
 `check_source_parity.mjs` は `alignSegments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。Phase 6A cutover で `phase: 'segment-shadow'` は廃止され、segment-* issue は primary gate の actionable / active 集計に入る。cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ、active 集計から除外される。
 
-`shadowIssues` / `shadowFiles` / `shadowIssuesByType` は backward compat の dual emit として **0 値を維持**しているだけで、runtime 判定には使っていない。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の primary-gate / baseline 集計、`check_source_parity --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
+`shadowIssues` / `shadowFiles` / `shadowIssuesByType` の dual emit は Phase 7 cutover で削除済み。runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の primary-gate / baseline 集計、`check_source_parity --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
 
 **Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が Phase 0 manifest の 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る。
 
@@ -429,7 +429,7 @@ npm run docs:report-categories
 
 `segment-move` は cross-language で content が swap されるケースの検出が token 依存になるので、strict-recall set からは除外して informational 扱い（現状 1/8）。`section-body-swap` の strict-recall は corpus 内の token 持ち swap を対象にしている。tokenless prose-only swap は exact gate で `segment-shifted` にせず、near-tie の曖昧ケースだけ `inconclusive` に落とす。Phase 6B はこの `tokenless-near-tie` を **review queue** として surfacing するが、新しい semantic detector は導入しない。
 
-> Phase 5 PoC は **Go**。Phase 6A PR1 で frozen baseline 機構を追加し、Phase 6A PR2 で `segment-*` を primary gate に昇格済み。**shadow mode は retired**。`shadowIssues` / `shadowFiles` / `shadowIssuesByType` dual emit フィールドは Phase 7 reporting 4-family 化で削除予定。
+> Phase 5 PoC は **Go**。Phase 6A PR1 で frozen baseline 機構を追加し、Phase 6A PR2 で `segment-*` を primary gate に昇格済み。**shadow mode は retired**。`shadowIssues` / `shadowFiles` / `shadowIssuesByType` dual emit フィールドは Phase 7 reporting 4-family 化で削除済み。
 
 ---
 
@@ -570,6 +570,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_recall.test.mjs`            | Phase 5 diff=1 recall ベンチマーク      |
 | `__tests__/source_parity_align_runtime.test.mjs`     | Phase 6A/6B runtime integration E2E     |
 | `__tests__/source_parity_advisory_queue.test.mjs`    | Phase 6B review queue helper            |
+| `__tests__/sync_detection_issues.test.mjs`           | Phase 7 issue sync (family-key match)   |
 
 ---
 
@@ -626,6 +627,8 @@ npm run lint:docs && npm run check:parity && npm test && npm run build
 1. [`scheduled-actionable.yml`](../.github/workflows/scheduled-actionable.yml)
 2. [`deep-audit.yml`](../.github/workflows/deep-audit.yml)
 
-`scheduled-actionable` は issue を create/update/close し、`deep-audit` は artifact と summary のみ残す。
+`scheduled-actionable` は 4 family (`source-sync-health` / `snapshot-diff` /
+`parity-regression` / `parity-followup`) の issue を sync し、`deep-audit` は
+artifact と summary のみ残す。
 
 詳細は `docs/OPS_DESIGN.md` を参照。

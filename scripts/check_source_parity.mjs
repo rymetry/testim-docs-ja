@@ -20,11 +20,14 @@ import {
   compareSnapshotStructure,
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
+  isNonBlockingParityIssue,
   loadSidebarSlugs,
   localCheck,
   parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
+import { isValidAcknowledgedIssue } from './lib/source_parity_issue_state.mjs';
+export { isValidAcknowledgedIssue };
 import {
   computeSnapshotFingerprint,
   validateAcknowledgements,
@@ -70,12 +73,8 @@ function buildSegmentInconclusiveIssue(reason, category, meta = null) {
   };
 }
 
-export function isValidAcknowledgedIssue(issue) {
-  return issue.acknowledged === true && issue.ackExpired !== true;
-}
-
 export function isNonBlockingIssue(issue) {
-  return issue.phase === 'segment-shadow' || issue.baselined === true || isValidAcknowledgedIssue(issue);
+  return isNonBlockingParityIssue(issue);
 }
 
 export function getConsoleCoverageState(issues) {
@@ -88,9 +87,7 @@ export function getConsoleCoverageState(issues) {
     };
   }
 
-  const allAcked = issues.every(
-    (issue) => issue.phase === 'segment-shadow' || isValidAcknowledgedIssue(issue),
-  );
+  const allAcked = issues.every((issue) => isValidAcknowledgedIssue(issue));
   const allCovered = issues.every((issue) => isNonBlockingIssue(issue));
 
   return {
@@ -379,12 +376,6 @@ export async function checkSourceParity({
       continue;
     }
 
-    // Compatibility shim: keep legacy shadow-only fixtures out of the
-    // human-facing listing. Post-cutover, normal runtime output always has
-    // non-shadow issues and uses baseline/ack coverage to determine whether
-    // the file is blocking.
-    const hasNonShadow = issues.some((i) => i.phase !== 'segment-shadow');
-
     results.push({
       file: doc.relativePath,
       sourceUrl: doc.data.sourceUrl || '',
@@ -392,7 +383,7 @@ export async function checkSourceParity({
       issues,
     });
 
-    if (!json && hasNonShadow) {
+    if (!json) {
       const { icon, suffix } = getConsoleCoverageState(issues);
       console.log(`${icon} ${doc.relativePath}${suffix}`);
       for (const issue of issues) {
@@ -517,14 +508,6 @@ export async function checkSourceParity({
     console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {
       console.log(`  ${type}: ${count} 件`);
-    }
-    if ((summary.shadowIssues || 0) > 0) {
-      console.log(
-        `\n[Phase 5 shadow] segment-* diffs (gate には影響しません): ${summary.shadowIssues} 件 / ${summary.shadowFiles} ファイル`,
-      );
-      for (const [type, count] of Object.entries(summary.shadowIssuesByType ?? {})) {
-        console.log(`  ${type}: ${count} 件`);
-      }
     }
     if ((summary.baselinedIssues || 0) > 0) {
       console.log(

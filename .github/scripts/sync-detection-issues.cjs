@@ -2,6 +2,15 @@ const fs = require('fs');
 
 const DEFAULT_LABELS = ['documentation', 'automated'];
 
+/**
+ * Builds the HTML comment marker embedded in the issue body.
+ * Used to find existing issues by family key rather than by exact title string,
+ * so title edits or emoji changes never create duplicate issues.
+ */
+function buildFamilyMarker(key) {
+  return `<!-- detection-family: ${key} -->`;
+}
+
 function fallbackCore(core) {
   return core ?? {
     info: console.log,
@@ -23,16 +32,36 @@ function sortByUpdatedDesc(left, right) {
   return Date.parse(right.updated_at) - Date.parse(left.updated_at);
 }
 
+function hasFamilyMarker(issue, marker) {
+  return issue.body?.includes(marker) === true;
+}
+
+function getIssueFamilyKey(issue) {
+  const match = issue.body?.match(/<!--\s*detection-family:\s*([a-z0-9-]+)\s*-->/);
+  return match?.[1] ?? null;
+}
+
+function sortMatchingIssues(marker) {
+  return (left, right) => {
+    const markerDiff =
+      Number(hasFamilyMarker(right, marker)) - Number(hasFamilyMarker(left, marker));
+    if (markerDiff !== 0) return markerDiff;
+    const updatedDiff = sortByUpdatedDesc(left, right);
+    if (Number.isFinite(updatedDiff) && updatedDiff !== 0) return updatedDiff;
+    return (right.number ?? 0) - (left.number ?? 0);
+  };
+}
+
 function buildIssueSpecs(report) {
   const specs = [
     {
-      key: 'snapshot-diff',
+      key: report.snapshotDiff.key ?? 'snapshot-diff',
       title: report.snapshotDiff.issueTitle,
       body: report.snapshotDiff.body,
       shouldOpenIssue: report.snapshotDiff.shouldOpenIssue,
     },
     {
-      key: 'parity-regression',
+      key: report.parityRegression.key ?? 'parity-regression',
       title: report.parityRegression.issueTitle,
       body: report.parityRegression.body,
       shouldOpenIssue: report.parityRegression.shouldOpenIssue,
@@ -41,10 +70,19 @@ function buildIssueSpecs(report) {
 
   if (report.sourceSyncHealth) {
     specs.push({
-      key: 'source-sync-health',
+      key: report.sourceSyncHealth.key ?? 'source-sync-health',
       title: report.sourceSyncHealth.issueTitle,
       body: report.sourceSyncHealth.body,
       shouldOpenIssue: report.sourceSyncHealth.shouldOpenIssue,
+    });
+  }
+
+  if (report.parityFollowup) {
+    specs.push({
+      key: report.parityFollowup.key ?? 'parity-followup',
+      title: report.parityFollowup.issueTitle,
+      body: report.parityFollowup.body,
+      shouldOpenIssue: report.parityFollowup.shouldOpenIssue,
     });
   }
 
@@ -94,6 +132,27 @@ async function createIssue({ github, owner, repo, title, body, labels, log }) {
   }
 }
 
+async function closeIssue({
+  github,
+  owner,
+  repo,
+  issueNumber,
+  commentBody,
+}) {
+  await github.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: issueNumber,
+    body: commentBody,
+  });
+  await github.rest.issues.update({
+    owner,
+    repo,
+    issue_number: issueNumber,
+    state: 'closed',
+  });
+}
+
 async function syncOneIssue({
   github,
   owner,
@@ -105,14 +164,28 @@ async function syncOneIssue({
   key,
   log,
 }) {
-  const matching = existingIssues
-    .filter((issue) => issue.title === title)
-    .sort(sortByUpdatedDesc);
-  const openIssue = matching.find((issue) => issue.state === 'open') ?? null;
+  // Prefer key-based matching (HTML comment in body) over title matching so
+  // that title renames never create duplicate issues.  Fall back to title
+  // matching only for OPEN legacy issues that do not already belong to some
+  // other managed detection family.
+  const marker = buildFamilyMarker(key);
+  const byMarker = existingIssues.filter((issue) => hasFamilyMarker(issue, marker));
+  const byTitle = existingIssues.filter(
+    (issue) =>
+      issue.state === 'open'
+      && issue.title === title
+      && getIssueFamilyKey(issue) === null,
+  );
+  const matching = [...new Map(
+    [...byMarker, ...byTitle].map((issue) => [issue.number, issue]),
+  ).values()].sort(sortMatchingIssues(marker));
+  const openIssues = matching.filter((issue) => issue.state === 'open');
+  const openIssue = openIssues[0] ?? null;
+  const duplicateOpenIssues = openIssues.slice(1);
 
   if (shouldOpenIssue) {
     if (openIssue) {
-      if (openIssue.body !== body) {
+      if (openIssue.body !== body || openIssue.title !== title) {
         await github.rest.issues.update({
           owner,
           repo,
@@ -123,6 +196,17 @@ async function syncOneIssue({
         log.info(`Updated open issue #${openIssue.number} (${key}).`);
       } else {
         log.info(`No body changes for open issue #${openIssue.number} (${key}).`);
+      }
+      for (const duplicate of duplicateOpenIssues) {
+        await closeIssue({
+          github,
+          owner,
+          repo,
+          issueNumber: duplicate.number,
+          commentBody:
+            `Closing duplicate detection issue for ${key}; family-key sync keeps one open issue per family.`,
+        });
+        log.info(`Closed duplicate issue #${duplicate.number} (${key}).`);
       }
       return;
     }
@@ -145,19 +229,17 @@ async function syncOneIssue({
     return;
   }
 
-  await github.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number: openIssue.number,
-    body: `Closing because the latest scheduled check reports no actionable or signal ${key} file(s).`,
-  });
-  await github.rest.issues.update({
-    owner,
-    repo,
-    issue_number: openIssue.number,
-    state: 'closed',
-  });
-  log.info(`Closed issue #${openIssue.number} (${key}).`);
+  for (const issue of openIssues) {
+    await closeIssue({
+      github,
+      owner,
+      repo,
+      issueNumber: issue.number,
+      commentBody:
+        `Closing because the latest scheduled check reports no actionable or signal ${key} file(s).`,
+    });
+    log.info(`Closed issue #${issue.number} (${key}).`);
+  }
 }
 
 module.exports = async function syncDetectionIssues({

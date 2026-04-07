@@ -629,6 +629,54 @@ describe('renderSummaryMarkdown', () => {
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
     assert.match(md, /Expired acknowledgements: 1/);
   });
+
+  it('marks partial advisory queue summaries as not repo-wide', () => {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        acknowledgedIssues: 0,
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-07T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: { issueCount: 0 },
+      },
+      parityFollowup: {
+        summary: {
+          baselineDebt: {
+            baselinedIssues: 1,
+            baselinedFiles: 1,
+            expiredBaselineEntries: 1,
+            baselineInvalidatedSlugs: ['overview/page-a'],
+          },
+          advisoryQueue: {
+            issues: 2,
+            files: 1,
+            blockingItems: 1,
+            advisoryQueueScope: {
+              type: 'slug',
+              isComplete: false,
+              filters: { slug: 'overview/page-a' },
+            },
+          },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; partial scope: slug=overview\/page-a, not repo-wide\)/);
+  });
 });
 
 describe('loadDetectionInputs', () => {
@@ -711,6 +759,397 @@ describe('sourceSyncHealth in buildActionableReport', () => {
     const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
     assert.match(md, /Source Sync Health/);
     assert.match(md, /broken/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 7: parityFollowup family
+// ---------------------------------------------------------------------------
+
+describe('parityFollowup in buildActionableReport', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-07T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  const cleanParity = {
+    summary: {
+      checkedAt: '2026-04-07T00:00:00Z',
+      actionableFiles: 0,
+      signalFiles: 0,
+      errorFiles: 0,
+      baselinedIssues: 0,
+      baselinedFiles: 0,
+      expiredBaselineEntries: 0,
+      baselineInvalidatedSlugs: [],
+      advisoryQueueIssues: 0,
+      advisoryQueueFiles: 0,
+    },
+    files: [],
+    advisoryQueueScope: { type: 'full', isComplete: true, filters: {}, checkedFiles: 100, totalFiles: 100 },
+    advisoryQueue: [],
+  };
+
+  it('includes parityFollowup family in report', () => {
+    const report = buildActionableReport(emptySnapshot, cleanParity, []);
+    assert.ok(report.parityFollowup, 'parityFollowup must be present');
+    assert.equal(typeof report.parityFollowup.shouldOpenIssue, 'boolean');
+    assert.equal(typeof report.parityFollowup.body, 'string');
+    assert.ok(report.parityFollowup.summary);
+    assert.ok(report.parityFollowup.summary.baselineDebt);
+    assert.ok(report.parityFollowup.summary.advisoryQueue);
+    assert.ok(report.parityFollowup.summary.reviewHints);
+  });
+
+  it('shouldOpenIssue = false when no follow-up debt', () => {
+    const report = buildActionableReport(emptySnapshot, cleanParity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, false);
+    assert.equal(report.parityFollowup.body, '');
+  });
+
+  it('shouldOpenIssue = true when expiredBaselineEntries > 0', () => {
+    const parity = {
+      ...cleanParity,
+      summary: { ...cleanParity.summary, expiredBaselineEntries: 3 },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.equal(report.parityFollowup.summary.baselineDebt.expiredBaselineEntries, 3);
+  });
+
+  it('shouldOpenIssue = true when baselineInvalidatedSlugs has entries', () => {
+    const parity = {
+      ...cleanParity,
+      summary: { ...cleanParity.summary, baselineInvalidatedSlugs: ['overview/page-a'] },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.deepEqual(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugs, [
+      'overview/page-a',
+    ]);
+    assert.equal(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugCount, 1);
+  });
+
+  it('shouldOpenIssue = true when advisory queue is complete with blocking items', () => {
+    const parity = {
+      ...cleanParity,
+      summary: { ...cleanParity.summary, advisoryQueueIssues: 2, advisoryQueueFiles: 1 },
+      advisoryQueueScope: { type: 'full', isComplete: true, filters: {}, checkedFiles: 100, totalFiles: 100 },
+      advisoryQueue: [
+        { slug: 'overview/page-a', blocking: true, issueCount: 2, issues: [{ inconclusiveCategory: 'tokenless-near-tie' }] },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.equal(report.parityFollowup.summary.advisoryQueue.blockingItems, 1);
+    assert.deepEqual(report.parityFollowup.summary.advisoryQueue.advisoryQueueScope, {
+      type: 'full',
+      isComplete: true,
+      filters: {},
+      checkedFiles: 100,
+      totalFiles: 100,
+    });
+    assert.equal(report.parityFollowup.summary.advisoryQueue.advisoryQueue.length, 1);
+    assert.equal(
+      report.parityFollowup.summary.reviewHints.tokenlessNearTieExamples[0].slug,
+      'overview/page-a',
+    );
+    assert.match(report.parityFollowup.body, /Scope: full repo/);
+
+    const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
+    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; full repo\)/);
+  });
+
+  it('shouldOpenIssue = false when advisory has blocking items but scope is not complete', () => {
+    const parity = {
+      ...cleanParity,
+      summary: { ...cleanParity.summary, advisoryQueueIssues: 2, advisoryQueueFiles: 1 },
+      advisoryQueueScope: { type: 'slug', isComplete: false, filters: { slug: 'overview/page-a' }, checkedFiles: 1, totalFiles: 100 },
+      advisoryQueue: [
+        { slug: 'overview/page-a', blocking: true, issueCount: 2, issues: [] },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, false);
+  });
+
+  it('keeps partial advisory queue in JSON but omits it from issue body', () => {
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        expiredBaselineEntries: 1,
+        advisoryQueueIssues: 2,
+        advisoryQueueFiles: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              severity: 'actionable',
+              baselined: true,
+              baselineExpired: true,
+              baselineReviewAfter: '2026-03-01',
+              detail: 'expired',
+            },
+          ],
+        },
+      ],
+      advisoryQueueScope: {
+        type: 'slug',
+        isComplete: false,
+        filters: { slug: 'overview/page-a' },
+        checkedFiles: 1,
+        totalFiles: 100,
+      },
+      advisoryQueue: [
+        {
+          slug: 'overview/page-a',
+          file: 'src/content/docs/overview/page-a.md',
+          blocking: true,
+          issueCount: 2,
+          issues: [{ inconclusiveCategory: 'tokenless-near-tie', detail: 'partial-only' }],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.equal(report.parityFollowup.summary.advisoryQueue.advisoryQueue.length, 1);
+    assert.equal(report.parityFollowup.summary.advisoryQueue.includedInIssueBody, false);
+    assert.deepEqual(report.parityFollowup.summary.advisoryQueue.advisoryQueueScope, {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: 'overview/page-a' },
+      checkedFiles: 1,
+      totalFiles: 100,
+    });
+    assert.doesNotMatch(report.parityFollowup.body, /Advisory queue:/);
+    assert.doesNotMatch(report.parityFollowup.body, /tokenless-near-tie/);
+    assert.doesNotMatch(report.parityFollowup.body, /partial-only/);
+
+    const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
+    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; partial scope: slug=overview\/page-a, not repo-wide\)/);
+  });
+
+  it('parityFollowup body contains invalidated slugs', () => {
+    const parity = {
+      ...cleanParity,
+      summary: { ...cleanParity.summary, baselineInvalidatedSlugs: ['overview/page-a', 'settings/config'] },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.match(report.parityFollowup.body, /overview\/page-a/);
+    assert.match(report.parityFollowup.body, /settings\/config/);
+    assert.deepEqual(report.parityFollowup.summary.baselineDebt.baselineInvalidatedSlugs, [
+      'overview/page-a',
+      'settings/config',
+    ]);
+  });
+
+  it('parityFollowup body contains expired baseline file details', () => {
+    const parity = {
+      ...cleanParity,
+      summary: { ...cleanParity.summary, expiredBaselineEntries: 2 },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            { type: 'segment-missing', severity: 'actionable', baselined: true, baselineExpired: true, baselineReviewAfter: '2026-03-01', detail: 'expired' },
+            { type: 'segment-extra', severity: 'actionable', baselined: true, baselineExpired: true, detail: 'expired2' },
+          ],
+        },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.match(report.parityFollowup.body, /overview\/page-a/);
+    assert.equal(report.parityFollowup.summary.reviewHints.topBaselinedPages[0].slug, 'overview/page-a');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 7: parityRegression excludes non-expired baselined issues
+// ---------------------------------------------------------------------------
+
+describe('parityRegression excludes non-expired baselined issues (Phase 7)', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-07T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  it('does not open parity issue when all issues are non-expired baselined', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 1,
+        signalFiles: 0,
+        errorFiles: 0,
+        baselinedIssues: 2,
+        baselinedFiles: 1,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        baselineInvalidatedSlugs: [],
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            { type: 'segment-missing', severity: 'actionable', baselined: true, detail: 'frozen' },
+            { type: 'segment-extra', severity: 'actionable', baselined: true, detail: 'frozen2' },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+    assert.equal(report.parityRegression.topEntries.length, 0);
+    assert.deepEqual(report.parityRegression.summary.issuesByType, {});
+    assert.deepEqual(report.parityRegression.summary.issuesBySeverity, {});
+  });
+
+  it('opens parity issue when baselined issue has expired', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 1,
+        errorFiles: 0,
+        expiredBaselineEntries: 1,
+        activeActionableFiles: 1,
+        activeFiles: 1,
+        baselineInvalidatedSlugs: [],
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            { type: 'segment-missing', severity: 'actionable', baselined: true, baselineExpired: true, detail: 'expired' },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+  });
+
+  it('baselined issue is NOT in parityRegression topEntries but expired baselined IS', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 1,
+        errorFiles: 0,
+        expiredBaselineEntries: 1,
+        activeActionableFiles: 1,
+        baselineInvalidatedSlugs: [],
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            { type: 'segment-missing', severity: 'actionable', baselined: true, detail: 'frozen — must not appear' },
+            { type: 'segment-extra', severity: 'actionable', baselined: true, baselineExpired: true, detail: 'expired — must appear' },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.doesNotMatch(report.parityRegression.body, /frozen — must not appear/);
+    assert.match(report.parityRegression.body, /segment-extra/);
+    assert.deepEqual(report.parityRegression.summary.issuesByType, {
+      'segment-extra': 1,
+    });
+    assert.deepEqual(report.parityRegression.summary.issuesBySeverity, {
+      actionable: 1,
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 7: detection-family HTML comments in issue bodies
+// ---------------------------------------------------------------------------
+
+describe('detection-family HTML comments in issue bodies', () => {
+  const snapshot = {
+    checkedAt: '2026-04-07T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 1, added: 0, removed: 0, unchanged: 99 },
+    changes: [
+      {
+        slug: 'page-a',
+        type: 'page-changed',
+        sourceUrl: 'https://docs.tricentis.com/testim/content/page-a.htm',
+        categories: {
+          heading: { added: 0, removed: 0 },
+          image: { added: 0, removed: 0 },
+          code: { added: 0, removed: 0 },
+          callout: { added: 0, removed: 0 },
+          content: { added: 1, removed: 0 },
+        },
+        diffLines: 1,
+      },
+    ],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+  const parity = {
+    summary: {
+      checkedAt: '2026-04-07T00:00:00Z',
+      actionableFiles: 1,
+      baselinedIssues: 0,
+      baselineInvalidatedSlugs: [],
+    },
+    files: [
+      { file: 'src/content/docs/page-a.md', issues: [{ type: 'image-mismatch', severity: 'actionable', detail: 'EN=3 JA=1' }] },
+    ],
+    advisoryQueueScope: null,
+    advisoryQueue: [],
+  };
+
+  it('snapshotDiff body starts with detection-family marker', () => {
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.match(report.snapshotDiff.body, /^<!-- detection-family: snapshot-diff -->/);
+  });
+
+  it('parityRegression body starts with detection-family marker', () => {
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.match(report.parityRegression.body, /^<!-- detection-family: parity-regression -->/);
+  });
+
+  it('sourceSyncHealth body starts with detection-family marker when broken', () => {
+    const sourceSync = {
+      freshnessState: 'broken',
+      summary: { targetPages: 100, fetchedPages: 0, notFoundPages: 0, errorPages: 100, sidebarVerified: false },
+      errors: [],
+    };
+    const report = buildActionableReport(snapshot, parity, [], { sourceSync });
+    assert.match(report.sourceSyncHealth.body, /^<!-- detection-family: source-sync-health -->/);
+  });
+
+  it('sourceSyncHealth body is empty string when not broken', () => {
+    const report = buildActionableReport(snapshot, parity, [], { sourceSync: { freshnessState: 'fresh' } });
+    assert.equal(report.sourceSyncHealth.body, '');
+  });
+
+  it('parityFollowup body starts with detection-family marker when shouldOpen', () => {
+    const parityWithDebt = {
+      ...parity,
+      summary: { ...parity.summary, baselineInvalidatedSlugs: ['page-a'] },
+    };
+    const report = buildActionableReport(snapshot, parityWithDebt, []);
+    assert.match(report.parityFollowup.body, /^<!-- detection-family: parity-followup -->/);
   });
 });
 

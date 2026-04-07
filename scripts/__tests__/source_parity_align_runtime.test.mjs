@@ -11,7 +11,7 @@
  *      metadata when the page is part of the frozen cutover baseline.
  *   3. Baselined issues do NOT fail the runtime exit code.
  *   4. `summarizeParityResults` reports primary-gate issues in the
- *      actionable totals while dual-emitting `shadowIssues* = 0`.
+ *      actionable totals.
  *   5. The alignment + parityDiffsToIssues round trip produces issues
  *      that carry the structured metadata Phase 6 / Phase 7 reports
  *      will rely on (sectionIndex, segmentKind, fingerprints).
@@ -145,9 +145,6 @@ describe('summarizeParityResults — Phase 6A cutover', () => {
     assert.equal(summary.actionableFiles, 2);
     // Without baseline, they are also active
     assert.equal(summary.activeActionableFiles, 2);
-    // Shadow dual-emit stays at 0
-    assert.equal(summary.shadowIssues, 0);
-    assert.equal(summary.shadowFiles, 0);
   });
 
   it('excludes baseline-tagged segment-* from active counts', () => {
@@ -185,26 +182,6 @@ describe('summarizeParityResults — Phase 6A cutover', () => {
     });
   });
 
-  it('still handles legacy shadow-tagged issues for backward compat (dual emit)', () => {
-    // Compatibility shim: if a caller programmatically passes shadow-tagged
-    // issues, they are counted as shadow and excluded from primary totals.
-    // This path is dead under normal operation post-cutover.
-    const results = [
-      {
-        file: 'legacy.md',
-        sourceUrl: '',
-        category: '',
-        issues: [
-          { type: 'segment-missing', severity: 'actionable', phase: 'segment-shadow', detail: 'legacy' },
-        ],
-      },
-    ];
-    const summary = summarizeParityResults(results);
-    assert.equal(summary.shadowIssues, 1);
-    assert.equal(summary.shadowFiles, 1);
-    assert.equal(summary.activeActionableFiles, 0);
-    assert.equal(summary.totalIssues, 0);
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -245,8 +222,6 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
       );
       assert.ok((summary.baselinedFiles ?? 0) >= 1);
       assert.ok(summary.baselinedByType);
-      // Dual-emit shadow fields stay at 0 post-cutover
-      assert.equal(summary.shadowIssues ?? 0, 0);
 
       // Per-file segment-* issues are present with primary gate shape
       // (no shadow phase tag) and baselined: true because the preview
