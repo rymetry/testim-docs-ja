@@ -258,6 +258,15 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
     assert.equal(computeExitCode(summary, 'any'), 1);
   });
 
+  it('failOn=any returns 1 on error-only summary', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      activeErrorFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, 'any'), 1);
+  });
+
   it('default failOn (null) returns 0 for coarse-only summary', () => {
     // Coarse-only: legacy activeFiles is 1 because the file has an
     // unacknowledged signal, but reportableActiveFiles is 0 because the
@@ -273,6 +282,15 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
   it('default failOn (null) returns 1 when reportableActiveFiles > 0', () => {
     const summary = {
       reportableActiveFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 1);
+  });
+
+  it('default failOn (null) returns 1 on error-only summary', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      activeErrorFiles: 1,
       activeFiles: 1,
     };
     assert.equal(computeExitCode(summary, null), 1);

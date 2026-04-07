@@ -149,22 +149,23 @@ export function buildRunScope({ resolvedSlug = null, section = null } = {}) {
  * are intentionally ignored here so downstream consumers that still
  * read them keep their old semantics.
  *
- * `activeErrorFiles` is still consulted for the `actionable` mode so
+ * `activeErrorFiles` is still consulted in all modes so
  * `source-fetch-error` and similar real errors continue to fail the
- * gate.
+ * gate, even when there are no reportable parity issues.
  *
  * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.4
  */
 export function computeExitCode(summary, failOn) {
   if (!summary || typeof summary !== 'object') return 0;
+  const errorFiles = summary.activeErrorFiles || 0;
   if (failOn === 'actionable') {
     const reportableActionable = summary.reportableActiveActionableFiles || 0;
-    const errorFiles = summary.activeErrorFiles || 0;
     return reportableActionable > 0 || errorFiles > 0 ? 1 : 0;
   }
-  // Default and 'any' both look at the broader reportable bucket.
+  // Default and 'any' both look at the broader reportable bucket, but
+  // still fail on real runtime errors such as source-fetch-error.
   const reportable = summary.reportableActiveFiles || 0;
-  return reportable > 0 ? 1 : 0;
+  return reportable > 0 || errorFiles > 0 ? 1 : 0;
 }
 
 export function getConsoleCoverageState(issues) {
