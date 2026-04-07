@@ -1673,6 +1673,66 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     assert.doesNotMatch(paritySection, /heading-mismatch/);
   });
 
+  it('propagates parity.summary.runScope to actionableReport top-level (Phase 8 PR2)', () => {
+    // The Phase 8 sync guard reads runScope off docs-actionable-report.json,
+    // not parity-check-status.json. Make sure the field is hoisted.
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        runScope: {
+          type: 'slug',
+          isComplete: false,
+          filters: { slug: 'overview/page-a', section: null },
+        },
+      },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    assert.deepEqual(report.runScope, {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: 'overview/page-a', section: null },
+    });
+  });
+
+  it('propagates a full-scope runScope through unchanged', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        runScope: {
+          type: 'full',
+          isComplete: true,
+          filters: { slug: null, section: null },
+        },
+      },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    assert.equal(report.runScope.type, 'full');
+    assert.equal(report.runScope.isComplete, true);
+  });
+
+  it('falls back to runScope=null when parity.summary.runScope is absent (legacy report)', () => {
+    // Backward compatibility: a parity-check-status.json that pre-dates
+    // Phase 8 PR2 has no runScope. The actionable report must still set
+    // the field (so consumers can probe it) but the value is null. The
+    // sync guard treats null as legacy and falls back to its prior
+    // behaviour (the test for that lives in the sync_detection_issues
+    // suite added in commit 3 of PR2).
+    const parity = {
+      summary: { checkedAt: '2026-04-07T00:00:00Z' },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    assert.equal(report.runScope, null);
+  });
+
   it('snapshot-driven entries still receive parity cross-reference (existing behaviour)', () => {
     // Phase 8 must NOT remove the existing parity cross-reference on
     // entries that DO have a matching snapshot change.

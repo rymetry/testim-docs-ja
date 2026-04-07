@@ -538,8 +538,17 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       ].join('\n')
     : '';
 
+  // Phase 8 PR2: hoist parity-side runScope to the actionable report
+  // top-level so .github/scripts/sync-detection-issues.cjs (which only
+  // reads docs-actionable-report.json) can refuse to sync managed
+  // issues from partial runs. A missing runScope is preserved as null
+  // so legacy parity-check-status.json files (pre-Phase-8 PR2) keep
+  // their pre-PR2 sync behaviour.
+  const runScope = parity.summary?.runScope ?? null;
+
   return {
     generatedAt: new Date().toISOString(),
+    runScope,
     sourceSyncHealth: {
       key: FAMILY_KEYS.SOURCE_SYNC_HEALTH,
       issueTitle: SOURCE_SYNC_ISSUE_TITLE,
