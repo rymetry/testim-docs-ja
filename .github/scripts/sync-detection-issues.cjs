@@ -242,6 +242,27 @@ async function syncOneIssue({
   }
 }
 
+/**
+ * Phase 8 PR2: classify whether the actionable report came from a full
+ * run or a partial (--slug / --section) run.
+ *
+ * Contract:
+ *   report.runScope === undefined / null  → legacy report, sync as before
+ *   report.runScope.isComplete === true   → full run, sync as before
+ *   report.runScope.isComplete === false  → partial run, NO-OP + warning
+ *
+ * The legacy fallback is intentional. It keeps existing CI runs that
+ * pre-date the runScope field from breaking the moment this commit
+ * lands. Once Phase 8 is rolled out, the next planned tightening is to
+ * make a missing runScope an error too — but that should be a
+ * follow-up so we have a soft landing.
+ */
+function isPartialRunReport(report) {
+  const scope = report?.runScope;
+  if (scope == null) return false; // legacy
+  return scope.isComplete !== true;
+}
+
 module.exports = async function syncDetectionIssues({
   github,
   context,
@@ -251,6 +272,29 @@ module.exports = async function syncDetectionIssues({
   const log = fallbackCore(core);
   const { owner, repo } = context.repo;
   const report = loadReport(reportPath);
+
+  // Phase 8 PR2 partial-run guard: refuse to touch GitHub managed
+  // issues when the actionable report came from a partial run. This
+  // runs BEFORE listManagedIssues so a deep-audit / debugging run that
+  // is wired into the wrong workflow step never even pages through
+  // the issue list. See:
+  //   docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.7
+  if (isPartialRunReport(report)) {
+    const scope = report.runScope ?? {};
+    const slug = scope.filters?.slug ?? null;
+    const section = scope.filters?.section ?? null;
+    const filterDesc = slug
+      ? `slug=${slug}`
+      : section
+        ? `section=${section}`
+        : '(unknown filter)';
+    log.warning(
+      `Skipping detection issue sync — partial run (${scope.type ?? 'unknown'}, ${filterDesc}). ` +
+        'Managed issues are only synced from full-repo (scheduled-actionable) runs.',
+    );
+    return;
+  }
+
   const issueSpecs = buildIssueSpecs(report);
   const existingIssues = await listManagedIssues({ github, owner, repo });
 
