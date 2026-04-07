@@ -78,6 +78,59 @@ export function isNonBlockingIssue(issue) {
 }
 
 /**
+ * Phase 8 PR2: pure helper that classifies the run scope of a single
+ * `checkSourceParity` invocation. The result is embedded in
+ * `parity-check-status.json.summary.runScope` so downstream tools can
+ * tell whether the report was produced by a full-repo run or a
+ * partial (`--slug` / `--section`) run.
+ *
+ * The downstream guard in `.github/scripts/sync-detection-issues.cjs`
+ * uses `runScope.isComplete === true` as the precondition for syncing
+ * managed GitHub issues, so partial runs (deep-audit, manual debugging)
+ * cannot accidentally overwrite the managed issue body even if their
+ * artifacts are wired into the wrong workflow step.
+ *
+ * Inputs:
+ *   resolvedSlug — value of --slug after slug resolution (null if absent)
+ *   section      — value of --section (null if absent)
+ *
+ * Returns:
+ *   { type: 'full' | 'slug' | 'section',
+ *     isComplete: boolean,
+ *     filters: { slug: string|null, section: string|null } }
+ *
+ * `--slug` wins over `--section` in `checkSourceParity` (the section
+ * filter is skipped when `resolvedSlug` is set), so the helper reports
+ * `type: 'slug'` in that defensive case while still surfacing the
+ * section filter for diagnostic purposes.
+ *
+ * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.7
+ */
+export function buildRunScope({ resolvedSlug = null, section = null } = {}) {
+  const slugFilter = resolvedSlug ?? null;
+  const sectionFilter = section ?? null;
+  if (slugFilter) {
+    return {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: slugFilter, section: sectionFilter },
+    };
+  }
+  if (sectionFilter) {
+    return {
+      type: 'section',
+      isComplete: false,
+      filters: { slug: null, section: sectionFilter },
+    };
+  }
+  return {
+    type: 'full',
+    isComplete: true,
+    filters: { slug: null, section: null },
+  };
+}
+
+/**
  * Phase 8: pure helper that maps a parity-check summary into a CLI exit
  * code. Lifted out of `checkSourceParity` so the gate behaviour is
  * unit-testable without spinning up the full pipeline.
@@ -516,6 +569,9 @@ export async function checkSourceParity({
     ...summarizeParityResults(results),
     ...advisoryQueueSummary,
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
+    // Phase 8 PR2: classify the run scope so downstream sync tooling can
+    // refuse to act on partial runs. See buildRunScope() above.
+    runScope: buildRunScope({ resolvedSlug, section }),
   };
 
   const payload = {

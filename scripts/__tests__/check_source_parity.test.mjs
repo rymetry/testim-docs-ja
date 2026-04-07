@@ -10,6 +10,7 @@ let isValidAcknowledgedIssue;
 let isNonBlockingIssue;
 let getConsoleCoverageState;
 let computeExitCode;
+let buildRunScope;
 
 before(async () => {
   ({
@@ -19,6 +20,7 @@ before(async () => {
     isNonBlockingIssue,
     getConsoleCoverageState,
     computeExitCode,
+    buildRunScope,
   } = await import('../check_source_parity.mjs'));
 });
 
@@ -327,5 +329,68 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
     assert.equal(computeExitCode({}, 'actionable'), 0);
     assert.equal(computeExitCode({}, 'any'), 0);
     assert.equal(computeExitCode({}, null), 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 8 PR2: runScope on parity-check-status summary
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 PR2 — buildRunScope', () => {
+  // Pure helper that maps the (resolvedSlug, section) pair into the
+  // runScope object embedded in summary.runScope. The downstream guard in
+  // sync-detection-issues.cjs reads this to refuse to sync managed
+  // issues from partial runs.
+
+  it('returns full scope when neither slug nor section is set', () => {
+    assert.deepEqual(buildRunScope({ resolvedSlug: null, section: null }), {
+      type: 'full',
+      isComplete: true,
+      filters: { slug: null, section: null },
+    });
+  });
+
+  it('returns slug scope when --slug is set', () => {
+    assert.deepEqual(
+      buildRunScope({ resolvedSlug: 'overview/testim-overview', section: null }),
+      {
+        type: 'slug',
+        isComplete: false,
+        filters: { slug: 'overview/testim-overview', section: null },
+      },
+    );
+  });
+
+  it('returns section scope when --section is set', () => {
+    assert.deepEqual(
+      buildRunScope({ resolvedSlug: null, section: 'Overview' }),
+      {
+        type: 'section',
+        isComplete: false,
+        filters: { slug: null, section: 'Overview' },
+      },
+    );
+  });
+
+  it('prefers slug when both slug and section are set (defensive)', () => {
+    // --slug already wins in checkSourceParity (the section filter is
+    // skipped when resolvedSlug is set), so the runScope should record
+    // the actual scope (slug) and surface the section filter as
+    // diagnostic only. Either way, isComplete stays false.
+    const result = buildRunScope({
+      resolvedSlug: 'overview/testim-overview',
+      section: 'Overview',
+    });
+    assert.equal(result.type, 'slug');
+    assert.equal(result.isComplete, false);
+    assert.equal(result.filters.slug, 'overview/testim-overview');
+  });
+
+  it('uses null filter values when arguments are undefined', () => {
+    assert.deepEqual(buildRunScope({}), {
+      type: 'full',
+      isComplete: true,
+      filters: { slug: null, section: null },
+    });
   });
 });
