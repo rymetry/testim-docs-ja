@@ -1,75 +1,71 @@
 /**
- * Tests for the canonical block-sequence structure comparator
- * (Issue #247 PR2).
+ * canonical block-sequence structure comparator (Issue #247 PR2) のテスト。
  *
- * `compareSectionStructure(enSection, jaSection)` runs three staged checks
- * over a single (EN, JA) section body pair and returns at most one
- * section-level parity diff:
+ * `compareSectionStructure(enSection, jaSection)` は 1 組の (EN, JA) section
+ * body に対して 3 段階のチェックを走らせ、section 単位の parity diff を
+ * 最大 1 件返す:
  *
  *   Stage A — kind-multiset
- *     Body kind multisets differ (merge/split/collapse across kinds).
- *     Emits `section-structure-mismatch`.
+ *     block kind 集合が EN/JA で違う (cross-kind の merge/split/collapse)。
+ *     `section-structure-mismatch` を emit。
  *
  *   Stage B — kind-sequence
- *     Multisets match but the kind sequence order differs
- *     (mixed-kind reorder).
- *     Emits `segment-order-mismatch`.
+ *     multiset は一致するが並び順が違う (mixed-kind reorder)。
+ *     `segment-order-mismatch` を emit。
  *
  *   Stage C — content-order
- *     Kind sequence is identical but the best-effort content bijection
- *     is not monotonic (pure same-kind swap / rotation).
- *     Emits `segment-order-mismatch`.
+ *     kind 列は完全一致しているが content bijection が monotonic ではない
+ *     (same-kind の pure swap / rotation)。
+ *     `segment-order-mismatch` を emit。
  *
- * When none of the stages fires, the comparator returns an empty array
- * and the caller (alignSegments) falls through to the existing weighted
- * LCS. At most ONE diff per section is emitted — the first stage that
- * fires wins, later stages are short-circuited. This keeps the cascade
- * suppression contract predictable for PR4 gate cutover.
+ * どの stage も発火しなければ comparator は空配列を返し、呼び出し元
+ * (alignSegments) は既存の weighted LCS にフォールスルーする。section
+ * あたり emit される diff は最大 1 件 — 先に発火した stage が勝ち、
+ * 後続 stage は short-circuit でスキップされる。これは PR4 の gate cutover
+ * で contract を予測可能にするため。
  *
- * Issue payload contract pinned here (PR5 baseline identity key will be
- * derived from these fields — do NOT remove or rename without updating
- * the baseline loader in the same PR):
+ * ここで PIN している issue payload contract (PR5 baseline identity key
+ * がこれらを参照する前提なので、同 PR で baseline loader を合わせて変える
+ * までは rename / 削除してはならない):
  *
- *   sectionPath          — heading path of the affected section
- *   sectionIndex         — 0-based section index in document order
- *   scope                — always 'section' (distinguishes structure issues
- *                          from segment-level diffs — do NOT reuse the
- *                          existing `segmentKind` field, which carries
- *                          block kinds like 'paragraph' elsewhere and would
- *                          confuse matchers and baseline keys)
+ *   sectionPath          — 対象 section の heading path
+ *   sectionIndex         — 0 始まりの section index (document order)
+ *   scope                — 必ず 'section'。structure issue と segment 単位
+ *                          diff を区別するためのフィールド。**既存の
+ *                          `segmentKind` フィールドを流用してはいけない** —
+ *                          `segmentKind` は他所で 'paragraph' などの block
+ *                          kind 値を持っており、ここに 'section' を入れると
+ *                          matcher と baseline key が混乱する。
  *   structureCategory    — 'kind-multiset' | 'kind-sequence' | 'content-order'
- *   enKinds              — BLOCK-level kind sequence of EN section body.
- *                          VOCABULARY IS FROZEN — see STRUCTURE_COMPARATOR_KINDS
- *                          re-export from source_parity_structure.mjs.
- *                          The allowed set is:
+ *   enKinds              — EN section body の **block 単位** kind 列。
+ *                          語彙は FROZEN — source_parity_structure.mjs が
+ *                          export する STRUCTURE_COMPARATOR_KINDS 参照。
+ *                          許容セット:
  *                            paragraph | ordered-list | unordered-list |
  *                            callout-body | table | details-summary
- *                          Segment-level kinds (ordered-list-item,
- *                          unordered-list-item, table-cell) are COLLAPSED
- *                          to their block counterparts before comparison:
- *                          consecutive list items fold into one list
- *                          block, consecutive table cells fold into one
- *                          table block. Paragraph / callout-body /
- *                          details-summary are 1:1 with their segments.
- *                          Within-block shape drift (list item count,
- *                          table cell count) is intentionally owned by
- *                          other comparators — the structure comparator
- *                          is strictly about block sequence.
- *                          PR5 baseline identity keys will hash
- *                          enKinds.join('|'), so adding a new kind to
- *                          the vocabulary is a breaking change that must
- *                          bump the baseline schema.
- *   jaKinds              — gate-eligible kind sequence of JA section body
- *   enSegmentCount       — enKinds.length (frozen for baseline stability)
+ *                          segment 単位の kind (ordered-list-item /
+ *                          unordered-list-item / table-cell) は比較前に
+ *                          block 相当へ **畳まれる** — 連続 list item は 1
+ *                          list block、連続 table cell は 1 table block に。
+ *                          paragraph / callout-body / details-summary は
+ *                          segment と 1:1。block 内部の drift (list item
+ *                          数差、table cell 数差) は意図的に別 comparator の
+ *                          責務にしており、structure comparator は block
+ *                          列の差だけを見る。
+ *                          PR5 baseline identity key は enKinds.join('|') を
+ *                          hash する予定なので、語彙へのエントリ追加は
+ *                          破壊的変更で baseline schema bump が必須。
+ *   jaKinds              — JA section body の block 単位 kind 列
+ *   enSegmentCount       — enKinds.length (baseline 安定のため frozen)
  *   jaSegmentCount       — jaKinds.length
- *   detail               — human-readable summary ONLY (free text, never
- *                          read by baseline/ack matchers)
- *   contentPermutation?  — only on content-order: Array<{enIndex, jaIndex, score}>.
- *                          `score` is DIAGNOSTIC-ONLY — threshold tweaks and
- *                          scoring algorithm changes are allowed to shift it.
- *                          PR5 baseline identity MUST NOT hash `score`; only
- *                          the (enIndex, jaIndex) permutation entries are
- *                          stable enough to key off.
+ *   detail               — 人間向け要約のみ (free text)。baseline/ack
+ *                          matcher は **絶対に読まない**。
+ *   contentPermutation?  — content-order でのみ付与する
+ *                          Array<{enIndex, jaIndex, score}>。`score` は
+ *                          DIAGNOSTIC-ONLY — 閾値調整やスコアアルゴリズム
+ *                          変更で揺れてよい。PR5 の baseline identity は
+ *                          score を **絶対に hash してはならず**、安定鍵と
+ *                          して使えるのは (enIndex, jaIndex) ペアだけ。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -86,7 +82,7 @@ before(async () => {
 });
 
 // ---------------------------------------------------------------------------
-// Helpers
+// ヘルパー
 // ---------------------------------------------------------------------------
 
 function makeSeg(sectionPath, kind, segmentIndex, rawText) {
@@ -94,8 +90,9 @@ function makeSeg(sectionPath, kind, segmentIndex, rawText) {
 }
 
 /**
- * Build a minimal Section record the way source_parity_align splits it.
- * Only the fields the structure comparator reads are populated.
+ * source_parity_align が section を分割するのと同じ形状の、最小限の
+ * Section レコードを組み立てる。structure comparator が参照する
+ * フィールドだけを埋める。
  */
 function makeSection({ index = 0, sectionPath = 'Overview', body = [] } = {}) {
   return {
@@ -117,13 +114,12 @@ function singleDiff(result) {
 // ---------------------------------------------------------------------------
 
 describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
-  // Stage A is the home of CROSS-KIND drift: list→paragraph collapse,
-  // callout→paragraph collapse, details-summary loss, ordered↔unordered
-  // swaps. Pure same-single-kind count drift (N paragraphs → M
-  // paragraphs, no other kinds) is intentionally handled by the
-  // existing weighted LCS as segment-missing / segment-extra, so the
-  // structure comparator does NOT double-count it. The first two tests
-  // pin that contract explicitly.
+  // Stage A は **CROSS-KIND** ドリフト担当: list→paragraph collapse、
+  // callout→paragraph collapse、details-summary の消失、ordered↔unordered
+  // list 入れ替えなど。同種 kind のみの count drift (段落 N 個 → M 個、
+  // 他の kind は無し) は既存 weighted LCS の segment-missing /
+  // segment-extra に任せる契約で、structure comparator は二重計上しない。
+  // 下の 2 本のテストでこの契約を明示的に pin する。
 
   it('A1 same-single-kind count drift (3 EN paragraphs → 1 JA paragraph) is handled by LCS, not structure comparator', () => {
     const en = makeSection({
@@ -140,9 +136,9 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
         makeSeg('Overview', 'paragraph', 0, 'CLI と network-logs と flag を 1 段落にまとめた翻訳'),
       ],
     });
-    // No structure diff — this is segment-missing territory, owned by
-    // source_parity_align.mjs. The integration test in
-    // source_parity_align.test.mjs asserts the segment-missing shape.
+    // structure diff は emit しない — ここは segment-missing の担当領域で
+    // source_parity_align.mjs のほうが扱う。segment-missing 側の形状は
+    // source_parity_align.test.mjs の統合テストで assert している。
     assert.deepEqual(
       compareSectionStructure(en, ja),
       [],
@@ -169,10 +165,10 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
   });
 
   it('A3 detects list → paragraph collapse (3 EN list items → 1 JA paragraph)', () => {
-    // Consecutive list items are collapsed into a single `unordered-list`
-    // block before comparison. The structure comparator owns cross-kind
-    // drift (list → paragraph); within-kind list item count drift stays
-    // with the existing LCS-based segment-missing/extra path.
+    // 連続した list item は比較前に 1 `unordered-list` block に畳まれる。
+    // structure comparator は cross-kind drift (list → paragraph) を担当し、
+    // 同種 kind 内の list item 数差は既存 LCS の segment-missing/extra 経路に
+    // 任せる。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'unordered-list-item', 0, '- EN bullet with `token-a`'),
@@ -243,16 +239,16 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
     const diff = singleDiff(compareSectionStructure(en, ja));
     assert.equal(diff.type, 'section-structure-mismatch');
     assert.equal(diff.structureCategory, 'kind-multiset');
-    // EN collapses to [paragraph, unordered-list]; JA is [paragraph, paragraph].
+    // EN は [paragraph, unordered-list] に畳まれる、JA は [paragraph, paragraph]。
     assert.deepEqual(diff.enKinds, ['paragraph', 'unordered-list']);
     assert.deepEqual(diff.jaKinds, ['paragraph', 'paragraph']);
   });
 
   it('A7 detects table → paragraph collapse (table cells collapsed into a single "table" block)', () => {
-    // Table cells MUST collapse into a single `table` structure block so
-    // the comparator tracks table-ness, not cell-level granularity. Cell
-    // count drift within a present table is the table shape comparator's
-    // responsibility.
+    // table cell は必ず 1 つの `table` structure block に畳まれる必要が
+    // ある — comparator が追うのはあくまで「table が存在するかどうか」で
+    // あり、cell 単位の粒度ではない。table 内部の cell 数差は別の table
+    // shape comparator の責務。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'table-cell', 0, 'Header `col-1`'),
@@ -274,9 +270,9 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
   });
 
   it('A8 keeps non-adjacent list blocks separate (p between lists does NOT collapse)', () => {
-    // `[ul-item, p, ul-item]` has a paragraph between two lists, so the
-    // collapsing rule must produce two independent `unordered-list` blocks
-    // with a `paragraph` between them — not a single fused list.
+    // `[ul-item, p, ul-item]` のように list の間に paragraph が挟まっている
+    // 場合、畳み規則は 2 つの独立した `unordered-list` block + 間の
+    // `paragraph` を生成しなければならない (1 つに融合してはいけない)。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'unordered-list-item', 0, '- first list'),
@@ -298,9 +294,9 @@ describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
   });
 
   it('A emits an exact-match payload contract (all required fields typed)', () => {
-    // Cross-kind fixture: EN has a callout-body + paragraph, JA
-    // collapsed the callout into plain prose. Kind sets differ
-    // ({callout-body, paragraph} vs {paragraph}) so Stage A fires.
+    // Cross-kind fixture: EN は callout-body + paragraph、JA は callout を
+    // 平文に畳んである。kind 集合が {callout-body, paragraph} vs
+    // {paragraph} で違うので Stage A が fire する。
     const en = makeSection({
       sectionPath: 'Getting Started > Quickstart',
       index: 2,
@@ -413,9 +409,9 @@ describe('Stage B — kind-sequence (segment-order-mismatch)', () => {
 
 describe('Stage C — content-order (segment-order-mismatch)', () => {
   it('C1 detects same-kind pure swap [p_A, p_B] → [p_B, p_A] with strong tokens', () => {
-    // JA tokens MUST be backticked to survive `extractInvariantTokens`
-    // — this mirrors real translations, which always preserve CLI
-    // flags and identifiers as code spans.
+    // JA 側の token は必ずバッククォートで囲むこと — `extractInvariantTokens`
+    // はバッククォートで囲まれた token しか拾わない。これは実際の翻訳と
+    // 同じ形 (CLI フラグや識別子は常に code span のまま残す) に合わせている。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'Paragraph about `alpha-tool` and `alpha-flag`.'),
@@ -492,9 +488,9 @@ describe('Stage C — content-order (segment-order-mismatch)', () => {
   });
 
   it('C-negative returns empty when both sides are tokenless (cannot determine)', () => {
-    // Pure prose with zero invariant tokens — the comparator cannot prove
-    // a swap happened and must fall through to the LCS rather than
-    // guess a content-order mismatch.
+    // invariant token が両側ともゼロな純散文 — comparator は swap が
+    // 起きたことを証明できないので、推測で content-order mismatch を
+    // 出さずに LCS にフォールスルーする契約。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'The first paragraph discusses overall goals.'),
@@ -545,9 +541,9 @@ describe('Stage precedence and fall-through contract', () => {
   });
 
   it('empty JA body with a populated EN body falls through to LCS (segment-missing path)', () => {
-    // Owned by the weighted LCS — the per-segment detail reviewers
-    // rely on (which EN segment was dropped) would be lost if we
-    // blanket-fired a structure mismatch instead.
+    // これは weighted LCS の担当。ここで structure mismatch を一括発火
+    // させてしまうと、「どの EN segment が落ちたか」という reviewer が
+    // 頼りにしている per-segment の情報が失われる。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'callout-body', 0, 'EN callout `token`'),
@@ -567,14 +563,13 @@ describe('Stage precedence and fall-through contract', () => {
   });
 
   it('same-kind-set count drift with reordering falls through to LCS (no Stage A, no Stage B)', () => {
-    // Under the narrowed Stage A rule (fires only when kind SETS
-    // differ), this case — same kind set but different counts AND
-    // reordered — does NOT fire either Stage A (sets equal) or
-    // Stage B (multisets differ, Stage B requires multiset equality).
-    // It correctly falls through to the weighted LCS so per-segment
-    // drill-down survives. This pins the mutually-exclusive precedence
-    // contract: Stage A and Stage B are disjoint by construction,
-    // there is no "which wins" case.
+    // Stage A ルールを kind SET 差分のみに狭めたので、この
+    // 「kind 集合は同じ / 個数は違う / 順序も違う」ケースは Stage A
+    // (set 一致なので fire しない) でも Stage B (multiset 一致が
+    // 前提なので fire しない) でも拾われず、正しく weighted LCS に
+    // フォールスルーして per-segment drill-down が生きる。Stage A と
+    // Stage B は設計上 disjoint であり「どちらが勝つか」という
+    // precedence ケースは存在しない — この contract をここで pin する。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'p1'),
@@ -593,8 +588,9 @@ describe('Stage precedence and fall-through contract', () => {
   });
 
   it('Stage B takes precedence over Stage C when multiset is same but kinds reorder', () => {
-    // Identical kinds per-position would be Stage C; mixed-kind reorder
-    // is Stage B and must win before we look at content-level bijection.
+    // 各 position で kind が完全一致するなら Stage C の担当だが、
+    // mixed-kind の reorder は Stage B の担当で、content-level bijection
+    // を見る前にここで勝たなければならない。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'p `token-a`'),
@@ -652,7 +648,7 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
   }
 
   it('section-structure-mismatch carries all required fields', () => {
-    // Cross-kind fixture so Stage A fires.
+    // Stage A を発火させるための cross-kind fixture。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'callout-body', 0, 'Callout `token-a`'),
@@ -710,17 +706,17 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
   });
 
   it('STRUCTURE_COMPARATOR_KINDS is frozen to the block-level vocabulary', () => {
-    // The kind vocabulary used in enKinds / jaKinds is PINNED to this set.
-    // These are BLOCK kinds, not segment kinds — consecutive list items
-    // collapse to a single `ordered-list` / `unordered-list`, and
-    // consecutive table cells collapse to a single `table` block. Block
-    // comparator responsibility is intentionally separated from
-    // within-block shape comparators (table shape, list cardinality).
+    // enKinds / jaKinds で使う kind 語彙はこの集合に PIN されている。
+    // これらは **block** kind であって segment kind ではない — 連続する
+    // list item は 1 つの `ordered-list` / `unordered-list` に、連続する
+    // table cell は 1 つの `table` block に畳まれる。block comparator の
+    // 責務は、block 内部の shape comparator (table shape / list
+    // cardinality 等) と意図的に切り分けてある。
     //
-    // Adding or removing a kind is a breaking change that also requires a
-    // baseline schema bump (see PR5). The test exists to make accidental
-    // drift impossible — changing this assertion will force the reviewer
-    // to think about the downstream contract.
+    // kind を追加 / 削除するのは破壊的変更であり baseline schema bump
+    // (PR5) を伴う必要がある。このテストは誤って drift させないための
+    // 保険 — この assertion を書き換えようとした reviewer は downstream
+    // 契約を必ず意識することになる。
     assert.ok(Array.isArray(STRUCTURE_COMPARATOR_KINDS));
     assert.deepEqual(
       [...STRUCTURE_COMPARATOR_KINDS].sort(),
@@ -754,8 +750,8 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
     for (const kind of diff.jaKinds) {
       assert.ok(allowed.has(kind), `JA kind "${kind}" not in STRUCTURE_COMPARATOR_KINDS`);
     }
-    // Segment-level kinds must NEVER appear — these would mean the
-    // collapsing step was skipped.
+    // segment 単位の kind は絶対に現れてはいけない — 現れていたら
+    // 畳み処理がスキップされている証拠。
     const segmentLevelKinds = ['ordered-list-item', 'unordered-list-item', 'table-cell'];
     for (const forbidden of segmentLevelKinds) {
       assert.equal(
@@ -772,10 +768,11 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
   });
 
   it('contentPermutation score is declared diagnostic-only (not part of identity)', () => {
-    // The score field captures match strength for debugging. Baseline
-    // identity (PR5) must hash only (enIndex, jaIndex) entries. This test
-    // pins the contract by checking that the permutation entries sorted
-    // by enIndex produce a stable key regardless of score mutation.
+    // score フィールドはマッチの強さをデバッグ用に保持しているだけ。
+    // baseline identity (PR5) は (enIndex, jaIndex) エントリだけを hash
+    // しなければならない。このテストは、permutation エントリを enIndex で
+    // sort した結果が score が揺れても安定キーになる、という契約を pin
+    // する。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'Paragraph `alpha-token`.'),
@@ -797,16 +794,17 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
       .join(',');
     assert.equal(identityKey, '0->1,1->0');
 
-    // Every entry must still carry a score, but callers must treat it as
-    // diagnostic — this test exists so that anyone tempted to hash `score`
-    // into an identity key will first have to delete this assertion.
+    // 各 entry は依然として score を持つが、呼び出し側は必ず
+    // diagnostic として扱うこと。このテストは、`score` を identity key に
+    // hash しようとした人が、まずこの assertion を消す必要があるように
+    // するためのガードレール。
     for (const p of diff.contentPermutation) {
       assert.equal(typeof p.score, 'number');
     }
   });
 
   it('detail is a non-empty human string and never a structured object', () => {
-    // Cross-kind fixture so Stage A fires.
+    // Stage A を発火させるための cross-kind fixture。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'callout-body', 0, 'callout `token-a`'),
@@ -821,8 +819,9 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
     const diff = singleDiff(compareSectionStructure(en, ja));
     assert.equal(typeof diff.detail, 'string');
     assert.ok(diff.detail.length > 0);
-    // Detail must not be a JSON-encoded blob — keeping it human-only is the
-    // contract that lets PR5 baseline/ack matchers key off structured fields.
+    // detail は JSON エンコードされた blob になってはいけない — 人間向け
+    // 専用に保つことで、PR5 の baseline/ack matcher が構造化フィールドを
+    // 直接 key にできる契約を守る。
     assert.equal(diff.detail.trimStart().startsWith('{'), false);
   });
 });

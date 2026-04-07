@@ -1,54 +1,52 @@
 /**
- * Section-level canonical block sequence comparator (Issue #247 PR2).
+ * Section 単位の canonical block sequence comparator (Issue #247 PR2)。
  *
- * `compareSectionStructure(enSection, jaSection)` runs three staged checks
- * over a paired (EN, JA) section body and returns at most ONE section-level
- * parity diff. The staging is:
+ * `compareSectionStructure(enSection, jaSection)` は 1 組の (EN, JA) section
+ * body に対して 3 段階のチェックを走らせ、section 単位の parity diff を
+ * 最大 1 件返す。段階は以下の通り:
  *
  *   Stage A — kind-multiset (section-structure-mismatch)
- *     The block kind multisets disagree. Covers paragraph merge/split,
- *     list→paragraph collapse, callout→paragraph collapse, table→paragraph
- *     collapse, and ordered↔unordered list swaps.
+ *     block kind の **集合** が EN/JA で違うケース。list→paragraph
+ *     collapse、callout→paragraph collapse、table→paragraph collapse、
+ *     ordered↔unordered list swap、details-summary 消失などを捕捉する。
  *
  *   Stage B — kind-sequence (segment-order-mismatch)
- *     The multisets match but the block kind sequence order differs
- *     (mixed-kind reorder such as [p, ul] vs [ul, p]).
+ *     multiset は一致するが block kind の並び順だけが違うケース
+ *     (例: [p, ul] と [ul, p] のような mixed-kind reorder)。
  *
  *   Stage C — content-order (segment-order-mismatch)
- *     The block kind sequences are identical, but an all-pairs
- *     content-match bijection is non-monotonic. Covers pure same-kind
- *     swaps and cyclic rotations that carry stable invariant tokens.
- *     Tokenless prose-only swaps are intentionally NOT detected here
- *     (the comparator cannot distinguish them from an independent rewrite
- *     without semantic evidence; the existing LCS handles those).
+ *     block kind 列までは完全一致しているが、all-pairs content bijection
+ *     が monotonic でないケース。same-kind pure swap や cyclic rotation を
+ *     invariant token のアンカーを頼りに検出する。tokenless な純粋散文の
+ *     swap は **意図的に検出しない**: semantic evidence なしには独立の
+ *     rewrite と区別できないので、これは既存 LCS に委ねる契約。
  *
- * When none of the stages fires, the comparator returns an empty array
- * and the caller (`alignSegments`) falls through to the existing weighted
- * LCS. At most one diff per section is emitted — the first stage to fire
- * wins, later stages are short-circuited.
+ * どの stage も発火しなければ空配列を返し、呼び出し側 (`alignSegments`) は
+ * そのまま既存の weighted LCS に流す。section あたり高々 1 件の diff しか
+ * emit しない — 先に発火した stage が勝ち、後続 stage は short-circuit で
+ * 走らない。
  *
- * Block-level vocabulary
- * ----------------------
- * The comparator operates on BLOCK kinds, not segment kinds. Consecutive
- * segments of a collapsible source kind fold into a single block before
- * comparison:
+ * Block 単位の語彙
+ * ----------------
+ * comparator は **block** kind を扱い、segment kind は扱わない。比較前に
+ * 同種の collapsible source kind が連続していれば 1 block に畳む:
  *
  *   ordered-list-item × N   → 'ordered-list'
  *   unordered-list-item × N → 'unordered-list'
  *   table-cell × N          → 'table'
  *
- * `paragraph`, `callout-body`, and `details-summary` are 1:1 (each segment
- * is its own block). This separation is deliberate: within-block drift
- * (list item count, table cell count) is owned by other comparators —
- * the structure comparator is strictly about block sequence.
+ * `paragraph` / `callout-body` / `details-summary` は畳まず 1:1 (segment 1
+ * つがそのまま 1 block)。この切り分けは意図的: block 内部の drift
+ * (list item 数差、table cell 数差) は別 comparator の責務であり、この
+ * structure comparator は **block 列の差** だけを見る。
  *
  * Issue payload contract (PR5 baseline identity surface)
  * ------------------------------------------------------
- * See `STRUCTURE_DIFF_CONTRACT_FIELDS` and the unit test file for the
- * frozen shape. Do NOT rename, reorder, or remove fields without
- * coordinating a baseline schema bump in PR5.
+ * 固定 schema は単体テスト (source_parity_structure.test.mjs) にも pin
+ * してある。PR5 で baseline schema を bump せずにここのフィールドを
+ * rename / reorder / 削除してはいけない。
  *
- * Pure functions only: inputs are never mutated.
+ * 純粋関数のみ: 入力は決して mutate しない。
  *
  * @module source_parity_structure
  */
@@ -56,16 +54,15 @@
 import { scoreSegmentMatch } from './source_parity_align_scoring.mjs';
 
 // ---------------------------------------------------------------------------
-// Block kind vocabulary — FROZEN
+// Block kind 語彙 — FROZEN
 // ---------------------------------------------------------------------------
 
 /**
- * Block-level kind vocabulary used by the structure comparator in
- * `enKinds` / `jaKinds`. This set is PINNED by a regression test in
- * `source_parity_structure.test.mjs` because PR5 will hash
- * `enKinds.join('|')` / `jaKinds.join('|')` into baseline identity keys.
- * Adding, removing, or renaming an entry is a breaking change that must
- * be accompanied by a baseline schema bump.
+ * structure comparator が `enKinds` / `jaKinds` で使う block 単位の kind
+ * 語彙。この集合は `source_parity_structure.test.mjs` の regression test
+ * で PIN されている。PR5 では `enKinds.join('|')` / `jaKinds.join('|')` を
+ * baseline identity key に hash する予定なので、エントリの追加・削除・
+ * 改名は破壊的変更であり baseline schema の bump とセットにする必要がある。
  */
 export const STRUCTURE_COMPARATOR_KINDS = Object.freeze([
   'paragraph',
@@ -79,9 +76,9 @@ export const STRUCTURE_COMPARATOR_KINDS = Object.freeze([
 const STRUCTURE_KIND_SET = new Set(STRUCTURE_COMPARATOR_KINDS);
 
 /**
- * Map from segment kind (as emitted by the canonical extractors) to the
- * block kind the structure comparator uses. Kinds not in this map are
- * dropped during collapsing (e.g. image, code-block, image-caption).
+ * canonical extractor が emit する segment kind から、structure comparator
+ * が使う block kind への対応表。ここに無い kind (image / code-block /
+ * image-caption 等) は畳み処理で落とされる (structure 語彙の対象外)。
  */
 const SEGMENT_TO_BLOCK_KIND = Object.freeze({
   paragraph: 'paragraph',
@@ -93,9 +90,9 @@ const SEGMENT_TO_BLOCK_KIND = Object.freeze({
 });
 
 /**
- * Collapsible source kinds — consecutive segments of these source kinds
- * fold into a single block. Non-collapsible source kinds (paragraph,
- * callout-body, details-summary) produce one block per segment.
+ * 畳み可能な source kind の集合。ここに属する kind が連続していれば 1
+ * block に折り畳まれる。paragraph / callout-body / details-summary は畳み
+ * 不可で、segment 1 つがそのまま 1 block になる。
  */
 const COLLAPSIBLE_SOURCE_KINDS = new Set([
   'ordered-list-item',
@@ -104,25 +101,26 @@ const COLLAPSIBLE_SOURCE_KINDS = new Set([
 ]);
 
 // ---------------------------------------------------------------------------
-// Score threshold for Stage C content bijection
+// Stage C の content bijection 用スコア閾値
 // ---------------------------------------------------------------------------
 
 /**
- * Minimum match score required for a pair to be considered a "strong"
- * content anchor during Stage C content-order detection. This threshold
- * is chosen to require at least a token-overlap-level match — tokenless
- * weak-position scores (1–15) fall below this and a section of pure
- * prose therefore fails the bijection, forcing a fall-through to LCS.
+ * Stage C (content-order) で「強いアンカー」として採用するために必要な最小
+ * マッチスコア。この閾値は最低でも token-overlap レベルのマッチを要求する
+ * 値にしてある — tokenless な weak-position スコア (1–15) はここを下回る
+ * ので、invariant token を持たない純散文 section は bijection が成立せず
+ * 自動的に LCS にフォールスルーする。
  *
- * See `scoreSegmentMatch` in source_parity_align_scoring.mjs for the
- * score hierarchy. This threshold MUST stay above the tokenless weak
- * position score range to preserve the "we never guess a swap without
- * invariant-token evidence" contract.
+ * スコア階層 (fingerprint > textNorm > token overlap > weak position/length
+ * > kind floor) は `source_parity_align_scoring.mjs::scoreSegmentMatch` を
+ * 参照。この閾値は **invariant-token の根拠なしに swap を推測しない** と
+ * いう契約を守るために、tokenless weak-position レンジより上に保たれて
+ * いなければならない。
  */
 const CONTENT_ORDER_MIN_SCORE = 100;
 
 // ---------------------------------------------------------------------------
-// Block collapsing
+// Block 畳み処理
 // ---------------------------------------------------------------------------
 
 /**
@@ -131,17 +129,17 @@ const CONTENT_ORDER_MIN_SCORE = 100;
 
 /**
  * @typedef {object} StructureBlock
- * @property {string} kind               a STRUCTURE_COMPARATOR_KINDS entry
- * @property {Segment[]} segments        source segments folded into this block
+ * @property {string} kind               STRUCTURE_COMPARATOR_KINDS のいずれか
+ * @property {Segment[]} segments        この block に畳まれた元 segment 列
  */
 
 /**
- * Walk a section body and fold consecutive same-kind collapsible segments
- * into one block. Non-collapsible segments become 1:1 blocks. Segments
- * whose kind is not in SEGMENT_TO_BLOCK_KIND are dropped (they are not
- * part of the structure vocabulary — e.g. image, code-block).
+ * section body を走査し、同種 collapsible segment が連続していれば 1 block
+ * に折り畳む。畳み不可 segment は 1:1 で block になる。SEGMENT_TO_BLOCK_KIND
+ * に無い kind (image / code-block など) は structure 語彙の対象外なので
+ * ここで落とす。
  *
- * Pure function — does not mutate `body`.
+ * 純粋関数 — `body` を mutate しない。
  *
  * @param {Segment[]} body
  * @returns {StructureBlock[]}
@@ -164,13 +162,13 @@ function collapseBodyToBlocks(body) {
       blocks.push({ kind: blockKind, sourceKind: seg.segmentKind, segments: [seg] });
     }
   }
-  // Drop the internal sourceKind discriminator — consumers only see
-  // { kind, segments }.
+  // 内部判別用の sourceKind は外部 API から見せない — consumer は
+  // { kind, segments } だけを受け取る。
   return blocks.map(({ kind, segments }) => ({ kind, segments }));
 }
 
 // ---------------------------------------------------------------------------
-// Multiset / sequence helpers
+// 集合 / 列の比較ヘルパー
 // ---------------------------------------------------------------------------
 
 function buildMultiset(items) {
@@ -210,17 +208,18 @@ function sequencesEqual(a, b) {
 // ---------------------------------------------------------------------------
 
 /**
- * Greedy all-pairs bijection from EN blocks to JA blocks using the
- * existing scoreSegmentMatch function as the match strength oracle.
+ * EN blocks と JA blocks を `scoreSegmentMatch` のスコアを頼りに greedy で
+ * 全ペア bijection する。
  *
- * Only fires when the block kind sequences are identical (the caller
- * enforces this). Blocks that folded multiple segments use their FIRST
- * segment as the representative — within-block drift is handled by the
- * LCS, not this comparator.
+ * 呼び出し元が block kind 列の完全一致を保証している前提で動く
+ * (compareSectionStructure の Stage C 分岐)。複数 segment が畳まれた block
+ * は **最初の segment** を代表として採用する。これが最も安定した選択:
+ * list 内部で token を束ねると content signal がぼけるため、LCS の
+ * per-segment scoring と同じ粒度で判定できるよう先頭を固定する。
  *
- * Returns a permutation `[{enIndex, jaIndex, score}]` when a strong
- * bijection exists and is non-identity; returns `null` otherwise so the
- * caller falls through to LCS.
+ * 強い bijection が見つかり、かつ identity 順列でない場合に
+ * `[{enIndex, jaIndex, score}]` を返す。それ以外は `null` を返し、呼び出し
+ * 側は LCS にフォールスルーする。
  *
  * @param {StructureBlock[]} enBlocks
  * @param {StructureBlock[]} jaBlocks
@@ -230,19 +229,15 @@ function detectContentOrderPermutation(enBlocks, jaBlocks) {
   const n = enBlocks.length;
   if (n < 2 || n !== jaBlocks.length) return null;
 
-  // Representative segment for each block — take the first segment. This
-  // is the stable choice: it matches the LCS's per-segment scoring
-  // without having to combine tokens across multiple segments of a list
-  // block (combining would blur the content signal).
+  // 各 block の代表 segment を先頭固定にする理由はヘッダコメント参照。
   const enReps = enBlocks.map((b) => b.segments[0] ?? null);
   const jaReps = jaBlocks.map((b) => b.segments[0] ?? null);
   if (enReps.some((s) => s == null) || jaReps.some((s) => s == null)) return null;
 
-  // Build all-pairs score matrix. scoreSegmentMatch requires matching
-  // segmentKind — since we only run when kind sequences are identical,
-  // same-index pairs always satisfy that constraint; cross-index pairs
-  // depend on the section's own kind pattern (e.g. [p, p] lets any pair
-  // match by kind; [p, ul] only lets same-index pairs match).
+  // 全ペアのスコア表を構築する。scoreSegmentMatch は segmentKind 一致を
+  // 前提にする — block kind 列が同一なのでここで同一 index ペアはその制約を
+  // 自然に満たす。非同一 index ペアは section 内の kind パターン次第
+  // ([p, p] なら任意ペア、[p, ul] なら同一 index ペアのみ)。
   const scores = Array.from({ length: n }, () => new Array(n).fill(0));
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
@@ -250,10 +245,9 @@ function detectContentOrderPermutation(enBlocks, jaBlocks) {
     }
   }
 
-  // Collect all strong candidate pairs, sorted by score descending. Then
-  // greedily assign. For the small section sizes we see in practice
-  // (typically ≤ 10 blocks), greedy is optimal enough and avoids the
-  // complexity of the Hungarian algorithm.
+  // 強い候補ペアを score 降順で集めてから greedy に割り当てる。実運用の
+  // section サイズ (典型的に block 数 ≤ 10) では Hungarian までやる必要は
+  // なく、greedy で十分最適に近い。
   const candidates = [];
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
@@ -275,10 +269,10 @@ function detectContentOrderPermutation(enBlocks, jaBlocks) {
     if (permutation.length === n) break;
   }
 
-  if (permutation.length !== n) return null; // not a full bijection — fall through
+  if (permutation.length !== n) return null; // 全 block が強マッチしなかった — LCS に流す
 
-  // Check for non-identity. If every enIndex equals its jaIndex the
-  // permutation is monotonic and we should NOT emit a content-order diff.
+  // identity チェック。全 enIndex が自分と同じ jaIndex を指しているなら
+  // monotonic なので content-order diff は emit しない。
   permutation.sort((a, b) => a.enIndex - b.enIndex);
   let isIdentity = true;
   for (let i = 0; i < permutation.length; i++) {
@@ -293,7 +287,7 @@ function detectContentOrderPermutation(enBlocks, jaBlocks) {
 }
 
 // ---------------------------------------------------------------------------
-// Diff factories
+// Diff ファクトリ
 // ---------------------------------------------------------------------------
 
 function buildBaseDiff({ type, section, enKinds, jaKinds, structureCategory, detail }) {
@@ -386,12 +380,12 @@ function buildContentOrderDiff(enSection, jaSection, enKinds, jaKinds, permutati
  */
 
 /**
- * Compare a paired (EN, JA) section body and return at most one
- * section-level structure diff. See module header for the staging rules.
+ * ペアになった (EN, JA) section body を比較し、section 単位の structure
+ * diff を最大 1 件返す。段階のルールはモジュールヘッダ参照。
  *
  * @param {{index: number, sectionPath: string, body: Segment[]}} enSection
  * @param {{index: number, sectionPath: string, body: Segment[]}} jaSection
- * @returns {StructureDiff[]}  empty = no structure issue, caller runs LCS
+ * @returns {StructureDiff[]}  空配列 = 構造 issue 無し、呼び出し側が LCS を走らせる
  */
 export function compareSectionStructure(enSection, jaSection) {
   if (!enSection || !jaSection) return [];
@@ -402,7 +396,7 @@ export function compareSectionStructure(enSection, jaSection) {
   const enKinds = enBlocks.map((b) => b.kind);
   const jaKinds = jaBlocks.map((b) => b.kind);
 
-  // Guard — every emitted kind must be in the frozen vocabulary.
+  // Guard — 出力される kind は必ず frozen 語彙の中になければならない。
   for (const kind of [...enKinds, ...jaKinds]) {
     if (!STRUCTURE_KIND_SET.has(kind)) {
       throw new Error(
@@ -412,57 +406,55 @@ export function compareSectionStructure(enSection, jaSection) {
     }
   }
 
-  // Empty-body short circuit. When one side has zero blocks, there is
-  // no structural information on that side to compare against — the
-  // drift is a pure translation gap (or a pure addition) that the
-  // weighted LCS expresses precisely as segment-missing /
-  // segment-extra. Firing a structure mismatch here would strip the
-  // per-segment detail reviewers rely on. Fall through instead.
+  // 空 body の short-circuit。片側の block が 0 個のときは構造情報そのもの
+  // が存在しないので、差分は純粋な翻訳欠落 (または純粋な追加) — これは
+  // weighted LCS が segment-missing / segment-extra として正確に表現する。
+  // ここで structure mismatch を出してしまうと reviewer が頼りにする per-
+  // segment の drill-down が消えるので、必ずフォールスルーする。
   if (enBlocks.length === 0 || jaBlocks.length === 0) {
     return [];
   }
 
-  // Stage A — CROSS-KIND structural drift.
+  // Stage A — CROSS-KIND 構造ドリフト。
   //
-  // Stage A is the home of drift that changes WHICH kinds are present:
-  // list→paragraph collapse, callout→paragraph collapse,
-  // details-summary loss, ordered↔unordered list swap. Count-only drift
-  // within the same set of kinds (e.g. "one paragraph was deleted from
-  // a section that still has paragraphs + list items + callouts on
-  // both sides") is INTENTIONALLY OUT OF SCOPE and stays with the
-  // weighted LCS, because:
-  //   1. LCS emits per-segment drill-down (which EN paragraph was
-  //      dropped) that reviewers and the recall test suite depend on,
-  //      and a section-level structure mismatch would erase it.
-  //   2. Recall fixtures for paragraph-delete / bullet-delete /
-  //      step-delete / callout-paragraph-delete / html-table-cell-delete
-  //      are exactly this "single-item deletion inside a multi-kind
-  //      section" shape and must remain segment-missing.
+  // Stage A の担当は「どの kind が存在するか」が変わる drift:
+  // list→paragraph collapse / callout→paragraph collapse /
+  // details-summary 消失 / ordered↔unordered list swap など。**同じ kind
+  // 集合の中での数の増減** (例: paragraph + list-item + callout が両側に
+  // 残ったまま paragraph が 1 つ削除される) は **意図的に scope 外** にして
+  // weighted LCS に委ねる。理由は:
   //
-  // Therefore Stage A fires exclusively when the kind SET differs. If
-  // both sides have the same set of distinct kinds, the drift is a
-  // count change inside an existing kind vocabulary and belongs to LCS.
+  //   1. LCS は per-segment 単位で drill-down (どの EN 段落が落ちたか) を
+  //      emit するが、これが reviewer と recall benchmark の信号源になって
+  //      いる。section 単位の structure mismatch を被せるとそれが消える。
+  //   2. recall fixture の paragraph-delete / bullet-delete / step-delete /
+  //      callout-paragraph-delete / html-table-cell-delete は全て
+  //      「multi-kind section の中で 1 item 消える」形状で、これらは必ず
+  //      segment-missing として残さなければならない。
+  //
+  // したがって Stage A は **kind SET が違う** 場合にのみ fire する。両側が
+  // 同じ distinct kind の集合を持っているなら、drift は既存 kind 語彙の
+  // 内側で起きている「個数変化」であり LCS の担当になる。
   const enKindSet = new Set(enKinds);
   const jaKindSet = new Set(jaKinds);
   if (!setsEqual(enKindSet, jaKindSet)) {
     return [buildKindMultisetDiff(enSection, jaSection, enKinds, jaKinds)];
   }
 
-  // Stage B — kind sequence (same multiset, different order).
+  // Stage B — kind sequence (multiset 一致 / 並び順のみ不一致)。
   //
-  // Stage B only runs when the multisets already match — otherwise a
-  // length mismatch would masquerade as a "reorder". Count drift that
-  // fell through Stage A (same kind set, different counts) must keep
-  // falling through to LCS, not be caught here.
+  // Stage B は multiset が既に一致している場合にのみ走る — そうしないと
+  // 長さが違うだけなのに「reorder」と誤認してしまう。Stage A を抜けてきた
+  // count drift (同 kind 集合で個数違い) はここでも拾わずに LCS へ流す。
   const enMultiset = buildMultiset(enKinds);
   const jaMultiset = buildMultiset(jaKinds);
   if (multisetsEqual(enMultiset, jaMultiset) && !sequencesEqual(enKinds, jaKinds)) {
     return [buildKindSequenceDiff(enSection, jaSection, enKinds, jaKinds)];
   }
 
-  // Stage C — content-order bijection. Kind sequences must be
-  // identical here (otherwise Stage B would have fired, or multisets
-  // differ and we're falling through to LCS).
+  // Stage C — content-order bijection。ここに来た時点で kind 列は完全一致
+  // している必要がある (そうでなければ Stage B が発火しているか、multiset
+  // が違って LCS にフォールスルーする経路)。
   if (sequencesEqual(enKinds, jaKinds)) {
     const permutation = detectContentOrderPermutation(enBlocks, jaBlocks);
     if (permutation) {
@@ -473,5 +465,5 @@ export function compareSectionStructure(enSection, jaSection) {
   return [];
 }
 
-// Re-exports for tests.
+// テスト用の re-export。
 export { collapseBodyToBlocks as __collapseBodyToBlocks };
