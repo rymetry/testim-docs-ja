@@ -36,12 +36,19 @@ function hasFamilyMarker(issue, marker) {
   return issue.body?.includes(marker) === true;
 }
 
+function getIssueFamilyKey(issue) {
+  const match = issue.body?.match(/<!--\s*detection-family:\s*([a-z0-9-]+)\s*-->/);
+  return match?.[1] ?? null;
+}
+
 function sortMatchingIssues(marker) {
   return (left, right) => {
     const markerDiff =
       Number(hasFamilyMarker(right, marker)) - Number(hasFamilyMarker(left, marker));
     if (markerDiff !== 0) return markerDiff;
-    return sortByUpdatedDesc(left, right);
+    const updatedDiff = sortByUpdatedDesc(left, right);
+    if (Number.isFinite(updatedDiff) && updatedDiff !== 0) return updatedDiff;
+    return (right.number ?? 0) - (left.number ?? 0);
   };
 }
 
@@ -159,10 +166,16 @@ async function syncOneIssue({
 }) {
   // Prefer key-based matching (HTML comment in body) over title matching so
   // that title renames never create duplicate issues.  Fall back to title
-  // matching for issues that were created before the marker was introduced.
+  // matching only for OPEN legacy issues that do not already belong to some
+  // other managed detection family.
   const marker = buildFamilyMarker(key);
   const byMarker = existingIssues.filter((issue) => hasFamilyMarker(issue, marker));
-  const byTitle = existingIssues.filter((issue) => issue.title === title);
+  const byTitle = existingIssues.filter(
+    (issue) =>
+      issue.state === 'open'
+      && issue.title === title
+      && getIssueFamilyKey(issue) === null,
+  );
   const matching = [...new Map(
     [...byMarker, ...byTitle].map((issue) => [issue.number, issue]),
   ).values()].sort(sortMatchingIssues(marker));

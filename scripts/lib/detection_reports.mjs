@@ -4,6 +4,10 @@ import path from 'node:path';
 import {
   ROOT_DIR,
 } from './project.mjs';
+import {
+  isActiveParityIssue,
+  isReportableParityIssue,
+} from './source_parity_issue_state.mjs';
 
 const SNAPSHOT_ISSUE_TITLE =
   '📸 Content Drift: English source changes detected via snapshot diff';
@@ -142,29 +146,6 @@ function sortSnapshotEntries(entries) {
   });
 }
 
-/**
- * An issue is "active" if it is NOT validly acknowledged.
- * Expired acknowledgements count as active (source has changed or review date passed).
- */
-function isActiveIssue(issue) {
-  if (issue.acknowledged !== true) return true;
-  if (issue.ackExpired === true) return true;
-  return false;
-}
-
-/**
- * Reportable for the parityRegression gate: actionable/signal severity,
- * not validly acknowledged, AND not frozen by a non-expired baseline entry.
- * Expired baselines (baselineExpired: true) are re-activated and count as
- * regression.  Non-expired baselined issues are surfaced in parityFollowup
- * instead.
- */
-function isReportableParityIssue(issue) {
-  if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
-  if (issue.baselined === true && issue.baselineExpired !== true) return false;
-  return isActiveIssue(issue);
-}
-
 function withFamilyMarker(body, key) {
   if (!body) return '';
   return `<!-- detection-family: ${key} -->\n${body}`;
@@ -172,7 +153,7 @@ function withFamilyMarker(body, key) {
 
 function scoreParityEntry(entry) {
   return entry.issues.reduce((score, issue) => {
-    if (!isActiveIssue(issue)) return score;
+    if (!isActiveParityIssue(issue)) return score;
     if (issue.type === 'image-mismatch') return score + 3;
     if (issue.type === 'codeblock-mismatch') return score + 3;
     if (issue.severity === 'actionable') return score + 2;
@@ -315,10 +296,9 @@ function buildParityFollowupBody({
   ];
 
   if (includeAdvisoryInBody) {
-    const scopeType = advisoryQueueScope?.type ?? 'unknown';
     lines.push(
       `- Advisory queue: ${advisoryQueueIssues} issues (${advisoryQueueFiles} files)`,
-      `  - Scope: ${scopeType} (complete)`,
+      `  - Scope: ${formatAdvisoryQueueScope(advisoryQueueScope)}`,
       `  - Blocking: ${blockingAdvisoryItems.length}`,
       '',
     );

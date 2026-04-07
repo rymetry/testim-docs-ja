@@ -1,3 +1,8 @@
+import {
+  isFrozenByBaseline,
+  isValidAcknowledgedIssue,
+} from './source_parity_issue_state.mjs';
+
 /**
  * Aggregates per-file parity results into type/severity/acknowledgement
  * summary statistics.
@@ -44,10 +49,7 @@ export function summarizeParityResults(results) {
 
     for (const issue of result.issues) {
       const isBaselined = issue.baselined === true;
-      // Non-expired baseline entries are frozen from the gate.  Expired
-      // entries (reviewAfter date passed) re-enter the active accounting so
-      // that isReportableParityIssue and the summary agree on what is "active".
-      const isFrozenByBaseline = isBaselined && issue.baselineExpired !== true;
+      const isFrozen = isFrozenByBaseline(issue);
 
       if (isBaselined) {
         baselinedIssues += 1;
@@ -69,11 +71,11 @@ export function summarizeParityResults(results) {
       issuesByType[issue.type] = (issuesByType[issue.type] || 0) + 1;
       issuesBySeverity[issue.severity] = (issuesBySeverity[issue.severity] || 0) + 1;
 
-      const isValidAck = issue.acknowledged === true && issue.ackExpired !== true;
+      const isValidAck = isValidAcknowledgedIssue(issue);
 
       if (isValidAck) {
         acknowledgedIssues += 1;
-      } else if (!isFrozenByBaseline) {
+      } else if (!isFrozen) {
         hasActiveIssue = true;
       }
 
@@ -83,12 +85,12 @@ export function summarizeParityResults(results) {
 
       if (issue.severity === 'actionable') {
         hasActionable = true;
-        if (!isValidAck && !isFrozenByBaseline) hasActiveActionable = true;
+        if (!isValidAck && !isFrozen) hasActiveActionable = true;
       }
       if (issue.severity === 'signal') hasSignal = true;
       if (issue.severity === 'error') {
         hasError = true;
-        if (!isValidAck && !isFrozenByBaseline) hasActiveError = true;
+        if (!isValidAck && !isFrozen) hasActiveError = true;
       }
     }
 

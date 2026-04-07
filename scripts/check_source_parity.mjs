@@ -20,11 +20,14 @@ import {
   compareSnapshotStructure,
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
+  isNonBlockingParityIssue,
+  isValidAcknowledgedIssue,
   loadSidebarSlugs,
   localCheck,
   parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
+export { isValidAcknowledgedIssue } from './lib/source_parity_issue_state.mjs';
 import {
   computeSnapshotFingerprint,
   validateAcknowledgements,
@@ -70,12 +73,8 @@ function buildSegmentInconclusiveIssue(reason, category, meta = null) {
   };
 }
 
-export function isValidAcknowledgedIssue(issue) {
-  return issue.acknowledged === true && issue.ackExpired !== true;
-}
-
 export function isNonBlockingIssue(issue) {
-  return (issue.baselined === true && issue.baselineExpired !== true) || isValidAcknowledgedIssue(issue);
+  return isNonBlockingParityIssue(issue);
 }
 
 export function getConsoleCoverageState(issues) {

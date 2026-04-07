@@ -856,6 +856,10 @@ describe('parityFollowup in buildActionableReport', () => {
       report.parityFollowup.summary.reviewHints.tokenlessNearTieExamples[0].slug,
       'overview/page-a',
     );
+    assert.match(report.parityFollowup.body, /Scope: full repo/);
+
+    const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
+    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; full repo\)/);
   });
 
   it('shouldOpenIssue = false when advisory has blocking items but scope is not complete', () => {
@@ -927,6 +931,9 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.doesNotMatch(report.parityFollowup.body, /Advisory queue:/);
     assert.doesNotMatch(report.parityFollowup.body, /tokenless-near-tie/);
     assert.doesNotMatch(report.parityFollowup.body, /partial-only/);
+
+    const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
+    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; partial scope: slug=overview\/page-a, not repo-wide\)/);
   });
 
   it('parityFollowup body contains invalidated slugs', () => {
