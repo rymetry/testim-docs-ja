@@ -957,3 +957,231 @@ describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR2 — section structure comparator wired into alignSegments
+// ---------------------------------------------------------------------------
+
+describe('alignSegments — structure comparator integration (Issue #247 PR2)', () => {
+  let parityDiffsToIssues;
+
+  before(async () => {
+    ({ parityDiffsToIssues } = await import('../lib/source_parity_align.mjs'));
+  });
+
+  it('emits section-structure-mismatch for cross-kind collapse (list → paragraph)', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'unordered-list-item', 0, '- bullet `alpha`'),
+      makeSeg('Overview', 'unordered-list-item', 1, '- bullet `beta`'),
+      makeSeg('Overview', 'unordered-list-item', 2, '- bullet `gamma`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, 'alpha, beta, gamma を段落に畳んだ翻訳'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter(
+      (d) => d.type === 'section-structure-mismatch',
+    );
+    assert.equal(structureDiffs.length, 1);
+    const diff = structureDiffs[0];
+    assert.equal(diff.scope, 'section');
+    assert.equal(diff.structureCategory, 'kind-multiset');
+    assert.deepEqual(diff.enKinds, ['unordered-list']);
+    assert.deepEqual(diff.jaKinds, ['paragraph']);
+  });
+
+  it('emits exactly one section-level structure diff per mismatched section (no cascade multiplier)', () => {
+    // PR2 runs the structure comparator ALONGSIDE the weighted LCS,
+    // not in place of it. The structure comparator contributes at most
+    // +1 diff per mismatched section; the LCS is still free to emit
+    // its per-segment drill-down (segment-missing / segment-extra /
+    // segment-token-gap). This parallel contract is intentional:
+    // suppressing LCS would hide subsequent small mutations in a
+    // section that already has pre-existing structural drift (see the
+    // recall benchmark for callout-paragraph-delete / step-delete /
+    // section-body-swap).
+    //
+    // The cascade concern is specifically about structure mismatch NOT
+    // multiplying into many structure-level diffs — i.e., one
+    // structural drift must produce exactly one `section-structure-
+    // mismatch` regardless of how many segments moved.
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'unordered-list-item', 0, '- bullet `alpha`'),
+      makeSeg('Overview', 'unordered-list-item', 1, '- bullet `beta`'),
+      makeSeg('Overview', 'unordered-list-item', 2, '- bullet `gamma`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, 'alpha, beta, gamma を段落に畳んだ翻訳'),
+    ];
+    const result = alignSegments(en, ja);
+    const grouped = diffsByType(result.diffs);
+    assert.equal(
+      grouped['section-structure-mismatch'],
+      1,
+      'exactly one section-level structure diff per mismatched section',
+    );
+    // LCS still runs and may emit per-segment drill-down — assert only
+    // that the structure-mismatch counter did not multiply.
+  });
+
+  it('structure mismatch is limited to the affected section (no leakage to sibling sections)', () => {
+    // Section 1 has a cross-kind structure mismatch; Section 2 is
+    // perfectly aligned. The structure comparator emits for Section 1
+    // only — Section 2 must not receive any structure-mismatch diff.
+    const en = [
+      makeHeading('Section 1', 0, 'Section 1'),
+      makeSeg('Section 1', 'callout-body', 0, 'EN callout `warn`'),
+      makeSeg('Section 1', 'paragraph', 0, 'EN para `flag`'),
+      makeHeading('Section 2', 0, 'Section 2'),
+      makeSeg('Section 2', 'paragraph', 0, 'Clean EN paragraph `key`'),
+    ];
+    const ja = [
+      makeHeading('セクション 1', 0, 'セクション 1'),
+      makeSeg('セクション 1', 'paragraph', 0, '注意 `warn` と段落 `flag` を畳んだ翻訳'),
+      makeHeading('セクション 2', 0, 'セクション 2'),
+      makeSeg('セクション 2', 'paragraph', 0, '綺麗な翻訳 `key`'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter(
+      (d) => d.type === 'section-structure-mismatch' || d.type === 'segment-order-mismatch',
+    );
+    assert.equal(structureDiffs.length, 1);
+    assert.equal(structureDiffs[0].sectionPath, 'Section 1');
+  });
+
+  it('emits segment-order-mismatch (kind-sequence) for mixed-kind reorder', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'EN para `token-a`'),
+      makeSeg('Overview', 'unordered-list-item', 0, '- bullet `token-b`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'unordered-list-item', 0, '- 箇条書き `token-b`'),
+      makeSeg('概要', 'paragraph', 0, '段落 `token-a`'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter((d) => d.type === 'segment-order-mismatch');
+    assert.equal(structureDiffs.length, 1);
+    assert.equal(structureDiffs[0].structureCategory, 'kind-sequence');
+  });
+
+  it('emits segment-order-mismatch (content-order) for same-kind content swap', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'Paragraph `alpha-token`'),
+      makeSeg('Overview', 'paragraph', 1, 'Paragraph `beta-token`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '`beta-token` の段落'),
+      makeSeg('概要', 'paragraph', 1, '`alpha-token` の段落'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter((d) => d.type === 'segment-order-mismatch');
+    assert.equal(structureDiffs.length, 1);
+    assert.equal(structureDiffs[0].structureCategory, 'content-order');
+    assert.ok(Array.isArray(structureDiffs[0].contentPermutation));
+  });
+
+  it('preserves existing segment-missing behavior for pure same-kind count drift', () => {
+    // This is the critical regression test — structure comparator must
+    // NOT intercept pure same-single-kind count drift. The existing
+    // segment-missing contract (one dropped paragraph → one diff) has
+    // to stay intact so reviewers keep getting the per-segment index
+    // drill-down.
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'EN para A `token-a`'),
+      makeSeg('Overview', 'paragraph', 1, 'EN para B `token-b`'),
+      makeSeg('Overview', 'paragraph', 2, 'EN para C `token-c`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, 'JA 段落 A `token-a`'),
+      makeSeg('概要', 'paragraph', 1, 'JA 段落 C `token-c`'),
+    ];
+    const result = alignSegments(en, ja);
+    const grouped = diffsByType(result.diffs);
+    assert.equal(grouped['segment-missing'], 1, 'the dropped middle paragraph must still surface');
+    assert.equal(grouped['section-structure-mismatch'], undefined);
+    assert.equal(grouped['segment-order-mismatch'], undefined);
+  });
+
+  it('parityDiffsToIssues forwards the structure payload contract verbatim', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'callout-body', 0, 'EN callout `warn`'),
+      makeSeg('Overview', 'paragraph', 0, 'EN paragraph `flag`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '注意 `warn` と段落 `flag` を畳んだ翻訳'),
+    ];
+    const result = alignSegments(en, ja);
+    const issues = parityDiffsToIssues(result.diffs);
+
+    const structureIssue = issues.find((i) => i.type === 'section-structure-mismatch');
+    assert.ok(structureIssue, 'structure mismatch must be present after adapter pass');
+
+    // Contract fields.
+    assert.equal(structureIssue.severity, 'actionable');
+    assert.equal(structureIssue.scope, 'section');
+    assert.equal(structureIssue.structureCategory, 'kind-multiset');
+    assert.deepEqual(structureIssue.enKinds, ['callout-body', 'paragraph']);
+    assert.deepEqual(structureIssue.jaKinds, ['paragraph']);
+    assert.equal(structureIssue.enSegmentCount, 2);
+    assert.equal(structureIssue.jaSegmentCount, 1);
+    assert.equal(typeof structureIssue.detail, 'string');
+    assert.ok(structureIssue.detail.length > 0);
+
+    // Forbidden fields — segment-level shape must not leak onto the
+    // section-level adapter branch.
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'segmentKind'),
+      false,
+      'structure issues MUST NOT carry segmentKind after adapter',
+    );
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'enSegmentIndex'),
+      false,
+    );
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'jaSegmentIndex'),
+      false,
+    );
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'enSourceFingerprint'),
+      false,
+    );
+  });
+
+  it('parityDiffsToIssues forwards contentPermutation for content-order diffs', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'Paragraph `alpha`'),
+      makeSeg('Overview', 'paragraph', 1, 'Paragraph `beta`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '`beta` の段落'),
+      makeSeg('概要', 'paragraph', 1, '`alpha` の段落'),
+    ];
+    const result = alignSegments(en, ja);
+    const issues = parityDiffsToIssues(result.diffs);
+    const issue = issues.find((i) => i.type === 'segment-order-mismatch');
+    assert.ok(issue);
+    assert.equal(issue.structureCategory, 'content-order');
+    assert.ok(Array.isArray(issue.contentPermutation));
+    assert.equal(issue.contentPermutation.length, 2);
+    for (const entry of issue.contentPermutation) {
+      assert.equal(typeof entry.enIndex, 'number');
+      assert.equal(typeof entry.jaIndex, 'number');
+      assert.equal(typeof entry.score, 'number');
+    }
+  });
+});
