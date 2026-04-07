@@ -722,7 +722,9 @@ describe('summarizeParityResults — baseline accounting', () => {
     });
   });
 
-  it('counts expired baseline entries separately without making them active', () => {
+  it('counts expired baseline entries and re-activates them in active accounting', () => {
+    // Phase 7: expired baselines re-enter the gate, consistent with
+    // isReportableParityIssue.  Non-expired baselines remain frozen.
     const results = [
       {
         file: 'a.md',
@@ -741,7 +743,31 @@ describe('summarizeParityResults — baseline accounting', () => {
     ];
     const summary = summarizeParityResults(results);
     assert.equal(summary.expiredBaselineEntries, 1);
+    // Expired baseline is active — it shows up in the gate
+    assert.equal(summary.activeFiles, 1);
+    assert.equal(summary.activeActionableFiles, 1);
+  });
+
+  it('keeps non-expired baselines frozen (not active)', () => {
+    const results = [
+      {
+        file: 'a.md',
+        sourceUrl: '',
+        category: '',
+        issues: [
+          {
+            type: 'segment-missing',
+            severity: 'actionable',
+            baselined: true,
+            detail: 'non-expired baseline',
+          },
+        ],
+      },
+    ];
+    const summary = summarizeParityResults(results);
+    assert.equal(summary.baselinedIssues, 1);
     assert.equal(summary.activeFiles, 0);
+    assert.equal(summary.activeActionableFiles, 0);
   });
 
   it('reports baselinedFiles=0 when no baseline tags are present', () => {

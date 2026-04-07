@@ -75,7 +75,7 @@ export function isValidAcknowledgedIssue(issue) {
 }
 
 export function isNonBlockingIssue(issue) {
-  return issue.baselined === true || isValidAcknowledgedIssue(issue);
+  return (issue.baselined === true && issue.baselineExpired !== true) || isValidAcknowledgedIssue(issue);
 }
 
 export function getConsoleCoverageState(issues) {

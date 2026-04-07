@@ -110,10 +110,11 @@ describe('CLI coverage helpers', () => {
     assert.equal(isValidAcknowledgedIssue({ acknowledged: false, ackExpired: false }), false);
   });
 
-  it('treats baseline and valid acknowledgements as non-blocking', () => {
+  it('treats non-expired baselines and valid acknowledgements as non-blocking', () => {
     assert.equal(isNonBlockingIssue({ baselined: true }), true);
     assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: false }), true);
-    assert.equal(isNonBlockingIssue({ baselined: true, baselineExpired: true }), true);
+    // Phase 7: expired baselines re-enter the gate and are blocking
+    assert.equal(isNonBlockingIssue({ baselined: true, baselineExpired: true }), false);
     assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: true }), false);
     assert.equal(isNonBlockingIssue({ severity: 'actionable' }), false);
   });
@@ -144,13 +145,15 @@ describe('CLI coverage helpers', () => {
     });
   });
 
-  it('keeps expired baselines non-blocking for console coverage', () => {
+  it('treats expired baselines as blocking for console coverage (Phase 7)', () => {
+    // Phase 7: expired baselines re-enter the gate, so the console icon
+    // should be ❌ to match the parity regression gate behavior.
     const state = getConsoleCoverageState([{ baselined: true, baselineExpired: true }]);
     assert.deepEqual(state, {
       allAcked: false,
-      allCovered: true,
-      icon: '⏸️',
-      suffix: ' (covered by baseline/ack)',
+      allCovered: false,
+      icon: '❌',
+      suffix: '',
     });
   });
 

@@ -44,6 +44,10 @@ export function summarizeParityResults(results) {
 
     for (const issue of result.issues) {
       const isBaselined = issue.baselined === true;
+      // Non-expired baseline entries are frozen from the gate.  Expired
+      // entries (reviewAfter date passed) re-enter the active accounting so
+      // that isReportableParityIssue and the summary agree on what is "active".
+      const isFrozenByBaseline = isBaselined && issue.baselineExpired !== true;
 
       if (isBaselined) {
         baselinedIssues += 1;
@@ -69,7 +73,7 @@ export function summarizeParityResults(results) {
 
       if (isValidAck) {
         acknowledgedIssues += 1;
-      } else if (!isBaselined) {
+      } else if (!isFrozenByBaseline) {
         hasActiveIssue = true;
       }
 
@@ -79,12 +83,12 @@ export function summarizeParityResults(results) {
 
       if (issue.severity === 'actionable') {
         hasActionable = true;
-        if (!isValidAck && !isBaselined) hasActiveActionable = true;
+        if (!isValidAck && !isFrozenByBaseline) hasActiveActionable = true;
       }
       if (issue.severity === 'signal') hasSignal = true;
       if (issue.severity === 'error') {
         hasError = true;
-        if (!isValidAck && !isBaselined) hasActiveError = true;
+        if (!isValidAck && !isFrozenByBaseline) hasActiveError = true;
       }
     }
 

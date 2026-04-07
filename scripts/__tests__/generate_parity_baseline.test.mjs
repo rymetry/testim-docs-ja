@@ -36,7 +36,7 @@ const sampleStatus = {
         {
           type: 'segment-missing',
           severity: 'actionable',
-          phase: 'segment-shadow',
+
           sectionPath: 'Setup',
           segmentKind: 'paragraph',
           enSegmentIndex: 2,
@@ -47,7 +47,7 @@ const sampleStatus = {
         {
           type: 'segment-extra',
           severity: 'actionable',
-          phase: 'segment-shadow',
+
           sectionPath: 'Setup',
           segmentKind: 'paragraph',
           enSegmentIndex: null,
@@ -58,7 +58,7 @@ const sampleStatus = {
         {
           type: 'segment-token-gap',
           severity: 'actionable',
-          phase: 'segment-shadow',
+
           sectionPath: 'CLI',
           segmentKind: 'paragraph',
           enSegmentIndex: 1,
@@ -70,7 +70,7 @@ const sampleStatus = {
         {
           type: 'segment-inconclusive',
           severity: 'actionable',
-          phase: 'segment-shadow',
+
           sectionPath: null,
           segmentKind: null,
           inconclusiveCategory: 'heading-count-mismatch',
