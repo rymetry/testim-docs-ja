@@ -479,6 +479,13 @@ describe('Phase 8 — existing activeFiles semantics unchanged', () => {
 // 新 taxonomy 用 counter の集計契約を固定する。PR1 時点では emitter が
 // 未実装 (PR2/PR3 で追加) のため、現実運用では常にゼロだが、downstream
 // (detection_reports / CLI / schema) が受け入れる枠をここで先取りする。
+//
+// 「frozen baseline で除外」系のテストは、counter が baselined フラグを
+// honor することを純粋関数として固定しているもので、PR1 時点で実際に
+// 新 type に baseline が付くことは無い (`BASELINE_ELIGIBLE_TYPES` は
+// まだ legacy segment-* だけを許容し、loader/validator が新 type を
+// reject する — source_parity_baseline.test.mjs 参照)。baseline wiring
+// は PR5 で baseline 同定キーを設計してから追加する。
 // ---------------------------------------------------------------------------
 
 describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', () => {

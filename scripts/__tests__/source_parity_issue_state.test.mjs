@@ -570,6 +570,14 @@ describe('Issue #247 PR1 — isSourceUnusableIssue', () => {
 describe('Issue #247 PR1 — isReportableParityIssue accepts new taxonomy', () => {
   // 構造保持違反を coarse audit-only に降格せず、reportable として扱う
   // ことが PR1 契約の要。ここで reportable 契約を固定する。
+  //
+  // 注意 — 「frozen baseline」「expired baseline」系のテストは、述語単体
+  // (isFrozenByBaseline) が baselined フラグを honor することを固定して
+  // いるだけで、PR1 時点では実際のフロー上これらのフラグが新 type に
+  // 付くことはない (`source_parity_baseline.mjs::BASELINE_ELIGIBLE_TYPES`
+  // はまだ legacy segment-* しか許容せず、loader が reject する)。
+  // 新 type の baseline wiring は PR5 で baseline 同定キーを確定してから
+  // 追加する。ここでは述語の forward-compatibility だけを保証する。
 
   it('accepts section-structure-mismatch (active, no ack, no baseline)', () => {
     assert.equal(

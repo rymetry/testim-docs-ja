@@ -31,16 +31,22 @@ import {
  *   structureMismatchIssues / structureMismatchFiles / structureMismatchByType
  *     Issue #247 PR1 — canonical block sequence comparator 由来の structure
  *     mismatch (section-structure-mismatch / segment-order-mismatch) の
- *     独立 counter。ack / frozen baseline は除外し、gate に載せる予定の
- *     active な structure violation のみカウントする。PR2 で emitter を
- *     追加するまでは常にゼロ。PR4 で `reportableActive*` と揃えて gate
+ *     独立 counter。ack (valid) と frozen baseline は除外し、gate に載せる
+ *     予定の active な structure violation のみカウントする。PR2 で emitter
+ *     を追加するまでは常にゼロ。PR4 で `reportableActive*` と揃えて gate
  *     cutover する。
+ *
+ *     PR1 時点の注意: 新 type は `BASELINE_ELIGIBLE_TYPES` にまだ含まれない
+ *     ため、現実運用で baseline が付くことは無い (loader が reject する)。
+ *     ここで `!isFrozen` を見ているのは将来の baseline wiring (PR5) を
+ *     見越した契約であって、PR1 段階では純粋に ack だけが除外経路になる。
  *
  *   snapshotUnusableIssues / snapshotUnusableFiles / snapshotUnusableByType
  *     Issue #247 PR1 — snapshot / source 起因で comparator が成立しない
  *     ページ用の独立 counter。`snapshot-incomplete` / `source-unusable` を
  *     translation drift と混ぜないために別枠で集計する。PR3 で emitter を
- *     追加するまでは常にゼロ。
+ *     追加するまでは常にゼロ。baseline eligibility は structureMismatch と
+ *     同じで、PR1 時点では未対応 (PR5 で wiring)。
  *
  *   baselinedIssues / baselinedFiles / baselinedByType /
  *   baselinedByInconclusiveCategory / expiredBaselineEntries

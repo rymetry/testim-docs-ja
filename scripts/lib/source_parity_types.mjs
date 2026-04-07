@@ -40,7 +40,8 @@ export const ISSUE_SEVERITY = Object.freeze({
   // を主判定から降ろし、section ごとの block 列そのものを比較した結果を
   // ここに emit する。PR1 時点では taxonomy / contract のみ導入し、emission
   // は PR2 で追加する。どちらも reportable (actionable) で、coarse audit
-  // signal には含めない。
+  // signal には含めない。ack は可能 / baseline は PR1 時点では未対応
+  // (STRUCTURE_MISMATCH_TYPES の docstring 参照)。
   'section-structure-mismatch': 'actionable',
   'segment-order-mismatch': 'actionable',
   // Issue #247 PR1 — snapshot / source 起因で comparator が成立しない
@@ -48,7 +49,8 @@ export const ISSUE_SEVERITY = Object.freeze({
   // 既知 unusable パターンにマッチした場合、structure mismatch を suppress
   // してこちらに 1 件だけ畳む。PR3 で emission を追加する。reportable に
   // 含めるが、structure mismatch とは別 counter で集計する (translation
-  // drift と source unusable を混ぜないため)。
+  // drift と source unusable を混ぜないため)。ack は可能 / baseline は
+  // PR1 時点では未対応 (SOURCE_UNUSABLE_TYPES の docstring 参照)。
   'snapshot-incomplete': 'actionable',
   'source-unusable': 'actionable',
 });
@@ -91,13 +93,20 @@ export const COARSE_SIGNAL_TYPES = Object.freeze(
  * として検出される「原文の全文構造を保っていない翻訳」を first-class に
  * 出すための集合。PR2 で `source_parity_align.mjs` から emit される。
  *
- * これらの type は:
+ * これらの type の PR1 時点での契約:
  * - coarse audit signal には**含めない** (gate に乗せる)
  * - `isReportableParityIssue()` では reportable として扱う
  * - summary の `structureMismatchIssues` / `structureMismatchFiles` に
  *   集計される (PR4 で gate cutover)
- * - acknowledgement / baseline は引き続き可能 (意図的な差分は人間レビューで
- *   抑制できる)
+ * - **acknowledgement は可能** (NON_ACKNOWLEDGEABLE_TYPES に入れないため、
+ *   意図的な差分を reviewer が ack で抑制できる)
+ * - **baseline は PR1 時点では未対応**。`source_parity_baseline.mjs` の
+ *   `BASELINE_ELIGIBLE_TYPES` は引き続き legacy `segment-*` ファミリだけを
+ *   許容し、新 type は拒否される。新 type の baseline 同定キー
+ *   (section path / block kind / canonical sequence hash など) は PR2/PR3
+ *   で emitter が fix した後、PR5 の baseline migration で設計 + wiring する。
+ *   それまでは「freeze する必要がない」== active として gate に乗る前提で
+ *   運用する。
  */
 export const STRUCTURE_MISMATCH_TYPES = Object.freeze(
   new Set([
@@ -113,12 +122,17 @@ export const STRUCTURE_MISMATCH_TYPES = Object.freeze(
  * structure mismatch を suppress してこちらに 1 件だけ畳む。PR3 で
  * `source_parity_checks.mjs` から emit される。
  *
- * これらの type は:
+ * これらの type の PR1 時点での契約:
  * - coarse audit signal には**含めない** (reportable)
  * - `isReportableParityIssue()` では reportable として扱う
  * - summary の `snapshotUnusableIssues` / `snapshotUnusableFiles` に
  *   集計される (translation drift とは別カウント)
- * - acknowledgement / baseline は可能 (snapshot 側の known 崩れを抑制できる)
+ * - **acknowledgement は可能** (snapshot 側の known 崩れを ack で抑制できる)
+ * - **baseline は PR1 時点では未対応**。`BASELINE_ELIGIBLE_TYPES` は
+ *   これらを許容せず、`validateBaseline` は新 type を含む entry を reject
+ *   する。page-level の freeze 粒度 (page slug? known-artifact id? source
+ *   fingerprint?) は PR3 の emitter 設計と連動するため、PR5 の baseline
+ *   migration で合わせて wiring する。
  */
 export const SOURCE_UNUSABLE_TYPES = Object.freeze(
   new Set([

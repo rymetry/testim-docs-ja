@@ -108,6 +108,78 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     assert.ok(!BASELINE_ELIGIBLE_TYPES.has('paragraph-count-mismatch'));
     assert.ok(!BASELINE_ELIGIBLE_TYPES.has('untranslated'));
   });
+
+  // Issue #247 PR1 — 新 taxonomy は PR1 時点で**まだ** baseline 対象に
+  // していない。PR2/PR3 で emitter が fix した後、PR5 の baseline migration
+  // で同定キー (section path / block kind / canonical hash など) を設計して
+  // から allowlist に追加する。ここで「未対応であること」を明示的に固定
+  // しておき、後続 PR で wiring を忘れた場合に検出できるようにする。
+  it('does NOT yet contain Issue #247 structure-mismatch / source-unusable types (PR1 scope)', () => {
+    for (const type of [
+      'section-structure-mismatch',
+      'segment-order-mismatch',
+      'snapshot-incomplete',
+      'source-unusable',
+    ]) {
+      assert.equal(
+        BASELINE_ELIGIBLE_TYPES.has(type),
+        false,
+        `${type} must NOT be in BASELINE_ELIGIBLE_TYPES until PR5 wires it up`,
+      );
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR1 — validateBaseline rejects the new taxonomy
+//
+// The taxonomy (source_parity_types.mjs) already knows about
+// section-structure-mismatch / segment-order-mismatch / snapshot-incomplete /
+// source-unusable, but `source_parity_baseline.mjs` hasn't been extended to
+// accept them yet. Pin that refusal so PR5 has a clear signal when the
+// baseline migration should flip it.
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR1 — validateBaseline rejects new structure/source types', () => {
+  const VALID_PR1_FP = 'sha256:' + 'f'.repeat(64);
+
+  function baseEntry(issueType) {
+    return {
+      slug: 'running-tests/the-command-line-cli',
+      issueType,
+      sectionPath: 'Options',
+      segmentKind: 'paragraph',
+      enSegmentIndex: 0,
+      jaSegmentIndex: null,
+      enSourceFingerprint: VALID_PR1_FP,
+      jaSourceFingerprint: null,
+      missingTokens: null,
+      snapshotFingerprint: VALID_PR1_FP,
+      inconclusiveCategory: null,
+      inconclusiveReason: null,
+      reviewAfter: '2026-10-06',
+    };
+  }
+
+  for (const type of [
+    'section-structure-mismatch',
+    'segment-order-mismatch',
+    'snapshot-incomplete',
+    'source-unusable',
+  ]) {
+    it(`rejects baseline entry with issueType="${type}"`, () => {
+      const entry = baseEntry(type);
+      assert.throws(
+        () =>
+          validateBaseline({
+            schemaVersion: 1,
+            generatedAt: '2026-04-08T00:00:00Z',
+            entries: [entry],
+          }),
+        /invalid "issueType" — must be one of/,
+      );
+    });
+  }
 });
 
 describe('INCONCLUSIVE_CATEGORIES', () => {
