@@ -1,5 +1,18 @@
 name: Deep Audit Docs Checks
 
+# Phase 8 contract (DO NOT BREAK):
+# - This workflow runs `npm run check:parity` with optional --section
+#   filtering for ad-hoc debugging. It is intentionally manual-only
+#   (workflow_dispatch) and MUST NOT call sync-detection-issues.cjs.
+# - Partial runs produce a docs-actionable-report.json whose
+#   runScope.isComplete is false. The Phase 8 PR2 partial-run guard
+#   in sync-detection-issues.cjs would refuse the sync if you wired
+#   it in here, but please do not rely on the guard alone — keep the
+#   sync call out of this file. The Phase 8 audit-only signals
+#   (paragraph-count-mismatch, heading-mismatch, table-cell-* etc.)
+#   are visible in the artifacts uploaded below for human review.
+# - Managed issue updates always come from scheduled-actionable.yml.
+
 on:
   workflow_dispatch:
     inputs:
