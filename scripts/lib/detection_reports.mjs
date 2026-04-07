@@ -538,8 +538,17 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       ].join('\n')
     : '';
 
+  // Phase 8 PR2: hoist parity-side runScope to the actionable report
+  // top-level so .github/scripts/sync-detection-issues.cjs (which only
+  // reads docs-actionable-report.json) can refuse to sync managed
+  // issues from partial runs. A missing runScope is preserved as null
+  // so legacy parity-check-status.json files (pre-Phase-8 PR2) keep
+  // their pre-PR2 sync behaviour.
+  const runScope = parity.summary?.runScope ?? null;
+
   return {
     generatedAt: new Date().toISOString(),
+    runScope,
     sourceSyncHealth: {
       key: FAMILY_KEYS.SOURCE_SYNC_HEALTH,
       issueTitle: SOURCE_SYNC_ISSUE_TITLE,
@@ -600,6 +609,32 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
   const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? 'unknown';
   const syncSummary = sourceSync?.summary ?? actionableReport?.sourceSyncHealth?.summary ?? {};
 
+  // Phase 8: the Parity section now reports the reportableActive*
+  // counters (which exclude coarse audit signals), and a new "Audit
+  // Signals" section lists the coarse breakdown so reviewers can still
+  // see the demoted heuristics without confusing them with active
+  // parity drift.
+  const parityActiveActionable =
+    parity.summary?.reportableActiveActionableFiles ??
+    parity.summary?.activeActionableFiles ??
+    parity.summary?.actionableFiles ??
+    0;
+  const parityActiveFiles =
+    parity.summary?.reportableActiveFiles ??
+    parity.summary?.activeFiles ??
+    actionableReport?.parityRegression?.summary?.issueCount ??
+    0;
+
+  const auditSignalIssues = parity.summary?.auditSignalIssues ?? 0;
+  const auditSignalFiles = parity.summary?.auditSignalFiles ?? 0;
+  const auditSignalsByType = parity.summary?.auditSignalsByType ?? {};
+  const auditSignalRows =
+    Object.keys(auditSignalsByType).length > 0
+      ? Object.entries(auditSignalsByType)
+          .sort(([leftType], [rightType]) => leftType.localeCompare(rightType))
+          .map(([type, count]) => `  - ${type}: ${count}`)
+      : ['  - (none)'];
+
   return [
     '# Docs Detection Summary',
     '',
@@ -622,19 +657,21 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## Parity',
     '',
-    // Phase 3: report active (non-acknowledged) counts so the summary matches
-    // actionableReport.parityRegression.shouldOpenIssue / issueCount.
-    `- Active actionable files: ${
-      parity.summary?.activeActionableFiles ?? parity.summary?.actionableFiles ?? 0
-    }`,
-    `- Active issue files: ${
-      parity.summary?.activeFiles ?? actionableReport?.parityRegression?.summary?.issueCount ?? 0
-    }`,
+    `- Active actionable files: ${parityActiveActionable}`,
+    `- Active issue files: ${parityActiveFiles}`,
     `- Error files: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
     `- Acknowledged (non-blocking): ${parity.summary?.acknowledgedIssues || 0}`,
     ...((parity.summary?.expiredAcknowledgements || 0) > 0
       ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
       : []),
+    '',
+    '## Audit Signals',
+    '',
+    '- Phase 8 audit-only: coarse counting / shape / table-cell heuristics',
+    '- Visible to deep-audit, NOT included in parity-regression issue body',
+    `- Total: ${auditSignalIssues} issues across ${auditSignalFiles} files`,
+    '- By type:',
+    ...auditSignalRows,
     '',
     '## Audit Manifest',
     '',

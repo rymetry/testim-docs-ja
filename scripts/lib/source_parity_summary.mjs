@@ -1,5 +1,7 @@
 import {
+  isCoarseAuditSignal,
   isFrozenByBaseline,
+  isReportableParityIssue,
   isValidAcknowledgedIssue,
 } from './source_parity_issue_state.mjs';
 
@@ -19,12 +21,33 @@ import {
  * / `baselinedByType` / `baselinedByInconclusiveCategory` /
  * `expiredBaselineEntries`) is the primary mechanism for excluding known drift
  * from the gate exit code.
+ *
+ * Phase 8 (audit demotion): adds `reportableActive*` and `auditSignal*`
+ * counters in PARALLEL to the existing `activeFiles` / `activeActionableFiles`
+ * counters. The legacy counters keep their pre-Phase-8 semantics so that
+ * downstream consumers and tests are not silently rerouted; only the gate
+ * exit code (`check_source_parity.mjs`) and `parityRegression` filtering
+ * (`detection_reports.mjs`) switch to the new counters in later commits.
+ *
+ * The contract for the new counters:
+ *
+ *   reportableActiveFiles            = files with at least one
+ *                                       isReportableParityIssue()-true issue
+ *   reportableActiveActionableFiles  = same, restricted to severity=actionable
+ *   auditSignalIssues                = total coarse signal issue count
+ *   auditSignalFiles                 = files with at least one coarse signal
+ *   auditSignalsByType               = coarse signal counts grouped by type
+ *
+ * Coarse signals are NEVER counted as reportable, even when their
+ * acknowledgement or baseline has expired (so the gate cannot re-light on
+ * them).
  */
 export function summarizeParityResults(results) {
   const issuesByType = {};
   const issuesBySeverity = {};
   const baselinedByType = {};
   const baselinedByInconclusiveCategory = {};
+  const auditSignalsByType = {};
   let actionableFiles = 0;
   let signalFiles = 0;
   let errorFiles = 0;
@@ -37,6 +60,10 @@ export function summarizeParityResults(results) {
   let baselinedIssues = 0;
   let baselinedFiles = 0;
   let expiredBaselineEntries = 0;
+  let reportableActiveFiles = 0;
+  let reportableActiveActionableFiles = 0;
+  let auditSignalIssues = 0;
+  let auditSignalFiles = 0;
 
   for (const result of results) {
     let hasActionable = false;
@@ -46,6 +73,9 @@ export function summarizeParityResults(results) {
     let hasActiveError = false;
     let hasActiveIssue = false;
     let hasBaselined = false;
+    let hasReportableActive = false;
+    let hasReportableActiveActionable = false;
+    let hasAuditSignal = false;
 
     for (const issue of result.issues) {
       const isBaselined = issue.baselined === true;
@@ -70,6 +100,22 @@ export function summarizeParityResults(results) {
       totalIssues += 1;
       issuesByType[issue.type] = (issuesByType[issue.type] || 0) + 1;
       issuesBySeverity[issue.severity] = (issuesBySeverity[issue.severity] || 0) + 1;
+
+      // Phase 8: coarse signals are tracked on a separate audit channel
+      // regardless of their ack/baseline state. They never count toward
+      // the reportable counters that drive the gate.
+      if (isCoarseAuditSignal(issue)) {
+        auditSignalIssues += 1;
+        auditSignalsByType[issue.type] = (auditSignalsByType[issue.type] || 0) + 1;
+        hasAuditSignal = true;
+      }
+
+      if (isReportableParityIssue(issue)) {
+        hasReportableActive = true;
+        if (issue.severity === 'actionable') {
+          hasReportableActiveActionable = true;
+        }
+      }
 
       const isValidAck = isValidAcknowledgedIssue(issue);
 
@@ -102,6 +148,9 @@ export function summarizeParityResults(results) {
     if (hasActiveError) activeErrorFiles += 1;
     if (hasActiveIssue) activeFiles += 1;
     if (hasBaselined) baselinedFiles += 1;
+    if (hasReportableActive) reportableActiveFiles += 1;
+    if (hasReportableActiveActionable) reportableActiveActionableFiles += 1;
+    if (hasAuditSignal) auditSignalFiles += 1;
   }
 
   return {
@@ -122,5 +171,11 @@ export function summarizeParityResults(results) {
     baselinedByType,
     baselinedByInconclusiveCategory,
     expiredBaselineEntries,
+    // Phase 8 — see header comment
+    reportableActiveFiles,
+    reportableActiveActionableFiles,
+    auditSignalIssues,
+    auditSignalFiles,
+    auditSignalsByType,
   };
 }

@@ -188,6 +188,43 @@ npm run test && npm run build
 - [`deep-audit.yml`](../.github/workflows/deep-audit.yml) では section 単位または全件のスナップショット diff を実行する
 - `snapshot-diff-status.json`、`parity-check-status.json`、`docs-actionable-report.json`、`docs-update-summary.md`、`docs-audit-manifest.json` を artifact として保存する
 
+### Phase 8 — Workflow split の契約 (DO NOT BREAK)
+
+Phase 8 PR2 で workflow 間の責務を明示的に固定した。新しい workflow を
+追加する、または既存の workflow に check:parity 系の step を追加する際は
+次のルールを守ること。
+
+| 役割 | 担当 workflow | scope | sync-detection-issues.cjs を呼ぶか |
+| ---- | ------------- | ----- | ---------------------------------- |
+| 4 family の managed issue 更新 | `scheduled-actionable.yml` | **full repo のみ**（`--slug` / `--section` 禁止） | はい（`schedule` 実行時のみ） |
+| 単一 section / slug の手動デバッグ | `deep-audit.yml` | partial（`--section` 任意、`--slug` 任意） | **絶対に呼ばない** |
+
+**構造的な防壁** (PR2 で導入):
+
+1. `parity-check-status.json.summary.runScope` に `{ type, isComplete, filters }` を出力する
+2. `generate_detection_reports.mjs` が runScope を `docs-actionable-report.json` の top-level に複写する
+3. `.github/scripts/sync-detection-issues.cjs` が `report.runScope?.isComplete !== true` を検出した場合、**listManagedIssues を呼ぶ前に early return + warning** する
+4. legacy report (`runScope === null` / 欠如) は後方互換のため従来どおり sync する。Phase 8 ロールアウトが完全に終わったあと、別 PR で fail-closed に切り替える検討をする
+
+**やってはいけないこと**:
+
+- `scheduled-actionable.yml` に `--slug` や `--section` を追加すること（partial run になり、sync guard が managed issue 更新を止める）
+- `deep-audit.yml` に `sync-detection-issues.cjs` の呼び出しを追加すること（partial run の上書きを runtime guard 1 個に頼ることになる）
+- `parity-check-status.json` の `summary.runScope` を partial run でも `isComplete: true` にすること（guard が空回りする）
+- 新しい coarse signal type を `parity-regression` family に流すこと（Phase 8 PR1 の `COARSE_SIGNAL_TYPES` allowlist で audit-only として扱うか、新規 issue type として gate に乗せるかを review で必ず判断する）
+
+**Phase 8 audit-only signals を CI で確認する手順**:
+
+```bash
+# scheduled-actionable.yml の artifact から確認
+jq '.summary | { reportableActiveFiles, reportableActiveActionableFiles, auditSignalIssues, auditSignalFiles, auditSignalsByType, runScope }' parity-check-status.json
+
+# deep-audit.yml の artifact から section 単位で確認
+jq '.summary.auditSignalsByType' parity-check-status.json
+```
+
+**関連 spec**: `docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md`
+
 ---
 
 ## Phase 6A Rollback Playbook

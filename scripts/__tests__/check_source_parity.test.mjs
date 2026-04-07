@@ -9,6 +9,8 @@ let collectSnapshotSlugs;
 let isValidAcknowledgedIssue;
 let isNonBlockingIssue;
 let getConsoleCoverageState;
+let computeExitCode;
+let buildRunScope;
 
 before(async () => {
   ({
@@ -17,6 +19,8 @@ before(async () => {
     isValidAcknowledgedIssue,
     isNonBlockingIssue,
     getConsoleCoverageState,
+    computeExitCode,
+    buildRunScope,
   } = await import('../check_source_parity.mjs'));
 });
 
@@ -61,6 +65,22 @@ describe('parseArgs', () => {
   it('returns false includeAdvisory when not specified', () => {
     const args = parseArgs(['--json']);
     assert.equal(args.includeAdvisory, false);
+  });
+
+  it('parses --include-audit-signals (Phase 8)', () => {
+    const args = parseArgs(['--include-audit-signals']);
+    assert.equal(args.includeAuditSignals, true);
+  });
+
+  it('returns false includeAuditSignals when not specified (Phase 8)', () => {
+    const args = parseArgs(['--json']);
+    assert.equal(args.includeAuditSignals, false);
+  });
+
+  it('parses --include-audit-signals together with --include-advisory', () => {
+    const args = parseArgs(['--include-advisory', '--include-audit-signals']);
+    assert.equal(args.includeAdvisory, true);
+    assert.equal(args.includeAuditSignals, true);
   });
 });
 
@@ -175,6 +195,220 @@ describe('CLI coverage helpers', () => {
       allCovered: false,
       icon: '❌',
       suffix: '',
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 8: computeExitCode uses reportableActive* counters
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', () => {
+  // Pure helper extracted in Phase 8 PR1 commit 5 so the gate exit-code
+  // logic can be unit-tested without spinning up the full
+  // checkSourceParity pipeline. The legacy activeFiles fields are kept
+  // alongside the new reportableActive* fields to make sure the helper
+  // really is reading the new ones.
+
+  it('failOn=actionable returns 0 when no reportable actionable + no error', () => {
+    const summary = {
+      reportableActiveActionableFiles: 0,
+      activeErrorFiles: 0,
+      // legacy: should be IGNORED by Phase 8 helper even though set
+      activeActionableFiles: 5,
+      activeFiles: 5,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+  });
+
+  it('failOn=actionable returns 1 when reportableActiveActionableFiles > 0', () => {
+    const summary = {
+      reportableActiveActionableFiles: 1,
+      activeErrorFiles: 0,
+      reportableActiveFiles: 1,
+      activeActionableFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 1);
+  });
+
+  it('failOn=actionable returns 1 on error files even with no reportable issues', () => {
+    const summary = {
+      reportableActiveActionableFiles: 0,
+      activeErrorFiles: 1,
+      reportableActiveFiles: 0,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 1);
+  });
+
+  it('failOn=any returns 0 when reportableActiveFiles is 0', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      activeFiles: 5, // legacy: must be ignored
+    };
+    assert.equal(computeExitCode(summary, 'any'), 0);
+  });
+
+  it('failOn=any returns 1 when reportableActiveFiles > 0', () => {
+    const summary = {
+      reportableActiveFiles: 2,
+      activeFiles: 2,
+    };
+    assert.equal(computeExitCode(summary, 'any'), 1);
+  });
+
+  it('failOn=any returns 1 on error-only summary', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      activeErrorFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, 'any'), 1);
+  });
+
+  it('default failOn (null) returns 0 for coarse-only summary', () => {
+    // Coarse-only: legacy activeFiles is 1 because the file has an
+    // unacknowledged signal, but reportableActiveFiles is 0 because the
+    // signal is in COARSE_SIGNAL_TYPES. Phase 8 must return exit 0 here.
+    const summary = {
+      reportableActiveFiles: 0,
+      auditSignalFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 0);
+  });
+
+  it('default failOn (null) returns 1 when reportableActiveFiles > 0', () => {
+    const summary = {
+      reportableActiveFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 1);
+  });
+
+  it('default failOn (null) returns 1 on error-only summary', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      activeErrorFiles: 1,
+      activeFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 1);
+  });
+
+  it('returns 0 for coarse-only with expired ack (Phase 8 audit only)', () => {
+    // The summary that summarizeParityResults() would emit for a file
+    // with a single expired-ack coarse signal:
+    const summary = {
+      reportableActiveFiles: 0,
+      reportableActiveActionableFiles: 0,
+      auditSignalFiles: 1,
+      auditSignalIssues: 1,
+      activeFiles: 1, // legacy
+      activeActionableFiles: 0,
+      activeErrorFiles: 0,
+      expiredAcknowledgements: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+    assert.equal(computeExitCode(summary, 'any'), 0);
+    assert.equal(computeExitCode(summary, null), 0);
+  });
+
+  it('returns 0 for coarse-only with expired baseline (Phase 8 audit only)', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      reportableActiveActionableFiles: 0,
+      auditSignalFiles: 1,
+      auditSignalIssues: 1,
+      activeFiles: 1, // legacy: includes the expired-baseline coarse
+      activeActionableFiles: 0,
+      activeErrorFiles: 0,
+      expiredBaselineEntries: 1,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+    assert.equal(computeExitCode(summary, 'any'), 0);
+    assert.equal(computeExitCode(summary, null), 0);
+  });
+
+  it('returns 1 for actionable-only file even when there are also coarse signals', () => {
+    const summary = {
+      reportableActiveFiles: 1,
+      reportableActiveActionableFiles: 1,
+      auditSignalFiles: 1,
+      activeFiles: 1,
+      activeActionableFiles: 1,
+      activeErrorFiles: 0,
+    };
+    assert.equal(computeExitCode(summary, 'actionable'), 1);
+    assert.equal(computeExitCode(summary, 'any'), 1);
+  });
+
+  it('handles missing fields by defaulting to 0', () => {
+    assert.equal(computeExitCode({}, 'actionable'), 0);
+    assert.equal(computeExitCode({}, 'any'), 0);
+    assert.equal(computeExitCode({}, null), 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 8 PR2: runScope on parity-check-status summary
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 PR2 — buildRunScope', () => {
+  // Pure helper that maps the (resolvedSlug, section) pair into the
+  // runScope object embedded in summary.runScope. The downstream guard in
+  // sync-detection-issues.cjs reads this to refuse to sync managed
+  // issues from partial runs.
+
+  it('returns full scope when neither slug nor section is set', () => {
+    assert.deepEqual(buildRunScope({ resolvedSlug: null, section: null }), {
+      type: 'full',
+      isComplete: true,
+      filters: { slug: null, section: null },
+    });
+  });
+
+  it('returns slug scope when --slug is set', () => {
+    assert.deepEqual(
+      buildRunScope({ resolvedSlug: 'overview/testim-overview', section: null }),
+      {
+        type: 'slug',
+        isComplete: false,
+        filters: { slug: 'overview/testim-overview', section: null },
+      },
+    );
+  });
+
+  it('returns section scope when --section is set', () => {
+    assert.deepEqual(
+      buildRunScope({ resolvedSlug: null, section: 'Overview' }),
+      {
+        type: 'section',
+        isComplete: false,
+        filters: { slug: null, section: 'Overview' },
+      },
+    );
+  });
+
+  it('prefers slug when both slug and section are set (defensive)', () => {
+    // --slug already wins in checkSourceParity (the section filter is
+    // skipped when resolvedSlug is set), so the runScope should record
+    // the actual scope (slug) and surface the section filter as
+    // diagnostic only. Either way, isComplete stays false.
+    const result = buildRunScope({
+      resolvedSlug: 'overview/testim-overview',
+      section: 'Overview',
+    });
+    assert.equal(result.type, 'slug');
+    assert.equal(result.isComplete, false);
+    assert.equal(result.filters.slug, 'overview/testim-overview');
+  });
+
+  it('uses null filter values when arguments are undefined', () => {
+    assert.deepEqual(buildRunScope({}), {
+      type: 'full',
+      isComplete: true,
+      filters: { slug: null, section: null },
     });
   });
 });

@@ -335,6 +335,228 @@ describe('summarizeParityResults', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Phase 8: reportableActive* and auditSignal* counters
+//
+// New counters added in Phase 8 PR1 commit 3. They live alongside the
+// existing activeFiles / activeActionableFiles counters; the existing
+// counters MUST NOT change semantics (verified below as a regression
+// guard). Only the gate exit code and parityRegression switch to the new
+// counters in later commits.
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 — reportableActive and auditSignal counters', () => {
+  it('emits reportableActive* and auditSignal* fields', () => {
+    const summary = summarizeParityResults([]);
+    assert.equal(typeof summary.reportableActiveFiles, 'number');
+    assert.equal(typeof summary.reportableActiveActionableFiles, 'number');
+    assert.equal(typeof summary.auditSignalIssues, 'number');
+    assert.equal(typeof summary.auditSignalFiles, 'number');
+    assert.deepEqual(summary.auditSignalsByType, {});
+  });
+
+  it('counts coarse signals into auditSignal* but excludes them from reportableActive*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/coarse-only.md',
+        issues: [
+          { type: 'paragraph-count-mismatch', severity: 'signal' },
+          { type: 'heading-mismatch', severity: 'signal' },
+        ],
+      },
+    ]);
+    assert.equal(summary.auditSignalFiles, 1);
+    assert.equal(summary.auditSignalIssues, 2);
+    assert.deepEqual(summary.auditSignalsByType, {
+      'paragraph-count-mismatch': 1,
+      'heading-mismatch': 1,
+    });
+    // The coarse-only file is NOT a reportable active file/issue.
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
+  });
+
+  it('counts non-coarse actionable issues into reportableActive*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/actionable.md',
+        issues: [
+          { type: 'image-mismatch', severity: 'actionable' },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 1);
+    assert.equal(summary.reportableActiveActionableFiles, 1);
+    assert.equal(summary.auditSignalFiles, 0);
+    assert.equal(summary.auditSignalIssues, 0);
+  });
+
+  it('counts mixed file (actionable + coarse) into both buckets', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/mixed.md',
+        issues: [
+          { type: 'image-mismatch', severity: 'actionable' },
+          { type: 'paragraph-count-mismatch', severity: 'signal' },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 1);
+    assert.equal(summary.reportableActiveActionableFiles, 1);
+    assert.equal(summary.auditSignalFiles, 1);
+    assert.equal(summary.auditSignalIssues, 1);
+    assert.deepEqual(summary.auditSignalsByType, { 'paragraph-count-mismatch': 1 });
+  });
+
+  it('excludes valid acknowledgements from reportableActive*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/acked.md',
+        issues: [
+          {
+            type: 'image-mismatch',
+            severity: 'actionable',
+            acknowledged: true,
+            ackExpired: false,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
+  });
+
+  it('includes expired acknowledgements in reportableActive*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/expired-ack.md',
+        issues: [
+          {
+            type: 'image-mismatch',
+            severity: 'actionable',
+            acknowledged: true,
+            ackExpired: true,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 1);
+    assert.equal(summary.reportableActiveActionableFiles, 1);
+  });
+
+  it('excludes coarse signals from reportableActive* even with expired ack', () => {
+    // Phase 8 intent: coarse signals must never re-light reportable counters,
+    // even if their acknowledgement has expired.
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/expired-coarse.md',
+        issues: [
+          {
+            type: 'paragraph-count-mismatch',
+            severity: 'signal',
+            acknowledged: true,
+            ackExpired: true,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
+    // But it IS still surfaced via the audit channel.
+    assert.equal(summary.auditSignalFiles, 1);
+    assert.equal(summary.auditSignalIssues, 1);
+  });
+
+  it('excludes coarse signals from reportableActive* even with expired baseline', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/expired-baseline-coarse.md',
+        issues: [
+          {
+            type: 'heading-mismatch',
+            severity: 'signal',
+            baselined: true,
+            baselineExpired: true,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
+    assert.equal(summary.auditSignalFiles, 1);
+  });
+
+  it('excludes frozen baseline (non-expired) from reportableActive*', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/frozen.md',
+        issues: [
+          {
+            type: 'segment-missing',
+            severity: 'actionable',
+            baselined: true,
+            baselineExpired: false,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.reportableActiveFiles, 0);
+    assert.equal(summary.reportableActiveActionableFiles, 0);
+  });
+});
+
+describe('Phase 8 — existing activeFiles semantics unchanged', () => {
+  // Regression guard: the existing counters that downstream consumers
+  // depend on (activeFiles / activeActionableFiles / activeErrorFiles)
+  // must keep their pre-Phase-8 meaning. Phase 8 adds NEW counters in
+  // parallel; it does not redefine the existing ones.
+
+  it('still counts coarse-only file as active (legacy semantics)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/coarse-only.md',
+        issues: [{ type: 'paragraph-count-mismatch', severity: 'signal' }],
+      },
+    ]);
+    // Legacy: activeFiles counts files with any active issue, including
+    // signals. Phase 8 does not change this.
+    assert.equal(summary.activeFiles, 1);
+    assert.equal(summary.activeActionableFiles, 0);
+  });
+
+  it('still counts mixed file as active and active-actionable (legacy semantics)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/mixed.md',
+        issues: [
+          { type: 'image-mismatch', severity: 'actionable' },
+          { type: 'paragraph-count-mismatch', severity: 'signal' },
+        ],
+      },
+    ]);
+    assert.equal(summary.activeFiles, 1);
+    assert.equal(summary.activeActionableFiles, 1);
+  });
+
+  it('still excludes acked actionable from active (legacy semantics)', () => {
+    const summary = summarizeParityResults([
+      {
+        file: 'src/content/docs/acked.md',
+        issues: [
+          {
+            type: 'image-mismatch',
+            severity: 'actionable',
+            acknowledged: true,
+            ackExpired: false,
+          },
+        ],
+      },
+    ]);
+    assert.equal(summary.activeFiles, 0);
+    assert.equal(summary.activeActionableFiles, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Snapshot structure comparison tests
 // ---------------------------------------------------------------------------
 

@@ -77,6 +77,97 @@ export function isNonBlockingIssue(issue) {
   return isNonBlockingParityIssue(issue);
 }
 
+/**
+ * Phase 8 PR2: pure helper that classifies the run scope of a single
+ * `checkSourceParity` invocation. The result is embedded in
+ * `parity-check-status.json.summary.runScope` so downstream tools can
+ * tell whether the report was produced by a full-repo run or a
+ * partial (`--slug` / `--section`) run.
+ *
+ * The downstream guard in `.github/scripts/sync-detection-issues.cjs`
+ * uses `runScope.isComplete === true` as the precondition for syncing
+ * managed GitHub issues, so partial runs (deep-audit, manual debugging)
+ * cannot accidentally overwrite the managed issue body even if their
+ * artifacts are wired into the wrong workflow step.
+ *
+ * Inputs:
+ *   resolvedSlug — value of --slug after slug resolution (null if absent)
+ *   section      — value of --section (null if absent)
+ *
+ * Returns:
+ *   { type: 'full' | 'slug' | 'section',
+ *     isComplete: boolean,
+ *     filters: { slug: string|null, section: string|null } }
+ *
+ * `--slug` wins over `--section` in `checkSourceParity` (the section
+ * filter is skipped when `resolvedSlug` is set), so the helper reports
+ * `type: 'slug'` in that defensive case while still surfacing the
+ * section filter for diagnostic purposes.
+ *
+ * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.7
+ */
+export function buildRunScope({ resolvedSlug = null, section = null } = {}) {
+  const slugFilter = resolvedSlug ?? null;
+  const sectionFilter = section ?? null;
+  if (slugFilter) {
+    return {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: slugFilter, section: sectionFilter },
+    };
+  }
+  if (sectionFilter) {
+    return {
+      type: 'section',
+      isComplete: false,
+      filters: { slug: null, section: sectionFilter },
+    };
+  }
+  return {
+    type: 'full',
+    isComplete: true,
+    filters: { slug: null, section: null },
+  };
+}
+
+/**
+ * Phase 8: pure helper that maps a parity-check summary into a CLI exit
+ * code. Lifted out of `checkSourceParity` so the gate behaviour is
+ * unit-testable without spinning up the full pipeline.
+ *
+ * Inputs:
+ *   summary  — output of summarizeParityResults() (or any object with the
+ *              same shape, including the Phase 8 reportableActive*
+ *              counters)
+ *   failOn   — 'actionable' | 'any' | null (any other value defaults to
+ *              the same behaviour as 'any')
+ *
+ * Returns 0 (gate passes) or 1 (gate fails). The gate now consumes the
+ * Phase 8 `reportableActive*` counters; coarse audit signals never
+ * affect the exit code, even when their ack/baseline has expired. The
+ * legacy `activeFiles` / `activeActionableFiles` fields on the summary
+ * are intentionally ignored here so downstream consumers that still
+ * read them keep their old semantics.
+ *
+ * `activeErrorFiles` is still consulted in all modes so
+ * `source-fetch-error` and similar real errors continue to fail the
+ * gate, even when there are no reportable parity issues.
+ *
+ * See: docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.4
+ */
+export function computeExitCode(summary, failOn) {
+  if (!summary || typeof summary !== 'object') return 0;
+  const errorFiles = summary.activeErrorFiles || 0;
+  if (failOn === 'actionable') {
+    const reportableActionable = summary.reportableActiveActionableFiles || 0;
+    return reportableActionable > 0 || errorFiles > 0 ? 1 : 0;
+  }
+  // Default and 'any' both look at the broader reportable bucket, but
+  // still fail on real runtime errors such as source-fetch-error.
+  const reportable = summary.reportableActiveFiles || 0;
+  return reportable > 0 || errorFiles > 0 ? 1 : 0;
+}
+
 export function getConsoleCoverageState(issues) {
   if (!Array.isArray(issues) || issues.length === 0) {
     return {
@@ -145,6 +236,9 @@ export function parseArgs(argv = process.argv.slice(2)) {
   return {
     json: argv.includes('--json'),
     includeAdvisory: argv.includes('--include-advisory'),
+    // Phase 8: opt-in CLI display of demoted coarse audit signals.
+    // Mirrors --include-advisory in role: display only, no gate impact.
+    includeAuditSignals: argv.includes('--include-audit-signals'),
     section: sectionArg ? sectionArg.split('=').slice(1).join('=') : null,
     failOn: failOnArg ? failOnArg.split('=').slice(1).join('=') : null,
     slug: slugArg ? slugArg.split('=').slice(1).join('=') : null,
@@ -175,6 +269,7 @@ function loadBaselineFileSafe(filePath = BASELINE_PATH) {
 export async function checkSourceParity({
   json = false,
   includeAdvisory = false,
+  includeAuditSignals = false,
   section = null,
   failOn = null,
   slug = null,
@@ -220,6 +315,7 @@ export async function checkSourceParity({
     if (section) console.log(`📂 セクション絞り込み: ${section}`);
     if (failOn) console.log(`🚦 --fail-on=${failOn}`);
     if (includeAdvisory) console.log('📝 Phase 6B review queue 表示: ON');
+    if (includeAuditSignals) console.log('🔍 Phase 8 audit signals 表示: ON');
     console.log('');
   }
 
@@ -474,6 +570,9 @@ export async function checkSourceParity({
     ...summarizeParityResults(results),
     ...advisoryQueueSummary,
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
+    // Phase 8 PR2: classify the run scope so downstream sync tooling can
+    // refuse to act on partial runs. See buildRunScope() above.
+    runScope: buildRunScope({ resolvedSlug, section }),
   };
 
   const payload = {
@@ -532,6 +631,29 @@ export async function checkSourceParity({
         console.log(`  ${slug}`);
       }
     }
+    // Phase 8: always print a one-line summary of demoted audit signals
+    // so they remain visible even without --include-audit-signals; the
+    // flag only controls the per-type breakdown to keep the default
+    // CLI output compact.
+    if ((summary.auditSignalIssues || 0) > 0 || includeAuditSignals) {
+      console.log(
+        `\n[Phase 8 audit signals] coarse heuristics (gate から除外): ${summary.auditSignalIssues || 0} 件 / ${summary.auditSignalFiles || 0} ファイル`,
+      );
+      console.log(
+        '  parity-regression issue body には載せません。deep-audit workflow と --include-audit-signals でのみ詳細を確認できます',
+      );
+      if (includeAuditSignals) {
+        const byType = summary.auditSignalsByType ?? {};
+        const sortedTypes = Object.keys(byType).sort();
+        if (sortedTypes.length === 0) {
+          console.log('  (no coarse signals in this run)');
+        } else {
+          for (const type of sortedTypes) {
+            console.log(`    ${type}: ${byType[type]} 件`);
+          }
+        }
+      }
+    }
     if (includeAdvisory) {
       const scopeLabel = advisoryQueueScope.isComplete
         ? 'full-repo queue'
@@ -565,16 +687,14 @@ export async function checkSourceParity({
     console.log(`\n💾 詳細結果を ${path.relative(ROOT_DIR, OUTPUT_PATH)} に保存しました`);
   }
 
-  // Exit code: fail only on active (non-acknowledged) issues
-  if (failOn === 'actionable') {
-    const hasActiveActionableOrError =
-      (summary.activeActionableFiles || 0) > 0 || (summary.activeErrorFiles || 0) > 0;
-    return hasActiveActionableOrError ? 1 : 0;
-  }
-  if (failOn === 'any') {
-    return (summary.activeFiles || 0) > 0 ? 1 : 0;
-  }
-  return (summary.activeFiles || 0) > 0 ? 1 : 0;
+  // Phase 8: gate exit code now consumes the reportableActive* counters
+  // so coarse audit signals (paragraph/bullet/step/section count, heading,
+  // table-shape, table-cell-* heuristics) cannot fail the build, even
+  // when their acknowledgement or baseline has expired. The legacy
+  // `activeFiles` / `activeActionableFiles` fields on `summary` keep
+  // their pre-Phase-8 semantics for downstream consumers but are no
+  // longer read here.
+  return computeExitCode(summary, failOn);
 }
 
 async function main() {

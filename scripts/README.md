@@ -77,17 +77,21 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 **スナップショット構造比較（signal）:**
 
-| チェック項目                  | 検出内容                                           |
-| ----------------------------- | -------------------------------------------------- |
-| `section-count-mismatch`      | H2-H4 セクション数の不一致                         |
-| `step-count-mismatch`         | 番号付きステップ数の不一致                         |
-| `bullet-count-mismatch`       | 箇条書き数の不一致                                 |
-| `paragraph-count-mismatch`    | 段落数の不一致（diff >= 1）                        |
-| `table-shape-mismatch`        | テーブル行数・列数の不一致                         |
-| `table-cell-english-residual` | テーブルセルの英語残留                             |
-| `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致                        |
-| `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致              |
-| `source-snapshot-missing`     | sourceUrl があるが EN スナップショットが存在しない |
+| チェック項目                  | 検出内容                                           | Phase 8 分類 |
+| ----------------------------- | -------------------------------------------------- | ------------ |
+| `section-count-mismatch`      | H2-H4 セクション数の不一致                         | audit-only   |
+| `step-count-mismatch`         | 番号付きステップ数の不一致                         | audit-only   |
+| `bullet-count-mismatch`       | 箇条書き数の不一致                                 | audit-only   |
+| `paragraph-count-mismatch`    | 段落数の不一致（diff >= 1）                        | audit-only   |
+| `heading-mismatch`            | 見出しレベル / テキストの不一致                    | audit-only   |
+| `table-shape-mismatch`        | テーブル行数・列数の不一致                         | audit-only   |
+| `table-cell-english-residual` | テーブルセルの英語残留                             | audit-only   |
+| `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致                        | audit-only   |
+| `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致              | audit-only   |
+| `source-snapshot-missing`     | sourceUrl があるが EN スナップショットが存在しない | gate signal  |
+| `missing-snapshot`            | EN snapshot が存在しないページ                     | gate signal  |
+
+**Phase 8 audit-only**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、Phase 5 の exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `scripts/lib/source_parity_types.mjs` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review checklist で「audit-only か gate-eligible か」を必ず判断する。
 
 **acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。`source-page-missing-local` / `segment-*` は acknowledgement 不可。
 
@@ -535,6 +539,63 @@ partial run かどうかは `advisoryQueueScope.isComplete` で判定する。
 
 ---
 
+## Phase 8 — Coarse Signal Audit Demotion
+
+Phase 8 PR1 は `compareSnapshotStructure` が出していた **coarse counting /
+shape / table-cell signals** を audit-only 経路に降格する。Phase 5 の
+`segment-*` exact gate と重複した noise を `parity-regression` issue
+body と gate exit code から取り除き、`deep-audit` workflow からのみ
+閲覧可能にする。
+
+**降格対象 (9 種, allowlist)**: `paragraph-count-mismatch` /
+`bullet-count-mismatch` / `step-count-mismatch` / `section-count-mismatch` /
+`heading-mismatch` / `table-shape-mismatch` / `table-cell-english-residual` /
+`table-cell-empty-mismatch` / `table-cell-token-mismatch`
+
+**降格しない signal**: `missing-snapshot` / `source-snapshot-missing` は
+新規 / 欠落ページの gate signal なので残す。`content-root-missing` は
+emitter が存在しないため allowlist に入れない。
+
+**新カウンタ** (`source_parity_summary.mjs`):
+
+- `reportableActiveFiles` / `reportableActiveActionableFiles` — coarse
+  signal を除いた active file 数。`gate exit code` と `parityRegression`
+  はこれを参照する
+- `auditSignalIssues` / `auditSignalFiles` / `auditSignalsByType` —
+  coarse signal の集計
+
+既存の `activeFiles` / `activeActionableFiles` は **意味を変更しない**。
+downstream 消費者と既存テストが読み続けられるよう、新カウンタは
+parallel に追加した。
+
+**CLI**:
+
+```bash
+npm run check:parity                          # exit 0 (coarse signal は無視)
+npm run check:parity -- --fail-on=actionable  # 同上
+npm run check:parity -- --include-audit-signals  # 詳細表示
+```
+
+`--include-audit-signals` は表示専用のフラグで、`--include-advisory` と
+同じく gate exit code には影響しない。`docs-update-summary.md` には
+`## Audit Signals` セクションが追加され、coarse signal の type 別件数を
+別枠で報告する。`## Parity` セクションの active 数は coarse signal を
+含まない `reportableActive*` 値を表示する。
+
+**Phase 8 が壊さないこと** (テストで固定):
+
+- `parityRegression` family の発火条件
+- `parityFollowup` / `snapshotDiff` / `sourceSyncHealth` family の挙動
+- `auditManifest` の構造（snapshot-driven のまま、`signals[]` への parity
+  cross-reference は維持）
+- 4-family schema（`buildIssueSpecs(report).length === 4`）
+- expired ack / expired baseline 付き coarse signal が gate を再点火
+  しないこと
+
+**関連 spec**: `docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md`
+
+---
+
 ## テスト
 
 ```bash
@@ -571,6 +632,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_align_runtime.test.mjs`     | Phase 6A/6B runtime integration E2E     |
 | `__tests__/source_parity_advisory_queue.test.mjs`    | Phase 6B review queue helper            |
 | `__tests__/sync_detection_issues.test.mjs`           | Phase 7 issue sync (family-key match)   |
+| `__tests__/source_parity_issue_state.test.mjs`       | Phase 8 shared issue-state predicates   |
 
 ---
 

@@ -204,7 +204,12 @@ describe('buildAuditManifest', () => {
 });
 
 describe('buildActionableReport', () => {
-  it('opens a parity issue for signal-only entries', () => {
+  it('does NOT open a parity issue for coarse-signal-only entries (Phase 8)', () => {
+    // Phase 8 demotion: heading-mismatch is in COARSE_SIGNAL_TYPES, so a
+    // file with only this issue type must NOT trigger parityRegression.
+    // Pre-Phase-8 this test asserted the opposite ("opens a parity issue
+    // for signal-only entries"). The semantic flip is the whole point of
+    // commit 4 — coarse signals are now audit-only.
     const snapshot = {
       checkedAt: '2026-03-19T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -229,8 +234,9 @@ describe('buildActionableReport', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
-    assert.equal(report.parityRegression.shouldOpenIssue, true);
-    assert.ok(report.parityRegression.body.includes('[signal]'));
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+    assert.equal(report.parityRegression.topEntries.length, 0);
   });
 
   it('opens snapshot diff issue when changes exist', () => {
@@ -387,7 +393,52 @@ describe('buildActionableReport', () => {
     assert.equal('errorFiles' in report.parityRegression.summary, false);
   });
 
-  it('opens a parity issue when acknowledgement is expired', () => {
+  it('opens a parity issue when acknowledgement is expired on a non-coarse type', () => {
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 1,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 1,
+        activeFiles: 1,
+        activeErrorFiles: 0,
+        expiredAcknowledgements: 1,
+        issuesByType: { 'image-mismatch': 1 },
+        issuesBySeverity: { actionable: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'image-mismatch',
+              severity: 'actionable',
+              detail: 'expired case',
+              acknowledged: true,
+              ackExpired: true,
+              ackExpiryReason: 'fingerprint-changed',
+            },
+          ],
+        },
+      ],
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+  });
+
+  it('does NOT re-light parity issue for expired-ack on coarse signal (Phase 8)', () => {
+    // Phase 8 intent: even when an acknowledgement on a coarse signal
+    // expires, the gate / parityRegression must NOT re-light. The signal
+    // stays on the audit channel only.
     const snapshot = {
       checkedAt: '2026-03-19T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -414,7 +465,7 @@ describe('buildActionableReport', () => {
             {
               type: 'paragraph-count-mismatch',
               severity: 'signal',
-              detail: 'expired case',
+              detail: 'expired coarse',
               acknowledged: true,
               ackExpired: true,
               ackExpiryReason: 'fingerprint-changed',
@@ -425,8 +476,52 @@ describe('buildActionableReport', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
-    assert.equal(report.parityRegression.shouldOpenIssue, true);
-    assert.equal(report.parityRegression.summary.issueCount, 1);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+  });
+
+  it('does NOT re-light parity issue for expired-baseline on coarse signal (Phase 8)', () => {
+    // Same intent via the baseline path.
+    const snapshot = {
+      checkedAt: '2026-03-19T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: {
+        checkedAt: '2026-03-19T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 1,
+        activeErrorFiles: 0,
+        expiredBaselineEntries: 1,
+        issuesByType: { 'heading-mismatch': 1 },
+        issuesBySeverity: { signal: 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            {
+              type: 'heading-mismatch',
+              severity: 'signal',
+              detail: 'expired baseline coarse',
+              baselined: true,
+              baselineExpired: true,
+            },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+
+    const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
   });
 
   it('filters acknowledged issues out of top entries but keeps active ones on the same file', () => {
@@ -1158,7 +1253,10 @@ describe('detection-family HTML comments in issue bodies', () => {
 // ---------------------------------------------------------------------------
 
 describe('buildActionableReport with new signal types', () => {
-  it('opens parity issue for signal-only new types', () => {
+  it('does NOT open parity issue for signal-only new types (Phase 8 demoted)', () => {
+    // Phase 8: section-count, table-shape, table-cell-* are all in
+    // COARSE_SIGNAL_TYPES. A file with only these types is audit-only and
+    // does not trigger parityRegression.
     const snapshot = {
       checkedAt: '2026-03-23T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1194,8 +1292,9 @@ describe('buildActionableReport with new signal types', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
-    assert.equal(report.parityRegression.shouldOpenIssue, true);
-    assert.ok(report.parityRegression.body.includes('[signal]'));
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+    assert.equal(report.parityRegression.topEntries.length, 0);
   });
 
   it('does not open parity issue for error-only entries', () => {
@@ -1226,7 +1325,12 @@ describe('buildActionableReport with new signal types', () => {
     assert.equal(report.parityRegression.shouldOpenIssue, false);
   });
 
-  it('opens parity issue when mixed error and signal entries', () => {
+  it('does NOT open parity issue for mixed error + coarse signal entries (Phase 8)', () => {
+    // Phase 8: source-fetch-error has severity 'error', not 'actionable',
+    // so it never enters parityRegression in the first place. Combined
+    // with a heading-mismatch (now coarse-only/audit), the file has zero
+    // reportable issues. Pre-Phase-8 the heading-mismatch would have lit
+    // the issue; after Phase 8 it must not.
     const snapshot = {
       checkedAt: '2026-04-03T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1254,6 +1358,419 @@ describe('buildActionableReport with new signal types', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 8: parityRegression excludes coarse signals (audit demotion)
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 — parityRegression excludes coarse audit signals', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-07T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  it('still opens parity issue for non-coarse actionable issues', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [{ type: 'image-mismatch', severity: 'actionable', detail: 'EN=3 JA=1' }],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+    assert.match(report.parityRegression.body, /image-mismatch/);
+  });
+
+  it('filters coarse signals out of mixed file body but keeps actionable rows', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/example.md',
+          issues: [
+            { type: 'image-mismatch', severity: 'actionable', detail: 'real drift' },
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'noisy coarse — must not appear',
+            },
+            {
+              type: 'heading-mismatch',
+              severity: 'signal',
+              detail: 'noisy coarse 2 — must not appear',
+            },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
+    assert.match(report.parityRegression.body, /image-mismatch/);
+    assert.match(report.parityRegression.body, /real drift/);
+    assert.doesNotMatch(report.parityRegression.body, /paragraph-count-mismatch/);
+    assert.doesNotMatch(report.parityRegression.body, /heading-mismatch/);
+    assert.doesNotMatch(report.parityRegression.body, /noisy coarse/);
+    assert.deepEqual(report.parityRegression.summary.issuesByType, {
+      'image-mismatch': 1,
+    });
+  });
+
+  it('topEntries does not include files whose only issues are coarse', () => {
+    const parity = {
+      summary: { checkedAt: '2026-04-07T00:00:00Z', actionableFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/coarse-only.md',
+          issues: [
+            { type: 'paragraph-count-mismatch', severity: 'signal', detail: 'noise' },
+          ],
+        },
+        {
+          file: 'src/content/docs/real.md',
+          issues: [
+            { type: 'image-mismatch', severity: 'actionable', detail: 'drift' },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    const topFiles = report.parityRegression.topEntries.map((entry) => entry.file);
+    assert.deepEqual(topFiles, ['src/content/docs/real.md']);
+  });
+
+  it('coarse-only file does not appear in parityRegression even with expired ack', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 0,
+        expiredAcknowledgements: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/expired-coarse.md',
+          issues: [
+            {
+              type: 'paragraph-count-mismatch',
+              severity: 'signal',
+              detail: 'expired',
+              acknowledged: true,
+              ackExpired: true,
+              ackExpiryReason: 'fingerprint-changed',
+            },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+  });
+
+  it('coarse-only file does not appear in parityRegression even with expired baseline', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        actionableFiles: 0,
+        expiredBaselineEntries: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/expired-baseline-coarse.md',
+          issues: [
+            {
+              type: 'heading-mismatch',
+              severity: 'signal',
+              detail: 'expired baseline',
+              baselined: true,
+              baselineExpired: true,
+            },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 8: family count and audit manifest invariants
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 — family count and audit manifest invariants', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-07T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  it('actionableReport still exposes exactly 4 detection families', () => {
+    // The 4 families are: snapshotDiff, parityRegression, sourceSyncHealth,
+    // parityFollowup. Phase 8 must NOT introduce a new family or rename one.
+    const parity = {
+      summary: { checkedAt: '2026-04-07T00:00:00Z' },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    const familyKeys = [
+      report.snapshotDiff?.key,
+      report.parityRegression?.key,
+      report.sourceSyncHealth?.key,
+      report.parityFollowup?.key,
+    ].filter(Boolean);
+    assert.equal(familyKeys.length, 4);
+    assert.deepEqual(new Set(familyKeys), new Set([
+      'snapshot-diff',
+      'parity-regression',
+      'source-sync-health',
+      'parity-followup',
+    ]));
+  });
+
+  it('coarse-only run still produces all 4 families with shouldOpenIssue=false', () => {
+    const parity = {
+      summary: { checkedAt: '2026-04-07T00:00:00Z', signalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/coarse.md',
+          issues: [
+            { type: 'paragraph-count-mismatch', severity: 'signal', detail: 'EN=4 JA=2' },
+          ],
+        },
+      ],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    // All 4 families exist as keys ...
+    assert.ok(report.snapshotDiff);
+    assert.ok(report.parityRegression);
+    assert.ok(report.sourceSyncHealth);
+    assert.ok(report.parityFollowup);
+    // ... and none of them want a managed issue opened.
+    assert.equal(report.snapshotDiff.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+    assert.equal(report.parityFollowup.shouldOpenIssue, false);
+  });
+
+  it('parity-only file with coarse signals does not create a new auditManifest entry', () => {
+    // The auditManifest is snapshot-driven: a parity issue WITHOUT a
+    // matching snapshot change must NOT add an entry. Phase 8 preserves
+    // this property — coarse signals appear nowhere in the manifest.
+    const snapshot = {
+      checkedAt: '2026-04-07T00:00:00Z',
+      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+      changes: [],
+      sidebar: { changed: false, addedPages: [], removedPages: [] },
+    };
+    const parity = {
+      summary: { checkedAt: '2026-04-07T00:00:00Z', signalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/parity-only.md',
+          issues: [
+            { type: 'paragraph-count-mismatch', severity: 'signal', detail: 'noise' },
+            { type: 'heading-mismatch', severity: 'signal', detail: 'noise2' },
+          ],
+        },
+      ],
+    };
+    const manifest = buildAuditManifest(snapshot, parity);
+    assert.equal(manifest.length, 0);
+  });
+
+  it('renderSummaryMarkdown puts coarse signals in the audit section, not Parity', () => {
+    // Phase 8 codex follow-up test: docs-update-summary.md must put
+    // coarse signals into a new "Audit Signals" section, never into the
+    // active counts of the "Parity" section. The Parity section should
+    // count zero active files for a coarse-only summary, and the Audit
+    // Signals section should list the coarse type breakdown.
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 1,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 1,
+        acknowledgedIssues: 0,
+        reportableActiveFiles: 0,
+        reportableActiveActionableFiles: 0,
+        auditSignalIssues: 3,
+        auditSignalFiles: 1,
+        auditSignalsByType: {
+          'paragraph-count-mismatch': 2,
+          'heading-mismatch': 1,
+        },
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-07T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: { summary: { issueCount: 0 } },
+      parityFollowup: {
+        summary: {
+          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, expiredBaselineEntries: 0, baselineInvalidatedSlugs: [] },
+          advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+
+    // Parity section: active counts must reflect Phase 8 reportable
+    // counters, NOT the legacy ones that include coarse signals.
+    assert.match(md, /## Parity/);
+    assert.match(md, /Active actionable files: 0/);
+    assert.match(md, /Active issue files: 0/);
+
+    // Audit Signals section exists and lists the coarse breakdown.
+    assert.match(md, /## Audit Signals/);
+    assert.match(md, /paragraph-count-mismatch: 2/);
+    assert.match(md, /heading-mismatch: 1/);
+
+    // Sanity: coarse signal labels must NOT show up inside the Parity
+    // section. The simplest way to test this is to extract the Parity
+    // section text and check it for the coarse type names.
+    const paritySectionMatch = md.match(/## Parity\n([\s\S]*?)(?:\n## |$)/);
+    assert.ok(paritySectionMatch, 'Parity section must exist');
+    const paritySection = paritySectionMatch[1];
+    assert.doesNotMatch(paritySection, /paragraph-count-mismatch/);
+    assert.doesNotMatch(paritySection, /heading-mismatch/);
+  });
+
+  it('propagates parity.summary.runScope to actionableReport top-level (Phase 8 PR2)', () => {
+    // The Phase 8 sync guard reads runScope off docs-actionable-report.json,
+    // not parity-check-status.json. Make sure the field is hoisted.
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        runScope: {
+          type: 'slug',
+          isComplete: false,
+          filters: { slug: 'overview/page-a', section: null },
+        },
+      },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    assert.deepEqual(report.runScope, {
+      type: 'slug',
+      isComplete: false,
+      filters: { slug: 'overview/page-a', section: null },
+    });
+  });
+
+  it('propagates a full-scope runScope through unchanged', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-07T00:00:00Z',
+        runScope: {
+          type: 'full',
+          isComplete: true,
+          filters: { slug: null, section: null },
+        },
+      },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    assert.equal(report.runScope.type, 'full');
+    assert.equal(report.runScope.isComplete, true);
+  });
+
+  it('falls back to runScope=null when parity.summary.runScope is absent (legacy report)', () => {
+    // Backward compatibility: a parity-check-status.json that pre-dates
+    // Phase 8 PR2 has no runScope. The actionable report must still set
+    // the field (so consumers can probe it) but the value is null. The
+    // sync guard treats null as legacy and falls back to its prior
+    // behaviour (the test for that lives in the sync_detection_issues
+    // suite added in commit 3 of PR2).
+    const parity = {
+      summary: { checkedAt: '2026-04-07T00:00:00Z' },
+      files: [],
+      advisoryQueue: [],
+      advisoryQueueScope: null,
+    };
+    const report = buildActionableReport(emptySnapshot, parity, [], { sourceSync: {} });
+    assert.equal(report.runScope, null);
+  });
+
+  it('snapshot-driven entries still receive parity cross-reference (existing behaviour)', () => {
+    // Phase 8 must NOT remove the existing parity cross-reference on
+    // entries that DO have a matching snapshot change.
+    const snapshot = {
+      changes: [
+        {
+          slug: 'overview/page-a',
+          type: 'page-changed',
+          sourceUrl: 'https://docs.tricentis.com/.../page-a.htm',
+          categories: {
+            heading: { added: 0, removed: 0 },
+            image: { added: 1, removed: 0 },
+            code: { added: 0, removed: 0 },
+            callout: { added: 0, removed: 0 },
+            content: { added: 1, removed: 0 },
+          },
+          diffLines: 2,
+        },
+      ],
+    };
+    const parity = {
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            { type: 'image-mismatch', severity: 'actionable', detail: 'EN=2 JA=1' },
+            { type: 'paragraph-count-mismatch', severity: 'signal', detail: 'EN=4 JA=3' },
+          ],
+        },
+      ],
+    };
+    const manifest = buildAuditManifest(snapshot, parity);
+    assert.equal(manifest.length, 1);
+    // Both signals are passed through into the manifest entry; the audit
+    // manifest is meant for human review, so we don't filter at this layer.
+    assert.equal(manifest[0].signals.length, 2);
+    const signalTypes = manifest[0].signals.map((s) => s.type);
+    assert.ok(signalTypes.includes('image-mismatch'));
+    assert.ok(signalTypes.includes('paragraph-count-mismatch'));
   });
 });
