@@ -34,6 +34,11 @@ export function isCoarseAuditSignal(issue) {
 }
 
 export function isReportableParityIssue(issue) {
+  // Phase 8: coarse signals (paragraph/bullet/step/section count, heading,
+  // table-shape, table-cell-* heuristics) are audit-only and never feed
+  // parityRegression or the gate, regardless of ack/baseline state.
+  // See docs/superpowers/specs/2026-04-07-issue-225-phase-8-design.md §3.3
+  if (isCoarseAuditSignal(issue)) return false;
   if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
   if (isFrozenByBaseline(issue)) return false;
   return isActiveParityIssue(issue);

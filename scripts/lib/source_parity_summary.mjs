@@ -1,27 +1,9 @@
 import {
   isCoarseAuditSignal,
   isFrozenByBaseline,
+  isReportableParityIssue,
   isValidAcknowledgedIssue,
 } from './source_parity_issue_state.mjs';
-
-/**
- * Phase 8: classifies whether an issue counts toward `reportableActive*`.
- *
- * This is intentionally a local helper rather than a re-use of
- * `isReportableParityIssue` because, in the Phase 8 commit ordering, the
- * `parityRegression` predicate is wired to reject coarse signals in a
- * later commit. Keeping the summary-side filter local lets the
- * `reportableActive*` counters reach their final semantics in this commit
- * without disturbing `parityRegression` callers (which are migrated in
- * commit 4).
- */
-function isReportableActiveIssueLocal(issue) {
-  if (isCoarseAuditSignal(issue)) return false;
-  if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
-  if (isFrozenByBaseline(issue)) return false;
-  if (isValidAcknowledgedIssue(issue)) return false;
-  return true;
-}
 
 /**
  * Aggregates per-file parity results into type/severity/acknowledgement
@@ -128,7 +110,7 @@ export function summarizeParityResults(results) {
         hasAuditSignal = true;
       }
 
-      if (isReportableActiveIssueLocal(issue)) {
+      if (isReportableParityIssue(issue)) {
         hasReportableActive = true;
         if (issue.severity === 'actionable') {
           hasReportableActiveActionable = true;

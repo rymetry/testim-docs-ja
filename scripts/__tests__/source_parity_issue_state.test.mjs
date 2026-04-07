@@ -193,14 +193,124 @@ describe('Phase 8 — isCoarseAuditSignal', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Phase 8: isReportableParityIssue rejects coarse audit signals
+// ---------------------------------------------------------------------------
+
+describe('Phase 8 — isReportableParityIssue rejects coarse signals', () => {
+  it('rejects plain coarse signal (no ack, no baseline)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'paragraph-count-mismatch',
+        severity: 'signal',
+      }),
+      false,
+    );
+  });
+
+  it('rejects coarse signal even when acknowledged is expired', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'paragraph-count-mismatch',
+        severity: 'signal',
+        acknowledged: true,
+        ackExpired: true,
+      }),
+      false,
+    );
+  });
+
+  it('rejects coarse signal even when baseline is expired', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'heading-mismatch',
+        severity: 'signal',
+        baselined: true,
+        baselineExpired: true,
+      }),
+      false,
+    );
+  });
+
+  it('still accepts non-coarse actionable issues (image-mismatch)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'image-mismatch',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('still accepts segment-missing with no ack/baseline', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'segment-missing',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('still rejects valid (non-expired) ack on actionable issues', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'image-mismatch',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('still rejects non-expired baseline on actionable issues', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'segment-missing',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('still accepts expired baseline on non-coarse actionable issues (refire)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'segment-missing',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: true,
+      }),
+      true,
+    );
+  });
+
+  it('still rejects unknown severity', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'image-mismatch',
+        severity: 'unknown',
+      }),
+      false,
+    );
+  });
+
+  it('still accepts missing-snapshot (gate signal — not in allowlist)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'missing-snapshot',
+        severity: 'signal',
+      }),
+      true,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 8: existing predicates remain unchanged for non-coarse issues
 // ---------------------------------------------------------------------------
-//
-// NOTE: the assertions for `isReportableParityIssue rejecting coarse signals`
-// are added in a later commit, together with the wiring change in
-// `source_parity_issue_state.mjs`. This commit only adds the
-// `isCoarseAuditSignal` predicate and the `COARSE_SIGNAL_TYPES` allowlist
-// without changing the existing reportability behaviour.
 
 describe('Phase 8 — existing predicates unchanged for non-coarse issues', () => {
   it('isFrozenByBaseline stays the same', () => {
