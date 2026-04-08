@@ -1,10 +1,10 @@
 /**
- * Fixture integration tests for detectSourceUsability (Issue #247 PR3).
+ * detectSourceUsability の fixture integration テスト (Issue #247 PR3)。
  *
  * 設計書 §4.5.2 に対応。実 snapshot ファイルを読み込んで detector を呼び、
  * type / reason を assert する。
  *
- * 2 ページが対象:
+ * 対象 2 ページ:
  *   - salesforce-testing/salesforce-testing-overview → snapshot-incomplete / shallow-snapshot
  *   - salesforce-testing/faq                        → source-unusable   / escaped-details-residue
  */

@@ -1,5 +1,5 @@
 /**
- * Pre-comparator source usability gate (Issue #247 PR3).
+ * 比較前 source usability gate (Issue #247 PR3)。
  *
  * EN snapshot が比較不能なページ (shallow / collapsed / malformed) を
  * `alignSegments` の前に検出し、`snapshot-incomplete` または `source-unusable`
@@ -45,7 +45,7 @@ const MAX_EN_RAW_HTML_FOR_SHALLOW = 800;
 // ---------------------------------------------------------------------------
 
 /**
- * Pre-comparator usability gate。EN snapshot 起因で comparator が成立しない
+ * 比較前 usability gate。EN snapshot 起因で comparator が成立しない
  * ページを検出し、`alignSegments` / `compareSnapshotStructure` を走らせる前に
  * 1 件の issue を返す。比較可能なら null を返す。
  *
@@ -61,7 +61,7 @@ const MAX_EN_RAW_HTML_FOR_SHALLOW = 800;
  * @param {Error|null} [input.extractError] extractSegmentsFromHtml が throw した場合に渡す。
  *   non-null のとき Layer 1 / Layer 3 (enSegments を読む) を skip し、
  *   rawEnHtml 単独で動く Layer 2 だけを評価する (設計書 §4.6.2)。
- * @returns {{ type: string, severity: string, scope: string, detail: string,
+ * @returns {{ type: string, severity: 'actionable', scope: 'page', detail: string,
  *             usabilitySignals: object } | null}
  */
 export function detectSourceUsability({
@@ -134,7 +134,8 @@ export function detectSourceUsability({
 // ---------------------------------------------------------------------------
 
 /**
- * signals オブジェクトを収集する。reason は buildIssue で上書きする。
+ * signals オブジェクトを収集する。
+ * reason フィールドは null で初期化し、buildIssue で発火した reason を上書きする。
  */
 function collectSignals(rawEnHtml, enSegments, jaSegments) {
   const enBodySegmentCount = enSegments.filter(s => s.segmentKind !== 'heading').length;
@@ -161,9 +162,9 @@ function collectSignals(rawEnHtml, enSegments, jaSegments) {
 
 /**
  * issue payload を組み立てる。
- * @param {'snapshot-incomplete' | 'source-unusable'} type
- * @param {'shallow-snapshot' | 'escaped-details-residue' | 'extractor-empty'} reason
- * @param {object} signals collectSignals の結果
+ * @param {'snapshot-incomplete' | 'source-unusable'} type      issue の type
+ * @param {'shallow-snapshot' | 'escaped-details-residue' | 'extractor-empty'} reason  発火した layer の識別子
+ * @param {object} signals  collectSignals の戻り値
  */
 function buildIssue(type, reason, signals) {
   return {
@@ -176,7 +177,7 @@ function buildIssue(type, reason, signals) {
 }
 
 /**
- * reviewer 向け 1 行サマリを返す。
+ * reviewer 向け 1 行サマリ文字列を返す。issue payload の `detail` フィールドに使う。
  */
 function describeReason(type, reason, signals) {
   switch (reason) {
@@ -210,8 +211,8 @@ function describeReason(type, reason, signals) {
 
 /**
  * 文字列 str 中で pattern にマッチする件数を返す。
- * @param {string} str
- * @param {RegExp} pattern  g フラグ必須
+ * @param {string} str       検索対象の文字列
+ * @param {RegExp} pattern   g フラグ付き正規表現
  */
 function countMatches(str, pattern) {
   let count = 0;
