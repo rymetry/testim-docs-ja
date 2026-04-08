@@ -16,8 +16,8 @@
 - `scripts/lib/source_parity_summary.mjs` — Phase C (`orphanBaselineEntries` counter)
 - `scripts/check_source_parity.mjs` — Phase C (per-slug `matchedKeys` を消費), Phase G (再生成後の検証)
 - `scripts/lib/detection_reports.mjs` — Phase C (followup report に orphan を追加)
-- `scripts/lib/turndown.mjs` — Phase F (`unescapeDetails` の multi-paragraph 対応)
-- `scripts/lib/source_parity_segments_en.mjs` — Phase E (FileOrFilePath list item / table-cell-inside-ul の normalization), **Phase F (`<summary>` → heading kind への変更, Finding 1 対応)**
+- `scripts/lib/turndown.mjs` — Phase F (`unescapeDetails` + 新規 `normalizeEscapedFaqDetails` で broken multi-paragraph details を h2 anchor に正規化, Finding 5-8 後の最終方針)
+- `scripts/lib/source_parity_segments_en.mjs` — Phase E (FileOrFilePath list item / table-cell-inside-ul の normalization). **Phase F は extractor を touch しない** (Finding 6 でスコープ縮小)
 - `src/content/docs/running-tests/the-command-line-cli.md` — Phase D (JA 構造修正)
 - `src/content/docs/results/test-results/network-logs.md` — Phase D (JA 構造修正)
 - `src/content/docs/advanced-editing/validations/email-validation.md` — Phase D (JA 構造修正)
@@ -29,11 +29,19 @@
 **重要な設計決定 (codex advice 反映済み):**
 - `main(['--types='])` は `main()` が `process.argv.slice(2)` をハードコードしているため直接テストできない。**Phase B では `validateTypesArg(types)` という純粋関数 helper を新設し、helper 単体を test する。** `main()` は helper を呼ぶだけの thin wrapper にする。
 
-**Plan 改訂履歴 (2026-04-09 post-drafting review):**
-- **Finding 1**: Phase F の preprocessor 修正だけでは faq は green にならない。`source_parity_segments_en.mjs::walkDetails` が `<summary>` を `'details-summary'` kind で emit しており、JA 側の `## heading` 変換と segment 契約が合わない。→ **Phase F にTask F.2.5 (EN extractor の summary→heading 変更) を追加**
-- **Finding 2**: Phase G の purge 対象 `testops/testops-version-control/pull-requests` は legacy `segment-inconclusive` の他に **live な `snapshot-incomplete (extractor-empty)` 実測確認済み** が同居している。`salesforce-testing-overview` と同じく live entry を保持する必要あり。→ **Phase G.3 の再 seed 対象に `pull-requests` を追加**
-- **Finding 3**: Phase H.2 の orphan E2E test が「存在しない slug に架空 entry」を使う設計だが、orphan 検知は checked slug にしか反応しないため false negative になる。→ **Phase H.2 を「存在する clean slug に stale な segment-missing entry を仕込む」設計に変更**
-- **Finding 4**: `result: pass` は local で達成不可能(`freshnessState: broken` → `inconclusive` に degrade される実装契約)。実測で確認。→ **Phase G.4 / Phase I の完了条件を `reportableActiveFiles === 0 && orphanBaselineEntries === 0` に緩和し、`result` 値はローカル環境依存であることを明記**
+**Plan 改訂履歴 (2026-04-09 post-drafting review 第 1 弾 — Finding 1-4):**
+- **Finding 1** (当時): Phase F の preprocessor 修正だけでは faq は green にならない。`walkDetails` が summary を `details-summary` kind で emit するため。→ **F.2.5 で extractor を summary→heading に書き換える案を追加** (**第 2 弾で破棄**)
+- **Finding 2**: Phase G の purge 対象 `pull-requests` は legacy `segment-inconclusive` の他に **live な `snapshot-incomplete (extractor-empty)` 実測確認済み** が同居。→ **Phase G.2/G.3 を `FULL_PURGE_SLUGS` (6) と `RESEED_SLUGS` (2: salesforce-testing-overview + pull-requests) に分割**
+- **Finding 3**: Phase H.2 の orphan E2E test が「存在しない slug に架空 entry」を使う設計だが、orphan 検知は checked slug にしか反応しないため false negative になる。→ **Phase H.2 を「存在する clean slug に synthetic stale entry を仕込む」設計に変更**
+- **Finding 4**: `result: pass` は local で達成不可能(`freshnessState: broken` → `inconclusive` に degrade される実装契約)。→ **Phase G.4 / Phase I の完了条件を `reportableActiveFiles === 0 && orphanBaselineEntries === 0` に緩和**
+
+**Plan 改訂履歴 (2026-04-09 post-drafting review 第 2 弾 — Finding 5-8):**
+- **Finding 5 [P1]**: 第 1 弾の F.2.5 「EN extractor の summary→heading 昇格」案のテスト自体が不正。(1) `<h1>` は `h1Consumed` フラグで skip される契約 (`source_parity_segments_en.mjs:394`, 既存 test `source_parity_segments_en.test.mjs:25` で pin) なので `h1 + 2 summary = 3 headings` は成立しない。(2) Segment schema は `textNorm` フィールドで `text` は存在しない (`source_parity_segments_shared.mjs:184`)。→ **F.2.5 を extractor 変更から preprocessor 正規化に方針転換**
+- **Finding 6 [P1]**: `details-summary` は `STRUCTURE_COMPARATOR_KINDS` の **FROZEN 語彙** で baseline identity key に畳み込まれている (`source_parity_structure.mjs:74-81`)。さらに JA extractor も `<summary>` を `details-summary` として emit (`source_parity_segments_ja.mjs:366-368`)、`coding-assistant.md` には raw `<details><summary>` が残っている。EN 側だけ変えると契約が割れ、FAQ は救えても別ページで regression を作る。→ **F.2.5 は extractor / frozen 語彙に触らず、`turndown.mjs::normalizeEscapedFaqDetails` による preprocessor 正規化に限定**
+- **Finding 7 [P2]**: `SUMMARY_HEADING_LEVEL = 2` 固定は `pushHeading` の `entry.level < level` フィルタ (`source_parity_segments_shared.mjs:134`) によってネストした parent h2 を落とす。`Examples > Q1` ではなく `Q1` になる。→ **extractor 変更案を破棄したので本 Finding は moot、ただし記録として残す**
+- **Finding 8 [P3]**:
+  - Phase G.3 の期待値が緩い (`'snapshot-incomplete' or 'source-unusable'` を許容)。regression を飲み込む。→ **G.3 を `issueType` + `usabilityReason` ペア厳密 assert に強化** (`salesforce-testing-overview`: `snapshot-incomplete/shallow-snapshot`, `pull-requests`: `snapshot-incomplete/extractor-empty`)
+  - Phase H.1 の placeholder が plan 完了前に実 slug へ置換される前提が不明確。→ **H.1 に「置換手順」節を追加し、placeholder のままでは実行できないことを明記**
 
 **Phase 間依存関係 (実行順が固定):**
 ```
@@ -1749,6 +1757,13 @@ EOF
 
 ## Phase F: `faq` preprocessor root cause fix
 
+**Phase F 改訂通知 (Finding 5-8)**: 初稿の F.1/F.2 は「escaped details を real `<details>` に復元 → 後で extractor を書き換えて summary を heading に昇格」という 2 段階方針だったが、第 3 弾レビューで以下が判明して破綻:
+
+- Finding 6: `details-summary` は frozen vocabulary で extractor 書き換えは破壊的変更
+- Finding 5: 初稿の F.2.5 テストが無効な segment schema 前提で書かれていた
+
+→ **F.1 と F.2 を削除し、F.2.5 (preprocessor で直接 `<h2>` 正規化) を唯一の主タスクとする**。F.2.5 は `turndown.mjs::normalizeEscapedFaqDetails` を新規追加し、extractor / frozen vocabulary / JA 側を一切触らない最小変更で faq を clean green にする。
+
 ### Task F.0: 調査 — unescapeDetails の現状と broken pattern の解析
 
 **Context:** `salesforce-testing/faq.html` (3603 bytes) は MadCap が `<details>` 内容を複数の `<p>` に跨って escape 出力する。現状 `unescapeDetails` は単一の `<p>` 内で `&lt;details&gt;` で始まる場合のみ処理する。broken details tree は hyperlink が別 `<p>` に分割され、code block が `<div class="codeSnippet">` になり、close タグが最後の独立 `<p>` に残るケースで失敗する。
@@ -1757,260 +1772,290 @@ EOF
 
 - [ ] **Step 2: `scripts/lib/turndown.mjs` の `unescapeDetails` / `preprocessEnHtml` の現状実装を読む**
 
-- [ ] **Step 3: 他の `<details>` 使用ページ (e.g. `advanced-editing/coding-assistant`) を grep して false positive が出ないパターン境界を決める**
+- [ ] **Step 3: `coding-assistant.html` を grep して single-<p> 内 balanced 例 (legacy unescape で扱う) と faq の multi-paragraph broken tree (新 normalize で扱う) の境界を確認**
 
-### Task F.1: 失敗テスト — faq を detect/compare が通るまで preprocess する
+### ~~Task F.1: preprocessEnHtml 失敗テスト~~ → **F.2.5 に統合、削除**
 
-- [ ] **Step 1: `scripts/__tests__/turndown.test.mjs` に faq round-trip test を追加**
+### ~~Task F.2: unescapeDetails を multi-paragraph 対応に拡張~~ → **F.2.5 に統合、削除**
+
+### Task F.2.5: faq escaped details を h2 anchor に正規化 (Finding 5-8 反映版)
+
+**Files:**
+- Modify: `scripts/lib/turndown.mjs` (`unescapeDetails` / 新規 `normalizeEscapedFaqDetails`)
+- Modify: `scripts/__tests__/turndown.test.mjs` (新規 test)
+- Modify: `scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` (faq 契約を null + heading 5+ に flip)
+
+**Context (再改訂理由):** 初稿の「EN extractor の `<summary>` を heading kind に昇格」案は以下の 4 つの Finding で破綻:
+
+1. **Finding 5**: 初稿テストは `h1 + 2 summary = 3 headings` を期待したが、extractor は最初の `<h1>` を `h1Consumed` フラグで skip する契約 (`source_parity_segments_en.mjs:394`, `source_parity_segments_en.test.mjs:25` で pin)。segment schema は `textNorm` で `text` フィールドは存在しない (`source_parity_segments_shared.mjs:184`)
+2. **Finding 6**: `details-summary` は `STRUCTURE_COMPARATOR_KINDS` の **FROZEN 語彙** で baseline identity key に畳み込まれている (`source_parity_structure.mjs:74-81`)。削除は破壊的変更
+3. **Finding 6 補足**: JA extractor (`source_parity_segments_ja.mjs:366-368`) も `<summary>` を `details-summary` として emit、実データでも `coding-assistant.md` に raw `<details><summary>` が残っている。EN だけ変えると EN/JA 契約が非対称になる
+4. **Finding 7**: `SUMMARY_HEADING_LEVEL = 2` 固定は `pushHeading` の `entry.level < level` フィルタ (`source_parity_segments_shared.mjs:134`) によってネストした h2 を潰す。`Examples > Q1` ではなく `Q1` になる
+
+**新方針 (scope 最小化)**: extractor 契約を一切触らず、`turndown.mjs` の preprocessor で **faq 特有の broken escaped details を h2 anchor に正規化** する。具体的には:
+
+- `&lt;details&gt; &lt;summary&gt;<b>Q?</b>&lt;/summary&gt; ... &lt;/details&gt;` の balanced block を
+- `<h2>Q?</h2> ...` に置換する
+- `<details>` / `</details>` ラッパーは消し、body 部分はそのまま HTML として残す
+
+これで EN 側は real `<h1>FAQ</h1>` と 5 つの `<h2>Q?</h2>` を持ち、JA 側の `## Q?` と整合する。JA extractor も structure comparator の frozen vocabulary も触らない。
+
+**影響範囲の確認 (repo 全体で実測):**
+
+- EN 側で `&lt;details&gt;` を持つ snapshot: `faq.html`, `coding-assistant.html` (計 2 page)
+- JA 側で raw `<details>` を持つ md: `coding-assistant.md` (1 page のみ)
+- **faq は EN のみ / JA は coding-assistant のみ** — ほぼ disjoint
+
+したがって新正規化ルールは:
+
+- **faq**: 意図通り `<h2>` anchor を生成 → EN heading 5+ → alignSegments 成功
+- **coding-assistant**: 既存 fixture test (`source_parity_source_usability_fixtures.test.mjs:87-209`) が現状維持 (preprocessed 後の detector が `null` を返す前提) → 壊れないことを必須 assert
+- **その他**: 影響なし
+
+`coding-assistant` 影響の理由: escaped details が balanced なので、新ルールでも同じく `<h2>` に変換されるリスクがある。しかし `coding-assistant` の escaped details は **本文内のドキュメント例** として書かれており、その意図的な例示を `<h2>` に潰すと文書の semantics が壊れる。そのため正規化条件は **ページ全体 (root level の `<p>` に跨る broken tree)** に限定する必要がある。
+
+実装戦略:
+1. 既存 `unescapeDetails` は per-`<p>` で balanced な single-paragraph details を real `<details>` に復元する(legacy — coding-assistant 向け)
+2. その後に新規 `normalizeEscapedFaqDetails(html)` を挟む。条件:
+   - root level (`<p>` で wrap された) の `&lt;details&gt;` open が複数 `<p>` に跨って存在 **(つまり multi-paragraph broken tree)**
+   - 全ての `&lt;details&gt;` / `&lt;/details&gt;` のペアが balanced
+3. condition 合致時にのみ、該当 HTML region 内の `&lt;summary&gt;<b>Q</b>&lt;/summary&gt;` を `<h2>Q</h2>` に置換し、`&lt;details&gt;` / `&lt;/details&gt;` wrapper を削除
+
+- [ ] **Step 1: 失敗テスト (RED)**
+
+`scripts/__tests__/turndown.test.mjs` に追加:
 
 ```js
-describe('Issue #247 post-merge — preprocessEnHtml faq root cause fix', () => {
+describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 5-8)', () => {
   let preprocessEnHtml;
   before(async () => {
     ({ preprocessEnHtml } = await import('../lib/turndown.mjs'));
   });
 
-  it('faq: 複数 <p> に跨る escaped <details> tree を balanced な real <details> に復元する', () => {
-    const rawFaq = readFileSync(
+  it('faq broken multi-paragraph details を h2 anchor に正規化する', () => {
+    // 簡易 faq fixture (実 faq.html に近い構造)
+    const html = [
+      '<h1>FAQ</h1>',
+      '<p>&lt;details&gt; &lt;summary&gt;<b>Q1?</b>&lt;/summary&gt; Answer 1. &lt;/details&gt; &lt;details&gt; &lt;summary&gt;<b>Q2?</b>&lt;/summary&gt; Answer 2 with <br /></p>',
+      '<p><a href="foo.htm">link</a>.</p>',
+      '<p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt;<b>Q3?</b>&lt;/summary&gt; Answer 3. &lt;/details&gt;</p>',
+    ].join('\n');
+
+    const out = preprocessEnHtml(html);
+    // escaped markers は残らない
+    assert.equal(out.includes('&lt;details&gt;'), false);
+    assert.equal(out.includes('&lt;/details&gt;'), false);
+    assert.equal(out.includes('&lt;summary&gt;'), false);
+    // h2 anchor が 3 件 (Q1 / Q2 / Q3) に対応
+    const h2Count = (out.match(/<h2[^>]*>/gi) || []).length;
+    assert.equal(h2Count, 3);
+    assert.ok(out.includes('Q1?'));
+    assert.ok(out.includes('Q2?'));
+    assert.ok(out.includes('Q3?'));
+    assert.ok(out.includes('Answer 1.'));
+    assert.ok(out.includes('Answer 2'));
+    assert.ok(out.includes('Answer 3.'));
+  });
+
+  it('real faq fixture: heading 5+ / details marker 0 / single-paragraph 内 details は影響しない', () => {
+    const raw = readFileSync(
       join(ROOT, 'snapshots/en/content/salesforce-testing/faq.html'),
       'utf8',
     );
-    const preprocessed = preprocessEnHtml(rawFaq);
-    // escaped markers は残っていないこと
-    assert.equal(preprocessed.includes('&lt;details&gt;'), false);
-    assert.equal(preprocessed.includes('&lt;/details&gt;'), false);
-    // real <details> タグが 5 件 (5 つの FAQ 項目) 存在すること
-    const openCount = (preprocessed.match(/<details\b/gi) || []).length;
-    const closeCount = (preprocessed.match(/<\/details>/gi) || []).length;
-    assert.equal(openCount, 5);
-    assert.equal(closeCount, 5);
+    const out = preprocessEnHtml(raw);
+    // raw faq は 5 QnA → h2 が 5 件生成されるはず
+    const h2Count = (out.match(/<h2[^>]*>/gi) || []).length;
+    assert.ok(h2Count >= 5, `faq は h2 anchor を 5 件以上生成すべき (actual: ${h2Count})`);
+    assert.equal(out.includes('&lt;details&gt;'), false);
+    assert.equal(out.includes('&lt;/details&gt;'), false);
+  });
+
+  it('coding-assistant (balanced single-paragraph details 例): 正規化は発火せず既存の legacy unescape が動く', () => {
+    const raw = readFileSync(
+      join(ROOT, 'snapshots/en/content/advanced-editing/coding-assistant.html'),
+      'utf8',
+    );
+    const out = preprocessEnHtml(raw);
+    // coding-assistant の既存挙動を break しない pin:
+    //   現状と同じく real <details> or balanced escaped markers が残っていて
+    //   detector/extractor が正常動作する状態を維持する
+    // 詳細 assertion は source_parity_source_usability_fixtures.test.mjs が
+    // 担保する (detector が null を返すこと)
+    assert.ok(out.length > 0);
   });
 });
 ```
-
-- [ ] **Step 2: detector が faq を source-unusable と判定しないこと (Layer 2 が発火しない) を test**
-
-```js
-it('faq: preprocess 後 detectSourceUsability が null を返す', () => {
-  const rawFaq = readFileSync(
-    join(ROOT, 'snapshots/en/content/salesforce-testing/faq.html'),
-    'utf8',
-  );
-  // detector は内部で preprocessEnHtml を呼ぶ (既存実装)
-  const jaMd = readFileSync(join(ROOT, 'src/content/docs/salesforce-testing/faq.md'), 'utf8');
-  const jaBody = extractJaBody(jaMd);
-  const enSegs = extractSegmentsFromHtml(rawFaq);
-  const jaSegs = extractSegmentsFromMarkdown(jaBody);
-  const issue = detectSourceUsability({ rawEnHtml: rawFaq, enSegments: enSegs, jaSegments: jaSegs });
-  assert.equal(issue, null, 'preprocess 後は faq が usable と判定されるべき');
-});
-```
-
-- [ ] **Step 3: test 実行 — RED**
 
 Run: `npm test -- scripts/__tests__/turndown.test.mjs`
 
-Expected: FAIL (現状の unescapeDetails は faq の broken tree を扱えない)。
+Expected: FAIL (新規 `normalizeEscapedFaqDetails` 未実装、faq の h2 count === 0)。
 
-### Task F.2: `unescapeDetails` を multi-paragraph 対応に拡張 (GREEN)
+- [ ] **Step 2: `normalizeEscapedFaqDetails` を実装 (GREEN)**
 
-**Files:**
-- Modify: `scripts/lib/turndown.mjs:211-232`
-
-**Context:** アルゴリズム:
-1. `<p>` を一つずつ scan
-2. `<p>` が `&lt;details&gt;` を含むか `&lt;/details&gt;` で終わる場合、multi-paragraph details block の一部かもしれない
-3. 先読みして close まで到達したら、その間の全 `<p>`/`<div class="codeSnippet">` 等を join して一括 unescape
-4. join した結果を `<details>...</details>` で wrap
-
-複数の details が連続する場合(faq は 5 件連続)も対応する。
-
-- [ ] **Step 1: 以下の方針で `unescapeDetails` を書き直す**
+`scripts/lib/turndown.mjs` の `unescapeDetails` の直後に新規関数を追加:
 
 ```js
-function unescapeDetails(html) {
-  // Issue #247 post-merge — MadCap が <details> 内容を複数 <p> に跨って
-  // escape 出力する broken tree を扱うため、global unescape 方針に変更する。
-  //
-  // 契約:
-  //   - HTML 内の `&lt;details&gt;` / `&lt;/details&gt;` /
-  //     `&lt;summary&gt;` / `&lt;/summary&gt;` / `&lt;b&gt;` / `&lt;/b&gt;`
-  //     出現回数を数える。
-  //   - open と close の件数が一致し、かつどちらも > 0 なら、HTML 全体に
-  //     対してこれらの entity だけを unescape する (他の &lt; は触らない)。
-  //   - 不均衡 (open ≠ close) の場合は legacy path で per-<p> の処理にフォール
-  //     バックする (balanced ですらない壊れ方は safe 抑制: detector が
-  //     source-unusable を出す)。
-  //
-  // false positive 懸念: prose で `<details>` タグそのものを紹介する
-  // 文書では誤変換される。既存の coding-assistant は `<details>` の
-  // 使用例を含むが、open/close が均衡しているため global unescape で
-  // 問題なく real <details> に変換される (既存テストで pin)。
-  const openCount = (html.match(/&lt;details(\b[^&]*)?&gt;/gi) || []).length;
-  const closeCount = (html.match(/&lt;\/details&gt;/gi) || []).length;
+/**
+ * Issue #247 post-merge (Finding 5-8) — faq の multi-paragraph broken
+ * details tree を h2 anchor に正規化する。
+ *
+ * MadCap が <details><summary>Q</summary>...</details> 構造を複数の <p> に
+ * 跨って escape 出力するパターンで、`unescapeDetails` (per-<p>) では
+ * 扱えない。このヘルパは以下の条件を満たす場合に、HTML 全体の
+ * `&lt;summary&gt;...&lt;/summary&gt;` を `<h2>...</h2>` に置換し、
+ * `&lt;details&gt;` / `&lt;/details&gt;` wrapper を削除する:
+ *
+ *   - `&lt;details&gt;` open と `&lt;/details&gt;` close が balanced
+ *   - escaped details marker が**複数の `<p>` に跨って**出現
+ *     (single-<p> 内で閉じている coding-assistant ケースは legacy unescape
+ *      で扱うので、ここでは発火させない)
+ *
+ * **契約**: EN extractor / JA extractor / structure comparator の frozen
+ * vocabulary は一切触らない。影響範囲は preprocessor 内に閉じる。
+ *
+ * @param {string} html
+ * @returns {string}
+ */
+function normalizeEscapedFaqDetails(html) {
+  const openRe = /&lt;details(\b[^&]*)?&gt;/gi;
+  const closeRe = /&lt;\/details&gt;/gi;
+  const opens = [...html.matchAll(openRe)];
+  const closes = [...html.matchAll(closeRe)];
+  if (opens.length === 0 || opens.length !== closes.length) return html;
 
-  if (openCount === 0 && closeCount === 0) return html;
-  if (openCount !== closeCount) {
-    // unbalanced — detector に任せる (source-unusable 経路)
-    return legacyUnescapeDetails(html);
-  }
+  // multi-paragraph detection: open と close が別 <p> 要素に散っていることを確認する。
+  // per-<p> で全て閉じている場合は legacy unescape に任せる。
+  const pSegments = [...html.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/gi)];
+  const spansMultipleP = pSegments.some((pm) => {
+    const inner = pm[0];
+    const o = (inner.match(openRe) || []).length;
+    const c = (inner.match(closeRe) || []).length;
+    return o > 0 && c === 0; // open はあるが同じ <p> 内で閉じていない
+  });
+  if (!spansMultipleP) return html;
 
-  // balanced — details / summary / b のみ global unescape
-  return html
-    .replace(/&lt;(\/?)(details|summary|b)(\b[^&]*)?&gt;/gi, '<$1$2$3>')
-    .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
-}
-
-// 旧 per-<p> 実装を legacy helper として残す (unbalanced fallback 用)
-function legacyUnescapeDetails(html) {
-  // ... 既存の unescapeDetails 実装をここに移動 ...
+  // (1) &lt;summary&gt;<b>Q</b>&lt;/summary&gt; → <h2>Q</h2>
+  //     <b> は optional。複数行にまたがる場合もあるので [\s\S]*? を使う。
+  let out = html.replace(
+    /&lt;summary&gt;\s*(?:<b>)?([\s\S]*?)(?:<\/b>)?\s*&lt;\/summary&gt;/gi,
+    (_m, inner) => `<h2>${inner.trim()}</h2>`,
+  );
+  // (2) &lt;details ...&gt; と &lt;/details&gt; を削除 (wrapping のみ剥がす)
+  out = out.replace(openRe, '');
+  out = out.replace(closeRe, '');
+  return out;
 }
 ```
 
-- [ ] **Step 2: test 実行で GREEN を確認**
-
-Run: `npm test -- scripts/__tests__/turndown.test.mjs scripts/__tests__/source_parity_source_usability_fixtures.test.mjs`
-
-Expected:
-- faq: PASS (balanced, global unescape 成功)
-- coding-assistant: PASS (既存 test — balanced なので同じく global unescape 成功、変換後の compare も通る)
-- salesforce-testing-overview: 変更なし (details marker 無し、スキップされる)
-
-### Task F.2.5: EN extractor の `<summary>` を heading kind に昇格 (Finding 1 対応)
-
-**Files:**
-- Modify: `scripts/lib/source_parity_segments_en.mjs:547-559` (`walkDetails` 関数)
-- Modify: test 追加
-
-**Context:** Finding 1 — preprocessor が real `<details><summary>` を復元しても、`walkDetails` は `<summary>` を `'details-summary'` kind で emit する。JA 側はその summary を `## h2` として翻訳しているので、EN heading=0/1 vs JA heading>=N の mismatch が残る。EN extractor で `<summary>` を heading として昇格させる。turndown conversion rule (`turndown.mjs:180-185` — `replacement: '\n\n## ' + content + '\n\n'`) が既にこの変換を前提にしているので、extractor も同じ semantics に揃える。
-
-heading level の決定: `<summary>` は enclosing heading stack の最深レベル + 1。preface (stack 空) なら h2。`<h1>FAQ</h1>` の下なら h2。ネストした sections の下にある details の summary なら h3 以上。turndown rule は unconditional `## `(level 2 固定) なので、extractor も level 2 固定にして turndown と整合させるのが最も単純。
-
-- [ ] **Step 1: 失敗テスト**
-
-`scripts/__tests__/source_parity_segments_en.test.mjs` (既存もしくは新規) に追加:
+`preprocessEnHtml` チェインに挟む:
 
 ```js
-describe('Issue #247 post-merge — <summary> is extracted as heading (level 2)', () => {
-  let extractSegmentsFromHtml;
-  before(async () => {
-    ({ extractSegmentsFromHtml } = await import('../lib/source_parity_segments_en.mjs'));
-  });
+export function preprocessEnHtml(html) {
+  if (typeof html !== 'string') {
+    throw new TypeError(`preprocessEnHtml expected string, got ${typeof html}`);
+  }
+  // 順序: (1) normalizeEscapedCallouts → (2) 新規 normalizeEscapedFaqDetails
+  //        → (3) legacy unescapeDetails (coding-assistant の single-<p> 例向け)
+  // 新ルールは multi-paragraph パターンにしか当たらないので、single-<p> の
+  // coding-assistant は (3) の legacy path でそのまま扱われる。
+  return unescapeDetails(normalizeEscapedFaqDetails(normalizeEscapedCallouts(html)));
+}
+```
 
-  it('<details><summary> 配下で summary が heading kind で emit される', () => {
-    const html = `
-      <h1>FAQ</h1>
-      <details><summary><b>Question A?</b></summary>Answer A.</details>
-      <details><summary><b>Question B?</b></summary>Answer B.</details>
-    `;
-    const segs = extractSegmentsFromHtml(html);
-    const headings = segs.filter((s) => s.segmentKind === 'heading');
-    // h1 + 2 summary = 3 headings
-    assert.equal(headings.length, 3);
-    assert.ok(headings[0].text.includes('FAQ'));
-    assert.ok(headings[1].text.includes('Question A'));
-    assert.ok(headings[2].text.includes('Question B'));
-    // details-summary kind は emit されない (既存契約からの break change)
-    const dsum = segs.filter((s) => s.segmentKind === 'details-summary');
-    assert.equal(dsum.length, 0);
-  });
+Run: `npm test -- scripts/__tests__/turndown.test.mjs`
 
-  it('summary text は sectionPath の heading stack に積まれる (details-body が summary の子 section になる)', () => {
-    const html = `
-      <h1>Top</h1>
-      <details><summary>Q1</summary><p>Body of Q1.</p></details>
-    `;
-    const segs = extractSegmentsFromHtml(html);
-    const bodySeg = segs.find((s) => s.segmentKind === 'paragraph' && s.text.includes('Body of Q1'));
-    assert.ok(bodySeg, 'details の body paragraph が extract されるべき');
-    assert.ok(
-      bodySeg.sectionPath.includes('Q1'),
-      `sectionPath に Q1 が含まれるべき (actual: ${bodySeg.sectionPath})`,
-    );
+Expected: PASS。
+
+- [ ] **Step 3: 既存 detector 契約の再確認 — faq が source-unusable を出さないことを pin**
+
+`scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` の faq describe を更新:
+
+変更前:
+```js
+describe('detectSourceUsability fixture: salesforce-testing/faq', () => {
+  it('escaped-details-residue を検出する (source-unusable / reason=escaped-details-residue)', () => {
+    // ...
+    assert.ok(result !== null);
+    assert.equal(result.type, 'source-unusable');
+    assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
+  });
+  it('faq は residualEscapedDetailsClose >= 1 を持つ', () => {
+    // ...
+    assert.ok(result.usabilitySignals.residualEscapedDetailsClose >= 1);
   });
 });
-```
-
-Run: `npm test -- scripts/__tests__/source_parity_segments_en.test.mjs`
-
-Expected: FAIL (現状の `walkDetails` は summary を `details-summary` kind で emit)。
-
-- [ ] **Step 2: `walkDetails` を書き換え**
-
-変更前 (`source_parity_segments_en.mjs:547-559`):
-```js
-function walkDetails(node, state) {
-  for (const child of node.children) {
-    if (child.type !== 'element') continue;
-    if (child.tag === 'summary') {
-      const text = collectInlineText(child);
-      if (text.length > 0) {
-        state.emitter.emit(currentSectionPath(state), 'details-summary', text);
-      }
-      continue;
-    }
-    walkBlock(child, state);
-  }
-}
 ```
 
 変更後:
 ```js
-function walkDetails(node, state) {
-  // Issue #247 post-merge (Finding 1) — <summary> は heading kind で emit する。
-  // turndown の html-summary rule (`turndown.mjs:180-185`) が `## content` に
-  // 変換しており JA 側は h2 として翻訳される前提のため、EN extractor も
-  // level 2 fixed の heading として扱って semantics を整える。これによって
-  // faq のような <details> FAQ アコーディオンが EN/JA で同じ heading 数に
-  // なり、alignSegments の heading-count-mismatch を回避できる。
-  const SUMMARY_HEADING_LEVEL = 2;
-  for (const child of node.children) {
-    if (child.type !== 'element') continue;
-    if (child.tag === 'summary') {
-      const text = collectInlineText(child);
-      if (text.length > 0) {
-        // heading stack に push してから emit する (sectionPath に含める)
-        state.headingStack = pushHeading(state.headingStack, SUMMARY_HEADING_LEVEL, text);
-        state.emitter.emit(currentSectionPath(state), 'heading', text);
-      }
-      continue;
-    }
-    walkBlock(child, state);
-  }
-}
+describe('detectSourceUsability fixture: salesforce-testing/faq (Phase F 完了後)', () => {
+  it('Phase F preprocessor で faq は source-unusable を出さない', () => {
+    // (既存の load コード)
+    // normalizeEscapedFaqDetails が発火したあと、detector は null を返す
+    assert.equal(
+      result,
+      null,
+      `faq は Phase F 以降 usable と判定されるべき。actual: ${JSON.stringify(result)}`,
+    );
+  });
+
+  it('Phase F 後: faq は extractSegmentsFromHtml で heading >= 5 件を生成する', () => {
+    // preprocess 後の faq HTML が real <h2> anchor を持つことを確認
+    const rawEnHtml = readFileSync(
+      join(SNAPSHOTS_DIR, 'salesforce-testing/faq.html'),
+      'utf8',
+    );
+    const enSegs = extractSegmentsFromHtml(rawEnHtml);
+    const headings = enSegs.filter((s) => s.segmentKind === 'heading');
+    assert.ok(
+      headings.length >= 5,
+      `faq は heading >= 5 件であるべき (actual: ${headings.length}, ` +
+        `firstHeading=${JSON.stringify(headings[0] || null)})`,
+    );
+  });
+});
 ```
 
-- [ ] **Step 3: 既存 test の回帰確認**
+既存の `coding-assistant` fixture describe (`source_parity_source_usability_fixtures.test.mjs:87-209` 相当) は**変更不要**で、`detectSourceUsability` が `null` を返す contract を引き続き pin する(正規化条件を multi-paragraph に限定しているため)。
 
-Run: `npm test -- scripts/__tests__/source_parity_segments_en.test.mjs scripts/__tests__/source_parity_source_usability_fixtures.test.mjs scripts/__tests__/source_parity_structure_fixtures.test.mjs`
+- [ ] **Step 4: 全 test 回帰 (PHASE F.2.5 完了判定)**
 
-Expected:
-- 新 test: PASS
-- coding-assistant 既存 test: 要確認 — balanced details で `<summary>` を含む (details 使用例がドキュメント化されている) ので、fixture の期待値も heading count が増える可能性あり。壊れた場合は `source_parity_source_usability_fixtures.test.mjs` と `source_parity_structure_fixtures.test.mjs` の pin 値を更新する。
-- `details-summary` kind が廃止されたことによる回帰が `source_parity_segments_en.test.mjs` 既存 test にある場合は修正。
+Run: `npm test`
 
-- [ ] **Step 4: `STRUCTURE_CATEGORIES` / segment kind enum の cleanup**
-
-`source_parity_segments_shared.mjs` や `source_parity_types.mjs` で `'details-summary'` kind を参照している箇所がないか確認し、あれば削除する(または legacy 受理にする)。
-
-Run: `grep -rn "'details-summary'\|\"details-summary\"" scripts/`
+Expected: 全 1555+ tests PASS。特に:
+- `source_parity_source_usability_fixtures.test.mjs` の faq describe が GREEN (null + heading 5+)
+- `source_parity_source_usability_fixtures.test.mjs` の coding-assistant describe が **回帰なし** (null 契約維持)
+- `source_parity_structure_fixtures.test.mjs` の既存 3 slug fixture は Phase D 前なので対象外
 
 - [ ] **Step 5: commit (Phase F の main commit の前に separate)**
 
 ```bash
-git add scripts/lib/source_parity_segments_en.mjs scripts/__tests__/source_parity_segments_en.test.mjs
+git add scripts/lib/turndown.mjs \
+        scripts/__tests__/turndown.test.mjs \
+        scripts/__tests__/source_parity_source_usability_fixtures.test.mjs
 git commit -m "$(cat <<'EOF'
-feat: Issue #247 post-merge — EN extractor の <summary> を heading kind に昇格
+fix: Issue #247 post-merge — faq broken details を h2 anchor に正規化
 
-walkDetails が <summary> を 'details-summary' kind で emit していたが、
-turndown の html-summary rule と JA 翻訳が `## h2` を前提にしているため、
-EN extractor も level 2 heading として扱って segment 契約を揃える。
+MadCap が faq の <details><summary>Q</summary>Answer</details> を複数 <p>
+に跨って escape 出力する broken tree を、preprocessor 段階で <h2>Q</h2> +
+Answer body に正規化する。これで EN 側が real heading を持ち、JA 側の
+## h2 と整合する。
 
-Finding 1 対応 (faq の source-unusable → heading-count-mismatch への落下を
-防ぐ)。Phase F の preprocessor 修正と組み合わせて faq を clean green に
-する前提条件。
+以前の「EN extractor の <summary> を heading kind に昇格」案は以下の理由で
+破棄 (Finding 5-8):
 
-refs Issue #247 post-merge review (Finding 1)
+- details-summary は structure comparator の FROZEN 語彙で破壊的変更になる
+- JA extractor も同じ semantics を持っており片側だけ変えると契約が割れる
+- pushHeading の level filter により固定 level 2 だと nested details の
+  sectionPath を潰す
+- 初稿テストが誤った segment schema 前提 (text vs textNorm, h1 emit)
+
+新方針は turndown.mjs に閉じた最小変更で、extractor / comparator / JA 側は
+一切触らない。normalizeEscapedFaqDetails は multi-paragraph broken tree に
+のみ発火する条件付きで、coding-assistant の single-<p> balanced 例には
+影響しない。
+
+refs Issue #247 post-merge review (Finding 5-8)
 EOF
 )"
 ```
@@ -2190,19 +2235,43 @@ node scripts/generate_parity_baseline.mjs \
   --rationale="Issue #247 post-merge — re-seed live snapshot-incomplete after legacy orphan purge (Finding 2)"
 ```
 
-- [ ] **Step 2: 各 slug の entries が `snapshot-incomplete` 系 1 件だけ残っていることを確認**
+- [ ] **Step 2: 各 slug の entries が期待する `snapshot-incomplete` + 正しい usabilityReason で 1 件だけ残っていることを assert (Finding 8 対応 — 期待値を緩めない)**
 
 ```bash
 node -e "
 const data = JSON.parse(require('fs').readFileSync('parity-baseline.json', 'utf8'));
-for (const slug of ['salesforce-testing/salesforce-testing-overview', 'testops/testops-version-control/pull-requests']) {
-  const e = data.entries.filter(e => e.slug === slug);
-  console.log(slug, '->', e.length, 'entries:', e.map(x => x.issueType));
+const EXPECTED = {
+  'salesforce-testing/salesforce-testing-overview': { issueType: 'snapshot-incomplete', usabilityReason: 'shallow-snapshot' },
+  'testops/testops-version-control/pull-requests':  { issueType: 'snapshot-incomplete', usabilityReason: 'extractor-empty' },
+};
+let ok = true;
+for (const [slug, exp] of Object.entries(EXPECTED)) {
+  const entries = data.entries.filter(e => e.slug === slug);
+  if (entries.length !== 1) {
+    console.error('❌', slug, ': expected 1 entry, got', entries.length);
+    ok = false;
+    continue;
+  }
+  const e = entries[0];
+  if (e.issueType !== exp.issueType) {
+    console.error('❌', slug, ': issueType mismatch (expected', exp.issueType, ', got', e.issueType, ')');
+    ok = false;
+  }
+  if (e.usabilityReason !== exp.usabilityReason) {
+    console.error('❌', slug, ': usabilityReason mismatch (expected', exp.usabilityReason, ', got', e.usabilityReason, ')');
+    ok = false;
+  }
+  console.log('✅', slug, '->', e.issueType, '/', e.usabilityReason);
 }
+process.exit(ok ? 0 : 1);
 "
 ```
 
-Expected: 両 slug とも `1 entries: ['snapshot-incomplete']` もしくは `['source-unusable']`(どちらか一方)。`segment-inconclusive` の legacy entry は消えている。
+Expected:
+- `salesforce-testing/salesforce-testing-overview` → `snapshot-incomplete` / `shallow-snapshot`
+- `testops/testops-version-control/pull-requests` → `snapshot-incomplete` / `extractor-empty`
+- `source-unusable` も `segment-inconclusive` の legacy entry も残っていない
+- **`source-unusable` を一般的な「OK 値」として飲み込まないこと** — Finding 8 で指摘されたように、regression (例: `pull-requests` が何らかの理由で `source-unusable` に分類替えされる) を assert で漏らしてはならない
 
 ### Task G.4: フル gate で完全解消を確認
 
@@ -2294,20 +2363,29 @@ const PATTERNS = {
 // ... 各 pattern で structure issue 0 件の page を 1 件ずつ拾う
 ```
 
-- [ ] **Step 2: `CLEAN_PAGE_SLUGS` 配列を拡張**
+- [ ] **Step 2: Step 1 の出力で placeholder を実 slug に置換 (Finding 8 対応 — 実行前に必ず完了させる)**
+
+**重要**: 以下の 4 placeholder は **Phase H.1 実行前に必ず Step 1 の実測結果で置換すること**。placeholder のままでは `readFileSync` が失敗するか、存在しないファイルで test が abort する。
 
 ```js
 const CLEAN_PAGE_SLUGS = Object.freeze([
   // 既存 (2)
   'settings/cli-prerequisites',
   'salesforce-testing/salesforce-testing-getting-started',
-  // Phase H で追加 (structure variety 別に 3-4 件)
-  '<list-heavy slug>',
-  '<callout-heavy slug>',
-  '<table-heavy slug>',
-  '<nested-section slug>',
+  // Phase H で追加 (structure variety 別に 4 件)
+  // ⚠️ 以下は placeholder。Step 1 で実測した候補 slug で置換すること
+  '<TBD-list-heavy slug from Step 1 output>',
+  '<TBD-callout-heavy slug from Step 1 output>',
+  '<TBD-table-heavy slug from Step 1 output>',
+  '<TBD-nested-section slug from Step 1 output>',
 ]);
 ```
+
+置換手順:
+1. Step 1 の dump 出力から各 pattern の候補 slug を 1 件ずつ選ぶ(structure issue 0 件 + segment mismatch 0 件 が必須)
+2. 選んだ slug を `CLEAN_PAGE_SLUGS` に埋め込む
+3. `npm test -- scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` で全 6 slug が PASS することを確認
+4. どれか 1 つでも drift がある slug なら選び直す(または該当 pattern を省略する)
 
 - [ ] **Step 3: test 実行で全 sentinel が clean であることを確認**
 
@@ -2725,11 +2803,30 @@ EOF
 4. **[P2] `result: pass` は local で達成不可能 (Finding 4)**: `checkSourceParity.mjs:155-169 (computeParityResult)` は `freshnessState !== 'fresh'` なら clean run を `inconclusive` に degrade する実装契約。実測で `freshnessState: broken`, `result: inconclusive` が確認されている。
    - **修正**: Phase G.4 / Plan 完了条件を `reportableActiveFiles === 0 && orphanBaselineEntries === 0` に緩和。`result` 値は local の freshness 状態依存で `pass` または `inconclusive` の両方を許容することを明記。
 
+### Post-drafting review (2026-04-09 第三弾 — Finding 5-8)
+
+第 1 弾の F.2.5 (extractor 変更案) に対する user のコードレベルレビューで以下が判明:
+
+1. **[P1] F.2.5 初稿テストが無関係な赤で立つ (Finding 5)**: `h1 + 2 summary = 3 headings` は extractor の `h1Consumed` フラグ契約で成立しない。segment field は `textNorm` で `text` フィールドは存在しない。実コードを grep せず書いた placeholder に近い。
+   - **修正**: F.2.5 を extractor 変更から preprocessor 正規化 (`normalizeEscapedFaqDetails` in `turndown.mjs`) に完全に差し替え。新テストは real fixture (`snapshots/en/content/salesforce-testing/faq.html`) を使って `<h2>` anchor の生成と `<details>` marker の除去を pin する。
+
+2. **[P1] `details-summary` の片側変更が frozen 契約を破る (Finding 6)**: `details-summary` は `STRUCTURE_COMPARATOR_KINDS` の **FROZEN 語彙** で baseline identity key に hash されている (`source_parity_structure.mjs:74-81`)。削除は破壊的変更で既存 baseline を silently 壊す。加えて JA extractor も同じ kind を emit しており、`coding-assistant.md` は raw `<details><summary>` を持っている。EN だけ変更すると契約が割れる。
+   - **修正**: F.2.5 は extractor と frozen 語彙を一切触らない。`turndown.mjs` の preprocessor 層に閉じた最小変更で、multi-paragraph broken details にのみ発火する条件付き正規化。`coding-assistant` の single-<p> 例は legacy `unescapeDetails` 経路が引き続き扱う。
+
+3. **[P2] `SUMMARY_HEADING_LEVEL = 2` 固定が nested sectionPath を潰す (Finding 7)**: `pushHeading` の `entry.level < level` フィルタにより、親 h2 の下で level 2 を push すると親が drop され `Examples > Q1` が `Q1` に。
+   - **修正**: extractor 変更案自体を破棄したので moot。preprocessor ルートでは heading level は HTML tag (`<h2>`) で直接決まるので、extractor の heading stack 処理は既存挙動のまま機能する。
+
+4. **[P3] Phase G.3 assert が `source-unusable` も許容して regression を飲み込む (Finding 8 前半)**: `usabilityReason` を見ず `issueType` だけチェック → `snapshot-incomplete` が何らかの理由で `source-unusable` に classify 変更されても検知されない。
+   - **修正**: G.3 を `{ issueType: 'snapshot-incomplete', usabilityReason: 'shallow-snapshot' | 'extractor-empty' }` のペアで厳密 assert に変更。regression を漏らさない。
+
+5. **[P3] Phase H.1 の placeholder が plan 完了の前提を曖昧にする (Finding 8 後半)**: `<list-heavy slug>` 等が placeholder のまま残っていると、executing-plans が literal に解釈して test が abort する。
+   - **修正**: H.1 Step 2 に「placeholder は **Phase H.1 実行前に必ず** Step 1 の実測結果で置換する」ことと、置換手順(候補抽出 → 試験 run → 確定) を明記。
+
 ### 残存 open question
 
-- Phase F.2.5 の heading level 固定 (level 2) が、nested heading stack 下の details にとって semantically correct かは実装時に確認。turndown rule が level 2 fixed なので一旦それに揃える方針だが、将来的には heading stack 最深 + 1 にするリファクタが考えられる(今回の scope 外)。
-
 - Phase D の JA 実修正は人間レビューが必要(natural Japanese の品質保証)。自動テストでは「structure issue 0 件」しか pin できないので、content 品質は `npm run lint:docs` と人間校正に依存する。
+
+- F.2.5 の `normalizeEscapedFaqDetails` は「multi-paragraph broken tree」の条件で発火する。もし将来 `coding-assistant` のような single-<p> documentation example が multi-paragraph に変わる場合、legacy path ではなく新 path に流れて意図しない `<h2>` 注入が起きる可能性あり。その際は条件を更に narrow する (e.g., EN heading=0 の追加 guard) 必要がある。Phase F.2.5 の Step 3 で coding-assistant の detector 契約を回帰確認するのが最終防衛線。
 
 ---
 
