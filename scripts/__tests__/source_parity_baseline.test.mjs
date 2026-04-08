@@ -903,6 +903,143 @@ describe('isBaselineExpired', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR5 — tagIssuesWithBaseline contract for structure mismatch
+//
+// runtime 側から baseline entry にマッチする挙動を pin する。
+// tagIssuesWithBaseline 本体は generic contract なので新しい分岐は
+// 入らないはずだが、BASELINE_ELIGIBLE_TYPES / buildBaselineKey の拡張が
+// 下流まで波及していることを explicit に pin する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — tagIssuesWithBaseline (structure mismatch)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  function makeStructureIssue(overrides = {}) {
+    return {
+      type: 'section-structure-mismatch',
+      severity: 'actionable',
+      detail: '[CLI Installation > Basic CLI command] block kind multiset differs',
+      sectionPath: 'CLI Installation > Basic CLI command',
+      sectionIndex: 7,
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+      ...overrides,
+    };
+  }
+
+  function makeStructureEntry(slug, issue, overrides = {}) {
+    return {
+      slug,
+      issueType: issue.type,
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      sectionIndex: issue.sectionIndex,
+      sectionPath: issue.sectionPath,
+      structureCategory: issue.structureCategory,
+      structureFingerprint: computeStructureFingerprint({
+        structureCategory: issue.structureCategory,
+        enKinds: issue.enKinds,
+        jaKinds: issue.jaKinds,
+        contentPermutation: issue.contentPermutation,
+      }),
+      ...overrides,
+    };
+  }
+
+  it('tags a matching structure issue with baselined: true', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue();
+    const entry = makeStructureEntry(slug, issue);
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.invalidated, false);
+  });
+
+  it('does NOT tag when structureFingerprint differs (same sectionIndex / category)', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue({ enKinds: ['paragraph', 'heading'] });
+    const otherIssue = makeStructureIssue({ enKinds: ['paragraph', 'table'] });
+    const entry = makeStructureEntry(slug, otherIssue);
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, undefined);
+  });
+
+  it('invalidates page when snapshotFingerprint differs', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue();
+    const entry = makeStructureEntry(slug, issue);
+    const otherFp = 'sha256:' + 'a'.repeat(64);
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], otherFp);
+    assert.equal(result.tagged[0].baselined, undefined);
+    assert.equal(result.invalidated, true);
+  });
+
+  it('(Finding 2) two sections with identical path/fingerprint but different sectionIndex are tagged independently', () => {
+    // 同一ページに section A (index=3) と section B (index=7) があり、
+    // 両方が同じ sectionPath + 同じ structureFingerprint を出すケース。
+    // baseline が A にしか付いていないとき、B は untagged のままになる
+    // 必要がある。sectionIndex が identity に含まれていないと、両方が
+    // 同じ key になって A の baseline が B にも silently 被さってしまう。
+    const slug = 'some/page';
+    const sharedOverrides = {
+      sectionPath: 'Shared heading',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    };
+    const issueA = makeStructureIssue({ ...sharedOverrides, sectionIndex: 3 });
+    const issueB = makeStructureIssue({ ...sharedOverrides, sectionIndex: 7 });
+    const entryA = makeStructureEntry(slug, issueA);
+    const result = tagIssuesWithBaseline(slug, [issueA, issueB], [entryA], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.tagged[1].baselined, undefined);
+  });
+});
+
+describe('Issue #247 PR5 — tagIssuesWithBaseline (source unusable)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  it('tags a matching source-unusable issue by usabilityReason', () => {
+    const slug = 'salesforce-testing/faq';
+    const issue = {
+      type: 'source-unusable',
+      severity: 'actionable',
+      detail: 'source snapshot is unusable (escaped-details-residue)',
+      usabilitySignals: { reason: 'escaped-details-residue' },
+    };
+    const entry = {
+      slug,
+      issueType: 'source-unusable',
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+    };
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.invalidated, false);
+  });
+
+  it('does NOT tag when usabilityReason mismatches', () => {
+    const slug = 'salesforce-testing/faq';
+    const issue = {
+      type: 'source-unusable',
+      severity: 'actionable',
+      detail: 'source snapshot is unusable',
+      usabilitySignals: { reason: 'extractor-empty' },
+    };
+    const entry = {
+      slug,
+      issueType: 'source-unusable',
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+    };
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, undefined);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Issue #247 PR5 — STRUCTURE_CATEGORIES / USABILITY_REASONS
 //
 // 新 4 type (section-structure-mismatch / segment-order-mismatch /
