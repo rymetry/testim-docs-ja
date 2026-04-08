@@ -419,6 +419,28 @@ export function isBaselineExpiringSoon(entry, today) {
  * @returns {string}
  */
 export function buildBaselineKey(slug, issue) {
+  if (STRUCTURE_MISMATCH_TYPES.has(issue.type)) {
+    // Issue #247 PR5 — section 粒度の structure diff。
+    // identity surface: sectionIndex + structureCategory + structureFingerprint。
+    // sectionPath は entry 側に保存するが machine identity key には含めない
+    // (同一ページ内で一意の保証が無いため — Finding 2)。
+    const fp = computeStructureFingerprint({
+      structureCategory: issue.structureCategory,
+      enKinds: Array.isArray(issue.enKinds) ? issue.enKinds : [],
+      jaKinds: Array.isArray(issue.jaKinds) ? issue.jaKinds : [],
+      contentPermutation: issue.contentPermutation,
+    });
+    return (
+      `${slug}|${issue.type}|idx=${issue.sectionIndex ?? '_null_'}|` +
+      `cat=${issue.structureCategory ?? '_null_'}|sfp=${fp}`
+    );
+  }
+  if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
+    // Issue #247 PR5 — page 粒度の source unusable detector。
+    // identity surface: usabilityReason のみ。
+    const reason = issue.usabilitySignals?.reason ?? '_null_';
+    return `${slug}|${issue.type}|reason=${reason}`;
+  }
   if (issue.type === 'segment-inconclusive') {
     return `${slug}|${issue.type}|category=${issue.inconclusiveCategory ?? '_null_'}`;
   }
@@ -456,6 +478,18 @@ export function buildBaselineKey(slug, issue) {
  * @returns {string}
  */
 export function buildBaselineKeyFromEntry(entry) {
+  if (STRUCTURE_MISMATCH_TYPES.has(entry.issueType)) {
+    // Issue #247 PR5 — buildBaselineKey (runtime) と同じ合成順・同じ区切り
+    // 文字を使う。runtime 側は毎回 fingerprint を derive するが disk 側は
+    // 事前計算された structureFingerprint をそのまま読む。
+    return (
+      `${entry.slug}|${entry.issueType}|idx=${entry.sectionIndex ?? '_null_'}|` +
+      `cat=${entry.structureCategory ?? '_null_'}|sfp=${entry.structureFingerprint ?? '_null_'}`
+    );
+  }
+  if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
+    return `${entry.slug}|${entry.issueType}|reason=${entry.usabilityReason ?? '_null_'}`;
+  }
   if (entry.issueType === 'segment-inconclusive') {
     return `${entry.slug}|${entry.issueType}|category=${entry.inconclusiveCategory ?? '_null_'}`;
   }

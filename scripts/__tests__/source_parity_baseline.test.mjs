@@ -587,6 +587,149 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry の対称性
+//
+// runtime 側 (buildBaselineKey) は毎回 computeStructureFingerprint を呼んで
+// fingerprint を derive するのに対し、disk 側 (buildBaselineKeyFromEntry) は
+// 事前計算された structureFingerprint を読むだけ。両者が必ず同じ key を
+// 返すことが baseline matching の前提。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  function makeStructureIssue(overrides = {}) {
+    return {
+      type: 'section-structure-mismatch',
+      sectionPath: 'CLI Installation > Basic CLI command',
+      sectionIndex: 7,
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+      ...overrides,
+    };
+  }
+
+  function entryFromIssue(slug, issue, overrides = {}) {
+    return {
+      slug,
+      issueType: issue.type,
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      sectionIndex: issue.sectionIndex,
+      sectionPath: issue.sectionPath,
+      structureCategory: issue.structureCategory,
+      structureFingerprint: computeStructureFingerprint({
+        structureCategory: issue.structureCategory,
+        enKinds: issue.enKinds,
+        jaKinds: issue.jaKinds,
+        contentPermutation: issue.contentPermutation,
+      }),
+      ...overrides,
+    };
+  }
+
+  it('runtime key and entry key match (kind-multiset)', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue();
+    const entry = entryFromIssue(slug, issue);
+    const issueKey = buildBaselineKey(slug, issue);
+    const entryKey = buildBaselineKeyFromEntry(entry);
+    assert.equal(issueKey, entryKey);
+  });
+
+  it('runtime key and entry key match (segment-order-mismatch / content-order)', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue({
+      type: 'segment-order-mismatch',
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+      ],
+    });
+    const entry = entryFromIssue(slug, issue);
+    assert.equal(buildBaselineKey(slug, issue), buildBaselineKeyFromEntry(entry));
+  });
+
+  it('distinguishes by sectionIndex even when sectionPath is identical (Finding 2 regression pin)', () => {
+    const slug = 'some/page';
+    const issueA = makeStructureIssue({ sectionIndex: 3 });
+    const issueB = makeStructureIssue({ sectionIndex: 7 });
+    // 同一 slug / 同一 sectionPath / 同一 structureCategory / 同一 kinds
+    // でも sectionIndex が違えば別 key になる必要がある。machine identity
+    // に sectionIndex を必須にすることで、同一ページ内で sectionPath が
+    // 衝突したときに baseline が silently 誤った section を覆うのを防ぐ。
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+
+  it('distinguishes by structureCategory (same sectionIndex)', () => {
+    const slug = 'some/page';
+    const issueA = makeStructureIssue({ structureCategory: 'kind-multiset' });
+    const issueB = makeStructureIssue({ structureCategory: 'kind-sequence' });
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+
+  it('distinguishes by enKinds (via structureFingerprint)', () => {
+    const slug = 'some/page';
+    const issueA = makeStructureIssue({
+      enKinds: ['paragraph', 'bullet-list'],
+    });
+    const issueB = makeStructureIssue({
+      enKinds: ['paragraph', 'heading'],
+    });
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+});
+
+describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (source unusable)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  it('runtime key and entry key match (escaped-details-residue)', () => {
+    const slug = 'salesforce-testing/faq';
+    const issue = {
+      type: 'source-unusable',
+      usabilitySignals: { reason: 'escaped-details-residue' },
+    };
+    const entry = {
+      slug,
+      issueType: 'source-unusable',
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+    };
+    assert.equal(buildBaselineKey(slug, issue), buildBaselineKeyFromEntry(entry));
+  });
+
+  it('distinguishes different usabilityReason values', () => {
+    const slug = 'some/page';
+    const issueA = {
+      type: 'snapshot-incomplete',
+      usabilitySignals: { reason: 'shallow-snapshot' },
+    };
+    const issueB = {
+      type: 'snapshot-incomplete',
+      usabilitySignals: { reason: 'extractor-empty' },
+    };
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
 // tagIssuesWithBaseline — match + page-level invalidation
 // ---------------------------------------------------------------------------
 
