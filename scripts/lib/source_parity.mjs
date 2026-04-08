@@ -4,10 +4,7 @@ export * from './source_parity_extract.mjs';
 export * from './source_parity_checks.mjs';
 export * from './source_parity_issue_state.mjs';
 export * from './source_parity_summary.mjs';
-export {
-  formatStructureMismatchSection,
-  formatSourceUnusableSection,
-} from './source_parity_summary_format.mjs';
+export { formatSourceUnusableSection } from './source_parity_summary_format.mjs';
 export * from './source_parity_advisory_queue.mjs';
 export * from './source_parity_page_coverage.mjs';
 export * from './source_parity_acknowledgements.mjs';
