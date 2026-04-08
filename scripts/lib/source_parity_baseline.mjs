@@ -13,6 +13,11 @@
 
 import { readFileSync } from 'node:fs';
 
+import {
+  STRUCTURE_MISMATCH_TYPES,
+  SOURCE_UNUSABLE_TYPES,
+} from './source_parity_types.mjs';
+
 /**
  * frozen baseline 対象になる issue type。
  *
@@ -27,6 +32,30 @@ export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
     'segment-token-gap',
     'segment-inconclusive',
   ]),
+);
+
+/**
+ * Issue #247 PR5 — structure mismatch baseline 対象の structureCategory 列。
+ * `source_parity_structure.mjs` の 3 stage (kind-multiset / kind-sequence /
+ * content-order) と 1:1 で対応する enum。emitter 側が新しい stage を追加
+ * する際はこちらも同期する必要がある (test で pin)。
+ *
+ * @type {ReadonlySet<string>}
+ */
+export const STRUCTURE_CATEGORIES = Object.freeze(
+  new Set(['kind-multiset', 'kind-sequence', 'content-order']),
+);
+
+/**
+ * Issue #247 PR5 — source unusable baseline 対象の usabilityReason 列。
+ * `source_parity_source_usability.mjs::buildIssue` の reason と 1:1 で対応
+ * する enum。emitter 側が新しい reason を追加する際はこちらも同期する
+ * 必要がある (test で pin)。
+ *
+ * @type {ReadonlySet<string>}
+ */
+export const USABILITY_REASONS = Object.freeze(
+  new Set(['shallow-snapshot', 'escaped-details-residue', 'extractor-empty']),
 );
 
 /**

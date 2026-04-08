@@ -17,6 +17,8 @@ import {
   isBaselineExpired,
   BASELINE_ELIGIBLE_TYPES,
   INCONCLUSIVE_CATEGORIES,
+  STRUCTURE_CATEGORIES,
+  USABILITY_REASONS,
 } from '../lib/source_parity_baseline.mjs';
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
@@ -639,5 +641,53 @@ describe('isBaselineExpired', () => {
 
   it('returns true after reviewAfter passes', () => {
     assert.equal(isBaselineExpired(validMissingEntry, '2026-10-07'), true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — STRUCTURE_CATEGORIES / USABILITY_REASONS
+//
+// 新 4 type (section-structure-mismatch / segment-order-mismatch /
+// snapshot-incomplete / source-unusable) を baseline 可能にするため、
+// structureCategory / usabilityReason の allowlist を frozen Set で pin する。
+// emitter 側 (source_parity_structure.mjs / source_parity_source_usability.mjs)
+// の出力と同一の enum を参照することで、validateBaseline / buildBaselineKey
+// の identity 検証を decouple する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — STRUCTURE_CATEGORIES', () => {
+  it('contains the 3 canonical structure categories (kind-multiset / kind-sequence / content-order)', () => {
+    assert.ok(STRUCTURE_CATEGORIES.has('kind-multiset'));
+    assert.ok(STRUCTURE_CATEGORIES.has('kind-sequence'));
+    assert.ok(STRUCTURE_CATEGORIES.has('content-order'));
+    assert.equal(STRUCTURE_CATEGORIES.size, 3);
+  });
+
+  it('is frozen (regression guard against accidental mutation)', () => {
+    assert.equal(Object.isFrozen(STRUCTURE_CATEGORIES), true);
+  });
+
+  it('does NOT contain unrelated values (guards against typo drift)', () => {
+    assert.ok(!STRUCTURE_CATEGORIES.has(''));
+    assert.ok(!STRUCTURE_CATEGORIES.has('unknown'));
+    assert.ok(!STRUCTURE_CATEGORIES.has('segment-missing'));
+  });
+});
+
+describe('Issue #247 PR5 — USABILITY_REASONS', () => {
+  it('contains the 3 known unusable reasons', () => {
+    assert.ok(USABILITY_REASONS.has('shallow-snapshot'));
+    assert.ok(USABILITY_REASONS.has('escaped-details-residue'));
+    assert.ok(USABILITY_REASONS.has('extractor-empty'));
+    assert.equal(USABILITY_REASONS.size, 3);
+  });
+
+  it('is frozen (regression guard against accidental mutation)', () => {
+    assert.equal(Object.isFrozen(USABILITY_REASONS), true);
+  });
+
+  it('does NOT contain unrelated values', () => {
+    assert.ok(!USABILITY_REASONS.has(''));
+    assert.ok(!USABILITY_REASONS.has('unknown'));
   });
 });
