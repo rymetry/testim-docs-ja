@@ -851,15 +851,17 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
  * (`enSegmentIndex` / `jaSegmentIndex` / fingerprint / missingTokens) は
  * そのまま forward して、downstream report が drill-down できるようにする。
  *
- * Issue #247 PR2 — section 単位の structure diff (`scope: 'section'` で
- * `segmentKind` フィールドを持たない) は独自の構造化 payload
+ * Issue #247 PR2 → PR5 — section 単位の structure diff (`scope: 'section'`
+ * で `segmentKind` フィールドを持たない) は独自の構造化 payload
  * (`structureCategory` / `enKinds` / `jaKinds` / `enSegmentCount` /
- * `jaSegmentCount`、option で `contentPermutation`) を持っていて、PR5 で
- * baseline 同定キーがここを参照する前提なので、adapter は **そのまま**
- * コピーして forward する。これらの diff に `segmentKind` を合成しては
- * **絶対にならない** — `scope: 'section'` を導入した目的はまさに block
- * 単位の `segmentKind` (paragraph / list / callout) を section 単位の issue
- * family で汚染しないためなので、ここで segmentKind を混ぜると契約崩壊。
+ * `jaSegmentCount`、option で `contentPermutation`) を持っていて、PR5
+ * baseline migration でこのフィールドを identity key に hash する
+ * (`source_parity_baseline.mjs::computeStructureFingerprint` 参照)。
+ * adapter は **そのまま** コピーして forward する。これらの diff に
+ * `segmentKind` を合成しては **絶対にならない** — `scope: 'section'` を
+ * 導入した目的はまさに block 単位の `segmentKind` (paragraph / list /
+ * callout) を section 単位の issue family で汚染しないためなので、
+ * ここで segmentKind を混ぜると契約崩壊。
  *
  * segment-* 系 issue は `summarizeParityResults` の gate accounting を
  * そのまま通る。cutover 前の drift は `parity-baseline.json` で frozen に

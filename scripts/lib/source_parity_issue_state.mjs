@@ -115,11 +115,11 @@ export function isAdvisoryOnlyParityIssue(issue) {
 
 export function isNonBlockingParityIssue(issue) {
   // 「非ブロッキング」の元の意味 — ack または baseline で **明示的に** 覆わ
-  // れている issue だけ。Issue #247 PR2 で emission を入れた structure-
-  // mismatch / source-unusable は、PR5 cutover まで gate には乗らないが、
-  // それは ack / baseline で覆われているからではなく advisory として
-  // 扱っているからなので、ここには含めない。CLI の "(covered by
-  // baseline/ack)" / "(advisory only)" を区別するために
-  // `isAdvisoryOnlyParityIssue` を別途用意してある。
+  // れている issue だけ。Issue #247 PR5 cutover 後、structure mismatch も
+  // 通常通り baseline / ack で覆える (覆われていれば非ブロッキング、
+  // active なら gate に載る)。source-unusable は ack / baseline で
+  // 覆われていない場合に「advisory only」として `isAdvisoryOnlyParityIssue`
+  // 経路で識別される。CLI の "(covered by baseline/ack)" /
+  // "(source unusable)" を区別するためにこの 2 経路を使い分ける。
   return isFrozenByBaseline(issue) || isValidAcknowledgedIssue(issue);
 }

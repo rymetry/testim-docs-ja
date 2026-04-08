@@ -5,6 +5,17 @@
  * Provides SHA-256 fingerprinting for EN snapshots and schema validation
  * for parity-acknowledgements.json files.
  *
+ * Issue #247 PR5 以降、structure mismatch (section-structure-mismatch /
+ * segment-order-mismatch) と source unusable (snapshot-incomplete /
+ * source-unusable) も当 matcher の generic contract (slug + issueType +
+ * detailIncludes/detailRegex) でそのまま ack 可能。専用分岐や専用 key
+ * 構築は **追加しない** — 追加すると generic contract から外れて二重
+ * メンテナンスになるため。structure mismatch を ack する場合は detail に
+ * 埋め込まれた section path を detailIncludes で狙い撃ちすればよい (例:
+ * `detailIncludes: "[Viewing the network logs at the step level >"`)。
+ * 同様に source unusable は usabilityReason 由来の wording を狙い撃つ
+ * (`detailIncludes: "escaped-details-residue"` 等)。
+ *
  * @module source_parity_acknowledgements
  */
 
