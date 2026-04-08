@@ -459,6 +459,7 @@ function buildParityFollowupBody({
   advisoryQueueFiles,
   advisoryQueueScope,
   includeAdvisoryInBody,
+  sourceUnusable,
 }) {
   const lines = [
     '## Summary',
@@ -478,6 +479,28 @@ function buildParityFollowupBody({
       `  - Blocking: ${blockingAdvisoryItems.length}`,
       '',
     );
+  }
+
+  // Issue #247 PR4 — source-unusable サブセクション。`shouldOpenIssue` の
+  // 条件には加えていない (翻訳者責任外なので新規 issue は open しない) が、
+  // 既に別の signal で issue body が生成されているなら、source-unusable の
+  // 件数も併記して reviewer に状況を見せる。0 件のときはセクション自体を
+  // 省略する。
+  if (sourceUnusable && sourceUnusable.snapshotUnusableIssues > 0) {
+    lines.push(
+      '## Source Unusable (advisory)',
+      '',
+      `- Total: ${sourceUnusable.snapshotUnusableIssues} issues across ${sourceUnusable.snapshotUnusableFiles} files`,
+      '- Not a translation failure — snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+    );
+    const sortedTypes = Object.keys(sourceUnusable.snapshotUnusableByType ?? {}).sort();
+    if (sortedTypes.length > 0) {
+      lines.push('- By type:');
+      for (const type of sortedTypes) {
+        lines.push(`  - ${type}: ${sourceUnusable.snapshotUnusableByType[type]}`);
+      }
+    }
+    lines.push('');
   }
 
   if (expiredBaselineFiles.length > 0) {
@@ -551,6 +574,15 @@ function buildParityFollowup(parity, options = {}) {
   const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
   const isComplete = advisoryQueueScope?.isComplete ?? null;
 
+  // Issue #247 PR4 — source-unusable サブセクション。`shouldOpenIssue` の
+  // 判定には加えない (翻訳者責任外、新規 issue を open しない契約)。summary
+  // への露出と body サブセクションのみを担う。
+  const sourceUnusable = {
+    snapshotUnusableIssues: summary.snapshotUnusableIssues ?? 0,
+    snapshotUnusableFiles: summary.snapshotUnusableFiles ?? 0,
+    snapshotUnusableByType: summary.snapshotUnusableByType ?? {},
+  };
+
   const blockingAdvisoryItems = advisoryQueue.filter((e) => e.blocking);
   const hasBlockingAdvisory = isComplete === true && blockingAdvisoryItems.length > 0;
 
@@ -612,6 +644,7 @@ function buildParityFollowup(parity, options = {}) {
           advisoryQueueFiles,
           advisoryQueueScope,
           includeAdvisoryInBody: isComplete === true,
+          sourceUnusable,
         }),
         FAMILY_KEYS.PARITY_FOLLOWUP,
       )
@@ -642,6 +675,10 @@ function buildParityFollowup(parity, options = {}) {
         includedInIssueBody: isComplete === true,
       },
       reviewHints,
+      // Issue #247 PR4 — source-unusable counter のサブセクション。
+      // shouldOpenIssue には影響しないが、JSON consumer (人手レビュー /
+      // ダッシュボード) が翻訳者責任外の snapshot debt を観測できる。
+      sourceUnusable,
     },
   };
 }
@@ -706,6 +743,34 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const acknowledgedIssues = parity.summary?.acknowledgedIssues || 0;
   const expiredAcknowledgements = parity.summary?.expiredAcknowledgements || 0;
 
+  // Issue #247 PR4 — structure mismatch の補助 counter (PR2 で emit され、
+  // PR5 で gate に載る予定)。`isReportableParityIssue` を flip しないため
+  // `parityTopEntries` には含めず、summary と body の独立セクションのみで
+  // 露出する。
+  const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
+  const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
+  const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
+
+  const structureMismatchBodyLines =
+    structureMismatchIssues > 0
+      ? [
+          '## Structure Mismatch (advisory)',
+          '',
+          `- Total: ${structureMismatchIssues} issues across ${structureMismatchFiles} files`,
+          ...(Object.keys(structureMismatchByType).length > 0
+            ? [
+                '- By type:',
+                ...Object.keys(structureMismatchByType)
+                  .sort()
+                  .map((type) => `  - ${type}: ${structureMismatchByType[type]}`),
+              ]
+            : []),
+          '',
+          '> これらは現在 advisory です。PR5 の baseline migration と同時に gate に載る予定です。',
+          '',
+        ]
+      : [];
+
   const parityIssueBody = [
     '## Summary',
     '',
@@ -732,6 +797,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       }),
     ),
     '',
+    ...structureMismatchBodyLines,
     '## Artifacts',
     '',
     '- `parity-check-status.json`',
@@ -826,6 +892,16 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
         issuesByType: parityIssueSummary.issuesByType,
         issuesBySeverity: parityIssueSummary.issuesBySeverity,
+        // Issue #247 PR4 — structure mismatch の独立 counter を補助フィールド
+        // として露出する。`isReportableParityIssue` は PR4 では flip しない
+        // ため `topEntries` / `issueCount` には流れ込まないが、JSON consumer
+        // (sync-detection-issues / ダッシュボード / 人手レビュー) はこの
+        // フィールドから drift の存在を観測できる。PR5 cutover で structure
+        // mismatch が `topEntries` 側にも流れ込むが、その時点でもこの 3
+        // フィールドは並走させる。
+        structureMismatchIssues,
+        structureMismatchFiles,
+        structureMismatchByType,
       },
     },
     parityFollowup: buildParityFollowup(parity, options),
@@ -867,6 +943,54 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
           .map(([type, count]) => `  - ${type}: ${count}`)
       : ['  - (none)'];
 
+  // Issue #247 PR4 — structure mismatch / source unusable の独立 advisory
+  // セクション。`## Parity` の `Active issue files` は引き続き
+  // `reportableActiveFiles` を読むので PR4 時点では structure mismatch を
+  // 含まない。新セクションは 0 件のときは省略する。
+  const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
+  const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
+  const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
+  const structureMismatchSection =
+    structureMismatchIssues > 0
+      ? [
+          '## Structure Mismatch (advisory)',
+          '',
+          `- Total: ${structureMismatchIssues} issues across ${structureMismatchFiles} files`,
+          '- Advisory — PR5 cutover までは gate に載りません',
+          ...(Object.keys(structureMismatchByType).length > 0
+            ? [
+                '- By type:',
+                ...Object.keys(structureMismatchByType)
+                  .sort()
+                  .map((type) => `  - ${type}: ${structureMismatchByType[type]}`),
+              ]
+            : []),
+          '',
+        ]
+      : [];
+
+  const snapshotUnusableIssues = parity.summary?.snapshotUnusableIssues ?? 0;
+  const snapshotUnusableFiles = parity.summary?.snapshotUnusableFiles ?? 0;
+  const snapshotUnusableByType = parity.summary?.snapshotUnusableByType ?? {};
+  const sourceUnusableSection =
+    snapshotUnusableIssues > 0
+      ? [
+          '## Source Unusable (advisory)',
+          '',
+          `- Total: ${snapshotUnusableIssues} issues across ${snapshotUnusableFiles} files`,
+          '- Not a translation failure — snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+          ...(Object.keys(snapshotUnusableByType).length > 0
+            ? [
+                '- By type:',
+                ...Object.keys(snapshotUnusableByType)
+                  .sort()
+                  .map((type) => `  - ${type}: ${snapshotUnusableByType[type]}`),
+              ]
+            : []),
+          '',
+        ]
+      : [];
+
   return [
     '# Docs Detection Summary',
     '',
@@ -897,6 +1021,8 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
       : []),
     '',
+    ...structureMismatchSection,
+    ...sourceUnusableSection,
     '## Audit Signals',
     '',
     '- audit-only: coarse counting / shape / table-cell heuristics',

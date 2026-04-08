@@ -1080,6 +1080,450 @@ describe('parityFollowup in buildActionableReport', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR4 — parityRegression が structure mismatch の補助 counter を
+// summary に露出する。`isReportableParityIssue` の flip は伴わないので
+// `topEntries` には structure mismatch は含まれず、`shouldOpenIssue` も
+// structure mismatch 単独では立たない。summary の補助カウンタからのみ
+// 観測可能になる。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR4 — parityRegression structure mismatch summary exposure', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-08T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  function makeParityWithStructureMismatch() {
+    return {
+      summary: {
+        checkedAt: '2026-04-08T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        activeErrorFiles: 0,
+        reportableActiveFiles: 0,
+        reportableActiveActionableFiles: 0,
+        structureMismatchIssues: 5,
+        structureMismatchFiles: 3,
+        structureMismatchByType: {
+          'section-structure-mismatch': 4,
+          'segment-order-mismatch': 1,
+        },
+      },
+      files: [
+        {
+          file: 'src/content/docs/running-tests/the-command-line-cli.md',
+          issues: [
+            {
+              type: 'section-structure-mismatch',
+              severity: 'actionable',
+              detail: 'section[2]/block[3] kind diff',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  it('exposes structureMismatchIssues / structureMismatchFiles / structureMismatchByType in parityRegression.summary', () => {
+    const parity = makeParityWithStructureMismatch();
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.summary.structureMismatchIssues, 5);
+    assert.equal(report.parityRegression.summary.structureMismatchFiles, 3);
+    assert.deepEqual(report.parityRegression.summary.structureMismatchByType, {
+      'section-structure-mismatch': 4,
+      'segment-order-mismatch': 1,
+    });
+  });
+
+  it('defaults structure mismatch counters to 0 / {} when summary fields are absent', () => {
+    const parity = {
+      summary: { checkedAt: '2026-04-08T00:00:00Z' },
+      files: [],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.summary.structureMismatchIssues, 0);
+    assert.equal(report.parityRegression.summary.structureMismatchFiles, 0);
+    assert.deepEqual(report.parityRegression.summary.structureMismatchByType, {});
+  });
+
+  it('does NOT include structure mismatch files in parityRegression.topEntries (PR4 — gate flip is PR5)', () => {
+    const parity = makeParityWithStructureMismatch();
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    // `isReportableParityIssue` は PR4 では flip しないので、structure
+    // mismatch 単独のファイルは topEntries に流れ込まない。
+    assert.equal(report.parityRegression.topEntries.length, 0);
+    // shouldOpenIssue も立たない (= GitHub 上に新規 issue は open されない)
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+  });
+
+  it('parityRegression.body contains "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {
+    const parity = makeParityWithStructureMismatch();
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.match(report.parityRegression.body, /## Structure Mismatch \(advisory\)/);
+    // 件数 / ファイル数の wiring 確認
+    assert.match(
+      report.parityRegression.body,
+      /Total: 5 issues across 3 files/,
+    );
+    // type 別内訳 (sort 順は alpha 昇順)
+    assert.match(
+      report.parityRegression.body,
+      /section-structure-mismatch: 4/,
+    );
+    assert.match(
+      report.parityRegression.body,
+      /segment-order-mismatch: 1/,
+    );
+    // 「PR5 で gate に載る予定」の引用行
+    assert.match(
+      report.parityRegression.body,
+      /PR5 の baseline migration と同時に gate に載る予定です/,
+    );
+  });
+
+  it('parityRegression.body OMITS the "## Structure Mismatch" section when structureMismatchIssues = 0', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-08T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        activeErrorFiles: 0,
+        structureMismatchIssues: 0,
+        structureMismatchFiles: 0,
+        structureMismatchByType: {},
+      },
+      files: [],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.doesNotMatch(report.parityRegression.body, /## Structure Mismatch/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR4 — parityFollowup の sourceUnusable サブセクション露出。
+// 翻訳者責任外 (snapshot / source sync 側 debt) のため、shouldOpenIssue の
+// 条件には加えない。`summary.sourceUnusable` 経由で counter のみ可視化する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-08T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  const cleanParity = {
+    summary: {
+      checkedAt: '2026-04-08T00:00:00Z',
+      actionableFiles: 0,
+      signalFiles: 0,
+      errorFiles: 0,
+      baselinedIssues: 0,
+      baselinedFiles: 0,
+      expiredBaselineEntries: 0,
+      baselineInvalidatedSlugs: [],
+      advisoryQueueIssues: 0,
+      advisoryQueueFiles: 0,
+    },
+    files: [],
+    advisoryQueueScope: { type: 'full', isComplete: true, filters: {}, checkedFiles: 100, totalFiles: 100 },
+    advisoryQueue: [],
+  };
+
+  it('exposes sourceUnusable counters in parityFollowup.summary', () => {
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        snapshotUnusableIssues: 3,
+        snapshotUnusableFiles: 2,
+        snapshotUnusableByType: {
+          'snapshot-incomplete': 2,
+          'source-unusable': 1,
+        },
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.ok(report.parityFollowup.summary.sourceUnusable, 'sourceUnusable subsection must exist');
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableIssues, 3);
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableFiles, 2);
+    assert.deepEqual(report.parityFollowup.summary.sourceUnusable.snapshotUnusableByType, {
+      'snapshot-incomplete': 2,
+      'source-unusable': 1,
+    });
+  });
+
+  it('defaults sourceUnusable counters to 0 / {} when summary fields are absent', () => {
+    const report = buildActionableReport(emptySnapshot, cleanParity, []);
+    assert.ok(report.parityFollowup.summary.sourceUnusable);
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableIssues, 0);
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableFiles, 0);
+    assert.deepEqual(report.parityFollowup.summary.sourceUnusable.snapshotUnusableByType, {});
+  });
+
+  it('shouldOpenIssue stays FALSE when source-unusable is the only signal (PR4 — translation 責任外)', () => {
+    // PR4 では parityFollowup の `shouldOpenIssue` 判定には source-unusable を
+    // 加えない。snapshot / source sync 側の debt なので、翻訳 PR で修正でき
+    // ない issue を新規 open すると「baseline 必要」と誤読される。
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        snapshotUnusableIssues: 5,
+        snapshotUnusableFiles: 3,
+        snapshotUnusableByType: { 'snapshot-incomplete': 4, 'source-unusable': 1 },
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, false);
+    // body もゼロケースのまま空文字列
+    assert.equal(report.parityFollowup.body, '');
+  });
+
+  it('parityFollowup.body contains "## Source Unusable (advisory)" section when sourceUnusable counts > 0 AND another signal opens the issue', () => {
+    // body は `shouldOpenIssue=true` のときだけ生成される。source-unusable
+    // 単独では shouldOpenIssue が立たないので、別の signal (expired
+    // baseline) と同居させて body を生成させる。
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        expiredBaselineEntries: 1,
+        snapshotUnusableIssues: 4,
+        snapshotUnusableFiles: 2,
+        snapshotUnusableByType: { 'snapshot-incomplete': 3, 'source-unusable': 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              severity: 'actionable',
+              baselined: true,
+              baselineExpired: true,
+              baselineReviewAfter: '2026-03-01',
+              detail: 'expired',
+            },
+          ],
+        },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.match(report.parityFollowup.body, /## Source Unusable \(advisory\)/);
+    assert.match(report.parityFollowup.body, /Total: 4 issues across 2 files/);
+    // sort 順固定: snapshot-incomplete → source-unusable
+    assert.match(report.parityFollowup.body, /snapshot-incomplete: 3/);
+    assert.match(report.parityFollowup.body, /source-unusable: 1/);
+    // 翻訳者責任外であることの注意文
+    assert.match(
+      report.parityFollowup.body,
+      /翻訳者責任外|snapshot.*source sync|翻訳 PR では修正できません/,
+    );
+  });
+
+  it('parityFollowup.body OMITS the "## Source Unusable" section when snapshotUnusableIssues = 0', () => {
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        expiredBaselineEntries: 1,
+        snapshotUnusableIssues: 0,
+        snapshotUnusableFiles: 0,
+        snapshotUnusableByType: {},
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              severity: 'actionable',
+              baselined: true,
+              baselineExpired: true,
+              detail: 'expired',
+            },
+          ],
+        },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.doesNotMatch(report.parityFollowup.body, /## Source Unusable/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR4 — renderSummaryMarkdown が `## Structure Mismatch (advisory)` /
+// `## Source Unusable (advisory)` セクションを追加する。`## Parity` の
+// `Active issue files` は引き続き `reportableActiveFiles` を読むので、
+// PR4 時点では structure mismatch を含まない値のまま (PR5 cutover で
+// 意味が広がる)。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable sections', () => {
+  function makeBaseInputs() {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        reportableActiveFiles: 0,
+        reportableActiveActionableFiles: 0,
+        acknowledgedIssues: 0,
+        structureMismatchIssues: 5,
+        structureMismatchFiles: 3,
+        structureMismatchByType: {
+          'section-structure-mismatch': 4,
+          'segment-order-mismatch': 1,
+        },
+        snapshotUnusableIssues: 2,
+        snapshotUnusableFiles: 2,
+        snapshotUnusableByType: {
+          'snapshot-incomplete': 1,
+          'source-unusable': 1,
+        },
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-08T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: {
+          issueCount: 0,
+          structureMismatchIssues: 5,
+          structureMismatchFiles: 3,
+          structureMismatchByType: {
+            'section-structure-mismatch': 4,
+            'segment-order-mismatch': 1,
+          },
+        },
+      },
+      parityFollowup: {
+        summary: {
+          baselineDebt: {
+            baselinedIssues: 0,
+            baselinedFiles: 0,
+            expiredBaselineEntries: 0,
+            baselineInvalidatedSlugs: [],
+          },
+          advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
+          sourceUnusable: {
+            snapshotUnusableIssues: 2,
+            snapshotUnusableFiles: 2,
+            snapshotUnusableByType: {
+              'snapshot-incomplete': 1,
+              'source-unusable': 1,
+            },
+          },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+    return { snapshot, parity, actionableReport };
+  }
+
+  it('includes "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {
+    const { snapshot, parity, actionableReport } = makeBaseInputs();
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /## Structure Mismatch \(advisory\)/);
+    assert.match(md, /Total: 5 issues across 3 files/);
+    // PR5 で gate に載る予定であることを heading 自体ではなく本文で明示
+    assert.match(md, /PR5 cutover|advisory|gate に載りません/);
+    // type 別内訳 (alpha sort)
+    assert.match(md, /section-structure-mismatch: 4/);
+    assert.match(md, /segment-order-mismatch: 1/);
+  });
+
+  it('includes "## Source Unusable (advisory)" section when snapshotUnusableIssues > 0', () => {
+    const { snapshot, parity, actionableReport } = makeBaseInputs();
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /## Source Unusable \(advisory\)/);
+    assert.match(md, /Total: 2 issues across 2 files/);
+    // 翻訳者責任外であることの注意文
+    assert.match(md, /translation failure|snapshot.*source sync|翻訳/);
+    // type 別内訳 (alpha sort)
+    assert.match(md, /snapshot-incomplete: 1/);
+    assert.match(md, /source-unusable: 1/);
+  });
+
+  it('OMITS both new sections when both counters are 0', () => {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        reportableActiveFiles: 0,
+        acknowledgedIssues: 0,
+        structureMismatchIssues: 0,
+        structureMismatchFiles: 0,
+        structureMismatchByType: {},
+        snapshotUnusableIssues: 0,
+        snapshotUnusableFiles: 0,
+        snapshotUnusableByType: {},
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-08T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: {
+          issueCount: 0,
+          structureMismatchIssues: 0,
+          structureMismatchFiles: 0,
+          structureMismatchByType: {},
+        },
+      },
+      parityFollowup: {
+        summary: {
+          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, expiredBaselineEntries: 0, baselineInvalidatedSlugs: [] },
+          advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
+          sourceUnusable: {
+            snapshotUnusableIssues: 0,
+            snapshotUnusableFiles: 0,
+            snapshotUnusableByType: {},
+          },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.doesNotMatch(md, /## Structure Mismatch/);
+    assert.doesNotMatch(md, /## Source Unusable/);
+  });
+
+  it('## Parity section の "Active issue files" は structure mismatch を含まない値 (reportableActiveFiles を読む)', () => {
+    // PR4 時点では `reportableActiveFiles` に structure mismatch は流れ込まない。
+    // structure mismatch が 5 件あっても "Active issue files" は 0 のまま。
+    const { snapshot, parity, actionableReport } = makeBaseInputs();
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Active issue files: 0/);
+    // 念のため "Active actionable files" もまだ 0
+    assert.match(md, /Active actionable files: 0/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 7: parityRegression excludes non-expired baselined issues
 // ---------------------------------------------------------------------------
 

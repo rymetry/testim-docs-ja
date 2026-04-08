@@ -68,7 +68,7 @@ export function isReportableParityIssue(issue) {
   if (isCoarseAuditSignal(issue)) return false;
 
   // Issue #247 PR2 — structure-mismatch / source-unusable は PR2 で
-  // emission を入れた段階で、PR4 の gate cutover まで `reportableActive*`
+  // emission を入れた段階で、PR5 の gate cutover まで `reportableActive*`
   // (gate counter) には乗せない。専用の `structureMismatchIssues` /
   // `snapshotUnusableIssues` counter にだけ集計する。
   //
@@ -79,10 +79,14 @@ export function isReportableParityIssue(issue) {
   //      した瞬間に gate exit 1 でブロックされる (新 type は baseline で
   //      freeze できないため)。
   //   2. 段階的 cutover の意図 — PR2 は emitter / contract を pin する
-  //      フェーズで、gate flip は PR4 の責務 (Issue #247 の PR 分割案
-  //      参照)。
-  //   3. PR4 でこの 2 行を削除するだけで cutover が完了する設計。
-  //      それまでは structure-mismatch は構造化 advisory として
+  //      フェーズで、PR4 は summary / reporting / CLI の可視化のみ、gate
+  //      flip は PR5 の責務 (Issue #247 の PR 分割案参照)。
+  //   3. PR5 では `isStructureMismatchIssue(issue)` の分岐のみ削除する
+  //      ことで structure mismatch を gate に載せる (= reportable 化)。
+  //      `isSourceUnusableIssue(issue)` の分岐は PR5 でも残す — snapshot /
+  //      source sync 側 debt は翻訳 PR で修正できないため、PR5 cutover
+  //      後も advisory のまま。
+  //   4. それまでは structure-mismatch は構造化 advisory として
   //      `structureMismatch*` counter から見えるが、gate は再点火しない。
   if (isStructureMismatchIssue(issue) || isSourceUnusableIssue(issue)) return false;
 
@@ -96,7 +100,7 @@ export function isReportableParityIssue(issue) {
  * ack / baseline で覆われていないものを「advisory only」として識別する
  * 純粋述語。
  *
- * PR2 で emission を入れたが gate cutover は PR4 の責務、という方針
+ * PR2 で emission を入れたが gate cutover は PR5 の責務、という方針
  * (`isReportableParityIssue` の docstring 参照) を CLI 表示と整合させる
  * ために独立した述語にしている。advisory only な issue は:
  *   - gate には乗らない (`isReportableParityIssue` が false を返す)
@@ -109,7 +113,9 @@ export function isReportableParityIssue(issue) {
  * なる (ack / baseline 経路が優先で、advisory より具体的なカバレッジ
  * 情報を持っているため)。
  *
- * PR4 cutover ではこの述語と CLI 側の advisory 表示分岐を削除する。
+ * PR5 cutover では structure mismatch 側がここから外れ (reportable に
+ * 昇格するため)、この述語は source-unusable のみを指すよう scope が
+ * 縮小される予定。PR4 では scope を変更しない。
  */
 export function isAdvisoryOnlyParityIssue(issue) {
   if (!issue || typeof issue !== 'object') return false;
@@ -124,7 +130,7 @@ export function isAdvisoryOnlyParityIssue(issue) {
 export function isNonBlockingParityIssue(issue) {
   // 「非ブロッキング」の元の意味 — ack または baseline で **明示的に** 覆わ
   // れている issue だけ。Issue #247 PR2 で emission を入れた structure-
-  // mismatch / source-unusable は、PR4 cutover まで gate には乗らないが、
+  // mismatch / source-unusable は、PR5 cutover まで gate には乗らないが、
   // それは ack / baseline で覆われているからではなく advisory として
   // 扱っているからなので、ここには含めない。CLI の "(covered by
   // baseline/ack)" / "(advisory only)" を区別するために
