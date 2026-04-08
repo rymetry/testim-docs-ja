@@ -92,8 +92,32 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 | `table-cell-empty-mismatch`   | テーブルセルの空/非空不一致                        | audit-only   |
 | `table-cell-token-mismatch`   | テーブルセルの invariant token 不一致              | audit-only   |
 | `missing-snapshot`            | EN snapshot が存在しないページ                     | gate signal  |
+| `section-structure-mismatch`  | EN/JA の section body で block kind 多重集合が違う | reportable   |
+| `segment-order-mismatch`      | section 内 block 種別の並びまたは content 順が違う | reportable   |
+| `snapshot-incomplete`         | EN snapshot が shallow/extractor-empty で比較不能  | advisory     |
+| `source-unusable`             | EN snapshot が malformed details で復元不能        | advisory     |
 
 **audit-only signals**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `scripts/lib/source_parity_types.mjs` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
+
+**structure comparator (Issue #247)**: `alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに canonical block sequence を比較する。block 単位の語彙は `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種に凍結されており、segment 単位の list item / table cell は比較前に対応する list / table block に畳まれる。
+
+3 段階の fall-through で section あたり最大 1 件の diff を emit する:
+
+1. **kind-multiset** (`section-structure-mismatch`) — block 種別の多重集合が違う
+2. **kind-sequence** (`segment-order-mismatch`) — 多重集合は一致するが並び順が違う
+3. **content-order** (`segment-order-mismatch`) — kind 列は同じだが content bijection が monotonic でない
+
+いずれかが発火すると後続 stage は short-circuit され、alignSegments の weighted LCS も呼ばれない (section body に対して structure issue と segment diff が二重発火しないため)。
+
+**baseline identity**: structure 系 entry の machine identity は **`sectionIndex` + `structureCategory` + `structureFingerprint`** の 3 つ組 (`buildBaselineKey` / `buildBaselineKeyFromEntry`)。`structureFingerprint` は `structureCategory` + `enKinds` + `jaKinds` (content-order では `contentPermutation`) を sha256 に畳み込む。`sectionPath` は entry に保存するが identity key には含めない (同一ページ内で同じ heading text が複数現れる場合に sectionPath が一意にならないため、PR5 Finding 2)。
+
+**source unusability gate**: `detectSourceUsability()` は alignSegments 呼び出し前に EN snapshot の比較可能性を判定する。判定条件は以下:
+
+- `shallow-snapshot` (`snapshot-incomplete`) — raw EN HTML が 800 bytes 以下かつ EN body ≤ 2 かつ JA body ≥ 5 かつ JA/EN ratio ≥ 4
+- `extractor-empty` (`snapshot-incomplete`) — clean HTML なのに EN body が 0 で JA body ≥ 3
+- `escaped-details-residue` (`source-unusable`) — (通常経路) `&lt;/details&gt;` 残存 **または** open/close 不均衡 **かつ** `enHeadingSegmentCount === 0 && jaHeadingSegmentCount >= 2` を **両方** 満たす / (extractError 経路) `open !== close` の不均衡のみで判定
+
+`escaped-details-residue` は **狭く** narrowing されており、`<details>` 例を本文に含む合法ページ (`advanced-editing/coding-assistant` 等) は false positive にならない。発火したページでは alignSegments が呼ばれない (translation drift と snapshot debt を混ぜないため)。両者とも **advisory のみ** で gate exit code には寄与しないが、`summary.snapshotUnusable*` の独立 counter に集計される。
 
 **acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。
 

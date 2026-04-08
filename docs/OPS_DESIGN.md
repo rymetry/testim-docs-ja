@@ -82,6 +82,42 @@ queue 全体を消費する。
 - `EN uses <details> blocks` — EN が `<details>` を使用
 - `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
 
+### Structure comparator (canonical block sequence)
+
+`alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに `compareSectionStructure()` を呼び、**原文 block 列の並びと多重集合** を比較する。この比較器は Issue #247 で導入され、`paragraph-count-mismatch` などの count heuristic を降格した後の **構造保持の主判定** を担う。
+
+**比較対象の block 語彙 (凍結)**: `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary`。segment 単位の `ordered-list-item` / `unordered-list-item` / `table-cell` は比較前に list / table block に畳み込まれる (block 内部の件数差は別 comparator の責務)。
+
+**3 段階の fall-through**:
+
+| Stage | 条件 | emit type | structureCategory |
+| --- | --- | --- | --- |
+| A | EN/JA で block kind の **多重集合** が違う (cross-kind merge/split/collapse) | `section-structure-mismatch` | `kind-multiset` |
+| B | multiset は一致するが **並び順** が違う (mixed-kind reorder) | `segment-order-mismatch` | `kind-sequence` |
+| C | kind 列は完全一致しているが **content bijection が monotonic でない** (same-kind の swap / rotation) | `segment-order-mismatch` | `content-order` |
+
+どの stage も発火しなければ比較器は空配列を返し、alignSegments は従来通り weighted LCS にフォールスルーする。section あたり最大 1 件までしか emit しない — 先に発火した stage が勝ち、後続 stage は short-circuit でスキップされる (gate 契約を予測可能にするため)。
+
+**gate 分類**: `section-structure-mismatch` と `segment-order-mismatch` は PR5 cutover 以降 **reportable** (gate 対象)。`parity-baseline.json` に entry が無ければ `--fail-on=any` と `--fail-on=actionable` の両方で exit code 1。
+
+**baseline identity**: structure 系 entry の machine identity は **`sectionIndex` + `structureCategory` + `structureFingerprint`** の 3 つ組で構成する (`buildBaselineKey` / `buildBaselineKeyFromEntry`)。`structureFingerprint` は `structureCategory` + `enKinds` + `jaKinds` (+ content-order の場合は `contentPermutation` の `enIndex→jaIndex` pair) を sha256 に畳み込んだもの。`sectionPath` は **reviewer 可読性のために entry に保存するが identity key には含めない** — 同一ページ内で同じ heading text が複数現れる場合に sectionPath だけだと一意にならないため (PR5 Finding 2)。
+
+### Source unusable 判定
+
+比較前に `detectSourceUsability()` が EN snapshot の **比較可能性** を判定する。比較不能と判定されたページはその 1 件だけを emit し、後続の alignSegments / structure comparator は呼ばれない (translation drift と snapshot/source debt を混ぜないため)。
+
+**3 つの reason (凍結)**:
+
+| reason | 発火条件 | emit type |
+| --- | --- | --- |
+| `shallow-snapshot` | raw EN ≤ 800 bytes かつ EN body ≤ 2 かつ JA body ≥ 5 かつ ratio ≥ 4 | `snapshot-incomplete` |
+| `extractor-empty` | clean HTML なのに EN body が 0 で JA body ≥ 3 | `snapshot-incomplete` |
+| `escaped-details-residue` | (通常経路) `&lt;/details&gt;` 残存 **または** open/close 不均衡 (= broken details tree) **かつ** `enHeadingSegmentCount === 0` で JA heading ≥ 2 (= section anchor failure) を **両方** 満たす。(extractError 経路) open/close 不均衡 (`open !== close`) のみで判定 | `source-unusable` |
+
+`escaped-details-residue` の判定が **狭く** なっているのは、`advanced-editing/coding-assistant` のように `<details>` の使用例を本文に含むため preprocessEnHtml 後も balanced な escaped marker が残るが extractor / comparator は正常に動く合法ケースを誤発火させないため (PR3 P1 fix)。「escaped marker が残るだけ」では unusable と判定しない。
+
+**gate 分類**: `snapshot-incomplete` と `source-unusable` は **advisory のみ** — `summary.snapshotUnusableIssues` / `summary.snapshotUnusableFiles` に集計されるが `summary.reportableActiveFiles` には入らない。そのため active な source unusable が何件あっても exit code は 0。これは「翻訳者責任外の snapshot / source sync 側の debt」を翻訳者 gate で失敗させないためで、PR5 cutover 後も同じ契約。`parity-baseline.json` には `usabilityReason` を key として entry を置けるので、人手管理の枠としては活用できる。
+
 ## チェックの保証範囲
 
 | 保証する | 保証しない |
@@ -91,6 +127,7 @@ queue 全体を消費する。
 | 画像ファイル実在 | 文体品質 |
 | frontmatter 整合 | 厳密な Astro レンダリング |
 | 原文構造差分 | セマンティックな翻訳精度 |
+| block 列レベルの構造保持 (paragraph / list / callout / table / details の並びと多重集合) | |
 
 ### 日常運用（ページ単位）
 
