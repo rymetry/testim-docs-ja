@@ -664,3 +664,34 @@ export function tagIssuesWithBaseline(
 
   return { tagged, invalidated: false, matchedKeys };
 }
+
+/**
+ * Issue #247 post-merge — tagIssuesWithBaseline の `matchedKeys` を使って
+ * 「runtime に一致する issue が無かった baseline entry」= orphan を返す
+ * 純粋関数。detector/emitter が仕様変更したときに legacy entry が
+ * 取り残されるパターン(PR5 migration で `segment-inconclusive` が 3 slug
+ * 分残った件)を可視化する。
+ *
+ * 呼び出し側の契約:
+ *   - page-level invalidation (fingerprint mismatch) 時は `matchedKeys` が
+ *     空になり、全 entry が「unmatched」として返るが、それは orphan では
+ *     ない (snapshot 更新に伴う invalidation)。呼び出し側が
+ *     `tagIssuesWithBaseline` の `invalidated` フラグを見て orphan 集計を
+ *     スキップすること。
+ *   - helper 自体は entries 配列と matchedKeys Set を機械的に突き合わせ
+ *     るのみで、invalidation 状態や checked/unchecked の概念を持たない。
+ *
+ * @param {string} slug
+ * @param {object[]} baselineEntries — 全 slug 混じった entries でも良い
+ * @param {Set<string>} matchedKeys — `tagIssuesWithBaseline` の戻り値
+ * @returns {object[]} orphan baseline entries (sourceFingerprint 等そのまま)
+ */
+export function computeOrphanBaselineEntries(slug, baselineEntries, matchedKeys) {
+  if (!Array.isArray(baselineEntries)) return [];
+  if (!(matchedKeys instanceof Set)) return [];
+  const slugEntries = baselineEntries.filter((e) => e.slug === slug);
+  return slugEntries.filter((e) => {
+    const key = buildBaselineKeyFromEntry(e);
+    return !matchedKeys.has(key);
+  });
+}
