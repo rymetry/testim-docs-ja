@@ -1209,6 +1209,162 @@ describe('Issue #247 PR4 — parityRegression structure mismatch summary exposur
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR4 — parityFollowup の sourceUnusable サブセクション露出。
+// 翻訳者責任外 (snapshot / source sync 側 debt) のため、shouldOpenIssue の
+// 条件には加えない。`summary.sourceUnusable` 経由で counter のみ可視化する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-08T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  const cleanParity = {
+    summary: {
+      checkedAt: '2026-04-08T00:00:00Z',
+      actionableFiles: 0,
+      signalFiles: 0,
+      errorFiles: 0,
+      baselinedIssues: 0,
+      baselinedFiles: 0,
+      expiredBaselineEntries: 0,
+      baselineInvalidatedSlugs: [],
+      advisoryQueueIssues: 0,
+      advisoryQueueFiles: 0,
+    },
+    files: [],
+    advisoryQueueScope: { type: 'full', isComplete: true, filters: {}, checkedFiles: 100, totalFiles: 100 },
+    advisoryQueue: [],
+  };
+
+  it('exposes sourceUnusable counters in parityFollowup.summary', () => {
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        snapshotUnusableIssues: 3,
+        snapshotUnusableFiles: 2,
+        snapshotUnusableByType: {
+          'snapshot-incomplete': 2,
+          'source-unusable': 1,
+        },
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.ok(report.parityFollowup.summary.sourceUnusable, 'sourceUnusable subsection must exist');
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableIssues, 3);
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableFiles, 2);
+    assert.deepEqual(report.parityFollowup.summary.sourceUnusable.snapshotUnusableByType, {
+      'snapshot-incomplete': 2,
+      'source-unusable': 1,
+    });
+  });
+
+  it('defaults sourceUnusable counters to 0 / {} when summary fields are absent', () => {
+    const report = buildActionableReport(emptySnapshot, cleanParity, []);
+    assert.ok(report.parityFollowup.summary.sourceUnusable);
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableIssues, 0);
+    assert.equal(report.parityFollowup.summary.sourceUnusable.snapshotUnusableFiles, 0);
+    assert.deepEqual(report.parityFollowup.summary.sourceUnusable.snapshotUnusableByType, {});
+  });
+
+  it('shouldOpenIssue stays FALSE when source-unusable is the only signal (PR4 — translation 責任外)', () => {
+    // PR4 では parityFollowup の `shouldOpenIssue` 判定には source-unusable を
+    // 加えない。snapshot / source sync 側の debt なので、翻訳 PR で修正でき
+    // ない issue を新規 open すると「baseline 必要」と誤読される。
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        snapshotUnusableIssues: 5,
+        snapshotUnusableFiles: 3,
+        snapshotUnusableByType: { 'snapshot-incomplete': 4, 'source-unusable': 1 },
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, false);
+    // body もゼロケースのまま空文字列
+    assert.equal(report.parityFollowup.body, '');
+  });
+
+  it('parityFollowup.body contains "## Source Unusable (advisory)" section when sourceUnusable counts > 0 AND another signal opens the issue', () => {
+    // body は `shouldOpenIssue=true` のときだけ生成される。source-unusable
+    // 単独では shouldOpenIssue が立たないので、別の signal (expired
+    // baseline) と同居させて body を生成させる。
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        expiredBaselineEntries: 1,
+        snapshotUnusableIssues: 4,
+        snapshotUnusableFiles: 2,
+        snapshotUnusableByType: { 'snapshot-incomplete': 3, 'source-unusable': 1 },
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              severity: 'actionable',
+              baselined: true,
+              baselineExpired: true,
+              baselineReviewAfter: '2026-03-01',
+              detail: 'expired',
+            },
+          ],
+        },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.match(report.parityFollowup.body, /## Source Unusable \(advisory\)/);
+    assert.match(report.parityFollowup.body, /Total: 4 issues across 2 files/);
+    // sort 順固定: snapshot-incomplete → source-unusable
+    assert.match(report.parityFollowup.body, /snapshot-incomplete: 3/);
+    assert.match(report.parityFollowup.body, /source-unusable: 1/);
+    // 翻訳者責任外であることの注意文
+    assert.match(
+      report.parityFollowup.body,
+      /翻訳者責任外|snapshot.*source sync|翻訳 PR では修正できません/,
+    );
+  });
+
+  it('parityFollowup.body OMITS the "## Source Unusable" section when snapshotUnusableIssues = 0', () => {
+    const parity = {
+      ...cleanParity,
+      summary: {
+        ...cleanParity.summary,
+        expiredBaselineEntries: 1,
+        snapshotUnusableIssues: 0,
+        snapshotUnusableFiles: 0,
+        snapshotUnusableByType: {},
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            {
+              type: 'segment-missing',
+              severity: 'actionable',
+              baselined: true,
+              baselineExpired: true,
+              detail: 'expired',
+            },
+          ],
+        },
+      ],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityFollowup.shouldOpenIssue, true);
+    assert.doesNotMatch(report.parityFollowup.body, /## Source Unusable/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 7: parityRegression excludes non-expired baselined issues
 // ---------------------------------------------------------------------------
 

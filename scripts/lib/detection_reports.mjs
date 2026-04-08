@@ -459,6 +459,7 @@ function buildParityFollowupBody({
   advisoryQueueFiles,
   advisoryQueueScope,
   includeAdvisoryInBody,
+  sourceUnusable,
 }) {
   const lines = [
     '## Summary',
@@ -478,6 +479,28 @@ function buildParityFollowupBody({
       `  - Blocking: ${blockingAdvisoryItems.length}`,
       '',
     );
+  }
+
+  // Issue #247 PR4 — source-unusable サブセクション。`shouldOpenIssue` の
+  // 条件には加えていない (翻訳者責任外なので新規 issue は open しない) が、
+  // 既に別の signal で issue body が生成されているなら、source-unusable の
+  // 件数も併記して reviewer に状況を見せる。0 件のときはセクション自体を
+  // 省略する。
+  if (sourceUnusable && sourceUnusable.snapshotUnusableIssues > 0) {
+    lines.push(
+      '## Source Unusable (advisory)',
+      '',
+      `- Total: ${sourceUnusable.snapshotUnusableIssues} issues across ${sourceUnusable.snapshotUnusableFiles} files`,
+      '- Not a translation failure — snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+    );
+    const sortedTypes = Object.keys(sourceUnusable.snapshotUnusableByType ?? {}).sort();
+    if (sortedTypes.length > 0) {
+      lines.push('- By type:');
+      for (const type of sortedTypes) {
+        lines.push(`  - ${type}: ${sourceUnusable.snapshotUnusableByType[type]}`);
+      }
+    }
+    lines.push('');
   }
 
   if (expiredBaselineFiles.length > 0) {
@@ -551,6 +574,15 @@ function buildParityFollowup(parity, options = {}) {
   const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
   const isComplete = advisoryQueueScope?.isComplete ?? null;
 
+  // Issue #247 PR4 — source-unusable サブセクション。`shouldOpenIssue` の
+  // 判定には加えない (翻訳者責任外、新規 issue を open しない契約)。summary
+  // への露出と body サブセクションのみを担う。
+  const sourceUnusable = {
+    snapshotUnusableIssues: summary.snapshotUnusableIssues ?? 0,
+    snapshotUnusableFiles: summary.snapshotUnusableFiles ?? 0,
+    snapshotUnusableByType: summary.snapshotUnusableByType ?? {},
+  };
+
   const blockingAdvisoryItems = advisoryQueue.filter((e) => e.blocking);
   const hasBlockingAdvisory = isComplete === true && blockingAdvisoryItems.length > 0;
 
@@ -612,6 +644,7 @@ function buildParityFollowup(parity, options = {}) {
           advisoryQueueFiles,
           advisoryQueueScope,
           includeAdvisoryInBody: isComplete === true,
+          sourceUnusable,
         }),
         FAMILY_KEYS.PARITY_FOLLOWUP,
       )
@@ -642,6 +675,10 @@ function buildParityFollowup(parity, options = {}) {
         includedInIssueBody: isComplete === true,
       },
       reviewHints,
+      // Issue #247 PR4 — source-unusable counter のサブセクション。
+      // shouldOpenIssue には影響しないが、JSON consumer (人手レビュー /
+      // ダッシュボード) が翻訳者責任外の snapshot debt を観測できる。
+      sourceUnusable,
     },
   };
 }
