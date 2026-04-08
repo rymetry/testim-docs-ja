@@ -202,64 +202,39 @@ describe('CLI coverage helpers', () => {
     });
   });
 
-  // Issue #247 PR2 — advisory only / mixed advisory + baseline 表示の契約
-  describe('Issue #247 PR2 — advisory-only display path', () => {
-    it('advisory-only file (1 structure-mismatch, no baseline/ack) gets "(advisory only)"', () => {
+  // Issue #247 PR5 — gate cutover 後の coverage state 契約
+  describe('Issue #247 PR5 — coverage state after structure mismatch cutover', () => {
+    it('active structure-mismatch 単独 (no baseline/ack) → icon ❌, suffix ""', () => {
+      // PR5 cutover で structure mismatch は reportable に昇格したため、
+      // 単独でも ack/baseline が無ければ ❌ 経路に落ちる。
       const state = getConsoleCoverageState([
         { type: 'section-structure-mismatch', severity: 'actionable' },
       ]);
       assert.deepEqual(state, {
         allAcked: false,
-        // すべての issue が advisory なので「ack/baseline で覆われている」
-        // 状態ではない (allCovered=false) が、icon は ⏸️。
         allCovered: false,
-        icon: '⏸️',
-        suffix: ' (advisory only)',
+        icon: '❌',
+        suffix: '',
       });
     });
 
-    it('multiple advisory-only issues (no baseline/ack) get "(advisory only)"', () => {
+    it('structure-mismatch × 2 + source-unusable × 2 mix → icon ❌ (structure は reportable)', () => {
+      // structure mismatch が含まれていれば、source-unusable が何件
+      // あっても ❌ 経路に落ちる。
       const state = getConsoleCoverageState([
         { type: 'section-structure-mismatch', severity: 'actionable' },
         { type: 'segment-order-mismatch', severity: 'actionable' },
         { type: 'snapshot-incomplete', severity: 'actionable' },
         { type: 'source-unusable', severity: 'actionable' },
       ]);
-      assert.equal(state.icon, '⏸️');
-      assert.equal(state.suffix, ' (advisory only)');
+      assert.equal(state.icon, '❌');
+      assert.equal(state.suffix, '');
     });
 
-    it('advisory + baseline mix gets "(advisory + baseline/ack)"', () => {
-      // structure-mismatch (advisory) と既存 segment-* drift (baseline で
-      // 覆われている) が同居するケース。CLI で「covered by baseline/ack」
-      // と書くと advisory が ack/baseline で覆われているように誤読される
-      // ので、この mixed state は専用 wording で表示する。
+    it('source-unusable advisory + active segment-missing → icon ❌', () => {
+      // active な reportable が別途あれば advisory の有無は関係なく ❌。
       const state = getConsoleCoverageState([
-        { type: 'section-structure-mismatch', severity: 'actionable' },
-        { type: 'segment-missing', severity: 'actionable', baselined: true },
-      ]);
-      assert.deepEqual(state, {
-        allAcked: false,
-        allCovered: false,
-        icon: '⏸️',
-        suffix: ' (advisory + baseline/ack)',
-      });
-    });
-
-    it('advisory + ack mix gets "(advisory + baseline/ack)"', () => {
-      const state = getConsoleCoverageState([
-        { type: 'segment-order-mismatch', severity: 'actionable' },
-        { type: 'segment-missing', severity: 'actionable', acknowledged: true, ackExpired: false },
-      ]);
-      assert.equal(state.icon, '⏸️');
-      assert.equal(state.suffix, ' (advisory + baseline/ack)');
-    });
-
-    it('advisory + active reportable issue still blocks (❌)', () => {
-      // active な segment-missing が混じっていれば、advisory があっても
-      // ファイルはブロッキング扱い。
-      const state = getConsoleCoverageState([
-        { type: 'section-structure-mismatch', severity: 'actionable' },
+        { type: 'source-unusable', severity: 'actionable' },
         { type: 'segment-missing', severity: 'actionable' },
       ]);
       assert.deepEqual(state, {
@@ -270,7 +245,47 @@ describe('CLI coverage helpers', () => {
       });
     });
 
-    it('acked structure-mismatch is treated as ack-covered, not advisory', () => {
+    it('baselined structure-mismatch + active segment-missing → icon ❌', () => {
+      // baseline で covered な structure mismatch があっても、他に
+      // active な reportable があればファイルはブロッキング。
+      const state = getConsoleCoverageState([
+        {
+          type: 'section-structure-mismatch',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: false,
+        },
+        { type: 'segment-missing', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '❌',
+        suffix: '',
+      });
+    });
+
+    it('baselined structure-mismatch 単独 → icon ⏸️, suffix " (covered by baseline/ack)"', () => {
+      // baseline 経路は引き続き non-blocking。structure mismatch の baseline
+      // wiring が PR5 で実動するようになったので、このケースは実運用で
+      // 発生する。
+      const state = getConsoleCoverageState([
+        {
+          type: 'section-structure-mismatch',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: false,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: true,
+        icon: '⏸️',
+        suffix: ' (covered by baseline/ack)',
+      });
+    });
+
+    it('acked structure-mismatch 単独 → icon ⏸️, suffix " (all acknowledged)"', () => {
       // ack 経路は advisory より優先 (より具体的なカバレッジ情報なので)。
       const state = getConsoleCoverageState([
         {
@@ -288,12 +303,54 @@ describe('CLI coverage helpers', () => {
       });
     });
 
-    it('baselined structure-mismatch is treated as baseline-covered, not advisory', () => {
-      // baseline 経路も advisory より優先。PR1 時点では新 type に baseline
-      // は実運用上付かないが、述語の forward compatibility をここで pin。
+    it('baselined structure-mismatch + source-unusable advisory → icon ⏸️, suffix " (advisory + baseline/ack)"', () => {
+      // mix のケース: structure は baseline、source-unusable は advisory。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: false,
+        },
+        { type: 'source-unusable', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (advisory + baseline/ack)',
+      });
+    });
+
+    it('expired baseline on structure-mismatch → icon ❌, suffix "" (re-fire)', () => {
+      // PR5 の新しい挙動: baseline 期限切れ → reportable に戻る。
+      const state = getConsoleCoverageState([
+        {
+          type: 'section-structure-mismatch',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: true,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '❌',
+        suffix: '',
+      });
+    });
+
+    it('structure-mismatch + source-unusable both baselined → icon ⏸️, suffix " (covered by baseline/ack)"', () => {
+      // 両方 baseline で覆われているので「covered」として扱う。
+      const state = getConsoleCoverageState([
+        {
+          type: 'section-structure-mismatch',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: false,
+        },
+        {
+          type: 'source-unusable',
           severity: 'actionable',
           baselined: true,
           baselineExpired: false,
@@ -308,14 +365,11 @@ describe('CLI coverage helpers', () => {
     });
   });
 
-  // Issue #247 PR4 — source-unusable 単独 advisory 専用 CLI suffix
-  // structure mismatch を含まない source-unusable 単独 advisory ファイルに
-  // 対し、CLI で「翻訳者責任外の snapshot debt」であることを明示する
-  // `(source unusable)` suffix を出す。advisory に structure mismatch が
-  // 1 件でも混ざるなら既存の `(advisory only)` に落ちる。`isAdvisoryOnly
-  // ParityIssue` の scope (= structure + source-unusable 両方) は変更
-  // しない。
-  describe('Issue #247 PR4 — source-unusable 専用 CLI suffix', () => {
+  // Issue #247 PR5 — source-unusable advisory 専用 CLI suffix
+  // PR4 で導入した `(source unusable)` suffix は PR5 cutover でも維持する。
+  // ただし structure mismatch は advisory ではなくなったので、structure
+  // mismatch を含む mix ケースは ❌ (reportable 経路) に落ちる。
+  describe('Issue #247 PR5 — source-unusable 専用 CLI suffix', () => {
     it('source-unusable 単独 (advisory) → icon ⏸️, suffix " (source unusable)"', () => {
       const state = getConsoleCoverageState([
         { type: 'source-unusable', severity: 'actionable' },
@@ -353,9 +407,9 @@ describe('CLI coverage helpers', () => {
       });
     });
 
-    it('source-unusable + section-structure-mismatch (advisory mix) → " (advisory only)"', () => {
-      // advisory に structure mismatch が含まれているので、CLI 上は
-      // structure drift 側を優先する既存の "(advisory only)" に落ちる。
+    it('source-unusable + active section-structure-mismatch → icon ❌ (PR5: structure は reportable)', () => {
+      // PR5 cutover で structure mismatch が reportable になった結果、
+      // この mix は advisory only ではなく ❌ に落ちる。
       const state = getConsoleCoverageState([
         { type: 'source-unusable', severity: 'actionable' },
         { type: 'section-structure-mismatch', severity: 'actionable' },
@@ -363,8 +417,8 @@ describe('CLI coverage helpers', () => {
       assert.deepEqual(state, {
         allAcked: false,
         allCovered: false,
-        icon: '⏸️',
-        suffix: ' (advisory only)',
+        icon: '❌',
+        suffix: '',
       });
     });
 

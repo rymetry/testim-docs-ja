@@ -31,7 +31,6 @@ import {
 } from './lib/source_parity.mjs';
 import {
   isAdvisoryOnlyParityIssue,
-  isSourceUnusableIssue,
   isValidAcknowledgedIssue,
 } from './lib/source_parity_issue_state.mjs';
 export { isValidAcknowledgedIssue };
@@ -93,9 +92,10 @@ export function isNonBlockingIssue(issue) {
 }
 
 /**
- * Issue #247 PR2 — `getConsoleCoverageState` で advisory-only issue を
+ * Issue #247 PR5 — `getConsoleCoverageState` で advisory-only issue を
  * baseline / ack と区別するためのラッパー。`isAdvisoryOnlyParityIssue`
- * 自体は pure helper として lib 側に置いてあり、ここはコンソール経路から
+ * は PR5 cutover で scope が source-unusable のみに縮小されている
+ * (structure mismatch は reportable に昇格)。ここはコンソール経路から
  * 直接 import しないための再 export。
  */
 export function isAdvisoryOnlyIssue(issue) {
@@ -179,15 +179,19 @@ export function getConsoleCoverageState(issues) {
     };
   }
 
-  // 各 issue を 4 状態に分類する。優先度は ack > baseline > advisory >
-  // active reportable で、上の状態が当たれば下は見ない契約。
+  // Issue #247 PR5 — 各 issue を 4 状態に分類する。優先度は
+  // ack > baseline > advisory > active reportable で、上の状態が当たれば
+  // 下は見ない契約。
   //
   //   ack         — `isValidAcknowledgedIssue` が true
   //   baseline    — `isFrozenByBaseline` が true (= isNonBlockingIssue が
   //                 true で ack でないもの)
-  //   advisory    — Issue #247 PR2 で emit したが PR5 まで gate cutover
-  //                 されない type で、ack/baseline でも覆われていない
-  //   reportable  — それ以外 (= active な gate-blocking issue)
+  //   advisory    — source-unusable (snapshot-incomplete / source-unusable)
+  //                 のうち ack / baseline で覆われていないもの。structure
+  //                 mismatch は PR5 cutover で reportable に昇格したため、
+  //                 この分類には含まれない (`isAdvisoryOnlyParityIssue` の
+  //                 scope が source-unusable のみに縮小されている)。
+  //   reportable  — それ以外 (= active gate-blocking issue)
   const allAcked = issues.every((issue) => isValidAcknowledgedIssue(issue));
   const allBaselineOrAck = issues.every((issue) => isNonBlockingIssue(issue));
   const allCoveredOrAdvisory = issues.every(
@@ -195,17 +199,6 @@ export function getConsoleCoverageState(issues) {
   );
   const hasAdvisory = issues.some((issue) => isAdvisoryOnlyIssue(issue));
   const hasBaselineOrAck = issues.some((issue) => isNonBlockingIssue(issue));
-  // Issue #247 PR4 — source-unusable 単独 advisory 判定。advisory な issue
-  // すべてが source-unusable 系のとき、CLI では「翻訳者責任外の snapshot
-  // debt」であることを明示する専用 suffix `(source unusable)` を出す。
-  // `isAdvisoryOnlyParityIssue` の scope 自体は変えず (structure mismatch +
-  // source-unusable の両方を advisory として扱う PR2 契約を維持) 、CLI 表示
-  // のみを差別化する。advisory に structure mismatch が 1 件でも混じれば
-  // 既存 `(advisory only)` に落ちる。
-  const advisoryIssues = issues.filter((issue) => isAdvisoryOnlyIssue(issue));
-  const allAdvisoryAreSourceUnusable =
-    advisoryIssues.length > 0 &&
-    advisoryIssues.every((issue) => isSourceUnusableIssue(issue));
 
   // active reportable issue が 1 つでも残っていればファイルはブロッキング扱い。
   if (!allCoveredOrAdvisory) {
@@ -223,25 +216,15 @@ export function getConsoleCoverageState(issues) {
   if (allAcked) {
     suffix = ' (all acknowledged)';
   } else if (allBaselineOrAck) {
-    // 既存の動作を保持: 全件が ack / baseline で覆われている。
+    // 全件が ack / baseline で覆われている (structure mismatch の baseline
+    // もこの経路でカバーされる)。
     suffix = ' (covered by baseline/ack)';
-  } else if (
-    hasAdvisory &&
-    !hasBaselineOrAck &&
-    allAdvisoryAreSourceUnusable
-  ) {
-    // Issue #247 PR4 — source-unusable 単独 advisory。翻訳者に修正を求める
-    // drift ではないことを CLI で明示する。structure mismatch を含む advisory
-    // mix は次の分岐 (`(advisory only)`) に落ちる。
-    suffix = ' (source unusable)';
   } else if (hasAdvisory && !hasBaselineOrAck) {
-    // Issue #247 PR2 — 全件が advisory only。structure mismatch 単独、または
-    // structure mismatch + source-unusable の advisory。PR5 cutover で
-    // structure mismatch が gate に載るまでは、構造化 advisory として
-    // 可視化するだけで gate は止めない。
-    suffix = ' (advisory only)';
+    // PR5 では advisory の scope は source-unusable のみ。翻訳者責任外の
+    // snapshot / source 側 debt であることを CLI で明示する。
+    suffix = ' (source unusable)';
   } else {
-    // 混在: PR2 由来の advisory と既存の ack/baseline が同居。
+    // 混在: source-unusable advisory と既存の ack/baseline が同居。
     // "covered by baseline/ack" と書くと advisory が ack/baseline で
     // 覆われているように誤読されるので、明示的に分けて表記する。
     suffix = ' (advisory + baseline/ack)';
