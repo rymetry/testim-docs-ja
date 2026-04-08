@@ -181,11 +181,12 @@ describe('detectSourceUsability — usable (null を返す)', () => {
 // ---------------------------------------------------------------------------
 
 describe('detectSourceUsability — Layer 2: escaped-details-residue', () => {
-  it('faq ライク: rawEnHtml に orphan </details> を含む, enSegments body=4', () => {
+  it('faq ライク: orphan close + enHeading=0 + jaHeading≥2 → source-unusable', () => {
+    // faq の実条件を模倣: orphan &lt;/details&gt; (close=1, open=0) + EN section anchor 欠落
     const result = detectSourceUsability({
       rawEnHtml: makeHtmlWithEscapedDetails(2000),
-      enSegments: bodySegs(4),
-      jaSegments: bodySegs(5),
+      enSegments: bodySegs(4),               // heading=0 (EN section anchor 欠落)
+      jaSegments: mixedSegs(5, 5),           // heading=5 ≥ 2 (JA には見出しあり)
       extractError: null,
     });
     assert.ok(result !== null, '結果が null でないこと');
@@ -193,25 +194,25 @@ describe('detectSourceUsability — Layer 2: escaped-details-residue', () => {
     assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
   });
 
-  it('Layer 2 は Layer 1 より先に発火する (escaped + extractor body=0)', () => {
-    // enSegments body=0 → Layer 1 条件も満たすが、Layer 2 が先に評価される
+  it('Layer 2 は Layer 1 より先に発火する (orphan close + extractor body=0 + jaHeading≥2)', () => {
+    // Layer 1 条件 (body=0) も満たすが hasBrokenDetailsTree && hasSectionAnchorFailure が先
     const result = detectSourceUsability({
       rawEnHtml: makeHtmlWithEscapedDetails(2000),
-      enSegments: [], // body=0
-      jaSegments: bodySegs(10),
+      enSegments: [],                        // body=0, heading=0
+      jaSegments: mixedSegs(5, 10),          // heading=5 ≥ 2
       extractError: null,
     });
     assert.ok(result !== null);
-    assert.equal(result.type, 'source-unusable', 'source-unusable が正しい (Layer 2 優先 §4.6.1)');
+    assert.equal(result.type, 'source-unusable', 'source-unusable が正しい (Layer 2 優先)');
     assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
   });
 
-  it('Layer 2 は extractError でも発火する (rawEnHtml single-only signal)', () => {
-    // extractError があっても Layer 2 は rawEnHtml の string match だけで動く
+  it('Layer 2 は extractError でも発火する (hasBrokenDetailsTree のみで判定)', () => {
+    // extractError 時は hasSectionAnchorFailure を確認しない — rawHtml 由来の broken-tree のみ
     const result = detectSourceUsability({
       rawEnHtml: makeHtmlWithEscapedDetails(2000),
       enSegments: [],
-      jaSegments: bodySegs(10),
+      jaSegments: bodySegs(10),             // heading=0 でも extractError 時は通す
       extractError: new Error('boom'),
     });
     assert.ok(result !== null);
@@ -219,17 +220,54 @@ describe('detectSourceUsability — Layer 2: escaped-details-residue', () => {
     assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
   });
 
-  it('open escaped details marker (<details>) で発火する — <p> 先頭以外に含まれる場合', () => {
-    // preprocessEnHtml は <p> の trimmed 先頭が &lt;details&gt; のときのみ unescape する。
-    // "see &lt;details&gt; section" のように途中に含まれる場合は unescape されず残る。
+  it('balanced escaped markers + enHeading≥1 → null (coding-assistant ライク)', () => {
+    // open==close (balanced) かつ enHeading=1 → hasSectionAnchorFailure=false → Layer 2 発火しない
+    // coding-assistant は例示コードとして &lt;details&gt; を埋め込んでいるが comparator は正常動作する
+    const htmlWithBalanced = makeCleanHtml(12000)
+      .replace('<p>content</p>',
+        '<p>See &lt;details&gt; example</p><p>&lt;/details&gt; end</p>');
+    // open=1, close=1 → balanced。open≠close は false。close>0 は true → hasBrokenDetailsTree=true
+    // enHeading=1 (makeMixedSeg 由来) → hasSectionAnchorFailure=false
+    const result = detectSourceUsability({
+      rawEnHtml: htmlWithBalanced,
+      enSegments: mixedSegs(1, 50),         // heading=1 ≥ 1 → hasSectionAnchorFailure=false
+      jaSegments: mixedSegs(1, 55),
+    });
+    assert.equal(result, null, 'comparator が動ける coding-assistant ライクな balanced page は null');
+  });
+
+  it('orphan close だが enHeading≥1 → null (section anchor が機能している)', () => {
+    // orphan close があっても extractor が heading を作れているなら section comparator は動く
+    const result = detectSourceUsability({
+      rawEnHtml: makeHtmlWithEscapedDetails(2000),
+      enSegments: mixedSegs(2, 10),         // heading=2 ≥ 1 → hasSectionAnchorFailure=false
+      jaSegments: mixedSegs(5, 10),
+    });
+    assert.equal(result, null);
+  });
+
+  it('open/close ゼロ → hasBrokenDetailsTree=false → Layer 2 発火しない', () => {
+    const result = detectSourceUsability({
+      rawEnHtml: makeCleanHtml(2000),
+      enSegments: bodySegs(3),
+      jaSegments: mixedSegs(5, 10),
+    });
+    // escaped details がないので Layer 2 は発火しない。enBody=3>2 で Layer 3 も発火しない。
+    assert.equal(result, null);
+  });
+
+  it('open escaped details marker が <p> 途中に埋め込まれ残存する場合 (open≠close → imbalanced)', () => {
+    // <p>See &lt;details&gt; section...</p> → trimmed が &lt;details&gt; で始まらないため
+    // preprocessEnHtml でアンエスケープされず残存。open=1, close=0 → open≠close → hasBrokenDetailsTree=true
     const htmlWithEmbeddedOpen = makeCleanHtml(2000).replace(
       '<p>content</p>',
       '<p>See &lt;details&gt; section for info</p>',
     );
+    // enHeading=0 かつ jaHeading=5 → hasSectionAnchorFailure=true → Layer 2 発火
     const result = detectSourceUsability({
       rawEnHtml: htmlWithEmbeddedOpen,
-      enSegments: bodySegs(3),
-      jaSegments: bodySegs(5),
+      enSegments: bodySegs(3),              // heading=0
+      jaSegments: mixedSegs(5, 5),          // heading=5 ≥ 2
     });
     assert.ok(result !== null);
     assert.equal(result.type, 'source-unusable');
@@ -418,10 +456,11 @@ describe('detectSourceUsability — payload schema pin', () => {
   });
 
   it('source-unusable ケースの reason が escaped-details-residue', () => {
+    // faq 実条件: orphan close + enHeading=0 + jaHeading≥2
     const result = detectSourceUsability({
       rawEnHtml: makeHtmlWithEscapedDetails(2000),
-      enSegments: bodySegs(4),
-      jaSegments: bodySegs(5),
+      enSegments: bodySegs(4),              // heading=0
+      jaSegments: mixedSegs(5, 5),          // heading=5 ≥ 2
     });
     assert.ok(result !== null);
     assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');

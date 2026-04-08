@@ -76,24 +76,51 @@ export function detectSourceUsability({
   const signals = collectSignals(rawEnHtml, enSegments, jaSegments);
 
   // -------------------------------------------------------------------------
-  // Layer 2 (最優先): escaped-details-residue
-  //   preprocessEnHtml 後も `&lt;details&gt;` / `&lt;/details&gt;` が残っている。
-  //   rawEnHtml への直接 string match だけで動くため extractError があっても safe。
-  //   Layer 1 より先に評価することで、escaped details ページが
-  //   `snapshot-incomplete/extractor-empty` に誤分類されるのを防ぐ (§4.6.1)。
+  // Layer 2: escaped-details-residue — broken details tree の証拠がある場合
+  //
+  // 「escaped marker が残存する」だけでは条件が広すぎる。例として
+  // `advanced-editing/coding-assistant` は `<details>` 利用例を本文中に
+  // 含むため preprocessEnHtml 後も balanced な escaped marker が残るが、
+  // extractor / comparator は正常に動作する。
+  //
+  // 2 つの条件を AND で要求する:
+  //
+  //   hasBrokenDetailsTree:
+  //     残存 close marker がある (orphan close) か open/close が不均衡。
+  //     `faq` は orphan `&lt;/details&gt;` で close=1, open=0 → TRUE。
+  //     `coding-assistant` は balanced (4==4) で close>0 だが open==close —
+  //     ただし close>0 の OR が TRUE になる。
+  //
+  //   hasSectionAnchorFailure (extractError===null のときだけ):
+  //     extractor が heading を 1 つも作れず (EN section anchor が欠落)、
+  //     かつ JA 側には見出しが 2 個以上ある。broken details tree が
+  //     `<summary>` を section anchor として使えなくした symptom。
+  //     `faq`: EN heading=0, JA heading=5 → TRUE。
+  //     `coding-assistant`: EN heading=1 → FALSE。
+  //
+  // extractError 時は enSegments/jaSegments を信用できないため
+  // hasBrokenDetailsTree (rawEnHtml 由来) だけで判定する。
   // -------------------------------------------------------------------------
-  if (
-    signals.residualEscapedDetailsOpen > 0 ||
-    signals.residualEscapedDetailsClose > 0
-  ) {
-    return buildIssue('source-unusable', 'escaped-details-residue', signals);
+  const hasBrokenDetailsTree =
+    signals.residualEscapedDetailsClose > 0 ||
+    signals.residualEscapedDetailsOpen !== signals.residualEscapedDetailsClose;
+
+  const hasSectionAnchorFailure =
+    signals.enHeadingSegmentCount === 0 &&
+    signals.jaHeadingSegmentCount >= 2;
+
+  // extractError がある場合: Layer 1/3 の enSegments 依存判定を skip する。
+  // Layer 2 は hasBrokenDetailsTree のみで判定 (rawEnHtml 由来のため safe)。
+  if (extractError !== null) {
+    if (hasBrokenDetailsTree) {
+      return buildIssue('source-unusable', 'escaped-details-residue', signals);
+    }
+    return null;
   }
 
-  // extractError guard: Layer 2 は評価済み (null = escaped details なし)。
-  // Layer 1 / Layer 3 は enSegments を読むため extractError != null の場合は
-  // 信用できない — skip して caller の align-exception 経路にフォールバックさせる。
-  if (extractError !== null) {
-    return null;
+  // extractError なし: broken tree かつ section anchor failure の両方を要求。
+  if (hasBrokenDetailsTree && hasSectionAnchorFailure) {
+    return buildIssue('source-unusable', 'escaped-details-residue', signals);
   }
 
   // -------------------------------------------------------------------------

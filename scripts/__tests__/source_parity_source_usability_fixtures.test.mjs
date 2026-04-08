@@ -16,11 +16,14 @@ import { join } from 'node:path';
 let detectSourceUsability;
 let extractSegmentsFromHtml;
 let extractSegmentsFromMarkdown;
+let alignSegments;
+let parityDiffsToIssues;
 
 before(async () => {
   ({ detectSourceUsability } = await import('../lib/source_parity_source_usability.mjs'));
   ({ extractSegmentsFromHtml } = await import('../lib/source_parity_segments_en.mjs'));
   ({ extractSegmentsFromMarkdown } = await import('../lib/source_parity_segments_ja.mjs'));
+  ({ alignSegments, parityDiffsToIssues } = await import('../lib/source_parity_align.mjs'));
 });
 
 const ROOT = join(import.meta.dirname, '../../');
@@ -70,6 +73,108 @@ describe('detectSourceUsability fixture: salesforce-testing/salesforce-testing-o
     );
     assert.equal(result.type, 'snapshot-incomplete');
     assert.equal(result.usabilitySignals.reason, 'shallow-snapshot');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// advanced-editing/coding-assistant (リグレッション fixture — P1 fix §4.6.1)
+//
+// このページは <details> の使用例を本文中に含むため preprocessEnHtml 後も
+// balanced な escaped marker が残るが、enHeading=1 のため Layer 2 は
+// hasSectionAnchorFailure=false → detectSourceUsability は null を返すべき。
+// ---------------------------------------------------------------------------
+
+describe('detectSourceUsability fixture: advanced-editing/coding-assistant', () => {
+  it('null を返す (Layer 2 は balanced escaped markers + enHeading≥1 では発火しない)', () => {
+    const rawEnHtml = readFileSync(
+      join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
+      'utf8',
+    );
+    const jaMd = readFileSync(
+      join(JA_CONTENT_DIR, 'advanced-editing/coding-assistant.md'),
+      'utf8',
+    );
+    const jaBody = extractJaBody(jaMd);
+
+    let enSegments = [];
+    let extractError = null;
+    try {
+      enSegments = extractSegmentsFromHtml(rawEnHtml);
+    } catch (e) {
+      extractError = e;
+    }
+    const jaSegments = extractSegmentsFromMarkdown(jaBody);
+
+    const result = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
+
+    assert.equal(
+      result,
+      null,
+      `coding-assistant は usability issue を返すべきでない。` +
+        `enSegments=${enSegments.length}, jaSegments=${jaSegments.length}`,
+    );
+  });
+
+  it('coding-assistant は enHeadingSegmentCount >= 1 を持つ', () => {
+    const rawEnHtml = readFileSync(
+      join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
+      'utf8',
+    );
+
+    let enSegments = [];
+    try {
+      enSegments = extractSegmentsFromHtml(rawEnHtml);
+    } catch (_) {
+      // extractError ならこのテストは skip 相当
+    }
+
+    const enHeadingCount = enSegments.filter(s => s.segmentKind === 'heading').length;
+    assert.ok(
+      enHeadingCount >= 1,
+      `enHeadingSegmentCount=${enHeadingCount} は 1 以上であるべき (hasSectionAnchorFailure=false の前提)`,
+    );
+  });
+
+  it('runtime: source-unusable を出さず segment-* issue が生成される', () => {
+    // gate が null を返す → alignSegments が走り → 通常の segment-* diffs が出る。
+    // ここでは alignSegments + parityDiffsToIssues を直接呼んで確認する。
+    const rawEnHtml = readFileSync(
+      join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
+      'utf8',
+    );
+    const jaMd = readFileSync(
+      join(JA_CONTENT_DIR, 'advanced-editing/coding-assistant.md'),
+      'utf8',
+    );
+    const jaBody = extractJaBody(jaMd);
+
+    let enSegments = [];
+    let extractError = null;
+    try {
+      enSegments = extractSegmentsFromHtml(rawEnHtml);
+    } catch (e) {
+      extractError = e;
+    }
+    const jaSegments = extractSegmentsFromMarkdown(jaBody);
+
+    // gate は null のはず (上のテストで確認済み)
+    const usabilityIssue = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
+    assert.equal(usabilityIssue, null, 'gate は null を返すべき');
+
+    // extractError がない場合のみ alignSegments を検証する
+    if (!extractError) {
+      const alignment = alignSegments(enSegments, jaSegments);
+      const issues = parityDiffsToIssues(alignment.diffs);
+      // source-unusable は出ない
+      const sourceUnusable = issues.filter(i => i.type === 'source-unusable');
+      assert.equal(sourceUnusable.length, 0, 'source-unusable は出るべきでない');
+      // segment-* issue が 1 件以上ある (parity diffs が存在する)
+      const segmentIssues = issues.filter(i => i.type.startsWith('segment-'));
+      assert.ok(
+        segmentIssues.length >= 1,
+        `segment-* issue が少なくとも 1 件あるべき。実際: ${segmentIssues.map(i => i.type).join(', ')}`,
+      );
+    }
   });
 });
 
