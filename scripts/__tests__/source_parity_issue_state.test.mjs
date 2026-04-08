@@ -567,10 +567,11 @@ describe('Issue #247 PR1 — isSourceUnusableIssue', () => {
   });
 });
 
-describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until PR4 cutover', () => {
+describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until PR5 cutover', () => {
   // PR2 で structure-mismatch / source-unusable の emission を入れたが、
   // gate cutover (= `reportableActive*` への組み込み) は Issue #247 の
-  // PR 分割案で PR4 の責務になっている。
+  // PR 分割案で PR5 の責務になっている (PR4 は summary / reporting / CLI
+  // の可視化のみで gate flip を伴わない)。
   //
   // PR2 時点で gate に載せると、PR1 で `BASELINE_ELIGIBLE_TYPES` に新 type
   // を入れていない (PR5 で wiring 予定) ため、既存の segment-* drift で
@@ -578,10 +579,12 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
   // 瞬間に gate exit 1 でブロックされる。これを避けるため `isReportable
   // ParityIssue` で新 type を gate 経路から明示的に exclude する。
   //
-  // PR4 の cutover では `source_parity_issue_state.mjs::isReportable
+  // PR5 の cutover では `source_parity_issue_state.mjs::isReportable
   // ParityIssue` の `if (isStructureMismatchIssue(...) || isSourceUnusable
-  // Issue(...)) return false;` を削除するだけで、structure mismatch が
-  // `reportableActive*` に流れ込む。それまでは独立 counter
+  // Issue(...)) return false;` 行を `isSourceUnusableIssue(...)` のみに
+  // 縮小することで、structure mismatch が `reportableActive*` に流れ込む。
+  // source-unusable は PR5 cutover 後も翻訳者責任外として gate に乗らず
+  // advisory のまま。それまでは独立 counter
   // (`structureMismatchIssues` / `snapshotUnusableIssues`) からだけ参照
   // される構造化 advisory として動く。
   //
@@ -595,14 +598,14 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
     'snapshot-incomplete',
     'source-unusable',
   ]) {
-    it(`${type} is NOT reportable in PR2 even when active (gate cutover deferred to PR4)`, () => {
+    it(`${type} is NOT reportable in PR2 even when active (gate cutover deferred to PR5)`, () => {
       assert.equal(
         isReportableParityIssue({
           type,
           severity: 'actionable',
         }),
         false,
-        `${type} must not be reportable until PR4 cutover`,
+        `${type} must not be reportable until PR5 cutover`,
       );
     });
   }
@@ -633,10 +636,10 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
     );
   });
 
-  it('expired baseline on a structure mismatch is STILL non-reportable in PR2 (gate cutover is PR4)', () => {
-    // PR4 では「baseline 期限切れ → 再点火」だが、PR2 時点では gate
+  it('expired baseline on a structure mismatch is STILL non-reportable in PR2 (gate cutover is PR5)', () => {
+    // PR5 では「baseline 期限切れ → 再点火」だが、PR2 時点では gate
     // cutover 自体が未実施なので、期限切れも reportable にならない。
-    // PR4 でこのテストを「true 期待」に flip する。
+    // PR5 でこのテストを「true 期待」に flip する。
     assert.equal(
       isReportableParityIssue({
         type: 'section-structure-mismatch',
@@ -650,7 +653,7 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
 
   it('new taxonomy is NOT coarse (isCoarseAuditSignal returns false)', () => {
     // coarse signal とは別経路で gate exclusion されている点を pin。
-    // PR4 でこの分類は変えず、isReportableParityIssue 側だけ flip する。
+    // PR5 でこの分類は変えず、isReportableParityIssue 側だけ flip する。
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',
