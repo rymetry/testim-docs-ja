@@ -54,6 +54,9 @@
 - **Finding 14 [P1]**: 第 4 弾の F.2.5 は `&lt;summary&gt;...&lt;/summary&gt; -> <h2>...</h2>` と `&lt;details&gt;` 削除を全体置換していたが、そのままだと `preprocessEnHtml()` の出力に **`<p><h2>Q</h2>...` という invalid HTML** が残る。`turndown` は DOM repair で Markdown 化できる一方、`extractSegmentsFromHtml()` は `preprocessEnHtml()` の結果をそのまま tokenize / tree walk するため heading を拾えず、faq は依然 `heading-count-mismatch` に落ちる。→ **F.2.5 を paragraph-aware な block rewrite に再設計し、valid sibling `<h2></h2><p>...</p>` を emit する方針へ変更。RED/GREEN test も `extractSegmentsFromHtml()` の heading 件数と `/<p>\\s*<h2>/` 非存在を直接 pin する**
 - **Finding 15 [P2]**: 第 4 弾の H.2 orphan E2E は repo-global `parity-baseline.json` / `parity-check-status.json` を直接 backup/restore する設計だが、既存 suite にも同じ status file を触る integration test があり、`npm test` (`node --test scripts/__tests__/*.mjs`) 下で race / flake の余地がある。→ **H.2 は `checkSourceParity({ baselinePath, outputPath })` の test-only 注入 hook を先に追加し、temp copy を使う isolated integration test へ変更**
 
+**Plan 改訂履歴 (2026-04-09 post-drafting review 第 6 弾 — Finding 16):**
+- **Finding 16 [P1]**: PR6 の `source_parity_representative_summary.test.mjs` はなお「faq = `source-unusable` baselined」「custom-action-step-mobile = structure baselined」という **旧 baseline world** を pin しているが、現 plan にはこれを post-merge 完了後の期待値へ更新する task が無かった。Issue #247 本文と PR6 の履歴は「representative run の expected summary を test で固定する」ことを完了条件に含むため、この fixture を放置すると plan は E2E 完了の受け入れ条件を取り切れない。さらに既存 test は repo root の `parity-check-status.json` を直接書き換えるため、Finding 15 で導入する `outputPath` hook を使わないままでは isolation も不足する。→ **Phase H に Task H.4 を追加し、representative summary fixture を post-resolution state (resolved 6 slug + retained source-debt 2 slug) に更新し、temp `outputPath` を使う形へ書き換える**
+
 **Phase 間依存関係 (実行順が固定):**
 ```
 A (ack 契約修正) ──┐
@@ -2703,6 +2706,174 @@ EOF
 )"
 ```
 
+### Task H.4: representative summary fixture を post-resolution state に更新 (Finding 16 対応)
+
+**Files:**
+- Modify: `scripts/__tests__/source_parity_representative_summary.test.mjs`
+
+**Context:** PR6 の representative summary fixture は `salesforce-testing/faq` を `source-unusable` baselined、`advanced-editing/custom-action-step-mobile` を structure baselined として pin している。しかし post-merge 完全解消後は:
+
+- **resolved 6 slug** (`the-command-line-cli`, `network-logs`, `email-validation`, `faq`, `custom-action-step-mobile`, `test-runs`) が **baseline 0 / reportable 0 / usable**
+- **retained source-side debt 2 slug** (`salesforce-testing/salesforce-testing-overview`, `testops/testops-version-control/pull-requests`) だけが `snapshot-incomplete` baselined
+
+に変わる。Issue #247 の本文と PR6 の履歴は「representative run の expected summary を test で固定する」ことを含むため、この fixture も新世界へ更新しないと E2E 完了とは言えない。さらに既存 test は repo root の `parity-check-status.json` を backup/restore しており、Finding 15 の isolation 方針と揃っていない。H.2 で導入する `outputPath` hook を再利用し、temp status file で実行する。
+
+- [ ] **Step 1: representative summary test を temp `outputPath` 利用 + 新期待値へ書き換える**
+
+方針:
+1. repo root `STATUS_PATH` / backup-restore を削除
+2. `mkdtempSync(join(tmpdir(), 'parity-representative-'))` で temp dir を作り、**slug ごとの別 status file** を使う
+3. `runForSlug(slug)` は `checkSourceParity({ slug, json: true, outputPath: statusPathForSlug(slug) })` を呼ぶ
+4. pin 対象を 2 群に分ける:
+   - `RESOLVED_PAGES`: 6 slug。`reportableActiveFiles=0`, `structureMismatchIssues=0`, `snapshotUnusableIssues=0`, `reportableActiveActionableFiles=0`, `baselinedIssues=0`, `baselinedFiles=0`, `baselinedByType={}`
+   - `RETAINED_SOURCE_DEBT_PAGES`: 2 slug。`reportableActiveFiles=0`, `snapshotUnusableIssues=0`, `baselinedByType.snapshot-incomplete >= 1`
+5. `salesforce-testing-overview` と `pull-requests` の両方を representative set に含める
+
+書き換え後の骨子:
+
+```js
+import { before, after, describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+let checkSourceParity;
+
+before(async () => {
+  ({ checkSourceParity } = await import('../check_source_parity.mjs'));
+});
+
+const TMP_DIR = mkdtempSync(join(tmpdir(), 'parity-representative-'));
+
+function statusPathForSlug(slug) {
+  return join(TMP_DIR, `${slug.replaceAll('/', '__')}.status.json`);
+}
+
+after(() => {
+  rmSync(TMP_DIR, { recursive: true, force: true });
+});
+
+async function runForSlug(slug) {
+  const statusPath = statusPathForSlug(slug);
+  const exitCode = await checkSourceParity({ slug, json: true, outputPath: statusPath });
+  if (!existsSync(statusPath)) {
+    throw new Error(`status file missing for ${slug}`);
+  }
+  return {
+    exitCode,
+    status: JSON.parse(readFileSync(statusPath, 'utf8')),
+  };
+}
+
+const COMMON_ZERO_COUNTERS = Object.freeze({
+  reportableActiveFiles: 0,
+  structureMismatchIssues: 0,
+  snapshotUnusableIssues: 0,
+  reportableActiveActionableFiles: 0,
+  baselinedIssues: 0,
+  baselinedFiles: 0,
+});
+
+const RESOLVED_PAGES = Object.freeze([
+  'running-tests/the-command-line-cli',
+  'results/test-results/network-logs',
+  'advanced-editing/validations/email-validation',
+  'salesforce-testing/faq',
+  'advanced-editing/custom-action-step-mobile',
+  'results/test-runs',
+]);
+
+const RETAINED_SOURCE_DEBT_PAGES = Object.freeze([
+  'salesforce-testing/salesforce-testing-overview',
+  'testops/testops-version-control/pull-requests',
+]);
+```
+
+resolved 側 assertion:
+
+```js
+describe(`source_parity_representative_summary: ${slug}`, () => {
+  let cached;
+  before(async () => {
+    cached = await runForSlug(slug);
+  });
+
+  it('post-resolution: active/reportable/unusable counter が 0', () => {
+    const { exitCode, status } = cached;
+    assert.equal(exitCode, 0);
+    for (const [key, expected] of Object.entries(COMMON_ZERO_COUNTERS)) {
+      assert.equal(status.summary[key] || 0, expected, `${slug}: ${key} drift`);
+    }
+  });
+
+  it('post-resolution: baseline には残っていない', () => {
+    const byType = cached.status.summary.baselinedByType || {};
+    assert.equal(
+      Object.keys(byType).length,
+      0,
+      `${slug}: baselinedByType should be empty after full resolution. actual=${JSON.stringify(byType)}`,
+    );
+  });
+});
+```
+
+retained debt 側 assertion:
+
+```js
+describe(`source_parity_representative_summary: ${slug}`, () => {
+  let cached;
+  before(async () => {
+    cached = await runForSlug(slug);
+  });
+
+  it('retained source debt: gate は green のまま', () => {
+    const { exitCode, status } = cached;
+    assert.equal(exitCode, 0);
+    assert.equal(status.summary.reportableActiveFiles || 0, 0);
+    assert.equal(status.summary.snapshotUnusableIssues || 0, 0);
+  });
+
+  it('retained source debt: snapshot-incomplete baseline を 1 件以上持つ', () => {
+    const byType = cached.status.summary.baselinedByType || {};
+    assert.ok(
+      (byType['snapshot-incomplete'] || 0) >= 1,
+      `${slug}: snapshot-incomplete baseline が必要。actual=${JSON.stringify(byType)}`,
+    );
+  });
+});
+```
+
+- [ ] **Step 2: test 実行**
+
+Run: `npm test -- scripts/__tests__/source_parity_representative_summary.test.mjs`
+
+Expected:
+- resolved 6 slug は baseline 0 / active 0
+- `salesforce-testing-overview` / `pull-requests` は `snapshot-incomplete` baselined のまま gate green
+- repo root `parity-check-status.json` は汚れない
+
+- [ ] **Step 3: commit**
+
+```bash
+git add scripts/__tests__/source_parity_representative_summary.test.mjs
+git commit -m "$(cat <<'EOF'
+test: Issue #247 post-merge — representative summary fixture を完了後の期待値へ更新
+
+PR6 の representative summary fixture が pin していた旧 baseline world
+(faq source-unusable / custom-action-step-mobile structure baselined) を
+post-merge 完了後の期待値に更新。
+
+- resolved 6 slug は baseline 0 / active 0
+- retained source-side debt 2 slug (salesforce-testing-overview / pull-requests)
+  だけが snapshot-incomplete baseline を保持
+- checkSourceParity の outputPath hook を使い、temp status file で isolation
+
+refs Issue #247 post-merge — representative full verification sync
+EOF
+)"
+```
+
 ---
 
 ## Phase I: Docs 同期と Issue closure
@@ -2753,6 +2924,9 @@ PR1-6 では未達だった 2 slug を extractor レベルで吸収:
   faq が source-unusable を出さないことを pin
 - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` — 6 clean
   sentinel ページで structure/segment 共に 0 件を pin (false-positive ガード)
+- `scripts/__tests__/source_parity_representative_summary.test.mjs` —
+  resolved 6 slug が baseline 0 / active 0、retained source-side debt 2 slug が
+  `snapshot-incomplete` baselined のまま gate green であることを pin
 
 ## Baseline / debt 運用の明文化 (Issue #247 post-merge)
 
@@ -2842,29 +3016,32 @@ PR1-6 merge 後の批判的レビューで浮上した 3 つのコード defect 
   email-validation) の JA を EN と構造一致させて structure mismatch を実解消
 - **Phase E**: artifact 2 slug (custom-action-step-mobile / test-runs) を
   extractor レベルで吸収 (FileOrFilePath list item / table cell 内 ul)
-- **Phase F**: `faq` preprocessor root cause fix — broken details tree を
-  global balanced unescape で real `<details>` に復元
+- **Phase F**: `faq` preprocessor root cause fix — broken escaped details tree を
+  valid sibling `<h2>/<p>` block に再構成し、必要な FAQ JA drift も解消
 - **Phase G**: 完全解消済み 6 slug + legacy orphan 3 slug を baseline から purge
 - **Phase H**: clean sentinel 拡張 + orphan integration test + artifact
-  regression fixture
+  regression fixture + representative summary fixture の post-resolution 同期
 - **Phase I**: OPS_DESIGN / scripts/README の契約記述を実装と同期
 
 ### 完了条件との対応
 
 - [x] `paragraph-count-mismatch` が主判定から外れても構造差検知が成立する
 - [x] `the-command-line-cli` / `network-logs` / `faq` / `email-validation`
-  が structure mismatch (または source-unusable) なしで baseline 0 entry で
+  が structure mismatch なし・source-unusable なしで baseline 0 entry で
   green
 - [x] `salesforce-testing-overview` は shallow-snapshot として分離済み (baseline 1 件保持)
 - [x] `custom-action-step-mobile` / `test-runs` の artifact が吸収で green
 - [x] `reportableActiveFiles` が「全文構造を保っていない翻訳」を取りこぼさない
-- [x] テスト fixture で 6 slug の clean green と artifact 吸収が pin されている
+- [x] テスト fixture で 6 slug の clean green と artifact 吸収、および
+  retained source-side debt 2 slug の representative summary が pin されている
 
 ### 残存 debt
 
-- `salesforce-testing-overview` の shallow-snapshot は upstream snapshot 側
-  debt なので baseline 1 件を保持(翻訳者責任外)。snapshot fetch が復旧すれば
-  orphan 検知経由で自動 cleanup される
+- `salesforce-testing-overview` (`shallow-snapshot`) と
+  `testops/testops-version-control/pull-requests` (`extractor-empty`) は
+  どちらも source-side snapshot debt なので baseline を 1 件ずつ保持
+  (翻訳差分ではない)。snapshot 側が復旧すれば orphan 検知経由で cleanup
+  される
 
 Issue #247 をこのコメントを持って close します。
 ```
@@ -2903,7 +3080,7 @@ EOF
 - [ ] Phase F: `faq` が source-unusable を出さず baseline なし gate green
 - [ ] Phase G: `parity-baseline.json` に Issue #247 対象 6 slug (full purge) 分の entry が残っていない。`salesforce-testing-overview` / `pull-requests` は live な `snapshot-incomplete` 1 件ずつのみ残存(Finding 2)
 - [ ] Phase G: `npm run check:parity` で `reportableActiveFiles === 0 && orphanBaselineEntries === 0`(Finding 4: `result` は local の `freshnessState` 次第で `pass` または `inconclusive` — これは実装契約に沿った正常動作)
-- [ ] Phase H: `npm run test` 全 suite PASS + clean sentinel 6 ページ + artifact regression fixture 2 ページ
+- [ ] Phase H: `npm run test` 全 suite PASS + clean sentinel 6 ページ + artifact regression fixture 2 ページ + representative summary fixture が post-resolution state を pin
 - [ ] Phase I: Issue #247 が closed, OPS_DESIGN / scripts/README の契約記述が実装と一致
 - [ ] 全 phase の commit が個別に cherry-pick 可能 (線形履歴)
 
