@@ -574,3 +574,56 @@ describe('Phase 8 PR2 — buildRunScope', () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR3 — usability gate の gate 契約
+//
+// PR3 では snapshot-incomplete / source-unusable は advisory として集計されるが
+// gate exit code を変えない (PR4 cutover の前)。
+// これを `computeExitCode` の pure helper で検証する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR3 — gate exit code contract (snapshotUnusable* は gate を変えない)', () => {
+  it('snapshotUnusableIssues=1, reportableActiveFiles=0 のとき exit code は 0', () => {
+    // PR3 での期待挙動: snapshot-incomplete / source-unusable は
+    // isReportableParityIssue=false なので reportableActiveFiles に乗らない。
+    // gate は PR4 cutover まで 0 のまま。
+    const summary = {
+      reportableActiveFiles: 0,
+      reportableActiveActionableFiles: 0,
+      activeErrorFiles: 0,
+      snapshotUnusableIssues: 1,
+      snapshotUnusableFiles: 1,
+      snapshotUnusableByType: { 'snapshot-incomplete': 1 },
+    };
+    assert.equal(computeExitCode(summary, null), 0, 'default failOn');
+    assert.equal(computeExitCode(summary, 'actionable'), 0, 'failOn=actionable');
+    assert.equal(computeExitCode(summary, 'any'), 0, 'failOn=any');
+  });
+
+  it('snapshotUnusableFiles=2 (両方とも unusable) で reportableActiveFiles=0 のとき exit code は 0', () => {
+    const summary = {
+      reportableActiveFiles: 0,
+      reportableActiveActionableFiles: 0,
+      activeErrorFiles: 0,
+      snapshotUnusableIssues: 2,
+      snapshotUnusableFiles: 2,
+      snapshotUnusableByType: { 'snapshot-incomplete': 1, 'source-unusable': 1 },
+    };
+    assert.equal(computeExitCode(summary, null), 0);
+    assert.equal(computeExitCode(summary, 'actionable'), 0);
+    assert.equal(computeExitCode(summary, 'any'), 0);
+  });
+
+  it('snapshotUnusableFiles があっても reportableActiveFiles > 0 なら exit code は 1', () => {
+    // 他の reportable issue が存在する場合は gate を変えない
+    const summary = {
+      reportableActiveFiles: 1,
+      reportableActiveActionableFiles: 1,
+      activeErrorFiles: 0,
+      snapshotUnusableIssues: 1,
+      snapshotUnusableFiles: 1,
+    };
+    assert.equal(computeExitCode(summary, null), 1);
+  });
+});
