@@ -303,7 +303,11 @@ function describeKindSequence(kinds) {
   return kinds.join(' → ');
 }
 
-function buildKindMultisetDiff(enSection, jaSection, enKinds, jaKinds) {
+// 以下 3 つの builder は detail 文字列に EN 側の `sectionPath` だけを使い、
+// JA section オブジェクトは参照しない (`buildBaseDiff` も `section: enSection`
+// 経由でしか section 情報を読まない)。シグネチャから `jaSection` を外して
+// astro check の未使用引数 hint (ts(6133)) を消す。
+function buildKindMultisetDiff(enSection, enKinds, jaKinds) {
   const detail =
     `Section "${enSection.sectionPath || '(preface)'}" block structure differs: ` +
     `EN=[${describeKindSequence(enKinds)}] vs JA=[${describeKindSequence(jaKinds)}]`;
@@ -317,7 +321,7 @@ function buildKindMultisetDiff(enSection, jaSection, enKinds, jaKinds) {
   });
 }
 
-function buildKindSequenceDiff(enSection, jaSection, enKinds, jaKinds) {
+function buildKindSequenceDiff(enSection, enKinds, jaKinds) {
   const detail =
     `Section "${enSection.sectionPath || '(preface)'}" block kinds reordered: ` +
     `EN=[${describeKindSequence(enKinds)}] vs JA=[${describeKindSequence(jaKinds)}]`;
@@ -331,7 +335,7 @@ function buildKindSequenceDiff(enSection, jaSection, enKinds, jaKinds) {
   });
 }
 
-function buildContentOrderDiff(enSection, jaSection, enKinds, jaKinds, permutation) {
+function buildContentOrderDiff(enSection, enKinds, jaKinds, permutation) {
   const permDesc = permutation
     .slice()
     .sort((a, b) => a.enIndex - b.enIndex)
@@ -432,7 +436,7 @@ export function compareSectionStructure(enSection, jaSection) {
   const enMultiset = buildMultiset(enKinds);
   const jaMultiset = buildMultiset(jaKinds);
   if (!multisetsEqual(enMultiset, jaMultiset)) {
-    return [buildKindMultisetDiff(enSection, jaSection, enKinds, jaKinds)];
+    return [buildKindMultisetDiff(enSection, enKinds, jaKinds)];
   }
 
   // Stage B — kind sequence (multiset 一致 / 並び順のみ不一致)。
@@ -440,7 +444,7 @@ export function compareSectionStructure(enSection, jaSection) {
   // ここに来た時点で multiset は一致しているので、kind 列が違えば必ず
   // 「mixed-kind reorder」(例: [p, ul] vs [ul, p]) のケース。
   if (!sequencesEqual(enKinds, jaKinds)) {
-    return [buildKindSequenceDiff(enSection, jaSection, enKinds, jaKinds)];
+    return [buildKindSequenceDiff(enSection, enKinds, jaKinds)];
   }
 
   // Stage C — content-order bijection。ここに来た時点で multiset と
@@ -448,7 +452,7 @@ export function compareSectionStructure(enSection, jaSection) {
   // swap / rotation を、invariant token の content bijection で検出する。
   const permutation = detectContentOrderPermutation(enBlocks, jaBlocks);
   if (permutation) {
-    return [buildContentOrderDiff(enSection, jaSection, enKinds, jaKinds, permutation)];
+    return [buildContentOrderDiff(enSection, enKinds, jaKinds, permutation)];
   }
 
   return [];
