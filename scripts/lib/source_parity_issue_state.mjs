@@ -91,18 +91,43 @@ export function isReportableParityIssue(issue) {
   return isActiveParityIssue(issue);
 }
 
+/**
+ * Issue #247 PR2 — structure-mismatch / source-unusable のうち、まだ
+ * ack / baseline で覆われていないものを「advisory only」として識別する
+ * 純粋述語。
+ *
+ * PR2 で emission を入れたが gate cutover は PR4 の責務、という方針
+ * (`isReportableParityIssue` の docstring 参照) を CLI 表示と整合させる
+ * ために独立した述語にしている。advisory only な issue は:
+ *   - gate には乗らない (`isReportableParityIssue` が false を返す)
+ *   - だが ack / baseline で **覆われているわけではない** ので、CLI で
+ *     "covered by baseline/ack" と表示するのは誤り
+ *   - 専用の "(advisory only)" / "(advisory + baseline/ack)" suffix で
+ *     表示する
+ *
+ * ack / baseline が付いている structure mismatch はこの述語で false に
+ * なる (ack / baseline 経路が優先で、advisory より具体的なカバレッジ
+ * 情報を持っているため)。
+ *
+ * PR4 cutover ではこの述語と CLI 側の advisory 表示分岐を削除する。
+ */
+export function isAdvisoryOnlyParityIssue(issue) {
+  if (!issue || typeof issue !== 'object') return false;
+  if (!isStructureMismatchIssue(issue) && !isSourceUnusableIssue(issue)) return false;
+  // ack / baseline 経路が優先 — そちらが付いている場合は covered 扱いで
+  // advisory ではない。
+  if (isValidAcknowledgedIssue(issue)) return false;
+  if (isFrozenByBaseline(issue)) return false;
+  return true;
+}
+
 export function isNonBlockingParityIssue(issue) {
-  // Issue #247 PR2 — structure-mismatch / source-unusable は PR2 時点で
-  // gate cutover していないので (`isReportableParityIssue` も同じ理由で
-  // false を返している)、ack / baseline と同じく **非ブロッキングの
-  // advisory** として扱う。CLI の `getConsoleCoverageState` がこの述語を
-  // 使ってファイルの ⏸️ / ❌ アイコンを決めるので、structure mismatch を
-  // ここで非ブロッキングに含めないと、新 issue が emit された瞬間に
-  // baseline 済みファイルが ❌ で表示されてしまう。
-  //
-  // PR4 cutover ではこの 2 行を削除し、structure mismatch を従来の ack /
-  // baseline と同じ ブロッキング判定経路に乗せる。
-  if (isStructureMismatchIssue(issue)) return true;
-  if (isSourceUnusableIssue(issue)) return true;
+  // 「非ブロッキング」の元の意味 — ack または baseline で **明示的に** 覆わ
+  // れている issue だけ。Issue #247 PR2 で emission を入れた structure-
+  // mismatch / source-unusable は、PR4 cutover まで gate には乗らないが、
+  // それは ack / baseline で覆われているからではなく advisory として
+  // 扱っているからなので、ここには含めない。CLI の "(covered by
+  // baseline/ack)" / "(advisory only)" を区別するために
+  // `isAdvisoryOnlyParityIssue` を別途用意してある。
   return isFrozenByBaseline(issue) || isValidAcknowledgedIssue(issue);
 }
