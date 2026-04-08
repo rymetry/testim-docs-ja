@@ -13,6 +13,7 @@ let isActiveParityIssue;
 let isNonBlockingParityIssue;
 let isStructureMismatchIssue;
 let isSourceUnusableIssue;
+let isAdvisoryOnlyParityIssue;
 
 before(async () => {
   ({
@@ -24,6 +25,7 @@ before(async () => {
     isNonBlockingParityIssue,
     isStructureMismatchIssue,
     isSourceUnusableIssue,
+    isAdvisoryOnlyParityIssue,
   } = await import('../lib/source_parity_issue_state.mjs'));
   ({
     COARSE_SIGNAL_TYPES,
@@ -722,5 +724,89 @@ describe('Issue #247 PR5 — isReportableParityIssue cutover for structure misma
         `${type} must not be a coarse audit signal`,
       );
     }
+  });
+});
+
+describe('Issue #247 PR5 — isAdvisoryOnlyParityIssue scope narrowed to source-unusable', () => {
+  // PR5 cutover で scope を縮小 (§3.7): structure mismatch は reportable
+  // に昇格したため advisory 分類から外れた。source-unusable は引き続き
+  // advisory (翻訳者責任外)。
+  //
+  // advisory-only の意味: gate には乗らないが、`isNonBlockingIssue`
+  // (baseline / ack 経路) にも属さない。CLI で `(covered by baseline/ack)`
+  // と表示するのは誤りで、`(source unusable)` のような専用 suffix で
+  // 表示する必要がある。
+
+  it('returns false for active structure mismatch (PR5: reportable, not advisory)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+      }),
+      false,
+    );
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'segment-order-mismatch',
+        severity: 'actionable',
+      }),
+      false,
+    );
+  });
+
+  it('returns true for active source-unusable (still advisory)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+      }),
+      true,
+    );
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('returns false for source-unusable when valid ack is present (ack path wins)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('returns false for source-unusable when baseline is frozen (baseline path wins)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('returns false for segment-* types (not in advisory scope)', () => {
+    for (const type of ['segment-missing', 'segment-extra', 'segment-untranslated']) {
+      assert.equal(
+        isAdvisoryOnlyParityIssue({ type, severity: 'actionable' }),
+        false,
+      );
+    }
+  });
+
+  it('returns false for null / undefined / non-issue inputs', () => {
+    assert.equal(isAdvisoryOnlyParityIssue(null), false);
+    assert.equal(isAdvisoryOnlyParityIssue(undefined), false);
+    assert.equal(isAdvisoryOnlyParityIssue({}), false);
   });
 });

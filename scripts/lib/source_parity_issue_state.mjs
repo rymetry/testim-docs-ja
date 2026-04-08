@@ -83,30 +83,29 @@ export function isReportableParityIssue(issue) {
 }
 
 /**
- * Issue #247 PR2 — structure-mismatch / source-unusable のうち、まだ
- * ack / baseline で覆われていないものを「advisory only」として識別する
- * 純粋述語。
+ * Issue #247 PR5 — source-unusable のうち、まだ ack / baseline で覆われて
+ * いないものを「advisory only」として識別する純粋述語。
  *
- * PR2 で emission を入れたが gate cutover は PR5 の責務、という方針
- * (`isReportableParityIssue` の docstring 参照) を CLI 表示と整合させる
- * ために独立した述語にしている。advisory only な issue は:
+ * PR5 cutover で scope を縮小した。structure mismatch は gate に昇格した
+ * ため advisory ではなくなり、このラベルは source-unusable
+ * (snapshot-incomplete / source-unusable) のみを指す。source-unusable は
+ * 翻訳者責任外 (snapshot / source sync 側 debt) なので引き続き advisory
+ * のまま扱う。
+ *
+ * advisory only な issue は:
  *   - gate には乗らない (`isReportableParityIssue` が false を返す)
  *   - だが ack / baseline で **覆われているわけではない** ので、CLI で
  *     "covered by baseline/ack" と表示するのは誤り
- *   - 専用の "(advisory only)" / "(advisory + baseline/ack)" suffix で
+ *   - 専用の "(source unusable)" / "(advisory + baseline/ack)" suffix で
  *     表示する
  *
- * ack / baseline が付いている structure mismatch はこの述語で false に
+ * ack / baseline が付いている source-unusable はこの述語で false に
  * なる (ack / baseline 経路が優先で、advisory より具体的なカバレッジ
  * 情報を持っているため)。
- *
- * PR5 cutover では structure mismatch 側がここから外れ (reportable に
- * 昇格するため)、この述語は source-unusable のみを指すよう scope が
- * 縮小される予定。PR4 では scope を変更しない。
  */
 export function isAdvisoryOnlyParityIssue(issue) {
   if (!issue || typeof issue !== 'object') return false;
-  if (!isStructureMismatchIssue(issue) && !isSourceUnusableIssue(issue)) return false;
+  if (!isSourceUnusableIssue(issue)) return false;
   // ack / baseline 経路が優先 — そちらが付いている場合は covered 扱いで
   // advisory ではない。
   if (isValidAcknowledgedIssue(issue)) return false;
