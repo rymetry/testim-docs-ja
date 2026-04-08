@@ -2,12 +2,17 @@ import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 let COARSE_SIGNAL_TYPES;
+let STRUCTURE_MISMATCH_TYPES;
+let SOURCE_UNUSABLE_TYPES;
+let ISSUE_SEVERITY;
 let isCoarseAuditSignal;
 let isReportableParityIssue;
 let isFrozenByBaseline;
 let isValidAcknowledgedIssue;
 let isActiveParityIssue;
 let isNonBlockingParityIssue;
+let isStructureMismatchIssue;
+let isSourceUnusableIssue;
 
 before(async () => {
   ({
@@ -17,8 +22,15 @@ before(async () => {
     isValidAcknowledgedIssue,
     isActiveParityIssue,
     isNonBlockingParityIssue,
+    isStructureMismatchIssue,
+    isSourceUnusableIssue,
   } = await import('../lib/source_parity_issue_state.mjs'));
-  ({ COARSE_SIGNAL_TYPES } = await import('../lib/source_parity_types.mjs'));
+  ({
+    COARSE_SIGNAL_TYPES,
+    STRUCTURE_MISMATCH_TYPES,
+    SOURCE_UNUSABLE_TYPES,
+    ISSUE_SEVERITY,
+  } = await import('../lib/source_parity_types.mjs'));
 });
 
 // ---------------------------------------------------------------------------
@@ -348,5 +360,313 @@ describe('Phase 8 — existing predicates unchanged for non-coarse issues', () =
       true,
     );
     assert.equal(isNonBlockingParityIssue({}), false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR1: new taxonomy — structure mismatch / source unusable
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR1 — STRUCTURE_MISMATCH_TYPES allowlist', () => {
+  it('contains exactly the 2 canonical block sequence mismatch types', () => {
+    const expected = new Set([
+      'section-structure-mismatch',
+      'segment-order-mismatch',
+    ]);
+    assert.deepEqual(new Set(STRUCTURE_MISMATCH_TYPES), expected);
+  });
+
+  it('does NOT overlap with COARSE_SIGNAL_TYPES', () => {
+    for (const type of STRUCTURE_MISMATCH_TYPES) {
+      assert.equal(
+        COARSE_SIGNAL_TYPES.has(type),
+        false,
+        `${type} must not be in COARSE_SIGNAL_TYPES (structure violations must be reportable)`,
+      );
+    }
+  });
+
+  it('does NOT overlap with SOURCE_UNUSABLE_TYPES', () => {
+    for (const type of STRUCTURE_MISMATCH_TYPES) {
+      assert.equal(
+        SOURCE_UNUSABLE_TYPES.has(type),
+        false,
+        `${type} must not be in SOURCE_UNUSABLE_TYPES (translation drift vs source unusable are separate counters)`,
+      );
+    }
+  });
+
+  it('every type is registered in ISSUE_SEVERITY as actionable', () => {
+    for (const type of STRUCTURE_MISMATCH_TYPES) {
+      assert.equal(
+        ISSUE_SEVERITY[type],
+        'actionable',
+        `${type} must be registered as actionable in ISSUE_SEVERITY`,
+      );
+    }
+  });
+});
+
+describe('Issue #247 PR1 — SOURCE_UNUSABLE_TYPES allowlist', () => {
+  it('contains exactly the 2 source usability issue types', () => {
+    const expected = new Set(['snapshot-incomplete', 'source-unusable']);
+    assert.deepEqual(new Set(SOURCE_UNUSABLE_TYPES), expected);
+  });
+
+  it('does NOT overlap with COARSE_SIGNAL_TYPES', () => {
+    for (const type of SOURCE_UNUSABLE_TYPES) {
+      assert.equal(
+        COARSE_SIGNAL_TYPES.has(type),
+        false,
+        `${type} must not be in COARSE_SIGNAL_TYPES (source usability must be reportable as its own family)`,
+      );
+    }
+  });
+
+  it('every type is registered in ISSUE_SEVERITY as actionable', () => {
+    for (const type of SOURCE_UNUSABLE_TYPES) {
+      assert.equal(
+        ISSUE_SEVERITY[type],
+        'actionable',
+        `${type} must be registered as actionable in ISSUE_SEVERITY`,
+      );
+    }
+  });
+});
+
+describe('Issue #247 PR1 — isStructureMismatchIssue', () => {
+  it('returns true for section-structure-mismatch', () => {
+    assert.equal(
+      isStructureMismatchIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('returns true for segment-order-mismatch', () => {
+    assert.equal(
+      isStructureMismatchIssue({
+        type: 'segment-order-mismatch',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('returns true ignoring ack / baseline flags (pure classification)', () => {
+    assert.equal(
+      isStructureMismatchIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: false,
+      }),
+      true,
+    );
+    assert.equal(
+      isStructureMismatchIssue({
+        type: 'segment-order-mismatch',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: false,
+      }),
+      true,
+    );
+  });
+
+  it('returns false for segment-* types (these are emitted by the legacy aligner)', () => {
+    for (const type of ['segment-missing', 'segment-extra', 'segment-shifted']) {
+      assert.equal(
+        isStructureMismatchIssue({ type, severity: 'actionable' }),
+        false,
+        `${type} must not be classified as structure mismatch`,
+      );
+    }
+  });
+
+  it('returns false for coarse count heuristics', () => {
+    for (const type of [
+      'paragraph-count-mismatch',
+      'bullet-count-mismatch',
+      'heading-mismatch',
+      'section-count-mismatch',
+    ]) {
+      assert.equal(
+        isStructureMismatchIssue({ type, severity: 'signal' }),
+        false,
+        `${type} must not be classified as structure mismatch (still coarse)`,
+      );
+    }
+  });
+
+  it('returns false for source usability types', () => {
+    for (const type of ['snapshot-incomplete', 'source-unusable']) {
+      assert.equal(
+        isStructureMismatchIssue({ type, severity: 'actionable' }),
+        false,
+        `${type} must not be classified as structure mismatch (source usability family)`,
+      );
+    }
+  });
+
+  it('returns false for null / undefined / non-issue inputs', () => {
+    assert.equal(isStructureMismatchIssue(null), false);
+    assert.equal(isStructureMismatchIssue(undefined), false);
+    assert.equal(isStructureMismatchIssue({}), false);
+    assert.equal(isStructureMismatchIssue({ type: null }), false);
+  });
+});
+
+describe('Issue #247 PR1 — isSourceUnusableIssue', () => {
+  it('returns true for snapshot-incomplete', () => {
+    assert.equal(
+      isSourceUnusableIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('returns true for source-unusable', () => {
+    assert.equal(
+      isSourceUnusableIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('returns false for structure mismatch types', () => {
+    for (const type of ['section-structure-mismatch', 'segment-order-mismatch']) {
+      assert.equal(
+        isSourceUnusableIssue({ type, severity: 'actionable' }),
+        false,
+        `${type} must not be classified as source unusable`,
+      );
+    }
+  });
+
+  it('returns false for segment-* types', () => {
+    for (const type of ['segment-missing', 'segment-extra', 'segment-shifted']) {
+      assert.equal(
+        isSourceUnusableIssue({ type, severity: 'actionable' }),
+        false,
+      );
+    }
+  });
+
+  it('returns false for null / undefined / non-issue inputs', () => {
+    assert.equal(isSourceUnusableIssue(null), false);
+    assert.equal(isSourceUnusableIssue(undefined), false);
+    assert.equal(isSourceUnusableIssue({}), false);
+    assert.equal(isSourceUnusableIssue({ type: null }), false);
+  });
+});
+
+describe('Issue #247 PR1 — isReportableParityIssue accepts new taxonomy', () => {
+  // 構造保持違反を coarse audit-only に降格せず、reportable として扱う
+  // ことが PR1 契約の要。ここで reportable 契約を固定する。
+  //
+  // 注意 — 「frozen baseline」「expired baseline」系のテストは、述語単体
+  // (isFrozenByBaseline) が baselined フラグを honor することを固定して
+  // いるだけで、PR1 時点では実際のフロー上これらのフラグが新 type に
+  // 付くことはない (`source_parity_baseline.mjs::BASELINE_ELIGIBLE_TYPES`
+  // はまだ legacy segment-* しか許容せず、loader が reject する)。
+  // 新 type の baseline wiring は PR5 で baseline 同定キーを確定してから
+  // 追加する。ここでは述語の forward-compatibility だけを保証する。
+
+  it('accepts section-structure-mismatch (active, no ack, no baseline)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('accepts segment-order-mismatch (active, no ack, no baseline)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'segment-order-mismatch',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('accepts snapshot-incomplete (active, no ack, no baseline)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('accepts source-unusable (active, no ack, no baseline)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('rejects section-structure-mismatch with valid ack (ack still wins)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('rejects segment-order-mismatch with frozen baseline (baseline still wins)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'segment-order-mismatch',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('re-fires structure mismatch when baseline expires', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: true,
+      }),
+      true,
+    );
+  });
+
+  it('new taxonomy is NOT coarse (isCoarseAuditSignal returns false)', () => {
+    for (const type of [
+      'section-structure-mismatch',
+      'segment-order-mismatch',
+      'snapshot-incomplete',
+      'source-unusable',
+    ]) {
+      assert.equal(
+        isCoarseAuditSignal({ type, severity: 'actionable' }),
+        false,
+        `${type} must not be a coarse audit signal`,
+      );
+    }
   });
 });
