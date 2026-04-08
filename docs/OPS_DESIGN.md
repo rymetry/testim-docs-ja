@@ -79,6 +79,16 @@ queue 全体を消費する。
 
 `detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
 
+**`source-unusable` / `snapshot-incomplete` の ack 形式** (Issue #247 post-merge): emitter (`source_parity_source_usability.mjs::describeReason`) は `detail` 末尾に `[reason=<token>]` を埋め込む。ack 作成時はこの token を `detailIncludes` に指定する:
+
+- `detailIncludes: "[reason=escaped-details-residue]"` — `<details>` widget tree 破壊
+- `detailIncludes: "[reason=shallow-snapshot]"` — EN snapshot が本文欠損
+- `detailIncludes: "[reason=extractor-empty]"` — extractor が body=0 を返した
+
+`reason` token は `usabilitySignals.reason` と 1:1 対応で、baseline 側 (`buildBaselineKey`) は同じ token を構造化 identity key に使う。`scripts/__tests__/source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を固定している。
+
+`detectEnArtifacts()` の `artifacts` フィールド種別:
+
 - `EN uses <details> blocks` — EN が `<details>` を使用
 - `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
 

@@ -10,11 +10,20 @@
  * source-unusable) も当 matcher の generic contract (slug + issueType +
  * detailIncludes/detailRegex) でそのまま ack 可能。専用分岐や専用 key
  * 構築は **追加しない** — 追加すると generic contract から外れて二重
- * メンテナンスになるため。structure mismatch を ack する場合は detail に
- * 埋め込まれた section path を detailIncludes で狙い撃ちすればよい (例:
+ * メンテナンスになるため。
+ *
+ * structure mismatch を ack する場合は detail に埋め込まれた section path を
+ * detailIncludes で狙い撃ちすればよい (例:
  * `detailIncludes: "[Viewing the network logs at the step level >"`)。
- * 同様に source unusable は usabilityReason 由来の wording を狙い撃つ
- * (`detailIncludes: "escaped-details-residue"` 等)。
+ *
+ * source unusable (Issue #247 post-merge) は emitter
+ * (`source_parity_source_usability.mjs::describeReason`) が detail 末尾に
+ * `[reason=<token>]` を埋め込むので、ack entry 側は
+ * `detailIncludes: "[reason=escaped-details-residue]"` /
+ * `"[reason=shallow-snapshot]"` / `"[reason=extractor-empty]"` の形で指定する。
+ * この契約が壊れていると silent no-op を起こすため、
+ * `scripts/__tests__/source_parity_usability_ack_integration.test.mjs` が
+ * 実 emitter → matcher の round-trip で回帰を検知する。
  *
  * @module source_parity_acknowledgements
  */

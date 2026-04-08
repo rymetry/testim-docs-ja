@@ -214,20 +214,28 @@ function buildIssue(type, reason, signals) {
 
 /**
  * reviewer 向け 1 行サマリ文字列を返す。issue payload の `detail` フィールドに使う。
+ *
+ * Issue #247 post-merge — reason token を detail 末尾に埋め込むことで、
+ * `findMatchingAcknowledgement` の `detailIncludes` / `detailRegex` が
+ * 安定して狙い撃てるようにする。generic ack contract を維持するための
+ * 最小変更。baseline 経路は従来通り `usabilitySignals.reason` を読む。
  */
 function describeReason(type, reason, signals) {
+  const tokenSuffix = ` [reason=${reason}]`;
   switch (reason) {
     case 'extractor-empty':
       return (
         `EN snapshot extractor produced 0 body segments while JA has ` +
-        `${signals.jaBodySegmentCount} body segments — snapshot likely shallow / fetch incomplete`
+        `${signals.jaBodySegmentCount} body segments — snapshot likely shallow / fetch incomplete` +
+        tokenSuffix
       );
     case 'escaped-details-residue': {
       const n =
         signals.residualEscapedDetailsOpen + signals.residualEscapedDetailsClose;
       return (
         `EN HTML still contains ${n} escaped <details> markers after preprocessEnHtml ` +
-        `— widget tree is unbalanced and comparator cannot align sections`
+        `— widget tree is unbalanced and comparator cannot align sections` +
+        tokenSuffix
       );
     }
     case 'shallow-snapshot': {
@@ -237,11 +245,12 @@ function describeReason(type, reason, signals) {
           : (signals.jaBodySegmentCount / signals.enBodySegmentCount).toFixed(1);
       return (
         `EN body has ${signals.enBodySegmentCount} segments while JA body has ` +
-        `${signals.jaBodySegmentCount} (${ratio}× larger) — snapshot likely missing main article body`
+        `${signals.jaBodySegmentCount} (${ratio}× larger) — snapshot likely missing main article body` +
+        tokenSuffix
       );
     }
     default:
-      return `${type}: ${reason}`;
+      return `${type}: ${reason}${tokenSuffix}`;
   }
 }
 
