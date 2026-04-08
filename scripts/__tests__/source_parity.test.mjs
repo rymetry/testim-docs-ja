@@ -503,7 +503,7 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.equal(summary.snapshotUnusableFiles, 0);
   });
 
-  it('counts section-structure-mismatch into structureMismatch*', () => {
+  it('counts section-structure-mismatch into structureMismatch* AND reportableActive* (PR5 cutover)', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/running-tests/the-command-line-cli.md',
@@ -526,11 +526,11 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.deepEqual(summary.structureMismatchByType, {
       'section-structure-mismatch': 2,
     });
-    // Issue #247 PR2 — structure mismatch は PR2 時点では `reportableActive*`
-    // (gate counter) に流れない。gate cutover は PR4 で行う。
-    // 専用の `structureMismatch*` counter からだけ参照される。
-    assert.equal(summary.reportableActiveFiles, 0);
-    assert.equal(summary.reportableActiveActionableFiles, 0);
+    // Issue #247 PR5 — gate cutover で structure mismatch が
+    // `reportableActive*` (gate counter) にも流れるようになった。専用
+    // counter (`structureMismatch*`) と併存し、両方から観測できる。
+    assert.equal(summary.reportableActiveFiles, 1);
+    assert.equal(summary.reportableActiveActionableFiles, 1);
   });
 
   it('counts segment-order-mismatch into structureMismatch*', () => {
@@ -659,7 +659,7 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.equal(summary.structureMismatchFiles, 0);
   });
 
-  it('includes expired ack on structure mismatch in structureMismatch* (counter re-fires)', () => {
+  it('includes expired ack on structure mismatch in structureMismatch* AND reportableActive* (PR5 cutover)', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/expired-ack-structure.md',
@@ -675,11 +675,11 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.structureMismatchIssues, 1);
     assert.equal(summary.structureMismatchFiles, 1);
-    // Issue #247 PR2 — gate cutover は PR4。PR2 時点では expired ack が
-    // 戻ってきても `reportableActive*` には流入しない (gate 経路から
-    // 完全に exclude されているため)。PR4 cutover でこの assertion を
-    // `1` に flip する。
-    assert.equal(summary.reportableActiveFiles, 0);
+    // Issue #247 PR5 — gate cutover 後は expired ack が戻ってきた
+    // structure mismatch も `reportableActive*` に流入する (通常の ack
+    // expiry セマンティクス)。expired ack は「もう一度人の目で確認
+    // すべき」の signal として gate を再点火する。
+    assert.equal(summary.reportableActiveFiles, 1);
   });
 
   it('includes expired baseline on source unusable in snapshotUnusable* (counter re-fires)', () => {

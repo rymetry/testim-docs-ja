@@ -829,3 +829,130 @@ describe('summarizeParityResults — baseline accounting', () => {
     assert.equal(summary.expiredBaselineEntries, 0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)
+//
+// PR5 では acknowledgement matcher / loader / key のコード変更は 0 行。
+// ただしこれは「新 type が ack 非対応だから」ではなく、既存の generic
+// matcher (slug + issueType + detailIncludes/detailRegex) が新 4 type
+// (section-structure-mismatch / segment-order-mismatch / snapshot-incomplete /
+// source-unusable) もそのまま受理できるからである。
+//
+// このブロックは次を pin する:
+//   - validateAcknowledgements が新 4 type の ack entry を reject しない
+//   - findMatchingAcknowledgement が新 4 type の detail を detailIncludes
+//     で狙い撃てる
+//   - NON_ACKNOWLEDGEABLE_TYPES に新 4 type を追加しない
+//
+// もし上記のどれかが fail したら、matcher の既存契約を読み間違えている
+// 可能性がある。matcher 本体を touch する前に設計を見直すこと。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)', () => {
+  const VALID_FP = 'sha256:' + 'f'.repeat(64);
+
+  function baseAckEntry(overrides = {}) {
+    return {
+      slug: 'running-tests/the-command-line-cli',
+      issueType: 'section-structure-mismatch',
+      sourceFingerprint: VALID_FP,
+      reason: 'structure drift pending review',
+      owner: 'translator',
+      reviewAfter: '2026-10-06',
+      detailIncludes: '[CLI Installation > Basic CLI command]',
+      ...overrides,
+    };
+  }
+
+  it('validateAcknowledgements accepts a section-structure-mismatch ack entry', () => {
+    const entry = baseAckEntry();
+    assert.doesNotThrow(() =>
+      validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('validateAcknowledgements accepts a segment-order-mismatch ack entry', () => {
+    const entry = baseAckEntry({ issueType: 'segment-order-mismatch' });
+    assert.doesNotThrow(() =>
+      validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('validateAcknowledgements accepts a snapshot-incomplete ack entry', () => {
+    const entry = baseAckEntry({
+      issueType: 'snapshot-incomplete',
+      detailIncludes: 'shallow-snapshot',
+    });
+    assert.doesNotThrow(() =>
+      validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('validateAcknowledgements accepts a source-unusable ack entry', () => {
+    const entry = baseAckEntry({
+      issueType: 'source-unusable',
+      detailIncludes: 'escaped-details-residue',
+    });
+    assert.doesNotThrow(() =>
+      validateAcknowledgements({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('findMatchingAcknowledgement matches structure mismatch by detailIncludes on section path', () => {
+    const entry = baseAckEntry();
+    const issue = {
+      type: 'section-structure-mismatch',
+      detail: '[CLI Installation > Basic CLI command] block kind multiset differs',
+    };
+    const match = findMatchingAcknowledgement(
+      'running-tests/the-command-line-cli',
+      issue,
+      [entry],
+      VALID_FP,
+      '2026-04-08',
+    );
+    assert.ok(match, 'expected a match for structure mismatch via detailIncludes');
+    assert.equal(match.expired, false);
+  });
+
+  it('findMatchingAcknowledgement matches source-unusable via detailIncludes on usability reason', () => {
+    // source-unusable は page-level issue だが、validateAcknowledgements は
+    // detailIncludes / detailRegex のいずれかを必須にする。emitter が
+    // detail 文字列に usabilityReason 由来の wording を埋め込むので、
+    // ack entry 側で reason 文字列を detailIncludes に書けば狙い撃てる。
+    const entry = baseAckEntry({
+      slug: 'salesforce-testing/faq',
+      issueType: 'source-unusable',
+      detailIncludes: 'escaped-details-residue',
+    });
+    const issue = {
+      type: 'source-unusable',
+      detail: 'source snapshot is unusable (escaped-details-residue)',
+    };
+    const match = findMatchingAcknowledgement(
+      'salesforce-testing/faq',
+      issue,
+      [entry],
+      VALID_FP,
+      '2026-04-08',
+    );
+    assert.ok(match, 'expected a match for source-unusable via detailIncludes');
+    assert.equal(match.expired, false);
+  });
+
+  it('NON_ACKNOWLEDGEABLE_TYPES does NOT contain any of the PR5 new taxonomy', () => {
+    for (const type of [
+      'section-structure-mismatch',
+      'segment-order-mismatch',
+      'snapshot-incomplete',
+      'source-unusable',
+    ]) {
+      assert.equal(
+        NON_ACKNOWLEDGEABLE_TYPES.has(type),
+        false,
+        `${type} must NOT be in NON_ACKNOWLEDGEABLE_TYPES (generic matcher handles it)`,
+      );
+    }
+  });
+});

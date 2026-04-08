@@ -1151,15 +1151,20 @@ describe('Issue #247 PR4 — parityRegression structure mismatch summary exposur
     assert.deepEqual(report.parityRegression.summary.structureMismatchByType, {});
   });
 
-  it('does NOT include structure mismatch files in parityRegression.topEntries (PR4 — gate flip is PR5)', () => {
+  it('includes structure mismatch files in parityRegression.topEntries (PR5 — gate cutover)', () => {
     const parity = makeParityWithStructureMismatch();
     const report = buildActionableReport(emptySnapshot, parity, []);
-    // `isReportableParityIssue` は PR4 では flip しないので、structure
-    // mismatch 単独のファイルは topEntries に流れ込まない。
-    assert.equal(report.parityRegression.topEntries.length, 0);
-    // shouldOpenIssue も立たない (= GitHub 上に新規 issue は open されない)
-    assert.equal(report.parityRegression.shouldOpenIssue, false);
-    assert.equal(report.parityRegression.summary.issueCount, 0);
+    // PR5 cutover で `isReportableParityIssue` が structure mismatch に
+    // true を返すようになったため、structure mismatch 単独のファイルも
+    // topEntries に流れ込み、shouldOpenIssue / issueCount に寄与する。
+    // source-unusable は引き続き advisory なのでここには現れない。
+    assert.equal(report.parityRegression.topEntries.length, 1);
+    assert.equal(
+      report.parityRegression.topEntries[0].file,
+      'src/content/docs/running-tests/the-command-line-cli.md',
+    );
+    assert.equal(report.parityRegression.shouldOpenIssue, true);
+    assert.equal(report.parityRegression.summary.issueCount, 1);
   });
 
   it('parityRegression.body contains "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {

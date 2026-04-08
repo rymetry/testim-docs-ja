@@ -67,28 +67,15 @@ export function isReportableParityIssue(issue) {
   // parityRegression / gate には乗らない。ack / baseline 状態は無視する。
   if (isCoarseAuditSignal(issue)) return false;
 
-  // Issue #247 PR2 — structure-mismatch / source-unusable は PR2 で
-  // emission を入れた段階で、PR5 の gate cutover まで `reportableActive*`
-  // (gate counter) には乗せない。専用の `structureMismatchIssues` /
-  // `snapshotUnusableIssues` counter にだけ集計する。
-  //
-  // この exclusion を入れる理由:
-  //   1. PR1 で `BASELINE_ELIGIBLE_TYPES` に新 type を入れていない (PR5 で
-  //      wiring 予定)。今 reportable に乗せると、既存の segment-* drift で
-  //      baseline されているページが PR2 から structure-mismatch を emit
-  //      した瞬間に gate exit 1 でブロックされる (新 type は baseline で
-  //      freeze できないため)。
-  //   2. 段階的 cutover の意図 — PR2 は emitter / contract を pin する
-  //      フェーズで、PR4 は summary / reporting / CLI の可視化のみ、gate
-  //      flip は PR5 の責務 (Issue #247 の PR 分割案参照)。
-  //   3. PR5 では `isStructureMismatchIssue(issue)` の分岐のみ削除する
-  //      ことで structure mismatch を gate に載せる (= reportable 化)。
-  //      `isSourceUnusableIssue(issue)` の分岐は PR5 でも残す — snapshot /
-  //      source sync 側 debt は翻訳 PR で修正できないため、PR5 cutover
-  //      後も advisory のまま。
-  //   4. それまでは structure-mismatch は構造化 advisory として
-  //      `structureMismatch*` counter から見えるが、gate は再点火しない。
-  if (isStructureMismatchIssue(issue) || isSourceUnusableIssue(issue)) return false;
+  // Issue #247 PR5 — gate cutover 済み。structure mismatch
+  // (section-structure-mismatch / segment-order-mismatch) は reportable
+  // に昇格し、ack / baseline で覆われていなければ `reportableActive*`
+  // counter と gate exit code に寄与する。source-unusable
+  // (snapshot-incomplete / source-unusable) は引き続き advisory のまま
+  // (翻訳 PR で修正できない source 側 debt なので reviewer を誤誘導する
+  // ことを避ける)。baseline / ack で人手管理する枠は提供するが、active
+  // な source-unusable が 1 件あっても exit code は 0。
+  if (isSourceUnusableIssue(issue)) return false;
 
   if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
   if (isFrozenByBaseline(issue)) return false;
