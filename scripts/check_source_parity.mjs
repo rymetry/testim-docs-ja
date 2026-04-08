@@ -26,7 +26,10 @@ import {
   parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
-import { isValidAcknowledgedIssue } from './lib/source_parity_issue_state.mjs';
+import {
+  isAdvisoryOnlyParityIssue,
+  isValidAcknowledgedIssue,
+} from './lib/source_parity_issue_state.mjs';
 export { isValidAcknowledgedIssue };
 import {
   computeSnapshotFingerprint,
@@ -83,6 +86,16 @@ function buildSegmentInconclusiveIssue(reason, category, meta = null) {
 
 export function isNonBlockingIssue(issue) {
   return isNonBlockingParityIssue(issue);
+}
+
+/**
+ * Issue #247 PR2 — `getConsoleCoverageState` で advisory-only issue を
+ * baseline / ack と区別するためのラッパー。`isAdvisoryOnlyParityIssue`
+ * 自体は pure helper として lib 側に置いてあり、ここはコンソール経路から
+ * 直接 import しないための再 export。
+ */
+export function isAdvisoryOnlyIssue(issue) {
+  return isAdvisoryOnlyParityIssue(issue);
 }
 
 // runScope の詳細 contract は shared helper 側
@@ -162,18 +175,57 @@ export function getConsoleCoverageState(issues) {
     };
   }
 
+  // 各 issue を 4 状態に分類する。優先度は ack > baseline > advisory >
+  // active reportable で、上の状態が当たれば下は見ない契約。
+  //
+  //   ack         — `isValidAcknowledgedIssue` が true
+  //   baseline    — `isFrozenByBaseline` が true (= isNonBlockingIssue が
+  //                 true で ack でないもの)
+  //   advisory    — Issue #247 PR2 で emit したが PR4 まで gate cutover
+  //                 されない type で、ack/baseline でも覆われていない
+  //   reportable  — それ以外 (= active な gate-blocking issue)
   const allAcked = issues.every((issue) => isValidAcknowledgedIssue(issue));
-  const allCovered = issues.every((issue) => isNonBlockingIssue(issue));
+  const allBaselineOrAck = issues.every((issue) => isNonBlockingIssue(issue));
+  const allCoveredOrAdvisory = issues.every(
+    (issue) => isNonBlockingIssue(issue) || isAdvisoryOnlyIssue(issue),
+  );
+  const hasAdvisory = issues.some((issue) => isAdvisoryOnlyIssue(issue));
+  const hasBaselineOrAck = issues.some((issue) => isNonBlockingIssue(issue));
+
+  // active reportable issue が 1 つでも残っていればファイルはブロッキング扱い。
+  if (!allCoveredOrAdvisory) {
+    return {
+      allAcked: false,
+      allCovered: false,
+      icon: '❌',
+      suffix: '',
+    };
+  }
+
+  // すべて非ブロッキング (ack / baseline / advisory) のいずれか。
+  // suffix は具体的な状態に応じて切り分ける。
+  let suffix;
+  if (allAcked) {
+    suffix = ' (all acknowledged)';
+  } else if (allBaselineOrAck) {
+    // 既存の動作を保持: 全件が ack / baseline で覆われている。
+    suffix = ' (covered by baseline/ack)';
+  } else if (hasAdvisory && !hasBaselineOrAck) {
+    // Issue #247 PR2 — 全件が advisory only。PR4 cutover で gate に
+    // 載るまでは構造化 advisory として可視化するだけで gate は止めない。
+    suffix = ' (advisory only)';
+  } else {
+    // 混在: PR2 由来の advisory と既存の ack/baseline が同居。
+    // "covered by baseline/ack" と書くと advisory が ack/baseline で
+    // 覆われているように誤読されるので、明示的に分けて表記する。
+    suffix = ' (advisory + baseline/ack)';
+  }
 
   return {
     allAcked,
-    allCovered,
-    icon: allCovered ? '⏸️' : '❌',
-    suffix: allAcked
-      ? ' (all acknowledged)'
-      : allCovered
-        ? ' (covered by baseline/ack)'
-        : '',
+    allCovered: allBaselineOrAck,
+    icon: '⏸️',
+    suffix,
   };
 }
 

@@ -201,6 +201,112 @@ describe('CLI coverage helpers', () => {
       suffix: '',
     });
   });
+
+  // Issue #247 PR2 — advisory only / mixed advisory + baseline 表示の契約
+  describe('Issue #247 PR2 — advisory-only display path', () => {
+    it('advisory-only file (1 structure-mismatch, no baseline/ack) gets "(advisory only)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'section-structure-mismatch', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        // すべての issue が advisory なので「ack/baseline で覆われている」
+        // 状態ではない (allCovered=false) が、icon は ⏸️。
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (advisory only)',
+      });
+    });
+
+    it('multiple advisory-only issues (no baseline/ack) get "(advisory only)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'section-structure-mismatch', severity: 'actionable' },
+        { type: 'segment-order-mismatch', severity: 'actionable' },
+        { type: 'snapshot-incomplete', severity: 'actionable' },
+        { type: 'source-unusable', severity: 'actionable' },
+      ]);
+      assert.equal(state.icon, '⏸️');
+      assert.equal(state.suffix, ' (advisory only)');
+    });
+
+    it('advisory + baseline mix gets "(advisory + baseline/ack)"', () => {
+      // structure-mismatch (advisory) と既存 segment-* drift (baseline で
+      // 覆われている) が同居するケース。CLI で「covered by baseline/ack」
+      // と書くと advisory が ack/baseline で覆われているように誤読される
+      // ので、この mixed state は専用 wording で表示する。
+      const state = getConsoleCoverageState([
+        { type: 'section-structure-mismatch', severity: 'actionable' },
+        { type: 'segment-missing', severity: 'actionable', baselined: true },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (advisory + baseline/ack)',
+      });
+    });
+
+    it('advisory + ack mix gets "(advisory + baseline/ack)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'segment-order-mismatch', severity: 'actionable' },
+        { type: 'segment-missing', severity: 'actionable', acknowledged: true, ackExpired: false },
+      ]);
+      assert.equal(state.icon, '⏸️');
+      assert.equal(state.suffix, ' (advisory + baseline/ack)');
+    });
+
+    it('advisory + active reportable issue still blocks (❌)', () => {
+      // active な segment-missing が混じっていれば、advisory があっても
+      // ファイルはブロッキング扱い。
+      const state = getConsoleCoverageState([
+        { type: 'section-structure-mismatch', severity: 'actionable' },
+        { type: 'segment-missing', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '❌',
+        suffix: '',
+      });
+    });
+
+    it('acked structure-mismatch is treated as ack-covered, not advisory', () => {
+      // ack 経路は advisory より優先 (より具体的なカバレッジ情報なので)。
+      const state = getConsoleCoverageState([
+        {
+          type: 'section-structure-mismatch',
+          severity: 'actionable',
+          acknowledged: true,
+          ackExpired: false,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: true,
+        allCovered: true,
+        icon: '⏸️',
+        suffix: ' (all acknowledged)',
+      });
+    });
+
+    it('baselined structure-mismatch is treated as baseline-covered, not advisory', () => {
+      // baseline 経路も advisory より優先。PR1 時点では新 type に baseline
+      // は実運用上付かないが、述語の forward compatibility をここで pin。
+      const state = getConsoleCoverageState([
+        {
+          type: 'section-structure-mismatch',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: false,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: true,
+        icon: '⏸️',
+        suffix: ' (covered by baseline/ack)',
+      });
+    });
+  });
 });
 
 // ---------------------------------------------------------------------------
