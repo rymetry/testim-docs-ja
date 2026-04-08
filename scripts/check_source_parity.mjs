@@ -18,6 +18,7 @@ import {
   alignSegments,
   buildAdvisoryArtifacts,
   compareSnapshotStructure,
+  detectSourceUsability,
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
   isNonBlockingParityIssue,
@@ -448,60 +449,85 @@ export async function checkSourceParity({
         }
       }
       if (enBody) {
-        // segment-level exact diff をまず実行する。inconclusive (heading count
-        // mismatch / 必要な入力が無い) のときは legacy coarse signals に
-        // フォールバックし、ページが silent green になることを防ぐ。
-        // alignment が conclusive のときも coarse complementary check
-        // (image order, callout nesting, table shape) を併走させる。これらは
-        // segment engine が意図的に無視する欠陥 (画像順序の入れ替え等) を
-        // 補完的に拾う。
-        let segmentIssues = [];
-        let alignmentInconclusive = false;
-        let alignmentInconclusiveReason = null;
-        let alignmentInconclusiveCategory = null;
-        let alignmentInconclusiveMeta = null;
+        // PR3 — source usability gate を alignSegments の前に挟む。
+        // enSegments / jaSegments を先に取得し、extractError を明示的に渡す。
+        // detector は extractError != null のとき enSegments を信用しない契約
+        // (Layer 1 / Layer 3 を skip し、rawEnHtml 単独で動く Layer 2 のみ評価)。
+        let enSegments = [];
+        let jaSegments = [];
+        let extractError = null;
         try {
-          const enSegments = extractSegmentsFromHtml(rawEnHtml);
-          const jaSegments = extractSegmentsFromMarkdown(doc.body);
-          const alignment = alignSegments(enSegments, jaSegments);
-          segmentIssues = parityDiffsToIssues(alignment.diffs);
-          if (alignment.inconclusive) {
-            alignmentInconclusive = true;
-            alignmentInconclusiveReason = alignment.inconclusiveReason;
-            alignmentInconclusiveCategory = alignment.inconclusiveCategory;
-            alignmentInconclusiveMeta = alignment.inconclusiveMeta ?? null;
-          }
+          enSegments = extractSegmentsFromHtml(rawEnHtml);
+          jaSegments = extractSegmentsFromMarkdown(doc.body);
         } catch (e) {
-          alignmentInconclusive = true;
-          alignmentInconclusiveReason = e.message;
-          alignmentInconclusiveCategory = 'align-exception';
-          alignmentInconclusiveMeta = null;
+          extractError = e;
           console.error(
-            `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
+            `extractSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
           );
         }
 
-        if (alignmentInconclusive) {
-          // Fallback: alignment 済みの exact diff を保持し、inconclusive を
-          // 示す補助 issue を追加した上で legacy coarse 比較を併走させる。
-          // ページが silent green になることを防ぐ。
-          issues.push(...segmentIssues);
+        const usabilityIssue = detectSourceUsability({
+          rawEnHtml,
+          enSegments,
+          jaSegments,
+          extractError,
+        });
+
+        if (usabilityIssue) {
+          // 比較不能ページ — alignSegments と compareSnapshotStructure を両方
+          // suppress し、page-scope の usability issue を 1 件だけ push する。
+          // localCheck (JA-side) は既に実行済みでそのまま残る。
+          issues.push(usabilityIssue);
+        } else if (extractError) {
+          // detector が usable と判定 (Layer 2 が発火しなかった) が extractor は
+          // 落ちていたケース。extractor 側の bug / 実装回帰の可能性が高いため、
+          // source 起因に取り違えず既存の align-exception 経路に明示的にフォールバック。
           issues.push(
-            buildSegmentInconclusiveIssue(
-              alignmentInconclusiveReason || 'unknown reason',
-              alignmentInconclusiveCategory,
-              alignmentInconclusiveMeta,
-            ),
+            buildSegmentInconclusiveIssue(extractError.message, 'align-exception', null),
           );
           issues.push(...compareSnapshotStructure(enBody, doc.body));
         } else {
-          // Primary gate: segment-level diffs に加え、補完的な coarse
-          // signals (image order, callout nesting, table shape) も併走させる。
-          // count-based mismatches は COARSE_SIGNAL_TYPES allowlist 経由で
-          // audit-only に降格済みで、`signal` severity では出るが
-          // parityRegression / gate exit code には乗らない。
-          issues.push(...segmentIssues);
-          issues.push(...compareSnapshotStructure(enBody, doc.body));
+          // 既存パス: segment-level exact diff をまず実行する。inconclusive
+          // (heading count mismatch 等) のときは legacy coarse signals に
+          // フォールバックし、ページが silent green になることを防ぐ。
+          // alignment が conclusive のときも coarse complementary check
+          // (image order, callout nesting, table shape) を併走させる。
+          let alignment;
+          try {
+            alignment = alignSegments(enSegments, jaSegments);
+          } catch (e) {
+            console.error(
+              `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
+            );
+            issues.push(
+              buildSegmentInconclusiveIssue(e.message, 'align-exception', null),
+            );
+            issues.push(...compareSnapshotStructure(enBody, doc.body));
+          }
+          if (alignment) {
+            const segmentIssues = parityDiffsToIssues(alignment.diffs);
+            if (alignment.inconclusive) {
+              // Fallback: alignment 済みの exact diff を保持し、inconclusive を
+              // 示す補助 issue を追加した上で legacy coarse 比較を併走させる。
+              issues.push(...segmentIssues);
+              issues.push(
+                buildSegmentInconclusiveIssue(
+                  alignment.inconclusiveReason || 'unknown reason',
+                  alignment.inconclusiveCategory,
+                  alignment.inconclusiveMeta ?? null,
+                ),
+              );
+              issues.push(...compareSnapshotStructure(enBody, doc.body));
+            } else {
+              // Primary gate: segment-level diffs に加え、補完的な coarse
+              // signals (image order, callout nesting, table shape) も併走させる。
+              // count-based mismatches は COARSE_SIGNAL_TYPES allowlist 経由で
+              // audit-only に降格済みで、`signal` severity では出るが
+              // parityRegression / gate exit code には乗らない。
+              issues.push(...segmentIssues);
+              issues.push(...compareSnapshotStructure(enBody, doc.body));
+            }
+          }
         }
       }
     }
