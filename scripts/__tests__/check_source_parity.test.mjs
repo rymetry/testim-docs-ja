@@ -307,6 +307,135 @@ describe('CLI coverage helpers', () => {
       });
     });
   });
+
+  // Issue #247 PR4 — source-unusable 単独 advisory 専用 CLI suffix
+  // structure mismatch を含まない source-unusable 単独 advisory ファイルに
+  // 対し、CLI で「翻訳者責任外の snapshot debt」であることを明示する
+  // `(source unusable)` suffix を出す。advisory に structure mismatch が
+  // 1 件でも混ざるなら既存の `(advisory only)` に落ちる。`isAdvisoryOnly
+  // ParityIssue` の scope (= structure + source-unusable 両方) は変更
+  // しない。
+  describe('Issue #247 PR4 — source-unusable 専用 CLI suffix', () => {
+    it('source-unusable 単独 (advisory) → icon ⏸️, suffix " (source unusable)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'source-unusable', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (source unusable)',
+      });
+    });
+
+    it('snapshot-incomplete 単独 (advisory) → icon ⏸️, suffix " (source unusable)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'snapshot-incomplete', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (source unusable)',
+      });
+    });
+
+    it('snapshot-incomplete + source-unusable (両方 source-unusable 系) → " (source unusable)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'snapshot-incomplete', severity: 'actionable' },
+        { type: 'source-unusable', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (source unusable)',
+      });
+    });
+
+    it('source-unusable + section-structure-mismatch (advisory mix) → " (advisory only)"', () => {
+      // advisory に structure mismatch が含まれているので、CLI 上は
+      // structure drift 側を優先する既存の "(advisory only)" に落ちる。
+      const state = getConsoleCoverageState([
+        { type: 'source-unusable', severity: 'actionable' },
+        { type: 'section-structure-mismatch', severity: 'actionable' },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (advisory only)',
+      });
+    });
+
+    it('source-unusable + frozen baseline (segment-missing, baselined) → " (advisory + baseline/ack)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'source-unusable', severity: 'actionable' },
+        { type: 'segment-missing', severity: 'actionable', baselined: true },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (advisory + baseline/ack)',
+      });
+    });
+
+    it('source-unusable + valid ack (segment-missing, acked) → " (advisory + baseline/ack)"', () => {
+      const state = getConsoleCoverageState([
+        { type: 'source-unusable', severity: 'actionable' },
+        {
+          type: 'segment-missing',
+          severity: 'actionable',
+          acknowledged: true,
+          ackExpired: false,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: false,
+        icon: '⏸️',
+        suffix: ' (advisory + baseline/ack)',
+      });
+    });
+
+    it('acked source-unusable 単独 → " (all acknowledged)"', () => {
+      // ack 経路は advisory より優先 (PR2 契約と同じ)。
+      const state = getConsoleCoverageState([
+        {
+          type: 'source-unusable',
+          severity: 'actionable',
+          acknowledged: true,
+          ackExpired: false,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: true,
+        allCovered: true,
+        icon: '⏸️',
+        suffix: ' (all acknowledged)',
+      });
+    });
+
+    it('baselined snapshot-incomplete 単独 → " (covered by baseline/ack)"', () => {
+      // baseline 経路も advisory より優先 (PR1 時点では新 type に
+      // baseline は付かないが forward compatibility のため pin)。
+      const state = getConsoleCoverageState([
+        {
+          type: 'snapshot-incomplete',
+          severity: 'actionable',
+          baselined: true,
+          baselineExpired: false,
+        },
+      ]);
+      assert.deepEqual(state, {
+        allAcked: false,
+        allCovered: true,
+        icon: '⏸️',
+        suffix: ' (covered by baseline/ack)',
+      });
+    });
+  });
 });
 
 // ---------------------------------------------------------------------------

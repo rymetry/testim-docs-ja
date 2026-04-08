@@ -29,6 +29,7 @@ import {
 } from './lib/source_parity.mjs';
 import {
   isAdvisoryOnlyParityIssue,
+  isSourceUnusableIssue,
   isValidAcknowledgedIssue,
 } from './lib/source_parity_issue_state.mjs';
 export { isValidAcknowledgedIssue };
@@ -182,7 +183,7 @@ export function getConsoleCoverageState(issues) {
   //   ack         — `isValidAcknowledgedIssue` が true
   //   baseline    — `isFrozenByBaseline` が true (= isNonBlockingIssue が
   //                 true で ack でないもの)
-  //   advisory    — Issue #247 PR2 で emit したが PR4 まで gate cutover
+  //   advisory    — Issue #247 PR2 で emit したが PR5 まで gate cutover
   //                 されない type で、ack/baseline でも覆われていない
   //   reportable  — それ以外 (= active な gate-blocking issue)
   const allAcked = issues.every((issue) => isValidAcknowledgedIssue(issue));
@@ -192,6 +193,17 @@ export function getConsoleCoverageState(issues) {
   );
   const hasAdvisory = issues.some((issue) => isAdvisoryOnlyIssue(issue));
   const hasBaselineOrAck = issues.some((issue) => isNonBlockingIssue(issue));
+  // Issue #247 PR4 — source-unusable 単独 advisory 判定。advisory な issue
+  // すべてが source-unusable 系のとき、CLI では「翻訳者責任外の snapshot
+  // debt」であることを明示する専用 suffix `(source unusable)` を出す。
+  // `isAdvisoryOnlyParityIssue` の scope 自体は変えず (structure mismatch +
+  // source-unusable の両方を advisory として扱う PR2 契約を維持) 、CLI 表示
+  // のみを差別化する。advisory に structure mismatch が 1 件でも混じれば
+  // 既存 `(advisory only)` に落ちる。
+  const advisoryIssues = issues.filter((issue) => isAdvisoryOnlyIssue(issue));
+  const allAdvisoryAreSourceUnusable =
+    advisoryIssues.length > 0 &&
+    advisoryIssues.every((issue) => isSourceUnusableIssue(issue));
 
   // active reportable issue が 1 つでも残っていればファイルはブロッキング扱い。
   if (!allCoveredOrAdvisory) {
@@ -211,9 +223,20 @@ export function getConsoleCoverageState(issues) {
   } else if (allBaselineOrAck) {
     // 既存の動作を保持: 全件が ack / baseline で覆われている。
     suffix = ' (covered by baseline/ack)';
+  } else if (
+    hasAdvisory &&
+    !hasBaselineOrAck &&
+    allAdvisoryAreSourceUnusable
+  ) {
+    // Issue #247 PR4 — source-unusable 単独 advisory。翻訳者に修正を求める
+    // drift ではないことを CLI で明示する。structure mismatch を含む advisory
+    // mix は次の分岐 (`(advisory only)`) に落ちる。
+    suffix = ' (source unusable)';
   } else if (hasAdvisory && !hasBaselineOrAck) {
-    // Issue #247 PR2 — 全件が advisory only。PR4 cutover で gate に
-    // 載るまでは構造化 advisory として可視化するだけで gate は止めない。
+    // Issue #247 PR2 — 全件が advisory only。structure mismatch 単独、または
+    // structure mismatch + source-unusable の advisory。PR5 cutover で
+    // structure mismatch が gate に載るまでは、構造化 advisory として
+    // 可視化するだけで gate は止めない。
     suffix = ' (advisory only)';
   } else {
     // 混在: PR2 由来の advisory と既存の ack/baseline が同居。
