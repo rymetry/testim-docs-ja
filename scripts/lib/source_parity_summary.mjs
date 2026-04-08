@@ -29,34 +29,23 @@ import {
  *     Audit channel: coarse signal の総数 + type 別内訳。
  *
  *   structureMismatchIssues / structureMismatchFiles / structureMismatchByType
- *     Issue #247 PR1 — canonical block sequence comparator 由来の structure
- *     mismatch (section-structure-mismatch / segment-order-mismatch) の
- *     独立 counter。ack (valid) と frozen baseline は除外し、gate に載せる
- *     予定の active な structure violation のみカウントする。PR2 で emitter
- *     を追加した。PR4 では summary / reporting / CLI の表層 (検出レポート、
- *     `renderSummaryMarkdown`、CLI 末尾セクション) に first-class で露出
- *     させる cutover を行うが、`reportableActive*` への流入は伴わない (gate
- *     flip は PR5 の責務)。PR4 時点では `reportableActiveFiles` には含まれ
- *     ず、独立 counter として並走する状態。PR5 で `BASELINE_ELIGIBLE_TYPES`
- *     拡張 + `isReportableParityIssue` flip が同時に行われ、structure
- *     mismatch が gate に載る。
- *
- *     PR1 時点の注意: 新 type は `BASELINE_ELIGIBLE_TYPES` にまだ含まれない
- *     ため、現実運用で baseline が付くことは無い (loader が reject する)。
- *     ここで `!isFrozen` を見ているのは将来の baseline wiring (PR5) を
- *     見越した契約であって、PR1 段階では純粋に ack だけが除外経路になる。
+ *     Issue #247 PR1〜PR5 — canonical block sequence comparator 由来の
+ *     structure mismatch (section-structure-mismatch / segment-order-mismatch)
+ *     の独立 counter。ack (valid) と frozen baseline は除外し、active な
+ *     structure violation のみカウントする。PR5 cutover 後は
+ *     `reportableActiveFiles` にも流れ込むようになった (gate に載る) が、
+ *     reviewer / dashboard 向けに type 別内訳を一発で読みたい場面のため
+ *     並走 counter として残してある。
  *
  *   snapshotUnusableIssues / snapshotUnusableFiles / snapshotUnusableByType
- *     Issue #247 PR1 — snapshot / source 起因で comparator が成立しない
- *     ページ用の独立 counter。`snapshot-incomplete` / `source-unusable` を
- *     translation drift と混ぜないために別枠で集計する。PR3 で emitter を
- *     追加。PR4 では summary / reporting / CLI に first-class で露出させる
- *     (parityFollowup の `summary.sourceUnusable` サブセクションと CLI 末尾
- *     セクション)。**翻訳者責任外 (snapshot / source sync 側 debt) のため、
- *     PR4/PR5 いずれでも `reportableActive*` には含めない**。常に独立
- *     advisory counter として可視化する。baseline eligibility は
- *     structureMismatch と同じで、PR5 で wiring 予定 (人手管理のため
- *     baseline で freeze はできるが gate には載らない)。
+ *     Issue #247 PR1〜PR5 — snapshot / source 起因で comparator が成立し
+ *     ないページ用の独立 counter。`snapshot-incomplete` / `source-unusable`
+ *     を translation drift と混ぜないために別枠で集計する。PR4 で
+ *     parityFollowup `summary.sourceUnusable` サブセクションと CLI 末尾
+ *     セクションに露出させた。**翻訳者責任外 (snapshot / source sync 側
+ *     debt) のため PR5 cutover 後も `reportableActive*` には含めない**。
+ *     baseline / ack で人手管理する枠は PR5 から提供されているが、active
+ *     な source unusable があっても gate exit code は 0 のまま。
  *
  *   baselinedIssues / baselinedFiles / baselinedByType /
  *   baselinedByInconclusiveCategory / expiredBaselineEntries

@@ -17,6 +17,9 @@ import {
   isBaselineExpired,
   BASELINE_ELIGIBLE_TYPES,
   INCONCLUSIVE_CATEGORIES,
+  STRUCTURE_CATEGORIES,
+  USABILITY_REASONS,
+  computeStructureFingerprint,
 } from '../lib/source_parity_baseline.mjs';
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
@@ -109,12 +112,11 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     assert.ok(!BASELINE_ELIGIBLE_TYPES.has('untranslated'));
   });
 
-  // Issue #247 PR1 — 新 taxonomy は PR1 時点で**まだ** baseline 対象に
-  // していない。PR2/PR3 で emitter が fix した後、PR5 の baseline migration
-  // で同定キー (section path / block kind / canonical hash など) を設計して
-  // から allowlist に追加する。ここで「未対応であること」を明示的に固定
-  // しておき、後続 PR で wiring を忘れた場合に検出できるようにする。
-  it('does NOT yet contain Issue #247 structure-mismatch / source-unusable types (PR1 scope)', () => {
+  // Issue #247 PR5 — gate cutover で structure mismatch / source unusable を
+  // baseline allowlist に追加した。§3.1 参照。emitter / validator / key
+  // builder / generator が足並みを揃えて新 type を扱えるようにする必要
+  // があるため、allowlist 拡張だけで済まない点に注意。
+  it('contains Issue #247 structure-mismatch / source-unusable types (PR5 cutover)', () => {
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',
@@ -123,63 +125,178 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     ]) {
       assert.equal(
         BASELINE_ELIGIBLE_TYPES.has(type),
-        false,
-        `${type} must NOT be in BASELINE_ELIGIBLE_TYPES until PR5 wires it up`,
+        true,
+        `${type} must be in BASELINE_ELIGIBLE_TYPES after PR5 cutover`,
       );
     }
   });
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR1 — validateBaseline rejects the new taxonomy
+// Issue #247 PR5 — validateBaseline — structure mismatch entries
 //
-// The taxonomy (source_parity_types.mjs) already knows about
-// section-structure-mismatch / segment-order-mismatch / snapshot-incomplete /
-// source-unusable, but `source_parity_baseline.mjs` hasn't been extended to
-// accept them yet. Pin that refusal so PR5 has a clear signal when the
-// baseline migration should flip it.
+// PR5 cutover で structure mismatch を baseline 可能にした。identity surface
+// は §3.2 に従い sectionIndex + structureCategory + structureFingerprint。
+// sectionPath は reviewer 可読性のための必須フィールドだが identity key
+// には含めない (同一ページ内で一意の保証が無いため — Finding 2)。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR1 — validateBaseline rejects new structure/source types', () => {
-  const VALID_PR1_FP = 'sha256:' + 'f'.repeat(64);
+describe('Issue #247 PR5 — validateBaseline — structure mismatch entries', () => {
+  const VALID_PR5_FP = 'sha256:' + 'f'.repeat(64);
+  const STRUCTURE_FP = 'sha256:' + '1'.repeat(64);
 
-  function baseEntry(issueType) {
+  function baseStructureEntry(overrides = {}) {
     return {
       slug: 'running-tests/the-command-line-cli',
-      issueType,
-      sectionPath: 'Options',
-      segmentKind: 'paragraph',
-      enSegmentIndex: 0,
-      jaSegmentIndex: null,
-      enSourceFingerprint: VALID_PR1_FP,
-      jaSourceFingerprint: null,
-      missingTokens: null,
-      snapshotFingerprint: VALID_PR1_FP,
-      inconclusiveCategory: null,
-      inconclusiveReason: null,
+      issueType: 'section-structure-mismatch',
+      snapshotFingerprint: VALID_PR5_FP,
       reviewAfter: '2026-10-06',
+      sectionIndex: 7,
+      sectionPath: 'CLI Installation > Basic CLI command',
+      structureCategory: 'kind-multiset',
+      structureFingerprint: STRUCTURE_FP,
+      ...overrides,
     };
   }
 
-  for (const type of [
-    'section-structure-mismatch',
-    'segment-order-mismatch',
-    'snapshot-incomplete',
-    'source-unusable',
-  ]) {
-    it(`rejects baseline entry with issueType="${type}"`, () => {
-      const entry = baseEntry(type);
-      assert.throws(
-        () =>
-          validateBaseline({
-            schemaVersion: 1,
-            generatedAt: '2026-04-08T00:00:00Z',
-            entries: [entry],
-          }),
-        /invalid "issueType" — must be one of/,
-      );
+  it('accepts a valid section-structure-mismatch entry (kind-multiset)', () => {
+    const entry = baseStructureEntry();
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('accepts a valid segment-order-mismatch entry (content-order)', () => {
+    const entry = baseStructureEntry({
+      issueType: 'segment-order-mismatch',
+      structureCategory: 'content-order',
     });
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('accepts a structure entry with empty string sectionPath (preface section)', () => {
+    const entry = baseStructureEntry({ sectionPath: '' });
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('throws on missing sectionIndex (machine identity key must be present)', () => {
+    const entry = baseStructureEntry();
+    delete entry.sectionIndex;
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on non-integer sectionIndex', () => {
+    const entry = baseStructureEntry({ sectionIndex: 1.5 });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on negative sectionIndex', () => {
+    const entry = baseStructureEntry({ sectionIndex: -1 });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on string sectionIndex', () => {
+    const entry = baseStructureEntry({ sectionIndex: '7' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on missing sectionPath (reviewer readability field is required)', () => {
+    const entry = baseStructureEntry();
+    delete entry.sectionPath;
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionPath/,
+    );
+  });
+
+  it('throws on invalid structureCategory enum', () => {
+    const entry = baseStructureEntry({ structureCategory: 'unknown' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /structureCategory/,
+    );
+  });
+
+  it('throws on malformed structureFingerprint (not sha256 hex)', () => {
+    const entry = baseStructureEntry({ structureFingerprint: 'not-a-hash' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /structureFingerprint/,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — validateBaseline — source unusable entries
+//
+// source unusable は page 粒度の issue。identity surface は usabilityReason
+// のみ (§3.3)。sectionPath / structureCategory / structureFingerprint は
+// 持たない。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — validateBaseline — source unusable entries', () => {
+  const VALID_PR5_FP = 'sha256:' + 'f'.repeat(64);
+
+  function baseSourceUnusableEntry(overrides = {}) {
+    return {
+      slug: 'salesforce-testing/faq',
+      issueType: 'source-unusable',
+      snapshotFingerprint: VALID_PR5_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+      ...overrides,
+    };
   }
+
+  it('accepts a valid source-unusable entry (escaped-details-residue)', () => {
+    const entry = baseSourceUnusableEntry();
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('accepts a valid snapshot-incomplete entry (shallow-snapshot)', () => {
+    const entry = baseSourceUnusableEntry({
+      issueType: 'snapshot-incomplete',
+      usabilityReason: 'shallow-snapshot',
+    });
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('throws on invalid usabilityReason enum', () => {
+    const entry = baseSourceUnusableEntry({ usabilityReason: 'unknown' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /usabilityReason/,
+    );
+  });
+
+  it('throws on missing usabilityReason', () => {
+    const entry = baseSourceUnusableEntry();
+    delete entry.usabilityReason;
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /usabilityReason/,
+    );
+  });
 });
 
 describe('INCONCLUSIVE_CATEGORIES', () => {
@@ -470,6 +587,149 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry の対称性
+//
+// runtime 側 (buildBaselineKey) は毎回 computeStructureFingerprint を呼んで
+// fingerprint を derive するのに対し、disk 側 (buildBaselineKeyFromEntry) は
+// 事前計算された structureFingerprint を読むだけ。両者が必ず同じ key を
+// 返すことが baseline matching の前提。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  function makeStructureIssue(overrides = {}) {
+    return {
+      type: 'section-structure-mismatch',
+      sectionPath: 'CLI Installation > Basic CLI command',
+      sectionIndex: 7,
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+      ...overrides,
+    };
+  }
+
+  function entryFromIssue(slug, issue, overrides = {}) {
+    return {
+      slug,
+      issueType: issue.type,
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      sectionIndex: issue.sectionIndex,
+      sectionPath: issue.sectionPath,
+      structureCategory: issue.structureCategory,
+      structureFingerprint: computeStructureFingerprint({
+        structureCategory: issue.structureCategory,
+        enKinds: issue.enKinds,
+        jaKinds: issue.jaKinds,
+        contentPermutation: issue.contentPermutation,
+      }),
+      ...overrides,
+    };
+  }
+
+  it('runtime key and entry key match (kind-multiset)', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue();
+    const entry = entryFromIssue(slug, issue);
+    const issueKey = buildBaselineKey(slug, issue);
+    const entryKey = buildBaselineKeyFromEntry(entry);
+    assert.equal(issueKey, entryKey);
+  });
+
+  it('runtime key and entry key match (segment-order-mismatch / content-order)', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue({
+      type: 'segment-order-mismatch',
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+      ],
+    });
+    const entry = entryFromIssue(slug, issue);
+    assert.equal(buildBaselineKey(slug, issue), buildBaselineKeyFromEntry(entry));
+  });
+
+  it('distinguishes by sectionIndex even when sectionPath is identical (Finding 2 regression pin)', () => {
+    const slug = 'some/page';
+    const issueA = makeStructureIssue({ sectionIndex: 3 });
+    const issueB = makeStructureIssue({ sectionIndex: 7 });
+    // 同一 slug / 同一 sectionPath / 同一 structureCategory / 同一 kinds
+    // でも sectionIndex が違えば別 key になる必要がある。machine identity
+    // に sectionIndex を必須にすることで、同一ページ内で sectionPath が
+    // 衝突したときに baseline が silently 誤った section を覆うのを防ぐ。
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+
+  it('distinguishes by structureCategory (same sectionIndex)', () => {
+    const slug = 'some/page';
+    const issueA = makeStructureIssue({ structureCategory: 'kind-multiset' });
+    const issueB = makeStructureIssue({ structureCategory: 'kind-sequence' });
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+
+  it('distinguishes by enKinds (via structureFingerprint)', () => {
+    const slug = 'some/page';
+    const issueA = makeStructureIssue({
+      enKinds: ['paragraph', 'bullet-list'],
+    });
+    const issueB = makeStructureIssue({
+      enKinds: ['paragraph', 'heading'],
+    });
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+});
+
+describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (source unusable)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  it('runtime key and entry key match (escaped-details-residue)', () => {
+    const slug = 'salesforce-testing/faq';
+    const issue = {
+      type: 'source-unusable',
+      usabilitySignals: { reason: 'escaped-details-residue' },
+    };
+    const entry = {
+      slug,
+      issueType: 'source-unusable',
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+    };
+    assert.equal(buildBaselineKey(slug, issue), buildBaselineKeyFromEntry(entry));
+  });
+
+  it('distinguishes different usabilityReason values', () => {
+    const slug = 'some/page';
+    const issueA = {
+      type: 'snapshot-incomplete',
+      usabilitySignals: { reason: 'shallow-snapshot' },
+    };
+    const issueB = {
+      type: 'snapshot-incomplete',
+      usabilitySignals: { reason: 'extractor-empty' },
+    };
+    assert.notEqual(
+      buildBaselineKey(slug, issueA),
+      buildBaselineKey(slug, issueB),
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
 // tagIssuesWithBaseline — match + page-level invalidation
 // ---------------------------------------------------------------------------
 
@@ -639,5 +899,344 @@ describe('isBaselineExpired', () => {
 
   it('returns true after reviewAfter passes', () => {
     assert.equal(isBaselineExpired(validMissingEntry, '2026-10-07'), true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — tagIssuesWithBaseline contract for structure mismatch
+//
+// runtime 側から baseline entry にマッチする挙動を pin する。
+// tagIssuesWithBaseline 本体は generic contract なので新しい分岐は
+// 入らないはずだが、BASELINE_ELIGIBLE_TYPES / buildBaselineKey の拡張が
+// 下流まで波及していることを explicit に pin する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — tagIssuesWithBaseline (structure mismatch)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  function makeStructureIssue(overrides = {}) {
+    return {
+      type: 'section-structure-mismatch',
+      severity: 'actionable',
+      detail: '[CLI Installation > Basic CLI command] block kind multiset differs',
+      sectionPath: 'CLI Installation > Basic CLI command',
+      sectionIndex: 7,
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+      ...overrides,
+    };
+  }
+
+  function makeStructureEntry(slug, issue, overrides = {}) {
+    return {
+      slug,
+      issueType: issue.type,
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      sectionIndex: issue.sectionIndex,
+      sectionPath: issue.sectionPath,
+      structureCategory: issue.structureCategory,
+      structureFingerprint: computeStructureFingerprint({
+        structureCategory: issue.structureCategory,
+        enKinds: issue.enKinds,
+        jaKinds: issue.jaKinds,
+        contentPermutation: issue.contentPermutation,
+      }),
+      ...overrides,
+    };
+  }
+
+  it('tags a matching structure issue with baselined: true', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue();
+    const entry = makeStructureEntry(slug, issue);
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.invalidated, false);
+  });
+
+  it('does NOT tag when structureFingerprint differs (same sectionIndex / category)', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue({ enKinds: ['paragraph', 'heading'] });
+    const otherIssue = makeStructureIssue({ enKinds: ['paragraph', 'table'] });
+    const entry = makeStructureEntry(slug, otherIssue);
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, undefined);
+  });
+
+  it('invalidates page when snapshotFingerprint differs', () => {
+    const slug = 'running-tests/the-command-line-cli';
+    const issue = makeStructureIssue();
+    const entry = makeStructureEntry(slug, issue);
+    const otherFp = 'sha256:' + 'a'.repeat(64);
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], otherFp);
+    assert.equal(result.tagged[0].baselined, undefined);
+    assert.equal(result.invalidated, true);
+  });
+
+  it('(Finding 2) two sections with identical path/fingerprint but different sectionIndex are tagged independently', () => {
+    // 同一ページに section A (index=3) と section B (index=7) があり、
+    // 両方が同じ sectionPath + 同じ structureFingerprint を出すケース。
+    // baseline が A にしか付いていないとき、B は untagged のままになる
+    // 必要がある。sectionIndex が identity に含まれていないと、両方が
+    // 同じ key になって A の baseline が B にも silently 被さってしまう。
+    const slug = 'some/page';
+    const sharedOverrides = {
+      sectionPath: 'Shared heading',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    };
+    const issueA = makeStructureIssue({ ...sharedOverrides, sectionIndex: 3 });
+    const issueB = makeStructureIssue({ ...sharedOverrides, sectionIndex: 7 });
+    const entryA = makeStructureEntry(slug, issueA);
+    const result = tagIssuesWithBaseline(slug, [issueA, issueB], [entryA], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.tagged[1].baselined, undefined);
+  });
+});
+
+describe('Issue #247 PR5 — tagIssuesWithBaseline (source unusable)', () => {
+  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
+
+  it('tags a matching source-unusable issue by usabilityReason', () => {
+    const slug = 'salesforce-testing/faq';
+    const issue = {
+      type: 'source-unusable',
+      severity: 'actionable',
+      detail: 'source snapshot is unusable (escaped-details-residue)',
+      usabilitySignals: { reason: 'escaped-details-residue' },
+    };
+    const entry = {
+      slug,
+      issueType: 'source-unusable',
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+    };
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, true);
+    assert.equal(result.invalidated, false);
+  });
+
+  it('does NOT tag when usabilityReason mismatches', () => {
+    const slug = 'salesforce-testing/faq';
+    const issue = {
+      type: 'source-unusable',
+      severity: 'actionable',
+      detail: 'source snapshot is unusable',
+      usabilitySignals: { reason: 'extractor-empty' },
+    };
+    const entry = {
+      slug,
+      issueType: 'source-unusable',
+      snapshotFingerprint: PAGE_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+    };
+    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
+    assert.equal(result.tagged[0].baselined, undefined);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — STRUCTURE_CATEGORIES / USABILITY_REASONS
+//
+// 新 4 type (section-structure-mismatch / segment-order-mismatch /
+// snapshot-incomplete / source-unusable) を baseline 可能にするため、
+// structureCategory / usabilityReason の allowlist を frozen Set で pin する。
+// emitter 側 (source_parity_structure.mjs / source_parity_source_usability.mjs)
+// の出力と同一の enum を参照することで、validateBaseline / buildBaselineKey
+// の identity 検証を decouple する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — STRUCTURE_CATEGORIES', () => {
+  it('contains the 3 canonical structure categories (kind-multiset / kind-sequence / content-order)', () => {
+    assert.ok(STRUCTURE_CATEGORIES.has('kind-multiset'));
+    assert.ok(STRUCTURE_CATEGORIES.has('kind-sequence'));
+    assert.ok(STRUCTURE_CATEGORIES.has('content-order'));
+    assert.equal(STRUCTURE_CATEGORIES.size, 3);
+  });
+
+  it('is frozen (regression guard against accidental mutation)', () => {
+    assert.equal(Object.isFrozen(STRUCTURE_CATEGORIES), true);
+  });
+
+  it('does NOT contain unrelated values (guards against typo drift)', () => {
+    assert.ok(!STRUCTURE_CATEGORIES.has(''));
+    assert.ok(!STRUCTURE_CATEGORIES.has('unknown'));
+    assert.ok(!STRUCTURE_CATEGORIES.has('segment-missing'));
+  });
+});
+
+describe('Issue #247 PR5 — USABILITY_REASONS', () => {
+  it('contains the 3 known unusable reasons', () => {
+    assert.ok(USABILITY_REASONS.has('shallow-snapshot'));
+    assert.ok(USABILITY_REASONS.has('escaped-details-residue'));
+    assert.ok(USABILITY_REASONS.has('extractor-empty'));
+    assert.equal(USABILITY_REASONS.size, 3);
+  });
+
+  it('is frozen (regression guard against accidental mutation)', () => {
+    assert.equal(Object.isFrozen(USABILITY_REASONS), true);
+  });
+
+  it('does NOT contain unrelated values', () => {
+    assert.ok(!USABILITY_REASONS.has(''));
+    assert.ok(!USABILITY_REASONS.has('unknown'));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — computeStructureFingerprint
+//
+// structure mismatch の baseline identity key 用に、enKinds / jaKinds /
+// structureCategory / contentPermutation を sha256 hex に畳み込む helper。
+// 生の配列を baseline entry に保存すると JSON が肥大化し、downstream の
+// 生データアクセス手段が増えるため、derived fingerprint 1 本に集約する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — computeStructureFingerprint', () => {
+  const FINGERPRINT_RE = /^sha256:[0-9a-f]{64}$/;
+
+  it('produces a deterministic sha256:<64 hex> fingerprint for a given input', () => {
+    const fp = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    });
+    assert.match(fp, FINGERPRINT_RE);
+    const fp2 = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    });
+    assert.equal(fp, fp2);
+  });
+
+  it('differs when enKinds differ', () => {
+    const a = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['paragraph'],
+    });
+    const b = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'heading'],
+      jaKinds: ['paragraph'],
+    });
+    assert.notEqual(a, b);
+  });
+
+  it('differs when jaKinds differ', () => {
+    const a = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph', 'bullet-list'],
+    });
+    const b = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph', 'heading'],
+    });
+    assert.notEqual(a, b);
+  });
+
+  it('differs when structureCategory differs (same kinds)', () => {
+    const shared = {
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['paragraph', 'bullet-list'],
+    };
+    const multiset = computeStructureFingerprint({
+      ...shared,
+      structureCategory: 'kind-multiset',
+    });
+    const sequence = computeStructureFingerprint({
+      ...shared,
+      structureCategory: 'kind-sequence',
+    });
+    assert.notEqual(multiset, sequence);
+  });
+
+  it('differs when contentPermutation differs (content-order only)', () => {
+    const shared = {
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+    };
+    const a = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+      ],
+    });
+    const b = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 0, score: 0.9 },
+        { enIndex: 1, jaIndex: 1, score: 0.9 },
+      ],
+    });
+    assert.notEqual(a, b);
+  });
+
+  it('is stable under contentPermutation reordering (sorted by enIndex internally)', () => {
+    const shared = {
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+    };
+    const sorted = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+      ],
+    });
+    const reversed = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+      ],
+    });
+    assert.equal(sorted, reversed);
+  });
+
+  it('is stable for kind-multiset whether contentPermutation is null/undefined/missing', () => {
+    const base = {
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph'],
+    };
+    const noField = computeStructureFingerprint(base);
+    const undef = computeStructureFingerprint({ ...base, contentPermutation: undefined });
+    const nullFp = computeStructureFingerprint({ ...base, contentPermutation: null });
+    assert.equal(noField, undef);
+    assert.equal(noField, nullFp);
+  });
+
+  it('ignores permutation "score" field (score is not identity)', () => {
+    const shared = {
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+    };
+    const low = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.1 },
+        { enIndex: 1, jaIndex: 0, score: 0.1 },
+      ],
+    });
+    const high = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.99 },
+        { enIndex: 1, jaIndex: 0, score: 0.99 },
+      ],
+    });
+    assert.equal(low, high);
   });
 });

@@ -40,11 +40,15 @@
  * (list item 数差、table cell 数差) は別 comparator の責務であり、この
  * structure comparator は **block 列の差** だけを見る。
  *
- * Issue payload contract (PR5 baseline identity surface)
- * ------------------------------------------------------
+ * Issue payload contract (PR5 baseline identity surface, wired)
+ * --------------------------------------------------------------
  * 固定 schema は単体テスト (source_parity_structure.test.mjs) にも pin
- * してある。PR5 で baseline schema を bump せずにここのフィールドを
- * rename / reorder / 削除してはいけない。
+ * してある。PR5 baseline migration で `sectionIndex` / `structureCategory` /
+ * `enKinds` / `jaKinds` / `contentPermutation` がそれぞれ
+ * `source_parity_baseline.mjs::computeStructureFingerprint` に渡されて
+ * identity hash に畳み込まれている。これらのフィールドを rename /
+ * reorder / 削除すると baseline match が silently 壊れる。変更する場合
+ * は baseline schemaVersion bump とセットで行うこと。
  *
  * 純粋関数のみ: 入力は決して mutate しない。
  *
@@ -60,9 +64,12 @@ import { scoreSegmentMatch } from './source_parity_align_scoring.mjs';
 /**
  * structure comparator が `enKinds` / `jaKinds` で使う block 単位の kind
  * 語彙。この集合は `source_parity_structure.test.mjs` の regression test
- * で PIN されている。PR5 では `enKinds.join('|')` / `jaKinds.join('|')` を
- * baseline identity key に hash する予定なので、エントリの追加・削除・
- * 改名は破壊的変更であり baseline schema の bump とセットにする必要がある。
+ * で PIN されている。Issue #247 PR5 baseline migration 以降、
+ * `enKinds.join('|')` / `jaKinds.join('|')` は
+ * `source_parity_baseline.mjs::computeStructureFingerprint` で baseline
+ * identity key に hash されている。エントリの追加・削除・改名は破壊的
+ * 変更であり、既存 baseline match を silently 壊す。変更する場合は
+ * baseline schemaVersion の bump とセットで行うこと。
  */
 export const STRUCTURE_COMPARATOR_KINDS = Object.freeze([
   'paragraph',

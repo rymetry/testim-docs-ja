@@ -12,9 +12,24 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+
+import {
+  STRUCTURE_MISMATCH_TYPES,
+  SOURCE_UNUSABLE_TYPES,
+} from './source_parity_types.mjs';
 
 /**
  * frozen baseline 対象になる issue type。
+ *
+ * Issue #247 PR5 — structure mismatch (section-structure-mismatch /
+ * segment-order-mismatch) と source unusable (snapshot-incomplete /
+ * source-unusable) を baseline 可能にした。identity key は segment-*
+ * ファミリとは別系統で、structure 系は sectionIndex + structureCategory +
+ * structureFingerprint、source unusable 系は usabilityReason のみで同定
+ * する (§3.2 / §3.3)。`source-unusable` / `snapshot-incomplete` は gate
+ * には載らないが (翻訳者責任外な source 側 debt)、ack / baseline で人手
+ * 管理できる枠を提供する。
  *
  * @type {ReadonlySet<string>}
  */
@@ -26,8 +41,84 @@ export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
     'segment-untranslated',
     'segment-token-gap',
     'segment-inconclusive',
+    'section-structure-mismatch',
+    'segment-order-mismatch',
+    'snapshot-incomplete',
+    'source-unusable',
   ]),
 );
+
+/**
+ * Issue #247 PR5 — structure mismatch baseline 対象の structureCategory 列。
+ * `source_parity_structure.mjs` の 3 stage (kind-multiset / kind-sequence /
+ * content-order) と 1:1 で対応する enum。emitter 側が新しい stage を追加
+ * する際はこちらも同期する必要がある (test で pin)。
+ *
+ * @type {ReadonlySet<string>}
+ */
+export const STRUCTURE_CATEGORIES = Object.freeze(
+  new Set(['kind-multiset', 'kind-sequence', 'content-order']),
+);
+
+/**
+ * Issue #247 PR5 — source unusable baseline 対象の usabilityReason 列。
+ * `source_parity_source_usability.mjs::buildIssue` の reason と 1:1 で対応
+ * する enum。emitter 側が新しい reason を追加する際はこちらも同期する
+ * 必要がある (test で pin)。
+ *
+ * @type {ReadonlySet<string>}
+ */
+export const USABILITY_REASONS = Object.freeze(
+  new Set(['shallow-snapshot', 'escaped-details-residue', 'extractor-empty']),
+);
+
+/**
+ * Issue #247 PR5 — structure mismatch issue の payload から
+ * `structureFingerprint` (sha256:<64 hex>) を derive する純粋関数。
+ *
+ * key 順序と join 記号を厳密に固定することで、runtime 側の
+ * `buildBaselineKey` と disk 側の `buildBaselineKeyFromEntry` が同じ
+ * fingerprint を経由して identity key を合成できるようにする。生の
+ * enKinds / jaKinds / contentPermutation は baseline entry に保存せず、
+ * ここで hash に畳み込む (§3.2 参照)。
+ *
+ * 注意点:
+ *   - enKinds / jaKinds の順序は EN/JA それぞれの自然順を使う
+ *     (`source_parity_structure.mjs::buildBaseDiff` の出力順)。
+ *   - contentPermutation は `structureCategory === 'content-order'` の
+ *     ときのみ使用し、enIndex 昇順に並べ替えて `enIndex->jaIndex`
+ *     形式に join する。`score` は identity に含めない。
+ *   - kind-multiset / kind-sequence では contentPermutation を無視する
+ *     (null / undefined / 省略で同じ fingerprint になる)。
+ *
+ * @param {object} input
+ * @param {string} input.structureCategory — STRUCTURE_CATEGORIES の 1 つ
+ * @param {string[]} input.enKinds
+ * @param {string[]} input.jaKinds
+ * @param {Array<{enIndex: number, jaIndex: number, score?: number}>} [input.contentPermutation]
+ * @returns {string} `sha256:<64 hex>`
+ */
+export function computeStructureFingerprint({
+  structureCategory,
+  enKinds,
+  jaKinds,
+  contentPermutation,
+}) {
+  const permutationDigest =
+    structureCategory === 'content-order' && Array.isArray(contentPermutation)
+      ? [...contentPermutation]
+          .sort((a, b) => a.enIndex - b.enIndex)
+          .map((p) => `${p.enIndex}->${p.jaIndex}`)
+          .join(',')
+      : '';
+  const raw = [
+    structureCategory,
+    Array.isArray(enKinds) ? enKinds.join('|') : '',
+    Array.isArray(jaKinds) ? jaKinds.join('|') : '',
+    permutationDigest,
+  ].join('\n');
+  return 'sha256:' + createHash('sha256').update(raw).digest('hex');
+}
 
 /**
  * `segment-inconclusive` の構造化カテゴリ。free text の `inconclusiveReason` は
@@ -126,7 +217,71 @@ export function validateBaseline(parsed) {
     //   - EN-owned: segment-missing, segment-shifted, segment-token-gap → enSegmentIndex
     //   - JA-owned: segment-extra, segment-untranslated → jaSegmentIndex
     //   - page-level: segment-inconclusive → inconclusiveCategory
-    if (entry.issueType === 'segment-inconclusive') {
+    //   - PR5 section: section-structure-mismatch / segment-order-mismatch →
+    //       sectionIndex + structureCategory + structureFingerprint
+    //   - PR5 page: snapshot-incomplete / source-unusable → usabilityReason
+    if (STRUCTURE_MISMATCH_TYPES.has(entry.issueType)) {
+      // Issue #247 PR5 — section 粒度の structure diff。
+      //
+      // identity surface (machine key):
+      //   sectionIndex + structureCategory + structureFingerprint
+      //
+      // sectionPath は reviewer 可読性 / sort 補助のために保存するが
+      // identity には使わない。sectionPath は同一ページ内で一意の保証が
+      // 無く、両方同じ sectionPath を持つ section が共存するケースで
+      // baseline が silently 誤った section を覆うのを防ぐため
+      // (レビュー指摘 Finding 2)。
+      //
+      // 生の enKinds / jaKinds / contentPermutation は
+      // structureFingerprint に畳み込まれる (computeStructureFingerprint
+      // 参照)。reviewer 用の raw data は parity-check-status.json 側に
+      // 出る。
+      if (
+        typeof entry.sectionIndex !== 'number' ||
+        !Number.isInteger(entry.sectionIndex) ||
+        entry.sectionIndex < 0
+      ) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have non-negative integer sectionIndex (machine identity key)`,
+        );
+      }
+      if (typeof entry.sectionPath !== 'string') {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have string sectionPath (empty string allowed for preface; reviewer readability only, not identity)`,
+        );
+      }
+      if (
+        typeof entry.structureCategory !== 'string' ||
+        !STRUCTURE_CATEGORIES.has(entry.structureCategory)
+      ) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have structureCategory in ` +
+            `${[...STRUCTURE_CATEGORIES].join(', ')}`,
+        );
+      }
+      if (!isValidFingerprint(entry.structureFingerprint)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have valid structureFingerprint (sha256:<64 hex>)`,
+        );
+      }
+    } else if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
+      // Issue #247 PR5 — page 粒度の source unusable detector。
+      //
+      // identity surface: usabilityReason のみ。
+      // sectionPath / structureCategory / structureFingerprint は持たない
+      // (page-level な issue なので)。数値フィールド (enBodySegmentCount
+      // 等) は drift 発火の閾値判定に使われる根拠であって identity では
+      // ないため baseline には保存しない。
+      if (
+        typeof entry.usabilityReason !== 'string' ||
+        !USABILITY_REASONS.has(entry.usabilityReason)
+      ) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have usabilityReason in ` +
+            `${[...USABILITY_REASONS].join(', ')}`,
+        );
+      }
+    } else if (entry.issueType === 'segment-inconclusive') {
       if (
         typeof entry.inconclusiveCategory !== 'string' ||
         !INCONCLUSIVE_CATEGORIES.has(entry.inconclusiveCategory)
@@ -264,6 +419,28 @@ export function isBaselineExpiringSoon(entry, today) {
  * @returns {string}
  */
 export function buildBaselineKey(slug, issue) {
+  if (STRUCTURE_MISMATCH_TYPES.has(issue.type)) {
+    // Issue #247 PR5 — section 粒度の structure diff。
+    // identity surface: sectionIndex + structureCategory + structureFingerprint。
+    // sectionPath は entry 側に保存するが machine identity key には含めない
+    // (同一ページ内で一意の保証が無いため — Finding 2)。
+    const fp = computeStructureFingerprint({
+      structureCategory: issue.structureCategory,
+      enKinds: Array.isArray(issue.enKinds) ? issue.enKinds : [],
+      jaKinds: Array.isArray(issue.jaKinds) ? issue.jaKinds : [],
+      contentPermutation: issue.contentPermutation,
+    });
+    return (
+      `${slug}|${issue.type}|idx=${issue.sectionIndex ?? '_null_'}|` +
+      `cat=${issue.structureCategory ?? '_null_'}|sfp=${fp}`
+    );
+  }
+  if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
+    // Issue #247 PR5 — page 粒度の source unusable detector。
+    // identity surface: usabilityReason のみ。
+    const reason = issue.usabilitySignals?.reason ?? '_null_';
+    return `${slug}|${issue.type}|reason=${reason}`;
+  }
   if (issue.type === 'segment-inconclusive') {
     return `${slug}|${issue.type}|category=${issue.inconclusiveCategory ?? '_null_'}`;
   }
@@ -301,6 +478,18 @@ export function buildBaselineKey(slug, issue) {
  * @returns {string}
  */
 export function buildBaselineKeyFromEntry(entry) {
+  if (STRUCTURE_MISMATCH_TYPES.has(entry.issueType)) {
+    // Issue #247 PR5 — buildBaselineKey (runtime) と同じ合成順・同じ区切り
+    // 文字を使う。runtime 側は毎回 fingerprint を derive するが disk 側は
+    // 事前計算された structureFingerprint をそのまま読む。
+    return (
+      `${entry.slug}|${entry.issueType}|idx=${entry.sectionIndex ?? '_null_'}|` +
+      `cat=${entry.structureCategory ?? '_null_'}|sfp=${entry.structureFingerprint ?? '_null_'}`
+    );
+  }
+  if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
+    return `${entry.slug}|${entry.issueType}|reason=${entry.usabilityReason ?? '_null_'}`;
+  }
   if (entry.issueType === 'segment-inconclusive') {
     return `${entry.slug}|${entry.issueType}|category=${entry.inconclusiveCategory ?? '_null_'}`;
   }

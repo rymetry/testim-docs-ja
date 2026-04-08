@@ -15,7 +15,10 @@ import {
   serializeBaseline,
   mergePartialBaseline,
   defaultReviewAfter,
+  parseArgs,
+  mergePartialBaselineByType,
 } from '../generate_parity_baseline.mjs';
+import { computeStructureFingerprint } from '../lib/source_parity_baseline.mjs';
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
 const OTHER_FINGERPRINT = 'sha256:' + 'b'.repeat(64);
@@ -550,5 +553,354 @@ describe('mergePartialBaseline', () => {
     assert.equal(merged.generatedAt, '2026-04-06T03:00:00Z');
     assert.equal(merged.generatedFromRunId, 'new-run');
     assert.equal(merged.rationale, 'partial');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — buildBaselineFromStatus 新 type 対応
+//
+// structure mismatch / source unusable を baseline 可能にする (§3.9)。
+// entry 形は §3.2 / §3.3 に従い、structureFingerprint を helper で derive する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — buildBaselineFromStatus structure mismatch entry', () => {
+  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+  const fpMap = new Map([
+    ['running-tests/the-command-line-cli', PR5_FP],
+    ['salesforce-testing/faq', PR5_FP],
+  ]);
+  const pr5Meta = {
+    runId: 'pr5',
+    generatedAt: '2026-04-06T03:00:00Z',
+    reviewAfterOverride: '2026-10-06',
+    rationale: 'pr5',
+  };
+
+  function statusWithStructureMismatch() {
+    return {
+      summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/running-tests/the-command-line-cli.md',
+          issues: [
+            {
+              type: 'section-structure-mismatch',
+              severity: 'actionable',
+              detail: '[CLI Installation > Basic CLI command] block kind multiset differs',
+              sectionPath: 'CLI Installation > Basic CLI command',
+              sectionIndex: 7,
+              structureCategory: 'kind-multiset',
+              enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+              jaKinds: ['paragraph', 'paragraph'],
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  it('emits a structure mismatch entry with sectionIndex / sectionPath / structureCategory / structureFingerprint', () => {
+    const status = statusWithStructureMismatch();
+    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    assert.equal(baseline.entries.length, 1);
+    const entry = baseline.entries[0];
+    assert.equal(entry.issueType, 'section-structure-mismatch');
+    assert.equal(entry.slug, 'running-tests/the-command-line-cli');
+    assert.equal(entry.sectionIndex, 7);
+    assert.equal(entry.sectionPath, 'CLI Installation > Basic CLI command');
+    assert.equal(entry.structureCategory, 'kind-multiset');
+    assert.match(entry.structureFingerprint, /^sha256:[0-9a-f]{64}$/);
+  });
+
+  it('structureFingerprint matches computeStructureFingerprint helper', () => {
+    const status = statusWithStructureMismatch();
+    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const entry = baseline.entries[0];
+    const expected = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    });
+    assert.equal(entry.structureFingerprint, expected);
+  });
+
+  it('skips a structure mismatch issue with malformed sectionIndex', () => {
+    const status = {
+      summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/running-tests/the-command-line-cli.md',
+          issues: [
+            {
+              type: 'section-structure-mismatch',
+              severity: 'actionable',
+              sectionPath: 'CLI',
+              sectionIndex: 'not-a-number',
+              structureCategory: 'kind-multiset',
+              enKinds: ['paragraph'],
+              jaKinds: ['paragraph'],
+            },
+          ],
+        },
+      ],
+    };
+    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    assert.equal(baseline.entries.length, 0);
+  });
+});
+
+describe('Issue #247 PR5 — buildBaselineFromStatus source unusable entry', () => {
+  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+  const fpMap = new Map([['salesforce-testing/faq', PR5_FP]]);
+  const pr5Meta = {
+    runId: 'pr5',
+    generatedAt: '2026-04-06T03:00:00Z',
+    reviewAfterOverride: '2026-10-06',
+    rationale: 'pr5',
+  };
+
+  it('emits a source unusable entry with usabilityReason from issue.usabilitySignals.reason', () => {
+    const status = {
+      summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/salesforce-testing/faq.md',
+          issues: [
+            {
+              type: 'source-unusable',
+              severity: 'actionable',
+              detail: 'source snapshot is unusable (escaped-details-residue)',
+              usabilitySignals: { reason: 'escaped-details-residue' },
+            },
+          ],
+        },
+      ],
+    };
+    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    assert.equal(baseline.entries.length, 1);
+    const entry = baseline.entries[0];
+    assert.equal(entry.issueType, 'source-unusable');
+    assert.equal(entry.slug, 'salesforce-testing/faq');
+    assert.equal(entry.usabilityReason, 'escaped-details-residue');
+  });
+
+  it('skips a source unusable issue with unknown reason', () => {
+    const status = {
+      summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/salesforce-testing/faq.md',
+          issues: [
+            {
+              type: 'source-unusable',
+              severity: 'actionable',
+              usabilitySignals: { reason: 'unknown-reason' },
+            },
+          ],
+        },
+      ],
+    };
+    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    assert.equal(baseline.entries.length, 0);
+  });
+});
+
+describe('Issue #247 PR5 — sortEntries with structure / source unusable types', () => {
+  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+  const fpMap = new Map([
+    ['some/page', PR5_FP],
+  ]);
+  const pr5Meta = {
+    runId: 'pr5',
+    generatedAt: '2026-04-06T03:00:00Z',
+    reviewAfterOverride: '2026-10-06',
+    rationale: 'pr5',
+  };
+
+  it('sorts structure mismatch entries by sectionIndex within slug', () => {
+    const status = {
+      summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
+      files: [
+        {
+          file: 'src/content/docs/some/page.md',
+          issues: [
+            {
+              type: 'section-structure-mismatch',
+              severity: 'actionable',
+              sectionPath: 'A',
+              sectionIndex: 5,
+              structureCategory: 'kind-multiset',
+              enKinds: ['paragraph'],
+              jaKinds: ['paragraph', 'paragraph'],
+            },
+            {
+              type: 'section-structure-mismatch',
+              severity: 'actionable',
+              sectionPath: 'B',
+              sectionIndex: 1,
+              structureCategory: 'kind-multiset',
+              enKinds: ['paragraph'],
+              jaKinds: ['paragraph', 'paragraph'],
+            },
+          ],
+        },
+      ],
+    };
+    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const out = serializeBaseline(baseline);
+    // sectionIndex=1 が先に来る
+    const idx1 = out.indexOf('"sectionIndex": 1');
+    const idx5 = out.indexOf('"sectionIndex": 5');
+    assert.ok(idx1 > -1 && idx5 > -1);
+    assert.ok(idx1 < idx5, 'sectionIndex=1 must appear before sectionIndex=5');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — parseArgs / --types partial mode
+//
+// 既存 segment-* エントリの reviewAfter を意図せず shift させずに、
+// 新 4 type 向けの entry だけを再生成するモード (§7.4)。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — parseArgs --types partial mode', () => {
+  it('parses --types=<csv> into a string[] of issue types', () => {
+    const args = parseArgs([
+      '--types=section-structure-mismatch,segment-order-mismatch',
+    ]);
+    assert.deepEqual(args.types, [
+      'section-structure-mismatch',
+      'segment-order-mismatch',
+    ]);
+  });
+
+  it('returns null types when not specified', () => {
+    const args = parseArgs(['--regenerate']);
+    assert.equal(args.types, null);
+  });
+
+  it('treats --types as mutually exclusive with --regenerate (parsing returns both)', () => {
+    // CLI validation that this combination is invalid lives in main();
+    // here we only check that parseArgs surfaces both flags so main can
+    // detect the conflict.
+    const args = parseArgs(['--regenerate', '--types=source-unusable']);
+    assert.equal(args.regenerate, true);
+    assert.deepEqual(args.types, ['source-unusable']);
+  });
+
+  it('treats --types as mutually exclusive with --slug (parsing returns both)', () => {
+    const args = parseArgs(['--slug=overview/foo', '--types=source-unusable']);
+    assert.deepEqual(args.slugs, ['overview/foo']);
+    assert.deepEqual(args.types, ['source-unusable']);
+  });
+});
+
+describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
+  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+  const SEG_FP = 'sha256:' + 'c'.repeat(64);
+
+  const existing = {
+    schemaVersion: 1,
+    generatedAt: '2026-03-01T00:00:00Z',
+    generatedFromRunId: 'old-run',
+    rationale: 'existing baseline',
+    entries: [
+      {
+        slug: 'overview/example',
+        issueType: 'segment-missing',
+        sectionPath: 'Setup',
+        segmentKind: 'paragraph',
+        enSegmentIndex: 0,
+        jaSegmentIndex: null,
+        enSourceFingerprint: SEG_FP,
+        jaSourceFingerprint: null,
+        missingTokens: null,
+        snapshotFingerprint: PR5_FP,
+        inconclusiveCategory: null,
+        inconclusiveReason: null,
+        // 重要: 既存 segment-* エントリの reviewAfter は touch 禁止 (§7.4)
+        reviewAfter: '2026-09-01',
+      },
+    ],
+  };
+
+  it('replaces only entries whose issueType is in typesToReplace', () => {
+    const newStructureEntry = {
+      slug: 'running-tests/the-command-line-cli',
+      issueType: 'section-structure-mismatch',
+      snapshotFingerprint: PR5_FP,
+      reviewAfter: '2026-10-06',
+      sectionIndex: 7,
+      sectionPath: 'CLI Installation > Basic CLI command',
+      structureCategory: 'kind-multiset',
+      structureFingerprint: 'sha256:' + '1'.repeat(64),
+    };
+    const merged = mergePartialBaselineByType(
+      existing,
+      ['section-structure-mismatch', 'segment-order-mismatch'],
+      [newStructureEntry],
+      {
+        generatedAt: '2026-04-06T03:00:00Z',
+        generatedFromRunId: 'pr5-run',
+        rationale: 'pr5 partial',
+      },
+    );
+    assert.equal(merged.entries.length, 2);
+    // 既存 segment-* は bit-identical で残る (reviewAfter 含む)
+    const segEntry = merged.entries.find((e) => e.issueType === 'segment-missing');
+    assert.equal(segEntry.reviewAfter, '2026-09-01');
+    // 新 type の entry が追加されている
+    const structEntry = merged.entries.find(
+      (e) => e.issueType === 'section-structure-mismatch',
+    );
+    assert.ok(structEntry);
+    assert.equal(structEntry.sectionIndex, 7);
+  });
+
+  it('removes existing entries of the targeted types when no new entries are provided', () => {
+    const existingWithStructure = {
+      ...existing,
+      entries: [
+        ...existing.entries,
+        {
+          slug: 'running-tests/the-command-line-cli',
+          issueType: 'section-structure-mismatch',
+          snapshotFingerprint: PR5_FP,
+          reviewAfter: '2026-10-06',
+          sectionIndex: 7,
+          sectionPath: 'CLI',
+          structureCategory: 'kind-multiset',
+          structureFingerprint: 'sha256:' + '1'.repeat(64),
+        },
+      ],
+    };
+    const merged = mergePartialBaselineByType(
+      existingWithStructure,
+      ['section-structure-mismatch'],
+      [],
+      {
+        generatedAt: '2026-04-06T03:00:00Z',
+        generatedFromRunId: 'pr5-run',
+        rationale: 'pr5 partial',
+      },
+    );
+    assert.equal(merged.entries.length, 1);
+    assert.equal(merged.entries[0].issueType, 'segment-missing');
+  });
+
+  it('preserves entries whose issueType is NOT in typesToReplace', () => {
+    const merged = mergePartialBaselineByType(
+      existing,
+      ['section-structure-mismatch'],
+      [],
+      {
+        generatedAt: '2026-04-06T03:00:00Z',
+        generatedFromRunId: 'pr5-run',
+        rationale: 'pr5 partial',
+      },
+    );
+    assert.equal(merged.entries.length, 1);
+    assert.equal(merged.entries[0].issueType, 'segment-missing');
+    assert.equal(merged.entries[0].reviewAfter, '2026-09-01');
   });
 });

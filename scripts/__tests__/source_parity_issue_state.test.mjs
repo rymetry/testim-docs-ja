@@ -13,6 +13,7 @@ let isActiveParityIssue;
 let isNonBlockingParityIssue;
 let isStructureMismatchIssue;
 let isSourceUnusableIssue;
+let isAdvisoryOnlyParityIssue;
 
 before(async () => {
   ({
@@ -24,6 +25,7 @@ before(async () => {
     isNonBlockingParityIssue,
     isStructureMismatchIssue,
     isSourceUnusableIssue,
+    isAdvisoryOnlyParityIssue,
   } = await import('../lib/source_parity_issue_state.mjs'));
   ({
     COARSE_SIGNAL_TYPES,
@@ -567,50 +569,54 @@ describe('Issue #247 PR1 — isSourceUnusableIssue', () => {
   });
 });
 
-describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until PR5 cutover', () => {
-  // PR2 で structure-mismatch / source-unusable の emission を入れたが、
-  // gate cutover (= `reportableActive*` への組み込み) は Issue #247 の
-  // PR 分割案で PR5 の責務になっている (PR4 は summary / reporting / CLI
-  // の可視化のみで gate flip を伴わない)。
+describe('Issue #247 PR5 — isReportableParityIssue cutover for structure mismatch', () => {
+  // PR5 gate cutover: `isReportableParityIssue` の exclusion を
+  // `isStructureMismatchIssue(...) || isSourceUnusableIssue(...)` から
+  // `isSourceUnusableIssue(...)` のみに縮小した (§3.6)。
   //
-  // PR2 時点で gate に載せると、PR1 で `BASELINE_ELIGIBLE_TYPES` に新 type
-  // を入れていない (PR5 で wiring 予定) ため、既存の segment-* drift で
-  // baseline されているページが PR2 から structure-mismatch を emit した
-  // 瞬間に gate exit 1 でブロックされる。これを避けるため `isReportable
-  // ParityIssue` で新 type を gate 経路から明示的に exclude する。
-  //
-  // PR5 の cutover では `source_parity_issue_state.mjs::isReportable
-  // ParityIssue` の `if (isStructureMismatchIssue(...) || isSourceUnusable
-  // Issue(...)) return false;` 行を `isSourceUnusableIssue(...)` のみに
-  // 縮小することで、structure mismatch が `reportableActive*` に流れ込む。
-  // source-unusable は PR5 cutover 後も翻訳者責任外として gate に乗らず
-  // advisory のまま。それまでは独立 counter
-  // (`structureMismatchIssues` / `snapshotUnusableIssues`) からだけ参照
-  // される構造化 advisory として動く。
-  //
-  // 注意 — ack / baseline 周りのテストは、新 type の述語がまだ実運用
-  // フロー上では到達しない (loader が reject する) が、forward-compatible
-  // に「ack/baseline ロジックを通っても結果が一貫する」ことを pin する。
+  // 結果として:
+  //   - structure mismatch (section-structure-mismatch / segment-order-
+  //     mismatch) は ack / baseline で覆われていない限り reportable に
+  //     昇格し、`reportableActive*` counter と gate exit code に寄与する。
+  //   - source-unusable (snapshot-incomplete / source-unusable) は翻訳者
+  //     責任外 (snapshot / source sync 側 debt は翻訳 PR では直せない)
+  //     として引き続き advisory のまま。baseline で freeze する枠だけ
+  //     提供し、exit code には寄与しない。
+  //   - expired baseline が structure mismatch に付くと再点火する (通常の
+  //     ack/baseline expiry セマンティクスに整合)。source-unusable は
+  //     例外で、expired baseline でも reportable に昇格しない。
+  //   - ack / baseline で有効に covered されている structure mismatch は
+  //     引き続き非 reportable。
 
-  for (const type of [
-    'section-structure-mismatch',
-    'segment-order-mismatch',
-    'snapshot-incomplete',
-    'source-unusable',
-  ]) {
-    it(`${type} is NOT reportable in PR2 even when active (gate cutover deferred to PR5)`, () => {
+  // ---- structure mismatch: active → reportable に昇格 (flip) ----
+  for (const type of ['section-structure-mismatch', 'segment-order-mismatch']) {
+    it(`${type} is reportable when active (PR5 cutover, no ack/baseline)`, () => {
+      assert.equal(
+        isReportableParityIssue({
+          type,
+          severity: 'actionable',
+        }),
+        true,
+        `${type} must be reportable after PR5 cutover`,
+      );
+    });
+  }
+
+  // ---- source unusable: 引き続き advisory (変化なし) ----
+  for (const type of ['snapshot-incomplete', 'source-unusable']) {
+    it(`${type} is NOT reportable (translator-out-of-scope, stays advisory after PR5)`, () => {
       assert.equal(
         isReportableParityIssue({
           type,
           severity: 'actionable',
         }),
         false,
-        `${type} must not be reportable until PR5 cutover`,
+        `${type} must stay advisory after PR5 cutover`,
       );
     });
   }
 
-  it('valid ack on a structure mismatch keeps it non-reportable (ack already covered the gate exclusion)', () => {
+  it('valid ack on a structure mismatch keeps it non-reportable (ack path wins)', () => {
     assert.equal(
       isReportableParityIssue({
         type: 'section-structure-mismatch',
@@ -623,8 +629,6 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
   });
 
   it('frozen baseline on a structure mismatch keeps it non-reportable', () => {
-    // baseline が新 type に付くのは PR5 以降だが、述語が forward-
-    // compatible に動くことを pin。
     assert.equal(
       isReportableParityIssue({
         type: 'segment-order-mismatch',
@@ -636,13 +640,67 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
     );
   });
 
-  it('expired baseline on a structure mismatch is STILL non-reportable in PR2 (gate cutover is PR5)', () => {
-    // PR5 では「baseline 期限切れ → 再点火」だが、PR2 時点では gate
-    // cutover 自体が未実施なので、期限切れも reportable にならない。
-    // PR5 でこのテストを「true 期待」に flip する。
+  it('expired baseline on a structure mismatch IS reportable (re-fire after PR5 cutover)', () => {
+    // §3.6 の副作用: baseline 期限切れ → reportable に戻る (= 再レビュー
+    // 要求)。この非対称性 (structure mismatch は再点火、source-unusable は
+    // しない) が PR5 の新しい契約の核。
     assert.equal(
       isReportableParityIssue({
         type: 'section-structure-mismatch',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: true,
+      }),
+      true,
+    );
+  });
+
+  it('expired ack on a structure mismatch IS reportable (standard ack expiry)', () => {
+    // 通常の ack expiry セマンティクスが structure mismatch にも適用される
+    // ことを pin。`isValidAcknowledgedIssue` は ackExpired=true で false を
+    // 返すので、reportable 経路を通り抜けて true になる。
+    assert.equal(
+      isReportableParityIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: true,
+      }),
+      true,
+    );
+  });
+
+  it('valid ack on a source-unusable keeps it non-reportable (ack-covered)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('frozen baseline on a source-unusable keeps it non-reportable (baseline-covered)', () => {
+    assert.equal(
+      isReportableParityIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('expired baseline on a source-unusable is STILL non-reportable (translator-out-of-scope asymmetry)', () => {
+    // source-unusable の特殊ルール: 期限切れでも reportable にならない。
+    // これは `isSourceUnusableIssue(issue)` 分岐が常に false を返すこと
+    // から自然に出る挙動で、structure mismatch との非対称性の核心。
+    assert.equal(
+      isReportableParityIssue({
+        type: 'source-unusable',
         severity: 'actionable',
         baselined: true,
         baselineExpired: true,
@@ -652,8 +710,8 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
   });
 
   it('new taxonomy is NOT coarse (isCoarseAuditSignal returns false)', () => {
-    // coarse signal とは別経路で gate exclusion されている点を pin。
-    // PR5 でこの分類は変えず、isReportableParityIssue 側だけ flip する。
+    // coarse signal の分類は PR5 でも変えない。structure mismatch は
+    // reportable になったが coarse には含まれない。
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',
@@ -666,5 +724,89 @@ describe('Issue #247 PR2 — isReportableParityIssue excludes new taxonomy until
         `${type} must not be a coarse audit signal`,
       );
     }
+  });
+});
+
+describe('Issue #247 PR5 — isAdvisoryOnlyParityIssue scope narrowed to source-unusable', () => {
+  // PR5 cutover で scope を縮小 (§3.7): structure mismatch は reportable
+  // に昇格したため advisory 分類から外れた。source-unusable は引き続き
+  // advisory (翻訳者責任外)。
+  //
+  // advisory-only の意味: gate には乗らないが、`isNonBlockingIssue`
+  // (baseline / ack 経路) にも属さない。CLI で `(covered by baseline/ack)`
+  // と表示するのは誤りで、`(source unusable)` のような専用 suffix で
+  // 表示する必要がある。
+
+  it('returns false for active structure mismatch (PR5: reportable, not advisory)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'section-structure-mismatch',
+        severity: 'actionable',
+      }),
+      false,
+    );
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'segment-order-mismatch',
+        severity: 'actionable',
+      }),
+      false,
+    );
+  });
+
+  it('returns true for active source-unusable (still advisory)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+      }),
+      true,
+    );
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+      }),
+      true,
+    );
+  });
+
+  it('returns false for source-unusable when valid ack is present (ack path wins)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'source-unusable',
+        severity: 'actionable',
+        acknowledged: true,
+        ackExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('returns false for source-unusable when baseline is frozen (baseline path wins)', () => {
+    assert.equal(
+      isAdvisoryOnlyParityIssue({
+        type: 'snapshot-incomplete',
+        severity: 'actionable',
+        baselined: true,
+        baselineExpired: false,
+      }),
+      false,
+    );
+  });
+
+  it('returns false for segment-* types (not in advisory scope)', () => {
+    for (const type of ['segment-missing', 'segment-extra', 'segment-untranslated']) {
+      assert.equal(
+        isAdvisoryOnlyParityIssue({ type, severity: 'actionable' }),
+        false,
+      );
+    }
+  });
+
+  it('returns false for null / undefined / non-issue inputs', () => {
+    assert.equal(isAdvisoryOnlyParityIssue(null), false);
+    assert.equal(isAdvisoryOnlyParityIssue(undefined), false);
+    assert.equal(isAdvisoryOnlyParityIssue({}), false);
   });
 });
