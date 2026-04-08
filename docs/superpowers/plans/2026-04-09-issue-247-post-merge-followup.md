@@ -43,6 +43,13 @@
   - Phase G.3 の期待値が緩い (`'snapshot-incomplete' or 'source-unusable'` を許容)。regression を飲み込む。→ **G.3 を `issueType` + `usabilityReason` ペア厳密 assert に強化** (`salesforce-testing-overview`: `snapshot-incomplete/shallow-snapshot`, `pull-requests`: `snapshot-incomplete/extractor-empty`)
   - Phase H.1 の placeholder が plan 完了前に実 slug へ置換される前提が不明確。→ **H.1 に「置換手順」節を追加し、placeholder のままでは実行できないことを明記**
 
+**Plan 改訂履歴 (2026-04-09 post-drafting review 第 4 弾 — Finding 9-13):**
+- **Finding 9 [P1]**: 第 2 弾の F.2.5 発火条件 `spansMultipleP` (`<p>` 内で open あり close なし) は実 snapshot の `coding-assistant.html:120` (`<p>Here are some examples... &lt;details&gt;...&lt;/summary&gt;</p>`) にも match していた。結果として coding-assistant の sample prompt が `<h2>` に潰される false positive。→ **discriminator を `startsWith('&lt;details&gt;')` に変更** (faq は `<p>&lt;details&gt;...`、coding-assistant は `<p>Here are some examples... &lt;details&gt;...` で区別)
+- **Finding 10 [P1]**: `summary→h2` 変換 regex `(?:<b>)?` が raw `<b>` しかマッチせず、実 snapshot では両 page とも `&lt;b&gt;` (escaped) を使っているため `<h2>&lt;b&gt;Q&lt;/b&gt;</h2>` が生成されていた。→ **regex を escaped `&lt;b&gt;` 対応に修正、さらに captured inner から残存 escaped HTML tag を strip する保険を追加**
+- **Finding 11 [P2]**: 初稿 F.2.5 の RED test fixture が raw `<b>` を使っていたため、regex バグが検出できない false assurance。→ **narrow fixture は escaped `&lt;b&gt;` を使う + 実 `faq.html` / `coding-assistant.html` を読む test を新規追加**
+- **Finding 12 [P2]**: coding-assistant 回帰 test が `assert.ok(out.length > 0)` しか見ておらず弱すぎ。→ **coding-assistant.html の `<h2>` count を preprocess 前後で同値 assert、sample prompt が `<h2>` に昇格していないことを明示 pin**
+- **Finding 13 [P2]**: Self-Review appendix に第 2 弾の古い記述 (「F.2.5 extractor summary→heading 昇格」) が残存していた。→ **Self-Review 第 2 弾エントリに「後に第 3/4 弾で再設計」の注釈を追加**
+
 **Phase 間依存関係 (実行順が固定):**
 ```
 A (ack 契約修正) ──┐
@@ -1794,8 +1801,8 @@ EOF
 
 **新方針 (scope 最小化)**: extractor 契約を一切触らず、`turndown.mjs` の preprocessor で **faq 特有の broken escaped details を h2 anchor に正規化** する。具体的には:
 
-- `&lt;details&gt; &lt;summary&gt;<b>Q?</b>&lt;/summary&gt; ... &lt;/details&gt;` の balanced block を
-- `<h2>Q?</h2> ...` に置換する
+- `&lt;details&gt; &lt;summary&gt;&lt;b&gt;Q?&lt;/b&gt;&lt;/summary&gt; ... &lt;/details&gt;` の balanced block を
+- `<h2>Q?</h2> ...` に置換する(escaped `&lt;b&gt;` も一緒に剥がす)
 - `<details>` / `</details>` ラッパーは消し、body 部分はそのまま HTML として残す
 
 これで EN 側は real `<h1>FAQ</h1>` と 5 つの `<h2>Q?</h2>` を持ち、JA 側の `## Q?` と整合する。JA extractor も structure comparator の frozen vocabulary も触らない。
@@ -1804,111 +1811,176 @@ EOF
 
 - EN 側で `&lt;details&gt;` を持つ snapshot: `faq.html`, `coding-assistant.html` (計 2 page)
 - JA 側で raw `<details>` を持つ md: `coding-assistant.md` (1 page のみ)
-- **faq は EN のみ / JA は coding-assistant のみ** — ほぼ disjoint
+- **どちらも `<b>` は escaped**: faq.html line 3 は `&lt;summary&gt;&lt;b&gt;How do...&lt;/b&gt;&lt;/summary&gt;`、coding-assistant.html line 120 は `&lt;summary&gt; &lt;b&gt;generate code...&lt;/b&gt;&lt;/summary&gt;`
+
+**`faq` vs `coding-assistant` の discriminator (Finding 9 対応)**:
+
+初稿の `spansMultipleP` 条件 (`<p>` 内で open はあるが close が無い) は **coding-assistant にも当たる**。実測:
+
+- `coding-assistant.html` line 120: `<p>Here are some examples of possible prompts that you can use: &lt;details&gt; &lt;summary&gt; &lt;b&gt;...&lt;/b&gt;&lt;/summary&gt;</p>` — open あり、close なし → spansMultipleP が true になってしまう
+- その結果 coding-assistant も normalization 対象に入り、`&lt;h2&gt;generate code...&lt;/h2&gt;` がドキュメント本文中に注入される
+
+**本当の discriminator**: **faq の first-open `<p>` は `&lt;details&gt;` で開始する**、**coding-assistant の first-open `<p>` は prose で開始して中ほどに `&lt;details&gt;` がある**。既存 legacy `unescapeDetails` (`turndown.mjs:217-221`) と同じ `startsWith('&lt;details&gt;')` check を再利用できる。
+
+- faq line 3: `<p>&lt;details&gt; &lt;summary&gt;...` — 先頭から `&lt;details&gt;` ✓
+- coding-assistant line 120: `<p>Here are some examples... &lt;details&gt; ...` — prose 先行 ✗
 
 したがって新正規化ルールは:
 
-- **faq**: 意図通り `<h2>` anchor を生成 → EN heading 5+ → alignSegments 成功
-- **coding-assistant**: 既存 fixture test (`source_parity_source_usability_fixtures.test.mjs:87-209`) が現状維持 (preprocessed 後の detector が `null` を返す前提) → 壊れないことを必須 assert
+- **faq**: first `<p>` with details-open starts with `&lt;details&gt;` → 正規化発火 → `<h2>` anchor 生成
+- **coding-assistant**: first `<p>` with details-open has prose prefix → 正規化**発火せず** → 現状維持
 - **その他**: 影響なし
 
-`coding-assistant` 影響の理由: escaped details が balanced なので、新ルールでも同じく `<h2>` に変換されるリスクがある。しかし `coding-assistant` の escaped details は **本文内のドキュメント例** として書かれており、その意図的な例示を `<h2>` に潰すと文書の semantics が壊れる。そのため正規化条件は **ページ全体 (root level の `<p>` に跨る broken tree)** に限定する必要がある。
-
 実装戦略:
-1. 既存 `unescapeDetails` は per-`<p>` で balanced な single-paragraph details を real `<details>` に復元する(legacy — coding-assistant 向け)
-2. その後に新規 `normalizeEscapedFaqDetails(html)` を挟む。条件:
-   - root level (`<p>` で wrap された) の `&lt;details&gt;` open が複数 `<p>` に跨って存在 **(つまり multi-paragraph broken tree)**
-   - 全ての `&lt;details&gt;` / `&lt;/details&gt;` のペアが balanced
-3. condition 合致時にのみ、該当 HTML region 内の `&lt;summary&gt;<b>Q</b>&lt;/summary&gt;` を `<h2>Q</h2>` に置換し、`&lt;details&gt;` / `&lt;/details&gt;` wrapper を削除
+1. `normalizeEscapedFaqDetails(html)` を新規追加
+2. 発火条件 (全部満たす):
+   - `&lt;details&gt;` open と `&lt;/details&gt;` close の件数が balanced
+   - 少なくとも 1 つの `<p>` が trimmed content `startsWith('&lt;details&gt;')` (faq discriminator)
+   - (optional refinement) open が複数 `<p>` に跨っている
+3. condition 合致時にのみ、`&lt;summary&gt; ... &lt;/summary&gt;` を `<h2>...</h2>` に置換(escaped `&lt;b&gt;` / `&lt;/b&gt;` も同時に剥がす)、`&lt;details&gt;` / `&lt;/details&gt;` wrapper を削除
+4. その後 legacy `unescapeDetails` が走る(coding-assistant の single-<p> 例や「既に normalization で消えた場合」の noop)
 
-- [ ] **Step 1: 失敗テスト (RED)**
+- [ ] **Step 1: 失敗テスト (RED) — 実 snapshot を使った強めの契約 pin**
 
 `scripts/__tests__/turndown.test.mjs` に追加:
 
 ```js
-describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 5-8)', () => {
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-13)', () => {
   let preprocessEnHtml;
   before(async () => {
     ({ preprocessEnHtml } = await import('../lib/turndown.mjs'));
   });
 
-  it('faq broken multi-paragraph details を h2 anchor に正規化する', () => {
-    // 簡易 faq fixture (実 faq.html に近い構造)
+  const ROOT = join(import.meta.dirname, '../../');
+  const SNAPSHOTS_DIR = join(ROOT, 'snapshots/en/content');
+
+  // ---------------------------------------------------------------------
+  // Narrow fixture (実 faq 構造の抜粋 — escaped <b> を含むことが Finding 11 の
+  // 保険)。
+  // ---------------------------------------------------------------------
+
+  it('escaped-<b>-inside-summary: `<h2>Q</h2>` を生成し、&lt;b&gt; は残らない', () => {
     const html = [
       '<h1>FAQ</h1>',
-      '<p>&lt;details&gt; &lt;summary&gt;<b>Q1?</b>&lt;/summary&gt; Answer 1. &lt;/details&gt; &lt;details&gt; &lt;summary&gt;<b>Q2?</b>&lt;/summary&gt; Answer 2 with <br /></p>',
-      '<p><a href="foo.htm">link</a>.</p>',
-      '<p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt;<b>Q3?</b>&lt;/summary&gt; Answer 3. &lt;/details&gt;</p>',
+      // 先頭が &lt;details&gt; (faq discriminator 満たす)、escaped <b> 使用
+      '<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Q1?&lt;/b&gt;&lt;/summary&gt; Answer 1. &lt;/details&gt; &lt;details&gt; &lt;summary&gt;&lt;b&gt;Q2?&lt;/b&gt;&lt;/summary&gt; Answer 2.&lt;/details&gt;</p>',
     ].join('\n');
 
     const out = preprocessEnHtml(html);
-    // escaped markers は残らない
+    // escaped markers は残らない (details / summary / b すべて)
     assert.equal(out.includes('&lt;details&gt;'), false);
     assert.equal(out.includes('&lt;/details&gt;'), false);
     assert.equal(out.includes('&lt;summary&gt;'), false);
-    // h2 anchor が 3 件 (Q1 / Q2 / Q3) に対応
+    assert.equal(out.includes('&lt;/summary&gt;'), false);
+    assert.equal(
+      out.includes('&lt;b&gt;'),
+      false,
+      'escaped <b> が <h2> 内にリークしていないこと',
+    );
+    // h2 anchor が 2 件
     const h2Count = (out.match(/<h2[^>]*>/gi) || []).length;
-    assert.equal(h2Count, 3);
-    assert.ok(out.includes('Q1?'));
-    assert.ok(out.includes('Q2?'));
-    assert.ok(out.includes('Q3?'));
-    assert.ok(out.includes('Answer 1.'));
-    assert.ok(out.includes('Answer 2'));
-    assert.ok(out.includes('Answer 3.'));
+    assert.equal(h2Count, 2);
+    // 質問文がそのまま h2 の中身になる
+    assert.match(out, /<h2[^>]*>Q1\?<\/h2>/);
+    assert.match(out, /<h2[^>]*>Q2\?<\/h2>/);
   });
 
-  it('real faq fixture: heading 5+ / details marker 0 / single-paragraph 内 details は影響しない', () => {
+  // ---------------------------------------------------------------------
+  // 実 snapshot を使った contract pin (Finding 11 への対抗措置 — 疑似 fixture が
+  // 現実を反映できていないときに備えて、実ファイルを直接読む)
+  // ---------------------------------------------------------------------
+
+  it('real faq.html: h2 が 5 件生成される + escaped marker 0 + raw details tag 0', () => {
     const raw = readFileSync(
-      join(ROOT, 'snapshots/en/content/salesforce-testing/faq.html'),
+      join(SNAPSHOTS_DIR, 'salesforce-testing/faq.html'),
       'utf8',
     );
     const out = preprocessEnHtml(raw);
-    // raw faq は 5 QnA → h2 が 5 件生成されるはず
-    const h2Count = (out.match(/<h2[^>]*>/gi) || []).length;
-    assert.ok(h2Count >= 5, `faq は h2 anchor を 5 件以上生成すべき (actual: ${h2Count})`);
+    // escaped details / summary / b が残らない
     assert.equal(out.includes('&lt;details&gt;'), false);
     assert.equal(out.includes('&lt;/details&gt;'), false);
+    assert.equal(out.includes('&lt;summary&gt;'), false);
+    assert.equal(out.includes('&lt;b&gt;'), false);
+    // real <details> tag も残らない (h2 anchor に変換されているので不要)
+    assert.equal(/<details\b/i.test(out), false);
+    // h2 anchor が 5 件 (faq の 5 QnA)
+    const h2Count = (out.match(/<h2[^>]*>/gi) || []).length;
+    assert.equal(
+      h2Count,
+      5,
+      `faq は h2 を 5 件生成すべき (actual: ${h2Count})`,
+    );
   });
 
-  it('coding-assistant (balanced single-paragraph details 例): 正規化は発火せず既存の legacy unescape が動く', () => {
+  // ---------------------------------------------------------------------
+  // Finding 9 対応 — coding-assistant は normalize 対象外 (強い契約 pin)
+  // ---------------------------------------------------------------------
+
+  it('real coding-assistant.html: normalization は発火せず <h2> 注入ゼロ', () => {
     const raw = readFileSync(
-      join(ROOT, 'snapshots/en/content/advanced-editing/coding-assistant.html'),
+      join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
       'utf8',
     );
+    // preprocess 前の `<h2>` 件数を記録 (実データでは 0 だが、増えないことを pin)
+    const h2Before = (raw.match(/<h2[^>]*>/gi) || []).length;
+
     const out = preprocessEnHtml(raw);
-    // coding-assistant の既存挙動を break しない pin:
-    //   現状と同じく real <details> or balanced escaped markers が残っていて
-    //   detector/extractor が正常動作する状態を維持する
-    // 詳細 assertion は source_parity_source_usability_fixtures.test.mjs が
-    // 担保する (detector が null を返すこと)
-    assert.ok(out.length > 0);
+
+    // 正規化が発火してはいけない:
+    //   - details/summary/b marker は normalization で消えると 0 になるが、
+    //     発火していなければ「何かしら」残っているはず (escaped or real)。
+    //     ここでは h2 の件数が増えていないこと = 正規化未発火 を assert する。
+    const h2After = (out.match(/<h2[^>]*>/gi) || []).length;
+    assert.equal(
+      h2After,
+      h2Before,
+      `coding-assistant に <h2> が注入された (before=${h2Before}, after=${h2After})。` +
+        `faq 正規化が誤発火している可能性`,
+    );
+
+    // 本文の prose ("generate code to validate page URL" 等) が <h2> に
+    // 昇格していないことを追加で確認
+    assert.equal(
+      /<h2[^>]*>[^<]*generate code/i.test(out),
+      false,
+      'coding-assistant の sample prompt が <h2> に昇格してはいけない',
+    );
   });
 });
 ```
 
 Run: `npm test -- scripts/__tests__/turndown.test.mjs`
 
-Expected: FAIL (新規 `normalizeEscapedFaqDetails` 未実装、faq の h2 count === 0)。
+Expected: FAIL。現状の preprocessor は faq の broken tree を扱えず、real faq.html テストで h2 count=0 になる。
 
 - [ ] **Step 2: `normalizeEscapedFaqDetails` を実装 (GREEN)**
 
-`scripts/lib/turndown.mjs` の `unescapeDetails` の直後に新規関数を追加:
+`scripts/lib/turndown.mjs` の `unescapeDetails` の直後に追加:
 
 ```js
 /**
- * Issue #247 post-merge (Finding 5-8) — faq の multi-paragraph broken
+ * Issue #247 post-merge (Finding 9-13) — faq の multi-paragraph broken
  * details tree を h2 anchor に正規化する。
  *
- * MadCap が <details><summary>Q</summary>...</details> 構造を複数の <p> に
- * 跨って escape 出力するパターンで、`unescapeDetails` (per-<p>) では
- * 扱えない。このヘルパは以下の条件を満たす場合に、HTML 全体の
+ * MadCap が `<details><summary>Q</summary>body</details>` 構造を複数の
+ * `<p>` に跨って escape 出力するパターンで、`unescapeDetails` (per-<p>)
+ * では扱えない。このヘルパは以下の条件をすべて満たす場合に、HTML 全体の
  * `&lt;summary&gt;...&lt;/summary&gt;` を `<h2>...</h2>` に置換し、
  * `&lt;details&gt;` / `&lt;/details&gt;` wrapper を削除する:
  *
- *   - `&lt;details&gt;` open と `&lt;/details&gt;` close が balanced
- *   - escaped details marker が**複数の `<p>` に跨って**出現
- *     (single-<p> 内で閉じている coding-assistant ケースは legacy unescape
- *      で扱うので、ここでは発火させない)
+ *   1. `&lt;details&gt;` open と `&lt;/details&gt;` close の件数が一致
+ *   2. **少なくとも 1 つの `<p>` が (trimmed) `&lt;details&gt;` で開始**
+ *      — この条件が `faq` と `coding-assistant` を分ける discriminator。
+ *      `coding-assistant` は prose が先行 (`"Here are some examples of
+ *      possible prompts that you can use: &lt;details&gt;..."`) するので
+ *      ここで弾かれる。
+ *
+ * summary 内部の `&lt;b&gt;`/`&lt;/b&gt;` も同時に剥がす (実 faq.html の
+ * `&lt;summary&gt;&lt;b&gt;Q&lt;/b&gt;&lt;/summary&gt;` pattern 対応 —
+ * Finding 10)。
  *
  * **契約**: EN extractor / JA extractor / structure comparator の frozen
  * vocabulary は一切触らない。影響範囲は preprocessor 内に閉じる。
@@ -1919,28 +1991,34 @@ Expected: FAIL (新規 `normalizeEscapedFaqDetails` 未実装、faq の h2 count
 function normalizeEscapedFaqDetails(html) {
   const openRe = /&lt;details(\b[^&]*)?&gt;/gi;
   const closeRe = /&lt;\/details&gt;/gi;
-  const opens = [...html.matchAll(openRe)];
-  const closes = [...html.matchAll(closeRe)];
-  if (opens.length === 0 || opens.length !== closes.length) return html;
+  const openCount = (html.match(openRe) || []).length;
+  const closeCount = (html.match(closeRe) || []).length;
+  if (openCount === 0 || openCount !== closeCount) return html;
 
-  // multi-paragraph detection: open と close が別 <p> 要素に散っていることを確認する。
-  // per-<p> で全て閉じている場合は legacy unescape に任せる。
-  const pSegments = [...html.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/gi)];
-  const spansMultipleP = pSegments.some((pm) => {
-    const inner = pm[0];
-    const o = (inner.match(openRe) || []).length;
-    const c = (inner.match(closeRe) || []).length;
-    return o > 0 && c === 0; // open はあるが同じ <p> 内で閉じていない
+  // Discriminator: 少なくとも 1 つの <p> が (trimmed) `&lt;details&gt;` で
+  // 開始していること。prose が先行する coding-assistant ケースはここで弾く。
+  const pSegments = [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)];
+  const hasFaqStart = pSegments.some((pm) => {
+    const inner = pm[1] || '';
+    return inner.trim().startsWith('&lt;details&gt;');
   });
-  if (!spansMultipleP) return html;
+  if (!hasFaqStart) return html;
 
-  // (1) &lt;summary&gt;<b>Q</b>&lt;/summary&gt; → <h2>Q</h2>
-  //     <b> は optional。複数行にまたがる場合もあるので [\s\S]*? を使う。
+  // (1) `&lt;summary&gt; [&lt;b&gt;] Q [&lt;/b&gt;] &lt;/summary&gt;` → `<h2>Q</h2>`
+  //     escaped <b>/<b class="..."> も optional に受け入れる。内側の captured
+  //     グループから残存 escaped tag を追加 strip して安全側に倒す。
   let out = html.replace(
-    /&lt;summary&gt;\s*(?:<b>)?([\s\S]*?)(?:<\/b>)?\s*&lt;\/summary&gt;/gi,
-    (_m, inner) => `<h2>${inner.trim()}</h2>`,
+    /&lt;summary&gt;\s*(?:&lt;b(?:\b[^&]*)?&gt;)?\s*([\s\S]*?)\s*(?:&lt;\/b&gt;)?\s*&lt;\/summary&gt;/gi,
+    (_m, inner) => {
+      // inner に残った escaped HTML tag (`&lt;...&gt;`) を保険で剥がす
+      const stripped = inner
+        .replace(/&lt;\/?[a-z][^&]*&gt;/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return `<h2>${stripped}</h2>`;
+    },
   );
-  // (2) &lt;details ...&gt; と &lt;/details&gt; を削除 (wrapping のみ剥がす)
+  // (2) `&lt;details ...&gt;` と `&lt;/details&gt;` を削除 (wrapping のみ剥がす)
   out = out.replace(openRe, '');
   out = out.replace(closeRe, '');
   return out;
@@ -1955,16 +2033,16 @@ export function preprocessEnHtml(html) {
     throw new TypeError(`preprocessEnHtml expected string, got ${typeof html}`);
   }
   // 順序: (1) normalizeEscapedCallouts → (2) 新規 normalizeEscapedFaqDetails
-  //        → (3) legacy unescapeDetails (coding-assistant の single-<p> 例向け)
-  // 新ルールは multi-paragraph パターンにしか当たらないので、single-<p> の
-  // coding-assistant は (3) の legacy path でそのまま扱われる。
+  //        → (3) legacy unescapeDetails (coding-assistant / single-<p> 例向け)
+  // (2) は faq discriminator で発火するので coding-assistant には当たらず、
+  //     (3) の legacy path が従来通り処理する。
   return unescapeDetails(normalizeEscapedFaqDetails(normalizeEscapedCallouts(html)));
 }
 ```
 
 Run: `npm test -- scripts/__tests__/turndown.test.mjs`
 
-Expected: PASS。
+Expected: PASS (narrow fixture + real faq.html + real coding-assistant.html の 3 test 全 green)。
 
 - [ ] **Step 3: 既存 detector 契約の再確認 — faq が source-unusable を出さないことを pin**
 
@@ -2060,68 +2138,33 @@ EOF
 )"
 ```
 
-### Task F.3: detector と comparator での faq 挙動を確認
+### Task F.3: faq JA の structure drift を修正して clean green にする
 
-- [ ] **Step 1: faq の fixture test を更新**
+Phase D と同じプロセス。5 つの details セクションが real `<h2>` anchor に変換されると、EN/JA の alignSegments が走れる状態になる。残存する structure mismatch があれば JA を EN と構造一致させる。
 
-`scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` の faq describe を修正:
+- [ ] **Step 1: 残存 drift を dump**
 
-変更前 (line 215-244 付近):
-```js
-describe('detectSourceUsability fixture: salesforce-testing/faq', () => {
-  it('escaped-details-residue を検出する (source-unusable / reason=escaped-details-residue)', () => {
-    // ...
-    assert.ok(result !== null);
-    assert.equal(result.type, 'source-unusable');
-    assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
-  });
-});
-```
+Phase D の `/tmp/dump_structure_diff.mjs` に `salesforce-testing/faq` を追加して実行し、Phase F.2.5 完了後の faq の structure issue 一覧を書き出す。
 
-変更後:
-```js
-describe('detectSourceUsability fixture: salesforce-testing/faq', () => {
-  it('Phase F で preprocessor が fix されて source-unusable を出さない', () => {
-    // ...
-    assert.equal(
-      result,
-      null,
-      `faq は Phase F 以降 usable と判定されるべき。` +
-      `signals=${JSON.stringify(result?.usabilitySignals)}`,
-    );
-  });
-});
-```
+- [ ] **Step 2: 必要なら faq.md を EN と構造一致させる**
 
-- [ ] **Step 2: `node /tmp/dump_structure_diff.mjs` を faq も含めて再実行し、残存 drift を確認**
+5 QnA section それぞれで EN の block 列と JA の block 列を比較し、drift があれば JA を書き換える。
 
-- [ ] **Step 3: 必要なら faq の JA を EN と構造一致させる (structure mismatch を解消)**
+- [ ] **Step 3: lint + fixture 回帰**
 
-Phase D と同じプロセス。5 つの details セクションが real `<details><summary>` に変換されると、それぞれが H2 として extract される。JA も H2 見出しで構造が対応するはず。
+Run: `npm run lint:docs -- --path=src/content/docs/salesforce-testing/faq.md`
+Run: `npm test -- scripts/__tests__/source_parity_source_usability_fixtures.test.mjs`
 
-- [ ] **Step 4: `npm run lint:docs -- --path=src/content/docs/salesforce-testing/faq.md`**
-
-- [ ] **Step 5: commit**
+- [ ] **Step 4: commit**
 
 ```bash
-git add scripts/lib/turndown.mjs \
-        scripts/__tests__/turndown.test.mjs \
-        scripts/__tests__/source_parity_source_usability_fixtures.test.mjs \
-        src/content/docs/salesforce-testing/faq.md
+git add src/content/docs/salesforce-testing/faq.md
 git commit -m "$(cat <<'EOF'
-fix: Issue #247 post-merge — faq preprocessor root cause 解消
+docs: Issue #247 post-merge — faq JA を EN structure と一致させて clean green 化
 
-MadCap が <details> 内容を複数 <p> に跨って escape 出力する broken tree を
-扱うため、unescapeDetails を balanced-global unescape 方針に切り替える。
-open/close marker 件数が一致するとき HTML 全体で details/summary/b/br
-entity のみを unescape し、real <details> tree に復元する。
-
-影響:
-- faq は source-unusable を出さなくなり、comparator が正常に走る
-- coding-assistant (balanced details 例) も既存通り動作 (回帰なし)
-- salesforce-testing-overview (shallow-snapshot) は unrelated なので影響なし
-
-残存する faq の JA structure drift は本 commit で併せて修正。
+Phase F.2.5 の preprocessor 変更で faq EN が real <h1>/<h2> anchor を持つ
+ようになったので、JA 側の structure drift を解消して baseline なしで
+alignSegments を通す。
 
 refs Issue #247 post-merge — faq root cause fix
 EOF
@@ -2791,8 +2834,8 @@ EOF
 
 初稿に対して以下の問題が判明(レビュー出典: 同日付 post-drafting review):
 
-1. **[P1] Phase F の green 前提ズレ (Finding 1)**: `source_parity_segments_en.mjs::walkDetails` が `<summary>` を `'details-summary'` kind で emit しており、JA 側の `## h2` 翻訳と segment 契約が合わない。preprocessor を修正しても `alignSegments` が heading-count-mismatch で inconclusive に落ちる可能性が高い。
-   - **修正**: Phase F に Task F.2.5 (EN extractor の summary→heading 昇格) を追加済み。coding-assistant など既存 `<details>` 使用ページの fixture にも影響するため、F.2.5 Step 3 で回帰確認を必須にしている。
+1. **[P1] Phase F の green 前提ズレ (Finding 1 → 後に第 3/4 弾で再設計)**: `source_parity_segments_en.mjs::walkDetails` が `<summary>` を `'details-summary'` kind で emit しており、JA 側の `## h2` 翻訳と segment 契約が合わない。preprocessor を修正しても `alignSegments` が heading-count-mismatch で inconclusive に落ちる可能性が高い。
+   - **当時の対応**: Phase F に Task F.2.5 (EN extractor の summary→heading 昇格) を追加(**第 3 弾 Finding 5-7 で破棄**、**第 4 弾 Finding 9-13 でも再改訂**)。現在の F.2.5 は preprocessor-only の `normalizeEscapedFaqDetails` + faq discriminator (`startsWith('&lt;details&gt;')`) 設計。
 
 2. **[P1] Phase G purge が live debt を破壊 (Finding 2)**: `testops/testops-version-control/pull-requests` は baseline に **live な `snapshot-incomplete (extractor-empty)` が実測で確認できている**。`salesforce-testing-overview` だけ再 seed する当初案ではこの live debt が失われる。
    - **修正**: Phase G.2 を `FULL_PURGE_SLUGS` (6 slug) と `RESEED_SLUGS` (2 slug) に分割。G.3 で `--slug=salesforce-testing/salesforce-testing-overview,testops/testops-version-control/pull-requests` を一括再 seed する。
@@ -2822,11 +2865,30 @@ EOF
 5. **[P3] Phase H.1 の placeholder が plan 完了の前提を曖昧にする (Finding 8 後半)**: `<list-heavy slug>` 等が placeholder のまま残っていると、executing-plans が literal に解釈して test が abort する。
    - **修正**: H.1 Step 2 に「placeholder は **Phase H.1 実行前に必ず** Step 1 の実測結果で置換する」ことと、置換手順(候補抽出 → 試験 run → 確定) を明記。
 
+### Post-drafting review (2026-04-09 第四弾 — Finding 9-13)
+
+第 3 弾の `normalizeEscapedFaqDetails` 設計に対して、user の実 snapshot レビューで以下が判明:
+
+1. **[P1] 発火条件 `spansMultipleP` が coding-assistant にも当たる (Finding 9)**: 初稿条件 `<p>` 内で open あり close なしは、`coding-assistant.html:120` (`<p>Here are some examples... &lt;details&gt; &lt;summary&gt;...&lt;/summary&gt;</p>`) にも match。結果として coding-assistant の sample prompt が `<h2>` に潰される危険があった。
+   - **修正**: discriminator を `startsWith('&lt;details&gt;')` に変更。faq は line 3 で `<p>&lt;details&gt;...` (先頭から details)、coding-assistant は `<p>Here are some examples...` (prose 先行) なので区別できる。既存 legacy `unescapeDetails` の同一 check を再利用。
+
+2. **[P1] summary→h2 regex が escaped `<b>` を扱えない (Finding 10)**: 初稿 regex `(?:<b>)?` は raw `<b>` しかマッチしないが、実 faq.html / coding-assistant.html は両方とも `&lt;b&gt;...&lt;/b&gt;` (escaped)。結果 `<h2>&lt;b&gt;Q&lt;/b&gt;</h2>` が生成されていた。
+   - **修正**: regex を `(?:&lt;b(?:\b[^&]*)?&gt;)?\s*([\s\S]*?)\s*(?:&lt;\/b&gt;)?` に修正 (escaped `<b>` 対応)。加えて captured inner から残存 escaped HTML tag を strip する保険 (`inner.replace(/&lt;\/?[a-z][^&]*&gt;/gi, '')`) を追加して安全側に倒す。
+
+3. **[P2] RED test fixture が実データと乖離 (Finding 11)**: 初稿 fixture は raw `<b>` を使っていたので、regex バグが検出されなかった(green なのに実 snapshot では壊れる false assurance)。
+   - **修正**: narrow fixture は escaped `&lt;b&gt;` を使う。加えて **実 `snapshots/en/content/salesforce-testing/faq.html` を読む test** を追加して「h2 が 5 件 / escaped marker 0 件 / real details tag 0 件」を実データで直接 pin する。
+
+4. **[P2] coding-assistant 回帰テストが弱すぎ (Finding 12)**: 初稿は `assert.ok(out.length > 0)` しか見ていなかった。「`<h2>` が注入されていない」「`detectSourceUsability === null` が維持される」といった本当に守りたい契約を pin していなかった。
+   - **修正**: **実 `snapshots/en/content/advanced-editing/coding-assistant.html` を読む test** を追加して、`<h2>` count が preprocess 前後で変化しないこと、`generate code ...` のような sample prompt が `<h2>` に昇格していないことを pin する。detector 側の `null` 契約は既存の `source_parity_source_usability_fixtures.test.mjs` が引き続き担保する。
+
+5. **[P2] Self-Review appendix が古い方針を残していた (Finding 13)**: 第 2 弾の「F.2.5 で extractor の summary→heading 昇格」記述が本文の新方針と矛盾していた。
+   - **修正**: Self-Review 第 2 弾のエントリに「後に第 3/4 弾で再設計」の注釈を追加、現在の F.2.5 が preprocessor-only 設計であることを明記。
+
 ### 残存 open question
 
 - Phase D の JA 実修正は人間レビューが必要(natural Japanese の品質保証)。自動テストでは「structure issue 0 件」しか pin できないので、content 品質は `npm run lint:docs` と人間校正に依存する。
 
-- F.2.5 の `normalizeEscapedFaqDetails` は「multi-paragraph broken tree」の条件で発火する。もし将来 `coding-assistant` のような single-<p> documentation example が multi-paragraph に変わる場合、legacy path ではなく新 path に流れて意図しない `<h2>` 注入が起きる可能性あり。その際は条件を更に narrow する (e.g., EN heading=0 の追加 guard) 必要がある。Phase F.2.5 の Step 3 で coding-assistant の detector 契約を回帰確認するのが最終防衛線。
+- F.2.5 の `normalizeEscapedFaqDetails` の discriminator は `startsWith('&lt;details&gt;')` に依存する。将来 `coding-assistant` と同等パターンの新 page (= prose 先行の escaped details) が追加された場合は自動的に legacy path に流れるので安全。逆に **faq と同等パターンの新 page** (= `<p>&lt;details&gt;` で始まる multi-paragraph broken tree) が追加された場合は自動的に新 path に乗って h2 anchor 化される。意図しない match があった場合は discriminator を更に narrow する (e.g., `h1` の後ろ直後という構造条件を追加) 必要がある。Phase F.2.5 の Step 1/Step 3 の実 snapshot fixture test が最終防衛線。
 
 ---
 
