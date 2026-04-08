@@ -25,9 +25,16 @@ import { fileURLToPath } from 'node:url';
 import { ROOT_DIR } from './lib/project.mjs';
 import {
   BASELINE_ELIGIBLE_TYPES,
+  STRUCTURE_CATEGORIES,
+  USABILITY_REASONS,
+  computeStructureFingerprint,
   validateBaseline,
   loadBaselineFile,
 } from './lib/source_parity_baseline.mjs';
+import {
+  STRUCTURE_MISMATCH_TYPES,
+  SOURCE_UNUSABLE_TYPES,
+} from './lib/source_parity_types.mjs';
 import { computeSnapshotFingerprint } from './lib/source_parity_acknowledgements.mjs';
 
 const STATUS_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
@@ -209,7 +216,52 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         missingTokens: null,
         inconclusiveCategory: null,
         inconclusiveReason: null,
+        // Issue #247 PR5 — structure mismatch / source unusable 用フィールド
+        sectionIndex: null,
+        structureCategory: null,
+        structureFingerprint: null,
+        usabilityReason: null,
       };
+
+      if (STRUCTURE_MISMATCH_TYPES.has(issue.type)) {
+        // Issue #247 PR5 — section 粒度の structure diff (§3.9)。
+        // identity は sectionIndex (machine) + structureCategory +
+        // structureFingerprint。sectionPath は reviewer 可読性のために
+        // 保存するが identity には使わない。
+        if (
+          typeof issue.sectionIndex !== 'number' ||
+          !Number.isInteger(issue.sectionIndex) ||
+          issue.sectionIndex < 0 ||
+          typeof issue.sectionPath !== 'string' ||
+          !STRUCTURE_CATEGORIES.has(issue.structureCategory) ||
+          !Array.isArray(issue.enKinds) ||
+          !Array.isArray(issue.jaKinds)
+        ) {
+          continue;
+        }
+        entry.sectionIndex = issue.sectionIndex;
+        entry.sectionPath = issue.sectionPath;
+        entry.structureCategory = issue.structureCategory;
+        entry.structureFingerprint = computeStructureFingerprint({
+          structureCategory: issue.structureCategory,
+          enKinds: issue.enKinds,
+          jaKinds: issue.jaKinds,
+          contentPermutation: issue.contentPermutation,
+        });
+        entries.push(entry);
+        continue;
+      }
+      if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
+        // Issue #247 PR5 — page 粒度の source unusable detector (§3.9)。
+        // identity surface: usabilityReason のみ。
+        const reason = issue.usabilitySignals?.reason ?? null;
+        if (typeof reason !== 'string' || !USABILITY_REASONS.has(reason)) {
+          continue;
+        }
+        entry.usabilityReason = reason;
+        entries.push(entry);
+        continue;
+      }
 
       if (issue.type === 'segment-inconclusive') {
         entry.inconclusiveCategory = issue.inconclusiveCategory ?? null;
@@ -282,9 +334,17 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
 export function buildGenerationMeta(status, args) {
   const checkedAt = getCheckedAt(status);
   const generatedAt = checkedAt;
-  const defaultRationale = args.regenerate
-    ? 'frozen baseline — regenerated with staggered reviewAfter'
-    : `frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
+  let defaultRationale;
+  if (args.regenerate) {
+    defaultRationale = 'frozen baseline — regenerated with staggered reviewAfter';
+  } else if (args.types) {
+    defaultRationale =
+      `frozen baseline — partial regeneration by type: ${args.types.join(', ')}`;
+  } else if (args.slugs) {
+    defaultRationale = `frozen baseline — partial regeneration for ${args.slugs.join(', ')}`;
+  } else {
+    defaultRationale = 'frozen baseline';
+  }
   return {
     runId: `${checkedAt}#parity-check-status`,
     generatedAt,
@@ -298,11 +358,31 @@ export function buildGenerationMeta(status, args) {
 
 /**
  * Sort entries deterministically: slug → issueType → sectionPath → segmentKind → index.
+ *
+ * Issue #247 PR5 — structure mismatch 系は sectionIndex を sectionPath より
+ * 先に使うことで、同一ページ内で sectionPath が衝突しても stable に並ぶ。
+ * source unusable 系は usabilityReason で補助 sort する。
  */
 function sortEntries(entries) {
   return [...entries].sort((a, b) => {
     if (a.slug !== b.slug) return a.slug < b.slug ? -1 : 1;
     if (a.issueType !== b.issueType) return a.issueType < b.issueType ? -1 : 1;
+    if (STRUCTURE_MISMATCH_TYPES.has(a.issueType)) {
+      const aIdx = typeof a.sectionIndex === 'number' ? a.sectionIndex : -1;
+      const bIdx = typeof b.sectionIndex === 'number' ? b.sectionIndex : -1;
+      if (aIdx !== bIdx) return aIdx - bIdx;
+      const aCat = a.structureCategory ?? '';
+      const bCat = b.structureCategory ?? '';
+      if (aCat !== bCat) return aCat < bCat ? -1 : 1;
+      const aFp = a.structureFingerprint ?? '';
+      const bFp = b.structureFingerprint ?? '';
+      return aFp < bFp ? -1 : aFp > bFp ? 1 : 0;
+    }
+    if (SOURCE_UNUSABLE_TYPES.has(a.issueType)) {
+      const aReason = a.usabilityReason ?? '';
+      const bReason = b.usabilityReason ?? '';
+      return aReason < bReason ? -1 : aReason > bReason ? 1 : 0;
+    }
     const aSec = a.sectionPath ?? '';
     const bSec = b.sectionPath ?? '';
     if (aSec !== bSec) return aSec < bSec ? -1 : 1;
@@ -386,17 +466,46 @@ export function mergePartialBaseline(existing, slugsToReplace, newEntries, meta)
   };
 }
 
+/**
+ * Issue #247 PR5 — `--types=<csv>` partial mode 用のマージヘルパー (§7.4)。
+ *
+ * 指定 issueType の既存エントリだけを削除し、新しい entries とマージする。
+ * 指定外の issueType のエントリは bit-identical で保持する。これにより、
+ * 既存 segment-* エントリの `reviewAfter` を意図せず shift させずに、
+ * 新 4 type (structure mismatch / source unusable) のエントリだけを
+ * 追加生成できる。
+ *
+ * @param {object} existing — loadBaselineFile の戻り値
+ * @param {string[]} typesToReplace — 置換対象の issueType (例: ['section-structure-mismatch'])
+ * @param {object[]} newEntries — buildBaselineFromStatus が生成した新エントリ
+ * @param {{ generatedAt: string, generatedFromRunId: string, rationale: string }} meta
+ */
+export function mergePartialBaselineByType(existing, typesToReplace, newEntries, meta) {
+  const typeSet = new Set(typesToReplace);
+  const preserved = existing.entries.filter((e) => !typeSet.has(e.issueType));
+  const filteredNew = newEntries.filter((e) => typeSet.has(e.issueType));
+  return {
+    schemaVersion: 1,
+    generatedAt: meta.generatedAt,
+    generatedFromRunId: meta.generatedFromRunId,
+    rationale: meta.rationale,
+    entries: [...preserved, ...filteredNew],
+  };
+}
+
 // ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const slugArg = argv.find((arg) => arg.startsWith('--slug='));
   const rationaleArg = argv.find((arg) => arg.startsWith('--rationale='));
   const reviewAfterArg = argv.find((arg) => arg.startsWith('--review-after='));
+  const typesArg = argv.find((arg) => arg.startsWith('--types='));
   return {
     regenerate: argv.includes('--regenerate'),
     slugs: slugArg ? slugArg.slice('--slug='.length).split(',').filter(Boolean) : null,
+    types: typesArg ? typesArg.slice('--types='.length).split(',').filter(Boolean) : null,
     rationale: rationaleArg ? rationaleArg.slice('--rationale='.length) : null,
     reviewAfter: reviewAfterArg ? reviewAfterArg.slice('--review-after='.length) : null,
   };
@@ -410,11 +519,31 @@ function printUsage() {
   console.error(
     '  node scripts/generate_parity_baseline.mjs --slug=overview/foo,overview/bar [--rationale="..."]',
   );
+  console.error(
+    '  node scripts/generate_parity_baseline.mjs --types=section-structure-mismatch,segment-order-mismatch [--rationale="..."]',
+  );
+  console.error('');
+  console.error(
+    '  --types is mutually exclusive with --regenerate and --slug. It re-generates only entries',
+  );
+  console.error(
+    '  for the specified issue types, leaving other entries (incl. their reviewAfter) untouched.',
+  );
 }
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  if (!args.regenerate && !args.slugs) {
+  if (!args.regenerate && !args.slugs && !args.types) {
+    printUsage();
+    return 1;
+  }
+  // Issue #247 PR5 — --types は --regenerate / --slug と排他的。
+  // 同時指定を許すと「partial mode なのに既存 segment-* も touch される」
+  // 状態が起き得るので明示的に reject する。
+  const modeCount =
+    (args.regenerate ? 1 : 0) + (args.slugs ? 1 : 0) + (args.types ? 1 : 0);
+  if (modeCount > 1) {
+    console.error('❌ --regenerate / --slug / --types are mutually exclusive');
     printUsage();
     return 1;
   }
@@ -432,6 +561,27 @@ async function main() {
   let output;
   if (args.regenerate) {
     output = buildBaselineFromStatus(status, fingerprintMap, meta);
+  } else if (args.types) {
+    // Issue #247 PR5 — partial-by-type mode (§7.4)。
+    // 指定 issueType の issue だけから entry を生成し、既存 baseline と
+    // mergePartialBaselineByType でマージする。指定外 (segment-*) は
+    // bit-identical で残る (reviewAfter 含む)。
+    const newBaseline = buildBaselineFromStatus(status, fingerprintMap, meta);
+    let existing = {
+      schemaVersion: 1,
+      generatedAt: meta.generatedAt,
+      generatedFromRunId: '',
+      rationale: '',
+      entries: [],
+    };
+    if (fs.existsSync(BASELINE_PATH)) {
+      existing = loadBaselineFile(BASELINE_PATH);
+    }
+    output = mergePartialBaselineByType(existing, args.types, newBaseline.entries, {
+      generatedAt: meta.generatedAt,
+      generatedFromRunId: meta.runId,
+      rationale: meta.rationale,
+    });
   } else {
     const filtered = {
       ...status,
