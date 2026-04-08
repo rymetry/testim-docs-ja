@@ -706,6 +706,34 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const acknowledgedIssues = parity.summary?.acknowledgedIssues || 0;
   const expiredAcknowledgements = parity.summary?.expiredAcknowledgements || 0;
 
+  // Issue #247 PR4 — structure mismatch の補助 counter (PR2 で emit され、
+  // PR5 で gate に載る予定)。`isReportableParityIssue` を flip しないため
+  // `parityTopEntries` には含めず、summary と body の独立セクションのみで
+  // 露出する。
+  const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
+  const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
+  const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
+
+  const structureMismatchBodyLines =
+    structureMismatchIssues > 0
+      ? [
+          '## Structure Mismatch (advisory)',
+          '',
+          `- Total: ${structureMismatchIssues} issues across ${structureMismatchFiles} files`,
+          ...(Object.keys(structureMismatchByType).length > 0
+            ? [
+                '- By type:',
+                ...Object.keys(structureMismatchByType)
+                  .sort()
+                  .map((type) => `  - ${type}: ${structureMismatchByType[type]}`),
+              ]
+            : []),
+          '',
+          '> これらは現在 advisory です。PR5 の baseline migration と同時に gate に載る予定です。',
+          '',
+        ]
+      : [];
+
   const parityIssueBody = [
     '## Summary',
     '',
@@ -732,6 +760,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       }),
     ),
     '',
+    ...structureMismatchBodyLines,
     '## Artifacts',
     '',
     '- `parity-check-status.json`',
@@ -826,6 +855,16 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
         issuesByType: parityIssueSummary.issuesByType,
         issuesBySeverity: parityIssueSummary.issuesBySeverity,
+        // Issue #247 PR4 — structure mismatch の独立 counter を補助フィールド
+        // として露出する。`isReportableParityIssue` は PR4 では flip しない
+        // ため `topEntries` / `issueCount` には流れ込まないが、JSON consumer
+        // (sync-detection-issues / ダッシュボード / 人手レビュー) はこの
+        // フィールドから drift の存在を観測できる。PR5 cutover で structure
+        // mismatch が `topEntries` 側にも流れ込むが、その時点でもこの 3
+        // フィールドは並走させる。
+        structureMismatchIssues,
+        structureMismatchFiles,
+        structureMismatchByType,
       },
     },
     parityFollowup: buildParityFollowup(parity, options),

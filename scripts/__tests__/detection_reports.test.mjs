@@ -1080,6 +1080,135 @@ describe('parityFollowup in buildActionableReport', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR4 — parityRegression が structure mismatch の補助 counter を
+// summary に露出する。`isReportableParityIssue` の flip は伴わないので
+// `topEntries` には structure mismatch は含まれず、`shouldOpenIssue` も
+// structure mismatch 単独では立たない。summary の補助カウンタからのみ
+// 観測可能になる。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR4 — parityRegression structure mismatch summary exposure', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-08T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+
+  function makeParityWithStructureMismatch() {
+    return {
+      summary: {
+        checkedAt: '2026-04-08T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        activeErrorFiles: 0,
+        reportableActiveFiles: 0,
+        reportableActiveActionableFiles: 0,
+        structureMismatchIssues: 5,
+        structureMismatchFiles: 3,
+        structureMismatchByType: {
+          'section-structure-mismatch': 4,
+          'segment-order-mismatch': 1,
+        },
+      },
+      files: [
+        {
+          file: 'src/content/docs/running-tests/the-command-line-cli.md',
+          issues: [
+            {
+              type: 'section-structure-mismatch',
+              severity: 'actionable',
+              detail: 'section[2]/block[3] kind diff',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  it('exposes structureMismatchIssues / structureMismatchFiles / structureMismatchByType in parityRegression.summary', () => {
+    const parity = makeParityWithStructureMismatch();
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.summary.structureMismatchIssues, 5);
+    assert.equal(report.parityRegression.summary.structureMismatchFiles, 3);
+    assert.deepEqual(report.parityRegression.summary.structureMismatchByType, {
+      'section-structure-mismatch': 4,
+      'segment-order-mismatch': 1,
+    });
+  });
+
+  it('defaults structure mismatch counters to 0 / {} when summary fields are absent', () => {
+    const parity = {
+      summary: { checkedAt: '2026-04-08T00:00:00Z' },
+      files: [],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.equal(report.parityRegression.summary.structureMismatchIssues, 0);
+    assert.equal(report.parityRegression.summary.structureMismatchFiles, 0);
+    assert.deepEqual(report.parityRegression.summary.structureMismatchByType, {});
+  });
+
+  it('does NOT include structure mismatch files in parityRegression.topEntries (PR4 — gate flip is PR5)', () => {
+    const parity = makeParityWithStructureMismatch();
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    // `isReportableParityIssue` は PR4 では flip しないので、structure
+    // mismatch 単独のファイルは topEntries に流れ込まない。
+    assert.equal(report.parityRegression.topEntries.length, 0);
+    // shouldOpenIssue も立たない (= GitHub 上に新規 issue は open されない)
+    assert.equal(report.parityRegression.shouldOpenIssue, false);
+    assert.equal(report.parityRegression.summary.issueCount, 0);
+  });
+
+  it('parityRegression.body contains "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {
+    const parity = makeParityWithStructureMismatch();
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.match(report.parityRegression.body, /## Structure Mismatch \(advisory\)/);
+    // 件数 / ファイル数の wiring 確認
+    assert.match(
+      report.parityRegression.body,
+      /Total: 5 issues across 3 files/,
+    );
+    // type 別内訳 (sort 順は alpha 昇順)
+    assert.match(
+      report.parityRegression.body,
+      /section-structure-mismatch: 4/,
+    );
+    assert.match(
+      report.parityRegression.body,
+      /segment-order-mismatch: 1/,
+    );
+    // 「PR5 で gate に載る予定」の引用行
+    assert.match(
+      report.parityRegression.body,
+      /PR5 の baseline migration と同時に gate に載る予定です/,
+    );
+  });
+
+  it('parityRegression.body OMITS the "## Structure Mismatch" section when structureMismatchIssues = 0', () => {
+    const parity = {
+      summary: {
+        checkedAt: '2026-04-08T00:00:00Z',
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeFiles: 0,
+        activeErrorFiles: 0,
+        structureMismatchIssues: 0,
+        structureMismatchFiles: 0,
+        structureMismatchByType: {},
+      },
+      files: [],
+    };
+    const report = buildActionableReport(emptySnapshot, parity, []);
+    assert.doesNotMatch(report.parityRegression.body, /## Structure Mismatch/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 7: parityRegression excludes non-expired baselined issues
 // ---------------------------------------------------------------------------
 
