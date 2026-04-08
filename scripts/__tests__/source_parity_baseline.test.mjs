@@ -112,12 +112,11 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     assert.ok(!BASELINE_ELIGIBLE_TYPES.has('untranslated'));
   });
 
-  // Issue #247 PR1 — 新 taxonomy は PR1 時点で**まだ** baseline 対象に
-  // していない。PR2/PR3 で emitter が fix した後、PR5 の baseline migration
-  // で同定キー (section path / block kind / canonical hash など) を設計して
-  // から allowlist に追加する。ここで「未対応であること」を明示的に固定
-  // しておき、後続 PR で wiring を忘れた場合に検出できるようにする。
-  it('does NOT yet contain Issue #247 structure-mismatch / source-unusable types (PR1 scope)', () => {
+  // Issue #247 PR5 — gate cutover で structure mismatch / source unusable を
+  // baseline allowlist に追加した。§3.1 参照。emitter / validator / key
+  // builder / generator が足並みを揃えて新 type を扱えるようにする必要
+  // があるため、allowlist 拡張だけで済まない点に注意。
+  it('contains Issue #247 structure-mismatch / source-unusable types (PR5 cutover)', () => {
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',
@@ -126,63 +125,178 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     ]) {
       assert.equal(
         BASELINE_ELIGIBLE_TYPES.has(type),
-        false,
-        `${type} must NOT be in BASELINE_ELIGIBLE_TYPES until PR5 wires it up`,
+        true,
+        `${type} must be in BASELINE_ELIGIBLE_TYPES after PR5 cutover`,
       );
     }
   });
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR1 — validateBaseline rejects the new taxonomy
+// Issue #247 PR5 — validateBaseline — structure mismatch entries
 //
-// The taxonomy (source_parity_types.mjs) already knows about
-// section-structure-mismatch / segment-order-mismatch / snapshot-incomplete /
-// source-unusable, but `source_parity_baseline.mjs` hasn't been extended to
-// accept them yet. Pin that refusal so PR5 has a clear signal when the
-// baseline migration should flip it.
+// PR5 cutover で structure mismatch を baseline 可能にした。identity surface
+// は §3.2 に従い sectionIndex + structureCategory + structureFingerprint。
+// sectionPath は reviewer 可読性のための必須フィールドだが identity key
+// には含めない (同一ページ内で一意の保証が無いため — Finding 2)。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR1 — validateBaseline rejects new structure/source types', () => {
-  const VALID_PR1_FP = 'sha256:' + 'f'.repeat(64);
+describe('Issue #247 PR5 — validateBaseline — structure mismatch entries', () => {
+  const VALID_PR5_FP = 'sha256:' + 'f'.repeat(64);
+  const STRUCTURE_FP = 'sha256:' + '1'.repeat(64);
 
-  function baseEntry(issueType) {
+  function baseStructureEntry(overrides = {}) {
     return {
       slug: 'running-tests/the-command-line-cli',
-      issueType,
-      sectionPath: 'Options',
-      segmentKind: 'paragraph',
-      enSegmentIndex: 0,
-      jaSegmentIndex: null,
-      enSourceFingerprint: VALID_PR1_FP,
-      jaSourceFingerprint: null,
-      missingTokens: null,
-      snapshotFingerprint: VALID_PR1_FP,
-      inconclusiveCategory: null,
-      inconclusiveReason: null,
+      issueType: 'section-structure-mismatch',
+      snapshotFingerprint: VALID_PR5_FP,
       reviewAfter: '2026-10-06',
+      sectionIndex: 7,
+      sectionPath: 'CLI Installation > Basic CLI command',
+      structureCategory: 'kind-multiset',
+      structureFingerprint: STRUCTURE_FP,
+      ...overrides,
     };
   }
 
-  for (const type of [
-    'section-structure-mismatch',
-    'segment-order-mismatch',
-    'snapshot-incomplete',
-    'source-unusable',
-  ]) {
-    it(`rejects baseline entry with issueType="${type}"`, () => {
-      const entry = baseEntry(type);
-      assert.throws(
-        () =>
-          validateBaseline({
-            schemaVersion: 1,
-            generatedAt: '2026-04-08T00:00:00Z',
-            entries: [entry],
-          }),
-        /invalid "issueType" — must be one of/,
-      );
+  it('accepts a valid section-structure-mismatch entry (kind-multiset)', () => {
+    const entry = baseStructureEntry();
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('accepts a valid segment-order-mismatch entry (content-order)', () => {
+    const entry = baseStructureEntry({
+      issueType: 'segment-order-mismatch',
+      structureCategory: 'content-order',
     });
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('accepts a structure entry with empty string sectionPath (preface section)', () => {
+    const entry = baseStructureEntry({ sectionPath: '' });
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('throws on missing sectionIndex (machine identity key must be present)', () => {
+    const entry = baseStructureEntry();
+    delete entry.sectionIndex;
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on non-integer sectionIndex', () => {
+    const entry = baseStructureEntry({ sectionIndex: 1.5 });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on negative sectionIndex', () => {
+    const entry = baseStructureEntry({ sectionIndex: -1 });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on string sectionIndex', () => {
+    const entry = baseStructureEntry({ sectionIndex: '7' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionIndex/,
+    );
+  });
+
+  it('throws on missing sectionPath (reviewer readability field is required)', () => {
+    const entry = baseStructureEntry();
+    delete entry.sectionPath;
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /sectionPath/,
+    );
+  });
+
+  it('throws on invalid structureCategory enum', () => {
+    const entry = baseStructureEntry({ structureCategory: 'unknown' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /structureCategory/,
+    );
+  });
+
+  it('throws on malformed structureFingerprint (not sha256 hex)', () => {
+    const entry = baseStructureEntry({ structureFingerprint: 'not-a-hash' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /structureFingerprint/,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — validateBaseline — source unusable entries
+//
+// source unusable は page 粒度の issue。identity surface は usabilityReason
+// のみ (§3.3)。sectionPath / structureCategory / structureFingerprint は
+// 持たない。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — validateBaseline — source unusable entries', () => {
+  const VALID_PR5_FP = 'sha256:' + 'f'.repeat(64);
+
+  function baseSourceUnusableEntry(overrides = {}) {
+    return {
+      slug: 'salesforce-testing/faq',
+      issueType: 'source-unusable',
+      snapshotFingerprint: VALID_PR5_FP,
+      reviewAfter: '2026-10-06',
+      usabilityReason: 'escaped-details-residue',
+      ...overrides,
+    };
   }
+
+  it('accepts a valid source-unusable entry (escaped-details-residue)', () => {
+    const entry = baseSourceUnusableEntry();
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('accepts a valid snapshot-incomplete entry (shallow-snapshot)', () => {
+    const entry = baseSourceUnusableEntry({
+      issueType: 'snapshot-incomplete',
+      usabilityReason: 'shallow-snapshot',
+    });
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+    );
+  });
+
+  it('throws on invalid usabilityReason enum', () => {
+    const entry = baseSourceUnusableEntry({ usabilityReason: 'unknown' });
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /usabilityReason/,
+    );
+  });
+
+  it('throws on missing usabilityReason', () => {
+    const entry = baseSourceUnusableEntry();
+    delete entry.usabilityReason;
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      /usabilityReason/,
+    );
+  });
 });
 
 describe('INCONCLUSIVE_CATEGORIES', () => {

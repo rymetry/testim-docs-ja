@@ -22,6 +22,15 @@ import {
 /**
  * frozen baseline 対象になる issue type。
  *
+ * Issue #247 PR5 — structure mismatch (section-structure-mismatch /
+ * segment-order-mismatch) と source unusable (snapshot-incomplete /
+ * source-unusable) を baseline 可能にした。identity key は segment-*
+ * ファミリとは別系統で、structure 系は sectionIndex + structureCategory +
+ * structureFingerprint、source unusable 系は usabilityReason のみで同定
+ * する (§3.2 / §3.3)。`source-unusable` / `snapshot-incomplete` は gate
+ * には載らないが (翻訳者責任外な source 側 debt)、ack / baseline で人手
+ * 管理できる枠を提供する。
+ *
  * @type {ReadonlySet<string>}
  */
 export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
@@ -32,6 +41,10 @@ export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
     'segment-untranslated',
     'segment-token-gap',
     'segment-inconclusive',
+    'section-structure-mismatch',
+    'segment-order-mismatch',
+    'snapshot-incomplete',
+    'source-unusable',
   ]),
 );
 
@@ -204,7 +217,71 @@ export function validateBaseline(parsed) {
     //   - EN-owned: segment-missing, segment-shifted, segment-token-gap → enSegmentIndex
     //   - JA-owned: segment-extra, segment-untranslated → jaSegmentIndex
     //   - page-level: segment-inconclusive → inconclusiveCategory
-    if (entry.issueType === 'segment-inconclusive') {
+    //   - PR5 section: section-structure-mismatch / segment-order-mismatch →
+    //       sectionIndex + structureCategory + structureFingerprint
+    //   - PR5 page: snapshot-incomplete / source-unusable → usabilityReason
+    if (STRUCTURE_MISMATCH_TYPES.has(entry.issueType)) {
+      // Issue #247 PR5 — section 粒度の structure diff。
+      //
+      // identity surface (machine key):
+      //   sectionIndex + structureCategory + structureFingerprint
+      //
+      // sectionPath は reviewer 可読性 / sort 補助のために保存するが
+      // identity には使わない。sectionPath は同一ページ内で一意の保証が
+      // 無く、両方同じ sectionPath を持つ section が共存するケースで
+      // baseline が silently 誤った section を覆うのを防ぐため
+      // (レビュー指摘 Finding 2)。
+      //
+      // 生の enKinds / jaKinds / contentPermutation は
+      // structureFingerprint に畳み込まれる (computeStructureFingerprint
+      // 参照)。reviewer 用の raw data は parity-check-status.json 側に
+      // 出る。
+      if (
+        typeof entry.sectionIndex !== 'number' ||
+        !Number.isInteger(entry.sectionIndex) ||
+        entry.sectionIndex < 0
+      ) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have non-negative integer sectionIndex (machine identity key)`,
+        );
+      }
+      if (typeof entry.sectionPath !== 'string') {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have string sectionPath (empty string allowed for preface; reviewer readability only, not identity)`,
+        );
+      }
+      if (
+        typeof entry.structureCategory !== 'string' ||
+        !STRUCTURE_CATEGORIES.has(entry.structureCategory)
+      ) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have structureCategory in ` +
+            `${[...STRUCTURE_CATEGORIES].join(', ')}`,
+        );
+      }
+      if (!isValidFingerprint(entry.structureFingerprint)) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have valid structureFingerprint (sha256:<64 hex>)`,
+        );
+      }
+    } else if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
+      // Issue #247 PR5 — page 粒度の source unusable detector。
+      //
+      // identity surface: usabilityReason のみ。
+      // sectionPath / structureCategory / structureFingerprint は持たない
+      // (page-level な issue なので)。数値フィールド (enBodySegmentCount
+      // 等) は drift 発火の閾値判定に使われる根拠であって identity では
+      // ないため baseline には保存しない。
+      if (
+        typeof entry.usabilityReason !== 'string' ||
+        !USABILITY_REASONS.has(entry.usabilityReason)
+      ) {
+        throw new Error(
+          `${prefix}: ${entry.issueType} entry must have usabilityReason in ` +
+            `${[...USABILITY_REASONS].join(', ')}`,
+        );
+      }
+    } else if (entry.issueType === 'segment-inconclusive') {
       if (
         typeof entry.inconclusiveCategory !== 'string' ||
         !INCONCLUSIVE_CATEGORIES.has(entry.inconclusiveCategory)
