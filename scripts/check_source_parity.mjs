@@ -21,6 +21,8 @@ import {
   detectSourceUsability,
   extractSegmentsFromHtml,
   extractSegmentsFromMarkdown,
+  formatSourceUnusableSection,
+  formatStructureMismatchSection,
   isNonBlockingParityIssue,
   loadSidebarSlugs,
   localCheck,
@@ -809,6 +811,20 @@ export async function checkSourceParity({
           }
         }
       }
+    }
+    // Issue #247 PR4 — structure mismatch / source unusable の独立 advisory
+    // セクションを CLI 末尾に追加する。両 formatter とも 0 件のときは null
+    // を返すので、その場合はセクション自体を省略する。pure helper の文言は
+    // `source_parity_summary_format.test.mjs` で固定済み。
+    const structureMismatchSection = formatStructureMismatchSection(summary);
+    if (structureMismatchSection) {
+      console.log('');
+      console.log(structureMismatchSection);
+    }
+    const sourceUnusableSection = formatSourceUnusableSection(summary);
+    if (sourceUnusableSection) {
+      console.log('');
+      console.log(sourceUnusableSection);
     }
     if (includeAdvisory) {
       const scopeLabel = advisoryQueueScope.isComplete
