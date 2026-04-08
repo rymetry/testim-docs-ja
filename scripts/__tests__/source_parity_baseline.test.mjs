@@ -19,6 +19,7 @@ import {
   INCONCLUSIVE_CATEGORIES,
   STRUCTURE_CATEGORIES,
   USABILITY_REASONS,
+  computeStructureFingerprint,
 } from '../lib/source_parity_baseline.mjs';
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
@@ -689,5 +690,159 @@ describe('Issue #247 PR5 — USABILITY_REASONS', () => {
   it('does NOT contain unrelated values', () => {
     assert.ok(!USABILITY_REASONS.has(''));
     assert.ok(!USABILITY_REASONS.has('unknown'));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR5 — computeStructureFingerprint
+//
+// structure mismatch の baseline identity key 用に、enKinds / jaKinds /
+// structureCategory / contentPermutation を sha256 hex に畳み込む helper。
+// 生の配列を baseline entry に保存すると JSON が肥大化し、downstream の
+// 生データアクセス手段が増えるため、derived fingerprint 1 本に集約する。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR5 — computeStructureFingerprint', () => {
+  const FINGERPRINT_RE = /^sha256:[0-9a-f]{64}$/;
+
+  it('produces a deterministic sha256:<64 hex> fingerprint for a given input', () => {
+    const fp = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    });
+    assert.match(fp, FINGERPRINT_RE);
+    const fp2 = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list', 'paragraph'],
+      jaKinds: ['paragraph', 'paragraph'],
+    });
+    assert.equal(fp, fp2);
+  });
+
+  it('differs when enKinds differ', () => {
+    const a = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['paragraph'],
+    });
+    const b = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph', 'heading'],
+      jaKinds: ['paragraph'],
+    });
+    assert.notEqual(a, b);
+  });
+
+  it('differs when jaKinds differ', () => {
+    const a = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph', 'bullet-list'],
+    });
+    const b = computeStructureFingerprint({
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph', 'heading'],
+    });
+    assert.notEqual(a, b);
+  });
+
+  it('differs when structureCategory differs (same kinds)', () => {
+    const shared = {
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['paragraph', 'bullet-list'],
+    };
+    const multiset = computeStructureFingerprint({
+      ...shared,
+      structureCategory: 'kind-multiset',
+    });
+    const sequence = computeStructureFingerprint({
+      ...shared,
+      structureCategory: 'kind-sequence',
+    });
+    assert.notEqual(multiset, sequence);
+  });
+
+  it('differs when contentPermutation differs (content-order only)', () => {
+    const shared = {
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+    };
+    const a = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+      ],
+    });
+    const b = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 0, score: 0.9 },
+        { enIndex: 1, jaIndex: 1, score: 0.9 },
+      ],
+    });
+    assert.notEqual(a, b);
+  });
+
+  it('is stable under contentPermutation reordering (sorted by enIndex internally)', () => {
+    const shared = {
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+    };
+    const sorted = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+      ],
+    });
+    const reversed = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 1, jaIndex: 0, score: 0.9 },
+        { enIndex: 0, jaIndex: 1, score: 0.9 },
+      ],
+    });
+    assert.equal(sorted, reversed);
+  });
+
+  it('is stable for kind-multiset whether contentPermutation is null/undefined/missing', () => {
+    const base = {
+      structureCategory: 'kind-multiset',
+      enKinds: ['paragraph'],
+      jaKinds: ['paragraph'],
+    };
+    const noField = computeStructureFingerprint(base);
+    const undef = computeStructureFingerprint({ ...base, contentPermutation: undefined });
+    const nullFp = computeStructureFingerprint({ ...base, contentPermutation: null });
+    assert.equal(noField, undef);
+    assert.equal(noField, nullFp);
+  });
+
+  it('ignores permutation "score" field (score is not identity)', () => {
+    const shared = {
+      structureCategory: 'content-order',
+      enKinds: ['paragraph', 'bullet-list'],
+      jaKinds: ['bullet-list', 'paragraph'],
+    };
+    const low = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.1 },
+        { enIndex: 1, jaIndex: 0, score: 0.1 },
+      ],
+    });
+    const high = computeStructureFingerprint({
+      ...shared,
+      contentPermutation: [
+        { enIndex: 0, jaIndex: 1, score: 0.99 },
+        { enIndex: 1, jaIndex: 0, score: 0.99 },
+      ],
+    });
+    assert.equal(low, high);
   });
 });

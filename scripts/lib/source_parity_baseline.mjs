@@ -12,6 +12,7 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 import {
   STRUCTURE_MISMATCH_TYPES,
@@ -57,6 +58,54 @@ export const STRUCTURE_CATEGORIES = Object.freeze(
 export const USABILITY_REASONS = Object.freeze(
   new Set(['shallow-snapshot', 'escaped-details-residue', 'extractor-empty']),
 );
+
+/**
+ * Issue #247 PR5 — structure mismatch issue の payload から
+ * `structureFingerprint` (sha256:<64 hex>) を derive する純粋関数。
+ *
+ * key 順序と join 記号を厳密に固定することで、runtime 側の
+ * `buildBaselineKey` と disk 側の `buildBaselineKeyFromEntry` が同じ
+ * fingerprint を経由して identity key を合成できるようにする。生の
+ * enKinds / jaKinds / contentPermutation は baseline entry に保存せず、
+ * ここで hash に畳み込む (§3.2 参照)。
+ *
+ * 注意点:
+ *   - enKinds / jaKinds の順序は EN/JA それぞれの自然順を使う
+ *     (`source_parity_structure.mjs::buildBaseDiff` の出力順)。
+ *   - contentPermutation は `structureCategory === 'content-order'` の
+ *     ときのみ使用し、enIndex 昇順に並べ替えて `enIndex->jaIndex`
+ *     形式に join する。`score` は identity に含めない。
+ *   - kind-multiset / kind-sequence では contentPermutation を無視する
+ *     (null / undefined / 省略で同じ fingerprint になる)。
+ *
+ * @param {object} input
+ * @param {string} input.structureCategory — STRUCTURE_CATEGORIES の 1 つ
+ * @param {string[]} input.enKinds
+ * @param {string[]} input.jaKinds
+ * @param {Array<{enIndex: number, jaIndex: number, score?: number}>} [input.contentPermutation]
+ * @returns {string} `sha256:<64 hex>`
+ */
+export function computeStructureFingerprint({
+  structureCategory,
+  enKinds,
+  jaKinds,
+  contentPermutation,
+}) {
+  const permutationDigest =
+    structureCategory === 'content-order' && Array.isArray(contentPermutation)
+      ? [...contentPermutation]
+          .sort((a, b) => a.enIndex - b.enIndex)
+          .map((p) => `${p.enIndex}->${p.jaIndex}`)
+          .join(',')
+      : '';
+  const raw = [
+    structureCategory,
+    Array.isArray(enKinds) ? enKinds.join('|') : '',
+    Array.isArray(jaKinds) ? jaKinds.join('|') : '',
+    permutationDigest,
+  ].join('\n');
+  return 'sha256:' + createHash('sha256').update(raw).digest('hex');
+}
 
 /**
  * `segment-inconclusive` の構造化カテゴリ。free text の `inconclusiveReason` は
