@@ -271,11 +271,20 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
         0,
         `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
       );
+      // Issue #247 PR2 — このページは既存 segment-* drift が baseline で
+      // 覆われている上に、新たに section-structure-mismatch が emit
+      // される (PR2 で structure comparator が動くようになったため)。
+      // structure mismatch は ack / baseline で覆われているわけではなく
+      // PR4 cutover まで gate に乗らない advisory として扱われるので、
+      // CLI suffix は "(covered by baseline/ack)" ではなく
+      // "(advisory + baseline/ack)" の mixed 表示になる。
+      // PR4 cutover でこの assertion を "(covered by baseline/ack)" に
+      // 戻すか、または gate に乗せて ❌ に移す。
       assert.ok(
         result.stdout.includes(
-          '⏸️ src/content/docs/test-management/shared-configuration.md (covered by baseline/ack)',
+          '⏸️ src/content/docs/test-management/shared-configuration.md (advisory + baseline/ack)',
         ),
-        `stdout did not mark the baselined file as non-blocking:\n${result.stdout}`,
+        `stdout did not mark the file with the expected mixed-state suffix:\n${result.stdout}`,
       );
       assert.ok(
         result.stdout.includes('🧊baseline'),
@@ -283,7 +292,15 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
       );
       assert.ok(
         !result.stdout.includes('❌ src/content/docs/test-management/shared-configuration.md'),
-        `stdout still marked the baselined file as blocking:\n${result.stdout}`,
+        `stdout still marked the file as blocking:\n${result.stdout}`,
+      );
+      // 加えて、advisory 状態が "covered by baseline/ack" と誤表示されて
+      // いないことも明示的に確認する (Issue #247 PR2 review feedback)。
+      assert.ok(
+        !result.stdout.includes(
+          '⏸️ src/content/docs/test-management/shared-configuration.md (covered by baseline/ack)',
+        ),
+        `advisory file must NOT be labeled as fully covered by baseline/ack:\n${result.stdout}`,
       );
     } finally {
       if (existsSync(STATUS_BACKUP_PATH)) {

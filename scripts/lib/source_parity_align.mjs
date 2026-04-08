@@ -68,14 +68,15 @@
  */
 
 import { GATE_ELIGIBLE_KINDS } from './source_parity_segments_shared.mjs';
+import {
+  CJK_RE,
+  scoreSegmentMatch,
+  // 下で __scoreSegmentMatch として re-export している — align.mjs 経由で
+  // import している既存テストを壊さないための後方互換。
+} from './source_parity_align_scoring.mjs';
+import { compareSectionStructure } from './source_parity_structure.mjs';
 
 const GATE_KIND_SET = new Set(GATE_ELIGIBLE_KINDS);
-
-// CJK-ish ranges that signal "JA side has been translated".
-// Hiragana, katakana, CJK unified ideographs, half/full-width, and
-// CJK compatibility — broad enough that a properly-translated JA
-// paragraph is never mistaken for English residue.
-const CJK_RE = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF]/;
 
 // Minimum prose length (after stripping invariant tokens and link refs)
 // before a JA segment is allowed to be classified as untranslated. Short
@@ -233,117 +234,11 @@ function weightedLcs(a, b, score) {
 // ---------------------------------------------------------------------------
 // Content-aware match predicate
 // ---------------------------------------------------------------------------
-
-// Score weights — must satisfy STRONG > MEDIUM > WEAK so the weighted LCS
-// always prefers a strong anchor over weaker fallbacks. The exact magnitudes
-// only matter relative to each other.
-const SCORE_FINGERPRINT_MATCH = 1000;
-const SCORE_TEXTNORM_MATCH = 500;
-const SCORE_TOKEN_OVERLAP_BASE = 100;
-const SCORE_TOKEN_OVERLAP_PER_TOKEN = 10;
-const SCORE_WEAK_POSITION_MAX = 10;
-const SCORE_WEAK_LENGTH_MAX = 5;
-const SCORE_KIND_FLOOR = 1;
-
-/**
- * Compute a numeric match score for a candidate segment pair under the
- * weighted-LCS aligner. The hierarchy is:
- *
- *   1. `sourceFingerprint` equality (1000) — identical raw text. Rare
- *      cross-language but common for invariant-heavy lines and synthetic
- *      test fixtures.
- *   2. `textNorm` equality (500) — identical normalized prose.
- *   3. Invariant token overlap (100 + 10/token). Both sides must carry
- *      tokens. Disjoint token sets short-circuit to 0 — that is strong
- *      negative evidence and the pair must NOT be matched.
- *   4. Same-language penalty (0) — both sides ASCII-only with different
- *      `textNorm`. Almost certainly not the same content.
- *   5. Tokenless cross-language (1–15) — best-effort weak score from
- *      normalized position similarity AND length similarity. This is
- *      what fixes the kind-only LCS regression where a middle deletion
- *      collapsed onto enIndex=0: position-aware scoring naturally aligns
- *      EN[i] to JA[i] when the section has no other anchors.
- *   6. Floor of 1 (kind match with neither textual signals nor a useful
- *      position) — keeps the pair eligible but at the lowest possible
- *      weight so any other match wins ties.
- *
- * Returns 0 when segments must NOT be matched (different kinds, disjoint
- * tokens, ASCII-only with different text). The weighted LCS treats 0 as
- * a hard non-match.
- *
- * @param {Segment} en
- * @param {Segment} ja
- * @param {number} enLocalIndex   index of `en` within its section body
- * @param {number} jaLocalIndex   index of `ja` within its section body
- * @param {number} enSectionLen   total body length of the EN section
- * @param {number} jaSectionLen   total body length of the JA section
- * @returns {number}
- */
-function scoreSegmentMatch(en, ja, enLocalIndex, jaLocalIndex, enSectionLen, jaSectionLen) {
-  if (en.segmentKind !== ja.segmentKind) return 0;
-  if (en.sourceFingerprint && en.sourceFingerprint === ja.sourceFingerprint) {
-    return SCORE_FINGERPRINT_MATCH;
-  }
-  if (en.textNorm && en.textNorm === ja.textNorm) return SCORE_TEXTNORM_MATCH;
-
-  const enTokens = en.tokensInvariant ?? [];
-  const jaTokens = ja.tokensInvariant ?? [];
-  if (enTokens.length > 0 && jaTokens.length > 0) {
-    const jaSet = new Set(jaTokens);
-    let overlap = 0;
-    for (const token of enTokens) {
-      if (jaSet.has(token)) overlap += 1;
-    }
-    if (overlap > 0) {
-      return SCORE_TOKEN_OVERLAP_BASE + overlap * SCORE_TOKEN_OVERLAP_PER_TOKEN;
-    }
-    return 0; // disjoint tokens — strong non-match
-  }
-
-  // Same-language penalty: both sides ASCII-only with different text.
-  if (en.textNorm && ja.textNorm && !CJK_RE.test(en.textNorm) && !CJK_RE.test(ja.textNorm)) {
-    return 0;
-  }
-
-  // Tokenless cross-language: weak position + length similarity score.
-  const positionScore = computeWeakPositionScore(
-    enLocalIndex,
-    jaLocalIndex,
-    enSectionLen,
-    jaSectionLen,
-  );
-  const lengthScore = computeWeakLengthScore(en.textNorm, ja.textNorm);
-  return Math.max(SCORE_KIND_FLOOR, positionScore + lengthScore);
-}
-
-/**
- * Score how close two segment positions are within their respective
- * section bodies. Returns 0 when fully misaligned (one at the start, the
- * other at the end) and `SCORE_WEAK_POSITION_MAX` when normalized
- * positions match exactly. Sections of length ≤ 1 fall back to a flat
- * mid-range score because there is no positional information to use.
- */
-function computeWeakPositionScore(i, j, n, m) {
-  if (n <= 1 || m <= 1) return Math.floor(SCORE_WEAK_POSITION_MAX / 2);
-  const enRatio = i / (n - 1);
-  const jaRatio = j / (m - 1);
-  const distance = Math.abs(enRatio - jaRatio);
-  return Math.max(0, Math.round(SCORE_WEAK_POSITION_MAX * (1 - distance)));
-}
-
-/**
- * Score how similar the textual lengths of two segments are. JA tends to
- * be more concise than EN, so this is a soft hint rather than a strong
- * predictor. Returns 0 when both sides are empty (avoids divide-by-zero)
- * or when the ratio collapses to nothing.
- */
-function computeWeakLengthScore(enText, jaText) {
-  if (!enText || !jaText) return 0;
-  const minLen = Math.min(enText.length, jaText.length);
-  const maxLen = Math.max(enText.length, jaText.length);
-  if (maxLen === 0) return 0;
-  return Math.round(SCORE_WEAK_LENGTH_MAX * (minLen / maxLen));
-}
+// `scoreSegmentMatch` とスコア重み定数は Issue #247 PR2 で
+// `source_parity_align_scoring.mjs` に移した。structure comparator が
+// 同一のスコア階層を共有できるようにするための抽出で、align.mjs への
+// 循環依存を作らないことが目的。スコア表と設計根拠の詳細はそのモジュールの
+// docstring を参照。
 
 /**
  * Aggregate the union of invariant tokens contributed by every body segment
@@ -843,7 +738,49 @@ export function alignSegments(enSegments, jaSegments) {
 
   const diffs = [];
   for (let i = 0; i < enSections.length; i++) {
+    // Issue #247 PR2 — alignSection (weighted LCS + cross-section body
+    // swap detection) を **先に** 走らせる。理由は shift と structure
+    // mismatch の二重発火を避けるため:
+    //
+    //   - cross-section body swap が起きると、section 0 と section 1 の
+    //     対応ペアは「multiset / kind 列が両方違う」という形で観測され、
+    //     何の対策もなければ structure comparator は section ごとに 1 件
+    //     ずつ section-structure-mismatch を emit してしまう。
+    //   - だが本当の診断は section-local な構造ドリフトではなく
+    //     **cross-section misalignment** で、これは alignSection の
+    //     `findBodySwapEvidence` が `segment-shifted` として既に表現
+    //     できる。そちらが headline で、structure-mismatch を被せると
+    //     `structureMismatch*` カウンタが汚れるだけ。
+    //
+    // したがって順序は (1) alignSection を先に走らせて section の diff
+    // を取る、(2) `segment-shifted` が emit されていれば structure
+    // comparator は **その section だけ** スキップする、(3) shift では
+    // ない section に対してのみ structure comparator を並行で走らせる。
+    //
+    // structure comparator を並行で生かす理由 (shift していない section):
+    //   1. 既存の構造ドリフト: 運用中の section には baseline 時点で既に
+    //      drift が残っていることがある。この状態で LCS を suppress すると、
+    //      後続の小さな mutation (1 段落削除、token drop) は新しい LCS diff
+    //      も新しい structure diff も生まず、recall benchmark から見ると
+    //      mutation が不可視になる。recall test の callout-paragraph-delete /
+    //      step-delete / section-body-swap を参照。
+    //   2. reviewer drill-down: structure mismatch は section レベルの
+    //      見出し情報だが、「どの block が」崩れたかを把握するには
+    //      segment-missing / segment-extra / segment-token-gap の per-segment
+    //      情報が依然として必要。
+    //
+    // section レベルの structure diff と segment レベルの LCS diff は
+    // downstream で別カウンタ族 (`structureMismatch*` と従来の segment-*)
+    // に分かれて集計されるので、shift していない section での共存は
+    // gate accounting で二重計上にならない。
     const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
+    const hasShift = sectionDiffs.some((d) => d.type === 'segment-shifted');
+
+    if (!hasShift) {
+      const structureDiffs = compareSectionStructure(enSections[i], jaSections[i]);
+      for (const diff of structureDiffs) diffs.push(diff);
+    }
+
     for (const diff of sectionDiffs) diffs.push(diff);
   }
 
@@ -894,23 +831,39 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
   'segment-shifted': 'actionable',
   'segment-untranslated': 'actionable',
   'segment-token-gap': 'actionable',
+  // Issue #247 PR2 — source_parity_structure.mjs から emit される
+  // section 単位の structure diff。同じ issue adapter を通すことで
+  // reportable counter / baseline validation / ack wiring が副経路を
+  //作らずそのまま拾えるようにしている。
+  'section-structure-mismatch': 'actionable',
+  'segment-order-mismatch': 'actionable',
 });
 
 /**
- * Convert ParityDiff records emitted by `alignSegments` into the legacy
- * `{ type, severity, detail, line? }` issue shape consumed by
- * `check_source_parity.mjs`, `tagIssuesWithAcknowledgements`, and
- * `summarizeParityResults`. Pure function — does not mutate inputs.
+ * `alignSegments` が返した ParityDiff レコードを、`check_source_parity.mjs` /
+ * `tagIssuesWithAcknowledgements` / `summarizeParityResults` が消費する
+ * 旧来の `{ type, severity, detail, line? }` 形式に変換する。純粋関数 —
+ * 入力を mutate しない。
  *
- * Each diff is mapped 1:1 to one issue. The `detail` field carries the
- * section path (so the acknowledgement matcher's `detailIncludes` /
- * `detailRegex` can target specific sections), and any extra structured
- * metadata (`enSegmentIndex`, `jaSegmentIndex`, fingerprints, missingTokens)
- * is forwarded as-is so downstream reports can drill in.
+ * 各 diff は 1:1 で 1 issue になる。`detail` には section path を埋め込んで
+ * おくことで、acknowledgement matcher の `detailIncludes` / `detailRegex` が
+ * section 単位で狙えるようになる。その他の構造化メタデータ
+ * (`enSegmentIndex` / `jaSegmentIndex` / fingerprint / missingTokens) は
+ * そのまま forward して、downstream report が drill-down できるようにする。
  *
- * segment-* issues flow through the primary gate accounting in
- * `summarizeParityResults`. Pre-cutover drift is frozen via
- * `parity-baseline.json` (`isFrozenByBaseline`).
+ * Issue #247 PR2 — section 単位の structure diff (`scope: 'section'` で
+ * `segmentKind` フィールドを持たない) は独自の構造化 payload
+ * (`structureCategory` / `enKinds` / `jaKinds` / `enSegmentCount` /
+ * `jaSegmentCount`、option で `contentPermutation`) を持っていて、PR5 で
+ * baseline 同定キーがここを参照する前提なので、adapter は **そのまま**
+ * コピーして forward する。これらの diff に `segmentKind` を合成しては
+ * **絶対にならない** — `scope: 'section'` を導入した目的はまさに block
+ * 単位の `segmentKind` (paragraph / list / callout) を section 単位の issue
+ * family で汚染しないためなので、ここで segmentKind を混ぜると契約崩壊。
+ *
+ * segment-* 系 issue は `summarizeParityResults` の gate accounting を
+ * そのまま通る。cutover 前の drift は `parity-baseline.json` で frozen に
+ * なる (`isFrozenByBaseline` 参照)。
  *
  * @param {ParityDiff[]} diffs
  * @returns {Array<object>}
@@ -920,6 +873,35 @@ export function parityDiffsToIssues(diffs) {
   return diffs.map((diff) => {
     const sectionLabel = diff.sectionPath || '(preface)';
     const severity = SEGMENT_ISSUE_SEVERITY[diff.type] ?? 'actionable';
+
+    // Issue #247 PR2 — section 単位 structure diff は専用の adapter 分岐に
+    // 流す。payload 形状が segment 単位 diff と構造的に違う (scope vs
+    // segmentKind、kind-multiset / sequence メタデータ) ので、segment 単位の
+    // フィールドを混ぜないように切り分ける必要がある。
+    if (diff.scope === 'section') {
+      const issue = {
+        type: diff.type,
+        severity,
+        detail: `[${sectionLabel}] ${diff.detail}`,
+        sectionPath: diff.sectionPath,
+        sectionIndex: diff.sectionIndex,
+        scope: 'section',
+        structureCategory: diff.structureCategory,
+        enKinds: [...diff.enKinds],
+        jaKinds: [...diff.jaKinds],
+        enSegmentCount: diff.enSegmentCount,
+        jaSegmentCount: diff.jaSegmentCount,
+      };
+      if (Array.isArray(diff.contentPermutation)) {
+        issue.contentPermutation = diff.contentPermutation.map((entry) => ({
+          enIndex: entry.enIndex,
+          jaIndex: entry.jaIndex,
+          score: entry.score,
+        }));
+      }
+      return issue;
+    }
+
     const issue = {
       type: diff.type,
       severity,

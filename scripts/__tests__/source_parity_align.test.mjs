@@ -102,6 +102,9 @@ describe('alignSegments — empty / identical inputs', () => {
 
 describe('alignSegments — segment-missing', () => {
   it('detects a single missing paragraph as exactly one segment-missing diff', () => {
+    // Issue #247 PR2: section-structure-mismatch も並行で出る
+    // (multiset {p:3} vs {p:2} で違うため)。LCS が emit する
+    // segment-missing は引き続き 1 件 / cascade なしで pin する。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'paragraph', 0, 'First paragraph.'),
@@ -111,14 +114,13 @@ describe('alignSegments — segment-missing', () => {
     const ja = [
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, '段落 1'),
-      // Second paragraph deleted
+      // 2 番目の段落を削除
       makeSeg('セットアップ', 'paragraph', 1, '段落 3'),
     ];
     const result = alignSegments(en, ja);
-    const grouped = diffsByType(result.diffs);
-    assert.equal(grouped['segment-missing'], 1);
-    assert.equal(result.diffs.length, 1, 'exactly one diff — no cascade');
-    assert.equal(result.diffs[0].segmentKind, 'paragraph');
+    const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missingDiffs.length, 1, 'exactly one segment-missing — no LCS cascade');
+    assert.equal(missingDiffs[0].segmentKind, 'paragraph');
   });
 
   it('detects a single missing bullet as exactly one segment-missing diff', () => {
@@ -157,6 +159,8 @@ describe('alignSegments — segment-missing', () => {
   });
 
   it('detects a missing callout-body as one diff', () => {
+    // Issue #247 PR2: section-structure-mismatch も並行で出る
+    // (multiset {callout-body:2} vs {callout-body:1})。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'callout-body', 0, 'EN callout para A'),
@@ -165,12 +169,12 @@ describe('alignSegments — segment-missing', () => {
     const ja = [
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'callout-body', 0, 'JA callout 文 A'),
-      // JA missing the second callout body paragraph
+      // 2 番目の callout body 段落が JA で欠落
     ];
     const result = alignSegments(en, ja);
-    assert.equal(result.diffs.length, 1);
-    assert.equal(result.diffs[0].type, 'segment-missing');
-    assert.equal(result.diffs[0].segmentKind, 'callout-body');
+    const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missingDiffs.length, 1);
+    assert.equal(missingDiffs[0].segmentKind, 'callout-body');
   });
 
   it('detects a missing table-cell as one diff', () => {
@@ -201,6 +205,8 @@ describe('alignSegments — segment-missing', () => {
 
 describe('alignSegments — segment-extra', () => {
   it('detects a single extra JA paragraph as one segment-extra diff', () => {
+    // Issue #247 PR2: section-structure-mismatch も並行で出る
+    // (multiset {p:2} vs {p:3})。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'paragraph', 0, 'Paragraph one.'),
@@ -213,9 +219,9 @@ describe('alignSegments — segment-extra', () => {
       makeSeg('セットアップ', 'paragraph', 2, '段落 2'),
     ];
     const result = alignSegments(en, ja);
-    assert.equal(result.diffs.length, 1);
-    assert.equal(result.diffs[0].type, 'segment-extra');
-    assert.equal(result.diffs[0].segmentKind, 'paragraph');
+    const extraDiffs = result.diffs.filter((d) => d.type === 'segment-extra');
+    assert.equal(extraDiffs.length, 1);
+    assert.equal(extraDiffs[0].segmentKind, 'paragraph');
   });
 });
 
@@ -311,6 +317,10 @@ describe('alignSegments — segment-token-gap', () => {
 
 describe('alignSegments — section anchoring', () => {
   it('groups diffs by their section path', () => {
+    // Issue #247 PR2: Setup section の paragraph 削除 (multiset
+    // {p:2} vs {p:1}) で section-structure-mismatch も並行に出る。
+    // ここでは segment-missing 単体の section path をピン止めするのが
+    // 目的なので、type で filter してから検証する。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'paragraph', 0, 'Setup paragraph one.'),
@@ -321,16 +331,15 @@ describe('alignSegments — section anchoring', () => {
     const ja = [
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, 'セットアップ段落 1'),
-      // setup paragraph 2 missing
+      // setup paragraph 2 が欠落
       makeHeading('実行', 0, '実行'),
       makeSeg('実行', 'paragraph', 0, '実行段落 1'),
     ];
     const result = alignSegments(en, ja);
-    assert.equal(result.diffs.length, 1);
-    const diff = result.diffs[0];
-    assert.equal(diff.type, 'segment-missing');
-    // sectionPath comes from the EN side because EN owns the missing segment
-    assert.equal(diff.sectionPath, 'Setup');
+    const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
+    assert.equal(missingDiffs.length, 1);
+    // sectionPath は EN 側 (削除された segment は EN にしか存在しない)。
+    assert.equal(missingDiffs[0].sectionPath, 'Setup');
   });
 
   it('does not cascade across section boundaries — a missing segment in one section ' +
@@ -363,17 +372,31 @@ describe('alignSegments — section anchoring', () => {
       makeSeg('Cセクション', 'paragraph', 0, '`--cflag` を C1 で使用します。'),
     ];
     const result = alignSegments(en, ja);
-    // The cascade property: section A (with the deletion) holds exactly
-    // one diff, and that diff is the segment-missing for the deleted A2.
-    // Sections B and C must contribute zero diffs.
+    // cascade-isolation: section A (削除あり) には segment-missing が
+    // ちょうど 1 件、section B / C には segment-missing が 1 件もない
+    // ことを pin する。Issue #247 PR2 では section A に
+    // section-structure-mismatch (multiset {p:2} vs {p:1}) も並行で出る
+    // が、これは想定通りで他 section には影響しない。
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missingDiffs.length, 1, 'no cascade — exactly one missing diff');
     assert.equal(missingDiffs[0].sectionPath, 'A');
-    const otherSectionDiffs = result.diffs.filter((d) => d.sectionPath !== 'A');
+    // section B / C には LCS 由来の diff が 1 件も入ってはいけない。
+    const lcsDiffsInOtherSections = result.diffs.filter(
+      (d) => d.sectionPath !== 'A' && d.scope !== 'section',
+    );
     assert.equal(
-      otherSectionDiffs.length,
+      lcsDiffsInOtherSections.length,
       0,
-      `sections B and C must be diff-free; got: ${JSON.stringify(otherSectionDiffs.map((d) => `${d.type}/${d.sectionPath}`))}`,
+      `sections B and C must be LCS-diff-free; got: ${JSON.stringify(lcsDiffsInOtherSections.map((d) => `${d.type}/${d.sectionPath}`))}`,
+    );
+    // structure-mismatch も section A だけにしか出ない。
+    const structureDiffsInOtherSections = result.diffs.filter(
+      (d) => d.scope === 'section' && d.sectionPath !== 'A',
+    );
+    assert.equal(
+      structureDiffsInOtherSections.length,
+      0,
+      'structure-mismatch must be confined to section A as well',
     );
   });
 });
@@ -954,6 +977,334 @@ describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
     } else {
       assert.equal(result.inconclusiveCategory, null);
       assert.equal(result.inconclusiveMeta, null);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 PR2 — section structure comparator wired into alignSegments
+// ---------------------------------------------------------------------------
+
+describe('alignSegments — structure comparator integration (Issue #247 PR2)', () => {
+  let parityDiffsToIssues;
+
+  before(async () => {
+    ({ parityDiffsToIssues } = await import('../lib/source_parity_align.mjs'));
+  });
+
+  it('emits section-structure-mismatch for cross-kind collapse (list → paragraph)', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'unordered-list-item', 0, '- bullet `alpha`'),
+      makeSeg('Overview', 'unordered-list-item', 1, '- bullet `beta`'),
+      makeSeg('Overview', 'unordered-list-item', 2, '- bullet `gamma`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, 'alpha, beta, gamma を段落に畳んだ翻訳'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter(
+      (d) => d.type === 'section-structure-mismatch',
+    );
+    assert.equal(structureDiffs.length, 1);
+    const diff = structureDiffs[0];
+    assert.equal(diff.scope, 'section');
+    assert.equal(diff.structureCategory, 'kind-multiset');
+    assert.deepEqual(diff.enKinds, ['unordered-list']);
+    assert.deepEqual(diff.jaKinds, ['paragraph']);
+  });
+
+  it('emits exactly one section-level structure diff per mismatched section (no cascade multiplier)', () => {
+    // PR2 は structure comparator を weighted LCS の **代わり** ではなく
+    // **並行** で走らせる。structure comparator はミスマッチ section
+    // あたり高々 +1 diff しか足さず、LCS は変わらず per-segment の
+    // drill-down (segment-missing / segment-extra / segment-token-gap) を
+    // emit する。この並行契約は意図的: LCS を suppress してしまうと、
+    // 既に構造ドリフトを抱えた section で後続の小さな mutation が隠れて
+    // しまう (recall benchmark の callout-paragraph-delete / step-delete /
+    // section-body-swap 参照)。
+    //
+    // cascade 懸念は、あくまで「structure mismatch が structure-level diff
+    // として多重化しない」こと — つまり 1 つの構造ドリフトはセグメントが
+    // 何個動いても必ず 1 件の `section-structure-mismatch` になる、という
+    // 保証のほうを指す。
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'unordered-list-item', 0, '- bullet `alpha`'),
+      makeSeg('Overview', 'unordered-list-item', 1, '- bullet `beta`'),
+      makeSeg('Overview', 'unordered-list-item', 2, '- bullet `gamma`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, 'alpha, beta, gamma を段落に畳んだ翻訳'),
+    ];
+    const result = alignSegments(en, ja);
+    const grouped = diffsByType(result.diffs);
+    assert.equal(
+      grouped['section-structure-mismatch'],
+      1,
+      'exactly one section-level structure diff per mismatched section',
+    );
+    // LCS も並行で走るので per-segment drill-down が出る可能性はあるが、
+    // ここでは structure-mismatch counter が multiply していないことだけを
+    // assert する。
+  });
+
+  it('structure mismatch is limited to the affected section (no leakage to sibling sections)', () => {
+    // Section 1 に cross-kind structure mismatch、Section 2 は整合している。
+    // structure comparator は Section 1 にだけ emit するべきで、Section 2
+    // には structure-mismatch diff が 1 件も来てはならない。
+    const en = [
+      makeHeading('Section 1', 0, 'Section 1'),
+      makeSeg('Section 1', 'callout-body', 0, 'EN callout `warn`'),
+      makeSeg('Section 1', 'paragraph', 0, 'EN para `flag`'),
+      makeHeading('Section 2', 0, 'Section 2'),
+      makeSeg('Section 2', 'paragraph', 0, 'Clean EN paragraph `key`'),
+    ];
+    const ja = [
+      makeHeading('セクション 1', 0, 'セクション 1'),
+      makeSeg('セクション 1', 'paragraph', 0, '注意 `warn` と段落 `flag` を畳んだ翻訳'),
+      makeHeading('セクション 2', 0, 'セクション 2'),
+      makeSeg('セクション 2', 'paragraph', 0, '綺麗な翻訳 `key`'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter(
+      (d) => d.type === 'section-structure-mismatch' || d.type === 'segment-order-mismatch',
+    );
+    assert.equal(structureDiffs.length, 1);
+    assert.equal(structureDiffs[0].sectionPath, 'Section 1');
+  });
+
+  it('emits segment-order-mismatch (kind-sequence) for mixed-kind reorder', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'EN para `token-a`'),
+      makeSeg('Overview', 'unordered-list-item', 0, '- bullet `token-b`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'unordered-list-item', 0, '- 箇条書き `token-b`'),
+      makeSeg('概要', 'paragraph', 0, '段落 `token-a`'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter((d) => d.type === 'segment-order-mismatch');
+    assert.equal(structureDiffs.length, 1);
+    assert.equal(structureDiffs[0].structureCategory, 'kind-sequence');
+  });
+
+  it('emits segment-order-mismatch (content-order) for same-kind content swap', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'Paragraph `alpha-token`'),
+      makeSeg('Overview', 'paragraph', 1, 'Paragraph `beta-token`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '`beta-token` の段落'),
+      makeSeg('概要', 'paragraph', 1, '`alpha-token` の段落'),
+    ];
+    const result = alignSegments(en, ja);
+    const structureDiffs = result.diffs.filter((d) => d.type === 'segment-order-mismatch');
+    assert.equal(structureDiffs.length, 1);
+    assert.equal(structureDiffs[0].structureCategory, 'content-order');
+    assert.ok(Array.isArray(structureDiffs[0].contentPermutation));
+  });
+
+  it('emits BOTH section-structure-mismatch and segment-missing for same-kind count drift', () => {
+    // 並行 emission の契約を pin する。同種 kind の count drift
+    // (3 段落 → 2 段落) は:
+    //   - structure comparator が headline として
+    //     section-structure-mismatch を 1 件 emit する (Stage A の
+    //     multiset 規約による)
+    //   - LCS は drill-down として、どの段落が落ちたかを示す
+    //     segment-missing を emit する
+    // 両方が並行で出ることで、reviewer は section-level の見出しと
+    // segment-level のインデックス情報の両方を受け取れる。downstream の
+    // gate accounting では `structureMismatch*` と従来の segment-*
+    // counter が別ファミリで集計されるので、二重計上にはならない。
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'EN para A `token-a`'),
+      makeSeg('Overview', 'paragraph', 1, 'EN para B `token-b`'),
+      makeSeg('Overview', 'paragraph', 2, 'EN para C `token-c`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, 'JA 段落 A `token-a`'),
+      makeSeg('概要', 'paragraph', 1, 'JA 段落 C `token-c`'),
+    ];
+    const result = alignSegments(en, ja);
+    const grouped = diffsByType(result.diffs);
+    assert.equal(
+      grouped['section-structure-mismatch'],
+      1,
+      'structure comparator must emit the section-level headline',
+    );
+    assert.equal(
+      grouped['segment-missing'],
+      1,
+      'LCS must still emit per-segment drill-down for the dropped paragraph',
+    );
+    assert.equal(grouped['segment-order-mismatch'], undefined);
+  });
+
+  it('cross-section body swap emits segment-shifted only — structure comparator is skipped', () => {
+    // Issue #247 PR2 review (Finding 1) — cross-section body swap が
+    // 起きると、section 単位の対応ペアは「kind 列が両方違う」形に
+    // 観測されるので、何もしないと structure comparator が
+    // section-structure-mismatch を section ごとに 1 件ずつ emit して
+    // しまう。だが本当の診断は section-local な構造ドリフトではなく
+    // **cross-section misalignment** で、これは alignSection の
+    // findBodySwapEvidence が segment-shifted として既に表現できる。
+    //
+    // alignSegments は alignSection を先に走らせ、segment-shifted が
+    // emit されている section では structure comparator を skip する
+    // 契約。この regression test が崩れると `structureMismatch*`
+    // counter が swap で汚染される。
+    const en = [
+      makeHeading('Section A', 0, 'Section A'),
+      makeSeg('Section A', 'paragraph', 0, 'EN A paragraph with `alpha-token` and `alpha-flag`'),
+      makeSeg('Section A', 'unordered-list-item', 0, '- A bullet `alpha-extra`'),
+      makeHeading('Section B', 0, 'Section B'),
+      makeSeg('Section B', 'callout-body', 0, 'EN B callout `beta-token` and `beta-flag`'),
+      makeSeg('Section B', 'paragraph', 0, 'EN B paragraph `beta-extra`'),
+    ];
+    const ja = [
+      makeHeading('セクション A', 0, 'セクション A'),
+      // セクション A は本来 A の内容を持つはずだが、B の内容に入れ替わっている
+      makeSeg('セクション A', 'callout-body', 0, 'JA B コールアウト `beta-token` と `beta-flag`'),
+      makeSeg('セクション A', 'paragraph', 0, 'JA B 段落 `beta-extra`'),
+      makeHeading('セクション B', 0, 'セクション B'),
+      // セクション B は本来 B の内容を持つはずだが、A の内容に入れ替わっている
+      makeSeg('セクション B', 'paragraph', 0, 'JA A 段落 `alpha-token` と `alpha-flag`'),
+      makeSeg('セクション B', 'unordered-list-item', 0, '- A 箇条書き `alpha-extra`'),
+    ];
+    const result = alignSegments(en, ja);
+    const grouped = diffsByType(result.diffs);
+    assert.ok(
+      (grouped['segment-shifted'] ?? 0) > 0,
+      'segment-shifted must fire on token-evidenced cross-section body swap',
+    );
+    assert.equal(
+      grouped['section-structure-mismatch'],
+      undefined,
+      'structure comparator must NOT also emit section-structure-mismatch on shifted sections',
+    );
+    assert.equal(
+      grouped['segment-order-mismatch'],
+      undefined,
+      'structure comparator must NOT also emit segment-order-mismatch on shifted sections',
+    );
+  });
+
+  it('local structure drift in one section coexists with shifted sibling section', () => {
+    // Section A が cross-section swap で segment-shifted、Section B が
+    // 独立に local cross-kind drift を持つ場合、Section A の structure
+    // comparator は skip される (shift があるため) が、Section B では
+    // structure comparator は普通に走って structure-mismatch を emit
+    // する。skip は section-local で、他の section に波及しない。
+    const en = [
+      makeHeading('Section A', 0, 'Section A'),
+      makeSeg('Section A', 'paragraph', 0, 'EN A paragraph `swap-alpha` `swap-beta`'),
+      makeHeading('Section B', 0, 'Section B'),
+      makeSeg('Section B', 'callout-body', 0, 'EN B callout `local-token`'),
+      makeSeg('Section B', 'paragraph', 0, 'EN B paragraph `local-flag`'),
+    ];
+    const ja = [
+      makeHeading('セクション A', 0, 'セクション A'),
+      // Section A の内容が Section C 由来 (cross-section misalignment)
+      makeSeg('セクション A', 'paragraph', 0, 'JA C 段落 `unrelated-x` `unrelated-y`'),
+      makeHeading('セクション B', 0, 'セクション B'),
+      // Section B はローカルに callout を平文に畳んだ (cross-kind drift)
+      makeSeg('セクション B', 'paragraph', 0, 'JA B 注意と段落を畳んだ翻訳 `local-token` `local-flag`'),
+    ];
+    const result = alignSegments(en, ja);
+    const grouped = diffsByType(result.diffs);
+    // Section B の cross-kind drift は structure-mismatch として残る。
+    // (Section A は shift 判定が出るかどうかは alignSection の token
+    // evidence 次第なので、ここでは structure-mismatch が ≥ 1 件出る
+    // ことだけ assert する。)
+    assert.ok(
+      (grouped['section-structure-mismatch'] ?? 0) >= 1,
+      'local structure drift in a non-shifted section must still surface',
+    );
+    const localDrift = result.diffs.find(
+      (d) => d.type === 'section-structure-mismatch' && d.sectionPath === 'Section B',
+    );
+    assert.ok(localDrift, 'Section B (local drift) must carry the structure-mismatch');
+  });
+
+  it('parityDiffsToIssues forwards the structure payload contract verbatim', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'callout-body', 0, 'EN callout `warn`'),
+      makeSeg('Overview', 'paragraph', 0, 'EN paragraph `flag`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '注意 `warn` と段落 `flag` を畳んだ翻訳'),
+    ];
+    const result = alignSegments(en, ja);
+    const issues = parityDiffsToIssues(result.diffs);
+
+    const structureIssue = issues.find((i) => i.type === 'section-structure-mismatch');
+    assert.ok(structureIssue, 'structure mismatch must be present after adapter pass');
+
+    // Contract フィールド。
+    assert.equal(structureIssue.severity, 'actionable');
+    assert.equal(structureIssue.scope, 'section');
+    assert.equal(structureIssue.structureCategory, 'kind-multiset');
+    assert.deepEqual(structureIssue.enKinds, ['callout-body', 'paragraph']);
+    assert.deepEqual(structureIssue.jaKinds, ['paragraph']);
+    assert.equal(structureIssue.enSegmentCount, 2);
+    assert.equal(structureIssue.jaSegmentCount, 1);
+    assert.equal(typeof structureIssue.detail, 'string');
+    assert.ok(structureIssue.detail.length > 0);
+
+    // 禁止フィールド — segment 単位の shape が section 単位の adapter
+    // 分岐に漏れてはいけない。
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'segmentKind'),
+      false,
+      'structure issues MUST NOT carry segmentKind after adapter',
+    );
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'enSegmentIndex'),
+      false,
+    );
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'jaSegmentIndex'),
+      false,
+    );
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(structureIssue, 'enSourceFingerprint'),
+      false,
+    );
+  });
+
+  it('parityDiffsToIssues forwards contentPermutation for content-order diffs', () => {
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg('Overview', 'paragraph', 0, 'Paragraph `alpha`'),
+      makeSeg('Overview', 'paragraph', 1, 'Paragraph `beta`'),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '`beta` の段落'),
+      makeSeg('概要', 'paragraph', 1, '`alpha` の段落'),
+    ];
+    const result = alignSegments(en, ja);
+    const issues = parityDiffsToIssues(result.diffs);
+    const issue = issues.find((i) => i.type === 'segment-order-mismatch');
+    assert.ok(issue);
+    assert.equal(issue.structureCategory, 'content-order');
+    assert.ok(Array.isArray(issue.contentPermutation));
+    assert.equal(issue.contentPermutation.length, 2);
+    for (const entry of issue.contentPermutation) {
+      assert.equal(typeof entry.enIndex, 'number');
+      assert.equal(typeof entry.jaIndex, 'number');
+      assert.equal(typeof entry.score, 'number');
     }
   });
 });
