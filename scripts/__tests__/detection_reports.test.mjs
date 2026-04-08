@@ -1365,6 +1365,165 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
 });
 
 // ---------------------------------------------------------------------------
+// Issue #247 PR4 — renderSummaryMarkdown が `## Structure Mismatch (advisory)` /
+// `## Source Unusable (advisory)` セクションを追加する。`## Parity` の
+// `Active issue files` は引き続き `reportableActiveFiles` を読むので、
+// PR4 時点では structure mismatch を含まない値のまま (PR5 cutover で
+// 意味が広がる)。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable sections', () => {
+  function makeBaseInputs() {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        actionableFiles: 0,
+        signalFiles: 0,
+        errorFiles: 0,
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        reportableActiveFiles: 0,
+        reportableActiveActionableFiles: 0,
+        acknowledgedIssues: 0,
+        structureMismatchIssues: 5,
+        structureMismatchFiles: 3,
+        structureMismatchByType: {
+          'section-structure-mismatch': 4,
+          'segment-order-mismatch': 1,
+        },
+        snapshotUnusableIssues: 2,
+        snapshotUnusableFiles: 2,
+        snapshotUnusableByType: {
+          'snapshot-incomplete': 1,
+          'source-unusable': 1,
+        },
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-08T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: {
+          issueCount: 0,
+          structureMismatchIssues: 5,
+          structureMismatchFiles: 3,
+          structureMismatchByType: {
+            'section-structure-mismatch': 4,
+            'segment-order-mismatch': 1,
+          },
+        },
+      },
+      parityFollowup: {
+        summary: {
+          baselineDebt: {
+            baselinedIssues: 0,
+            baselinedFiles: 0,
+            expiredBaselineEntries: 0,
+            baselineInvalidatedSlugs: [],
+          },
+          advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
+          sourceUnusable: {
+            snapshotUnusableIssues: 2,
+            snapshotUnusableFiles: 2,
+            snapshotUnusableByType: {
+              'snapshot-incomplete': 1,
+              'source-unusable': 1,
+            },
+          },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+    return { snapshot, parity, actionableReport };
+  }
+
+  it('includes "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {
+    const { snapshot, parity, actionableReport } = makeBaseInputs();
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /## Structure Mismatch \(advisory\)/);
+    assert.match(md, /Total: 5 issues across 3 files/);
+    // PR5 で gate に載る予定であることを heading 自体ではなく本文で明示
+    assert.match(md, /PR5 cutover|advisory|gate に載りません/);
+    // type 別内訳 (alpha sort)
+    assert.match(md, /section-structure-mismatch: 4/);
+    assert.match(md, /segment-order-mismatch: 1/);
+  });
+
+  it('includes "## Source Unusable (advisory)" section when snapshotUnusableIssues > 0', () => {
+    const { snapshot, parity, actionableReport } = makeBaseInputs();
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /## Source Unusable \(advisory\)/);
+    assert.match(md, /Total: 2 issues across 2 files/);
+    // 翻訳者責任外であることの注意文
+    assert.match(md, /translation failure|snapshot.*source sync|翻訳/);
+    // type 別内訳 (alpha sort)
+    assert.match(md, /snapshot-incomplete: 1/);
+    assert.match(md, /source-unusable: 1/);
+  });
+
+  it('OMITS both new sections when both counters are 0', () => {
+    const snapshot = {};
+    const parity = {
+      summary: {
+        activeActionableFiles: 0,
+        activeErrorFiles: 0,
+        activeFiles: 0,
+        reportableActiveFiles: 0,
+        acknowledgedIssues: 0,
+        structureMismatchIssues: 0,
+        structureMismatchFiles: 0,
+        structureMismatchByType: {},
+        snapshotUnusableIssues: 0,
+        snapshotUnusableFiles: 0,
+        snapshotUnusableByType: {},
+      },
+    };
+    const actionableReport = {
+      generatedAt: '2026-04-08T00:00:00Z',
+      snapshotDiff: {
+        summary: { changed: 0, added: 0, removed: 0, unchanged: 100, totalSnapshots: 100 },
+      },
+      parityRegression: {
+        summary: {
+          issueCount: 0,
+          structureMismatchIssues: 0,
+          structureMismatchFiles: 0,
+          structureMismatchByType: {},
+        },
+      },
+      parityFollowup: {
+        summary: {
+          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, expiredBaselineEntries: 0, baselineInvalidatedSlugs: [] },
+          advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
+          sourceUnusable: {
+            snapshotUnusableIssues: 0,
+            snapshotUnusableFiles: 0,
+            snapshotUnusableByType: {},
+          },
+        },
+      },
+      auditManifest: { total: 0, bucketCounts: {} },
+    };
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.doesNotMatch(md, /## Structure Mismatch/);
+    assert.doesNotMatch(md, /## Source Unusable/);
+  });
+
+  it('## Parity section の "Active issue files" は structure mismatch を含まない値 (reportableActiveFiles を読む)', () => {
+    // PR4 時点では `reportableActiveFiles` に structure mismatch は流れ込まない。
+    // structure mismatch が 5 件あっても "Active issue files" は 0 のまま。
+    const { snapshot, parity, actionableReport } = makeBaseInputs();
+    const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
+    assert.match(md, /Active issue files: 0/);
+    // 念のため "Active actionable files" もまだ 0
+    assert.match(md, /Active actionable files: 0/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 7: parityRegression excludes non-expired baselined issues
 // ---------------------------------------------------------------------------
 

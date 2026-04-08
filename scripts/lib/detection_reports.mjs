@@ -943,6 +943,54 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
           .map(([type, count]) => `  - ${type}: ${count}`)
       : ['  - (none)'];
 
+  // Issue #247 PR4 — structure mismatch / source unusable の独立 advisory
+  // セクション。`## Parity` の `Active issue files` は引き続き
+  // `reportableActiveFiles` を読むので PR4 時点では structure mismatch を
+  // 含まない。新セクションは 0 件のときは省略する。
+  const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
+  const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
+  const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
+  const structureMismatchSection =
+    structureMismatchIssues > 0
+      ? [
+          '## Structure Mismatch (advisory)',
+          '',
+          `- Total: ${structureMismatchIssues} issues across ${structureMismatchFiles} files`,
+          '- Advisory — PR5 cutover までは gate に載りません',
+          ...(Object.keys(structureMismatchByType).length > 0
+            ? [
+                '- By type:',
+                ...Object.keys(structureMismatchByType)
+                  .sort()
+                  .map((type) => `  - ${type}: ${structureMismatchByType[type]}`),
+              ]
+            : []),
+          '',
+        ]
+      : [];
+
+  const snapshotUnusableIssues = parity.summary?.snapshotUnusableIssues ?? 0;
+  const snapshotUnusableFiles = parity.summary?.snapshotUnusableFiles ?? 0;
+  const snapshotUnusableByType = parity.summary?.snapshotUnusableByType ?? {};
+  const sourceUnusableSection =
+    snapshotUnusableIssues > 0
+      ? [
+          '## Source Unusable (advisory)',
+          '',
+          `- Total: ${snapshotUnusableIssues} issues across ${snapshotUnusableFiles} files`,
+          '- Not a translation failure — snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+          ...(Object.keys(snapshotUnusableByType).length > 0
+            ? [
+                '- By type:',
+                ...Object.keys(snapshotUnusableByType)
+                  .sort()
+                  .map((type) => `  - ${type}: ${snapshotUnusableByType[type]}`),
+              ]
+            : []),
+          '',
+        ]
+      : [];
+
   return [
     '# Docs Detection Summary',
     '',
@@ -973,6 +1021,8 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
       : []),
     '',
+    ...structureMismatchSection,
+    ...sourceUnusableSection,
     '## Audit Signals',
     '',
     '- audit-only: coarse counting / shape / table-cell heuristics',
