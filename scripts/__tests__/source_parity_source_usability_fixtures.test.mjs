@@ -135,6 +135,36 @@ describe('detectSourceUsability fixture: advanced-editing/coding-assistant', () 
     );
   });
 
+  it('extractError を強制しても null を返す (coding-assistant + extractError ライク)', () => {
+    // balanced escaped markers (open=4, close=4) は hasImbalancedDetailsTree=false
+    // → extractError 経路でも source-unusable に昇格しない (§4.6.1 リグレッション)
+    const rawEnHtml = readFileSync(
+      join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
+      'utf8',
+    );
+    const jaMd = readFileSync(
+      join(JA_CONTENT_DIR, 'advanced-editing/coding-assistant.md'),
+      'utf8',
+    );
+    const jaBody = extractJaBody(jaMd);
+    const jaSegments = extractSegmentsFromMarkdown(jaBody);
+
+    // extractError を強制して extractError 経路だけを評価する
+    const simulatedError = new Error('simulated extractor failure');
+    const result = detectSourceUsability({
+      rawEnHtml,
+      enSegments: [],
+      jaSegments,
+      extractError: simulatedError,
+    });
+
+    assert.equal(
+      result,
+      null,
+      `coding-assistant + extractError は null を返すべき (balanced open=close は source-unusable 非発火)`,
+    );
+  });
+
   it('runtime: source-unusable を出さず segment-* issue が生成される', () => {
     // gate が null を返す → alignSegments が走り → 通常の segment-* diffs が出る。
     // ここでは alignSegments + parityDiffsToIssues を直接呼んで確認する。

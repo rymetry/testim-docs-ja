@@ -85,11 +85,12 @@ export function detectSourceUsability({
   //
   // 2 つの条件を AND で要求する:
   //
-  //   hasBrokenDetailsTree:
+  //   hasBrokenDetailsTree (通常経路):
   //     残存 close marker がある (orphan close) か open/close が不均衡。
   //     `faq` は orphan `&lt;/details&gt;` で close=1, open=0 → TRUE。
   //     `coding-assistant` は balanced (4==4) で close>0 だが open==close —
-  //     ただし close>0 の OR が TRUE になる。
+  //     ただし close>0 の OR が TRUE になるため、通常経路では
+  //     hasSectionAnchorFailure を AND で必須にして誤発火を防ぐ。
   //
   //   hasSectionAnchorFailure (extractError===null のときだけ):
   //     extractor が heading を 1 つも作れず (EN section anchor が欠落)、
@@ -98,8 +99,14 @@ export function detectSourceUsability({
   //     `faq`: EN heading=0, JA heading=5 → TRUE。
   //     `coding-assistant`: EN heading=1 → FALSE。
   //
-  // extractError 時は enSegments/jaSegments を信用できないため
-  // hasBrokenDetailsTree (rawEnHtml 由来) だけで判定する。
+  //   extractError 経路:
+  //     enSegments を信用できないため hasSectionAnchorFailure は使えない。
+  //     rawEnHtml 由来のシグナルのみ使用するが、hasBrokenDetailsTree
+  //     (close>0 OR imbalance) では balanced examples (coding-assistant:
+  //     open=4, close=4) でも true になり extractor 回帰を source 起因と
+  //     誤分類してしまう。そのため extractError 時はより狭い条件
+  //     hasImbalancedDetailsTree (open !== close のみ) で判定する。
+  //     balanced な tree は null に落として align-exception fallback へ送る。
   // -------------------------------------------------------------------------
   const hasBrokenDetailsTree =
     signals.residualEscapedDetailsClose > 0 ||
@@ -109,10 +116,12 @@ export function detectSourceUsability({
     signals.enHeadingSegmentCount === 0 &&
     signals.jaHeadingSegmentCount >= 2;
 
-  // extractError がある場合: Layer 1/3 の enSegments 依存判定を skip する。
-  // Layer 2 は hasBrokenDetailsTree のみで判定 (rawEnHtml 由来のため safe)。
+  // extractError 経路: imbalance (open !== close) のみで判定する。
+  // balanced escaped examples は null に落として align-exception fallback へ送る。
   if (extractError !== null) {
-    if (hasBrokenDetailsTree) {
+    const hasImbalancedDetailsTree =
+      signals.residualEscapedDetailsOpen !== signals.residualEscapedDetailsClose;
+    if (hasImbalancedDetailsTree) {
       return buildIssue('source-unusable', 'escaped-details-residue', signals);
     }
     return null;

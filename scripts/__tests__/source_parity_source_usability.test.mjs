@@ -207,8 +207,9 @@ describe('detectSourceUsability — Layer 2: escaped-details-residue', () => {
     assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
   });
 
-  it('Layer 2 は extractError でも発火する (hasBrokenDetailsTree のみで判定)', () => {
-    // extractError 時は hasSectionAnchorFailure を確認しない — rawHtml 由来の broken-tree のみ
+  it('Layer 2 は extractError でも発火する (imbalance: orphan close → hasImbalancedDetailsTree=true)', () => {
+    // makeHtmlWithEscapedDetails は close=1, open=0 (orphan close) → open !== close → TRUE
+    // extractError 時は hasSectionAnchorFailure を確認しない — imbalance のみで判定
     const result = detectSourceUsability({
       rawEnHtml: makeHtmlWithEscapedDetails(2000),
       enSegments: [],
@@ -218,6 +219,22 @@ describe('detectSourceUsability — Layer 2: escaped-details-residue', () => {
     assert.ok(result !== null);
     assert.equal(result.type, 'source-unusable');
     assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
+  });
+
+  it('balanced escaped markers + extractError → null (coding-assistant + extractError ライク)', () => {
+    // open=1, close=1 → balanced → open !== close は false → hasImbalancedDetailsTree=false
+    // extractError 時でも balanced な tree は null に落として align-exception fallback へ送る。
+    // 「extractor 回帰を source 起因に取り違えない」要件 (§4.6.1)。
+    const htmlWithBalanced = makeCleanHtml(12000)
+      .replace('<p>content</p>',
+        '<p>See &lt;details&gt; example</p><p>&lt;/details&gt; end</p>');
+    const result = detectSourceUsability({
+      rawEnHtml: htmlWithBalanced,
+      enSegments: [],
+      jaSegments: bodySegs(10),
+      extractError: new Error('extractor regression'),
+    });
+    assert.equal(result, null, 'balanced escaped markers + extractError は null (align-exception fallback へ)');
   });
 
   it('balanced escaped markers + enHeading≥1 → null (coding-assistant ライク)', () => {
