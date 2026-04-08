@@ -743,33 +743,12 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const acknowledgedIssues = parity.summary?.acknowledgedIssues || 0;
   const expiredAcknowledgements = parity.summary?.expiredAcknowledgements || 0;
 
-  // Issue #247 PR4 — structure mismatch の補助 counter (PR2 で emit され、
-  // PR5 で gate に載る予定)。`isReportableParityIssue` を flip しないため
-  // `parityTopEntries` には含めず、summary と body の独立セクションのみで
-  // 露出する。
+  // Issue #247 PR5 — structure mismatch の補助 counter は summary に
+  // 露出するだけで、独立 advisory section は持たない。reportable に
+  // 昇格したため、件数は通常の Top Entries 経路で見えるようになった。
   const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
   const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
   const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
-
-  const structureMismatchBodyLines =
-    structureMismatchIssues > 0
-      ? [
-          '## Structure Mismatch (advisory)',
-          '',
-          `- Total: ${structureMismatchIssues} issues across ${structureMismatchFiles} files`,
-          ...(Object.keys(structureMismatchByType).length > 0
-            ? [
-                '- By type:',
-                ...Object.keys(structureMismatchByType)
-                  .sort()
-                  .map((type) => `  - ${type}: ${structureMismatchByType[type]}`),
-              ]
-            : []),
-          '',
-          '> これらは現在 advisory です。PR5 の baseline migration と同時に gate に載る予定です。',
-          '',
-        ]
-      : [];
 
   const parityIssueBody = [
     '## Summary',
@@ -797,7 +776,6 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       }),
     ),
     '',
-    ...structureMismatchBodyLines,
     '## Artifacts',
     '',
     '- `parity-check-status.json`',
@@ -892,13 +870,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
         issuesByType: parityIssueSummary.issuesByType,
         issuesBySeverity: parityIssueSummary.issuesBySeverity,
-        // Issue #247 PR4 — structure mismatch の独立 counter を補助フィールド
-        // として露出する。`isReportableParityIssue` は PR4 では flip しない
-        // ため `topEntries` / `issueCount` には流れ込まないが、JSON consumer
-        // (sync-detection-issues / ダッシュボード / 人手レビュー) はこの
-        // フィールドから drift の存在を観測できる。PR5 cutover で structure
-        // mismatch が `topEntries` 側にも流れ込むが、その時点でもこの 3
-        // フィールドは並走させる。
+        // Issue #247 PR5 — structure mismatch の独立 counter は cutover 後も
+        // 並走で露出する。reportable に昇格したため `topEntries` / `issueCount`
+        // にも流れるが、JSON consumer (sync-detection-issues / ダッシュボード /
+        // 人手レビュー) が drift の type-別内訳を一発で読みたい場面のために
+        // 補助フィールドとして残してある。
         structureMismatchIssues,
         structureMismatchFiles,
         structureMismatchByType,
@@ -943,32 +919,10 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
           .map(([type, count]) => `  - ${type}: ${count}`)
       : ['  - (none)'];
 
-  // Issue #247 PR4 — structure mismatch / source unusable の独立 advisory
-  // セクション。`## Parity` の `Active issue files` は引き続き
-  // `reportableActiveFiles` を読むので PR4 時点では structure mismatch を
-  // 含まない。新セクションは 0 件のときは省略する。
-  const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
-  const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
-  const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
-  const structureMismatchSection =
-    structureMismatchIssues > 0
-      ? [
-          '## Structure Mismatch (advisory)',
-          '',
-          `- Total: ${structureMismatchIssues} issues across ${structureMismatchFiles} files`,
-          '- Advisory — PR5 cutover までは gate に載りません',
-          ...(Object.keys(structureMismatchByType).length > 0
-            ? [
-                '- By type:',
-                ...Object.keys(structureMismatchByType)
-                  .sort()
-                  .map((type) => `  - ${type}: ${structureMismatchByType[type]}`),
-              ]
-            : []),
-          '',
-        ]
-      : [];
-
+  // Issue #247 PR5 — structure mismatch の独立 advisory section は削除した。
+  // reportable に昇格したため、件数は `## Parity` の `Active issue files`
+  // 経由で見える。source unusable は引き続き advisory なので独立 section
+  // を持つ。
   const snapshotUnusableIssues = parity.summary?.snapshotUnusableIssues ?? 0;
   const snapshotUnusableFiles = parity.summary?.snapshotUnusableFiles ?? 0;
   const snapshotUnusableByType = parity.summary?.snapshotUnusableByType ?? {};
@@ -1021,7 +975,6 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
       : []),
     '',
-    ...structureMismatchSection,
     ...sourceUnusableSection,
     '## Audit Signals',
     '',

@@ -1167,47 +1167,11 @@ describe('Issue #247 PR4 — parityRegression structure mismatch summary exposur
     assert.equal(report.parityRegression.summary.issueCount, 1);
   });
 
-  it('parityRegression.body contains "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {
+  it('PR5 — parityRegression.body OMITS the "## Structure Mismatch (advisory)" section (structure mismatch is reportable now)', () => {
+    // PR5 cutover で structure mismatch は reportable に昇格したため、
+    // 「## Structure Mismatch (advisory)」の独立 section は不要になった。
+    // 件数は通常の Top Entries 経路で表示される。
     const parity = makeParityWithStructureMismatch();
-    const report = buildActionableReport(emptySnapshot, parity, []);
-    assert.match(report.parityRegression.body, /## Structure Mismatch \(advisory\)/);
-    // 件数 / ファイル数の wiring 確認
-    assert.match(
-      report.parityRegression.body,
-      /Total: 5 issues across 3 files/,
-    );
-    // type 別内訳 (sort 順は alpha 昇順)
-    assert.match(
-      report.parityRegression.body,
-      /section-structure-mismatch: 4/,
-    );
-    assert.match(
-      report.parityRegression.body,
-      /segment-order-mismatch: 1/,
-    );
-    // 「PR5 で gate に載る予定」の引用行
-    assert.match(
-      report.parityRegression.body,
-      /PR5 の baseline migration と同時に gate に載る予定です/,
-    );
-  });
-
-  it('parityRegression.body OMITS the "## Structure Mismatch" section when structureMismatchIssues = 0', () => {
-    const parity = {
-      summary: {
-        checkedAt: '2026-04-08T00:00:00Z',
-        actionableFiles: 0,
-        signalFiles: 0,
-        errorFiles: 0,
-        activeActionableFiles: 0,
-        activeFiles: 0,
-        activeErrorFiles: 0,
-        structureMismatchIssues: 0,
-        structureMismatchFiles: 0,
-        structureMismatchByType: {},
-      },
-      files: [],
-    };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.doesNotMatch(report.parityRegression.body, /## Structure Mismatch/);
   });
@@ -1370,14 +1334,13 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR4 — renderSummaryMarkdown が `## Structure Mismatch (advisory)` /
-// `## Source Unusable (advisory)` セクションを追加する。`## Parity` の
-// `Active issue files` は引き続き `reportableActiveFiles` を読むので、
-// PR4 時点では structure mismatch を含まない値のまま (PR5 cutover で
-// 意味が広がる)。
+// Issue #247 PR5 — renderSummaryMarkdown は `## Source Unusable (advisory)`
+// セクションのみを保持する。`## Structure Mismatch (advisory)` は PR5 cutover
+// で削除した (structure mismatch は reportable に昇格したため、`Active issue
+// files` 経由で表示される)。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable sections', () => {
+describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable sections', () => {
   function makeBaseInputs() {
     const snapshot = {};
     const parity = {
@@ -1385,11 +1348,13 @@ describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable s
         actionableFiles: 0,
         signalFiles: 0,
         errorFiles: 0,
-        activeActionableFiles: 0,
+        activeActionableFiles: 3,
         activeErrorFiles: 0,
-        activeFiles: 0,
-        reportableActiveFiles: 0,
-        reportableActiveActionableFiles: 0,
+        activeFiles: 3,
+        // PR5 — structure mismatch が reportable に昇格したため、
+        // structureMismatchFiles=3 のページが reportableActive* にも入る。
+        reportableActiveFiles: 3,
+        reportableActiveActionableFiles: 3,
         acknowledgedIssues: 0,
         structureMismatchIssues: 5,
         structureMismatchFiles: 3,
@@ -1445,16 +1410,10 @@ describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable s
     return { snapshot, parity, actionableReport };
   }
 
-  it('includes "## Structure Mismatch (advisory)" section when structureMismatchIssues > 0', () => {
+  it('OMITS the "## Structure Mismatch (advisory)" section (PR5: reportable now)', () => {
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /## Structure Mismatch \(advisory\)/);
-    assert.match(md, /Total: 5 issues across 3 files/);
-    // PR5 で gate に載る予定であることを heading 自体ではなく本文で明示
-    assert.match(md, /PR5 cutover|advisory|gate に載りません/);
-    // type 別内訳 (alpha sort)
-    assert.match(md, /section-structure-mismatch: 4/);
-    assert.match(md, /segment-order-mismatch: 1/);
+    assert.doesNotMatch(md, /## Structure Mismatch/);
   });
 
   it('includes "## Source Unusable (advisory)" section when snapshotUnusableIssues > 0', () => {
@@ -1469,7 +1428,7 @@ describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable s
     assert.match(md, /source-unusable: 1/);
   });
 
-  it('OMITS both new sections when both counters are 0', () => {
+  it('OMITS the source unusable section when snapshotUnusableIssues = 0', () => {
     const snapshot = {};
     const parity = {
       summary: {
@@ -1517,14 +1476,14 @@ describe('Issue #247 PR4 — renderSummaryMarkdown structure / source unusable s
     assert.doesNotMatch(md, /## Source Unusable/);
   });
 
-  it('## Parity section の "Active issue files" は structure mismatch を含まない値 (reportableActiveFiles を読む)', () => {
-    // PR4 時点では `reportableActiveFiles` に structure mismatch は流れ込まない。
-    // structure mismatch が 5 件あっても "Active issue files" は 0 のまま。
+  it('## Parity section の "Active issue files" は structure mismatch も含む値 (PR5 cutover)', () => {
+    // PR5 cutover で structure mismatch が reportable になったため、
+    // structureMismatchFiles ぶんが `reportableActiveFiles` 経由で
+    // "Active issue files" にも反映される。
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /Active issue files: 0/);
-    // 念のため "Active actionable files" もまだ 0
-    assert.match(md, /Active actionable files: 0/);
+    assert.match(md, /Active issue files: 3/);
+    assert.match(md, /Active actionable files: 3/);
   });
 });
 
