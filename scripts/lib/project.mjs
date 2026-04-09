@@ -130,9 +130,22 @@ export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
 export function resetProjectCachesForTest() {
   _sectionCache.clear();
   _basenameMapCache.clear();
+  _slugIndexCache.clear();
 }
 
+/**
+ * Lazy-cached full slug → { categoryFolder, filePath } index.
+ *
+ * Issue #247 re-review 第三弾 — `resolveToFullSlug` が `extractInvariantTokens`
+ * → `createSegment` の hot path で呼ばれるため、毎回 repo 全体を再帰走査する
+ * と full parity が main 比で倍以上遅くなっていた (測定で 4.32s → 9.79s)。
+ * `buildBasenameToPathMap` と同じ docsDir-keyed Map で memoize して再帰走査を
+ * 1 回に抑える。test 分離は `resetProjectCachesForTest` でクリアする。
+ */
+const _slugIndexCache = new Map();
 export function buildSlugIndex(docsDir = DOCS_DIR) {
+  const cached = _slugIndexCache.get(docsDir);
+  if (cached) return cached;
   /** @type {Record<string, {categoryFolder:string, filePath:string}>} */
   const index = {};
   const walk = (dir) => {
@@ -147,6 +160,7 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
     }
   };
   walk(docsDir);
+  _slugIndexCache.set(docsDir, index);
   return index;
 }
 

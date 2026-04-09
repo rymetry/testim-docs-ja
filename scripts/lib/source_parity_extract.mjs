@@ -519,16 +519,32 @@ export function extractHtmlTables(body) {
  *   2. そうでなければ basename lookup を試す (unique basename のときだけ
  *      fallback。ambiguous basename は null なので safe に原 slug を返す)
  *
+ * Issue #247 re-review 第三弾 — この関数は `extractInvariantTokens` →
+ * `createSegment` の hot path で呼ばれるため、同じ slug を何千回も resolve
+ * することになる。戻り値を Map で memoize し、backing の `buildSlugIndex` /
+ * `buildBasenameToPathMap` もそれぞれ docsDir-keyed cache を持つので、
+ * 2 回目以降は純粋に Map lookup のみで済む。`resetProjectCachesForTest` で
+ * 上流 cache がクリアされる場面ではこの Map も同期クリアする必要がある
+ * が、現状 production / main loop では不要。
+ *
  * @param {string} slug
  * @returns {string}
  */
+const _resolveToFullSlugCache = new Map();
 function resolveToFullSlug(slug) {
+  const cached = _resolveToFullSlugCache.get(slug);
+  if (cached !== undefined) return cached;
   const index = buildSlugIndex();
-  if (slug in index) return slug;
-  const map = buildBasenameToPathMap();
-  const basename = slug.split('/').pop();
-  const resolved = map.get(basename);
-  return resolved ?? slug;
+  let resolved;
+  if (slug in index) {
+    resolved = slug;
+  } else {
+    const map = buildBasenameToPathMap();
+    const basename = slug.split('/').pop();
+    resolved = map.get(basename) ?? slug;
+  }
+  _resolveToFullSlugCache.set(slug, resolved);
+  return resolved;
 }
 
 function normalizeUrlToken(url) {
