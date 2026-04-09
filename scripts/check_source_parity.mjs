@@ -496,8 +496,8 @@ export async function checkSourceParity({
           if (alignment) {
             const segmentIssues = parityDiffsToIssues(alignment.diffs);
             if (alignment.inconclusive) {
-              // Fallback: alignment 済みの exact diff を保持し、inconclusive を
-              // 示す補助 issue を追加した上で legacy coarse 比較を併走させる。
+              // fallback として、alignment 済みの exact diff を保持したまま
+              // inconclusive 補助 issue と legacy coarse 比較を併走させる。
               issues.push(...segmentIssues);
               issues.push(
                 buildSegmentInconclusiveIssue(
@@ -508,9 +508,9 @@ export async function checkSourceParity({
               );
               issues.push(...compareSnapshotStructure(enBody, doc.body));
             } else {
-              // Primary gate: segment-level diffs に加え、補完的な coarse
-              // signals (image order, callout nesting, table shape) も併走させる。
-              // count-based mismatches は COARSE_SIGNAL_TYPES allowlist 経由で
+              // 主 gate は segment-level diff だが、補完的な coarse signal
+              // (image order, callout nesting, table shape) も併走させる。
+              // count-based mismatch は COARSE_SIGNAL_TYPES allowlist 経由で
               // audit-only に降格済みで、`signal` severity では出るが
               // parityRegression / gate exit code には乗らない。
               issues.push(...segmentIssues);

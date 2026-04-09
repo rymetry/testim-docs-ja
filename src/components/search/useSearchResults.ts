@@ -1,4 +1,4 @@
-/** React hook: 読み込み済み index に対して MiniSearch query を実行し、結果 state を組み立てる。 */
+/** 読み込み済み index に対して MiniSearch query を実行し、結果 state を組み立てる hook。 */
 import { useEffect, useMemo, useState } from 'react';
 import type MiniSearch from 'minisearch';
 import type { IndexedSearchDocument, SearchResult } from './types';

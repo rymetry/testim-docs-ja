@@ -351,7 +351,7 @@ function partitionSourceSideDebtPages(pages) {
  * `source-sync-status.json` から source-side debt の要約を組み立てる。
  * downstream consumer が raw status を再解釈せずに描画できる形へ整える。
  *
- * Pure function。空の sourceSync でも安全に呼べる。
+ * 純粋関数。空の sourceSync でも安全に呼べる。
  *
  * @param {object | null | undefined} sourceSync — parsed source-sync-status.json
  * @returns {{
@@ -536,7 +536,7 @@ export function buildAuditManifest(
 ) {
   const changes = snapshot.changes ?? [];
 
-  // Build parity index by slug (extract from file path)
+  // file path から slug を引き、parity 結果を slug 単位で引ける index にする。
   const parityBySlug = new Map();
   for (const file of parity?.files ?? []) {
     const slug = fileToSlug(file.file);
@@ -893,7 +893,7 @@ function buildParityFollowup(parity, options = {}) {
   }
   expiredBaselineFiles.sort((a, b) => b.count - a.count);
   expiringBaselineFiles.sort((a, b) => {
-    // Earliest expiry first so reviewers see the cliff in order.
+    // review 期限が近い順に並べ、期限切れの崖を先頭から見えるようにする。
     if ((a.reviewAfter ?? '') !== (b.reviewAfter ?? '')) {
       return (a.reviewAfter ?? '') < (b.reviewAfter ?? '') ? -1 : 1;
     }
@@ -1052,12 +1052,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     '- `docs-audit-manifest.json`',
   ].join('\n');
 
-  // Source sync health
+  // source sync health
   const freshnessState = sourceSync.freshnessState ?? null;
-  // §3 cleanup: linkage failure also opens the source-sync-health issue
-  // so reviewers see "stale" / "scope-mismatch" runs in the same place
-  // they see freshness degradation. linkageState='missing' is the
-  // legacy / no-linkage case and is intentionally NOT escalated.
+  // linkage failure も source-sync-health issue を開く対象に含める。
+  // reviewer が freshness 劣化と stale / scope-mismatch run を同じ場所で見られるようにする。
+  // linkageState='missing' は legacy / no-linkage ケースなので意図的に昇格しない。
   const linkageBlocking =
     linkageState !== null && linkageState !== 'linked' && linkageState !== 'missing';
   const syncSummary = sourceSync.summary ?? {};
@@ -1144,8 +1143,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       topEntries: parityTopEntries,
       body: withFamilyMarker(parityIssueBody, FAMILY_KEYS.PARITY_REGRESSION),
       summary: {
-        // Only count files with at least one ACTIVE reportable issue.
-        // Validly-acknowledged and non-expired baselined issues are excluded.
+        // active な reportable issue を 1 件以上持つ file だけを数える。
+        // 有効な ack と未期限切れ baseline はここに含めない。
         issueCount: parityIssueFiles.length,
         acknowledgedIssues: parity.summary?.acknowledgedIssues || 0,
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
@@ -1181,9 +1180,9 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       ? renderSourceSideDebtSubsection(sourceSideDebt, sourceSync?.pages ?? [])
       : [];
 
-  // Parity section は coarse audit signals を除外した reportableActive*
-  // counters を表示する。降格された coarse heuristics は別枠の "Audit
-  // Signals" section に出して active parity drift と混同させない。
+  // parity section では、coarse audit signal を除いた reportableActive*
+  // counter を表示する。降格済みの coarse heuristic は別枠の audit
+  // signals section に出し、active parity drift と混同させない。
   const parityActiveActionable =
     parity.summary?.reportableActiveActionableFiles ??
     parity.summary?.activeActionableFiles ??

@@ -1,4 +1,4 @@
-/** React hook: 検索モーダルのライフサイクルを扱う。Cmd+K、Escape、focus trap、scroll lock を提供する。 */
+/** 検索モーダルのライフサイクルを扱う hook。Cmd+K、Escape、focus trap、scroll lock を提供する。 */
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
 

@@ -1,4 +1,4 @@
-/** React hook: モーダル表示時に `/api/search.json` から MiniSearch index を遅延ロードする。 */
+/** モーダル表示時に `/api/search.json` から MiniSearch index を遅延ロードする hook。 */
 import { useEffect, useRef, useState } from 'react';
 import MiniSearch from 'minisearch';
 import type { IndexedSearchDocument, SearchDocument, SearchIndexState } from './types';

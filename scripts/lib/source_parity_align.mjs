@@ -1,5 +1,5 @@
 /**
- * Section 単位で canonical segment の exact diff を計算する。
+ * セクション単位で canonical segment の exact diff を計算する。
  *
  * EN segment 列と JA segment 列を比較し、最小差分を `ParityDiff` として返す。
  *
@@ -48,7 +48,7 @@ const MIN_UNTRANSLATED_PROSE_LENGTH = 15;
 const MIN_UNTRANSLATED_WORD_COUNT = 3;
 
 // ---------------------------------------------------------------------------
-// Section 分割
+// セクション分割
 // ---------------------------------------------------------------------------
 
 /**
@@ -137,8 +137,8 @@ function weightedLcs(a, b, score) {
   const m = b.length;
   if (n === 0 || m === 0) return [];
 
-  // Pre-compute the score table once so traceback can re-read scores
-  // without invoking the score function a second time.
+  // score table は先に 1 回だけ計算し、traceback では再利用する。
+  // score 関数を 2 度呼ばずに済むようにするため。
   const scores = new Array(n);
   for (let i = 0; i < n; i++) {
     const row = new Float64Array(m);
@@ -275,7 +275,7 @@ function looksUntranslated(text) {
 }
 
 // ---------------------------------------------------------------------------
-// Diff factory 群。schema を 1 箇所に寄せる
+// 差分生成ヘルパー群。schema を 1 箇所に寄せる
 // ---------------------------------------------------------------------------
 
 function buildSectionLabel(sectionPath) {
@@ -724,7 +724,7 @@ export function alignSegments(enSegments, jaSegments) {
 }
 
 // ---------------------------------------------------------------------------
-// Runtime adapter: ParityDiff を旧 issue 形式へ変換する
+// ランタイム変換: ParityDiff を旧 issue 形式へ変換する
 // ---------------------------------------------------------------------------
 
 const SEGMENT_ISSUE_SEVERITY = Object.freeze({
