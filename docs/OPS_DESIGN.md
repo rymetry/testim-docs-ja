@@ -460,6 +460,65 @@ source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.
 で pin される。representative test (`source_parity_representative_summary.test.mjs`)
 は 7 slug 版に縮小された。
 
+#### source-side debt 運用手順書
+
+##### 新規 slug の除外登録 (upstream broken を確認したとき)
+
+1. **目視確認**: ブラウザで `sourceUrl` を開き、本文が `<code>` ブロックに
+   collapsed / `<details>` が壊れている / 本文がほぼ空 など、MadCap Flare
+   extractor が正常にパースできない状態であることを確認する
+2. **detector 確認**: `npm run check:parity -- --slug=<slug>` を実行し、
+   `snapshot-incomplete` または `source-unusable` が出ることを確認する。
+   出力の `usabilitySignals.reason` が registry の `expectedReason` になる
+3. **registry 追加**: `scripts/lib/source_sync_exclusions.mjs` の
+   `SOURCE_SYNC_EXCLUSIONS` に entry を追加する:
+
+   ```js
+   '<category>/<slug>': Object.freeze({
+     reason: 'broken-upstream-source',
+     note: '<壊れ方の説明>',
+     expectedIssueType: '<detector の type>',
+     expectedReason: '<detector の reason>',
+     addedAt: '<YYYY-MM-DD>',
+     linkedIssue: <Issue 番号>,
+   }),
+   ```
+
+4. **hand-authored snapshot**: 必要なら
+   `snapshots/en/content/<slug>.html` に正しい HTML を手動作成する
+   (registry が write をブロックするため以後上書きされない)
+5. **テスト更新**:
+   - `source_parity_source_side_debt.test.mjs` が新 slug を自動検出する
+   - representative test から対象 slug を外す (必要な場合)
+6. **検証**: `npm run lint && npm run test && npm run build` を通す
+7. **PR 作成**: 証跡として PR 本文に以下を含める:
+   - sourceUrl と壊れ方のスクリーンショットまたは説明
+   - `check:parity` 出力の `usabilitySignals` 全文
+   - 追加した registry entry
+
+##### 除外解除 (upstream が復旧したとき)
+
+1. **復旧候補の検知**: workflow summary (`docs-update-summary.md`) または
+   managed issue body の `## ソース原文の既知問題` セクションで
+   `expectedMatch: false` (想定と不一致) を確認する。
+   現在の probe は全分岐 fail-close なので `excluded-recovered` は自動では
+   起きない — `body-appeared-inconclusive` が出たら復旧の可能性を疑う
+2. **目視確認**: ブラウザで `sourceUrl` を開き、本文が正常な HTML 構造
+   (`<h2>` / `<p>` / `<ol>` 等) に戻っていることを確認する
+3. **detector 確認**: `npm run check:parity -- --slug=<slug>` を実行し、
+   `snapshot-incomplete` / `source-unusable` が出ないことを確認する
+4. **snapshot 更新**: `npm run check:snapshots:fetch -- --slug=<slug>` で
+   最新 HTML を取得する (registry から外すと write が有効になる)
+5. **registry 削除**: `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する
+6. **parity 確認**: `npm run check:parity -- --slug=<slug>` で JA との
+   構造差分を確認し、必要なら JA ファイルを修正する
+7. **テスト更新**: representative test に slug を戻す (必要な場合)
+8. **検証**: `npm run lint && npm run test && npm run build` を通す
+9. **PR 作成**: 証跡として PR 本文に以下を含める:
+   - sourceUrl が正常に戻ったことのスクリーンショットまたは説明
+   - `check:parity` 出力が 0 issues であること
+   - 削除した registry entry と理由
+
 **完了条件の保証 (regression guard)**:
 
 - `scripts/__tests__/source_parity_structure_fixtures.test.mjs` — 5 代表ページ
