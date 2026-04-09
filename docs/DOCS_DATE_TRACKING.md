@@ -115,7 +115,7 @@ upstream 英語原文自体が broken で parity comparator の前提を満た�
 
 - snapshot fetch は毎回実行する（復旧監視のため）
 - snapshot file は上書きしない（hand-authored snapshot を凍結参照として温存）
-- fetch 結果に対して `detectSourceUsability` で recovery probe を実行する
+- fetch 結果に対して EN-only recovery probe を実行する (現在 `extractor-empty` のみ自動判定、他は fail-close)
 - probe 結果は `source-sync-status.json` の `fetchStatus` に反映される:
   - `excluded-broken` — 依然 broken（未復旧）
   - `excluded-recovered` — upstream 復旧候補（人間が確認の上、registry から削除）
@@ -128,7 +128,7 @@ upstream 英語原文自体が broken で parity comparator の前提を満た�
 
 - **自動除外はしない**（false negative を避けるため）
 - 人間が upstream broken と目視確認した slug のみ `SOURCE_SYNC_EXCLUSIONS` に追加する
-- `expectedIssueType` / `expectedReason` は実際の `detectSourceUsability` 出力と合致させる
+- `expectedIssueType` / `expectedReason` は EN-only recovery probe の判定に使用される (現在 `extractor-empty` のみ自動判定)
 - 復旧候補は人間判断で registry から削除する（自動解除はしない）
 
 ## 出力ファイル

@@ -34,7 +34,6 @@ import { isDirectRun } from './lib/cli.mjs';
 import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 import { isSourceSideDebt, getExclusion } from './lib/source_sync_exclusions.mjs';
 import { extractSegmentsFromHtml } from './lib/source_parity_segments_en.mjs';
-import { preprocessEnHtml } from './lib/turndown.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -95,23 +94,6 @@ function collectTargets({ section, slug }) {
 }
 
 /**
- * Count occurrences of a global regex pattern in a string.
- * @param {string} str
- * @param {RegExp} pattern  g flag required
- * @returns {number}
- */
-function countMatches(str, pattern) {
-  let n = 0;
-  for (const _ of str.matchAll(pattern)) n++;
-  return n;
-}
-
-// Thresholds for shallow-snapshot EN-only check (aligned with
-// source_parity_source_usability.mjs but used independently).
-const SHALLOW_MAX_EN_BODY = 2;
-const SHALLOW_MAX_EN_RAW_HTML = 800;
-
-/**
  * EN-only, registry-aware recovery probe for a known source-side debt page.
  *
  * Checks whether the page is still broken for the **specific reason**
@@ -154,26 +136,17 @@ function probeRecoveryEnOnly(rawEnHtml, exclusionEntry) {
 
   switch (expReason) {
     case 'extractor-empty':
+      // EN body segments が 0 のままなら broken。唯一 EN-only で安全に
+      // 判定できる reason — false recovery のリスクが無い。
       if (enBodyCount === 0) return broken('extractor-empty', true);
       return null; // recovered
 
-    case 'escaped-details-residue': {
-      const preprocessed = preprocessEnHtml(rawEnHtml);
-      const openCount = countMatches(preprocessed, /&lt;details(\b[^>]*)?&gt;/gi);
-      const closeCount = countMatches(preprocessed, /&lt;\/details&gt;/gi);
-      if (openCount !== closeCount) return broken('escaped-details-residue', true);
-      return null; // recovered
-    }
-
-    case 'shallow-snapshot':
-      if (enBodyCount <= SHALLOW_MAX_EN_BODY && rawEnHtml.length <= SHALLOW_MAX_EN_RAW_HTML) {
-        return broken('shallow-snapshot', true);
-      }
-      return null; // recovered
-
     default:
-      // Unsupported reason → fail-close: broken + expectedMatch: false
-      return broken(expReason, false);
+      // escaped-details-residue / shallow-snapshot / 将来の reason は
+      // EN-only では安全に判定できない (false recovery のリスクがある)。
+      // fail-close: broken に倒して自動 recovery しない。
+      // 人間が upstream を目視確認して registry から除外解除する運用。
+      return broken('unsupported-recovery-probe', false);
   }
 }
 

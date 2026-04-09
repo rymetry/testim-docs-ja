@@ -454,7 +454,7 @@ baseline entry 0 で clean green に到達:
 
 | slug | 状態 | 運用 |
 | --- | --- | --- |
-| `testops/testops-version-control/pull-requests` | EN live HTML が body 全体を `<code>` ブロックで wrap した broken output (extractor-empty) を返し、MadCap Flare extractor が 0 body segment に落ちる。Issue #247 では hand-authored snapshot で一時的に clean に見せたが、次回の snapshot fetch で必ず再破壊される | Issue #255 で `scripts/lib/source_sync_exclusions.mjs` registry に登録し、`snapshot_update` は fetch するが snapshot file を上書きしない。fetch 結果に対して `detectSourceUsability` で recovery probe を実行し、`excluded-broken` / `excluded-recovered` として `source-sync-status.json` に報告する。hand-authored snapshot は凍結参照として温存 |
+| `testops/testops-version-control/pull-requests` | EN live HTML が body 全体を `<code>` ブロックで wrap した broken output (extractor-empty) を返し、MadCap Flare extractor が 0 body segment に落ちる。Issue #247 では hand-authored snapshot で一時的に clean に見せたが、次回の snapshot fetch で必ず再破壊される | Issue #255 で `scripts/lib/source_sync_exclusions.mjs` registry に登録し、`snapshot_update` は fetch するが snapshot file を上書きしない。fetch 結果に対して EN-only recovery probe を実行し (現在 `extractor-empty` のみ自動判定、他は fail-close)、`excluded-broken` / `excluded-recovered` として `source-sync-status.json` に報告する。hand-authored snapshot は凍結参照として温存 |
 
 source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.test.mjs`
 で pin される。representative test (`source_parity_representative_summary.test.mjs`)

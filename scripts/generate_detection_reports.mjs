@@ -62,7 +62,7 @@ function main() {
     console.log(
       `  パリティ問題 (未解消): ${actionableReport.parityRegression.summary.issueCount}`,
     );
-    console.log(`  パリティ結果: ${actionableReport.result ?? 'unknown'}`);
+    console.log(`  パリティ結果: ${actionableReport.result ?? '不明'}`);
     const followup = actionableReport.parityFollowup;
     console.log(
       `  パリティフォローアップ: 期限切れ=${followup.summary.baselineDebt.expiredBaselineEntries} 30日以内期限切れ=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} 無効化=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} ブロッキング=${followup.summary.advisoryQueue.blockingItems}`,
