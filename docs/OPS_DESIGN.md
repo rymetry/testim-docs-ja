@@ -423,7 +423,7 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 - representative fixture は clean page 群だけを対象にし、source-side debt ページは別テストで扱う
 - `testops/testops-version-control/pull-requests` は source-side debt registry で管理し、snapshot fetch 時に上書きしない
 - 代表ページ、clean sentinel、source unusable fixture、source-side debt fixture はそれぞれ専用テストで契約を固定する
-- 詳細な経緯や過去のレビュー履歴は [IMPLEMENTATION_HISTORY.md](/Users/rym/.codex/worktrees/0ba5/testim-docs-ja/docs/IMPLEMENTATION_HISTORY.md) に集約する
+- 詳細な経緯や過去のレビュー履歴は [IMPLEMENTATION_HISTORY.md](./IMPLEMENTATION_HISTORY.md) に集約する
 
 ### source-side debt 運用手順
 

@@ -57,10 +57,10 @@ const MIN_UNTRANSLATED_WORD_COUNT = 3;
 
 /**
  * @typedef {object} Section
- * @property {number} index             0-based section index in document order
- * @property {string} sectionPath       sectionPath from the heading (or '' for preface)
- * @property {string} headingText       normalized heading text (or '' for preface)
- * @property {Segment[]} body           non-heading body segments under this section
+ * @property {number} index             文書順の 0-based section index
+ * @property {string} sectionPath       heading 由来の sectionPath (`''` は preface)
+ * @property {string} headingText       正規化済み heading text (`''` は preface)
+ * @property {Segment[]} body           この section 配下の non-heading body segment
  */
 
 /**
@@ -92,9 +92,9 @@ function splitIntoSections(segments) {
 }
 
 /**
- * Filter to gate-eligible body kinds plus headings (the latter are needed as
- * section anchors). All other kinds — code-block, image, image-caption — are
- * dropped before alignment runs.
+ * gate 対象の body kind と heading だけを残す。
+ * heading は section anchor に必要で、それ以外の `code-block` / `image` /
+ * `image-caption` などは alignment 前に落とす。
  *
  * @param {Segment[]} segments
  * @returns {Segment[]}
@@ -107,33 +107,30 @@ function filterForAlignment(segments) {
 }
 
 // ---------------------------------------------------------------------------
-// Local alignment — weighted LCS that prefers strong content matches
+// ローカル alignment: 強い内容一致を優先する重み付き LCS
 // ---------------------------------------------------------------------------
 
 /**
- * Compute the maximum-weight monotonic alignment of two arrays under a
- * scalar score function, returning the matched index pairs in order.
- * Conceptually a weighted Longest Common Subsequence: each candidate pair
- * (a[i], b[j]) has a `score` (≥ 0 to be considered a match), and the DP
- * finds the matching that maximizes the sum of scores along a monotonic
- * (i++, j++) path.
+ * スカラー score 関数の下で、2 配列の最大重み単調 alignment を求める。
+ * 結果は matched index pair を順序付きで返す。
  *
- * Why weighted instead of plain boolean LCS:
- *   - The boolean predicate forces ties to be resolved by traceback bias
- *     (always picking the rightmost or leftmost match), which collapses
- *     middle deletions onto enIndex=0 / enIndex=N-1.
- *   - With per-pair scores we can express "fingerprint match >> token
- *     overlap >> position similarity" so the DP naturally pairs strong
- *     anchors first and lets weak position-aware fallbacks fill the gaps.
+ * 概念的には weighted LCS で、各候補 pair `(a[i], b[j])` が `score` を持ち、
+ * DP が `(i++, j++)` の単調 path 上で score 合計が最大になる対応を選ぶ。
  *
- * Time / space: O(n * m). Sections in practice carry ≤ 100 segments, so
- * this stays sub-millisecond per section.
+ * boolean LCS にしない理由:
+ *   - true/false だけだと tie が traceback 偏りで解消され、
+ *     中央の欠落が `enIndex=0` や `enIndex=N-1` に潰れやすい
+ *   - pair ごとの score を持たせると、
+ *     `fingerprint 一致 > token overlap > 位置の近さ` を表現でき、
+ *     強い anchor を先に確定して弱い fallback を後段に回せる
+ *
+ * 計算量は O(n * m)。実運用では 1 section あたり 100 segment 以下なので許容する。
  *
  * @template T
  * @param {readonly T[]} a
  * @param {readonly T[]} b
  * @param {(x: T, y: T, i: number, j: number, n: number, m: number) => number} score
- * @returns {Array<[number, number]>} matched (a-index, b-index) pairs
+ * @returns {Array<[number, number]>} matched な `(a-index, b-index)` pair
  */
 function weightedLcs(a, b, score) {
   const n = a.length;
@@ -193,14 +190,13 @@ function weightedLcs(a, b, score) {
 }
 
 // ---------------------------------------------------------------------------
-// Content-aware match predicate
+// 内容を加味した match 判定
 // ---------------------------------------------------------------------------
 // align と structure comparator で同じスコア階層を共有する。
 
 /**
- * Aggregate the union of invariant tokens contributed by every body segment
- * in a section. Used by the section-content validation pass to detect body
- * swaps between sections that share heading levels and segment kind sequences.
+ * section 内の全 body segment が持つ invariant token の和集合を集める。
+ * heading level や segment kind が似ている section 間で body swap を検出するときに使う。
  *
  * @param {Section} section
  * @returns {Set<string>}
@@ -246,18 +242,17 @@ function pairwiseLengthSimilaritySum(a, b) {
 const TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN = 0.01;
 
 // ---------------------------------------------------------------------------
-// Untranslated heuristic
+// untranslated 判定ヒューリスティック
 // ---------------------------------------------------------------------------
 
 /**
- * Decide whether a JA segment's normalized text looks like untranslated
- * English. Backtick-quoted invariants and link destinations are stripped
- * first so a normally-translated paragraph that contains a CLI flag or URL
- * is not mistaken for residue. The remainder must contain ≥ 15 prose
- * characters AND ≥ 3 word-like ASCII tokens AND zero CJK characters before
- * we flag it.
+ * JA segment の正規化 text が、未翻訳の英語らしく見えるかを判定する。
+ * 先に backtick 内 invariant や link destination を落とし、
+ * CLI flag や URL を含むだけの正常な訳文を residue と誤判定しないようにする。
  *
- * @param {string} text  JA-side normalized text from createSegment
+ * 判定には、15 文字以上の prose、3 個以上の ASCII 単語、CJK 文字 0 個を要求する。
+ *
+ * @param {string} text JA 側の正規化済み text (`createSegment` 由来)
  */
 function looksUntranslated(text) {
   if (typeof text !== 'string' || text.length < MIN_UNTRANSLATED_PROSE_LENGTH) {
@@ -280,7 +275,7 @@ function looksUntranslated(text) {
 }
 
 // ---------------------------------------------------------------------------
-// Diff factories — keep the schema in one place
+// Diff factory 群。schema を 1 箇所に寄せる
 // ---------------------------------------------------------------------------
 
 function buildSectionLabel(sectionPath) {
@@ -374,11 +369,11 @@ function diffTokenGap(section, enSeg, jaSeg, enLocalIndex, jaLocalIndex, missing
 }
 
 // ---------------------------------------------------------------------------
-// Per-section alignment
+// section 単位 alignment
 // ---------------------------------------------------------------------------
 
 /**
- * Count how many tokens in `query` appear in `target`.
+ * `query` 内 token のうち、`target` にも現れる個数を数える。
  *
  * @param {Set<string>} query
  * @param {Set<string>} target

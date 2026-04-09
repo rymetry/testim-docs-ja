@@ -72,7 +72,7 @@ function getSidebarOrdering(): SidebarOrdering {
     const lines = text.split(/\r?\n/);
 
     const sectionRe = /^##\s+(.+?)\s*$/;
-    // ✅🔍 must precede ✅ — regex alternation is order-dependent
+    // ✅🔍 を先に置く。regex の alternation は順序依存のため。
     const urlLineRe =
       /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
 
