@@ -19,8 +19,10 @@
  *   1. upstream が broken であることを人間が目視確認する
  *   2. `SOURCE_SYNC_EXCLUSIONS` に entry を追加する
  *   3. `expectedIssueType` / `expectedReason` は EN-only recovery probe の
- *      判定に使用される。現在 `extractor-empty` のみ自動 recovery 判定に
- *      対応し、他の reason は fail-close で excluded-broken に倒す
+ *      判定に使用される。detector が理解する reason
+ *      (`extractor-empty` / `shallow-snapshot` / `escaped-details-residue`)
+ *      のみ recovery 判定対象で、それ以外や extractor 例外は fail-close
+ *      で `excluded-broken` に倒す
  *
  * @module source_sync_exclusions
  */

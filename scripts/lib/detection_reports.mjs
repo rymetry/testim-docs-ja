@@ -263,6 +263,31 @@ export function validateSourceSyncStatus(parsed) {
       );
     }
   }
+  if (version >= 2) {
+    const excludedBrokenPages = parsed.pages.filter((p) => p.fetchStatus === 'excluded-broken').length;
+    const excludedRecoveredPages = parsed.pages.filter(
+      (p) => p.fetchStatus === 'excluded-recovered',
+    ).length;
+    const excludedPages = excludedBrokenPages + excludedRecoveredPages;
+    if (parsed.summary.excludedPages !== excludedPages) {
+      throw new Error(
+        `source-sync-status.json: summary.excludedPages must equal pages[] excluded count ` +
+        `(${excludedPages}), got ${parsed.summary.excludedPages}`,
+      );
+    }
+    if (parsed.summary.excludedBrokenPages !== excludedBrokenPages) {
+      throw new Error(
+        `source-sync-status.json: summary.excludedBrokenPages must equal pages[] excluded-broken count ` +
+        `(${excludedBrokenPages}), got ${parsed.summary.excludedBrokenPages}`,
+      );
+    }
+    if (parsed.summary.excludedRecoveredPages !== excludedRecoveredPages) {
+      throw new Error(
+        `source-sync-status.json: summary.excludedRecoveredPages must equal pages[] excluded-recovered count ` +
+        `(${excludedRecoveredPages}), got ${parsed.summary.excludedRecoveredPages}`,
+      );
+    }
+  }
   if (!Array.isArray(parsed.errors)) {
     throw new Error('source-sync-status.json: errors must be an array');
   }
@@ -326,6 +351,15 @@ function formatList(values) {
   return values.map((value) => `- ${value}`).join('\n');
 }
 
+function partitionSourceSideDebtPages(pages) {
+  const safePages = Array.isArray(pages) ? pages : [];
+  return {
+    brokenPages: safePages.filter((p) => p.fetchStatus === 'excluded-broken'),
+    recoveredPages: safePages.filter((p) => p.fetchStatus === 'excluded-recovered'),
+    fetchErrorPages: safePages.filter((p) => p.fetchStatus === 'excluded-fetch-error'),
+  };
+}
+
 /**
  * Issue #255 — Build a structured summary of source-side debt from
  * `source-sync-status.json`. Returns counters plus broken / recovered
@@ -353,17 +387,13 @@ function formatList(values) {
  * }}
  */
 function buildSourceSideDebtSummary(sourceSync) {
-  const summary = sourceSync?.summary ?? {};
   const pages = sourceSync?.pages ?? [];
-
-  const brokenPages = pages.filter((p) => p.fetchStatus === 'excluded-broken');
-  const recoveredPages = pages.filter((p) => p.fetchStatus === 'excluded-recovered');
-  const fetchErrorPages = pages.filter((p) => p.fetchStatus === 'excluded-fetch-error');
+  const { brokenPages, recoveredPages, fetchErrorPages } = partitionSourceSideDebtPages(pages);
 
   return {
-    excludedPages: summary.excludedPages ?? 0,
-    excludedBrokenPages: summary.excludedBrokenPages ?? 0,
-    excludedRecoveredPages: summary.excludedRecoveredPages ?? 0,
+    excludedPages: brokenPages.length + recoveredPages.length,
+    excludedBrokenPages: brokenPages.length,
+    excludedRecoveredPages: recoveredPages.length,
     fetchErrorSlugs: fetchErrorPages.map((p) => p.slug).sort(),
     fetchErrorDetails: fetchErrorPages.map((p) => ({
       slug: p.slug,

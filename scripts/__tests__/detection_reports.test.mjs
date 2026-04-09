@@ -2761,6 +2761,72 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
       /must have debtCategory "source-side-debt"/,
     );
   });
+
+  it('throws when summary.excludedPages disagrees with pages[]', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 0;
+    v.summary.excludedBrokenPages = 0;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: {
+          issueType: 'snapshot-incomplete',
+          reason: 'extractor-empty',
+          expectedIssueType: 'snapshot-incomplete',
+          expectedReason: 'extractor-empty',
+          expectedMatch: true,
+        },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.excludedPages must equal pages\[\] excluded count/,
+    );
+  });
+
+  it('throws when summary.excludedBrokenPages disagrees with pages[]', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 0;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: {
+          issueType: 'snapshot-incomplete',
+          reason: 'extractor-empty',
+          expectedIssueType: 'snapshot-incomplete',
+          expectedReason: 'extractor-empty',
+          expectedMatch: true,
+        },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.excludedBrokenPages must equal pages\[\] excluded-broken count/,
+    );
+  });
+
+  it('throws when summary.excludedRecoveredPages disagrees with pages[]', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedRecoveredPages = 0;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-recovered',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: null,
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.excludedRecoveredPages must equal pages\[\] excluded-recovered count/,
+    );
+  });
 });
 
 describe('§1 cleanup — validateDetectionInputs', () => {
@@ -2983,6 +3049,44 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     // brokenSlugs / recoveredSlugs が slug list として露出している
     assert.deepEqual(report.sourceSyncHealth.sourceSideDebt.brokenSlugs, ['a']);
     assert.deepEqual(report.sourceSyncHealth.sourceSideDebt.recoveredSlugs, ['b']);
+  });
+
+  it('recomputes source-side debt counters from pages[] even when summary counters are stale', () => {
+    const sourceSync = {
+      schemaVersion: 2,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 100,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 0,
+        excludedBrokenPages: 0,
+        excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [
+        {
+          slug: 'a',
+          fetchStatus: 'excluded-broken',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: {
+            issueType: 'snapshot-incomplete',
+            reason: 'extractor-empty',
+            expectedIssueType: 'snapshot-incomplete',
+            expectedReason: 'extractor-empty',
+            expectedMatch: true,
+          },
+        },
+      ],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    assert.equal(report.sourceSyncHealth.sourceSideDebt.excludedPages, 1);
+    assert.equal(report.sourceSyncHealth.sourceSideDebt.excludedBrokenPages, 1);
+    assert.deepEqual(report.sourceSyncHealth.sourceSideDebt.brokenSlugs, ['a']);
   });
 
   it('Source Sync Health issue body surfaces source-side debt info in 日本語', () => {

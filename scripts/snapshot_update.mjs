@@ -118,6 +118,31 @@ function buildProbeJaSegments(expectedReason) {
   }
 }
 
+const SUPPORTED_RECOVERY_REASONS = new Set([
+  'extractor-empty',
+  'shallow-snapshot',
+  'escaped-details-residue',
+]);
+
+function buildBrokenRecoveryProbe({
+  actualIssueType,
+  actualReason,
+  exclusionEntry,
+}) {
+  return {
+    fetchStatus: 'excluded-broken',
+    recoveryProbe: {
+      issueType: actualIssueType,
+      reason: actualReason,
+      expectedIssueType: exclusionEntry.expectedIssueType,
+      expectedReason: exclusionEntry.expectedReason,
+      expectedMatch:
+        actualIssueType === exclusionEntry.expectedIssueType &&
+        actualReason === exclusionEntry.expectedReason,
+    },
+  };
+}
+
 /**
  * Recovery probe for a known source-side debt page.
  *
@@ -128,16 +153,40 @@ function buildProbeJaSegments(expectedReason) {
  *
  * JA body には依存しない — synthetic segments を使って EN-only 判定を維持。
  *
- * @param {{ rawEnHtml: string, exclusionEntry: object }} opts
+ * Unsupported registry reasons and extractor exceptions both fail closed.
+ * A debt page is only `excluded-recovered` when the extractor succeeds and
+ * `detectSourceUsability()` returns no issue.
+ *
+ * @param {{ rawEnHtml: string, exclusionEntry: object, extractSegments?: (html: string) => any[] }} opts
  * @returns {{ fetchStatus: string, recoveryProbe: object|null }}
  */
-function runRecoveryProbe({ rawEnHtml, exclusionEntry }) {
+export function runRecoveryProbe({
+  rawEnHtml,
+  exclusionEntry,
+  extractSegments = extractSegmentsFromHtml,
+}) {
+  if (!SUPPORTED_RECOVERY_REASONS.has(exclusionEntry.expectedReason)) {
+    return buildBrokenRecoveryProbe({
+      actualIssueType: 'probe-failed',
+      actualReason: 'unsupported-expected-reason',
+      exclusionEntry,
+    });
+  }
+
   let enSegments = [];
   let extractError = null;
   try {
-    enSegments = extractSegmentsFromHtml(rawEnHtml);
+    enSegments = extractSegments(rawEnHtml);
   } catch (error) {
     extractError = error;
+  }
+
+  if (extractError !== null) {
+    return buildBrokenRecoveryProbe({
+      actualIssueType: 'probe-failed',
+      actualReason: 'extractor-throw',
+      exclusionEntry,
+    });
   }
 
   const jaSegments = buildProbeJaSegments(exclusionEntry.expectedReason);
@@ -149,25 +198,13 @@ function runRecoveryProbe({ rawEnHtml, exclusionEntry }) {
     extractError,
   });
 
-  if (!issue) {
-    return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
-  }
+  if (!issue) return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
 
-  const actualType = issue.type;
-  const actualReason = issue.usabilitySignals?.reason ?? 'unknown';
-
-  return {
-    fetchStatus: 'excluded-broken',
-    recoveryProbe: {
-      issueType: actualType,
-      reason: actualReason,
-      expectedIssueType: exclusionEntry.expectedIssueType,
-      expectedReason: exclusionEntry.expectedReason,
-      expectedMatch:
-        actualType === exclusionEntry.expectedIssueType &&
-        actualReason === exclusionEntry.expectedReason,
-    },
-  };
+  return buildBrokenRecoveryProbe({
+    actualIssueType: issue.type,
+    actualReason: issue.usabilitySignals?.reason ?? 'unknown',
+    exclusionEntry,
+  });
 }
 
 const FETCH_TIMEOUT_MS = 30_000;

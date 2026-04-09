@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 
 let main;
 let extractMainContent;
+let runRecoveryProbe;
 
 const originalFetch = global.fetch;
 const originalLog = console.log;
@@ -18,7 +19,7 @@ function createResponse({ ok = true, status = 200, text = '' } = {}) {
 }
 
 before(async () => {
-  ({ main, extractMainContent } = await import('../snapshot_update.mjs'));
+  ({ main, extractMainContent, runRecoveryProbe } = await import('../snapshot_update.mjs'));
 });
 
 afterEach(() => {
@@ -319,6 +320,47 @@ describe('snapshot_update — source-side debt exclusion', () => {
     const page = result.sourceSyncStatus.pages[0];
     assert.equal(page.fetchStatus, 'excluded-recovered');
     assert.equal(page.recoveryProbe, null);
+  });
+
+  it('extractor throw in recovery probe fails closed as excluded-broken', () => {
+    const result = runRecoveryProbe({
+      rawEnHtml: CLEAN_PAGE_HTML,
+      exclusionEntry: {
+        expectedIssueType: 'snapshot-incomplete',
+        expectedReason: 'extractor-empty',
+      },
+      extractSegments: () => {
+        throw new Error('simulated extractor failure');
+      },
+    });
+
+    assert.equal(result.fetchStatus, 'excluded-broken');
+    assert.deepEqual(result.recoveryProbe, {
+      issueType: 'probe-failed',
+      reason: 'extractor-throw',
+      expectedIssueType: 'snapshot-incomplete',
+      expectedReason: 'extractor-empty',
+      expectedMatch: false,
+    });
+  });
+
+  it('unsupported expectedReason in registry fails closed', () => {
+    const result = runRecoveryProbe({
+      rawEnHtml: CLEAN_PAGE_HTML,
+      exclusionEntry: {
+        expectedIssueType: 'snapshot-incomplete',
+        expectedReason: 'unknown-reason',
+      },
+    });
+
+    assert.equal(result.fetchStatus, 'excluded-broken');
+    assert.deepEqual(result.recoveryProbe, {
+      issueType: 'probe-failed',
+      reason: 'unsupported-expected-reason',
+      expectedIssueType: 'snapshot-incomplete',
+      expectedReason: 'unknown-reason',
+      expectedMatch: false,
+    });
   });
 
   // --- Finding 2: expectedMatch + actual/expected が probe output に載る ---
