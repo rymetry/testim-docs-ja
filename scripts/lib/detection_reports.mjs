@@ -179,6 +179,12 @@ export function validateSourceSyncStatus(parsed) {
   const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered']);
   for (const page of parsed.pages) {
     if (page.debtCategory) {
+      if (page.debtCategory !== 'source-side-debt') {
+        throw new Error(
+          `source-sync-status.json: debt page "${page.slug}" debtCategory must be "source-side-debt", ` +
+          `got ${JSON.stringify(page.debtCategory)}`,
+        );
+      }
       if (!VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus)) {
         throw new Error(
           `source-sync-status.json: debt page "${page.slug}" has invalid fetchStatus ` +
@@ -192,11 +198,10 @@ export function validateSourceSyncStatus(parsed) {
         );
       }
       const probe = page.recoveryProbe;
-      if (probe !== null) {
-        if (typeof probe !== 'object' || Array.isArray(probe)) {
+      if (page.fetchStatus === 'excluded-broken') {
+        if (probe === null || typeof probe !== 'object' || Array.isArray(probe)) {
           throw new Error(
-            `source-sync-status.json: debt page "${page.slug}" recoveryProbe must be object|null, ` +
-            `got ${probe === null ? 'null' : typeof probe}`,
+            `source-sync-status.json: debt page "${page.slug}" recoveryProbe must be an object for excluded-broken`,
           );
         }
         if (typeof probe.issueType !== 'string') {
@@ -207,6 +212,18 @@ export function validateSourceSyncStatus(parsed) {
         if (typeof probe.reason !== 'string') {
           throw new Error(
             `source-sync-status.json: debt page "${page.slug}" recoveryProbe.reason must be a string`,
+          );
+        }
+        if (typeof probe.expectedMatch !== 'boolean') {
+          throw new Error(
+            `source-sync-status.json: debt page "${page.slug}" recoveryProbe.expectedMatch must be a boolean`,
+          );
+        }
+      }
+      if (page.fetchStatus === 'excluded-recovered') {
+        if (probe !== null) {
+          throw new Error(
+            `source-sync-status.json: debt page "${page.slug}" recoveryProbe must be null for excluded-recovered`,
           );
         }
       }

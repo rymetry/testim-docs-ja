@@ -186,7 +186,7 @@ export function validateRunLinkage(sourceSync, snapshotDiff, parityRunScope) {
  *   fetchStatus: string,
  *   errorDetail?: string,
  *   snapshotFingerprint?: string,
- *   recoveryProbe?: { issueType: string, reason: string } | null,
+ *   recoveryProbe?: { issueType: string, reason: string, expectedMatch: boolean } | null,
  *   debtCategory?: 'source-side-debt' | null,
  * }[]} opts.pages
  * @param {{ ok: boolean, sectionCount?: number, pageCount?: number, reason?: string, sidebarSlugs?: string[] }} opts.sidebarResult

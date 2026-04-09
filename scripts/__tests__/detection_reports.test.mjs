@@ -2527,7 +2527,27 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     assert.doesNotThrow(() => validateSourceSyncStatus(v));
   });
 
-  it('throws when recoveryProbe is a non-object primitive (shape validation)', () => {
+  // --- fetchStatus × recoveryProbe の組み合わせ契約 ---
+
+  it('throws when excluded-broken has recoveryProbe: null (不可能状態)', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: null,
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe must be an object for excluded-broken/,
+    );
+  });
+
+  it('throws when excluded-broken has recoveryProbe as primitive', () => {
     const v = validSourceSyncStatus();
     v.summary.excludedPages = 1;
     v.summary.excludedBrokenPages = 1;
@@ -2541,47 +2561,11 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     ];
     assert.throws(
       () => validateSourceSyncStatus(v),
-      /recoveryProbe must be object\|null/,
+      /recoveryProbe must be an object for excluded-broken/,
     );
   });
 
-  it('throws when recoveryProbe.issueType is not a string', () => {
-    const v = validSourceSyncStatus();
-    v.summary.excludedPages = 1;
-    v.summary.excludedBrokenPages = 1;
-    v.pages = [
-      {
-        slug: 'a',
-        fetchStatus: 'excluded-broken',
-        debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: null, reason: 'extractor-empty' },
-      },
-    ];
-    assert.throws(
-      () => validateSourceSyncStatus(v),
-      /recoveryProbe\.issueType must be a string/,
-    );
-  });
-
-  it('throws when recoveryProbe.reason is not a string', () => {
-    const v = validSourceSyncStatus();
-    v.summary.excludedPages = 1;
-    v.summary.excludedBrokenPages = 1;
-    v.pages = [
-      {
-        slug: 'a',
-        fetchStatus: 'excluded-broken',
-        debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 42 },
-      },
-    ];
-    assert.throws(
-      () => validateSourceSyncStatus(v),
-      /recoveryProbe\.reason must be a string/,
-    );
-  });
-
-  it('throws when recoveryProbe is an array', () => {
+  it('throws when excluded-broken has recoveryProbe as array', () => {
     const v = validSourceSyncStatus();
     v.summary.excludedPages = 1;
     v.summary.excludedBrokenPages = 1;
@@ -2595,7 +2579,115 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     ];
     assert.throws(
       () => validateSourceSyncStatus(v),
-      /recoveryProbe must be object\|null/,
+      /recoveryProbe must be an object for excluded-broken/,
+    );
+  });
+
+  it('throws when excluded-broken recoveryProbe.expectedMatch is missing', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe\.expectedMatch must be a boolean/,
+    );
+  });
+
+  it('throws when excluded-broken recoveryProbe.expectedMatch is not boolean', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: 'yes' },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe\.expectedMatch must be a boolean/,
+    );
+  });
+
+  it('throws when excluded-broken recoveryProbe.issueType is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: null, reason: 'extractor-empty', expectedMatch: true },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe\.issueType must be a string/,
+    );
+  });
+
+  it('throws when excluded-broken recoveryProbe.reason is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 42, expectedMatch: true },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe\.reason must be a string/,
+    );
+  });
+
+  it('throws when excluded-recovered has non-null recoveryProbe (不可能状態)', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedRecoveredPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-recovered',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe must be null for excluded-recovered/,
+    );
+  });
+
+  it('throws when debtCategory is not "source-side-debt"', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'foo',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /debtCategory must be "source-side-debt"/,
     );
   });
 });
