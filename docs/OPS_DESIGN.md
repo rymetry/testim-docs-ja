@@ -454,7 +454,7 @@ baseline entry 0 で clean green に到達:
 
 | slug | 状態 | 運用 |
 | --- | --- | --- |
-| `testops/testops-version-control/pull-requests` | EN live HTML が body 全体を `<code>` ブロックで wrap した broken output (extractor-empty) を返し、MadCap Flare extractor が 0 body segment に落ちる。Issue #247 では hand-authored snapshot で一時的に clean に見せたが、次回の snapshot fetch で必ず再破壊される | Issue #255 で `scripts/lib/source_sync_exclusions.mjs` registry に登録し、`snapshot_update` は fetch するが snapshot file を上書きしない。fetch 結果に対して EN-only recovery probe を実行し (現在 `extractor-empty` のみ自動判定、他は fail-close)、`excluded-broken` / `excluded-recovered` として `source-sync-status.json` に報告する。hand-authored snapshot は凍結参照として温存 |
+| `testops/testops-version-control/pull-requests` | EN live HTML が body 全体を `<code>` ブロックで wrap した broken output (extractor-empty) を返し、MadCap Flare extractor が 0 body segment に落ちる。Issue #247 では hand-authored snapshot で一時的に clean に見せたが、次回の snapshot fetch で必ず再破壊される | Issue #255 で `scripts/lib/source_sync_exclusions.mjs` registry に登録し、`snapshot_update` は fetch するが snapshot file を上書きしない。fetch 結果に対して recovery probe (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定) を実行し、`excluded-broken` / `excluded-recovered` として `source-sync-status.json` に報告する。hand-authored snapshot は凍結参照として温存 |
 
 source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.test.mjs`
 で pin される。representative test (`source_parity_representative_summary.test.mjs`)
@@ -511,9 +511,9 @@ live EN の broken 確認には使えない。live EN の状態は `check:snapsh
 
 1. **復旧候補の検知**: workflow summary (`docs-update-summary.md`) または
    managed issue body の `## ソース原文の既知問題` セクションで
-   `expectedMatch: false` (想定と不一致) を確認する。
-   現在の probe は全分岐 fail-close なので `excluded-recovered` は自動では
-   起きない — `body-appeared-inconclusive` が出たら復旧の可能性を疑う
+   `excluded-recovered` を確認する。recovery probe は `detectSourceUsability()`
+   を再利用するため、detector が「比較可能」と判定したページは自動で
+   `excluded-recovered` に遷移する
 2. **目視確認**: ブラウザで `sourceUrl` を開き、本文が正常な HTML 構造
    (`<h2>` / `<p>` / `<ol>` 等) に戻っていることを確認する
 3. **live fetch 確認**: `npm run check:snapshots:fetch -- --slug=<slug> --dry-run`

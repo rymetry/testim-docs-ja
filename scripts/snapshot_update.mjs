@@ -34,6 +34,8 @@ import { isDirectRun } from './lib/cli.mjs';
 import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 import { isSourceSideDebt, getExclusion } from './lib/source_sync_exclusions.mjs';
 import { extractSegmentsFromHtml } from './lib/source_parity_segments_en.mjs';
+import { extractSegmentsFromMarkdown } from './lib/source_parity_segments_ja.mjs';
+import { detectSourceUsability } from './lib/source_parity_source_usability.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -87,6 +89,7 @@ function collectTargets({ section, slug }) {
       slug: fileSlug,
       sourceUrl: data.sourceUrl,
       relativePath: doc.relativePath,
+      jaBody: doc.body,
     });
   }
 
@@ -94,93 +97,18 @@ function collectTargets({ section, slug }) {
 }
 
 /**
- * EN-only, registry-aware recovery probe for a known source-side debt page.
+ * Recovery probe for a known source-side debt page.
  *
- * Checks whether the page is still broken for the **specific reason**
- * recorded in the registry (`exclusionEntry.expectedReason`). This is a
- * narrow / fail-close probe — it does NOT run the full `detectSourceUsability`
- * pipeline and has zero dependency on JA body / segments / parse state.
+ * `detectSourceUsability()` を再利用して、registry に登録された
+ * broken upstream source が復旧したかを判定する。detector が対応する
+ * `extractor-empty` / `shallow-snapshot` / `escaped-details-residue` を
+ * そのまま扱えるため、registry 追加だけで新しい debt reason を運用に載せられる。
  *
- * Unsupported `expectedReason` values are treated as excluded-broken with
- * `expectedMatch: false` so that new registry reasons don't silently fall
- * through to recovered.
- *
- * @param {string} rawEnHtml   inner HTML of `#mc-main-content`
- * @param {object} exclusionEntry   registry entry (from `getExclusion`)
- * @returns {{ issueType: string, reason: string, expectedMatch: boolean } | null}
- *          object → still broken, null → recovered
- */
-function probeRecoveryEnOnly(rawEnHtml, exclusionEntry, { extractFn = extractSegmentsFromHtml } = {}) {
-  // Segment extraction — needed for extractor-empty check.
-  // extractFn is injectable for testing the extract-error branch.
-  let enSegments = [];
-  let extractError = null;
-  try {
-    enSegments = extractFn(rawEnHtml);
-  } catch (e) {
-    extractError = e;
-  }
-
-  const expType = exclusionEntry.expectedIssueType;
-  const expReason = exclusionEntry.expectedReason;
-
-  function broken(reason, match) {
-    return { issueType: expType, reason, expectedIssueType: expType, expectedReason: expReason, expectedMatch: match };
-  }
-
-  // extractError → fail-close: broken with probe-specific reason
-  if (extractError) {
-    return broken('extract-error', false);
-  }
-
-  const enBodyCount = enSegments.filter((s) => s.segmentKind !== 'heading').length;
-
-  // すべての expectedReason で自動 recovery しない (fail-close)。
-  //
-  // extractor-empty でも body > 0 になっただけでは usable とは限らない
-  // (shallow-snapshot 等の別種 unusable に移行した可能性がある)。
-  // EN-only probe で「usable になったか」を安全に判定するには
-  // detectSourceUsability 相当の全レイヤーが必要だが、それは JA 依存を
-  // 戻すことになる。false recovery を完全に排除するため、probe は
-  // 「registry の expected と同じ broken shape か」だけを観測し、
-  // 復旧判定は人間に委ねる。
-  //
-  // expectedMatch の意味:
-  //   true  = expected と同じ shape で壊れている (想定どおり)
-  //   false = 壊れ方が変わった or 判定できない (registry 更新を検討)
-  //
-  // excluded-recovered になるのは runRecoveryProbe の fetch-failed 以外では
-  // 起きない (= 自動 recovery は無い)。
-
-  if (expReason === 'extractor-empty' && enBodyCount === 0) {
-    return broken('extractor-empty', true);
-  }
-
-  if (expReason === 'extractor-empty' && enBodyCount > 0) {
-    // body が出現したが usable かは不明。false recovery を避けるため
-    // broken に倒す。expectedMatch=false で「壊れ方が変わった」と通知。
-    return broken('body-appeared-inconclusive', false);
-  }
-
-  // その他の reason は EN-only で安全に判定できない。
-  return broken('unsupported-recovery-probe', false);
-}
-
-/**
- * Run the EN-only recovery probe for a known source-side debt page.
- *
- * `content` is the raw `#mc-main-content` inner HTML from the live page.
- * When fetch failed (`content` is null), returns `excluded-broken` with a
- * synthetic probe so the debt counter is not reset by a network blip.
- *
- * JA body / segments / parse state には一切依存しない。translation-side
- * state と切り離した EN-only の fail-close 判定。
- *
- * @param {{ content: string|null, exclusionEntry: object }} opts
+ * @param {{ rawEnHtml: string|null, jaBody: string, exclusionEntry: object }} opts
  * @returns {{ fetchStatus: string, recoveryProbe: object|null }}
  */
-function runRecoveryProbe({ content, exclusionEntry }) {
-  if (!content) {
+function runRecoveryProbe({ rawEnHtml, jaBody, exclusionEntry }) {
+  if (!rawEnHtml) {
     return {
       fetchStatus: 'excluded-broken',
       recoveryProbe: {
@@ -193,14 +121,41 @@ function runRecoveryProbe({ content, exclusionEntry }) {
     };
   }
 
-  const probe = probeRecoveryEnOnly(content, exclusionEntry);
-  if (!probe) {
+  let enSegments = [];
+  let extractError = null;
+  try {
+    enSegments = extractSegmentsFromHtml(rawEnHtml);
+  } catch (error) {
+    extractError = error;
+  }
+
+  const jaSegments = extractSegmentsFromMarkdown(jaBody ?? '');
+
+  const issue = detectSourceUsability({
+    rawEnHtml,
+    enSegments,
+    jaSegments,
+    extractError,
+  });
+
+  if (!issue) {
     return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
   }
 
+  const actualType = issue.type;
+  const actualReason = issue.usabilitySignals?.reason ?? 'unknown';
+
   return {
     fetchStatus: 'excluded-broken',
-    recoveryProbe: probe,
+    recoveryProbe: {
+      issueType: actualType,
+      reason: actualReason,
+      expectedIssueType: exclusionEntry.expectedIssueType,
+      expectedReason: exclusionEntry.expectedReason,
+      expectedMatch:
+        actualType === exclusionEntry.expectedIssueType &&
+        actualReason === exclusionEntry.expectedReason,
+    },
   };
 }
 
@@ -210,9 +165,6 @@ const FETCH_TIMEOUT_MS = 30_000;
  * Extract the main content HTML from a full page.
  * Targets `<div id="mc-main-content" ...>...</div>` (MadCap Flare).
  */
-// Exported for unit testing of fail-close branches.
-export { probeRecoveryEnOnly as _probeRecoveryEnOnly };
-
 export function extractMainContent(html) {
   const startMatch = /<div[^>]*\bid=["']mc-main-content["'][^>]*>/i.exec(html);
   if (!startMatch) return null;
@@ -368,7 +320,7 @@ export async function main(argv) {
         // recovery probe を実行し、結果は excluded-broken / excluded-recovered
         // として pageResults に載せる。404 / HTTP エラーも debt 側に吸収し、
         // 一時的な network 障害で counter が broken にフリップしないようにする。
-        const probe = runRecoveryProbe({ content, exclusionEntry: getExclusion(target.slug) });
+        const probe = runRecoveryProbe({ rawEnHtml: content, jaBody: target.jaBody, exclusionEntry: getExclusion(target.slug) });
         const label = probe.fetchStatus === 'excluded-recovered' ? 'RECOV' : 'DEBT ';
         console.log(`  ${label} ${target.slug} — source-side debt (snapshot not written)`);
         excluded += 1;
@@ -405,7 +357,7 @@ export async function main(argv) {
     } catch (error) {
       if (excludedSlug) {
         // fetch が throw しても excluded 経路は debt にとどめる
-        const probe = runRecoveryProbe({ content: null, exclusionEntry: getExclusion(target.slug) });
+        const probe = runRecoveryProbe({ rawEnHtml: null, jaBody: target.jaBody, exclusionEntry: getExclusion(target.slug) });
         console.log(`  DEBT ${target.slug} — source-side debt (fetch failed: ${error.message})`);
         excluded += 1;
         pageResults.push({

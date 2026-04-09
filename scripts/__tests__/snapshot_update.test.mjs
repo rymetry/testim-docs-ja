@@ -4,7 +4,6 @@ import assert from 'node:assert/strict';
 
 let main;
 let extractMainContent;
-let probeRecoveryEnOnly;
 
 const originalFetch = global.fetch;
 const originalLog = console.log;
@@ -19,7 +18,7 @@ function createResponse({ ok = true, status = 200, text = '' } = {}) {
 }
 
 before(async () => {
-  ({ main, extractMainContent, _probeRecoveryEnOnly: probeRecoveryEnOnly } = await import('../snapshot_update.mjs'));
+  ({ main, extractMainContent } = await import('../snapshot_update.mjs'));
 });
 
 afterEach(() => {
@@ -168,8 +167,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
 
   // clean upstream simulation: broken 状態から upstream が直り、
   // 正しく <h2> / <p> / <ol> に分解された clean HTML が返る想定。
-  // ただし EN-only probe は全分岐 fail-close なので excluded-broken
-  // (body-appeared-inconclusive) に倒れる。excluded-recovered は自動では起きない。
+  // detectSourceUsability が null を返すため excluded-recovered になる。
   const CLEAN_PAGE_HTML =
     '<html><body><div role="main" id="mc-main-content">' +
     '<h1>Pull Requests</h1>' +
@@ -229,25 +227,24 @@ describe('snapshot_update — source-side debt exclusion', () => {
     assert.equal(result.sourceSyncStatus.errors.length, 0);
   });
 
-  it('clean upstream → still excluded-broken (全分岐 fail-close、自動 recovery なし)', async () => {
+  it('clean upstream → excluded-recovered (detectSourceUsability が null を返す)', async () => {
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
     const result = await main(['--dry-run', '--slug=pull-requests']);
 
-    // 自動 recovery は起きない — body が出ても inconclusive で broken に倒れる
+    // upstream が復旧 — detectSourceUsability が issue なしと判定
     assert.equal(result.sourceSyncStatus.summary.excludedPages, 1);
-    assert.equal(result.sourceSyncStatus.summary.excludedBrokenPages, 1);
-    assert.equal(result.sourceSyncStatus.summary.excludedRecoveredPages, 0);
+    assert.equal(result.sourceSyncStatus.summary.excludedBrokenPages, 0);
+    assert.equal(result.sourceSyncStatus.summary.excludedRecoveredPages, 1);
 
     const page = result.sourceSyncStatus.pages.find(
       (p) => p.slug === 'testops/testops-version-control/pull-requests',
     );
     assert.ok(page);
-    assert.equal(page.fetchStatus, 'excluded-broken');
+    assert.equal(page.fetchStatus, 'excluded-recovered');
     assert.equal(page.debtCategory, 'source-side-debt');
-    assert.equal(page.recoveryProbe.reason, 'body-appeared-inconclusive');
-    assert.equal(page.recoveryProbe.expectedMatch, false);
+    assert.equal(page.recoveryProbe, null);
   });
 
   it('does not overwrite snapshot file even in non-dry-run mode', async () => {
@@ -313,18 +310,15 @@ describe('snapshot_update — source-side debt exclusion', () => {
     assert.equal(page.recoveryProbe.expectedMatch, true);
   });
 
-  it('clean EN → excluded-broken + body-appeared-inconclusive (全分岐 fail-close)', async () => {
-    // clean EN でも自動 recovery しない。body が出現しただけでは
-    // usable かは不明なので broken に倒す (false recovery 防止)。
+  it('clean EN → excluded-recovered (detectSourceUsability returns null)', async () => {
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
     const result = await main(['--dry-run', '--slug=pull-requests']);
 
     const page = result.sourceSyncStatus.pages[0];
-    assert.equal(page.fetchStatus, 'excluded-broken');
-    assert.equal(page.recoveryProbe.reason, 'body-appeared-inconclusive');
-    assert.equal(page.recoveryProbe.expectedMatch, false);
+    assert.equal(page.fetchStatus, 'excluded-recovered');
+    assert.equal(page.recoveryProbe, null);
   });
 
   // --- Finding 2: expectedMatch + actual/expected が probe output に載る ---
@@ -345,127 +339,9 @@ describe('snapshot_update — source-side debt exclusion', () => {
 });
 
 // ---------------------------------------------------------------------------
-// probeRecoveryEnOnly — fail-close 分岐のユニットテスト
+// recovery probe — detectSourceUsability 再利用の統合テスト
 //
-// extract-error と unsupported-recovery-probe の 2 分岐を直接テストし、
-// 将来のリファクタで false recovery が再発しないよう regression pin する。
+// probeRecoveryEnOnly は廃止。recovery probe は detectSourceUsability を
+// 再利用するため、detector が対応する全 reason を registry 追加だけで扱える。
+// 個別 reason の判定ロジックは source_parity_source_usability.test.mjs で pin。
 // ---------------------------------------------------------------------------
-
-describe('probeRecoveryEnOnly — fail-close branches', () => {
-  const baseEntry = {
-    reason: 'broken-upstream-source',
-    note: 'test',
-    addedAt: '2026-04-09',
-    linkedIssue: 255,
-  };
-
-  it('extractError → excluded-broken + reason=extract-error + expectedMatch=false', () => {
-    const entry = {
-      ...baseEntry,
-      expectedIssueType: 'snapshot-incomplete',
-      expectedReason: 'extractor-empty',
-    };
-    const throwingExtractor = () => {
-      throw new Error('simulated extractor failure');
-    };
-
-    const result = probeRecoveryEnOnly(
-      '<h1>Title</h1><p>Body</p>',
-      entry,
-      { extractFn: throwingExtractor },
-    );
-
-    assert.ok(result, 'extractError must not return null (recovered)');
-    assert.equal(result.reason, 'extract-error');
-    assert.equal(result.expectedMatch, false);
-    assert.equal(result.expectedIssueType, 'snapshot-incomplete');
-    assert.equal(result.expectedReason, 'extractor-empty');
-  });
-
-  it('unsupported expectedReason は excluded-broken + unsupported-recovery-probe + expectedMatch=false', () => {
-    const entry = {
-      ...baseEntry,
-      expectedIssueType: 'snapshot-incomplete',
-      expectedReason: 'shallow-snapshot',
-    };
-    // clean EN — 正常な本文があるページ
-    const cleanHtml =
-      '<h1>Title</h1>' +
-      '<p>First paragraph with real content.</p>' +
-      '<h2>Section</h2>' +
-      '<p>Second paragraph.</p>' +
-      '<p>Third paragraph.</p>';
-
-    const result = probeRecoveryEnOnly(cleanHtml, entry);
-
-    // shallow-snapshot は unsupported なので recovered に流れず broken に倒れる
-    assert.ok(result, 'unsupported reason must not return null (recovered)');
-    assert.equal(result.reason, 'unsupported-recovery-probe');
-    assert.equal(result.expectedMatch, false);
-    assert.equal(result.expectedIssueType, 'snapshot-incomplete');
-    assert.equal(result.expectedReason, 'shallow-snapshot');
-  });
-
-  it('unsupported expectedReason: escaped-details-residue も fail-close', () => {
-    const entry = {
-      ...baseEntry,
-      expectedIssueType: 'source-unusable',
-      expectedReason: 'escaped-details-residue',
-    };
-    const cleanHtml = '<h1>Page</h1><p>Normal content.</p>';
-
-    const result = probeRecoveryEnOnly(cleanHtml, entry);
-
-    assert.ok(result);
-    assert.equal(result.reason, 'unsupported-recovery-probe');
-    assert.equal(result.expectedMatch, false);
-  });
-
-  it('未知の将来 reason も fail-close に倒れる', () => {
-    const entry = {
-      ...baseEntry,
-      expectedIssueType: 'snapshot-incomplete',
-      expectedReason: 'future-unknown-reason',
-    };
-    const cleanHtml = '<h1>Page</h1><p>Content.</p>';
-
-    const result = probeRecoveryEnOnly(cleanHtml, entry);
-
-    assert.ok(result);
-    assert.equal(result.reason, 'unsupported-recovery-probe');
-    assert.equal(result.expectedMatch, false);
-  });
-
-  it('extractor-empty + body=0 → broken (expectedMatch=true)', () => {
-    const entry = {
-      ...baseEntry,
-      expectedIssueType: 'snapshot-incomplete',
-      expectedReason: 'extractor-empty',
-    };
-    // body segment が 0 になる HTML (heading のみ)
-    const emptyBodyHtml = '<h1>Title Only</h1>';
-
-    const result = probeRecoveryEnOnly(emptyBodyHtml, entry);
-
-    assert.ok(result);
-    assert.equal(result.reason, 'extractor-empty');
-    assert.equal(result.expectedMatch, true);
-  });
-
-  it('extractor-empty + body>0 → excluded-broken + body-appeared-inconclusive (fail-close)', () => {
-    // body が出現しても usable かは不明。false recovery を避けるため
-    // broken に倒す。expectedMatch=false で壊れ方の変化を通知。
-    const entry = {
-      ...baseEntry,
-      expectedIssueType: 'snapshot-incomplete',
-      expectedReason: 'extractor-empty',
-    };
-    const cleanHtml = '<h1>Title</h1><p>Has body content.</p>';
-
-    const result = probeRecoveryEnOnly(cleanHtml, entry);
-
-    assert.ok(result, 'body が出ても自動 recovery しない');
-    assert.equal(result.reason, 'body-appeared-inconclusive');
-    assert.equal(result.expectedMatch, false);
-  });
-});

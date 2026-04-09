@@ -67,9 +67,9 @@ describe('SOURCE_SYNC_EXCLUSIONS registry', () => {
     // consumer が string match しやすいように)
     assert.equal(entry.reason, 'broken-upstream-source');
     // expectedIssueType / expectedReason は detectSourceUsability の
-    // 出力 shape と合致させる — recovery probe が出す issueType / reason を
-    // ここで固定することで、upstream が直ったときに mismatch から
-    // "excluded-recovered" 判定が落ちるようにする。
+    // 出力 shape と合致させる — recovery probe が detectSourceUsability を
+    // 再利用するため、upstream が直ったとき detector が null を返し
+    // "excluded-recovered" 判定が正しく到達する。
     assert.equal(entry.expectedIssueType, 'snapshot-incomplete');
     assert.equal(entry.expectedReason, 'extractor-empty');
     assert.match(entry.addedAt, /^\d{4}-\d{2}-\d{2}$/);

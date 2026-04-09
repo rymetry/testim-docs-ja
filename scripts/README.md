@@ -48,7 +48,7 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 **Source-side debt の除外運用 (Issue #255)**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
 
 - snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)
-- fetch 結果に対して EN-only recovery probe を実行 (現在 `extractor-empty` のみ自動判定対応、他は fail-close)
+- fetch 結果に対して recovery probe を実行 (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定)
 - probe が issue を返す → `fetchStatus: "excluded-broken"` (既知 debt 継続)
 - probe が null を返す → `fetchStatus: "excluded-recovered"` (upstream 復旧候補)
 - `source-sync-status.json` の `excludedPages` / `excludedBrokenPages` / `excludedRecoveredPages` counter に流れる
