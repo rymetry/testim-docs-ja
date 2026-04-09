@@ -292,4 +292,47 @@ describe('snapshot_update — source-side debt exclusion', () => {
     // excluded-only のみの scope でも sidebar さえ verified なら fresh
     assert.equal(result.sourceSyncStatus.freshnessState, 'fresh');
   });
+
+  // --- Finding 1: EN-only probe は JA 入力に依存しない ---
+
+  it('recovery probe は JA の有無で結果が変わらない (EN-only)', async () => {
+    // JA body は collectTargets 経由で読まれるが probe には渡らない。
+    // broken EN に対して excluded-broken が返ることだけを確認する。
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const page = result.sourceSyncStatus.pages[0];
+    assert.equal(page.fetchStatus, 'excluded-broken');
+    assert.equal(page.recoveryProbe.reason, 'extractor-empty');
+    assert.equal(page.recoveryProbe.expectedMatch, true);
+  });
+
+  it('clean EN → excluded-recovered (probe returns null)', async () => {
+    global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const page = result.sourceSyncStatus.pages[0];
+    assert.equal(page.fetchStatus, 'excluded-recovered');
+    assert.equal(page.recoveryProbe, null);
+  });
+
+  // --- Finding 2: expectedMatch + actual/expected が probe output に載る ---
+
+  it('excluded-broken probe に expectedIssueType / expectedReason / expectedMatch が載る', async () => {
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const probe = result.sourceSyncStatus.pages[0].recoveryProbe;
+    assert.equal(probe.issueType, 'snapshot-incomplete');
+    assert.equal(probe.reason, 'extractor-empty');
+    assert.equal(probe.expectedIssueType, 'snapshot-incomplete');
+    assert.equal(probe.expectedReason, 'extractor-empty');
+    assert.equal(probe.expectedMatch, true);
+  });
 });

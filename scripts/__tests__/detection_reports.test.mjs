@@ -2508,7 +2508,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
         slug: 'a',
         fetchStatus: 'excluded-broken',
         debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
       },
     ];
     assert.doesNotThrow(() => validateSourceSyncStatus(v));
@@ -2594,7 +2594,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
         slug: 'a',
         fetchStatus: 'excluded-broken',
         debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty' },
       },
     ];
     assert.throws(
@@ -2612,7 +2612,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
         slug: 'a',
         fetchStatus: 'excluded-broken',
         debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: 'yes' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: 'yes' },
       },
     ];
     assert.throws(
@@ -2666,7 +2666,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
         slug: 'a',
         fetchStatus: 'excluded-recovered',
         debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
       },
     ];
     assert.throws(
@@ -2683,7 +2683,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
       {
         slug: 'a',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
       },
     ];
     assert.throws(
@@ -2733,7 +2733,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
         slug: 'a',
         fetchStatus: 'excluded-broken',
         debtCategory: 'foo',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
       },
     ];
     assert.throws(
@@ -2837,7 +2837,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
           slug: 'testops/testops-version-control/pull-requests',
           fetchStatus: 'excluded-broken',
           debtCategory: 'source-side-debt',
-          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         },
       ],
       errors: [],
@@ -2939,7 +2939,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
           slug: 'a',
           fetchStatus: 'excluded-broken',
           debtCategory: 'source-side-debt',
-          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         },
         {
           slug: 'b',
@@ -2986,7 +2986,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
           slug: 'testops/testops-version-control/pull-requests',
           fetchStatus: 'excluded-broken',
           debtCategory: 'source-side-debt',
-          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         },
       ],
       errors: [{ slug: 'x', detail: 'HTTP 500' }],
@@ -3020,7 +3020,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
           slug: 'testops/testops-version-control/pull-requests',
           fetchStatus: 'excluded-broken',
           debtCategory: 'source-side-debt',
-          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         },
       ],
       errors: [],
@@ -3056,5 +3056,93 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
 
     // debt なし + fresh → 従来通り issue は開かない
     assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+  });
+
+  // --- Finding 2: expectedMatch が summary / issue body まで流れる ---
+
+  it('expectedMatch: true が summary markdown に「想定どおり」として出る', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100, fetchedPages: 99, notFoundPages: 0, errorPages: 0,
+        excludedPages: 1, excludedBrokenPages: 1, excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [{
+        slug: 'test/broken',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: {
+          issueType: 'snapshot-incomplete', reason: 'extractor-empty',
+          expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty',
+          expectedMatch: true,
+        },
+      }],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
+
+    assert.match(md, /想定どおり/);
+    assert.match(md, /実際: snapshot-incomplete \/ extractor-empty/);
+    assert.match(md, /期待: snapshot-incomplete \/ extractor-empty/);
+  });
+
+  it('expectedMatch: false が summary markdown に「想定と不一致」+ actual/expected 両方出る', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100, fetchedPages: 99, notFoundPages: 0, errorPages: 0,
+        excludedPages: 1, excludedBrokenPages: 1, excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [{
+        slug: 'test/drifted',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: {
+          issueType: 'snapshot-incomplete', reason: 'shallow-snapshot',
+          expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty',
+          expectedMatch: false,
+        },
+      }],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
+
+    assert.match(md, /想定と不一致/);
+    assert.match(md, /実際: snapshot-incomplete \/ shallow-snapshot/);
+    assert.match(md, /期待: snapshot-incomplete \/ extractor-empty/);
+  });
+
+  it('expectedMatch: false が issue body にも出る', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100, fetchedPages: 99, notFoundPages: 0, errorPages: 0,
+        excludedPages: 1, excludedBrokenPages: 1, excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [{
+        slug: 'test/drifted',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: {
+          issueType: 'snapshot-incomplete', reason: 'shallow-snapshot',
+          expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty',
+          expectedMatch: false,
+        },
+      }],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+
+    assert.match(report.sourceSyncHealth.body, /想定と不一致/);
+    assert.match(report.sourceSyncHealth.body, /実際: snapshot-incomplete \/ shallow-snapshot/);
+    assert.match(report.sourceSyncHealth.body, /期待: snapshot-incomplete \/ extractor-empty/);
   });
 });

@@ -162,7 +162,7 @@ describe('source-side debt pipeline integration', () => {
         slug: debtSlug,
         fetchStatus: 'excluded-broken',
         debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
       },
     ];
     return buildSourceSyncStatus({
@@ -210,8 +210,11 @@ describe('source-side debt pipeline integration', () => {
     assert.deepEqual(report.sourceSyncHealth.sourceSideDebt.brokenDetails, [
       {
         slug: debtSlug,
-        issueType: 'snapshot-incomplete',
-        reason: 'extractor-empty',
+        actualIssueType: 'snapshot-incomplete',
+        actualReason: 'extractor-empty',
+        expectedIssueType: 'snapshot-incomplete',
+        expectedReason: 'extractor-empty',
+        expectedMatch: true,
       },
     ]);
     // P1 修正: fresh でも debt があれば managed issue に可視化する
@@ -256,7 +259,7 @@ describe('source-side debt pipeline integration', () => {
           slug: debtSlug,
           fetchStatus: 'excluded-broken',
           debtCategory: 'source-side-debt',
-          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         },
       ],
       sidebarResult: baseSidebarResult,
@@ -274,7 +277,7 @@ describe('source-side debt pipeline integration', () => {
         slug: debtSlug,
         fetchStatus: 'excluded-broken',
         debtCategory: 'source-side-debt',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
       },
     ];
     assert.equal(computeFreshnessState(pages, true), 'partial');

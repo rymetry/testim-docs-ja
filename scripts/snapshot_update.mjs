@@ -34,8 +34,7 @@ import { isDirectRun } from './lib/cli.mjs';
 import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
 import { isSourceSideDebt, getExclusion } from './lib/source_sync_exclusions.mjs';
 import { extractSegmentsFromHtml } from './lib/source_parity_segments_en.mjs';
-import { extractSegmentsFromMarkdown } from './lib/source_parity_segments_ja.mjs';
-import { detectSourceUsability } from './lib/source_parity_source_usability.mjs';
+import { preprocessEnHtml } from './lib/turndown.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -64,11 +63,7 @@ function parseArgs(argv = process.argv.slice(2)) {
 }
 
 /**
- * Build list of { slug, sourceUrl, relativePath, jaBody } from doc files.
- *
- * `jaBody` is included so the recovery-probe path (for source-side debt
- * pages) can diff the raw EN HTML against the JA body without re-reading
- * the same file. Normal pages ignore it.
+ * Build list of { slug, sourceUrl, relativePath } from doc files.
  */
 function collectTargets({ section, slug }) {
   const files = findMdFiles(DOCS_DIR);
@@ -93,7 +88,6 @@ function collectTargets({ section, slug }) {
       slug: fileSlug,
       sourceUrl: data.sourceUrl,
       relativePath: doc.relativePath,
-      jaBody: doc.body,
     });
   }
 
@@ -101,76 +95,123 @@ function collectTargets({ section, slug }) {
 }
 
 /**
- * Run the source-usability detector against freshly fetched HTML for a
- * known source-side debt page. Returns:
- *   - { fetchStatus: 'excluded-broken', recoveryProbe: { issueType, reason, expectedMatch } }
- *     if the detector still flags the page as unusable (debt persists).
- *   - { fetchStatus: 'excluded-recovered', recoveryProbe: null }
- *     if the detector returns null (upstream likely recovered — candidate
- *     for registry removal; decided by a human).
- *
- * `content` is the raw `#mc-main-content` inner HTML extracted from the
- * live page. When fetch itself failed, `content` will be null and we still
- * return `excluded-broken` with a synthetic probe so the debt counter is
- * not silently reset by a transient network blip.
- *
- * `exclusionEntry` is the registry metadata for this slug — used to
- * compare `expectedIssueType` / `expectedReason` against the actual
- * detector output. The comparison result is emitted as `expectedMatch`
- * so that humans reviewing the status can spot shape drift (e.g.
- * upstream changed from `extractor-empty` to `shallow-snapshot`).
+ * Count occurrences of a global regex pattern in a string.
+ * @param {string} str
+ * @param {RegExp} pattern  g flag required
+ * @returns {number}
  */
-function runRecoveryProbe({ content, jaBody, exclusionEntry }) {
+function countMatches(str, pattern) {
+  let n = 0;
+  for (const _ of str.matchAll(pattern)) n++;
+  return n;
+}
+
+// Thresholds for shallow-snapshot EN-only check (aligned with
+// source_parity_source_usability.mjs but used independently).
+const SHALLOW_MAX_EN_BODY = 2;
+const SHALLOW_MAX_EN_RAW_HTML = 800;
+
+/**
+ * EN-only, registry-aware recovery probe for a known source-side debt page.
+ *
+ * Checks whether the page is still broken for the **specific reason**
+ * recorded in the registry (`exclusionEntry.expectedReason`). This is a
+ * narrow / fail-close probe — it does NOT run the full `detectSourceUsability`
+ * pipeline and has zero dependency on JA body / segments / parse state.
+ *
+ * Unsupported `expectedReason` values are treated as excluded-broken with
+ * `expectedMatch: false` so that new registry reasons don't silently fall
+ * through to recovered.
+ *
+ * @param {string} rawEnHtml   inner HTML of `#mc-main-content`
+ * @param {object} exclusionEntry   registry entry (from `getExclusion`)
+ * @returns {{ issueType: string, reason: string, expectedMatch: boolean } | null}
+ *          object → still broken, null → recovered
+ */
+function probeRecoveryEnOnly(rawEnHtml, exclusionEntry) {
+  // Segment extraction — needed for extractor-empty / shallow checks
+  let enSegments = [];
+  let extractError = null;
+  try {
+    enSegments = extractSegmentsFromHtml(rawEnHtml);
+  } catch (e) {
+    extractError = e;
+  }
+
+  const expType = exclusionEntry.expectedIssueType;
+  const expReason = exclusionEntry.expectedReason;
+
+  function broken(reason, match) {
+    return { issueType: expType, reason, expectedIssueType: expType, expectedReason: expReason, expectedMatch: match };
+  }
+
+  // extractError → fail-close: broken with probe-specific reason
+  if (extractError) {
+    return broken('extract-error', false);
+  }
+
+  const enBodyCount = enSegments.filter((s) => s.segmentKind !== 'heading').length;
+
+  switch (expReason) {
+    case 'extractor-empty':
+      if (enBodyCount === 0) return broken('extractor-empty', true);
+      return null; // recovered
+
+    case 'escaped-details-residue': {
+      const preprocessed = preprocessEnHtml(rawEnHtml);
+      const openCount = countMatches(preprocessed, /&lt;details(\b[^>]*)?&gt;/gi);
+      const closeCount = countMatches(preprocessed, /&lt;\/details&gt;/gi);
+      if (openCount !== closeCount) return broken('escaped-details-residue', true);
+      return null; // recovered
+    }
+
+    case 'shallow-snapshot':
+      if (enBodyCount <= SHALLOW_MAX_EN_BODY && rawEnHtml.length <= SHALLOW_MAX_EN_RAW_HTML) {
+        return broken('shallow-snapshot', true);
+      }
+      return null; // recovered
+
+    default:
+      // Unsupported reason → fail-close: broken + expectedMatch: false
+      return broken(expReason, false);
+  }
+}
+
+/**
+ * Run the EN-only recovery probe for a known source-side debt page.
+ *
+ * `content` is the raw `#mc-main-content` inner HTML from the live page.
+ * When fetch failed (`content` is null), returns `excluded-broken` with a
+ * synthetic probe so the debt counter is not reset by a network blip.
+ *
+ * JA body / segments / parse state には一切依存しない。translation-side
+ * state と切り離した EN-only の fail-close 判定。
+ *
+ * @param {{ content: string|null, exclusionEntry: object }} opts
+ * @returns {{ fetchStatus: string, recoveryProbe: object|null }}
+ */
+function runRecoveryProbe({ content, exclusionEntry }) {
   if (!content) {
     return {
       fetchStatus: 'excluded-broken',
       recoveryProbe: {
-        issueType: 'snapshot-incomplete',
+        issueType: exclusionEntry.expectedIssueType ?? 'snapshot-incomplete',
         reason: 'fetch-failed',
+        expectedIssueType: exclusionEntry.expectedIssueType,
+        expectedReason: exclusionEntry.expectedReason,
         expectedMatch: false,
       },
     };
   }
 
-  let enSegments = [];
-  let jaSegments = [];
-  let extractError = null;
-  try {
-    enSegments = extractSegmentsFromHtml(content);
-  } catch (e) {
-    extractError = e;
-  }
-  try {
-    jaSegments = extractSegmentsFromMarkdown(jaBody || '');
-  } catch {
-    jaSegments = [];
-  }
-
-  const issue = detectSourceUsability({
-    rawEnHtml: content,
-    enSegments,
-    jaSegments,
-    extractError,
-  });
-
-  if (!issue) {
+  const probe = probeRecoveryEnOnly(content, exclusionEntry);
+  if (!probe) {
     return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
   }
 
-  const actualType = issue.type;
-  const actualReason = issue.usabilitySignals?.reason ?? 'unknown';
-  const expectedMatch =
-    exclusionEntry != null &&
-    actualType === exclusionEntry.expectedIssueType &&
-    actualReason === exclusionEntry.expectedReason;
-
   return {
     fetchStatus: 'excluded-broken',
-    recoveryProbe: {
-      issueType: actualType,
-      reason: actualReason,
-      expectedMatch,
-    },
+    recoveryProbe: probe,
   };
 }
 
@@ -335,7 +376,7 @@ export async function main(argv) {
         // recovery probe を実行し、結果は excluded-broken / excluded-recovered
         // として pageResults に載せる。404 / HTTP エラーも debt 側に吸収し、
         // 一時的な network 障害で counter が broken にフリップしないようにする。
-        const probe = runRecoveryProbe({ content, jaBody: target.jaBody, exclusionEntry: getExclusion(target.slug) });
+        const probe = runRecoveryProbe({ content, exclusionEntry: getExclusion(target.slug) });
         const label = probe.fetchStatus === 'excluded-recovered' ? 'RECOV' : 'DEBT ';
         console.log(`  ${label} ${target.slug} — source-side debt (snapshot not written)`);
         excluded += 1;
@@ -372,7 +413,7 @@ export async function main(argv) {
     } catch (error) {
       if (excludedSlug) {
         // fetch が throw しても excluded 経路は debt にとどめる
-        const probe = runRecoveryProbe({ content: null, jaBody: target.jaBody, exclusionEntry: getExclusion(target.slug) });
+        const probe = runRecoveryProbe({ content: null, exclusionEntry: getExclusion(target.slug) });
         console.log(`  DEBT ${target.slug} — source-side debt (fetch failed: ${error.message})`);
         excluded += 1;
         pageResults.push({

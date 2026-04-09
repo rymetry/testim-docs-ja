@@ -210,6 +210,16 @@ export function validateSourceSyncStatus(parsed) {
             `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.reason must be a string`,
           );
         }
+        if (typeof probe.expectedIssueType !== 'string') {
+          throw new Error(
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.expectedIssueType must be a string`,
+          );
+        }
+        if (typeof probe.expectedReason !== 'string') {
+          throw new Error(
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.expectedReason must be a string`,
+          );
+        }
         if (typeof probe.expectedMatch !== 'boolean') {
           throw new Error(
             `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.expectedMatch must be a boolean`,
@@ -315,7 +325,14 @@ function formatList(values) {
  *   excludedRecoveredPages: number,
  *   brokenSlugs: string[],
  *   recoveredSlugs: string[],
- *   brokenDetails: { slug: string, issueType: string|null, reason: string|null }[],
+ *   brokenDetails: {
+ *     slug: string,
+ *     actualIssueType: string|null,
+ *     actualReason: string|null,
+ *     expectedIssueType: string|null,
+ *     expectedReason: string|null,
+ *     expectedMatch: boolean|null,
+ *   }[],
  * }}
  */
 function buildSourceSideDebtSummary(sourceSync) {
@@ -332,11 +349,17 @@ function buildSourceSideDebtSummary(sourceSync) {
     brokenSlugs: brokenPages.map((p) => p.slug).sort(),
     recoveredSlugs: recoveredPages.map((p) => p.slug).sort(),
     brokenDetails: brokenPages
-      .map((p) => ({
-        slug: p.slug,
-        issueType: p.recoveryProbe?.issueType ?? null,
-        reason: p.recoveryProbe?.reason ?? null,
-      }))
+      .map((p) => {
+        const probe = p.recoveryProbe;
+        return {
+          slug: p.slug,
+          actualIssueType: probe?.issueType ?? null,
+          actualReason: probe?.reason ?? null,
+          expectedIssueType: probe?.expectedIssueType ?? null,
+          expectedReason: probe?.expectedReason ?? null,
+          expectedMatch: probe?.expectedMatch ?? null,
+        };
+      })
       .sort((left, right) => left.slug.localeCompare(right.slug)),
   };
 }
@@ -373,12 +396,21 @@ function renderSourceSideDebtSubsection(debt, _pages) {
   if (debt.excludedBrokenPages > 0) {
     lines.push('### 未復旧', '');
     for (const entry of debt.brokenDetails) {
-      const detail = entry.issueType && entry.reason
-        ? `${entry.issueType} / ${entry.reason}`
-        : entry.issueType || entry.reason || '判定なし';
+      const actual = entry.actualIssueType && entry.actualReason
+        ? `${entry.actualIssueType} / ${entry.actualReason}`
+        : entry.actualIssueType || entry.actualReason || '判定なし';
+      const expected = entry.expectedIssueType && entry.expectedReason
+        ? `${entry.expectedIssueType} / ${entry.expectedReason}`
+        : '不明';
+      const matchLabel = entry.expectedMatch === true
+        ? '想定どおり'
+        : entry.expectedMatch === false
+          ? '想定と不一致'
+          : '不明';
       lines.push(`- \`${entry.slug}\``);
-      lines.push(`  - 状態: excluded-broken`);
-      lines.push(`  - 判定: ${detail}`);
+      lines.push(`  - 実際: ${actual}`);
+      lines.push(`  - 期待: ${expected}`);
+      lines.push(`  - 期待一致: ${matchLabel}`);
     }
     lines.push('');
   }

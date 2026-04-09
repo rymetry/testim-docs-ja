@@ -428,7 +428,7 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
       {
         slug: 'testops/testops-version-control/pull-requests',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         debtCategory: 'source-side-debt',
       },
     ];
@@ -448,7 +448,7 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
       {
         slug: 'x',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         debtCategory: 'source-side-debt',
       },
       {
@@ -475,7 +475,7 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
       {
         slug: 'b',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         debtCategory: 'source-side-debt',
       },
     ];
@@ -498,7 +498,7 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
       {
         slug: 'testops/testops-version-control/pull-requests',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         debtCategory: 'source-side-debt',
       },
     ];
@@ -516,6 +516,9 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
     assert.deepEqual(page.recoveryProbe, {
       issueType: 'snapshot-incomplete',
       reason: 'extractor-empty',
+      expectedIssueType: 'snapshot-incomplete',
+      expectedReason: 'extractor-empty',
+      expectedMatch: true,
     });
     assert.equal(page.debtCategory, 'source-side-debt');
   });
@@ -527,7 +530,7 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
       {
         slug: 'testops/testops-version-control/pull-requests',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         debtCategory: 'source-side-debt',
       },
     ];
@@ -545,7 +548,7 @@ describe('buildSourceSyncStatus — source-side debt counters', () => {
       {
         slug: 'a',
         fetchStatus: 'excluded-broken',
-        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
         debtCategory: 'source-side-debt',
       },
     ];
