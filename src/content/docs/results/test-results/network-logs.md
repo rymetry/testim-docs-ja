@@ -125,7 +125,15 @@ keywords:
 
 ![ファイル名とドメインでのフィルター例](/images/results/network-logs/e21c0d7-Testim_074a.png)
 
-*File*列と*Domain*列のテキストに基づいて、結果が即座にフィルタリングされます。
+結果は次の列のテキストに基づいて即座にフィルタリングされます:
+
+*File*
+
+および
+
+*Domain*
+
+列。
 
 **リクエストタイプでフィルタリングするには:**
 
@@ -262,11 +270,9 @@ Headers ウィンドウの 3 つのセクションはそれぞれ、各セクシ
  </tbody>
 </table>
 
-:::note
 この機能は Chrome ブラウザでのみサポートされています。
 プライバシーとセキュリティ上の理由から、HAR ファイルにはレスポンスボディは含まれません。
-完全な HAR を作成してダウンロードするには、[モックネットワーク](/docs/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file#カスタム-har-ファイルのアップロード)を使用してください。
-:::
+完全な HAR を作成してダウンロードするには、[モックネットワーク](/docs/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file#カスタム-har-ファイルのアップロード) を使用してください。
 
 ## HAR ファイルのダウンロード
 
