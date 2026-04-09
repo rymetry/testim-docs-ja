@@ -220,6 +220,8 @@ describe('snapshot_update — source-side debt exclusion', () => {
     assert.ok(page.recoveryProbe);
     assert.equal(page.recoveryProbe.issueType, 'snapshot-incomplete');
     assert.equal(page.recoveryProbe.reason, 'extractor-empty');
+    // registry の expected と一致するので true
+    assert.equal(page.recoveryProbe.expectedMatch, true);
 
     // excluded は top-level errors に積まない
     assert.equal(result.sourceSyncStatus.errors.length, 0);

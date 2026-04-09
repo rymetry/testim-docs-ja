@@ -2696,10 +2696,67 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
 
     assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
-    // Issue body is bilingual — heading can stay English for now (Phase 4b
-    // migrates the whole markdown), but the debt subsection is Japanese
     assert.match(report.sourceSyncHealth.body, /ソース側 debt/);
     assert.match(report.sourceSyncHealth.body, /testops\/testops-version-control\/pull-requests/);
     assert.match(report.sourceSyncHealth.body, /未復旧/);
+  });
+
+  it('[P1] debt-only run (fresh) でも sourceSyncHealth issue が open する', () => {
+    // P1 フィードバック: freshness=fresh でも excludedPages > 0 なら
+    // managed issue に debt が載らないと運用契約が閉じない
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 99,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 1,
+        excludedBrokenPages: 1,
+        excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [
+        {
+          slug: 'testops/testops-version-control/pull-requests',
+          fetchStatus: 'excluded-broken',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        },
+      ],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+
+    // fresh だが debt が残っているので issue は open される
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    // body にソース側 debt セクションが含まれる
+    assert.match(report.sourceSyncHealth.body, /ソース側 debt/);
+    assert.match(report.sourceSyncHealth.body, /testops\/testops-version-control\/pull-requests/);
+    assert.match(report.sourceSyncHealth.body, /未復旧: 1/);
+  });
+
+  it('[P1] debt なし + fresh なら sourceSyncHealth issue は開かない (従来動作)', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 100,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 0,
+        excludedBrokenPages: 0,
+        excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+
+    // debt なし + fresh → 従来通り issue は開かない
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
   });
 });

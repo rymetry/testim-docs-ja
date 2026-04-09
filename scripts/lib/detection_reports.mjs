@@ -920,20 +920,23 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   // legacy / no-linkage case and is intentionally NOT escalated.
   const linkageBlocking =
     linkageState !== null && linkageState !== 'linked' && linkageState !== 'missing';
-  const syncShouldOpen =
-    freshnessState === 'broken' || freshnessState === 'partial' || linkageBlocking;
   const syncSummary = sourceSync.summary ?? {};
   const syncErrors = sourceSync.errors ?? [];
 
   // Issue #255 — source-side debt counters and slug lists. These come from
   // source-sync-status.json `summary.excluded*Pages` and `pages[]`.
+  // Must be computed before syncShouldOpen because debt triggers issue open.
   const sourceSideDebtSummary = buildSourceSideDebtSummary(sourceSync);
+  const hasSourceSideDebt = sourceSideDebtSummary.excludedPages > 0;
+  const syncShouldOpen =
+    freshnessState === 'broken' || freshnessState === 'partial' || linkageBlocking ||
+    hasSourceSideDebt;
 
   const sourceSyncBody = syncShouldOpen
     ? [
         '## サマリー',
         '',
-        `- freshness state: **${freshnessState ?? 'unknown'}**`,
+        `- 鮮度状態: **${freshnessState ?? 'unknown'}**`,
         `- linkage state: **${linkageState ?? 'unknown'}**`,
         `- 対象ページ: ${syncSummary.targetPages ?? 0}`,
         `- 取得済みページ: ${syncSummary.fetchedPages ?? 0}`,
@@ -1105,7 +1108,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## ソース同期状態',
     '',
-    `- freshness state: ${syncState}`,
+    `- 鮮度状態: ${syncState}`,
     `- 取得: ${syncSummary.fetchedPages ?? 0} / ${syncSummary.targetPages ?? 0} ページ`,
     `- エラー: ${syncSummary.errorPages ?? 0}`,
     `- サイドバー検証: ${syncSummary.sidebarVerified ?? false}`,

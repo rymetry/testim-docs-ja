@@ -32,7 +32,7 @@ import {
 import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
 import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
-import { isSourceSideDebt } from './lib/source_sync_exclusions.mjs';
+import { isSourceSideDebt, getExclusion } from './lib/source_sync_exclusions.mjs';
 import { extractSegmentsFromHtml } from './lib/source_parity_segments_en.mjs';
 import { extractSegmentsFromMarkdown } from './lib/source_parity_segments_ja.mjs';
 import { detectSourceUsability } from './lib/source_parity_source_usability.mjs';
@@ -103,7 +103,7 @@ function collectTargets({ section, slug }) {
 /**
  * Run the source-usability detector against freshly fetched HTML for a
  * known source-side debt page. Returns:
- *   - { fetchStatus: 'excluded-broken', recoveryProbe: { issueType, reason } }
+ *   - { fetchStatus: 'excluded-broken', recoveryProbe: { issueType, reason, expectedMatch } }
  *     if the detector still flags the page as unusable (debt persists).
  *   - { fetchStatus: 'excluded-recovered', recoveryProbe: null }
  *     if the detector returns null (upstream likely recovered — candidate
@@ -113,14 +113,22 @@ function collectTargets({ section, slug }) {
  * live page. When fetch itself failed, `content` will be null and we still
  * return `excluded-broken` with a synthetic probe so the debt counter is
  * not silently reset by a transient network blip.
+ *
+ * `exclusionEntry` is the registry metadata for this slug — used to
+ * compare `expectedIssueType` / `expectedReason` against the actual
+ * detector output. The comparison result is emitted as `expectedMatch`
+ * so that humans reviewing the status can spot shape drift (e.g.
+ * upstream changed from `extractor-empty` to `shallow-snapshot`).
  */
-function runRecoveryProbe({ content, jaBody }) {
+function runRecoveryProbe({ content, jaBody, exclusionEntry }) {
   if (!content) {
-    // Fetch failed or extractor found no mc-main-content. Treat as still
-    // broken — never flip to recovered on a missing payload.
     return {
       fetchStatus: 'excluded-broken',
-      recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'fetch-failed' },
+      recoveryProbe: {
+        issueType: 'snapshot-incomplete',
+        reason: 'fetch-failed',
+        expectedMatch: false,
+      },
     };
   }
 
@@ -149,11 +157,19 @@ function runRecoveryProbe({ content, jaBody }) {
     return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
   }
 
+  const actualType = issue.type;
+  const actualReason = issue.usabilitySignals?.reason ?? 'unknown';
+  const expectedMatch =
+    exclusionEntry != null &&
+    actualType === exclusionEntry.expectedIssueType &&
+    actualReason === exclusionEntry.expectedReason;
+
   return {
     fetchStatus: 'excluded-broken',
     recoveryProbe: {
-      issueType: issue.type,
-      reason: issue.usabilitySignals?.reason ?? 'unknown',
+      issueType: actualType,
+      reason: actualReason,
+      expectedMatch,
     },
   };
 }
@@ -319,7 +335,7 @@ export async function main(argv) {
         // recovery probe を実行し、結果は excluded-broken / excluded-recovered
         // として pageResults に載せる。404 / HTTP エラーも debt 側に吸収し、
         // 一時的な network 障害で counter が broken にフリップしないようにする。
-        const probe = runRecoveryProbe({ content, jaBody: target.jaBody });
+        const probe = runRecoveryProbe({ content, jaBody: target.jaBody, exclusionEntry: getExclusion(target.slug) });
         const label = probe.fetchStatus === 'excluded-recovered' ? 'RECOV' : 'DEBT ';
         console.log(`  ${label} ${target.slug} — source-side debt (snapshot not written)`);
         excluded += 1;
@@ -356,7 +372,7 @@ export async function main(argv) {
     } catch (error) {
       if (excludedSlug) {
         // fetch が throw しても excluded 経路は debt にとどめる
-        const probe = runRecoveryProbe({ content: null, jaBody: target.jaBody });
+        const probe = runRecoveryProbe({ content: null, jaBody: target.jaBody, exclusionEntry: getExclusion(target.slug) });
         console.log(`  DEBT ${target.slug} — source-side debt (fetch failed: ${error.message})`);
         excluded += 1;
         pageResults.push({

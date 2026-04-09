@@ -561,7 +561,9 @@ post-merge PR に対する完全解消レビューで以下の gap が判明し�
    / `structureMismatchIssues` / `snapshotUnusableIssues` の 0 + `baselinedByType`
    の空のみを pin していたが、signal-only drift (paragraph-count-mismatch /
    bullet-count-mismatch) も 0 件であることを追加 pin。`f.issues.length === 0`
-   を全 8 slug に課すことで、原文構造を保ったまま翻訳する契約を明示化した。
+   を代表 slug に課すことで、原文構造を保ったまま翻訳する契約を明示化した。
+   (Issue #255 により pull-requests は representative から除外され 7 slug に縮小。
+   debt ページの契約は `source_parity_source_side_debt.test.mjs` に分離。)
 
 8. **WRITING_GUIDE 更新** — (a) リスト節に「step 配下 nested list を圧縮しない」
    (b) その他節に「count 系 signal は補助で、原文構造を崩してよい意味では

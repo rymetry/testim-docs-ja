@@ -214,8 +214,8 @@ describe('source-side debt pipeline integration', () => {
         reason: 'extractor-empty',
       },
     ]);
-    // fresh なので sourceSyncHealth issue は open しない
-    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+    // P1 修正: fresh でも debt があれば managed issue に可視化する
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
   });
 
   it('summary markdown emits the 日本語 debt section with the slug', () => {
