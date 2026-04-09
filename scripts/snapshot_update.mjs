@@ -320,7 +320,7 @@ export async function main(argv) {
   const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
   if (args.slug && !resolvedSlug) {
     console.error(`❌ Unknown slug: "${args.slug}". No matching document found.`);
-    return { fetched: 0, notFound: 0, errors: 1, skipped: 0 };
+    return { fetched: 0, notFound: 0, errors: 1, excluded: 0, skipped: 0, sidebarVerified: false, sourceSyncStatus: null };
   }
 
   const targets = collectTargets({ section: args.section, resolvedSlug });
@@ -331,7 +331,7 @@ export async function main(argv) {
 
   if (targets.length === 0) {
     console.log('No targets found.');
-    return { fetched: 0, notFound: 0, errors: args.slug ? 1 : 0, skipped: 0 };
+    return { fetched: 0, notFound: 0, errors: args.slug ? 1 : 0, excluded: 0, skipped: 0, sidebarVerified: false, sourceSyncStatus: null };
   }
 
   // 出力先ディレクトリを先に用意する。
