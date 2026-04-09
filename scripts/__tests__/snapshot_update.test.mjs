@@ -354,18 +354,26 @@ describe('probeRecoveryEnOnly — fail-close branches', () => {
   };
 
   it('extractError → excluded-broken + reason=extract-error + expectedMatch=false', () => {
-    // extractSegmentsFromHtml が throw する HTML を渡す。
-    // 不正な HTML でも extractMainContent は通るが、segmenter が落ちる
-    // ケースを模擬するため、空文字列を渡す (extractor は空入力で throw)。
-    // ただし probeRecoveryEnOnly は rawEnHtml (mc-main-content の innerHTML)
-    // を受け取るので、segmenter が throw する合成 payload を使う。
-    //
-    // extractSegmentsFromHtml は valid HTML なら throw しないので、
-    // 意図的に throw させるのは難しい。代わりに extractor-empty の
-    // entry で body=0 のページを渡し、expected path を確認する。
-    //
-    // ここでは unsupported reason のテストに焦点を当てる。
-    // extract-error は別途確認。
+    const entry = {
+      ...baseEntry,
+      expectedIssueType: 'snapshot-incomplete',
+      expectedReason: 'extractor-empty',
+    };
+    const throwingExtractor = () => {
+      throw new Error('simulated extractor failure');
+    };
+
+    const result = probeRecoveryEnOnly(
+      '<h1>Title</h1><p>Body</p>',
+      entry,
+      { extractFn: throwingExtractor },
+    );
+
+    assert.ok(result, 'extractError must not return null (recovered)');
+    assert.equal(result.reason, 'extract-error');
+    assert.equal(result.expectedMatch, false);
+    assert.equal(result.expectedIssueType, 'snapshot-incomplete');
+    assert.equal(result.expectedReason, 'extractor-empty');
   });
 
   it('unsupported expectedReason は excluded-broken + unsupported-recovery-probe + expectedMatch=false', () => {

@@ -110,12 +110,13 @@ function collectTargets({ section, slug }) {
  * @returns {{ issueType: string, reason: string, expectedMatch: boolean } | null}
  *          object → still broken, null → recovered
  */
-function probeRecoveryEnOnly(rawEnHtml, exclusionEntry) {
-  // Segment extraction — needed for extractor-empty / shallow checks
+function probeRecoveryEnOnly(rawEnHtml, exclusionEntry, { extractFn = extractSegmentsFromHtml } = {}) {
+  // Segment extraction — needed for extractor-empty check.
+  // extractFn is injectable for testing the extract-error branch.
   let enSegments = [];
   let extractError = null;
   try {
-    enSegments = extractSegmentsFromHtml(rawEnHtml);
+    enSegments = extractFn(rawEnHtml);
   } catch (e) {
     extractError = e;
   }
