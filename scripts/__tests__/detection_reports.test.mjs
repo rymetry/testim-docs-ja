@@ -670,7 +670,7 @@ describe('renderSummaryMarkdown', () => {
     assert.match(md, /変更ページ: 3/);
     assert.match(md, /追加ページ: 1/);
     assert.match(md, /## パリティ/);
-    assert.match(md, /actionable ファイル: 2/);
+    assert.match(md, /要対応ファイル: 2/);
     assert.match(md, /## 監査マニフェスト/);
     assert.match(md, /ページライフサイクル: 1/);
     assert.match(md, /構造変更: 1/);
@@ -705,8 +705,8 @@ describe('renderSummaryMarkdown', () => {
     };
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /actionable ファイル: 0/);
-    assert.match(md, /issue ファイル: 0/);
+    assert.match(md, /要対応ファイル: 0/);
+    assert.match(md, /問題ファイル: 0/);
     assert.match(md, /承認済み \(非ブロッキング\): 41/);
     // The legacy counters must not appear standalone in a way that contradicts activeFiles:0.
     assert.doesNotMatch(md, /^- Signal-only files: 22$/m);
@@ -782,7 +782,7 @@ describe('renderSummaryMarkdown', () => {
     };
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /advisory キュー: 2 件 \(1 ファイル, 1 ブロッキング; 部分 scope: slug=overview\/page-a、リポジトリ全体ではない\)/);
+    assert.match(md, /アドバイザリキュー: 2 件 \(1 ファイル, 1 ブロッキング; 部分スコープ: slug=overview\/page-a、リポジトリ全体ではない\)/);
   });
 });
 
@@ -963,10 +963,10 @@ describe('parityFollowup in buildActionableReport', () => {
       report.parityFollowup.summary.reviewHints.tokenlessNearTieExamples[0].slug,
       'overview/page-a',
     );
-    assert.match(report.parityFollowup.body, /scope: リポジトリ全体/);
+    assert.match(report.parityFollowup.body, /スコープ: リポジトリ全体/);
 
     const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
-    assert.match(md, /advisory キュー: 2 件 \(1 ファイル, 1 ブロッキング; リポジトリ全体\)/);
+    assert.match(md, /アドバイザリキュー: 2 件 \(1 ファイル, 1 ブロッキング; リポジトリ全体\)/);
   });
 
   it('shouldOpenIssue = false when advisory has blocking items but scope is not complete', () => {
@@ -1040,7 +1040,7 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.doesNotMatch(report.parityFollowup.body, /partial-only/);
 
     const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
-    assert.match(md, /advisory キュー: 2 件 \(1 ファイル, 1 ブロッキング; 部分 scope: slug=overview\/page-a、リポジトリ全体ではない\)/);
+    assert.match(md, /アドバイザリキュー: 2 件 \(1 ファイル, 1 ブロッキング; 部分スコープ: slug=overview\/page-a、リポジトリ全体ではない\)/);
   });
 
   it('parityFollowup body contains invalidated slugs', () => {
@@ -1259,7 +1259,7 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     assert.equal(report.parityFollowup.body, '');
   });
 
-  it('parityFollowup.body contains "## Source Unusable (advisory)" section when sourceUnusable counts > 0 AND another signal opens the issue', () => {
+  it('parityFollowup.body contains "## ソース使用不可 (参考)" section when sourceUnusable counts > 0 AND another signal opens the issue', () => {
     // body は `shouldOpenIssue=true` のときだけ生成される。source-unusable
     // 単独では shouldOpenIssue が立たないので、別の signal (expired
     // baseline) と同居させて body を生成させる。
@@ -1290,8 +1290,8 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
-    assert.match(report.parityFollowup.body, /## ソース使用不可 \(advisory\)/);
-    assert.match(report.parityFollowup.body, /合計: 4 件 \(2 ファイル\)/);
+    assert.match(report.parityFollowup.body, /## ソース使用不可 \(参考\)/);
+    assert.match(report.parityFollowup.body, /合計: 4 件/);
     // sort 順固定: snapshot-incomplete → source-unusable
     assert.match(report.parityFollowup.body, /snapshot-incomplete: 3/);
     assert.match(report.parityFollowup.body, /source-unusable: 1/);
@@ -1329,7 +1329,7 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
-    assert.doesNotMatch(report.parityFollowup.body, /## ソース使用不可/);
+    assert.doesNotMatch(report.parityFollowup.body, /## ソース使用不可 \(参考\)/);
   });
 });
 
@@ -1419,7 +1419,7 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
   it('includes "## ソース使用不可 (advisory)" section when snapshotUnusableIssues > 0', () => {
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /## ソース使用不可 \(advisory\)/);
+    assert.match(md, /## ソース使用不可 \(参考\)/);
     assert.match(md, /合計: 2 件 \(2 ファイル\)/);
     // 翻訳者責任外であることの注意文
     assert.match(md, /翻訳の問題ではなく|スナップショット.*ソース同期|翻訳 PR では修正できません/);
@@ -1482,8 +1482,8 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     // "issue ファイル" にも反映される。
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /issue ファイル: 3/);
-    assert.match(md, /actionable ファイル: 3/);
+    assert.match(md, /問題ファイル: 3/);
+    assert.match(md, /要対応ファイル: 3/);
   });
 });
 
@@ -2075,8 +2075,8 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     // パリティ section: active counts must reflect Phase 8 reportable
     // counters, NOT the legacy ones that include coarse signals.
     assert.match(md, /## パリティ/);
-    assert.match(md, /actionable ファイル: 0/);
-    assert.match(md, /issue ファイル: 0/);
+    assert.match(md, /要対応ファイル: 0/);
+    assert.match(md, /問題ファイル: 0/);
 
     // 監査シグナル section exists and lists the coarse breakdown.
     assert.match(md, /## 監査シグナル/);

@@ -21,7 +21,7 @@ const PARITY_ISSUE_TITLE =
 const SOURCE_SYNC_ISSUE_TITLE =
   '⚠️ ソース同期: 取得の劣化またはソース原文の既知問題を検知';
 const PARITY_FOLLOWUP_ISSUE_TITLE =
-  '🗂️ パリティフォローアップ: baseline 負債と advisory キュー';
+  '🗂️ パリティフォローアップ: ベースライン負債とアドバイザリキュー';
 const DOCS_PREFIX = path.join('src', 'content', 'docs') + path.sep;
 
 /**
@@ -642,20 +642,20 @@ function buildTokenlessNearTieExamples(advisoryQueue, maxEntries) {
 }
 
 function formatAdvisoryQueueScope(scope) {
-  if (!scope || typeof scope !== 'object') return 'scope 不明';
+  if (!scope || typeof scope !== 'object') return 'スコープ不明';
   if (scope.isComplete === true) return 'リポジトリ全体';
 
   const slug = scope.filters?.slug ?? null;
   if (scope.type === 'slug' && slug) {
-    return `部分 scope: slug=${slug}、リポジトリ全体ではない`;
+    return `部分スコープ: slug=${slug}、リポジトリ全体ではない`;
   }
 
   const section = scope.filters?.section ?? null;
   if (scope.type === 'section' && section) {
-    return `部分 scope: section=${section}、リポジトリ全体ではない`;
+    return `部分スコープ: section=${section}、リポジトリ全体ではない`;
   }
 
-  return '部分 scope、リポジトリ全体ではない';
+  return '部分スコープ、リポジトリ全体ではない';
 }
 
 function buildParityFollowupBody({
@@ -673,18 +673,18 @@ function buildParityFollowupBody({
   const lines = [
     '## サマリー',
     '',
-    `- チェック日時: ${summary.checkedAt ?? 'unknown'}`,
-    `- baseline 済 issue: ${summary.baselinedIssues ?? 0} 件 (${summary.baselinedFiles ?? 0} ファイル)`,
-    `- 期限切れ baseline: ${summary.expiredBaselineEntries ?? 0}`,
+    `- チェック日時: ${summary.checkedAt ?? '不明'}`,
+    `- ベースライン済み: ${summary.baselinedIssues ?? 0} 件 (${summary.baselinedFiles ?? 0} ファイル)`,
+    `- 期限切れベースライン: ${summary.expiredBaselineEntries ?? 0}`,
     `- 30 日以内期限切れ予定: ${summary.expiringBaselineEntries30d ?? 0}`,
-    `- 無効化された baseline slug: ${baselineInvalidatedSlugs.length}`,
+    `- 無効化されたベースライン slug: ${baselineInvalidatedSlugs.length}`,
     '',
   ];
 
   if (includeAdvisoryInBody) {
     lines.push(
-      `- advisory キュー: ${advisoryQueueIssues} 件 (${advisoryQueueFiles} ファイル)`,
-      `  - scope: ${formatAdvisoryQueueScope(advisoryQueueScope)}`,
+      `- アドバイザリキュー: ${advisoryQueueIssues} 件 (${advisoryQueueFiles} ファイル)`,
+      `  - スコープ: ${formatAdvisoryQueueScope(advisoryQueueScope)}`,
       `  - ブロッキング: ${blockingAdvisoryItems.length}`,
       '',
     );
@@ -697,7 +697,7 @@ function buildParityFollowupBody({
   // 省略する。
   if (sourceUnusable && sourceUnusable.snapshotUnusableIssues > 0) {
     lines.push(
-      '## ソース使用不可 (advisory)',
+      '## ソース使用不可 (参考)',
       '',
       `- 合計: ${sourceUnusable.snapshotUnusableIssues} 件 (${sourceUnusable.snapshotUnusableFiles} ファイル)`,
       '- 翻訳の問題ではなくスナップショット / ソース同期側の既知問題です。翻訳 PR では修正できません。',
@@ -719,9 +719,9 @@ function buildParityFollowupBody({
   const orphanBaselineEntries = summary.orphanBaselineEntries || 0;
   if (orphanBaselineEntries > 0) {
     lines.push(
-      '## 🧹 孤立した baseline entry',
+      '## 🧹 孤立したベースラインエントリー',
       '',
-      `- 合計: ${orphanBaselineEntries} 件 (runtime で一致する issue が無い — 掃除対象)`,
+      `- 合計: ${orphanBaselineEntries} 件 (実行時に一致する問題が無い — 掃除対象)`,
     );
     const byType = summary.orphanBaselineByType || {};
     const sortedTypes = Object.keys(byType).sort();
@@ -733,13 +733,13 @@ function buildParityFollowupBody({
     }
     lines.push(
       '',
-      '対応: `node scripts/generate_parity_baseline.mjs --slug=<slug>` で該当 slug を再生成すると orphan が purge されます。',
+      '対応: `node scripts/generate_parity_baseline.mjs --slug=<slug>` で該当 slug を再生成すると孤立エントリーが削除されます。',
       '',
     );
   }
 
   if (expiredBaselineFiles.length > 0) {
-    lines.push('## 期限切れ baseline エントリー', '');
+    lines.push('## 期限切れベースラインエントリー', '');
     lines.push(
       formatList(
         expiredBaselineFiles.map((f) => {
@@ -769,20 +769,20 @@ function buildParityFollowupBody({
   }
 
   if (baselineInvalidatedSlugs.length > 0) {
-    lines.push('## 無効化された baseline slug', '');
+    lines.push('## 無効化されたベースライン slug', '');
     lines.push(
-      formatList(baselineInvalidatedSlugs.map((s) => `\`${s}\` — EN snapshot が変更された`)),
+      formatList(baselineInvalidatedSlugs.map((s) => `\`${s}\` — 英語スナップショットが変更された`)),
     );
     lines.push('');
   }
 
   if (blockingAdvisoryItems.length > 0) {
-    lines.push('## Advisory queue — ブロッキング項目', '');
+    lines.push('## アドバイザリキュー — ブロッキング項目', '');
     lines.push(
       formatList(
         blockingAdvisoryItems.map((e) => {
           const topIssue = (e.issues ?? [])[0];
-          const cat = topIssue?.inconclusiveCategory ?? 'unknown';
+          const cat = topIssue?.inconclusiveCategory ?? '不明';
           return `\`${e.slug}\` — ${cat} (${e.issueCount} 件)`;
         }),
       ),
@@ -944,7 +944,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const snapshotIssueBody = [
     '## サマリー',
     '',
-    `- チェック日時: ${snapshot.checkedAt ?? 'unknown'}`,
+    `- チェック日時: ${snapshot.checkedAt ?? '不明'}`,
     `- 変更ページ: ${snapshot.summary?.changed || 0}`,
     `- 追加ページ: ${snapshot.summary?.added || 0}`,
     `- 削除ページ: ${snapshot.summary?.removed || 0}`,
@@ -988,9 +988,9 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const parityIssueBody = [
     '## サマリー',
     '',
-    `- チェック日時: ${parity.summary?.checkedAt ?? 'unknown'}`,
-    `- actionable ファイル: ${activeActionableFiles}`,
-    `- issue ファイル: ${parityIssueFiles.length}`,
+    `- チェック日時: ${parity.summary?.checkedAt ?? '不明'}`,
+    `- 要対応ファイル: ${activeActionableFiles}`,
+    `- 問題ファイル: ${parityIssueFiles.length}`,
     `- エラーファイル: ${activeErrorFiles}`,
     `- 承認済み (非ブロッキング): ${acknowledgedIssues}`,
     ...(expiredAcknowledgements > 0
@@ -1042,8 +1042,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     ? [
         '## サマリー',
         '',
-        `- 鮮度状態: **${freshnessState ?? 'unknown'}**`,
-        `- linkage state: **${linkageState ?? 'unknown'}**`,
+        `- 鮮度状態: **${freshnessState ?? '不明'}**`,
+        `- 連結状態: **${linkageState ?? '不明'}**`,
         `- 対象ページ: ${syncSummary.targetPages ?? 0}`,
         `- 取得済みページ: ${syncSummary.fetchedPages ?? 0}`,
         `- 404 ページ: ${syncSummary.notFoundPages ?? 0}`,
@@ -1143,7 +1143,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
 }
 
 export function renderSummaryMarkdown(_snapshot, parity, actionableReport, auditManifest, sourceSync) {
-  const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? 'unknown';
+  const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? '不明';
   const syncSummary = sourceSync?.summary ?? actionableReport?.sourceSyncHealth?.summary ?? {};
 
   // Issue #255 — source-side debt を summary markdown に可視化する。
@@ -1179,7 +1179,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       ? Object.entries(auditSignalsByType)
           .sort(([leftType], [rightType]) => leftType.localeCompare(rightType))
           .map(([type, count]) => `  - ${type}: ${count}`)
-      : ['  - (none)'];
+      : ['  - (なし)'];
 
   // Issue #247 PR5 — structure mismatch の独立 advisory section は削除した。
   // reportable に昇格したため、件数は `## パリティ` の `active issue files`
@@ -1191,7 +1191,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
   const sourceUnusableSection =
     snapshotUnusableIssues > 0
       ? [
-          '## ソース使用不可 (advisory)',
+          '## ソース使用不可 (参考)',
           '',
           `- 合計: ${snapshotUnusableIssues} 件 (${snapshotUnusableFiles} ファイル)`,
           '- 翻訳の問題ではなくスナップショット / ソース同期側の既知問題です。翻訳 PR では修正できません。',
@@ -1230,8 +1230,8 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## パリティ',
     '',
-    `- actionable ファイル: ${parityActiveActionable}`,
-    `- issue ファイル: ${parityActiveFiles}`,
+    `- 要対応ファイル: ${parityActiveActionable}`,
+    `- 問題ファイル: ${parityActiveFiles}`,
     `- エラーファイル: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
     `- 承認済み (非ブロッキング): ${parity.summary?.acknowledgedIssues || 0}`,
     ...((parity.summary?.expiredAcknowledgements || 0) > 0
@@ -1241,8 +1241,8 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     ...sourceUnusableSection,
     '## 監査シグナル',
     '',
-    '- audit 専用: 粗い count / 形状 / table cell ヒューリスティック',
-    '- deep-audit で確認可能。parity-regression issue body には含めない',
+    '- 監査専用: 粗いカウント / 形状 / テーブルセルのヒューリスティック',
+    '- deep-audit で確認可能。パリティ後退の issue 本文には含めない',
     `- 合計: ${auditSignalIssues} 件 (${auditSignalFiles} ファイル)`,
     '- 種別別:',
     ...auditSignalRows,
@@ -1256,10 +1256,10 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## パリティフォローアップ',
     '',
-    `- baseline 済: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} ファイル)`,
-    `- 期限切れ baseline: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
+    `- ベースライン済み: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} ファイル)`,
+    `- 期限切れベースライン: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
     `- 無効化された slug: ${(actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? []).length}`,
-    `- advisory キュー: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} ファイル, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} ブロッキング; ${formatAdvisoryQueueScope(actionableReport.parityFollowup?.summary?.advisoryQueue?.advisoryQueueScope ?? null)})`,
+    `- アドバイザリキュー: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} ファイル, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} ブロッキング; ${formatAdvisoryQueueScope(actionableReport.parityFollowup?.summary?.advisoryQueue?.advisoryQueueScope ?? null)})`,
     '',
     '## アーティファクト',
     '',
