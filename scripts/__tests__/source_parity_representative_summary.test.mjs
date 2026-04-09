@@ -1,11 +1,18 @@
 /**
  * Issue #247 post-merge — representative full-run summary contract test。
  *
- * 代表 8 ページに対して `checkSourceParity({ slug, baselinePath, outputPath })`
+ * 代表 7 ページに対して `checkSourceParity({ slug, baselinePath, outputPath })`
  * を in-process で順次呼び、temp status file から summary counter を
  * pin する。Phase D/E/F/G の post-resolution state を固定する fixture。
  *
- * 8 ページ全て RESOLVED_PAGES で baseline 0 件 clean green 完了:
+ * Issue #255: `testops/testops-version-control/pull-requests` は
+ * representative から外された。理由は upstream EN HTML が broken
+ * (body 全体が <code> ブロックに collapsed) で、parity comparator の
+ * 前提を満たさないため。このページは "source-side debt" として
+ * `source_sync_exclusions.mjs` registry で管理され、契約は
+ * `source_parity_source_side_debt.test.mjs` に分離されている。
+ *
+ * 7 ページ全て RESOLVED_PAGES で baseline 0 件 clean green 完了:
  *
  *   | slug                                               | 解消手段                                         |
  *   | -------------------------------------------------- | ------------------------------------------------ |
@@ -16,7 +23,6 @@
  *   | results/test-results/network-logs                  | Phase D.2: Filtering / test level の JA rewrite  |
  *   | advanced-editing/validations/email-validation      | Phase D.3: preface / Codeless Option / token 差別化 |
  *   | salesforce-testing/salesforce-testing-overview     | Phase G: shallow EN に合わせて JA trim           |
- *   | testops/testops-version-control/pull-requests      | Phase G: broken EN snapshot を手動で正しい HTML 化 |
  *
  * pin する契約:
  *   1. 全 slug で `reportableActiveFiles === 0`
@@ -80,8 +86,11 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 });
 
 // ---------------------------------------------------------------------------
-// RESOLVED_PAGES — Issue #247 End-to-End 完全解消後、全 8 代表ページが
+// RESOLVED_PAGES — Issue #247 End-to-End 完全解消後、代表 7 ページが
 // baseline entry 0 で clean green に到達。
+//
+// Issue #255 で `pull-requests` は representative から外され、
+// `source_parity_source_side_debt.test.mjs` に分離された。
 //
 // 解消プロセス:
 // - `custom-action-step-mobile` / `test-runs`: Phase E の JA 修正で解消
@@ -99,9 +108,6 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 //   body 例の `messages[0].subject` / `DOMParser` token 差別化)
 // - `salesforce-testing-overview`: EN 本文が `<h1>` + 1 paragraph のみで
 //   source が shallow なため、JA も同構造に trim
-// - `pull-requests`: EN source が `<code>` ブロックで全文 wrap されていた
-//   ため、正しい HTML snapshot を手動で書き起こし (Reviewing a Pull Request
-//   section の nested list を flatten して JA と構造一致)
 // ---------------------------------------------------------------------------
 const RESOLVED_PAGES = Object.freeze([
   'advanced-editing/custom-action-step-mobile',
@@ -111,7 +117,6 @@ const RESOLVED_PAGES = Object.freeze([
   'results/test-results/network-logs',
   'advanced-editing/validations/email-validation',
   'salesforce-testing/salesforce-testing-overview',
-  'testops/testops-version-control/pull-requests',
 ]);
 
 // Issue #247 End-to-End 完全解消後、RESIDUAL_PAGES は空。

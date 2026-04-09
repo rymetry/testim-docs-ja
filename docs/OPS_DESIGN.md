@@ -418,11 +418,14 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 `checkSourceParity({ baselinePath, outputPath })` の test-only 注入 hook を
 使って `mkdtemp` 上の temp copy だけを操作する。
 
-### Issue #247 完了条件の着地点 (End-to-End 完全解消, 2026-04-09)
+### Issue #247 完了条件の着地点 (Issue #255 で source-side debt 分離, 2026-04-09)
 
 Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レビュー →
-re-review で段階的に絞り込み、最終的に **8 代表ページすべてを baseline 0 件の
-clean green** まで解消した (完全 End-to-End 達成):
+re-review で段階的に絞り込み、**7 代表ページを baseline 0 件の clean green** まで
+解消した。残る 1 ページ (`testops/testops-version-control/pull-requests`) は
+upstream EN source 自体が broken で parity comparator の前提を満たさないため、
+Issue #255 で **source-side debt** として representative から分離し、別レーンで
+管理することにした。
 
 **完了条件 #2 (4 slug が structure mismatch として reportable)**: 4 slug すべてが
 baseline entry 0 で clean green に到達:
@@ -441,12 +444,21 @@ baseline entry 0 で clean green に到達:
 | `advanced-editing/custom-action-step-mobile` | JA 側を EN plain-text 構造に揃える | baseline entry 0 |
 | `results/test-runs` | preface の extra paragraph 削除 + 関連修正 | baseline entry 0 |
 
-**追加: upstream snapshot debt 2 slug** (re-review で完全解消):
+**追加: upstream snapshot debt 1 slug** (JA trim で完全解消):
 
 | slug | 方針 | 着地点 |
 | --- | --- | --- |
 | `salesforce-testing/salesforce-testing-overview` | EN source が h1 + 1 paragraph のみの shallow snapshot だったため、JA も同じ minimal 構造に trim (source-first 原則) | baseline entry 0 |
-| `testops/testops-version-control/pull-requests` | EN source の body 全体が `<code>` ブロックで wrap された broken output (extractor-empty) だったため、正しい HTML snapshot を手動で書き起こして置き換え | baseline entry 0 |
+
+**Issue #255 で分離: source-side debt 1 slug**:
+
+| slug | 状態 | 運用 |
+| --- | --- | --- |
+| `testops/testops-version-control/pull-requests` | EN live HTML が body 全体を `<code>` ブロックで wrap した broken output (extractor-empty) を返し、MadCap Flare extractor が 0 body segment に落ちる。Issue #247 では hand-authored snapshot で一時的に clean に見せたが、次回の snapshot fetch で必ず再破壊される | Issue #255 で `scripts/lib/source_sync_exclusions.mjs` registry に登録し、`snapshot_update` は fetch するが snapshot file を上書きしない。fetch 結果に対して `detectSourceUsability` で recovery probe を実行し、`excluded-broken` / `excluded-recovered` として `source-sync-status.json` に報告する。hand-authored snapshot は凍結参照として温存 |
+
+source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.test.mjs`
+で pin される。representative test (`source_parity_representative_summary.test.mjs`)
+は 7 slug 版に縮小された。
 
 **完了条件の保証 (regression guard)**:
 
@@ -459,8 +471,17 @@ baseline entry 0 で clean green に到達:
 - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` — 4 clean sentinel ページで
   structure / segment 共に 0 件を pin (false-positive 回帰ガード)
 - `scripts/__tests__/source_parity_representative_summary.test.mjs` — Issue #247
-  End-to-End 解消後の全 8 slug summary counter を `RESOLVED_PAGES` で pin
-  (`RESIDUAL_PAGES = []`)
+  End-to-End 解消後の 7 slug summary counter を `RESOLVED_PAGES` で pin
+  (Issue #255 で pull-requests が除外され `RESIDUAL_PAGES = []`)
+- `scripts/__tests__/source_parity_source_side_debt.test.mjs` — Issue #255 の
+  source-side debt registry 契約と凍結 snapshot / JA file の存在を pin
+- `scripts/__tests__/source_sync_exclusions.test.mjs` — exclusion registry の
+  shape と lookup helper を pin
+- `scripts/__tests__/source_sync_health.test.mjs` — excluded ページが freshness
+  計算から除外され、`excludedPages` / `excludedBrokenPages` / `excludedRecoveredPages`
+  の独立 counter で可視化される契約を pin
+- `scripts/__tests__/snapshot_update.test.mjs` — excluded slug は fetch するが
+  snapshot file を書かず、recovery probe 結果を pageResults に載せる契約を pin
 - `scripts/__tests__/source_parity_orphan_integration.test.mjs` — orphan detection の
   E2E contract を pin
 - `scripts/__tests__/source_parity_usability_ack_integration.test.mjs` — detector → ack
@@ -485,7 +506,10 @@ post-merge PR に対する完全解消レビューで以下の gap が判明し�
 
 3. **2 snapshot debt の upstream 修正** — salesforce-testing-overview は JA trim、
    pull-requests は broken source を正しい HTML snapshot に手動書き換え。これにより
-   Issue #247 の 8 代表ページすべてを End-to-End で完全解消。
+   Issue #247 の 8 代表ページに対して一旦 End-to-End green を達成。ただし
+   pull-requests の hand-authored snapshot は次回の `check:snapshots:fetch` で必ず
+   再破壊されるため、Issue #255 で source-side debt registry 運用に切り替え、
+   representative から分離した。
 
 ### Issue #247 re-review 第二弾 での追加修正 (2026-04-09)
 

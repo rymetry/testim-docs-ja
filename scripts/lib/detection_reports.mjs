@@ -225,6 +225,109 @@ function formatList(values) {
   return values.map((value) => `- ${value}`).join('\n');
 }
 
+/**
+ * Issue #255 — Build a structured summary of source-side debt from
+ * `source-sync-status.json`. Returns counters plus broken / recovered
+ * slug lists with their recovery-probe payloads so downstream consumers
+ * (markdown renderer, issue body, dashboards) can render without
+ * re-parsing the raw status file.
+ *
+ * Pure function. Safe to call with an empty/missing sourceSync object.
+ *
+ * @param {object | null | undefined} sourceSync — parsed source-sync-status.json
+ * @returns {{
+ *   excludedPages: number,
+ *   excludedBrokenPages: number,
+ *   excludedRecoveredPages: number,
+ *   brokenSlugs: string[],
+ *   recoveredSlugs: string[],
+ *   brokenDetails: { slug: string, issueType: string|null, reason: string|null }[],
+ * }}
+ */
+function buildSourceSideDebtSummary(sourceSync) {
+  const summary = sourceSync?.summary ?? {};
+  const pages = sourceSync?.pages ?? [];
+
+  const brokenPages = pages.filter((p) => p.fetchStatus === 'excluded-broken');
+  const recoveredPages = pages.filter((p) => p.fetchStatus === 'excluded-recovered');
+
+  return {
+    excludedPages: summary.excludedPages ?? 0,
+    excludedBrokenPages: summary.excludedBrokenPages ?? 0,
+    excludedRecoveredPages: summary.excludedRecoveredPages ?? 0,
+    brokenSlugs: brokenPages.map((p) => p.slug).sort(),
+    recoveredSlugs: recoveredPages.map((p) => p.slug).sort(),
+    brokenDetails: brokenPages
+      .map((p) => ({
+        slug: p.slug,
+        issueType: p.recoveryProbe?.issueType ?? null,
+        reason: p.recoveryProbe?.reason ?? null,
+      }))
+      .sort((left, right) => left.slug.localeCompare(right.slug)),
+  };
+}
+
+/**
+ * Issue #255 — Render the `## ソース側 debt` section as Markdown lines.
+ * Returns an array of strings ready to be joined with '\n'. The caller
+ * is responsible for deciding when the section should appear at all
+ * (usually: skip when `excludedPages === 0`).
+ *
+ * The section is fully Japanese on the theory that humans read it and
+ * machines read the JSON fields instead. Slugs and technical tokens
+ * (`snapshot-incomplete`, `extractor-empty`, file names) stay in English.
+ *
+ * @param {ReturnType<typeof buildSourceSideDebtSummary>} debt
+ * @param {{ slug: string, fetchStatus: string, recoveryProbe?: any, debtCategory?: string }[]} _pages
+ * @returns {string[]}
+ */
+function renderSourceSideDebtSubsection(debt, _pages) {
+  const lines = [
+    '## ソース側 debt',
+    '',
+    `- 除外ページ: ${debt.excludedPages}`,
+    `- 未復旧: ${debt.excludedBrokenPages}`,
+    `- 復旧候補: ${debt.excludedRecoveredPages}`,
+    '',
+    '既知の upstream EN source が broken で parity comparator の前提を満たさない',
+    'ページです。`scripts/lib/source_sync_exclusions.mjs` の registry で管理され、',
+    'snapshot fetch は実行するが snapshot file は上書きせず、hand-authored snapshot を',
+    '凍結参照として保持します。',
+    '',
+  ];
+
+  if (debt.excludedBrokenPages > 0) {
+    lines.push('### 未復旧', '');
+    for (const entry of debt.brokenDetails) {
+      const detail = entry.issueType && entry.reason
+        ? `${entry.issueType} / ${entry.reason}`
+        : entry.issueType || entry.reason || '判定なし';
+      lines.push(`- \`${entry.slug}\``);
+      lines.push(`  - 状態: excluded-broken`);
+      lines.push(`  - 判定: ${detail}`);
+    }
+    lines.push('');
+  }
+
+  if (debt.excludedRecoveredPages > 0) {
+    lines.push('### 復旧候補', '');
+    lines.push(
+      'upstream EN source が復旧した可能性があります。人間が確認の上、',
+      '`scripts/lib/source_sync_exclusions.mjs` から該当 slug を登録解除してください。',
+      '(自動解除はしません — 一時的な upstream 揺れで false recovery を作らないため)',
+      '',
+    );
+    for (const slug of debt.recoveredSlugs) {
+      lines.push(`- \`${slug}\``);
+      lines.push(`  - 状態: excluded-recovered`);
+      lines.push(`  - 対応: registry entry 削除を検討`);
+    }
+    lines.push('');
+  }
+
+  return lines;
+}
+
 function bucketPriority(bucket) {
   if (bucket === 'page-lifecycle') return 0;
   if (bucket === 'structural-change') return 1;
@@ -433,20 +536,20 @@ function buildTokenlessNearTieExamples(advisoryQueue, maxEntries) {
 }
 
 function formatAdvisoryQueueScope(scope) {
-  if (!scope || typeof scope !== 'object') return 'scope unknown';
-  if (scope.isComplete === true) return 'full repo';
+  if (!scope || typeof scope !== 'object') return 'scope 不明';
+  if (scope.isComplete === true) return 'リポジトリ全体';
 
   const slug = scope.filters?.slug ?? null;
   if (scope.type === 'slug' && slug) {
-    return `partial scope: slug=${slug}, not repo-wide`;
+    return `部分 scope: slug=${slug}、リポジトリ全体ではない`;
   }
 
   const section = scope.filters?.section ?? null;
   if (scope.type === 'section' && section) {
-    return `partial scope: section=${section}, not repo-wide`;
+    return `部分 scope: section=${section}、リポジトリ全体ではない`;
   }
 
-  return 'partial scope, not repo-wide';
+  return '部分 scope、リポジトリ全体ではない';
 }
 
 function buildParityFollowupBody({
@@ -462,21 +565,21 @@ function buildParityFollowupBody({
   sourceUnusable,
 }) {
   const lines = [
-    '## Summary',
+    '## サマリー',
     '',
-    `- Checked at: ${summary.checkedAt ?? 'unknown'}`,
-    `- Baselined issues: ${summary.baselinedIssues ?? 0} (${summary.baselinedFiles ?? 0} files)`,
-    `- Expired baseline entries: ${summary.expiredBaselineEntries ?? 0}`,
-    `- Expiring within 30 days: ${summary.expiringBaselineEntries30d ?? 0}`,
-    `- Baseline-invalidated slugs: ${baselineInvalidatedSlugs.length}`,
+    `- チェック日時: ${summary.checkedAt ?? 'unknown'}`,
+    `- baseline 済 issue: ${summary.baselinedIssues ?? 0} 件 (${summary.baselinedFiles ?? 0} ファイル)`,
+    `- 期限切れ baseline: ${summary.expiredBaselineEntries ?? 0}`,
+    `- 30 日以内期限切れ予定: ${summary.expiringBaselineEntries30d ?? 0}`,
+    `- 無効化された baseline slug: ${baselineInvalidatedSlugs.length}`,
     '',
   ];
 
   if (includeAdvisoryInBody) {
     lines.push(
-      `- Advisory queue: ${advisoryQueueIssues} issues (${advisoryQueueFiles} files)`,
-      `  - Scope: ${formatAdvisoryQueueScope(advisoryQueueScope)}`,
-      `  - Blocking: ${blockingAdvisoryItems.length}`,
+      `- advisory キュー: ${advisoryQueueIssues} 件 (${advisoryQueueFiles} ファイル)`,
+      `  - scope: ${formatAdvisoryQueueScope(advisoryQueueScope)}`,
+      `  - ブロッキング: ${blockingAdvisoryItems.length}`,
       '',
     );
   }
@@ -488,14 +591,14 @@ function buildParityFollowupBody({
   // 省略する。
   if (sourceUnusable && sourceUnusable.snapshotUnusableIssues > 0) {
     lines.push(
-      '## Source Unusable (advisory)',
+      '## ソース使用不可 (advisory)',
       '',
-      `- Total: ${sourceUnusable.snapshotUnusableIssues} issues across ${sourceUnusable.snapshotUnusableFiles} files`,
-      '- Not a translation failure — snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+      `- 合計: ${sourceUnusable.snapshotUnusableIssues} 件 (${sourceUnusable.snapshotUnusableFiles} ファイル)`,
+      '- 翻訳失敗ではなく snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
     );
     const sortedTypes = Object.keys(sourceUnusable.snapshotUnusableByType ?? {}).sort();
     if (sortedTypes.length > 0) {
-      lines.push('- By type:');
+      lines.push('- 種別別:');
       for (const type of sortedTypes) {
         lines.push(`  - ${type}: ${sourceUnusable.snapshotUnusableByType[type]}`);
       }
@@ -510,14 +613,14 @@ function buildParityFollowupBody({
   const orphanBaselineEntries = summary.orphanBaselineEntries || 0;
   if (orphanBaselineEntries > 0) {
     lines.push(
-      '## 🧹 Orphan baseline entries',
+      '## 🧹 孤立した baseline entry',
       '',
-      `- Total: ${orphanBaselineEntries} entries (runtime で一致する issue が無い — 掃除対象)`,
+      `- 合計: ${orphanBaselineEntries} 件 (runtime で一致する issue が無い — 掃除対象)`,
     );
     const byType = summary.orphanBaselineByType || {};
     const sortedTypes = Object.keys(byType).sort();
     if (sortedTypes.length > 0) {
-      lines.push('- By type:');
+      lines.push('- 種別別:');
       for (const type of sortedTypes) {
         lines.push(`  - ${type}: ${byType[type]}`);
       }
@@ -530,12 +633,12 @@ function buildParityFollowupBody({
   }
 
   if (expiredBaselineFiles.length > 0) {
-    lines.push('## Expired Baseline Entries', '');
+    lines.push('## 期限切れ baseline エントリー', '');
     lines.push(
       formatList(
         expiredBaselineFiles.map((f) => {
           const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
-          return `\`${f.file}\` (${f.count} entries${rv})`;
+          return `\`${f.file}\` (${f.count} 件${rv})`;
         }),
       ),
     );
@@ -543,16 +646,16 @@ function buildParityFollowupBody({
   }
 
   if (expiringBaselineFiles && expiringBaselineFiles.length > 0) {
-    lines.push('## Expiring Within 30 Days', '');
+    lines.push('## 30 日以内に期限切れ', '');
     lines.push(
-      '> Plan paydown PRs before these entries cross `reviewAfter` and re-enter the gate.',
+      '> `reviewAfter` を越えて gate に戻る前に返済 PR を計画してください。',
       '',
     );
     lines.push(
       formatList(
         expiringBaselineFiles.map((f) => {
           const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
-          return `\`${f.file}\` (${f.count} entries${rv})`;
+          return `\`${f.file}\` (${f.count} 件${rv})`;
         }),
       ),
     );
@@ -560,28 +663,28 @@ function buildParityFollowupBody({
   }
 
   if (baselineInvalidatedSlugs.length > 0) {
-    lines.push('## Baseline-Invalidated Slugs', '');
+    lines.push('## 無効化された baseline slug', '');
     lines.push(
-      formatList(baselineInvalidatedSlugs.map((s) => `\`${s}\` — EN snapshot changed`)),
+      formatList(baselineInvalidatedSlugs.map((s) => `\`${s}\` — EN snapshot が変更された`)),
     );
     lines.push('');
   }
 
   if (blockingAdvisoryItems.length > 0) {
-    lines.push('## Advisory Queue — Blocking Items', '');
+    lines.push('## Advisory queue — ブロッキング項目', '');
     lines.push(
       formatList(
         blockingAdvisoryItems.map((e) => {
           const topIssue = (e.issues ?? [])[0];
           const cat = topIssue?.inconclusiveCategory ?? 'unknown';
-          return `\`${e.slug}\` — ${cat} (${e.issueCount} issues)`;
+          return `\`${e.slug}\` — ${cat} (${e.issueCount} 件)`;
         }),
       ),
     );
     lines.push('');
   }
 
-  lines.push('## Artifacts', '', '- `parity-check-status.json`');
+  lines.push('## アーティファクト', '', '- `parity-check-status.json`');
 
   return lines.join('\n');
 }
@@ -733,29 +836,29 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   );
 
   const snapshotIssueBody = [
-    '## Summary',
+    '## サマリー',
     '',
-    `- Checked at: ${snapshot.checkedAt ?? 'unknown'}`,
-    `- Changed pages: ${snapshot.summary?.changed || 0}`,
-    `- Added pages: ${snapshot.summary?.added || 0}`,
-    `- Removed pages: ${snapshot.summary?.removed || 0}`,
-    `- Unchanged: ${snapshot.summary?.unchanged || 0}`,
-    `- Total snapshots: ${snapshot.summary?.totalSnapshots || 0}`,
+    `- チェック日時: ${snapshot.checkedAt ?? 'unknown'}`,
+    `- 変更ページ: ${snapshot.summary?.changed || 0}`,
+    `- 追加ページ: ${snapshot.summary?.added || 0}`,
+    `- 削除ページ: ${snapshot.summary?.removed || 0}`,
+    `- 変更なし: ${snapshot.summary?.unchanged || 0}`,
+    `- 総スナップショット数: ${snapshot.summary?.totalSnapshots || 0}`,
     '',
-    '## Top Entries',
+    '## 上位エントリー',
     '',
     formatList(snapshotTopEntries.map(formatSnapshotEntry)),
     '',
     ...(snapshot.sidebar?.changed
       ? [
-          '## Sidebar Changes',
+          '## サイドバー変更',
           '',
-          `- Pages added: ${snapshot.sidebar.addedPages?.length || 0}`,
-          `- Pages removed: ${snapshot.sidebar.removedPages?.length || 0}`,
+          `- 追加ページ: ${snapshot.sidebar.addedPages?.length || 0}`,
+          `- 削除ページ: ${snapshot.sidebar.removedPages?.length || 0}`,
           '',
         ]
       : []),
-    '## Artifacts',
+    '## アーティファクト',
     '',
     '- `snapshot-diff-status.json`',
     '- `docs-update-summary.md`',
@@ -777,18 +880,18 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
 
   const parityIssueBody = [
-    '## Summary',
+    '## サマリー',
     '',
-    `- Checked at: ${parity.summary?.checkedAt ?? 'unknown'}`,
-    `- Active actionable files: ${activeActionableFiles}`,
-    `- Active issue files: ${parityIssueFiles.length}`,
-    `- Error files: ${activeErrorFiles}`,
-    `- Acknowledged (non-blocking): ${acknowledgedIssues}`,
+    `- チェック日時: ${parity.summary?.checkedAt ?? 'unknown'}`,
+    `- active actionable ファイル: ${activeActionableFiles}`,
+    `- active issue ファイル: ${parityIssueFiles.length}`,
+    `- エラーファイル: ${activeErrorFiles}`,
+    `- 承認済み (非ブロッキング): ${acknowledgedIssues}`,
     ...(expiredAcknowledgements > 0
-      ? [`- ⚠ Expired acknowledgements: ${expiredAcknowledgements}`]
+      ? [`- ⚠ 期限切れ承認: ${expiredAcknowledgements}`]
       : []),
     '',
-    '## Top Entries',
+    '## 上位エントリー',
     '',
     formatList(
       parityTopEntries.map((entry) => {
@@ -802,7 +905,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       }),
     ),
     '',
-    '## Artifacts',
+    '## アーティファクト',
     '',
     '- `parity-check-status.json`',
     '- `docs-update-summary.md`',
@@ -822,23 +925,32 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const syncSummary = sourceSync.summary ?? {};
   const syncErrors = sourceSync.errors ?? [];
 
+  // Issue #255 — source-side debt counters and slug lists. These come from
+  // source-sync-status.json `summary.excluded*Pages` and `pages[]`.
+  const sourceSideDebtSummary = buildSourceSideDebtSummary(sourceSync);
+
   const sourceSyncBody = syncShouldOpen
     ? [
-        '## Summary',
+        '## サマリー',
         '',
-        `- Freshness state: **${freshnessState ?? 'unknown'}**`,
-        `- Linkage state: **${linkageState ?? 'unknown'}**`,
-        `- Target pages: ${syncSummary.targetPages ?? 0}`,
-        `- Fetched pages: ${syncSummary.fetchedPages ?? 0}`,
-        `- Not found pages: ${syncSummary.notFoundPages ?? 0}`,
-        `- Error pages: ${syncSummary.errorPages ?? 0}`,
-        `- Sidebar verified: ${syncSummary.sidebarVerified ?? false}`,
+        `- freshness state: **${freshnessState ?? 'unknown'}**`,
+        `- linkage state: **${linkageState ?? 'unknown'}**`,
+        `- 対象ページ: ${syncSummary.targetPages ?? 0}`,
+        `- 取得済みページ: ${syncSummary.fetchedPages ?? 0}`,
+        `- 404 ページ: ${syncSummary.notFoundPages ?? 0}`,
+        `- エラーページ: ${syncSummary.errorPages ?? 0}`,
+        `- サイドバー検証: ${syncSummary.sidebarVerified ?? false}`,
         '',
-        '## Errors',
+        '## エラー',
         '',
         formatList(syncErrors.map((e) => `\`${e.slug}\` — ${e.detail}`)),
         '',
-        '## Artifacts',
+        // Issue #255 — 日本語 debt サブセクション (issue body 内)。
+        // 件数 0 なら丸ごと省略する。
+        ...(sourceSideDebtSummary.excludedPages > 0
+          ? [...renderSourceSideDebtSubsection(sourceSideDebtSummary, sourceSync.pages ?? []), '']
+          : []),
+        '## アーティファクト',
         '',
         '- `source-sync-status.json`',
         '- `snapshot-diff-status.json`',
@@ -866,6 +978,10 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         errorPages: syncSummary.errorPages ?? 0,
         sidebarVerified: syncSummary.sidebarVerified ?? false,
       },
+      // Issue #255 — source-side debt counter / slug list を independently
+      // expose する。JSON consumer (sync-detection-issues / dashboards /
+      // 人手レビュー) が freshness counter と混ぜずに読めるようにする。
+      sourceSideDebt: sourceSideDebtSummary,
     },
     snapshotDiff: {
       key: FAMILY_KEYS.SNAPSHOT_DIFF,
@@ -921,6 +1037,17 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
   const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? 'unknown';
   const syncSummary = sourceSync?.summary ?? actionableReport?.sourceSyncHealth?.summary ?? {};
 
+  // Issue #255 — source-side debt を summary markdown に可視化する。
+  // actionableReport にすでに sourceSideDebt が計算されていればそれを優先、
+  // 無ければ sourceSync から組み立てる。
+  const sourceSideDebt =
+    actionableReport?.sourceSyncHealth?.sourceSideDebt ??
+    buildSourceSideDebtSummary(sourceSync);
+  const sourceSideDebtSection =
+    sourceSideDebt.excludedPages > 0
+      ? renderSourceSideDebtSubsection(sourceSideDebt, sourceSync?.pages ?? [])
+      : [];
+
   // Parity section は coarse audit signals を除外した reportableActive*
   // counters を表示する。降格された coarse heuristics は別枠の "Audit
   // Signals" section に出して active parity drift と混同させない。
@@ -946,7 +1073,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       : ['  - (none)'];
 
   // Issue #247 PR5 — structure mismatch の独立 advisory section は削除した。
-  // reportable に昇格したため、件数は `## Parity` の `Active issue files`
+  // reportable に昇格したため、件数は `## パリティ` の `active issue files`
   // 経由で見える。source unusable は引き続き advisory なので独立 section
   // を持つ。
   const snapshotUnusableIssues = parity.summary?.snapshotUnusableIssues ?? 0;
@@ -955,13 +1082,13 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
   const sourceUnusableSection =
     snapshotUnusableIssues > 0
       ? [
-          '## Source Unusable (advisory)',
+          '## ソース使用不可 (advisory)',
           '',
-          `- Total: ${snapshotUnusableIssues} issues across ${snapshotUnusableFiles} files`,
-          '- Not a translation failure — snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+          `- 合計: ${snapshotUnusableIssues} 件 (${snapshotUnusableFiles} ファイル)`,
+          '- 翻訳失敗ではなく snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
           ...(Object.keys(snapshotUnusableByType).length > 0
             ? [
-                '- By type:',
+                '- 種別別:',
                 ...Object.keys(snapshotUnusableByType)
                   .sort()
                   .map((type) => `  - ${type}: ${snapshotUnusableByType[type]}`),
@@ -972,59 +1099,60 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       : [];
 
   return [
-    '# Docs Detection Summary',
+    '# ドキュメント検知サマリー',
     '',
-    `Generated: ${actionableReport.generatedAt}`,
+    `生成日時: ${actionableReport.generatedAt}`,
     '',
-    '## Source Sync Health',
+    '## ソース同期状態',
     '',
-    `- Freshness state: ${syncState}`,
-    `- Fetched: ${syncSummary.fetchedPages ?? 0} / ${syncSummary.targetPages ?? 0} pages`,
-    `- Errors: ${syncSummary.errorPages ?? 0}`,
-    `- Sidebar verified: ${syncSummary.sidebarVerified ?? false}`,
+    `- freshness state: ${syncState}`,
+    `- 取得: ${syncSummary.fetchedPages ?? 0} / ${syncSummary.targetPages ?? 0} ページ`,
+    `- エラー: ${syncSummary.errorPages ?? 0}`,
+    `- サイドバー検証: ${syncSummary.sidebarVerified ?? false}`,
     '',
-    '## Snapshot Diff',
+    ...sourceSideDebtSection,
+    '## スナップショット差分',
     '',
-    `- Changed pages: ${actionableReport.snapshotDiff.summary.changed}`,
-    `- Added pages: ${actionableReport.snapshotDiff.summary.added}`,
-    `- Removed pages: ${actionableReport.snapshotDiff.summary.removed}`,
-    `- Unchanged: ${actionableReport.snapshotDiff.summary.unchanged}`,
-    `- Total snapshots: ${actionableReport.snapshotDiff.summary.totalSnapshots}`,
+    `- 変更ページ: ${actionableReport.snapshotDiff.summary.changed}`,
+    `- 追加ページ: ${actionableReport.snapshotDiff.summary.added}`,
+    `- 削除ページ: ${actionableReport.snapshotDiff.summary.removed}`,
+    `- 変更なし: ${actionableReport.snapshotDiff.summary.unchanged}`,
+    `- 総スナップショット数: ${actionableReport.snapshotDiff.summary.totalSnapshots}`,
     '',
-    '## Parity',
+    '## パリティ',
     '',
-    `- Active actionable files: ${parityActiveActionable}`,
-    `- Active issue files: ${parityActiveFiles}`,
-    `- Error files: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
-    `- Acknowledged (non-blocking): ${parity.summary?.acknowledgedIssues || 0}`,
+    `- active actionable ファイル: ${parityActiveActionable}`,
+    `- active issue ファイル: ${parityActiveFiles}`,
+    `- エラーファイル: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
+    `- 承認済み (非ブロッキング): ${parity.summary?.acknowledgedIssues || 0}`,
     ...((parity.summary?.expiredAcknowledgements || 0) > 0
-      ? [`- ⚠ Expired acknowledgements: ${parity.summary.expiredAcknowledgements}`]
+      ? [`- ⚠ 期限切れ承認: ${parity.summary.expiredAcknowledgements}`]
       : []),
     '',
     ...sourceUnusableSection,
-    '## Audit Signals',
+    '## 監査シグナル',
     '',
-    '- audit-only: coarse counting / shape / table-cell heuristics',
-    '- Visible to deep-audit, NOT included in parity-regression issue body',
-    `- Total: ${auditSignalIssues} issues across ${auditSignalFiles} files`,
-    '- By type:',
+    '- audit 専用: 粗い count / 形状 / table cell ヒューリスティック',
+    '- deep-audit で確認可能。parity-regression issue body には含めない',
+    `- 合計: ${auditSignalIssues} 件 (${auditSignalFiles} ファイル)`,
+    '- 種別別:',
     ...auditSignalRows,
     '',
-    '## Audit Manifest',
+    '## 監査マニフェスト',
     '',
-    `- Total review entries: ${auditManifest.length}`,
-    `- Page lifecycle: ${actionableReport.auditManifest.bucketCounts['page-lifecycle'] || 0}`,
-    `- Structural change: ${actionableReport.auditManifest.bucketCounts['structural-change'] || 0}`,
-    `- Content only: ${actionableReport.auditManifest.bucketCounts['content-only'] || 0}`,
+    `- 総レビュー対象: ${auditManifest.length}`,
+    `- ページライフサイクル: ${actionableReport.auditManifest.bucketCounts['page-lifecycle'] || 0}`,
+    `- 構造変更: ${actionableReport.auditManifest.bucketCounts['structural-change'] || 0}`,
+    `- 本文のみ: ${actionableReport.auditManifest.bucketCounts['content-only'] || 0}`,
     '',
-    '## Parity Followup',
+    '## パリティフォローアップ',
     '',
-    `- Baselined: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} issues (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} files)`,
-    `- Expired baseline entries: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
-    `- Invalidated slugs: ${(actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? []).length}`,
-    `- Advisory queue: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} issues (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} files, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} blocking; ${formatAdvisoryQueueScope(actionableReport.parityFollowup?.summary?.advisoryQueue?.advisoryQueueScope ?? null)})`,
+    `- baseline 済: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} ファイル)`,
+    `- 期限切れ baseline: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
+    `- 無効化された slug: ${(actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? []).length}`,
+    `- advisory キュー: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} ファイル, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} ブロッキング; ${formatAdvisoryQueueScope(actionableReport.parityFollowup?.summary?.advisoryQueue?.advisoryQueueScope ?? null)})`,
     '',
-    '## Files',
+    '## アーティファクト',
     '',
     '- `snapshot-diff-status.json`',
     '- `parity-check-status.json`',

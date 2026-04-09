@@ -45,6 +45,18 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
 
+**Source-side debt の除外運用 (Issue #255)**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
+
+- snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)
+- fetch 結果に対して `detectSourceUsability` で recovery probe を実行
+- probe が issue を返す → `fetchStatus: "excluded-broken"` (既知 debt 継続)
+- probe が null を返す → `fetchStatus: "excluded-recovered"` (upstream 復旧候補)
+- `source-sync-status.json` の `excludedPages` / `excludedBrokenPages` / `excludedRecoveredPages` counter に流れる
+- freshness 計算 (`computeFreshnessState`) から除外される (既知 debt だけの run は `fresh`)
+- debt slug への新規追加は **人間が upstream broken と確認した場合のみ** — 自動除外はしない
+
+復旧候補 (`excluded-recovered`) が出ても自動では registry から削除せず、人間が確認の上 `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する。
+
 ---
 
 #### check_source_parity.mjs
@@ -633,7 +645,14 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 - **`source-sync-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `runId`, `checkedAt`, `sourceInventoryFingerprint`,
   `sidebarFingerprint`, `freshnessState`, `runScope`, `summary`, `pages`,
-  `errors`
+  `errors`。
+  `summary` に Issue #255 で追加された counter: `excludedPages` (= 既知
+  source-side debt の合計) / `excludedBrokenPages` (未復旧) /
+  `excludedRecoveredPages` (upstream 復旧候補)。`pages[n]` には debt slug に
+  対してのみ `debtCategory: "source-side-debt"` と `recoveryProbe: {
+  issueType, reason } | null` が emit される。excluded は `fetchedPages`
+  / `notFoundPages` / `errorPages` のどれにも count されず、`freshnessState`
+  計算からも除外される (= 既知 debt だけの run は `fresh` 扱い)
 - **`parity-check-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `summary` (含む `checkedAt` / `runScope` / `result` /
   `linkageState` / `freshnessState`), `files`
@@ -697,6 +716,8 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_acknowledgements.test.mjs`  | lib/source_parity_acknowledgements.mjs  |
 | `__tests__/source_parity_page_coverage.test.mjs`     | lib/source_parity_page_coverage.mjs     |
 | `__tests__/source_sync_health.test.mjs`              | lib/source_sync_health.mjs              |
+| `__tests__/source_sync_exclusions.test.mjs`          | lib/source_sync_exclusions.mjs          |
+| `__tests__/source_parity_source_side_debt.test.mjs`  | Issue #255 source-side debt 契約統合    |
 | `__tests__/source_parity_segments_shared.test.mjs`   | lib/source_parity_segments_shared.mjs   |
 | `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
 | `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |

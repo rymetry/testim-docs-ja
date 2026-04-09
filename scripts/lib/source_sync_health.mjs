@@ -53,11 +53,31 @@ export function fingerprint(items) {
 }
 
 /**
+ * Pages with these fetchStatus values are "source-side debt" — known broken
+ * upstream source pages registered in `source_sync_exclusions.mjs`. They
+ * are ignored by freshness calculation (debt is tracked separately).
+ *
+ * @type {ReadonlySet<string>}
+ */
+const EXCLUDED_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered']);
+
+function isExcludedPage(page) {
+  return EXCLUDED_FETCH_STATUSES.has(page.fetchStatus);
+}
+
+/**
  * Compute freshness state from per-page fetch results.
  *
- * - "fresh"   — all pages fetched ok, sidebar verified
- * - "partial" — some pages failed/404 but at least one ok, sidebar verified
- * - "broken"  — sidebar failed, no pages, or all pages failed
+ * - "fresh"   — all non-excluded pages fetched ok, sidebar verified
+ * - "partial" — some non-excluded pages failed/404 but at least one ok
+ * - "broken"  — sidebar failed, no pages, or all non-excluded pages failed
+ *
+ * Source-side debt pages (`excluded-broken` / `excluded-recovered`) are
+ * ignored entirely — a run that only touches debt pages is still `fresh`
+ * so long as the sidebar verifies. This keeps the freshness gate aligned
+ * with the translator-side contract and avoids conflating known upstream
+ * debt with sync failures. Debt state lives in the separate
+ * `excludedPages` counters (see `buildSourceSyncStatus`).
  *
  * Note: `stale` is also a valid freshness state but is computed from
  * RUN LINKAGE rather than fetch results — see `validateRunLinkage`.
@@ -74,9 +94,15 @@ export function computeFreshnessState(pages, sidebarVerified) {
   if (!sidebarVerified) return 'broken';
   if (pages.length === 0) return 'broken';
 
-  const okCount = pages.filter((p) => p.fetchStatus === 'ok').length;
+  const nonExcluded = pages.filter((p) => !isExcludedPage(p));
+
+  // A run that only touches known source-side debt pages is considered
+  // fresh: the sidebar verified, and debt is tracked in its own counters.
+  if (nonExcluded.length === 0) return 'fresh';
+
+  const okCount = nonExcluded.filter((p) => p.fetchStatus === 'ok').length;
   if (okCount === 0) return 'broken';
-  if (okCount === pages.length) return 'fresh';
+  if (okCount === nonExcluded.length) return 'fresh';
   return 'partial';
 }
 
@@ -155,7 +181,14 @@ export function validateRunLinkage(sourceSync, snapshotDiff, parityRunScope) {
  * Build the full source-sync-status.json payload.
  *
  * @param {object} opts
- * @param {{ slug: string, fetchStatus: string, errorDetail?: string, snapshotFingerprint?: string }[]} opts.pages
+ * @param {{
+ *   slug: string,
+ *   fetchStatus: string,
+ *   errorDetail?: string,
+ *   snapshotFingerprint?: string,
+ *   recoveryProbe?: { issueType: string, reason: string } | null,
+ *   debtCategory?: 'source-side-debt' | null,
+ * }[]} opts.pages
  * @param {{ ok: boolean, sectionCount?: number, pageCount?: number, reason?: string, sidebarSlugs?: string[] }} opts.sidebarResult
  * @param {{ type: string, isComplete: boolean, filters: { slug: string|null, section: string|null } }} opts.runScope
  * @param {Date} [opts.now]  — override for deterministic tests
@@ -176,14 +209,24 @@ export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, run
     ? fingerprint(sidebarResult.sidebarSlugs)
     : fingerprint([`${sidebarResult.sectionCount ?? 0}:${sidebarResult.pageCount ?? 0}`]);
 
+  // Per-status counters — excluded pages are tracked in their own counters
+  // below and are NOT counted as ok / not-found / error.
   const okCount = pages.filter((p) => p.fetchStatus === 'ok').length;
   const notFoundCount = pages.filter((p) => p.fetchStatus === 'not-found').length;
   const errorCount = pages.filter((p) => p.fetchStatus === 'error').length;
+  const excludedBrokenCount = pages.filter((p) => p.fetchStatus === 'excluded-broken').length;
+  const excludedRecoveredCount = pages.filter(
+    (p) => p.fetchStatus === 'excluded-recovered',
+  ).length;
+  const excludedCount = excludedBrokenCount + excludedRecoveredCount;
 
   const freshnessState = computeFreshnessState(pages, sidebarResult.ok);
 
   const errors = [];
   for (const p of pages) {
+    // Excluded pages are "known debt" — never emitted as top-level errors
+    // even if the underlying fetch surfaced a failure. Their state is
+    // visible via the excludedPages counters and the recoveryProbe field.
     if (p.fetchStatus === 'error' && p.errorDetail) {
       errors.push({ slug: p.slug, detail: p.errorDetail });
     }
@@ -208,12 +251,24 @@ export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, run
       fetchedPages: okCount,
       notFoundPages: notFoundCount,
       errorPages: errorCount,
+      excludedPages: excludedCount,
+      excludedBrokenPages: excludedBrokenCount,
+      excludedRecoveredPages: excludedRecoveredCount,
       sidebarVerified: sidebarResult.ok,
     },
     pages: pages.map((p) => ({
       slug: p.slug,
       fetchStatus: p.fetchStatus,
       ...(p.snapshotFingerprint ? { snapshotFingerprint: p.snapshotFingerprint } : {}),
+      // Emit recoveryProbe / debtCategory only when the page is registered
+      // as source-side debt, so the field absence stays meaningful for
+      // normal pages. `recoveryProbe` is explicitly `null` for
+      // excluded-recovered to distinguish "probed and clean" from
+      // "never probed".
+      ...(p.debtCategory ? { debtCategory: p.debtCategory } : {}),
+      ...(p.debtCategory
+        ? { recoveryProbe: p.recoveryProbe ?? null }
+        : {}),
     })),
     errors,
   };

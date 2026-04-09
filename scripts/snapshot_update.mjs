@@ -32,6 +32,10 @@ import {
 import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
 import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
+import { isSourceSideDebt } from './lib/source_sync_exclusions.mjs';
+import { extractSegmentsFromHtml } from './lib/source_parity_segments_en.mjs';
+import { extractSegmentsFromMarkdown } from './lib/source_parity_segments_ja.mjs';
+import { detectSourceUsability } from './lib/source_parity_source_usability.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -60,7 +64,11 @@ function parseArgs(argv = process.argv.slice(2)) {
 }
 
 /**
- * Build list of { slug, sourceUrl, relativePath } from doc files.
+ * Build list of { slug, sourceUrl, relativePath, jaBody } from doc files.
+ *
+ * `jaBody` is included so the recovery-probe path (for source-side debt
+ * pages) can diff the raw EN HTML against the JA body without re-reading
+ * the same file. Normal pages ignore it.
  */
 function collectTargets({ section, slug }) {
   const files = findMdFiles(DOCS_DIR);
@@ -85,10 +93,69 @@ function collectTargets({ section, slug }) {
       slug: fileSlug,
       sourceUrl: data.sourceUrl,
       relativePath: doc.relativePath,
+      jaBody: doc.body,
     });
   }
 
   return targets;
+}
+
+/**
+ * Run the source-usability detector against freshly fetched HTML for a
+ * known source-side debt page. Returns:
+ *   - { fetchStatus: 'excluded-broken', recoveryProbe: { issueType, reason } }
+ *     if the detector still flags the page as unusable (debt persists).
+ *   - { fetchStatus: 'excluded-recovered', recoveryProbe: null }
+ *     if the detector returns null (upstream likely recovered — candidate
+ *     for registry removal; decided by a human).
+ *
+ * `content` is the raw `#mc-main-content` inner HTML extracted from the
+ * live page. When fetch itself failed, `content` will be null and we still
+ * return `excluded-broken` with a synthetic probe so the debt counter is
+ * not silently reset by a transient network blip.
+ */
+function runRecoveryProbe({ content, jaBody }) {
+  if (!content) {
+    // Fetch failed or extractor found no mc-main-content. Treat as still
+    // broken — never flip to recovered on a missing payload.
+    return {
+      fetchStatus: 'excluded-broken',
+      recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'fetch-failed' },
+    };
+  }
+
+  let enSegments = [];
+  let jaSegments = [];
+  let extractError = null;
+  try {
+    enSegments = extractSegmentsFromHtml(content);
+  } catch (e) {
+    extractError = e;
+  }
+  try {
+    jaSegments = extractSegmentsFromMarkdown(jaBody || '');
+  } catch {
+    jaSegments = [];
+  }
+
+  const issue = detectSourceUsability({
+    rawEnHtml: content,
+    enSegments,
+    jaSegments,
+    extractError,
+  });
+
+  if (!issue) {
+    return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
+  }
+
+  return {
+    fetchStatus: 'excluded-broken',
+    recoveryProbe: {
+      issueType: issue.type,
+      reason: issue.usabilitySignals?.reason ?? 'unknown',
+    },
+  };
 }
 
 const FETCH_TIMEOUT_MS = 30_000;
@@ -236,14 +303,33 @@ export async function main(argv) {
   let fetched = 0;
   let notFound = 0;
   let errors = 0;
+  let excluded = 0;
   const pageResults = [];
 
   for (const target of targets) {
+    const excludedSlug = isSourceSideDebt(target.slug);
+
     try {
       const { content, status, reason } = await fetchHtmlContent(target.sourceUrl);
       const snapshotPath = path.join(CONTENT_DIR, target.slug + '.html');
 
-      if (status === 404) {
+      if (excludedSlug) {
+        // Issue #255 — source-side debt: fetch しても snapshot file は
+        // 絶対に上書きしない (hand-authored を凍結参照として温存)。
+        // recovery probe を実行し、結果は excluded-broken / excluded-recovered
+        // として pageResults に載せる。404 / HTTP エラーも debt 側に吸収し、
+        // 一時的な network 障害で counter が broken にフリップしないようにする。
+        const probe = runRecoveryProbe({ content, jaBody: target.jaBody });
+        const label = probe.fetchStatus === 'excluded-recovered' ? 'RECOV' : 'DEBT ';
+        console.log(`  ${label} ${target.slug} — source-side debt (snapshot not written)`);
+        excluded += 1;
+        pageResults.push({
+          slug: target.slug,
+          fetchStatus: probe.fetchStatus,
+          recoveryProbe: probe.recoveryProbe,
+          debtCategory: 'source-side-debt',
+        });
+      } else if (status === 404) {
         if (!args.dryRun) {
           fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
           fs.writeFileSync(snapshotPath, MARKER_404(target.sourceUrl));
@@ -268,9 +354,22 @@ export async function main(argv) {
         pageResults.push({ slug: target.slug, fetchStatus: 'ok' });
       }
     } catch (error) {
-      console.log(`  ERR  ${target.slug} — ${error.message}`);
-      errors += 1;
-      pageResults.push({ slug: target.slug, fetchStatus: 'error', errorDetail: error.message });
+      if (excludedSlug) {
+        // fetch が throw しても excluded 経路は debt にとどめる
+        const probe = runRecoveryProbe({ content: null, jaBody: target.jaBody });
+        console.log(`  DEBT ${target.slug} — source-side debt (fetch failed: ${error.message})`);
+        excluded += 1;
+        pageResults.push({
+          slug: target.slug,
+          fetchStatus: probe.fetchStatus,
+          recoveryProbe: probe.recoveryProbe,
+          debtCategory: 'source-side-debt',
+        });
+      } else {
+        console.log(`  ERR  ${target.slug} — ${error.message}`);
+        errors += 1;
+        pageResults.push({ slug: target.slug, fetchStatus: 'error', errorDetail: error.message });
+      }
     }
 
     await sleep(THROTTLE_MS);
@@ -298,11 +397,21 @@ export async function main(argv) {
   );
 
   console.log();
-  console.log(`Done: ${fetched} fetched, ${notFound} not found, ${errors} errors`);
+  console.log(
+    `Done: ${fetched} fetched, ${notFound} not found, ${errors} errors, ${excluded} excluded (source-side debt)`,
+  );
   console.log(`Freshness: ${sourceSyncStatus.freshnessState}`);
   if (args.dryRun) console.log('(dry-run — snapshots not written, source-sync-status.json updated)');
 
-  return { fetched, notFound, errors, skipped: 0, sidebarVerified: sidebarResult.ok, sourceSyncStatus };
+  return {
+    fetched,
+    notFound,
+    errors,
+    excluded,
+    skipped: 0,
+    sidebarVerified: sidebarResult.ok,
+    sourceSyncStatus,
+  };
 }
 
 if (isDirectRun(import.meta.url)) {

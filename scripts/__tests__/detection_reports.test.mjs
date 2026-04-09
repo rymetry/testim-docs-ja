@@ -350,8 +350,8 @@ describe('buildActionableReport', () => {
     };
 
     const report = buildActionableReport(snapshot, parity, []);
-    assert.match(report.snapshotDiff.body, /Sidebar Changes/);
-    assert.match(report.snapshotDiff.body, /Pages added: 1/);
+    assert.match(report.snapshotDiff.body, /サイドバー変更/);
+    assert.match(report.snapshotDiff.body, /追加ページ: 1/);
   });
 
   it('does NOT open a parity issue when all issues are validly acknowledged', () => {
@@ -665,16 +665,16 @@ describe('renderSummaryMarkdown', () => {
     const auditManifest = [{}, {}, {}, {}];
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, auditManifest);
-    assert.match(md, /# Docs Detection Summary/);
-    assert.match(md, /## Snapshot Diff/);
-    assert.match(md, /Changed pages: 3/);
-    assert.match(md, /Added pages: 1/);
-    assert.match(md, /## Parity/);
-    assert.match(md, /Active actionable files: 2/);
-    assert.match(md, /## Audit Manifest/);
-    assert.match(md, /Page lifecycle: 1/);
-    assert.match(md, /Structural change: 1/);
-    assert.match(md, /Content only: 2/);
+    assert.match(md, /# ドキュメント検知サマリー/);
+    assert.match(md, /## スナップショット差分/);
+    assert.match(md, /変更ページ: 3/);
+    assert.match(md, /追加ページ: 1/);
+    assert.match(md, /## パリティ/);
+    assert.match(md, /active actionable ファイル: 2/);
+    assert.match(md, /## 監査マニフェスト/);
+    assert.match(md, /ページライフサイクル: 1/);
+    assert.match(md, /構造変更: 1/);
+    assert.match(md, /本文のみ: 2/);
     assert.match(md, /snapshot-diff-status\.json/);
   });
 
@@ -705,9 +705,9 @@ describe('renderSummaryMarkdown', () => {
     };
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /Active actionable files: 0/);
-    assert.match(md, /Active issue files: 0/);
-    assert.match(md, /Acknowledged \(non-blocking\): 41/);
+    assert.match(md, /active actionable ファイル: 0/);
+    assert.match(md, /active issue ファイル: 0/);
+    assert.match(md, /承認済み \(非ブロッキング\): 41/);
     // The legacy counters must not appear standalone in a way that contradicts activeFiles:0.
     assert.doesNotMatch(md, /^- Signal-only files: 22$/m);
   });
@@ -734,7 +734,7 @@ describe('renderSummaryMarkdown', () => {
     };
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /Expired acknowledgements: 1/);
+    assert.match(md, /期限切れ承認: 1/);
   });
 
   it('marks partial advisory queue summaries as not repo-wide', () => {
@@ -782,7 +782,7 @@ describe('renderSummaryMarkdown', () => {
     };
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; partial scope: slug=overview\/page-a, not repo-wide\)/);
+    assert.match(md, /advisory キュー: 2 件 \(1 ファイル, 1 ブロッキング; 部分 scope: slug=overview\/page-a、リポジトリ全体ではない\)/);
   });
 });
 
@@ -864,7 +864,7 @@ describe('sourceSyncHealth in buildActionableReport', () => {
     };
     const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
     const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
-    assert.match(md, /Source Sync Health/);
+    assert.match(md, /## ソース同期状態/);
     assert.match(md, /broken/);
   });
 });
@@ -963,10 +963,10 @@ describe('parityFollowup in buildActionableReport', () => {
       report.parityFollowup.summary.reviewHints.tokenlessNearTieExamples[0].slug,
       'overview/page-a',
     );
-    assert.match(report.parityFollowup.body, /Scope: full repo/);
+    assert.match(report.parityFollowup.body, /scope: リポジトリ全体/);
 
     const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
-    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; full repo\)/);
+    assert.match(md, /advisory キュー: 2 件 \(1 ファイル, 1 ブロッキング; リポジトリ全体\)/);
   });
 
   it('shouldOpenIssue = false when advisory has blocking items but scope is not complete', () => {
@@ -1040,7 +1040,7 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.doesNotMatch(report.parityFollowup.body, /partial-only/);
 
     const md = renderSummaryMarkdown(emptySnapshot, parity, report, []);
-    assert.match(md, /Advisory queue: 2 issues \(1 files, 1 blocking; partial scope: slug=overview\/page-a, not repo-wide\)/);
+    assert.match(md, /advisory キュー: 2 件 \(1 ファイル, 1 ブロッキング; 部分 scope: slug=overview\/page-a、リポジトリ全体ではない\)/);
   });
 
   it('parityFollowup body contains invalidated slugs', () => {
@@ -1290,8 +1290,8 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
-    assert.match(report.parityFollowup.body, /## Source Unusable \(advisory\)/);
-    assert.match(report.parityFollowup.body, /Total: 4 issues across 2 files/);
+    assert.match(report.parityFollowup.body, /## ソース使用不可 \(advisory\)/);
+    assert.match(report.parityFollowup.body, /合計: 4 件 \(2 ファイル\)/);
     // sort 順固定: snapshot-incomplete → source-unusable
     assert.match(report.parityFollowup.body, /snapshot-incomplete: 3/);
     assert.match(report.parityFollowup.body, /source-unusable: 1/);
@@ -1329,7 +1329,7 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
-    assert.doesNotMatch(report.parityFollowup.body, /## Source Unusable/);
+    assert.doesNotMatch(report.parityFollowup.body, /## ソース使用不可/);
   });
 });
 
@@ -1416,13 +1416,13 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     assert.doesNotMatch(md, /## Structure Mismatch/);
   });
 
-  it('includes "## Source Unusable (advisory)" section when snapshotUnusableIssues > 0', () => {
+  it('includes "## ソース使用不可 (advisory)" section when snapshotUnusableIssues > 0', () => {
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /## Source Unusable \(advisory\)/);
-    assert.match(md, /Total: 2 issues across 2 files/);
+    assert.match(md, /## ソース使用不可 \(advisory\)/);
+    assert.match(md, /合計: 2 件 \(2 ファイル\)/);
     // 翻訳者責任外であることの注意文
-    assert.match(md, /translation failure|snapshot.*source sync|翻訳/);
+    assert.match(md, /翻訳失敗|snapshot.*source sync|翻訳/);
     // type 別内訳 (alpha sort)
     assert.match(md, /snapshot-incomplete: 1/);
     assert.match(md, /source-unusable: 1/);
@@ -1473,17 +1473,17 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     };
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
     assert.doesNotMatch(md, /## Structure Mismatch/);
-    assert.doesNotMatch(md, /## Source Unusable/);
+    assert.doesNotMatch(md, /## ソース使用不可/);
   });
 
-  it('## Parity section の "Active issue files" は structure mismatch も含む値 (PR5 cutover)', () => {
+  it('## パリティ section の "active issue ファイル" は structure mismatch も含む値 (PR5 cutover)', () => {
     // PR5 cutover で structure mismatch が reportable になったため、
     // structureMismatchFiles ぶんが `reportableActiveFiles` 経由で
-    // "Active issue files" にも反映される。
+    // "active issue ファイル" にも反映される。
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /Active issue files: 3/);
-    assert.match(md, /Active actionable files: 3/);
+    assert.match(md, /active issue ファイル: 3/);
+    assert.match(md, /active actionable ファイル: 3/);
   });
 });
 
@@ -2072,22 +2072,22 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     };
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
 
-    // Parity section: active counts must reflect Phase 8 reportable
+    // パリティ section: active counts must reflect Phase 8 reportable
     // counters, NOT the legacy ones that include coarse signals.
-    assert.match(md, /## Parity/);
-    assert.match(md, /Active actionable files: 0/);
-    assert.match(md, /Active issue files: 0/);
+    assert.match(md, /## パリティ/);
+    assert.match(md, /active actionable ファイル: 0/);
+    assert.match(md, /active issue ファイル: 0/);
 
-    // Audit Signals section exists and lists the coarse breakdown.
-    assert.match(md, /## Audit Signals/);
+    // 監査シグナル section exists and lists the coarse breakdown.
+    assert.match(md, /## 監査シグナル/);
     assert.match(md, /paragraph-count-mismatch: 2/);
     assert.match(md, /heading-mismatch: 1/);
 
-    // Sanity: coarse signal labels must NOT show up inside the Parity
-    // section. The simplest way to test this is to extract the Parity
+    // Sanity: coarse signal labels must NOT show up inside the パリティ
+    // section. The simplest way to test this is to extract the パリティ
     // section text and check it for the coarse type names.
-    const paritySectionMatch = md.match(/## Parity\n([\s\S]*?)(?:\n## |$)/);
-    assert.ok(paritySectionMatch, 'Parity section must exist');
+    const paritySectionMatch = md.match(/## パリティ\n([\s\S]*?)(?:\n## |$)/);
+    assert.ok(paritySectionMatch, 'パリティ section must exist');
     const paritySection = paritySectionMatch[1];
     assert.doesNotMatch(paritySection, /paragraph-count-mismatch/);
     assert.doesNotMatch(paritySection, /heading-mismatch/);
@@ -2496,5 +2496,210 @@ describe('§1 cleanup — loadDetectionInputs strict mode', () => {
     // Skipped here because the helper assumes filesystem inputs; the
     // direct validateDetectionInputs tests above already cover the
     // failure logic.
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #255 Phase 4 — source-side debt visibility and Japanization
+// ---------------------------------------------------------------------------
+
+describe('Issue #255 — source-side debt section in summary markdown', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-09T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+  const emptyParity = {
+    summary: {
+      checkedAt: '2026-04-09T00:00:00Z',
+      actionableFiles: 0,
+      signalFiles: 0,
+      errorFiles: 0,
+    },
+    files: [],
+  };
+
+  it('emits "## Source-side debt" (日本語) section when excluded pages exist', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 99,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 1,
+        excludedBrokenPages: 1,
+        excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [
+        {
+          slug: 'testops/testops-version-control/pull-requests',
+          fetchStatus: 'excluded-broken',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        },
+      ],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
+
+    // 日本語セクション見出しが emit される
+    assert.match(md, /## ソース側 debt/);
+    // Counters (human-readable Japanese labels)
+    assert.match(md, /除外ページ: 1/);
+    assert.match(md, /未復旧: 1/);
+    assert.match(md, /復旧候補: 0/);
+    // Slug listing subsection
+    assert.match(md, /### 未復旧/);
+    assert.match(md, /testops\/testops-version-control\/pull-requests/);
+    // Recovery probe 結果
+    assert.match(md, /snapshot-incomplete/);
+    assert.match(md, /extractor-empty/);
+  });
+
+  it('omits the section entirely when no excluded pages exist', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 100,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 0,
+        excludedBrokenPages: 0,
+        excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
+
+    assert.doesNotMatch(md, /## ソース側 debt/);
+    assert.doesNotMatch(md, /excluded-broken/);
+  });
+
+  it('lists recovery-candidate subsection (復旧候補) when excluded-recovered exists', () => {
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 99,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 1,
+        excludedBrokenPages: 0,
+        excludedRecoveredPages: 1,
+        sidebarVerified: true,
+      },
+      pages: [
+        {
+          slug: 'testops/testops-version-control/pull-requests',
+          fetchStatus: 'excluded-recovered',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: null,
+        },
+      ],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+    const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
+
+    assert.match(md, /## ソース側 debt/);
+    assert.match(md, /復旧候補: 1/);
+    assert.match(md, /### 復旧候補/);
+    assert.match(md, /testops\/testops-version-control\/pull-requests/);
+    // recovered は「復旧したので registry から削除を検討」説明を含む
+    assert.match(md, /registry|登録解除|除外解除/);
+  });
+
+  it('exposes sourceSideDebt counters on actionable report JSON', () => {
+    // JSON consumer (sync-detection-issues / dashboards) が独立に
+    // counter を読めるように、docs-actionable-report.json にも露出する
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'fresh',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 98,
+        notFoundPages: 0,
+        errorPages: 0,
+        excludedPages: 2,
+        excludedBrokenPages: 1,
+        excludedRecoveredPages: 1,
+        sidebarVerified: true,
+      },
+      pages: [
+        {
+          slug: 'a',
+          fetchStatus: 'excluded-broken',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        },
+        {
+          slug: 'b',
+          fetchStatus: 'excluded-recovered',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: null,
+        },
+      ],
+      errors: [],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+
+    assert.ok(
+      report.sourceSyncHealth.sourceSideDebt,
+      'actionable report must expose sourceSideDebt under sourceSyncHealth',
+    );
+    assert.equal(report.sourceSyncHealth.sourceSideDebt.excludedPages, 2);
+    assert.equal(report.sourceSyncHealth.sourceSideDebt.excludedBrokenPages, 1);
+    assert.equal(report.sourceSyncHealth.sourceSideDebt.excludedRecoveredPages, 1);
+
+    // brokenSlugs / recoveredSlugs が slug list として露出している
+    assert.deepEqual(report.sourceSyncHealth.sourceSideDebt.brokenSlugs, ['a']);
+    assert.deepEqual(report.sourceSyncHealth.sourceSideDebt.recoveredSlugs, ['b']);
+  });
+
+  it('Source Sync Health issue body surfaces source-side debt info in 日本語', () => {
+    // freshnessState=partial (broken 以外) で issue body が開いたとき、
+    // source-side debt 情報も日本語で body に入る
+    const sourceSync = {
+      schemaVersion: 1,
+      freshnessState: 'partial',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 95,
+        notFoundPages: 0,
+        errorPages: 4,
+        excludedPages: 1,
+        excludedBrokenPages: 1,
+        excludedRecoveredPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [
+        {
+          slug: 'testops/testops-version-control/pull-requests',
+          fetchStatus: 'excluded-broken',
+          debtCategory: 'source-side-debt',
+          recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty' },
+        },
+      ],
+      errors: [{ slug: 'x', detail: 'HTTP 500' }],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
+
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    // Issue body is bilingual — heading can stay English for now (Phase 4b
+    // migrates the whole markdown), but the debt subsection is Japanese
+    assert.match(report.sourceSyncHealth.body, /ソース側 debt/);
+    assert.match(report.sourceSyncHealth.body, /testops\/testops-version-control\/pull-requests/);
+    assert.match(report.sourceSyncHealth.body, /未復旧/);
   });
 });

@@ -107,15 +107,40 @@ node scripts/fetch_translate_images.mjs --mode=full
 2. `snapshot_diff` が `page-removed` として検出
 3. 対応: 日本語ドキュメントの扱いを判断（削除 or アーカイブ）
 
+### Source-side debt（broken upstream）の隔離 (Issue #255)
+
+upstream 英語原文自体が broken で parity comparator の前提を満たさないページ（例: `testops/testops-version-control/pull-requests`）は、 `scripts/lib/source_sync_exclusions.mjs` の **明示 registry** で管理し、通常の翻訳同期レーンから分離します。
+
+**運用契約:**
+
+- snapshot fetch は毎回実行する（復旧監視のため）
+- snapshot file は上書きしない（hand-authored snapshot を凍結参照として温存）
+- fetch 結果に対して `detectSourceUsability` で recovery probe を実行する
+- probe 結果は `source-sync-status.json` の `fetchStatus` に反映される:
+  - `excluded-broken` — 依然 broken（未復旧）
+  - `excluded-recovered` — upstream 復旧候補（人間が確認の上、registry から削除）
+- excluded ページは `fetchedPages` / `notFoundPages` / `errorPages` のどのカウンタにも含まれない
+- 独立カウンタ `excludedPages` / `excludedBrokenPages` / `excludedRecoveredPages` に集計される
+- `freshnessState` の計算から完全に除外されるため、既知 debt だけ残っていても `fresh` 扱い
+- `docs-update-summary.md` の `## ソース側 debt` セクションで日本語可視化される
+
+**新規 entry 追加のルール:**
+
+- **自動除外はしない**（false negative を避けるため）
+- 人間が upstream broken と目視確認した slug のみ `SOURCE_SYNC_EXCLUSIONS` に追加する
+- `expectedIssueType` / `expectedReason` は実際の `detectSourceUsability` 出力と合致させる
+- 復旧候補は人間判断で registry から削除する（自動解除はしない）
+
 ## 出力ファイル
 
-| ファイル                      | 内容                                 |
-| ----------------------------- | ------------------------------------ |
-| `snapshot-diff-status.json`   | 変更検知結果（ページごとの差分分類） |
-| `parity-check-status.json`    | ローカル parity チェック結果         |
-| `docs-actionable-report.json` | Issue 作成用レポート                 |
-| `docs-update-summary.md`      | 人間向けサマリー                     |
-| `docs-audit-manifest.json`    | レビュー計画用マニフェスト           |
+| ファイル | 内容 |
+| --- | --- |
+| `snapshot-diff-status.json` | 変更検知結果（ページごとの差分分類） |
+| `source-sync-status.json` | fetch metadata + freshness + source-side debt カウンタ (`excludedPages` 等、Issue #255) |
+| `parity-check-status.json` | ローカル parity チェック結果 |
+| `docs-actionable-report.json` | Issue 作成用レポート |
+| `docs-update-summary.md` | 人間向けサマリー（`## ソース側 debt` セクションを含む） |
+| `docs-audit-manifest.json` | レビュー計画用マニフェスト |
 
 ## 初回セットアップ
 
@@ -135,11 +160,13 @@ git commit -m "feat: 初回英語原文スナップショット"
 ## 関連ファイル
 
 - `scripts/lib/madcap_toc.mjs` — MadCap Flare TOC データ解析
-- `scripts/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON）
+- `scripts/lib/source_sync_exclusions.mjs` — Source-side debt registry (Issue #255)
+- `scripts/lib/source_sync_health.mjs` — `source-sync-status.json` 生成と freshness 判定
+- `scripts/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON + exclusion 分岐）
 - `scripts/snapshot_diff.mjs` — 比較 & レポート
-- `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック
+- `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック（日本語 warning/error メッセージ）
 - `.github/workflows/deep-audit.yml` — 手動 deep audit
 
 ---
 
-最終更新: 2026-03-27
+最終更新: 2026-04-09

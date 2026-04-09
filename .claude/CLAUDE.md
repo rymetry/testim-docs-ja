@@ -48,6 +48,7 @@ Full reference: `scripts/README.md`
   - **Content**: Extracts `#mc-main-content` from each EN page HTML, saves to `snapshots/en/content/{folder}/{basename}.html`.
   - **Sidebar**: Parses MadCap Flare TOC data (`scripts/lib/madcap_toc.mjs`), saves to `snapshots/en/sidebar.json`.
   - **Parity comparison**: Converts HTML snapshots to Markdown via `turndown`, then compares structure with JA translations.
+  - **Source-side debt**: broken upstream EN ソースは `scripts/lib/source_sync_exclusions.mjs` の registry で隔離し、snapshot 上書きを抑止して `source-sync-status.json` の `excludedPages` counter で可視化する (詳細は `docs/DOCS_DATE_TRACKING.md`)。
 
 ## Authority Sources
 

@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { afterEach, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -6,6 +7,7 @@ let extractMainContent;
 
 const originalFetch = global.fetch;
 const originalLog = console.log;
+const originalWriteFileSync = fs.writeFileSync;
 
 function createResponse({ ok = true, status = 200, text = '' } = {}) {
   return {
@@ -22,6 +24,7 @@ before(async () => {
 afterEach(() => {
   global.fetch = originalFetch;
   console.log = originalLog;
+  fs.writeFileSync = originalWriteFileSync;
 });
 
 describe('extractMainContent', () => {
@@ -136,5 +139,155 @@ describe('snapshot_update main', () => {
 
     assert.equal(result.fetched, 0);
     assert.equal(result.notFound, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #255 Phase 3b — source-side debt exclusion wiring
+//
+// pull-requests は registry に登録されているので、snapshot_update は
+//   1. fetch する
+//   2. snapshot file を上書きしない
+//   3. detectSourceUsability で recovery probe を実行する
+//   4. 結果を pageResults (excluded-broken / excluded-recovered) に流す
+// ---------------------------------------------------------------------------
+
+describe('snapshot_update — source-side debt exclusion', () => {
+  // broken upstream simulation: body 全体が <code> ブロックで wrap された
+  // 実際の live HTML を模して、extractMainContent が extract しても body が
+  // code/pre だけになるペイロード。detectSourceUsability は extractor-empty
+  // を発火する (EN body segment が 0)。
+  const BROKEN_PAGE_HTML =
+    '<html><body><div role="main" id="mc-main-content">' +
+    '<h1>Pull Requests</h1>' +
+    '<div class="codeSnippet"><div class="codeSnippetBody"><pre><code>' +
+    'Pull requests notify reviewers on changes introduced to a test.' +
+    '</code></pre></div></div>' +
+    '</div></body></html>';
+
+  // recovered upstream simulation: broken 状態から upstream が直り、
+  // 正しく <h2> / <p> / <ol> に分解された clean HTML が返る想定。
+  // detectSourceUsability は null (usable) を返すので excluded-recovered。
+  const CLEAN_PAGE_HTML =
+    '<html><body><div role="main" id="mc-main-content">' +
+    '<h1>Pull Requests</h1>' +
+    '<p>Pull requests notify reviewers on changes introduced to a test.</p>' +
+    '<h2>Creating a Pull Request</h2>' +
+    '<p>A pull request represents the difference between branches.</p>' +
+    '<h2>Reviewing a Pull Request</h2>' +
+    '<p>Reviewers are notified via email.</p>' +
+    '<h2>Resubmitting a Pull Request</h2>' +
+    '<p>If the reviewer sent back the PR you can respond.</p>' +
+    '</div></body></html>';
+
+  function mockTocFetchFor(pageHtml) {
+    const tocMainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0}]}});";
+    const tocChunkJs =
+      "define({'/content/testops/testops-version-control/pull-requests/index.htm':{i:[0],t:['Pull Requests'],b:['']}});";
+
+    return async (url) => {
+      const href = String(url);
+      if (href.includes('Main.js')) return createResponse({ text: tocMainJs });
+      if (href.includes('Mock_Chunk0.js')) return createResponse({ text: tocChunkJs });
+      return createResponse({ text: pageHtml });
+    };
+  }
+
+  it('broken upstream → fetchStatus excluded-broken with recovery probe', async () => {
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    // 1 target in scope
+    assert.equal(result.sourceSyncStatus.summary.targetPages, 1);
+    // excluded は ok / error / not-found のどれにも count されない
+    assert.equal(result.sourceSyncStatus.summary.fetchedPages, 0);
+    assert.equal(result.sourceSyncStatus.summary.errorPages, 0);
+    assert.equal(result.sourceSyncStatus.summary.notFoundPages, 0);
+    // 新 counter
+    assert.equal(result.sourceSyncStatus.summary.excludedPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.excludedBrokenPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.excludedRecoveredPages, 0);
+
+    // page 単位に debtCategory / recoveryProbe が載っている
+    const page = result.sourceSyncStatus.pages.find(
+      (p) => p.slug === 'testops/testops-version-control/pull-requests',
+    );
+    assert.ok(page);
+    assert.equal(page.fetchStatus, 'excluded-broken');
+    assert.equal(page.debtCategory, 'source-side-debt');
+    assert.ok(page.recoveryProbe);
+    assert.equal(page.recoveryProbe.issueType, 'snapshot-incomplete');
+    assert.equal(page.recoveryProbe.reason, 'extractor-empty');
+
+    // excluded は top-level errors に積まない
+    assert.equal(result.sourceSyncStatus.errors.length, 0);
+  });
+
+  it('recovered upstream → fetchStatus excluded-recovered and recoveryProbe is null', async () => {
+    global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    assert.equal(result.sourceSyncStatus.summary.excludedPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.excludedBrokenPages, 0);
+    assert.equal(result.sourceSyncStatus.summary.excludedRecoveredPages, 1);
+
+    const page = result.sourceSyncStatus.pages.find(
+      (p) => p.slug === 'testops/testops-version-control/pull-requests',
+    );
+    assert.ok(page);
+    assert.equal(page.fetchStatus, 'excluded-recovered');
+    assert.equal(page.debtCategory, 'source-side-debt');
+    assert.equal(page.recoveryProbe, null);
+  });
+
+  it('does not overwrite snapshot file even in non-dry-run mode', async () => {
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    // fs.writeFileSync を完全にスパイし、全 write 呼び出しを record するが
+    // 実際のディスク書き込みは抑止する。これにより repo root 上の
+    // source-sync-status.json / sidebar.json / snapshot HTML が
+    // テスト実行で汚染されない。
+    const writeCalls = [];
+    fs.writeFileSync = (path, _content, ..._rest) => {
+      writeCalls.push(String(path));
+      // NOTE: 実 file には書かない — テストの目的は "どの path が write
+      // 対象として渡ってくるか" を observe することのみ。
+    };
+
+    await main(['--slug=pull-requests']);
+
+    const snapshotWrite = writeCalls.find((p) => p.includes('pull-requests.html'));
+    assert.equal(
+      snapshotWrite,
+      undefined,
+      `excluded slug の snapshot HTML を書き込んではならない — 書込発生: ${snapshotWrite}`,
+    );
+  });
+
+  it('exposes excluded counter on main() return value', async () => {
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    // main() が新 counter を返すことを契約として pin する
+    // (workflow / detection_reports から観測できるように)
+    assert.equal(result.excluded, 1);
+    assert.equal(result.fetched, 0);
+  });
+
+  it('debt-only run keeps freshnessState fresh (not broken)', async () => {
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    // excluded-only のみの scope でも sidebar さえ verified なら fresh
+    assert.equal(result.sourceSyncStatus.freshnessState, 'fresh');
   });
 });
