@@ -133,28 +133,39 @@ const PINNED_NETWORK_LOGS = Object.freeze({
 
 const PINNED_EMAIL_VALIDATION = Object.freeze({
   slug: 'advanced-editing/validations/email-validation',
-  structureIssueCount: 2,
-  byType: { 'section-structure-mismatch': 2, 'segment-order-mismatch': 0 },
+  // Phase D で preface の extra paragraph を削除したので 2 → 1 に減少。
+  // 残る 1 件は nested heading 構造差 (Codeless Option セクション末尾の
+  // extra paragraph) で、Phase G で baseline 保持する方針。
+  structureIssueCount: 1,
+  byType: { 'section-structure-mismatch': 1, 'segment-order-mismatch': 0 },
   byCategory: {
-    'kind-multiset': 2,
+    'kind-multiset': 1,
     'kind-sequence': 0,
     'content-order': 0,
   },
   firstIssue: {
     type: 'section-structure-mismatch',
     structureCategory: 'kind-multiset',
-    sectionPath: '',
-    sectionIndex: 0,
+    sectionPath: 'Creating a Validate Email Step > Creating a Validate Email Step using the Codeless Option',
+    sectionIndex: 16,
     enKinds: [
-      'paragraph', 'callout-body', 'paragraph', 'table',
-      'paragraph', 'unordered-list', 'paragraph', 'callout-body',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'callout-body', 'paragraph', 'ordered-list', 'paragraph',
+      'ordered-list', 'callout-body', 'ordered-list', 'paragraph',
+      'ordered-list', 'paragraph', 'ordered-list', 'paragraph',
+      'paragraph', 'paragraph', 'ordered-list', 'paragraph',
     ],
     jaKinds: [
-      'paragraph', 'paragraph', 'callout-body', 'paragraph', 'table',
-      'paragraph', 'unordered-list', 'paragraph', 'callout-body',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'callout-body', 'paragraph', 'ordered-list', 'paragraph',
+      'ordered-list', 'callout-body', 'ordered-list', 'paragraph',
+      'ordered-list', 'paragraph', 'ordered-list', 'paragraph',
+      'paragraph', 'ordered-list', 'paragraph',
     ],
-    enSegmentCount: 8,
-    jaSegmentCount: 9,
+    enSegmentCount: 24,
+    jaSegmentCount: 23,
   },
 });
 
@@ -251,5 +262,36 @@ describe('source_parity_structure_fixtures: results/test-results/network-logs', 
 describe('source_parity_structure_fixtures: advanced-editing/validations/email-validation', () => {
   it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
     assertStructurePin(PINNED_EMAIL_VALIDATION.slug, PINNED_EMAIL_VALIDATION);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 post-merge — Phase H.3 — artifact regression fixture
+//
+// Phase E で JA 側を整えて完全に clean green に到達した 2 slug
+// (custom-action-step-mobile と test-runs) について、structure mismatch が
+// 0 件であることを pin する。将来の extractor / preprocessor 変更で再発した
+// 場合にここで捕まえる regression guard。
+// ---------------------------------------------------------------------------
+function assertStructureClean(slug) {
+  const { structureIssues } = runStructureComparator(slug);
+  assert.equal(
+    structureIssues.length,
+    0,
+    `${slug}: Phase E で clean 化済みだが structure issue が ` +
+      `${structureIssues.length} 件検出された。` +
+      `最初の issue: ${JSON.stringify(structureIssues[0] ?? null)}`,
+  );
+}
+
+describe('source_parity_structure_fixtures: custom-action-step-mobile (Phase E artifact)', () => {
+  it('Phase E 以降、structure issue は 0 件を維持する (artifact regression guard)', () => {
+    assertStructureClean('advanced-editing/custom-action-step-mobile');
+  });
+});
+
+describe('source_parity_structure_fixtures: test-runs (Phase E artifact)', () => {
+  it('Phase E 以降、structure issue は 0 件を維持する (artifact regression guard)', () => {
+    assertStructureClean('results/test-runs');
   });
 });
