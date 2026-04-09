@@ -20,8 +20,6 @@ keywords:
   - Testim
 ---
 
-コマンドラインからすべてのテストを実行し、CI と統合します。
-
 ## 前提条件
 
 CLI 経由での実行には Node.js がインストールされている必要があります。Testim は [LTS/サポート対象](https://github.com/nodejs/Release/blob/main/README.md) の Node.js のすべてのバージョンをサポートしています。
@@ -38,26 +36,33 @@ npm install -g @testim/testim-cli && testim connect
 
 #### 基本的な CLI コマンド
 
-Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タブに表示され、トークンとプロジェクト ID が含まれています。
-
-**基本的な CLI コマンドを表示するには:**
+Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タブに表示され、トークンとプロジェクト ID が含まれています。→ **基本的な CLI コマンドを表示するには:**
 
 1. **設定 > CLI** タブに移動します。
 2. **CI** をクリックしてテストをリモート実行するか、**ローカル** をクリックしてテストをローカル実行します（マシンのローカルブラウザが開きます）（Web のみ）
 3. **CI プラットフォーム** で、希望する CI プラットフォームを選択します （オプション）
-4. **グリッド** で、テストを実行するグリッドを選択します。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:\
-   [仮想モバイルグリッド](/docs/integrations/grid-management/virtual-mobile-grid)\
-   [Tricentis Device Cloud](/docs/integrations/grid-management/tricentis-device-cloud)\
-   [Testim Headspin Mobile](/docs/integrations/grid-management/headspin-integration)\
-   [Browserstack](/docs/integrations/grid-management/browserstack-integration-1)\
-   [LambdaTest](/docs/integrations/grid-management/browserstack-integration-copy)\
-   基本的な CLI コマンドは **例** の下部に表示されます。
+4. **グリッド** で、テストを実行するグリッドを選択します。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には以下のグリッドが表示されます:
+
+[仮想モバイルグリッド](/docs/integrations/grid-management/virtual-mobile-grid)
+
+[Tricentis Device Cloud（デバイス クラウド）](/docs/integrations/grid-management/tricentis-device-cloud)
+
+[Testim Headspin Mobile（モバイル グリッド）](/docs/integrations/grid-management/headspin-integration)
+
+[Browserstack（グリッド）](/docs/integrations/grid-management/browserstack-integration-1)
+
+[LambdaTest（グリッド）](/docs/integrations/grid-management/browserstack-integration-copy)
+
+基本的な CLI コマンドは **例** の下部に表示されます。
 
 ![設定画面に表示される基本的な CLI コマンド例](/images/running-tests/the-command-line-cli/af52b8a-cli_command.png)
 
-基本コマンドには以下の要素が含まれています:\
-`--token`: 認証トークン\
-`--project`: プロジェクト ID\
+基本コマンドには以下の要素が含まれています:
+
+`--token`: 認証トークン
+
+`--project`: プロジェクト ID
+
 `--grid`: テストを実行するグリッドの名前。Web テスト用には Selenium グリッドが表示され、モバイルテスト用には Appium グリッドが表示されます。
 
 5. CLI をコピーし、編集して必要に応じてパラメーターを追加します。 特定のテスト、ラベル、構成など、以下のセクションで説明されているように実行できます。
@@ -66,10 +71,14 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 
 最も一般的なオプションを含む基本コマンドの例は次のとおりです （使用可能なすべてのオプションの詳細な説明については、以下を参照）:
 
-`--project`: 上記を参照\
-`--token`: 上記を参照\
-`--label:` これを使用して、指定したラベルを含む特定のテストを実行します\
-`--grid`: 上記を参照\
+`--project`: 上記を参照
+
+`--token`: 上記を参照
+
+`--label`: これを使用して、指定したラベルを含む特定のテストを実行します
+
+`--grid`: 上記を参照
+
 `--report-file`: テスト結果を保存する場所を指定します （CI サーバーがそれを読みます）
 
 ```shell
@@ -77,15 +86,16 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 ```
 
 :::note{title="Web のみの注記"}
-グリッドで実行する代わりに、**--use-local-chrome-driver** を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode selenium` フラグも追加する必要があります。
+グリッドで実行する代わりに、`--use-local-chrome-driver` を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode` `selenium` フラグも追加する必要があります。
 :::
 
 ## すべての CLI パラメーター
 
 #### プロジェクト
 
-`--project` プロジェクト ID。\
-別のプロジェクトを選択するには、企業画面に移動し （参照 [プロジェクトとユーザー管理](/docs/administration/project-and-user-management)）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
+`--project` プロジェクト ID。
+
+別のプロジェクトを選択するには、企業画面に移動し（[https://help.testim.io/docs/project-and-user-management](/docs/administration/project-and-user-management) を参照）、関連するプロジェクトを選択し、**設定 > CLI** タブに移動し、基本的な CLI コマンド例からプロジェクト ID を抽出します。
 
 ```shell
 --project AOL-12323-a4b2-4762-df380
@@ -139,14 +149,15 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### グリッド名
 
-`--grid`、使用する Selenium グリッド名。"Testim-Grid"/ローカル selenium グリッド/ Saucelabs / Browserstack を使用できます。
+`--grid`、使用する Selenium グリッド名。"Testim-Grid" / ローカル selenium グリッド / Saucelabs / Browserstack を使用できます。
 
 `--grid` `<grid-name>`
+
 注: グリッドを構成する方法については、[こちら](/docs/integrations/grid-management) をお読みください。
 
 #### ホスト
 
-`-h` または `--host <host-name>`、selenium グリッドを含むホスト名または IP。このコマンドは `--grid` コマンドをオーバーライドします。
+`-h` または `--host` `<host-name>`、selenium グリッドを含むホスト名または IP。このコマンドは `--grid` コマンドをオーバーライドします。
 
 ```shell
 --host seleniumhost
@@ -162,9 +173,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 -r ~/report.xml
 ```
 
-レポートファイルのクラス名をオーバーライドするには、このパラメーターを追加します。
+レポートファイルのクラス名をオーバーライドするには、このパラメーターを追加します:
 
-`--override-report-file-classname com.someName`
+`--override-report-file-classname` `com.someName`
 
 #### ベース URL （Web のみ）
 
@@ -176,7 +187,8 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### テスト構成
 
-`test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメーター （例: ブラウザ、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメーターなど） を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。\
+`test-config` は、このテスト実行の全テストに対して定義されている構成をオーバーライドする構成パラメーター （例: ブラウザ、オペレーティング システム、解像度、デバイス名、OS バージョン、ビジュアル検証パラメーターなど） を指定します。モバイル テストでは、テストはテスト構成で構成されているデバイスプールの最初の利用可能なデバイスで実行されます。
+
 詳細は [構成ライブラリ - Web](/docs/test-management/shared-configuration) および [構成ライブラリ - モバイル](/docs/test-management/configuration-library-mobile) をお読みください。
 
 ```shell
@@ -185,7 +197,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### パラメーター ファイル
 
-`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters) をお読みください。
+`--params-file` テスト実行にパラメーターを渡すために使用できる JSON パラメーター ファイルを使用します。このメソッドにより、テスト環境によって異なるテスト内に動的な値を定義できます。例えば、ローカルでテストする場合と CI でテストする場合に異なるログイン認証情報 （ユーザー名とパスワード） を設定できます。JSON パラメーター ファイルを定義した後、それを Testim CLI に引数として渡すことができます: `--params-file` の後にファイル名を指定します。詳細は [https://help.testim.io/docs/json-parameters-file-parameters](/docs/advanced-editing/parameters/json-parameters-file-parameters) をお読みください。
 
 :::note
 `params-file` パスで設定されている文字列パスは相対パスである必要があり、完全なパスではありません。
@@ -274,7 +286,8 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### 構成ファイル （Web のみ）
 
-`--config-file` または `-c`、外部構成ファイルからすべての構成オプションを指定します。\
+`--config-file` または `-c`、外部構成ファイルからすべての構成オプションを指定します。
+
 シェルでアクセス可能なパスに構成ファイルを配置し、コマンドでファイルへのパスを指定します。
 
 ```shell
@@ -305,8 +318,9 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### 専用実行トンネル （Web のみ）
 
-`--tunnel` `--tunnel-port`、トンネルを使用して、内部サーバー/localhost からアプリを実行し、外部ブラウザで表示できます。\
-\--tunnel #デフォルト アプリケーション ポート 80
+`--tunnel` `--tunnel-port`、トンネルを使用して、内部サーバー/localhost からアプリを実行し、外部ブラウザで表示できます。
+
+`--tunnel` #デフォルト アプリケーション ポート 80
 
 ```shell
 testim --tunnel --tunnel-port <APP PORT default 80>
@@ -333,8 +347,6 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 --disable-timeout-retry
 ```
 
-<br />
-
 #### データ保持を設定
 
 `--set-retention` パラメーター --set-retention \[1 ～ 10 の整数] を CLI 実行に追加すると、この実行のすべてのテスト結果は、パラメーターで指定された日数後に削除対象としてマークされます （保持期間）。
@@ -353,12 +365,12 @@ CLI に --rerun-failed-by-run-id フラグをスイートの実行 ID で追加�
 
 ![CLI 実行が中止されたことを示す実行結果画面](/images/running-tests/the-command-line-cli/a78e858-Screen_Shot_2020-10-15_at_11.49.37.png)
 
-CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを閉じることで強制的に終了することもできます （いわゆる、不正な中止）。\
+CLI は複数回 CTRL+C キーを押すか、ターミナル ウィンドウを閉じることで強制的に終了することもできます（a.k.a、不正な中止）。
 これにより実行は停止しますが、ステータスはエディターで「実行中」のままになります。実行ステータスは 90 分後に「タイムアウト」に変わります。
 
 #### Chrome 追加引数を追加する （Web のみ）
 
-Chrome 追加引数を追加するには、_--chrome-extra-args_ を使用します。これは必要なフラグをコンマで区切った文字列を受け取ります （フラグ間に スペースはありません）。例えば:
+Chrome 追加引数を追加するには、`--chrome-extra-args` を使用します。これは必要なフラグをコンマで区切った文字列を受け取ります （フラグ間に スペースはありません）。例えば:
 
 ```shell
 testim --token "TOKEN" --project "PROJECT" --grid "Testim-Grid" --chrome-extra-args "enable-heavy-ad-intervention,heavy-ad-privacy-mitigations"
@@ -397,19 +409,9 @@ testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "E
 
 `intersect-with` フラグは、元の実行コマンドに含まれていたすべてのテストから、Testim が指定されたラベルまたはスイートと一般的な （つまり、交差する） テストのみを実行することを定義しています。
 
-**例えば:**\
-ラベル A - テストが含まれています: 1,2,3,4\
-ラベル B - テストが含まれています: 5,6,7\
-ラベル C - テストが含まれています: 3,4,5\
-ラベル D - テストが含まれています: 8,9
+**例えば:**
 
-テスト計画 P はラベル A と B を含んでいます。\
-したがって、テスト計画 P を --intersect-with-label C で実行する場合 ==> テスト 3,4,5 が実行されます\
-テスト計画 P を --intersect-with-label D で実行する場合 ==> テストは実行されません。
-
-複数の交差フラグを追加することが可能です。\
-例えば、テスト計画 P を --intersect-with-label C --intersect-with-label A で実行する場合\
-Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
+ラベル A - テストが含まれています: 1,2,3,4 ラベル B - テストが含まれています: 5,6,7 ラベル C - テストが含まれています: 3,4,5 ラベル D - テストが含まれています: 8,9 テスト計画 P はラベル A と B を含んでいます。 したがって、テスト計画 P を --intersect-with-label C で実行する場合 ==> テスト 3,4,5 が実行されます。テスト計画 P を --intersect-with-label D で実行する場合 ==> テストは実行されません。複数の交差フラグを追加することが可能です。 例えば、テスト計画 P を --intersect-with-label C --intersect-with-label A で実行する場合、Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
 
 :::note
 交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、--intersect-with-label A と --intersect-with-label B がある場合、Testim は要求されたテストと交差する A または B のすべてのテストを実行します。
@@ -441,8 +443,6 @@ Testim は元の実行コマンド内のテストを確認してから、交差�
 ```shell
 --sealights-lab-id [sealights-lab-id]
 ```
-
-<br />
 
 ### モバイル専用フラグ
 
