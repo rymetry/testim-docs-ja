@@ -394,3 +394,83 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
 - baseline paydown は明示的な PR で実施する（段階的縮小）。期限切れによる自動再点火に頼ってはいけない
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
 - `tokenless-near-tie` baseline エントリは `--include-advisory` review queue として triage する
+
+### Orphan baseline entry (Issue #247 post-merge 追加)
+
+detector / extractor / preprocessor の仕様変更で、runtime が emit しなくなった
+issueType の baseline entry は **orphan** として残留する。`check_source_parity.mjs`
+は完走時に orphan を以下の経路で可視化する:
+
+- `parity-check-status.json.summary.orphanBaselineEntries` (総数) および
+  `.orphanBaselineByType` (type 別内訳) に集計される
+- CLI サマリーで 0 件以外なら `🧹 orphan baseline entries: N 件 (...)` の 1 行を出す
+- `detection_reports.parityFollowup` に `## 🧹 Orphan baseline entries` セクションを出す
+
+掃除手順:
+
+1. `npm run check:parity` の CLI 出力で orphan 件数と byType を確認
+2. 該当 slug に対して `node scripts/generate_parity_baseline.mjs --slug=<slug>` で再生成
+3. 再度 `npm run check:parity` を走らせて `orphanBaselineEntries === 0` を確認
+
+`scripts/__tests__/source_parity_orphan_integration.test.mjs` が
+「既存 clean slug に stale entry を注入 → orphan として集計される」E2E を
+pin する。repo-global な baseline/status file を奪い合わないよう、
+`checkSourceParity({ baselinePath, outputPath })` の test-only 注入 hook を
+使って `mkdtemp` 上の temp copy だけを操作する。
+
+### Issue #247 完了条件の着地点 (post-merge 2026-04-09)
+
+Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レビューで
+完了条件 #2 と #4 が未達だったため、以下の追加作業で完全解消した:
+
+**完了条件 #2 (4 slug が structure mismatch として reportable)**: Phase D/E/F の
+実修正で以下のように収束:
+
+| slug | 方針 | 着地点 |
+| --- | --- | --- |
+| `salesforce-testing/faq` | Phase F.2.5 preprocessor 正規化 + JA 構造追従 | structure / source-unusable 共に 0 件、extractor 既知バグ起因の `segment-token-gap` 1 件のみ baseline 保持 |
+| `running-tests/the-command-line-cli` | Phase D 部分改善 (後続 Issue 対応) | 残存 10 structure-mismatch を baseline reseed |
+| `results/test-results/network-logs` | Phase D 部分改善 (後続 Issue 対応) | 残存 2 structure-mismatch を baseline reseed |
+| `advanced-editing/validations/email-validation` | Phase D preface 改善 | preface は clean、Codeless Option 末尾の 1 structure-mismatch を baseline 保持 |
+
+**完了条件 #4 (artifact 吸収で green)**: Phase E で 2 slug が完全に clean green:
+
+| slug | 方針 | 着地点 |
+| --- | --- | --- |
+| `advanced-editing/custom-action-step-mobile` | JA 側を EN plain-text 構造に揃える | baseline entry 0 件、structure / segment 共に 0 |
+| `results/test-runs` | preface の extra paragraph 削除 + 関連修正 | baseline entry 0 件 |
+
+**保持する source-side debt 2 slug** (翻訳 PR では修正できない upstream 側):
+
+- `salesforce-testing/salesforce-testing-overview`: `snapshot-incomplete/shallow-snapshot`
+- `testops/testops-version-control/pull-requests`: `snapshot-incomplete/extractor-empty`
+
+**完了条件の保証 (regression guard)**:
+
+- `scripts/__tests__/source_parity_structure_fixtures.test.mjs` — the-command-line-cli /
+  network-logs / email-validation の structure drift 件数と、
+  custom-action-step-mobile / test-runs の 0 件を pin
+- `scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` — faq が
+  source-unusable を出さないこと (Phase F.2.5 後の正常挙動) を pin
+- `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` — 4 clean sentinel ページで
+  structure / segment 共に 0 件を pin (false-positive 回帰ガード)
+- `scripts/__tests__/source_parity_representative_summary.test.mjs` — Phase D/E/F/G
+  後の全 8 slug summary counter を RESOLVED / RESIDUAL に分けて pin
+- `scripts/__tests__/source_parity_orphan_integration.test.mjs` — orphan detection の
+  E2E contract を pin
+- `scripts/__tests__/source_parity_usability_ack_integration.test.mjs` — detector → ack
+  matcher の round-trip を合成 HTML で pin
+
+### Issue #247 post-merge の local gate 期待値
+
+`npm run check:parity` を local で走らせた場合の完了条件は以下:
+
+- `reportableActiveFiles === 0`
+- `orphanBaselineEntries === 0`
+- `structureMismatchIssues === 0`
+- `snapshotUnusableIssues === 0`
+
+ただし `result` フィールドは `freshnessState !== 'fresh'` のとき実装契約上
+`inconclusive` に degrade する (`check_source_parity.mjs::computeParityResult`)。
+local で snapshot fetch をしていない限り `freshnessState: broken` なので、
+`result` は `inconclusive` のままで正常。CI 環境のみ `result: pass` が期待される。

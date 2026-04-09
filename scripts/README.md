@@ -130,6 +130,10 @@ acknowledgement の対象外:
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
+**`--types` 契約 (Issue #247 post-merge 追加)**: `generate_parity_baseline.mjs --types=<csv>` は PR5 migration 専用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validateTypesArg` が fail-fast する。`scripts/__tests__/generate_parity_baseline.test.mjs` の `Issue #247 post-merge — validateTypesArg` suite が契約を pin。
+
+**Orphan baseline entry の検出 (Issue #247 post-merge 追加)**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/__tests__/source_parity_orphan_integration.test.mjs` が pin する (temp dir 上の copy を使った isolated test)。
+
 **出力**: `parity-check-status.json`。
 
 ---
