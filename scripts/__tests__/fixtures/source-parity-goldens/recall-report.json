@@ -40,9 +40,9 @@
       },
       "segment-move": {
         "applicable": 8,
-        "detected": 1,
+        "detected": 2,
         "inconclusive": 0,
-        "recall": 0.125
+        "recall": 0.25
       },
       "section-body-swap": {
         "applicable": 7,
@@ -102,9 +102,9 @@
       },
       "segment-move": {
         "applicable": 8,
-        "detected": 1,
+        "detected": 2,
         "inconclusive": 0,
-        "recall": 0.125
+        "recall": 0.25
       },
       "section-body-swap": {
         "applicable": 7,
@@ -126,7 +126,7 @@
       }
     },
     "maxCascade": 2,
-    "maxBaselineDiffsPerPage": 39,
+    "maxBaselineDiffsPerPage": 36,
     "strictRecallTypes": [
       "paragraph-delete",
       "bullet-delete",
@@ -144,16 +144,16 @@
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
-      "baselineDiffCount": 39,
+      "baselineDiffCount": 0,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
-          "affectedSectionIndex": 0,
+          "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 38,
-          "cascadeSize": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
+          "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -162,8 +162,8 @@
           "applicable": true,
           "affectedSectionIndex": 39,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 40,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -173,8 +173,8 @@
           "applicable": true,
           "affectedSectionIndex": 3,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 40,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -184,8 +184,8 @@
           "applicable": true,
           "affectedSectionIndex": 4,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 39,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -201,19 +201,19 @@
           "applicable": true,
           "affectedSectionIndex": 3,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 39,
-          "cascadeSize": 0,
-          "detected": false,
-          "exactDetected": false,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
+          "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "section-body-swap": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 44,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 5,
           "cascadeSize": 3,
           "detected": true,
           "exactDetected": true,
@@ -221,11 +221,11 @@
         },
         "en-residual": {
           "applicable": true,
-          "affectedSectionIndex": 0,
+          "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 39,
-          "cascadeSize": 1,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -234,8 +234,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 39,
-          "mutatedDiffCount": 40,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,

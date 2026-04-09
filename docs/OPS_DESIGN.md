@@ -418,69 +418,74 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 `checkSourceParity({ baselinePath, outputPath })` の test-only 注入 hook を
 使って `mkdtemp` 上の temp copy だけを操作する。
 
-### Issue #247 完了条件の着地点 (post-merge 2026-04-09)
+### Issue #247 完了条件の着地点 (End-to-End 完全解消, 2026-04-09)
 
-Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レビューで
-完了条件 #2 と #4 が未達だったため、以下の追加作業で完全解消した:
+Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レビュー →
+re-review で段階的に絞り込み、最終的に **8 代表ページすべてを baseline 0 件の
+clean green** まで解消した (完全 End-to-End 達成):
 
-**完了条件 #2 (4 slug が structure mismatch として reportable)**: Phase D/E/F の
-実修正で以下のように収束:
+**完了条件 #2 (4 slug が structure mismatch として reportable)**: 4 slug すべてが
+baseline entry 0 で clean green に到達:
 
 | slug | 方針 | 着地点 |
 | --- | --- | --- |
-| `salesforce-testing/faq` | Phase F.2.5 preprocessor 正規化 + JA 構造追従 + post-merge re-review で `normalizeUrlToken` basename fallback 修正 | structure / source-unusable / token-gap すべて 0 件、baseline entry 0 件で完全解消 |
-| `running-tests/the-command-line-cli` | Phase D 部分改善 (後続 Issue 対応) | 残存 10 structure-mismatch + 29 segment-level を baseline 保持。JA 全面書き換えが必要で plan 明記の「人間校正依存」scope 外 |
-| `results/test-results/network-logs` | Phase D 部分改善 (後続 Issue 対応) | 残存 2 structure-mismatch + 6 segment-level を baseline 保持 |
-| `advanced-editing/validations/email-validation` | Phase D preface 改善 + callout link 追加 | preface callout は clean、nested Codeless Option section の 1 structure-mismatch + 3 segment-level を baseline 保持 (JA 見出し階層が flat 化) |
+| `salesforce-testing/faq` | Phase F.2.5 preprocessor 正規化 + `normalizeUrlToken` basename fallback 修正 | baseline entry 0 |
+| `running-tests/the-command-line-cli` | Phase D.1: 14 section の JA 全面 rewrite (`\` 行継続解除、1 段落への圧縮解消、EN の paragraph/ordered-list 構造に 1:1 対応) + token gap 修正 (`--mode`, `--tunnel`, `--host`, `a.k.a`, `--chrome-extra-args`, `--override-report-file-classname`, `/docs/project-and-user-management` 等) | baseline entry 0 |
+| `results/test-results/network-logs` | Phase D.2: `Filtering request results` の分割構造に合わせて intro → task A → screenshot → result → note → task B の順に再構成 + `Viewing the network logs at the test level` の末尾 `:::note` → plain paragraph 変換 | baseline entry 0 |
+| `advanced-editing/validations/email-validation` | Phase D.3: preface callout link (`https://www.testim.io/pricing/`) 追加 + table cell `date (送信時刻)` 翻訳 + Codeless Option の "5. 次のいずれかを実行します" sub-content を独立 paragraph に split + sign-up/links-in-body 例に `messages[0].subject` / `DOMParser` unique token 差別化 (tokenless-near-tie 解消) | baseline entry 0 |
 
 **完了条件 #4 (artifact 吸収で green)**: Phase E で 2 slug が完全に clean green:
 
 | slug | 方針 | 着地点 |
 | --- | --- | --- |
-| `advanced-editing/custom-action-step-mobile` | JA 側を EN plain-text 構造に揃える | baseline entry 0 件、structure / segment 共に 0 |
-| `results/test-runs` | preface の extra paragraph 削除 + 関連修正 | baseline entry 0 件 |
+| `advanced-editing/custom-action-step-mobile` | JA 側を EN plain-text 構造に揃える | baseline entry 0 |
+| `results/test-runs` | preface の extra paragraph 削除 + 関連修正 | baseline entry 0 |
 
-**保持する source-side debt 2 slug** (翻訳 PR では修正できない upstream 側):
+**追加: upstream snapshot debt 2 slug** (re-review で完全解消):
 
-- `salesforce-testing/salesforce-testing-overview`: `snapshot-incomplete/shallow-snapshot`
-- `testops/testops-version-control/pull-requests`: `snapshot-incomplete/extractor-empty`
+| slug | 方針 | 着地点 |
+| --- | --- | --- |
+| `salesforce-testing/salesforce-testing-overview` | EN source が h1 + 1 paragraph のみの shallow snapshot だったため、JA も同じ minimal 構造に trim (source-first 原則) | baseline entry 0 |
+| `testops/testops-version-control/pull-requests` | EN source の body 全体が `<code>` ブロックで wrap された broken output (extractor-empty) だったため、正しい HTML snapshot を手動で書き起こして置き換え | baseline entry 0 |
 
 **完了条件の保証 (regression guard)**:
 
-- `scripts/__tests__/source_parity_structure_fixtures.test.mjs` — the-command-line-cli /
-  network-logs / email-validation の structure drift 件数と、
-  custom-action-step-mobile / test-runs の 0 件を pin
-- `scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` — faq が
-  source-unusable を出さないこと (Phase F.2.5 後の正常挙動) を pin
+- `scripts/__tests__/source_parity_structure_fixtures.test.mjs` — 5 代表ページ
+  (the-command-line-cli / network-logs / email-validation / custom-action-step-mobile /
+  test-runs) で structure issue が 0 件を `assertStructureClean()` で pin
+- `scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` — faq と
+  salesforce-testing-overview と coding-assistant のいずれも source-unusable を
+  出さない (usable) ことを pin
 - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` — 4 clean sentinel ページで
   structure / segment 共に 0 件を pin (false-positive 回帰ガード)
-- `scripts/__tests__/source_parity_representative_summary.test.mjs` — Phase D/E/F/G
-  後の全 8 slug summary counter を RESOLVED (3 slug: custom-action-step-mobile /
-  test-runs / faq) / RESIDUAL (5 slug) に分けて pin
+- `scripts/__tests__/source_parity_representative_summary.test.mjs` — Issue #247
+  End-to-End 解消後の全 8 slug summary counter を `RESOLVED_PAGES` で pin
+  (`RESIDUAL_PAGES = []`)
 - `scripts/__tests__/source_parity_orphan_integration.test.mjs` — orphan detection の
   E2E contract を pin
 - `scripts/__tests__/source_parity_usability_ack_integration.test.mjs` — detector → ack
-  matcher の round-trip を合成 HTML で pin
+  matcher の round-trip を合成 HTML (shallow-snapshot / escaped-details-residue) で pin
 - `scripts/__tests__/source_parity.test.mjs` — `normalizeUrlToken` の
-  basename fallback (Issue #247 post-merge re-review) を pin。MadCap の相対
-  `<a href="category/page.htm">` リンクを JA docs tree 上の full path に
-  復元する contract を守る
+  basename fallback を pin。MadCap の相対 `<a href="category/page.htm">` リンクを
+  JA docs tree 上の full path に復元する contract を守る
 
-### Issue #247 post-merge **re-review** での追加修正 (2026-04-09)
+### Issue #247 post-merge / re-review での追加修正 (2026-04-09)
 
 post-merge PR に対する完全解消レビューで以下の gap が判明し、追加で修正した:
 
 1. **`normalizeUrlToken` relative path bug** — MadCap の
    `<a href="category/page.htm">` パターンで `resolveToFullSlug` が slug に
-   `/` を含むと basename lookup を bypass していた。結果、EN token が
-   `/docs/category/page` となり、JA の正しい full path と mismatch して
-   silent な `segment-token-gap` を発火。修正: `resolveToFullSlug` を
-   docs index 照合 → basename fallback の 2 段構えに変更。これにより
-   `faq` の segment-token-gap が自動解消し、baseline entry 0 件に。
+   `/` を含むと basename lookup を bypass していた。修正: `resolveToFullSlug` を
+   docs index 照合 → basename fallback の 2 段構えに変更。`faq` の
+   segment-token-gap が自動解消。
 
-2. **`email-validation` preface callout の pricing link 欠落** — EN callout は
-   `[here](https://www.testim.io/pricing/)` を含むが JA は翻訳時にリンクが
-   欠落していた。JA callout に link を追加して解消。
+2. **3 代表ページの JA 全面 rewrite** — the-command-line-cli / network-logs /
+   email-validation を EN の block sequence に 1:1 対応させて baseline 0 件まで
+   解消 (Phase D.1-D.3)。
+
+3. **2 snapshot debt の upstream 修正** — salesforce-testing-overview は JA trim、
+   pull-requests は broken source を正しい HTML snapshot に手動書き換え。これにより
+   Issue #247 の 8 代表ページすべてを End-to-End で完全解消。
 
 ### Issue #247 post-merge の local gate 期待値
 
