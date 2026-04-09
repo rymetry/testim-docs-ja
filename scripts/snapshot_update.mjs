@@ -64,15 +64,9 @@ function parseArgs(argv = process.argv.slice(2)) {
 /**
  * doc file から { slug, sourceUrl, relativePath } の一覧を作る。
  */
-function collectTargets({ section, slug }) {
+function collectTargets({ section, resolvedSlug }) {
   const files = findMdFiles(DOCS_DIR);
   const targets = [];
-  // --slug は basename / path-based の両方を受け付け、内部では path-based に解決する。
-  const resolvedSlug = slug ? resolveSlug(slug) : null;
-  if (slug && !resolvedSlug) {
-    console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
-    return [];
-  }
 
   for (const filePath of files) {
     const doc = readDocFile(filePath);
@@ -323,8 +317,13 @@ async function verifySidebar({ dryRun = false } = {}) {
 
 export async function main(argv) {
   const args = parseArgs(argv);
-  const targets = collectTargets(args);
   const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
+  if (args.slug && !resolvedSlug) {
+    console.error(`❌ Unknown slug: "${args.slug}". No matching document found.`);
+    return { fetched: 0, notFound: 0, errors: 1, excluded: 0, skipped: 0, sidebarVerified: false, sourceSyncStatus: null };
+  }
+
+  const targets = collectTargets({ section: args.section, resolvedSlug });
   const runScope = buildRunScope({
     slug: resolvedSlug,
     section: args.section,
@@ -332,7 +331,7 @@ export async function main(argv) {
 
   if (targets.length === 0) {
     console.log('No targets found.');
-    return { fetched: 0, notFound: 0, errors: args.slug ? 1 : 0, skipped: 0 };
+    return { fetched: 0, notFound: 0, errors: args.slug ? 1 : 0, excluded: 0, skipped: 0, sidebarVerified: false, sourceSyncStatus: null };
   }
 
   // 出力先ディレクトリを先に用意する。

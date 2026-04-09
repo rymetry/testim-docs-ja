@@ -61,7 +61,7 @@ describe('snapshot_update main', () => {
     };
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=testim-overview']);
+    const result = await main(['--dry-run', '--slug=overview/testim-overview']);
 
     assert.equal(result.fetched, 1);
     assert.equal(result.errors, 0);
@@ -78,7 +78,7 @@ describe('snapshot_update main', () => {
     };
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=testim-overview']);
+    const result = await main(['--dry-run', '--slug=overview/testim-overview']);
 
     assert.equal(result.fetched, 1);
     assert.equal(result.errors, 1, 'sidebar failure should count as an error');
@@ -98,7 +98,7 @@ describe('snapshot_update main', () => {
     };
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=testim-overview']);
+    const result = await main(['--dry-run', '--slug=overview/testim-overview']);
 
     assert.ok(result.sourceSyncStatus, 'should include sourceSyncStatus');
     assert.equal(result.sourceSyncStatus.schemaVersion, 2);
@@ -118,7 +118,7 @@ describe('snapshot_update main', () => {
     };
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=testim-overview']);
+    const result = await main(['--dry-run', '--slug=overview/testim-overview']);
 
     assert.equal(result.sourceSyncStatus.freshnessState, 'broken');
     assert.equal(result.sourceSyncStatus.summary.sidebarVerified, false);
@@ -136,7 +136,7 @@ describe('snapshot_update main', () => {
     };
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=testim-overview']);
+    const result = await main(['--dry-run', '--slug=overview/testim-overview']);
 
     assert.equal(result.fetched, 0);
     assert.equal(result.notFound, 1);
@@ -198,7 +198,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     // 1 target in scope
     assert.equal(result.sourceSyncStatus.summary.targetPages, 1);
@@ -232,7 +232,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     // upstream が復旧 — detectSourceUsability が issue なしと判定
     assert.equal(result.sourceSyncStatus.summary.excludedPages, 1);
@@ -263,7 +263,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
       // 対象として渡ってくるか" を observe することのみ。
     };
 
-    await main(['--slug=pull-requests']);
+    await main(['--slug=testops/testops-version-control/pull-requests']);
 
     const snapshotWrite = writeCalls.find((p) => p.includes('pull-requests.html'));
     assert.equal(
@@ -277,7 +277,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     // main() が新 counter を返すことを契約として pin する
     // (workflow / detection_reports から観測できるように)
@@ -289,7 +289,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     // excluded-only のみの scope でも sidebar さえ verified なら fresh
     assert.equal(result.sourceSyncStatus.freshnessState, 'fresh');
@@ -303,7 +303,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const page = result.sourceSyncStatus.pages[0];
     assert.equal(page.fetchStatus, 'excluded-broken');
@@ -315,7 +315,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const page = result.sourceSyncStatus.pages[0];
     assert.equal(page.fetchStatus, 'excluded-recovered');
@@ -388,7 +388,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const probe = result.sourceSyncStatus.pages[0].recoveryProbe;
     assert.equal(probe.issueType, 'snapshot-incomplete');
@@ -435,7 +435,7 @@ describe('snapshot_update — excluded-fetch-error', () => {
     global.fetch = mockTocWithFetchError();
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const page = result.sourceSyncStatus.pages.find(
       (p) => p.slug === 'testops/testops-version-control/pull-requests',
@@ -451,7 +451,7 @@ describe('snapshot_update — excluded-fetch-error', () => {
     global.fetch = mockTocWithFetchThrow();
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const page = result.sourceSyncStatus.pages.find(
       (p) => p.slug === 'testops/testops-version-control/pull-requests',
@@ -466,7 +466,7 @@ describe('snapshot_update — excluded-fetch-error', () => {
     global.fetch = mockTocWithFetchError();
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     // fetch error は freshness 劣化 — fresh ではなく broken になる
     assert.equal(result.sourceSyncStatus.freshnessState, 'broken');
@@ -477,7 +477,7 @@ describe('snapshot_update — excluded-fetch-error', () => {
     global.fetch = mockTocWithFetchError();
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const errorEntry = result.sourceSyncStatus.errors.find(
       (e) => e.slug === 'testops/testops-version-control/pull-requests',
@@ -490,7 +490,7 @@ describe('snapshot_update — excluded-fetch-error', () => {
     global.fetch = mockTocWithFetchError();
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     // fetch 失敗は errorPages に計上、excludedPages には含まない
     assert.equal(result.sourceSyncStatus.summary.excludedPages, 0);
@@ -542,7 +542,7 @@ describe('snapshot_update — recovery probe JA independence', () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const page = result.sourceSyncStatus.pages[0];
     assert.equal(page.fetchStatus, 'excluded-broken');
@@ -554,7 +554,7 @@ describe('snapshot_update — recovery probe JA independence', () => {
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
-    const result = await main(['--dry-run', '--slug=pull-requests']);
+    const result = await main(['--dry-run', '--slug=testops/testops-version-control/pull-requests']);
 
     const page = result.sourceSyncStatus.pages[0];
     assert.equal(page.fetchStatus, 'excluded-recovered');

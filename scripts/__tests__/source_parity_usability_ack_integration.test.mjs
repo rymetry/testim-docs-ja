@@ -3,31 +3,16 @@
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
 let detectSourceUsability;
-let extractSegmentsFromHtml;
-let extractSegmentsFromMarkdown;
 let findMatchingAcknowledgement;
 let computeSnapshotFingerprint;
 
 before(async () => {
   ({ detectSourceUsability } = await import('../lib/source_parity_source_usability.mjs'));
-  ({ extractSegmentsFromHtml } = await import('../lib/source_parity_segments_en.mjs'));
-  ({ extractSegmentsFromMarkdown } = await import('../lib/source_parity_segments_ja.mjs'));
   ({ findMatchingAcknowledgement, computeSnapshotFingerprint } = await import(
     '../lib/source_parity_acknowledgements.mjs'
   ));
 });
-
-const ROOT = join(import.meta.dirname, '../../');
-const SNAPSHOTS_DIR = join(ROOT, 'snapshots/en/content');
-const JA_CONTENT_DIR = join(ROOT, 'src/content/docs');
-
-function extractJaBody(md) {
-  return md.replace(/^---[\s\S]*?---\n/m, '').trim();
-}
 
 function buildAckEntry({ slug, issueType, detailIncludes, fingerprint }) {
   return {
