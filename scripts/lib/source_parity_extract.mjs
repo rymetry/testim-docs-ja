@@ -285,6 +285,18 @@ export function classifyLine(line, state = {}) {
     return { kind: 'unordered-list', nextState };
   }
   if (/^!\[/.test(trimmed) || /<img\b/i.test(trimmed) || /<Image\b/.test(trimmed)) {
+    // Issue #247 post-merge re-review — MadCap→turndown で loose text が
+    // 画像と同じ行に連結されるケース (例: `![](img.png)The results are...`)
+    // では、画像の後ろに実質的なテキストが残る。その場合は paragraph-start
+    // として計上し、別行に分けた JA 段落と count を揃える。`![...)` markdown
+    // syntax のときだけ追跡する (HTML `<img>` は別途処理)。
+    if (/^!\[/.test(trimmed)) {
+      const afterImage = trimmed.replace(/^!\[[^\]]*\]\([^)]*(?:\s+"[^"]*")?\)\s*/, '');
+      if (afterImage.length > 0 && !/^!\[/.test(afterImage)) {
+        nextState.inParagraph = true;
+        return { kind: 'paragraph-start', nextState };
+      }
+    }
     nextState.inParagraph = false;
     return { kind: 'image', nextState };
   }
@@ -539,6 +551,16 @@ function normalizeUrlToken(url) {
   return url;
 }
 
+// WRITING_GUIDE「原文から意図的に除外するコンテンツ」で JA から削除すると
+// 指定されている既知 URL 一覧。EN/JA 両側の invariant token から除外して、
+// guide 準拠の JA と EN snapshot の間で token-gap が発生しないようにする。
+const EXCLUDED_INVARIANT_URL_TOKENS = Object.freeze(
+  new Set([
+    'https://www.testim.io/pricing/',
+    'https://www.testim.io/pricing',
+  ]),
+);
+
 export function extractInvariantTokens(cell) {
   const tokenSet = new Set();
   const codeRe = /`([^`]+)`/g;
@@ -599,6 +621,13 @@ export function extractInvariantTokens(cell) {
 
   const pathRe = /(?:^|\s)(\/[a-zA-Z][\w.-]+(?:\/[\w.-]+)+)/g;
   while ((match = pathRe.exec(rest)) !== null) tokenSet.add(match[1]);
+
+  // WRITING_GUIDE 除外ルール: JA から削除された既知 URL は EN 側でも token
+  // として emit しない。これにより guide 準拠の JA と raw EN snapshot の
+  // 間で false-positive な segment-token-gap が発生しない。
+  for (const excluded of EXCLUDED_INVARIANT_URL_TOKENS) {
+    tokenSet.delete(excluded);
+  }
 
   return [...tokenSet].sort();
 }
