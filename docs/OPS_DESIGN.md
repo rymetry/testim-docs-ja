@@ -464,13 +464,21 @@ source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.
 
 ##### 新規 slug の除外登録 (upstream broken を確認したとき)
 
+注意: `check:parity` は `snapshots/en/content/` の**凍結 snapshot** を読むため、
+live EN の broken 確認には使えない。live EN の状態は `check:snapshots:fetch` の
+`--dry-run` 出力と、ブラウザでの目視で確認する。
+
 1. **目視確認**: ブラウザで `sourceUrl` を開き、本文が `<code>` ブロックに
    collapsed / `<details>` が壊れている / 本文がほぼ空 など、MadCap Flare
    extractor が正常にパースできない状態であることを確認する
-2. **detector 確認**: `npm run check:parity -- --slug=<slug>` を実行し、
-   `snapshot-incomplete` または `source-unusable` が出ることを確認する。
+2. **live fetch 確認**: `npm run check:snapshots:fetch -- --slug=<slug> --dry-run`
+   を実行し、出力に `SKIP` (mc-main-content not found) または取得された
+   HTML が broken であることを確認する。dry-run なので snapshot file は変更されない
+3. **detector 確認** (任意): 取得された live HTML を一時的に snapshot file に
+   コピーし `npm run check:parity -- --slug=<slug>` で `snapshot-incomplete`
+   / `source-unusable` が出ることを確認する。確認後は `git restore` で戻す。
    出力の `usabilitySignals.reason` が registry の `expectedReason` になる
-3. **registry 追加**: `scripts/lib/source_sync_exclusions.mjs` の
+4. **registry 追加**: `scripts/lib/source_sync_exclusions.mjs` の
    `SOURCE_SYNC_EXCLUSIONS` に entry を追加する:
 
    ```js
@@ -484,19 +492,22 @@ source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.
    }),
    ```
 
-4. **hand-authored snapshot**: 必要なら
+5. **hand-authored snapshot**: 必要なら
    `snapshots/en/content/<slug>.html` に正しい HTML を手動作成する
    (registry が write をブロックするため以後上書きされない)
-5. **テスト更新**:
+6. **テスト更新**:
    - `source_parity_source_side_debt.test.mjs` が新 slug を自動検出する
    - representative test から対象 slug を外す (必要な場合)
-6. **検証**: `npm run lint && npm run test && npm run build` を通す
-7. **PR 作成**: 証跡として PR 本文に以下を含める:
+7. **検証**: `npm run lint && npm run test && npm run build` を通す
+8. **PR 作成**: 証跡として PR 本文に以下を含める:
    - sourceUrl と壊れ方のスクリーンショットまたは説明
-   - `check:parity` 出力の `usabilitySignals` 全文
+   - live fetch の dry-run 出力
    - 追加した registry entry
 
 ##### 除外解除 (upstream が復旧したとき)
+
+注意: excluded slug は registry に載っている限り snapshot file を上書きしない。
+そのため**registry 削除を先に行い**、その後に snapshot fetch で最新 HTML を取得する。
 
 1. **復旧候補の検知**: workflow summary (`docs-update-summary.md`) または
    managed issue body の `## ソース原文の既知問題` セクションで
@@ -505,17 +516,19 @@ source-side debt の契約は `scripts/__tests__/source_parity_source_side_debt.
    起きない — `body-appeared-inconclusive` が出たら復旧の可能性を疑う
 2. **目視確認**: ブラウザで `sourceUrl` を開き、本文が正常な HTML 構造
    (`<h2>` / `<p>` / `<ol>` 等) に戻っていることを確認する
-3. **detector 確認**: `npm run check:parity -- --slug=<slug>` を実行し、
-   `snapshot-incomplete` / `source-unusable` が出ないことを確認する
-4. **snapshot 更新**: `npm run check:snapshots:fetch -- --slug=<slug>` で
-   最新 HTML を取得する (registry から外すと write が有効になる)
-5. **registry 削除**: `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する
+3. **live fetch 確認**: `npm run check:snapshots:fetch -- --slug=<slug> --dry-run`
+   で live HTML が正常であることを確認する (dry-run なのでまだ上書きしない)
+4. **registry 削除**: `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する
+   (これにより snapshot_update の write-block が解除される)
+5. **snapshot 更新**: `npm run check:snapshots:fetch -- --slug=<slug>` で
+   最新 HTML を取得する (registry から外したので write が有効)
 6. **parity 確認**: `npm run check:parity -- --slug=<slug>` で JA との
    構造差分を確認し、必要なら JA ファイルを修正する
 7. **テスト更新**: representative test に slug を戻す (必要な場合)
 8. **検証**: `npm run lint && npm run test && npm run build` を通す
 9. **PR 作成**: 証跡として PR 本文に以下を含める:
    - sourceUrl が正常に戻ったことのスクリーンショットまたは説明
+   - live fetch の dry-run 出力
    - `check:parity` 出力が 0 issues であること
    - 削除した registry entry と理由
 
