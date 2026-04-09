@@ -64,11 +64,9 @@ function parseArgs(argv = process.argv.slice(2)) {
 /**
  * doc file から { slug, sourceUrl, relativePath } の一覧を作る。
  */
-function collectTargets({ section, slug }) {
+function collectTargets({ section, slug, resolvedSlug }) {
   const files = findMdFiles(DOCS_DIR);
   const targets = [];
-  // --slug は basename / path-based の両方を受け付け、内部では path-based に解決する。
-  const resolvedSlug = slug ? resolveSlug(slug) : null;
   if (slug && !resolvedSlug) {
     console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
     return [];
@@ -323,8 +321,8 @@ async function verifySidebar({ dryRun = false } = {}) {
 
 export async function main(argv) {
   const args = parseArgs(argv);
-  const targets = collectTargets(args);
   const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
+  const targets = collectTargets({ ...args, resolvedSlug });
   const runScope = buildRunScope({
     slug: resolvedSlug,
     section: args.section,
