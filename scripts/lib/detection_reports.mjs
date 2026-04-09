@@ -503,6 +503,32 @@ function buildParityFollowupBody({
     lines.push('');
   }
 
+  // Issue #247 post-merge — orphan baseline entries を followup report に
+  // 可視化する。detector / emitter が仕様変更したときに legacy entry が
+  // 取り残されるパターンを検知する (PR5 migration 後の segment-inconclusive
+  // 3 件の事例が典型)。
+  const orphanBaselineEntries = summary.orphanBaselineEntries || 0;
+  if (orphanBaselineEntries > 0) {
+    lines.push(
+      '## 🧹 Orphan baseline entries',
+      '',
+      `- Total: ${orphanBaselineEntries} entries (runtime で一致する issue が無い — 掃除対象)`,
+    );
+    const byType = summary.orphanBaselineByType || {};
+    const sortedTypes = Object.keys(byType).sort();
+    if (sortedTypes.length > 0) {
+      lines.push('- By type:');
+      for (const type of sortedTypes) {
+        lines.push(`  - ${type}: ${byType[type]}`);
+      }
+    }
+    lines.push(
+      '',
+      '対応: `node scripts/generate_parity_baseline.mjs --slug=<slug>` で該当 slug を再生成すると orphan が purge されます。',
+      '',
+    );
+  }
+
   if (expiredBaselineFiles.length > 0) {
     lines.push('## Expired Baseline Entries', '');
     lines.push(

@@ -41,6 +41,7 @@ import {
 import {
   loadBaselineFile,
   tagIssuesWithBaseline,
+  computeOrphanBaselineEntries,
 } from './lib/source_parity_baseline.mjs';
 import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import { convertEnHtmlToMd, preprocessEnHtml } from './lib/turndown.mjs';
@@ -337,6 +338,12 @@ export async function checkSourceParity({
   section = null,
   failOn = null,
   slug = null,
+  // Issue #247 post-merge (Finding 15) — test-only dependency injection。
+  // integration test が repo-global な baseline / status file を奪い合わないよう
+  // に、呼び出し側から path を上書きできる。既定値は従来どおり ROOT_DIR 直下。
+  // CLI の parseArgs surface は増やさず、script 呼び出し時の引数でだけ注入する。
+  baselinePath = BASELINE_PATH,
+  outputPath = OUTPUT_PATH,
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH) ? fs.readFileSync(SIDEBAR_PATH, 'utf8') : '';
   const sidebarSlugs = loadSidebarSlugs(sidebarText);
@@ -358,9 +365,10 @@ export async function checkSourceParity({
   const today = new Date().toISOString().slice(0, 10);
 
   // frozen baseline をロード。acknowledgement とは別ファイル / 別意味で管理する。
+  // Finding 15: test からの注入を許すため baselinePath を明示的に渡す。
   let baselineData = { schemaVersion: 1, entries: [] };
   try {
-    baselineData = loadBaselineFileSafe();
+    baselineData = loadBaselineFileSafe(baselinePath);
   } catch (error) {
     console.error(`❌ ${error.message}`);
     return 1;
@@ -386,6 +394,10 @@ export async function checkSourceParity({
   }
 
   const results = [];
+  // Issue #247 post-merge — orphan baseline entries を per-slug で蓄積する。
+  // 完走後に byType で集計して summary に出す。invalidated slug のものは
+  // 含まない (snapshot 更新での再タグ付け待ちなので orphan ではない)。
+  const orphanBaselineEntries = [];
   let checkedCount = 0;
 
   for (const filePath of allFiles) {
@@ -551,6 +563,8 @@ export async function checkSourceParity({
     // isFrozenByBaseline / isReportableParityIssue で gate から除外される
     // (scripts/lib/source_parity_issue_state.mjs を参照)。期限切れ baseline
     // entries は gate に refire する。
+    // Issue #247 post-merge — matchedKeys を consumer 側で消費して orphan
+    // baseline entry を集計する。invalidated なページは skip する契約。
     {
       const baselineResult = tagIssuesWithBaseline(
         fileSlug,
@@ -562,6 +576,15 @@ export async function checkSourceParity({
       issues = baselineResult.tagged;
       if (baselineResult.invalidated) {
         baselineInvalidatedSlugs.add(fileSlug);
+      } else {
+        const orphans = computeOrphanBaselineEntries(
+          fileSlug,
+          baselineData.entries,
+          baselineResult.matchedKeys,
+        );
+        for (const o of orphans) {
+          orphanBaselineEntries.push(o);
+        }
       }
     }
 
@@ -678,12 +701,23 @@ export async function checkSourceParity({
     ? 'stale'
     : freshnessState;
 
+  // Issue #247 post-merge — orphan baseline entries の byType 集計。
+  // --slug / --section mode では checked 範囲だけが対象 (未 check 分は
+  // orphan 判定できない)。
+  const orphanBaselineByType = {};
+  for (const o of orphanBaselineEntries) {
+    orphanBaselineByType[o.issueType] = (orphanBaselineByType[o.issueType] || 0) + 1;
+  }
+
   const summaryBase = {
     checkedAt: new Date().toISOString(),
     mode: 'local',
     totalFiles: allFiles.length,
     checkedFiles: checkedCount,
-    ...summarizeParityResults(results),
+    ...summarizeParityResults(results, {
+      orphanBaselineEntries: orphanBaselineEntries.length,
+      orphanBaselineByType,
+    }),
     ...advisoryQueueSummary,
     baselineInvalidatedSlugs: [...baselineInvalidatedSlugs].sort(),
     // run scope を summary に出力。downstream の sync tooling は partial run
@@ -718,7 +752,9 @@ export async function checkSourceParity({
     advisoryQueue,
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(payload, null, 2));
+  // Finding 15: test からの注入を許すため outputPath を明示的に渡す。
+  // 既定は ROOT_DIR/parity-check-status.json で従来と同一挙動。
+  fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2));
 
   if (!json) {
     console.log(`${'='.repeat(60)}\n📊 チェック結果サマリー\n`);
@@ -728,6 +764,19 @@ export async function checkSourceParity({
       `問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, ` +
         `covered by baseline/ack: ${coveredFiles})`,
     );
+    // Issue #247 post-merge — orphan baseline entries を reviewer に可視化する。
+    // 0 件なら silent、非ゼロなら件数 + byType 上位を 1 行で表示する。
+    if ((summary.orphanBaselineEntries || 0) > 0) {
+      const top = Object.entries(summary.orphanBaselineByType || {})
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([type, count]) => `${type}×${count}`)
+        .join(', ');
+      console.log(
+        `🧹 orphan baseline entries: ${summary.orphanBaselineEntries} 件 (${top}) — ` +
+          `runtime で一致しないため掃除対象。--slug で再生成してください`,
+      );
+    }
     console.log(`actionable: ${summary.actionableFiles} ファイル (active: ${summary.activeActionableFiles})`);
     console.log(`signal-only: ${summary.signalFiles} ファイル`);
     console.log(`errors: ${summary.errorFiles} ファイル`);

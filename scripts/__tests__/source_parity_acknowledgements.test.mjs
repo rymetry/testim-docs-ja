@@ -917,18 +917,25 @@ describe('Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)
   });
 
   it('findMatchingAcknowledgement matches source-unusable via detailIncludes on usability reason', () => {
-    // source-unusable は page-level issue だが、validateAcknowledgements は
-    // detailIncludes / detailRegex のいずれかを必須にする。emitter が
-    // detail 文字列に usabilityReason 由来の wording を埋め込むので、
-    // ack entry 側で reason 文字列を detailIncludes に書けば狙い撃てる。
+    // Issue #247 post-merge — emitter の describeReason() は detail 末尾に
+    // `[reason=<token>]` を埋め込むので、ack entry 側はこの token 文字列を
+    // detailIncludes に書けば狙い撃てる。実 emitter の生成 pattern に対して
+    // assert すること (fabricated string は使わない — 再発防止)。実 emitter
+    // 出力との round-trip は
+    // source_parity_usability_ack_integration.test.mjs が担保する。
     const entry = baseAckEntry({
       slug: 'salesforce-testing/faq',
       issueType: 'source-unusable',
-      detailIncludes: 'escaped-details-residue',
+      detailIncludes: '[reason=escaped-details-residue]',
     });
     const issue = {
       type: 'source-unusable',
-      detail: 'source snapshot is unusable (escaped-details-residue)',
+      // 実 describeReason('source-unusable', 'escaped-details-residue', ...) の
+      // 出力形式を pin する。signals の数値部分は具体値を埋めておく。
+      detail:
+        'EN HTML still contains 3 escaped <details> markers after preprocessEnHtml ' +
+        '— widget tree is unbalanced and comparator cannot align sections ' +
+        '[reason=escaped-details-residue]',
     };
     const match = findMatchingAcknowledgement(
       'salesforce-testing/faq',

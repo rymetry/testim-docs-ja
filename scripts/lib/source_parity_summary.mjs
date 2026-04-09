@@ -52,8 +52,16 @@ import {
  *     Frozen drift accounting。parity-baseline.json が cutover 前の
  *     segment-* drift を active gate から除外する。期限切れ baseline は
  *     gate に refire する (isFrozenByBaseline / isReportableParityIssue 参照)。
+ *
+ * @param {object[]} results
+ * @param {object} [orphanMeta] — Issue #247 post-merge。呼び出し側が
+ *   `checkSourceParity` ループ内で `tagIssuesWithBaseline` の
+ *   `matchedKeys` を使って計算した orphan baseline entry の集計結果。
+ *   省略時は 0 件 / {}(後方互換)。
+ * @param {number} [orphanMeta.orphanBaselineEntries]
+ * @param {Record<string, number>} [orphanMeta.orphanBaselineByType]
  */
-export function summarizeParityResults(results) {
+export function summarizeParityResults(results, orphanMeta = {}) {
   const issuesByType = {};
   const issuesBySeverity = {};
   const baselinedByType = {};
@@ -229,5 +237,15 @@ export function summarizeParityResults(results) {
     snapshotUnusableIssues,
     snapshotUnusableFiles,
     snapshotUnusableByType,
+    // Issue #247 post-merge — baseline orphan detection。呼び出し側が
+    // tagIssuesWithBaseline の matchedKeys を使って計算した結果を
+    // そのまま summary に透過させる。counter そのものは
+    // parityRegression / gate exit code には寄与しない (情報のみ)。
+    orphanBaselineEntries: orphanMeta.orphanBaselineEntries || 0,
+    orphanBaselineByType:
+      orphanMeta.orphanBaselineByType &&
+      typeof orphanMeta.orphanBaselineByType === 'object'
+        ? orphanMeta.orphanBaselineByType
+        : {},
   };
 }

@@ -121,12 +121,18 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 **acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。
 
+`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を保証する(Issue #247 post-merge)。
+
 acknowledgement の対象外:
 
 - `NON_ACKNOWLEDGEABLE_TYPES` (`source-page-missing-local`, `segment-missing`, `segment-untranslated`, `segment-token-gap`, `segment-inconclusive`) — gate を suppress すべきでない hard gap
 - `COARSE_SIGNAL_TYPES` (audit-only 9 種) — そもそも gate に乗らないため、ack をつけても no-op になる。validation は `validateAcknowledgements` で reject する
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
+
+**`--types` 契約 (Issue #247 post-merge 追加)**: `generate_parity_baseline.mjs --types=<csv>` は PR5 migration 専用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validateTypesArg` が fail-fast する。`scripts/__tests__/generate_parity_baseline.test.mjs` の `Issue #247 post-merge — validateTypesArg` suite が契約を pin。
+
+**Orphan baseline entry の検出 (Issue #247 post-merge 追加)**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/__tests__/source_parity_orphan_integration.test.mjs` が pin する (temp dir 上の copy を使った isolated test)。
 
 **出力**: `parity-check-status.json`。
 

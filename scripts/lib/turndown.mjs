@@ -232,6 +232,122 @@ function unescapeDetails(html) {
 }
 
 /**
+ * Issue #247 post-merge (Finding 9-14) — `faq` の multi-paragraph broken
+ * details tree を valid sibling `<h2>/<p>` block に再構成する。
+ *
+ * MadCap は `<details><summary>Q</summary>body</details>` という FAQ
+ * アコーディオンを、複数の `<p>` に跨って escape entity で出力する
+ * パターンがある。その状態では以下の既存経路では処理できない:
+ *
+ *   - 既存の `unescapeDetails` は「先頭が `&lt;details&gt;` かつ同じ `<p>`
+ *     内で閉じている」ケースしか扱わない。`faq` は <p> を跨ぐので対象外
+ *   - `summary -> <h2>` の global 置換だけだと `<p><h2>Q</h2>...` という
+ *     invalid HTML が残る。`turndown` は DOM repair で見かけ上回復できる
+ *     が、`extractSegmentsFromHtml()` は DOM repair 無しで tokenize する
+ *     ため heading を拾えず、faq は `heading-count-mismatch` に落ちる
+ *
+ * この関数は以下の条件をすべて満たす場合にだけ、HTML 全体を
+ * paragraph-aware に rewrite し、valid sibling block を emit する:
+ *
+ *   1. `&lt;details&gt;` open と `&lt;/details&gt;` close の件数が一致
+ *      (不均衡 = source-unusable 経路は detector に任せる)
+ *   2. **少なくとも 1 つの `<p>` が trimmed で `&lt;details&gt;` から開始**
+ *      — これが `faq` と `coding-assistant` を分ける discriminator。
+ *      `coding-assistant` は `<p>Here are some examples ... &lt;details&gt;...`
+ *      のように prose が先行するため、ここで弾かれる
+ *
+ * 段落境界の rewrite は以下の 3 ケースを別々に処理して、必ず valid な
+ * `<h2></h2><p>...</p>` sibling block を emit する (invalid `<p><h2>`
+ * ネストを一切作らない):
+ *
+ *   A. paragraph-start opener:
+ *      `<p>&lt;details&gt; ... &lt;summary&gt;Q&lt;/summary&gt; body`
+ *      → `<h2>Q</h2><p>body`
+ *   B. paragraph-start close+opener:
+ *      `<p>&lt;/details&gt; &lt;details&gt; ... &lt;summary&gt;Q&lt;/summary&gt; body`
+ *      → `<h2>Q</h2><p>body`
+ *   C. mid-paragraph boundary (同じ `<p>` 内で複数 QnA が連続するケース):
+ *      `... body1 &lt;/details&gt; &lt;details&gt; ... &lt;summary&gt;Q2&lt;/summary&gt; body2 ...`
+ *      → `... body1 </p><h2>Q2</h2><p>body2 ...`
+ *
+ * summary 内部は `&lt;b&gt;...&lt;/b&gt;` (escaped `<b>` タグ) が含まれて
+ * いる可能性があるので、heading 抽出時に残存 escaped HTML entity を
+ * 保険で strip する。末尾の `<p>&lt;/details&gt;</p>` や residual close
+ * marker は最後にまとめて除去する。
+ *
+ * **契約**: EN extractor / JA extractor / structure comparator の frozen
+ * vocabulary (`details-summary` 等) は一切触らない。影響範囲は
+ * preprocessor 内に閉じる。
+ *
+ * @param {string} html
+ * @returns {string}
+ */
+function normalizeEscapedFaqDetails(html) {
+  const openRe = /&lt;details(\b[^&]*)?&gt;/gi;
+  const closeRe = /&lt;\/details&gt;/gi;
+  const openCount = (html.match(openRe) || []).length;
+  const closeCount = (html.match(closeRe) || []).length;
+  if (openCount === 0 || openCount !== closeCount) return html;
+
+  // discriminator (2 段階):
+  //   1. 最初に trimmed で `&lt;details&gt;` から開始する <p> を探す。
+  //      coding-assistant のように prose が先行するケースはここで弾く。
+  //   2. その <p> が自分の中で balanced に閉じている (open == close) なら、
+  //      それは legacy single-<p> ケース (例: `preprocessEnHtml escaped
+  //      details` の既存テスト)。legacy `unescapeDetails` に任せる。
+  //      unbalanced なら faq のような multi-paragraph broken tree なので
+  //      新しい paragraph-aware rewrite を適用する。
+  const pSegments = [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)];
+  const firstFaqP = pSegments.find((pm) => {
+    const inner = pm[1] || '';
+    return inner.trim().startsWith('&lt;details&gt;');
+  });
+  if (!firstFaqP) return html;
+  const firstInner = firstFaqP[1] || '';
+  const firstOpens = (firstInner.match(openRe) || []).length;
+  const firstCloses = (firstInner.match(closeRe) || []).length;
+  if (firstOpens === firstCloses) return html;
+
+  // summary inner から escaped HTML tag を取り除いて heading 文字列にする。
+  // `&lt;b&gt;Q&lt;/b&gt;` のような残存タグを保険で strip する。
+  const extractHeading = (summaryInner) =>
+    summaryInner
+      .replace(/&lt;\/?[a-z][^&]*&gt;/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  const pOpen = (attrs = '') => `<p${attrs || ''}>`;
+
+  let out = html;
+  // A. `<p>&lt;details&gt; ... &lt;summary&gt;Q&lt;/summary&gt;` で始まるケース
+  //    → `<h2>Q</h2><p>` の sibling block に書き換え、元の <p> の body は
+  //    そのまま後続にぶら下がる
+  out = out.replace(
+    /<p(\b[^>]*)>\s*&lt;details(?:\b[^&]*)?&gt;\s*&lt;summary&gt;\s*(?:&lt;b(?:\b[^&]*)?&gt;)?\s*([\s\S]*?)\s*(?:&lt;\/b&gt;)?\s*&lt;\/summary&gt;\s*/gi,
+    (_m, attrs, headingInner) => `<h2>${extractHeading(headingInner)}</h2>${pOpen(attrs)}`,
+  );
+  // B. `<p>&lt;/details&gt; &lt;details&gt; ... &lt;summary&gt;Q&lt;/summary&gt;` で
+  //    始まるケース(直前段落で QnA が閉じていて、新しい `<p>` の先頭で
+  //    次の QnA が始まる faq のパターン)
+  out = out.replace(
+    /<p(\b[^>]*)>\s*&lt;\/details&gt;\s*&lt;details(?:\b[^&]*)?&gt;\s*&lt;summary&gt;\s*(?:&lt;b(?:\b[^&]*)?&gt;)?\s*([\s\S]*?)\s*(?:&lt;\/b&gt;)?\s*&lt;\/summary&gt;\s*/gi,
+    (_m, attrs, headingInner) => `<h2>${extractHeading(headingInner)}</h2>${pOpen(attrs)}`,
+  );
+  // C. 同じ `<p>` 内で QnA が連続するケース(mid-paragraph boundary)。
+  //    `</p><h2>Q2</h2><p>` を挿入して、新しい sibling block にバトンを渡す。
+  out = out.replace(
+    /&lt;\/details&gt;\s*&lt;details(?:\b[^&]*)?&gt;\s*&lt;summary&gt;\s*(?:&lt;b(?:\b[^&]*)?&gt;)?\s*([\s\S]*?)\s*(?:&lt;\/b&gt;)?\s*&lt;\/summary&gt;\s*/gi,
+    (_m, headingInner) => `</p><h2>${extractHeading(headingInner)}</h2><p>`,
+  );
+  // 末尾の `<p>&lt;/details&gt;</p>` を除去し、残存 open/close marker も
+  // まとめて削除する。最後に空 `<p></p>` が出来ていれば掃除する。
+  out = out.replace(/<p\b[^>]*>\s*&lt;\/details&gt;\s*<\/p>/gi, '');
+  out = out.replace(openRe, '');
+  out = out.replace(closeRe, '');
+  out = out.replace(/<p\b[^>]*>\s*<\/p>/gi, '');
+  return out;
+}
+
+/**
  * Convert escaped callout patterns (`&gt; Title &gt; &gt; Content`)
  * inside `<p>` elements to `<div class="note">` for the madcap-callout rule.
  *
@@ -274,18 +390,24 @@ function normalizeEscapedCallouts(html) {
 /**
  * Normalize EN HTML before turndown conversion.
  *
- * Chains two preprocessing steps:
- *   1. `unescapeDetails` — restore entity-encoded `<details>` blocks
- *   2. `normalizeEscapedCallouts` — convert escaped `>` callout patterns
+ * Chains three preprocessing steps (Issue #247 post-merge で Step 3 を追加):
+ *   1. `normalizeEscapedCallouts` — convert escaped `>` callout patterns
+ *   2. `normalizeEscapedFaqDetails` — `faq` の broken escaped details tree を
+ *      valid sibling `<h2>/<p>` block に再構成する(Finding 9-14)。faq
+ *      discriminator で発火するので coding-assistant など prose 先行の
+ *      ページには影響しない
+ *   3. `unescapeDetails` — legacy single-<p> の escaped details 復元経路
+ *      (coding-assistant のようにドキュメント内の `<details>` 使用例を
+ *      real `<details>` に戻す古い処理を維持する)
  *
  * @param {string} html - Raw MadCap Flare HTML from EN snapshot
- * @returns {string} Normalized HTML with escaped callouts/details restored
+ * @returns {string} Normalized HTML for both turndown and EN extractor
  */
 export function preprocessEnHtml(html) {
   if (typeof html !== 'string') {
     throw new TypeError(`preprocessEnHtml expected string, got ${typeof html}`);
   }
-  return normalizeEscapedCallouts(unescapeDetails(html));
+  return unescapeDetails(normalizeEscapedFaqDetails(normalizeEscapedCallouts(html)));
 }
 
 /**

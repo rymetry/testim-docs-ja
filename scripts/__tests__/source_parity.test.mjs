@@ -1724,8 +1724,15 @@ describe('extractInvariantTokens', () => {
   });
 
   it('normalizes docs.tricentis.com URLs to /docs/slug', () => {
+    // Issue #247 post-merge re-review: EN MadCap の URL は JA 側のカテゴリ
+    // 構造と一致しないことがある (EN `editing/shareable-steps.htm` は JA
+    // では `editing-tests/shareable-steps` に配置されている)。
+    // resolveToFullSlug の basename fallback が正しい JA full path に復元する。
     const tokens = extractInvariantTokens('Link: https://docs.tricentis.com/testim/content/editing/shareable-steps.htm');
-    assert.ok(tokens.includes('/docs/editing/shareable-steps'));
+    assert.ok(
+      tokens.includes('/docs/editing-tests/shareable-steps'),
+      `Expected canonical JA full path /docs/editing-tests/shareable-steps in ${JSON.stringify(tokens)}`,
+    );
     assert.ok(!tokens.some((t) => t.includes('docs.tricentis.com')));
   });
 
@@ -1843,6 +1850,41 @@ describe('extractInvariantTokens', () => {
     assert.ok(tokens.includes('/docs/overview/testim-overview'), `Expected /docs/overview/testim-overview in ${JSON.stringify(tokens)}`);
     assert.ok(!tokens.some((t) => t.includes('/content/')), 'should not contain /content/ in output');
   });
+
+  // Issue #247 post-merge (re-review) — normalizeUrlToken relative path bug fix.
+  //
+  // MadCap の <a href="salesforce-steps/sfdc-step-apex-action.htm"> のような
+  // **親ディレクトリを省いた相対リンク** は、従来 `resolveToFullSlug` で slug
+  // に `/` が含まれると basename lookup が bypass され、正しい full path に
+  // 復元できなかった。結果 `/docs/salesforce-steps/sfdc-step-apex-action` と
+  // いう存在しない path に正規化され、JA 側の正しい
+  // `/docs/salesforce-testing/salesforce-steps/sfdc-step-apex-action` と
+  // mismatch して segment-token-gap を silent に発火していた。
+  //
+  // 修正方針: slug が docs index に存在しない場合は basename fallback を
+  // 試す。ambiguous basename (複数ディレクトリに存在) はそのまま返して
+  // safe に倒す。
+  it('normalizes MadCap relative .htm link with unique basename to full path', () => {
+    // `sfdc-step-apex-action` は docs index に 1 件しか無い (unique basename)
+    const tokens = extractInvariantTokens('[APEX 実行](salesforce-steps/sfdc-step-apex-action.htm)');
+    assert.ok(
+      tokens.includes('/docs/salesforce-testing/salesforce-steps/sfdc-step-apex-action'),
+      `Expected full path /docs/salesforce-testing/salesforce-steps/sfdc-step-apex-action in ${JSON.stringify(tokens)}`,
+    );
+    assert.ok(
+      !tokens.includes('/docs/salesforce-steps/sfdc-step-apex-action'),
+      'truncated path should not be emitted — basename fallback should resolve the correct full path',
+    );
+  });
+
+  it('keeps already-valid full paths as-is when they exist in the docs index', () => {
+    // `overview/testim-overview` は docs index の正式 slug なので basename
+    // fallback を発動せず、そのまま返る。
+    const tokens = extractInvariantTokens(
+      'https://docs.tricentis.com/testim/content/overview/testim-overview.htm',
+    );
+    assert.ok(tokens.includes('/docs/overview/testim-overview'));
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -1883,8 +1925,11 @@ describe('table-cell-token-mismatch in compareSnapshotStructure', () => {
   });
 
   it('does not flag tricentis.com absolute URL rewritten to relative /docs/ link', () => {
+    // EN の MadCap absolute URL が JA の /docs/ 相対 link と同じ canonical
+    // token に正規化されることを確認する。JA 側は正しい full path
+    // (`/docs/editing-tests/shareable-steps`) を使用する前提。
     const en = '| Page | Link |\n| --- | --- |\n| Steps | [steps](https://docs.tricentis.com/testim/content/editing/shareable-steps.htm) |\n';
-    const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/editing/shareable-steps) |\n';
+    const ja = '| ページ | リンク |\n| --- | --- |\n| ステップ | [steps](/docs/editing-tests/shareable-steps) |\n';
     const issues = compareSnapshotStructure(en, ja);
     const tokenIssues = issues.filter((i) => i.type === 'table-cell-token-mismatch');
     assert.equal(tokenIssues.length, 0, 'absolute/relative testim URL should normalize to same token');

@@ -195,6 +195,8 @@ EN snapshot           →  JA 翻訳
 - マーカー: EN `*` → JA `-`（markdownlint 互換）
 - ネストレベルは原文を維持
 - 番号付きステップ数は原文に合わせる（merge/split で調整）
+- 原文で step 配下に nested list がある場合、本文へ圧縮せず nested list のまま維持する
+- 箇条書きの内容を 1 paragraph や 1 list item に統合して bullet 数を減らさない
 
 ### テーブル
 
@@ -216,6 +218,14 @@ EN snapshot           →  JA 翻訳
 
 - 画像・callout・コードブロック: 出現順序と配置を原文に合わせる
 - 段落: 原文の段落構造を維持（diff >= 1 で検出）
+- `paragraph-count-mismatch` / `bullet-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
+
+### 原文準拠の source-first 例外
+
+以下のケースでは `snapshots/en/content/<slug>.html` が保存済み JA より新しい／最小構造になっている。
+
+- EN live source 自体が shallow / broken snapshot の場合は、保存済み JA ではなく current source を正本とする
+- この場合は source parity の comparator 契約を優先し、必要なら JA を live source の最小構造へ合わせる
 
 ### 原文から意図的に除外するコンテンツ
 
@@ -225,7 +235,8 @@ EN snapshot           →  JA 翻訳
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `testim-overview` | 「At Testim, we are developers and testers too...」段落（企業紹介文）                                                                                                                                                       |
 | `testim-overview` | Pricing callout（料金プラン・サブスクリプション案内）                                                                                                                                                                       |
-| 全ページ共通      | `https://www.testim.io/pricing/` への誘導リンク（「詳細については、[こちら](https://www.testim.io/pricing/)をご覧ください」等）。「Professional plan でのみ利用できます」の制限案内文は残し、pricing リンク部分のみ削除する |
+| 全ページ共通      | `https://www.testim.io/pricing/` への誘導リンクは削除する                                                                                                                                                                   |
+| 全ページ共通      | 「Professional plan でのみ利用可能」の制限案内文は残してよい（pricing リンクだけ削除し、"Professional plan のプロジェクトでのみ利用できます" のような制限文は保持する）                                                     |
 
 ### ルール追加・更新の手順
 

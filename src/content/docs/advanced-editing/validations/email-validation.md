@@ -18,8 +18,6 @@ keywords:
   - Testim 受信箱
 ---
 
-サインアップとログインフローを検証する
-
 Testim は、恒久的および一時的なメールアドレスを提供する組み込みメールサービスを備えています。_Validate email_ ステップを使用すると、これらのメールアドレスにメールが送信されたことを検証できます。このステップは通常、アプリのサインアップまたはログインフローをテストするために使用されます。
 
 :::note{title="これはPRO機能です"}
@@ -80,7 +78,7 @@ _Validate email_ ステップは、指定された Testim メールアドレス�
   </tr>
   <tr>
    <td style="text-align: left;">
-    date (time sent)
+    date （送信時刻）
    </td>
    <td style="text-align: left;">
     Date
@@ -424,7 +422,7 @@ AUT を開いて HTML 要素をパラメーターとして定義した場合は�
 
 #### サインアップ件名の検証
 
-_Validate email_ ステップを使用して、アプリが生成して Testim 生成メールアドレスに送信したメールの件名の内容を検証できます。
+_Validate email_ ステップを使用して、アプリケーションが Testim 生成メールアドレスに送信したメールの件名（`messages[0].subject`）の内容を検証できます。
 
 ![メール検証コード例](/images/validations/email-validation/120320e-Testim_306.png)
 
@@ -441,7 +439,7 @@ return false;
 
 #### 本文内のリンクを検証する
 
-_Validate email_ ステップを使用して、メールの本文内のハイパーリンクを検索し、見つかった各リンクのテキストコンポーネントとリンクコンポーネントを返すことができます。
+_Validate email_ ステップを使用して、メール本文（`messages[0].html`）内のハイパーリンクを `DOMParser` で検索し、見つかった各リンクのテキストとリンク コンポーネントを返すことができます。
 
 ![メール検証結果](/images/validations/email-validation/df541fc-Testim_307.png)
 
@@ -556,19 +554,23 @@ exportsTest.emailLink = emailLinks[0];
 
 ![受信箱ボタン](/images/validations/email-validation/74073d1-verify.png)
 
-25. 次のいずれかを実行します：  
-    **恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。  
-    ![コピーボタン](/images/validations/email-validation/55551bf-image_3.png)
+25. 次のいずれかを実行します：
 
-    **一時的メールオプションの場合** -  
-    **Generate email address** ステップで定義した **Variable name** パラメーターの名前を **Email address** フィールドに入力します。  
-    ![メールアドレス生成ボタン](/images/validations/email-validation/d50b959-image_4.png)
+**恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。
 
-12. 必要に応じて、ステップとパラメーターの追加設定を行います。
+![コピーボタン](/images/validations/email-validation/55551bf-image_3.png)
 
-13. ペインを閉じ、戻るをクリックしてテストを表示し、**Save** をクリックして変更を保存します。
+**一時的メールオプションの場合** -
 
-14. 必要に応じて、ステップとパラメーターの追加設定を行います。
+**Generate email address** ステップで定義した **Variable name** パラメーターの名前を **Email address** フィールドに入力します。
+
+![メールアドレス生成ボタン](/images/validations/email-validation/d50b959-image_4.png)
+
+26. 必要に応じて、ステップとパラメーターの追加設定を行います。
+
+27. ペインを閉じ、戻るをクリックしてテストを表示し、**Save** をクリックして変更を保存します。
+
+28. 必要に応じて、ステップとパラメーターの追加設定を行います。
 
 ステップが作成されます。
 

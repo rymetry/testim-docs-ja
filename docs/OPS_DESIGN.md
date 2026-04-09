@@ -79,6 +79,16 @@ queue 全体を消費する。
 
 `detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
 
+**`source-unusable` / `snapshot-incomplete` の ack 形式** (Issue #247 post-merge): emitter (`source_parity_source_usability.mjs::describeReason`) は `detail` 末尾に `[reason=<token>]` を埋め込む。ack 作成時はこの token を `detailIncludes` に指定する:
+
+- `detailIncludes: "[reason=escaped-details-residue]"` — `<details>` widget tree 破壊
+- `detailIncludes: "[reason=shallow-snapshot]"` — EN snapshot が本文欠損
+- `detailIncludes: "[reason=extractor-empty]"` — extractor が body=0 を返した
+
+`reason` token は `usabilitySignals.reason` と 1:1 対応で、baseline 側 (`buildBaselineKey`) は同じ token を構造化 identity key に使う。`scripts/__tests__/source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を固定している。
+
+`detectEnArtifacts()` の `artifacts` フィールド種別:
+
 - `EN uses <details> blocks` — EN が `<details>` を使用
 - `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
 
@@ -384,3 +394,166 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
 - baseline paydown は明示的な PR で実施する（段階的縮小）。期限切れによる自動再点火に頼ってはいけない
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
 - `tokenless-near-tie` baseline エントリは `--include-advisory` review queue として triage する
+
+### Orphan baseline entry (Issue #247 post-merge 追加)
+
+detector / extractor / preprocessor の仕様変更で、runtime が emit しなくなった
+issueType の baseline entry は **orphan** として残留する。`check_source_parity.mjs`
+は完走時に orphan を以下の経路で可視化する:
+
+- `parity-check-status.json.summary.orphanBaselineEntries` (総数) および
+  `.orphanBaselineByType` (type 別内訳) に集計される
+- CLI サマリーで 0 件以外なら `🧹 orphan baseline entries: N 件 (...)` の 1 行を出す
+- `detection_reports.parityFollowup` に `## 🧹 Orphan baseline entries` セクションを出す
+
+掃除手順:
+
+1. `npm run check:parity` の CLI 出力で orphan 件数と byType を確認
+2. 該当 slug に対して `node scripts/generate_parity_baseline.mjs --slug=<slug>` で再生成
+3. 再度 `npm run check:parity` を走らせて `orphanBaselineEntries === 0` を確認
+
+`scripts/__tests__/source_parity_orphan_integration.test.mjs` が
+「既存 clean slug に stale entry を注入 → orphan として集計される」E2E を
+pin する。repo-global な baseline/status file を奪い合わないよう、
+`checkSourceParity({ baselinePath, outputPath })` の test-only 注入 hook を
+使って `mkdtemp` 上の temp copy だけを操作する。
+
+### Issue #247 完了条件の着地点 (End-to-End 完全解消, 2026-04-09)
+
+Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レビュー →
+re-review で段階的に絞り込み、最終的に **8 代表ページすべてを baseline 0 件の
+clean green** まで解消した (完全 End-to-End 達成):
+
+**完了条件 #2 (4 slug が structure mismatch として reportable)**: 4 slug すべてが
+baseline entry 0 で clean green に到達:
+
+| slug | 方針 | 着地点 |
+| --- | --- | --- |
+| `salesforce-testing/faq` | Phase F.2.5 preprocessor 正規化 + `normalizeUrlToken` basename fallback 修正 | baseline entry 0 |
+| `running-tests/the-command-line-cli` | Phase D.1: 14 section の JA 全面 rewrite (`\` 行継続解除、1 段落への圧縮解消、EN の paragraph/ordered-list 構造に 1:1 対応) + token gap 修正 (`--mode`, `--tunnel`, `--host`, `a.k.a`, `--chrome-extra-args`, `--override-report-file-classname`, `/docs/project-and-user-management` 等) | baseline entry 0 |
+| `results/test-results/network-logs` | Phase D.2: `Filtering request results` の分割構造に合わせて intro → task A → screenshot → result → note → task B の順に再構成 + `Viewing the network logs at the test level` の末尾 `:::note` → plain paragraph 変換 | baseline entry 0 |
+| `advanced-editing/validations/email-validation` | Phase D.3: preface callout link (`https://www.testim.io/pricing/`) 追加 + table cell `date (送信時刻)` 翻訳 + Codeless Option の "5. 次のいずれかを実行します" sub-content を独立 paragraph に split + sign-up/links-in-body 例に `messages[0].subject` / `DOMParser` unique token 差別化 (tokenless-near-tie 解消) | baseline entry 0 |
+
+**完了条件 #4 (artifact 吸収で green)**: Phase E で 2 slug が完全に clean green:
+
+| slug | 方針 | 着地点 |
+| --- | --- | --- |
+| `advanced-editing/custom-action-step-mobile` | JA 側を EN plain-text 構造に揃える | baseline entry 0 |
+| `results/test-runs` | preface の extra paragraph 削除 + 関連修正 | baseline entry 0 |
+
+**追加: upstream snapshot debt 2 slug** (re-review で完全解消):
+
+| slug | 方針 | 着地点 |
+| --- | --- | --- |
+| `salesforce-testing/salesforce-testing-overview` | EN source が h1 + 1 paragraph のみの shallow snapshot だったため、JA も同じ minimal 構造に trim (source-first 原則) | baseline entry 0 |
+| `testops/testops-version-control/pull-requests` | EN source の body 全体が `<code>` ブロックで wrap された broken output (extractor-empty) だったため、正しい HTML snapshot を手動で書き起こして置き換え | baseline entry 0 |
+
+**完了条件の保証 (regression guard)**:
+
+- `scripts/__tests__/source_parity_structure_fixtures.test.mjs` — 5 代表ページ
+  (the-command-line-cli / network-logs / email-validation / custom-action-step-mobile /
+  test-runs) で structure issue が 0 件を `assertStructureClean()` で pin
+- `scripts/__tests__/source_parity_source_usability_fixtures.test.mjs` — faq と
+  salesforce-testing-overview と coding-assistant のいずれも source-unusable を
+  出さない (usable) ことを pin
+- `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` — 4 clean sentinel ページで
+  structure / segment 共に 0 件を pin (false-positive 回帰ガード)
+- `scripts/__tests__/source_parity_representative_summary.test.mjs` — Issue #247
+  End-to-End 解消後の全 8 slug summary counter を `RESOLVED_PAGES` で pin
+  (`RESIDUAL_PAGES = []`)
+- `scripts/__tests__/source_parity_orphan_integration.test.mjs` — orphan detection の
+  E2E contract を pin
+- `scripts/__tests__/source_parity_usability_ack_integration.test.mjs` — detector → ack
+  matcher の round-trip を合成 HTML (shallow-snapshot / escaped-details-residue) で pin
+- `scripts/__tests__/source_parity.test.mjs` — `normalizeUrlToken` の
+  basename fallback を pin。MadCap の相対 `<a href="category/page.htm">` リンクを
+  JA docs tree 上の full path に復元する contract を守る
+
+### Issue #247 post-merge / re-review での追加修正 (2026-04-09)
+
+post-merge PR に対する完全解消レビューで以下の gap が判明し、追加で修正した:
+
+1. **`normalizeUrlToken` relative path bug** — MadCap の
+   `<a href="category/page.htm">` パターンで `resolveToFullSlug` が slug に
+   `/` を含むと basename lookup を bypass していた。修正: `resolveToFullSlug` を
+   docs index 照合 → basename fallback の 2 段構えに変更。`faq` の
+   segment-token-gap が自動解消。
+
+2. **3 代表ページの JA 全面 rewrite** — the-command-line-cli / network-logs /
+   email-validation を EN の block sequence に 1:1 対応させて baseline 0 件まで
+   解消 (Phase D.1-D.3)。
+
+3. **2 snapshot debt の upstream 修正** — salesforce-testing-overview は JA trim、
+   pull-requests は broken source を正しい HTML snapshot に手動書き換え。これにより
+   Issue #247 の 8 代表ページすべてを End-to-End で完全解消。
+
+### Issue #247 re-review 第二弾 での追加修正 (2026-04-09)
+
+「representative の End-to-End 完全解消」契約を signal-only drift まで含めた
+強い契約に引き上げる過程で、以下の gap と修正を実施した:
+
+1. **EN `walkBlockContainer` が loose text + inline 要素を分断** — MadCap の
+   `<img .../>The results are instantly filtered based on text in the <em>File</em>
+   and <em>Domain</em> columns.` のような非標準 HTML で、loose text と `<em>` /
+   `<strong>` / `<a>` などの inline 要素が sibling 列として現れると、各 text node
+   を独立 paragraph segment として emit していた (`<em>` 境界で文が寸断)。修正:
+   `walkBlockContainer` に loose-text + inline-element accumulator を追加し、
+   連続する loose text と inline 要素を **1 つの paragraph として merge** する。
+   これにより `network-logs` の `Filtering request results` section が EN side で
+   正しく 1 paragraph に戻り、paragraph-count-mismatch が解消。
+
+2. **`<img>` line with trailing text in turndown output** — turndown は
+   `![](img.png)The results are...` のように画像と後続テキストを 1 行に出力する。
+   `classifyLine` はこれを image kind として扱い paragraph をカウントしない
+   ため、同じテキストを別行に書いた JA と paragraph-count がズレる。修正:
+   `![...](url)` の後ろに実質的テキストが残る行は paragraph-start として扱う
+   (trailing content check 追加)。
+
+3. **`test-runs` の Status table cell に `- 赤い x` などの markdown-list 風
+   文字列** — line-based `extractBulletCounts` がこれを bullet としてカウント
+   し、EN=0 JA=3 の bullet-count-mismatch を出していた。修正: HTML table cell
+   内の表記を `**Failed** — 赤い x` の inline 形式に統一。
+
+4. **`network-logs` の `:::note` を `>` blockquote に変更** — `<blockquote>` は
+   EN turndown / classifyLine で blockquote kind として扱われ paragraph count
+   に含まれないが、`:::note` は JA extractor では callout-body として扱われ、
+   さらに plain paragraph に変換した場合は paragraph としてカウントされる。
+   EN と JA で paragraph count を揃えるため、JA も `>` blockquote に統一。
+
+5. **`pull-requests` の nested list 復元** — WRITING_GUIDE 「原文で step 配下に
+   nested list がある場合は本文へ圧縮せず維持」に従い、Status 一覧 (Review
+   required / Changes requested / Approved) と 5. Decide 配下 (Approve /
+   Request Changes) を nested list に戻した。EN snapshot 側は `<ol>` 内の
+   `<ul>` を li の外 (sibling) に配置することで、両 extractor が対称に
+   sibling list として emit するようにした。
+
+6. **pricing link 除外** — `https://www.testim.io/pricing/` は WRITING_GUIDE
+   「全ページ共通 削除対象」だが、EN snapshot 側には残る。JA から link を
+   削除した後も EN 側の token として extract されると segment-token-gap に
+   なるため、`extractInvariantTokens` に `EXCLUDED_INVARIANT_URL_TOKENS` セット
+   を追加して EN/JA 両側で該当 token を emit しないようにした。
+
+7. **representative summary test の契約強化** — 従来は `reportableActiveFiles`
+   / `structureMismatchIssues` / `snapshotUnusableIssues` の 0 + `baselinedByType`
+   の空のみを pin していたが、signal-only drift (paragraph-count-mismatch /
+   bullet-count-mismatch) も 0 件であることを追加 pin。`f.issues.length === 0`
+   を全 8 slug に課すことで、原文構造を保ったまま翻訳する契約を明示化した。
+
+8. **WRITING_GUIDE 更新** — (a) リスト節に「step 配下 nested list を圧縮しない」
+   (b) その他節に「count 系 signal は補助で、原文構造を崩してよい意味では
+   ない」、(c) 除外ルールに pricing link 削除の明示、(d) source-first 例外節
+   (shallow / broken EN snapshot は current source を正本とする) を追記。
+
+### Issue #247 post-merge の local gate 期待値
+
+`npm run check:parity` を local で走らせた場合の完了条件は以下:
+
+- `reportableActiveFiles === 0`
+- `orphanBaselineEntries === 0`
+- `structureMismatchIssues === 0`
+- `snapshotUnusableIssues === 0`
+
+ただし `result` フィールドは `freshnessState !== 'fresh'` のとき実装契約上
+`inconclusive` に degrade する (`check_source_parity.mjs::computeParityResult`)。
+local で snapshot fetch をしていない限り `freshnessState: broken` なので、
+`result` は `inconclusive` のままで正常。CI 環境のみ `result: pass` が期待される。

@@ -407,3 +407,4 @@ describe('extractSegmentsFromHtml — shape invariants', () => {
     assert.deepEqual(extractSegmentsFromHtml('   \n\t  '), []);
   });
 });
+

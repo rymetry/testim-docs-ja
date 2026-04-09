@@ -5,7 +5,7 @@
  * mergePartialBaseline, defaultReviewAfter) and verifies determinism.
  * The CLI invocation is exercised by an end-to-end smoke test.
  */
-import { describe, it } from 'node:test';
+import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
@@ -902,5 +902,124 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
     assert.equal(merged.entries.length, 1);
     assert.equal(merged.entries[0].issueType, 'segment-missing');
     assert.equal(merged.entries[0].reviewAfter, '2026-09-01');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 post-merge — validateTypesArg helper contract
+//
+// main() は process.argv.slice(2) を直読みするので main() 自体は直接
+// テストできない。その代わりに --types CSV を検証する純粋関数を切り出し、
+// ここで allowlist / 空配列 / typo をピン止めする。codex review に従った
+// 設計で、CLI wiring はこの helper を呼ぶ thin wrapper に留める。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 post-merge — validateTypesArg', () => {
+  let validateTypesArg;
+  before(async () => {
+    ({ validateTypesArg } = await import('../lib/source_parity_baseline.mjs'));
+  });
+
+  it('returns { ok: true } when types is null (--types not specified)', () => {
+    assert.deepEqual(validateTypesArg(null), { ok: true });
+  });
+
+  it('returns { ok: false } for empty array (empty --types=)', () => {
+    const result = validateTypesArg([]);
+    assert.equal(result.ok, false);
+    assert.match(result.error, /empty|空/);
+  });
+
+  it('returns { ok: false } for unknown types (typo guard)', () => {
+    const result = validateTypesArg(['section-structure-misatch']);
+    assert.equal(result.ok, false);
+    assert.match(result.error, /unsupported|unknown|未知/);
+    assert.match(result.error, /section-structure-misatch/);
+  });
+
+  it('returns { ok: false } when ANY element is unknown (mixed input)', () => {
+    const result = validateTypesArg(['section-structure-mismatch', 'foo-bar']);
+    assert.equal(result.ok, false);
+    assert.match(result.error, /foo-bar/);
+  });
+
+  it('returns { ok: true } for the 4 PR5 migration types', () => {
+    for (const t of [
+      'section-structure-mismatch',
+      'segment-order-mismatch',
+      'snapshot-incomplete',
+      'source-unusable',
+    ]) {
+      assert.deepEqual(
+        validateTypesArg([t]),
+        { ok: true },
+        `${t} should be accepted`,
+      );
+    }
+  });
+
+  it('returns { ok: true } for a combination of the 4 PR5 migration types', () => {
+    const result = validateTypesArg([
+      'section-structure-mismatch',
+      'snapshot-incomplete',
+    ]);
+    assert.deepEqual(result, { ok: true });
+  });
+
+  it('rejects legacy segment-* types (tightest allowlist — PR5 migration only)', () => {
+    // segment-missing / segment-extra / segment-shifted / segment-untranslated /
+    // segment-token-gap / segment-inconclusive は --types 経路では扱わない。
+    // これらを書き換えたいときは --regenerate か --slug で処理する。
+    for (const t of [
+      'segment-missing',
+      'segment-extra',
+      'segment-shifted',
+      'segment-untranslated',
+      'segment-token-gap',
+      'segment-inconclusive',
+    ]) {
+      const result = validateTypesArg([t]);
+      assert.equal(
+        result.ok,
+        false,
+        `${t} should NOT be accepted by --types (use --regenerate instead)`,
+      );
+    }
+  });
+
+  it('rejects non-array input defensively', () => {
+    const result = validateTypesArg('section-structure-mismatch');
+    assert.equal(result.ok, false);
+  });
+});
+
+describe('Issue #247 post-merge — parseArgs + validateTypesArg integration', () => {
+  let validateTypesArg;
+  before(async () => {
+    ({ validateTypesArg } = await import('../lib/source_parity_baseline.mjs'));
+  });
+
+  it('parseArgs(["--types="]) produces an empty array which validateTypesArg rejects', () => {
+    const args = parseArgs(['--types=']);
+    // filter(Boolean) が空要素を落として [] になる
+    assert.deepEqual(args.types, []);
+    // その [] を validateTypesArg に渡すと reject される
+    const v = validateTypesArg(args.types);
+    assert.equal(v.ok, false);
+  });
+
+  it('parseArgs(["--types=typo"]) produces ["typo"] which validateTypesArg rejects', () => {
+    const args = parseArgs(['--types=section-structure-misatch']);
+    assert.deepEqual(args.types, ['section-structure-misatch']);
+    const v = validateTypesArg(args.types);
+    assert.equal(v.ok, false);
+    assert.match(v.error, /section-structure-misatch/);
+  });
+
+  it('parseArgs(["--types=source-unusable"]) round-trips as valid', () => {
+    const args = parseArgs(['--types=source-unusable']);
+    assert.deepEqual(args.types, ['source-unusable']);
+    const v = validateTypesArg(args.types);
+    assert.equal(v.ok, true);
   });
 });

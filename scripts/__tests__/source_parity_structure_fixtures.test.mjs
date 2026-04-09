@@ -1,24 +1,20 @@
 /**
- * Issue #247 PR6 — 代表ページに対する canonical block sequence comparator
- * の実 snapshot + 実 JA md 回帰 fixture テスト。
+ * Issue #247 End-to-End 完全解消後の structure regression guard。
  *
- * 対象 3 ページ (Issue #247 本文で structure mismatch として明示されたもの):
+ * representative 3 ページ:
  *   - running-tests/the-command-line-cli
  *   - results/test-results/network-logs
  *   - advanced-editing/validations/email-validation
  *
- * pin する契約:
- *   1. alignSegments → parityDiffsToIssues 経由で section-structure-mismatch /
- *      segment-order-mismatch が **少なくとも 1 件** emit される (false red
- *      回帰の防止)
- *   2. 各 page で emit される structure issue の件数が PR5 baseline と一致する
- *      (drift 発生時のシグナル)
- *   3. 先頭 issue の structureCategory / sectionPath / enKinds / jaKinds が
- *      固定の期待値と一致する (comparator の出力契約の固定)
+ * これらは post-resolution では canonical block sequence comparator 上
+ * `section-structure-mismatch` / `segment-order-mismatch` ともに 0 件である
+ * ことを維持し続ける必要がある。ここでは実 snapshot + 実 JA md を読み、
+ * raw comparator 出力が空配列であることを pin する。
  *
- * このテストは gate 側の挙動 (baseline tagging / acknowledgement tagging /
- * exit code) には触れない — それは §Task 3 の representative summary test が
- * 担当する。ここは **comparator の raw 出力** だけを pin する。
+ * なお、下の `PINNED_*` 定数は PR5 / post-merge review 時点の historical
+ * pin 値を残した参照データであり、現在の assert 本体は `assertStructureClean()`
+ * を使う。gate 側の summary counter や baseline tagging は
+ * representative summary test が担当する。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -73,7 +69,7 @@ function runStructureComparator(slug) {
 }
 
 // ---------------------------------------------------------------------------
-// pin 値 (Step 3 の実測で確定)
+// Historical pin 値 (PR5 / post-merge review 時点の実測)。
 // ---------------------------------------------------------------------------
 
 const PINNED_THE_CLI = Object.freeze({
@@ -133,28 +129,39 @@ const PINNED_NETWORK_LOGS = Object.freeze({
 
 const PINNED_EMAIL_VALIDATION = Object.freeze({
   slug: 'advanced-editing/validations/email-validation',
-  structureIssueCount: 2,
-  byType: { 'section-structure-mismatch': 2, 'segment-order-mismatch': 0 },
+  // Phase D で preface の extra paragraph を削除したので 2 → 1 に減少。
+  // 残る 1 件は nested heading 構造差 (Codeless Option セクション末尾の
+  // extra paragraph) で、Phase G で baseline 保持する方針。
+  structureIssueCount: 1,
+  byType: { 'section-structure-mismatch': 1, 'segment-order-mismatch': 0 },
   byCategory: {
-    'kind-multiset': 2,
+    'kind-multiset': 1,
     'kind-sequence': 0,
     'content-order': 0,
   },
   firstIssue: {
     type: 'section-structure-mismatch',
     structureCategory: 'kind-multiset',
-    sectionPath: '',
-    sectionIndex: 0,
+    sectionPath: 'Creating a Validate Email Step > Creating a Validate Email Step using the Codeless Option',
+    sectionIndex: 16,
     enKinds: [
-      'paragraph', 'callout-body', 'paragraph', 'table',
-      'paragraph', 'unordered-list', 'paragraph', 'callout-body',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'callout-body', 'paragraph', 'ordered-list', 'paragraph',
+      'ordered-list', 'callout-body', 'ordered-list', 'paragraph',
+      'ordered-list', 'paragraph', 'ordered-list', 'paragraph',
+      'paragraph', 'paragraph', 'ordered-list', 'paragraph',
     ],
     jaKinds: [
-      'paragraph', 'paragraph', 'callout-body', 'paragraph', 'table',
-      'paragraph', 'unordered-list', 'paragraph', 'callout-body',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'paragraph', 'ordered-list', 'paragraph', 'ordered-list',
+      'callout-body', 'paragraph', 'ordered-list', 'paragraph',
+      'ordered-list', 'callout-body', 'ordered-list', 'paragraph',
+      'ordered-list', 'paragraph', 'ordered-list', 'paragraph',
+      'paragraph', 'ordered-list', 'paragraph',
     ],
-    enSegmentCount: 8,
-    jaSegmentCount: 9,
+    enSegmentCount: 24,
+    jaSegmentCount: 23,
   },
 });
 
@@ -228,28 +235,56 @@ function assertStructurePin(slug, pinned) {
 }
 
 // ---------------------------------------------------------------------------
-// 代表ページ 1: running-tests/the-command-line-cli
+// Issue #247 End-to-End 完全解消後: 3 代表ページは Phase D.1/D.2/D.3 の JA
+// 全面 rewrite で structure issue が 0 件に到達した。PR5 時点の PINNED_*
+// 期待値は post-resolution 回帰 guard として assertStructureClean() 側へ
+// 切り替える。将来 JA が再度 drift した場合に即座に検知する。
 // ---------------------------------------------------------------------------
 describe('source_parity_structure_fixtures: running-tests/the-command-line-cli', () => {
-  it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
-    assertStructurePin(PINNED_THE_CLI.slug, PINNED_THE_CLI);
+  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+    assertStructureClean(PINNED_THE_CLI.slug);
   });
 });
 
-// ---------------------------------------------------------------------------
-// 代表ページ 2: results/test-results/network-logs
-// ---------------------------------------------------------------------------
 describe('source_parity_structure_fixtures: results/test-results/network-logs', () => {
-  it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
-    assertStructurePin(PINNED_NETWORK_LOGS.slug, PINNED_NETWORK_LOGS);
+  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+    assertStructureClean(PINNED_NETWORK_LOGS.slug);
+  });
+});
+
+describe('source_parity_structure_fixtures: advanced-editing/validations/email-validation', () => {
+  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+    assertStructureClean(PINNED_EMAIL_VALIDATION.slug);
   });
 });
 
 // ---------------------------------------------------------------------------
-// 代表ページ 3: advanced-editing/validations/email-validation
+// Issue #247 post-merge — Phase H.3 — artifact regression fixture
+//
+// Phase E で JA 側を整えて完全に clean green に到達した 2 slug
+// (custom-action-step-mobile と test-runs) について、structure mismatch が
+// 0 件であることを pin する。将来の extractor / preprocessor 変更で再発した
+// 場合にここで捕まえる regression guard。
 // ---------------------------------------------------------------------------
-describe('source_parity_structure_fixtures: advanced-editing/validations/email-validation', () => {
-  it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
-    assertStructurePin(PINNED_EMAIL_VALIDATION.slug, PINNED_EMAIL_VALIDATION);
+function assertStructureClean(slug) {
+  const { structureIssues } = runStructureComparator(slug);
+  assert.equal(
+    structureIssues.length,
+    0,
+    `${slug}: Phase E で clean 化済みだが structure issue が ` +
+      `${structureIssues.length} 件検出された。` +
+      `最初の issue: ${JSON.stringify(structureIssues[0] ?? null)}`,
+  );
+}
+
+describe('source_parity_structure_fixtures: custom-action-step-mobile (Phase E artifact)', () => {
+  it('Phase E 以降、structure issue は 0 件を維持する (artifact regression guard)', () => {
+    assertStructureClean('advanced-editing/custom-action-step-mobile');
+  });
+});
+
+describe('source_parity_structure_fixtures: test-runs (Phase E artifact)', () => {
+  it('Phase E 以降、structure issue は 0 件を維持する (artifact regression guard)', () => {
+    assertStructureClean('results/test-runs');
   });
 });

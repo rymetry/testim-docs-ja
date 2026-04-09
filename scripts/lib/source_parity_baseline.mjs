@@ -49,6 +49,75 @@ export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
 );
 
 /**
+ * Issue #247 post-merge — `generate_parity_baseline --types` で受け入れる
+ * issueType の allowlist。BASELINE_ELIGIBLE_TYPES より狭く、PR5 migration
+ * 対象 (structure mismatch + source unusable) の 4 type のみを許可する。
+ *
+ * これより広くすると `--types` が既存 segment-* entry を touch できて
+ * しまい、reviewAfter の意図しない shift を起こす (§7.4 の意図と反する)。
+ * 逆にこれより狭くすると PR5 migration 自体が不可能になる。
+ *
+ * `--types=` を空で渡した場合 (silent no-op が起きる入力パターン) も
+ * `validateTypesArg` で reject される。
+ *
+ * @type {ReadonlySet<string>}
+ */
+export const TYPES_ARG_ALLOWLIST = Object.freeze(
+  new Set([
+    'section-structure-mismatch',
+    'segment-order-mismatch',
+    'snapshot-incomplete',
+    'source-unusable',
+  ]),
+);
+
+/**
+ * `generate_parity_baseline.mjs --types=<csv>` の引数を検証する純粋関数。
+ * `main()` は `process.argv.slice(2)` を直読みしているため単体テストしづらい
+ * ので、検証ロジックを helper として切り出す。CLI wiring 側はこの helper の
+ * 戻り値を見てエラー出力 → return 1 する thin wrapper に留める。
+ *
+ * 受理:
+ *   - `null` (= `--types` flag が指定されていない) → `{ ok: true }`
+ *   - `TYPES_ARG_ALLOWLIST` の非空部分集合 → `{ ok: true }`
+ *
+ * reject:
+ *   - 非 Array → `{ ok: false, error: string }`
+ *   - 空配列 → `{ ok: false, error: string }` (silent no-op 防止)
+ *   - allowlist 外の要素を含む → `{ ok: false, error: string }`
+ *
+ * @param {unknown} types
+ * @returns {{ ok: true } | { ok: false, error: string }}
+ */
+export function validateTypesArg(types) {
+  if (types === null) return { ok: true };
+  if (!Array.isArray(types)) {
+    return {
+      ok: false,
+      error: `--types must be a comma-separated list (got ${typeof types})`,
+    };
+  }
+  if (types.length === 0) {
+    return {
+      ok: false,
+      error:
+        '--types cannot be empty. Use --regenerate for a full rebuild, ' +
+        `or pass a non-empty csv of: ${[...TYPES_ARG_ALLOWLIST].join(', ')}`,
+    };
+  }
+  const unknown = types.filter((t) => !TYPES_ARG_ALLOWLIST.has(t));
+  if (unknown.length > 0) {
+    return {
+      ok: false,
+      error:
+        `--types contains unsupported issueType(s): ${unknown.join(', ')}. ` +
+        `Allowed: ${[...TYPES_ARG_ALLOWLIST].join(', ')}`,
+    };
+  }
+  return { ok: true };
+}
+
+/**
  * Issue #247 PR5 — structure mismatch baseline 対象の structureCategory 列。
  * `source_parity_structure.mjs` の 3 stage (kind-multiset / kind-sequence /
  * content-order) と 1:1 で対応する enum。emitter 側が新しい stage を追加
@@ -594,4 +663,35 @@ export function tagIssuesWithBaseline(
   });
 
   return { tagged, invalidated: false, matchedKeys };
+}
+
+/**
+ * Issue #247 post-merge — tagIssuesWithBaseline の `matchedKeys` を使って
+ * 「runtime に一致する issue が無かった baseline entry」= orphan を返す
+ * 純粋関数。detector/emitter が仕様変更したときに legacy entry が
+ * 取り残されるパターン(PR5 migration で `segment-inconclusive` が 3 slug
+ * 分残った件)を可視化する。
+ *
+ * 呼び出し側の契約:
+ *   - page-level invalidation (fingerprint mismatch) 時は `matchedKeys` が
+ *     空になり、全 entry が「unmatched」として返るが、それは orphan では
+ *     ない (snapshot 更新に伴う invalidation)。呼び出し側が
+ *     `tagIssuesWithBaseline` の `invalidated` フラグを見て orphan 集計を
+ *     スキップすること。
+ *   - helper 自体は entries 配列と matchedKeys Set を機械的に突き合わせ
+ *     るのみで、invalidation 状態や checked/unchecked の概念を持たない。
+ *
+ * @param {string} slug
+ * @param {object[]} baselineEntries — 全 slug 混じった entries でも良い
+ * @param {Set<string>} matchedKeys — `tagIssuesWithBaseline` の戻り値
+ * @returns {object[]} orphan baseline entries (sourceFingerprint 等そのまま)
+ */
+export function computeOrphanBaselineEntries(slug, baselineEntries, matchedKeys) {
+  if (!Array.isArray(baselineEntries)) return [];
+  if (!(matchedKeys instanceof Set)) return [];
+  const slugEntries = baselineEntries.filter((e) => e.slug === slug);
+  return slugEntries.filter((e) => {
+    const key = buildBaselineKeyFromEntry(e);
+    return !matchedKeys.has(key);
+  });
 }

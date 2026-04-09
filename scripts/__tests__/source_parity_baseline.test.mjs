@@ -6,7 +6,7 @@
  * lives in source_parity_acknowledgements.test.mjs (summary accounting)
  * and the runtime tests.
  */
-import { describe, it } from 'node:test';
+import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
@@ -1238,5 +1238,165 @@ describe('Issue #247 PR5 — computeStructureFingerprint', () => {
       ],
     });
     assert.equal(low, high);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 post-merge — computeOrphanBaselineEntries helper
+//
+// tagIssuesWithBaseline が返す matchedKeys を使って「runtime に一致しない
+// baseline entry」= orphan を抽出する純粋関数。PR5 migration で
+// `segment-inconclusive` 3 件が legacy として残留した再発を防ぐ。
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 post-merge — computeOrphanBaselineEntries', () => {
+  let computeOrphanBaselineEntries;
+  let tagIssuesWithBaseline2;
+  before(async () => {
+    ({ computeOrphanBaselineEntries, tagIssuesWithBaseline: tagIssuesWithBaseline2 } =
+      await import('../lib/source_parity_baseline.mjs'));
+  });
+
+  const SLUG = 'overview/orphan-example';
+  const FP = 'sha256:' + '1'.repeat(64);
+  const EN_FP = 'sha256:' + '2'.repeat(64);
+
+  function segmentMissingEntry(idx) {
+    return {
+      slug: SLUG,
+      issueType: 'segment-missing',
+      sectionPath: 'Setup',
+      segmentKind: 'paragraph',
+      enSegmentIndex: idx,
+      jaSegmentIndex: null,
+      enSourceFingerprint: EN_FP,
+      jaSourceFingerprint: null,
+      missingTokens: null,
+      snapshotFingerprint: FP,
+      reviewAfter: '2026-10-01',
+      inconclusiveCategory: null,
+      inconclusiveReason: null,
+    };
+  }
+
+  function segmentMissingIssue(idx) {
+    return {
+      type: 'segment-missing',
+      severity: 'actionable',
+      sectionPath: 'Setup',
+      segmentKind: 'paragraph',
+      enSegmentIndex: idx,
+      enSourceFingerprint: EN_FP,
+    };
+  }
+
+  it('returns [] when every entry matched a runtime issue', () => {
+    const entries = [segmentMissingEntry(0), segmentMissingEntry(1)];
+    const issues = [segmentMissingIssue(0), segmentMissingIssue(1)];
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
+    assert.deepEqual(orphans, []);
+  });
+
+  it('returns entries whose key did not appear in matchedKeys', () => {
+    const entries = [segmentMissingEntry(0), segmentMissingEntry(1), segmentMissingEntry(2)];
+    // runtime issue は idx=0 のみ
+    const issues = [segmentMissingIssue(0)];
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
+    assert.equal(orphans.length, 2);
+    assert.deepEqual(
+      orphans.map((e) => e.enSegmentIndex).sort(),
+      [1, 2],
+    );
+  });
+
+  it('only considers entries for the given slug', () => {
+    const entries = [
+      segmentMissingEntry(0),
+      { ...segmentMissingEntry(0), slug: 'other/page' },
+    ];
+    const issues = []; // nothing matches
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
+    // 'other/page' entry は現在の slug の orphan ではない
+    assert.equal(orphans.length, 1);
+    assert.equal(orphans[0].slug, SLUG);
+  });
+
+  it('returns all entries when every runtime issue failed to match (e.g., invalidated page)', () => {
+    const entries = [segmentMissingEntry(0), segmentMissingEntry(1)];
+    const issues = [segmentMissingIssue(0), segmentMissingIssue(1)];
+    const OTHER_FP = 'sha256:' + '3'.repeat(64);
+    // invalidated === true のケースは matchedKeys === Set() になる
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, OTHER_FP, '2026-04-09');
+    assert.equal(tagResult.invalidated, true);
+    assert.equal(tagResult.matchedKeys.size, 0);
+    // helper は invalidated を受け取らないので、呼び出し側が invalidated 時は
+    // orphan 集計をスキップする契約。helper 自体は entries をそのまま返す。
+    const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
+    assert.equal(
+      orphans.length,
+      2,
+      'invalidated 時は全 entry が "unmatched" になるが、呼び出し側が invalidated フラグで skip する契約',
+    );
+  });
+
+  it('orphan entries retain their original fields (identity preserved)', () => {
+    const entries = [segmentMissingEntry(0)];
+    const issues = [];
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
+    assert.equal(orphans.length, 1);
+    assert.equal(orphans[0].slug, SLUG);
+    assert.equal(orphans[0].issueType, 'segment-missing');
+    assert.equal(orphans[0].enSegmentIndex, 0);
+  });
+
+  it('returns [] defensively when matchedKeys is not a Set', () => {
+    const entries = [segmentMissingEntry(0)];
+    assert.deepEqual(computeOrphanBaselineEntries(SLUG, entries, null), []);
+    assert.deepEqual(computeOrphanBaselineEntries(SLUG, entries, undefined), []);
+    assert.deepEqual(computeOrphanBaselineEntries(SLUG, entries, []), []);
+  });
+
+  it('returns [] defensively when entries is not an array', () => {
+    assert.deepEqual(computeOrphanBaselineEntries(SLUG, null, new Set()), []);
+    assert.deepEqual(computeOrphanBaselineEntries(SLUG, undefined, new Set()), []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #247 post-merge — summary orphanBaselineEntries counter
+// ---------------------------------------------------------------------------
+
+describe('Issue #247 post-merge — summary orphanBaselineEntries counter', () => {
+  let summarizeParityResults;
+  before(async () => {
+    ({ summarizeParityResults } = await import('../lib/source_parity_summary.mjs'));
+  });
+
+  it('exposes orphanBaselineEntries === 0 when no orphans are passed', () => {
+    const summary = summarizeParityResults([], {
+      orphanBaselineEntries: 0,
+      orphanBaselineByType: {},
+    });
+    assert.equal(summary.orphanBaselineEntries, 0);
+    assert.deepEqual(summary.orphanBaselineByType, {});
+  });
+
+  it('propagates a provided orphan count + byType breakdown', () => {
+    const summary = summarizeParityResults([], {
+      orphanBaselineEntries: 3,
+      orphanBaselineByType: { 'segment-inconclusive': 3 },
+    });
+    assert.equal(summary.orphanBaselineEntries, 3);
+    assert.deepEqual(summary.orphanBaselineByType, { 'segment-inconclusive': 3 });
+  });
+
+  it('defaults to 0 / {} when no orphan metadata is passed (backward compat)', () => {
+    const summary = summarizeParityResults([]);
+    assert.equal(summary.orphanBaselineEntries, 0);
+    assert.deepEqual(summary.orphanBaselineByType, {});
   });
 });

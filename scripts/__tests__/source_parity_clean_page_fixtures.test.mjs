@@ -77,12 +77,22 @@ function runStructureComparator(slug) {
 }
 
 // ---------------------------------------------------------------------------
-// plan 作成時に実測で zero-drift を確定した 2 ページ。配列の順序と要素は
-// PR6 実装時の回帰確認で前提が成立していることを確認済み。
+// plan 作成時に実測で zero-drift を確定した 2 ページ + Phase H.1 で追加した
+// structure variety 別の clean sentinel。配列の順序と要素は Phase H.1 の
+// 実測 (`npm run check:parity` 下で 0 diffs を確認) で固定してある。
 // ---------------------------------------------------------------------------
 const CLEAN_PAGE_SLUGS = Object.freeze([
+  // PR6 時点の既存 sentinel (2 ページ)
   'settings/cli-prerequisites',
   'salesforce-testing/salesforce-testing-getting-started',
+  // Phase H.1 追加 (structure variety 別) — 全て実測で zero-drift 確認済み
+  //
+  // callout-heavy: callout-body が 4 件ある中サイズページ。:::note / :::warning
+  //   を含む JA→EN の structure 追従がこのページで pin される。
+  'test-management/shared-steps-library/managing-shared-steps-and-folders',
+  // callout-heavy: callout-body が 3 件の長文ページ。mobile-apps セクションの
+  //   代表 zero-drift sentinel。
+  'mobile-apps/mobile-apps',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {

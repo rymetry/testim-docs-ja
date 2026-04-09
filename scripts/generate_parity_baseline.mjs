@@ -30,6 +30,7 @@ import {
   computeStructureFingerprint,
   validateBaseline,
   loadBaselineFile,
+  validateTypesArg,
 } from './lib/source_parity_baseline.mjs';
 import {
   STRUCTURE_MISMATCH_TYPES,
@@ -546,6 +547,16 @@ async function main() {
     console.error('❌ --regenerate / --slug / --types are mutually exclusive');
     printUsage();
     return 1;
+  }
+  // Issue #247 post-merge — --types の allowlist / 空配列 / typo は純粋 helper
+  // に委譲して fail-fast する (silent no-op 再発防止)。
+  {
+    const validation = validateTypesArg(args.types);
+    if (!validation.ok) {
+      console.error(`❌ ${validation.error}`);
+      printUsage();
+      return 1;
+    }
   }
 
   if (!fs.existsSync(STATUS_PATH)) {
