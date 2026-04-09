@@ -89,42 +89,45 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 });
 
 // ---------------------------------------------------------------------------
-// RESOLVED_PAGES — Phase E で完全に clean green 化した 2 slug。
-// baseline entry を一切持たないことを pin する。
+// RESOLVED_PAGES — Phase D-F 完了後、baseline entry 0 で clean green に
+// 到達した slug。
+//
+// - `custom-action-step-mobile` / `test-runs`: Phase E の JA 修正で解消
+// - `faq`: Phase F.2.5 の preprocessor 修正 + Issue #247 post-merge re-review
+//          で追加した `normalizeUrlToken` basename fallback 修正で token-gap
+//          が完全解消
 // ---------------------------------------------------------------------------
 const RESOLVED_PAGES = Object.freeze([
   'advanced-editing/custom-action-step-mobile',
   'results/test-runs',
+  'salesforce-testing/faq',
 ]);
 
 // ---------------------------------------------------------------------------
 // RESIDUAL_PAGES — Phase D/E/F 完了後も baseline に残る debt 種別を
-// 最低 1 件持つことを pin する slug。
+// 最低 1 件持つことを pin する slug。Issue #247 post-merge re-review で
+// the-command-line-cli / network-logs / email-validation は JA 大規模
+// rewrite が必要 (plan で明記された「人間校正依存」scope 外) と判断し、
+// residual として継続保持。後続 Issue で順次解消する方針。
 // ---------------------------------------------------------------------------
 const RESIDUAL_PAGES = Object.freeze([
   {
     slug: 'running-tests/the-command-line-cli',
-    // Phase D で JA 全面書き換えが膨大なため後続 Issue 送り。
-    // section-structure-mismatch を最低 1 件は保持する前提で reseed 済み
+    // 10 section-structure-mismatch + 29 segment-level entries
+    // 全面 JA rewrite が必要なため後続 Issue 送り
     requiredBaselinedTypes: ['section-structure-mismatch'],
   },
   {
     slug: 'results/test-results/network-logs',
-    // section-structure-mismatch × 2 を reseed 保持
+    // 2 section-structure-mismatch + 6 segment-level entries
     requiredBaselinedTypes: ['section-structure-mismatch'],
   },
   {
     slug: 'advanced-editing/validations/email-validation',
-    // Phase D で preface は clean に。nested section は residual を reseed 保持
+    // Phase D で preface の callout link を修正済み。
+    // nested section (Codeless Option) は JA 見出し階層が flat 化されており
+    // 構造的に大規模書き換えが必要なため residual として保持
     requiredBaselinedTypes: ['section-structure-mismatch'],
-  },
-  {
-    slug: 'salesforce-testing/faq',
-    // Phase F.2.5 で structure は clean。source_parity_extract.mjs の
-    // normalizeUrlToken 既知バグによる segment-token-gap のみ baseline 保持
-    // (別ページ best-practice-variable-naming-convention-for-easy-cleanup
-    //  と対称)。
-    requiredBaselinedTypes: ['segment-token-gap'],
   },
   {
     slug: 'salesforce-testing/salesforce-testing-overview',

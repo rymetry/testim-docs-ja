@@ -428,10 +428,10 @@ Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レ�
 
 | slug | 方針 | 着地点 |
 | --- | --- | --- |
-| `salesforce-testing/faq` | Phase F.2.5 preprocessor 正規化 + JA 構造追従 | structure / source-unusable 共に 0 件、extractor 既知バグ起因の `segment-token-gap` 1 件のみ baseline 保持 |
-| `running-tests/the-command-line-cli` | Phase D 部分改善 (後続 Issue 対応) | 残存 10 structure-mismatch を baseline reseed |
-| `results/test-results/network-logs` | Phase D 部分改善 (後続 Issue 対応) | 残存 2 structure-mismatch を baseline reseed |
-| `advanced-editing/validations/email-validation` | Phase D preface 改善 | preface は clean、Codeless Option 末尾の 1 structure-mismatch を baseline 保持 |
+| `salesforce-testing/faq` | Phase F.2.5 preprocessor 正規化 + JA 構造追従 + post-merge re-review で `normalizeUrlToken` basename fallback 修正 | structure / source-unusable / token-gap すべて 0 件、baseline entry 0 件で完全解消 |
+| `running-tests/the-command-line-cli` | Phase D 部分改善 (後続 Issue 対応) | 残存 10 structure-mismatch + 29 segment-level を baseline 保持。JA 全面書き換えが必要で plan 明記の「人間校正依存」scope 外 |
+| `results/test-results/network-logs` | Phase D 部分改善 (後続 Issue 対応) | 残存 2 structure-mismatch + 6 segment-level を baseline 保持 |
+| `advanced-editing/validations/email-validation` | Phase D preface 改善 + callout link 追加 | preface callout は clean、nested Codeless Option section の 1 structure-mismatch + 3 segment-level を baseline 保持 (JA 見出し階層が flat 化) |
 
 **完了条件 #4 (artifact 吸収で green)**: Phase E で 2 slug が完全に clean green:
 
@@ -455,11 +455,32 @@ Issue #247 は PR1-6 のタクソノミー / gate cutover 後、post-merge レ�
 - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` — 4 clean sentinel ページで
   structure / segment 共に 0 件を pin (false-positive 回帰ガード)
 - `scripts/__tests__/source_parity_representative_summary.test.mjs` — Phase D/E/F/G
-  後の全 8 slug summary counter を RESOLVED / RESIDUAL に分けて pin
+  後の全 8 slug summary counter を RESOLVED (3 slug: custom-action-step-mobile /
+  test-runs / faq) / RESIDUAL (5 slug) に分けて pin
 - `scripts/__tests__/source_parity_orphan_integration.test.mjs` — orphan detection の
   E2E contract を pin
 - `scripts/__tests__/source_parity_usability_ack_integration.test.mjs` — detector → ack
   matcher の round-trip を合成 HTML で pin
+- `scripts/__tests__/source_parity.test.mjs` — `normalizeUrlToken` の
+  basename fallback (Issue #247 post-merge re-review) を pin。MadCap の相対
+  `<a href="category/page.htm">` リンクを JA docs tree 上の full path に
+  復元する contract を守る
+
+### Issue #247 post-merge **re-review** での追加修正 (2026-04-09)
+
+post-merge PR に対する完全解消レビューで以下の gap が判明し、追加で修正した:
+
+1. **`normalizeUrlToken` relative path bug** — MadCap の
+   `<a href="category/page.htm">` パターンで `resolveToFullSlug` が slug に
+   `/` を含むと basename lookup を bypass していた。結果、EN token が
+   `/docs/category/page` となり、JA の正しい full path と mismatch して
+   silent な `segment-token-gap` を発火。修正: `resolveToFullSlug` を
+   docs index 照合 → basename fallback の 2 段構えに変更。これにより
+   `faq` の segment-token-gap が自動解消し、baseline entry 0 件に。
+
+2. **`email-validation` preface callout の pricing link 欠落** — EN callout は
+   `[here](https://www.testim.io/pricing/)` を含むが JA は翻訳時にリンクが
+   欠落していた。JA callout に link を追加して解消。
 
 ### Issue #247 post-merge の local gate 期待値
 
