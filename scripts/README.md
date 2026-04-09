@@ -57,6 +57,10 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 復旧候補 (`excluded-recovered`) が出ても自動では registry から削除せず、人間が確認の上 `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する。
 
+**managed issue への可視化**: `excludedPages > 0` のとき、freshness が `fresh` であっても `source-sync-health` managed issue が open され、ソース側 debt セクションが issue body に載る。これにより step summary だけでなく GitHub Issue フローでも debt 状態が追跡可能。body 内容が前回と変わらなければ issue は更新されない (sync-detection-issues の body 比較ガード)。
+
+**recovery probe の expected 照合**: `recoveryProbe` には `expectedMatch: boolean` が付与される。registry の `expectedIssueType` / `expectedReason` と実際の detector 出力が一致すれば `true` (想定どおり broken)、不一致なら `false` (broken 理由が変わった — registry 更新を検討)。
+
 ---
 
 #### check_source_parity.mjs

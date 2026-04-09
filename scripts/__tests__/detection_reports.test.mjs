@@ -670,7 +670,7 @@ describe('renderSummaryMarkdown', () => {
     assert.match(md, /変更ページ: 3/);
     assert.match(md, /追加ページ: 1/);
     assert.match(md, /## パリティ/);
-    assert.match(md, /active actionable ファイル: 2/);
+    assert.match(md, /actionable ファイル: 2/);
     assert.match(md, /## 監査マニフェスト/);
     assert.match(md, /ページライフサイクル: 1/);
     assert.match(md, /構造変更: 1/);
@@ -705,8 +705,8 @@ describe('renderSummaryMarkdown', () => {
     };
 
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /active actionable ファイル: 0/);
-    assert.match(md, /active issue ファイル: 0/);
+    assert.match(md, /actionable ファイル: 0/);
+    assert.match(md, /issue ファイル: 0/);
     assert.match(md, /承認済み \(非ブロッキング\): 41/);
     // The legacy counters must not appear standalone in a way that contradicts activeFiles:0.
     assert.doesNotMatch(md, /^- Signal-only files: 22$/m);
@@ -1476,14 +1476,14 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     assert.doesNotMatch(md, /## ソース使用不可/);
   });
 
-  it('## パリティ section の "active issue ファイル" は structure mismatch も含む値 (PR5 cutover)', () => {
+  it('## パリティ section の "issue ファイル" は structure mismatch も含む値 (PR5 cutover)', () => {
     // PR5 cutover で structure mismatch が reportable になったため、
     // structureMismatchFiles ぶんが `reportableActiveFiles` 経由で
-    // "active issue ファイル" にも反映される。
+    // "issue ファイル" にも反映される。
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
-    assert.match(md, /active issue ファイル: 3/);
-    assert.match(md, /active actionable ファイル: 3/);
+    assert.match(md, /issue ファイル: 3/);
+    assert.match(md, /actionable ファイル: 3/);
   });
 });
 
@@ -2075,8 +2075,8 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     // パリティ section: active counts must reflect Phase 8 reportable
     // counters, NOT the legacy ones that include coarse signals.
     assert.match(md, /## パリティ/);
-    assert.match(md, /active actionable ファイル: 0/);
-    assert.match(md, /active issue ファイル: 0/);
+    assert.match(md, /actionable ファイル: 0/);
+    assert.match(md, /issue ファイル: 0/);
 
     // 監査シグナル section exists and lists the coarse breakdown.
     assert.match(md, /## 監査シグナル/);
@@ -2249,6 +2249,9 @@ function validSourceSyncStatus() {
       fetchedPages: 100,
       notFoundPages: 0,
       errorPages: 0,
+      excludedPages: 0,
+      excludedBrokenPages: 0,
+      excludedRecoveredPages: 0,
       sidebarVerified: true,
     },
     pages: [],
@@ -2442,6 +2445,86 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     const v = validSourceSyncStatus();
     v.errors = null;
     assert.throws(() => validateSourceSyncStatus(v), /errors must be an array/);
+  });
+
+  // Issue #255 — excluded counter の strict validation
+  it('throws when summary.excludedPages is not a number', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 'one';
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.excludedPages must be a number/,
+    );
+  });
+
+  it('throws when summary.excludedBrokenPages is not a number', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedBrokenPages = null;
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.excludedBrokenPages must be a number/,
+    );
+  });
+
+  it('throws when summary.excludedRecoveredPages is not a number', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedRecoveredPages = undefined;
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /summary\.excludedRecoveredPages must be a number/,
+    );
+  });
+
+  it('throws when a debt page has invalid fetchStatus', () => {
+    const v = validSourceSyncStatus();
+    v.pages = [
+      { slug: 'a', fetchStatus: 'excluded-typo', debtCategory: 'source-side-debt' },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /fetchStatus.*excluded-broken\|excluded-recovered/,
+    );
+  });
+
+  it('throws when a debt page is missing recoveryProbe', () => {
+    const v = validSourceSyncStatus();
+    v.pages = [
+      { slug: 'a', fetchStatus: 'excluded-broken', debtCategory: 'source-side-debt' },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe/,
+    );
+  });
+
+  it('accepts valid debt page with recoveryProbe object', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+      },
+    ];
+    assert.doesNotThrow(() => validateSourceSyncStatus(v));
+  });
+
+  it('accepts valid debt page with recoveryProbe null (excluded-recovered)', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedRecoveredPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-recovered',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: null,
+      },
+    ];
+    assert.doesNotThrow(() => validateSourceSyncStatus(v));
   });
 });
 

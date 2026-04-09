@@ -159,8 +159,39 @@ export function validateSourceSyncStatus(parsed) {
   if (typeof parsed.summary.sidebarVerified !== 'boolean') {
     throw new Error('source-sync-status.json: summary.sidebarVerified must be boolean');
   }
+  // Issue #255 — excluded counter の strict validation。
+  // buildSourceSyncStatus は常にこれらを emit するので、欠損は artifact 破損。
+  if (typeof parsed.summary.excludedPages !== 'number') {
+    throw new Error('source-sync-status.json: summary.excludedPages must be a number');
+  }
+  if (typeof parsed.summary.excludedBrokenPages !== 'number') {
+    throw new Error('source-sync-status.json: summary.excludedBrokenPages must be a number');
+  }
+  if (typeof parsed.summary.excludedRecoveredPages !== 'number') {
+    throw new Error('source-sync-status.json: summary.excludedRecoveredPages must be a number');
+  }
   if (!Array.isArray(parsed.pages)) {
     throw new Error('source-sync-status.json: pages must be an array');
+  }
+  // Issue #255 — debt page の shape validation。debtCategory を持つ page は
+  // fetchStatus が excluded-broken|excluded-recovered のいずれかで、
+  // recoveryProbe が object|null であることを要求する。
+  const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered']);
+  for (const page of parsed.pages) {
+    if (page.debtCategory) {
+      if (!VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus)) {
+        throw new Error(
+          `source-sync-status.json: debt page "${page.slug}" has invalid fetchStatus ` +
+          `"${page.fetchStatus}" (expected excluded-broken|excluded-recovered)`,
+        );
+      }
+      if (!('recoveryProbe' in page)) {
+        throw new Error(
+          `source-sync-status.json: debt page "${page.slug}" must have recoveryProbe ` +
+          `(object for excluded-broken, null for excluded-recovered)`,
+        );
+      }
+    }
   }
   if (!Array.isArray(parsed.errors)) {
     throw new Error('source-sync-status.json: errors must be an array');
@@ -883,8 +914,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     '## サマリー',
     '',
     `- チェック日時: ${parity.summary?.checkedAt ?? 'unknown'}`,
-    `- active actionable ファイル: ${activeActionableFiles}`,
-    `- active issue ファイル: ${parityIssueFiles.length}`,
+    `- actionable ファイル: ${activeActionableFiles}`,
+    `- issue ファイル: ${parityIssueFiles.length}`,
     `- エラーファイル: ${activeErrorFiles}`,
     `- 承認済み (非ブロッキング): ${acknowledgedIssues}`,
     ...(expiredAcknowledgements > 0
@@ -1124,8 +1155,8 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '',
     '## パリティ',
     '',
-    `- active actionable ファイル: ${parityActiveActionable}`,
-    `- active issue ファイル: ${parityActiveFiles}`,
+    `- actionable ファイル: ${parityActiveActionable}`,
+    `- issue ファイル: ${parityActiveFiles}`,
     `- エラーファイル: ${parity.summary?.activeErrorFiles ?? parity.summary?.errorFiles ?? 0}`,
     `- 承認済み (非ブロッキング): ${parity.summary?.acknowledgedIssues || 0}`,
     ...((parity.summary?.expiredAcknowledgements || 0) > 0
