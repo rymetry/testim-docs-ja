@@ -338,6 +338,12 @@ export async function checkSourceParity({
   section = null,
   failOn = null,
   slug = null,
+  // Issue #247 post-merge (Finding 15) — test-only dependency injection。
+  // integration test が repo-global な baseline / status file を奪い合わないよう
+  // に、呼び出し側から path を上書きできる。既定値は従来どおり ROOT_DIR 直下。
+  // CLI の parseArgs surface は増やさず、script 呼び出し時の引数でだけ注入する。
+  baselinePath = BASELINE_PATH,
+  outputPath = OUTPUT_PATH,
 } = {}) {
   const sidebarText = fs.existsSync(SIDEBAR_PATH) ? fs.readFileSync(SIDEBAR_PATH, 'utf8') : '';
   const sidebarSlugs = loadSidebarSlugs(sidebarText);
@@ -359,9 +365,10 @@ export async function checkSourceParity({
   const today = new Date().toISOString().slice(0, 10);
 
   // frozen baseline をロード。acknowledgement とは別ファイル / 別意味で管理する。
+  // Finding 15: test からの注入を許すため baselinePath を明示的に渡す。
   let baselineData = { schemaVersion: 1, entries: [] };
   try {
-    baselineData = loadBaselineFileSafe();
+    baselineData = loadBaselineFileSafe(baselinePath);
   } catch (error) {
     console.error(`❌ ${error.message}`);
     return 1;
@@ -745,7 +752,9 @@ export async function checkSourceParity({
     advisoryQueue,
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(payload, null, 2));
+  // Finding 15: test からの注入を許すため outputPath を明示的に渡す。
+  // 既定は ROOT_DIR/parity-check-status.json で従来と同一挙動。
+  fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2));
 
   if (!json) {
     console.log(`${'='.repeat(60)}\n📊 チェック結果サマリー\n`);
