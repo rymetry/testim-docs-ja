@@ -874,11 +874,11 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
   // Loose <summary> boundary parity with EN (P3)
   // -------------------------------------------------------------------------
 
-  it('loose <summary> with inline <code> emits one paragraph per text node (matching EN)', () => {
-    // Verified against EN extractor: loose <summary>Run <code>--proxy</code></summary>
-    // produces two paragraphs "run" and "--proxy" because EN's
-    // walkBlockContainer recurses through unknown blocks and emits each
-    // text node via its text-child branch.
+  it('loose <summary> with inline <code> merges into one paragraph (matching EN)', () => {
+    // Issue #247 post-merge re-review — EN walkBlockContainer は loose
+    // text + inline 要素 (`<em>`/`<strong>`/`<code>`/`<a>` 等) を 1 つの
+    // paragraph にマージする。JA loose summary は EN walker を経由する
+    // ため、同じ動作に追随する。
     const md = [
       '## S',
       '',
@@ -888,13 +888,11 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     const segments = extractSegmentsFromMarkdown(md);
     assert.equal(byKind(segments, 'details-summary').length, 0);
     const paragraphs = byKind(segments, 'paragraph');
-    assert.deepEqual(
-      paragraphs.map((p) => p.textNorm),
-      ['run', '--proxy'],
-    );
+    assert.equal(paragraphs.length, 1);
+    assert.match(paragraphs[0].textNorm, /run.*--proxy/);
   });
 
-  it('loose <summary> with <strong> emits three paragraphs matching EN', () => {
+  it('loose <summary> with <strong> merges into one paragraph matching EN', () => {
     const md = [
       '## S',
       '',
@@ -902,13 +900,11 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
       '',
     ].join('\n');
     const paragraphs = byKind(extractSegmentsFromMarkdown(md), 'paragraph');
-    assert.deepEqual(
-      paragraphs.map((p) => p.textNorm),
-      ['a', 'bold', 'b'],
-    );
+    assert.equal(paragraphs.length, 1);
+    assert.match(paragraphs[0].textNorm, /a\s+bold\s+b/);
   });
 
-  it('loose <summary> with an anchor emits three paragraphs matching EN', () => {
+  it('loose <summary> with an anchor merges into one paragraph matching EN', () => {
     const md = [
       '## S',
       '',
@@ -916,10 +912,8 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
       '',
     ].join('\n');
     const paragraphs = byKind(extractSegmentsFromMarkdown(md), 'paragraph');
-    assert.deepEqual(
-      paragraphs.map((p) => p.textNorm),
-      ['see', 'link', 'text'],
-    );
+    assert.equal(paragraphs.length, 1);
+    assert.match(paragraphs[0].textNorm, /see.*link.*text/);
   });
 
   it('loose <summary> with plain text stays as a single paragraph', () => {
@@ -994,9 +988,9 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
   });
 
   it('loose <summary> quote-aware: <a data-x="1>0" href="/docs/y">', () => {
-    // Verified against EN: <a> is treated as an unknown block and its
-    // child text becomes a paragraph, but the tokenizer must still
-    // respect quoted attribute values containing ">".
+    // Regression: the tokenizer must respect quoted attribute values
+    // containing `>`. Issue #247 post-merge re-review — loose text + inline
+    // `<a>` now merges into 1 paragraph (EN walker inline accumulator).
     const md = [
       '## S',
       '',
@@ -1005,10 +999,9 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     ].join('\n');
     const segments = extractSegmentsFromMarkdown(md);
     const nonHeading = segments.filter((s) => s.segmentKind !== 'heading');
-    assert.deepEqual(
-      nonHeading.map((s) => s.textNorm),
-      ['text', 'link', 'end'],
-    );
+    assert.equal(nonHeading.length, 1);
+    assert.equal(nonHeading[0].segmentKind, 'paragraph');
+    assert.match(nonHeading[0].textNorm, /text.*link.*end/);
   });
 
   it('loose <summary> closes on the matching outer </summary>, not a nested one', () => {
