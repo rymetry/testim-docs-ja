@@ -48,11 +48,12 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 **Source-side debt の除外運用 (Issue #255)**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
 
 - snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)
-- fetch 結果に対して recovery probe を実行 (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定)
+- fetch 成功時は recovery probe を実行 (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定。JA 非依存 — synthetic segments を使用)
 - probe が issue を返す → `fetchStatus: "excluded-broken"` (既知 debt 継続)
 - probe が null を返す → `fetchStatus: "excluded-recovered"` (upstream 復旧候補)
-- `source-sync-status.json` の `excludedPages` / `excludedBrokenPages` / `excludedRecoveredPages` counter に流れる
-- freshness 計算 (`computeFreshnessState`) から除外される (既知 debt だけの run は `fresh`)
+- fetch 失敗 (HTTP error / 404 / mc-main-content missing / throw) → `fetchStatus: "excluded-fetch-error"` (errors に計上、freshness 劣化として可視化)
+- `excluded-broken` / `excluded-recovered` は `excludedPages` counter に流れ、freshness 計算から除外される
+- `excluded-fetch-error` は `errorPages` counter に流れ、freshness を劣化させる (live EN を観測できないため)
 - debt slug への新規追加は **人間が upstream broken と確認した場合のみ** — 自動除外はしない
 
 復旧候補 (`excluded-recovered`) が出ても自動では registry から削除せず、人間が確認の上 `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する。

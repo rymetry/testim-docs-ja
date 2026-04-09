@@ -181,7 +181,7 @@ export function validateSourceSyncStatus(parsed) {
   // recoveryProbe が object|null であることを要求する。
   // Debt page shape validation is v2+ only. v1 artifacts have no
   // excluded-* pages and no debt fields.
-  const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered']);
+  const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered', 'excluded-fetch-error']);
   if (version >= 2) for (const page of parsed.pages) {
     const isExcludedDebt = VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus);
 
@@ -235,6 +235,18 @@ export function validateSourceSyncStatus(parsed) {
         throw new Error(
           `source-sync-status.json: excluded page "${page.slug}" recoveryProbe must be null for excluded-recovered`,
         );
+      }
+      if (page.fetchStatus === 'excluded-fetch-error') {
+        if (probe !== null) {
+          throw new Error(
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe must be null for excluded-fetch-error`,
+          );
+        }
+        if (typeof page.errorDetail !== 'string') {
+          throw new Error(
+            `source-sync-status.json: excluded page "${page.slug}" must have errorDetail string for excluded-fetch-error`,
+          );
+        }
       }
       continue;
     }
@@ -346,11 +358,17 @@ function buildSourceSideDebtSummary(sourceSync) {
 
   const brokenPages = pages.filter((p) => p.fetchStatus === 'excluded-broken');
   const recoveredPages = pages.filter((p) => p.fetchStatus === 'excluded-recovered');
+  const fetchErrorPages = pages.filter((p) => p.fetchStatus === 'excluded-fetch-error');
 
   return {
     excludedPages: summary.excludedPages ?? 0,
     excludedBrokenPages: summary.excludedBrokenPages ?? 0,
     excludedRecoveredPages: summary.excludedRecoveredPages ?? 0,
+    fetchErrorSlugs: fetchErrorPages.map((p) => p.slug).sort(),
+    fetchErrorDetails: fetchErrorPages.map((p) => ({
+      slug: p.slug,
+      errorDetail: p.errorDetail ?? 'unknown',
+    })).sort((a, b) => a.slug.localeCompare(b.slug)),
     brokenSlugs: brokenPages.map((p) => p.slug).sort(),
     recoveredSlugs: recoveredPages.map((p) => p.slug).sort(),
     brokenDetails: brokenPages
@@ -416,6 +434,20 @@ function renderSourceSideDebtSubsection(debt, _pages) {
       lines.push(`  - 実際: ${actual}`);
       lines.push(`  - 期待: ${expected}`);
       lines.push(`  - 期待一致: ${matchLabel}`);
+    }
+    lines.push('');
+  }
+
+  if (debt.fetchErrorSlugs && debt.fetchErrorSlugs.length > 0) {
+    lines.push('### 観測失敗', '');
+    lines.push(
+      'fetch に失敗したため live EN の状態を観測できませんでした。',
+      'source-sync の劣化として errors に計上されています。',
+      '',
+    );
+    for (const entry of debt.fetchErrorDetails) {
+      lines.push(`- \`${entry.slug}\``);
+      lines.push(`  - エラー: ${entry.errorDetail}`);
     }
     lines.push('');
   }
@@ -1038,7 +1070,8 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   // source-sync-status.json `summary.excluded*Pages` and `pages[]`.
   // Must be computed before syncShouldOpen because debt triggers issue open.
   const sourceSideDebtSummary = buildSourceSideDebtSummary(sourceSync);
-  const hasSourceSideDebt = sourceSideDebtSummary.excludedPages > 0;
+  const hasSourceSideDebt = sourceSideDebtSummary.excludedPages > 0 ||
+    (sourceSideDebtSummary.fetchErrorSlugs?.length ?? 0) > 0;
   const syncShouldOpen =
     freshnessState === 'broken' || freshnessState === 'partial' || linkageBlocking ||
     hasSourceSideDebt;
@@ -1061,7 +1094,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         '',
         // Issue #255 — 日本語 debt サブセクション (issue body 内)。
         // 件数 0 なら丸ごと省略する。
-        ...(sourceSideDebtSummary.excludedPages > 0
+        ...(hasSourceSideDebt
           ? [...renderSourceSideDebtSubsection(sourceSideDebtSummary, sourceSync.pages ?? []), '']
           : []),
         '## アーティファクト',
@@ -1158,7 +1191,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     actionableReport?.sourceSyncHealth?.sourceSideDebt ??
     buildSourceSideDebtSummary(sourceSync);
   const sourceSideDebtSection =
-    sourceSideDebt.excludedPages > 0
+    sourceSideDebt.excludedPages > 0 || (sourceSideDebt.fetchErrorSlugs?.length ?? 0) > 0
       ? renderSourceSideDebtSubsection(sourceSideDebt, sourceSync?.pages ?? [])
       : [];
 

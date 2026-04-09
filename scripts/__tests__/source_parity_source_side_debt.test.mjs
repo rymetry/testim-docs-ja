@@ -282,4 +282,33 @@ describe('source-side debt pipeline integration', () => {
     ];
     assert.equal(computeFreshnessState(pages, true), 'partial');
   });
+
+  it('excluded-fetch-error は freshness 劣化として扱う (excluded-broken とは違う)', () => {
+    // excluded-fetch-error は EXCLUDED_FETCH_STATUSES に含まれないため
+    // freshness 計算で non-excluded として扱われる。
+    const pages = [
+      {
+        slug: debtSlug,
+        fetchStatus: 'excluded-fetch-error',
+        debtCategory: 'source-side-debt',
+        errorDetail: 'HTTP 500',
+        recoveryProbe: null,
+      },
+    ];
+    assert.equal(computeFreshnessState(pages, true), 'broken');
+  });
+
+  it('ok + excluded-fetch-error → partial', () => {
+    const pages = [
+      { slug: 'n', fetchStatus: 'ok' },
+      {
+        slug: debtSlug,
+        fetchStatus: 'excluded-fetch-error',
+        debtCategory: 'source-side-debt',
+        errorDetail: 'HTTP 500',
+        recoveryProbe: null,
+      },
+    ];
+    assert.equal(computeFreshnessState(pages, true), 'partial');
+  });
 });

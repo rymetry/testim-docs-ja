@@ -115,13 +115,13 @@ upstream 英語原文自体が broken で parity comparator の前提を満た�
 
 - snapshot fetch は毎回実行する（復旧監視のため）
 - snapshot file は上書きしない（hand-authored snapshot を凍結参照として温存）
-- fetch 結果に対して recovery probe を実行する (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定)
+- fetch 成功時は recovery probe を実行する (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定。JA 非依存 — synthetic segments を使用)
 - probe 結果は `source-sync-status.json` の `fetchStatus` に反映される:
   - `excluded-broken` — 依然 broken（未復旧）
   - `excluded-recovered` — upstream 復旧候補（人間が確認の上、registry から削除）
-- excluded ページは `fetchedPages` / `notFoundPages` / `errorPages` のどのカウンタにも含まれない
-- 独立カウンタ `excludedPages` / `excludedBrokenPages` / `excludedRecoveredPages` に集計される
-- `freshnessState` の計算から完全に除外されるため、既知 debt だけ残っていても `fresh` 扱い
+  - `excluded-fetch-error` — fetch 失敗（live EN を観測できなかった。`errorPages` に計上し freshness を劣化させる）
+- `excluded-broken` / `excluded-recovered` は `excludedPages` counter に集計され、`freshnessState` の計算から除外される
+- `excluded-fetch-error` は `errorPages` に計上され、freshness を劣化させる（観測能力の欠如は source-sync 劣化）
 - `docs-update-summary.md` の `## ソース側 debt` セクションで日本語可視化される
 
 **新規 entry 追加のルール:**

@@ -339,9 +339,164 @@ describe('snapshot_update — source-side debt exclusion', () => {
 });
 
 // ---------------------------------------------------------------------------
-// recovery probe — detectSourceUsability 再利用の統合テスト
-//
-// probeRecoveryEnOnly は廃止。recovery probe は detectSourceUsability を
-// 再利用するため、detector が対応する全 reason を registry 追加だけで扱える。
-// 個別 reason の判定ロジックは source_parity_source_usability.test.mjs で pin。
+// excluded-fetch-error — fetch 失敗を source-sync 劣化として可視化
 // ---------------------------------------------------------------------------
+
+describe('snapshot_update — excluded-fetch-error', () => {
+  function mockTocWithFetchError() {
+    const tocMainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0}]}});";
+    const tocChunkJs =
+      "define({'/content/testops/testops-version-control/pull-requests/index.htm':{i:[0],t:['Pull Requests'],b:['']}});";
+
+    return async (url) => {
+      const href = String(url);
+      if (href.includes('Main.js')) return createResponse({ text: tocMainJs });
+      if (href.includes('Mock_Chunk0.js')) return createResponse({ text: tocChunkJs });
+      // excluded slug の fetch が HTTP error を返す
+      return createResponse({ ok: false, status: 500 });
+    };
+  }
+
+  function mockTocWithFetchThrow() {
+    const tocMainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0}]}});";
+    const tocChunkJs =
+      "define({'/content/testops/testops-version-control/pull-requests/index.htm':{i:[0],t:['Pull Requests'],b:['']}});";
+
+    return async (url) => {
+      const href = String(url);
+      if (href.includes('Main.js')) return createResponse({ text: tocMainJs });
+      if (href.includes('Mock_Chunk0.js')) return createResponse({ text: tocChunkJs });
+      throw new Error('simulated network failure');
+    };
+  }
+
+  it('excluded slug + HTTP error → excluded-fetch-error', async () => {
+    global.fetch = mockTocWithFetchError();
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const page = result.sourceSyncStatus.pages.find(
+      (p) => p.slug === 'testops/testops-version-control/pull-requests',
+    );
+    assert.ok(page);
+    assert.equal(page.fetchStatus, 'excluded-fetch-error');
+    assert.equal(page.debtCategory, 'source-side-debt');
+    assert.equal(page.recoveryProbe, null);
+    assert.ok(page.errorDetail);
+  });
+
+  it('excluded slug + fetch throw → excluded-fetch-error', async () => {
+    global.fetch = mockTocWithFetchThrow();
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const page = result.sourceSyncStatus.pages.find(
+      (p) => p.slug === 'testops/testops-version-control/pull-requests',
+    );
+    assert.ok(page);
+    assert.equal(page.fetchStatus, 'excluded-fetch-error');
+    assert.equal(page.debtCategory, 'source-side-debt');
+    assert.equal(page.errorDetail, 'simulated network failure');
+  });
+
+  it('debt-only run + excluded-fetch-error → freshnessState broken', async () => {
+    global.fetch = mockTocWithFetchError();
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    // fetch error は freshness 劣化 — fresh ではなく broken になる
+    assert.equal(result.sourceSyncStatus.freshnessState, 'broken');
+    assert.equal(result.errors, 1);
+  });
+
+  it('errors[] に excluded-fetch-error の slug が載る', async () => {
+    global.fetch = mockTocWithFetchError();
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const errorEntry = result.sourceSyncStatus.errors.find(
+      (e) => e.slug === 'testops/testops-version-control/pull-requests',
+    );
+    assert.ok(errorEntry, 'excluded-fetch-error must appear in top-level errors');
+    assert.ok(errorEntry.detail);
+  });
+
+  it('excluded-fetch-error は excludedPages counter に含まれない', async () => {
+    global.fetch = mockTocWithFetchError();
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    // fetch 失敗は errorPages に計上、excludedPages には含まない
+    assert.equal(result.sourceSyncStatus.summary.excludedPages, 0);
+    assert.equal(result.sourceSyncStatus.summary.errorPages, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// recovery probe — JA 非依存の synthetic segments テスト
+// ---------------------------------------------------------------------------
+
+describe('snapshot_update — recovery probe JA independence', () => {
+  const BROKEN_PAGE_HTML =
+    '<html><body><div role="main" id="mc-main-content">' +
+    '<h1>Pull Requests</h1>' +
+    '<div class="codeSnippet"><div class="codeSnippetBody"><pre><code>' +
+    'Pull requests notify reviewers on changes introduced to a test.' +
+    '</code></pre></div></div>' +
+    '</div></body></html>';
+
+  const CLEAN_PAGE_HTML =
+    '<html><body><div role="main" id="mc-main-content">' +
+    '<h1>Pull Requests</h1>' +
+    '<p>Pull requests notify reviewers on changes introduced to a test.</p>' +
+    '<h2>Creating a Pull Request</h2>' +
+    '<p>A pull request represents the difference between branches.</p>' +
+    '<h2>Reviewing a Pull Request</h2>' +
+    '<p>Reviewers are notified via email.</p>' +
+    '<h2>Resubmitting a Pull Request</h2>' +
+    '<p>If the reviewer sent back the PR you can respond.</p>' +
+    '</div></body></html>';
+
+  function mockTocFetchFor(pageHtml) {
+    const tocMainJs = "define({numchunks:1,prefix:'Mock_Chunk',tree:{n:[{i:0,c:0}]}});";
+    const tocChunkJs =
+      "define({'/content/testops/testops-version-control/pull-requests/index.htm':{i:[0],t:['Pull Requests'],b:['']}});";
+
+    return async (url) => {
+      const href = String(url);
+      if (href.includes('Main.js')) return createResponse({ text: tocMainJs });
+      if (href.includes('Mock_Chunk0.js')) return createResponse({ text: tocChunkJs });
+      return createResponse({ text: pageHtml });
+    };
+  }
+
+  it('broken EN → excluded-broken regardless of JA content (synthetic JA)', async () => {
+    // probe は synthetic JA segments を使うため、実 JA ファイルの内容に
+    // 依存しない。broken EN は常に excluded-broken になる。
+    global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const page = result.sourceSyncStatus.pages[0];
+    assert.equal(page.fetchStatus, 'excluded-broken');
+    assert.equal(page.recoveryProbe.reason, 'extractor-empty');
+    assert.equal(page.recoveryProbe.expectedMatch, true);
+  });
+
+  it('clean EN → excluded-recovered (detector が null を返す)', async () => {
+    global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
+    console.log = () => {};
+
+    const result = await main(['--dry-run', '--slug=pull-requests']);
+
+    const page = result.sourceSyncStatus.pages[0];
+    assert.equal(page.fetchStatus, 'excluded-recovered');
+    assert.equal(page.recoveryProbe, null);
+  });
+});

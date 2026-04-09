@@ -213,7 +213,7 @@ export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, run
   // below and are NOT counted as ok / not-found / error.
   const okCount = pages.filter((p) => p.fetchStatus === 'ok').length;
   const notFoundCount = pages.filter((p) => p.fetchStatus === 'not-found').length;
-  const errorCount = pages.filter((p) => p.fetchStatus === 'error').length;
+  const errorCount = pages.filter((p) => p.fetchStatus === 'error' || p.fetchStatus === 'excluded-fetch-error').length;
   const excludedBrokenCount = pages.filter((p) => p.fetchStatus === 'excluded-broken').length;
   const excludedRecoveredCount = pages.filter(
     (p) => p.fetchStatus === 'excluded-recovered',
@@ -224,10 +224,10 @@ export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, run
 
   const errors = [];
   for (const p of pages) {
-    // Excluded pages are "known debt" — never emitted as top-level errors
-    // even if the underlying fetch surfaced a failure. Their state is
-    // visible via the excludedPages counters and the recoveryProbe field.
-    if (p.fetchStatus === 'error' && p.errorDetail) {
+    // Excluded pages with successful fetch are "known debt" — not errors.
+    // But excluded-fetch-error pages ARE errors — we couldn't observe the
+    // live EN page, which is a source-sync degradation.
+    if ((p.fetchStatus === 'error' || p.fetchStatus === 'excluded-fetch-error') && p.errorDetail) {
       errors.push({ slug: p.slug, detail: p.errorDetail });
     }
   }
@@ -269,6 +269,7 @@ export function buildSourceSyncStatus({ pages, sidebarResult, runScope, now, run
       ...(p.debtCategory
         ? { recoveryProbe: p.recoveryProbe ?? null }
         : {}),
+      ...(p.errorDetail ? { errorDetail: p.errorDetail } : {}),
     })),
     errors,
   };
