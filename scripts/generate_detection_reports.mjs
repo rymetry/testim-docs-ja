@@ -71,7 +71,7 @@ function main() {
     const debt = actionableReport.sourceSyncHealth?.sourceSideDebt;
     if (debt && debt.excludedPages > 0) {
       console.log(
-        `  ソース側 debt: 除外=${debt.excludedPages} 未復旧=${debt.excludedBrokenPages} 復旧候補=${debt.excludedRecoveredPages}`,
+        `  ソース原文の既知問題: 除外=${debt.excludedPages} 未復旧=${debt.excludedBrokenPages} 復旧候補=${debt.excludedRecoveredPages}`,
       );
     }
   } catch (error) {

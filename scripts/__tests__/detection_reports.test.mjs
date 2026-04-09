@@ -2846,7 +2846,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
 
     // 日本語セクション見出しが emit される
-    assert.match(md, /## ソース側 debt/);
+    assert.match(md, /## ソース原文の既知問題/);
     // Counters (human-readable Japanese labels)
     assert.match(md, /除外ページ: 1/);
     assert.match(md, /未復旧: 1/);
@@ -2879,7 +2879,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
     const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
 
-    assert.doesNotMatch(md, /## ソース側 debt/);
+    assert.doesNotMatch(md, /## ソース原文の既知問題/);
     assert.doesNotMatch(md, /excluded-broken/);
   });
 
@@ -2910,7 +2910,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
     const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
 
-    assert.match(md, /## ソース側 debt/);
+    assert.match(md, /## ソース原文の既知問題/);
     assert.match(md, /復旧候補: 1/);
     assert.match(md, /### 復旧候補/);
     assert.match(md, /testops\/testops-version-control\/pull-requests/);
@@ -2994,7 +2994,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     const report = buildActionableReport(emptySnapshot, emptyParity, [], { sourceSync });
 
     assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
-    assert.match(report.sourceSyncHealth.body, /ソース側 debt/);
+    assert.match(report.sourceSyncHealth.body, /ソース原文の既知問題/);
     assert.match(report.sourceSyncHealth.body, /testops\/testops-version-control\/pull-requests/);
     assert.match(report.sourceSyncHealth.body, /未復旧/);
   });
@@ -3030,7 +3030,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     // fresh だが debt が残っているので issue は open される
     assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
     // body にソース側 debt セクションが含まれる
-    assert.match(report.sourceSyncHealth.body, /ソース側 debt/);
+    assert.match(report.sourceSyncHealth.body, /ソース原文の既知問題/);
     assert.match(report.sourceSyncHealth.body, /testops\/testops-version-control\/pull-requests/);
     assert.match(report.sourceSyncHealth.body, /未復旧: 1/);
   });

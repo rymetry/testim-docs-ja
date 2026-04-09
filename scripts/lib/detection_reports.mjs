@@ -15,13 +15,13 @@ import {
 export const ACTIONABLE_REPORT_SCHEMA_VERSION = 1;
 
 const SNAPSHOT_ISSUE_TITLE =
-  '📸 Content Drift: English source changes detected via snapshot diff';
+  '📸 コンテンツ差分: スナップショットで英語原文の変更を検知';
 const PARITY_ISSUE_TITLE =
-  '🔍 Parity Regression: content drift detected';
+  '🔍 パリティ後退: コンテンツの差分を検知';
 const SOURCE_SYNC_ISSUE_TITLE =
-  '⚠️ Source Sync Health: fetch degradation detected';
+  '⚠️ ソース同期: 取得の劣化またはソース原文の既知問題を検知';
 const PARITY_FOLLOWUP_ISSUE_TITLE =
-  '🗂️ Parity Followup: baseline debt and advisory queue';
+  '🗂️ パリティフォローアップ: baseline 負債と advisory キュー';
 const DOCS_PREFIX = path.join('src', 'content', 'docs') + path.sep;
 
 /**
@@ -342,7 +342,7 @@ function buildSourceSideDebtSummary(sourceSync) {
 }
 
 /**
- * Issue #255 — Render the `## ソース側 debt` section as Markdown lines.
+ * Issue #255 — Render the `## ソース原文の既知問題` section as Markdown lines.
  * Returns an array of strings ready to be joined with '\n'. The caller
  * is responsible for deciding when the section should appear at all
  * (usually: skip when `excludedPages === 0`).
@@ -357,7 +357,7 @@ function buildSourceSideDebtSummary(sourceSync) {
  */
 function renderSourceSideDebtSubsection(debt, _pages) {
   const lines = [
-    '## ソース側 debt',
+    '## ソース原文の既知問題',
     '',
     `- 除外ページ: ${debt.excludedPages}`,
     `- 未復旧: ${debt.excludedBrokenPages}`,

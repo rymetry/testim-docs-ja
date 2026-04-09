@@ -239,7 +239,7 @@ describe('source-side debt pipeline integration', () => {
     const md = renderSummaryMarkdown(emptySnapshot, emptyParity, report, [], sourceSync);
 
     // 日本語 debt セクション
-    assert.match(md, /## ソース側 debt/);
+    assert.match(md, /## ソース原文の既知問題/);
     assert.match(md, /除外ページ: 1/);
     assert.match(md, /未復旧: 1/);
     // slug が listing に現れる
