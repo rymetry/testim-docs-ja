@@ -45,6 +45,23 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
 
+**Source-side debt の除外運用 (Issue #255)**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
+
+- snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)
+- fetch 成功時は recovery probe を実行 (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定。JA 非依存 — synthetic segments を使用)
+- probe が issue を返す → `fetchStatus: "excluded-broken"` (既知 debt 継続)
+- probe が null を返す → `fetchStatus: "excluded-recovered"` (upstream 復旧候補)
+- fetch 失敗 (HTTP error / 404 / mc-main-content missing / throw) → `fetchStatus: "excluded-fetch-error"` (errors に計上、freshness 劣化として可視化)
+- `excluded-broken` / `excluded-recovered` は `excludedPages` counter に流れ、freshness 計算から除外される
+- `excluded-fetch-error` は `errorPages` counter に流れ、freshness を劣化させる (live EN を観測できないため)
+- debt slug への新規追加は **人間が upstream broken と確認した場合のみ** — 自動除外はしない
+
+復旧候補 (`excluded-recovered`) が出ても自動では registry から削除せず、人間が確認の上 `SOURCE_SYNC_EXCLUSIONS` から該当 entry を削除する。
+
+**managed issue への可視化**: `excludedPages > 0` のとき、freshness が `fresh` であっても `source-sync-health` managed issue が open され、ソース側 debt セクションが issue body に載る。これにより step summary だけでなく GitHub Issue フローでも debt 状態が追跡可能。body 内容が前回と変わらなければ issue は更新されない (sync-detection-issues の body 比較ガード)。
+
+**recovery probe の expected 照合**: `recoveryProbe` には `expectedMatch: boolean` が付与される。registry の `expectedIssueType` / `expectedReason` と実際の detector 出力が一致すれば `true` (想定どおり broken)、不一致なら `false` (broken 理由が変わった — registry 更新を検討)。
+
 ---
 
 #### check_source_parity.mjs
@@ -630,10 +647,17 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 - **`snapshot-diff-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `runId`, `sourceSyncRunId`, `sourceInventoryFingerprint`,
   `runScope`, `checkedAt`, `summary`, `changes`, `sidebar`
-- **`source-sync-status.json`** (`schemaVersion: 1`) —
+- **`source-sync-status.json`** (`schemaVersion: 2`) —
   必須 top-level: `runId`, `checkedAt`, `sourceInventoryFingerprint`,
   `sidebarFingerprint`, `freshnessState`, `runScope`, `summary`, `pages`,
-  `errors`
+  `errors`。
+  `summary` に Issue #255 で追加された counter: `excludedPages` (= 既知
+  source-side debt の合計) / `excludedBrokenPages` (未復旧) /
+  `excludedRecoveredPages` (upstream 復旧候補)。`pages[n]` には debt slug に
+  対してのみ `debtCategory: "source-side-debt"` と `recoveryProbe: {
+  issueType, reason } | null` が emit される。excluded は `fetchedPages`
+  / `notFoundPages` / `errorPages` のどれにも count されず、`freshnessState`
+  計算からも除外される (= 既知 debt だけの run は `fresh` 扱い)
 - **`parity-check-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `summary` (含む `checkedAt` / `runScope` / `result` /
   `linkageState` / `freshnessState`), `files`
@@ -697,6 +721,8 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_acknowledgements.test.mjs`  | lib/source_parity_acknowledgements.mjs  |
 | `__tests__/source_parity_page_coverage.test.mjs`     | lib/source_parity_page_coverage.mjs     |
 | `__tests__/source_sync_health.test.mjs`              | lib/source_sync_health.mjs              |
+| `__tests__/source_sync_exclusions.test.mjs`          | lib/source_sync_exclusions.mjs          |
+| `__tests__/source_parity_source_side_debt.test.mjs`  | Issue #255 source-side debt 契約統合    |
 | `__tests__/source_parity_segments_shared.test.mjs`   | lib/source_parity_segments_shared.mjs   |
 | `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
 | `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |

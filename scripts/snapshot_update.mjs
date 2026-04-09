@@ -32,6 +32,10 @@ import {
 import { fetchTocData, buildSidebarSnapshot, extractSlugsFromSnapshot } from './lib/madcap_toc.mjs';
 import { isDirectRun } from './lib/cli.mjs';
 import { buildRunScope, buildSourceSyncStatus } from './lib/source_sync_health.mjs';
+import { isSourceSideDebt, getExclusion } from './lib/source_sync_exclusions.mjs';
+import { extractSegmentsFromHtml } from './lib/source_parity_segments_en.mjs';
+import { extractSegmentsFromMarkdown } from './lib/source_parity_segments_ja.mjs';
+import { detectSourceUsability } from './lib/source_parity_source_usability.mjs';
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en');
 const CONTENT_DIR = path.join(SNAPSHOTS_DIR, 'content');
@@ -89,6 +93,114 @@ function collectTargets({ section, slug }) {
   }
 
   return targets;
+}
+
+/**
+ * Synthetic JA segments for recovery probe.
+ *
+ * detectSourceUsability は JA body / heading 数を閾値に使う
+ * (`extractor-empty`: jaBody >= 3, `shallow-snapshot`: jaBody >= 5,
+ * `escaped-details-residue`: jaHeading >= 2)。recovery probe が実 JA に
+ * 依存すると、未翻訳や短い JA で false recovery が発生する。
+ *
+ * recovery probe は "現在の expectedReason" ではなく detector が持つ
+ * すべての閾値を一度に満たす synthetic JA を使う。これにより
+ * `extractor-empty` → `shallow-snapshot` のような cross-reason drift でも
+ * fail-close を維持できる。
+ */
+function buildProbeJaSegments() {
+  return extractSegmentsFromMarkdown(
+    '# Probe\n\n## Section One\n\nA\n\nB\n\n## Section Two\n\nC\n\nD\n\nE',
+  );
+}
+
+const SUPPORTED_RECOVERY_REASONS = new Set([
+  'extractor-empty',
+  'shallow-snapshot',
+  'escaped-details-residue',
+]);
+
+function buildBrokenRecoveryProbe({
+  actualIssueType,
+  actualReason,
+  exclusionEntry,
+}) {
+  return {
+    fetchStatus: 'excluded-broken',
+    recoveryProbe: {
+      issueType: actualIssueType,
+      reason: actualReason,
+      expectedIssueType: exclusionEntry.expectedIssueType,
+      expectedReason: exclusionEntry.expectedReason,
+      expectedMatch:
+        actualIssueType === exclusionEntry.expectedIssueType &&
+        actualReason === exclusionEntry.expectedReason,
+    },
+  };
+}
+
+/**
+ * Recovery probe for a known source-side debt page.
+ *
+ * `detectSourceUsability()` を再利用して、registry に登録された
+ * broken upstream source が復旧したかを判定する。detector が対応する
+ * `extractor-empty` / `shallow-snapshot` / `escaped-details-residue` を
+ * そのまま扱えるため、registry 追加だけで新しい debt reason を運用に載せられる。
+ *
+ * JA body には依存しない — synthetic segments を使って EN-only 判定を維持。
+ *
+ * Unsupported registry reasons and extractor exceptions both fail closed.
+ * A debt page is only `excluded-recovered` when the extractor succeeds and
+ * `detectSourceUsability()` returns no issue.
+ *
+ * @param {{ rawEnHtml: string, exclusionEntry: object, extractSegments?: (html: string) => any[] }} opts
+ * @returns {{ fetchStatus: string, recoveryProbe: object|null }}
+ */
+export function runRecoveryProbe({
+  rawEnHtml,
+  exclusionEntry,
+  extractSegments = extractSegmentsFromHtml,
+}) {
+  if (!SUPPORTED_RECOVERY_REASONS.has(exclusionEntry.expectedReason)) {
+    return buildBrokenRecoveryProbe({
+      actualIssueType: 'probe-failed',
+      actualReason: 'unsupported-expected-reason',
+      exclusionEntry,
+    });
+  }
+
+  let enSegments = [];
+  let extractError = null;
+  try {
+    enSegments = extractSegments(rawEnHtml);
+  } catch (error) {
+    extractError = error;
+  }
+
+  if (extractError !== null) {
+    return buildBrokenRecoveryProbe({
+      actualIssueType: 'probe-failed',
+      actualReason: 'extractor-throw',
+      exclusionEntry,
+    });
+  }
+
+  const jaSegments = buildProbeJaSegments();
+
+  const issue = detectSourceUsability({
+    rawEnHtml,
+    enSegments,
+    jaSegments,
+    extractError,
+  });
+
+  if (!issue) return { fetchStatus: 'excluded-recovered', recoveryProbe: null };
+
+  return buildBrokenRecoveryProbe({
+    actualIssueType: issue.type,
+    actualReason: issue.usabilitySignals?.reason ?? 'unknown',
+    exclusionEntry,
+  });
 }
 
 const FETCH_TIMEOUT_MS = 30_000;
@@ -236,14 +348,51 @@ export async function main(argv) {
   let fetched = 0;
   let notFound = 0;
   let errors = 0;
+  let excluded = 0;
   const pageResults = [];
 
   for (const target of targets) {
+    const excludedSlug = isSourceSideDebt(target.slug);
+
     try {
       const { content, status, reason } = await fetchHtmlContent(target.sourceUrl);
       const snapshotPath = path.join(CONTENT_DIR, target.slug + '.html');
 
-      if (status === 404) {
+      if (excludedSlug) {
+        // Issue #255 — source-side debt: fetch しても snapshot file は
+        // 絶対に上書きしない (hand-authored を凍結参照として温存)。
+        //
+        // fetch 失敗 (HTTP error / 404 / mc-main-content missing) と
+        // 正常 fetch + recovery probe は分離する。fetch 失敗は
+        // excluded-fetch-error として errors に計上し、freshness 劣化を
+        // 可視化する。probe は content が取れたときのみ実行する。
+        if (!content) {
+          const detail =
+            status !== 200 ? `HTTP ${status}` :
+            reason === 'mc-main-content-not-found' ? '#mc-main-content not found' :
+            'fetch failed';
+          console.log(`  FERR ${target.slug} — source-side debt (${detail})`);
+          errors += 1;
+          pageResults.push({
+            slug: target.slug,
+            fetchStatus: 'excluded-fetch-error',
+            debtCategory: 'source-side-debt',
+            errorDetail: detail,
+            recoveryProbe: null,
+          });
+        } else {
+          const probe = runRecoveryProbe({ rawEnHtml: content, exclusionEntry: getExclusion(target.slug) });
+          const label = probe.fetchStatus === 'excluded-recovered' ? 'RECOV' : 'DEBT ';
+          console.log(`  ${label} ${target.slug} — source-side debt (snapshot not written)`);
+          excluded += 1;
+          pageResults.push({
+            slug: target.slug,
+            fetchStatus: probe.fetchStatus,
+            recoveryProbe: probe.recoveryProbe,
+            debtCategory: 'source-side-debt',
+          });
+        }
+      } else if (status === 404) {
         if (!args.dryRun) {
           fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
           fs.writeFileSync(snapshotPath, MARKER_404(target.sourceUrl));
@@ -268,9 +417,23 @@ export async function main(argv) {
         pageResults.push({ slug: target.slug, fetchStatus: 'ok' });
       }
     } catch (error) {
-      console.log(`  ERR  ${target.slug} — ${error.message}`);
-      errors += 1;
-      pageResults.push({ slug: target.slug, fetchStatus: 'error', errorDetail: error.message });
+      if (excludedSlug) {
+        // fetch が throw した → excluded-fetch-error として errors に計上。
+        // live EN を観測できなかったことを source-sync 劣化として可視化する。
+        console.log(`  FERR ${target.slug} — source-side debt (fetch failed: ${error.message})`);
+        errors += 1;
+        pageResults.push({
+          slug: target.slug,
+          fetchStatus: 'excluded-fetch-error',
+          debtCategory: 'source-side-debt',
+          errorDetail: error.message,
+          recoveryProbe: null,
+        });
+      } else {
+        console.log(`  ERR  ${target.slug} — ${error.message}`);
+        errors += 1;
+        pageResults.push({ slug: target.slug, fetchStatus: 'error', errorDetail: error.message });
+      }
     }
 
     await sleep(THROTTLE_MS);
@@ -298,11 +461,21 @@ export async function main(argv) {
   );
 
   console.log();
-  console.log(`Done: ${fetched} fetched, ${notFound} not found, ${errors} errors`);
+  console.log(
+    `Done: ${fetched} fetched, ${notFound} not found, ${errors} errors, ${excluded} excluded (source-side debt)`,
+  );
   console.log(`Freshness: ${sourceSyncStatus.freshnessState}`);
   if (args.dryRun) console.log('(dry-run — snapshots not written, source-sync-status.json updated)');
 
-  return { fetched, notFound, errors, skipped: 0, sidebarVerified: sidebarResult.ok, sourceSyncStatus };
+  return {
+    fetched,
+    notFound,
+    errors,
+    excluded,
+    skipped: 0,
+    sidebarVerified: sidebarResult.ok,
+    sourceSyncStatus,
+  };
 }
 
 if (isDirectRun(import.meta.url)) {

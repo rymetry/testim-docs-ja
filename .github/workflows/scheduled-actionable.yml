@@ -73,23 +73,23 @@ jobs:
         if: always()
         run: |
           if [ "$SNAPSHOTS_OUTCOME" = "failure" ]; then
-            echo "::warning::Snapshot fetch/diff reported issues (exit code non-zero)"
+            echo "::warning::スナップショット取得または差分検出で問題を報告しました (exit code 非 0)"
           fi
           if [ "$PARITY_OUTCOME" = "failure" ]; then
-            echo "::warning::Parity check reported issues (exit code non-zero)"
+            echo "::warning::パリティ検査で問題を報告しました (exit code 非 0)"
           fi
           if [ "$SUMMARY_OUTCOME" = "failure" ]; then
-            echo "::error::Detection input validation failed — sync will be skipped"
+            echo "::error::検出入力の検証に失敗しました — 管理 issue の同期はスキップされます"
             {
-              echo "## ❌ Detection input validation failed"
+              echo "## ❌ 検出入力の検証に失敗しました"
               echo ""
-              echo "Strict --strict validation rejected one or more of:"
+              echo "strict モードの検証が以下のいずれかを拒否しました:"
               echo "- snapshot-diff-status.json"
               echo "- parity-check-status.json"
-              echo "- source-sync-status.json (when present)"
+              echo "- source-sync-status.json (存在する場合)"
               echo ""
-              echo "Managed detection issues will NOT be synced from this run."
-              echo "Inspect the artifact bundle and the previous step logs."
+              echo "この run から管理 detection issue の同期は行われません。"
+              echo "アーティファクトと前ステップのログを確認してください。"
             } >> "$GITHUB_STEP_SUMMARY"
           fi
         env:

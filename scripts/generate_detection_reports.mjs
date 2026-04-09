@@ -55,18 +55,25 @@ function main() {
   const args = parseArgs();
   try {
     const { actionableReport } = generateDetectionReports({ strict: args.strict });
-    console.log('📄 Detection summary generated');
+    console.log('📄 検知サマリー生成完了');
     console.log(
-      `  snapshot diff actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
+      `  スナップショット差分の要対応: ${actionableReport.snapshotDiff.summary.actionableCount}`,
     );
     console.log(
-      `  active parity issues: ${actionableReport.parityRegression.summary.issueCount}`,
+      `  パリティ問題 (未解消): ${actionableReport.parityRegression.summary.issueCount}`,
     );
-    console.log(`  parity result: ${actionableReport.result ?? 'unknown'}`);
+    console.log(`  パリティ結果: ${actionableReport.result ?? '不明'}`);
     const followup = actionableReport.parityFollowup;
     console.log(
-      `  parity followup: expired=${followup.summary.baselineDebt.expiredBaselineEntries} expiring30d=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
+      `  パリティフォローアップ: 期限切れ=${followup.summary.baselineDebt.expiredBaselineEntries} 30日以内期限切れ=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} 無効化=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} ブロッキング=${followup.summary.advisoryQueue.blockingItems}`,
     );
+    // Issue #255 — source-side debt counter を CLI 出力に含める
+    const debt = actionableReport.sourceSyncHealth?.sourceSideDebt;
+    if (debt && debt.excludedPages > 0) {
+      console.log(
+        `  ソース原文の既知問題: 除外=${debt.excludedPages} 未復旧=${debt.excludedBrokenPages} 復旧候補=${debt.excludedRecoveredPages}`,
+      );
+    }
   } catch (error) {
     console.error(`❌ ${error.message}`);
     if (error.validationErrors) {

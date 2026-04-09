@@ -98,6 +98,7 @@ describe('buildSourceSyncStatus', () => {
       runScope: fullScope,
     });
 
+    assert.equal(result.schemaVersion, 2);
     assert.equal(result.schemaVersion, SOURCE_SYNC_STATUS_SCHEMA_VERSION);
     assert.match(result.runId, /^\d{4}-\d{2}-\d{2}T.+#[0-9a-f]{8}$/);
     assert.equal(typeof result.checkedAt, 'string');
@@ -110,6 +111,9 @@ describe('buildSourceSyncStatus', () => {
       fetchedPages: 2,
       notFoundPages: 0,
       errorPages: 0,
+      excludedPages: 0,
+      excludedBrokenPages: 0,
+      excludedRecoveredPages: 0,
       sidebarVerified: true,
     });
     assert.equal(result.pages.length, 2);
@@ -363,5 +367,211 @@ describe('validateRunLinkage', () => {
       sectionScope,
     );
     assert.equal(result, 'scope-mismatch');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Issue #255 Phase 3a — source-side debt (excluded-broken / excluded-recovered)
+//
+// "既知 broken upstream" page は freshness 計算から除外し、独立 counter で
+// 見せる。excluded は `fresh` 判定を壊さない。
+// ---------------------------------------------------------------------------
+
+describe('computeFreshnessState — source-side debt handling', () => {
+  it('ignores excluded-broken pages (debt-only run is still fresh)', () => {
+    const pages = [
+      { slug: 'overview/a', fetchStatus: 'ok' },
+      { slug: 'overview/b', fetchStatus: 'excluded-broken' },
+    ];
+    assert.equal(computeFreshnessState(pages, true), 'fresh');
+  });
+
+  it('ignores excluded-recovered pages (debt-only run is still fresh)', () => {
+    const pages = [
+      { slug: 'overview/a', fetchStatus: 'ok' },
+      { slug: 'overview/b', fetchStatus: 'excluded-recovered' },
+    ];
+    assert.equal(computeFreshnessState(pages, true), 'fresh');
+  });
+
+  it('returns "fresh" when the entire run is excluded (no real fetch targets)', () => {
+    // エッジケース: registry 上の slug しか fetch 対象がないとき、それだけで
+    // broken 扱いしない。既知 debt のみ残っても "fresh" を維持する。
+    const pages = [
+      { slug: 'a', fetchStatus: 'excluded-broken' },
+      { slug: 'b', fetchStatus: 'excluded-recovered' },
+    ];
+    assert.equal(computeFreshnessState(pages, true), 'fresh');
+  });
+
+  it('still returns "broken" when sidebar fails even if all pages are excluded', () => {
+    const pages = [{ slug: 'a', fetchStatus: 'excluded-broken' }];
+    assert.equal(computeFreshnessState(pages, false), 'broken');
+  });
+
+  it('returns "partial" when excluded + mixed ok/error non-excluded pages', () => {
+    const pages = [
+      { slug: 'a', fetchStatus: 'ok' },
+      { slug: 'b', fetchStatus: 'error' },
+      { slug: 'c', fetchStatus: 'excluded-broken' },
+    ];
+    assert.equal(computeFreshnessState(pages, true), 'partial');
+  });
+});
+
+describe('buildSourceSyncStatus — source-side debt counters', () => {
+  const baseSidebarResult = { ok: true, sectionCount: 5, pageCount: 100 };
+  const fullScope = { type: 'full', isComplete: true, filters: { slug: null, section: null } };
+
+  it('exposes excludedPages / excludedBrokenPages / excludedRecoveredPages in summary', () => {
+    const pages = [
+      { slug: 'overview/a', fetchStatus: 'ok' },
+      {
+        slug: 'testops/testops-version-control/pull-requests',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
+        debtCategory: 'source-side-debt',
+      },
+    ];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+
+    assert.equal(result.summary.excludedPages, 1);
+    assert.equal(result.summary.excludedBrokenPages, 1);
+    assert.equal(result.summary.excludedRecoveredPages, 0);
+  });
+
+  it('counts excluded-recovered separately from excluded-broken', () => {
+    const pages = [
+      {
+        slug: 'x',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
+        debtCategory: 'source-side-debt',
+      },
+      {
+        slug: 'y',
+        fetchStatus: 'excluded-recovered',
+        recoveryProbe: null,
+        debtCategory: 'source-side-debt',
+      },
+    ];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+
+    assert.equal(result.summary.excludedPages, 2);
+    assert.equal(result.summary.excludedBrokenPages, 1);
+    assert.equal(result.summary.excludedRecoveredPages, 1);
+  });
+
+  it('excludes debt pages from fetchedPages / notFoundPages / errorPages', () => {
+    const pages = [
+      { slug: 'a', fetchStatus: 'ok' },
+      {
+        slug: 'b',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
+        debtCategory: 'source-side-debt',
+      },
+    ];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+
+    // excluded は ok / not-found / error のどこにも count しない
+    assert.equal(result.summary.fetchedPages, 1);
+    assert.equal(result.summary.notFoundPages, 0);
+    assert.equal(result.summary.errorPages, 0);
+    // ただし targetPages には含まれる (fetch 対象という意味では依然 target)
+    assert.equal(result.summary.targetPages, 2);
+  });
+
+  it('preserves recoveryProbe and debtCategory on each page entry', () => {
+    const pages = [
+      {
+        slug: 'testops/testops-version-control/pull-requests',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
+        debtCategory: 'source-side-debt',
+      },
+    ];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+
+    const page = result.pages.find(
+      (p) => p.slug === 'testops/testops-version-control/pull-requests',
+    );
+    assert.ok(page);
+    assert.equal(page.fetchStatus, 'excluded-broken');
+    assert.deepEqual(page.recoveryProbe, {
+      issueType: 'snapshot-incomplete',
+      reason: 'extractor-empty',
+      expectedIssueType: 'snapshot-incomplete',
+      expectedReason: 'extractor-empty',
+      expectedMatch: true,
+    });
+    assert.equal(page.debtCategory, 'source-side-debt');
+  });
+
+  it('sets freshnessState to fresh when only excluded pages remain', () => {
+    // 既知 debt だけを fetch したとき (= `--slug=pull-requests` の実行)
+    // freshness は broken ではなく fresh を返す
+    const pages = [
+      {
+        slug: 'testops/testops-version-control/pull-requests',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
+        debtCategory: 'source-side-debt',
+      },
+    ];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+    assert.equal(result.freshnessState, 'fresh');
+  });
+
+  it('does not add excluded pages to the top-level errors array', () => {
+    // excluded は "既知" なので error として issue ルートに listup しない
+    const pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true },
+        debtCategory: 'source-side-debt',
+      },
+    ];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+    assert.deepEqual(result.errors, []);
+  });
+
+  it('defaults counters to 0 when no excluded pages', () => {
+    // backward-compatible: 普通の fetch では新 counter は 0 で出る
+    const pages = [{ slug: 'a', fetchStatus: 'ok' }];
+    const result = buildSourceSyncStatus({
+      pages,
+      sidebarResult: baseSidebarResult,
+      runScope: fullScope,
+    });
+
+    assert.equal(result.summary.excludedPages, 0);
+    assert.equal(result.summary.excludedBrokenPages, 0);
+    assert.equal(result.summary.excludedRecoveredPages, 0);
   });
 });
