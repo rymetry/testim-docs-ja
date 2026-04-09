@@ -101,7 +101,7 @@ describe('snapshot_update main', () => {
     const result = await main(['--dry-run', '--slug=testim-overview']);
 
     assert.ok(result.sourceSyncStatus, 'should include sourceSyncStatus');
-    assert.equal(result.sourceSyncStatus.schemaVersion, 1);
+    assert.equal(result.sourceSyncStatus.schemaVersion, 2);
     assert.equal(result.sourceSyncStatus.freshnessState, 'fresh');
     assert.equal(result.sourceSyncStatus.summary.targetPages, 1);
     assert.equal(result.sourceSyncStatus.summary.fetchedPages, 1);
@@ -166,9 +166,10 @@ describe('snapshot_update — source-side debt exclusion', () => {
     '</code></pre></div></div>' +
     '</div></body></html>';
 
-  // recovered upstream simulation: broken 状態から upstream が直り、
+  // clean upstream simulation: broken 状態から upstream が直り、
   // 正しく <h2> / <p> / <ol> に分解された clean HTML が返る想定。
-  // detectSourceUsability は null (usable) を返すので excluded-recovered。
+  // ただし EN-only probe は全分岐 fail-close なので excluded-broken
+  // (body-appeared-inconclusive) に倒れる。excluded-recovered は自動では起きない。
   const CLEAN_PAGE_HTML =
     '<html><body><div role="main" id="mc-main-content">' +
     '<h1>Pull Requests</h1>' +
@@ -228,23 +229,25 @@ describe('snapshot_update — source-side debt exclusion', () => {
     assert.equal(result.sourceSyncStatus.errors.length, 0);
   });
 
-  it('recovered upstream → fetchStatus excluded-recovered and recoveryProbe is null', async () => {
+  it('clean upstream → still excluded-broken (全分岐 fail-close、自動 recovery なし)', async () => {
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
     const result = await main(['--dry-run', '--slug=pull-requests']);
 
+    // 自動 recovery は起きない — body が出ても inconclusive で broken に倒れる
     assert.equal(result.sourceSyncStatus.summary.excludedPages, 1);
-    assert.equal(result.sourceSyncStatus.summary.excludedBrokenPages, 0);
-    assert.equal(result.sourceSyncStatus.summary.excludedRecoveredPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.excludedBrokenPages, 1);
+    assert.equal(result.sourceSyncStatus.summary.excludedRecoveredPages, 0);
 
     const page = result.sourceSyncStatus.pages.find(
       (p) => p.slug === 'testops/testops-version-control/pull-requests',
     );
     assert.ok(page);
-    assert.equal(page.fetchStatus, 'excluded-recovered');
+    assert.equal(page.fetchStatus, 'excluded-broken');
     assert.equal(page.debtCategory, 'source-side-debt');
-    assert.equal(page.recoveryProbe, null);
+    assert.equal(page.recoveryProbe.reason, 'body-appeared-inconclusive');
+    assert.equal(page.recoveryProbe.expectedMatch, false);
   });
 
   it('does not overwrite snapshot file even in non-dry-run mode', async () => {
@@ -310,15 +313,18 @@ describe('snapshot_update — source-side debt exclusion', () => {
     assert.equal(page.recoveryProbe.expectedMatch, true);
   });
 
-  it('clean EN → excluded-recovered (probe returns null)', async () => {
+  it('clean EN → excluded-broken + body-appeared-inconclusive (全分岐 fail-close)', async () => {
+    // clean EN でも自動 recovery しない。body が出現しただけでは
+    // usable かは不明なので broken に倒す (false recovery 防止)。
     global.fetch = mockTocFetchFor(CLEAN_PAGE_HTML);
     console.log = () => {};
 
     const result = await main(['--dry-run', '--slug=pull-requests']);
 
     const page = result.sourceSyncStatus.pages[0];
-    assert.equal(page.fetchStatus, 'excluded-recovered');
-    assert.equal(page.recoveryProbe, null);
+    assert.equal(page.fetchStatus, 'excluded-broken');
+    assert.equal(page.recoveryProbe.reason, 'body-appeared-inconclusive');
+    assert.equal(page.recoveryProbe.expectedMatch, false);
   });
 
   // --- Finding 2: expectedMatch + actual/expected が probe output に載る ---
@@ -446,7 +452,9 @@ describe('probeRecoveryEnOnly — fail-close branches', () => {
     assert.equal(result.expectedMatch, true);
   });
 
-  it('extractor-empty + body>0 → recovered (null)', () => {
+  it('extractor-empty + body>0 → excluded-broken + body-appeared-inconclusive (fail-close)', () => {
+    // body が出現しても usable かは不明。false recovery を避けるため
+    // broken に倒す。expectedMatch=false で壊れ方の変化を通知。
     const entry = {
       ...baseEntry,
       expectedIssueType: 'snapshot-incomplete',
@@ -456,6 +464,8 @@ describe('probeRecoveryEnOnly — fail-close branches', () => {
 
     const result = probeRecoveryEnOnly(cleanHtml, entry);
 
-    assert.equal(result, null, 'body が復活したら recovered');
+    assert.ok(result, 'body が出ても自動 recovery しない');
+    assert.equal(result.reason, 'body-appeared-inconclusive');
+    assert.equal(result.expectedMatch, false);
   });
 });

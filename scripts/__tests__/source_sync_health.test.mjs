@@ -98,6 +98,7 @@ describe('buildSourceSyncStatus', () => {
       runScope: fullScope,
     });
 
+    assert.equal(result.schemaVersion, 2);
     assert.equal(result.schemaVersion, SOURCE_SYNC_STATUS_SCHEMA_VERSION);
     assert.match(result.runId, /^\d{4}-\d{2}-\d{2}T.+#[0-9a-f]{8}$/);
     assert.equal(typeof result.checkedAt, 'string');

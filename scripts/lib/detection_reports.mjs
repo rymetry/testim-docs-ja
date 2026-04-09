@@ -120,9 +120,10 @@ export function validateParityCheckStatus(parsed) {
 
 export function validateSourceSyncStatus(parsed) {
   expectObject(parsed, 'source-sync-status.json');
-  if (parsed.schemaVersion !== 1) {
+  const version = parsed.schemaVersion;
+  if (version !== 1 && version !== 2) {
     throw new Error(
-      `source-sync-status.json: unsupported schemaVersion ${JSON.stringify(parsed.schemaVersion)} (expected 1)`,
+      `source-sync-status.json: unsupported schemaVersion ${JSON.stringify(version)} (expected 1 or 2)`,
     );
   }
   if (typeof parsed.runId !== 'string') {
@@ -160,15 +161,17 @@ export function validateSourceSyncStatus(parsed) {
     throw new Error('source-sync-status.json: summary.sidebarVerified must be boolean');
   }
   // Issue #255 — excluded counter の strict validation。
-  // buildSourceSyncStatus は常にこれらを emit するので、欠損は artifact 破損。
-  if (typeof parsed.summary.excludedPages !== 'number') {
-    throw new Error('source-sync-status.json: summary.excludedPages must be a number');
-  }
-  if (typeof parsed.summary.excludedBrokenPages !== 'number') {
-    throw new Error('source-sync-status.json: summary.excludedBrokenPages must be a number');
-  }
-  if (typeof parsed.summary.excludedRecoveredPages !== 'number') {
-    throw new Error('source-sync-status.json: summary.excludedRecoveredPages must be a number');
+  // v2 では必須。v1 (pre-#255) では欠損を許容し 0 扱い。
+  if (version >= 2) {
+    if (typeof parsed.summary.excludedPages !== 'number') {
+      throw new Error('source-sync-status.json: summary.excludedPages must be a number');
+    }
+    if (typeof parsed.summary.excludedBrokenPages !== 'number') {
+      throw new Error('source-sync-status.json: summary.excludedBrokenPages must be a number');
+    }
+    if (typeof parsed.summary.excludedRecoveredPages !== 'number') {
+      throw new Error('source-sync-status.json: summary.excludedRecoveredPages must be a number');
+    }
   }
   if (!Array.isArray(parsed.pages)) {
     throw new Error('source-sync-status.json: pages must be an array');
@@ -176,8 +179,10 @@ export function validateSourceSyncStatus(parsed) {
   // Issue #255 — debt page の shape validation。debtCategory を持つ page は
   // fetchStatus が excluded-broken|excluded-recovered のいずれかで、
   // recoveryProbe が object|null であることを要求する。
+  // Debt page shape validation is v2+ only. v1 artifacts have no
+  // excluded-* pages and no debt fields.
   const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered']);
-  for (const page of parsed.pages) {
+  if (version >= 2) for (const page of parsed.pages) {
     const isExcludedDebt = VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus);
 
     if (isExcludedDebt) {

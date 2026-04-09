@@ -135,20 +135,35 @@ function probeRecoveryEnOnly(rawEnHtml, exclusionEntry, { extractFn = extractSeg
 
   const enBodyCount = enSegments.filter((s) => s.segmentKind !== 'heading').length;
 
-  switch (expReason) {
-    case 'extractor-empty':
-      // EN body segments が 0 のままなら broken。唯一 EN-only で安全に
-      // 判定できる reason — false recovery のリスクが無い。
-      if (enBodyCount === 0) return broken('extractor-empty', true);
-      return null; // recovered
+  // すべての expectedReason で自動 recovery しない (fail-close)。
+  //
+  // extractor-empty でも body > 0 になっただけでは usable とは限らない
+  // (shallow-snapshot 等の別種 unusable に移行した可能性がある)。
+  // EN-only probe で「usable になったか」を安全に判定するには
+  // detectSourceUsability 相当の全レイヤーが必要だが、それは JA 依存を
+  // 戻すことになる。false recovery を完全に排除するため、probe は
+  // 「registry の expected と同じ broken shape か」だけを観測し、
+  // 復旧判定は人間に委ねる。
+  //
+  // expectedMatch の意味:
+  //   true  = expected と同じ shape で壊れている (想定どおり)
+  //   false = 壊れ方が変わった or 判定できない (registry 更新を検討)
+  //
+  // excluded-recovered になるのは runRecoveryProbe の fetch-failed 以外では
+  // 起きない (= 自動 recovery は無い)。
 
-    default:
-      // escaped-details-residue / shallow-snapshot / 将来の reason は
-      // EN-only では安全に判定できない (false recovery のリスクがある)。
-      // fail-close: broken に倒して自動 recovery しない。
-      // 人間が upstream を目視確認して registry から除外解除する運用。
-      return broken('unsupported-recovery-probe', false);
+  if (expReason === 'extractor-empty' && enBodyCount === 0) {
+    return broken('extractor-empty', true);
   }
+
+  if (expReason === 'extractor-empty' && enBodyCount > 0) {
+    // body が出現したが usable かは不明。false recovery を避けるため
+    // broken に倒す。expectedMatch=false で「壊れ方が変わった」と通知。
+    return broken('body-appeared-inconclusive', false);
+  }
+
+  // その他の reason は EN-only で安全に判定できない。
+  return broken('unsupported-recovery-probe', false);
 }
 
 /**

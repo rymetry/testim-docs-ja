@@ -2237,7 +2237,7 @@ function validActionableReport() {
 
 function validSourceSyncStatus() {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     runId: '2026-04-07T00:00:00Z#sync-deadbeef',
     checkedAt: '2026-04-07T00:00:00Z',
     sourceInventoryFingerprint: 'sha256:' + 'a'.repeat(64),
@@ -2391,6 +2391,26 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     const v = validSourceSyncStatus();
     delete v.schemaVersion;
     assert.throws(() => validateSourceSyncStatus(v), /unsupported schemaVersion/);
+  });
+
+  it('accepts schemaVersion 1 (pre-#255 backward compat)', () => {
+    // v1 artifact は excluded* が無くても通る
+    const v = {
+      schemaVersion: 1,
+      runId: '2026-04-07T00:00:00Z#old',
+      checkedAt: '2026-04-07T00:00:00Z',
+      sourceInventoryFingerprint: 'sha256:' + 'a'.repeat(64),
+      sidebarFingerprint: 'sha256:' + 'b'.repeat(64),
+      freshnessState: 'fresh',
+      runScope: { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+      summary: {
+        targetPages: 100, fetchedPages: 100, notFoundPages: 0, errorPages: 0,
+        sidebarVerified: true,
+      },
+      pages: [],
+      errors: [],
+    };
+    assert.doesNotThrow(() => validateSourceSyncStatus(v));
   });
 
   it('throws when runScope is missing', () => {

@@ -7,7 +7,7 @@
 
 import { createHash } from 'node:crypto';
 
-export const SOURCE_SYNC_STATUS_SCHEMA_VERSION = 1;
+export const SOURCE_SYNC_STATUS_SCHEMA_VERSION = 2;
 
 /**
  * Shared run-scope classifier used by source-sync, snapshot-diff, and parity.
