@@ -541,9 +541,14 @@ describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', 
   // ---------------------------------------------------------------------
 
   it('narrow fixture: valid sibling <h2>/<p> block を生成し、extractor でも heading を拾える', () => {
+    // 実 faq.html と同じ multi-paragraph broken tree 構造 (first <p> が
+    // details open を含むが同じ <p> 内で close していない — 次の <p> に
+    // 跨っている)。この不均衡が「legacy single-<p> ではない」判定を起動し、
+    // paragraph-aware rewrite が発火する。
     const html = [
       '<h1>FAQ</h1>',
-      '<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Q1?&lt;/b&gt;&lt;/summary&gt; Answer 1. &lt;/details&gt; &lt;details&gt; &lt;summary&gt;&lt;b&gt;Q2?&lt;/b&gt;&lt;/summary&gt; Answer 2.&lt;/details&gt;</p>',
+      '<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Q1?&lt;/b&gt;&lt;/summary&gt; Answer 1 continues.<br /></p>',
+      '<p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt;&lt;b&gt;Q2?&lt;/b&gt;&lt;/summary&gt; Answer 2. &lt;/details&gt;</p>',
     ].join('\n');
 
     const out = preprocessEnHtml(html);
