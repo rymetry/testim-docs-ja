@@ -3,7 +3,7 @@
 ## 対象
 
 - 英語記事: SIDEBAR_URLS.md の {SECTION_NAME} セクション配下の全記事
-- 日本語ファイル: `/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/{FOLDER_NAME}` 配下のmdファイル
+- 日本語ファイル: `src/content/docs/{FOLDER_NAME}` 配下の md ファイル
 
 ## 実行手順
 
@@ -35,7 +35,7 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 - [ ] 画像ファイルの存在確認だけでなく、本文中の配置順も原文と一致しているか
 - [ ] 本文末尾に更新日(updated, 最終更新日等)の記載がないか
 - [ ] 記事内のリンクが適切に処理されているか
-  - 外部リンク(`https://docs.tricentis.com/testim/content/...`)で、対応する日本語mdファイルが`/Users/rym/Dev/personal-projects/testim-docs-ja/src/content/docs/`配下に存在する場合、内部リンクに変更されているか
+  - 外部リンク(`https://docs.tricentis.com/testim/content/...`)で、対応する日本語 md ファイルが `src/content/docs/` 配下に存在する場合、内部リンクに変更されているか
   - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `/docs/overview/testim-overview` (該当mdファイルが存在する場合)
   - 対応する日本語ファイルが存在しない場合は、元の外部リンクのまま維持
 
