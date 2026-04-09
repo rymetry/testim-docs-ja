@@ -194,6 +194,9 @@ const FETCH_TIMEOUT_MS = 30_000;
  * Extract the main content HTML from a full page.
  * Targets `<div id="mc-main-content" ...>...</div>` (MadCap Flare).
  */
+// Exported for unit testing of fail-close branches.
+export { probeRecoveryEnOnly as _probeRecoveryEnOnly };
+
 export function extractMainContent(html) {
   const startMatch = /<div[^>]*\bid=["']mc-main-content["'][^>]*>/i.exec(html);
   if (!startMatch) return null;
