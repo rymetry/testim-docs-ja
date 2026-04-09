@@ -18,15 +18,13 @@ keywords:
   - Testim モバイル
 ---
 
-事前定義ステップにないアクションや検証を行いたい場合に、Appium を用いたスクリプトを実行できる「カスタムアクション（モバイル）」ステップを使用します。複数のモバイルコマンドをバッチ実行でき、JS パラメーターも利用可能です。
+事前定義ステップにないアクションや検証を行いたい場合に、Appium を用いたスクリプトを実行できる「カスタムアクション（モバイル）」ステップを使用します。複数のモバイルコマンドをバッチ実行でき、JS パラメーターも利用可能です。カスタムアクション（モバイル）は TMA でのみ完全にサポートされます。サードパーティのグリッドでは未サポートです（例）：
 
-カスタムアクション（モバイル）は TMA でのみ完全にサポートされます。サードパーティのグリッドでは未サポートです（例）：
-
-- Browserstack returns: \``Execute driver script functionality is not available unless server is started with --allow-insecure including the 'execute_driver_script' flag, e.g., --allow-insecure=execute_driver_script`
-- Headspin returns: `An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden`
+- Browserstack では次のエラーが返ります: Execute driver script functionality is not available unless server is started with --allow-insecure including the 'execute_driver_script' flag, e.g., --allow-insecure=execute_driver_script
+- Headspin では次のエラーが返ります: `An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden`
 
 :::note{title="ローカル実行の前提条件"}
-物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: `tricentis-mobile-agent start -e`
+物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: tricentis-mobile-agent start -e
 :::
 
 ## VMG でサポートされる Appium メソッド
@@ -93,8 +91,6 @@ keywords:
 
 ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/0b1c350-customaction3.png)
 
-<br />
-
 :::warning{title="注意"}
 AUT で要素をパラメーター定義するためにブレークポイントを有効化した場合は、Toggle Breakpoint で解除してください。
 :::
@@ -126,8 +122,6 @@ await DRIVER.performActions([
   },
 ]);
 ```
-
-<br />
 
 ### xpath でボタン要素を探す
 
