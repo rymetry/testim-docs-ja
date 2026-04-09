@@ -150,6 +150,25 @@ for (const slug of RESOLVED_PAGES) {
         `${slug}: baselinedByType should be empty after Phase E. actual=${JSON.stringify(byType)}`,
       );
     });
+
+    it('post-resolution: signal-only drift も 0 件 (原文構造を保っている強い契約)', () => {
+      // Issue #247 post-merge re-review 第二弾 — representative の End-to-End
+      // 完全解消契約は `reportableActiveFiles` / structure / snapshot-unusable
+      // の 0 だけでは弱く、signal-only drift (paragraph-count-mismatch /
+      // bullet-count-mismatch 等) が残っていても通ってしまう。原文構造を
+      // 保ったまま翻訳する要件を test で pin するため、`f.issues` の長さが
+      // 0 (actionable も signal も共に 0) であることを強く assert する。
+      const { status } = cached;
+      const jaRelativePath = `src/content/docs/${slug}.md`;
+      const file = (status.files || []).find((f) => f.file === jaRelativePath);
+      const issues = file ? file.issues : [];
+      assert.equal(
+        issues.length,
+        0,
+        `${slug}: representative page must have 0 issues of any severity (actionable/signal). ` +
+          `actual=${JSON.stringify(issues.map((i) => ({ type: i.type, severity: i.severity, detail: (i.detail || '').slice(0, 80) })))}`,
+      );
+    });
   });
 }
 
