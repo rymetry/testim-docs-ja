@@ -1,6 +1,6 @@
 /** Markdown structure extraction and parsing functions for source parity analysis. */
 import { extractSlug as extractSlugFromUrl } from './madcap_toc.mjs';
-import { buildBasenameToPathMap } from './project.mjs';
+import { buildBasenameToPathMap, buildSlugIndex } from './project.mjs';
 import { FENCE_LINE_RE } from './source_parity_types.mjs';
 
 const IMAGE_PATTERNS = [
@@ -491,10 +491,32 @@ export function extractHtmlTables(body) {
   return tables;
 }
 
+/**
+ * Resolve a (possibly relative / basename-only) slug to the full slug that
+ * exists in the docs tree.
+ *
+ * MadCap が emit する相対リンク `href="category/page.htm"` は、当該ページの
+ * 親ディレクトリを省いた形で extractor に届く。例えば
+ * `salesforce-testing/faq.htm` の中にある
+ * `<a href="salesforce-steps/sfdc-step-apex-action.htm">` は
+ * `salesforce-steps/sfdc-step-apex-action` として届き、これは docs tree 上の
+ * 正式 slug ではない (正しくは `salesforce-testing/salesforce-steps/...`)。
+ *
+ * 解決順:
+ *   1. slug が docs index に既に存在するなら、そのまま返す (正式 full path)
+ *   2. そうでなければ basename lookup を試す (unique basename のときだけ
+ *      fallback。ambiguous basename は null なので safe に原 slug を返す)
+ *
+ * @param {string} slug
+ * @returns {string}
+ */
 function resolveToFullSlug(slug) {
-  if (slug.includes('/')) return slug;
+  const index = buildSlugIndex();
+  if (slug in index) return slug;
   const map = buildBasenameToPathMap();
-  return map.get(slug) ?? slug;
+  const basename = slug.split('/').pop();
+  const resolved = map.get(basename);
+  return resolved ?? slug;
 }
 
 function normalizeUrlToken(url) {
