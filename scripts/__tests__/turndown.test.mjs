@@ -512,3 +512,113 @@ describe('preprocessEnHtml real snapshot fixtures', () => {
     assert.ok(!md.includes('&lt;details'), `Should not contain escaped <details> after preprocessing`);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Issue #247 post-merge — normalizeEscapedFaqDetails
+//
+// MadCap が `<details><summary>Q</summary>body</details>` を複数 <p> に跨って
+// escape 出力する FAQ アコーディオンを、preprocessor 段階で valid sibling
+// `<h2>/<p>` block へ再構成する変換を pin する。Finding 9-14 の積み上げで
+// 「extractor が DOM repair に頼らず heading を拾える」「coding-assistant の
+// sample prompt が <h2> に昇格しない」を both pin する。
+// ---------------------------------------------------------------------------
+
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', () => {
+  let extractSegmentsFromHtml;
+  before(async () => {
+    ({ extractSegmentsFromHtml } = await import('../lib/source_parity_segments_en.mjs'));
+  });
+
+  const ROOT_DIR = join(import.meta.dirname, '../../');
+  const SNAPSHOTS_DIR = join(ROOT_DIR, 'snapshots/en/content');
+
+  // ---------------------------------------------------------------------
+  // narrow fixture (実 faq 構造の抜粋 — escaped <b> を含むことが Finding 11 の
+  // 保険)。
+  // ---------------------------------------------------------------------
+
+  it('narrow fixture: valid sibling <h2>/<p> block を生成し、extractor でも heading を拾える', () => {
+    const html = [
+      '<h1>FAQ</h1>',
+      '<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Q1?&lt;/b&gt;&lt;/summary&gt; Answer 1. &lt;/details&gt; &lt;details&gt; &lt;summary&gt;&lt;b&gt;Q2?&lt;/b&gt;&lt;/summary&gt; Answer 2.&lt;/details&gt;</p>',
+    ].join('\n');
+
+    const out = preprocessEnHtml(html);
+    // escaped markers (details / summary / b) は残らないこと
+    assert.equal(out.includes('&lt;details&gt;'), false);
+    assert.equal(out.includes('&lt;/details&gt;'), false);
+    assert.equal(out.includes('&lt;summary&gt;'), false);
+    assert.equal(out.includes('&lt;/summary&gt;'), false);
+    assert.equal(out.includes('&lt;b&gt;'), false);
+    // Finding 14: invalid `<p><h2>` ネストを作らないこと
+    assert.equal(/<p\b[^>]*>\s*<h2\b/i.test(out), false);
+
+    // narrow fixture には extractor が h1 を skip した状態で h2 を 2 件生成する
+    // (h1 は h1Consumed フラグで skip されるため heading 数は h2 のみで 2 件)
+    const segs = extractSegmentsFromHtml(html);
+    const headings = segs.filter((s) => s.segmentKind === 'heading');
+    assert.equal(headings.length, 2);
+  });
+
+  // ---------------------------------------------------------------------
+  // 実 snapshot を使った contract pin (Finding 11 への対抗 — narrow fixture が
+  // 現実を反映できていないときに備えて、実ファイルを直接読む)
+  // ---------------------------------------------------------------------
+
+  it('real faq.html: invalid <p><h2> なし + extractor heading=5 + details-summary=0', () => {
+    const raw = readFileSync(
+      join(SNAPSHOTS_DIR, 'salesforce-testing/faq.html'),
+      'utf8',
+    );
+    const out = preprocessEnHtml(raw);
+    // escaped details / summary / b が残らない
+    assert.equal(out.includes('&lt;details&gt;'), false);
+    assert.equal(out.includes('&lt;/details&gt;'), false);
+    assert.equal(out.includes('&lt;summary&gt;'), false);
+    assert.equal(out.includes('&lt;b&gt;'), false);
+    // Finding 14: invalid nesting を明示的に禁止
+    assert.equal(/<p\b[^>]*>\s*<h2\b/i.test(out), false);
+    // real <details> tag も残らない (faq は h2/p block に再構成されているので不要)
+    assert.equal(/<details\b/i.test(out), false);
+
+    const segs = extractSegmentsFromHtml(raw);
+    const headings = segs.filter((s) => s.segmentKind === 'heading');
+    const detailSummaries = segs.filter((s) => s.segmentKind === 'details-summary');
+    assert.equal(headings.length, 5, `faq の heading 件数が不正: ${headings.length}`);
+    assert.equal(detailSummaries.length, 0, 'faq に details-summary は残ってはいけない');
+  });
+
+  // ---------------------------------------------------------------------
+  // Finding 9 対応 — coding-assistant は normalize 対象外 (強い契約 pin)
+  // ---------------------------------------------------------------------
+
+  it('real coding-assistant.html: normalization は発火せず <h2> 注入ゼロ', () => {
+    const raw = readFileSync(
+      join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
+      'utf8',
+    );
+    // preprocess 前後の <h2> 件数が同じであること = 正規化未発火
+    const h2Before = (raw.match(/<h2[^>]*>/gi) || []).length;
+    const out = preprocessEnHtml(raw);
+    const h2After = (out.match(/<h2[^>]*>/gi) || []).length;
+    assert.equal(
+      h2After,
+      h2Before,
+      `coding-assistant に <h2> が注入された (before=${h2Before}, after=${h2After})。` +
+        `faq 正規化が誤発火している可能性`,
+    );
+    // invalid nesting も発生しない
+    assert.equal(/<p\b[^>]*>\s*<h2\b/i.test(out), false);
+
+    // 本文の prose ("generate code to validate page URL" 等) が <h2> に
+    // 昇格していないことを追加で確認
+    assert.equal(
+      /<h2[^>]*>[^<]*generate code/i.test(out),
+      false,
+      'coding-assistant の sample prompt が <h2> に昇格してはいけない',
+    );
+  });
+});
