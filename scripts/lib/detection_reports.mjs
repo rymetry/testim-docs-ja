@@ -9,8 +9,8 @@ import {
 } from './source_parity_issue_state.mjs';
 
 /**
- * Schema version for `docs-actionable-report.json`. Validators MUST
- * refuse to load any report whose `schemaVersion` does not match.
+ * `docs-actionable-report.json` の schema version。
+ * validator は不一致の report を読み込まない。
  */
 export const ACTIONABLE_REPORT_SCHEMA_VERSION = 1;
 
@@ -25,10 +25,8 @@ const PARITY_FOLLOWUP_ISSUE_TITLE =
 const DOCS_PREFIX = path.join('src', 'content', 'docs') + path.sep;
 
 /**
- * Family keys used in HTML body comments and by sync-detection-issues.cjs for
- * key-based issue matching.  Embed as `<!-- detection-family: KEY -->` in the
- * issue body so the sync script can find existing issues without relying on
- * the exact title string.
+ * HTML body comment と sync-detection-issues.cjs で共有する family key。
+ * issue body には `<!-- detection-family: KEY -->` を埋め込む。
  */
 export const FAMILY_KEYS = {
   SNAPSHOT_DIFF: 'snapshot-diff',
@@ -43,11 +41,7 @@ function readJson(filePath) {
 }
 
 /**
- * §1 cleanup: strict validators for the three detection inputs. Each
- * returns the parsed object (same reference) on success, or throws a
- * descriptive Error. We deliberately do NOT default-fill missing
- * fields — the §2 fail-closed pipeline relies on validation errors to
- * refuse to sync managed issues from a half-baked run.
+ * 3 つの detection 入力を fail-closed で検証する。欠損値は補完しない。
  */
 
 function expectObject(value, label) {
@@ -160,8 +154,7 @@ export function validateSourceSyncStatus(parsed) {
   if (typeof parsed.summary.sidebarVerified !== 'boolean') {
     throw new Error('source-sync-status.json: summary.sidebarVerified must be boolean');
   }
-  // Issue #255 — excluded counter の strict validation。
-  // v2 では必須。v1 (pre-#255) では欠損を許容し 0 扱い。
+  // excluded counter は v2 以降で必須。v1 は後方互換のため 0 扱いを許容する。
   if (version >= 2) {
     if (typeof parsed.summary.excludedPages !== 'number') {
       throw new Error('source-sync-status.json: summary.excludedPages must be a number');
@@ -176,11 +169,7 @@ export function validateSourceSyncStatus(parsed) {
   if (!Array.isArray(parsed.pages)) {
     throw new Error('source-sync-status.json: pages must be an array');
   }
-  // Issue #255 — debt page の shape validation。debtCategory を持つ page は
-  // fetchStatus が excluded-broken|excluded-recovered のいずれかで、
-  // recoveryProbe が object|null であることを要求する。
-  // Debt page shape validation is v2+ only. v1 artifacts have no
-  // excluded-* pages and no debt fields.
+  // debt page の形状検証は v2+ のみ。v1 には excluded-* page が無い。
   const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered', 'excluded-fetch-error']);
   if (version >= 2) for (const page of parsed.pages) {
     const isExcludedDebt = VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus);
@@ -251,7 +240,7 @@ export function validateSourceSyncStatus(parsed) {
       continue;
     }
 
-    // Non-excluded pages must not carry debt fields.
+    // 除外対象でない page に debt 専用 field を載せてはいけない。
     if ('debtCategory' in page && page.debtCategory != null) {
       throw new Error(
         `source-sync-status.json: non-excluded page "${page.slug}" must not have debtCategory`,
@@ -313,11 +302,9 @@ export function validateActionableReport(parsed) {
 }
 
 /**
- * Validate the three detection inputs after they have been loaded.
- * Returns `{ ok: true }` on success, `{ ok: false, errors: string[] }`
- * when one or more inputs fail validation. The function never throws —
- * the caller (e.g. `loadDetectionInputs` in strict mode) is responsible
- * for deciding whether to continue.
+ * 読み込み済みの 3 種類の detection 入力を検証する。
+ * 成功時は `{ ok: true }`、1 つでも不正なら `{ ok: false, errors }` を返す。
+ * ここでは throw せず、継続可否の判断は呼び出し側に委ねる。
  */
 export function validateDetectionInputs({ snapshot, parity, sourceSync }) {
   const errors = [];
@@ -330,8 +317,8 @@ export function validateDetectionInputs({ snapshot, parity, sourceSync }) {
   };
   tryValidate('snapshot', () => validateSnapshotDiffStatus(snapshot));
   tryValidate('parity', () => validateParityCheckStatus(parity));
-  // sourceSync is allowed to be missing entirely (legacy / pre-Phase-1
-  // runs); only check the shape if a non-empty payload is present.
+  // sourceSync は payload 自体が無いことを許容する。
+  // 空でない payload があるときだけ shape を検証する。
   if (sourceSync && Object.keys(sourceSync).length > 0) {
     tryValidate('sourceSync', () => validateSourceSyncStatus(sourceSync));
   }
@@ -361,13 +348,10 @@ function partitionSourceSideDebtPages(pages) {
 }
 
 /**
- * Issue #255 — Build a structured summary of source-side debt from
- * `source-sync-status.json`. Returns counters plus broken / recovered
- * slug lists with their recovery-probe payloads so downstream consumers
- * (markdown renderer, issue body, dashboards) can render without
- * re-parsing the raw status file.
+ * `source-sync-status.json` から source-side debt の要約を組み立てる。
+ * downstream consumer が raw status を再解釈せずに描画できる形へ整える。
  *
- * Pure function. Safe to call with an empty/missing sourceSync object.
+ * 純粋関数。空の sourceSync でも安全に呼べる。
  *
  * @param {object | null | undefined} sourceSync — parsed source-sync-status.json
  * @returns {{
@@ -418,14 +402,10 @@ function buildSourceSideDebtSummary(sourceSync) {
 }
 
 /**
- * Issue #255 — Render the `## ソース原文の既知問題` section as Markdown lines.
- * Returns an array of strings ready to be joined with '\n'. The caller
- * is responsible for deciding when the section should appear at all
- * (usually: skip when `excludedPages === 0`).
+ * `## ソース原文の既知問題` セクションを Markdown 行へ変換する。
+ * 表示有無の判断は呼び出し側が行う。
  *
- * The section is fully Japanese on the theory that humans read it and
- * machines read the JSON fields instead. Slugs and technical tokens
- * (`snapshot-incomplete`, `extractor-empty`, file names) stay in English.
+ * 人間が読む section なので日本語で整え、slug や technical token だけ英語のまま残す。
  *
  * @param {ReturnType<typeof buildSourceSideDebtSummary>} debt
  * @param {{ slug: string, fetchStatus: string, recoveryProbe?: any, debtCategory?: string }[]} _pages
@@ -556,7 +536,7 @@ export function buildAuditManifest(
 ) {
   const changes = snapshot.changes ?? [];
 
-  // Build parity index by slug (extract from file path)
+  // file path から slug を引き、parity 結果を slug 単位で引ける index にする。
   const parityBySlug = new Map();
   for (const file of parity?.files ?? []) {
     const slug = fileToSlug(file.file);
@@ -757,11 +737,7 @@ function buildParityFollowupBody({
     );
   }
 
-  // Issue #247 PR4 — source-unusable サブセクション。`shouldOpenIssue` の
-  // 条件には加えていない (翻訳者責任外なので新規 issue は open しない) が、
-  // 既に別の signal で issue body が生成されているなら、source-unusable の
-  // 件数も併記して reviewer に状況を見せる。0 件のときはセクション自体を
-  // 省略する。
+  // source-unusable は新規 issue を開く条件には含めず、本文だけに併記する。
   if (sourceUnusable && sourceUnusable.snapshotUnusableIssues > 0) {
     lines.push(
       '## ソース使用不可 (参考)',
@@ -779,10 +755,7 @@ function buildParityFollowupBody({
     lines.push('');
   }
 
-  // Issue #247 post-merge — orphan baseline entries を followup report に
-  // 可視化する。detector / emitter が仕様変更したときに legacy entry が
-  // 取り残されるパターンを検知する (PR5 migration 後の segment-inconclusive
-  // 3 件の事例が典型)。
+  // orphan baseline entry は followup report に可視化する。
   const orphanBaselineEntries = summary.orphanBaselineEntries || 0;
   if (orphanBaselineEntries > 0) {
     lines.push(
@@ -876,9 +849,7 @@ function buildParityFollowup(parity, options = {}) {
   const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
   const isComplete = advisoryQueueScope?.isComplete ?? null;
 
-  // Issue #247 PR4 — source-unusable サブセクション。`shouldOpenIssue` の
-  // 判定には加えない (翻訳者責任外、新規 issue を open しない契約)。summary
-  // への露出と body サブセクションのみを担う。
+  // source-unusable は summary と body にだけ露出し、issue open 条件には入れない。
   const sourceUnusable = {
     snapshotUnusableIssues: summary.snapshotUnusableIssues ?? 0,
     snapshotUnusableFiles: summary.snapshotUnusableFiles ?? 0,
@@ -922,7 +893,7 @@ function buildParityFollowup(parity, options = {}) {
   }
   expiredBaselineFiles.sort((a, b) => b.count - a.count);
   expiringBaselineFiles.sort((a, b) => {
-    // Earliest expiry first so reviewers see the cliff in order.
+    // review 期限が近い順に並べ、期限切れの崖を先頭から見えるようにする。
     if ((a.reviewAfter ?? '') !== (b.reviewAfter ?? '')) {
       return (a.reviewAfter ?? '') < (b.reviewAfter ?? '') ? -1 : 1;
     }
@@ -977,9 +948,7 @@ function buildParityFollowup(parity, options = {}) {
         includedInIssueBody: isComplete === true,
       },
       reviewHints,
-      // Issue #247 PR4 — source-unusable counter のサブセクション。
-      // shouldOpenIssue には影響しないが、JSON consumer (人手レビュー /
-      // ダッシュボード) が翻訳者責任外の snapshot debt を観測できる。
+      // source-unusable counter は JSON consumer 向けに残す。
       sourceUnusable,
     },
   };
@@ -1045,9 +1014,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const acknowledgedIssues = parity.summary?.acknowledgedIssues || 0;
   const expiredAcknowledgements = parity.summary?.expiredAcknowledgements || 0;
 
-  // Issue #247 PR5 — structure mismatch の補助 counter は summary に
-  // 露出するだけで、独立 advisory section は持たない。reportable に
-  // 昇格したため、件数は通常の Top Entries 経路で見えるようになった。
+  // structure mismatch の補助 counter は summary にだけ露出する。
   const structureMismatchIssues = parity.summary?.structureMismatchIssues ?? 0;
   const structureMismatchFiles = parity.summary?.structureMismatchFiles ?? 0;
   const structureMismatchByType = parity.summary?.structureMismatchByType ?? {};
@@ -1085,20 +1052,17 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
     '- `docs-audit-manifest.json`',
   ].join('\n');
 
-  // Source sync health
+  // source sync health
   const freshnessState = sourceSync.freshnessState ?? null;
-  // §3 cleanup: linkage failure also opens the source-sync-health issue
-  // so reviewers see "stale" / "scope-mismatch" runs in the same place
-  // they see freshness degradation. linkageState='missing' is the
-  // legacy / no-linkage case and is intentionally NOT escalated.
+  // linkage failure も source-sync-health issue を開く対象に含める。
+  // reviewer が freshness 劣化と stale / scope-mismatch run を同じ場所で見られるようにする。
+  // linkageState='missing' は legacy / no-linkage ケースなので意図的に昇格しない。
   const linkageBlocking =
     linkageState !== null && linkageState !== 'linked' && linkageState !== 'missing';
   const syncSummary = sourceSync.summary ?? {};
   const syncErrors = sourceSync.errors ?? [];
 
-  // Issue #255 — source-side debt counters and slug lists. These come from
-  // source-sync-status.json `summary.excluded*Pages` and `pages[]`.
-  // Must be computed before syncShouldOpen because debt triggers issue open.
+  // source-side debt counters/slugs は source-sync-status.json から組み立てる。
   const sourceSideDebtSummary = buildSourceSideDebtSummary(sourceSync);
   const hasSourceSideDebt = sourceSideDebtSummary.excludedPages > 0 ||
     (sourceSideDebtSummary.fetchErrorSlugs?.length ?? 0) > 0;
@@ -1122,8 +1086,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         '',
         formatList(syncErrors.map((e) => `\`${e.slug}\` — ${e.detail}`)),
         '',
-        // Issue #255 — 日本語 debt サブセクション (issue body 内)。
-        // 件数 0 なら丸ごと省略する。
+        // debt サブセクションは件数 0 なら省略する。
         ...(hasSourceSideDebt
           ? [...renderSourceSideDebtSubsection(sourceSideDebtSummary, sourceSync.pages ?? []), '']
           : []),
@@ -1155,9 +1118,7 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         errorPages: syncSummary.errorPages ?? 0,
         sidebarVerified: syncSummary.sidebarVerified ?? false,
       },
-      // Issue #255 — source-side debt counter / slug list を independently
-      // expose する。JSON consumer (sync-detection-issues / dashboards /
-      // 人手レビュー) が freshness counter と混ぜずに読めるようにする。
+      // source-side debt counter / slug list は独立フィールドで返す。
       sourceSideDebt: sourceSideDebtSummary,
     },
     snapshotDiff: {
@@ -1182,18 +1143,14 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       topEntries: parityTopEntries,
       body: withFamilyMarker(parityIssueBody, FAMILY_KEYS.PARITY_REGRESSION),
       summary: {
-        // Only count files with at least one ACTIVE reportable issue.
-        // Validly-acknowledged and non-expired baselined issues are excluded.
+        // active な reportable issue を 1 件以上持つ file だけを数える。
+        // 有効な ack と未期限切れ baseline はここに含めない。
         issueCount: parityIssueFiles.length,
         acknowledgedIssues: parity.summary?.acknowledgedIssues || 0,
         expiredAcknowledgements: parity.summary?.expiredAcknowledgements || 0,
         issuesByType: parityIssueSummary.issuesByType,
         issuesBySeverity: parityIssueSummary.issuesBySeverity,
-        // Issue #247 PR5 — structure mismatch の独立 counter は cutover 後も
-        // 並走で露出する。reportable に昇格したため `topEntries` / `issueCount`
-        // にも流れるが、JSON consumer (sync-detection-issues / ダッシュボード /
-        // 人手レビュー) が drift の type-別内訳を一発で読みたい場面のために
-        // 補助フィールドとして残してある。
+        // structure mismatch の type 別内訳は補助フィールドとして残す。
         structureMismatchIssues,
         structureMismatchFiles,
         structureMismatchByType,
@@ -1214,9 +1171,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
   const syncState = sourceSync?.freshnessState ?? actionableReport?.sourceSyncHealth?.freshnessState ?? '不明';
   const syncSummary = sourceSync?.summary ?? actionableReport?.sourceSyncHealth?.summary ?? {};
 
-  // Issue #255 — source-side debt を summary markdown に可視化する。
-  // actionableReport にすでに sourceSideDebt が計算されていればそれを優先、
-  // 無ければ sourceSync から組み立てる。
+  // source-side debt は summary markdown にも出す。
   const sourceSideDebt =
     actionableReport?.sourceSyncHealth?.sourceSideDebt ??
     buildSourceSideDebtSummary(sourceSync);
@@ -1225,9 +1180,9 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
       ? renderSourceSideDebtSubsection(sourceSideDebt, sourceSync?.pages ?? [])
       : [];
 
-  // Parity section は coarse audit signals を除外した reportableActive*
-  // counters を表示する。降格された coarse heuristics は別枠の "Audit
-  // Signals" section に出して active parity drift と混同させない。
+  // parity section では、coarse audit signal を除いた reportableActive*
+  // counter を表示する。降格済みの coarse heuristic は別枠の audit
+  // signals section に出し、active parity drift と混同させない。
   const parityActiveActionable =
     parity.summary?.reportableActiveActionableFiles ??
     parity.summary?.activeActionableFiles ??
@@ -1249,10 +1204,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
           .map(([type, count]) => `  - ${type}: ${count}`)
       : ['  - (なし)'];
 
-  // Issue #247 PR5 — structure mismatch の独立 advisory section は削除した。
-  // reportable に昇格したため、件数は `## パリティ` の `active issue files`
-  // 経由で見える。source unusable は引き続き advisory なので独立 section
-  // を持つ。
+  // structure mismatch は独立 advisory section を持たず、source unusable だけを分離表示する。
   const snapshotUnusableIssues = parity.summary?.snapshotUnusableIssues ?? 0;
   const snapshotUnusableFiles = parity.summary?.snapshotUnusableFiles ?? 0;
   const snapshotUnusableByType = parity.summary?.snapshotUnusableByType ?? {};

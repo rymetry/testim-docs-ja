@@ -1,5 +1,5 @@
 /**
- * Tests for the Phase 6A baseline generation script.
+ * Tests for the baseline generation script.
  *
  * Validates pure helpers (buildBaselineFromStatus, serializeBaseline,
  * mergePartialBaseline, defaultReviewAfter) and verifies determinism.
@@ -78,7 +78,7 @@ const sampleStatus = {
           segmentKind: null,
           inconclusiveCategory: 'heading-count-mismatch',
           inconclusiveReason: 'Heading count mismatch: EN has 0, JA has 5',
-          detail: 'Phase 5 alignment inconclusive: heading count mismatch',
+          detail: 'alignment inconclusive: heading count mismatch',
         },
         {
           // Non-eligible — must be skipped
@@ -557,23 +557,20 @@ describe('mergePartialBaseline', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — buildBaselineFromStatus 新 type 対応
-//
-// structure mismatch / source unusable を baseline 可能にする (§3.9)。
-// entry 形は §3.2 / §3.3 に従い、structureFingerprint を helper で derive する。
+// buildBaselineFromStatus: structure mismatch / source unusable 対応
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — buildBaselineFromStatus structure mismatch entry', () => {
-  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+describe('buildBaselineFromStatus: structure mismatch entry', () => {
+  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const fpMap = new Map([
-    ['running-tests/the-command-line-cli', PR5_FP],
-    ['salesforce-testing/faq', PR5_FP],
+    ['running-tests/the-command-line-cli', VALID_SNAPSHOT_FP],
+    ['salesforce-testing/faq', VALID_SNAPSHOT_FP],
   ]);
-  const pr5Meta = {
-    runId: 'pr5',
+  const baselineMeta = {
+    runId: 'baseline-run',
     generatedAt: '2026-04-06T03:00:00Z',
     reviewAfterOverride: '2026-10-06',
-    rationale: 'pr5',
+    rationale: 'baseline',
   };
 
   function statusWithStructureMismatch() {
@@ -601,7 +598,7 @@ describe('Issue #247 PR5 — buildBaselineFromStatus structure mismatch entry', 
 
   it('emits a structure mismatch entry with sectionIndex / sectionPath / structureCategory / structureFingerprint', () => {
     const status = statusWithStructureMismatch();
-    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
     assert.equal(baseline.entries.length, 1);
     const entry = baseline.entries[0];
     assert.equal(entry.issueType, 'section-structure-mismatch');
@@ -614,7 +611,7 @@ describe('Issue #247 PR5 — buildBaselineFromStatus structure mismatch entry', 
 
   it('structureFingerprint matches computeStructureFingerprint helper', () => {
     const status = statusWithStructureMismatch();
-    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
     const entry = baseline.entries[0];
     const expected = computeStructureFingerprint({
       structureCategory: 'kind-multiset',
@@ -644,19 +641,19 @@ describe('Issue #247 PR5 — buildBaselineFromStatus structure mismatch entry', 
         },
       ],
     };
-    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
     assert.equal(baseline.entries.length, 0);
   });
 });
 
-describe('Issue #247 PR5 — buildBaselineFromStatus source unusable entry', () => {
-  const PR5_FP = 'sha256:' + 'f'.repeat(64);
-  const fpMap = new Map([['salesforce-testing/faq', PR5_FP]]);
-  const pr5Meta = {
-    runId: 'pr5',
+describe('buildBaselineFromStatus: source unusable entry', () => {
+  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
+  const fpMap = new Map([['salesforce-testing/faq', VALID_SNAPSHOT_FP]]);
+  const baselineMeta = {
+    runId: 'baseline-run',
     generatedAt: '2026-04-06T03:00:00Z',
     reviewAfterOverride: '2026-10-06',
-    rationale: 'pr5',
+    rationale: 'baseline',
   };
 
   it('emits a source unusable entry with usabilityReason from issue.usabilitySignals.reason', () => {
@@ -676,7 +673,7 @@ describe('Issue #247 PR5 — buildBaselineFromStatus source unusable entry', () 
         },
       ],
     };
-    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
     assert.equal(baseline.entries.length, 1);
     const entry = baseline.entries[0];
     assert.equal(entry.issueType, 'source-unusable');
@@ -700,21 +697,21 @@ describe('Issue #247 PR5 — buildBaselineFromStatus source unusable entry', () 
         },
       ],
     };
-    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
     assert.equal(baseline.entries.length, 0);
   });
 });
 
-describe('Issue #247 PR5 — sortEntries with structure / source unusable types', () => {
-  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+describe('sortEntries: structure / source unusable types', () => {
+  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const fpMap = new Map([
-    ['some/page', PR5_FP],
+    ['some/page', VALID_SNAPSHOT_FP],
   ]);
-  const pr5Meta = {
-    runId: 'pr5',
+  const baselineMeta = {
+    runId: 'baseline-run',
     generatedAt: '2026-04-06T03:00:00Z',
     reviewAfterOverride: '2026-10-06',
-    rationale: 'pr5',
+    rationale: 'baseline',
   };
 
   it('sorts structure mismatch entries by sectionIndex within slug', () => {
@@ -746,7 +743,7 @@ describe('Issue #247 PR5 — sortEntries with structure / source unusable types'
         },
       ],
     };
-    const baseline = buildBaselineFromStatus(status, fpMap, pr5Meta);
+    const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
     const out = serializeBaseline(baseline);
     // sectionIndex=1 が先に来る
     const idx1 = out.indexOf('"sectionIndex": 1');
@@ -757,13 +754,10 @@ describe('Issue #247 PR5 — sortEntries with structure / source unusable types'
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — parseArgs / --types partial mode
-//
-// 既存 segment-* エントリの reviewAfter を意図せず shift させずに、
-// 新 4 type 向けの entry だけを再生成するモード (§7.4)。
+// parseArgs: --types partial mode
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — parseArgs --types partial mode', () => {
+describe('parseArgs: --types partial mode', () => {
   it('parses --types=<csv> into a string[] of issue types', () => {
     const args = parseArgs([
       '--types=section-structure-mismatch,segment-order-mismatch',
@@ -795,8 +789,8 @@ describe('Issue #247 PR5 — parseArgs --types partial mode', () => {
   });
 });
 
-describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
-  const PR5_FP = 'sha256:' + 'f'.repeat(64);
+describe('mergePartialBaselineByType', () => {
+  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const SEG_FP = 'sha256:' + 'c'.repeat(64);
 
   const existing = {
@@ -815,7 +809,7 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
         enSourceFingerprint: SEG_FP,
         jaSourceFingerprint: null,
         missingTokens: null,
-        snapshotFingerprint: PR5_FP,
+        snapshotFingerprint: VALID_SNAPSHOT_FP,
         inconclusiveCategory: null,
         inconclusiveReason: null,
         // 重要: 既存 segment-* エントリの reviewAfter は touch 禁止 (§7.4)
@@ -828,7 +822,7 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
     const newStructureEntry = {
       slug: 'running-tests/the-command-line-cli',
       issueType: 'section-structure-mismatch',
-      snapshotFingerprint: PR5_FP,
+      snapshotFingerprint: VALID_SNAPSHOT_FP,
       reviewAfter: '2026-10-06',
       sectionIndex: 7,
       sectionPath: 'CLI Installation > Basic CLI command',
@@ -841,8 +835,8 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
       [newStructureEntry],
       {
         generatedAt: '2026-04-06T03:00:00Z',
-        generatedFromRunId: 'pr5-run',
-        rationale: 'pr5 partial',
+        generatedFromRunId: 'baseline-run',
+        rationale: 'partial baseline',
       },
     );
     assert.equal(merged.entries.length, 2);
@@ -865,7 +859,7 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
         {
           slug: 'running-tests/the-command-line-cli',
           issueType: 'section-structure-mismatch',
-          snapshotFingerprint: PR5_FP,
+          snapshotFingerprint: VALID_SNAPSHOT_FP,
           reviewAfter: '2026-10-06',
           sectionIndex: 7,
           sectionPath: 'CLI',
@@ -880,8 +874,8 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
       [],
       {
         generatedAt: '2026-04-06T03:00:00Z',
-        generatedFromRunId: 'pr5-run',
-        rationale: 'pr5 partial',
+        generatedFromRunId: 'baseline-run',
+        rationale: 'partial baseline',
       },
     );
     assert.equal(merged.entries.length, 1);
@@ -895,8 +889,8 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
       [],
       {
         generatedAt: '2026-04-06T03:00:00Z',
-        generatedFromRunId: 'pr5-run',
-        rationale: 'pr5 partial',
+        generatedFromRunId: 'baseline-run',
+        rationale: 'partial baseline',
       },
     );
     assert.equal(merged.entries.length, 1);
@@ -906,15 +900,10 @@ describe('Issue #247 PR5 — mergePartialBaselineByType', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 post-merge — validateTypesArg helper contract
-//
-// main() は process.argv.slice(2) を直読みするので main() 自体は直接
-// テストできない。その代わりに --types CSV を検証する純粋関数を切り出し、
-// ここで allowlist / 空配列 / typo をピン止めする。codex review に従った
-// 設計で、CLI wiring はこの helper を呼ぶ thin wrapper に留める。
+// validateTypesArg helper contract
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 post-merge — validateTypesArg', () => {
+describe('validateTypesArg', () => {
   let validateTypesArg;
   before(async () => {
     ({ validateTypesArg } = await import('../lib/source_parity_baseline.mjs'));
@@ -943,7 +932,7 @@ describe('Issue #247 post-merge — validateTypesArg', () => {
     assert.match(result.error, /foo-bar/);
   });
 
-  it('returns { ok: true } for the 4 PR5 migration types', () => {
+  it('returns { ok: true } for the 4 allowlisted types', () => {
     for (const t of [
       'section-structure-mismatch',
       'segment-order-mismatch',
@@ -958,7 +947,7 @@ describe('Issue #247 post-merge — validateTypesArg', () => {
     }
   });
 
-  it('returns { ok: true } for a combination of the 4 PR5 migration types', () => {
+  it('returns { ok: true } for a combination of allowlisted types', () => {
     const result = validateTypesArg([
       'section-structure-mismatch',
       'snapshot-incomplete',
@@ -966,7 +955,7 @@ describe('Issue #247 post-merge — validateTypesArg', () => {
     assert.deepEqual(result, { ok: true });
   });
 
-  it('rejects legacy segment-* types (tightest allowlist — PR5 migration only)', () => {
+  it('rejects legacy segment-* types (tightest allowlist)', () => {
     // segment-missing / segment-extra / segment-shifted / segment-untranslated /
     // segment-token-gap / segment-inconclusive は --types 経路では扱わない。
     // これらを書き換えたいときは --regenerate か --slug で処理する。
@@ -993,7 +982,7 @@ describe('Issue #247 post-merge — validateTypesArg', () => {
   });
 });
 
-describe('Issue #247 post-merge — parseArgs + validateTypesArg integration', () => {
+describe('parseArgs + validateTypesArg integration', () => {
   let validateTypesArg;
   before(async () => {
     ({ validateTypesArg } = await import('../lib/source_parity_baseline.mjs'));

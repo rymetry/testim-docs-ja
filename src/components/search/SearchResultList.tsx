@@ -1,4 +1,4 @@
-/** Presentational component: renders grouped search results with term highlighting and status indicators. */
+/** 検索結果をグループ表示し、ヒット語の強調と状態表示を行う。 */
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { ResultGroup, SearchIndexStatus, SearchResult } from './types';
 
@@ -14,7 +14,7 @@ type SearchResultListProps = {
   totalCount: number;
 };
 
-/** Split text on matched search terms and wrap matches in <mark> elements. Terms shorter than 2 chars are ignored to avoid excessive CJK highlighting. */
+/** ヒット語ごとに text を分割し、一致箇所を `<mark>` で包む。2 文字未満は過剰反応を避けるため無視する。 */
 function highlightText(text: string, terms: string[]): ReactNode {
   if (!text) return text;
   const safeTerms = [...terms.filter((term) => term.length >= 2)].sort(

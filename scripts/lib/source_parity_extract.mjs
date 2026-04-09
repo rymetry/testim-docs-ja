@@ -1,4 +1,4 @@
-/** Markdown structure extraction and parsing functions for source parity analysis. */
+/** source parity 用に Markdown 構造を抽出・解析する補助関数群。 */
 import { extractSlug as extractSlugFromUrl } from './madcap_toc.mjs';
 import { resolveToFullSlug } from './project.mjs';
 import { FENCE_LINE_RE } from './source_parity_types.mjs';
@@ -90,7 +90,7 @@ export function extractStepCounts(body) {
 
     const trimmed = line.trim();
 
-    // Skip markdown pipe table rows so list markers inside cells are not counted.
+    // Markdown の pipe table 行は、セル内の記号を箇条書きとして数えない。
     if (/^\|/.test(trimmed)) continue;
 
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
@@ -180,7 +180,7 @@ export function extractBulletCounts(body) {
 
     const trimmed = line.trim();
 
-    // Skip markdown pipe table rows so list markers inside cells are not counted.
+    // Markdown の pipe table 行は、セル内の記号を箇条書きとして数えない。
     if (/^\|/.test(trimmed)) continue;
 
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
@@ -285,11 +285,7 @@ export function classifyLine(line, state = {}) {
     return { kind: 'unordered-list', nextState };
   }
   if (/^!\[/.test(trimmed) || /<img\b/i.test(trimmed) || /<Image\b/.test(trimmed)) {
-    // Issue #247 post-merge re-review — MadCap→turndown で loose text が
-    // 画像と同じ行に連結されるケース (例: `![](img.png)The results are...`)
-    // では、画像の後ろに実質的なテキストが残る。その場合は paragraph-start
-    // として計上し、別行に分けた JA 段落と count を揃える。`![...)` markdown
-    // syntax のときだけ追跡する (HTML `<img>` は別途処理)。
+    // 画像記法の後ろに本文が続く行は paragraph-start として数える。
     if (/^!\[/.test(trimmed)) {
       const afterImage = trimmed.replace(/^!\[[^\]]*\]\([^)]*(?:\s+"[^"]*")?\)\s*/, '');
       if (afterImage.length > 0 && !/^!\[/.test(afterImage)) {
@@ -503,22 +499,21 @@ export function extractHtmlTables(body) {
   return tables;
 }
 
-// Relative `.htm` links can omit parent segments, so normalize them through the
-// project-level slug resolver before comparing invariant URL tokens.
+// 相対 `.htm` link は親パスを省略することがあるため、比較前に full slug へ正規化する。
 function normalizeUrlToken(url) {
   if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
     const slug = extractSlugFromUrl(url.replace(/[?#].*$/, ''));
     if (slug) return `/docs/${resolveToFullSlug(slug)}`;
   }
   if (/\.htm(?:[?#]|$)/.test(url)) {
-    // Strip relative path prefixes (../../, ../, ./) and fragment/query
+    // 相対 prefix (../../, ../, ./) と fragment/query を落とす。
     const stripped = url.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '').replace(/[?#].*$/, '');
-    // Already root-relative /content/ paths pass through directly
+    // すでに root-relative な /content/ path はそのまま使う。
     const contentPath = stripped.startsWith('/content/') ? stripped : `/content/${stripped}`;
     const slug = extractSlugFromUrl(contentPath);
     if (slug) return `/docs/${resolveToFullSlug(slug)}`;
   }
-  // Normalize /docs/ paths by stripping fragments (EN/JA fragments differ by design)
+  // /docs/ path は fragment を落として比較する。EN/JA で fragment がずれるため。
   if (url.startsWith('/docs/') && url.includes('#')) {
     return url.replace(/#.*$/, '');
   }

@@ -1,4 +1,4 @@
-/** rehype plugin: wraps <table> elements in a responsive overflow-x-auto div. */
+/** rehype plugin: `<table>` を横スクロール可能な `overflow-x-auto` の div で包む。 */
 import type { Element, Parent, Root } from 'hast';
 import type { Plugin } from 'unified';
 import { SKIP, visit } from 'unist-util-visit';
@@ -39,7 +39,7 @@ const rehypeWrapTable: Plugin<[], Root> = () => {
         children: [node],
       };
 
-      // rehype visitors require in-place AST mutation (unist-util-visit contract)
+      // rehype visitor は AST をその場で書き換える必要がある。
       parent.children[index] = wrapper;
       return SKIP;
     });

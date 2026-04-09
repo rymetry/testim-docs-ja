@@ -1,5 +1,5 @@
 /**
- * Issue #247 PR6 — Confirmed zero-drift ページの false-positive sentinel。
+ * Confirmed zero-drift ページの false-positive sentinel。
  *
  * 対象ページ (plan 作成時に実測で確定):
  *   - settings/cli-prerequisites
@@ -7,7 +7,7 @@
  *   - salesforce-testing/salesforce-testing-getting-started
  *     (enSegments=79, jaSegments=79, structureIssues=0, totalIssues=0)
  *
- * 両ページとも EN/JA が完全整合している clean page で、PR5 base で
+ * 両ページとも EN/JA が完全整合している clean page で、
  * parity-baseline.json / parity-acknowledgements.json のどちらにも
  * エントリが無い。comparator が正しく動いている限り、structure issue は
  * 0 件かつ segment-* diff も 0 件のはず。
@@ -49,9 +49,6 @@ const JA_CONTENT_DIR = join(ROOT, 'src/content/docs');
 
 // ---------------------------------------------------------------------------
 // ヘルパ: JA md の frontmatter を除去し本文だけを返す。
-// source_parity_source_usability_fixtures.test.mjs (PR3) と同じ実装を
-// 複製する。lib への切り出しは production code change を伴うため PR6 では
-// 行わない。
 // ---------------------------------------------------------------------------
 function extractJaBody(mdContent) {
   const withoutFm = mdContent.replace(/^---[\s\S]*?---\n/m, '');
@@ -82,7 +79,6 @@ function runStructureComparator(slug) {
 // 実測 (`npm run check:parity` 下で 0 diffs を確認) で固定してある。
 // ---------------------------------------------------------------------------
 const CLEAN_PAGE_SLUGS = Object.freeze([
-  // PR6 時点の既存 sentinel (2 ページ)
   'settings/cli-prerequisites',
   'salesforce-testing/salesforce-testing-getting-started',
   // Phase H.1 追加 (structure variety 別) — 全て実測で zero-drift 確認済み
@@ -102,7 +98,7 @@ for (const slug of CLEAN_PAGE_SLUGS) {
       assert.equal(
         alignment.inconclusive ?? false,
         false,
-        `${slug}: alignment.inconclusive === true になった — PR5 base では解析成功していたはず`,
+        `${slug}: alignment.inconclusive === true になった`,
       );
     });
 

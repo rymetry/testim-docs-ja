@@ -1,4 +1,4 @@
-/** React hook: search modal lifecycle — Cmd+K toggle, Escape close, focus trap, and scroll lock. */
+/** 検索モーダルのライフサイクルを扱う hook。Cmd+K、Escape、focus trap、scroll lock を提供する。 */
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
 
@@ -28,12 +28,12 @@ export function useModalBehavior({
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const isOpenRef = useRef(isOpen);
 
-  // useEffectEvent reads the latest onClose without re-subscribing effects
+  // effect の再登録を増やさず、常に最新の onClose を参照する。
   const runOnClose = useEffectEvent(() => {
     onClose?.();
   });
 
-  // useCallback for stable identity — safe to pass as JSX event handler props
+  // stable identity を保ち、JSX のイベントハンドラにそのまま渡せるようにする。
   const openModal = useCallback(() => {
     const active = document.activeElement;
     previousFocusRef.current =

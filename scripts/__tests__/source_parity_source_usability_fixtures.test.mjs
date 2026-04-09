@@ -1,11 +1,10 @@
 /**
- * detectSourceUsability の fixture integration テスト (Issue #247 PR3 → post-merge 改訂 →
- * Issue #247 End-to-End 完全解消 post-review 改訂)。
+ * detectSourceUsability の fixture integration テスト。
  *
  * 設計書 §4.5.2 に対応。実 snapshot ファイルを読み込んで detector を呼び、
  * type / reason を assert する。
  *
- * Issue #247 End-to-End 完全解消後の契約:
+ * 現行契約:
  *   - `salesforce-testing/salesforce-testing-overview` → **usable** (detector returns null)
  *     (JA を EN shallow snapshot に合わせて trim したため、EN/JA 共に minimal で
  *      shallow-snapshot heuristic の発火条件を満たさない)
@@ -55,7 +54,7 @@ function extractJaBody(mdContent) {
 // ---------------------------------------------------------------------------
 
 describe('detectSourceUsability fixture: salesforce-testing/salesforce-testing-overview', () => {
-  it('Issue #247 End-to-End 解消後: JA を EN shallow snapshot に合わせて trim 済みのため usability issue は出ない', () => {
+  it('JA を EN shallow snapshot に合わせて trim 済みのため usability issue は出ない', () => {
     const rawEnHtml = readFileSync(
       join(SNAPSHOTS_DIR, 'salesforce-testing/salesforce-testing-overview.html'),
       'utf8',

@@ -514,19 +514,17 @@ describe('preprocessEnHtml real snapshot fixtures', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 post-merge — normalizeEscapedFaqDetails
+// normalizeEscapedFaqDetails
 //
 // MadCap が `<details><summary>Q</summary>body</details>` を複数 <p> に跨って
 // escape 出力する FAQ アコーディオンを、preprocessor 段階で valid sibling
-// `<h2>/<p>` block へ再構成する変換を pin する。Finding 9-14 の積み上げで
-// 「extractor が DOM repair に頼らず heading を拾える」「coding-assistant の
-// sample prompt が <h2> に昇格しない」を both pin する。
+// `<h2>/<p>` block へ再構成する変換を pin する。
 // ---------------------------------------------------------------------------
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', () => {
+describe('normalizeEscapedFaqDetails', () => {
   let extractSegmentsFromHtml;
   before(async () => {
     ({ extractSegmentsFromHtml } = await import('../lib/source_parity_segments_en.mjs'));
@@ -536,8 +534,7 @@ describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', 
   const SNAPSHOTS_DIR = join(ROOT_DIR, 'snapshots/en/content');
 
   // ---------------------------------------------------------------------
-  // narrow fixture (実 faq 構造の抜粋 — escaped <b> を含むことが Finding 11 の
-  // 保険)。
+  // narrow fixture (実 faq 構造の抜粋。escaped <b> が残るケースの回帰防止)。
   // ---------------------------------------------------------------------
 
   it('narrow fixture: valid sibling <h2>/<p> block を生成し、extractor でも heading を拾える', () => {
@@ -558,7 +555,7 @@ describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', 
     assert.equal(out.includes('&lt;summary&gt;'), false);
     assert.equal(out.includes('&lt;/summary&gt;'), false);
     assert.equal(out.includes('&lt;b&gt;'), false);
-    // Finding 14: invalid `<p><h2>` ネストを作らないこと
+    // invalid `<p><h2>` ネストを作らないこと
     assert.equal(/<p\b[^>]*>\s*<h2\b/i.test(out), false);
 
     // narrow fixture には extractor が h1 を skip した状態で h2 を 2 件生成する
@@ -569,8 +566,7 @@ describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', 
   });
 
   // ---------------------------------------------------------------------
-  // 実 snapshot を使った contract pin (Finding 11 への対抗 — narrow fixture が
-  // 現実を反映できていないときに備えて、実ファイルを直接読む)
+  // 実 snapshot を使った contract pin。narrow fixture だけに依存しない。
   // ---------------------------------------------------------------------
 
   it('real faq.html: invalid <p><h2> なし + extractor heading=5 + details-summary=0', () => {
@@ -584,7 +580,7 @@ describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', 
     assert.equal(out.includes('&lt;/details&gt;'), false);
     assert.equal(out.includes('&lt;summary&gt;'), false);
     assert.equal(out.includes('&lt;b&gt;'), false);
-    // Finding 14: invalid nesting を明示的に禁止
+    // invalid nesting を明示的に禁止
     assert.equal(/<p\b[^>]*>\s*<h2\b/i.test(out), false);
     // real <details> tag も残らない (faq は h2/p block に再構成されているので不要)
     assert.equal(/<details\b/i.test(out), false);
@@ -597,7 +593,7 @@ describe('Issue #247 post-merge — normalizeEscapedFaqDetails (Finding 9-14)', 
   });
 
   // ---------------------------------------------------------------------
-  // Finding 9 対応 — coding-assistant は normalize 対象外 (強い契約 pin)
+  // coding-assistant は normalize 対象外
   // ---------------------------------------------------------------------
 
   it('real coding-assistant.html: normalization は発火せず <h2> 注入ゼロ', () => {

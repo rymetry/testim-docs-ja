@@ -45,7 +45,7 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
 
-**Source-side debt の除外運用 (Issue #255)**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
+**Source-side debt の除外運用**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
 
 - snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)
 - fetch 成功時は recovery probe を実行 (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定。JA 非依存 — synthetic segments を使用)
@@ -116,7 +116,7 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 **audit-only signals**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `scripts/lib/source_parity_types.mjs` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
 
-**structure comparator (Issue #247)**: `alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに canonical block sequence を比較する。block 単位の語彙は `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種に凍結されており、segment 単位の list item / table cell は比較前に対応する list / table block に畳まれる。
+**structure comparator**: `alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに canonical block sequence を比較する。block 単位の語彙は `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種に凍結されており、segment 単位の list item / table cell は比較前に対応する list / table block に畳まれる。
 
 3 段階の fall-through で section あたり最大 1 件の diff を emit する:
 
@@ -126,7 +126,7 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 いずれかが発火すると後続 stage は short-circuit され、alignSegments の weighted LCS も呼ばれない (section body に対して structure issue と segment diff が二重発火しないため)。
 
-**baseline identity**: structure 系 entry の machine identity は **`sectionIndex` + `structureCategory` + `structureFingerprint`** の 3 つ組 (`buildBaselineKey` / `buildBaselineKeyFromEntry`)。`structureFingerprint` は `structureCategory` + `enKinds` + `jaKinds` (content-order では `contentPermutation`) を sha256 に畳み込む。`sectionPath` は entry に保存するが identity key には含めない (同一ページ内で同じ heading text が複数現れる場合に sectionPath が一意にならないため、PR5 Finding 2)。
+**baseline identity**: structure 系 entry の machine identity は **`sectionIndex` + `structureCategory` + `structureFingerprint`** の 3 つ組 (`buildBaselineKey` / `buildBaselineKeyFromEntry`)。`structureFingerprint` は `structureCategory` + `enKinds` + `jaKinds` (content-order では `contentPermutation`) を sha256 に畳み込む。`sectionPath` は entry に保存するが identity key には含めない。これは、同一ページ内で同じ heading text が複数現れる場合に `sectionPath` だけでは一意にならないため。
 
 **source unusability gate**: `detectSourceUsability()` は alignSegments 呼び出し前に EN snapshot の比較可能性を判定する。判定条件は以下:
 
@@ -138,7 +138,7 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 **acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。
 
-`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を保証する(Issue #247 post-merge)。
+`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を保証する。
 
 acknowledgement の対象外:
 
@@ -147,9 +147,9 @@ acknowledgement の対象外:
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
-**`--types` 契約 (Issue #247 post-merge 追加)**: `generate_parity_baseline.mjs --types=<csv>` は PR5 migration 専用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validateTypesArg` が fail-fast する。`scripts/__tests__/generate_parity_baseline.test.mjs` の `Issue #247 post-merge — validateTypesArg` suite が契約を pin。
+**`--types` 契約**: `generate_parity_baseline.mjs --types=<csv>` は structure/source-unusable 系の partial migration 用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validateTypesArg` が fail-fast する。`scripts/__tests__/generate_parity_baseline.test.mjs` の `validateTypesArg` suite が契約を固定している。
 
-**Orphan baseline entry の検出 (Issue #247 post-merge 追加)**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/__tests__/source_parity_orphan_integration.test.mjs` が pin する (temp dir 上の copy を使った isolated test)。
+**Orphan baseline entry の検出**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/__tests__/source_parity_orphan_integration.test.mjs` が固定している (temp dir 上の copy を使った isolated test)。
 
 **出力**: `parity-check-status.json`。
 
@@ -651,7 +651,7 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
   必須 top-level: `runId`, `checkedAt`, `sourceInventoryFingerprint`,
   `sidebarFingerprint`, `freshnessState`, `runScope`, `summary`, `pages`,
   `errors`。
-  `summary` に Issue #255 で追加された counter: `excludedPages` (= 既知
+  `summary` に追加された counter: `excludedPages` (= 既知
   source-side debt の合計) / `excludedBrokenPages` (未復旧) /
   `excludedRecoveredPages` (upstream 復旧候補)。`pages[n]` には debt slug に
   対してのみ `debtCategory: "source-side-debt"` と `recoveryProbe: {
@@ -722,7 +722,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/source_parity_page_coverage.test.mjs`     | lib/source_parity_page_coverage.mjs     |
 | `__tests__/source_sync_health.test.mjs`              | lib/source_sync_health.mjs              |
 | `__tests__/source_sync_exclusions.test.mjs`          | lib/source_sync_exclusions.mjs          |
-| `__tests__/source_parity_source_side_debt.test.mjs`  | Issue #255 source-side debt 契約統合    |
+| `__tests__/source_parity_source_side_debt.test.mjs`  | source-side debt 契約統合               |
 | `__tests__/source_parity_segments_shared.test.mjs`   | lib/source_parity_segments_shared.mjs   |
 | `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
 | `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |

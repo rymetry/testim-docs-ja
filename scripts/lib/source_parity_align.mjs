@@ -1,68 +1,32 @@
 /**
- * Section-anchored exact diff engine for canonical segments (Issue #225).
+ * セクション単位で canonical segment の exact diff を計算する。
  *
- * Compares an EN segment sequence to a JA segment sequence and emits exact
- * `parityDiff` records for each minimal divergence:
+ * EN segment 列と JA segment 列を比較し、最小差分を `ParityDiff` として返す。
  *
- *   - segment-missing       EN has a body segment, JA does not
- *   - segment-extra         JA has a body segment, EN does not
- *   - segment-shifted       Matched section pair appears to have swapped
- *                           bodies and cross-section token evidence exists
- *   - segment-untranslated  JA segment is still in English
- *   - segment-token-gap     Matched JA segment is missing an EN invariant token
+ *   - `segment-missing`      EN にあり JA に無い body segment
+ *   - `segment-extra`        JA にあり EN に無い body segment
+ *   - `segment-shifted`      section body が別 section と入れ替わった強い証拠がある
+ *   - `segment-untranslated` JA segment がまだ英語のまま残っている
+ *   - `segment-token-gap`    対応する JA segment に EN の invariant token が欠ける
  *
- * Algorithm
- * ---------
- *   1. Filter both sequences to gate-eligible kinds (plus `heading` itself,
- *      because headings are the section anchors).
- *   2. Split each filtered sequence into sections at every heading boundary.
- *      The first section is the "preface" — segments before any heading.
- *   3. If section counts disagree, return `inconclusive: true` so the caller
- *      can fall back to coarser signals instead of producing a cascade of
- *      bogus diffs across mis-aligned sections.
- *   4. For each (en, ja) section pair, run a section-content-validation pass:
- *      if both sides have invariant tokens, the current pair is disjoint, AND
- *      there is symmetric cross-section destination evidence, the bodies were
- *      probably swapped between sections — emit a `segment-shifted` diff and
- *      skip the within-section LCS for that pair (its results would be
- *      misleading).
- *   5. Otherwise, run a Hunt-Szymanski / classic LCS with a *content-aware*
- *      equality predicate (`segmentLikelyMatches`):
- *        a. Same kind is required.
- *        b. Identical sourceFingerprint OR identical textNorm → strong match
- *           (handles synthetic and rare exact-text-shared cross-language).
- *        c. Both sides have tokens that overlap → strong match.
- *        d. Both sides have tokens that DON'T overlap → strong non-match
- *           (these clearly aren't the same content).
- *        e. Otherwise (no distinguishing features) fall back to kind-only.
- *      The strong non-match rule is what stops the LCS from blindly pairing
- *      unrelated segments by kind alone — middle deletions in a section of
- *      distinguishable paragraphs now report the *correct* enIndex.
- *   6. Unmatched EN body segments → `segment-missing`. Unmatched JA body
- *      segments → `segment-extra` (or `segment-untranslated` when their
- *      text is still English-looking).
- *   7. For each LCS-matched pair, compare invariant tokens. EN tokens absent
- *      from JA are emitted as `segment-token-gap`. The JA side of the pair
- *      is additionally checked for `segment-untranslated` so a paragraph
- *      that kept the same kind but never got translated is still surfaced.
+ * 処理の流れ:
+ *   1. gate 対象 kind と `heading` だけを残す。
+ *   2. heading 境界で section に分割する。最初の section は preface。
+ *   3. section 数が合わなければ cascade を避けるため `inconclusive` にする。
+ *   4. 各 (en, ja) section で cross-section の token 証拠を見て、
+ *      body swap の可能性が高ければ `segment-shifted` を 1 件だけ返す。
+ *   5. それ以外は重み付き LCS で section 内の対応付けを作る。
+ *   6. unmatched な EN body は `segment-missing`、
+ *      unmatched な JA body は `segment-extra` または `segment-untranslated`。
+ *   7. 対応付いた pair では invariant token の欠落を `segment-token-gap` として出す。
  *
- * Heading segments are NOT diffed individually — heading count parity is
- * already enforced by the canonical segment boundary tests, and the section
- * split here is what makes the within-section LCS local rather than global.
- * The result is
- * "no cascade": a single mutation in one section produces ≤ a small constant
- * number of diffs and never bleeds into adjacent sections.
+ * heading 自体は個別 diff しない。section 境界としてだけ使い、
+ * section 内 LCS を局所化して「1 箇所の変化が隣 section に波及しない」ことを優先する。
  *
- * Scope boundary:
- *   Tokenless cross-section body swaps are intentionally outside the exact
- *   gate. With EN as the source of truth, this module hard-gates
- *   section-local structural drift plus token-anchored cross-section shifts.
- *   When adjacent tokenless prose-only sections are too ambiguous to
- *   distinguish from a body swap, the module returns `inconclusive` rather
- *   than silently green-lighting the page. Fully resolving those cases still
- *   requires semantic evidence (translation memory, embeddings, etc.).
+ * token を持たない prose-only section 同士の入れ替わりは exact gate の対象外。
+ * 判断材料が弱いときは green にせず `inconclusive` を返す。
  *
- * Pure functions only: inputs are never mutated.
+ * 純粋関数として実装し、入力配列は mutate しない。
  *
  * @module source_parity_align
  */
@@ -78,14 +42,13 @@ import { compareSectionStructure } from './source_parity_structure.mjs';
 
 const GATE_KIND_SET = new Set(GATE_ELIGIBLE_KINDS);
 
-// Minimum prose length (after stripping invariant tokens and link refs)
-// before a JA segment is allowed to be classified as untranslated. Short
-// strings like `OK` or `URL:` would otherwise produce false positives.
+// JA segment を untranslated と判定する最小 prose 長。
+// `OK` や `URL:` のような短い断片で誤検知しないために使う。
 const MIN_UNTRANSLATED_PROSE_LENGTH = 15;
 const MIN_UNTRANSLATED_WORD_COUNT = 3;
 
 // ---------------------------------------------------------------------------
-// Section split
+// セクション分割
 // ---------------------------------------------------------------------------
 
 /**
@@ -94,18 +57,16 @@ const MIN_UNTRANSLATED_WORD_COUNT = 3;
 
 /**
  * @typedef {object} Section
- * @property {number} index             0-based section index in document order
- * @property {string} sectionPath       sectionPath from the heading (or '' for preface)
- * @property {string} headingText       normalized heading text (or '' for preface)
- * @property {Segment[]} body           non-heading body segments under this section
+ * @property {number} index             文書順の 0-based section index
+ * @property {string} sectionPath       heading 由来の sectionPath (`''` は preface)
+ * @property {string} headingText       正規化済み heading text (`''` は preface)
+ * @property {Segment[]} body           この section 配下の non-heading body segment
  */
 
 /**
- * Split a flat segment list into sections bounded by heading segments.
- * The first section is always the preface (segments before any heading);
- * its sectionPath / headingText are empty strings. Heading segments
- * themselves are NOT included in any section's body — they only define
- * section boundaries.
+ * flat な segment 列を heading 境界ごとに section へ分割する。
+ * 先頭 section は preface で、heading 前の segment を受け持つ。
+ * heading 自体は body に含めず、境界としてだけ使う。
  *
  * @param {Segment[]} segments
  * @returns {Section[]}
@@ -131,9 +92,9 @@ function splitIntoSections(segments) {
 }
 
 /**
- * Filter to gate-eligible body kinds plus headings (the latter are needed as
- * section anchors). All other kinds — code-block, image, image-caption — are
- * dropped before alignment runs.
+ * gate 対象の body kind と heading だけを残す。
+ * heading は section anchor に必要で、それ以外の `code-block` / `image` /
+ * `image-caption` などは alignment 前に落とす。
  *
  * @param {Segment[]} segments
  * @returns {Segment[]}
@@ -146,41 +107,38 @@ function filterForAlignment(segments) {
 }
 
 // ---------------------------------------------------------------------------
-// Local alignment — weighted LCS that prefers strong content matches
+// ローカル alignment: 強い内容一致を優先する重み付き LCS
 // ---------------------------------------------------------------------------
 
 /**
- * Compute the maximum-weight monotonic alignment of two arrays under a
- * scalar score function, returning the matched index pairs in order.
- * Conceptually a weighted Longest Common Subsequence: each candidate pair
- * (a[i], b[j]) has a `score` (≥ 0 to be considered a match), and the DP
- * finds the matching that maximizes the sum of scores along a monotonic
- * (i++, j++) path.
+ * スカラー score 関数の下で、2 配列の最大重み単調 alignment を求める。
+ * 結果は matched index pair を順序付きで返す。
  *
- * Why weighted instead of plain boolean LCS:
- *   - The boolean predicate forces ties to be resolved by traceback bias
- *     (always picking the rightmost or leftmost match), which collapses
- *     middle deletions onto enIndex=0 / enIndex=N-1.
- *   - With per-pair scores we can express "fingerprint match >> token
- *     overlap >> position similarity" so the DP naturally pairs strong
- *     anchors first and lets weak position-aware fallbacks fill the gaps.
+ * 概念的には weighted LCS で、各候補 pair `(a[i], b[j])` が `score` を持ち、
+ * DP が `(i++, j++)` の単調 path 上で score 合計が最大になる対応を選ぶ。
  *
- * Time / space: O(n * m). Sections in practice carry ≤ 100 segments, so
- * this stays sub-millisecond per section.
+ * boolean LCS にしない理由:
+ *   - true/false だけだと tie が traceback 偏りで解消され、
+ *     中央の欠落が `enIndex=0` や `enIndex=N-1` に潰れやすい
+ *   - pair ごとの score を持たせると、
+ *     `fingerprint 一致 > token overlap > 位置の近さ` を表現でき、
+ *     強い anchor を先に確定して弱い fallback を後段に回せる
+ *
+ * 計算量は O(n * m)。実運用では 1 section あたり 100 segment 以下なので許容する。
  *
  * @template T
  * @param {readonly T[]} a
  * @param {readonly T[]} b
  * @param {(x: T, y: T, i: number, j: number, n: number, m: number) => number} score
- * @returns {Array<[number, number]>} matched (a-index, b-index) pairs
+ * @returns {Array<[number, number]>} matched な `(a-index, b-index)` pair
  */
 function weightedLcs(a, b, score) {
   const n = a.length;
   const m = b.length;
   if (n === 0 || m === 0) return [];
 
-  // Pre-compute the score table once so traceback can re-read scores
-  // without invoking the score function a second time.
+  // score table は先に 1 回だけ計算し、traceback では再利用する。
+  // score 関数を 2 度呼ばずに済むようにするため。
   const scores = new Array(n);
   for (let i = 0; i < n; i++) {
     const row = new Float64Array(m);
@@ -232,18 +190,13 @@ function weightedLcs(a, b, score) {
 }
 
 // ---------------------------------------------------------------------------
-// Content-aware match predicate
+// 内容を加味した match 判定
 // ---------------------------------------------------------------------------
-// `scoreSegmentMatch` とスコア重み定数は Issue #247 PR2 で
-// `source_parity_align_scoring.mjs` に移した。structure comparator が
-// 同一のスコア階層を共有できるようにするための抽出で、align.mjs への
-// 循環依存を作らないことが目的。スコア表と設計根拠の詳細はそのモジュールの
-// docstring を参照。
+// align と structure comparator で同じスコア階層を共有する。
 
 /**
- * Aggregate the union of invariant tokens contributed by every body segment
- * in a section. Used by the section-content validation pass to detect body
- * swaps between sections that share heading levels and segment kind sequences.
+ * section 内の全 body segment が持つ invariant token の和集合を集める。
+ * heading level や segment kind が似ている section 間で body swap を検出するときに使う。
  *
  * @param {Section} section
  * @returns {Set<string>}
@@ -289,18 +242,17 @@ function pairwiseLengthSimilaritySum(a, b) {
 const TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN = 0.01;
 
 // ---------------------------------------------------------------------------
-// Untranslated heuristic
+// untranslated 判定ヒューリスティック
 // ---------------------------------------------------------------------------
 
 /**
- * Decide whether a JA segment's normalized text looks like untranslated
- * English. Backtick-quoted invariants and link destinations are stripped
- * first so a normally-translated paragraph that contains a CLI flag or URL
- * is not mistaken for residue. The remainder must contain ≥ 15 prose
- * characters AND ≥ 3 word-like ASCII tokens AND zero CJK characters before
- * we flag it.
+ * JA segment の正規化 text が、未翻訳の英語らしく見えるかを判定する。
+ * 先に backtick 内 invariant や link destination を落とし、
+ * CLI flag や URL を含むだけの正常な訳文を residue と誤判定しないようにする。
  *
- * @param {string} text  JA-side normalized text from createSegment
+ * 判定には、15 文字以上の prose、3 個以上の ASCII 単語、CJK 文字 0 個を要求する。
+ *
+ * @param {string} text JA 側の正規化済み text (`createSegment` 由来)
  */
 function looksUntranslated(text) {
   if (typeof text !== 'string' || text.length < MIN_UNTRANSLATED_PROSE_LENGTH) {
@@ -323,7 +275,7 @@ function looksUntranslated(text) {
 }
 
 // ---------------------------------------------------------------------------
-// Diff factories — keep the schema in one place
+// 差分生成ヘルパー群。schema を 1 箇所に寄せる
 // ---------------------------------------------------------------------------
 
 function buildSectionLabel(sectionPath) {
@@ -417,11 +369,11 @@ function diffTokenGap(section, enSeg, jaSeg, enLocalIndex, jaLocalIndex, missing
 }
 
 // ---------------------------------------------------------------------------
-// Per-section alignment
+// section 単位 alignment
 // ---------------------------------------------------------------------------
 
 /**
- * Count how many tokens in `query` appear in `target`.
+ * `query` 内 token のうち、`target` にも現れる個数を数える。
  *
  * @param {Set<string>} query
  * @param {Set<string>} target
@@ -456,28 +408,20 @@ function findBestCrossSectionMatch(queryTokens, candidateSets, currentIndex) {
 }
 
 /**
- * Look for evidence that this section's body was actually relocated to a
- * *different* section on the other side of the alignment. The check is
- * conservative on purpose: zero token overlap on its own is NOT enough
- * (a single mistranslated CLI flag would otherwise be flagged as a
- * structural shift). We require:
+ * 現在の section body が、別 section へ移ってしまった証拠を探す。
  *
- *   - The current section's en/ja token sets must be completely disjoint, AND
- *   - Some other EN section's tokens must overlap the current JA tokens at
- *     a meaningful threshold (≥ half of jaTokens, minimum 1 token), AND
- *   - Some other JA section's tokens must overlap the current EN tokens at
- *     the same threshold, AND
- *   - Both directions must identify the SAME destination section with a
- *     strictly better overlap than any second-best candidate.
+ * 判定は保守的にしており、「token overlap が 0」だけでは shift とみなさない。
+ * 誤訳した CLI flag 1 個だけで structure shift 扱いになるのを防ぐため、
+ * 次をすべて満たしたときだけ `segment-shifted` を出す。
  *
- * The uniqueness requirement is what lets a one-token section swap still be
- * classified as structural while suppressing common-token false positives.
+ *   - 現在の en/ja token 集合が完全に非交差
+ *   - 別の EN section に、現在 JA token の有意な重なり先がある
+ *   - 別の JA section に、現在 EN token の有意な重なり先がある
+ *   - その行き先が両方向で一致し、2 位候補より明確に強い
  *
- * If all three hold, return the destination indices so the caller can
- * emit a single `segment-shifted` diff. Otherwise return `null` and the
- * caller should fall through to normal LCS — the section is suspect, but
- * the right answer is `segment-token-gap` / `segment-missing` /
- * `segment-extra`, not a structural shift.
+ * 条件を満たさなければ通常の LCS へ落とす。怪しく見えても、
+ * 正しい答えが `segment-token-gap` / `segment-missing` / `segment-extra`
+ * のことがあるため。
  */
 function findBodySwapEvidence({
   currentEnIndex,
@@ -511,13 +455,12 @@ function findBodySwapEvidence({
 }
 
 /**
- * Even when other sections already produced exact diffs, adjacent free-form
- * tokenless sections may still be too ambiguous to certify as "no drift".
- * Only NEAR-TIE cases are
- * treated as ambiguous: if the current and swapped pairings are within a very
- * small relative margin under the only available non-semantic signal
- * (relative paragraph lengths), return an ambiguity record so the caller can
- * mark the page inconclusive instead of green.
+ * token を持たない隣接 section 同士は、exact diff が出ていなくても
+ * 「本当に差分なし」と言い切れないことがある。
+ *
+ * 利用できる非意味的 signal は段落長の近さしかないため、現在の組み合わせと
+ * swap 後の組み合わせが near tie なら曖昧扱いにし、green ではなく
+ * `inconclusive` に落とす。
  */
 function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
   const sectionHasDiff = new Set();
@@ -560,21 +503,12 @@ function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
 }
 
 /**
- * Align two paired sections and return their diff list. Headings are NOT in
- * the body — section identity is implicit from positional pairing.
+ * 対応する 2 つの section を比較し、section 内 diff を返す。
+ * heading は body に含めず、section の対応関係は位置で暗黙に決める。
  *
- * Section-content validation runs first: when there is *symmetric* evidence
- * that the section bodies were swapped with another pair of sections (zero
- * overlap with the matched partner AND meaningful overlap with a different
- * partner on the other side), we emit a single `segment-shifted` diff and
- * skip the within-section LCS. Without that destination evidence we fall
- * through to LCS so a single mistranslated token surfaces as
- * `segment-token-gap` rather than a misleading `segment-shifted`.
- *
- * The body LCS itself is now a *weighted* alignment — see scoreSegmentMatch
- * for the score hierarchy. The previous boolean LCS collapsed middle
- * deletions onto enIndex=0 in tokenless sections; the position-aware
- * weighted scoring fixes that regression.
+ * 先に body swap の証拠を確認し、十分なら `segment-shifted` を 1 件だけ返す。
+ * 証拠が足りない場合は重み付き LCS に落として token-gap / missing / extra を
+ * 素直に出す。
  *
  * @param {Section} enSection
  * @param {Section} jaSection
@@ -618,13 +552,13 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
     jaMatchedIndices.add(jIdx);
   }
 
-  // Unmatched EN body segments → segment-missing.
+  // unmatched な EN body segment は `segment-missing`。
   for (let i = 0; i < enBody.length; i++) {
     if (enMatchedIndices.has(i)) continue;
     diffs.push(diffMissing(enSection, enBody[i], i));
   }
 
-  // Unmatched JA body segments → segment-extra OR segment-untranslated.
+  // unmatched な JA body segment は `segment-extra` または `segment-untranslated`。
   for (let j = 0; j < jaBody.length; j++) {
     if (jaMatchedIndices.has(j)) continue;
     const seg = jaBody[j];
@@ -635,7 +569,7 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
     }
   }
 
-  // Matched pairs — token-gap and inline untranslated.
+  // 対応付いた pair では token-gap と inline untranslated を確認する。
   for (const [enIdx, jaIdx] of matched) {
     const enSeg = enBody[enIdx];
     const jaSeg = jaBody[jaIdx];
@@ -659,34 +593,34 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
 }
 
 // ---------------------------------------------------------------------------
-// Public API
+// 公開 API
 // ---------------------------------------------------------------------------
 
 /**
  * @typedef {object} ParityDiff
- * @property {string} type                one of segment-missing | segment-extra | segment-shifted | segment-untranslated | segment-token-gap
- * @property {string} sectionPath         EN-side section path
- * @property {number} sectionIndex        0-based section index in document order
- * @property {string} segmentKind         canonical kind of the affected segment, or 'section' for segment-shifted
- * @property {number|null} enIndex        section-local EN body index
- * @property {number|null} jaIndex        section-local JA body index
- * @property {number|null} enSegmentIndex per-(section,kind) EN segment index from createSegment
- * @property {number|null} jaSegmentIndex per-(section,kind) JA segment index from createSegment
- * @property {string|null} enSourceFingerprint  sha256 fingerprint of the EN segment raw text
- * @property {string|null} jaSourceFingerprint  sha256 fingerprint of the JA segment raw text
- * @property {string} detail              human-readable summary
- * @property {string} [confidence]              only on segment-shifted: 'high' (destination evidence)
- * @property {string[]} [missingTokens]          only on segment-token-gap
- * @property {string[]} [enSectionTokens]        only on high-confidence segment-shifted
- * @property {string[]} [jaSectionTokens]        only on high-confidence segment-shifted
+ * @property {string} type                diff 種別
+ * @property {string} sectionPath         EN 側 section path
+ * @property {number} sectionIndex        文書順の 0-based section index
+ * @property {string} segmentKind         対象 segment の canonical kind
+ * @property {number|null} enIndex        section 内 EN body index
+ * @property {number|null} jaIndex        section 内 JA body index
+ * @property {number|null} enSegmentIndex section/kind 単位の EN segment index
+ * @property {number|null} jaSegmentIndex section/kind 単位の JA segment index
+ * @property {string|null} enSourceFingerprint  EN raw text の sha256 fingerprint
+ * @property {string|null} jaSourceFingerprint  JA raw text の sha256 fingerprint
+ * @property {string} detail              人間向け要約
+ * @property {string} [confidence]        `segment-shifted` 時の確信度
+ * @property {string[]} [missingTokens]   `segment-token-gap` の欠落 token
+ * @property {string[]} [enSectionTokens] high-confidence shift 時の EN section token
+ * @property {string[]} [jaSectionTokens] high-confidence shift 時の JA section token
  */
 
 /**
  * @typedef {object} AlignResult
  * @property {ParityDiff[]} diffs
- * @property {number} sectionsAligned        number of section pairs aligned
- * @property {number} sectionsCompared       number of section pairs compared (== aligned in current impl)
- * @property {boolean} inconclusive          true when alignment had to bail out
+ * @property {number} sectionsAligned        alignment した section pair 数
+ * @property {number} sectionsCompared       比較した section pair 数
+ * @property {boolean} inconclusive          alignment を打ち切ったか
  * @property {string|null} inconclusiveReason
  * @property {'heading-count-mismatch'|'align-exception'|'tokenless-near-tie'|null} inconclusiveCategory
  * @property {{
@@ -695,14 +629,13 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  *   currentScore?: number,
  *   swapScore?: number,
  * } | null} inconclusiveMeta
- *   structured enum for baseline lookup. The free-text
- *   `inconclusiveReason` is for human display only and must NOT be used
- *   as a baseline identity key (it changes with wording tweaks).
+ *   baseline lookup 用の構造化 enum。
+ *   `inconclusiveReason` は表示用なので identity key に使わない。
  */
 
 /**
- * Align EN canonical segments to JA canonical segments and return the
- * resulting diff list. See module header for the algorithm.
+ * EN canonical segments と JA canonical segments を整列し、diff 一覧を返す。
+ * 詳細な契約は module header を参照。
  *
  * @param {Segment[]} enSegments
  * @param {Segment[]} jaSegments
@@ -729,50 +662,19 @@ export function alignSegments(enSegments, jaSegments) {
     };
   }
 
-  // Pre-compute per-section invariant token sets so the section-content
-  // validation pass in alignSection can run a cross-section best-match
-  // check without re-walking sections O(n^2) times.
+  // section ごとの invariant token 集合を先に作り、
+  // cross-section best-match 判定で毎回 section を再走査しない。
   const enSectionTokensList = enSections.map(collectSectionTokens);
   const jaSectionTokensList = jaSections.map(collectSectionTokens);
   const crossSectionInfo = { enSectionTokensList, jaSectionTokensList };
 
   const diffs = [];
   for (let i = 0; i < enSections.length; i++) {
-    // Issue #247 PR2 — alignSection (weighted LCS + cross-section body
-    // swap detection) を **先に** 走らせる。理由は shift と structure
-    // mismatch の二重発火を避けるため:
-    //
-    //   - cross-section body swap が起きると、section 0 と section 1 の
-    //     対応ペアは「multiset / kind 列が両方違う」という形で観測され、
-    //     何の対策もなければ structure comparator は section ごとに 1 件
-    //     ずつ section-structure-mismatch を emit してしまう。
-    //   - だが本当の診断は section-local な構造ドリフトではなく
-    //     **cross-section misalignment** で、これは alignSection の
-    //     `findBodySwapEvidence` が `segment-shifted` として既に表現
-    //     できる。そちらが headline で、structure-mismatch を被せると
-    //     `structureMismatch*` カウンタが汚れるだけ。
-    //
-    // したがって順序は (1) alignSection を先に走らせて section の diff
-    // を取る、(2) `segment-shifted` が emit されていれば structure
-    // comparator は **その section だけ** スキップする、(3) shift では
-    // ない section に対してのみ structure comparator を並行で走らせる。
-    //
-    // structure comparator を並行で生かす理由 (shift していない section):
-    //   1. 既存の構造ドリフト: 運用中の section には baseline 時点で既に
-    //      drift が残っていることがある。この状態で LCS を suppress すると、
-    //      後続の小さな mutation (1 段落削除、token drop) は新しい LCS diff
-    //      も新しい structure diff も生まず、recall benchmark から見ると
-    //      mutation が不可視になる。recall test の callout-paragraph-delete /
-    //      step-delete / section-body-swap を参照。
-    //   2. reviewer drill-down: structure mismatch は section レベルの
-    //      見出し情報だが、「どの block が」崩れたかを把握するには
-    //      segment-missing / segment-extra / segment-token-gap の per-segment
-    //      情報が依然として必要。
-    //
-    // section レベルの structure diff と segment レベルの LCS diff は
-    // downstream で別カウンタ族 (`structureMismatch*` と従来の segment-*)
-    // に分かれて集計されるので、shift していない section での共存は
-    // gate accounting で二重計上にならない。
+    // まず cross-section shift を判定する。
+    // body swap が起きた section では `segment-shifted` を headline にし、
+    // 同じ section の structure diff は重複報告になるため抑止する。
+    // shift していない section は structure diff と segment diff を併記し、
+    // section レベルの要約と drill-down を両方残す。
     const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
     const hasShift = sectionDiffs.some((d) => d.type === 'segment-shifted');
 
@@ -822,7 +724,7 @@ export function alignSegments(enSegments, jaSegments) {
 }
 
 // ---------------------------------------------------------------------------
-// Runtime adapter — convert ParityDiff records to the legacy issue shape
+// ランタイム変換: ParityDiff を旧 issue 形式へ変換する
 // ---------------------------------------------------------------------------
 
 const SEGMENT_ISSUE_SEVERITY = Object.freeze({
@@ -831,10 +733,7 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
   'segment-shifted': 'actionable',
   'segment-untranslated': 'actionable',
   'segment-token-gap': 'actionable',
-  // Issue #247 PR2 — source_parity_structure.mjs から emit される
-  // section 単位の structure diff。同じ issue adapter を通すことで
-  // reportable counter / baseline validation / ack wiring が副経路を
-  //作らずそのまま拾えるようにしている。
+  // section 単位の structure diff も同じ adapter に流す。
   'section-structure-mismatch': 'actionable',
   'segment-order-mismatch': 'actionable',
 });
@@ -851,21 +750,10 @@ const SEGMENT_ISSUE_SEVERITY = Object.freeze({
  * (`enSegmentIndex` / `jaSegmentIndex` / fingerprint / missingTokens) は
  * そのまま forward して、downstream report が drill-down できるようにする。
  *
- * Issue #247 PR2 → PR5 — section 単位の structure diff (`scope: 'section'`
- * で `segmentKind` フィールドを持たない) は独自の構造化 payload
- * (`structureCategory` / `enKinds` / `jaKinds` / `enSegmentCount` /
- * `jaSegmentCount`、option で `contentPermutation`) を持っていて、PR5
- * baseline migration でこのフィールドを identity key に hash する
- * (`source_parity_baseline.mjs::computeStructureFingerprint` 参照)。
- * adapter は **そのまま** コピーして forward する。これらの diff に
- * `segmentKind` を合成しては **絶対にならない** — `scope: 'section'` を
- * 導入した目的はまさに block 単位の `segmentKind` (paragraph / list /
- * callout) を section 単位の issue family で汚染しないためなので、
- * ここで segmentKind を混ぜると契約崩壊。
+ * section 単位の structure diff は独自 payload を持つので、そのまま転送する。
+ * `segmentKind` を補わず、section スコープの契約を維持する。
  *
- * segment-* 系 issue は `summarizeParityResults` の gate accounting を
- * そのまま通る。cutover 前の drift は `parity-baseline.json` で frozen に
- * なる (`isFrozenByBaseline` 参照)。
+ * segment-* 系 issue は通常の gate 集計にそのまま流す。
  *
  * @param {ParityDiff[]} diffs
  * @returns {Array<object>}
@@ -876,10 +764,7 @@ export function parityDiffsToIssues(diffs) {
     const sectionLabel = diff.sectionPath || '(preface)';
     const severity = SEGMENT_ISSUE_SEVERITY[diff.type] ?? 'actionable';
 
-    // Issue #247 PR2 — section 単位 structure diff は専用の adapter 分岐に
-    // 流す。payload 形状が segment 単位 diff と構造的に違う (scope vs
-    // segmentKind、kind-multiset / sequence メタデータ) ので、segment 単位の
-    // フィールドを混ぜないように切り分ける必要がある。
+    // section 単位 diff は segment 単位 diff と payload が異なる。
     if (diff.scope === 'section') {
       const issue = {
         type: diff.type,
@@ -930,7 +815,7 @@ export function parityDiffsToIssues(diffs) {
   });
 }
 
-// Re-exports for tests / consumers that need direct access to the helpers.
+// helper へ直接アクセスしたい test / consumer 向けの re-export。
 export {
   weightedLcs as __weightedLcs,
   scoreSegmentMatch as __scoreSegmentMatch,

@@ -8,9 +8,9 @@ const ROOT = ROOT_DIR;
 const TRANS_DIR = path.join(ROOT, 'llm', 'translations');
 
 /**
- * Resolve a translation file's relative path to a path-based slug.
- * - Nested paths (containing '/') → exact-match only (no basename fallback)
- * - Flat files (no '/') → basename fallback via resolveSlug (deprecated)
+ * 翻訳ファイルの相対パスを path-based slug に解決する。
+ * - nested path (`/` を含む) は完全一致のみ
+ * - flat file は basename fallback を許容する
  * @param {string} relPath - path relative to TRANS_DIR (e.g. "overview/page.md")
  * @param {Record<string, {filePath:string}>} index - slug index from buildSlugIndex
  * @returns {string|null}
@@ -21,10 +21,10 @@ export function resolveTranslationSlug(relPath, index) {
 
   if (index[pathCandidate]) return pathCandidate;
 
-  // Nested paths must match exactly — no basename fallback
+  // nested path は完全一致のみ許可する。
   if (isNested) return null;
 
-  // Flat files: basename lookup within the provided index
+  // flat file は index 内で basename lookup する。
   const bn = path.basename(relPath, '.md');
   const matches = Object.keys(index).filter((s) => s.split('/').pop() === bn);
   if (matches.length === 1) {
@@ -38,8 +38,8 @@ export function resolveTranslationSlug(relPath, index) {
 }
 
 /**
- * Validate translated content before writing.
- * Returns null if valid, or a skip reason string if invalid.
+ * 翻訳結果を書き込む前に内容を検証する。
+ * 正常なら null、問題があれば skip 理由を返す。
  * @param {string} fm - frontmatter block from the current doc
  * @param {string} translated - raw translated content from LLM output
  * @returns {string|null}
@@ -49,7 +49,7 @@ export function validateTranslation(fm, translated) {
   const body = translated.trim();
   if (!body) return 'empty translation file';
   if (body.startsWith('# 翻訳タスク')) return 'untranslated prompt file (contains task header)';
-  // Detect actual YAML frontmatter block (---\n...\n---), not just a thematic break
+  // thematic break ではなく、実際の YAML frontmatter block だけを弾く。
   if (body.startsWith('---\n') && body.indexOf('\n---', 4) !== -1) {
     return 'translated body contains frontmatter block (double frontmatter risk)';
   }
@@ -57,8 +57,7 @@ export function validateTranslation(fm, translated) {
 }
 
 /**
- * Write content to a file atomically (write tmp → rename).
- * Uses a unique temp file in the same directory to ensure atomic rename.
+ * tmp 書き込み後に rename して atomic に保存する。
  * @param {string} filePath - target file path
  * @param {string} content - file content to write
  */
@@ -72,13 +71,13 @@ export function writeFileAtomic(filePath, content) {
     renamed = true;
   } finally {
     if (!renamed) {
-      try { fs.unlinkSync(tmpPath); } catch { /* write failed, tmp may not exist */ }
+      try { fs.unlinkSync(tmpPath); } catch { /* 書き込み失敗時は tmp が無い場合がある */ }
     }
   }
 }
 
 /**
- * Process a single translation file: validate and apply to the target doc.
+ * 翻訳ファイル 1 件を検証し、対象 doc に反映する。
  * @param {object} params
  * @param {string} params.slug - resolved path-based slug
  * @param {string} params.transPath - absolute path to translation file
@@ -98,7 +97,7 @@ export function processOneTranslation({ slug, transPath, hit }) {
 
   const final = `${fm}\n${translated.trim()}\n`;
 
-  // No-op guard: skip if content is identical
+  // 内容が同一なら何もしない。
   if (final === cur) return 'unchanged';
 
   writeFileAtomic(hit.filePath, final);
@@ -107,7 +106,7 @@ export function processOneTranslation({ slug, transPath, hit }) {
 }
 
 /**
- * Main entry point. Returns a summary object for testability.
+ * エントリポイント。test しやすいよう集計結果を返す。
  * @param {string[]} argv - process.argv.slice(2) equivalent
  * @returns {Promise<{applied:number, skipped:number, unchanged:number, errors:number}>}
  */
@@ -129,7 +128,7 @@ export async function main(argv = []) {
   }
   const index = buildSlugIndex();
 
-  // Collect translation files
+  // 翻訳ファイルを集める。
   const files = [];
   const walkTransDir = (dir) => {
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -141,8 +140,7 @@ export async function main(argv = []) {
     }
   };
   walkTransDir(TRANS_DIR);
-  // Sort nested (path-based) files before flat files so the authoritative
-  // path-based layout wins when both exist for the same slug.
+  // 同じ slug に nested と flat が共存するときは nested を優先する。
   files.sort((a, b) => {
     const aDepth = a.includes('/') ? 0 : 1;
     const bDepth = b.includes('/') ? 0 : 1;
@@ -156,8 +154,7 @@ export async function main(argv = []) {
   for (const f of files) {
     const slug = resolveTranslationSlug(f, index);
     if (!slug) {
-      // If a section filter is active and the file can't be resolved,
-      // silently skip — it may simply be out of scope.
+      // section filter 中に解決できない file は対象外の可能性があるので黙って飛ばす。
       if (!sectionSlugs) {
         console.warn(`⚠️  Cannot resolve slug for translation file: ${f}`);
         counts.skipped++;
@@ -166,8 +163,7 @@ export async function main(argv = []) {
     }
     if (sectionSlugs && !sectionSlugs.has(slug)) continue;
 
-    // Detect duplicate translation files targeting the same slug.
-    // Expected when both flat and nested layouts exist during migration.
+    // 同じ slug を指す重複翻訳は先着を採用する。
     if (processedSlugs.has(slug)) {
       console.warn(`⚠️  Duplicate translation for slug "${slug}" (file: ${f}) — skipping, earlier file already applied`);
       continue;

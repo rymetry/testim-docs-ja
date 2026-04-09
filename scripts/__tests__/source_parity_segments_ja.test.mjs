@@ -1,6 +1,4 @@
-/**
- * Tests for the JA markdown canonical segment extractor (Issue #225 Phase 4).
- */
+/** Tests for the JA markdown canonical segment extractor. */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -105,8 +103,7 @@ describe('extractSegmentsFromMarkdown — headings and section paths', () => {
   });
 
   it('strips Astro {#anchor-id} suffix from heading text and section path', () => {
-    // Regression: without stripping, the sectionPath of every segment in the
-    // section would include "{#using-parameters}" and never align with EN.
+    // anchor suffix を残すと sectionPath が EN と揃わない。
     const md = [
       '## Using Parameters {#using-parameters}',
       '',
@@ -344,7 +341,7 @@ describe('extractSegmentsFromMarkdown — callouts', () => {
     // Regression: previously, lines inside :::note were all swallowed as
     // callout-body, so list markers never reached the normal list handler.
     // EN walkCalloutBody emits unordered-list-item for <ul><li> inside a
-    // callout; JA must match so Phase 5 segment kinds align.
+    // callout; JA も同じ segment kind に揃える。
     const md = [
       '## S',
       '',
@@ -513,7 +510,7 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
     // Regression: previously the JA extractor flattened everything inside
     // <details> into the paragraph buffer. EN walkDetails recurses into
     // walkBlock for non-summary children, so lists/tables/images keep their
-    // proper segment kinds. JA must match for Phase 5 alignment on FAQ pages
+    // proper segment kinds. JA も FAQ ページで同じ kind に揃える。
     // with structured answers.
     const md = [
       '## FAQ',
@@ -875,10 +872,7 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
   // -------------------------------------------------------------------------
 
   it('loose <summary> with inline <code> merges into one paragraph (matching EN)', () => {
-    // Issue #247 post-merge re-review — EN walkBlockContainer は loose
-    // text + inline 要素 (`<em>`/`<strong>`/`<code>`/`<a>` 等) を 1 つの
-    // paragraph にマージする。JA loose summary は EN walker を経由する
-    // ため、同じ動作に追随する。
+    // EN と同じく、loose text + inline 要素は 1 つの paragraph にマージする。
     const md = [
       '## S',
       '',
@@ -988,9 +982,7 @@ describe('extractSegmentsFromMarkdown — details/summary', () => {
   });
 
   it('loose <summary> quote-aware: <a data-x="1>0" href="/docs/y">', () => {
-    // Regression: the tokenizer must respect quoted attribute values
-    // containing `>`. Issue #247 post-merge re-review — loose text + inline
-    // `<a>` now merges into 1 paragraph (EN walker inline accumulator).
+    // quoted attribute 内の `>` を壊さず、loose text + inline `<a>` を 1 paragraph に保つ。
     const md = [
       '## S',
       '',

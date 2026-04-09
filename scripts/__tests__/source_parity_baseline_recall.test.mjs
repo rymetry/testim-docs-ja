@@ -1,5 +1,5 @@
 /**
- * Phase 6A C4 — frozen baseline does NOT absorb new mutations.
+ * frozen baseline が新しい mutation を吸収しないことを確認する。
  *
  * Builds a synthetic baseline from the current diff set of each representative
  * page, applies every diff=1 mutation from the mutation corpus, and asserts
@@ -91,7 +91,7 @@ function diffId(diff) {
   return [diff.type, diff.sectionIndex, diff.segmentKind, fingerprint, tokenSig].join('|');
 }
 
-describe('Phase 6A C4 — baseline does not absorb new mutations', () => {
+describe('baseline does not absorb new mutations', () => {
   it('every diff=1 mutation leaves at least one un-baselined issue', () => {
     const manifest = loadManifest();
     const failures = [];
@@ -145,7 +145,7 @@ describe('Phase 6A C4 — baseline does not absorb new mutations', () => {
     assert.equal(
       failures.length,
       0,
-      `Phase 6A C4 FAILURE — baseline absorbed new mutations:\n  ${failures.join('\n  ')}`,
+      `baseline absorbed new mutations:\n  ${failures.join('\n  ')}`,
     );
   });
 });

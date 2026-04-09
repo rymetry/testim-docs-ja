@@ -1,5 +1,5 @@
 /**
- * Tests for the EN HTML direct canonical segment extractor (Issue #225 Phase 4).
+ * Tests for the EN HTML direct canonical segment extractor.
  *
  * The extractor walks MadCap Flare HTML WITHOUT routing through turndown so
  * segment boundaries stay stable across turndown version changes.
@@ -407,4 +407,3 @@ describe('extractSegmentsFromHtml — shape invariants', () => {
     assert.deepEqual(extractSegmentsFromHtml('   \n\t  '), []);
   });
 });
-

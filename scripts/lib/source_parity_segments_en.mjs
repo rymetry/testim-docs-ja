@@ -1,5 +1,5 @@
 /**
- * EN HTML direct canonical segment extractor (Issue #225).
+ * EN HTML direct canonical segment extractor.
  *
  * Walks MadCap Flare HTML directly — without routing through turndown —
  * so segment boundaries stay stable across turndown version changes.
@@ -365,9 +365,7 @@ function currentSectionPath(state) {
  * Loose text nodes directly inside the container (not wrapped in `<p>`) and
  * any consecutive inline elements (`<em>`, `<strong>`, `<a>`, `<span>` 等)
  * が sibling 列として現れる場合は、**1 つの paragraph として merge** して
- * emit する。これにより MadCap の non-standard HTML (例: `<img ... />`
- * の直後に loose text + `<em>` inline が続くパターン) で 1 論理段落が
- * 複数 `<em>` 境界で寸断されるのを防ぐ (Issue #247 post-merge re-review)。
+ * emit する。これにより non-standard HTML でも 1 論理段落が不必要に分断されない。
  */
 function walkBlockContainer(node, state) {
   let looseBuffer = [];

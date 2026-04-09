@@ -232,8 +232,7 @@ function unescapeDetails(html) {
 }
 
 /**
- * Issue #247 post-merge (Finding 9-14) — `faq` の multi-paragraph broken
- * details tree を valid sibling `<h2>/<p>` block に再構成する。
+ * `faq` の broken escaped details tree を `<h2>/<p>` sibling block に正規化する。
  *
  * MadCap は `<details><summary>Q</summary>body</details>` という FAQ
  * アコーディオンを、複数の `<p>` に跨って escape entity で出力する
@@ -390,12 +389,10 @@ function normalizeEscapedCallouts(html) {
 /**
  * Normalize EN HTML before turndown conversion.
  *
- * Chains three preprocessing steps (Issue #247 post-merge で Step 3 を追加):
+ * Chains three preprocessing steps:
  *   1. `normalizeEscapedCallouts` — convert escaped `>` callout patterns
  *   2. `normalizeEscapedFaqDetails` — `faq` の broken escaped details tree を
- *      valid sibling `<h2>/<p>` block に再構成する(Finding 9-14)。faq
- *      discriminator で発火するので coding-assistant など prose 先行の
- *      ページには影響しない
+ *      valid sibling `<h2>/<p>` block に再構成する
  *   3. `unescapeDetails` — legacy single-<p> の escaped details 復元経路
  *      (coding-assistant のようにドキュメント内の `<details>` 使用例を
  *      real `<details>` に戻す古い処理を維持する)

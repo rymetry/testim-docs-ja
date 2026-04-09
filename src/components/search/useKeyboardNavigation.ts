@@ -1,4 +1,4 @@
-/** React hook: ArrowUp/Down/Enter keyboard navigation for the search result list. Guards against IME composition events. */
+/** React hook: 検索結果リストの ArrowUp/Down/Enter 操作を扱う。IME 変換中のキー入力は無視する。 */
 import { useCallback, useEffect } from 'react';
 import type { Dispatch, KeyboardEvent as ReactKeyboardEvent, RefObject, SetStateAction } from 'react';
 import type { SearchResult } from './types';
@@ -24,7 +24,7 @@ export function useKeyboardNavigation({
       `#search-result-${selectedIndex}`
     );
     activeElement?.scrollIntoView({ block: 'nearest' });
-  }, [flatResults, selectedIndex]); // listRef is a stable RefObject — excluded from deps
+  }, [flatResults, selectedIndex]); // listRef は stable な RefObject なので deps には含めない
 
   const handleInputKeyDown = useCallback(
     (event: ReactKeyboardEvent<HTMLInputElement>) => {

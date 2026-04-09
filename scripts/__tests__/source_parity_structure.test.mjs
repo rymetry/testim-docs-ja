@@ -1,5 +1,5 @@
 /**
- * canonical block-sequence structure comparator (Issue #247 PR2) のテスト。
+ * canonical block-sequence structure comparator のテスト。
  *
  * `compareSectionStructure(enSection, jaSection)` は 1 組の (EN, JA) section
  * body に対して 3 段階のチェックを走らせ、section 単位の parity diff を
@@ -20,13 +20,9 @@
  *
  * どの stage も発火しなければ comparator は空配列を返し、呼び出し元
  * (alignSegments) は既存の weighted LCS にフォールスルーする。section
- * あたり emit される diff は最大 1 件 — 先に発火した stage が勝ち、
- * 後続 stage は short-circuit でスキップされる。これは PR4 の gate cutover
- * で contract を予測可能にするため。
+ * あたり emit される diff は最大 1 件で、先に発火した stage が勝つ。
  *
- * ここで PIN している issue payload contract (PR5 baseline identity key
- * がこれらを参照する前提なので、同 PR で baseline loader を合わせて変える
- * までは rename / 削除してはならない):
+ * ここで固定している issue payload contract:
  *
  *   sectionPath          — 対象 section の heading path
  *   sectionIndex         — 0 始まりの section index (document order)
@@ -52,9 +48,8 @@
  *                          数差、table cell 数差) は意図的に別 comparator の
  *                          責務にしており、structure comparator は block
  *                          列の差だけを見る。
- *                          PR5 baseline identity key は enKinds.join('|') を
- *                          hash する予定なので、語彙へのエントリ追加は
- *                          破壊的変更で baseline schema bump が必須。
+ *                          baseline identity key がここを参照するため、
+ *                          語彙変更は schema 変更として扱う。
  *   jaKinds              — JA section body の block 単位 kind 列
  *   enSegmentCount       — enKinds.length (baseline 安定のため frozen)
  *   jaSegmentCount       — jaKinds.length
@@ -63,7 +58,7 @@
  *   contentPermutation?  — content-order でのみ付与する
  *                          Array<{enIndex, jaIndex, score}>。`score` は
  *                          DIAGNOSTIC-ONLY — 閾値調整やスコアアルゴリズム
- *                          変更で揺れてよい。PR5 の baseline identity は
+ *                          変更で揺れてよい。baseline identity は
  *                          score を **絶対に hash してはならず**、安定鍵と
  *                          して使えるのは (enIndex, jaIndex) ペアだけ。
  */
@@ -114,10 +109,7 @@ function singleDiff(result) {
 // ---------------------------------------------------------------------------
 
 describe('Stage A — kind-multiset (section-structure-mismatch)', () => {
-  // Stage A は block kind の **multiset (多重集合)** 不一致を捕まえる。
-  // PR2 の目的が「全文構造保持」を保証することなので、以下を全部 fire
-  // させる必要がある:
-  //
+  // Stage A は block kind の multiset 不一致を捕まえる。
   //   - paragraph merge (3p → 1p) / split (1p → 3p) のような同種 kind
   //     の count drift
   //   - list→paragraph collapse / callout→paragraph collapse /
@@ -624,7 +616,7 @@ describe('Stage precedence and fall-through contract', () => {
 // Payload contract regression — stable field set and types
 // ---------------------------------------------------------------------------
 
-describe('issue payload contract (PR5 baseline identity surface)', () => {
+describe('issue payload contract', () => {
   const REQUIRED_FIELDS = [
     'type',
     'severity',
@@ -724,10 +716,7 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
     // 責務は、block 内部の shape comparator (table shape / list
     // cardinality 等) と意図的に切り分けてある。
     //
-    // kind を追加 / 削除するのは破壊的変更であり baseline schema bump
-    // (PR5) を伴う必要がある。このテストは誤って drift させないための
-    // 保険 — この assertion を書き換えようとした reviewer は downstream
-    // 契約を必ず意識することになる。
+    // kind の追加・削除は downstream 契約に影響するため固定する。
     assert.ok(Array.isArray(STRUCTURE_COMPARATOR_KINDS));
     assert.deepEqual(
       [...STRUCTURE_COMPARATOR_KINDS].sort(),
@@ -779,11 +768,7 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
   });
 
   it('contentPermutation score is declared diagnostic-only (not part of identity)', () => {
-    // score フィールドはマッチの強さをデバッグ用に保持しているだけ。
-    // baseline identity (PR5) は (enIndex, jaIndex) エントリだけを hash
-    // しなければならない。このテストは、permutation エントリを enIndex で
-    // sort した結果が score が揺れても安定キーになる、という契約を pin
-    // する。
+    // score は診断用であり、identity には含めない。
     const en = makeSection({
       body: [
         makeSeg('Overview', 'paragraph', 0, 'Paragraph `alpha-token`.'),
@@ -830,9 +815,7 @@ describe('issue payload contract (PR5 baseline identity surface)', () => {
     const diff = singleDiff(compareSectionStructure(en, ja));
     assert.equal(typeof diff.detail, 'string');
     assert.ok(diff.detail.length > 0);
-    // detail は JSON エンコードされた blob になってはいけない — 人間向け
-    // 専用に保つことで、PR5 の baseline/ack matcher が構造化フィールドを
-    // 直接 key にできる契約を守る。
+    // detail は人間向け文字列に保つ。
     assert.equal(diff.detail.trimStart().startsWith('{'), false);
   });
 });

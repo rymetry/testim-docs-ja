@@ -1,20 +1,7 @@
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-// Issue #247 PR5 — `scripts/lib/source_parity_summary_format.mjs` の純粋
-// formatter ヘルパー (`formatSourceUnusableSection`) の挙動を pin する。
-//
-// PR4 で導入した `formatStructureMismatchSection` は PR5 cutover で削除した
-// (structure mismatch が reportable に昇格し、件数は通常の `Active issue
-// files` 経由で表示されるため、独立 section を残すと重複表示になる)。
-//
-// `formatSourceUnusableSection` は引き続き advisory section として残す:
-//   - 0 件 / 欠損時の omit-zero 挙動
-//   - 非ゼロ時のヘッダー文言と注意文
-//   - type 別内訳の sort 順とソースフィールド名の wiring
-// を固定する。`check_source_parity.mjs` 側はこの helper を呼んで結果を
-// `console.log` するだけなので、stdout を直接テストする基盤を新設する
-// 必要がない。
+// `formatSourceUnusableSection` の挙動を固定する。
 
 let formatSourceUnusableSection;
 

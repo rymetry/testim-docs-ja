@@ -13,7 +13,6 @@ export const GET: APIRoute = async () => {
           const urlSlug = extractSlug(doc);
 
           return [
-            // ページdocument
             {
               id: doc.id,
               type: 'page',
@@ -25,7 +24,6 @@ export const GET: APIRoute = async () => {
               parentTitle: '',
               headingSlug: '',
             },
-            // 見出しdocument（見出しごとに独立）
             // h.text に含まれる手動アンカー構文 {#slug} / ${#slug} を除去
             ...headings.map((h) => ({
               id: `${doc.id}#${h.slug}`,

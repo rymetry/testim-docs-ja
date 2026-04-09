@@ -11,8 +11,6 @@ type SidebarOrdering = {
   itemIndexBySlug: Map<string, number>;
 };
 
-// フロントエンドのナビゲーション表示順のフォールバック。
-// （通常は docs/SIDEBAR_URLS.md から抽出した順を優先）
 const FALLBACK_CATEGORY_ORDER: string[] = [
   'Changelog',
   '概要',
@@ -38,8 +36,6 @@ const FALLBACK_CATEGORY_ORDER: string[] = [
 ];
 
 function extractJapaneseLabel(sectionTitle: string): string {
-  // "Overview（概要）" -> "概要"
-  // "Validations(検証)" -> "検証"
   const m = sectionTitle.match(/[（(]([^）)]+)[）)]/);
   return (m ? m[1] : sectionTitle).trim();
 }
@@ -49,7 +45,7 @@ function extractJapaneseLabel(sectionTitle: string): string {
  * `/content/overview/testim-overview/index.htm` → `overview/testim-overview`
  * `/content/overview/testim-automate.htm`       → `overview/testim-automate`
  *
- * NOTE: scripts/lib/madcap_toc.mjs extractSlug() と同一ロジック。
+ * 注: scripts/lib/madcap_toc.mjs extractSlug() と同一ロジック。
  * Astro ビルド層から scripts/ を import できないため複製。
  */
 function extractSlugFromUrl(url: string): string | null {
@@ -76,7 +72,7 @@ function getSidebarOrdering(): SidebarOrdering {
     const lines = text.split(/\r?\n/);
 
     const sectionRe = /^##\s+(.+?)\s*$/;
-    // ✅🔍 must precede ✅ — regex alternation is order-dependent
+    // ✅🔍 を先に置く。regex の alternation は順序依存のため。
     const urlLineRe =
       /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
 
@@ -91,13 +87,11 @@ function getSidebarOrdering(): SidebarOrdering {
       const sm = line.match(sectionRe);
       if (sm) {
         const raw = sm[1].trim();
-        // メタ見出しはスキップ
         if (raw === '翻訳ステータス' || raw === '検証ステータス' || raw === 'URL抽出方法') {
           currentCategory = null;
           continue;
         }
         const label = extractJapaneseLabel(raw);
-        // コンテンツを持たないセクション（Home）をスキップ
         if (label === 'Home') {
           currentCategory = null;
           continue;
@@ -116,7 +110,6 @@ function getSidebarOrdering(): SidebarOrdering {
           nullSlugCount++;
           continue;
         }
-        // グローバルの並び（SIDEBAR内の出現順）を採用
         if (!itemIndexBySlug.has(slug)) {
           itemIndexBySlug.set(slug, globalItemIndex++);
         }
@@ -139,7 +132,6 @@ function getSidebarOrdering(): SidebarOrdering {
     );
   }
 
-  // 失敗時は固定順のみ
   return {
     categoryIndexByLabel: new Map(FALLBACK_CATEGORY_ORDER.map((c, i) => [c, i])),
     itemIndexBySlug: new Map(),
@@ -148,7 +140,6 @@ function getSidebarOrdering(): SidebarOrdering {
 
 const SIDEBAR_ORDERING = getSidebarOrdering();
 
-/** doc.id をそのままパスベース slug として返す（例: "overview/testim-overview"） */
 export function extractSlug(doc: DocEntry): string {
   return doc.id;
 }
@@ -174,8 +165,6 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
   >();
 
   docs.forEach((doc) => {
-    // doc.id は "overview/testim-overview" のような形式（Content Layer API）
-    // パスベース slug をそのまま URL に使用（例: "overview/testim-overview"）
     const urlSlug = extractSlug(doc);
 
     const groupKey = doc.data.category;

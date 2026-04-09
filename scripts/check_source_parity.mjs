@@ -60,19 +60,13 @@ const ACKNOWLEDGEMENTS_PATH = path.join(ROOT_DIR, 'parity-acknowledgements.json'
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 
 /**
- * Schema version for `parity-check-status.json`. Bumped whenever the
- * top-level shape changes (added top-level fields like `result`,
- * `schemaVersion`, etc.). Downstream validators MUST treat
- * `schemaVersion !== PARITY_CHECK_STATUS_SCHEMA_VERSION` as
- * non-loadable rather than silently coercing.
+ * `parity-check-status.json` の schema version。
+ * top-level shape が変わったら更新し、downstream は不一致 payload を拒否する。
  */
 export const PARITY_CHECK_STATUS_SCHEMA_VERSION = 1;
 
 function buildSegmentInconclusiveIssue(reason, category, meta = null) {
-  // category is the structured enum from alignSegments (`inconclusiveCategory`)
-  // — `heading-count-mismatch`, `align-exception`, or `tokenless-near-tie`.
-  // Required by parity-baseline.json so segment-inconclusive entries can be
-  // identified by category rather than the volatile free-text `reason`.
+  // free-text reason ではなく structured enum で inconclusive を識別する。
   const inconclusiveMeta =
     meta && typeof meta === 'object' && !Array.isArray(meta)
       ? { ...meta }
@@ -92,34 +86,33 @@ export function isNonBlockingIssue(issue) {
 }
 
 /**
- * Issue #247 PR5 — `getConsoleCoverageState` で advisory-only issue を
- * baseline / ack と区別するためのラッパー。`isAdvisoryOnlyParityIssue`
- * は PR5 cutover で scope が source-unusable のみに縮小されている
- * (structure mismatch は reportable に昇格)。ここはコンソール経路から
- * 直接 import しないための再 export。
+ * `getConsoleCoverageState` 用の薄いラッパー。
+ * `isAdvisoryOnlyParityIssue` は source-unusable 系だけを advisory とみなし、
+ * structure mismatch は reportable 扱いにする。
+ * console 経路から直接 import しないため、ここで再 export する。
  */
 export function isAdvisoryOnlyIssue(issue) {
   return isAdvisoryOnlyParityIssue(issue);
 }
 
-// runScope の詳細 contract は shared helper 側
-// (`scripts/lib/source_sync_health.mjs::buildRunScope`) に集約している。
+// runScope の詳細契約は shared helper
+// (`scripts/lib/source_sync_health.mjs::buildRunScope`) に集約する。
 /**
- * parity-check summary を CLI exit code にマップする純粋ヘルパー。
- * `checkSourceParity` から切り出してあり、フルパイプラインを起動せずに
- * gate 挙動を unit test できるようにしている。
+ * parity-check summary を CLI exit code に写像する純粋ヘルパー。
+ * `checkSourceParity` から切り出し、フル pipeline なしで gate 挙動を test できる。
  *
  * 入力:
- *   summary  — summarizeParityResults() の出力 (または同じ shape のオブジェクト)
- *   failOn   — 'actionable' | 'any' | null (それ以外の値は 'any' 相当)
+ *   summary  — summarizeParityResults() の出力、または同 shape の object
+ *   failOn   — `'actionable' | 'any' | null`。それ以外は `'any'` 扱い
  *
- * 0 (gate pass) か 1 (gate fail) を返す。gate は `reportableActive*`
- * counters のみを参照する。coarse audit signal は ack / baseline が
- * 期限切れでも exit code に影響しない。legacy の `activeFiles` /
- * `activeActionableFiles` は downstream 互換のためここでは意図的に無視する。
+ * 0 (gate pass) か 1 (gate fail) を返す。
+ * gate は `reportableActive*` counter だけを見る。coarse audit signal は
+ * ack / baseline が期限切れでも exit code に影響させない。
+ * legacy の `activeFiles` / `activeActionableFiles` は downstream 互換のため残すが、
+ * ここでは意図的に参照しない。
  *
- * `activeErrorFiles` は全モードで参照する。`source-fetch-error` のような
- * 実 runtime error は reportable issue が 0 件でも gate を fail させる契約。
+ * `activeErrorFiles` は常に参照する。`source-fetch-error` のような
+ * runtime error は reportable issue が 0 件でも fail にする。
  */
 export function computeExitCode(summary, failOn) {
   if (!summary || typeof summary !== 'object') return 0;
@@ -128,40 +121,30 @@ export function computeExitCode(summary, failOn) {
     const reportableActionable = summary.reportableActiveActionableFiles || 0;
     return reportableActionable > 0 || errorFiles > 0 ? 1 : 0;
   }
-  // Default and 'any' both look at the broader reportable bucket, but
-  // still fail on real runtime errors such as source-fetch-error.
+  // default と `any` は reportable bucket を見るが、runtime error でも fail にする。
   const reportable = summary.reportableActiveFiles || 0;
   return reportable > 0 || errorFiles > 0 ? 1 : 0;
 }
 
 /**
- * parity summary を 3 値 (pass / fail / inconclusive) に畳み込むヘルパー。
- * 結果は `parity-check-status.json.summary.result` に乗り、downstream の
- * fail-closed gate (sync-detection-issues.cjs) が inconclusive run からの
- * issue 同期を拒否できるようにする。counter 全集合を読み返す必要はない。
+ * parity summary を `pass | fail | inconclusive` の 3 値へ畳み込む。
+ * 結果は `parity-check-status.json.summary.result` に入り、downstream の
+ * fail-closed gate が inconclusive run からの issue 同期を拒否できるようにする。
  *
- *   pass         — no reportable parity issues, no error files, source
- *                  sync is fresh (or freshness state is unknown for
- *                  partial / legacy runs)
- *   fail         — at least one reportable issue or error
- *   inconclusive — source freshness was not "fresh" so the run cannot
- *                  rule out gaps. We never down-grade `inconclusive` to
- *                  `pass` even if all files happen to be clean.
+ *   pass         — reportable parity issue なし、error file なし、source sync fresh
+ *   fail         — reportable issue または error が 1 件以上ある
+ *   inconclusive — source freshness が fresh ではなく、欠落を否定できない
  *
- * `freshnessState` is the value read from
- * `source-sync-status.json.freshnessState`. Pass `null` when the file
- * is missing (legacy runs); the helper treats null as "no freshness
- * info available, do not block".
+ * `freshnessState` には `source-sync-status.json.freshnessState` を渡す。
+ * file が無い場合は `null` にし、「freshness 情報なし」として扱う。
  */
 export function computeParityResult(summary, freshnessState = null) {
   if (!summary || typeof summary !== 'object') return 'inconclusive';
   const reportable = summary.reportableActiveFiles || 0;
   const errors = summary.activeErrorFiles || 0;
   if (freshnessState && freshnessState !== 'fresh') {
-    // stale / partial / broken / unknown source — never call this a pass.
-    // We still report fail when there ARE reportable issues so the gate
-    // does not lose its signal, but a clean run is degraded to
-    // inconclusive instead of pass.
+    // stale / partial / broken / unknown source は pass にしない。
+    // reportable issue が無い場合も clean pass ではなく inconclusive に落とす。
     if (reportable > 0 || errors > 0) return 'fail';
     return 'inconclusive';
   }
@@ -179,7 +162,7 @@ export function getConsoleCoverageState(issues) {
     };
   }
 
-  // Issue #247 PR5 — 各 issue を 4 状態に分類する。優先度は
+  // 各 issue を 4 状態に分類する。優先度は
   // ack > baseline > advisory > active reportable で、上の状態が当たれば
   // 下は見ない契約。
   //
@@ -188,7 +171,7 @@ export function getConsoleCoverageState(issues) {
   //                 true で ack でないもの)
   //   advisory    — source-unusable (snapshot-incomplete / source-unusable)
   //                 のうち ack / baseline で覆われていないもの。structure
-  //                 mismatch は PR5 cutover で reportable に昇格したため、
+  //                 mismatch は reportable に昇格しているため、
   //                 この分類には含まれない (`isAdvisoryOnlyParityIssue` の
   //                 scope が source-unusable のみに縮小されている)。
   //   reportable  — それ以外 (= active gate-blocking issue)
@@ -220,7 +203,7 @@ export function getConsoleCoverageState(issues) {
     // もこの経路でカバーされる)。
     suffix = ' (covered by baseline/ack)';
   } else if (hasAdvisory && !hasBaselineOrAck) {
-    // PR5 では advisory の scope は source-unusable のみ。翻訳者責任外の
+    // advisory の scope は source-unusable のみ。翻訳者責任外の
     // snapshot / source 側 debt であることを CLI で明示する。
     suffix = ' (source unusable)';
   } else {
@@ -239,10 +222,8 @@ export function getConsoleCoverageState(issues) {
 }
 
 /**
- * Load source-sync-status.json. Returns the parsed payload or null if
- * the file doesn't exist / is invalid. Used both for freshness state
- * (legacy callers) and for §3 run linkage validation (which needs the
- * full payload, not just freshnessState).
+ * `source-sync-status.json` を読み込む。
+ * file が無い、または壊れていれば null。freshness 判定と run linkage 検証の両方で使う。
  */
 function loadSourceSyncPayload() {
   if (!fs.existsSync(SOURCE_SYNC_STATUS_PATH)) return null;
@@ -256,12 +237,8 @@ function loadSourceSyncPayload() {
 const SNAPSHOT_DIFF_STATUS_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 
 /**
- * Load snapshot-diff-status.json for §3 run linkage validation. Returns
- * the parsed payload or null if missing. The parity gate does NOT
- * require this file to exist (PR CI runs parity without first running
- * snapshot_diff); when it is missing the linkage validator returns
- * "missing" and the result stays at whatever computeParityResult
- * decides from the freshness state alone.
+ * run linkage 検証用に `snapshot-diff-status.json` を読み込む。
+ * file が無ければ null。missing 扱いにして freshness 判定だけで継続する。
  */
 function loadSnapshotDiffPayload() {
   if (!fs.existsSync(SNAPSHOT_DIFF_STATUS_PATH)) return null;
@@ -272,9 +249,7 @@ function loadSnapshotDiffPayload() {
   }
 }
 
-/**
- * Collect slugs that have existing EN snapshot HTML files.
- */
+/** 既存 EN snapshot HTML がある slug を集める。 */
 export function collectSnapshotSlugs(snapshotsDir) {
   const slugs = new Set();
   if (!fs.existsSync(snapshotsDir)) return slugs;
@@ -310,10 +285,7 @@ export function parseArgs(argv = process.argv.slice(2)) {
   };
 }
 
-/**
- * Load and validate acknowledgements from parity-acknowledgements.json.
- * Returns { schemaVersion, entries } or empty structure if file missing.
- */
+/** `parity-acknowledgements.json` を読み込み、validation 済み payload を返す。 */
 function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
   if (!fs.existsSync(filePath)) return { schemaVersion: 1, entries: [] };
   const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -321,8 +293,8 @@ function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
 }
 
 /**
- * parity-baseline.json をロードし validation を通す。
- * Returns { schemaVersion, entries } or empty structure if file missing.
+ * `parity-baseline.json` を読み込み、validation 済み payload を返す。
+ * file が無ければ空の structure を返す。
  */
 function loadBaselineFileSafe(filePath = BASELINE_PATH) {
   if (!fs.existsSync(filePath)) {
@@ -338,9 +310,9 @@ export async function checkSourceParity({
   section = null,
   failOn = null,
   slug = null,
-  // Issue #247 post-merge (Finding 15) — test-only dependency injection。
-  // integration test が repo-global な baseline / status file を奪い合わないよう
-  // に、呼び出し側から path を上書きできる。既定値は従来どおり ROOT_DIR 直下。
+  // test 用 dependency injection。
+  // repo-global な state file を奪い合わないよう path を差し替えられる。
+  // 既定値は従来どおり ROOT_DIR 直下。
   // CLI の parseArgs surface は増やさず、script 呼び出し時の引数でだけ注入する。
   baselinePath = BASELINE_PATH,
   outputPath = OUTPUT_PATH,
@@ -360,12 +332,12 @@ export async function checkSourceParity({
     console.error(`❌ ${error.message}`);
     return 1;
   }
-  // Ack expiry uses UTC "today" intentionally so CI runs are timezone-independent
-  // and match reviewAfter values (also stored as plain YYYY-MM-DD / UTC dates).
+  // ack expiry は UTC の `today` で判定する。
+  // CI の timezone 差を消し、`reviewAfter` の YYYY-MM-DD と揃えるため。
   const today = new Date().toISOString().slice(0, 10);
 
   // frozen baseline をロード。acknowledgement とは別ファイル / 別意味で管理する。
-  // Finding 15: test からの注入を許すため baselinePath を明示的に渡す。
+  // テストでは baselinePath を差し替えて隔離実行できる。
   let baselineData = { schemaVersion: 1, entries: [] };
   try {
     baselineData = loadBaselineFileSafe(baselinePath);
@@ -375,7 +347,7 @@ export async function checkSourceParity({
   }
   const baselineInvalidatedSlugs = new Set();
 
-  // Resolve --slug to path-based slug (supports both basename and path-based input)
+  // `--slug` は path-based slug に正規化する。basename 入力も後方互換で受ける。
   const resolvedSlug = slug ? resolveSlug(slug) : null;
   if (slug && !resolvedSlug) {
     console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
@@ -394,7 +366,7 @@ export async function checkSourceParity({
   }
 
   const results = [];
-  // Issue #247 post-merge — orphan baseline entries を per-slug で蓄積する。
+  // orphan baseline entries を per-slug で蓄積する。
   // 完走後に byType で集計して summary に出す。invalidated slug のものは
   // 含まない (snapshot 更新での再タグ付け待ちなので orphan ではない)。
   const orphanBaselineEntries = [];
@@ -413,10 +385,8 @@ export async function checkSourceParity({
     checkedCount += 1;
     let issues = [...localCheck({ body: doc.body })];
 
-    // Per-file page coverage checks (--slug mode only; global mode uses
-    // page coverage gate after the per-file loop). Mirrors the bulk
-    // checkLocalPageOrphan / checkSinglePageSnapshot semantics so a
-    // single-page run can still surface coverage gaps.
+    // `--slug` 時だけ page coverage を file 単位で追加確認する。
+    // bulk 実行後の global gate と同じ意味を、single-page run でも出すため。
     if (resolvedSlug) {
       if (sidebarSlugs && sidebarSlugs.size > 0 && !sidebarSlugs.has(fileSlug)) {
         issues.push({
@@ -430,8 +400,8 @@ export async function checkSourceParity({
       );
     }
 
-    // Snapshot structure comparison (image order, callout nesting, step counts)
-    // EN snapshots are stored as HTML; convert to Markdown for structural comparison.
+    // snapshot の構造比較。画像順、callout nesting、step 数などを見る。
+    // EN snapshot は HTML なので、構造比較の前に Markdown へ寄せる。
     const snapshotPath = path.join(SNAPSHOTS_DIR, fileSlug + '.html');
     let snapshotFingerprint = null;
 
@@ -468,7 +438,7 @@ export async function checkSourceParity({
         }
       }
       if (enBody) {
-        // PR3 — source usability gate を alignSegments の前に挟む。
+        // source usability gate を alignSegments の前に挟む。
         // enSegments / jaSegments を先に取得し、extractError を明示的に渡す。
         // detector は extractError != null のとき enSegments を信用しない契約
         // (Layer 1 / Layer 3 を skip し、rawEnHtml 単独で動く Layer 2 のみ評価)。
@@ -526,8 +496,8 @@ export async function checkSourceParity({
           if (alignment) {
             const segmentIssues = parityDiffsToIssues(alignment.diffs);
             if (alignment.inconclusive) {
-              // Fallback: alignment 済みの exact diff を保持し、inconclusive を
-              // 示す補助 issue を追加した上で legacy coarse 比較を併走させる。
+              // fallback として、alignment 済みの exact diff を保持したまま
+              // inconclusive 補助 issue と legacy coarse 比較を併走させる。
               issues.push(...segmentIssues);
               issues.push(
                 buildSegmentInconclusiveIssue(
@@ -538,9 +508,9 @@ export async function checkSourceParity({
               );
               issues.push(...compareSnapshotStructure(enBody, doc.body));
             } else {
-              // Primary gate: segment-level diffs に加え、補完的な coarse
-              // signals (image order, callout nesting, table shape) も併走させる。
-              // count-based mismatches は COARSE_SIGNAL_TYPES allowlist 経由で
+              // 主 gate は segment-level diff だが、補完的な coarse signal
+              // (image order, callout nesting, table shape) も併走させる。
+              // count-based mismatch は COARSE_SIGNAL_TYPES allowlist 経由で
               // audit-only に降格済みで、`signal` severity では出るが
               // parityRegression / gate exit code には乗らない。
               issues.push(...segmentIssues);
@@ -563,7 +533,7 @@ export async function checkSourceParity({
     // isFrozenByBaseline / isReportableParityIssue で gate から除外される
     // (scripts/lib/source_parity_issue_state.mjs を参照)。期限切れ baseline
     // entries は gate に refire する。
-    // Issue #247 post-merge — matchedKeys を consumer 側で消費して orphan
+    // matchedKeys を consumer 側で消費して orphan
     // baseline entry を集計する。invalidated なページは skip する契約。
     {
       const baselineResult = tagIssuesWithBaseline(
@@ -638,7 +608,7 @@ export async function checkSourceParity({
     }
   }
 
-  // Page coverage gate: global checks (skip in --slug mode)
+  // global 実行時だけ page coverage gate を走らせる。
   if (!resolvedSlug) {
     const localSlugs = new Set(allFiles.map((f) => filePathToSlug(f)));
     const localSourceUrls = new Map();
@@ -682,26 +652,23 @@ export async function checkSourceParity({
   if (advisoryQueueError) {
     console.error(`⚠ tokenless-near-tie review queue 構築失敗: ${advisoryQueueError}`);
   }
-  // run linkage validation: source-sync-status / snapshot-diff-status と
-  // parity gate 自身の run scope の整合を検証する。結果は computeParityResult
-  // に折り込まれ、"linked" 以外の状態では clean run でも pass→inconclusive へ
-  // 降格する (stale run を silent pass にしない)。
+  // source-sync-status / snapshot-diff-status と parity run scope の整合を検証する。
+  // `linked` 以外なら clean run でも pass ではなく inconclusive に落とす。
   const parityRunScope = buildRunScope({ slug: resolvedSlug, section });
   const linkageState = validateRunLinkage(
     sourceSyncPayload,
     snapshotDiffPayload,
     parityRunScope,
   );
-  // PR CI runs parity without first running snapshot_diff and without
-  // a source-sync payload. Treat that as the legacy "no linkage info"
-  // case (linkage='missing') and don't downgrade the result. Live runs
-  // (which have a source-sync payload) MUST link cleanly.
+  // CI の parity 単体実行は snapshot_diff / source-sync payload を持たないことがある。
+  // その場合は legacy の「linkage 情報なし」とみなし、結果を降格しない。
+  // live run は source-sync payload を持つ前提なので、link clean である必要がある。
   const linkageBlocking = sourceSyncPayload != null && linkageState !== 'linked';
   const effectiveFreshnessState = linkageState === 'stale'
     ? 'stale'
     : freshnessState;
 
-  // Issue #247 post-merge — orphan baseline entries の byType 集計。
+  // orphan baseline entries の byType 集計。
   // --slug / --section mode では checked 範囲だけが対象 (未 check 分は
   // orphan 判定できない)。
   const orphanBaselineByType = {};
@@ -733,11 +700,8 @@ export async function checkSourceParity({
     sourceSyncRunId: sourceSyncPayload?.runId ?? null,
     sourceInventoryFingerprint: sourceSyncPayload?.sourceInventoryFingerprint ?? null,
   };
-  // computeParityResult depends on the full counter set, so it has to
-  // run after summarizeParityResults has been spread into summaryBase.
-  // The linkage check is layered on top: if the linkage is broken
-  // (stale / scope-mismatch), we degrade pass→inconclusive but keep
-  // fail as fail (so a real regression still surfaces).
+  // `computeParityResult` は summarize 後の full counter を必要とする。
+  // その上に linkage 判定を重ね、broken linkage なら pass だけを inconclusive へ落とす。
   const baseResult = computeParityResult(summaryBase, effectiveFreshnessState);
   const summary = {
     ...summaryBase,
@@ -752,7 +716,7 @@ export async function checkSourceParity({
     advisoryQueue,
   };
 
-  // Finding 15: test からの注入を許すため outputPath を明示的に渡す。
+  // テストでは outputPath を差し替えて隔離実行できる。
   // 既定は ROOT_DIR/parity-check-status.json で従来と同一挙動。
   fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2));
 
@@ -764,7 +728,7 @@ export async function checkSourceParity({
       `問題あり: ${summary.filesWithIssues} ファイル (active: ${summary.activeFiles}, ` +
         `covered by baseline/ack: ${coveredFiles})`,
     );
-    // Issue #247 post-merge — orphan baseline entries を reviewer に可視化する。
+    // orphan baseline entries を reviewer に可視化する。
     // 0 件なら silent、非ゼロなら件数 + byType 上位を 1 行で表示する。
     if ((summary.orphanBaselineEntries || 0) > 0) {
       const top = Object.entries(summary.orphanBaselineByType || {})
@@ -843,7 +807,7 @@ export async function checkSourceParity({
         }
       }
     }
-    // Issue #247 PR5 — structure mismatch は reportable に昇格したため
+    // structure mismatch は reportable 扱いなので
     // CLI 独立セクションは削除した。件数は通常の `Active issue files` 経由
     // で表示される。source unusable は引き続き advisory なので独立 section
     // を維持する (0 件時は null を返して省略する)。

@@ -1,6 +1,5 @@
 /**
- * alignment / structure comparator が共有するペアスコアリング
- * (Issue #247 PR2)。
+ * alignment / structure comparator が共有するペアスコアリング。
  *
  * `scoreSegmentMatch` は以下の 2 者が共通で使うペア単位の等価性オラクル:
  *   - `source_parity_align.mjs` — section body 内の weighted LCS

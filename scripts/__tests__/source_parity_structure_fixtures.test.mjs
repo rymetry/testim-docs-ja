@@ -1,5 +1,5 @@
 /**
- * Issue #247 End-to-End 完全解消後の structure regression guard。
+ * structure regression guard。
  *
  * representative 3 ページ:
  *   - running-tests/the-command-line-cli
@@ -11,10 +11,8 @@
  * ことを維持し続ける必要がある。ここでは実 snapshot + 実 JA md を読み、
  * raw comparator 出力が空配列であることを pin する。
  *
- * なお、下の `PINNED_*` 定数は PR5 / post-merge review 時点の historical
- * pin 値を残した参照データであり、現在の assert 本体は `assertStructureClean()`
- * を使う。gate 側の summary counter や baseline tagging は
- * representative summary test が担当する。
+ * 下の `PINNED_*` は historical data の参照値で、主アサーションは
+ * `assertStructureClean()` が担当する。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -41,9 +39,6 @@ const JA_CONTENT_DIR = join(ROOT, 'src/content/docs');
 
 // ---------------------------------------------------------------------------
 // ヘルパ: JA md の frontmatter を除去し本文だけを返す。
-// source_parity_source_usability_fixtures.test.mjs (PR3) と同じ実装を
-// 複製する。lib への切り出しは production code change を伴うため PR6 では
-// 行わない。
 // ---------------------------------------------------------------------------
 function extractJaBody(mdContent) {
   const withoutFm = mdContent.replace(/^---[\s\S]*?---\n/m, '');
@@ -69,7 +64,7 @@ function runStructureComparator(slug) {
 }
 
 // ---------------------------------------------------------------------------
-// Historical pin 値 (PR5 / post-merge review 時点の実測)。
+// Historical pin 値。
 // ---------------------------------------------------------------------------
 
 const PINNED_THE_CLI = Object.freeze({
@@ -181,7 +176,7 @@ function assertStructurePin(slug, pinned) {
   // 少なくとも 1 件は出るはず (false red 回帰ガード)
   assert.ok(
     structureIssues.length >= 1,
-    `${slug}: structure issue が 0 件になった — PR5 baseline では active であるべき`,
+    `${slug}: structure issue が 0 件になった`,
   );
 
   // type 別内訳
@@ -235,56 +230,48 @@ function assertStructurePin(slug, pinned) {
 }
 
 // ---------------------------------------------------------------------------
-// Issue #247 End-to-End 完全解消後: 3 代表ページは Phase D.1/D.2/D.3 の JA
-// 全面 rewrite で structure issue が 0 件に到達した。PR5 時点の PINNED_*
-// 期待値は post-resolution 回帰 guard として assertStructureClean() 側へ
-// 切り替える。将来 JA が再度 drift した場合に即座に検知する。
+// 3 代表ページは現在 structure issue 0 件を維持することを期待する。
 // ---------------------------------------------------------------------------
 describe('source_parity_structure_fixtures: running-tests/the-command-line-cli', () => {
-  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+  it('structure issue は 0 件を維持する', () => {
     assertStructureClean(PINNED_THE_CLI.slug);
   });
 });
 
 describe('source_parity_structure_fixtures: results/test-results/network-logs', () => {
-  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+  it('structure issue は 0 件を維持する', () => {
     assertStructureClean(PINNED_NETWORK_LOGS.slug);
   });
 });
 
 describe('source_parity_structure_fixtures: advanced-editing/validations/email-validation', () => {
-  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+  it('structure issue は 0 件を維持する', () => {
     assertStructureClean(PINNED_EMAIL_VALIDATION.slug);
   });
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 post-merge — Phase H.3 — artifact regression fixture
-//
-// Phase E で JA 側を整えて完全に clean green に到達した 2 slug
-// (custom-action-step-mobile と test-runs) について、structure mismatch が
-// 0 件であることを pin する。将来の extractor / preprocessor 変更で再発した
-// 場合にここで捕まえる regression guard。
+// artifact regression fixture
 // ---------------------------------------------------------------------------
 function assertStructureClean(slug) {
   const { structureIssues } = runStructureComparator(slug);
   assert.equal(
     structureIssues.length,
     0,
-    `${slug}: Phase E で clean 化済みだが structure issue が ` +
+    `${slug}: clean page だが structure issue が ` +
       `${structureIssues.length} 件検出された。` +
       `最初の issue: ${JSON.stringify(structureIssues[0] ?? null)}`,
   );
 }
 
-describe('source_parity_structure_fixtures: custom-action-step-mobile (Phase E artifact)', () => {
-  it('Phase E 以降、structure issue は 0 件を維持する (artifact regression guard)', () => {
+describe('source_parity_structure_fixtures: custom-action-step-mobile (artifact)', () => {
+  it('structure issue は 0 件を維持する', () => {
     assertStructureClean('advanced-editing/custom-action-step-mobile');
   });
 });
 
-describe('source_parity_structure_fixtures: test-runs (Phase E artifact)', () => {
-  it('Phase E 以降、structure issue は 0 件を維持する (artifact regression guard)', () => {
+describe('source_parity_structure_fixtures: test-runs (artifact)', () => {
+  it('structure issue は 0 件を維持する', () => {
     assertStructureClean('results/test-runs');
   });
 });

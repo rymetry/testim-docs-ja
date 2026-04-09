@@ -1,5 +1,5 @@
 /**
- * JA markdown canonical segment extractor (Issue #225).
+ * JA markdown canonical segment extractor.
  *
  * Walks a JA markdown document and emits a flat sequence of Segment records
  * for the exact diff engine. The extractor is deliberately conservative:

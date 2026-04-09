@@ -1,12 +1,12 @@
 /**
- * Issue #247 post-merge — Phase C orphan detection の E2E 結合テスト。
+ * orphan detection の E2E 結合テスト。
  *
  * 設計:
- *   - 架空 slug では orphan 検知が走らない (Finding 3 — runtime が対象 slug
+ *   - 架空 slug では orphan 検知が走らない (runtime が対象 slug
  *     を check しないため) ので、存在する clean sentinel slug
  *     (settings/cli-prerequisites) に runtime が emit しない stale な
  *     segment-missing entry を仕込む
- *   - Finding 15: repo-global な `parity-baseline.json` /
+ *   - repo-global な `parity-baseline.json` /
  *     `parity-check-status.json` を奪い合わないよう、checkSourceParity の
  *     baselinePath / outputPath 注入 hook を使って `mkdtemp` 上の
  *     temp copy だけを操作する。repo root のファイルは touch しない
@@ -56,7 +56,7 @@ const SNAPSHOT_PATH = join(
   'snapshots/en/content/settings/cli-prerequisites.html',
 );
 
-// temp dir と temp baseline/status path。isolation の要 (Finding 15)。
+// temp dir と temp baseline/status path。isolation の要。
 const TMP_DIR = mkdtempSync(join(tmpdir(), 'parity-orphan-e2e-'));
 const BASELINE_TMP = join(TMP_DIR, 'parity-baseline.json');
 const STATUS_TMP = join(TMP_DIR, 'parity-check-status.json');
@@ -100,7 +100,7 @@ after(() => {
   rmSync(TMP_DIR, { recursive: true, force: true });
 });
 
-describe('Issue #247 post-merge — orphan baseline detection E2E', () => {
+describe('orphan baseline detection E2E', () => {
   it('temp baseline 上の synthetic stale entry を orphan として集計する', async () => {
     await checkSourceParity({
       slug: TARGET_SLUG,

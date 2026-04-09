@@ -27,7 +27,7 @@ export function isActiveParityIssue(issue) {
  * baseline 状態は無視するため、期限切れ ack / baseline でも coarse signal は
  * coarse signal のままで `parityRegression` / gate を再点火しない契約。
  *
- * Issue #247 PR1 の契約上、新しい `section-structure-mismatch` /
+ * 現行契約では、新しい `section-structure-mismatch` /
  * `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` は
  * coarse audit signal には**含めない**。これらは reportable な一級 issue
  * として扱う。
@@ -39,7 +39,7 @@ export function isCoarseAuditSignal(issue) {
 }
 
 /**
- * Issue #247 PR1 — section-anchored canonical block sequence comparator 由来
+ * section-anchored canonical block sequence comparator 由来
  * の structure mismatch 判定。type のみで判定する純粋関数。ack / baseline /
  * severity は無視する (別の counter に畳み込むための純粋分類述語)。
  */
@@ -50,10 +50,7 @@ export function isStructureMismatchIssue(issue) {
 }
 
 /**
- * Issue #247 PR1 — snapshot / source 起因で canonical comparator が成立しない
- * ページ用 issue 判定。type のみで判定する純粋関数。structure mismatch と
- * 重なった場合の優先順位は emission 側 (PR3) で制御し、ここでは純粋分類に
- * 留める。
+ * snapshot / source 起因で canonical comparator が成立しないページ用判定。
  */
 export function isSourceUnusableIssue(issue) {
   if (!issue || typeof issue !== 'object') return false;
@@ -67,14 +64,7 @@ export function isReportableParityIssue(issue) {
   // parityRegression / gate には乗らない。ack / baseline 状態は無視する。
   if (isCoarseAuditSignal(issue)) return false;
 
-  // Issue #247 PR5 — gate cutover 済み。structure mismatch
-  // (section-structure-mismatch / segment-order-mismatch) は reportable
-  // に昇格し、ack / baseline で覆われていなければ `reportableActive*`
-  // counter と gate exit code に寄与する。source-unusable
-  // (snapshot-incomplete / source-unusable) は引き続き advisory のまま
-  // (翻訳 PR で修正できない source 側 debt なので reviewer を誤誘導する
-  // ことを避ける)。baseline / ack で人手管理する枠は提供するが、active
-  // な source-unusable が 1 件あっても exit code は 0。
+  // structure mismatch は reportable、source-unusable は advisory のまま扱う。
   if (isSourceUnusableIssue(issue)) return false;
 
   if (issue.severity !== 'actionable' && issue.severity !== 'signal') return false;
@@ -83,10 +73,10 @@ export function isReportableParityIssue(issue) {
 }
 
 /**
- * Issue #247 PR5 — source-unusable のうち、まだ ack / baseline で覆われて
+ * source-unusable のうち、まだ ack / baseline で覆われて
  * いないものを「advisory only」として識別する純粋述語。
  *
- * PR5 cutover で scope を縮小した。structure mismatch は gate に昇格した
+ * scope を縮小した。structure mismatch は gate に昇格した
  * ため advisory ではなくなり、このラベルは source-unusable
  * (snapshot-incomplete / source-unusable) のみを指す。source-unusable は
  * 翻訳者責任外 (snapshot / source sync 側 debt) なので引き続き advisory
@@ -115,7 +105,7 @@ export function isAdvisoryOnlyParityIssue(issue) {
 
 export function isNonBlockingParityIssue(issue) {
   // 「非ブロッキング」の元の意味 — ack または baseline で **明示的に** 覆わ
-  // れている issue だけ。Issue #247 PR5 cutover 後、structure mismatch も
+  // れている issue だけ。現在は structure mismatch も
   // 通常通り baseline / ack で覆える (覆われていれば非ブロッキング、
   // active なら gate に載る)。source-unusable は ack / baseline で
   // 覆われていない場合に「advisory only」として `isAdvisoryOnlyParityIssue`

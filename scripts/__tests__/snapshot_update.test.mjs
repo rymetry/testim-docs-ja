@@ -144,7 +144,7 @@ describe('snapshot_update main', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #255 Phase 3b — source-side debt exclusion wiring
+// source-side debt exclusion wiring
 //
 // pull-requests は registry に登録されているので、snapshot_update は
 //   1. fetch する
@@ -295,7 +295,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     assert.equal(result.sourceSyncStatus.freshnessState, 'fresh');
   });
 
-  // --- Finding 1: EN-only probe は JA 入力に依存しない ---
+  // --- EN-only probe は JA 入力に依存しない ---
 
   it('recovery probe は JA の有無で結果が変わらない (EN-only)', async () => {
     // JA body は collectTargets 経由で読まれるが probe には渡らない。
@@ -382,7 +382,7 @@ describe('snapshot_update — source-side debt exclusion', () => {
     });
   });
 
-  // --- Finding 2: expectedMatch + actual/expected が probe output に載る ---
+  // --- expectedMatch + actual/expected が probe output に載る ---
 
   it('excluded-broken probe に expectedIssueType / expectedReason / expectedMatch が載る', async () => {
     global.fetch = mockTocFetchFor(BROKEN_PAGE_HTML);

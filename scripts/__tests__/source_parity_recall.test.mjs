@@ -1,8 +1,8 @@
 /**
- * Phase 5 exact diff engine — diff=1 recall benchmark (Issue #225 Go gate).
+ * exact diff engine の diff=1 recall benchmark。
  *
  * Runs every mutation type from `mutation_corpus` against every representative
- * page in the Phase 0 manifest, then verifies that the new alignment engine
+ * page in the representative manifest, then verifies that the new alignment engine
  * (`source_parity_align.alignSegments`) catches the introduced mutation as a
  * NEW diff that did not exist in the baseline (EN ↔ unmodified JA) state.
  *
@@ -30,10 +30,8 @@
  * affected section's diff set changed in any way (added, removed, or
  * shifted) under the canonical identity above.
  *
- * Go conditions
- * -------------
- * Per Issue #225 Phase 5:
- *
+ * Acceptance conditions
+ * ---------------------
  *   - recall 100% on the diff=1 corpus
  *   - precision unchanged (baseline diffs per page bounded)
  *   - no cascade (single mutation produces a small bounded number of new diffs)
@@ -177,7 +175,7 @@ function diffId(d) {
  *      either side of the mutation line.
  *
  * Section indices are positional (0 = preface, 1 = first heading's
- * section, etc.) and match across EN and JA because Phase 4's boundary
+ * section, etc.) and match across EN and JA because the boundary
  * test already enforces that EN and JA share the same heading count
  * per page.
  *
@@ -505,7 +503,7 @@ function maxBaselineDiffsAcrossCorpus(pageRecords) {
 // Benchmark suite
 // ---------------------------------------------------------------------------
 
-describe('Phase 5 — exact diff recall benchmark', () => {
+describe('exact diff recall benchmark', () => {
   it('detects every diff=1 mutation in the strict-recall set with 100% recall', () => {
     const manifest = loadManifest();
     const pageRecords = manifest.map((p) => analyzePage(p.slug));
@@ -547,7 +545,7 @@ describe('Phase 5 — exact diff recall benchmark', () => {
     assert.equal(
       failures.length,
       0,
-      `Phase 5 NO-GO — strict-recall mutations not detected:\n  ${failures.join('\n  ')}`,
+      `strict-recall mutations not detected:\n  ${failures.join('\n  ')}`,
     );
 
     // Every strict-recall type must be applicable on at least one page —
@@ -562,13 +560,13 @@ describe('Phase 5 — exact diff recall benchmark', () => {
     // Go condition 2 — no cascade.
     assert.ok(
       maxCascade <= MAX_CASCADE,
-      `Phase 5 NO-GO — cascade detected: a single mutation produced ${maxCascade} new diffs (limit ${MAX_CASCADE})`,
+      `cascade detected: a single mutation produced ${maxCascade} new diffs (limit ${MAX_CASCADE})`,
     );
 
     // Go condition 3 — precision baseline bounded.
     assert.ok(
       maxBaselineDiffs <= MAX_BASELINE_DIFFS_PER_PAGE,
-      `Phase 5 NO-GO — precision regression: max baseline diffs on a page is ${maxBaselineDiffs} (limit ${MAX_BASELINE_DIFFS_PER_PAGE})`,
+      `precision regression: max baseline diffs on a page is ${maxBaselineDiffs} (limit ${MAX_BASELINE_DIFFS_PER_PAGE})`,
     );
   });
 
