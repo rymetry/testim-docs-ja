@@ -64,13 +64,9 @@ function parseArgs(argv = process.argv.slice(2)) {
 /**
  * doc file から { slug, sourceUrl, relativePath } の一覧を作る。
  */
-function collectTargets({ section, slug, resolvedSlug }) {
+function collectTargets({ section, resolvedSlug }) {
   const files = findMdFiles(DOCS_DIR);
   const targets = [];
-  if (slug && !resolvedSlug) {
-    console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
-    return [];
-  }
 
   for (const filePath of files) {
     const doc = readDocFile(filePath);
@@ -322,7 +318,12 @@ async function verifySidebar({ dryRun = false } = {}) {
 export async function main(argv) {
   const args = parseArgs(argv);
   const resolvedSlug = args.slug ? resolveSlug(args.slug) : null;
-  const targets = collectTargets({ ...args, resolvedSlug });
+  if (args.slug && !resolvedSlug) {
+    console.error(`❌ Unknown slug: "${args.slug}". No matching document found.`);
+    return { fetched: 0, notFound: 0, errors: 1, skipped: 0 };
+  }
+
+  const targets = collectTargets({ section: args.section, resolvedSlug });
   const runScope = buildRunScope({
     slug: resolvedSlug,
     section: args.section,
