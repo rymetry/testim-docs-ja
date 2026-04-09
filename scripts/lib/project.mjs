@@ -125,12 +125,23 @@ export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
 }
 
 /**
+ * Lazy-cached full slug → resolved full slug lookup.
+ *
+ * `resolveToFullSlug` is used from the parity extraction hot path, so repeated
+ * lookups for the same truncated slug are memoized per docsDir. The cache must
+ * stay under `resetProjectCachesForTest()` so test-only callers can force a
+ * fresh scan after mutating a temp docs tree.
+ */
+const _resolveToFullSlugCache = new Map();
+
+/**
  * Reset all module-level caches. Test-only API.
  */
 export function resetProjectCachesForTest() {
   _sectionCache.clear();
   _basenameMapCache.clear();
   _slugIndexCache.clear();
+  _resolveToFullSlugCache.clear();
 }
 
 /**
@@ -162,6 +173,45 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
   walk(docsDir);
   _slugIndexCache.set(docsDir, index);
   return index;
+}
+
+/**
+ * Resolve a possibly truncated slug to the full slug present in the docs tree.
+ *
+ * Resolution order:
+ *   1. Exact full-slug match in the docs index
+ *   2. Unique basename fallback
+ *   3. Original slug (safe fallback for ambiguous / missing entries)
+ *
+ * Cache is keyed by docsDir so temp test trees stay isolated from the real
+ * repository docs tree.
+ *
+ * @param {string} slug
+ * @param {string} [docsDir]
+ * @returns {string}
+ */
+export function resolveToFullSlug(slug, docsDir = DOCS_DIR) {
+  let dirCache = _resolveToFullSlugCache.get(docsDir);
+  if (!dirCache) {
+    dirCache = new Map();
+    _resolveToFullSlugCache.set(docsDir, dirCache);
+  }
+
+  const cached = dirCache.get(slug);
+  if (cached !== undefined) return cached;
+
+  const index = buildSlugIndex(docsDir);
+  let resolved;
+  if (Object.prototype.hasOwnProperty.call(index, slug)) {
+    resolved = slug;
+  } else {
+    const basename = slug.split('/').pop();
+    const basenameMap = buildBasenameToPathMap(docsDir);
+    resolved = basenameMap.get(basename) ?? slug;
+  }
+
+  dirCache.set(slug, resolved);
+  return resolved;
 }
 
 /**

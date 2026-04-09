@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { buildSlugIndex, buildDocsIndex, buildBasenameToPathMap, extractSourceContentPath, filePathToSlug, matchesSectionFilter, resolveSlug, splitFrontmatter, toKebab, resetProjectCachesForTest } from '../lib/project.mjs';
+import { buildSlugIndex, buildDocsIndex, buildBasenameToPathMap, extractSourceContentPath, filePathToSlug, matchesSectionFilter, resolveSlug, resolveToFullSlug, splitFrontmatter, toKebab, resetProjectCachesForTest } from '../lib/project.mjs';
 
 describe('buildSlugIndex', () => {
   it('returns an object with slug keys mapping to categoryFolder and filePath', () => {
@@ -337,6 +337,81 @@ describe('buildBasenameToPathMap', () => {
     const map = buildBasenameToPathMap(dir);
     assert.equal(map.size, 0);
     fs.rmSync(dir, { recursive: true });
+  });
+});
+
+describe('resolveToFullSlug', () => {
+  it('returns the full slug as-is when it exists in the docs index', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'resolve-full-'));
+    fs.mkdirSync(path.join(dir, 'salesforce-testing', 'salesforce-steps'), { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, 'salesforce-testing', 'salesforce-steps', 'sfdc-step-apex-action.md'),
+      '',
+    );
+
+    try {
+      assert.equal(
+        resolveToFullSlug('salesforce-testing/salesforce-steps/sfdc-step-apex-action', dir),
+        'salesforce-testing/salesforce-steps/sfdc-step-apex-action',
+      );
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+      resetProjectCachesForTest();
+    }
+  });
+
+  it('falls back to the unique basename when the input slug is truncated', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'resolve-fallback-'));
+    fs.mkdirSync(path.join(dir, 'salesforce-testing', 'salesforce-steps'), { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, 'salesforce-testing', 'salesforce-steps', 'sfdc-step-apex-action.md'),
+      '',
+    );
+
+    try {
+      assert.equal(
+        resolveToFullSlug('salesforce-steps/sfdc-step-apex-action', dir),
+        'salesforce-testing/salesforce-steps/sfdc-step-apex-action',
+      );
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+      resetProjectCachesForTest();
+    }
+  });
+
+  it('returns stale cached resolution until reset, then re-scans after reset', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'resolve-reset-'));
+    const oldPath = path.join(dir, 'salesforce-testing', 'salesforce-steps', 'sfdc-step-apex-action.md');
+    const newPath = path.join(dir, 'zzz-temp', 'sfdc-step-apex-action.md');
+    fs.mkdirSync(path.dirname(oldPath), { recursive: true });
+    fs.writeFileSync(oldPath, '');
+
+    try {
+      assert.equal(
+        resolveToFullSlug('salesforce-steps/sfdc-step-apex-action', dir),
+        'salesforce-testing/salesforce-steps/sfdc-step-apex-action',
+      );
+
+      fs.mkdirSync(path.dirname(newPath), { recursive: true });
+      fs.renameSync(oldPath, newPath);
+
+      assert.equal(
+        resolveToFullSlug('salesforce-steps/sfdc-step-apex-action', dir),
+        'salesforce-testing/salesforce-steps/sfdc-step-apex-action',
+        'without reset, cached value should remain stale',
+      );
+
+      resetProjectCachesForTest();
+
+      assert.equal(
+        resolveToFullSlug('salesforce-steps/sfdc-step-apex-action', dir),
+        'zzz-temp/sfdc-step-apex-action',
+        'after reset, cache should refresh from disk',
+      );
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+      resetProjectCachesForTest();
+    }
   });
 });
 
