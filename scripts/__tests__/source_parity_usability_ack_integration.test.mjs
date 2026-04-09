@@ -44,37 +44,39 @@ function buildAckEntry({ slug, issueType, detailIncludes, fingerprint }) {
 }
 
 describe('Issue #247 post-merge — detector→matcher round-trip (source-unusable)', () => {
-  it('faq (escaped-details-residue) は detailIncludes で ack 可能', () => {
-    const rawEnHtml = readFileSync(
-      join(SNAPSHOTS_DIR, 'salesforce-testing/faq.html'),
-      'utf8',
-    );
-    const jaBody = extractJaBody(
-      readFileSync(join(JA_CONTENT_DIR, 'salesforce-testing/faq.md'), 'utf8'),
-    );
-    let enSegments = [];
-    let extractError = null;
-    try {
-      enSegments = extractSegmentsFromHtml(rawEnHtml);
-    } catch (e) {
-      extractError = e;
-    }
-    const jaSegments = extractSegmentsFromMarkdown(jaBody);
+  // Phase F.2.5 で `faq` は preprocessor 段階で正規化され、もはや
+  // `source-unusable (escaped-details-residue)` を emit しない。そのため
+  // 本 contract の round-trip 検証は合成 HTML で Layer 2 を直接トリガする。
+  // JA 側の segments も手作りすれば実ファイル依存を持たず、将来 faq の
+  // JA が変更されても本 test は壊れない。
+  it('escaped-details-residue (合成 HTML) は detailIncludes で ack 可能', () => {
+    // orphan な `&lt;/details&gt;` close を持つだけの <p> — faq 正規化は
+    // firstOpens !== firstCloses 条件で発火しないため preprocess 後も
+    // escaped marker が残り、detector の Layer 2 が発火する。
+    const rawEnHtml = '<p>Some legacy body text &lt;/details&gt;</p>';
+    const enSegments = []; // body も heading も 0
+    const jaSegments = [
+      { segmentKind: 'heading', sectionPath: 'Top', text: 'トップ' },
+      { segmentKind: 'heading', sectionPath: 'Q1', text: 'セクション 1' },
+      { segmentKind: 'heading', sectionPath: 'Q2', text: 'セクション 2' },
+      { segmentKind: 'paragraph', sectionPath: 'Q1', text: '本文' },
+    ];
 
-    const issue = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
-    assert.ok(issue, 'detector は issue を返すべき');
+    const issue = detectSourceUsability({ rawEnHtml, enSegments, jaSegments });
+    assert.ok(issue, 'detector は source-unusable issue を返すべき');
     assert.equal(issue.type, 'source-unusable');
+    assert.equal(issue.usabilitySignals.reason, 'escaped-details-residue');
 
     const fingerprint = computeSnapshotFingerprint(rawEnHtml);
     const entry = buildAckEntry({
-      slug: 'salesforce-testing/faq',
+      slug: 'synthetic/escaped-details-residue',
       issueType: 'source-unusable',
       detailIncludes: '[reason=escaped-details-residue]',
       fingerprint,
     });
 
     const match = findMatchingAcknowledgement(
-      'salesforce-testing/faq',
+      'synthetic/escaped-details-residue',
       issue,
       [entry],
       fingerprint,
@@ -82,7 +84,7 @@ describe('Issue #247 post-merge — detector→matcher round-trip (source-unusab
     );
     assert.ok(
       match,
-      '[reason=escaped-details-residue] は実 emitter 出力の detail 末尾に含まれるべき ' +
+      '[reason=escaped-details-residue] は detail 末尾に含まれるべき ' +
         `(actual detail=${JSON.stringify(issue.detail)})`,
     );
     assert.equal(match.expired, false);

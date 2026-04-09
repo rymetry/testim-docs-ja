@@ -1,12 +1,15 @@
 /**
- * detectSourceUsability の fixture integration テスト (Issue #247 PR3)。
+ * detectSourceUsability の fixture integration テスト (Issue #247 PR3 → post-merge 改訂)。
  *
  * 設計書 §4.5.2 に対応。実 snapshot ファイルを読み込んで detector を呼び、
  * type / reason を assert する。
  *
- * 対象 2 ページ:
+ * 対象 2 ページ (post-merge 完了後の契約):
  *   - salesforce-testing/salesforce-testing-overview → snapshot-incomplete / shallow-snapshot
- *   - salesforce-testing/faq                        → source-unusable   / escaped-details-residue
+ *     (upstream snapshot side debt のため `snapshot-incomplete` のまま保持)
+ *   - salesforce-testing/faq                        → **usable** (detector returns null)
+ *     (Phase F.2.5 で `normalizeEscapedFaqDetails` が valid sibling `<h2>/<p>` block
+ *      に再構成するため、broken details tree が消えて detector の Layer 2 が発火しない)
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -212,8 +215,8 @@ describe('detectSourceUsability fixture: advanced-editing/coding-assistant', () 
 // salesforce-testing/faq
 // ---------------------------------------------------------------------------
 
-describe('detectSourceUsability fixture: salesforce-testing/faq', () => {
-  it('escaped-details-residue を検出する (source-unusable / reason=escaped-details-residue)', () => {
+describe('detectSourceUsability fixture: salesforce-testing/faq (Phase F.2.5 完了後)', () => {
+  it('Phase F.2.5 で normalizeEscapedFaqDetails が発火し detector は null を返す', () => {
     const rawEnHtml = readFileSync(
       join(SNAPSHOTS_DIR, 'salesforce-testing/faq.html'),
       'utf8',
@@ -235,40 +238,30 @@ describe('detectSourceUsability fixture: salesforce-testing/faq', () => {
 
     const result = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
 
-    assert.ok(
-      result !== null,
-      `faq は usability issue を返すべき。rawEnHtml.length=${rawEnHtml.length}, enSegments=${enSegments.length}, jaSegments=${jaSegments.length}`,
+    assert.equal(
+      result,
+      null,
+      `faq は Phase F.2.5 以降 usable と判定されるべき。` +
+        `actual type=${result?.type}, reason=${result?.usabilitySignals?.reason}`,
     );
-    assert.equal(result.type, 'source-unusable');
-    assert.equal(result.usabilitySignals.reason, 'escaped-details-residue');
   });
 
-  it('faq は residualEscapedDetailsClose >= 1 を持つ', () => {
+  it('Phase F.2.5 後: faq は extractor で heading=5 / details-summary=0 を生成する', () => {
     const rawEnHtml = readFileSync(
       join(SNAPSHOTS_DIR, 'salesforce-testing/faq.html'),
       'utf8',
     );
-    const jaMd = readFileSync(
-      join(JA_CONTENT_DIR, 'salesforce-testing/faq.md'),
-      'utf8',
-    );
-    const jaBody = extractJaBody(jaMd);
-
-    let enSegments = [];
-    let extractError = null;
-    try {
-      enSegments = extractSegmentsFromHtml(rawEnHtml);
-    } catch (e) {
-      extractError = e;
-    }
-    const jaSegments = extractSegmentsFromMarkdown(jaBody);
-
-    const result = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
-
-    assert.ok(result !== null);
-    assert.ok(
-      result.usabilitySignals.residualEscapedDetailsClose >= 1,
-      `residualEscapedDetailsClose=${result.usabilitySignals.residualEscapedDetailsClose} は 1 以上であるべき`,
+    const enSegs = extractSegmentsFromHtml(rawEnHtml);
+    const headings = enSegs.filter((s) => s.segmentKind === 'heading');
+    const detailSummaries = enSegs.filter((s) => s.segmentKind === 'details-summary');
+    // 5 つの FAQ 項目がすべて valid `<h2>` anchor に再構成されている
+    assert.equal(headings.length, 5, `faq の heading 件数が 5 でない: ${headings.length}`);
+    // details-summary kind は 0 件 — frozen vocabulary は既存のまま、faq は
+    // preprocessor で既に `<h2>` に置き換わっているので emit されない
+    assert.equal(
+      detailSummaries.length,
+      0,
+      `faq に details-summary が残っている: ${detailSummaries.length}`,
     );
   });
 });
