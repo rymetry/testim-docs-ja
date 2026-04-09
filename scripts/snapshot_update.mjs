@@ -98,24 +98,20 @@ function collectTargets({ section, slug }) {
 /**
  * Synthetic JA segments for recovery probe.
  *
- * detectSourceUsability は JA body segment 数を閾値に使う (extractor-empty
- * は jaBody >= 3, shallow-snapshot は jaBody >= 5)。recovery probe が
- * 実 JA に依存すると、未翻訳や短い JA で false recovery が発生する。
- * reason ごとに detector の閾値を満たす synthetic segments を返すことで、
- * EN-only の判定を維持する。
+ * detectSourceUsability は JA body / heading 数を閾値に使う
+ * (`extractor-empty`: jaBody >= 3, `shallow-snapshot`: jaBody >= 5,
+ * `escaped-details-residue`: jaHeading >= 2)。recovery probe が実 JA に
+ * 依存すると、未翻訳や短い JA で false recovery が発生する。
+ *
+ * recovery probe は "現在の expectedReason" ではなく detector が持つ
+ * すべての閾値を一度に満たす synthetic JA を使う。これにより
+ * `extractor-empty` → `shallow-snapshot` のような cross-reason drift でも
+ * fail-close を維持できる。
  */
-function buildProbeJaSegments(expectedReason) {
-  switch (expectedReason) {
-    case 'extractor-empty':
-      return extractSegmentsFromMarkdown('# Probe\n\nA\n\nB\n\nC');
-    case 'shallow-snapshot':
-      return extractSegmentsFromMarkdown('# Probe\n\nA\n\nB\n\nC\n\nD\n\nE');
-    case 'escaped-details-residue':
-      return extractSegmentsFromMarkdown('# Probe\n\n## Section\n\nA');
-    default:
-      // 未知の reason は最も厳しい shallow-snapshot の閾値で安全側に倒す
-      return extractSegmentsFromMarkdown('# Probe\n\nA\n\nB\n\nC\n\nD\n\nE');
-  }
+function buildProbeJaSegments() {
+  return extractSegmentsFromMarkdown(
+    '# Probe\n\n## Section One\n\nA\n\nB\n\n## Section Two\n\nC\n\nD\n\nE',
+  );
 }
 
 const SUPPORTED_RECOVERY_REASONS = new Set([
@@ -189,7 +185,7 @@ export function runRecoveryProbe({
     });
   }
 
-  const jaSegments = buildProbeJaSegments(exclusionEntry.expectedReason);
+  const jaSegments = buildProbeJaSegments();
 
   const issue = detectSourceUsability({
     rawEnHtml,

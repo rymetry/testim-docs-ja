@@ -363,6 +363,25 @@ describe('snapshot_update — source-side debt exclusion', () => {
     });
   });
 
+  it('cross-reason drift to shallow-snapshot stays excluded-broken', () => {
+    const result = runRecoveryProbe({
+      rawEnHtml: '<h1>Title</h1><p>A</p>',
+      exclusionEntry: {
+        expectedIssueType: 'snapshot-incomplete',
+        expectedReason: 'extractor-empty',
+      },
+    });
+
+    assert.equal(result.fetchStatus, 'excluded-broken');
+    assert.deepEqual(result.recoveryProbe, {
+      issueType: 'snapshot-incomplete',
+      reason: 'shallow-snapshot',
+      expectedIssueType: 'snapshot-incomplete',
+      expectedReason: 'extractor-empty',
+      expectedMatch: false,
+    });
+  });
+
   // --- Finding 2: expectedMatch + actual/expected が probe output に載る ---
 
   it('excluded-broken probe に expectedIssueType / expectedReason / expectedMatch が載る', async () => {
