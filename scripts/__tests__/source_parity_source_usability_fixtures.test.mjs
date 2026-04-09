@@ -1,5 +1,4 @@
 /**
-/**
  * detectSourceUsability の fixture integration テスト (Issue #247 PR3 → post-merge 改訂 →
  * Issue #247 End-to-End 完全解消 post-review 改訂)。
  *

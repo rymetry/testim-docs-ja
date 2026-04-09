@@ -1,24 +1,20 @@
 /**
- * Issue #247 PR6 — 代表ページに対する canonical block sequence comparator
- * の実 snapshot + 実 JA md 回帰 fixture テスト。
+ * Issue #247 End-to-End 完全解消後の structure regression guard。
  *
- * 対象 3 ページ (Issue #247 本文で structure mismatch として明示されたもの):
+ * representative 3 ページ:
  *   - running-tests/the-command-line-cli
  *   - results/test-results/network-logs
  *   - advanced-editing/validations/email-validation
  *
- * pin する契約:
- *   1. alignSegments → parityDiffsToIssues 経由で section-structure-mismatch /
- *      segment-order-mismatch が **少なくとも 1 件** emit される (false red
- *      回帰の防止)
- *   2. 各 page で emit される structure issue の件数が PR5 baseline と一致する
- *      (drift 発生時のシグナル)
- *   3. 先頭 issue の structureCategory / sectionPath / enKinds / jaKinds が
- *      固定の期待値と一致する (comparator の出力契約の固定)
+ * これらは post-resolution では canonical block sequence comparator 上
+ * `section-structure-mismatch` / `segment-order-mismatch` ともに 0 件である
+ * ことを維持し続ける必要がある。ここでは実 snapshot + 実 JA md を読み、
+ * raw comparator 出力が空配列であることを pin する。
  *
- * このテストは gate 側の挙動 (baseline tagging / acknowledgement tagging /
- * exit code) には触れない — それは §Task 3 の representative summary test が
- * 担当する。ここは **comparator の raw 出力** だけを pin する。
+ * なお、下の `PINNED_*` 定数は PR5 / post-merge review 時点の historical
+ * pin 値を残した参照データであり、現在の assert 本体は `assertStructureClean()`
+ * を使う。gate 側の summary counter や baseline tagging は
+ * representative summary test が担当する。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -73,7 +69,7 @@ function runStructureComparator(slug) {
 }
 
 // ---------------------------------------------------------------------------
-// pin 値 (Step 3 の実測で確定)
+// Historical pin 値 (PR5 / post-merge review 時点の実測)。
 // ---------------------------------------------------------------------------
 
 const PINNED_THE_CLI = Object.freeze({
