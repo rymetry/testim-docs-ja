@@ -1,9 +1,9 @@
 /**
- * Boundary stability benchmark (Issue #225 Phase 4 success gate).
+ * Boundary stability benchmark.
  *
  * Runs the new EN HTML and JA markdown canonical segment extractors against
- * the 10 representative pages from the Phase 0 mutation corpus manifest and
- * verifies that segment boundaries are stable enough to feed the Phase 5
+ * the representative pages from the mutation corpus manifest and
+ * verifies that segment boundaries are stable enough to feed the exact diff
  * exact diff engine.
  *
  * Hard assertions (structural invariants — must match exactly):
@@ -18,8 +18,8 @@
  *
  * `KNOWN_ORDERED_DRIFTS` lists slugs where EN embeds "1. x 2. y 3. z" as
  * plain text in a single <p> while JA uses a proper numbered list. This is
- * a legitimate translation improvement that Phase 5's exact diff engine
- * must handle; Phase 4 keeps the invariant on the other pages so
+ * a legitimate translation improvement that the exact diff engine
+ * must handle; this suite keeps the invariant on the other pages so
  * ordered-list regressions there are still caught.
  *
  * The stability score is 1 - (total absolute count diffs / (2 * total segments))
@@ -131,7 +131,7 @@ function analyzePage(slug, gateSet) {
 // Benchmark suite
 // ---------------------------------------------------------------------------
 
-describe('Phase 4 boundary stability benchmark', () => {
+describe('boundary stability benchmark', () => {
   it('runs the extractors on every representative page without errors', () => {
     const gateSet = new Set(GATE_ELIGIBLE_KINDS);
     const manifest = loadManifest();
@@ -242,7 +242,7 @@ describe('Phase 4 boundary stability benchmark', () => {
   });
 
   it('callout-body counts match exactly between EN and JA on every page', () => {
-    // After the Phase 4 callout-block-parsing refactor, list items inside a
+    // callout block parsing 後も、list items inside a
     // callout are classified as list-items on both sides. The remaining
     // callout-body segments are plain-paragraph content, which should align
     // exactly between the two extractors.

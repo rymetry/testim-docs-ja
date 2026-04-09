@@ -370,12 +370,7 @@ describe('validateRunLinkage', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Issue #255 Phase 3a — source-side debt (excluded-broken / excluded-recovered)
-//
-// "既知 broken upstream" page は freshness 計算から除外し、独立 counter で
-// 見せる。excluded は `fresh` 判定を壊さない。
-// ---------------------------------------------------------------------------
+// excluded-broken / excluded-recovered は freshness 判定から除外する。
 
 describe('computeFreshnessState — source-side debt handling', () => {
   it('ignores excluded-broken pages (debt-only run is still fresh)', () => {

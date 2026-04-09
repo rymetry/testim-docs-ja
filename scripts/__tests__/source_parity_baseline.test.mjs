@@ -1,5 +1,5 @@
 /**
- * Tests for the Phase 6A frozen baseline mechanism.
+ * Tests for the frozen baseline mechanism.
  *
  * Pure-function tests for schema validation, lookup key generation, and
  * page-level invalidation. The integration into check_source_parity.mjs
@@ -97,7 +97,7 @@ const validTokenGapEntry = {
 // ---------------------------------------------------------------------------
 
 describe('BASELINE_ELIGIBLE_TYPES', () => {
-  it('contains all 6 Phase 6A baseline-eligible types', () => {
+  it('contains all baseline-eligible segment types', () => {
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-missing'));
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-extra'));
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-shifted'));
@@ -112,11 +112,7 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     assert.ok(!BASELINE_ELIGIBLE_TYPES.has('untranslated'));
   });
 
-  // Issue #247 PR5 — gate cutover で structure mismatch / source unusable を
-  // baseline allowlist に追加した。§3.1 参照。emitter / validator / key
-  // builder / generator が足並みを揃えて新 type を扱えるようにする必要
-  // があるため、allowlist 拡張だけで済まない点に注意。
-  it('contains Issue #247 structure-mismatch / source-unusable types (PR5 cutover)', () => {
+  it('contains structure-mismatch / source-unusable types', () => {
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',
@@ -126,30 +122,21 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
       assert.equal(
         BASELINE_ELIGIBLE_TYPES.has(type),
         true,
-        `${type} must be in BASELINE_ELIGIBLE_TYPES after PR5 cutover`,
+        `${type} must be in BASELINE_ELIGIBLE_TYPES`,
       );
     }
   });
 });
 
-// ---------------------------------------------------------------------------
-// Issue #247 PR5 — validateBaseline — structure mismatch entries
-//
-// PR5 cutover で structure mismatch を baseline 可能にした。identity surface
-// は §3.2 に従い sectionIndex + structureCategory + structureFingerprint。
-// sectionPath は reviewer 可読性のための必須フィールドだが identity key
-// には含めない (同一ページ内で一意の保証が無いため — Finding 2)。
-// ---------------------------------------------------------------------------
-
-describe('Issue #247 PR5 — validateBaseline — structure mismatch entries', () => {
-  const VALID_PR5_FP = 'sha256:' + 'f'.repeat(64);
+describe('validateBaseline — structure mismatch entries', () => {
+  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const STRUCTURE_FP = 'sha256:' + '1'.repeat(64);
 
   function baseStructureEntry(overrides = {}) {
     return {
       slug: 'running-tests/the-command-line-cli',
       issueType: 'section-structure-mismatch',
-      snapshotFingerprint: VALID_PR5_FP,
+      snapshotFingerprint: VALID_SNAPSHOT_FP,
       reviewAfter: '2026-10-06',
       sectionIndex: 7,
       sectionPath: 'CLI Installation > Basic CLI command',
@@ -243,21 +230,21 @@ describe('Issue #247 PR5 — validateBaseline — structure mismatch entries', (
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — validateBaseline — source unusable entries
+// validateBaseline — source unusable entries
 //
 // source unusable は page 粒度の issue。identity surface は usabilityReason
 // のみ (§3.3)。sectionPath / structureCategory / structureFingerprint は
 // 持たない。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — validateBaseline — source unusable entries', () => {
-  const VALID_PR5_FP = 'sha256:' + 'f'.repeat(64);
+describe('validateBaseline — source unusable entries', () => {
+  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
 
   function baseSourceUnusableEntry(overrides = {}) {
     return {
       slug: 'salesforce-testing/faq',
       issueType: 'source-unusable',
-      snapshotFingerprint: VALID_PR5_FP,
+      snapshotFingerprint: VALID_SNAPSHOT_FP,
       reviewAfter: '2026-10-06',
       usabilityReason: 'escaped-details-residue',
       ...overrides,
@@ -587,7 +574,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry の対称性
+// buildBaselineKey / buildBaselineKeyFromEntry の対称性
 //
 // runtime 側 (buildBaselineKey) は毎回 computeStructureFingerprint を呼んで
 // fingerprint を derive するのに対し、disk 側 (buildBaselineKeyFromEntry) は
@@ -595,7 +582,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
 // 返すことが baseline matching の前提。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', () => {
+describe('buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', () => {
   const PAGE_FP = 'sha256:' + 'f'.repeat(64);
 
   function makeStructureIssue(overrides = {}) {
@@ -654,7 +641,7 @@ describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (struc
     assert.equal(buildBaselineKey(slug, issue), buildBaselineKeyFromEntry(entry));
   });
 
-  it('distinguishes by sectionIndex even when sectionPath is identical (Finding 2 regression pin)', () => {
+  it('distinguishes by sectionIndex even when sectionPath is identical', () => {
     const slug = 'some/page';
     const issueA = makeStructureIssue({ sectionIndex: 3 });
     const issueB = makeStructureIssue({ sectionIndex: 7 });
@@ -693,7 +680,7 @@ describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (struc
   });
 });
 
-describe('Issue #247 PR5 — buildBaselineKey / buildBaselineKeyFromEntry (source unusable)', () => {
+describe('buildBaselineKey / buildBaselineKeyFromEntry (source unusable)', () => {
   const PAGE_FP = 'sha256:' + 'f'.repeat(64);
 
   it('runtime key and entry key match (escaped-details-residue)', () => {
@@ -903,7 +890,7 @@ describe('isBaselineExpired', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — tagIssuesWithBaseline contract for structure mismatch
+// tagIssuesWithBaseline contract for structure mismatch
 //
 // runtime 側から baseline entry にマッチする挙動を pin する。
 // tagIssuesWithBaseline 本体は generic contract なので新しい分岐は
@@ -911,7 +898,7 @@ describe('isBaselineExpired', () => {
 // 下流まで波及していることを explicit に pin する。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — tagIssuesWithBaseline (structure mismatch)', () => {
+describe('tagIssuesWithBaseline (structure mismatch)', () => {
   const PAGE_FP = 'sha256:' + 'f'.repeat(64);
 
   function makeStructureIssue(overrides = {}) {
@@ -975,7 +962,7 @@ describe('Issue #247 PR5 — tagIssuesWithBaseline (structure mismatch)', () => 
     assert.equal(result.invalidated, true);
   });
 
-  it('(Finding 2) two sections with identical path/fingerprint but different sectionIndex are tagged independently', () => {
+  it('two sections with identical path/fingerprint but different sectionIndex are tagged independently', () => {
     // 同一ページに section A (index=3) と section B (index=7) があり、
     // 両方が同じ sectionPath + 同じ structureFingerprint を出すケース。
     // baseline が A にしか付いていないとき、B は untagged のままになる
@@ -996,7 +983,7 @@ describe('Issue #247 PR5 — tagIssuesWithBaseline (structure mismatch)', () => 
   });
 });
 
-describe('Issue #247 PR5 — tagIssuesWithBaseline (source unusable)', () => {
+describe('tagIssuesWithBaseline (source unusable)', () => {
   const PAGE_FP = 'sha256:' + 'f'.repeat(64);
 
   it('tags a matching source-unusable issue by usabilityReason', () => {
@@ -1040,7 +1027,7 @@ describe('Issue #247 PR5 — tagIssuesWithBaseline (source unusable)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — STRUCTURE_CATEGORIES / USABILITY_REASONS
+// STRUCTURE_CATEGORIES / USABILITY_REASONS
 //
 // 新 4 type (section-structure-mismatch / segment-order-mismatch /
 // snapshot-incomplete / source-unusable) を baseline 可能にするため、
@@ -1050,7 +1037,7 @@ describe('Issue #247 PR5 — tagIssuesWithBaseline (source unusable)', () => {
 // の identity 検証を decouple する。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — STRUCTURE_CATEGORIES', () => {
+describe('STRUCTURE_CATEGORIES', () => {
   it('contains the 3 canonical structure categories (kind-multiset / kind-sequence / content-order)', () => {
     assert.ok(STRUCTURE_CATEGORIES.has('kind-multiset'));
     assert.ok(STRUCTURE_CATEGORIES.has('kind-sequence'));
@@ -1069,7 +1056,7 @@ describe('Issue #247 PR5 — STRUCTURE_CATEGORIES', () => {
   });
 });
 
-describe('Issue #247 PR5 — USABILITY_REASONS', () => {
+describe('USABILITY_REASONS', () => {
   it('contains the 3 known unusable reasons', () => {
     assert.ok(USABILITY_REASONS.has('shallow-snapshot'));
     assert.ok(USABILITY_REASONS.has('escaped-details-residue'));
@@ -1088,7 +1075,7 @@ describe('Issue #247 PR5 — USABILITY_REASONS', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — computeStructureFingerprint
+// computeStructureFingerprint
 //
 // structure mismatch の baseline identity key 用に、enKinds / jaKinds /
 // structureCategory / contentPermutation を sha256 hex に畳み込む helper。
@@ -1096,7 +1083,7 @@ describe('Issue #247 PR5 — USABILITY_REASONS', () => {
 // 生データアクセス手段が増えるため、derived fingerprint 1 本に集約する。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — computeStructureFingerprint', () => {
+describe('computeStructureFingerprint', () => {
   const FINGERPRINT_RE = /^sha256:[0-9a-f]{64}$/;
 
   it('produces a deterministic sha256:<64 hex> fingerprint for a given input', () => {
@@ -1242,14 +1229,13 @@ describe('Issue #247 PR5 — computeStructureFingerprint', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 post-merge — computeOrphanBaselineEntries helper
+// computeOrphanBaselineEntries helper
 //
 // tagIssuesWithBaseline が返す matchedKeys を使って「runtime に一致しない
-// baseline entry」= orphan を抽出する純粋関数。PR5 migration で
-// `segment-inconclusive` 3 件が legacy として残留した再発を防ぐ。
+// baseline entry」= orphan を抽出する純粋関数。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 post-merge — computeOrphanBaselineEntries', () => {
+describe('computeOrphanBaselineEntries', () => {
   let computeOrphanBaselineEntries;
   let tagIssuesWithBaseline2;
   before(async () => {
@@ -1367,10 +1353,10 @@ describe('Issue #247 post-merge — computeOrphanBaselineEntries', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 post-merge — summary orphanBaselineEntries counter
+// summary orphanBaselineEntries counter
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 post-merge — summary orphanBaselineEntries counter', () => {
+describe('summary orphanBaselineEntries counter', () => {
   let summarizeParityResults;
   before(async () => {
     ({ summarizeParityResults } = await import('../lib/source_parity_summary.mjs'));

@@ -1,9 +1,8 @@
 /**
- * Section 単位の canonical block sequence comparator (Issue #247 PR2)。
+ * Section 単位の canonical block sequence comparator。
  *
- * `compareSectionStructure(enSection, jaSection)` は 1 組の (EN, JA) section
- * body に対して 3 段階のチェックを走らせ、section 単位の parity diff を
- * 最大 1 件返す。段階は以下の通り:
+ * `compareSectionStructure(enSection, jaSection)` は 1 組の section body を
+ * 3 段階で比較し、最大 1 件の section-level diff を返す。段階は以下の通り:
  *
  *   Stage A — kind-multiset (section-structure-mismatch)
  *     block kind の **集合** が EN/JA で違うケース。list→paragraph
@@ -21,10 +20,9 @@
  *     swap は **意図的に検出しない**: semantic evidence なしには独立の
  *     rewrite と区別できないので、これは既存 LCS に委ねる契約。
  *
- * どの stage も発火しなければ空配列を返し、呼び出し側 (`alignSegments`) は
- * そのまま既存の weighted LCS に流す。section あたり高々 1 件の diff しか
- * emit しない — 先に発火した stage が勝ち、後続 stage は short-circuit で
- * 走らない。
+ * どの stage も発火しなければ空配列を返し、呼び出し側は既存の weighted LCS
+ * に流す。section ごとに emit する diff は最大 1 件で、先に発火した
+ * stage が勝つ。
  *
  * Block 単位の語彙
  * ----------------
@@ -40,10 +38,10 @@
  * (list item 数差、table cell 数差) は別 comparator の責務であり、この
  * structure comparator は **block 列の差** だけを見る。
  *
- * Issue payload contract (PR5 baseline identity surface, wired)
+ * Issue payload contract
  * --------------------------------------------------------------
  * 固定 schema は単体テスト (source_parity_structure.test.mjs) にも pin
- * してある。PR5 baseline migration で `sectionIndex` / `structureCategory` /
+ * してある。baseline migration で `sectionIndex` / `structureCategory` /
  * `enKinds` / `jaKinds` / `contentPermutation` がそれぞれ
  * `source_parity_baseline.mjs::computeStructureFingerprint` に渡されて
  * identity hash に畳み込まれている。これらのフィールドを rename /
@@ -64,7 +62,7 @@ import { scoreSegmentMatch } from './source_parity_align_scoring.mjs';
 /**
  * structure comparator が `enKinds` / `jaKinds` で使う block 単位の kind
  * 語彙。この集合は `source_parity_structure.test.mjs` の regression test
- * で PIN されている。Issue #247 PR5 baseline migration 以降、
+ * で PIN されている。baseline migration 以降、
  * `enKinds.join('|')` / `jaKinds.join('|')` は
  * `source_parity_baseline.mjs::computeStructureFingerprint` で baseline
  * identity key に hash されている。エントリの追加・削除・改名は破壊的
@@ -418,45 +416,19 @@ export function compareSectionStructure(enSection, jaSection) {
     return [];
   }
 
-  // Stage A — block kind multiset の不一致。
-  //
-  // 「全文構造保持」を保証するという PR2 の目的に忠実に従い、block kind
-  // の **多重集合 (multiset)** が違えば section-structure-mismatch を
-  // 1 件 emit する。これにより以下が headline signal として可視化される:
-  //
-  //   - paragraph merge (3p → 1p) / split (1p → 3p) のような同種 kind の
-  //     count drift
-  //   - list→paragraph collapse / callout→paragraph collapse /
-  //     ordered↔unordered list swap / details-summary 消失のような
-  //     cross-kind drift
-  //   - mixed-kind の数違い (例: [p, p, ul] vs [p, ul])
-  //
-  // structure comparator は LCS と **並行** で動かす設計 (alignSegments
-  // を参照) なので、Stage A が fire しても LCS の per-segment drill-down
-  // (segment-missing / segment-extra / segment-token-gap) は通常通り出る。
-  // section-level の structure-mismatch は headline、segment-level の
-  // LCS diff は drill-down として共存する契約。
-  //
-  // 例外は cross-section body swap で、その場合は呼び出し側 (alignSegments)
-  // が `segment-shifted` を先に emit して structure comparator 自体を
-  // skip するので、ここでは考慮しなくてよい。
+  // Stage A: multiset が違えば section-level の構造差分を返す。
   const enMultiset = buildMultiset(enKinds);
   const jaMultiset = buildMultiset(jaKinds);
   if (!multisetsEqual(enMultiset, jaMultiset)) {
     return [buildKindMultisetDiff(enSection, enKinds, jaKinds)];
   }
 
-  // Stage B — kind sequence (multiset 一致 / 並び順のみ不一致)。
-  //
-  // ここに来た時点で multiset は一致しているので、kind 列が違えば必ず
-  // 「mixed-kind reorder」(例: [p, ul] vs [ul, p]) のケース。
+  // Stage B: multiset が同じで kind 列だけ違う場合は mixed-kind reorder。
   if (!sequencesEqual(enKinds, jaKinds)) {
     return [buildKindSequenceDiff(enSection, enKinds, jaKinds)];
   }
 
-  // Stage C — content-order bijection。ここに来た時点で multiset と
-  // kind 列の両方が完全一致している。block kind では区別できない same-kind
-  // swap / rotation を、invariant token の content bijection で検出する。
+  // Stage C: same-kind swap / rotation を content bijection で検出する。
   const permutation = detectContentOrderPermutation(enBlocks, jaBlocks);
   if (permutation) {
     return [buildContentOrderDiff(enSection, enKinds, jaKinds, permutation)];

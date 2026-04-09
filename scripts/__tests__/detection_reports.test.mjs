@@ -216,8 +216,8 @@ describe('buildAuditManifest', () => {
 });
 
 describe('buildActionableReport', () => {
-  it('does NOT open a parity issue for coarse-signal-only entries (Phase 8)', () => {
-    // Phase 8 demotion: heading-mismatch is in COARSE_SIGNAL_TYPES, so a
+  it('does NOT open a parity issue for coarse-signal-only entries', () => {
+    // heading-mismatch is in COARSE_SIGNAL_TYPES, so a
     // file with only this issue type must NOT trigger parityRegression.
     // Pre-Phase-8 this test asserted the opposite ("opens a parity issue
     // for signal-only entries"). The semantic flip is the whole point of
@@ -447,8 +447,8 @@ describe('buildActionableReport', () => {
     assert.equal(report.parityRegression.summary.issueCount, 1);
   });
 
-  it('does NOT re-light parity issue for expired-ack on coarse signal (Phase 8)', () => {
-    // Phase 8 intent: even when an acknowledgement on a coarse signal
+  it('does NOT re-light parity issue for expired-ack on coarse signal', () => {
+    // even when an acknowledgement on a coarse signal
     // expires, the gate / parityRegression must NOT re-light. The signal
     // stays on the audit channel only.
     const snapshot = {
@@ -492,7 +492,7 @@ describe('buildActionableReport', () => {
     assert.equal(report.parityRegression.summary.issueCount, 0);
   });
 
-  it('does NOT re-light parity issue for expired-baseline on coarse signal (Phase 8)', () => {
+  it('does NOT re-light parity issue for expired-baseline on coarse signal', () => {
     // Same intent via the baseline path.
     const snapshot = {
       checkedAt: '2026-03-19T00:00:00Z',
@@ -870,7 +870,7 @@ describe('sourceSyncHealth in buildActionableReport', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Phase 7: parityFollowup family
+// parityFollowup family
 // ---------------------------------------------------------------------------
 
 describe('parityFollowup in buildActionableReport', () => {
@@ -1080,14 +1080,10 @@ describe('parityFollowup in buildActionableReport', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR4 — parityRegression が structure mismatch の補助 counter を
-// summary に露出する。`isReportableParityIssue` の flip は伴わないので
-// `topEntries` には structure mismatch は含まれず、`shouldOpenIssue` も
-// structure mismatch 単独では立たない。summary の補助カウンタからのみ
-// 観測可能になる。
+// parityRegression の structure mismatch summary exposure
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR4 — parityRegression structure mismatch summary exposure', () => {
+describe('parityRegression structure mismatch summary exposure', () => {
   const emptySnapshot = {
     checkedAt: '2026-04-08T00:00:00Z',
     summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1151,13 +1147,9 @@ describe('Issue #247 PR4 — parityRegression structure mismatch summary exposur
     assert.deepEqual(report.parityRegression.summary.structureMismatchByType, {});
   });
 
-  it('includes structure mismatch files in parityRegression.topEntries (PR5 — gate cutover)', () => {
+  it('includes structure mismatch files in parityRegression.topEntries', () => {
     const parity = makeParityWithStructureMismatch();
     const report = buildActionableReport(emptySnapshot, parity, []);
-    // PR5 cutover で `isReportableParityIssue` が structure mismatch に
-    // true を返すようになったため、structure mismatch 単独のファイルも
-    // topEntries に流れ込み、shouldOpenIssue / issueCount に寄与する。
-    // source-unusable は引き続き advisory なのでここには現れない。
     assert.equal(report.parityRegression.topEntries.length, 1);
     assert.equal(
       report.parityRegression.topEntries[0].file,
@@ -1167,10 +1159,7 @@ describe('Issue #247 PR4 — parityRegression structure mismatch summary exposur
     assert.equal(report.parityRegression.summary.issueCount, 1);
   });
 
-  it('PR5 — parityRegression.body OMITS the "## Structure Mismatch (advisory)" section (structure mismatch is reportable now)', () => {
-    // PR5 cutover で structure mismatch は reportable に昇格したため、
-    // 「## Structure Mismatch (advisory)」の独立 section は不要になった。
-    // 件数は通常の Top Entries 経路で表示される。
+  it('parityRegression.body omits the "## Structure Mismatch (advisory)" section', () => {
     const parity = makeParityWithStructureMismatch();
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.doesNotMatch(report.parityRegression.body, /## Structure Mismatch/);
@@ -1178,12 +1167,10 @@ describe('Issue #247 PR4 — parityRegression structure mismatch summary exposur
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR4 — parityFollowup の sourceUnusable サブセクション露出。
-// 翻訳者責任外 (snapshot / source sync 側 debt) のため、shouldOpenIssue の
-// 条件には加えない。`summary.sourceUnusable` 経由で counter のみ可視化する。
+// parityFollowup の sourceUnusable サブセクション露出
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure', () => {
+describe('parityFollowup sourceUnusable subsection exposure', () => {
   const emptySnapshot = {
     checkedAt: '2026-04-08T00:00:00Z',
     summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1240,10 +1227,7 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     assert.deepEqual(report.parityFollowup.summary.sourceUnusable.snapshotUnusableByType, {});
   });
 
-  it('shouldOpenIssue stays FALSE when source-unusable is the only signal (PR4 — translation 責任外)', () => {
-    // PR4 では parityFollowup の `shouldOpenIssue` 判定には source-unusable を
-    // 加えない。snapshot / source sync 側の debt なので、翻訳 PR で修正でき
-    // ない issue を新規 open すると「baseline 必要」と誤読される。
+  it('shouldOpenIssue stays FALSE when source-unusable is the only signal', () => {
     const parity = {
       ...cleanParity,
       summary: {
@@ -1255,14 +1239,10 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, false);
-    // body もゼロケースのまま空文字列
     assert.equal(report.parityFollowup.body, '');
   });
 
   it('parityFollowup.body contains "## ソース使用不可 (参考)" section when sourceUnusable counts > 0 AND another signal opens the issue', () => {
-    // body は `shouldOpenIssue=true` のときだけ生成される。source-unusable
-    // 単独では shouldOpenIssue が立たないので、別の signal (expired
-    // baseline) と同居させて body を生成させる。
     const parity = {
       ...cleanParity,
       summary: {
@@ -1292,10 +1272,8 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
     assert.match(report.parityFollowup.body, /## ソース使用不可 \(参考\)/);
     assert.match(report.parityFollowup.body, /合計: 4 件/);
-    // sort 順固定: snapshot-incomplete → source-unusable
     assert.match(report.parityFollowup.body, /snapshot-incomplete: 3/);
     assert.match(report.parityFollowup.body, /source-unusable: 1/);
-    // 翻訳者責任外であることの注意文
     assert.match(
       report.parityFollowup.body,
       /翻訳者責任外|snapshot.*source sync|翻訳 PR では修正できません/,
@@ -1334,13 +1312,10 @@ describe('Issue #247 PR4 — parityFollowup sourceUnusable subsection exposure',
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — renderSummaryMarkdown は `## Source Unusable (advisory)`
-// セクションのみを保持する。`## Structure Mismatch (advisory)` は PR5 cutover
-// で削除した (structure mismatch は reportable に昇格したため、`Active issue
-// files` 経由で表示される)。
+// renderSummaryMarkdown structure / source unusable sections
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable sections', () => {
+describe('renderSummaryMarkdown structure / source unusable sections', () => {
   function makeBaseInputs() {
     const snapshot = {};
     const parity = {
@@ -1351,8 +1326,6 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
         activeActionableFiles: 3,
         activeErrorFiles: 0,
         activeFiles: 3,
-        // PR5 — structure mismatch が reportable に昇格したため、
-        // structureMismatchFiles=3 のページが reportableActive* にも入る。
         reportableActiveFiles: 3,
         reportableActiveActionableFiles: 3,
         acknowledgedIssues: 0,
@@ -1410,7 +1383,7 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     return { snapshot, parity, actionableReport };
   }
 
-  it('OMITS the "## Structure Mismatch (advisory)" section (PR5: reportable now)', () => {
+  it('omits the "## Structure Mismatch (advisory)" section', () => {
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
     assert.doesNotMatch(md, /## Structure Mismatch/);
@@ -1421,9 +1394,7 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
     assert.match(md, /## ソース使用不可 \(参考\)/);
     assert.match(md, /合計: 2 件 \(2 ファイル\)/);
-    // 翻訳者責任外であることの注意文
     assert.match(md, /翻訳の問題ではなく|スナップショット.*ソース同期|翻訳 PR では修正できません/);
-    // type 別内訳 (alpha sort)
     assert.match(md, /snapshot-incomplete: 1/);
     assert.match(md, /source-unusable: 1/);
   });
@@ -1476,10 +1447,7 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     assert.doesNotMatch(md, /## ソース使用不可/);
   });
 
-  it('## パリティ section の "issue ファイル" は structure mismatch も含む値 (PR5 cutover)', () => {
-    // PR5 cutover で structure mismatch が reportable になったため、
-    // structureMismatchFiles ぶんが `reportableActiveFiles` 経由で
-    // "issue ファイル" にも反映される。
+  it('## パリティ section の "問題ファイル" は structure mismatch も含む', () => {
     const { snapshot, parity, actionableReport } = makeBaseInputs();
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
     assert.match(md, /問題ファイル: 3/);
@@ -1488,10 +1456,10 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
 });
 
 // ---------------------------------------------------------------------------
-// Phase 7: parityRegression excludes non-expired baselined issues
+// parityRegression excludes non-expired baselined issues
 // ---------------------------------------------------------------------------
 
-describe('parityRegression excludes non-expired baselined issues (Phase 7)', () => {
+describe('parityRegression excludes non-expired baselined issues', () => {
   const emptySnapshot = {
     checkedAt: '2026-04-07T00:00:00Z',
     summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1595,7 +1563,7 @@ describe('parityRegression excludes non-expired baselined issues (Phase 7)', () 
 });
 
 // ---------------------------------------------------------------------------
-// Phase 7: detection-family HTML comments in issue bodies
+// detection-family HTML comments in issue bodies
 // ---------------------------------------------------------------------------
 
 describe('detection-family HTML comments in issue bodies', () => {
@@ -1669,12 +1637,12 @@ describe('detection-family HTML comments in issue bodies', () => {
 });
 
 // ---------------------------------------------------------------------------
-// New signal types from Phase 2b/2c
+// New signal types
 // ---------------------------------------------------------------------------
 
 describe('buildActionableReport with new signal types', () => {
-  it('does NOT open parity issue for signal-only new types (Phase 8 demoted)', () => {
-    // Phase 8: section-count, table-shape, table-cell-* are all in
+  it('does NOT open parity issue for signal-only new types', () => {
+    // section-count, table-shape, table-cell-* are all in
     // COARSE_SIGNAL_TYPES. A file with only these types is audit-only and
     // does not trigger parityRegression.
     const snapshot = {
@@ -1745,12 +1713,12 @@ describe('buildActionableReport with new signal types', () => {
     assert.equal(report.parityRegression.shouldOpenIssue, false);
   });
 
-  it('does NOT open parity issue for mixed error + coarse signal entries (Phase 8)', () => {
-    // Phase 8: source-fetch-error has severity 'error', not 'actionable',
+  it('does NOT open parity issue for mixed error + coarse signal entries', () => {
+    // source-fetch-error has severity 'error', not 'actionable',
     // so it never enters parityRegression in the first place. Combined
     // with a heading-mismatch (now coarse-only/audit), the file has zero
     // reportable issues. Pre-Phase-8 the heading-mismatch would have lit
-    // the issue; after Phase 8 it must not.
+    // the issue; now it must not.
     const snapshot = {
       checkedAt: '2026-04-03T00:00:00Z',
       summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1783,10 +1751,10 @@ describe('buildActionableReport with new signal types', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Phase 8: parityRegression excludes coarse signals (audit demotion)
+// parityRegression excludes coarse signals
 // ---------------------------------------------------------------------------
 
-describe('Phase 8 — parityRegression excludes coarse audit signals', () => {
+describe('parityRegression excludes coarse audit signals', () => {
   const emptySnapshot = {
     checkedAt: '2026-04-07T00:00:00Z',
     summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1941,10 +1909,10 @@ describe('Phase 8 — parityRegression excludes coarse audit signals', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Phase 8: family count and audit manifest invariants
+// family count and audit manifest invariants
 // ---------------------------------------------------------------------------
 
-describe('Phase 8 — family count and audit manifest invariants', () => {
+describe('family count and audit manifest invariants', () => {
   const emptySnapshot = {
     checkedAt: '2026-04-07T00:00:00Z',
     summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -1954,7 +1922,7 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
 
   it('actionableReport still exposes exactly 4 detection families', () => {
     // The 4 families are: snapshotDiff, parityRegression, sourceSyncHealth,
-    // parityFollowup. Phase 8 must NOT introduce a new family or rename one.
+    // parityFollowup. family 名は増減させない。
     const parity = {
       summary: { checkedAt: '2026-04-07T00:00:00Z' },
       files: [],
@@ -2006,7 +1974,7 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
 
   it('parity-only file with coarse signals does not create a new auditManifest entry', () => {
     // The auditManifest is snapshot-driven: a parity issue WITHOUT a
-    // matching snapshot change must NOT add an entry. Phase 8 preserves
+    // matching snapshot change must NOT add an entry.
     // this property — coarse signals appear nowhere in the manifest.
     const snapshot = {
       checkedAt: '2026-04-07T00:00:00Z',
@@ -2031,7 +1999,7 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
   });
 
   it('renderSummaryMarkdown puts coarse signals in the audit section, not Parity', () => {
-    // Phase 8 codex follow-up test: docs-update-summary.md must put
+    // docs-update-summary.md must put
     // coarse signals into a new "Audit Signals" section, never into the
     // active counts of the "Parity" section. The Parity section should
     // count zero active files for a coarse-only summary, and the Audit
@@ -2072,7 +2040,7 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     };
     const md = renderSummaryMarkdown(snapshot, parity, actionableReport, []);
 
-    // パリティ section: active counts must reflect Phase 8 reportable
+    // パリティ section: active counts must reflect reportable
     // counters, NOT the legacy ones that include coarse signals.
     assert.match(md, /## パリティ/);
     assert.match(md, /要対応ファイル: 0/);
@@ -2093,8 +2061,8 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
     assert.doesNotMatch(paritySection, /heading-mismatch/);
   });
 
-  it('propagates parity.summary.runScope to actionableReport top-level (Phase 8 PR2)', () => {
-    // The Phase 8 sync guard reads runScope off docs-actionable-report.json,
+  it('propagates parity.summary.runScope to actionableReport top-level', () => {
+    // sync guard reads runScope off docs-actionable-report.json,
     // not parity-check-status.json. Make sure the field is hoisted.
     const parity = {
       summary: {
@@ -2137,12 +2105,7 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
   });
 
   it('falls back to runScope=null when parity.summary.runScope is absent (legacy report)', () => {
-    // Backward compatibility: a parity-check-status.json that pre-dates
-    // Phase 8 PR2 has no runScope. The actionable report must still set
-    // the field (so consumers can probe it) but the value is null. The
-    // sync guard treats null as legacy and falls back to its prior
-    // behaviour (the test for that lives in the sync_detection_issues
-    // suite added in commit 3 of PR2).
+    // runScope が無い legacy report でも top-level runScope は null を維持する。
     const parity = {
       summary: { checkedAt: '2026-04-07T00:00:00Z' },
       files: [],
@@ -2154,8 +2117,7 @@ describe('Phase 8 — family count and audit manifest invariants', () => {
   });
 
   it('snapshot-driven entries still receive parity cross-reference (existing behaviour)', () => {
-    // Phase 8 must NOT remove the existing parity cross-reference on
-    // entries that DO have a matching snapshot change.
+    // 既存の parity cross-reference は維持する。
     const snapshot = {
       changes: [
         {
@@ -2467,7 +2429,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     assert.throws(() => validateSourceSyncStatus(v), /errors must be an array/);
   });
 
-  // Issue #255 — excluded counter の strict validation
+  // excluded counter の strict validation
   it('throws when summary.excludedPages is not a number', () => {
     const v = validSourceSyncStatus();
     v.summary.excludedPages = 'one';
@@ -2884,10 +2846,10 @@ describe('§1 cleanup — loadDetectionInputs strict mode', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #255 Phase 4 — source-side debt visibility and Japanization
+// source-side debt visibility and Japanization
 // ---------------------------------------------------------------------------
 
-describe('Issue #255 — source-side debt section in summary markdown', () => {
+describe('source-side debt section in summary markdown', () => {
   const emptySnapshot = {
     checkedAt: '2026-04-09T00:00:00Z',
     summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
@@ -3182,7 +3144,7 @@ describe('Issue #255 — source-side debt section in summary markdown', () => {
     assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
   });
 
-  // --- Finding 2: expectedMatch が summary / issue body まで流れる ---
+  // expectedMatch が summary / issue body まで流れる
 
   it('expectedMatch: true が summary markdown に「想定どおり」として出る', () => {
     const sourceSync = {

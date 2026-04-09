@@ -1,10 +1,8 @@
 /**
- * Issue #255 Phase 2 — source-side debt exclusion registry contract。
+ * source-side debt exclusion registry の契約。
  *
  * `scripts/lib/source_sync_exclusions.mjs` は "既知 broken upstream source"
- * を明示 registry で管理する。自動除外はしない — 人間が upstream broken と
- * 確認した slug だけ registry に追加される (Issue body #7 の false-negative
- * 回避原則)。
+ * を明示 registry で管理する。自動除外はしない。
  *
  * このテストが pin する契約:
  *   1. registry は slug → metadata object の plain object
@@ -38,7 +36,7 @@ describe('SOURCE_SYNC_EXCLUSIONS registry', () => {
     const slug = 'testops/testops-version-control/pull-requests';
     assert.ok(
       SOURCE_SYNC_EXCLUSIONS[slug],
-      `registry must seed ${slug} as the first known source-side debt entry (Issue #247 follow-up)`,
+      `registry must seed ${slug} as the first known source-side debt entry`,
     );
   });
 

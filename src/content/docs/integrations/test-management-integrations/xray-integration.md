@@ -118,7 +118,7 @@ Xray の **Test** 課題タイプが変更された場合、実行は Xray で�
     skipped
    </td>
    <td style="text-align: left;">
-    TODO
+    Xray 側の設定に依存
    </td>
   </tr>
   <tr>
@@ -142,7 +142,7 @@ Xray の **Test** 課題タイプが変更された場合、実行は Xray で�
     aborted
    </td>
    <td style="text-align: left;">
-    TODO
+    Xray 側の設定に依存
    </td>
   </tr>
   <tr>

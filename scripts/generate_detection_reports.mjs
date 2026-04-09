@@ -67,7 +67,7 @@ function main() {
     console.log(
       `  パリティフォローアップ: 期限切れ=${followup.summary.baselineDebt.expiredBaselineEntries} 30日以内期限切れ=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} 無効化=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} ブロッキング=${followup.summary.advisoryQueue.blockingItems}`,
     );
-    // Issue #255 — source-side debt counter を CLI 出力に含める
+    // source-side debt の件数も CLI 出力に含める
     const debt = actionableReport.sourceSyncHealth?.sourceSideDebt;
     if (debt && debt.excludedPages > 0) {
       console.log(

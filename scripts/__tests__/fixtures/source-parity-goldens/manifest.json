@@ -1,5 +1,5 @@
 {
-  "description": "Representative pages for diff=1 mutation corpus (Issue #225 Phase 0). Coverage goal: each mutation type must be producible by at least one page across the corpus. Individual pages need not support all types — traits declare per-page expectations.",
+  "description": "Representative pages for the diff=1 mutation corpus. Coverage goal: each mutation type must be producible by at least one page across the corpus. Individual pages need not support all types — traits declare per-page expectations.",
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",

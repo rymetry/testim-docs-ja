@@ -107,7 +107,7 @@ node scripts/fetch_translate_images.mjs --mode=full
 2. `snapshot_diff` が `page-removed` として検出
 3. 対応: 日本語ドキュメントの扱いを判断（削除 or アーカイブ）
 
-### Source-side debt（broken upstream）の隔離 (Issue #255)
+### Source-side debt（broken upstream）の隔離
 
 upstream 英語原文自体が broken で parity comparator の前提を満たさないページ（例: `testops/testops-version-control/pull-requests`）は、 `scripts/lib/source_sync_exclusions.mjs` の **明示 registry** で管理し、通常の翻訳同期レーンから分離します。
 
@@ -136,7 +136,7 @@ upstream 英語原文自体が broken で parity comparator の前提を満た�
 | ファイル | 内容 |
 | --- | --- |
 | `snapshot-diff-status.json` | 変更検知結果（ページごとの差分分類） |
-| `source-sync-status.json` | fetch metadata + freshness + source-side debt カウンタ (`excludedPages` 等、Issue #255) |
+| `source-sync-status.json` | fetch metadata + freshness + source-side debt カウンタ (`excludedPages` など) |
 | `parity-check-status.json` | ローカル parity チェック結果 |
 | `docs-actionable-report.json` | Issue 作成用レポート |
 | `docs-update-summary.md` | 人間向けサマリー（`## ソース側 debt` セクションを含む） |
@@ -160,7 +160,7 @@ git commit -m "feat: 初回英語原文スナップショット"
 ## 関連ファイル
 
 - `scripts/lib/madcap_toc.mjs` — MadCap Flare TOC データ解析
-- `scripts/lib/source_sync_exclusions.mjs` — Source-side debt registry (Issue #255)
+- `scripts/lib/source_sync_exclusions.mjs` — Source-side debt registry
 - `scripts/lib/source_sync_health.mjs` — `source-sync-status.json` 生成と freshness 判定
 - `scripts/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON + exclusion 分岐）
 - `scripts/snapshot_diff.mjs` — 比較 & レポート

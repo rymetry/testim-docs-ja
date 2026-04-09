@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Fetch English source pages and save HTML snapshots.
+ * 英語ソースを取得して HTML snapshot を更新する。
  *
- * Fetches the main content (`#mc-main-content`) from each page and stores it
- * as HTML in `snapshots/en/content/{slug}.html`. Also fetches the MadCap Flare
- * TOC data for sidebar verification and stores it as `snapshots/en/sidebar.json`.
+ * 各ページの `#mc-main-content` を `snapshots/en/content/{slug}.html` に保存し、
+ * sidebar 検証用の TOC data も `snapshots/en/sidebar.json` に保存する。
  *
- * Always writes `source-sync-status.json` (even in --dry-run) as fetch metadata.
- * --dry-run skips writing snapshot HTML and sidebar JSON only.
+ * `--dry-run` でも fetch metadata として `source-sync-status.json` は必ず書き出す。
  *
  * Usage:
  *   node scripts/snapshot_update.mjs                   # all pages
@@ -64,12 +62,12 @@ function parseArgs(argv = process.argv.slice(2)) {
 }
 
 /**
- * Build list of { slug, sourceUrl, relativePath } from doc files.
+ * doc file から { slug, sourceUrl, relativePath } の一覧を作る。
  */
 function collectTargets({ section, slug }) {
   const files = findMdFiles(DOCS_DIR);
   const targets = [];
-  // Resolve --slug to path-based slug (supports both basename and path-based input)
+  // --slug は basename / path-based の両方を受け付け、内部では path-based に解決する。
   const resolvedSlug = slug ? resolveSlug(slug) : null;
   if (slug && !resolvedSlug) {
     console.error(`❌ Unknown slug: "${slug}". No matching document found.`);
@@ -96,7 +94,7 @@ function collectTargets({ section, slug }) {
 }
 
 /**
- * Synthetic JA segments for recovery probe.
+ * recovery probe 用の synthetic JA segments。
  *
  * detectSourceUsability は JA body / heading 数を閾値に使う
  * (`extractor-empty`: jaBody >= 3, `shallow-snapshot`: jaBody >= 5,
@@ -140,7 +138,7 @@ function buildBrokenRecoveryProbe({
 }
 
 /**
- * Recovery probe for a known source-side debt page.
+ * 既知の source-side debt page に対する recovery probe。
  *
  * `detectSourceUsability()` を再利用して、registry に登録された
  * broken upstream source が復旧したかを判定する。detector が対応する
@@ -149,9 +147,9 @@ function buildBrokenRecoveryProbe({
  *
  * JA body には依存しない — synthetic segments を使って EN-only 判定を維持。
  *
- * Unsupported registry reasons and extractor exceptions both fail closed.
- * A debt page is only `excluded-recovered` when the extractor succeeds and
- * `detectSourceUsability()` returns no issue.
+ * 未対応の reason や extractor 例外は fail-close で扱う。
+ * `excluded-recovered` にするのは、extractor が成功し、
+ * `detectSourceUsability()` が issue を返さない場合だけ。
  *
  * @param {{ rawEnHtml: string, exclusionEntry: object, extractSegments?: (html: string) => any[] }} opts
  * @returns {{ fetchStatus: string, recoveryProbe: object|null }}
@@ -206,8 +204,8 @@ export function runRecoveryProbe({
 const FETCH_TIMEOUT_MS = 30_000;
 
 /**
- * Extract the main content HTML from a full page.
- * Targets `<div id="mc-main-content" ...>...</div>` (MadCap Flare).
+ * フルページ HTML から main content を抜き出す。
+ * 対象は MadCap Flare の `<div id="mc-main-content" ...>...</div>`。
  */
 export function extractMainContent(html) {
   const startMatch = /<div[^>]*\bid=["']mc-main-content["'][^>]*>/i.exec(html);
@@ -243,8 +241,8 @@ export function extractMainContent(html) {
 }
 
 /**
- * Fetch a page's HTML with retry and exponential backoff.
- * Retries on HTTP 522 status and network errors (timeout, DNS, etc.).
+ * HTML を retry 付きで取得する。
+ * HTTP 522 とネットワークエラーは exponential backoff で再試行する。
  */
 async function fetchHtmlWithRetry(url) {
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -280,8 +278,7 @@ async function fetchHtmlWithRetry(url) {
 }
 
 /**
- * Fetch HTML page and extract the main content area.
- * Returns the raw inner HTML of `#mc-main-content`.
+ * HTML を取得して `#mc-main-content` の生 HTML を返す。
  */
 async function fetchHtmlContent(url) {
   const { html, status } = await fetchHtmlWithRetry(url);
@@ -299,8 +296,8 @@ async function fetchHtmlContent(url) {
 }
 
 /**
- * Verify sidebar by fetching MadCap Flare TOC data.
- * Stores the result as a JSON snapshot.
+ * MadCap Flare の TOC data を取得して sidebar を検証する。
+ * 結果は JSON snapshot として保存する。
  */
 async function verifySidebar({ dryRun = false } = {}) {
   try {
@@ -338,7 +335,7 @@ export async function main(argv) {
     return { fetched: 0, notFound: 0, errors: args.slug ? 1 : 0, skipped: 0 };
   }
 
-  // Ensure directories exist
+  // 出力先ディレクトリを先に用意する。
   if (!args.dryRun) {
     fs.mkdirSync(CONTENT_DIR, { recursive: true });
   }
@@ -359,7 +356,7 @@ export async function main(argv) {
       const snapshotPath = path.join(CONTENT_DIR, target.slug + '.html');
 
       if (excludedSlug) {
-        // Issue #255 — source-side debt: fetch しても snapshot file は
+        // source-side debt 対象では、fetch しても snapshot file は
         // 絶対に上書きしない (hand-authored を凍結参照として温存)。
         //
         // fetch 失敗 (HTTP error / 404 / mc-main-content missing) と
@@ -439,7 +436,7 @@ export async function main(argv) {
     await sleep(THROTTLE_MS);
   }
 
-  // Verify sidebar via TOC data (independent of individual page fetches)
+  // sidebar は個別ページ fetch と独立に TOC data で検証する。
   const sidebarResult = await verifySidebar({ dryRun: args.dryRun });
   if (sidebarResult.ok) {
     const mode = args.dryRun ? 'dry-run' : 'saved';
@@ -449,7 +446,7 @@ export async function main(argv) {
     errors += 1;
   }
 
-  // Build source sync status (always written — metadata, not content)
+  // source sync status は常に書き出す。内容物ではなく metadata として扱う。
   const sourceSyncStatus = buildSourceSyncStatus({
     pages: pageResults,
     sidebarResult,

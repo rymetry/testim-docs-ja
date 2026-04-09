@@ -1,5 +1,5 @@
 /**
- * Frozen baseline mechanism (Issue #225 で導入)。
+ * Frozen baseline mechanism。
  *
  * baseline は cutover 時点の既存 drift を凍結する仕組み。ack は「人がレビュー
  * して了承した例外」、baseline は「cutover 時点の既知 debt」で意味も生成方法
@@ -22,7 +22,7 @@ import {
 /**
  * frozen baseline 対象になる issue type。
  *
- * Issue #247 PR5 — structure mismatch (section-structure-mismatch /
+ * structure mismatch (section-structure-mismatch /
  * segment-order-mismatch) と source unusable (snapshot-incomplete /
  * source-unusable) を baseline 可能にした。identity key は segment-*
  * ファミリとは別系統で、structure 系は sectionIndex + structureCategory +
@@ -49,13 +49,13 @@ export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
 );
 
 /**
- * Issue #247 post-merge — `generate_parity_baseline --types` で受け入れる
- * issueType の allowlist。BASELINE_ELIGIBLE_TYPES より狭く、PR5 migration
+ * `generate_parity_baseline --types` で受け入れる issueType の allowlist。
+ * BASELINE_ELIGIBLE_TYPES より狭く、structure/source-unusable migration
  * 対象 (structure mismatch + source unusable) の 4 type のみを許可する。
  *
  * これより広くすると `--types` が既存 segment-* entry を touch できて
  * しまい、reviewAfter の意図しない shift を起こす (§7.4 の意図と反する)。
- * 逆にこれより狭くすると PR5 migration 自体が不可能になる。
+ * 逆にこれより狭くすると partial migration 自体が不可能になる。
  *
  * `--types=` を空で渡した場合 (silent no-op が起きる入力パターン) も
  * `validateTypesArg` で reject される。
@@ -118,7 +118,7 @@ export function validateTypesArg(types) {
 }
 
 /**
- * Issue #247 PR5 — structure mismatch baseline 対象の structureCategory 列。
+ * structure mismatch baseline 対象の structureCategory 列。
  * `source_parity_structure.mjs` の 3 stage (kind-multiset / kind-sequence /
  * content-order) と 1:1 で対応する enum。emitter 側が新しい stage を追加
  * する際はこちらも同期する必要がある (test で pin)。
@@ -130,7 +130,7 @@ export const STRUCTURE_CATEGORIES = Object.freeze(
 );
 
 /**
- * Issue #247 PR5 — source unusable baseline 対象の usabilityReason 列。
+ * source unusable baseline 対象の usabilityReason 列。
  * `source_parity_source_usability.mjs::buildIssue` の reason と 1:1 で対応
  * する enum。emitter 側が新しい reason を追加する際はこちらも同期する
  * 必要がある (test で pin)。
@@ -142,7 +142,7 @@ export const USABILITY_REASONS = Object.freeze(
 );
 
 /**
- * Issue #247 PR5 — structure mismatch issue の payload から
+ * structure mismatch issue の payload から
  * `structureFingerprint` (sha256:<64 hex>) を derive する純粋関数。
  *
  * key 順序と join 記号を厳密に固定することで、runtime 側の
@@ -281,30 +281,9 @@ export function validateBaseline(parsed) {
       );
     }
 
-    // issueType-specific required fields. Ownership of the diff determines
-    // which side's index keys the baseline:
-    //   - EN-owned: segment-missing, segment-shifted, segment-token-gap → enSegmentIndex
-    //   - JA-owned: segment-extra, segment-untranslated → jaSegmentIndex
-    //   - page-level: segment-inconclusive → inconclusiveCategory
-    //   - PR5 section: section-structure-mismatch / segment-order-mismatch →
-    //       sectionIndex + structureCategory + structureFingerprint
-    //   - PR5 page: snapshot-incomplete / source-unusable → usabilityReason
+    // issueType ごとに、baseline の同定に必要な構造化フィールドを検証する。
     if (STRUCTURE_MISMATCH_TYPES.has(entry.issueType)) {
-      // Issue #247 PR5 — section 粒度の structure diff。
-      //
-      // identity surface (machine key):
-      //   sectionIndex + structureCategory + structureFingerprint
-      //
-      // sectionPath は reviewer 可読性 / sort 補助のために保存するが
-      // identity には使わない。sectionPath は同一ページ内で一意の保証が
-      // 無く、両方同じ sectionPath を持つ section が共存するケースで
-      // baseline が silently 誤った section を覆うのを防ぐため
-      // (レビュー指摘 Finding 2)。
-      //
-      // 生の enKinds / jaKinds / contentPermutation は
-      // structureFingerprint に畳み込まれる (computeStructureFingerprint
-      // 参照)。reviewer 用の raw data は parity-check-status.json 側に
-      // 出る。
+      // sectionPath は可読性用に保持するが、同定には使わない。
       if (
         typeof entry.sectionIndex !== 'number' ||
         !Number.isInteger(entry.sectionIndex) ||
@@ -334,13 +313,7 @@ export function validateBaseline(parsed) {
         );
       }
     } else if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
-      // Issue #247 PR5 — page 粒度の source unusable detector。
-      //
-      // identity surface: usabilityReason のみ。
-      // sectionPath / structureCategory / structureFingerprint は持たない
-      // (page-level な issue なので)。数値フィールド (enBodySegmentCount
-      // 等) は drift 発火の閾値判定に使われる根拠であって identity では
-      // ないため baseline には保存しない。
+      // page 単位の unusable 判定は usabilityReason だけで同定する。
       if (
         typeof entry.usabilityReason !== 'string' ||
         !USABILITY_REASONS.has(entry.usabilityReason)
@@ -435,10 +408,7 @@ export function isBaselineExpired(entry, today) {
 }
 
 /**
- * Pre-expiry warning window in days. The baseline `reviewAfter` cliff used
- * to fire all 1000+ entries on the same day; the §5 stagger fixes the cliff
- * itself, and this warning window gives a runway for paydown PRs to land
- * before any individual entry actually re-enters the gate.
+ * baseline 期限の事前警告日数。
  */
 export const BASELINE_EXPIRY_WARNING_DAYS = 30;
 
@@ -460,7 +430,7 @@ export function isBaselineExpiringSoon(entry, today) {
   if (typeof entry.reviewAfter !== 'string' || !REVIEW_AFTER_RE.test(entry.reviewAfter)) {
     return false;
   }
-  if (today > entry.reviewAfter) return false; // already expired
+  if (today > entry.reviewAfter) return false;
   const [ty, tm, td] = today.split('-').map(Number);
   const [ry, rm, rd] = entry.reviewAfter.split('-').map(Number);
   const todayUtc = Date.UTC(ty, tm - 1, td);
@@ -489,10 +459,7 @@ export function isBaselineExpiringSoon(entry, today) {
  */
 export function buildBaselineKey(slug, issue) {
   if (STRUCTURE_MISMATCH_TYPES.has(issue.type)) {
-    // Issue #247 PR5 — section 粒度の structure diff。
-    // identity surface: sectionIndex + structureCategory + structureFingerprint。
-    // sectionPath は entry 側に保存するが machine identity key には含めない
-    // (同一ページ内で一意の保証が無いため — Finding 2)。
+    // structure diff は sectionIndex + category + fingerprint で同定する。
     const fp = computeStructureFingerprint({
       structureCategory: issue.structureCategory,
       enKinds: Array.isArray(issue.enKinds) ? issue.enKinds : [],
@@ -505,8 +472,6 @@ export function buildBaselineKey(slug, issue) {
     );
   }
   if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
-    // Issue #247 PR5 — page 粒度の source unusable detector。
-    // identity surface: usabilityReason のみ。
     const reason = issue.usabilitySignals?.reason ?? '_null_';
     return `${slug}|${issue.type}|reason=${reason}`;
   }
@@ -548,9 +513,7 @@ export function buildBaselineKey(slug, issue) {
  */
 export function buildBaselineKeyFromEntry(entry) {
   if (STRUCTURE_MISMATCH_TYPES.has(entry.issueType)) {
-    // Issue #247 PR5 — buildBaselineKey (runtime) と同じ合成順・同じ区切り
-    // 文字を使う。runtime 側は毎回 fingerprint を derive するが disk 側は
-    // 事前計算された structureFingerprint をそのまま読む。
+    // runtime 側と同じ順序で key を組み立てる。
     return (
       `${entry.slug}|${entry.issueType}|idx=${entry.sectionIndex ?? '_null_'}|` +
       `cat=${entry.structureCategory ?? '_null_'}|sfp=${entry.structureFingerprint ?? '_null_'}`
@@ -620,7 +583,7 @@ export function tagIssuesWithBaseline(
     };
   }
 
-  // Page-level invalidation: any fingerprint mismatch invalidates the entire page
+  // fingerprint がずれたページでは、そのページの baseline を一括無効化する。
   const fingerprintMismatch = slugEntries.some(
     (e) => e.snapshotFingerprint !== currentSnapshotFingerprint,
   );
@@ -632,7 +595,6 @@ export function tagIssuesWithBaseline(
     };
   }
 
-  // Build a key index of slug entries
   const entryKeyIndex = new Map();
   for (const entry of slugEntries) {
     entryKeyIndex.set(buildBaselineKeyFromEntry(entry), entry);
@@ -666,20 +628,10 @@ export function tagIssuesWithBaseline(
 }
 
 /**
- * Issue #247 post-merge — tagIssuesWithBaseline の `matchedKeys` を使って
- * 「runtime に一致する issue が無かった baseline entry」= orphan を返す
- * 純粋関数。detector/emitter が仕様変更したときに legacy entry が
- * 取り残されるパターン(PR5 migration で `segment-inconclusive` が 3 slug
- * 分残った件)を可視化する。
+ * `tagIssuesWithBaseline` の `matchedKeys` を使って orphan entry を返す。
  *
- * 呼び出し側の契約:
- *   - page-level invalidation (fingerprint mismatch) 時は `matchedKeys` が
- *     空になり、全 entry が「unmatched」として返るが、それは orphan では
- *     ない (snapshot 更新に伴う invalidation)。呼び出し側が
- *     `tagIssuesWithBaseline` の `invalidated` フラグを見て orphan 集計を
- *     スキップすること。
- *   - helper 自体は entries 配列と matchedKeys Set を機械的に突き合わせ
- *     るのみで、invalidation 状態や checked/unchecked の概念を持たない。
+ * page-level invalidation 時は全 entry が unmatched になるため、呼び出し側で
+ * `invalidated` を見て orphan 集計をスキップする。
  *
  * @param {string} slug
  * @param {object[]} baselineEntries — 全 slug 混じった entries でも良い

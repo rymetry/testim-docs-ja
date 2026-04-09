@@ -252,16 +252,10 @@ describe('summarizeParityResults', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Phase 8: reportableActive* and auditSignal* counters
-//
-// New counters added in Phase 8 PR1 commit 3. They live alongside the
-// existing activeFiles / activeActionableFiles counters; the existing
-// counters MUST NOT change semantics (verified below as a regression
-// guard). Only the gate exit code and parityRegression switch to the new
-// counters in later commits.
+// reportableActive* and auditSignal* counters
 // ---------------------------------------------------------------------------
 
-describe('Phase 8 — reportableActive and auditSignal counters', () => {
+describe('reportableActive and auditSignal counters', () => {
   it('emits reportableActive* and auditSignal* fields', () => {
     const summary = summarizeParityResults([]);
     assert.equal(typeof summary.reportableActiveFiles, 'number');
@@ -287,7 +281,6 @@ describe('Phase 8 — reportableActive and auditSignal counters', () => {
       'paragraph-count-mismatch': 1,
       'heading-mismatch': 1,
     });
-    // The coarse-only file is NOT a reportable active file/issue.
     assert.equal(summary.reportableActiveFiles, 0);
     assert.equal(summary.reportableActiveActionableFiles, 0);
   });
@@ -361,8 +354,7 @@ describe('Phase 8 — reportableActive and auditSignal counters', () => {
   });
 
   it('excludes coarse signals from reportableActive* even with expired ack', () => {
-    // Phase 8 intent: coarse signals must never re-light reportable counters,
-    // even if their acknowledgement has expired.
+    // coarse signal は ack 期限切れでも reportable に戻さない。
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/expired-coarse.md',
@@ -378,7 +370,6 @@ describe('Phase 8 — reportableActive and auditSignal counters', () => {
     ]);
     assert.equal(summary.reportableActiveFiles, 0);
     assert.equal(summary.reportableActiveActionableFiles, 0);
-    // But it IS still surfaced via the audit channel.
     assert.equal(summary.auditSignalFiles, 1);
     assert.equal(summary.auditSignalIssues, 1);
   });
@@ -421,11 +412,7 @@ describe('Phase 8 — reportableActive and auditSignal counters', () => {
   });
 });
 
-describe('Phase 8 — existing activeFiles semantics unchanged', () => {
-  // Regression guard: the existing counters that downstream consumers
-  // depend on (activeFiles / activeActionableFiles / activeErrorFiles)
-  // must keep their pre-Phase-8 meaning. Phase 8 adds NEW counters in
-  // parallel; it does not redefine the existing ones.
+describe('existing activeFiles semantics unchanged', () => {
 
   it('still counts coarse-only file as active (legacy semantics)', () => {
     const summary = summarizeParityResults([
@@ -434,8 +421,6 @@ describe('Phase 8 — existing activeFiles semantics unchanged', () => {
         issues: [{ type: 'paragraph-count-mismatch', severity: 'signal' }],
       },
     ]);
-    // Legacy: activeFiles counts files with any active issue, including
-    // signals. Phase 8 does not change this.
     assert.equal(summary.activeFiles, 1);
     assert.equal(summary.activeActionableFiles, 0);
   });
@@ -474,21 +459,10 @@ describe('Phase 8 — existing activeFiles semantics unchanged', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR1: structureMismatch* / snapshotUnusable* counters
-//
-// 新 taxonomy 用 counter の集計契約を固定する。PR1 時点では emitter が
-// 未実装 (PR2/PR3 で追加) のため、現実運用では常にゼロだが、downstream
-// (detection_reports / CLI / schema) が受け入れる枠をここで先取りする。
-//
-// 「frozen baseline で除外」系のテストは、counter が baselined フラグを
-// honor することを純粋関数として固定しているもので、PR1 時点で実際に
-// 新 type に baseline が付くことは無い (`BASELINE_ELIGIBLE_TYPES` は
-// まだ legacy segment-* だけを許容し、loader/validator が新 type を
-// reject する — source_parity_baseline.test.mjs 参照)。baseline wiring
-// は PR5 で baseline 同定キーを設計してから追加する。
+// structureMismatch* / snapshotUnusable* counters
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', () => {
+describe('structureMismatch and snapshotUnusable counters', () => {
   it('emits structureMismatch* and snapshotUnusable* fields with safe defaults', () => {
     const summary = summarizeParityResults([]);
     assert.equal(typeof summary.structureMismatchIssues, 'number');
@@ -503,7 +477,7 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.equal(summary.snapshotUnusableFiles, 0);
   });
 
-  it('counts section-structure-mismatch into structureMismatch* AND reportableActive* (PR5 cutover)', () => {
+  it('counts section-structure-mismatch into structureMismatch* AND reportableActive*', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/running-tests/the-command-line-cli.md',
@@ -526,9 +500,6 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.deepEqual(summary.structureMismatchByType, {
       'section-structure-mismatch': 2,
     });
-    // Issue #247 PR5 — gate cutover で structure mismatch が
-    // `reportableActive*` (gate counter) にも流れるようになった。専用
-    // counter (`structureMismatch*`) と併存し、両方から観測できる。
     assert.equal(summary.reportableActiveFiles, 1);
     assert.equal(summary.reportableActiveActionableFiles, 1);
   });
@@ -571,9 +542,6 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.deepEqual(summary.snapshotUnusableByType, {
       'snapshot-incomplete': 1,
     });
-    // Issue #247 PR2 — source-unusable family も PR2 時点では
-    // `reportableActive*` には流れない。PR4 cutover で `reportableActive*`
-    // 経路に取り込む。
     assert.equal(summary.reportableActiveFiles, 0);
     assert.equal(summary.reportableActiveActionableFiles, 0);
   });
@@ -636,8 +604,6 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.structureMismatchIssues, 0);
     assert.equal(summary.structureMismatchFiles, 0);
-    // ack 有り + structure mismatch は PR2 時点でも reportable=0。
-    // (PR4 cutover 後も ack が gate exclusion の優先経路として残る。)
     assert.equal(summary.reportableActiveFiles, 0);
   });
 
@@ -659,7 +625,7 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     assert.equal(summary.structureMismatchFiles, 0);
   });
 
-  it('includes expired ack on structure mismatch in structureMismatch* AND reportableActive* (PR5 cutover)', () => {
+  it('includes expired ack on structure mismatch in structureMismatch* AND reportableActive*', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/expired-ack-structure.md',
@@ -675,10 +641,6 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.structureMismatchIssues, 1);
     assert.equal(summary.structureMismatchFiles, 1);
-    // Issue #247 PR5 — gate cutover 後は expired ack が戻ってきた
-    // structure mismatch も `reportableActive*` に流入する (通常の ack
-    // expiry セマンティクス)。expired ack は「もう一度人の目で確認
-    // すべき」の signal として gate を再点火する。
     assert.equal(summary.reportableActiveFiles, 1);
   });
 
@@ -698,7 +660,6 @@ describe('Issue #247 PR1 — structureMismatch and snapshotUnusable counters', (
     ]);
     assert.equal(summary.snapshotUnusableIssues, 1);
     assert.equal(summary.snapshotUnusableFiles, 1);
-    // Issue #247 PR2 — 同様に PR2 時点では gate に流れない。
     assert.equal(summary.reportableActiveFiles, 0);
   });
 
@@ -1343,7 +1304,7 @@ describe('extractStepCounts edge cases', () => {
 });
 
 // ---------------------------------------------------------------------------
-// H4 boundary tests (Phase 2b)
+// H4 boundary tests
 // ---------------------------------------------------------------------------
 
 describe('H4 section boundary support', () => {
@@ -1370,7 +1331,7 @@ describe('H4 section boundary support', () => {
 });
 
 // ---------------------------------------------------------------------------
-// section-count-mismatch tests (Phase 2b)
+// section-count-mismatch tests
 // ---------------------------------------------------------------------------
 
 describe('section-count-mismatch', () => {
@@ -1427,7 +1388,7 @@ describe('section-count-mismatch', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Table structure comparison tests (Phase 2c)
+// Table structure comparison tests
 // ---------------------------------------------------------------------------
 
 describe('extractMarkdownTables', () => {
@@ -1724,7 +1685,7 @@ describe('extractInvariantTokens', () => {
   });
 
   it('normalizes docs.tricentis.com URLs to /docs/slug', () => {
-    // Issue #247 post-merge re-review: EN MadCap の URL は JA 側のカテゴリ
+    // EN MadCap の URL は JA 側のカテゴリ
     // 構造と一致しないことがある (EN `editing/shareable-steps.htm` は JA
     // では `editing-tests/shareable-steps` に配置されている)。
     // resolveToFullSlug の basename fallback が正しい JA full path に復元する。
@@ -1851,7 +1812,7 @@ describe('extractInvariantTokens', () => {
     assert.ok(!tokens.some((t) => t.includes('/content/')), 'should not contain /content/ in output');
   });
 
-  // Issue #247 post-merge (re-review) — normalizeUrlToken relative path bug fix.
+  // normalizeUrlToken relative path bug fix.
   //
   // MadCap の <a href="salesforce-steps/sfdc-step-apex-action.htm"> のような
   // **親ディレクトリを省いた相対リンク** は、従来 `resolveToFullSlug` で slug

@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { toBool } from '../lib/env';
 
 export const GET: APIRoute = (context) => {
-  // Basic認証が有効な場合はnoindex
+  // Basic 認証が有効な場合は noindex 相当の robots を返す
   const authEnabled = toBool(process.env.BASIC_AUTH_ENABLED);
   const body = authEnabled
     ? ['User-agent: *', 'Disallow: /'].join('\n')

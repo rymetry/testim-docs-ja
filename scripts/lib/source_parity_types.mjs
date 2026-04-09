@@ -1,4 +1,4 @@
-/** Shared severity mappings and pattern constants for the source parity checking system. */
+/** source parity 判定で共有する severity と定数。 */
 
 export const ISSUE_SEVERITY = Object.freeze({
   untranslated: 'actionable',
@@ -35,22 +35,10 @@ export const ISSUE_SEVERITY = Object.freeze({
   'segment-untranslated': 'actionable',
   'segment-token-gap': 'actionable',
   'segment-inconclusive': 'actionable',
-  // Issue #247 PR1 — section-anchored canonical block sequence comparator
-  // の first-class issue type。count heuristic (paragraph/bullet/step/heading)
-  // を主判定から降ろし、section ごとの block 列そのものを比較した結果を
-  // ここに emit する。PR1 時点では taxonomy / contract のみ導入し、emission
-  // は PR2 で追加する。どちらも reportable (actionable) で、coarse audit
-  // signal には含めない。ack は可能 / baseline は PR1 時点では未対応
-  // (STRUCTURE_MISMATCH_TYPES の docstring 参照)。
+  // section 単位の構造差分。coarse signal には含めず、reportable issue として扱う。
   'section-structure-mismatch': 'actionable',
   'segment-order-mismatch': 'actionable',
-  // Issue #247 PR1 — snapshot / source 起因で comparator が成立しない
-  // ページ用。shallow snapshot / collapsed article / malformed details などの
-  // 既知 unusable パターンにマッチした場合、structure mismatch を suppress
-  // してこちらに 1 件だけ畳む。PR3 で emission を追加する。reportable に
-  // 含めるが、structure mismatch とは別 counter で集計する (translation
-  // drift と source unusable を混ぜないため)。ack は可能 / baseline は
-  // PR1 時点では未対応 (SOURCE_UNUSABLE_TYPES の docstring 参照)。
+  // snapshot / source 側の事情で比較自体が成立しないページ。別カウンタで集計する。
   'snapshot-incomplete': 'actionable',
   'source-unusable': 'actionable',
 });
@@ -67,11 +55,8 @@ export const ISSUE_SEVERITY = Object.freeze({
  * あり (`missing-fresh-snapshot` の actionable 版と対になる)、必ず reportable
  * に残す必要があるため。
  *
- * Issue #247 PR1: count heuristic は advisory に残す (structure mismatch を
- * 主判定にしつつ、並行 signal として deep-audit からは見えるようにする)。
- * 新しい `section-structure-mismatch` / `segment-order-mismatch` /
- * `snapshot-incomplete` / `source-unusable` は coarse 扱いにはしない (reportable
- * な一級 issue)。
+ * count heuristic は advisory に残し、構造差分や source unusable は
+ * reportable issue として別枠で扱う。
  */
 export const COARSE_SIGNAL_TYPES = Object.freeze(
   new Set([
@@ -88,12 +73,9 @@ export const COARSE_SIGNAL_TYPES = Object.freeze(
 );
 
 /**
- * Issue #247 PR1〜PR5 — canonical block sequence comparator 由来の structure
- * mismatch の issue type allowlist。EN/JA の section path ごとの block 列差
- * として検出される「原文の全文構造を保っていない翻訳」を first-class に
- * 出すための集合。`source_parity_align.mjs` から emit される。
+ * canonical block sequence comparator が出す structure mismatch の集合。
  *
- * 現行契約 (PR5 cutover 済み):
+ * 現行契約:
  * - coarse audit signal には**含めない**
  * - summary の `structureMismatchIssues` / `structureMismatchFiles` に
  *   独立 counter として集計される (gate counter とは並走)
@@ -101,7 +83,7 @@ export const COARSE_SIGNAL_TYPES = Object.freeze(
  *   覆われていない active な structure mismatch は `reportableActive*`
  *   に流れ込み、gate exit code 1 を駆動する
  * - **acknowledgement は可能** (`NON_ACKNOWLEDGEABLE_TYPES` に入っていない)
- * - **baseline は対応済み** — `BASELINE_ELIGIBLE_TYPES` に追加されており、
+ * - **baseline は対応済み** — `BASELINE_ELIGIBLE_TYPES` に含まれ、
  *   identity key は `sectionIndex + structureCategory + structureFingerprint`
  *   (`source_parity_baseline.mjs::buildBaselineKey` 参照)。期限切れ baseline
  *   は通常通り gate を refire する
@@ -114,13 +96,9 @@ export const STRUCTURE_MISMATCH_TYPES = Object.freeze(
 );
 
 /**
- * Issue #247 PR1〜PR5 — snapshot / source 起因で canonical comparator が
- * 成立しないページ用の issue type allowlist。shallow snapshot / collapsed
- * article / malformed details など known unusable パターンにマッチした
- * 場合に、structure mismatch を suppress してこちらに 1 件だけ畳む。
- * `source_parity_checks.mjs` から emit される。
+ * snapshot / source 起因で comparator が成立しないページ用の集合。
  *
- * 現行契約 (PR5 cutover 済み):
+ * 現行契約:
  * - coarse audit signal には**含めない**
  * - summary の `snapshotUnusableIssues` / `snapshotUnusableFiles` に
  *   独立 counter として集計される (translation drift とは別カウント)

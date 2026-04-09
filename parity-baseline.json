@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "generatedAt": "2026-04-09T03:43:07.779Z",
   "generatedFromRunId": "2026-04-09T03:43:07.779Z#parity-check-status",
-  "rationale": "Issue #247 re-review round 2 — final regeneration after all fixes",
+  "rationale": "全修正反映後の最終再生成",
   "entries": [
     {
       "slug": "administration/api-access",

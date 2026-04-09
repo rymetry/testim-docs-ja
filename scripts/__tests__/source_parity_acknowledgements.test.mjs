@@ -713,7 +713,7 @@ describe('summarizeParityResults — acknowledgement counting', () => {
 });
 
 // ---------------------------------------------------------------------------
-// summarizeParityResults — baseline accounting (Phase 6A PR1)
+// summarizeParityResults — baseline accounting
 // ---------------------------------------------------------------------------
 
 describe('summarizeParityResults — baseline accounting', () => {
@@ -763,8 +763,7 @@ describe('summarizeParityResults — baseline accounting', () => {
   });
 
   it('counts expired baseline entries and re-activates them in active accounting', () => {
-    // Phase 7: expired baselines re-enter the gate, consistent with
-    // isReportableParityIssue.  Non-expired baselines remain frozen.
+    // expired baseline は gate に戻り、non-expired baseline は frozen のまま。
     const results = [
       {
         file: 'a.md',
@@ -831,25 +830,10 @@ describe('summarizeParityResults — baseline accounting', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)
-//
-// PR5 では acknowledgement matcher / loader / key のコード変更は 0 行。
-// ただしこれは「新 type が ack 非対応だから」ではなく、既存の generic
-// matcher (slug + issueType + detailIncludes/detailRegex) が新 4 type
-// (section-structure-mismatch / segment-order-mismatch / snapshot-incomplete /
-// source-unusable) もそのまま受理できるからである。
-//
-// このブロックは次を pin する:
-//   - validateAcknowledgements が新 4 type の ack entry を reject しない
-//   - findMatchingAcknowledgement が新 4 type の detail を detailIncludes
-//     で狙い撃てる
-//   - NON_ACKNOWLEDGEABLE_TYPES に新 4 type を追加しない
-//
-// もし上記のどれかが fail したら、matcher の既存契約を読み間違えている
-// 可能性がある。matcher 本体を touch する前に設計を見直すこと。
+// acknowledgement contract regression pin
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)', () => {
+describe('acknowledgement contract regression pin', () => {
   const VALID_FP = 'sha256:' + 'f'.repeat(64);
 
   function baseAckEntry(overrides = {}) {
@@ -917,12 +901,7 @@ describe('Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)
   });
 
   it('findMatchingAcknowledgement matches source-unusable via detailIncludes on usability reason', () => {
-    // Issue #247 post-merge — emitter の describeReason() は detail 末尾に
-    // `[reason=<token>]` を埋め込むので、ack entry 側はこの token 文字列を
-    // detailIncludes に書けば狙い撃てる。実 emitter の生成 pattern に対して
-    // assert すること (fabricated string は使わない — 再発防止)。実 emitter
-    // 出力との round-trip は
-    // source_parity_usability_ack_integration.test.mjs が担保する。
+    // detail 末尾の `[reason=<token>]` を detailIncludes で狙い撃てる。
     const entry = baseAckEntry({
       slug: 'salesforce-testing/faq',
       issueType: 'source-unusable',
@@ -930,8 +909,6 @@ describe('Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)
     });
     const issue = {
       type: 'source-unusable',
-      // 実 describeReason('source-unusable', 'escaped-details-residue', ...) の
-      // 出力形式を pin する。signals の数値部分は具体値を埋めておく。
       detail:
         'EN HTML still contains 3 escaped <details> markers after preprocessEnHtml ' +
         '— widget tree is unbalanced and comparator cannot align sections ' +
@@ -948,7 +925,7 @@ describe('Issue #247 PR5 — acknowledgement contract regression pin (Finding 1)
     assert.equal(match.expired, false);
   });
 
-  it('NON_ACKNOWLEDGEABLE_TYPES does NOT contain any of the PR5 new taxonomy', () => {
+  it('NON_ACKNOWLEDGEABLE_TYPES does NOT contain the new taxonomy', () => {
     for (const type of [
       'section-structure-mismatch',
       'segment-order-mismatch',

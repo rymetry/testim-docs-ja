@@ -1,5 +1,5 @@
 /**
- * detectSourceUsability の unit テスト (Issue #247 PR3)。
+ * detectSourceUsability の unit テスト。
  *
  * 設計書 §4.5.1 に対応。純粋関数として detector を直接呼ぶ。
  * extractError を含む全引数パターンをカバーする。
@@ -460,7 +460,7 @@ describe('detectSourceUsability — payload schema pin', () => {
     assert.equal(typeof result.detail, 'string');
     assert.ok(result.detail.length > 0, 'detail は空でない');
 
-    // usabilitySignals のキー集合 (PR5 baseline identity surface)
+    // usabilitySignals のキー集合
     const s = result.usabilitySignals;
     assert.ok('enRawHtmlLength' in s, 'enRawHtmlLength');
     assert.ok('enBodySegmentCount' in s, 'enBodySegmentCount');

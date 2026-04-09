@@ -1,5 +1,5 @@
 /**
- * 比較前 source usability gate (Issue #247 PR3)。
+ * 比較前 source usability gate。
  *
  * EN snapshot が比較不能なページ (shallow / collapsed / malformed) を
  * `alignSegments` の前に検出し、`snapshot-incomplete` または `source-unusable`
@@ -215,7 +215,7 @@ function buildIssue(type, reason, signals) {
 /**
  * reviewer 向け 1 行サマリ文字列を返す。issue payload の `detail` フィールドに使う。
  *
- * Issue #247 post-merge — reason token を detail 末尾に埋め込むことで、
+ * reason token を detail 末尾に埋め込むことで、
  * `findMatchingAcknowledgement` の `detailIncludes` / `detailRegex` が
  * 安定して狙い撃てるようにする。generic ack contract を維持するための
  * 最小変更。baseline 経路は従来通り `usabilitySignals.reason` を読む。

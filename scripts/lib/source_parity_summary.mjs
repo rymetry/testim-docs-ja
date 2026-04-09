@@ -29,23 +29,12 @@ import {
  *     Audit channel: coarse signal の総数 + type 別内訳。
  *
  *   structureMismatchIssues / structureMismatchFiles / structureMismatchByType
- *     Issue #247 PR1〜PR5 — canonical block sequence comparator 由来の
- *     structure mismatch (section-structure-mismatch / segment-order-mismatch)
- *     の独立 counter。ack (valid) と frozen baseline は除外し、active な
- *     structure violation のみカウントする。PR5 cutover 後は
- *     `reportableActiveFiles` にも流れ込むようになった (gate に載る) が、
- *     reviewer / dashboard 向けに type 別内訳を一発で読みたい場面のため
- *     並走 counter として残してある。
+ *     structure mismatch の独立 counter。ack / frozen baseline を除外し、
+ *     active な構造差分だけを数える。
  *
  *   snapshotUnusableIssues / snapshotUnusableFiles / snapshotUnusableByType
- *     Issue #247 PR1〜PR5 — snapshot / source 起因で comparator が成立し
- *     ないページ用の独立 counter。`snapshot-incomplete` / `source-unusable`
- *     を translation drift と混ぜないために別枠で集計する。PR4 で
- *     parityFollowup `summary.sourceUnusable` サブセクションと CLI 末尾
- *     セクションに露出させた。**翻訳者責任外 (snapshot / source sync 側
- *     debt) のため PR5 cutover 後も `reportableActive*` には含めない**。
- *     baseline / ack で人手管理する枠は PR5 から提供されているが、active
- *     な source unusable があっても gate exit code は 0 のまま。
+ *     snapshot / source 起因で comparator が成立しないページ用の独立 counter。
+ *     翻訳差分と混ぜずに別枠で集計し、gate には載せない。
  *
  *   baselinedIssues / baselinedFiles / baselinedByType /
  *   baselinedByInconclusiveCategory / expiredBaselineEntries
@@ -54,10 +43,7 @@ import {
  *     gate に refire する (isFrozenByBaseline / isReportableParityIssue 参照)。
  *
  * @param {object[]} results
- * @param {object} [orphanMeta] — Issue #247 post-merge。呼び出し側が
- *   `checkSourceParity` ループ内で `tagIssuesWithBaseline` の
- *   `matchedKeys` を使って計算した orphan baseline entry の集計結果。
- *   省略時は 0 件 / {}(後方互換)。
+ * @param {object} [orphanMeta] 呼び出し側で集計した orphan baseline entry の情報。
  * @param {number} [orphanMeta.orphanBaselineEntries]
  * @param {Record<string, number>} [orphanMeta.orphanBaselineByType]
  */
@@ -131,18 +117,14 @@ export function summarizeParityResults(results, orphanMeta = {}) {
       issuesByType[issue.type] = (issuesByType[issue.type] || 0) + 1;
       issuesBySeverity[issue.severity] = (issuesBySeverity[issue.severity] || 0) + 1;
 
-      // coarse signals は ack / baseline 状態に関わらず audit channel で
-      // 別管理する。gate を駆動する reportable counters には絶対に寄与しない契約。
+      // coarse signal は audit channel にだけ載せる。
       if (isCoarseAuditSignal(issue)) {
         auditSignalIssues += 1;
         auditSignalsByType[issue.type] = (auditSignalsByType[issue.type] || 0) + 1;
         hasAuditSignal = true;
       }
 
-      // Issue #247 PR1 — structure mismatch / source unusable の専用 counter。
-      // ack / frozen baseline を除外して active な drift のみカウントする。
-      // PR1 時点では emitter 未実装のため実運用では常にゼロ。PR2/PR3 で
-      // emission を追加する。
+      // structure mismatch / source unusable は専用 counter でも集計する。
       if (isStructureMismatchIssue(issue) && !isValidAcknowledgedIssue(issue) && !isFrozen) {
         structureMismatchIssues += 1;
         structureMismatchByType[issue.type] =
@@ -221,26 +203,20 @@ export function summarizeParityResults(results, orphanMeta = {}) {
     baselinedByInconclusiveCategory,
     expiredBaselineEntries,
     expiringBaselineEntries30d,
-    // audit / reportable counters — header コメント参照
+    // audit / reportable counters
     reportableActiveFiles,
     reportableActiveActionableFiles,
     auditSignalIssues,
     auditSignalFiles,
     auditSignalsByType,
-    // Issue #247 PR1 — structure mismatch / source unusable counters。
-    // PR2/PR3 で emitter を追加するまでは常にゼロだが、downstream
-    // (detection_reports / CLI / schema validation) が受け入れる枠を
-    // 先に確保する。
+    // structure mismatch / source unusable の専用 counters
     structureMismatchIssues,
     structureMismatchFiles,
     structureMismatchByType,
     snapshotUnusableIssues,
     snapshotUnusableFiles,
     snapshotUnusableByType,
-    // Issue #247 post-merge — baseline orphan detection。呼び出し側が
-    // tagIssuesWithBaseline の matchedKeys を使って計算した結果を
-    // そのまま summary に透過させる。counter そのものは
-    // parityRegression / gate exit code には寄与しない (情報のみ)。
+    // baseline orphan detection。情報表示用で、gate には影響しない。
     orphanBaselineEntries: orphanMeta.orphanBaselineEntries || 0,
     orphanBaselineByType:
       orphanMeta.orphanBaselineByType &&

@@ -1,5 +1,5 @@
 /**
- * Tests for the section-anchored exact diff engine (Issue #225 Phase 5).
+ * Tests for the section-anchored exact diff engine.
  *
  * The alignment module groups EN and JA canonical segments by heading-bounded
  * sections, runs an LCS-based local diff over the body of each section, and
@@ -102,9 +102,7 @@ describe('alignSegments — empty / identical inputs', () => {
 
 describe('alignSegments — segment-missing', () => {
   it('detects a single missing paragraph as exactly one segment-missing diff', () => {
-    // Issue #247 PR2: section-structure-mismatch も並行で出る
-    // (multiset {p:3} vs {p:2} で違うため)。LCS が emit する
-    // segment-missing は引き続き 1 件 / cascade なしで pin する。
+    // section-structure-mismatch も並行で出るが、LCS 側の segment-missing は 1 件に保つ。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'paragraph', 0, 'First paragraph.'),
@@ -159,8 +157,7 @@ describe('alignSegments — segment-missing', () => {
   });
 
   it('detects a missing callout-body as one diff', () => {
-    // Issue #247 PR2: section-structure-mismatch も並行で出る
-    // (multiset {callout-body:2} vs {callout-body:1})。
+    // section-structure-mismatch も並行で出る。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'callout-body', 0, 'EN callout para A'),
@@ -205,8 +202,7 @@ describe('alignSegments — segment-missing', () => {
 
 describe('alignSegments — segment-extra', () => {
   it('detects a single extra JA paragraph as one segment-extra diff', () => {
-    // Issue #247 PR2: section-structure-mismatch も並行で出る
-    // (multiset {p:2} vs {p:3})。
+    // section-structure-mismatch も並行で出る。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'paragraph', 0, 'Paragraph one.'),
@@ -317,10 +313,7 @@ describe('alignSegments — segment-token-gap', () => {
 
 describe('alignSegments — section anchoring', () => {
   it('groups diffs by their section path', () => {
-    // Issue #247 PR2: Setup section の paragraph 削除 (multiset
-    // {p:2} vs {p:1}) で section-structure-mismatch も並行に出る。
-    // ここでは segment-missing 単体の section path をピン止めするのが
-    // 目的なので、type で filter してから検証する。
+    // section-structure-mismatch も並行に出るが、ここでは segment-missing の sectionPath だけを見る。
     const en = [
       makeHeading('Setup', 0, 'Setup'),
       makeSeg('Setup', 'paragraph', 0, 'Setup paragraph one.'),
@@ -372,11 +365,7 @@ describe('alignSegments — section anchoring', () => {
       makeSeg('Cセクション', 'paragraph', 0, '`--cflag` を C1 で使用します。'),
     ];
     const result = alignSegments(en, ja);
-    // cascade-isolation: section A (削除あり) には segment-missing が
-    // ちょうど 1 件、section B / C には segment-missing が 1 件もない
-    // ことを pin する。Issue #247 PR2 では section A に
-    // section-structure-mismatch (multiset {p:2} vs {p:1}) も並行で出る
-    // が、これは想定通りで他 section には影響しない。
+    // section A にだけ diff が出て、B / C に cascade しないことを確認する。
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missingDiffs.length, 1, 'no cascade — exactly one missing diff');
     assert.equal(missingDiffs[0].sectionPath, 'A');
@@ -674,9 +663,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
   });
 
   it('may return inconclusive for an aligned tokenless page when swap cannot be ruled out', () => {
-    // This is the tradeoff for trustworthy clean results: when current
-    // and swapped hypotheses are equally plausible, Phase 5 returns
-    // inconclusive instead of asserting that the page is definitely clean.
+    // current と swapped の仮説が同程度なら inconclusive を返す。
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
@@ -868,9 +855,7 @@ describe('alignSegments — tokenless cross-language paragraph identification', 
     assert.equal(missing.length, 1, 'one missing diff must be emitted');
     assert.equal(missing[0].segmentKind, 'paragraph');
     // We deliberately do NOT assert which enSegmentIndex was chosen.
-    // The Phase 6 cutover plan is to either (a) accept this as a known
-    // limitation and pair with shadow-mode review, or (b) augment the
-    // alignment with a translation memory before promoting.
+    // どの enSegmentIndex を選ぶかは保証しない。
   });
 });
 
@@ -908,10 +893,10 @@ describe('alignSegments — determinism', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Phase 6A — inconclusiveCategory enum
+// inconclusiveCategory enum
 // ---------------------------------------------------------------------------
 
-describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
+describe('alignSegments — inconclusiveCategory enum', () => {
   it('returns inconclusiveCategory: null when alignment is conclusive', () => {
     const en = [
       makeHeading('Setup', 0, 'Setup'),
@@ -982,10 +967,10 @@ describe('alignSegments — inconclusiveCategory enum (Phase 6A)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR2 — section structure comparator wired into alignSegments
+// section structure comparator wired into alignSegments
 // ---------------------------------------------------------------------------
 
-describe('alignSegments — structure comparator integration (Issue #247 PR2)', () => {
+describe('alignSegments — structure comparator integration', () => {
   let parityDiffsToIssues;
 
   before(async () => {
@@ -1016,19 +1001,7 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
   });
 
   it('emits exactly one section-level structure diff per mismatched section (no cascade multiplier)', () => {
-    // PR2 は structure comparator を weighted LCS の **代わり** ではなく
-    // **並行** で走らせる。structure comparator はミスマッチ section
-    // あたり高々 +1 diff しか足さず、LCS は変わらず per-segment の
-    // drill-down (segment-missing / segment-extra / segment-token-gap) を
-    // emit する。この並行契約は意図的: LCS を suppress してしまうと、
-    // 既に構造ドリフトを抱えた section で後続の小さな mutation が隠れて
-    // しまう (recall benchmark の callout-paragraph-delete / step-delete /
-    // section-body-swap 参照)。
-    //
-    // cascade 懸念は、あくまで「structure mismatch が structure-level diff
-    // として多重化しない」こと — つまり 1 つの構造ドリフトはセグメントが
-    // 何個動いても必ず 1 件の `section-structure-mismatch` になる、という
-    // 保証のほうを指す。
+    // structure comparator は LCS と並行に走り、section ごとに 1 件だけ structure diff を足す。
     const en = [
       makeHeading('Overview', 0, 'Overview'),
       makeSeg('Overview', 'unordered-list-item', 0, '- bullet `alpha`'),
@@ -1112,17 +1085,7 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
   });
 
   it('emits BOTH section-structure-mismatch and segment-missing for same-kind count drift', () => {
-    // 並行 emission の契約を pin する。同種 kind の count drift
-    // (3 段落 → 2 段落) は:
-    //   - structure comparator が headline として
-    //     section-structure-mismatch を 1 件 emit する (Stage A の
-    //     multiset 規約による)
-    //   - LCS は drill-down として、どの段落が落ちたかを示す
-    //     segment-missing を emit する
-    // 両方が並行で出ることで、reviewer は section-level の見出しと
-    // segment-level のインデックス情報の両方を受け取れる。downstream の
-    // gate accounting では `structureMismatch*` と従来の segment-*
-    // counter が別ファミリで集計されるので、二重計上にはならない。
+    // 同種 kind の count drift では section-level と segment-level の両方が出る。
     const en = [
       makeHeading('Overview', 0, 'Overview'),
       makeSeg('Overview', 'paragraph', 0, 'EN para A `token-a`'),
@@ -1150,18 +1113,7 @@ describe('alignSegments — structure comparator integration (Issue #247 PR2)', 
   });
 
   it('cross-section body swap emits segment-shifted only — structure comparator is skipped', () => {
-    // Issue #247 PR2 review (Finding 1) — cross-section body swap が
-    // 起きると、section 単位の対応ペアは「kind 列が両方違う」形に
-    // 観測されるので、何もしないと structure comparator が
-    // section-structure-mismatch を section ごとに 1 件ずつ emit して
-    // しまう。だが本当の診断は section-local な構造ドリフトではなく
-    // **cross-section misalignment** で、これは alignSection の
-    // findBodySwapEvidence が segment-shifted として既に表現できる。
-    //
-    // alignSegments は alignSection を先に走らせ、segment-shifted が
-    // emit されている section では structure comparator を skip する
-    // 契約。この regression test が崩れると `structureMismatch*`
-    // counter が swap で汚染される。
+    // cross-section body swap は segment-shifted のみ出し、structure comparator は skip する。
     const en = [
       makeHeading('Section A', 0, 'Section A'),
       makeSeg('Section A', 'paragraph', 0, 'EN A paragraph with `alpha-token` and `alpha-flag`'),

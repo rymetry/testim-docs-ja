@@ -1,7 +1,5 @@
 /**
- * Issue #247 post-merge — detectSourceUsability → findMatchingAcknowledgement の
- * round-trip 結合テスト。実 emitter の出力に対して ack matcher が機能することを
- * 保証する。fabricated detail string で通るテストの再発を防ぐセーフティネット。
+ * detectSourceUsability → findMatchingAcknowledgement の結合テスト。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -43,12 +41,8 @@ function buildAckEntry({ slug, issueType, detailIncludes, fingerprint }) {
   };
 }
 
-describe('Issue #247 post-merge — detector→matcher round-trip (source-unusable)', () => {
-  // Phase F.2.5 で `faq` は preprocessor 段階で正規化され、もはや
-  // `source-unusable (escaped-details-residue)` を emit しない。そのため
-  // 本 contract の round-trip 検証は合成 HTML で Layer 2 を直接トリガする。
-  // JA 側の segments も手作りすれば実ファイル依存を持たず、将来 faq の
-  // JA が変更されても本 test は壊れない。
+describe('detector→matcher round-trip (source-unusable)', () => {
+  // 実ファイル依存を避けるため、合成 HTML で detector を直接発火させる。
   it('escaped-details-residue (合成 HTML) は detailIncludes で ack 可能', () => {
     // orphan な `&lt;/details&gt;` close を持つだけの <p> — faq 正規化は
     // firstOpens !== firstCloses 条件で発火しないため preprocess 後も
@@ -91,10 +85,7 @@ describe('Issue #247 post-merge — detector→matcher round-trip (source-unusab
   });
 
   it('shallow-snapshot (合成 HTML) は detailIncludes で ack 可能', () => {
-    // Issue #247 End-to-End 解消後、`salesforce-testing-overview` の JA は
-    // EN shallow snapshot と同じ minimal 構造に trim したので、detector は
-    // 実ファイルでは shallow-snapshot を発火しない。round-trip 契約の
-    // 確認は合成 HTML + 合成 JA segments で再現する。
+    // 実ファイル依存を避けるため、shallow-snapshot も合成入力で再現する。
     const rawEnHtml = '<h1>Stub</h1><p>single short paragraph.</p>';
     const enSegments = [
       { segmentKind: 'heading', sectionPath: 'Top', textNorm: 'stub' },

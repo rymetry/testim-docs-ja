@@ -1,13 +1,4 @@
-/**
- * Issue #247 PR5 — summary counter を CLI 表示用の複数行テキストに変換する
- * 純粋 formatter。副作用なし。0 件のときは null を返し、呼び出し側
- * (`check_source_parity.mjs`) はそれを見てセクション自体を省略する契約。
- *
- * 現時点で残っているのは `formatSourceUnusableSection` のみ。PR4 で
- * 導入した `formatStructureMismatchSection` は PR5 cutover で削除した
- * (structure mismatch が reportable に昇格し、件数は通常の `Active issue
- * files` 経路で表示されるため、独立 section が重複表示になった)。
- */
+/** summary counter を CLI 表示用の複数行テキストに変換する。 */
 
 /**
  * `[source unusable]` セクションを生成する。snapshot / source sync 側 debt

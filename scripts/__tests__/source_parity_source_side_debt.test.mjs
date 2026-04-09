@@ -1,5 +1,5 @@
 /**
- * Issue #255 Phase 1 + Phase 5 — source-side debt contract test。
+ * source-side debt の契約テスト。
  *
  * `source_sync_exclusions.mjs` に登録された broken upstream source page の
  * 運用契約を pin する。representative test から分離することで、
@@ -9,7 +9,6 @@
  *
  *   1. registry に最低 1 entry (`pull-requests`) が seeding されている
  *   2. 各 debt slug には対応する JA file が存在する
- *      (registry entry が孤立すると Issue #247 の completion state を崩す)
  *   3. 各 debt slug の hand-authored EN snapshot file が存在する
  *      (Q1=A の決定: 凍結参照として残す)
  *   4. 各 debt slug の metadata は "upstream recovery を検知できる shape"
@@ -19,8 +18,8 @@
  *      buildActionableReport → renderSummaryMarkdown の流れで、
  *      debt slug が日本語 summary section と JSON counter に現れる
  *
- * Issue #255 Phase 3b の snapshot_update 側挙動 (excluded-broken /
- * excluded-recovered) は `snapshot_update.test.mjs` 側で pin している。
+ * `snapshot_update.test.mjs` では excluded-broken / excluded-recovered の
+ * 書き込み側挙動を別途確認する。
  */
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -79,17 +78,15 @@ describe('source-side debt registry / repository integrity', () => {
         const jaPath = path.join(DOCS_DIR, `${slug}.md`);
         assert.ok(
           existsSync(jaPath),
-          `debt slug ${slug} must have a JA file at ${jaPath} — ` +
-            `orphan registry entries corrupt the Issue #247 completion state`,
+          `debt slug ${slug} must have a JA file at ${jaPath}`,
         );
       });
 
-      it('has a frozen hand-authored EN snapshot (Issue #255 Q1=A decision)', () => {
+      it('has a frozen hand-authored EN snapshot', () => {
         const snapshotPath = path.join(SNAPSHOTS_CONTENT_DIR, `${slug}.html`);
         assert.ok(
           existsSync(snapshotPath),
-          `debt slug ${slug} must keep its hand-authored snapshot at ${snapshotPath}. ` +
-            `Issue #255 決定: snapshot_update は write をスキップし、この file を凍結参照として温存する。`,
+          `debt slug ${slug} must keep its hand-authored snapshot at ${snapshotPath}`,
         );
       });
 
@@ -134,14 +131,7 @@ describe('source-side debt registry / repository integrity', () => {
   }
 });
 
-// ---------------------------------------------------------------------------
-// Phase 5 — end-to-end pipeline integration
-//
-// registry に登録された debt slug が、pipeline 全体 (source-sync-status →
-// actionable-report → summary markdown) を一貫して流れることを pin する。
-// それぞれの unit は個別テストで pin されているが、統合経路で機械が
-// 誤配線すると silent に drift する可能性があるため end-to-end で assertion。
-// ---------------------------------------------------------------------------
+// registry に登録された debt slug が、pipeline 全体を一貫して流れることを確認する。
 
 describe('source-side debt pipeline integration', () => {
   const debtSlug = 'testops/testops-version-control/pull-requests';

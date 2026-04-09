@@ -94,17 +94,16 @@ export function matchesSectionFilter(relativePath, data, sectionFilter) {
 }
 
 /**
- * Convert an absolute .md file path to its path-based slug.
- * e.g. "/…/src/content/docs/overview/testim-overview.md" → "overview/testim-overview"
+ * 絶対 `.md` path を path-based slug に変換する。
+ * 例: `/.../src/content/docs/overview/testim-overview.md` → `overview/testim-overview`
  */
 export function filePathToSlug(filePath, docsDir = DOCS_DIR) {
   return path.relative(docsDir, filePath).replace(/\.md$/, '');
 }
 
 /**
- * Lazy-cached basename → path-slug lookup built from the docs index.
- * Values are `null` for ambiguous basenames (those appearing in multiple folders).
- * Cache is keyed by docsDir to support test isolation.
+ * docs index から basename → path-slug の lookup を lazy-cache で組み立てる。
+ * 複数 folder にまたがる basename は `null` にして曖昧さを残す。
  */
 const _basenameMapCache = new Map();
 export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
@@ -115,7 +114,7 @@ export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
   for (const slug of Object.keys(slugIndex)) {
     const bn = slug.split('/').pop();
     if (map.has(bn)) {
-      map.set(bn, null); // ambiguous — skip
+      map.set(bn, null); // ambiguous
     } else {
       map.set(bn, slug);
     }
@@ -125,18 +124,12 @@ export function buildBasenameToPathMap(docsDir = DOCS_DIR) {
 }
 
 /**
- * Lazy-cached full slug → resolved full slug lookup.
- *
- * `resolveToFullSlug` is used from the parity extraction hot path, so repeated
- * lookups for the same truncated slug are memoized per docsDir. The cache must
- * stay under `resetProjectCachesForTest()` so test-only callers can force a
- * fresh scan after mutating a temp docs tree.
+ * truncated slug → full slug の解決結果を docsDir 単位で lazy-cache する。
+ * temp docs tree を使う test からは `resetProjectCachesForTest()` でクリアする。
  */
 const _resolveToFullSlugCache = new Map();
 
-/**
- * Reset all module-level caches. Test-only API.
- */
+/** module-level cache を全消去する test 専用 API。 */
 export function resetProjectCachesForTest() {
   _sectionCache.clear();
   _basenameMapCache.clear();
@@ -145,13 +138,9 @@ export function resetProjectCachesForTest() {
 }
 
 /**
- * Lazy-cached full slug → { categoryFolder, filePath } index.
+ * full slug → `{ categoryFolder, filePath }` の index を lazy cache 付きで返す。
  *
- * Issue #247 re-review 第三弾 — `resolveToFullSlug` が `extractInvariantTokens`
- * → `createSegment` の hot path で呼ばれるため、毎回 repo 全体を再帰走査する
- * と full parity が main 比で倍以上遅くなっていた (測定で 4.32s → 9.79s)。
- * `buildBasenameToPathMap` と同じ docsDir-keyed Map で memoize して再帰走査を
- * 1 回に抑える。test 分離は `resetProjectCachesForTest` でクリアする。
+ * `resolveToFullSlug` の呼び出し回数が多いため、docs 走査結果を再利用する。
  */
 const _slugIndexCache = new Map();
 export function buildSlugIndex(docsDir = DOCS_DIR) {
@@ -176,19 +165,12 @@ export function buildSlugIndex(docsDir = DOCS_DIR) {
 }
 
 /**
- * Resolve a possibly truncated slug to the full slug present in the docs tree.
+ * 省略形 slug を docs tree 上の full slug に解決する。
  *
- * Resolution order:
- *   1. Exact full-slug match in the docs index
- *   2. Unique basename fallback
- *   3. Original slug (safe fallback for ambiguous / missing entries)
- *
- * Cache is keyed by docsDir so temp test trees stay isolated from the real
- * repository docs tree.
- *
- * @param {string} slug
- * @param {string} [docsDir]
- * @returns {string}
+ * 解決順:
+ *   1. full slug 完全一致
+ *   2. basename が一意なら fallback
+ *   3. 解決できなければ元の slug を返す
  */
 export function resolveToFullSlug(slug, docsDir = DOCS_DIR) {
   let dirCache = _resolveToFullSlugCache.get(docsDir);
@@ -215,23 +197,15 @@ export function resolveToFullSlug(slug, docsDir = DOCS_DIR) {
 }
 
 /**
- * Resolve a CLI --slug value to a path-based slug.
- * Accepts both basename ("testim-overview") and path-based ("overview/testim-overview").
- * Returns null if the slug is not found or is ambiguous (logs a warning for ambiguity).
- *
- * **Deprecated**: Basename resolution is deprecated. Use path-based slugs directly
- * (e.g., `--slug=overview/testim-overview` instead of `--slug=testim-overview`).
- *
- * @param {string | null | undefined} input
- * @param {string} [docsDir]
- * @returns {string | null}
+ * CLI の `--slug` 値を path-based slug に解決する。
+ * basename 入力も受けるが非推奨で、曖昧または未解決なら null を返す。
  */
 export function resolveSlug(input, docsDir = DOCS_DIR) {
   if (!input) return null;
   const index = buildSlugIndex(docsDir);
-  // Exact match (already path-based)
+  // すでに path-based ならそのまま返す。
   if (index[input]) return input;
-  // Basename resolution (deprecated): find all entries whose basename matches
+  // basename fallback は非推奨だが後方互換のため残す。
   const basename = input.includes('/') ? null : input;
   if (!basename) return null;
   const matches = Object.keys(index).filter((slug) => slug.split('/').pop() === basename);
@@ -254,14 +228,14 @@ const SOURCE_URL_RE =
   /^https:\/\/docs\.tricentis\.com\/testim\/content\/([a-z0-9_-]+(?:\/[a-z0-9_-]+)*)\.htm$/;
 
 /**
- * Extract the EN content path from a sourceUrl.
+ * `sourceUrl` から EN 側の content path を抽出する。
  *
- * Examples:
- *   ".../content/running-tests/play-from-here.htm"          → "running-tests/play-from-here"
- *   ".../content/running-tests/play-from-here/index.htm"    → "running-tests/play-from-here"
+ * 例:
+ *   ".../content/running-tests/play-from-here.htm"           → "running-tests/play-from-here"
+ *   ".../content/running-tests/play-from-here/index.htm"     → "running-tests/play-from-here"
  *   ".../content/overview/testim-overview/use-ai/index.htm"  → "overview/testim-overview/use-ai"
  *
- * Returns null for non-matching URLs or non-string input.
+ * URL が pattern に合わない、または文字列でなければ `null` を返す。
  * @param {string | undefined | null} sourceUrl
  * @returns {string | null}
  */
@@ -274,8 +248,8 @@ export function extractSourceContentPath(sourceUrl) {
 }
 
 /**
- * Richer doc index that includes the EN source content path from frontmatter.
- * Keys are path-based slugs (e.g., "overview/testim-overview").
+ * frontmatter 由来の EN source content path も含めた docs index を組み立てる。
+ * key は path-based slug (`overview/testim-overview` など)。
  * @param {string} [docsDir]
  * @returns {Record<string, {filePath:string, localFolder:string, sourceContentPath:string|null}>}
  */

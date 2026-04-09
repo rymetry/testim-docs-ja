@@ -4,7 +4,6 @@ import { isDirectRun } from './lib/cli.mjs';
 import { parseSidebarSections, getSectionSlugSet } from './lib/sidebar.mjs';
 import { ROOT_DIR, DOCS_DIR, toKebab } from './lib/project.mjs';
 
-// Paths
 const ROOT = ROOT_DIR;
 const SIDEBAR_FILE = path.join(ROOT, 'docs', 'SIDEBAR_URLS.md');
 const DOCS_ROOT = DOCS_DIR;
@@ -61,7 +60,6 @@ async function main() {
       if (sectionSlugs && !sectionSlugs.has(item.slug)) continue;
 
       const slug = item.slug;
-      // Use basename for the filename (slug is now path-based, e.g., overview/testim-overview)
       const basenameSlug = slug.includes('/') ? slug.split('/').pop() : slug;
       const filePath = path.join(categoryDir, `${basenameSlug}.md`);
       if (fs.existsSync(filePath)) continue;

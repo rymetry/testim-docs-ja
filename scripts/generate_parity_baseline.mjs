@@ -217,7 +217,7 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         missingTokens: null,
         inconclusiveCategory: null,
         inconclusiveReason: null,
-        // Issue #247 PR5 — structure mismatch / source unusable 用フィールド
+        // structure mismatch / source unusable 用フィールド
         sectionIndex: null,
         structureCategory: null,
         structureFingerprint: null,
@@ -225,7 +225,7 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
       };
 
       if (STRUCTURE_MISMATCH_TYPES.has(issue.type)) {
-        // Issue #247 PR5 — section 粒度の structure diff (§3.9)。
+        // section 粒度の structure diff。
         // identity は sectionIndex (machine) + structureCategory +
         // structureFingerprint。sectionPath は reviewer 可読性のために
         // 保存するが identity には使わない。
@@ -253,7 +253,7 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         continue;
       }
       if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
-        // Issue #247 PR5 — page 粒度の source unusable detector (§3.9)。
+        // page 粒度の source unusable detector。
         // identity surface: usabilityReason のみ。
         const reason = issue.usabilitySignals?.reason ?? null;
         if (typeof reason !== 'string' || !USABILITY_REASONS.has(reason)) {
@@ -360,8 +360,8 @@ export function buildGenerationMeta(status, args) {
 /**
  * Sort entries deterministically: slug → issueType → sectionPath → segmentKind → index.
  *
- * Issue #247 PR5 — structure mismatch 系は sectionIndex を sectionPath より
- * 先に使うことで、同一ページ内で sectionPath が衝突しても stable に並ぶ。
+ * structure mismatch 系は sectionIndex を sectionPath より先に使うことで、
+ * 同一ページ内で sectionPath が衝突しても stable に並ぶ。
  * source unusable 系は usabilityReason で補助 sort する。
  */
 function sortEntries(entries) {
@@ -468,7 +468,7 @@ export function mergePartialBaseline(existing, slugsToReplace, newEntries, meta)
 }
 
 /**
- * Issue #247 PR5 — `--types=<csv>` partial mode 用のマージヘルパー (§7.4)。
+ * `--types=<csv>` partial mode 用のマージヘルパー。
  *
  * 指定 issueType の既存エントリだけを削除し、新しい entries とマージする。
  * 指定外の issueType のエントリは bit-identical で保持する。これにより、
@@ -538,7 +538,7 @@ async function main() {
     printUsage();
     return 1;
   }
-  // Issue #247 PR5 — --types は --regenerate / --slug と排他的。
+  // --types は --regenerate / --slug と排他的。
   // 同時指定を許すと「partial mode なのに既存 segment-* も touch される」
   // 状態が起き得るので明示的に reject する。
   const modeCount =
@@ -548,7 +548,7 @@ async function main() {
     printUsage();
     return 1;
   }
-  // Issue #247 post-merge — --types の allowlist / 空配列 / typo は純粋 helper
+  // --types の allowlist / 空配列 / typo は純粋 helper
   // に委譲して fail-fast する (silent no-op 再発防止)。
   {
     const validation = validateTypesArg(args.types);
@@ -573,7 +573,7 @@ async function main() {
   if (args.regenerate) {
     output = buildBaselineFromStatus(status, fingerprintMap, meta);
   } else if (args.types) {
-    // Issue #247 PR5 — partial-by-type mode (§7.4)。
+    // partial-by-type mode。
     // 指定 issueType の issue だけから entry を生成し、既存 baseline と
     // mergePartialBaselineByType でマージする。指定外 (segment-*) は
     // bit-identical で残る (reviewAfter 含む)。

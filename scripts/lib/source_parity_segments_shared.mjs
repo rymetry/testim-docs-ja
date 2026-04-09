@@ -1,5 +1,5 @@
 /**
- * Shared canonical segment types and helpers (Issue #225).
+ * Shared canonical segment types and helpers.
  *
  * Defines the Segment schema used by the EN HTML and JA markdown extractors,
  * along with text normalization, source fingerprinting, section path tracking,

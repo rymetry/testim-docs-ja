@@ -1,5 +1,5 @@
 /**
- * Tests for the shared canonical segment types and helpers (Issue #225 Phase 4).
+ * Tests for the shared canonical segment types and helpers.
  *
  * The shared module defines the Segment schema, text normalization, fingerprinting,
  * section path construction, and a createSegment factory used by both the EN HTML
@@ -63,7 +63,7 @@ describe('SEGMENT_KINDS', () => {
     assert.ok(GATE_ELIGIBLE_KINDS.includes('table-cell'));
   });
 
-  it('GATE_ELIGIBLE_KINDS excludes image-caption (declared but unemitted in Phase 4)', () => {
+  it('GATE_ELIGIBLE_KINDS excludes image-caption (declared but unemitted)', () => {
     assert.ok(!GATE_ELIGIBLE_KINDS.includes('image-caption'));
   });
 

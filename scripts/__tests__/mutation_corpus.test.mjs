@@ -740,7 +740,7 @@ describe('real page corpus coverage', () => {
     });
   }
 
-  // Design intent: corpus-level coverage is the Phase 0 requirement.
+  // corpus-level coverage を維持する。
   // Each mutation type must be producible by at least one page in the corpus,
   // but individual pages are NOT required to support all types — a page without
   // pipe tables naturally cannot produce table-cell-delete, and a page whose

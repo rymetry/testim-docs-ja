@@ -1,5 +1,5 @@
 /**
- * Source-Side Debt Exclusion Registry (Issue #255)。
+ * Source-Side Debt Exclusion Registry。
  *
  * EN upstream 側が broken で parity comparator の前提を満たさない page を
  * 明示的に管理する registry。自動除外は一切しない — 人間が upstream broken と
@@ -28,16 +28,16 @@
  */
 
 /**
- * Registry of known source-side debt pages.
+ * 既知の source-side debt page を保持する registry。
  *
  * Shape:
  *   slug → {
- *     reason: 'broken-upstream-source',   // fixed token for downstream match
- *     note: string,                        // human description of symptom
- *     expectedIssueType: string,           // recovery probe の issueType
- *     expectedReason: string,              // recovery probe の reason
+ *     reason: 'broken-upstream-source',
+ *     note: string,
+ *     expectedIssueType: string,
+ *     expectedReason: string,
  *     addedAt: 'YYYY-MM-DD',
- *     linkedIssue: number,                 // upstream / parent issue number
+ *     linkedIssue: number,
  *   }
  *
  * @type {Readonly<Record<string, Readonly<{
@@ -55,9 +55,9 @@ export const SOURCE_SYNC_EXCLUSIONS = Object.freeze({
     note:
       'EN live HTML collapses the full article body into a single <code> block ' +
       'inside <div class="codeSnippet">. The MadCap Flare extractor produces 0 ' +
-      'body segments, so the parity comparator cannot align sections. Issue #247 ' +
-      'originally fixed this by writing a hand-authored snapshot, but every snapshot ' +
-      'fetch reverts that fix. Registered here so snapshot_update stops overwriting ' +
+      'body segments, so the parity comparator cannot align sections. A hand-authored ' +
+      'snapshot can keep parity checks stable, but every snapshot fetch would overwrite ' +
+      'that fix. Registered here so snapshot_update stops overwriting ' +
       'the frozen reference file.',
     expectedIssueType: 'snapshot-incomplete',
     expectedReason: 'extractor-empty',
@@ -67,7 +67,7 @@ export const SOURCE_SYNC_EXCLUSIONS = Object.freeze({
 });
 
 /**
- * Return true if the slug is registered as source-side debt.
+ * slug が source-side debt として登録されていれば true を返す。
  *
  * @param {string | null | undefined} slug
  * @returns {boolean}
@@ -78,9 +78,8 @@ export function isSourceSideDebt(slug) {
 }
 
 /**
- * Return a shallow copy of the registry entry for a slug, or null if the
- * slug is not registered. The returned object is a fresh copy — mutating
- * it does not affect the registry.
+ * slug の registry entry を shallow copy で返す。
+ * 未登録なら null。返り値を変更しても registry 本体には影響しない。
  *
  * @param {string | null | undefined} slug
  * @returns {{
@@ -100,8 +99,8 @@ export function getExclusion(slug) {
 }
 
 /**
- * Return all registered source-side debt slugs as a fresh sorted array.
- * Callers can mutate the returned array without affecting the registry.
+ * 登録済み source-side debt slug をソート済み配列で返す。
+ * 返り値を変更しても registry 本体には影響しない。
  *
  * @returns {string[]}
  */

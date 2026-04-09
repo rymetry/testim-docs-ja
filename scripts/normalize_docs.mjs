@@ -65,7 +65,6 @@ function normalizeFile(filePath, urlMappings) {
   const data = { ...(parsed.data ?? {}) };
   let content = parsed.content ?? '';
 
-  // sourceUrl must come from url_mapping.json; no longer generate a default from slug alone
   if (!data.sourceUrl && urlMappings[slug]) {
     data.sourceUrl = urlMappings[slug].new_url;
   }
@@ -101,7 +100,6 @@ async function main() {
     (filePath) => !slugSet || slugSet.has(filePathToSlug(filePath, DOCS_ROOT))
   );
 
-  // Load url_mapping.json once for all files (avoid re-reading per file)
   let urlMappings = {};
   try {
     const mappingPath = path.join(__dirname, 'url_mapping.json');

@@ -1,5 +1,5 @@
 /**
- * End-to-end runtime integration test for the Phase 6A segment-level gate.
+ * End-to-end runtime integration test for the segment-level gate.
  *
  * Verifies that:
  *   1. `source_parity.mjs` re-exports the new alignment surface
@@ -13,7 +13,7 @@
  *   4. `summarizeParityResults` reports primary-gate issues in the
  *      actionable totals.
  *   5. The alignment + parityDiffsToIssues round trip produces issues
- *      that carry the structured metadata Phase 6 / Phase 7 reports
+ *      that carry the structured metadata downstream reports
  *      will rely on (sectionIndex, segmentKind, fingerprints).
  *
  * The test runs `check_source_parity.mjs` end-to-end via `node` against
@@ -52,7 +52,7 @@ const STATUS_BACKUP_PATH = join(ROOT, 'parity-check-status.test-backup.json');
 // 1. Facade re-exports
 // ---------------------------------------------------------------------------
 
-describe('source_parity.mjs facade — Phase 5 surface', () => {
+describe('source_parity.mjs facade', () => {
   it('re-exports alignSegments, parityDiffsToIssues, and the segment extractors', () => {
     assert.equal(typeof alignSegments, 'function');
     assert.equal(typeof parityDiffsToIssues, 'function');
@@ -62,7 +62,7 @@ describe('source_parity.mjs facade — Phase 5 surface', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 2. parityDiffsToIssues — schema (Phase 6A cutover: primary gate)
+// 2. parityDiffsToIssues — schema
 // ---------------------------------------------------------------------------
 
 describe('parityDiffsToIssues', () => {
@@ -75,8 +75,7 @@ describe('parityDiffsToIssues', () => {
     const issues = parityDiffsToIssues(alignment.diffs);
     assert.ok(issues.length > 0, 'expected at least one diff (token-gap on --proxy)');
     for (const issue of issues) {
-      // Phase 6A cutover (2026-04-06): shadow phase tagging removed.
-      // segment-* issues now flow through primary gate accounting.
+      // shadow phase tagging は廃止され、segment-* issue は primary gate に流れる。
       assert.equal(issue.phase, undefined);
       assert.equal(issue.severity, 'actionable');
       assert.ok(issue.detail.startsWith('['), 'detail must include section label prefix');
@@ -105,13 +104,12 @@ describe('parityDiffsToIssues', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 3. summarizeParityResults — Phase 6A cutover accounting
+// 3. summarizeParityResults — accounting
 // ---------------------------------------------------------------------------
 
-describe('summarizeParityResults — Phase 6A cutover', () => {
+describe('summarizeParityResults', () => {
   it('counts un-baselined segment-* as primary gate actionable', () => {
-    // Phase 6A cutover: un-baselined segment-* issues flow through
-    // primary gate accounting. No shadow phase tag.
+    // un-baselined segment-* issues は primary gate accounting に流れる。
     const results = [
       {
         file: 'a.md',
@@ -188,7 +186,7 @@ describe('summarizeParityResults — Phase 6A cutover', () => {
 // 4. End-to-end CLI invocation against a real drifted page
 // ---------------------------------------------------------------------------
 
-describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () => {
+describe('check_source_parity.mjs --slug — runtime integration', () => {
   it('emits baseline-tagged segment-* issues into parity-check-status.json', () => {
     // Backup any existing status file so the test does not destroy
     // local CI state. Restored in the `after` step below.
@@ -212,9 +210,7 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
       assert.ok(existsSync(STATUS_PATH), 'parity-check-status.json must exist');
       const data = JSON.parse(readFileSync(STATUS_PATH, 'utf8'));
 
-      // Phase 6A cutover: segment-* issues flow through primary gate,
-      // but known drift is frozen via parity-baseline.json so the runtime
-      // exit code remains 0 for this drifted page.
+      // known drift is frozen via parity-baseline.json so the runtime exit code remains 0.
       const summary = data.summary;
       assert.ok(
         (summary.baselinedIssues ?? 0) > 0,
@@ -223,9 +219,7 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
       assert.ok((summary.baselinedFiles ?? 0) >= 1);
       assert.ok(summary.baselinedByType);
 
-      // Per-file segment-* issues are present with primary gate shape
-      // (no shadow phase tag) and baselined: true because the preview
-      // baseline from PR1 covers this page.
+      // segment-* issues は primary gate shape のまま baselined: true になる。
       const file = data.files.find(
         (f) => f.file === 'src/content/docs/test-management/shared-configuration.md',
       );
@@ -271,10 +265,7 @@ describe('check_source_parity.mjs --slug — Phase 6A runtime integration', () =
         0,
         `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
       );
-      // Issue #247 PR5 — このページは既存 segment-* drift が baseline で
-      // 覆われている上に、PR5 baseline migration で section-structure-mismatch
-      // も baseline に追加された。両 type とも baseline 経路で covered な
-      // ので、CLI suffix は "(covered by baseline/ack)" になる。
+      // 既存 drift は baseline で覆われているため CLI suffix は covered 扱いになる。
       assert.ok(
         result.stdout.includes(
           '⏸️ src/content/docs/test-management/shared-configuration.md (covered by baseline/ack)',

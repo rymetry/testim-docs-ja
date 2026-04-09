@@ -71,12 +71,12 @@ describe('parseArgs', () => {
     assert.equal(args.includeAdvisory, false);
   });
 
-  it('parses --include-audit-signals (Phase 8)', () => {
+  it('parses --include-audit-signals', () => {
     const args = parseArgs(['--include-audit-signals']);
     assert.equal(args.includeAuditSignals, true);
   });
 
-  it('returns false includeAuditSignals when not specified (Phase 8)', () => {
+  it('returns false includeAuditSignals when not specified', () => {
     const args = parseArgs(['--json']);
     assert.equal(args.includeAuditSignals, false);
   });
@@ -137,7 +137,7 @@ describe('CLI coverage helpers', () => {
   it('treats non-expired baselines and valid acknowledgements as non-blocking', () => {
     assert.equal(isNonBlockingIssue({ baselined: true }), true);
     assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: false }), true);
-    // Phase 7: expired baselines re-enter the gate and are blocking
+    // 期限切れ baseline は再び blocking 扱いに戻る。
     assert.equal(isNonBlockingIssue({ baselined: true, baselineExpired: true }), false);
     assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: true }), false);
     assert.equal(isNonBlockingIssue({ severity: 'actionable' }), false);
@@ -169,9 +169,8 @@ describe('CLI coverage helpers', () => {
     });
   });
 
-  it('treats expired baselines as blocking for console coverage (Phase 7)', () => {
-    // Phase 7: expired baselines re-enter the gate, so the console icon
-    // should be ❌ to match the parity regression gate behavior.
+  it('treats expired baselines as blocking for console coverage', () => {
+    // 期限切れ baseline は console coverage でも blocking に戻す。
     const state = getConsoleCoverageState([{ baselined: true, baselineExpired: true }]);
     assert.deepEqual(state, {
       allAcked: false,
@@ -202,11 +201,8 @@ describe('CLI coverage helpers', () => {
     });
   });
 
-  // Issue #247 PR5 — gate cutover 後の coverage state 契約
-  describe('Issue #247 PR5 — coverage state after structure mismatch cutover', () => {
+  describe('coverage state with structure mismatch', () => {
     it('active structure-mismatch 単独 (no baseline/ack) → icon ❌, suffix ""', () => {
-      // PR5 cutover で structure mismatch は reportable に昇格したため、
-      // 単独でも ack/baseline が無ければ ❌ 経路に落ちる。
       const state = getConsoleCoverageState([
         { type: 'section-structure-mismatch', severity: 'actionable' },
       ]);
@@ -219,8 +215,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('structure-mismatch × 2 + source-unusable × 2 mix → icon ❌ (structure は reportable)', () => {
-      // structure mismatch が含まれていれば、source-unusable が何件
-      // あっても ❌ 経路に落ちる。
       const state = getConsoleCoverageState([
         { type: 'section-structure-mismatch', severity: 'actionable' },
         { type: 'segment-order-mismatch', severity: 'actionable' },
@@ -232,7 +226,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('source-unusable advisory + active segment-missing → icon ❌', () => {
-      // active な reportable が別途あれば advisory の有無は関係なく ❌。
       const state = getConsoleCoverageState([
         { type: 'source-unusable', severity: 'actionable' },
         { type: 'segment-missing', severity: 'actionable' },
@@ -246,8 +239,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('baselined structure-mismatch + active segment-missing → icon ❌', () => {
-      // baseline で covered な structure mismatch があっても、他に
-      // active な reportable があればファイルはブロッキング。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
@@ -266,9 +257,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('baselined structure-mismatch 単独 → icon ⏸️, suffix " (covered by baseline/ack)"', () => {
-      // baseline 経路は引き続き non-blocking。structure mismatch の baseline
-      // wiring が PR5 で実動するようになったので、このケースは実運用で
-      // 発生する。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
@@ -286,7 +274,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('acked structure-mismatch 単独 → icon ⏸️, suffix " (all acknowledged)"', () => {
-      // ack 経路は advisory より優先 (より具体的なカバレッジ情報なので)。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
@@ -304,7 +291,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('baselined structure-mismatch + source-unusable advisory → icon ⏸️, suffix " (advisory + baseline/ack)"', () => {
-      // mix のケース: structure は baseline、source-unusable は advisory。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
@@ -323,7 +309,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('expired baseline on structure-mismatch → icon ❌, suffix "" (re-fire)', () => {
-      // PR5 の新しい挙動: baseline 期限切れ → reportable に戻る。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
@@ -341,7 +326,6 @@ describe('CLI coverage helpers', () => {
     });
 
     it('structure-mismatch + source-unusable both baselined → icon ⏸️, suffix " (covered by baseline/ack)"', () => {
-      // 両方 baseline で覆われているので「covered」として扱う。
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
@@ -365,11 +349,7 @@ describe('CLI coverage helpers', () => {
     });
   });
 
-  // Issue #247 PR5 — source-unusable advisory 専用 CLI suffix
-  // PR4 で導入した `(source unusable)` suffix は PR5 cutover でも維持する。
-  // ただし structure mismatch は advisory ではなくなったので、structure
-  // mismatch を含む mix ケースは ❌ (reportable 経路) に落ちる。
-  describe('Issue #247 PR5 — source-unusable 専用 CLI suffix', () => {
+  describe('source-unusable 専用 CLI suffix', () => {
     it('source-unusable 単独 (advisory) → icon ⏸️, suffix " (source unusable)"', () => {
       const state = getConsoleCoverageState([
         { type: 'source-unusable', severity: 'actionable' },
@@ -407,9 +387,7 @@ describe('CLI coverage helpers', () => {
       });
     });
 
-    it('source-unusable + active section-structure-mismatch → icon ❌ (PR5: structure は reportable)', () => {
-      // PR5 cutover で structure mismatch が reportable になった結果、
-      // この mix は advisory only ではなく ❌ に落ちる。
+    it('source-unusable + active section-structure-mismatch → icon ❌', () => {
       const state = getConsoleCoverageState([
         { type: 'source-unusable', severity: 'actionable' },
         { type: 'section-structure-mismatch', severity: 'actionable' },
@@ -454,7 +432,7 @@ describe('CLI coverage helpers', () => {
     });
 
     it('acked source-unusable 単独 → " (all acknowledged)"', () => {
-      // ack 経路は advisory より優先 (PR2 契約と同じ)。
+      // ack 経路は advisory より優先。
       const state = getConsoleCoverageState([
         {
           type: 'source-unusable',
@@ -472,8 +450,7 @@ describe('CLI coverage helpers', () => {
     });
 
     it('baselined snapshot-incomplete 単独 → " (covered by baseline/ack)"', () => {
-      // baseline 経路も advisory より優先 (PR1 時点では新 type に
-      // baseline は付かないが forward compatibility のため pin)。
+      // baseline 経路も advisory より優先。
       const state = getConsoleCoverageState([
         {
           type: 'snapshot-incomplete',
@@ -493,21 +470,17 @@ describe('CLI coverage helpers', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Phase 8: computeExitCode uses reportableActive* counters
+// computeExitCode uses reportableActive* counters
 // ---------------------------------------------------------------------------
 
-describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', () => {
-  // Pure helper extracted in Phase 8 PR1 commit 5 so the gate exit-code
-  // logic can be unit-tested without spinning up the full
-  // checkSourceParity pipeline. The legacy activeFiles fields are kept
-  // alongside the new reportableActive* fields to make sure the helper
-  // really is reading the new ones.
+describe('computeExitCode (gate uses reportableActive counters)', () => {
+  // gate exit-code logic を pure helper で検証する。
 
   it('failOn=actionable returns 0 when no reportable actionable + no error', () => {
     const summary = {
       reportableActiveActionableFiles: 0,
       activeErrorFiles: 0,
-      // legacy: should be IGNORED by Phase 8 helper even though set
+      // legacy field: helper はここを読まない
       activeActionableFiles: 5,
       activeFiles: 5,
     };
@@ -538,7 +511,7 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
   it('failOn=any returns 0 when reportableActiveFiles is 0', () => {
     const summary = {
       reportableActiveFiles: 0,
-      activeFiles: 5, // legacy: must be ignored
+      activeFiles: 5,
     };
     assert.equal(computeExitCode(summary, 'any'), 0);
   });
@@ -561,9 +534,7 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
   });
 
   it('default failOn (null) returns 0 for coarse-only summary', () => {
-    // Coarse-only: legacy activeFiles is 1 because the file has an
-    // unacknowledged signal, but reportableActiveFiles is 0 because the
-    // signal is in COARSE_SIGNAL_TYPES. Phase 8 must return exit 0 here.
+    // coarse signal は activeFiles に出ても gate には載らない。
     const summary = {
       reportableActiveFiles: 0,
       auditSignalFiles: 1,
@@ -589,15 +560,13 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
     assert.equal(computeExitCode(summary, null), 1);
   });
 
-  it('returns 0 for coarse-only with expired ack (Phase 8 audit only)', () => {
-    // The summary that summarizeParityResults() would emit for a file
-    // with a single expired-ack coarse signal:
+  it('returns 0 for coarse-only with expired ack', () => {
     const summary = {
       reportableActiveFiles: 0,
       reportableActiveActionableFiles: 0,
       auditSignalFiles: 1,
       auditSignalIssues: 1,
-      activeFiles: 1, // legacy
+      activeFiles: 1,
       activeActionableFiles: 0,
       activeErrorFiles: 0,
       expiredAcknowledgements: 1,
@@ -607,13 +576,13 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
     assert.equal(computeExitCode(summary, null), 0);
   });
 
-  it('returns 0 for coarse-only with expired baseline (Phase 8 audit only)', () => {
+  it('returns 0 for coarse-only with expired baseline', () => {
     const summary = {
       reportableActiveFiles: 0,
       reportableActiveActionableFiles: 0,
       auditSignalFiles: 1,
       auditSignalIssues: 1,
-      activeFiles: 1, // legacy: includes the expired-baseline coarse
+      activeFiles: 1,
       activeActionableFiles: 0,
       activeErrorFiles: 0,
       expiredBaselineEntries: 1,
@@ -644,7 +613,7 @@ describe('Phase 8 — computeExitCode (gate uses reportableActive counters)', ()
 });
 
 // ---------------------------------------------------------------------------
-// Phase 8 PR2: runScope on parity-check-status summary
+// runScope on parity-check-status summary
 // ---------------------------------------------------------------------------
 
 describe('§1 cleanup — schema version constant', () => {
@@ -699,11 +668,8 @@ describe('§1 cleanup — computeParityResult', () => {
   });
 });
 
-describe('Phase 8 PR2 — buildRunScope', () => {
-  // Pure helper that maps the (resolvedSlug, section) pair into the
-  // runScope object embedded in summary.runScope. The downstream guard in
-  // sync-detection-issues.cjs reads this to refuse to sync managed
-  // issues from partial runs.
+describe('buildRunScope', () => {
+  // (resolvedSlug, section) を summary.runScope へ写す pure helper。
 
   it('returns full scope when neither slug nor section is set', () => {
     assert.deepEqual(buildRunScope({ slug: null, section: null }), {
@@ -759,18 +725,16 @@ describe('Phase 8 PR2 — buildRunScope', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Issue #247 PR3 — usability gate の gate 契約
+// usability gate の gate 契約
 //
-// PR3 では snapshot-incomplete / source-unusable は advisory として集計されるが
-// gate exit code を変えない (PR4 cutover の前)。
+// snapshot-incomplete / source-unusable は advisory として集計されるが、
+// gate exit code は変えない。
 // これを `computeExitCode` の pure helper で検証する。
 // ---------------------------------------------------------------------------
 
-describe('Issue #247 PR3 — gate exit code contract (snapshotUnusable* は gate を変えない)', () => {
+describe('gate exit code contract (snapshotUnusable* は gate を変えない)', () => {
   it('snapshotUnusableIssues=1, reportableActiveFiles=0 のとき exit code は 0', () => {
-    // PR3 での期待挙動: snapshot-incomplete / source-unusable は
-    // isReportableParityIssue=false なので reportableActiveFiles に乗らない。
-    // gate は PR4 cutover まで 0 のまま。
+    // snapshot-incomplete / source-unusable は reportableActiveFiles に乗らない。
     const summary = {
       reportableActiveFiles: 0,
       reportableActiveActionableFiles: 0,

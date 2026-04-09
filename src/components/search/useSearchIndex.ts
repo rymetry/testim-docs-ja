@@ -1,4 +1,4 @@
-/** React hook: lazy-loads the MiniSearch index from /api/search.json when the modal opens. */
+/** React hook: モーダル表示時に `/api/search.json` から MiniSearch index を遅延ロードする。 */
 import { useEffect, useRef, useState } from 'react';
 import MiniSearch from 'minisearch';
 import type { IndexedSearchDocument, SearchDocument, SearchIndexState } from './types';

@@ -1,16 +1,9 @@
 /**
- * Issue #247 post-merge — representative full-run summary contract test。
+ * representative full-run summary contract test。
  *
  * 代表 7 ページに対して `checkSourceParity({ slug, baselinePath, outputPath })`
  * を in-process で順次呼び、temp status file から summary counter を
- * pin する。Phase D/E/F/G の post-resolution state を固定する fixture。
- *
- * Issue #255: `testops/testops-version-control/pull-requests` は
- * representative から外された。理由は upstream EN HTML が broken
- * (body 全体が <code> ブロックに collapsed) で、parity comparator の
- * 前提を満たさないため。このページは "source-side debt" として
- * `source_sync_exclusions.mjs` registry で管理され、契約は
- * `source_parity_source_side_debt.test.mjs` に分離されている。
+ * pin する。
  *
  * 7 ページ全て RESOLVED_PAGES で baseline 0 件 clean green 完了:
  *
@@ -29,9 +22,7 @@
  *   2. 全 slug で `structureMismatchIssues === 0` / `snapshotUnusableIssues === 0`
  *   3. 全 slug で `baselinedByType === {}` (完全に clean、End-to-End 解消)
  *
- * Finding 15: repo-global な `parity-check-status.json` を奪い合わない
- * ために、checkSourceParity の `outputPath` 注入 hook を使い、slug ごとに
- * temp dir 上の別 status file へ書き出す。repo root は一切触らない。
+ * slug ごとに別 status file へ書き出し、repo root は触らない。
  */
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -45,8 +36,7 @@ before(async () => {
   ({ checkSourceParity } = await import('../check_source_parity.mjs'));
 });
 
-// Finding 15: slug ごとに別の temp status file を使う。repo root の
-// parity-check-status.json は一切 touch しない。
+// slug ごとに別の temp status file を使う。
 const TMP_DIR = mkdtempSync(join(tmpdir(), 'parity-representative-'));
 
 function statusPathForSlug(slug) {
@@ -86,12 +76,7 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 });
 
 // ---------------------------------------------------------------------------
-// RESOLVED_PAGES — Issue #247 End-to-End 完全解消後、代表 7 ページが
-// baseline entry 0 で clean green に到達。
-//
-// Issue #255 で `pull-requests` は representative から外され、
-// `source_parity_source_side_debt.test.mjs` に分離された。
-//
+// RESOLVED_PAGES — baseline entry 0 で clean green を期待する代表ページ。
 // 解消プロセス:
 // - `custom-action-step-mobile` / `test-runs`: Phase E の JA 修正で解消
 // - `faq`: Phase F.2.5 preprocessor 修正 + normalizeUrlToken basename fallback
@@ -119,7 +104,7 @@ const RESOLVED_PAGES = Object.freeze([
   'salesforce-testing/salesforce-testing-overview',
 ]);
 
-// Issue #247 End-to-End 完全解消後、RESIDUAL_PAGES は空。
+// 現在 residual page は無し。
 const RESIDUAL_PAGES = Object.freeze([]);
 
 // ---------------------------------------------------------------------------
@@ -152,17 +137,12 @@ for (const slug of RESOLVED_PAGES) {
       assert.equal(
         Object.keys(byType).length,
         0,
-        `${slug}: baselinedByType should be empty after Phase E. actual=${JSON.stringify(byType)}`,
+        `${slug}: baselinedByType should be empty. actual=${JSON.stringify(byType)}`,
       );
     });
 
-    it('post-resolution: signal-only drift も 0 件 (原文構造を保っている強い契約)', () => {
-      // Issue #247 post-merge re-review 第二弾 — representative の End-to-End
-      // 完全解消契約は `reportableActiveFiles` / structure / snapshot-unusable
-      // の 0 だけでは弱く、signal-only drift (paragraph-count-mismatch /
-      // bullet-count-mismatch 等) が残っていても通ってしまう。原文構造を
-      // 保ったまま翻訳する要件を test で pin するため、`f.issues` の長さが
-      // 0 (actionable も signal も共に 0) であることを強く assert する。
+    it('signal-only drift も 0 件', () => {
+      // signal-only drift も含めて 0 件であることを確認する。
       const { status } = cached;
       const jaRelativePath = `src/content/docs/${slug}.md`;
       const file = (status.files || []).find((f) => f.file === jaRelativePath);
