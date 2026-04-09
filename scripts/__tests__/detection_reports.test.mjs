@@ -2475,14 +2475,16 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     );
   });
 
-  it('throws when a debt page has invalid fetchStatus', () => {
+  it('throws when non-excluded page carries debtCategory (e.g. fetchStatus typo)', () => {
+    // excluded-typo は excluded-* set に含まれないので non-excluded 扱いになり、
+    // debtCategory が残っていると "non-excluded page must not have debtCategory" で弾かれる
     const v = validSourceSyncStatus();
     v.pages = [
       { slug: 'a', fetchStatus: 'excluded-typo', debtCategory: 'source-side-debt' },
     ];
     assert.throws(
       () => validateSourceSyncStatus(v),
-      /fetchStatus.*excluded-broken\|excluded-recovered/,
+      /non-excluded page.*must not have debtCategory/,
     );
   });
 
@@ -2673,6 +2675,55 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     );
   });
 
+  it('throws when excluded-broken page is missing debtCategory', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedMatch: true },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /excluded page.*must have debtCategory/,
+    );
+  });
+
+  it('throws when excluded-recovered page is missing debtCategory', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedRecoveredPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-recovered',
+        recoveryProbe: null,
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /excluded page.*must have debtCategory/,
+    );
+  });
+
+  it('throws when non-excluded page carries recoveryProbe', () => {
+    const v = validSourceSyncStatus();
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'ok',
+        recoveryProbe: null,
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /non-excluded page.*must not have recoveryProbe/,
+    );
+  });
+
   it('throws when debtCategory is not "source-side-debt"', () => {
     const v = validSourceSyncStatus();
     v.summary.excludedPages = 1;
@@ -2687,7 +2738,7 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     ];
     assert.throws(
       () => validateSourceSyncStatus(v),
-      /debtCategory must be "source-side-debt"/,
+      /must have debtCategory "source-side-debt"/,
     );
   });
 });

@@ -178,22 +178,18 @@ export function validateSourceSyncStatus(parsed) {
   // recoveryProbe が object|null であることを要求する。
   const VALID_DEBT_FETCH_STATUSES = new Set(['excluded-broken', 'excluded-recovered']);
   for (const page of parsed.pages) {
-    if (page.debtCategory) {
+    const isExcludedDebt = VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus);
+
+    if (isExcludedDebt) {
       if (page.debtCategory !== 'source-side-debt') {
         throw new Error(
-          `source-sync-status.json: debt page "${page.slug}" debtCategory must be "source-side-debt", ` +
-          `got ${JSON.stringify(page.debtCategory)}`,
-        );
-      }
-      if (!VALID_DEBT_FETCH_STATUSES.has(page.fetchStatus)) {
-        throw new Error(
-          `source-sync-status.json: debt page "${page.slug}" has invalid fetchStatus ` +
-          `"${page.fetchStatus}" (expected excluded-broken|excluded-recovered)`,
+          `source-sync-status.json: excluded page "${page.slug}" must have debtCategory ` +
+          `"source-side-debt", got ${JSON.stringify(page.debtCategory)}`,
         );
       }
       if (!('recoveryProbe' in page)) {
         throw new Error(
-          `source-sync-status.json: debt page "${page.slug}" must have recoveryProbe ` +
+          `source-sync-status.json: excluded page "${page.slug}" must have recoveryProbe ` +
           `(object for excluded-broken, null for excluded-recovered)`,
         );
       }
@@ -201,32 +197,43 @@ export function validateSourceSyncStatus(parsed) {
       if (page.fetchStatus === 'excluded-broken') {
         if (probe === null || typeof probe !== 'object' || Array.isArray(probe)) {
           throw new Error(
-            `source-sync-status.json: debt page "${page.slug}" recoveryProbe must be an object for excluded-broken`,
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe must be an object for excluded-broken`,
           );
         }
         if (typeof probe.issueType !== 'string') {
           throw new Error(
-            `source-sync-status.json: debt page "${page.slug}" recoveryProbe.issueType must be a string`,
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.issueType must be a string`,
           );
         }
         if (typeof probe.reason !== 'string') {
           throw new Error(
-            `source-sync-status.json: debt page "${page.slug}" recoveryProbe.reason must be a string`,
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.reason must be a string`,
           );
         }
         if (typeof probe.expectedMatch !== 'boolean') {
           throw new Error(
-            `source-sync-status.json: debt page "${page.slug}" recoveryProbe.expectedMatch must be a boolean`,
+            `source-sync-status.json: excluded page "${page.slug}" recoveryProbe.expectedMatch must be a boolean`,
           );
         }
       }
-      if (page.fetchStatus === 'excluded-recovered') {
-        if (probe !== null) {
-          throw new Error(
-            `source-sync-status.json: debt page "${page.slug}" recoveryProbe must be null for excluded-recovered`,
-          );
-        }
+      if (page.fetchStatus === 'excluded-recovered' && probe !== null) {
+        throw new Error(
+          `source-sync-status.json: excluded page "${page.slug}" recoveryProbe must be null for excluded-recovered`,
+        );
       }
+      continue;
+    }
+
+    // Non-excluded pages must not carry debt fields.
+    if ('debtCategory' in page && page.debtCategory != null) {
+      throw new Error(
+        `source-sync-status.json: non-excluded page "${page.slug}" must not have debtCategory`,
+      );
+    }
+    if ('recoveryProbe' in page) {
+      throw new Error(
+        `source-sync-status.json: non-excluded page "${page.slug}" must not have recoveryProbe`,
+      );
     }
   }
   if (!Array.isArray(parsed.errors)) {
