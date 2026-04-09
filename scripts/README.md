@@ -646,7 +646,7 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 - **`snapshot-diff-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `runId`, `sourceSyncRunId`, `sourceInventoryFingerprint`,
   `runScope`, `checkedAt`, `summary`, `changes`, `sidebar`
-- **`source-sync-status.json`** (`schemaVersion: 1`) —
+- **`source-sync-status.json`** (`schemaVersion: 2`) —
   必須 top-level: `runId`, `checkedAt`, `sourceInventoryFingerprint`,
   `sidebarFingerprint`, `freshnessState`, `runScope`, `summary`, `pages`,
   `errors`。
