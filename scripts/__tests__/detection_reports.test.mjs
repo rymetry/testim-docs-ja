@@ -2526,6 +2526,78 @@ describe('§1 cleanup — validateSourceSyncStatus', () => {
     ];
     assert.doesNotThrow(() => validateSourceSyncStatus(v));
   });
+
+  it('throws when recoveryProbe is a non-object primitive (shape validation)', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: 123,
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe must be object\|null/,
+    );
+  });
+
+  it('throws when recoveryProbe.issueType is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: null, reason: 'extractor-empty' },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe\.issueType must be a string/,
+    );
+  });
+
+  it('throws when recoveryProbe.reason is not a string', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: { issueType: 'snapshot-incomplete', reason: 42 },
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe\.reason must be a string/,
+    );
+  });
+
+  it('throws when recoveryProbe is an array', () => {
+    const v = validSourceSyncStatus();
+    v.summary.excludedPages = 1;
+    v.summary.excludedBrokenPages = 1;
+    v.pages = [
+      {
+        slug: 'a',
+        fetchStatus: 'excluded-broken',
+        debtCategory: 'source-side-debt',
+        recoveryProbe: ['snapshot-incomplete', 'extractor-empty'],
+      },
+    ];
+    assert.throws(
+      () => validateSourceSyncStatus(v),
+      /recoveryProbe must be object\|null/,
+    );
+  });
 });
 
 describe('§1 cleanup — validateDetectionInputs', () => {

@@ -191,6 +191,25 @@ export function validateSourceSyncStatus(parsed) {
           `(object for excluded-broken, null for excluded-recovered)`,
         );
       }
+      const probe = page.recoveryProbe;
+      if (probe !== null) {
+        if (typeof probe !== 'object' || Array.isArray(probe)) {
+          throw new Error(
+            `source-sync-status.json: debt page "${page.slug}" recoveryProbe must be object|null, ` +
+            `got ${probe === null ? 'null' : typeof probe}`,
+          );
+        }
+        if (typeof probe.issueType !== 'string') {
+          throw new Error(
+            `source-sync-status.json: debt page "${page.slug}" recoveryProbe.issueType must be a string`,
+          );
+        }
+        if (typeof probe.reason !== 'string') {
+          throw new Error(
+            `source-sync-status.json: debt page "${page.slug}" recoveryProbe.reason must be a string`,
+          );
+        }
+      }
     }
   }
   if (!Array.isArray(parsed.errors)) {
