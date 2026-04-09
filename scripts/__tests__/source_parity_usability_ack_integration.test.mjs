@@ -90,40 +90,38 @@ describe('Issue #247 post-merge — detector→matcher round-trip (source-unusab
     assert.equal(match.expired, false);
   });
 
-  it('salesforce-testing-overview (shallow-snapshot) は detailIncludes で ack 可能', () => {
-    const rawEnHtml = readFileSync(
-      join(SNAPSHOTS_DIR, 'salesforce-testing/salesforce-testing-overview.html'),
-      'utf8',
-    );
-    const jaBody = extractJaBody(
-      readFileSync(
-        join(JA_CONTENT_DIR, 'salesforce-testing/salesforce-testing-overview.md'),
-        'utf8',
-      ),
-    );
-    let enSegments = [];
-    let extractError = null;
-    try {
-      enSegments = extractSegmentsFromHtml(rawEnHtml);
-    } catch (e) {
-      extractError = e;
-    }
-    const jaSegments = extractSegmentsFromMarkdown(jaBody);
+  it('shallow-snapshot (合成 HTML) は detailIncludes で ack 可能', () => {
+    // Issue #247 End-to-End 解消後、`salesforce-testing-overview` の JA は
+    // EN shallow snapshot と同じ minimal 構造に trim したので、detector は
+    // 実ファイルでは shallow-snapshot を発火しない。round-trip 契約の
+    // 確認は合成 HTML + 合成 JA segments で再現する。
+    const rawEnHtml = '<h1>Stub</h1><p>single short paragraph.</p>';
+    const enSegments = [
+      { segmentKind: 'heading', sectionPath: 'Top', textNorm: 'stub' },
+      { segmentKind: 'paragraph', sectionPath: 'Top', textNorm: 'single short paragraph.' },
+    ];
+    // jaSegments is much larger → 5× ratio triggers shallow-snapshot Layer 3
+    const jaSegments = Array.from({ length: 12 }, (_, i) => ({
+      segmentKind: 'paragraph',
+      sectionPath: `セクション ${i + 1}`,
+      textNorm: `日本語本文 ${i + 1}`,
+    }));
 
-    const issue = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
-    assert.ok(issue);
+    const issue = detectSourceUsability({ rawEnHtml, enSegments, jaSegments });
+    assert.ok(issue, 'detector は shallow-snapshot issue を返すべき');
     assert.equal(issue.type, 'snapshot-incomplete');
+    assert.equal(issue.usabilitySignals.reason, 'shallow-snapshot');
 
     const fingerprint = computeSnapshotFingerprint(rawEnHtml);
     const entry = buildAckEntry({
-      slug: 'salesforce-testing/salesforce-testing-overview',
+      slug: 'synthetic/shallow-snapshot',
       issueType: 'snapshot-incomplete',
       detailIncludes: '[reason=shallow-snapshot]',
       fingerprint,
     });
 
     const match = findMatchingAcknowledgement(
-      'salesforce-testing/salesforce-testing-overview',
+      'synthetic/shallow-snapshot',
       issue,
       [entry],
       fingerprint,

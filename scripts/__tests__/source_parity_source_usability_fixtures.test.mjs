@@ -1,15 +1,23 @@
 /**
- * detectSourceUsability の fixture integration テスト (Issue #247 PR3 → post-merge 改訂)。
+/**
+ * detectSourceUsability の fixture integration テスト (Issue #247 PR3 → post-merge 改訂 →
+ * Issue #247 End-to-End 完全解消 post-review 改訂)。
  *
  * 設計書 §4.5.2 に対応。実 snapshot ファイルを読み込んで detector を呼び、
  * type / reason を assert する。
  *
- * 対象 2 ページ (post-merge 完了後の契約):
- *   - salesforce-testing/salesforce-testing-overview → snapshot-incomplete / shallow-snapshot
- *     (upstream snapshot side debt のため `snapshot-incomplete` のまま保持)
- *   - salesforce-testing/faq                        → **usable** (detector returns null)
+ * Issue #247 End-to-End 完全解消後の契約:
+ *   - `salesforce-testing/salesforce-testing-overview` → **usable** (detector returns null)
+ *     (JA を EN shallow snapshot に合わせて trim したため、EN/JA 共に minimal で
+ *      shallow-snapshot heuristic の発火条件を満たさない)
+ *   - `salesforce-testing/faq`                        → **usable** (detector returns null)
  *     (Phase F.2.5 で `normalizeEscapedFaqDetails` が valid sibling `<h2>/<p>` block
  *      に再構成するため、broken details tree が消えて detector の Layer 2 が発火しない)
+ *   - `advanced-editing/coding-assistant`             → **usable** (detector returns null)
+ *     (balanced escaped `<details>` + enHeading≥1 では発火しない)
+ *
+ * shallow-snapshot の raw 検知契約そのものは
+ * `source_parity_source_usability.test.mjs` 側の合成 HTML テストが担保する。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -48,7 +56,7 @@ function extractJaBody(mdContent) {
 // ---------------------------------------------------------------------------
 
 describe('detectSourceUsability fixture: salesforce-testing/salesforce-testing-overview', () => {
-  it('shallow-snapshot を検出する (snapshot-incomplete / reason=shallow-snapshot)', () => {
+  it('Issue #247 End-to-End 解消後: JA を EN shallow snapshot に合わせて trim 済みのため usability issue は出ない', () => {
     const rawEnHtml = readFileSync(
       join(SNAPSHOTS_DIR, 'salesforce-testing/salesforce-testing-overview.html'),
       'utf8',
@@ -70,12 +78,11 @@ describe('detectSourceUsability fixture: salesforce-testing/salesforce-testing-o
 
     const result = detectSourceUsability({ rawEnHtml, enSegments, jaSegments, extractError });
 
-    assert.ok(
-      result !== null,
-      `salesforce-testing-overview は usability issue を返すべき。rawEnHtml.length=${rawEnHtml.length}, enSegments=${enSegments.length}, jaSegments=${jaSegments.length}`,
+    assert.equal(
+      result,
+      null,
+      `salesforce-testing-overview は post-resolution では usable と判定されるべき。actual: ${JSON.stringify(result)}`,
     );
-    assert.equal(result.type, 'snapshot-incomplete');
-    assert.equal(result.usabilitySignals.reason, 'shallow-snapshot');
   });
 });
 

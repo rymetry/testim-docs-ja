@@ -5,32 +5,23 @@
  * を in-process で順次呼び、temp status file から summary counter を
  * pin する。Phase D/E/F/G の post-resolution state を固定する fixture。
  *
- * 2 群に分類:
+ * 8 ページ全て RESOLVED_PAGES で baseline 0 件 clean green 完了:
  *
- *   RESOLVED_PAGES — baseline entry 0 で clean green に到達したページ
- *     | slug                                               | 期待状態               |
- *     | -------------------------------------------------- | ---------------------- |
- *     | advanced-editing/custom-action-step-mobile         | 全 baseline 消えて 0   |
- *     | results/test-runs                                  | 全 baseline 消えて 0   |
- *
- *   RESIDUAL_PAGES — baseline に partial drift や upstream debt が残るページ
- *     | slug                                               | 最低 baseline 必須 type         |
- *     | -------------------------------------------------- | ------------------------------- |
- *     | running-tests/the-command-line-cli                 | section-structure-mismatch      |
- *     | results/test-results/network-logs                  | section-structure-mismatch      |
- *     | advanced-editing/validations/email-validation      | section-structure-mismatch      |
- *     | salesforce-testing/faq                             | segment-token-gap (extractor bug)|
- *     | salesforce-testing/salesforce-testing-overview     | snapshot-incomplete             |
- *     | testops/testops-version-control/pull-requests      | snapshot-incomplete             |
+ *   | slug                                               | 解消手段                                         |
+ *   | -------------------------------------------------- | ------------------------------------------------ |
+ *   | advanced-editing/custom-action-step-mobile         | Phase E: JA を EN plain-text 構造に揃える        |
+ *   | results/test-runs                                  | Phase E: preface extra paragraph 削除            |
+ *   | salesforce-testing/faq                             | Phase F.2.5 + normalizeUrlToken bug fix          |
+ *   | running-tests/the-command-line-cli                 | Phase D.1: 14 section を EN 構造に full rewrite  |
+ *   | results/test-results/network-logs                  | Phase D.2: Filtering / test level の JA rewrite  |
+ *   | advanced-editing/validations/email-validation      | Phase D.3: preface / Codeless Option / token 差別化 |
+ *   | salesforce-testing/salesforce-testing-overview     | Phase G: shallow EN に合わせて JA trim           |
+ *   | testops/testops-version-control/pull-requests      | Phase G: broken EN snapshot を手動で正しい HTML 化 |
  *
  * pin する契約:
  *   1. 全 slug で `reportableActiveFiles === 0`
- *      (active reportable は 0 件、drift は baselined で吸収)
  *   2. 全 slug で `structureMismatchIssues === 0` / `snapshotUnusableIssues === 0`
- *      (active structure / snapshot unusable counter は 0)
- *   3. RESOLVED_PAGES は `baselinedByType === {}` (完全に clean)
- *   4. RESIDUAL_PAGES は `baselinedByType[requiredType] >= 1`
- *      (指定の issue type が最低 1 件 baseline 保持)
+ *   3. 全 slug で `baselinedByType === {}` (完全に clean、End-to-End 解消)
  *
  * Finding 15: repo-global な `parity-check-status.json` を奪い合わない
  * ために、checkSourceParity の `outputPath` 注入 hook を使い、slug ごとに
@@ -89,57 +80,42 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 });
 
 // ---------------------------------------------------------------------------
-// RESOLVED_PAGES — Phase D-F 完了後、baseline entry 0 で clean green に
-// 到達した slug。
+// RESOLVED_PAGES — Issue #247 End-to-End 完全解消後、全 8 代表ページが
+// baseline entry 0 で clean green に到達。
 //
+// 解消プロセス:
 // - `custom-action-step-mobile` / `test-runs`: Phase E の JA 修正で解消
-// - `faq`: Phase F.2.5 の preprocessor 修正 + Issue #247 post-merge re-review
-//          で追加した `normalizeUrlToken` basename fallback 修正で token-gap
-//          が完全解消
+// - `faq`: Phase F.2.5 preprocessor 修正 + normalizeUrlToken basename fallback
+// - `the-command-line-cli`: Phase D.1 JA 全面 rewrite (Basic CLI command /
+//   Additional common parameters / Project / Grid Name / Host / Report File /
+//   Test Config / Params File / Config file / Dedicated Run Tunnel / Disable
+//   timeout retry / Abort CLI run / Chrome extra args / intersect-with flag /
+//   Sealights labId — 14 section を EN の block sequence に合わせる)
+// - `network-logs`: Phase D.2 JA 2 section rewrite (Filtering request results
+//   の EN 分割構造に合わせる + Viewing the network logs at the test level の
+//   `:::note` callout → plain paragraph 変換)
+// - `email-validation`: Phase D.3 (preface callout link 追加 + Codeless Option
+//   list item splitting + date (送信時刻) table cell 翻訳 + sign-up / links
+//   body 例の `messages[0].subject` / `DOMParser` token 差別化)
+// - `salesforce-testing-overview`: EN 本文が `<h1>` + 1 paragraph のみで
+//   source が shallow なため、JA も同構造に trim
+// - `pull-requests`: EN source が `<code>` ブロックで全文 wrap されていた
+//   ため、正しい HTML snapshot を手動で書き起こし (Reviewing a Pull Request
+//   section の nested list を flatten して JA と構造一致)
 // ---------------------------------------------------------------------------
 const RESOLVED_PAGES = Object.freeze([
   'advanced-editing/custom-action-step-mobile',
   'results/test-runs',
   'salesforce-testing/faq',
+  'running-tests/the-command-line-cli',
+  'results/test-results/network-logs',
+  'advanced-editing/validations/email-validation',
+  'salesforce-testing/salesforce-testing-overview',
+  'testops/testops-version-control/pull-requests',
 ]);
 
-// ---------------------------------------------------------------------------
-// RESIDUAL_PAGES — Phase D/E/F 完了後も baseline に残る debt 種別を
-// 最低 1 件持つことを pin する slug。Issue #247 post-merge re-review で
-// the-command-line-cli / network-logs / email-validation は JA 大規模
-// rewrite が必要 (plan で明記された「人間校正依存」scope 外) と判断し、
-// residual として継続保持。後続 Issue で順次解消する方針。
-// ---------------------------------------------------------------------------
-const RESIDUAL_PAGES = Object.freeze([
-  {
-    slug: 'running-tests/the-command-line-cli',
-    // 10 section-structure-mismatch + 29 segment-level entries
-    // 全面 JA rewrite が必要なため後続 Issue 送り
-    requiredBaselinedTypes: ['section-structure-mismatch'],
-  },
-  {
-    slug: 'results/test-results/network-logs',
-    // 2 section-structure-mismatch + 6 segment-level entries
-    requiredBaselinedTypes: ['section-structure-mismatch'],
-  },
-  {
-    slug: 'advanced-editing/validations/email-validation',
-    // Phase D で preface の callout link を修正済み。
-    // nested section (Codeless Option) は JA 見出し階層が flat 化されており
-    // 構造的に大規模書き換えが必要なため residual として保持
-    requiredBaselinedTypes: ['section-structure-mismatch'],
-  },
-  {
-    slug: 'salesforce-testing/salesforce-testing-overview',
-    // upstream snapshot 側 debt (shallow-snapshot) を保持
-    requiredBaselinedTypes: ['snapshot-incomplete'],
-  },
-  {
-    slug: 'testops/testops-version-control/pull-requests',
-    // 同じく upstream snapshot 側 debt (extractor-empty) を保持
-    requiredBaselinedTypes: ['snapshot-incomplete'],
-  },
-]);
+// Issue #247 End-to-End 完全解消後、RESIDUAL_PAGES は空。
+const RESIDUAL_PAGES = Object.freeze([]);
 
 // ---------------------------------------------------------------------------
 // slug ごとに describe を分け、before() で 1 度だけ checkSourceParity を呼ぶ。

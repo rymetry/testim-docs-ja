@@ -239,29 +239,26 @@ function assertStructurePin(slug, pinned) {
 }
 
 // ---------------------------------------------------------------------------
-// 代表ページ 1: running-tests/the-command-line-cli
+// Issue #247 End-to-End 完全解消後: 3 代表ページは Phase D.1/D.2/D.3 の JA
+// 全面 rewrite で structure issue が 0 件に到達した。PR5 時点の PINNED_*
+// 期待値は post-resolution 回帰 guard として assertStructureClean() 側へ
+// 切り替える。将来 JA が再度 drift した場合に即座に検知する。
 // ---------------------------------------------------------------------------
 describe('source_parity_structure_fixtures: running-tests/the-command-line-cli', () => {
-  it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
-    assertStructurePin(PINNED_THE_CLI.slug, PINNED_THE_CLI);
+  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+    assertStructureClean(PINNED_THE_CLI.slug);
   });
 });
 
-// ---------------------------------------------------------------------------
-// 代表ページ 2: results/test-results/network-logs
-// ---------------------------------------------------------------------------
 describe('source_parity_structure_fixtures: results/test-results/network-logs', () => {
-  it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
-    assertStructurePin(PINNED_NETWORK_LOGS.slug, PINNED_NETWORK_LOGS);
+  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+    assertStructureClean(PINNED_NETWORK_LOGS.slug);
   });
 });
 
-// ---------------------------------------------------------------------------
-// 代表ページ 3: advanced-editing/validations/email-validation
-// ---------------------------------------------------------------------------
 describe('source_parity_structure_fixtures: advanced-editing/validations/email-validation', () => {
-  it('structure issue 件数 / category / 先頭 issue の payload が PR5 baseline と一致する', () => {
-    assertStructurePin(PINNED_EMAIL_VALIDATION.slug, PINNED_EMAIL_VALIDATION);
+  it('Issue #247 End-to-End 解消以降、structure issue は 0 件を維持する', () => {
+    assertStructureClean(PINNED_EMAIL_VALIDATION.slug);
   });
 });
 
