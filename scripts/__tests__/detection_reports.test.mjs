@@ -1422,7 +1422,7 @@ describe('Issue #247 PR5 — renderSummaryMarkdown structure / source unusable s
     assert.match(md, /## ソース使用不可 \(advisory\)/);
     assert.match(md, /合計: 2 件 \(2 ファイル\)/);
     // 翻訳者責任外であることの注意文
-    assert.match(md, /翻訳失敗|snapshot.*source sync|翻訳/);
+    assert.match(md, /翻訳の問題ではなく|スナップショット.*ソース同期|翻訳 PR では修正できません/);
     // type 別内訳 (alpha sort)
     assert.match(md, /snapshot-incomplete: 1/);
     assert.match(md, /source-unusable: 1/);

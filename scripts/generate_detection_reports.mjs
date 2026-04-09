@@ -57,15 +57,15 @@ function main() {
     const { actionableReport } = generateDetectionReports({ strict: args.strict });
     console.log('📄 検知サマリー生成完了');
     console.log(
-      `  スナップショット差分 actionable: ${actionableReport.snapshotDiff.summary.actionableCount}`,
+      `  スナップショット差分の要対応: ${actionableReport.snapshotDiff.summary.actionableCount}`,
     );
     console.log(
-      `  active パリティ issue: ${actionableReport.parityRegression.summary.issueCount}`,
+      `  パリティ問題 (未解消): ${actionableReport.parityRegression.summary.issueCount}`,
     );
     console.log(`  パリティ結果: ${actionableReport.result ?? 'unknown'}`);
     const followup = actionableReport.parityFollowup;
     console.log(
-      `  パリティフォローアップ: expired=${followup.summary.baselineDebt.expiredBaselineEntries} expiring30d=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} invalidated=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} advisory-blocking=${followup.summary.advisoryQueue.blockingItems}`,
+      `  パリティフォローアップ: 期限切れ=${followup.summary.baselineDebt.expiredBaselineEntries} 30日以内期限切れ=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} 無効化=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} ブロッキング=${followup.summary.advisoryQueue.blockingItems}`,
     );
     // Issue #255 — source-side debt counter を CLI 出力に含める
     const debt = actionableReport.sourceSyncHealth?.sourceSideDebt;

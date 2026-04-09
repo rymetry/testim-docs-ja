@@ -363,10 +363,10 @@ function renderSourceSideDebtSubsection(debt, _pages) {
     `- 未復旧: ${debt.excludedBrokenPages}`,
     `- 復旧候補: ${debt.excludedRecoveredPages}`,
     '',
-    '既知の upstream EN source が broken で parity comparator の前提を満たさない',
-    'ページです。`scripts/lib/source_sync_exclusions.mjs` の registry で管理され、',
-    'snapshot fetch は実行するが snapshot file は上書きせず、hand-authored snapshot を',
-    '凍結参照として保持します。',
+    '英語原文が壊れておりパリティ比較の前提を満たさないページです。',
+    '`scripts/lib/source_sync_exclusions.mjs` の除外レジストリで管理され、',
+    'スナップショット取得は実行するがファイルは上書きせず、手動作成した',
+    'スナップショットを凍結参照として保持します。',
     '',
   ];
 
@@ -386,15 +386,15 @@ function renderSourceSideDebtSubsection(debt, _pages) {
   if (debt.excludedRecoveredPages > 0) {
     lines.push('### 復旧候補', '');
     lines.push(
-      'upstream EN source が復旧した可能性があります。人間が確認の上、',
-      '`scripts/lib/source_sync_exclusions.mjs` から該当 slug を登録解除してください。',
-      '(自動解除はしません — 一時的な upstream 揺れで false recovery を作らないため)',
+      '英語原文が復旧した可能性があります。人間が確認の上、',
+      '`scripts/lib/source_sync_exclusions.mjs` から該当 slug を除外解除してください。',
+      '(自動解除はしません — 一時的な原文側の揺れで誤検知を作らないため)',
       '',
     );
     for (const slug of debt.recoveredSlugs) {
       lines.push(`- \`${slug}\``);
       lines.push(`  - 状態: excluded-recovered`);
-      lines.push(`  - 対応: registry entry 削除を検討`);
+      lines.push(`  - 対応: 除外レジストリからの削除を検討`);
     }
     lines.push('');
   }
@@ -668,7 +668,7 @@ function buildParityFollowupBody({
       '## ソース使用不可 (advisory)',
       '',
       `- 合計: ${sourceUnusable.snapshotUnusableIssues} 件 (${sourceUnusable.snapshotUnusableFiles} ファイル)`,
-      '- 翻訳失敗ではなく snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+      '- 翻訳の問題ではなくスナップショット / ソース同期側の既知問題です。翻訳 PR では修正できません。',
     );
     const sortedTypes = Object.keys(sourceUnusable.snapshotUnusableByType ?? {}).sort();
     if (sortedTypes.length > 0) {
@@ -1162,7 +1162,7 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
           '## ソース使用不可 (advisory)',
           '',
           `- 合計: ${snapshotUnusableIssues} 件 (${snapshotUnusableFiles} ファイル)`,
-          '- 翻訳失敗ではなく snapshot / source sync 側 debt です。翻訳 PR では修正できません。',
+          '- 翻訳の問題ではなくスナップショット / ソース同期側の既知問題です。翻訳 PR では修正できません。',
           ...(Object.keys(snapshotUnusableByType).length > 0
             ? [
                 '- 種別別:',
