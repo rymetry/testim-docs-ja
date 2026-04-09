@@ -487,6 +487,63 @@ post-merge PR に対する完全解消レビューで以下の gap が判明し�
    pull-requests は broken source を正しい HTML snapshot に手動書き換え。これにより
    Issue #247 の 8 代表ページすべてを End-to-End で完全解消。
 
+### Issue #247 re-review 第二弾 での追加修正 (2026-04-09)
+
+「representative の End-to-End 完全解消」契約を signal-only drift まで含めた
+強い契約に引き上げる過程で、以下の gap と修正を実施した:
+
+1. **EN `walkBlockContainer` が loose text + inline 要素を分断** — MadCap の
+   `<img .../>The results are instantly filtered based on text in the <em>File</em>
+   and <em>Domain</em> columns.` のような非標準 HTML で、loose text と `<em>` /
+   `<strong>` / `<a>` などの inline 要素が sibling 列として現れると、各 text node
+   を独立 paragraph segment として emit していた (`<em>` 境界で文が寸断)。修正:
+   `walkBlockContainer` に loose-text + inline-element accumulator を追加し、
+   連続する loose text と inline 要素を **1 つの paragraph として merge** する。
+   これにより `network-logs` の `Filtering request results` section が EN side で
+   正しく 1 paragraph に戻り、paragraph-count-mismatch が解消。
+
+2. **`<img>` line with trailing text in turndown output** — turndown は
+   `![](img.png)The results are...` のように画像と後続テキストを 1 行に出力する。
+   `classifyLine` はこれを image kind として扱い paragraph をカウントしない
+   ため、同じテキストを別行に書いた JA と paragraph-count がズレる。修正:
+   `![...](url)` の後ろに実質的テキストが残る行は paragraph-start として扱う
+   (trailing content check 追加)。
+
+3. **`test-runs` の Status table cell に `- 赤い x` などの markdown-list 風
+   文字列** — line-based `extractBulletCounts` がこれを bullet としてカウント
+   し、EN=0 JA=3 の bullet-count-mismatch を出していた。修正: HTML table cell
+   内の表記を `**Failed** — 赤い x` の inline 形式に統一。
+
+4. **`network-logs` の `:::note` を `>` blockquote に変更** — `<blockquote>` は
+   EN turndown / classifyLine で blockquote kind として扱われ paragraph count
+   に含まれないが、`:::note` は JA extractor では callout-body として扱われ、
+   さらに plain paragraph に変換した場合は paragraph としてカウントされる。
+   EN と JA で paragraph count を揃えるため、JA も `>` blockquote に統一。
+
+5. **`pull-requests` の nested list 復元** — WRITING_GUIDE 「原文で step 配下に
+   nested list がある場合は本文へ圧縮せず維持」に従い、Status 一覧 (Review
+   required / Changes requested / Approved) と 5. Decide 配下 (Approve /
+   Request Changes) を nested list に戻した。EN snapshot 側は `<ol>` 内の
+   `<ul>` を li の外 (sibling) に配置することで、両 extractor が対称に
+   sibling list として emit するようにした。
+
+6. **pricing link 除外** — `https://www.testim.io/pricing/` は WRITING_GUIDE
+   「全ページ共通 削除対象」だが、EN snapshot 側には残る。JA から link を
+   削除した後も EN 側の token として extract されると segment-token-gap に
+   なるため、`extractInvariantTokens` に `EXCLUDED_INVARIANT_URL_TOKENS` セット
+   を追加して EN/JA 両側で該当 token を emit しないようにした。
+
+7. **representative summary test の契約強化** — 従来は `reportableActiveFiles`
+   / `structureMismatchIssues` / `snapshotUnusableIssues` の 0 + `baselinedByType`
+   の空のみを pin していたが、signal-only drift (paragraph-count-mismatch /
+   bullet-count-mismatch) も 0 件であることを追加 pin。`f.issues.length === 0`
+   を全 8 slug に課すことで、原文構造を保ったまま翻訳する契約を明示化した。
+
+8. **WRITING_GUIDE 更新** — (a) リスト節に「step 配下 nested list を圧縮しない」
+   (b) その他節に「count 系 signal は補助で、原文構造を崩してよい意味では
+   ない」、(c) 除外ルールに pricing link 削除の明示、(d) source-first 例外節
+   (shallow / broken EN snapshot は current source を正本とする) を追記。
+
 ### Issue #247 post-merge の local gate 期待値
 
 `npm run check:parity` を local で走らせた場合の完了条件は以下:

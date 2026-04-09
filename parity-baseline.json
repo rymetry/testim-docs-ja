@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-09T02:54:19.925Z",
-  "generatedFromRunId": "2026-04-09T02:54:19.925Z#parity-check-status",
-  "rationale": "Issue #247 post-merge re-review — full rewrite of 3 representative JA files + 2 EN snapshot fixes; 5 target slugs now clean",
+  "generatedAt": "2026-04-09T03:43:07.779Z",
+  "generatedFromRunId": "2026-04-09T03:43:07.779Z#parity-check-status",
+  "rationale": "Issue #247 re-review round 2 — final regeneration after all fixes",
   "entries": [
     {
       "slug": "administration/api-access",
@@ -54,27 +54,6 @@
       "enSourceFingerprint": "sha256:6af94dd66e144c617638bd74033786783b505b8132a28f6fe811d5deba92ff30",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "administration/api-access",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:192059a56af326e9ae03dc5f57955cb3c90cd8e0d8898600a0ce9c2d1eebbcd4",
-      "reviewAfter": "2026-11-14",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -381,48 +360,6 @@
       "enSourceFingerprint": "sha256:de047870a5a7a2c4cbb15b41bf151a54da32a7c456342c1521443d3f82567a55",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "administration/project-settings",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:28e422234fa63b156fd5e8edfc17d5774a693e41b82ef35f81b20fce489540a4",
-      "reviewAfter": "2026-12-25",
-      "sectionPath": "General Settings > Allow auto-complete suggestions",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:498ac5cdcf978427739bc7983e41f4ecfcbb55941b6f6d77df19808cb1cd5de0",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "administration/project-settings",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:28e422234fa63b156fd5e8edfc17d5774a693e41b82ef35f81b20fce489540a4",
-      "reviewAfter": "2026-12-25",
-      "sectionPath": "Pull Request Settings",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:638fb5f8213e1dd0bb1ffd7ebbe4055df6dcb6b05132286e66c02f0fa824cb52",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -898,27 +835,6 @@
       "enSourceFingerprint": "sha256:e41371216e2c63edf86ab976e8e0567e09a5939c112392a6880d913e1c2c17a2",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/api-testing",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:d7f051411b10aba9f41572d48ee710b1e52b690636090a3f43138acd81f0f780",
-      "reviewAfter": "2026-12-21",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -3864,27 +3780,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "advanced-editing/parameters/hidden-parameters",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:209e142067a5ceb68eeb268b0ebe44ba2cb42600e778cd31c128c3fc651e1cdb",
-      "reviewAfter": "2026-11-06",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "advanced-editing/parameters/json-parameters-file-parameters",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:02d329a9b10f07490cb07c1e9a64d821f1e872c19c32bc8f6075f360c46fa8fa",
@@ -4599,27 +4494,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "advanced-editing/validations/accessibility-validations",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:a2975939ec9ab6ac561870958794b75e5c592b5a205636637735f70d43324aed",
-      "reviewAfter": "2026-10-18",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:32058c7e7254be9c0581ad9c312071b9ab1c37060cd15d78b1cb92d635c0df10",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "advanced-editing/validations/add-cli-validations-and-actions",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:0b0b943443ac3b56dcc38970df355aba5a43c7d11a14214a6c9e5df4121be83a",
@@ -4777,27 +4651,6 @@
       "snapshotFingerprint": "sha256:0b0b943443ac3b56dcc38970df355aba5a43c7d11a14214a6c9e5df4121be83a",
       "reviewAfter": "2026-12-03",
       "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/add-cli-validations-and-actions",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:0b0b943443ac3b56dcc38970df355aba5a43c7d11a14214a6c9e5df4121be83a",
-      "reviewAfter": "2026-12-03",
-      "sectionPath": "",
       "segmentKind": "paragraph",
       "enSegmentIndex": 0,
       "jaSegmentIndex": null,
@@ -4884,27 +4737,6 @@
       "missingTokens": null,
       "inconclusiveCategory": "tokenless-near-tie",
       "inconclusiveReason": "Tokenless adjacent sections \"Network Validation > Network Validation Examples > Validate all the image requests\" and \"Network Validation > Network Validation Examples > Validate a single request\" cannot rule out a body swap (current=2.00, swap=2.00)",
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/add-network-validation",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:580b24d8c546620a76beaf7ed82d79e75a32c237ed128b037f690c32717c65b9",
-      "reviewAfter": "2026-10-23",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
       "sectionIndex": null,
       "structureCategory": null,
       "structureFingerprint": null,
@@ -5226,27 +5058,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:e0b98553b7a63ce37770ee7c8aa8583951ee2395e8579318b0055529f6345053",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/element-accessibility-validation",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:fa31c1a1a4c16bf2f0d64cf2a65cff33db29acf419f87cc8a408d4993279e3d6",
-      "reviewAfter": "2026-11-16",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:32058c7e7254be9c0581ad9c312071b9ab1c37060cd15d78b1cb92d635c0df10",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -5811,27 +5622,6 @@
       "snapshotFingerprint": "sha256:fa7b5a0f0ea166b23dc08dbe694cdbc9f5c20ac06a6dfd7467394ee3f390e555",
       "reviewAfter": "2027-01-05",
       "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:5455b9434bd7216401bd7a90ded0a834260eadff913a15215f39b23da56f2035",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/pixel-validation-and-pixel-wait-for",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:fa7b5a0f0ea166b23dc08dbe694cdbc9f5c20ac06a6dfd7467394ee3f390e555",
-      "reviewAfter": "2027-01-05",
-      "sectionPath": "",
       "segmentKind": "paragraph",
       "enSegmentIndex": 0,
       "jaSegmentIndex": null,
@@ -6091,27 +5881,6 @@
       "enSourceFingerprint": "sha256:542c7ef3ffa307bf0d5a96d9602810b91f965934b2ad2974c4ec40f3be3e9f5b",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/validate-download",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:966b1f0e67eadb0be6c4205e09c590519fe53383cf4a505799a61718892f3f75",
-      "reviewAfter": "2026-11-27",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -7112,27 +6881,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "advanced-editing/validations/validate-element-visualization",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:546b14cfa9cd0bdbdbdc1a32afa54ce65bba77b751b36b55756c6e048b4445af",
-      "reviewAfter": "2026-12-13",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:4da528fee64fdcddaa22135bb66dff606cb8cf893af17ee3f77dfdcb7f7ec471",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "advanced-editing/validations/validate-full-page-visualization",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:ce73a2137a511e0c3518198e56af7cb62138f30685ac156e5a980e1db0e4c6c9",
@@ -7171,27 +6919,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "advanced-editing/validations/validate-full-page-visualization",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:ce73a2137a511e0c3518198e56af7cb62138f30685ac156e5a980e1db0e4c6c9",
-      "reviewAfter": "2026-12-08",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:4da528fee64fdcddaa22135bb66dff606cb8cf893af17ee3f77dfdcb7f7ec471",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "advanced-editing/validations/validate-viewport-visualization",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:19ca3b8ba3ffff36bf2621fabac68157c6e729d41825d1bfd66c986c12830a80",
@@ -7222,27 +6949,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:9f49c7439831b1c3d87f8608b7122d705c1632e929bc4b04e16ec8941602993b",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/validate-viewport-visualization",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:19ca3b8ba3ffff36bf2621fabac68157c6e729d41825d1bfd66c986c12830a80",
-      "reviewAfter": "2026-12-06",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:4da528fee64fdcddaa22135bb66dff606cb8cf893af17ee3f77dfdcb7f7ec471",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -7338,27 +7044,6 @@
       "enSourceFingerprint": "sha256:11b8a70e57bfad0184f5860df518a8330bee8bc634fb01526d53e076eda21995",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/validations/wait-for-element-visualization",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:ef998a376f63b6386d0b3567200318a56105cc6cf28408cd3bd8bc98b314769b",
-      "reviewAfter": "2026-10-14",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:4da528fee64fdcddaa22135bb66dff606cb8cf893af17ee3f77dfdcb7f7ec471",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -9714,27 +9399,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "editing-tests/groups/auto-complete",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:83fa74259cc61c3295cbf2639f15ce46e48e019045e16f8335a4bf88adbdbe84",
-      "reviewAfter": "2027-01-05",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:4da528fee64fdcddaa22135bb66dff606cb8cf893af17ee3f77dfdcb7f7ec471",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "editing-tests/groups/auto-grouping",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:2e2070187f4c9f2f4a8ae1bbd4838dc21eb53b899afbfa95e91eb71839247752",
@@ -11550,27 +11214,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "integrations/bug-tracker-settings",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:7f18f776e9f3e404216502a39d3cdf268b2d995282eac799e0904eb5d81476c0",
-      "reviewAfter": "2026-10-30",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:219c82b6456687e921609a16043c552231550ee885d7f54f9bc86225247b481e",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "integrations/bug-tracker-settings/connecting-testim-to-github",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:f2ac7714318baf9cc04408c0343c1d3b2fefa354c91da04dc0fe32b9716f924b",
@@ -11696,27 +11339,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:1403593ce3a602b3368711700cc0d14d8686ff3e5fc73f2f7796cc1ab2339988",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/dedicated-run-tunnel",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:3de0f555053f90f9a7fbe66ab9dc0f2d1a9bf46505cc4a81f71885c6124931ee",
-      "reviewAfter": "2026-10-26",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -11928,27 +11550,6 @@
       "enSourceFingerprint": "sha256:468159fc632a91228b10f12a3a3c68bc336a4cbbfdaa00b65cd223ea486151a7",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/grid-management",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:489ea7bb7c05a4e49da21ddc04178ee80726426a4f91f6ff103e5b3559eeeacd",
-      "reviewAfter": "2026-10-13",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -13531,27 +13132,6 @@
     },
     {
       "slug": "integrations/test-management-integrations",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:c62dab4762965840e14a9f50988c94ede2a39bb530d9c7b122a728d4bb6ebdae",
-      "reviewAfter": "2026-12-23",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/test-management-integrations",
       "issueType": "segment-untranslated",
       "snapshotFingerprint": "sha256:c62dab4762965840e14a9f50988c94ede2a39bb530d9c7b122a728d4bb6ebdae",
       "reviewAfter": "2026-12-23",
@@ -14345,48 +13925,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:711dd126124cfa4a411029542d1654a78e80fb16b7136c14bf40032674864975",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/visual-validation",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:f5f674fdcc0386a1945ed8bb65d5c9cb832f2ce8e2081a69cc690406c739e26e",
-      "reviewAfter": "2026-12-05",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/visual-validation",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:f5f674fdcc0386a1945ed8bb65d5c9cb832f2ce8e2081a69cc690406c739e26e",
-      "reviewAfter": "2026-12-05",
-      "sectionPath": "Prerequisites",
-      "segmentKind": "unordered-list-item",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:638fb5f8213e1dd0bb1ffd7ebbe4055df6dcb6b05132286e66c02f0fa824cb52",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -16188,27 +15726,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "results/export-test-list-and-test-results",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:69070a9ac8b018383c166c930f3986276f2fea764a707596fa06829b4c1bec03",
-      "reviewAfter": "2026-10-24",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "results/tag-remote-runs-failures",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:2dd0d70fc50641d9af1ebfe4ff6a6c29da5da3fa872e65c5c44c3559ef5b95ff",
@@ -16891,27 +16408,6 @@
       "enSourceFingerprint": "sha256:7c6c1ed5ccd8693c71164bf203d1cb7b5c4ab0f92b8cd80e560e5f87753d1a7f",
       "jaSourceFingerprint": null,
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "running-tests/mock-network-responses",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:9e0ede317c6c4613dc9f25e2b2b2648232fdd1affc893c628ddcd36248502bef",
-      "reviewAfter": "2026-12-27",
-      "sectionPath": "Overview",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -19337,27 +18833,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "security/sso-integration",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:1357b6e4f44becb2ab46b3d30be0e5b37e1451f3bb5c31033b90d7b44ffc6c66",
-      "reviewAfter": "2027-01-02",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:ba92470a0eeb6f6501c8244f872ab8a05a093ee8c5a7e6f122448f7ba7aa24d1",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "security/sso-integration/azure-ad-sso-integration",
       "issueType": "segment-untranslated",
       "snapshotFingerprint": "sha256:f37b5cc3307195884309162b73d2bfdc5e99ad71f7adbc6e3de98b3a2192af88",
@@ -20979,27 +20454,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "testops/audit-log",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:005c2cab946f1a08cdbe0800cfb3548ec7f8e64294e0e6e2b49fb02b59fd2a45",
-      "reviewAfter": "2026-12-12",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "testops/insights",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:433a2405328a3c86c62aa630622190125fc25abaec1dadc2af82e9f665bf2555",
@@ -21068,27 +20522,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:b1c40e41f32138a6c012371e96e8ca82e8a4b802215dfadd01ceb6b2dfb80f16",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "testops/insights/dashboard",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:4abbedc22b4cd015f7695a86dc655655c6b1c709121e3460690bb903af1ca327",
-      "reviewAfter": "2026-12-31",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:ccb9f5a8529fcda2492a169c25ead2993e317bafe78f8b6adaf5bfd85262689d",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -21310,27 +20743,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "testops/testops-management/flaky-tests",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:08060fd4857850fdcb305cee133161ba6aa51a59d18581ea6ebebe7c916f140d",
-      "reviewAfter": "2026-12-29",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:ba92470a0eeb6f6501c8244f872ab8a05a093ee8c5a7e6f122448f7ba7aa24d1",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "testops/testops-management/test-owner",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:cffd2ca31fdeb4106d1873a811ee21e1813277fe1561935a5661a7da46123129",
@@ -21361,27 +20773,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:157d7511c3709d033a7b0cde83628477812561bb8d18892978dd0420b96ddd61",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "testops/testops-management/test-owner",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:cffd2ca31fdeb4106d1873a811ee21e1813277fe1561935a5661a7da46123129",
-      "reviewAfter": "2026-10-20",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:4da528fee64fdcddaa22135bb66dff606cb8cf893af17ee3f77dfdcb7f7ec471",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -21458,27 +20849,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:8cb98d2ba0e76eb1f90d86f9ca4f5d5c44cdefbccca3228f90dbc3ffaf96953f",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "testops/testops-management/test-status",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:683b100e55ecf78059e891cbcb1b2bb40edef82e809aa64f02dee21dbc42c093",
-      "reviewAfter": "2026-12-04",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:ba92470a0eeb6f6501c8244f872ab8a05a093ee8c5a7e6f122448f7ba7aa24d1",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -21620,27 +20990,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "testops/testops-version-control/read-only",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:bc3d1675eb72a1ef2e9dfe24459c656b028b40e3f02e4faa09e2454b9cecf31f",
-      "reviewAfter": "2026-11-08",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:6049ac5bb61fa005b5d9c71eade4ad99eac82e67d2f3f73f1a51bda42122d76b",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "testops/testops-version-control/version-control-branches",
       "issueType": "section-structure-mismatch",
       "snapshotFingerprint": "sha256:aa99ca794ca999b4eae908810f47afae2241aa78c09059826ff0b58fbea63a38",
@@ -21671,27 +21020,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:e20069a4ec0d1efe91307d63d7b9d303572cd7e1ba6358d3644e9cbe988cfd67",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "testops/testops-version-control/version-control-branches",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:aa99ca794ca999b4eae908810f47afae2241aa78c09059826ff0b58fbea63a38",
-      "reviewAfter": "2026-11-03",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -21768,27 +21096,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:744dd02b442b5704b79bb9dba14a382a4d031734d2a77f47c0adf29dc922a0c0",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "testops/turbo-mode",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:acf60266871ee83707809a6c6732a3f7a2e4d42bd3c3eba8a577cb73d4d4037b",
-      "reviewAfter": "2026-10-30",
-      "sectionPath": "",
-      "segmentKind": "callout-body",
-      "enSegmentIndex": 0,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:0179455686f659d084f6f4995ca80e8e3c6028781270cd06beb1e9ba2e01dd83",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "https://www.testim.io/pricing/"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
