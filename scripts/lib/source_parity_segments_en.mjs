@@ -361,21 +361,46 @@ function currentSectionPath(state) {
 /**
  * Walk a block container (body/root/section-like) and emit segments for each
  * block-level child.
+ *
+ * Loose text nodes directly inside the container (not wrapped in `<p>`) and
+ * any consecutive inline elements (`<em>`, `<strong>`, `<a>`, `<span>` 等)
+ * が sibling 列として現れる場合は、**1 つの paragraph として merge** して
+ * emit する。これにより MadCap の non-standard HTML (例: `<img ... />`
+ * の直後に loose text + `<em>` inline が続くパターン) で 1 論理段落が
+ * 複数 `<em>` 境界で寸断されるのを防ぐ (Issue #247 post-merge re-review)。
  */
 function walkBlockContainer(node, state) {
+  let looseBuffer = [];
+  const flushLoose = () => {
+    if (looseBuffer.length === 0) return;
+    const text = looseBuffer.join('').replace(/\s+/g, ' ').trim();
+    looseBuffer = [];
+    if (text.length > 0) {
+      state.emitter.emit(currentSectionPath(state), 'paragraph', text);
+    }
+  };
+
   for (const child of node.children) {
     if (child.type === 'text') {
-      // Loose text outside a <p> inside a block container is rare in MadCap;
-      // treat non-blank loose text as a paragraph.
-      const text = decodeEntities(child.value).trim();
-      if (text.length > 0) {
-        state.emitter.emit(currentSectionPath(state), 'paragraph', text);
-      }
+      looseBuffer.push(decodeEntities(child.value));
       continue;
     }
     if (child.type !== 'element') continue;
+
+    // Inline element encountered among block siblings: accumulate its inline
+    // text into the loose paragraph buffer instead of recursing as a block.
+    if (INLINE_JOIN_TAGS.has(child.tag) || child.tag === 'br') {
+      renderInlineText(child, looseBuffer);
+      continue;
+    }
+
+    // Block element boundary: flush any pending loose text as a paragraph
+    // first, then walk the block normally.
+    flushLoose();
     walkBlock(child, state);
   }
+
+  flushLoose();
 }
 
 function isCalloutDiv(node) {
