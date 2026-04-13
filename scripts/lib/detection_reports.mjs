@@ -716,6 +716,10 @@ function buildParityFollowupBody({
   advisoryQueueScope,
   includeAdvisoryInBody,
   sourceUnusable,
+  baselinedIssues = 0,
+  baselinedFiles = 0,
+  baselinedByType = {},
+  topBaselinedPages = [],
 }) {
   const lines = [
     '## サマリー',
@@ -735,6 +739,31 @@ function buildParityFollowupBody({
       `  - ブロッキング: ${blockingAdvisoryItems.length}`,
       '',
     );
+  }
+
+  if (baselinedIssues > 0) {
+    const sortedTypes = Object.keys(baselinedByType).sort();
+    lines.push(
+      '## ベースライン残債',
+      '',
+      `- 合計: ${baselinedIssues} 件 (${baselinedFiles} ファイル)`,
+      '- EN 原文との既知の構造差分です。翻訳を修正して返済してください。',
+    );
+    if (sortedTypes.length > 0) {
+      lines.push('- 種別別:');
+      for (const type of sortedTypes) {
+        lines.push(`  - ${type}: ${baselinedByType[type]}`);
+      }
+    }
+    if (topBaselinedPages.length > 0) {
+      lines.push('', '### 上位ファイル', '');
+      lines.push(
+        formatList(
+          topBaselinedPages.map((p) => `\`${p.file}\` (${p.issueCount} 件)`),
+        ),
+      );
+    }
+    lines.push('');
   }
 
   // source-unusable は新規 issue を開く条件には含めず、本文だけに併記する。
@@ -856,10 +885,15 @@ function buildParityFollowup(parity, options = {}) {
     snapshotUnusableByType: summary.snapshotUnusableByType ?? {},
   };
 
+  const baselinedIssues = summary.baselinedIssues ?? 0;
+  const baselinedFiles = summary.baselinedFiles ?? 0;
+  const baselinedByType = summary.baselinedByType ?? {};
+
   const blockingAdvisoryItems = advisoryQueue.filter((e) => e.blocking);
   const hasBlockingAdvisory = isComplete === true && blockingAdvisoryItems.length > 0;
 
   const shouldOpenIssue =
+    baselinedIssues > 0 ||
     expiredBaselineEntries > 0 ||
     expiringBaselineEntries30d > 0 ||
     baselineInvalidatedSlugs.length > 0 ||
@@ -904,6 +938,8 @@ function buildParityFollowup(parity, options = {}) {
     tokenlessNearTieExamples: buildTokenlessNearTieExamples(advisoryQueue, maxEntries),
   };
 
+  const topBaselinedPages = buildTopBaselinedPages(files, maxEntries);
+
   const body = shouldOpenIssue
     ? withFamilyMarker(
         buildParityFollowupBody({
@@ -918,6 +954,10 @@ function buildParityFollowup(parity, options = {}) {
           advisoryQueueScope,
           includeAdvisoryInBody: isComplete === true,
           sourceUnusable,
+          baselinedIssues,
+          baselinedFiles,
+          baselinedByType,
+          topBaselinedPages,
         }),
         FAMILY_KEYS.PARITY_FOLLOWUP,
       )

@@ -285,10 +285,20 @@ export function classifyLine(line, state = {}) {
     return { kind: 'unordered-list', nextState };
   }
   if (/^!\[/.test(trimmed) || /<img\b/i.test(trimmed) || /<Image\b/.test(trimmed)) {
-    // 画像記法の後ろに本文が続く行は paragraph-start として数える。
+    // 画像記法の後ろに本文が続く行の分類。turndown が `![](img)3.  text`
+    // のように画像とリスト項目を 1 行に連結することがあるため、後続部分の
+    // 構造を判定してリスト / 段落を正しく分類する。
     if (/^!\[/.test(trimmed)) {
-      const afterImage = trimmed.replace(/^!\[[^\]]*\]\([^)]*(?:\s+"[^"]*")?\)\s*/, '');
+      const afterImage = trimmed.replace(/^!\[[^\]]*\]\([^)"]*(?:\s+"[^"]*")?\)\s*/, '');
       if (afterImage.length > 0 && !/^!\[/.test(afterImage)) {
+        if (/^\d+(?:\\)?\.\s/.test(afterImage)) {
+          nextState.inParagraph = false;
+          return { kind: 'ordered-list', nextState };
+        }
+        if (/^[-*+]\s/.test(afterImage)) {
+          nextState.inParagraph = false;
+          return { kind: 'unordered-list', nextState };
+        }
         nextState.inParagraph = true;
         return { kind: 'paragraph-start', nextState };
       }

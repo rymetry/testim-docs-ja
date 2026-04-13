@@ -2109,6 +2109,24 @@ describe('classifyLine', () => {
     const result = classifyLine(':::');
     assert.equal(result.kind, 'paragraph-start');
   });
+
+  it('classifies image+ordered-list concatenation as ordered-list (turndown artifact)', () => {
+    const result = classifyLine('![](images/bc293ae-image.png "image.png")3.  If you have already registered');
+    assert.equal(result.kind, 'ordered-list');
+    assert.equal(result.nextState.inParagraph, false);
+  });
+
+  it('classifies image+unordered-list concatenation as unordered-list (turndown artifact)', () => {
+    const result = classifyLine('![](images/foo.png)- Bullet item text');
+    assert.equal(result.kind, 'unordered-list');
+    assert.equal(result.nextState.inParagraph, false);
+  });
+
+  it('classifies image+plain-text concatenation as paragraph-start (unchanged)', () => {
+    const result = classifyLine('![](images/foo.png)Some trailing text');
+    assert.equal(result.kind, 'paragraph-start');
+    assert.equal(result.nextState.inParagraph, true);
+  });
 });
 
 // ---------------------------------------------------------------------------
