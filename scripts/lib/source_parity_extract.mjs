@@ -74,6 +74,13 @@ export function extractCalloutPositions(body) {
   return callouts;
 }
 
+function extractTrailingContentAfterLeadingMarkdownImage(line) {
+  if (!/^!\[/.test(line)) return null;
+  const afterImage = line.replace(/^!\[[^\]]*\]\([^)"]*(?:\s+"[^"]*")?\)\s*/, '');
+  if (afterImage.length === 0 || /^!\[/.test(afterImage)) return null;
+  return afterImage;
+}
+
 export function extractStepCounts(body) {
   const lines = body.split('\n');
   const sections = new Map();
@@ -111,7 +118,8 @@ export function extractStepCounts(body) {
       continue;
     }
 
-    if (!inCallout && /^\d+(?:\\)?\.\s/.test(line)) {
+    const listCandidate = extractTrailingContentAfterLeadingMarkdownImage(trimmed) ?? line;
+    if (!inCallout && /^\d+(?:\\)?\.\s/.test(listCandidate)) {
       sections.set(currentSection, (sections.get(currentSection) || 0) + 1);
     }
   }
@@ -201,7 +209,9 @@ export function extractBulletCounts(body) {
       continue;
     }
 
-    if (!inCallout && /^[-*+]\s/.test(trimmed)) {
+    const listCandidate =
+      extractTrailingContentAfterLeadingMarkdownImage(trimmed) ?? trimmed;
+    if (!inCallout && /^[-*+]\s/.test(listCandidate)) {
       sections.set(currentSection, (sections.get(currentSection) || 0) + 1);
     }
   }
@@ -285,10 +295,20 @@ export function classifyLine(line, state = {}) {
     return { kind: 'unordered-list', nextState };
   }
   if (/^!\[/.test(trimmed) || /<img\b/i.test(trimmed) || /<Image\b/.test(trimmed)) {
-    // 画像記法の後ろに本文が続く行は paragraph-start として数える。
+    // 画像記法の後ろに本文が続く行の分類。turndown が `![](img)3.  text`
+    // のように画像とリスト項目を 1 行に連結することがあるため、後続部分の
+    // 構造を判定してリスト / 段落を正しく分類する。
     if (/^!\[/.test(trimmed)) {
-      const afterImage = trimmed.replace(/^!\[[^\]]*\]\([^)]*(?:\s+"[^"]*")?\)\s*/, '');
-      if (afterImage.length > 0 && !/^!\[/.test(afterImage)) {
+      const afterImage = extractTrailingContentAfterLeadingMarkdownImage(trimmed);
+      if (afterImage) {
+        if (/^\d+(?:\\)?\.\s/.test(afterImage)) {
+          nextState.inParagraph = false;
+          return { kind: 'ordered-list', nextState };
+        }
+        if (/^[-*+]\s/.test(afterImage)) {
+          nextState.inParagraph = false;
+          return { kind: 'unordered-list', nextState };
+        }
         nextState.inParagraph = true;
         return { kind: 'paragraph-start', nextState };
       }
