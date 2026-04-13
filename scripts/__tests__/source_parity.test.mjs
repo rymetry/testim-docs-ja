@@ -1224,6 +1224,12 @@ describe('extractBulletCounts', () => {
     assert.equal(result.get('Section'), 2);
   });
 
+  it('counts image+unordered-list concatenation as a bullet (turndown artifact)', () => {
+    const body = '## Section\n![](images/foo.png)- Bullet item\n';
+    const result = extractBulletCounts(body);
+    assert.equal(result.get('Section'), 1);
+  });
+
   it('excludes bullets inside code blocks', () => {
     const body = '## Section\n- Real item\n```\n- Fake item\n```\n';
     const result = extractBulletCounts(body);
@@ -1296,6 +1302,12 @@ describe('extractStepCounts edge cases', () => {
     assert.equal(result.get('Section'), 1);
   });
 
+  it('counts image+ordered-list concatenation as a step (turndown artifact)', () => {
+    const body = '## Section\n![](images/foo.png)3. Step three\n';
+    const result = extractStepCounts(body);
+    assert.equal(result.get('Section'), 1);
+  });
+
   it('resets callout state at heading boundary', () => {
     const body = '## Section A\n:::note\nUnclosed note\n## Section B\n1. Step one\n';
     const result = extractStepCounts(body);
@@ -1358,6 +1370,22 @@ describe('section-count-mismatch', () => {
     const issues = compareSnapshotStructure(en, ja);
     const sectionIssues = issues.filter((i) => i.type === 'section-count-mismatch');
     assert.equal(sectionIssues.length, 0);
+  });
+
+  it('does not emit step-count mismatch for image+ordered-list concatenation', () => {
+    const en = '# Title\n## Steps\n![](images/foo.png)3. Item one\n';
+    const ja = '## Steps\n3. Item one\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(stepIssues.length, 0);
+  });
+
+  it('does not emit bullet-count mismatch for image+unordered-list concatenation', () => {
+    const en = '# Title\n## Bullets\n![](images/foo.png)- Bullet one\n';
+    const ja = '## Bullets\n- Bullet one\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const bulletIssues = issues.filter((i) => i.type === 'bullet-count-mismatch');
+    assert.equal(bulletIssues.length, 0);
   });
 
   it('counts H4 headings in section count', () => {
