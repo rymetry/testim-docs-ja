@@ -57,6 +57,7 @@ Full reference: `scripts/README.md`
 - **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
 - **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop.
 - **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection: HTML snapshot format, sidebar JSON structure, diff classification, CI workflow, and translation sync process.
+- **`docs/PARITY_GUIDE.md`** — Parity debt patterns, EN source artifacts, fix workflow, and parallel agent delegation checklist.
 - **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
 
 ## Content Rules
@@ -73,28 +74,9 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 1. Self-check → Codex CLI review → fix → `npm run lint && npm run test && npm run build`
 2. When new patterns emerge, update the relevant guide (not just the affected file)
 
-## Parity Debt Patterns
+## Parity Debt
 
-パリティ残債（baseline で凍結中の EN/JA 構造差分）を修正する際の参照情報。
-
-### 頻出パターン（segment-extra が最大カテゴリ）
-
-1. **preface に frontmatter description の重複段落**: JA のみに description と同内容の要約段落がある → 削除
-2. **手順導入文の段落分離**: EN の `:fa-arrow-right:` パターンが JA で別段落に分かれている → 前段落に `→ **...するには:**` を追記して統合
-3. **callout 内の番号付きリスト**: EN が `<p>` 内にインラインで書くものを JA が Markdown リストに展開 → インラインテキストに戻す
-
-### EN ソースの既知問題（JA に含めず baseline で管理）
-
-- **MadCap `</Image>` アーティファクト**: EN HTML に `<p>&lt;/Image&gt;</p>` がゴミテキストとして存在する。JA に追加しない
-- **`<span class="FileOrFilePath">`**: EN が `<code>` ではなく `<span>` でコードを表示する箇所がある。JA で backtick にすると token 抽出が変わるため注意
-
-### パリティ修正ワークフロー
-
-- 並列エージェントに委任する際は **TRANSLATION_GUIDE.md のルール**（Testim 用語英語維持、ですます調、NG/OK パターン）を必ず送ること
-- 検知コードの修正とドキュメント修正は**別 PR** にする
-- EN のゴミテキストを JA に含めない（baseline で管理）
-- リスト項目数を変更したら `KNOWN_ORDERED_DRIFTS` テストを確認すること
-- `npm run format` はリポジトリ全体を変更するため、PR 対象ファイルのみに限定する
+パリティ残債（baseline で凍結中の EN/JA 構造差分）の修正手順、頻出パターン、EN ソースの既知問題、並列エージェント委任時の注意点は **`docs/PARITY_GUIDE.md`** を参照。
 
 ## Commit Style
 
