@@ -7,7 +7,7 @@ updated: '2025-09-22'
 sourceUrl: 'https://docs.tricentis.com/testim/content/results/execution-runs-screen.htm'
 keywords:
   - 実行結果一覧
-  - 実行ラン
+  - Execution Runs
   - テスト実行一覧
   - 実行統計
   - 成功率
