@@ -18,8 +18,6 @@ keywords:
   - Applitools Eyes
 ---
 
-ピクセルレベルでビジュアルの詳細を検証
-
 **ビューポートのビジュアル検証**を使用すると、ビューポートのベースラインと現在のテスト実行の間でビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::warning{title="Applitools ライセンスについて"}

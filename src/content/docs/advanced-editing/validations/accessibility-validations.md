@@ -18,8 +18,6 @@ keywords:
   - Chrome
 ---
 
-アクセシブルな Web ページとは、障害や機能制限を持つ人々が利用できるように設計された Web ページのことです。米国や欧州のほとんどの組織では、アクセシビリティ準拠が求められています。
-
 **ページアクセシビリティ検証**ステップを使用すると、Web ページのアクセシビリティレベルをチェックし、アクセシブルにできたはずだが実装されていない要素を特定できます。アクセシビリティチェックは、以下のルールに基づいています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
 :::info{title="これはPRO機能です"}

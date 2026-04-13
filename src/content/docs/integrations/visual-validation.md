@@ -15,8 +15,6 @@ keywords:
   - 統合設定
 ---
 
-AI 駆動のビジュアルテストを有効にするために Applitools と統合する方法。
-
 Testim のビジュアル検証および wait-for ステップを使用するには、まず[Applitools](https://applitools.com/)が提供する Applitools Eyes アプリと Testim アカウントを統合する必要があります。
 
 :::info{title="PRO機能"}

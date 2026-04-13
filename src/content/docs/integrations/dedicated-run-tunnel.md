@@ -17,8 +17,6 @@ keywords:
   - Testim CLI
 ---
 
-Dedicated Run Tunnel を使用すると、internal server や localhost からアプリを実行し、外部ブラウザ（proxy）で表示できます。
-
 場合によっては、Testim または外部プロバイダー（SauceLabs など）が提供するリモート Selenium Grid サーバーを使用して、独自のプライベートまたは内部サーバーでテストを実行したい場合があります。
 
 :::info
