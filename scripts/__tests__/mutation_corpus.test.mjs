@@ -522,6 +522,37 @@ describe('insertEnResidual', () => {
   it('returns null for no CJK paragraphs', () => {
     assert.equal(insertEnResidual('Only English text here'), null);
   });
+
+  it('replaces entire multi-line paragraph block', () => {
+    const md = '段落の1行目\n段落の2行目\n\n次の段落';
+    const result = insertEnResidual(md, 0);
+    assert.ok(result);
+    assert.ok(!result.mutated.includes('段落の1行目'));
+    assert.ok(!result.mutated.includes('段落の2行目'));
+    assert.ok(result.mutated.includes('次の段落'));
+    assert.equal(result.metadata.lineIndex, 0);
+    assert.equal(result.metadata.linesRemoved, 1);
+  });
+
+  it('nth selects different paragraph blocks, not lines within the same block', () => {
+    const md = '段落A 1行目\n段落A 2行目\n\n段落B 単独行';
+    const r0 = insertEnResidual(md, 0);
+    const r1 = insertEnResidual(md, 1);
+    assert.ok(r0);
+    assert.ok(r1);
+    // nth=0 targets block A (line 0), nth=1 targets block B (line 3)
+    assert.equal(r0.metadata.lineIndex, 0);
+    assert.equal(r1.metadata.lineIndex, 3);
+  });
+
+  it('handles paragraph at end of file', () => {
+    const md = '# 見出し\n\n末尾の段落';
+    const result = insertEnResidual(md, 0);
+    assert.ok(result);
+    assert.ok(result.mutated.includes('Click on the Settings button'));
+    assert.ok(!result.mutated.includes('末尾の段落'));
+    assert.equal(result.metadata.linesRemoved, 0);
+  });
 });
 
 // ---------------------------------------------------------------------------
