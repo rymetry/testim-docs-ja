@@ -232,8 +232,6 @@ JS（JavaScript）: 任意の JS 式を定義できます。**Expected Value フ
 
 **gif をクリックで拡大**
 
-</Image>
-
 2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。
 
 例えば、`username` パラメーターに `Hello, John` という値をエクスポートするには、新しいカスタムアクションステップを追加し、エディターに以下を入力します：
@@ -245,8 +243,6 @@ exportsTest.usename = 'Hello, John';
 ![export_param.gif](/images/validations/validate-element-text/91597d2-export_param.gif)
 
 **gif をクリックで拡大**
-
-</Image>
 
 3. **Element text validation** ステップを作成し、**Expected value** にパラメーターを指定します。
 
