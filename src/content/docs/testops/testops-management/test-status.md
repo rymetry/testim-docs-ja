@@ -20,7 +20,7 @@ keywords:
 
 どのテストに作業が必要かを管理するためにテストにステータスを追加します
 
-テストにステータスを追加して、どのテストに作業が必要かを管理できます。ステータスは、テストライブラリリストおよびテストエディターの列の 1 つとして表示されます。
+テストにステータスを追加して、どのテストに作業が必要かを管理できます。ステータスは、テストライブラリリストおよびTest Editorの列の 1 つとして表示されます。
 
 デフォルトでは、すべてのステータスは「Draft」とラベル付けされています。この機能を有効にすると、Testim は過去 30 日間に実行されたテストを自動的に識別し、「Active」とラベル付けします。その他のステータスはすべて以下に説明するように手動で適用されます。
 
@@ -130,9 +130,9 @@ keywords:
 
 ![テストライブラリのテストステータス](/images/testops-management/test-status/ebf3e27-teststatuses1.png)
 
-**テストエディター**
+**Test Editor**
 
-![テストエディターのテストステータス](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
+![Test Editorのテストステータス](/images/testops-management/test-status/a56ee9d-teststatuses2.png)
 
 ## ステータスでテストをフィルタリング
 

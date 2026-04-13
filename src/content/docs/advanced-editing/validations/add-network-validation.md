@@ -171,7 +171,7 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
 
 1. ステップを追加したい位置の **（矢印記号）** にカーソルを合わせます。
 
-![テストエディターのナビゲーションステップ選択画面](/images/validations/add-network-validation/a0847f8-Testim_308a.png)
+![Test Editorのナビゲーションステップ選択画面](/images/validations/add-network-validation/a0847f8-Testim_308a.png)
 
 アクションのオプションが表示されます。
 

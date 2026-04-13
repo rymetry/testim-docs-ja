@@ -479,6 +479,7 @@ _動画: テストの実行デモ_
      - NG: 「Pro プラン」→ OK: 「Professional plan」（英語維持、短縮形も正式名に統一）
      - NG: 「注：」で `:::note` → OK: 制限事項・注意喚起は「注意」で `:::warning`（タイトルの意味で callout タイプを決める）
      - NG: 「実行ラン画面」→ OK: 「実行結果一覧」（Execution Runs Screen の訳語統一）
+     - NG: 「テストエディター」→ OK: 「Test Editor」（画面名は英語維持）
 
 ### 5.2 用語統一表
 
@@ -517,6 +518,8 @@ _動画: テストの実行デモ_
 | Pro feature             | Pro機能                     | 「Pro」は英語のまま                   |
 | Pro plan                | Professional plan           | 短縮形も正式名で英語維持              |
 | third party / 3rd party | サードパーティ              | カタカナ化。「3番目のパーティ」は不可 |
+| Test Editor             | Test Editor                 | 画面名は英語維持。「テストエディター」は不可 |
+| Mobile Test Editor      | Mobile Test Editor          | 画面名は英語維持。「モバイルテストエディター」は不可 |
 | Execution Runs Screen   | 実行結果一覧                | 画面タイトル。「実行ラン画面」は不可  |
 | execution run(s)        | 実行                        | 個別インスタンス。文脈で区別          |
 

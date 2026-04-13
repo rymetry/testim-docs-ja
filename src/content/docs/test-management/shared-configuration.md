@@ -233,7 +233,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 スケジュール実行のリストがフィルター選択に基づいてフィルタリングされます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
 
-## テストエディターでテスト構成を作成および変更する
+## Test Editorでテスト構成を作成および変更する
 
 **Test Editor** で変更されたテスト構成は、構成に名前が含まれていてテストが保存されている場合、**Configuration Library** に追加されます。新しく追加されたテスト構成は、将来のテストに使用できます。**テスト内でテスト構成を変更するには:**
 
@@ -265,11 +265,11 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 4. 戻る矢印をクリックして、**Edit Configuration** 設定を閉じます。
 
-![Edit Configuration 画面から戻る矢印を押してテストエディターに戻る操作画面](/images/test-management/shared-configuration/8e94901-Testim_600a_r.png)
+![Edit Configuration 画面から戻る矢印を押してTest Editorに戻る操作画面](/images/test-management/shared-configuration/8e94901-Testim_600a_r.png)
 
 5. **Save** をクリックします。
 
-![テストエディターで構成変更後に Save ボタンをクリックする画面](/images/test-management/shared-configuration/d7f9a8b-Testim_594b.png)
+![Test Editorで構成変更後に Save ボタンをクリックする画面](/images/test-management/shared-configuration/d7f9a8b-Testim_594b.png)
 
 **Change Message** ウィンドウが開きます。
 

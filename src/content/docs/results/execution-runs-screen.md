@@ -20,7 +20,7 @@ keywords:
 ![Execution Runs 画面の一覧ビュー](/images/results/execution-runs-screen/e1d2a5a-execution-runs-1.jpg)
 
 :::warning{title="注意"}
-テストエディターで直接実行されたテストは、Execution Runs には表示されません。
+Test Editorで直接実行されたテストは、Execution Runs には表示されません。
 :::
 
 ## 実行リスト
@@ -80,7 +80,7 @@ keywords:
     Local suite
    </td>
    <td style="text-align: left;">
-    <ul><li>テストライブラリから特定のテストをローカルで実行する場合</li><li>スイートライブラリから特定のスイートをローカルで実行する場合。テストエディターから単一のテストを実行した場合は表示されません。</li></ul>
+    <ul><li>テストライブラリから特定のテストをローカルで実行する場合</li><li>スイートライブラリから特定のスイートをローカルで実行する場合。Test Editorから単一のテストを実行した場合は表示されません。</li></ul>
    </td>
   </tr>
   <tr>
@@ -332,7 +332,7 @@ Testim が実行を停止します。
 
 ![同じパラメーターでのテスト再実行](/images/results/execution-runs-screen/cd2aaef-execution-runs-20.jpg)
 
-Testim は、テストエディターにいるかのようにテストを実行します。
+Testim は、Test Editorにいるかのようにテストを実行します。
 
 ### 詳細なデバッグ情報の表示
 
