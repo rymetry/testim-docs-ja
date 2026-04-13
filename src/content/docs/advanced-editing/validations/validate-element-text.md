@@ -178,25 +178,25 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 
 2 つの値のいずれかに一致するかを検証します。例えば param1 = "Hello"、param2 = "World" の場合、"Hello" または "World" でパスします：
 
-`new RegExp('^' + '(?:' + param1 + '_' + '|' + param2 + '_' + ')' + '$');`
+式: `new RegExp("^" + "(?:" + param1 + "_" + "|" + param2 + "_)" + "$")`
 
 ### 不一致の検証（Not Equal Validation）
 
 テキストが param1 と一致しないことを検証します。例えば param1 = "Example1" の場合、テキストが "Example1" であれば検証は失敗し、それ以外の値はパスします：
 
-`new RegExp("^" + "((?!" + param1 + ").)*$")`
+式: `new RegExp("^" + "((?!" + param1 + ").)*$")`
 
 ### 数値の検証（正の整数のみ）
 
 テキストが正の整数（数字 0〜9）のみで構成されていることを検証します。例えば "12345" はパスしますが、"12a34" や "-123" は失敗します：
 
-`/^\d+$/`
+式: `/^d+$/`
 
 ### 数値の検証（正・負・小数）
 
 正の数、負の数、小数のみで構成されていることを検証します。例えば "123"、"-123"、"3.14"、"-0.5" はパスしますが、"12a" や "." は失敗します：
 
-`/^-?\d+(\.\d+)?$/`
+式: `/^-?d+(.d+)?$/`
 
 もちろん、必要に応じてその他の有効な Regex も使用できます。
 
@@ -232,6 +232,8 @@ JS（JavaScript）: 任意の JS 式を定義できます。**Expected Value フ
 
 **gif をクリックで拡大**
 
+</Image>
+
 2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。
 
 例えば、`username` パラメーターに `Hello, John` という値をエクスポートするには、新しいカスタムアクションステップを追加し、エディターに以下を入力します：
@@ -243,6 +245,8 @@ exportsTest.usename = 'Hello, John';
 ![export_param.gif](/images/validations/validate-element-text/91597d2-export_param.gif)
 
 **gif をクリックで拡大**
+
+</Image>
 
 3. **Element text validation** ステップを作成し、**Expected value** にパラメーターを指定します。
 

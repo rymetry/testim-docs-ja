@@ -100,7 +100,7 @@ keywords:
   </tr>
   <tr>
    <td style="text-align: left;">
-    &lt;scheduler name&gt;//&lt;test plan name&gt;
+    &lt;スケジューラー名&gt;//&lt;テストプラン名&gt;
    </td>
    <td style="text-align: left;">
     テストプランで特定の Scheduler を実行する場合
