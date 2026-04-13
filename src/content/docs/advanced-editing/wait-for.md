@@ -263,7 +263,7 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/e553c48-wait-for-download.png)
 
-6. **Back Arrow** をクリックしてテストエディターに戻ります。スクリプトは自動的に保存されます。
+6. **Back Arrow** をクリックしてTest Editorに戻ります。スクリプトは自動的に保存されます。
 
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/4a10d25-return-to-test.png)
 

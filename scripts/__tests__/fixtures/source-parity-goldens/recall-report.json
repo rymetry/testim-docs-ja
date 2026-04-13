@@ -39,10 +39,10 @@
         "recall": 1
       },
       "segment-move": {
-        "applicable": 8,
+        "applicable": 7,
         "detected": 2,
         "inconclusive": 0,
-        "recall": 0.25
+        "recall": 0.2857142857142857
       },
       "section-body-swap": {
         "applicable": 7,
@@ -101,10 +101,10 @@
         "recall": 1
       },
       "segment-move": {
-        "applicable": 8,
+        "applicable": 7,
         "detected": 2,
         "inconclusive": 0,
-        "recall": 0.25
+        "recall": 0.2857142857142857
       },
       "section-body-swap": {
         "applicable": 7,
@@ -423,16 +423,16 @@
     },
     {
       "slug": "advanced-editing/loops",
-      "baselineDiffCount": 20,
+      "baselineDiffCount": 0,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 18,
-          "cascadeSize": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -441,8 +441,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -452,9 +452,9 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
-          "cascadeSize": 1,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -463,9 +463,9 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
-          "cascadeSize": 1,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -477,22 +477,14 @@
           "applicable": false
         },
         "segment-move": {
-          "applicable": true,
-          "affectedSectionIndex": 0,
-          "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 20,
-          "cascadeSize": 0,
-          "detected": false,
-          "exactDetected": false,
-          "inconclusive": false
+          "applicable": false
         },
         "section-body-swap": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 28,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 10,
           "cascadeSize": 5,
           "detected": true,
           "exactDetected": true,
@@ -502,9 +494,9 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 20,
-          "cascadeSize": 1,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -513,8 +505,8 @@
           "applicable": true,
           "affectedSectionIndex": 4,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 20,
-          "mutatedDiffCount": 21,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,

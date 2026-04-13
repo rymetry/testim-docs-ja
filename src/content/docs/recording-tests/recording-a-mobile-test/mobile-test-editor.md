@@ -1,12 +1,12 @@
 ---
-title: モバイルテストエディター画面
-description: Testim モバイルテストエディター画面の構成要素と機能について説明します。
+title: Mobile Test Editor画面
+description: Testim Mobile Test Editor画面の構成要素と機能について説明します。
 category: テストの記録
 order: 3010
 updated: '2025-09-19'
 sourceUrl: 'https://docs.tricentis.com/testim/content/recording-tests/recording-a-mobile-test/mobile-test-editor.htm'
 keywords:
-  - モバイルテストエディター
+  - Mobile Test Editor
   - AUT Viewer
   - テストステップ
   - デバイス情報
@@ -15,7 +15,7 @@ keywords:
 
 Mobile Test Editor 画面には、現在のモバイルテストと Application Under Test (AUT) Viewer が表示されます。
 
-![モバイルテストエディター](/images/recording-tests/mobile-test-editor/0b45d6b-mobiletesteditor.png)
+![Mobile Test Editor](/images/recording-tests/mobile-test-editor/0b45d6b-mobiletesteditor.png)
 
 Mobile Test Editor 画面には、上の画像に示されているように、以下のセクションがあります:
 
@@ -28,7 +28,7 @@ Mobile Test Editor 画面には、上の画像に示されているように、�
 
 ![デバイス情報](/images/recording-tests/mobile-test-editor/c04932f-image_14.png)
 
-テストエディターの Device and Mobile Application Information セクションには、以下の情報が表示されます:
+Test Editorの Device and Mobile Application Information セクションには、以下の情報が表示されます:
 
 - **Target Device**: 記録/再生セッションに現在使用されているデバイスの構成情報（ターゲットモバイルデバイス、オペレーティングシステム、ディスプレイ解像度に関する情報を含む）を表示します。
 - **Application Name**: テストに使用されているモバイルアプリケーションを表示します。
@@ -38,7 +38,7 @@ Testim で使用する仮想デバイスを追加するには、以下のソフ�
 
 - Android デバイス: Virtual Device Manager 付き Android Studio
 - Apple デバイス: XCode iOS Simulator
-:::
+  :::
 
 ### テストに使用するモバイルアプリの変更
 

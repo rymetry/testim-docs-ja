@@ -13,9 +13,7 @@ keywords:
   - 条件分岐
 ---
 
-ステップを作成した後、そのステップのプロパティを編集できます。設定可能なプロパティオプションは、編集するステップのタイプによって異なります。
-
-ステップのプロパティを編集するには：
+ステップを作成した後、そのステップのプロパティを編集できます。設定可能なプロパティオプションは、編集するステップのタイプによって異なります。**ステップのプロパティを編集するには：**
 
 1. 目的のステップの上にマウスを移動し、**Show Properties** アイコンをクリックします。
 
@@ -23,15 +21,13 @@ keywords:
 
    プロパティパネルが右側に開きます。
 
-2. 目的の変更を行います。
-
    ![プロパティパネル](/images/steps-editing-tests/editing-a-steps-properties/2958483-2023-10-10_16-17-44.png)
 
-   変更はテストに自動的に適用されます。
+2. 目的の変更を行います。
 
-:::warning
-エディター画面を閉じる前に、ヘッダーバーの **Save** ボタンをクリックして、すべての変更を保存してください。
-:::
+変更はテストに自動的に適用されます。
+
+> エディター画面を閉じる前に、ヘッダーバーの **Save** ボタンをクリックして、すべての変更を保存してください。
 
 ## プロパティの設定
 
@@ -97,7 +93,7 @@ keywords:
     ターゲット要素を見つけるにはスクロールが必要な場合がありますが、テストが最初に記録されたときには必要ありませんでした。デフォルトでは、Testim はビューポート外の要素に自動的にスクロールします。このチェックボックスを選択すると、このステップのこの機能が無効になります。Testim はビューポート内のみを検索し、ビューポート外にはスクロールしません。
    </td>
    <td>
-    <a href="/docs/advanced-editing/handling-ui-actions/auto-scroll">Auto scroll</a>
+    <a href="/docs/advanced-editing/handling-ui-actions/auto-scroll">自動スクロール</a>
    </td>
   </tr>
   <tr>
@@ -113,7 +109,7 @@ keywords:
     ターゲット要素がページ上に存在するが、ユーザーには表示されない場合があります。例えば、要素が現在ビューポートにない場合や、可視性が「display: none」に設定されている場合です。このボックスがチェックされている場合（デフォルト）、ターゲット要素が表示されている場合にのみステップが実行されます。
    </td>
    <td>
-    <a href="/docs/results/test-results/why-did-my-test-fail#1-element-not-visible">Element not visible</a>
+    <a href="/docs/results/test-results/why-did-my-test-fail#1-element-not-visible">要素が表示されていない場合</a>
    </td>
   </tr>
   <tr>
@@ -129,7 +125,7 @@ keywords:
     ステップが失敗したときに表示されるエラーメッセージにサフィックスとしてカスタムメッセージを追加します。単純な文字列（例：'my custom error'）を入力するか、パラメーターを含む文字列（例：'my custom error' + `Param1`）を入力できます。
    </td>
    <td>
-    <a href="/docs/advanced-editing/error-suffix-customization">Error Suffix Customization</a>
+    <a href="/docs/advanced-editing/error-suffix-customization">エラーサフィックスのカスタマイズ</a>
    </td>
   </tr>
   <tr>
@@ -160,7 +156,7 @@ keywords:
     これは、AUT（テスト対象アプリケーション）ブラウザで選択された要素（プロパティパネルの要素のサムネイル画像で表される）で、このテストステップの実行時にクリックされます。ターゲット要素は編集可能です。サムネイルの上にマウスを移動すると、Highlight、Reassign、Improve、View locators のオプションが表示されます。
    </td>
    <td>
-    <a href="/docs/editing-tests/editing-your-tests/editing-target-element-properties">Editing Target Element Properties</a>
+    <a href="/docs/editing-tests/editing-your-tests/editing-target-element-properties">ターゲット要素のプロパティ編集</a>
    </td>
   </tr>
   <tr>
@@ -174,13 +170,10 @@ keywords:
    </td>
    <td>
     ステップが失敗した場合、デフォルトの動作は、ステップにエラーをマークしてテストを停止することです。このデフォルトの動作を上書きできます。このプロパティのオプションは次のとおりです：
-
-* **Mark error & stop**（デフォルト）- このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止して失敗します。
-* **Mark error & continue** - このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止しませんが、失敗します。
-* **Mark warning & continue** - このオプションを選択すると、失敗したステップはオレンジ色でマークされ、警告を示します。テストは停止せず、失敗もしません。
+    <ul><li><p><strong>Mark error & stop</strong>（デフォルト）- このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止して失敗します。</p></li><li><p><strong>Mark error & continue</strong> - このオプションを選択すると、失敗したステップは赤色でマークされ、エラーを示します。テストは停止しませんが、失敗します。</p></li><li><p><strong>Mark warning & continue</strong> - このオプションを選択すると、失敗したステップはオレンジ色でマークされ、警告を示します。テストは停止せず、失敗もしません。</p></li></ul>
    </td>
    <td>
-    <a href="/docs/results/test-results/why-did-my-test-fail">Why did my test fail?</a>
+    <a href="/docs/results/test-results/why-did-my-test-fail">テストが失敗した理由は？</a>
    </td>
   </tr>
   <tr>
@@ -194,15 +187,11 @@ keywords:
    </td>
    <td>
     「when to run step」機能を使用すると、テストのステップをいつ実行するか、または実行しないかを制御できます。以下のオプションを適用できます：
-
-* **Always Run** - テストを実行するたびにステップが実行されます。
-* **Element** - 指定された要素がページに存在する（または存在しない）場合にステップが実行されます。
-* **Element text** - 特定の要素内に指定されたテキストが存在する場合にステップが実行されます。
-* **Custom** - 要素が特定の値を持つ場合にステップが実行されます。
-* **Never (skip)** - ステップは実行されません。
+    <ul><li><p><strong>Always Run</strong> - テストを実行するたびにステップが実行されます。</p></li><li><p><strong>Element</strong> - 指定された要素がページに存在する（または存在しない）場合にステップが実行されます。</p></li><li><p><strong>Element text</strong> - 特定の要素内に指定されたテキストが存在する場合にステップが実行されます。</p></li><li><p><strong>Custom</strong> - 要素が特定の値を持つ場合にステップが実行されます。</p></li></ul>
+    <p><strong>Never (skip)</strong> - ステップは実行されません。</p>
    </td>
    <td>
-    <a href="/docs/editing-tests/conditions">Conditions</a>
+    <a href="/docs/editing-tests/conditions">条件分岐</a>
    </td>
   </tr>
   <tr>
@@ -231,7 +220,7 @@ keywords:
     値にプレフィックス文字列を追加します。例えば、「User」を追加すると、すべての値が User で始まります：User47、User65、User32。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">Generate Random Value Step</a>
+    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -247,7 +236,7 @@ keywords:
     値にサフィックス文字列を追加します。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">Generate Random Value Step</a>
+    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -263,7 +252,7 @@ keywords:
     失敗した場合に API リクエストを再試行します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">API Validation</a>
+    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">API 検証</a>
    </td>
   </tr>
   <tr>
@@ -279,7 +268,7 @@ keywords:
     これは、ステップが最初に作成されたときにユーザーが入力した属性名です。名前を変更するには、フィールド内をクリックして内容を編集します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/html-attribute-validation">HTML Attribute Validation</a>
+    <a href="/docs/advanced-editing/validations/html-attribute-validation">HTML 属性の検証</a>
    </td>
   </tr>
   <tr>
@@ -295,7 +284,7 @@ keywords:
     Get Cookie ステップを使用すると、UI から直接テストのコンテキストで Cookie を取得できます。ステップを作成した後、ステップを編集して、取得したい Cookie の名前を指定する必要があります。名前を入力または変更するには、フィールド内をクリックして内容を編集します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/cookies">Cookies</a>
+    <a href="/docs/advanced-editing/cookies">Cookie（クッキー）</a>
    </td>
   </tr>
   <tr>
@@ -311,7 +300,7 @@ keywords:
     Testim が Generate date ステップに使用するデフォルトの形式は「YYYY-MM-DD」です。この形式を変更するには、フィールド内をクリックして内容を編集します。形式は任意の JS 日付形式にできます。
    </td>
    <td>
-    <a href="https://day.js.org/docs/en/parse/string-format">JS Date Formats</a>
+    <a href="https://day.js.org/docs/en/parse/string-format">JS 日付フォーマット</a>
    </td>
   </tr>
   <tr>
@@ -327,7 +316,7 @@ keywords:
     このプロパティは、チェックボックスまたはラジオボタンのチェック済みまたは未チェック状態を検証する場合に適用されます。デフォルト設定は Checked です。設定を変更するには、Unchecked ラジオボタンをクリックします。注：チェックボックスとラジオボタンの検証は、ネイティブのチェックボックスまたはラジオ入力要素でのみ使用できます。基礎となる入力を使用しないカスタムチェックボックスの実装はサポートされていません。
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/checkbox-and-radio-button-validation#validate-checkboxradio-button-ステップの追加">How to Add Checkbox and Radio Button Validation</a>
+    <a href="/docs/advanced-editing/validations/checkbox-and-radio-button-validation#validate-checkboxradio-button-ステップの追加">チェックボックス／ラジオボタン検証の追加方法</a>
    </td>
   </tr>
   <tr>
@@ -343,7 +332,7 @@ keywords:
     これは、このステップの実行時に Testim が探している値です。この値は、ステップが作成されたときに最初に設定されました。値を変更するには、フィールド内をクリックして内容を編集します。注：Expected value フィールドでは、パラメーター、正規表現、JavaScript 式を使用できます。
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/validate-element-text#パラメーターを使った検証">Advanced text validation</a>
+    <a href="/docs/advanced-editing/validations/validate-element-text#パラメーターを使った検証">高度なテキスト検証</a>
    </td>
   </tr>
   <tr>
@@ -359,7 +348,7 @@ keywords:
     抽出するデータタイプを指定します。デフォルトでは、モードは文字列全体を抽出することです。モードを変更して、数値、日付を抽出するか、正規表現を使用してテキストの一部のみを抽出できます。Number/Date/Regular Exp を抽出する場合でも、抽出された値は文字列になることに注意してください。
    </td>
    <td>
-    <a href="/docs/advanced-editing/extract-text">Extract Text</a>
+    <a href="/docs/advanced-editing/extract-text">値の抽出</a>
    </td>
   </tr>
   <tr>
@@ -375,7 +364,7 @@ keywords:
     生成される値の長さを指定します。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">Generate Random Value Step</a>
+    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -406,7 +395,7 @@ keywords:
     要素が表示されていないことを確認する前に遅延時間を設定したい場合があります。例えば、要素がページに突然表示されないことを確認したい場合です。デフォルトでは、遅延は設定されていません。遅延を設定するには、Pre-step delay チェックボックスを選択し、遅延時間をミリ秒で設定します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/validate-element-not-visible">Validate element not visible</a>
+    <a href="/docs/advanced-editing/validations/validate-element-not-visible">要素が不可視であることの検証</a>
    </td>
   </tr>
   <tr>
@@ -437,7 +426,7 @@ keywords:
     共有ステップを編集している場合、1 か所で変更すると、プロジェクトのすべてのインスタンスで変更されます。特定のテストのみのステップを変更するには、Replace with a clone をクリックします。
    </td>
    <td>
-    <a href="/docs/editing-tests/groups#共有グループの特定のインスタンスのみをクローンで置き換える">How to change only one instance of a group</a>
+    <a href="/docs/editing-tests/groups#共有グループの特定のインスタンスのみをクローンで置き換える">グループの特定インスタンスのみを変更する方法</a>
    </td>
   </tr>
   <tr>
@@ -453,7 +442,7 @@ keywords:
     共有ステップへの変更を含む変更を含むテストを保存するたびに、変更前のテストのバージョンが自動的に保存されます。これらのテストの各バージョンはリビジョンと呼ばれます。リビジョンリストには、変更メッセージ、変更を行ったユーザーの名前、変更が行われた日付が含まれます。リビジョンを使用すると、常に変更を振り返り、古いリビジョンに戻す力が得られます。See old revisions リンクをクリックして、リビジョンリストを表示します。
    </td>
    <td>
-    <a href="/docs/test-management/revisions">Revisions</a>
+    <a href="/docs/test-management/revisions">リビジョン</a>
    </td>
   </tr>
   <tr>
@@ -469,7 +458,7 @@ keywords:
     このプロパティは、HTTP リクエストを送信する場合、または API 呼び出しから返される値を検証する場合に適用されます。API が Cookie などのブラウザ情報も送信する必要がある場合は、このオプションをチェックしたままにします（自動的に送信されます）。ブラウザのコンテキスト外で API 呼び出しを送信して、ブラウザの制限が適用されないようにする場合にのみ、このオプションをオフにします（例えば、API が CORS をサポートしていない場合）。
    </td>
    <td>
-    <a href="/docs/advanced-editing/api-testing">API Testing</a>
+    <a href="/docs/advanced-editing/api-testing">API テスト</a>
    </td>
   </tr>
   <tr>
@@ -500,7 +489,7 @@ keywords:
     このプロパティは、次のステップに進む前にテストが待機する時間を設定します。デフォルトは 1 秒（1,000 ms）です。この値を変更するには、フィールド内をクリックして、新しいスリープ値（ms）を編集します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）">Wait for</a>
+    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）">待機（Wait for）</a>
    </td>
   </tr>
   <tr>
@@ -516,7 +505,7 @@ keywords:
     生成される文字列のタイプ。文字のみ、数字のみ、またはその両方の混合が含まれます。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">Generating a Random Value Step</a>
+    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -532,7 +521,7 @@ keywords:
     生成された日付/時刻は、ブラウザ時刻または UTC（UTC が選択されている場合）の前または後に設定できます。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-date">Generating a Date</a>
+    <a href="/docs/editing-tests/generating-a-date">日付の生成</a>
    </td>
   </tr>
   <tr>
@@ -548,7 +537,7 @@ keywords:
     テスト中に別のページに移動するための URL を指定します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/handling-ui-actions/navigation">How to Add a Parameter</a>
+    <a href="/docs/advanced-editing/handling-ui-actions/navigation">パラメーターの追加方法</a>
    </td>
   </tr>
   <tr>
@@ -564,7 +553,7 @@ keywords:
     ブラウザのタイムゾーンの代わりに UTC を使用する場合に選択します。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-date">Generating a Date</a>
+    <a href="/docs/editing-tests/generating-a-date">日付の生成</a>
    </td>
   </tr>
   <tr>
@@ -580,7 +569,7 @@ keywords:
     これは、これらの各ステップでデータを保持する変数に Testim が使用するデフォルト名です。名前を変更するには、フィールド内をクリックして内容を編集します。注：変数名は JavaScript の名前制限の対象となります。例えば、スペースや特殊文字は使用できません。
    </td>
    <td>
-    <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Variables">JavaScript variables</a>
+    <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Variables">JavaScript 変数</a>
    </td>
   </tr>
   <tr>
@@ -594,18 +583,14 @@ keywords:
    </td>
    <td>
     これらのタイプのステップで Testim が使用する変数のスコープを選択できます。デフォルトでは、変数スコープは Test に設定されています。変更したい場合は、Variable scope ドロップダウンをクリックして、次の 3 つのオプションのいずれかを選択します：
-
-* **Local**: 同じグループ内（グループ内で宣言されている場合）またはテスト内（テストレベルから宣言されている場合）のステップ間でパラメーターを渡すことができます。
-* **Test**: 同じテスト内のステップとグループ間でパラメーターを渡すことができます。
-* **Suite**: 同じテストスイート内のテスト間でパラメーターを渡すことができます。
+    <ul><li><p><strong>Local</strong>: 同じグループ内（グループ内で宣言されている場合）またはテスト内（テストレベルから宣言されている場合）のステップ間でパラメーターを渡すことができます。</p></li><li><p><strong>Test</strong>: 同じテスト内のステップとグループ間でパラメーターを渡すことができます。</p></li><li><p><strong>Suite</strong>: 同じテストスイート内のテスト間でパラメーターを渡すことができます。</p></li></ul>
    </td>
    <td>
    </td>
   </tr>
   <tr>
    <td>
-
-* PARAMS
+    PARAMS
    </td>
    <td>
     Add custom action, Add API action, Add custom validation, Validate API, Add network validation, and Add custom wait for
@@ -614,7 +599,7 @@ keywords:
     パラメーターは、事前に情報がわからなくても、さまざまなシナリオをテストするためにステップで使用できます。PARAMS の横にある+をクリックすると、Testim でステップで使用する HTML パラメーターと JS パラメーターを定義できます。
    </td>
    <td>
-    <a href="/docs/advanced-editing/parameters">Parameters</a>
+    <a href="/docs/advanced-editing/parameters">パラメーター</a>
    </td>
   </tr>
  </tbody>

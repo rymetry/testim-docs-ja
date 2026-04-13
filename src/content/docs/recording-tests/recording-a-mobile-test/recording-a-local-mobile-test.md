@@ -15,8 +15,6 @@ keywords:
   - Tricentis Mobile Agent
 ---
 
-ローカル環境でモバイルテストを記録・実行する
-
 モバイルテストは、物理デバイスおよび仮想デバイス（iOS/Android）の両方でローカル環境での記録と実行が可能です。記録自体は、Windows、Mac、または Linux コンピューターで Web ブラウザを使用して実行できます。モバイルテストを記録すると、Testim は各アクションをテストステップに変換し、Testim Visual Editor の画面に表示します。ただし、[テストの編集](/docs/editing-tests/editing-your-tests)により、テストに追加のステップを手動で追加することもできます。テストは[テストライブラリ](/docs/test-management/test-list)に追加され、いつでも実行できます。
 
 :::warning{title="警告"}
@@ -60,7 +58,7 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 1. 物理 Android デバイスをローカルコンピューターに接続します（例: USB ケーブルを使用して携帯電話を接続）。
 
 :::info{title="情報"}
-Android デバイスの場合、デバイスを「デバッグモード」で実行する必要があります - [開発者オプションと USB デバッグを有効にする](https://developer.android.com/studio/debug/dev-options#enable)。デバッグモードを有効にした後、設定 > 開発者オプションに移動し、USB デバッグオプションを有効にします。詳細については、[Tricentis Mobile Agent の構成](/docs/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent)の関連セクションを参照してください。
+Android デバイスの場合、デバイスを「デバッグモード」で実行する必要があります - [開発者オプションと USB デバッグを有効にする](https://developer.android.com/studio/debug/dev-options#enable)。デバッグモードを有効にした後、設定 > 開発者オプションに移動し、USB デバッグオプションを有効にします。詳細については、[https://help.testim.io/docs/configure-tricentis-mobile-agent](/docs/recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent)の関連セクションを参照してください。
 :::
 
 Tricentis Mobile Agent がデバイスを認識すると、デバイスがリストに表示されます:
@@ -131,9 +129,7 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 - [Android Studio](https://developer.android.com/studio)などの Android シミュレーター/IDE。
 - 以下で説明されているすべてのステップを完了する。
 
-以下の手順では Android Studio を使用していますが、他のソフトウェアも使用できます。
-
-**仮想 Android デバイスを接続するには:**
+以下の手順では Android Studio を使用していますが、他のソフトウェアも使用できます。**仮想 Android デバイスを接続するには:**
 
 1. Android Studio で、ケバブメニュー（3 つの縦の点）をクリックし、**Virtual Device Manager**をクリックします。
 
@@ -155,7 +151,9 @@ Android デバイスを接続するには、以下の要件を満たす必要が
 
 ![メモリとストレージの設定](/images/recording-tests/recording-a-local-mobile-test/4c319fe-2023-01-18_13-12-41.png)
 
-7. **Finish**をクリックします。構成されたデバイスは、Device Manager 画面で使用可能になります。
+7. **Finish**をクリックします。
+
+構成されたデバイスは、Device Manager 画面で使用可能になります。
 
 8. デバイスを実行するには、Play アイコンをクリックします。
 
@@ -217,9 +215,7 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 ## ステップ 4 - テストを記録する
 
-モバイルデバイスでテストを記録して、後で自動的に実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
-
-**モバイルテストを記録するには:**
+モバイルデバイスでテストを記録して、後で自動的に実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。**モバイルテストを記録するには:**
 
 1. Tricentis Mobile Agent インジケーターが緑色であることを確認して、物理デバイスまたは仮想デバイスが接続されていることを確認します。
 
@@ -254,7 +250,7 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 7. **Done**をクリックして終了します。
 
-8. テスト対象のアプリケーションが開いた[AUT ミラーリングビューアー](/docs/recording-tests/recording-a-mobile-test/mobile-test-editor)が表示されます。ビューアーを使用すると、デバイスを表示してテスト対象のアプリケーションと対話できます。Testim はアクションを記録します。サポートされているアクションの詳細については、以下の[サポートされているモバイルアクション](#サポートされているモバイルアクション)セクションを参照してください。
+8. テスト対象のアプリケーションが開いた[AUT ミラーリングビューアー](/docs/recording-tests/recording-a-mobile-test/mobile-test-editor)が表示されます。ビューアーを使用すると、デバイスを表示してテスト対象のアプリケーションと対話できます。Testim はアクションを記録します。サポートされているアクションの詳細については、以下の[**サポートされているモバイルアクション**](#サポートされているモバイルアクション)セクションを参照してください。
 
 :::info{title="情報"}
 テストステップは、AUT ミラーリングビューアーでアクションを実行することによってのみ記録されます。デバイスで直接アクションを実行しても、テストステップは記録されません。

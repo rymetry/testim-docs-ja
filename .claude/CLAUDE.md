@@ -57,6 +57,7 @@ Full reference: `scripts/README.md`
 - **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
 - **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop.
 - **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection: HTML snapshot format, sidebar JSON structure, diff classification, CI workflow, and translation sync process.
+- **`docs/PARITY_GUIDE.md`** — Parity debt patterns, EN source artifacts, fix workflow, and parallel agent delegation checklist.
 - **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
 
 ## Content Rules
@@ -72,6 +73,10 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 
 1. Self-check → Codex CLI review → fix → `npm run lint && npm run test && npm run build`
 2. When new patterns emerge, update the relevant guide (not just the affected file)
+
+## Parity Debt
+
+パリティ残債（baseline で凍結中の EN/JA 構造差分）の修正手順、頻出パターン、EN ソースの既知問題、並列エージェント委任時の注意点は **`docs/PARITY_GUIDE.md`** を参照。
 
 ## Commit Style
 

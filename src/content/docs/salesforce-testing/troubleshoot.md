@@ -53,18 +53,17 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
 
 - IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
-
   ![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
 
 - IP アドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**
-
   ![プロファイルレベルのログイン IP アドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
 
 - ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
-
   ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
 
+:::note
 IP アドレス制限が必要な場合は、ホワイトリストに登録する必要がある IP アドレスについて[サポート](https://www.testim.io/contact-us/)にお問い合わせください。
+:::
 
 ## Grid 上のスケジュール済みテスト実行が確認コードの入力を求められて失敗する
 

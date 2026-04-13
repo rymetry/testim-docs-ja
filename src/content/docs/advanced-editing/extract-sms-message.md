@@ -18,8 +18,6 @@ keywords:
   - 二要素認証
 ---
 
-CLI action step と Twilio を使用して SMS メッセージを抽出する方法を学びます。
-
 [CLI action step](/docs/advanced-editing/validations/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMS メッセージの受信時刻とコンテンツの高度な検証を実行できます。
 
 #### コード例
@@ -59,7 +57,9 @@ return client.messages
 
 #### Parameters - この例で使用するパッケージと JavaScript
 
-1. name: twilio, type: Package, value: twilio@3.25.0
-2. name: \_, type: Package, value: moment@latest
+1\. 名前: twilio、種類: Package、値: twilio@3.25.0<br />
+2\. 名前: \_、種類: Package、値: moment@latest
+
+**スクリーンショットを参照:**
 
 ![設定画面のスクリーンショット](/images/handling-ui-actions/extract-sms-message/6842940-see_screenshot1.png)

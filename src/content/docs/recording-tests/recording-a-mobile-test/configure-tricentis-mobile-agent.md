@@ -81,18 +81,18 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 
 ![Linux のダウンロード](/images/recording-tests/configure-tricentis-mobile-agent/64e7a69-image.png)
 
-2. インストールファイルを見つけて、次の手順を実行します:
+1. インストールファイルを見つけて、次の手順を実行します:
    - 右クリックして**Properties > Permissions > Execute**を選択します。
    - **Allow executing file as program**を選択してウィンドウを閉じます。
 
-3. インストールファイルを右クリックして、**Open in Terminal**を選択します。
+2. インストールファイルを右クリックして、**Open in Terminal**を選択します。
 
-4. ターミナルで、次の手順を実行します:
+3. ターミナルで、次の手順を実行します:
    - `./Tricentis_Mobile_Agent_1.0.0.sh`と入力し、Enter を押します。
    - インストールを続行することを確認するために`yes`と入力し、Enter を押します。
    - インストール先のパスを指定し、Enter を押します。これによりインストールが完了し、デスクトップショートカットが作成されます。
 
-5. プロンプトが表示されたら、ターミナルで`y`キーを押してアプリケーションを起動します。または、新しく作成されたデスクトップショートカットからアプリケーションを起動します。
+4. プロンプトが表示されたら、ターミナルで`y`キーを押してアプリケーションを起動します。または、新しく作成されたデスクトップショートカットからアプリケーションを起動します。
 
 ## Tricentis Mobile Agent を Testim に接続する
 
@@ -187,9 +187,7 @@ Windows オペレーティングシステムで iOS デバイスのテスト自�
 
 #### iOS シミュレーターを有効にする
 
-Mac で iOS シミュレーターを有効にするには、Xcode 内で利用可能なシミュレーターアプリを使用します。キーボードまたはマウスを使用して iOS シミュレーターを操作します。Tricentis Mobile Agent を使用して iOS シミュレーターをミラーリングするには、Apple Developer アカウントは必要ありません。
-
-**Tricentis Mobile Agent を使用したテスト自動化のために Mac で iOS シミュレーターを有効にするには:**
+Mac で iOS シミュレーターを有効にするには、Xcode 内で利用可能なシミュレーターアプリを使用します。キーボードまたはマウスを使用して iOS シミュレーターを操作します。Tricentis Mobile Agent を使用して iOS シミュレーターをミラーリングするには、Apple Developer アカウントは必要ありません。→ **Tricentis Mobile Agent を使用したテスト自動化のために Mac で iOS シミュレーターを有効にするには:**
 
 1. Mac に Tricentis Mobile Agent をインストールして起動します。
 
@@ -199,9 +197,7 @@ Mac で iOS シミュレーターを有効にするには、Xcode 内で利用�
 
 Tricentis Mobile Agent が iOS シミュレーターを検出できない場合は、ターミナルで次のコマンドを実行し、Tricentis Mobile Agent を再起動してください:
 
-```bash
-sudo xcode-select -s $(ls -td /Applications/Xcode* | head -1)/Contents/Developer
-```
+コマンド: sudo xcode-select -s $(ls -td /Applications/Xcode\* | head -1)/Contents/Developer
 
 iOS シミュレーターで WDA を起動する際にエラーが発生した場合は、マシンで実行されているすべての Xcode シミュレーターをシャットダウンし、iOS シミュレーターを起動してから、Tricentis Mobile Agent を再起動してください。
 
@@ -223,19 +219,17 @@ iOS シミュレーターで WDA を起動する際にエラーが発生した�
 
 シミュレーターが検出されない場合は、次のコマンドを実行してから、Tricentis Mobile Agent を再起動してみてください:
 
-```bash
-sudo xcode-select -s $(ls -td /Applications/Xcode* | head -1)/Contents/Developer
-```
+コマンド: sudo xcode-select -s $(ls -td /Applications/Xcode\* | head -1)/Contents/Developer
 
 ### WebDriverAgent（WDA）エラー
 
 iOS シミュレーターで WDA を起動する際に次のようなエラーが発生した場合:
 
-2021-07-18 02:22:22.461 ERROR 37497 qtp499764573-13 i.t.a.i.n Failed trying to start WDA on 2D3C1771-938B-43D7-A95C-5CCB834CE63E for unknown reason java.util.concurrent.ExecutionException: java.io.IOException: There was a problem connecting to the simulator with the udid of 2D3C1771-938B-43D7-A95C-5CCB834CE63E
+エラー例: 2021-07-18 02:22:22.461 ERROR 37497 qtp499764573-13 i.t.a.i.n Failed trying to start WDA on 2D3C1771-938B-43D7-A95C-5CCB834CE63E for unknown reason java.util.concurrent.ExecutionException: java.io.IOException: There was a problem connecting to the simulator with the udid of 2D3C1771-938B-43D7-A95C-5CCB834CE63E
 
-次のコマンドを実行して、マシンで実行されているすべての XCode シミュレーターをシャットダウンしてみてください:
+マシンで実行されているすべての Xcode シミュレーターをシャットダウンするために、次のコマンドを実行してみてください:
 
-sudo xcrun simctl shutdown all
+コマンド: sudo xcrun simctl shutdown all
 
 その後、テストを再度実行してみてください。Tricentis Mobile Agent が自動的にシミュレーターを起動します。
 

@@ -18,9 +18,7 @@ keywords:
   - Testim for Salesforce
 ---
 
-Testim for Salesforce のペルソナは、管理者、営業、顧客などのユーザータイプです。ペルソナは、テストを実行する際に Salesforce 環境にアクセスするために使用されます。ペルソナを作成した後、接続された Salesforce 環境の既存の Salesforce ユーザーの認証情報と関連付けます。これにより、テストを書き直すことなく、さまざまな環境（Dev、QA、本番など）間を切り替えることができます。
-
-このプロセスは、Salesforce 環境を Testim for Salesforce に接続していることを前提としています。詳細については、[Salesforce 環境の接続](/docs/salesforce-testing/create-and-manage-test-environments)を参照してください。
+Testim for Salesforce のペルソナは、管理者、営業、顧客などのユーザータイプです。ペルソナは、テストを実行する際に Salesforce 環境にアクセスするために使用されます。ペルソナを作成した後、接続された Salesforce 環境の既存の Salesforce ユーザーの認証情報と関連付けます。これにより、テストを書き直すことなく、さまざまな環境（Dev、QA、本番など）間を切り替えることができます。このプロセスは、Salesforce 環境を Testim for Salesforce に接続していることを前提としています。詳細については、[Salesforce 環境の接続](/docs/salesforce-testing/create-and-manage-test-environments)を参照してください。
 
 :::note
 デフォルトでは、Salesforce 環境を接続した後、システムはこの環境に管理者ペルソナを作成し、環境へのログインに使用された認証情報を使用します。
@@ -40,10 +38,10 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/29532af-addpersona4.png)
 
 2. ペルソナ名を入力し、**Add**をクリックします。\
-   ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/1019250-addpersona2.png)\
+   ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/1019250-addpersona2.png)
 
-   ペルソナがリストに追加されます。\
-   ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/cbf8b38-persona5.png)
+ペルソナがリストに追加されます。\
+![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/cbf8b38-persona5.png)
 
 3. ペルソナのリストから、関連するペルソナの隣にある **+** ボタンをクリックします。\
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/7e2cd64-persona6.png)

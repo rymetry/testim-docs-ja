@@ -16,8 +16,6 @@ keywords:
   - テストデータ
 ---
 
-設定ファイルの beforeSuite / beforeTest フックでテストにパラメーターを渡す
-
 [_設定ファイル_](/docs/running-tests/configuration-file-run-hooks) は、テスト／スイート実行に必要なパラメーターを定義する共通 JS です。単一テスト／全テストの前後に実行されるフックで、バックエンドの準備やパラメーター定義を行えます。**設定ファイル**を使うと、CLI 実行時にパラメーターを各テストへ渡せます。
 
 ## パラメーターのスコープ
@@ -58,12 +56,12 @@ exports.config = {
 
 ## テストレベル: `overrideTestData` の追加
 
-`return` セクションに `overrideTestData` を追加すると、テスト名ごとにデータを割り当てられます。実行内でテストごとに異なる値を指定できます。
-
-**テストごとのデータを追加するには:**
+`return` セクションに `overrideTestData` を追加すると、テスト名ごとにデータを割り当てられます。実行内でテストごとに異なる値を指定できます。 → **テストごとのデータを追加するには:**
 
 1. 設定ファイルを作成／編集します。
-2. `beforeSuite` の戻り値に `overrideTestData` を追加し、テスト名とデータセット（JSON）を記述します。他の設定はそのまま保持します。例：
+2. `beforeSuite` の戻り値に `overrideTestData` を追加し、テスト名とデータセット（JSON）を記述します。他の設定はそのまま保持します。
+
+`beforeSuite` フックの例:
 
 ```javascript
 beforeSuite: function () {
@@ -98,16 +96,14 @@ beforeSuite: function () {
 
 ## 実行レベル: `return` で一括指定
 
-設定フック（`beforeSuite` / `beforeTest`）の `return` に値を置くと、実行に含まれる全テストで同一データが使われます。
-
-**実行レベルで指定するには:**
+設定フック（`beforeSuite` / `beforeTest`）の `return` に値を置くと、実行に含まれる全テストで同一データが使われます。 → **実行レベルで指定するには:**
 
 1. 設定ファイルを作成／編集します。
 2. `beforeSuite` または `beforeTest` の `return` にパラメーターと値を記述します。
 
 例（beforeSuite に追加）：
 
-```javascript javascript
+```javascript
 exports.config = {
   beforeSuite: function (suite) {
     console.log('beforeSuite', suite);
@@ -121,7 +117,7 @@ exports.config = {
 
 例（beforeTest に追加）：
 
-```javascript javasc
+```javascript
 exports.config = {
   .....
   .....
@@ -142,11 +138,11 @@ exports.config = {
 
 ## グローバルエクスポートパラメーター
 
-`afterSuite` では、その実行でエクスポートされたグローバルパラメーターを参照できます。構文: `suite.exportsGlobal.<param_name>`
+"afterSuite" 関数では、その実行でエクスポートされたグローバルパラメーターを使用できます。構文: suite.exportsGlobal.\<param_name\>
 
 ## CLI での指定
 
-設定ファイルは [Testim CLI](/docs/running-tests/the-command-line-cli) の **-c** 引数で指定します。
+設定ファイルを定義したら、[Testim CLI](/docs/running-tests/the-command-line-cli) の引数として `-c` に続けてファイル名を指定します。
 
 ```shell
 testim -c "testimConfig.js"

@@ -47,7 +47,7 @@ Testim は、劣化したロケーターを自動改善されたロケーター�
 1. 自動改善されたテストを開きます。
 2. **Show improved steps**スイッチを右にトグルします。
 
-![自動改善されたステップがハイライトされたテストエディター画面](/images/test-management/revisions/cadf2a8-Testim_585b.png)
+![自動改善されたステップがハイライトされたTest Editor画面](/images/test-management/revisions/cadf2a8-Testim_585b.png)
 
 自動改善されたステップが強調表示されます。
 

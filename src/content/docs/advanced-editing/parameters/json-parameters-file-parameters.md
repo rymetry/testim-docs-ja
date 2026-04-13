@@ -16,8 +16,6 @@ keywords:
   - 動的値
 ---
 
-JSON パラメーターファイルでテストに値を渡す
-
 **JSON パラメーターファイル**を使うと、実行時にパラメーターを渡せます。環境ごとに異なる値を定義でき、例えばローカルと CI で認証情報を切り替える、といった用途に向いています。パラメーターを定義した JSON ファイルを用意し、テスト実行時に CLI 引数で指定します。
 
 ## パラメーターのスコープ
@@ -37,7 +35,7 @@ JSON パラメーターファイルでテストに値を渡す
 
 ## CLI で指定する
 
-作成した JSON ファイルは、[Testim CLI](/docs/running-tests/the-command-line-cli) の **--params-file** 引数で指定します。
+作成した JSON ファイルは、[Testim CLI](/docs/running-tests/the-command-line-cli) の `--params-file` 引数で指定します。
 
 :::note
 `--params-file` に指定するパスはフルパスではなく相対パスである必要があります。
@@ -50,9 +48,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 ## JavaScript（JS）形式のパラメーターファイル
 
-JSON の代わりに、JS ファイルで値をエクスポートすることも可能です。テスト設定内でより動的に管理できます。
-
-次のような JS ファイル（例: param-file.js）を作成します。
+JSON の代わりに、JS ファイルで値をエクスポートすることも可能です。テスト設定内でより動的に管理できます。次のような JS ファイル（例: param-file.js）を作成します。
 
 ```javascript
 module.exports = {

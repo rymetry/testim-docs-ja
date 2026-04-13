@@ -77,9 +77,9 @@ keywords:
 テスト失敗にタグを付けた後、既存のテスト失敗タグを編集できます。
 
 1. **Test List**画面から、該当するテストをクリックします。\
-   テストエディター画面に、以前に選択したテスト失敗タグが表示されます。
+   Test Editor画面に、以前に選択したテスト失敗タグが表示されます。
 
-![テストエディターに表示される既存の失敗タグ](/images/results/tag-remote-runs-failures/84be8ad-previoustag.png)
+![Test Editorに表示される既存の失敗タグ](/images/results/tag-remote-runs-failures/84be8ad-previoustag.png)
 
 2. タグにマウスを合わせ、**Edit Tag**アイコンをクリックします。
 
