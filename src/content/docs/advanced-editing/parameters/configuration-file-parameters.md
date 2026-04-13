@@ -139,7 +139,7 @@ exports.config = {
 
 ## グローバルエクスポートパラメーター
 
-`afterSuite` では、その実行でエクスポートされたグローバルパラメーターを参照できます。構文: `suite.exportsGlobal`.\<param_name\>
+`afterSuite` では、その実行でエクスポートされたグローバルパラメーターを参照できます。構文: `suite.exportsGlobal.<param_name>`
 
 ## CLI での指定
 
