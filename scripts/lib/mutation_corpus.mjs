@@ -490,15 +490,22 @@ export function insertEnResidual(md, nth = 0) {
   const classified = classifyLines(md);
   const CJK_RE = /[\u3000-\u9fff\uf900-\ufaff]/;
 
-  // Collect JA paragraph *block starts* (deduplicated, like deleteParagraph).
-  const blockStarts = [];
+  // Collect paragraph block starts, then keep only blocks containing CJK.
+  const allBlockStarts = [];
   for (let i = 0; i < classified.length; i++) {
-    if (classified[i].kind !== 'paragraph' || !CJK_RE.test(classified[i].text)) continue;
+    if (classified[i].kind !== 'paragraph') continue;
     const isStart = i === 0 ||
       classified[i - 1].kind !== 'paragraph' ||
       classified[i - 1].index !== classified[i].index - 1;
-    if (isStart) blockStarts.push(i);
+    if (isStart) allBlockStarts.push(i);
   }
+  const blockStarts = allBlockStarts.filter((startIdx) => {
+    const [, blockEnd] = paragraphBlockRange(classified, startIdx);
+    for (let i = startIdx; classified[i] && classified[i].index < blockEnd; i++) {
+      if (CJK_RE.test(classified[i].text)) return true;
+    }
+    return false;
+  });
   if (blockStarts.length === 0) return null;
 
   const targetClassifiedIdx = blockStarts[nth % blockStarts.length];

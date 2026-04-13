@@ -553,6 +553,17 @@ describe('insertEnResidual', () => {
     assert.ok(!result.mutated.includes('末尾の段落'));
     assert.equal(result.metadata.linesRemoved, 0);
   });
+
+  it('targets EN-first block when any line contains CJK', () => {
+    const md = 'Mobile Test Library\\\nテストライブラリの説明\n\n別の段落です';
+    const result = insertEnResidual(md, 0);
+    assert.ok(result);
+    assert.ok(!result.mutated.includes('Mobile Test Library'));
+    assert.ok(!result.mutated.includes('テストライブラリの説明'));
+    assert.ok(result.mutated.includes('別の段落'));
+    assert.equal(result.metadata.lineIndex, 0);
+    assert.equal(result.metadata.linesRemoved, 1);
+  });
 });
 
 // ---------------------------------------------------------------------------
