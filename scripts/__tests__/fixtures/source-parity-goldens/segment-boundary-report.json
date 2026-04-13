@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.9871031364572742,
+  "meanStabilityScore": 0.9874320838256953,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -102,7 +102,7 @@
     {
       "slug": "running-tests/running-tests-overview",
       "enTotal": 151,
-      "jaTotal": 152,
+      "jaTotal": 151,
       "enCounts": {
         "paragraph": 47,
         "unordered-list-item": 14,
@@ -112,14 +112,14 @@
         "callout-body": 2
       },
       "jaCounts": {
-        "paragraph": 48,
+        "paragraph": 47,
         "unordered-list-item": 14,
         "heading": 18,
         "table-cell": 44,
         "ordered-list-item": 26,
         "callout-body": 2
       },
-      "stabilityScore": 0.9967105263157895
+      "stabilityScore": 1
     },
     {
       "slug": "test-management/shared-configuration",
