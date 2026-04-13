@@ -74,7 +74,7 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
   - Source attribute: user.givenname
 - lastName
   - Name: lastName
-- Source attribute: user.surname
+  - Source attribute: user.surname
 
 16. ページを閉じて、**SAML Signing Certificate**の下で**Federation Metadata XML**をダウンロードします。
 17. **Testim**タブで、**IDENTITY PROVIDER (IDP) METADATA**の下の**Upload File**をクリックし、Federation Metadata XML ファイルを選択します。
