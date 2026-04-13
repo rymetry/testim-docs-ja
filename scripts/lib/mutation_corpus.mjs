@@ -479,6 +479,9 @@ export function moveSegment(md, nth = 0) {
 
 /**
  * Replace one JA paragraph with English text (simulating untranslated residual).
+ * Consecutive paragraph lines (no blank line between them) form a single
+ * markdown paragraph, so the entire block must be replaced to produce a
+ * detectable diff=1 mutation.
  * @param {string} md
  * @param {number} [nth=0]
  * @returns {MutationResult | null}
@@ -492,19 +495,30 @@ export function insertEnResidual(md, nth = 0) {
   );
   if (jaParagraphs.length === 0) return null;
   const target = jaParagraphs[nth % jaParagraphs.length];
+
+  // Expand to the full paragraph block (consecutive 'paragraph' lines).
+  const targetPos = classified.findIndex((l) => l.index === target.index);
+  let startPos = targetPos;
+  while (startPos > 0 && classified[startPos - 1].kind === 'paragraph') startPos--;
+  let endPos = targetPos;
+  while (endPos < classified.length - 1 && classified[endPos + 1].kind === 'paragraph') endPos++;
+  const blockStart = classified[startPos].index;
+  const blockEnd = classified[endPos].index;
+
   const enText =
     'Click on the Settings button and configure the required parameters for your test execution.';
   const lines = md.split('\n');
   const newLines = [...lines];
-  newLines[target.index] = enText;
+  newLines.splice(blockStart, blockEnd - blockStart + 1, enText);
+  const linesRemoved = blockEnd - blockStart;
   return {
     mutated: newLines.join('\n'),
     metadata: {
       type: 'en-residual',
-      lineIndex: target.index,
-      linesRemoved: 0,
-      originalText: target.text,
-      description: `EN残留 (L${target.index + 1}): JA\u2192EN置換`,
+      lineIndex: blockStart,
+      linesRemoved,
+      originalText: lines.slice(blockStart, blockEnd + 1).join('\n'),
+      description: `EN残留 (L${blockStart + 1}${blockEnd > blockStart ? `-${blockEnd + 1}` : ''}): JA\u2192EN置換`,
     },
   };
 }

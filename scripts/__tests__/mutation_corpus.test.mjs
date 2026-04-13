@@ -696,7 +696,7 @@ describe('real page corpus coverage', () => {
           const originalLines = md.split('\n').length;
           const mutatedLines = result.mutated.split('\n').length;
           const { linesRemoved } = result.metadata;
-          if (['segment-move', 'table-cell-delete', 'en-residual', 'token-drop'].includes(type)) {
+          if (['segment-move', 'table-cell-delete', 'token-drop'].includes(type)) {
             assert.equal(linesRemoved, 0, `${type}: in-place mutation`);
           } else if (type === 'html-table-cell-delete') {
             // HTML cell replacement may change line count unpredictably

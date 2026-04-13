@@ -40,9 +40,9 @@
       },
       "segment-move": {
         "applicable": 7,
-        "detected": 1,
+        "detected": 2,
         "inconclusive": 0,
-        "recall": 0.14285714285714285
+        "recall": 0.2857142857142857
       },
       "section-body-swap": {
         "applicable": 7,
@@ -102,9 +102,9 @@
       },
       "segment-move": {
         "applicable": 7,
-        "detected": 1,
+        "detected": 2,
         "inconclusive": 0,
-        "recall": 0.14285714285714285
+        "recall": 0.2857142857142857
       },
       "section-body-swap": {
         "applicable": 7,
@@ -125,7 +125,7 @@
         "recall": 1
       }
     },
-    "maxCascade": 2,
+    "maxCascade": 3,
     "maxBaselineDiffsPerPage": 36,
     "strictRecallTypes": [
       "paragraph-delete",
@@ -965,16 +965,16 @@
     },
     {
       "slug": "debugging-tests/debugging-controls",
-      "baselineDiffCount": 2,
+      "baselineDiffCount": 0,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 0,
-          "cascadeSize": 0,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -983,8 +983,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 3,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -994,8 +994,8 @@
           "applicable": true,
           "affectedSectionIndex": 2,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 3,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -1005,8 +1005,8 @@
           "applicable": true,
           "affectedSectionIndex": 2,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 4,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 2,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -1019,8 +1019,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "table-cell",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 3,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 1,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -1030,19 +1030,19 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 2,
-          "cascadeSize": 0,
-          "detected": false,
-          "exactDetected": false,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 3,
+          "cascadeSize": 3,
+          "detected": true,
+          "exactDetected": true,
           "inconclusive": false
         },
         "section-body-swap": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 2,
-          "mutatedDiffCount": 28,
+          "baselineDiffCount": 0,
+          "mutatedDiffCount": 26,
           "cascadeSize": 13,
           "detected": true,
           "exactDetected": true,
@@ -1052,9 +1052,9 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 2,
+          "baselineDiffCount": 0,
           "mutatedDiffCount": 2,
-          "cascadeSize": 1,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
