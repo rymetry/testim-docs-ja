@@ -48,7 +48,8 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 
 - Azure Active Directory や Okta などの Identity and Access Management（IAM）サービスがテスト実行を妨げている可能性があります。**可能な解決策** - テストアカウントに対して IAM サービスを無効にすることをお勧めします。Grid でのテスト実行をエミュレートするために、シークレットモードでローカルでテストを実行してください。
 - IP アドレスがブロックされている可能性があります。**可能な解決策** - **設定 > ID > ログイン履歴**で、アプリケーション「TTA for Salesforce」からの「制限付き IP」アドレスをログイン履歴で確認してください。
-- ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
+
+  ![ログイン履歴で制限付き IP を確認（TTA for Salesforce）](/images/salesforce-utilities/troubleshoot/bbf8513-image.png)
 
 Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
 
@@ -64,7 +65,9 @@ Grid からの外部アクセスを妨げている可能性のある以下の制
 
   ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
 
+:::note
 IP アドレス制限が必要な場合は、ホワイトリストに登録する必要がある IP アドレスについて[サポート](https://www.testim.io/contact-us/)にお問い合わせください。
+:::
 
 ## Grid 上のスケジュール済みテスト実行が確認コードの入力を求められて失敗する
 

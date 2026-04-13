@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.9856813355094068,
+  "meanStabilityScore": 0.9871031364572742,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -66,7 +66,7 @@
     {
       "slug": "advanced-editing/loops",
       "enTotal": 205,
-      "jaTotal": 211,
+      "jaTotal": 205,
       "enCounts": {
         "paragraph": 51,
         "callout-body": 16,
@@ -75,13 +75,13 @@
         "ordered-list-item": 100
       },
       "jaCounts": {
-        "paragraph": 54,
+        "paragraph": 51,
         "callout-body": 16,
         "unordered-list-item": 26,
         "heading": 12,
-        "ordered-list-item": 103
+        "ordered-list-item": 100
       },
-      "stabilityScore": 0.985781990521327
+      "stabilityScore": 1
     },
     {
       "slug": "settings/cli-prerequisites",

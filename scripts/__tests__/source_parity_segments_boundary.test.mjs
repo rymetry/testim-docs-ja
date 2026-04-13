@@ -60,16 +60,7 @@ const REPORT_PATH = join(FIXTURES, 'segment-boundary-report.json');
  *
  * @type {Readonly<Record<string, {expectedEn: number, expectedJa: number, reason: string}>>}
  */
-const KNOWN_ORDERED_DRIFTS = Object.freeze({
-  'advanced-editing/loops': {
-    expectedEn: 100,
-    expectedJa: 103,
-    reason:
-      'EN embeds "1. x 2. y 3. z" as plain text in a single <p> inside a ' +
-      ':::warning callout; JA translation uses a proper numbered list with ' +
-      '3 items. 3-item JA-side surplus.',
-  },
-});
+const KNOWN_ORDERED_DRIFTS = Object.freeze({});
 
 function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST_PATH, 'utf8')).pages;

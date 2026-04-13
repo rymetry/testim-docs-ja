@@ -18,8 +18,6 @@ keywords:
   - DOM 検証
 ---
 
-期待するテキストが表示されていることを検証する
-
 Element Text 検証は、指定した要素の存在を前提にする点で Element Visible 検証と似ていますが、Element Text 検証ではその要素に表示される「特定のテキスト値」も指定して検証します。複数のテキスト要素をまとめて検証することもできます。\
 検証対象のテキストは、固定文字列のほか、正規表現（Regex）、短い JS 式、パラメーターなどで表せます。詳細は [Advanced text validation](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
 
@@ -156,76 +154,61 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 
 Testim は Expected Value 入力フィールドでの Regex をサポートしています。よく使われるケースを以下に示します：
 
-![Regex を使ったテキスト検証](/images/validations/validate-element-text/6ce7739-Ijhqz8PAQMODiuaQYwVv_text-validation-regex.png)
-
 ### 前方一致（Starts with）
 
 特定の単語で*始まる*テキストを検証します。残りのテキストが動的であっても検証をパスします：
 
-```text
-/^My text/
-```
+`/^My text/`
+
+![Regex を使ったテキスト検証](/images/validations/validate-element-text/6ce7739-Ijhqz8PAQMODiuaQYwVv_text-validation-regex.png)
 
 ### 後方一致（Ends with）
 
 特定の単語で*終わる*テキストを検証します。残りのテキストが動的であっても検証をパスします：
 
-```text
-/my text$/
-```
+`/my text$/`
 
 ### 部分一致（Contains）
 
 特定の単語を*含む*テキストを検証します。残りのテキストが動的であっても検証をパスします：
 
-```text
-/my text/
-```
+`/my text/`
 
 ### 複数の選択肢（OR）とパラメーター
 
 2 つの値のいずれかに一致するかを検証します。例えば param1 = "Hello"、param2 = "World" の場合、"Hello" または "World" でパスします：
 
-```javascript
-new RegExp('^' + '(?:' + param1 + '_' + '|' + param2 + '_)' + '$');
-```
+`new RegExp("^" + "(?:" + param1 + "*" + "|" + param2 + "*)" + "$")`
 
 ### 不一致の検証（Not Equal Validation）
 
 テキストが param1 と一致しないことを検証します。例えば param1 = "Example1" の場合、テキストが "Example1" であれば検証は失敗し、それ以外の値はパスします：
 
-```javascript
-new RegExp('^' + '((?!' + param1 + ').)*$');
-```
+`new RegExp("^" + "((?!" + param1 + ").)*$")`
 
 ### 数値の検証（正の整数のみ）
 
 テキストが正の整数（数字 0〜9）のみで構成されていることを検証します。例えば "12345" はパスしますが、"12a34" や "-123" は失敗します：
 
-```text
-/^\d+$/
-```
+`/^d+$/`
 
 ### 数値の検証（正・負・小数）
 
 正の数、負の数、小数のみで構成されていることを検証します。例えば "123"、"-123"、"3.14"、"-0.5" はパスしますが、"12a" や "." は失敗します：
 
-```text
-/^-?\d+(\.\d+)?$/
-```
+`/^-?d+(.d+)?$/`
 
 もちろん、必要に応じてその他の有効な Regex も使用できます。
 
-:::tip{title="Tips"}
-- [RegexOne](http://regexone.com/) は正規表現の学習と練習に最適なサイトです。
-- [RegularExpressions 101](https://regex101.com/) は正規表現の作成とテストに役立つツールです。
+:::note{title="Tips"}
+[RegexOne](http://regexone.com/) は正規表現の学習と練習に最適なサイトです。[RegularExpressions 101](https://regex101.com/) は正規表現の作成とテストに役立つツールです。
 :::
 
 ## JavaScript 式を使った検証
 
-![JavaScript 式を使った検証](/images/validations/validate-element-text/b1662ca-Screen_Shot_2021-04-18_at_7.06.47.png)
+テキストが JavaScript 式の計算結果と等しいことを検証したい場合があります。例えば、テキストに現在の日付が表示されていることを確認するには、**Expected Value** に次の式を設定します：`new Date().toDateString()`。Testim はこの式の計算結果と要素のテキストを比較します。検証が失敗した場合の例を以下に示します：
 
-テキストが JavaScript 式の計算結果と等しいことを検証したい場合があります。例えば、テキストに現在の日付が表示されていることを確認するには、**Expected Value** に次の式を設定します：`new Date().toDateString()`。Testim はこの式の計算結果と要素のテキストを比較します。
+![JavaScript 式を使った検証](/images/validations/validate-element-text/b1662ca-Screen_Shot_2021-04-18_at_7.06.47.png)
 
 ## パラメーターを使った検証
 
@@ -235,9 +218,7 @@ new RegExp('^' + '((?!' + param1 + ').)*$');
 
 パラメーターには 2 種類あります:\
 HTML: アプリ内の HTML 要素を参照できます。\
-JS（JavaScript）: 任意の JS 式を定義できます。
-
-**Expected Value フィールドでパラメーターを使用するには:**
+JS（JavaScript）: 任意の JS 式を定義できます。**Expected Value フィールドでパラメーターを使用するには:**
 
 1. 以下のいずれかの方法でパラメーターを定義します。
 
@@ -247,47 +228,47 @@ JS（JavaScript）: 任意の JS 式を定義できます。
 
    - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/running-tests/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file)を参照してください。
 
-<Image title="Untitled_Project.gif" alt={1920} align="center" src="/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif">
-  **画像をクリックで拡大**
-</Image>
+![Untitled_Project.gif](/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif)
 
-2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。\
-   例えば、`username` パラメーターに `Hello, John` という値をエクスポートするには、新しいカスタムアクションステップを追加し、エディターに以下を入力します。
+**gif をクリックで拡大**
+
+2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。
+
+例えば、`username` パラメーターに `Hello, John` という値をエクスポートするには、新しいカスタムアクションステップを追加し、エディターに以下を入力します：
 
 ```javascript
 exportsTest.usename = 'Hello, John';
 ```
 
-<Image title="export_param.gif" alt={1920} align="center" src="/images/validations/validate-element-text/91597d2-export_param.gif">
-  **画像をクリックで拡大**
-</Image>
+![export_param.gif](/images/validations/validate-element-text/91597d2-export_param.gif)
+
+**gif をクリックで拡大**
 
 3. **Element text validation** ステップを作成し、**Expected value** にパラメーターを指定します。
 
-<Image title="textvalidation3.gif" alt={1920} align="center" src="/images/validations/validate-element-text/ec83fac-textvalidation3.gif">
-  **画像をクリックで拡大**
-</Image>
+![textvalidation3.gif](/images/validations/validate-element-text/ec83fac-textvalidation3.gif)
+
+**gif をクリックで拡大**
 
 テスト実行後、**Element text validation** ステップが期待するパラメーター値と一致することを確認できます。
 
-<Image title="validation2.png" alt={1842} align="center" src="/images/validations/validate-element-text/6a9b523-validation2.png">
-  **画像をクリックで拡大**
-</Image>
+![validation2.png](/images/validations/validate-element-text/6a9b523-validation2.png)
+
+**画像をクリックで拡大**
 
 パラメーターと固定文字列を `+` で結合することも可能です。例えば、`username` パラメーターの値を `Hello, John` ではなく `John` として定義し、Expected Value を `'Hello ' + userName` と指定できます。
 
 ### パラメーターと正規表現の組み合わせ
 
-**Expected value** フィールドで正規表現を返す関数を使うと、パラメーターと Regex を組み合わせられます。
-
-先頭一致（パラメーターで始まる）
+**Expected value** フィールドで正規表現を返す関数を定義することで、パラメーターと Regex を組み合わせられます。\
+例えば、パラメーターで**始まる**組み合わせは次のようになります：
 
 ```javascript
-new RegExp('^' + userName);
+new RegExp("^" +userName)
 ```
 
-末尾一致（パラメーターで終わる）
+パラメーターで**終わる**組み合わせは次のようになります：
 
 ```javascript
-new RegExp(userName + '$');
+new RegExp(userName+"$")
 ```

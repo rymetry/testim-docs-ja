@@ -501,23 +501,26 @@ export function extractHtmlTables(body) {
 
 // 相対 `.htm` link は親パスを省略することがあるため、比較前に full slug へ正規化する。
 function normalizeUrlToken(url) {
-  if (url.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
-    const slug = extractSlugFromUrl(url.replace(/[?#].*$/, ''));
+  // MadCap の `\&amp;` エスケープが entity decode 後に `\&` として残るため、
+  // backslash を除去してから正規化する。
+  const cleaned = url.replace(/\\/g, '');
+  if (cleaned.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
+    const slug = extractSlugFromUrl(cleaned.replace(/[?#].*$/, ''));
     if (slug) return `/docs/${resolveToFullSlug(slug)}`;
   }
-  if (/\.htm(?:[?#]|$)/.test(url)) {
+  if (/\.htm(?:[?#]|$)/.test(cleaned)) {
     // 相対 prefix (../../, ../, ./) と fragment/query を落とす。
-    const stripped = url.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '').replace(/[?#].*$/, '');
+    const stripped = cleaned.replace(/^(?:\.\.\/)+|^(?:\.\/)+/, '').replace(/[?#].*$/, '');
     // すでに root-relative な /content/ path はそのまま使う。
     const contentPath = stripped.startsWith('/content/') ? stripped : `/content/${stripped}`;
     const slug = extractSlugFromUrl(contentPath);
     if (slug) return `/docs/${resolveToFullSlug(slug)}`;
   }
   // /docs/ path は fragment を落として比較する。EN/JA で fragment がずれるため。
-  if (url.startsWith('/docs/') && url.includes('#')) {
-    return url.replace(/#.*$/, '');
+  if (cleaned.startsWith('/docs/') && cleaned.includes('#')) {
+    return cleaned.replace(/#.*$/, '');
   }
-  return url;
+  return cleaned;
 }
 
 // WRITING_GUIDE「原文から意図的に除外するコンテンツ」で JA から削除すると

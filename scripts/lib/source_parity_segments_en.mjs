@@ -294,7 +294,8 @@ function renderInlineText(node, buffer) {
     const inner = [];
     for (const child of node.children) renderInlineText(child, inner);
     const label = inner.join('').trim();
-    const href = node.attrs?.href;
+    const rawHref = node.attrs?.href;
+    const href = rawHref ? decodeEntities(rawHref) : rawHref;
     if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
       buffer.push('[', label, '](', href, ')');
     } else {
