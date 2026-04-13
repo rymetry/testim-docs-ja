@@ -221,7 +221,6 @@ HTML: アプリ内の HTML 要素を参照できます。\
 JS（JavaScript）: 任意の JS 式を定義できます。**Expected Value フィールドでパラメーターを使用するには:**
 
 1. 以下のいずれかの方法でパラメーターを定義します。
-
    - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps)を参照してください。
 
    - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
@@ -264,11 +263,11 @@ exportsTest.usename = 'Hello, John';
 例えば、パラメーターで**始まる**組み合わせは次のようになります：
 
 ```javascript
-new RegExp("^" +userName)
+new RegExp('^' + userName);
 ```
 
 パラメーターで**終わる**組み合わせは次のようになります：
 
 ```javascript
-new RegExp(userName+"$")
+new RegExp(userName + '$');
 ```

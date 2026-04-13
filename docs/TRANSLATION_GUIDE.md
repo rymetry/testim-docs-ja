@@ -61,11 +61,11 @@ src/content/docs/
 
 **重要**: ファイル名は元のURL slugと完全に一致させること。
 
-| URL | カテゴリフォルダ | ファイル名 |
-| --- | --- | --- |
-| `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` | `overview/` | `testim-overview.md` |
-| `https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test.htm` | `recording-tests/` | `how-to-record-a-test.md` |
-| `https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-overview.htm` | `salesforce-testing/` | `salesforce-overview.md` |
+| URL                                                                                    | カテゴリフォルダ      | ファイル名                |
+| -------------------------------------------------------------------------------------- | --------------------- | ------------------------- |
+| `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm`         | `overview/`           | `testim-overview.md`      |
+| `https://docs.tricentis.com/testim/content/recording-tests/how-to-record-a-test.htm`   | `recording-tests/`    | `how-to-record-a-test.md` |
+| `https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-overview.htm` | `salesforce-testing/` | `salesforce-overview.md`  |
 
 この命名規則により、元のページとの対応関係が明確になり、更新時の追跡が容易になります。
 
@@ -493,35 +493,35 @@ _動画: テストの実行デモ_
 
 これにより、次回以降の翻訳で同じ問題が再発することを防ぎます。
 
-| 英語                    | 日本語                      | 備考                                  |
-| ----------------------- | --------------------------- | ------------------------------------- |
-| Smart Locators          | Smart Locators              | 固有技術名は英語のまま                |
-| Testim Copilot          | Testim Copilot              | 製品名                                |
-| Testim Automate         | Testim Automate             | 製品名                                |
-| Auto Grouping           | Auto Grouping               | 機能名は英語のまま                    |
-| Scheduler               | Scheduler                   | 機能名は英語のまま                    |
-| Shared Steps            | Shared Steps                | 機能名は英語のまま                    |
-| TestOps                 | TestOps                     | 製品機能名                            |
-| Enhanced mode           | Enhanced mode               | 技術用語として英語のまま              |
-| VMG                     | VMG（仮想モバイルグリッド） | 初出時のみ補足                        |
-| codeless                | コードレス                  | カタカナ化                            |
-| test automation         | テスト自動化                | 一般的な訳語                          |
-| debugging               | デバッグ                    | カタカナ化                            |
-| test suite              | テストスイート              | カタカナ化                            |
-| test case               | テストケース                | カタカナ化                            |
-| test step               | テストステップ              | カタカナ化                            |
-| CI/CD                   | CI/CD                       | 略語はそのまま                        |
-| dashboard               | ダッシュボード              | カタカナ化                            |
-| locator                 | ロケーター                  | カタカナ化                            |
-| Professional plan       | Professional plan           | プラン名は英語のまま                  |
-| free tier               | 無料プラン                  | 「無料ティア」は不自然                |
-| Pro feature             | Pro機能                     | 「Pro」は英語のまま                   |
-| Pro plan                | Professional plan           | 短縮形も正式名で英語維持              |
-| third party / 3rd party | サードパーティ              | カタカナ化。「3番目のパーティ」は不可 |
-| Test Editor             | Test Editor                 | 画面名は英語維持。「テストエディター」は不可 |
+| 英語                    | 日本語                      | 備考                                                 |
+| ----------------------- | --------------------------- | ---------------------------------------------------- |
+| Smart Locators          | Smart Locators              | 固有技術名は英語のまま                               |
+| Testim Copilot          | Testim Copilot              | 製品名                                               |
+| Testim Automate         | Testim Automate             | 製品名                                               |
+| Auto Grouping           | Auto Grouping               | 機能名は英語のまま                                   |
+| Scheduler               | Scheduler                   | 機能名は英語のまま                                   |
+| Shared Steps            | Shared Steps                | 機能名は英語のまま                                   |
+| TestOps                 | TestOps                     | 製品機能名                                           |
+| Enhanced mode           | Enhanced mode               | 技術用語として英語のまま                             |
+| VMG                     | VMG（仮想モバイルグリッド） | 初出時のみ補足                                       |
+| codeless                | コードレス                  | カタカナ化                                           |
+| test automation         | テスト自動化                | 一般的な訳語                                         |
+| debugging               | デバッグ                    | カタカナ化                                           |
+| test suite              | テストスイート              | カタカナ化                                           |
+| test case               | テストケース                | カタカナ化                                           |
+| test step               | テストステップ              | カタカナ化                                           |
+| CI/CD                   | CI/CD                       | 略語はそのまま                                       |
+| dashboard               | ダッシュボード              | カタカナ化                                           |
+| locator                 | ロケーター                  | カタカナ化                                           |
+| Professional plan       | Professional plan           | プラン名は英語のまま                                 |
+| free tier               | 無料プラン                  | 「無料ティア」は不自然                               |
+| Pro feature             | Pro機能                     | 「Pro」は英語のまま                                  |
+| Pro plan                | Professional plan           | 短縮形も正式名で英語維持                             |
+| third party / 3rd party | サードパーティ              | カタカナ化。「3番目のパーティ」は不可                |
+| Test Editor             | Test Editor                 | 画面名は英語維持。「テストエディター」は不可         |
 | Mobile Test Editor      | Mobile Test Editor          | 画面名は英語維持。「モバイルテストエディター」は不可 |
-| Execution Runs Screen   | 実行結果一覧                | 画面タイトル。「実行ラン画面」は不可  |
-| execution run(s)        | 実行                        | 個別インスタンス。文脈で区別          |
+| Execution Runs Screen   | 実行結果一覧                | 画面タイトル。「実行ラン画面」は不可                 |
+| execution run(s)        | 実行                        | 個別インスタンス。文脈で区別                         |
 
 ### 5.3 特殊記法
 

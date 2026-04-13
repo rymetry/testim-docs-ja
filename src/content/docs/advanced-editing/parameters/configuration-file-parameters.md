@@ -105,13 +105,12 @@ beforeSuite: function () {
 
 ```javascript
 exports.config = {
-
   beforeSuite: function (suite) {
-    console.log("beforeSuite", suite);
+    console.log('beforeSuite', suite);
     return {
-      "username": "David",
-      "password": 123
-    }
+      username: 'David',
+      password: 123,
+    };
   },
 };
 ```
