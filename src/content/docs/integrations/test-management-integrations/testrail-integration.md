@@ -65,7 +65,7 @@ TestRail 統合により、TestRail のテストを Testim のテストにリン
 
 ### 特定の実行に TestRail のカスタムパラメーターを渡す
 
-CLI 実行の一部として、TestRail で使用できるカスタムパラメーターを追加できます。例:
+[CLI 実行](/docs/running-tests/the-command-line-cli)の一部として、TestRail で使用できるカスタムパラメーターを追加できます。例:
 
 - version
 - executed_by

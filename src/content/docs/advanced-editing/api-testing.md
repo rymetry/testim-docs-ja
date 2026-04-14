@@ -263,8 +263,11 @@ API ステップでは、他のコードステップと同様にパラメータ�
 パラメーターの詳細は [Parameters](/docs/advanced-editing/parameters) を参照してください。
 
 :::note
-配列パラメーターは `array.0.name` のような形式で参照できます。  
-また、API ステップ内の各入力セクションでは、複雑な式はサポートされません。
+配列パラメーターは `array.0.name` のような形式で参照できます。
+:::
+
+:::note
+API ステップ内の各入力セクションでは、複雑な式はサポートされていません。
 :::
 
 ## 送信する HTTP リクエストでのパラメーター利用 {#using-parameters-in-the-sent-http-request}
