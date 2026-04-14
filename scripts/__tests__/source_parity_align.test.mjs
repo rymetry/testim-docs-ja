@@ -1260,3 +1260,84 @@ describe('alignSegments — structure comparator integration', () => {
     }
   });
 });
+
+describe('alignSegments — glossary_mask 統合 (Phase 0)', () => {
+  it('JA segment が glossary 用語 + 日本語なら segment-untranslated を emit しない', () => {
+    const enSegs = [
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'heading',
+        segmentIndex: 0,
+        rawText: 'Overview',
+      }),
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'paragraph',
+        segmentIndex: 0,
+        rawText: 'Open Test Editor to start.',
+      }),
+    ];
+    const jaSegs = [
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'heading',
+        segmentIndex: 0,
+        rawText: 'Overview',
+      }),
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'paragraph',
+        segmentIndex: 0,
+        rawText: 'Test Editor を開いて開始します。',
+      }),
+    ];
+    const result = alignSegments(enSegs, jaSegs);
+    const untranslatedDiffs = result.diffs.filter(
+      (d) => d.type === 'segment-untranslated',
+    );
+    assert.equal(
+      untranslatedDiffs.length,
+      0,
+      'glossary term + CJK の混在は untranslated として emit しないべき',
+    );
+  });
+
+  it('JA segment が英語 prose のまま残っていれば segment-untranslated を emit する', () => {
+    const enSegs = [
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'heading',
+        segmentIndex: 0,
+        rawText: 'Overview',
+      }),
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'paragraph',
+        segmentIndex: 0,
+        rawText: 'Open Test Editor to start recording tests.',
+      }),
+    ];
+    const jaSegs = [
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'heading',
+        segmentIndex: 0,
+        rawText: 'Overview',
+      }),
+      createSegment({
+        sectionPath: 'Overview',
+        kind: 'paragraph',
+        segmentIndex: 0,
+        rawText: 'Open Test Editor to start recording tests.',
+      }),
+    ];
+    const result = alignSegments(enSegs, jaSegs);
+    const untranslatedDiffs = result.diffs.filter(
+      (d) => d.type === 'segment-untranslated',
+    );
+    assert.ok(
+      untranslatedDiffs.length >= 1,
+      '英語 prose が残る場合は untranslated として emit するべき',
+    );
+  });
+});

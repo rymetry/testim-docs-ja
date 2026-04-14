@@ -246,8 +246,8 @@ describe('Markdown syntax: callout directives', () => {
     assert.equal(e.level, 'error');
   });
 
-  it('no error for known callout types (note, warning, tip, danger, success, info)', () => {
-    for (const type of ['note', 'warning', 'tip', 'danger', 'success', 'info']) {
+  it('no error for known callout types (note, caution, warning, tip, danger, info)', () => {
+    for (const type of ['note', 'caution', 'warning', 'tip', 'danger', 'info']) {
       const content = makeDoc({ body: `::: ${type}\nContent\n:::\n` });
       const errors = lintContent(content, 'src/content/docs/test.md');
       assert.equal(

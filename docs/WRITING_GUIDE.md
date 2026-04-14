@@ -117,7 +117,7 @@ keywords:
 
 - `tip`
 - `warning`
-- `success`
+- `caution`
 - `danger`
 - `note`
 - `info`
@@ -132,16 +132,16 @@ keywords:
 
 ### 原文 blockquote → JA callout 変換マッピング
 
-EN 原文の blockquote callout を JA の `:::` callout に変換する際は、以下のマッピングに従ってください：
+EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::` callout に変換する際は、以下のマッピングに従ってください：
 
-| EN 原文パターン                     | JA callout タイプ | 備考                   |
-| ----------------------------------- | ----------------- | ---------------------- |
-| `> 📘 Note` / `> 📘` (タイトルなし) | `:::note`         | デフォルトの情報補足   |
-| `> 📘 Tip` / `> 👍`                 | `:::tip`          | ヒント・推奨事項       |
-| `> 🚧` / `> ⚠️`                     | `:::warning`      | 注意・警告             |
-| `> ❗` / `> ❗️`                     | `:::danger`       | 重大な警告・破壊的操作 |
-| `<Callout theme="info">`            | `:::note`         | JSX形式の情報callout   |
-| `<Callout theme="warning">`         | `:::warning`      | JSX形式の警告callout   |
+| EN 原文パターン | JA callout タイプ | 備考 |
+| --- | --- | --- |
+| `📘` / `<div class="note">` | `:::note` | 情報提供 |
+| `🚧` / `<div class="warning">` | `:::warning` | 注意喚起 |
+| `<div class="caution">` + 警告 | `:::caution` | MadCap Flare の caution。当面は `:::warning` と同じ見た目（CSS alias、Phase 0） |
+| `💡` / `<div class="tip">` | `:::tip` | 便利情報 |
+| `❗` / `⚠️` / `<div class="danger">` | `:::danger` | 重大な警告 |
+| `ℹ️` / `<div class="info">` | `:::info` | 補足 |
 
 注意: JA タイトルが「注意」の場合は、EN 原文の絵文字に関わらず `:::warning{title="注意"}` を使用する。「注意」という日本語表現は警告の意味合いが強いため、`:::warning` が適切。
 
@@ -159,13 +159,17 @@ EN 原文の blockquote callout を JA の `:::` callout に変換する際は�
 
 ## 🪞 原文準拠ルール（Source-First 構造契約）
 
-`sourceUrl` を持つページは、原文の要約ではなく公開用の日本語版として整備してください。
+`sourceUrl` を持つページは、原文の要約ではなく原文の**構造を鏡写しにした**日本語版として整備してください。
 
 - 原文の本文段落、番号手順、箇条書き、callout は省略しない
 - 原文にコンテンツ画像がある場合、ローカルに保存するだけでなく本文中の対応位置へ埋め込む
 - 画像数だけでなく、画像の配置順も原文に合わせる
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
-- 補足説明を追加する場合でも、原文の内容が先に満たされていることを前提にする
+- **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
+- 唯一の許容される content 差分は次の 2 つのみ:
+  1. Testim 用語の英語維持（[GLOSSARY.md](./GLOSSARY.md) の entry に従う）
+  2. URL のローカライズ書き換え（`help.testim.io/docs/X` ↔ `/docs/X`、`docs.tricentis.com/testim/content/...` → canonical、[PARITY_GUIDE.md](./PARITY_GUIDE.md) 参照）
+- 上記 2 つに該当しない英語 prose が JA に残っていれば **検知系がバグとして報告する**。その場合は翻訳する
 
 ### 見出しマッピング
 
@@ -211,10 +215,11 @@ EN snapshot           →  JA 翻訳
 - テーブルセル内の複雑な HTML（`<ul><li><p>` 等）: Markdown では表現できないため HTML のまま維持する。ただしセル外の本文で `<p>` / `<br />` / `<span>` を使う場合は、Markdown の段落・行継続（`\`）・コードスパン（`` ` ``）で代替すること
 - `<Image>` / `</Image>`: EN ソースに存在しない JA 独自の JSX タグは削除する。標準の Markdown 画像記法（`![alt](path)`）を使うこと
 
-### JA のみのセクション
+### JA のみのセクション / 独自 callout（絶対禁止）
 
-- EN に存在しないセクション（「次のステップ」「関連リンク」等の JA 独自追加）は source parity のために削除する
-- 「原文から意図的に除外するコンテンツ」（下記）は例外
+- EN に存在しない **セクション / 段落 / callout / リスト項目 / 見出し** は source parity のために削除する
+- 「読者に親切な補足」「JA 読者向けの注記」等の追加は禁止。翻訳ニュアンスは構造を変えずに文内で表現する
+- 例外は §「原文から意図的に除外するコンテンツ」のみ（Tricentis からの削除依頼ページ）
 
 ### その他
 
@@ -251,6 +256,8 @@ EN snapshot           →  JA 翻訳
 ---
 
 ## 🏷️ Testim 機能名・製品名・画面名の英語維持
+
+> **正本は [GLOSSARY.md](./GLOSSARY.md) です**。本節は執筆者向けの要約で、detector (`scripts/lib/parity_glossary_mask.mjs`) は GLOSSARY.md のみを参照します。用語追加・更新は GLOSSARY.md に対して行ってください。
 
 Testim の固有名詞は英語のまま維持してください。日本語に翻訳しないこと。
 
@@ -440,9 +447,7 @@ Markdown ファイルでは、基本的な記法に加えて、多くの拡張�
 ⚠️ 注意事項や警告を表示
 :::
 
-:::success
-✅ ベストプラクティスを表示
-:::
+<!-- :::success was removed in Phase 0 (2026-04-14) — dead callout type, no usage in content -->
 
 :::danger
 🚨 エラーや問題を表示
@@ -475,7 +480,7 @@ API の仕様が大きく変更されました。
 
 - `tip` - 💡 ヒント（indigo）
 - `warning` - ⚠️ 注意（amber）
-- `success` - ✅ 推奨（emerald）
+- `caution` - 警告（amber、`warning` と CSS alias）
 - `danger` - 🚨 エラー（rose）
 - `note` - 📝 メモ（slate）
 - `info` - ℹ️ 情報（sky）
@@ -812,14 +817,14 @@ src/content/docs/
 
 ### 🎨 情報パネルの使い分け
 
-| タイプ    | 用途               | 例                                   |
-| --------- | ------------------ | ------------------------------------ |
-| `tip`     | 便利な情報、ヒント | 「時間を節約するには...」            |
-| `warning` | 注意事項、制限     | 「この機能は Enterprise プランのみ」 |
-| `success` | ベストプラクティス | 「推奨される設定方法」               |
-| `danger`  | エラー、失敗例     | 「この方法は避けてください」         |
-| `note`    | 補足情報           | 「関連する機能について」             |
-| `info`    | 参考情報、リンク   | 「公式ドキュメントも参照」           |
+| タイプ | 用途 | 例 |
+| --- | --- | --- |
+| `tip` | 便利な情報、ヒント | 「時間を節約するには...」 |
+| `warning` | 注意事項、制限 | 「この機能は Enterprise プランのみ」 |
+| `caution` | MadCap Flare 由来の警告 | EN 原文の `<div class="caution">` を変換する場合に使用 |
+| `danger` | エラー、失敗例 | 「この方法は避けてください」 |
+| `note` | 補足情報 | 「関連する機能について」 |
+| `info` | 参考情報、リンク | 「公式ドキュメントも参照」 |
 
 ---
 
@@ -971,7 +976,7 @@ MDX が必要なのは：
 - **迷ったら Markdown (.md) を選択** - シンプルで高速、プレビューも簡単
 - **インタラクティブな要素が本当に必要な時だけ MDX (.mdx) を使用**
 - **コードブロックには必ず言語指定とタイトルを付ける** - 読者の理解を助ける
-- **情報パネルは適切なタイプを選ぶ** - tip / warning / success / danger など
+- **情報パネルは適切なタイプを選ぶ** - tip / warning / caution / danger / note / info から選択
 - **執筆中は `npm run dev` でリアルタイムプレビュー** - 見た目を確認しながら書く
 - **困ったら [執筆機能リファレンス](./WRITING_FEATURES.md) を参照** - 実装例が豊富
 

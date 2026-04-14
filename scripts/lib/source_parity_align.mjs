@@ -33,19 +33,15 @@
 
 import { GATE_ELIGIBLE_KINDS } from './source_parity_segments_shared.mjs';
 import {
-  CJK_RE,
   scoreSegmentMatch,
   // 下で __scoreSegmentMatch として re-export している — align.mjs 経由で
   // import している既存テストを壊さないための後方互換。
 } from './source_parity_align_scoring.mjs';
 import { compareSectionStructure } from './source_parity_structure.mjs';
+import { classifySegment } from './parity_glossary_mask.mjs';
+import { normalizeSegmentTokens } from './parity_normalize.mjs';
 
 const GATE_KIND_SET = new Set(GATE_ELIGIBLE_KINDS);
-
-// JA segment を untranslated と判定する最小 prose 長。
-// `OK` や `URL:` のような短い断片で誤検知しないために使う。
-const MIN_UNTRANSLATED_PROSE_LENGTH = 15;
-const MIN_UNTRANSLATED_WORD_COUNT = 3;
 
 // ---------------------------------------------------------------------------
 // セクション分割
@@ -246,32 +242,19 @@ const TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN = 0.01;
 // ---------------------------------------------------------------------------
 
 /**
- * JA segment の正規化 text が、未翻訳の英語らしく見えるかを判定する。
- * 先に backtick 内 invariant や link destination を落とし、
- * CLI flag や URL を含むだけの正常な訳文を residue と誤判定しないようにする。
+ * JA segment の正規化 text が、未翻訳の英語 prose を含むかを判定する。
  *
- * 判定には、15 文字以上の prose、3 個以上の ASCII 単語、CJK 文字 0 個を要求する。
+ * Phase 0: fuzzy なヒューリスティックではなく、`parity_glossary_mask.classifySegment`
+ * を呼び、glossary / invariant pattern でマスクされた後に残る residue が
+ * 存在するかで判定する。この関数は内部的に glossary_mask に委譲する薄い
+ * wrapper だが、旧 API shape を保って align 側の呼び出しコードを変えない。
  *
  * @param {string} text JA 側の正規化済み text (`createSegment` 由来)
  */
 function looksUntranslated(text) {
-  if (typeof text !== 'string' || text.length < MIN_UNTRANSLATED_PROSE_LENGTH) {
-    return false;
-  }
-  if (CJK_RE.test(text)) return false;
-
-  const stripped = text
-    .replace(/`[^`]*`/g, ' ')
-    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/https?:\/\/\S+/g, ' ')
-    .replace(/\/docs\/\S+/g, ' ')
-    .trim();
-
-  if (stripped.length < MIN_UNTRANSLATED_PROSE_LENGTH) return false;
-
-  const words = stripped.split(/\s+/).filter((word) => /[a-z]/i.test(word));
-  if (words.length < MIN_UNTRANSLATED_WORD_COUNT) return false;
-  return true;
+  if (typeof text !== 'string') return false;
+  const cls = classifySegment(text);
+  return !cls.isFullyMasked;
 }
 
 // ---------------------------------------------------------------------------
@@ -574,8 +557,10 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
     const enSeg = enBody[enIdx];
     const jaSeg = jaBody[jaIdx];
 
-    const jaTokenSet = new Set(jaSeg.tokensInvariant ?? []);
-    const enTokens = enSeg.tokensInvariant ?? [];
+    // Phase 0: localized-link の差異を token-gap として誤検知しないよう、
+    // 比較前に URL を canonical 化する。
+    const jaTokenSet = new Set(normalizeSegmentTokens(jaSeg.tokensInvariant ?? []));
+    const enTokens = normalizeSegmentTokens(enSeg.tokensInvariant ?? []);
     const missingTokens = [];
     for (const token of enTokens) {
       if (!jaTokenSet.has(token)) missingTokens.push(token);

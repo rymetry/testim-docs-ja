@@ -395,6 +395,15 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
 - `tokenless-near-tie` baseline エントリは `--include-advisory` review queue として triage する
 
+### Phase 0 後の baseline 運用（2026-04-14 以降）
+
+baseline は bug backlog として運用する:
+
+- 新規 issue は原則として baseline に追加しない。修正するか、glossary / normalize / page-level exclusion のいずれかで説明可能に除外する
+- `reviewAfter` フィールドは既存 entry の互換性のため残すが、新規 entry では不要（Phase 4 で schema から削除予定）
+- Quarterly review は「方針再検討」ではなく「残 backlog の burn-down 進捗確認」として実施
+- 再生成手順: `npm run check:parity` と `node scripts/generate_parity_baseline.mjs`
+
 ### Orphan baseline entry
 
 detector / extractor / preprocessor の仕様変更で、runtime が emit しなくなった

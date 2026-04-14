@@ -155,6 +155,15 @@ acknowledgement の対象外:
 
 ---
 
+### Parity detection — glossary mask と URL normalize (Phase 0, 2026-04-14 以降)
+
+- `scripts/lib/parity_glossary_mask.mjs`: `docs/GLOSSARY.md` と `docs/INVARIANT_TOKENS.md` を読み、segment text を Testim 用語 + invariant pattern でマスクする
+- `scripts/lib/parity_normalize.mjs`: URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
+- `scripts/check_source_parity.mjs` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.* を読まない**契約）
+- 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/__tests__/parity_glossary_mask.test.mjs` に追加する
+
+---
+
 #### lint_docs.mjs
 
 WRITING_GUIDE.md に基づく Markdown 構文・frontmatter の検証。

@@ -84,9 +84,7 @@ HTMLタグを使えば、<u>下線付きテキスト</u> や <mark>ハイライ�
 これは注意を促すwarningパネルです。重要な注意事項や制限事項を記載する際に使用します。
 :::
 
-:::success
-これはベストプラクティスを示すsuccessパネルです。推奨される方法や正しいアプローチを強調できます。
-:::
+<!-- :::success was removed in Phase 0 (2026-04-14) — dead callout type, no usage in content -->
 
 :::danger
 これはエラーや問題を示すdangerパネルです。よくある失敗例や避けるべき実装を警告します。
