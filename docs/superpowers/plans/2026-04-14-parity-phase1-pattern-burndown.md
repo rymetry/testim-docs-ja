@@ -4,7 +4,7 @@
 
 **Goal:** Phase 0 完了後の baseline (total **2337** / segment-untranslated **1904** / segment-extra **150** / segment-missing 136 / section-structure-mismatch 86 / segment-token-gap 49 / segment-inconclusive 11 / segment-order-mismatch 1) に残る `segment-extra` **150 件** のうち、機械的に修正可能な 3 パターン (preface 重複、手順導入文分離、callout 内番号リスト展開) を 3 本の並列 PR でバッチ修正する。派生する `section-structure-mismatch` の大半も連鎖解消する想定。
 
-> **実測内訳 (baseline 再生成 @ 2026-04-14 時点):** segment-extra 150 = preface (sectionPath=空) **35 件 / 27 slug**、section-internal **115 件** (unordered-list-item 47, callout-body 17, ordered-list-item 14, paragraph 20, table-cell 13, details-summary 4)。unique slug 68。
+> **実測内訳 (baseline 再生成 @ 2026-04-14 時点):** segment-extra 150 = preface (sectionPath=空) **35 件 / 22 slug**、section-internal **115 件** (unordered-list-item 47, callout-body 17, ordered-list-item 14, paragraph 20, table-cell 13, details-summary 4)。unique slug 68。
 
 **Architecture:** 3 つの独立 sub-phase (1.1 / 1.2 / 1.3) を並列実行可能。各 sub-phase は (a) 対象 slug を baseline から enumerate、(b) 正規表現 + 手動確認で修正、(c) baseline 再生成で削減確認、の 3 段構成。パターン検知を汎化する補助スクリプトを `scripts/phase1/` 配下に新設し、再実行可能にする。
 
@@ -21,15 +21,18 @@
 - `docs/superpowers/specs/2026-04-14-parity-phase1-report.md` — 全 sub-phase 完了後の総括レポート (新規)
 
 **並列実行の注意:**
-- 3 sub-phase は並列可能。異なる worktree / branch で作業
+- 3 sub-phase は**論理上**並列可能 (異なる slug 集合を触るため)。ただし同一 worktree で並列 subagent dispatch すると `parity-baseline.json` 再生成の競合、git lock、同 branch の commit 衝突リスクあり
 - 同じ slug に複数パターンが同居する場合は、ファイル単位で責務者を決める (baseline 分析で enumerate 時に重複検知、1 sub-phase に割り当てる)
-- Worktree 命名: `worktree-phase1-preface` / `worktree-phase1-step-intro` / `worktree-phase1-callout-list`
+- Worktree 命名 (並列時): `worktree-phase1-preface` / `worktree-phase1-step-intro` / `worktree-phase1-callout-list`
+
+**Phase 1 実行実態 (2026-04-14):**
+Phase 1 は単一 worktree (`giggly-moseying-flamingo`) で 3 sub-phase を **順次** 実行し、1 PR (#266) に集約した。ユーザ判断により Phase 1.2 / 1.3 も同 worktree 継続。理由: baseline 再生成を 1 回にまとめられる / 最終 review を Phase 全体で 1 回で済む / 並列 worktree 運用のオーバーヘッド回避。後続 Phase 2/3 でも同パターン (1 PR / sub-phase 順次) を第 1 選択肢とし、並列 worktree は特に時間制約がある場合のみ検討する。
 
 ---
 
-## Phase 1.1: preface 重複削除 (35 件、27 slug)
+## Phase 1.1: preface 重複削除 (35 件、22 slug)
 
-> **実測:** `segment-extra` かつ `sectionPath` 空 = 35 件。原本 plan の 45 件は Phase 0 前の想定値で、Phase 0 の glossary_mask / URL normalize / CJK 早期 return 削除後の再生成で 35 件に減少している。
+> **実測:** `segment-extra` かつ `sectionPath` 空 = 35 件 / 22 unique slug。原本 plan の「45 件 / 27 slug」は Phase 0 前の想定値で、Phase 0 の glossary_mask / URL normalize / CJK 早期 return 削除後の再生成で 35 件 / 22 slug に減少している。
 
 ### Task 1.1.1: 対象 slug を列挙する
 
@@ -236,7 +239,7 @@ gh pr create --title "fix: Phase 1.1 preface 重複削除 (segment-extra 20-30 �
 
 Phase 1.1 として、frontmatter description と内容が重複する preface 段落を削除しました。
 
-- 対象: preface の segment-extra 35 件 / 27 slug (HIT 判定分)
+- 対象: preface の segment-extra 35 件 / 22 slug (HIT 判定分)
 - 解消: segment-extra ~20-30 件 + 派生 section-structure-mismatch
 
 ## Test plan

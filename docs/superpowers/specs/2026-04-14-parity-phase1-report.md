@@ -5,6 +5,7 @@
 - **Roadmap**: `docs/superpowers/specs/2026-04-14-parity-burndown-roadmap.md`
 - **Phase 0 Report**: `docs/superpowers/specs/2026-04-14-parity-oracle-phase0-report.md`
 - **Execution method**: superpowers:subagent-driven-development (implementer + spec reviewer + code quality reviewer の 2 段レビュー、sonnet4.6 model)
+- **PR**: 1 PR (#266) に 3 sub-phase を集約。plan の「3 並列 worktree / 3 PR」想定とは異なり、単一 worktree (`giggly-moseying-flamingo`) で sub-phase を順次実行。ユーザ判断により Phase 1.2 / 1.3 も同 worktree 継続 (baseline 再生成競合回避と運用簡素化のため)
 
 ---
 
@@ -36,7 +37,7 @@
 
 ### Phase 1.1 — preface 重複削除
 
-- **Target 実測:** preface segment-extra 35 件 / 27 slug
+- **Target 実測:** preface segment-extra 35 件 / 22 slug (enumerate 実測: HIT 1 / REVIEW 21 / MISS 0)
 - **Scope 調整:** controller 判断で preface 領域の「EN 1 段落 → JA 2+ 段落分離」の結合も Phase 1.1 に吸収 (当初は Phase 1.2 予定)。理由: 実測で preface 領域に両パターンが混在するため境界を引くメリットが少ない
 - **修正:** 8 slug / 8 修正
   - 削除 (JA-only preface echo): `administration/project-settings`、`overview/testim-overview`
@@ -84,7 +85,7 @@
 
 ### Phase 1 で REVIEW 除外 (手動判定で非対象と判定)
 
-**Phase 1.1 (16 slug):** callout-body / table-cell / list item の構造差異で単純削除不可、EN 対応コンテンツの位置ずれ、sfdc-step-* など
+**Phase 1.1 (14 slug、gap fix 後):** callout-body / table-cell / list item の構造差異で単純削除不可、EN 対応コンテンツの位置ずれ、sfdc-step-* など。具体的には `advanced-editing/cookies`、`advanced-editing/parameters/passing-parameters-from-excel-file`、`advanced-editing/validations/pixel-validation-and-pixel-wait-for`、`advanced-editing/validations/wait-for-element-visualization`、`editing-tests/conditions/advanced-conditions-settings`、`guides/keyboard-shortcuts`、`integrations/grid-management` (Phase 1.3 で別 callout に触れたが preface は保留)、`recording-tests/recording-a-mobile-test` (同上)、`salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`、`sfdc-step-create`、`sfdc-step-edit`、`sfdc-step-relatedlistaction`、`sfdc-step-validate`、`testops/insights/reports` — いずれも Phase 2 以降で個別対応
 
 **Phase 1.2 (15 slug / 17 entries):** `するには:` の前段落が prose 以外 (heading / image / HTML table / list / callout)。別パターンとして Phase 2 で扱うか、仕様上正となる構造
 
