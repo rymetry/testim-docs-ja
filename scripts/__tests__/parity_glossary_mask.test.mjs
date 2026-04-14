@@ -117,3 +117,31 @@ describe('maskSegmentText — mask record shape', () => {
     }
   });
 });
+
+describe('createMaskCoverage — run-level collector', () => {
+  it('records masks and returns summary counters', async () => {
+    const { createMaskCoverage } = await import('../lib/parity_glossary_mask.mjs');
+    const cov = createMaskCoverage();
+    cov.record({
+      slug: 'test/slug',
+      segmentKind: 'paragraph',
+      sectionPath: 'Overview',
+      masks: [
+        { source: 'glossary', entry: 'Visual Editor', span: { start: 0, end: 13 } },
+        { source: 'invariant-pattern', pattern: 'cli-flag', span: { start: 20, end: 32 } },
+      ],
+    });
+    const json = cov.toJSON();
+    assert.equal(json.summary.segmentsMasked, 1);
+    assert.equal(json.summary.byGlossaryEntry['Visual Editor'], 1);
+    assert.equal(json.summary.byInvariantPattern['cli-flag'], 1);
+    assert.equal(json.maskedSegments.length, 1);
+  });
+
+  it('returns empty summary when no masks recorded', async () => {
+    const { createMaskCoverage } = await import('../lib/parity_glossary_mask.mjs');
+    const cov = createMaskCoverage();
+    const json = cov.toJSON();
+    assert.equal(json.summary.segmentsMasked, 0);
+  });
+});

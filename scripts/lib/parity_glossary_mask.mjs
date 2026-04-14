@@ -191,3 +191,37 @@ export function classifySegment(text) {
 
   return { isFullyMasked: false, residue: englishPortion };
 }
+
+/**
+ * Mask coverage collector — 各 segment の mask 結果を集約する stateful
+ * utility。check_source_parity.mjs が run 単位で create し、align 側から
+ * record で記録、run 終了後に toJSON() で debug.maskCoverage を得る。
+ */
+export function createMaskCoverage() {
+  const entries = [];
+  const byGlossary = new Map();
+  const byPattern = new Map();
+  return {
+    record({ slug, segmentKind, sectionPath, masks }) {
+      if (!Array.isArray(masks) || masks.length === 0) return;
+      entries.push({ slug, segmentKind, sectionPath, masks });
+      for (const m of masks) {
+        if (m.source === 'glossary') {
+          byGlossary.set(m.entry, (byGlossary.get(m.entry) ?? 0) + 1);
+        } else if (m.source === 'invariant-pattern') {
+          byPattern.set(m.pattern, (byPattern.get(m.pattern) ?? 0) + 1);
+        }
+      }
+    },
+    toJSON() {
+      return {
+        maskedSegments: entries,
+        summary: {
+          segmentsMasked: entries.length,
+          byGlossaryEntry: Object.fromEntries(byGlossary),
+          byInvariantPattern: Object.fromEntries(byPattern),
+        },
+      };
+    },
+  };
+}
