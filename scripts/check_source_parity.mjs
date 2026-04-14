@@ -47,6 +47,7 @@ import { isDirectRun as isDirectCliRun } from './lib/cli.mjs';
 import { convertEnHtmlToMd, preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
 import { buildRunScope, validateRunLinkage } from './lib/source_sync_health.mjs';
+import { createMaskCoverage, maskSegmentText } from './lib/parity_glossary_mask.mjs';
 export { buildRunScope };
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
@@ -372,6 +373,9 @@ export async function checkSourceParity({
   const orphanBaselineEntries = [];
   let checkedCount = 0;
 
+  // debug.maskCoverage: per-segment mask 結果を収集する。
+  const maskCoverage = createMaskCoverage();
+
   for (const filePath of allFiles) {
     const fileSlug = filePathToSlug(filePath);
     if (resolvedSlug && fileSlug !== resolvedSlug) {
@@ -453,6 +457,18 @@ export async function checkSourceParity({
           console.error(
             `extractSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
           );
+        }
+
+        // debug.maskCoverage: JA segments の mask 結果を収集する。
+        // extractError 時は jaSegments が空なので何も記録されない。
+        for (const seg of jaSegments) {
+          const { masks } = maskSegmentText(seg.textNorm ?? seg.rawText ?? '');
+          maskCoverage.record({
+            slug: fileSlug,
+            segmentKind: seg.segmentKind,
+            sectionPath: seg.sectionPath,
+            masks,
+          });
         }
 
         const usabilityIssue = detectSourceUsability({
@@ -714,6 +730,9 @@ export async function checkSourceParity({
     files: results,
     advisoryQueueScope,
     advisoryQueue,
+    debug: {
+      maskCoverage: maskCoverage.toJSON(),
+    },
   };
 
   // テストでは outputPath を差し替えて隔離実行できる。
@@ -858,16 +877,21 @@ export async function checkSourceParity({
   return computeExitCode(summary, failOn);
 }
 
-async function main() {
-  const code = await checkSourceParity(parseArgs());
-  process.exit(code);
+async function main({ outputPath = OUTPUT_PATH } = {}) {
+  return checkSourceParity({ ...parseArgs(), outputPath });
 }
+
+export default main;
 
 const isDirectRun = isDirectCliRun(import.meta.url);
 
 if (isDirectRun) {
-  main().catch((error) => {
-    console.error('❌ エラー:', error);
-    process.exit(1);
-  });
+  main()
+    .then((code) => {
+      process.exit(code);
+    })
+    .catch((error) => {
+      console.error('❌ エラー:', error);
+      process.exit(1);
+    });
 }
