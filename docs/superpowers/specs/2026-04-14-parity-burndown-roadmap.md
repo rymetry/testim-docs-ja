@@ -47,15 +47,18 @@ Phase 0 の glossary_mask + URL normalize + 契約整合が完了した時点で
 
 **Plan**: `docs/superpowers/plans/2026-04-14-parity-phase1-pattern-burndown.md`
 
-### Phase 2: 手動修正
+### Phase 2: 手動修正 (Phase 1 完了後の実測で再構築)
 
-**対象**: パターン化できない個別修正
-- **Phase 2.1** (Top 2 files): `editing-tests/steps` 34 件、`editing-your-tests/editing-a-steps-properties` 28 件
-  - **重要**: 両ファイルの 58 件中 58 件が segment-untranslated で、Phase 0 の glossary mask で大半が吸収される想定。Phase 2.1 は **Phase 0 後に改めて残件を確認してから着手**する
-- **Phase 2.2** (segment-missing 翻訳復元): 136 件、71 slug — EN 段落を JA が統合・省略
-- **Phase 2.3** (residual token-gap): ~34 件 (Phase 0 後) — CLI フラグ、内部リンク欠落
+**対象** (2026-04-14 実測、Phase 1 完了後):
+- **Phase 2.0** (glossary 監査 + untranslated 翻訳、次 round): `segment-untranslated` 1903 件 / 218 slug — 最大残件
+- **Phase 2.1** (Top 2 files): `editing-tests/steps` 31 件、`editing-a-steps-properties` 39 件。glossary mask が Top 2 には効かなかった実績を踏まえ、**翻訳作業として実行**
+- **Phase 2.2** (segment-missing 翻訳復元): **127 件、66 slug** — EN 段落を JA が統合・省略
+- **Phase 2.3** (residual token-gap): **49 件、43 slug** — CLI フラグ、内部リンク、数値単位欠落
+- **Phase 2.4** (residual structure、次 round): `segment-extra=102 − callout-body 17 = 85 件` と `section-structure-mismatch=66` の派生整理
 
-**構成**: 3 PR、並列エージェント委任可、手動レビュー必須
+**構成:** **単一統合 PR** (baseline 直列更新、content 修正は subagent 並列 isolated worktree)
+**本 round 実行:** Phase 2.1 / 2.2 / 2.3 / 2.5
+**次 round 実行:** Phase 2.0 / 2.4
 
 **Plan**: `docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md`
 

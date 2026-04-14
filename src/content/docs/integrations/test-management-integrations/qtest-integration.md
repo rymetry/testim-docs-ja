@@ -33,7 +33,7 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 
 ![qTest 統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/dbe2722-image_3.png)
 
-3. qTest を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、Testim の **URL** フィールドに貼り付けます。URL 構造: `https://<プロジェクト名>.qtestnet.com/`。`プロジェクト名` は qTest の URL で確認できます。例: `myProject`。
+3. qTest を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、Testim の **URL** フィールドに貼り付けます。URL 構造は `https://<projectName>.qtestnet.com/` の形式です。`projectName` の部分をプロジェクト名に置き換えてください。例: 下のアカウントの `projectName` は `myProject` です。
 
 ![qTest の URL 入力例](/images/test-management-integrations/qtest-integration/761db53-image_4.png)
 
@@ -94,8 +94,10 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 
 ![qTest Manager の Test Executions 画面](/images/test-management-integrations/qtest-integration/4758c86-image.png)
 
-右下のペインに、実行のリストが表示されます。`ID` 列は qTest のテスト ID を表します。`Status` 列は Testim からのテスト実行結果を表示します。\
-3\. **ID** をクリックしてテストの詳細を表示します。\
+右下のペインに、実行のリストが表示されます。`ID` 列は qTest のテスト ID を表します。`Status` 列は Testim からのテスト実行結果を表示します。
+
+3. **ID** をクリックしてテストの詳細を表示します。
+
 以下の画面が表示されます:
 
 ![qTest でのテスト実行詳細画面](/images/test-management-integrations/qtest-integration/cee1498-image_1.png)
@@ -104,11 +106,11 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 
 - **Name** - Testim のテスト名
 - **Status** - 実行のステータス。表示されるステータスは qTest ステータスで、Testim ステータスから以下のように変換されます（Testim → qTest）:
-  - ABORTED → Unexecuted
-  - SKIPPED（Testim での quarantine ステータス） → Blocked
-  - TIMEOUT → Failed
-  - PASSED → Passed
-  - FAILED → Failed
+  - ABORTED - Unexecuted
+  - SKIPPED (quarantine status in Testim) - Blocked
+  - TIMEOUT - Failed
+  - PASSED - Passed
+  - FAILED - Failed
 
 4. **Execution History** 内には、以下の情報を含む **Test Log Details** ペインがあります:
    - Result URL - Testim のテスト結果を開きます

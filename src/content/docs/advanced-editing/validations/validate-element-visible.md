@@ -112,8 +112,9 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![Show Properties アイコン](/images/validations/validate-element-visible/eaf41e7-Screen_Shot_2021-04-18_at_6.42.37.png)
 
-右側に Properties パネルが表示されます。\
-4\. **Target element** のサムネイルにカーソルを合わせます。
+右側に Properties パネルが表示されます。
+
+4. **Target element** のサムネイルにカーソルを合わせます。
 
 ![Testim インターフェース](/images/validations/validate-element-visible/0508833-Testim_009a_r.png)
 
@@ -125,8 +126,10 @@ Element visible 検証では、要素がページ（Web）やアプリ画面（�
 
 ![Reassign ボタン](/images/validations/validate-element-visible/db22251-Testim_010a_r.png)
 
-6. AUT ウィンドウで新しい要素を特定し、クリックして選択します。\
-   選択した要素が Properties パネルの **Target element** に表示されます。
+6. AUT ウィンドウで新しい要素を特定し、クリックして選択します。
+
+選択した要素が Properties パネルの **Target element** に表示されます。
+
 7. 再割り当てしたステップの左の **Toggle Breakpoint** をクリックして、ブレークポイントを解除します。
 
 ## Validate element visible ステップの修正（Mobile）

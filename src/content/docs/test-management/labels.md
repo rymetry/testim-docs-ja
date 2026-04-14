@@ -70,7 +70,7 @@ keywords:
 
 ## CLI ベースの実行でのラベルの使用
 
-CLI を実行する際、--label パラメーターを使用して実行するラベルを選択できます:
+CLI を実行する際、`--label` パラメーターを使用して実行するラベルを選択できます:
 
 ```shell
 testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PROJECT ID>" --grid "<Your grid name>" --report-file test-results/testim-tests-report.xml

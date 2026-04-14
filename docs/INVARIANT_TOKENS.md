@@ -67,6 +67,17 @@
 | example | `BASIC_AUTH_ENABLED`, `NODE_ENV` |
 | note | 全大文字 + アンダースコア の識別子。3 文字以上で誤検知を避ける |
 
+## testim-step-name-with-parens
+
+Testim のステップ名・プロパティ名のうち、括弧や記号を含むもの（GLOSSARY のワード境界マッチが効かない）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `testim-step-name-with-parens` |
+| regex | `(?:\b(?:[Ss]croll\s*\(to\s+element\/on\s+page\)|[Ff]ile\s+upload\s*\/\s*[Ff]ile\s+drop|[Pp]ress\s*\([Kk]ey\s+press\))|\([Ss]hared\)\s+step\s+name)` |
+| example | `Scroll (to element/on page)`, `File upload / File drop`, `Press (Key press)`, `(Shared) step name` |
+| note | 括弧・スラッシュを含む Testim ステップ名・プロパティ名。textNorm は小文字になるためパターンに大文字小文字両方を含む |
+
 ---
 
 ## 登録手順

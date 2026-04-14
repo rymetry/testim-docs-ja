@@ -19,7 +19,7 @@ keywords:
 ---
 
 :::note{title="PRO機能"}
-Professional plan で利用可能です。
+Professional plan で利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)をご覧ください。
 :::
 
 :::note

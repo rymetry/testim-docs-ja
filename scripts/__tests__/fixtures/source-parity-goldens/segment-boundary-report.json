@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.9916055217012809,
+  "meanStabilityScore": 0.993076109936575,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -160,7 +160,7 @@
     {
       "slug": "editing-tests/steps",
       "enTotal": 101,
-      "jaTotal": 102,
+      "jaTotal": 101,
       "enCounts": {
         "paragraph": 2,
         "unordered-list-item": 2,
@@ -168,12 +168,12 @@
         "table-cell": 92
       },
       "jaCounts": {
-        "paragraph": 1,
+        "paragraph": 2,
         "unordered-list-item": 2,
         "heading": 5,
-        "table-cell": 94
+        "table-cell": 92
       },
-      "stabilityScore": 0.9852941176470589
+      "stabilityScore": 1
     },
     {
       "slug": "debugging-tests/debugging-controls",

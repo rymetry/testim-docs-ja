@@ -33,7 +33,7 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 
    ![生成された API キーをコピーする画面](/images/ci-integrations/gearset-integration/7c2ad4a-copy.png)
 
-5. Swagger で Testim REST API に移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
+5. [Testim REST API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml) を Swagger で開き、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
 
    ![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
 

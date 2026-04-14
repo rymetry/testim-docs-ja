@@ -16,7 +16,8 @@ keywords:
 
 ![GitLab ロゴ](/images/ci-integrations/gitlab-integration/6744632-gitlab-logo-gray-rgb.png)
 
-**YAML ファイル**\
+**YAML ファイル**
+
 GitLab と Testim を統合するには、YAML ファイルに以下の行を追加する必要があります:
 
 ```yaml
