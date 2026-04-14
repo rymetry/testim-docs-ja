@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-14T08:25:09.693Z",
-  "generatedFromRunId": "2026-04-14T08:25:09.693Z#parity-check-status",
-  "rationale": "Phase 1.1 gap fix: testim-overview + generating-a-random-value",
+  "generatedAt": "2026-04-14T08:48:58.271Z",
+  "generatedFromRunId": "2026-04-14T08:48:58.271Z#parity-check-status",
+  "rationale": "Phase 1.2: section-internal 手順導入文の段落結合完了",
   "entries": [
     {
       "slug": "administration/api-access",
@@ -820,7 +820,7 @@
       "inconclusiveReason": null,
       "sectionIndex": 2,
       "structureCategory": "kind-multiset",
-      "structureFingerprint": "sha256:390dd4564e5dc37a9ac53d2e1d7bcfd2f14f494c1949e9eb30befb73a104aeb6",
+      "structureFingerprint": "sha256:3e13d258899b230649177350b72e35d3dc42e6b2e9c519fd444da93160882ba4",
       "usabilityReason": null
     },
     {
@@ -839,7 +839,7 @@
       "inconclusiveReason": null,
       "sectionIndex": 3,
       "structureCategory": "kind-multiset",
-      "structureFingerprint": "sha256:390dd4564e5dc37a9ac53d2e1d7bcfd2f14f494c1949e9eb30befb73a104aeb6",
+      "structureFingerprint": "sha256:3e13d258899b230649177350b72e35d3dc42e6b2e9c519fd444da93160882ba4",
       "usabilityReason": null
     },
     {
@@ -858,64 +858,7 @@
       "inconclusiveReason": null,
       "sectionIndex": 6,
       "structureCategory": "kind-multiset",
-      "structureFingerprint": "sha256:518af00f9c014113bb5e6e2d40034bc2701fb4fda4405414b99815891b44f347",
-      "usabilityReason": null
-    },
-    {
-      "slug": "administration/project-settings",
-      "issueType": "segment-extra",
-      "snapshotFingerprint": "sha256:28e422234fa63b156fd5e8edfc17d5774a693e41b82ef35f81b20fce489540a4",
-      "reviewAfter": "2026-12-30",
-      "sectionPath": "General Settings > Default Base URL",
-      "segmentKind": "paragraph",
-      "enSegmentIndex": null,
-      "jaSegmentIndex": 1,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:ecf53e129cb0ebe3c348b996165f5aad543248ff9aca5afacaa0924123483edb",
-      "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "administration/project-settings",
-      "issueType": "segment-extra",
-      "snapshotFingerprint": "sha256:28e422234fa63b156fd5e8edfc17d5774a693e41b82ef35f81b20fce489540a4",
-      "reviewAfter": "2026-12-30",
-      "sectionPath": "General Settings > Hidden Parameters",
-      "segmentKind": "paragraph",
-      "enSegmentIndex": null,
-      "jaSegmentIndex": 1,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:24b09fbbe76324e8ea34b1088aabbc6e5bacb4d8f582ba7dd6077144fa386d97",
-      "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "administration/project-settings",
-      "issueType": "segment-extra",
-      "snapshotFingerprint": "sha256:28e422234fa63b156fd5e8edfc17d5774a693e41b82ef35f81b20fce489540a4",
-      "reviewAfter": "2026-12-30",
-      "sectionPath": "General Settings > Project Name",
-      "segmentKind": "paragraph",
-      "enSegmentIndex": null,
-      "jaSegmentIndex": 1,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:c68e31988c536c6a5f980dc1801c87247dc3a3e2e04262939c47d0075f102500",
-      "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
+      "structureFingerprint": "sha256:e31aaef3192e74fcc2267e3a5d674b19ad919f81dab7b02124d6f603f3f233af",
       "usabilityReason": null
     },
     {
