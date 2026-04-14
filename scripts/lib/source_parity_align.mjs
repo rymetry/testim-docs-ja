@@ -39,6 +39,7 @@ import {
 } from './source_parity_align_scoring.mjs';
 import { compareSectionStructure } from './source_parity_structure.mjs';
 import { classifySegment } from './parity_glossary_mask.mjs';
+import { normalizeSegmentTokens } from './parity_normalize.mjs';
 
 const GATE_KIND_SET = new Set(GATE_ELIGIBLE_KINDS);
 
@@ -556,8 +557,10 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
     const enSeg = enBody[enIdx];
     const jaSeg = jaBody[jaIdx];
 
-    const jaTokenSet = new Set(jaSeg.tokensInvariant ?? []);
-    const enTokens = enSeg.tokensInvariant ?? [];
+    // Phase 0: localized-link の差異を token-gap として誤検知しないよう、
+    // 比較前に URL を canonical 化する。
+    const jaTokenSet = new Set(normalizeSegmentTokens(jaSeg.tokensInvariant ?? []));
+    const enTokens = normalizeSegmentTokens(enSeg.tokensInvariant ?? []);
     const missingTokens = [];
     for (const token of enTokens) {
       if (!jaTokenSet.has(token)) missingTokens.push(token);
