@@ -96,10 +96,98 @@ export function __clearCaches() {
   patternsCache = null;
 }
 
-export function maskSegmentText(_text) {
-  throw new Error('not implemented');
+const GLOSSARY_PLACEHOLDER = '__GLOSSARY__';
+const INVARIANT_PLACEHOLDER = '__INVARIANT__';
+
+/**
+ * Mask glossary terms and invariant patterns in text, returning both the
+ * masked string and a list of mask records.
+ *
+ * Process order: longest glossary terms first (to handle multi-word matches
+ * before single-word substrings), then invariant patterns applied to remainder.
+ */
+export function maskSegmentText(text) {
+  if (typeof text !== 'string' || text.length === 0) {
+    return { maskedText: text, masks: [] };
+  }
+
+  const glossary = loadGlossary();
+  const patterns = loadInvariantPatterns();
+  const masks = [];
+
+  const sortedTerms = [...glossary].sort((a, b) => b.length - a.length);
+
+  let masked = text;
+  for (const term of sortedTerms) {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('\\b' + escaped + '\\b', 'g');
+    for (const match of masked.matchAll(re)) {
+      masks.push({
+        source: 'glossary',
+        entry: term,
+        span: { start: match.index, end: match.index + match[0].length },
+      });
+    }
+    masked = masked.replace(re, GLOSSARY_PLACEHOLDER);
+  }
+
+  for (const { id, regex } of patterns) {
+    const localRe = new RegExp(regex.source, regex.flags);
+    for (const match of masked.matchAll(localRe)) {
+      if (match[0].length === 0) continue;
+      masks.push({
+        source: 'invariant-pattern',
+        pattern: id,
+        span: { start: match.index, end: match.index + match[0].length },
+      });
+    }
+    masked = masked.replace(new RegExp(regex.source, regex.flags), INVARIANT_PLACEHOLDER);
+  }
+
+  return { maskedText: masked, masks };
 }
 
-export function classifySegment(_text) {
-  throw new Error('not implemented');
+const RESIDUE_MIN_WORDS = 3;
+const RESIDUE_MIN_LENGTH = 15;
+const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/;
+
+/**
+ * After masking, decide whether the remaining text is (a) fully covered
+ * (glossary + invariant + CJK only, no English prose) or (b) contains
+ * untranslated English prose (= a bug).
+ */
+export function classifySegment(text) {
+  if (typeof text !== 'string' || text.length === 0) {
+    return { isFullyMasked: true, residue: '' };
+  }
+
+  // ASCII 英字が全くなければ翻訳の問題はない
+  const stripped = text.trim();
+  const hasAscii = /[a-zA-Z]/.test(stripped);
+  if (!hasAscii) {
+    return { isFullyMasked: true, residue: '' };
+  }
+
+  const { maskedText } = maskSegmentText(text);
+
+  // Placeholder と inline code / URLs / backticks を除去して residue を見る
+  const residue = maskedText
+    .replace(new RegExp(GLOSSARY_PLACEHOLDER, 'g'), ' ')
+    .replace(new RegExp(INVARIANT_PLACEHOLDER, 'g'), ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/https?:\/\/\S+/g, ' ')
+    .replace(/\/docs\/\S+/g, ' ')
+    .trim();
+
+  const englishPortion = residue.replace(CJK_RE, ' ').trim();
+  if (englishPortion.length < RESIDUE_MIN_LENGTH) {
+    return { isFullyMasked: true, residue: '' };
+  }
+  const words = englishPortion.split(/\s+/).filter((w) => /[a-z]/i.test(w));
+  if (words.length < RESIDUE_MIN_WORDS) {
+    return { isFullyMasked: true, residue: '' };
+  }
+
+  return { isFullyMasked: false, residue: englishPortion };
 }
