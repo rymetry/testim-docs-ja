@@ -91,6 +91,98 @@
 | Run View | |
 | Step Properties | |
 
+## Testim ステップ名（検証・待機・アクション）
+
+Testim UI に表示されるステップ名は英語のまま維持する。
+
+| 用語 | 備考 |
+| --- | --- |
+| Add custom validation | 検証ステップ |
+| Add network validation | 検証ステップ |
+| Validate CSS property | 検証ステップ |
+| Validate HTML attribute | 検証ステップ |
+| Add API action | アクションステップ |
+| Validate API | 検証ステップ |
+| Validate element visible | 検証ステップ |
+| Validate element not visible | 検証ステップ |
+| Validate element text | 検証ステップ |
+| Validate radio button | 検証ステップ |
+| Validate element visualization | 検証ステップ |
+| Validate viewport visualization | 検証ステップ |
+| Validate full-page visualization | 検証ステップ |
+| Validate page accessibility | 検証ステップ |
+| Validate element accessibility | 検証ステップ |
+| Add custom wait for | 待機ステップ |
+| Wait for element visible | 待機ステップ |
+| Wait for element not visible | 待機ステップ |
+| Wait for element text | 待機ステップ |
+| Wait for download | 待機ステップ |
+| Wait for element visualization | 待機ステップ |
+| Add hover action | アクションステップ |
+| Add extract value step | アクションステップ |
+| Generate email address | アクションステップ |
+| Add navigation action | アクションステップ |
+| Add custom action | アクションステップ |
+| Generate random value | アクションステップ |
+| Generate date | アクションステップ |
+| Get Cookie | アクションステップ |
+| Set Cookie | アクションステップ |
+| Drag & Drop | 自動記録ステップ |
+| Download validation | 自動記録ステップ |
+| Recorded steps and validations | ステップ分類ラベル |
+| Recorded Steps and validations | ステップ分類ラベル（大文字バリアント） |
+
+## Testim プロパティ名
+
+ステッププロパティパネルに表示されるプロパティ名は英語のまま維持する。
+
+| 用語 | 備考 |
+| --- | --- |
+| Element must be visible | プロパティ名 |
+| When this step fails | プロパティ名 |
+| When to run step | プロパティ名 |
+| Allow API request retry | プロパティ名 |
+| Pre-step delay | プロパティ名（ms 単位） |
+| Replace with a clone | プロパティ名 |
+| See old revisions | プロパティ名 |
+| Send via web page | プロパティ名 |
+| Native events | プロパティ名 |
+| Variable scope | プロパティ名 |
+| Variable name | プロパティ名 |
+| Error Suffix | プロパティ名 |
+| Override timeout | プロパティ名 |
+| Target Element | プロパティ名 |
+| Cookie name | プロパティ名 |
+| Date format | プロパティ名 |
+| Extract Mode | プロパティ名 |
+| Sleep duration | プロパティ名 |
+| String type | プロパティ名 |
+| Time difference | プロパティ名 |
+| URL to assign | プロパティ名 |
+| Use UTC | プロパティ名 |
+| Add Prefix | プロパティ名 |
+| Add Suffix | プロパティ名 |
+| Attribute name | プロパティ名 |
+| Property name | プロパティ名 |
+| Expected value | プロパティ名 |
+| Expected status | プロパティ名 |
+| Always Run | When to run step のオプション |
+| Never (skip) | When to run step のオプション |
+| Mark error & stop | When this step fails のオプション |
+| Mark error & continue | When this step fails のオプション |
+| Mark warning & continue | When this step fails のオプション |
+| Shared step name | プロパティ名（共有ステップ版） |
+| Step name | プロパティ名（非共有ステップ版） |
+
+## キーボードキー名
+
+| 用語 | 備考 |
+| --- | --- |
+| Enter | キー名 |
+| Tab | キー名 |
+| Page Up | キー名 |
+| Page Down | キー名 |
+
 ## 一般的な技術用語（英語維持）
 
 | 用語 | 備考 |

@@ -469,19 +469,4 @@ keywords:
  </tbody>
 </table>
 
-<table class="md-table md-table-2cols">
- <tbody>
-  <tr>
-   <td>
-    Drag &amp; Drop
-   </td>
-   <td>
-    AUT 内でアーティファクトをドラッグ&amp;ドロップ時（
-    <a href="/docs/advanced-editing/handling-ui-actions/drag-drop-step">
-     Drag &amp; Drop ステップ
-    </a>
-    を参照）
-   </td>
-  </tr>
- </tbody>
-</table>
+Drag & Drop — AUT 内でアーティファクトをドラッグ&amp;ドロップ時（[Drag & Drop ステップ](/docs/advanced-editing/handling-ui-actions/drag-drop-step)を参照）
