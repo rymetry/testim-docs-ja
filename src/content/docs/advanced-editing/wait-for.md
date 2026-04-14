@@ -231,11 +231,8 @@ keywords:
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
 :::warning{title="注意"}
-
-- 関数が true を返すかステップのタイムアウトに達するまでリトライします。
-- Custom wait for は再利用可能です。
-- ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/advanced-editing/validations/custom-code)。
-  :::
+関数が true を返すかステップのタイムアウトに達するまでリトライします。Custom wait for は再利用可能です。ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/advanced-editing/validations/custom-code)。
+:::
 
 ## ダウンロード待機（Web）
 

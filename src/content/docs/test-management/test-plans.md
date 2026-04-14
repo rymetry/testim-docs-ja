@@ -48,11 +48,8 @@ keywords:
 ![Add After All セクションでティアダウン用テストスイートやラベルを設定する画面](/images/test-management/test-plans/e34954a-newwebtestplan.png)
 
 :::warning{title="注意"}
-
-- "Before all" と "After all" のテストは、常に並列レベル `1` で実行されます。"Test List" のみが、CLI で設定されている場合、より高い並列化レベルで実行できます。
-- "before all" のテストのいずれかが失敗した場合、テストリストのテストは実行されません。その結果、実行全体が「失敗」としてマークされ、残りのキューイングされたすべてのテスト実行が中止されます。
-- "Add After All" のテストは、テストリストのテストが失敗した場合でも常に実行されます。
-  :::
+"Before all" と "After all" のテストは、常に並列レベル `1` で実行されます。"Test List" のみが、CLI で設定されている場合、より高い並列化レベルで実行できます。"before all" のテストのいずれかが失敗した場合、テストリストのテストは実行されません。その結果、実行全体が「失敗」としてマークされ、残りのキューイングされたすべてのテスト実行が中止されます。"Add After All" のテストは、テストリストのテストが失敗した場合でも常に実行されます。
+:::
 
 8. **Where to Run** フィールドで、テストを実行したい **Grid** を選択します。詳細については、[Grid Management](/docs/integrations/grid-management) を参照してください。
 
