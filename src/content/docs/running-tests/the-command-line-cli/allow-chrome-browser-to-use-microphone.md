@@ -17,8 +17,6 @@ keywords:
   - Testim
 ---
 
-テストの一部として、ブラウザにモックマイクを有効にすることが可能です。これを有効にするには、CLI コマンドの一部として追加のフラグを渡す必要があります。[CLI コマンド](/docs/running-tests/the-command-line-cli)について詳しくは、こちらをお読みください。
-
 マイクを有効にするには、_--chrome-extra-args_ を値 _"use-fake-device-for-media-stream"_ と共に使用してください。\
 例：
 

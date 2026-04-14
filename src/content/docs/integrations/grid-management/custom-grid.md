@@ -16,8 +16,6 @@ keywords:
   - Test Plan
 ---
 
-独自の Selenium Grid 上でテストを実行できます。
-
 この記事では、Testim 上で独自の Selenium Grid を設定する方法を説明します。
 
 ## Custom Grid を追加する

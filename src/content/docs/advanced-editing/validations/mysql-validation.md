@@ -18,8 +18,6 @@ keywords:
   - データベース接続
 ---
 
-CLI アクションと SQL で MySQL を検証する
-
 [CLI action step](/docs/advanced-editing/validations/add-cli-validations-and-actions) を使って MySQL に対してクエリや検証を実行できます。
 
 :::note{title="権限について"}

@@ -30,9 +30,7 @@ Copilot コーディングアシスタントは、以下のステップで用い
 - [Validate Download](/docs/advanced-editing/validations/validate-download)
 - [Custom Condition](/docs/editing-tests/conditions#custom-条件の設定)
 
-このアシスタントは OpenAI の生成 AI を Testim 用に統合・最適化したものです。チャットのプロンプト入力に加え、スラッシュ（/）で始まるコマンドも利用できます。
-
-**使用手順:**
+このアシスタントは OpenAI の生成 AI を Testim 用に統合・最適化したものです。チャットのプロンプト入力に加え、スラッシュ（/）で始まるコマンドも利用できます。**Testim Copilot コーディングアシスタントを使用するには:**
 
 1. カスタムステップを作成します（上記リンク先の手順を参照）。
 

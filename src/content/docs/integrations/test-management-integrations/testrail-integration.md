@@ -15,8 +15,6 @@ keywords:
   - リモートグリッド
 ---
 
-TestRail プロジェクトで Testim のテスト実行結果を表示します。
-
 TestRail 統合により、TestRail のテストを Testim のテストにリンクできます。テスト実行結果が TestRail に自動的に表示され、手動テスト結果と自動テスト結果を一元的に表示できます。
 
 :::info

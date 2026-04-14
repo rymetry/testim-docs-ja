@@ -17,8 +17,6 @@ keywords:
   - リモートグリッド
 ---
 
-TTM for Jira プロジェクトで Testim のテスト実行結果を表示します。
-
 ## TTM for Jira とは？
 
 [Tricentis Test Management (TTM) for Jira](https://www.tricentis.com/products/test-management-jira)は、Jira 内でのエンドツーエンドのテスト管理で、QA と開発を連携させ、アイデアから本番環境まで、ソフトウェアに品質を組み込むことができます。

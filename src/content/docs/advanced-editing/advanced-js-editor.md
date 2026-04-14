@@ -18,8 +18,6 @@ keywords:
   - シンタックスチェック
 ---
 
-Monaco Editor を用いたシンタックスチェック、自動補完、配色などで、カスタムステップの編集体験を向上させます。
-
 新しい高度な JS エディターは、[Monaco Editor](https://microsoft.github.io/monaco-editor/) をベースにした、より快適で効率的なコーディング体験を提供します。以下のさまざまなカスタムステップで JS の記述に利用できます（一覧は後述）。Monaco Editor は VS Code を支えるコードエディターです。
 
 ### 主な機能

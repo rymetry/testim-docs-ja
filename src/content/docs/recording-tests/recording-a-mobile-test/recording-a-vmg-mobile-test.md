@@ -17,8 +17,6 @@ keywords:
   - Android
 ---
 
-Virtual Mobile Grid は、さまざまな iOS シミュレータと Android エミュレータでテストを記録および実行するために使用できます。[Mobile Apps Library](/docs/mobile-apps/mobile-apps) に接続されています。つまり、実行しているテストがモバイルアプリを使用している場合、Virtual Mobile Grid でテストを実行する前に、そのアプリを Mobile Apps Library に追加する必要があります。
-
 Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は[Device Management](/docs/device-management/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。
 
 ## モード
