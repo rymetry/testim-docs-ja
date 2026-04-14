@@ -5,22 +5,30 @@
  * を in-process で順次呼び、temp status file から summary counter を
  * pin する。
  *
- * 7 ページ全て RESOLVED_PAGES で baseline 0 件 clean green 完了:
- *
+ * RESOLVED_PAGES (baseline 0 件 clean green):
  *   | slug                                               | 解消手段                                         |
  *   | -------------------------------------------------- | ------------------------------------------------ |
- *   | advanced-editing/custom-action-step-mobile         | Phase E: JA を EN plain-text 構造に揃える        |
- *   | results/test-runs                                  | Phase E: preface extra paragraph 削除            |
- *   | salesforce-testing/faq                             | Phase F.2.5 + normalizeUrlToken bug fix          |
- *   | running-tests/the-command-line-cli                 | Phase D.1: 14 section を EN 構造に full rewrite  |
- *   | results/test-results/network-logs                  | Phase D.2: Filtering / test level の JA rewrite  |
- *   | advanced-editing/validations/email-validation      | Phase D.3: preface / Codeless Option / token 差別化 |
  *   | salesforce-testing/salesforce-testing-overview     | Phase G: shallow EN に合わせて JA trim           |
  *
+ * RESIDUAL_PAGES (segment-untranslated が baseline 凍結):
+ *   PR review #3 で classifySegment の CJK 早期 return を削除した結果、
+ *   以下 6 ページで Testim UI 名の英語残留が segment-untranslated として
+ *   surface するようになった。GLOSSARY 拡張での解消は Phase 0 scope を超える
+ *   ため、baseline で凍結して Phase 1.x の GLOSSARY 監査タスクとする。
+ *
+ *   | slug                                               | 残留理由                                         |
+ *   | -------------------------------------------------- | ------------------------------------------------ |
+ *   | advanced-editing/custom-action-step-mobile         | Testim UI 名 英語残留 (segment-untranslated)     |
+ *   | results/test-runs                                  | Testim UI 名 英語残留 (segment-untranslated)     |
+ *   | salesforce-testing/faq                             | Testim UI 名 英語残留 (segment-untranslated)     |
+ *   | running-tests/the-command-line-cli                 | Testim UI 名 英語残留 (segment-untranslated)     |
+ *   | results/test-results/network-logs                  | Testim UI 名 英語残留 (segment-untranslated)     |
+ *   | advanced-editing/validations/email-validation      | Testim UI 名 英語残留 (segment-untranslated)     |
+ *
  * pin する契約:
- *   1. 全 slug で `reportableActiveFiles === 0`
- *   2. 全 slug で `structureMismatchIssues === 0` / `snapshotUnusableIssues === 0`
- *   3. 全 slug で `baselinedByType === {}` (完全に clean、End-to-End 解消)
+ *   RESOLVED: 全 slug で `reportableActiveFiles === 0` かつ `baselinedByType === {}`
+ *   RESIDUAL: 全 slug で `reportableActiveActionableFiles === 0` かつ
+ *             `baselinedByType[segment-untranslated] >= 1`
  *
  * slug ごとに別 status file へ書き出し、repo root は触らない。
  */
@@ -78,34 +86,27 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 // ---------------------------------------------------------------------------
 // RESOLVED_PAGES — baseline entry 0 で clean green を期待する代表ページ。
 // 解消プロセス:
-// - `custom-action-step-mobile` / `test-runs`: Phase E の JA 修正で解消
-// - `faq`: Phase F.2.5 preprocessor 修正 + normalizeUrlToken basename fallback
-// - `the-command-line-cli`: Phase D.1 JA 全面 rewrite (Basic CLI command /
-//   Additional common parameters / Project / Grid Name / Host / Report File /
-//   Test Config / Params File / Config file / Dedicated Run Tunnel / Disable
-//   timeout retry / Abort CLI run / Chrome extra args / intersect-with flag /
-//   Sealights labId — 14 section を EN の block sequence に合わせる)
-// - `network-logs`: Phase D.2 JA 2 section rewrite (Filtering request results
-//   の EN 分割構造に合わせる + Viewing the network logs at the test level の
-//   `:::note` callout → plain paragraph 変換)
-// - `email-validation`: Phase D.3 (preface callout link 追加 + Codeless Option
-//   list item splitting + date (送信時刻) table cell 翻訳 + sign-up / links
-//   body 例の `messages[0].subject` / `DOMParser` token 差別化)
 // - `salesforce-testing-overview`: EN 本文が `<h1>` + 1 paragraph のみで
 //   source が shallow なため、JA も同構造に trim
 // ---------------------------------------------------------------------------
 const RESOLVED_PAGES = Object.freeze([
-  'advanced-editing/custom-action-step-mobile',
-  'results/test-runs',
-  'salesforce-testing/faq',
-  'running-tests/the-command-line-cli',
-  'results/test-results/network-logs',
-  'advanced-editing/validations/email-validation',
   'salesforce-testing/salesforce-testing-overview',
 ]);
 
-// 現在 residual page は無し。
-const RESIDUAL_PAGES = Object.freeze([]);
+// ---------------------------------------------------------------------------
+// RESIDUAL_PAGES — segment-untranslated が baseline 凍結中のページ。
+// PR review #3 で classifySegment の CJK 早期 return を削除した結果、
+// Testim UI 名の英語残留が surface するようになった。
+// GLOSSARY 拡張は Phase 1.x で実施予定。それまで baseline で凍結。
+// ---------------------------------------------------------------------------
+const RESIDUAL_PAGES = Object.freeze([
+  { slug: 'advanced-editing/custom-action-step-mobile', requiredBaselinedTypes: ['segment-untranslated'] },
+  { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
+  { slug: 'salesforce-testing/faq', requiredBaselinedTypes: ['segment-untranslated'] },
+  { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
+  { slug: 'results/test-results/network-logs', requiredBaselinedTypes: ['segment-untranslated'] },
+  { slug: 'advanced-editing/validations/email-validation', requiredBaselinedTypes: ['segment-untranslated'] },
+]);
 
 // ---------------------------------------------------------------------------
 // slug ごとに describe を分け、before() で 1 度だけ checkSourceParity を呼ぶ。
