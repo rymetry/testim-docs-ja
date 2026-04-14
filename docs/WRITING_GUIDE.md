@@ -117,7 +117,7 @@ keywords:
 
 - `tip`
 - `warning`
-- `success`
+- `caution`
 - `danger`
 - `note`
 - `info`
@@ -480,7 +480,7 @@ API の仕様が大きく変更されました。
 
 - `tip` - 💡 ヒント（indigo）
 - `warning` - ⚠️ 注意（amber）
-- `success` - ✅ 推奨（emerald）
+- `caution` - 警告（amber、`warning` と CSS alias）
 - `danger` - 🚨 エラー（rose）
 - `note` - 📝 メモ（slate）
 - `info` - ℹ️ 情報（sky）
@@ -821,7 +821,7 @@ src/content/docs/
 | --------- | ------------------ | ------------------------------------ |
 | `tip`     | 便利な情報、ヒント | 「時間を節約するには...」            |
 | `warning` | 注意事項、制限     | 「この機能は Enterprise プランのみ」 |
-| `success` | ベストプラクティス | 「推奨される設定方法」               |
+| `caution` | MadCap Flare 由来の警告 | EN 原文の `<div class="caution">` を変換する場合に使用 |
 | `danger`  | エラー、失敗例     | 「この方法は避けてください」         |
 | `note`    | 補足情報           | 「関連する機能について」             |
 | `info`    | 参考情報、リンク   | 「公式ドキュメントも参照」           |
@@ -976,7 +976,7 @@ MDX が必要なのは：
 - **迷ったら Markdown (.md) を選択** - シンプルで高速、プレビューも簡単
 - **インタラクティブな要素が本当に必要な時だけ MDX (.mdx) を使用**
 - **コードブロックには必ず言語指定とタイトルを付ける** - 読者の理解を助ける
-- **情報パネルは適切なタイプを選ぶ** - tip / warning / success / danger など
+- **情報パネルは適切なタイプを選ぶ** - tip / warning / caution / danger / note / info から選択
 - **執筆中は `npm run dev` でリアルタイムプレビュー** - 見た目を確認しながら書く
 - **困ったら [執筆機能リファレンス](./WRITING_FEATURES.md) を参照** - 実装例が豊富
 
