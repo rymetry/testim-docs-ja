@@ -18,8 +18,6 @@ keywords:
   - 月間 1000 回実行
 ---
 
-この記事では、Testim Extension のインストール方法と Testim アカウント（無料トライアル）へのサインアップ方法を説明します。これらの準備が整えば、テストの作成を始めることができます。
-
 ## Testim Extension のインストール
 
 Testim Extension をインストールするには：

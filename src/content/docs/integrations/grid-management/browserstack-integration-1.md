@@ -15,8 +15,6 @@ keywords:
   - Test Plan
 ---
 
-Testim で作成したテストを BrowserStack 上で実行できます。
-
 この記事では、Testim 上で BrowserStack を設定する方法と、テストを実行する方法を説明します。
 
 ## BrowserStack Grid を追加する

@@ -14,8 +14,6 @@ keywords:
   - Testim HeadSpin Mobile
 ---
 
-Testim で作成した mobile テストを HeadSpin 上で実行できます。
-
 この記事では、Testim 上で HeadSpin Grid を設定する方法を説明します。
 
 ## HeadSpin Grid を追加する

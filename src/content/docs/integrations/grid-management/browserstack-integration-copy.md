@@ -15,8 +15,6 @@ keywords:
   - Test Plan
 ---
 
-Testim で作成したテストを LambdaTest 上で実行できます。
-
 この記事では、Testim 上で LambdaTest を設定する方法と、テストを実行する方法を説明します。
 
 :::info

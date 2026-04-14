@@ -39,10 +39,10 @@
         "recall": 1
       },
       "segment-move": {
-        "applicable": 7,
-        "detected": 2,
+        "applicable": 4,
+        "detected": 1,
         "inconclusive": 0,
-        "recall": 0.2857142857142857
+        "recall": 0.25
       },
       "section-body-swap": {
         "applicable": 7,
@@ -101,10 +101,10 @@
         "recall": 1
       },
       "segment-move": {
-        "applicable": 7,
-        "detected": 2,
+        "applicable": 4,
+        "detected": 1,
         "inconclusive": 0,
-        "recall": 0.2857142857142857
+        "recall": 0.25
       },
       "section-body-swap": {
         "applicable": 7,
@@ -125,8 +125,8 @@
         "recall": 1
       }
     },
-    "maxCascade": 3,
-    "maxBaselineDiffsPerPage": 36,
+    "maxCascade": 2,
+    "maxBaselineDiffsPerPage": 34,
     "strictRecallTypes": [
       "paragraph-delete",
       "bullet-delete",
@@ -346,15 +346,15 @@
     },
     {
       "slug": "advanced-editing/coding-assistant",
-      "baselineDiffCount": 12,
+      "baselineDiffCount": 10,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 12,
-          "mutatedDiffCount": 13,
+          "baselineDiffCount": 10,
+          "mutatedDiffCount": 12,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -364,8 +364,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 12,
-          "mutatedDiffCount": 12,
+          "baselineDiffCount": 10,
+          "mutatedDiffCount": 10,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -375,8 +375,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 12,
-          "mutatedDiffCount": 13,
+          "baselineDiffCount": 10,
+          "mutatedDiffCount": 11,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -392,15 +392,7 @@
           "applicable": false
         },
         "segment-move": {
-          "applicable": true,
-          "affectedSectionIndex": 0,
-          "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 12,
-          "mutatedDiffCount": 12,
-          "cascadeSize": 0,
-          "detected": false,
-          "exactDetected": false,
-          "inconclusive": false
+          "applicable": false
         },
         "section-body-swap": {
           "applicable": false
@@ -409,8 +401,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 12,
-          "mutatedDiffCount": 14,
+          "baselineDiffCount": 10,
+          "mutatedDiffCount": 12,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -702,16 +694,16 @@
     },
     {
       "slug": "test-management/shared-configuration",
-      "baselineDiffCount": 8,
+      "baselineDiffCount": 6,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 6,
-          "cascadeSize": 0,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
+          "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -720,8 +712,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 9,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -731,8 +723,8 @@
           "applicable": true,
           "affectedSectionIndex": 3,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 10,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 8,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -742,8 +734,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 10,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 8,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -756,22 +748,14 @@
           "applicable": false
         },
         "segment-move": {
-          "applicable": true,
-          "affectedSectionIndex": 0,
-          "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 8,
-          "cascadeSize": 0,
-          "detected": false,
-          "exactDetected": false,
-          "inconclusive": false
+          "applicable": false
         },
         "section-body-swap": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 30,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 28,
           "cascadeSize": 11,
           "detected": true,
           "exactDetected": true,
@@ -781,9 +765,9 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 8,
+          "baselineDiffCount": 6,
           "mutatedDiffCount": 8,
-          "cascadeSize": 1,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -792,8 +776,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 8,
-          "mutatedDiffCount": 9,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -803,16 +787,16 @@
     },
     {
       "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
-      "baselineDiffCount": 4,
+      "baselineDiffCount": 3,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 3,
-          "cascadeSize": 0,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 4,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -824,8 +808,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 4,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -835,8 +819,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 4,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -849,15 +833,7 @@
           "applicable": false
         },
         "segment-move": {
-          "applicable": true,
-          "affectedSectionIndex": 0,
-          "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 4,
-          "cascadeSize": 0,
-          "detected": false,
-          "exactDetected": false,
-          "inconclusive": false
+          "applicable": false
         },
         "section-body-swap": {
           "applicable": false
@@ -866,9 +842,9 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 4,
-          "cascadeSize": 1,
+          "baselineDiffCount": 3,
+          "mutatedDiffCount": 5,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -880,16 +856,16 @@
     },
     {
       "slug": "editing-tests/steps",
-      "baselineDiffCount": 36,
+      "baselineDiffCount": 34,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 36,
-          "mutatedDiffCount": 35,
-          "cascadeSize": 1,
+          "baselineDiffCount": 34,
+          "mutatedDiffCount": 36,
+          "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
           "inconclusive": false
@@ -898,8 +874,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 36,
-          "mutatedDiffCount": 37,
+          "baselineDiffCount": 34,
+          "mutatedDiffCount": 35,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -918,8 +894,8 @@
           "applicable": true,
           "affectedSectionIndex": 2,
           "affectedSegmentKind": "table-cell",
-          "baselineDiffCount": 36,
-          "mutatedDiffCount": 36,
+          "baselineDiffCount": 34,
+          "mutatedDiffCount": 34,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -927,10 +903,10 @@
         },
         "segment-move": {
           "applicable": true,
-          "affectedSectionIndex": 0,
-          "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 36,
-          "mutatedDiffCount": 36,
+          "affectedSectionIndex": 5,
+          "affectedSegmentKind": "table-cell",
+          "baselineDiffCount": 34,
+          "mutatedDiffCount": 34,
           "cascadeSize": 0,
           "detected": false,
           "exactDetected": false,
@@ -940,8 +916,8 @@
           "applicable": true,
           "affectedSectionIndex": 2,
           "affectedSegmentKind": "table-cell",
-          "baselineDiffCount": 36,
-          "mutatedDiffCount": 83,
+          "baselineDiffCount": 34,
+          "mutatedDiffCount": 81,
           "cascadeSize": 36,
           "detected": true,
           "exactDetected": true,
@@ -951,8 +927,8 @@
           "applicable": true,
           "affectedSectionIndex": 0,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 36,
-          "mutatedDiffCount": 37,
+          "baselineDiffCount": 34,
+          "mutatedDiffCount": 36,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,

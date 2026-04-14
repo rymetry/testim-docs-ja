@@ -13,8 +13,6 @@ keywords:
   - テストデータ生成
 ---
 
-ランダムデータ（ユーザー名、パスワード、メールなど）をテキストフィールドに動的に割り当てる方法を学ぶ
-
 Testim のすべてのステップはパラメーター化できます。これは、set-text ステップが記録されたリテラル値（例: "[john@yourapp.io](mailto:john@yourapp.io)", "passw0rd!"）だけでなく、任意の JS 式を持つことができることを意味します。
 
 ![set-text ステップで JS 式を使用してパラメーター化する方法を示す Testim エディターの画面](/images/miscellaneous/generate-random-data-with-js/0ad0468-Untitled.png)

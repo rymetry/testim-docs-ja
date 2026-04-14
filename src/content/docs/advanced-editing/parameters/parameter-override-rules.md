@@ -16,8 +16,6 @@ keywords:
   - CLI
 ---
 
-パラメーター使用時に発生する上書き（オーバーライド）ルールの整理
-
 Testim でパラメーターを使う方法はいくつかあります（例: [データ駆動テスト](/docs/advanced-editing/data-driven-testing)、[グループ](/docs/editing-tests/groups)、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)、[設定ファイルと実行フック](/docs/advanced-editing/parameters/configuration-file-parameters)、[パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters)）。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
 
 ## 上書きの基本

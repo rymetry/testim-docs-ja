@@ -20,8 +20,6 @@ keywords:
   - テスト作成
 ---
 
-AI エージェントの支援を受けて、Salesforce 環境向けのユニークなテストを作成します。
-
 [ステップを手動で追加または記録する](/docs/salesforce-testing/create-a-salesforce-test)ことに加えて、Agentic Test Automation の支援を受けて Salesforce 向けのテストを作成できます。このツールを使用すると、特別にトレーニングされた AI エージェントと協力して、Salesforce 環境向けのユニークなテストを生成および実行できます。
 
 ## 前提条件

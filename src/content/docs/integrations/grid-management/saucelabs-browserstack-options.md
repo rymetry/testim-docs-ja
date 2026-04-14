@@ -16,8 +16,6 @@ keywords:
   - browserstack-options
 ---
 
-SauceLabs と BrowserStack の Grid で CLI から capability を設定する方法を説明します。
-
 定義済み capability を含む JSON file を使うことで、SauceLabs と BrowserStack へ追加の configuration parameter を渡せます。
 
 例えば、特定の browser version と time zone でテストを実行したい場合は、次の手順に従います。

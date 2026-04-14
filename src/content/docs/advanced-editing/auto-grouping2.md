@@ -18,8 +18,6 @@ keywords:
   - Testim
 ---
 
-テスト内の重複ステップ列を検出し、再利用可能なグループへまとめます。
-
 :::note{title="PRO機能"}
 Professional plan で利用可能です。
 :::

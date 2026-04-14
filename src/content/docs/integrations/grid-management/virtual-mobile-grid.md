@@ -16,7 +16,7 @@ keywords:
   - app-id
 ---
 
-Virtual Mobile Grid (VMG) は、多数の iOS simulator と Android emulator を対象にテストできる Grid です。利用可能なさまざまな virtual device を使うことで、接続と設定を簡素化し、品質を高められます。
+Virtual Mobile Grid (VMG) は、多数の iOS simulator と Android emulator を対象にテストできるクラウドベースの Grid です。以下が可能になります：
 
 - 利用可能な virtual device を使って接続と設定を簡素化し、品質を向上できます。
 - 異なる device で parallel run を行い、テスト実行をスケールできます。

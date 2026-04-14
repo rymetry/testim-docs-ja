@@ -18,8 +18,6 @@ keywords:
   - Testim
 ---
 
-アプリ内の任意の HTML 属性を検証する
-
 HTML 属性検証では、要素の任意の HTML 属性の値を検証できます（例：_href_、_src_、_alt_、_title_ など）。また、以下に説明する通り「disabled」属性の検証も可能です。
 
 ## Validate HTML attribute ステップの追加

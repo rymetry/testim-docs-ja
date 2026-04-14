@@ -18,8 +18,6 @@ keywords:
   - データベース接続
 ---
 
-CLI アクションステップを使って MongoDB を検証する
-
 [CLI action](/docs/advanced-editing/validations/add-cli-validations-and-actions) ステップで MongoDB に対してクエリや検証を実行できます。
 
 :::note{title="権限について"}

@@ -16,8 +16,6 @@ keywords:
   - リモートグリッド
 ---
 
-qTest プロジェクトで Testim のテスト実行結果を表示します。
-
 ## qTest とは？
 
 Tricentis の[qTest テスト管理プラットフォーム](https://www.tricentis.com/products/unified-test-management-qtest/)は、アジャイルチームに「ソフトウェアテストライフサイクル全体を通じてスピード、効率性、コラボレーションを向上させるために設計されたソフトウェアテストツールスイート」を提供します。プラットフォームには、テストケース管理のための qTest Manager と、テストメトリクスに関するビジネスインテリジェンスのための qTest Insights が含まれています。

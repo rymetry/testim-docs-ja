@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.988568447462059,
+  "meanStabilityScore": 0.9904691580649173,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -47,7 +47,7 @@
     {
       "slug": "advanced-editing/coding-assistant",
       "enTotal": 39,
-      "jaTotal": 44,
+      "jaTotal": 43,
       "enCounts": {
         "paragraph": 9,
         "unordered-list-item": 11,
@@ -55,13 +55,13 @@
         "heading": 1
       },
       "jaCounts": {
-        "paragraph": 10,
+        "paragraph": 9,
         "unordered-list-item": 11,
         "ordered-list-item": 18,
         "heading": 1,
         "details-summary": 4
       },
-      "stabilityScore": 0.9431818181818182
+      "stabilityScore": 0.9534883720930233
     },
     {
       "slug": "advanced-editing/loops",
@@ -124,7 +124,7 @@
     {
       "slug": "test-management/shared-configuration",
       "enTotal": 115,
-      "jaTotal": 116,
+      "jaTotal": 115,
       "enCounts": {
         "paragraph": 36,
         "heading": 9,
@@ -133,18 +133,18 @@
         "ordered-list-item": 42
       },
       "jaCounts": {
-        "paragraph": 37,
+        "paragraph": 36,
         "heading": 9,
         "unordered-list-item": 23,
         "callout-body": 5,
         "ordered-list-item": 42
       },
-      "stabilityScore": 0.9956896551724138
+      "stabilityScore": 1
     },
     {
       "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
       "enTotal": 21,
-      "jaTotal": 23,
+      "jaTotal": 22,
       "enCounts": {
         "callout-body": 3,
         "paragraph": 3,
@@ -152,15 +152,15 @@
       },
       "jaCounts": {
         "callout-body": 3,
-        "paragraph": 5,
+        "paragraph": 4,
         "ordered-list-item": 15
       },
-      "stabilityScore": 0.9565217391304348
+      "stabilityScore": 0.9772727272727273
     },
     {
       "slug": "editing-tests/steps",
       "enTotal": 101,
-      "jaTotal": 103,
+      "jaTotal": 102,
       "enCounts": {
         "paragraph": 2,
         "unordered-list-item": 2,
@@ -168,12 +168,12 @@
         "table-cell": 92
       },
       "jaCounts": {
-        "paragraph": 2,
+        "paragraph": 1,
         "unordered-list-item": 2,
         "heading": 5,
         "table-cell": 94
       },
-      "stabilityScore": 0.9902912621359223
+      "stabilityScore": 0.9852941176470589
     },
     {
       "slug": "debugging-tests/debugging-controls",

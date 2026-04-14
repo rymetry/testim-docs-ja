@@ -17,11 +17,7 @@ keywords:
 
 ![GitHub Actions の継続的デプロイ図](/images/ci-integrations/github-action-integration/28e7267-Continuous-Deployment-con-GitHub-Actions.png)
 
-Testim と GitHub Actions を統合するには、新しい GitHub-Action ワークフローを作成する必要があります:
-
-以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
-
-<!-- markdownlint-disable-next-line MD036 -->
+Testim と GitHub Actions を統合するには、新しい GitHub-Action ワークフローを作成する必要があります。以下の手順に従ってください: [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 
 **YAML File**
 

@@ -18,8 +18,6 @@ keywords:
   - HeadSpin
 ---
 
-SauceLabs、BrowserStack、LambdaTest、HeadSpin などを含む各種 Grid を使って、テストをリモート実行する方法を説明します。
-
 :::info{title="これはPRO機能です"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
 :::

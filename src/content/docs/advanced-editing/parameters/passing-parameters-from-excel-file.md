@@ -15,8 +15,6 @@ keywords:
   - インポート
 ---
 
-Excel/CSV のデータをテストにパラメーターとして渡す方法
-
 [データ駆動テスト](/docs/advanced-editing/data-driven-testing)の一環として、Excel ファイルからパラメーターを渡す方法は 2 つあります。
 
 - Testim Visual Editor から Excel/CSV をアップロードする — 複数データセットが含まれていても、エディターからの実行では最初の 1 件のみ実行されます。複数回実行されるのは CLI／スケジューラ／ローカルスイート実行時です。また、この方法ではファイル変更時に自動更新されず、都度アップロードが必要です。手順は「[CSV/Excel のアップロードでテストデータを追加](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor#csvexcel-ファイルをアップロードしてテストデータを追加)」を参照してください。
