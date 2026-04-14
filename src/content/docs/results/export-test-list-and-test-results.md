@@ -14,10 +14,7 @@ keywords:
   - レポート
 ---
 
-結果を CSV ファイルにエクスポートする方法を学びます。
-
 エクスポートボタンをクリックすることで、[実行画面](/docs/results/execution-runs-screen)、[テスト実行](/docs/results/test-runs)画面、[テストリスト](/docs/test-management/test-list)からテスト結果をエクスポートできます。
-
 各ビューで利用可能なさまざまなフィルターを使用すると、選択したフィルターに応じて変更されたエクスポートファイルが作成されます。
 
 :::note{title="PRO機能"}

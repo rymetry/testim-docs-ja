@@ -27,7 +27,6 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 :::
 
 ローカルで本ステップを含むテストを実行するには、事前に次を実行します: **npm i -g @testim/testim-cli && testim connect**
-
 以下に _Salesforce APEX action_ ステップの追加手順と、代表的なコード例を示します。
 
 ## Salesforce APEX アクションステップを追加する

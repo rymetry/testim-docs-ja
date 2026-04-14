@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.9871031364572742,
+  "meanStabilityScore": 0.988568447462059,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -102,7 +102,7 @@
     {
       "slug": "running-tests/running-tests-overview",
       "enTotal": 151,
-      "jaTotal": 152,
+      "jaTotal": 151,
       "enCounts": {
         "paragraph": 47,
         "unordered-list-item": 14,
@@ -112,14 +112,14 @@
         "callout-body": 2
       },
       "jaCounts": {
-        "paragraph": 48,
+        "paragraph": 47,
         "unordered-list-item": 14,
         "heading": 18,
         "table-cell": 44,
         "ordered-list-item": 26,
         "callout-body": 2
       },
-      "stabilityScore": 0.9967105263157895
+      "stabilityScore": 1
     },
     {
       "slug": "test-management/shared-configuration",
@@ -178,7 +178,7 @@
     {
       "slug": "debugging-tests/debugging-controls",
       "enTotal": 43,
-      "jaTotal": 44,
+      "jaTotal": 43,
       "enCounts": {
         "paragraph": 16,
         "table-cell": 3,
@@ -188,14 +188,14 @@
         "ordered-list-item": 6
       },
       "jaCounts": {
-        "paragraph": 17,
+        "paragraph": 16,
         "table-cell": 3,
         "heading": 11,
         "unordered-list-item": 6,
         "callout-body": 1,
         "ordered-list-item": 6
       },
-      "stabilityScore": 0.9886363636363636
+      "stabilityScore": 1
     }
   ]
 }

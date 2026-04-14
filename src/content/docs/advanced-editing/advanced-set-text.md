@@ -18,8 +18,6 @@ keywords:
   - 文字列連結
 ---
 
-JavaScript とパラメーターを組み合わせて動的なテキストを設定する
-
 **Set text** ステップ（テキスト入力）のあるテストを記録した後、記録時に入力した固定テキストを動的文字列に置き換えられます。動的文字列には JavaScript 式や、あらかじめ作成済みのパラメーターを含めることができます。より高度な活用例については [Data-driven testing](/docs/advanced-editing/data-driven-testing) を参照してください。
 
 ## JavaScript 式でテキストを設定する
