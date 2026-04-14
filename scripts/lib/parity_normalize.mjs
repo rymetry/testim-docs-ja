@@ -9,8 +9,12 @@
  */
 
 const HELP_TESTIM_RE = /^(?:https?:\/\/)?help\.testim\.io(\/docs\/[^\s)]+)/;
+// Matches any path under /testim/content/ (canonical repo URL form: /{category}/{slug}.htm).
+// Legacy /Topics/Help/ URLs are also matched by this broader regex and produce their literal
+// path translation (e.g. Topics/Help/loops → /docs/Topics/Help/loops) since that URL form
+// is not actually used in the repo.
 const TRICENTIS_DOCS_RE =
-  /^https?:\/\/docs\.tricentis\.com\/testim\/content\/Topics\/Help\/(.+?)\.htm(#[^\s)]*)?$/;
+  /^https?:\/\/docs\.tricentis\.com\/testim\/content\/(.+?)\.htm(#[^\s)]*)?$/;
 
 export function normalizeUrlForParity(url) {
   if (typeof url !== 'string' || url.length === 0) return url;
@@ -19,7 +23,11 @@ export function normalizeUrlForParity(url) {
   if (helpMatch) return helpMatch[1];
 
   const tricentisMatch = url.match(TRICENTIS_DOCS_RE);
-  if (tricentisMatch) return `/docs/${tricentisMatch[1]}${tricentisMatch[2] ?? ''}`;
+  if (tricentisMatch) {
+    // Strip trailing /index so that /foo/index.htm → /docs/foo (directory root).
+    const path = tricentisMatch[1].replace(/\/index$/, '');
+    return `/docs/${path}${tricentisMatch[2] ?? ''}`;
+  }
 
   return url;
 }

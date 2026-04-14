@@ -45,21 +45,24 @@ describe('normalizeUrlForParity — help.testim.io → canonical', () => {
 });
 
 describe('canonicalizeDocsUrl — docs.tricentis.com/testim/content/...', () => {
-  it('rewrites docs.tricentis.com/testim/content/Topics/Help/X.htm to /docs/X', () => {
+  // NOTE: /Topics/Help/ is a legacy URL form not used in the repo.
+  // The canonical repo form is /{category}/{slug}.htm (no Topics/Help prefix).
+  // These tests document the literal path translation behaviour for legacy URLs.
+  it('rewrites docs.tricentis.com/testim/content/Topics/Help/X.htm (legacy form — literal path)', () => {
     assert.equal(
       canonicalizeDocsUrl(
         'https://docs.tricentis.com/testim/content/Topics/Help/loops.htm',
       ),
-      '/docs/loops',
+      '/docs/Topics/Help/loops',
     );
   });
 
-  it('handles nested path /Topics/Help/advanced-editing/loops.htm', () => {
+  it('handles nested path /Topics/Help/advanced-editing/loops.htm (legacy form — literal path)', () => {
     assert.equal(
       canonicalizeDocsUrl(
         'https://docs.tricentis.com/testim/content/Topics/Help/advanced-editing/loops.htm',
       ),
-      '/docs/advanced-editing/loops',
+      '/docs/Topics/Help/advanced-editing/loops',
     );
   });
 });
@@ -68,12 +71,13 @@ describe('normalizeSegmentTokens — applies both rewrites', () => {
   it('returns token set with all URLs normalized', () => {
     const tokens = [
       'https://help.testim.io/docs/loops',
+      // Legacy Topics/Help form — normalizes to literal path (not canonical repo form).
       'https://docs.tricentis.com/testim/content/Topics/Help/hooks.htm',
       '--project-id',
       'Ctrl+S',
     ];
     const result = normalizeSegmentTokens(tokens);
-    assert.deepEqual(result.sort(), ['--project-id', '/docs/hooks', '/docs/loops', 'Ctrl+S']);
+    assert.deepEqual(result.sort(), ['--project-id', '/docs/Topics/Help/hooks', '/docs/loops', 'Ctrl+S']);
   });
 
   it('preserves non-URL tokens unchanged', () => {
@@ -86,6 +90,43 @@ describe('normalizeSegmentTokens — applies both rewrites', () => {
     const enTokens = ['https://help.testim.io/docs/loops'];
     const jaTokens = ['/docs/loops'];
     assert.deepEqual(normalizeSegmentTokens(enTokens), normalizeSegmentTokens(jaTokens));
+  });
+});
+
+describe('canonicalizeDocsUrl — actual repo canonical URL forms', () => {
+  it('rewrites docs.tricentis.com/testim/content/{category}/{slug}.htm (no Topics/Help prefix)', () => {
+    assert.equal(
+      canonicalizeDocsUrl('https://docs.tricentis.com/testim/content/administration/api-access.htm'),
+      '/docs/administration/api-access',
+    );
+  });
+
+  it('rewrites nested category path', () => {
+    assert.equal(
+      canonicalizeDocsUrl('https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file.htm'),
+      '/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file',
+    );
+  });
+
+  it('strips /index.htm to directory root', () => {
+    assert.equal(
+      canonicalizeDocsUrl('https://docs.tricentis.com/testim/content/advanced-editing/data-driven-testing/index.htm'),
+      '/docs/advanced-editing/data-driven-testing',
+    );
+  });
+
+  it('strips top-level /index.htm to /docs/{category}', () => {
+    assert.equal(
+      canonicalizeDocsUrl('https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm'),
+      '/docs/overview/testim-overview',
+    );
+  });
+
+  it('preserves hash fragment after canonical conversion', () => {
+    assert.equal(
+      canonicalizeDocsUrl('https://docs.tricentis.com/testim/content/administration/api-access.htm#api-access'),
+      '/docs/administration/api-access#api-access',
+    );
   });
 });
 
