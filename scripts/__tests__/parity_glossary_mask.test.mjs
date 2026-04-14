@@ -118,6 +118,32 @@ describe('maskSegmentText — mask record shape', () => {
   });
 });
 
+describe('maskSegmentText — case-insensitive (Phase 0 fix for textNorm lowercased input)', () => {
+  it('masks glossary term in lowercased text (textNorm context)', () => {
+    const result = maskSegmentText('the visual editor opens here');
+    const entries = result.masks.map((m) => m.entry);
+    assert.ok(
+      entries.includes('Visual Editor'),
+      'Glossary should match case-insensitively because textNorm lowercases input',
+    );
+  });
+
+  it('masks lowercased Testim term', () => {
+    const result = maskSegmentText('open testim to start');
+    const entries = result.masks.map((m) => m.entry);
+    assert.ok(entries.includes('Testim'));
+  });
+
+  it('classifySegment returns isFullyMasked=true for English-only UI label (table cell case)', () => {
+    const cls = classifySegment('test editor');
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      'English-only UI label should be masked, not flagged as untranslated',
+    );
+  });
+});
+
 describe('createMaskCoverage — run-level collector', () => {
   it('records masks and returns summary counters', async () => {
     const { createMaskCoverage } = await import('../lib/parity_glossary_mask.mjs');

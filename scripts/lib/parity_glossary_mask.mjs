@@ -120,7 +120,7 @@ export function maskSegmentText(text) {
   let masked = text;
   for (const term of sortedTerms) {
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp('\\b' + escaped + '\\b', 'g');
+    const re = new RegExp('\\b' + escaped + '\\b', 'gi');
     for (const match of masked.matchAll(re)) {
       masks.push({
         source: 'glossary',
