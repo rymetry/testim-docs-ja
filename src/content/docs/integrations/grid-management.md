@@ -33,13 +33,8 @@ VPN などの制限付き環境を使うテストを実行する場合は、Grid
 :::
 
 :::info
-互換性を確保するため、Testim Grid 上の browser version は十分な検証とテストを行ったうえで定期的に更新されます。
-
-更新は主に次の 2 条件で実施されます。
-
-- 公式の major version リリースから 3 か月以内
-- 重大な security update を含む version
-  :::
+互換性を確保するため、Testim Grid 上の browser version は十分な検証とテストを行ったうえで定期的に更新されます。更新は主に次の 2 条件で実施されます: 公式の major version リリースから 3 か月以内 重大な security update を含む version
+:::
 
 ## Web Testing Grids
 
