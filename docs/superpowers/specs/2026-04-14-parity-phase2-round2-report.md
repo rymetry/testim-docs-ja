@@ -4,134 +4,123 @@
 - **Branch**: `claude/parity-phase2-round2`
 - **Base**: `main` (PR#267 merged)
 - **Plan**: `docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md`
-- **Executed this round**: Phase 2.0 (glossary + untranslated) + Phase 2.4 (residual structure)
+- **Executed this round**: Phase 2.0 (glossary) + Phase 2.4 (residual structure) 部分適用
 - **Dispatch mode**: 4 subagents (sonnet 4.6, isolated worktrees, background, automode)
+- **Post-review state**: UI label 維持違反の 5 ファイルは revert、構造修正のみ残置
 
-## Baseline delta (after regen)
+## Baseline delta (post-review)
 
-| issueType | Phase 2 end (round 1) | Phase 2 Round 2 | 差 |
+| issueType | Phase 2 end (round 1) | Phase 2 Round 2 (post-review) | 差 |
 | --- | ---: | ---: | ---: |
-| segment-untranslated | 1606 | 1510 | **-96** |
-| segment-extra | 91 | 83 | **-8** |
-| segment-missing | 109 | 105 | **-4** |
-| section-structure-mismatch | 61 | 53 | **-8** |
+| segment-untranslated | 1606 | 1571 | **-35** |
+| segment-extra | 91 | 87 | **-4** |
+| segment-missing | 109 | 107 | **-2** |
+| section-structure-mismatch | 61 | 56 | **-5** |
 | segment-token-gap | 40 | 40 | 0 |
 | segment-inconclusive | 11 | 11 | 0 |
 | segment-order-mismatch | 1 | 1 | 0 |
-| **total** | **1919** | **1803** | **-116** |
+| **total** | **1919** | **1873** | **-46** |
 
-累計差 (Phase 1 終了時 2259 → Round 2 終了時 1803): **-456 / -20.2%**
+累計差 (Phase 1 終了時 2259 → Round 2 終了時 1873): **-386 / -17.1%**
+
+## Review findings (反映済み)
+
+**Review で指摘された 4 件 + 関連 regression の修正:**
+
+1. **P1 `coding-assistant.md`**: `<details>/<summary>` を平文化 → `main` へ revert。
+   EN snapshot の `<details>` は escape された artifact で、JA 側は original の
+   折りたたみ構造を維持するのが `docs/WRITING_GUIDE.md §HTML 要素の取り扱い` の契約。
+2. **P1 `hooks.md`**: `Before test handler` 等の UI label を本文から削除 → `main` へ revert。
+   `Config File` / `Turbo Mode` / `View Screenshot` / `Baseline` 等の UI 語も paraphrase
+   されていたため全体 revert。
+3. **P2 `dashboard.md`**: `Assigned to me` / `Remote Execution Runs` / `Duplication Level` /
+   `Auto Grouping` を日本語化 → `main` へ revert。
+4. **P2 `azure-ad-sso-integration.md` + `okta-sso-integration.md` + `shared-configuration.md`**:
+   Azure / Okta / Testim の literal UI label を paraphrase → `main` へ revert。
+
+**副次的 revert:**
+- `wait-for.md`: callout 2 分割の structure fix は良かったが、「Wait for element text (Mobile)」
+  の warning callout に英語エラー文比率が高く新規 active `segment-untranslated` を誘発したため revert
+
+**保持した subagent 修正:**
+- `advanced-editing/parameters/parameters-for-groups.md` — preface 2 段落分割 + inline paragraph 化
+- `salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction.md` — 3 箇所の `<br />` 除去
 
 ## Glossary additions (Phase 2.0 scope)
 
 追加 2 件:
 
-- `Tricentis Mobile Agent` — configure-tricentis-mobile-agent Top slug のモバイルエージェント名
-- `Virtual Mobile Grid` — virtual-mobile-grid Top slug のモバイル実行グリッド
+- `Tricentis Mobile Agent` — configure-tricentis-mobile-agent Top slug
+- `Virtual Mobile Grid` — virtual-mobile-grid Top slug
 
-### 検討後見送った追加
-
-- `TTM for Jira` — `integrations/test-management-integrations/ttm-for-jira-integration` に 4 件の
-  `segment-extra` regression を誘発するため除外。TTM ラベルを mask すると既存の
-  segment alignment が変わり、preface / bulk-create section / callout の
-  JA segment が EN にない扱いになる。Top slug への影響を事前検証した上で、
-  後 round で再検討する。
-- `Configuration Library` / `Configuration List` / `Default Configuration` /
-  `Test Configuration` / `Setup Step` など — shared-configuration 等に
-  similar regression を誘発。本 round では保留。
-
-**教訓:** glossary 追加は Top slug の segment-extra 発生を事前シミュレーションしてから
-反映する。単純な UI label の英語維持目的では **false-negative risk** (`Approve` /
-`Enter` / `Tab` 系、PR#267 round 2 review 参照) に加えて **segment alignment regression**
-も起きうる。
+**繰越:**
+- `TTM for Jira` — Phase 3 Task 3.6 で `ttm-for-jira-integration` の alignment
+  先行修正とセットで追加 (Phase 3 plan に追記済み)
 
 ## Sub-phase summary
 
-### Phase 2.0 (untranslated 翻訳、5 slugs)
+### Phase 2.0 (untranslated 翻訳)
 
-| slug | 追加前 untranslated | 追加後 untranslated | 差 |
-| --- | ---: | ---: | ---: |
-| advanced-editing/hooks | 42 | 30 | -12 |
-| test-management/shared-configuration | 29 | 24 | -5 |
-| testops/insights/dashboard | 25 | 19 | -6 |
-| security/sso-integration/azure-ad-sso-integration | 20 | 1 | -19 |
-| security/sso-integration/okta-sso-integration | 18 | 0 | -18 |
-| **Phase 2.0 合計** | **134** | **74** | **-60** |
+今 round で純減した結果として残るのは glossary mask 効果のみ (-35 untranslated)。
+subagent が実施した content translation は 5 ファイルすべて UI label 違反を含んでいたため revert。
 
-**Dispatch lane:**
-- P2.0-A: hooks / shared-configuration / dashboard (subagent worktree `agent-a1753390`、
-  API 500 error で異常終了するも 2 commit + 1 uncommitted file を回収)
-- P2.0-B: recording-a-local-mobile-test / email-validation / azure-ad-sso / okta-sso
-  (subagent worktree `agent-ab764cde`、4 slug 中 SSO 2 slug を実翻訳、前 2 slug は
-  baseline-covered のため変更なし)
+| slug | 結果 |
+| --- | --- |
+| advanced-editing/hooks | revert (11 箇所 UI label 破壊) |
+| test-management/shared-configuration | revert (CLI / Configuration Library 等の UI 語 paraphrase) |
+| testops/insights/dashboard | revert (Assigned to me / Auto Grouping 等日本語化) |
+| security/sso-integration/azure-ad-sso-integration | revert (Azure literal UI label paraphrase) |
+| security/sso-integration/okta-sso-integration | revert (Okta literal UI label paraphrase) |
 
-### Phase 2.4 (structure + extra + opportunistic translate、4 slugs)
+### Phase 2.4 (structure + extra)
 
-| slug | structure | extra (non-callout) | missing | untranslated |
-| --- | ---: | ---: | ---: | ---: |
-| advanced-editing/coding-assistant | 1 → 0 | 4 → 0 | 0 → 0 | 7 → 7 |
-| advanced-editing/wait-for | 2 → 0 | 0 → 0 | 2 → 0 | 8 → 7 |
-| advanced-editing/parameters/parameters-for-groups | 2 → 0 | 1 → 0 | 2 → 0 | 3 → 3 |
-| salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction | 3 → 0 | 3 → 0 | 0 → 0 | 13 → 13 |
-| **Phase 2.4 合計** | **8 → 0** | **8 → 0** | **4 → 0** | **31 → 30** |
-
-**修正内容:**
-- `coding-assistant`: `<details>/<summary>` を flat paragraph に展開し EN の inline
-  `<details>` 表記に整合
-- `wait-for`: 単一 callout を 2 分割し EN の 2 note block に整合
-- `parameters-for-groups`: preface 段落を EN の 2 段落構造に分割 + inline paragraph 化
-- `sfdc-step-relatedlistaction`: 3 箇所の standalone `<br />` 除去 (EN にない)
+| slug | structure | extra (non-callout) | missing | 結果 |
+| --- | ---: | ---: | ---: | --- |
+| advanced-editing/parameters/parameters-for-groups | 2 → 0 | 1 → 0 | 2 → 0 | ✅ 適用 |
+| salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction | 3 → 0 | 3 → 0 | 0 → 0 | ✅ 適用 |
+| advanced-editing/coding-assistant | 1 | 4 | 0 | revert (details 平文化は contract 違反) |
+| advanced-editing/wait-for | 2 | 0 | 2 | revert (English-heavy callout で新規 untranslated 誘発) |
 
 ### Phase 2.4 blocked (7 slugs、次 round scope)
 
-以下 7 slug は subagent が「baseline orphan regression」を理由に修正を見送り。
-現行 baseline の fingerprint マッチが部分的失効すると、baseline でカバーされていた
-untranslated が active 扱いに昇格するため、**baseline 先行再生成 + 個別修正** が必要。
+以下 7 slug は subagent 側で「baseline orphan regression」を理由にスキップ。
+`baseline 先行再生成 + 個別修正` lane を Phase 3 Round 1 / 2 で切る予定:
 
-- `administration/project-settings` (3 structure)
-- `administration/subscription-plans` (3 extra + 1 structure)
-- `administration/secrets` (2 extra + 1 structure + 3 callout-body extras は Phase 3)
-- `editing-tests/generating-a-random-value` (7 extra + 1 structure)
-- `integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration` (2 extra + 2 structure)
-- `guides/keyboard-shortcuts` (4 extra table-cell + 1 structure)
-- `running-tests/configuration-file-run-hooks` (2 extra + 2 structure)
+- `administration/project-settings`
+- `administration/subscription-plans`
+- `administration/secrets`
+- `editing-tests/generating-a-random-value`
+- `integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration`
+- `guides/keyboard-shortcuts`
+- `running-tests/configuration-file-run-hooks`
 
-## Dispatch outcome summary
+## Lessons learned
 
-| lane | slugs | commits | result |
-| --- | --- | ---: | --- |
-| P2.0-A | 3 (hooks, shared-cfg, dashboard) | 2 commit + 1 uncommitted | ⚠️ API 500 error、controller 側で uncommitted 回収 |
-| P2.0-B | 4 (recording-local, email-val, 2×SSO) | 2 staged (commit block) | ✅ 2 slug で -37 untranslated、2 slug は baseline-only |
-| P2.4-A | 5 (admin×3, sfdc, generate-random) | 1 staged (commit block) | ⚠️ 1/5 fixed、4 blocked by baseline orphan risk |
-| P2.4-B | 6 (adv-editing×3, integrations, guides, run-hooks) | 3 uncommitted (commit block) | ⚠️ 3/6 fixed、3 blocked by baseline orphan risk |
+1. **Subagent の content translation は UI label 維持契約を破壊しやすい**
+   - `docs/WRITING_GUIDE.md` §5.1 / `docs/TRANSLATION_GUIDE.md` § Testim 機能名英語維持
+     を prompt に明示し、subagent に「literal label は一字一句変更しない」を強く指示する必要
+   - 今回のような「翻訳範囲が曖昧な段落」での paraphrase を controller 側で自動検出するには、
+     *diff の中で既存 English UI label が消滅していたら regression* と判定する lint を作ると良い
+2. **Glossary mask は segment alignment まで作用する**
+   - Top slug への影響を事前シミュレーション (`npm run check:parity` full run diff) してから登録
+3. **Subagent の `git commit` tool 不許可**
+   - prompt に「commit できなければファイル差分を残して final report で path を渡す」と明記
+4. **`<details>` は EN artifact よりも WRITING_GUIDE を優先**
+   - EN snapshot が literal `<details>` 文字列でも、JA は折りたたみ構造を保つ (§HTML 要素の取り扱い)
 
-**学び:**
-1. subagent 側で `git commit` が tool sandbox で block されるケースがあり、controller が
-   worktree から手動で回収する必要がある → 次 round では subagent prompt に
-   「commit 不能ならファイル差分をそのまま残して final report で path を渡す」と明記
-2. `glossary` 追加は Top slug への regression を事前確認しないと、baseline を増やす
-   結果になる。追加候補を決めたら **per-slug full parity diff** で検証する
-3. Phase 2.4 の未処理 7 slug は **baseline 先行再生成 lane** を次 round で切る
+## Deferred (次 round)
 
-## Deferred
-
-- **次 round (Phase 2 Round 3)**: Phase 2.4 blocked 7 slug (baseline 先行再生成 + 個別修正)
-- **次 round**: untranslated Top 残 ~1500 を段階的に焼却 (lane を追加する)
+- **Phase 2 Round 3 / Phase 3 Round 0**: baseline 先行再生成 + Phase 2.4 blocked 7 slug の個別修正
+- **Phase 3 Task 3.6**: `TTM for Jira` glossary + `ttm-for-jira-integration` alignment (plan 追記済み)
+- **untranslated Top 残 ~1500 の段階翻訳** — subagent prompt 強化後に再挑戦
 - **Phase 3**: callout-body 17 件
-- **Phase 4**: inconclusive 11 件、order-mismatch 1 件、schema cleanup
+- **Phase 4**: inconclusive 11 / order-mismatch 1 / schema cleanup
 
-## Gates (本 PR 直前)
+## Gates (post-review)
 
-- [x] `npm run check:parity`: 288/288 ファイル、active actionable=0、signal-only 9 件
+- [x] `npm run check:parity --fail-on=actionable`: exit 0、active actionable = 0
 - [x] `npm run lint:docs`: 0 error / 0 warning
 - [x] `npm run test`: 1726 pass / 0 fail
-- [x] `npm run build`: 290 pages built, 8.82s
-- [x] baseline 再生成: 1919 → 1803 (-116)
-- [x] Phase 2.0/2.4 対象 issueType がすべて純減
-- [x] `callout-body` 17 件は据え置き (Phase 3 送り)
-
-## Next actions
-
-1. PR 作成 → review → merge
-2. Phase 2 Round 3 plan ("baseline 先行再生成 + Phase 2.4 blocked 7 slug 修正" + "Phase 2.0 untranslated 第 2 波") を起草
-3. Phase 3 scope (callout-body extra 17 件) の設計
+- [x] baseline 再生成済み (1919 → 1873)
+- [x] Review 指摘 4 件すべて revert or 部分修正で対応
+- [x] Phase 2.0 / 2.4 対象 issueType すべて純減 (小幅)

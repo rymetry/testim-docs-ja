@@ -16,17 +16,17 @@ keywords:
   - アクセス管理
 ---
 
-Okta はアクセス管理サービスプロバイダーです。Testim はこのサービスと統合されており、一度認証すれば再認証なしで利用できます。
+Okta は ID およびアクセス管理サービスプロバイダーです。Testim は Okta と統合されており、Okta ユーザーは Okta で一度認証すれば、再度認証することなく Testim にアクセスできます。
 
 :::info
-SSO はプレミアム機能です。デプロイメントで有効になっていることを確認してください。有効になっていない場合は、Testim のサポートチームに連絡してください。
+SSO はプレミアム機能です。デプロイメントで SSO 機能が有効になっていることを確認してください。有効になっていない場合は、Testim の CSM に連絡してください。
 :::
 
 **Testim Okta 統合をセットアップするには:**
 
 1. **Okta Admin**アカウントにログインします。
 2. **Applications > Applications**に移動します。
-3. アプリ統合の作成ボタンをクリックします。
+3. **Create App Integration**をクリックします。
 
 ![Create App Integration ボタン](/images/security-sso/okta-sso-integration/cc7a2ac-image.png)
 
@@ -39,8 +39,8 @@ SSO はプレミアム機能です。デプロイメントで有効になって�
 
 ![General Settings 画面](/images/security-sso/okta-sso-integration/cf9a206-Capture2.PNG)
 
-6. アプリ名フィールドに「Testim SSO」などのコネクタアプリ名を入力します。
-7. **Browse** をクリックして Testim ロゴを選択し、アップロードします（オプション）。
+6. **App Name**フィールドに、'Testim SSO'などのコネクタアプリの名前を入力します。
+7. **Browse**をクリックして Testim ロゴを選択し、**Upload Logo**をクリックしてアップロードします（オプション）。
 8. ユーザーが Testim について詳しく知るのに役立つ**説明**を追加することもできます（オプション）。
 9. **Next**をクリックします。\
    **Configure SAML**画面が表示されます。この時点でコネクタが作成されました。次に Testim に接続する必要があります。
@@ -49,20 +49,20 @@ SSO はプレミアム機能です。デプロイメントで有効になって�
 ![ユーザーアイコン](/images/security-sso/okta-sso-integration/713786e-sso1.png)
 
 11. ドロップダウンメニューで、**Settings**をクリックし、**SSO**タブをクリックします。
-12. Testim のサービスプロバイダー詳細から **ACS URL** をコピーします。
+12. **Testim Service Provider Details**の下の**Assertion Consumer Service URL**で、**Copy**ボタンをクリックします。
 
 ![Assertion Consumer Service URL](/images/security-sso/okta-sso-integration/f75d3f1-sso4.png)
 
-13. Okta タブに戻り、コピーした URL を対応フィールドに貼り付けます。
+13. **Okta**を開いているタブに戻り、コピーした**Assertion Consumer Service URL**を**Single sign on URL**フィールドに貼り付けます。
 
 ![Okta SAML 設定](/images/security-sso/okta-sso-integration/7ecca0b-okta5.png)
 
-14. Testim Automate タブに戻り、SP エンティティ ID をコピーします。
-15. Okta タブで、このコードを対応フィールドに貼り付けます。
-16. 引き続き Okta で、名前 ID フォーマットとして **EmailAddress** を選択します。
-17. アプリケーションのユーザー名フィールドで **Email** を選択します。
+14. **Testim Automate**タブに戻り、**SERVICE PROVIDER ENTITY ID/AUDIENCE**コードをコピーします。
+15. **Okta**タブで、このコードを **Audience URI (SP Entity ID)** フィールドに貼り付けます。
+16. Okta のまま、**Name ID format**フィールドで**EmailAddress**を選択します。
+17. **Application username**フィールドで**Email**を選択します。
 18. **Name**フィールドの下に**email**と入力します。
-19. **user.email** を選択します。これで両サービス間の email がマッピングされます。
+19. **Value**の下で**user.email**を選択します。これにより、Testim の`email`フィールドが Okta の`user.email`フィールドにマッピングされます。
 
 ![属性マッピング設定](/images/security-sso/okta-sso-integration/5dae2c9-okta6.PNG)
 
@@ -77,8 +77,8 @@ SSO はプレミアム機能です。デプロイメントで有効になって�
 
 22. **Next**をクリックします。
 23. フィードバックを完了し、**Finish**をクリックします。
-24. 新しく作成されたアプリケーションのページで、SAML 署名証明書セクションまでスクロールします。
-25. **Actions** メニューから IdP メタデータを表示します。
+24. 新しく作成されたアプリケーションのページで、**SAML Signing Certificates**セクションまでスクロールダウンします。
+25. **Actions > View IdP metadata**をクリックします。
 
 ![IdP メタデータ表示メニュー](/images/security-sso/okta-sso-integration/8b9736c-image_1.png)
 
@@ -91,15 +91,15 @@ SSO はプレミアム機能です。デプロイメントで有効になって�
 
 ![SSO 有効化トグル](/images/security-sso/okta-sso-integration/e687b64-sso10.png)
 
-29. 全ユーザーが SSO 経由でのみログインするよう設定するには、IdP 経由ログインを強制するチェックボックスを選択します。
+29. すべてのユーザーが Okta を通じてのみログインでき、通常の Testim ログインページを通じてログインできないようにするには、**Force users to login via idP**チェックボックスを選択します。
 
 ![IdP 経由ログイン強制チェックボックス](/images/security-sso/okta-sso-integration/1a94a23-sso11.png)
 
 30. **Okta**タブに戻り、新しく作成した Testim SSO コネクタアプリケーションを関連するユーザー、グループ、またはロールに関連付けます。この例ではユーザーを追加する方法を示しますが、グループやロールにも同様に適用されます。
-31. アプリケーション一覧に移動します。新しい Testim SSO コネクタが表示されます。
+31. **Applications > Applications**に移動します。新しい Testim SSO コネクタが表示されます。
 
 ![Testim SSO アプリケーション](/images/security-sso/okta-sso-integration/508e2c1-tempsnip1.png)
 
-32. 設定ドロップダウンをクリックし、ユーザーへの割り当てを選択します。
+32. **Settings** ドロップダウンをクリックし、**Assign to Users**を選択します。
 33. 関連するユーザーに割り当てます。\
-    新しく作成されたアプリが、指定されたユーザー/グループ/ロールのポータルに表示されます。これ以降、ユーザーは SSO 経由で Testim にログインできるようになります。
+    新しく作成されたアプリが作成され、指定されたユーザー/グループ/ロールの Okta ポータルに表示されます。これ以降、これらのユーザーは Okta SSO から Testim にログインできるようになります。
