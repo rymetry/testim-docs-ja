@@ -698,4 +698,18 @@ return pdf(fileBuffer).then((data) => {
  </tbody>
 </table>
 
-| expectedText | JavaScript | 'A Simple PDF File' |
+<table class="md-table md-table-3cols">
+ <tbody>
+  <tr>
+   <td style="text-align: left;">
+    expectedText
+   </td>
+   <td style="text-align: left;">
+    JavaScript
+   </td>
+   <td style="text-align: left;">
+    'A Simple PDF File'
+   </td>
+  </tr>
+ </tbody>
+</table>

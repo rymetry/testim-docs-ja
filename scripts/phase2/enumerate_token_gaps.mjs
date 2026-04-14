@@ -2,25 +2,26 @@
 /**
  * Phase 2.3: segment-token-gap 残件を対象 29 slug に絞り分類するスクリプト。
  *
- * 分類カテゴリ:
- *   - cliFlag      : -- or - で始まるトークン (CLI フラグ)
- *   - internalLink : /docs/ で始まるトークン
- *   - numericOrUnit: 数値 + 単位 (ms, sec, %, x 等)
- *   - externalUrl  : http で始まるトークン
- *   - other        : それ以外
+ * 分類カテゴリ (`categorizeToken` in ./lib/baseline.mjs):
+ *   - enSideArtifact : EN 側 typo / 不正 link で JA 側修正不能 (registry 管理)
+ *   - cliFlag        : -- or - で始まるトークン (CLI フラグ)
+ *   - internalLink   : /docs/ で始まるトークン
+ *   - numericOrUnit  : 数値 + 単位 (ms, sec, %, x 等)
+ *   - externalUrl    : http で始まるトークン
+ *   - other          : それ以外
+ *
+ * **複合 token-gap への対応 (PR#267 review 対応):**
+ * `missingTokens[0]` だけでなく **全トークンを分類** し、entry を該当する全カテゴリに
+ * 登録する。例: `[--chrome-extra-args, /docs/index]` を持つ entry は
+ * `cliFlag` と `enSideArtifact` の両方に現れる。従来実装は先頭トークンのみ見て
+ * 内部リンク欠落を見落とす問題があった。
  *
  * Usage:
  *   node scripts/phase2/enumerate_token_gaps.mjs
  *   node scripts/phase2/enumerate_token_gaps.mjs > /tmp/phase2-3-targets.md
  */
 
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = join(__dirname, '../..');
+import { loadBaseline, categorizeToken } from './lib/baseline.mjs';
 
 const TARGET_SLUGS = new Set([
   'advanced-editing/hooks',
@@ -54,60 +55,74 @@ const TARGET_SLUGS = new Set([
   'testops/insights/dashboard',
 ]);
 
-/** カテゴリを判定する (最初の missingToken を基準にする) */
-function categorize(token) {
-  if (!token) return 'other';
-  if (token.startsWith('--') || /^-[a-zA-Z]/.test(token)) return 'cliFlag';
-  if (token.startsWith('/docs/')) return 'internalLink';
-  if (/^\d+(\.\d+)?(ms|sec|s|min|hr|px|em|rem|MB|GB|KB|%|x)$/i.test(token))
-    return 'numericOrUnit';
-  if (token.startsWith('http')) return 'externalUrl';
-  return 'other';
-}
+const CATEGORY_ORDER = [
+  'enSideArtifact',
+  'cliFlag',
+  'internalLink',
+  'numericOrUnit',
+  'externalUrl',
+  'other',
+];
 
-const baseline = JSON.parse(
-  readFileSync(join(REPO_ROOT, 'parity-baseline.json'), 'utf8'),
-);
+const baseline = loadBaseline();
 
 const inScope = baseline.entries.filter(
   (e) => e.issueType === 'segment-token-gap' && TARGET_SLUGS.has(e.slug),
 );
 
-// カテゴリごとに集約
-const byCategory = {
-  cliFlag: [],
-  internalLink: [],
-  numericOrUnit: [],
-  externalUrl: [],
-  other: [],
-};
+// entry を token ごとにカテゴリに投入。同じ entry が複数カテゴリに現れてよい。
+const byCategory = Object.fromEntries(CATEGORY_ORDER.map((c) => [c, []]));
+let multiCategoryEntryCount = 0;
 
 for (const entry of inScope) {
-  const firstToken = entry.missingTokens?.[0] ?? '';
-  const cat = categorize(firstToken);
-  byCategory[cat].push({
-    slug: entry.slug,
-    sectionPath: entry.sectionPath,
-    missingTokens: entry.missingTokens,
-    detail: entry.inconclusiveReason ?? entry.usabilityReason ?? '',
-  });
+  const tokens = entry.missingTokens ?? [];
+  const cats = new Map(); // category -> tokens matching that category
+
+  for (const token of tokens) {
+    const cat = categorizeToken(token);
+    if (!cats.has(cat)) cats.set(cat, []);
+    cats.get(cat).push(token);
+  }
+
+  if (cats.size > 1) multiCategoryEntryCount += 1;
+
+  for (const [cat, catTokens] of cats) {
+    byCategory[cat].push({
+      slug: entry.slug,
+      sectionPath: entry.sectionPath,
+      allTokens: tokens,
+      categoryTokens: catTokens,
+      detail: entry.inconclusiveReason ?? entry.usabilityReason ?? '',
+    });
+  }
 }
 
 // Markdown 出力
 const lines = [];
 lines.push('# Phase 2.3 segment-token-gap 対象一覧');
 lines.push('');
-lines.push(`総件数: ${inScope.length} entries / ${TARGET_SLUGS.size} slugs`);
+lines.push(
+  `総件数: ${inScope.length} entries / ${TARGET_SLUGS.size} slugs ` +
+    `(うち複数カテゴリにまたがる entry: ${multiCategoryEntryCount})`,
+);
 lines.push('');
 
-for (const [cat, entries] of Object.entries(byCategory)) {
+for (const cat of CATEGORY_ORDER) {
+  const entries = byCategory[cat];
   if (entries.length === 0) continue;
-  lines.push(`## ${cat} (${entries.length} entries)`);
+  lines.push(`## ${cat} (${entries.length} occurrences)`);
   lines.push('');
   for (const e of entries) {
     lines.push(`### ${e.slug}`);
     lines.push(`- **sectionPath**: ${e.sectionPath}`);
-    lines.push(`- **missingTokens**: \`${e.missingTokens?.join('`, `')}\``);
+    lines.push(
+      `- **categoryTokens**: \`${e.categoryTokens.join('`, `')}\``,
+    );
+    if (e.allTokens.length > e.categoryTokens.length) {
+      lines.push(
+        `- **allTokens**: \`${e.allTokens.join('`, `')}\` (複合 token-gap — 他カテゴリも確認)`,
+      );
+    }
     if (e.detail) lines.push(`- **detail**: ${e.detail}`);
     lines.push('');
   }

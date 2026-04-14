@@ -81,7 +81,7 @@
 | Environments | UI ナビゲーション要素 |
 | Go Back to the Editor | Testim の UI リンク |
 | See Error | Testim の UI リンク |
-| Approve | UI ボタン名（qTest） |
+| Approve | UI ボタン名（qTest、watch: 一般単語） |
 
 ## 画面 / UI 領域
 
@@ -188,12 +188,16 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 
 ## キーボードキー名
 
+> ⚠️ **Watch list (PR#267 review より):** `Enter` / `Tab` / `Approve` のような一般的な英単語は、`\b` word-boundary マッチで他文脈の未翻訳英文も mask する可能性がある。
+> 実装上 `parity_glossary_mask.classifySegment` は `RESIDUE_MIN_WORDS=3` / `RESIDUE_MIN_LENGTH=15` の防護層で「全英文 segment」は検知され続けるが、**短い英文 segment (< 3 words) は mask されて検知漏れする**。
+> 2026-10 Phase 4 audit で、これらのエントリが「意図した UI 文脈 (キー押下/ボタン ラベル) のみ」で mask されていることを `debug.maskCoverage` で確認すること。
+
 | 用語 | 備考 |
 | --- | --- |
-| Enter | キー名 |
-| Tab | キー名 |
-| Page Up | キー名 |
-| Page Down | キー名 |
+| Enter | キー名 (watch: 一般単語) |
+| Tab | キー名 (watch: 一般単語) |
+| Page Up | キー名 (複合語で比較的安全) |
+| Page Down | キー名 (複合語で比較的安全) |
 
 ## 一般的な技術用語（英語維持）
 
