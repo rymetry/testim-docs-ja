@@ -196,3 +196,49 @@ describe('classifySegment — Spec Invariant 5: Residue = バグ (mixed JA/EN mu
     assert.equal(cls.isFullyMasked, true);
   });
 });
+
+describe('GLOSSARY common-word false-negative regression (PR#267 round 2 review)', () => {
+  /**
+   * 一般的な英単語 (Enter / Tab / Approve / Page Up / Page Down) を GLOSSARY に
+   * 登録すると、`\b` word-boundary マッチで他文脈の短い英文 segment も mask され、
+   * `classifySegment` の RESIDUE_MIN_WORDS=3 防護層を silent に bypass する。
+   *
+   * このスイートは以下を pin する:
+   *   1. これら 5 語が GLOSSARY に**登録されていない**こと
+   *   2. 「英単語 + common word + 英単語」の 3-word all-English segment が
+   *      fully-masked と誤判定されないこと (= 未翻訳検知の false-negative 防止)
+   */
+  it('does not include common English words (Enter/Tab/Approve/Page Up/Page Down) in GLOSSARY', () => {
+    const glossary = loadGlossary();
+    for (const forbidden of ['Enter', 'Tab', 'Approve', 'Page Up', 'Page Down']) {
+      assert.ok(
+        !glossary.has(forbidden),
+        `GLOSSARY に "${forbidden}" を登録してはいけない: ` +
+          `\\b word-boundary マッチで意図しない文脈も mask し、3-word 以下の全英文 segment を silent false-negative にする。` +
+          `docs/GLOSSARY.md の「キーボードキー名」コメントを参照。`,
+      );
+    }
+  });
+
+  it('3-word all-English segment containing "Approve" is flagged as untranslated (not silent-passed)', () => {
+    // "Click Approve now" は 3 words / 17 chars の全英文。
+    // "Approve" を GLOSSARY に登録すると mask されて "Click now" (2 words) が
+    // residue となり、RESIDUE_MIN_WORDS=3 未満で isFullyMasked=true に落ちる (false negative)。
+    const cls = classifySegment('Click Approve now');
+    assert.equal(
+      cls.isFullyMasked,
+      false,
+      '3-word all-English segment は mask で bypass されてはならない',
+    );
+  });
+
+  it('3-word all-English segment containing "Enter" is flagged', () => {
+    const cls = classifySegment('Press Enter key');
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('3-word all-English segment containing "Tab" is flagged', () => {
+    const cls = classifySegment('Select Tab here');
+    assert.equal(cls.isFullyMasked, false);
+  });
+});

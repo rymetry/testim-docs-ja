@@ -81,7 +81,6 @@
 | Environments | UI ナビゲーション要素 |
 | Go Back to the Editor | Testim の UI リンク |
 | See Error | Testim の UI リンク |
-| Approve | UI ボタン名（qTest、watch: 一般単語） |
 
 ## 画面 / UI 領域
 
@@ -186,18 +185,31 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Shared step name | プロパティ名（共有ステップ版） |
 | Step name | プロパティ名（非共有ステップ版） |
 
-## キーボードキー名
+<!--
+## キーボードキー名 / 一般単語 UI ラベル (登録禁止)
 
-> ⚠️ **Watch list (PR#267 review より):** `Enter` / `Tab` / `Approve` のような一般的な英単語は、`\b` word-boundary マッチで他文脈の未翻訳英文も mask する可能性がある。
-> 実装上 `parity_glossary_mask.classifySegment` は `RESIDUE_MIN_WORDS=3` / `RESIDUE_MIN_LENGTH=15` の防護層で「全英文 segment」は検知され続けるが、**短い英文 segment (< 3 words) は mask されて検知漏れする**。
-> 2026-10 Phase 4 audit で、これらのエントリが「意図した UI 文脈 (キー押下/ボタン ラベル) のみ」で mask されていることを `debug.maskCoverage` で確認すること。
+`Enter` / `Tab` / `Page Up` / `Page Down` / `Approve` のような一般的な英単語の
+GLOSSARY 登録は禁止する (PR#267 round 2 review で false-negative を確認)。
 
-| 用語 | 備考 |
-| --- | --- |
-| Enter | キー名 (watch: 一般単語) |
-| Tab | キー名 (watch: 一般単語) |
-| Page Up | キー名 (複合語で比較的安全) |
-| Page Down | キー名 (複合語で比較的安全) |
+理由:
+- `parity_glossary_mask.maskSegmentText` は `\b word \b` で case-insensitive マッチ
+- `classifySegment` は residue が < 15 chars または < 3 words なら
+  `isFullyMasked=true` に落とすが、これは「長い英文は検知継続」という意味では
+  なく、**「短い英文は mask されれば silent pass」という意味**
+- 具体例: "Click Approve now" (17 chars, 3 words) に `Approve` mask を適用
+  → residue "Click now" (9 chars, 2 words) → `isFullyMasked=true`
+  → **silent false-negative** (本来 flag すべき全英文 segment が検知漏れ)
+
+UI ラベルやキー名を英語維持したい場合は、代わりに以下を使う:
+- `docs/INVARIANT_TOKENS.md` に文脈付き regex を追加
+  (例: "keyboard-shortcut" パターンは `Ctrl+Enter` / `Shift+Tab` のような
+   修飾子結合のみマッチし、裸の `Enter` / `Tab` は mask しない)
+- 翻訳時に key 名を **太字** + 日本語補足 (例: "**Enter** キーを押します") と
+  して記述し、classifier の CJK 比率でマスク不要にする
+
+この方針は `scripts/__tests__/parity_glossary_mask.test.mjs` の
+`"GLOSSARY common-word false-negative regression"` suite で pin されている。
+-->
 
 ## 一般的な技術用語（英語維持）
 

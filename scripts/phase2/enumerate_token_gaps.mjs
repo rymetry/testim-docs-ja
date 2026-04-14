@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 /**
- * Phase 2.3: segment-token-gap 残件を対象 29 slug に絞り分類するスクリプト。
+ * Phase 2.3 / 共通: `segment-token-gap` 残件の分類と enumerate。
+ *
+ * **データソース:** `parity-baseline.json` の **現物** (hardcoded slug list なし)。
+ * Phase 2.3 の元々の scope (gap-only 29 slug) は baseline から算出できるため、
+ * このスクリプトは母集団を baseline で決定し、`--scope` オプションで filter する。
  *
  * 分類カテゴリ (`categorizeToken` in ./lib/baseline.mjs):
  *   - enSideArtifact : EN 側 typo / 不正 link で JA 側修正不能 (registry 管理)
@@ -10,50 +14,25 @@
  *   - externalUrl    : http で始まるトークン
  *   - other          : それ以外
  *
- * **複合 token-gap への対応 (PR#267 review 対応):**
- * `missingTokens[0]` だけでなく **全トークンを分類** し、entry を該当する全カテゴリに
- * 登録する。例: `[--chrome-extra-args, /docs/index]` を持つ entry は
- * `cliFlag` と `enSideArtifact` の両方に現れる。従来実装は先頭トークンのみ見て
- * 内部リンク欠落を見落とす問題があった。
+ * **複合 token-gap への対応:** `missingTokens[0]` だけでなく全トークンを分類し、
+ * entry を該当する全カテゴリに登録する (PR#267 review で改善)。
  *
  * Usage:
- *   node scripts/phase2/enumerate_token_gaps.mjs
+ *   node scripts/phase2/enumerate_token_gaps.mjs                # all token-gap entries
+ *   node scripts/phase2/enumerate_token_gaps.mjs --scope=gap-only  # Phase 2.3 scope (not overlapping missing)
+ *   node scripts/phase2/enumerate_token_gaps.mjs --scope=overlap   # overlap with missing (Phase 2.2 responsibility)
  *   node scripts/phase2/enumerate_token_gaps.mjs > /tmp/phase2-3-targets.md
  */
 
 import { loadBaseline, categorizeToken } from './lib/baseline.mjs';
 
-const TARGET_SLUGS = new Set([
-  'advanced-editing/hooks',
-  'advanced-editing/parameters',
-  'advanced-editing/parameters/exports-parameters',
-  'editing-tests/conditions/advanced-conditions-settings',
-  'editing-tests/editing-your-tests/editing-target-element-properties-mobile',
-  'editing-tests/search-within-a-test',
-  'getting-started/creating-your-first-codeless-test',
-  'guides/generate-random-data-with-js',
-  'guides/mobile-web-testing',
-  'integrations/grid-management/virtual-mobile-grid',
-  'integrations/integrate-testim-to-your-ci/gearset-integration',
-  'integrations/integrate-testim-to-your-ci/teamcity-integration',
-  'integrations/visual-validation/visual_validation_index',
-  'recording-tests/recording-a-mobile-test/recording-a-local-mobile-test',
-  'recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test',
-  'running-tests/base-url',
-  'running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone',
-  'salesforce-testing/salesforce-steps/sfdc-step-apex-action',
-  'salesforce-testing/salesforce-steps/sfdc-step-create',
-  'salesforce-testing/salesforce-steps/sfdc-step-edit',
-  'salesforce-testing/salesforce-steps/sfdc-step-login',
-  'salesforce-testing/salesforce-steps/sfdc-step-quickactions',
-  'salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction',
-  'salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows',
-  'salesforce-testing/salesforce-steps/sfdc-step-validate',
-  'test-management/configuration-library-mobile',
-  'test-management/dependencies-and-ordering-of-tests',
-  'test-management/labels',
-  'testops/insights/dashboard',
-]);
+const SCOPE_ARG = process.argv.find((a) => a.startsWith('--scope='));
+const SCOPE = SCOPE_ARG ? SCOPE_ARG.slice('--scope='.length) : 'all';
+const VALID_SCOPES = ['all', 'gap-only', 'overlap'];
+if (!VALID_SCOPES.includes(SCOPE)) {
+  console.error(`Invalid --scope=${SCOPE}. Must be one of: ${VALID_SCOPES.join(', ')}`);
+  process.exit(2);
+}
 
 const CATEGORY_ORDER = [
   'enSideArtifact',
@@ -66,9 +45,27 @@ const CATEGORY_ORDER = [
 
 const baseline = loadBaseline();
 
-const inScope = baseline.entries.filter(
-  (e) => e.issueType === 'segment-token-gap' && TARGET_SLUGS.has(e.slug),
+// 全 token-gap entries と missing slugs を baseline から算出
+const allTokenGap = baseline.entries.filter((e) => e.issueType === 'segment-token-gap');
+const missingSlugs = new Set(
+  baseline.entries.filter((e) => e.issueType === 'segment-missing').map((e) => e.slug),
 );
+
+// scope に応じて filter (hardcode なし、baseline から算出)
+function isInScope(entry) {
+  switch (SCOPE) {
+    case 'all':
+      return true;
+    case 'gap-only':
+      return !missingSlugs.has(entry.slug);
+    case 'overlap':
+      return missingSlugs.has(entry.slug);
+    default:
+      return true;
+  }
+}
+
+const inScope = allTokenGap.filter(isInScope);
 
 // entry を token ごとにカテゴリに投入。同じ entry が複数カテゴリに現れてよい。
 const byCategory = Object.fromEntries(CATEGORY_ORDER.map((c) => [c, []]));
@@ -76,7 +73,7 @@ let multiCategoryEntryCount = 0;
 
 for (const entry of inScope) {
   const tokens = entry.missingTokens ?? [];
-  const cats = new Map(); // category -> tokens matching that category
+  const cats = new Map();
 
   for (const token of tokens) {
     const cat = categorizeToken(token);
@@ -97,14 +94,23 @@ for (const entry of inScope) {
   }
 }
 
+const slugCount = new Set(inScope.map((e) => e.slug)).size;
+const totalTokenGap = allTokenGap.length;
+const totalSlugs = new Set(allTokenGap.map((e) => e.slug)).size;
+
 // Markdown 出力
 const lines = [];
-lines.push('# Phase 2.3 segment-token-gap 対象一覧');
+lines.push(`# Phase 2.3 segment-token-gap 対象一覧 (scope=${SCOPE})`);
 lines.push('');
-lines.push(
-  `総件数: ${inScope.length} entries / ${TARGET_SLUGS.size} slugs ` +
-    `(うち複数カテゴリにまたがる entry: ${multiCategoryEntryCount})`,
-);
+lines.push(`対象: ${inScope.length} entries / ${slugCount} slugs`);
+lines.push(`(全 token-gap: ${totalTokenGap} entries / ${totalSlugs} slugs — scope filter で絞り込み)`);
+lines.push(`複数カテゴリにまたがる entry: ${multiCategoryEntryCount}`);
+lines.push('');
+lines.push('## Scope definition');
+lines.push('');
+lines.push('- `all`: baseline 内の全 `segment-token-gap` entries');
+lines.push('- `gap-only`: `segment-missing` を持たない slug のみ (Phase 2.3 の元々の scope)');
+lines.push('- `overlap`: `segment-missing` と同 slug にある entries (Phase 2.2 responsibility)');
 lines.push('');
 
 for (const cat of CATEGORY_ORDER) {

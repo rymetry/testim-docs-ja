@@ -13,20 +13,21 @@
 
 ## 削減結果
 
-| 種別 | Phase 1 後 (2259) | Phase 2 後 (1909) | 差 |
+| 種別 | Phase 1 後 (2259) | Phase 2 後 (1919) | 差 |
 | --- | ---: | ---: | ---: |
-| segment-untranslated | 1903 | 1600 | **-303** |
-| segment-missing | 127 | 107 | **-20** |
-| segment-extra | 102 | 90 | **-12** |
-| section-structure-mismatch | 66 | 60 | **-6** |
+| segment-untranslated | 1903 | 1606 | **-297** |
+| segment-missing | 127 | 109 | **-18** |
+| segment-extra | 102 | 91 | **-11** |
+| section-structure-mismatch | 66 | 61 | **-5** |
 | segment-token-gap | 49 | 40 | **-9** |
 | segment-inconclusive | 11 | 11 | 0 |
 | segment-order-mismatch | 1 | 1 | 0 |
-| **baseline total** | **2259** | **1913** | **-346** |
+| **baseline total** | **2259** | **1919** | **-340** |
 
-> PR#267 review 反映後の最終値。初回 baseline 再生成時点 (1909) から **+4** は、UX 保護のため意図的に受容した structural divergence:
-> - `administration/api-access.md`: `:::danger` 警告 callout を復元したため +3 (section-structure-mismatch + segment-missing + segment-extra)
-> - `integrations/test-management-integrations/qtest-integration.md`: `<projectName>` を backtick 化して MDX HTML タグ解釈を防いだため +1 (segment-untranslated、content fingerprint 変化)
+> PR#267 **round 2 review** 反映後の最終値。初回 baseline 再生成時点 (1909) から **+10** は以下の意図的 divergence を受容:
+> - **round 1**: `administration/api-access.md` の `:::danger` 復元 (+3) / `qtest-integration.md` の `<projectName>` backtick 化 (+1) — UX / rendering 保護
+> - **round 2**: GLOSSARY から一般単語 5 件 (Approve / Enter / Tab / Page Up / Page Down) 削除で surface した 6 件の active entries (+6) — JA 文中の英語 UI ラベル (`**Approve**` / `**Tab Name**` 等) が legitimate な翻訳判断として baseline frozen
+> - round 2 での surface は false-negative 解消の正当な代償 (覆い隠されていた短い 3-word 英文 segment 検知回復)
 
 > 主要削減源は Phase 2.1 で実施した GLOSSARY/INVARIANT_TOKENS 拡張 (Testim step / property 名 50+ と `testim-step-name-with-parens` パターン)。これが Top 2 files 以外の 218 slug 全体に波及し、segment-untranslated を -303 まで押し下げた。
 
@@ -124,7 +125,8 @@
 | npm run test | 1722 pass / 0 fail ✅ |
 | npm run check:parity | 完走、active issue 0 件 (baseline で凍結中) ✅ |
 | npm run build | 290 pages built in 8.99s ✅ |
-| parity-baseline.json | **1909 entries (Phase 1 比 -350)** ✅ |
+| parity-baseline.json | **1919 entries (Phase 1 比 -340)** ✅ |
+| npm test regression coverage | GLOSSARY 一般語 false-negative 回帰テスト 4 件追加 (1726 pass) ✅ |
 
 ---
 
@@ -164,6 +166,47 @@
 ### Review improvement (非 regression)
 
 4. **`scripts/phase2/lib/baseline.mjs` 新設**: 共通ユーティリティを抽出。`loadBaseline()` / `REPO_ROOT` / `EN_SIDE_ARTIFACT_TOKENS` / `EN_SIDE_ARTIFACT_URLS` / `categorizeToken()`。Phase 2.0 / 2.4 の enumerate script で再利用可能 (Phase 1 retrospective の指摘事項も解消)
-5. **`GLOSSARY.md` watch list 注記**: `Enter` / `Tab` / `Page Up` / `Page Down` / `Approve` の一般単語エントリに watch 注記追加。word-boundary mask のリスクと `RESIDUE_MIN_WORDS=3` 防護層の挙動を明文化
+5. **`GLOSSARY.md` watch list 注記**: `Enter` / `Tab` / `Page Up` / `Page Down` / `Approve` の一般単語エントリに watch 注記追加 (**round 2 で削除済み**)
 6. **`api-access.md` の `:::danger` 復元**: API キー削除の警告 callout を bold paragraph に downgrade していたのを revert。UX (視覚的警告) を優先し、parity 側は 3 件を意図的 baseline entry として受容
 7. **EN-side typo の cliFlag 誤分類解消**: `-variable` / `-this` / `step.This` / `/docs/index` / `http://google.com` を `EN_SIDE_ARTIFACT_TOKENS` registry に登録し、enumerate script が `enSideArtifact` カテゴリに自動振り分け
+
+---
+
+## PR#267 Round 2 Review 対応 (2026-04-14 追加)
+
+### P1 regression: GLOSSARY 一般語の silent false-negative (修復済み)
+
+前回 review response で「`RESIDUE_MIN_WORDS=3` 防護で全英文 segment は検知継続」と説明したが、これは **誤り**。`RESIDUE_MIN_WORDS=3` は「3 語未満の残余英語は fully-masked 判定」という意味で、**長い英文の false-negative を防ぐガードではない**。具体例:
+
+- `"Click Approve now"` (17 chars, 3 words) → `Approve` mask → residue `"Click now"` (9 chars, 2 words) → `isFullyMasked=true` → **silent false-negative**
+
+対応:
+- **`docs/GLOSSARY.md`**: `Approve` / `Enter` / `Tab` / `Page Up` / `Page Down` の 5 エントリを削除。「キーボードキー名」セクション自体もコメントアウト、登録禁止の方針を明文化
+- **`scripts/__tests__/parity_glossary_mask.test.mjs`**: `"GLOSSARY common-word false-negative regression (PR#267 round 2 review)"` suite を追加 (4 tests):
+  - `does not include common English words in GLOSSARY`: 5 語が glossary に登録されていないことを pin
+  - `3-word all-English segment containing "Approve"/"Enter"/"Tab" is flagged`: 3-word full-English segment が `isFullyMasked=false` になることを検証
+- **副作用**: 一般語を外したことで surface した 6 件の active entries (JA 文中の英語 UI ラベル `**Approve**` / `**Tab Name**` 等) を baseline で受容。これは false-negative 解消の正当な代償
+
+### P2: `scripts/phase2/enumerate_missing_segments.mjs` 新設
+
+Plan Task 2.2.1 で要求されていた enumerate script を実装。`parity-baseline.json` の現物から `segment-missing` entries を抽出、slug 別に降順出力、`--exclude-top2` オプション、同 slug の token-gap 併記 (統合修正判断用)。
+
+```bash
+node scripts/phase2/enumerate_missing_segments.mjs --exclude-top2
+# 対象: 109 entries / 61 slugs
+# segmentKind 内訳: paragraph 51 / ordered-list-item 22 / unordered-list-item 16 / callout-body 12 / table-cell 8
+```
+
+### P2: `enumerate_token_gaps.mjs` を baseline 計算ベースに refactor
+
+`TARGET_SLUGS = new Set([...29 slugs])` の hardcode を削除し、baseline から動的に算出:
+
+- `--scope=all`: 全 token-gap entries (40)
+- `--scope=gap-only`: `segment-missing` を持たない slug のみ (Phase 2.3 元々の scope、25 entries)
+- `--scope=overlap`: `segment-missing` と同 slug の entries (Phase 2.2 responsibility、15 entries)
+
+rerun 時に 14 slug 分の token-gap を見落とす構造を解消。母集団が baseline から derive されるため、今後 slug が増減しても追随する。
+
+### P3: report / PR 数値の統一 (1919 / -340)
+
+round 1 時点の 1913 が report の一部と PR body に残っていた。全箇所を round 2 後の値 (1919、-340) に統一。accepted divergence は round 1 の +4 に加えて round 2 の +6 (legitimate 英語 UI ラベル) を加算して説明。
