@@ -1,355 +1,350 @@
-# Parity Phase 2 — 手動修正 (Top 2 files + segment-missing + token-gap residual) Plan
+# Parity Phase 2 — Bulk Fixes Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) with parallel worktrees. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** 推奨は superpowers:subagent-driven-development。ただし `parity-baseline.json` / `parity-check-status.json` / Phase report の更新は統合ブランチで直列実行すること。Steps は checkbox (`- [ ]`) で追跡する。
 
-**Goal:** Phase 1 完了後の baseline から、パターン化できない個別修正を 3 本の PR (Top 2 大物、segment-missing 翻訳復元、token-gap 残件) に分けて burn-down する。並列エージェント委任 + glossary_mask / URL normalize を参照しながら進める。
+**Date:** 2026-04-14 (codex 提案を採用して再構築、実測ベース更新)
 
-**Architecture:** 3 sub-phase 並列可。Sub-phase 2.1 は Phase 0 の glossary mask 効果で残件が激減するので、先に残件を確認してからスコープを確定する。Sub-phase 2.2 は EN 段落を復元する翻訳作業なので LLM エージェント委任が有効。Sub-phase 2.3 は CLI フラグ / 内部リンクのピンポイント修正。
+## Goal
 
-**Tech Stack:** 既存パイプライン + 並列エージェント (codex / claude subagent)。
+Phase 1 完了後の parity 残件を、**実測ベース**で burn-down する。Phase 2 の責務は以下の 4 系統:
 
-**Prerequisite:** Phase 1 PR (3 本) がマージされ、baseline が再生成済み。
+1. `segment-untranslated` の大規模削減 (Phase 2.0)
+2. `segment-missing` の復元 (Phase 2.2)
+3. `segment-token-gap` の解消 (Phase 2.3)
+4. `callout-body` 以外の residual `segment-extra` / `section-structure-mismatch` の削減 (Phase 2.4)
 
-**File ownership map:**
-- `src/content/docs/editing-tests/steps.md` — Phase 2.1 (Top 1)
-- `src/content/docs/editing-tests/editing-your-tests/editing-a-steps-properties.md` — Phase 2.1 (Top 2)
-- `src/content/docs/**/*.md` — Phase 2.2 で segment-missing の 71 slug、Phase 2.3 で token-gap の 43 slug
-- `scripts/phase2/enumerate_missing_segments.mjs` — Phase 2.2 (新規、対象 enumerate)
-- `scripts/phase2/enumerate_token_gaps.mjs` — Phase 2.3 (新規)
-- `docs/superpowers/specs/2026-04-14-parity-phase2-report.md` — 完了レポート (新規)
+高密度 slug (`editing-tests/steps`, `editing-a-steps-properties`) は Phase 2.1 として page 単位でまとめて直す。
 
-**並列 worktree:** `worktree-phase2-top2` / `worktree-phase2-missing` / `worktree-phase2-token-gap`
+## Current baseline (source of truth)
+
+`parity-baseline.json` 実測 (Phase 1 完了直後 / 2026-04-14):
+
+| issueType | count | notes |
+| --- | ---: | --- |
+| `segment-untranslated` | 1903 | 218 slug、Phase 0 mask が Top 2 には効かなかった残 |
+| `segment-missing` | 127 | 66 slug |
+| `segment-extra` | 102 | うち `callout-body` 17 は Phase 3 送り |
+| `section-structure-mismatch` | 66 | 多くは同 slug の segment 差分の派生 |
+| `segment-token-gap` | 49 | 43 slug |
+| `segment-inconclusive` | 11 | Phase 4 送り |
+| `segment-order-mismatch` | 1 | Phase 4 送り |
+| **total** | **2259** | Phase 0 後 2337 → Phase 1 で -78 |
+
+Top slug 参考 (Phase 2.0 優先候補):
+
+- `advanced-editing/cookies`: 57 untranslated
+- `advanced-editing/hooks`: 42 untranslated + 1 token-gap
+- `recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent`: 42 untranslated
+- `editing-tests/editing-your-tests/editing-a-steps-properties`: 39 untranslated
+- `integrations/test-management-integrations/ttm-for-jira-integration`: 38 untranslated + 3 missing
+- `editing-tests/steps`: 28 untranslated + 1 structure-mismatch + 1 extra + 1 missing = 31
+
+## Non-goals
+
+Phase 2 では以下は完了条件に含めない:
+
+- `segment-extra` かつ `segmentKind=callout-body` の削除 (Phase 3)
+- `segment-inconclusive` の最終判断 (Phase 4)
+- `segment-order-mismatch` の最終解消 (Phase 4)
+- baseline schema / parity schema の変更 (Phase 4)
+
+## Core principles
+
+- 固定件数を plan に埋め込まず、常に `parity-baseline.json` の**現物**で enumerate する
+- `segment-untranslated` はまず glossary / invariant で吸収できる residue を減らし、その後に実翻訳する
+- **content 修正は並列可、baseline 更新は直列**
+- subagent の完了条件は「**対象 issueType の純減** + **他 issueType の純増なし**」
+- `parity-check-status.json` は partial run で上書きされるため、`debug.maskCoverage` を根拠にする場合は**フル run 直後の artifact のみ**使う
+- `section-structure-mismatch` は単独で潰しにいかず、対応する content 差分を直した結果として解消させる
+- 1 slug に複数 issueType が密集している場合は lane を跨いでも **slug 単位でまとめて直す** 方を優先してよい
+
+## Branch / PR strategy
+
+**推奨:** Phase 2 は **1 統合 PR** で進める。
+
+理由:
+- `parity-baseline.json` がグローバル artifact のため、sub-phase ごとに別 PR / 別 baseline 更新をすると競合しやすい
+- Phase 1 retrospective でも同理由で単一 worktree 運用へ寄せている
+- `segment-untranslated` / `segment-missing` / residual structure は同じ slug 上で同時発生しやすい
+
+**ブランチ構成:**
+- 統合ブランチ: `claude/parity-phase2`
+- 作業枝 (subagent 用): isolated worktree + 枝名は task ごと
+  - content 修正だけ行う
+  - `parity-baseline.json` は更新しない
+  - 最終的に `claude/parity-phase2` へ集約してから baseline を 1 回だけ再生成する
+
+## File ownership map
+
+- `docs/GLOSSARY.md` — Phase 2.0
+- `docs/INVARIANT_TOKENS.md` — Phase 2.0
+- `src/content/docs/**/*.md` — Phase 2.0-2.4 (slug ごとに lane を決める)
+- `scripts/phase2/enumerate_untranslated_residuals.mjs` — Phase 2.0
+- `scripts/phase2/enumerate_missing_segments.mjs` — Phase 2.2
+- `scripts/phase2/enumerate_token_gaps.mjs` — Phase 2.3
+- `scripts/phase2/enumerate_residual_structure.mjs` — Phase 2.4
+- `docs/superpowers/specs/2026-04-14-parity-phase2-report.md` — Phase 2.5
+
+## Execution scope for this round
+
+本 plan は Phase 2.0-2.5 全体を定義するが、本 round (2026-04-14 セッション) では以下を実行:
+
+- **Phase 2.1**: Top 2 files の複合修正 (subagent A)
+- **Phase 2.2**: `segment-missing` 復元 (subagent B, 66 slug)
+- **Phase 2.3**: `segment-token-gap` 修正 (subagent C, 43 slug)
+- **Phase 2.5**: 統合 + baseline 再生成 + report (controller)
+
+次 round 以降で追加実行:
+
+- **Phase 2.0**: glossary 監査 + untranslated 大規模翻訳 (1903 件 → 数 round に分割)
+- **Phase 2.4**: residual structure (85 件、callout-body を除く)
 
 ---
 
-## Phase 2.1: Top 2 files の残件修正
+## Phase 2.0: Glossary audit + segment-untranslated burn-down (次 round)
 
-**Context:** Phase 0 の glossary_mask で Top 2 files (`editing-tests/steps` 34 件、`editing-your-tests/editing-a-steps-properties` 28 件) の大半 (両者 58 件全てが segment-untranslated) が吸収される想定。Phase 1 完了後の実 baseline を見てスコープ確定。
+**Why first:** 最大残件は `segment-untranslated=1903`。ここを先に崩さない限り、Phase 2 の全体成果が薄くなる。ただし 1 セッションでは完走不可能なので、次 round 以降で着手。
 
-### Task 2.1.1: Phase 1 後 baseline で両 file の残件確認
+### Task 2.0.1: untranslated 残件の enumerate
 
-- [ ] **Step 1: 残件確認スクリプト実行**
+**Files:**
+- Create: `scripts/phase2/enumerate_untranslated_residuals.mjs`
+
+- [ ] **Step 1: enumerate スクリプト作成** (`parity-baseline.json` から `segment-untranslated` を抽出、slug/segmentKind/Top 20 集計)
+- [ ] **Step 2: enumerate 実行** (`node scripts/phase2/enumerate_untranslated_residuals.mjs > /tmp/phase2-0-untranslated.md`)
+- [ ] **Step 3: 初期優先 slug を確認** (Top 6: cookies / hooks / configure-tricentis-mobile-agent / editing-a-steps-properties / ttm-for-jira / steps)
+
+### Task 2.0.2: glossary / invariant 監査
+
+**Decision rule:** product 名 / UI 名 / feature 名 / 略語 / URL / file path / CLI flag は、まず translation ではなく glossary / invariant を疑う。
+
+- [ ] **Step 1: フル parity run** (`npm run check:parity && cp parity-check-status.json /tmp/phase2-full-parity-status.before-untranslated.json`)
+- [ ] **Step 2: `debug.maskCoverage` と untranslated Top slug を照合**
+- [ ] **Step 3: `docs/GLOSSARY.md` / `docs/INVARIANT_TOKENS.md` を更新**
+- [ ] **Step 4: 効果確認** (再度フル parity、差分測定)
+
+**Exit criteria:** glossary/invariant 追加で吸収できる residue が一段落し、以降は content translation が費用対効果で上回る状態。
+
+### Task 2.0.3: untranslated 実翻訳
+
+- [ ] **Step 1: Top slug から順に修正** (entry 数 + section 集中度 + 他 issueType との同居 + 高密度ページを優先)
+- [ ] **Step 2: slug ごとの修正手順** (EN snapshot 参照 → JA 該当 section → 自然な日本語 → glossary/UI/CLI/URL/path 維持 → 不要なリフォーマットしない)
+- [ ] **Step 3: slug 単位で parity 確認** (`npm run check:parity -- --slug=<slug>`)
+- [ ] **Step 4: 逐次 commit**
+
+**DoD per slug:** `segment-untranslated` が 0 または大きく純減、他 issueType 純増なし、構造保持。
+
+---
+
+## Phase 2.1: Top residual slug の複合修正 (本 round 実行)
+
+**Why separate lane:** 高密度 slug は issueType ごとに割ると破綻しやすい。page 単位でまとめて直す。
+
+**Current scope:**
+- `editing-tests/steps` (31 entries: 28 untranslated + 1 structure-mismatch + 1 extra + 1 missing)
+- `editing-tests/editing-your-tests/editing-a-steps-properties` (39 entries: 全て `Properties Configuration` セクションの table-cell untranslated)
+
+### Task 2.1.1: 対象 slug を確定
+
+- [ ] **Step 1: 現時点の複合残件 slug を確認**
 
 ```bash
 node -e "
-const b = require('./parity-baseline.json');
+const b=require('./parity-baseline.json');
 for (const slug of ['editing-tests/steps', 'editing-tests/editing-your-tests/editing-a-steps-properties']) {
-  const entries = b.entries.filter(e => e.slug === slug);
-  const byType = {};
-  for (const e of entries) byType[e.issueType] = (byType[e.issueType] || 0) + 1;
-  console.log(slug + ': ' + entries.length + ' entries');
-  Object.entries(byType).forEach(([t,c]) => console.log('  ' + c + ' ' + t));
+  const arr=b.entries.filter(e=>e.slug===slug);
+  const byType={};
+  for (const e of arr) byType[e.issueType]=(byType[e.issueType]||0)+1;
+  console.log(slug + ':', arr.length, byType);
 }
 "
 ```
 
-- [ ] **Step 2: 残件数に応じてスコープ決定**
+- [ ] **Step 2: 必要なら対象追加** (単一 slug に多 issueType 密集、1 section 内で table/list/paragraph が絡む場合)
 
-- **残 0-5 件**: Phase 2.1 スキップ、Phase 2.2 に統合可能
-- **残 6-20 件**: そのまま Phase 2.1 として処理
-- **残 20+ 件**: Phase 0 の glossary_mask が想定通り吸収していない可能性 → GLOSSARY.md / INVARIANT_TOKENS.md を拡張すべき。Phase 0 に巻き戻して対応
+### Task 2.1.2: `editing-tests/steps` の修正
 
-結果を `/tmp/phase2-1-scope.md` に記録。
+- [ ] **Step 1: `Automatically Recorded Steps` を EN snapshot と 1:1 で比較**
+- [ ] **Step 2: paragraph missing / table-cell untranslated / table-cell extra / structure-mismatch をまとめて解消**
+- [ ] **Step 3: slug parity 確認** (`npm run check:parity -- --slug=editing-tests/steps`)
 
-### Task 2.1.2: 残件ごとの修正
+**DoD:** 既存 `segment-missing` / `segment-extra` / `segment-untranslated` が純減、`section-structure-mismatch` が解消または純減、表の row/cell 対応が崩れていない。
 
-**Files:**
-- Modify: `editing-tests/steps.md` / `editing-a-steps-properties.md`
+### Task 2.1.3: `editing-a-steps-properties` の修正
 
-- [ ] **Step 1: 各残件 entry を debug.maskCoverage と照合し、分類**
+- [ ] **Step 1: `Properties Configuration` セクションの table 全体を EN に合わせる**
+- [ ] **Step 2: table-cell untranslated を row 単位で翻訳**
+- [ ] **Step 3: slug parity 確認** (`npm run check:parity -- --slug=editing-tests/editing-your-tests/editing-a-steps-properties`)
 
-`parity-check-status.json` の `debug.maskCoverage` で masked entry 一覧を確認。各残件が:
-- glossary に未登録の Testim 用語 → GLOSSARY.md に追加 (Phase 0 に戻す分)
-- invariant pattern で拾えるべきだった → INVARIANT_TOKENS.md に追加
-- 実際の翻訳抜け → JA を翻訳
+**DoD:** `segment-untranslated` 大幅純減、table 構造保持、新規 `segment-extra` / `segment-missing` なし。
 
-- [ ] **Step 2: 各残件を分類に従って修正**
-
-翻訳抜けは、EN snapshot (`snapshots/en/content/editing-tests/steps.html`) を読み、該当 segment を JA に翻訳して追加する。
-
-- [ ] **Step 3: parity 確認**
-
-```bash
-npm run check:parity -- --slug=editing-tests/steps 2>&1 | tail -10
-npm run check:parity -- --slug=editing-tests/editing-your-tests/editing-a-steps-properties 2>&1 | tail -10
-```
-
-- [ ] **Step 4: commit**
+- [ ] **Step 4: commit** (両 md を 1 commit で)
 
 ```bash
 git add src/content/docs/editing-tests/steps.md src/content/docs/editing-tests/editing-your-tests/editing-a-steps-properties.md
-git commit -m "fix: Phase 2.1 Top 2 files の残件修正"
-```
-
-### Task 2.1.3: baseline 再生成 + PR
-
-- [ ] **Step 1: baseline 再生成 + PR**
-
-```bash
-npm run check:parity 2>&1 | tail -10
-node scripts/generate_parity_baseline.mjs --rationale="Phase 2.1: Top 2 files 残件修正完了"
-git add parity-baseline.json
-git commit -m "chore: Phase 2.1 完了後の baseline 再生成"
-git push -u origin worktree-phase2-top2
-gh pr create --title "fix: Phase 2.1 Top 2 files 残件修正" --body "Plan: docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md"
+git commit -m "fix: Phase 2.1 Top 2 residual slug の複合修正 (steps + editing-a-steps-properties)"
 ```
 
 ---
 
-## Phase 2.2: segment-missing 翻訳復元 (136 件、71 slug)
+## Phase 2.2: segment-missing 翻訳復元 (本 round 実行)
 
-**Context:** EN にある本文段落が JA で統合・省略されているケース。並列エージェント委任が有効だが、GLOSSARY.md / INVARIANT_TOKENS.md を**必ず**エージェントに送り、翻訳後の segment が再度 segment-untranslated に落ちないようにする。
+**Current scope:** `127 entries / 66 slug`
 
-### Task 2.2.1: 対象 enumerate
+### Task 2.2.1: enumerate
 
 **Files:**
 - Create: `scripts/phase2/enumerate_missing_segments.mjs`
 
-- [ ] **Step 1: enumerate スクリプト**
+- [ ] **Step 1: enumerate スクリプト作成**
 
-```js
-// scripts/phase2/enumerate_missing_segments.mjs
-/**
- * Phase 2.2: segment-missing の各 entry を EN snapshot と照合し、
- * 翻訳復元タスクリストを生成する。
- */
+要件:
+- `issueType === 'segment-missing'` を抽出
+- slug ごと件数降順
+- 各 entry: `slug` / `sectionPath` / `segmentKind` / `enSegmentIndex` / `detail` を出力
+- `segmentKind` 集計
 
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = join(__dirname, '../..');
-
-const baseline = JSON.parse(
-  readFileSync(join(REPO_ROOT, 'parity-baseline.json'), 'utf8'),
-);
-
-const missing = baseline.entries.filter((e) => e.issueType === 'segment-missing');
-
-const bySlug = new Map();
-for (const e of missing) {
-  if (!bySlug.has(e.slug)) bySlug.set(e.slug, []);
-  bySlug.get(e.slug).push(e);
-}
-
-console.log('# Phase 2.2 Task List\n');
-console.log('Total: ' + missing.length + ' entries in ' + bySlug.size + ' slugs\n');
-
-for (const [slug, entries] of [...bySlug.entries()].sort((a, b) => b[1].length - a[1].length)) {
-  console.log('## ' + slug + ' (' + entries.length + ' entries)');
-  console.log('- EN snapshot: snapshots/en/content/' + slug + '.html');
-  console.log('- JA file: src/content/docs/' + slug + '.md');
-  for (const e of entries) {
-    console.log('  - section: "' + (e.sectionPath || '(preface)') + '" segmentKind=' + e.segmentKind + ' enSegmentIndex=' + e.enSegmentIndex);
-  }
-  console.log('');
-}
-```
-
-- [ ] **Step 2: enumerate 実行**
+- [ ] **Step 2: 実行**
 
 ```bash
-node scripts/phase2/enumerate_missing_segments.mjs > /tmp/phase2-2-tasklist.md
-head -80 /tmp/phase2-2-tasklist.md
+node scripts/phase2/enumerate_missing_segments.mjs > /tmp/phase2-2-missing.md
+head -120 /tmp/phase2-2-missing.md
 ```
 
-- [ ] **Step 3: commit**
+### Task 2.2.2: 修正
 
-```bash
-git add scripts/phase2/enumerate_missing_segments.mjs
-git commit -m "chore: Phase 2.2 segment-missing タスクリスト生成スクリプト"
-```
+- [ ] **Step 1: Top 10 slug を優先** (advanced-editing/keyboard-shortcut-step 8、ttm-qtest 7、generating-a-random-value 6、validate-element-attribute 5、validate-download 4、validate-element-text 4、vsts-and-tfs-integration 4、lambdatest_integration 4、project-settings 3、pixel-validation 3)
 
-### Task 2.2.2: 並列エージェントに翻訳復元を委任
+- [ ] **Step 2: 必要なら subagent 委任** (Top 10 以降の slug を複数並列処理)
 
-**Files:**
-- Modify: 各 slug の md (71 files)
+**Subagent prompt template:**
 
-**Context:** Subagent-driven で Top 10 slug (entry 数降順) を 2 並列で処理。各エージェントに以下を提供:
-- WRITING_GUIDE.md §Source-First 契約
-- GLOSSARY.md (Testim 用語リスト)
-- INVARIANT_TOKENS.md (invariant pattern)
-- TRANSLATION_GUIDE.md (自然な日本語ガイドライン)
-- 該当 slug の EN snapshot と JA ファイル
-- task entries 一覧 (section, segmentKind, enSegmentIndex)
+```text
+Phase 2.2: <slug> の segment-missing 復元
 
-- [ ] **Step 1: Top 10 slug を Subagent 2 並列で処理**
-
-Subagent prompt template:
-
-```
-Phase 2.2: <slug> の segment-missing 翻訳復元
-
-- EN snapshot: snapshots/en/content/<slug>.html
+対象:
 - JA file: src/content/docs/<slug>.md
-- 対象 entries:
-  - section "<sectionPath>" segmentKind=<kind> enSegmentIndex=<idx>
-  ...
+- EN snapshot: snapshots/en/content/<slug>.html
+- issueType: segment-missing
+- entries: section "<sectionPath>" segmentKind=<kind> enSegmentIndex=<idx> …
 
-必須参照:
-- docs/WRITING_GUIDE.md §Source-First 構造契約
-- docs/GLOSSARY.md (Testim 用語は英語維持)
-- docs/INVARIANT_TOKENS.md
-- docs/TRANSLATION_GUIDE.md
+必須参照: docs/WRITING_GUIDE.md, docs/GLOSSARY.md, docs/INVARIANT_TOKENS.md, docs/TRANSLATION_GUIDE.md
 
 手順:
-1. EN snapshot の <sectionPath> セクションから対象 segment を特定
-2. JA ファイルの対応箇所で該当段落が省略/統合されている箇所を見つける
-3. EN segment を自然な日本語に翻訳して復元 (Testim 用語は英語維持)
-4. npm run check:parity -- --slug=<slug> で検証
-5. 新規 issue 0 になるまで修正
+1. EN snapshot の該当 section で対象 segment を特定
+2. JA 側で欠落位置を確認
+3. EN segment を自然な日本語で復元
+4. glossary 対象語と invariant token は保持
+5. npm run check:parity -- --slug=<slug> で再確認
 
 完了条件:
 - 該当 slug の segment-missing が 0
-- 新規 segment-untranslated / segment-extra が発生していない
+- 他 issueType を純増させていない
 ```
 
-- [ ] **Step 2: 各エージェント完了後に親セッションで検証**
-
-```bash
-npm run check:parity -- --slug=<slug> 2>&1 | tail -10
-```
-
-失敗した slug はエージェント結果を review して修正。
-
-- [ ] **Step 3: 逐次 commit (slug 単位 or まとめて)**
+- [ ] **Step 3: 親セッションで review** (`npm run check:parity -- --slug=<slug>`)
+- [ ] **Step 4: slug 単位で commit**
 
 ```bash
 git add src/content/docs/<slug>.md
-git commit -m "fix: Phase 2.2 segment-missing 翻訳復元 (<slug>)"
-```
-
-- [ ] **Step 4: Top 10 以降の slug を 4-5 並列で処理**
-
-同様の手順で残 61 slug を処理。
-
-### Task 2.2.3: baseline 再生成 + PR
-
-- [ ] **Step 1: baseline 再生成**
-
-```bash
-npm run check:parity 2>&1 | tail -15
-node scripts/generate_parity_baseline.mjs --rationale="Phase 2.2: segment-missing 翻訳復元完了"
-git add parity-baseline.json
-git commit -m "chore: Phase 2.2 完了後の baseline 再生成"
-```
-
-- [ ] **Step 2: PR 作成**
-
-```bash
-git push -u origin worktree-phase2-missing
-gh pr create --title "fix: Phase 2.2 segment-missing 翻訳復元 (71 slug、136 entries)" --body "## Summary
-
-EN 本文段落が JA で統合・省略されていた 136 箇所を並列エージェント委任で翻訳復元しました。
-
-Plan: docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md (Phase 2.2)
-"
+git commit -m "fix: Phase 2.2 segment-missing 復元 (<slug>)"
 ```
 
 ---
 
-## Phase 2.3: segment-token-gap 残件 (~34 件、Phase 0 後の残)
+## Phase 2.3: segment-token-gap 修正 (本 round 実行)
 
-**Context:** Phase 0 の URL normalize で localized link 分 (~15 件) が吸収された後の残。CLI フラグ欠落、内部リンク欠落、数値単位等が対象。
+**Current scope:** `49 entries / 43 slug`
 
-### Task 2.3.1: 対象 enumerate
+### Task 2.3.1: enumerate
 
 **Files:**
 - Create: `scripts/phase2/enumerate_token_gaps.mjs`
 
-- [ ] **Step 1: enumerate スクリプト**
+分類:
+- `cliFlag` (`--`/`-` で始まる)
+- `internalLink` (`/docs/` で始まる)
+- `numericOrUnit` (`\d+(ms|sec|s|min|hr|px|em|rem|MB|GB|KB|%)`)
+- `externalUrl` (`http` で始まる)
+- `mixed` / `other`
 
-```js
-// scripts/phase2/enumerate_token_gaps.mjs
-/**
- * Phase 2.3: segment-token-gap 残件を性質別に分類する。
- */
+出力: `slug` / `sectionPath` / `missingTokens` / `detail`
 
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = join(__dirname, '../..');
-
-const baseline = JSON.parse(
-  readFileSync(join(REPO_ROOT, 'parity-baseline.json'), 'utf8'),
-);
-
-const gaps = baseline.entries.filter((e) => e.issueType === 'segment-token-gap');
-
-const categories = { cliFlag: [], internalLink: [], numeric: [], externalUrl: [], other: [] };
-for (const g of gaps) {
-  const tokens = g.missingTokens || [];
-  const first = tokens[0] || '';
-  if (first.startsWith('--') || first.startsWith('-')) categories.cliFlag.push(g);
-  else if (first.startsWith('/docs/')) categories.internalLink.push(g);
-  else if (/^\d+(ms|sec|s|min|hr|px|em|rem|MB|GB|KB|%)$/.test(first)) categories.numeric.push(g);
-  else if (first.startsWith('http')) categories.externalUrl.push(g);
-  else categories.other.push(g);
-}
-
-for (const [cat, items] of Object.entries(categories)) {
-  console.log('## ' + cat + ' (' + items.length + ')');
-  for (const g of items) {
-    console.log('- ' + g.slug + ' | section: ' + g.sectionPath + ' | tokens: ' + JSON.stringify(g.missingTokens));
-  }
-  console.log('');
-}
-```
-
-- [ ] **Step 2: enumerate 実行 + commit**
+- [ ] **Step 2: 実行**
 
 ```bash
-node scripts/phase2/enumerate_token_gaps.mjs > /tmp/phase2-3-targets.md
-cat /tmp/phase2-3-targets.md | head -40
-git add scripts/phase2/enumerate_token_gaps.mjs
-git commit -m "chore: Phase 2.3 token-gap 残件分類スクリプト"
+node scripts/phase2/enumerate_token_gaps.mjs > /tmp/phase2-3-token-gap.md
+head -120 /tmp/phase2-3-token-gap.md
 ```
 
-### Task 2.3.2: カテゴリ別に修正
+### Task 2.3.2: カテゴリ別修正
 
-**Files:**
-- Modify: 各 slug の md
-
-- [ ] **Step 1: cliFlag カテゴリ**
-
-EN の CLI フラグ (`--project-id` 等) が JA に欠けている場合、JA 本文 or code block に追加。EN snapshot を参照して正しい位置 / 記法を確認。
-
-- [ ] **Step 2: internalLink カテゴリ**
-
-`/docs/X` 形式の内部リンクが JA に欠けている場合、対応する JA 本文に `[表示テキスト](/docs/X)` を追加。
-
-- [ ] **Step 3: numeric / externalUrl / other カテゴリ**
-
-個別判断で修正。修正できないもの (EN 側の typo 等) は `source_sync_exclusions.mjs` の検討対象として report に記録。
-
-- [ ] **Step 4: 各修正を逐次 commit**
+- [ ] **Step 1: `cliFlag`** — EN の CLI flag を JA に補う (dash 数 / spelling / inline code formatting を EN に合わせる)
+- [ ] **Step 2: `internalLink`** — `/docs/...` の欠落を補う (表示文言は自然な JA、path は canonical)
+- [ ] **Step 3: `numericOrUnit` / `externalUrl` / `mixed` / `other`** — token 脱落を個別修正。EN 側 artifact が疑わしいものは修正せず report に送る
+- [ ] **Step 4: slug parity 確認**
+- [ ] **Step 5: slug 単位で commit**
 
 ```bash
 git add src/content/docs/<slug>.md
 git commit -m "fix: Phase 2.3 token-gap 修正 (<slug>, <category>)"
 ```
 
-### Task 2.3.3: baseline 再生成 + PR
-
-```bash
-npm run check:parity 2>&1 | tail -10
-node scripts/generate_parity_baseline.mjs --rationale="Phase 2.3: token-gap 残件修正完了"
-git add parity-baseline.json
-git commit -m "chore: Phase 2.3 完了後の baseline 再生成"
-git push -u origin worktree-phase2-token-gap
-gh pr create --title "fix: Phase 2.3 segment-token-gap 残件修正" --body "Plan: docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md (Phase 2.3)"
-```
+**DoD per slug:** `segment-token-gap` が 0、他 issueType 純増なし。
 
 ---
 
-## Phase 2 総括レポート
+## Phase 2.4: residual `segment-extra` / `section-structure-mismatch` (次 round)
 
-### Task 2.4: Phase 2 完了レポート
+**Current scope:** `segment-extra=102` のうち `callout-body=17` を除く 85 件。
+内訳: `unordered-list-item=28` / `paragraph=25` / `table-cell=17` / `ordered-list-item=11` / `details-summary=4`。加えて `section-structure-mismatch=66` の派生整理。
+
+### Task 2.4.1: enumerate
+
+**Files:**
+- Create: `scripts/phase2/enumerate_residual_structure.mjs`
+
+- [ ] **Step 1: enumerate スクリプト作成** (`segment-extra` と `section-structure-mismatch` を抽出、`segmentKind` ごと分類、`callout-body` は別出力)
+- [ ] **Step 2: 実行**
+
+### Task 2.4.2: 修正方針
+
+- [ ] **Step 1: `paragraph`** — EN 1 paragraph を JA が過分割/過統合している差分を調整、segment 契約一致を優先
+- [ ] **Step 2: `unordered-list-item` / `ordered-list-item`** — callout 外 list の item 対応を EN に揃える
+- [ ] **Step 3: `table-cell`** — cell 単位ではなく row 全体で確認、片側だけ追加削除しない
+- [ ] **Step 4: `details-summary`** — details タイトルを EN 構造に揃える、details ブロックの粒度を変えない
+- [ ] **Step 5: `section-structure-mismatch`** — 単独解消を目的にせず、対応する segment 修正の結果として落とす
+- [ ] **Step 6: slug parity 確認**
+- [ ] **Step 7: slug 単位で commit**
+
+---
+
+## Phase 2.5: 統合、gate、baseline 再生成、report (本 round 実行)
+
+**Important:** ここで初めて baseline を更新する。sub-phase 途中では更新しない。
+
+### Task 2.5.1: 統合ブランチで full gate
+
+- [ ] **Step 1: フル parity** (`npm run check:parity && cp parity-check-status.json /tmp/phase2-full-parity-status.pre-baseline.json`)
+- [ ] **Step 2: docs lint / tests / build**
+
+```bash
+npm run lint:docs
+npm run test
+npm run build
+```
+
+### Task 2.5.2: baseline 再生成
+
+- [ ] **Step 1: baseline 更新**
+
+```bash
+node scripts/generate_parity_baseline.mjs --rationale="Phase 2: Top 2 translation + segment-missing restoration + token-gap fixes"
+```
+
+- [ ] **Step 2: 差分確認** — Phase 2 対象 issueType (untranslated / missing / token-gap / 非 callout-body の extra / structure-mismatch) が純減していることを確認
+
+### Task 2.5.3: 完了レポート
 
 **Files:**
 - Create: `docs/superpowers/specs/2026-04-14-parity-phase2-report.md`
@@ -357,38 +352,72 @@ gh pr create --title "fix: Phase 2.3 segment-token-gap 残件修正" --body "Pla
 - [ ] **Step 1: レポート作成**
 
 ```markdown
-# Parity Phase 2 — 手動修正 Report
+# Parity Phase 2 — Bulk Fixes Report
 
-## 削減結果
+- **Date**: 2026-04-14
+- **Plan**: `docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md`
+- **Executed this round**: Phase 2.1 / 2.2 / 2.3
+- **Deferred to next round**: Phase 2.0 / 2.4
 
-| 種別 | Phase 1 後 | Phase 2 後 | 差 |
-| --- | --- | --- | --- |
-| segment-missing | 136 | (実測) | (実測) |
-| segment-token-gap | 34 (想定) | (実測) | (実測) |
-| (Top 2 残) | (実測) | (実測) | (実測) |
+## Baseline delta
 
-## Sub-phase 別
+| issueType | Phase 1後 | Phase 2後 | 差 |
+| --- | ---: | ---: | ---: |
+| segment-untranslated | 1903 | (実測) | (実測) |
+| segment-missing | 127 | (実測) | (実測) |
+| segment-token-gap | 49 | (実測) | (実測) |
+| segment-extra | 102 | (実測) | (実測) |
+| section-structure-mismatch | 66 | (実測) | (実測) |
+| segment-inconclusive | 11 | (実測) | (実測) |
+| segment-order-mismatch | 1 | (実測) | (実測) |
 
-- **Phase 2.1** (Top 2 残件): ??? entries 修正、GLOSSARY への追加 ??? 件
-- **Phase 2.2** (segment-missing): 71 slug、??? entries 修正
-- **Phase 2.3** (token-gap): ??? entries 修正、??? 件は EN 側 artifact として次 Phase へ
+## Sub-phase summary
 
-## Phase 3 へのインプット
+- **Phase 2.1**: Top 2 files 修正 (2 slug、~70 entries 削減見込み)
+- **Phase 2.2**: missing 復元 (66 slug、127 entries)
+- **Phase 2.3**: token-gap 修正 (43 slug、49 entries)
 
-- 残 segment-extra (callout-body): ??? 件 (Phase 3 対象)
-- 残 segment-inconclusive: ??? 件 (Phase 4 対象)
-- EN-side artifact として保留: ??? 件
+## Deferred to next round / Phase 3 / Phase 4
+
+- Phase 2.0: glossary 監査 + untranslated 1903 件の burn-down
+- Phase 2.4: residual structure (非 callout-body の 85 件)
+- Phase 3: callout-body 17 件
+- Phase 4: inconclusive 11 件、order-mismatch 1 件、schema cleanup
 ```
 
-- [ ] **Step 2: commit**
+- [ ] **Step 2: 最終 commit + PR**
 
 ```bash
-git add docs/superpowers/specs/2026-04-14-parity-phase2-report.md
-git commit -m "docs: Phase 2 完了レポート"
+git add scripts/phase2/*.mjs src/content/docs/**/*.md parity-baseline.json docs/superpowers/specs/2026-04-14-parity-phase2-report.md docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md
+git commit -m "fix: Phase 2 Top 2 + segment-missing + token-gap 修正完了"
+git push -u origin claude/parity-phase2
+gh pr create --title "fix: Phase 2 Top 2 translation + missing restoration + token-gap" --body "Plan: docs/superpowers/plans/2026-04-14-parity-phase2-bulk-fixes.md"
 ```
 
 ---
 
-## Execution Handoff
+## Quality gates
 
-3 sub-phase は並列実行可能。Subagent-Driven with parallel worktrees が推奨。
+- [ ] `npm run check:parity` が完走する
+- [ ] `npm run lint:docs` が通る
+- [ ] `npm run test` が通る
+- [ ] `npm run build` が通る
+- [ ] Phase 2.1 / 2.2 / 2.3 対象 issueType がすべて純減している
+- [ ] `callout-body` は残っていてよいが、件数を report に明記している
+- [ ] partial run の `parity-check-status.json` を根拠に baseline 更新していない
+
+## Completion criteria (本 round)
+
+Phase 2 本 round 完了条件:
+
+- Phase 2.1: Top 2 slug の複合 issueType が純減
+- Phase 2.2: `segment-missing` が明確に減少
+- Phase 2.3: `segment-token-gap` が明確に減少
+- 次 round / Phase 3 / 4 へ送る残件が report に明文化
+
+## Execution handoff
+
+- **実行方式:** superpowers:subagent-driven-development, model=sonnet 4.6, isolated worktree, background, automode
+- content 修正は並列可、baseline 更新と report は統合ブランチで直列実行
+- subagent の完了条件は「対象 issueType の純減」であり、「slug の issue 全消し」ではない
+- plan の数値は着手時点の実測であり、進行中の判断は常に最新 enumerate に基づく
