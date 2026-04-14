@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-14T08:17:32.842Z",
-  "generatedFromRunId": "2026-04-14T08:17:32.842Z#parity-check-status",
-  "rationale": "Phase 1.1: preface 重複削除完了",
+  "generatedAt": "2026-04-14T08:25:09.693Z",
+  "generatedFromRunId": "2026-04-14T08:25:09.693Z#parity-check-status",
+  "rationale": "Phase 1.1 gap fix: testim-overview + generating-a-random-value",
   "entries": [
     {
       "slug": "administration/api-access",
@@ -19106,7 +19106,7 @@
       "enSegmentIndex": null,
       "jaSegmentIndex": 0,
       "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:b502568dfb34609690f59369921ea6cbb07d86d63c9e06bbd014a39134f68d35",
+      "jaSourceFingerprint": "sha256:9f55c9cdcb998d513f50a5571d0ee6f567a6a685a67a3de8c71a5127a75ef05e",
       "missingTokens": null,
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
@@ -29061,7 +29061,7 @@
       "inconclusiveReason": null,
       "sectionIndex": 0,
       "structureCategory": "kind-multiset",
-      "structureFingerprint": "sha256:9cf71d0f9939818e658ca5ac3a49368315d8f9955a54fba33900ef991e9821c5",
+      "structureFingerprint": "sha256:487cd9e5a2dfb4daa0d3cb7e64b122d166bb3de6aaaa6a3b85527864e581f739",
       "usabilityReason": null
     },
     {
@@ -29150,7 +29150,7 @@
       "sectionPath": "",
       "segmentKind": "paragraph",
       "enSegmentIndex": null,
-      "jaSegmentIndex": 1,
+      "jaSegmentIndex": 0,
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:70d001f75d76aec51267c72dc5b608b76f24dae896ff63df030fa46494cd9281",
       "missingTokens": null,
