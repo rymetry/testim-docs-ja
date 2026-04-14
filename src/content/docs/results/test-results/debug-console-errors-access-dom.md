@@ -57,10 +57,8 @@ Testim はコンソールエラーとネットワークエラーを自動的に�
 ![DOM スナップショット表示画面](/images/results/debug-console-errors-access-dom/986c536-viewdom2.png)
 
 :::warning{title="注意"}
-
-- DOM は、Chrome & Edge Chromium ブラウザの実行にのみ表示されます。
-- DOM は失敗したステップにのみ表示されます。
-  :::
+DOM は、Chrome & Edge Chromium ブラウザの実行にのみ表示されます。DOM は失敗したステップにのみ表示されます。
+:::
 
 ## ステップパラメーターのデバッグ
 

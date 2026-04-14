@@ -161,11 +161,7 @@ HTML または JavaScript パラメーターを定義し、条件内でそれら
 ![Custom 条件設定のデモ](/images/conditions/conditions/12714a6-custom_condition2.gif)
 
 :::warning
-ステップ 5（下記）で HTML 要素をパラメーターとして定義する場合は、まず AUT を開く必要があります。
-
-1. ステップの左にある **>（矢印）** にカーソルを合わせます。
-2. **Toggle Breakpoint** をクリックします。
-3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
+ステップ 5（下記）で HTML 要素をパラメーターとして定義する場合は、まず AUT を開く必要があります: 1. ステップの左にある **>（矢印）** にカーソルを合わせます。2. **Toggle Breakpoint** をクリックします。3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 :::
 
 1. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\

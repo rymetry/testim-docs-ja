@@ -40,15 +40,7 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 - **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。詳細については、[Virtual Mobile Grid](/docs/integrations/grid-management/virtual-mobile-grid) を参照してください。
 
 :::info
-**無料トライアルの制限**
-
-無料トライアルには以下の制限が適用されます:
-
-- 並列化なし
-- 実行時間は 10 分に制限
-- 1 時間に 1 回のみ実行可能
-
-追加機能が必要な場合は、Tricentis 担当者にお問い合わせください。
+**無料トライアルの制限** 無料トライアルには以下の制限が適用されます: 並列化なし 実行時間は 10 分に制限 1 時間に 1 回のみ実行可能 追加機能が必要な場合は、Tricentis 担当者にお問い合わせください。
 :::
 
 - **アプリケーション要件** -

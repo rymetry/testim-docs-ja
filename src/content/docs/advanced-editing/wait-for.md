@@ -18,9 +18,7 @@ keywords:
   - 高度な機能
 ---
 
-次のステップへ進む前に、あるイベントの発生を待ちたい場面があります。要素の表示待ち、テキストの表示待ち、数秒の待機など、さまざまです。
-
-Testim には待機のためのビルトイン機能があります。提供される待機の種類:
+次のステップへ進む前に、あるイベントの発生を待ちたい場面があります。要素の表示待ち、テキストの表示待ち、数秒の待機など、さまざまです。Testim には待機のためのビルトイン機能があります。提供される待機の種類:
 
 - 要素の表示待機（[Web](#wait-for-element-visible-web)、[モバイル](#wait-for-element-visible-mobile)）
 - 要素の非表示待機（[Web](#wait-for-element-not-visible-web)）
@@ -233,11 +231,8 @@ Testim には待機のためのビルトイン機能があります。提供さ�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/94a0b4a-js-wait.png)
 
 :::warning{title="注意"}
-
-- 関数が true を返すかステップのタイムアウトに達するまでリトライします。
-- Custom wait for は再利用可能です。
-- ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/advanced-editing/validations/custom-code)。
-  :::
+関数が true を返すかステップのタイムアウトに達するまでリトライします。Custom wait for は再利用可能です。ステップパラメーター、エクスポートパラメーターなども利用できます。詳細は[カスタム検証・アクション](/docs/advanced-editing/validations/custom-code)。
+:::
 
 ## ダウンロード待機（Web）
 
