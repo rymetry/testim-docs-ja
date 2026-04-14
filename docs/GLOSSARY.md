@@ -35,6 +35,9 @@
 | Tricentis Testim Extension | |
 | Testim Visual Editor | |
 | Visual Editor | |
+| Tricentis Mobile Agent | モバイルテスト用エージェント |
+| Virtual Mobile Grid | Testim のモバイル実行グリッド |
+| TTM for Jira | Tricentis Test Management for Jira |
 
 ## 機能 / 技術名
 
