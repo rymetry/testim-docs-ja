@@ -22,7 +22,11 @@
 | segment-token-gap | 49 | 40 | **-9** |
 | segment-inconclusive | 11 | 11 | 0 |
 | segment-order-mismatch | 1 | 1 | 0 |
-| **baseline total** | **2259** | **1909** | **-350** |
+| **baseline total** | **2259** | **1913** | **-346** |
+
+> PR#267 review 反映後の最終値。初回 baseline 再生成時点 (1909) から **+4** は、UX 保護のため意図的に受容した structural divergence:
+> - `administration/api-access.md`: `:::danger` 警告 callout を復元したため +3 (section-structure-mismatch + segment-missing + segment-extra)
+> - `integrations/test-management-integrations/qtest-integration.md`: `<projectName>` を backtick 化して MDX HTML タグ解釈を防いだため +1 (segment-untranslated、content fingerprint 変化)
 
 > 主要削減源は Phase 2.1 で実施した GLOSSARY/INVARIANT_TOKENS 拡張 (Testim step / property 名 50+ と `testim-step-name-with-parens` パターン)。これが Top 2 files 以外の 218 slug 全体に波及し、segment-untranslated を -303 まで押し下げた。
 
@@ -140,7 +144,26 @@
 - **Phase 2.4 (次 round)**: residual `segment-extra` (90) と `section-structure-mismatch` (60) の整理。callout-body 17 は Phase 3 対象
 - **Phase 3**: JA 独自 callout (segment-extra callout-body) 17 件削除
 - **Phase 4**: schema cleanup + inconclusive 11 件 + order-mismatch 1 件 + EN-side artifact の registry 化 (特に `/docs/index` 問題と `help.testim.io#fragment` 正規化修正)
-- **parity checker 改善候補** (Phase 2.3 で浮上):
+- **parity checker 改善候補** (Phase 2.3 / PR#267 review で浮上):
   1. EN token 由来の `help.testim.io#fragment` と JA `/docs/X#fragment` の正規化非対称性 (現状 3 entries 影響)
-  2. EN 側 `index.htm` self-referential リンクの別扱い (現状 6 entries 影響)
-  3. `/docs/` 経路指定の EN typo (dash / sentence-boundary) を EN-side artifact registry へ移す枠組み
+  2. EN 側 `index.htm` self-referential リンクの別扱い (現状 6 entries 影響、`EN_SIDE_ARTIFACT_TOKENS` に登録済み)
+  3. `/docs/` 経路指定の EN typo (dash / sentence-boundary) を EN-side artifact registry へ移す枠組み (`scripts/phase2/lib/baseline.mjs` に雛形あり)
+  4. EN `<blockquote>` ↔ JA `:::danger` callout を parity_turndown 側で吸収 (api-access.md の 3 entries が該当)
+  5. GLOSSARY の common word (Enter / Tab / Approve) が word-boundary マッチで他文脈も mask するリスク。`RESIDUE_MIN_WORDS=3` 防護で全英文は検知継続だが、短い segment の false-negative を Phase 4 で `debug.maskCoverage` audit
+
+---
+
+## PR#267 Review 対応 (2026-04-14 追加、commit `b207f01`)
+
+### P2 regression 修復 (rendering 壊れていた、要 pre-merge fix)
+
+1. **`validate-download.md` line 698**: 1 行パイプ文字列 (`| expectedText | JavaScript | 'A Simple PDF File' |`) は Markdown table として不正 (header/separator 行なし) で表示が壊れていた。HTML `<table class="md-table md-table-3cols">` を復元
+2. **`qtest-integration.md` line 36**: `https://<projectName>.qtestnet.com/` の `<projectName>` が MDX で HTML タグとして解釈され表示消失。URL 全体と placeholder を backtick で inline code 化
+3. **`enumerate_token_gaps.mjs`**: `missingTokens[0]` のみ分類するロジックを全トークン分類に変更。複合 token-gap を持つ entry (例: `--chrome-extra-args` + `/docs/index` の `allow-chrome-browser-to-use-microphone`) を複数カテゴリに登録し、内部リンク欠落の誘導漏れを防止
+
+### Review improvement (非 regression)
+
+4. **`scripts/phase2/lib/baseline.mjs` 新設**: 共通ユーティリティを抽出。`loadBaseline()` / `REPO_ROOT` / `EN_SIDE_ARTIFACT_TOKENS` / `EN_SIDE_ARTIFACT_URLS` / `categorizeToken()`。Phase 2.0 / 2.4 の enumerate script で再利用可能 (Phase 1 retrospective の指摘事項も解消)
+5. **`GLOSSARY.md` watch list 注記**: `Enter` / `Tab` / `Page Up` / `Page Down` / `Approve` の一般単語エントリに watch 注記追加。word-boundary mask のリスクと `RESIDUE_MIN_WORDS=3` 防護層の挙動を明文化
+6. **`api-access.md` の `:::danger` 復元**: API キー削除の警告 callout を bold paragraph に downgrade していたのを revert。UX (視覚的警告) を優先し、parity 側は 3 件を意図的 baseline entry として受容
+7. **EN-side typo の cliFlag 誤分類解消**: `-variable` / `-this` / `step.This` / `/docs/index` / `http://google.com` を `EN_SIDE_ARTIFACT_TOKENS` registry に登録し、enumerate script が `enSideArtifact` カテゴリに自動振り分け
