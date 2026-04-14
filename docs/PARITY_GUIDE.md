@@ -66,6 +66,7 @@ JA に含めず baseline で管理すべき EN 側のアーティファクト。
 | MadCap `</Image>` テキスト | `validate-element-text` | EN HTML に `<p>&lt;/Image&gt;</p>` がゴミテキストとして存在。JA に追加しない |
 | `<span class="FileOrFilePath">` | `configuration-file-parameters` | EN が `<code>` ではなく `<span>` でコード表示。JA で backtick にすると token 抽出が変わる場合がある |
 | `pull-requests` ページ壊れ | `testops/testops-version-control/pull-requests` | EN ソース自体が空。`source_sync_exclusions.mjs` で除外管理 |
+| 壊れたリンク（display text と href 不一致） | `creating-your-first-codeless-test` | EN に `<a href="http://google.com">demo.testim.io</a>` が存在。display text が正。JA は正しい URL（`https://demo.testim.io`）を維持し、token-gap は baseline で管理 |
 
 ## 修正ワークフロー
 

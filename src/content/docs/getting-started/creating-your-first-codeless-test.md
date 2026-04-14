@@ -51,11 +51,11 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 
    ![Record ボタン](/images/getting-started/creating-your-first-codeless-test/ce98d0d-gettingstarted3.png)
 
-   既定の **Base URL** にデモサイトの URL「[demo.testim.io](http://google.com)」が設定されている場合は、新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。そのままステップ 4 に進みます。Base URL が未設定の場合は **Start A New Test** ウィンドウが開きます。
+   既定の **Base URL** にデモサイトの URL「[demo.testim.io](https://demo.testim.io)」が設定されている場合は、新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。そのままステップ 4 に進みます。Base URL が未設定の場合は **Start A New Test** ウィンドウが開きます。
 
 ![Start A New Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/d42b2ee-gettingstarted4.png)
 
-3. **Your app URL** フィールドにデモサイトの URL「[demo.testim.io](http://google.com)」を入力し、**Create Test** をクリックします。
+3. **Your app URL** フィールドにデモサイトの URL「[demo.testim.io](https://demo.testim.io)」を入力し、**Create Test** をクリックします。
    新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。このウィンドウが **Application Under Test (AUT)** です。このウィンドウで行った操作が記録され、Testim のテストとして保存されます。
 4. AUT のブラウザで任意のユーザー名とパスワードを使ってログインします。
 
