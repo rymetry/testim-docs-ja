@@ -23,6 +23,9 @@
 | Testim Grid | |
 | Tricentis | |
 | Tricentis Testim | |
+| qTest | Tricentis のテスト管理プラットフォーム |
+| qTest Manager | qTest のテスト管理コンポーネント |
+| qTest Insights | qTest のインサイトコンポーネント |
 
 ## 拡張機能 / IDE
 
@@ -78,6 +81,7 @@
 | Environments | UI ナビゲーション要素 |
 | Go Back to the Editor | Testim の UI リンク |
 | See Error | Testim の UI リンク |
+| Approve | UI ボタン名（qTest） |
 
 ## 画面 / UI 領域
 
@@ -90,6 +94,14 @@
 | Dashboard | |
 | Run View | |
 | Step Properties | |
+| Bearer Token | qTest API トークン |
+| Test Execution | qTest の UI 画面名（単数形） |
+| Test Executions | qTest の UI 画面名 |
+| Execution History | qTest の UI 画面名 |
+| Test Log Details | qTest の UI 要素名 |
+| Result URL | qTest の UI フィールド名 |
+| Console Logs URL | qTest の UI フィールド名 |
+| Network Logs URL | qTest の UI フィールド名 |
 
 ## Testim ステップ名（検証・待機・アクション）
 
@@ -192,6 +204,7 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | CI/CD | |
 | API | |
 | URL | |
+| TMS | テスト管理システムの略称（Test Management System） |
 | URI | |
 | ID | 識別子 |
 | JSON | |
@@ -210,3 +223,4 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Objective C | プログラミング言語 |
 | Swift | プログラミング言語 |
 | Ctrl/Cmd | キーボード修飾キーの表記（ctrl/cmd と小文字でも使用） |
+| Quarantine | Testim のテスト隔離機能・ステータス |

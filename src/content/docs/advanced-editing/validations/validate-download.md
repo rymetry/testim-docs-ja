@@ -234,7 +234,7 @@ return csv({
     Package
    </td>
    <td style="text-align: left;">
-    [csvtojson\@2.0.8]
+    [csvtojson@2.0.8]
    </td>
   </tr>
   <tr>
@@ -309,7 +309,7 @@ return (
     Package
    </td>
    <td style="text-align: left;">
-    [image-size\@0.6.3]
+    [image-size@0.6.3]
    </td>
   </tr>
   <tr>
@@ -406,7 +406,7 @@ if (sheet !== expectedPageName) {
     Package
    </td>
    <td style="text-align: left;">
-    [xlsx\@0.14.1]
+    [xlsx@0.14.1]
    </td>
   </tr>
   <tr>
@@ -493,7 +493,7 @@ expectedText.forEach(item => {
     Package
    </td>
    <td>
-    [docxtemplater\@3.9.5]
+    [docxtemplater@3.9.5]
    </td>
   </tr>
   <tr>
@@ -504,7 +504,7 @@ expectedText.forEach(item => {
     Package
    </td>
    <td>
-    [jszip\@2.*]
+    [jszip@2.*]
    </td>
   </tr>
   <tr>
@@ -527,7 +527,7 @@ expectedText.forEach(item => {
     Package
    </td>
    <td>
-    [lodash\@4.17.11]
+    [lodash@4.17.11]
    </td>
   </tr>
   <tr>
@@ -593,7 +593,7 @@ return docxText.includes(expectedText);
     Package
    </td>
    <td style="text-align: left;">
-    [docxtemplater\@3.9.5]
+    [docxtemplater@3.9.5]
    </td>
   </tr>
   <tr>
@@ -604,7 +604,7 @@ return docxText.includes(expectedText);
     Package
    </td>
    <td style="text-align: left;">
-    [jszip\@2.*]
+    [jszip@2.*]
    </td>
   </tr>
   <tr>
@@ -681,7 +681,7 @@ return pdf(fileBuffer).then((data) => {
     Package
    </td>
    <td style="text-align: left;">
-    [pdf-parse\@latest]
+    [pdf-parse@latest]
    </td>
   </tr>
   <tr>
@@ -698,18 +698,4 @@ return pdf(fileBuffer).then((data) => {
  </tbody>
 </table>
 
-<table class="md-table md-table-3cols">
- <tbody>
-  <tr>
-   <td style="text-align: left;">
-    expectedText
-   </td>
-   <td style="text-align: left;">
-    JavaScript
-   </td>
-   <td style="text-align: left;">
-    'A Simple PDF File'
-   </td>
-  </tr>
- </tbody>
-</table>
+| expectedText | JavaScript | 'A Simple PDF File' |

@@ -125,20 +125,20 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 
 - checkable
 - checked
-- \{class,className}
-- clickable \{content-desc,contentDescription}
+- {class,className}
+- clickable {content-desc,contentDescription}
 - enabled
 - focusable
 - focused
-- \{long-clickable,longClickable}
+- {long-clickable,longClickable}
 - package
 - password
-- \{resource-id,resourceId}
+- {resource-id,resourceId}
 - scrollable
 - selection-start
 - selection-end
 - selected
-- \{text,name}
+- {text,name}
 - hint
 - extras
 - bounds
