@@ -122,9 +122,6 @@ for (const [slug, entries] of bySlug) {
     if (i === 0) continue;
     const prev = paragraphs[i - 1];
     if (isHeading(prev) || isCallout(prev) || isCodeBlock(prev) || isList(prev) || isImageOnly(prev) || isHtmlBlock(prev)) continue;
-    // 前段落が平叙文であること (前段落自体に改行を含んでよいが、最後の行が文で終わること)
-    const prevLastLine = prev.split('\n').pop() ?? '';
-    // 明らかに heading/code/callout な最終行はスキップ (ほぼ前チェックでカバー済み)
 
     // 後段落の確認 (list, image, HTML block, or prose を許容)
     const next = i + 1 < paragraphs.length ? paragraphs[i + 1] : null;
