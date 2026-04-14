@@ -62,7 +62,7 @@ EN が `<p>` 内にインラインで `1. x 2. y 3. z` を書く callout を、J
 JA に含めず baseline で管理すべき EN 側のアーティファクト。
 
 | 問題 | 対象ファイル例 | 対応 |
-|------|---------------|------|
+| ------ | --------------- | ------ |
 | MadCap `</Image>` テキスト | `validate-element-text` | EN HTML に `<p>&lt;/Image&gt;</p>` がゴミテキストとして存在。JA に追加しない |
 | `<span class="FileOrFilePath">` | `configuration-file-parameters` | EN が `<code>` ではなく `<span>` でコード表示。JA で backtick にすると token 抽出が変わる場合がある |
 | `pull-requests` ページ壊れ | `testops/testops-version-control/pull-requests` | EN ソース自体が空。`source_sync_exclusions.mjs` で除外管理 |
@@ -99,7 +99,7 @@ node scripts/generate_parity_baseline.mjs --slug=advanced-editing/loops
 ## 残債の返済優先順位
 
 | 種別 | 残件数 | 対応内容 | 難易度 |
-|------|--------|----------|--------|
+| ------ | -------- | ---------- | -------- |
 | segment-extra | 最大 | preface 重複・手順分離が大半。パターン化されており機械的に修正可能 | 低 |
 | segment-untranslated | 中 | テーブルセルの未翻訳が中心 | 中 |
 | segment-missing | 中 | EN にあって JA にない内容。翻訳が必要 | 中 |

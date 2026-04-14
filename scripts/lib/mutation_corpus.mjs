@@ -479,32 +479,52 @@ export function moveSegment(md, nth = 0) {
 
 /**
  * Replace one JA paragraph with English text (simulating untranslated residual).
+ * Consecutive paragraph lines (no blank line between them) form a single
+ * markdown paragraph, so the entire block must be replaced to produce a
+ * detectable diff=1 mutation.
  * @param {string} md
  * @param {number} [nth=0]
  * @returns {MutationResult | null}
  */
 export function insertEnResidual(md, nth = 0) {
   const classified = classifyLines(md);
-  const jaParagraphs = classified.filter(
-    (l) =>
-      l.kind === 'paragraph' &&
-      /[\u3000-\u9fff\uf900-\ufaff]/.test(l.text),
-  );
-  if (jaParagraphs.length === 0) return null;
-  const target = jaParagraphs[nth % jaParagraphs.length];
+  const CJK_RE = /[\u3000-\u9fff\uf900-\ufaff]/;
+
+  // Collect paragraph block starts, then keep only blocks containing CJK.
+  const allBlockStarts = [];
+  for (let i = 0; i < classified.length; i++) {
+    if (classified[i].kind !== 'paragraph') continue;
+    const isStart = i === 0 ||
+      classified[i - 1].kind !== 'paragraph' ||
+      classified[i - 1].index !== classified[i].index - 1;
+    if (isStart) allBlockStarts.push(i);
+  }
+  const blockStarts = allBlockStarts.filter((startIdx) => {
+    const [, blockEnd] = paragraphBlockRange(classified, startIdx);
+    for (let i = startIdx; classified[i] && classified[i].index < blockEnd; i++) {
+      if (CJK_RE.test(classified[i].text)) return true;
+    }
+    return false;
+  });
+  if (blockStarts.length === 0) return null;
+
+  const targetClassifiedIdx = blockStarts[nth % blockStarts.length];
+  const [start, end] = paragraphBlockRange(classified, targetClassifiedIdx);
+
   const enText =
     'Click on the Settings button and configure the required parameters for your test execution.';
   const lines = md.split('\n');
   const newLines = [...lines];
-  newLines[target.index] = enText;
+  newLines.splice(start, end - start, enText);
+  const linesRemoved = end - start - 1;
   return {
     mutated: newLines.join('\n'),
     metadata: {
       type: 'en-residual',
-      lineIndex: target.index,
-      linesRemoved: 0,
-      originalText: target.text,
-      description: `EN残留 (L${target.index + 1}): JA\u2192EN置換`,
+      lineIndex: start,
+      linesRemoved,
+      originalText: lines.slice(start, end).join('\n'),
+      description: `EN残留 (L${start + 1}${end - start > 1 ? `-${end}` : ''}): JA\u2192EN置換`,
     },
   };
 }
