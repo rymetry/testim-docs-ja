@@ -257,6 +257,8 @@ EN snapshot           →  JA 翻訳
 
 ## 🏷️ Testim 機能名・製品名・画面名の英語維持
 
+> **正本は [GLOSSARY.md](./GLOSSARY.md) です**。本節は執筆者向けの要約で、detector (`scripts/lib/parity_glossary_mask.mjs`) は GLOSSARY.md のみを参照します。用語追加・更新は GLOSSARY.md に対して行ってください。
+
 Testim の固有名詞は英語のまま維持してください。日本語に翻訳しないこと。
 
 | カテゴリ   | 例                                          |
