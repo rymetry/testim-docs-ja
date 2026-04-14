@@ -85,7 +85,7 @@ Mobile Apps Library でアプリが不要になった場合は、削除できま
 
 ## Mobile App ID をコピーする
 
-Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[Running mobile tests through the CLI](/docs/running-tests/running-tests-overview#cli-を通じてモバイル-テストを実行する) を参照してください。→ **Mobile App ID をコピーするには**:
+Mobile Apps Library に含まれているモバイルアプリをグリッドでテストを実行するために使用したい場合で、このグリッドにアプリがまだインストールされていない場合は、CLI を通じてグリッドに提供するために **Mobile App ID** をコピーする必要があります。詳細については、[CLI を通じてモバイル テストを実行する](/docs/running-tests/running-tests-overview#cli-を通じてモバイル-テストを実行する) を参照してください。→ **Mobile App ID をコピーするには**:
 
 1. **Mobile Apps Library** に移動します。
 2. モバイルアプリのリストからアプリを選択し、**Copy ID** ボタンをクリックします。

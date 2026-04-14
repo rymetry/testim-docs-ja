@@ -171,3 +171,28 @@ describe('createMaskCoverage — run-level collector', () => {
     assert.equal(json.summary.segmentsMasked, 0);
   });
 });
+
+describe('classifySegment — Spec Invariant 5: Residue = バグ (mixed JA/EN must not bypass residue check)', () => {
+  it('detects English prose residue in mixed JA/EN segment (CJK does not bypass)', () => {
+    // textNorm 経由 (lowercased) を想定。Visual Editor は glossary 経由でマスクされるが、
+    // 残りの "click the save button" は英語 prose 残留 = バグとして検知すべき。
+    const cls = classifySegment('visual editor で click the save button');
+    assert.equal(
+      cls.isFullyMasked,
+      false,
+      'CJK 文字 1 つで早期 return すると Spec Invariant 5 (Residue = バグ) を破る',
+    );
+    assert.ok(cls.residue.length > 0);
+  });
+
+  it('still passes pure CJK text (handled by hasAscii early-return, not CJK fallback)', () => {
+    const cls = classifySegment('これは完全に翻訳された段落です。');
+    assert.equal(cls.isFullyMasked, true);
+  });
+
+  it('still passes glossary + CJK with no English residue', () => {
+    // glossary がマスクされ、残りが全て CJK なら residue は空になる
+    const cls = classifySegment('test editor を開いて開始します。');
+    assert.equal(cls.isFullyMasked, true);
+  });
+});

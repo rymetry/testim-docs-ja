@@ -168,14 +168,6 @@ export function classifySegment(text) {
     return { isFullyMasked: true, residue: '' };
   }
 
-  // CJK 文字が含まれている場合は日本語訳済みテキストとみなす。
-  // textNorm は小文字化されるため「Testim」→「testim」になり glossary マッチが外れるが、
-  // CJK が存在する = 翻訳済みなのでここで早期リターンする。
-  // これは旧 looksUntranslated() の CJK_RE.test(text) early-exit と等価。
-  if (CJK_RE.test(stripped)) {
-    return { isFullyMasked: true, residue: '' };
-  }
-
   const { maskedText } = maskSegmentText(text);
 
   // Placeholder と inline code / URLs / backticks を除去して residue を見る

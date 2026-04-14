@@ -47,6 +47,37 @@
 | Validations | |
 | CodeBot | |
 | Coding Assistant | |
+| Mobile Apps Library | モバイルアプリ管理画面 |
+| Mobile App ID | モバイルアプリの識別子 |
+| Mobile Apps Tab | モバイルアプリタブ |
+| Upload to Grid | グリッドへのアップロード機能 |
+| Move to Folder | 共有ステップの移動 UI アクション |
+
+## Testim for Salesforce
+
+| 用語 | 備考 |
+| --- | --- |
+| Salesforce | サードパーティプラットフォーム（Testim for Salesforce 文脈） |
+| Testim for Salesforce | 製品名 |
+| Salesforce Steps | Testim for Salesforce のステップカテゴリタブ |
+| Log In | Testim for Salesforce のステップ名 |
+| Log Out | Testim for Salesforce のステップ名 |
+| Launch App | Testim for Salesforce のステップ名 |
+| Record Operations | Testim for Salesforce のステップカテゴリ |
+| Select Login Persona | Testim for Salesforce の UI ラベル |
+| Connect a Salesforce Environment | Testim UI の操作名 |
+| Select Existing Branch | Testim UI の操作名 |
+| Create New Branch | Testim UI の操作名 |
+| Select Type | Testim for Salesforce の UI ラベル |
+| Select Record Type | Testim for Salesforce の UI ラベル |
+| Account Name | Salesforce フィールド名 |
+| Account | Salesforce オブジェクトタイプ |
+| Create Account | Salesforce のレコード操作名 |
+| Object | Salesforce / Testim の概念用語 |
+| Settings | UI ナビゲーション要素 |
+| Environments | UI ナビゲーション要素 |
+| Go Back to the Editor | Testim の UI リンク |
+| See Error | Testim の UI リンク |
 
 ## 画面 / UI 領域
 
@@ -70,6 +101,7 @@
 | API | |
 | URL | |
 | URI | |
+| ID | 識別子 |
 | JSON | |
 | YAML | |
 | XML | |
@@ -79,3 +111,10 @@
 | TypeScript | |
 | npm | |
 | Node.js | |
+| Android | モバイルプラットフォーム |
+| iOS | モバイルプラットフォーム |
+| Java | プログラミング言語 |
+| Kotlin | プログラミング言語 |
+| Objective C | プログラミング言語 |
+| Swift | プログラミング言語 |
+| Ctrl/Cmd | キーボード修飾キーの表記（ctrl/cmd と小文字でも使用） |

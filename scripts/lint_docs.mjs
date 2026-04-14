@@ -18,7 +18,7 @@ const PUBLIC_ROOT = path.join(PROJECT_ROOT, 'public');
 /** @typedef {{ file: string, line: number | null, rule: string, message: string, level: 'error' | 'warning' }} LintError */
 /** @typedef {{ allSlugs?: Set<string>, headingsBySlug?: Map<string, Set<string>> }} LintContext */
 
-const VALID_CALLOUT_TYPES = new Set(['note', 'warning', 'tip', 'danger', 'success', 'info']);
+const VALID_CALLOUT_TYPES = new Set(['note', 'caution', 'warning', 'tip', 'danger', 'info']);
 const VALID_SOURCE_URL_RE =
   /^https:\/\/docs\.tricentis\.com\/testim\/content\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*(?:\/index)?\.htm$/;
 
