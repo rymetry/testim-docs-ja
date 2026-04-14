@@ -2,13 +2,15 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Phase 0 完了後の baseline に残る `segment-extra` 193 件のうち、機械的に修正可能な 3 パターン (preface 重複、手順導入文分離、callout 内番号リスト展開) を 3 本の並列 PR でバッチ修正する。派生する `section-structure-mismatch` の大半も連鎖解消する想定。
+**Goal:** Phase 0 完了後の baseline (total **2337** / segment-untranslated **1904** / segment-extra **150** / segment-missing 136 / section-structure-mismatch 86 / segment-token-gap 49 / segment-inconclusive 11 / segment-order-mismatch 1) に残る `segment-extra` **150 件** のうち、機械的に修正可能な 3 パターン (preface 重複、手順導入文分離、callout 内番号リスト展開) を 3 本の並列 PR でバッチ修正する。派生する `section-structure-mismatch` の大半も連鎖解消する想定。
+
+> **実測内訳 (baseline 再生成 @ 2026-04-14 時点):** segment-extra 150 = preface (sectionPath=空) **35 件 / 27 slug**、section-internal **115 件** (unordered-list-item 47, callout-body 17, ordered-list-item 14, paragraph 20, table-cell 13, details-summary 4)。unique slug 68。
 
 **Architecture:** 3 つの独立 sub-phase (1.1 / 1.2 / 1.3) を並列実行可能。各 sub-phase は (a) 対象 slug を baseline から enumerate、(b) 正規表現 + 手動確認で修正、(c) baseline 再生成で削減確認、の 3 段構成。パターン検知を汎化する補助スクリプトを `scripts/phase1/` 配下に新設し、再実行可能にする。
 
 **Tech Stack:** Node.js 20 (enumerate スクリプト), 既存 `scripts/check_source_parity.mjs` + `generate_parity_baseline.mjs`, Markdown 直接編集。
 
-**Prerequisite:** Phase 0 PR がマージされ、baseline が glossary_mask + URL normalize 後の状態で再生成済みであること。
+**Prerequisite:** Phase 0 PR (#265) がマージ済み、baseline が glossary_mask + URL normalize + CJK 早期 return 削除後の最終状態 (2337 entries) で再生成済み。
 
 **File ownership map:**
 - `scripts/phase1/enumerate_preface_duplicates.mjs` — Phase 1.1 (新規、slug 列挙)
@@ -25,7 +27,9 @@
 
 ---
 
-## Phase 1.1: preface 重複削除 (45 件、27 slug)
+## Phase 1.1: preface 重複削除 (35 件、27 slug)
+
+> **実測:** `segment-extra` かつ `sectionPath` 空 = 35 件。原本 plan の 45 件は Phase 0 前の想定値で、Phase 0 の glossary_mask / URL normalize / CJK 早期 return 削除後の再生成で 35 件に減少している。
 
 ### Task 1.1.1: 対象 slug を列挙する
 
@@ -212,7 +216,7 @@ console.log('preface segment-extra 残: ' + extras.length);
 "
 ```
 
-Expected: 大幅減 (45 → 10 以下が目標)。残件は REVIEW で除外したものか、機械判定に漏れたものなので、report に記録して次に進む。
+Expected: 大幅減 (35 → 10 以下が目標)。残件は REVIEW で除外したものか、機械判定に漏れたものなので、report に記録して次に進む。
 
 - [ ] **Step 3: commit baseline**
 
@@ -228,12 +232,12 @@ git commit -m "chore: Phase 1.1 完了後の baseline 再生成"
 ```bash
 git push -u origin worktree-phase1-preface
 
-gh pr create --title "fix: Phase 1.1 preface 重複削除 (segment-extra 25-40 件解消)" --body "## Summary
+gh pr create --title "fix: Phase 1.1 preface 重複削除 (segment-extra 20-30 件解消)" --body "## Summary
 
 Phase 1.1 として、frontmatter description と内容が重複する preface 段落を削除しました。
 
-- 対象: preface の segment-extra 45 件のうち HIT 判定の 27 slug
-- 解消: segment-extra ~25-40 件 + 派生 section-structure-mismatch
+- 対象: preface の segment-extra 35 件 / 27 slug (HIT 判定分)
+- 解消: segment-extra ~20-30 件 + 派生 section-structure-mismatch
 
 ## Test plan
 
@@ -250,7 +254,9 @@ Phase 1.1 として、frontmatter description と内容が重複する preface �
 
 ---
 
-## Phase 1.2: 手順導入文の段落結合 (~25 件)
+## Phase 1.2: 手順導入文の段落結合 (~20 件)
+
+> **実測:** section-internal `segment-extra` かつ `segmentKind=paragraph` = **20 件**。原本 plan の ~25 件は Phase 0 前の想定値。手順導入文 (`**〜するには:**`) パターンに該当するのはこの 20 件の一部。
 
 ### Task 1.2.1: 対象 slug を列挙する
 
@@ -390,7 +396,9 @@ Plan: docs/superpowers/plans/2026-04-14-parity-phase1-pattern-burndown.md (Phase
 
 ---
 
-## Phase 1.3: callout 内番号リスト inline 化 (~80 件)
+## Phase 1.3: callout 内番号リスト inline 化 (~75 件)
+
+> **実測:** section-internal `segment-extra` のうち ul-item **47 件** + ol-item **14 件** + callout-body **17 件** = 最大 78 件が理論上のスコープ。原本 plan の ~80 件と概ね一致。実際に callout 内のインライン列挙を展開したケースは EN snapshot との突き合わせで判定。
 
 ### Task 1.3.1: 対象 slug を列挙する
 
