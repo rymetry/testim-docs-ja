@@ -1,5 +1,7 @@
 # Invariant Token Patterns
 
+<!-- markdownlint-disable MD038 MD052 MD056 MD060 -->
+
 本ファイルは **JA 内に英語のまま残るべき invariant token のパターン定義** です。`scripts/lib/parity_glossary_mask.mjs` が読み、マッチした token は `segment-untranslated` 検知から除外されます。
 
 各 pattern には:
@@ -21,7 +23,7 @@
 | id | `keyboard-shortcut` |
 | regex | `\b(Ctrl|Cmd|Shift|Alt|Option|Meta|Enter|Esc|Escape|Tab|Space|Backspace|Delete)(\+\w+)+\b` |
 | example | `Ctrl+S`, `Shift+Cmd+K`, `Alt+Tab` |
-| note | 修飾キー (`Ctrl|Cmd|...`) から始まり `+` で連結されるもののみ |
+| note | 修飾キー (`Ctrl|Cmd|...`) から始まり`+` で連結されるもののみ |
 
 ## cli-flag
 

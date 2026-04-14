@@ -339,7 +339,7 @@ git commit -m "chore: Phase 1.2 手順導入文分離候補列挙スクリプト
 **Files:**
 - Modify: enumerate で候補になった slug の各 md ファイル
 
-**Context:** `[前段落文字列]` と `**〜するには:**` の間の空行を削除し、`→ ` でつなぐ。WRITING_GUIDE §Source-First 契約の推奨形。
+**Context:** `[前段落文字列]` と `**〜するには:**` の間の空行を削除し、`→` でつなぐ。WRITING_GUIDE §Source-First 契約の推奨形。
 
 - [ ] **Step 1: 各候補 slug で修正**
 
@@ -488,6 +488,7 @@ git commit -m "chore: Phase 1.3 callout リスト展開候補列挙スクリプ�
 修正例 (inline 化):
 
 修正前:
+
 ```markdown
 :::warning
 以下の制限があります:
@@ -498,6 +499,7 @@ git commit -m "chore: Phase 1.3 callout リスト展開候補列挙スクリプ�
 ```
 
 修正後:
+
 ```markdown
 :::warning
 以下の制限があります: 1. 制限 A 2. 制限 B 3. 制限 C

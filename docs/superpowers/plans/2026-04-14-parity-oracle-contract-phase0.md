@@ -37,6 +37,7 @@
 - `scripts/README.md` — Phase H.1 (command 追記)
 
 **Phase 間依存:**
+
 ```
 A (ガイド絶対化) ──┐
                   │

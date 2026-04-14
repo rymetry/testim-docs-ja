@@ -134,14 +134,14 @@ keywords:
 
 EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::` callout に変換する際は、以下のマッピングに従ってください：
 
-| EN 原文パターン                     | JA callout タイプ | 備考                                                                             |
-| ----------------------------------- | ----------------- | -------------------------------------------------------------------------------- |
-| `📘` / `<div class="note">`          | `:::note`         | 情報提供                                                                         |
-| `🚧` / `<div class="warning">`       | `:::warning`      | 注意喚起                                                                         |
-| `<div class="caution">` + 警告       | `:::caution`      | MadCap Flare の caution。当面は `:::warning` と同じ見た目（CSS alias、Phase 0）  |
-| `💡` / `<div class="tip">`           | `:::tip`          | 便利情報                                                                         |
-| `❗` / `⚠️` / `<div class="danger">`   | `:::danger`       | 重大な警告                                                                       |
-| `ℹ️` / `<div class="info">`          | `:::info`         | 補足                                                                             |
+| EN 原文パターン | JA callout タイプ | 備考 |
+| --- | --- | --- |
+| `📘` / `<div class="note">` | `:::note` | 情報提供 |
+| `🚧` / `<div class="warning">` | `:::warning` | 注意喚起 |
+| `<div class="caution">` + 警告 | `:::caution` | MadCap Flare の caution。当面は `:::warning` と同じ見た目（CSS alias、Phase 0） |
+| `💡` / `<div class="tip">` | `:::tip` | 便利情報 |
+| `❗` / `⚠️` / `<div class="danger">` | `:::danger` | 重大な警告 |
+| `ℹ️` / `<div class="info">` | `:::info` | 補足 |
 
 注意: JA タイトルが「注意」の場合は、EN 原文の絵文字に関わらず `:::warning{title="注意"}` を使用する。「注意」という日本語表現は警告の意味合いが強いため、`:::warning` が適切。
 
