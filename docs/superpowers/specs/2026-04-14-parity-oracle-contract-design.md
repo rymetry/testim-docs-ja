@@ -231,7 +231,7 @@ Phase 0 完了条件は以下全てを満たすこと:
 | --- | --- | --- |
 | `looksUntranslated()` を mask に置き換えると table-cell 102 件の本物のバグが炙り出される → 一時的に issue 件数が見かけ上増える可能性 | baseline diff レポートが混乱 | Phase 0 では baseline 再生成時に **diff の内訳** を `issueType × segmentKind × maskRecord 理由` で集計したレポートを出す。Phase 1 で本物バグとして burn-down |
 | callout `caution` 追加で既存 `:::warning` マッピングの翻訳者習慣が変わる | 既存 JA content で `:::warning{title="注意"}` と書いているものが移行必要? | 移行は Phase 1 以降。Phase 0 では **renderer に受け口を用意するのみ**で、既存 `:::warning` は警告無く動き続ける。WRITING_GUIDE にも「将来は `:::caution` へ移行、当面は `:::warning` のままで良い」と記載 |
-| `success` 削除で誰かが `:::success` を書いていた場合、表示崩壊 | visual bug | 事前 grep で JA content / EN snapshot 両方に `success` が 0 件であることを verify 済み (2026-04-14 時点) |
+| `success` 削除で誰かが `:::success` を書いていた場合、表示崩壊 | visual bug | 事前 grep で `src/content/docs/` (JA content) と EN snapshot に `success` が 0 件であることを verify 済み。`docs/WRITING_GUIDE.md` `docs/WRITING_FEATURES.md` の例示記述は事後 (PR レビュー指摘後) に削除した |
 | mask record の `debug.maskCoverage` のサイズが大きくなり status file が肥大化 | CI artifact サイズ、読み込み時間 | page 単位で `summary` に集計し、詳細は optional として debug mode でのみ fully emit する実装にする（Task E で詳細） |
 | `parity_normalize.mjs` の URL rewrite が既存 `EXCLUDED_INVARIANT_URL_TOKENS` と衝突 | token-gap の挙動変化 | 既存 token 除外は `extractInvariantTokens()` 内で行われており、normalize は align 側の pair comparison でのみ適用。順序を明確に分離 |
 | WRITING_GUIDE 改訂が既存 lint ルールと衝突 | `npm run lint:docs` 失敗 | `scripts/lint_docs.mjs` が参照する rule set を先に検証、必要なら同 PR 内で lint 側も更新 |

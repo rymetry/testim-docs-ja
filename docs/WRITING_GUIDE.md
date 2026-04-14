@@ -447,9 +447,7 @@ Markdown ファイルでは、基本的な記法に加えて、多くの拡張�
 ⚠️ 注意事項や警告を表示
 :::
 
-:::success
-✅ ベストプラクティスを表示
-:::
+<!-- :::success was removed in Phase 0 (2026-04-14) — dead callout type, no usage in content -->
 
 :::danger
 🚨 エラーや問題を表示
