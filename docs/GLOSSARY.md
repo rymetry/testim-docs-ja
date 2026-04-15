@@ -273,15 +273,5 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | VMG | Virtual Mobile Grid の略 |
 | SSO | Single Sign-On |
 | SAML | 認証連携プロトコル |
-| DOM | Document Object Model |
-| SDK | Software Development Kit |
-| IDE | Integrated Development Environment |
-| REST | REST API アーキテクチャスタイル |
-| HTTP | プロトコル |
-| HTTPS | プロトコル（TLS 付き） |
-| TLS | Transport Layer Security |
-| SSL | Secure Sockets Layer |
-| SMTP | メール送信プロトコル |
-| CSV | データフォーマット |
 | Ctrl/Cmd | キーボード修飾キーの表記（ctrl/cmd と小文字でも使用） |
 | Quarantine | Testim のテスト隔離機能・ステータス |
