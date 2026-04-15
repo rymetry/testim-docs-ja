@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development with careful quality gate. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `segment-extra` かつ `segmentKind = callout-body` の 29 件 (20 slug) — JA が読者のために独自追加した callout を削除する。翻訳ニュアンスが重要な callout は「情報を本文に統合 + callout 削除」で構造契約を守りながら情報保存する。
+**Goal:** `segment-extra` かつ `segmentKind = callout-body` の 17 件 (13 slug、Phase 2 Round 2 post-review baseline 1873 基準) — JA が読者のために独自追加した callout を削除する。翻訳ニュアンスが重要な callout は「情報を本文に統合 + callout 削除」で構造契約を守りながら情報保存する。
 
 **Architecture:** 1-2 PR。並列エージェント委任可能だが、**単純削除ではなく情報保存を伴う判断が必要**なため、個別レビュー必須。
 
@@ -10,10 +10,27 @@
 
 **Prerequisite:** Phase 2 がマージ済み、baseline が最新の状態。
 
+**Current target slugs (post-review baseline):**
+- `administration/api-access` (1)
+- `administration/secrets` (3)
+- `advanced-editing/auto-grouping2` (1)
+- `advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor` (1)
+- `advanced-editing/extract-text` (1)
+- `advanced-editing/validations/wait-for-element-visualization` (1)
+- `editing-tests/conditions/advanced-conditions-settings` (1)
+- `getting-started/creating-your-first-mobile-test-in-testim-visual-editor` (1)
+- `integrations/test-management-integrations/xray-integration` (1)
+- `overview/testim-overview` (1)
+- `recording-tests/recording-a-mobile-test` (1)
+- `recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test` (3)
+- `salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows` (1)
+
 **File ownership map:**
-- `src/content/docs/**/*.md` — 20 slug
+- `src/content/docs/**/*.md` — 13 slug (上記)
 - `scripts/phase3/enumerate_ja_only_callouts.mjs` — 対象 enumerate (新規)
 - `docs/superpowers/specs/2026-04-14-parity-phase3-report.md` — 完了レポート (新規)
+- `docs/GLOSSARY.md` — `TTM for Jira` 追加 (Phase 2 Round 2 から繰越、下記 Task 3.6 参照)
+- `src/content/docs/integrations/test-management-integrations/ttm-for-jira-integration.md` — Task 3.6 先行修正
 
 **Worktree:** `worktree-phase3-ja-only`
 
@@ -170,7 +187,7 @@ git commit -m "chore: Phase 3 完了後の baseline 再生成"
 
 ```bash
 git push -u origin worktree-phase3-ja-only
-gh pr create --title "fix: Phase 3 JA 独自 callout の削除 (29 entries, 20 slug)" --body "## Summary
+gh pr create --title "fix: Phase 3 JA 独自 callout の削除 (17 entries, 13 slug)" --body "## Summary
 
 EN 原文にない JA 独自の callout を 3 分類 (純粋削除 / callout 解除 / 本文統合) に従って整理しました。
 
@@ -181,6 +198,55 @@ EN 原文にない JA 独自の callout を 3 分類 (純粋削除 / callout 解
 Plan: docs/superpowers/plans/2026-04-14-parity-phase3-ja-only-removal.md
 "
 ```
+
+## Task 3.6: TTM for Jira glossary 追加 (Phase 2 Round 2 からの繰越)
+
+**Background:** Phase 2 Round 2 (PR#268) で `TTM for Jira` を `docs/GLOSSARY.md`
+に追加しようとしたが、`integrations/test-management-integrations/ttm-for-jira-integration`
+で 4 件の `segment-extra` (preface / Setting up section / Bulk Create unordered-list ×2 /
+callout-body) を誘発するため見送った。
+
+原因: glossary mask は segment の fingerprint と alignment 両方に作用する。
+`ttm-for-jira-integration` は "TTM for Jira" が文中に散りばめられており、mask 後の
+segment text が EN / JA で異なる alignment を生むため、baseline に含まれない
+extras が新規発生した。
+
+**Strategy (Plan B):** `ttm-for-jira-integration` の JA 側 alignment を EN に
+合わせて先に直し、その後 glossary に追加する。
+
+- [ ] **Step 1: `ttm-for-jira-integration.md` の alignment 修正**
+  - 対象: 3 section-structure-mismatch + 3 segment-missing + 非 callout 由来の JA segment
+  - `snapshots/en/content/integrations/test-management-integrations/ttm-for-jira-integration.html` と突き合わせ
+  - 特に問題が出た section: `Setting up TTM for Jira Integration` /
+    `Bulk Create & Map Test Cases to TTM for Jira` /
+    `Running a test and viewing the Testim test results in TTM for Jira > Upon Testim test run execution end`
+  - 作業中 UI label (TTM for Jira / Manually Map a test in Testim to TTM for Jira / Unmap a Test Already Mapped to TTM for Jira 等) は英語維持
+- [ ] **Step 2: per-slug parity 確認**
+  ```bash
+  npm run check:parity -- --slug=integrations/test-management-integrations/ttm-for-jira-integration
+  ```
+  active issues が 0 になっていること (baseline-covered のみ)
+- [ ] **Step 3: `docs/GLOSSARY.md` に追加**
+  ```markdown
+  | TTM for Jira | Tricentis Test Management for Jira |
+  ```
+- [ ] **Step 4: 影響再確認**
+  ```bash
+  npm run check:parity
+  ```
+  `ttm-for-jira-integration` 以外の slug で新規 extra / missing が生じていないこと
+- [ ] **Step 5: baseline 再生成 + commit**
+  ```bash
+  node scripts/generate_parity_baseline.mjs --regenerate --rationale="Phase 3 Task 3.6: TTM for Jira glossary 追加 + ttm-for-jira-integration alignment 修正"
+  git add docs/GLOSSARY.md src/content/docs/integrations/test-management-integrations/ttm-for-jira-integration.md parity-baseline.json
+  git commit -m "feat: Phase 3 Task 3.6 TTM for Jira glossary + alignment 修正"
+  ```
+
+**DoD:**
+- `TTM for Jira` が GLOSSARY に登録済み
+- `ttm-for-jira-integration` の active issues = 0
+- 他 slug で新規 active 発生なし
+- 旧 baseline からの純減 (-4 以上、glossary mask 効果 + alignment 修正)
 
 ## Task 3.5: Phase 3 完了レポート
 
@@ -196,7 +262,7 @@ Plan: docs/superpowers/plans/2026-04-14-parity-phase3-ja-only-removal.md
 
 | 種別 | Phase 2 後 | Phase 3 後 | 差 |
 | --- | --- | --- | --- |
-| segment-extra (callout-body) | 29 | (実測) | (実測) |
+| segment-extra (callout-body) | 17 | (実測) | (実測) |
 | segment-extra total | ??? | (実測) | (実測) |
 
 ## 分類別修正件数

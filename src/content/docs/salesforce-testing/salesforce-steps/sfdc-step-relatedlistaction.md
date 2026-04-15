@@ -23,8 +23,6 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-relatedlistaction/8bb9014-related.png)
 
-<br />
-
 **関連リストアクション**ステップは、レコード（例: 取引先責任者レコード）に対して次のアクションを実行するために使用できます:
 
 - 新しい関連リストオブジェクトを**作成**します。例えば、関連する商談を作成します。
@@ -53,8 +51,6 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 7. **アクションを選択**フィールドで、**Create** を選択します。
 8. **レコードタイプを選択**の下で、関連リストオブジェクトを追加したいレコードのレコードタイプを選択します。上の例では、タイプは **External or Internal Contact** のいずれかになります。\
    関連リストオブジェクトのフィールドが表示されます。(\*) で示されているフィールドは必須です。
-
-<br />
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-relatedlistaction/0c6f260-fieldlistcreate.png)
 
@@ -135,8 +131,6 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 27. **Add** を再度クリックして、別の検証を追加します。
 
 28. 完了したら、**保存**をクリックします。
-
-<br />
 
 ## 関連リストオブジェクトの表示（View）
 

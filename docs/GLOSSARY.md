@@ -35,6 +35,8 @@
 | Tricentis Testim Extension | |
 | Testim Visual Editor | |
 | Visual Editor | |
+| Tricentis Mobile Agent | モバイルテスト用エージェント |
+| Virtual Mobile Grid | Testim のモバイル実行グリッド |
 
 ## 機能 / 技術名
 
