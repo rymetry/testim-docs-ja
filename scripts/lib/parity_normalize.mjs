@@ -33,9 +33,11 @@ export function normalizeUrlForParity(url) {
     return `/docs/${path}${tricentisMatch[2] ?? ''}`;
   }
 
-  // help.testim.io prefix を常に剥がし、/docs/... path で canonicalize を適用する
-  // (query drop / trailing slash drop / fragment 保持)。help.testim.io 形式と
-  // bare /docs/... 形式が同一 canonical form に揃う。
+  // help.testim.io prefix を剥がし、剥がした結果が /docs/... path に match する
+  // ときのみ canonicalize を適用する (query drop / trailing slash drop /
+  // fragment 保持)。help.testim.io 形式と bare /docs/... 形式が同一 canonical
+  // form に揃う。/docs/ 以外 (例: /v2.0/docs/...) は Stage B5 scope のため、
+  // 既存挙動 (URL 不変) を保つ。
   const stripped = url.replace(HELP_TESTIM_PREFIX_RE, '');
   const docsMatch = stripped.match(DOCS_PATH_RE);
   if (docsMatch) {
@@ -43,8 +45,7 @@ export function normalizeUrlForParity(url) {
     return `${path}${fragment ?? ''}`;
   }
 
-  // /docs/ 以外 (例: /v2.0/docs/...) は prefix strip のみ適用 (Stage B5 で別途処理)。
-  return stripped;
+  return url;
 }
 
 export function canonicalizeDocsUrl(url) {

@@ -202,11 +202,12 @@ describe('normalizeUrlForParity — /docs canonical form (PR A feedback P2)', ()
     );
   });
 
-  it('strips help.testim.io prefix even for non-/docs paths (e.g. /v2.0/docs/...)', () => {
-    // Stage B5 で別途処理する想定。ここでは少なくとも prefix strip の対称性を確保する。
+  it('passes through non-/docs help.testim.io paths unchanged (Stage B5 scope)', () => {
+    // /v2.0/docs/... 等の versioned path は PR A canonical form の範囲外。
+    // 既存の baseline 凍結を崩さないよう URL 不変で返す (Stage B5 で別途処理)。
     assert.equal(
       normalizeUrlForParity('https://help.testim.io/v2.0/docs/scheduler#x'),
-      '/v2.0/docs/scheduler#x',
+      'https://help.testim.io/v2.0/docs/scheduler#x',
     );
   });
 });
