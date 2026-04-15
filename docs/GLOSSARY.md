@@ -21,11 +21,19 @@
 | Testim | |
 | Testim Automate | |
 | Testim Grid | |
+| Testim Mobile | Testim のモバイルテスト製品 |
+| Testim Copilot | Testim の AI アシスタント製品 (Help / Coding 両方を含む) |
+| Testim Startup Promotion | Testim の旧 startup 向け無償プログラム名 (廃止済み) |
 | Tricentis | |
 | Tricentis Testim | |
+| Tricentis Test Management | Tricentis のテスト管理製品 (TTM for Jira 等を含む) |
+| Tricentis Device Cloud | Tricentis のモバイルデバイスクラウド |
 | qTest | Tricentis のテスト管理プラットフォーム |
 | qTest Manager | qTest のテスト管理コンポーネント |
 | qTest Insights | qTest のインサイトコンポーネント |
+| Azure OpenAI Service | Microsoft Azure の OpenAI サービス (AI 基盤) |
+| Microsoft Azure OpenAI Service | Microsoft Azure OpenAI Service の完全表記 (4-word compound) |
+| Testim AI | Testim の AI 機能群総称 (Testim AI ソリューション等の compound) |
 
 ## 拡張機能 / IDE
 
@@ -58,6 +66,10 @@
 | Upload to Grid | グリッドへのアップロード機能 |
 | Move to Folder | 共有ステップの移動 UI アクション |
 | Enhanced mode | Testim モバイル機能名（VMG 上での高度モバイルテスト実行モード） |
+| Smart Locator | Smart Locators の単数形バリアント |
+| Hidden Parameters | Testim の非公開パラメーター管理機能 |
+| Test Plans | Scheduler の機能名 (テストプランニング) |
+| Execute Driver Script | Testim Mobile のステップ名 |
 
 ## Testim for Salesforce
 
@@ -259,6 +271,8 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | Linux | OS |
 | Firefox | ブラウザ |
 | Safari | ブラウザ |
+| Edge Legacy | Microsoft Edge Legacy (旧 EdgeHTML 版、サポート終了済み) |
+| Internet Explorer | Microsoft 旧ブラウザ (サポート終了済み) |
 | Java | プログラミング言語 |
 | Kotlin | プログラミング言語 |
 | Objective C | プログラミング言語 |
