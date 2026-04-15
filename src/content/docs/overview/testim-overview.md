@@ -26,6 +26,4 @@ Testim は、安定したテストの高速作成と、チームが効率的に�
 - Salesforce テスト - Testim の高速作成と AI を活用した安定性により、Salesforce のような動的なアプリケーションに最適です。Salesforce と統合する顧客向けアプリケーションを構築している場合、Testim はエンドツーエンドのワークフローをテストするための優れた選択肢です。詳細については、[Salesforce テスト](/docs/salesforce-testing/salesforce-testing-overview) をご覧ください。
 - モバイルアプリテスト - Testim は、デバイスとアプリケーションの管理を簡素化し、モバイルアプリケーションのテストをより簡単にします。ユーザーは、同じ機能と Testim エクスペリエンスを使用して、ローコードテストを迅速に作成できます。詳細については、[最初のモバイルテストの作成](/docs/getting-started/creating-your-first-mobile-test-in-testim-visual-editor) をご覧ください。
 
-:::info{title="変更履歴"}
 Testim の新機能をご確認ください。新機能の継続的なリストを Testim の[変更履歴](https://help.testim.io/changelog)で公開しています。
-:::
