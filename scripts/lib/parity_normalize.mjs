@@ -8,7 +8,11 @@
  * @module parity_normalize
  */
 
-const HELP_TESTIM_RE = /^(?:https?:\/\/)?help\.testim\.io(\/docs\/[^\s)]+)/;
+// Matches help.testim.io URL (protocol optional), capturing:
+//   group 1: path starting with /docs/ (no fragment, no trailing slash preserved)
+//   group 2: optional #fragment
+const HELP_TESTIM_RE =
+  /^(?:https?:\/\/)?help\.testim\.io(\/docs\/[^\s)#]+?)\/?(#[^\s)]*)?$/;
 // Matches any path under /testim/content/ (canonical repo URL form: /{category}/{slug}.htm).
 // Legacy /Topics/Help/ URLs are also matched by this broader regex and produce their literal
 // path translation (e.g. Topics/Help/loops → /docs/Topics/Help/loops) since that URL form
@@ -20,7 +24,7 @@ export function normalizeUrlForParity(url) {
   if (typeof url !== 'string' || url.length === 0) return url;
 
   const helpMatch = url.match(HELP_TESTIM_RE);
-  if (helpMatch) return helpMatch[1];
+  if (helpMatch) return `${helpMatch[1]}${helpMatch[2] ?? ''}`;
 
   const tricentisMatch = url.match(TRICENTIS_DOCS_RE);
   if (tricentisMatch) {

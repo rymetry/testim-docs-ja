@@ -142,3 +142,26 @@ describe('normalizeUrlForParity — passthrough cases', () => {
     assert.equal(normalizeUrlForParity('--project-id'), '--project-id');
   });
 });
+
+describe('normalizeUrlForParity — help.testim.io symmetry (Phase 4 Task 4.3)', () => {
+  it('normalizes help.testim.io URL with fragment symmetrically', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access#api-access'),
+      normalizeUrlForParity('/docs/api-access#api-access'),
+    );
+  });
+
+  it('preserves fragment on /docs path', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/index#top'),
+      '/docs/index#top',
+    );
+  });
+
+  it('drops trailing slash differences', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access/'),
+      normalizeUrlForParity('/docs/api-access'),
+    );
+  });
+});
