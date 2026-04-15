@@ -1,9 +1,9 @@
 {
   "baseline": {
-    "total": 1863,
+    "total": 1756,
     "byIssueType": {
-      "segment-untranslated": 1571,
-      "segment-extra": 86,
+      "segment-untranslated": 1459,
+      "segment-extra": 91,
       "segment-missing": 106,
       "segment-token-gap": 33,
       "section-structure-mismatch": 55,
@@ -817,15 +817,6 @@
         "inconclusiveReason": null
       },
       {
-        "slug": "administration/subscription-plans",
-        "issueType": "segment-untranslated",
-        "sectionPath": "What is Counted Towards the Parallelism Quota",
-        "segmentKind": "table-cell",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
         "slug": "advanced-editing/advanced-js-editor",
         "issueType": "segment-untranslated",
         "sectionPath": "",
@@ -1411,6 +1402,15 @@
         "inconclusiveReason": null
       },
       {
+        "slug": "advanced-editing/clear-text-mobile",
+        "issueType": "segment-untranslated",
+        "sectionPath": "Limitations",
+        "segmentKind": "unordered-list-item",
+        "missingTokens": null,
+        "inconclusiveCategory": null,
+        "inconclusiveReason": null
+      },
+      {
         "slug": "advanced-editing/coding-assistant",
         "issueType": "section-structure-mismatch",
         "sectionPath": "Examples",
@@ -1936,15 +1936,6 @@
         "slug": "advanced-editing/custom-action-step-mobile",
         "issueType": "segment-untranslated",
         "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/custom-action-step-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -1955,15 +1946,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "",
         "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/custom-action-step-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Adding a Custom Action (mobile) Step to your Test",
-        "segmentKind": "callout-body",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -2131,15 +2113,6 @@
         "inconclusiveReason": null
       },
       {
-        "slug": "advanced-editing/deep-link-mobile/hide-keyboard-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
         "slug": "advanced-editing/error-suffix-customization",
         "issueType": "segment-untranslated",
         "sectionPath": "",
@@ -2234,15 +2207,6 @@
         "issueType": "segment-extra",
         "sectionPath": "Modify the \"Drop\" Target",
         "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/handling-ui-actions/drag-drop-step",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Use Native events",
-        "segmentKind": "callout-body",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -3083,15 +3047,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Reusing the Group with the Parameters",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/parameters/parameters-in-custom-javascript-steps",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Using the parameter in the step",
-        "segmentKind": "callout-body",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -3991,15 +3946,6 @@
         "slug": "advanced-editing/validations/add-network-validation",
         "issueType": "segment-untranslated",
         "sectionPath": "Network Validation",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/validations/add-network-validation",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Network Validation",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -4135,15 +4081,6 @@
         "slug": "advanced-editing/validations/custom-code",
         "issueType": "segment-missing",
         "sectionPath": "Adding an Add custom validation step or an Add custom action step > Custom validation and action examples > Navigating to a different website (Custom action)",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/validations/custom-code",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Adding an Add custom validation step or an Add custom action step",
         "segmentKind": "callout-body",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -4460,15 +4397,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Creating a Validate Email Step > Creating a Validate Email Step using the Codeless Option",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/validations/email-validation",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Creating a Validate Email Step > Creating a Validation Email Step using the Coded Option",
-        "segmentKind": "callout-body",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -5642,34 +5570,7 @@
         "inconclusiveReason": null
       },
       {
-        "slug": "advanced-editing/validations/validate-element-visualization",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
         "slug": "advanced-editing/validations/validate-full-page-visualization",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/validations/validate-full-page-visualization",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/validations/validate-viewport-visualization",
         "issueType": "segment-untranslated",
         "sectionPath": "",
         "segmentKind": "callout-body",
@@ -5681,7 +5582,7 @@
         "slug": "advanced-editing/validations/validate-viewport-visualization",
         "issueType": "segment-untranslated",
         "sectionPath": "",
-        "segmentKind": "paragraph",
+        "segmentKind": "callout-body",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -5700,6 +5601,15 @@
         "issueType": "segment-extra",
         "sectionPath": "",
         "segmentKind": "callout-body",
+        "missingTokens": null,
+        "inconclusiveCategory": null,
+        "inconclusiveReason": null
+      },
+      {
+        "slug": "advanced-editing/validations/wait-for-element-visualization",
+        "issueType": "segment-extra",
+        "sectionPath": "",
+        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -5729,15 +5639,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "",
         "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "advanced-editing/validations/wait-for-element-visualization",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -5935,15 +5836,6 @@
         "slug": "debugging-tests/js-code-debugging",
         "issueType": "segment-untranslated",
         "sectionPath": "Debugging the JS Code in a supported step",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "debugging-tests/js-code-debugging",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Debugging the JS Code in a supported step",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -5953,24 +5845,6 @@
         "slug": "debugging-tests/js-code-debugging",
         "issueType": "segment-untranslated",
         "sectionPath": "Debugging the JS Code in a supported step",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "debugging-tests/js-code-debugging",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Debugging the JS Code in a supported step",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "debugging-tests/recording-additional-steps-to-fix-bugs",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Start recording",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -6106,15 +5980,6 @@
         "slug": "editing-tests/conditions",
         "issueType": "segment-untranslated",
         "sectionPath": "Configuring a Custom Condition",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/conditions",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Configuring a Custom Condition",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -6125,15 +5990,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Configuring a Custom Condition",
         "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/conditions",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Configuring a Custom Condition",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -6376,33 +6232,6 @@
         "slug": "editing-tests/editing-your-tests/editing-target-element-properties",
         "issueType": "segment-untranslated",
         "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -6440,15 +6269,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Reassigning the Target Element",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Reassigning the Target Element",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -6497,33 +6317,6 @@
         "slug": "editing-tests/editing-your-tests/editing-target-element-properties-mobile",
         "issueType": "segment-untranslated",
         "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -6551,15 +6344,6 @@
         "slug": "editing-tests/editing-your-tests/editing-target-element-properties-mobile",
         "issueType": "segment-untranslated",
         "sectionPath": "Machine learning mode > Viewing the locators in the Machine learning mode",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "editing-tests/editing-your-tests/editing-target-element-properties-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Reassigning the Target Element",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -7113,15 +6897,6 @@
         "slug": "getting-started/creating-your-first-codeless-test",
         "issueType": "segment-untranslated",
         "sectionPath": "Adding Validation",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-codeless-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Adding Validation",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -7193,42 +6968,6 @@
       {
         "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
         "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial!",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial! > Before we begin",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial! > Before we begin",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial! > Recording a Mobile Test",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
         "sectionPath": "Welcome to Testim's mobile testing tutorial! > Recording a Mobile Test",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
@@ -7276,33 +7015,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Welcome to Testim's mobile testing tutorial! > Recording a Mobile Test > Supported Mobile Actions",
         "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial! > Recording a Mobile Test > Supported Mobile Actions",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial! > Running a Mobile Test",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "getting-started/creating-your-first-mobile-test-in-testim-visual-editor",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Welcome to Testim's mobile testing tutorial! > Running a Mobile Test > Run Mobile Test in Testim Editor",
-        "segmentKind": "ordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -7627,15 +7339,6 @@
       {
         "slug": "integrations/dedicated-run-tunnel",
         "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/dedicated-run-tunnel",
-        "issueType": "segment-untranslated",
         "sectionPath": "Additional use cases > Example using Testim CLI with a tunnel",
         "segmentKind": "callout-body",
         "missingTokens": null,
@@ -7917,15 +7620,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "How to add a Browserstack grid",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/grid-management/browserstack-integration-1",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to add a Browserstack grid",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -8598,33 +8292,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "How to add a Saucelabs grid",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/grid-management/saucelabs-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to add a Saucelabs grid",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/grid-management/saucelabs-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to add a Saucelabs grid",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/grid-management/saucelabs-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to add a Saucelabs grid",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -9735,6 +9402,42 @@
       },
       {
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
+        "issueType": "segment-extra",
+        "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
+        "segmentKind": "unordered-list-item",
+        "missingTokens": null,
+        "inconclusiveCategory": null,
+        "inconclusiveReason": null
+      },
+      {
+        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
+        "issueType": "segment-extra",
+        "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
+        "segmentKind": "unordered-list-item",
+        "missingTokens": null,
+        "inconclusiveCategory": null,
+        "inconclusiveReason": null
+      },
+      {
+        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
+        "issueType": "segment-extra",
+        "sectionPath": "Running a test and viewing the Testim test results in TTM for Jira > Upon Testim test run execution end",
+        "segmentKind": "callout-body",
+        "missingTokens": null,
+        "inconclusiveCategory": null,
+        "inconclusiveReason": null
+      },
+      {
+        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
+        "issueType": "segment-extra",
+        "sectionPath": "Setting up TTM for Jira Integration",
+        "segmentKind": "paragraph",
+        "missingTokens": null,
+        "inconclusiveCategory": null,
+        "inconclusiveReason": null
+      },
+      {
+        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-missing",
         "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
         "segmentKind": "callout-body",
@@ -9827,34 +9530,7 @@
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
         "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -9889,15 +9565,6 @@
       {
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-untranslated",
-        "sectionPath": "Bulk Create & Map Test Cases to TTM for Jira > Unmap a Test Already Mapped to TTM for Jira",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
         "sectionPath": "Manually Map a test in Testim to TTM for Jira",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
@@ -9925,15 +9592,6 @@
       {
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-untranslated",
-        "sectionPath": "Running a test and viewing the Testim test results in TTM for Jira",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
         "sectionPath": "Running a test and viewing the Testim test results in TTM for Jira > Upon Testim test run execution end",
         "segmentKind": "callout-body",
         "missingTokens": null,
@@ -9944,24 +9602,6 @@
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "Running a test and viewing the Testim test results in TTM for Jira > Upon Testim test run execution end",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Running a test and viewing the Testim test results in TTM for Jira > Upon Testim test run execution end",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Running a test and viewing the Testim test results in TTM for Jira > Upon Testim test run execution end",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -9971,15 +9611,6 @@
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "Setting up TTM for Jira Integration",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up TTM for Jira Integration",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -10007,33 +9638,6 @@
         "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "Setting up TTM for Jira Integration",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up TTM for Jira Integration",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up TTM for Jira Integration",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up TTM for Jira Integration",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -10053,24 +9657,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "What is TTM for Jira?",
         "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "What is TTM for Jira?",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "What is TTM for Jira?",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -10080,24 +9666,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Why do I need a TTM for Jira integration?",
         "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Why do I need a TTM for Jira integration?",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/ttm-for-jira-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Why do I need a TTM for Jira integration?",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -10168,15 +9736,6 @@
       {
         "slug": "integrations/test-management-integrations/xray-integration",
         "issueType": "segment-untranslated",
-        "sectionPath": "Map a test in Testim to an Xray test case",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
         "sectionPath": "Running a test and viewing the Testim test results in Xray",
         "segmentKind": "callout-body",
         "missingTokens": null,
@@ -10195,71 +9754,8 @@
       {
         "slug": "integrations/test-management-integrations/xray-integration",
         "issueType": "segment-untranslated",
-        "sectionPath": "Running a test and viewing the Testim test results in Xray",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
         "sectionPath": "Setting up Xray integration",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up Xray integration",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up Xray integration",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Setting up Xray integration",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "What is Xray?",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/test-management-integrations/xray-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Why do I need Xray integration?",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "integrations/visual-validation",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -10391,27 +9887,9 @@
         "inconclusiveReason": null
       },
       {
-        "slug": "integrations/visual-validation/override-applitools-app-name",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
         "slug": "overview/changelog",
         "issueType": "segment-untranslated",
         "sectionPath": "Archive > End of Support for IE 11 and Edge",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/changelog",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Archive > Enhanced Mode for Testim Mobile",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -10555,105 +10033,6 @@
         "inconclusiveReason": null
       },
       {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Enhanced mode advantages",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Enhanced mode advantages",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Enhanced mode advantages",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "FAQ > Can I apply Enhanced mode on previously recorded tests?",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "FAQ > Can I select another mode for my test (not Enhanced mode)?",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "FAQ > Can I use Enhanced mode on other grids (not just VMG)?",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to use the Enhanced mode in Testim",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to use the Enhanced mode in Testim",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/enhanced-mode-mobile",
-        "issueType": "segment-untranslated",
-        "sectionPath": "How to use the Enhanced mode in Testim",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
         "slug": "overview/testim-overview/help-ai-assistant",
         "issueType": "segment-untranslated",
         "sectionPath": "",
@@ -10675,24 +10054,6 @@
         "slug": "overview/testim-overview/help-ai-assistant",
         "issueType": "segment-untranslated",
         "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/testim-automate",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Execute your tests",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "overview/testim-overview/testim-automate",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Execute your tests",
         "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -10881,15 +10242,6 @@
       {
         "slug": "recording-tests/how-to-record-a-test",
         "issueType": "segment-untranslated",
-        "sectionPath": "Step 3 – Setting the Test Configuration > Test Configuration Parameters",
-        "segmentKind": "table-cell",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/how-to-record-a-test",
-        "issueType": "segment-untranslated",
         "sectionPath": "Step 4 - Recording the test",
         "segmentKind": "paragraph",
         "missingTokens": null,
@@ -10955,24 +10307,6 @@
         "issueType": "segment-extra",
         "sectionPath": "Recording a Mobile Test",
         "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Recording a Mobile Test",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Recording a Mobile Test",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -11088,15 +10422,6 @@
       {
         "slug": "recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent",
         "issueType": "segment-untranslated",
-        "sectionPath": "Configure your Device > Prepare your iOS device > Prerequisites",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent",
-        "issueType": "segment-untranslated",
         "sectionPath": "Configure your Device > Prepare your iOS device > Upload iOS images",
         "segmentKind": "paragraph",
         "missingTokens": null,
@@ -11162,15 +10487,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Troubleshooting > UI Automator crash on Android devices",
         "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Troubleshooting > UI Automator crash on Android devices",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -11448,15 +10764,6 @@
       {
         "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
         "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
-        "issueType": "segment-untranslated",
         "sectionPath": "Step 2 - Connect a Device > Connecting a physical Android device",
         "segmentKind": "callout-body",
         "missingTokens": null,
@@ -11511,15 +10818,6 @@
       {
         "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
         "issueType": "segment-untranslated",
-        "sectionPath": "Step 2 - Connect a Device > Connecting a physical iOS device",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
-        "issueType": "segment-untranslated",
         "sectionPath": "Step 2 - Connect a Device > Connecting a virtual Android device",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
@@ -11548,15 +10846,6 @@
         "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
         "issueType": "segment-untranslated",
         "sectionPath": "Step 2 - Connect a Device > Connecting a virtual iOS device",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Step 4 - Record the test",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -11729,24 +11018,6 @@
       {
         "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
         "issueType": "segment-untranslated",
-        "sectionPath": "Modes",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Modes",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
-        "issueType": "segment-untranslated",
         "sectionPath": "Recording a Mobile Test",
         "segmentKind": "callout-body",
         "missingTokens": null,
@@ -11838,24 +11109,6 @@
         "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
         "issueType": "segment-untranslated",
         "sectionPath": "Recording a Mobile Test",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Recording a Mobile Test",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Recording a Mobile Test",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -11874,15 +11127,6 @@
         "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
         "issueType": "segment-untranslated",
         "sectionPath": "Recording a Mobile Test",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Supported Mobile Actions",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -12316,24 +11560,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Tagging multiple test failures from the Test Runs screen",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "results/tag-remote-runs-failures",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Tagging multiple test failures from the Test Runs screen",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "results/test-results",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Viewing Overall Test Results",
-        "segmentKind": "unordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -12964,15 +12190,6 @@
       {
         "slug": "running-tests/the-command-line-cli",
         "issueType": "segment-untranslated",
-        "sectionPath": "All CLI Parameters > Grid Name",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "running-tests/the-command-line-cli",
-        "issueType": "segment-untranslated",
         "sectionPath": "All CLI Parameters > Sealights Integration",
         "segmentKind": "unordered-list-item",
         "missingTokens": null,
@@ -13038,15 +12255,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "CLI Installation > Additional common parameters",
         "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "running-tests/the-command-line-cli",
-        "issueType": "segment-untranslated",
-        "sectionPath": "CLI Installation > Basic CLI command",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -14113,42 +13321,6 @@
         "inconclusiveReason": null
       },
       {
-        "slug": "security/sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Configuring SSO for your deployment",
-        "segmentKind": "unordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Ensuring SSO is enabled",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/azure-ad-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
         "slug": "security/sso-integration/azure-ad-sso-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "",
@@ -14270,15 +13442,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/azure-ad-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -14323,15 +13486,6 @@
         "slug": "security/sso-integration/okta-sso-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
         "segmentKind": "ordered-list-item",
         "missingTokens": null,
         "inconclusiveCategory": null,
@@ -14420,78 +13574,6 @@
       },
       {
         "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/okta-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/onelogin-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "callout-body",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/onelogin-sso-integration",
         "issueType": "segment-untranslated",
         "sectionPath": "",
         "segmentKind": "ordered-list-item",
@@ -14567,42 +13649,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/onelogin-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/onelogin-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/onelogin-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "security/sso-integration/onelogin-sso-integration",
-        "issueType": "segment-untranslated",
-        "sectionPath": "",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -15487,15 +14533,6 @@
         "issueType": "segment-untranslated",
         "sectionPath": "Viewing the Test Library > Filtering the Test Library",
         "segmentKind": "ordered-list-item",
-        "missingTokens": null,
-        "inconclusiveCategory": null,
-        "inconclusiveReason": null
-      },
-      {
-        "slug": "test-management/test-list",
-        "issueType": "segment-untranslated",
-        "sectionPath": "Viewing the Test Library > Filtering the Test Library",
-        "segmentKind": "paragraph",
         "missingTokens": null,
         "inconclusiveCategory": null,
         "inconclusiveReason": null
@@ -16820,7 +15857,7 @@
         "segmentKind": null,
         "missingTokens": null,
         "inconclusiveCategory": "tokenless-near-tie",
-        "inconclusiveReason": "Tokenless adjacent sections \"Archive > Exporting a Testim test as code for Playwright\" and \"Archive > Cloning tests\" cannot rule out a body swap (current=2.81, swap=2.81)"
+        "inconclusiveReason": "Tokenless adjacent sections \"Archive > Enhanced Mode for Testim Mobile\" and \"Archive > Exporting a Testim test as code for Playwright\" cannot rule out a body swap (current=3.34, swap=3.31)"
       },
       {
         "slug": "running-tests/scheduler",
@@ -16862,7 +15899,7 @@
   },
   "summary": {
     "reportableActiveFiles": 0,
-    "baselinedIssues": 1863,
+    "baselinedIssues": 1756,
     "advisoryQueueIssues": 6,
     "auditSignalIssues": 9
   },
