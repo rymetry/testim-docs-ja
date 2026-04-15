@@ -57,6 +57,7 @@
 | Mobile Apps Tab | モバイルアプリタブ |
 | Upload to Grid | グリッドへのアップロード機能 |
 | Move to Folder | 共有ステップの移動 UI アクション |
+| Enhanced mode | Testim モバイル機能名（VMG 上での高度モバイルテスト実行モード） |
 
 ## Testim for Salesforce
 
@@ -83,6 +84,24 @@
 | Environments | UI ナビゲーション要素 |
 | Go Back to the Editor | Testim の UI リンク |
 | See Error | Testim の UI リンク |
+
+## 外部製品 / 第三者ツール
+
+Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま維持する。
+
+| 用語 | 備考 |
+| --- | --- |
+| Appium | モバイル自動化フレームワーク |
+| Standard Appium | Testim Mobile の Appium 互換モード名 |
+| Applitools | ビジュアルテスト製品 |
+| Jira | Atlassian のプロジェクト管理ツール |
+| Xray | Jira のテスト管理プラグイン |
+| BrowserStack | クラウドブラウザ / デバイスグリッド |
+| SauceLabs | クラウドブラウザ / デバイスグリッド |
+| OneLogin | SSO / ID プロバイダー |
+| Okta | SSO / ID プロバイダー |
+| Azure DevOps | Microsoft の DevOps プラットフォーム |
+| Selenium | Web 自動化フレームワーク |
 
 ## 画面 / UI 領域
 
@@ -236,9 +255,23 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | Node.js | |
 | Android | モバイルプラットフォーム |
 | iOS | モバイルプラットフォーム |
+| macOS | デスクトップ OS |
+| Linux | OS |
+| Firefox | ブラウザ |
+| Safari | ブラウザ |
 | Java | プログラミング言語 |
 | Kotlin | プログラミング言語 |
 | Objective C | プログラミング言語 |
+| Objective-C | プログラミング言語（ハイフン表記バリアント） |
 | Swift | プログラミング言語 |
+| SwiftUI | Apple の UI フレームワーク |
+| React Native | クロスプラットフォームモバイル FW |
+| Flutter | クロスプラットフォームモバイル FW |
+| Webviews | モバイルアプリ内埋め込み Web ビュー（複数形） |
+| WebView | モバイルアプリ内埋め込み Web ビュー（単数形） |
+| AUT | Application Under Test（Testim 固有略語） |
+| VMG | Virtual Mobile Grid の略 |
+| SSO | Single Sign-On |
+| SAML | 認証連携プロトコル |
 | Ctrl/Cmd | キーボード修飾キーの表記（ctrl/cmd と小文字でも使用） |
 | Quarantine | Testim のテスト隔離機能・ステータス |
