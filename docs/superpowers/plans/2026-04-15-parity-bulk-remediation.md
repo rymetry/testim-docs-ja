@@ -102,21 +102,42 @@ PR A merge 後の baseline 再生成で mechanism 自動解消分 **10 件** (ar
 
 **Exit:** baseline の `segment-inconclusive` 件数 = 0 または PR Z 開始合意できる水準 (目標 0–5 件)
 
-## 10. Exit criteria → PR Z 着手
+## 10. PR Z Entry Criteria (Rev 7 / 2026-04-15 固定)
 
-以下がすべて true のとき PR Z (Phase 4 final cutover, Task 4.5–4.8) に着手可能とする:
+PR Z (Phase 4 final cutover, Task 4.5–4.8 / schema v2 atomic cutover) に**着手してよい**のは、以下をすべて満たすとき。**`entries.length` の数値閾値は廃止** — issueType 内訳ベースで判定する。
 
-- `parity-baseline.json.entries.length` ≤ 20 (目標は 0)
-- `byIssueType` から以下がすべて 0:
-  - `segment-untranslated`
-  - `segment-missing`
-  - `segment-extra`
-  - `section-structure-mismatch`
-  - `segment-token-gap`
-  - `segment-order-mismatch`
-- 残るのは `segment-inconclusive` のみ。これは schema v2 migration で baseline 対象外になる (`BASELINE_ELIGIBLE_TYPES` 縮約対象)。
+### 必須条件 (machine-checkable)
 
-この時点で PR Z の Task 4.5 (entries=0 絞り込み) は `segment-inconclusive` 消化のみで達成可能な水準に到達している。
+`parity-baseline.json` の `byIssueType` 集計について:
+
+| issueType | 条件 |
+|---|---|
+| `segment-untranslated` | = 0 |
+| `segment-missing` | = 0 |
+| `segment-extra` | = 0 |
+| `section-structure-mismatch` | = 0 |
+| `segment-token-gap` | = 0 (artifact registry / URL normalizer で抑止されるか、content で解消) |
+| `segment-order-mismatch` | = 0 |
+| `segment-inconclusive` | ≤ 3 |
+
+### 運用条件 (human judgement)
+
+- 残 residual は通常 review で捌ける小さい件数に収まっている (目安: baseline entries ≤ 5)
+- PR Z の中で `entries === 0` まで持ち切れる現実的見込みがある (`segment-inconclusive` を JA 側 wording / alignment score narrow rule / artifact registry 昇格のいずれかで 0 化できる)
+- bulk remediation / mechanism 変更 / schema migration の 3 トラックが独立 rollback 可能な状態で分離されている (PR #270 済 / Stage B 済 / PR Z 未着手)
+
+### PR Z 着手禁止条件
+
+以下のいずれかに該当する場合は PR Z 着手不可:
+
+- 上記 6 issueType の 0 化未達 ( `segment-untranslated=1` 等でも禁止 — bulk burn-down を Stage B で完遂してから移る)
+- `segment-inconclusive` 4 件以上
+- mechanism 側 (artifact registry / URL normalizer / extractor) に未修正の gap が残っており、追加 mechanism 変更が必要 — この場合は別 PR で mechanism 層を先に更新する
+
+### 根拠
+
+- 最終 DoD (Phase 4 plan Rev 7 §最終 DoD 参照) は `entries === 0` を要求するため、PR Z 着手時点で `inconclusive ≤ 3` まで絞り込まれている必要がある (3 件なら PR Z 内で alignment narrow rule 1 本 / artifact registry 3 件追加等で吸収可能)
+- `entries.length` 数値閾値は「残件の種類」を見ない粗い gate で、bulk 種別の未消化を許容してしまう。issueType ベースに変えることで「bulk は Stage B で完遂、PR Z は最後の alignment 残を消化」という責任分界を守る。
 
 ## 11. Non-goals
 
