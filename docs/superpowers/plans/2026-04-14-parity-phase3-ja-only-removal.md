@@ -332,14 +332,16 @@ git commit -m "docs: Phase 3 保留 entries の backlog 記録"
 
 ## Task 3.4: baseline 再生成 + gate + PR 作成 (最後に 1 回だけ)
 
-**Important:** Task 3.2 / 3.3 / 3.6 がすべて完了した後で、baseline を**一度だけ**再生成する。
+**Important:** Task 3.2 / 3.3 / 3.6 / **3.5 (report)** がすべて完了した後で、baseline を**一度だけ**再生成し、report を含んだ状態で PR を作る。Task 3.5 は Task 3.4 より先に完了させること (実行順は `Execution Handoff` セクション参照)。
 
 - [ ] **Step 1: フル parity**
 
   ```bash
   npm run check:parity 2>&1 | tail -20
-  cp parity-check-status.json /tmp/phase3-full-parity-status.pre-baseline.json
+  cp parity-check-status.json phase3-full-parity-status.pre-baseline.json
   ```
+
+  (worktree 直下に保存。`/tmp/` は PreToolUse hook で blocked される可能性があるため。commit 対象外にするため `.gitignore` に `phase3-full-parity-status.*.json` が無ければ追加しておくか、作業後に削除する。)
 
 - [ ] **Step 2: lint / test / build gate**
 
@@ -354,24 +356,36 @@ git commit -m "docs: Phase 3 保留 entries の backlog 記録"
 - [ ] **Step 3: baseline 再生成**
 
   ```bash
-  node scripts/generate_parity_baseline.mjs --rationale="Phase 3: JA 独自 callout 削除 + TTM for Jira glossary + ttm-for-jira-integration alignment"
+  node scripts/generate_parity_baseline.mjs --regenerate --rationale="Phase 3: JA 独自 callout 削除 + TTM for Jira glossary + ttm-for-jira-integration alignment"
   git add parity-baseline.json
   git commit -m "chore: Phase 3 完了後の baseline 再生成"
   ```
 
-- [ ] **Step 4: Entry-level 差分確認**
+- [ ] **Step 4: 差分分解確認**
 
-  Phase 2 Round 2 終了時点 (`total=1873`) との差分:
-  - `segment-extra` の callout-body 相当分の純減数 = content 修正対象 entry 数 (分類 1+2+3 の合計)
-  - **保留 entry 数 = 17 − 純減数** が baseline に残っていて OK (ただし `phase3-holds.md` に記録済み)
-  - 他 issueType で純増がない
-  - 全体 total は `純減数` 分だけ減少 (glossary 追加の副次効果は別途明記)
+  Phase 2 Round 2 終了時点 (`total=1873`) との差分は単一要素ではなく、以下 3 要素の**合成**として検証する:
 
-- [ ] **Step 5: PR 作成**
+  - **要素 A (Task 3.2 の content 修正):** `segment-extra` の callout-body 相当分の純減数 = 分類 1+2+3 で修正した entry 数
+  - **要素 B (Task 3.6 の alignment 修正):** `ttm-for-jira-integration` の non-untranslated active issues (`section-structure-mismatch` 3 件 + `segment-missing` 3 件 = 計 6 件) のうち、実際に解消した件数。残 ≤1 が DoD
+  - **要素 C (Task 3.6 の glossary mask 副作用):** `TTM for Jira` 登録に伴う `segment-untranslated` の純減 (正の影響) と、他 slug に新規 active が発生していないこと (副作用の負の影響がない) を両方確認
+
+  DoD として以下を**すべて**満たしていること:
+
+  - 要素 A の純減数 = `phase3-holds.md` と report の分類別件数と一致
+  - 保留 entry 数 = 17 − 要素 A 純減数 が baseline に残っていて OK (`phase3-holds.md` に記録済み)
+  - 要素 B の純減数 ≥ 0 (alignment 修正で non-untranslated が増えていない)
+  - 要素 C: ttm-for-jira-integration 以外の slug で新規 active なし
+  - callout-body 以外の issueType が要素 A/B/C で説明できない純増をしていない (例: content 修正副作用で missing/structure が暴発していない)
+  - 全体 total は `(要素 A 純減) + (要素 B 純減) + (要素 C 純減) = 1873 − 新 total` で分解して等式が成り立つ
+
+  不一致があれば、要素ごとに切り分けて原因特定 (content 修正副作用 / glossary collateral / alignment 波及) してから次へ進む。
+
+- [ ] **Step 5: PR 作成** (この時点で `phase3-report.md` と `phase3-holds.md` が commit 済みであることを確認)
 
   ```bash
-  git push -u origin worktree-phase3-ja-only
-  gh pr create --title "fix: Phase 3 JA 独自 callout 削除 + TTM for Jira glossary" --body "$(cat <<'EOF'
+  git log --oneline main..HEAD | grep -E "phase3-report|phase3-holds" || echo "MISSING: report または holds が未 commit"
+  git push -u origin HEAD:claude/parity-phase3
+  gh pr create --head claude/parity-phase3 --title "fix: Phase 3 JA 独自 callout 削除 + TTM for Jira glossary" --body "$(cat <<'EOF'
 ## Summary
 
 - EN 原文にない JA 独自の callout を 3 分類 (純粋削除 / callout 解除 / 本文統合) に従って整理
@@ -468,12 +482,14 @@ EOF
 - schema 簡素化の対象フィールド棚卸し済み
 ```
 
-- [ ] **Step 2: commit**
+- [ ] **Step 2: commit** (push はしない — Task 3.4 Step 5 でまとめて push する)
 
   ```bash
-  git add docs/superpowers/specs/2026-04-14-parity-phase3-report.md
-  git commit -m "docs: Phase 3 完了レポート"
+  git add docs/superpowers/specs/2026-04-14-parity-phase3-report.md docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
+  git commit -m "docs: Phase 3 完了レポート + holds backlog"
   ```
+
+**Task 3.5 は Task 3.4 (baseline regen + PR) より前に commit 完了させること。** そうしないと report/holds がローカル commit だけになり、PR 本文の参照が dead link になる。
 
 ---
 
@@ -481,13 +497,14 @@ EOF
 
 - **実行方式:** superpowers:subagent-driven-development, model=sonnet 4.6, isolated worktree, background, automode
 - **Per-task execution order (codex review 2026-04-15 反映):**
-  1. Task 3.1 (enumerate) — subagent
-  2. Task 3.2 (13 slug の callout 修正) — subagent (必要に応じて複数 slug を並列、ただし baseline 更新はしない)
-  3. Task 3.3 (codex review 分類 3) — controller 主導
+  1. Task 3.1 (enumerate v2) — subagent
+  2. Task 3.2 (13 slug の callout 修正 + holds list 作成) — subagent (必要に応じて複数 slug を並列、ただし baseline 更新はしない)
+  3. Task 3.3 (codex review 分類 3 / 保留判断) — controller 主導
   4. Task 3.6 (TTM for Jira) — subagent
-  5. Task 3.4 (baseline 再生成 + gate + PR) — controller
-  6. Task 3.5 (report) — controller
+  5. **Task 3.5 (report + holds の commit)** — controller。**Task 3.4 より先に実施**。push はしない
+  6. Task 3.4 (baseline 再生成 + gate + push + PR 作成) — controller。push 前に Step 5 で report/holds が commit 済みであることを確認
 - 判断を伴う修正は codex review を挟むのが推奨。baseline 更新は Task 3.4 で 1 回だけ。
+- push は Task 3.4 Step 5 で 1 回だけ。PR 本文が参照する report/holds が**同じ push に含まれている**こと。
 
 ---
 
