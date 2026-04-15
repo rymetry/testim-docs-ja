@@ -211,9 +211,15 @@ git add src/content/docs/<slug>.md
 git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>, N entry)"
 ```
 
-- [ ] **Step 5: 保留 list (`phase3-holds.md`) への記録**
+- [ ] **Step 5: 保留 list (`phase3-holds.md`) の作成 + commit**
 
-enumerate v2 の `enHasCallout=true` entry または 分類判断で「保留」となった entry は content を touch せず、以下の書式で `docs/superpowers/specs/2026-04-14-parity-phase3-holds.md` に追記する:
+Task 3.2 全 slug 処理後に 1 回だけ `phase3-holds.md` を作成し commit する。**Task 3.5 では holds を再度 commit しない** (二重 commit 禁止; Task 3.5 は report のみ commit する)。
+
+**保留 entry の判定:** enumerate v2 の `enHasCallout=true` entry、または Task 3.3 codex review で「保留」となった entry は content を touch しない。
+
+**必須: holds 0 件でもファイルは必ず作る。** 0 件の場合は見出しのみの wireframe を書き、表 body は空行 1 行。PR template / global DoD / Task 3.5 report が常に `phase3-holds.md` を参照するため。
+
+書式 (保留 entries がある場合):
 
 ```markdown
 # Phase 3 保留 entries (次 phase 受け皿)
@@ -222,14 +228,35 @@ enumerate v2 の `enHasCallout=true` entry または 分類判断で「保留」
 | --- | --- | ---: | --- | --- | --- |
 | advanced-editing/auto-grouping2 | Reviewing auto-grouping suggestion | 0 | sha256:... | enHasCallout=true (EN 側に `<div class="note">`) | parity-turndown callout mapping 修正 phase |
 | ... | ... | ... | ... | ... | ... |
+
+## 集計
+
+- 保留件数: N 件
+- Phase 3 全対象 (17 件) に対する割合: N/17
 ```
 
-全 slug 処理後に 1 回 commit:
+書式 (保留 0 件の場合、wireframe だけ残す):
+
+```markdown
+# Phase 3 保留 entries (次 phase 受け皿)
+
+| slug | sectionPath | jaSegmentIndex | jaSourceFingerprint | 理由 | 次 phase 受け皿 |
+| --- | --- | ---: | --- | --- | --- |
+
+## 集計
+
+- 保留件数: 0 件
+- Phase 3 全対象 (17 件) に対する割合: 0/17 (すべて分類 1/2/3 で content 修正完了)
+```
+
+commit:
 
 ```bash
 git add docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
-git commit -m "docs: Phase 3 保留 entries の backlog 記録"
+git commit -m "docs: Phase 3 保留 entries の backlog 記録 (N件)"
 ```
+
+(ここで **N** を実数で埋めること。commit subject に数字があることで、Task 3.4 Step 5 の preflight が `phase3-holds` を確実に検出できる。)
 
 **DoD:** `(分類 1 / 2 / 3 で content 修正した entry 数) + (phase3-holds.md に記録した保留 entry 数) = 17` が成り立つこと。
 
@@ -380,10 +407,34 @@ git commit -m "docs: Phase 3 保留 entries の backlog 記録"
 
   不一致があれば、要素ごとに切り分けて原因特定 (content 修正副作用 / glossary collateral / alignment 波及) してから次へ進む。
 
-- [ ] **Step 5: PR 作成** (この時点で `phase3-report.md` と `phase3-holds.md` が commit 済みであることを確認)
+- [ ] **Step 5: PR 作成** (commit 済み確認 → push → PR)
+
+  まず `main..HEAD` の**ファイル差分**に report/holds が含まれているかを検証し、欠けていれば non-zero で止める:
 
   ```bash
-  git log --oneline main..HEAD | grep -E "phase3-report|phase3-holds" || echo "MISSING: report または holds が未 commit"
+  missing=()
+  changed_files="$(git diff --name-only main..HEAD)"
+  for f in \
+    docs/superpowers/specs/2026-04-14-parity-phase3-report.md \
+    docs/superpowers/specs/2026-04-14-parity-phase3-holds.md \
+    parity-baseline.json \
+  ; do
+    if ! printf '%s\n' "$changed_files" | grep -qxF "$f"; then
+      missing+=("$f")
+    fi
+  done
+  if [ ${#missing[@]} -gt 0 ]; then
+    echo "MISSING in main..HEAD diff:" >&2
+    printf '  - %s\n' "${missing[@]}" >&2
+    echo "Task 3.5 (report) / Task 3.2 Step 5 (holds) / Task 3.4 Step 3 (baseline) を確認してから再実行してください。" >&2
+    exit 1
+  fi
+  echo "preflight OK: report / holds / baseline すべてブランチ差分に含まれています"
+  ```
+
+  この preflight が通ってから push + PR:
+
+  ```bash
   git push -u origin HEAD:claude/parity-phase3
   gh pr create --head claude/parity-phase3 --title "fix: Phase 3 JA 独自 callout 削除 + TTM for Jira glossary" --body "$(cat <<'EOF'
 ## Summary
@@ -482,14 +533,16 @@ EOF
 - schema 簡素化の対象フィールド棚卸し済み
 ```
 
-- [ ] **Step 2: commit** (push はしない — Task 3.4 Step 5 でまとめて push する)
+- [ ] **Step 2: report のみ commit** (push はしない — Task 3.4 Step 5 でまとめて push する)
 
   ```bash
-  git add docs/superpowers/specs/2026-04-14-parity-phase3-report.md docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
-  git commit -m "docs: Phase 3 完了レポート + holds backlog"
+  git add docs/superpowers/specs/2026-04-14-parity-phase3-report.md
+  git commit -m "docs: Phase 3 完了レポート"
   ```
 
-**Task 3.5 は Task 3.4 (baseline regen + PR) より前に commit 完了させること。** そうしないと report/holds がローカル commit だけになり、PR 本文の参照が dead link になる。
+**重要:**
+- `phase3-holds.md` は Task 3.2 Step 5 で既に commit 済みなので、ここでは **add しない**。二重 commit 禁止
+- Task 3.5 は Task 3.4 (baseline regen + PR) より前に完了させること。そうしないと report がローカル commit だけになり、PR 本文の参照が dead link になる
 
 ---
 
@@ -498,13 +551,18 @@ EOF
 - **実行方式:** superpowers:subagent-driven-development, model=sonnet 4.6, isolated worktree, background, automode
 - **Per-task execution order (codex review 2026-04-15 反映):**
   1. Task 3.1 (enumerate v2) — subagent
-  2. Task 3.2 (13 slug の callout 修正 + holds list 作成) — subagent (必要に応じて複数 slug を並列、ただし baseline 更新はしない)
+  2. Task 3.2 (13 slug の callout 修正 + **holds list 作成 + holds commit**) — subagent (必要に応じて複数 slug を並列、ただし baseline 更新はしない)
   3. Task 3.3 (codex review 分類 3 / 保留判断) — controller 主導
   4. Task 3.6 (TTM for Jira) — subagent
-  5. **Task 3.5 (report + holds の commit)** — controller。**Task 3.4 より先に実施**。push はしない
-  6. Task 3.4 (baseline 再生成 + gate + push + PR 作成) — controller。push 前に Step 5 で report/holds が commit 済みであることを確認
+  5. **Task 3.5 (report のみ commit)** — controller。**Task 3.4 より先に実施**。push はしない。holds は Task 3.2 で commit 済みなので再度触らない
+  6. Task 3.4 (baseline 再生成 + gate + push + PR 作成) — controller。push 前に Step 5 preflight で report / holds / baseline 3 ファイルが `main..HEAD` 差分にあることを検証し、欠けていれば `exit 1`
 - 判断を伴う修正は codex review を挟むのが推奨。baseline 更新は Task 3.4 で 1 回だけ。
-- push は Task 3.4 Step 5 で 1 回だけ。PR 本文が参照する report/holds が**同じ push に含まれている**こと。
+- push は Task 3.4 Step 5 で 1 回だけ。PR 本文が参照する report / holds / baseline が**同じ push に含まれている**こと。
+- **commit 担当の明確化:**
+  - `phase3-holds.md` → **Task 3.2 Step 5 のみ** で 1 回 commit
+  - `phase3-report.md` → **Task 3.5 Step 2 のみ** で 1 回 commit
+  - `parity-baseline.json` → **Task 3.4 Step 3 のみ** で 1 回 commit
+  - content files → **Task 3.2 Step 4** で slug 単位に commit (複数 slug = 複数 commit、holds は別)
 
 ---
 
