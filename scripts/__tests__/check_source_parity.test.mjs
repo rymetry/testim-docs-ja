@@ -774,3 +774,30 @@ describe('gate exit code contract (snapshotUnusable* は gate を変えない)',
     assert.equal(computeExitCode(summary, null), 1);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 4: parity-check-status.json の debug.artifactCoverage 出力契約
+//
+// alignSegments の slug-scope artifact 抑止 hit は runtime aggregator で
+// 集計され、status.debug.artifactCoverage に snapshot として emit される。
+// ---------------------------------------------------------------------------
+
+describe('parity-check-status.json — debug.artifactCoverage emit (Phase 4)', () => {
+  it('status.debug.artifactCoverage has runtime aggregate shape', async () => {
+    const { default: main } = await import('../check_source_parity.mjs');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'parity-artifact-'));
+    const outputPath = path.join(tmp, 'parity-check-status.json');
+    try {
+      await main({ outputPath });
+      const status = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+      const ac = status.debug?.artifactCoverage;
+      assert.ok(ac, 'debug.artifactCoverage should exist');
+      assert.equal(typeof ac.registryEntries, 'number');
+      assert.equal(typeof ac.matchedHits, 'number');
+      assert.ok(typeof ac.bySlug === 'object' && ac.bySlug !== null);
+      assert.ok(typeof ac.byToken === 'object' && ac.byToken !== null);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+});

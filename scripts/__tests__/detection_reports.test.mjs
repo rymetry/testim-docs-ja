@@ -2303,6 +2303,26 @@ describe('§1 cleanup — validateParityCheckStatus', () => {
     delete v.schemaVersion;
     assert.throws(() => validateParityCheckStatus(v), /unsupported schemaVersion/);
   });
+
+  // Phase 4: debug.artifactCoverage は runtime 側で emit されるが、
+  // validator / detection 側は gate-sensitive でないため passthrough として
+  // 受け入れる (Spec Invariant 3: debug.* は baseline / ack / gate と独立)。
+  it('passes through debug.artifactCoverage without rejecting', () => {
+    const v = validParityStatus();
+    v.debug = {
+      artifactCoverage: {
+        registryEntries: 2,
+        matchedHits: 3,
+        bySlug: { 'a/b': 2, 'c/d': 1 },
+        byToken: { '/docs/index': 2, 'http://google.com': 1 },
+      },
+    };
+    // validator が debug.* を rejection 対象にしないこと (passthrough 契約)
+    assert.doesNotThrow(() => validateParityCheckStatus(v));
+    // field は input をそのまま保持している (mutation 禁止の確認)
+    assert.equal(v.debug.artifactCoverage.matchedHits, 3);
+    assert.equal(v.debug.artifactCoverage.byToken['/docs/index'], 2);
+  });
 });
 
 describe('§1 cleanup — validateActionableReport', () => {

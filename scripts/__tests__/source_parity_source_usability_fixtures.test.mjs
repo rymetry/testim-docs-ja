@@ -201,7 +201,9 @@ describe('detectSourceUsability fixture: advanced-editing/coding-assistant', () 
 
     // extractError がない場合のみ alignSegments を検証する
     if (!extractError) {
-      const alignment = alignSegments(enSegments, jaSegments);
+      const alignment = alignSegments(enSegments, jaSegments, {
+        slug: 'advanced-editing/coding-assistant',
+      });
       const issues = parityDiffsToIssues(alignment.diffs);
       // source-unusable は出ない
       const sourceUnusable = issues.filter(i => i.type === 'source-unusable');

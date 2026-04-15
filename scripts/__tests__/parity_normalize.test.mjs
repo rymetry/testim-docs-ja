@@ -142,3 +142,72 @@ describe('normalizeUrlForParity — passthrough cases', () => {
     assert.equal(normalizeUrlForParity('--project-id'), '--project-id');
   });
 });
+
+describe('normalizeUrlForParity — help.testim.io symmetry (Phase 4 Task 4.3)', () => {
+  it('normalizes help.testim.io URL with fragment symmetrically', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access#api-access'),
+      normalizeUrlForParity('/docs/api-access#api-access'),
+    );
+  });
+
+  it('preserves fragment on /docs path', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/index#top'),
+      '/docs/index#top',
+    );
+  });
+
+  it('drops trailing slash differences', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access/'),
+      normalizeUrlForParity('/docs/api-access'),
+    );
+  });
+});
+
+describe('normalizeUrlForParity — /docs canonical form (PR A feedback P2)', () => {
+  it('drops trailing slash on bare /docs path', () => {
+    assert.equal(
+      normalizeUrlForParity('/docs/api-access/'),
+      '/docs/api-access',
+    );
+  });
+
+  it('drops query string on bare /docs path', () => {
+    assert.equal(
+      normalizeUrlForParity('/docs/api-access?x=1'),
+      '/docs/api-access',
+    );
+  });
+
+  it('drops query string on help.testim.io URL', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access?x=1'),
+      '/docs/api-access',
+    );
+  });
+
+  it('drops query while preserving fragment', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access?x=1#frag'),
+      '/docs/api-access#frag',
+    );
+  });
+
+  it('help.testim.io + query + trailing slash ↔ bare /docs symmetric', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access/?ref=x#top'),
+      normalizeUrlForParity('/docs/api-access#top'),
+    );
+  });
+
+  it('passes through non-/docs help.testim.io paths unchanged (Stage B5 scope)', () => {
+    // /v2.0/docs/... 等の versioned path は PR A canonical form の範囲外。
+    // 既存の baseline 凍結を崩さないよう URL 不変で返す (Stage B5 で別途処理)。
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/v2.0/docs/scheduler#x'),
+      'https://help.testim.io/v2.0/docs/scheduler#x',
+    );
+  });
+});

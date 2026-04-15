@@ -28,6 +28,7 @@ import {
   parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
+import { CALLOUT_NORMALIZATION_SLUGS } from './lib/source_parity_segments_en.mjs';
 import {
   isAdvisoryOnlyParityIssue,
   isValidAcknowledgedIssue,
@@ -48,6 +49,7 @@ import { convertEnHtmlToMd, preprocessEnHtml } from './lib/turndown.mjs';
 import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_page_coverage.mjs';
 import { buildRunScope, validateRunLinkage } from './lib/source_sync_health.mjs';
 import { createMaskCoverage, maskSegmentText } from './lib/parity_glossary_mask.mjs';
+import { createArtifactCoverage } from './lib/parity_artifact_registry.mjs';
 export { buildRunScope };
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
@@ -376,6 +378,10 @@ export async function checkSourceParity({
   // debug.maskCoverage: per-segment mask 結果を収集する。
   const maskCoverage = createMaskCoverage();
 
+  // debug.artifactCoverage: alignSegments の slug-scope artifact 抑止 hit を
+  // 集計する run 単位 aggregator。Phase 4 で新設。
+  const artifactCoverage = createArtifactCoverage();
+
   for (const filePath of allFiles) {
     const fileSlug = filePathToSlug(filePath);
     if (resolvedSlug && fileSlug !== resolvedSlug) {
@@ -450,7 +456,10 @@ export async function checkSourceParity({
         let jaSegments = [];
         let extractError = null;
         try {
-          enSegments = extractSegmentsFromHtml(rawEnHtml);
+          enSegments = extractSegmentsFromHtml(rawEnHtml, {
+            slug: fileSlug,
+            calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+          });
           jaSegments = extractSegmentsFromMarkdown(doc.body);
         } catch (e) {
           extractError = e;
@@ -499,7 +508,10 @@ export async function checkSourceParity({
           // (image order, callout nesting, table shape) を併走させる。
           let alignment;
           try {
-            alignment = alignSegments(enSegments, jaSegments);
+            alignment = alignSegments(enSegments, jaSegments, {
+              slug: fileSlug,
+              coverage: artifactCoverage,
+            });
           } catch (e) {
             console.error(
               `alignSegments failed for ${fileSlug}: ${e.message}. Falling back to coarse parity.`,
@@ -732,6 +744,7 @@ export async function checkSourceParity({
     advisoryQueue,
     debug: {
       maskCoverage: maskCoverage.toJSON(),
+      artifactCoverage: artifactCoverage.snapshot(),
     },
   };
 

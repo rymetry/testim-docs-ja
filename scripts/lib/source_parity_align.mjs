@@ -40,6 +40,7 @@ import {
 import { compareSectionStructure } from './source_parity_structure.mjs';
 import { classifySegment } from './parity_glossary_mask.mjs';
 import { normalizeSegmentTokens } from './parity_normalize.mjs';
+import { isArtifactExcluded, NOOP_COVERAGE } from './parity_artifact_registry.mjs';
 
 const GATE_KIND_SET = new Set(GATE_ELIGIBLE_KINDS);
 
@@ -496,9 +497,12 @@ function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
  * @param {Section} enSection
  * @param {Section} jaSection
  * @param {{enSectionTokensList: Set<string>[], jaSectionTokensList: Set<string>[]}} crossSectionInfo
+ * @param {{slug: string, coverage: {record: Function, snapshot: Function}}} artifactCtx
+ *   slug-scope artifact 抑止に使う context。EN-side artifact registry の直接照合に
+ *   必要な slug と、抑止 hit を記録する runtime coverage aggregator を受け取る。
  * @returns {object[]}
  */
-function alignSection(enSection, jaSection, crossSectionInfo) {
+function alignSection(enSection, jaSection, crossSectionInfo, artifactCtx) {
   const diffs = [];
   const enBody = enSection.body;
   const jaBody = jaSection.body;
@@ -563,7 +567,18 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
     const enTokens = normalizeSegmentTokens(enSeg.tokensInvariant ?? []);
     const missingTokens = [];
     for (const token of enTokens) {
-      if (!jaTokenSet.has(token)) missingTokens.push(token);
+      if (jaTokenSet.has(token)) continue;
+      // Phase 4: slug-scope EN-side artifact は registry で抑止し、
+      // 抑止 hit は runtime coverage aggregator に記録する。
+      if (isArtifactExcluded({ slug: artifactCtx.slug, token })) {
+        artifactCtx.coverage.record({
+          slug: artifactCtx.slug,
+          token,
+          reason: 'artifact-registry',
+        });
+        continue;
+      }
+      missingTokens.push(token);
     }
     if (missingTokens.length > 0) {
       diffs.push(diffTokenGap(enSection, enSeg, jaSeg, enIdx, jaIdx, missingTokens));
@@ -622,11 +637,24 @@ function alignSection(enSection, jaSection, crossSectionInfo) {
  * EN canonical segments と JA canonical segments を整列し、diff 一覧を返す。
  * 詳細な契約は module header を参照。
  *
+ * `options.slug` は EN-side artifact の slug-scope 抑止判定に使う (Phase 4)。
+ * 未指定だと `isArtifactExcluded` が effectively no-op になり、本来抑止される
+ * はずの token-gap が検出側に漏れるため必須とする。既存呼び出し (check_source_parity /
+ * test fixture) 全てがこの signature に揃っていることは Step 9 grep gate で担保する。
+ *
+ * `options.coverage` は抑止 hit の runtime aggregator。省略時は `NOOP_COVERAGE`。
+ *
  * @param {Segment[]} enSegments
  * @param {Segment[]} jaSegments
+ * @param {{slug: string, coverage?: {record: Function, snapshot: Function}}} [options]
  * @returns {AlignResult}
  */
-export function alignSegments(enSegments, jaSegments) {
+export function alignSegments(enSegments, jaSegments, options = {}) {
+  const { slug, coverage = NOOP_COVERAGE } = options;
+  if (typeof slug !== 'string' || slug.length === 0) {
+    throw new Error('alignSegments: slug option is required');
+  }
+
   const enFiltered = filterForAlignment(enSegments);
   const jaFiltered = filterForAlignment(jaSegments);
 
@@ -660,7 +688,10 @@ export function alignSegments(enSegments, jaSegments) {
     // 同じ section の structure diff は重複報告になるため抑止する。
     // shift していない section は structure diff と segment diff を併記し、
     // section レベルの要約と drill-down を両方残す。
-    const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo);
+    const sectionDiffs = alignSection(enSections[i], jaSections[i], crossSectionInfo, {
+      slug,
+      coverage,
+    });
     const hasShift = sectionDiffs.some((d) => d.type === 'segment-shifted');
 
     if (!hasShift) {

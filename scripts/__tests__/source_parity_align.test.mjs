@@ -23,10 +23,12 @@ import assert from 'node:assert/strict';
 
 let alignSegments;
 let createSegment;
+let createArtifactCoverage;
 
 before(async () => {
   ({ alignSegments } = await import('../lib/source_parity_align.mjs'));
   ({ createSegment } = await import('../lib/source_parity_segments_shared.mjs'));
+  ({ createArtifactCoverage } = await import('../lib/parity_artifact_registry.mjs'));
 });
 
 // ---------------------------------------------------------------------------
@@ -55,7 +57,7 @@ function diffsByType(diffs) {
 
 describe('alignSegments — empty / identical inputs', () => {
   it('returns no diffs for two empty sequences', () => {
-    const result = alignSegments([], []);
+    const result = alignSegments([], [], { slug: 'test/fixture' });
     assert.deepEqual(result.diffs, []);
     assert.equal(result.sectionsAligned, 1); // preface only
   });
@@ -73,7 +75,7 @@ describe('alignSegments — empty / identical inputs', () => {
       makeSeg('セットアップ', 'unordered-list-item', 0, 'JA 箇条書き 1'),
       makeSeg('セットアップ', 'unordered-list-item', 1, 'JA 箇条書き 2'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.deepEqual(result.diffs, []);
   });
 
@@ -88,7 +90,7 @@ describe('alignSegments — empty / identical inputs', () => {
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, '本文段落'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const grouped = diffsByType(result.diffs);
     assert.equal(grouped['segment-missing'], 1, 'preface paragraph missing');
     const missing = result.diffs.find((d) => d.type === 'segment-missing');
@@ -115,7 +117,7 @@ describe('alignSegments — segment-missing', () => {
       // 2 番目の段落を削除
       makeSeg('セットアップ', 'paragraph', 1, '段落 3'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missingDiffs.length, 1, 'exactly one segment-missing — no LCS cascade');
     assert.equal(missingDiffs[0].segmentKind, 'paragraph');
@@ -133,7 +135,7 @@ describe('alignSegments — segment-missing', () => {
       makeSeg('セットアップ', 'unordered-list-item', 0, '箇条 1'),
       makeSeg('セットアップ', 'unordered-list-item', 1, '箇条 3'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.diffs.length, 1);
     assert.equal(result.diffs[0].type, 'segment-missing');
     assert.equal(result.diffs[0].segmentKind, 'unordered-list-item');
@@ -151,7 +153,7 @@ describe('alignSegments — segment-missing', () => {
       makeSeg('手順', 'ordered-list-item', 0, '手順 1'),
       makeSeg('手順', 'ordered-list-item', 1, '手順 3'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.diffs.length, 1);
     assert.equal(result.diffs[0].type, 'segment-missing');
   });
@@ -168,7 +170,7 @@ describe('alignSegments — segment-missing', () => {
       makeSeg('セットアップ', 'callout-body', 0, 'JA callout 文 A'),
       // 2 番目の callout body 段落が JA で欠落
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missingDiffs.length, 1);
     assert.equal(missingDiffs[0].segmentKind, 'callout-body');
@@ -189,7 +191,7 @@ describe('alignSegments — segment-missing', () => {
       makeSeg('引数', 'table-cell', 2, '`--token`'),
       // 4th cell deleted
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.ok(missingDiffs.length >= 1, 'at least one segment-missing emitted');
     assert.equal(missingDiffs[0].segmentKind, 'table-cell');
@@ -214,7 +216,7 @@ describe('alignSegments — segment-extra', () => {
       makeSeg('セットアップ', 'paragraph', 1, '余分な段落'),
       makeSeg('セットアップ', 'paragraph', 2, '段落 2'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const extraDiffs = result.diffs.filter((d) => d.type === 'segment-extra');
     assert.equal(extraDiffs.length, 1);
     assert.equal(extraDiffs[0].segmentKind, 'paragraph');
@@ -235,7 +237,7 @@ describe('alignSegments — segment-untranslated', () => {
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, 'Click on the Settings button to begin.'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const untranslated = result.diffs.filter((d) => d.type === 'segment-untranslated');
     assert.equal(untranslated.length, 1);
     assert.equal(untranslated[0].segmentKind, 'paragraph');
@@ -250,7 +252,7 @@ describe('alignSegments — segment-untranslated', () => {
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, '設定ボタンをクリックして開始します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const untranslated = result.diffs.filter((d) => d.type === 'segment-untranslated');
     assert.equal(untranslated.length, 0);
   });
@@ -264,7 +266,7 @@ describe('alignSegments — segment-untranslated', () => {
       makeHeading('CLI', 0, 'CLI'),
       makeSeg('CLI', 'paragraph', 0, '`--proxy` フラグは URL を受け取ります。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const untranslated = result.diffs.filter((d) => d.type === 'segment-untranslated');
     assert.equal(untranslated.length, 0);
   });
@@ -285,7 +287,7 @@ describe('alignSegments — segment-token-gap', () => {
       // The token `--proxy` was dropped from the JA paragraph
       makeSeg('CLI', 'paragraph', 0, 'HTTP プロキシを使うには起動します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const gaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
     assert.equal(gaps.length, 1);
     assert.ok(Array.isArray(gaps[0].missingTokens));
@@ -301,7 +303,7 @@ describe('alignSegments — segment-token-gap', () => {
       makeHeading('CLI', 0, 'CLI'),
       makeSeg('CLI', 'paragraph', 0, '`--proxy` を指定して HTTP プロキシを使用します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const gaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
     assert.equal(gaps.length, 0);
   });
@@ -328,7 +330,7 @@ describe('alignSegments — section anchoring', () => {
       makeHeading('実行', 0, '実行'),
       makeSeg('実行', 'paragraph', 0, '実行段落 1'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missingDiffs.length, 1);
     // sectionPath は EN 側 (削除された segment は EN にしか存在しない)。
@@ -364,7 +366,7 @@ describe('alignSegments — section anchoring', () => {
       makeHeading('Cセクション', 0, 'Cセクション'),
       makeSeg('Cセクション', 'paragraph', 0, '`--cflag` を C1 で使用します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     // section A にだけ diff が出て、B / C に cascade しないことを確認する。
     const missingDiffs = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missingDiffs.length, 1, 'no cascade — exactly one missing diff');
@@ -407,7 +409,7 @@ describe('alignSegments — heading count mismatch', () => {
       makeSeg('A-ja', 'paragraph', 0, 'a-ja'),
       // B heading + body missing entirely
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.inconclusive, true);
     assert.match(result.inconclusiveReason, /heading/i);
   });
@@ -434,7 +436,7 @@ describe('alignSegments — position correctness on distinguishable content', ()
       makeSeg('セットアップ', 'paragraph', 0, 'JA 0: `token-alpha-0`'),
       makeSeg('セットアップ', 'paragraph', 1, 'JA 2: `token-alpha-2`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missing.length, 1, 'exactly one missing diff');
     // The deleted EN paragraph is the second one (segmentIndex=1).
@@ -453,7 +455,7 @@ describe('alignSegments — position correctness on distinguishable content', ()
       makeSeg('セットアップ', 'paragraph', 0, 'JA 0: `token-beta-0`'),
       makeSeg('セットアップ', 'paragraph', 1, 'JA 1: `token-beta-1`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missing.length, 1);
     assert.equal(missing[0].enSegmentIndex, 2, 'enSegmentIndex must point at the trailing paragraph');
@@ -467,7 +469,7 @@ describe('alignSegments — position correctness on distinguishable content', ()
       makeSeg('セットアップ', 'paragraph', 0, 'JA 1: `token-gamma-1`'),
       makeSeg('セットアップ', 'paragraph', 1, 'JA 2: `token-gamma-2`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missing.length, 1);
     assert.equal(missing[0].enSegmentIndex, 0, 'enSegmentIndex must point at the leading paragraph');
@@ -491,7 +493,7 @@ describe('alignSegments — position correctness on distinguishable content', ()
       makeSeg('Setup', 'paragraph', 0, 'Alpha paragraph.'),
       makeSeg('Setup', 'paragraph', 1, 'Gamma paragraph.'),
     ];
-    const middle = alignSegments(en, jaMiddleMissing);
+    const middle = alignSegments(en, jaMiddleMissing, { slug: 'test/fixture' });
     const middleMissing = middle.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(middleMissing.length, 1);
     assert.equal(middleMissing[0].enSegmentIndex, 1);
@@ -523,7 +525,7 @@ describe('alignSegments — section content validation', () => {
       // body sourced from Setup
       makeSeg('実行', 'paragraph', 0, '`--proxy` と `--token` を設定します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     // At least the Setup section must be flagged as mis-aligned.
     assert.ok(shifted.length >= 1, 'at least one segment-shifted diff expected');
@@ -542,7 +544,7 @@ describe('alignSegments — section content validation', () => {
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, '`--proxy` を使用して設定します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     assert.equal(shifted.length, 0);
   });
@@ -567,7 +569,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeHeading('CLI', 0, 'CLI'),
       makeSeg('CLI', 'paragraph', 0, '`--token` を指定して認証します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const types = result.diffs.map((d) => d.type);
     assert.ok(
       !types.includes('segment-shifted'),
@@ -598,7 +600,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('Bセクション', 'paragraph', 0, '極短ベータ 1。'),
       makeSeg('Bセクション', 'paragraph', 1, '極短ベータ 2。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     assert.equal(
       shifted.length,
@@ -630,7 +632,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('Bセクション', 'paragraph', 0, 'これはより長い A1 段落で、重要な詳細を含んでいます。'),
       makeSeg('Bセクション', 'paragraph', 1, 'これは A2 段落も長く、物事を詳しく説明しています。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     assert.equal(result.inconclusive, false);
     assert.equal(shifted.length, 0, 'no exact shift diff should be emitted');
@@ -656,7 +658,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('Bセクション', 'paragraph', 0, 'アルファ 1 の段落です。'),
       makeSeg('Bセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.diffs.length, 0);
     assert.equal(result.inconclusive, true, 'uniform tokenless swap must not be silent green');
     assert.match(result.inconclusiveReason, /cannot rule out a body swap/i);
@@ -680,7 +682,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeSeg('B-ja', 'paragraph', 0, 'ベータ 1 の段落です。'),
       makeSeg('B-ja', 'paragraph', 1, 'ベータ 2 の段落です。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.diffs.length, 0);
     assert.equal(result.inconclusive, true);
   });
@@ -706,7 +708,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeHeading('C-ja', 0, 'C-ja'),
       makeSeg('C-ja', 'paragraph', 0, 'ここで使います。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.inconclusive, true, 'A/B pair should still mark the page inconclusive');
     const gaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
     assert.equal(gaps.length, 1, 'exact diff in section C must be preserved');
@@ -730,7 +732,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeHeading('B', 0, 'B'),
       makeSeg('B', 'paragraph', 0, '`--beta` を B で使います。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     assert.equal(shifted.length, 0, 'no destination section → no shift');
   });
@@ -751,7 +753,7 @@ describe('alignSegments — segment-shifted only fires with token destination ev
       makeHeading('実行', 0, '実行'),
       makeSeg('実行', 'paragraph', 0, '`--proxy` を設定します。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const shifted = result.diffs.filter((d) => d.type === 'segment-shifted');
     assert.ok(shifted.length >= 1, 'symmetric token swap must surface as segment-shifted');
     assert.ok(shifted.every((d) => d.confidence === 'high'));
@@ -780,7 +782,7 @@ describe('alignSegments — tokenless cross-language paragraph identification', 
       makeSeg('セットアップ', 'paragraph', 0, 'アルファ段落です。'),
       makeSeg('セットアップ', 'paragraph', 1, 'ガンマ段落です。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missing.length, 1);
     assert.equal(missing[0].enSegmentIndex, 1, 'middle paragraph must be the gap');
@@ -804,7 +806,7 @@ describe('alignSegments — tokenless cross-language paragraph identification', 
       makeSeg('セットアップ', 'paragraph', 1, 'Beta paragraph.'),
       // Gamma deleted
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missing.length, 1);
     assert.equal(missing[0].enSegmentIndex, 2, 'trailing paragraph must be the gap');
@@ -823,7 +825,7 @@ describe('alignSegments — tokenless cross-language paragraph identification', 
       makeSeg('セットアップ', 'paragraph', 0, 'Beta paragraph.'),
       makeSeg('セットアップ', 'paragraph', 1, 'Gamma paragraph.'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     assert.equal(missing.length, 1);
     assert.equal(missing[0].enSegmentIndex, 0, 'leading paragraph must be the gap');
@@ -849,7 +851,7 @@ describe('alignSegments — tokenless cross-language paragraph identification', 
       makeSeg('セットアップ', 'paragraph', 0, 'ベータの段落です。'),
       makeSeg('セットアップ', 'paragraph', 1, 'ガンマの段落です。'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const missing = result.diffs.filter((d) => d.type === 'segment-missing');
     // Structural detection still fires — exactly one paragraph is missing.
     assert.equal(missing.length, 1, 'one missing diff must be emitted');
@@ -876,8 +878,8 @@ describe('alignSegments — determinism', () => {
       makeSeg('セットアップ', 'paragraph', 0, 'p1-ja'),
       makeSeg('セットアップ', 'paragraph', 1, 'p3-ja'),
     ];
-    const a = alignSegments(en, ja);
-    const b = alignSegments(en, ja);
+    const a = alignSegments(en, ja, { slug: 'test/fixture' });
+    const b = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.deepEqual(a, b);
   });
 
@@ -886,7 +888,7 @@ describe('alignSegments — determinism', () => {
     const ja = [makeHeading('A-ja', 0, 'A-ja')];
     const enClone = JSON.parse(JSON.stringify(en));
     const jaClone = JSON.parse(JSON.stringify(ja));
-    alignSegments(en, ja);
+    alignSegments(en, ja, { slug: 'test/fixture' });
     assert.deepEqual(en, enClone);
     assert.deepEqual(ja, jaClone);
   });
@@ -906,7 +908,7 @@ describe('alignSegments — inconclusiveCategory enum', () => {
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, '本文段落'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.inconclusive, false);
     assert.equal(result.inconclusiveCategory, null);
     assert.equal(result.inconclusiveMeta, null);
@@ -922,7 +924,7 @@ describe('alignSegments — inconclusiveCategory enum', () => {
       makeHeading('セットアップ', 0, 'セットアップ'),
       makeSeg('セットアップ', 'paragraph', 0, '本文'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.inconclusive, true);
     assert.equal(result.inconclusiveCategory, 'heading-count-mismatch');
     assert.equal(result.inconclusiveMeta, null);
@@ -947,7 +949,7 @@ describe('alignSegments — inconclusiveCategory enum', () => {
       makeHeading('セクション B', 0, 'セクション B'),
       makeSeg('セクション B', 'paragraph', 0, '1 番目の本文文章 ほぼ同じ長さ'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     if (result.inconclusive) {
       assert.equal(result.inconclusiveCategory, 'tokenless-near-tie');
       assert.match(result.inconclusiveReason, /tokenless adjacent sections/i);
@@ -988,7 +990,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeHeading('概要', 0, '概要'),
       makeSeg('概要', 'paragraph', 0, 'alpha, beta, gamma を段落に畳んだ翻訳'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const structureDiffs = result.diffs.filter(
       (d) => d.type === 'section-structure-mismatch',
     );
@@ -1012,7 +1014,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeHeading('概要', 0, '概要'),
       makeSeg('概要', 'paragraph', 0, 'alpha, beta, gamma を段落に畳んだ翻訳'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const grouped = diffsByType(result.diffs);
     assert.equal(
       grouped['section-structure-mismatch'],
@@ -1041,7 +1043,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeHeading('セクション 2', 0, 'セクション 2'),
       makeSeg('セクション 2', 'paragraph', 0, '綺麗な翻訳 `key`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const structureDiffs = result.diffs.filter(
       (d) => d.type === 'section-structure-mismatch' || d.type === 'segment-order-mismatch',
     );
@@ -1060,7 +1062,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeSeg('概要', 'unordered-list-item', 0, '- 箇条書き `token-b`'),
       makeSeg('概要', 'paragraph', 0, '段落 `token-a`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const structureDiffs = result.diffs.filter((d) => d.type === 'segment-order-mismatch');
     assert.equal(structureDiffs.length, 1);
     assert.equal(structureDiffs[0].structureCategory, 'kind-sequence');
@@ -1077,7 +1079,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeSeg('概要', 'paragraph', 0, '`beta-token` の段落'),
       makeSeg('概要', 'paragraph', 1, '`alpha-token` の段落'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const structureDiffs = result.diffs.filter((d) => d.type === 'segment-order-mismatch');
     assert.equal(structureDiffs.length, 1);
     assert.equal(structureDiffs[0].structureCategory, 'content-order');
@@ -1097,7 +1099,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeSeg('概要', 'paragraph', 0, 'JA 段落 A `token-a`'),
       makeSeg('概要', 'paragraph', 1, 'JA 段落 C `token-c`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const grouped = diffsByType(result.diffs);
     assert.equal(
       grouped['section-structure-mismatch'],
@@ -1132,7 +1134,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeSeg('セクション B', 'paragraph', 0, 'JA A 段落 `alpha-token` と `alpha-flag`'),
       makeSeg('セクション B', 'unordered-list-item', 0, '- A 箇条書き `alpha-extra`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const grouped = diffsByType(result.diffs);
     assert.ok(
       (grouped['segment-shifted'] ?? 0) > 0,
@@ -1171,7 +1173,7 @@ describe('alignSegments — structure comparator integration', () => {
       // Section B はローカルに callout を平文に畳んだ (cross-kind drift)
       makeSeg('セクション B', 'paragraph', 0, 'JA B 注意と段落を畳んだ翻訳 `local-token` `local-flag`'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const grouped = diffsByType(result.diffs);
     // Section B の cross-kind drift は structure-mismatch として残る。
     // (Section A は shift 判定が出るかどうかは alignSection の token
@@ -1197,7 +1199,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeHeading('概要', 0, '概要'),
       makeSeg('概要', 'paragraph', 0, '注意 `warn` と段落 `flag` を畳んだ翻訳'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const issues = parityDiffsToIssues(result.diffs);
 
     const structureIssue = issues.find((i) => i.type === 'section-structure-mismatch');
@@ -1246,7 +1248,7 @@ describe('alignSegments — structure comparator integration', () => {
       makeSeg('概要', 'paragraph', 0, '`beta` の段落'),
       makeSeg('概要', 'paragraph', 1, '`alpha` の段落'),
     ];
-    const result = alignSegments(en, ja);
+    const result = alignSegments(en, ja, { slug: 'test/fixture' });
     const issues = parityDiffsToIssues(result.diffs);
     const issue = issues.find((i) => i.type === 'segment-order-mismatch');
     assert.ok(issue);
@@ -1291,7 +1293,7 @@ describe('alignSegments — glossary_mask 統合 (Phase 0)', () => {
         rawText: 'Test Editor を開いて開始します。',
       }),
     ];
-    const result = alignSegments(enSegs, jaSegs);
+    const result = alignSegments(enSegs, jaSegs, { slug: 'test/fixture' });
     const untranslatedDiffs = result.diffs.filter(
       (d) => d.type === 'segment-untranslated',
     );
@@ -1331,7 +1333,7 @@ describe('alignSegments — glossary_mask 統合 (Phase 0)', () => {
         rawText: 'Open Test Editor to start recording tests.',
       }),
     ];
-    const result = alignSegments(enSegs, jaSegs);
+    const result = alignSegments(enSegs, jaSegs, { slug: 'test/fixture' });
     const untranslatedDiffs = result.diffs.filter(
       (d) => d.type === 'segment-untranslated',
     );
@@ -1339,5 +1341,77 @@ describe('alignSegments — glossary_mask 統合 (Phase 0)', () => {
       untranslatedDiffs.length >= 1,
       '英語 prose が残る場合は untranslated として emit するべき',
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 4: options.slug safety guard + artifact registry suppression
+// ---------------------------------------------------------------------------
+
+describe('alignSegments — options.slug / artifact registry integration (Phase 4)', () => {
+  it('throws when slug option is missing (safety guard)', () => {
+    const en = [makeHeading('Setup', 0, 'Setup'), makeSeg('Setup', 'paragraph', 0, 'body')];
+    const ja = [makeHeading('セットアップ', 0, 'セットアップ'), makeSeg('セットアップ', 'paragraph', 0, '本文')];
+    assert.throws(() => alignSegments(en, ja), /slug option is required/);
+    assert.throws(() => alignSegments(en, ja, {}), /slug option is required/);
+  });
+
+  it('suppresses segment-token-gap via artifact registry and records coverage', () => {
+    // EN 側に /docs/index リンクを持ち、JA には無い fixture を作る。
+    // registry 登録済 slug で呼ぶと token-gap が 1 件も出ない。coverage には 1 hit。
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg(
+        'Overview',
+        'paragraph',
+        0,
+        'See the [index page](/docs/index) for details.',
+      ),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '詳細は index ページを参照してください。'),
+    ];
+    const registeredSlug = 'testops/insights/dashboard'; // registry 登録済
+    const coverage = createArtifactCoverage();
+    const result = alignSegments(en, ja, { slug: registeredSlug, coverage });
+    const tokenGaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
+    assert.equal(
+      tokenGaps.length,
+      0,
+      `registry 登録済 slug + token では token-gap が 0 件になるべき (実際: ${tokenGaps.length})`,
+    );
+    const snap = coverage.snapshot();
+    assert.ok(snap.matchedHits >= 1, 'coverage に 1 hit 以上記録されるべき');
+    assert.equal(snap.byToken['/docs/index'], snap.matchedHits);
+    assert.equal(snap.bySlug[registeredSlug], snap.matchedHits);
+  });
+
+  it('does not suppress segment-token-gap for unregistered slugs', () => {
+    // 同じ fixture を registry 非登録 slug で呼ぶと通常通り token-gap が出る。
+    const en = [
+      makeHeading('Overview', 0, 'Overview'),
+      makeSeg(
+        'Overview',
+        'paragraph',
+        0,
+        'See the [index page](/docs/index) for details.',
+      ),
+    ];
+    const ja = [
+      makeHeading('概要', 0, '概要'),
+      makeSeg('概要', 'paragraph', 0, '詳細は index ページを参照してください。'),
+    ];
+    const coverage = createArtifactCoverage();
+    const result = alignSegments(en, ja, {
+      slug: 'unregistered/slug-should-not-match',
+      coverage,
+    });
+    const tokenGaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
+    assert.ok(
+      tokenGaps.length >= 1,
+      `未登録 slug では token-gap が emit されるべき (実際: ${tokenGaps.length})`,
+    );
+    assert.equal(coverage.snapshot().matchedHits, 0);
   });
 });

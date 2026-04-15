@@ -31,6 +31,70 @@ const HTML_COMMENT_RE = /<!--[\s\S]*?-->/g;
 const SCRIPT_STYLE_RE = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi;
 const COL_TAG_RE = /<col\b[^>]*\/?>/gi;
 
+// ---------------------------------------------------------------------------
+// callout-normalization (slug 限定の intentional divergence 吸収層)
+// ---------------------------------------------------------------------------
+
+/**
+ * callout-normalization を適用する slug の single source of truth。
+ *
+ * allow list に含まれる slug では、EN snapshot に存在する warning-like な短い
+ * `<blockquote>` を `<div class="callout-note">` に書き換え、JA 側の
+ * `:::note` / `:::danger` 等 callout と kind-level parity を揃える。
+ *
+ * Phase 4 Task 4.1 inventory の `intentionalDivergenceCandidates` に基づく
+ * 初期値。slug の追加 / 削除は **本定数を先に更新** すること (docs に先に書かない)。
+ *
+ * 詳細: `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` §8。
+ */
+export const CALLOUT_NORMALIZATION_SLUGS = Object.freeze(
+  new Set(['administration/api-access']),
+);
+
+const BLOCKQUOTE_RE = /<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/gi;
+const BLOCKQUOTE_P_RE = /<p\b[^>]*>([\s\S]*?)<\/p>/gi;
+const WARNING_LEAD_RE = /^\s*(?:<(?:strong|b)>\s*)?(note|warning|important|caution|tip|danger)\b/i;
+const MAX_CALLOUT_PARAGRAPHS = 3;
+
+/**
+ * blockquote 内側 HTML が callout-normalization の対象となる 3 条件を満たすかを
+ * 判定する。
+ *
+ * - **`<p>` 存在必須:** `<p>` が 1 つもない bare-text blockquote は対象外。
+ *   walkCalloutBody() は text node を emit しないため、書き換えると中身が
+ *   丸ごと消える。そのままの `<blockquote>` として残し、extractor の通常経路で
+ *   paragraph として処理させる。
+ * - **warning-like 判定:** 最初の `<p>` の先頭が
+ *   `(Note|Warning|Important|Caution|Tip|Danger)` で始まる (先頭 `<strong>` /
+ *   `<b>` は許容、case-insensitive)。
+ * - **短長制約:** `<p>` 個数 ≤ MAX_CALLOUT_PARAGRAPHS (3)
+ */
+function isWarningLikeBlockquote(innerHtml) {
+  const paragraphs = Array.from(innerHtml.matchAll(BLOCKQUOTE_P_RE)).map(
+    (m) => m[1],
+  );
+  if (paragraphs.length === 0) return false;
+  if (paragraphs.length > MAX_CALLOUT_PARAGRAPHS) return false;
+  return WARNING_LEAD_RE.test(paragraphs[0]);
+}
+
+/**
+ * slug allow list に含まれる場合のみ、warning-like な短い `<blockquote>` を
+ * `<div class="callout-note">` に書き換える。options なし / slug 未指定 /
+ * slug 非該当 / 判定不一致のときは元 HTML をそのまま返す (後方互換)。
+ */
+function normalizeCallouts(html, options) {
+  if (!options || typeof options !== 'object') return html;
+  const { slug, calloutAllowSlugs } = options;
+  if (typeof slug !== 'string' || slug.length === 0) return html;
+  if (!(calloutAllowSlugs instanceof Set)) return html;
+  if (!calloutAllowSlugs.has(slug)) return html;
+  return html.replace(BLOCKQUOTE_RE, (match, inner) => {
+    if (!isWarningLikeBlockquote(inner)) return match;
+    return `<div class="callout-note">${inner}</div>`;
+  });
+}
+
 /**
  * Preprocess raw MadCap Flare HTML by removing line-oriented noise and simple
  * self-contained structures that would otherwise produce spurious segments.
@@ -40,8 +104,16 @@ const COL_TAG_RE = /<col\b[^>]*\/?>/gi;
  * non-greedy match stops at the first `</div>`, corrupting the outer tree).
  * Instead the walker drops codeSnippet divs on traversal so nested structures
  * inside a callout are preserved correctly.
+ *
+ * @param {string} html                 raw MadCap Flare HTML
+ * @param {object} [options]            slug-scoped normalization controls
+ * @param {string} [options.slug]       page slug (e.g. `administration/api-access`)
+ * @param {Set<string>} [options.calloutAllowSlugs]
+ *   allow list of slugs for warning-like `<blockquote>` → `<div class="callout-note">`
+ *   rewriting. Usually `CALLOUT_NORMALIZATION_SLUGS`. When omitted or when slug
+ *   is not in the set, no normalization is applied (backward compat).
  */
-export function preprocessHtml(html) {
+export function preprocessHtml(html, options) {
   if (typeof html !== 'string' || html.length === 0) return '';
   let text = html;
   text = text.replace(HTML_COMMENT_RE, '');
@@ -50,6 +122,7 @@ export function preprocessHtml(html) {
   text = text.replace(ANCHOR_ONLY_RE, '');
   text = text.replace(THEAD_RE, '');
   text = text.replace(COL_TAG_RE, '');
+  text = normalizeCallouts(text, options);
   return text;
 }
 
@@ -589,17 +662,23 @@ function walkDetails(node, state) {
 /**
  * Extract canonical segments from an EN HTML snapshot.
  *
- * @param {string} html  raw MadCap Flare HTML
+ * @param {string} html                 raw MadCap Flare HTML
+ * @param {object} [options]            slug-scoped normalization controls
+ * @param {string} [options.slug]       page slug (forwarded to preprocessHtml)
+ * @param {Set<string>} [options.calloutAllowSlugs]
+ *   allow list of slugs whose warning-like `<blockquote>` are rewritten to
+ *   `<div class="callout-note">` before tokenization. Omitting options
+ *   preserves legacy behavior (no normalization).
  * @returns {import('./source_parity_segments_shared.mjs').Segment[]}
  */
-export function extractSegmentsFromHtml(html) {
+export function extractSegmentsFromHtml(html, options) {
   if (typeof html !== 'string') return [];
   const trimmed = html.trim();
   if (trimmed.length === 0) return [];
   // Reuse the existing turndown preprocessor so entity-encoded <details>
   // blocks and escaped callouts become real HTML before our own pass runs.
   const normalized = preprocessEnHtml(html);
-  const preprocessed = preprocessHtml(normalized);
+  const preprocessed = preprocessHtml(normalized, options);
   const tokens = tokenize(preprocessed);
   const tree = buildTree(tokens);
   const state = createWalkState();

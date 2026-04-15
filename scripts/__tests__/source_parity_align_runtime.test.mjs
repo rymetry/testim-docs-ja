@@ -71,7 +71,7 @@ describe('parityDiffsToIssues', () => {
     const jaMd = '## セットアップ\n\nプロキシを設定します。\n';
     const enSegs = extractSegmentsFromHtml(enHtml);
     const jaSegs = extractSegmentsFromMarkdown(jaMd);
-    const alignment = alignSegments(enSegs, jaSegs);
+    const alignment = alignSegments(enSegs, jaSegs, { slug: 'test/fixture' });
     const issues = parityDiffsToIssues(alignment.diffs);
     assert.ok(issues.length > 0, 'expected at least one diff (token-gap on --proxy)');
     for (const issue of issues) {
@@ -89,7 +89,7 @@ describe('parityDiffsToIssues', () => {
     const jaMd = '## CLI\n\nHTTP プロキシを使うときに指定します。\n';
     const enSegs = extractSegmentsFromHtml(enHtml);
     const jaSegs = extractSegmentsFromMarkdown(jaMd);
-    const alignment = alignSegments(enSegs, jaSegs);
+    const alignment = alignSegments(enSegs, jaSegs, { slug: 'test/fixture' });
     const issues = parityDiffsToIssues(alignment.diffs);
     const tokenGap = issues.find((i) => i.type === 'segment-token-gap');
     assert.ok(tokenGap, 'expected a segment-token-gap diff');
