@@ -11,16 +11,33 @@ const ARTIFACT_TOKEN_MATCHERS = [
 const NORMALIZER_TOKEN_MATCHERS = [
   (t) => typeof t === 'string' && /^https?:\/\/help\.testim\.io/.test(t),
 ];
-// Task 4.4 の HTML extractor で正規化すべき intentional divergence 候補
+// Task 4.4 の HTML extractor で正規化すべき intentional divergence 候補 slug。
 const INTENTIONAL_SLUGS = new Set(['administration/api-access']);
+// intentional 候補として routing してよい issueType (callout 正規化で解消する
+// 3 パターン)。token-gap 等は除外して、slug 別の actionable / artifact / normalizer
+// 判定に fall through させる。
+const INTENTIONAL_CALLOUT_ISSUE_TYPES = new Set([
+  'section-structure-mismatch',
+  'segment-extra',
+  'segment-missing',
+]);
 
 function classify(entry) {
   if (entry.issueType === 'segment-inconclusive') return 'advisoryResidual';
-  if (INTENTIONAL_SLUGS.has(entry.slug)) return 'intentionalDivergenceCandidates';
-  const tokens = entry.missingTokens ?? [];
-  if (tokens.length > 0) {
-    if (tokens.every(t => NORMALIZER_TOKEN_MATCHERS.some(f => f(t)))) return 'normalizerCandidates';
-    if (tokens.every(t => ARTIFACT_TOKEN_MATCHERS.some(f => f(t)))) return 'artifactCandidates';
+  const missingTokens = entry.missingTokens ?? [];
+  // intentional bucket は「slug が allow list に入り、かつ callout 関連の
+  // issueType で、missingTokens が無い」という狭い条件にする。token gap は
+  // たとえ同 slug でも normalizer / artifact / actionable 判定に回す。
+  if (
+    INTENTIONAL_SLUGS.has(entry.slug) &&
+    INTENTIONAL_CALLOUT_ISSUE_TYPES.has(entry.issueType) &&
+    missingTokens.length === 0
+  ) {
+    return 'intentionalDivergenceCandidates';
+  }
+  if (missingTokens.length > 0) {
+    if (missingTokens.every(t => NORMALIZER_TOKEN_MATCHERS.some(f => f(t)))) return 'normalizerCandidates';
+    if (missingTokens.every(t => ARTIFACT_TOKEN_MATCHERS.some(f => f(t)))) return 'artifactCandidates';
   }
   return 'actionable';
 }
