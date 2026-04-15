@@ -1,8 +1,10 @@
-# Parity Phase 4 — Final Cutover Implementation Plan (Revision 6)
+# Parity Phase 4 — Final Cutover Implementation Plan (Revision 7)
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development or superpowers:executing-plans. Steps use checkbox (`- [ ]`). Worktree: `noble-squishing-bee` / branch: `worktree-noble-squishing-bee`.
+> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development or superpowers:executing-plans. Steps use checkbox (`- [ ]`). PR A 実行 worktree は `noble-squishing-bee`。PR Z は別 worktree で実行 (別途 `claude/parity-phase4-pr-z` 系を用意)。
 
-**Goal:** Phase 4 を「最終 cutover」として parity 運用の数値状態をすべて 0 に落とす。`parity-baseline.json.entries = 0`、`summary.baselinedIssues = 0`、`summary.advisoryQueueIssues = 0`、`summary.auditSignalIssues = 0`、`snapshot-diff-status.summary.{changed, added, removed} = 0`。残る EN-side artifact / URL normalizer ターゲット / intentional divergence は checker 側で吸収する。schema を v1→v2 に atomic cutover し、baseline 契約から非 JA-actionable な type (`segment-inconclusive` / `snapshot-incomplete` / `source-unusable`) を除外する。
+> **Revision 7 (2026-04-15):** 最終 DoD を「機械判定 JSON assertion」ベースに置換 (本 plan §最終 DoD 参照)。`baselineExpired` / `acknowledged` (non-blocking) / `audit manifest` / `debug.artifactCoverage` を DoD **非含有**として明示。PR Z entry criteria は `docs/superpowers/plans/2026-04-15-parity-bulk-remediation.md §10` に集約し、entries 数閾値は廃止、issueType ベース (`segment-inconclusive ≤ 3`、他 6 種 = 0) に統一。最終判定ルール「green だから OK ではなく、残件ゼロだから OK」を明記。Rev 6 以前の DoD 記述は本 Rev 7 で置換 (履歴は git に残る)。
+
+**Goal:** Phase 4 を「最終 cutover」として parity 運用の数値状態をすべて 0 に落とす。`parity-baseline.json.entries.length === 0`、`parity-check-status.summary.{reportableActiveFiles, baselinedIssues, advisoryQueueIssues, auditSignalIssues} === 0`、`snapshot-diff-status.summary.{changed, added, removed} === 0`。残る EN-side artifact / URL normalizer ターゲット / intentional divergence は checker 側で吸収する。schema を v1→v2 に atomic cutover し、baseline 契約から非 JA-actionable な type (`segment-inconclusive` / `snapshot-incomplete` / `source-unusable`) を除外する。
 
 **Architecture:** 1 PR / 1 worktree。順序: (0) DoD 再定義 → (1) 5-bucket 残件実測 (JSON + md) → (2) parity_artifact_registry (slug-scope token + runtime coverage aggregator) + `alignSegments({slug, coverage})` への全呼出更新 → (3) URL normalizer 対称化 → (4) HTML extractor (`preprocessHtml`) で EN blockquote→callout 限定正規化 → (5) 残 baseline を 0 まで解消 → (6) schema v2 atomic cutover (types / loader / generator / advisory / summary / check / issue_state / detection_reports / status / migration / tests) → (7) docs 最終化 (scripts/README.md を含む) → (8) E2E JSON assertion → report → push → PR。
 
@@ -119,39 +121,67 @@ worktree で Task 4.5–4.8 を実行する:
 
 ---
 
-## 最終 DoD (Definition of Done)
+## 最終 DoD (Definition of Done) — Rev 7
 
-以下すべてが true であること:
+### 機械判定 (必須 / authoritative)
+
+以下の JSON assertion がすべて true であること。これが Phase 4 の唯一の authoritative DoD:
 
 ```
-# baseline
-parity-baseline.json.entries.length === 0
-parity-baseline.json.schemaVersion  === 2
+# parity-baseline.json
+entries.length === 0
 
 # parity-check-status.json
 summary.reportableActiveFiles === 0
 summary.baselinedIssues       === 0
 summary.advisoryQueueIssues   === 0
 summary.auditSignalIssues     === 0
-debug.artifactCoverage exists with keys { registryEntries, matchedHits, bySlug, byToken }
 
 # snapshot-diff-status.json
-summary.changed === 0 && summary.added === 0 && summary.removed === 0
+summary.changed === 0
+summary.added   === 0
+summary.removed === 0
+```
 
-# schema / runtime
+### DoD に含めないもの (明示的除外)
+
+以下は DoD **非含有**。PR Z 判定では評価しない:
+
+- `baselineExpired === 0` — schema v2 cutover でこの概念自体を削除するため、ゼロ化対象ではなく「削除対象」。残っている/残っていないは DoD 判定には使わない。
+- `acknowledged` / `non-blocking === 0` — baseline / advisory / audit とは別概念。必要なら別途「open acknowledgements なし」という独立ルールとして扱う。DoD には組み込まない。
+- `audit manifest === 0` — 派生物。一次判定は `auditSignalIssues === 0` と `snapshot-diff-status.summary.{changed, added, removed} === 0` で行う。
+- `debug.artifactCoverage === 0` — checker が artifact を吸収した証跡。runtime で非ゼロになるのは正常動作であり、DoD 違反ではない。
+
+### Schema v2 / runtime 契約 (cutover で満たす副次条件)
+
+以下は schema cutover の完了を表す契約条件。機械判定 DoD と分けて扱う:
+
+```
+parity-baseline.json.schemaVersion === 2
 BASELINE_ELIGIBLE_TYPES ⊆ { segment-missing, segment-extra, segment-shifted,
                              segment-untranslated, segment-token-gap,
                              section-structure-mismatch, segment-order-mismatch }
-(reviewAfter は baseline schema / runtime tagging / summary / queue どこにも存在しない)
-(baselineReviewAfter / baselineExpired は issue / queue / issue_state どこにも存在しない)
-(inconclusiveReason は runtime issue 側にのみ存在。baseline entry schema には存在しない)
+reviewAfter は baseline schema / runtime tagging / summary / queue どこにも存在しない
+baselineReviewAfter / baselineExpired は issue / queue / issue_state どこにも存在しない
+inconclusiveReason は runtime issue 側にのみ存在。baseline entry schema には存在しない
 isFrozenByBaseline(issue) ≡ issue.baselined === true
 alignSegments は必ず { slug } option 付きで呼ばれる (grep 検証)
+debug.artifactCoverage は shape { registryEntries, matchedHits, bySlug, byToken } で出力される (値は非ゼロ可)
+```
 
-# gates
+### Gate コマンド (PR Z merge 前)
+
+```
 npm run test && npm run lint && npm run build が green
 npm run check:parity && npm run check:snapshots:diff が green
 ```
+
+### 判定ルール
+
+- 「green だから OK」ではなく「残件ゼロだから OK」とする
+- checker 吸収後も residual が残るなら未達
+- baseline / advisory / audit に逃がしたままなら未達
+- EN 更新取り込み後に同じ手順でゼロへ戻せないなら未達
 
 ---
 
