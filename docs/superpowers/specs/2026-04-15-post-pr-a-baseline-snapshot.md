@@ -80,9 +80,9 @@ Phase 4 plan Rev 7 §最終 DoD 基準。PR Z 完了時に全 8 assertion が tr
 
 PR A 効果: artifact 7 + intentional 3 = **10 件を mechanism で自動吸収**し baseline から orphan 化 (plan 予測と一致)。
 
-## 7. Audit Signal Gap (⚠ Stage B plan 対象外)
+## 7. Audit Signal Gap (Stage B1–B6 scope 外 / §10.5 B7 gate で処理)
 
-`auditSignalIssues = 9` は DoD 対象だが、現行 Stage B1–B6 の scope に入っていない。以下 3 種:
+`auditSignalIssues = 9` は Rev 7 DoD の測定対象 (`=== 0` 要求) だが、現行 Stage B1–B6 の直接 scope には入っていない。以下 3 種:
 
 | issueType | count | 備考 |
 |---|---:|---|
@@ -90,7 +90,13 @@ PR A 効果: artifact 7 + intentional 3 = **10 件を mechanism で自動吸収*
 | step-count-mismatch | 2 | 同上 |
 | table-shape-mismatch | 1 | 表構造不一致。個別対応 |
 
-**判断:** Stage B2–B4 完了後に audit-signal 残 0 でなければ、**Stage B7 (audit-signal 残)** を bulk-remediation plan に追加する。PR Z 着手条件には含めない (entry criteria は issueType ベースに限定)。PR Z 完了時点の DoD `auditSignalIssues === 0` は PR Z スコープで解消する (必要なら Stage B7 を先に実施)。
+**運用 (bulk-remediation plan §10.5 と整合):**
+
+1. Stage B4 完了直後に `npm run check:parity` を再実行し `auditSignalIssues` を再計測する
+2. 0 なら gate 通過、Stage B5 / B6 へ進む
+3. 非ゼロなら **Stage B7 (audit-signal 残) を条件付き起票** し、完了してから Stage B5 / B6 / PR Z へ進む
+
+PR Z は **final cutover 専用**に保つため、audit-signal の DoD 未達 (`auditSignalIssues > 0`) を抱えたまま PR Z へ入れない。PR Z entry criteria (bulk-remediation plan §10 必須条件 (b)) に `auditSignalIssues === 0` が含まれる。
 
 ## 8. Run metadata
 

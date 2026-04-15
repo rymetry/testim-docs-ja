@@ -20,15 +20,15 @@ Phase 4 plan (Rev 7) は `parity-baseline.json.entries.length === 0` / `parity-c
 
 | bucket (inventory 分類) | 件数 | byIssueType 内訳 | burn-down 手段 |
 |---|---|---|---|
-| actionable | 1851 | segment-untranslated 1571 / segment-missing 106 / segment-extra 86 / section-structure-mismatch 55 / segment-token-gap 32 / segment-order-mismatch 1 | Stage B1–B4 / B6 |
+| actionable | 1851 | segment-untranslated 1571 / segment-missing 106 / segment-extra 86 / section-structure-mismatch 55 / segment-token-gap 32 / segment-order-mismatch 1 | Stage B1–B6 |
 | normalizerCandidates | 1 | segment-token-gap 1 (`/v2.0/docs/scheduler#integrating-scheduler-with-slack`) | Stage B5 |
 | intentionalDivergenceCandidates | 0 | (PR A Task 4.4 extractor で 3 件吸収済) | 完了 |
 | artifactCandidates | 0 | (PR A Task 4.2 artifact registry で 7 件吸収済) | 完了 |
 | advisoryResidual | 11 | segment-inconclusive 11 (tokenless-near-tie 6 / heading-count-mismatch 5) | Stage B6 |
 
-### DoD 非含有の audit-signal (参考 / Stage B1–B6 scope 外)
+### Stage B1–B6 scope 外の audit-signal (1863 baseline とは別 tier)
 
-`parity-check-status.summary.auditSignalIssues === 9` は上記 1863 baseline とは別 tier で、Stage B1–B6 では直接 burn-down しない。§10.5 の再評価 gate で扱う:
+`parity-check-status.summary.auditSignalIssues === 9` は Rev 7 DoD の測定対象 (`=== 0` 要求) だが、上記 1863 baseline とは別 tier のため Stage B1–B6 では直接 burn-down しない。Stage B2–B4 (missing/extra/structure) 修正の副次効果で減る可能性があるため、**§10.5 の再評価 gate** で扱い、非ゼロなら Stage B7 を条件付き起票する。
 
 | audit-signal issueType | count |
 |---|---:|
