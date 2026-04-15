@@ -65,7 +65,7 @@ function runStructureComparator(slug) {
   const jaBody = extractJaBody(jaMd);
   const enSegments = extractSegmentsFromHtml(rawEnHtml);
   const jaSegments = extractSegmentsFromMarkdown(jaBody);
-  const alignment = alignSegments(enSegments, jaSegments);
+  const alignment = alignSegments(enSegments, jaSegments, { slug });
   const issues = parityDiffsToIssues(alignment.diffs);
   const structureIssues = issues.filter(
     (i) => i.type === 'section-structure-mismatch' || i.type === 'segment-order-mismatch',

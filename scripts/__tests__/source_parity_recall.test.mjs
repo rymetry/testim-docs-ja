@@ -394,7 +394,7 @@ function analyzePage(slug) {
   const enSegments = extractSegmentsFromHtml(html);
   const jaSegmentsOriginal = extractSegmentsFromMarkdown(jaOriginal);
 
-  const baselineResult = alignSegments(enSegments, jaSegmentsOriginal);
+  const baselineResult = alignSegments(enSegments, jaSegmentsOriginal, { slug });
 
   const mutations = {};
   for (const [type, fn] of Object.entries(MUTATION_TYPES)) {
@@ -404,7 +404,7 @@ function analyzePage(slug) {
       continue;
     }
     const jaSegmentsMutated = extractSegmentsFromMarkdown(mutation.mutated);
-    const mutatedResult = alignSegments(enSegments, jaSegmentsMutated);
+    const mutatedResult = alignSegments(enSegments, jaSegmentsMutated, { slug });
 
     const affected = findAffectedSegment(
       jaSegmentsOriginal,

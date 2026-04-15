@@ -103,7 +103,7 @@ describe('baseline does not absorb new mutations', () => {
       const enSegments = extractSegmentsFromHtml(html);
       const jaOriginal = readJaMarkdown(slug);
       const jaSegmentsOriginal = extractSegmentsFromMarkdown(jaOriginal);
-      const baselineAlignment = alignSegments(enSegments, jaSegmentsOriginal);
+      const baselineAlignment = alignSegments(enSegments, jaSegmentsOriginal, { slug });
 
       if (baselineAlignment.inconclusive) continue;
 
@@ -116,7 +116,7 @@ describe('baseline does not absorb new mutations', () => {
         if (mutation === null) continue;
 
         const jaSegmentsMutated = extractSegmentsFromMarkdown(mutation.mutated);
-        const mutatedAlignment = alignSegments(enSegments, jaSegmentsMutated);
+        const mutatedAlignment = alignSegments(enSegments, jaSegmentsMutated, { slug });
         if (mutatedAlignment.inconclusive) continue;
 
         const mutatedIssues = parityDiffsToIssues(mutatedAlignment.diffs);

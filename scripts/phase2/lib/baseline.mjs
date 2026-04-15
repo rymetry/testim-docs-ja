@@ -4,11 +4,10 @@
  * 目的:
  *   - `parity-baseline.json` の読み込みを一箇所にまとめる
  *   - REPO_ROOT を相対パスで解決する
- *   - 既知 EN-side artifact トークンを registry として共有
+ *   - 既知 EN-side artifact を Phase 4 registry 経由で参照する
  *
- * Phase 2.3 report で浮上した EN-side artifact は、ここに登録することで
- * enumerate script が直接修正候補から除外し `enSideArtifact` カテゴリへ回せる。
- * Phase 4 で parity checker 側の修正に使う registry の雛形でもある。
+ * Phase 4 で slug-scope の `parity_artifact_registry` に一本化したため、
+ * enSideArtifact 判定は registry に登録済みの token を参照する。
  *
  * @module scripts/phase2/lib/baseline
  */
@@ -16,6 +15,14 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+
+import {
+  ARTIFACT_REGISTRY,
+  NOOP_COVERAGE,
+  createArtifactCoverage,
+  isArtifactExcluded,
+  registryEntries,
+} from '../../lib/parity_artifact_registry.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,31 +37,28 @@ export function loadBaseline() {
   );
 }
 
-/**
- * 既知 EN-side artifact トークン。
- * Phase 2.3 (2026-04-14) で enumerate 時に skip 理由として記録したもの。
- * JA 側修正不能 / 要 EN 側修正 or parity normalizer 側修正。
- */
-export const EN_SIDE_ARTIFACT_TOKENS = new Set([
-  '-variable',   // "Generate email address -variable name" stray dash (EN typo, search-within-a-test)
-  '-this',       // "Verify -this action" stray dash (EN typo, sfdc-step-{create,edit,quickactions,relatedlistaction,validate})
-  'step.This',   // "step.This will create..." sentence boundary (EN typo, generate-random-data-with-js)
-  '/docs/index', // EN の index.htm self-referential / unresolvable link (6 slugs)
-]);
+// Phase 4: registry API を phase2 側から直接参照できるよう re-export。
+export {
+  ARTIFACT_REGISTRY,
+  NOOP_COVERAGE,
+  createArtifactCoverage,
+  isArtifactExcluded,
+  registryEntries,
+};
 
 /**
- * EN-side artifact で「href 値として」既知不正なもの。
- * missingTokens に現れる URL を判定するのに使う。
+ * Phase 4 registry に登録済みの EN-side artifact token 集合。
+ * (slug, token) 対応は失うが、カテゴリ分類では token 単位で見れば十分。
  */
-export const EN_SIDE_ARTIFACT_URLS = new Set([
-  'http://google.com', // demo.testim.io link text に対して誤 href (creating-your-first-codeless-test)
-]);
+const EN_SIDE_ARTIFACT_TOKENS_FROM_REGISTRY = new Set(
+  ARTIFACT_REGISTRY.map((e) => e.token),
+);
 
 /**
  * 単一トークンを category に分類する。
  *
  * Category:
- *   - enSideArtifact: EN 側 typo / 不正リンクで JA 側修正不能
+ *   - enSideArtifact: EN 側 typo / 不正リンクで JA 側修正不能 (registry 登録済)
  *   - cliFlag        : `--flag` / `-f` 形式の CLI フラグ
  *   - internalLink   : `/docs/...` 形式の内部リンク
  *   - numericOrUnit  : 数値 + 単位 (`1000ms`, `10MB` 等)
@@ -63,8 +67,7 @@ export const EN_SIDE_ARTIFACT_URLS = new Set([
  */
 export function categorizeToken(token) {
   if (!token) return 'other';
-  if (EN_SIDE_ARTIFACT_TOKENS.has(token)) return 'enSideArtifact';
-  if (EN_SIDE_ARTIFACT_URLS.has(token)) return 'enSideArtifact';
+  if (EN_SIDE_ARTIFACT_TOKENS_FROM_REGISTRY.has(token)) return 'enSideArtifact';
   if (token.startsWith('--') || /^-[a-zA-Z]/.test(token)) return 'cliFlag';
   if (token.startsWith('/docs/')) return 'internalLink';
   if (/^\d+(\.\d+)?(ms|sec|s|min|hr|px|em|rem|MB|GB|KB|%|x)$/i.test(token)) {
