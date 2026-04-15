@@ -57,21 +57,25 @@ const WARNING_LEAD_RE = /^\s*(?:<(?:strong|b)>\s*)?(note|warning|important|cauti
 const MAX_CALLOUT_PARAGRAPHS = 3;
 
 /**
- * blockquote 内側 HTML が callout-normalization の対象となる 2 条件 (短長 +
- * warning-like 先頭) を満たすかを判定する。
+ * blockquote 内側 HTML が callout-normalization の対象となる 3 条件を満たすかを
+ * 判定する。
  *
- * - **warning-like 判定:** 最初の段落の先頭が `(Note|Warning|Important|Caution|Tip|Danger)`
- *   で始まる (先頭 `<strong>` / `<b>` は許容、case-insensitive)。`<p>` が 1 つも
- *   ない場合は inner そのものを対象にする (fallback)。
+ * - **`<p>` 存在必須:** `<p>` が 1 つもない bare-text blockquote は対象外。
+ *   walkCalloutBody() は text node を emit しないため、書き換えると中身が
+ *   丸ごと消える。そのままの `<blockquote>` として残し、extractor の通常経路で
+ *   paragraph として処理させる。
+ * - **warning-like 判定:** 最初の `<p>` の先頭が
+ *   `(Note|Warning|Important|Caution|Tip|Danger)` で始まる (先頭 `<strong>` /
+ *   `<b>` は許容、case-insensitive)。
  * - **短長制約:** `<p>` 個数 ≤ MAX_CALLOUT_PARAGRAPHS (3)
  */
 function isWarningLikeBlockquote(innerHtml) {
   const paragraphs = Array.from(innerHtml.matchAll(BLOCKQUOTE_P_RE)).map(
     (m) => m[1],
   );
+  if (paragraphs.length === 0) return false;
   if (paragraphs.length > MAX_CALLOUT_PARAGRAPHS) return false;
-  const head = paragraphs.length > 0 ? paragraphs[0] : innerHtml;
-  return WARNING_LEAD_RE.test(head);
+  return WARNING_LEAD_RE.test(paragraphs[0]);
 }
 
 /**

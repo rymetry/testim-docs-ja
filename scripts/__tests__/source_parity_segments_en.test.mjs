@@ -486,6 +486,20 @@ describe('preprocessHtml callout normalization', () => {
     assert.match(out, /<div class="callout-note">/);
     assert.doesNotMatch(out, /<blockquote>/);
   });
+
+  it('does NOT rewrite <blockquote> without <p> wrapper even for allowed slug (walkCalloutBody drops text nodes)', () => {
+    // bare-text blockquote を callout-note に書き換えると walkCalloutBody が
+    // text node を emit しないため content が消失する。変換対象外にして
+    // 元の <blockquote> を残すことで、extractor の通常経路で paragraph 扱いに
+    // フォールバックする。
+    const html = '<blockquote>Warning text</blockquote>';
+    const out = preprocessHtml(html, {
+      slug: 'administration/api-access',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    assert.match(out, /<blockquote>/);
+    assert.doesNotMatch(out, /<div class="callout-note">/);
+  });
 });
 
 describe('extractSegmentsFromHtml emits callout-body after normalization', () => {
