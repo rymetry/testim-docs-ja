@@ -8,9 +8,12 @@ import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 let extractSegmentsFromHtml;
+let preprocessHtml;
+let CALLOUT_NORMALIZATION_SLUGS;
 
 before(async () => {
-  ({ extractSegmentsFromHtml } = await import('../lib/source_parity_segments_en.mjs'));
+  ({ extractSegmentsFromHtml, preprocessHtml, CALLOUT_NORMALIZATION_SLUGS } =
+    await import('../lib/source_parity_segments_en.mjs'));
 });
 
 function byKind(segments, kind) {
@@ -405,5 +408,112 @@ describe('extractSegmentsFromHtml — shape invariants', () => {
   it('handles empty input', () => {
     assert.deepEqual(extractSegmentsFromHtml(''), []);
     assert.deepEqual(extractSegmentsFromHtml('   \n\t  '), []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// preprocessHtml — slug-scoped <blockquote> → callout-note 正規化
+// ---------------------------------------------------------------------------
+
+describe('preprocessHtml callout normalization', () => {
+  it('exports CALLOUT_NORMALIZATION_SLUGS as a frozen Set with administration/api-access', () => {
+    assert.ok(CALLOUT_NORMALIZATION_SLUGS instanceof Set);
+    assert.ok(CALLOUT_NORMALIZATION_SLUGS.has('administration/api-access'));
+    assert.ok(Object.isFrozen(CALLOUT_NORMALIZATION_SLUGS));
+  });
+
+  it('rewrites short warning-like <blockquote> to <div class="callout-note"> for allowed slug', () => {
+    const html =
+      '<blockquote><p><strong>Note</strong>: Keep your API key safe.</p></blockquote>';
+    const out = preprocessHtml(html, {
+      slug: 'administration/api-access',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    assert.match(out, /<div class="callout-note">/);
+    assert.doesNotMatch(out, /<blockquote>/);
+  });
+
+  it('does NOT rewrite when slug is not allowed', () => {
+    const html = '<blockquote><p><strong>Note</strong>: Keep.</p></blockquote>';
+    const out = preprocessHtml(html, {
+      slug: 'editing-tests/steps',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    assert.match(out, /<blockquote>/);
+  });
+
+  it('does NOT rewrite when options omitted (backward compat)', () => {
+    const html = '<blockquote><p><strong>Note</strong>: Keep.</p></blockquote>';
+    const out = preprocessHtml(html);
+    assert.match(out, /<blockquote>/);
+  });
+
+  it('does NOT rewrite long (>3 paragraph) blockquote', () => {
+    const html = [
+      '<blockquote>',
+      '<p>Note: a</p>',
+      '<p>b</p>',
+      '<p>c</p>',
+      '<p>d</p>',
+      '</blockquote>',
+    ].join('');
+    const out = preprocessHtml(html, {
+      slug: 'administration/api-access',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    assert.match(out, /<blockquote>/);
+  });
+
+  it('does NOT rewrite blockquote without warning-like leading token', () => {
+    const html = '<blockquote><p>This is a quotation.</p></blockquote>';
+    const out = preprocessHtml(html, {
+      slug: 'administration/api-access',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    assert.match(out, /<blockquote>/);
+  });
+
+  it('rewrites blockquote starting with Warning (no delimiter) as api-access-style', () => {
+    const html =
+      '<blockquote><p>Warning This action cannot be undone.</p></blockquote>';
+    const out = preprocessHtml(html, {
+      slug: 'administration/api-access',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    assert.match(out, /<div class="callout-note">/);
+    assert.doesNotMatch(out, /<blockquote>/);
+  });
+});
+
+describe('extractSegmentsFromHtml emits callout-body after normalization', () => {
+  it('emits segmentKind=callout-body for allowed slug + warning-like short blockquote', () => {
+    const html =
+      '<h2>Heading</h2><blockquote><p><strong>Warning</strong>: drop zone</p></blockquote>';
+    const segments = extractSegmentsFromHtml(html, {
+      slug: 'administration/api-access',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    const kinds = segments.map((s) => s.segmentKind);
+    assert.ok(kinds.includes('callout-body'));
+    assert.ok(!kinds.includes('paragraph') || kinds.indexOf('callout-body') !== -1);
+  });
+
+  it('does NOT emit callout-body for disallowed slug (stays paragraph fallback)', () => {
+    const html =
+      '<h2>Heading</h2><blockquote><p><strong>Warning</strong>: drop zone</p></blockquote>';
+    const segments = extractSegmentsFromHtml(html, {
+      slug: 'editing-tests/steps',
+      calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+    });
+    const kinds = segments.map((s) => s.segmentKind);
+    assert.ok(!kinds.includes('callout-body'));
+  });
+
+  it('legacy 1-arg call still works (backward compat, no normalization)', () => {
+    const html = '<h2>H</h2><blockquote><p>Warning: x</p></blockquote>';
+    const segments = extractSegmentsFromHtml(html);
+    assert.ok(Array.isArray(segments));
+    const kinds = segments.map((s) => s.segmentKind);
+    assert.ok(!kinds.includes('callout-body'));
   });
 });

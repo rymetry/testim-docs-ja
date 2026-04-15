@@ -28,6 +28,7 @@ import {
   parityDiffsToIssues,
   summarizeParityResults,
 } from './lib/source_parity.mjs';
+import { CALLOUT_NORMALIZATION_SLUGS } from './lib/source_parity_segments_en.mjs';
 import {
   isAdvisoryOnlyParityIssue,
   isValidAcknowledgedIssue,
@@ -455,7 +456,10 @@ export async function checkSourceParity({
         let jaSegments = [];
         let extractError = null;
         try {
-          enSegments = extractSegmentsFromHtml(rawEnHtml);
+          enSegments = extractSegmentsFromHtml(rawEnHtml, {
+            slug: fileSlug,
+            calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
+          });
           jaSegments = extractSegmentsFromMarkdown(doc.body);
         } catch (e) {
           extractError = e;
