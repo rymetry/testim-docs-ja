@@ -443,8 +443,21 @@ function main() {
     try {
       content = readFileSync(filePath, 'utf8');
     } catch {
-      outLines.push(`- **ERROR: file not found: ${filePath}**`);
+      // File 読み込み失敗も unresolved として集計 — 「正しい対象を特定できない」状態は
+      // すべて exit 1 で止める方針に寄せる。該当 slug の全 entry を unresolved に積む。
+      outLines.push(`- **⚠ FILE-NOT-FOUND (UNSAFE):** ${filePath}`);
+      outLines.push('  - 該当 slug の JA md が読めず、どの entry も対象特定不能。');
       outLines.push('');
+      for (const entry of sortedEntries) {
+        unresolvedEntries.push({
+          slug,
+          sectionPath: entry.sectionPath,
+          jaSegmentIndex: entry.jaSegmentIndex,
+          jaSourceFingerprint: entry.jaSourceFingerprint,
+          sectionCalloutCount: 0,
+          reasons: ['file-not-found'],
+        });
+      }
       continue;
     }
     const rawLines = content.split('\n');
@@ -552,7 +565,12 @@ function main() {
   const banner = [];
   if (unresolvedEntries.length > 0) {
     // 失敗原因ごとの内訳
-    const reasonCount = { 'heading-not-found': 0, 'block-not-found': 0, 'index-mismatch': 0 };
+    const reasonCount = {
+      'heading-not-found': 0,
+      'block-not-found': 0,
+      'index-mismatch': 0,
+      'file-not-found': 0,
+    };
     for (const u of unresolvedEntries) {
       for (const r of u.reasons) {
         if (r in reasonCount) reasonCount[r] += 1;
@@ -564,6 +582,7 @@ function main() {
     banner.push(`> - \`heading-not-found\`: ${reasonCount['heading-not-found']} 件 (sectionPath が JA heading と一致せず whole-document fallback)`);
     banner.push(`> - \`block-not-found\`: ${reasonCount['block-not-found']} 件 (section 内に callout が 0 件)`);
     banner.push(`> - \`index-mismatch\`: ${reasonCount['index-mismatch']} 件 (jaSegmentIndex が範囲外で先頭 callout にフォールバック)`);
+    banner.push(`> - \`file-not-found\`: ${reasonCount['file-not-found']} 件 (JA md ファイル自体が読めない)`);
     banner.push('>');
     banner.push('> Round 1 の `administration/api-access` 誤対象化 (preface `:::tip` を `API keys management` section 対象として扱った) と同じ失敗モードです。');
     banner.push('>');
@@ -581,7 +600,7 @@ function main() {
   if (unresolvedEntries.length > 0) {
     process.stderr.write(
       `\n[enumerate v1] UNSAFE: ${unresolvedEntries.length} / ${targets.length} entries could not be resolved ` +
-      `(heading-not-found / block-not-found / index-mismatch は stdout banner 参照). ` +
+      `(reasons: heading-not-found / block-not-found / index-mismatch / file-not-found — 内訳は stdout banner 参照). ` +
       `Exiting with status 1. Use enumerate v2 (see plan).\n`,
     );
     process.exit(1);

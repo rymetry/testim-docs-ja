@@ -39,13 +39,20 @@
 
 **Entry-level DoD (グローバル):**
 
-- 対象 callout-body entry (17 件) がすべて baseline から純減している
+Phase 3 は「削除できるものだけ純減し、source-first 契約上削除できないものは別 backlog に明文化する」で完了条件を満たす。17 件全件純減は要求しない。
+
+- 17 callout-body entries 各々が、以下のいずれか 1 つに分類されて処理されている:
+  - **分類 1 / 2 / 3 で content 側を修正**: baseline から純減 (content 編集 + 次 baseline 再生成で消える)
+  - **「保留」で content を touch しない**: baseline には残す。**かつ** `docs/superpowers/specs/2026-04-14-parity-phase3-holds.md` (Round 2 で新設) に slug / sectionPath / jaSegmentIndex / jaSourceFingerprint / 保留理由 (`enHasCallout=true` 等) / 次 phase 受け皿 (例: `parity-turndown callout mapping 修正 phase`) を記録
+- 17 件の内訳が `content 修正 (分類 1+2+3) 合計 + 保留合計 = 17` で一致している
+- **「保留」枠は Round 2 で初めて明示される**ので、plan の固定数を埋めない。ただし Round 2 完了時に合計で 17 になることは DoD に含まれる
 - 他 issueType (segment-untranslated / segment-missing / section-structure-mismatch / segment-extra の非 callout-body / segment-token-gap / segment-inconclusive / segment-order-mismatch) のカウントが Phase 2 Round 2 終了時点 (1873) から純増していない
 - `npm run check:parity --fail-on=actionable` が exit 0
 - `npm run lint:docs` が 0 error / 0 warning
 - `npm run test` が pass
 - `npm run build` が success
-- `parity-baseline.json` が再生成され、差分が意図通り
+- `parity-baseline.json` が再生成され、差分が意図通り (content 修正した entry のみ純減、保留 entry は残存)
+- 保留 list (`phase3-holds.md`) が PR に含まれ、各 entry の次 phase 受け皿 が明記されている
 
 **重要な方針 (codex review 2026-04-15 反映):**
 
@@ -75,6 +82,7 @@
   - `heading-not-found` (v1 から継承): sectionPath の leaf heading が JA md 内にマッチしない
   - `block-not-found`: section 特定できたが内部に callout が 0 件
   - `index-mismatch`: jaSegmentIndex が section 内 callout 数を超過
+  - `file-not-found`: JA md ファイル自体が読めない (該当 slug の全 entry を unresolved 扱い)
   - `fingerprint-mismatch`: 要件 2 の resolver (fingerprint-exact または substring-fallback) で対象を一意に確定できない
   - `enhascallout-unknown`: EN snapshot の存在確認 or grep に失敗
 - **要件 5:** baseline.entries から `issueType === 'segment-extra' && segmentKind === 'callout-body'` を抽出し、各 entry について `slug` / `sectionPath` / `jaSegmentIndex` / `jaSourceFingerprint` / `resolver` (`fingerprint-exact` または `substring-fallback`) / 行番号 / callout type / body preview / 2 行 context / `enHasCallout` を出力
@@ -201,8 +209,32 @@ git add src/content/docs/<slug>.md
 git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>)"
 ```
 
+- [ ] **Step 5: 保留 list (`phase3-holds.md`) への記録**
+
+enumerate v2 の `enHasCallout=true` entry または 分類判断で「保留」となった entry は content を touch せず、以下の書式で `docs/superpowers/specs/2026-04-14-parity-phase3-holds.md` に追記する:
+
+```markdown
+# Phase 3 保留 entries (次 phase 受け皿)
+
+| slug | sectionPath | jaSegmentIndex | jaSourceFingerprint | 理由 | 次 phase 受け皿 |
+| --- | --- | ---: | --- | --- | --- |
+| advanced-editing/auto-grouping2 | Reviewing auto-grouping suggestion | 0 | sha256:... | enHasCallout=true (EN 側に `<div class="note">`) | parity-turndown callout mapping 修正 phase |
+| ... | ... | ... | ... | ... | ... |
+```
+
+全 slug 処理後に 1 回 commit:
+
+```bash
+git add docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
+git commit -m "docs: Phase 3 保留 entries の backlog 記録"
+```
+
+**DoD:** `(Task 3.2 Step 4 で commit した content 修正数) + (phase3-holds.md の行数) = 17` が成り立つこと。
+
 **Task 3.2 per-slug DoD:**
-- 該当 slug の `segment-extra` かつ `segmentKind='callout-body'` が 0 件
+- 該当 slug の **content 修正対象 entry** (分類 1 / 2 / 3 に分類されたもの) が baseline 上で純減している
+- 該当 slug の **保留 entry** (`enHasCallout=true` 等で content touch 不可と判断されたもの) は baseline に残して OK。ただし `phase3-holds.md` に当該 entry の slug / sectionPath / jaSegmentIndex / jaSourceFingerprint / 保留理由 / 次 phase 受け皿 を記録済み
+- 該当 slug 内で (content 修正済み entry の数) + (保留 entry の数) = (enumerate v2 が該当 slug で出力した entry の総数) が成り立つ
 - 他 issueType の純増なし
 - 画像 / 表 / 他 callout / `<details>` が触られていない
 - UI label / 製品名 / URL / path が英語維持
@@ -321,9 +353,10 @@ git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>)
 - [ ] **Step 4: Entry-level 差分確認**
 
   Phase 2 Round 2 終了時点 (`total=1873`) との差分:
-  - `segment-extra` の callout-body 相当分が純減 (目安 -17 前後)
+  - `segment-extra` の callout-body 相当分の純減数 = content 修正対象 entry 数 (分類 1+2+3 の合計)
+  - **保留 entry 数 = 17 − 純減数** が baseline に残っていて OK (ただし `phase3-holds.md` に記録済み)
   - 他 issueType で純増がない
-  - 全体 total が純減
+  - 全体 total は `純減数` 分だけ減少 (glossary 追加の副次効果は別途明記)
 
 - [ ] **Step 5: PR 作成**
 
@@ -354,7 +387,8 @@ EOF
 
 **Task 3.4 DoD:**
 - すべての gate が green
-- baseline 再生成で Phase 3 対象 entry が純減、他 issueType 純増なし
+- baseline 再生成で content 修正対象 entry (分類 1+2+3) が純減、他 issueType 純増なし
+- 保留 entry (17 − 純減数) が `phase3-holds.md` に記録されており、baseline 上にも残っている (両者の件数が一致)
 - PR 作成済み
 
 ---
