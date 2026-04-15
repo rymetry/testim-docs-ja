@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development with careful quality gate. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `segment-extra` かつ `segmentKind = callout-body` の 29 件 (20 slug) — JA が読者のために独自追加した callout を削除する。翻訳ニュアンスが重要な callout は「情報を本文に統合 + callout 削除」で構造契約を守りながら情報保存する。
+**Goal:** `segment-extra` かつ `segmentKind = callout-body` の 17 件 (13 slug、Phase 2 Round 2 post-review baseline 1873 基準) — JA が読者のために独自追加した callout を削除する。翻訳ニュアンスが重要な callout は「情報を本文に統合 + callout 削除」で構造契約を守りながら情報保存する。
 
 **Architecture:** 1-2 PR。並列エージェント委任可能だが、**単純削除ではなく情報保存を伴う判断が必要**なため、個別レビュー必須。
 
@@ -10,8 +10,23 @@
 
 **Prerequisite:** Phase 2 がマージ済み、baseline が最新の状態。
 
+**Current target slugs (post-review baseline):**
+- `administration/api-access` (1)
+- `administration/secrets` (3)
+- `advanced-editing/auto-grouping2` (1)
+- `advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor` (1)
+- `advanced-editing/extract-text` (1)
+- `advanced-editing/validations/wait-for-element-visualization` (1)
+- `editing-tests/conditions/advanced-conditions-settings` (1)
+- `getting-started/creating-your-first-mobile-test-in-testim-visual-editor` (1)
+- `integrations/test-management-integrations/xray-integration` (1)
+- `overview/testim-overview` (1)
+- `recording-tests/recording-a-mobile-test` (1)
+- `recording-tests/recording-a-mobile-test/recording-a-vmg-mobile-test` (3)
+- `salesforce-testing/salesforce-steps/sfdc-step-salesforce-flows` (1)
+
 **File ownership map:**
-- `src/content/docs/**/*.md` — 20 slug
+- `src/content/docs/**/*.md` — 13 slug (上記)
 - `scripts/phase3/enumerate_ja_only_callouts.mjs` — 対象 enumerate (新規)
 - `docs/superpowers/specs/2026-04-14-parity-phase3-report.md` — 完了レポート (新規)
 - `docs/GLOSSARY.md` — `TTM for Jira` 追加 (Phase 2 Round 2 から繰越、下記 Task 3.6 参照)
@@ -172,7 +187,7 @@ git commit -m "chore: Phase 3 完了後の baseline 再生成"
 
 ```bash
 git push -u origin worktree-phase3-ja-only
-gh pr create --title "fix: Phase 3 JA 独自 callout の削除 (29 entries, 20 slug)" --body "## Summary
+gh pr create --title "fix: Phase 3 JA 独自 callout の削除 (17 entries, 13 slug)" --body "## Summary
 
 EN 原文にない JA 独自の callout を 3 分類 (純粋削除 / callout 解除 / 本文統合) に従って整理しました。
 
@@ -247,7 +262,7 @@ extras が新規発生した。
 
 | 種別 | Phase 2 後 | Phase 3 後 | 差 |
 | --- | --- | --- | --- |
-| segment-extra (callout-body) | 29 | (実測) | (実測) |
+| segment-extra (callout-body) | 17 | (実測) | (実測) |
 | segment-extra total | ??? | (実測) | (実測) |
 
 ## 分類別修正件数
