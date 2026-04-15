@@ -18,7 +18,9 @@ keywords:
   - Testim
 ---
 
+:::note{title="PRO機能"}
 Professional plan で利用可能です。詳細は[こちら](https://www.testim.io/automation-testing-pricing/)をご覧ください。
+:::
 
 :::note
 自動グルーピングは master ブランチでのみ動作します。他のブランチでは使用できません。自動グルーピングの状態は毎週末に更新されます。

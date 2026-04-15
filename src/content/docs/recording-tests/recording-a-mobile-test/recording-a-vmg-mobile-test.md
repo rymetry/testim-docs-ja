@@ -33,7 +33,9 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 
 - **モバイルテストプロジェクト** - モバイルテストには、Web テストプロジェクトとは別のモバイルテストプロジェクトが必要です。既存のモバイルプロジェクトがない場合は、Tricentis サポートにお問い合わせください。
 
+:::warning{title="注意"}
 各プロジェクトは単一のモバイルオペレーティングシステムに割り当てられます。異なるオペレーティングシステムでテストを作成/実行するには、別のプロジェクトが必要です。例えば、プロジェクトが Android 用に作成された場合、iOS デバイス用のテストを作成することはできません。
+:::
 
 - **Virtual Mobile Grid** - Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。詳細については、[Virtual Mobile Grid](/docs/integrations/grid-management/virtual-mobile-grid) を参照してください。
 
@@ -53,9 +55,11 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 
 モバイルデバイスでテストを記録して、後で手動または自動で実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
 
+:::info
 **仮想/物理デバイスでの記録**
 
 Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバイスで記録されたテストは、仮想デバイスでのみ実行できます。物理デバイスで記録されたテストは、物理デバイスでのみ実行できます。
+:::
 
 **モバイルテストを記録するには:**
 
@@ -128,9 +132,11 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 
 12. **Save** をクリックしてテストを保存します。
 
+:::warning
 **自動リカバリ**
 
 新しいテストを作成したり、既存のテストに変更を加えたりする場合は、必ずテストを保存してください。しかし、心配しないでください。テストを保存する前にブラウザを閉じても、ブラウザのキャッシュに保存されるため、作業を再開できるはずです。詳細については、[Recovering a test that was not saved](/docs/editing-tests/recovering-a-test-that-was-not-saved) を参照してください。
+:::
 
 13. 追加のテスト構成設定を構成する場合は、[Setting the Test Configuration](/docs/recording-tests/recording-a-mobile-test/setting-the-test-configuration) を参照してください。
 

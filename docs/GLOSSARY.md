@@ -23,7 +23,6 @@
 | Testim Grid | |
 | Tricentis | |
 | Tricentis Testim | |
-| TTM for Jira | Tricentis Test Management for Jira |
 | qTest | Tricentis のテスト管理プラットフォーム |
 | qTest Manager | qTest のテスト管理コンポーネント |
 | qTest Insights | qTest のインサイトコンポーネント |
