@@ -202,11 +202,13 @@ node -e "const fs=require('node:fs');const b=JSON.parse(fs.readFileSync('./parit
 - 対象 callout-body entry が該当 slug から消えている
 - 他 issueType の count が該当 slug で増えていない
 
-- [ ] **Step 4: 逐次 commit**
+- [ ] **Step 4: slug 単位で逐次 commit**
+
+(commit 数は DoD に使わない。DoD は **entry 数** で集計する。1 slug に複数 entry がある場合 — 例: `administration/secrets` 3 entries — は 1 commit で済むが、entry 数としては 3 計上する。)
 
 ```bash
 git add src/content/docs/<slug>.md
-git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>)"
+git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>, N entry)"
 ```
 
 - [ ] **Step 5: 保留 list (`phase3-holds.md`) への記録**
@@ -229,7 +231,14 @@ git add docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
 git commit -m "docs: Phase 3 保留 entries の backlog 記録"
 ```
 
-**DoD:** `(Task 3.2 Step 4 で commit した content 修正数) + (phase3-holds.md の行数) = 17` が成り立つこと。
+**DoD:** `(分類 1 / 2 / 3 で content 修正した entry 数) + (phase3-holds.md に記録した保留 entry 数) = 17` が成り立つこと。
+
+補助表を report または `phase3-holds.md` に持たせ、少なくとも以下を集計する:
+- 分類 1 件数
+- 分類 2 件数
+- 分類 3 件数
+- 保留件数
+- 合計 17 件
 
 **Task 3.2 per-slug DoD:**
 - 該当 slug の **content 修正対象 entry** (分類 1 / 2 / 3 に分類されたもの) が baseline 上で純減している
@@ -366,12 +375,14 @@ git commit -m "docs: Phase 3 保留 entries の backlog 記録"
 ## Summary
 
 - EN 原文にない JA 独自の callout を 3 分類 (純粋削除 / callout 解除 / 本文統合) に従って整理
-- `administration/api-access` の `:::danger` は UX 保護のため分類 3 (本文統合) を適用
+- `enHasCallout=true` で content 修正対象にできない entry は hold として切り出し、次 phase の backlog (`phase3-holds.md`) に記録
+- `administration/api-access` は enumerate v2 の fingerprint match と EN snapshot 確認に基づいて分類を決定
 - `TTM for Jira` glossary 追加 + `ttm-for-jira-integration` alignment 修正 (Phase 2 Round 2 繰越)
-- baseline 再生成 (Phase 2 Round 2 → Phase 3 完了)
+- baseline 再生成 (content 修正した entry のみ純減、hold entry は残存)
 
 Plan: docs/superpowers/plans/2026-04-14-parity-phase3-ja-only-removal.md
 Report: docs/superpowers/specs/2026-04-14-parity-phase3-report.md
+Holds: docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
 
 ## Test plan
 
@@ -379,8 +390,10 @@ Report: docs/superpowers/specs/2026-04-14-parity-phase3-report.md
 - [ ] npm run lint:docs 0 error / 0 warning
 - [ ] npm run test pass
 - [ ] npm run build success
-- [ ] baseline の callout-body entry 純減を確認
-- [ ] <details> / 画像 / 他 callout / 製品名が触られていない
+- [ ] callout-body entry の純減数 = content 修正 entry 数
+- [ ] hold entry 数 = phase3-holds.md 記録数 = baseline 残存数
+- [ ] 他 issueType の純増なし
+- [ ] details / 画像 / 他 callout / 製品名が触られていない
 EOF
 )"
   ```
@@ -421,11 +434,26 @@ EOF
 | segment-order-mismatch | 1 | (実測) | (実測) |
 | **total** | **1873** | (実測) | (実測) |
 
-## 分類別修正件数
+## 分類別処理件数
 
 - 分類 1 (純粋削除): ??? 件
 - 分類 2 (callout 解除): ??? 件
-- 分類 3 (本文統合): ??? 件 (うち `administration/api-access` は UX 保護のため必須適用)
+- 分類 3 (本文統合): ??? 件
+- 保留 (content 非修正): ??? 件
+- 合計: 17 件
+
+## Hold entries
+
+| slug | sectionPath | jaSegmentIndex | jaSourceFingerprint | 理由 | 次 phase 受け皿 |
+| --- | --- | ---: | --- | --- | --- |
+| ... | ... | ... | ... | enHasCallout=true / parity limitation | parity-turndown callout mapping 修正 phase |
+
+## api-access judgment
+
+- enumerate v2 の fingerprint match 結果: (preface `:::tip` / `API keys management` `:::danger` / その他)
+- EN snapshot 側の block 種別: (callout / plain paragraph)
+- 最終判断: 分類 1 / 分類 2 / 分類 3 / 保留
+- 理由: (Round 2 で記入)
 
 ## Task 3.6 TTM for Jira
 
@@ -436,6 +464,7 @@ EOF
 
 - 残 baseline (全種類合計): ??? 件
 - Phase 4 対象 (inconclusive, order-mismatch): ??? 件
+- Phase 3 hold 経由で parity-turndown mapping 修正 phase に送る entries: ??? 件
 - schema 簡素化の対象フィールド棚卸し済み
 ```
 
