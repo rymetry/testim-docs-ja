@@ -117,15 +117,57 @@ Phase 0 (契約整備 + baseline 再生成) ───┐
 - Phase 2.1 / 2.2 / 2.3 は相互独立 → 3 並列可能
 - Phase 3 は Phase 2.2 (segment-missing) と間接依存 (同じ slug で両方発生するケースあり) — 同じ slug に触る場合は順次、そうでなければ並列可
 
-## 5. 完了判定基準
+## 5. 完了判定基準 (Final DoD — 5 counter 0)
 
-Phase 1-4 全体の完了条件:
+Phase 1-4 全体の完了条件は、以下 **5 つの counter がすべて 0** であること。測定は JSON artifact (`parity-baseline.json` / `parity-check-status.json` / `snapshot-diff-status.json`) に対する機械的判定で行う。詳細と runtime 検出 3 枠 (actionable-baseline / parity-artifact-registry / advisory-residual) の責務分離は `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` を参照。
 
-- `parity-baseline.json` の entries が 10-20 件以下（`segment-inconclusive` 残を想定）
-- `segment-extra` / `segment-missing` / `section-structure-mismatch` / `segment-untranslated` / `segment-token-gap` / `segment-order-mismatch` がすべて 0 件
-- `parity-baseline.json` schema から allowlist 系フィールドが削除され、`source_parity_baseline.mjs` が bug backlog 前提にリファクタ済み
-- `npm run test`、`npm run lint`、`npm run build`、`npm run check:parity` が全て通る
-- 運用ドキュメント (`docs/OPS_DESIGN.md`、`docs/PARITY_GUIDE.md`) が burn-down 完了後の定常運用 (バグ検知 ≡ 失敗 gate) を反映している
+### baseline
+
+```
+parity-baseline.json.entries.length === 0
+parity-baseline.json.schemaVersion  === 2
+```
+
+### parity-check-status.json (summary counters)
+
+```
+summary.reportableActiveFiles === 0
+summary.baselinedIssues       === 0
+summary.advisoryQueueIssues   === 0
+summary.auditSignalIssues     === 0
+debug.artifactCoverage exists with keys { registryEntries, matchedHits, bySlug, byToken }
+```
+
+### snapshot-diff-status.json
+
+```
+summary.changed === 0 && summary.added === 0 && summary.removed === 0
+```
+
+### schema / runtime invariants
+
+```
+BASELINE_ELIGIBLE_TYPES ⊆ { segment-missing, segment-extra, segment-shifted,
+                             segment-untranslated, segment-token-gap,
+                             section-structure-mismatch, segment-order-mismatch }
+(reviewAfter は baseline schema / runtime tagging / summary / queue どこにも存在しない)
+(baselineReviewAfter / baselineExpired は issue / queue / issue_state どこにも存在しない)
+(inconclusiveReason は runtime issue 側にのみ存在。baseline entry schema には存在しない)
+isFrozenByBaseline(issue) ≡ issue.baselined === true
+alignSegments は必ず { slug } option 付きで呼ばれる (grep 検証)
+```
+
+### gates
+
+```
+npm run test && npm run lint && npm run build が green
+npm run check:parity && npm run check:snapshots:diff が green
+```
+
+### 運用ドキュメント
+
+- `docs/OPS_DESIGN.md` / `docs/PARITY_GUIDE.md` が burn-down 完了後の定常運用 (バグ検知 ≡ 失敗 gate) を反映している
+- `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` が 5 counter 0 DoD の根拠・測定方法・runtime 検出 3 枠・`debug.artifactCoverage` 契約・callout-normalization の single source of truth を記述している
 
 ## 6. リスク・緩和
 
