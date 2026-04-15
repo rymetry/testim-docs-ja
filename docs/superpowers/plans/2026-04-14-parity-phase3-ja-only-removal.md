@@ -110,11 +110,25 @@ git commit -m "chore: Phase 3 JA 独自 callout 候補列挙スクリプト"
 
 **Context:** 各 slug の JA callout を EN snapshot と照合し、以下の 3 つに分類:
 
-1. **純粋な JA 独自 callout** (EN に対応する情報が本文にもない) → 削除
-2. **EN 本文にある情報を JA で callout 化** → callout を解除して本文に戻す (構造を EN に合わせる)
+1. **純粋な JA 独自 callout** (EN に対応する情報が本文にも callout にもない) → 削除
+2. **EN 本文に plain paragraph / list として同内容がある (EN 側が `<div class="note">` 等の callout ではない)** → callout を解除して本文に戻す (構造を EN に合わせる)
 3. **情報保存が必須** (読者への重要注記) → 本文に段落として統合、callout は削除
 
-**api-access 特別扱い:** `administration/api-access` の `:::danger` (API キー削除警告) は Phase 2 Round 1 で UX 優先の intentional divergence として保持した経緯がある。Phase 3 では**分類 3 を必ず適用** し、警告本文を bold 段落または強調句として本文に残す。警告情報自体を消さない。
+**[2026-04-15 Round 1 revert 反映] 分類2 適用の前提:**
+
+- 対象 slug の `snapshots/en/content/<slug>.html` を grep して `<div class="note">` / `<div class="caution">` / `<div class="warning">` / `<div class="tip">` / `<div class="info">` / `<div class="danger">` の**数と位置**を確認
+- **EN 側に同一内容の callout div がある場合、分類2 は使えない** (source-first 契約上、両側とも callout で構造一致させるべき)。その場合の選択肢:
+  - (a) **分類「保留」**: parity turndown が EN callout を plain paragraph として扱う既知 limitation 由来の mismatch なので、Phase 3 content 修正ではなく parity 側の `parity_turndown.mjs` 修正で解消する (別 phase)
+  - (b) **JA callout type を EN と揃える** (例: JA `:::tip` → EN `:::note` 相当なら `:::note` に変換、ただし読者体験は劣化する)
+- 真の 分類1 / 分類2 は「EN 側にこの位置の callout div が**ない**」ケースのみ
+
+**[2026-04-15 Round 1 revert 反映] api-access 特別扱い:**
+
+- Phase 2 Round 1 で UX 保護された `:::danger` (API キー削除警告) は `API キーの管理` (= `API keys management`) section の L71 付近にある
+- baseline entry は `sectionPath=API keys management, jaSegmentIndex=0` だが、jaSourceFingerprint を突き合わせると**実際の対象は preface の `:::tip` (Swagger link)** だった (Round 1 実装時の誤対象) — つまり baseline 登録の callout と Phase 2 で UX 保護宣言した callout は**別物**。対応:
+  1. まず baseline の `jaSourceFingerprint` → JA md の body を fingerprint match する enumerate スクリプト修正が必要
+  2. 対象 callout が preface の `:::tip` と確定したら、EN snapshot 側の該当 div を調べて 分類を決定 (EN 側が plain paragraph なら 分類2、callout div なら 保留)
+  3. L71 の `:::danger` は独立した UX 保護対象として plan の special case 記述を分離する
 
 - [ ] **Step 1: 作業優先順 (entry 密度順)**
 
@@ -391,3 +405,35 @@ EOF
   5. Task 3.4 (baseline 再生成 + gate + PR) — controller
   6. Task 3.5 (report) — controller
 - 判断を伴う修正は codex review を挟むのが推奨。baseline 更新は Task 3.4 で 1 回だけ。
+
+---
+
+## Round 1 Post-mortem (2026-04-15)
+
+Round 1 実装 (PR #269 初版) は 13 slug / 17 callout すべてを revert した。
+
+### 何が起きたか
+
+1. **Group A (4 slug / 8 entries) + Group B (9 slug / 9 entries) すべてで誤分類**: subagent は EN snapshot に `<div class="note">` / `<div class="caution">` / `<div class="warning">` 等の callout div がある箇所でも 分類2 を適用し、JA 側 callout marker (`:::note` / `:::warning` / `:::info` / `:::tip` 等) を全削除。EN 側が callout なのに JA を plain paragraph に落としたため、source-first 構造契約違反。
+2. **api-access の対象誤り**: enumerate スクリプトは JA heading (`## API キーの管理（API keys management）`) を EN sectionPath (`API keys management`) と match できず whole-doc fallback し、preface の `:::tip` を jaSegmentIndex=0 として出力。plan に書いた UX 保護対象 `:::danger` ではなく、無関係の `:::tip` を改変する結果になった。
+3. **baseline 純増**: 再生成後 `segment-missing +10` / `segment-extra(total) +10` / `section-structure-mismatch +5` / `segment-token-gap +1` / `segment-order-mismatch +1`。updated plan の「対象 callout-body 17 件純減 + 他 issueType 純増なし」DoD 未達。`--fail-on=actionable` は pass しても完了条件としては不十分。
+
+### 根本原因
+
+- 分類2 の定義が曖昧 ("EN 本文にある情報を JA で callout 化" は EN 側の block 種別を規定していなかった)
+- subagent への検証指示が「EN section に同内容がある」レベルで止まっており、「EN 側の block 種別 = paragraph / list / callout」の区別を要求していなかった
+- enumerate スクリプトの JA heading resolver が EN 併記 heading (`日本語（English）`) パターンに対応せず、fingerprint match fallback も未実装
+
+### 次 round 以降で必須の作業
+
+1. **enumerate v2**: `jaSourceFingerprint` → JA md の body を fingerprint match (現在の heading text match だけでなく)。`日本語（English）` パターンは heading の括弧内英語を副キーとして拾う
+2. **Pre-flight verification**: 各 entry で `snapshots/en/content/<slug>.html` の該当 section に callout div があるか grep → 結果を enumerate 出力に `enHasCallout: bool` として付与
+3. **分類2 ガード**: `enHasCallout=true` の entry は分類2 適用禁止。分類「保留」(parity turndown 側の修正 phase に送り) に設定
+4. **per-slug DoD の強化**: 個別 parity 差分を before/after で取り、他 issueType が純増した slug は即座に revert
+5. **api-access 対象の再確定**: baseline の `administration/api-access | API keys management | jaSegmentIndex=0` が指す fingerprint を JA md の body と照合して正確な対象 callout を特定
+
+### 現在の state
+
+- revert 完了 (`git log main..HEAD` で `revert: Phase 3 Task 3.2 + 3.6 + ...` 単一 commit)
+- `parity-baseline.json` は Phase 2 Round 2 end (1873 entries / 17 callout-body extras) に戻った
+- 保持した成果物: この plan 自身の codex review 反映部分 (commit 1e9f454) + enumerate スクリプト v1 (commit 17006a0、次 round で v2 に更新予定)
