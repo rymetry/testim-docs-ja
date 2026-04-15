@@ -50,7 +50,7 @@
 **重要な方針 (codex review 2026-04-15 反映):**
 
 - **per-slug parity check だけでは DoD を判定できない**。ほとんどの slug に callout-body 以外の active issue も残っているため、`npm run check:parity -- --slug=<slug>` は「該当 slug の callout-body entry が 0」を確認する補助手段であり、entry 単位の差分を baseline comparison で検証する。
-- **`administration/api-access` の `:::danger` は Phase 2 で UX 優先の intentional divergence として保持された経緯がある** (`docs/superpowers/specs/2026-04-14-parity-phase2-report.md#L169`)。Phase 3 ではこの方針を部分的に改め、**分類 3 (本文統合) を必ず適用** して警告情報を bold paragraph などで本文に残しつつ callout 構造だけ解除する。UX を毀損しない範囲で parity 構造契約に寄せる。
+- **`administration/api-access` は対象 callout 未確定** (`docs/superpowers/specs/2026-04-14-parity-phase2-report.md#L169` で UX 保護宣言された `:::danger` と、baseline entry が指す callout が同一かは不明)。Round 1 で enumerate v1 が heading resolver 失敗により preface `:::tip` を誤対象化した経緯があるため、**plan では分類を固定しない**。Round 2 で enumerate v2 の fingerprint match により対象を確定し、`enHasCallout` 判定を踏まえて Task 3.3 codex review で分類を決定する。
 - **Task 3.6 (TTM for Jira) は Task 3.4 (baseline 再生成 + PR) より前に実施する**。Task 3.6 自体が glossary mask の影響を全 slug に広げるため、Task 3.4 の baseline 再生成は Task 3.6 完了後に 1 回だけ行う。
 
 ---
@@ -60,46 +60,48 @@
 **Files:**
 - Create: `scripts/phase3/enumerate_ja_only_callouts.mjs`
 
-- [ ] **Step 1: enumerate スクリプト作成 (決定的出力)**
+> ⚠ **v1 (commit 17006a0 + post-mortem 反映) は Round 2 の編集対象確定には使えない。** Round 2 着手前に v2 へ更新必須。
+>
+> v1 の失敗モード: `sectionPath` の leaf heading が JA md 内に一致しない (例: `## API キーの管理（API keys management）` の日本語（English）併記パターンに対応していない) と whole-document fallback し、別 section の callout を誤対象化する。現 baseline では **17 entries 中 14 entries が fallback に該当**。v1 は unresolved entry を検出した時点で banner 警告を出力し exit 1 する状態に既に改修済み (commit TBD)。Round 2 は下記 v2 要件で作り直してから進める。
 
-要件:
-- baseline.entries から `issueType === 'segment-extra' && segmentKind === 'callout-body'` を抽出
-- entry ごとに以下を出力:
-  - `slug`
-  - `sectionPath`
-  - `jaSegmentIndex`
-  - `jaSourceFingerprint`
-  - JA md ファイルで該当 callout の**行番号** (callout ブロックの `:::type` 開始行と `:::` 終了行)
-  - callout の **type** (`note` / `warning` / `caution` / `tip` / `info` / `danger`)
-  - callout 本文の**全文 preview** (行制限しない。ただし 400 文字で clip)
-  - 直前 2 行 / 直後 2 行の本文 (context; source の sectionPath 位置推定用)
-- `sectionPath` を使って md 上の該当 section を search し、section 内の callout だけを対象にする
-- section 内に callout が複数ある場合は `jaSegmentIndex` の index 順で番号を振る
-- `administration/api-access` entry には「**UX 保護のため分類 3 必須**」のマーカーを付与
+### v2 要件 (Round 2 必須)
 
-実装方針:
-- callout ブロックの検出は `lines` 配列を先頭から走査し、`/^:::(note|warning|caution|tip|info|danger)\b/` で開始行を検出、`/^:::\s*$/` で終了行を検出する。`String.matchAll` か `RegExp#test` を使い、`RegExp#exec` は使わない (security hook 回避)。
-- section 範囲の検出は、`sectionPath` の leaf heading を同等以上の heading が現れるまでの範囲として取り出す。
+- **要件 1:** `日本語（English）` heading pattern の解決。leaf heading が JA md 内にマッチしない場合、括弧内の英語部分 (`（...）` の中身) と、ハイフン / 空白 / 大文字小文字 を許容する fuzzy match で再試行する
+- **要件 2:** `jaSourceFingerprint` による本照合。`jaSourceFingerprint` は parity が computing する body hash なので、アルゴリズムを replicate できない場合は次善として JA md 内の callout body text を抽出 → 部分文字列マッチで対象確定する
+- **要件 3:** `enHasCallout: bool` フィールドを各 entry に付与。対応する EN snapshot ファイルで該当 sectionPath 周辺に `<div class="note">` / `<div class="caution">` / `<div class="warning">` / `<div class="tip">` / `<div class="info">` / `<div class="danger">` のいずれかが存在するか grep で判定
+- **要件 4:** unresolved entry (sectionPath match 失敗 / fingerprint 照合失敗) を検出した場合、banner 警告 + exit 1。silent fallback 禁止
+- **要件 5:** baseline.entries から `issueType === 'segment-extra' && segmentKind === 'callout-body'` を抽出し、各 entry について `slug` / `sectionPath` / `jaSegmentIndex` / `jaSourceFingerprint` / 行番号 / callout type / body preview / 2 行 context / `enHasCallout` を出力
 
-- [ ] **Step 2: enumerate 実行**
+実装ルール (v2):
+- `RegExp#exec` は使わない (PreToolUse hook 回避)。`String.matchAll` / `RegExp#test` のみ使用
+- UX_CARRYOVER マーカー (slug レベル) は「Phase 2 UX 保護 callout が別にあるかもしれない」情報のみで、**classification (分類1/2/3) を固定しない**。対象が fingerprint で確定してから分類を決める
 
-```bash
-node scripts/phase3/enumerate_ja_only_callouts.mjs > /tmp/phase3-targets.md
-wc -l /tmp/phase3-targets.md
-head -80 /tmp/phase3-targets.md
-```
+### 実行ステップ (Round 2)
+
+- [ ] **Step 1: v2 スクリプト実装** (`scripts/phase3/enumerate_ja_only_callouts.mjs` を上書き or `enumerate_ja_only_callouts_v2.mjs` として新設)
+- [ ] **Step 2: v2 実行**
+
+  ```bash
+  node scripts/phase3/enumerate_ja_only_callouts.mjs > phase3-targets.md
+  ```
+
+  (`/tmp/` はセッションによっては PreToolUse hook で blocked なので worktree 内に保存)
+
+  exit 0 であり、かつ unresolved entries 数 = 0、かつ `enHasCallout=true` 判定の entry は分類2 適用禁止フラグで区別されていること
 
 - [ ] **Step 3: commit**
 
-```bash
-git add scripts/phase3/enumerate_ja_only_callouts.mjs
-git commit -m "chore: Phase 3 JA 独自 callout 候補列挙スクリプト"
-```
+  ```bash
+  git add scripts/phase3/enumerate_ja_only_callouts.mjs
+  git commit -m "chore: Phase 3 enumerate v2 (jaSourceFingerprint + 日本語（English） heading 解決 + enHasCallout)"
+  ```
 
-**Task 3.1 DoD:**
-- `scripts/phase3/enumerate_ja_only_callouts.mjs` が exit 0 で 17 entry すべてを出力
-- 各 entry に行番号、callout type、body preview、context が出ている
-- `administration/api-access` entry に `[UX-PROTECTED: 分類3必須]` マーカーが付いている
+**Task 3.1 DoD (v2):**
+
+- enumerate v2 が exit 0 で 17 entry すべての対象 callout を **fingerprint 照合で確定** して出力している
+- 各 entry に行番号、callout type、body preview、context、`enHasCallout` フィールド
+- unresolved entry は 0 (heading-not-found fallback は発生しない、または発生時は exit 1)
+- UX_CARRYOVER マーカーがある slug では分類を plan 上で固定しておらず、Task 3.2 で対象 fingerprint 確定後に分類判断することになっている
 
 ---
 
@@ -122,13 +124,15 @@ git commit -m "chore: Phase 3 JA 独自 callout 候補列挙スクリプト"
   - (b) **JA callout type を EN と揃える** (例: JA `:::tip` → EN `:::note` 相当なら `:::note` に変換、ただし読者体験は劣化する)
 - 真の 分類1 / 分類2 は「EN 側にこの位置の callout div が**ない**」ケースのみ
 
-**[2026-04-15 Round 1 revert 反映] api-access 特別扱い:**
+**[2026-04-15 Round 1 revert 反映] api-access の取り扱い — 対象未確定、分類固定しない:**
 
-- Phase 2 Round 1 で UX 保護された `:::danger` (API キー削除警告) は `API キーの管理` (= `API keys management`) section の L71 付近にある
-- baseline entry は `sectionPath=API keys management, jaSegmentIndex=0` だが、jaSourceFingerprint を突き合わせると**実際の対象は preface の `:::tip` (Swagger link)** だった (Round 1 実装時の誤対象) — つまり baseline 登録の callout と Phase 2 で UX 保護宣言した callout は**別物**。対応:
-  1. まず baseline の `jaSourceFingerprint` → JA md の body を fingerprint match する enumerate スクリプト修正が必要
-  2. 対象 callout が preface の `:::tip` と確定したら、EN snapshot 側の該当 div を調べて 分類を決定 (EN 側が plain paragraph なら 分類2、callout div なら 保留)
-  3. L71 の `:::danger` は独立した UX 保護対象として plan の special case 記述を分離する
+- baseline entry は `administration/api-access | sectionPath=API keys management | jaSegmentIndex=0`
+- Round 1 の enumerate v1 は JA heading を解決できず whole-document fallback で preface の `:::tip` (Swagger link) を対象として扱ったが、これが正しい対象かは未確定
+- Phase 2 Round 1 で UX 保護宣言した callout は `API キーの管理` section 内の `:::danger` (API キー削除警告、L71 付近) の可能性があり、baseline entry 対象と**別物**の可能性がある
+- **対応:** Round 2 では enumerate v2 の `jaSourceFingerprint` 照合で対象 callout を**確定してから**分類を判断する。
+  - 対象が preface `:::tip` と確定 → EN snapshot の対応位置を調べて分類 (EN 側が plain paragraph なら 分類2、callout div なら「保留」)
+  - 対象が `:::danger` と確定 → Phase 2 UX 保護方針を引き続き尊重するかを改めて判断 (引き続き保護するなら baseline に残し続ける、 or 分類3 で本文統合)
+- **Round 2 実行者へ: api-access の分類は plan で固定しない。enumerate v2 の fingerprint match 結果と EN snapshot 確認を経てから Task 3.3 codex review で決定すること。**
 
 - [ ] **Step 1: 作業優先順 (entry 密度順)**
 
@@ -138,14 +142,19 @@ git commit -m "chore: Phase 3 JA 独自 callout 候補列挙スクリプト"
 
 各 slug で以下を実行:
 
-1. `/tmp/phase3-targets.md` から該当 entry の `sectionPath` / `line range` / `body preview` を読む
+1. enumerate v2 出力から該当 entry の `sectionPath` / 確定済み `line range` / `body preview` / `enHasCallout` を読む
 2. `snapshots/en/content/<slug>.html` を読み、同 section の EN 本文と照合
 3. JA の callout 内容を確認
-4. 3 分類のいずれかに決定 (api-access は必ず分類 3)
+4. **分類判断フロー** (固定ではなく、下記を順に評価):
+   - `enHasCallout=true` → **分類2 は適用禁止** (EN 側も callout のため source-first 違反)。「保留」(parity turndown phase 送り) または JA callout type を EN に揃える (b) を検討
+   - `enHasCallout=false` かつ EN 本文に同内容の plain text が**ある** → 分類2
+   - `enHasCallout=false` かつ EN 本文に同内容の情報が**ない** が読者保護に必要 → 分類3 (本文統合)
+   - `enHasCallout=false` かつ EN 本文に同内容なし かつ JA 読者にも不要 → 分類1 (削除)
 5. 分類に応じて修正:
    - **分類 1:** callout ブロック (`:::type` 行〜対応する `:::` 行) をまとめて削除、前後空行整理
    - **分類 2:** `:::type` と `:::` の行だけ削除、本文はそのまま段落 / リストとして残す
    - **分類 3:** callout を本文段落に統合 (bold や emphasis で警告性を残す、または `**注意:** ...` のような inline 形式に)
+   - **保留:** content は touch せず、`docs/superpowers/specs/` に「parity turndown 側修正 phase へ送る entry リスト」を記録
 
 **編集ルール:**
 - UI label / 製品名 / CLI flag / URL / path は英語維持 (`docs/TRANSLATION_GUIDE.md` § Testim 機能名英語維持)
@@ -206,9 +215,9 @@ git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>)
 ```
 
 **優先レビュー対象:**
-- `administration/api-access` (UX-PROTECTED 分類 3 必須)
+- `administration/api-access` (UX-CARRYOVER; 対象 callout は enumerate v2 の fingerprint match で確定してから分類判断。plan で固定しない)
 - `administration/secrets` (3 entries、Edit or Delete a Secret section、削除系の注意喚起が多いと推定)
-- その他分類 3 を適用した slug
+- その他分類 3 または「保留」を適用した slug
 
 - [ ] **Step 2: codex 指摘を反映した修正を commit**
 

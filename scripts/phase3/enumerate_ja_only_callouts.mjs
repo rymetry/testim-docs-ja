@@ -1,17 +1,41 @@
 #!/usr/bin/env node
 /**
- * Phase 3.1: JA 独自 callout 候補の enumerate + 分類
+ * Phase 3.1: JA 独自 callout 候補の enumerate + 分類 (v1 — UNSAFE for editing)
  *
  * parity-baseline.json の entries から issueType==='segment-extra' かつ
  * segmentKind==='callout-body' のものを抽出し、各エントリが JA md ファイルの
  * どの callout ブロックに対応するかを特定して Markdown で出力する。
+ *
+ * ---
+ *
+ * ⚠ **v1 は Round 2 の編集対象確定には使えない。** 理由:
+ *
+ * 1. sectionPath の leaf heading が JA md 内に一致しない場合 (例: JA は
+ *    `## API キーの管理（API keys management）` のように日本語（English） 併記)、
+ *    whole-document fallback に入り「別 section の最初の callout」を誤対象化する。
+ *    Round 1 の `administration/api-access` 誤修正 (preface の `:::tip` を
+ *    `API keys management` section 対象として扱った) はこの fallback が直接原因。
+ * 2. 現 baseline では **17 entries 中 14 entries が fallback に該当** する。
+ *    つまり v1 の出力のほとんどは unsafe。
+ * 3. fallback が発生した entry には output 中に `⚠ HEADING-NOT-FOUND (UNSAFE FALLBACK)`
+ *    を明示し、プロセスを exit status 1 で終了する。Round 2 script は `jaSourceFingerprint`
+ *    を JA md body と照合する v2 に差し替えが必要。
+ *
+ * **Round 2 で対応が必要な作業** (詳細は plan の `Round 1 Post-mortem` を参照):
+ *
+ * - `日本語（English）` heading 解決 (括弧内英語を副キーとして leaf heading resolver に追加)
+ * - `jaSourceFingerprint` -> JA md body の fingerprint match (heading text match 不可時の最終 resolver)
+ * - `enHasCallout: bool` pre-flight (EN snapshot 側の対応 section に `<div class="note">` 等が
+ *   存在するかを grep し、分類2 を機械的にガード)
+ *
+ * ---
  *
  * NOTE: RegExp.prototype.exec は使用禁止。
  * String.prototype.match / matchAll / RegExp.prototype.test のみ使用する。
  *
  * Usage:
  *   node scripts/phase3/enumerate_ja_only_callouts.mjs
- *   node scripts/phase3/enumerate_ja_only_callouts.mjs > /tmp/phase3-targets.md
+ *   # unresolved entries があれば exit 1 (現時点ではほぼ常に 1)
  *
  * @module scripts/phase3/enumerate_ja_only_callouts
  */
@@ -240,13 +264,19 @@ function leafHeading(sectionPath) {
  * @param {string} sectionPath         - EN sectionPath from baseline
  * @param {number} jaSegmentIndex      - 0-based index within the section
  * @param {number} totalLines          - total line count of file
- * @returns {{block: CalloutBlock|null, mismatch: boolean, sectionCalloutCount: number}}
+ * @returns {{block: CalloutBlock|null, mismatch: boolean, sectionCalloutCount: number, headingResolved: boolean}}
+ *
+ * `headingResolved = false` は sectionPath が非 empty なのに JA 内で対応 heading を
+ * 見つけられず whole-document fallback した危険状態。Round 1 の `administration/api-access`
+ * 誤対象化 (preface の :::tip を目標にしてしまう) はこの silent fallback が直接原因。
+ * 呼び出し側は unresolved を明示してプロセスを non-zero 終了する。
  */
 function findCalloutForEntry(allCallouts, rawLines, sectionPath, jaSegmentIndex, totalLines) {
   let sectionCallouts;
+  let headingResolved = true;
 
   if (!sectionPath) {
-    // Empty sectionPath — use whole document
+    // Empty sectionPath — document-root (fallback ではなく正当に whole document)
     sectionCallouts = allCallouts;
   } else {
     const leaf = leafHeading(sectionPath);
@@ -269,7 +299,9 @@ function findCalloutForEntry(allCallouts, rawLines, sectionPath, jaSegmentIndex,
     }
 
     if (sectionStartLine === -1) {
-      // Heading not found — fall back to whole document
+      // Heading not found — 対象 section を確定できない。whole-document fallback は不安全で、
+      // api-access Round 1 で preface の :::tip を誤対象化した直接原因。
+      headingResolved = false;
       sectionCallouts = allCallouts;
     } else {
       // Find end of section: next heading at equal or higher level (lower number)
@@ -305,7 +337,7 @@ function findCalloutForEntry(allCallouts, rawLines, sectionPath, jaSegmentIndex,
     mismatch = true;
   }
 
-  return { block, mismatch, sectionCalloutCount };
+  return { block, mismatch, sectionCalloutCount, headingResolved };
 }
 
 // ---------------------------------------------------------------------------
@@ -349,8 +381,17 @@ function previewBody(body) {
 // Main
 // ---------------------------------------------------------------------------
 
-/** Slugs that carry an intentional-divergence carryover from Phase 2 Round 1 */
-const UX_PROTECTED_SLUGS = new Set(['administration/api-access']);
+/**
+ * Slugs where Phase 2 Round 1 で UX 優先の intentional divergence として保持した
+ * callout が存在する可能性がある (:::danger 等)。
+ *
+ * **注意:** このマーカーは「該当 callout が存在するかもしれない」シグナルであり、
+ * classification (分類1/2/3) を固定するものではない。Round 1 では api-access の
+ * `:::tip` を誤対象化して分類3を強制した失敗があった。Round 2 以降は baseline entry の
+ * `jaSourceFingerprint` と JA md body の照合で対象 callout を先に確定させ、
+ * その後で分類を決定すること。
+ */
+const UX_CARRYOVER_SLUGS = new Set(['administration/api-access']);
 
 function main() {
   const baseline = loadBaseline();
@@ -373,6 +414,8 @@ function main() {
   });
 
   const outLines = [];
+  /** @type {Array<{slug: string, sectionPath: string, jaSegmentIndex: number, jaSourceFingerprint: string|null, sectionCalloutCount: number}>} */
+  const unresolvedEntries = [];
   outLines.push('# Phase 3 JA-only callouts (deterministic)');
   outLines.push('');
   outLines.push(`Total: ${targets.length} entries in ${bySlug.size} slugs`);
@@ -386,11 +429,11 @@ function main() {
       return a.jaSegmentIndex - b.jaSegmentIndex;
     });
 
-    const uxProtectedMarker = UX_PROTECTED_SLUGS.has(slug)
-      ? ' **[UX-PROTECTED: 分類3必須]**'
+    const uxCarryoverMarker = UX_CARRYOVER_SLUGS.has(slug)
+      ? ' **[UX-CARRYOVER: Phase 2 UX保護 callout が別にある可能性。分類は fingerprint 照合後に決定]**'
       : '';
 
-    outLines.push(`## ${slug} (${entries.length} entries)${uxProtectedMarker}`);
+    outLines.push(`## ${slug} (${entries.length} entries)${uxCarryoverMarker}`);
     outLines.push(`- file: src/content/docs/${slug}.md`);
     outLines.push(`- EN snapshot: snapshots/en/content/${slug}.html`);
 
@@ -411,7 +454,7 @@ function main() {
 
     for (let i = 0; i < sortedEntries.length; i++) {
       const entry = sortedEntries[i];
-      const { block, mismatch, sectionCalloutCount } = findCalloutForEntry(
+      const { block, mismatch, sectionCalloutCount, headingResolved } = findCalloutForEntry(
         allCallouts,
         rawLines,
         entry.sectionPath,
@@ -419,11 +462,32 @@ function main() {
         rawLines.length,
       );
 
+      if (!headingResolved) {
+        unresolvedEntries.push({
+          slug,
+          sectionPath: entry.sectionPath,
+          jaSegmentIndex: entry.jaSegmentIndex,
+          jaSourceFingerprint: entry.jaSourceFingerprint,
+          sectionCalloutCount,
+        });
+      }
+
       outLines.push(`### entry[${i}] jaSegmentIndex=${entry.jaSegmentIndex}`);
       outLines.push(
         `- sectionPath: ${entry.sectionPath ? entry.sectionPath : '(document-root)'}`,
       );
       outLines.push(`- jaSourceFingerprint: ${entry.jaSourceFingerprint ?? 'null'}`);
+      if (!headingResolved) {
+        outLines.push(
+          '- **⚠ HEADING-NOT-FOUND (UNSAFE FALLBACK):** EN の sectionPath が JA md 内に一致しません。',
+        );
+        outLines.push(
+          '  - 下記の `line range` / `body` は whole-document fallback の結果で、**別 section の callout を誤対象化している可能性**があります。',
+        );
+        outLines.push(
+          '  - Round 2 作業前に `jaSourceFingerprint` と JA md body の照合で対象を再特定してください。script exit は非零になります。',
+        );
+      }
 
       if (!block) {
         outLines.push(`- callout type: (not found — sectionCalloutCount=${sectionCalloutCount})`);
@@ -436,7 +500,8 @@ function main() {
         outLines.push('- context after: (blank) / (blank)');
       } else {
         const mismatchNote = mismatch ? ' \u26a0 (index out of range, fell back to first)' : '';
-        outLines.push(`- callout type: :::${block.type}`);
+        const fallbackNote = !headingResolved ? ' \u26a0 (whole-document fallback; 対象未確定)' : '';
+        outLines.push(`- callout type: :::${block.type}${fallbackNote}`);
         const closeLabel = block.closeLine === -1 ? '(unterminated)' : String(block.closeLine);
         outLines.push(`- line range: L${block.openLine}-L${closeLabel}${mismatchNote}`);
         outLines.push('- body:');
@@ -458,7 +523,33 @@ function main() {
     }
   }
 
+  // stdout: banner first when unresolved exists, then body
+  const banner = [];
+  if (unresolvedEntries.length > 0) {
+    banner.push('> \u26a0\u26a0\u26a0 **UNSAFE OUTPUT — DO NOT USE FOR EDITING** \u26a0\u26a0\u26a0');
+    banner.push('>');
+    banner.push(`> enumerate v1 は ${unresolvedEntries.length} / ${targets.length} entries で heading resolver が失敗し、whole-document fallback しています。`);
+    banner.push('>');
+    banner.push('> Round 1 の `administration/api-access` 誤対象化 (preface `:::tip` を `API keys management` section 対象として扱ってしまった) と同じ失敗モードです。');
+    banner.push('>');
+    banner.push('> **対応が必要:** `jaSourceFingerprint` 突き合わせを含む enumerate v2 で Round 2 を進めてください。詳細は plan の `Round 1 Post-mortem` セクションを参照。');
+    banner.push('>');
+    banner.push('> 該当 entries:');
+    for (const u of unresolvedEntries) {
+      banner.push(`> - ${u.slug} | sectionPath=${u.sectionPath} | jaSegmentIndex=${u.jaSegmentIndex} | fp=${u.jaSourceFingerprint ?? 'null'}`);
+    }
+    banner.push('');
+  }
+  process.stdout.write(banner.join('\n'));
   process.stdout.write(outLines.join('\n') + '\n');
+
+  if (unresolvedEntries.length > 0) {
+    process.stderr.write(
+      `\n[enumerate v1] UNSAFE: ${unresolvedEntries.length} / ${targets.length} entries had heading-not-found fallback. ` +
+      `Exiting with status 1. Use enumerate v2 (see plan).\n`,
+    );
+    process.exit(1);
+  }
 }
 
 main();
