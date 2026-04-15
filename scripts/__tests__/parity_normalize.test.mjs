@@ -165,3 +165,48 @@ describe('normalizeUrlForParity — help.testim.io symmetry (Phase 4 Task 4.3)',
     );
   });
 });
+
+describe('normalizeUrlForParity — /docs canonical form (PR A feedback P2)', () => {
+  it('drops trailing slash on bare /docs path', () => {
+    assert.equal(
+      normalizeUrlForParity('/docs/api-access/'),
+      '/docs/api-access',
+    );
+  });
+
+  it('drops query string on bare /docs path', () => {
+    assert.equal(
+      normalizeUrlForParity('/docs/api-access?x=1'),
+      '/docs/api-access',
+    );
+  });
+
+  it('drops query string on help.testim.io URL', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access?x=1'),
+      '/docs/api-access',
+    );
+  });
+
+  it('drops query while preserving fragment', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access?x=1#frag'),
+      '/docs/api-access#frag',
+    );
+  });
+
+  it('help.testim.io + query + trailing slash ↔ bare /docs symmetric', () => {
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/docs/api-access/?ref=x#top'),
+      normalizeUrlForParity('/docs/api-access#top'),
+    );
+  });
+
+  it('strips help.testim.io prefix even for non-/docs paths (e.g. /v2.0/docs/...)', () => {
+    // Stage B5 で別途処理する想定。ここでは少なくとも prefix strip の対称性を確保する。
+    assert.equal(
+      normalizeUrlForParity('https://help.testim.io/v2.0/docs/scheduler#x'),
+      '/v2.0/docs/scheduler#x',
+    );
+  });
+});

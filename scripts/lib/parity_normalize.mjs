@@ -8,11 +8,13 @@
  * @module parity_normalize
  */
 
-// Matches help.testim.io URL (protocol optional), capturing:
-//   group 1: path starting with /docs/ (no fragment, no trailing slash preserved)
-//   group 2: optional #fragment
-const HELP_TESTIM_RE =
-  /^(?:https?:\/\/)?help\.testim\.io(\/docs\/[^\s)#]+?)\/?(#[^\s)]*)?$/;
+// help.testim.io の protocol + host prefix (path 以降は DOCS_PATH_RE で canonicalize)。
+const HELP_TESTIM_PREFIX_RE = /^(?:https?:\/\/)?help\.testim\.io/;
+// /docs/... path の canonical form を分解:
+//   group 1: path (trailing slash / ?query / #fragment を含まない)
+//   group 2: 任意の ?query (canonicalize で drop、保持しない)
+//   group 3: 任意の #fragment (保持)
+const DOCS_PATH_RE = /^(\/docs\/[^\s)?#]+?)\/?(\?[^\s)#]*)?(#[^\s)]*)?$/;
 // Matches any path under /testim/content/ (canonical repo URL form: /{category}/{slug}.htm).
 // Legacy /Topics/Help/ URLs are also matched by this broader regex and produce their literal
 // path translation (e.g. Topics/Help/loops → /docs/Topics/Help/loops) since that URL form
@@ -23,9 +25,7 @@ const TRICENTIS_DOCS_RE =
 export function normalizeUrlForParity(url) {
   if (typeof url !== 'string' || url.length === 0) return url;
 
-  const helpMatch = url.match(HELP_TESTIM_RE);
-  if (helpMatch) return `${helpMatch[1]}${helpMatch[2] ?? ''}`;
-
+  // tricentis.com/testim/content/*.htm → /docs/* は先に処理する (fragment 保持)。
   const tricentisMatch = url.match(TRICENTIS_DOCS_RE);
   if (tricentisMatch) {
     // Strip trailing /index so that /foo/index.htm → /docs/foo (directory root).
@@ -33,7 +33,18 @@ export function normalizeUrlForParity(url) {
     return `/docs/${path}${tricentisMatch[2] ?? ''}`;
   }
 
-  return url;
+  // help.testim.io prefix を常に剥がし、/docs/... path で canonicalize を適用する
+  // (query drop / trailing slash drop / fragment 保持)。help.testim.io 形式と
+  // bare /docs/... 形式が同一 canonical form に揃う。
+  const stripped = url.replace(HELP_TESTIM_PREFIX_RE, '');
+  const docsMatch = stripped.match(DOCS_PATH_RE);
+  if (docsMatch) {
+    const [, path, , fragment] = docsMatch;
+    return `${path}${fragment ?? ''}`;
+  }
+
+  // /docs/ 以外 (例: /v2.0/docs/...) は prefix strip のみ適用 (Stage B5 で別途処理)。
+  return stripped;
 }
 
 export function canonicalizeDocsUrl(url) {
