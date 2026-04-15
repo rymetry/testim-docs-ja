@@ -24,9 +24,7 @@ Testim Automate の REST API を使用して、以下のアクションを実行
 - **実行** - 指定したテスト、スイート、ラベル、またはテストプランの実行を開始します。
 - **実行結果** - 実行結果を取得します。
 
-:::tip
-完全な API ドキュメントについては、[こちら](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml)を参照してください。
-:::
+**ヒント:** 完全な API ドキュメントについては、[こちら](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml)を参照してください。
 
 :::info{title="PRO機能"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
