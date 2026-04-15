@@ -7,25 +7,25 @@ Task 4.2 (artifact registry) / Task 4.3 (URL normalizer) / Task 4.4 (HTML extrac
 
 ## 1. 概要
 
-- baseline entries 合計: **1863**
+- baseline entries 合計: **1756**
 
 ### issueType 別件数
 
 | issueType | count |
 | --- | --- |
 | section-structure-mismatch | 55 |
-| segment-extra | 86 |
+| segment-extra | 91 |
 | segment-inconclusive | 11 |
 | segment-missing | 106 |
 | segment-order-mismatch | 1 |
 | segment-token-gap | 33 |
-| segment-untranslated | 1571 |
+| segment-untranslated | 1459 |
 
 ### bucket 別件数
 
 | bucket | count |
 | --- | --- |
-| actionable | 1851 |
+| actionable | 1744 |
 | artifactCandidates | 0 |
 | normalizerCandidates | 1 |
 | intentionalDivergenceCandidates | 0 |
@@ -33,7 +33,7 @@ Task 4.2 (artifact registry) / Task 4.3 (URL normalizer) / Task 4.4 (HTML extrac
 
 ## 2. bucket 別 entry 一覧
 
-### actionable (1851 件)
+### actionable (1744 件)
 
 | slug | issueType | sectionPath | segmentKind | missingTokens | inconclusiveCategory | inconclusiveReason |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -88,7 +88,7 @@ Task 4.2 (artifact registry) / Task 4.3 (URL normalizer) / Task 4.4 (HTML extrac
 | administration/project-settings | segment-untranslated | General Settings > Default Test Configuration | ordered-list-item |  |  |  |
 | administration/project-settings | segment-untranslated | General Settings > Hidden Parameters | ordered-list-item |  |  |  |
 
-先頭 50 件のみ表示。全 1851 件は JSON を参照。
+先頭 50 件のみ表示。全 1744 件は JSON を参照。
 
 ### artifactCandidates (0 件)
 
@@ -114,7 +114,7 @@ _該当なし_
 | integrations/bug-tracker-settings/connecting-testim-to-trello | segment-inconclusive |  |  |  | heading-count-mismatch | Heading count mismatch: EN has 0 headings, JA has 2 |
 | integrations/integrate-testim-to-your-ci/codeship-integration | segment-inconclusive |  |  |  | heading-count-mismatch | Heading count mismatch: EN has 2 headings, JA has 3 |
 | integrations/sealights-integration | segment-inconclusive |  |  |  | heading-count-mismatch | Heading count mismatch: EN has 15 headings, JA has 8 |
-| overview/changelog | segment-inconclusive |  |  |  | tokenless-near-tie | Tokenless adjacent sections "Archive > Exporting a Testim test as code for Playwright" and "Archive > Cloning tests" cannot rule out a body swap (current=2.81, swap=2.81) |
+| overview/changelog | segment-inconclusive |  |  |  | tokenless-near-tie | Tokenless adjacent sections "Archive > Enhanced Mode for Testim Mobile" and "Archive > Exporting a Testim test as code for Playwright" cannot rule out a body swap (current=3.34, swap=3.31) |
 | running-tests/scheduler | segment-inconclusive |  |  |  | tokenless-near-tie | Tokenless adjacent sections "Modify your scheduled test suites > Activate or Pause" and "Modify your scheduled test suites > Edit" cannot rule out a body swap (current=1.34, swap=1.35) |
 | running-tests/scheduler-mobile | segment-inconclusive |  |  |  | tokenless-near-tie | Tokenless adjacent sections "Modify your scheduled test suites > Activate or Pause" and "Modify your scheduled test suites > Edit" cannot rule out a body swap (current=1.34, swap=1.35) |
 | salesforce-testing/changelog | segment-inconclusive |  |  |  | tokenless-near-tie | Tokenless adjacent sections "Switch between users with Login As step May 2023" and "Permission validation step May 2023" cannot rule out a body swap (current=1.18, swap=1.17) |
@@ -127,7 +127,7 @@ _該当なし_
 | counter | value |
 | --- | --- |
 | reportableActiveFiles | 0 |
-| baselinedIssues | 1863 |
+| baselinedIssues | 1756 |
 | advisoryQueueIssues | 6 |
 | auditSignalIssues | 9 |
 

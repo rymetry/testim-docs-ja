@@ -10,25 +10,25 @@ Phase 4 plan (Rev 7) は `parity-baseline.json.entries.length === 0` / `parity-c
 
 本 plan はその後 **PR Z** (Task 4.5–4.8 final cutover) に着手できる水準まで baseline / advisory / audit-signal を burn down するための multi-session / multi-PR 計画である。
 
-## 2. Baseline snapshot (post-PR A anchor / 2026-04-15)
+## 2. Baseline snapshot (post-PR #272 anchor / 2026-04-15)
 
-**authoritative source:** [`docs/superpowers/specs/2026-04-15-post-pr-a-baseline-snapshot.md`](../specs/2026-04-15-post-pr-a-baseline-snapshot.md)
+**authoritative source:** [`docs/superpowers/specs/2026-04-15-post-pr-a-baseline-snapshot.md`](../specs/2026-04-15-post-pr-a-baseline-snapshot.md) (Rev 2)
 **inventory JSON:** [`docs/superpowers/specs/2026-04-15-post-pr-a-residual-inventory.json`](../specs/2026-04-15-post-pr-a-residual-inventory.json)
 **pre-PR A 参考 (historical):** [`docs/superpowers/specs/2026-04-14-parity-phase4-residual-inventory.json`](../specs/2026-04-14-parity-phase4-residual-inventory.json) (1873 entries)
 
-合計 **1863 entries** (post-regen)。PR A mechanism 吸収で 1873 → 1863 (artifact 7 + intentional 3 = 10 件 orphan 化)。
+合計 **1756 entries** (post-regen)。累積 mechanism 吸収: 1873 → 1863 (PR A: artifact 7 + intentional 3) → **1756** (PR #272: glossary curated 26 term で net −107 / segment-untranslated −112, segment-extra +5 alignment shift)。
 
 | bucket (inventory 分類) | 件数 | byIssueType 内訳 | burn-down 手段 |
 |---|---|---|---|
-| actionable | 1851 | segment-untranslated 1571 / segment-missing 106 / segment-extra 86 / section-structure-mismatch 55 / segment-token-gap 32 / segment-order-mismatch 1 | Stage B1–B6 |
+| actionable | 1744 | segment-untranslated 1459 / segment-missing 106 / segment-extra 91 / section-structure-mismatch 55 / segment-token-gap 32 / segment-order-mismatch 1 | Stage B1–B6 |
 | normalizerCandidates | 1 | segment-token-gap 1 (`/v2.0/docs/scheduler#integrating-scheduler-with-slack`) | Stage B5 |
 | intentionalDivergenceCandidates | 0 | (PR A Task 4.4 extractor で 3 件吸収済) | 完了 |
 | artifactCandidates | 0 | (PR A Task 4.2 artifact registry で 7 件吸収済) | 完了 |
 | advisoryResidual | 11 | segment-inconclusive 11 (tokenless-near-tie 6 / heading-count-mismatch 5) | Stage B6 |
 
-### Stage B1–B6 scope 外の audit-signal (1863 baseline とは別 tier)
+### Stage B1–B6 scope 外の audit-signal (1756 baseline とは別 tier)
 
-`parity-check-status.summary.auditSignalIssues === 9` は Rev 7 DoD の測定対象 (`=== 0` 要求) だが、上記 1863 baseline とは別 tier のため Stage B1–B6 では直接 burn-down しない。Stage B2–B4 (missing/extra/structure) 修正の副次効果で減る可能性があるため、**§10.5 の再評価 gate** で扱い、非ゼロなら Stage B7 を条件付き起票する。
+`parity-check-status.summary.auditSignalIssues === 9` は Rev 7 DoD の測定対象 (`=== 0` 要求) だが、上記 1756 baseline とは別 tier のため Stage B1–B6 では直接 burn-down しない。Stage B2–B4 (missing/extra/structure) 修正の副次効果で減る可能性があるため、**§10.5 の再評価 gate** で扱い、非ゼロなら Stage B7 を条件付き起票する。
 
 | audit-signal issueType | count |
 |---|---:|
@@ -47,15 +47,17 @@ Phase 4 plan (Rev 7) は `parity-baseline.json.entries.length === 0` / `parity-c
   - `npm run test` / `npm run lint` / `npm run build` green
   - `npm run check:parity` で対象 slug の runtime 0 化確認
 
-## 4. Stage B1: segment-untranslated (1571 件)
+## 4. Stage B1: segment-untranslated (1459 件)
 
 **優先度:** 最高 (volume 最大、mechanism 層では解消不能)
 
-**手段:** 既存 LLM pipeline (`scripts/pipeline.mjs` / `scripts/apply_llm_translations.mjs` / checkpoint 再開可能) を使用。`docs/TRANSLATION_GUIDE.md` の terminology / NG-OK パターンに従う。glossary は `scripts/lib/glossary.mjs` (存在すれば)、INVARIANT_TOKENS も baseline 側と一致させる。
+**手段:** 既存 LLM pipeline (`scripts/pipeline.mjs` / `scripts/apply_llm_translations.mjs` / checkpoint 再開可能) を使用。`docs/TRANSLATION_GUIDE.md` の terminology / NG-OK パターンに従う。glossary は `docs/GLOSSARY.md` (PR #272 で curated 26 term 追加済) / `scripts/lib/parity_glossary_mask.mjs` 経由で検知器側と同期、INVARIANT_TOKENS も baseline 側と一致させる。
 
 **分割:**
 - slug 単位に集約 → ~100–200 件 (slug 単位) / PR を目安
-- 優先 order: 1) `overview/` / `getting-started/` (認知度高) → 2) 頻出 feature (editing-tests / recording-tests / testops) → 3) 残 area
+- 優先 order: 1) `overview/` (27 件) / `getting-started/` (16 件) を pilot → 2) 頻出 feature (`advanced-editing/` 547 / `integrations/` 310 / `recording-tests/` 130 / `test-management/` 130 等) → 3) 残 area
+
+**Pilot 選定 (post-PR #272 / 2026-04-15):** Overview section (`overview/*`, 27 entries / un 21) を **B1 pilot** として採用。内訳は `overview/changelog` 10, `overview/testim-overview` family 11 (本体 1 + help-ai-assistant 3 + testim-automate 1 + ai-data-usage-policy 6), `overview/testim-overview` の missing/extra/structure/token-gap 各 1, inconclusive 1。Pilot スコープは pure segment-untranslated に絞るため本 PR では `overview/changelog` (10) + `overview/testim-overview` family の `segment-untranslated` 5 (本体 1 + help-ai-assistant 3 + testim-automate 1) + `ai-data-usage-policy` 6 = **計 21 entries** を対象とする。missing/extra/structure/token-gap/inconclusive は Stage B2–B6 で別 PR 処理。
 
 **Verification per PR:**
 1. `npm run check:parity -- --slug=<target>` で対象 slug の untranslated = 0
@@ -72,7 +74,7 @@ Phase 4 plan (Rev 7) は `parity-baseline.json.entries.length === 0` / `parity-c
 
 **Exit:** baseline の `segment-missing` 件数 = 0
 
-## 6. Stage B3: segment-extra (86 件)
+## 6. Stage B3: segment-extra (91 件)
 
 **手段:** JA 側に EN に存在しない segment が「余分」にある箇所の削除、または EN 側に無い情報を callout として統合する。Phase 3 で扱った JA 独自 callout の扱いに近い。`WRITING_GUIDE.md` の JA-only section 削除規約に沿う。
 
