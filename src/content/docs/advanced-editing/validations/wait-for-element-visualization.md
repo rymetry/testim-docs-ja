@@ -32,9 +32,7 @@ keywords:
 RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしでは Applitools によって拒否されます。詳細については、Applitools の担当者にお問い合わせください。
 :::
 
-:::info{title="PRO機能"}
 この機能は Professional plan のプロジェクトでのみ利用できます。
-:::
 
 :::note{title="テスト設定の変更について"}
 テストの設定を変更すると、Applitools では Testim では新しいベースラインが作成されますが、Testim では作成されません。各設定ごとに新しいベースラインが必要な場合は、それぞれ個別のテストを作成する必要があります。
