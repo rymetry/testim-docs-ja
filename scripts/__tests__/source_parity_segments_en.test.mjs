@@ -416,10 +416,13 @@ describe('extractSegmentsFromHtml — shape invariants', () => {
 // ---------------------------------------------------------------------------
 
 describe('preprocessHtml callout normalization', () => {
-  it('exports CALLOUT_NORMALIZATION_SLUGS as a frozen Set with administration/api-access', () => {
+  it('exports CALLOUT_NORMALIZATION_SLUGS as a Set containing administration/api-access', () => {
+    // NOTE: Object.freeze(new Set(...)) は内部 slot (add/delete/clear) を
+    // 防がないため Object.isFrozen では「単一 truth」を保証できない。allow list
+    // の書き換えを検知したい場合は下記 size assertion を更新すること。
     assert.ok(CALLOUT_NORMALIZATION_SLUGS instanceof Set);
     assert.ok(CALLOUT_NORMALIZATION_SLUGS.has('administration/api-access'));
-    assert.ok(Object.isFrozen(CALLOUT_NORMALIZATION_SLUGS));
+    assert.equal(CALLOUT_NORMALIZATION_SLUGS.size, 1);
   });
 
   it('rewrites short warning-like <blockquote> to <div class="callout-note"> for allowed slug', () => {
