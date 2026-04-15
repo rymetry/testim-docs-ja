@@ -431,7 +431,7 @@ git commit -m "chore: Phase 4 residual inventory (5-bucket) を実測"
 - Create: `scripts/__tests__/parity_artifact_registry.test.mjs`
 - Modify: `scripts/lib/source_parity_align.mjs:527-577`
 - Modify: `scripts/check_source_parity.mjs` (status 書き出しはここで行う — 新 module は作らない)
-- Modify (2 引数 → 3 引数移行): 
+- Modify (2 引数 → 3 引数移行):
   - `scripts/__tests__/source_parity_align.test.mjs`
   - `scripts/__tests__/source_parity_align_runtime.test.mjs`
   - `scripts/__tests__/source_parity_recall.test.mjs`
