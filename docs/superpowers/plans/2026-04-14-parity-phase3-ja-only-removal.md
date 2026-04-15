@@ -215,7 +215,7 @@ git commit -m "fix: Phase 3 JA 独自 callout を削除 (<slug>, 分類<番号>,
 
 Task 3.2 全 slug 処理後に 1 回だけ `phase3-holds.md` を作成し commit する。**Task 3.5 では holds を再度 commit しない** (二重 commit 禁止; Task 3.5 は report のみ commit する)。
 
-**保留 entry の判定:** enumerate v2 の `enHasCallout=true` entry、または Task 3.3 codex review で「保留」となった entry は content を touch しない。
+**保留 entry の判定:** enumerate v2 の `enHasCallout=true` entry は content を touch しない。**holds list は Task 3.2 Step 5 で確定させ、以降の Task で追加しない**。Task 3.3 は分類 2 / 3 の適用品質を review する役割に限定し、新たな hold 判定を増やさない (Task 3.3 の review で content 修正が不適切と判明した場合は、分類 1 に降格するか、対象を修正前に戻して enumerate v2 の `enHasCallout` 判定を再確認する)。
 
 **必須: holds 0 件でもファイルは必ず作る。** 0 件の場合は見出しのみの wireframe を書き、表 body は空行 1 行。PR template / global DoD / Task 3.5 report が常に `phase3-holds.md` を参照するため。
 
@@ -256,7 +256,7 @@ git add docs/superpowers/specs/2026-04-14-parity-phase3-holds.md
 git commit -m "docs: Phase 3 保留 entries の backlog 記録 (N件)"
 ```
 
-(ここで **N** を実数で埋めること。commit subject に数字があることで、Task 3.4 Step 5 の preflight が `phase3-holds` を確実に検出できる。)
+(ここで **N** を実数で埋めること。commit subject の数字は人間の監査性のため — Task 3.4 Step 5 の preflight は commit subject ではなく `main..HEAD` のファイル差分を検査する。)
 
 **DoD:** `(分類 1 / 2 / 3 で content 修正した entry 数) + (phase3-holds.md に記録した保留 entry 数) = 17` が成り立つこと。
 
@@ -284,6 +284,12 @@ git commit -m "docs: Phase 3 保留 entries の backlog 記録 (N件)"
 
 **Context:** 分類 2 / 3 (情報保存を伴う削除) の判断は翻訳品質に影響するので、codex review を挟むのが推奨。
 
+**Scope 制約:** Task 3.3 は**既に Task 3.2 で適用した分類 2 / 3 の品質 review** に限定する。新規 hold 判定は増やさない (holds list は Task 3.2 Step 5 で既に確定済み)。review で修正が必要と判明した場合の対処は以下のいずれか:
+
+- 分類 3 の情報欠落 → 本文統合を修正して再 commit
+- 分類 2 / 3 の適用不適切 → 分類 1 (純粋削除) に降格して再 commit
+- enumerate v2 の `enHasCallout` 判定自体が誤りと判明 → その slug の Task 3.2 commit を revert した上で、enumerate 出力 / hold list / content 修正の整合を Task 3.2 の責務として再実行 (Task 3.3 内で holds list を触らない)
+
 - [ ] **Step 1: 分類 3 (情報統合) を適用した slug を codex にレビュー依頼**
 
 各 commit 前に以下で review:
@@ -296,9 +302,9 @@ git commit -m "docs: Phase 3 保留 entries の backlog 記録 (N件)"
 **優先レビュー対象:**
 - `administration/api-access` (UX-CARRYOVER; 対象 callout は enumerate v2 の fingerprint match で確定してから分類判断。plan で固定しない)
 - `administration/secrets` (3 entries、Edit or Delete a Secret section、削除系の注意喚起が多いと推定)
-- その他分類 3 または「保留」を適用した slug
+- その他分類 3 を適用した slug
 
-- [ ] **Step 2: codex 指摘を反映した修正を commit**
+- [ ] **Step 2: codex 指摘を反映した修正を commit** (holds list は触らない)
 
 ---
 
@@ -552,7 +558,7 @@ EOF
 - **Per-task execution order (codex review 2026-04-15 反映):**
   1. Task 3.1 (enumerate v2) — subagent
   2. Task 3.2 (13 slug の callout 修正 + **holds list 作成 + holds commit**) — subagent (必要に応じて複数 slug を並列、ただし baseline 更新はしない)
-  3. Task 3.3 (codex review 分類 3 / 保留判断) — controller 主導
+  3. Task 3.3 (codex review 分類 3 の品質 review のみ。新規 hold 判定は増やさない) — controller 主導
   4. Task 3.6 (TTM for Jira) — subagent
   5. **Task 3.5 (report のみ commit)** — controller。**Task 3.4 より先に実施**。push はしない。holds は Task 3.2 で commit 済みなので再度触らない
   6. Task 3.4 (baseline 再生成 + gate + push + PR 作成) — controller。push 前に Step 5 preflight で report / holds / baseline 3 ファイルが `main..HEAD` 差分にあることを検証し、欠けていれば `exit 1`
