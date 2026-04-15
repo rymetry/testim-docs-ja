@@ -462,13 +462,26 @@ function main() {
         rawLines.length,
       );
 
-      if (!headingResolved) {
+      // Unresolved conditions (すべて「正しい対象を特定できていない」状態として扱う):
+      //   1. headingResolved=false — whole-document fallback (Round 1 の誤対象化の直接原因)
+      //   2. !block — 対象候補が 0 (section 特定できても callout が見つからない)
+      //   3. mismatch — jaSegmentIndex が範囲外で先頭 callout にフォールバック
+      const isBlockNotFound = !block;
+      const isIndexMismatch = block !== null && mismatch;
+      const isUnresolved = !headingResolved || isBlockNotFound || isIndexMismatch;
+      const unresolvedReasons = [];
+      if (!headingResolved) unresolvedReasons.push('heading-not-found');
+      if (isBlockNotFound) unresolvedReasons.push('block-not-found');
+      if (isIndexMismatch) unresolvedReasons.push('index-mismatch');
+
+      if (isUnresolved) {
         unresolvedEntries.push({
           slug,
           sectionPath: entry.sectionPath,
           jaSegmentIndex: entry.jaSegmentIndex,
           jaSourceFingerprint: entry.jaSourceFingerprint,
           sectionCalloutCount,
+          reasons: unresolvedReasons,
         });
       }
 
@@ -477,15 +490,27 @@ function main() {
         `- sectionPath: ${entry.sectionPath ? entry.sectionPath : '(document-root)'}`,
       );
       outLines.push(`- jaSourceFingerprint: ${entry.jaSourceFingerprint ?? 'null'}`);
-      if (!headingResolved) {
+      if (isUnresolved) {
         outLines.push(
-          '- **⚠ HEADING-NOT-FOUND (UNSAFE FALLBACK):** EN の sectionPath が JA md 内に一致しません。',
+          `- **⚠ UNSAFE (reasons: ${unresolvedReasons.join(', ')}):** 対象 callout を確定できませんでした。`,
         );
+        if (!headingResolved) {
+          outLines.push(
+            '  - `heading-not-found`: EN の sectionPath が JA md 内に一致せず whole-document fallback。別 section の callout を誤対象化している可能性あり。',
+          );
+        }
+        if (isBlockNotFound) {
+          outLines.push(
+            `  - \`block-not-found\`: section 内に callout が 0 件 (sectionCalloutCount=${sectionCalloutCount})。対象位置を特定できません。`,
+          );
+        }
+        if (isIndexMismatch) {
+          outLines.push(
+            `  - \`index-mismatch\`: jaSegmentIndex=${entry.jaSegmentIndex} が section の callout 数 (${sectionCalloutCount}) を超過。先頭 callout を便宜表示していますが、正しい対象ではありません。`,
+          );
+        }
         outLines.push(
-          '  - 下記の `line range` / `body` は whole-document fallback の結果で、**別 section の callout を誤対象化している可能性**があります。',
-        );
-        outLines.push(
-          '  - Round 2 作業前に `jaSourceFingerprint` と JA md body の照合で対象を再特定してください。script exit は非零になります。',
+          '  - Round 2 作業前に `jaSourceFingerprint` 照合 (v2 resolver) で対象を再特定してください。script exit は非零になります。',
         );
       }
 
@@ -499,7 +524,7 @@ function main() {
         outLines.push('- context before: (blank) / (blank)');
         outLines.push('- context after: (blank) / (blank)');
       } else {
-        const mismatchNote = mismatch ? ' \u26a0 (index out of range, fell back to first)' : '';
+        const mismatchNote = mismatch ? ' \u26a0 (index out of range, fell back to first — unsafe)' : '';
         const fallbackNote = !headingResolved ? ' \u26a0 (whole-document fallback; 対象未確定)' : '';
         outLines.push(`- callout type: :::${block.type}${fallbackNote}`);
         const closeLabel = block.closeLine === -1 ? '(unterminated)' : String(block.closeLine);
@@ -526,17 +551,27 @@ function main() {
   // stdout: banner first when unresolved exists, then body
   const banner = [];
   if (unresolvedEntries.length > 0) {
+    // 失敗原因ごとの内訳
+    const reasonCount = { 'heading-not-found': 0, 'block-not-found': 0, 'index-mismatch': 0 };
+    for (const u of unresolvedEntries) {
+      for (const r of u.reasons) {
+        if (r in reasonCount) reasonCount[r] += 1;
+      }
+    }
     banner.push('> \u26a0\u26a0\u26a0 **UNSAFE OUTPUT — DO NOT USE FOR EDITING** \u26a0\u26a0\u26a0');
     banner.push('>');
-    banner.push(`> enumerate v1 は ${unresolvedEntries.length} / ${targets.length} entries で heading resolver が失敗し、whole-document fallback しています。`);
+    banner.push(`> enumerate v1 は ${unresolvedEntries.length} / ${targets.length} entries で対象 callout を確定できませんでした:`);
+    banner.push(`> - \`heading-not-found\`: ${reasonCount['heading-not-found']} 件 (sectionPath が JA heading と一致せず whole-document fallback)`);
+    banner.push(`> - \`block-not-found\`: ${reasonCount['block-not-found']} 件 (section 内に callout が 0 件)`);
+    banner.push(`> - \`index-mismatch\`: ${reasonCount['index-mismatch']} 件 (jaSegmentIndex が範囲外で先頭 callout にフォールバック)`);
     banner.push('>');
-    banner.push('> Round 1 の `administration/api-access` 誤対象化 (preface `:::tip` を `API keys management` section 対象として扱ってしまった) と同じ失敗モードです。');
+    banner.push('> Round 1 の `administration/api-access` 誤対象化 (preface `:::tip` を `API keys management` section 対象として扱った) と同じ失敗モードです。');
     banner.push('>');
     banner.push('> **対応が必要:** `jaSourceFingerprint` 突き合わせを含む enumerate v2 で Round 2 を進めてください。詳細は plan の `Round 1 Post-mortem` セクションを参照。');
     banner.push('>');
     banner.push('> 該当 entries:');
     for (const u of unresolvedEntries) {
-      banner.push(`> - ${u.slug} | sectionPath=${u.sectionPath} | jaSegmentIndex=${u.jaSegmentIndex} | fp=${u.jaSourceFingerprint ?? 'null'}`);
+      banner.push(`> - ${u.slug} | sectionPath=${u.sectionPath} | jaSegmentIndex=${u.jaSegmentIndex} | reasons=${u.reasons.join(',')} | fp=${u.jaSourceFingerprint ?? 'null'}`);
     }
     banner.push('');
   }
@@ -545,7 +580,8 @@ function main() {
 
   if (unresolvedEntries.length > 0) {
     process.stderr.write(
-      `\n[enumerate v1] UNSAFE: ${unresolvedEntries.length} / ${targets.length} entries had heading-not-found fallback. ` +
+      `\n[enumerate v1] UNSAFE: ${unresolvedEntries.length} / ${targets.length} entries could not be resolved ` +
+      `(heading-not-found / block-not-found / index-mismatch は stdout banner 参照). ` +
       `Exiting with status 1. Use enumerate v2 (see plan).\n`,
     );
     process.exit(1);

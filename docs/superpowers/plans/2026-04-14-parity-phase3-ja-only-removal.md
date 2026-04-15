@@ -67,18 +67,26 @@
 ### v2 要件 (Round 2 必須)
 
 - **要件 1:** `日本語（English）` heading pattern の解決。leaf heading が JA md 内にマッチしない場合、括弧内の英語部分 (`（...）` の中身) と、ハイフン / 空白 / 大文字小文字 を許容する fuzzy match で再試行する
-- **要件 2:** `jaSourceFingerprint` による本照合。`jaSourceFingerprint` は parity が computing する body hash なので、アルゴリズムを replicate できない場合は次善として JA md 内の callout body text を抽出 → 部分文字列マッチで対象確定する
+- **要件 2:** `jaSourceFingerprint` による本照合を最優先 resolver とする。parity 内部の fingerprint アルゴリズムを replicate できない場合のみ、次善策として substring match (callout body 全文の prefix/exact/unique substring で対象確定) を許容する。ただし次善策を使う場合は以下を両方満たすこと:
+  - **(a) 同一 section 内で他 callout と body が重複しない一意な match** であることを script が検証し、重複がある場合は unresolved 扱い
+  - **(b) output 上で `resolver: substring-fallback` とマークし、`resolver: fingerprint-exact` と区別する**
 - **要件 3:** `enHasCallout: bool` フィールドを各 entry に付与。対応する EN snapshot ファイルで該当 sectionPath 周辺に `<div class="note">` / `<div class="caution">` / `<div class="warning">` / `<div class="tip">` / `<div class="info">` / `<div class="danger">` のいずれかが存在するか grep で判定
-- **要件 4:** unresolved entry (sectionPath match 失敗 / fingerprint 照合失敗) を検出した場合、banner 警告 + exit 1。silent fallback 禁止
-- **要件 5:** baseline.entries から `issueType === 'segment-extra' && segmentKind === 'callout-body'` を抽出し、各 entry について `slug` / `sectionPath` / `jaSegmentIndex` / `jaSourceFingerprint` / 行番号 / callout type / body preview / 2 行 context / `enHasCallout` を出力
+- **要件 4:** unresolved entry を検出した場合、banner 警告 + exit 1。silent fallback 禁止。unresolved の原因:
+  - `heading-not-found` (v1 から継承): sectionPath の leaf heading が JA md 内にマッチしない
+  - `block-not-found`: section 特定できたが内部に callout が 0 件
+  - `index-mismatch`: jaSegmentIndex が section 内 callout 数を超過
+  - `fingerprint-mismatch`: 要件 2 の resolver (fingerprint-exact または substring-fallback) で対象を一意に確定できない
+  - `enhascallout-unknown`: EN snapshot の存在確認 or grep に失敗
+- **要件 5:** baseline.entries から `issueType === 'segment-extra' && segmentKind === 'callout-body'` を抽出し、各 entry について `slug` / `sectionPath` / `jaSegmentIndex` / `jaSourceFingerprint` / `resolver` (`fingerprint-exact` または `substring-fallback`) / 行番号 / callout type / body preview / 2 行 context / `enHasCallout` を出力
 
 実装ルール (v2):
 - `RegExp#exec` は使わない (PreToolUse hook 回避)。`String.matchAll` / `RegExp#test` のみ使用
 - UX_CARRYOVER マーカー (slug レベル) は「Phase 2 UX 保護 callout が別にあるかもしれない」情報のみで、**classification (分類1/2/3) を固定しない**。対象が fingerprint で確定してから分類を決める
+- **v2 は既存の `scripts/phase3/enumerate_ja_only_callouts.mjs` を置き換える** (別ファイル新設禁止。Round 1 の v1 unsafe 状態を残さないため)
 
 ### 実行ステップ (Round 2)
 
-- [ ] **Step 1: v2 スクリプト実装** (`scripts/phase3/enumerate_ja_only_callouts.mjs` を上書き or `enumerate_ja_only_callouts_v2.mjs` として新設)
+- [ ] **Step 1: v2 スクリプト実装** — `scripts/phase3/enumerate_ja_only_callouts.mjs` を**上書き** (別ファイル新設禁止)
 - [ ] **Step 2: v2 実行**
 
   ```bash
@@ -98,10 +106,13 @@
 
 **Task 3.1 DoD (v2):**
 
-- enumerate v2 が exit 0 で 17 entry すべての対象 callout を **fingerprint 照合で確定** して出力している
-- 各 entry に行番号、callout type、body preview、context、`enHasCallout` フィールド
-- unresolved entry は 0 (heading-not-found fallback は発生しない、または発生時は exit 1)
+- enumerate v2 が exit 0 で 17 entry すべての対象 callout を特定している。resolver は以下のいずれか、かつ **output で明示されている**:
+  - `resolver: fingerprint-exact` (要件 2 の一次解法)
+  - `resolver: substring-fallback` (要件 2 の次善策; 同一 section 内で一意な match を script が検証済み)
+- 各 entry に行番号、callout type、body preview、context、`resolver`、`enHasCallout` フィールドが出ている
+- unresolved entry は 0 (heading-not-found / block-not-found / index-mismatch / fingerprint-mismatch / enhascallout-unknown のいずれも発生しない、または発生時は exit 1)
 - UX_CARRYOVER マーカーがある slug では分類を plan 上で固定しておらず、Task 3.2 で対象 fingerprint 確定後に分類判断することになっている
+- 既存の v1 ファイル (`scripts/phase3/enumerate_ja_only_callouts.mjs`) が v2 で上書き済み (v1 がファイルシステム上に残っていない)
 
 ---
 
