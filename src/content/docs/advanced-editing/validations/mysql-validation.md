@@ -56,9 +56,9 @@ return sequelize
 
 #### Parameters - この例で使用するパッケージと JS
 
-1. name: Sequelize, type: Package, value: [sequelize@latest](https://www.npmjs.com/package/sequelize)
-2. name: mysql2, type: Package, value: [mysql2@latest](https://www.npmjs.com/package/mysql2)
-3. name: expectedValue, type: JavaScript, value: "fdssdf dfdf"
+1.name: Sequelize, type: Package, value: [sequelize@latest](https://www.npmjs.com/package/sequelize)\
+2.name: mysql2, type: Package, value: [mysql2@latest](https://www.npmjs.com/package/mysql2)\
+3.name: expectedValue, type: JavaScript, value: "fdssdf dfdf"
 
 **see screenshot:**
 
