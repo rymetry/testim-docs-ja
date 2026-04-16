@@ -28,6 +28,13 @@
 | Tricentis | |
 | Tricentis Testim | |
 | Tricentis Test Management | Tricentis のテスト管理製品 (TTM for Jira 等を含む) |
+| TTM for Jira | Tricentis Test Management for Jira 略称 |
+| Tricentis Test Management for Jira | 正式名称 |
+| Test in TTM for Jira | Testim Properties の TTM 連携セクション |
+| Create & map TTM for Jira tests | テスト一括マッピングボタン |
+| Folder Path in TTM for Jira | TTM フォルダーパス設定セクション |
+| My test cases | TTM for Jira のデフォルトフォルダー名 |
+| My Test Cases | TTM for Jira のデフォルトフォルダー名（大文字） |
 | Tricentis Device Cloud | Tricentis のモバイルデバイスクラウド |
 | qTest | Tricentis のテスト管理プラットフォーム |
 | qTest Manager | qTest のテスト管理コンポーネント |
@@ -84,6 +91,88 @@
 | Test Plans Library | テストプランライブラリ画面 |
 | REST API | REST API 種別表記 |
 | Configuring a Data-driven Test From The Visual Editor | Visual Editor データ駆動テスト設定ページリンクテキスト |
+| Auto Grouping | 自動グルーピング機能 |
+| Configuration Library | テスト設定ライブラリ画面 |
+| Configuration List | テスト設定リスト画面 |
+| Custom capabilities | Grid のカスタムケイパビリティ機能 |
+| Custom capability | Grid のカスタムケイパビリティ（単数形） |
+| Grid Type | グリッドタイプ設定 |
+| Validate download | ダウンロード検証ステップ |
+| Validate Email | メール検証ステップ |
+| Visual validation | ビジュアル検証機能 |
+| Vision Locate | モバイルテスト用要素認識機能 |
+| Play Scenario | シナリオ再生機能 |
+| Validate API | API 検証ステップ |
+| API Action | API アクションステップ種別 |
+| Add API validation | API 検証追加 UI 操作 |
+| Add API action | API アクション追加 UI 操作 |
+| Run on a grid | グリッド上で実行する UI オプション |
+| Pull Request | プルリクエスト機能（単独使用） |
+| Pull Requests | プルリクエスト機能（複数形） |
+| Ultrafast Test Cloud | Tricentis Ultrafast Test Cloud |
+| Root Cause Analysis | テスト失敗の根本原因分析機能 |
+| Suite Runs | スイート実行ビュー |
+| Step Log | ステップログ UI 要素 |
+| Merge Branch | ブランチマージ UI 操作 |
+| Test Properties | テストプロパティパネル |
+| Override default configurations | デフォルト設定の上書きオプション |
+| Click event type | クリックイベントタイププロパティ |
+| Apply to click steps | クリックステップへの適用オプション |
+| Key Value | キー・バリューデータ構造 |
+| App Registration | アプリ登録（Azure AD 文脈） |
+| Verification Code | 認証コード（MFA 文脈） |
+| Choose Other | 別の選択肢 UI アクション |
+| New name | 名前変更ダイアログフィールド |
+| Add After All | Hook 設定の全体後フック追加 |
+| Net Total | 金額合計フィールド |
+| Download for | ダウンロード対象選択 |
+| Additional content | 追加コンテンツセクション |
+| Device Management | デバイス管理画面 |
+| Apps Library | アプリライブラリ画面 |
+| Mobile Configuration | モバイル設定 |
+| Scheduled Runs | スケジュール実行画面 |
+| Application name | アプリケーション名フィールド |
+| Change app | アプリ変更リンク |
+| Start A Trial | トライアル開始ボタン |
+| Duplication Level | 重複レベルラベル |
+| Override application | アプリケーション上書きオプション |
+| Generate API Key | API キー生成ボタン |
+| Generate Key | キー生成ボタン |
+| New Secret | 新規シークレット作成ボタン |
+| Edit Secret | シークレット編集操作 |
+| Share step | 共有ステップチェックボックス（Properties パネル） |
+| From Device | デバイスからの記録オプション |
+| Run additional code | 追加コード実行オプション |
+| Default Configuration | デフォルト設定 |
+| Runs Configuration | 実行設定画面パス |
+| Mobile Devices | モバイルデバイスセクション |
+| Grid Configuration | グリッド設定 |
+| Test Configuration | テスト設定 |
+| Suite Configuration | スイート設定 |
+| Select a folder | フォルダ選択ダイアログ |
+| Resolved Duplicate | 解決済み重複ステータス |
+| Pending Duplicates | 保留中重複ステータス |
+| New Duplicates | 新規重複ステータス |
+| Form Data | フォームデータ形式 |
+| Assertion | API ステップの検証セクション |
+| Add New Config | 新規設定追加ボタン |
+| Login URL | ログイン URL フィールド |
+| Cloud Grid | Testim Cloud Grid |
+| Local grid | ローカルグリッド |
+| Third party grid | サードパーティグリッド |
+| Retry all | 全再試行リンク |
+| Grant Access | アクセス許可ボタン |
+| New Branch | 新規ブランチ作成 |
+| WebDriverAgent | Apple WebDriverAgent |
+| Apple Team ID | Apple 開発者チーム ID |
+| User Details | ユーザー詳細セクション |
+| One-Time Password Authenticator | ワンタイムパスワード認証 |
+| Open in Terminal | ターミナルで開くメニュー |
+| Salesforce Auto Login | Salesforce 自動ログインステップ |
+| Salesforce Auto Login step | Salesforce 自動ログインステップ名 |
+| Create the same Testim folder path | TTM フォルダーパスオプション |
+| Create all test cases in My test cases folder | TTM 一括テストケース作成オプション |
+| Mark as default | デフォルト設定マークボタン |
 
 ## Testim for Salesforce
 
@@ -110,6 +199,14 @@
 | Environments | UI ナビゲーション要素 |
 | Go Back to the Editor | Testim の UI リンク |
 | See Error | Testim の UI リンク |
+| As Another User | Salesforce のログイン方法（別ユーザーとしてログイン） |
+| Salesforce Flows | Salesforce フロー自動化ステップ |
+| Related List Action | Salesforce 関連リストアクションステップ |
+| Quote Line Editor | Salesforce 見積明細エディターステップ |
+| Quick Actions | Salesforce クイックアクション |
+| Verify Picklist Options | Salesforce ピックリスト検証ステップ |
+| Document Validation | Salesforce ドキュメント検証ステップ |
+| Apex Action | Salesforce Apex アクションステップ |
 
 ## 外部製品 / 第三者ツール
 
@@ -224,6 +321,35 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Link to Issue | 課題リンクフィールド |
 | Show Section | セクション表示ボタン |
 | CSV Download | CSV ダウンロードボタン |
+| Show Properties | プロパティ表示ボタン/アイコン |
+| Show step properties | ステッププロパティ表示ボタン |
+| Predefined steps | Testim の定義済みステップメニュー |
+| Toggle Breakpoint | ブレークポイント切替ボタン |
+| Filter Test | テストフィルター機能 |
+| Create Step | ステップ作成ボタン |
+| Text to assign | Set text ステップの入力フィールド |
+| Name the new step | 新規ステップ名入力フィールド |
+| What to run on | テスト実行先選択プロパティ |
+| Assigned to me | 自分に割り当てフィルター |
+| Native click event | ネイティブクリックイベントプロパティ |
+| Step delay | ステップ遅延プロパティ |
+| Verify not visible | 要素非表示検証プロパティ |
+| Add Environment | 環境追加ボタン |
+| Group Name | グループ名プロパティ |
+| Paste code at cursor | カーソル位置にコード貼り付けボタン |
+| Add Action | アクション追加メニュー |
+| Tab Name | タブ名フィールド |
+| Create New | 新規作成ボタン |
+| Add custom action | カスタムアクション追加 UI 操作 |
+| Run additional code on request results | API ステップの追加コード実行オプション |
+| Send via web page | API ステップの送信コンテキストチェックボックス |
+| Setup step | テスト Setup ステップ（単数、小文字） |
+| Setup Step | テスト Setup ステップ（単数、大文字） |
+| Test Configuration Properties | テスト設定プロパティパネル |
+| Cookie Info | Set Cookie ステップのフィールドグループ |
+| Cookie value | Cookie 値フィールド |
+| External or Internal Contact | メール検証の連絡先タイプ選択 |
+| Add custom validation | カスタム検証追加 UI 操作 |
 | Copilot User Licenses | Copilot ライセンス管理セクション |
 | Assign Copilot Seats to Teammates | Copilot シート割り当てダイアログ |
 | Go to Secrets Manager | シークレットマネージャーへのナビゲーションアクション |
@@ -463,6 +589,34 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Step name | プロパティ名（非共有ステップ版） |
 | Test Name | テスト名入力フィールドラベル（2-word compound） |
 | Test Description | テスト説明入力フィールドラベル（2-word compound） |
+| Step delay | プロパティ名（ms 単位ステップ遅延） |
+| Group Name | プロパティ名（グループ名） |
+| Tab Name | プロパティ名（タブ名） |
+| Text to assign | Set text ステップのプロパティ名 |
+| Ignore displacement diffs | ビジュアル検証プロパティ |
+| Include Evaluating | ビジュアル検証プロパティ |
+| Match Level | ビジュアル検証プロパティ |
+| Element text | 要素テキストプロパティ |
+| Native click event | クリックイベントプロパティ |
+| Verify not visible | 要素非表示検証プロパティ |
+| What to run on | テスト実行先選択プロパティ |
+| Assigned to me | フィルタープロパティ |
+| After test handler | テスト後フックハンドラー名 |
+| After each step handler | 各ステップ後フックハンドラー名 |
+| Before test handler | テスト前フックハンドラー名 |
+| Before each step handler | 各ステップ前フックハンドラー名 |
+| After suite handler | スイート後フックハンドラー名 |
+| Before suite handler | スイート前フックハンドラー名 |
+| Before Test | Testim Config Hook 名（プロパティ文脈） |
+| After Test | Testim Config Hook 名（プロパティ文脈） |
+| Before Step | Testim Config Hook 名 |
+| After Step | Testim Config Hook 名 |
+| Before each step | Testim Hook タイプ名 |
+| After each step | Testim Hook タイプ名 |
+| Before test | Testim Hook タイプ名 |
+| After test | Testim Hook タイプ名 |
+| Before suite | Testim Hook タイプ名 |
+| After suite | Testim Hook タイプ名 |
 
 <!--
 ## キーボードキー名 / 一般単語 UI ラベル (登録禁止)
