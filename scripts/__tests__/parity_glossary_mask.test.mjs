@@ -201,6 +201,46 @@ describe('classifySegment — URL/link stripping order (M2-P2-1 pilot regression
     );
     assert.equal(cls.isFullyMasked, false);
   });
+
+  it('handles URL with percent-encoded non-ASCII path (boundary)', () => {
+    // URLs may contain percent-encoded bytes for non-ASCII paths (e.g. Japanese
+    // page slugs). \S+ pre-strip must consume the entire URL without leaving
+    // percent-encoded fragments in the residue.
+    const cls = classifySegment(
+      '詳細は https://example.com/docs/%E6%97%A5%E6%9C%AC%E8%AA%9E を参照してください。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('handles bare URL followed by Japanese punctuation (boundary)', () => {
+    // Japanese "。" is treated as non-whitespace by \S+, so the period must
+    // not terminate URL stripping in a way that leaves residue behind. The
+    // ideographic period itself is CJK-stripped later; what matters is the
+    // URL body gets fully consumed.
+    const cls = classifySegment(
+      'リポジトリは https://github.com/example/repo にあります。続きは後述します。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('leaves malformed URL scheme as residue (negative boundary)', () => {
+    // "https:/" (single slash) does not match the pre-strip regex. The
+    // English prose around it must still be classified as untranslated so
+    // that genuinely broken content is not masked away silently.
+    const cls = classifySegment(
+      'This page mentions a malformed link https:/example.com that is broken.',
+    );
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('accepts multiple backtick-wrapped URLs in sequence (boundary)', () => {
+    // Non-greedy `[^`]*` handles consecutive backtick pairs without crossing
+    // each other. Two CLI-style tokens side by side should both be stripped.
+    const cls = classifySegment(
+      '例として `https://byby.dev/ios-deep-linking` および `https://open.spotify.com/artist/abc` を参照してください。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
 });
 
 describe('maskSegmentText — mask record shape', () => {
