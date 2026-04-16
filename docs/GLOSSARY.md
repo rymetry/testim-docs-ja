@@ -176,6 +176,23 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | custom capabilities | Custom capabilities の小文字バリアント |
 | driver | Selenium / Appium driver |
 | Selenium driver | Selenium WebDriver |
+| Private grid | Testim 専用グリッド提供 |
+| private grid | Testim 専用グリッド提供 (小文字) |
+| Private Grid | Testim 専用グリッド (Title Case) |
+| Run a Docker command | VSTS Docker タスクの Action 値 |
+| Publish Test Results | VSTS/TFS Publish Test Results タスク |
+| Test result format | VSTS Publish Test Results フィールド |
+| Test results files | VSTS Publish Test Results フィールド |
+| Search folder | VSTS Publish Test Results フィールド |
+| Build.BinariesDirectory | VSTS 環境変数 |
+| Build.BuildId | VSTS 環境変数 |
+| JUnitXMLReporter | JUnit XML レポーター |
+| New Token | HeadSpin API Token 生成ボタン |
+| +New Token | HeadSpin API Token 生成ボタン (prefix) |
+| User Settings | HeadSpin User Settings 画面 |
+| Docker command | VSTS Docker コマンドオプション |
+| Configuration Library - Mobile | Testim モバイル設定ライブラリ |
+| Configuration Library | Testim 設定ライブラリ (generic) |
 | Codeship | CloudBees の CI プロバイダー |
 | Gearset | Salesforce DevOps プラットフォーム |
 | Copado | Salesforce DevOps プラットフォーム |
