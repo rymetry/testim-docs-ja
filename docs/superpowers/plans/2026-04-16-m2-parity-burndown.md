@@ -96,6 +96,32 @@ Tier A 全 slug で recurring する 2 つの主要 pattern を agent input に�
 
 Tier A agent は上記 2 pattern を優先 scan し、3 件目以降の未知 pattern が出たら pilot #1 と同様に reviewer gate + plan §5.3 登録を経由すること。
 
+**Tier A 20 slug × `**Xするには:**` 出現数** (2026-04-17 実測 / 残 19 slug — pilot #1 は 0 化済み):
+
+| slug (entries) | `**Xするには:**` count |
+|---|---:|
+| editing-tests/generating-a-random-value (14) | 2 |
+| salesforce-testing/salesforce-steps/sfdc-document-validation (12) | 8 |
+| advanced-editing/keyboard-shortcut-step (10) | 0 |
+| integrations/test-management-integrations/ttm-for-jira-integration (9) | 1 |
+| salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce (9) | 1 |
+| editing-tests/editing-your-tests/editing-target-element-properties (8) | 0 |
+| integrations/visual-validation/lambdatest_integration (8) | 0 |
+| integrations/grid-management (7) | 1 |
+| administration/secrets (6) | 1 |
+| advanced-editing/parameters/passing-parameters-from-excel-file (6) | 0 |
+| advanced-editing/validations/validate-download (6) | 1 |
+| advanced-editing/validations/validate-element-text (6) | 4 |
+| integrations/grid-management/saucelabs-browserstack-options (6) | 0 |
+| integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration (6) | 0 |
+| administration/subscription-plans (5) | 1 |
+| advanced-editing/coding-assistant (5) | 0 |
+| integrations/test-management-integrations/xray-integration (5) | 1 |
+| overview/testim-overview (5) | 0 |
+| testops/insights/reports (5) | 3 |
+
+Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高密度 slug (`sfdc-document-validation` 8 / `validate-element-text` 4 / `testops/insights/reports` 3) は baseline entry の大半が同 pattern 由来の可能性が高く、expected effort は中程度。pattern 0 slug (8 slug: `keyboard-shortcut-step` 10 entries / `editing-target-element-properties` 8 entries / `lambdatest_integration` 8 entries 等) は異なる構造起因の drift を主因とするため、pilot #1 の recipe が即適用できず agent 側で別 pattern 識別が必要。
+
 **Exit:** Tier A 全 slug で entry = 0、baseline total ≤ 140
 
 ### P2-3: Tier B batch — area 単位
@@ -163,10 +189,15 @@ Tier A agent は上記 2 pattern を優先 scan し、3 件目以降の未知 pa
 
 §P2-2 Exit の `Tier A 全 slug で entry = 0` は **content-level で解消可能な entry** に適用する。以下の mechanism-pending カテゴリは content 修正で 0 に到達不能なため、per-slug ≤ 2 件の残存を許容し、M3 PR Z 前の別 mechanism PR で一括解消する (architect gate P2-2 D2, 2026-04-17):
 
-1. **FileOrFilePath paragraph vs code-fence kind-mismatch** (P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知): EN の `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は `source_parity_segments_en.mjs` の INLINE_JOIN_TAGS 透過経路で paragraph kind に extract される。JA は code-fence (```text / ``` ) で `code-block` kind になる。paragraph 一致には backtick inline が不可欠だが textNorm が backticks を strip するため classifier で segment-untranslated が再発火。構造的修正は EN 抽出側で FileOrFilePath を inline-code として wrap する mechanism change が必要 (= M2 範囲外)
-   - **symptom pattern**: WDA section / CLI prerequisites / error log example ページ
-   - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
-   - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
+**Scope (architect gate P2-2 round 2)**: 本 carve-out は下記 §5.3.1 に列挙する **具体的 mechanism pattern のみ** に適用する。Wave 2 以降の agent が未知の残存 entry を一般的な "mechanism-pending" として自主宣言するのは禁止。新規 mechanism-level 課題を発見した場合は §5.2 と同じ security L2 gate (reviewer 承認 + §5.3.N 追加登録) を経由すること。§P2-2 Exit は実質的に **"Tier A 全 slug で content-level entry = 0 ∧ §5.3 登録済 mechanism-pending ≤ 2"** として読み替える。
+
+#### 5.3.1 FileOrFilePath paragraph vs code-fence kind-mismatch
+
+P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は `source_parity_segments_en.mjs` の INLINE_JOIN_TAGS 透過経路で paragraph kind に extract される。JA は code-fence (```text / ``` ) で `code-block` kind になる。paragraph 一致には backtick inline が不可欠だが textNorm が backticks を strip するため classifier で segment-untranslated が再発火。構造的修正は EN 抽出側で FileOrFilePath を inline-code として wrap する mechanism change が必要 (= M2 範囲外)
+
+- **symptom pattern**: WDA section / CLI prerequisites / error log example ページ
+- **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
+- **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
 
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
