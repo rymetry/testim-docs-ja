@@ -145,7 +145,7 @@ TST_CREDS.<keyName>.<'username'|'password'>
 パラメーターファイルは JSON 形式で定義されますが、この種の静的ファイルは暗号化された認証情報の使用をサポートしていません。**パラメーターファイルを暗号化された認証情報に対応させるには:**
 
 1. ファイル名の拡張子を `.json` から `.js` に変更します。例: `<file name>.js`
-2. 最初の行として `module.exports =` を追加します:
+2. 最初の行として `module.exports=` を追加します:
 
 ```javascript
 module.exports = {
