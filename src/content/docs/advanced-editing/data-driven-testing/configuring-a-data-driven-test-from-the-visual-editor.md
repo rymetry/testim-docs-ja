@@ -70,9 +70,7 @@ return 行の括弧は残しておく必要があります。
 
 ![テスト実行結果](/images/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor/ca3d466-Capture1.png)
 
-"username": "tomsmith", "password": "SuperSecretPassword!"
-
-エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UI で提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/running-tests/scheduler) を使用する必要があります。
+"username": "tomsmith", "password": "SuperSecretPassword!" エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UI で提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/running-tests/scheduler) を使用する必要があります。
 
 ### CSV/Excel ファイルをアップロードしてテストデータを追加
 
