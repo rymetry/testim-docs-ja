@@ -238,6 +238,77 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | AWS | Amazon Web Services クラウドプラットフォーム |
 | Xcode | Apple の開発ツール |
 | Android Studio | Google の Android 開発ツール |
+| GitHub | Git ホスティング / CI プロバイダー |
+| GitHub Issues | GitHub の課題管理機能 |
+| GitHub Actions | GitHub の CI/CD 機能 |
+| Git Issues | Git Issues (bug 報告先) |
+| Bitbucket | Atlassian の Git / Mercurial ホスティング |
+| Jenkins | オープンソース CI サーバー |
+| Jenkins Pipeline | Jenkins のパイプライン機能 |
+| CircleCI | CI プロバイダー |
+| Circle CI | CircleCI の別表記 |
+| circle.yaml | CircleCI 設定ファイル名 |
+| circleci-test-results | CircleCI テスト結果ディレクトリ |
+| Dedicated run tunnel | Testim Dedicated Run Tunnel 機能名 |
+| dedicated run tunnel | Testim Dedicated Run Tunnel (小文字バリアント) |
+| docker engine | Docker Engine |
+| Docker Engine | Docker Engine |
+| docker run | Docker CLI コマンド |
+| testim-runner | Testim Docker CLI runner コンテナ名 |
+| testim-sanity | Testim CI report filename prefix |
+| Settings > Integrations | Testim Settings 画面パス |
+| Settings > Integration | Testim Settings 画面パス (単数形) |
+| Test in qTest | qTest プロパティセクション名 |
+| Test in Xray | Xray プロパティセクション名 |
+| Test in TTM for Jira | TTM for Jira プロパティセクション名 (既出) |
+| issue type | Xray / Jira 課題タイプフィールド |
+| Create all test cases in My test cases folder | TTM for Jira フォルダーパスオプション |
+| Create all test cases | TTM for Jira フォルダーパスオプション (短縮) |
+| aa1 | テスト UI 例のフォルダー名 |
+| bb1 | テスト UI 例のフォルダー名 |
+| Monaco Code Editor | Testim UI のコードエディター |
+| Add new one | Testim Custom capabilities ダイアログの追加ボタン |
+| Custom capability | Custom capabilities の単数形 |
+| custom capability | Custom capabilities の単数形 (小文字) |
+| custom capabilities | Custom capabilities の小文字バリアント |
+| driver | Selenium / Appium driver |
+| Selenium driver | Selenium WebDriver |
+| Private grid | Testim 専用グリッド提供 |
+| private grid | Testim 専用グリッド提供 (小文字) |
+| Private Grid | Testim 専用グリッド (Title Case) |
+| Run a Docker command | VSTS Docker タスクの Action 値 |
+| Publish Test Results | VSTS/TFS Publish Test Results タスク |
+| Test result format | VSTS Publish Test Results フィールド |
+| Test results files | VSTS Publish Test Results フィールド |
+| Search folder | VSTS Publish Test Results フィールド |
+| Build.BinariesDirectory | VSTS 環境変数 |
+| Build.BuildId | VSTS 環境変数 |
+| JUnitXMLReporter | JUnit XML レポーター |
+| New Token | HeadSpin API Token 生成ボタン |
+| +New Token | HeadSpin API Token 生成ボタン (prefix) |
+| User Settings | HeadSpin User Settings 画面 |
+| Docker command | VSTS Docker コマンドオプション |
+| Configuration Library - Mobile | Testim モバイル設定ライブラリ |
+| Configuration Library | Testim 設定ライブラリ (generic) |
+| Codeship | CloudBees の CI プロバイダー |
+| Gearset | Salesforce DevOps プラットフォーム |
+| Copado | Salesforce DevOps プラットフォーム |
+| AutoRABIT | Salesforce DevOps / CI プラットフォーム |
+| TestRail | Gurock のテスト管理プラットフォーム |
+| HeadSpin | モバイル / IoT テストグリッドプロバイダー |
+| VSTS | Visual Studio Team Services (旧称) |
+| TFS | Team Foundation Server |
+| Azure Pipelines | Azure DevOps のパイプライン機能 |
+| Mercurial | 分散バージョン管理システム |
+| Atlassian | Jira / Bitbucket の提供企業 |
+| Trello | Atlassian のカンバンボード |
+| Sealights | テストインパクト分析製品（再掲バリアント） |
+| LambdaTest Automation | LambdaTest の自動化プラットフォーム |
+| Appium | モバイル自動化フレームワーク（再掲バリアント） |
+| TTM for Jira | Tricentis Test Management for Jira |
+| Tricentis Test Management for Jira | TTM for Jira の完全表記 |
+| TDC | Tricentis Device Cloud 略称 |
+| qTest API | qTest の API |
 
 ## 画面 / UI 領域
 
@@ -445,6 +516,236 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | executionId | Webhook JSON ペイロードフィールド |
 | schedulerName | Webhook JSON ペイロードフィールド |
 | executionUrl | Webhook JSON ペイロードフィールド |
+| Custom Grid | ユーザー所有のカスタム Selenium Grid オプション |
+| Cloud Grid | Testim Cloud Grid (デフォルト提供) |
+| Testim Cloud Grid | Testim 提供のクラウドグリッド |
+| Local grid | ローカル Grid 実行オプション |
+| Remote Grid | リモート Grid 実行オプション |
+| Add New Grid | Grid 追加ダイアログのボタン |
+| Grid Type | Grid 設定画面の種別フィールド |
+| Sign in | Grid 設定画面のログインボタン |
+| Grant Access | Grid アクセス付与ボタン |
+| My Settings | TestRail のユーザー設定画面 |
+| API Keys | API キー管理タブ |
+| API Key | API キーラベル |
+| API Token | API トークンラベル |
+| Generate Key | API キー生成ボタン |
+| Start A Trial | トライアル開始ボタン |
+| Start a Trial | トライアル開始ボタン (小文字バリアント) |
+| Run on a grid | テスト実行オプション |
+| Custom capabilities | Grid 追加のカスタムケイパビリティ機能 |
+| Custom Capabilities | Custom capabilities の Title Case バリアント |
+| Custom Host | カスタムホスト設定 |
+| Custom Port | カスタムポート設定 |
+| URL Callout | Copado / CI コール機能のステップ名 |
+| URL Callout ステップ | Copado の URL Callout ステップ |
+| Execute Shell Command | Jenkins のシェルコマンド実行ステップ |
+| Jenkins Execute Shell Command | Jenkins シェルコマンド実行ステップ (複合表記) |
+| Add New Config | Grid 設定画面の新規設定ボタン |
+| Create & Map | TTM for Jira 一括マッピングボタン |
+| Create & map TTM for Jira tests | TTM for Jira 一括作成ボタン |
+| Retry all | 失敗再実行リンク |
+| Test Properties | テストプロパティパネル |
+| Test in TTM for Jira | プロパティセクション名 (TTM for Jira) |
+| Folder Path in TTM for Jira | TTM for Jira フォルダーパス設定 |
+| Create the same Testim folder path | TTM for Jira フォルダーパスオプション |
+| My test cases | TTM for Jira 単一フォルダー名 |
+| My Test Cases | TTM for Jira 単一フォルダー名 (Title Case) |
+| Test Execution | 既出 - qTest の UI 画面名 |
+| Test Library | テストライブラリ画面 |
+| Password/access key | Grid 認証パスワード / アクセスキーフィールド |
+| access key | BrowserStack アクセスキーフィールド |
+| user name | BrowserStack 設定の user name ラベル |
+| host name | BrowserStack 設定の host name ラベル |
+| Bug in App | 既出 - 失敗タイプタグ |
+| Create & map | 一括マッピングボタン (小文字バリアント) |
+| Create and map | 一括マッピングアクション |
+| Test Execution tab | qTest / TTM for Jira 実行タブ名 |
+| Test Runs tab | qTest の実行タブ名 |
+| Testim.io | Testim 旧称 / テスト実行名プレフィックス |
+| W3C format | W3C 準拠の capabilities format |
+| JSON object | JSON オブジェクト形式 |
+| base url | Testim のベース URL 設定 |
+| revision control | 版管理（revision control system）|
+| revision control system | 版管理システム (Bitbucket context) |
+| source code | ソースコード (generic) |
+| bug tracker | バグトラッカー機能 |
+| bug / issue tracking system | バグ/課題トラッキングシステム |
+| mobile configuration | モバイルテスト設定 |
+| Mobile Configuration | モバイル設定 (Title Case) |
+| Device Management | モバイルデバイス管理画面 |
+| Apps Library | モバイルアプリライブラリ |
+| Mobile Apps | モバイルアプリ画面 |
+| virtual device | モバイル仮想デバイス |
+| iOS application | iOS アプリケーション |
+| Android application | Android アプリケーション |
+| Community license | Community 版ライセンス |
+| trial license | トライアルライセンス |
+| advanced test parameter | 高度なテストパラメーター |
+| third party grid | 第三者グリッド (SauceLabs / BrowserStack / LambdaTest 等) |
+| Third party grid | 第三者グリッド (Title Case) |
+| Third Party Grid | 第三者グリッド (Title Case) |
+| project / repository | プロジェクト / リポジトリ |
+| Pull Request | Git プルリクエスト |
+| pull request | Git プルリクエスト (小文字) |
+| Options arrow | テスト実行ボタンの options arrow |
+| options arrow | テスト実行ボタンの options arrow |
+| scheduled test run | スケジュールされたテスト実行 |
+| scheduler | スケジューラー機能 |
+| Scheduler | 既出 - テストスケジューラー画面 |
+| What to run on | scheduler の実行先設定 |
+| Override custom capabilities | scheduler の custom capabilities 上書き |
+| command line interface | CLI の完全表記 |
+| grid parameter | --grid パラメーター |
+| host / port parameter | 旧来の host / port パラメーター |
+| API action | API アクションステップ (generic) |
+| REST API | REST API |
+| Testim REST API | Testim の REST API |
+| CI job | CI ジョブ |
+| CI jobs | CI ジョブ (複数形) |
+| test plan | テストプラン |
+| test plans | テストプラン (複数形) |
+| test suite | テストスイート |
+| test suites | テストスイート (複数形) |
+| test label | テストラベル |
+| test labels | テストラベル (複数形) |
+| Publish Bug | 既出 - バグレポート公開画面 |
+| branch name | ブランチ名 |
+| execution name | 実行名 |
+| integration | 統合機能 generic term |
+| admin access | 管理者アクセス |
+| trial | トライアル期間 |
+| Master | 既出 - Git / Testim ブランチ名 |
+| Mobile Apps Library | モバイルアプリライブラリ (既出) |
+| Setup Step | テストのセットアップステップ |
+| Setup step | テストのセットアップステップ (lowercase step) |
+| Show Properties | プロパティ表示ボタン |
+| Application name | アプリ名プロパティ |
+| Change app | アプリ変更リンク |
+| change app | アプリ変更リンク (lowercase) |
+| Library option | From Library オプション |
+| From Library | app 選択オプション |
+| From Device | app 選択オプション |
+| drop-down menu | ドロップダウンメニュー |
+| drop down menu | ドロップダウンメニュー (no hyphen) |
+| command example | CLI コマンド例 |
+| command prompt | コマンドプロンプト |
+| Copy ID | ID コピーボタン |
+| app-id | CLI フラグ名 |
+| Scheduled Runs | スケジュール済み実行画面 |
+| Override application | アプリケーション上書きチェックボックス |
+| Select from library | ライブラリから選択ボタン |
+| Virtual Mobile Grid trial | VMG トライアル |
+| trial period | トライアル期間 |
+| CLI command | CLI コマンド |
+| CLI commands | CLI コマンド (複数形) |
+| admin access | 管理者アクセス (既出) |
+| HTTPS tunnel | HTTPS トンネル |
+| options arrow | options arrow (既出) |
+| time zone | タイムゾーン |
+| revision control | 版管理 |
+| parallel run | 並列実行 |
+| parallel runs | 並列実行 (複数形) |
+| mobile app | モバイルアプリ (固有 noun phrase) |
+| mobile apps | モバイルアプリ (複数形) |
+| virtual device | 仮想デバイス (noun phrase) |
+| virtual devices | 仮想デバイス (複数形) |
+| iOS simulator | iOS シミュレータ |
+| Android emulator | Android エミュレータ |
+| iOS application | iOS アプリケーション (既出) |
+| Android application | Android アプリケーション (既出) |
+| source code | ソースコード (既出) |
+| revision control system | 版管理システム (既出) |
+| bug tracker | バグトラッカー (既出) |
+| bug / issue tracking system | バグ/課題トラッキングシステム (既出) |
+| mobile configuration | モバイルテスト設定 (既出) |
+| Mobile Configuration | モバイル設定 (既出) |
+| Device Management | モバイルデバイス管理 (既出) |
+| Apps Library | モバイルアプリライブラリ (既出) |
+| Mobile Apps | モバイルアプリ画面 (既出) |
+| Community license | Community 版ライセンス (既出) |
+| trial license | トライアルライセンス (既出) |
+| advanced test parameter | 高度なテストパラメーター (既出) |
+| third party grid | 第三者グリッド (既出) |
+| Third party grid | 第三者グリッド (既出) |
+| Third Party Grid | 第三者グリッド (既出) |
+| project / repository | プロジェクト / リポジトリ (既出) |
+| Pull Request | Git プルリクエスト (既出) |
+| pull request | Git プルリクエスト (既出) |
+| scheduled test run | スケジュールされたテスト実行 (既出) |
+| What to run on | scheduler 実行先設定 (既出) |
+| Override custom capabilities | scheduler の custom capabilities 上書き (既出) |
+| command line interface | CLI 完全表記 (既出) |
+| grid parameter | --grid パラメーター (既出) |
+| host / port parameter | 旧来の host / port パラメーター (既出) |
+| API action | API アクションステップ (既出) |
+| REST API | REST API (既出) |
+| Testim REST API | Testim の REST API (既出) |
+| CI job | CI ジョブ (既出) |
+| CI jobs | CI ジョブ (複数形, 既出) |
+| Publish Bug | 既出 - バグレポート公開画面 |
+| branch name | ブランチ名 (既出) |
+| execution name | 実行名 (既出) |
+| Test Execution tab | qTest / TTM for Jira 実行タブ名 (既出) |
+| Test Runs tab | qTest の実行タブ名 (既出) |
+| BUILD_NUMBER | CI 環境変数プレースホルダー |
+| report-file | Testim CI --report-file フラグ |
+| Release Manager | Copado Release Manager |
+| Copado Release Manager | Copado の Release Manager モジュール名 |
+| Perform callout and continue with deployment | Copado URL Callout ステップの Type 値 |
+| Perform callout and pause step | Copado URL Callout ステップの Type 値 (pause) |
+| Deploy All | Copado Deploy All ボタン |
+| Dynamic URL Parameters | Copado URL Callout のオプション |
+| Resume URL | Copado pause step の Resume URL |
+| Continuous Integration | CI の完全表記 |
+| View Results | Copado の View Results ボタン |
+| Runs > Configuration | Testim Configuration リスト |
+| After test handler | Testim Config Hook 項目 |
+| Content-Type | HTTP Content-Type ヘッダー |
+| application/json | MIME type |
+| Test Plan | Testim Test Plan |
+| Test Label | Testim Test Label |
+| JSON payload | JSON ペイロード |
+| Add API action | Testim API action ステップ (既出) |
+| Send via web page | プロパティ名 (既出) |
+| shared step | Testim 共有ステップ |
+| shared steps | Testim 共有ステップ (複数形) |
+| Grids | Testim Grids セクション (top-right profile) |
+| Access key | LambdaTest / Grid アクセスキー |
+| Project token | LambdaTest プロジェクトトークン |
+| Project Token | LambdaTest プロジェクトトークン (Title Case) |
+| SmartUI | LambdaTest SmartUI 製品名 |
+| LambdaTest SmartUI | LambdaTest SmartUI 製品名 |
+| Smart UI | LambdaTest Smart UI バリアント表記 |
+| Visual testing | Testim 設定メニュー項目 (Visual testing) |
+| visual testing provider | ビジュアルテストプロバイダー |
+| Integrate LambdaTest SmartUI | LambdaTest SmartUI 統合セクション見出し |
+| Visual testing tab | Testim 設定 visual testing タブ |
+| Add a new API key | Applitools Eyes の API key 追加ボタン |
+| Run Key | Applitools Run Key フィールド |
+| Merge Key | Applitools Merge Key フィールド |
+| App Name | Applitools App Name フィールド (既出) |
+| Applitools Eyes | Applitools のビジュアルテスト製品 |
+| Cloud URL | Applitools Cloud URL フィールド |
+| Admin panel | Applitools Eyes の Admin 画面 |
+| API keys | Applitools API keys セクション (複数形) |
+| Expiry | Applitools API key Expiry フィールド |
+| Purpose | Applitools API key Purpose フィールド |
+| Permissions | Applitools API key Permissions セクション |
+| Visual Validation | 検証機能ページ名 |
+| Execute | Applitools Permissions Execute |
+| Merge | Applitools Permissions Merge |
+| wait-for | Testim wait-for ステップ統合プレフィックス |
+| Test run and results | TestRail のタブ名 |
+| Save settings | TestRail API key 保存ボタン |
+| ApiKey | Testim 設定フィールド名 (TestRail) |
+| Suite\\Test name | TestRail 実行名テンプレート |
+| Report from Testim.io | TestRail 実行名プレフィックス |
+| tms-field-file | TestRail CLI フラグ |
+| executed_by | TestRail カスタムパラメーター |
+| Success events | Gearset Webhook トリガーオプション |
+| Outgoing webhook url | Gearset Webhook 送信先 URL フィールド |
+| Generate API Key | Testim API Key 生成ボタン |
 
 ## SSO / 認証連携 UI ラベル
 

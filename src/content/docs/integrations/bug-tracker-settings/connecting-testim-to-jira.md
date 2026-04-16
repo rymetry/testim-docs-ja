@@ -15,18 +15,21 @@ keywords:
   - 接続設定
 ---
 
-Testim は新しい Bug チケットを作成します。チケットにはバグの詳細な説明、バグの再現手順、画面解像度とブラウザ、バグのスクリーンショットが含まれます。次のスクリーンショットは、説明やスクリーンショットなどを含む、実際に作成された Bug チケットの例です。詳細については [Bug Reporting](/docs/test-management/bug-reporting) を参照してください。
+## Testim と Jira の連携
 
-![Jira に作成された Bug チケットの例](/images/bug-tracker-settings/connecting-testim-to-jira/6290943-image.png)
+Testim は、新しいバグチケットを作成します。これには、バグの詳細な説明、バグの再現手順、画面解像度とブラウザー、バグのスクリーンショットが含まれます。次のスクリーンショットは、説明やスクリーンショットなどを含む、実際に作成されたバグチケットの例です。詳細については、[Bug Reporting](/docs/test-management/bug-reporting) を参照してください。
 
-Testim を Jira に接続するには、まず Jira にログインする必要があります。初回のハンドシェイクが確立されれば、その後は接続を再設定しなくても Jira にイシューを作成できるようになります。
-→ **Testim を Jira に接続するには:**
+![Jira に作成された Bug Ticket の例](/images/bug-tracker-settings/connecting-testim-to-jira/6290943-image.png)
 
-1. **Settings > Bug Tracker** に移動します。
-2. **Jira** が選択されており、すでに Jira にログインしていることを確認します。
-3. **Host** フィールドに Jira サイトの URL を入力します。例えば `https://<yourcompany>.atlassian.net` です。
+Testim を Jira に接続するには、まず Jira にログインする必要があります。初回のハンドシェイクが確立されると、その後は接続を再設定しなくても Jira に課題を作成できるようになります。
 
-![Jira の Host フィールド](/images/bug-tracker-settings/connecting-testim-to-jira/f26f1c9-jira1.PNG)
+## Testim を Jira に接続する
+
+1. `Settings > Bug Tracker` に移動します。
+2. Jira が選択されており、すでに Jira にログイン済みであることを確認します。
+3. `Host` フィールドに Jira サイトの URL を入力します。例えば `https://<yourcompany>.atlassian.net` です。
+
+![Jira の Host field](/images/bug-tracker-settings/connecting-testim-to-jira/f26f1c9-jira1.PNG)
 
 ログインしていない場合は、**Log in** リンクをクリックして Jira にログインします。
 

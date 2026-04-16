@@ -16,11 +16,11 @@ keywords:
   - mobile configuration
 ---
 
-Testim Mobile は Tricentis Device Cloud (TDC) と組み合わせることで、サポート付きで Grid 上の実機 iOS / Android デバイスを利用できます。さらに、機械学習を活用した分析により、mobile app の使いやすさやパフォーマンスに関するインサイトも得られます。TDC では、複数ユーザーで共有するデバイスと、自分専用の専有デバイスの両方が提供されます。Tricentis Device Cloud は特別な連携設定を必要としません。
+Testim Mobile は Tricentis Device Cloud (TDC) と組み合わせることで、サポート付きで Grid 上の実機 iOS / Android デバイスを利用できます。さらに、機械学習を活用した分析により、モバイルアプリの使い勝手やパフォーマンスに関するインサイトも得られます。TDC では、複数ユーザーで共有する共有デバイスと、自分専用の専有プライベートデバイスの両方が提供されます。Tricentis Device Cloud は特別な統合設定を必要としません。
 
 ## Tricentis Device Cloud でテストを実行する
 
-Tricentis Device Cloud でテストを実行する前に、TDC と互換性のある mobile configuration を事前に作成しておく必要があります。
+Tricentis Device Cloud でテストを実行する前に、TDC と互換性のあるモバイル設定を作成しておく必要があります。
 
 [Configuration Library - Mobile](/docs/test-management/configuration-library-mobile)
 

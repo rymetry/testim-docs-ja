@@ -22,14 +22,14 @@ keywords:
 
 **Custom Grid を追加するには:**
 
-1. [Grid の追加](/docs/integrations/grid-management#adding-a-grid) の手順に従い、Grid の種類として **Custom Grid** を選択します。
+1. [グリッドの追加](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Custom Grid** を選択します。
 2. **Next** をクリックします。
 3. **Name** フィールドに、利用する Selenium Grid の名前を入力します。
 4. **Host** フィールドに、Selenium Grid のホスト名または IP アドレスを入力します。
-5. **Port** フィールドに、Selenium Grid のポート番号を入力します。
+5. **Port** フィールドに、Selenium Grid のポートを入力します。
 
 :::info
-ローカルで実行する場合でも、Testim はテスト結果を表示・保存するために browser へ接続する必要があります。ネットワークから [https://services.testim.io/](https://services.testim.io/) へアクセスできることを確認してください。
+ローカルで実行する場合でも、Testim はテスト結果を表示して保存するためにブラウザーへ接続する必要があります。ネットワークから [https://services.testim.io/](https://services.testim.io/) へアクセスできることを確認してください。
 :::
 
 ![Custom Grid の Name、Host、Port を設定する画面](/images/grid-management/custom-grid/caabeca-2023-03-19_17-44-02.gif)
@@ -50,13 +50,13 @@ Grid 名を指定して `--grid` パラメーターを追加します。
 
 **Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
-### editor から実行する
+### エディターから実行する
 
 Test Editor から直接 Grid 上でテストを実行できます。
 
-- **Run**（実行）ボタンの横にあるオプションの矢印をクリックします。
-- **Run on a grid**（Grid で実行）をクリックします。
+- **Run** ボタンの横にある options arrow をクリックします。
+- **Run on a grid** をクリックします。
 
-その実行で構成 / Grid / Base URL を変更したい場合は **Edit** をクリックします。
+その実行で構成 / Grid / ベース URL を変更したい場合は **Edit** をクリックします。
 
 ![Test Editor から Run on a grid を選択している画面](/images/grid-management/custom-grid/0ca9bb7-Jul-21-2021_13-11-22.gif)

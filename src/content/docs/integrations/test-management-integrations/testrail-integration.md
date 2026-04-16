@@ -35,7 +35,7 @@ TestRail 統合により、TestRail のテストを Testim のテストにリン
 ![TestRail の URL 入力例](/images/test-management-integrations/testrail-integration/ea0ada5-image-20210523-052818.png)
 
 4. TestRail のユーザー名を入力します。
-5. Admin ユーザーとして TestRail にログインし、**My Settings** に移動して **API Keys** タブに移動します。**Generate Key** をクリックし、任意のキー名を入力して、生成された文字列をコピーし、**Save settings** をクリックします。このキーを Testim の ApiKey フィールドに貼り付けます。
+5. 管理者ユーザーとして TestRail にログインし、**My Settings** に移動して **API Keys** タブに移動します。**Generate Key** をクリックし、任意のキー名を入力して、生成された文字列をコピーし、**Save settings** をクリックします。このキーを Testim の ApiKey フィールドに貼り付けます。
 
 ![TestRail で API キーを生成する操作](/images/test-management-integrations/testrail-integration/b291ef8-TR.gif)
 
