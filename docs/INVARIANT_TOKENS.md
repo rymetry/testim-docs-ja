@@ -22,10 +22,20 @@
 | 項目 | 値 |
 | --- | --- |
 | id | `keyboard-shortcut` |
-| regex | `\b(Ctrl|Cmd|Shift|Alt|Option|Meta|Enter|Esc|Escape|Tab|Space|Backspace|Delete)(\+\w+)+\b` |
+| regex | `\b(Ctrl|Cmd|Shift|Alt|Option|Control|Command|Meta|Enter|Esc|Escape|Tab|Space|Backspace|Delete)(\+\w+)+\b` |
 | flags | `gi` |
 | example | `Ctrl+S`, `Shift+Cmd+K`, `Alt+Tab`, `ctrl+shift+i` |
 | note | 修飾キー (`Ctrl|Cmd|...`) から始まり`+` で連結されるもののみ。textNorm は小文字化するため `gi` flag で大文字小文字両対応 |
+
+## keyboard-shortcut-spaced
+
+| 項目 | 値 |
+| --- | --- |
+| id | `keyboard-shortcut-spaced` |
+| regex | `\b(Ctrl|Cmd|Shift|Alt|Option|Control|Command)\s*\+\s*(Ctrl|Cmd|Shift|Alt|Option|Control|Command|F\d+|[A-Z0-9])(?:\s*\+\s*(F\d+|[A-Z0-9]))?\b` |
+| flags | `gi` |
+| example | `Alt + X`, `Ctrl + 1`, `Alt + Ctrl + F12`, `option + command + x` |
+| note | スペース区切りのキーボードショートカット（例: `Alt + X / Ctrl + 1`）。F キーと単一英数字（0-9、A-Z）のみを末尾とする |
 
 ## cli-flag
 

@@ -67,25 +67,25 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0277227-header.png)
 
 10. 認証ヘッダーを設定するには **Authorization** タブをクリックし、次のいずれかの方式を選択します。
-    - **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の認証方式を使いたい場合に選択します。この場合、認証ヘッダーは **Header** タブで手動入力する必要があります。
+    - **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の方式を使いたい場合に選びます。この場合、認証ヘッダーは **Header** タブで手動設定する必要があります。
     - **Basic** – エンドポイントが Basic 認証を使用する場合に選択します。ユーザー名とパスワードを入力します。
     - **Bearer** – エンドポイントが Bearer トークン認証を使用する場合に選択します。トークンを入力します。
 
 :::note
-**Authorization** タブで **None** 以外を選択した場合、その設定が **Header** タブで手動入力した Authorization 値を上書きします。
+**Authorization** タブで **None** 以外を指定した場合、その設定が **Header** タブで手動入力した認証値を上書きします。
 :::
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-11. **Body** セクションのドロップダウンで送信したいデータ形式を選択し、下の入力欄にリクエストボディを入力します。例えばキーと値のペアなど任意のテキストを送りたい場合は **Text** オプションを使用します。利用できる形式は Text / JSON / JavaScript / XML / HTML です。Body にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
+11. **Body** セクションのドロップダウンで送信するデータ形式を選び、下の入力欄にリクエストボディを入力します。任意のテキスト（キーと値のペアなど）を送りたい場合は **Text** オプションを使用します。利用できる形式は Text、JSON、JavaScript、XML、HTML の 5 種類です。ボディ内にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
-**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。
+**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードを検証できます。アサーションは後述の「Run additional code on request results」で記述するコードより先に実行され、真なら成功、偽なら失敗になります。アサーションが失敗した場合、ステップとテスト全体が失敗扱いとなり、「Run additional code on request results」に書いたコードは実行されません。
 
 設定手順:
 
-- 1 つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
+- 1 つ目のドロップダウンから検証対象を指定します（Status code、Header、Body (JSON)、Body (Text) など）。<br/>
 - 2 つ目のドロップダウンで比較演算子を選択します。<br/>
 - 3 つ目の入力欄に比較する値を入力します。値には波括弧なしでパラメーターを指定することもできます。<br/>
 - 追加の Assertion を設定したい場合は同じ手順で行を追加し、左のチェックボックスで有効／無効を切り替えます。<br/>
@@ -117,9 +117,9 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ## AUT コンテキスト外でリクエストを試す
 
-テストを実行せずに、AUT（対象アプリ）コンテキスト外で素早くリクエストだけを試したい場合は、**URL** フィールドの **Send** ボタンを使います。このとき **Run additional code on request results** で設定したコードや Assertion は実行されません。\
-送信されるのは **Properties** パネルで定義されたローカルパラメーターのうち、静的な値のみです。動的な値は空文字として送信されます。\
-利用可能なステップパラメーターは URL フィールド下に一覧表示され、**Edit** をクリックすると **Properties** パネルで編集できます。
+テストを実行せずに AUT（対象アプリ）のコンテキスト外で素早くリクエストだけを試したい場合は、**URL** フィールドの **Send** ボタンを使います。このとき **Run additional code on request results** に記述したコードやアサーションは実行されません。\
+送信されるのは **Properties** パネルで定義したローカルパラメーターのうち、静的な値のみです。動的な値は空文字として扱われます。\
+使用可能なステップパラメーターは URL フィールドの下に一覧表示され、**Edit** をクリックすると **Properties** パネルで編集できます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/b763cb7-image_13.png)
 
@@ -130,8 +130,8 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ## Adding an API Action Step
 
-API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行いたいケースで使用します。返却データを計算に利用したり、後続ステップで利用するためにエクスポートパラメーターとして保存したりできます。_header_ / _body_ / _status code_ いずれの情報も利用可能です。\
-**“Add API action” ステップを追加するには:**
+API アクションステップ（Add API action）は、レスポンスを利用した追加処理を行う用途で使用します。返却されたデータを計算に用いたり、後続ステップで再利用するためにエクスポートパラメーターとして保存したりできます。ヘッダー／ボディ／ステータスコードのいずれの情報も活用可能です。\
+**Add API action ステップを追加するには:**
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/437b054-apiaciton.gif)
 
@@ -151,7 +151,7 @@ API アクションステップ（Add API action）は、レスポンスを利�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/01b1c12-Picture1.png)
 
 5. 上記「Validate API ステップの追加」の **手順 5〜13** に従って、URL ・ヘッダー・ボディ・ Assertion などを設定します（ただし目的は「検証」ではなく「応答データの利用」になります）。
-6. レスポンスデータを使った追加処理（パラメーター抽出、DB 接続のクローズなど）を行いたい場合は、**Run additional code on request results** をオンにします。ここではレスポンスの _status code_ / _response headers_ / _response body_ などを利用して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合は Object、それ以外は文字列として渡されます。
+6. レスポンスデータを使った追加処理（パラメーター抽出、DB 接続のクローズなど）を行う場合は、**Run additional code on request results** をオンにします。ここではレスポンスのステータスコード、レスポンスヘッダー、レスポンスボディなどを参照して任意の JavaScript コードを実行できます。レスポンスボディが XML/JSON の場合はオブジェクト、それ以外は文字列として渡されます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/5d3302a-image_2.png)
 
@@ -259,7 +259,7 @@ Body セクションに定義したエントリは、一時的に無効化した
 
 ## パラメーターの使用 {#using-parameters}
 
-API ステップでは、他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL／ヘッダー／ボディにパラメーターを埋め込んだり、レスポンスから値を取り出してパラメーターに保存したり、Assertion の値として使用したりできます。パラメーターは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
+API ステップでは、他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL・ヘッダー・ボディにパラメーターを埋め込んだり、レスポンスから値を取り出して保存したり、アサーションの比較値として使用したりできます。パラメーターは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
 パラメーターの詳細は [Parameters](/docs/advanced-editing/parameters) を参照してください。
 
 :::note
