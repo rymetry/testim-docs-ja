@@ -158,6 +158,14 @@ const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uff
  * After masking, decide whether the remaining text is (a) fully covered
  * (glossary + invariant + CJK only, no English prose) or (b) contains
  * untranslated English prose (= a bug).
+ *
+ * Ordering contract: inline code / markdown links / autolinks / bare URLs /
+ * `/docs` links are stripped **before** glossary + invariant masking.
+ * Otherwise glossary terms embedded inside URLs (e.g. `https`, `ios`) are
+ * consumed by the glossary matcher first, defeating the URL regex applied
+ * afterwards and leaving English fragments (`byby.dev`, `open.spotify.com`
+ * 等) in the residue — a deterministic false-positive pattern for
+ * callout-body / paragraph segments that embed external references.
  */
 export function classifySegment(text) {
   if (typeof text !== 'string' || text.length === 0) {
@@ -171,16 +179,21 @@ export function classifySegment(text) {
     return { isFullyMasked: true, residue: '' };
   }
 
-  const { maskedText } = maskSegmentText(text);
+  // Pre-strip link/code/URL atoms BEFORE masking. The maskSegmentText
+  // preserves raw tokens for fingerprinting elsewhere; the stripping here is
+  // classifier-local and does not leak back to callers.
+  const preStripped = text
+    .replace(/`[^`]*`/g, ' ') // inline code
+    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ') // markdown link [label](url)
+    .replace(/<https?:\/\/[^>]+>/g, ' ') // GFM autolink
+    .replace(/https?:\/\/\S+/g, ' ') // bare URL
+    .replace(/\/docs\/\S+/g, ' '); // internal /docs link
 
-  // Placeholder と inline code / URLs / backticks を除去して residue を見る
+  const { maskedText } = maskSegmentText(preStripped);
+
   const residue = maskedText
     .replace(new RegExp(GLOSSARY_PLACEHOLDER, 'g'), ' ')
     .replace(new RegExp(INVARIANT_PLACEHOLDER, 'g'), ' ')
-    .replace(/`[^`]*`/g, ' ')
-    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/https?:\/\/\S+/g, ' ')
-    .replace(/\/docs\/\S+/g, ' ')
     .trim();
 
   const englishPortion = residue.replace(CJK_RE, ' ').trim();

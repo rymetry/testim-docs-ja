@@ -142,6 +142,67 @@ describe('classifySegment — residue detection', () => {
   });
 });
 
+describe('classifySegment — URL/link stripping order (M2-P2-1 pilot regression)', () => {
+  // Ordering contract: inline code / markdown links / autolinks / bare URLs
+  // must be stripped BEFORE glossary masking. Glossary terms embedded in
+  // URLs (e.g. "https", "ios") would otherwise be consumed first, defeating
+  // the URL regex applied afterwards and leaving English fragments
+  // (byby.dev, spotify.com 等) in the residue — a deterministic
+  // false-positive pattern for callout-body segments that reference
+  // external URLs.
+
+  it('masks JA callout-body containing bare external URL', () => {
+    const cls = classifySegment(
+      'サードパーティアプリは url ベースのスキームのみサポートする場合があります。例: https://byby.dev/ios-deep-linking 参照。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('masks JA callout-body containing markdown link [url](url)', () => {
+    const cls = classifySegment(
+      'spotify は次の種類の deep link のみサポートします: [https://open.spotify.com/artist/abc](https://open.spotify.com/artist/abc)',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('masks JA callout-body containing GFM autolink <url>', () => {
+    const cls = classifySegment(
+      'サードパーティアプリは url ベースのスキームのみサポートする場合があります。例: <https://byby.dev/ios-deep-linking>',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('masks JA text with backtick-wrapped URL', () => {
+    const cls = classifySegment(
+      '例として `https://byby.dev/ios-deep-linking` を参照してください。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('masks JA text referencing internal /docs link', () => {
+    const cls = classifySegment(
+      '詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('still flags untranslated EN prose even when URLs are present', () => {
+    // Negative boundary: URL stripping must not mask genuine untranslated prose.
+    const cls = classifySegment(
+      'This is an untranslated description referring to https://byby.dev/ios-deep-linking for more details.',
+    );
+    assert.equal(cls.isFullyMasked, false);
+    assert.ok(cls.residue.length > 10, `expected residue, got: "${cls.residue}"`);
+  });
+
+  it('still flags untranslated EN prose inside markdown link context', () => {
+    const cls = classifySegment(
+      'The [documentation](https://example.com) describes advanced features in detail.',
+    );
+    assert.equal(cls.isFullyMasked, false);
+  });
+});
+
 describe('maskSegmentText — mask record shape', () => {
   it('mask record includes source, entry OR pattern, span (start/end)', () => {
     const result = maskSegmentText('Use the Visual Editor to edit.');
