@@ -434,7 +434,7 @@ if (sheet !== expectedPageName) {
 ### MS PowerPoint ファイル
 
 Validate download ステップを使用すると、スライド数や含まれる文字列など、PowerPoint ファイルに対して高度な検証が行えます。\
-以下の例では、ダウンロードした MS PowerPoint のスライド数が 9 枚であり、1 枚目に `Department`（部門）、2 枚目に `Location`（場所）の単語がそれぞれ含まれていることを確認します。
+以下の例では、ダウンロードした MS PowerPoint のスライド数が 9 枚であることに加え、1 枚目と 2 枚目のスライドに所定の単語（部門を表す文字列と場所を表す文字列）が含まれていることを確認します。具体的なコードは次のとおりです。
 
 ![PowerPoint ファイル検証のコード例](/images/validations/validate-download/4914681-Testim_175.png)
 
@@ -542,7 +542,7 @@ expectedText.forEach(item => {
 </table>
 
 :::note
-JSZip が扱えるのは新しい Office Open XML 形式（`.docx`）のみで、旧バイナリ形式（`.doc`）はサポートしていません。JSZip を使ったダウンロード検証では、必ず Office Open XML 形式を指定してください。
+JSZip が対応するのは新しいドキュメント形式（`.docx`）のみで、旧形式（`.doc`）はサポートしていません。JSZip を使ったダウンロード検証では、新しいドキュメント形式を指定してください。
 :::
 
 ### MS Word ファイル
@@ -619,7 +619,7 @@ return docxText.includes(expectedText);
 </table>
 
 :::note
-JSZip が扱えるのは新しい Office Open XML 形式（`.docx`）のみで、旧バイナリ形式（`.doc`）はサポートしていません。JSZip を使ったダウンロード検証では、必ず Office Open XML 形式を指定してください。
+JSZip が対応するのは新しいドキュメント形式（`.docx`）のみで、旧形式（`.doc`）はサポートしていません。JSZip を使ったダウンロード検証では、新しいドキュメント形式を指定してください。
 :::
 
 ### PDF ファイル
