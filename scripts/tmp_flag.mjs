@@ -1,4 +1,3 @@
-// Show all flagged segments with context
 import fs from 'node:fs';
 import path from 'node:path';
 import { extractSegmentsFromMarkdown } from './lib/source_parity_segments_ja.mjs';
@@ -12,7 +11,6 @@ const advedSlugs = new Set(
     .map((e) => e.slug),
 );
 
-// Only include kinds that appear in baseline entries (excludes code-block, heading)
 const ACTIVE_KINDS = new Set([
   'ordered-list-item',
   'unordered-list-item',
@@ -38,24 +36,21 @@ for (const slug of advedSlugs) {
         kind: seg.segmentKind,
         idx: seg.segmentIndex,
         line: seg.line,
-        text: seg.textNorm.slice(0, 200),
-        residue: cls.residue.slice(0, 150),
+        text: seg.textNorm.slice(0, 250),
+        residue: cls.residue.slice(0, 200),
       });
     }
   }
-  if (flagged.length > 0) {
-    bySlug[slug] = flagged;
-  }
+  if (flagged.length > 0) bySlug[slug] = flagged;
 }
 
 const sorted = Object.entries(bySlug).sort((a, b) => b[1].length - a[1].length);
 for (const [slug, flagged] of sorted) {
   console.log(`\n=== ${slug} (${flagged.length}) ===`);
-  for (const f of flagged.slice(0, 20)) {
+  for (const f of flagged) {
     console.log(`  L${f.line} ${f.kind}#${f.idx} [${f.section}]`);
     console.log(`    text: ${f.text}`);
     console.log(`    res:  ${f.residue}`);
   }
 }
-console.log('\nTotal slugs with flags:', sorted.length);
-console.log('Total flagged:', sorted.reduce((s,[_,v])=>s+v.length, 0));
+console.log('\nTotal flagged:', sorted.reduce((s, [_, v]) => s + v.length, 0));

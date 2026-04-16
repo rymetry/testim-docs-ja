@@ -81,7 +81,7 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
 
-10. APEX 側の入力パラメーターは文字列型で受け取ります。必要なパラメーターは次の手順で定義します。**Properties** パネルの **APEX Params** セクションで **+ APEX PARAMS** ボタンをクリックし、パラメーターの **Value** を入力してください。入力値は自動的に文字列型に変換されます（手順 12 のコード内で別の型に変換することも可能です）。パラメーター名はデフォルトで `param` になります。分かりやすい名前に変更したい場合は **edit** アイコンをクリックして任意の名前を入力します。
+10. APEX 側の入力パラメーターは文字列型で受け取ります。次の手順で必要なパラメーターを定義します。**Properties** パネルの **APEX Params** セクションで **+ APEX PARAMS** ボタンをクリックし、パラメーターの値を入力してください。入力値は自動的に文字列型へ変換されます（手順 12 のコード内で別の型に変換することも可能です）。パラメーター名はデフォルトで `param` となるので、分かりやすい名前に変更したい場合は **edit** アイコンをクリックして任意の名前を入力します。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/7007b2f-Testim_538a_r.png)
 

@@ -262,7 +262,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/54cf195-2023-01-04_13-02-27.png)
 
-2. 新しい構成を作成するには、ドロップダウンから新規作成オプションを選択します（ラベル表記は **Custom (create new) +** です）。
+2. 新しい構成を作成するには、ドロップダウンから新規作成オプションを選びます。UI 上の表示ラベルは **Custom (create new) +** です。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c6f2e2e-2023-01-04_13-05-48.png)
 

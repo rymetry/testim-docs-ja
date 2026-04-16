@@ -40,7 +40,7 @@ keywords:
 - [Email validation](/docs/advanced-editing/validations/email-validation)
 - [Network validation](/docs/advanced-editing/validations/add-network-validation)
 - [Custom wait for](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)
-- CLI wait for（CLI 待機ステップ）
-- Download wait for（ダウンロード待機ステップ）
+- CLI wait for — CLI 待機ステップ
+- Download wait for — ダウンロード待機ステップ
 
 ![高度な JS エディターのスクリーンショット](/images/advanced-features/advanced-js-editor/37b40ca-monaco_editor4x.png)
