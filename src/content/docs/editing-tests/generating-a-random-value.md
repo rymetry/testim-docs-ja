@@ -19,8 +19,7 @@ keywords:
 ---
 
 テキスト入力用の **Set text** ステップを含むテストを記録した後、そのステップの入力に毎回異なるランダム文字列を使用するよう、テスト構成を編集できます。ランダム文字列は **Generate random value** ステップで生成され、変数に格納されます（このステップは **Set text** ステップの直前に挿入します）。その後、**Set text** ステップで、**Generate random value** ステップで作成した変数を参照するように編集します。ランダムなデータを生成してテストできるようにすることで、追加のテストを作成せずにカバレッジを拡張し、仕様内での失敗ケースの発見、データセットの分散、同じデータを繰り返し使ってしまうことの回避が可能になります。
-
-**「Generate random value」ステップで乱数を生成するには:**
+→ **「Generate random value」ステップで乱数を生成するには:**
 
 1. ステップを追加したい位置の **>（矢印）** にカーソルを合わせます。
 
@@ -30,13 +29,15 @@ keywords:
 
 ![アクションオプションメニュー](/images/test-utilities/generating-a-random-value/077856e-Testim_224a_r.png)
 
-2. **"M"**（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+2. **"M"**（Testim の事前定義ステップ）をクリックします。
+
+**Predefined steps** メニューが開きます。
 
 ![事前定義ステップメニュー](/images/test-utilities/generating-a-random-value/509a4e6-Testim_034_r.png)
 
-3. **Actions** をクリックします。\
-   Actions メニューが展開されます。
+3. **Actions** をクリックします。
+
+Actions メニューが展開されます。
 
 ![Actions メニュー](/images/test-utilities/generating-a-random-value/987804d-Testim_079_r.png)
 
@@ -46,8 +47,9 @@ keywords:
 代替手順: メニュー上部の検索ボックスで **Generate random value** を検索しても構いません。
 :::
 
-「Generate random value」ステップが **Editor** に追加されます。\
-5\. 作成したステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
+「Generate random value」ステップが **Editor** に追加されます。
+
+5. 作成したステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 
 ![3848](/images/test-utilities/generating-a-random-value/a6856ec-Testim_225a.png)
 
@@ -57,26 +59,32 @@ keywords:
 
 6. 以下の説明に従ってプロパティを設定します。
 
-- **Description** – ステップの説明。（既定値 = _Generate Random Value_）
-- **Variable name** – ランダムデータを格納する変数名。（既定値 = _randomValue_）
+**Description** – ステップの説明。（既定値 = _Generate Random Value_）
+
+**Variable name** – ランダムデータを格納する変数名。（既定値 = _randomValue_）
+
 - **String type** – 乱数を構成する文字の種類：
-  - **Letters Only**: 大文字・小文字の英字のみを使用します。
-  - **Numbers Only**: 数字のみを使用します。
-  - **Mixed**: 数字と大文字・小文字の英字を混在させます。_既定値_
-- **Length** – 生成する文字数。（最大 = _256_、既定値 = _12_）
+- **Letters Only**: 大文字・小文字の英字のみを使用します。
+- **Numbers Only**: 数字のみを使用します。
+
+**Mixed**: 数字と大文字・小文字の英字を混在させます。_既定値_
+
+**Length** – 生成する文字数。（最大 = _256_、既定値 = _12_）
+
 - **Add prefix** – 生成した文字列の先頭に接頭辞を追加します。接頭辞には、文字列（シングルまたはダブルクォートで囲む）、既存の変数、またはそれらの組み合わせ（プラス記号で連結）を使用できます。
 - **Add suffix** – 生成した文字列の末尾に接尾辞を追加します。構成は **Add prefix** と同様です。
 - **Variable scope** – 変数を受け渡しできるスコープ：
-  - **Local**: 同一スコープ内のステップ間でパラメーターを受け渡しできます。
-  - **Test**: 同一テスト内のステップやグループ間で受け渡しできます。_既定値_
-  - **Suite**: 同一テストスイート内のテスト間で受け渡しできます。
+- **Local**: 同一スコープ内のステップ間でパラメーターを受け渡しできます。
+
+**Test**: 同一テスト内のステップやグループ間で受け渡しできます。_既定値_
+
+- **Suite**: 同一テストスイート内のテスト間で受け渡しできます。
 - **When this step fails** – ステップが失敗した場合の動作を指定します。
 - **When to run step** – ステップの実行条件を指定します。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – Testim がテストステップの失敗と見なすまでの規定待機時間を上書きし、別の時間（ミリ秒）を指定できます。
 
 テストを実行すると、生成されたランダム値（任意のプレフィックス／サフィックスを含む）が指定した変数に格納されます。
-
-**「Set text」ステップでランダム文字列を入力するよう変更するには:**
+→ **「Set text」ステップでランダム文字列を入力するよう変更するには:**
 
 1. 変更したい **Set text** ステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
 

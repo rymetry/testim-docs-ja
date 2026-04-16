@@ -18,13 +18,16 @@
  *
  * ## Pin strategy (T12 / T13 / plan §3.2)
  *
- * Primary pin: `editing-tests/generating-a-random-value` (14 baseline entries,
- * multi-type: section-structure-mismatch / segment-extra / segment-missing).
+ * Primary pin: `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
+ * (3 baseline entries, multi-type: section-structure-mismatch / segment-extra /
+ * segment-missing). Not a Tier A target so less likely to churn in M2 P2-2.
  * Fallback pin: `administration/project-and-user-management` (4 entries).
  *
  * Pin swap history:
  *   test-management/shared-configuration → editing-tests/generating-a-random-value
- *   → (候補) 合成 fixture 化 / 複数 pin (T12 現在)
+ *   → running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks
+ *     (swapped 2026-04-17 when P2-2 Wave 1 burned down generating-a-random-value 14→0;
+ *     condition (b) of re-pin threshold triggered)
  *
  * ## Numeric re-pin threshold (T13 fragility-2 / plan §3.2)
  *
@@ -211,7 +214,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=editing-tests/generating-a-random-value',
+          '--slug=running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks',
           '--json',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -235,7 +238,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
       // segment-* issues は primary gate shape のまま baselined: true になる。
       const file = data.files.find(
-        (f) => f.file === 'src/content/docs/editing-tests/generating-a-random-value.md',
+        (f) => f.file === 'src/content/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.md',
       );
       assert.ok(file, 'drifted page must appear in the results');
       const segmentIssues = file.issues.filter((i) =>
@@ -269,7 +272,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=editing-tests/generating-a-random-value',
+          '--slug=running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks',
           '--fail-on=actionable',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -282,7 +285,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       // 既存 drift は baseline で覆われているため CLI suffix は covered 扱いになる。
       assert.ok(
         result.stdout.includes(
-          '⏸️ src/content/docs/editing-tests/generating-a-random-value.md (covered by baseline/ack)',
+          '⏸️ src/content/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.md (covered by baseline/ack)',
         ),
         `stdout did not mark the file as covered by baseline/ack:\n${result.stdout}`,
       );
@@ -291,7 +294,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         `stdout did not annotate baselined issues:\n${result.stdout}`,
       );
       assert.ok(
-        !result.stdout.includes('❌ src/content/docs/editing-tests/generating-a-random-value.md'),
+        !result.stdout.includes('❌ src/content/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.md'),
         `stdout still marked the file as blocking:\n${result.stdout}`,
       );
     } finally {
@@ -404,7 +407,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
 describe('pin slug content-correctness + fallback (T12)', () => {
   it('primary pin slug file has extractable segments (fixture non-empty guard)', () => {
-    const pinSlug = 'editing-tests/generating-a-random-value';
+    const pinSlug = 'running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks';
     const jaPath = join(ROOT, `src/content/docs/${pinSlug}.md`);
     assert.ok(existsSync(jaPath), `primary pin JA file must exist at ${jaPath}`);
     const content = readFileSync(jaPath, 'utf8');
