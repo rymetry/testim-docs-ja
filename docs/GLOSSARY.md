@@ -477,6 +477,55 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Exports Parameters | Testim ドキュメントのセクションリンクテキスト |
 | Configuring a Data Driven Test from the Visual Editor | データ駆動テスト設定ページリンクテキスト（単語境界バリアント） |
 | Configuring Data Driven Tests using the Config file | データ駆動テスト（Config）設定ページリンクテキスト |
+| Allow access to file URLs | Chrome 拡張機能の権限名 |
+| Download PDF files instead of automatically opening them in Chrome | Chrome PDF 設定トグル名 |
+| Download PDFs | Chrome PDF 設定オプション |
+| Privacy and security | Chrome 設定セクション名 |
+| Site Settings | Chrome 設定セクション名 |
+| Site settings | Chrome 設定セクション名（小文字バリアント） |
+| Additional content settings | Chrome 設定セクション名 |
+| PDF documents | Chrome 設定項目 |
+| Default behavior | Chrome PDF デフォルト動作セクション |
+| Ask where to save each file before downloading | Chrome ダウンロード設定トグル |
+| Run Shared API Validation | Validate API ステップエディターウィンドウ名 |
+| Run API Action | API アクションステップ実行名 |
+| Run Action | アクションステップ実行名 |
+| Run Download Validation | Validate download ステップ既定説明文 |
+| Run download validation | Validate download ステップ既定説明文（小文字） |
+| Accessibility Validation | アクセシビリティ検証ステップ既定名 |
+| DevTools Network | Chrome DevTools のネットワークパネル |
+| Key-Value | API ステップのヘッダー入力モード |
+| Form Data | API ステップのフォームデータエントリタイプ |
+| Upload File | ファイルアップロードボタン |
+| File Drop | ファイルアップロード記録ステップ名 |
+| Browse for file | ファイルアップロード記録ステップ名 |
+| File drop | 小文字バリアント |
+| Element Attribute Validation | Validate Element Attribute フォーム名 |
+| Attribute name | Validate Element Attribute の属性名フィールド |
+| Expected value | 検証ステップの期待値フィールド |
+| Property name | Validate CSS property のプロパティ名フィールド |
+| List of possible attributes | モバイル要素属性リンクテキスト |
+| Toggle breakpoint | ステップブレークポイントトグル |
+| Convert to file | テストデータファイル変換ボタン |
+| Reusable file | 再利用可能テストデータファイルオプション |
+| Scheduled Runs | スケジュール実行画面 |
+| Scheduled runs | 小文字バリアント |
+| All impact levels | アクセシビリティ違反の影響レベルトグル |
+| All impact level | トグル（単数形バリアント） |
+| Check here for more details | アクセシビリティ検証結果の詳細リンク |
+| To choose an element open base URL or run test to relevant step | Wait for 要素選択時のメッセージ |
+| To choose an element open app or run test to relevant step | Wait for 要素選択時のメッセージ（モバイル） |
+| Delay time in milliseconds | Wait for 遅延時間入力フィールド |
+| Add hidden parameter | Hidden Parameters 追加ボタン |
+| Params | ステッププロパティパネルのパラメーターセクション |
+| Show test properties | テストプロパティ表示アイコン |
+| Show step properties | ステッププロパティ表示アイコン |
+| Custom (create new) | 構成ドロップダウンの新規作成オプション |
+| My custom error | エラーサフィックスのサンプル文字列 |
+| Context selection mode | ロケーターコンテキスト選択モード |
+| Set username | Test Data コードのサンプル識別子 |
+| Set Username | Test Data コードのサンプル識別子（大文字） |
+| Getting Cookies using the Get Cookie step | Cookie ページ内のセクションリンクテキスト |
 
 ## Testim プロパティ名
 
