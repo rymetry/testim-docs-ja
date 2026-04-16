@@ -92,7 +92,7 @@ exports.config = {
 - Before Suite: スイートの前に実行
 - After Suite: スイートの後に実行
 
-フックの詳細は [Hooks](/docs/advanced-editing/hooks#テスト構成から作成) を参照してください。以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
+フックの詳細は [Hooks](/docs/advanced-editing/hooks#creating-hooks-via-the-test-configuration) を参照してください。以下は `beforeSuite` フックにテストデータを追加する例です。実行に含まれるすべてのテストで同じデータが使われます。
 
 ```javascript
 exports.config = {

@@ -89,6 +89,13 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   // callout-heavy: callout-body が 3 件の長文ページ。mobile-apps セクションの
   //   代表 zero-drift sentinel。
   'mobile-apps/mobile-apps',
+  // M2 P2-1 pilot 追加 — flat ol 分割 (source-first mechanical exception
+  //   per plan §5.2) + classifier URL-before-mask fix の regression pin。
+  //   EN の single <ol> with <li value="1"..value="15"> + img/note sibling
+  //   構造を JA が複数 ol + ol 外部 block sibling + 番号手動指定で追従して
+  //   zero-drift になる pattern。Tier A bulk で同 pattern の slug が増える
+  //   前に sentinel として固定する (testing gate Sev 6)。
+  'advanced-editing/deep-link-mobile',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
