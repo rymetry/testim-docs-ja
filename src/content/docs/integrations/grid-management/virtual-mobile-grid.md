@@ -55,7 +55,7 @@ Virtual Mobile Grid でテストを実行する前に、次を確認してくだ
 
 ![Virtual Mobile Grid 向け mobile configuration の設定例](/images/grid-management/virtual-mobile-grid/07dd385-image_2.png)
 
-- **Apps Library**: テスト対象 app を Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps/mobile-apps) を参照してください。すでに **_"From Device"_** option で選択した app を使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** pane で **change app** link をクリックし、From Library option を選択します。
+- **Apps Library**: テスト対象アプリを Apps Library に追加しておきます。[Mobile Apps](/docs/mobile-apps/mobile-apps) を参照してください。すでに **_"From Device"_** オプションで選択したアプリを使ってテストを記録済みの場合は、テストの **Setup Step** の **Properties** ペインで **change app** リンクをクリックし、From Library オプションを選択します。
 
 ### テストをリモート実行する
 
@@ -71,11 +71,11 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 [Scheduler](/docs/running-tests/scheduler-mobile)
 
-**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+**Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
 [Test Plan](/docs/test-management/test-plans-mobile)
 
-**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+**Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
 [Remote Run through the Editor](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する)
 
@@ -85,14 +85,14 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 ### From Device で記録した app を変更する
 
-**_"From Device"_** option で選択した app を使ってテストを記録済みの場合は、次の方法で app を差し替えます。
+**_"From Device"_** オプションで選択したアプリを使ってテストを記録済みの場合は、次の方法でアプリを差し替えます。
 
 #### Editor から変更する
 
 **Editor から app を変更するには:**
 
 1. **Setup Step** で **Show Properties** をクリックします。
-2. **Properties** pane の **Application name** の下にある **Change app** link をクリックします。
+2. **Properties** ペインの **Application name** の下にある **Change app** リンクをクリックします。
 3. From **Library option** を選択し、一覧から該当する app を選びます。
 4. **Done** をクリックします。
 
@@ -100,7 +100,7 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 #### CLI から変更する
 
-CLI でテストを実行する場合は、テスト記録時に使われた既定の app Id を、Mobile Apps Library にある別の app Id で上書きできます。→ **既定の app ID を上書きするには:**
+CLI でテストを実行する場合は、テスト記録時に使われた既定のアプリ ID を、Mobile Apps Library にある別のアプリ ID で上書きできます。→ **既定のアプリ ID を上書きするには:**
 
 1. **Settings > CLI** へ移動します。
 2. **Grid** drop-down menu で **Virtual Mobile Grid** を選択します。

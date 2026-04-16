@@ -16,11 +16,9 @@ keywords:
   - browserstack-options
 ---
 
-定義済み capability を含む JSON file を使うことで、SauceLabs と BrowserStack へ追加の configuration parameter を渡せます。
+定義済みの capabilities を含む JSON ファイルを使うことで、SauceLabs と BrowserStack へ追加の設定パラメーターを渡せます。例えば、特定のブラウザーバージョンとタイムゾーンでテストを実行したい場合は、次の手順に従います。
 
-例えば、特定の browser version と time zone でテストを実行したい場合は、次の手順に従います。
-
-1. 次の JSON file を作成します。
+1. 次の JSON ファイルを作成します。
 
 ```json
 {
@@ -31,34 +29,34 @@ keywords:
 
 2. CLI では次を追加します: **--sauce-options "\<aboveConfigFileName>.json"**
 
-capability は次のような用途に利用できます。
+capabilities は次のような用途に利用できます。
 
-- device allocation の制御
-- Appium version の制御
-- auto alert approval の制御
-- Grid 側で取得する data の制御
-- video の無効化
-- network log の無効化
-- build / project option capability を使った custom test result mapping
-- reset strategy の制御
+- デバイス割り当ての制御
+- Appium のバージョン制御
+- 自動アラート承認の制御
+- Grid 側で取得するデータの制御
+- 動画キャプチャーの無効化
+- ネットワークログの無効化
+- build / project option capabilities を使ったテスト結果マッピングのカスタマイズ
+- リセット戦略の制御
 
 ## capability の override rule (mobile)
 
-JSON capability file の設定は、次の設定を上書きします。
+JSON capabilities ファイルの設定は、次の設定を上書きします。
 
-- CLI flag (`deviceName`, `osVersion`)
+- CLI フラグ (`deviceName`, `osVersion`)
 - Mobile Config
-- `autoGrantPermissions`、`AutoAcceptAlerts`、video capturing 無効化などの default value
+- `autoGrantPermissions`、`AutoAcceptAlerts`、動画キャプチャー無効化などのデフォルト値
 
 :::info{title="PlatformVersion capabilities"}
-`platformVersion` capability は検証され、使用すべき Appium version を決定するために使われます。例えば client が Appium version `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の warning が表示されます。これは mobile config / CLI flag の `osVersion` logic と同様です。
+`platformVersion` capability は検証され、使用すべき Appium バージョンを決定するために使われます。例えばクライアントが Appium バージョン `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の警告が表示されます。これは mobile config / CLI フラグの `osVersion` ロジックと同様です。
 :::
 
 ## SauceLabs
 
 **Web の場合:**
 
-CLI に次を追加します: **--sauce-options "config_saucelabs.json"** file の例:
+CLI に次を追加します: **--sauce-options "config_saucelabs.json"** ファイルの例:
 
 ```json
 {
@@ -72,12 +70,12 @@ CLI に次を追加します: **--sauce-options "config_saucelabs.json"** file �
 }
 ```
 
-parameter の詳細は、SauceLabs の公式ドキュメントを参照してください。\
+パラメーターの詳細は、SauceLabs の公式ドキュメントを参照してください。\
 [https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options](https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options)
 
 **Mobile の場合:**
 
-- prefix なしの W3C format で Appium capability と SauceLabs option を指定します。
+- プレフィックスなしの W3C 形式で Appium の capabilities と SauceLabs オプションを指定します。
 
 [Appium caps](https://saucelabs.com/resources/blog/appium-desired-capabilities-tutorial)
 
@@ -101,7 +99,7 @@ parameter の詳細は、SauceLabs の公式ドキュメントを参照してく
 
 **Web の場合:**
 
-CLI に次を追加します: **--browserstack-options "config_browserstack.json"** 次はサポートされる代表的な override parameter の例です。
+CLI に次を追加します: **--browserstack-options "config_browserstack.json"** 次はサポートされる代表的な上書きパラメーターの例です。
 
 ```json
 {
@@ -118,14 +116,14 @@ CLI に次を追加します: **--browserstack-options "config_browserstack.json
 }
 ```
 
-parameter の詳細は、BrowserStack の公式ドキュメントを参照してください。
+パラメーターの詳細は、BrowserStack の公式ドキュメントを参照してください。
 
 [https://www.browserstack.com/automate/capabilities](https://www.browserstack.com/automate/capabilities)
 
 **Mobile の場合:**
 
-- Appium capability には、prefix なしの W3C capability format を使用します。
-- BrowserStack capability には、legacy (Wire JSON) format を使用します。
+- Appium の capabilities には、プレフィックスなしの W3C capabilities 形式を使用します。
+- BrowserStack の capabilities には、レガシー (Wire JSON) 形式を使用します。
 
 [Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
 
@@ -146,6 +144,6 @@ parameter の詳細は、BrowserStack の公式ドキュメントを参照して
 ```
 
 :::warning{title="BrowserStack 証明書エラー"}
-Android version 13.0 以上の device でテストしている場合、certificate issue により target device が offline のように見えることがあります。詳細と解決方法は BrowserStack の関連ドキュメントを参照してください。\
+Android バージョン 13.0 以上のデバイスでテストしている場合、証明書の問題により対象デバイスがオフラインのように見えることがあります。詳細と解決方法は BrowserStack の関連ドキュメントを参照してください。\
 [https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues](https://www.browserstack.com/docs/app-automate/appium/troubleshooting/networklogs-acceptinsecurecerts-issues)
 :::
