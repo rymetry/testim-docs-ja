@@ -22,12 +22,11 @@ keywords:
 
 ![Web Test Library の Test Library 画面](/images/test-management/test-list/e75e02c-2024-11-24_16-39-18.png)
 
-Web Test Library
+Web Test Library の画面
 
 ![Mobile Test Library の Test Library 画面](/images/test-management/test-list/20dd7c7-mobiletestlibrary.png)
 
-Mobile Test Library\
-テストライブラリ画面には、次の情報を含むテストとフォルダーのリストが表示されます:
+Mobile Test Library の画面。テストライブラリ画面には、次の情報を含むテストとフォルダーのリストが表示されます:
 
 - **Name** - テストまたはフォルダーの名前。Testim がテスト内の 1 つ以上の要素の劣化したロケーターを自動改善されたロケーターに置き換えた場合、テスト名の後に約 2 週間「Ai」アイコンが表示されます。詳細については、[Locators: Auto Improve](/docs/test-management/locators-auto-improve) を参照してください。
 - **Owner** - テストまたはフォルダーの所有者。
@@ -95,17 +94,18 @@ Filter Test ペインをリセットせずに閉じても、フィルターは�
 
 ![テスト名や説明で検索ボックスからテストを検索する画面](/images/test-management/test-list/f9e60e3-search.png)
 
-**名前と説明で検索するには:**
+→ **名前と説明で検索するには:**
 
-1. Search library テキストボックスに、検索したいテストまたはフォルダーの名前または説明から任意のテキストを入力します。\
-   結果のリストは、各文字を入力するとすぐにフィルタリングされます。
+1. Search library テキストボックスに、検索したいテストまたはフォルダーの名前または説明から任意のテキストを入力します。
 
-**ラベルで検索するには:**
+結果のリストは、各文字を入力するとすぐにフィルタリングされます。→ **ラベルで検索するには:**
 
-1. Search library テキストボックスに、**label:** というテキストの後にラベルの完全な名前を入力します（それらの間にスペースなし）。\
-   ラベルの完全な名前を入力すると、フィルタリングされたリストが表示されます。
+1. Search library テキストボックスに、**label:** というテキストの後にラベルの完全な名前を入力します（それらの間にスペースなし）。
 
-**ラベル検索の例:**\
+ラベルの完全な名前を入力すると、フィルタリングされたリストが表示されます。
+
+**ラベル検索の例:**
+
 まだ失敗しているすべてのテストに「Failed」ラベルを付けた場合、次のようにフィルタリングできます:
 
 ```text

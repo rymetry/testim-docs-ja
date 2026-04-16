@@ -57,8 +57,10 @@ return client.messages
 
 #### Parameters - この例で使用するパッケージと JavaScript
 
-1\. 名前: twilio、種類: Package、値: twilio@3.25.0<br />
-2\. 名前: \_、種類: Package、値: moment@latest
+この例で使用する Parameters（パッケージ）は次のとおりです。
+
+1. 名前: `twilio`、種類: Package、値: `twilio@3.25.0`
+2. 名前: `_`、種類: Package、値: `moment@latest`
 
 **スクリーンショットを参照:**
 

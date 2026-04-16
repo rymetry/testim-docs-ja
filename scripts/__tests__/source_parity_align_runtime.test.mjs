@@ -17,7 +17,7 @@
  *      will rely on (sectionIndex, segmentKind, fingerprints).
  *
  * The test runs `check_source_parity.mjs` end-to-end via `node` against
- * a single representative page (`--slug=test-management/shared-configuration`,
+ * a single representative page (`--slug=editing-tests/generating-a-random-value`,
  * which has a small but non-zero baseline drift) and parses the resulting
  * JSON output. This is the closest-to-production verification we can do
  * without spinning up the full corpus.
@@ -197,7 +197,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=test-management/shared-configuration',
+          '--slug=editing-tests/generating-a-random-value',
           '--json',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -221,7 +221,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
       // segment-* issues は primary gate shape のまま baselined: true になる。
       const file = data.files.find(
-        (f) => f.file === 'src/content/docs/test-management/shared-configuration.md',
+        (f) => f.file === 'src/content/docs/editing-tests/generating-a-random-value.md',
       );
       assert.ok(file, 'drifted page must appear in the results');
       const segmentIssues = file.issues.filter((i) =>
@@ -255,7 +255,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=test-management/shared-configuration',
+          '--slug=editing-tests/generating-a-random-value',
           '--fail-on=actionable',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -268,7 +268,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       // 既存 drift は baseline で覆われているため CLI suffix は covered 扱いになる。
       assert.ok(
         result.stdout.includes(
-          '⏸️ src/content/docs/test-management/shared-configuration.md (covered by baseline/ack)',
+          '⏸️ src/content/docs/editing-tests/generating-a-random-value.md (covered by baseline/ack)',
         ),
         `stdout did not mark the file as covered by baseline/ack:\n${result.stdout}`,
       );
@@ -277,7 +277,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         `stdout did not annotate baselined issues:\n${result.stdout}`,
       );
       assert.ok(
-        !result.stdout.includes('❌ src/content/docs/test-management/shared-configuration.md'),
+        !result.stdout.includes('❌ src/content/docs/editing-tests/generating-a-random-value.md'),
         `stdout still marked the file as blocking:\n${result.stdout}`,
       );
     } finally {

@@ -18,9 +18,7 @@ keywords:
   - 画面遷移
 ---
 
-ディープリンクは、アプリを起動して特定の画面を直接開くリンクです（ホーム画面や Web ではなく、アプリ内の所定位置へ遷移）。OS 標準アプリやブラウザを含む端末内のアプリを開け、パラメーター（例: 電話番号）も渡せます。
-**Deep Link** ステップでは、ディープリンクが期待通り動作するかを検証します。指定アプリの指定位置を開き、任意でパラメーターを渡します。
-ディープリンク遷移後に確認ダイアログが表示される場合は、その承認ボタンをタップするステップを記録してください。
+ディープリンクとは、アプリを起動して特定の画面を直接開くためのリンクです（ホーム画面や Web ページではなく、アプリ内の所定位置へ遷移します）。OS 標準アプリやブラウザを含む端末内のアプリを開けるほか、パラメーター（電話番号など）も渡せます。**Deep Link** ステップは、ディープリンクが期待どおりに動作するかを検証するためのステップであり、指定したアプリの所定位置を開いて、必要ならパラメーターも渡します。ディープリンク遷移後に確認ダイアログが表示される場合は、その承認ボタンをタップする手順も記録してください。
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/58d5cba-open.png)
 
@@ -46,23 +44,23 @@ keywords:
 
 ![ディープリンクステップのスクリーンショット](/images/special-steps/deep-link-mobile/fdd1fcc-deeplink2.png)
 
-4. **Value** に次の形式で値を入力します。
-5. 構文: `schemeName://parameterValue`
-6. schemeName — 起動するアプリのスキーム名（例: `tel`, `sms`, `mailto`, `facetime` など）
-7. parameter — アプリに渡す値（例: 電話番号）
-8. 文字列（JS 式）なので引用符で囲みます
-9. 例 — `'sms://12354'`, `mailto://example@email.com`, `facetime://1-408-555-1212`
+4. **Value** フィールドに、次の形式で値を入力します。
+   - 構文: `schemeName://parameterValue`
+   - `schemeName` — 起動するアプリのスキーム名（例: `tel`、`sms`、`mailto`、`facetime` など）
+   - `parameter` — アプリに渡す値（例: 電話番号）
+   - 文字列（JS 式）なので、値は引用符で囲みます
+   - 例: `'sms://12354'`、`mailto://example@email.com`、`facetime://1-408-555-1212`
 
 :::note
 一部サードパーティアプリは URL ベースのスキームのみ対応です（例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)）。Spotify は [https://open.spotify.com/...](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO) の形式のみ対応など。
 :::
 
-10. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを JS 式と同様に連結できます（例: `'sms://12354' + myParam`）。
-11. **OK** をクリックします。
+5. ディープリンク値にパラメーターを追加することもできます。通常の Testim パラメーターを、JS 式と同じ要領で連結できます（例: `'sms://12354' + myParam`）。
+6. **OK** をクリックします。
 
 Deep Link ステップが追加されます。
 
-12. **Properties** で必要に応じて以下を設定します。
-13. **When this step fails** – 失敗時の動作
-14. **When to run step** – 実行条件（[Conditions](/docs/editing-tests/conditions)）
-15. **Override timeout** – タイムアウトの上書き（ミリ秒）。成功に必要な残時間がある限りリトライします。
+7. **Properties** パネルで、必要に応じて次のプロパティを設定します。
+   - **When this step fails** – 失敗時の動作を指定します。
+   - **When to run step** – 実行条件を指定します（[Conditions](/docs/editing-tests/conditions) を参照）。
+   - **Override timeout** – タイムアウト値（ミリ秒）を上書きします。成功に必要な残り時間がある限りリトライします。

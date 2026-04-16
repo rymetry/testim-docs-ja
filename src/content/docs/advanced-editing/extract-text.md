@@ -54,8 +54,8 @@ keywords:
 
 ![抽出名](/images/handling-ui-actions/extract-text/5ac725a-extract-name.png)
 
-:::warning{title="注意"}
-変数名は JavaScript の名前の制限に従います。例えば、スペースや特殊文字は使用できません。詳細は[こちら](https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Variables)をご覧ください。
+:::note
+注意: 変数名は JavaScript の名前に関する制限を受けます。例えば、スペースや特殊文字は使用できません。詳細は [こちら](https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Variables) を参照してください。
 :::
 
 ## 抽出モードの設定

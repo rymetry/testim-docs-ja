@@ -318,23 +318,4 @@ Testim には、テスト作成を高速化するために使用できる一連�
  </tbody>
 </table>
 
-<table class="md-table md-table-4cols">
- <tbody>
-  <tr>
-   <td style="text-align: left;">
-    <a href="/docs/advanced-editing/wait-for#要素テキストの表示を待つ（web）">
-     要素テキストを待機
-    </a>
-   </td>
-   <td style="text-align: left;">
-    Alt + T
-   </td>
-   <td style="text-align: left;">
-    Option + T
-   </td>
-   <td style="text-align: left;">
-    エディター
-   </td>
-  </tr>
- </tbody>
-</table>
+\| [要素テキストを待機](/docs/advanced-editing/wait-for#要素テキストの表示を待つ（web）)              \| Alt + T           \| Option + T        \| エディター       \|

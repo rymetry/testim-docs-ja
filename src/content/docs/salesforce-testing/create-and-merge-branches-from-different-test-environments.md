@@ -51,5 +51,5 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 2. マージアイコンをクリックします。\
    Merge Branch ダイアログが表示されます。
 3. マージする前に変更を確認します。
-4. マージ後にブランチを削除する場合は、**Delete branch\<branch_name> upon merge**チェックボックスを選択します。
+4. マージ後にブランチを削除する場合は、`Delete branch<branch_name> upon merge` のチェックボックス（`<branch_name>` は対象ブランチ名）を選択します。
 5. **Merge**をクリックします。

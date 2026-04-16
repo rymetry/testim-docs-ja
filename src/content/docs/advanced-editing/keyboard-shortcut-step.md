@@ -34,59 +34,59 @@ keywords:
  <thead>
   <tr>
    <th>
-    ショートカットの種類
+    Keyboard Shortcut Combination（ショートカットの種類）
    </th>
    <th>
-    Windows 例
+    Windows Example
    </th>
    <th>
-    Mac 例
+    Mac Example
    </th>
   </tr>
  </thead>
  <tbody>
   <tr>
    <td>
-    Alt/Ctrl 修飾キー + 文字/数字/記号キー
+    Alt/Ctrl modifier + char/number/special key
    </td>
    <td>
-    ALT + X / CTRL + 1
+    ALT + X<br/>CTRL + 1
    </td>
    <td>
-    Option + X
-   </td>
-  </tr>
-  <tr>
-   <td>
-    修飾キー + ファンクションキー
-   </td>
-   <td>
-    Alt + F3 / Ctrl + F10
-   </td>
-   <td>
-    Option + F3 / Command + F10
+    ⌥ Option + X
    </td>
   </tr>
   <tr>
    <td>
-    修飾キー 2 つ + 文字/数字/記号キー
+    Modifier + function key
    </td>
    <td>
-    Alt + Ctrl + X / Ctrl + Shift + 1
+    Alt + F3<br/>Ctrl + F10
    </td>
    <td>
-    Option + Command + X / Command + Shift + 1
+    ⌥ Option + F3 ⌘ Command + F10
    </td>
   </tr>
   <tr>
    <td>
-    修飾キー 2 つ + ファンクションキー
+    Modifier (*2) + char/number/special key
    </td>
    <td>
-    Alt + Ctrl + F12 / Ctrl + Shift + F7
+    Alt + Ctrl + X<br/>Ctrl + Shift + 1
    </td>
    <td>
-    Option + Control + F12 / Command + Shift + F7
+    ⌥ Option + ⌘ Command + X ⌘ Command + ⇧ Shift + 1
+   </td>
+  </tr>
+  <tr>
+   <td>
+    Modifier (*2) + function key
+   </td>
+   <td>
+    Alt + Ctrl + F12<br/>Ctrl + Shift + F7
+   </td>
+   <td>
+    ⌥ Option + ⌃ Control + F12 ⌘ Command + ⇧ Shift + F7
    </td>
   </tr>
  </tbody>

@@ -115,8 +115,6 @@ exports.config = {
 設定ファイルの `beforeTest` フック内で、テストに定義されたラベル一覧でパラメーターを埋めることができます。\
 次の例では `labels` というパラメーターを定義しています。このパラメーターには事前定義パラメーター `allLabels` を用いて、そのテストに付与されたラベルの一覧が入ります。以降、パラメーターが使える場所で参照できます。例えば **カスタムステップ** で、ラベルに `Games` が含まれる場合はステップをスキップする、といったコードを記述できます。パラメーターの利用については[設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters)も参照してください。
 
-<br />
-
 ```javascript
 beforeTest: function(test) {
     return {
@@ -146,7 +144,7 @@ exports.config = {
 
 afterSuite 関数内では、その実行でエクスポートされたグローバルパラメーターを参照できます。
 
-**構文**: `suite.exportsGlobal.<param_name>`
+**構文**: suite.exportsGlobal.&lt;param_name&gt;
 
 グローバルエクスポートの詳細は[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。
 

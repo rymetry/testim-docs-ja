@@ -1360,16 +1360,4 @@ keywords:
  </tbody>
 </table>
 
-<table class="md-table md-table-3cols">
- <tbody>
-  <tr>
-   <td style="text-align: left;">
-    globalParameters
-   </td>
-   <td style="text-align: left;">
-   </td>
-   <td style="text-align: left;">
-   </td>
-  </tr>
- </tbody>
-</table>
+| globalParameters      |             |      |

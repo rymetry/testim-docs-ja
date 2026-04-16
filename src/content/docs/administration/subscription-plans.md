@@ -212,21 +212,4 @@ Test Editorを通じて開始されるローカル実行は、これらの使用
  </tbody>
 </table>
 
-<table class="md-table md-table-3cols">
- <tbody>
-  <tr>
-   <td style="text-align: left;">
-    <strong>
-     スケジューラ
-    </strong>
-    から実行をトリガー
-   </td>
-   <td style="text-align: left;">
-    Web &amp; モバイル
-   </td>
-   <td style="text-align: left;">
-    はい
-   </td>
-  </tr>
- </tbody>
-</table>
+| **スケジューラ** から実行をトリガー | Web &amp; モバイル | はい |

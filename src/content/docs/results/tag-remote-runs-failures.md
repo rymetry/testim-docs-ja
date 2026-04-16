@@ -23,9 +23,7 @@ keywords:
 
 1. テストをリモートで実行した後、テストが失敗した場合は、**Tag Test Failure**リンクをクリックします。
 
-:::warning
-「Run locally」ではなく「Run on grid」オプションを使用してテストを実行してください。
-:::
+> 「Run locally」ではなく「Run on grid」オプションを使用してテストを実行してください。
 
 ![Tag Test Failure リンクの位置](/images/results/tag-remote-runs-failures/3ee72ad-tag6.png)
 

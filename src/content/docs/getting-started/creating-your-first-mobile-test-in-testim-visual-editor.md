@@ -112,8 +112,6 @@ VMG でテストを実行する場合、テストの起動には 30 秒から 1 
 テストを作成したら、Testim が記録済みのステップを自動で再現してくれます。
 
 :::info
-**Enhanced mode での実行**
-
 Enhanced mode で記録したテストは Enhanced mode でのみ実行できます。Appium モードで実行したい場合は、Appium 互換モードで再度記録してください。
 :::
 

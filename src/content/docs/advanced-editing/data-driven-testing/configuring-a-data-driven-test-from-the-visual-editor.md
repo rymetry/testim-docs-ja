@@ -70,9 +70,7 @@ return 行の括弧は残しておく必要があります。
 
 ![テスト実行結果](/images/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor/ca3d466-Capture1.png)
 
-"username": "tomsmith", "password": "SuperSecretPassword!"
-
-エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UI で提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/running-tests/scheduler) を使用する必要があります。
+"username": "tomsmith", "password": "SuperSecretPassword!" エディターからテストを実行すると、**最初のデータセット**のみが実行されます。追加のデータセットを実行する場合は、UI で提供されたテストデータを上書きする `beforeSuite` フックを含む **CLI**、または [スケジューラー](/docs/running-tests/scheduler) を使用する必要があります。
 
 ### CSV/Excel ファイルをアップロードしてテストデータを追加
 
@@ -82,7 +80,7 @@ CSV or Excel ファイルをアップロードしてテストデータを追加�
 - 2 行目以降 - 各行が単一のデータセットに変換されます（キー値）。最大 1200 行。
 
 :::note
-この方法では、ファイルが変更されてもアップロードされたデータは更新されません。更新するたびにファイルを再度アップロードする必要があります。一方、設定ファイル方式（[外部ソースからのデータを使用したデータ駆動テスト](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)を参照）を使用すると、ファイルは実行ごとに自動的に解析されます。
+この方式では、ファイルが変更されてもアップロード済みのデータは更新されません。更新のたびにファイルを再アップロードする必要があります。これに対し、設定ファイル方式（[Data Driven tests using data from an external source](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source) を参照）を使用すると、ファイルは実行ごとに自動で解析されます。
 :::
 
 **ファイルをアップロードしてテストデータを追加するには:**

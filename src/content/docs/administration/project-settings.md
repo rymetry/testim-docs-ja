@@ -33,7 +33,9 @@ keywords:
 
 ![Project Name セクションの編集アイコン](/images/project-user-management/project-settings/f225cca-Picture2.png)
 
-3. **Project Name** ウィンドウが開きます。**Enter a new name for this project** フィールドに、新しい名前を入力します。
+**Project Name** ウィンドウが開きます。
+
+3. **Enter a new name for this project** フィールドに、新しい名前を入力します。
 
 ![新しいプロジェクト名を入力するフィールド](/images/project-user-management/project-settings/ad8a31f-Picture3.png)
 
@@ -55,7 +57,9 @@ keywords:
 
 ![Base URL 編集用の入力ダイアログ](/images/project-user-management/project-settings/2c841e2-Picture6.png)
 
-3. **Test Default URL** ウィンドウが開きます。**Your app URL** フィールドに、テスト対象のアプリの URL を入力します。
+**Test Default URL** ウィンドウが開きます。
+
+3. **Your app URL** フィールドに、テスト対象のアプリの URL を入力します。
 
 ![344](/images/project-user-management/project-settings/38fd0c6-Picture7.png)
 
@@ -110,7 +114,9 @@ Testim のオートコンプリート機能は、現在記録中のテストで�
 
 ![475](/images/project-user-management/project-settings/7be7e39-Picture14.png)
 
-2. 現在の非表示パラメーターのリストが **Hidden Parameters** セクションに表示されます。リストに現在パラメーターがない場合は、**Add hidden params** リンクが表示されます。**Add hidden params** リンクをクリックします。
+現在の非表示パラメーターのリストが **Hidden Parameters** セクションに表示されます。リストに現在パラメーターがない場合は、**Add hidden params** リンクが表示されます。
+
+2. **Add hidden params** リンクをクリックします。
 
 ![487](/images/project-user-management/project-settings/f841a78-Picture15.png)
 

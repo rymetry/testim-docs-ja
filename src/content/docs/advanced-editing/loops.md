@@ -411,7 +411,7 @@ HTML 要素をパラメーターとして定義するために AUT を開いた�
 
 ![ループアイコン](/images/handling-ui-actions/loops/5de7f77-Testim_Image_050.png)
 
-## ループイテレータパラメーターの使用
+## ループイテレータパラメーターの使用 {#using-the-loop-iterator-parameter}
 
 TESTIM_ITERATOR は、現在のループ反復の値を追跡して使用できるようにする組み込みパラメーターです。ループが実行されるたびに、TESTIM_ITERATOR の値は 1 ずつ増加します。以下は、TESTIM_ITERATOR を使用する方法の例です。
 

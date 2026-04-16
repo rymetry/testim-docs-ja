@@ -99,7 +99,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 7. **Properties** パネルの **Expected value** フィールドに、新しいプロパティの期待値を入力します。
 
 :::note
-**Properties** パネルで **Property name** と **Expected value** の値を変更する際は、それらがシングルクォートで囲まれていることを確認してください。例: 'background' と '#ffea64'。
+**Properties** パネルで **Property name** と **Expected value** の値を変更する際は、値がシングルクォートで囲まれていることを確認してください（例: background、#ffea64）。
 :::
 
 8. 要素を再割り当てしたステップの左側にある同じ **Toggle Breakpoint** ボタンをクリックして、ブレークポイントを削除します。
