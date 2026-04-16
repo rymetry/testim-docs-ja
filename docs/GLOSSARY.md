@@ -614,6 +614,8 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Cookie name | Cookie 名プロパティ |
 | Cookie value | Cookie 値プロパティ |
 | Cookie info | Cookie 情報セクション |
+| cookie | ブラウザ Cookie（小文字バリアント） |
+| cookies | ブラウザ Cookie（複数形小文字） |
 | Config File | 設定ファイル（英語維持） |
 | Config file | 小文字バリアント |
 | Run Hooks | 実行フック（英語維持） |
@@ -748,6 +750,85 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | fromstring | 小文字バリアント |
 | filebuffer | Validate download の fileBuffer 変数 |
 | fileBuffer | 正式キャメルケース |
+| None | API 認証「無し」オプション |
+| Basic | API 認証 Basic オプション |
+| Bearer | API 認証 Bearer オプション |
+| Authorization | API ステップ Authorization タブ |
+| authorization | 小文字バリアント |
+| Assertion | API ステップアサーション機能 |
+| assertion | 小文字バリアント |
+| Status code | API ステップ検証対象ドロップダウン選択肢 |
+| status code | 小文字バリアント |
+| Body (JSON) | API 検証ドロップダウン選択肢 |
+| Body (Text) | API 検証ドロップダウン選択肢 |
+| Send | API ステップのリクエスト送信ボタン |
+| Professional plan | Testim ライセンスプラン名 |
+| professional plan | 小文字バリアント |
+| PRO機能 | Professional プラン限定機能タグ（混成表記） |
+| Execute Driver Script | Testim Mobile のステップ名（既存登録済み） |
+| execute_driver_script | Testim Mobile Appium フラグ名 |
+| run_shared_action | Testim Mobile 共有アクション既定説明 |
+| run shared action | スペース区切り |
+| Run shared action | 大文字バリアント |
+| Edit | UI 編集アクション |
+| Reassign | 要素再割り当てアクション |
+| reassign | 小文字バリアント |
+| Target checkbox/radio button | Validate Checkbox Radio Button の対象要素表示 |
+| target checkbox/radio button | 小文字バリアント |
+| Checked | チェック状態 |
+| Unchecked | 非チェック状態 |
+| Expected status | Validate checkbox/radio プロパティ名 |
+| expected status | 小文字バリアント |
+| Unsync Fields | キーボードショートカットステップの同期解除ボタン |
+| unsync fields | 小文字バリアント |
+| Unsupported keyboard shortcut | 未対応ショートカットエラー |
+| unsupported keyboard shortcut | 小文字バリアント |
+| Function | カスタムコードエディターの function テキストボックス |
+| function | 小文字バリアント |
+| email address | Generate Email Address フィールド |
+| Email address | 大文字バリアント |
+| Email Address | 完全大文字バリアント |
+| email validation examples | ドキュメント内参照セクション |
+| Email validation examples | 大文字バリアント |
+| browserstack | BrowserStack 小文字バリアント |
+| BrowserStack | 既存登録済み |
+| headspin | HeadSpin モバイルクラウド |
+| HeadSpin | 大文字バリアント |
+| sequelize | npm パッケージ名 |
+| mysql2 | npm パッケージ名 |
+| bluebird | npm パッケージ名 |
+| collname | MongoDB サンプルパラメーター名 |
+| dbname | MongoDB サンプルパラメーター名 |
+| myproject | MongoDB サンプル値 |
+| expectedvalue | JS 期待値サンプルパラメーター名 |
+| expectedValue | 正式キャメルケース |
+| expected name | パラメーター名 |
+| expected subject | Validate Email フィールド（既存登録済み） |
+| Expected Name | 大文字バリアント |
+| expectedNumOfPages | PDF 検証サンプルパラメーター名 |
+| expectedNumOfRows | CSV 検証サンプルパラメーター名 |
+| expectedNumOfSheets | Excel 検証サンプルパラメーター名 |
+| expectedPageName | Excel 検証サンプルパラメーター名 |
+| expectedImageType | 画像検証サンプルパラメーター名 |
+| expectedWidth | 画像検証サンプルパラメーター名 |
+| expectedHeight | 画像検証サンプルパラメーター名 |
+| expectedText | 検証サンプルパラメーター名 |
+| excpectedNumOfSlides | PowerPoint 検証サンプル（タイポ含む既存 API） |
+| maxTimeInMs | ネットワーク検証サンプルパラメーター名 |
+| maxtimeinms | 小文字バリアント |
+| amountLabel | カスタムコードサンプル変数 |
+| amountlabel | 小文字バリアント |
+| firstLabel | カスタムコードサンプル変数 |
+| secondLabel | カスタムコードサンプル変数 |
+| firstlabel | 小文字バリアント |
+| secondlabel | 小文字バリアント |
+| setTimeout | JS 標準関数 |
+| settimeout | 小文字バリアント |
+| Base URL | ベース URL 設定（既存登録済み） |
+| base URL | 小文字バリアント |
+| base url | 完全小文字 |
+| Properties panel | プロパティパネル（英語表記） |
+| properties panel | 小文字バリアント |
 
 ## Testim プロパティ名
 
