@@ -12,6 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { classifySegment } from './lib/parity_glossary_mask.mjs';
+import { isDirectRun } from './lib/cli.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS_DIR = path.join(ROOT, 'src', 'content', 'docs');
@@ -87,11 +88,10 @@ export function printFindings(slug, filePath, findings) {
 
 function main() {
   const args = process.argv.slice(2);
-  const slugFilter = args.find((a) => a.startsWith('--slug='))?.split('=')[1] || null;
-  const limit = parseInt(
-    args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '0',
-    10,
-  );
+  const slugArg = args.find((a) => a.startsWith('--slug='));
+  const slugFilter = slugArg ? slugArg.slice('--slug='.length) : null;
+  const limitArg = args.find((a) => a.startsWith('--limit='));
+  const limit = parseInt(limitArg ? limitArg.slice('--limit='.length) : '0', 10);
 
   const baseline = JSON.parse(fs.readFileSync(BASELINE_PATH, 'utf8'));
   const untranslatedSlugs = new Set(
@@ -140,6 +140,6 @@ function main() {
   );
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun(import.meta.url)) {
   main();
 }
