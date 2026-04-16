@@ -6,17 +6,44 @@
 
 **重要**: `sourceUrl` の英語記事は「参照用」ではなく、日本語ページの正本です。要約ページへ作り替えず、原文の本文、手順、callout、コンテンツ画像を欠落なく反映してください。
 
-## ⚖️ 翻訳の構造契約
+## ⚖️ 翻訳の構造契約（最上位規約、2026-04-16 強化）
 
-翻訳ニュアンス（自然さ、丁寧語、語順等）は **原文の構造を変えずに** 文内で実現してください。
+> このセクションは **翻訳作業の最上位規約** です。用語統一表・トラブルシューティング・一括処理時の注意事項よりも優先します。
 
-- NG: EN 原文の 1 段落を JA で 2 段落に分けて説明する
-- NG: EN 原文にない補助 callout を JA で追加する
-- NG: EN 原文の番号リストを JA で箇条書きに変換する
-- OK: EN 原文の 1 段落を JA の 1 段落として訳し、その中で自然な語順にする
-- OK: Testim 用語は英語のまま維持する（[GLOSSARY.md](./GLOSSARY.md) 参照）
+翻訳ニュアンス（自然さ、丁寧語、語順等）は **原文の構造を変えずに** 文内で実現してください。JA ドキュメントは EN 原文の構造をそのまま写した日本語版として整備するのが本プロジェクトの **最終ゴール** です。
 
-構造契約の詳細は [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) を参照。
+### 絶対禁止（MUST NOT）
+
+- ❌ EN 原文の 1 段落を JA で 2 段落に分けて説明する
+- ❌ EN 原文にない補助 callout を JA で追加する
+- ❌ EN 原文の番号リストを JA で箇条書きに変換する（またはその逆）
+- ❌ EN 原文の callout タイプを JA で別タイプに変更する（`note` → `tip` 等）
+- ❌ EN 原文の 1 callout を JA で複数 callout に分割する
+- ❌ EN 原文にない「日本語読者向け補足」「親切な注記」「IME 情報」等の追加
+- ❌ EN 原文の段落の順序を JA で入れ替える
+- ❌ Testim 機能名・画面名・ボタン名を日本語化する（英語のまま維持）
+
+### 必ず守る（MUST）
+
+- ✅ EN 原文の 1 段落を JA の 1 段落として訳し、その中で自然な語順にする
+- ✅ Testim 用語は英語のまま維持する（[GLOSSARY.md](./GLOSSARY.md) 3-tier 分類 参照）
+- ✅ 見出しレベル（H2/H3/H4）・番号リスト項目数・箇条書き項目数・callout 数を原文と一致させる
+- ✅ 画像の配置順序・枚数を原文と一致させる
+- ✅ 一般 IT 用語（simulator / repository / pipeline 等）は [§5.4 許容される一般 IT 用語](#54-許容される一般-it-用語英語維持) に従う
+
+### 構造契約違反の検知
+
+本ルール違反は `npm run check:parity` で自動検出され、以下のいずれかの issue として報告されます:
+
+| Issue type | 違反例 |
+| --- | --- |
+| `segment-missing` | EN 段落を JA で省略 / 翻訳欠落 |
+| `segment-extra` | JA 独自段落追加 / 1 段落→2 段落分割 |
+| `section-structure-mismatch` | 見出しレベル変更 / callout タイプ変更 / リスト形式変換 |
+| `segment-untranslated` | Testim UI 用語以外の英語 prose 残留 |
+| `segment-token-gap` | CLI flag / URL / 数値 token の欠落 |
+
+**これらの issue は必ず「JA を EN に追従させる」方向で解消する。baseline で許容してはならない。** 詳細は [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) と [PARITY_GUIDE.md M2 burn-down recipe](./PARITY_GUIDE.md) を参照。
 
 ## 1. 準備：公式サイトの構造を確認
 
@@ -540,6 +567,37 @@ _動画: テストの実行デモ_
 Callout（`:::` ディレクティブ）、コードブロック、リスト、テーブルの記法は **`docs/WRITING_GUIDE.md`** を参照してください。
 
 **重要**: 旧記法（`> 📘` 等の blockquote 形式）は使用禁止。必ず `:::` ディレクティブを使用すること。
+
+### 5.4 許容される一般 IT 用語（英語維持）
+
+Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のまま維持してよい。検知系 (`scripts/lib/parity_glossary_mask.mjs` + `docs/INVARIANT_TOKENS.md`) の narrow pattern で保護される。
+
+**判定原則**:
+
+- 英訳すると技術文書として意味が通らない / 業界共通語になっている → 英語維持
+- 一般名詞で日本語訳が広く定着している（例: サーバー / ブラウザー）→ カタカナ化
+- 迷ったら本文脈で [GLOSSARY.md](./GLOSSARY.md) の Tier C (許容一般 IT 用語) を確認
+
+**Tier C 例**:
+
+| カテゴリ | 英語維持 | カタカナ化 |
+| --- | --- | --- |
+| デバイス / モバイル | simulator / emulator / device | スマートフォン / タブレット |
+| Web / ネットワーク | web / app / proxy / tunnel / endpoint | ブラウザー / サーバー |
+| 認証 / セキュリティ | authentication / authorization / token / certificate | セッション |
+| CI/CD | pipeline / repository / integration / middleware / callback | ビルド（日本語定着）/ デプロイ |
+| 開発ツール | plugin / debugger / breakpoint / localhost / timeout / override | エディター（日本語定着） |
+| 外部通知 | webhook / email / inbox / payload | — |
+
+**運用ルール**:
+
+- 新しい一般 IT 用語を英語維持したい場合は、[INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) の narrow pattern に追加する
+- 文脈限定で pattern を narrow に保つ（広 alternation 禁止、pattern あたり語数 ≤ 6-8）
+- 追加時は `scripts/__tests__/parity_glossary_mask.test.mjs` に inventory guard test を追加する
+
+**false-positive 事例**（M1 T4 で除外済）:
+
+- `browser version` / `major version` / `Add action` / `Add validation` は compound general であり、GLOSSARY に登録しない（一般 IT 英文の silent false-negative 源になる）
 
 ## 6. ナビゲーション構造の確認
 

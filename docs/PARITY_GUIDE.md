@@ -2,6 +2,77 @@
 
 パリティチェック（`npm run check:parity`）で検出される EN/JA 構造差分の修正手順と頻出パターンをまとめたガイドです。
 
+## 🎯 本ガイドの位置づけ（2026-04-16 M4 改訂）
+
+本プロジェクトの最終ゴールは `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0。baseline は **時限的 ack** であって **恒常許容ではない**。
+
+- **上位契約**: [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) / [TRANSLATION_GUIDE.md §⚖️ 翻訳の構造契約](./TRANSLATION_GUIDE.md)
+- **本ガイドの責務**: baseline entries を 0 に向けた **burn-down recipe** と並列エージェント運用手順
+- **M2 Stage B7**: 現時点の baseline = **340 entries / 100 ファイル**（2026-04-16 main 実測）。本ガイドに従って段階的に burn-down する
+
+## 📊 340 件の内訳と修正方針（M4 pinned）
+
+| issue type | 件数 | 主要原因 | 修正方針 | 並列 agent 向き |
+| --- | --- | --- | --- | --- |
+| `segment-extra` | 120 | JA 独自段落 / 1 callout→2 callout 分割 / 番号リスト展開 | JA 側の独自追加を削除し EN 原文 1:1 に戻す | ✅ 1 slug / 1 agent |
+| `segment-missing` | 76 | EN 段落が JA で欠落 | EN 原文を翻訳して追加 | ✅ 1 slug / 1 agent |
+| `section-structure-mismatch` | 66 | 見出しレベル変更 / callout タイプ変更 / リスト形式変換 | 構造を EN 原文に揃える（JA 独自見出しの削除等） | ✅ 1 slug / 1 agent |
+| `segment-untranslated` | 47 | Testim UI 以外の英語 prose 残留 | 翻訳。Tier C 許容語は INVARIANT 側で保護 | ✅ 1 slug / 1 agent |
+| `segment-token-gap` | 20 | URL/CLI flag/数値 token の欠落 | 原文の token を JA 側に復元 | ✅ 1 slug / 1 agent |
+| `segment-inconclusive` | 11 | tokenless-near-tie / heading-count-mismatch | 手動確認 → 構造追従 or ack 判断 | ❌ 人手 review |
+
+### Burn-down workflow（1 slug / 1 agent）
+
+```bash
+# 1. 対象 slug の baseline entry 確認
+jq "[.entries[] | select(.slug == \"<slug>\")]" parity-baseline.json
+
+# 2. EN 原文と JA 差分を並列確認
+cat snapshots/en/content/<slug>.html
+cat src/content/docs/<slug>.md
+
+# 3. JA を EN 構造に追従させる（WRITING_GUIDE §Source-First 参照）
+#    - 独自段落削除 / callout タイプ修正 / リスト形式復元 etc.
+
+# 4. 単一 slug parity check
+npm run check:parity -- --slug=<slug>
+
+# 5. lint / build 通過
+npm run lint:docs -- --path=src/content/docs/<slug>.md
+
+# 6. 問題解消後に baseline 再生成
+npm run check:parity                              # フルラン必須
+node scripts/generate_parity_baseline.mjs --slug=<slug>
+
+# 7. entry が 0 件になったことを確認
+jq "[.entries[] | select(.slug == \"<slug>\")] | length" parity-baseline.json
+# → 0
+```
+
+### 並列エージェント委任チェックリスト
+
+各 agent 向けに送る情報:
+
+- [ ] 対象 slug と baseline entry の issueType 内訳
+- [ ] EN snapshot path (`snapshots/en/content/<slug>.html`) と JA path (`src/content/docs/<slug>.md`)
+- [ ] [WRITING_GUIDE §Source-First 構造契約](./WRITING_GUIDE.md) を必読指定
+- [ ] [TRANSLATION_GUIDE §⚖️ 翻訳の構造契約](./TRANSLATION_GUIDE.md) を必読指定
+- [ ] **禁止事項**: JA 独自段落追加 / callout タイプ変更 / 1 callout→2 callout 分割 / 番号リスト展開 / 読者向け親切補足
+- [ ] **完了条件**: `npm run check:parity -- --slug=<slug>` で該当 slug の active / baseline 両方が 0 件
+- [ ] **PR scope**: 1 slug / 1 PR または関連 slug の小 batch。検知コード修正は別 PR
+
+### 注意: baseline 追加の判断原則
+
+以下に該当する場合のみ baseline 追加を許容する（それ以外は必ず修正する）:
+
+| 状況 | baseline 許容 | 理由 |
+| --- | --- | --- |
+| EN upstream 自体が壊れている (`source-unusable` / `snapshot-incomplete`) | ✅ | upstream 修正待ち |
+| EN-only の小 artifact (1-2 件、Phase 0 後の残り) | △ (micro-exclusion を検討) | 件数監視 |
+| JA 側の構造修正で簡単に解消可能 | ❌ | burn-down 対象 |
+| Testim UI 用語で GLOSSARY 未登録 | ❌ | GLOSSARY Tier A/B に追加 |
+| 一般 IT 用語で INVARIANT 未登録 | ❌ | INVARIANT narrow pattern に追加 |
+
 ## 頻出パターン
 
 ### 1. preface に frontmatter description の重複段落（segment-extra）

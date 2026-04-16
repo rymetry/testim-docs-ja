@@ -466,3 +466,68 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 `inconclusive` に degrade する (`check_source_parity.mjs::computeParityResult`)。
 local で snapshot fetch をしていない限り `freshnessState: broken` なので、
 `result` は `inconclusive` のままで正常。CI 環境のみ `result: pass` が期待される。
+
+## Rollback Playbook（Phase 4 PR Z atomic cutover / M4 追加 2026-04-16）
+
+Phase 4 の atomic schema cutover (PR Z) を実施後、以下の rollback 条件に該当した場合の手順。rollback は **schema v1 の状態に完全復帰** することを目標とする。
+
+### Rollback トリガー
+
+| 状況 | rollback 要否 |
+| --- | --- |
+| PR Z merge 直後に `reportableActiveFiles > 0` 発生 | 必須（revert merge commit） |
+| baseline schema v2 が期待件数 = 0 に収束しない | 必須（schema 再設計） |
+| `orphanBaselineEntries > 0` が検知される | 要確認（detector 仕様変更の可能性） |
+| `advisoryQueueIssues > 3` の異常増加 | 要調査（rollback は最終手段） |
+| CI でビルド不能 | 必須（即時 revert） |
+
+### Rollback 手順
+
+```bash
+# 1. PR Z merge commit を特定
+git log --oneline main -10 | grep "PR Z"
+
+# 2. main に戻った状態で revert commit を作成
+git checkout main
+git pull --ff-only origin main
+git revert -m 1 <PR-Z-merge-SHA>      # merge commit の revert (mainline=1)
+
+# 3. baseline schema v1 の復元
+git checkout <PR-Z-merge-SHA>^ -- parity-baseline.json
+git add parity-baseline.json
+git commit --amend --no-edit
+
+# 4. 検証
+npm run check:parity                   # フルラン
+npm run test
+npm run build
+
+# 5. 期待値
+#    - baseline schema v1 形式 (entries/generatedAt/generatedFromRunId 等)
+#    - reportableActiveFiles === 0
+#    - 新たな orphan entry なし
+
+# 6. push
+git push origin main
+```
+
+### schema v1 ↔ v2 cutover の不整合対策
+
+- **v2 内部参照の残存**: PR Z で導入した `scripts/lib/source_parity_baseline_v2.mjs` (仮) がテストから参照されている場合、`check_source_parity.mjs` が v1 schema を検出して feature-flag で v2 code path を skip する必要がある
+- **baseline file の schema マイグレーション**: revert 後に `parity-baseline.json` の `schemaVersion` フィールドが v2 のまま残った場合、手動で v1 に戻す (`schemaVersion: 1`)
+- **CI workflow の切り戻し**: PR Z で `.github/workflows/parity.yml` が更新されていた場合、v1 時代の workflow YAML を git show で復元
+
+### Rollback 後の再着手
+
+- PR Z で発見した問題を plan `docs/superpowers/plans/2026-04-14-parity-phase4-schema-cleanup.md` に追記
+- 次回 PR Z 着手前に M2 Stage B7 の burn-down 完了 (`baseline.entries === 0`) を entry criteria にする
+- schema v2 の設計見直し (backward compat 層の要否、feature flag 期間等) を別 plan 文書で行う
+
+### Rollback の責任分界
+
+| 対象 | rollback 範囲 | 範囲外（別対応） |
+| --- | --- | --- |
+| `parity-baseline.json` | schema v1 に戻す | baseline 件数の一時増加は burn-down で対応 |
+| `scripts/lib/source_parity*.mjs` | v2 追加モジュールを削除 | 既存 v1 モジュールのバグ修正は別 PR |
+| `.github/workflows/parity.yml` | v1 時代の YAML に戻す | 新規 CI 改善は別 PR |
+| `src/content/docs/**` | 触らない | 翻訳内容の変更は M2 の範疇 |

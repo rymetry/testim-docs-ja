@@ -17,20 +17,27 @@
 - 英語のまま残すべき token で、決定論的に識別できるパターン
 - Glossary に個別登録するには数が多すぎる、または動的なもの（バージョン番号・タイムスタンプ等）
 
-## T19 — wide alternation 分割方針（M1 policy / M4 implementation）
+## T19 — wide alternation 分割の現状（M4 で実施済 / 2026-04-16）
 
-以下の広 alternation pattern は false-positive リスクが高いため、M4 ガイド改訂 plan で **文脈限定 pattern に分割** する:
+以下の広 alternation pattern は false-positive リスクが高いため、M4 ガイド改訂で **narrow 文脈限定 pattern に分割済** です:
 
-- `common-it-loanword` → 分割後 **≥ 3 narrow pattern** に再構成（例: `device-terms` / `web-network-terms` / `ops-ci-terms` 等）
-- `technical-concept-term` → 分割後 **≥ 3 narrow pattern** に再構成（例: `ci-cd-term` / `auth-api-term` / `concept-term` 等）
-- `table-header-pattern` → M4 で table 構造検出 + header 限定の文脈チェックへ移行
+| 旧 pattern | 分割後 narrow pattern | 備考 |
+|---|---|---|
+| `common-it-loanword` | `common-it-loanword-device` / `common-it-loanword-network` / `common-it-loanword-ops` | デバイス / Web / 運用の 3 ドメインに分離 |
+| `technical-concept-term` | `technical-concept-repo` / `technical-concept-auth` / `technical-concept-validation` | コード管理 / 認証 / 検証の 3 ドメインに分離 |
+| `table-header-pattern` | 未分割（要検討） | table 構造検出との統合は M5 以降の課題 |
 
 分割後の各 pattern は:
-- 単一ドメイン（device / web / auth / ci-cd 等）に limit
-- regex alternation は最大 6-8 語 / 重複禁止
-- note に「文脈（surrounding token / document section）」を明記
+- 単一ドメイン（device / web / auth / 検証等）に limit
+- regex alternation は最大 6-12 語 / 重複禁止
+- note に「分割由来の旧 pattern」を明記
 
-M1 では **方針のみ** 確定（本 plan 範囲）。実装は M4 別 plan。
+### pattern 追加の判断原則（新規追加時）
+
+1. 既存 narrow pattern のドメインに収まるか？ → yes なら既存 pattern に語を追加（≤12 語で留める）
+2. 新ドメインが必要か？ → 新 narrow pattern を作成（`<domain>-<subcategory>` 命名）
+3. 広 alternation は禁止（pattern 1 つで複数ドメインを吸収しない）
+4. 追加後は `scripts/__tests__/parity_glossary_mask.test.mjs` の inventory guard に narrow ID を追加
 
 ---
 
@@ -200,29 +207,77 @@ JA テキスト中に出現する JavaScript コードパターン（throw/retur
 | example | `Name`, `Type`, `Value`, `Package` |
 | note | テーブルヘッダーとして残る一般的な英語列名。G6/T19 で文脈限定 pattern に分割予定 |
 
-## common-it-loanword
+## common-it-loanword-device
 
-JA 技術文書で英語のまま使用される一般的な IT 用語。
-
-| 項目 | 値 |
-| --- | --- |
-| id | `common-it-loanword` |
-| regex | `\b(?:simulator|emulator|device|compile|mobile|web|app|parallel|integration|plugin|certificate|profile|payload|webhook|token|dashboard|server|proxy|tunnel|execution|email|inbox|download|upload|screenshot|annotation|breakpoint|debugger|localhost|timeout|override)\b` |
-| flags | `gi` |
-| example | `simulator`, `emulator`, `device`, `compile`, `mobile`, `web` |
-| note | 技術文脈で英語のまま使用が許容される一般 IT 用語。T19 で文脈限定 pattern に分割予定（plan §3.2 / §4 G6） |
-
-## technical-concept-term
-
-JA 技術文書で英語のまま使われる中級 IT 概念用語。
+デバイス / モバイル / コンパイル文脈の一般 IT 用語。
 
 | 項目 | 値 |
 | --- | --- |
-| id | `technical-concept-term` |
-| regex | `\b(?:repository|pipeline|credentials|source\s+code|authentication|authorization|middleware|callback|endpoint|status\s+code|assertion|validation)\b` |
+| id | `common-it-loanword-device` |
+| regex | `\b(?:simulator|emulator|device|compile|mobile|app)\b` |
 | flags | `gi` |
-| example | `repository`, `pipeline`, `credentials` |
-| note | コードレビュー・CI/CD・API・認証等の文脈で英語のまま使用される技術概念用語。T19 で文脈限定 pattern に分割予定 |
+| example | `simulator`, `emulator`, `device`, `compile`, `mobile` |
+| note | T19 分割: 旧 `common-it-loanword` からデバイス / モバイル領域を分離（M4 で narrow 化、plan §3.2 T19） |
+
+## common-it-loanword-network
+
+Web / ネットワーク / 認証トークン文脈の一般 IT 用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `common-it-loanword-network` |
+| regex | `\b(?:web|plugin|proxy|tunnel|parallel|integration|certificate|profile|token|payload|webhook|server)\b` |
+| flags | `gi` |
+| example | `web`, `plugin`, `proxy`, `token`, `webhook`, `server` |
+| note | T19 分割: 旧 `common-it-loanword` から Web/ネットワーク/トークン領域を分離 |
+
+## common-it-loanword-ops
+
+運用 / CI / 監視 / 開発支援文脈の一般 IT 用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `common-it-loanword-ops` |
+| regex | `\b(?:dashboard|execution|email|inbox|download|upload|screenshot|annotation|breakpoint|debugger|localhost|timeout|override)\b` |
+| flags | `gi` |
+| example | `dashboard`, `execution`, `screenshot`, `breakpoint`, `debugger`, `localhost` |
+| note | T19 分割: 旧 `common-it-loanword` から運用 / デバッグ / 通知領域を分離 |
+
+## technical-concept-repo
+
+コードレビュー / CI/CD / バージョン管理文脈の概念用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `technical-concept-repo` |
+| regex | `\b(?:repository|pipeline|source\s+code|credentials)\b` |
+| flags | `gi` |
+| example | `repository`, `pipeline`, `source code`, `credentials` |
+| note | T19 分割: 旧 `technical-concept-term` からコード管理領域を分離 |
+
+## technical-concept-auth
+
+認証 / API / middleware 文脈の概念用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `technical-concept-auth` |
+| regex | `\b(?:authentication|authorization|middleware|callback|endpoint|status\s+code)\b` |
+| flags | `gi` |
+| example | `authentication`, `authorization`, `endpoint`, `status code` |
+| note | T19 分割: 旧 `technical-concept-term` から認証 / API 領域を分離 |
+
+## technical-concept-validation
+
+検証 / アサーション文脈の概念用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `technical-concept-validation` |
+| regex | `\b(?:assertion|validation)\b` |
+| flags | `gi` |
+| example | `assertion`, `validation` |
+| note | T19 分割: 旧 `technical-concept-term` から検証領域を分離 |
 
 ---
 

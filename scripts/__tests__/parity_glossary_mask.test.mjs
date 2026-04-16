@@ -348,15 +348,20 @@ describe('INVARIANT_TOKENS.md contract completeness (ARCH-001 regression)', () =
 });
 
 describe('INVARIANT_TOKENS inventory guard (T1 silent-drop prevention / plan §7 R2)', () => {
-  // frozen canonical set: PR #286-#291 stack で復元された pattern + keyboard-shortcut-spaced
+  // frozen canonical set: PR #286-#291 stack で復元された pattern + M4 narrow split の新 ID
   // silent drop 検知のため、loadInvariantPatterns の ID 集合がこの set を ⊇ で含むこと
   const FROZEN_CANONICAL_IDS = [
     'inline-js-throw-return',
     'table-header-pattern',
-    'common-it-loanword',
-    'technical-concept-term',
     'sfdc-ui-name-with-parens',
     'keyboard-shortcut-spaced',
+    // M4 T19 narrow split (2026-04-16): 旧 common-it-loanword / technical-concept-term を置換
+    'common-it-loanword-device',
+    'common-it-loanword-network',
+    'common-it-loanword-ops',
+    'technical-concept-repo',
+    'technical-concept-auth',
+    'technical-concept-validation',
   ];
 
   it('loadInvariantPatterns() returns superset of frozen canonical IDs', () => {
@@ -366,6 +371,18 @@ describe('INVARIANT_TOKENS inventory guard (T1 silent-drop prevention / plan §7
       assert.ok(
         ids.has(id),
         `frozen canonical pattern "${id}" must remain in INVARIANT_TOKENS.md (silent drop regression guard)`,
+      );
+    }
+  });
+
+  it('M4 T19 narrow split: 旧広 alternation pattern が削除されている', () => {
+    const patterns = loadInvariantPatterns();
+    const ids = new Set(patterns.map((p) => p.id));
+    // 旧 wide pattern は narrow 分割後に削除されているべき
+    for (const removedId of ['common-it-loanword', 'technical-concept-term']) {
+      assert.ok(
+        !ids.has(removedId),
+        `旧 wide pattern "${removedId}" は M4 T19 で narrow 分割されたため削除済みのはず`,
       );
     }
   });
@@ -425,37 +442,84 @@ describe('maskSegmentText — restored PR #286-#291 patterns (T1 / T3 regression
     );
   });
 
-  it('common-it-loanword: regex matches documented examples (simulator/emulator/mobile)', () => {
+  it('common-it-loanword-device: regex matches documented examples (simulator/emulator/mobile)', () => {
     const patterns = loadInvariantPatterns();
-    const p = patterns.find((x) => x.id === 'common-it-loanword');
-    assert.ok(p, 'common-it-loanword must be loaded');
-    for (const word of ['simulator', 'emulator', 'mobile', 'device']) {
+    const p = patterns.find((x) => x.id === 'common-it-loanword-device');
+    assert.ok(p, 'common-it-loanword-device must be loaded');
+    for (const word of ['simulator', 'emulator', 'mobile', 'device', 'compile']) {
       assert.ok(
         new RegExp(p.regex.source, p.regex.flags).test(word),
-        `common-it-loanword regex must match documented example "${word}"`,
+        `common-it-loanword-device regex must match documented example "${word}"`,
       );
     }
-    // Wide-scope regex; out-of-alternation loanword must not match (ensures boundary integrity)
     assert.ok(
       !new RegExp(p.regex.source, p.regex.flags).test('totallydifferentword'),
-      'common-it-loanword regex must NOT match out-of-alternation token',
+      'common-it-loanword-device regex must NOT match out-of-alternation token',
     );
   });
 
-  it('technical-concept-term: regex matches documented examples (repository/pipeline/credentials)', () => {
+  it('common-it-loanword-network: regex matches network/auth tokens (web/plugin/proxy/token)', () => {
     const patterns = loadInvariantPatterns();
-    const p = patterns.find((x) => x.id === 'technical-concept-term');
-    assert.ok(p, 'technical-concept-term must be loaded');
+    const p = patterns.find((x) => x.id === 'common-it-loanword-network');
+    assert.ok(p, 'common-it-loanword-network must be loaded');
+    for (const word of ['web', 'plugin', 'proxy', 'token', 'webhook', 'server']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `common-it-loanword-network regex must match documented example "${word}"`,
+      );
+    }
+  });
+
+  it('common-it-loanword-ops: regex matches ops/debug tokens (dashboard/breakpoint/localhost)', () => {
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'common-it-loanword-ops');
+    assert.ok(p, 'common-it-loanword-ops must be loaded');
+    for (const word of ['dashboard', 'breakpoint', 'localhost', 'debugger', 'screenshot']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `common-it-loanword-ops regex must match documented example "${word}"`,
+      );
+    }
+  });
+
+  it('technical-concept-repo: regex matches repo/pipeline tokens', () => {
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'technical-concept-repo');
+    assert.ok(p, 'technical-concept-repo must be loaded');
     for (const word of ['repository', 'pipeline', 'credentials']) {
       assert.ok(
         new RegExp(p.regex.source, p.regex.flags).test(word),
-        `technical-concept-term regex must match documented example "${word}"`,
+        `technical-concept-repo regex must match documented example "${word}"`,
       );
     }
     assert.ok(
       !new RegExp(p.regex.source, p.regex.flags).test('unrelatedword'),
-      'technical-concept-term regex must NOT match unrelated prose token',
+      'technical-concept-repo regex must NOT match unrelated prose token',
     );
+  });
+
+  it('technical-concept-auth: regex matches auth/API tokens', () => {
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'technical-concept-auth');
+    assert.ok(p, 'technical-concept-auth must be loaded');
+    for (const word of ['authentication', 'authorization', 'endpoint', 'middleware']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `technical-concept-auth regex must match documented example "${word}"`,
+      );
+    }
+  });
+
+  it('technical-concept-validation: regex matches validation tokens', () => {
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'technical-concept-validation');
+    assert.ok(p, 'technical-concept-validation must be loaded');
+    for (const word of ['assertion', 'validation']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `technical-concept-validation regex must match documented example "${word}"`,
+      );
+    }
   });
 
   it('keyboard-shortcut-spaced: masks "Ctrl + S" with spaced modifier', () => {

@@ -53,9 +53,9 @@ Auto grouping は、プロジェクト全体のテストから重複したステ
 重複レベルの計算は、毎週日曜日に実行されるオフライン処理に基づく推定値であり、すべての最新変更を反映しているわけではありません。
 :::
 
-   - **The number of duplicate steps** – 他のテストで見つかった同一ステップ列の数。
-   - **Duplication level reduction** – 候補を採用したときに重複レベルがどれだけ下がるか（例: 現在 14% で 1% と表示されている場合、採用後は 13% になる）。
-   - **The number tests and groups** – 同じステップ列が見つかったテスト／グループの数。
+- **The number of duplicate steps** – 他のテストで見つかった同一ステップ列の数。
+- **Duplication level reduction** – 候補を採用したときに重複レベルがどれだけ下がるか（例: 現在 14% で 1% と表示されている場合、採用後は 13% になる）。
+- **The number tests and groups** – 同じステップ列が見つかったテスト／グループの数。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png)
 
