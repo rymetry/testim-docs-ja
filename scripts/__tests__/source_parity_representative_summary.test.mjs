@@ -9,26 +9,27 @@
  *   | slug                                               | 解消手段                                         |
  *   | -------------------------------------------------- | ------------------------------------------------ |
  *   | salesforce-testing/salesforce-testing-overview     | Phase G: shallow EN に合わせて JA trim           |
+ *   | results/test-results/network-logs                  | Phase 4 burn-down で Testim UI 英語残留 解消     |
+ *   | advanced-editing/custom-action-step-mobile         | Phase 4 B2+B3 burn-down (T11 / plan §3.2)        |
+ *   | salesforce-testing/faq                             | Phase 4 B2+B3 burn-down (T11 / plan §3.2)        |
+ *   | advanced-editing/validations/email-validation      | Phase 4 B2+B3 burn-down (T11 / plan §3.2)        |
  *
  * RESIDUAL_PAGES (segment-untranslated が baseline 凍結):
- *   PR review #3 で classifySegment の CJK 早期 return を削除した結果、
- *   以下 6 ページで Testim UI 名の英語残留が segment-untranslated として
- *   surface するようになった。GLOSSARY 拡張での解消は Phase 0 scope を超える
- *   ため、baseline で凍結して Phase 1.x の GLOSSARY 監査タスクとする。
+ *   Testim UI 名の英語残留が surface するページ。GLOSSARY 拡張での解消は
+ *   Phase 0 scope を超えるため、baseline で凍結して Phase 1.x の GLOSSARY
+ *   監査タスクとする。
  *
  *   | slug                                               | 残留理由                                         |
  *   | -------------------------------------------------- | ------------------------------------------------ |
- *   | advanced-editing/custom-action-step-mobile         | Testim UI 名 英語残留 (segment-untranslated)     |
  *   | results/test-runs                                  | Testim UI 名 英語残留 (segment-untranslated)     |
- *   | salesforce-testing/faq                             | Testim UI 名 英語残留 (segment-untranslated)     |
- *   | running-tests/the-command-line-cli                 | Testim UI 名 英語残留 (segment-untranslated)     |
- *   | results/test-results/network-logs                  | Testim UI 名 英語残留 (segment-untranslated)     |
- *   | advanced-editing/validations/email-validation      | Testim UI 名 英語残留 (segment-untranslated)     |
+ *   | running-tests/the-command-line-cli                 | Testim UI 名 英語残留 (segment-untranslated, 4 件 / T11 pending) |
  *
  * pin する契約:
  *   RESOLVED: 全 slug で `reportableActiveFiles === 0` かつ `baselinedByType === {}`
  *   RESIDUAL: 全 slug で `reportableActiveActionableFiles === 0` かつ
  *             `baselinedByType[segment-untranslated] >= 1`
+ *             T15: 加えて `section-structure-mismatch` / `segment-extra` も
+ *             requiredBaselinedTypes として pin 可能 (plan §3.2)
  *
  * slug ごとに別 status file へ書き出し、repo root は触らない。
  */
@@ -88,21 +89,30 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 // 解消プロセス:
 // - `salesforce-testing-overview`: EN 本文が `<h1>` + 1 paragraph のみで
 //   source が shallow なため、JA も同構造に trim
+// - 他 4 slug: Phase 4 burn-down で Testim UI 英語残留を解消 (T11 promotion)
 // ---------------------------------------------------------------------------
 const RESOLVED_PAGES = Object.freeze([
   'salesforce-testing/salesforce-testing-overview',
   'results/test-results/network-logs',
+  'advanced-editing/custom-action-step-mobile',
+  'salesforce-testing/faq',
+  'advanced-editing/validations/email-validation',
 ]);
 
 // ---------------------------------------------------------------------------
 // RESIDUAL_PAGES — segment-untranslated が baseline 凍結中のページ。
-// PR review #3 で classifySegment の CJK 早期 return を削除した結果、
-// Testim UI 名の英語残留が surface するようになった。
-// Phase 4 B2+B3 burn-down (2026-04-16) で salesforce-testing/faq と
-// advanced-editing/validations/email-validation は完全に解消済のため除外。
+// T11: running-tests/the-command-line-cli は未解消 (4 件残) のため RESIDUAL に復帰。
+// T15: section-structure-mismatch / segment-extra も requiredBaselinedTypes で pin 可能。
 // ---------------------------------------------------------------------------
 const RESIDUAL_PAGES = Object.freeze([
   { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
+  { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
+  // T15: section-structure-mismatch / segment-extra も代表 pin として追加
+  // (PR #287/#288 で副作用増加した surface。plan §3.2)
+  {
+    slug: 'administration/project-and-user-management',
+    requiredBaselinedTypes: ['section-structure-mismatch', 'segment-extra'],
+  },
 ]);
 
 // ---------------------------------------------------------------------------
