@@ -526,6 +526,85 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Set username | Test Data コードのサンプル識別子 |
 | Set Username | Test Data コードのサンプル識別子（大文字） |
 | Getting Cookies using the Get Cookie step | Cookie ページ内のセクションリンクテキスト |
+| Create new Cookie | Cookie 作成ラジオボタン |
+| Use cookie parameter | Cookie パラメーター利用ラジオボタン |
+| Expires (Max-Age) | Cookie 有効期限フィールド |
+| Parameter Name | ステッププロパティのパラメーター名フィールド |
+| Test Data | Setup ステップのテストデータプロパティ |
+| test data | 小文字バリアント |
+| Parameters in custom JavaScript steps | ドキュメントリンクテキスト |
+| Validate Element Attribute | Validate Element Attribute ステップ名（大文字バリアント） |
+| validate element attribute | 小文字バリアント |
+| Network Capture Options | ネットワークキャプチャオプションセクション |
+| Capture request body | ネットワーク検証オプション |
+| Capture response body | ネットワーク検証オプション |
+| Editing target element properties | ドキュメントリンクテキスト |
+| Target element | Target Element の小文字バリアント |
+| Duplicate steps | auto-grouping 画面のラベル |
+| Filter & sort steps duplications | auto-grouping フィルターダイアログ名 |
+| Filter and sort steps duplications | 小文字バリアント |
+| Min. steps | auto-grouping フィルター min ステップ数フィールド |
+| Max steps | auto-grouping フィルター max ステップ数フィールド |
+| Select original | auto-grouping 元候補へ戻すボタン |
+| Create shared group | auto-grouping 共有グループ作成ボタン |
+| Shared group name | 共有グループ名入力フィールド |
+| Number of steps | 重複ステップ数設定ラベル |
+| Edited | auto-grouping 候補編集ラベル |
+| The number of duplicate steps | auto-grouping 重複数説明テキスト |
+| The number tests and groups | auto-grouping テスト数説明テキスト |
+| Reviewing auto-grouping suggestion | auto-grouping ドキュメント内セクション見出し |
+| Editing the auto-grouping suggestion | auto-grouping ドキュメント内セクション見出し |
+| Filtering auto-grouping suggestions | auto-grouping ドキュメント内セクション見出し |
+| Sorting auto-grouping suggestions | auto-grouping ドキュメント内セクション見出し |
+| Creating the shared group based on the suggestion | auto-grouping ドキュメント内セクション見出し |
+| auto grouping | 機能名（スペース表記バリアント） |
+| Auto grouping | 機能名（スペース表記） |
+| Auto-grouping | 機能名（ハイフン表記） |
+| auto-grouping | 小文字バリアント |
+| Don't repeat yourself | DRY 原則の英略表現 |
+| Email filters | Validate Email のフィルタセクション |
+| Email text extraction | Validate Email のテキスト抽出セクション |
+| Expected subject | Validate Email の件名期待値フィールド |
+| Expected body | Validate Email の本文期待値フィールド |
+| Verification email inbox address | Validate Email の受信箱アドレスセクション |
+| Verify email filters | Validate Email のフィルタ検証ボタン |
+| Coded | Validate Email の Coded オプション |
+| Codeless | Validate Email の Codeless オプション |
+| Validate Email | Validate Email ステップ名（大文字バリアント） |
+| validation email | 小文字バリアント |
+| validate email | 小文字バリアント |
+| Validation Email | Validate Email の別表記 |
+| Generate Email Address | Generate Email Address ステップ |
+| generate email address | 小文字バリアント |
+| Add API action | アクションステップ（大文字バリアント） |
+| Run API action | API アクション実行名 |
+| Add API validation | Validate API ステップ別名 |
+| Add custom validation | 検証ステップ |
+| Add custom action | アクションステップ |
+| Add Step | ステップ追加ダイアログ名 |
+| Run validation | 検証ステップ既定説明 |
+| Run action | アクションステップ既定説明 |
+| Run network validation | Network Validation 既定説明 |
+| Network capture options | 小文字バリアント |
+| Element text | Element Text 検証概念 |
+| Element Text Validation | Validate Element Text ステップ名 |
+| Element text validation | 小文字バリアント |
+| Advanced text validation | 高度なテキスト検証セクション見出し |
+| Not Equal Validation | Validate Element Text ドキュメント内セクション見出し |
+| Unsupported keyboard shortcut | Keyboard Shortcut ステップのエラーメッセージ |
+| Download PDFs option | Chrome 設定のダウンロードオプション |
+| Download the response info | API ステップ結果画面のダウンロードアクション |
+| Assertion response | API ステップのアサーション結果ラベル |
+| Adding an API Action Step | ドキュメント見出し |
+| Including a File and/or Text field with an API Call Using Form Data | ドキュメント見出し |
+| Cancel a File Upload in Progress | ドキュメント見出し |
+| Replace a File Attachment | ドキュメント見出し |
+| Exclude or Delete an Entry from the Body Section | ドキュメント見出し |
+| Setup step | Testim の Setup ステップ |
+| Setup | Setup ステップ名 |
+| Validate download step | Validate download ステップ名（バリアント） |
+| DOM | Document Object Model（小文字文脈バリアント用） |
+| mobile web | モバイル Web プロジェクト種別 |
 
 ## Testim プロパティ名
 
