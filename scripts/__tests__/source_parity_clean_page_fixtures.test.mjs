@@ -96,6 +96,13 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   zero-drift になる pattern。Tier A bulk で同 pattern の slug が増える
   //   前に sentinel として固定する (testing gate Sev 6)。
   'advanced-editing/deep-link-mobile',
+  // M2 P2-2 Wave 1 追加 — arrow-fusion pattern (plan §5.2 #2) の sentinel。
+  //   EN の `<p>Context. →<strong>To X:</strong></p>` single paragraph に
+  //   対し JA が context paragraph と `**Xするには:**` paragraph を分離
+  //   していた drift を `→**Xするには:**` soft-break で融合して zero-drift
+  //   化。6 section に同 pattern が集中しており、Wave 2 以降の同 pattern
+  //   slug 展開前の regression pin として固定 (predecessor PR #294 と同質)。
+  'salesforce-testing/salesforce-steps/sfdc-document-validation',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
