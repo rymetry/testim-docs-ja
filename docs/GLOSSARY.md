@@ -448,6 +448,80 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | admin access | 管理者アクセス |
 | trial | トライアル期間 |
 | Master | 既出 - Git / Testim ブランチ名 |
+| Mobile Apps Library | モバイルアプリライブラリ (既出) |
+| Setup Step | テストのセットアップステップ |
+| Setup step | テストのセットアップステップ (lowercase step) |
+| Show Properties | プロパティ表示ボタン |
+| Application name | アプリ名プロパティ |
+| Change app | アプリ変更リンク |
+| change app | アプリ変更リンク (lowercase) |
+| Library option | From Library オプション |
+| From Library | app 選択オプション |
+| From Device | app 選択オプション |
+| drop-down menu | ドロップダウンメニュー |
+| drop down menu | ドロップダウンメニュー (no hyphen) |
+| command example | CLI コマンド例 |
+| command prompt | コマンドプロンプト |
+| Copy ID | ID コピーボタン |
+| app-id | CLI フラグ名 |
+| Scheduled Runs | スケジュール済み実行画面 |
+| Override application | アプリケーション上書きチェックボックス |
+| Select from library | ライブラリから選択ボタン |
+| Virtual Mobile Grid trial | VMG トライアル |
+| trial period | トライアル期間 |
+| CLI command | CLI コマンド |
+| CLI commands | CLI コマンド (複数形) |
+| admin access | 管理者アクセス (既出) |
+| HTTPS tunnel | HTTPS トンネル |
+| options arrow | options arrow (既出) |
+| time zone | タイムゾーン |
+| revision control | 版管理 |
+| parallel run | 並列実行 |
+| parallel runs | 並列実行 (複数形) |
+| mobile app | モバイルアプリ (固有 noun phrase) |
+| mobile apps | モバイルアプリ (複数形) |
+| virtual device | 仮想デバイス (noun phrase) |
+| virtual devices | 仮想デバイス (複数形) |
+| iOS simulator | iOS シミュレータ |
+| Android emulator | Android エミュレータ |
+| iOS application | iOS アプリケーション (既出) |
+| Android application | Android アプリケーション (既出) |
+| source code | ソースコード (既出) |
+| revision control system | 版管理システム (既出) |
+| bug tracker | バグトラッカー (既出) |
+| bug / issue tracking system | バグ/課題トラッキングシステム (既出) |
+| mobile configuration | モバイルテスト設定 (既出) |
+| Mobile Configuration | モバイル設定 (既出) |
+| Device Management | モバイルデバイス管理 (既出) |
+| Apps Library | モバイルアプリライブラリ (既出) |
+| Mobile Apps | モバイルアプリ画面 (既出) |
+| Community license | Community 版ライセンス (既出) |
+| trial license | トライアルライセンス (既出) |
+| advanced test parameter | 高度なテストパラメーター (既出) |
+| third party grid | 第三者グリッド (既出) |
+| Third party grid | 第三者グリッド (既出) |
+| Third Party Grid | 第三者グリッド (既出) |
+| project / repository | プロジェクト / リポジトリ (既出) |
+| Pull Request | Git プルリクエスト (既出) |
+| pull request | Git プルリクエスト (既出) |
+| scheduled test run | スケジュールされたテスト実行 (既出) |
+| What to run on | scheduler 実行先設定 (既出) |
+| Override custom capabilities | scheduler の custom capabilities 上書き (既出) |
+| command line interface | CLI 完全表記 (既出) |
+| grid parameter | --grid パラメーター (既出) |
+| host / port parameter | 旧来の host / port パラメーター (既出) |
+| API action | API アクションステップ (既出) |
+| REST API | REST API (既出) |
+| Testim REST API | Testim の REST API (既出) |
+| CI job | CI ジョブ (既出) |
+| CI jobs | CI ジョブ (複数形, 既出) |
+| Publish Bug | 既出 - バグレポート公開画面 |
+| branch name | ブランチ名 (既出) |
+| execution name | 実行名 (既出) |
+| Test Execution tab | qTest / TTM for Jira 実行タブ名 (既出) |
+| Test Runs tab | qTest の実行タブ名 (既出) |
+| BUILD_NUMBER | CI 環境変数プレースホルダー |
+| report-file | Testim CI --report-file フラグ |
 
 ## SSO / 認証連携 UI ラベル
 
