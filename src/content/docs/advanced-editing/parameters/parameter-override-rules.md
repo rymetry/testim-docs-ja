@@ -16,7 +16,7 @@ keywords:
   - CLI
 ---
 
-[Testim.io](http://testim.io) でパラメーターを使う方法はいくつかあります。例: [データ駆動テスト](/docs/advanced-editing/data-driven-testing)、[グループ](/docs/editing-tests/groups)、[Exports Parameters](/docs/exports-parameters)、[設定ファイルと実行フック](/docs/running-tests/configuration-file-run-hooks)、[Params file](/docs/index)。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
+[Testim.io](http://testim.io) でパラメーターを使う方法はいくつかあります。例: [データ駆動テスト](/docs/advanced-editing/data-driven-testing)、[グループ](/docs/editing-tests/groups)、[Exports Parameters](/docs/advanced-editing/parameters/exports-parameters)、[設定ファイルと実行フック](/docs/running-tests/configuration-file-run-hooks)、[Params file](/docs/advanced-editing/parameters)。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
 
 ## 上書きの基本
 

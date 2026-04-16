@@ -328,7 +328,7 @@ Config File は、テスト／テストスイートの実行に必要なパラ�
 - **Before Suite** – スイート実行前に実行
 - **After Suite** – スイート実行後に実行
 
-Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [Configuration File (Run Hooks)](/docs/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [設定ファイルでの定義](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
+Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [Configuration File (Run Hooks)](/docs/running-tests/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [設定ファイルでの定義](/docs/advanced-editing/parameters/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
 ## フックの可視化（Hooks Visualizations）
 
