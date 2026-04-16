@@ -541,6 +541,16 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | shared step | Testim 共有ステップ |
 | shared steps | Testim 共有ステップ (複数形) |
 | Grids | Testim Grids セクション (top-right profile) |
+| Access key | LambdaTest / Grid アクセスキー |
+| Project token | LambdaTest プロジェクトトークン |
+| Project Token | LambdaTest プロジェクトトークン (Title Case) |
+| SmartUI | LambdaTest SmartUI 製品名 |
+| LambdaTest SmartUI | LambdaTest SmartUI 製品名 |
+| Smart UI | LambdaTest Smart UI バリアント表記 |
+| Visual testing | Testim 設定メニュー項目 (Visual testing) |
+| visual testing provider | ビジュアルテストプロバイダー |
+| Integrate LambdaTest SmartUI | LambdaTest SmartUI 統合セクション見出し |
+| Visual testing tab | Testim 設定 visual testing タブ |
 
 ## SSO / 認証連携 UI ラベル
 
