@@ -88,7 +88,7 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 2. インストールファイルを右クリックして、**Open in Terminal**を選択します。
 
 3. ターミナルで、次の手順を実行します:
-   - `./Tricentis_Mobile_Agent_1.0.0.sh`と入力し、Enter を押します。
+   - ./Tricentis_Mobile_Agent_1.0.0.sh と入力し、Enter を押します。
    - インストールを続行することを確認するために`yes`と入力し、Enter を押します。
    - インストール先のパスを指定し、Enter を押します。これによりインストールが完了し、デスクトップショートカットが作成されます。
 
@@ -96,9 +96,8 @@ Testim でモバイルテストを作成および実行する前に、Tricentis 
 
 ## Tricentis Mobile Agent を Testim に接続する
 
-Tricentis Mobile Agent をインストールした後、Testim に接続する必要があります。
-
-**Tricentis Mobile Agent に接続するには:**
+Tricentis Mobile Agent をインストールした後、Testim に接続する必要があります。  
+→**Tricentis Mobile Agent に接続するには:**
 
 1. Tricentis Mobile Agent アイコンをクリックします。
 
@@ -118,9 +117,8 @@ Tricentis Mobile Agent を Testim に接続した後、デバイスを接続し�
 
 ### Android デバイスを準備する
 
-Tricentis Mobile Agent を使用したテスト自動化のために Android デバイスを準備するには、次の手順に従ってください。
-
-**Android デバイスを準備するには:**
+Tricentis Mobile Agent を使用したテスト自動化のために Android デバイスを準備するには、次の手順に従ってください。  
+→**Android デバイスを準備するには:**
 
 1. Android デバイスをコンピューターに接続し、電話データへのアクセスを許可します。
 
@@ -152,9 +150,8 @@ Tricentis Mobile Agent で iOS デバイスを使用するには、以下の要�
 
 #### iOS イメージをアップロードする
 
-iOS デバイスを開発者モードで実行し、開発証明書を使用して WebDriverAgent（WDA）をインストールするには、iOS イメージが必要です。iOS イメージは、Xcode（iOS IDE）によって生成される zip フォルダーです。また、GitHub から iOS イメージをダウンロードすることもできます - [https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)。
-
-**iOS イメージをアップロードするには:**
+iOS デバイスを開発者モードで実行し、開発証明書を使用して WebDriverAgent（WDA）をインストールするには、iOS イメージが必要です。iOS イメージは、Xcode（iOS IDE）によって生成される zip フォルダーです。また、GitHub から iOS イメージをダウンロードすることもできます - [https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)。  
+→**iOS イメージをアップロードするには:**
 
 1. 関連する iOS イメージを[https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport](https://github.com/iGhibli/iOS-DeviceSupport/tree/master/DeviceSupport)からダウンロードできます。
 
@@ -170,9 +167,8 @@ iOS デバイスを開発者モードで実行し、開発証明書を使用し�
 
 #### Tricentis Mobile Agent iOS Artifacts を構成する
 
-Tricentis Mobile Agent で iOS デバイスを使用するには、以下の追加の構成手順を実行する必要があります。
-
-**iOS artifacts を構成するには:**
+Tricentis Mobile Agent で iOS デバイスを使用するには、以下の追加の構成手順を実行する必要があります。  
+→**iOS artifacts を構成するには:**
 
 1. Tricentis Mobile Agent で、**iOS artifacts**に移動します。
 
@@ -195,9 +191,8 @@ Windows オペレーティングシステムで iOS デバイスのテスト自�
 
 #### iOS シミュレーターを有効にする
 
-Mac で iOS シミュレーターを有効にするには、Xcode 内で利用可能なシミュレーターアプリを使用します。キーボードまたはマウスを使用して iOS シミュレーターを操作します。Tricentis Mobile Agent を使用して iOS シミュレーターをミラーリングするには、Apple Developer アカウントは必要ありません。
-
-**Tricentis Mobile Agent を使用したテスト自動化のために Mac で iOS シミュレーターを有効にするには:**
+Mac で iOS シミュレーターを有効にするには、Xcode 内で利用可能なシミュレーターアプリを使用します。キーボードまたはマウスを使用して iOS シミュレーターを操作します。Tricentis Mobile Agent を使用して iOS シミュレーターをミラーリングするには、Apple Developer アカウントは必要ありません。  
+→**Tricentis Mobile Agent を使用したテスト自動化のために Mac で iOS シミュレーターを有効にするには:**
 
 1. Mac に Tricentis Mobile Agent をインストールして起動します。
 
@@ -217,9 +212,8 @@ iOS シミュレーターで WDA を起動する際にエラーが発生した�
 
 ### エージェントログをダウンロードする
 
-サポートチームにサポートを依頼する際、Tricentis Mobile Agent ログの情報を提供するよう求められることがあります。
-
-**Tricentis Mobile Agent ログをダウンロードするには:**
+サポートチームにサポートを依頼する際、Tricentis Mobile Agent ログの情報を提供するよう求められることがあります。  
+→**Tricentis Mobile Agent ログをダウンロードするには:**
 
 1. Tricentis Mobile Agent の**Agent Settings**タブに移動します。
 
