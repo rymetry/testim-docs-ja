@@ -29,6 +29,7 @@
     "lint:fix": "markdownlint 'src/content/docs/**/*.md' --config .markdownlint-docs.json --fix && markdownlint 'docs/**/*.md' 'scripts/**/*.md' '.github/**/*.md' '*.md' --config .markdownlint.json --fix",
     "test": "node --test scripts/__tests__/*.mjs",
     "lint:docs": "node scripts/lint_docs.mjs",
+    "check:untranslated": "node scripts/find_untranslated.mjs",
     "format": "prettier --write \"**/*.{astro,ts,js,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{astro,ts,js,json,css,md}\"",
     "docs:sync-sidebar": "node scripts/update_sidebar_urls_from_live.mjs",

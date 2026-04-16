@@ -164,6 +164,30 @@ acknowledgement の対象外:
 
 ---
 
+### find_untranslated.mjs — baseline 残債の個別スキャン (診断系)
+
+baseline に `segment-untranslated` として凍結された各ページを開いて、未翻訳ブロック単位で行番号と residue (英語残差) を報告する診断ツール。
+
+```bash
+npm run check:untranslated                                  # baseline の全 untranslated slug をスキャン
+npm run check:untranslated -- --slug=overview/testim-overview   # 単一ページ
+npm run check:untranslated -- --limit=5                     # 先頭 N ファイルのみ
+```
+
+**引数**:
+
+- `--slug=<slug>` — 個別ページ指定。対象ファイル不在で exit code 2 (fail-fast / T8 / plan §3.2)
+- `--limit=<N>` — 出力ファイル数上限
+
+**Exit code**:
+
+- `0` — 正常終了（0 件も含む）
+- `2` — `--slug` 明示指定で対象ファイル不在 / path-traversal 違反 (T8 / T17 / plan §3.2)
+
+**内部構造**: `splitMarkdownBlocks(markdown)` → `findUntranslatedBlocks(blocks)` → `printFindings(slug, filePath, findings)` の 3 関数 (plan §3.2 T7)。test は `scripts/__tests__/find_untranslated.test.mjs` を参照。
+
+---
+
 #### lint_docs.mjs
 
 WRITING_GUIDE.md に基づく Markdown 構文・frontmatter の検証。
