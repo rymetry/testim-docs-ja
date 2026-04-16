@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-16T07:30:06.136Z",
-  "generatedFromRunId": "2026-04-16T07:30:06.136Z#parity-check-status",
+  "generatedAt": "2026-04-16T07:35:39.010Z",
+  "generatedFromRunId": "2026-04-16T07:35:39.010Z#parity-check-status",
   "rationale": "frozen baseline — regenerated with staggered reviewAfter",
   "entries": [
     {
@@ -2093,25 +2093,6 @@
       "jaSegmentIndex": 1,
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:b6c2bc37ad50bb208a92a572925e332e5ca0bb2918a6e05d17f5b736be296795",
-      "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "editing-tests/conditions/advanced-conditions-settings",
-      "issueType": "segment-untranslated",
-      "snapshotFingerprint": "sha256:bd402dfd621bac5e0d219aceeb397038807b58945ed25d6a035556e96043fe52",
-      "reviewAfter": "2026-10-25",
-      "sectionPath": "",
-      "segmentKind": "ordered-list-item",
-      "enSegmentIndex": null,
-      "jaSegmentIndex": 1,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:01d70ead4fff01e7489965c8f899ca30ef793c9ae82abf3fddac47a0ba4242d2",
       "missingTokens": null,
       "inconclusiveCategory": null,
       "inconclusiveReason": null,

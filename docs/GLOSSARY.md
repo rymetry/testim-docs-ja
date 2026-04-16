@@ -173,6 +173,22 @@
 | Create the same Testim folder path | TTM フォルダーパスオプション |
 | Create all test cases in My test cases folder | TTM 一括テストケース作成オプション |
 | Mark as default | デフォルト設定マークボタン |
+| + PARAMS | パラメーター追加 UI ラベル (compound) |
+| JS parameter | JS パラメーター種別 |
+| Package parameter | Package パラメーター種別 |
+| Failure Types | 失敗タイプ列ヘッダー |
+| Modifier | キーボードショートカット修飾キー種別 |
+| This validation will always fail | Validate 機能の結果表示メッセージ |
+| Repeat group | Repeat group loops のループ種別 (省略形) |
+| browser version | ブラウザバージョン (一般用語) |
+| major version | メジャーバージョン (一般用語) |
+| Testim cloud grid | Testim Cloud Grid の小文字バリアント |
+| Local grids | ローカルグリッド (複数形) |
+| Mark error | ステップ失敗時プロパティオプション prefix |
+| Mark warning | ステップ失敗時プロパティオプション prefix |
+| Add action | アクション追加 UI 操作 (compound) |
+| Add validation | 検証追加 UI 操作 (compound) |
+
 
 ## Testim for Salesforce
 
