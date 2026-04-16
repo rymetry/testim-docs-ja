@@ -65,7 +65,7 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：_[https://www.testim.io](https://www.testim.io)_）。
 
 :::note
-Expected value では正規表現も使用できます。例えば、https で始まる 'href' を検証する場合は次の正規表現を使用します：/^https/
+**Expected value** には正規表現も使用できます。たとえば、リンクの URL（`href` 属性）が安全なプロトコルで始まるかを確認するには、`/^https/` のような正規表現を指定します。
 :::
 
 10. **OK** をクリックします。\
@@ -115,7 +115,7 @@ Expected value では正規表現も使用できます。例えば、https で�
 7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と 'https://www.testim.io'
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更するときは、それぞれの値をシングルクォートで囲みます。属性名の例: `'href'`。期待値には URL 文字列などをシングルクォートで囲んで指定します（例: `'https://example.com'` のような形式）。
 :::
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
@@ -134,5 +134,5 @@ Expected value では正規表現も使用できます。例えば、https で�
 3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、必ずシングルクォートで囲んでください。例：'href' と 'https://www.testim.io'
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更するときは、それぞれの値をシングルクォートで囲みます。属性名の例: `'href'`。期待値には URL 文字列などをシングルクォートで囲んで指定します（例: `'https://example.com'` のような形式）。
 :::

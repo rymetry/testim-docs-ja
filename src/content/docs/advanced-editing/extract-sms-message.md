@@ -18,7 +18,7 @@ keywords:
   - 二要素認証
 ---
 
-[CLI action step](/docs/advanced-editing/validations/add-cli-validations-and-actions)を[Twilio](https://www.twilio.com/)と組み合わせて使用することで、SMS メッセージの受信時刻とコンテンツの高度な検証を実行できます。
+[CLI アクションステップ](/docs/advanced-editing/validations/add-cli-validations-and-actions) を [Twilio](https://www.twilio.com/) と組み合わせて使用すると、SMS メッセージの受信時刻や本文に対して高度な検証が行えます。
 
 #### コード例
 
@@ -57,10 +57,8 @@ return client.messages
 
 #### Parameters - この例で使用するパッケージと JavaScript
 
-この例で使用する Parameters（パッケージ）は次のとおりです。
-
-1. 名前: `twilio`、種類: Package、値: `twilio@3.25.0`
-2. 名前: `_`、種類: Package、値: `moment@latest`
+1\. 名前 `twilio`、種類 Package、値 `twilio@3.25.0`<br />
+2\. 名前 `_`、種類 Package、値 `moment@latest`
 
 **スクリーンショットを参照:**
 

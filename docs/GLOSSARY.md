@@ -545,6 +545,428 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Download validation | 自動記録ステップ |
 | Recorded steps and validations | ステップ分類ラベル |
 | Recorded Steps and validations | ステップ分類ラベル（大文字バリアント） |
+| Validate download | 検証ステップ（ダウンロードファイル内容検証） |
+| Validate email | 検証ステップ（メール検証） |
+| Validate element attribute | 検証ステップ |
+| Add network validation | 検証ステップ |
+| Apex action | Salesforce Apex アクションステップ |
+| Custom wait for | 待機ステップ（カスタム待機） |
+| Add custom action | アクションステップ |
+| Page accessibility validation | アクセシビリティ検証ステップ |
+| Visual validation | ビジュアル検証ステップ |
+| Predefined steps | Testim 定義済みステップメニュー |
+| Name the new step | ステップ追加ダイアログのフィールドラベル |
+| Create Step | ステップ作成ボタン |
+| Back arrow | エディターの戻るボタン |
+| Show Properties | プロパティパネル表示アイコン |
+| Text to assign | Set Text ステップのテキスト入力フィールド |
+| Run additional code on request results | API ステップの追加コード実行トグル |
+| View Sent Request | API ステップの送信リクエスト表示ボタン |
+| Upload Data File | データファイルアップロードボタン |
+| Configuration List | テスト構成一覧画面 |
+| Configuration File | テスト構成ファイル |
+| Test Configuration Properties | Test Configuration プロパティパネル |
+| Default Configuration | 既定のテスト構成 |
+| Add new configuration | テスト構成追加ダイアログ |
+| Change default configuration | 既定構成変更ダイアログ |
+| Add Environment | Salesforce 環境追加ボタン |
+| Before each step | Testim フック種別 |
+| After each step | Testim フック種別 |
+| Before test | Testim フック種別 |
+| After test | Testim フック種別 |
+| Before each step handler | Testim フック名 |
+| After each step handler | Testim フック名 |
+| Before test handler | Testim フック名 |
+| After test handler | Testim フック名 |
+| Run on | フック実行条件ドロップダウンラベル |
+| Paste code at cursor | コードエディター挿入アクション |
+| Context Selection Mode | Testim のロケーター設定モード |
+| Turbo Mode | Testim Mobile のターボモード |
+| Duplication Level | 重複検出レベル設定 |
+| Number of matches | マッチ数 |
+| Number of steps | ステップ数 |
+| Match level | マッチレベル設定 |
+| Enable RCA | RCA (Root Cause Analysis) 有効化トグル |
+| Ignore Displacement Diffs | ビジュアル検証の変位差分無視オプション |
+| Ignore Displacement diffs | ビジュアル検証オプション（小文字バリアント） |
+| Ultrafast Test Cloud | Applitools Ultrafast Test Cloud |
+| App Registration | Salesforce のアプリ登録セクション |
+| One-Time Password Authenticator | Salesforce の MFA 認証アプリ項目 |
+| Verification Code | MFA 認証コードフィールド |
+| Monaco Editor | Testim のコードエディター名 |
+| Fail test from impact level | アクセシビリティ検証の失敗基準設定 |
+| Run only specific tags | アクセシビリティ検証のタグ絞り込みフィールド |
+| Exclude specific rule IDs | アクセシビリティ検証の除外ルール設定 |
+| Accessibility violations were found | アクセシビリティ違反検出メッセージ |
+| Setting up MFA | Salesforce MFA 設定ガイドリンクテキスト |
+| Using Parameters | Testim ドキュメントのセクションリンクテキスト |
+| Exports Parameters | Testim ドキュメントのセクションリンクテキスト |
+| Configuring a Data Driven Test from the Visual Editor | データ駆動テスト設定ページリンクテキスト（単語境界バリアント） |
+| Configuring Data Driven Tests using the Config file | データ駆動テスト（Config）設定ページリンクテキスト |
+| Allow access to file URLs | Chrome 拡張機能の権限名 |
+| Download PDF files instead of automatically opening them in Chrome | Chrome PDF 設定トグル名 |
+| Download PDFs | Chrome PDF 設定オプション |
+| Privacy and security | Chrome 設定セクション名 |
+| Site Settings | Chrome 設定セクション名 |
+| Site settings | Chrome 設定セクション名（小文字バリアント） |
+| Additional content settings | Chrome 設定セクション名 |
+| PDF documents | Chrome 設定項目 |
+| Default behavior | Chrome PDF デフォルト動作セクション |
+| Ask where to save each file before downloading | Chrome ダウンロード設定トグル |
+| Run Shared API Validation | Validate API ステップエディターウィンドウ名 |
+| Run API Action | API アクションステップ実行名 |
+| Run Action | アクションステップ実行名 |
+| Run Download Validation | Validate download ステップ既定説明文 |
+| Run download validation | Validate download ステップ既定説明文（小文字） |
+| Accessibility Validation | アクセシビリティ検証ステップ既定名 |
+| DevTools Network | Chrome DevTools のネットワークパネル |
+| Key-Value | API ステップのヘッダー入力モード |
+| Form Data | API ステップのフォームデータエントリタイプ |
+| Upload File | ファイルアップロードボタン |
+| File Drop | ファイルアップロード記録ステップ名 |
+| Browse for file | ファイルアップロード記録ステップ名 |
+| File drop | 小文字バリアント |
+| Element Attribute Validation | Validate Element Attribute フォーム名 |
+| Attribute name | Validate Element Attribute の属性名フィールド |
+| Expected value | 検証ステップの期待値フィールド |
+| Property name | Validate CSS property のプロパティ名フィールド |
+| List of possible attributes | モバイル要素属性リンクテキスト |
+| Toggle breakpoint | ステップブレークポイントトグル |
+| Convert to file | テストデータファイル変換ボタン |
+| Reusable file | 再利用可能テストデータファイルオプション |
+| Scheduled Runs | スケジュール実行画面 |
+| Scheduled runs | 小文字バリアント |
+| All impact levels | アクセシビリティ違反の影響レベルトグル |
+| All impact level | トグル（単数形バリアント） |
+| Check here for more details | アクセシビリティ検証結果の詳細リンク |
+| To choose an element open base URL or run test to relevant step | Wait for 要素選択時のメッセージ |
+| To choose an element open app or run test to relevant step | Wait for 要素選択時のメッセージ（モバイル） |
+| Delay time in milliseconds | Wait for 遅延時間入力フィールド |
+| Add hidden parameter | Hidden Parameters 追加ボタン |
+| Params | ステッププロパティパネルのパラメーターセクション |
+| Show test properties | テストプロパティ表示アイコン |
+| Show step properties | ステッププロパティ表示アイコン |
+| Custom (create new) | 構成ドロップダウンの新規作成オプション |
+| My custom error | エラーサフィックスのサンプル文字列 |
+| Context selection mode | ロケーターコンテキスト選択モード |
+| Set username | Test Data コードのサンプル識別子 |
+| Set Username | Test Data コードのサンプル識別子（大文字） |
+| Getting Cookies using the Get Cookie step | Cookie ページ内のセクションリンクテキスト |
+| Create new Cookie | Cookie 作成ラジオボタン |
+| Use cookie parameter | Cookie パラメーター利用ラジオボタン |
+| Expires (Max-Age) | Cookie 有効期限フィールド |
+| Parameter Name | ステッププロパティのパラメーター名フィールド |
+| Test Data | Setup ステップのテストデータプロパティ |
+| test data | 小文字バリアント |
+| Parameters in custom JavaScript steps | ドキュメントリンクテキスト |
+| Validate Element Attribute | Validate Element Attribute ステップ名（大文字バリアント） |
+| validate element attribute | 小文字バリアント |
+| Network Capture Options | ネットワークキャプチャオプションセクション |
+| Capture request body | ネットワーク検証オプション |
+| Capture response body | ネットワーク検証オプション |
+| Editing target element properties | ドキュメントリンクテキスト |
+| Target element | Target Element の小文字バリアント |
+| Duplicate steps | auto-grouping 画面のラベル |
+| Filter & sort steps duplications | auto-grouping フィルターダイアログ名 |
+| Filter and sort steps duplications | 小文字バリアント |
+| Min. steps | auto-grouping フィルター min ステップ数フィールド |
+| Max steps | auto-grouping フィルター max ステップ数フィールド |
+| Select original | auto-grouping 元候補へ戻すボタン |
+| Create shared group | auto-grouping 共有グループ作成ボタン |
+| Shared group name | 共有グループ名入力フィールド |
+| Number of steps | 重複ステップ数設定ラベル |
+| Edited | auto-grouping 候補編集ラベル |
+| The number of duplicate steps | auto-grouping 重複数説明テキスト |
+| The number tests and groups | auto-grouping テスト数説明テキスト |
+| Reviewing auto-grouping suggestion | auto-grouping ドキュメント内セクション見出し |
+| Editing the auto-grouping suggestion | auto-grouping ドキュメント内セクション見出し |
+| Filtering auto-grouping suggestions | auto-grouping ドキュメント内セクション見出し |
+| Sorting auto-grouping suggestions | auto-grouping ドキュメント内セクション見出し |
+| Creating the shared group based on the suggestion | auto-grouping ドキュメント内セクション見出し |
+| auto grouping | 機能名（スペース表記バリアント） |
+| Auto grouping | 機能名（スペース表記） |
+| Auto-grouping | 機能名（ハイフン表記） |
+| auto-grouping | 小文字バリアント |
+| Don't repeat yourself | DRY 原則の英略表現 |
+| Email filters | Validate Email のフィルタセクション |
+| Email text extraction | Validate Email のテキスト抽出セクション |
+| Expected subject | Validate Email の件名期待値フィールド |
+| Expected body | Validate Email の本文期待値フィールド |
+| Verification email inbox address | Validate Email の受信箱アドレスセクション |
+| Verify email filters | Validate Email のフィルタ検証ボタン |
+| Coded | Validate Email の Coded オプション |
+| Codeless | Validate Email の Codeless オプション |
+| Validate Email | Validate Email ステップ名（大文字バリアント） |
+| validation email | 小文字バリアント |
+| validate email | 小文字バリアント |
+| Validation Email | Validate Email の別表記 |
+| Generate Email Address | Generate Email Address ステップ |
+| generate email address | 小文字バリアント |
+| Add API action | アクションステップ（大文字バリアント） |
+| Run API action | API アクション実行名 |
+| Add API validation | Validate API ステップ別名 |
+| Add custom validation | 検証ステップ |
+| Add custom action | アクションステップ |
+| Add Step | ステップ追加ダイアログ名 |
+| Run validation | 検証ステップ既定説明 |
+| Run action | アクションステップ既定説明 |
+| Run network validation | Network Validation 既定説明 |
+| Network capture options | 小文字バリアント |
+| Element text | Element Text 検証概念 |
+| Element Text Validation | Validate Element Text ステップ名 |
+| Element text validation | 小文字バリアント |
+| Advanced text validation | 高度なテキスト検証セクション見出し |
+| Not Equal Validation | Validate Element Text ドキュメント内セクション見出し |
+| Unsupported keyboard shortcut | Keyboard Shortcut ステップのエラーメッセージ |
+| Download PDFs option | Chrome 設定のダウンロードオプション |
+| Download the response info | API ステップ結果画面のダウンロードアクション |
+| Assertion response | API ステップのアサーション結果ラベル |
+| Adding an API Action Step | ドキュメント見出し |
+| Including a File and/or Text field with an API Call Using Form Data | ドキュメント見出し |
+| Cancel a File Upload in Progress | ドキュメント見出し |
+| Replace a File Attachment | ドキュメント見出し |
+| Exclude or Delete an Entry from the Body Section | ドキュメント見出し |
+| Setup step | Testim の Setup ステップ |
+| Setup | Setup ステップ名 |
+| Validate download step | Validate download ステップ名（バリアント） |
+| DOM | Document Object Model（小文字文脈バリアント用） |
+| mobile web | モバイル Web プロジェクト種別 |
+| JS parameter | JavaScript パラメータードロップダウン選択肢 |
+| HTML parameter | HTML パラメータードロップダウン選択肢 |
+| Package parameter | パッケージパラメータードロップダウン選択肢 |
+| packageVariable | パラメーター既定名 |
+| HttpOnly | Cookie 属性フラグ |
+| httpOnly | 小文字バリアント |
+| Cookie name | Cookie 名プロパティ |
+| Cookie value | Cookie 値プロパティ |
+| Cookie info | Cookie 情報セクション |
+| cookie | ブラウザ Cookie（小文字バリアント） |
+| cookies | ブラウザ Cookie（複数形小文字） |
+| Config File | 設定ファイル（英語維持） |
+| Config file | 小文字バリアント |
+| Run Hooks | 実行フック（英語維持） |
+| run hooks | 完全小文字バリアント |
+| Jurisdiction Name | CSV サンプルのヘッダー名 |
+| Example Test | Excel サンプルのシート名 |
+| Example Code | サンプルコードセクション見出し |
+| Example Parameters | サンプルパラメーターセクション見出し |
+| A Simple PDF File | PDF サンプルテキスト |
+| Item A | Word サンプルテキスト |
+| yellow-cat-cartoon-style-clipart | 画像サンプル名 |
+| JSZip | JS パッケージ名 |
+| Docxtemplater | JS パッケージ名 |
+| XLSX | JS パッケージ名 |
+| custom JavaScript | カスタム JS ステップ型（スペース区切り） |
+| Custom JavaScript | 大文字バリアント |
+| Keyboard Shortcut | キーボードショートカット |
+| Add keyboard shortcut | キーボードショートカット追加アクション |
+| Match Level | ビジュアル検証マッチレベル |
+| Match levels | Applitools ドキュメントリンクテキスト |
+| Root Cause Analysis | RCA 完全表記 |
+| root cause analysis | 小文字バリアント |
+| Applitools Eyes | Applitools ビジュアル検証製品 |
+| applitools eyes | 小文字バリアント |
+| Create a shared configuration | テスト設定ドキュメントリンクテキスト |
+| Command Line Interface | CLI 完全表記 |
+| Command line interface: test config | CLI ドキュメントリンクテキスト |
+| exportsGlobal | JS API 名 |
+| exportsTest | JS API 名 |
+| networkRequests | ネットワーク検証の入力配列名 |
+| requestBody | ネットワーク検証のリクエストボディプロパティ |
+| responseBody | ネットワーク検証のレスポンスボディプロパティ |
+| resposeHeaders | ネットワーク検証のヘッダープロパティ（タイポ含む既存 API） |
+| statusCode | HTTP ステータスコード JS プロパティ |
+| toAddress | メールアドレスパラメーター名（キャメルケース） |
+| emailAddress | メールアドレスパラメーター名 |
+| User Details | Salesforce Setup ユーザー詳細画面 |
+| App Registration: One-Time Password Authenticator | Salesforce MFA 登録セクション |
+| App Registration - One-Time Password Authenticator | ハイフン区切りバリアント |
+| Google Authenticator | MFA 認証アプリ |
+| Microsoft Authenticator | MFA 認証アプリ |
+| Disconnect | Salesforce MFA 切断ボタン |
+| Connect | Salesforce MFA 接続ボタン |
+| Choose another verification method | MFA 別検証方法選択リンク |
+| Choose a verification method | MFA 検証方法選択画面 |
+| Use verification codes from an authenticator app | MFA コード利用オプション |
+| Connect an authenticator app | MFA 認証アプリ接続画面 |
+| I cant scan the QR code | MFA QR コード不可リンク |
+| Continue | MFA 続行ボタン |
+| Properties Panel | プロパティパネル（スペース区切り） |
+| Login with MFA | Salesforce 自動ログインステップの MFA セクション |
+| ADD KEY | MFA キー追加ボタン |
+| Add key | 小文字バリアント |
+| Your Key | MFA キー入力フィールド |
+| Your key | 小文字バリアント |
+| Secret Key | MFA シークレットキーフィールド |
+| Salesforce Auto-Login | Salesforce 自動ログインステップ名 |
+| salesforce auto-login | 小文字バリアント |
+| Command Prompt | OS コマンドプロンプト |
+| command prompt | 小文字バリアント |
+| Add CLI validation | CLI 検証ステップ |
+| Add CLI action | CLI アクションステップ |
+| add CLI validation | 小文字バリアント |
+| add CLI action | 小文字バリアント |
+| Run CLI validation | CLI 検証既定説明 |
+| Run CLI action | CLI アクション既定説明 |
+| Extract SMS message | ドキュメント内リンクテキスト |
+| extract SMS message | 小文字バリアント |
+| Validate full page visualization | ビジュアル検証ステップ |
+| Validate using custom code | カスタムコードで検証 |
+| Visual validation (element, viewport, full-page) | ビジュアル検証ステップ種別一覧 |
+| Add CLI validations and actions | CLI 検証／アクションステップ |
+| File upload step validation | ファイルアップロード検証 |
+| MonBoDB validation | MongoDB 検証ステップ（タイポ含む UI 名） |
+| MonboDB validation | 別表記 |
+| monbodb validation | 完全小文字バリアント |
+| My SQL validation | MySQL 検証ステップ |
+| my SQL validation | 小文字バリアント |
+| Write Code with AI | Coding Assistant ボタン |
+| Write code with AI | 小文字バリアント |
+| Explain Code with AI | Coding Assistant アイコン |
+| Explain code with AI | 小文字バリアント |
+| Fix Code with AI | Coding Assistant アイコン |
+| Fix code with AI | 小文字バリアント |
+| Copy code | Coding Assistant コピー機能 |
+| Copy Code | 大文字バリアント |
+| Deep link | Deep Link ステップ小文字バリアント |
+| SchemeName | Deep Link スキーマ名プレースホルダー |
+| schemeName | 小文字バリアント |
+| parameterValue | Deep Link パラメーター値プレースホルダー |
+| Actions | アクションメニュー |
+| New Regexp | RegExp 構文 |
+| new RegExp | 小文字バリアント |
+| RegExp | JavaScript 正規表現オブジェクト |
+| Regex | 正規表現 |
+| regex | 小文字バリアント |
+| SMS | Short Message Service |
+| sms | 小文字バリアント |
+| tel | URL スキーマ名 |
+| mailto | URL スキーマ名 |
+| facetime | URL スキーマ名 |
+| Step log | ステップログセクション |
+| step log | 小文字バリアント |
+| APEX params | APEX パラメーターセクション |
+| APEX Params | 大文字バリアント |
+| APEX | Salesforce APEX プログラミング言語 |
+| apex | 小文字バリアント |
+| My Personal Information | Salesforce 個人情報セクション |
+| my personal information | 小文字バリアント |
+| Run Salesforce APEX Action | Salesforce APEX アクション既定説明 |
+| Run Salesforce apex action | 小文字バリアント |
+| myspecialfield | Salesforce APEX サンプルフィールド名 |
+| mySpecialField | 大文字バリアント |
+| accountName | Salesforce フィールド名（キャメルケース） |
+| hello, john | Validate Element Text サンプルパラメーター値 |
+| Hello, John | 大文字バリアント |
+| john | Element Text サンプル値 |
+| item a | サンプル値 |
+| jurisdiction name | CSV サンプル値（小文字） |
+| example test | Excel サンプル値（小文字） |
+| department | PowerPoint サンプル値（小文字） |
+| location | PowerPoint サンプル値（小文字） |
+| Users | Salesforce の Users メニュー項目 |
+| users | 小文字バリアント |
+| Promise | JavaScript Promise オブジェクト |
+| promise | 小文字バリアント |
+| param1 | パラメーター名サンプル |
+| param2 | パラメーター名サンプル |
+| packageVariable | パラメーター既定名（既存登録済み） |
+| FromString | CSV parse メソッド名 |
+| fromString | JS メソッド名 |
+| fromstring | 小文字バリアント |
+| filebuffer | Validate download の fileBuffer 変数 |
+| fileBuffer | 正式キャメルケース |
+| None | API 認証「無し」オプション |
+| Basic | API 認証 Basic オプション |
+| Bearer | API 認証 Bearer オプション |
+| Authorization | API ステップ Authorization タブ |
+| authorization | 小文字バリアント |
+| Assertion | API ステップアサーション機能 |
+| assertion | 小文字バリアント |
+| Status code | API ステップ検証対象ドロップダウン選択肢 |
+| status code | 小文字バリアント |
+| Body (JSON) | API 検証ドロップダウン選択肢 |
+| Body (Text) | API 検証ドロップダウン選択肢 |
+| Send | API ステップのリクエスト送信ボタン |
+| Professional plan | Testim ライセンスプラン名 |
+| professional plan | 小文字バリアント |
+| PRO機能 | Professional プラン限定機能タグ（混成表記） |
+| Execute Driver Script | Testim Mobile のステップ名（既存登録済み） |
+| execute_driver_script | Testim Mobile Appium フラグ名 |
+| run_shared_action | Testim Mobile 共有アクション既定説明 |
+| run shared action | スペース区切り |
+| Run shared action | 大文字バリアント |
+| Edit | UI 編集アクション |
+| Reassign | 要素再割り当てアクション |
+| reassign | 小文字バリアント |
+| Target checkbox/radio button | Validate Checkbox Radio Button の対象要素表示 |
+| target checkbox/radio button | 小文字バリアント |
+| Checked | チェック状態 |
+| Unchecked | 非チェック状態 |
+| Expected status | Validate checkbox/radio プロパティ名 |
+| expected status | 小文字バリアント |
+| Unsync Fields | キーボードショートカットステップの同期解除ボタン |
+| unsync fields | 小文字バリアント |
+| Unsupported keyboard shortcut | 未対応ショートカットエラー |
+| unsupported keyboard shortcut | 小文字バリアント |
+| Function | カスタムコードエディターの function テキストボックス |
+| function | 小文字バリアント |
+| email address | Generate Email Address フィールド |
+| Email address | 大文字バリアント |
+| Email Address | 完全大文字バリアント |
+| email validation examples | ドキュメント内参照セクション |
+| Email validation examples | 大文字バリアント |
+| browserstack | BrowserStack 小文字バリアント |
+| BrowserStack | 既存登録済み |
+| headspin | HeadSpin モバイルクラウド |
+| HeadSpin | 大文字バリアント |
+| sequelize | npm パッケージ名 |
+| mysql2 | npm パッケージ名 |
+| bluebird | npm パッケージ名 |
+| collname | MongoDB サンプルパラメーター名 |
+| dbname | MongoDB サンプルパラメーター名 |
+| myproject | MongoDB サンプル値 |
+| expectedvalue | JS 期待値サンプルパラメーター名 |
+| expectedValue | 正式キャメルケース |
+| expected name | パラメーター名 |
+| expected subject | Validate Email フィールド（既存登録済み） |
+| Expected Name | 大文字バリアント |
+| expectedNumOfPages | PDF 検証サンプルパラメーター名 |
+| expectedNumOfRows | CSV 検証サンプルパラメーター名 |
+| expectedNumOfSheets | Excel 検証サンプルパラメーター名 |
+| expectedPageName | Excel 検証サンプルパラメーター名 |
+| expectedImageType | 画像検証サンプルパラメーター名 |
+| expectedWidth | 画像検証サンプルパラメーター名 |
+| expectedHeight | 画像検証サンプルパラメーター名 |
+| expectedText | 検証サンプルパラメーター名 |
+| excpectedNumOfSlides | PowerPoint 検証サンプル（タイポ含む既存 API） |
+| maxTimeInMs | ネットワーク検証サンプルパラメーター名 |
+| maxtimeinms | 小文字バリアント |
+| amountLabel | カスタムコードサンプル変数 |
+| amountlabel | 小文字バリアント |
+| firstLabel | カスタムコードサンプル変数 |
+| secondLabel | カスタムコードサンプル変数 |
+| firstlabel | 小文字バリアント |
+| secondlabel | 小文字バリアント |
+| setTimeout | JS 標準関数 |
+| settimeout | 小文字バリアント |
+| Base URL | ベース URL 設定（既存登録済み） |
+| base URL | 小文字バリアント |
+| base url | 完全小文字 |
+| Properties panel | プロパティパネル（英語表記） |
+| properties panel | 小文字バリアント |
+| twilio | Twilio npm パッケージ名 |
+| Twilio | 既存登録済み（大文字バリアント） |
+| moment | moment.js npm パッケージ名 |
+| csvtojson | CSV 変換 npm パッケージ名 |
+| mongodb | MongoDB npm パッケージ名 |
+| MongoDB | MongoDB データベース |
+| MySQL | MySQL データベース |
+| mysql2 | mysql2 npm パッケージ名（既存登録済み） |
+| Sequelize | Sequelize ORM npm パッケージ名（既存登録済み） |
+| PARAMS | パラメーター追加ボタン大文字ラベル |
+| Params | 小文字バリアント（既存のパネルラベル） |
+| UI | User Interface 略称 |
 
 ## Testim プロパティ名
 
