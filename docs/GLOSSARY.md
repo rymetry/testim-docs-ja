@@ -28,6 +28,13 @@
 | Tricentis | |
 | Tricentis Testim | |
 | Tricentis Test Management | Tricentis のテスト管理製品 (TTM for Jira 等を含む) |
+| TTM for Jira | Tricentis Test Management for Jira 略称 |
+| Tricentis Test Management for Jira | 正式名称 |
+| Test in TTM for Jira | Testim Properties の TTM 連携セクション |
+| Create & map TTM for Jira tests | テスト一括マッピングボタン |
+| Folder Path in TTM for Jira | TTM フォルダーパス設定セクション |
+| My test cases | TTM for Jira のデフォルトフォルダー名 |
+| My Test Cases | TTM for Jira のデフォルトフォルダー名（大文字） |
 | Tricentis Device Cloud | Tricentis のモバイルデバイスクラウド |
 | qTest | Tricentis のテスト管理プラットフォーム |
 | qTest Manager | qTest のテスト管理コンポーネント |
@@ -148,6 +155,24 @@
 | New Duplicates | 新規重複ステータス |
 | Form Data | フォームデータ形式 |
 | Assertion | API ステップの検証セクション |
+| Add New Config | 新規設定追加ボタン |
+| Login URL | ログイン URL フィールド |
+| Cloud Grid | Testim Cloud Grid |
+| Local grid | ローカルグリッド |
+| Third party grid | サードパーティグリッド |
+| Retry all | 全再試行リンク |
+| Grant Access | アクセス許可ボタン |
+| New Branch | 新規ブランチ作成 |
+| WebDriverAgent | Apple WebDriverAgent |
+| Apple Team ID | Apple 開発者チーム ID |
+| User Details | ユーザー詳細セクション |
+| One-Time Password Authenticator | ワンタイムパスワード認証 |
+| Open in Terminal | ターミナルで開くメニュー |
+| Salesforce Auto Login | Salesforce 自動ログインステップ |
+| Salesforce Auto Login step | Salesforce 自動ログインステップ名 |
+| Create the same Testim folder path | TTM フォルダーパスオプション |
+| Create all test cases in My test cases folder | TTM 一括テストケース作成オプション |
+| Mark as default | デフォルト設定マークボタン |
 
 ## Testim for Salesforce
 

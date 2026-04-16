@@ -173,6 +173,18 @@ JA 技術文書で英語のまま使用される一般的な IT 用語。カタ�
 | example | `simulator`, `emulator`, `device`, `compile`, `mobile`, `web` |
 | note | 技術文脈で英語のまま使用が許容される一般 IT 用語。残留が 15 文字/3 語を下回るよう閾値寄与を減らす |
 
+## technical-concept-term
+
+JA 技術文書で英語のまま使われる中級 IT 概念用語。カタカナ変換もあり得るが、本プロジェクトでは英語許容。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `technical-concept-term` |
+| regex | `\b(?:repository|pipeline|credentials|source\s+code|authentication|authorization|middleware|callback|endpoint|status\s+code|assertion|validation)\b` |
+| flags | `gi` |
+| example | `repository`, `branch`, `merge`, `browser`, `session`, `credentials` |
+| note | コードレビュー・CI/CD・API・認証等の文脈で英語のまま使用される技術概念用語 |
+
 ---
 
 ## 登録手順
