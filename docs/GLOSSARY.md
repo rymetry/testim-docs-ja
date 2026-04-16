@@ -2,6 +2,8 @@
 
 本ファイルは **翻訳者と検知系 (`scripts/lib/parity_glossary_mask.mjs`) が参照する canonical な用語集** です。ここに登録された用語は英語のまま維持され、`segment-untranslated` 検知から除外されます。
 
+> **Policy status (in revision):** See `docs/superpowers/plans/2026-04-16-pr-286-291-stack-remediation.md` §4 G2/G5/G6. 本 PR stack 内の用語削除・pattern 分割は本 plan 範囲として正当化される。
+
 登録基準:
 - Testim / Tricentis の固有名詞（製品名・機能名・画面名）
 - 広く通用する英語 UI ラベルで、日本語化すると逆に混乱を招くもの

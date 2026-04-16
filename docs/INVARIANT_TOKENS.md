@@ -4,6 +4,8 @@
 
 本ファイルは **JA 内に英語のまま残るべき invariant token のパターン定義** です。`scripts/lib/parity_glossary_mask.mjs` が読み、マッチした token は `segment-untranslated` 検知から除外されます。
 
+> **Policy status (in revision):** See `docs/superpowers/plans/2026-04-16-pr-286-291-stack-remediation.md` §4 G2/G5/G6. 本 PR stack 内の用語削除・pattern 分割は本 plan 範囲として正当化される。
+
 各 pattern には:
 - `id`: 識別子（debug.maskCoverage で出力される）
 - `regex`: マッチ正規表現（JavaScript）
