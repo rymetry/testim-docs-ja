@@ -41,7 +41,7 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 
 7. **Outgoing webhook url**に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`
 
-8. **Triggers**セクションで、**Success events**を選択します。
+8. トリガー（**Triggers**）セクションで、**Success events** を選択します。
 
 9. **Payload**フィールドで、**Custom**を選択します。
 

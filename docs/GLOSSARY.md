@@ -573,6 +573,9 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Report from Testim.io | TestRail 実行名プレフィックス |
 | tms-field-file | TestRail CLI フラグ |
 | executed_by | TestRail カスタムパラメーター |
+| Success events | Gearset Webhook トリガーオプション |
+| Outgoing webhook url | Gearset Webhook 送信先 URL フィールド |
+| Generate API Key | Testim API Key 生成ボタン |
 
 ## SSO / 認証連携 UI ラベル
 
