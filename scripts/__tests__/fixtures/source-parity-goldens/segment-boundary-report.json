@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.9927215000074969,
+  "meanStabilityScore": 0.993076109936575,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
       "enTotal": 140,
-      "jaTotal": 141,
+      "jaTotal": 140,
       "enCounts": {
         "heading": 46,
         "paragraph": 79,
@@ -15,12 +15,12 @@
       },
       "jaCounts": {
         "heading": 46,
-        "paragraph": 80,
+        "paragraph": 79,
         "ordered-list-item": 5,
         "callout-body": 8,
         "unordered-list-item": 2
       },
-      "stabilityScore": 0.9964539007092199
+      "stabilityScore": 1
     },
     {
       "slug": "recording-tests/how-to-record-a-test",
