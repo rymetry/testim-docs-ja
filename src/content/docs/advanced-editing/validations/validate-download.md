@@ -134,10 +134,7 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 ![Validate download エディター画面](/images/validations/validate-download/7d6af62-Testim_158.png)
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定: “Run download validation”）。
-9. 次の手順で必要なパラメーターを定義します。\
-   a. **Properties** パネルで **+ PARAMS** をクリックします。\
-   b. **JS parameter** — ドロップダウンで **JS** を選び、JavaScript パラメーターを入力します。\
-   c. **Package parameter** — ドロップダウンで **Package** を選び、NPM パッケージ変数を入力します。
+9. 次の手順で必要なパラメーターを定義します。まず **Properties** パネルで **+ PARAMS** をクリックし、次に追加したい種別を選んで内容を入力します。JavaScript パラメーターの場合はドロップダウンで **JS** を選び、JavaScript のパラメーターを入力してください。Package パラメーター（NPM パッケージ）の場合はドロップダウンで **Package** を選び、パッケージ名とバージョンを入力してください。
 
 :::warning
 コード内で npm パッケージを使用する場合は `require` を書かず、ステップのプロパティで PACKAGE パラメーターとして渡してください。
@@ -437,7 +434,7 @@ if (sheet !== expectedPageName) {
 ### MS PowerPoint ファイル
 
 Validate download ステップを使用すると、スライド数や含まれる文字列など、PowerPoint ファイルに対して高度な検証が行えます。\
-以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が 9 で、最初のスライドに「Department」、2 枚目のスライドに「Location」という単語が含まれていることを確認します。
+以下の例では、ダウンロードした MS PowerPoint ファイルのスライド数が 9 であること、および最初のスライドに「Department」、2 枚目のスライドに「Location」の単語がそれぞれ含まれていることを確認します。
 
 ![PowerPoint ファイル検証のコード例](/images/validations/validate-download/4914681-Testim_175.png)
 
@@ -545,7 +542,7 @@ expectedText.forEach(item => {
 </table>
 
 :::note
-JSZip が対応しているのは .docx ファイルのみで、.doc ファイルは扱えません。JSZip を使ったダウンロード検証では、.docx 形式のファイルを使用してください。
+JSZip が対応しているのは `.docx` ファイルのみで、`.doc` ファイルは扱えません。JSZip を使ったダウンロード検証では `.docx` 形式を使用してください。
 :::
 
 ### MS Word ファイル
@@ -622,7 +619,7 @@ return docxText.includes(expectedText);
 </table>
 
 :::note
-JSZip が対応しているのは .docx ファイルのみで、.doc ファイルは扱えません。JSZip を使ったダウンロード検証では、.docx 形式のファイルを使用してください。
+JSZip が対応しているのは `.docx` ファイルのみで、`.doc` ファイルは扱えません。JSZip を使ったダウンロード検証では `.docx` 形式を使用してください。
 :::
 
 ### PDF ファイル

@@ -77,7 +77,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-11. **Body** セクションのドロップダウンで送信するデータ形式を選び、下の入力欄にリクエストボディを入力します。任意のテキスト（キーと値のペアなど）を送りたい場合は Text 形式を使います。選択可能な形式は「Text」「JSON」「JavaScript」「XML」「HTML」の 5 種類です。ボディ内にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
+11. **Body** セクションのドロップダウンで送信するデータ形式を選び、下の入力欄にリクエストボディを入力します。キーと値のペアなど任意のテキストを送る場合は Text 形式を選んでください。選択できるのは Text、JSON、JavaScript、XML、HTML の 5 つの形式で、ボディにはパラメーターも埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 

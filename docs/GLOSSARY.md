@@ -829,6 +829,10 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | base url | 完全小文字 |
 | Properties panel | プロパティパネル（英語表記） |
 | properties panel | 小文字バリアント |
+| twilio | Twilio npm パッケージ名 |
+| Twilio | 既存登録済み（大文字バリアント） |
+| moment | moment.js npm パッケージ名 |
+| csvtojson | CSV 変換 npm パッケージ名 |
 
 ## Testim プロパティ名
 
