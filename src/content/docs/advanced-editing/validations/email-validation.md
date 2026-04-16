@@ -405,7 +405,7 @@ Run API Action ステップを使用して、一時的/恒久的メールアド�
 11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。メールを検証するさまざまな方法については、以下の [Email validation examples](/docs/advanced-editing/validations/email-validation#テストの関連ステップで恒久的メールを使用する) セクションを参照してください。コードは通常、Email address フィールドに入力された値をコード内のパラメーターとして使用します。
 
 :::note
-HTML パラメーター以外の DOM セレクタ（例：jQuery）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
+HTML パラメーター以外の DOM セレクタ（例: jQuery）を使う場合、空配列は真値として扱われる点に注意してください。`$(<query>)` ではなく `$(<query>).length` を使用します。
 :::
 
 12. 左上の戻る矢印でエディターに戻ります。

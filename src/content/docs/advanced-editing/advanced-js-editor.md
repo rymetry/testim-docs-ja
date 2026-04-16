@@ -18,7 +18,7 @@ keywords:
   - シンタックスチェック
 ---
 
-Testim の新しい高度な JS エディターは、より快適で効率的なコーディング体験を提供します。このエディターは、[Monaco Editor](https://microsoft.github.io/monaco-editor/)（VS Code を支えるコードエディター）をベースにしており、以下のさまざまなカスタムステップで JS の記述に利用できます（一覧は後述）。
+新しい高度な JS エディターは、[Monaco Editor](https://microsoft.github.io/monaco-editor/) をベースにした、より快適で効率的なコーディング体験を提供します。以下のさまざまなカスタムステップで JS の記述に利用できます（一覧は後述）。Monaco Editor は VS Code を支えるコードエディターです。
 
 ### 主な機能
 
@@ -40,7 +40,7 @@ Testim の新しい高度な JS エディターは、より快適で効率的な
 - [Email validation](/docs/advanced-editing/validations/email-validation)
 - [Network validation](/docs/advanced-editing/validations/add-network-validation)
 - [Custom wait for](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)
-- CLI wait for ステップ
-- Download wait for ステップ
+- CLI の wait ステップ
+- ダウンロード完了待機ステップ
 
 ![高度な JS エディターのスクリーンショット](/images/advanced-features/advanced-js-editor/37b40ca-monaco_editor4x.png)

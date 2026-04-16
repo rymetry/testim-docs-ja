@@ -15,23 +15,26 @@ keywords:
   - 不具合管理
 ---
 
-Testim は新しい Bug チケットを作成します。チケットにはバグの詳細な説明、バグの再現手順、画面解像度とブラウザ、バグのスクリーンショットが含まれます。Testim を Trello に接続するには、以下で説明するように Testim Automate にアクセス権限を付与する必要があります。
-→ **Testim を Trello に接続するには:**
+## Testim と Trello の連携
 
-1. **Settings > Bug Tracker** に移動します。
+Testim は、新しいバグチケットを作成します。これには、バグの詳細な説明、バグの再現手順、画面解像度とブラウザー、バグのスクリーンショットが含まれます。Testim を Trello に接続するには、以下で説明するように Testim Automate にアクセス権限を付与する必要があります。
+
+## Testim を Trello に接続する
+
+1. `Settings > Bug Tracker` に移動します。
 2. **Trello** ロゴをクリックします。
 3. **Log in** リンクをクリックします。
 
 ![Trello の Log in リンク](/images/bug-tracker-settings/connecting-testim-to-trello/7e41e35-trello1.png)
 
-次の通知が表示されます。
+次の notice が表示されます。
 
-![Trello の認可通知](/images/bug-tracker-settings/connecting-testim-to-trello/cea3497-trello2.PNG)
+![Trello の認可 notice](/images/bug-tracker-settings/connecting-testim-to-trello/cea3497-trello2.PNG)
 
-4. **Log in** をクリックし、アカウントにログインします。
+4. **Log in** をクリックし、アカウントに login します。
 
-次の通知が表示されます。
+次の notice が表示されます。
 
-![Trello へのアクセス許可の通知](/images/bug-tracker-settings/connecting-testim-to-trello/7fdec49-trello3.PNG)
+![Trello へのアクセス許可 notice](/images/bug-tracker-settings/connecting-testim-to-trello/7fdec49-trello3.PNG)
 
 5. **Allow** をクリックします。

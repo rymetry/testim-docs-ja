@@ -22,7 +22,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 検証対象のテキストは、固定文字列のほか、正規表現（Regex）、短い JS 式、パラメーターなどで表せます。詳細は [Advanced text validation](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
 
 :::note
-（Web のみの補足）記録中に、アプリ上のテキストをキーボードショートカットで直接検証として記録できます。Ctrl + 'v' を押して検証したいテキストを選択します。
+Web 限定の補足として、記録中にアプリ上のテキストをキーボードショートカットで直接検証として記録できます。`Ctrl+V` を押しながら検証したいテキストを選択してください。
 :::
 
 ## Validate element text ステップの追加（Web）
@@ -255,7 +255,7 @@ exportsTest.usename = 'Hello, John';
 
 **画像をクリックで拡大**
 
-パラメーターと固定文字列を `+` で結合することも可能です。例えば、`username` パラメーターの値を `Hello, John` ではなく `John` として定義し、Expected Value を `'Hello ' + userName` と指定できます。
+パラメーターと固定文字列を `+` で結合することも可能です。例えば、`userName` パラメーターには名前だけを格納し、Expected Value 側で挨拶文（例: `'Hello '`）をパラメーターへ連結する書き方も利用できます。
 
 ### パラメーターと正規表現の組み合わせ
 

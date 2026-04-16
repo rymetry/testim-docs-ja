@@ -16,23 +16,23 @@ keywords:
   - GitHub 連携
 ---
 
-失敗したテストやバグは、バグ / 課題管理システムへ簡単に報告できます。Testim は主要なバグトラッカーと統合されており、ワンクリックで課題を公開できます。作成される課題には、詳細な説明とバグのスクリーンショットが含まれます。
+失敗したテストやバグは、バグ / 課題トラッキングシステムに簡単に報告できます。Testim は一般的なバグトラッカーと統合されており、ワンクリックで課題を公開できます。作成される課題には、詳細な説明とバグのスクリーンショットが含まれます。
 
 :::info{title="PRO機能"}
-この機能は Professional プラン以上で利用できます。
+この機能は Professional plan 以上で利用できます。
 :::
 
-バグや課題を管理システムへ報告する方法はいくつかあります。
+バグや課題をトラッキングシステムに報告する方法はいくつかあります。
 
 - [失敗した実行への失敗タイプのタグ付け](/docs/results/tag-remote-runs-failures) の手順の一部として、**Create issue** リンクをクリックして課題を作成できます。
 
 ![失敗した実行から Create issue を選択](/images/bug-tracker-settings/bug-tracker-settings/78599fb-tagtestwithcreateissue.png)
 
-- [Testim Chrome Extension](/docs/testim-extension/testim-extension-overview) を使うと、課題を [スクリーンショット](/docs/testim-extension/testim-extension-capture-screenshot) または [動画 / バグシナリオ](/docs/testim-extension/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
+- [Testim Chrome 拡張機能](/docs/testim-extension/testim-extension-overview) を使うと、課題を [スクリーンショット](/docs/testim-extension/testim-extension-capture-screenshot) または [ビデオとバグシナリオ](/docs/testim-extension/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
 
-![Testim Extension からバグを Publish](/images/bug-tracker-settings/bug-tracker-settings/23ee812-publishbug.png)
+![Testim Extension から bug を Publish](/images/bug-tracker-settings/bug-tracker-settings/23ee812-publishbug.png)
 
-Testim は次のバグ管理システムに接続できます。
+Testim は次のバグトラッキングシステムに接続できます。
 
 - [Testim と Jira の連携](/docs/integrations/bug-tracker-settings/connecting-testim-to-jira)
 - [Testim と Trello の連携](/docs/integrations/bug-tracker-settings/connecting-testim-to-trello)

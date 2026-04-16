@@ -22,7 +22,7 @@ keywords:
 この機能は Professional plan のプロジェクトでのみ利用できます。
 :::
 
-web テストをリモートで実行するには Selenium Grid が必要です。mobile テストを実行するには HeadSpin が必要です。
+Web テストをリモートで実行するには Selenium Grid が必要です。モバイルテストを実行するには HeadSpin が必要です。
 
 :::info
 Testim Grid の browser 数や browser 種類を変更したい場合は、サポートチームに連絡してください。
@@ -33,25 +33,25 @@ VPN などの制限付き環境を使うテストを実行する場合は、Grid
 :::
 
 :::info
-互換性を確保するため、Testim Grid 上の browser version は十分な検証とテストを行ったうえで定期的に更新されます。更新は主に次の 2 条件で実施されます: 公式の major version リリースから 3 か月以内 重大な security update を含む version
+互換性を確保するため、Testim Grid 上のブラウザーバージョンは十分な検証とテストを行ったうえで定期的に更新されます。更新は主に次の 2 条件で実施されます: 公式のメジャーバージョンリリースから 3 か月以内、重大なセキュリティアップデートを含むバージョン
 :::
 
 ## Web Testing Grids
 
-web テストには次の Grid を使用できます。
+Web テストには次の Grid を使用できます。
 
 - **Testim cloud grid**: Testim Cloud Grid は Testim のデフォルト提供で、契約プランに応じて自動的に利用できます。
 - **Local grids**: Selenium Grid を所有している場合は、それを Testim と統合できます。
-- **Third party grid**: Testim は SauceLabs、BrowserStack、LambdaTest などの third party grid と統合できます。
-- **Private grid**: Private grid は、専用利用のために提供される専用 Testim Grid です。Testim Cloud Grid とは異なり、この構成は VPN SITE-TO-SITE に対応しており、任意の IP address で Grid を動かせるため、許可リスト登録が不要になります。専用リソースなので、geolocation や browser version など特定要件に対してより高い制御性を得られます。詳細は Account Executive または Testim サポートチームに問い合わせてください。
+- **Third party grid**: Testim は SauceLabs、BrowserStack、LambdaTest などのサードパーティ製グリッドと統合できます。
+- **Private grid**: Private grid は、専用利用のために提供される専用 Testim Grid です。Testim Cloud Grid とは異なり、この構成は VPN サイト間接続に対応しており、任意の IP アドレスでグリッドを動かせるため、許可リスト登録が不要になります。専用リソースなので、Geolocation やブラウザーバージョンなど特定要件に対してより高い制御性を得られます。詳細はアカウントエグゼクティブまたは Testim サポートチームに問い合わせてください。
 
 ## Mobile Testing Grids
 
-mobile テストには次の Grid を使用できます。
+モバイルテストには次の Grid を使用できます。
 
-- **Virtual Mobile Grid**: Virtual Mobile Grid は、多数の iOS simulator と Android emulator によるテストを可能にします。
-- **Third party grid**: Testim は SauceLabs、BrowserStack、HeadSpin などの third party grid と統合できます。
-- **Tricentis Device Cloud (TDC)**: TDC では、サポート付きで Grid 上の実機 iOS / Android device を利用できます。複数ユーザーで共有する shared device と、自分専用の dedicated private device の両方を提供します。
+- **Virtual Mobile Grid**: Virtual Mobile Grid は、多数の iOS シミュレータと Android エミュレータによるテストを可能にします。
+- **Third party grid**: Testim は SauceLabs、BrowserStack、HeadSpin などのサードパーティ製グリッドと統合できます。
+- **Tricentis Device Cloud (TDC)**: TDC では、サポート付きで Grid 上の実機 iOS / Android デバイスを利用できます。複数ユーザーで共有する共有デバイスと、自分専用の専有プライベートデバイスの両方を提供します。
 
 ## Adding a grid
 
@@ -60,21 +60,22 @@ mobile テストには次の Grid を使用できます。
 1. Testim の画面右上で、User Name のイニシャルが表示された丸いアイコンをクリックします。
 2. **Account** の下にある **Grids** をクリックします。
 3. **Add New Grid** をクリックします。
-4. Grid type を選択します。\
-   web 用に選択できるのは次のとおりです。
-   - Custom Grid: 独自の Selenium Grid
+4. Grid タイプを選択します。\
+   Web 用に選択できるのは次のとおりです。
+   - Custom Grid - 独自の Selenium Grid
    - Saucelabs
    - Browserstack
    - LambdaTest\
-     mobile 用に選択できるのは次のとおりです。
+     モバイル用に選択できるのは次のとおりです。
    - Virtual Mobile Grid
    - TDC
    - Saucelabs
    - Browserstack
    - Testim HeadSpin Mobile
-5. 各 Grid に対応する項目を入力します。詳細は後続の各記事を参照してください。
-6. **Add** をクリックします。\
-   Grid の編集または削除を行うには、Grid 設定ボックスに hover して目的の操作をクリックします。
+5. 各 Grid に対応するフィールドを入力します（下で各オプションの詳細を説明します）。
+6. **Add** をクリックします。
+
+Grid の編集または削除を行うには、Grid 設定ボックスにマウスを重ねて目的の操作をクリックします。
 
 :::info
 契約プランに **Testim grid** が含まれている場合、構成は自動的に表示されるはずです。表示されない場合はサポートへ連絡してください。
@@ -87,13 +88,13 @@ mobile テストには次の Grid を使用できます。
 各 Grid の設定方法の詳細は、次の記事を参照してください。
 
 - [Virtual Mobile Grid](/docs/integrations/grid-management/virtual-mobile-grid)
-- [Tricentis Device Cloud (mobile)](/docs/integrations/grid-management/tricentis-device-cloud)
-- [Custom Grid (web only)](/docs/integrations/grid-management/custom-grid)
-- [SauceLabs integration (mobile and web)](/docs/integrations/grid-management/saucelabs-integration)
-- [BrowserStack integration (mobile and web)](/docs/integrations/grid-management/browserstack-integration-1)
-- [Test capabilities for SauceLabs & BrowserStack in CLI (mobile and web)](/docs/integrations/grid-management/saucelabs-browserstack-options)
-- [HeadSpin integration (mobile)](/docs/integrations/grid-management/headspin-integration)
-- [LambdaTest integration (web only)](/docs/integrations/grid-management/browserstack-integration-copy)
+- [Tricentis Device Cloud (モバイル)](/docs/integrations/grid-management/tricentis-device-cloud)
+- [Custom Grid (Web のみ)](/docs/integrations/grid-management/custom-grid)
+- [SauceLabs 統合 (モバイルと Web)](/docs/integrations/grid-management/saucelabs-integration)
+- [BrowserStack 統合 (モバイルと Web)](/docs/integrations/grid-management/browserstack-integration-1)
+- [SauceLabs と BrowserStack の CLI 用テスト capabilities (モバイルと Web)](/docs/integrations/grid-management/saucelabs-browserstack-options)
+- [HeadSpin 統合 (モバイル)](/docs/integrations/grid-management/headspin-integration)
+- [LambdaTest 統合 (Web のみ)](/docs/integrations/grid-management/browserstack-integration-copy)
 
 ## Grid で実行する方法
 
@@ -101,20 +102,20 @@ mobile テストには次の Grid を使用できます。
 
 [CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
-Grid 名を指定して `--grid` parameter を追加します。
+Grid 名を指定して `--grid` パラメーターを追加します。
 
 [Scheduler](/docs/running-tests/scheduler)
 
-**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+**Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
 [Test Plan](/docs/test-management/test-plans)
 
-**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+**Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
-### editor からの実行 (web)
+### エディターからの実行 (Web)
 
-web テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote web test](/docs/running-tests/running-tests-overview#リモート-web-テストを実行する) を参照してください。
+Web テストは Test Editor から直接グリッド上で実行できます。詳細は [リモート Web テストの実行方法](/docs/running-tests/running-tests-overview#リモート-web-テストを実行する) を参照してください。
 
-### editor からの実行 (mobile)
+### エディターからの実行 (Mobile)
 
-mobile テストは Test Editor から直接 Grid 上で実行できます。詳細は [Running a remote mobile test](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する) を参照してください。
+モバイルテストは Test Editor から直接グリッド上で実行できます。詳細は [リモートモバイルテストの実行方法](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する) を参照してください。

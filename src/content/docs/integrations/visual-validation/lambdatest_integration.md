@@ -14,7 +14,7 @@ keywords:
   - 統合設定
 ---
 
-LambdaTest SmartUI は、Web アプリの UI をデバイス横断でテストし、テキストの重なり、画像の破損、不正な間隔などの視覚的な差分やレイアウトの問題を検出する[ビジュアル検証](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)ツールです。LambdaTest を Testim と統合することで、ビジュアルリグレッションの検出を自動化できます。
+LambdaTest SmartUI は、Web アプリの UI をデバイス横断でテストし、テキストの重なり、画像の破損、不正な間隔などの視覚的な差分やレイアウトの問題を検出する[ビジュアル検証](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)ツールです。LambdaTest を Testim と統合することで、ビジュアル回帰の検出を自動化できます。
 
 ## 開始前の準備
 

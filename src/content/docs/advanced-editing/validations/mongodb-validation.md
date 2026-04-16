@@ -72,11 +72,11 @@ return connect()
 
 #### Parameters - この例で使用するパッケージと JS
 
-1. name: mongodb, type: Package, value: [mongodb@3.1.10](https://www.npmjs.com/package/mongodb/v/3.1.10)
-2. name: Promise, type: Package, value: [bluebird@3.5.3](https://www.npmjs.com/package/bluebird/v/3.5.3)
-3. name: query, type: JavaScript, value: '\{"name":"test"}'
-4. name: collName, type: JavaScript, value: 'users'
-5. name: dbName, type: JavaScript, value: 'myproject'
+1. 名前: `mongodb`、種類: Package、値: [mongodb@3.1.10](https://www.npmjs.com/package/mongodb/v/3.1.10)
+2. 名前: `Promise`、種類: Package、値: [bluebird@3.5.3](https://www.npmjs.com/package/bluebird/v/3.5.3)
+3. 名前: `query`、種類: JavaScript、値: `'\{"name":"test"}'`
+4. 名前: `collName`、種類: JavaScript、値: `'users'`
+5. 名前: `dbName`、種類: JavaScript、値: `'myproject'`
 
 **see screenshot:**
 
