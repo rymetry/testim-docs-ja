@@ -52,7 +52,7 @@ Note: メニュー上部の検索ボックスで Deep link と入力して検索
 9. **例** - `'sms://12354'`、`mailto://example@email.com`、`facetime://1-408-555-1212` などを指定できます。
 
 :::note
-サードパーティアプリは URL ベースのスキームのみサポートする場合があります。例: <https://byby.dev/ios-deep-linking>。Spotify は次の種類の deep link のみサポートします: <https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO>
+サードパーティアプリは URL ベースのスキームのみサポートする場合があります。例: [https://byby.dev/ios-deep-linking](https://byby.dev/ios-deep-linking)。Spotify は次の種類の deep link のみサポートします: [https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO](https://open.spotify.com/artist/1rSGNXhhYuWoq9BEz5DZGO)
 :::
 
 10. **deep link 値にパラメーターを追加する** - 通常の Testim パラメーターを、JS 式と同じ要領で追加できます。例: `'sms://12354' + myParam`
@@ -63,4 +63,4 @@ Note: メニュー上部の検索ボックスで Deep link と入力して検索
 12. ステップの **Properties** パネルで、必要に応じて次のプロパティを指定します:
 13. **When this step fails** – このステップが失敗した場合の動作を指定します。
 14. **When to run step** – ステップを実行する条件を指定します。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
-15. **Override timeout** – テストステップを失敗として登録するまでのデフォルトのタイムラプス設定を上書きし、異なるタイムラプス値（ミリ秒）を指定できます。成功に必要な残り時間がある限り、失敗したステップは再試行されます。
+15. **Override timeout** – テストステップを失敗として登録するまでのデフォルトのタイムアウト設定を上書きし、異なるタイムアウト値（ミリ秒）を指定できます。成功に必要な残り時間がある限り、失敗したステップは再試行されます。
