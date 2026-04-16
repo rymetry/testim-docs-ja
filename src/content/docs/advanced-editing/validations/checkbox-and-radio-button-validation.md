@@ -69,8 +69,9 @@ keywords:
 
 ![Show Properties アイコン](/images/validations/checkbox-and-radio-button-validation/ee0c7a1-Testim_137a.png)
 
-右側に **Properties パネル** が開きます。\
-9\. **Expected status** セクションで、検証したいステータスに応じて **Checked**（デフォルト）または **Unchecked** をクリックします。
+右側に **Properties パネル** が開きます。
+
+9. **Expected status** セクションで、検証したいステータスに応じて **Checked**（デフォルト）または **Unchecked** をクリックします。
 
 ![検証](/images/validations/checkbox-and-radio-button-validation/5ed3749-Testim_138a_r.png)
 
@@ -87,8 +88,9 @@ keywords:
 
 ![ステップの Show Properties アイコン](/images/validations/checkbox-and-radio-button-validation/d39aec2-Testim_139a.png)
 
-右側に **Properties** パネルが表示されます。\
-4\. **Target checkbox/radio button** のサムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。
+右側に **Properties** パネルが表示されます。
+
+4. **Target checkbox/radio button** のサムネイルにカーソルを合わせてオプションを表示し、**Reassign** をクリックします。
 
 ![チェックボックス](/images/validations/checkbox-and-radio-button-validation/db9dd10-Testim_141a_r.png)
 
