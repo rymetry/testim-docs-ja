@@ -833,6 +833,9 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Twilio | 既存登録済み（大文字バリアント） |
 | moment | moment.js npm パッケージ名 |
 | csvtojson | CSV 変換 npm パッケージ名 |
+| PARAMS | パラメーター追加ボタン大文字ラベル |
+| Params | 小文字バリアント（既存のパネルラベル） |
+| UI | User Interface 略称 |
 
 ## Testim プロパティ名
 
