@@ -169,6 +169,13 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Create all test cases | TTM for Jira フォルダーパスオプション (短縮) |
 | aa1 | テスト UI 例のフォルダー名 |
 | bb1 | テスト UI 例のフォルダー名 |
+| Monaco Code Editor | Testim UI のコードエディター |
+| Add new one | Testim Custom capabilities ダイアログの追加ボタン |
+| Custom capability | Custom capabilities の単数形 |
+| custom capability | Custom capabilities の単数形 (小文字) |
+| custom capabilities | Custom capabilities の小文字バリアント |
+| driver | Selenium / Appium driver |
+| Selenium driver | Selenium WebDriver |
 | Codeship | CloudBees の CI プロバイダー |
 | Gearset | Salesforce DevOps プラットフォーム |
 | Copado | Salesforce DevOps プラットフォーム |
