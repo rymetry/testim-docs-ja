@@ -149,6 +149,26 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Jenkins | オープンソース CI サーバー |
 | Jenkins Pipeline | Jenkins のパイプライン機能 |
 | CircleCI | CI プロバイダー |
+| Circle CI | CircleCI の別表記 |
+| circle.yaml | CircleCI 設定ファイル名 |
+| circleci-test-results | CircleCI テスト結果ディレクトリ |
+| Dedicated run tunnel | Testim Dedicated Run Tunnel 機能名 |
+| dedicated run tunnel | Testim Dedicated Run Tunnel (小文字バリアント) |
+| docker engine | Docker Engine |
+| Docker Engine | Docker Engine |
+| docker run | Docker CLI コマンド |
+| testim-runner | Testim Docker CLI runner コンテナ名 |
+| testim-sanity | Testim CI report filename prefix |
+| Settings > Integrations | Testim Settings 画面パス |
+| Settings > Integration | Testim Settings 画面パス (単数形) |
+| Test in qTest | qTest プロパティセクション名 |
+| Test in Xray | Xray プロパティセクション名 |
+| Test in TTM for Jira | TTM for Jira プロパティセクション名 (既出) |
+| issue type | Xray / Jira 課題タイプフィールド |
+| Create all test cases in My test cases folder | TTM for Jira フォルダーパスオプション |
+| Create all test cases | TTM for Jira フォルダーパスオプション (短縮) |
+| aa1 | テスト UI 例のフォルダー名 |
+| bb1 | テスト UI 例のフォルダー名 |
 | Codeship | CloudBees の CI プロバイダー |
 | Gearset | Salesforce DevOps プラットフォーム |
 | Copado | Salesforce DevOps プラットフォーム |

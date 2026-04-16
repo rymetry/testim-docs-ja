@@ -21,7 +21,7 @@ keywords:
 Testim は以下のタイプの統合を提供しています:
 
 - [CI 統合](/docs/integrations/integrate-testim-to-your-ci)
-- [専用ランネル (Dedicated run tunnel)](/docs/integrations/dedicated-run-tunnel)
+- [専用実行トンネル](/docs/integrations/dedicated-run-tunnel)
 - [GitHub 統合](/docs/integrations/github-integration)
 - [Sealights 統合](/docs/integrations/sealights-integration)
 - [グリッド管理](/docs/integrations/grid-management)
