@@ -551,6 +551,21 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | visual testing provider | ビジュアルテストプロバイダー |
 | Integrate LambdaTest SmartUI | LambdaTest SmartUI 統合セクション見出し |
 | Visual testing tab | Testim 設定 visual testing タブ |
+| Add a new API key | Applitools Eyes の API key 追加ボタン |
+| Run Key | Applitools Run Key フィールド |
+| Merge Key | Applitools Merge Key フィールド |
+| App Name | Applitools App Name フィールド (既出) |
+| Applitools Eyes | Applitools のビジュアルテスト製品 |
+| Cloud URL | Applitools Cloud URL フィールド |
+| Admin panel | Applitools Eyes の Admin 画面 |
+| API keys | Applitools API keys セクション (複数形) |
+| Expiry | Applitools API key Expiry フィールド |
+| Purpose | Applitools API key Purpose フィールド |
+| Permissions | Applitools API key Permissions セクション |
+| Visual Validation | 検証機能ページ名 |
+| Execute | Applitools Permissions Execute |
+| Merge | Applitools Permissions Merge |
+| wait-for | Testim wait-for ステップ統合プレフィックス |
 
 ## SSO / 認証連携 UI ラベル
 
