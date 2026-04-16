@@ -468,18 +468,38 @@ describe('maskSegmentText — restored PR #286-#291 patterns (T1 / T3 regression
         `common-it-loanword-network regex must match documented example "${word}"`,
       );
     }
+    // boundary integrity — out-of-alternation token must NOT match
+    assert.ok(
+      !new RegExp(p.regex.source, p.regex.flags).test('unrelatednetworkword'),
+      'common-it-loanword-network regex must NOT match out-of-alternation token',
+    );
   });
 
   it('common-it-loanword-ops: regex matches ops/debug tokens (dashboard/breakpoint/localhost)', () => {
     const patterns = loadInvariantPatterns();
     const p = patterns.find((x) => x.id === 'common-it-loanword-ops');
     assert.ok(p, 'common-it-loanword-ops must be loaded');
-    for (const word of ['dashboard', 'breakpoint', 'localhost', 'debugger', 'screenshot']) {
+    // corpus 拡張: 13 entries の過半数 (8 token) をカバー (test evidence 強化)
+    for (const word of [
+      'dashboard',
+      'execution',
+      'breakpoint',
+      'localhost',
+      'debugger',
+      'screenshot',
+      'timeout',
+      'override',
+    ]) {
       assert.ok(
         new RegExp(p.regex.source, p.regex.flags).test(word),
         `common-it-loanword-ops regex must match documented example "${word}"`,
       );
     }
+    // boundary integrity — out-of-alternation token must NOT match
+    assert.ok(
+      !new RegExp(p.regex.source, p.regex.flags).test('unrelatedopsword'),
+      'common-it-loanword-ops regex must NOT match out-of-alternation token',
+    );
   });
 
   it('technical-concept-repo: regex matches repo/pipeline tokens', () => {
@@ -502,22 +522,36 @@ describe('maskSegmentText — restored PR #286-#291 patterns (T1 / T3 regression
     const patterns = loadInvariantPatterns();
     const p = patterns.find((x) => x.id === 'technical-concept-auth');
     assert.ok(p, 'technical-concept-auth must be loaded');
-    for (const word of ['authentication', 'authorization', 'endpoint', 'middleware']) {
+    for (const word of ['authentication', 'authorization', 'endpoint', 'middleware', 'callback']) {
       assert.ok(
         new RegExp(p.regex.source, p.regex.flags).test(word),
         `technical-concept-auth regex must match documented example "${word}"`,
       );
     }
+    // boundary integrity — out-of-alternation token must NOT match
+    assert.ok(
+      !new RegExp(p.regex.source, p.regex.flags).test('unrelatedauthword'),
+      'technical-concept-auth regex must NOT match out-of-alternation token',
+    );
   });
 
-  it('technical-concept-validation: regex matches validation tokens', () => {
+  it('technical-concept-validation: regex matches validation tokens and rejects near-neighbors', () => {
     const patterns = loadInvariantPatterns();
     const p = patterns.find((x) => x.id === 'technical-concept-validation');
     assert.ok(p, 'technical-concept-validation must be loaded');
+    // positive: 2 entry の full corpus + word-boundary 境界 check
     for (const word of ['assertion', 'validation']) {
       assert.ok(
         new RegExp(p.regex.source, p.regex.flags).test(word),
         `technical-concept-validation regex must match documented example "${word}"`,
+      );
+    }
+    // boundary integrity — near-neighbor / out-of-alternation token must NOT match
+    // (validations/validator/validated 等の語幹派生は別扱い、厳密一致のみ)
+    for (const nonMatch of ['schema', 'constraint', 'unrelatedvalidationword']) {
+      assert.ok(
+        !new RegExp(p.regex.source, p.regex.flags).test(nonMatch),
+        `technical-concept-validation regex must NOT match "${nonMatch}" (out-of-alternation boundary)`,
       );
     }
   });

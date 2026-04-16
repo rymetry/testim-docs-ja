@@ -574,9 +574,10 @@ Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のま
 
 **判定原則**:
 
-- 英訳すると技術文書として意味が通らない / 業界共通語になっている → 英語維持
-- 一般名詞で日本語訳が広く定着している（例: サーバー / ブラウザー）→ カタカナ化
-- 迷ったら本文脈で [GLOSSARY.md](./GLOSSARY.md) の Tier C (許容一般 IT 用語) を確認
+- **Tier C は closed-list 運用**: 下記の §Tier C 例 表と [GLOSSARY.md](./GLOSSARY.md) Tier C / [INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) narrow pattern に **明示的に登録された用語のみ** が英語維持の対象。表にない用語は原則翻訳する
+- 登録されていない用語を agent 判断で「業界共通語」として英語維持することは禁止 (Security loophole 対応)
+- 一般名詞で日本語訳が広く定着している（例: サーバー / ブラウザー / エディター / ビルド / デプロイ）→ カタカナ化
+- 迷ったら [GLOSSARY.md](./GLOSSARY.md) の Tier C section と [INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) narrow pattern を grep する。該当なければ **翻訳** がデフォルト
 
 **Tier C 例**:
 

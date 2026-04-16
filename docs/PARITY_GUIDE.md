@@ -58,7 +58,8 @@ jq "[.entries[] | select(.slug == \"<slug>\")] | length" parity-baseline.json
 - [ ] [WRITING_GUIDE §Source-First 構造契約](./WRITING_GUIDE.md) を必読指定
 - [ ] [TRANSLATION_GUIDE §⚖️ 翻訳の構造契約](./TRANSLATION_GUIDE.md) を必読指定
 - [ ] **禁止事項**: JA 独自段落追加 / callout タイプ変更 / 1 callout→2 callout 分割 / 番号リスト展開 / 読者向け親切補足
-- [ ] **完了条件**: `npm run check:parity -- --slug=<slug>` で該当 slug の active / baseline 両方が 0 件
+- [ ] **`segment-inconclusive` 取り扱い禁止** (loophole 対応): 該当 entry が slug に含まれる場合は該当 entry のみ触らず、完了報告に「inconclusive 残留 N 件、人手 review 依頼」と明記する。agent 判断で翻訳・構造変更・baseline 追加しない
+- [ ] **完了条件**: `npm run check:parity -- --slug=<slug>` で該当 slug の active / baseline 両方が 0 件（inconclusive 除く）
 - [ ] **PR scope**: 1 slug / 1 PR または関連 slug の小 batch。検知コード修正は別 PR
 
 ### 注意: baseline 追加の判断原則
@@ -67,11 +68,39 @@ jq "[.entries[] | select(.slug == \"<slug>\")] | length" parity-baseline.json
 
 | 状況 | baseline 許容 | 理由 |
 | --- | --- | --- |
-| EN upstream 自体が壊れている (`source-unusable` / `snapshot-incomplete`) | ✅ | upstream 修正待ち |
-| EN-only の小 artifact (1-2 件、Phase 0 後の残り) | △ (micro-exclusion を検討) | 件数監視 |
+| EN upstream 自体が壊れている (`source-unusable` / `snapshot-incomplete` で emitter が reason token を付与) | ✅ | upstream 修正待ち、`scripts/lib/source_sync_exclusions.mjs` の registry が canonical |
+| EN-only の小 artifact (具体 EN HTML anomaly に traceable) | △ **厳格条件下のみ** | 下記 §EN-only artifact の厳格条件 参照 |
 | JA 側の構造修正で簡単に解消可能 | ❌ | burn-down 対象 |
 | Testim UI 用語で GLOSSARY 未登録 | ❌ | GLOSSARY Tier A/B に追加 |
 | 一般 IT 用語で INVARIANT 未登録 | ❌ | INVARIANT narrow pattern に追加 |
+| `segment-inconclusive` (tokenless-near-tie / heading-count-mismatch) | ❌ (自動判断禁止) | agent は触らず残し、完了報告で人手 review 依頼 |
+
+#### EN-only artifact の厳格条件（Security P1 対応）
+
+`△ micro-exclusion を検討` の rationalization を排除するため、baseline 追加には **以下を全て満たす** 必要がある:
+
+1. **具体 EN HTML anomaly への traceability**: 該当 artifact が `snapshots/en/content/<slug>.html` 内の具体的な EN 側不整合（例: `<a href="...">display-text</a>` の href と display-text 不一致 / EN-only ZWS / broken anchor 等）に 1:1 対応すること。「EN が曖昧だから」等の抽象理由は不可
+2. **1 slug あたり最大 1 件**: 同一 slug で 2 件以上発生した場合は baseline せず、upstream 修正待ちとして Phase 4 plan の `source_sync_exclusions` に page 単位で登録するか否かを判断する
+3. **Baseline entry への justification comment 必須**: `parity-baseline.json` の該当 entry に `rationale` フィールドで具体 anomaly を 1 文で記述する（例: `"EN-only broken href: display='google.com' vs href=''"`）。記述なしの baseline 追加は禁止
+4. **reviewAfter 期限 ≤ 3 ヶ月**: 長期凍結禁止。期限切れは `orphanBaselineEntries` として検知される
+
+**判定フロー**:
+
+```text
+baseline 候補を発見
+  ↓
+source_sync_exclusions に page 登録済み？
+  ├─ Yes → page-level で隔離、baseline 対象外
+  └─ No  ↓
+JA 側の構造修正で解消可能？
+  ├─ Yes → burn-down で解消（baseline しない）
+  └─ No  ↓
+上記 4 条件を全て満たす？
+  ├─ Yes → baseline 追加（rationale 付き）
+  └─ No  → ❌ burn-down で解消（baseline しない）
+```
+
+この厳格条件により、`△` 欄は「自由裁量で baseline できる escape hatch」ではなく「具体 evidence + reviewer 承認必須の限定ケース」として運用される。
 
 ## 頻出パターン
 

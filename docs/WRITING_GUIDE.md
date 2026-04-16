@@ -151,6 +151,8 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 
 注意: JA タイトルが「注意」の場合は、EN 原文の絵文字に関わらず `:::warning{title="注意"}` を使用する。「注意」という日本語表現は警告の意味合いが強いため、`:::warning` が適切。
 
+> **Scope 制限 (Security loophole P3 対応)**: 上記 "「注意」→ `:::warning`" override は **JA タイトル文字列が "注意" と一致する callout にのみ適用** する。EN callout タイプを JA で別タイプに変更する一般許可ではない。EN が `note` / `tip` / `caution` / `danger` / `info` の場合は、JA タイトルが "注意" 以外なら EN のタイプをそのまま維持する（TRANSLATION_GUIDE.md §⚖️ 翻訳の構造契約 MUST NOT §4 と整合）。
+
 ### レガシー callout 変換時の注意事項
 
 原文の blockquote callout を `:::` に変換する際は、以下にも注意する:
@@ -336,12 +338,31 @@ EN snapshot           →  JA 翻訳
 - 段落: 原文の段落構造を維持（diff >= 1 で検出）
 - `paragraph-count-mismatch` / `bullet-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
 
-### 原文準拠の source-first 例外
+### 原文準拠の source-first 例外（operationalized / Security P2 対応）
 
-以下のケースでは `snapshots/en/content/<slug>.html` が保存済み JA より新しい／最小構造になっている。
+> **M2 agent 向け警告**: source-first 例外は自由裁量の escape hatch ではない。以下の **厳格な machine-checkable 条件** のみ該当する。
 
-- EN live source 自体が shallow / broken snapshot の場合は、保存済み JA ではなく current source を正本とする
-- この場合は source parity の comparator 契約を優先し、必要なら JA を live source の最小構造へ合わせる
+#### 例外の判定トリガー（以下のいずれかが真の場合のみ）
+
+1. **`scripts/lib/source_sync_exclusions.mjs` の `SOURCE_SYNC_EXCLUSIONS` に該当 slug が entry 登録済み**: これが canonical な shallow / broken snapshot registry。登録済みなら source-first の主判定を suspend し、`snapshots/en/content/<slug>.html` ではなく該当 entry が指す `hand-authored snapshot` または `update-lock 対象` として扱う
+2. **`check:parity` の issue detail に `[reason=shallow-snapshot]` / `[reason=escaped-details-residue]` / `[reason=extractor-empty]` が emit されている**: `source_parity_source_usability.mjs::describeReason` が runtime で付与する reason token。これが無ければ snapshot は authoritative
+
+上記いずれも真でなければ、**snapshot は authoritative** として扱い、JA を snapshot に追従させる。**agent の主観判断による「EN が曖昧だから shallow snapshot」等の rationalization は禁止**。
+
+#### 運用手順
+
+```text
+baseline 候補発見
+  ↓
+source_sync_exclusions に slug 登録？
+  ├─ Yes → page-level で隔離、source-first 例外として JA を調整
+  └─ No  ↓
+check:parity で [reason=...] token 付与？
+  ├─ Yes → 該当 reason token 対応の OPS_DESIGN §Ack 運用に従う
+  └─ No  → snapshot は authoritative、JA を snapshot に追従（burn-down）
+```
+
+この operationalization により、例外判定は **登録 registry + runtime token** の 2 つの決定論的 signal のみに基づく。「EN が broken に見える」という主観判断で JA を断念するパスを閉じる。
 
 ### 原文から意図的に除外するコンテンツ
 
