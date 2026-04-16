@@ -172,9 +172,9 @@ return {
 ```
 
 :::note
-**name** は Cookie 名、\
-**value** は Cookie の値、\
-**domain** は Cookie のドメイン（任意）を示します。
+- **name**: Cookie 名
+- **value**: Cookie の値
+- **domain**: Cookie のドメイン（任意）
 :::
 
 **back arrow** をクリックしてメインの **Editor** ウィンドウに戻ります。

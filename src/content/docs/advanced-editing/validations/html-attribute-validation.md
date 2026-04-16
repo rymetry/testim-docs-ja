@@ -65,7 +65,7 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 9. **Expected value** フィールドに、その属性で検証したい値を入力します（例：_[https://www.testim.io](https://www.testim.io)_）。
 
 :::note
-**Expected value** には正規表現も使用できます。たとえば、`href` が `https` で始まることを検証する場合は `/^https/` のような正規表現を指定します。
+**Expected value** には正規表現も使用できます。たとえば `href` が `https` 接頭辞で始まることを検証するには、`/^https/` のような正規表現を指定します。
 :::
 
 10. **OK** をクリックします。\
@@ -115,7 +115,7 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、値をシングルクォートで囲んでください。属性名の例: `'href'`。期待値の例: `'https://www.testim.io'`
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、値をシングルクォートで囲んでください。属性名の例は `'href'`、期待値の例は `'https://www.testim.io'` のようになります。
 :::
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
@@ -134,5 +134,5 @@ HTML 属性検証では、要素の任意の HTML 属性の値を検証できま
 3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、値をシングルクォートで囲んでください。属性名の例: `'href'`。期待値の例: `'https://www.testim.io'`
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、値をシングルクォートで囲んでください。属性名の例は `'href'`、期待値の例は `'https://www.testim.io'` のようになります。
 :::
