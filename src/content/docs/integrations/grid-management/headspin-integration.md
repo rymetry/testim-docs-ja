@@ -22,7 +22,7 @@ keywords:
 
 1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Testim HeadSpin Mobile** を選択します。
 2. **Next** をクリックします。
-3. 次の field を入力します。
+3. 次のフィールドを入力します。
 
 - **Name**: 実行時に使用する Grid 名
 - **API Token**: HeadSpin 側で生成した API Token。詳細は後述します。
@@ -33,11 +33,11 @@ keywords:
 
 **HeadSpin API Token を取得するには:**
 
-1. HeadSpin account に login します。
-2. 画面右上で user name をクリックします。
+1. HeadSpin アカウントにログインします。
+2. 画面右上でユーザー名をクリックします。
 
 ![HeadSpin の user menu を開いた状態](/images/grid-management/headspin-integration/689ab5c-2023-01-29_18-01-05.png)
 
 3. **Settings** をクリックします。
-4. **User Settings** の **API Token** section で、既存 token をコピーするか、**+New Token** button をクリックして新規 token を作成します。
-5. API Token をコピーし、Testim の API Token field に貼り付けます。
+4. **User Settings** の **API Token** セクションで、既存のトークンをコピーするか、**+New Token** ボタンをクリックして新しいトークンを作成します。
+5. API Token をコピーし、Testim の API Token フィールドに貼り付けます。

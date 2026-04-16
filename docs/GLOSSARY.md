@@ -566,6 +566,13 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Execute | Applitools Permissions Execute |
 | Merge | Applitools Permissions Merge |
 | wait-for | Testim wait-for ステップ統合プレフィックス |
+| Test run and results | TestRail のタブ名 |
+| Save settings | TestRail API key 保存ボタン |
+| ApiKey | Testim 設定フィールド名 (TestRail) |
+| Suite\\Test name | TestRail 実行名テンプレート |
+| Report from Testim.io | TestRail 実行名プレフィックス |
+| tms-field-file | TestRail CLI フラグ |
+| executed_by | TestRail カスタムパラメーター |
 
 ## SSO / 認証連携 UI ラベル
 
