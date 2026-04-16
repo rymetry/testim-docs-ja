@@ -116,7 +116,7 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 ![属性](/images/validations/validate-element-attribute/4865d83-propertiespanel.png)
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、値をシングルクォートで囲んでください。属性名の例: `'clickable'`。期待値の例: `'true'`。
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更する際は、値をシングルクォートで囲みます。属性名の例はクリック可能フラグを示す識別子（`'clickable'`）、期待値の例は真偽値を表す文字列（`'true'`）です。
 :::
 
 ## 利用可能な属性一覧

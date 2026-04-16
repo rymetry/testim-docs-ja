@@ -255,7 +255,7 @@ exportsTest.usename = 'Hello, John';
 
 **画像をクリックで拡大**
 
-パラメーターと固定文字列を `+` で結合することも可能です。例えば、`username` パラメーターの値を `Hello, John` ではなく `John` として定義し、Expected Value を `'Hello ' + userName` と指定できます。
+パラメーターと固定文字列を `+` で結合することも可能です。例えば、`userName` パラメーターには名前だけを格納し、Expected Value 側で挨拶文（例: `'Hello '`）をパラメーターへ連結する書き方も利用できます。
 
 ### パラメーターと正規表現の組み合わせ
 
