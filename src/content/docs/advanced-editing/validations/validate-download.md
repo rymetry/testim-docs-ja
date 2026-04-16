@@ -134,7 +134,10 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 ![Validate download エディター画面](/images/validations/validate-download/7d6af62-Testim_158.png)
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定: “Run download validation”）。
-9. 必要なパラメーターを定義します。まず **Properties** パネルで **+ PARAMS** をクリックし、種別を選んで内容を入力します。JavaScript の値を渡す場合はドロップダウンで **JS** を選択してパラメーター値を、NPM パッケージを参照する場合はドロップダウンで **Package** を選択してパッケージ名とバージョンをそれぞれ入力します。
+9. 次の手順で必要なパラメーターを定義します:\
+   a. **Properties** パネルで **+ PARAMS** をクリック\
+   b. **JS parameter** — ドロップダウンを **JS** にし、JavaScript パラメーターを入力\
+   c. **Package parameter** — ドロップダウンを **Package** にし、NPM パッケージ変数を入力
 
 :::warning
 コード内で npm パッケージを使用する場合は `require` を書かず、ステップのプロパティで PACKAGE パラメーターとして渡してください。
