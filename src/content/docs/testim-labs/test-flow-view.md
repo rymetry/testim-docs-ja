@@ -1,6 +1,6 @@
 ---
 title: Test Flow View
-description: 'Test Flow View は、テストのグラフィカルなフローベースの可視化を提供する Labs 機能です。テスト構造の理解、共通パターンの特定、ステップへの直接アクセスが可能です。'
+description: 'Test Flow View は、テストのグラフィカルなフローベースの可視化を提供する Testim Labs 機能です。テスト構造の理解、共通パターンの特定、ステップへの直接アクセスが可能です。'
 category: Testim Labs
 order: 20002
 updated: '2025-11-02'
@@ -10,7 +10,7 @@ keywords:
   - ビジュアライゼーション
   - フローグラフ
   - テスト構造
-  - Labs 機能
+  - Testim Labs 機能
 ---
 
 :::info{title="Testim Labs 機能"}

@@ -1,6 +1,6 @@
 ---
 title: Shared Step に直接リンク
-description: 'Shared Steps ライブラリから Shared Step やグループに直接アクセスする方法を説明する Labs 機能です。'
+description: 'Shared Steps ライブラリから Shared Step やグループに直接アクセスする方法を説明する Testim Labs 機能です。'
 category: Testim Labs
 order: 20003
 updated: '2025-11-02'
@@ -10,7 +10,7 @@ keywords:
   - ダイレクトリンク
   - Shared Steps ライブラリ
   - アクセス性向上
-  - Labs 機能
+  - Testim Labs 機能
 ---
 
 :::info{title="Testim Labs 機能"}

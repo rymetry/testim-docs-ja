@@ -6,7 +6,8 @@
 
 各 pattern には:
 - `id`: 識別子（debug.maskCoverage で出力される）
-- `regex`: マッチ正規表現（JavaScript、`g` flag 推奨）
+- `regex`: マッチ正規表現（JavaScript）
+- `flags`: 正規表現フラグ（省略時は `g` のみ。大文字小文字無視が必要なら `gi`）
 - `example`: 正しくマッチする例
 - `note`: 例外や注意点
 
@@ -22,8 +23,9 @@
 | --- | --- |
 | id | `keyboard-shortcut` |
 | regex | `\b(Ctrl|Cmd|Shift|Alt|Option|Meta|Enter|Esc|Escape|Tab|Space|Backspace|Delete)(\+\w+)+\b` |
-| example | `Ctrl+S`, `Shift+Cmd+K`, `Alt+Tab` |
-| note | 修飾キー (`Ctrl|Cmd|...`) から始まり`+` で連結されるもののみ |
+| flags | `gi` |
+| example | `Ctrl+S`, `Shift+Cmd+K`, `Alt+Tab`, `ctrl+shift+i` |
+| note | 修飾キー (`Ctrl|Cmd|...`) から始まり`+` で連結されるもののみ。textNorm は小文字化するため `gi` flag で大文字小文字両対応 |
 
 ## cli-flag
 
@@ -78,11 +80,22 @@ Testim のステップ名・プロパティ名のうち、括弧や記号を含�
 | example | `Scroll (to element/on page)`, `File upload / File drop`, `Press (Key press)`, `(Shared) step name` |
 | note | 括弧・スラッシュを含む Testim ステップ名・プロパティ名。textNorm は小文字になるためパターンに大文字小文字両方を含む |
 
+## js-exports-expression
+
+JS コードスニペット内の `exports.xxx` 式。カスタム JS ステップの解説で頻出する。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `js-exports-expression` |
+| regex | `\bexports\.\w+\b` |
+| example | `exports.myvar`, `exports.besttestingtool` |
+| note | `exports.` に続く識別子をマスクする。JS コード例が JA テキスト中に残るケース |
+
 ---
 
 ## 登録手順
 
 1. 本ファイルに `##` で新規 pattern の節を追加
-2. `id`, `regex`, `example`, `note` を埋める
+2. `id`, `regex`, `example`, `note` を埋める（大文字小文字無視が必要な場合は `flags` に `gi` を指定）
 3. `scripts/__tests__/parity_glossary_mask.test.mjs` に該当 pattern の TDD ケースを追加
 4. 実装を追加し、`npm run test` で通るか確認

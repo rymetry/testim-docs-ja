@@ -34,6 +34,7 @@
 | Azure OpenAI Service | Microsoft Azure の OpenAI サービス (AI 基盤) |
 | Microsoft Azure OpenAI Service | Microsoft Azure OpenAI Service の完全表記 (4-word compound) |
 | Testim AI | Testim の AI 機能群総称 (Testim AI ソリューション等の compound) |
+| Testim Labs | Testim の先行アクセス機能プログラム |
 
 ## 拡張機能 / IDE
 
@@ -70,6 +71,12 @@
 | Hidden Parameters | Testim の非公開パラメーター管理機能 |
 | Test Plans | Scheduler の機能名 (テストプランニング) |
 | Execute Driver Script | Testim Mobile のステップ名 |
+| Custom Action | カスタムアクションステップ種別 |
+| Code Debugging | コードデバッグ機能 |
+| Test Flow View | テストフロー可視化機能 (Testim Labs) |
+| Shared Step | 共有ステップ (Shared Steps の単数形) |
+| Go To AUT | AUT への移動機能 |
+| Result Script Execution | テスト結果スクリプト実行 |
 
 ## Testim for Salesforce
 
@@ -114,6 +121,9 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Okta | SSO / ID プロバイダー |
 | Azure DevOps | Microsoft の DevOps プラットフォーム |
 | Selenium | Web 自動化フレームワーク |
+| Sealights | テストインパクト分析製品 |
+| Chrome DevTools | Chrome ブラウザの開発者ツール |
+| Wikipedia | オンライン百科事典 |
 
 ## 画面 / UI 領域
 
@@ -134,6 +144,30 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Result URL | qTest の UI フィールド名 |
 | Console Logs URL | qTest の UI フィールド名 |
 | Network Logs URL | qTest の UI フィールド名 |
+| Go to location | デバッグパネルのブレークポイント位置移動ボタン |
+| Filter entries by log text | コンソールログのフィルターフィールド |
+| Delete all breakpoints | ブレークポイント一括削除ボタン |
+| Start A New Test | テスト作成開始ボタン |
+| Your app URL | AUT URL 入力フィールドラベル |
+| Login To Start | Testim Extension のログインボタン |
+| Create Automated Test | Testim Extension の自動テスト作成ボタン |
+| Open in new tab | コンテキストメニュー項目 |
+| Local Devices | ローカルデバイスセクション (デバイス管理) |
+| Device UDID | デバイス UDID フィールド |
+| Scheduler | テストスケジューラー画面 |
+| Start recording at this position | Test Editor の記録位置指定ボタン |
+| Space & Beyond | Testim チュートリアルのデモアプリ名 |
+| Demo App | デモアプリケーション |
+| OS Version | デバイスプロパティフィールド |
+| I'm not a robot | CAPTCHA チャレンジテキスト |
+| Base URL | テスト対象のベース URL 設定 |
+| Create Test | テスト作成ボタン |
+| DEVTOOL IS OPEN | Chrome DevTools 起動確認メッセージ |
+| Don't show again in this session | セッション中非表示チェックボックス |
+| Mirroring Viewer | AUT Mirroring Viewer (モバイルテスト画面) |
+| Next | UI ナビゲーションボタン |
+| Done | UI 完了ボタン |
+| Stop Recording | テスト記録停止ボタン |
 
 ## Testim ステップ名（検証・待機・アクション）
 
@@ -172,6 +206,7 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Get Cookie | アクションステップ |
 | Set Cookie | アクションステップ |
 | Drag & Drop | 自動記録ステップ |
+| Set Custom Text | テキスト設定ステップ |
 | Download validation | 自動記録ステップ |
 | Recorded steps and validations | ステップ分類ラベル |
 | Recorded Steps and validations | ステップ分類ラベル（大文字バリアント） |
@@ -217,6 +252,8 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Mark warning & continue | When this step fails のオプション |
 | Shared step name | プロパティ名（共有ステップ版） |
 | Step name | プロパティ名（非共有ステップ版） |
+| Test Name | テスト名入力フィールドラベル（2-word compound） |
+| Test Description | テスト説明入力フィールドラベル（2-word compound） |
 
 <!--
 ## キーボードキー名 / 一般単語 UI ラベル (登録禁止)
@@ -284,6 +321,12 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | Webviews | モバイルアプリ内埋め込み Web ビュー（複数形） |
 | WebView | モバイルアプリ内埋め込み Web ビュー（単数形） |
 | AUT | Application Under Test（Testim 固有略語） |
+| Application Under Test | AUT の完全表記 |
+| JS | JavaScript の略称 |
+| Chrome | Google Chrome ブラウザ |
+| Chromium | オープンソースブラウザエンジン |
+| iPhone | Apple のモバイルデバイス |
+| Windows | Microsoft OS |
 | VMG | Virtual Mobile Grid の略 |
 | SSO | Single Sign-On |
 | SAML | 認証連携プロトコル |
