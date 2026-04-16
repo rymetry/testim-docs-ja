@@ -17,6 +17,8 @@ keywords:
 
 [データ駆動テスト](/docs/advanced-editing/data-driven-testing)の一環として、Excel ファイルからパラメーターを渡す方法は 2 つあります。
 
-- Testim Visual Editor から Excel/CSV をアップロードする — 複数データセットが含まれていても、エディターからの実行では最初の 1 件のみ実行されます。複数回実行されるのは CLI／スケジューラ／ローカルスイート実行時です。また、この方法ではファイル変更時に自動更新されず、都度アップロードが必要です。手順は「[CSV/Excel のアップロードでテストデータを追加](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor#csvexcel-ファイルをアップロードしてテストデータを追加)」を参照してください。
+- **Testim Visual Editor を使った Excel/CSV ファイルのアップロード** - 複数回の実行で使用するデータセットが Excel データに含まれている場合、エディターからテストを実行すると最初のデータセットのみが実行されます。Testim CLI、スケジューラ、またはローカルスイート実行からテストを実行した場合のみ、テストは順に複数回、それぞれ異なるデータセットで実行されます。また、この方法ではファイルが変更されてもアップロードされたデータは更新されません。更新のたびに Excel ファイルを再度アップロードする必要があります。詳細な手順については [CSV/Excel ファイルのアップロードでテストデータを追加する](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor#csvexcel-ファイルをアップロードしてテストデータを追加) を参照してください。
 
-- 設定ファイル経由でパラメーターを渡す — Excel のデータを設定ファイル経由で 1 つまたは複数テストへ受け渡し、CLI 実行時に設定ファイルを使用するフラグを付与します。複数データセットがある場合、順番に複数回実行されます。ファイルは毎回自動でパースされるため、Excel を更新すれば次回実行で反映されます。手順は「[外部ソースのデータを使ったデータ駆動テスト](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)」。
+<!-- -->
+
+* **設定ファイル経由でパラメーターを渡す** - Excel ファイルのテストデータを設定ファイル経由で 1 つまたは複数のテストに渡し、CLI からテストを実行する際に設定ファイルを使用するフラグを追加します。Excel データに複数回の実行で使用する複数データセットが含まれている場合、テストは順に複数回、それぞれ異なるデータセットで実行されます。さらに、ファイルは実行のたびに自動的にパースされるため、Excel ファイルを更新すれば、次回の実行で更新後のデータが使用されます。詳細な手順については [外部ソースのデータを使ったデータ駆動テスト](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source) を参照してください。

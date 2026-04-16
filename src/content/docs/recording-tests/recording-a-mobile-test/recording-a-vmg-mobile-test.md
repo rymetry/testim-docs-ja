@@ -56,9 +56,7 @@ Virtual Mobile Grid は特別な統合を必要としません。有料ユーザ
 モバイルデバイスでテストを記録して、後で手動または自動で実行できます。テスト中は、1 つのデバイスから 1 つのアプリケーションのみを記録できます。ただし、テストを再生する際には、記録に使用したデバイスとは別のデバイスで同じテストを実行できます。
 
 :::info
-**仮想/物理デバイスでの記録**
-
-Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバイスで記録されたテストは、仮想デバイスでのみ実行できます。物理デバイスで記録されたテストは、物理デバイスでのみ実行できます。
+**仮想/物理デバイスでの記録** Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバイスで記録されたテストは、仮想デバイスでのみ実行できます。物理デバイスで記録されたテストは、物理デバイスでのみ実行できます。
 :::
 
 **モバイルテストを記録するには:**
@@ -88,9 +86,7 @@ Virtual Mobile Grid 上で提供される仮想デバイスなど、仮想デバ
 10. **アプリをアップロード** - **Upload App** をクリックし、指定された領域に .apk ファイルをドラッグするか、クリックしてファイルエクスプローラーを開いてファイルを見つけます。
 
 :::info
-**アプリコンパイルの互換性（iOS のみ）**
-
-仮想デバイスを使用してテストを記録する場合は、アプリが仮想デバイス用にコンパイルされていること（.app）を確認してください。逆に、物理デバイスを使用して記録する場合は、アプリが物理デバイス用にコンパイルされていること（.ipa）を確認してください。詳細については、[How to Prepare a .ipa for Mobile Testing](/docs/recording-tests/recording-a-mobile-test/how-to-prepare-an-ipa-for-mobile-testing) を参照してください。
+**アプリコンパイルの互換性（iOS のみ）** 仮想デバイスを使用してテストを記録する場合は、アプリが仮想デバイス用にコンパイルされていること（.app）を確認してください。逆に、物理デバイスを使用して記録する場合は、アプリが物理デバイス用にコンパイルされていること（.ipa）を確認してください。詳細については、[How to Prepare a .ipa for Mobile Testing](/docs/recording-tests/recording-a-mobile-test/how-to-prepare-an-ipa-for-mobile-testing) を参照してください。
 :::
 
 :::info
@@ -133,9 +129,7 @@ Virtual Mobile Grid でテストを実行する場合、テストの開始には
 12. **Save** をクリックしてテストを保存します。
 
 :::warning
-**自動リカバリ**
-
-新しいテストを作成したり、既存のテストに変更を加えたりする場合は、必ずテストを保存してください。しかし、心配しないでください。テストを保存する前にブラウザを閉じても、ブラウザのキャッシュに保存されるため、作業を再開できるはずです。詳細については、[Recovering a test that was not saved](/docs/editing-tests/recovering-a-test-that-was-not-saved) を参照してください。
+**自動リカバリ** 新しいテストを作成したり、既存のテストに変更を加えたりする場合は、必ずテストを保存してください。しかし、心配しないでください。テストを保存する前にブラウザを閉じても、ブラウザのキャッシュに保存されるため、作業を再開できるはずです。詳細については、[Recovering a test that was not saved](/docs/editing-tests/recovering-a-test-that-was-not-saved) を参照してください。
 :::
 
 13. 追加のテスト構成設定を構成する場合は、[Setting the Test Configuration](/docs/recording-tests/recording-a-mobile-test/setting-the-test-configuration) を参照してください。

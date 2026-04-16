@@ -16,7 +16,7 @@ keywords:
   - CLI
 ---
 
-[Testim.io](http://testim.io) 内でパラメーターを使用する方法はいくつかあります。代表的な例として、[Data-Driven Testing](/docs/advanced-editing/data-driven-testing)、[Groups](/docs/editing-tests/groups)、[Exports Parameters](/docs/exports-parameters)、[Configuration Files and Run Hooks](/docs/running-tests/configuration-file-run-hooks)、そして [Params file](/docs/index) があります。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
+[Testim.io](http://testim.io) でパラメーターを使う方法はいくつかあります。例: [データ駆動テスト](/docs/advanced-editing/data-driven-testing)、[グループ](/docs/editing-tests/groups)、[Exports Parameters](/docs/exports-parameters)、[設定ファイルと実行フック](/docs/running-tests/configuration-file-run-hooks)、[Params file](/docs/index)。それぞれ適用タイミングや目的が異なり、上書きの優先関係が発生します。
 
 ## 上書きの基本
 
@@ -24,8 +24,8 @@ keywords:
 
 #### テスト開始前
 
-- [Config-file's parameters](/docs/running-tests/configuration-file-run-hooks) は [params-file's parameters](/docs/advanced-editing/parameters/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
-- [Params-file's parameters](/docs/running-tests/configuration-file-run-hooks) は [既定のテストデータ／ランデータ](/docs/advanced-editing/data-driven-testing) を上書きします。
+- [Config-file のパラメーター](/docs/running-tests/configuration-file-run-hooks) は [params-file のパラメーター](/docs/advanced-editing/parameters/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
+- [Params-file のパラメーター](/docs/running-tests/configuration-file-run-hooks) は [既定のテストデータ／ランデータ](/docs/advanced-editing/data-driven-testing) を上書きします。
 
 Note: テストに渡されるすべてのパラメーターは**ローカルレベル**の可視性（テスト全体を大きな 1 つのグループとみなす）を持ちます。
 

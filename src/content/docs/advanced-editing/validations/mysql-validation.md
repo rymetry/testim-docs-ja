@@ -18,7 +18,7 @@ keywords:
   - データベース接続
 ---
 
-[CLI アクションステップ](/docs/advanced-editing/validations/add-cli-validations-and-actions) を使用して、MySQL に対してクエリや検証を実行できます。
+[CLI action step](/docs/advanced-editing/validations/add-cli-validations-and-actions) を使って MySQL に対してクエリや検証を実行できます。
 
 :::note{title="権限について"}
 多くの DB は保護されているため、CLI 検証ステップを実行するマシンの IP をホワイトリストに追加する必要がある場合があります。未設定だと DB に到達できずステップが失敗します。スケジューラー経由で実行する場合などはサポートまでお問い合わせください。
@@ -56,9 +56,9 @@ return sequelize
 
 #### Parameters - この例で使用するパッケージと JS
 
-1. 名前: `Sequelize`、種類: Package、値: [sequelize@latest](https://www.npmjs.com/package/sequelize)
-2. 名前: `mysql2`、種類: Package、値: [mysql2@latest](https://www.npmjs.com/package/mysql2)
-3. 名前: `expectedValue`、種類: JavaScript、値: `"fdssdf dfdf"`
+1.name: Sequelize, type: Package, value: [sequelize@latest](https://www.npmjs.com/package/sequelize)\
+2.name: mysql2, type: Package, value: [mysql2@latest](https://www.npmjs.com/package/mysql2)\
+3.name: expectedValue, type: JavaScript, value: "fdssdf dfdf"
 
 **see screenshot:**
 

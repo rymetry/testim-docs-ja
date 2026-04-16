@@ -27,9 +27,7 @@ Xray 統合により、Testim のテストを Xray のテストケースにリ�
 
 ## Xray 統合の設定
 
-Xray 統合を使用する前に、Testim を Xray プロジェクトに接続する必要があります。このプロセスは一度だけ必要です。
-
-統合を実行するには、以下が必要です：
+Xray 統合を使用する前に、Testim を Xray プロジェクトに接続する必要があります。このプロセスは一度だけ必要です。統合を実行するには、以下が必要です：
 
 - **Jira API トークン** - Jira API トークンを取得するには、[https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)の手順に従ってください。
 - **Xray クライアント ID と Xray クライアントシークレット** - Xray クライアント ID とクライアントシークレットを取得するには、[https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys](https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys)の手順に従ってください。
@@ -79,7 +77,7 @@ Xray でテスト実行の結果を表示するには、リモートグリッド
 実行の名前は `"<Testim実行名><UTC時刻>"` です。
 
 :::info
-Xray 側のテストの **issue type（課題タイプ）** は [Test](https://docs.getxray.app/display/ON/Enabling+Xray+Issue+Types) である必要があります。
+Xray 側のテストの **issue type（課題タイプ）** は [Test](https://docs.getxray.app/display/ON/Enabling+Xray+Issue+Types) である必要があります。\
 Xray の **Test** 課題タイプが変更された場合、実行は Xray でテストされません。
 :::
 
