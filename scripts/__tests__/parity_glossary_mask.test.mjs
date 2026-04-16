@@ -8,6 +8,7 @@
 
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 let loadGlossary;
 let loadInvariantPatterns;
@@ -55,6 +56,19 @@ describe('maskSegmentText — glossary match', () => {
     const entries = result.masks.map((m) => m.entry);
     assert.ok(entries.includes('Testim'));
   });
+
+  it('masks Test Name and Test Description as glossary terms', () => {
+    // Given: text containing Testim property names (compound terms ≥2 words)
+    const result = maskSegmentText('enter the test name and test description');
+
+    // Then: both terms are masked as glossary entries
+    const entries = result.masks.map((m) => m.entry);
+    assert.ok(entries.includes('Test Name'), 'Test Name must be a glossary term');
+    assert.ok(
+      entries.includes('Test Description'),
+      'Test Description must be a glossary term',
+    );
+  });
 });
 
 describe('maskSegmentText — invariant pattern match', () => {
@@ -69,6 +83,30 @@ describe('maskSegmentText — invariant pattern match', () => {
     const result = maskSegmentText('Run with --project-id option.');
     const patterns = result.masks.map((m) => m.pattern);
     assert.ok(patterns.includes('cli-flag'));
+  });
+
+  it('masks lowercase keyboard shortcut (textNorm lowercased input)', () => {
+    // Given: textNorm lowercases all input, so Ctrl+Shift+I becomes ctrl+shift+i
+    const result = maskSegmentText('press ctrl+shift+i to open devtools');
+
+    // Then: keyboard-shortcut pattern matches lowercased modifier keys
+    const patterns = result.masks.map((m) => m.pattern);
+    assert.ok(
+      patterns.includes('keyboard-shortcut'),
+      'keyboard-shortcut must match lowercased modifier keys (textNorm lowercases all input)',
+    );
+  });
+
+  it('masks js-exports-expression via invariant pattern', () => {
+    // Given: JS code token exports.xxx in normalized text
+    const result = maskSegmentText('add exports.myvar to the scope');
+
+    // Then: matched by js-exports-expression invariant pattern
+    const patterns = result.masks.map((m) => m.pattern);
+    assert.ok(
+      patterns.includes('js-exports-expression'),
+      'js-exports-expression should mask exports.xxx tokens',
+    );
   });
 });
 
@@ -240,5 +278,31 @@ describe('GLOSSARY common-word false-negative regression (PR#267 round 2 review)
   it('3-word all-English segment containing "Tab" is flagged', () => {
     const cls = classifySegment('Select Tab here');
     assert.equal(cls.isFullyMasked, false);
+  });
+});
+
+describe('INVARIANT_TOKENS.md contract completeness (ARCH-001 regression)', () => {
+  it('header documents all fields that the parser reads: id, regex, flags, example, note', () => {
+    const md = readFileSync('docs/INVARIANT_TOKENS.md', 'utf8');
+    // Header section is between the first "各 pattern には:" and the next "---"
+    const headerMatch = md.match(/各 pattern には:\n([\s\S]*?)(?=\n登録基準:)/);
+    assert.ok(headerMatch, 'Header section "各 pattern には:" must exist');
+    const header = headerMatch[1];
+    for (const field of ['id', 'regex', 'flags', 'example', 'note']) {
+      assert.ok(
+        header.includes(`\`${field}\``),
+        `Header must document the "${field}" field`,
+      );
+    }
+  });
+
+  it('registration procedure mentions the flags field', () => {
+    const md = readFileSync('docs/INVARIANT_TOKENS.md', 'utf8');
+    const procedureMatch = md.match(/## 登録手順\n([\s\S]*?)$/);
+    assert.ok(procedureMatch, 'Registration procedure section must exist');
+    assert.ok(
+      procedureMatch[1].includes('flags'),
+      'Registration procedure must mention flags',
+    );
   });
 });

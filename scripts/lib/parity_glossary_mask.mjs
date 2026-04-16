@@ -79,8 +79,11 @@ export function loadInvariantPatterns() {
     const id = firstLine;
     const regexMatch = section.match(/\|\s*regex\s*\|\s*`(.+?)`\s*\|/);
     if (!regexMatch) continue;
+    const flagsMatch = section.match(/\|\s*flags\s*\|\s*`(.+?)`\s*\|/);
+    const baseFlags = flagsMatch ? flagsMatch[1] : '';
+    const flags = baseFlags.includes('g') ? baseFlags : baseFlags + 'g';
     try {
-      const regex = new RegExp(regexMatch[1], 'g');
+      const regex = new RegExp(regexMatch[1], flags);
       patterns.push({ id, regex });
     } catch {
       // invalid regex — skip (will be caught by tests)
