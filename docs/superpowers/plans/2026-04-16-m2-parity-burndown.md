@@ -62,8 +62,8 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 **Findings (pilot 実測):**
 
 - EN `<p>&gt; &gt; &gt; Content</p>` は `turndown.mjs:normalizeEscapedCallouts` で `<div class="note">` に正規化される → JA 側は同じ位置に `:::note` directive で対応させる (blockquote `> > >` では callout-body として認識されない)
-- URL を含む callout-body の `segment-untranslated` 誤検知回避には **Markdown autolink `<https://...>`** を使う (`[label](url)` / `` `url` `` / 裸 URL は `parity_glossary_mask` が `https`/`ios` を glossary 優先で masking し URL 全体の strip が機能しないため residue に英字断片が残る)
-- EN の flat `<ol>` に `<img>` / `<p>` / `<div class="note">` が混在する場合、JA は ol を複数に分割し **ol 外部に block sibling を配置**、番号は EN の value 属性に合わせて手動指定する
+- **classifier URL-before-mask 修正 (本 PR で同時適用)**: `parity_glossary_mask.classifySegment` は従来 glossary masking → URL/link strip の順で residue 判定していたが、`https`/`ios` が glossary term として先に consume されるため URL regex が URL 全体にマッチできず、callout-body 内 URL を含む JA 段落が segment-untranslated と誤判定される問題があった。**pilot で pre-strip (inline code / markdown link / GFM autolink / bare URL / `/docs` link) を glossary masking より前に実行する順序に変更** し、positive (URL 4 形式すべてで fully masked) + negative (URL 含み untranslated prose は依然検知) の regression test を追加。以降の phase では通常の markdown link `[url](url)` / bare URL 記法を使えばよい (autolink `<url>` 強制は不要)
+- EN の flat `<ol>` に `<img>` / `<p>` / `<div class="note">` が混在する構造は、turndown の walker が非 `<li>` sibling を ol 外の block として走査するため、**JA 側も ol を複数に分割し ol 外部に block sibling を配置、番号は EN の `<li value="N">` 属性に合わせて手動指定する**。これは source-first policy の **mechanical exception** として扱う (kind-multiset fingerprint 基準では単一 ol と複数 ol の差は無視される仕様であり、検知器が「許容」しているため JA 独自構造の導入ではない。§5 "source-first mechanical exceptions" に正式登録)
 
 ### P2-2: Tier A bulk — 並列 agent × heavy slugs
 
@@ -122,7 +122,7 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 
 - **base branch**: 各 phase で `origin/main` から新 branch を切る (`claude/m2-p2-1-pilot`, `claude/m2-p2-2-*`, …)
 - **worktree**: Tier A 並列時は per-slug worktree (`.claude/worktrees/m2-<slug-hash>`)
-- **baseline 再生成タイミング**: 各 PR merge 後に main で `node scripts/generate_parity_baseline.mjs --regenerate` → 次 phase の input 更新
+- **baseline 再生成**: 各 **phase 完了 PR merge 後** に main で `node scripts/generate_parity_baseline.mjs --regenerate` (full 再生成 / slug-partial は非推奨) を実行し、`rationale` フィールドを固定文言 `"frozen baseline — M2 burn-down phase P2-X post-merge regen"` に統一する。phase 内の中間 PR では `--slug=<csv>` の partial 再生成を許容するが、最終 phase PR では必ず `--regenerate` で書き直す (M3 atomic cutover 時の "凍結日時" トレーサビリティ維持 / architect gate C2)
 - **PR description 必須**: before/after の baseline entries + byIssueType 表、対象 slug list、source-first 遵守宣言
 
 ## 5. Non-goals
@@ -131,6 +131,19 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 - mechanism 変更 (M1 PR #270 で完了済。追加必要時は別 PR)
 - translation quality の general review (別 audit task)
 - GLOSSARY 589 duplicate bulk merge (M2 と並行可の独立 PR)
+
+### 5.1 Completed follow-ups (pilot 由来で本 plan 内で解決済)
+
+- **classifier URL-before-mask**: P2-1 pilot で identified された `parity_glossary_mask.classifySegment` の masking 順序問題は同 PR (#293) で構造的に修正済 (pre-strip → mask 順に変更、regression test 追加)。Tier A bulk 以降で autolink workaround は不要
+
+### 5.2 Source-first mechanical exceptions (M4 policy 補足)
+
+M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:
+
+1. **flat `<ol>` の複数分割**: EN の単一 `<ol>` に non-`<li>` sibling (`<img>`/`<p>`/`<div class="note">`) が混在する場合、JA は ol を複数に分割して sibling を ol 外に出してよい。`<li value="N">` 属性に対応する番号は手動指定。(P2-1 pilot で初実施、kind-multiset fingerprint で同値)
+2. **`:fa-arrow-right:` 段落融合**: EN の矢印 `→` プレフィックス段落は JA で `→**...するには:**` に変換するだけで段落は分離しない (PARITY_GUIDE §頻出パターン 2 で既定義)
+
+exception 追加は **reviewer 承認 + plan への明示登録** を条件とし、個別 PR の自由裁量では追加しない (security L2 gate)
 
 ## 6. Tracking
 
