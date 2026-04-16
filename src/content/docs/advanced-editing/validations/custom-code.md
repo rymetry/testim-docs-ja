@@ -250,11 +250,11 @@ _Add custom action_ を使って、テストのベース URL から Testim の�
 window.location.href = 'https://testim.io/';
 ```
 
-:::info{title="Chrome DevTools debugger"}
-ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/debugging-tests/js-code-debugging) を参照してください。
+:::note
+Chrome DevTools debugger ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/debugging-tests/js-code-debugging) を参照してください。
 :::
 
-:::info
+:::note
 Testim が公開しているカスタムコードのサンプル集は [https://github.com/testimio/custom-actions-examples](https://github.com/testimio/custom-actions-examples) にあります。ガイドラインに従って、ユーザーの皆さまからのサンプルの提供も歓迎しています。
 :::
 
