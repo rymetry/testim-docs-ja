@@ -81,8 +81,20 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 
 **Mandatory pre-P2-2 steps:**
 
-1. `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` に、P2-1 で burn-down した pilot slug (`advanced-editing/deep-link-mobile`) を追加済であること (本 PR で実施済 / testing gate Sev 6)。Tier A slug 毎に burn-down 完了後、本 fixture array に追加することで sentinel 化する
+1. `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` に、P2-1 で burn-down した pilot slug (`advanced-editing/deep-link-mobile`) を追加済であること (本 PR で実施済 / testing gate Sev 6)。Tier A slug 毎に burn-down 完了後、本 fixture array に追加することで sentinel 化する。ただし §5.3 mechanism-pending 残存 (per-slug ≤ 2 件) がある slug は **fixture から除外** (`totalIssues = 0` の assertion を満たさないため)
 2. P2-2 着手時点で `npm run check:snapshots:diff` / `npm run check:untranslated` をフル実行し、pilot slug が 0-drift であり untranslated 65 blocks (2026-04-17 baseline 実測) に pilot slug が含まれないことを宣言
+
+**Wave 2 briefing for parallel agents (2026-04-17 P2-2-1 pilot 実測):**
+
+Tier A 全 slug で recurring する 2 つの主要 pattern を agent input に明示すること (architect gate P2-2 D3):
+
+1. **JA-only 導入段落 + `**Xするには:**` 段落分割** (repo 全体で 347 occurrences / `grep -rE '^\*\*[^*]+するには:\*\*$' src/content/docs/` で計測): EN は `<p>Context. → <strong>To X:</strong></p>` (1 paragraph) なのに JA は `Context。\n\n**X するには:**` (2 paragraph) に分割。Pilot #1 で単一 slug に 6 件。修正手法:
+   - EN に `<br />` がある場合 (pilot #1 Connect section のみ): `。  \n→ **X するには:**` (trailing 2-space + newline で hard break 保持)
+   - EN に `<br />` がない場合 (大多数): `。\n→ **X するには:**` (soft-break / 単一改行) — markdown は space に render
+   - **確認手順**: EN snapshot `grep -oE '<br /> →|\. →' <file>` で `<br />` 有無を判別
+2. **FileOrFilePath inline-code の不整合** (per-slug 1-3 件): EN の `<span class="FileOrFilePath">./path</span>` / `<span class="FileOrFilePath">yes</span>` を JA が backticks で wrap すると `tokensInvariant` が不一致となり segment-token-gap が発火。修正: JA 側も backticks 外す (EN 抽出側も backtick wrap しないため揃う)
+
+Tier A agent は上記 2 pattern を優先 scan し、3 件目以降の未知 pattern が出たら pilot #1 と同様に reviewer gate + plan §5.3 登録を経由すること。
 
 **Exit:** Tier A 全 slug で entry = 0、baseline total ≤ 140
 
@@ -132,6 +144,7 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 - **base branch**: 各 phase で `origin/main` から新 branch を切る (`claude/m2-p2-1-pilot`, `claude/m2-p2-2-*`, …)
 - **worktree**: Tier A 並列時は per-slug worktree (`.claude/worktrees/m2-<slug-hash>`)
 - **baseline 再生成**: 各 **phase 完了 PR merge 後** に main で `node scripts/generate_parity_baseline.mjs --regenerate` (full 再生成 / slug-partial は非推奨) を実行し、`rationale` フィールドを固定文言 `"frozen baseline — M2 burn-down phase P2-X post-merge regen"` に統一する。phase 内の中間 PR では `--slug=<csv>` の partial 再生成を許容するが、最終 phase PR では必ず `--regenerate` で書き直す (M3 atomic cutover 時の "凍結日時" トレーサビリティ維持 / architect gate C2)
+  - **中間 PR partial regen rationale (canonical format)** (architect gate P2-2 D1, 2026-04-17): `generate_parity_baseline.mjs --slug=<csv>` が自動生成する `"frozen baseline — partial regeneration for <slug>"` はそのまま使用してよい (script 出力準拠 / 人手編集不要)。複数 slug を一括 regen する場合は script が slug csv を連結するため、trail 情報は `generatedFromRunId` + commit SHA から追跡する。phase 最終 PR で full `--regenerate` に書き直すので中間 rationale は使い捨て前提
 - **`reviewAfter` field の扱い** (architect gate A2 注記): schema v1 の各 entry に付与されている `reviewAfter: "<YYYY-MM-DD>"` は、M1 で設計された "期限切れ baseline を orphanBaselineEntries として検知する" 仕組みの input。M2 burn-down の文脈では baseline total を漸減させる運用が主であり、**実質的に未使用** (期限切れを待たずに entry を解消するため)。M3 (PR Z schema v2) では本 field は削除予定 (`migrate_baseline_schema.mjs` で strip)。phase PR の `--regenerate` で自動付与される value (6 ヶ月先) は harmless だが意味を持たないことに留意
 - **PR description 必須**: before/after の baseline entries + byIssueType 表、対象 slug list、source-first 遵守宣言
 
@@ -145,6 +158,17 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 ### 5.1 Completed follow-ups (pilot 由来で本 plan 内で解決済)
 
 - **classifier URL-before-mask**: P2-1 pilot で identified された `parity_glossary_mask.classifySegment` の masking 順序問題は同 PR (#293) で構造的に修正済 (pre-strip → mask 順に変更、regression test 追加)。Tier A bulk 以降で autolink workaround は不要
+
+### 5.3 Mechanism-pending carve-outs (Tier A 全 slug で entry = 0 の例外)
+
+§P2-2 Exit の `Tier A 全 slug で entry = 0` は **content-level で解消可能な entry** に適用する。以下の mechanism-pending カテゴリは content 修正で 0 に到達不能なため、per-slug ≤ 2 件の残存を許容し、M3 PR Z 前の別 mechanism PR で一括解消する (architect gate P2-2 D2, 2026-04-17):
+
+1. **FileOrFilePath paragraph vs code-fence kind-mismatch** (P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知): EN の `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は `source_parity_segments_en.mjs` の INLINE_JOIN_TAGS 透過経路で paragraph kind に extract される。JA は code-fence (```text / ``` ) で `code-block` kind になる。paragraph 一致には backtick inline が不可欠だが textNorm が backticks を strip するため classifier で segment-untranslated が再発火。構造的修正は EN 抽出側で FileOrFilePath を inline-code として wrap する mechanism change が必要 (= M2 範囲外)
+   - **symptom pattern**: WDA section / CLI prerequisites / error log example ページ
+   - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
+   - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
+
+exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
 
