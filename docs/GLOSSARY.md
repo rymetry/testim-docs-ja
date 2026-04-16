@@ -9,10 +9,21 @@
 - 広く通用する英語 UI ラベルで、日本語化すると逆に混乱を招くもの
 - CLI コマンド名・設定キー名
 
+## T18 — 3 セクション分離方針（M1 policy / M4 implementation）
+
+現在の flat table は compound general / Testim UI label / 固有名詞が混在し、false-negative と duplicate の源になっている（`npm run lint:glossary` で 589 重複 group 検出、T21）。M4 ガイド改訂 plan で以下 3 セクションに分離する:
+
+1. **Testim 固有名詞** — 製品名 / 会社名 / 機能名（Testim / Visual Editor / Test Editor / etc.）
+2. **Testim UI label** — 画面名 / ボタン / メニュー / プロパティ（Add Environment / Create New / etc.）
+3. **許容される一般 IT 用語** — 広く英語のまま使われる IT 用語の許容リスト（compound general は INVARIANT pattern 側へ移管）
+
+M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂と既存 2774 行の再分類は M4 別 plan（§4 G2 / G5）。
+
 登録手順:
 1. 以下のカテゴリ配下に行を追加する
 2. `scripts/lib/parity_glossary_mask.mjs` は起動時に本ファイルをパースするため、再起動で反映される
 3. 登録後に `npm run check:parity` で影響を確認する
+4. 重複検出は `npm run lint:glossary` で確認（T21 / `scripts/check_glossary_duplicates.mjs`）
 
 ---
 

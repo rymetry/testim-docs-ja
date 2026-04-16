@@ -282,3 +282,35 @@ M1 完了後、`docs/superpowers/plans/2026-04-15-parity-bulk-remediation.md` §
 - mechanism 層の追加変更（M2 / Phase 4 PR A 後継 PR 所掌）
 - Phase 5（定常運用 check gate 追加）の設計（PR Z merge 後の別 plan）
 - upstream（Tricentis MadCap）への修正要請の文面作成（M5 / 別トラック）
+
+## 13. Execution log (2026-04-16)
+
+本 run で case B (7 commit) を PR #291 head へ積んだ記録。branch: `pr291-remediation` → push 時 `claude/phase4-round5-glossary` へ reconcile。
+
+| commit | 含む | baseline delta | test state |
+|--------|------|---------------|-----------|
+| 0 (governance) | T0 policy stubs + PR template + plan Rev 2.1 取り込み | — | pre-run: 1900 tests pass |
+| 1a (INVARIANT restore) | T1 + T2 + T3 | 345→340 entries / 103→100 slugs | full test gate: 1900 pass |
+| 1b (GLOSSARY compound) | T4 + T19 | 未再生成（最終 regen で吸収） | 41 parity_glossary_mask tests pass |
+| 2 (find_untranslated) | T5 + T6 + T7 + T8 + T10 + T17 | — | 13 new find_untranslated tests pass |
+| 3 (docs) | T9 | — | N/A |
+| 4 (test contract) | T11 + T12 + T13 + T14 + T15 | — | 21 representative summary + 12 align_runtime tests pass |
+| 5 (self-check) | T16 + T18 + T20 + T21 + T22 | 最終 regen 予定 | plan self-check 4 項目 pass |
+
+### T16 audit trail (recall-report.json:129 maxBaselineDiffsPerPage 32→5)
+
+本 PR #291 head には `recall-report.json` が存在しない（PR #287 固有成果物）。根拠記録は本 plan §13 で言及し、PR #287 body 編集は別 PR-body-only 作業に委譲（M2 起票時の checkpoint）。
+
+### T20 audit trail (custom-code-1.md / custom-code.md)
+
+実パス: `src/content/docs/advanced-editing/validations/custom-code.md` と `custom-code-1.md`。EN 原文 snapshot は両方存在（`snapshots/en/content/advanced-editing/validations/custom-code.html` / `custom-code-1.html`）。
+
+`npm run check:parity -- --slug=advanced-editing/validations/custom-code` → active 0 / baseline 1 件 (segment-untranslated) で gate pass。
+`npm run check:parity -- --slug=advanced-editing/validations/custom-code-1` → active 0 / baseline 0 件 で clean green。
+
+結論: 両ページは source-first 整合（各々 EN 原文に対応）。同時編集は正当化され、PR #288 revert は不要。
+
+### T21 audit trail (check_glossary_duplicates.mjs 現況)
+
+`npm run lint:glossary` 初回実行で **589 duplicate group** 検出。compound general 削除 (T4) と section 分離 (T18/M4) の前段として lint gate を先行導入。実際の重複 merge は M4 G5 のスコープ（本 M1 では npm script alias 提供のみ）。
+
