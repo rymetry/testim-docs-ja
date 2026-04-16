@@ -21,15 +21,15 @@ keywords:
 
 **SauceLabs Grid を追加するには:**
 
-1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
+1. [Grid の追加](/docs/integrations/grid-management#adding-a-grid) の手順に従い、Grid の種類として **Saucelabs** を選択します。
 2. **Next** をクリックします。
-3. 次の field を入力します。
+3. 次のフィールドを入力します。
 
 - **Name**: 実行時に使用する Grid 名
-- **Saucelabs User**: 接続に使用する SauceLabs key
-- **Saucelabs key**: 接続に使用する SauceLabs key
-- **Host**: SauceLabs の host name
-- **Port**: SauceLabs の port
+- **Saucelabs User**: 接続に使用する SauceLabs のユーザー名
+- **Saucelabs key**: 接続に使用する SauceLabs のキー
+- **Host**: SauceLabs のホスト名
+- **Port**: SauceLabs のポート
 
 ![SauceLabs Grid の接続情報を設定する画面](/images/grid-management/saucelabs-integration/be4fb2b-Jul-24-2021_08-13-41.gif)
 
@@ -39,25 +39,25 @@ keywords:
 
 [CLI](/docs/running-tests/the-command-line-cli) / [CI](/docs/integrations/integrate-testim-to-your-ci)
 
-Grid 名を指定して `--grid` parameter を追加します。
+Grid 名を指定して `--grid` パラメーターを追加します。
 
 [Scheduler](/docs/running-tests/scheduler)
 
-**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+**Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
 [Test Plan](/docs/test-management/test-plans)
 
-**Grid** field で、どの Grid 上でテストを実行するかを選択します。
+**Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
 ### Editor から実行する
 
 Test Editor から直接 Grid 上でテストを実行できます。
 
-- **Run** ボタンの横にある options arrow をクリックします。
-- **Run on a grid** をクリックします。
+- **Run**（実行）ボタンの横にあるオプションの矢印をクリックします。
+- **Run on a grid**（Grid で実行）をクリックします。
 
-その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
+その実行で構成 / Grid / Base URL を変更したい場合は **Edit** をクリックします。
 
 ![Test Editor から SauceLabs Grid を選んで実行する画面](/images/grid-management/saucelabs-integration/0ca9bb7-Jul-21-2021_13-11-22.gif)
 
-テスト実行に追加 option を渡したい場合は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。
+テスト実行に追加オプションを渡したい場合は、[SauceLabs と BrowserStack の CLI テスト capability](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。

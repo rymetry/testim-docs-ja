@@ -225,7 +225,9 @@ iOS シミュレーターで WDA を起動する際にエラーが発生した�
 
 iOS シミュレーターで WDA を起動する際に次のようなエラーが発生した場合:
 
-エラー例: 2021-07-18 02:22:22.461 ERROR 37497 qtp499764573-13 i.t.a.i.n Failed trying to start WDA on 2D3C1771-938B-43D7-A95C-5CCB834CE63E for unknown reason java.util.concurrent.ExecutionException: java.io.IOException: There was a problem connecting to the simulator with the udid of 2D3C1771-938B-43D7-A95C-5CCB834CE63E
+```text
+2021-07-18 02:22:22.461 ERROR 37497 qtp499764573-13 i.t.a.i.n Failed trying to start WDA on 2D3C1771-938B-43D7-A95C-5CCB834CE63E for unknown reason java.util.concurrent.ExecutionException: java.io.IOException: There was a problem connecting to the simulator with the udid of 2D3C1771-938B-43D7-A95C-5CCB834CE63E
+```
 
 マシンで実行されているすべての Xcode シミュレーターをシャットダウンするために、次のコマンドを実行してみてください:
 

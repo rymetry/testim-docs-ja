@@ -22,7 +22,7 @@ keywords:
 外部ソース（CSV、DB など）からのテストデータは、[設定ファイル](/docs/running-tests/configuration-file-run-hooks)を使用して 1 つまたは複数のテストに渡し、設定ファイルを使用するフラグを追加して CLI でテストを実行できます。**外部テストデータを設定ファイルに追加するには:**
 
 1. 設定ファイルを作成するか、既存のファイルを編集します。
-2. この機能を使用するために、npm パッケージ csvtojson をインストールします。詳細はこちらを参照してください: [https://www.npmjs.com/package/csvtojson](https://www.npmjs.com/package/csvtojson)。csvtojson npm パッケージは、以下のように設定ファイルに含める必要があります（`const csvtojson = require("csvtojson")`）。
+2. この機能を使用するために `csvtojson` npm パッケージをインストールします。詳細は [https://www.npmjs.com/package/csvtojson](https://www.npmjs.com/package/csvtojson) を参照してください。次のように設定ファイルに `csvtojson` の require 文を含める必要があります: `const csvtojson = require("csvtojson")`
 3. 設定ファイルの冒頭に、外部ソースから JSON オブジェクトにデータをロードする JavaScript 関数を追加します（`loadCsvFile(path)`）。
 
 ```javascript

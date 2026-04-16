@@ -19,10 +19,9 @@ keywords:
 
 ![Jenkins ロゴ](/images/ci-integrations/jenkins-integration/74d3ef8-tCyedoSJRGO8AAGv6sqs_jenkins-logo.png)
 
-Jenkins とテストを統合するには、まず\
-Jenkins マシンまたはそのワーカーマシンの 1 つに node.js（Node.js の LTS/サポートされているバージョンのいずれか）がインストールされている必要があります。
+Jenkins とテストを統合するには、まず Jenkins マシンまたはそのワーカーマシンのいずれかに Node.js (Node.js の LTS / サポート対象バージョン) がインストールされている必要があります。
 
-## 次の手順に従ってください
+## 次の手順に従ってください:
 
 1. Jenkins で新しいアイテムを作成します:
 
@@ -59,9 +58,7 @@ testim --label "<YOUR LABEL>" \
 --report-file test-results/testim-tests-$BUILD_NUMBER-report.xml
 ```
 
-<Image title="File1488700845402.png" alt={899} align="center" src="/images/ci-integrations/jenkins-integration/ff81d47-File1488700845402.png">
-  Jenkins Execute Shell Command
-</Image>
+![Jenkins の Execute Shell コマンド設定画面](/images/ci-integrations/jenkins-integration/ff81d47-File1488700845402.png)
 
 **注記:** グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 
@@ -84,14 +81,14 @@ testim --label "<YOUR LABEL>" ^
 --report-file test-results/testim-tests-$BUILD_NUMBER-report.xml
 ```
 
-<Image title="jenkins.png" alt={1402} align="center" src="/images/ci-integrations/jenkins-integration/05fb4d0-jenkins.png">
-  Jenkins Execute Windows Batch Command
-</Image>
+![Jenkins の Execute Windows batch command 設定画面](/images/ci-integrations/jenkins-integration/05fb4d0-jenkins.png)
 
-5. Jenkins が結果を保存、分析、表示するために、標準の JUnitXMLReporter XML ファイルを生成します。Jenkins がファイルを使用するには、"Publish JUnit test result report"タイプのポストビルドアクションを追加する必要があります:
+Jenkins の Execute Windows Batch コマンド設定画面。
+
+5. Jenkins で結果を保存、分析、表示するために、標準の JUnit XML レポート (JUnitXMLReporter) ファイルを生成します。Jenkins がそのファイルを使用するには、`Publish JUnit test result report` タイプのポストビルドアクションを追加する必要があります:
 
 ![Publish JUnit test result report ポストビルドアクションを追加する画面](/images/ci-integrations/jenkins-integration/0d9aac5-0h9FTPrwROu7qb7ae7hC_jenkins_post_build_action.PNG)
 
-5. セクション 4 の"report-file"パラメーターに従って、xml ファイルの値を設定します:
+5. 手順 4 の `report-file` パラメーターに合わせて、XML ファイルのパスを設定します:
 
 ![JUnit テスト結果の XML ファイルパスを設定する画面](/images/ci-integrations/jenkins-integration/3a10b08-AP4V4UjQj6mBgoCdhmoQ_jenkins_post_build_action_details.PNG)

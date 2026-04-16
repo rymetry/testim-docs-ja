@@ -21,7 +21,7 @@ keywords:
 **ビューポートのビジュアル検証**を使用すると、ビューポートのベースラインと現在のテスト実行の間でビジュアル差異を比較できます。この機能は [Applitools](https://applitools.com) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。詳細については、[ビジュアル検証（要素、ビューポート、フルページ）](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for) をご覧ください。
 
 :::warning{title="Applitools ライセンスについて"}
-RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしでは Applitools によって拒否されます。詳細については、Applitools の担当者にお問い合わせください。
+RCA および `Ultrafast Test Cloud`（追加環境の追加）機能は、適切なライセンスがないと Applitools によって拒否されます。詳細については Applitools の担当者にお問い合わせください。
 :::
 
 :::info{title="PRO機能"}

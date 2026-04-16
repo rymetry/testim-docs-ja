@@ -92,7 +92,7 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 ## Salesforce でレコードが見つからない
 
-**Create**ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、**Find**ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/editing-tests/conditions#custom-条件の設定)を含むステップを追加し、その後次のステップに進むことです。カスタム条件を含む追加されるステップは、こちらのデモプロジェクトで共有ステップとして見つけることができます - [https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs](https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs) この共有ステップをテストに追加するだけです。デモテストでは、**Create**ステップの後に共有**Find**ステップが続きます。
+`Create` ステップを使用して Salesforce でレコードを作成する場合、レコードが実際に Salesforce で作成され、`Find` ステップを使用して見つけられるようになるまでに時間遅延が発生する可能性があります。解決策は、レコードが見つかるまで、または設定された回数だけ再試行するまで（ループで）繰り返し検索する[カスタム条件](/docs/editing-tests/conditions#custom-条件の設定)を含むステップを追加し、その後次のステップに進むことです。カスタム条件を含む追加されるステップは、こちらの[デモプロジェクト](https://tta-crm.tricentis.com/#/project/WPZPXX3rnCpFZOSFPzYi/branch/master/test/FXeyB01zXmzQmAfs)で共有ステップとして見つけることができます。この共有ステップをテストに追加するだけです。デモテストでは、`Create` ステップの後に共有 `Find` ステップが続きます。
 
 ![共有 Find ステップの例](/images/salesforce-utilities/troubleshoot/210f6e5-troubleshootfind.png)
 

@@ -20,13 +20,13 @@ keywords:
   - ブレークポイント
 ---
 
-"when to run step" 機能を使うと、テスト内の各ステップを実行するかしないかを制御できます。グループステップを含むあらゆるステップに「実行条件（when to run）」を設定できます。ステップの実行条件は次の 5 種類です:
+**When to run step** 機能を使うと、テスト内の各ステップを実行するかしないかを制御できます。グループステップを含むあらゆるステップに実行条件を設定できます。ステップの実行条件は次の 5 種類です:
 
 - **Always Run** — このステップには条件がありません。テスト実行時に常に実行されます。すべてのステップの既定設定です。
-- **Element** — 指定した要素がページ上に存在する（または存在しない）かどうかに基づいて、ステップを実行するかを制御します。要素は Property ID、テキスト、クラスなど任意の DOM オブジェクトが対象です。詳しくは [CONFIGURING AN ELEMENT CONDITION](/docs/editing-tests/conditions#element-条件の設定) を参照してください。
-- **Element text** — Element 条件に類似しますが、指定要素に期待するテキスト値が存在する場合にのみステップを実行します。詳しくは [CONFIGURING AN ELEMENT TEXT CONDITION](/docs/editing-tests/conditions#element-text-条件の設定) を参照してください。
-- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは [CONFIGURING A CUSTOM CONDITION](/docs/editing-tests/conditions#custom-条件の設定) を参照してください。
-- **Never (skip)** — このオプションが選択されている間、ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは [CONFIGURING A NEVER RUN STEP CONDITION](/docs/editing-tests/conditions#never-run-step-条件の設定) を参照してください。
+- **Element** — ページ上に指定要素が存在するか（または存在しないか）に基づいて、ステップの実行可否を制御します。対象要素として、Property ID やテキスト、クラスなどの任意の DOM オブジェクトを指定できます。詳しくは[Element 条件の設定](/docs/editing-tests/conditions#element-条件の設定)を参照してください。
+- **Element text** — Element 条件と類似していますが、指定要素に期待するテキスト値が含まれる場合にのみステップを実行します。詳しくは[Element text 条件の設定](/docs/editing-tests/conditions#element-text-条件の設定)を参照してください。
+- **Custom** — ページ上の要素について特定の値をチェックします。値が存在する場合にステップを実行します。条件にはカスタム JavaScript を使用できます。詳しくは[Custom 条件の設定](/docs/editing-tests/conditions#custom-条件の設定)を参照してください。
+- **Never (skip)** — このオプションが選択されている間、該当ステップは実行されません。一時的にステップを無効化したい場合に使用します。ステップは将来の再利用に備えて保持されます。詳しくは[Never run step 条件の設定](/docs/editing-tests/conditions#never-run-step-条件の設定)を参照してください。
 
 ## Condition インジケーター
 
@@ -99,11 +99,11 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 ### Element 条件を試してみましょう
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンが可視のときにのみログインを実行する Element 条件を作成してみてください。
+[こちらのサンプルテスト](http://bit.ly/2xFTMyW)を開くと、Login グループステップを含むテストが表示されます。Login ボタンが可視のときにのみログインステップを実行する Element 条件を作成してみてください。
 
 ## Element text 条件の設定
 
-Element text 条件は Element 条件に類似しますが、指定した要素に特定のテキスト値が含まれる場合にのみステップを実行します。条件には正規表現、短い JavaScript 式、またはパラメーターを使用できます。\
+Element text 条件は Element 条件に類似していますが、指定した要素に特定のテキスト値が含まれる場合にのみステップを実行します。条件として、正規表現・短い JavaScript 式・パラメーターのいずれかを利用できます。\
 **Element text 条件を設定するには:**
 
 ![Element text 条件設定のデモ](/images/conditions/conditions/59391e6-element_text_condition.gif)
@@ -144,7 +144,7 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 
 ### Element text 条件を試してみましょう
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンのテキストが「Log in」と表示されているときにのみログインを実行する Element text 条件を作成してみてください。
+[こちらのサンプルテスト](http://bit.ly/2xFTMyW)を開くと、Login グループステップを含むテストが表示されます。Login ボタンのテキストが「Log in」と表示されているときにのみログインステップを実行する Element text 条件を作成してみてください。
 
 ## Custom 条件の設定
 
@@ -155,13 +155,13 @@ Element text 条件は Element 条件に類似しますが、指定した要素�
 return loginButton.innerText === 'LOG IN';
 ```
 
-HTML または JavaScript パラメーターを定義し、条件内でそれらを参照することもできます。例えば、HTML 要素としてボタンを選択し、そのボタンのテキストをチェックする条件を作成できます。Custom 条件はブール値を返すステップとして記述します。`true` を返すとステップが実行され、`false` を返すとスキップされます。\
+HTML パラメーターや JavaScript パラメーターを条件内で定義し、参照することもできます。例えば、HTML 要素としてボタンを選択し、そのボタンのテキストをチェックする条件を作成できます。Custom 条件はブール値を返すステップとして記述します。`true` を返すとステップは実行され、`false` を返すとスキップされます。\
 **Custom 条件を設定するには:**
 
 ![Custom 条件設定のデモ](/images/conditions/conditions/12714a6-custom_condition2.gif)
 
 :::warning
-ステップ 5（下記）で HTML 要素をパラメーターとして定義する場合は、まず AUT を開く必要があります: 1. ステップの左にある **>（矢印）** にカーソルを合わせます。2. **Toggle Breakpoint** をクリックします。3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
+以下のステップ 5 で HTML 要素をパラメーターとして定義する場合は、先に AUT を開いておく必要があります。手順は次のとおりです: 1. ステップの左側にある **>（矢印）** にカーソルを合わせます。2. **Toggle Breakpoint** をクリックします。3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 :::
 
 1. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\
@@ -188,10 +188,10 @@ HTML または JavaScript パラメーターを定義し、条件内でそれら
 6. 関数テキストボックスに、JavaScript 条件を入力します。定義したパラメーターがある場合は、条件内でそれらを参照できます。
 
 :::note
-jQuery などの DOM セレクター（HTML パラメーターではなく）を使用する場合、空の配列は truthy として評価されます。`$(<query>)` ではなく `$(<query>).length` を使用してください。
+HTML パラメーターではなく jQuery などの DOM セレクターを使用する場合、空の配列も truthy として評価されます。そのため、`$(<query>)` ではなく `$(<query>).length` を使用してください。
 :::
 
-7. デフォルトのタイムアウト（30000ms）を変更する場合は、Custom Step の **Properties** ペインで **Override timeout** ボタンをクリックし、目的のタイムアウト値を入力します。
+7. デフォルトのタイムアウト値（30000ms）を変更する場合は、Custom Step の **Properties** ペインで **Override timeout** ボタンをクリックし、任意のタイムアウト値を入力します。
 
 ![HTML パラメーター設定](/images/conditions/conditions/4f76e55-custom5_r.png)
 
@@ -209,11 +209,11 @@ AUT を開いて HTML 要素をパラメーターとして定義した場合は�
 
 ### Custom 条件を試してみましょう
 
-[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/RQyrVVAjJp) を開くと、Login グループステップを含むサンプルテストが表示されます。Login ボタンを選択する HTML パラメーターを作成し、`return loginButton.innerText === 'LOG IN';` という Custom 条件を入力して、ボタンが可視かつ正しいテキストを表示しているときにのみログインを実行するように設定してみてください。
+[こちらのサンプルテスト](http://bit.ly/2xFTMyW)を開くと、Login グループステップを含むテストが表示されます。Login ボタンを選択する HTML パラメーターを作成し、`return loginButton.innerText === 'LOG IN';` という Custom 条件を入力して、ボタンが可視かつ正しいテキストを表示しているときにのみログインステップを実行するように設定してみてください。
 
 ## Never run step 条件の設定
 
-Never（skip）条件は、テストステップを一時的に無効化しながらも、将来の再利用に備えてステップ自体を保持する場合に使用します。\
+Never (skip) 条件は、テストステップを一時的に無効化しつつ、将来の再利用に備えてステップ自体は保持しておきたい場合に使用します。\
 **Never run step 条件を設定するには:**
 
 1. 対象のステップをクリックします。\

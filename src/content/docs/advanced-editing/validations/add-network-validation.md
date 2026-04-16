@@ -204,13 +204,13 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
 ![ナビゲーションステップ前の状態](/images/validations/add-network-validation/989f939-Testim_310.png)
 
 8. **Properties** パネルの **Description** フィールドで、必要に応じてこのステップの説明を編集します。デフォルトの説明は「Run network validation」です。
-9. ステップに必要なパラメーターを次のように定義します:\
-   a. **Properties** パネルで **+ PARAMS** ボタンをクリックします。\
-   b. **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
-   c. **HTML parameter**: HTML 要素をパラメーターとして定義する場合は、ドロップダウンリストから **HTML** を選択します。ブラウザが開き、このステップに関連するページが表示されます。次の操作を行います:
-   - **AUT** ウィンドウで、関連する要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** パネルの **Target Element** ボックスに表示されます。選択した要素の表示、置き換え、設定の調整を行う場合は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) で説明されている手順を使用してください。
+9. ステップに必要なパラメーターを次のように定義します:
 
-d. 選択した要素には、自動的に「param」または「element」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
+   - **Properties** パネルで **+ PARAMS** ボタンをクリックします。
+   - **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。
+   - **HTML parameter**: HTML 要素をパラメーターとして定義する場合は、ドロップダウンリストから **HTML** を選択します。ブラウザが開き、このステップに関連するページが表示されます。次の操作を行います:
+     - **AUT** ウィンドウで、関連する要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** パネルの **Target Element** ボックスに表示されます。選択した要素の表示、置き換え、設定の調整を行う場合は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) で説明されている手順を使用してください。
+   - 選択した要素には、自動的に「param」または「element」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
 
 ![ネットワーク検証ステップの追加位置](/images/validations/add-network-validation/f5a215a-Testim_285a_r.png)
 

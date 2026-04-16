@@ -48,13 +48,13 @@ testim --tunnel --tunnel-port <APP PORT default 80> --label "<YOUR LABEL>" --tok
 ```
 
 :::note
-必要に応じて HTTPS address に tunnel を使用できます。これを設定するにはサポートにお問い合わせください。**HTTPS tunnel は、Testim 提供のグリッドで実行する場合にのみ使用できます。**
+必要に応じて HTTPS アドレスへのトンネルも利用できます。設定するにはサポートにお問い合わせください。**HTTPS トンネルは、Testim が提供するグリッドで実行する場合のみ利用できます。**
 :::
 
 :::note
-grid name については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
+グリッド名については、[こちら](/docs/integrations/grid-management) でグリッドの設定方法をご確認ください。
 :::
 
 :::note
-Tunnel は Scheduled runs ではサポートされていません。
+トンネルはスケジュール実行ではサポートされていません。
 :::

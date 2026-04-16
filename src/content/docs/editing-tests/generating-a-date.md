@@ -118,10 +118,7 @@ keywords:
     Variable Scope
    </td>
    <td>
-    変数を受け渡しできるスコープ:
-    **Local:** 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。
-    **Test:** 同一テスト内のステップやグループ間で受け渡しできます。
-    **Suite:** 同一テストスイート内のテスト間で受け渡しできます。
+    変数を受け渡しできるスコープ: **Local:** 同一スコープ内のステップ間でパラメーターを受け渡しできます（例: グループ内でエクスポートしたパラメーターを同一グループ内で共有）。**Test:** 同一テスト内のステップやグループ間で受け渡しできます。test.Suite: 同一テストスイート内のテスト間で受け渡しできます。
    </td>
    <td>
    </td>
@@ -149,4 +146,4 @@ keywords:
  </tbody>
 </table>
 
-このステップの使用例は <a href="https://app.testim.io/#/project/GYXR2qZC/branch/master/test/IrAg1rfldG">こちら</a> を参照してください。
+このステップの使用例は[こちら](https://app.testim.io/#/project/GYXR2qZC/branch/master/test/IrAg1rfldG)を参照してください。

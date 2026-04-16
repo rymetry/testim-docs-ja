@@ -55,7 +55,7 @@ Before/After each step フックは、テスト内の「各ステップの直前
 関連ステップが条件でスキップされる設定でも、Before/After step フックは実行されます。
 :::
 
-## フックの作成
+## Before/After フックの作成 {#creating-before-after-hooks}
 
 フックはテスト設定の構成（Test Configuration）と／または設定ファイル（Config File）で作成します。新規／既存の構成で設定可能な方法:
 
@@ -166,11 +166,11 @@ Before/After each step フックは、テスト内の「各ステップの直前
  </tbody>
 </table>
 
-## テスト構成から作成
+### テスト構成からフックを作成する {#creating-hooks-via-the-test-configuration}
 
 Test Configuration Hooks は、プロパティパネル／構成リスト画面／テストの既定構成から作成できます。
 
-### プロパティパネルから作成
+#### プロパティパネルからフックを作成する {#creating-hooks-via-the-properties-panel}
 
 テストの**プロパティパネル**から作成できるフック:
 
@@ -216,7 +216,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/603e29d-propertiespanel.gif)
 
-### Configuration List 画面からフックを作成する
+#### Configuration List 画面からフックを作成する {#creating-hooks-via-the-configuration-list-screen}
 
 **Configuration List** 画面からは、次のフックを作成できます。
 
@@ -254,7 +254,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/0cbe19a-configlist.gif)
 
-### Default Configuration 設定からフックを作成する
+#### Default Configuration 設定からフックを作成する {#creating-hooks-via-the-default-configuration-setting}
 
 **Default Configuration からフックを作成するには:**
 
@@ -287,7 +287,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c475584-defaultconfig.gif)
 
-## Test Configuration Hooks の実行パラメーター
+### Test Configuration Hooks の実行パラメーター {#test-configuration-hooks-run-parameters}
 
 一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメーターが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
 
@@ -319,7 +319,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
     - `failureReason` – 失敗理由（失敗時）
     - `errorType` – エラータイプ（エラーがある場合）
 
-## 設定ファイル（Config File）でフックを作成する
+## Config File でフックを作成する {#creating-hooks-via-the-config-file}
 
 Config File は、テスト／テストスイートの実行に必要なパラメーターと run hooks を定義する CommonJS 形式のファイルです。バックエンドのセットアップや、単一テスト／すべてのテストの前後で実行したい処理をまとめて定義できます。Config File で設定できるフックタイプは次のとおりです。
 
@@ -328,7 +328,7 @@ Config File は、テスト／テストスイートの実行に必要なパラ�
 - **Before Suite** – スイート実行前に実行
 - **After Suite** – スイート実行後に実行
 
-Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [Configuration File (Run Hooks)](/docs/running-tests/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [設定ファイルでの定義](/docs/advanced-editing/parameters/configuration-file-parameters#設定ファイルでの定義)
+Config File 経由での Before/After フック設定の詳細手順は、以下のガイドを参照してください。Config file の概要: [Configuration File (Run Hooks)](/docs/configuration-file-run-hooks)。フック経由で Config file パラメーターを追加する方法: [設定ファイルでの定義](/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file)
 
 ## フックの可視化（Hooks Visualizations）
 
@@ -338,7 +338,7 @@ Hooks を含むテストを実行すると、エディター上でさまざま�
 Turbo Mode でテストを実行している場合、不要なデータ保存を避けるためフックの表示は制限されます。Turbo Mode では、フックが可視化されるのは失敗した実行のみです。
 :::
 
-## Before/After each step フックの可視化
+### Before/After each step フックの可視化 {#viewing-before-after-each-step-hooks}
 
 Before/After each step フックが設定されているステップには、実行後にステップ上へ「Hook」ボタンが表示されます（ステップにカーソルを合わせたときに表示）。
 
@@ -378,7 +378,7 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、Baseline（基準画像）は表示されず、結果側のみが表示されます。
 :::
 
-## Before/After test フックの可視化
+### Before/After test フックの可視化 {#viewing-before-after-test-hooks}
 
 Before/After test フックはテストごとに 1 回、テストの開始前／終了後に実行されます。実行後、最初のステップ（Setup ステップ）にカーソルを合わせると「Hook」ボタンが表示されます。
 
@@ -402,7 +402,7 @@ Hook ボタンをクリックすると、テスト前後に実行された共有
 Hook ステップのスクリーンショットをサイドバイサイド表示した場合、Baseline 側は表示されず、結果側のみ表示されます。
 :::
 
-## 成功／失敗条件により実行されなかったフックの確認
+### 成功／失敗条件により実行されなかったフックの確認 {#viewing-hooks-that-did-not-run-due-to-success-failure-conditions}
 
 フック作成時に、ステップ／グループが成功した場合のみ／失敗した場合のみ実行するように条件を設定できます。この条件により実行されなかったフックは、青いドットでマークされます。
 
@@ -416,7 +416,7 @@ Hook ステップのスクリーンショットをサイドバイサイド表示
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/bd7554b-2023-01-10_13-46-41.png)
 
-## フックに関連するエラーの確認
+### フックに関連するエラーの確認 {#viewing-errors-related-to-hooks}
 
 テスト実行後にエラーが発生した場合、そのエラーがフックステップに起因することがあります。フックステップでエラーが発生した場合、関連ステップの左側（before each step / before test のフックエラー）または右側（after each step / after test のフックエラー）に赤いドットが表示されます。
 

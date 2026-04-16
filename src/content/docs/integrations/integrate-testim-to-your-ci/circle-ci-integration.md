@@ -22,10 +22,9 @@ keywords:
 
 #### YAML File
 
-[Circle CI](https://circleci.com/)のローカル Selenium Grid を使用して Testim と統合するには、circle.yaml ファイルに以下の行を追加する必要があります:
+[Circle CI](https://circleci.com/) のローカル Selenium Grid を使用して Testim と統合するには、circle.yaml ファイルに以下の行を追加する必要があります:
 
 <!-- markdownlint-disable-next-line MD036 -->
-
 **YAML**
 
 ```yaml

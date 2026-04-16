@@ -98,14 +98,13 @@ const RESOLVED_PAGES = Object.freeze([
 // RESIDUAL_PAGES — segment-untranslated が baseline 凍結中のページ。
 // PR review #3 で classifySegment の CJK 早期 return を削除した結果、
 // Testim UI 名の英語残留が surface するようになった。
-// GLOSSARY 拡張は Phase 1.x で実施予定。それまで baseline で凍結。
+// Phase 4 B2+B3 burn-down (2026-04-16) で salesforce-testing/faq と
+// advanced-editing/validations/email-validation は完全に解消済のため除外。
 // ---------------------------------------------------------------------------
 const RESIDUAL_PAGES = Object.freeze([
   { slug: 'advanced-editing/custom-action-step-mobile', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
-  { slug: 'salesforce-testing/faq', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
-  { slug: 'advanced-editing/validations/email-validation', requiredBaselinedTypes: ['segment-untranslated'] },
 ]);
 
 // ---------------------------------------------------------------------------

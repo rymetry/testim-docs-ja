@@ -22,7 +22,7 @@ keywords:
 
 定義したパラメーターは、単一の実行（ラン）に含まれるすべてのテストに適用されます。
 
-## 設定ファイルでの定義
+## 設定ファイルでの定義 {#defining-parameters-in-a-configuration-file}
 
 [設定ファイル](/docs/running-tests/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメーターを定義できます。例：
 

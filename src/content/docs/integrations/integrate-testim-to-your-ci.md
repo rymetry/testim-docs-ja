@@ -39,12 +39,12 @@ keywords:
 
 **特定の CI への統合に関するガイドのリスト:**
 
-- [Azure Pipeline Integration](/docs/integrations/integrate-testim-to-your-ci/azure-devops-build-pipeline-integrations)
-- [Bamboo integration](/docs/integrations/integrate-testim-to-your-ci/bamboo-integration)
-- [Circle CI integration](/docs/integrations/integrate-testim-to-your-ci/circle-ci-integration)
-- [Codeship integration](/docs/integrations/integrate-testim-to-your-ci/codeship-integration)
-- [Jenkins Integration](/docs/integrations/integrate-testim-to-your-ci/jenkins-integration)
-- [Jenkins Integration - Using Docker](/docs/integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker)
-- [TeamCity Integration](/docs/integrations/integrate-testim-to-your-ci/teamcity-integration)
-- [Visual Studio integration](/docs/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration)
-- [GitLab integration](/docs/integrations/integrate-testim-to-your-ci/gitlab-integration)
+- [Azure Pipeline との統合](/docs/integrations/integrate-testim-to-your-ci/azure-devops-build-pipeline-integrations)
+- [Bamboo との統合](/docs/integrations/integrate-testim-to-your-ci/bamboo-integration)
+- [Circle CI との統合](/docs/integrations/integrate-testim-to-your-ci/circle-ci-integration)
+- [Codeship との統合](/docs/integrations/integrate-testim-to-your-ci/codeship-integration)
+- [Jenkins との統合](/docs/integrations/integrate-testim-to-your-ci/jenkins-integration)
+- [Jenkins との統合 - Docker を使用](/docs/integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker)
+- [TeamCity との統合](/docs/integrations/integrate-testim-to-your-ci/teamcity-integration)
+- [Visual Studio との統合](/docs/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration)
+- [GitLab との統合](/docs/integrations/integrate-testim-to-your-ci/gitlab-integration)

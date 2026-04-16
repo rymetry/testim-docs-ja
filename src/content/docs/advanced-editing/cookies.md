@@ -22,15 +22,17 @@ keywords:
 Web サイトから送信されブラウザに保存される小さなデータです。用途は多岐に渡りますが、テスト自動化ではログインフロー全体を踏まずに Cookie を直接設定して認証を高速化する、といった使い方が可能です。
 :::
 
-Testim では複数の方法で Cookie の設定（set）と取得（get）が可能です。Cookie を「設定」すると、属性値がブラウザに書き込まれます。「取得」すると、ブラウザ内の Cookie 値を取り出して変数に代入できます。\
-Cookie を扱う代表的な方法:
+Testim では複数の方法で Cookie の設定と取得が可能です。Testim で Cookie を「設定」すると属性値がブラウザに書き込まれ、「取得」するとブラウザ内の Cookie 値を取り出して変数に代入できます。\
+Testim では Cookie を扱うためにさまざまな手段を用意しています。
 
-- Cookie ステップ — Cookie 用の専用ステップを利用します。
-  - Set Cookie — テストで使用する Cookie を定義する新規ステップ。_HttpOnly_ や _Secure_ Cookie の作成はこのステップ推奨。
-  - Get Cookie — AUT のブラウザから Cookie を取得してパラメーターに保存。以降のステップ（Set Cookie を含む）で参照可能。
-- Setup ステップの「Test Data」— 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。Cookie のドメイン追加はこの Test Data で行うのが推奨。
-- カスタム JS ステップ — テスト開始時でなくても良い場合に、任意の箇所で set/get を行う。
-- 設定ファイル＆実行フック — CLI 実行時に設定ファイル経由で Cookie を設定。スイート全体で必要な場合に有効。注: CLI から Cookie を「取得」することはできません。
+- **Cookie ステップ** — テスト内で Cookie を扱う専用ステップを作成できます。次のオプションがあります。
+
+_**Set Cookie**_ – テストで使用する Cookie を定義する新規ステップです。_HttpOnly_ Cookie や _Secure_ Cookie の作成は、**Set Cookie** ステップを使う方法が推奨です。
+
+- **Get Cookie** — AUT のブラウザから Cookie データを取得してパラメーターとして保存する新規ステップです。このパラメーターは「Set cookie」ステップを含む後続のテストステップで利用できます。
+- **Setup ステップ – 「Test Data」プロパティ** — 特定のテストで Cookie を必要とする場合に、Test Data プロパティで Cookie を設定できます。ページ読み込み前に Cookie をロードしたい場合に使用します。Cookie にドメインを追加する推奨方法も、この **Test Data** プロパティ経由です。
+- **Custom JS（JavaScript）ステップ** — 特定のテストで Cookie を必要とするが、必ずしもテスト開始時でなくてよい場合に、Custom JavaScript ステップで Cookie の設定・取得が可能です。
+- **Configuration File & Run Hooks** — CLI から実行する場合に、設定ファイル経由で Cookie を設定できます。テストスイート全体で Cookie が必要な場合に便利です。**注意**: CLI 経由で Cookie を「取得」することはできません。
 
 ## Cookie を設定する
 
@@ -302,8 +304,9 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 上部の検索ボックスで **Get Cookie** を検索して選択することもできます。
 :::
 
-**Editor** 内に “Get Cookie” ステップが追加されます。\
-5\. 追加されたステップにカーソルを合わせ、**Show Properties**アイコンをクリックします。
+**Editor** 内に "Get Cookie" ステップが追加されます。
+
+5. 追加されたステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/06fb384-Testim_208a.png)
 

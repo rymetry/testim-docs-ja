@@ -31,8 +31,8 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 
 構成で使用されるさまざまなオブジェクトを理解するために、上のスクリーンショットの例に表示されているオブジェクトを使用します:
 
-- 関連リスト項目を追加する**オブジェクト**は **Contact**（Mr. John Brown）です
-- **関連リスト項目**は **Opportunity**（Test Opp and Test Opp 2）です
+- 関連リスト項目を追加する**オブジェクト**は **Contact**（例: ジョン・ブラウン氏のレコード）です
+- **関連リスト項目**は **Opportunity**（例: テスト商談 1 および テスト商談 2）です
 
 :::note{title="レコード表示の要件"}
 ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。

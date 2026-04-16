@@ -75,10 +75,8 @@ BrowserStack と SauceLabs では、1 つのデバイスしか選択できませ
 
 現在ルールに一致する選択したグリッドからのデバイスのリストは、以下の **Devices** セクションに表示されます。動的割り当て構成でテストを実行する場合、Testim はルール条件を満たすデバイスのセットから最初に利用可能なデバイスを検索し、そのデバイスをテストに使用します。グリッドプロバイダーがグリッド上のデバイスを更新すると、デバイスは引き続きルールを満たすかどうかに基づいて、構成で自動的に利用可能または利用不可になります。
 
-:::warning{title="注意"}
-SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。
-
-BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/app-automate/appium/dynamic-device-allocation) を参照してください。
+:::note
+SauceLabs 固有のルールの詳細については、[SauceLabs Test Configuration Options](https://docs.saucelabs.com/dev/test-configuration-options/index.html) および [Sause Labs Platform Configurator](https://saucelabs.com/products/platform-configurator) を参照してください。BrowserStack 固有のルールの詳細については、[BrowserStack Select Device Using Regex](https://www.browserstack.com/docs/app-automate/appium/dynamic-device-allocation) を参照してください。
 :::
 
 :::note

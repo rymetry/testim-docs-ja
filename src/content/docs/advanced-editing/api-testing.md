@@ -81,14 +81,12 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
-**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。
+**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。<br/><br/> 以下を設定します:
 
-設定手順:
-
-- 1 つ目のドロップダウンで検証対象（Status code / Header / Body(JSON) / Body(Text) など）を選択します。<br/>
-- 2 つ目のドロップダウンで比較演算子を選択します。<br/>
-- 3 つ目の入力欄に比較する値を入力します。値には波括弧なしでパラメーターを指定することもできます。<br/>
-- 追加の Assertion を設定したい場合は同じ手順で行を追加し、左のチェックボックスで有効／無効を切り替えます。<br/>
+- 1 つ目のドロップダウンで Assertion 対象の要素を選択します。選択肢は Status code / Header / Body (JSON) / Body (Text) です。<br/>
+- 2 つ目のフィールドで演算子を選択します。<br/>
+- 3 つ目のフィールド（値）に検査する値を入力します。値には波括弧なしのパラメーターを指定することもできます。<br/>
+- 上記手順を繰り返して Assertion を追加します。チェックボックスのオン／オフで Assertion の有効／無効を切り替えられます。<br/>
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/9c95b25-assertions.png)
 
