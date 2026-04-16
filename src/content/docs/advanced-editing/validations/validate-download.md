@@ -163,7 +163,7 @@ CLI ステップで非同期コードを実行する場合は、解決させた�
 
 11. ステップが失敗した場合の動作を指定するには、**Properties** パネルの **When this step fails** の下矢印をクリックし、希望するオプションを選択します。オプション: _Mark error & stop_、_Mark error & continue_、_Mark warning & continue_。
 12. このステップの実行条件を制御するには、**Properties** パネルの **When to run step** の下矢印をクリックし、希望するオプションを選択します。詳細については、[Conditions](/docs/editing-tests/conditions) を参照してください。
-13. デフォルトのタイムアウト設定（30000 ミリ秒）を上書きするには、**Properties** パネルの **Override timeout** ボタンをクリックし、希望するタイムアウト値を入力します。
+13. デフォルトのタイムアウト設定（30000ms）を上書きするには、**Properties** パネルの **Override timeout** ボタンをクリックし、希望するタイムアウト値を入力します。
 14. 左上の戻る矢印でエディターに戻ります。
 
 ![CSV ファイル検証のコード例](/images/validations/validate-download/ae8ec4a-Testim_160a.png)
@@ -698,18 +698,4 @@ return pdf(fileBuffer).then((data) => {
  </tbody>
 </table>
 
-<table class="md-table md-table-3cols">
- <tbody>
-  <tr>
-   <td style="text-align: left;">
-    expectedText
-   </td>
-   <td style="text-align: left;">
-    JavaScript
-   </td>
-   <td style="text-align: left;">
-    'A Simple PDF File'
-   </td>
-  </tr>
- </tbody>
-</table>
+| expectedText       | JavaScript | 'A Simple PDF File'  |

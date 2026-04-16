@@ -20,21 +20,21 @@ keywords:
 
 **要素のビジュアライゼーション待機**ステップを使用すると、テストは次のステップに進む前に特定のイベントが発生するまで一時停止して待機します。要素のビジュアライゼーション待機ステップの場合、Testim は要素がページ上に表示されるまで待機し、その後ビジュアルレベルで要素を検証します。ビジュアル検証および待機ステップを使用すると、ベースラインと現在のテスト実行のビジュアルの差異を高精度で比較できます。比較方法をカスタマイズするためにいくつかのパラメーターを変更できます。この機能は [Applitools](https://applitools.com/) のサービスとして提供されており、Applitools Eyes アプリとの連携が必要です。
 
-:::warning{title="Applitools ライセンスについて"}
-RCA 機能および `Ultrafast Test Cloud` 機能（追加環境の追加）は、適切なライセンスがないと Applitools によって拒否されます。詳細については Applitools の担当者にお問い合わせください。
+:::note
+RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切なライセンスなしでは Applitools によって拒否されます。詳細については、Applitools の担当者にお問い合わせください。
 :::
 
-次のビジュアル検証を実行できます:
+次のビジュアル検証を実行できます：
 
 - **Element Visualization** — 特定の要素に対するビジュアル検証。
 - **Viewport Visualization** — ビューポートに対するビジュアル検証。
 - **Full-page Visualization** — ページ全体に対するビジュアル検証。
 
-:::info{title="PRO機能"}
-この機能は Professional plan のプロジェクトでのみ利用できます。
+:::note
+これは PRO 機能です。この機能は Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細は、[こちら](https://www.testim.io/pricing/)をクリックしてください。
 :::
 
-:::note{title="テスト設定の変更について"}
+:::note
 テストの設定を変更すると、Applitools では新しいベースラインが作成されますが、Testim では作成されません。各設定ごとに新しいベースラインが必要な場合は、それぞれ個別のテストを作成する必要があります。
 :::
 
