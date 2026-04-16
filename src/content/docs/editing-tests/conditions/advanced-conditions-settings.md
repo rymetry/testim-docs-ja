@@ -20,7 +20,8 @@ Testim の条件は、ステップの実行にもループの繰り返し（[Rep
 ステップやループに設定した条件が false の場合、既定ではステップはスキップ（またはループは即座に終了）されます。逆に条件が true の場合、既定では直ちにステップを実行（またはループを繰り返し）ます。下記の拡張オプションを使うと、true/false と判定する前に一定時間、条件チェックを継続するように設定できます。
 
 :::note
-次の種類の条件に拡張設定を適用できます: Element、Element text、Custom。 次の種類のループにも拡張設定を適用できます: While element、While element text is、For each item、Loop for、Custom。
+次の種類の条件に拡張設定を適用できます: Element、Element text、Custom\
+次の種類のループに拡張設定を適用できます: While element、While element text is、For each item、Loop for、Custom
 :::
 
 **拡張条件設定を構成するには:**
