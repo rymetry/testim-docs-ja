@@ -24,14 +24,20 @@
 
 ---
 
-## 🎯 最優先ルール
+## 🎯 最優先ルール（2026-04-16 改訂: source-first を最上位に elevate）
 
-1. `docs/WRITING_GUIDE.md` を公開ドキュメント整備の最優先ルールとする
-2. 公開ページは原則 `.md` で管理し、特別な UI が必要な場合だけ `.mdx` を使う
-3. `npm run lint:docs` で検出される違反は必ず修正してからマージする
-4. Testim の機能名、製品名、画面名、固有ラベルは原則として英語のまま維持する
-5. `docs/SIDEBAR_URLS.md` を seed URL とセクション分割の正本として扱う
-6. `sourceUrl` の原文にあるユーザー向け本文、手順、callout、画像は欠落なく日本語ページへ反映する
+**本プロジェクトの最上位契約**: JA ドキュメントは **EN 原文の構造をそのまま写した日本語版** として整備する。JA 独自の構造は作成しない。
+
+1. **Source-First 絶対遵守**: `sourceUrl` の原文にある見出し・段落・番号手順・箇条書き・callout・画像は欠落なく、**構造そのまま** 日本語化する。JA 独自の section / 段落 / callout / リスト項目 / 見出しは **絶対に追加しない**（詳細は [§🪞 原文準拠ルール](#-原文準拠ルールsource-first-構造契約)）
+2. **Callout は EN 原文準拠**: EN の callout タイプ (`note` / `warning` / `caution` / `danger` / `tip` / `info`) にそのまま追従する。JA 独自 callout 種別の発明禁止（[Callout 規則](#-callout-規則)の変換マップ参照）
+3. **Testim 固有名詞の英語維持**: 機能名、製品名、画面名、UI ラベル、CLI flag、設定キーは原則として英語のまま維持する（正本: [GLOSSARY.md](./GLOSSARY.md) の 3-tier 分類）
+4. **検知基盤との整合**: 上記 1–3 に違反すると `npm run check:parity` が gate で報告する。baseline 対象にする前に、まず **JA 側を EN 構造に追従させる** ことを優先する
+5. `npm run lint:docs` で検出される違反は必ず修正してからマージする
+6. 公開ページは原則 `.md` で管理し、特別な UI が必要な場合だけ `.mdx` を使う
+7. `docs/SIDEBAR_URLS.md` を seed URL とセクション分割の正本として扱う
+
+> **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0。baseline は「時限的 ack」であって「恒常許容」ではない。
+> このゴールを達成するため、本ガイドは baseline を増やす方向の変更（JA 独自構造追加 / callout 改変 / Testim 用語翻訳）を全面禁止する。
 
 ---
 
@@ -145,6 +151,8 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 
 注意: JA タイトルが「注意」の場合は、EN 原文の絵文字に関わらず `:::warning{title="注意"}` を使用する。「注意」という日本語表現は警告の意味合いが強いため、`:::warning` が適切。
 
+> **Scope 制限 (Security loophole P3 対応)**: 上記 "「注意」→ `:::warning`" override は **JA タイトル文字列が "注意" と一致する callout にのみ適用** する。EN callout タイプを JA で別タイプに変更する一般許可ではない。EN が `note` / `tip` / `caution` / `danger` / `info` の場合は、JA タイトルが "注意" 以外なら EN のタイプをそのまま維持する（TRANSLATION_GUIDE.md §⚖️ 翻訳の構造契約 MUST NOT §4 と整合）。
+
 ### レガシー callout 変換時の注意事項
 
 原文の blockquote callout を `:::` に変換する際は、以下にも注意する:
@@ -159,17 +167,120 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 
 ## 🪞 原文準拠ルール（Source-First 構造契約）
 
+> **このセクションは最上位規約です**。最優先ルール §1 の実装詳細であり、他のすべてのルール（表記統一 / ベストプラクティス / ファイル形式選択）に対して **優先** します。
+
 `sourceUrl` を持つページは、原文の要約ではなく原文の**構造を鏡写しにした**日本語版として整備してください。
+
+### 絶対遵守 (MUST)
 
 - 原文の本文段落、番号手順、箇条書き、callout は省略しない
 - 原文にコンテンツ画像がある場合、ローカルに保存するだけでなく本文中の対応位置へ埋め込む
 - 画像数だけでなく、画像の配置順も原文に合わせる
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
 - **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
-- 唯一の許容される content 差分は次の 2 つのみ:
-  1. Testim 用語の英語維持（[GLOSSARY.md](./GLOSSARY.md) の entry に従う）
-  2. URL のローカライズ書き換え（`help.testim.io/docs/X` ↔ `/docs/X`、`docs.tricentis.com/testim/content/...` → canonical、[PARITY_GUIDE.md](./PARITY_GUIDE.md) 参照）
-- 上記 2 つに該当しない英語 prose が JA に残っていれば **検知系がバグとして報告する**。その場合は翻訳する
+- 段落境界・リスト境界・見出し境界は原文に完全に一致させる（1 段落→2 段落分割、1 callout→2 callout 分割等は禁止）
+
+### 唯一の許容差分（HEREだけ）
+
+1. Testim 用語の英語維持（[GLOSSARY.md](./GLOSSARY.md) の entry に従う、3-tier 分類参照）
+2. URL のローカライズ書き換え（`help.testim.io/docs/X` ↔ `/docs/X`、`docs.tricentis.com/testim/content/...` → canonical、[PARITY_GUIDE.md](./PARITY_GUIDE.md) 参照）
+
+上記 2 つに該当しない英語 prose が JA に残っていれば **検知系 (`check:parity`) がバグとして報告する**。その場合は翻訳する。
+
+### Good / Bad 具体例
+
+#### 1. JA 独自段落の追加は NG
+
+```text
+EN 原文:
+Click Run to execute the test.
+
+❌ NG (JA 独自補足):
+Run をクリックしてテストを実行します。
+
+補足: Run ボタンは画面右上にあります。   ← EN 原文にない独自段落
+
+✅ OK:
+Run をクリックしてテストを実行します。
+```
+
+#### 2. EN の 1 callout を JA で 2 callout に分割するのは NG
+
+```text
+EN 原文:
+> 📘 Note: Only works on Chrome. Firefox support is planned for Q3.
+
+❌ NG (JA で分割):
+:::note
+Chrome でのみ動作します。
+:::
+
+:::info
+Firefox サポートは Q3 予定です。
+:::
+
+✅ OK:
+:::note
+Chrome でのみ動作します。Firefox サポートは Q3 予定です。
+:::
+```
+
+#### 3. EN の段落を JA で箇条書きに変換するのは NG
+
+```text
+EN 原文:
+The Test Editor supports recording, editing, and debugging tests.
+
+❌ NG (JA で箇条書き展開):
+Test Editor は以下をサポートします:
+- テストの記録
+- テストの編集
+- テストのデバッグ
+
+✅ OK:
+Test Editor はテストの記録・編集・デバッグをサポートします。
+```
+
+#### 4. EN の callout タイプを JA で改変するのは NG
+
+```text
+EN 原文:
+> ⚠️ Warning: This action deletes data permanently.
+
+❌ NG (JA で note に格下げ):
+:::note
+この操作はデータを永久に削除します。
+:::
+
+✅ OK:
+:::warning
+この操作はデータを永久に削除します。
+:::
+```
+
+#### 5. EN にない JA 読者向け補足追加は NG
+
+```text
+EN 原文:
+Click Save.
+
+❌ NG (JA 読者向け親切補足):
+Save をクリックします。
+
+:::tip{title="日本語ユーザー向け"}
+キーボードショートカットは Ctrl+S です（日本語版 IME でも動作）。
+:::
+
+✅ OK:
+Save をクリックします。
+```
+
+### この契約を守ることで得られること
+
+- `parity-baseline.json` の新規 entry 発生率が 0 になる
+- `npm run check:parity` が 100% clean になる
+- translation pipeline の LLM 入力が簡潔になり、翻訳品質が安定する
+- 英語原文 update 時の自動追従が成立する（構造に差分がないため翻訳部分だけの LLM 再生成で済む）
 
 ### 見出しマッピング
 
@@ -227,12 +338,31 @@ EN snapshot           →  JA 翻訳
 - 段落: 原文の段落構造を維持（diff >= 1 で検出）
 - `paragraph-count-mismatch` / `bullet-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
 
-### 原文準拠の source-first 例外
+### 原文準拠の source-first 例外（operationalized / Security P2 対応）
 
-以下のケースでは `snapshots/en/content/<slug>.html` が保存済み JA より新しい／最小構造になっている。
+> **M2 agent 向け警告**: source-first 例外は自由裁量の escape hatch ではない。以下の **厳格な machine-checkable 条件** のみ該当する。
 
-- EN live source 自体が shallow / broken snapshot の場合は、保存済み JA ではなく current source を正本とする
-- この場合は source parity の comparator 契約を優先し、必要なら JA を live source の最小構造へ合わせる
+#### 例外の判定トリガー（以下のいずれかが真の場合のみ）
+
+1. **`scripts/lib/source_sync_exclusions.mjs` の `SOURCE_SYNC_EXCLUSIONS` に該当 slug が entry 登録済み**: これが canonical な shallow / broken snapshot registry。登録済みなら source-first の主判定を suspend し、`snapshots/en/content/<slug>.html` ではなく該当 entry が指す `hand-authored snapshot` または `update-lock 対象` として扱う
+2. **`check:parity` の issue detail に `[reason=shallow-snapshot]` / `[reason=escaped-details-residue]` / `[reason=extractor-empty]` が emit されている**: `source_parity_source_usability.mjs::describeReason` が runtime で付与する reason token。これが無ければ snapshot は authoritative
+
+上記いずれも真でなければ、**snapshot は authoritative** として扱い、JA を snapshot に追従させる。**agent の主観判断による「EN が曖昧だから shallow snapshot」等の rationalization は禁止**。
+
+#### 運用手順
+
+```text
+baseline 候補発見
+  ↓
+source_sync_exclusions に slug 登録？
+  ├─ Yes → page-level で隔離、source-first 例外として JA を調整
+  └─ No  ↓
+check:parity で [reason=...] token 付与？
+  ├─ Yes → 該当 reason token 対応の OPS_DESIGN §Ack 運用に従う
+  └─ No  → snapshot は authoritative、JA を snapshot に追従（burn-down）
+```
+
+この operationalization により、例外判定は **登録 registry + runtime token** の 2 つの決定論的 signal のみに基づく。「EN が broken に見える」という主観判断で JA を断念するパスを閉じる。
 
 ### 原文から意図的に除外するコンテンツ
 

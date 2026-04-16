@@ -9,15 +9,32 @@
 - 広く通用する英語 UI ラベルで、日本語化すると逆に混乱を招くもの
 - CLI コマンド名・設定キー名
 
-## T18 — 3 セクション分離方針（M1 policy / M4 implementation）
+## 3-tier 分類（M4 実施 / 2026-04-16）
 
-現在の flat table は compound general / Testim UI label / 固有名詞が混在し、false-negative と duplicate の源になっている（`npm run lint:glossary` で 589 重複 group 検出、T21）。M4 ガイド改訂 plan で以下 3 セクションに分離する:
+本 GLOSSARY は以下の 3 tier に分類される。各 `##` section 見出しに `[Tier X]` 接頭辞を付記し、検知系 (`parity_glossary_mask.mjs`) は tier を区別せず全 entry を読む。
 
-1. **Testim 固有名詞** — 製品名 / 会社名 / 機能名（Testim / Visual Editor / Test Editor / etc.）
-2. **Testim UI label** — 画面名 / ボタン / メニュー / プロパティ（Add Environment / Create New / etc.）
-3. **許容される一般 IT 用語** — 広く英語のまま使われる IT 用語の許容リスト（compound general は INVARIANT pattern 側へ移管）
+| Tier | 内容 | 登録例 |
+| --- | --- | --- |
+| **Tier A: Testim 固有名詞** | 製品名 / 会社名 / 機能名 / Testim for Salesforce / 外部製品固有名 / SSO UI | Testim / Visual Editor / TTM for Jira / Salesforce |
+| **Tier B: Testim UI label** | 画面名 / ボタン / メニュー / プロパティ / ステップ名 | Test Editor / Add Environment / Mark error & stop |
+| **Tier C: 許容される一般 IT 用語** | 英語のまま使われる IT 業界一般語（narrow 文脈のみ） | Smart Locators / codeless（カタカナ化後例外） |
 
-M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂と既存 2774 行の再分類は M4 別 plan（§4 G2 / G5）。
+### Tier 分類の運用原則
+
+- **新規追加時**: Tier A/B に該当しない汎用語は GLOSSARY ではなく [INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) の narrow pattern に追加する
+- **compound general 禁止**: `browser version` / `major version` / `Add action` / `Add validation` 等の compound general 一般語は全 Tier で登録禁止（false-negative 源）
+- **Tier C の範囲**: narrow 文脈で英語維持が許容される用語のみ。判定は [TRANSLATION_GUIDE.md §5.4 許容される一般 IT 用語](./TRANSLATION_GUIDE.md) 参照
+- **duplicate 禁止**: 同一用語の case / whitespace 変異 entry は merge する。検知は `npm run lint:glossary`（`scripts/check_glossary_duplicates.mjs`）
+
+### duplicate 現況 (M4 時点)
+
+`npm run lint:glossary` で **589 duplicate group** を検出中。これは M1 時点の運用結果が蓄積したもので、以下の優先順位で別 PR にて段階 merge する:
+
+1. 完全同一 term + 完全同一 description → 機械的 merge
+2. 完全同一 term + 異なる description → 最長/最詳細な description に統合
+3. case/whitespace 違いの term → canonical 表記（通常は Tier 該当側の capitalization）に統合
+
+本 GLOSSARY の 3-tier 分類は duplicate merge に先行して確定させ、merge PR 側で tier 境界を越えない形でクリーンアップする。
 
 登録手順:
 1. 以下のカテゴリ配下に行を追加する
@@ -27,7 +44,7 @@ M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂�
 
 ---
 
-## 製品名 / 会社名
+## [Tier A] 製品名 / 会社名
 
 | 用語 | 備考 |
 | --- | --- |
@@ -57,7 +74,7 @@ M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂�
 | Testim AI | Testim の AI 機能群総称 (Testim AI ソリューション等の compound) |
 | Testim Labs | Testim の先行アクセス機能プログラム |
 
-## 拡張機能 / IDE
+## [Tier A] 拡張機能 / IDE
 
 | 用語 | 備考 |
 | --- | --- |
@@ -68,7 +85,7 @@ M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂�
 | Tricentis Mobile Agent | モバイルテスト用エージェント |
 | Virtual Mobile Grid | Testim のモバイル実行グリッド |
 
-## 機能 / 技術名
+## [Tier A] 機能 / 技術名
 
 | 用語 | 備考 |
 | --- | --- |
@@ -199,9 +216,7 @@ M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂�
      and bare Mark error / Mark warning (plan §3.2 T4 / false-negative regression guard).
      Specific Testim UI labels like "Mark error & stop" / "Mark warning & continue" remain below. -->
 
-
-
-## Testim for Salesforce
+## [Tier A] Testim for Salesforce
 
 | 用語 | 備考 |
 | --- | --- |
@@ -235,7 +250,7 @@ M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂�
 | Document Validation | Salesforce ドキュメント検証ステップ |
 | Apex Action | Salesforce Apex アクションステップ |
 
-## 外部製品 / 第三者ツール
+## [Tier A] 外部製品 / 第三者ツール
 
 Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま維持する。
 
@@ -337,7 +352,7 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | TDC | Tricentis Device Cloud 略称 |
 | qTest API | qTest の API |
 
-## 画面 / UI 領域
+## [Tier B] 画面 / UI 領域
 
 | 用語 | 備考 |
 | --- | --- |
@@ -776,7 +791,7 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Outgoing webhook url | Gearset Webhook 送信先 URL フィールド |
 | Generate API Key | Testim API Key 生成ボタン |
 
-## SSO / 認証連携 UI ラベル
+## [Tier B] SSO / 認証連携 UI ラベル
 
 SSO プロバイダー（Azure AD / Okta / OneLogin）の設定画面 UI ラベル。JA 文中でも英語のまま維持する。
 
@@ -833,7 +848,7 @@ SSO プロバイダー（Azure AD / Okta / OneLogin）の設定画面 UI ラベ�
 | User Info | OneLogin のユーザー情報画面名 |
 | Add App | OneLogin のアプリ追加ボタン |
 
-## Testim ステップ名（検証・待機・アクション）
+## [Tier B] Testim ステップ名（検証・待機・アクション）
 
 Testim UI に表示されるステップ名は英語のまま維持する。
 
@@ -1297,7 +1312,7 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Params | 小文字バリアント（既存のパネルラベル） |
 | UI | User Interface 略称 |
 
-## Testim プロパティ名
+## [Tier B] Testim プロパティ名
 
 ステッププロパティパネルに表示されるプロパティ名は英語のまま維持する。
 
@@ -1370,7 +1385,7 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | After suite | Testim Hook タイプ名 |
 
 <!--
-## キーボードキー名 / 一般単語 UI ラベル (登録禁止)
+## [禁止] キーボードキー名 / 一般単語 UI ラベル (登録禁止)
 
 `Enter` / `Tab` / `Page Up` / `Page Down` / `Approve` のような一般的な英単語の
 GLOSSARY 登録は禁止する (PR#267 round 2 review で false-negative を確認)。
@@ -1395,7 +1410,7 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 `"GLOSSARY common-word false-negative regression"` suite で pin されている。
 -->
 
-## 一般的な技術用語（英語維持）
+## [Tier C] 一般的な技術用語（英語維持）
 
 | 用語 | 備考 |
 | --- | --- |
@@ -1481,7 +1496,9 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | UTC | Coordinated Universal Time タイムゾーン略称 |
 | CSV | Comma-Separated Values ファイル形式 |
 
-## エージェント追加用語 (2026-04-16 parity burn-down)
+## [Tier Mixed] エージェント追加用語 (2026-04-16 parity burn-down)
+
+> **M4 note**: このセクションは旧 burn-down 作業で追加された用語が混在。次回 GLOSSARY cleanup PR で各 entry を Tier A/B/C のいずれかに再分類する。
 
 並列エージェント (8 並列) による per-folder parity burn-down で検出された追加用語。
 内訳: Testim UI ラベル / Salesforce UI / Tricentis UI / 技術用語 / 一般 IT loanword 等。
