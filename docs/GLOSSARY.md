@@ -419,6 +419,64 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Download validation | 自動記録ステップ |
 | Recorded steps and validations | ステップ分類ラベル |
 | Recorded Steps and validations | ステップ分類ラベル（大文字バリアント） |
+| Validate download | 検証ステップ（ダウンロードファイル内容検証） |
+| Validate email | 検証ステップ（メール検証） |
+| Validate element attribute | 検証ステップ |
+| Add network validation | 検証ステップ |
+| Apex action | Salesforce Apex アクションステップ |
+| Custom wait for | 待機ステップ（カスタム待機） |
+| Add custom action | アクションステップ |
+| Page accessibility validation | アクセシビリティ検証ステップ |
+| Visual validation | ビジュアル検証ステップ |
+| Predefined steps | Testim 定義済みステップメニュー |
+| Name the new step | ステップ追加ダイアログのフィールドラベル |
+| Create Step | ステップ作成ボタン |
+| Back arrow | エディターの戻るボタン |
+| Show Properties | プロパティパネル表示アイコン |
+| Text to assign | Set Text ステップのテキスト入力フィールド |
+| Run additional code on request results | API ステップの追加コード実行トグル |
+| View Sent Request | API ステップの送信リクエスト表示ボタン |
+| Upload Data File | データファイルアップロードボタン |
+| Configuration List | テスト構成一覧画面 |
+| Configuration File | テスト構成ファイル |
+| Test Configuration Properties | Test Configuration プロパティパネル |
+| Default Configuration | 既定のテスト構成 |
+| Add new configuration | テスト構成追加ダイアログ |
+| Change default configuration | 既定構成変更ダイアログ |
+| Add Environment | Salesforce 環境追加ボタン |
+| Before each step | Testim フック種別 |
+| After each step | Testim フック種別 |
+| Before test | Testim フック種別 |
+| After test | Testim フック種別 |
+| Before each step handler | Testim フック名 |
+| After each step handler | Testim フック名 |
+| Before test handler | Testim フック名 |
+| After test handler | Testim フック名 |
+| Run on | フック実行条件ドロップダウンラベル |
+| Paste code at cursor | コードエディター挿入アクション |
+| Context Selection Mode | Testim のロケーター設定モード |
+| Turbo Mode | Testim Mobile のターボモード |
+| Duplication Level | 重複検出レベル設定 |
+| Number of matches | マッチ数 |
+| Number of steps | ステップ数 |
+| Match level | マッチレベル設定 |
+| Enable RCA | RCA (Root Cause Analysis) 有効化トグル |
+| Ignore Displacement Diffs | ビジュアル検証の変位差分無視オプション |
+| Ignore Displacement diffs | ビジュアル検証オプション（小文字バリアント） |
+| Ultrafast Test Cloud | Applitools Ultrafast Test Cloud |
+| App Registration | Salesforce のアプリ登録セクション |
+| One-Time Password Authenticator | Salesforce の MFA 認証アプリ項目 |
+| Verification Code | MFA 認証コードフィールド |
+| Monaco Editor | Testim のコードエディター名 |
+| Fail test from impact level | アクセシビリティ検証の失敗基準設定 |
+| Run only specific tags | アクセシビリティ検証のタグ絞り込みフィールド |
+| Exclude specific rule IDs | アクセシビリティ検証の除外ルール設定 |
+| Accessibility violations were found | アクセシビリティ違反検出メッセージ |
+| Setting up MFA | Salesforce MFA 設定ガイドリンクテキスト |
+| Using Parameters | Testim ドキュメントのセクションリンクテキスト |
+| Exports Parameters | Testim ドキュメントのセクションリンクテキスト |
+| Configuring a Data Driven Test from the Visual Editor | データ駆動テスト設定ページリンクテキスト（単語境界バリアント） |
+| Configuring Data Driven Tests using the Config file | データ駆動テスト（Config）設定ページリンクテキスト |
 
 ## Testim プロパティ名
 
