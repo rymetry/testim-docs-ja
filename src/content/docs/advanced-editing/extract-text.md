@@ -34,8 +34,8 @@ keywords:
 
 ![抽出ステップを追加](/images/handling-ui-actions/extract-text/80366ab-add-extract-step.png)
 
-:::note
-Note: アプリがベース URL で開かれていない場合、上記のステップを実行する前に、最初にベース URL（Web）を開くか、アプリを開く（モバイル）ように指示される場合があります。
+:::warning{title="注意"}
+アプリがベース URL で開かれていない場合、上記のステップを実行する前に、最初にベース URL（Web）を開くか、アプリを開く（モバイル）ように指示される場合があります。
 :::
 
 ![ベース URL を開く](/images/handling-ui-actions/extract-text/376956a-open-base-url.png)
@@ -54,8 +54,8 @@ Note: アプリがベース URL で開かれていない場合、上記のステ
 
 ![抽出名](/images/handling-ui-actions/extract-text/5ac725a-extract-name.png)
 
-:::note
-Note: 変数名は JavaScript の名前の制限に従います。例えば、スペースや特殊文字は使用できません。詳細は[こちら](https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Variables)をご覧ください。
+:::warning{title="注意"}
+変数名は JavaScript の名前の制限に従います。例えば、スペースや特殊文字は使用できません。詳細は[こちら](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Variables)をご覧ください。
 :::
 
 ## 抽出モードの設定

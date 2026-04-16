@@ -62,7 +62,10 @@ keywords:
 ![function エディターと Properties パネル](/images/validations/custom-code/5d95f6a-Testim_284.png)
 
 8. **Properties** パネルの **Description** に、必要ならステップの説明を入力します（既定: “Run validation” / “Run action”）。
-9. ステップに必要なパラメーターを定義します。まず **Properties** パネルで **+ PARAMS** をクリックし、追加したいパラメーター種別を選びます。JavaScript パラメーターの場合はドロップダウンで **JS** を選び、JavaScript の値を入力します。HTML 要素をパラメーターとして指定する場合はドロップダウンで **HTML** を選びます。ブラウザが開いて対象ページが表示されるので、以降の手順で要素を指定します。
+9. ステップに必要なパラメーターを定義します。\
+   a. **Properties** パネルで **+ PARAMS** をクリック\
+   b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
+   c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザが開き、対象ページが表示されます）。次を実施します：
    - **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) を参照してください。
 
 d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
@@ -78,7 +81,7 @@ d. 追加した要素は "param" または "element" といった既定名にな
 11. **function** テキストボックスに JavaScript コードを記述します。定義したパラメーターはコードから参照できます。
 
 :::info
-HTML パラメーター以外の DOM セレクター（例: jQuery）を使う場合、空配列は真値として扱われるため注意が必要です。`$(<query>)` ではなく `$(<query>).length` を使用してください。
+HTML パラメーター以外の DOM セレクター（例: jQuery）を使う場合、空配列は truthy です。`$(<query>)` ではなく `$(<query>).length` を使用してください。
 :::
 
 12. 左上の戻る矢印でメインのエディターに戻ります。
@@ -213,7 +216,7 @@ return equal;
 
 #### Promise による非同期検証（Custom validation）
 
-JavaScript の Promise を使うと、指定時間（ミリ秒）後に成功もしくは失敗させるコードを記述できます。真値のときは解決側の関数（`resolve`）が呼ばれてステップは成功し、偽値のときは失敗側の関数（`reject`）が呼ばれて失敗扱いになります。以下はパラメーターを使わないシンプルな例で、10 秒後に成功します。
+JavaScript の Promise を使うと、一定時間（ミリ秒）後に resolve / reject するコードを記述できます。真なら resolve されステップはパス、偽なら reject され失敗になります。以下は概念説明のためのシンプルな例（パラメーターは使用しません）。（10 秒後にパスします）
 
 :::info
 検証が失敗した場合、`reject()` に渡した文字列はステップのプロパティパネルに表示されます。
@@ -247,11 +250,11 @@ _Add custom action_ を使って、テストのベース URL から Testim の�
 window.location.href = 'https://testim.io/';
 ```
 
-:::note
-Chrome DevTools debugger ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/debugging-tests/js-code-debugging) を参照してください。
+:::info{title="Chrome DevTools debugger"}
+ローカル実行時のデバッグには Chrome DevTools を活用できます。詳しくは [Chrome DevTools debugger](/docs/debugging-tests/debugging-controls) を参照してください。
 :::
 
-:::note
+:::info
 Testim が公開しているカスタムコードのサンプル集は [https://github.com/testimio/custom-actions-examples](https://github.com/testimio/custom-actions-examples) にあります。ガイドラインに従って、ユーザーの皆さまからのサンプルの提供も歓迎しています。
 :::
 
