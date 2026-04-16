@@ -281,6 +281,46 @@ describe('GLOSSARY common-word false-negative regression (PR#267 round 2 review)
   });
 });
 
+describe('GLOSSARY compound general-word removal regression (T4 / plan §3.2)', () => {
+  /**
+   * T4 で削除した 4 一般語 (browser version / major version / Add action / Add validation)
+   * が再登録されても、一般 IT 英文の 3+ 語 segment が silent false-negative にならないこと。
+   */
+  it('does not include compound general words (browser version / major version / Add action / Add validation) in GLOSSARY', () => {
+    const glossary = loadGlossary();
+    for (const forbidden of ['browser version', 'major version', 'Add action', 'Add validation']) {
+      assert.ok(
+        !glossary.has(forbidden),
+        `GLOSSARY に "${forbidden}" を登録してはいけない: T4 で削除 (plan §3.2)`,
+      );
+    }
+  });
+
+  it('English regression: "Click Add action button" is flagged as untranslated', () => {
+    const cls = classifySegment('Click Add action button');
+    assert.equal(
+      cls.isFullyMasked,
+      false,
+      '4-word all-English segment は mask で bypass されてはならない',
+    );
+  });
+
+  it('English regression: "Please Add validation now" is flagged', () => {
+    const cls = classifySegment('Please Add validation now');
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('English regression: "Select browser version carefully" is flagged', () => {
+    const cls = classifySegment('Select browser version carefully');
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('English regression: "Choose major version now" is flagged', () => {
+    const cls = classifySegment('Choose major version now');
+    assert.equal(cls.isFullyMasked, false);
+  });
+});
+
 describe('INVARIANT_TOKENS.md contract completeness (ARCH-001 regression)', () => {
   it('header documents all fields that the parser reads: id, regex, flags, example, note', () => {
     const md = readFileSync('docs/INVARIANT_TOKENS.md', 'utf8');

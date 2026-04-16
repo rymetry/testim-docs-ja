@@ -17,6 +17,21 @@
 - 英語のまま残すべき token で、決定論的に識別できるパターン
 - Glossary に個別登録するには数が多すぎる、または動的なもの（バージョン番号・タイムスタンプ等）
 
+## T19 — wide alternation 分割方針（M1 policy / M4 implementation）
+
+以下の広 alternation pattern は false-positive リスクが高いため、M4 ガイド改訂 plan で **文脈限定 pattern に分割** する:
+
+- `common-it-loanword` → 分割後 **≥ 3 narrow pattern** に再構成（例: `device-terms` / `web-network-terms` / `ops-ci-terms` 等）
+- `technical-concept-term` → 分割後 **≥ 3 narrow pattern** に再構成（例: `ci-cd-term` / `auth-api-term` / `concept-term` 等）
+- `table-header-pattern` → M4 で table 構造検出 + header 限定の文脈チェックへ移行
+
+分割後の各 pattern は:
+- 単一ドメイン（device / web / auth / ci-cd 等）に limit
+- regex alternation は最大 6-8 語 / 重複禁止
+- note に「文脈（surrounding token / document section）」を明記
+
+M1 では **方針のみ** 確定（本 plan 範囲）。実装は M4 別 plan。
+
 ---
 
 ## keyboard-shortcut

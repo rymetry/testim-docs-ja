@@ -182,14 +182,12 @@
 | Modifier | キーボードショートカット修飾キー種別 |
 | This validation will always fail | Validate 機能の結果表示メッセージ |
 | Repeat group | Repeat group loops のループ種別 (省略形) |
-| browser version | ブラウザバージョン (一般用語) |
-| major version | メジャーバージョン (一般用語) |
 | Testim cloud grid | Testim Cloud Grid の小文字バリアント |
 | Local grids | ローカルグリッド (複数形) |
-| Mark error | ステップ失敗時プロパティオプション prefix |
-| Mark warning | ステップ失敗時プロパティオプション prefix |
-| Add action | アクション追加 UI 操作 (compound) |
-| Add validation | 検証追加 UI 操作 (compound) |
+<!-- T4: removed compound general words (browser version / major version / Add action / Add validation)
+     and bare Mark error / Mark warning (plan §3.2 T4 / false-negative regression guard).
+     Specific Testim UI labels like "Mark error & stop" / "Mark warning & continue" remain below. -->
+
 
 
 ## Testim for Salesforce
@@ -426,7 +424,9 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Add Environment | 環境追加ボタン |
 | Group Name | グループ名プロパティ |
 | Paste code at cursor | カーソル位置にコード貼り付けボタン |
-| Add Action | アクション追加メニュー |
+<!-- T4: "Add Action" 単独登録は case-insensitive で "Add action" (compound general)
+     と衝突し false-negative 源になるため削除。
+     "Add custom action" 等の compound 具体形は残す。 -->
 | Tab Name | タブ名フィールド |
 | Create New | 新規作成ボタン |
 | Add custom action | カスタムアクション追加 UI 操作 |
