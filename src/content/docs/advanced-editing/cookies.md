@@ -27,7 +27,7 @@ Cookie を扱う代表的な方法:
 
 - **Cookie ステップ** — Cookie 用の専用ステップを利用します。選択肢は次のとおりです:
 
-_**Set Cookie** — テストで使用する Cookie を定義する新規ステップ。_HttpOnly_ や _Secure_ Cookie の作成はこのステップ推奨。_
+_**Set Cookie** – テストで使用する Cookie を定義する新規ステップ。_HttpOnly_ や _Secure_ Cookie の作成は **Set Cookie** ステップからが推奨されます。
 
 - **Get Cookie** — AUT のブラウザから Cookie を取得してパラメーターに保存。以降のステップ（Set Cookie を含む）で参照可能。
 - **Setup ステップの「Test Data」プロパティ** — 特定のテストでページ読込前に Cookie を読み込ませたい場合に使用。Cookie のドメイン追加はこの Test Data で行うのが推奨。
