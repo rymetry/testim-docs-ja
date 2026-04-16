@@ -18,10 +18,10 @@ keywords:
   - PRO機能
 ---
 
-テストで[パラメーター](/docs/advanced-editing/parameters)を使用すると、実行時に使われた値がデバッグや失敗原因の特定に役立つように UI に保存・表示されます。ただし情報が機微な場合、値を非表示にしたいことがあります。Testim では、どのパラメーターを非表示にするかを定義できます。非表示パラメーターは Testim のクラウドに一切保存されないため、「同じパラメーターで再実行」機能は使用できません。
+テストで[パラメーター](/docs/advanced-editing/parameters)を使うと、実行時に使用された値が UI に保存・表示され、デバッグや失敗原因の特定に役立ちます。一方で機微情報を扱う場合は値を表示したくないことがあります。Testim では非表示にするパラメーターを定義できます。非表示パラメーターは Testim Cloud に保存されないため、「同じパラメーターで再実行」機能は利用できません。
 
-:::note
-これは PRO 機能です。この機能は Professional plan のプロジェクトでのみ利用できます。Professional plan の詳細は、[こちら](https://www.testim.io/pricing/)をクリックしてください。
+:::note{title="PRO機能"}
+この機能は Professional plan で利用可能です。
 :::
 
 ## 非表示パラメーターを追加する
@@ -46,8 +46,7 @@ keywords:
 
 ## 非表示パラメーターを使ってテストを実行
 
-非表示パラメーターを使用するテストの実行は [CLI](/docs/running-tests/the-command-line-cli) 経由でのみ可能です。Scheduler を使って非表示パラメーターのテストを実行することはできません。\
-CLI 実行には次のいずれかの方法で非表示パラメーターの値を渡せます:
+非表示パラメーターを使用するテスト実行は [CLI](/docs/running-tests/the-command-line-cli) のみ対応です（スケジューラ不可）。CLI では次の方法で値を渡せます。
 
 - JSON パラメーターファイル — 非表示パラメーターを JSON で定義して渡す。詳細は[JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters)
 - 設定ファイル — 設定ファイルで定義して渡す。詳細は[設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters)

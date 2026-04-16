@@ -20,7 +20,7 @@ keywords:
 
 ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](/docs/integrations/visual-validation) と [LambdaTest](/docs/integrations/visual-validation/lambdatest_integration) のアプリによって提供されています。
 
-開始前に、[Applitools Eyes](/docs/integrations/visual-validation) または [LambdaTest Smart UI](/docs/integrations/visual-validation/lambdatest_integration) と Testim を連携してください。詳しくは[ビジュアル検証統合ガイド](/docs/integrations/visual-validation/visual_validation_index)を参照。\
+開始前に、[Applitools Eyes](https://applitools.com/) または [LambdaTest SmartUI](https://www.lambdatest.com/) と Testim を連携してください。詳しくは[ビジュアル検証統合ガイド](/docs/integrations/visual-validation/visual_validation_index)を参照。\
 関連情報：
 
 - [Applitools ドキュメント](https://applitools.com/docs/)
@@ -50,7 +50,7 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 Testim 内で変更できるビジュアル検証パラメーターは 4 つあります：
 
 - **Add Environment** – テストを実行する 1 つ以上のシミュレートされた環境設定（高度な環境を含む）を追加します。この機能には Ultrafast Test Cloud 用の追加 Applitools ライセンスが必要です。この機能ライセンスのないアカウントで追加された環境は Applitools によって拒否されます。
-- **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
+- **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/common/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
 - **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、Applitools によって拒否されます。
 - **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
 
@@ -132,7 +132,8 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 ![Configuration Library の+ Create New ボタン](/images/validations/pixel-validation-and-pixel-wait-for/3e415da-Testim_503a.png)
 
 3. [Configuration List](/docs/test-management/shared-configuration#構成ライブラリでテスト構成を作成および変更する) に記載されている基本設定を入力します。
-4. 詳細設定ボタン（**Advanced**）をクリックします。詳細設定画面が表示されるので、[Test Configuration](/docs/recording-tests/how-to-record-a-test) の説明を参考に各項目を入力してください。
+4. **Advanced** をクリックし、[Test Configuration](/docs/recording-tests/how-to-record-a-test) に説明されている詳細設定を入力します。\
+   詳細設定が表示されます。
 
 ![Visual validation の詳細設定画面](/images/validations/pixel-validation-and-pixel-wait-for/938763b-Testim_602_r.png)
 

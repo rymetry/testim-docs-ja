@@ -127,11 +127,11 @@ keywords:
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/00ffc60-text-selection.png)
 
 :::note
-Note: 「**To choose an element Open base URL or Run test to relevant step**」というメッセージが出る場合、Wait for element text ステップを追加する前に、ベース URL でアプリを開くか該当ステップまでテストを実行してください。
+"**To choose an element Open base URL or Run test to relevant step**" のメッセージが出る場合、ベース URL でアプリを開くか該当ステップまで実行してから Wait for element text ステップを追加してください。
 :::
 
 :::note
-Note: '**Expected Value**' フィールドにはパラメーター、正規表現、JavaScript 式が使用できます。詳細は[高度なテキスト検証](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
+'**Expected Value**' フィールドにはパラメーター、正規表現、JavaScript 式を使用できます。使い方は[高度なテキスト検証](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
 :::
 
 ## 要素テキストの表示を待つ（モバイル）
@@ -153,11 +153,11 @@ Note: '**Expected Value**' フィールドにはパラメーター、正規表�
 ![Wait for ステップのスクリーンショット](/images/advanced-features/wait-for/5bb3fab-select-target.png)
 
 :::note
-Note: 「To choose an element Open App or Run test to relevant step」というメッセージが出る場合、Wait for element text ステップを追加する前に、アプリを開くか該当ステップまでテストを実行してください。
+"To choose an element Open App or Run test to relevant step" のメッセージが出る場合は、アプリを開くか、該当ステップまで実行してから Wait for element text ステップを追加してください。
 :::
 
 :::note
-Note: 'Expected Value' フィールドにはパラメーター、正規表現、JavaScript 式が使用できます。詳細は[Advanced text validation](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
+'Expected Value' フィールドにはパラメーター、正規表現、JavaScript 式を使用できます。使い方は [高度なテキスト検証](/docs/advanced-editing/validations/validate-element-text#advanced-text-validation) を参照してください。
 :::
 
 ## スリープ（Web）

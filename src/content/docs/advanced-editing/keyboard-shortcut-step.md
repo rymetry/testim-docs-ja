@@ -34,13 +34,13 @@ keywords:
  <thead>
   <tr>
    <th>
-    Keyboard Shortcut Combination（ショートカットの種類）
+    ショートカットの種類
    </th>
    <th>
-    Windows Example
+    Windows 例
    </th>
    <th>
-    Mac Example
+    Mac 例
    </th>
   </tr>
  </thead>
@@ -50,7 +50,7 @@ keywords:
     Alt/Ctrl modifier + char/number/special key
    </td>
    <td>
-    ALT + X<br/>CTRL + 1
+    ALT + X / CTRL + 1
    </td>
    <td>
     ⌥ Option + X
@@ -61,7 +61,7 @@ keywords:
     Modifier + function key
    </td>
    <td>
-    Alt + F3<br/>Ctrl + F10
+    Alt + F3 / Ctrl + F10
    </td>
    <td>
     ⌥ Option + F3 ⌘ Command + F10
@@ -72,7 +72,7 @@ keywords:
     Modifier (*2) + char/number/special key
    </td>
    <td>
-    Alt + Ctrl + X<br/>Ctrl + Shift + 1
+    Alt + Ctrl + X / Ctrl + Shift + 1
    </td>
    <td>
     ⌥ Option + ⌘ Command + X ⌘ Command + ⇧ Shift + 1
@@ -83,7 +83,7 @@ keywords:
     Modifier (*2) + function key
    </td>
    <td>
-    Alt + Ctrl + F12<br/>Ctrl + Shift + F7
+    Alt + Ctrl + F12 / Ctrl + Shift + F7
    </td>
    <td>
     ⌥ Option + ⌃ Control + F12 ⌘ Command + ⇧ Shift + F7

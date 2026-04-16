@@ -31,12 +31,12 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 
 ## 前提条件
 
-- CLI 検証/アクションを含むテストをローカルで実行するには、次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
+- CLI 検証/アクションを含むテストをローカルで実行するには、次のコマンドを実行します: **npm i -g @testim/testim-cli && testim connect**（下記参照）。
 
 **CLI 検証/アクションを含むテストをローカルで実行するには:**
 
 1. OS の **Command Prompt**（端末）を開きます。
-2. 次のコマンドを実行します: `npm i -g @testim/testim-cli && testim connect`
+2. コマンドプロンプトで次のコマンドを入力します: **npm i -g @testim/testim-cli && testim connect**
 
 ![CLI](/images/validations/add-cli-validations-and-actions/2ab6f86-Testim_164.png)
 
@@ -82,7 +82,10 @@ _Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
 ![検証](/images/validations/add-cli-validations-and-actions/3c8168d-Testim_330.png)
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定値: “Run CLI validation” / “Run CLI action”）。
-9. パラメーターを定義します。まず **+ PARAMS** をクリックして種別を選び、必要な値を入力します。JavaScript の値を渡す場合はドロップダウンで **JS** を選択してパラメーター値を、NPM パッケージを参照する場合はドロップダウンで **Package** を選択してパッケージ名とバージョンをそれぞれ入力します。
+9. パラメーターを定義します。
+   a. **+ PARAMS** をクリック\
+   b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
+   c. **Package parameter** — ドロップダウンを **Package** にして NPM パッケージ変数を入力
 
 :::warning
 コード内で npm パッケージを使う場合、`require` は行わず、ステップのパラメーターで PACKAGE として渡してください。

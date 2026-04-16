@@ -74,7 +74,7 @@ return connect()
 
 1. name: mongodb, type: Package, value: [mongodb@3.1.10](https://www.npmjs.com/package/mongodb/v/3.1.10)
 2. name: Promise, type: Package, value: [bluebird@3.5.3](https://www.npmjs.com/package/bluebird/v/3.5.3)
-3. name: query, type: JavaScript, value: `'{"name":"test"}'`
+3. name: query, type: JavaScript, value: '{"name":"test"}'
 4. name: collName, type: JavaScript, value: 'users'
 5. name: dbName, type: JavaScript, value: 'myproject'
 
