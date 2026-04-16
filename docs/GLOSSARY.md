@@ -2,15 +2,28 @@
 
 本ファイルは **翻訳者と検知系 (`scripts/lib/parity_glossary_mask.mjs`) が参照する canonical な用語集** です。ここに登録された用語は英語のまま維持され、`segment-untranslated` 検知から除外されます。
 
+> **Policy status (in revision):** See `docs/superpowers/plans/2026-04-16-pr-286-291-stack-remediation.md` §4 G2/G5/G6. 本 PR stack 内の用語削除・pattern 分割は本 plan 範囲として正当化される。
+
 登録基準:
 - Testim / Tricentis の固有名詞（製品名・機能名・画面名）
 - 広く通用する英語 UI ラベルで、日本語化すると逆に混乱を招くもの
 - CLI コマンド名・設定キー名
 
+## T18 — 3 セクション分離方針（M1 policy / M4 implementation）
+
+現在の flat table は compound general / Testim UI label / 固有名詞が混在し、false-negative と duplicate の源になっている（`npm run lint:glossary` で 589 重複 group 検出、T21）。M4 ガイド改訂 plan で以下 3 セクションに分離する:
+
+1. **Testim 固有名詞** — 製品名 / 会社名 / 機能名（Testim / Visual Editor / Test Editor / etc.）
+2. **Testim UI label** — 画面名 / ボタン / メニュー / プロパティ（Add Environment / Create New / etc.）
+3. **許容される一般 IT 用語** — 広く英語のまま使われる IT 用語の許容リスト（compound general は INVARIANT pattern 側へ移管）
+
+M1 では**方針のみ**確定（本 plan 範囲）。本文の章立て改訂と既存 2774 行の再分類は M4 別 plan（§4 G2 / G5）。
+
 登録手順:
 1. 以下のカテゴリ配下に行を追加する
 2. `scripts/lib/parity_glossary_mask.mjs` は起動時に本ファイルをパースするため、再起動で反映される
 3. 登録後に `npm run check:parity` で影響を確認する
+4. 重複検出は `npm run lint:glossary` で確認（T21 / `scripts/check_glossary_duplicates.mjs`）
 
 ---
 
@@ -173,6 +186,20 @@
 | Create the same Testim folder path | TTM フォルダーパスオプション |
 | Create all test cases in My test cases folder | TTM 一括テストケース作成オプション |
 | Mark as default | デフォルト設定マークボタン |
+| + PARAMS | パラメーター追加 UI ラベル (compound) |
+| JS parameter | JS パラメーター種別 |
+| Package parameter | Package パラメーター種別 |
+| Failure Types | 失敗タイプ列ヘッダー |
+| Modifier | キーボードショートカット修飾キー種別 |
+| This validation will always fail | Validate 機能の結果表示メッセージ |
+| Repeat group | Repeat group loops のループ種別 (省略形) |
+| Testim cloud grid | Testim Cloud Grid の小文字バリアント |
+| Local grids | ローカルグリッド (複数形) |
+<!-- T4: removed compound general words (browser version / major version / Add action / Add validation)
+     and bare Mark error / Mark warning (plan §3.2 T4 / false-negative regression guard).
+     Specific Testim UI labels like "Mark error & stop" / "Mark warning & continue" remain below. -->
+
+
 
 ## Testim for Salesforce
 
@@ -408,7 +435,9 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Add Environment | 環境追加ボタン |
 | Group Name | グループ名プロパティ |
 | Paste code at cursor | カーソル位置にコード貼り付けボタン |
-| Add Action | アクション追加メニュー |
+<!-- T4: "Add Action" 単独登録は case-insensitive で "Add action" (compound general)
+     と衝突し false-negative 源になるため削除。
+     "Add custom action" 等の compound 具体形は残す。 -->
 | Tab Name | タブ名フィールド |
 | Create New | 新規作成ボタン |
 | Add custom action | カスタムアクション追加 UI 操作 |

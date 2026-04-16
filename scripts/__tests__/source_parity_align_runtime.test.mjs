@@ -16,11 +16,25 @@
  *      that carry the structured metadata downstream reports
  *      will rely on (sectionIndex, segmentKind, fingerprints).
  *
- * The test runs `check_source_parity.mjs` end-to-end via `node` against
- * a single representative page (`--slug=editing-tests/generating-a-random-value`,
- * which has a small but non-zero baseline drift) and parses the resulting
- * JSON output. This is the closest-to-production verification we can do
- * without spinning up the full corpus.
+ * ## Pin strategy (T12 / T13 / plan §3.2)
+ *
+ * Primary pin: `editing-tests/generating-a-random-value` (14 baseline entries,
+ * multi-type: section-structure-mismatch / segment-extra / segment-missing).
+ * Fallback pin: `administration/project-and-user-management` (4 entries).
+ *
+ * Pin swap history:
+ *   test-management/shared-configuration → editing-tests/generating-a-random-value
+ *   → (候補) 合成 fixture 化 / 複数 pin (T12 現在)
+ *
+ * ## Numeric re-pin threshold (T13 fragility-2 / plan §3.2)
+ *
+ * 以下の 2 条件のいずれかが真なら fixture 化へ再 swap を検討:
+ *   (a) pin 対象 slug の baseline entry 数 drift が ≥ 3 件/週
+ *   (b) pin 対象 slug の削除により test fail が 1 回以上発生
+ *
+ * 条件 (a) の監視: `git log --oneline -- parity-baseline.json` と本 pin の
+ * entry 件数を対比。条件 (b) の検知: CI 失敗ログから本 test の pin slug
+ * ミスマッチを拾う。どちらも自動化は M4 以降。
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -381,5 +395,37 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         unlinkSync(STATUS_BACKUP_PATH);
       }
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 5. Pin content-correctness + fallback (T12 fragility-1 / plan §3.2)
+// ---------------------------------------------------------------------------
+
+describe('pin slug content-correctness + fallback (T12)', () => {
+  it('primary pin slug file has extractable segments (fixture non-empty guard)', () => {
+    const pinSlug = 'editing-tests/generating-a-random-value';
+    const jaPath = join(ROOT, `src/content/docs/${pinSlug}.md`);
+    assert.ok(existsSync(jaPath), `primary pin JA file must exist at ${jaPath}`);
+    const content = readFileSync(jaPath, 'utf8');
+    const segs = extractSegmentsFromMarkdown(content);
+    assert.ok(
+      segs.length >= 3,
+      `primary pin must yield ≥ 3 segments to guard against empty-fixture drift (actual: ${segs.length})`,
+    );
+  });
+
+  it('fallback pin slug is still baseline-covered (fixture 2-page pin / fragility fallback)', () => {
+    // 1 ページ破綻時に fallback として検証可能な 2nd pin。baseline 上に entry が
+    // 存在することを jq で 1 度だけ確認する (実測再評価は T11 側で別途 pin 済)。
+    const fallbackSlug = 'administration/project-and-user-management';
+    const baselinePath = join(ROOT, 'parity-baseline.json');
+    const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
+    const count = baseline.entries.filter((e) => e.slug === fallbackSlug).length;
+    assert.ok(
+      count >= 1,
+      `fallback pin "${fallbackSlug}" must have ≥ 1 baseline entry (actual: ${count}). ` +
+        `もし fallback が解消されたら docstring の再 pin 指針に従って別 slug を選ぶ。`,
+    );
   });
 });

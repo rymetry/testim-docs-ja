@@ -4,6 +4,8 @@
 
 本ファイルは **JA 内に英語のまま残るべき invariant token のパターン定義** です。`scripts/lib/parity_glossary_mask.mjs` が読み、マッチした token は `segment-untranslated` 検知から除外されます。
 
+> **Policy status (in revision):** See `docs/superpowers/plans/2026-04-16-pr-286-291-stack-remediation.md` §4 G2/G5/G6. 本 PR stack 内の用語削除・pattern 分割は本 plan 範囲として正当化される。
+
 各 pattern には:
 - `id`: 識別子（debug.maskCoverage で出力される）
 - `regex`: マッチ正規表現（JavaScript）
@@ -14,6 +16,21 @@
 登録基準:
 - 英語のまま残すべき token で、決定論的に識別できるパターン
 - Glossary に個別登録するには数が多すぎる、または動的なもの（バージョン番号・タイムスタンプ等）
+
+## T19 — wide alternation 分割方針（M1 policy / M4 implementation）
+
+以下の広 alternation pattern は false-positive リスクが高いため、M4 ガイド改訂 plan で **文脈限定 pattern に分割** する:
+
+- `common-it-loanword` → 分割後 **≥ 3 narrow pattern** に再構成（例: `device-terms` / `web-network-terms` / `ops-ci-terms` 等）
+- `technical-concept-term` → 分割後 **≥ 3 narrow pattern** に再構成（例: `ci-cd-term` / `auth-api-term` / `concept-term` 等）
+- `table-header-pattern` → M4 で table 構造検出 + header 限定の文脈チェックへ移行
+
+分割後の各 pattern は:
+- 単一ドメイン（device / web / auth / ci-cd 等）に limit
+- regex alternation は最大 6-8 語 / 重複禁止
+- note に「文脈（surrounding token / document section）」を明記
+
+M1 では **方針のみ** 確定（本 plan 範囲）。実装は M4 別 plan。
 
 ---
 
@@ -90,6 +107,18 @@ Testim のステップ名・プロパティ名のうち、括弧や記号を含�
 | example | `Scroll (to element/on page)`, `File upload / File drop`, `Press (Key press)`, `(Shared) step name` |
 | note | 括弧・スラッシュを含む Testim ステップ名・プロパティ名。textNorm は小文字になるためパターンに大文字小文字両方を含む |
 
+## sfdc-ui-name-with-parens
+
+Testim for Salesforce の UI ラベル / セクション名のうち、括弧を含むもの（GLOSSARY のワード境界マッチが効かない）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `sfdc-ui-name-with-parens` |
+| regex | `(?:Filter\s*\(Where\)|Count\s*\(\s*\)|Verify\s+Not\s+Visible)` |
+| flags | `gi` |
+| example | `Filter (Where)`, `Count()`, `count ()`, `Verify Not Visible` |
+| note | Salesforce テストの UI セクション / 関数名で括弧を含むもの。textNorm 小文字化対応のため `gi` |
+
 ## js-exports-expression
 
 JS コードスニペット内の `exports.xxx` 式。カスタム JS ステップの解説で頻出する。
@@ -146,6 +175,54 @@ CLI コマンド例やコードスニペット内のダブルクォート文字�
 | regex | `"[^"]*"` |
 | example | `"token"`, `"testim-grid"`, `"label #2"` |
 | note | CLI 引数値やコード例中のダブルクォート文字列をマスクする。JA テキスト中の「」括弧とは異なるため false-negative リスクは低い |
+
+## inline-js-throw-return
+
+JA テキスト中に出現する JavaScript コードパターン（throw/return/const/if 構文）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `inline-js-throw-return` |
+| regex | `\b(?:throw\s+new\s+\w+\(|return\s*\{|const\s+\w+\s*=|let\s+\w+\s*=|var\s+\w+\s*=)` |
+| flags | `g` |
+| example | `throw new Error(`, `return {`, `const statusCode =`, `let cookieArray =` |
+| note | JS 構文開始部をマスクする |
+
+## table-header-pattern
+
+テーブルヘッダーに残る英語列名パターン。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `table-header-pattern` |
+| regex | `\b(?:Name|Type|Value|Description|Package|Field)\b` |
+| flags | `g` |
+| example | `Name`, `Type`, `Value`, `Package` |
+| note | テーブルヘッダーとして残る一般的な英語列名。G6/T19 で文脈限定 pattern に分割予定 |
+
+## common-it-loanword
+
+JA 技術文書で英語のまま使用される一般的な IT 用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `common-it-loanword` |
+| regex | `\b(?:simulator|emulator|device|compile|mobile|web|app|parallel|integration|plugin|certificate|profile|payload|webhook|token|dashboard|server|proxy|tunnel|execution|email|inbox|download|upload|screenshot|annotation|breakpoint|debugger|localhost|timeout|override)\b` |
+| flags | `gi` |
+| example | `simulator`, `emulator`, `device`, `compile`, `mobile`, `web` |
+| note | 技術文脈で英語のまま使用が許容される一般 IT 用語。T19 で文脈限定 pattern に分割予定（plan §3.2 / §4 G6） |
+
+## technical-concept-term
+
+JA 技術文書で英語のまま使われる中級 IT 概念用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `technical-concept-term` |
+| regex | `\b(?:repository|pipeline|credentials|source\s+code|authentication|authorization|middleware|callback|endpoint|status\s+code|assertion|validation)\b` |
+| flags | `gi` |
+| example | `repository`, `pipeline`, `credentials` |
+| note | コードレビュー・CI/CD・API・認証等の文脈で英語のまま使用される技術概念用語。T19 で文脈限定 pattern に分割予定 |
 
 ---
 
