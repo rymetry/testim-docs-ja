@@ -727,7 +727,6 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Replace a File Attachment | ドキュメント見出し |
 | Exclude or Delete an Entry from the Body Section | ドキュメント見出し |
 | Setup step | Testim の Setup ステップ |
-| Setup | Setup ステップ名 |
 | Validate download step | Validate download ステップ名（バリアント） |
 | DOM | Document Object Model（小文字文脈バリアント用） |
 | mobile web | モバイル Web プロジェクト種別 |

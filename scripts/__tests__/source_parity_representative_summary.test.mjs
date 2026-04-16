@@ -102,9 +102,7 @@ const RESOLVED_PAGES = Object.freeze([
 // advanced-editing/validations/email-validation は完全に解消済のため除外。
 // ---------------------------------------------------------------------------
 const RESIDUAL_PAGES = Object.freeze([
-  { slug: 'advanced-editing/custom-action-step-mobile', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
-  { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
 ]);
 
 // ---------------------------------------------------------------------------

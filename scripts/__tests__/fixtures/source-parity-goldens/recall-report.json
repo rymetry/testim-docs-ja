@@ -40,9 +40,9 @@
       },
       "segment-move": {
         "applicable": 4,
-        "detected": 3,
+        "detected": 2,
         "inconclusive": 0,
-        "recall": 0.75
+        "recall": 0.5
       },
       "section-body-swap": {
         "applicable": 7,
@@ -102,9 +102,9 @@
       },
       "segment-move": {
         "applicable": 4,
-        "detected": 3,
+        "detected": 2,
         "inconclusive": 0,
-        "recall": 0.75
+        "recall": 0.5
       },
       "section-body-swap": {
         "applicable": 7,
@@ -126,7 +126,7 @@
       }
     },
     "maxCascade": 3,
-    "maxBaselineDiffsPerPage": 5,
+    "maxBaselineDiffsPerPage": 6,
     "strictRecallTypes": [
       "paragraph-delete",
       "bullet-delete",
@@ -144,15 +144,15 @@
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
-      "baselineDiffCount": 4,
+      "baselineDiffCount": 6,
       "baselineInconclusive": false,
       "mutations": {
         "paragraph-delete": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -162,8 +162,8 @@
           "applicable": true,
           "affectedSectionIndex": 39,
           "affectedSegmentKind": "unordered-list-item",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -173,8 +173,8 @@
           "applicable": true,
           "affectedSectionIndex": 3,
           "affectedSegmentKind": "ordered-list-item",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
@@ -184,8 +184,8 @@
           "applicable": true,
           "affectedSectionIndex": 4,
           "affectedSegmentKind": "callout-body",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 6,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 8,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -201,19 +201,19 @@
           "applicable": true,
           "affectedSectionIndex": 3,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
+          "baselineDiffCount": 6,
           "mutatedDiffCount": 6,
-          "cascadeSize": 2,
-          "detected": true,
-          "exactDetected": true,
+          "cascadeSize": 0,
+          "detected": false,
+          "exactDetected": false,
           "inconclusive": false
         },
         "section-body-swap": {
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 9,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 11,
           "cascadeSize": 3,
           "detected": true,
           "exactDetected": true,
@@ -223,8 +223,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 6,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 8,
           "cascadeSize": 2,
           "detected": true,
           "exactDetected": true,
@@ -234,8 +234,8 @@
           "applicable": true,
           "affectedSectionIndex": 1,
           "affectedSegmentKind": "paragraph",
-          "baselineDiffCount": 4,
-          "mutatedDiffCount": 5,
+          "baselineDiffCount": 6,
+          "mutatedDiffCount": 7,
           "cascadeSize": 1,
           "detected": true,
           "exactDetected": true,
