@@ -110,6 +110,16 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   (2 件) を、JA 側の `<br />` 採用 + 分類語翻訳で 0 drift にした。HTML
   //   table block の extractHtmlTableCells 経路を pin する regression fixture。
   'advanced-editing/keyboard-shortcut-step',
+  // M2 P2-2 Wave 1 追加 — interleaved ol/ul + orphan <p> pattern の sentinel。
+  //   EN の MadCap 出力で `<ol>` / `<ul>` の間に `<p>` 段落が interleave
+  //   される broken-ish structure (例: property list の `<p>Description</p>`
+  //   が `<ul>` の兄弟として並ぶ) を JA が <ol>/<ul> 内に nest させていた
+  //   drift を、EN 構造に忠実に content-level で分割 (12 section) して
+  //   zero-drift 化。arrow-fusion 2 section と併せて 14 entry を消化。
+  //   `<ol>` flat split は §5.2 #1 既存 exception と同質だが、`<ul>` と
+  //   orphan `<p>` の interleave までをカバーする extension として sentinel
+  //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
+  'editing-tests/generating-a-random-value',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
