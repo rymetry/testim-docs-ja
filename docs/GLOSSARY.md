@@ -605,6 +605,51 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | Validate download step | Validate download ステップ名（バリアント） |
 | DOM | Document Object Model（小文字文脈バリアント用） |
 | mobile web | モバイル Web プロジェクト種別 |
+| JS parameter | JavaScript パラメータードロップダウン選択肢 |
+| HTML parameter | HTML パラメータードロップダウン選択肢 |
+| Package parameter | パッケージパラメータードロップダウン選択肢 |
+| packageVariable | パラメーター既定名 |
+| HttpOnly | Cookie 属性フラグ |
+| httpOnly | 小文字バリアント |
+| Cookie name | Cookie 名プロパティ |
+| Cookie value | Cookie 値プロパティ |
+| Cookie info | Cookie 情報セクション |
+| Config File | 設定ファイル（英語維持） |
+| Config file | 小文字バリアント |
+| Run Hooks | 実行フック（英語維持） |
+| run hooks | 完全小文字バリアント |
+| Jurisdiction Name | CSV サンプルのヘッダー名 |
+| Example Test | Excel サンプルのシート名 |
+| Example Code | サンプルコードセクション見出し |
+| Example Parameters | サンプルパラメーターセクション見出し |
+| A Simple PDF File | PDF サンプルテキスト |
+| Item A | Word サンプルテキスト |
+| yellow-cat-cartoon-style-clipart | 画像サンプル名 |
+| JSZip | JS パッケージ名 |
+| Docxtemplater | JS パッケージ名 |
+| XLSX | JS パッケージ名 |
+| custom JavaScript | カスタム JS ステップ型（スペース区切り） |
+| Custom JavaScript | 大文字バリアント |
+| Keyboard Shortcut | キーボードショートカット |
+| Add keyboard shortcut | キーボードショートカット追加アクション |
+| Match Level | ビジュアル検証マッチレベル |
+| Match levels | Applitools ドキュメントリンクテキスト |
+| Root Cause Analysis | RCA 完全表記 |
+| root cause analysis | 小文字バリアント |
+| Applitools Eyes | Applitools ビジュアル検証製品 |
+| applitools eyes | 小文字バリアント |
+| Create a shared configuration | テスト設定ドキュメントリンクテキスト |
+| Command Line Interface | CLI 完全表記 |
+| Command line interface: test config | CLI ドキュメントリンクテキスト |
+| exportsGlobal | JS API 名 |
+| exportsTest | JS API 名 |
+| networkRequests | ネットワーク検証の入力配列名 |
+| requestBody | ネットワーク検証のリクエストボディプロパティ |
+| responseBody | ネットワーク検証のレスポンスボディプロパティ |
+| resposeHeaders | ネットワーク検証のヘッダープロパティ（タイポ含む既存 API） |
+| statusCode | HTTP ステータスコード JS プロパティ |
+| toAddress | メールアドレスパラメーター名（キャメルケース） |
+| emailAddress | メールアドレスパラメーター名 |
 
 ## Testim プロパティ名
 
