@@ -69,7 +69,7 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
     method
    </td>
    <td>
-    リクエストメソッド（例: GET, POST, PUT など）
+    リクエストメソッド（HTTP メソッド）
    </td>
   </tr>
   <tr>
@@ -204,10 +204,10 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
 ![ナビゲーションステップ前の状態](/images/validations/add-network-validation/989f939-Testim_310.png)
 
 8. **Properties** パネルの **Description** フィールドで、必要に応じてこのステップの説明を編集します。デフォルトの説明は「Run network validation」です。
-9. ステップに必要なパラメーターを次のように定義します:\
+9. ステップに必要なパラメーターを次のように定義します。\
    a. **Properties** パネルで **+ PARAMS** ボタンをクリックします。\
-   b. **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
-   c. **HTML parameter**: HTML 要素をパラメーターとして定義する場合は、ドロップダウンリストから **HTML** を選択します。ブラウザが開き、このステップに関連するページが表示されます。次の操作を行います:
+   b. **JS parameter** — ドロップダウンリストで **JS** を選び、JavaScript パラメーターを入力します。\
+   c. **HTML parameter** — ドロップダウンリストで **HTML** を選ぶと、ブラウザが開きステップに関連するページが表示されます。以降の操作を行います。
    - **AUT** ウィンドウで、関連する要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** パネルの **Target Element** ボックスに表示されます。選択した要素の表示、置き換え、設定の調整を行う場合は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) で説明されている手順を使用してください。
 
 d. 選択した要素には、自動的に「param」または「element」という名前が付けられます（JS パラメーターと HTML 要素のどちらを選択したかによって異なります）。パラメーター/要素に適切な名前を割り当てるには、**edit** アイコンをクリックして希望する名前を入力します。
@@ -223,7 +223,7 @@ d. 選択した要素には、自動的に「param」または「element」と�
 11. **function** テキストボックスに、希望する JavaScript コードを入力します。パラメーターを定義している場合は、JavaScript コード内でそれらのパラメーターを参照できます。
 
 :::note
-HTML パラメーター以外の DOM セレクター（jQuery など）を使用している場合、空の配列は truthy であるため、`$(<query>)` の代わりに `$(<query>).length` を使用する必要があります。
+HTML パラメーター以外の DOM セレクター（jQuery など）を使う場合、空配列が真値として扱われる点に注意してください。`$(<query>)` ではなく `$(<query>).length` を使用します。
 :::
 
 12. 左上の戻る矢印でエディターに戻ります。

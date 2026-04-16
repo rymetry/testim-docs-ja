@@ -77,7 +77,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/e0ec5a9-authorization.png)
 
-11. **Body** セクションのドロップダウンで送信するデータ形式を選び、下の入力欄にリクエストボディを入力します。任意のテキスト（キーと値のペアなど）を送りたい場合は **Text** オプションを使用します。利用できる形式は Text、JSON、JavaScript、XML、HTML の 5 種類です。ボディ内にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
+11. **Body** セクションのドロップダウンで送信するデータ形式を選び、下の入力欄にリクエストボディを入力します。任意のテキスト（キーと値のペアなど）を送りたい場合は Text 形式を使います。選択可能な形式は「Text」「JSON」「JavaScript」「XML」「HTML」の 5 種類です。ボディ内にもパラメーターを埋め込めます。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
@@ -85,7 +85,7 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 設定手順:
 
-- 1 つ目のドロップダウンから検証対象を指定します（Status code、Header、Body (JSON)、Body (Text) など）。<br/>
+- 1 つ目のドロップダウンから検証対象を指定します。対象例は「Status code」「Header」、JSON 形式のボディ、テキスト形式のボディなどです。<br/>
 - 2 つ目のドロップダウンで比較演算子を選択します。<br/>
 - 3 つ目の入力欄に比較する値を入力します。値には波括弧なしでパラメーターを指定することもできます。<br/>
 - 追加の Assertion を設定したい場合は同じ手順で行を追加し、左のチェックボックスで有効／無効を切り替えます。<br/>
@@ -259,8 +259,8 @@ Body セクションに定義したエントリは、一時的に無効化した
 
 ## パラメーターの使用 {#using-parameters}
 
-API ステップでは、他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL・ヘッダー・ボディにパラメーターを埋め込んだり、レスポンスから値を取り出して保存したり、アサーションの比較値として使用したりできます。パラメーターは in-param（依存性注入）として受け取るか、exports / exportsGlobal を使って out-param としてエクスポートできます。また、テストスコープ内の他の変数も参照可能です。\
-パラメーターの詳細は [Parameters](/docs/advanced-editing/parameters) を参照してください。
+API ステップでは他のコードステップと同様にパラメーターを利用できます。送信する HTTP リクエストの URL・ヘッダー・ボディへパラメーターを埋め込んだり、レスポンスから値を取り出して保存したり、アサーションの比較値として使用したりできます。パラメーターは入力値（依存性注入）として受け取れるほか、`exports` や `exportsGlobal` を使って出力値としてエクスポートすることもできます。テストスコープ内の他の変数も参照可能です。\
+パラメーター全体の詳細は [Parameters](/docs/advanced-editing/parameters) を参照してください。
 
 :::note
 配列パラメーターは `array.0.name` のような形式で参照できます。

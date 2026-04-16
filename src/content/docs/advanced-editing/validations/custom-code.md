@@ -63,9 +63,9 @@ keywords:
 
 8. **Properties** パネルの **Description** に、必要ならステップの説明を入力します（既定: “Run validation” / “Run action”）。
 9. ステップに必要なパラメーターを定義します。\
-   a. **Properties** パネルで **+ PARAMS** をクリック\
-   b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
-   c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザが開き、対象ページが表示されます）。次を実施します：
+   a. **Properties** パネルで **+ PARAMS** をクリックします。\
+   b. **JS parameter** — ドロップダウンで **JS** を選び、JavaScript パラメーターを入力します。\
+   c. **HTML parameter** — ドロップダウンで **HTML** を選び、HTML 要素をパラメーターとして指定します（ブラウザが開き、対象ページが表示されます）。次の手順を実行します。
    - **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) を参照してください。
 
 d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
@@ -81,7 +81,7 @@ d. 追加した要素は "param" または "element" といった既定名にな
 11. **function** テキストボックスに JavaScript コードを記述します。定義したパラメーターはコードから参照できます。
 
 :::info
-HTML パラメーター以外の DOM セレクター（例: jQuery）を使う場合、空配列は truthy です。`$(<query>)` ではなく `$(<query>).length` を使用してください。
+HTML パラメーター以外の DOM セレクター（例: jQuery）を使う場合、空配列は真値として扱われるため注意が必要です。`$(<query>)` ではなく `$(<query>).length` を使用してください。
 :::
 
 12. 左上の戻る矢印でメインのエディターに戻ります。
@@ -216,7 +216,7 @@ return equal;
 
 #### Promise による非同期検証（Custom validation）
 
-JavaScript の Promise を使うと、一定時間（ミリ秒）後に resolve / reject するコードを記述できます。真なら resolve されステップはパス、偽なら reject され失敗になります。以下は概念説明のためのシンプルな例（パラメーターは使用しません）。（10 秒後にパスします）
+JavaScript の Promise を使うと、指定時間（ミリ秒）後に `resolve` または `reject` を実行するコードを記述できます。真値なら `resolve` が呼ばれてステップは成功、偽値なら `reject` が呼ばれて失敗となります。以下は概念を示すシンプルな例です（パラメーターは使用しません）。10 秒後に成功します。
 
 :::info
 検証が失敗した場合、`reject()` に渡した文字列はステップのプロパティパネルに表示されます。
