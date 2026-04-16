@@ -12,6 +12,16 @@ const advedSlugs = new Set(
     .map((e) => e.slug),
 );
 
+// Only include kinds that appear in baseline entries (excludes code-block, heading)
+const ACTIVE_KINDS = new Set([
+  'ordered-list-item',
+  'unordered-list-item',
+  'paragraph',
+  'callout-body',
+  'table-cell',
+  'details-summary',
+]);
+
 const bySlug = {};
 for (const slug of advedSlugs) {
   const mdPath = path.join('src/content/docs', `${slug}.md`);
@@ -20,6 +30,7 @@ for (const slug of advedSlugs) {
   const segments = extractSegmentsFromMarkdown(md);
   const flagged = [];
   for (const seg of segments) {
+    if (!ACTIVE_KINDS.has(seg.segmentKind)) continue;
     const cls = classifySegment(seg.textNorm);
     if (!cls.isFullyMasked) {
       flagged.push({

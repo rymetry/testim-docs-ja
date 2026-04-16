@@ -650,6 +650,104 @@ Testim UI に表示されるステップ名は英語のまま維持する。
 | statusCode | HTTP ステータスコード JS プロパティ |
 | toAddress | メールアドレスパラメーター名（キャメルケース） |
 | emailAddress | メールアドレスパラメーター名 |
+| User Details | Salesforce Setup ユーザー詳細画面 |
+| App Registration: One-Time Password Authenticator | Salesforce MFA 登録セクション |
+| App Registration - One-Time Password Authenticator | ハイフン区切りバリアント |
+| Google Authenticator | MFA 認証アプリ |
+| Microsoft Authenticator | MFA 認証アプリ |
+| Disconnect | Salesforce MFA 切断ボタン |
+| Connect | Salesforce MFA 接続ボタン |
+| Choose another verification method | MFA 別検証方法選択リンク |
+| Choose a verification method | MFA 検証方法選択画面 |
+| Use verification codes from an authenticator app | MFA コード利用オプション |
+| Connect an authenticator app | MFA 認証アプリ接続画面 |
+| I cant scan the QR code | MFA QR コード不可リンク |
+| Continue | MFA 続行ボタン |
+| Properties Panel | プロパティパネル（スペース区切り） |
+| Login with MFA | Salesforce 自動ログインステップの MFA セクション |
+| ADD KEY | MFA キー追加ボタン |
+| Add key | 小文字バリアント |
+| Your Key | MFA キー入力フィールド |
+| Your key | 小文字バリアント |
+| Secret Key | MFA シークレットキーフィールド |
+| Salesforce Auto-Login | Salesforce 自動ログインステップ名 |
+| salesforce auto-login | 小文字バリアント |
+| Command Prompt | OS コマンドプロンプト |
+| command prompt | 小文字バリアント |
+| Add CLI validation | CLI 検証ステップ |
+| Add CLI action | CLI アクションステップ |
+| add CLI validation | 小文字バリアント |
+| add CLI action | 小文字バリアント |
+| Run CLI validation | CLI 検証既定説明 |
+| Run CLI action | CLI アクション既定説明 |
+| Extract SMS message | ドキュメント内リンクテキスト |
+| extract SMS message | 小文字バリアント |
+| Validate full page visualization | ビジュアル検証ステップ |
+| Validate using custom code | カスタムコードで検証 |
+| Visual validation (element, viewport, full-page) | ビジュアル検証ステップ種別一覧 |
+| Add CLI validations and actions | CLI 検証／アクションステップ |
+| File upload step validation | ファイルアップロード検証 |
+| MonBoDB validation | MongoDB 検証ステップ（タイポ含む UI 名） |
+| MonboDB validation | 別表記 |
+| monbodb validation | 完全小文字バリアント |
+| My SQL validation | MySQL 検証ステップ |
+| my SQL validation | 小文字バリアント |
+| Write Code with AI | Coding Assistant ボタン |
+| Write code with AI | 小文字バリアント |
+| Explain Code with AI | Coding Assistant アイコン |
+| Explain code with AI | 小文字バリアント |
+| Fix Code with AI | Coding Assistant アイコン |
+| Fix code with AI | 小文字バリアント |
+| Copy code | Coding Assistant コピー機能 |
+| Copy Code | 大文字バリアント |
+| Deep link | Deep Link ステップ小文字バリアント |
+| SchemeName | Deep Link スキーマ名プレースホルダー |
+| schemeName | 小文字バリアント |
+| parameterValue | Deep Link パラメーター値プレースホルダー |
+| Actions | アクションメニュー |
+| New Regexp | RegExp 構文 |
+| new RegExp | 小文字バリアント |
+| RegExp | JavaScript 正規表現オブジェクト |
+| Regex | 正規表現 |
+| regex | 小文字バリアント |
+| SMS | Short Message Service |
+| sms | 小文字バリアント |
+| tel | URL スキーマ名 |
+| mailto | URL スキーマ名 |
+| facetime | URL スキーマ名 |
+| Step log | ステップログセクション |
+| step log | 小文字バリアント |
+| APEX params | APEX パラメーターセクション |
+| APEX Params | 大文字バリアント |
+| APEX | Salesforce APEX プログラミング言語 |
+| apex | 小文字バリアント |
+| My Personal Information | Salesforce 個人情報セクション |
+| my personal information | 小文字バリアント |
+| Run Salesforce APEX Action | Salesforce APEX アクション既定説明 |
+| Run Salesforce apex action | 小文字バリアント |
+| myspecialfield | Salesforce APEX サンプルフィールド名 |
+| mySpecialField | 大文字バリアント |
+| accountName | Salesforce フィールド名（キャメルケース） |
+| hello, john | Validate Element Text サンプルパラメーター値 |
+| Hello, John | 大文字バリアント |
+| john | Element Text サンプル値 |
+| item a | サンプル値 |
+| jurisdiction name | CSV サンプル値（小文字） |
+| example test | Excel サンプル値（小文字） |
+| department | PowerPoint サンプル値（小文字） |
+| location | PowerPoint サンプル値（小文字） |
+| Users | Salesforce の Users メニュー項目 |
+| users | 小文字バリアント |
+| Promise | JavaScript Promise オブジェクト |
+| promise | 小文字バリアント |
+| param1 | パラメーター名サンプル |
+| param2 | パラメーター名サンプル |
+| packageVariable | パラメーター既定名（既存登録済み） |
+| FromString | CSV parse メソッド名 |
+| fromString | JS メソッド名 |
+| fromstring | 小文字バリアント |
+| filebuffer | Validate download の fileBuffer 変数 |
+| fileBuffer | 正式キャメルケース |
 
 ## Testim プロパティ名
 
