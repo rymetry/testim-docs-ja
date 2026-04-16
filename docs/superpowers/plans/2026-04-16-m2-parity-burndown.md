@@ -72,8 +72,17 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 **運用:**
 
 - 1 slug / 1 agent / 1 worktree / 1 PR (§ `PARITY_GUIDE.md §並列エージェント委任チェックリスト`)
-- 同時並列 **5 agent 上限** (local disk / GitHub PR queue 圧迫回避)
+- 同時並列 **5 agent 上限** — 下記 3 制約の最小値に合わせて固定 (architect gate A1 文書化):
+  - **PR review queue**: 5 並列超で reviewer 4 人 × 4 観点 gate が律速し、1 日 20 件以上の PR が待ち行列化する
+  - **local disk**: 1 worktree あたり `node_modules` ≈ 500MB、20 並列で 10GB のディスク圧迫 (開発機の swap が始まる閾値)
+  - **CI concurrency**: GitHub Actions free tier の並列 job 上限 20 (self-hosted なしの前提)、lint / build / test / parity / Vercel の 5 jobs × 5 agent = 25 で既に overflow
+  - プレッシャー下でも緩和禁止 (plan 改訂提案 → §P2-2 改訂 + reviewer 承認が必要)
 - 各 PR で baseline 再生成 → 次 agent の input 更新
+
+**Mandatory pre-P2-2 steps:**
+
+1. `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` に、P2-1 で burn-down した pilot slug (`advanced-editing/deep-link-mobile`) を追加済であること (本 PR で実施済 / testing gate Sev 6)。Tier A slug 毎に burn-down 完了後、本 fixture array に追加することで sentinel 化する
+2. P2-2 着手時点で `npm run check:snapshots:diff` / `npm run check:untranslated` をフル実行し、pilot slug が 0-drift であり untranslated 65 blocks (2026-04-17 baseline 実測) に pilot slug が含まれないことを宣言
 
 **Exit:** Tier A 全 slug で entry = 0、baseline total ≤ 140
 
@@ -123,6 +132,7 @@ Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure
 - **base branch**: 各 phase で `origin/main` から新 branch を切る (`claude/m2-p2-1-pilot`, `claude/m2-p2-2-*`, …)
 - **worktree**: Tier A 並列時は per-slug worktree (`.claude/worktrees/m2-<slug-hash>`)
 - **baseline 再生成**: 各 **phase 完了 PR merge 後** に main で `node scripts/generate_parity_baseline.mjs --regenerate` (full 再生成 / slug-partial は非推奨) を実行し、`rationale` フィールドを固定文言 `"frozen baseline — M2 burn-down phase P2-X post-merge regen"` に統一する。phase 内の中間 PR では `--slug=<csv>` の partial 再生成を許容するが、最終 phase PR では必ず `--regenerate` で書き直す (M3 atomic cutover 時の "凍結日時" トレーサビリティ維持 / architect gate C2)
+- **`reviewAfter` field の扱い** (architect gate A2 注記): schema v1 の各 entry に付与されている `reviewAfter: "<YYYY-MM-DD>"` は、M1 で設計された "期限切れ baseline を orphanBaselineEntries として検知する" 仕組みの input。M2 burn-down の文脈では baseline total を漸減させる運用が主であり、**実質的に未使用** (期限切れを待たずに entry を解消するため)。M3 (PR Z schema v2) では本 field は削除予定 (`migrate_baseline_schema.mjs` で strip)。phase PR の `--regenerate` で自動付与される value (6 ヶ月先) は harmless だが意味を持たないことに留意
 - **PR description 必須**: before/after の baseline entries + byIssueType 表、対象 slug list、source-first 遵守宣言
 
 ## 5. Non-goals
