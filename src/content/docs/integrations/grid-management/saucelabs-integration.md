@@ -21,7 +21,7 @@ keywords:
 
 **SauceLabs Grid を追加するには:**
 
-1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
+1. [グリッドの追加](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Saucelabs** を選択します。
 2. **Next** をクリックします。
 3. 次のフィールドを入力します。
 
@@ -60,4 +60,4 @@ Test Editor から直接 Grid 上でテストを実行できます。
 
 ![Test Editor から SauceLabs Grid を選んで実行する画面](/images/grid-management/saucelabs-integration/0ca9bb7-Jul-21-2021_13-11-22.gif)
 
-テスト実行に追加オプションを渡したい場合は、[Test capabilities for SauceLabs & BrowserStack in CLI](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。
+テスト実行に追加オプションを渡したい場合は、[SauceLabs と BrowserStack の CLI 用テスト capabilities](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。

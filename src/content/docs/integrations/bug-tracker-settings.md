@@ -28,7 +28,7 @@ keywords:
 
 ![失敗した実行から Create issue を選択](/images/bug-tracker-settings/bug-tracker-settings/78599fb-tagtestwithcreateissue.png)
 
-- [Testim Chrome Extension](/docs/testim-extension/testim-extension-overview) を使うと、課題を [Screenshot](/docs/testim-extension/testim-extension-capture-screenshot) または [Video & Bug Scenario](/docs/testim-extension/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
+- [Testim Chrome 拡張機能](/docs/testim-extension/testim-extension-overview) を使うと、課題を [スクリーンショット](/docs/testim-extension/testim-extension-capture-screenshot) または [ビデオとバグシナリオ](/docs/testim-extension/testim-extension-capture-video-bug-scenario) としてキャプチャし、**Publish** をクリックして送信できます。
 
 ![Testim Extension から bug を Publish](/images/bug-tracker-settings/bug-tracker-settings/23ee812-publishbug.png)
 

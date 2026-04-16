@@ -22,7 +22,7 @@ keywords:
 
 **Custom Grid を追加するには:**
 
-1. [Adding a grid](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Custom Grid** を選択します。
+1. [グリッドの追加](/docs/integrations/grid-management#adding-a-grid) の手順に従い、**Grid Type** で **Custom Grid** を選択します。
 2. **Next** をクリックします。
 3. **Name** フィールドに、利用する Selenium Grid の名前を入力します。
 4. **Host** フィールドに、Selenium Grid のホスト名または IP アドレスを入力します。
@@ -57,6 +57,6 @@ Test Editor から直接 Grid 上でテストを実行できます。
 - **Run** ボタンの横にある options arrow をクリックします。
 - **Run on a grid** をクリックします。
 
-その実行で configuration / Grid / base url を変更したい場合は **Edit** をクリックします。
+その実行で構成 / Grid / ベース URL を変更したい場合は **Edit** をクリックします。
 
 ![Test Editor から Run on a grid を選択している画面](/images/grid-management/custom-grid/0ca9bb7-Jul-21-2021_13-11-22.gif)

@@ -35,7 +35,7 @@ Virtual Mobile Grid は x86_64 Android build のみをサポートします。
 
 ## 無料の Virtual Mobile Grid trial を開始する
 
-Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料 trial を開始できます。trial 期間は 14 日間です。trial 中は、全 project を通して iOS / Android それぞれ 1 実行ずつ実行できます。無料 trial をスキップして直接有償版へ進みたい場合は、[contact us](https://www.testim.io/contact-us/) を参照してください。→ **無料の Virtual Mobile Grid trial を開始するには:**
+Community license を利用している場合、Company Owner または Project Owner として Virtual Mobile Grid の無料トライアルを開始できます。トライアル期間は 14 日間です。トライアル中は、全プロジェクトを通して iOS / Android それぞれ 1 実行ずつ実行できます。無料トライアルをスキップして直接有償版へ進みたい場合は、[お問い合わせ](https://www.testim.io/contact-us/) を参照してください。→ **無料の Virtual Mobile Grid トライアルを開始するには:**
 
 1. **Device Management** 画面へ移動し、**Virtual Mobile Grid** tab を開いて **Start A Trial** をクリックします。
 
@@ -51,7 +51,7 @@ Community license を利用している場合、Company Owner または Project 
 
 Virtual Mobile Grid でテストを実行する前に、次を確認してください。
 
-- **Mobile Configuration**: Virtual Mobile Grid と互換性のある mobile configuration を作成しておきます。[Configuration Library - Mobile](/docs/test-management/configuration-library-mobile) を参照してください。この configuration は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
+- **Mobile Configuration**: Virtual Mobile Grid と互換性のあるモバイル設定を作成しておきます。[Configuration Library - Mobile](/docs/test-management/configuration-library-mobile) を参照してください。この設定は CLI / CI、Scheduler、Test Plan からの実行に使用できます。
 
 ![Virtual Mobile Grid 向け mobile configuration の設定例](/images/grid-management/virtual-mobile-grid/07dd385-image_2.png)
 
@@ -59,7 +59,7 @@ Virtual Mobile Grid でテストを実行する前に、次を確認してくだ
 
 ### テストをリモート実行する
 
-Virtual Mobile Grid 用に設定した configuration を使うことで、次のいずれかの方法でテストをリモート実行できます。
+Virtual Mobile Grid 用に設定した構成を使うことで、次のいずれかの方法でテストをリモート実行できます。
 
 :::info
 [Mobile Apps Library](/docs/mobile-apps/mobile-apps) に対象の mobile app があることを確認してください。
@@ -77,9 +77,9 @@ Grid 名を指定して `--grid` parameter を追加します。
 
 **Grid** フィールドで、どの Grid 上でテストを実行するかを選択します。
 
-[Remote Run through the Editor](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する)
+[エディターからのリモート実行](/docs/running-tests/running-tests-overview#リモート-モバイル-テストを実行する)
 
-**Run on a grid** option で **Virtual Mobile Grid** と該当する configuration を選択します。
+**Run on a grid** オプションで **Virtual Mobile Grid** と該当する構成を選択します。
 
 ![Remote Run through the Editor で Virtual Mobile Grid を選択している画面](/images/grid-management/virtual-mobile-grid/81f27e0-image_3.png)
 
