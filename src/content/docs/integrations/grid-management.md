@@ -65,8 +65,10 @@ mobile テストには次の Grid を使用できます。
    - Custom Grid: 独自の Selenium Grid
    - Saucelabs
    - Browserstack
-   - LambdaTest\
-     mobile 用に選択できるのは次のとおりです。
+   - LambdaTest
+
+   mobile 用に選択できるのは次のとおりです。
+
    - Virtual Mobile Grid
    - TDC
    - Saucelabs
