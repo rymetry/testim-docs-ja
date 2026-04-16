@@ -33,7 +33,7 @@ Copado からテストを自動化するには、Copado に[URL Callout ステ�
 
    ![生成された API キーをコピーする画面](/images/ci-integrations/copado-integration/1b473ef-apikey.png)
 
-5. Swagger で Testim REST API に移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
+5. Swagger で [Testim REST API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml) に移動し、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
 
    ![Swagger 上で Testim REST API エンドポイントを確認する画面](/images/ci-integrations/copado-integration/7c0621b-copado_swagger.png)
 

@@ -383,8 +383,6 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | My Test Cases | TTM for Jira 単一フォルダー名 (Title Case) |
 | Test Execution | 既出 - qTest の UI 画面名 |
 | Test Library | テストライブラリ画面 |
-| Host | BrowserStack / グリッド接続ホストフィールド |
-| Username | Grid 認証ユーザー名フィールド |
 | Password/access key | Grid 認証パスワード / アクセスキーフィールド |
 | access key | BrowserStack アクセスキーフィールド |
 | user name | BrowserStack 設定の user name ラベル |
@@ -522,6 +520,27 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Test Runs tab | qTest の実行タブ名 (既出) |
 | BUILD_NUMBER | CI 環境変数プレースホルダー |
 | report-file | Testim CI --report-file フラグ |
+| Release Manager | Copado Release Manager |
+| Copado Release Manager | Copado の Release Manager モジュール名 |
+| Perform callout and continue with deployment | Copado URL Callout ステップの Type 値 |
+| Perform callout and pause step | Copado URL Callout ステップの Type 値 (pause) |
+| Deploy All | Copado Deploy All ボタン |
+| Dynamic URL Parameters | Copado URL Callout のオプション |
+| Resume URL | Copado pause step の Resume URL |
+| Continuous Integration | CI の完全表記 |
+| View Results | Copado の View Results ボタン |
+| Runs > Configuration | Testim Configuration リスト |
+| After test handler | Testim Config Hook 項目 |
+| Content-Type | HTTP Content-Type ヘッダー |
+| application/json | MIME type |
+| Test Plan | Testim Test Plan |
+| Test Label | Testim Test Label |
+| JSON payload | JSON ペイロード |
+| Add API action | Testim API action ステップ (既出) |
+| Send via web page | プロパティ名 (既出) |
+| shared step | Testim 共有ステップ |
+| shared steps | Testim 共有ステップ (複数形) |
+| Grids | Testim Grids セクション (top-right profile) |
 
 ## SSO / 認証連携 UI ラベル
 
