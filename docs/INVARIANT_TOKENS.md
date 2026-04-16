@@ -32,9 +32,9 @@
 | 項目 | 値 |
 | --- | --- |
 | id | `cli-flag` |
-| regex | `(?:^|\s)--?[a-zA-Z][\w-]*(?=\s|$|[,;])` |
-| example | `--project-id`, `-h`, `--token` |
-| note | 既存 `extractInvariantTokens()` と重複するが、glossary mask でも同等にマスクする |
+| regex | `(?:^|[\s\u3001\u3002])--?[a-zA-Z][\w-]*(?=[\s\u3001\u3002:,;]|$)` |
+| example | `--project-id`, `-h`, `--token`, `、--label` |
+| note | 既存 `extractInvariantTokens()` と重複するが、glossary mask でも同等にマスクする。CJK 句読点（`、` `。`）の前後でもマッチする |
 
 ## version-number
 
@@ -90,6 +90,52 @@ JS コードスニペット内の `exports.xxx` 式。カスタム JS ステッ�
 | regex | `\bexports\.\w+\b` |
 | example | `exports.myvar`, `exports.besttestingtool` |
 | note | `exports.` に続く識別子をマスクする。JS コード例が JA テキスト中に残るケース |
+
+## snake-case-identifier
+
+コード識別子の snake_case パターン（JSON フィールド名、Testim パラメーター名等）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `snake-case-identifier` |
+| regex | `\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b` |
+| flags | `g` |
+| example | `tst_creds`, `project_id`, `execution_url`, `scheduler_name` |
+| note | アンダースコアを含む小文字識別子をマスクする。textNorm は小文字化されているため大文字パターンは不要 |
+
+## sso-ui-prompt
+
+SSO プロバイダー UI の固定プロンプトテキスト。`\b` word boundary では末尾の `?` や `)` が非ワード文字のためマッチしないものを、固定文字列パターンとして登録する。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `sso-ui-prompt` |
+| regex | `(?:what's the name of your app\?|integrate any other application you don't find in the gallery \(non-gallery\)|choose integrate any other application you don't find in the gallery \(non-gallery\))` |
+| flags | `gi` |
+| example | `What's the name of your app?`, `integrate any other application you don't find in the gallery (non-gallery)` |
+| note | Azure AD セットアップ手順の固定 UI プロンプト。GLOSSARY の `\b` マッチが末尾の非ワード文字 (`?`, `)`) で失敗するため INVARIANT で登録 |
+
+## cli-placeholder
+
+CLI コマンド例の angle-bracket プレースホルダー（`<token id>`, `<project id>` 等）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `cli-placeholder` |
+| regex | `<[^<>]+>` |
+| example | `<token id>`, `<project id>`, `<key id>` |
+| note | CLI コマンド例に頻出するプレースホルダーをマスクする |
+
+## double-quoted-literal
+
+CLI コマンド例やコードスニペット内のダブルクォート文字列。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `double-quoted-literal` |
+| regex | `"[^"]*"` |
+| example | `"token"`, `"testim-grid"`, `"label #2"` |
+| note | CLI 引数値やコード例中のダブルクォート文字列をマスクする。JA テキスト中の「」括弧とは異なるため false-negative リスクは低い |
 
 ---
 

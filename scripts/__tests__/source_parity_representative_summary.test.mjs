@@ -91,6 +91,7 @@ const COMMON_ZERO_COUNTERS = Object.freeze({
 // ---------------------------------------------------------------------------
 const RESOLVED_PAGES = Object.freeze([
   'salesforce-testing/salesforce-testing-overview',
+  'results/test-results/network-logs',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -104,7 +105,6 @@ const RESIDUAL_PAGES = Object.freeze([
   { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'salesforce-testing/faq', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
-  { slug: 'results/test-results/network-logs', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'advanced-editing/validations/email-validation', requiredBaselinedTypes: ['segment-untranslated'] },
 ]);
 
