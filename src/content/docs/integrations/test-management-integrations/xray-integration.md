@@ -32,7 +32,7 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 - **Jira API トークン** - Jira API トークンを取得するには、[https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)の手順に従ってください。
 - **Xray クライアント ID と Xray クライアントシークレット** - Xray クライアント ID とクライアントシークレットを取得するには、[https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys](https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys)の手順に従ってください。
 
-**Testim を Xray に接続するには:**
+→ **Testim を Xray に接続するには:**
 
 1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合モジュールがあります。
 2. Xray 統合モジュールで、**login（ログイン）** をクリックします。
@@ -164,6 +164,6 @@ Xray の **Test** 課題タイプが変更された場合、実行は Xray で�
 Xray でこれらのステータスを変更すると、統合が中断される可能性があります。
 :::
 
-:::warning
+:::note
 Xray の必須カスタムフィールドはサポートされていません。Xray でカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
 :::
