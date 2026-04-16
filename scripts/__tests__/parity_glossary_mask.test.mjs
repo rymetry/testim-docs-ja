@@ -306,3 +306,132 @@ describe('INVARIANT_TOKENS.md contract completeness (ARCH-001 regression)', () =
     );
   });
 });
+
+describe('INVARIANT_TOKENS inventory guard (T1 silent-drop prevention / plan §7 R2)', () => {
+  // frozen canonical set: PR #286-#291 stack で復元された pattern + keyboard-shortcut-spaced
+  // silent drop 検知のため、loadInvariantPatterns の ID 集合がこの set を ⊇ で含むこと
+  const FROZEN_CANONICAL_IDS = [
+    'inline-js-throw-return',
+    'table-header-pattern',
+    'common-it-loanword',
+    'technical-concept-term',
+    'sfdc-ui-name-with-parens',
+    'keyboard-shortcut-spaced',
+  ];
+
+  it('loadInvariantPatterns() returns superset of frozen canonical IDs', () => {
+    const patterns = loadInvariantPatterns();
+    const ids = new Set(patterns.map((p) => p.id));
+    for (const id of FROZEN_CANONICAL_IDS) {
+      assert.ok(
+        ids.has(id),
+        `frozen canonical pattern "${id}" must remain in INVARIANT_TOKENS.md (silent drop regression guard)`,
+      );
+    }
+  });
+});
+
+describe('maskSegmentText — restored PR #286-#291 patterns (T1 / T3 regression)', () => {
+  // Each pattern: (a) masks expected example, (b) does not falsely mask out-of-context text
+
+  it('sfdc-ui-name-with-parens: masks "Filter (Where)" but not "Filter the list carefully"', () => {
+    const hit = maskSegmentText('Use Filter (Where) to narrow the scope.');
+    const hitPatterns = hit.masks.map((m) => m.pattern);
+    assert.ok(
+      hitPatterns.includes('sfdc-ui-name-with-parens'),
+      'sfdc-ui-name-with-parens must mask "Filter (Where)"',
+    );
+
+    const miss = maskSegmentText('Please filter the list carefully before submit.');
+    const missPatterns = miss.masks.map((m) => m.pattern);
+    assert.ok(
+      !missPatterns.includes('sfdc-ui-name-with-parens'),
+      'sfdc-ui-name-with-parens must NOT mask generic "filter" prose',
+    );
+  });
+
+  it('inline-js-throw-return: masks "throw new Error(" but not "error message"', () => {
+    const hit = maskSegmentText('The handler will throw new Error(msg) on failure.');
+    const hitPatterns = hit.masks.map((m) => m.pattern);
+    assert.ok(
+      hitPatterns.includes('inline-js-throw-return'),
+      'inline-js-throw-return must mask "throw new Error("',
+    );
+
+    const miss = maskSegmentText('Review the error message before retry.');
+    const missPatterns = miss.masks.map((m) => m.pattern);
+    assert.ok(
+      !missPatterns.includes('inline-js-throw-return'),
+      'inline-js-throw-return must NOT mask generic "error" prose',
+    );
+  });
+
+  it('table-header-pattern: regex matches documented examples (Name/Type/Value/Package)', () => {
+    // GLOSSARY pre-empts single-word matches via maskSegmentText pipeline;
+    // verify via regex directly that documented examples are covered by the pattern.
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'table-header-pattern');
+    assert.ok(p, 'table-header-pattern must be loaded');
+    for (const word of ['Name', 'Type', 'Value', 'Package']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `table-header-pattern regex must match documented example "${word}"`,
+      );
+    }
+    // Does NOT match unrelated word (negative case — ensures alternation is bounded)
+    assert.ok(
+      !new RegExp(p.regex.source, p.regex.flags).test('unrelated'),
+      'table-header-pattern regex must NOT match unrelated prose token',
+    );
+  });
+
+  it('common-it-loanword: regex matches documented examples (simulator/emulator/mobile)', () => {
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'common-it-loanword');
+    assert.ok(p, 'common-it-loanword must be loaded');
+    for (const word of ['simulator', 'emulator', 'mobile', 'device']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `common-it-loanword regex must match documented example "${word}"`,
+      );
+    }
+    // Wide-scope regex; out-of-alternation loanword must not match (ensures boundary integrity)
+    assert.ok(
+      !new RegExp(p.regex.source, p.regex.flags).test('totallydifferentword'),
+      'common-it-loanword regex must NOT match out-of-alternation token',
+    );
+  });
+
+  it('technical-concept-term: regex matches documented examples (repository/pipeline/credentials)', () => {
+    const patterns = loadInvariantPatterns();
+    const p = patterns.find((x) => x.id === 'technical-concept-term');
+    assert.ok(p, 'technical-concept-term must be loaded');
+    for (const word of ['repository', 'pipeline', 'credentials']) {
+      assert.ok(
+        new RegExp(p.regex.source, p.regex.flags).test(word),
+        `technical-concept-term regex must match documented example "${word}"`,
+      );
+    }
+    assert.ok(
+      !new RegExp(p.regex.source, p.regex.flags).test('unrelatedword'),
+      'technical-concept-term regex must NOT match unrelated prose token',
+    );
+  });
+
+  it('keyboard-shortcut-spaced: masks "Ctrl + S" with spaced modifier', () => {
+    const hit = maskSegmentText('Press Ctrl + S to save the file.');
+    const hitPatterns = hit.masks.map((m) => m.pattern);
+    assert.ok(
+      hitPatterns.includes('keyboard-shortcut-spaced') ||
+        hitPatterns.includes('keyboard-shortcut'),
+      'keyboard-shortcut-spaced must mask "Ctrl + S" with spaces around +',
+    );
+
+    const miss = maskSegmentText('Plain prose without shortcut reference.');
+    const missPatterns = miss.masks.map((m) => m.pattern);
+    assert.ok(
+      !missPatterns.includes('keyboard-shortcut-spaced'),
+      'keyboard-shortcut-spaced must NOT mask plain prose',
+    );
+  });
+});

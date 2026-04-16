@@ -92,6 +92,18 @@ Testim のステップ名・プロパティ名のうち、括弧や記号を含�
 | example | `Scroll (to element/on page)`, `File upload / File drop`, `Press (Key press)`, `(Shared) step name` |
 | note | 括弧・スラッシュを含む Testim ステップ名・プロパティ名。textNorm は小文字になるためパターンに大文字小文字両方を含む |
 
+## sfdc-ui-name-with-parens
+
+Testim for Salesforce の UI ラベル / セクション名のうち、括弧を含むもの（GLOSSARY のワード境界マッチが効かない）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `sfdc-ui-name-with-parens` |
+| regex | `(?:Filter\s*\(Where\)|Count\s*\(\s*\)|Verify\s+Not\s+Visible)` |
+| flags | `gi` |
+| example | `Filter (Where)`, `Count()`, `count ()`, `Verify Not Visible` |
+| note | Salesforce テストの UI セクション / 関数名で括弧を含むもの。textNorm 小文字化対応のため `gi` |
+
 ## js-exports-expression
 
 JS コードスニペット内の `exports.xxx` 式。カスタム JS ステップの解説で頻出する。
@@ -148,6 +160,54 @@ CLI コマンド例やコードスニペット内のダブルクォート文字�
 | regex | `"[^"]*"` |
 | example | `"token"`, `"testim-grid"`, `"label #2"` |
 | note | CLI 引数値やコード例中のダブルクォート文字列をマスクする。JA テキスト中の「」括弧とは異なるため false-negative リスクは低い |
+
+## inline-js-throw-return
+
+JA テキスト中に出現する JavaScript コードパターン（throw/return/const/if 構文）。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `inline-js-throw-return` |
+| regex | `\b(?:throw\s+new\s+\w+\(|return\s*\{|const\s+\w+\s*=|let\s+\w+\s*=|var\s+\w+\s*=)` |
+| flags | `g` |
+| example | `throw new Error(`, `return {`, `const statusCode =`, `let cookieArray =` |
+| note | JS 構文開始部をマスクする |
+
+## table-header-pattern
+
+テーブルヘッダーに残る英語列名パターン。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `table-header-pattern` |
+| regex | `\b(?:Name|Type|Value|Description|Package|Field)\b` |
+| flags | `g` |
+| example | `Name`, `Type`, `Value`, `Package` |
+| note | テーブルヘッダーとして残る一般的な英語列名。G6/T19 で文脈限定 pattern に分割予定 |
+
+## common-it-loanword
+
+JA 技術文書で英語のまま使用される一般的な IT 用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `common-it-loanword` |
+| regex | `\b(?:simulator|emulator|device|compile|mobile|web|app|parallel|integration|plugin|certificate|profile|payload|webhook|token|dashboard|server|proxy|tunnel|execution|email|inbox|download|upload|screenshot|annotation|breakpoint|debugger|localhost|timeout|override)\b` |
+| flags | `gi` |
+| example | `simulator`, `emulator`, `device`, `compile`, `mobile`, `web` |
+| note | 技術文脈で英語のまま使用が許容される一般 IT 用語。T19 で文脈限定 pattern に分割予定（plan §3.2 / §4 G6） |
+
+## technical-concept-term
+
+JA 技術文書で英語のまま使われる中級 IT 概念用語。
+
+| 項目 | 値 |
+| --- | --- |
+| id | `technical-concept-term` |
+| regex | `\b(?:repository|pipeline|credentials|source\s+code|authentication|authorization|middleware|callback|endpoint|status\s+code|assertion|validation)\b` |
+| flags | `gi` |
+| example | `repository`, `pipeline`, `credentials` |
+| note | コードレビュー・CI/CD・API・認証等の文脈で英語のまま使用される技術概念用語。T19 で文脈限定 pattern に分割予定 |
 
 ---
 
