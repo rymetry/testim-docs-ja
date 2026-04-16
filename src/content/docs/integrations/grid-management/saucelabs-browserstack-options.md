@@ -37,7 +37,7 @@ capabilities は次のような用途に利用できます。
 - Grid 側で取得するデータの制御
 - 動画キャプチャーの無効化
 - ネットワークログの無効化
-- build / project option capabilities を使ったテスト結果マッピングのカスタマイズ
+- build / project オプションの capabilities を使ったテスト結果マッピングのカスタマイズ
 - リセット戦略の制御
 
 ## capability の override rule (mobile)
@@ -49,7 +49,7 @@ JSON capabilities ファイルの設定は、次の設定を上書きします�
 - `autoGrantPermissions`、`AutoAcceptAlerts`、動画キャプチャー無効化などのデフォルト値
 
 :::info{title="PlatformVersion capabilities"}
-`platformVersion` capability は検証され、使用すべき Appium バージョンを決定するために使われます。例えばクライアントが Appium バージョン `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の警告が表示されます。これは mobile config / CLI フラグの `osVersion` ロジックと同様です。
+`platformVersion` capability は検証され、使用すべき Appium バージョンを決定するために使われます。例えばクライアントが Appium バージョン `1.22.2` と、iOS 実行で `platformVersion` `17.2` を要求した場合、自動的に Appium 2 が使用され、その旨の警告が表示されます。これはモバイル設定 / CLI フラグの `osVersion` ロジックと同様です。
 :::
 
 ## SauceLabs
@@ -127,11 +127,11 @@ CLI に次を追加します: **--browserstack-options "config_browserstack.json
 
 [Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
 
-[BrowserStack options](https://www.browserstack.com/app-automate/capabilities?tag=jsonwire) JSON File Example:
+[BrowserStack オプション](https://www.browserstack.com/app-automate/capabilities?tag=jsonwire) の JSON ファイル例:
 
 ```json
 {
-  // project と build は修正が必要です（W3C format では projectName と buildName へ変更）
+  // project と build は修正が必要（W3C 形式では projectName と buildName へ変更）
   "project": "json-project-test",
   "build": "json-build-test",
   "platformVersion": "12",
