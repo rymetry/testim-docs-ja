@@ -47,10 +47,10 @@ keywords:
  <tbody>
   <tr>
    <td>
-    Alt/Ctrl modifier + char/number/special key
+    Alt/Ctrl 修飾子 + 文字 / 数字 / 特殊キー
    </td>
    <td>
-    ALT + X / CTRL + 1
+    ALT + X<br />CTRL + 1
    </td>
    <td>
     ⌥ Option + X
@@ -58,10 +58,10 @@ keywords:
   </tr>
   <tr>
    <td>
-    Modifier + function key
+    修飾子 + ファンクションキー
    </td>
    <td>
-    Alt + F3 / Ctrl + F10
+    Alt + F3<br />Ctrl + F10
    </td>
    <td>
     ⌥ Option + F3 ⌘ Command + F10
@@ -69,10 +69,10 @@ keywords:
   </tr>
   <tr>
    <td>
-    Modifier (*2) + char/number/special key
+    修飾子 (*2) + 文字 / 数字 / 特殊キー
    </td>
    <td>
-    Alt + Ctrl + X / Ctrl + Shift + 1
+    Alt + Ctrl + X<br />Ctrl + Shift + 1
    </td>
    <td>
     ⌥ Option + ⌘ Command + X ⌘ Command + ⇧ Shift + 1
@@ -80,10 +80,10 @@ keywords:
   </tr>
   <tr>
    <td>
-    Modifier (*2) + function key
+    修飾子 (*2) + ファンクションキー
    </td>
    <td>
-    Alt + Ctrl + F12 / Ctrl + Shift + F7
+    Alt + Ctrl + F12<br />Ctrl + Shift + F7
    </td>
    <td>
     ⌥ Option + ⌃ Control + F12 ⌘ Command + ⇧ Shift + F7
