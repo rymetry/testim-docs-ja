@@ -443,6 +443,30 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   pattern の再利用、新 mechanical exception / §5.3.N carve-out なし。4 entry
   //   (section-structure-mismatch ×2, segment-extra ×2) → 0。
   'administration/project-and-user-management',
+  // M2 Tier B Wave 2 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1 / §5.2 #2)
+  //   の Tier B 展開 sentinel。EN `<p>Context. → <strong>To X:</strong></p>` 単一
+  //   段落 (Allow Testim Chrome Extension to Run in Incognito Mode / How to Run
+  //   Tests in Incognito Mode の 2 section) に対し、JA が context 段落と
+  //   `**Xするには:**` 見出し段落を空行で分離していた drift を
+  //   `。\n→ **Xするには:**` soft-break 融合で解消。canonical arrow-fusion
+  //   sentinel (`editing-target-element-properties` / `sfdc-document-validation`
+  //   / `stop-pause-debug-tests` / `groups` / `project-and-user-management`) と
+  //   同 mechanism の再利用、新 mechanical exception / §5.3.N carve-out なし。
+  //   4 entry (section-structure-mismatch ×2, segment-extra ×2) → 0。
+  'running-tests/run-in-incognito',
+  // M2 Tier B Wave 2.5 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1) の
+  //   debugging-tests folder 小規模 sentinel。EN `<p>Context. → <strong>To X:</strong></p>`
+  //   単一段落 (Start recording / Start recording at this position の 2 section)
+  //   に対し、JA が context 段落と `**Xするには:**` 段落を空行で分離していた
+  //   drift を `。\n→ **Xするには:**` soft-break 融合で解消。canonical arrow-
+  //   fusion sentinel `editing-target-element-properties` (Wave 2) / `results/
+  //   stop-pause-debug-tests` (Tier B Wave 1) / `editing-tests/groups` (Tier B
+  //   Wave 1) と同一 mechanism の Tier B 再利用。Tier B Wave 2.5 で旧 T12
+  //   fallback pin だった本 slug を burn-down、fallback pin は
+  //   `integrations/grid-management/virtual-mobile-grid` (3 entry / multi-type)
+  //   に再 pin。4 entry (section-structure-mismatch ×2, segment-extra ×2) → 0。
+  //   新 mechanical exception / §5.3.N carve-out なし。
+  'debugging-tests/recording-additional-steps-to-fix-bugs',
   // M2 P2-3 Tier B Wave 2 追加 — callout-body token-disjoint + orphan arrow-
   //   paragraph malformation の複合 sentinel。"Modifying a Validate HTML
   //   attribute step" section で (1) 2 つの `:::note` callout-body が EN URL
