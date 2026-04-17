@@ -138,6 +138,14 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
   //   first callout 修正の組み合わせ。
   'integrations/test-management-integrations/ttm-for-jira-integration',
+  // M2 P2-2 Wave 2 追加 — 初の純 content-level segment-untranslated sentinel。
+  //   arrow-fusion / ol-split / table 等の構造 pattern は不使用、generic-
+  //   English-residue (browser version, shared/dedicated device, hover,
+  //   geolocation, site-to-site, executive 等) のみが drift 原因だった
+  //   slug。Testim UI / vendor name (Grid, Editor, VPN, IP, CLI, SauceLabs,
+  //   BrowserStack 等) は英語維持、generic 語のみ JA 化で 7 entry を解消。
+  //   後続の Tier A bulk で同 pattern の slug が多発する前の regression pin。
+  'integrations/grid-management',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
