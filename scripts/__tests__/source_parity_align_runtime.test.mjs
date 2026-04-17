@@ -21,13 +21,17 @@
  * Primary pin: `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
  * (3 baseline entries, multi-type: section-structure-mismatch / segment-extra /
  * segment-missing). Not a Tier A target so less likely to churn in M2 P2-2.
- * Fallback pin: `administration/project-and-user-management` (4 entries).
+ * Fallback pin: `editing-tests/groups` (4 entries, multi-type: section-structure-mismatch
+ * / segment-extra). Not a Tier A/B target so less likely to churn in M2.
  *
  * Pin swap history:
  *   test-management/shared-configuration → editing-tests/generating-a-random-value
  *   → running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks
  *     (swapped 2026-04-17 when P2-2 Wave 1 burned down generating-a-random-value 14→0;
  *     condition (b) of re-pin threshold triggered)
+ *   fallback: administration/project-and-user-management → editing-tests/groups
+ *     (swapped 2026-04-17 when Tier B Wave 1 burned down project-and-user-management
+ *     4→0; condition (b) of re-pin threshold triggered)
  *
  * ## Numeric re-pin threshold (T13 fragility-2 / plan §3.2)
  *
@@ -421,7 +425,7 @@ describe('pin slug content-correctness + fallback (T12)', () => {
   it('fallback pin slug is still baseline-covered (fixture 2-page pin / fragility fallback)', () => {
     // 1 ページ破綻時に fallback として検証可能な 2nd pin。baseline 上に entry が
     // 存在することを jq で 1 度だけ確認する (実測再評価は T11 側で別途 pin 済)。
-    const fallbackSlug = 'administration/project-and-user-management';
+    const fallbackSlug = 'editing-tests/groups';
     const baselinePath = join(ROOT, 'parity-baseline.json');
     const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
     const count = baseline.entries.filter((e) => e.slug === fallbackSlug).length;

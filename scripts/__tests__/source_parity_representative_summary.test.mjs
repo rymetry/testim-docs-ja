@@ -103,6 +103,9 @@ const RESOLVED_PAGES = Object.freeze([
   // segment-untranslated を出さなくなった。既 baselined entry が削除され 0 件
   // clean green に復帰 (CJK_RE /g flag fix と併せて §5.3.7 で解消)。
   'results/test-runs',
+  // M2 Tier B Wave 1: arrow-fusion burn-down で 4→0 (section-structure-mismatch ×2,
+  //   segment-extra ×2) に clean 化 — RESIDUAL から移動
+  'administration/project-and-user-management',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -114,12 +117,10 @@ const RESIDUAL_PAGES = Object.freeze([
   // §5.3.7: results/test-runs は RESOLVED_PAGES へ昇格
   // (status-symbol 表現を Unicode ×/✓ に置換する content-level JA 翻訳で解消)
   { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
-  // T15: section-structure-mismatch / segment-extra も代表 pin として追加
-  // (PR #287/#288 で副作用増加した surface。plan §3.2)
-  {
-    slug: 'administration/project-and-user-management',
-    requiredBaselinedTypes: ['section-structure-mismatch', 'segment-extra'],
-  },
+  // T15 pin は M2 Tier B Wave 1 で `administration/project-and-user-management`
+  // を 4→0 に clean 化して解消。RESOLVED に移動済み。他の
+  // section-structure-mismatch / segment-extra 代表 pin が必要になったら
+  // 別 slug で再追加する。
 ]);
 
 // ---------------------------------------------------------------------------
