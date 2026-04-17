@@ -83,11 +83,12 @@ describe('parity_artifact_registry (inventory-driven exclusion)', () => {
     );
   });
 
-  it('excludes /docs/index for registered slugs (5 slugs in inventory)', () => {
+  it('excludes /docs/index for registered slugs (6 slugs in inventory)', () => {
     const registered = [
       'editing-tests/conditions/advanced-conditions-settings',
       'integrations/visual-validation/visual_validation_index',
       'recording-tests/recording-a-mobile-test/recording-a-local-mobile-test',
+      'salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce',
       'salesforce-testing/salesforce-steps/sfdc-step-login',
       'testops/insights/dashboard',
     ];

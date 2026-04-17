@@ -32,6 +32,7 @@ export const ARTIFACT_REGISTRY = Object.freeze([
       'editing-tests/conditions/advanced-conditions-settings',
       'integrations/visual-validation/visual_validation_index',
       'recording-tests/recording-a-mobile-test/recording-a-local-mobile-test',
+      'salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce',
       'salesforce-testing/salesforce-steps/sfdc-step-login',
       'testops/insights/dashboard',
     ]),

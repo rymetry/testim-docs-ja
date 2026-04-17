@@ -199,6 +199,16 @@ P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span 
 - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
 - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
 
+#### 5.3.2 EN `index.htm/#/` self-link artifact (slug-scope registry extension)
+
+P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCap Flare が出力する self-link `<a href="index.htm/#/">` / `<a href="index.htm">` は `normalizeUrlToken` (`scripts/lib/source_parity_extract.mjs`) が `/docs/index` token に変換する。この token は **既存 `ARTIFACT_REGISTRY` entry (`reason: en-side-self-index-link-artifact`)** として 5 slug で登録済み。`salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` は 6 番目の slug として同 entry の `slugs[]` に追加する slug-scope extension。新規 mechanism pattern ではなく、既存 mechanism の scope 拡張。
+
+- **symptom pattern**: EN ページ内 self-link `<a href="index.htm[/#/]">` が含まれる salesforce / integration / conditions / mobile recording / testops ページ
+- **per-slug cap**: ≤ 2 件 (`segment-token-gap` with `missingTokens: ["/docs/index"]`)
+- **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: docs-index-self-link-artifact` ラベルを記載
+- **follow-up mechanism PR**: `scripts/lib/parity_artifact_registry.mjs` `/docs/index` entry の `slugs[]` に新 slug を追加 (2026-04-17 PR #304 で処理)、同時に `scripts/__tests__/parity_artifact_registry.test.mjs` の hardcoded 件数 (5 slugs → 6 slugs) を更新。**registry + test の 2 files 更新**が必要 (架空の "1-line diff" ではない)。
+- **scope lock**: 本 §5.3.2 entry は **`/docs/index` token の既存 artifact entry 再利用のみ** 対象。別 token (`http://google.com`、`http://example.com` 等) に対する新規 registry 登録は独立 §5.3.N として別途 security L2 gate を経由する。
+
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
