@@ -20,7 +20,7 @@ keywords:
   - テスト作成
 ---
 
-[ステップを手動で追加または記録する](/docs/salesforce-testing/create-a-salesforce-test)ことに加えて、Agentic Test Automation の支援を受けて Salesforce 向けのテストを作成できます。このツールを使用すると、特別にトレーニングされた AI エージェントと協力して、Salesforce 環境向けのユニークなテストを生成および実行できます。
+ステップを手動で追加または記録することに加えて、Agentic Test Automation の支援を受けて Salesforce 向けのテストを作成できます。このツールを使用すると、特別にトレーニングされた AI エージェントと協力して、Salesforce 環境向けのユニークなテストを生成および実行できます。
 
 ## 前提条件
 
@@ -38,7 +38,7 @@ keywords:
 ![Agentic Test Automation のプロンプト入力画面](/images/salesforce-testing/use-agentic-test-automation-for-salesforce/ff3b908-Salesforce_AgenticeAITesting_Screenshot.png)
 
 4. エージェントが作業している間、時々テストステップを追加する確認を求めます。エージェントが提供する情報を確認し、ステップを追加するかどうかを確認します。
-5. エージェントがテストの作成を完了すると、テストを実行するかどうかを尋ねられます。この時点で、停止して通常どおりに[テストを手動でレビュー、編集、実行](/docs/salesforce-testing/create-a-salesforce-test)できます。または、このリクエストを確認して、エージェントにテストを実行させることができます。
+5. エージェントがテストの作成を完了すると、テストを実行するかどうかを尋ねられます。この時点で、停止して通常どおりにテストを手動でレビュー、編集、実行できます。または、このリクエストを確認して、エージェントにテストを実行させることができます。
 6. エージェントがテストを実行する場合、テストを検証し、見つかった問題を解決します。テスト実行が完了すると、エージェントは作成したテストの概要を提供し、これをアーティファクトとしてテストに追加できます。
 
 ## プロンプトの作成方法
@@ -118,18 +118,4 @@ keywords:
  </tbody>
 </table>
 
-<table class="md-table md-table-3cols">
- <tbody>
-  <tr>
-   <td style="text-align: left;">
-    リード変換のテスト（検証あり）
-   </td>
-   <td style="text-align: left;">
-    新しい Lead を作成し、新しい Account と Contact を伴う Opportunity に変換するまで、すべての段階を進める。新しい Opportunity、Account、Contact が作成され、Lead からフィールドが正しく反映されていることを検証する。
-   </td>
-   <td style="text-align: left;">
-    高
-   </td>
-  </tr>
- </tbody>
-</table>
+\| リード変換のテスト（検証あり） \| 新しい Lead を作成し、新しい Account と Contact を伴う Opportunity に変換するまで、すべての段階を進める。新しい Opportunity、Account、Contact が作成され、Lead からフィールドが正しく反映されていることを検証する。 \| 高 \|

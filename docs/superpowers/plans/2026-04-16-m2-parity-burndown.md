@@ -199,6 +199,15 @@ P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span 
 - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
 - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
 
+#### 5.3.2 EN `index.htm/#/` self-link artifact (slug-scope registry extension)
+
+P2-2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN HTML の `<a href="index.htm/#/">` は MadCap Flare の壊れた self-link で、EN 抽出側では `normalizeUrlToken` 経由で `/docs/index` token に正規化される (page 内 `index.htm` → slug `index` → `/docs/index`)。JA が source-first で「EN の broken self-link を踏襲して意味的に正しいリンクを削除」(=プレーンテキスト化) した場合、alignSegments は tokenless cross-language 経路でペアリングするが、直後の token-gap 検査で EN の `/docs/index` token が JA 側に欠けるため `segment-token-gap` が発火する。`scripts/lib/parity_artifact_registry.mjs` には既に `/docs/index` artifact が 5 slug (`editing-tests/conditions/advanced-conditions-settings`, `integrations/visual-validation/visual_validation_index`, `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`, `salesforce-testing/salesforce-steps/sfdc-step-login`, `testops/insights/dashboard`) に対して登録済。本 slug を同 entry の `slugs[]` に追加する mechanism PR で解消可能 (= 既存 artifact の slug-scope 拡張であり、新規 mechanism pattern ではない。登録後は runtime で `isArtifactExcluded` が hit して token-gap を抑止する)。`scripts/lib/parity_artifact_registry.mjs` への純粋な slug 追加のため、M3 PR Z 前に低リスクで反映可能。
+
+- **symptom pattern**: EN の preface / ordered-list-item で `<a href="index.htm/#/">` または `<a href="index.htm">` を含むページ (MadCap Flare の壊れた page 内 self-link artifact)
+- **per-slug cap**: ≤ 2 件 (preface paragraph / body ordered-list-item で `/docs/index` token を持つ segment のペア)
+- **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: docs-index-self-link-artifact` ラベルを記載。JA 側の link は source-first に従い除去し、token-gap のみ残す (disjoint-token による segment-missing/extra ペア化を避けるため)
+- **follow-up mechanism PR**: `parity_artifact_registry.mjs` の既存 `/docs/index` entry の `slugs[]` に本 slug を追加 (1 行 diff、alignSegments 挙動は slug-scope 限定で既存 5 slug と等価)
+
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
